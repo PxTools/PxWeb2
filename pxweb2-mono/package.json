@@ -2,7 +2,9 @@
   "name": "@pxweb2-mono/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "start": "npx nx run pxweb2:serve"
+  },
   "private": true,
   "dependencies": {
     "@swc/helpers": "~0.5.2",
