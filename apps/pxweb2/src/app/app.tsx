@@ -9,7 +9,10 @@ export function App() {
   return (
     <div>
       <NxWelcome title="pxweb2" />
-      <Pxweb2Ui />
+      <Pxweb2Ui 
+        title="Welcome to pxweb2-ui!"
+        variant="primary"
+      />
     </div>
   );
 }

@@ -12,7 +12,21 @@ export default meta;
 type Story = StoryObj<typeof Pxweb2Ui>;
 
 export const Primary = {
-  args: {},
+  args: {
+    title: 'pxweb2-ui primary!',
+    variant: 'primary',
+  },
+};
+
+export const Secondary: Story = {
+  args: {
+    title: 'pxweb2-ui secondary!',
+    variant: 'secondary',
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    expect(canvas.getByText(/pxweb2-ui secondary!/gi)).toBeTruthy();
+  },
 };
 
 export const Heading: Story = {
