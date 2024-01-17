@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "start": "npx nx run pxweb2:serve"
+    "start": "npx nx run pxweb2:serve",
+    "start-storybook": "npx nx run pxweb2-ui:storybook"
   },
   "private": true,
   "dependencies": {
@@ -19,8 +20,17 @@
     "@nx/eslint-plugin": "17.2.8",
     "@nx/js": "17.2.8",
     "@nx/react": "17.2.8",
+    "@nx/storybook": "^17.2.8",
     "@nx/vite": "17.2.8",
+    "@nx/web": "17.2.8",
     "@nx/workspace": "17.2.8",
+    "@storybook/addon-essentials": "^7.5.3",
+    "@storybook/addon-interactions": "^7.5.3",
+    "@storybook/core-server": "^7.5.3",
+    "@storybook/jest": "^0.2.3",
+    "@storybook/react-vite": "^7.5.3",
+    "@storybook/test-runner": "^0.13.0",
+    "@storybook/testing-library": "^0.2.2",
     "@swc-node/register": "~1.6.7",
     "@swc/cli": "~0.1.62",
     "@swc/core": "~1.3.85",
@@ -45,6 +55,7 @@
     "nx": "17.2.8",
     "prettier": "^2.6.2",
     "sass": "^1.55.0",
+    "ts-node": "10.9.1",
     "typescript": "~5.2.2",
     "vite": "^5.0.0",
     "vite-plugin-dts": "~2.3.0",
