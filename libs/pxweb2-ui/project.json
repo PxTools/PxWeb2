@@ -48,7 +48,7 @@
       "executor": "@nx/storybook:build",
       "outputs": ["{options.outputDir}"],
       "options": {
-        "outputDir": "dist/storybook/pxweb2-ui",
+        "outputDir": "dist/apps/pxweb2/storybook",
         "configDir": "libs/pxweb2-ui/.storybook"
       },
       "configurations": {
