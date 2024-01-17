@@ -14,7 +14,9 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@pxweb2/pxweb2-ui": ["libs/pxweb2-ui/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }
