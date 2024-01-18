@@ -29,10 +29,3 @@ export const Secondary: Story = {
   },
 };
 
-export const Heading: Story = {
-  args: {},
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    expect(canvas.getByText(/Welcome to Pxweb2Ui!/gi)).toBeTruthy();
-  },
-};

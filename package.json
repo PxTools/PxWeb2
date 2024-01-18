@@ -4,7 +4,8 @@
   "license": "MIT",
   "scripts": {
     "start": "npx nx run pxweb2:serve",
-    "start-storybook": "npx nx run pxweb2-ui:storybook"
+    "start-storybook": "npx nx run pxweb2-ui:storybook",
+    "build-storybook": "npx nx run pxweb2-ui:build-storybook"
   },
   "private": true,
   "dependencies": {
@@ -43,6 +44,7 @@
     "@vitejs/plugin-react": "^4.2.0",
     "@vitest/coverage-v8": "~0.34.6",
     "@vitest/ui": "~0.34.6",
+    "chromatic": "^10.3.1",
     "cypress": "^13.0.0",
     "eslint": "~8.48.0",
     "eslint-config-prettier": "^9.0.0",
@@ -60,5 +62,7 @@
     "vite": "^5.0.0",
     "vite-plugin-dts": "~2.3.0",
     "vitest": "~0.34.6"
-  }
+  },
+  "readme": "ERROR: No README data found!",
+  "_id": "@pxweb2/source@0.0.0"
 }
