@@ -3,7 +3,12 @@
 
 name: "Chromatic"
 
-on: push
+on:
+  pull_request:
+    branches:
+    - main
+    paths:
+    - 'libs/pxweb2-ui/**'
 
 jobs:
   chromatic:
@@ -15,13 +20,9 @@ jobs:
           fetch-depth: 0
 
       - name: Install dependencies
-        # ⚠️ Pick one of these, matching the package manager for your project
         run: npm ci
-        # run: pnpm install
-        # run: yarn install --immutable --immutable-cache --check-cache
 
       - name: Publish to Chromatic
         uses: chromaui/action@latest
         with:
-          # ⚠️ Make sure to configure a `CHROMATIC_PROJECT_TOKEN` repository secret
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
