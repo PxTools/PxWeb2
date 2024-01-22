@@ -1,7 +1,32 @@
-/*
- * Replace this with your own classes
- *
- * e.g.
- * .container {
- * }
-*/
+.button{
+    color: var(--color-text-on-action, #FFF);
+    text-align: center;
+
+        /* Label/Medium */
+    font-family: Roboto;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px; /* 150% */
+
+    display: inline-flex;
+    padding: 12px 20px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border-radius: 1000px;
+    background: var(--color-surface-action, #274247);    
+    &:hover{
+        border-radius: 8px;
+        background: var(--color-surface-action-hover, #274247);
+    };
+    &:active{
+        border-radius: 8px;
+        background: var(--color-surface-action-active, #162327);
+    }
+    &:disabled{
+        border-radius: 1000px;
+        opacity: 0.4;
+        background: var(--color-surface-action, #274247);
+    }    
+}

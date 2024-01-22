@@ -14,7 +14,7 @@ export function Pxweb2Ui(props: Pxweb2UiProps) {
     <div className={styles['container']}>
       <h1>{title}</h1>
       {props.variant === 'primary' && (
-        <Button  label='Knapp'></Button>
+        <Button iconOnly={true} label='Knapp'></Button>
       )}
     </div>
   );
