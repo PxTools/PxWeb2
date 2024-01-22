@@ -11,7 +11,6 @@ export function App() {
       <NxWelcome title="pxweb2" />
       <Pxweb2Ui 
         title="Welcome to pxweb2-ui!"
-        variant="primary"
       />
     </div>
   );

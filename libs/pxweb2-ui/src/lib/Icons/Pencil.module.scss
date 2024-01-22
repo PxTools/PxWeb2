@@ -1,5 +1,17 @@
-.pencil{
-    width: 24px;
-    height: 24px;
-    flex-shrink: 0;
+.pencil {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.primary {
+  fill: white;
+}
+
+.secondary {
+  fill: 274247;
+}
+
+.tertiary {
+  color: var(--color-text-on-action, #000);
 }

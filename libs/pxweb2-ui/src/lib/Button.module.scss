@@ -1,32 +1,82 @@
-.button{
-    color: var(--color-text-on-action, #FFF);
-    text-align: center;
+// .size-small {
+//   color: var(--color-text-on-action, #fff);
+//   text-align: center;
 
-        /* Label/Medium */
-    font-family: Roboto;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 24px; /* 150% */
+//   /* Label/Medium */
+//   font-family: Roboto;
+//   font-size: 16px;
+//   font-style: normal;
+//   font-weight: 500;
+//   line-height: 24px; /* 150% */
+// }
 
-    display: inline-flex;
-    padding: 12px 20px;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
+.button {
+  color: var(--color-text-on-action, #fff);
+  text-align: center;
+
+  /* Label/Medium */
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px; /* 150% */
+}
+
+.primary {
+  background: var(--color-surface-action, #274247);
+
+  &:hover {
+    border-radius: 8px;
+    background: var(--color-surface-action-hover, #274247);
+  }
+  &:active {
+    border-radius: 8px;
+    background: var(--color-surface-action-active, #162327);
+  }
+  &:disabled {
     border-radius: 1000px;
-    background: var(--color-surface-action, #274247);    
-    &:hover{
-        border-radius: 8px;
-        background: var(--color-surface-action-hover, #274247);
-    };
-    &:active{
-        border-radius: 8px;
-        background: var(--color-surface-action-active, #162327);
-    }
-    &:disabled{
-        border-radius: 1000px;
-        opacity: 0.4;
-        background: var(--color-surface-action, #274247);
-    }    
+    opacity: 0.4;
+    background: var(--color-surface-action, #274247);
+  }
+}
+
+.secondary {
+  border: 1.5px solid var(--color-border-action, #274247);
+
+  &:hover {
+    border-radius: 8px;
+    background: var(--color-surface-action-hover, #274247);
+  }
+  &:active {
+    border-radius: 8px;
+    background: var(--color-surface-action-active, #162327);
+  }
+  &:disabled {
+    border-radius: 1000px;
+    opacity: 0.4;
+    background: var(--color-surface-action, #274247);
+  }
+}
+
+.tertiary {
+  color: var(--color-text-on-action, #000);
+  background: var(--color-surface-action, #fff);
+
+  &:hover {
+    border-radius: 8px;
+    background: var(--color-surface-action-hover, #fff);
+  }
+  &:active {
+    border-radius: 8px;
+    background: var(--color-surface-action-active, #fff);
+  }
+  &:disabled {
+    border-radius: 1000px;
+    opacity: 0.4;
+    background: var(--color-surface-action, #fff);
+  }
+}
+
+.iconOnly {
+  padding: 12px;
 }

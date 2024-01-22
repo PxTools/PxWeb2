@@ -1,13 +1,9 @@
 import styles from './pxweb2-ui.module.scss';
 import Button from './Button';
-//import Pencil from './Icons/Pencil';
-//import Pencil from './Icons/Pencil';
-//import Pencil from './Icons/Pencil';
 
 /* eslint-disable-next-line */
 export interface Pxweb2UiProps {
   title: string;
-  variant: 'primary' | 'secondary';
 }
 
 export function Pxweb2Ui(props: Pxweb2UiProps) {
@@ -16,9 +12,18 @@ export function Pxweb2Ui(props: Pxweb2UiProps) {
   return (
     <div className={styles['container']}>
       <h1>{title}</h1>
-      {props.variant === 'primary' && (
-        <Button iconOnly={false} label='Knapp' icon='Pencil'></Button>
-      )}
+      <Button
+        iconOnly={true}
+        label="Knapp"
+        icon="Pencil"
+        variant="primary"
+      ></Button>
+      <Button
+        iconOnly={true}
+        label="Knapp 2"
+        icon="Pencil"
+        variant="secondary"
+      ></Button>
     </div>
   );
 }
