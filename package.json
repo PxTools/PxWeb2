@@ -5,7 +5,8 @@
   "scripts": {
     "start": "npx nx run pxweb2:serve",
     "start-storybook": "npx nx run pxweb2-ui:storybook",
-    "build-storybook": "npx nx run pxweb2-ui:build-storybook"
+    "build-storybook": "npx nx run pxweb2-ui:build-storybook",
+    "build-style-dictionary": "npx nx run pxweb2-ui:build-style-dictionary"
   },
   "private": true,
   "dependencies": {

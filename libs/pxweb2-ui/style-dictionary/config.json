@@ -1,0 +1,28 @@
+{
+  "source": [
+    "./libs/pxweb2-ui/style-dictionary/theme/default_theme.json",
+    "./libs/pxweb2-ui/style-dictionary/theme/custom_theme.json"
+  ],
+  "platforms": {
+    "scss": {
+      "transformGroup": "scss",
+      "buildPath": "./libs/pxweb2-ui/style-dictionary/build/scss/",
+      "files": [
+        {
+          "destination": "_variables.scss",
+          "format": "scss/variables"
+        }
+      ]
+    },
+    "js": {
+      "transformGroup": "js",
+      "buildPath": "./libs/pxweb2-ui/style-dictionary/build/js/",
+      "files": [
+        {
+          "destination": "variables.js",
+          "format": "javascript/es6"
+        }
+      ]
+    }
+  }
+}
