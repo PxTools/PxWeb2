@@ -40,3 +40,6 @@ testem.log
 Thumbs.db
 
 .nx/cache
+
+# Style dictionary
+custom_theme.json
