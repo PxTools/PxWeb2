@@ -1,17 +1,12 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import styles from './app.module.scss';
 
-import { Pxweb2Ui } from "@pxweb2/pxweb2-ui";
-
-import NxWelcome from './nx-welcome';
+import { Pxweb2Ui } from '@pxweb2/pxweb2-ui';
 
 export function App() {
   return (
     <div>
-      <NxWelcome title="pxweb2" />
-      <Pxweb2Ui 
-        title="Welcome to pxweb2-ui!"
-      />
+      <Pxweb2Ui title="Welcome to pxweb2-ui!" />
     </div>
   );
 }

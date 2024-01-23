@@ -12,18 +12,48 @@ export function Pxweb2Ui(props: Pxweb2UiProps) {
   return (
     <div className={styles['container']}>
       <h1>{title}</h1>
-      <Button
-        iconOnly={true}
-        label="Knapp"
-        icon="Pencil"
-        variant="primary"
-      ></Button>
-      <Button
-        iconOnly={true}
-        label="Knapp 2"
-        icon="Pencil"
-        variant="secondary"
-      ></Button>
+      <Button iconOnly={false} variant="primary" isDisabled={true}>
+        Button
+      </Button>
+      <Button iconOnly={true} icon="Pencil" variant="primary">
+        Knapp 2
+      </Button>
+      <Button size="small" iconOnly={true} icon="Pencil" variant="primary">
+        Knapp 3
+      </Button>
+      <Button size="small" iconOnly={true} icon="Pencil" variant="primary" isDisabled={true}>
+        Knapp 3
+      </Button>
+
+      <br />
+
+      <Button iconOnly={false} variant="secondary">
+        Button
+      </Button>
+      <Button iconOnly={true} icon="Pencil" variant="secondary">
+        Knapp 2
+      </Button>
+      <Button size="small" iconOnly={true} icon="Pencil" variant="secondary">
+        Knapp 3
+      </Button>
+      <Button size="small" iconOnly={true} icon="Pencil" variant="secondary" isDisabled={true}>
+        Knapp 3
+      </Button>
+
+      <br />
+
+      <Button iconOnly={false} variant="tertiary">
+        Button
+      </Button>
+      <Button iconOnly={true} icon="Pencil" variant="tertiary">
+        Knapp 2
+      </Button>
+      <Button size="small" iconOnly={true} icon="Pencil" variant="tertiary">
+        Knapp 3
+      </Button>
+      <Button size="small" iconOnly={true} icon="Pencil" variant="tertiary" isDisabled={true}>
+        Knapp 3
+      </Button>
     </div>
   );
 }

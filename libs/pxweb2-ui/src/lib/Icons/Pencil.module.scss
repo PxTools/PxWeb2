@@ -1,17 +1,39 @@
 .pencil {
-  width: 24px;
-  height: 24px;
+  width: 1.5rem;
+  height: 1.5rem;
   flex-shrink: 0;
 }
 
 .primary {
-  fill: white;
+  fill: var(--color-text-on-action, #fff);
 }
 
 .secondary {
-  fill: 274247;
+  //fill: var(--color-text-action, #274247);
+  //pointer-events: none;
+
+  // &:hover {
+  //   fill: var(--color-text-on-action-subtle, #162327);
+  // }
+  // &:active {
+  //   fill: var(--color-text-on-action, #fff);
+  // }
+  // &.secondary-disabled {
+  //   &:hover {
+  //     fill: var(--color-text-action, #274247);
+  //   }
+  //   &:active {
+  //     fill: var(--color-text-action, #274247);
+  //   }
+    
+  // } transform filter
 }
 
-.tertiary {
-  color: var(--color-text-on-action, #000);
-}
+// .secondary-disabled {
+//   fill: var(--color-text-action, #274247);
+//   pointer-events: none;
+// }
+
+// .tertiary {
+//   fill: #274247;
+// }
