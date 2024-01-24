@@ -65,21 +65,26 @@
 }
 
 .tertiary {
-  color: var(--color-text-on-action, #000);
-  background: var(--color-surface-action, #fff);
+  // Override browser defaults styles
+  background-color: inherit;
+
+  color: var(--color-text-action, #274247);
+  border: none;
+  border-radius: var(--border-radius-full, 624.9375rem);
 
   &:hover {
-    border-radius: 8px;
-    background: var(--color-surface-action-hover, #fff);
+    color: var(--color-text-on-action-subtle, #162327);
+    border-radius: var(--border-radius-medium, 0.5rem);
+    background: var(--color-surface-action-subtle-hover, #dbebeb);
   }
   &:active {
-    border-radius: 8px;
-    background: var(--color-surface-action-active, #fff);
+    color: var(--color-text-on-action, #fff);
+    border-radius: var(--border-radius-medium, 0.5rem);
+    background: var(--color-surface-action-active, #162327);
   }
   &:disabled {
-    border-radius: 1000px;
-    opacity: 0.4;
-    background: var(--color-surface-action, #fff);
+    background-color: inherit;
+    color: var(--color-text-action, #274247);
   }
 }
 
