@@ -6,7 +6,7 @@ type IconType = 'Pencil' | 'ChevronUp';
 
 /* eslint-disable-next-line */
 export interface ButtonProps {
-  size?:'small'|'medium',
+  size?: 'small' | 'medium';
   variant: 'primary' | 'secondary' | 'tertiary';
   iconOnly: boolean;
   icon?: IconType;
@@ -14,7 +14,14 @@ export interface ButtonProps {
   isDisabled?: boolean;
 }
 
-export function Button({ iconOnly, icon, variant, size="medium", children, isDisabled=false }: ButtonProps) {
+export function Button({
+  iconOnly,
+  icon,
+  variant,
+  size = 'medium',
+  children,
+  isDisabled = false,
+}: ButtonProps) {
   let styling = styles['button'];
 
   if (variant) {
@@ -29,7 +36,7 @@ export function Button({ iconOnly, icon, variant, size="medium", children, isDis
 
   return (
     <button className={styling} disabled={isDisabled}>
-      {icon && <Pencil variant={variant}></Pencil>}
+      {icon && <Pencil></Pencil>}
       {/* {icon && <Icon icon={icon}></Icon>} */}
       {!iconOnly && children}
     </button>

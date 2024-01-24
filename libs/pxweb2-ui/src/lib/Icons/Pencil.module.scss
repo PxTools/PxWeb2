@@ -3,37 +3,3 @@
   height: 1.5rem;
   flex-shrink: 0;
 }
-
-.primary {
-  fill: var(--color-text-on-action, #fff);
-}
-
-.secondary {
-  //fill: var(--color-text-action, #274247);
-  //pointer-events: none;
-
-  // &:hover {
-  //   fill: var(--color-text-on-action-subtle, #162327);
-  // }
-  // &:active {
-  //   fill: var(--color-text-on-action, #fff);
-  // }
-  // &.secondary-disabled {
-  //   &:hover {
-  //     fill: var(--color-text-action, #274247);
-  //   }
-  //   &:active {
-  //     fill: var(--color-text-action, #274247);
-  //   }
-    
-  // } transform filter
-}
-
-// .secondary-disabled {
-//   fill: var(--color-text-action, #274247);
-//   pointer-events: none;
-// }
-
-// .tertiary {
-//   fill: #274247;
-// }

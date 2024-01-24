@@ -1,15 +1,3 @@
-// .size-small {
-//   color: var(--color-text-on-action, #fff);
-//   text-align: center;
-
-//   /* Label/Medium */
-//   font-family: Roboto;
-//   font-size: 16px;
-//   font-style: normal;
-//   font-weight: 500;
-//   line-height: 24px; /* 150% */
-// }
-
 .button {
   text-align: center;
 
@@ -19,6 +7,16 @@
   font-style: normal;
   font-weight: 500;
   line-height: 1.5rem; /* 150% */
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+   
+    &:hover, &:focus {
+      border-radius: var(--border-radius-full, 624.9375rem);
+      text-decoration: none;
+    }
+  }
 }
 
 .primary {
@@ -32,15 +30,12 @@
 
   &:hover {
     border-radius: var(--border-radius-medium, 0.5rem);
-    //background: var(--color-surface-action-hover, #274247);
   }
   &:active {
     border-radius: var(--border-radius-medium, 0.5rem);
     background: var(--color-surface-action-active, #162327);
   }
   &:disabled {
-    border-radius: var(--border-radius-full, 624.9375rem);
-    opacity: 0.4;
     background: var(--color-surface-action, #274247);
   }
 }
@@ -58,21 +53,12 @@
     border-radius: var(--border-radius-medium, 0.5rem);
     background: var(--color-surface-action-subtle-hover, #dbebeb);
   }
-  &:hover .icon-svg {
-    fill: var(--color-text-on-action-subtle, #162327) !important;
-  }
   &:active {
     color: var(--color-text-on-action, #fff);
     border-radius: var(--border-radius-medium, 0.5rem);
     background: var(--color-surface-action-active, #162327);
   }
-  &:active .icon-svg {
-    fill: var(--color-text-on-action-subtle, #fff) !important;
-  }
   &:disabled {
-    border-radius: var(--border-radius-full, 624.9375rem);
-    opacity: 0.4;
-
     background-color: inherit;
     color: var(--color-text-action, #274247);
   }
