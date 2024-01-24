@@ -1,0 +1,26 @@
+{
+  "border-radius-none": {
+    "value": "0"
+  },
+  "border-radius-xxsmall": {
+    "value": "0.5px"
+  },
+  "border-radius-xsmall": {
+    "value": "2px"
+  },
+  "border-radius-small": {
+    "value": "4px"
+  },
+  "border-radius-medium": {
+    "value": "8px"
+  },
+  "border-radius-large": {
+    "value": "16px"
+  },
+  "border-radius-xlarge": {
+    "value": "24px"
+  },
+  "border-radius-full": {
+    "value": "9999px"
+  }
+}
