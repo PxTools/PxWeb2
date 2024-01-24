@@ -1,4 +1,5 @@
-import styles from './Button.module.scss';
+import cl from 'clsx';
+import classes from './Button.module.scss';
 import Icon from './Icon';
 import Pencil from './Icons/Pencil';
 
@@ -24,20 +25,15 @@ export function Button({
   isDisabled = false,
   onClick,
 }: ButtonProps) {
-  let styling = styles['button'];
 
-  if (variant) {
-    styling += ' ' + styles[variant];
-  }
-  if (size) {
-    styling += ' ' + styles[size];
-  }
-  if (iconOnly) {
-    styling += ' ' + styles['iconOnly'];
-  }
-
-  return (
-    <button className={styling} disabled={isDisabled} onClick={onClick}>
+   return (
+    <button className={cl(
+      classes.button,
+      classes[size],
+      classes[variant],
+      {[classes.iconOnly]: iconOnly}
+    )}
+     disabled={isDisabled} onClick={onClick}>
       {icon && <Pencil></Pencil>}
       {/* {icon && <Icon icon={icon}></Icon>} */}
       {!iconOnly && children}
