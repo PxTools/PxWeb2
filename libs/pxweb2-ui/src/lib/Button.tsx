@@ -1,9 +1,6 @@
 import cl from 'clsx';
 import classes from './Button.module.scss';
-import Icon from './Icon';
-import Pencil from './Icons/Pencil';
-
-type IconType = 'Pencil' | 'ChevronUp';
+import Icon, { IconType } from './Icon';
 
 /* eslint-disable-next-line */
 export interface ButtonProps {
@@ -34,8 +31,7 @@ export function Button({
       {[classes.iconOnly]: iconOnly}
     )}
      disabled={isDisabled} onClick={onClick}>
-      {icon && <Pencil></Pencil>}
-      {/* {icon && <Icon icon={icon}></Icon>} */}
+      {icon && <Icon icon={icon}></Icon>}
       {!iconOnly && children}
     </button>
   );

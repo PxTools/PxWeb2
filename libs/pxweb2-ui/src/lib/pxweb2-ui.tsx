@@ -20,7 +20,7 @@ export function Pxweb2Ui(props: Pxweb2UiProps) {
       <Button iconOnly={true} icon="Pencil" variant="primary" onClick={test}>
         Knapp 2
       </Button>
-      <Button size="small" iconOnly={true} icon="Pencil" variant="primary" onClick={test}>
+      <Button size="small" iconOnly={true} icon="ChevronUp" variant="primary" onClick={test}>
         Knapp 3
       </Button>
       <Button size="small" iconOnly={true} icon="Pencil" variant="primary" isDisabled={true} onClick={test}>
