@@ -6,52 +6,54 @@ export interface Pxweb2UiProps {
   title: string;
 }
 
+function test() { alert('test'); } 
+
 export function Pxweb2Ui(props: Pxweb2UiProps) {
   const title = props.title || 'Welcome to pxweb2-ui!';
 
   return (
     <div className={styles['container']}>
       <h1>{title}</h1>
-      <Button iconOnly={false} variant="primary" isDisabled={true}>
+      <Button iconOnly={false} variant="primary" isDisabled={true} onClick={test}>
         Button
       </Button>
-      <Button iconOnly={true} icon="Pencil" variant="primary">
+      <Button iconOnly={true} icon="Pencil" variant="primary" onClick={test}>
         Knapp 2
       </Button>
-      <Button size="small" iconOnly={true} icon="Pencil" variant="primary">
+      <Button size="small" iconOnly={true} icon="Pencil" variant="primary" onClick={test}>
         Knapp 3
       </Button>
-      <Button size="small" iconOnly={true} icon="Pencil" variant="primary" isDisabled={true}>
+      <Button size="small" iconOnly={true} icon="Pencil" variant="primary" isDisabled={true} onClick={test}>
         Knapp 3
       </Button>
 
       <br />
 
-      <Button iconOnly={false} variant="secondary">
+      <Button iconOnly={false} variant="secondary" onClick={test}>
         Button
       </Button>
-      <Button iconOnly={true} icon="Pencil" variant="secondary">
+      <Button iconOnly={true} icon="Pencil" variant="secondary" onClick={test}>
         Knapp 2
       </Button>
-      <Button size="small" iconOnly={true} icon="Pencil" variant="secondary">
+      <Button size="small" iconOnly={true} icon="Pencil" variant="secondary" onClick={test}>
         Knapp 3
       </Button>
-      <Button size="small" iconOnly={true} icon="Pencil" variant="secondary" isDisabled={true}>
+      <Button size="small" iconOnly={true} icon="Pencil" variant="secondary" isDisabled={true} onClick={test}>
         Knapp 3
       </Button>
 
       <br />
 
-      <Button iconOnly={false} variant="tertiary">
+      <Button iconOnly={false} variant="tertiary" onClick={test}>
         Button
       </Button>
-      <Button iconOnly={true} icon="Pencil" variant="tertiary">
+      <Button iconOnly={true} icon="Pencil" variant="tertiary" onClick={test}>
         Knapp 2
       </Button>
-      <Button size="small" iconOnly={true} icon="Pencil" variant="tertiary">
+      <Button size="small" iconOnly={true} icon="Pencil" variant="tertiary" onClick={test}>
         Knapp 3
       </Button>
-      <Button size="small" iconOnly={true} icon="Pencil" variant="tertiary" isDisabled={true}>
+      <Button size="small" iconOnly={true} icon="Pencil" variant="tertiary" isDisabled={true} onClick={test}>
         Knapp 3
       </Button>
     </div>

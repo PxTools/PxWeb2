@@ -12,6 +12,7 @@ export interface ButtonProps {
   icon?: IconType;
   children?: string;
   isDisabled?: boolean;
+  onClick: () => void;
 }
 
 export function Button({
@@ -21,6 +22,7 @@ export function Button({
   size = 'medium',
   children,
   isDisabled = false,
+  onClick,
 }: ButtonProps) {
   let styling = styles['button'];
 
@@ -35,7 +37,7 @@ export function Button({
   }
 
   return (
-    <button className={styling} disabled={isDisabled}>
+    <button className={styling} disabled={isDisabled} onClick={onClick}>
       {icon && <Pencil></Pencil>}
       {/* {icon && <Icon icon={icon}></Icon>} */}
       {!iconOnly && children}
