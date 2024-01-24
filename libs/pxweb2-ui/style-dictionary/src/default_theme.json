@@ -22,5 +22,14 @@
   },
   "border-radius-full": {
     "value": "9999px"
+  },
+  "color-text-action": {
+    "value": "#274247"
+  },
+  "color-text-on-action-subtle": {
+    "value": "#162327"
+  },
+  "color-surface-action-subtle-active": {
+    "value": "#C3DCDC"
   }
 }
