@@ -24,11 +24,9 @@ export function Pxweb2Ui(props: Pxweb2UiProps) {
         Knapp 3
       </Button>
       <Button size="small" iconOnly={true} icon="Pencil" variant="primary" isDisabled={true} onClick={test}>
-        Knapp 3
+        Knapp 4
       </Button>
-
       <br />
-
       <Button iconOnly={false} variant="secondary" onClick={test}>
         Button
       </Button>
@@ -39,11 +37,9 @@ export function Pxweb2Ui(props: Pxweb2UiProps) {
         Knapp 3
       </Button>
       <Button size="small" iconOnly={true} icon="Pencil" variant="secondary" isDisabled={true} onClick={test}>
-        Knapp 3
+        Knapp 4
       </Button>
-
       <br />
-
       <Button iconOnly={false} variant="tertiary" onClick={test}>
         Button
       </Button>
@@ -54,7 +50,7 @@ export function Pxweb2Ui(props: Pxweb2UiProps) {
         Knapp 3
       </Button>
       <Button size="small" iconOnly={true} icon="Pencil" variant="tertiary" isDisabled={true} onClick={test}>
-        Knapp 3
+        Knapp 4
       </Button>
     </div>
   );

@@ -21,7 +21,6 @@ export const Primary = {
 export const Secondary: Story = {
   args: {
     title: 'pxweb2-ui secondary!',
-    variant: 'secondary',
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
