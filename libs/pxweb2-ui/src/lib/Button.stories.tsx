@@ -3,12 +3,14 @@ import { Button } from './Button';
 
 const meta: Meta<typeof Button> = {
   component: Button,
-  title: 'Button',
+  title: 'Button'
 };
 export default meta;
 type Story = StoryObj<typeof Button>;
 
-function test() { alert('test'); }
+function test() { 
+  alert('test');
+ }
 
 export const ButtonSettings: Story = {
   args: {
@@ -30,14 +32,30 @@ export const Variants: StoryFn<typeof Button> = () => {
       <br />
       Primary with icon only medium
       <br />
-      <Button variant="primary" icon='Pencil' onClick={test}></Button>
+      <Button 
+        variant="primary"
+        icon='Pencil'
+        onClick={test}
+        aria-label={'Button with icon'}
+      ></Button>
       <br />
       Primary with icon only small
       <br />
-      <Button variant="primary" icon='Pencil' onClick={test} size={'small'}></Button>
+      <Button
+        variant="primary"
+        icon='Pencil'
+        onClick={test}
+        size={'small'}
+        aria-label={'Button with icon'}
+      ></Button>
       Primary disabled
       <br />
-      <Button variant="primary" icon='Pencil' disabled onClick={test}></Button>
+      <Button
+        variant="primary"
+        icon='Pencil'
+        disabled onClick={test}
+        aria-label={'Button with icon'}
+      ></Button>
       <br />
       <br />
       Secondary
@@ -48,14 +66,31 @@ export const Variants: StoryFn<typeof Button> = () => {
       <br />
       Secondary with icon only medium
       <br />
-      <Button variant="secondary" icon='Pencil' onClick={test}></Button>
+      <Button
+        variant="secondary"
+        icon='Pencil'
+        onClick={test}
+        aria-label={'Button with icon'}
+      ></Button>
       <br />
       Secondary with icon only small
       <br />
-      <Button variant="secondary" icon='Pencil' onClick={test} size={'small'}></Button>
+      <Button
+        variant="secondary"
+        icon='Pencil'
+        onClick={test}
+        size={'small'}
+        aria-label={'Button with icon'}
+      ></Button>
       Secondary disabled
       <br />
-      <Button variant="secondary" icon='Pencil' disabled onClick={test}></Button>
+      <Button
+        variant="secondary"
+        icon='Pencil'
+        disabled
+        onClick={test}
+        aria-label={'Button with icon'}
+      ></Button>
       <br />
       <br />
       Tertiary
@@ -66,14 +101,31 @@ export const Variants: StoryFn<typeof Button> = () => {
       <br />
       Tertiary with icon only medium
       <br />
-      <Button variant="tertiary" icon='Pencil' onClick={test}></Button>
+      <Button
+        variant="tertiary"
+        icon='Pencil'
+        onClick={test}
+        aria-label={'Button with icon'}
+      ></Button>
       <br />
       Tertiary with icon only small
       <br />
-      <Button variant="tertiary" icon='Pencil' onClick={test} size={'small'}></Button>
+      <Button
+        variant="tertiary"
+        icon='Pencil'
+        onClick={test}
+        size={'small'}
+        aria-label={'Button with icon'}
+      ></Button>
       Tertiary disabled
       <br />
-      <Button variant="tertiary" icon='Pencil' disabled onClick={test}></Button>
+      <Button
+        variant="tertiary"
+        icon='Pencil'
+        disabled
+        onClick={test}
+        aria-label={'Button with icon'}
+      ></Button>
     </>
   );
 };
