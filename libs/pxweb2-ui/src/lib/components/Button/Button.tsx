@@ -1,6 +1,6 @@
 import cl from 'clsx';
 import classes from './Button.module.scss';
-import Icon, { IconType } from './Icon';
+import Icon, { IconType } from '../Icon/Icon';
 
 /* eslint-disable-next-line */
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
