@@ -16,7 +16,7 @@ export const ButtonSettings: Story = {
   args: {
     variant: 'primary',
     size: 'medium',
-    children: 'Primary',
+    children: 'Button',
     onClick: test,
   },
 };
