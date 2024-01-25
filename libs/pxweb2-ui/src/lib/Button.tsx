@@ -3,36 +3,32 @@ import classes from './Button.module.scss';
 import Icon, { IconType } from './Icon';
 
 /* eslint-disable-next-line */
-export interface ButtonProps {
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: 'small' | 'medium';
   variant: 'primary' | 'secondary' | 'tertiary';
-  iconOnly: boolean;
   icon?: IconType;
   children?: string;
-  isDisabled?: boolean;
-  onClick: () => void;
 }
 
 export function Button({
-  iconOnly,
   icon,
   variant,
   size = 'medium',
   children,
-  isDisabled = false,
-  onClick,
+  ...rest
 }: ButtonProps) {
-
    return (
-    <button className={cl(
+    <button
+    className={cl(
       classes.button,
       classes[size],
       classes[variant],
-      {[classes.iconOnly]: iconOnly}
+      {[classes.iconOnly]: !children && icon}
     )}
-     disabled={isDisabled} onClick={onClick}>
+    {...rest}
+    >
       {icon && <Icon icon={icon}></Icon>}
-      {!iconOnly && children}
+      {children}
     </button>
   );
 }

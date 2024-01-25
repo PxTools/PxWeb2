@@ -15,7 +15,6 @@ export const ButtonSettings: Story = {
     variant: 'primary',
     size: 'medium',
     children: 'Primary',
-    iconOnly: false,
     onClick: test,
   },
 };
@@ -25,74 +24,56 @@ export const Variants: StoryFn<typeof Button> = () => {
     <>
       Primary
       <br />
-      <Button iconOnly={false} variant="primary" isDisabled={false} onClick={test}>
+      <Button variant="primary" onClick={test}>
         Button
       </Button>
       <br />
       Primary with icon only medium
       <br />
-      <Button iconOnly={true} variant="primary" icon='Pencil' isDisabled={false} onClick={test}>
-        Button
-      </Button>
+      <Button variant="primary" icon='Pencil' onClick={test}></Button>
       <br />
       Primary with icon only small
       <br />
-      <Button iconOnly={true} variant="primary" icon='Pencil' isDisabled={false} onClick={test} size={'small'}>
-        Button
-      </Button>
+      <Button variant="primary" icon='Pencil' onClick={test} size={'small'}></Button>
       Primary disabled
       <br />
-      <Button iconOnly={true} variant="primary" icon='Pencil' isDisabled={true} onClick={test}>
-        Button
-      </Button>
+      <Button variant="primary" icon='Pencil' disabled onClick={test}></Button>
       <br />
       <br />
       Secondary
       <br />
-      <Button iconOnly={false} variant="secondary" isDisabled={false} onClick={test}>
+      <Button variant="secondary" onClick={test}>
         Button
       </Button>
       <br />
       Secondary with icon only medium
       <br />
-      <Button iconOnly={true} variant="secondary" icon='Pencil' isDisabled={false} onClick={test}>
-        Button
-      </Button>
+      <Button variant="secondary" icon='Pencil' onClick={test}></Button>
       <br />
       Secondary with icon only small
       <br />
-      <Button iconOnly={true} variant="secondary" icon='Pencil' isDisabled={false} onClick={test} size={'small'}>
-        Button
-      </Button>
+      <Button variant="secondary" icon='Pencil' onClick={test} size={'small'}></Button>
       Secondary disabled
       <br />
-      <Button iconOnly={true} variant="secondary" icon='Pencil' isDisabled={true} onClick={test}>
-        Button
-      </Button>
+      <Button variant="secondary" icon='Pencil' disabled onClick={test}></Button>
       <br />
       <br />
       Tertiary
       <br />
-      <Button iconOnly={false} variant="tertiary" isDisabled={false} onClick={test}>
+      <Button variant="tertiary" onClick={test}>
         Button
       </Button>
       <br />
       Tertiary with icon only medium
       <br />
-      <Button iconOnly={true} variant="tertiary" icon='Pencil' isDisabled={false} onClick={test}>
-        Button
-      </Button>
+      <Button variant="tertiary" icon='Pencil' onClick={test}></Button>
       <br />
       Tertiary with icon only small
       <br />
-      <Button iconOnly={true} variant="tertiary" icon='Pencil' isDisabled={false} onClick={test} size={'small'}>
-        Button
-      </Button>
+      <Button variant="tertiary" icon='Pencil' onClick={test} size={'small'}></Button>
       Tertiary disabled
       <br />
-      <Button iconOnly={true} variant="tertiary" icon='Pencil' isDisabled={true} onClick={test}>
-        Button
-      </Button>
+      <Button variant="tertiary" icon='Pencil' disabled onClick={test}></Button>
     </>
   );
 };
