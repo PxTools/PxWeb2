@@ -4,8 +4,23 @@ This guide is intended for maintainers - those who are maintaining PxWeb by prov
 
 ## Getting Started
 
-1. Familiarize yourself with the project structure and our [CONTRIBUTING.md](./CONTRIBUTING.md) guide aswell as this guide.
+1. Familiarize yourself with the project structure and our [CONTRIBUTING.md](./CONTRIBUTING.md) guide as well as this guide.
 2. Setup the project locally and make sure that you can run PxWeb.
+
+## Development Tools we use
+We recommend the following tools for our development environment:
+
+- **Code Editor**: [Visual Studio Code (VS Code)](https://code.visualstudio.com/) is our preferred code editor. It provides a rich set of features, extensions, and integrations that enhance productivity and make development easier.
+
+- **Build System**: [NX](https://nx.dev/) is our build system of choice. It is a powerful tool that helps us manage monorepos, improve build performance, and enforce best practices in our development workflow.
+
+- **Development Environment**: [Vite](https://vitejs.dev/) is our preferred development environment. It is a fast and lightweight build tool that optimizes the development experience by providing instant server startup, hot module replacement, and efficient bundling.
+
+- **Accessibility**: [Axe](https://www.deque.com/axe/) is our preferred tool to help us comply with wcag
+
+
+By using these tools, we ensure a streamlined and efficient development process, enabling us to deliver high-quality code.
+
 
 ## Git Branching Strategy
 
@@ -36,7 +51,6 @@ To get started with contributing code, please follow these steps:
 2. Create a new branch from the `main` branch. Name your branch descriptively, indicating the purpose of your changes.
 3. Make your changes and ensure that the code follows the project's coding conventions.
 4. Test your changes thoroughly to ensure they work as expected.
-4. ???CHANGE LOG see https://keepachangelog.com/en/1.1.0/???
 5. Commit your changes with a clear and descriptive commit message.
 6. Push your changes. 
 7. Open a pull request against the `main` branch and make sure that it has:
@@ -79,3 +93,13 @@ Before adding a new 3rd party component or library, please consider the followin
 2. Is the component actively maintained? An unmaintained component can pose a security risk and may lack support.
 3. Does the component have a large community? Larger communities often mean more resources for troubleshooting and learning.
 4. Is the component's license compatible with our project?
+5. Consult with another maintainer if it is the right component for the job.
+6. Consult [snyk Advisor](https://snyk.io/advisor/) to get a summary for the component.
+
+For existing third-party component dependencies, we will utilize Dependabot to help us stay up to date. Dependabot is an automated dependency management tool that regularly checks for updates to our dependencies and creates pull requests to update them. This helps us ensure that we are using the latest versions of our dependencies, which can include important bug fixes, security patches, and new features.
+
+We are committed to continuously updating our dependencies to ensure that we are using the latest versions. However, in some cases, we may encounter conflicts with NX plugins that prevent us from updating to the latest versions. In such situations, we carefully evaluate the impact and risks before deciding on the appropriate course of action.
+
+In the event of a security vulnerability being discovered in any of our dependencies, we will prioritize attending to it urgently. Our team will take immediate action to mitigate the risk and apply necessary patches or updates.
+
+
