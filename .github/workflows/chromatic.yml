@@ -1,14 +1,13 @@
-
 # .github/workflows/chromatic.yml
 
-name: "Chromatic"
+name: 'Chromatic'
 
 on:
   pull_request:
     branches:
-    - main
+      - main
     paths:
-    - 'libs/pxweb2-ui/**'
+      - 'libs/pxweb2-ui/**'
 
 jobs:
   chromatic:
@@ -21,6 +20,8 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+      - name: Build style-dictionary
+        run: npm run build-style-dictionary
 
       - name: Publish to Chromatic
         uses: chromaui/action@latest

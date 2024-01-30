@@ -1,0 +1,14 @@
+@use '../../../../style-dictionary/dist/scss/variables.scss' as variables;
+
+.link {
+  font-family: 'Roboto', sans-serif;
+  color: variables.$color-text-action;
+  &:hover {
+    text-decoration: none;
+  }
+
+  &:focus {
+    color: variables.$color-text-on-action-subtle;
+    background-color: variables.$color-surface-action-subtle-active;
+  }
+}
