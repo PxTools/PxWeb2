@@ -9,7 +9,5 @@
       "require": "./index.js"
     }
   },
-  "dependencies": {
-    "style-dictionary": "^3.9.2"
-  }
+  "dependencies": {}
 }
