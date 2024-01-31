@@ -1,1 +1,1 @@
-export * from './lib/pxweb2-ui';
+export * from './lib/components/Button/Button';

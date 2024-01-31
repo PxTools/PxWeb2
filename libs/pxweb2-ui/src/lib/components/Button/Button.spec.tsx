@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react';
 
-import Pxweb2Ui from './pxweb2-ui';
+import Button from './Button';
 
-describe('Pxweb2Ui', () => {
+describe('Button', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<Pxweb2Ui />);
+    const { baseElement } = render(<Button />);
     expect(baseElement).toBeTruthy();
   });
 });
