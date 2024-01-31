@@ -20,9 +20,9 @@
 }
 
 .primary {
-  color: var(--color-text-on-action, #fff);
+  color: var(--color-text-on-action, red);
   border-radius: var(--border-radius-full, 624.9375rem);
-  background: var(--color-surface-action, #274247);
+  background: var(--color-surface-action, #ffffff);
 
   // Override browser default styles
   border: none;
