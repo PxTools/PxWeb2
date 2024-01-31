@@ -30,17 +30,21 @@ We use a simple and effective Git branching strategy to keep our project organiz
 
 2. **Feature Branches**: For new features and non-emergency bug fixes, we create a new branch off of `main`. Name your branch descriptively, indicating the purpose of your changes. Branch names should be lowercased and should be prefixed with `feature/`.
 
-    Example: `feature/new-login-screen`
+    Example: `feature/PXWEB2-1-new-login-screen`
 
 3. **Fix Branches**: For bug fixes, we create a new branch off of `main`. Name your branch descriptively, indicating the purpose of your changes. Branch names should be lowercased and prefixed with `fix/`.
 
-    Example: `fix/login-screen-bug`
+    Example: `fix/PXWEB2-1-login-screen-bug`
 
 4. **Patch Branches**: For minor changes and patches, we create a new branch off of `main`. Name your branch descriptively, indicating the purpose of your changes. Branch names should be lowercased and prefixed with `patch/`.
 
-    Example: `patch/update-login-screen-docs`
+    Example: `patch/PXWEB2-1-update-login-screen-docs`
 
 5. **Pull Requests**: After making your changes in these branches, merge them back into `main` via a pull request. The pull request should be reviewed and tested before it is merged.
+
+>Make sure that the JIRA id is included in the branch name and that this should be in capital letters. 
+
+>We prefer hyphens instead of underscores for word separator in branch names.
 
 This strategy ensures that our `main` branch always has "production-ready" code that has been reviewed and tested.
 
