@@ -3,6 +3,11 @@
 name: 'Chromatic'
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'libs/pxweb2-ui/**'
   pull_request:
     branches:
       - main
