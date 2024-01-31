@@ -1,3 +1,5 @@
+@use '../../../../style-dictionary/dist/scss/variables.scss' as variables;
+
 .button {
   text-align: center;
 
@@ -11,32 +13,33 @@
   &:disabled {
     cursor: not-allowed;
     opacity: 0.4;
-   
-    &:hover, &:focus {
-      border-radius: var(--border-radius-full, 624.9375rem);
+
+    &:hover,
+    &:focus {
+      border-radius: variables.$border-radius-full;
       text-decoration: none;
     }
   }
 }
 
 .primary {
-  color: var(--color-text-on-action, #fff);
-  border-radius: var(--border-radius-full, 624.9375rem);
-  background: var(--color-surface-action, #274247);
+  color: variables.$color-text-on-action;
+  border-radius: variables.$border-radius-full;
+  background: variables.$color-surface-action;
 
   // Override browser default styles
   border: none;
   border-style: none;
 
   &:hover {
-    border-radius: var(--border-radius-medium, 0.5rem);
+    border-radius: variables.$border-radius-medium;
   }
   &:active {
-    border-radius: var(--border-radius-medium, 0.5rem);
-    background: var(--color-surface-action-active, #162327);
+    border-radius: variables.$border-radius-medium;
+    background: variables.$color-surface-action-active;
   }
   &:disabled {
-    background: var(--color-surface-action, #274247);
+    background: variables.$color-surface-action;
   }
 }
 
@@ -44,23 +47,23 @@
   // Override browser defaults styles
   background-color: inherit;
 
-  color: var(--color-text-action, #274247);
-  border-radius: var(--border-radius-full, 624.9375rem);
-  border: 1.5px solid var(--color-border-action, #274247);
+  color: variables.$color-text-action;
+  border-radius: variables.$border-radius-full;
+  border: 1.5px solid variables.$color-border-action;
 
   &:hover {
-    color: var(--color-text-on-action-subtle, #162327);
-    border-radius: var(--border-radius-medium, 0.5rem);
-    background: var(--color-surface-action-subtle-hover, #dbebeb);
+    color: variables.$color-text-on-action-subtle;
+    border-radius: variables.$border-radius-medium;
+    background: variables.$color-surface-subtle-hover;
   }
   &:active {
-    color: var(--color-text-on-action, #fff);
-    border-radius: var(--border-radius-medium, 0.5rem);
-    background: var(--color-surface-action-active, #162327);
+    color: variables.$color-text-on-action;
+    border-radius: variables.$border-radius-medium;
+    background: variables.$color-surface-action-active;
   }
   &:disabled {
     background-color: inherit;
-    color: var(--color-text-action, #274247);
+    color: variables.$color-text-action;
   }
 }
 
@@ -68,23 +71,23 @@
   // Override browser defaults styles
   background-color: inherit;
 
-  color: var(--color-text-action, #274247);
+  color: variables.$color-text-action;
   border: none;
-  border-radius: var(--border-radius-full, 624.9375rem);
+  border-radius: variables.$border-radius-full;
 
   &:hover {
-    color: var(--color-text-on-action-subtle, #162327);
-    border-radius: var(--border-radius-medium, 0.5rem);
-    background: var(--color-surface-action-subtle-hover, #dbebeb);
+    color: variables.$color-text-on-action-subtle;
+    border-radius: variables.$border-radius-medium;
+    background: variables.$color-surface-subtle-hover;
   }
   &:active {
-    color: var(--color-text-on-action, #fff);
-    border-radius: var(--border-radius-medium, 0.5rem);
-    background: var(--color-surface-action-active, #162327);
+    color: variables.$color-text-on-action;
+    border-radius: variables.$border-radius-medium;
+    background: variables.$color-surface-action-active;
   }
   &:disabled {
     background-color: inherit;
-    color: var(--color-text-action, #274247);
+    color: variables.$color-text-action;
   }
 }
 
