@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "start": "npx nx run pxweb2:serve",
+    "start": "npm run build-style-dictionary && nx run pxweb2:serve",
     "build": "npm run build-style-dictionary && nx run pxweb2:build && nx run pxweb2-ui",
     "start-storybook": "npx nx run pxweb2-ui:storybook",
     "build-storybook": "npx nx run pxweb2-ui:build-storybook",
