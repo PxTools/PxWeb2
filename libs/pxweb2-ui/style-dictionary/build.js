@@ -45,7 +45,7 @@ const configs = [
         buildPath: './libs/pxweb2-ui/style-dictionary/dist/scss/',
         files: [
           {
-            destination: 'global.scss',
+            destination: 'fixed-variables.scss',
             format: 'scss/variables',
           },
         ],
@@ -55,7 +55,7 @@ const configs = [
         buildPath: './libs/pxweb2-ui/style-dictionary/dist/js/',
         files: [
           {
-            destination: 'global.js',
+            destination: 'fixed-variables.js',
             format: 'javascript/es6',
           },
         ],
