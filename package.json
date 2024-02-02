@@ -3,11 +3,13 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
+    "prestart": "npm run build-style-dictionary",
     "start": "npx nx run pxweb2:serve",
-    "build": "npm run build-style-dictionary && nx run pxweb2:build && nx run pxweb2-ui",
+    "prebuild": "npm run build-style-dictionary",
+    "build": "npx nx run pxweb2:build && nx run pxweb2-ui",
     "start-storybook": "npx nx run pxweb2-ui:storybook",
     "build-storybook": "npx nx run pxweb2-ui:build-storybook",
-    "build-style-dictionary": "npx nx run pxweb2-ui:build-style-dictionary"
+    "build-style-dictionary": "node libs/pxweb2-ui/style-dictionary/build.js"
   },
   "private": true,
   "dependencies": {
