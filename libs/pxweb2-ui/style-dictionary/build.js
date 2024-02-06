@@ -13,23 +13,19 @@ const configs = [
       './libs/pxweb2-ui/style-dictionary/src/custom_theme.json',
     ],
     platforms: {
-      scss: {
-        transformGroup: 'scss',
-        buildPath: './libs/pxweb2-ui/style-dictionary/dist/scss/',
+      css: {
+        prefix: 'px-',
+        transformGroup: 'css',
+        buildPath: './libs/pxweb2-ui/style-dictionary/dist/css/',
         files: [
           {
-            destination: 'variables.scss',
-            format: 'scss/variables',
+            destination: 'variables.css',
+            format: 'css/variables',
           },
-        ],
-      },
-      js: {
-        transformGroup: 'js',
-        buildPath: './libs/pxweb2-ui/style-dictionary/dist/js/',
-        files: [
           {
-            destination: 'variables.js',
-            format: 'javascript/es6',
+            destination:
+              '../../../../../apps/pxweb2/public/theme/variables.css',
+            format: 'css/variables',
           },
         ],
       },
