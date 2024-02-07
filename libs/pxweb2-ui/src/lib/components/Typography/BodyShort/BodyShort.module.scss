@@ -1,0 +1,26 @@
+@use '../../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixed;
+
+.bodyShort {
+    font-family: PxWeb-font-400;
+    text-align: left;
+    letter-spacing: 0em;
+    font-weight: 400;
+}
+
+.small {
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.medium {
+    font-size: 16px;
+    line-height: 24px;
+}
+
+.spacing-small{
+    margin-bottom: fixed.$spacing-2;
+}
+
+.spacing-medium{
+    margin-bottom: fixed.$spacing-3;
+}
