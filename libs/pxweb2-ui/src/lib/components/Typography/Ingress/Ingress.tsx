@@ -7,9 +7,9 @@ interface IngressProps {
 
 export const Ingress: React.FC<IngressProps> = ({ children }) => {
   return (
-    <div className={styles.ingress}>
+    <p className={styles.ingress}>
       {children}
-    </div>
+    </p>
   );
 };
 
