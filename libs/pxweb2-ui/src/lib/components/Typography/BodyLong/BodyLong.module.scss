@@ -1,0 +1,29 @@
+@use "../../../../../style-dictionary/dist/scss/fixed-variables.scss" as fixvar;
+
+.bodylong{
+align-self: stretch;
+color: var(--px-color-text-default)
+}
+
+.small{
+        font-family: PxWeb-font-400;
+        font-size: 0.875rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 1.5rem; /* 171.429% */
+}
+.medium{
+    font-family: PxWeb-font-400;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.75rem; /* 150% */
+}
+
+.small-spacing{
+    margin-bottom:fixvar.$spacing-6
+}
+.medium-spacing{
+    margin-bottom:fixvar.$spacing-7
+}
+

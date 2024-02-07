@@ -1,30 +1,78 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj,StoryFn } from '@storybook/react';
 import { BodyLong } from './bodyLong';
 
 import { within } from '@storybook/testing-library';
 import { expect } from '@storybook/jest';
-import { Children } from 'react';
+
 
 const meta: Meta<typeof BodyLong> = {
   component: BodyLong,
-  title: 'BodyLong',
+  title: 'Component/Typography/BodyLong',
 };
 export default meta;
 type Story = StoryObj<typeof BodyLong>;
 
-export const Small = {
-  args: {children:"Dette er en liten lang historie",
+export const Variant:Story = {
+  args: {children:"This is a story about Little Red Ridinghood. One day she went into the wood to visit her grandmother. The day after too, She visited her every day, every week, every month, every year. She never saw a wolf, no even a little fox. ",
 size:"small"}
 };
-export const Medium = {
-  args: {children:"Dette er en medium lang historie",
-size:"medium"}
+
+
+
+export const MediumWithSpacing:StoryFn<typeof BodyLong> =()=> {
+  return(
+<>
+    <BodyLong size='medium' spacing >
+    This is a story about Little Red Ridinghood. One day she went into the wood to visit her grandmother. The day after too, She visited her every day, every week, every month, every year. She never saw a wolf, no even a little fox. 
+    </BodyLong>
+  <BodyLong size='medium' spacing>
+  This is a story about Little Red Ridinghood. One day she went into the wood to visit her grandmother. The day after too, She visited her every day, every week, every month, every year. She never saw a wolf, no even a little fox. 
+    </BodyLong>
+    <hr></hr>
+</>
+  )
 };
 
-export const Heading: Story = {
-  args: {},
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    expect(canvas.getByText(/Welcome to BodyLong!/gi)).toBeTruthy();
-  },
+export const MediumWithoutSpacing:StoryFn<typeof BodyLong> =()=> {
+  return(
+<>
+    <BodyLong size='medium'  >
+    This is a story about Little Red Ridinghood. One day she went into the wood to visit her grandmother. The day after too, She visited her every day, every week, every month, every year. She never saw a wolf, no even a little fox. 
+    </BodyLong>
+  <BodyLong size='medium' >
+  This is a story about Little Red Ridinghood. One day she went into the wood to visit her grandmother. The day after too, She visited her every day, every week, every month, every year. She never saw a wolf, no even a little fox. 
+    </BodyLong>
+    <hr></hr>
+</>
+  )
+}
+
+export const SmallWithSpacing:StoryFn<typeof BodyLong> =()=> {
+  return(
+<>
+    <BodyLong size='small' spacing >
+    This is a story about Little Red Ridinghood. One day she went into the wood to visit her grandmother. The day after too, She visited her every day, every week, every month, every year. She never saw a wolf, no even a little fox. 
+    </BodyLong>
+  <BodyLong size='small' spacing>
+  This is a story about Little Red Ridinghood. One day she went into the wood to visit her grandmother. The day after too, She visited her every day, every week, every month, every year. She never saw a wolf, no even a little fox. 
+    </BodyLong>
+    <hr></hr>
+</>
+  )
 };
+
+export const SmallWithoutSpacing:StoryFn<typeof BodyLong> =()=> {
+  return(
+<>
+    <BodyLong size='small'  >
+    This is a story about Little Red Ridinghood. One day she went into the wood to visit her grandmother. The day after too, She visited her every day, every week, every month, every year. She never saw a wolf, no even a little fox. 
+    </BodyLong>
+  <BodyLong size='small' >
+  This is a story about Little Red Ridinghood. One day she went into the wood to visit her grandmother. The day after too, She visited her every day, every week, every month, every year. She never saw a wolf, no even a little fox. 
+    </BodyLong>
+    <hr></hr>
+</>
+  )
+}
+
+
