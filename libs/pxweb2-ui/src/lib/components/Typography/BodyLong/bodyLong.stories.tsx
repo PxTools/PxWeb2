@@ -1,9 +1,6 @@
 import type { Meta, StoryObj,StoryFn } from '@storybook/react';
 import { BodyLong } from './bodyLong';
 
-import { within } from '@storybook/testing-library';
-import { expect } from '@storybook/jest';
-
 
 const meta: Meta<typeof BodyLong> = {
   component: BodyLong,
