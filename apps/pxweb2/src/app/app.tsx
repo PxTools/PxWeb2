@@ -18,7 +18,7 @@ export function App() {
     <>
       <h1>Welcome to pxweb2!</h1>
 
-      <BodyShort size='medium' spacing>hej</BodyShort>
+      <BodyShort size='medium' spacing align="center">This is the BodyShort component</BodyShort>
 
       <Button variant="primary" onClick={test}>Button</Button>
       <Button variant="primary" disabled onClick={test}>Button</Button>

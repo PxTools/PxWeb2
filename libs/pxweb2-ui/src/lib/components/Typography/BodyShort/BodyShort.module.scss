@@ -5,6 +5,8 @@
     text-align: left;
     letter-spacing: 0em;
     font-weight: 400;
+    margin: 0;
+    color: var(--px-color-text-default);
 }
 
 .small {
@@ -24,3 +26,16 @@
 .spacing-medium{
     margin-bottom: fixed.$spacing-3;
 }
+
+.align-left{
+    text-align: left;
+}
+
+.align-center{
+    text-align: center;
+}
+
+.align-right{
+    text-align: right;
+}
+
