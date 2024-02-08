@@ -1,12 +1,11 @@
 import cl from 'clsx';
 import classes from './BodyShort.module.scss';
 
-/* eslint-disable-next-line */
 export interface BodyShortProps extends React.HTMLAttributes<HTMLParagraphElement> {
   size?: 'medium' | 'small';
-  children?: React.ReactNode;
   spacing?: boolean;
   align?: 'left' | 'center' | 'right';
+  children?: React.ReactNode;
 }
 
 export function BodyShort({
