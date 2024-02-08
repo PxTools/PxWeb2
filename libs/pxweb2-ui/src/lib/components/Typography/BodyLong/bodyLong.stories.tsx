@@ -1,5 +1,5 @@
 import type { Meta, StoryObj,StoryFn } from '@storybook/react';
-import { BodyLong } from './bodyLong';
+import { BodyLong } from './BodyLong';
 
 
 const meta: Meta<typeof BodyLong> = {
