@@ -13,6 +13,12 @@ export const Default = {
   args: {
     children: text
   },
+  argTypes: {
+    size: {
+      options: ['medium', 'small'],
+      control: { type: 'radio' }
+    }
+  }
 };
 
 export const Size: StoryFn<typeof BodyShort> = () => {
