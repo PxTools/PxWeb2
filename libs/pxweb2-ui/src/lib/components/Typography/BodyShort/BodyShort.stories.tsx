@@ -89,3 +89,20 @@ export const Weight: StoryFn<typeof BodyShort> = () => {
   );
 };
 
+export const Textcolor: StoryFn<typeof BodyShort> = () => {
+  return (
+    <>
+      <h1>Textcolor</h1>
+
+      <h2>Default:</h2>
+      <BodyShort>{text}</BodyShort>
+
+      <h2>default:</h2>
+      <BodyShort textcolor='default'>{text}</BodyShort>
+
+      <h2>subtle:</h2>
+      <BodyShort textcolor='subtle'>{text}</BodyShort>
+    </>
+  );
+};
+

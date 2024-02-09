@@ -6,6 +6,7 @@ export interface BodyShortProps extends React.HTMLAttributes<HTMLParagraphElemen
   spacing?: boolean;
   align?: 'start' | 'center' | 'end';
   weight?: 'regular' | 'bold';
+  textcolor?: 'default' | 'subtle';
   children?: React.ReactNode;
 }
 
@@ -14,6 +15,7 @@ export function BodyShort({
   spacing = false,
   align = 'start',
   weight = 'regular',
+  textcolor = 'default',
   children,
   ...rest
 }: BodyShortProps) {
@@ -25,7 +27,8 @@ export function BodyShort({
         classes[size],
         cl({[classes[`spacing-${size}`]]: spacing}),
         cl({[classes[`align-${align}`]]: align}),
-        cl({[classes[`weight-${weight}`]]: weight})
+        cl({[classes[`weight-${weight}`]]: weight}),
+        cl({[classes[`textcolor-${textcolor}`]]: textcolor})
         )}
         {...rest}
         >

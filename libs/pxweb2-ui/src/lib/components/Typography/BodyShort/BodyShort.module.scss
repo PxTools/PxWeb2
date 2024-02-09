@@ -4,7 +4,6 @@
     text-align: left;
     letter-spacing: 0em;
     margin: 0;
-    color: var(--px-color-text-default);
 }
 
 .small {
@@ -47,3 +46,10 @@
     font-weight: 700;
 }
 
+.textcolor-default{
+    color: var(--px-color-text-default);
+}
+
+.textcolor-subtle{
+    color: var(--px-color-text-subtle);
+}
