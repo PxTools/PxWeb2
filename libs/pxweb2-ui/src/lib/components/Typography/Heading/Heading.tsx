@@ -19,7 +19,7 @@ export function Heading({
   align = 'start',
   color = 'default',
   children,
-  spacing = true,
+  spacing = false,
   as,
   ...rest
 }: HeadingProps) {
