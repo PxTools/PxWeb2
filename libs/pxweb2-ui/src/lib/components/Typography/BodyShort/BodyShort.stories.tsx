@@ -72,3 +72,20 @@ export const Align: StoryFn<typeof BodyShort> = () => {
   );
 };
 
+export const Weight: StoryFn<typeof BodyShort> = () => {
+  return (
+    <>
+      <h1>Weight</h1>
+
+      <h2>Default:</h2>
+      <BodyShort>{text}</BodyShort>
+
+      <h2>regular:</h2>
+      <BodyShort weight='regular'>{text}</BodyShort>
+
+      <h2>bold:</h2>
+      <BodyShort weight='bold'>{text}</BodyShort>
+    </>
+  );
+};
+
