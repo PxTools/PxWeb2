@@ -12,7 +12,12 @@ export const Variant: Story = {
   args: {
     children:
       'This is a story about Little Red Ridinghood. One day she went into the wood to visit her grandmother. The day after too, She visited her every day, every week, every month, every year. She never saw a wolf, no even a little fox. ',
-    size: 'small',
+  },
+  argTypes: {
+    size: {
+      options: ['medium', 'small'],
+      control: { type: 'radio' },
+    },
   },
 };
 
