@@ -3,6 +3,7 @@
 .heading {
   font-family: PxWeb-font-700;
   color: var(--px-color-text-default);
+  margin: 0;
 }
 
 .xsmall {
@@ -53,4 +54,21 @@
   &.spacing {
     margin-bottom: fixed.$spacing-6;
   }
+}
+
+.align-start {
+  text-align: start;
+}
+.align-center {
+  text-align: center;
+}
+.align-end {
+  text-align: end;
+}
+
+.text-color-default {
+  color: var(--px-color-text-default);
+}
+.text-color-subtle {
+  color: var(--px-color-text-subtle);
 }
