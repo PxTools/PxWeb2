@@ -4,14 +4,14 @@ import classes from './BodyShort.module.scss';
 export interface BodyShortProps extends React.HTMLAttributes<HTMLParagraphElement> {
   size?: 'medium' | 'small';
   spacing?: boolean;
-  align?: 'left' | 'center' | 'right';
+  align?: 'start' | 'center' | 'end';
   children?: React.ReactNode;
 }
 
 export function BodyShort({
   size = 'medium', 
   spacing = false,
-  align = 'left',
+  align = 'start',
   children,
   ...rest
 }: BodyShortProps) {

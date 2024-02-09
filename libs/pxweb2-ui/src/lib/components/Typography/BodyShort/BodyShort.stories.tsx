@@ -60,14 +60,14 @@ export const Align: StoryFn<typeof BodyShort> = () => {
       <h2>Default:</h2>
       <BodyShort>{text}</BodyShort>
 
-      <h2>left:</h2>
-      <BodyShort align='left'>{text}</BodyShort>
+      <h2>start:</h2>
+      <BodyShort align='start'>{text}</BodyShort>
 
       <h2>center:</h2>
       <BodyShort align='center'>{text}</BodyShort>
 
-      <h2>right:</h2>
-      <BodyShort align='right'>{text}</BodyShort>
+      <h2>end:</h2>
+      <BodyShort align='end'>{text}</BodyShort>
     </>
   );
 };
