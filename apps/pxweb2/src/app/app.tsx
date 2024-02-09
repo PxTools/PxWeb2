@@ -2,7 +2,7 @@
 import styles from './app.module.scss';
 
 
-import { Button } from '@pxweb2/pxweb2-ui';
+import { Button, Label } from '@pxweb2/pxweb2-ui';
 
 function test(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
   event.preventDefault();
@@ -16,6 +16,8 @@ export function App() {
   return (
     <>
       <h1>Welcome to pxweb2!</h1>
+
+      <Label size='medium' align='start' textcolor='subtle'>This is a label</Label>
 
       <Button variant="primary" onClick={test}>Button</Button>
       <Button variant="primary" disabled onClick={test}>Button</Button>
