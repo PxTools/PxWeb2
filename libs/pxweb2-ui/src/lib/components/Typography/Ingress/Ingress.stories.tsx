@@ -1,4 +1,4 @@
-import type { Meta, StoryObj, StoryFn } from '@storybook/react';
+import type { Meta, StoryFn } from '@storybook/react';
 import { Ingress } from './Ingress';
 
 const meta: Meta<typeof Ingress> = {
