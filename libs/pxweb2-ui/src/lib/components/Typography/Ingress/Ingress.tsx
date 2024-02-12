@@ -21,6 +21,7 @@ export function Ingress({
 }: IngressProps) { return (
   <p
     className={cl(
+      classes.ingress,
       classes[`align-${align}`],  
       spacing ? classes.spacing : '',      
       cl({[classes[`text-color-${textcolor}`]]: textcolor}),          
