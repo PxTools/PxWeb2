@@ -5,7 +5,7 @@ import React from 'react';
 export interface IngressProps 
   extends React.HTMLAttributes<HTMLParagraphElement> {
   children: React.ReactNode;  
-  spacing?: boolean;
+  spacing?: boolean; 
   align?: 'start' | 'center' | 'end';
   textcolor?: 'default' | 'subtle';  
 }
@@ -19,8 +19,8 @@ export function Ingress({
 }: IngressProps) { return (
   <p
     className={cl(
-      classes[`align-${align}`],      
-      classes[`spacing`],  
+      classes[`align-${align}`],  
+      spacing ? classes.spacing : '',      
       cl({[classes[`text-color-${textcolor}`]]: textcolor}),          
     )}
     {...rest}
