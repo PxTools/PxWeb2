@@ -52,6 +52,23 @@ export const Spacing: StoryFn<typeof Ingress> = () => {
   );
 };
 
+export const Weight: StoryFn<typeof Ingress> = () => {
+  return (
+    <>
+      <h1>Weight</h1>
+
+      <h2>Default:</h2>
+      <Ingress>{text}</Ingress>
+
+      <h2>regular:</h2>
+      <Ingress weight='regular'>{text}</Ingress>
+
+      <h2>bold:</h2>
+      <Ingress weight='bold'>{text}</Ingress>
+    </>
+  );
+};
+
 export const Textcolor: StoryFn<typeof Ingress> = () => {
   return (
     <>

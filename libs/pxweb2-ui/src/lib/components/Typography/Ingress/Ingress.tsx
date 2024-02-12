@@ -8,12 +8,14 @@ export interface IngressProps
   spacing?: boolean; 
   align?: 'start' | 'center' | 'end';
   textcolor?: 'default' | 'subtle';  
+  weight?: 'regular' | 'bold';
 }
 
 export function Ingress({
   spacing = false,
   align = 'start',
   textcolor = 'default',
+  weight = 'regular',
   children,
   ...rest
 }: IngressProps) { return (
@@ -22,6 +24,7 @@ export function Ingress({
       classes[`align-${align}`],  
       spacing ? classes.spacing : '',      
       cl({[classes[`text-color-${textcolor}`]]: textcolor}),          
+      cl({[classes[`weight-${weight}`]]: weight}),
     )}
     {...rest}
   >
