@@ -38,26 +38,6 @@ export const Size: StoryFn<typeof Label> = () => {
   );
 };
 
-export const Align: StoryFn<typeof Label> = () => {
-  return (
-    <>
-      <h1>Align</h1>
-
-      <h2>Default:</h2>
-      <Label>{text}</Label>
-
-      <h2>start:</h2>
-      <Label align='start'>{text}</Label>
-
-      <h2>center:</h2>
-      <Label align='center'>{text}</Label>
-
-      <h2>end:</h2>
-      <Label align='end'>{text}</Label>
-    </>
-  );
-};
-
 export const Textcolor: StoryFn<typeof Label> = () => {
   return (
     <>
@@ -75,16 +55,29 @@ export const Textcolor: StoryFn<typeof Label> = () => {
   );
 };
 
-  export const VisuallyHidden: StoryFn<typeof Label> = () => {
-    return (
-      <>
-        <h1>VisuallyHidden</h1>
-  
-        <h2>Default:</h2>
-        <Label>{text}</Label>
-  
-        <h2>hidden:</h2>
-        <Label visuallyHidden>{text}</Label>
-      </>
-    );
+export const VisuallyHidden: StoryFn<typeof Label> = () => {
+  return (
+    <>
+      <h1>VisuallyHidden</h1>
+
+      <h2>Default:</h2>
+      <Label>{text}</Label>
+
+      <h2>hidden:</h2>
+      <Label visuallyHidden>{text}</Label>
+    </>
+  );
+};
+
+export const LabelFor: StoryFn<typeof Label> = () => {
+  return (
+    <>
+      <h1>Label for</h1>
+
+      <Label htmlFor="fname">First name:</Label><br />
+      <input type="text" id="fname" name="fname" defaultValue="John" /><br />
+      <Label htmlFor="lname">Last name:</Label><br />
+      <input type="text" id="lname" name="lname" defaultValue="Doe" />
+    </>
+  );
 };

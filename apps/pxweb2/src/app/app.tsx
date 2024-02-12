@@ -17,8 +17,6 @@ export function App() {
     <>
       <h1>Welcome to pxweb2!</h1>
 
-      <Label size='medium' align='start' textcolor='subtle'>This is a label</Label>
-
       <Button variant="primary" onClick={test}>Button</Button>
       <Button variant="primary" disabled onClick={test}>Button</Button>
       <Button variant="primary" icon="Pencil" onClick={test}></Button>
@@ -35,9 +33,9 @@ export function App() {
       <Button variant="tertiary" icon="ChevronUp" onClick={test} size="small" ></Button>
 
       <form id="form1" onSubmit={ testSubmit }>
-        <label htmlFor="fname">First name:</label><br />
+        <Label htmlFor="fname">First name:</Label><br />
         <input type="text" id="fname" name="fname" defaultValue="John" /><br />
-        <label htmlFor="lname">Last name:</label><br />
+        <Label htmlFor="lname" textcolor='subtle'>Last name:</Label><br />
         <input type="text" id="lname" name="lname" defaultValue="Doe" />
       </form>
       <Button form="form1" variant="primary" type="submit">Button</Button>
