@@ -74,3 +74,17 @@ export const Textcolor: StoryFn<typeof Label> = () => {
     </>
   );
 };
+
+  export const VisuallyHidden: StoryFn<typeof Label> = () => {
+    return (
+      <>
+        <h1>VisuallyHidden</h1>
+  
+        <h2>Default:</h2>
+        <Label>{text}</Label>
+  
+        <h2>hidden:</h2>
+        <Label visuallyHidden>{text}</Label>
+      </>
+    );
+};
