@@ -20,7 +20,8 @@ export function Ingress({
   <p
     className={cl(
       classes[`align-${align}`],      
-      cl({[classes[`text-color-${textcolor}`]]: textcolor})      
+      classes[`spacing`],  
+      cl({[classes[`text-color-${textcolor}`]]: textcolor}),          
     )}
     {...rest}
   >

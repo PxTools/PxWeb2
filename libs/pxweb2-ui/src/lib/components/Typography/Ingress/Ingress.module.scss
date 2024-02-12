@@ -19,15 +19,12 @@
 .align-end {
   text-align: end;
 }
-
 .text-color-default {
   color: var(--px-color-text-default);
 }
-
 .text-color-subtle {  
   color: var(--px-color-text-subtle);
 }
-
 .font-weight-regular {
   font-family: PxWeb-font-400;
   font-weight: 400;
@@ -35,4 +32,7 @@
 .font-weight-bold {
   font-family: PxWeb-font-700;
   font-weight: 700;
+}
+.spacing {
+  margin-bottom: fixed.$spacing-10;
 }
