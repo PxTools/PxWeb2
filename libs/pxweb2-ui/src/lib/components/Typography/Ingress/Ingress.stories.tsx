@@ -40,11 +40,14 @@ export const Spacing: StoryFn<typeof Ingress> = () => {
     <>
       <h1>Spacing</h1>
       
-      <h2>no spacing:</h2>
-      <Ingress>{text}</Ingress>      
-
+      <h2>Default:</h2>
+      <Ingress>{text}</Ingress>            
+      
       <h2>spacing:</h2>
       <Ingress spacing>{text}</Ingress>     
+
+      <h2>no spacing:</h2>
+      <Ingress>{text}</Ingress>            
     </>
   );
 };
