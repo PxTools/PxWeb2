@@ -3,7 +3,7 @@ import { Label } from './Label';
 
 const meta: Meta<typeof Label> = {
   component: Label,
-  title: 'Label',
+  title: 'Components/Typography/Label',
 };
 export default meta;
 

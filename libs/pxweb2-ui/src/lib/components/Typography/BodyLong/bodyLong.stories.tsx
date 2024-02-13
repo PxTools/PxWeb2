@@ -3,7 +3,7 @@ import { BodyLong } from './BodyLong';
 
 const meta: Meta<typeof BodyLong> = {
   component: BodyLong,
-  title: 'Component/Typography/BodyLong',
+  title: 'Components/Typography/BodyLong',
 };
 export default meta;
 type Story = StoryObj<typeof BodyLong>;

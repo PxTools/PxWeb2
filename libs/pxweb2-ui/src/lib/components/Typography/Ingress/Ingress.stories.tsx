@@ -3,7 +3,7 @@ import { Ingress } from './Ingress';
 
 const meta: Meta<typeof Ingress> = {
   component: Ingress,
-  title: 'Ingress',
+  title: 'Components/Typography/Ingress',
 };
 export default meta;
 
