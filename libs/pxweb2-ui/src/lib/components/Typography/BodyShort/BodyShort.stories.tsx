@@ -49,20 +49,28 @@ export const Spacing: StoryFn<typeof BodyShort> = () => {
     <>
       <h1>Spacing</h1>
 
-      <h2>size medium:</h2>
+      <h2>size medium with spacing:</h2>
+      <BodyShort size="medium" spacing>
+        {text}
+      </BodyShort>
       <BodyShort size="medium" spacing>
         {text}
       </BodyShort>
 
       <h2>size medium no spacing:</h2>
       <BodyShort size="medium">{text}</BodyShort>
+      <BodyShort size="medium">{text}</BodyShort>
 
-      <h2>size small:</h2>
+      <h2>size small with spacing:</h2>
+      <BodyShort size="small" spacing>
+        {text}
+      </BodyShort>
       <BodyShort size="small" spacing>
         {text}
       </BodyShort>
 
       <h2>size small no spacing:</h2>
+      <BodyShort size="small">{text}</BodyShort>
       <BodyShort size="small">{text}</BodyShort>
     </>
   );

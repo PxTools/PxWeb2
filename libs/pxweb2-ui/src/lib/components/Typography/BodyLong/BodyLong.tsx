@@ -6,7 +6,7 @@ export interface BodyLongProps
   size?: 'medium' | 'small';
   spacing?: boolean;
   align?: 'start' | 'center' | 'end';
-  color?: 'default' | 'subtle';
+  textcolor?: 'default' | 'subtle';
   weight?: 'regular' | 'bold';
   children: React.ReactNode;
 }
@@ -15,7 +15,7 @@ export function BodyLong({
   children,
   size = 'medium',
   align = 'start',
-  color = 'default',
+  textcolor = 'default',
   weight = 'regular',
   spacing = false,
   ...rest
@@ -26,7 +26,7 @@ export function BodyLong({
         classes.bodylong,
         classes[size],
         classes[`align-${align}`],
-        classes[`text-color-${color}`],
+        classes[`text-color-${textcolor}`],
         classes[`font-weight-${weight}`],
         cl({ [classes[`${size}-spacing`]]: spacing })
       )}

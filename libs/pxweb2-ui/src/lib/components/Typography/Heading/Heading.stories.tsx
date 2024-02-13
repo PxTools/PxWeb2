@@ -8,7 +8,7 @@ const meta: Meta<typeof Heading> = {
     size: 'medium',
     level: '1',
     align: 'start',
-    color: 'default',
+    textcolor: 'default',
     spacing: false,
   },
   argTypes: {
