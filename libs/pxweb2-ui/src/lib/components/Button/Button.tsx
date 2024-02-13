@@ -1,12 +1,13 @@
 import cl from 'clsx';
 import classes from './Button.module.scss';
-import Icon, { IconType } from '../Icon/Icon';
+import { Icon, IconProps } from '../Icon/Icon';
 
 /* eslint-disable-next-line */
-export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: 'small' | 'medium';
   variant: 'primary' | 'secondary' | 'tertiary';
-  icon?: IconType;
+  icon?: IconProps['iconName'];
   children?: string;
 }
 
@@ -17,17 +18,14 @@ export function Button({
   children,
   ...rest
 }: ButtonProps) {
-   return (
+  return (
     <button
-    className={cl(
-      classes.button,
-      classes[size],
-      classes[variant],
-      {[classes.iconOnly]: !children && icon}
-    )}
-    {...rest}
+      className={cl(classes.button, classes[size], classes[variant], {
+        [classes.iconOnly]: !children && icon,
+      })}
+      {...rest}
     >
-      {icon && <Icon icon={icon}></Icon>}
+      {icon && <Icon iconName={icon}></Icon>}
       {children}
     </button>
   );
