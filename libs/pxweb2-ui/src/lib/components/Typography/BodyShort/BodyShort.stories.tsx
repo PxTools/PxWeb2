@@ -11,7 +11,12 @@ const text = 'The BodyShort component will be used for text with not more than 8
 
 export const Default = {
   args: {
-    children: text
+    children: text,
+    size : 'medium',
+    spacing: false,
+    align: 'start',
+    weight: 'regular',
+    textcolor: 'default'
   },
   argTypes: {
     size: {
