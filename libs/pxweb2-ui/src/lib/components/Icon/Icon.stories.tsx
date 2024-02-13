@@ -4,7 +4,7 @@ import * as Icons from './Icons';
 
 const meta: Meta<typeof Icon> = {
   component: Icon,
-  title: 'Icon',
+  title: 'Components/Icon',
 };
 export default meta;
 

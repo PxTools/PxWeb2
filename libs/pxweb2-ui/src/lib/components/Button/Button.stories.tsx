@@ -3,14 +3,14 @@ import { Button } from './Button';
 
 const meta: Meta<typeof Button> = {
   component: Button,
-  title: 'Button'
+  title: 'Components/Button',
 };
 export default meta;
 type Story = StoryObj<typeof Button>;
 
-function test() { 
+function test() {
   alert('test');
- }
+}
 
 export const ButtonSettings: Story = {
   args: {
@@ -32,9 +32,9 @@ export const Variants: StoryFn<typeof Button> = () => {
       <br />
       Primary with icon only medium
       <br />
-      <Button 
+      <Button
         variant="primary"
-        icon='Pencil'
+        icon="Pencil"
         onClick={test}
         aria-label={'Button with icon'}
       ></Button>
@@ -43,7 +43,7 @@ export const Variants: StoryFn<typeof Button> = () => {
       <br />
       <Button
         variant="primary"
-        icon='Pencil'
+        icon="Pencil"
         onClick={test}
         size={'small'}
         aria-label={'Button with icon'}
@@ -52,8 +52,9 @@ export const Variants: StoryFn<typeof Button> = () => {
       <br />
       <Button
         variant="primary"
-        icon='Pencil'
-        disabled onClick={test}
+        icon="Pencil"
+        disabled
+        onClick={test}
         aria-label={'Button with icon'}
       ></Button>
       <br />
@@ -68,7 +69,7 @@ export const Variants: StoryFn<typeof Button> = () => {
       <br />
       <Button
         variant="secondary"
-        icon='Pencil'
+        icon="Pencil"
         onClick={test}
         aria-label={'Button with icon'}
       ></Button>
@@ -77,7 +78,7 @@ export const Variants: StoryFn<typeof Button> = () => {
       <br />
       <Button
         variant="secondary"
-        icon='Pencil'
+        icon="Pencil"
         onClick={test}
         size={'small'}
         aria-label={'Button with icon'}
@@ -86,7 +87,7 @@ export const Variants: StoryFn<typeof Button> = () => {
       <br />
       <Button
         variant="secondary"
-        icon='Pencil'
+        icon="Pencil"
         disabled
         onClick={test}
         aria-label={'Button with icon'}
@@ -103,7 +104,7 @@ export const Variants: StoryFn<typeof Button> = () => {
       <br />
       <Button
         variant="tertiary"
-        icon='Pencil'
+        icon="Pencil"
         onClick={test}
         aria-label={'Button with icon'}
       ></Button>
@@ -112,7 +113,7 @@ export const Variants: StoryFn<typeof Button> = () => {
       <br />
       <Button
         variant="tertiary"
-        icon='Pencil'
+        icon="Pencil"
         onClick={test}
         size={'small'}
         aria-label={'Button with icon'}
@@ -121,7 +122,7 @@ export const Variants: StoryFn<typeof Button> = () => {
       <br />
       <Button
         variant="tertiary"
-        icon='Pencil'
+        icon="Pencil"
         disabled
         onClick={test}
         aria-label={'Button with icon'}

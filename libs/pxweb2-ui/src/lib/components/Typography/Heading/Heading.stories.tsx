@@ -4,11 +4,22 @@ import { Heading } from './Heading';
 const meta: Meta<typeof Heading> = {
   component: Heading,
   title: 'Components/Typography/Heading',
+  args: {
+    size: 'medium',
+    level: '1',
+    align: 'start',
+    textcolor: 'default',
+    spacing: false,
+  },
   argTypes: {
     as: {
       table: {
         disable: true,
       },
+    },
+    size: {
+      options: ['xlarge', 'large', 'medium', 'small', 'xsmall'],
+      control: { type: 'radio' },
     },
   },
 };
@@ -23,7 +34,7 @@ export const Default: Story = {
   },
   argTypes: {
     size: {
-      options: ['xlarge', 'large', 'medium', 'small', 'xsmall'],
+      // options: ['xlarge', 'large', 'medium', 'small', 'xsmall'],
       control: { type: 'radio' },
     },
     level: {

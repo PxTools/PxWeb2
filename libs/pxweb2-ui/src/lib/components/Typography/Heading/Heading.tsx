@@ -7,7 +7,7 @@ export interface HeadingProps extends React.HTMLAttributes<HTMLHeadingElement> {
   size?: 'xsmall' | 'small' | 'medium' | 'large' | 'xlarge';
   level?: '1' | '2' | '3' | '4' | '5' | '6';
   align?: 'start' | 'center' | 'end';
-  color?: 'default' | 'subtle';
+  textcolor?: 'default' | 'subtle';
   spacing?: boolean;
   children: string;
   as?: React.ElementType;
@@ -17,7 +17,7 @@ export function Heading({
   size = 'medium',
   level = '1',
   align = 'start',
-  color = 'default',
+  textcolor = 'default',
   children,
   spacing = false,
   as,
@@ -31,7 +31,7 @@ export function Heading({
         classes[size],
         { [classes.spacing]: spacing },
         classes[`align-${align}`],
-        classes[`text-color-${color}`]
+        classes[`text-color-${textcolor}`]
       )}
       {...rest}
     >

@@ -6,7 +6,7 @@ import { expect } from '@storybook/jest'; */
 
 const meta: Meta<typeof Link> = {
   component: Link,
-  title: 'Link',
+  title: 'Components/Link',
 };
 export default meta;
 
