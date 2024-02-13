@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react';
 
-import { Icon } from './Icon';
+import Ingress from './Ingress';
 
-describe('Icon', () => {
+describe('Ingress', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<Icon iconName="ChevronDown" />);
+    const { baseElement } = render(<Ingress />);
     expect(baseElement).toBeTruthy();
   });
 });
