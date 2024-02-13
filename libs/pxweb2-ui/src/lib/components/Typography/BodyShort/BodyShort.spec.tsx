@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react';
 
-import { Icon } from './Icon';
+import BodyShort from './BodyShort';
 
-describe('Icon', () => {
+describe('BodyShort', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<Icon iconName="ChevronDown" />);
+    const { baseElement } = render(<BodyShort />);
     expect(baseElement).toBeTruthy();
   });
 });

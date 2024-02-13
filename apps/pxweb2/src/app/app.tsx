@@ -2,7 +2,7 @@
 import styles from './app.module.scss';
 
 
-import { Button, Heading } from '@pxweb2/pxweb2-ui';
+import { Button, Heading, BodyShort} from '@pxweb2/pxweb2-ui';
 
 function test(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
   event.preventDefault();
@@ -15,7 +15,14 @@ function testSubmit() {
 export function App() {
   return (
     <>
+
     <Heading level='1' size="xlarge"> Welcome to pxweb2!</Heading>
+
+      <h1>Welcome to pxweb2!</h1>
+
+      <BodyShort size='medium' spacing align="center" weight='regular'>This is the BodyShort component</BodyShort>
+
+
       <Button variant="primary" onClick={test}>Button</Button>
       <Button variant="primary" disabled onClick={test}>Button</Button>
       <Button variant="primary" icon="Pencil" onClick={test}></Button>
