@@ -1,9 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import styles from './app.module.scss';
 
-
-
-import { Button, Heading, BodyShort, Ingress} from '@pxweb2/pxweb2-ui';
+import { Button, Heading, BodyShort, Ingress, Label } from '@pxweb2/pxweb2-ui';
 
 function test(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
   event.preventDefault();
@@ -41,9 +39,9 @@ export function App() {
       <Button variant="tertiary" icon="ChevronUp" onClick={test} size="small" ></Button>
 
       <form id="form1" onSubmit={ testSubmit }>
-        <label htmlFor="fname">First name:</label><br />
+        <Label htmlFor="fname">First name:</Label><br />
         <input type="text" id="fname" name="fname" defaultValue="John" /><br />
-        <label htmlFor="lname">Last name:</label><br />
+        <Label htmlFor="lname" textcolor='subtle'>Last name:</Label><br />
         <input type="text" id="lname" name="lname" defaultValue="Doe" />
       </form>
       <Button form="form1" variant="primary" type="submit">Button</Button>
