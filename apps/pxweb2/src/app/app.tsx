@@ -2,7 +2,8 @@
 import styles from './app.module.scss';
 
 
-import { Button, Heading, BodyShort} from '@pxweb2/pxweb2-ui';
+
+import { Button, Heading, BodyShort, Ingress} from '@pxweb2/pxweb2-ui';
 
 function test(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
   event.preventDefault();
@@ -20,6 +21,7 @@ export function App() {
 
       <h1>Welcome to pxweb2!</h1>
 
+      <Ingress>This page will display various components</Ingress>
       <BodyShort size='medium' spacing align="center" weight='regular'>This is the BodyShort component</BodyShort>
 
 
