@@ -8,11 +8,13 @@ export interface ButtonProps
   size?: 'small' | 'medium';
   variant: 'primary' | 'secondary' | 'tertiary';
   icon?: IconProps['iconName'];
+  iconPosition?: 'left' | 'right';
   children?: string;
 }
 
 export function Button({
   icon,
+  iconPosition = 'left',
   variant,
   size = 'medium',
   children,
@@ -25,8 +27,13 @@ export function Button({
       })}
       {...rest}
     >
-      {icon && <Icon iconName={icon}></Icon>}
+      {icon && iconPosition === 'left' && (
+        <Icon iconName={icon} className=""></Icon>
+      )}
       {children}
+      {icon && iconPosition === 'right' && (
+        <Icon iconName={icon} className=""></Icon>
+      )}
     </button>
   );
 }
