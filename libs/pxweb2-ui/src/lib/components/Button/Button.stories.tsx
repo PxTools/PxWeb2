@@ -9,7 +9,7 @@ export default meta;
 type Story = StoryObj<typeof Button>;
 
 function test() {
-  alert('test');
+  alert('Button clicked');
 }
 
 export const ButtonSettings: Story = {
