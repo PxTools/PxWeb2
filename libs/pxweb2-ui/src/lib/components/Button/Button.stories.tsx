@@ -130,12 +130,7 @@ export const Variants: StoryFn<typeof Button> = () => {
       <br />
       Primary icon left
       <br />
-      <Button
-        variant="primary"
-        onClick={test}
-        iconPosition="left"
-        icon="Pencil"
-      >
+      <Button variant="primary" onClick={test} iconPosition="left" icon="Clock">
         Button
       </Button>
       <br />
@@ -144,7 +139,7 @@ export const Variants: StoryFn<typeof Button> = () => {
       <Button
         variant="primary"
         onClick={test}
-        icon="Pencil"
+        icon="Clock"
         iconPosition="right"
       >
         Button
