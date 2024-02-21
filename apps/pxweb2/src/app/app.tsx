@@ -8,6 +8,7 @@ import {
   BodyLong,
   Ingress,
   Label,
+  Tag
 } from '@pxweb2/pxweb2-ui';
 
 function test(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
@@ -25,6 +26,9 @@ export function App() {
         Welcome to PxWeb 2.0
       </Heading>
       <br />
+      <Tag size="medium" variant="error">Tag</Tag>&nbsp;
+      <Tag size="small" variant="info">Tag</Tag>&nbsp;
+      <Tag size="xsmall" variant="info">Tag</Tag>
       <Ingress spacing>
         Ingress: This page will display various components
       </Ingress>
