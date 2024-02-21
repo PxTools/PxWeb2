@@ -7,6 +7,7 @@
   font-style: normal;
   font-weight: 500;
   line-height: 1.5rem; /* 150% */
+  border: none;
 
   &:disabled {
     cursor: not-allowed;
@@ -24,16 +25,7 @@
   color: var(--px-color-text-on-action);
   border-radius: var(--px-border-radius-full);
   background: var(--px-color-surface-action);
-
-  // Override browser default styles
-  border: none;
-  border-style: none;
-
-  &:hover {
-    border-radius: var(--px-border-radius-medium);
-  }
   &:active {
-    border-radius: var(--px-border-radius-medium);
     background: var(--px-color-surface-action-active);
   }
   &:disabled {
@@ -47,16 +39,14 @@
 
   color: var(--px-color-text-action);
   border-radius: var(--px-border-radius-full);
-  border: 1.5px solid var(--px-color-border-action);
+  box-shadow: 0 0 0 2px var(--px-color-border-action) inset;
 
   &:hover {
     color: var(--px-color-text-on-action-subtle);
-    border-radius: var(--px-border-radius-medium);
     background: var(--px-color-surface-subtle-hover);
   }
   &:active {
     color: var(--px-color-text-on-action);
-    border-radius: var(--px-border-radius-medium);
     background: var(--px-color-surface-action-active);
   }
   &:disabled {
@@ -68,19 +58,16 @@
 .tertiary {
   // Override browser defaults styles
   background-color: inherit;
-
   color: var(--px-color-text-action);
   border: none;
   border-radius: var(--px-border-radius-full);
 
   &:hover {
     color: var(--px-color-text-on-action-subtle);
-    border-radius: var(--px-border-radius-medium);
     background: var(--px-color-surface-subtle-hover);
   }
   &:active {
     color: var(--px-color-text-on-action);
-    border-radius: var(--px-border-radius-medium);
     background: var(--px-color-surface-action-active);
   }
   &:disabled {
@@ -90,7 +77,7 @@
 }
 
 .small {
-  display: flex;
+  display: inline-flex;
   width: 2rem;
   height: 2rem;
   padding: 0.75rem;
@@ -98,15 +85,27 @@
   align-items: center;
   gap: 0.5rem;
   flex-shrink: 0;
+  &:hover {
+    border-radius: var(--px-border-radius-small);
+  }
+  &:active {
+    border-radius: var(--px-border-radius-small);
+  }
 }
 
 .medium {
   /* Layout */
-  display: flex;
+  display: inline-flex;
   padding: 0.75rem 1.25rem;
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
+  &:hover {
+    border-radius: var(--px-border-radius-medium);
+  }
+  &:active {
+    border-radius: var(--px-border-radius-medium);
+  }
 }
 
 .iconOnly {
