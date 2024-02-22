@@ -39,7 +39,7 @@
 
   color: var(--px-color-text-action);
   border-radius: var(--px-border-radius-full);
-  box-shadow: 0 0 0 2px var(--px-color-border-action) inset;
+  box-shadow: 0 0 0 1.5px var(--px-color-border-action) inset;
 
   &:hover {
     color: var(--px-color-text-on-action-subtle);
@@ -78,9 +78,9 @@
 
 .small {
   display: inline-flex;
-  width: 2rem;
+  // width: 2rem;
   height: 2rem;
-  padding: 0.75rem;
+  padding: 0.375rem 0.75rem;
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
