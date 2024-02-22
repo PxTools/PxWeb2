@@ -22,9 +22,17 @@ export function Button({
 }: ButtonProps) {
   return (
     <button
-      className={cl(classes.button, classes[size], classes[variant], {
-        [classes.iconOnly]: !children && icon,
-      })}
+      className={cl(
+        classes.button,
+        classes[size],
+        classes[variant],
+        {
+          [classes.iconOnlyMedium]: !children && icon && size === 'medium',
+        },
+        {
+          [classes.iconOnlySmall]: !children && icon && size === 'small',
+        }
+      )}
       {...rest}
     >
       {icon && iconPosition === 'left' && (
