@@ -1,0 +1,13 @@
+.search {
+    font-family: 'Roboto', sans-serif;
+    color: var(--px-color-text-action);
+    &:hover {
+      text-decoration: none;
+    }
+  
+    &:focus {
+      color: var(--px-color-text-on-action-subtle);
+      background-color: var(--px-color-surface-subtle-active);
+    }
+  }
+  
