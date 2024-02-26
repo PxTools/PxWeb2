@@ -26,12 +26,6 @@ export function App() {
         Welcome to PxWeb 2.0
       </Heading>
       <br />
-      <Tag size="medium" variant="error" type='border'>Tag</Tag>&nbsp;
-      <Tag size="medium" variant="success">Tag</Tag>&nbsp;
-      <Tag size="small" variant="error">Tag</Tag>&nbsp;
-      <Tag size="small" variant="error" type='border'>Tag</Tag>&nbsp;
-      <Tag size="xsmall" variant="info">Tag</Tag>&nbsp;
-      <Tag size="xsmall" variant="info" type='border'>Tag</Tag>
       <Ingress spacing>
         Ingress: This page will display various components
       </Ingress>
@@ -45,6 +39,8 @@ export function App() {
         her every day, every week, every month, every year. She never saw a
         wolf, no even a little fox.
       </BodyLong>
+      <Tag size="medium" variant="info" type='border'>Mandatory</Tag>&nbsp;
+      <br />  
       <form id="form1" onSubmit={testSubmit}>
         <Label htmlFor="fname" textcolor="subtle">
           First name:
