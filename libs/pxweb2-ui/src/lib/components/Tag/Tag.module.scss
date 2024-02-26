@@ -5,8 +5,6 @@
     font-family: PxWeb-font-500;
     font-weight: 500;
     letter-spacing: 0em;
-    text-align: left;
-    color: var(--px-color-text-default);
 }
 
 .medium {
@@ -32,20 +30,45 @@
 
 .neutral {
     background-color: var(--px-color-surface-moderate);
+    &.border {
+        outline: 1px solid var(--px-color-border-moderate);
+        outline-offset: -1px;
+    }
 }
 
 .info {
     background-color: var(--px-color-surface-info-moderate);
+    &.border {
+        outline: 1px solid var(--px-color-border-info);
+        outline-offset: -1px;
+    }
 }
 
 .success {
     background-color: var(--px-color-surface-success-moderate);
+    &.border {
+        outline: 1px solid var(--px-color-border-success);
+        outline-offset: -1px;
+    }
 }
 
 .warning {
     background-color: var(--px-color-surface-warning-moderate);
+    &.border {
+        outline: 1px solid var(--px-color-border-warning);
+        outline-offset: -1px;
+    }
 }
 
 .error {
     background-color: var(--px-color-surface-error-moderate);
+    &.border {
+        outline: 1px solid var(--px-color-border-error);
+        outline-offset: -1px;
+    }
 }
+
+.default {
+    border: none;
+}
+

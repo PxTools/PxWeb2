@@ -1,6 +1,6 @@
 /**
  * Do not edit directly
- * Generated on Tue, 06 Feb 2024 11:35:57 GMT
+ * Generated on Mon, 26 Feb 2024 09:08:05 GMT
  */
 
 :root {
@@ -40,10 +40,10 @@
   --px-color-border-action: #274247;
   --px-color-border-hover: #62919a;
   --px-color-border-selected: #274247;
-  --px-color-border-info: #37b3f9;
-  --px-color-border-success: #4fc887;
-  --px-color-border-warning: #fcbf27;
-  --px-color-border-error: #fd7e6d;
+  --px-color-border-info: #0179c8;
+  --px-color-border-success: #00824d;
+  --px-color-border-warning: #cb7603;
+  --px-color-border-error: #e23822;
   --px-color-border-focus: #9272fc;
   --px-color-border-focus-on-inverted: #9272fc;
   --px-color-text-default: #162327;
