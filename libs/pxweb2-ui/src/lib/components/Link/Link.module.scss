@@ -1,11 +1,22 @@
 .link {
-  font-family: 'Roboto', sans-serif;
+  font-family: PxWeb-font-400;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.75rem; /* 175% */
+  text-decoration-line: underline;
   color: var(--px-color-text-action);
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+
   &:hover {
     text-decoration: none;
+    background-color: var(--px-color-surface-subtle-hover);
   }
 
   &:focus {
+    text-decoration-line: none;
     color: var(--px-color-text-on-action-subtle);
     background-color: var(--px-color-surface-subtle-active);
   }

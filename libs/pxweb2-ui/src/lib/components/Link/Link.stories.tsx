@@ -1,4 +1,4 @@
-import type { Meta } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 import { Link } from './Link';
 
 /* import { within } from '@storybook/testing-library';
@@ -10,9 +10,13 @@ const meta: Meta<typeof Link> = {
 };
 export default meta;
 
-export const Primary = {
+type Story = StoryObj<typeof Link>;
+
+export const Primary: Story = {
   args: {
     href: '#',
     children: 'En godt skrevet lenketekst',
+    icon: 'FileText',
+    iconPosition: 'left',
   },
 };
