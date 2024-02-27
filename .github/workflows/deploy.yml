@@ -39,7 +39,7 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Build
-        run: npm run build-style-dictionary && nx run pxweb2:build && nx run pxweb2-ui:build-storybook
+        run: npm run build-style-dictionary && npm run build
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Upload artifact
