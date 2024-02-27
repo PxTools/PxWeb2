@@ -111,16 +111,16 @@
       "value": "#274247"
     },
     "border-info": {
-      "value": "#37B3F9"
+      "value": "#0179C8"
     },
     "border-success": {
-      "value": "#4FC887"
+      "value": "#00824D"
     },
     "border-warning": {
-      "value": "#FCBF27"
+      "value": "#CB7603"
     },
     "border-error": {
-      "value": "#FD7E6D"
+      "value": "#E23822"
     },
     "border-focus": {
       "value": "#9272FC"
