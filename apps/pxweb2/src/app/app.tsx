@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import styles from './app.module.scss';
+import { useTranslation } from 'react-i18next';
 
 import {
   Button,
@@ -19,14 +18,29 @@ function testSubmit() {
 }
 
 export function App() {
+  const { t, i18n } = useTranslation();
+  
+  const locales = {
+    en: { title: 'English' },
+    no: { title: 'Norsk' },
+    sv: { title: 'Svenska' },
+  };  
+
   return (
     <>
+      <ul>
+        {Object.keys(locales).map((locale) => (
+          <li key={locale}><button style={{ fontWeight: i18n.resolvedLanguage === locale ? 'bold' : 'normal' }} type="submit" onClick={() => i18n.changeLanguage(locale)}>
+            {locales[locale as keyof typeof locales].title}
+          </button></li>
+        ))}
+      </ul>
       <Heading level="1" size="xlarge">
         Welcome to PxWeb 2.0
       </Heading>
       <br />
       <Ingress spacing>
-        Ingress: This page will display various components
+        {t('main.header')}
       </Ingress>
       <BodyShort size="medium" spacing align="start" weight="regular">
         BodyShort: This component will be used for text with not more than 80
