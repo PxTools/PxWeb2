@@ -17,7 +17,7 @@ i18n
     fallbackLng: 'en',
     // Explicitly tell i18next our
     // supported locales.
-    supportedLngs: ['en', 'no', 'sv'],
+    supportedLngs: ['en', 'no', 'sv', 'ar'],
     debug: true,
     interpolation: {
       escapeValue: false,

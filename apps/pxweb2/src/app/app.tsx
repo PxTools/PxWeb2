@@ -8,6 +8,7 @@ import {
   Ingress,
   Label,
 } from '@pxweb2/pxweb2-ui';
+import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
 
 function test(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
   event.preventDefault();
@@ -24,7 +25,10 @@ export function App() {
     en: { title: 'English' },
     no: { title: 'Norsk' },
     sv: { title: 'Svenska' },
-  };  
+    ar: { title: 'العربية' },
+  };
+
+  useLocalizeDocumentAttributes();
 
   return (
     <>

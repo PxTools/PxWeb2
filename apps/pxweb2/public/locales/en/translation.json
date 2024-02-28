@@ -1,5 +1,6 @@
 {
-    "main": {
-      "header": "Welcome to the app!"
-    }
+  "app_title": "Welcome to PxWeb",
+  "main": {
+    "header": "Welcome to the app!"
+  }
 }
