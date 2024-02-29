@@ -2,5 +2,8 @@
   "app_title": "Welcome to PxWeb",
   "main": {
     "header": "Welcome to the app!"
+  },
+  "date": {
+    "simple_date": "{{value, datetime}}"
   }
 }
