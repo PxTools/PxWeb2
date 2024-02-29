@@ -108,6 +108,11 @@ export function App() {
           value: new Date('2024-01-25'),
         })}
       </p>
+      <p>
+        {t('date.simple_date_with_time', {
+          value: new Date('2024-01-25 12:34:56'),
+        })}
+      </p>
     </>
   );
 }

@@ -4,6 +4,7 @@
     "header": "Velkommen til appen!"
   },
   "date": {
-    "simple_date": "{{value, datetime}}"
+    "simple_date": "{{value, datetime}}",
+    "simple_date_with_time": "{{value, datetime(year: 'numeric'; month: 'numeric'; day: 'numeric'; hour: 'numeric'; minute: 'numeric')}}"
   }
 }
