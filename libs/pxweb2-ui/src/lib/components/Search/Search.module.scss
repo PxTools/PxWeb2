@@ -1,13 +1,95 @@
 .search {
     font-family: 'Roboto', sans-serif;
+    // color: var(--px-color-text-action);
+    // &:hover {
+    //   text-decoration: none;
+    // }
+      // &:focus {
+    //   color: var(--px-color-text-on-action-subtle);
+    //   background-color: var(--px-color-surface-subtle-active);
+    // }
+    display: flex;
+    width: 280px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-1, 4px);
+    
+  }
+
+
+  .default {
+    // Override browser defaults styles
+    //background-color: inherit;
+  
     color: var(--px-color-text-action);
+    border-radius: var(--px-border-radius-small);
+    box-shadow: 0 0 0 1.5px var(--px-color-border-action) inset;
+    //border-style:  ;
+  
+
     &:hover {
-      text-decoration: none;
+      color: var(--px-color-text-on-action-subtle);
+      background: var(--px-color-surface-subtle-hover);
+    }
+    &:active {
+      color: var(--px-color-text-on-action);
+      background: var(--px-color-surface-action-active);
+    }    
+  }
+  
+  .inVariableBox {
+    // Override browser defaults styles
+    background-color: var(--px-color-surface-subtle);
+    color: var(--px-color-text-action);
+    //color/surface/subtle
+    border: none;
+    border-radius: var(--px-border-radius-small);
+  
+    &:hover {
+      color: var(--px-color-text-on-action-subtle);
+      background: var(--px-color-surface-subtle-hover);
+    }
+    &:active {
+      color: var(--px-color-text-on-action);
+      background: var(--px-color-surface-action-active);
+    }    
+  }
+
+
+  .input {
+    
+    border: none;
+    background-color: inherit;
+    width: max-content;
+    box-shadow: none;
+    align-items: center;
+
+    // display: flex;
+     height: 30px;
+     min-height: 30px;
+     flex-direction: column;
+     justify-content: center;
+     flex: 1 0 0;
+// text-align: left;
+// text-align: center;
+      //display: block;
+      //margin : 0 auto;
+
+
+    //  &:active {
+    //   border: none;
+    //   box-shadow: none;
+    //   outline: none;
+    // }
+
+    &:focus-visible
+    {
+      border: none;
+      box-shadow: none;
+      outline: none;
+
+
     }
   
-    &:focus {
-      color: var(--px-color-text-on-action-subtle);
-      background-color: var(--px-color-surface-subtle-active);
-    }
   }
   
