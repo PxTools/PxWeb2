@@ -10,7 +10,7 @@ const meta: Meta<typeof Search> = {
 export default meta;
 
 const placeholder = 'Text';
-const lableText = 'This is a lable';
+const labelText = 'This is a label';
 
 
 type Story = StoryObj<typeof Search>;
@@ -18,11 +18,9 @@ type Story = StoryObj<typeof Search>;
 export const Default: Story = {
   args: {
     variant: 'default',
-    lable: false,    
+    label: false,    
   },
 };
-
-
 
 export const Variants: StoryFn<typeof Search> = () => {
     return (
@@ -31,7 +29,7 @@ export const Variants: StoryFn<typeof Search> = () => {
         <br />
         <Search
           variant="default"
-          placeholder={placeholder}          
+          searchPlaceHolder={placeholder}          
         >
         </Search>
         <br />
@@ -39,27 +37,27 @@ export const Variants: StoryFn<typeof Search> = () => {
         <br />
         <Search
           variant="inVariableBox"
-          placeholder={placeholder}          
+          searchPlaceHolder={placeholder}          
         >
         </Search>
         <br />
-        Default with lable 
+        Default with label 
         <br />
         <Search
           variant="default"
-          placeholder={placeholder}            
-          lableText= {lableText}
-          lable={true}         
+          searchPlaceHolder={placeholder}          
+          labelText= {labelText}
+          label={true}         
         >
         </Search>
         <br />        
-        Default without lable 
+        Default without label 
         <br />
         <Search
           variant="default"
-          placeholder={placeholder}            
-          lableText={lableText}
-          lable={false}         
+          searchPlaceHolder={placeholder}          
+          labelText={labelText}
+          label={false}         
         >
         </Search>
         <br />        
