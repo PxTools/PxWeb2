@@ -9,7 +9,8 @@
     "build": "nx run pxweb2:build && nx run pxweb2-ui:build-storybook",
     "start-storybook": "npx nx run pxweb2-ui:storybook",
     "build-storybook": "npx nx run pxweb2-ui:build-storybook",
-    "build-style-dictionary": "node libs/pxweb2-ui/style-dictionary/build.js"
+    "build-style-dictionary": "node libs/pxweb2-ui/style-dictionary/build.js",
+    "build-i18n-interface": "npx i18next-resources-for-ts interface -i ./apps/pxweb2/public/locales/en -o ./apps/pxweb2/src/@types/resources.d.ts"
   },
   "private": true,
   "dependencies": {
@@ -62,6 +63,7 @@
     "eslint-plugin-jsx-a11y": "6.7.1",
     "eslint-plugin-react": "7.32.2",
     "eslint-plugin-react-hooks": "4.6.0",
+    "i18next-resources-for-ts": "^1.5.0",
     "jsdom": "~22.1.0",
     "nx": "18.0.5",
     "prettier": "^2.8.8",
