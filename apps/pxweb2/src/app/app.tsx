@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next';
+import { useTranslation, Trans } from 'react-i18next';
 
 import {
   Button,
@@ -112,6 +112,11 @@ export function App() {
         {t('date.simple_date_with_time', {
           value: new Date('2024-01-25 12:34:56'),
         })}
+      </p>
+      <p>
+        <Trans i18nKey="main.welcome_trans_test">
+          "Welcome to the <b>app</b> for PxWeb 2.0!"
+        </Trans>
       </p>
     </>
   );

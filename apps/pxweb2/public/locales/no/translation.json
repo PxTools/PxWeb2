@@ -1,6 +1,7 @@
 {
   "app_title": "Velkommen til PxWeb",
   "main": {
-    "header": "Velkommen til appen!"
+    "header": "Velkommen til appen!",
+    "welcome_trans_test": "Velkommen til <1>appen</1> for PxWeb 2.0!"
   }
 }
