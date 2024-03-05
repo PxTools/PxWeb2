@@ -6,7 +6,7 @@
     "prestart": "npm run build-style-dictionary",
     "start": "npx nx run pxweb2:serve",
     "prebuild": "npm run build-style-dictionary",
-    "build": "npx nx run pxweb2:build && nx run pxweb2-ui",
+    "build": "nx run pxweb2:build && nx run pxweb2-ui:build-storybook",
     "start-storybook": "npx nx run pxweb2-ui:storybook",
     "build-storybook": "npx nx run pxweb2-ui:build-storybook",
     "build-style-dictionary": "node libs/pxweb2-ui/style-dictionary/build.js"
@@ -15,8 +15,11 @@
   "dependencies": {
     "@swc/helpers": "^0.5.6",
     "clsx": "^2.1.0",
+    "i18next": "^23.10.0",
+    "i18next-http-backend": "^2.5.0",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-i18next": "^14.0.5"
   },
   "devDependencies": {
     "@babel/core": "^7.23.9",
