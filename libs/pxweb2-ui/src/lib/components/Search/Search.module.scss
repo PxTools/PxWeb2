@@ -1,113 +1,96 @@
-.search {
-    font-family: 'Roboto', sans-serif;
-    // color: var(--px-color-text-action);
-    // &:hover {
-    //   text-decoration: none;
-    // }
-      // &:focus {
-    //   color: var(--px-color-text-on-action-subtle);
-    //   background-color: var(--px-color-surface-subtle-active);
-    // }
-    display: flex;
-    // width: 280px;
-    // flex-direction: column;
-    // align-items: flex-start;
-    // gap: var(--spacing-1, 4px);
+.wrapper{
+  display: flex;
+  height: var(--spacing-12, 3rem);
+  padding: var(--spacing-2, 0.5rem);
+  align-items: center;
+  gap: var(--spacing-2, 0.5rem);
+  align-self: stretch;  
+}
 
-
-    display: flex;
-    height: var(--spacing-12, 48px);
-    
-    padding: var(--spacing-2, 8px);
-    
-    align-items: center;
-    gap: var(--spacing-2, 8px);
-    
-    align-self: stretch;
-
-    
-  }
-
-
-  .search.icon
-  {
-    padding: 0.75rem;
-  }
-
-
-  .default {
-    // Override browser defaults styles
-    //background-color: inherit;
-  
-    color: var(--px-color-text-action);
-    border-radius: var(--px-border-radius-small);
-    box-shadow: 0 0 0 1.5px var(--px-color-border-action) inset;
-    //border-style:  ;
-  
-
-    &:hover {
-      color: var(--px-color-text-on-action-subtle);
-      background: var(--px-color-surface-subtle-hover);
-    }
-    &:active {
-      color: var(--px-color-text-on-action);
-      background: var(--px-color-surface-action-active);
-    }    
-  }
-  
-  .inVariableBox {
-    // Override browser defaults styles
-    background-color: var(--px-color-surface-subtle);
-    color: var(--px-color-text-action);
-    //color/surface/subtle
+.clearButton {
+    background-color: transparent;
     border: none;
-    border-radius: var(--px-border-radius-small);
-  
+    width: var(--spacing-6, 1.5rem);
+    height: var(--spacing-6, 1.5rem);
+    flex-shrink: 0;
+}
+
+.searchIcon {
+    width: var(--spacing-6, 24px);
+    height: var(--spacing-6, 24px);
+    flex-shrink: 0;   
+  }
+
+.default {
+    border-radius: var(--px-border-radius-small, 0.25rem);
+    border: 1.5px solid var(--px-color-border-default, #162327);
+    background: var(--px-color-surface-default, #FFF);
+    
     &:hover {
-      color: var(--px-color-text-on-action-subtle);
-      background: var(--px-color-surface-subtle-hover);
+      border-radius: var(--px-border-radius-small, 0.25rem);
+      border: 2px solid var(--px-color-border-hover, #62919A);
+      background: var(--px-color-surface-default, #FFF);
     }
     &:active {
-      color: var(--px-color-text-on-action);
-      background: var(--px-color-surface-action-active);
+      border-radius: var(--px-border-radius-small, 0.25rem);
+      border: 2px solid var(--px-color-border-action, #274247);
+      background: var(--px-color-surface-default, #FFF);
+    }    
+  }
+  
+.inVariableBox {
+    border-radius: var(--px-border-radius-medium, 0.5rem);
+    background: var(--px-color-surface-subtle, #F0F8F9);
+ 
+    &:hover {
+      border-radius: var(--px-border-radius-medium, 0.5rem);
+      border: 1.5px solid var(--px-color-border-action, #274247);
+      background: var(--px-color-surface-default, #FFF);
+    }
+    &:active {
+      border-radius: var(--px-border-radius-medium, 0.5rem);
+      border: 1.5px solid var(--px-color-border-selected, #274247);
+      background: var(--px-color-surface-default, #FFF);
     }    
   }
 
+.input {
+    font-family: PxWeb-font-400;
+    font-weight: 400;
 
-  .input {
+    display: flex;
+    height: 1.875rem;
+    min-height: 1.875rem;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1 0 0;
+
+    overflow: hidden;
+    color: var(--color-text-subtle, #2D6975);
+    text-overflow: ellipsis;
+    white-space: nowrap;
     
     border: none;
     background-color: inherit;
-    width: max-content;
     box-shadow: none;
-    align-items: center;
 
-    // display: flex;
-     height: 30px;
-     min-height: 30px;
-     flex-direction: column;
-     justify-content: center;
-     flex: 1 0 0;
-// text-align: left;
-// text-align: center;
-      //display: block;
-      //margin : 0 auto;
-
-
-    //  &:active {
-    //   border: none;
-    //   box-shadow: none;
-    //   outline: none;
-    // }
-
-    &:focus-visible
-    {
+    &:hover {
       border: none;
       box-shadow: none;
       outline: none;
-
-
     }
-  
+
+     &:active {
+      border: none;
+      box-shadow: none;
+      outline: none;
+    }
+
+    &:focus-visible
+    { 
+      border: none;
+      box-shadow: none;
+      outline: none;
+    }
   }
   
