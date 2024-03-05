@@ -7,7 +7,7 @@ import {
   BodyLong,
   Ingress,
   Label,
-  Tag
+  Tag,
 } from '@pxweb2/pxweb2-ui';
 import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
 
@@ -64,9 +64,15 @@ export function App() {
         her every day, every week, every month, every year. She never saw a
         wolf, no even a little fox.
       </BodyLong>
-      <Tag size="medium" variant="info">Mandatory</Tag>&nbsp;
-      <Tag size="medium" variant="info" type='border'>Mandatory</Tag>&nbsp;
-      <br />  
+      <Tag size="medium" variant="info">
+        Mandatory
+      </Tag>
+      &nbsp;
+      <Tag size="medium" variant="info" type="border">
+        Mandatory
+      </Tag>
+      &nbsp;
+      <br />
       <form id="form1" onSubmit={testSubmit}>
         <Label htmlFor="fname" textcolor="subtle">
           First name:
@@ -121,6 +127,84 @@ export function App() {
         <Trans i18nKey="main.welcome_trans_test">
           "Welcome to the <b>app</b> for PxWeb 2.0!"
         </Trans>
+      </p>
+      <p>
+        Simple number:{' '}
+        {t('number.simple_number', {
+          value: 2000.044444444,
+        })}
+      </p>
+      <p>
+        Simple number with 0 decimals:{' '}
+        {t('number.simple_number_with_zero_decimal', {
+          value: 2000.044444444,
+        })}
+      </p>
+      <p>
+        Simple number with 1 decimal:{' '}
+        {t('number.simple_number_with_one_decimal', {
+          value: 2000.044444444,
+        })}
+      </p>
+      <p>
+        Simple number with 2 decimals:{' '}
+        {t('number.simple_number_with_two_decimals', {
+          value: 2000.044444444,
+        })}
+      </p>
+      <p>
+        Simple number with 3 decimals:{' '}
+        {t('number.simple_number_with_three_decimals', {
+          value: 2000.044444444,
+        })}
+      </p>
+      <p>
+        Simple number with 4 decimals:{' '}
+        {t('number.simple_number_with_four_decimals', {
+          value: 2000.044444444,
+        })}
+      </p>
+      <p>
+        Simple number with 5 decimals:{' '}
+        {t('number.simple_number_with_five_decimals', {
+          value: 2000.044447444,
+        })}
+      </p>
+      <p>
+        Round test:{' '}
+        {t('number.simple_number_with_one_decimal', {
+          value: 2.23,
+        })}
+      </p>
+      <p>
+        {' '}
+        {t('number.simple_number_with_one_decimal', {
+          value: 2.25,
+        })}
+      </p>
+      <p>
+        {' '}
+        {t('number.simple_number_with_one_decimal', {
+          value: 2.28,
+        })}
+      </p>
+      <p>
+        {' '}
+        {t('number.simple_number_with_one_decimal', {
+          value: -2.23,
+        })}
+      </p>
+      <p>
+        {' '}
+        {t('number.simple_number_with_one_decimal', {
+          value: -2.25,
+        })}
+      </p>
+      <p>
+        {' '}
+        {t('number.simple_number_with_one_decimal', {
+          value: -2.28,
+        })}
       </p>
     </>
   );
