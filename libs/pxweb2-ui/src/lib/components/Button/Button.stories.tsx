@@ -9,7 +9,7 @@ export default meta;
 type Story = StoryObj<typeof Button>;
 
 function test() {
-  alert('test');
+  alert('Button clicked');
 }
 
 export const ButtonSettings: Story = {
@@ -127,6 +127,24 @@ export const Variants: StoryFn<typeof Button> = () => {
         onClick={test}
         aria-label={'Button with icon'}
       ></Button>
+      <br />
+      Primary icon left
+      <br />
+      <Button variant="primary" onClick={test} iconPosition="left" icon="Clock">
+        Button
+      </Button>
+      <br />
+      Primary icon right
+      <br />
+      <Button
+        variant="primary"
+        onClick={test}
+        icon="Clock"
+        iconPosition="right"
+      >
+        Button
+      </Button>
+      <br />
     </>
   );
 };
