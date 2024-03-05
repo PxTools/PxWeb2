@@ -7,6 +7,7 @@ import {
   BodyLong,
   Ingress,
   Label,
+  Tag
 } from '@pxweb2/pxweb2-ui';
 import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
 
@@ -63,6 +64,9 @@ export function App() {
         her every day, every week, every month, every year. She never saw a
         wolf, no even a little fox.
       </BodyLong>
+      <Tag size="medium" variant="info">Mandatory</Tag>&nbsp;
+      <Tag size="medium" variant="info" type='border'>Mandatory</Tag>&nbsp;
+      <br />  
       <form id="form1" onSubmit={testSubmit}>
         <Label htmlFor="fname" textcolor="subtle">
           First name:
