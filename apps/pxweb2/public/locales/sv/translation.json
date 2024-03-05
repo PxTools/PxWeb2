@@ -2,9 +2,5 @@
   "app_title": "Välkommen till PxWeb",
   "main": {
     "header": "Välkommen till appen!"
-  },
-  "date": {
-    "simple_date": "{{value, datetime}}",
-    "simple_date_with_time": "{{value, datetime(year: 'numeric'; month: 'numeric'; day: 'numeric'; hour: 'numeric'; minute: 'numeric')}}"
   }
 }
