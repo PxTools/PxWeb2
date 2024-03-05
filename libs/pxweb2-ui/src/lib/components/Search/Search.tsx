@@ -7,25 +7,28 @@ import React from 'react';
 export interface SearchProps 
 extends React.InputHTMLAttributes <HTMLInputElement> {
   variant: 'default' | 'inVariableBox' ;
-  lable?: boolean; 
-  lableText?: string;
+  label?: boolean; 
+  labelText?: string;
+  searchPlaceHolder?: string;
   icon?: IconProps['iconName'];  
 }
 
 
 export function Search({
   icon = "MagnifyingGlass",
-  lable = false,
+  label = false,
   variant,
-  lableText,
+  labelText,
+  searchPlaceHolder,
   ...rest
 }: SearchProps) { return (
   <div>
-    {lable && <Label>{lableText}</Label>}
+    {label && <Label>{labelText}</Label>}
     <div className={cl(classes.wrapper, classes.border, classes[variant])}>
       <Icon iconName={icon}></Icon>
-      <input
+      <input type='text'
         className={cl(classes.input, classes[variant])}
+        placeholder={searchPlaceHolder}
         {...rest}
       ></input>
     </div>
