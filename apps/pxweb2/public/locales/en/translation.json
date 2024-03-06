@@ -10,6 +10,7 @@
   },
   "number": {
     "simple_number": "{{value, number}}",
+    "simple_number_with_custom_decimals": "{{value, number(minimumFractionDigits: 2; maximumFractionDigits: 2; roundingMode: 'halfExpand')}}",
     "simple_number_with_zero_decimal": "{{value, number(minimumFractionDigits: 0; maximumFractionDigits: 0; roundingMode: 'halfExpand')}}",
     "simple_number_with_one_decimal": "{{value, number(minimumFractionDigits: 1; maximumFractionDigits: 1; roundingMode: 'halfExpand')}}",
     "simple_number_with_two_decimals": "{{value, number(minimumFractionDigits: 2; maximumFractionDigits: 2; roundingMode: 'halfExpand')}}",

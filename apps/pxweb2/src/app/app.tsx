@@ -29,6 +29,10 @@ export function App() {
     ar: { title: 'العربية' },
   };
 
+  const customRoundingMode = 'halfExpand';
+  const customMinDecimals = 2;
+  const customMaxDecimals = 4;
+
   useLocalizeDocumentAttributes();
 
   return (
@@ -132,6 +136,15 @@ export function App() {
         Simple number:{' '}
         {t('number.simple_number', {
           value: 2000.044444444,
+        })}
+      </p>
+      <p>
+        Simple number with custom decimals:{' '}
+        {t('number.simple_number', {
+          value: 2000.00007,
+          minimumFractionDigits: customMinDecimals,
+          maximumFractionDigits: customMaxDecimals,
+          roundingMode: customRoundingMode
         })}
       </p>
       <p>
