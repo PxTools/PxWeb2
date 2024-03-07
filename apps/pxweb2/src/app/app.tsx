@@ -50,10 +50,10 @@ export function App() {
         ))}
       </ul>
       <Heading level="1" size="xlarge">
-        Welcome to PxWeb 2.0
+        {t('common.title')}
       </Heading>
       <br />
-      <Ingress spacing>{t('main.header')}</Ingress>
+      <Ingress spacing>{t('start_page.header')}</Ingress>
       <BodyShort size="medium" spacing align="start" weight="regular">
         BodyShort: This component will be used for text with not more than 80
         characters.
@@ -118,10 +118,14 @@ export function App() {
         })}
       </p>
       <p>
-        <Trans i18nKey="main.welcome_trans_test">
+        <Trans i18nKey="start_page.welcome_trans_test">
           "Welcome to the <b>app</b> for PxWeb 2.0!"
         </Trans>
       </p>
+      <BodyShort size="medium" spacing align="start" weight="regular">
+        Example of getting a translation from a nested translation key:&nbsp;
+        {t('presentation_page.sidemenu.edit.customize.pivot.title')}
+      </BodyShort>
     </>
   );
 }
