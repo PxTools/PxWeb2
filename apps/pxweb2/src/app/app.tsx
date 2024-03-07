@@ -10,6 +10,7 @@ import {
   Tag,
 } from '@pxweb2/pxweb2-ui';
 import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
+import { NumberFormatter } from '../i18n/formatters';
 
 function test(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
   event.preventDefault();
@@ -132,10 +133,11 @@ export function App() {
           "Welcome to the <b>app</b> for PxWeb 2.0!"
         </Trans>
       </p>
+      <p>Test custom number formatter: {NumberFormatter(2000.6666666, 2)}</p>
       <p>
         Simple number:{' '}
         {t('number.simple_number', {
-          value: 2000.044444444,
+          value: 2000.066666666,
         })}
       </p>
       <p>
@@ -144,7 +146,7 @@ export function App() {
           value: 2000.00007,
           minimumFractionDigits: customMinDecimals,
           maximumFractionDigits: customMaxDecimals,
-          roundingMode: customRoundingMode
+          roundingMode: customRoundingMode,
         })}
       </p>
       <p>
