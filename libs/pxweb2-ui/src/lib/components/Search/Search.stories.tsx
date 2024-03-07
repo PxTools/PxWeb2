@@ -61,7 +61,26 @@ export const Variants: StoryFn<typeof Search> = () => {
         >
         </Search>
         <br />        
-
+        Default with label 
+        <br />
+        <Search
+          variant="inVariableBox"
+          searchPlaceHolder={placeholder}          
+          labelText= {labelText}
+          label={true}         
+        >
+        </Search>
+        <br />        
+        Default without label 
+        <br />
+        <Search
+          variant="inVariableBox"
+          searchPlaceHolder={placeholder}          
+          labelText={labelText}
+          label={false}         
+        >
+        </Search>
+        <br />
         </>
   );
 
