@@ -29,3 +29,12 @@
   align-items: center;
   justify-content: center;
 }
+
+.checked {
+  background-color: var(--px-color-surface-action);
+  color: white;
+}
+
+.strong {
+  font-weight: 600;
+}
