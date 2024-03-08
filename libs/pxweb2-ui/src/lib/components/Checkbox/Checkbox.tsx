@@ -47,11 +47,11 @@ export const Checkbox: React.FC<CheckboxProps> = ({
       >
         {value && <Icon iconName="CheckMark"></Icon>}
       </span>
-      <span id={id + '-label'}>
+      <div className={styles.label} id={id + '-label'}>
         <Label>
           <span className={cl({ [styles.strong]: strong })}>{text}</span>
         </Label>
-      </span>
+      </div>
     </div>
   );
 };
@@ -111,11 +111,11 @@ export const MixedCheckbox: React.FC<MixedCheckboxProps> = ({
         {value === 'true' && <Icon iconName="CheckMark"></Icon>}
         {value === 'mixed' && <Icon iconName="IndeterminateCheckMark"></Icon>}
       </span>
-      <span id={id + '-label'}>
+      <div className={styles.label} id={id + '-label'}>
         <Label>
           <span className={cl({ [styles.strong]: strong })}>{text}</span>
         </Label>
-      </span>
+      </div>
     </div>
   );
 };

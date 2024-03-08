@@ -11,7 +11,7 @@ const meta: Meta<typeof Checkbox> = {
 };
 export default meta;
 
-export const Variants: StoryFn<typeof Checkbox> = () => {
+export const MixedStateCheckbox: StoryFn<typeof Checkbox> = () => {
   const [selectedMalamute, setSelectedMalamute] = React.useState(true);
   const [selectedHusky, setSelectedHusky] = React.useState(true);
   const [selectedYorkshireTerrier, setSelectedYorkshireTerrier] =
@@ -34,7 +34,7 @@ export const Variants: StoryFn<typeof Checkbox> = () => {
     <>
       <MixedCheckbox
         id="test"
-        text="All dog breeds"
+        text="Select all"
         onChange={(val) => {
           if (selectedHusky && selectedMalamute && selectedYorkshireTerrier) {
             setSelectedHusky(false);
@@ -81,5 +81,41 @@ export const Variants: StoryFn<typeof Checkbox> = () => {
         value={selectedYorkshireTerrier}
       />
     </>
+  );
+};
+
+export const LongTextOn400pxWideMax: StoryFn<typeof Checkbox> = () => {
+  const [selectedVar1, setSelectedVar1] = React.useState(true);
+  const [selectedVar2, setSelectedVar2] = React.useState(true);
+  const [selectedVar3, setSelectedVar3] = React.useState(false);
+
+  return (
+    <div style={{ width: '400px' }}>
+      <Checkbox
+        id="var1"
+        text="The text on this checkbox spans multiple lines. That's why it is written so long. Here's an additional sentence."
+        onChange={(val) => {
+          setSelectedVar2(val);
+        }}
+        value={selectedVar2}
+      />
+
+      <Checkbox
+        id="var2"
+        text="Short text"
+        onChange={(val) => {
+          setSelectedVar1(val);
+        }}
+        value={selectedVar1}
+      />
+      <Checkbox
+        id="var3"
+        text="The text on this checkbox spans multiple lines. That's why it is written so long. Here's an additional sentence."
+        onChange={(val) => {
+          setSelectedVar3(val);
+        }}
+        value={selectedVar3}
+      />
+    </div>
   );
 };
