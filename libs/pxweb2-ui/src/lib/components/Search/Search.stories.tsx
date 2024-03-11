@@ -17,8 +17,7 @@ type Story = StoryObj<typeof Search>;
 
 export const Default: Story = {
   args: {
-    variant: 'default',
-    label: false,    
+    variant: 'default'    
   },
 };
 
@@ -46,8 +45,7 @@ export const Variants: StoryFn<typeof Search> = () => {
         <Search
           variant="default"
           searchPlaceHolder={placeholder}          
-          labelText= {labelText}
-          label={true}         
+          labelText= {labelText}          
         >
         </Search>
         <br />        
@@ -56,8 +54,6 @@ export const Variants: StoryFn<typeof Search> = () => {
         <Search
           variant="default"
           searchPlaceHolder={placeholder}          
-          labelText={labelText}
-          label={false}         
         >
         </Search>
         <br />        
@@ -66,8 +62,7 @@ export const Variants: StoryFn<typeof Search> = () => {
         <Search
           variant="inVariableBox"
           searchPlaceHolder={placeholder}          
-          labelText= {labelText}
-          label={true}         
+          labelText= {labelText}          
         >
         </Search>
         <br />        
@@ -76,16 +71,12 @@ export const Variants: StoryFn<typeof Search> = () => {
         <Search
           variant="inVariableBox"
           searchPlaceHolder={placeholder}          
-          labelText={labelText}
-          label={false}         
         >
         </Search>
         <br />
         </>
   );
-
-
-  
+ 
 };    
 
 
