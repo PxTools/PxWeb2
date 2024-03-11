@@ -7,9 +7,10 @@ import {
   BodyLong,
   Ingress,
   Label,
-  Tag
+  Tag,
 } from '@pxweb2/pxweb2-ui';
 import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
+import { NumberFormatter } from '../i18n/formatters';
 
 function test(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
   event.preventDefault();
@@ -28,6 +29,10 @@ export function App() {
     sv: { title: 'Svenska' },
     ar: { title: 'العربية' },
   };
+
+  const customRoundingMode = 'halfExpand';
+  const customMinDecimals = 2;
+  const customMaxDecimals = 4;
 
   useLocalizeDocumentAttributes();
 
@@ -50,10 +55,10 @@ export function App() {
         ))}
       </ul>
       <Heading level="1" size="xlarge">
-        Welcome to PxWeb 2.0
+        {t('common.title')}
       </Heading>
       <br />
-      <Ingress spacing>{t('main.header')}</Ingress>
+      <Ingress spacing>{t('start_page.header')}</Ingress>
       <BodyShort size="medium" spacing align="start" weight="regular">
         BodyShort: This component will be used for text with not more than 80
         characters.
@@ -64,9 +69,15 @@ export function App() {
         her every day, every week, every month, every year. She never saw a
         wolf, no even a little fox.
       </BodyLong>
-      <Tag size="medium" variant="info">Mandatory</Tag>&nbsp;
-      <Tag size="medium" variant="info" type='border'>Mandatory</Tag>&nbsp;
-      <br />  
+      <Tag size="medium" variant="info">
+        Mandatory
+      </Tag>
+      &nbsp;
+      <Tag size="medium" variant="info" type="border">
+        Mandatory
+      </Tag>
+      &nbsp;
+      <br />
       <form id="form1" onSubmit={testSubmit}>
         <Label htmlFor="fname" textcolor="subtle">
           First name:
@@ -118,9 +129,101 @@ export function App() {
         })}
       </p>
       <p>
-        <Trans i18nKey="main.welcome_trans_test">
+        <Trans i18nKey="start_page.welcome_trans_test">
           "Welcome to the <b>app</b> for PxWeb 2.0!"
         </Trans>
+      </p>
+      <BodyShort size="medium" spacing align="start" weight="regular">
+        Example of getting a translation from a nested translation key:&nbsp;
+        {t('presentation_page.sidemenu.edit.customize.pivot.title')}
+      </BodyShort>
+      <p>Test custom number formatter: {NumberFormatter(2000.6666666, 2)}</p>
+      <p>
+        Simple number:{' '}
+        {t('number.simple_number', {
+          value: 2000.066666666,
+        })}
+      </p>
+      <p>
+        Simple number with custom decimals:{' '}
+        {t('number.simple_number', {
+          value: 2000.00007,
+          minimumFractionDigits: customMinDecimals,
+          maximumFractionDigits: customMaxDecimals,
+          roundingMode: customRoundingMode,
+        })}
+      </p>
+      <p>
+        Simple number with 0 decimals:{' '}
+        {t('number.simple_number_with_zero_decimal', {
+          value: 2000.044444444,
+        })}
+      </p>
+      <p>
+        Simple number with 1 decimal:{' '}
+        {t('number.simple_number_with_one_decimal', {
+          value: 2000.044444444,
+        })}
+      </p>
+      <p>
+        Simple number with 2 decimals:{' '}
+        {t('number.simple_number_with_two_decimals', {
+          value: 2000.044444444,
+        })}
+      </p>
+      <p>
+        Simple number with 3 decimals:{' '}
+        {t('number.simple_number_with_three_decimals', {
+          value: 2000.044444444,
+        })}
+      </p>
+      <p>
+        Simple number with 4 decimals:{' '}
+        {t('number.simple_number_with_four_decimals', {
+          value: 2000.044444444,
+        })}
+      </p>
+      <p>
+        Simple number with 5 decimals:{' '}
+        {t('number.simple_number_with_five_decimals', {
+          value: 2000.044447444,
+        })}
+      </p>
+      <p>
+        Round test:{' '}
+        {t('number.simple_number_with_one_decimal', {
+          value: 2.23,
+        })}
+      </p>
+      <p>
+        {' '}
+        {t('number.simple_number_with_one_decimal', {
+          value: 2.25,
+        })}
+      </p>
+      <p>
+        {' '}
+        {t('number.simple_number_with_one_decimal', {
+          value: 2.28,
+        })}
+      </p>
+      <p>
+        {' '}
+        {t('number.simple_number_with_one_decimal', {
+          value: -2.23,
+        })}
+      </p>
+      <p>
+        {' '}
+        {t('number.simple_number_with_one_decimal', {
+          value: -2.25,
+        })}
+      </p>
+      <p>
+        {' '}
+        {t('number.simple_number_with_one_decimal', {
+          value: -2.28,
+        })}
       </p>
     </>
   );

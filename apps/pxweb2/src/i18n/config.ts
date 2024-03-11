@@ -2,6 +2,8 @@ import i18n from 'i18next';
 import HttpApi from 'i18next-http-backend';
 import { initReactI18next } from 'react-i18next';
 
+import { pxNumber } from './formatters';
+
 export const defaultNS = 'translation';
 
 i18n
@@ -10,7 +12,7 @@ i18n
   .init({
     backend: {
       requestOptions: {
-        // Do not cache the response from the server. This is needed because site administrators 
+        // Do not cache the response from the server. This is needed because site administrators
         // may want to change the translations without having to wait for the cache to expire.
         cache: 'no-store',
       },
@@ -26,5 +28,7 @@ i18n
       escapeValue: false,
     },
   });
+
+i18n.services.formatter?.add('pxNumber', pxNumber);
 
 export default i18n;
