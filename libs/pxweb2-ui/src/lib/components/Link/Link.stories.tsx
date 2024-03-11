@@ -26,21 +26,13 @@ export const inlineAndStandalone: StoryFn<typeof BodyLong> = () => {
       <h2>medium without icon:</h2>      
       <BodyLong>Gå til <Link href="#" inline >Statistikkbanken</Link> dersom du vil se flere tabeller </BodyLong>
 
-      <h2>small without icon right:</h2>
-      <BodyLong size='small'>Gå til <Link href="#" inline>Statistikkbanken</Link> dersom du vil se flere tabeller </BodyLong>
 
       <h2>medium icon left:</h2>      
       <BodyLong>Gå til <Link href="#" inline icon="FileText" iconPosition="left">Statistikkbanken</Link> dersom du vil se flere tabeller </BodyLong>
 
-      <h2>small icon left:</h2>
-      <BodyLong size='small'>Gå til <Link href="#" inline icon="FileText" iconPosition="left">Statistikkbanken</Link> dersom du vil se flere tabeller </BodyLong>
-
 
       <h2>medium icon right:</h2>      
       <BodyLong>Gå til <Link href="#" inline icon="FileText" iconPosition="right">Statistikkbanken</Link> dersom du vil se flere tabeller </BodyLong>
-
-      <h2>small icon right:</h2>
-      <BodyLong size='small'>Gå til <Link href="#"  inline icon="FileText" iconPosition="right">Statistikkbanken</Link> dersom du vil se flere tabeller </BodyLong>
 
       
       <h1>Standalone link in BodyLong</h1>
