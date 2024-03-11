@@ -66,7 +66,7 @@ To get started with contributing code, please follow these steps:
     - Documentation updates if necessary.
     - Passed all the continuous integration checks (like build, linting and tests).
 
-> Your PR will have automatic deploys to Netlify that can be used by the reviewers    
+> Your PR will have automatic deploys to Cloudflare Pages that can be used by the reviewers    
 
 8. Assign reviewers to your PR and once approved by at least one reviewer you can continue and merge the PR.
 
