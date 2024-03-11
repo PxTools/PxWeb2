@@ -25,11 +25,11 @@ export function Link({
       [classes.no_underline]: noUnderline,[classes.inline]: inline
     })}   >
       {icon && iconPosition === 'left' && (
-        <Icon iconName={icon} className={cl({[classes.link_inline_svg]:inline})}></Icon>
+        <Icon iconName={icon} className=""></Icon>
       )}
       {children}
       {icon && iconPosition === 'right' && (
-        <Icon iconName={icon} className={cl({[classes.link_inline_svg]:inline})}></Icon>
+        <Icon iconName={icon} className=""></Icon>
       )}
     </a>
   );

@@ -8,6 +8,9 @@
   gap: fixvar.$spacing-1;
   min-width: 24px;
   min-height: 24px;
+  >svg{
+    align-self: center;
+  }
 
   &:hover {
     text-decoration: none;
@@ -31,10 +34,12 @@
  }
  .inline {
   display: inline;
+  >svg{
+    margin: 0 0 -0.3em;
+    display: inline;
+  }
  }
- .link_inline_svg{
-  margin: 0 0 -0.3em;
-  display: inline;
-  vertical-align: baseline;
- }
+
+
+
 
