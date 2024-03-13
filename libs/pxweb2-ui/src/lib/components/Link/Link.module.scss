@@ -1,45 +1,42 @@
 @use '../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixvar;
 
 .link {
-  text-decoration-line:underline;
+  text-decoration-line: underline;
   color: var(--px-color-text-action);
   display: inline-flex;
   align-items: flex-start;
-  gap: fixvar.$spacing-1;
-  min-width: 24px;
-  min-height: 24px;
-  >svg{
-    align-self: center;
-  }
+  gap: 2px;
+  padding: 22px;
+  align-items: center;
 
   &:hover {
     text-decoration: none;
     background-color: var(--px-color-surface-subtle-hover);
   }
 
-  &:focus   {
+  &:focus {
     text-decoration-line: none;
     color: var(--px-color-text-on-action-subtle);
     background-color: var(--px-color-surface-subtle-active);
   }
 
-  &:active   {
+  &:focus-visible {
+    text-decoration-line: none;
+    color: var(--px-color-text-on-action-subtle);
+    background-color: var(--px-color-surface-subtle-active);
+  }
+
+  &:active {
     text-decoration-line: none;
     color: var(--px-color-text-on-action-subtle);
     background-color: var(--px-color-surface-subtle-active);
   }
 }
- .no_underline {
+.no_underline {
   text-decoration-line: none;
- }
- .inline {
-  display: inline;
-  >svg{
-    margin: 0 0 -0.3em;
-    display: inline;
-  }
- }
-
-
-
-
+}
+.inline {
+  display: inline-flex;
+  gap: 0px;
+  padding: 0px;
+}

@@ -8,22 +8,26 @@ interface LinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   iconPosition?: 'left' | 'right';
   children: React.ReactNode;
   href: string;
-  inline?:boolean;
-  noUnderline?:boolean
+  inline?: boolean;
+  noUnderline?: boolean;
 }
 export function Link({
   children,
   href,
   icon,
   iconPosition,
-  inline=false,
-  noUnderline=false,
+  inline = false,
+  noUnderline = false,
   ...rest
 }: LinkProps) {
   return (
-    <a href={href} className={cl(classes.link, {
-      [classes.no_underline]: noUnderline,[classes.inline]: inline
-    })}   >
+    <a
+      href={href}
+      className={cl(classes.link, {
+        [classes.no_underline]: noUnderline,
+        [classes.inline]: inline,
+      })}
+    >
       {icon && iconPosition === 'left' && (
         <Icon iconName={icon} className=""></Icon>
       )}
@@ -34,13 +38,4 @@ export function Link({
     </a>
   );
 }
-
-// export const Link: React.FC<LinkProps> = ({ children, href }) => {
-//   return (
-//     <a href={href} className={styles.link}>
-//       {children}
-//     </a>
-//   );
-// };
-
 export default Link;
