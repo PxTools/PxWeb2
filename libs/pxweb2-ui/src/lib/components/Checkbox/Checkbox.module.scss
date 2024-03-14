@@ -31,16 +31,22 @@
   justify-content: center;
 }
 
+.checkmarkWithoutMargin {
+  margin-left: 0px;
+}
+
 .checked {
   background-color: var(--px-color-surface-action);
   color: white;
 }
 
-.strong {
-  font-weight: 600;
-}
-
 .label {
   margin-top: 12px;
   margin-bottom: 8px;
+  font-family: PxWeb-font-400;
+  letter-spacing: 0em;
+}
+.strong {
+  font-family: PxWeb-font-700;
+  margin-top: 13px;
 }

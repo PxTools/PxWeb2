@@ -119,3 +119,41 @@ export const LongTextOn400pxWideMax: StoryFn<typeof Checkbox> = () => {
     </div>
   );
 };
+export const NoMargin: StoryFn<typeof Checkbox> = () => {
+  const [selectedVar1, setSelectedVar1] = React.useState(true);
+  const [selectedVar2, setSelectedVar2] = React.useState(true);
+  const [selectedVar3, setSelectedVar3] = React.useState(false);
+
+  return (
+    <div style={{ width: '400px' }}>
+      <Checkbox
+        id="var1"
+        text="No margin"
+        onChange={(val) => {
+          setSelectedVar2(val);
+        }}
+        value={selectedVar2}
+        noMargin={true}
+      />
+
+      <Checkbox
+        id="var2"
+        text="No margin"
+        onChange={(val) => {
+          setSelectedVar1(val);
+        }}
+        value={selectedVar1}
+        noMargin={true}
+      />
+      <Checkbox
+        id="var3"
+        text="Margin"
+        onChange={(val) => {
+          setSelectedVar3(val);
+        }}
+        value={selectedVar3}
+        noMargin={false}
+      />
+    </div>
+  );
+};

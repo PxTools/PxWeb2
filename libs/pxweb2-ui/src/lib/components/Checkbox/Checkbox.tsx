@@ -11,6 +11,7 @@ interface CheckboxProps {
   onChange: (str: boolean) => void;
   tabIndex?: number;
   strong?: boolean;
+  noMargin?: boolean;
 }
 
 export const Checkbox: React.FC<CheckboxProps> = ({
@@ -20,6 +21,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   onChange,
   tabIndex,
   strong,
+  noMargin,
 }) => {
   return (
     <div
@@ -43,6 +45,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
       <span
         className={cl(styles.checkmark, {
           [styles.checked]: value,
+          [styles.checkmarkWithoutMargin]: noMargin,
         })}
       >
         {value && <Icon iconName="CheckMark"></Icon>}
@@ -63,6 +66,7 @@ interface MixedCheckboxProps {
   ariaControls: string[];
   tabIndex?: number;
   strong?: boolean;
+  noMargin?: boolean;
 }
 export const MixedCheckbox: React.FC<MixedCheckboxProps> = ({
   id,
@@ -72,6 +76,7 @@ export const MixedCheckbox: React.FC<MixedCheckboxProps> = ({
   ariaControls,
   tabIndex,
   strong,
+  noMargin,
 }) => {
   return (
     <div
@@ -106,15 +111,17 @@ export const MixedCheckbox: React.FC<MixedCheckboxProps> = ({
       <span
         className={cl(styles.checkmark, {
           [styles.checked]: value === 'mixed' || value === 'true',
+          [styles.checkmarkWithoutMargin]: noMargin,
         })}
       >
         {value === 'true' && <Icon iconName="CheckMark"></Icon>}
         {value === 'mixed' && <Icon iconName="IndeterminateCheckMark"></Icon>}
       </span>
-      <div className={styles.label} id={id + '-label'}>
-        <Label>
-          <span className={cl({ [styles.strong]: strong })}>{text}</span>
-        </Label>
+      <div
+        className={cl(styles.label, { [styles.strong]: strong })}
+        id={id + '-label'}
+      >
+        {text}
       </div>
     </div>
   );
