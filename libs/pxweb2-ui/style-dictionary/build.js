@@ -34,6 +34,7 @@ const configs = [
   {
     source: [
       './libs/pxweb2-ui/style-dictionary/src/global-tokens/spacing.json',
+      './libs/pxweb2-ui/style-dictionary/src/global-tokens/breakpoints.json',
     ],
     platforms: {
       scss: {

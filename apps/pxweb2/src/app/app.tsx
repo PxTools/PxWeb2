@@ -1,5 +1,7 @@
 import { useTranslation, Trans } from 'react-i18next';
+import cl from 'clsx';
 
+import classes from './app.module.scss';
 import {
   Button,
   Heading,
@@ -225,6 +227,7 @@ export function App() {
           value: -2.28,
         })}
       </p>
+      <div className={cl(classes.breakpoints)}>Breakpoint test</div>
     </>
   );
 }
