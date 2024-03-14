@@ -51,9 +51,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
         {value && <Icon iconName="CheckMark"></Icon>}
       </span>
       <div className={styles.label} id={id + '-label'}>
-        <Label>
-          <span className={cl({ [styles.strong]: strong })}>{text}</span>
-        </Label>
+        <span className={cl({ [styles.strong]: strong })}>{text}</span>
       </div>
     </div>
   );
