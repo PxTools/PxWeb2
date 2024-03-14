@@ -1,5 +1,4 @@
-@use '../../../../libs/pxweb2-ui/style-dictionary/dist/scss/fixed-variables.scss'
-  as fixed;
+@use '$ui/style-dictionary/dist/scss/fixed-variables.scss' as fixed;
 
 .breakpoints {
   height: 50px;
