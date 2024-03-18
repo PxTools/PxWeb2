@@ -1,4 +1,4 @@
 export enum CodeListType {
-    AGGREGATION = 'Aggregation',
-    VALUESET = 'Valueset',
+  AGGREGATION = 'Aggregation',
+  VALUESET = 'Valueset',
 }
