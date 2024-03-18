@@ -13,6 +13,8 @@ import {
 } from '@pxweb2/pxweb2-ui';
 import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
 import { NumberFormatter } from '../i18n/formatters';
+import { TableService, TableMetadataResponse } from '@pxweb2/pxweb2-api-client';
+import { useEffect, useState } from 'react';
 
 function test(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
   event.preventDefault();
@@ -24,6 +26,8 @@ function testSubmit() {
 
 export function App() {
   const { t, i18n } = useTranslation();
+
+  const [px, setPx] = useState<TableMetadataResponse | null>(null); // Update the type of px state variable
 
   const locales = {
     en: { title: 'English' },
@@ -37,6 +41,14 @@ export function App() {
   const customMaxDecimals = 4;
 
   useLocalizeDocumentAttributes();
+
+  useEffect(() => {
+    TableService.getMetadataById('tab005', i18n.resolvedLanguage).then((px) =>
+      setPx(px)
+    );
+  }, [i18n.resolvedLanguage]);
+
+  if (!px) return <div>Loading...</div>;
 
   return (
     <>
@@ -54,6 +66,11 @@ export function App() {
               {locales[locale as keyof typeof locales].title}
             </button>
           </li>
+        ))}
+      </ul>
+      <ul>
+        {px.variables.map((variable) => (
+          <li key={variable.id}>{variable.label}</li>
         ))}
       </ul>
       <Heading level="1" size="xlarge">
@@ -139,7 +156,8 @@ export function App() {
         Example of getting a translation from a nested translation key:&nbsp;
         {t('presentation_page.sidemenu.edit.customize.pivot.title')}
       </BodyShort>
-      <p>Test custom number formatter: {NumberFormatter(2000.6666666, 2)}</p>
+      {/*       <p>Test custom number formatter: {NumberFormatter(2000.6666666, 2)}</p>
+       */}{' '}
       <p>
         Simple number:{' '}
         {t('number.simple_number', {
