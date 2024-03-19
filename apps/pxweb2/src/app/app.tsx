@@ -13,6 +13,8 @@ import {
 } from '@pxweb2/pxweb2-ui';
 import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
 import { NumberFormatter } from '../i18n/formatters';
+import { TableService, TableMetadataResponse } from '@pxweb2/pxweb2-api-client';
+import { useState } from 'react';
 
 function test(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
   event.preventDefault();
@@ -24,6 +26,10 @@ function testSubmit() {
 
 export function App() {
   const { t, i18n } = useTranslation();
+
+  const [tableid, setTableid] = useState('tab005');
+  const [errorMsg, setErrorMsg] = useState('');
+  const [px, setPx] = useState<TableMetadataResponse | null>(null); // Update the type of px state variable
 
   const locales = {
     en: { title: 'English' },
@@ -37,6 +43,28 @@ export function App() {
   const customMaxDecimals = 4;
 
   useLocalizeDocumentAttributes();
+
+  const getTable = (id: string) => {
+    TableService.getMetadataById(id, i18n.resolvedLanguage)
+    .then((px) =>
+    {
+      setPx(px); setErrorMsg('')
+    }
+    )
+    .catch((error) => 
+    {
+      setErrorMsg('Could not get table: ' + id); setPx(null)
+    }
+    );
+  };
+
+  // useEffect(() => {
+  //   TableService.getMetadataById(tableid, i18n.resolvedLanguage).then((px) =>
+  //     setPx(px)
+  //   );
+  // }, [i18n.resolvedLanguage, tableid]);
+
+  //if (!px) return <div>Loading...</div>;
 
   return (
     <>
@@ -71,6 +99,37 @@ export function App() {
         her every day, every week, every month, every year. She never saw a
         wolf, no even a little fox.
       </BodyLong>
+      <Label htmlFor="tabid" textcolor="subtle">
+        Enter table id:
+      </Label>
+      <br />
+      <input
+        type="text"
+        id="tabid"
+        name="tabid"
+        defaultValue="tab005"
+        onChange={(e) => setTableid(e.target.value)}
+      />&nbsp;
+      { errorMsg.length > 0 && <Tag size="small" variant="error" type='border'>{errorMsg}</Tag>
+      } 
+      <br />
+      <br />
+      <Button variant="secondary" onClick={() => getTable(tableid)}>
+        Get table
+      </Button>
+      <br />
+      {px && (
+        <div>
+          <br></br>
+          <Label>{px.label}</Label>
+          <ul>
+            {px.variables.map((variable) => (
+              <li key={variable.id}>{variable.label}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+      <br />
       <Tag size="medium" variant="info">
         Mandatory
       </Tag>
@@ -98,25 +157,6 @@ export function App() {
         Submit
       </Button>
       <br />
-      <br />
-      <form id="form2" onSubmit={testSubmit}>
-        <Label htmlFor="address" textcolor="subtle">
-          Address:
-        </Label>
-        <br />
-        <input
-          type="text"
-          id="address"
-          name="address"
-          defaultValue="Baker Street no 45"
-        />
-      </form>
-      <br />
-      <Button form="form2" variant="secondary" type="submit">
-        Submit
-      </Button>
-      <br />
-      <br />
       <Button variant="secondary" icon="FloppyDisk" onClick={test}></Button>
       &nbsp;
       <Button variant="secondary" icon="Heart" onClick={test}></Button>
@@ -139,7 +179,8 @@ export function App() {
         Example of getting a translation from a nested translation key:&nbsp;
         {t('presentation_page.sidemenu.edit.customize.pivot.title')}
       </BodyShort>
-      <p>Test custom number formatter: {NumberFormatter(2000.6666666, 2)}</p>
+      {/*       <p>Test custom number formatter: {NumberFormatter(2000.6666666, 2)}</p>
+       */}{' '}
       <p>
         Simple number:{' '}
         {t('number.simple_number', {
