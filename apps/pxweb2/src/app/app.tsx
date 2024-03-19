@@ -14,7 +14,7 @@ import {
 import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
 import { NumberFormatter } from '../i18n/formatters';
 import { TableService, TableMetadataResponse } from '@pxweb2/pxweb2-api-client';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 function test(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
   event.preventDefault();
@@ -27,6 +27,7 @@ function testSubmit() {
 export function App() {
   const { t, i18n } = useTranslation();
 
+  const [tableid, setTableid] = useState('tab005');
   const [px, setPx] = useState<TableMetadataResponse | null>(null); // Update the type of px state variable
 
   const locales = {
@@ -42,13 +43,19 @@ export function App() {
 
   useLocalizeDocumentAttributes();
 
-  useEffect(() => {
-    TableService.getMetadataById('tab005', i18n.resolvedLanguage).then((px) =>
+  const getTable = (id: string) => {
+    TableService.getMetadataById(id, i18n.resolvedLanguage).then((px) =>
       setPx(px)
     );
-  }, [i18n.resolvedLanguage]);
+  };
 
-  if (!px) return <div>Loading...</div>;
+  // useEffect(() => {
+  //   TableService.getMetadataById(tableid, i18n.resolvedLanguage).then((px) =>
+  //     setPx(px)
+  //   );
+  // }, [i18n.resolvedLanguage, tableid]);
+
+  //if (!px) return <div>Loading...</div>;
 
   return (
     <>
@@ -68,11 +75,6 @@ export function App() {
           </li>
         ))}
       </ul>
-      <ul>
-        {px.variables.map((variable) => (
-          <li key={variable.id}>{variable.label}</li>
-        ))}
-      </ul>
       <Heading level="1" size="xlarge">
         {t('common.title')}
       </Heading>
@@ -88,6 +90,35 @@ export function App() {
         her every day, every week, every month, every year. She never saw a
         wolf, no even a little fox.
       </BodyLong>
+      <Label htmlFor="tabid" textcolor="subtle">
+        Enter table id:
+      </Label>
+      <br />
+      <input
+        type="text"
+        id="tabid"
+        name="tabid"
+        defaultValue="tab005"
+        onChange={(e) => setTableid(e.target.value)}
+      />
+      <br />
+      <br />
+      <Button variant="secondary" onClick={() => getTable(tableid)}>
+        Get table
+      </Button>
+      <br />
+      {px && (
+        <div>
+          <br></br>
+          <Label>{px.label}</Label>
+          <ul>
+            {px.variables.map((variable) => (
+              <li key={variable.id}>{variable.label}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+      <br />
       <Tag size="medium" variant="info">
         Mandatory
       </Tag>
@@ -114,25 +145,6 @@ export function App() {
       <Button form="form1" variant="primary" type="submit">
         Submit
       </Button>
-      <br />
-      <br />
-      <form id="form2" onSubmit={testSubmit}>
-        <Label htmlFor="address" textcolor="subtle">
-          Address:
-        </Label>
-        <br />
-        <input
-          type="text"
-          id="address"
-          name="address"
-          defaultValue="Baker Street no 45"
-        />
-      </form>
-      <br />
-      <Button form="form2" variant="secondary" type="submit">
-        Submit
-      </Button>
-      <br />
       <br />
       <Button variant="secondary" icon="FloppyDisk" onClick={test}></Button>
       &nbsp;
