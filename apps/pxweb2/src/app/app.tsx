@@ -28,6 +28,7 @@ export function App() {
   const { t, i18n } = useTranslation();
 
   const [tableid, setTableid] = useState('tab005');
+  const [errorMsg, setErrorMsg] = useState('');
   const [px, setPx] = useState<TableMetadataResponse | null>(null); // Update the type of px state variable
 
   const locales = {
@@ -44,8 +45,16 @@ export function App() {
   useLocalizeDocumentAttributes();
 
   const getTable = (id: string) => {
-    TableService.getMetadataById(id, i18n.resolvedLanguage).then((px) =>
-      setPx(px)
+    TableService.getMetadataById(id, i18n.resolvedLanguage)
+    .then((px) =>
+    {
+      setPx(px); setErrorMsg('')
+    }
+    )
+    .catch((error) => 
+    {
+      setErrorMsg('Could not get table: ' + id); setPx(null)
+    }
     );
   };
 
@@ -100,7 +109,9 @@ export function App() {
         name="tabid"
         defaultValue="tab005"
         onChange={(e) => setTableid(e.target.value)}
-      />
+      />&nbsp;
+      { errorMsg.length > 0 && <Tag size="small" variant="error" type='border'>{errorMsg}</Tag>
+      } 
       <br />
       <br />
       <Button variant="secondary" onClick={() => getTable(tableid)}>
