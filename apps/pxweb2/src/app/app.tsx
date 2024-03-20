@@ -10,10 +10,12 @@ import {
   Ingress,
   Label,
   Tag,
-} from '@pxweb2/pxweb2-ui';
+  PxTable,
+  } from '@pxweb2/pxweb2-ui';
 import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
-import { NumberFormatter } from '../i18n/formatters';
-import { TableService, TableMetadataResponse } from '@pxweb2/pxweb2-api-client';
+//import { NumberFormatter } from '../i18n/formatters';
+import { TableService } from '@pxweb2/pxweb2-api-client';
+import { mapTableMetadataResponse } from '../mappers/TableMetadataResponseMapper'; // Fix the casing of the import statement
 import { useState } from 'react';
 
 function test(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
@@ -29,7 +31,7 @@ export function App() {
 
   const [tableid, setTableid] = useState('tab005');
   const [errorMsg, setErrorMsg] = useState('');
-  const [px, setPx] = useState<TableMetadataResponse | null>(null); // Update the type of px state variable
+  const [pxTable, setPx] = useState<PxTable | null>(null); // Update the type of px state variable
 
   const locales = {
     en: { title: 'English' },
@@ -46,9 +48,10 @@ export function App() {
 
   const getTable = (id: string) => {
     TableService.getMetadataById(id, i18n.resolvedLanguage)
-    .then((px) =>
+    .then((tableMetadataResponse) =>
     {
-      setPx(px); setErrorMsg('')
+      const pxTab: PxTable = mapTableMetadataResponse(tableMetadataResponse);
+      setPx(pxTab); setErrorMsg('')
     }
     )
     .catch((error) => 
@@ -108,7 +111,7 @@ export function App() {
         id="tabid"
         name="tabid"
         defaultValue="tab005"
-        onChange={(e) => setTableid(e.target.value)}
+        onChange={(e) => setTableid(e.target.value.trim())}
       />&nbsp;
       { errorMsg.length > 0 && <Tag size="small" variant="error" type='border'>{errorMsg}</Tag>
       } 
@@ -118,13 +121,35 @@ export function App() {
         Get table
       </Button>
       <br />
-      {px && (
+      {pxTable && (
         <div>
           <br></br>
-          <Label>{px.label}</Label>
+          <Label>{pxTable.label}</Label>
           <ul>
-            {px.variables.map((variable) => (
-              <li key={variable.id}>{variable.label}</li>
+            {pxTable.variables.map((variable) => (
+              <li key={variable.id}><h3>{variable.label}</h3>
+                <ul><h4>Values:</h4>
+                  {variable.values.map((value) => (
+                    <li key={value.code}>{value.label}
+                      <ul>
+                        {value.notes?.map((note) => (
+                          <li key={note.text}>{note.text}</li>
+                        ))}
+                      </ul>
+                    </li>
+                  ))} 
+                </ul>
+                <ol><h4>CodeLists:</h4>
+                  {variable.codeLists?.map((codelist) => (
+                    <li key={codelist.id}>{codelist.label}</li>
+                  ))}
+                </ol>
+                <ul><h4>Notes:</h4>
+                  {variable.notes?.map((note) => (
+                    <li key={note.text}>{note.text}</li>
+                  ))}
+                </ul>
+              </li>
             ))}
           </ul>
         </div>
