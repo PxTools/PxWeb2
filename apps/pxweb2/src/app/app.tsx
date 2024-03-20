@@ -128,6 +128,7 @@ export function App() {
           <ul>
             {pxTable.variables.map((variable) => (
               <li key={variable.id}><h3>{variable.label}</h3>
+                {variable.mandatory && <Tag size="xsmall" variant="info" type='border'>Mandatory</Tag>}
                 <ul><h4>Values:</h4>
                   {variable.values.map((value) => (
                     <li key={value.code}>{value.label}

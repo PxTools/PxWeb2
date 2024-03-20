@@ -6,12 +6,12 @@ export function mapTableMetadataResponse(response: TableMetadataResponse): PxTab
     const pxTable: PxTable = {
         id: response.id,
         label: response.label,
-        variables: response.variables.map((variable) => {
+        variables: response.variables.map((variable ) => {
             return {
                 id: variable.id,
                 label: variable.label,
                 type: VariableTypeEnum.REGULAR_VARIABLE, //TODO: map to enum
-                mandatory: false, // TODO:
+                mandatory: (variable as AbstractCodeListVariable).elimination != null ? !(variable as AbstractCodeListVariable).elimination : true, 
                 values: (variable as AbstractCodeListVariable).values.map((value) => {
                     return {
                         label: value.label,
@@ -19,7 +19,7 @@ export function mapTableMetadataResponse(response: TableMetadataResponse): PxTab
                         notes: value.notes?.map((note) => {
                             return {
                                 text: note.text,
-                                mandatory: false // TODO:
+                                mandatory: note.mandatory != null ? note.mandatory : false
                             }   
                         }) 
                     }
@@ -33,7 +33,7 @@ export function mapTableMetadataResponse(response: TableMetadataResponse): PxTab
                 notes: variable.notes?.map((note) => {
                     return {
                         text: note.text,
-                        mandatory: false // TODO:
+                        mandatory: note.mandatory != null ? note.mandatory : false
                     }
                 })
             };
