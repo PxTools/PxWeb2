@@ -29,7 +29,7 @@ function testSubmit() {
 export function App() {
   const { t, i18n } = useTranslation();
 
-  const [tableid, setTableid] = useState('tab005');
+  const [tableid, setTableid] = useState('tab638');
   const [errorMsg, setErrorMsg] = useState('');
   const [pxTable, setPx] = useState<PxTable | null>(null); // Update the type of px state variable
 
