@@ -6,12 +6,15 @@
   display: inline-flex;
   align-items: flex-start;
   gap: 2px;
-  padding: 22px;
+  padding-top: 12px;
+  padding-bottom: 12px;
   align-items: center;
 
   &:hover {
     text-decoration: none;
     background-color: var(--px-color-surface-subtle-hover);
+    // padding-top: 0px;
+    // padding-bottom: 0px;
   }
 
   &:focus {
@@ -39,4 +42,30 @@
   display: inline-flex;
   gap: 0px;
   padding: 0px;
+}
+
+.padding-small {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.padding-medium {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.bodylong-small {
+  font-family: PxWeb-font-400;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 0.875rem;
+  line-height: 1.5rem;
+}
+
+.bodylong-medium {
+  font-family: PxWeb-font-400;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.75rem;
 }

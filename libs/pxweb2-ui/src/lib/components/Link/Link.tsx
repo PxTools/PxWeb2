@@ -4,6 +4,7 @@ import cl from 'clsx';
 import { Icon, IconProps } from '../Icon/Icon';
 
 interface LinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
+  size?: 'small' | 'medium';
   icon?: IconProps['iconName'];
   iconPosition?: 'left' | 'right';
   children: React.ReactNode;
@@ -13,6 +14,7 @@ interface LinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
 }
 export function Link({
   children,
+  size,
   href,
   icon,
   iconPosition,
@@ -26,13 +28,15 @@ export function Link({
       className={cl(classes.link, {
         [classes.no_underline]: noUnderline,
         [classes.inline]: inline,
+        [classes[`bodylong-${size}`]]: size,
+        [classes[`padding-${size}`]]: size,
       })}
     >
-      {icon && iconPosition === 'left' && (
+      {icon && iconPosition === 'left' && size === 'medium' && (
         <Icon iconName={icon} className=""></Icon>
       )}
       {children}
-      {icon && iconPosition === 'right' && (
+      {icon && iconPosition === 'right' && size === 'medium' && (
         <Icon iconName={icon} className=""></Icon>
       )}
     </a>
