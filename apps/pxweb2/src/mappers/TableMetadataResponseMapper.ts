@@ -1,5 +1,5 @@
-import { AbstractCodeListVariable, TableMetadataResponse } from "@pxweb2/pxweb2-api-client";
-import { PxTable, VariableTypeEnum } from "@pxweb2/pxweb2-ui";
+import { AbstractCodeListVariable, TableMetadataResponse, VariableTypeEnum } from "@pxweb2/pxweb2-api-client";
+import { PxTable, VartypeEnum } from "@pxweb2/pxweb2-ui";
 
 export function mapTableMetadataResponse(response: TableMetadataResponse): PxTable {
 
@@ -10,7 +10,7 @@ export function mapTableMetadataResponse(response: TableMetadataResponse): PxTab
             return {
                 id: variable.id,
                 label: variable.label,
-                type: VariableTypeEnum.REGULAR_VARIABLE, //TODO: map to enum
+                type: mapVariableTypeEnum(variable.type), 
                 mandatory: (variable as AbstractCodeListVariable).elimination != null ? !(variable as AbstractCodeListVariable).elimination : true, 
                 values: (variable as AbstractCodeListVariable).values.map((value) => {
                     return {
@@ -41,4 +41,17 @@ export function mapTableMetadataResponse(response: TableMetadataResponse): PxTab
     };
 
     return pxTable;
+}
+
+function mapVariableTypeEnum(type: VariableTypeEnum): VartypeEnum {
+    switch (type) {
+        case VariableTypeEnum.CONTENTS_VARIABLE:
+            return VartypeEnum.CONTENTS_VARIABLE;
+        case VariableTypeEnum.TIME_VARIABLE:
+            return VartypeEnum.TIME_VARIABLE;
+        case VariableTypeEnum.GEOGRAPHICAL_VARIABLE:
+            return VartypeEnum.GEOGRAPHICAL_VARIABLE;
+        case VariableTypeEnum.REGULAR_VARIABLE:
+            return VartypeEnum.REGULAR_VARIABLE;
+    }
 }
