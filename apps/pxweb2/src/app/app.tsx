@@ -15,7 +15,7 @@ import {
 import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
 //import { NumberFormatter } from '../i18n/formatters';
 import { TableService } from '@pxweb2/pxweb2-api-client';
-import { mapTableMetadataResponse } from '../mappers/TableMetadataResponseMapper'; // Fix the casing of the import statement
+import { mapTableMetadataResponse } from '../mappers/TableMetadataResponseMapper'; 
 import { useState } from 'react';
 
 function test(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
@@ -31,7 +31,7 @@ export function App() {
 
   const [tableid, setTableid] = useState('tab638');
   const [errorMsg, setErrorMsg] = useState('');
-  const [pxTable, setPx] = useState<PxTable | null>(null); // Update the type of px state variable
+  const [pxTable, setPx] = useState<PxTable | null>(null); 
 
   const locales = {
     en: { title: 'English' },
@@ -60,14 +60,6 @@ export function App() {
     }
     );
   };
-
-  // useEffect(() => {
-  //   TableService.getMetadataById(tableid, i18n.resolvedLanguage).then((px) =>
-  //     setPx(px)
-  //   );
-  // }, [i18n.resolvedLanguage, tableid]);
-
-  //if (!px) return <div>Loading...</div>;
 
   return (
     <>
