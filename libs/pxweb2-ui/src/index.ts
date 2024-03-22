@@ -12,4 +12,5 @@ export * from './lib/shared-types/pxTable';
 export * from './lib/shared-types/value';
 export * from './lib/shared-types/variable';
 export * from './lib/shared-types/vartypeEnum';
+export * from './lib/components/Search/Search';
 

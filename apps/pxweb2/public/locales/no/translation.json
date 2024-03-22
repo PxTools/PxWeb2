@@ -4,6 +4,11 @@
     "header": {
       "title": "PxWeb 2.0",
       "logo": "PxWeb 2.0"
+    },
+    "generic_buttons": {
+      "ok": "OK",
+      "cancel": "Avbryt",
+      "search": "Søk"
     }
   },
   "start_page": {

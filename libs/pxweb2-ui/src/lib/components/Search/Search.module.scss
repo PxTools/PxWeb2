@@ -7,7 +7,6 @@
 
 .wrapper{
   display: flex;
-  //height: var(--spacing-12, 3rem);
   padding: var(--spacing-2, 0.5rem);
   align-items: center;
   gap: var(--spacing-2, 0.5rem);
@@ -17,22 +16,13 @@
 .clearButton {
     background-color: transparent;
     border: none;
-    // width: var(--spacing-6, 1.5rem);
-    // height: var(--spacing-6, 1.5rem); 
-    //flex-shrink: 0;
     display: flex;
-    height: 32px;
+    height: 30px;
     padding: 12px 4px;
     justify-content: center;
     align-items: center;
     gap: 6px;
 }
-
-// .searchIcon {
-//     width: var(--spacing-6, 24px);
-//     height: var(--spacing-6, 24px);
-//     flex-shrink: 0;   
-//   }
 
 .default {
     border-radius: var(--px-border-radius-small, 0.25rem);
@@ -41,13 +31,15 @@
     
     &:hover {
       border-radius: var(--px-border-radius-small, 0.25rem);
-      border: 2px solid var(--px-color-border-hover, #62919A);
+      outline: 2px solid var(--px-color-border-hover, #62919A);
       background: var(--px-color-surface-default, #FFF);
+      outline-offset: -2px;
     }
     &:active {
       border-radius: var(--px-border-radius-small, 0.25rem);
-      border: 2px solid var(--px-color-border-action, #274247);
+      outline: 2px solid var(--px-color-border-action, #274247);
       background: var(--px-color-surface-default, #FFF);
+      outline-offset: -2px;
     }    
   }
   
@@ -57,13 +49,15 @@
  
     &:hover {
       border-radius: var(--px-border-radius-medium, 0.5rem);
-      border: 1.5px solid var(--px-color-border-action, #274247);
+      outline: 1.5px solid var(--px-color-border-action, #274247);
       background: var(--px-color-surface-default, #FFF);
+      outline-offset: -1.5px;
     }
     &:active {
       border-radius: var(--px-border-radius-medium, 0.5rem);
-      border: 1.5px solid var(--px-color-border-selected, #274247);
+      outline: 1.5px solid var(--px-color-border-selected, #274247);
       background: var(--px-color-surface-default, #FFF);
+      outline-offset: -1.5px;
     }    
   }
 
