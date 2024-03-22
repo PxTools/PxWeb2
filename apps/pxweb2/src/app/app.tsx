@@ -98,13 +98,19 @@ export function App() {
         Enter table id:
       </Label>
       <br />
-      <input
+      <select onChange={(e) => setTableid(e.target.value)}>
+        <option value="TAB638">TAB638</option>
+        <option value="TAB1292">TAB1292</option>
+        <option value="TAB5659">TAB5659</option>
+      </select>
+      {/* <input
         type="text"
         id="tabid"
         name="tabid"
         defaultValue="tab638"
         onChange={(e) => setTableid(e.target.value.trim())}
-      />&nbsp;
+      /> */}
+      &nbsp;
       { errorMsg.length > 0 && <Tag size="small" variant="error" type='border'>{errorMsg}</Tag>
       } 
       <br />
