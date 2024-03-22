@@ -105,7 +105,7 @@ export const inlineAndStandalone: StoryFn<typeof BodyLong> = () => {
         Statistikkbanken
       </Link>
 
-      {/* <h2>small icon left:</h2>
+       <h2>small icon left:</h2>
       <Link href="#" icon="FileText" iconPosition="left" size="small">
         Statistikkbanken{' '}
       </Link>
@@ -113,7 +113,7 @@ export const inlineAndStandalone: StoryFn<typeof BodyLong> = () => {
       <h2>small icon right:</h2>
       <Link href="#" icon="FileText" iconPosition="right" size="small">
         Statistikkbanken
-      </Link> */}
+      </Link> 
       <br />
     </>
   );
