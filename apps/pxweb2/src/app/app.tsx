@@ -10,6 +10,7 @@ import {
   Ingress,
   Label,
   Tag,
+  Search,
 } from '@pxweb2/pxweb2-ui';
 import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
 import { NumberFormatter } from '../i18n/formatters';
@@ -152,6 +153,13 @@ export function App() {
         <br />
         <input type="text" id="lname" name="lname" defaultValue="Doe" />
       </form>
+      <br />
+      <Search
+        variant="default"
+        searchPlaceHolder={t('common.generic_buttons.search')}
+        labelText={t('common.generic_buttons.search')}
+      >        
+      </Search>
       <br />
       <Button form="form1" variant="primary" type="submit">
         Submit

@@ -5,3 +5,4 @@ export * from './lib/components/Button/Button';
 export * from './lib/components/Typography/Ingress/Ingress';
 export * from './lib/components/Typography/Heading/Heading';
 export * from './lib/components/Typography/BodyLong/BodyLong';
+export * from './lib/components/Search/Search';
