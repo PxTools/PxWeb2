@@ -11,6 +11,11 @@
   align-items: center;
   gap: var(--spacing-2, 0.5rem);
   align-self: stretch;  
+  height: var(--spacing-12, 48px);
+}
+
+.searchIcon{  
+  color: var(--px-color-icon-default);    
 }
 
 .clearButton {
@@ -26,7 +31,7 @@
 
 .default {
     border-radius: var(--px-border-radius-small, 0.25rem);
-    border: 1.5px solid var(--px-color-border-default, #162327);
+    box-shadow: 0 0 0 1.5px var(--px-color-border-action) inset;
     background: var(--px-color-surface-default, #FFF);
     
     &:hover {
@@ -46,7 +51,7 @@
 .inVariableBox {
     border-radius: var(--px-border-radius-medium, 0.5rem);
     background: var(--px-color-surface-subtle, #F0F8F9);
- 
+     
     &:hover {
       border-radius: var(--px-border-radius-medium, 0.5rem);
       outline: 1.5px solid var(--px-color-border-action, #274247);
@@ -64,25 +69,24 @@
 .input {
     font-family: PxWeb-font-400;
     font-weight: 400;
-        
+    font-size: 16px;
+    line-height: 24px;
     display: flex;
     height: 1.875rem;
     min-height: 1.875rem;
     flex-direction: column;
     justify-content: center;
     flex: 1 0 0;
-    
     overflow: hidden;
-    color: var(--color-text-subtle, #2D6975);
-    text-overflow: ellipsis;
+    color: var(--px-color-text-default);
     white-space: nowrap;
     
     border: none;
     background-color: inherit;
     box-shadow: none;
 
-inset-block: 0;
-padding: 0;
+    inset-block: 0;
+    padding: 0;
 
     &:hover {
       border: none;

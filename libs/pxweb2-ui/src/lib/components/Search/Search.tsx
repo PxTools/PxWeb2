@@ -1,41 +1,43 @@
 import cl from 'clsx';
 import classes from './Search.module.scss';
-import { Icon, IconProps } from '../Icon/Icon';
-import{Label} from '../Typography/Label/Label';
-import {Button, ButtonProps} from '../Button/Button';
-import React, { useState } from 'react';
-
+import {Icon} from '../Icon/Icon';
+import {Label} from '../Typography/Label/Label';
+import {Button} from '../Button/Button';
+import React, { useState, useRef } from 'react';
 
 export interface SearchProps 
 extends React.InputHTMLAttributes <HTMLInputElement> {
   variant: 'default' | 'inVariableBox' ;
   labelText?: string;
-  searchPlaceHolder?: string;
-  searchIcon?: IconProps['iconName']; 
-  showClearButton?: boolean;
-  clearButton?: ButtonProps['icon'];      
+  searchPlaceHolder?: string;  
 }
 
 export function Search({
-  searchIcon = "MagnifyingGlass",
   variant,
   labelText,
   searchPlaceHolder,  
-  showClearButton = false,
-  clearButton = "XMark",      
   ...rest
 }: SearchProps) { 
   const [inputValue, setInputValue] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null); 
   const handleClear = () => {
-    setInputValue('');
+      setInputValue('');
+      if (inputRef.current !== null) {
+        inputRef.current.focus();
+      }
   };
    const hasValue = inputValue.length > 0;
   return (
     <div className={classes.search}>
       {labelText && <Label size='medium'>{labelText}</Label>}
       <div className={cl(classes.wrapper, classes.border, classes[variant])}>
-        <Icon iconName={searchIcon} className={classes.searchIcon} ></Icon>
+        <Icon 
+          iconName="MagnifyingGlass" 
+          className={classes.searchIcon} 
+          aria-label={'Button with icon'}>
+        </Icon>
         <input type='text'
+          ref={inputRef}
           className={cl(classes.input, classes[variant])}
           placeholder={searchPlaceHolder}           
           value={inputValue}
@@ -45,10 +47,11 @@ export function Search({
         {hasValue && (
           <Button 
             variant={"tertiary"} 
-            icon={clearButton}  
+            icon="XMark"  
             size={'small'} 
             className={classes.clearButton}
             onClick={handleClear}
+            aria-label={'Button with icon'}
           ></Button>
         )}      
       </div>
@@ -57,5 +60,3 @@ export function Search({
 }
 
 export default Search;
-
-
