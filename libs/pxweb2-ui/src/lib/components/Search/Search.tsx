@@ -10,12 +10,18 @@ extends React.InputHTMLAttributes <HTMLInputElement> {
   variant: 'default' | 'inVariableBox' ;
   labelText?: string;
   searchPlaceHolder?: string;  
+  showLable?: boolean;
+  ariaLabelIconText?: string;
+  arilLabelButtonText?: string;
 }
 
 export function Search({
   variant,
   labelText,
   searchPlaceHolder,  
+  showLable = false,  
+  ariaLabelIconText =  'Search icon',
+  arilLabelButtonText = 'Clear search button',
   ...rest
 }: SearchProps) { 
   const [inputValue, setInputValue] = useState('');
@@ -29,12 +35,12 @@ export function Search({
    const hasValue = inputValue.length > 0;
   return (
     <div className={classes.search}>
-      {labelText && <Label size='medium'>{labelText}</Label>}
+      {showLable && <Label size='medium' className={classes.label}>{labelText}</Label>}
       <div className={cl(classes.wrapper, classes.border, classes[variant])}>
         <Icon 
           iconName="MagnifyingGlass" 
           className={classes.searchIcon} 
-          aria-label={'Button with icon'}>
+          aria-label={ariaLabelIconText}>
         </Icon>
         <input type='text'
           ref={inputRef}
@@ -46,12 +52,11 @@ export function Search({
         ></input>
         {hasValue && (
           <Button 
-            variant={"tertiary"} 
+            variant="tertiary"
             icon="XMark"  
-            size={'small'} 
-            className={classes.clearButton}
+            size="small"
             onClick={handleClear}
-            aria-label={'Button with icon'}
+            aria-label={arilLabelButtonText}
           ></Button>
         )}      
       </div>
