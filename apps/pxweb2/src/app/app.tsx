@@ -31,7 +31,7 @@ export function App() {
 
   const [tableid, setTableid] = useState('tab638');
   const [errorMsg, setErrorMsg] = useState('');
-  const [pxTable, setPx] = useState<PxTable | null>(null); 
+  const [pxTable, setPxTable] = useState<PxTable | null>(null);
 
   const locales = {
     en: { title: 'English' },
@@ -51,12 +51,12 @@ export function App() {
     .then((tableMetadataResponse) =>
     {
       const pxTab: PxTable = mapTableMetadataResponse(tableMetadataResponse);
-      setPx(pxTab); setErrorMsg('')
+      setPxTable(pxTab); setErrorMsg('')
     }
     )
     .catch((error) => 
     {
-      setErrorMsg('Could not get table: ' + id); setPx(null)
+      setErrorMsg('Could not get table: ' + id); setPxTable(null)
     }
     );
   };
