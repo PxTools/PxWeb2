@@ -1,4 +1,5 @@
 import cl from 'clsx';
+
 import classes from './Label.module.scss';
 
 export interface LabelProps

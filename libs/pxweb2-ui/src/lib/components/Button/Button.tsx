@@ -1,4 +1,5 @@
 import cl from 'clsx';
+
 import classes from './Button.module.scss';
 import { Icon, IconProps } from '../Icon/Icon';
 

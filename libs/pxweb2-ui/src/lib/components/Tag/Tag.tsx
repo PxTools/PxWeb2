@@ -1,4 +1,5 @@
 import cl from 'clsx';
+
 import classes from './Tag.module.scss';
 
 export interface TagProps extends React.HTMLAttributes<HTMLSpanElement> {
