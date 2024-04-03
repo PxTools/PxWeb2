@@ -91,6 +91,9 @@ export const LongTextOn400pxWideMax: StoryFn<typeof Checkbox> = () => {
 
   return (
     <div style={{ width: '400px' }}>
+      <p>
+        An example of how labeltext wraps on multiple lines in smaller spaces
+      </p>
       <Checkbox
         id="var1"
         text="The text on this checkbox spans multiple lines. That's why it is written so long. Here's an additional sentence."
