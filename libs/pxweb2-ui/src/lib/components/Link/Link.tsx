@@ -1,6 +1,7 @@
 import React from 'react';
-import classes from './Link.module.scss';
 import cl from 'clsx';
+
+import classes from './Link.module.scss';
 import { Icon, IconProps } from '../Icon/Icon';
 
 interface LinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
