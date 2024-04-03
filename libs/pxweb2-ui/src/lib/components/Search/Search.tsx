@@ -32,6 +32,11 @@ export function Search({
         inputRef.current.focus();
       }
   };
+  const handleKeyDown = (e: { keyCode: number; }) => {
+    if (e.keyCode === 27) {
+      handleClear();
+    }
+  };
    const hasValue = inputValue.length > 0;
   return (
     <div className={classes.search}>
@@ -48,6 +53,7 @@ export function Search({
           placeholder={searchPlaceHolder}           
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
+          onKeyDown={handleKeyDown}
           {...rest}
         ></input>
         {hasValue && (
