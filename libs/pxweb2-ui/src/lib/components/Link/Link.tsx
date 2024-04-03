@@ -22,7 +22,6 @@ export function Link({
   noUnderline = false,
   ...rest
 }: LinkProps) {
-
   return (
     <a
       href={href}
@@ -30,7 +29,7 @@ export function Link({
         [classes.no_underline]: noUnderline,
         [classes.inline]: inline,
         [classes[`bodylong-${size}`]]: size,
-        [classes[`padding-${size}`]]: size
+        [classes[`padding-${size}`]]: size,
       })}
     >
       {icon && iconPosition === 'left' && (
