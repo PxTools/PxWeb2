@@ -54,7 +54,7 @@
     "@vitejs/plugin-react": "^4.2.1",
     "@vitest/coverage-v8": "1.4.0",
     "@vitest/ui": "1.4.0",
-    "chromatic": "^10.9.6",
+    "chromatic": "11.3.0",
     "cypress": "^13.7.1",
     "eslint": "8.57.0",
     "eslint-config-prettier": "^9.1.0",
@@ -78,3 +78,4 @@
   "readme": "ERROR: No README data found!",
   "_id": "@pxweb2/source@0.0.0"
 }
+
