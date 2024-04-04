@@ -1,4 +1,5 @@
 import cl from 'clsx';
+
 import classes from './Button.module.scss';
 import { Icon, IconProps } from '../Icon/Icon';
 
@@ -25,6 +26,7 @@ export function Button({
       className={cl(
         classes.button,
         classes[size],
+        classes[`label-${size}`],
         classes[variant],
         {
           [classes.iconOnlyMedium]: !children && icon && size === 'medium',
