@@ -1,6 +1,7 @@
-import cl from 'clsx';
-import classes from './Heading.module.scss';
 import React from 'react';
+import cl from 'clsx';
+
+import classes from './Heading.module.scss';
 
 /* eslint-disable-next-line */
 export interface HeadingProps extends React.HTMLAttributes<HTMLHeadingElement> {
