@@ -53,7 +53,7 @@
   line-height: 2.75rem; /* 275% */
 
   /* Heading/Mobile/Large */
-  @media screen and (max-width: fixed.$breakpoints-xsmall-max-width) {
+  @media screen and (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
     font-size: 1.75rem;
     line-height: 2.25rem; /* 225% */
   }
@@ -68,7 +68,7 @@
   line-height: 3.5rem; /* 350% */
 
   /* Heading/Mobile/XLarge */
-  @media screen and (max-width: fixed.$breakpoints-xsmall-max-width) {
+  @media screen and (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
     font-size: 2rem;
     line-height: 2.75rem; /* 275% */
   }
