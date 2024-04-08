@@ -1,3 +1,4 @@
+/* Label/Small */
 .label-small {
   font-family: PxWeb-font-500;
   font-style: normal;
@@ -6,6 +7,7 @@
   line-height: 1.25rem; /* 125% */
 }
 
+/* Label/Medium */
 .label-medium {
   font-family: PxWeb-font-500;
   font-style: normal;
@@ -14,3 +16,30 @@
   line-height: 1.5rem; /* 150% */
 }
 
+/* BodyLong/Medium */
+.bodylong-medium {
+  font-size: 1rem;
+  line-height: 1.75rem; /* 150% */
+  &.regular {
+    font-family: PxWeb-font-400;
+    font-weight: 400;
+  }
+  &.bold {
+    font-family: PxWeb-font-700;
+    font-weight: 700;
+  }
+}
+
+/* BodyLong/Small */
+.bodylong-small {
+  font-size: 0.875rem;
+  line-height: 1.5rem; /* 171.429% */
+  &.regular {
+    font-family: PxWeb-font-400;
+    font-weight: 400;
+  }
+  &.bold {
+    font-family: PxWeb-font-700;
+    font-weight: 700;
+  }
+}
