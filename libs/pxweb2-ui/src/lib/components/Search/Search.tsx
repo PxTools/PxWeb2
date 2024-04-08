@@ -40,7 +40,7 @@ export function Search({
    const hasValue = inputValue.length > 0;
   return (
     <div className={classes.search}>
-      {showLable && <Label size='medium' className={classes.label}>{labelText}</Label>}
+      {showLable && <Label size='medium' >{labelText}</Label>}
       <div className={cl(classes.wrapper, classes.border, classes[variant])}>
         <Icon 
           iconName="MagnifyingGlass" 

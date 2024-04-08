@@ -1,4 +1,3 @@
-//@use '../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixed;
 @use '../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixed;
 
 search {    
@@ -74,6 +73,9 @@ search {
     overflow: hidden;
     color: var(--px-color-text-default);
     white-space: nowrap;
+    ::placeholder {
+      color: var(--px-color-text-subtle, #2d6975);      
+    }
     
     border: none;
     background-color: inherit;
@@ -117,13 +119,3 @@ search {
       background: var(--px-color-surface-default, #FFF);
       outline-offset: -1.5px;
 } 
-  
-
-.label{
-  color: var(--px-color-text-default);
-  font-family: PxWeb-font-500;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 24px; /* 150% */
-}

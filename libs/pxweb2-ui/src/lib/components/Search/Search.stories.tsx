@@ -61,18 +61,7 @@ export const Variants: StoryFn<typeof Search> = () => {
         >
         </Search>
         <br />        
-        In variablebox with label 
-        <br />
-        <br />
-        <Search
-          showLable={true}
-          variant="inVariableBox"
-          searchPlaceHolder={placeholder}          
-          labelText= {labelText}          
-        >
-        </Search>
-        <br />        
-        In variblebox without label 
+        In variblebox  
         <br />
         <br />
         <Search
