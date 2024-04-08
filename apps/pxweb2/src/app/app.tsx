@@ -10,6 +10,7 @@ import {
   Ingress,
   Label,
   Tag,
+  Search,
   PxTable,
   Search,  
 } from '@pxweb2/pxweb2-ui';
