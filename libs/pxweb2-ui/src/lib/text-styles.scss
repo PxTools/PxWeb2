@@ -1,3 +1,5 @@
+@use '../../style-dictionary/dist/scss/fixed-variables.scss' as fixed;
+
 .label-small {
   font-family: PxWeb-font-500;
   font-style: normal;
@@ -14,3 +16,60 @@
   line-height: 1.5rem; /* 150% */
 }
 
+/* Heading/Desktop/XSmall */
+.heading-xsmall {
+  font-family: PxWeb-font-700;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1.625rem; /* 162.5% */
+}
+
+/* Heading/Desktop/Small */
+.heading-small {
+  font-family: PxWeb-font-700;
+  font-size: 1.25rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1.75rem; /* 175% */
+  letter-spacing: 0.00625rem;
+}
+
+/* Heading/Desktop/Medium */
+.heading-medium {
+  font-family: PxWeb-font-700;
+  font-size: 1.5rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 2.25rem; /* 225% */
+}
+
+/* Heading/Desktop/Large */
+.heading-large {
+  font-family: PxWeb-font-700;
+  font-size: 2rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 2.75rem; /* 275% */
+
+  /* Heading/Mobile/Large */
+  @media screen and (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
+    font-size: 1.75rem;
+    line-height: 2.25rem; /* 225% */
+  }
+}
+
+/* Heading/Desktop/XLarge */
+.heading-xlarge {
+  font-family: PxWeb-font-700;
+  font-size: 2.5rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 3.5rem; /* 350% */
+
+  /* Heading/Mobile/XLarge */
+  @media screen and (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
+    font-size: 2rem;
+    line-height: 2.75rem; /* 275% */
+  }
+}
