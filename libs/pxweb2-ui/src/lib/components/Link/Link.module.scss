@@ -1,4 +1,5 @@
 @use '../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixvar;
+@use '../../text-styles.scss';
 
 .link {
   text-decoration-line: underline;
@@ -52,18 +53,18 @@
   padding-bottom: 8px;
 }
 
-.bodylong-small {
-  font-family: PxWeb-font-400;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 0.875rem;
-  line-height: 1.5rem;
-}
+// .bodylong-small {
+//   font-family: PxWeb-font-400;
+//   font-style: normal;
+//   font-weight: 400;
+//   font-size: 0.875rem;
+//   line-height: 1.5rem;
+// }
 
-.bodylong-medium {
-  font-family: PxWeb-font-400;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 1rem;
-  line-height: 1.75rem;
-}
+// .bodylong-medium {
+//   font-family: PxWeb-font-400;
+//   font-style: normal;
+//   font-weight: 400;
+//   font-size: 1rem;
+//   line-height: 1.75rem;
+// }

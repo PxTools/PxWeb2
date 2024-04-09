@@ -29,7 +29,7 @@ export function Link({
       className={cl(classes.link, {
         [classes.no_underline]: noUnderline,
         [classes.inline]: inline,
-        [classes[`bodylong-${size}`]]: size,
+        [classes[`bodyshort-${size}`]]: size,
         [classes[`padding-${size}`]]: size,
       })}
     >
