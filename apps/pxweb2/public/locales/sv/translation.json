@@ -1,0 +1,13 @@
+{
+  "common": {
+    "title": "Välkommen till PxWeb 2.0",
+    "header": {
+      "title": "PxWeb 2.0",
+      "logo": "PxWeb 2.0"
+    }
+  },
+  "start_page": {
+    "header": "Välkommen till appen!",
+    "welcome_trans_test": "Välkommen till <1>appen</1> för PxWeb 2.0!"
+  }
+}

@@ -1,0 +1,26 @@
+/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+import type { ConfigResponse } from '../models/ConfigResponse';
+import type { CancelablePromise } from '../core/CancelablePromise';
+import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
+export class ConfigurationService {
+    /**
+     * Get API configuration settings.
+     * @returns ConfigResponse Success
+     * @throws ApiError
+     */
+    public static getApiConfiguration(): CancelablePromise<ConfigResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/config',
+            errors: {
+                400: `Error respsone for 400`,
+                404: `Error respsone for 404`,
+                429: `Error respsone for 429`,
+            },
+        });
+    }
+}

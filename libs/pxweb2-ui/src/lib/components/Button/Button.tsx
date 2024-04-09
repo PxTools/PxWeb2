@@ -1,4 +1,5 @@
 import cl from 'clsx';
+
 import classes from './Button.module.scss';
 import { Icon, IconProps } from '../Icon/Icon';
 
@@ -8,11 +9,13 @@ export interface ButtonProps
   size?: 'small' | 'medium';
   variant: 'primary' | 'secondary' | 'tertiary';
   icon?: IconProps['iconName'];
+  iconPosition?: 'left' | 'right';
   children?: string;
 }
 
 export function Button({
   icon,
+  iconPosition = 'left',
   variant,
   size = 'medium',
   children,
@@ -20,13 +23,27 @@ export function Button({
 }: ButtonProps) {
   return (
     <button
-      className={cl(classes.button, classes[size], classes[variant], {
-        [classes.iconOnly]: !children && icon,
-      })}
+      className={cl(
+        classes.button,
+        classes[size],
+        classes[`label-${size}`],
+        classes[variant],
+        {
+          [classes.iconOnlyMedium]: !children && icon && size === 'medium',
+        },
+        {
+          [classes.iconOnlySmall]: !children && icon && size === 'small',
+        }
+      )}
       {...rest}
     >
-      {icon && <Icon iconName={icon}></Icon>}
+      {icon && iconPosition === 'left' && (
+        <Icon iconName={icon} className=""></Icon>
+      )}
       {children}
+      {icon && iconPosition === 'right' && (
+        <Icon iconName={icon} className=""></Icon>
+      )}
     </button>
   );
 }

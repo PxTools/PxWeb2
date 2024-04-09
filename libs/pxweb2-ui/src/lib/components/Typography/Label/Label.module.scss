@@ -1,38 +1,27 @@
 @use '../../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixed;
+@use '../../../text-styles.scss';
 
 .label {
-    font-family: PxWeb-font-500;
-    font-weight: 500;
-    letter-spacing: 0em;
+  letter-spacing: 0em;
 }
 
-.small {
-    font-size: 14px;
-    line-height: 20px;
+.textcolor-default {
+  color: var(--px-color-text-default);
 }
 
-.medium {
-    font-size: 16px;
-    line-height: 24px;
-}
-
-.textcolor-default{
-    color: var(--px-color-text-default);
-}
-
-.textcolor-subtle{
-    color: var(--px-color-text-subtle);
+.textcolor-subtle {
+  color: var(--px-color-text-subtle);
 }
 
 .visually-hidden {
-    border: 0 !important;
-    clip: rect(0, 0, 0, 0) !important;
-    height: 1px !important;
-    margin: -1px !important;
-    overflow: hidden !important;
-    padding: 0 !important;
-    top: 0 !important;
-    position: absolute !important;
-    white-space: nowrap !important;
-    width: 1px !important;
-  }
+  border: 0 !important;
+  clip: rect(0, 0, 0, 0) !important;
+  height: 1px !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  top: 0 !important;
+  position: absolute !important;
+  white-space: nowrap !important;
+  width: 1px !important;
+}

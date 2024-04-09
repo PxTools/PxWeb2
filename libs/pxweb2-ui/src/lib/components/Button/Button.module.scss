@@ -1,17 +1,16 @@
-.button {
-  text-align: center;
+@use '../../text-styles.scss';
 
-  /* Label/Medium */
-  font-family: PxWeb-font-500;
-  font-size: 1rem;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 1.5rem; /* 150% */
+.button {
+  align-items: center;
+  text-align: center;
+  border: none;
+  display: inline-flex;
+  flex-shrink: 0;
+  justify-content: center;
 
   &:disabled {
     cursor: not-allowed;
     opacity: 0.4;
-
     &:hover,
     &:focus {
       border-radius: var(--px-border-radius-full);
@@ -20,20 +19,35 @@
   }
 }
 
-.primary {
-  color: var(--px-color-text-on-action);
-  border-radius: var(--px-border-radius-full);
-  background: var(--px-color-surface-action);
+.small {
+  height: 2rem;
+  padding: 0.375rem 0.75rem;
+  gap: 6px;
+  &:hover {
+    border-radius: var(--px-border-radius-small);
+  }
+  &:active {
+    border-radius: var(--px-border-radius-small);
+  }
+}
 
-  // Override browser default styles
-  border: none;
-  border-style: none;
-
+.medium {
+  height: 3rem;
+  padding: 0.75rem 1.25rem;
+  gap: 8px;
   &:hover {
     border-radius: var(--px-border-radius-medium);
   }
   &:active {
     border-radius: var(--px-border-radius-medium);
+  }
+}
+
+.primary {
+  color: var(--px-color-text-on-action);
+  border-radius: var(--px-border-radius-full);
+  background: var(--px-color-surface-action);
+  &:active {
     background: var(--px-color-surface-action-active);
   }
   &:disabled {
@@ -47,16 +61,14 @@
 
   color: var(--px-color-text-action);
   border-radius: var(--px-border-radius-full);
-  border: 1.5px solid var(--px-color-border-action);
+  box-shadow: 0 0 0 1.5px var(--px-color-border-action) inset;
 
   &:hover {
     color: var(--px-color-text-on-action-subtle);
-    border-radius: var(--px-border-radius-medium);
     background: var(--px-color-surface-subtle-hover);
   }
   &:active {
     color: var(--px-color-text-on-action);
-    border-radius: var(--px-border-radius-medium);
     background: var(--px-color-surface-action-active);
   }
   &:disabled {
@@ -68,19 +80,16 @@
 .tertiary {
   // Override browser defaults styles
   background-color: inherit;
-
   color: var(--px-color-text-action);
   border: none;
   border-radius: var(--px-border-radius-full);
 
   &:hover {
     color: var(--px-color-text-on-action-subtle);
-    border-radius: var(--px-border-radius-medium);
     background: var(--px-color-surface-subtle-hover);
   }
   &:active {
     color: var(--px-color-text-on-action);
-    border-radius: var(--px-border-radius-medium);
     background: var(--px-color-surface-action-active);
   }
   &:disabled {
@@ -89,26 +98,10 @@
   }
 }
 
-.small {
-  display: flex;
-  width: 2rem;
-  height: 2rem;
+.iconOnlyMedium {
   padding: 0.75rem;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-  flex-shrink: 0;
 }
 
-.medium {
-  /* Layout */
-  display: inline-flex;
-  padding: 0.75rem 1.25rem;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.iconOnly {
-  padding: 0.75rem;
+.iconOnlySmall {
+  padding: 0.75rem 0.25rem;
 }

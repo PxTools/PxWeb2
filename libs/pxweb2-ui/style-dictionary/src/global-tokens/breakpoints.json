@@ -1,0 +1,41 @@
+{
+  "breakpoints": {
+    "xsmall": {
+      "MinWidth": {
+        "value": "0px"
+      },
+      "MaxWidth": {
+        "value": "479px"
+      }
+    },
+    "small": {
+      "MinWidth": {
+        "value": "480px"
+      },
+      "MaxWidth": {
+        "value": "689px"
+      }
+    },
+    "medium": {
+      "MinWidth": {
+        "value": "690px"
+      },
+      "MaxWidth": {
+        "value": "1259px"
+      }
+    },
+    "large": {
+      "MinWidth": {
+        "value": "1260px"
+      },
+      "MaxWidth": {
+        "value": "1599px"
+      }
+    },
+    "xlarge": {
+      "MinWidth": {
+        "value": "1600px"
+      }
+    }
+  }
+}
