@@ -23,16 +23,19 @@ export function BodyLong({
   ...rest
 }: BodyLongProps) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
+  const weightClassExtension = weight === 'regular' ? '' : '-' + weight;
+  //const weightClassExtension = '';
   return (
     <p
-      className={cl(
-        classes.bodylong,
-        classes[`align-${align}`],
-        classes[`text-color-${textcolor}`],
-        classes[`bodylong-${size}`],
-        classes[weight],
-        cl({ [classes[`${size}-spacing`]]: spacing })
-      )+ cssClasses}
+      className={
+        cl(
+          classes.bodylong,
+          classes[`align-${align}`],
+          classes[`text-color-${textcolor}`],
+          classes[`bodylong-${size}${weightClassExtension}`],
+          cl({ [classes[`${size}-spacing`]]: spacing })
+        ) + cssClasses
+      }
       {...rest}
     >
       {children}
