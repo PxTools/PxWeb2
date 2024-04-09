@@ -16,14 +16,14 @@
   "dependencies": {
     "@swc/helpers": "^0.5.8",
     "clsx": "^2.1.0",
-    "i18next": "^23.10.1",
+    "i18next": "^23.11.0",
     "i18next-http-backend": "^2.5.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-i18next": "^14.1.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.24.3",
+    "@babel/core": "^7.24.4",
     "@babel/preset-react": "^7.24.1",
     "@nx/cypress": "18.2.3",
     "@nx/eslint": "18.2.3",
@@ -55,7 +55,7 @@
     "@vitest/coverage-v8": "1.4.0",
     "@vitest/ui": "1.4.0",
     "chromatic": "11.3.0",
-    "cypress": "^13.7.1",
+    "cypress": "^13.7.2",
     "eslint": "8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-cypress": "^2.15.1",
@@ -67,15 +67,14 @@
     "jsdom": "~22.1.0",
     "nx": "18.2.3",
     "prettier": "^2.8.8",
-    "sass": "^1.72.0",
+    "sass": "^1.74.1",
     "style-dictionary": "^3.9.2",
     "ts-node": "10.9.1",
     "typescript": "5.4.3",
-    "vite": "^5.2.7",
+    "vite": "^5.2.8",
     "vite-plugin-dts": "~2.3.0",
     "vitest": "1.4.0"
   },
   "readme": "ERROR: No README data found!",
   "_id": "@pxweb2/source@0.0.0"
 }
-
