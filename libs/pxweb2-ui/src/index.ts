@@ -1,3 +1,4 @@
+export * from './lib/components/VariableBox/VariableBox';
 export * from './lib/components/Tag/Tag';
 export * from './lib/components/Typography/Label/Label';
 export * from './lib/components/Typography/BodyShort/BodyShort';
