@@ -14,6 +14,7 @@ import {
   SelectOption,
   PxTable,
   Search,
+  VariableBox
 } from '@pxweb2/pxweb2-ui';
 import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
 //import { NumberFormatter } from '../i18n/formatters';
