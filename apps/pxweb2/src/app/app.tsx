@@ -11,6 +11,7 @@ import {
   Label,
   Tag,
   PxTable,
+  VariableBox
   } from '@pxweb2/pxweb2-ui';
 import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
 //import { NumberFormatter } from '../i18n/formatters';
@@ -94,6 +95,9 @@ export function App() {
         her every day, every week, every month, every year. She never saw a
         wolf, no even a little fox.
       </BodyLong>
+      <br />
+      <VariableBox />
+      <br />
       <Label htmlFor="tabid" textcolor="subtle">
         Enter table id:
       </Label>
