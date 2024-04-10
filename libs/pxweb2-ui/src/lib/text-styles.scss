@@ -1,5 +1,6 @@
 @use '../../style-dictionary/dist/scss/fixed-variables.scss' as fixed;
 
+/* Label/Small */
 .label-small {
   font-family: PxWeb-font-500;
   font-style: normal;
@@ -8,12 +9,85 @@
   line-height: 1.25rem; /* 125% */
 }
 
+/* Label/Medium */
 .label-medium {
   font-family: PxWeb-font-500;
   font-style: normal;
   font-weight: 500;
   font-size: 1rem;
   line-height: 1.5rem; /* 150% */
+}
+
+/* BodyLong/Medium */
+.bodylong-medium {
+  font-family: PxWeb-font-400;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.75rem; /* 175% */
+}
+
+/* BodyLong/Medium/strong */
+.bodylong-medium-bold {
+  font-family: PxWeb-font-700;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1.75rem; /* 175% */
+}
+
+/* BodyLong/Small */
+.bodylong-small {
+  font-family: PxWeb-font-400;
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.5rem; /* 150% */
+}
+
+/* BodyLong/Small/strong */
+.bodylong-small-bold {
+  font-family: PxWeb-font-700;
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1.5rem; /* 150% */
+}
+
+/* BodyShort/medium */
+.bodyshort-medium {
+  font-family: PxWeb-font-400;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.5rem; /* 150% */
+}
+
+/* BodyShort/medium/strong */
+.bodyshort-medium-bold {
+  font-family: PxWeb-font-700;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight:700;
+  line-height: 1.5rem; /* 150% */
+}
+
+/* BodyShort/Small */
+.bodyshort-small {
+  font-family: PxWeb-font-400;
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.25rem; /* 125% */
+}
+
+/* BodyShort/Small/strong */
+.bodyshort-small-bold {
+  font-family: PxWeb-font-700;
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1.25rem; /* 125% */
 }
 
 /* Heading/Desktop/XSmall */
