@@ -16,4 +16,24 @@ describe('Checkbox', () => {
     );
     expect(baseElement).toBeTruthy();
   });
+
+  it('should check the checkbox', () => {
+    let selected = false;
+
+    const { baseElement } = render(
+      <Checkbox
+        id="test"
+        text="Variable 1"
+        onChange={(val) => {
+          selected = val;
+          console.log('inside onchange');
+        }}
+        value={selected}
+      />
+    );
+
+    baseElement.querySelector('#test').click();
+
+    expect(selected).toBe(true);
+  });
 });
