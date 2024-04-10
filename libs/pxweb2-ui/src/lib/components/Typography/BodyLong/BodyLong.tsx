@@ -24,7 +24,6 @@ export function BodyLong({
 }: BodyLongProps) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
   const weightClassExtension = weight === 'regular' ? '' : '-' + weight;
-  //const weightClassExtension = '';
   return (
     <p
       className={
