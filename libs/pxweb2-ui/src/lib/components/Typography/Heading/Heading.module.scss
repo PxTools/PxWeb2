@@ -1,56 +1,35 @@
 @use '../../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixed;
+@use '../../../text-styles.scss';
 
 .heading {
-  font-family: PxWeb-font-700;
-  color: var(--px-color-text-default);
   margin: 0;
 }
 
 .xsmall {
-  font-size: 1rem;
-  line-height: 1.625rem;
-  letter-spacing: 0em;
-  text-align: left;
   &.spacing {
     margin-bottom: fixed.$spacing-1;
   }
 }
 
 .small {
-  font-size: 1.25rem;
-  line-height: 1.75;
-  letter-spacing: 0.005em;
-  text-align: left;
   &.spacing {
     margin-bottom: fixed.$spacing-1;
   }
 }
 
 .medium {
-  font-size: 1.5rem;
-  line-height: 2.25rem;
-  letter-spacing: 0em;
-  text-align: left;
   &.spacing {
     margin-bottom: fixed.$spacing-3;
   }
 }
 
 .large {
-  font-size: 2rem;
-  line-height: 2.75rem;
-  letter-spacing: 0em;
-  text-align: left;
   &.spacing {
     margin-bottom: fixed.$spacing-5;
   }
 }
 
 .xlarge {
-  font-size: 2.5rem;
-  line-height: 3.5rem;
-  letter-spacing: 0em;
-  text-align: left;
   &.spacing {
     margin-bottom: fixed.$spacing-6;
   }

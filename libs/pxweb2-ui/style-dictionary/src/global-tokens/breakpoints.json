@@ -1,6 +1,6 @@
 {
   "breakpoints": {
-    "XSmall": {
+    "xsmall": {
       "MinWidth": {
         "value": "0px"
       },
@@ -8,7 +8,7 @@
         "value": "479px"
       }
     },
-    "Small": {
+    "small": {
       "MinWidth": {
         "value": "480px"
       },
@@ -16,7 +16,7 @@
         "value": "689px"
       }
     },
-    "Medium": {
+    "medium": {
       "MinWidth": {
         "value": "690px"
       },
@@ -24,7 +24,7 @@
         "value": "1259px"
       }
     },
-    "Large": {
+    "large": {
       "MinWidth": {
         "value": "1260px"
       },
@@ -32,7 +32,7 @@
         "value": "1599px"
       }
     },
-    "XLarge": {
+    "xlarge": {
       "MinWidth": {
         "value": "1600px"
       }
