@@ -21,7 +21,6 @@ import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes
 //import { NumberFormatter } from '../i18n/formatters';
 import { TableService } from '@pxweb2/pxweb2-api-client';
 import { mapTableMetadataResponse } from '../mappers/TableMetadataResponseMapper';
-import { useState } from 'react';
 import { Header } from './components/Header/Header';
 import NavigationRail from './components/NavigationRail/NavigationRail';
 import { Content } from './components/Content/Content';
