@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Config schema",
+  "type": "object",
+  "properties": {
+    "language": {
+      "type": "object",
+      "properties": {
+        "supportedLanguages": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "defaultLanguage": {
+          "type": "string"
+        },
+        "fallbackLanguage": {
+          "type": "string"
+        }
+      },
+      "required": ["supportedLanguages", "defaultLanguage", "fallbackLanguage"]
+    }
+  },
+  "required": ["language"]
+}
