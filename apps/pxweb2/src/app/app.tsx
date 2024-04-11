@@ -10,6 +10,8 @@ import {
   Ingress,
   Label,
   Tag,
+  Select,
+  SelectOption,
   PxTable,
   } from '@pxweb2/pxweb2-ui';
 import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
@@ -32,6 +34,8 @@ export function App() {
   const [tableid, setTableid] = useState('tab638');
   const [errorMsg, setErrorMsg] = useState('');
   const [pxTable, setPxTable] = useState<PxTable | null>(null);
+
+  const options: SelectOption[] = [{ label: 'Option 1', value: '1' }, { label: 'Option 2', value: '2'}, { label: 'Option 3', value: '3'}];
 
   const locales = {
     en: { title: 'English' },
@@ -153,6 +157,14 @@ export function App() {
           </ul>
         </div>
       )}
+      <br />
+      <div className={cl(classes.selectWrapper)}>
+        <Select variant='default' label='Default' defaultOption='Make selection' options={options}></Select>
+        <br />
+        <Select variant='default' hideLabel label='Default' defaultOption='Make selection' options={options}></Select>
+        <br />
+        <Select variant='inVariableBox' label='VariableBox' defaultOption='Make selection' options={options}></Select>
+      </div>
       <br />
       <Tag size="medium" variant="info">
         Mandatory
