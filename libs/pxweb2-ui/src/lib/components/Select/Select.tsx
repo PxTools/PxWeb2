@@ -22,7 +22,7 @@ export interface SelectProps {
 
 function openOptions(options: SelectOption[]) {
   const optionsStr = options.map((option) => option.label).join('\n');
-  alert(optionsStr);
+  console.log(optionsStr);
 }
 
 export function Select({

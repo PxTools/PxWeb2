@@ -22,10 +22,10 @@ import { useState } from 'react';
 
 function test(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
   event.preventDefault();
-  alert('test');
+  console.log('test');
 }
 function testSubmit() {
-  alert('test submit');
+  console.log('test submit');
 }
 
 export function App() {
