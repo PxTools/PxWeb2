@@ -10,6 +10,8 @@ import {
   Heading,
   Ingress,
   Label,
+  Select,
+  SelectOption,
   PxTable,
   Tag,
   VariableBox,
@@ -36,6 +38,8 @@ export function App() {
   const [tableid, setTableid] = useState('tab638');
   const [errorMsg, setErrorMsg] = useState('');
   const [pxTable, setPxTable] = useState<PxTable | null>(null);
+
+  const options: SelectOption[] = [{ label: 'Option 1', value: '1' }, { label: 'Option 2', value: '2'}, { label: 'Option 3', value: '3'}];
 
   /* TODO: Is there a mistake with this? on first load of the page? We keep getting a warning of missing key on li element, pointing to loading the translation on line 34 */
   const locales = {
@@ -192,6 +196,14 @@ export function App() {
           </ul>
         </div>
       )}
+      <br />
+      <div className={cl(classes.selectWrapper)}>
+        <Select variant='default' label='Default' defaultOption='Make selection' options={options}></Select>
+        <br />
+        <Select variant='default' hideLabel label='Default' defaultOption='Make selection' options={options}></Select>
+        <br />
+        <Select variant='inVariableBox' label='VariableBox' defaultOption='Make selection' options={options}></Select>
+      </div>
       <br />
       <Tag size="medium" variant="info">
         Mandatory
