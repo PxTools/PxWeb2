@@ -28,6 +28,9 @@ interface Resources {
         "ok": "OK",
         "cancel": "Cancel",
         "search": "Search"
+      },
+      "generic_tags": {
+        "mandatory": "Mandatory"
       }
     },
     "start_page": {
