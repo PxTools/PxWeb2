@@ -27,6 +27,9 @@ interface Resources {
       "generic_buttons": {
         "ok": "OK",
         "cancel": "Cancel"
+      },
+      "generic_tags": {
+        "mandatory": "Mandatory"
       }
     },
     "start_page": {

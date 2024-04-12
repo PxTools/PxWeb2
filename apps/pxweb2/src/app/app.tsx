@@ -1,23 +1,26 @@
+import { useState } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 import cl from 'clsx';
 
 import classes from './app.module.scss';
 import {
   Button,
-  Heading,
   BodyShort,
   BodyLong,
+  Heading,
   Ingress,
   Label,
-  Tag,
   PxTable,
-  VariableBox
-  } from '@pxweb2/pxweb2-ui';
+  Tag,
+  VariableBox,
+} from '@pxweb2/pxweb2-ui';
+// import {
+//   PxTable
+// } from '@pxweb2/pxweb2-shared-types';
 import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
 //import { NumberFormatter } from '../i18n/formatters';
 import { TableService } from '@pxweb2/pxweb2-api-client';
-import { mapTableMetadataResponse } from '../mappers/TableMetadataResponseMapper'; 
-import { useState } from 'react';
+import { mapTableMetadataResponse } from '../mappers/TableMetadataResponseMapper';
 
 function test(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
   event.preventDefault();
@@ -49,17 +52,15 @@ export function App() {
 
   const getTable = (id: string) => {
     TableService.getMetadataById(id, i18n.resolvedLanguage)
-    .then((tableMetadataResponse) =>
-    {
-      const pxTab: PxTable = mapTableMetadataResponse(tableMetadataResponse);
-      setPxTable(pxTab); setErrorMsg('')
-    }
-    )
-    .catch((error) => 
-    {
-      setErrorMsg('Could not get table: ' + id); setPxTable(null)
-    }
-    );
+      .then((tableMetadataResponse) => {
+        const pxTab: PxTable = mapTableMetadataResponse(tableMetadataResponse);
+        setPxTable(pxTab);
+        setErrorMsg('');
+      })
+      .catch((error) => {
+        setErrorMsg('Could not get table: ' + id);
+        setPxTable(null);
+      });
   };
 
   return (
@@ -96,7 +97,6 @@ export function App() {
         wolf, no even a little fox.
       </BodyLong>
       <br />
-      <VariableBox />
       <br />
       <Label htmlFor="tabid" textcolor="subtle">
         Enter table id:
@@ -115,13 +115,30 @@ export function App() {
         onChange={(e) => setTableid(e.target.value.trim())}
       /> */}
       &nbsp;
-      { errorMsg.length > 0 && <Tag size="small" variant="error" type='border'>{errorMsg}</Tag>
-      } 
+      {errorMsg.length > 0 && (
+        <Tag size="small" variant="error" type="border">
+          {errorMsg}
+        </Tag>
+      )}
       <br />
       <br />
       <Button variant="secondary" onClick={() => getTable(tableid)}>
         Get table
       </Button>
+      <br />
+      {pxTable && ( /* TODO: Add mapping over pxTable.variables to show all variables */
+        <div className={cl(classes.variableBoxContainer)}>
+          <VariableBox
+            label={pxTable.variables[0].label}
+            id={pxTable.variables[0].id}
+            type={pxTable.variables[0].type}
+            mandatory={pxTable.variables[0].mandatory}
+            values={pxTable.variables[0].values}
+            codeLists={pxTable.variables[0].codeLists}
+            notes={pxTable.variables[0].notes}
+          />
+        </div>
+      )}
       <br />
       {pxTable && (
         <div>
@@ -129,25 +146,34 @@ export function App() {
           <Label>{pxTable.label}</Label>
           <ul>
             {pxTable.variables.map((variable) => (
-              <li key={variable.id}><h3>{variable.label}</h3>
-                {variable.mandatory && <Tag size="xsmall" variant="info" type='border'>Mandatory</Tag>}
-                <ul><h4>Values:</h4>
+              <li key={variable.id}>
+                <h3>{variable.label}</h3>
+                {variable.mandatory && (
+                  <Tag size="xsmall" variant="info" type="border">
+                    Mandatory
+                  </Tag>
+                )}
+                <ul>
+                  <h4>Values:</h4>
                   {variable.values.map((value) => (
-                    <li key={value.code}>{value.label}
+                    <li key={value.code}>
+                      {value.label}
                       <ul>
                         {value.notes?.map((note) => (
                           <li key={note.text}>{note.text}</li>
                         ))}
                       </ul>
                     </li>
-                  ))} 
+                  ))}
                 </ul>
-                <ol><h4>CodeLists:</h4>
+                <ol>
+                  <h4>CodeLists:</h4>
                   {variable.codeLists?.map((codelist) => (
                     <li key={codelist.id}>{codelist.label}</li>
                   ))}
                 </ol>
-                <ul><h4>Notes:</h4>
+                <ul>
+                  <h4>Notes:</h4>
                   {variable.notes?.map((note) => (
                     <li key={note.text}>{note.text}</li>
                   ))}

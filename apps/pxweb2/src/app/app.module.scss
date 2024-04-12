@@ -5,6 +5,10 @@
   width: 100%;
 }
 
+.variableBoxContainer {
+  width: 20.25rem;
+}
+
 @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
   .breakpoints {
     max-width: 100px;
