@@ -1,7 +1,90 @@
-/*
- * Replace this with your own classes
- *
- * e.g.
- * .container {
- * }
-*/
+@use '../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixed;
+
+.variablebox {
+  /* TODO: TEMP REMOVE LATER */
+  //border: 1px solid black;
+  /* width: 20.25rem is added to a container in app.tsx */
+
+  /* Layout */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+
+  /* Style */
+  border-radius: var(--border-radius-large, 1rem);
+}
+
+.variablebox-header {
+  /* inherited? */
+  display: flex;
+  align-items: flex-start;
+
+  /* Layout */
+  //padding: 0.75rem, 0.75rem, 1.25rem, 1.25rem;
+  padding: fixed.$spacing-3 fixed.$spacing-3 fixed.$spacing-5 fixed.$spacing-5;
+  gap: 1rem;
+  align-self: stretch;
+
+  /* Style */
+  background: var(--color-surface-default, #fff);
+}
+
+.header-title-and-tag {
+  /* inherited? */
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  align-self: stretch;
+
+  /* Layout */
+  padding-top: 0.375rem;
+  gap: fixed.$spacing-2;
+  flex: 1 0 0;
+}
+
+.header-title {
+  /* inherited? */
+  display: flex;
+  align-items: flex-start;
+  align-self: stretch;
+
+  /* Layout */
+  padding-top: 0.125rem;
+
+  /* need to place on Heading? "flex: 1 0 0;"  */
+}
+
+.header-tags {
+  /* inherited? */
+  display: flex;
+  align-items: flex-start;
+
+  /* Layout */
+  gap: fixed.$spacing-2;
+}
+
+.header-btn {
+  /* inherited? */
+  display: flex;
+  align-items: flex-start;
+
+  /* Layout */
+  width: 2.75rem;
+  height: 2.75rem;
+
+}
+
+.variablebox-content {
+  /* Layout */
+  display: flex;
+  padding: fixed.$spacing-2 fixed.$spacing-5 fixed.$spacing-5 fixed.$spacing-5;
+
+  flex-direction: column;
+  align-items: flex-start;
+  gap: fixed.$spacing-3;
+  align-self: stretch;
+
+  /* Style */
+  background: var(--color-surface-default, #fff);
+}
