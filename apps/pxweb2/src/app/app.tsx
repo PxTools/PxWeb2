@@ -12,11 +12,15 @@ import {
   Label,
   Select,
   SelectOption,
+  Search,
   PxTable,
   Search,
   Tag,
   VariableBox
 } from '@pxweb2/pxweb2-ui';
+// import {
+//   PxTable
+// } from '@pxweb2/pxweb2-shared-types';
 import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
 //import { NumberFormatter } from '../i18n/formatters';
 import { TableService } from '@pxweb2/pxweb2-api-client';
