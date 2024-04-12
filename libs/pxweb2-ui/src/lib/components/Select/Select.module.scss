@@ -75,23 +75,14 @@
 }
 
 .visuallyHidden {
-    border: 0 !important;
-    clip: rect(0, 0, 0, 0) !important;
-    height: 1px !important;
-    margin: -1px !important;
-    overflow: hidden !important;
-    padding: 0 !important;
-    top: 0 !important;
-    position: absolute !important;
-    white-space: nowrap !important;
-    width: 1px !important;
-  }
+    display: none;
+}
 
-  .buttonFocusHidden {
+.buttonFocusHidden {
     &:focus-visible {
         outline: none;
     }   
- }
+}
 
 // --------------------------------------------------------
 // --- CSS classes for the Variabelbox Select component ---

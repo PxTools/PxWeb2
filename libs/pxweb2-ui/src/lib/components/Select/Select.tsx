@@ -16,6 +16,7 @@ export interface SelectProps {
   defaultOption?: string;
   options: SelectOption[];
   selectedOption?: string;
+  onChange: (selectedItem: SelectOption) => void;
   arialLabelButton?: string;
   className?: string;
 }
@@ -32,18 +33,19 @@ export function Select({
   defaultOption = '',
   options: ops,
   selectedOption,
+  onChange,
   arialLabelButton = 'Show options',
   className = '',
 }: SelectProps) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
-  
+
   if (selectedOption != null) {
-    const selOption = ops.find(x => x.value === selectedOption);
+    const selOption = ops.find((x) => x.value === selectedOption);
     if (selOption != null) {
       defaultOption = selOption.label;
     }
   }
-  
+
   return (
     <div>
       {variant === 'default'
@@ -52,6 +54,7 @@ export function Select({
             label,
             ops,
             defaultOption,
+            onChange,
             arialLabelButton,
             cssClasses
           )
@@ -59,6 +62,7 @@ export function Select({
             label,
             ops,
             defaultOption,
+            onChange,
             arialLabelButton,
             cssClasses
           )}
@@ -71,6 +75,7 @@ function DefaultSelect(
   label: string,
   options: SelectOption[],
   defaultOption: string,
+  onChange: (selectedItem: SelectOption) => void,
   arialLabelButton: string,
   cssClasses: string
 ) {
@@ -97,7 +102,10 @@ function DefaultSelect(
           icon="ChevronDown"
           size="small"
           aria-label={arialLabelButton}
-          onClick={() => openOptions(options)}
+          onClick={(event) => {
+            openOptions(options); // TODO: Get option
+            onChange(options[0]); // TODO: Use selected option
+          }}
           className={cl(classes.buttonFocusHidden)}
         ></Button>
       </div>
@@ -109,6 +117,7 @@ function VariableBoxSelect(
   label: string,
   options: SelectOption[],
   defaultOption: string,
+  onChange: (selectedItem: SelectOption) => void,
   arialLabelButton: string,
   cssClasses: string
 ) {
@@ -133,7 +142,10 @@ function VariableBoxSelect(
         icon="ChevronDown"
         size="small"
         aria-label={arialLabelButton}
-        onClick={() => openOptions(options)}
+        onClick={(event) => {
+          openOptions(options); // TODO: Get option
+          onChange(options[0]); // TODO: Use selected option
+        }}
         className={cl(classes.buttonFocusHidden)}
       ></Button>
     </div>
