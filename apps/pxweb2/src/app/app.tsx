@@ -110,7 +110,7 @@ export function App() {
         Enter table id:
       </Label>
       <br />
-      <select onChange={(e) => setTableid(e.target.value)}>
+      <select name="tabid" id='tabid' onChange={(e) => setTableid(e.target.value)}>
         <option value="TAB638">TAB638</option>
         <option value="TAB1292">TAB1292</option>
         <option value="TAB5659">TAB5659</option>
