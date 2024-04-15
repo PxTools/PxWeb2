@@ -12,7 +12,7 @@
   align-items: flex-start;
 
   /* Style */
-  border-radius: var(--border-radius-large, 1rem);
+  border-radius: var(--px-border-radius-large, 1rem);
 }
 
 .variablebox-header {
@@ -27,7 +27,7 @@
   align-self: stretch;
 
   /* Style */
-  background: var(--color-surface-default, #fff);
+  background: var(--px-color-surface-default);
 }
 
 .header-title-and-tag {
@@ -86,5 +86,5 @@
   align-self: stretch;
 
   /* Style */
-  background: var(--color-surface-default, #fff);
+  background: var(--px-color-surface-default);
 }

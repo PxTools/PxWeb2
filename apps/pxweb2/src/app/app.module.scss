@@ -28,6 +28,7 @@
 
 .variableBoxContainer {
   width: 20.25rem;
+  background: var(--px-color-surface-moderate, #DBEBEB);
 }
 
 @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
