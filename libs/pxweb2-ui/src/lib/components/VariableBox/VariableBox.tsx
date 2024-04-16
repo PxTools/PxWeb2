@@ -100,8 +100,12 @@ function VariableBoxHeader({
             {t(
               'presentation_page.sidemenu.selection.variablebox.header.tag_selected',
               {
-                selected: totalChosenValues,
-                total: totalValues,
+                selected: t('number.simple_number_with_zero_decimal', {
+                  value: totalChosenValues,
+                }),
+                total: t('number.simple_number_with_zero_decimal', {
+                  value: totalValues,
+                }),
               }
             )}
           </Tag>
