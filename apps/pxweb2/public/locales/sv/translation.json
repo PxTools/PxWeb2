@@ -9,5 +9,23 @@
   "start_page": {
     "header": "Välkommen till appen!",
     "welcome_trans_test": "Välkommen till <1>appen</1> för PxWeb 2.0!"
+  },
+  "presentation_page": {
+    "sidemenu": {
+      "selection": {
+        "variablebox": {
+          "header": {
+            "tag_selected": "{{selected}} av {{total}} valda",
+            "mandatory": "Måste väljas"
+          },
+          "content": {
+            "mixed_checkbox": {
+              "select_all": "Välj alla",
+              "deselect_all": "Välj bort alla"
+            }
+          }
+        }
+      }
+    }
   }
 }

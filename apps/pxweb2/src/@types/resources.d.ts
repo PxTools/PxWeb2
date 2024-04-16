@@ -40,7 +40,19 @@ interface Resources {
       "sidemenu": {
         "hide": "Hide menu",
         "selection": {
-          "title": "Filter"
+          "title": "Filter",
+          "variablebox": {
+            "header": {
+              "tag_selected": "{{selected}} of {{total}} selected",
+              "tag_mandatory": "Mandatory"
+            },
+            "content": {
+              "mixed_checkbox": {
+                "select_all": "Select all",
+                "deselect_all": "Deselect all"
+              }
+            }
+          }
         },
         "view": {
           "title": "View",
