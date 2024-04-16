@@ -17,6 +17,7 @@ export interface SelectProps {
   options: SelectOption[];
   selectedOption?: string;
   onChange: (selectedItem: SelectOption) => void;
+  tabIndex?: number;
   className?: string;
 }
 
@@ -33,6 +34,7 @@ export function Select({
   options: ops,
   selectedOption,
   onChange,
+  tabIndex = 0,
   className = '',
 }: SelectProps) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
@@ -53,6 +55,7 @@ export function Select({
             ops,
             defaultOption,
             onChange,
+            tabIndex,
             cssClasses
           )
         : VariableBoxSelect(
@@ -60,6 +63,7 @@ export function Select({
             ops,
             defaultOption,
             onChange,
+            tabIndex,
             cssClasses
           )}
     </div>
@@ -72,6 +76,7 @@ function DefaultSelect(
   options: SelectOption[],
   defaultOption: string,
   onChange: (selectedItem: SelectOption) => void,
+  tabIndex: number,
   cssClasses: string
 ) {
   return (
@@ -85,10 +90,20 @@ function DefaultSelect(
           {label}
         </Label>
       </div>
-      <div className={cl(classes.contentStyle)} onClick={(event) => {
+      <div
+        className={cl(classes.contentStyle)}
+        tabIndex={tabIndex}
+        onClick={(event) => {
+          openOptions(options); // TODO: Get option
+          onChange(options[0]); // TODO: Use selected option
+        }}
+        onKeyUp={(event) => {
+          if (event.key === ' ' || event.key === 'Enter') {
             openOptions(options); // TODO: Get option
             onChange(options[0]); // TODO: Use selected option
-          }}>
+          }
+        }}
+      >
         <BodyShort
           size="medium"
           className={cl(classes.optionLayout, classes.optionTypography)}
@@ -106,13 +121,24 @@ function VariableBoxSelect(
   options: SelectOption[],
   defaultOption: string,
   onChange: (selectedItem: SelectOption) => void,
+  tabIndex: number,
   cssClasses: string
 ) {
   return (
-    <div className={cl(classes.selectVariabelbox) + cssClasses} onClick={(event) => {
-      openOptions(options); // TODO: Get option
-      onChange(options[0]); // TODO: Use selected option
-    }}>
+    <div
+      className={cl(classes.selectVariabelbox) + cssClasses}
+      tabIndex={tabIndex}
+      onClick={(event) => {
+        openOptions(options); // TODO: Get option
+        onChange(options[0]); // TODO: Use selected option
+      }}
+      onKeyUp={(event) => {
+        if (event.key === ' ' || event.key === 'Enter') {
+          openOptions(options); // TODO: Get option
+          onChange(options[0]); // TODO: Use selected option
+        }
+      }}
+    >
       <div className={cl(classes.textWrapper)}>
         <Label size="small" textcolor="default">
           {label}
