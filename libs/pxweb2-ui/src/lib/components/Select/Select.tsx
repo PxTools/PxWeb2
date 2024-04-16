@@ -17,7 +17,6 @@ export interface SelectProps {
   options: SelectOption[];
   selectedOption?: string;
   onChange: (selectedItem: SelectOption) => void;
-  arialLabelButton?: string;
   className?: string;
 }
 
@@ -34,7 +33,6 @@ export function Select({
   options: ops,
   selectedOption,
   onChange,
-  arialLabelButton = 'Show options',
   className = '',
 }: SelectProps) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
@@ -55,7 +53,6 @@ export function Select({
             ops,
             defaultOption,
             onChange,
-            arialLabelButton,
             cssClasses
           )
         : VariableBoxSelect(
@@ -63,7 +60,6 @@ export function Select({
             ops,
             defaultOption,
             onChange,
-            arialLabelButton,
             cssClasses
           )}
     </div>
@@ -76,7 +72,6 @@ function DefaultSelect(
   options: SelectOption[],
   defaultOption: string,
   onChange: (selectedItem: SelectOption) => void,
-  arialLabelButton: string,
   cssClasses: string
 ) {
   return (
@@ -111,7 +106,6 @@ function VariableBoxSelect(
   options: SelectOption[],
   defaultOption: string,
   onChange: (selectedItem: SelectOption) => void,
-  arialLabelButton: string,
   cssClasses: string
 ) {
   return (
