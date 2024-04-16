@@ -1,33 +1,78 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
 
 import classes from './VariableBox.module.scss';
 import Button from '../Button/Button';
+import { Checkbox, MixedCheckbox } from '../Checkbox/Checkbox';
 import Tag from '../Tag/Tag';
 import Heading from '../Typography/Heading/Heading';
 import { Variable } from '../../shared-types/variable';
+import { Value } from '../../shared-types/value';
 
 /* eslint-disable-next-line */
-export interface VariableBoxProps extends Variable {
-  metadataLink?: string;
+export type VariableBoxProps = Omit<Variable, 'type'>;
+
+export function VariableBox({
+  id,
+  label,
+  mandatory = false,
+  values,
+  codeLists,
+  notes,
+}: VariableBoxProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedValues, setSelectedValues] = useState<Value['code'][]>([]);
+
+  const totalValues = values?.length;
+  const totalChosenValues = selectedValues.length;
+  /** Maybe improve names? */
+
+  /*
+   * How do we handle the state of chosen options/values?
+   * - should the state be handled here or in the parent component and passed down through props?
+   *
+   * isOpen is handled here, but should selectedValues be handled here as well?
+   * - No, it should be in parent component?
+   *
+   * How should we structure the HTML in terms of sections, divs, etc?
+   */
+
+  return (
+    <div className={cl(classes.variablebox)} key={id}>
+      <VariableBoxHeader
+        label={label}
+        mandatory={mandatory}
+        totalValues={totalValues}
+        totalChosenValues={totalChosenValues}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+      />
+
+      {isOpen && (
+        <VariableBoxContent
+          id={id}
+          values={values}
+          codeLists={codeLists}
+          notes={notes}
+          selectedValues={selectedValues}
+          setSelectedValues={setSelectedValues}
+          totalValues={totalValues}
+          totalChosenValues={totalChosenValues}
+        />
+      )}
+    </div>
+  );
 }
 
-interface VariableBoxHeaderProps {
-  label: string;
-  mandatory: boolean;
+type VariableBoxPropsToHeader = Pick<VariableBoxProps, 'label' | 'mandatory'>;
+
+type VariableBoxHeaderProps = VariableBoxPropsToHeader & {
   totalValues: number;
   totalChosenValues: number;
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
-  metadataLink?: string;
-}
-
-interface VariableBoxContentProps {
-  values: Variable['values'];
-  codeLists: Variable['codeLists'];
-  notes: Variable['notes'];
-}
+};
 
 function VariableBoxHeader({
   label,
@@ -46,96 +91,151 @@ function VariableBoxHeader({
       onClick={() => setIsOpen(!isOpen)}
     >
       <div className={cl(classes['header-title-and-tag'])}>
-        {/* TODO: Is this the right level for Heading here?
-        * WARNING: THIS ONE ADDS MARGIN TOP AND BOTTOM 18px ATM -> USER AGENT STYLESHEET
-        */}
+        {/* TODO: Is this the right level for Heading here?*/}
         <Heading level="3" className={cl(classes['header-title'])} size="small">
           {capitalizedTitle}
         </Heading>
         <div className={cl(classes['header-tags'])}>
           <Tag variant="success">
-            {totalChosenValues} av {totalValues} valgt
+            {t(
+              'presentation_page.sidemenu.selection.variablebox.header.tag_selected',
+              {
+                selected: totalChosenValues,
+                total: totalValues,
+              }
+            )}
           </Tag>
-          {/* TODO: Add translation */}
           {mandatory && (
-            <Tag variant="info">{t('common.generic_tags.mandatory')}</Tag> 
-            /*
-              TODO: Is this the correct place for this translation?
-              Could other places want something else for "Mandatory" than "Må velges"?
-            */
+            <Tag variant="info">
+              {t(
+                'presentation_page.sidemenu.selection.variablebox.header.tag_mandatory'
+              )}
+            </Tag>
           )}
-          {/* TODO: Add translation */}
         </div>
       </div>
 
       <div className={cl(classes['header-btn'])}>
-        <Button variant="tertiary" size='medium' icon={isOpen ? 'ChevronUp' : 'ChevronDown'} />
+        <Button
+          variant="tertiary"
+          size="medium"
+          icon={isOpen ? 'ChevronUp' : 'ChevronDown'}
+        />
       </div>
     </section>
   );
 }
 
+type VariableBoxPropsToContent = Omit<VariableBoxProps, 'label' | 'mandatory'>;
+
+// TODO: should selectedValues and setSelectedValues be string[] or Value['code'][]?
+type VariableBoxContentProps = VariableBoxPropsToContent & {
+  selectedValues: Value['code'][];
+  setSelectedValues: (values: Value['code'][]) => void;
+  totalValues: number;
+  totalChosenValues: number;
+};
+
 function VariableBoxContent({
+  id,
   values,
   codeLists,
   notes,
+  selectedValues,
+  setSelectedValues,
+  totalValues,
+  totalChosenValues,
 }: VariableBoxContentProps) {
+  const { t } = useTranslation();
+  const checkboxSelectAllText = t(
+    'presentation_page.sidemenu.selection.variablebox.content.mixed_checkbox.select_all'
+  );
+  const checkboxDeselectAllText = t(
+    'presentation_page.sidemenu.selection.variablebox.content.mixed_checkbox.deselect_all'
+  );
+
+  const [allSelected, setAllSelected] = useState<'mixed' | 'true' | 'false'>(
+    'mixed'
+  );
+  const [mixedCheckboxText, setMixedCheckboxText] = useState(
+    checkboxSelectAllText
+  );
+
+  useEffect(() => {
+    if (totalChosenValues === 0) {
+      setMixedCheckboxText(checkboxSelectAllText);
+      setAllSelected('false');
+    }
+    if (totalChosenValues > 0 && totalChosenValues < totalValues) {
+      setMixedCheckboxText(checkboxSelectAllText);
+      setAllSelected('mixed');
+    }
+    if (totalChosenValues === totalValues) {
+      setMixedCheckboxText(checkboxDeselectAllText);
+      setAllSelected('true');
+    }
+  }, [
+    totalChosenValues,
+    totalValues,
+    checkboxSelectAllText,
+    checkboxDeselectAllText,
+  ]);
+
+  const handleMixedCheckboxChange = () => {
+    if (allSelected === 'true') {
+      setSelectedValues([]);
+    }
+    if (allSelected === 'false' || allSelected === 'mixed') {
+      setSelectedValues(values.map((value) => value.code));
+    }
+  };
+
+  const handleCheckboxChange = (value: Value['code']) => {
+    if (selectedValues.includes(value)) {
+      setSelectedValues(selectedValues.filter((val) => val !== value));
+    }
+    if (!selectedValues.includes(value)) {
+      setSelectedValues([...selectedValues, value]);
+    }
+  };
+
   return (
     <section className={cl(classes['variablebox-content'])}>
+      {/* Add the Alert here, see note in figma about it. Need more functionality atm i think */}
+
       {/* TODO: Add check for codelists here. Insert select if it has them? */}
+      {codeLists && <p>Has a codelist. Add the Select component</p>}
 
-      {/* TODO: Add checkboxes here */}
+      {values && values.length > 6 && (
+        <p>Has more than 6 values. Add the Search component.</p>
+      )}
 
-      {/* TODO: Add notes? */}
-
-      {/* TODO: Add metadata links */}
-    </section>
-  );
-}
-
-export function VariableBox({
-  label,
-  type /* TODO: Is this needed? */,
-  mandatory = false,
-  values,
-  codeLists,
-  notes,
-  metadataLink = '',
-}: VariableBoxProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedValues, setSelectedValues] = useState<string[]>([]);
-
-  const totalValues = values?.length;
-  const totalChosenValues = selectedValues.length;
-
-  /*
-   * How do we handle the state of chosen options/values?
-   * - should the state be handled here or in the parent component?
-   * isOpen is handled here, but should selectedValues be handled here as well?
-   * - No, it should be in parent component?
-   *
-   * Should we have separate components for the header and the content?
-   * How should we structure the HTML in terms of sections, divs, etc?
-   */
-
-  return (
-    <div className={cl(classes.variablebox)}>
-      <VariableBoxHeader
-        label={label}
-        mandatory={mandatory}
-        totalValues={totalValues}
-        totalChosenValues={totalChosenValues}
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-      />
-      {isOpen && (
-        <VariableBoxContent
-          values={values}
-          codeLists={codeLists}
-          notes={notes}
+      {values && values.length > 2 && (
+        <MixedCheckbox
+          id={id}
+          text={mixedCheckboxText}
+          value={allSelected}
+          onChange={handleMixedCheckboxChange}
+          ariaControls={values.map((value) => value.code)}
+          strong={true}
         />
       )}
-    </div>
+
+      {values.length > 0 &&
+        values.map((value) => (
+          <Checkbox
+            id={value.code}
+            value={selectedValues.includes(value.code)}
+            text={value.label}
+            onChange={() => handleCheckboxChange(value.code)}
+          />
+        ))}
+
+      {/* TODO: Add notes? Or is this shown somewhere else? */}
+      {notes && <p>Has notes</p>}
+
+      {/* TODO: Metadata Links are not implemented yet in the API. We have to wait for that to be done first. */}
+    </section>
   );
 }
 
