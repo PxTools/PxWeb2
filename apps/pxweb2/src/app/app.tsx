@@ -47,6 +47,7 @@ export function App() {
 
   const options: SelectOption[] = [{ label: 'Option 1', value: 'opt1' }, { label: 'Option 2', value: 'opt2'}, { label: 'Option 3', value: 'opt3'}];
 
+  /* TODO: Is there a mistake with this? on first load of the page? We keep getting a warning of missing key on li element, pointing to loading the translation on line 34 */
   const locales = {
     en: { title: 'English' },
     no: { title: 'Norsk' },
@@ -119,7 +120,11 @@ export function App() {
             Enter table id:
           </Label>
           <br />
-          <select onChange={(e) => setTableid(e.target.value)}>
+          <select 
+            name="tabid"
+            id="tabid"
+            onChange={(e) => setTableid(e.target.value)}
+          >
             <option value="TAB638">TAB638</option>
             <option value="TAB1292">TAB1292</option>
             <option value="TAB5659">TAB5659</option>
@@ -142,6 +147,24 @@ export function App() {
           <Button variant="secondary" onClick={() => getTable(tableid)}>
             Get table
           </Button>
+          <br />
+          <div className={cl(styles.variableBoxContainer)}>
+            {pxTable &&
+              pxTable.variables.length > 0 &&
+              pxTable.variables.map(
+                (variable) =>
+                  variable.id && (
+                    <VariableBox
+                      label={variable.label}
+                      id={variable.id}
+                      mandatory={variable.mandatory}
+                      values={variable.values}
+                      codeLists={variable.codeLists}
+                      notes={variable.notes}
+                    />
+                  )
+              )}
+          </div>
           <br />
           {pxTable && (
             <div>
