@@ -14,5 +14,23 @@
   "start_page": {
     "header": "مرحبا بكم في التطبيق!",
     "welcome_trans_test": "مرحبًا بك في <1>التطبيق</1> لـ PxWeb 2.0!"
+  },
+  "presentation_page": {
+    "sidemenu": {
+      "selection": {
+        "variablebox": {
+          "header": {
+            "tag_selected": "تم تحديد {{selected}} من {{total}}",
+            "tag_mandatory": "يجب أن يتم اختياره"
+          },
+          "content": {
+            "mixed_checkbox": {
+              "select_all": "اختر الكل",
+              "deselect_all": "الغاء تحديد الكل"
+            }
+          }
+        }
+      }
+    }
   }
 }

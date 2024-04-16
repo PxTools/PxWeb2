@@ -52,6 +52,16 @@
             "label": "Søk",
             "arialabelicontext": "Søkeikon",
             "ariallabelclearbuttontext": "Fjern søkeikon"
+          },
+          "header": {
+            "tag_selected": "{{selected}} av {{total}} valgt",
+            "tag_mandatory": "Må velges"
+          },
+          "content": {
+            "mixed_checkbox": {
+              "select_all": "Velg alle",
+              "deselect_all": "Fjern all valgte"
+            }
           }
         }
       },
