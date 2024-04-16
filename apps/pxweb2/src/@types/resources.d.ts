@@ -48,6 +48,16 @@ interface Resources {
               "label": "Search",
               "arialabelicontext": "Search icon",
               "ariallabelclearbuttontext": "Clear search icon"
+            },
+            "header": {
+              "tag_selected": "{{selected}} of {{total}} selected",
+              "tag_mandatory": "Mandatory"
+            },
+            "content": {
+              "mixed_checkbox": {
+                "select_all": "Select all",
+                "deselect_all": "Deselect all"
+              }
             }
           }
         },
