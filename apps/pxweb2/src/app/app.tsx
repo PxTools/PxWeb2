@@ -37,6 +37,7 @@ export function App() {
   const [errorMsg, setErrorMsg] = useState('');
   const [pxTable, setPxTable] = useState<PxTable | null>(null);
 
+  /* TODO: Is there a mistake with this? on first load of the page? We keep getting a warning of missing key on li element, pointing to loading the translation on line 34 */
   const locales = {
     en: { title: 'English' },
     no: { title: 'Norsk' },
@@ -102,7 +103,11 @@ export function App() {
         Enter table id:
       </Label>
       <br />
-      <select name="tabid" id='tabid' onChange={(e) => setTableid(e.target.value)}>
+      <select
+        name="tabid"
+        id="tabid"
+        onChange={(e) => setTableid(e.target.value)}
+      >
         <option value="TAB638">TAB638</option>
         <option value="TAB1292">TAB1292</option>
         <option value="TAB5659">TAB5659</option>
@@ -126,19 +131,23 @@ export function App() {
         Get table
       </Button>
       <br />
-      {pxTable && ( /* TODO: Add mapping over pxTable.variables to show all variables */
-        <div className={cl(classes.variableBoxContainer)}>
-          <VariableBox
-            label={pxTable.variables[0].label}
-            id={pxTable.variables[0].id}
-            type={pxTable.variables[0].type}
-            mandatory={pxTable.variables[0].mandatory}
-            values={pxTable.variables[0].values}
-            codeLists={pxTable.variables[0].codeLists}
-            notes={pxTable.variables[0].notes}
-          />
-        </div>
-      )}
+      <div className={cl(classes.variableBoxContainer)}>
+        {pxTable &&
+          pxTable.variables.length > 0 &&
+          pxTable.variables.map(
+            (variable) =>
+              variable.id && (
+                <VariableBox
+                  label={variable.label}
+                  id={variable.id}
+                  mandatory={variable.mandatory}
+                  values={variable.values}
+                  codeLists={variable.codeLists}
+                  notes={variable.notes}
+                />
+              )
+          )}
+      </div>
       <br />
       {pxTable && (
         <div>
