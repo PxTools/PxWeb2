@@ -1,8 +1,8 @@
 import cl from 'clsx';
 import classes from './Select.module.scss';
 import Label from '../Typography/Label/Label';
-import Button from '../Button/Button';
 import BodyShort from '../Typography/BodyShort/BodyShort';
+import { Icon } from '../Icon/Icon';
 
 export type SelectOption = {
   label: string;
@@ -90,24 +90,17 @@ function DefaultSelect(
           {label}
         </Label>
       </div>
-      <div className={cl(classes.contentLayout, classes.contentStyle)}>
+      <div className={cl(classes.contentStyle)} onClick={(event) => {
+            openOptions(options); // TODO: Get option
+            onChange(options[0]); // TODO: Use selected option
+          }}>
         <BodyShort
           size="medium"
           className={cl(classes.optionLayout, classes.optionTypography)}
         >
           {defaultOption}
         </BodyShort>
-        <Button
-          variant="tertiary"
-          icon="ChevronDown"
-          size="small"
-          aria-label={arialLabelButton}
-          onClick={(event) => {
-            openOptions(options); // TODO: Get option
-            onChange(options[0]); // TODO: Use selected option
-          }}
-          className={cl(classes.buttonFocusHidden)}
-        ></Button>
+        <Icon iconName="ChevronDown" className=""></Icon>
       </div>
     </div>
   );
@@ -122,7 +115,10 @@ function VariableBoxSelect(
   cssClasses: string
 ) {
   return (
-    <div className={cl(classes.selectVariabelbox) + cssClasses}>
+    <div className={cl(classes.selectVariabelbox) + cssClasses} onClick={(event) => {
+      openOptions(options); // TODO: Get option
+      onChange(options[0]); // TODO: Use selected option
+    }}>
       <div className={cl(classes.textWrapper)}>
         <Label size="small" textcolor="default">
           {label}
@@ -137,17 +133,7 @@ function VariableBoxSelect(
           {defaultOption}
         </BodyShort>
       </div>
-      <Button
-        variant="tertiary"
-        icon="ChevronDown"
-        size="small"
-        aria-label={arialLabelButton}
-        onClick={(event) => {
-          openOptions(options); // TODO: Get option
-          onChange(options[0]); // TODO: Use selected option
-        }}
-        className={cl(classes.buttonFocusHidden)}
-      ></Button>
+      <Icon iconName="ChevronDown" className=""></Icon>
     </div>
   );
 }
