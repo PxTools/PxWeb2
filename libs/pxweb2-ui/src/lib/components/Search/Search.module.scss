@@ -18,26 +18,20 @@
   box-sizing: border-box;
 }
 
-.searchIcon{  
-  color: var(--px-color-icon-default);    
-}
-
 .default {
     border-radius: var(--px-border-radius-small, 0.25rem);
-    box-shadow: 0 0 0 1.5px var(--px-color-border-action) inset;
+    outline: 2px solid var(--px-color-border-default, #62919A);
     background: var(--px-color-surface-default, #FFF);
     
     &:hover {
       border-radius: var(--px-border-radius-small, 0.25rem);
       outline: 2px solid var(--px-color-border-hover, #62919A);
-      background: var(--px-color-surface-default, #FFF);
-      outline-offset: -2px;
+      background: var(--px-color-surface-default, #FFF);    
     }
     &:active {
       border-radius: var(--px-border-radius-small, 0.25rem);
       outline: 2px solid var(--px-color-border-action, #274247);
-      background: var(--px-color-surface-default, #FFF);
-      outline-offset: -2px;
+      background: var(--px-color-surface-default, #FFF);      
     }
   }
   
@@ -47,14 +41,12 @@
      
     &:hover {
       border-radius: var(--px-border-radius-medium, 0.5rem);
-      outline: 1.5px solid var(--px-color-border-action, #274247);
-      outline-offset: -1.5px;
+      outline: 2px solid var(--px-color-border-action, #274247);      
     }
     &:active {
       border-radius: var(--px-border-radius-medium, 0.5rem);
-      outline: 1.5px solid var(--px-color-border-selected, #274247);
-      background: var(--px-color-surface-default, #FFF);
-      outline-offset: -1.5px;
+      outline: 2px solid var(--px-color-border-action, #274247);
+      background: var(--px-color-surface-default, #FFF);      
     }    
   }
 
@@ -75,9 +67,7 @@
     border: none;
     background-color: inherit;
     box-shadow: none;
-
     line-height: normal;
-
     inset-block: 0;
     padding: 0;
     outline: none;
@@ -106,16 +96,18 @@
     color: var(--px-color-text-subtle, #2d6975);                
   }
 
+  .searchIcon{  
+    color: var(--px-color-icon-default);    
+  }
+
 .wrapper.default:focus-within {    
       border-radius: var(--px-border-radius-small, 0.25rem);
       outline: 2px solid var(--px-color-border-action, #274247);
-      background: var(--px-color-surface-default, #FFF);
-      outline-offset: -2px;
+      background: var(--px-color-surface-default, #FFF);  
 } 
 
 .wrapper.inVariableBox:focus-within {    
       border-radius: var(--px-border-radius-medium, 0.5rem);
-      outline: 1.5px solid var(--px-color-border-selected, #274247);
-      background: var(--px-color-surface-default, #FFF);
-      outline-offset: -1.5px;
+      outline: 2px solid var(--px-color-border-action, #274247);
+      background: var(--px-color-surface-default, #FFF);      
 } 
