@@ -42,7 +42,6 @@
         outline: 2px solid var(--px-color-border-action);
         background: var(--px-color-surface-default);
     }
-
 }
 
 .optionLayout {
@@ -87,7 +86,7 @@
 
     &:active {
         border-radius: var(--px-border-radius-medium);
-        border: 2px solid var(--px-color-border-selected);
+        outline: 2px solid var(--px-color-border-selected);
     }
 }
 
