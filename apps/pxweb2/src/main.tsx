@@ -9,7 +9,7 @@ const root = ReactDOM.createRoot(
 );
 
 // eslint-disable-next-line no-restricted-globals
-if (location.hostname === 'localhost') {
+if (location.href.indexOf('localhost') >= -1) {
   validateConfig();
 }
 
