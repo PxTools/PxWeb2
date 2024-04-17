@@ -1,6 +1,6 @@
 import Ajv from 'ajv';
-import * as schema from '../../../public/config/config.schema.json';
-import { getConfig } from './getConfig';
+import * as schema from './config/config.schema.json';
+import { getConfig } from './config/getConfig';
 
 export const validateConfig = () => {
   const ajv = new Ajv();

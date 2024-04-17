@@ -3,7 +3,7 @@ import HttpApi from 'i18next-http-backend';
 import { initReactI18next } from 'react-i18next';
 
 import { pxNumber } from './formatters';
-import { getConfig } from '../app/util/getConfig';
+import { getConfig } from '../app/util/config/getConfig';
 
 export const defaultNS = 'translation';
 const config = getConfig();

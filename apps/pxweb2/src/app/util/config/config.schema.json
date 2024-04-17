@@ -7,15 +7,18 @@
       "type": "object",
       "properties": {
         "supportedLanguages": {
+          "description": "All supported languages",
           "type": "array",
           "items": {
             "type": "string"
           }
         },
         "defaultLanguage": {
+          "description": "The language that should be used unless other is specified",
           "type": "string"
         },
         "fallbackLanguage": {
+          "description": "If there is a missing string for another language, use a string from this language instead",
           "type": "string"
         }
       },
