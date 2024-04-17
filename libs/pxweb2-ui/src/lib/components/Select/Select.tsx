@@ -125,36 +125,39 @@ function VariableBoxSelect(
   cssClasses: string
 ) {
   return (
-    <div
-      className={cl(classes.selectVariabelbox) + cssClasses}
-      tabIndex={tabIndex}
-      onClick={(event) => {
-        openOptions(options); // TODO: Get option
-        onChange(options[0]); // TODO: Use selected option
-      }}
-      onKeyUp={(event) => {
-        if (event.key === ' ' || event.key === 'Enter') {
+    <>
+      <div
+        className={cl(classes.selectVariabelbox) + cssClasses}
+        tabIndex={tabIndex}
+        onClick={(event) => {
           openOptions(options); // TODO: Get option
           onChange(options[0]); // TODO: Use selected option
-        }
-      }}
-    >
-      <div className={cl(classes.textWrapper)}>
-        <Label size="small" textcolor="default">
-          {label}
-        </Label>
-        <BodyShort
-          size="medium"
-          className={cl(
-            classes.optionLayoutVariablebox,
-            classes.optionTypography
-          )}
-        >
-          {defaultOption}
-        </BodyShort>
+        }}
+        onKeyUp={(event) => {
+          if (event.key === ' ' || event.key === 'Enter') {
+            openOptions(options); // TODO: Get option
+            onChange(options[0]); // TODO: Use selected option
+          }
+        }}
+      >
+        <div className={cl(classes.textWrapper)}>
+          <Label size="small" textcolor="default">
+            {label}
+          </Label>
+          <BodyShort
+            size="medium"
+            className={cl(
+              classes.optionLayoutVariablebox,
+              classes.optionTypography
+            )}
+          >
+            {defaultOption}
+          </BodyShort>
+        </div>
+        <Icon iconName="ChevronDown" className=""></Icon>
       </div>
-      <Icon iconName="ChevronDown" className=""></Icon>
-    </div>
+      <div className={cl(classes.divider)}></div>
+    </>
   );
 }
 
