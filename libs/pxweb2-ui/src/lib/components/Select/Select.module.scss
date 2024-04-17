@@ -74,7 +74,6 @@
     background: var(--px-color-surface-default);
     
     &:hover {
-        border-bottom: 2px solid var(--px-color-surface-default);
         border-radius: var(--px-border-radius-medium);
         outline: 2px solid var(--px-color-border-action); 
         cursor: pointer;
