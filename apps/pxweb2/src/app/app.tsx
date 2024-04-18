@@ -10,6 +10,8 @@ import {
   Ingress,
   Label,
   Tag,
+  Select,
+  SelectOption,
   PxTable,
   Search,  
 } from '@pxweb2/pxweb2-ui';
@@ -21,10 +23,13 @@ import { useState } from 'react';
 
 function test(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
   event.preventDefault();
-  alert('test');
+  console.log('test');
 }
 function testSubmit() {
-  alert('test submit');
+  console.log('test submit');
+}
+function selectedOptionChanged(selectedItem: SelectOption) {  
+  console.log('Selected option: ' + selectedItem.label);
 }
 
 export function App() {
@@ -33,6 +38,8 @@ export function App() {
   const [tableid, setTableid] = useState('tab638');
   const [errorMsg, setErrorMsg] = useState('');
   const [pxTable, setPxTable] = useState<PxTable | null>(null);
+
+  const options: SelectOption[] = [{ label: 'Option 1', value: '1' }, { label: 'Option 2', value: '2'}, { label: 'Option 3', value: '3'}];
 
   const locales = {
     en: { title: 'English' },
@@ -154,6 +161,14 @@ export function App() {
           </ul>
         </div>
       )}
+      <br />
+      <div className={cl(classes.selectWrapper)}>
+        <Select variant='default' label='Default' defaultOption='Make selection' options={options} onChange={selectedOptionChanged}></Select>
+        <br />
+        <Select variant='default' hideLabel label='Default' defaultOption='Make selection' options={options} onChange={selectedOptionChanged}></Select>
+        <br />
+        <Select variant='inVariableBox' label='VariableBox' defaultOption='Make selection' options={options} onChange={selectedOptionChanged}></Select>
+      </div>
       <br />
       <Tag size="medium" variant="info">
         Mandatory
