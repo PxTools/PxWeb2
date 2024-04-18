@@ -38,7 +38,7 @@ export function App() {
   const [errorMsg, setErrorMsg] = useState('');
   const [pxTable, setPxTable] = useState<PxTable | null>(null);
 
-  const options: SelectOption[] = [{ label: 'Option 1', value: '1' }, { label: 'Option 2', value: '2'}, { label: 'Option 3', value: '3'}];
+  const options: SelectOption[] = [{ label: 'Option 1', value: 'opt1' }, { label: 'Option 2', value: 'opt2'}, { label: 'Option 3', value: 'opt3'}];
 
   const locales = {
     en: { title: 'English' },
@@ -166,7 +166,7 @@ export function App() {
         <br />
         <Select variant='default' hideLabel label='Default' defaultOption='Make selection' options={options} onChange={selectedOptionChanged}></Select>
         <br />
-        <Select variant='inVariableBox' label='VariableBox' defaultOption='Make selection' options={options} onChange={selectedOptionChanged}></Select>
+        <Select variant='inVariableBox' label='VariableBox' defaultOption='Make selection' options={options} onChange={selectedOptionChanged} selectedOption='opt2' ></Select>
       </div>
       <br />
       <Tag size="medium" variant="info">
