@@ -24,9 +24,9 @@ export function VariableBox({
   const [isOpen, setIsOpen] = useState(false);
   const [selectedValues, setSelectedValues] = useState<Value['code'][]>([]);
 
+  /** Maybe improve names? */
   const totalValues = values?.length;
   const totalChosenValues = selectedValues.length;
-  /** Maybe improve names? */
 
   /*
    * How do we handle the state of chosen options/values?
@@ -59,6 +59,7 @@ export function VariableBox({
           setSelectedValues={setSelectedValues}
           totalValues={totalValues}
           totalChosenValues={totalChosenValues}
+          isOpen={isOpen}
         />
       )}
     </div>
@@ -87,7 +88,10 @@ function VariableBoxHeader({
 
   return (
     <section
-      className={cl(classes['variablebox-header'])}
+      className={cl(
+        classes['variablebox-header'],
+        isOpen && classes['variablebox-header-isopen']
+      )}
       onClick={() => setIsOpen(!isOpen)}
     >
       <div className={cl(classes['header-title-and-tag'])}>
@@ -138,6 +142,7 @@ type VariableBoxContentProps = VariableBoxPropsToContent & {
   setSelectedValues: (values: Value['code'][]) => void;
   totalValues: number;
   totalChosenValues: number;
+  isOpen: boolean;
 };
 
 function VariableBoxContent({
@@ -149,6 +154,7 @@ function VariableBoxContent({
   setSelectedValues,
   totalValues,
   totalChosenValues,
+  isOpen,
 }: VariableBoxContentProps) {
   const { t } = useTranslation();
   const checkboxSelectAllText = t(
@@ -205,38 +211,40 @@ function VariableBoxContent({
 
   return (
     <section className={cl(classes['variablebox-content'])}>
-      {/* Add the Alert here, see note in figma about it. Need more functionality atm i think */}
+      <div className={cl(classes['variablebox-content-values-list'])}>
+        {/* Add the Alert here, see note in figma about it. Need more functionality atm i think */}
 
-      {/* TODO: Add check for codelists here. Insert select if it has them? */}
-      {codeLists && <p>Has a codelist. Add the Select component</p>}
+        {/* TODO: Add check for codelists here. Insert select if it has them? */}
+        {codeLists && <p>Has a codelist. Add the Select component</p>}
 
-      {values && values.length > 6 && (
-        <p>Has more than 6 values. Add the Search component.</p>
-      )}
+        {values && values.length > 6 && (
+          <p>Has more than 6 values. Add the Search component.</p>
+        )}
 
-      {values && values.length > 2 && (
-        <MixedCheckbox
-          id={id}
-          text={mixedCheckboxText}
-          value={allSelected}
-          onChange={handleMixedCheckboxChange}
-          ariaControls={values.map((value) => value.code)}
-          strong={true}
-        />
-      )}
-
-      {values.length > 0 &&
-        values.map((value) => (
-          <Checkbox
-            id={value.code}
-            value={selectedValues.includes(value.code)}
-            text={value.label}
-            onChange={() => handleCheckboxChange(value.code)}
+        {values && values.length > 2 && (
+          <MixedCheckbox
+            id={id}
+            text={mixedCheckboxText}
+            value={allSelected}
+            onChange={handleMixedCheckboxChange}
+            ariaControls={values.map((value) => value.code)}
+            strong={true}
           />
-        ))}
+        )}
 
-      {/* TODO: Add notes? Or is this shown somewhere else? */}
-      {notes && <p>Has notes</p>}
+        {values.length > 0 &&
+          values.map((value) => (
+            <Checkbox
+              id={value.code}
+              value={selectedValues.includes(value.code)}
+              text={value.label}
+              onChange={() => handleCheckboxChange(value.code)}
+            />
+          ))}
+
+        {/* TODO: Add notes? Or is this shown somewhere else? */}
+        {notes && <p>Has notes</p>}
+      </div>
 
       {/* TODO: Metadata Links are not implemented yet in the API. We have to wait for that to be done first. */}
     </section>
