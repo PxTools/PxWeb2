@@ -1,4 +1,5 @@
 import cl from 'clsx';
+
 import classes from './Select.module.scss';
 import Label from '../Typography/Label/Label';
 import BodyShort from '../Typography/BodyShort/BodyShort';
