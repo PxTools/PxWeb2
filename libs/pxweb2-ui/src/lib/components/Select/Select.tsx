@@ -10,7 +10,7 @@ export type SelectOption = {
   value: string;
 };
 
-export interface SelectProps {
+export type SelectProps = {
   variant?: 'default' | 'inVariableBox';
   label: string;
   hideLabel?: boolean;
@@ -20,7 +20,7 @@ export interface SelectProps {
   onChange: (selectedItem: SelectOption) => void;
   tabIndex?: number;
   className?: string;
-}
+};
 
 function openOptions(options: SelectOption[]) {
   const optionsStr = options.map((option) => option.label).join('\n');
@@ -48,38 +48,54 @@ export function Select({
   }
 
   return (
-    <div>
-      {variant === 'default'
-        ? DefaultSelect(
-            hideLabel,
-            label,
-            ops,
-            defaultOption,
-            onChange,
-            tabIndex,
-            cssClasses
-          )
-        : VariableBoxSelect(
-            label,
-            ops,
-            defaultOption,
-            onChange,
-            tabIndex,
-            cssClasses
-          )}
-    </div>
+    <>
+      {variant && variant === 'default' && (
+        <DefaultSelect
+          hideLabel={hideLabel}
+          label={label}
+          options={ops}
+          defaultOption={defaultOption}
+          onChange={onChange}
+          tabIndex={tabIndex}
+          className={cssClasses}
+        />
+      )}
+      {variant && variant === 'inVariableBox' && (
+        <VariableBoxSelect
+          label={label}
+          options={ops}
+          defaultOption={defaultOption}
+          onChange={onChange}
+          tabIndex={tabIndex}
+          className={cssClasses}
+        />
+      )}
+    </>
   );
 }
 
-function DefaultSelect(
-  hideLabel: boolean,
-  label: string,
-  options: SelectOption[],
-  defaultOption: string,
-  onChange: (selectedItem: SelectOption) => void,
-  tabIndex: number,
-  cssClasses: string
-) {
+type DefaultSelectProps = Pick<
+  SelectProps,
+  | 'hideLabel'
+  | 'label'
+  | 'options'
+  | 'defaultOption'
+  | 'onChange'
+  | 'tabIndex'
+  | 'className'
+>;
+
+function DefaultSelect({
+  hideLabel,
+  label,
+  options,
+  defaultOption,
+  onChange,
+  tabIndex,
+  className = '',
+}: DefaultSelectProps) {
+  const cssClasses = className.length > 0 ? ' ' + className : '';
+
   return (
     <div className={cl(classes.select) + cssClasses}>
       <div
@@ -117,14 +133,21 @@ function DefaultSelect(
   );
 }
 
-function VariableBoxSelect(
-  label: string,
-  options: SelectOption[],
-  defaultOption: string,
-  onChange: (selectedItem: SelectOption) => void,
-  tabIndex: number,
-  cssClasses: string
-) {
+type VariableBoxSelectProps = Pick<
+  SelectProps,
+  'label' | 'options' | 'defaultOption' | 'onChange' | 'tabIndex' | 'className'
+>;
+
+function VariableBoxSelect({
+  label,
+  options,
+  defaultOption,
+  onChange,
+  tabIndex,
+  className = '',
+}: VariableBoxSelectProps) {
+  const cssClasses = className.length > 0 ? ' ' + className : '';
+
   return (
     <>
       <div
