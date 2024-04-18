@@ -159,6 +159,7 @@ function VariableBoxContent({
   setSelectedValues,
   totalValues,
   totalChosenValues,
+  isOpen,
 }: VariableBoxContentProps) {
   const { t } = useTranslation();
   const checkboxSelectAllText = t(
@@ -249,9 +250,9 @@ function VariableBoxContent({
         </div>
       )}
 
-      {values && values.length > 6 && (
-        <p>Has more than 6 values. Add the Search component.</p>
-      )}
+        {values && values.length > 6 && (
+          <p>Has more than 6 values. Add the Search component.</p>
+        )}
 
       <div className={cl(classes['variablebox-content-values-list'])}>
         {values && values.length > 1 && (
