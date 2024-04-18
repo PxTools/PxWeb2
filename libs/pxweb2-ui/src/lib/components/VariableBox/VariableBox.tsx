@@ -9,9 +9,10 @@ import Tag from '../Tag/Tag';
 import Heading from '../Typography/Heading/Heading';
 import { Variable } from '../../shared-types/variable';
 import { Value } from '../../shared-types/value';
+import Select from '../Select/Select';
 
 /* eslint-disable-next-line */
-export type VariableBoxProps = Omit<Variable, 'type'>;
+export type VariableBoxProps = Omit<Variable, 'type' | 'notes'>;
 
 export function VariableBox({
   id,
@@ -19,7 +20,6 @@ export function VariableBox({
   mandatory = false,
   values,
   codeLists,
-  notes,
 }: VariableBoxProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedValues, setSelectedValues] = useState<Value['code'][]>([]);
@@ -52,9 +52,9 @@ export function VariableBox({
       {isOpen && (
         <VariableBoxContent
           id={id}
+          label={label}
           values={values}
           codeLists={codeLists}
-          notes={notes}
           selectedValues={selectedValues}
           setSelectedValues={setSelectedValues}
           totalValues={totalValues}
@@ -134,7 +134,7 @@ function VariableBoxHeader({
   );
 }
 
-type VariableBoxPropsToContent = Omit<VariableBoxProps, 'label' | 'mandatory'>;
+type VariableBoxPropsToContent = Omit<VariableBoxProps, 'mandatory'>;
 
 // TODO: should selectedValues and setSelectedValues be string[] or Value['code'][]?
 type VariableBoxContentProps = VariableBoxPropsToContent & {
@@ -147,14 +147,13 @@ type VariableBoxContentProps = VariableBoxPropsToContent & {
 
 function VariableBoxContent({
   id,
+  label,
   values,
   codeLists,
-  notes,
   selectedValues,
   setSelectedValues,
   totalValues,
   totalChosenValues,
-  isOpen,
 }: VariableBoxContentProps) {
   const { t } = useTranslation();
   const checkboxSelectAllText = t(
@@ -164,9 +163,9 @@ function VariableBoxContent({
     'presentation_page.sidemenu.selection.variablebox.content.mixed_checkbox.deselect_all'
   );
 
-  const [allSelected, setAllSelected] = useState<'mixed' | 'true' | 'false'>(
-    'mixed'
-  );
+  const [allValuesSelected, setallValuesSelected] = useState<
+    'mixed' | 'true' | 'false'
+  >('mixed');
   const [mixedCheckboxText, setMixedCheckboxText] = useState(
     checkboxSelectAllText
   );
@@ -174,15 +173,15 @@ function VariableBoxContent({
   useEffect(() => {
     if (totalChosenValues === 0) {
       setMixedCheckboxText(checkboxSelectAllText);
-      setAllSelected('false');
+      setallValuesSelected('false');
     }
     if (totalChosenValues > 0 && totalChosenValues < totalValues) {
       setMixedCheckboxText(checkboxSelectAllText);
-      setAllSelected('mixed');
+      setallValuesSelected('mixed');
     }
     if (totalChosenValues === totalValues) {
       setMixedCheckboxText(checkboxDeselectAllText);
-      setAllSelected('true');
+      setallValuesSelected('true');
     }
   }, [
     totalChosenValues,
@@ -192,10 +191,10 @@ function VariableBoxContent({
   ]);
 
   const handleMixedCheckboxChange = () => {
-    if (allSelected === 'true') {
+    if (allValuesSelected === 'true') {
       setSelectedValues([]);
     }
-    if (allSelected === 'false' || allSelected === 'mixed') {
+    if (allValuesSelected === 'false' || allValuesSelected === 'mixed') {
       setSelectedValues(values.map((value) => value.code));
     }
   };
@@ -209,23 +208,38 @@ function VariableBoxContent({
     }
   };
 
+  const handleSelectChange = () => {
+    console.log('Select clicked');
+  };
+
+  let mappedCodeList = codeLists?.map((codeList) => {});
+
   return (
     <section className={cl(classes['variablebox-content'])}>
+      {/* Add the Alert here, see note in figma about it. Need more functionality atm i think */}
+
+      {codeLists && codeLists.length > 0 && (
+        //<div className={classes['variablebox-content-select']}>
+        <Select
+          variant="inVariableBox"
+          label={label}
+          options={mappedCodeList}
+          //selectedOption={''}
+          onChange={handleSelectChange}
+        />
+        //</div>
+      )}
+
+      {values && values.length > 6 && (
+        <p>Has more than 6 values. Add the Search component.</p>
+      )}
+
       <div className={cl(classes['variablebox-content-values-list'])}>
-        {/* Add the Alert here, see note in figma about it. Need more functionality atm i think */}
-
-        {/* TODO: Add check for codelists here. Insert select if it has them? */}
-        {codeLists && <p>Has a codelist. Add the Select component</p>}
-
-        {values && values.length > 6 && (
-          <p>Has more than 6 values. Add the Search component.</p>
-        )}
-
         {values && values.length > 1 && (
           <MixedCheckbox
             id={id}
             text={mixedCheckboxText}
-            value={allSelected}
+            value={allValuesSelected}
             onChange={handleMixedCheckboxChange}
             ariaControls={values.map((value) => value.code)}
             strong={true}
@@ -241,9 +255,6 @@ function VariableBoxContent({
               onChange={() => handleCheckboxChange(value.code)}
             />
           ))}
-
-        {/* TODO: Add notes? Or is this shown somewhere else? */}
-        {notes && <p>Has notes</p>}
       </div>
 
       {/* TODO: Metadata Links are not implemented yet in the API. We have to wait for that to be done first. */}
