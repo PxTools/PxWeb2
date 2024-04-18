@@ -1,9 +1,11 @@
 import cl from 'clsx';
+import { useState } from 'react';
 
 import classes from './Select.module.scss';
 import Label from '../Typography/Label/Label';
 import BodyShort from '../Typography/BodyShort/BodyShort';
 import { Icon } from '../Icon/Icon';
+import Modal from '../Modal/Modal';
 
 export type SelectOption = {
   label: string;
@@ -148,18 +150,30 @@ function VariableBoxSelect({
 }: VariableBoxSelectProps) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
 
+  const [isModalOpen, setModalOpen] = useState<boolean>(false);
+  
+  const handleOpenModal = () => {
+    setModalOpen(true);
+  };
+  
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  }
+
   return (
     <>
       <div
         className={cl(classes.selectVariabelbox) + cssClasses}
         tabIndex={tabIndex}
         onClick={(event) => {
-          openOptions(options); // TODO: Get option
+          handleOpenModal();
+          //openOptions(options); // TODO: Get option
           onChange(options[0]); // TODO: Use selected option
         }}
         onKeyUp={(event) => {
           if (event.key === ' ' || event.key === 'Enter') {
-            openOptions(options); // TODO: Get option
+            //openOptions(options); // TODO: Get option
+            handleOpenModal();
             onChange(options[0]); // TODO: Use selected option
           }
         }}
@@ -181,6 +195,9 @@ function VariableBoxSelect({
         <Icon iconName="ChevronDown" className=""></Icon>
       </div>
       <div className={cl(classes.divider)}></div>
+      <Modal hasCloseBtn={true} isOpen={isModalOpen} onClose={handleCloseModal}>
+        <BodyShort>Hej</BodyShort>
+      </Modal>
     </>
   );
 }
