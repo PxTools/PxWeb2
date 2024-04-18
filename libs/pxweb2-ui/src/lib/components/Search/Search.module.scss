@@ -1,113 +1,114 @@
 @use '../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixed;
 
 .search {    
-    display: flex;
-    width: 340px;
-    flex-direction: column;
-    align-items: flex-start;
-    gap:4px;               
-  }
-
-.wrapper{
   display: flex;
-  padding: var(--spacing-2, 8px);
+  width: 340px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;               
+}
+
+.wrapper {
+  display: flex;
+  padding: fixed.$spacing-2;
   align-items: center;
-  gap: var(--spacing-2, 8px);
+  gap: fixed.$spacing-8; 
   align-self: stretch;    
-  height: var(--spacing-12, 48px);  
+  height: fixed.$spacing-12; 
   box-sizing: border-box;
 }
 
 .default {
+  border-radius: var(--px-border-radius-small, 0.25rem);
+  outline: 2px solid var(--px-color-border-default, #62919A);
+  background: var(--px-color-surface-default, #FFF);
+  
+  &:hover {
     border-radius: var(--px-border-radius-small, 0.25rem);
-    outline: 2px solid var(--px-color-border-default, #62919A);
-    background: var(--px-color-surface-default, #FFF);
-    
-    &:hover {
-      border-radius: var(--px-border-radius-small, 0.25rem);
-      outline: 2px solid var(--px-color-border-hover, #62919A);
-      background: var(--px-color-surface-default, #FFF);    
-    }
-    &:active {
-      border-radius: var(--px-border-radius-small, 0.25rem);
-      outline: 2px solid var(--px-color-border-action, #274247);
-      background: var(--px-color-surface-default, #FFF);      
-    }
+    outline: 2px solid var(--px-color-border-hover, #62919A);
+    background: var(--px-color-surface-default, #FFF);    
   }
   
-.inVariableBox {
-    border-radius: var(--px-border-radius-medium, 0.5rem);
-    background: var(--px-color-surface-subtle, #F0F8F9);
-     
-    &:hover {
-      border-radius: var(--px-border-radius-medium, 0.5rem);
-      outline: 2px solid var(--px-color-border-action, #274247);      
-    }
-    &:active {
-      border-radius: var(--px-border-radius-medium, 0.5rem);
-      outline: 2px solid var(--px-color-border-action, #274247);
-      background: var(--px-color-surface-default, #FFF);      
-    }    
+  &:active {
+    border-radius: var(--px-border-radius-small, 0.25rem);
+    outline: 2px solid var(--px-color-border-action, #274247);
+    background: var(--px-color-surface-default, #FFF);      
   }
+}
+  
+.inVariableBox {
+  border-radius: var(--px-border-radius-medium, 0.5rem);
+  background: var(--px-color-surface-subtle, #F0F8F9);
+   
+  &:hover {
+    border-radius: var(--px-border-radius-medium, 0.5rem);
+    outline: 2px solid var(--px-color-border-action, #274247);      
+  }
+  
+  &:active {
+    border-radius: var(--px-border-radius-medium, 0.5rem);
+    outline: 2px solid var(--px-color-border-action, #274247);
+    background: var(--px-color-surface-default, #FFF);      
+  }    
+}
 
 .input {
-    font-family: PxWeb-font-400;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 24px;
-    display: flex;
-    height: 1.875rem;
-    min-height: 1.875rem;
-    flex-direction: column;
-    justify-content: center;
-    flex: 1 0 0;
-    overflow: hidden;
-    color: var(--px-color-text-default);
-    white-space: nowrap;  
+  font-family: PxWeb-font-400;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  display: flex;
+  height: 1.875rem;
+  min-height: 1.875rem;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1 0 0;
+  overflow: hidden;
+  color: var(--px-color-text-default);
+  white-space: nowrap;  
+  border: none;
+  background-color: inherit;
+  box-shadow: none;
+  line-height: normal;
+  inset-block: 0;
+  padding: 0;
+  outline: none;
+
+  &:hover {
     border: none;
-    background-color: inherit;
     box-shadow: none;
-    line-height: normal;
-    inset-block: 0;
-    padding: 0;
     outline: none;
-
-    &:hover {
-      border: none;
-      box-shadow: none;
-      outline: none;
-    }
-
-     &:active {
-      border: none;
-      box-shadow: none;
-      outline: none;
-    }
-
-    &:focus-visible
-    { 
-      border: none;
-      box-shadow: none;
-      outline: none;
-    }
   }
 
-  ::placeholder {
-    color: var(--px-color-text-subtle, #2d6975);                
+  &:active {
+    border: none;
+    box-shadow: none;
+    outline: none;
   }
 
-  .searchIcon{  
-    color: var(--px-color-icon-default);    
+  &:focus-visible { 
+    border: none;
+    box-shadow: none;
+    outline: none;
   }
+}
+
+::placeholder {
+  color: var(--px-color-text-subtle, #2d6975);                
+}
+
+.searchIcon {  
+  color: var(--px-color-icon-default);    
+}
 
 .wrapper.default:focus-within {    
-      border-radius: var(--px-border-radius-small, 0.25rem);
-      outline: 2px solid var(--px-color-border-action, #274247);
-      background: var(--px-color-surface-default, #FFF);  
+  border-radius: var(--px-border-radius-small, 0.25rem);
+  outline: 2px solid var(--px-color-border-action, #274247);
+  background: var(--px-color-surface-default, #FFF);  
 } 
 
 .wrapper.inVariableBox:focus-within {    
-      border-radius: var(--px-border-radius-medium, 0.5rem);
-      outline: 2px solid var(--px-color-border-action, #274247);
-      background: var(--px-color-surface-default, #FFF);      
-} 
+  border-radius: var(--px-border-radius-medium, 0.5rem);
+  outline: 2px solid var(--px-color-border-action, #274247);
+  background: var(--px-color-surface-default, #FFF);      
+}
