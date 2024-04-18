@@ -221,7 +221,7 @@ function VariableBoxContent({
           <p>Has more than 6 values. Add the Search component.</p>
         )}
 
-        {values && values.length > 2 && (
+        {values && values.length > 1 && (
           <MixedCheckbox
             id={id}
             text={mixedCheckboxText}
