@@ -1,3 +1,4 @@
+export * from './lib/components/Alert/Alert';
 export * from './lib/components/Tag/Tag';
 export * from './lib/components/Typography/Label/Label';
 export * from './lib/components/Typography/BodyShort/BodyShort';
@@ -12,4 +13,3 @@ export * from './lib/shared-types/pxTable';
 export * from './lib/shared-types/value';
 export * from './lib/shared-types/variable';
 export * from './lib/shared-types/vartypeEnum';
-
