@@ -162,11 +162,11 @@ export function App() {
       )}
       <br />
       <div className={cl(classes.selectWrapper)}>
-        <Select variant='default' label='Default' defaultOption='Make selection' options={options} onChange={selectedOptionChanged}></Select>
+        <Select variant='default' label='Default' placeholder='Make selection' options={options} onChange={selectedOptionChanged}></Select>
         <br />
-        <Select variant='default' hideLabel label='Default' defaultOption='Make selection' options={options} onChange={selectedOptionChanged}></Select>
+        <Select variant='default' hideLabel label='Default' placeholder='Make selection' options={options} onChange={selectedOptionChanged}></Select>
         <br />
-        <Select variant='inVariableBox' label='VariableBox' defaultOption='Make selection' options={options} onChange={selectedOptionChanged} selectedOption={options[1]} ></Select>
+        <Select variant='inVariableBox' label='VariableBox' placeholder='Make selection' options={options} onChange={selectedOptionChanged} selectedOption={options[1]} ></Select>
       </div>
       <br />
       <Tag size="medium" variant="info">

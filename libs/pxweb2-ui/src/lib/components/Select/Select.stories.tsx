@@ -8,7 +8,7 @@ const meta: Meta<typeof Select> = {
 export default meta;
 
 const options: SelectOption[] = [{ label: 'Option 1', value: 'opt1' }, { label: 'Option 2', value: 'opt2'}, { label: 'Option 3 is an option with a very long text', value: 'opt3'}];
-const defaultOption = 'Make selection';
+const placeholder = 'Make selection';
 
 function selectedOptionChanged(selectedItem: SelectOption) {  
   console.log('Selected option: ' + selectedItem.label);
@@ -20,7 +20,7 @@ export const Default = {
     label: 'Label',
     hideLabel: false,
     options: options,
-    defaultOption: defaultOption,
+    placeholder: placeholder,
     onChange: selectedOptionChanged,
   },
 };
@@ -31,10 +31,10 @@ export const Variant: StoryFn<typeof Select> = () => {
       <h1>Variant</h1>
 
       <h2>Default:</h2>
-      <Select label="Label" options={options} defaultOption={defaultOption} onChange={selectedOptionChanged}></Select>
+      <Select label="Label" options={options} placeholder={placeholder} onChange={selectedOptionChanged}></Select>
 
       <h2>inVariableBox:</h2>
-      <Select label="Label" variant='inVariableBox' options={options} defaultOption={defaultOption} onChange={selectedOptionChanged}></Select>
+      <Select label="Label" variant='inVariableBox' options={options} placeholder={placeholder} onChange={selectedOptionChanged}></Select>
     </>
   );
 };
@@ -45,10 +45,10 @@ export const ShowLabel: StoryFn<typeof Select> = () => {
       <h1>Hide Label</h1>
 
       <h2>With label:</h2>
-      <Select label="Label" options={options} defaultOption={defaultOption} onChange={selectedOptionChanged}></Select>
+      <Select label="Label" options={options} placeholder={placeholder} onChange={selectedOptionChanged}></Select>
 
       <h2>Without label:</h2>
-      <Select label="Label" hideLabel options={options} defaultOption={defaultOption} onChange={selectedOptionChanged}></Select>
+      <Select label="Label" hideLabel options={options} placeholder={placeholder} onChange={selectedOptionChanged}></Select>
     </>
   );
 };
@@ -59,10 +59,10 @@ export const SelectedOption: StoryFn<typeof Select> = () => {
       <h1>Selected option</h1>
 
       <h2>Selected option = Option 2:</h2>
-      <Select label="Label" options={options} defaultOption={defaultOption} selectedOption={options[1]} onChange={selectedOptionChanged}></Select>
+      <Select label="Label" options={options} placeholder={placeholder} selectedOption={options[1]} onChange={selectedOptionChanged}></Select>
 
       <h2>No selected option:</h2>
-      <Select label="Label" hideLabel options={options} defaultOption={defaultOption} onChange={selectedOptionChanged}></Select>
+      <Select label="Label" hideLabel options={options} placeholder={placeholder} onChange={selectedOptionChanged}></Select>
     </>
   );
 };

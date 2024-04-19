@@ -16,7 +16,7 @@ export type SelectProps = {
   variant?: 'default' | 'inVariableBox';
   label: string;
   hideLabel?: boolean;
-  defaultOption?: string;
+  placeholder?: string;
   options: SelectOption[];
   selectedOption?: SelectOption;
   onChange: (selectedItem: SelectOption) => void;
@@ -33,7 +33,7 @@ export function Select({
   variant = 'default',
   label,
   hideLabel = false,
-  defaultOption = '',
+  placeholder = '',
   options: ops,
   selectedOption,
   onChange,
@@ -46,7 +46,7 @@ export function Select({
     // TODO: rewright
     const selOption = ops.find((x) => x.value === selectedOption.value);
     if (selOption != null) {
-      defaultOption = selOption.label;
+      placeholder = selOption.label;
     }
   }
 
@@ -57,7 +57,7 @@ export function Select({
           hideLabel={hideLabel}
           label={label}
           options={ops}
-          defaultOption={defaultOption}
+          placeholder={placeholder}
           onChange={onChange}
           tabIndex={tabIndex}
           className={cssClasses}
@@ -67,7 +67,7 @@ export function Select({
         <VariableBoxSelect
           label={label}
           options={ops}
-          defaultOption={defaultOption}
+          placeholder={placeholder}
           selectedOption={selectedOption}
           onChange={onChange}
           tabIndex={tabIndex}
@@ -83,7 +83,7 @@ type DefaultSelectProps = Pick<
   | 'hideLabel'
   | 'label'
   | 'options'
-  | 'defaultOption'
+  | 'placeholder'
   | 'onChange'
   | 'tabIndex'
   | 'className'
@@ -93,7 +93,7 @@ function DefaultSelect({
   hideLabel,
   label,
   options,
-  defaultOption,
+  placeholder,
   onChange,
   tabIndex,
   className = '',
@@ -129,7 +129,7 @@ function DefaultSelect({
           size="medium"
           className={cl(classes.optionLayout, classes.optionTypography)}
         >
-          {defaultOption}
+          {placeholder}
         </BodyShort>
         <Icon iconName="ChevronDown" className=""></Icon>
       </div>
@@ -141,7 +141,7 @@ type VariableBoxSelectProps = Pick<
   SelectProps,
   | 'label'
   | 'options'
-  | 'defaultOption'
+  | 'placeholder'
   | 'selectedOption'
   | 'onChange'
   | 'tabIndex'
@@ -151,7 +151,7 @@ type VariableBoxSelectProps = Pick<
 function VariableBoxSelect({
   label,
   options,
-  defaultOption,
+  placeholder,
   selectedOption,
   onChange,
   tabIndex,
@@ -206,7 +206,7 @@ function VariableBoxSelect({
               classes.optionTypography
             )}
           >
-            {selectedItem ? selectedItem.label : defaultOption}
+            {selectedItem ? selectedItem.label : placeholder}
           </BodyShort>
         </div>
         <Icon iconName="ChevronDown" className=""></Icon>
