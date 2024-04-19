@@ -154,6 +154,7 @@ function VariableBoxSelect({
 
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<string>(selectedOption || '');
+  const [clickedItem, setClickedItem] = useState<string>(selectedOption || '');
   
   const handleOpenModal = () => {
     setModalOpen(true);
@@ -161,6 +162,7 @@ function VariableBoxSelect({
   
   const handleCloseModal = () => {
     console.log(selectedItem);
+    setSelectedItem(clickedItem);
     setModalOpen(false);
   }
 
@@ -202,7 +204,7 @@ function VariableBoxSelect({
       <Modal hasCloseBtn={true} isOpen={isModalOpen} onClose={handleCloseModal}>
         {options.map((option) => (
           <div key={option.value}>
-            <input type="radio" id={option.value} name="option" value={option.value} key={option.value} checked={option.value === selectedItem} onChange={() => {setSelectedItem(option.value)}}/>
+            <input type="radio" id={option.value} name="option" value={option.value} key={option.value} checked={option.value === clickedItem} onChange={() => {setClickedItem(option.value)}}/>
             <label htmlFor={option.value}>{option.label}</label>
           </div>
           ))}
