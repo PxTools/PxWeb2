@@ -7,6 +7,7 @@ import { Label } from '../Typography/Label/Label';
 import { Button } from '../Button/Button';
 
 
+
 export interface SearchProps extends React.InputHTMLAttributes<HTMLInputElement> {
   variant: 'default' | 'inVariableBox';
   labelText?: string;
@@ -51,7 +52,7 @@ export function Search({
         <input
           type='text'
           ref={inputRef}
-          className={cl(classes.input, classes[variant])}
+          className={cl(classes[`bodyshort-medium`], classes.input, classes[variant])}
           placeholder={searchPlaceHolder}
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}

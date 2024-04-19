@@ -1,4 +1,5 @@
 @use '../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixed;
+@use '../../text-styles.scss';
 
 .search {    
   display: flex;
@@ -12,7 +13,7 @@
   display: flex;
   padding: fixed.$spacing-2;
   align-items: center;
-  gap: fixed.$spacing-8; 
+  gap: fixed.$spacing-2; 
   align-self: stretch;    
   height: fixed.$spacing-12; 
   box-sizing: border-box;
@@ -53,10 +54,6 @@
 }
 
 .input {
-  font-family: PxWeb-font-400;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 24px;
   display: flex;
   height: 1.875rem;
   min-height: 1.875rem;
@@ -69,7 +66,6 @@
   border: none;
   background-color: inherit;
   box-shadow: none;
-  line-height: normal;
   inset-block: 0;
   padding: 0;
   outline: none;
