@@ -18,7 +18,7 @@ export type SelectProps = {
   hideLabel?: boolean;
   defaultOption?: string;
   options: SelectOption[];
-  selectedOption?: string;
+  selectedOption?: SelectOption;
   onChange: (selectedItem: SelectOption) => void;
   tabIndex?: number;
   className?: string;
@@ -43,7 +43,8 @@ export function Select({
   const cssClasses = className.length > 0 ? ' ' + className : '';
 
   if (selectedOption != null) {
-    const selOption = ops.find((x) => x.value === selectedOption);
+    // TODO: rewright
+    const selOption = ops.find((x) => x.value === selectedOption.value);
     if (selOption != null) {
       defaultOption = selOption.label;
     }
@@ -138,7 +139,13 @@ function DefaultSelect({
 
 type VariableBoxSelectProps = Pick<
   SelectProps,
-  'label' | 'options' | 'defaultOption' | 'selectedOption' | 'onChange' | 'tabIndex' | 'className'
+  | 'label'
+  | 'options'
+  | 'defaultOption'
+  | 'selectedOption'
+  | 'onChange'
+  | 'tabIndex'
+  | 'className'
 >;
 
 function VariableBoxSelect({
@@ -153,18 +160,22 @@ function VariableBoxSelect({
   const cssClasses = className.length > 0 ? ' ' + className : '';
 
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
-  const [selectedItem, setSelectedItem] = useState<string>(selectedOption || '');
-  const [clickedItem, setClickedItem] = useState<string>(selectedOption || '');
-  
+  const [selectedItem, setSelectedItem] = useState<SelectOption | undefined>(
+    selectedOption
+  );
+  const [clickedItem, setClickedItem] = useState<SelectOption | undefined>(
+    selectedOption
+  );
+
   const handleOpenModal = () => {
     setModalOpen(true);
   };
-  
+
   const handleCloseModal = () => {
     console.log(selectedItem);
     setSelectedItem(clickedItem);
     setModalOpen(false);
-  }
+  };
 
   return (
     <>
@@ -195,7 +206,7 @@ function VariableBoxSelect({
               classes.optionTypography
             )}
           >
-            {selectedItem || defaultOption}
+            {selectedItem ? selectedItem.label : defaultOption}
           </BodyShort>
         </div>
         <Icon iconName="ChevronDown" className=""></Icon>
@@ -204,10 +215,20 @@ function VariableBoxSelect({
       <Modal hasCloseBtn={true} isOpen={isModalOpen} onClose={handleCloseModal}>
         {options.map((option) => (
           <div key={option.value}>
-            <input type="radio" id={option.value} name="option" value={option.value} key={option.value} checked={option.value === clickedItem} onChange={() => {setClickedItem(option.value)}}/>
+            <input
+              type="radio"
+              id={option.value}
+              name="option"
+              value={option.value}
+              key={option.value}
+              checked={option.value === clickedItem?.value}
+              onChange={() => {
+                setClickedItem(option);
+              }}
+            />
             <label htmlFor={option.value}>{option.label}</label>
           </div>
-          ))}
+        ))}
       </Modal>
     </>
   );

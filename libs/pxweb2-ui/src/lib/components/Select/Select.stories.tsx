@@ -7,7 +7,7 @@ const meta: Meta<typeof Select> = {
 };
 export default meta;
 
-const options: SelectOption[] = [{ label: 'Option 1', value: '1' }, { label: 'Option 2', value: '2'}, { label: 'Option 3', value: '3'}];
+const options: SelectOption[] = [{ label: 'Option 1', value: 'opt1' }, { label: 'Option 2', value: 'opt2'}, { label: 'Option 3 is an option with a very long text', value: 'opt3'}];
 const defaultOption = 'Make selection';
 
 function selectedOptionChanged(selectedItem: SelectOption) {  
@@ -58,8 +58,8 @@ export const SelectedOption: StoryFn<typeof Select> = () => {
     <>
       <h1>Selected option</h1>
 
-      <h2>Selected option = 1:</h2>
-      <Select label="Label" options={options} defaultOption={defaultOption} selectedOption='1' onChange={selectedOptionChanged}></Select>
+      <h2>Selected option = Option 2:</h2>
+      <Select label="Label" options={options} defaultOption={defaultOption} selectedOption={options[1]} onChange={selectedOptionChanged}></Select>
 
       <h2>No selected option:</h2>
       <Select label="Label" hideLabel options={options} defaultOption={defaultOption} onChange={selectedOptionChanged}></Select>
