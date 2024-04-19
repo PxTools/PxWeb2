@@ -14,7 +14,7 @@ export interface SearchProps extends React.InputHTMLAttributes<HTMLInputElement>
   searchPlaceHolder?: string;
   showLable?: boolean;
   ariaLabelIconText?: string;
-  arilLabelButtonText?: string;
+  arialLabelClearButtonText?: string;
 }
 
 export function Search({
@@ -23,7 +23,7 @@ export function Search({
   searchPlaceHolder,
   showLable = false,
   ariaLabelIconText = 'Search icon',
-  arilLabelButtonText = 'Clear search button',
+  arialLabelClearButtonText = 'Clear search button',
   ...rest
 }: SearchProps) {
   const [inputValue, setInputValue] = useState('');
@@ -65,7 +65,7 @@ export function Search({
             icon='XMark'
             size='small'
             onClick={handleClear}
-            aria-label={arilLabelButtonText}
+            aria-label={arialLabelClearButtonText}
           ></Button>
         )}
       </div>

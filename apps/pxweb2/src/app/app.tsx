@@ -195,8 +195,11 @@ export function App() {
       <br />
       <Search
         variant="default"
-        searchPlaceHolder={t('common.generic_buttons.search')}
-        labelText={t('common.generic_buttons.search')}
+        showLable={true}
+        searchPlaceHolder={t('presentation_page.sidemenu.selection.variablebox.search.placeholder')}
+        labelText={t('presentation_page.sidemenu.selection.variablebox.search.label')}
+        ariaLabelIconText={t('presentation_page.sidemenu.selection.variablebox.search.arialabelicontext')}
+        arialLabelClearButtonText={t('presentation_page.sidemenu.selection.variablebox.search.ariallabelclearbuttontext')}
       >        
       </Search>
       <br />
