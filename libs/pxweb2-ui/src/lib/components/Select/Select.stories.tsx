@@ -10,8 +10,8 @@ export default meta;
 const options: SelectOption[] = [{ label: 'Option 1', value: 'opt1' }, { label: 'Option 2', value: 'opt2'}, { label: 'Option 3 is an option with a very long text', value: 'opt3'}];
 const placeholder = 'Make selection';
 
-function selectedOptionChanged(selectedItem: SelectOption) {  
-  console.log('Selected option: ' + selectedItem.label);
+function selectedOptionChanged(selectedItem: SelectOption | undefined) {  
+  selectedItem ? console.log('Selected option: ' + selectedItem.label) : console.log('No option selected');
 }
 
 export const Default = {

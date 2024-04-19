@@ -27,8 +27,8 @@ function test(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
 function testSubmit() {
   console.log('test submit');
 }
-function selectedOptionChanged(selectedItem: SelectOption) {  
-  console.log('Selected option: ' + selectedItem.label);
+function selectedOptionChanged(selectedItem: SelectOption | undefined) {  
+  selectedItem ? console.log('Selected option: ' + selectedItem.label) : console.log('No option selected');
 }
 
 export function App() {
@@ -164,7 +164,7 @@ export function App() {
       <div className={cl(classes.selectWrapper)}>
         <Select variant='default' label='Default' placeholder='Make selection' options={options} onChange={selectedOptionChanged}></Select>
         <br />
-        <Select variant='default' hideLabel label='Default' placeholder='Make selection' options={options} onChange={selectedOptionChanged}></Select>
+        <Select variant='default' hideLabel label='Default' placeholder='Make selection' options={options} onChange={selectedOptionChanged} selectedOption={options[1]}></Select>
         <br />
         <Select variant='inVariableBox' label='VariableBox' placeholder='Make selection' options={options} onChange={selectedOptionChanged} selectedOption={options[1]} ></Select>
       </div>

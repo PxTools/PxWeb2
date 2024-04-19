@@ -19,7 +19,7 @@ export type SelectProps = {
   placeholder?: string;
   options: SelectOption[];
   selectedOption?: SelectOption;
-  onChange: (selectedItem: SelectOption) => void;
+  onChange: (selectedItem: SelectOption | undefined) => void;
   tabIndex?: number;
   className?: string;
 };
@@ -42,14 +42,6 @@ export function Select({
 }: SelectProps) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
 
-  if (selectedOption != null) {
-    // TODO: rewright
-    const selOption = ops.find((x) => x.value === selectedOption.value);
-    if (selOption != null) {
-      placeholder = selOption.label;
-    }
-  }
-
   return (
     <>
       {variant && variant === 'default' && (
@@ -58,6 +50,7 @@ export function Select({
           label={label}
           options={ops}
           placeholder={placeholder}
+          selectedOption={selectedOption}
           onChange={onChange}
           tabIndex={tabIndex}
           className={cssClasses}
@@ -84,6 +77,7 @@ type DefaultSelectProps = Pick<
   | 'label'
   | 'options'
   | 'placeholder'
+  | 'selectedOption'
   | 'onChange'
   | 'tabIndex'
   | 'className'
@@ -94,6 +88,7 @@ function DefaultSelect({
   label,
   options,
   placeholder,
+  selectedOption,
   onChange,
   tabIndex,
   className = '',
@@ -129,7 +124,7 @@ function DefaultSelect({
           size="medium"
           className={cl(classes.optionLayout, classes.optionTypography)}
         >
-          {placeholder}
+          {selectedOption ? selectedOption.label : placeholder}
         </BodyShort>
         <Icon iconName="ChevronDown" className=""></Icon>
       </div>
@@ -172,9 +167,9 @@ function VariableBoxSelect({
   };
 
   const handleCloseModal = () => {
-    console.log(selectedItem);
     setSelectedItem(clickedItem);
     setModalOpen(false);
+    onChange(clickedItem);
   };
 
   return (
@@ -184,14 +179,10 @@ function VariableBoxSelect({
         tabIndex={tabIndex}
         onClick={(event) => {
           handleOpenModal();
-          //openOptions(options); // TODO: Get option
-          onChange(options[0]); // TODO: Use selected option
         }}
         onKeyUp={(event) => {
           if (event.key === ' ' || event.key === 'Enter') {
-            //openOptions(options); // TODO: Get option
             handleOpenModal();
-            onChange(options[0]); // TODO: Use selected option
           }
         }}
       >
