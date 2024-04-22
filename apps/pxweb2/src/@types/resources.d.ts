@@ -26,7 +26,8 @@ interface Resources {
       },
       "generic_buttons": {
         "ok": "OK",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "search": "Search"
       }
     },
     "start_page": {
@@ -37,7 +38,15 @@ interface Resources {
       "sidemenu": {
         "hide": "Hide menu",
         "selection": {
-          "title": "Filter"
+          "title": "Filter",
+          "variablebox": {
+            "search": {
+              "placeholder": "Search",
+              "label": "Search",
+              "arialabelicontext": "Search icon",
+              "ariallabelclearbuttontext": "Clear search icon"
+            }
+          }
         },
         "view": {
           "title": "View",
