@@ -10,7 +10,6 @@ import Tag from '../Tag/Tag';
 import Heading from '../Typography/Heading/Heading';
 import { Variable } from '../../shared-types/variable';
 import { Value } from '../../shared-types/value';
-import Select from '../Select/Select';
 
 /* eslint-disable-next-line */
 export type VariableBoxProps = Omit<Variable, 'type' | 'notes'>;
