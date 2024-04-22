@@ -1,0 +1,17 @@
+@use '$ui/style-dictionary/dist/scss/fixed-variables.scss' as fixed;
+
+.contentWrapper {
+  background-color: var(--px-color-background-subtle);
+  border-top-left-radius: var(--px-border-radius-xlarge);
+
+  @media (min-width: fixed.$breakpoints-medium-min-width) {
+    background-color: none;
+  }
+}
+
+.content {
+  margin: fixed.$spacing-6;
+  padding: fixed.$spacing-12;
+  background-color: var(--px-color-background-default);
+  border-radius: var(--px-border-radius-xlarge);
+}

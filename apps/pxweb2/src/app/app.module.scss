@@ -5,6 +5,11 @@
   width: 100%;
 }
 
+.main {
+  display: flex;
+  width: 100%;
+}
+
 @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
   .breakpoints {
     max-width: 100px;

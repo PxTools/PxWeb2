@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './Header.module.scss';
-import { Button } from '@pxweb2/pxweb2-ui';
+import { Button, Heading } from '@pxweb2/pxweb2-ui';
 import { getConfig } from '../../util/config/getConfig';
 import { useTranslation } from 'react-i18next';
 
@@ -9,7 +9,9 @@ export const Header: React.FC = () => {
   const config = getConfig();
   return (
     <div className={styles.header}>
-      <div>PXWEB2</div>
+      <div>
+        <Heading size="medium">PXWEB2</Heading>
+      </div>
       <div className={styles.headerRight}>
         <div className={styles.desktopMenu}>
           <Button variant="tertiary" icon="House">
