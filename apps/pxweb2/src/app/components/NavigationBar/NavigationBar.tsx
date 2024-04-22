@@ -1,31 +1,12 @@
 import React from 'react';
-import cl from 'clsx';
-import styles from './NavigationRail.module.scss';
+import styles from './NavigationBar.module.scss';
 import { useTranslation } from 'react-i18next';
-import { Icon, IconProps, Label } from '@pxweb2/pxweb2-ui';
+import { Item } from '../NavigationRail/NavigationRail';
 
-interface ItemProps {
-  label: string;
-  selected: boolean;
-  icon: IconProps['iconName'];
-}
-export const Item: React.FC<ItemProps> = ({ label, selected, icon }) => {
-  return (
-    <div className={styles.item}>
-      <div className={cl(styles.icon, { [styles.selected]: selected })}>
-        <Icon iconName={icon} />
-      </div>
-      <div>
-        <Label>{label}</Label>
-      </div>
-    </div>
-  );
-};
-
-export const NavigationRail: React.FC = () => {
+export const NavigationBar: React.FC = () => {
   const { t } = useTranslation();
   return (
-    <div className={styles.navigationRail}>
+    <div className={styles.navigationBar}>
       <Item
         label={t('presentation_page.sidemenu.selection.title')}
         selected={true}
@@ -54,4 +35,4 @@ export const NavigationRail: React.FC = () => {
     </div>
   );
 };
-export default NavigationRail;
+export default NavigationBar;

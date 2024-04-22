@@ -23,6 +23,7 @@ import { useState } from 'react';
 import { Header } from './components/Header/Header';
 import NavigationRail from './components/NavigationRail/NavigationRail';
 import { Content } from './components/Content/Content';
+import NavigationBar from './components/NavigationBar/NavigationBar';
 
 function test(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
   event.preventDefault();
@@ -78,7 +79,12 @@ export function App() {
     <>
       <Header />
       <div className={styles.main}>
-        <NavigationRail />
+        <div className={styles.desktopNavigation}>
+          <NavigationRail />
+        </div>
+        <div className={styles.mobileNavigation}>
+          <NavigationBar />
+        </div>
         <Content>
           <ul>
             {Object.keys(locales).map((locale) => (
