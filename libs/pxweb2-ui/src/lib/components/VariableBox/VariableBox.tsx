@@ -134,6 +134,11 @@ function VariableBoxHeader({
   );
 }
 
+type MappedCodeList = {
+  value: string;
+  label: string;
+};
+
 type VariableBoxPropsToContent = Omit<VariableBoxProps, 'mandatory'>;
 
 // TODO: should selectedValues and setSelectedValues be string[] or Value['code'][]?
@@ -169,6 +174,8 @@ function VariableBoxContent({
   const [mixedCheckboxText, setMixedCheckboxText] = useState(
     checkboxSelectAllText
   );
+
+  const hasCodeLists = codeLists && codeLists.length > 0;
 
   useEffect(() => {
     if (totalChosenValues === 0) {
@@ -212,22 +219,31 @@ function VariableBoxContent({
     console.log('Select clicked');
   };
 
-  let mappedCodeList = codeLists?.map((codeList) => {});
+  let mappedCodeList: MappedCodeList[] = [];
+
+  if (hasCodeLists === true) {
+    mappedCodeList = codeLists?.map((codeList) => {
+      return {
+        value: codeList.id,
+        label: codeList.label,
+      };
+    });
+  }
 
   return (
     <section className={cl(classes['variablebox-content'])}>
       {/* Add the Alert here, see note in figma about it. Need more functionality atm i think */}
 
-      {codeLists && codeLists.length > 0 && (
-        //<div className={classes['variablebox-content-select']}>
-        <Select
-          variant="inVariableBox"
-          label={label}
-          options={mappedCodeList}
-          //selectedOption={''}
-          onChange={handleSelectChange}
-        />
-        //</div>
+      {hasCodeLists === true && (
+        <div className={classes['variablebox-content-select']}>
+          <Select
+            variant="inVariableBox"
+            label={label}
+            options={mappedCodeList}
+            //selectedOption={''}
+            onChange={handleSelectChange}
+          />
+        </div>
       )}
 
       {values && values.length > 6 && (
