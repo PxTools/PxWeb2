@@ -54,6 +54,7 @@ interface Resources {
               "tag_mandatory": "Mandatory"
             },
             "content": {
+              "select": "Choose grouping",
               "mixed_checkbox": {
                 "select_all": "Select all",
                 "deselect_all": "Deselect all"

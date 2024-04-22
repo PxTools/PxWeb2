@@ -24,6 +24,7 @@
             "mandatory": "Måste väljas"
           },
           "content": {
+            "select": "Välj division",
             "mixed_checkbox": {
               "select_all": "Välj alla",
               "deselect_all": "Välj bort alla"
