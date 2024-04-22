@@ -12,6 +12,7 @@ import {
   Label,
   Select,
   SelectOption,
+  Search,
   PxTable,
   Tag,
   VariableBox,
@@ -252,6 +253,16 @@ export function App() {
         <br />
         <input type="text" id="lname" name="lname" defaultValue="Doe" />
       </form>
+      <br />
+      <Search
+        variant="default"
+        showLable={true}
+        searchPlaceHolder={t('presentation_page.sidemenu.selection.variablebox.search.placeholder')}
+        labelText={t('presentation_page.sidemenu.selection.variablebox.search.label')}
+        ariaLabelIconText={t('presentation_page.sidemenu.selection.variablebox.search.arialabelicontext')}
+        arialLabelClearButtonText={t('presentation_page.sidemenu.selection.variablebox.search.ariallabelclearbuttontext')}
+      >        
+      </Search>
       <br />
       <Button form="form1" variant="primary" type="submit">
         Submit

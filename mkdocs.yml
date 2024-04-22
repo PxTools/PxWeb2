@@ -6,13 +6,9 @@ copyright: Copyright &copy; 2024 Statistics Sweden and Statistics Norway
 
 nav:
   - Home: index.md
-  - Getting Started:
-    - Installation: getting-started/installation.md
-    - Configuration: getting-started/configuration.md
-    - Contribute:
-      - Report a Bug: getting-started/contribute/report-a-bug.md
-      - Help us write the docs: getting-started/contribute/help-us-write-the-docs.md
-      - Add translations: getting-started/contribute/add-translations.md
+  - Project:
+    - Overview: project/overview.md
+    - PxWeb 2.0 solution: project/Solution.md
   - Documentation:
     - Customization:
       - Themes: documentation/customization/themes.md

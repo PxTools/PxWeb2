@@ -26,7 +26,8 @@ interface Resources {
       },
       "generic_buttons": {
         "ok": "OK",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "search": "Search"
       },
       "generic_tags": {
         "mandatory": "Mandatory"
@@ -42,6 +43,12 @@ interface Resources {
         "selection": {
           "title": "Filter",
           "variablebox": {
+            "search": {
+              "placeholder": "Search",
+              "label": "Search",
+              "arialabelicontext": "Search icon",
+              "ariallabelclearbuttontext": "Clear search icon"
+            },
             "header": {
               "tag_selected": "{{selected}} of {{total}} selected",
               "tag_mandatory": "Mandatory"
