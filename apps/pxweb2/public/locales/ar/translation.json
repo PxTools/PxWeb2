@@ -19,6 +19,7 @@
             "tag_mandatory": "يجب أن يتم اختياره"
           },
           "content": {
+            "select": "اختر القسم",
             "mixed_checkbox": {
               "select_all": "اختر الكل",
               "deselect_all": "الغاء تحديد الكل"

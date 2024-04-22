@@ -31,7 +31,7 @@ function test(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
 function testSubmit() {
   console.log('test submit');
 }
-function selectedOptionChanged(selectedItem: SelectOption) {  
+function selectedOptionChanged(selectedItem: SelectOption) {
   console.log('Selected option: ' + selectedItem.label);
 }
 
@@ -42,7 +42,11 @@ export function App() {
   const [errorMsg, setErrorMsg] = useState('');
   const [pxTable, setPxTable] = useState<PxTable | null>(null);
 
-  const options: SelectOption[] = [{ label: 'Option 1', value: '1' }, { label: 'Option 2', value: '2'}, { label: 'Option 3', value: '3'}];
+  const options: SelectOption[] = [
+    { label: 'Option 1', value: '1' },
+    { label: 'Option 2', value: '2' },
+    { label: 'Option 3', value: '3' },
+  ];
 
   /* TODO: Is there a mistake with this? on first load of the page? We keep getting a warning of missing key on li element, pointing to loading the translation on line 34 */
   const locales = {
@@ -150,7 +154,6 @@ export function App() {
                   mandatory={variable.mandatory}
                   values={variable.values}
                   codeLists={variable.codeLists}
-                  notes={variable.notes}
                 />
               )
           )}
@@ -201,11 +204,30 @@ export function App() {
       )}
       <br />
       <div className={cl(classes.selectWrapper)}>
-        <Select variant='default' label='Default' defaultOption='Make selection' options={options} onChange={selectedOptionChanged}></Select>
+        <Select
+          variant="default"
+          label="Default"
+          defaultOption="Make selection"
+          options={options}
+          onChange={selectedOptionChanged}
+        ></Select>
         <br />
-        <Select variant='default' hideLabel label='Default' defaultOption='Make selection' options={options} onChange={selectedOptionChanged}></Select>
+        <Select
+          variant="default"
+          hideLabel
+          label="Default"
+          defaultOption="Make selection"
+          options={options}
+          onChange={selectedOptionChanged}
+        ></Select>
         <br />
-        <Select variant='inVariableBox' label='VariableBox' defaultOption='Make selection' options={options} onChange={selectedOptionChanged}></Select>
+        <Select
+          variant="inVariableBox"
+          label="VariableBox"
+          defaultOption="Make selection"
+          options={options}
+          onChange={selectedOptionChanged}
+        ></Select>
       </div>
       <br />
       <Tag size="medium" variant="info">
