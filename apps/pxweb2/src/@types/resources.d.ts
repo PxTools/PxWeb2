@@ -35,6 +35,11 @@ interface Resources {
       "welcome_trans_test": "Welcome to the <1>app</1> for PxWeb 2.0!"
     },
     "presentation_page": {
+      "header": {
+        "searchbutton": "Search",
+        "languagebutton": "languages",
+        "statistics": "Statistikkbanken"
+      },
       "sidemenu": {
         "hide": "Hide menu",
         "selection": {

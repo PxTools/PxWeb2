@@ -13,13 +13,14 @@ import {
   Select,
   SelectOption,
   PxTable,
-  Search,  
+  Search,
 } from '@pxweb2/pxweb2-ui';
 import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
 //import { NumberFormatter } from '../i18n/formatters';
 import { TableService } from '@pxweb2/pxweb2-api-client';
-import { mapTableMetadataResponse } from '../mappers/TableMetadataResponseMapper'; 
+import { mapTableMetadataResponse } from '../mappers/TableMetadataResponseMapper';
 import { useState } from 'react';
+import { Header } from './components/header/Header';
 
 function test(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
   event.preventDefault();
@@ -28,7 +29,7 @@ function test(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
 function testSubmit() {
   console.log('test submit');
 }
-function selectedOptionChanged(selectedItem: SelectOption) {  
+function selectedOptionChanged(selectedItem: SelectOption) {
   console.log('Selected option: ' + selectedItem.label);
 }
 
@@ -39,7 +40,11 @@ export function App() {
   const [errorMsg, setErrorMsg] = useState('');
   const [pxTable, setPxTable] = useState<PxTable | null>(null);
 
-  const options: SelectOption[] = [{ label: 'Option 1', value: '1' }, { label: 'Option 2', value: '2'}, { label: 'Option 3', value: '3'}];
+  const options: SelectOption[] = [
+    { label: 'Option 1', value: '1' },
+    { label: 'Option 2', value: '2' },
+    { label: 'Option 3', value: '3' },
+  ];
 
   const locales = {
     en: { title: 'English' },
@@ -56,21 +61,20 @@ export function App() {
 
   const getTable = (id: string) => {
     TableService.getMetadataById(id, i18n.resolvedLanguage)
-    .then((tableMetadataResponse) =>
-    {
-      const pxTab: PxTable = mapTableMetadataResponse(tableMetadataResponse);
-      setPxTable(pxTab); setErrorMsg('')
-    }
-    )
-    .catch((error) => 
-    {
-      setErrorMsg('Could not get table: ' + id); setPxTable(null)
-    }
-    );
+      .then((tableMetadataResponse) => {
+        const pxTab: PxTable = mapTableMetadataResponse(tableMetadataResponse);
+        setPxTable(pxTab);
+        setErrorMsg('');
+      })
+      .catch((error) => {
+        setErrorMsg('Could not get table: ' + id);
+        setPxTable(null);
+      });
   };
 
   return (
     <>
+      <Header />
       <ul>
         {Object.keys(locales).map((locale) => (
           <li key={locale}>
@@ -119,8 +123,11 @@ export function App() {
         onChange={(e) => setTableid(e.target.value.trim())}
       /> */}
       &nbsp;
-      { errorMsg.length > 0 && <Tag size="small" variant="error" type='border'>{errorMsg}</Tag>
-      } 
+      {errorMsg.length > 0 && (
+        <Tag size="small" variant="error" type="border">
+          {errorMsg}
+        </Tag>
+      )}
       <br />
       <br />
       <Button variant="secondary" onClick={() => getTable(tableid)}>
@@ -133,25 +140,34 @@ export function App() {
           <Label>{pxTable.label}</Label>
           <ul>
             {pxTable.variables.map((variable) => (
-              <li key={variable.id}><h3>{variable.label}</h3>
-                {variable.mandatory && <Tag size="xsmall" variant="info" type='border'>Mandatory</Tag>}
-                <ul><h4>Values:</h4>
+              <li key={variable.id}>
+                <h3>{variable.label}</h3>
+                {variable.mandatory && (
+                  <Tag size="xsmall" variant="info" type="border">
+                    Mandatory
+                  </Tag>
+                )}
+                <ul>
+                  <h4>Values:</h4>
                   {variable.values.map((value) => (
-                    <li key={value.code}>{value.label}
+                    <li key={value.code}>
+                      {value.label}
                       <ul>
                         {value.notes?.map((note) => (
                           <li key={note.text}>{note.text}</li>
                         ))}
                       </ul>
                     </li>
-                  ))} 
+                  ))}
                 </ul>
-                <ol><h4>CodeLists:</h4>
+                <ol>
+                  <h4>CodeLists:</h4>
                   {variable.codeLists?.map((codelist) => (
                     <li key={codelist.id}>{codelist.label}</li>
                   ))}
                 </ol>
-                <ul><h4>Notes:</h4>
+                <ul>
+                  <h4>Notes:</h4>
                   {variable.notes?.map((note) => (
                     <li key={note.text}>{note.text}</li>
                   ))}
@@ -163,11 +179,30 @@ export function App() {
       )}
       <br />
       <div className={cl(classes.selectWrapper)}>
-        <Select variant='default' label='Default' defaultOption='Make selection' options={options} onChange={selectedOptionChanged}></Select>
+        <Select
+          variant="default"
+          label="Default"
+          defaultOption="Make selection"
+          options={options}
+          onChange={selectedOptionChanged}
+        ></Select>
         <br />
-        <Select variant='default' hideLabel label='Default' defaultOption='Make selection' options={options} onChange={selectedOptionChanged}></Select>
+        <Select
+          variant="default"
+          hideLabel
+          label="Default"
+          defaultOption="Make selection"
+          options={options}
+          onChange={selectedOptionChanged}
+        ></Select>
         <br />
-        <Select variant='inVariableBox' label='VariableBox' defaultOption='Make selection' options={options} onChange={selectedOptionChanged}></Select>
+        <Select
+          variant="inVariableBox"
+          label="VariableBox"
+          defaultOption="Make selection"
+          options={options}
+          onChange={selectedOptionChanged}
+        ></Select>
       </div>
       <br />
       <Tag size="medium" variant="info">
@@ -196,12 +231,19 @@ export function App() {
       <Search
         variant="default"
         showLable={true}
-        searchPlaceHolder={t('presentation_page.sidemenu.selection.variablebox.search.placeholder')}
-        labelText={t('presentation_page.sidemenu.selection.variablebox.search.label')}
-        ariaLabelIconText={t('presentation_page.sidemenu.selection.variablebox.search.arialabelicontext')}
-        arialLabelClearButtonText={t('presentation_page.sidemenu.selection.variablebox.search.ariallabelclearbuttontext')}
-      >        
-      </Search>
+        searchPlaceHolder={t(
+          'presentation_page.sidemenu.selection.variablebox.search.placeholder'
+        )}
+        labelText={t(
+          'presentation_page.sidemenu.selection.variablebox.search.label'
+        )}
+        ariaLabelIconText={t(
+          'presentation_page.sidemenu.selection.variablebox.search.arialabelicontext'
+        )}
+        arialLabelClearButtonText={t(
+          'presentation_page.sidemenu.selection.variablebox.search.ariallabelclearbuttontext'
+        )}
+      ></Search>
       <br />
       <Button form="form1" variant="primary" type="submit">
         Submit
