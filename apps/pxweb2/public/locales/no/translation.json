@@ -58,6 +58,7 @@
             "tag_mandatory": "Må velges"
           },
           "content": {
+            "select": "Velg inndeling",
             "mixed_checkbox": {
               "select_all": "Velg alle",
               "deselect_all": "Fjern all valgte"

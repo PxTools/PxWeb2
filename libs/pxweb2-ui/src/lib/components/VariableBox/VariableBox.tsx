@@ -5,11 +5,11 @@ import { useTranslation } from 'react-i18next';
 import classes from './VariableBox.module.scss';
 import Button from '../Button/Button';
 import { Checkbox, MixedCheckbox } from '../Checkbox/Checkbox';
+import Select from '../Select/Select';
 import Tag from '../Tag/Tag';
 import Heading from '../Typography/Heading/Heading';
 import { Variable } from '../../shared-types/variable';
 import { Value } from '../../shared-types/value';
-import Select from '../Select/Select';
 
 /* eslint-disable-next-line */
 export type VariableBoxProps = Omit<Variable, 'type' | 'notes'>;
@@ -87,7 +87,7 @@ function VariableBoxHeader({
   const capitalizedTitle = label.charAt(0).toUpperCase() + label.slice(1);
 
   return (
-    <section
+    <div
       className={cl(
         classes['variablebox-header'],
         isOpen && classes['variablebox-header-isopen']
@@ -130,7 +130,7 @@ function VariableBoxHeader({
           icon={isOpen ? 'ChevronUp' : 'ChevronDown'}
         />
       </div>
-    </section>
+    </div>
   );
 }
 
@@ -231,16 +231,19 @@ function VariableBoxContent({
   }
 
   return (
-    <section className={cl(classes['variablebox-content'])}>
+    <div className={cl(classes['variablebox-content'])}>
       {/* Add the Alert here, see note in figma about it. Need more functionality atm i think */}
 
       {hasCodeLists === true && (
         <div className={classes['variablebox-content-select']}>
           <Select
             variant="inVariableBox"
-            label={label}
+            label={t(
+              'presentation_page.sidemenu.selection.variablebox.content.select'
+            )} // TODO: Check the swedish translation with the swedes
             options={mappedCodeList}
-            //selectedOption={''}
+            defaultOption="Make a selection"
+            selectedOption={''} // TODO: Finish the logic for this. This is the selected option, like "region" or "age"
             onChange={handleSelectChange}
           />
         </div>
@@ -262,7 +265,8 @@ function VariableBoxContent({
           />
         )}
 
-        {values.length > 0 &&
+        {values &&
+          values.length > 0 &&
           values.map((value) => (
             <Checkbox
               id={value.code}
@@ -274,7 +278,7 @@ function VariableBoxContent({
       </div>
 
       {/* TODO: Metadata Links are not implemented yet in the API. We have to wait for that to be done first. */}
-    </section>
+    </div>
   );
 }
 
