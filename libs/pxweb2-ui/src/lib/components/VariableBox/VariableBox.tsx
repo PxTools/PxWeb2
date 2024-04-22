@@ -168,7 +168,7 @@ function VariableBoxContent({
     'presentation_page.sidemenu.selection.variablebox.content.mixed_checkbox.deselect_all'
   );
 
-  const [allValuesSelected, setallValuesSelected] = useState<
+  const [allValuesSelected, setAllValuesSelected] = useState<
     'mixed' | 'true' | 'false'
   >('mixed');
   const [mixedCheckboxText, setMixedCheckboxText] = useState(
@@ -180,15 +180,15 @@ function VariableBoxContent({
   useEffect(() => {
     if (totalChosenValues === 0) {
       setMixedCheckboxText(checkboxSelectAllText);
-      setallValuesSelected('false');
+      setAllValuesSelected('false');
     }
     if (totalChosenValues > 0 && totalChosenValues < totalValues) {
       setMixedCheckboxText(checkboxSelectAllText);
-      setallValuesSelected('mixed');
+      setAllValuesSelected('mixed');
     }
     if (totalChosenValues === totalValues) {
       setMixedCheckboxText(checkboxDeselectAllText);
-      setallValuesSelected('true');
+      setAllValuesSelected('true');
     }
   }, [
     totalChosenValues,
