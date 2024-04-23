@@ -11,14 +11,14 @@ interface ItemProps {
 }
 export const Item: React.FC<ItemProps> = ({ label, selected, icon }) => {
   return (
-    <div className={styles.item}>
+    <button className={styles.item}>
       <div className={cl(styles.icon, { [styles.selected]: selected })}>
         <Icon iconName={icon} />
       </div>
       <div>
         <Label>{label}</Label>
       </div>
-    </div>
+    </button>
   );
 };
 
