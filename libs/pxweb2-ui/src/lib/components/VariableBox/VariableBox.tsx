@@ -3,8 +3,8 @@ import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
 
 import classes from './VariableBox.module.scss';
-import Button from '../Button/Button';
 import { Checkbox, MixedCheckbox } from '../Checkbox/Checkbox';
+import { Icon } from '../Icon/Icon';
 import Search from '../Search/Search';
 import Select from '../Select/Select';
 import Tag from '../Tag/Tag';
@@ -74,6 +74,7 @@ type VariableBoxHeaderProps = VariableBoxPropsToHeader & {
   totalChosenValues: number;
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
+  tabIndex?: number;
 };
 
 function VariableBoxHeader({
@@ -83,9 +84,20 @@ function VariableBoxHeader({
   totalChosenValues,
   isOpen,
   setIsOpen,
+  tabIndex = 0,
 }: VariableBoxHeaderProps) {
   const { t } = useTranslation();
   const capitalizedTitle = label.charAt(0).toUpperCase() + label.slice(1);
+
+  function handleHeaderClick() {
+    setIsOpen(!isOpen);
+  }
+
+  function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      setIsOpen(!isOpen);
+    }
+  }
 
   return (
     <div
@@ -93,7 +105,9 @@ function VariableBoxHeader({
         classes['variablebox-header'],
         isOpen && classes['variablebox-header-isopen']
       )}
-      onClick={() => setIsOpen(!isOpen)}
+      onClick={handleHeaderClick}
+      onKeyDown={e => handleKeyDown(e)}
+      tabIndex={tabIndex}
     >
       <div className={cl(classes['header-title-and-tag'])}>
         {/* TODO: Is this the right level for Heading here?*/}
@@ -124,12 +138,8 @@ function VariableBoxHeader({
         </div>
       </div>
 
-      <div className={cl(classes['header-btn'])}>
-        <Button
-          variant="tertiary"
-          size="medium"
-          icon={isOpen ? 'ChevronUp' : 'ChevronDown'}
-        />
+      <div className={cl(classes['header-icon'])}>
+        {isOpen ? <Icon iconName="ChevronUp"></Icon> : <Icon iconName="ChevronDown"></Icon>}
       </div>
     </div>
   );
