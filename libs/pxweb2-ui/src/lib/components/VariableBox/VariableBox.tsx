@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import classes from './VariableBox.module.scss';
 import Button from '../Button/Button';
 import { Checkbox, MixedCheckbox } from '../Checkbox/Checkbox';
+import Search from '../Search/Search';
 import Select from '../Select/Select';
 import Tag from '../Tag/Tag';
 import Heading from '../Typography/Heading/Heading';
@@ -176,6 +177,10 @@ function VariableBoxContent({
   );
 
   const hasCodeLists = codeLists && codeLists.length > 0;
+  const hasSevenOrMoreValues = values && values.length > 6;
+  const hasTwoOrMoreValues = values && values.length > 1;
+  const hasValues = values && values.length > 0;
+  const hasSelectAndSearch = hasCodeLists && hasSevenOrMoreValues;
 
   useEffect(() => {
     if (totalChosenValues === 0) {
@@ -234,47 +239,63 @@ function VariableBoxContent({
     <div className={cl(classes['variablebox-content'])}>
       {/* Add the Alert here, see note in figma about it. Need more functionality atm i think */}
 
-      {hasCodeLists === true && (
-        <div className={classes['variablebox-content-select']}>
-          <Select
+      <div className={cl(classes['variablebox-content-main'])}>
+        {hasCodeLists === true && (
+          <div className={classes['variablebox-content-select']}>
+            <Select
+              variant="inVariableBox"
+              label={t(
+                'presentation_page.sidemenu.selection.variablebox.content.select.label'
+              )} // TODO: Check the swedish translation with the swedes
+              defaultOption={t(
+                'presentation_page.sidemenu.selection.variablebox.content.select.placeholder'
+              )}
+              options={mappedCodeList}
+              selectedOption={''} // TODO: Finish the logic for this. This is the selected option, like "region" or "age". Needs modal with radio logic inside.
+              onChange={handleSelectChange}
+            />
+          </div>
+        )}
+
+        {hasSevenOrMoreValues && (
+          <Search
             variant="inVariableBox"
-            label={t(
-              'presentation_page.sidemenu.selection.variablebox.content.select'
-            )} // TODO: Check the swedish translation with the swedes
-            options={mappedCodeList}
-            defaultOption="Make a selection"
-            selectedOption={''} // TODO: Finish the logic for this. This is the selected option, like "region" or "age"
-            onChange={handleSelectChange}
-          />
-        </div>
-      )}
-
-      {values && values.length > 6 && (
-        <p>Has more than 6 values. Add the Search component.</p>
-      )}
-
-      <div className={cl(classes['variablebox-content-values-list'])}>
-        {values && values.length > 1 && (
-          <MixedCheckbox
-            id={id}
-            text={mixedCheckboxText}
-            value={allValuesSelected}
-            onChange={handleMixedCheckboxChange}
-            ariaControls={values.map((value) => value.code)}
-            strong={true}
+            showLabel={false}
+            searchPlaceHolder={t(
+              'presentation_page.sidemenu.selection.variablebox.search.placeholder'
+            )}
+            ariaLabelIconText={t(
+              'presentation_page.sidemenu.selection.variablebox.search.arialabelicontext'
+            )}
+            arialLabelClearButtonText={t(
+              'presentation_page.sidemenu.selection.variablebox.search.ariallabelclearbuttontext'
+            )}
+            variableBoxTopBorderOverride={hasSelectAndSearch}
           />
         )}
 
-        {values &&
-          values.length > 0 &&
-          values.map((value) => (
-            <Checkbox
-              id={value.code}
-              value={selectedValues.includes(value.code)}
-              text={value.label}
-              onChange={() => handleCheckboxChange(value.code)}
+        <div className={cl(classes['variablebox-content-values-list'])}>
+          {hasTwoOrMoreValues && (
+            <MixedCheckbox
+              id={id}
+              text={mixedCheckboxText}
+              value={allValuesSelected}
+              onChange={handleMixedCheckboxChange}
+              ariaControls={values.map((value) => value.code)}
+              strong={true}
             />
-          ))}
+          )}
+
+          {hasValues &&
+            values.map((value) => (
+              <Checkbox
+                id={value.code}
+                value={selectedValues.includes(value.code)}
+                text={value.label}
+                onChange={() => handleCheckboxChange(value.code)}
+              />
+            ))}
+        </div>
       </div>
 
       {/* TODO: Metadata Links are not implemented yet in the API. We have to wait for that to be done first. */}

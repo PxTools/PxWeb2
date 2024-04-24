@@ -51,14 +51,17 @@
             "placeholder": "Søk",
             "label": "Søk",
             "arialabelicontext": "Søkeikon",
-            "ariallabelclearbuttontext": "Fjern søkeikon"
+            "ariallabelclearbuttontext": "Ikon for å fjerne tekst i søkefeltet"
           },
           "header": {
             "tag_selected": "{{selected}} av {{total}} valgt",
             "tag_mandatory": "Må velges"
           },
           "content": {
-            "select": "Velg inndeling",
+            "select": {
+              "label": "Velg inndeling",
+              "placeholder": "Velg en inndeling"
+            },
             "mixed_checkbox": {
               "select_all": "Velg alle",
               "deselect_all": "Fjern all valgte"

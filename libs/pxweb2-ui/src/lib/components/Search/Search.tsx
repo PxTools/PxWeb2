@@ -6,13 +6,13 @@ import { Icon } from '../Icon/Icon';
 import { Label } from '../Typography/Label/Label';
 import { Button } from '../Button/Button';
 
-
-
-export interface SearchProps extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface SearchProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {
   variant: 'default' | 'inVariableBox';
   labelText?: string;
   searchPlaceHolder?: string;
-  showLable?: boolean;
+  showLabel?: boolean;
+  variableBoxTopBorderOverride?: boolean;
   ariaLabelIconText?: string;
   arialLabelClearButtonText?: string;
 }
@@ -21,9 +21,10 @@ export function Search({
   variant,
   labelText,
   searchPlaceHolder,
-  showLable = false,
+  showLabel = false,
   ariaLabelIconText = 'Search icon',
   arialLabelClearButtonText = 'Clear search button',
+  variableBoxTopBorderOverride = false,
   ...rest
 }: SearchProps) {
   const [inputValue, setInputValue] = useState('');
@@ -46,13 +47,23 @@ export function Search({
 
   return (
     <div className={classes.search}>
-      {showLable && <Label size='medium'>{labelText}</Label>}
-      <div className={cl(classes.wrapper, classes.border, classes[variant])}>
-        <Icon iconName='MagnifyingGlass' className={classes.searchIcon} aria-label={ariaLabelIconText}></Icon>
+      {showLabel && <Label size="medium">{labelText}</Label>}
+      <div className={cl(classes.wrapper, classes.border, classes[variant], {
+              [classes.variableboxSearchAndSelectBorderOverride]: variableBoxTopBorderOverride,
+            })}>
+        <Icon
+          iconName="MagnifyingGlass"
+          className={classes.searchIcon}
+          aria-label={ariaLabelIconText}
+        ></Icon>
         <input
-          type='text'
+          type="text"
           ref={inputRef}
-          className={cl(classes[`bodyshort-medium`], classes.input, classes[variant])}
+          className={cl(
+            classes[`bodyshort-medium`],
+            classes.input,
+            classes[variant]
+          )}
           placeholder={searchPlaceHolder}
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
@@ -61,9 +72,9 @@ export function Search({
         ></input>
         {hasValue && (
           <Button
-            variant='tertiary'
-            icon='XMark'
-            size='small'
+            variant="tertiary"
+            icon="XMark"
+            size="small"
             onClick={handleClear}
             aria-label={arialLabelClearButtonText}
           ></Button>
