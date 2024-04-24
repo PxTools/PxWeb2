@@ -26,7 +26,8 @@ interface Resources {
       },
       "generic_buttons": {
         "ok": "OK",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "search": "Search"
       }
     },
     "start_page": {
@@ -34,10 +35,23 @@ interface Resources {
       "welcome_trans_test": "Welcome to the <1>app</1> for PxWeb 2.0!"
     },
     "presentation_page": {
+      "header": {
+        "searchbutton": "Search",
+        "languagebutton": "languages",
+        "statistics": "Statistikkbanken"
+      },
       "sidemenu": {
         "hide": "Hide menu",
         "selection": {
-          "title": "Filter"
+          "title": "Filter",
+          "variablebox": {
+            "search": {
+              "placeholder": "Search",
+              "label": "Search",
+              "arialabelicontext": "Search icon",
+              "ariallabelclearbuttontext": "Clear search icon"
+            }
+          }
         },
         "view": {
           "title": "View",

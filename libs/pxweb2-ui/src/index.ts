@@ -6,6 +6,8 @@ export * from './lib/components/Select/Select';
 export * from './lib/components/Typography/Ingress/Ingress';
 export * from './lib/components/Typography/Heading/Heading';
 export * from './lib/components/Typography/BodyLong/BodyLong';
+export * from './lib/components/Icon/Icon';
+export * from './lib/components/Search/Search';
 export * from './lib/shared-types/codelist';
 export * from './lib/shared-types/codelistType';
 export * from './lib/shared-types/note';
@@ -13,4 +15,3 @@ export * from './lib/shared-types/pxTable';
 export * from './lib/shared-types/value';
 export * from './lib/shared-types/variable';
 export * from './lib/shared-types/vartypeEnum';
-
