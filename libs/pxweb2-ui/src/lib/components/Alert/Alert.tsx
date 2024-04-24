@@ -46,8 +46,8 @@ export function Alert({
       onClick && onClick();
     }
   };
-let hasheading:boolean;
-heading?hasheading=true:hasheading=false; 
+  let hasheading: boolean;
+  heading ? (hasheading = true) : (hasheading = false);
   const iconRight = 'ArrowRight';
   const iconClose = 'XMark';
   // variant='warning';
@@ -90,7 +90,7 @@ heading?hasheading=true:hasheading=false;
   }
   return (
     <div
-      onKeyDown={clickable ? handleKeyDown:undefined}
+      onKeyDown={clickable ? handleKeyDown : undefined}
       tabIndex={clickable ? 0 : undefined}
       className={cl(classes[`alert-${size}`], classes[variant], {
         [classes[`${variant}-clickable`]]: clickable,
@@ -142,7 +142,12 @@ heading?hasheading=true:hasheading=false;
             onClick={HandleClose}
           />
         )}
-        {clickable && <Icon iconName={iconRight} className=""></Icon>}
+        {clickable && (
+          <div className={cl(classes['alert-icon-wrapper'])}>
+            {' '}
+            <Icon iconName={iconRight} className=""></Icon>
+          </div>
+        )}
       </div>
     </div>
   );
