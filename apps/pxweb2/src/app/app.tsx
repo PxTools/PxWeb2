@@ -32,8 +32,8 @@ function test(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
 function testSubmit() {
   console.log('test submit');
 }
-function selectedOptionChanged(selectedItem: SelectOption) {
-  console.log('Selected option: ' + selectedItem.label);
+function selectedOptionChanged(selectedItem: SelectOption | undefined) {  
+  selectedItem ? console.log('Selected option: ' + selectedItem.label) : console.log('No option selected');
 }
 
 export function App() {
@@ -43,11 +43,7 @@ export function App() {
   const [errorMsg, setErrorMsg] = useState('');
   const [pxTable, setPxTable] = useState<PxTable | null>(null);
 
-  const options: SelectOption[] = [
-    { label: 'Option 1', value: '1' },
-    { label: 'Option 2', value: '2' },
-    { label: 'Option 3', value: '3' },
-  ];
+  const options: SelectOption[] = [{ label: 'Option 1', value: 'opt1' }, { label: 'Option 2', value: 'opt2'}, { label: 'Option 3', value: 'opt3'}];
 
   const locales = {
     en: { title: 'English' },
@@ -190,30 +186,11 @@ export function App() {
           )}
           <br />
           <div className={cl(styles.selectWrapper)}>
-            <Select
-              variant="default"
-              label="Default"
-              defaultOption="Make selection"
-              options={options}
-              onChange={selectedOptionChanged}
-            ></Select>
+            <Select variant='default' label='Default' placeholder='Make selection' options={options} onChange={selectedOptionChanged}></Select>
             <br />
-            <Select
-              variant="default"
-              hideLabel
-              label="Default"
-              defaultOption="Make selection"
-              options={options}
-              onChange={selectedOptionChanged}
-            ></Select>
+            <Select variant='default' hideLabel label='Default' placeholder='Make selection' options={options} onChange={selectedOptionChanged} selectedOption={options[1]}></Select>
             <br />
-            <Select
-              variant="inVariableBox"
-              label="VariableBox"
-              defaultOption="Make selection"
-              options={options}
-              onChange={selectedOptionChanged}
-            ></Select>
+            <Select variant='inVariableBox' label='VariableBox' placeholder='Make selection' options={options} onChange={selectedOptionChanged} selectedOption={options[1]} ></Select>
           </div>
           <br />
           <Tag size="medium" variant="info">
