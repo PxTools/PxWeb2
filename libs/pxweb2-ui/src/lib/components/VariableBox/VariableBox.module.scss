@@ -11,9 +11,23 @@
   border-radius: var(--px-border-radius-large);
   border: 2px solid transparent;
 
-  &:hover {
+  &:hover,
+  &:active,
+  &:focus,
+  &:focus-within,
+  &:focus-visible {
     border-radius: var(--px-border-radius-large);
     border: 2px solid var(--px-color-border-action);
+
+  }
+
+  &:hover .header-icon,
+  &:active .header-icon,
+  &:focus .header-icon,
+  &:focus-within .header-icon,
+  &:focus-visible .header-icon {
+    border-radius: var(--px-border-radius-medium);
+    background: var(--px-color-surface-subtle-hover);
   }
 }
 
@@ -24,6 +38,8 @@
   align-self: stretch;
   padding: fixed.$spacing-3 fixed.$spacing-3 fixed.$spacing-5 fixed.$spacing-5;
   gap: 1rem;
+
+  outline: none;
 
   /* Style */
   background: var(--px-color-surface-default);
@@ -60,10 +76,12 @@
   gap: fixed.$spacing-2;
 }
 
-.header-btn {
+.header-icon {
   /* Layout */
   display: flex;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
   width: 2.75rem;
   height: 2.75rem;
 }
