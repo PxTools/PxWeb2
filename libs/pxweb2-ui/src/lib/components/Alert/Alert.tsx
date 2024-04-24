@@ -15,8 +15,8 @@ export interface AlertProps {
   // state: 'default|hover';
   clickable?: boolean;
   closeButton?: boolean;
-  description: string;
-  hasheading: boolean;
+  //description: string;
+  // hasheading: boolean;
   heading?: string;
   onClick?: () => void;
   children?: string | React.ReactNode;
@@ -28,8 +28,8 @@ export function Alert({
   // state,
   clickable = false,
   closeButton = false,
-  description,
-  hasheading = false,
+  //description,
+  // hasheading = false,
   heading = '',
   onClick,
   children,
@@ -41,6 +41,13 @@ export function Alert({
   };
   if (!isVisible) return null;
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      onClick && onClick();
+    }
+  };
+let hasheading:boolean;
+heading?hasheading=true:hasheading=false; 
   const iconRight = 'ArrowRight';
   const iconClose = 'XMark';
   // variant='warning';
@@ -50,17 +57,17 @@ export function Alert({
       variantIcon = 'InformationCircleFilled';
       break;
     case 'success':
-      variantIcon = 'CheckMarkCircle';
+      variantIcon = 'CheckMarkCircleFilled';
       break;
     case 'warning':
       variantIcon = 'ExclamationMarkFilled';
       break;
     case 'error':
-      variantIcon = 'XMarkCircle';
+      variantIcon = 'XMarkCircleFilled';
       break;
 
     default:
-      variantIcon = 'XMarkCircle';
+      variantIcon = 'XMarkCircleFilled';
   }
   let headingSize: 'small' | 'xsmall';
   const bodySize = 'medium';
@@ -83,27 +90,30 @@ export function Alert({
   }
   return (
     <div
-      className={cl(classes.alert, classes[variant], {
+      onKeyDown={clickable ? handleKeyDown:undefined}
+      tabIndex={clickable ? 0 : undefined}
+      className={cl(classes[`alert-${size}`], classes[variant], {
         [classes[`${variant}-clickable`]]: clickable,
       })}
       onClick={clickable ? onClick : undefined}
       style={{ cursor: clickable ? 'pointer' : 'default' }}
     >
-      <div className={classes[`alert-section-left`]}>
+      <div className={classes[`alert-section-left-${size}`]}>
         <Icon
           iconName={variantIcon}
           className={classes[`alert-icon-${variant}`]}
         ></Icon>
       </div>
-      <div>
-        <div className={classes[`alert-heading`]}>
-          {hasheading && <Heading size={headingSize}>{heading}</Heading>}
-        </div>
+      <div className={cl(classes[`alert-section-middle-${size}`])}>
+        {hasheading && (
+          <div className={classes[`alert-heading`]}>
+            <Heading size={headingSize}>{heading}</Heading>
+          </div>
+        )}
         <div
-          className={cl(
-            classes[`alert-body-${size}`],
-            classes[`truncate-text`]
-          )}
+          className={cl(classes[`alert-body-${size}`], {
+            [classes[`truncate-text-${size}`]]: clickable,
+          })}
         >
           {size === 'small' ? (
             <BodyShort size={bodySize}>{children}</BodyShort>
@@ -116,7 +126,7 @@ export function Alert({
         className={cl(
           classes[`alert-section-right`],
           {
-            [classes[`alert-section-right-close`]]: closeButton,
+            [classes[`alert-section-right-close-${size}`]]: closeButton,
           },
           {
             [classes[`alert-section-right-continue`]]: clickable,

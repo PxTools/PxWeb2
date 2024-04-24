@@ -2,12 +2,19 @@
 @use '../../../../style-dictionary/dist/css/variables.css' as var;
 @use '../../text-styles.scss';
 
-.alert {
+.alert-medium {
   display: flex;
   width: 30rem;
-  padding: 1rem 1.25rem;
+  padding: fixvar.$spacing-4 fixvar.$spacing-5;
   align-items: flex-start;
   gap: 0.75rem;
+}
+.alert-small {
+  display: flex;
+  width: 30rem;
+  padding: fixvar.$spacing-3;
+  align-items: flex-start;
+  gap: fixvar.$spacing-2;
 }
 
 .info {
@@ -53,37 +60,81 @@
   }
 }
 
-.alert-section-left {
+.alert-section-left-medium {
   display: flex;
-  align-self: flex-start;
-  width: var(--px-spacing-6, 1.5rem);
-  height: var(--px-spacing-6, 1.5rem);
+  width: fixvar.$spacing-6;
+  height: fixvar.$spacing-6;
+  padding-top: 4px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
   flex-shrink: 0;
+}
+
+.alert-section-left-small {
+  display: flex;
+  width: fixvar.$spacing-6;
+  height: fixvar.$spacing-6;
+  padding-top: fixvar.$spacing-1;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-shrink: 0;
+}
+
+.alert-section-middle-medium {
+  //display: block;
+  display: flex;
+  flex-direction: column;
+  padding-top: 2px;
+}
+
+.alert-section-middle-small {
+  // display: block;
+  display: flex;
+  flex-direction: column;
+  padding-top: 2px;
+  // gap:4px
 }
 
 .alert-heading {
   display: flex;
-  align-self: stretch;
+  // padding-top: 2px;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-top: 1px;
+  padding-bottom: 2px;
+  flex: 1 0 0;
 }
 
 .alert-body-small {
   display: flex;
   align-self: stretch;
-  max-height: var(--spacing-12, 48px);
+  padding-top: 2px;
+  // max-height: fixvar.$spacing-12;
 }
 
 .alert-body-medium {
   display: flex;
   align-self: stretch;
-  max-height: var(--spacing-14, 56px);
+  // padding-top: 2px;
+  // max-height: fixvar.$spacing-14;
 }
 
-.truncate-text {
+.truncate-text-small {
+  max-height: fixvar.$spacing-12;
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 2; /* Antall linjer du vil vise før tekst trunkeres */
   -webkit-box-orient: vertical;
-  flex: 1 0 0;
+  text-overflow: ellipsis;
+}
+
+.truncate-text-medium {
+  max-height: fixvar.$spacing-14;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Antall linjer du vil vise før tekst trunkeres */
+  -webkit-box-orient: vertical;
   text-overflow: ellipsis;
 }
 
@@ -92,10 +143,24 @@
   align-self: center;
 }
 
-.alert-section-right-close {
+.alert-section-right-close-medium {
   display: flex;
   align-self: flex-start;
   margin-left: auto;
+  height: 32px;
+  padding: 0px 4px;
+  align-items: center;
+  gap: 6px;
+}
+
+.alert-section-right-close-small {
+  display: flex;
+  align-self: flex-start;
+  margin-left: auto;
+  height: 32px;
+  padding: 0px 4px;
+  align-items: center;
+  gap: 6px;
 }
 
 .alert-section-right-continue {
@@ -105,17 +170,18 @@
 }
 
 .alert-icon-info {
-  color: #0179c8;
+  color: var(--px-color-icon-info, #0179c8);
+  flex-shrink: 0;
 }
 
 .alert-icon-success {
-  color: #00824d;
+  color: var(--px-color-icon-success, #00824d);
 }
 
 .alert-icon-warning {
-  color: #cb7603;
+  color: var(--px-color-icon-warning, #cb7603);
 }
 
 .alert-icon-error {
-  color: #e23822;
+  color: var(--px-color-icon-error, #e23822);
 }

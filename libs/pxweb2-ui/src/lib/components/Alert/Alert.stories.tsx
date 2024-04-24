@@ -12,14 +12,14 @@ export default meta;
 export const Variant = {
   args: {
     variant: 'info',
-    Heading: 'Vi beklager',
+    heading: 'Vi beklager',
     children:
-      'Statistikkbanken er for øyeblikket nede. Vi jobber med feilen og forventer å være opp igjen i løpet av ei uke eller 2',
+      'Statistikkbanken er for øyeblikket nede. Vi jobber med feilen og forventer å være opp igjen i løpet av ei uke eller 2, beklager så mye',
     // description:
     //   'Statistikkbanken er for øyeblikket nede. Vi jobber med feilen og forventer å være opp igjen i løpet av ei uke eller 2',
     onClick: () => {
       alert(
-        'Statistikkbanken er for øyeblikket nede. Vi jobber med feilen og forventer å være opp igjen i løpet av ei uke eller 2'
+        'Statistikkbanken er for øyeblikket nede. Vi jobber med feilen og forventer å være opp igjen i løpet av ei uke eller 2, beklager så mye '
       );
     },
   },
@@ -29,8 +29,8 @@ export const withlink: StoryFn<typeof Alert> = () => {
   return (
     <>
       <br />
-      <Alert variant="info" closeButton description="Hallo" hasheading>
-        <Link href="http://www.ssb.no">SSB</Link>
+      <Alert variant="info" closeButton>
+        <Link href="http://www.ssb.no" inline>SSB</Link>
       </Alert>
     </>
   );
@@ -40,7 +40,7 @@ export const withtextandlink: StoryFn<typeof Alert> = () => {
   return (
     <>
       <br />
-      <Alert variant="info" closeButton description="Hallo" hasheading>
+      <Alert variant="info" closeButton>
         Det finnes mer metadata om emnet. Dette kan du lese mer om her:{' '}
         <Link href="http://www.ssb.no" inline>
           SSB
