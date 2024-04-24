@@ -19,12 +19,21 @@
     "sidemenu": {
       "selection": {
         "variablebox": {
+          "search": {
+            "placeholder": "عيب",
+            "label": "عيب",
+            "arialabelicontext": "أيقونة البحث",
+            "ariallabelclearbuttontext": "أيقونة لإزالة النص في حقل البحث"
+          },
           "header": {
             "tag_selected": "تم تحديد {{selected}} من {{total}}",
             "tag_mandatory": "يجب أن يتم اختياره"
           },
           "content": {
-            "select": "اختر القسم",
+            "select": {
+              "label": "اختر القسم",
+              "placeholder": "اختر قسما"
+            },
             "mixed_checkbox": {
               "select_all": "اختر الكل",
               "deselect_all": "الغاء تحديد الكل"
