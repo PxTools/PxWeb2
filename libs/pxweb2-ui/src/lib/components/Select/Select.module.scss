@@ -72,6 +72,7 @@
     gap: fixed.$spacing-2;
     height: 43px;
     background: var(--px-color-surface-default);
+    border-radius: var(--px-border-radius-medium) var(--px-border-radius-medium) var(--px-border-radius-none) var(--px-border-radius-none);
     
     &:hover {
         border-radius: var(--px-border-radius-medium);
