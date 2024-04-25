@@ -6,10 +6,10 @@ copyright: Copyright &copy; 2024 Statistics Sweden and Statistics Norway
 
 nav:
   - Home: index.md
-  - Project:
+  - Project PxWeb 2.0:
     - Overview: project/overview.md
-    - PxWeb 2.0 solution: project/Solution.md
-    - Plan: project/plans.md
+    - Solution: project/Solution.md
+    - Plans: project/plans.md
     - Process: project/process.md
   - Documentation:
     - Customization:
