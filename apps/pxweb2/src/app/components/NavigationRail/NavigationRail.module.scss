@@ -32,11 +32,11 @@
 
   &:hover {
     > .icon {
-      background-color: var(--px-color-surface-subtle-hover);
+      background-color: var(--px-color-surface-action-subtle-hover);
     }
   }
 
   > .selected {
-    background-color: var(--px-color-surface-subtle-active) !important;
+    background-color: var(--px-color-surface-action-subtle-active) !important;
   }
 }
