@@ -4,7 +4,7 @@ import Modal from './Modal';
 
 describe('Modal', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<Modal />);
+    const { baseElement } = render(<Modal isOpen={true} />);
     expect(baseElement).toBeTruthy();
   });
 });
