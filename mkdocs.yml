@@ -9,6 +9,8 @@ nav:
   - Project:
     - Overview: project/overview.md
     - PxWeb 2.0 solution: project/Solution.md
+    - Plan: project/plans.md
+    - Process: project/process.md
   - Documentation:
     - Customization:
       - Themes: documentation/customization/themes.md
