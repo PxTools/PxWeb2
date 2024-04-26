@@ -2,15 +2,22 @@
   min-height: 44px;
   display: flex;
   position: relative;
+  border-radius: 4px;
+
+  outline: none;
+
   &:hover {
     cursor: pointer;
+    background-color: var(--px-color-surface-subtle-hover);
+  }
+
+  &:focus {
     background-color: var(--px-color-surface-subtle-hover);
   }
 
   &:active {
     background-color: var(--px-color-surface-subtle-active);
   }
-  border-radius: 4px;
 }
 
 .checkmark {
