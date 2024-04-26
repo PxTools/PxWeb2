@@ -7,12 +7,18 @@ export interface ModalProps {
   isOpen: boolean;
   hasCloseBtn?: boolean;
   onClose?: () => void;
+  className?: string;
   children: React.ReactNode;
 }
 
 export function Modal({
-  isOpen, hasCloseBtn, onClose, children
+  isOpen, 
+  hasCloseBtn, 
+  onClose, 
+  className = '', 
+  children
 }: ModalProps) {
+  const cssClasses = className.length > 0 ? ' ' + className : '';
   const [isModalOpen, setModalOpen] = useState(isOpen);
   const modalRef = useRef<HTMLDialogElement | null>(null);
 
@@ -45,13 +51,19 @@ export function Modal({
   };
 
   return (
-  <dialog ref={modalRef} onKeyDown={handleKeyDown}>
-    {hasCloseBtn && (
-      <button className="modal-close-btn" onClick={handleCloseModal}>
-        Close
-      </button>
-    )}
-    {children}
+  <dialog ref={modalRef} onKeyDown={handleKeyDown} className={cl(classes.modal) + cssClasses}>
+    <div className={cl(classes.header)}>
+    </div>
+    <div className={cl(classes.body)}>
+      {children}
+    </div>
+    <div className={cl(classes.footer)}>
+      {hasCloseBtn && (
+        <button className="modal-close-btn" onClick={handleCloseModal}>
+          Close
+        </button>
+      )}
+    </div>
   </dialog>
   );
 }

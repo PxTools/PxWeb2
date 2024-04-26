@@ -186,7 +186,9 @@ export function App() {
           )}
           <br />
           <div className={cl(styles.selectWrapper)}>
-            <Select variant='default' label='Default' placeholder='Make selection' options={options} onChange={selectedOptionChanged}></Select>
+          <Select variant='default' label='Default' placeholder='Make selection' options={options} onChange={selectedOptionChanged}></Select>
+          <br />
+          <Select variant='inVariableBox' label='Default' placeholder='Make selection' options={options} onChange={selectedOptionChanged}></Select>
           </div>
           <br />
           <Tag size="medium" variant="info">

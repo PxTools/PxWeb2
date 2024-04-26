@@ -203,24 +203,30 @@ function VariableBoxSelect({
         <Icon iconName="ChevronDown" className=""></Icon>
       </div>
       <div className={cl(classes.divider)}></div>
-      <Modal hasCloseBtn={true} isOpen={isModalOpen} onClose={handleCloseModal}>
-        {options.map((option) => (
-          <div key={option.value}>
-            <input
-              type="radio"
-              id={option.value}
-              name="option"
-              value={option.value}
-              key={option.value}
-              checked={option.value === clickedItem?.value}
-              onChange={() => {
-                setClickedItem(option);
-              }}
-            />
-            <label htmlFor={option.value}>{option.label}</label>
-          </div>
-        ))}
-      </Modal>
+      {isModalOpen && (
+        <Modal
+          hasCloseBtn={true}
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+        >
+          {options.map((option) => (
+            <div key={option.value}>
+              <input
+                type="radio"
+                id={option.value}
+                name="option"
+                value={option.value}
+                key={option.value}
+                checked={option.value === clickedItem?.value}
+                onChange={() => {
+                  setClickedItem(option);
+                }}
+              />
+              <label htmlFor={option.value}>{option.label}</label>
+            </div>
+          ))}
+        </Modal>
+      )}
     </>
   );
 }
