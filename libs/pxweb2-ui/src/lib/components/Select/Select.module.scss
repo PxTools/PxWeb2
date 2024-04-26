@@ -108,3 +108,20 @@
     align-self: stretch;
 }
 
+.modalradiolist{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    align-self: stretch;
+    border-radius: var(--px-border-radius-xlarge);
+}
+
+.modalradio{
+    display: flex;
+    padding: 10px 28px;
+    align-items: flex-start;
+    gap: 12px;
+    align-self: stretch;
+    border-radius: var(--px-border-radius-small);
+}
+

@@ -7,6 +7,10 @@
     align-items: center;
     border-radius: var(--px-border-radius-xlarge);
     background: var(--px-color-surface-default);
+
+    // Not from Figma
+    padding: 0px 0px 0px 0px;
+    border-style: none;
 }
 
 .header{
@@ -18,6 +22,26 @@
     align-self: stretch;
     border-radius: var(--px-border-radius-xlarge);
     background: var(--px-color-background-subtle);
+}
+
+.headercontent{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    align-self: stretch;
+}
+
+.headings{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex: 1 0 0;
+}
+
+.xmarkwrapper{
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
 }
 
 .body{
@@ -37,4 +61,12 @@
     align-self: stretch;
     border-radius: var(--px-border-radius-none) var(--px-border-radius-none) var(--px-border-radius-xlarge) var(--px-border-radius-xlarge);
     border-top: 1px solid var(--px-color-border-subtle);
+}
+
+.buttongroup{
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+    gap: fixed.$spacing-2;
+    flex: 1 0 0;
 }

@@ -2,6 +2,9 @@ import cl from 'clsx';
 import { useEffect, useRef, useState } from 'react';
 
 import classes from './Modal.module.scss';
+import Label from '../Typography/Label/Label';
+import Heading from '../Typography/Heading/Heading';
+import Button from '../Button/Button';
 
 export interface ModalProps {
   isOpen: boolean;
@@ -53,16 +56,29 @@ export function Modal({
   return (
   <dialog ref={modalRef} onKeyDown={handleKeyDown} className={cl(classes.modal) + cssClasses}>
     <div className={cl(classes.header)}>
+      <div className={cl(classes.headercontent)}>
+        <div className={cl(classes.headings)}>
+          <Label size="medium" textcolor="default">Select classification</Label>
+          <Heading size="medium" textcolor="default">Variable name</Heading>
+        </div>
+        <div className={cl(classes.xmarkwrapper)}>
+          <Button variant="tertiary" size="small" icon="XMark"></Button>
+        </div>
+      </div>
     </div>
     <div className={cl(classes.body)}>
       {children}
     </div>
     <div className={cl(classes.footer)}>
-      {hasCloseBtn && (
-        <button className="modal-close-btn" onClick={handleCloseModal}>
-          Close
-        </button>
-      )}
+      <div className={cl(classes.buttongroup)}>
+        <Button variant="secondary" size="medium">Cancel</Button>
+        <Button variant="primary" size="medium" onClick={handleCloseModal}>Save</Button>
+        {/* {hasCloseBtn && (
+          <button className="modal-close-btn" onClick={handleCloseModal}>
+            Close
+          </button>
+        )} */}
+      </div>
     </div>
   </dialog>
   );
