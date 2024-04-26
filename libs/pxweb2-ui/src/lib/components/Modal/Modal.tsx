@@ -8,7 +8,6 @@ import Button from '../Button/Button';
 
 export interface ModalProps {
   isOpen: boolean;
-  hasCloseBtn?: boolean;
   onClose?: () => void;
   className?: string;
   children: React.ReactNode;
@@ -16,7 +15,6 @@ export interface ModalProps {
 
 export function Modal({
   isOpen, 
-  hasCloseBtn, 
   onClose, 
   className = '', 
   children
@@ -73,11 +71,6 @@ export function Modal({
       <div className={cl(classes.buttongroup)}>
         <Button variant="secondary" size="medium">Cancel</Button>
         <Button variant="primary" size="medium" onClick={handleCloseModal}>Save</Button>
-        {/* {hasCloseBtn && (
-          <button className="modal-close-btn" onClick={handleCloseModal}>
-            Close
-          </button>
-        )} */}
       </div>
     </div>
   </dialog>

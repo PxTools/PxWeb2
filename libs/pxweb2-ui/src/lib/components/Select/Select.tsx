@@ -205,7 +205,6 @@ function VariableBoxSelect({
       <div className={cl(classes.divider)}></div>
       {isModalOpen && (
         <Modal
-          hasCloseBtn={true}
           isOpen={isModalOpen}
           onClose={handleCloseModal}
         >

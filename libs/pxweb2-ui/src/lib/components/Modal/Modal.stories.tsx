@@ -13,7 +13,6 @@ const content = 'Hej';
 
 export const Default = {
   args: {
-    hasCloseBtn: true,
     isOpen: true,
     onClose: () => {
       console.log('Modal closed');
@@ -34,7 +33,7 @@ export const Open: StoryFn<typeof Modal> = () => {
   return (
     <>
       <button onClick={() => setModalOpen(true)}>Open modal</button>
-      <Modal hasCloseBtn={true} isOpen={isModalOpen} onClose={() => {
+      <Modal isOpen={isModalOpen} onClose={() => {
                 setModalOpen(false);
               }}>
         <div>Hej</div>
