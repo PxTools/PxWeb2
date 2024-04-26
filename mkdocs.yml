@@ -1,14 +1,17 @@
 site_name: PxWeb
 repo_url: https://github.com/PxTools/PxWeb2
+edit_uri: ./edit/main/docs
 site_description: Disseminate your statistics fast and reliable.
 copyright: Copyright &copy; 2024 Statistics Sweden and Statistics Norway
 
 
 nav:
   - Home: index.md
-  - Project:
+  - Project PxWeb 2.0:
     - Overview: project/overview.md
-    - PxWeb 2.0 solution: project/Solution.md
+    - Solution: project/Solution.md
+    - Plans: project/plans.md
+    - Process: project/process.md
   - Documentation:
     - Customization:
       - Themes: documentation/customization/themes.md

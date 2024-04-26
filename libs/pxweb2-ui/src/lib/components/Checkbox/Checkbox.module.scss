@@ -8,6 +8,10 @@
 
   &:hover {
     cursor: pointer;
+    background-color: var(--px-color-surface-action-subtle-hover);
+  }
+
+  &:focus {
     background-color: var(--px-color-surface-subtle-hover);
   }
 
@@ -16,7 +20,7 @@
   }
 
   &:active {
-    background-color: var(--px-color-surface-subtle-active);
+    background-color: var(--px-color-surface-action-subtle-active);
   }
 }
 

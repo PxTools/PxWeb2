@@ -1,6 +1,6 @@
 /**
  * Do not edit directly
- * Generated on Wed, 17 Apr 2024 13:00:42 GMT
+ * Generated on Thu, 25 Apr 2024 10:31:55 GMT
  */
 
 :root {
@@ -22,8 +22,8 @@
   --px-color-surface-action: #274247;
   --px-color-surface-action-hover: #274247;
   --px-color-surface-action-active: #162327;
-  --px-color-surface-subtle-hover: #dbebeb;
-  --px-color-surface-subtle-active: #c3dcdc;
+  --px-color-surface-action-subtle-hover: #dbebeb;
+  --px-color-surface-action-subtle-active: #c3dcdc;
   --px-color-surface-info-subtle: #d7ecfe;
   --px-color-surface-info-moderate: #c3e6fe;
   --px-color-surface-success-subtle: #dbf5dc;

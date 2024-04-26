@@ -1,9 +1,11 @@
 import cl from 'clsx';
+import { useState } from 'react';
 
 import classes from './Select.module.scss';
 import Label from '../Typography/Label/Label';
 import BodyShort from '../Typography/BodyShort/BodyShort';
 import { Icon } from '../Icon/Icon';
+import Modal from '../Modal/Modal';
 
 export type SelectOption = {
   label: string;
@@ -14,10 +16,10 @@ export type SelectProps = {
   variant?: 'default' | 'inVariableBox';
   label: string;
   hideLabel?: boolean;
-  defaultOption?: string;
+  placeholder?: string;
   options: SelectOption[];
-  selectedOption?: string;
-  onChange: (selectedItem: SelectOption) => void;
+  selectedOption?: SelectOption;
+  onChange: (selectedItem: SelectOption | undefined) => void;
   tabIndex?: number;
   className?: string;
 };
@@ -31,7 +33,7 @@ export function Select({
   variant = 'default',
   label,
   hideLabel = false,
-  defaultOption = '',
+  placeholder = '',
   options: ops,
   selectedOption,
   onChange,
@@ -40,13 +42,6 @@ export function Select({
 }: SelectProps) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
 
-  if (selectedOption != null) {
-    const selOption = ops.find((x) => x.value === selectedOption);
-    if (selOption != null) {
-      defaultOption = selOption.label;
-    }
-  }
-
   return (
     <>
       {variant && variant === 'default' && (
@@ -54,7 +49,8 @@ export function Select({
           hideLabel={hideLabel}
           label={label}
           options={ops}
-          defaultOption={defaultOption}
+          placeholder={placeholder}
+          selectedOption={selectedOption}
           onChange={onChange}
           tabIndex={tabIndex}
           className={cssClasses}
@@ -64,7 +60,8 @@ export function Select({
         <VariableBoxSelect
           label={label}
           options={ops}
-          defaultOption={defaultOption}
+          placeholder={placeholder}
+          selectedOption={selectedOption}
           onChange={onChange}
           tabIndex={tabIndex}
           className={cssClasses}
@@ -79,7 +76,8 @@ type DefaultSelectProps = Pick<
   | 'hideLabel'
   | 'label'
   | 'options'
-  | 'defaultOption'
+  | 'placeholder'
+  | 'selectedOption'
   | 'onChange'
   | 'tabIndex'
   | 'className'
@@ -89,7 +87,8 @@ function DefaultSelect({
   hideLabel,
   label,
   options,
-  defaultOption,
+  placeholder,
+  selectedOption,
   onChange,
   tabIndex,
   className = '',
@@ -125,7 +124,7 @@ function DefaultSelect({
           size="medium"
           className={cl(classes.optionLayout, classes.optionTypography)}
         >
-          {defaultOption}
+          {selectedOption ? selectedOption.label : placeholder}
         </BodyShort>
         <Icon iconName="ChevronDown" className=""></Icon>
       </div>
@@ -135,18 +134,43 @@ function DefaultSelect({
 
 type VariableBoxSelectProps = Pick<
   SelectProps,
-  'label' | 'options' | 'defaultOption' | 'onChange' | 'tabIndex' | 'className'
+  | 'label'
+  | 'options'
+  | 'placeholder'
+  | 'selectedOption'
+  | 'onChange'
+  | 'tabIndex'
+  | 'className'
 >;
 
 function VariableBoxSelect({
   label,
   options,
-  defaultOption,
+  placeholder,
+  selectedOption,
   onChange,
   tabIndex,
   className = '',
 }: VariableBoxSelectProps) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
+
+  const [isModalOpen, setModalOpen] = useState<boolean>(false);
+  const [selectedItem, setSelectedItem] = useState<SelectOption | undefined>(
+    selectedOption
+  );
+  const [clickedItem, setClickedItem] = useState<SelectOption | undefined>(
+    selectedOption
+  );
+
+  const handleOpenModal = () => {
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedItem(clickedItem);
+    setModalOpen(false);
+    onChange(clickedItem);
+  };
 
   return (
     <>
@@ -154,13 +178,11 @@ function VariableBoxSelect({
         className={cl(classes.selectVariabelbox) + cssClasses}
         tabIndex={tabIndex}
         onClick={(event) => {
-          openOptions(options); // TODO: Get option
-          onChange(options[0]); // TODO: Use selected option
+          handleOpenModal();
         }}
         onKeyUp={(event) => {
           if (event.key === ' ' || event.key === 'Enter') {
-            openOptions(options); // TODO: Get option
-            onChange(options[0]); // TODO: Use selected option
+            handleOpenModal();
           }
         }}
       >
@@ -175,12 +197,30 @@ function VariableBoxSelect({
               classes.optionTypography
             )}
           >
-            {defaultOption}
+            {selectedItem ? selectedItem.label : placeholder}
           </BodyShort>
         </div>
         <Icon iconName="ChevronDown" className=""></Icon>
       </div>
       <div className={cl(classes.divider)}></div>
+      <Modal hasCloseBtn={true} isOpen={isModalOpen} onClose={handleCloseModal}>
+        {options.map((option) => (
+          <div key={option.value}>
+            <input
+              type="radio"
+              id={option.value}
+              name="option"
+              value={option.value}
+              key={option.value}
+              checked={option.value === clickedItem?.value}
+              onChange={() => {
+                setClickedItem(option);
+              }}
+            />
+            <label htmlFor={option.value}>{option.label}</label>
+          </div>
+        ))}
+      </Modal>
     </>
   );
 }
