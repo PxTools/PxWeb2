@@ -78,10 +78,18 @@
         border-radius: var(--px-border-radius-medium);
         outline: 2px solid var(--px-color-border-action); 
         cursor: pointer;
-     }
-     &:hover ~ .divider {
+    }
+    
+    &:focus {
+        border-radius: var(--px-border-radius-medium);
+        outline: 2px solid var(--px-color-border-action); 
+    }
+
+    &:hover ~ .divider,
+    &:active ~ .divider,
+    &:focus ~ .divider {
         border-bottom: 2px solid var(--px-color-surface-default);
-     }
+    }
 
     &:active {
         border-radius: var(--px-border-radius-medium);
