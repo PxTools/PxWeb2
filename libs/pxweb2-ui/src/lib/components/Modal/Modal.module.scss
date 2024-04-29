@@ -13,6 +13,10 @@
     border-style: none;
 }
 
+.modal::backdrop {
+    background-color:var(--px-color-surface-scrim);
+}
+
 .header{
     display: flex;
     padding: 28px 24px 24px 32px;
