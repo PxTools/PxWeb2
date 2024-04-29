@@ -8,7 +8,7 @@ import Button from '../Button/Button';
 
 export interface ModalProps {
   isOpen: boolean;
-  onClose?: () => void;
+  onClose?: (updated: boolean) => void;
   className?: string;
   children: React.ReactNode;
 }
@@ -38,16 +38,16 @@ export function Modal({
     }
   }, [isModalOpen]);
 
-  const handleCloseModal = () => {
+  const handleCloseModal = (updated: boolean) => {
     if (onClose) {
-      onClose();
+      onClose(updated);
     }
     setModalOpen(false);
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDialogElement>) => {
     if (event.key === "Escape") {
-      handleCloseModal();
+      handleCloseModal(false);
     }
   };
 
@@ -60,7 +60,7 @@ export function Modal({
           <Heading size="medium" textcolor="default">Variable name</Heading>
         </div>
         <div className={cl(classes.xmarkwrapper)}>
-          <Button variant="tertiary" size="small" icon="XMark"></Button>
+          <Button variant="tertiary" size="small" icon="XMark" onClick={() => handleCloseModal(false)}></Button>
         </div>
       </div>
     </div>
@@ -69,8 +69,8 @@ export function Modal({
     </div>
     <div className={cl(classes.footer)}>
       <div className={cl(classes.buttongroup)}>
-        <Button variant="secondary" size="medium">Cancel</Button>
-        <Button variant="primary" size="medium" onClick={handleCloseModal}>Save</Button>
+        <Button variant="secondary" size="medium" onClick={() => handleCloseModal(false)}>Cancel</Button>
+        <Button variant="primary" size="medium" onClick={() => handleCloseModal(true)}>Save</Button>
       </div>
     </div>
   </dialog>

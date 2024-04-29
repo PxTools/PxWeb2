@@ -166,10 +166,12 @@ function VariableBoxSelect({
     setModalOpen(true);
   };
 
-  const handleCloseModal = () => {
-    setSelectedItem(clickedItem);
+  const handleCloseModal = (updated: boolean) => {
     setModalOpen(false);
-    onChange(clickedItem);
+    if (updated) {
+      setSelectedItem(clickedItem);
+      onChange(clickedItem);
+    }
   };
 
   return (
