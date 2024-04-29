@@ -17,7 +17,8 @@ function selectedOptionChanged(selectedItem: SelectOption | undefined) {
 export const Default = {
   args: {
     variant: 'default',
-    label: 'Label',
+    label: 'Select classification',
+    secondLabel: 'Variable name',
     hideLabel: false,
     options: options,
     placeholder: placeholder,

@@ -7,6 +7,8 @@ import Heading from '../Typography/Heading/Heading';
 import Button from '../Button/Button';
 
 export interface ModalProps {
+  label?: string;
+  secondLabel?: string;
   isOpen: boolean;
   onClose?: (updated: boolean) => void;
   className?: string;
@@ -14,6 +16,8 @@ export interface ModalProps {
 }
 
 export function Modal({
+  label,
+  secondLabel,
   isOpen, 
   onClose, 
   className = '', 
@@ -56,8 +60,8 @@ export function Modal({
     <div className={cl(classes.header)}>
       <div className={cl(classes.headercontent)}>
         <div className={cl(classes.headings)}>
-          <Label size="medium" textcolor="default">Select classification</Label>
-          <Heading size="medium" textcolor="default">Variable name</Heading>
+          {label && (<Label size="medium" textcolor="default">{label}</Label>)}
+          {secondLabel && (<Heading size="medium" textcolor="default">{secondLabel}</Heading>)}
         </div>
         <div className={cl(classes.xmarkwrapper)}>
           <Button variant="tertiary" size="small" icon="XMark" onClick={() => handleCloseModal(false)}></Button>
