@@ -172,6 +172,9 @@ function VariableBoxSelect({
       setSelectedItem(clickedItem);
       onChange(clickedItem);
     }
+    else {
+      setClickedItem(selectedItem);
+    }
   };
 
   return (
