@@ -15,11 +15,8 @@ import {
   PxTable,
   Search,
   Tag,
-  VariableBox
+  VariableBox,
 } from '@pxweb2/pxweb2-ui';
-// import {
-//   PxTable
-// } from '@pxweb2/pxweb2-shared-types';
 import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
 //import { NumberFormatter } from '../i18n/formatters';
 import { TableService } from '@pxweb2/pxweb2-api-client';
@@ -36,8 +33,10 @@ function test(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
 function testSubmit() {
   console.log('test submit');
 }
-function selectedOptionChanged(selectedItem: SelectOption | undefined) {  
-  selectedItem ? console.log('Selected option: ' + selectedItem.label) : console.log('No option selected');
+function selectedOptionChanged(selectedItem: SelectOption | undefined) {
+  selectedItem
+    ? console.log('Selected option: ' + selectedItem.label)
+    : console.log('No option selected');
 }
 
 export function App() {
@@ -47,7 +46,11 @@ export function App() {
   const [errorMsg, setErrorMsg] = useState('');
   const [pxTable, setPxTable] = useState<PxTable | null>(null);
 
-  const options: SelectOption[] = [{ label: 'Option 1', value: 'opt1' }, { label: 'Option 2', value: 'opt2'}, { label: 'Option 3', value: 'opt3'}];
+  const options: SelectOption[] = [
+    { label: 'Option 1', value: 'opt1' },
+    { label: 'Option 2', value: 'opt2' },
+    { label: 'Option 3', value: 'opt3' },
+  ];
 
   /* TODO: Is there a mistake with this? on first load of the page? We keep getting a warning of missing key on li element, pointing to loading the translation on line 34 */
   const locales = {
@@ -122,7 +125,7 @@ export function App() {
             Enter table id:
           </Label>
           <br />
-          <select 
+          <select
             name="tabid"
             id="tabid"
             onChange={(e) => setTableid(e.target.value)}
@@ -157,12 +160,11 @@ export function App() {
                 (variable) =>
                   variable.id && (
                     <VariableBox
-                      label={variable.label}
                       id={variable.id}
+                      label={variable.label}
                       mandatory={variable.mandatory}
                       values={variable.values}
                       codeLists={variable.codeLists}
-                      notes={variable.notes}
                     />
                   )
               )}
@@ -213,7 +215,13 @@ export function App() {
           )}
           <br />
           <div className={cl(styles.selectWrapper)}>
-            <Select variant='default' label='Default' placeholder='Make selection' options={options} onChange={selectedOptionChanged}></Select>
+            <Select
+              variant="default"
+              label="Default"
+              placeholder="Make selection"
+              options={options}
+              onChange={selectedOptionChanged}
+            ></Select>
           </div>
           <br />
           <Tag size="medium" variant="info">
@@ -241,7 +249,7 @@ export function App() {
           <br />
           <Search
             variant="default"
-            showLable={true}
+            showLabel={true}
             searchPlaceHolder={t(
               'presentation_page.sidemenu.selection.variablebox.search.placeholder'
             )}

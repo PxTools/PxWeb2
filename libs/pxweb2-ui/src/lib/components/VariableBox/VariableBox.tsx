@@ -6,7 +6,7 @@ import classes from './VariableBox.module.scss';
 import { Checkbox, MixedCheckbox } from '../Checkbox/Checkbox';
 import { Icon } from '../Icon/Icon';
 import Search from '../Search/Search';
-import Select from '../Select/Select';
+import { Select, SelectOption } from '../Select/Select';
 import Tag from '../Tag/Tag';
 import Heading from '../Typography/Heading/Heading';
 import { Variable } from '../../shared-types/variable';
@@ -106,7 +106,7 @@ function VariableBoxHeader({
         isOpen && classes['variablebox-header-isopen']
       )}
       onClick={handleHeaderClick}
-      onKeyDown={e => handleKeyDown(e)}
+      onKeyDown={(e) => handleKeyDown(e)}
       tabIndex={tabIndex}
     >
       <div className={cl(classes['header-title-and-tag'])}>
@@ -139,7 +139,11 @@ function VariableBoxHeader({
       </div>
 
       <div className={cl(classes['header-icon'])}>
-        {isOpen ? <Icon iconName="ChevronUp"></Icon> : <Icon iconName="ChevronDown"></Icon>}
+        {isOpen ? (
+          <Icon iconName="ChevronUp"></Icon>
+        ) : (
+          <Icon iconName="ChevronDown"></Icon>
+        )}
       </div>
     </div>
   );
@@ -230,8 +234,10 @@ function VariableBoxContent({
     }
   };
 
-  const handleSelectChange = () => {
-    console.log('Select clicked');
+  const handleSelectOnChange = (selectedItem: SelectOption | undefined) => {
+    selectedItem
+      ? console.log('Selected option: ' + selectedItem.label)
+      : console.log('No option selected');
   };
 
   let mappedCodeList: MappedCodeList[] = [];
@@ -256,13 +262,13 @@ function VariableBoxContent({
               variant="inVariableBox"
               label={t(
                 'presentation_page.sidemenu.selection.variablebox.content.select.label'
-              )} // TODO: Check the swedish translation with the swedes
-              defaultOption={t(
+              )}
+              placeholder={t(
                 'presentation_page.sidemenu.selection.variablebox.content.select.placeholder'
               )}
               options={mappedCodeList}
-              selectedOption={''} // TODO: Finish the logic for this. This is the selected option, like "region" or "age". Needs modal with radio logic inside.
-              onChange={handleSelectChange}
+              selectedOption={ undefined } // TODO: Finish the logic for this. This is the selected option, like "region" or "age". Needs modal with radio logic inside.
+              onChange={handleSelectOnChange}
             />
           </div>
         )}
