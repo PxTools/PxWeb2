@@ -126,24 +126,28 @@ export function Alert({
         className={cl(
           classes[`alert-section-right`],
           {
-            [classes[`alert-section-right-close-${size}`]]: closeButton,
+            // [classes[`alert-section-right-close-${size}`]]: closeButton,
+            [classes[`alert-xmark`]]: closeButton,
           },
           {
-            [classes[`alert-section-right-continue`]]: clickable,
+            // [classes[`alert-section-right-continue`]]: clickable,
+            [classes[`alert-arrow-wrapper`]]: clickable,
           }
         )}
       >
         {/* {closeButton && <Icon iconName={iconClose} className=""></Icon>} */}
         {closeButton && (
-          <Button
-            variant="tertiary"
-            size="small"
-            icon={iconClose}
-            onClick={HandleClose}
-          />
+          <div className={cl(classes['alert-xmark-wrapper'])}>
+            <Button
+              variant="tertiary"
+              size="small"
+              icon={iconClose}
+              onClick={HandleClose}
+            />
+          </div>
         )}
         {clickable && (
-          <div className={cl(classes['alert-icon-wrapper'])}>
+          <div className={cl(classes['alert-arrow-wrapper'])}>
             {' '}
             <Icon iconName={iconRight} className=""></Icon>
           </div>
