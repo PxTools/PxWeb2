@@ -154,6 +154,7 @@ export function App() {
           </Button>
           <br />
           <div className={cl(styles.variableBoxContainer)}>
+            {/* TODO: I think the warning in the console about unique IDs is the variable.id below*/}
             {pxTable &&
               pxTable.variables.length > 0 &&
               pxTable.variables.map(

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
 
@@ -60,7 +60,6 @@ export function VariableBox({
           setSelectedValues={setSelectedValues}
           totalValues={totalValues}
           totalChosenValues={totalChosenValues}
-          isOpen={isOpen}
         />
       )}
     </div>
@@ -162,7 +161,6 @@ type VariableBoxContentProps = VariableBoxPropsToContent & {
   setSelectedValues: (values: Value['code'][]) => void;
   totalValues: number;
   totalChosenValues: number;
-  isOpen: boolean;
 };
 
 function VariableBoxContent({
@@ -183,13 +181,16 @@ function VariableBoxContent({
     'presentation_page.sidemenu.selection.variablebox.content.mixed_checkbox.deselect_all'
   );
 
-  const [allValuesSelected, setAllValuesSelected] = useState<
-    'mixed' | 'true' | 'false'
-  >('mixed');
+  const [scrollingUp, setScrollingUp] = useState(false);
+  const [lastScrollPosition, setLastScrollPosition] = useState(0);
   const [mixedCheckboxText, setMixedCheckboxText] = useState(
     checkboxSelectAllText
   );
+  const [allValuesSelected, setAllValuesSelected] = useState<
+    'mixed' | 'true' | 'false'
+  >('mixed');
 
+  const scrollRef = useRef<HTMLDivElement>(null);
   const hasCodeLists = codeLists && codeLists.length > 0;
   const hasSevenOrMoreValues = values && values.length > 6;
   const hasTwoOrMoreValues = values && values.length > 1;
@@ -234,6 +235,45 @@ function VariableBoxContent({
     }
   };
 
+  const handleScroll = () => {
+    if (scrollRef.current) {
+      const { scrollTop } = scrollRef.current;
+      const isScrolling = scrollTop > 0;
+      const isIntentionalScrollUp = scrollTop < lastScrollPosition - 5;
+      const isIntentionalScrollDown = scrollTop > lastScrollPosition + 5;
+      const isBelowFirstTwoElements =
+        scrollTop > scrollRef.current.children[0].clientHeight;
+
+      //  Reset scrollingUp state when at the top of the list
+      if (scrollTop === 0) {
+        setScrollingUp(false);
+      }
+
+      if (isScrolling) {
+        if (isIntentionalScrollUp && isBelowFirstTwoElements) {
+          setLastScrollPosition(scrollTop);
+
+          if (scrollingUp === false) {
+            setScrollingUp(true);
+          }
+        }
+
+        if (isIntentionalScrollDown && isBelowFirstTwoElements) {
+          setLastScrollPosition(scrollTop);
+
+          if (scrollingUp) {
+            setScrollingUp(false);
+          }
+        }
+      }
+    }
+  };
+
+  const handleSearch = () => {
+    //  TODO: Implement search functionality
+    console.log('Search');
+  };
+
   const handleSelectOnChange = (selectedItem: SelectOption | undefined) => {
     selectedItem
       ? console.log('Selected option: ' + selectedItem.label)
@@ -257,7 +297,7 @@ function VariableBoxContent({
 
       <div className={cl(classes['variablebox-content-main'])}>
         {hasCodeLists === true && (
-          <div className={classes['variablebox-content-select']}>
+          <div className={cl(classes['variablebox-content-select'])}>
             <Select
               variant="inVariableBox"
               label={t(
@@ -267,40 +307,57 @@ function VariableBoxContent({
                 'presentation_page.sidemenu.selection.variablebox.content.select.placeholder'
               )}
               options={mappedCodeList}
-              selectedOption={ undefined } // TODO: Finish the logic for this. This is the selected option, like "region" or "age". Needs modal with radio logic inside.
+              selectedOption={undefined} // TODO: Finish the logic for this. This is the selected option, like "region" or "age". Needs modal with radio logic inside.
               onChange={handleSelectOnChange}
             />
           </div>
         )}
 
-        {hasSevenOrMoreValues && (
-          <Search
-            variant="inVariableBox"
-            showLabel={false}
-            searchPlaceHolder={t(
-              'presentation_page.sidemenu.selection.variablebox.search.placeholder'
-            )}
-            ariaLabelIconText={t(
-              'presentation_page.sidemenu.selection.variablebox.search.arialabelicontext'
-            )}
-            arialLabelClearButtonText={t(
-              'presentation_page.sidemenu.selection.variablebox.search.ariallabelclearbuttontext'
-            )}
-            variableBoxTopBorderOverride={hasSelectAndSearch}
-          />
-        )}
-
-        <div className={cl(classes['variablebox-content-values-list'])}>
-          {hasTwoOrMoreValues && (
-            <MixedCheckbox
-              id={id}
-              text={mixedCheckboxText}
-              value={allValuesSelected}
-              onChange={handleMixedCheckboxChange}
-              ariaControls={values.map((value) => value.code)}
-              strong={true}
-            />
+        <div
+          className={cl(
+            classes['variablebox-content-values-list'],
+            hasSevenOrMoreValues &&
+              classes['variablebox-content-values-list-scroll']
           )}
+          ref={scrollRef}
+          onScroll={handleScroll}
+        >
+          <div
+            className={cl(
+              hasSevenOrMoreValues &&
+                scrollingUp &&
+                classes['variablebox-content-values-list-scroll-up']
+            )}
+          >
+            {hasSevenOrMoreValues && (
+              <Search
+                variant="inVariableBox"
+                showLabel={false}
+                searchPlaceHolder={t(
+                  'presentation_page.sidemenu.selection.variablebox.search.placeholder'
+                )}
+                ariaLabelIconText={t(
+                  'presentation_page.sidemenu.selection.variablebox.search.arialabelicontext'
+                )}
+                arialLabelClearButtonText={t(
+                  'presentation_page.sidemenu.selection.variablebox.search.ariallabelclearbuttontext'
+                )}
+                variableBoxTopBorderOverride={hasSelectAndSearch}
+              />
+            )}
+
+            {hasTwoOrMoreValues && (
+              <MixedCheckbox
+                id={id}
+                text={mixedCheckboxText}
+                value={allValuesSelected}
+                onChange={handleMixedCheckboxChange}
+                ariaControls={values.map((value) => value.code)}
+                strong={true}
+                inVariableBox={true}
+              />
+            )}
+          </div>
 
           {hasValues &&
             values.map((value) => (
