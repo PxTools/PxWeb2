@@ -18,7 +18,7 @@ export const Default = {
   args: {
     variant: 'default',
     label: 'Select classification',
-    secondLabel: 'Variable name',
+    modalHeading: 'Variable name',
     hideLabel: false,
     options: options,
     placeholder: placeholder,

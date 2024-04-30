@@ -8,7 +8,7 @@ import Button from '../Button/Button';
 
 export interface ModalProps {
   label?: string;
-  secondLabel?: string;
+  heading?: string;
   isOpen: boolean;
   onClose?: (updated: boolean) => void;
   className?: string;
@@ -17,7 +17,7 @@ export interface ModalProps {
 
 export function Modal({
   label,
-  secondLabel,
+  heading,
   isOpen, 
   onClose, 
   className = '', 
@@ -61,7 +61,7 @@ export function Modal({
       <div className={cl(classes.headercontent)}>
         <div className={cl(classes.headings)}>
           {label && (<Label size="medium" textcolor="default">{label}</Label>)}
-          {secondLabel && (<Heading size="medium" textcolor="default">{secondLabel}</Heading>)}
+          {heading && (<Heading size="medium" textcolor="default">{heading}</Heading>)}
         </div>
         <div className={cl(classes.xmarkwrapper)}>
           <Button variant="tertiary" size="small" icon="XMark" onClick={() => handleCloseModal(false)}></Button>

@@ -15,7 +15,7 @@ export type SelectOption = {
 export type SelectProps = {
   variant?: 'default' | 'inVariableBox';
   label: string;
-  secondLabel?: string;
+  modalHeading?: string;
   hideLabel?: boolean;
   placeholder?: string;
   options: SelectOption[];
@@ -33,7 +33,7 @@ function openOptions(options: SelectOption[]) {
 export function Select({
   variant = 'default',
   label,
-  secondLabel = '',
+  modalHeading = '',
   hideLabel = false,
   placeholder = '',
   options: ops,
@@ -61,7 +61,7 @@ export function Select({
       {variant && variant === 'inVariableBox' && (
         <VariableBoxSelect
           label={label}
-          secondLabel={secondLabel}
+          modalHeading={modalHeading}
           options={ops}
           placeholder={placeholder}
           selectedOption={selectedOption}
@@ -138,7 +138,7 @@ function DefaultSelect({
 type VariableBoxSelectProps = Pick<
   SelectProps,
   | 'label'
-  | 'secondLabel'
+  | 'modalHeading'
   | 'options'
   | 'placeholder'
   | 'selectedOption'
@@ -149,7 +149,7 @@ type VariableBoxSelectProps = Pick<
 
 function VariableBoxSelect({
   label,
-  secondLabel,
+  modalHeading,
   options,
   placeholder,
   selectedOption,
@@ -216,7 +216,7 @@ function VariableBoxSelect({
       {isModalOpen && (
         <Modal
           label={label}
-          secondLabel={secondLabel}
+          heading={modalHeading}
           isOpen={isModalOpen}
           onClose={handleCloseModal}
         >
