@@ -9,10 +9,12 @@ const meta: Meta<typeof Modal> = {
 };
 export default meta;
 
-const content = 'Hej';
+const content = 'Any content...';
 
 export const Default = {
   args: {
+    label: 'Label',
+    heading: 'Heading',
     isOpen: true,
     onClose: () => {
       console.log('Modal closed');
@@ -36,7 +38,7 @@ export const Open: StoryFn<typeof Modal> = () => {
       <Modal isOpen={isModalOpen} onClose={() => {
                 setModalOpen(false);
               }}>
-        <div>Hej</div>
+        <div>Any content</div>
       </Modal>
     </>
   );
