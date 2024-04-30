@@ -55,6 +55,9 @@
     align-items: flex-start;
     gap: 24px;
     align-self: stretch;
+
+    // Not from Figma
+    overflow-y : auto;
 }
 
 .footer{
