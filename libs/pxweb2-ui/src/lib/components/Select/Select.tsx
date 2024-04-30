@@ -222,7 +222,7 @@ function VariableBoxSelect({
         >
           <div className={cl(classes.modalradiolist)}>
             {options.map((option) => (
-              <div className={cl(classes.modalradio)} key={option.value}>
+              <div className={cl(classes.modalradio)} key={option.value} onClick={(event) => {setClickedItem(option)}}>
                 <input
                   type="radio"
                   id={option.value}
@@ -234,7 +234,7 @@ function VariableBoxSelect({
                     setClickedItem(option);
                   }}
                 />
-                <label htmlFor={option.value}>{option.label}</label>
+                <Label htmlFor={option.value}>{option.label}</Label>
               </div>
             ))}
           </div>
