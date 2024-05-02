@@ -181,7 +181,8 @@ function VariableBoxContent({
     'presentation_page.sidemenu.selection.variablebox.content.mixed_checkbox.deselect_all'
   );
 
-  const [scrollingUp, setScrollingUp] = useState(false);
+  const [scrolling, setScrolling] = useState<'atTop' | 'up' | 'down'
+  >('atTop');
   const [lastScrollPosition, setLastScrollPosition] = useState(0);
   const [mixedCheckboxText, setMixedCheckboxText] = useState(
     checkboxSelectAllText
@@ -244,25 +245,25 @@ function VariableBoxContent({
       const isBelowFirstTwoElements =
         scrollTop > scrollRef.current.children[0].clientHeight;
 
-      //  Reset scrollingUp state when at the top of the list
-      if (scrollTop === 0) {
-        setScrollingUp(false);
+      //  Reset scrolling state when at the top of the list
+      if (scrollTop === 0 && scrolling !== 'atTop') {
+        setScrolling('atTop');
       }
 
       if (isScrolling) {
         if (isIntentionalScrollUp && isBelowFirstTwoElements) {
           setLastScrollPosition(scrollTop);
 
-          if (scrollingUp === false) {
-            setScrollingUp(true);
+          if (scrolling !== 'up') {
+            setScrolling('up');
           }
         }
 
         if (isIntentionalScrollDown && isBelowFirstTwoElements) {
           setLastScrollPosition(scrollTop);
 
-          if (scrollingUp) {
-            setScrollingUp(false);
+          if (scrolling !== 'down') {
+            setScrolling('down');
           }
         }
       }
@@ -325,8 +326,11 @@ function VariableBoxContent({
           <div
             className={cl(
               hasSevenOrMoreValues &&
-                scrollingUp &&
-                classes['variablebox-content-values-list-scroll-up']
+                scrolling === 'up' &&
+                classes['variablebox-content-values-list-scroll-up'],
+              hasSevenOrMoreValues &&
+                scrolling === 'down' &&
+                classes['variablebox-content-values-list-scroll-down']
             )}
           >
             {hasSevenOrMoreValues && (

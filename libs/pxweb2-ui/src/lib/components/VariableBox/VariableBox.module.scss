@@ -12,10 +12,12 @@
 
 @keyframes slideUp {
   from {
+    position: sticky;
     transform: translateY(0);
   }
   to {
     transform: translateY(-100%);
+    position: inherit;
   }
 }
 
@@ -146,6 +148,13 @@
   top: 0;
   z-index: 1;
   animation: SlideDown 0.2s;
+}
+
+.variablebox-content-values-list-scroll-down {
+  //position: block;
+  top: 0;
+  z-index: 1;
+  animation: slideUp 0.2s;
 }
 
 .variablebox-content-metadata-link {
