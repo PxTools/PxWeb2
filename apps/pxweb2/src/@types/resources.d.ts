@@ -27,7 +27,8 @@ interface Resources {
       "generic_buttons": {
         "ok": "OK",
         "cancel": "Cancel",
-        "search": "Search"
+        "search": "Search",
+        "save": "Save"
       }
     },
     "start_page": {

@@ -1,4 +1,5 @@
 import cl from 'clsx';
+import { useTranslation } from 'react-i18next';
 import { useEffect, useRef, useState } from 'react';
 
 import classes from './Modal.module.scss';
@@ -23,6 +24,7 @@ export function Modal({
   className = '', 
   children
 }: ModalProps) {
+  const { t } = useTranslation();
   const cssClasses = className.length > 0 ? ' ' + className : '';
   const [isModalOpen, setModalOpen] = useState(isOpen);
   const modalRef = useRef<HTMLDialogElement | null>(null);
@@ -73,8 +75,8 @@ export function Modal({
     </div>
     <div className={cl(classes.footer)}>
       <div className={cl(classes.buttongroup)}>
-        <Button variant="secondary" size="medium" onClick={() => handleCloseModal(false)}>Cancel</Button>
-        <Button variant="primary" size="medium" onClick={() => handleCloseModal(true)}>Save</Button>
+        <Button variant="secondary" size="medium" onClick={() => handleCloseModal(false)}>{t('common.generic_buttons.cancel')}</Button>
+        <Button variant="primary" size="medium" onClick={() => handleCloseModal(true)}>{t('common.generic_buttons.save')}</Button>
       </div>
     </div>
   </dialog>
