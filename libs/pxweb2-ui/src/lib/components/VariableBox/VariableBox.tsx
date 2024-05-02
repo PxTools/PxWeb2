@@ -181,8 +181,8 @@ function VariableBoxContent({
     'presentation_page.sidemenu.selection.variablebox.content.mixed_checkbox.deselect_all'
   );
 
-  const [scrolling, setScrolling] = useState<'atTop' | 'up' | 'down'
-  >('atTop');
+  const [scrolling, setScrolling] = useState<'atTop' | 'up' | 'down'>('atTop');
+  const [hasScrolledUp, setHasScrolledUp] = useState(false);
   const [lastScrollPosition, setLastScrollPosition] = useState(0);
   const [mixedCheckboxText, setMixedCheckboxText] = useState(
     checkboxSelectAllText
@@ -248,6 +248,7 @@ function VariableBoxContent({
       //  Reset scrolling state when at the top of the list
       if (scrollTop === 0 && scrolling !== 'atTop') {
         setScrolling('atTop');
+        setHasScrolledUp(false);
       }
 
       if (isScrolling) {
@@ -256,6 +257,7 @@ function VariableBoxContent({
 
           if (scrolling !== 'up') {
             setScrolling('up');
+            setHasScrolledUp(true);
           }
         }
 
@@ -330,6 +332,7 @@ function VariableBoxContent({
                 classes['variablebox-content-values-list-scroll-up'],
               hasSevenOrMoreValues &&
                 scrolling === 'down' &&
+                hasScrolledUp === true &&
                 classes['variablebox-content-values-list-scroll-down']
             )}
           >
