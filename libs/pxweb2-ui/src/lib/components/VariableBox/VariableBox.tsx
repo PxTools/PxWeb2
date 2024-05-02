@@ -181,6 +181,7 @@ function VariableBoxContent({
     'presentation_page.sidemenu.selection.variablebox.content.mixed_checkbox.deselect_all'
   );
 
+  // TODO: Do we need 3 states for animating the scrolling? Can we simplify this?
   const [scrolling, setScrolling] = useState<'atTop' | 'up' | 'down'>('atTop');
   const [hasScrolledUp, setHasScrolledUp] = useState(false);
   const [lastScrollPosition, setLastScrollPosition] = useState(0);
