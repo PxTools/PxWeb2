@@ -20,6 +20,7 @@ export const Default = {
       console.log('Modal closed');
     },
   },
+  
   render: (args: ModalProps) => (
     <Modal {...args}>
       {content && (<div>{content}</div>)}
@@ -35,11 +36,13 @@ export const Open: StoryFn<typeof Modal> = () => {
   return (
     <>
       <button onClick={() => setModalOpen(true)}>Open modal</button>
-      <Modal isOpen={isModalOpen} onClose={() => {
+      {isModalOpen && (
+      <Modal label="Label" heading="Heading" isOpen={isModalOpen} onClose={() => {
                 setModalOpen(false);
               }}>
         <div>Any content</div>
       </Modal>
+      )}
     </>
   );
 };
