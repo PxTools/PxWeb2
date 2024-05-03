@@ -37,21 +37,53 @@ export function Modal({
     const modalElement = modalRef.current;
     if (modalElement) {
       if (isModalOpen) {
+        console.log('showing modal');
         modalElement.showModal();
       } else {
+        console.log('closing modal');
         modalElement.close();
       }
     }
   }, [isModalOpen]);
 
-  const handleCloseModal = (updated: boolean) => {
+  const delay = async (ms: number | undefined) => {
+    return new Promise((resolve) => 
+        setTimeout(resolve, ms));
+};
+
+  const handleCloseModal = async (updated: boolean) => {
     if (onClose) {
+      console.log('closing modal with updated: ', updated);
+      const modalElement = modalRef.current;
+      if (modalElement) {
+        modalElement.setAttribute('closing', '');
+
+        // console.log('waiting for transitionend');
+
+        // // Add an event listener for the 'transitionend' event
+        // modalElement.addEventListener('transitionend', (event) => {
+        //   console.log('transitionend event:', event.propertyName); // Log the property that finished transitioning
+        // });
+
+        // console.log('waiting for transitionend done');
+
+        // // Wait for the 'transitionend' event
+        // await new Promise(resolve => modalElement.addEventListener('transitionend', resolve, { once: true }));
+
+        await delay(300);
+
+        // console.log('transitionend done');
+
+        modalElement.removeAttribute('closing');
+      }
+      console.log('calling onClose');
       onClose(updated);
     }
-    setModalOpen(false);
+    console.log('setting modal open to false');
+    setModalOpen(false); // Ensure that the modal's state is updated when it's closed
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLDialogElement>) => {
+  const handleKeyDown = async (event: React.KeyboardEvent<HTMLDialogElement>) => {
     if (event.key === "Escape") {
       handleCloseModal(false);
     }
