@@ -29,17 +29,6 @@
     animation: fade-in 200ms forwards;
   }
   
-  // .modal[closing] {
-  //   display: block;
-  //   pointer-events: none;
-  //   inset: 0;
-  //   animation: fade-out 200ms forwards;
-  // }
-  
-  // .modal[closing]::backdrop {
-  //   animation: fade-out 200ms forwards;
-  // }
-  
   @keyframes fade-in {
     0% {
       opacity: 0;
@@ -48,15 +37,6 @@
       opacity: 1;
     }
   }
-  
-  // @keyframes fade-out {
-  //   0% {
-  //     opacity: 1;
-  //   }
-  //   100% {
-  //     opacity: 0;
-  //   }
-  // }
   
 .header{
     display: flex;

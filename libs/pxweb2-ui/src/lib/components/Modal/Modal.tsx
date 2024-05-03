@@ -37,33 +37,17 @@ export function Modal({
     const modalElement = modalRef.current;
     if (modalElement) {
       if (isModalOpen) {
-        // console.log('showing modal');
         modalElement.showModal();
       } else {
-        // console.log('closing modal');
         modalElement.close();
       }
     }
   }, [isModalOpen]);
 
-//   const delay = async (ms: number | undefined) => {
-//     return new Promise((resolve) => 
-//         setTimeout(resolve, ms));
-// };
-
   const handleCloseModal = (updated: boolean) => {
     if (onClose) {
-      // console.log('closing modal with updated: ', updated);
-      // const modalElement = modalRef.current;
-      // if (modalElement) {
-      //   modalElement.setAttribute('closing', '');
-      //   await delay(2000);
-      //   modalElement.removeAttribute('closing');
-      // }
-      // console.log('calling onClose');
       onClose(updated);
     }
-    // console.log('setting modal open to false');
     setModalOpen(false); // Ensure that the modal's state is updated when it's closed
   };
 
