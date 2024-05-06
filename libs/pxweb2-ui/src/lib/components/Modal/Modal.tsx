@@ -65,7 +65,7 @@ export function Modal({
           {label && (<Label size="medium" textcolor="default">{label}</Label>)}
           {heading && (<Heading size="medium" textcolor="default">{heading}</Heading>)}
         </div>
-        <div className={cl(classes.xmarkwrapper)}>
+        <div className={cl(classes.xMarkWrapper)}>
           <Button variant="tertiary" size="small" icon="XMark" onClick={() => handleCloseModal(false)} aria-label={t('common.generic_buttons.cancel')}></Button>
         </div>
       </div>
@@ -74,7 +74,7 @@ export function Modal({
       {children}
     </div>
     <div className={cl(classes.footer)}>
-      <div className={cl(classes.buttongroup)}>
+      <div className={cl(classes.buttonGroup)}>
         <Button variant="secondary" size="medium" onClick={() => handleCloseModal(false)} aria-label={t('common.generic_buttons.cancel')}>{t('common.generic_buttons.cancel')}</Button>
         <Button variant="primary" size="medium" onClick={() => handleCloseModal(true)} aria-label={t('common.generic_buttons.save')}>{t('common.generic_buttons.save')}</Button>
       </div>
