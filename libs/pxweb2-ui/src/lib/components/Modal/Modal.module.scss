@@ -94,7 +94,7 @@
 
 .buttonGroup {
   display: flex;
-  justify-content: flex-end;
+  flex-direction: row-reverse;
   align-items: flex-start;
   gap: fixed.$spacing-2;
   flex: 1 0 0;
