@@ -220,9 +220,9 @@ function VariableBoxSelect({
           isOpen={isModalOpen}
           onClose={handleCloseModal}
         >
-          <div className={cl(classes.modalradiolist)}>
+          <div className={cl(classes.modalRadioList)}>
             {options.map((option) => (
-              <div className={cl(classes.modalradio)} key={option.value} onClick={(event) => {setClickedItem(option)}}>
+              <div className={cl(classes.modalRadio)} key={option.value} onClick={(event) => {setClickedItem(option)}}>
                 <input
                   type="radio"
                   id={option.value}

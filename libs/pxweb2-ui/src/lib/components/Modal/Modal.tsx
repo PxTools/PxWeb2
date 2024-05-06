@@ -60,7 +60,7 @@ export function Modal({
   return (
   <dialog ref={modalRef} onKeyDown={handleKeyDown} className={cl(classes.modal) + cssClasses}>
     <div className={cl(classes.header)}>
-      <div className={cl(classes.headercontent)}>
+      <div className={cl(classes.headerContent)}>
         <div className={cl(classes.headings)}>
           {label && (<Label size="medium" textcolor="default">{label}</Label>)}
           {heading && (<Heading size="medium" textcolor="default">{heading}</Heading>)}
