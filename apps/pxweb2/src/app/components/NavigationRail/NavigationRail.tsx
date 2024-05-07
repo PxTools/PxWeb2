@@ -3,15 +3,22 @@ import cl from 'clsx';
 import styles from './NavigationRail.module.scss';
 import { useTranslation } from 'react-i18next';
 import { Icon, IconProps, Label } from '@pxweb2/pxweb2-ui';
+import { NavigationItem } from '../../app';
 
 interface ItemProps {
   label: string;
   selected: boolean;
   icon: IconProps['iconName'];
+  onClick: () => void;
 }
-export const Item: React.FC<ItemProps> = ({ label, selected, icon }) => {
+export const Item: React.FC<ItemProps> = ({
+  label,
+  selected,
+  icon,
+  onClick,
+}) => {
   return (
-    <button className={styles.item}>
+    <button className={styles.item} onClick={onClick}>
       <div className={cl(styles.icon, { [styles.selected]: selected })}>
         <Icon iconName={icon} />
       </div>
@@ -22,34 +29,57 @@ export const Item: React.FC<ItemProps> = ({ label, selected, icon }) => {
   );
 };
 
-export const NavigationRail: React.FC = () => {
+interface NavigationRailProps {
+  selected: NavigationItem;
+  onChange: (newSelected: NavigationItem) => void;
+}
+export const NavigationRail: React.FC<NavigationRailProps> = ({
+  onChange,
+  selected,
+}) => {
   const { t } = useTranslation();
+
   return (
     <div className={styles.navigationRail}>
       <Item
         label={t('presentation_page.sidemenu.selection.title')}
-        selected={true}
+        selected={selected === 'filter'}
         icon={'Controls'}
+        onClick={() => {
+          onChange('filter');
+        }}
       />
       <Item
         label={t('presentation_page.sidemenu.view.title')}
-        selected={false}
+        selected={selected === 'view'}
         icon={'BarChart'}
+        onClick={() => {
+          onChange('view');
+        }}
       />
       <Item
         label={t('presentation_page.sidemenu.edit.title')}
-        selected={false}
+        selected={selected === 'edit'}
         icon={'ArrowsUpDown'}
+        onClick={() => {
+          onChange('edit');
+        }}
       />
       <Item
         label={t('presentation_page.sidemenu.save.title')}
-        selected={false}
+        selected={selected === 'save'}
         icon={'FloppyDisk'}
+        onClick={() => {
+          onChange('save');
+        }}
       />
       <Item
         label={t('presentation_page.sidemenu.help.title')}
-        selected={false}
+        selected={selected === 'help'}
         icon={'QuestionMarkCircle'}
+        onClick={() => {
+          onChange('help');
+        }}
       />
     </div>
   );
