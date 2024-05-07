@@ -72,19 +72,29 @@
   gap: fixed.$spacing-2;
   height: 43px;
   background: var(--px-color-surface-default);
+  border-radius: var(--px-border-radius-medium) var(--px-border-radius-medium)
+    var(--px-border-radius-none) var(--px-border-radius-none);
 
   &:hover {
     border-radius: var(--px-border-radius-medium);
     outline: 2px solid var(--px-color-border-action);
     cursor: pointer;
   }
-  &:hover ~ .divider {
-    border-bottom: 2px solid var(--px-color-surface-default);
+
+  &:focus {
+    border-radius: var(--px-border-radius-medium);
+    outline: 2px solid var(--px-color-border-action);
   }
 
   &:active {
     border-radius: var(--px-border-radius-medium);
     outline: 2px solid var(--px-color-border-selected);
+  }
+
+  &:hover ~ .divider,
+  &:active ~ .divider,
+  &:focus ~ .divider {
+    border-bottom: 2px solid var(--px-color-surface-default);
   }
 }
 

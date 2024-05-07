@@ -26,6 +26,12 @@
   }
 }
 
+.variableBoxContainer {
+  width: 20.25rem;
+  background: var(--px-color-surface-moderate, #DBEBEB);
+  padding: 1rem;
+}
+
 @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
   .breakpoints {
     max-width: 100px;

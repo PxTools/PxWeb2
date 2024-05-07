@@ -1,25 +1,26 @@
+import { useState } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 import cl from 'clsx';
 
 import styles from './app.module.scss';
 import {
   Button,
-  Heading,
   BodyShort,
   BodyLong,
+  Heading,
   Ingress,
   Label,
-  Tag,
   Select,
   SelectOption,
   PxTable,
   Search,
+  Tag,
+  VariableBox,
 } from '@pxweb2/pxweb2-ui';
 import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
 //import { NumberFormatter } from '../i18n/formatters';
 import { TableService } from '@pxweb2/pxweb2-api-client';
 import { mapTableMetadataResponse } from '../mappers/TableMetadataResponseMapper';
-import { useState } from 'react';
 import { Header } from './components/Header/Header';
 import NavigationRail from './components/NavigationRail/NavigationRail';
 import { Content } from './components/Content/Content';
@@ -32,8 +33,10 @@ function test(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
 function testSubmit() {
   console.log('test submit');
 }
-function selectedOptionChanged(selectedItem: SelectOption | undefined) {  
-  selectedItem ? console.log('Selected option: ' + selectedItem.label) : console.log('No option selected');
+function selectedOptionChanged(selectedItem: SelectOption | undefined) {
+  selectedItem
+    ? console.log('Selected option: ' + selectedItem.label)
+    : console.log('No option selected');
 }
 
 export function App() {
@@ -60,6 +63,7 @@ export function App() {
     { label: 'Option 14', value: 'opt14' },
     { label: 'Option 15', value: 'opt15' },
   ];
+
   const locales = {
     en: { title: 'English' },
     no: { title: 'Norsk' },
@@ -132,7 +136,11 @@ export function App() {
             Enter table id:
           </Label>
           <br />
-          <select onChange={(e) => setTableid(e.target.value)}>
+          <select
+            name="tabid"
+            id="tabid"
+            onChange={(e) => setTableid(e.target.value)}
+          >
             <option value="TAB638">TAB638</option>
             <option value="TAB1292">TAB1292</option>
             <option value="TAB5659">TAB5659</option>
@@ -155,6 +163,24 @@ export function App() {
           <Button variant="secondary" onClick={() => getTable(tableid)}>
             Get table
           </Button>
+          <br />
+          <div className={cl(styles.variableBoxContainer)}>
+            {/* TODO: I think the warning in the console about unique IDs is the variable.id below*/}
+            {pxTable &&
+              pxTable.variables.length > 0 &&
+              pxTable.variables.map(
+                (variable) =>
+                  variable.id && (
+                    <VariableBox
+                      id={variable.id}
+                      label={variable.label}
+                      mandatory={variable.mandatory}
+                      values={variable.values}
+                      codeLists={variable.codeLists}
+                    />
+                  )
+              )}
+          </div>
           <br />
           {pxTable && (
             <div>
@@ -231,7 +257,7 @@ export function App() {
           <br />
           <Search
             variant="default"
-            showLable={true}
+            showLabel={true}
             searchPlaceHolder={t(
               'presentation_page.sidemenu.selection.variablebox.search.placeholder'
             )}
