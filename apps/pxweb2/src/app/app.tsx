@@ -81,12 +81,6 @@ export function App() {
     { label: 'Option 14', value: 'opt14' },
     { label: 'Option 15', value: 'opt15' },
   ];
-  const locales = {
-    en: { title: 'English' },
-    no: { title: 'Norsk' },
-    sv: { title: 'Svenska' },
-    ar: { title: 'العربية' },
-  };
 
   const customRoundingMode = 'halfExpand';
   const customMinDecimals = 2;
@@ -138,15 +132,6 @@ export function App() {
           <NavigationBar onChange={changeSelected} selected={selected} />
         </div>
         <Content topLeftBorderRadius={selected === 'none'}>
-          {Object.keys(locales).map((locale) => (
-            <Button
-              size="small"
-              variant="tertiary"
-              onClick={() => i18n.changeLanguage(locale)}
-            >
-              {locales[locale as keyof typeof locales].title}
-            </Button>
-          ))}
           <Heading level="1" size="xlarge">
             {t('common.title')}
           </Heading>
