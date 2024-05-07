@@ -13,7 +13,7 @@
 .desktopNavigation {
   display: none;
   @media (min-width: fixed.$breakpoints-medium-min-width) {
-    display: block;
+    display: flex;
   }
 }
 
