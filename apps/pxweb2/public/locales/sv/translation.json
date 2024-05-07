@@ -1,4 +1,7 @@
 {
+  "meta": {
+    "languageName": "Svenska"
+  },
   "common": {
     "title": "Välkommen till PxWeb 2.0",
     "header": {
