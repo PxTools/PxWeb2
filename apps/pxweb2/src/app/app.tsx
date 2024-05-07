@@ -1,22 +1,8 @@
 import { useState } from 'react';
-import { useTranslation, Trans } from 'react-i18next';
-import cl from 'clsx';
+import { useTranslation } from 'react-i18next';
 
 import styles from './app.module.scss';
-import {
-  Button,
-  BodyShort,
-  BodyLong,
-  Heading,
-  Ingress,
-  Label,
-  Select,
-  SelectOption,
-  PxTable,
-  Search,
-  Tag,
-  VariableBox,
-} from '@pxweb2/pxweb2-ui';
+import { Button, PxTable, VariableBox } from '@pxweb2/pxweb2-ui';
 import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
 //import { NumberFormatter } from '../i18n/formatters';
 import { TableService } from '@pxweb2/pxweb2-api-client';
@@ -27,19 +13,6 @@ import { Content } from './components/Content/Content';
 import NavigationBar from './components/NavigationBar/NavigationBar';
 import NavigationDrawer from './components/NavigationDrawer/NavigationDrawer';
 
-function test(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-  event.preventDefault();
-  console.log('test');
-}
-function testSubmit() {
-  console.log('test submit');
-}
-function selectedOptionChanged(selectedItem: SelectOption | undefined) {
-  selectedItem
-    ? console.log('Selected option: ' + selectedItem.label)
-    : console.log('No option selected');
-}
-
 export type NavigationItem =
   | 'none'
   | 'filter'
@@ -49,13 +22,12 @@ export type NavigationItem =
   | 'help';
 
 export function App() {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
 
   const [tableid, setTableid] = useState('tab638');
   const [errorMsg, setErrorMsg] = useState('');
   const [pxTable, setPxTable] = useState<PxTable | null>(null);
   const [selected, setSelected] = useState<NavigationItem>('none');
-  const [showDevStuff, setShowDevStuff] = useState<boolean>(false);
 
   const changeSelected = (newSelected: NavigationItem) => {
     if (selected === newSelected) {
@@ -64,28 +36,6 @@ export function App() {
       setSelected(newSelected);
     }
   };
-
-  const options: SelectOption[] = [
-    { label: 'Option 1', value: 'opt1' },
-    { label: 'Option 2', value: 'opt2' },
-    { label: 'Option 3 is an option with a very long text', value: 'opt3' },
-    { label: 'Option 4', value: 'opt4' },
-    { label: 'Option 5', value: 'opt5' },
-    { label: 'Option 6', value: 'opt6' },
-    { label: 'Option 7', value: 'opt7' },
-    { label: 'Option 8', value: 'opt8' },
-    { label: 'Option 9', value: 'opt9' },
-    { label: 'Option 10', value: 'opt10' },
-    { label: 'Option 11', value: 'opt11' },
-    { label: 'Option 12', value: 'opt12' },
-    { label: 'Option 13', value: 'opt13' },
-    { label: 'Option 14', value: 'opt14' },
-    { label: 'Option 15', value: 'opt15' },
-  ];
-
-  const customRoundingMode = 'halfExpand';
-  const customMinDecimals = 2;
-  const customMaxDecimals = 4;
 
   useLocalizeDocumentAttributes();
 
