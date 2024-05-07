@@ -10,8 +10,10 @@
 | --- | ----------- |
 |Unit and integration tests | Vitest/Jest, Stories in Storybook|
 |Static code analysis | CodeQL (in GitHub) |
-| Paragraph | Text |
-- 
+| Thirdparty code | Dependabot security and version updates, Dependabot alerts, Use Snyk Advisor to check development and maintenance health of libraries |
+| Automated end-to-end tests | Playwright |
+| Acceptancetests | Playwright, Chromatic: UI Review (Manual test) |
+| Regressiontests  | Playwright, Chromatic: UI Test |
 - ---------------- 
 -     
  
