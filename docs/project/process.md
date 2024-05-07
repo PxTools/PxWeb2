@@ -5,7 +5,7 @@
 - The sprints end with a demo on Monday every third week at twelve o'clock.
 - The project group meet physically once a quarter.
 ## Test tools
-**We are exploring what text tools we are going to use so this list can be changed. **
+**We are exploring what text tools we are going to use so this list can be changed.**
 
 | Type of test | Testing tools |
 | --- | ----------- |
