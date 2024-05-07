@@ -46,7 +46,7 @@ export function VariableBoxContent({
   const [scrolling, setScrolling] = useState<'atTop' | 'up' | 'down'>('atTop');
   const [hasScrolledUp, setHasScrolledUp] = useState(false);
   const [lastScrollPosition, setLastScrollPosition] = useState(0);
-  const [mixedCheckboxText, setMixedCheckboxText] = useState(
+  const [mixedCheckboxText, setMixedCheckboxText] = useState<string>(
     checkboxSelectAllText
   );
   const [allValuesSelected, setAllValuesSelected] = useState<
