@@ -1,5 +1,8 @@
 interface Resources {
   "translation": {
+    "meta": {
+      "languageName": "English"
+    },
     "common": {
       "title": "Welcome to PxWeb 2.0",
       "header": {

@@ -8,12 +8,6 @@ export const Header: React.FC = () => {
   const { t, i18n } = useTranslation();
   const config = getConfig();
 
-  const locales = {
-    en: { title: 'English' },
-    no: { title: 'Norsk' },
-    sv: { title: 'Svenska' },
-    ar: { title: 'العربية' },
-  };
   return (
     <div className={styles.header}>
       <div>
@@ -24,12 +18,12 @@ export const Header: React.FC = () => {
           <Button variant="tertiary" icon="House">
             {t('presentation_page.header.statistics')}
           </Button>
-          {Object.keys(locales).map((locale) => (
+          {config.language.supportedLanguages.map((locale) => (
             <Button
               variant="tertiary"
               onClick={() => i18n.changeLanguage(locale)}
             >
-              {locales[locale as keyof typeof locales].title}
+              {locale}
             </Button>
           ))}
           <Button variant="secondary" size="medium" icon="MagnifyingGlass">
