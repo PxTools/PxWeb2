@@ -28,6 +28,9 @@ export function App() {
   const [errorMsg, setErrorMsg] = useState('');
   const [pxTable, setPxTable] = useState<PxTable | null>(null);
   const [selected, setSelected] = useState<NavigationItem>('none');
+  const [pxData, setPxData] = useState<string | null>('');
+
+
 
   const changeSelected = (newSelected: NavigationItem) => {
     if (selected === newSelected) {
@@ -50,6 +53,29 @@ export function App() {
         setErrorMsg('Could not get table: ' + id);
         setPxTable(null);
       });
+    getData(id);
+  };
+
+  const getData = (id: string) => {
+    const url =
+      'https://api.scb.se/OV0104/v2beta/api/v2/tables/' +
+      id +
+      '/data?lang=' +
+      i18n.resolvedLanguage +
+      '&outputFormat=html5_table';
+    fetch(url)
+      .then((response) => response.arrayBuffer())
+      .then((buffer) => {
+        const decoder = new TextDecoder('iso-8859-1');
+        const tableDataResponse = decoder.decode(buffer);
+        const thePxData: string = tableDataResponse;
+        setPxData(thePxData);
+        setErrorMsg('');
+      })
+      .catch((error) => {
+        setErrorMsg('Could not get table: ' + id);
+        setPxTable(null);
+      });
   };
 
   const drawerFilter = (
@@ -63,10 +89,10 @@ export function App() {
         <option value="TAB1292">TAB1292</option>
         <option value="TAB5659">TAB5659</option>
       </select>
-      <Button variant="secondary" onClick={() => getTable(tableid)}>
+      <Button variant="tertiary" onClick={() => getTable(tableid)}>
         Get table
       </Button>
-      <div>
+      <div className={styles.variableBoxContainer}>
         {/* TODO: I think the warning in the console about unique IDs is the variable.id below*/}
         {pxTable &&
           pxTable.variables.length > 0 &&
@@ -114,7 +140,9 @@ export function App() {
         <div className={styles.mobileNavigation}>
           <NavigationBar onChange={changeSelected} selected={selected} />
         </div>
-        <Content topLeftBorderRadius={selected === 'none'}>content </Content>
+        <Content topLeftBorderRadius={selected === 'none'}>{pxData && (
+            <div dangerouslySetInnerHTML={{ __html: pxData }} />
+          )} </Content>
       </div>
     </>
   );

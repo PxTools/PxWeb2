@@ -27,9 +27,9 @@
 }
 
 .variableBoxContainer {
-  width: 20.25rem;
-  background: var(--px-color-surface-moderate, #DBEBEB);
-  padding: 1rem;
+display: flex;
+flex-direction: column;
+gap:fixed.$spacing-2;
 }
 
 @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
