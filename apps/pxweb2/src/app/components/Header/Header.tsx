@@ -27,7 +27,7 @@ export const Header: React.FC = () => {
             </Button>
           ))}
           <Button variant="secondary" size="medium" icon="MagnifyingGlass">
-            {t('presentation_page.header.searchbutton')}
+            {t('common.generic_buttons.search')}
           </Button>
         </div>
         <div className={styles.mobileMenu}>
