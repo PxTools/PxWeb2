@@ -168,6 +168,7 @@ export function VariableBoxContent({
               label={t(
                 'presentation_page.sidemenu.selection.variablebox.content.select.label'
               )}
+              modalHeading={label}
               placeholder={t(
                 'presentation_page.sidemenu.selection.variablebox.content.select.placeholder'
               )}

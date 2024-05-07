@@ -18,26 +18,18 @@ export function VariableBox({
   codeLists,
 }: VariableBoxProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedValues, setSelectedValues] = useState<Value['code'][]>([]);
+  const [selectedValues, setSelectedValues] = useState<Value['code'][]>([]); // selectedValues should be handled in the parent component
 
   /** Maybe improve names? */
   const totalValues = values?.length;
   const totalChosenValues = selectedValues.length;
-
-  /*
-   * How do we handle the state of chosen options/values?
-   * - should the state be handled here or in the parent component and passed down through props?
-   *
-   * isOpen is handled here, but should selectedValues be handled here as well?
-   * - No, it should be in parent component?
-   *
-   * How should we structure the HTML in terms of sections, divs, etc?
-   */
+  const capitalizedVariableName =
+    label.charAt(0).toUpperCase() + label.slice(1);
 
   return (
     <div className={cl(classes.variablebox)} key={id}>
       <VariableBoxHeader
-        label={label}
+        label={capitalizedVariableName}
         mandatory={mandatory}
         totalValues={totalValues}
         totalChosenValues={totalChosenValues}
@@ -48,7 +40,7 @@ export function VariableBox({
       {isOpen && (
         <VariableBoxContent
           id={id}
-          label={label}
+          label={capitalizedVariableName}
           values={values}
           codeLists={codeLists}
           selectedValues={selectedValues}

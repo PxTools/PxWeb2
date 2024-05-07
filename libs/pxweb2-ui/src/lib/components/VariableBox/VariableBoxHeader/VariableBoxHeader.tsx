@@ -7,7 +7,6 @@ import Tag from '../../Tag/Tag';
 import Heading from '../../Typography/Heading/Heading';
 import { VariableBoxProps } from '../VariableBox';
 
-
 /* eslint-disable-next-line */
 type VariableBoxPropsToHeader = Pick<VariableBoxProps, 'label' | 'mandatory'>;
 
@@ -19,7 +18,6 @@ type VariableBoxHeaderProps = VariableBoxPropsToHeader & {
   tabIndex?: number;
 };
 
-
 export function VariableBoxHeader({
   label,
   mandatory,
@@ -30,7 +28,6 @@ export function VariableBoxHeader({
   tabIndex = 0,
 }: VariableBoxHeaderProps) {
   const { t } = useTranslation();
-  const capitalizedTitle = label.charAt(0).toUpperCase() + label.slice(1);
 
   function handleHeaderClick() {
     setIsOpen(!isOpen);
@@ -53,9 +50,9 @@ export function VariableBoxHeader({
       tabIndex={tabIndex}
     >
       <div className={cl(classes['header-title-and-tag'])}>
-        {/* TODO: Is this the right level for Heading here?*/}
+        {/* TODO: Is this the right level for Heading here? */}
         <Heading level="3" className={cl(classes['header-title'])} size="small">
-          {capitalizedTitle}
+          {label}
         </Heading>
         <div className={cl(classes['header-tags'])}>
           <Tag variant="success">

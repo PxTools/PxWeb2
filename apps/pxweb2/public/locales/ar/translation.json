@@ -8,7 +8,8 @@
     "generic_buttons": {
       "ok": "نعم",
       "cancel": "يلغي",
-      "search": "يبحث"
+      "search": "يبحث",
+      "save": "يحفظ"
     }
   },
   "start_page": {
