@@ -86,6 +86,9 @@
     "surface-error-moderate": {
       "value": "#FFCEC7"
     },
+    "surface-scrim": {
+      "value": "#27424780"
+    },
     "border-default": {
       "value": "#162327"
     },

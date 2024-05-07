@@ -8,7 +8,8 @@
     "generic_buttons": {
       "ok": "OK",
       "cancel": "Avbryt",
-      "search": "Sök"
+      "search": "Sök",
+      "save": "Spara"
     }
   },
   "start_page": {

@@ -43,8 +43,23 @@ export function App() {
   const [errorMsg, setErrorMsg] = useState('');
   const [pxTable, setPxTable] = useState<PxTable | null>(null);
 
-  const options: SelectOption[] = [{ label: 'Option 1', value: 'opt1' }, { label: 'Option 2', value: 'opt2'}, { label: 'Option 3', value: 'opt3'}];
-
+  const options: SelectOption[] = [
+    { label: 'Option 1', value: 'opt1' },
+    { label: 'Option 2', value: 'opt2' },
+    { label: 'Option 3 is an option with a very long text', value: 'opt3' },
+    { label: 'Option 4', value: 'opt4' },
+    { label: 'Option 5', value: 'opt5' },
+    { label: 'Option 6', value: 'opt6' },
+    { label: 'Option 7', value: 'opt7' },
+    { label: 'Option 8', value: 'opt8' },
+    { label: 'Option 9', value: 'opt9' },
+    { label: 'Option 10', value: 'opt10' },
+    { label: 'Option 11', value: 'opt11' },
+    { label: 'Option 12', value: 'opt12' },
+    { label: 'Option 13', value: 'opt13' },
+    { label: 'Option 14', value: 'opt14' },
+    { label: 'Option 15', value: 'opt15' },
+  ];
   const locales = {
     en: { title: 'English' },
     no: { title: 'Norsk' },
@@ -186,7 +201,9 @@ export function App() {
           )}
           <br />
           <div className={cl(styles.selectWrapper)}>
-            <Select variant='default' label='Default' placeholder='Make selection' options={options} onChange={selectedOptionChanged}></Select>
+          <Select variant='default' label='Default' placeholder='Make selection' options={options} onChange={selectedOptionChanged}></Select>
+          <br />
+          <Select variant='inVariableBox' label='Select classification' modalHeading='Variable name' placeholder='Make selection' options={options} onChange={selectedOptionChanged}></Select>
           </div>
           <br />
           <Tag size="medium" variant="info">

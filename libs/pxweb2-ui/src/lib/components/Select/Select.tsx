@@ -15,6 +15,7 @@ export type SelectOption = {
 export type SelectProps = {
   variant?: 'default' | 'inVariableBox';
   label: string;
+  modalHeading?: string;
   hideLabel?: boolean;
   placeholder?: string;
   options: SelectOption[];
@@ -32,6 +33,7 @@ function openOptions(options: SelectOption[]) {
 export function Select({
   variant = 'default',
   label,
+  modalHeading = '',
   hideLabel = false,
   placeholder = '',
   options: ops,
@@ -59,6 +61,7 @@ export function Select({
       {variant && variant === 'inVariableBox' && (
         <VariableBoxSelect
           label={label}
+          modalHeading={modalHeading}
           options={ops}
           placeholder={placeholder}
           selectedOption={selectedOption}
@@ -135,6 +138,7 @@ function DefaultSelect({
 type VariableBoxSelectProps = Pick<
   SelectProps,
   | 'label'
+  | 'modalHeading'
   | 'options'
   | 'placeholder'
   | 'selectedOption'
@@ -145,6 +149,7 @@ type VariableBoxSelectProps = Pick<
 
 function VariableBoxSelect({
   label,
+  modalHeading,
   options,
   placeholder,
   selectedOption,
@@ -166,10 +171,15 @@ function VariableBoxSelect({
     setModalOpen(true);
   };
 
-  const handleCloseModal = () => {
-    setSelectedItem(clickedItem);
+  const handleCloseModal = (updated: boolean) => {
     setModalOpen(false);
-    onChange(clickedItem);
+    if (updated) {
+      setSelectedItem(clickedItem);
+      onChange(clickedItem);
+    }
+    else {
+      setClickedItem(selectedItem);
+    }
   };
 
   return (
@@ -203,24 +213,33 @@ function VariableBoxSelect({
         <Icon iconName="ChevronDown" className=""></Icon>
       </div>
       <div className={cl(classes.divider)}></div>
-      <Modal hasCloseBtn={true} isOpen={isModalOpen} onClose={handleCloseModal}>
-        {options.map((option) => (
-          <div key={option.value}>
-            <input
-              type="radio"
-              id={option.value}
-              name="option"
-              value={option.value}
-              key={option.value}
-              checked={option.value === clickedItem?.value}
-              onChange={() => {
-                setClickedItem(option);
-              }}
-            />
-            <label htmlFor={option.value}>{option.label}</label>
+      {isModalOpen && (
+        <Modal
+          label={label}
+          heading={modalHeading}
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+        >
+          <div className={cl(classes.modalRadioList)}>
+            {options.map((option) => (
+              <div className={cl(classes.modalRadio)} key={option.value} onClick={(event) => {setClickedItem(option)}}>
+                <input
+                  type="radio"
+                  id={option.value}
+                  name="option"
+                  value={option.value}
+                  key={option.value}
+                  checked={option.value === clickedItem?.value}
+                  onChange={() => {
+                    setClickedItem(option);
+                  }}
+                />
+                <Label htmlFor={option.value}>{option.label}</Label>
+              </div>
+            ))}
           </div>
-        ))}
-      </Modal>
+        </Modal>
+      )}
     </>
   );
 }
