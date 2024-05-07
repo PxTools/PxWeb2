@@ -10,25 +10,20 @@
 | --- | ----------- |
 |Unit and integration tests | Vitest/Jest, Stories in Storybook|
 |Static code analysis | CodeQL (in GitHub) |
-| Thirdparty code | Dependabot security and version updates, Dependabot alerts, Use Snyk Advisor to check development and maintenance health of libraries |
+| Thirdparty code | Dependabot security and version updates, Dependabot alerts |
+|  | Use Snyk Advisor to check development and maintenance health of libraries |
 | Automated end-to-end tests | Playwright |
 | Acceptancetests | Playwright, Chromatic: UI Review (Manual test) |
 | Regressiontests  | Playwright, Chromatic: UI Test |
-- ---------------- 
--     
- 
+| Accessibility testing |  @storybook/addon-a11ly Shows relevant results automatically in Storybook,  | 
+|  | Axe browser extension, Lighthouse, Playwright with Axe? Valid HTML5 (W3C validator) |
+| Security tests | [http://securityheaders.io/](http://securityheaders.io/)|
+| |Dynamic analysis:  |
+| |Detectify | 
+| |Nessus  |
+| Performance tests | Lighthouse |
+| Container security | Trivy? |
 
- 
-Thirdparty code Dependabot security and version
-updates
-Dependabot alerts
-Use Snyk Advisor to check
-development and maintenance
-health of libraries
-Automated end-to-end tests Playwright
-Acceptancetests Playwright
-Chromatic: UI Review (Manual
-test)
-Regressiontests Playwright
-Chromatic: UI Test
-- ## Scetch over the systems
+
+
+- ## Sketch over the systems
