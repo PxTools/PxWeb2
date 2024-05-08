@@ -19,8 +19,11 @@
 | Acceptancetests | Playwright, Chromatic: UI Review (Manual test) |
 | Regressiontests  | Playwright  |
 | |Chromatic: UI Test |
-| Accessibility testing |  @storybook/addon-a11ly Shows relevant results automatically in Storybook,  | 
-|  | Axe browser extension, Lighthouse, Playwright with Axe? Valid HTML5 (W3C validator) |
+| Accessibility testing |  @storybook/addon-a11ly    Shows relevant results automatically in Storybook,  | 
+|  | Axe browser extension |
+| |Lighthouse|
+| |Playwright with Axe?| 
+| |Valid HTML5 (W3C validator)  |
 | Security tests | [http://securityheaders.io/](http://securityheaders.io/)|
 | |Dynamic analysis:  |
 | |Detectify | 
