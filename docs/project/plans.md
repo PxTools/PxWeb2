@@ -10,7 +10,7 @@ Another goal is to deliver a new user interface based on PxWebAPI during 2024.
 + Algorithm for choosing the best result for displaying a table
 - Chose different values in variable and see changes in the table
 
-![PicturDetail-page of the table in PxWeb 2.0](https://github.com/PxTools/PxWeb2/assets/81364833/d1fd7888-1a43-4690-9014-a0e88dc5d0a0)
+![Picture of detail-page of variabel and the table in PxWeb 2.0](https://github.com/PxTools/PxWeb2/assets/81364833/d1fd7888-1a43-4690-9014-a0e88dc5d0a0)
 
 ## Remaining tasks - start autumn 2024
 
