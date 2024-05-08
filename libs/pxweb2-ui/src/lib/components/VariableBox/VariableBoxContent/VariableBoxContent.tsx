@@ -9,6 +9,8 @@ import { Select, SelectOption } from '../../Select/Select';
 import { Value } from '../../../shared-types/value';
 import { VariableBoxProps } from '../VariableBox';
 
+import { SelectedVBValues } from '../VariableBox';
+
 type MappedCodeList = {
   value: string;
   label: string;
@@ -18,10 +20,11 @@ type VariableBoxPropsToContent = Omit<VariableBoxProps, 'mandatory'>;
 // TODO: should selectedValues and setSelectedValues be string[] or Value['code'][]?
 /* eslint-disable-next-line */
 type VariableBoxContentProps = VariableBoxPropsToContent & {
-  selectedValues: Value['code'][];
-  setSelectedValues: (values: Value['code'][]) => void;
+  selectedValues: SelectedVBValues[];
+  setSelectedValues: (values: SelectedVBValues[]) => void;
   totalValues: number;
   totalChosenValues: number;
+  onChangeCodeList: (selectedItem: SelectOption | undefined) => void;
 };
 
 export function VariableBoxContent({
@@ -33,6 +36,7 @@ export function VariableBoxContent({
   setSelectedValues,
   totalValues,
   totalChosenValues,
+  onChangeCodeList,
 }: VariableBoxContentProps) {
   const { t } = useTranslation();
   const checkboxSelectAllText = t(
@@ -42,7 +46,7 @@ export function VariableBoxContent({
     'presentation_page.sidemenu.selection.variablebox.content.mixed_checkbox.deselect_all'
   );
 
-  // TODO: Do we need 3 states for animating the scrolling? Can we simplify this?
+  // TODO: Do we need 3 states for animating the scrolling? Can we simplify this? Maybe use useReducer instead?
   const [scrolling, setScrolling] = useState<'atTop' | 'up' | 'down'>('atTop');
   const [hasScrolledUp, setHasScrolledUp] = useState(false);
   const [lastScrollPosition, setLastScrollPosition] = useState(0);
@@ -81,20 +85,84 @@ export function VariableBoxContent({
   ]);
 
   const handleMixedCheckboxChange = () => {
+    const prevSelectedValues = selectedValues;
+
     if (allValuesSelected === 'true') {
-      setSelectedValues([]);
+      setSelectedValues(
+        prevSelectedValues.filter((variables) => variables.id !== id)
+      );
     }
     if (allValuesSelected === 'false' || allValuesSelected === 'mixed') {
-      setSelectedValues(values.map((value) => value.code));
+      const variable = prevSelectedValues.find(
+        (variables) => variables.id === id
+      );
+
+      if (variable) {
+        setSelectedValues(
+          prevSelectedValues.map((variables) => {
+            if (variables.id === id) {
+              variables.values = values.map((value) => value.code);
+            }
+
+            return variables;
+          })
+        );
+      } else {
+        setSelectedValues([
+          ...prevSelectedValues,
+          { id, values: values.map((value) => value.code) },
+        ]);
+      }
     }
   };
 
   const handleCheckboxChange = (value: Value['code']) => {
-    if (selectedValues.includes(value)) {
-      setSelectedValues(selectedValues.filter((val) => val !== value));
-    }
-    if (!selectedValues.includes(value)) {
-      setSelectedValues([...selectedValues, value]);
+    const hasVariable =
+      selectedValues.findIndex((variables) => variables.id === id) !== -1;
+    const hasValue = selectedValues
+      .find((variables) => variables.id === id)
+      ?.values.includes(value);
+    const prevSelectedValues = selectedValues;
+
+    if (hasVariable) {
+      // doesn't have value, add it
+      if (!hasValue) {
+        setSelectedValues(
+          prevSelectedValues.map((variable) => {
+            if (variable.id === id) {
+              variable.values = [...variable.values, value];
+            }
+
+            return variable;
+          })
+        );
+      }
+
+      // has value, remove it
+      if (hasValue) {
+        let hasMultipleValues = false;
+
+        setSelectedValues(
+          prevSelectedValues.map((variable) => {
+            if (variable.id === id) {
+              hasMultipleValues = variable.values.length > 1;
+
+              variable.values = variable.values.filter((val) => val !== value);
+            }
+
+            return variable;
+          })
+        );
+
+        // remove the variable if it now has no values
+        if (!hasMultipleValues) {
+          setSelectedValues(
+            prevSelectedValues.filter((variables) => variables.id !== id)
+          );
+        }
+      }
+    } else {
+      setSelectedValues([...selectedValues, { id, values: [value] }]);
     }
   };
 
@@ -139,12 +207,6 @@ export function VariableBoxContent({
     console.log('Search');
   };
 
-  const handleSelectOnChange = (selectedItem: SelectOption | undefined) => {
-    selectedItem
-      ? console.log('Selected option: ' + selectedItem.label)
-      : console.log('No option selected');
-  };
-
   let mappedCodeList: MappedCodeList[] = [];
 
   if (hasCodeLists === true) {
@@ -155,6 +217,8 @@ export function VariableBoxContent({
       };
     });
   }
+
+  console.log('selectedValues', selectedValues);
 
   return (
     <div className={cl(classes['variablebox-content'])}>
@@ -174,7 +238,7 @@ export function VariableBoxContent({
               )}
               options={mappedCodeList}
               selectedOption={undefined} // TODO: Finish the logic for this. This is the selected option, like "region" or "age". Needs modal with radio logic inside.
-              onChange={handleSelectOnChange}
+              onChange={onChangeCodeList}
             />
           </div>
         )}
@@ -233,7 +297,12 @@ export function VariableBoxContent({
             values.map((value) => (
               <Checkbox
                 id={value.code}
-                value={selectedValues.includes(value.code)}
+                value={
+                  selectedValues?.length > 0 &&
+                  selectedValues
+                    .find((variables) => variables.id === id)
+                    ?.values.includes(value.code) === true
+                }
                 text={value.label}
                 onChange={() => handleCheckboxChange(value.code)}
               />
