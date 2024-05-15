@@ -55,7 +55,7 @@ export function VariableBoxHeader({
           {label}
         </Heading>
         <div className={cl(classes['header-tags'])}>
-          <Tag variant="success">
+          <Tag variant="neutral">
             {t(
               'presentation_page.sidemenu.selection.variablebox.header.tag_selected',
               {
