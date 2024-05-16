@@ -17,6 +17,7 @@ Another goal is to deliver a new user interface based on PxWebAPI during 2024.
 - Main-page for PxWeb 2.0
 - Graph
 - Saved query
+- Search
 - Save file in different formats
 - Show PxWebAPI 2.0 in PxWeb 2.0
 - Most requested functionality and tools
