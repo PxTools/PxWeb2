@@ -16,6 +16,7 @@ type VariableBoxHeaderProps = VariableBoxPropsToHeader & {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
   tabIndex?: number;
+  className?: string;
 };
 
 export function VariableBoxHeader({
@@ -26,8 +27,10 @@ export function VariableBoxHeader({
   isOpen,
   setIsOpen,
   tabIndex = 0,
+  className = '',
 }: VariableBoxHeaderProps) {
   const { t } = useTranslation();
+  const cssClasses = className.length > 0 ? ' ' + className : '';
 
   function handleHeaderClick() {
     setIsOpen(!isOpen);
@@ -78,7 +81,7 @@ export function VariableBoxHeader({
         </div>
       </div>
 
-      <div className={cl(classes['header-icon'])}>
+      <div className={cssClasses}>
         {isOpen ? (
           <Icon iconName="ChevronUp"></Icon>
         ) : (

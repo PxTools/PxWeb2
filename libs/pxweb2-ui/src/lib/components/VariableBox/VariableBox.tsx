@@ -69,6 +69,7 @@ VariableBoxProps) {
         totalChosenValues={totalChosenValues}
         isOpen={isOpen}
         setIsOpen={setIsOpen}
+        className={cl(classes['header-icon'])}
       />
 
       {isOpen && (
