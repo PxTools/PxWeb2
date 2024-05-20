@@ -30,8 +30,3 @@
 | |Nessus  |
 | Performance tests | Lighthouse |
 | Container security | Trivy? |
-
-
-
-## Sketch over the systems
-
