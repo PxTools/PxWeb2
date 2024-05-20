@@ -1,6 +1,6 @@
 # Project overview
 ## Background
-The user interface in PxWeb can no longer be further developed effectively due to technological limitations, while the users' needs and expectations are constantly changing. Statistics Sweden and Statistics Norway will therefore together create a new user interface based on PxWebAPI 2.0
+The user interface in PxWeb can no longer be further developed effectively due to technological limitations, while the users needs and expectations are constantly changing. Statistics Sweden and Statistics Norway will therefore together create a new user interface based on PxWebAPI 2.0
 
 ## New user interface for PxWeb
 - PxWebAPI 2.0 Beta was released i March 
