@@ -1,4 +1,4 @@
-/* generated using openapi-typescript-codegen -- do no edit */
+/* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
@@ -20,9 +20,7 @@ export type OpenAPIConfig = {
 };
 
 export const OpenAPI: OpenAPIConfig = {
-    BASE: 'https://api.scb.se/OV0104/v2beta/api/v2',
-    //BASE: 'https://pxapi2-master-px.scb.se/api/v2',
-    //BASE: 'https://data.qa.ssb.no/pxapi2-beta/api/v2',
+    BASE: 'https://api.server.test/api/v2',
     VERSION: '2.0',
     WITH_CREDENTIALS: false,
     CREDENTIALS: 'include',
