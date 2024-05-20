@@ -1,5 +1,5 @@
 # PxWeb solution
-## WCAG and Search engine optimization (SEO)
+## WCAG and Search Engine Optimization (SEO)
 - The new interface will follow the rules for A and AA in [WCAG 2.1](https://www.w3.org/TR/WCAG21/)
 - SEO is the use of methods that achieve beter visibility or "ranking" on search engines result page.
 ## PxWeb 2.0 designsystem
@@ -12,8 +12,8 @@ It will be possible to change
 - colors
 - font
 - rounding of the corners of the elements in the interface.
- ##  Open source at Github
- The new interface will be able do install directly from Github. Also documentation will be found here. 
- [Px at GitHub](https://github.com/pxtools)
- ## Possibility for connection
+## Open source at GitHub
+The new interface will be able do install directly from GitHub. Also documentation will be found here. 
+[PxTools at GitHub](https://github.com/pxtools)
+## Possibility for connection
 When PxWeb 2.0 inteface is ready for production, it is easy to connect other tools such as Highcharts, Tableau, Power BI and other AI products. This can be connected both by using saved queries from PxWeb 2.0 or by connecting directly to PxWebAPI 2.0.
