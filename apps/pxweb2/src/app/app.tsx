@@ -123,6 +123,7 @@ export function App() {
         <option value="TAB638">TAB638</option>
         <option value="TAB1292">TAB1292</option>
         <option value="TAB5659">TAB5659</option>
+        <option value="TAB1128">TAB1128 (LARGE)</option>
       </select>
       <Button variant="tertiary" onClick={() => getTable(tableid)}>
         Get table

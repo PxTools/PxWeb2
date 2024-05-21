@@ -3,6 +3,8 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * Spesification on json-stat.org -> [here](https://json-stat.org/full/#note)
+ * Is always dataset
  */
-export type jsonstat_note = Array<string>;
+export enum ClassType {
+    DATASET = 'dataset',
+}

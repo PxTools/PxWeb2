@@ -1,4 +1,4 @@
-/* generated using openapi-typescript-codegen -- do no edit */
+/* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
@@ -45,9 +45,25 @@ export type extension_root = {
          */
         language?: string;
         /**
+         * Information about the contents, which makes up the first part of a title created when retrieving tables from PC-Axis.
+         */
+        contents?: string;
+        /**
          * See _description_ in [PX file format](https://www.scb.se/en/services/statistical-programs-for-px-files/px-file-format/)
          */
         description?: string;
+        /**
+         * For some languages it is difficult to build a table title dynamically. The keyword descriptiondefault = True; means that the text after keyword Description will be used as title for the table
+         */
+        descriptiondefault?: boolean;
+        /**
+         * List of suggested variables for table head
+         */
+        heading?: Array<string>;
+        /**
+         * List of suggested variables for table stub
+         */
+        stub?: Array<string>;
         /**
          * The name of the matrix
          */

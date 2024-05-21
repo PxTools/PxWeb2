@@ -1,4 +1,4 @@
-/* generated using openapi-typescript-codegen -- do no edit */
+/* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
@@ -30,7 +30,7 @@ export type TableMetadataResponse = {
     /**
      * A marker if the table is a part of the national official statistics.
      */
-    officalStatistics?: boolean;
+    officialStatistics?: boolean;
     /**
      * The code for the subject area that the table belongs to.
      */
@@ -46,7 +46,7 @@ export type TableMetadataResponse = {
     /**
      * A copyright statement for the data it could also be SPDX (https://spdx.org/licenses/) identifier
      */
-    licence?: string;
+    license?: string;
     /**
      * A list of strings/tags associated with the table
      */
