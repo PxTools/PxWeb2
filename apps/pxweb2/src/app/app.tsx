@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import styles from './app.module.scss';
-import { Button, PxTable, Variable, VariableBox, VartypeEnum } from '@pxweb2/pxweb2-ui';
+import { Button, PxTable, Variable, VariableBox, Table, VartypeEnum } from '@pxweb2/pxweb2-ui';
 import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
 //import { NumberFormatter } from '../i18n/formatters';
 import { TableService } from '@pxweb2/pxweb2-api-client';
@@ -180,7 +180,9 @@ export function App() {
         </div>
           <Content topLeftBorderRadius={selected === 'none'}>
             {pxTable?.data && (
-                <div>FAKE DATA</div>
+                <div>
+                  <Table />
+                </div>
               )}
             {pxData && (
               <div dangerouslySetInnerHTML={{ __html: pxData }} />
