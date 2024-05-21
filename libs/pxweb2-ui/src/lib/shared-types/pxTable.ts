@@ -1,3 +1,4 @@
+import { MultiDimensionalData } from './multiDimensionalData';
 import { Variable } from './variable';
 
 export type PxTable = {
@@ -17,4 +18,8 @@ export type PxTable = {
    * The variables that are part of the table.
    */
   variables: Array<Variable>;
+  /**
+   * The data cube for the table.
+   */
+  data: MultiDimensionalData<number>;
 };

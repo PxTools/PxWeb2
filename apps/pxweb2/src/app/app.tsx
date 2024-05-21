@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import styles from './app.module.scss';
-import { Button, PxTable, VariableBox } from '@pxweb2/pxweb2-ui';
+import { Button, PxTable, Variable, VariableBox, VartypeEnum } from '@pxweb2/pxweb2-ui';
 import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
 //import { NumberFormatter } from '../i18n/formatters';
 import { TableService } from '@pxweb2/pxweb2-api-client';
@@ -12,6 +12,7 @@ import NavigationRail from './components/NavigationRail/NavigationRail';
 import { Content } from './components/Content/Content';
 import NavigationBar from './components/NavigationBar/NavigationBar';
 import NavigationDrawer from './components/NavigationDrawer/NavigationDrawer';
+import { fakeData } from '@pxweb2/pxweb2-ui';
 
 export type NavigationItem =
   | 'none'
@@ -78,7 +79,41 @@ export function App() {
       });
   };
 
-  const drawerFilter = (
+  const getFakeTable = () => {
+    const variables: Variable[] = [
+      {id: "Region", 
+       label: "region", 
+       type: VartypeEnum.GEOGRAPHICAL_VARIABLE, 
+       mandatory: false, 
+       values: Array.from(Array(293).keys()).map(i => {return {label: "region_" + (i + 1), code: "R_" + (i + 1) }})},
+       {id: "Alder", 
+       label: "ålder", 
+       type: VartypeEnum.REGULAR_VARIABLE, 
+       mandatory: false, 
+       values: Array.from(Array(65).keys()).map(i => {return {label: "år " + (i + 1), code: "" + (i + 1) }})},
+       {id: "Civilstatus", 
+       label: "civilstatus", 
+       type: VartypeEnum.REGULAR_VARIABLE, 
+       mandatory: false, 
+       values: Array.from(Array(6).keys()).map(i => {return {label: "CS_" + (i + 1), code: "" + (i + 1) }})},
+       {id: "Kon", 
+       label: "kön", 
+       type: VartypeEnum.REGULAR_VARIABLE, 
+       mandatory: false, 
+       values: Array.from(Array(2).keys()).map(i => {return {label: "G_" + (i + 1), code: "" + (i + 1) }})},
+       {id: "TIME", 
+       label: "tid", 
+       type: VartypeEnum.TIME_VARIABLE, 
+       mandatory: false, 
+       values: Array.from(Array(5).keys()).map(i => {return {label: "" + (1968 + i), code: "" + (1968 + i) }})}
+      ];
+  
+      const table : PxTable = {id: "test01", label: "Test table", variables: variables, data: {}};
+      fakeData(table, [], 0, 0);
+      setPxTable(table);
+  }
+
+    const drawerFilter = (
     <>
       <select
         name="tabid"
@@ -91,6 +126,9 @@ export function App() {
       </select>
       <Button variant="tertiary" onClick={() => getTable(tableid)}>
         Get table
+      </Button>
+      <Button variant="tertiary" onClick={() => getFakeTable()}>
+        Get fake table
       </Button>
       <div className={styles.variableBoxContainer}>
         {/* TODO: I think the warning in the console about unique IDs is the variable.id below*/}
