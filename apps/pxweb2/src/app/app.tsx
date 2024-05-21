@@ -181,7 +181,7 @@ export function App() {
           <Content topLeftBorderRadius={selected === 'none'}>
             {pxTable?.data && (
                 <div>
-                  <Table />
+                  <Table pxtable={pxTable}/>
                 </div>
               )}
             {pxData && (

@@ -1,12 +1,16 @@
+import { PxTable } from '../../shared-types/pxTable';
 import styles from './Table.module.scss';
 
-/* eslint-disable-next-line */
-export interface TableProps {}
+export interface TableProps {
+  pxtable: PxTable
+}
 
-export function Table(props: TableProps) {
+export function Table({
+  pxtable
+}: TableProps) {
   return (
     <div className={styles['container']}>
-      <h1>Welcome to Table!</h1>
+      <h1>{pxtable.label}</h1>
     </div>
   );
 }
