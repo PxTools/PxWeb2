@@ -1,5 +1,7 @@
-/* export * from './lib/pxweb2-api-client'; */
-
+/* generated using openapi-typescript-codegen -- do not edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
 export { ApiError } from './core/ApiError';
 export { CancelablePromise, CancelError } from './core/CancelablePromise';
 export { OpenAPI } from './core/OpenAPI';
@@ -9,6 +11,7 @@ export type { AbstractCodeListVariable } from './models/AbstractCodeListVariable
 export type { AbstractVariable } from './models/AbstractVariable';
 export type { ApiFeature } from './models/ApiFeature';
 export type { CellNote } from './models/CellNote';
+export { ClassType } from './models/ClassType';
 export type { codeListId } from './models/codeListId';
 export type { CodeListInformation } from './models/CodeListInformation';
 export type { CodeListMetadata } from './models/CodeListMetadata';
@@ -22,7 +25,7 @@ export type { ConfigResponse } from './models/ConfigResponse';
 export type { Contact } from './models/Contact';
 export type { ContentsVariable } from './models/ContentsVariable';
 export { ContentValue } from './models/ContentValue';
-// export { Dataset } from './models/Dataset';
+export { Dataset } from './models/Dataset';
 export type { extension } from './models/extension';
 export type { extension_dimension } from './models/extension_dimension';
 export type { extension_root } from './models/extension_root';
@@ -42,7 +45,8 @@ export type { jsonstat_note } from './models/jsonstat_note';
 export type { jsonstat_noteMandatory } from './models/jsonstat_noteMandatory';
 export type { KeyValuePair } from './models/KeyValuePair';
 export type { label } from './models/label';
-export type { language } from './models/Language';
+export type { lang } from './models/lang';
+export type { Language } from './models/Language';
 export type { Link } from './models/Link';
 export type { metadataOutputFormat } from './models/metadataOutputFormat';
 export { MetadataOutputFormatType } from './models/MetadataOutputFormatType';
@@ -54,6 +58,7 @@ export type { pastDays } from './models/pastDays';
 export type { Problem } from './models/Problem';
 export type { query } from './models/query';
 export type { RegularVariable } from './models/RegularVariable';
+export type { SelectionResponse } from './models/SelectionResponse';
 export type { source } from './models/source';
 export type { SourceReference } from './models/SourceReference';
 export type { strarray } from './models/strarray';

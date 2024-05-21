@@ -2,14 +2,14 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CodeListMetadata } from './CodeListMetadata';
 import type { Link } from './Link';
-export type CodeListsResponse = {
+import type { VariablesSelection } from './VariablesSelection';
+export type SelectionResponse = {
     /**
      * The language code for the language used in this response
      */
     language: string;
-    codeLists?: Array<CodeListMetadata>;
-    links?: Array<Link>;
+    selection: VariablesSelection;
+    links: Array<Link>;
 };
 
