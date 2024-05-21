@@ -178,9 +178,14 @@ export function App() {
         <div className={styles.mobileNavigation}>
           <NavigationBar onChange={changeSelected} selected={selected} />
         </div>
-        <Content topLeftBorderRadius={selected === 'none'}>{pxData && (
-            <div dangerouslySetInnerHTML={{ __html: pxData }} />
-          )} </Content>
+          <Content topLeftBorderRadius={selected === 'none'}>
+            {pxTable?.data && (
+                <div>FAKE DATA</div>
+              )}
+            {pxData && (
+              <div dangerouslySetInnerHTML={{ __html: pxData }} />
+            )} 
+          </Content>
       </div>
     </>
   );
