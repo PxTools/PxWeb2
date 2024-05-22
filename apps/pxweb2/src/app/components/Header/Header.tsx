@@ -5,8 +5,9 @@ import { getConfig } from '../../util/config/getConfig';
 import { useTranslation } from 'react-i18next';
 
 export const Header: React.FC = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const config = getConfig();
+
   return (
     <div className={styles.header}>
       <div>
@@ -17,13 +18,16 @@ export const Header: React.FC = () => {
           <Button variant="tertiary" icon="House">
             {t('presentation_page.header.statistics')}
           </Button>
-          <Button variant="tertiary" icon="Globe">
-            {config.language.supportedLanguages.length +
-              ' ' +
-              t('presentation_page.header.languagebutton')}
-          </Button>
+          {config.language.supportedLanguages.map((locale) => (
+            <Button
+              variant="tertiary"
+              onClick={() => i18n.changeLanguage(locale)}
+            >
+              {locale}
+            </Button>
+          ))}
           <Button variant="secondary" size="medium" icon="MagnifyingGlass">
-            {t('presentation_page.header.searchbutton')}
+            {t('common.generic_buttons.search')}
           </Button>
         </div>
         <div className={styles.mobileMenu}>

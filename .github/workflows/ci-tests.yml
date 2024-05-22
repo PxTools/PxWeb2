@@ -11,6 +11,7 @@ on:
 
 jobs:
   build:
+    name: Node CI Tests
 
     runs-on: ubuntu-latest
 

@@ -1,4 +1,7 @@
 {
+  "meta": {
+    "languageName": "English"
+  },
   "common": {
     "title": "Welcome to PxWeb 2.0",
     "header": {
@@ -26,7 +29,11 @@
     "generic_buttons": {
       "ok": "OK",
       "cancel": "Cancel",
+      "save": "Save",
       "search": "Search"
+    },
+    "generic_tags": {
+      "mandatory": "Mandatory"
     }
   },
   "start_page": {
@@ -49,6 +56,20 @@
             "label": "Search",
             "arialabelicontext": "Search icon",
             "ariallabelclearbuttontext": "Clear search icon"
+          },
+          "header": {
+            "tag_selected": "{{selected}} of {{total}} selected",
+            "tag_mandatory": "Mandatory"
+          },
+          "content": {
+            "select": {
+              "label": "Choose grouping",
+              "placeholder": "Make a selection"
+            },
+            "mixed_checkbox": {
+              "select_all": "Select all",
+              "deselect_all": "Deselect all"
+            }
           }
         }
       },

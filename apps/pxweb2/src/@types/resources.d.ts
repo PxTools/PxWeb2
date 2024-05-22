@@ -1,5 +1,8 @@
 interface Resources {
   "translation": {
+    "meta": {
+      "languageName": "English"
+    },
     "common": {
       "title": "Welcome to PxWeb 2.0",
       "header": {
@@ -27,7 +30,11 @@ interface Resources {
       "generic_buttons": {
         "ok": "OK",
         "cancel": "Cancel",
-        "search": "Search"
+        "search": "Search",
+        "save": "Save"
+      },
+      "generic_tags": {
+        "mandatory": "Mandatory"
       }
     },
     "start_page": {
@@ -50,6 +57,20 @@ interface Resources {
               "label": "Search",
               "arialabelicontext": "Search icon",
               "ariallabelclearbuttontext": "Clear search icon"
+            },
+            "header": {
+              "tag_selected": "{{selected}} of {{total}} selected",
+              "tag_mandatory": "Mandatory"
+            },
+            "content": {
+              "select": {
+                "label": "Choose grouping",
+                "placeholder": "Make a selection"
+              },
+              "mixed_checkbox": {
+                "select_all": "Select all",
+                "deselect_all": "Deselect all"
+              }
             }
           }
         },

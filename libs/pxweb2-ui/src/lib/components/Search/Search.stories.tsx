@@ -44,7 +44,7 @@ export const Variants: StoryFn<typeof Search> = () => {
       <br />
       <br />
       <Search
-        showLable={true}
+        showLabel={true}
         variant="default"
         searchPlaceHolder={placeholder}          
         labelText={labelText}          

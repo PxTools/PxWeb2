@@ -1,9 +1,11 @@
-/* generated using openapi-typescript-codegen -- do no edit */
+/* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
 import type { CodeListOutputValuesType } from '../models/CodeListOutputValuesType';
 import type { CodeListResponse } from '../models/CodeListResponse';
+import type { MetadataOutputFormatType } from '../models/MetadataOutputFormatType';
+import type { SelectionResponse } from '../models/SelectionResponse';
 import type { TableMetadataResponse } from '../models/TableMetadataResponse';
 import type { TableResponse } from '../models/TableResponse';
 import type { TablesResponse } from '../models/TablesResponse';
@@ -86,16 +88,47 @@ export class TableService {
      *
      * @param id Id
      * @param lang The language if the default is not what you want.
+     * @param outputFormat The format of the resulting metadata
      * @returns TableMetadataResponse Success
      * @throws ApiError
      */
     public static getMetadataById(
         id: string,
         lang?: string | null,
+        outputFormat?: MetadataOutputFormatType,
     ): CancelablePromise<TableMetadataResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/tables/{id}/metadata',
+            path: {
+                'id': id,
+            },
+            query: {
+                'lang': lang,
+                'outputFormat': outputFormat,
+            },
+            errors: {
+                400: `Error respsone for 400`,
+                404: `Error respsone for 404`,
+                429: `Error respsone for 429`,
+            },
+        });
+    }
+    /**
+     * Get the default selection for Table by {id}.
+     * Get information about what is selected for the table by default when no selection is made i the /data endpoint.
+     * @param id Id
+     * @param lang The language if the default is not what you want.
+     * @returns SelectionResponse Success
+     * @throws ApiError
+     */
+    public static getDefaultSelection(
+        id: string,
+        lang?: string | null,
+    ): CancelablePromise<SelectionResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/tables/{id}/defaultselection',
             path: {
                 'id': id,
             },

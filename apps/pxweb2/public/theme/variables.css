@@ -1,6 +1,6 @@
 /**
  * Do not edit directly
- * Generated on Mon, 20 May 2024 07:24:40 GMT
+ * Generated on Tue, 07 May 2024 12:52:33 GMT
  */
 
 :root {
@@ -22,8 +22,8 @@
   --px-color-surface-action: #274247;
   --px-color-surface-action-hover: #274247;
   --px-color-surface-action-active: #162327;
-  --px-color-surface-subtle-hover: #dbebeb;
-  --px-color-surface-subtle-active: #c3dcdc;
+  --px-color-surface-action-subtle-hover: #dbebeb;
+  --px-color-surface-action-subtle-active: #c3dcdc;
   --px-color-surface-info-subtle: #d7ecfe;
   --px-color-surface-info-moderate: #c3e6fe;
   --px-color-surface-success-subtle: #dbf5dc;
@@ -32,6 +32,7 @@
   --px-color-surface-warning-moderate: #feeb9f;
   --px-color-surface-error-subtle: #ffe4e0;
   --px-color-surface-error-moderate: #ffcec7;
+  --px-color-surface-scrim: rgba(39, 66, 71, 0.5);
   --px-color-border-default: #162327;
   --px-color-border-subtle: #c3dcdc;
   --px-color-border-moderate: #62919a;

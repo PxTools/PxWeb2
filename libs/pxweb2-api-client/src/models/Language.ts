@@ -1,8 +1,18 @@
-/* generated using openapi-typescript-codegen -- do no edit */
+/* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
 /**
- * The language if the default is not what you want.
+ * Language information
  */
-export type language = string | null;
+export type Language = {
+    /**
+     * The language ISO code
+     */
+    id: string;
+    /**
+     * The name of the language
+     */
+    label: string;
+};
+

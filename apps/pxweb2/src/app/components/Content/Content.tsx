@@ -1,13 +1,22 @@
 import React from 'react';
 import styles from './Content.module.scss';
+import cl from 'clsx';
 
 export interface ContentProps {
   children: React.ReactNode;
+  topLeftBorderRadius: boolean;
 }
 
-export const Content: React.FC<ContentProps> = ({ children }) => {
+export const Content: React.FC<ContentProps> = ({
+  children,
+  topLeftBorderRadius,
+}) => {
   return (
-    <div className={styles.contentWrapper}>
+    <div
+      className={cl(styles.contentWrapper, {
+        [styles.topLeftBorderRadius]: topLeftBorderRadius,
+      })}
+    >
       <div className={styles.content}>{children}</div>
     </div>
   );
