@@ -13,6 +13,8 @@ export * from './lib/shared-types/codelist';
 export * from './lib/shared-types/codelistType';
 export * from './lib/shared-types/note';
 export * from './lib/shared-types/pxTable';
+export * from './lib/shared-types/pxTableMetadata';
+export * from './lib/shared-types/pxTableData';
 export * from './lib/shared-types/value';
 export * from './lib/shared-types/variable';
 export * from './lib/shared-types/vartypeEnum';
