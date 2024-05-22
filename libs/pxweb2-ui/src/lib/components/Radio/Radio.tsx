@@ -1,75 +1,50 @@
-//import React from 'react';
+import classes from './Radio.module.scss';
 import cl from 'clsx';
-
-import styles from './Radio.module.scss';
-import { Icon } from '../Icon/Icon';
-
-
-import React, { forwardRef } from "react";
+import React from "react";
 import Label from '../Typography/Label/Label';
-import { text } from 'stream/consumers';
-// import { BodyShort } from "../../typography";
-// import { omit } from "../../util";
-// import { useId } from "../../util/hooks";
-//import { RadioProps } from "./types";
-// import { useRadio } from "./useRadio";
 
-export interface RadioProps
-  //extends   React.InputHTMLAttributes<HTMLInputElement> {
-    extends React.InputHTMLAttributes<HTMLInputElement>
-  {
-  id: string;
-  text: string;
+export type SelectOption = {
+  label: string;
+  value: string;
+  number?: number;
+};
+
+export interface RadioProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  name: string;
   children: React.ReactNode;
-  value: any;
-  description?: string;
+  options: SelectOption[];
+  selectedOption?: SelectOption;
 }
 
 export function Radio({
- // const { inputProps, size, hasError, readOnly } = useRadio(props);
-    id,
-    text,
-    value,
-    children,
-    description,
-    ...props
+     name,
+     options,
+     selectedOption,     
 }: RadioProps) {
-   const ref = React.useRef<HTMLInputElement>(null);
-
-//   const labelId = useId();
-//   const descriptionId = useId();
-
+  const [clickedItem, setClickedItem] = React.useState<SelectOption | undefined>(
+    selectedOption
+  );
   return (
-    <div      
-    >
+    <div className={cl(classes.radioGroup)}>
+      {options.map((option) => (      
+    <label className={cl(classes.container)} key={option.value}>{option.label}
+      <div className={cl(classes.divider)}>
       <input
-        type='radio'                
-        ref={ref}
+        type="radio"
+        id={option.value}
+        name={name}
+        value={option.value}
+        key={option.value}
+        checked={option.value === clickedItem?.value}
+        onChange={() => {
+              setClickedItem(option);
+         }}
       />
-<Label size='medium'id={id}>{props.checked}</Label>
-
-{/* 
-      <label htmlFor={inputProps.id} className="navds-radio__label">
-        <span className="navds-radio__content">
-          <BodyShort as="span" id={labelId} size={size} aria-hidden>
-            {props.children}
-          </BodyShort>
-          {props.description && (
-            <BodyShort
-              as="span"
-              id={descriptionId}
-              size={size}
-              className="navds-form-field__subdescription navds-radio__description"
-              aria-hidden
-            >
-              {props.description}
-            </BodyShort>
-          )}
-        </span>
-      </label> */}
-
-
-    </div>
+      <span className={cl(classes.checkmark)}></span>            
+      </div>   
+    </label>    
+  ))}
+  </div>
   );
 }
 

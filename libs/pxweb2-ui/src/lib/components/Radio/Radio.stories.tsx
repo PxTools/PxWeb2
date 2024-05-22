@@ -12,11 +12,33 @@ export default meta;
 export const Default: StoryFn<typeof Radio> = () => {
   return (
     <Radio
-      id="radio"
-      text="Radio"
-      value="radio"
-    >
-      Radio
-    </Radio>
+      name='radio1'
+      options={[
+        { label: 'Label', value: 'opt1' , number: 12}        
+      ]}
+      children={undefined}>                
+    </Radio>    
   );
 };
+
+export const Variants: StoryFn<typeof Radio> = () => {
+  return (
+    <>
+      <Radio
+        name='radio2'        
+        options={[
+          { label: 'Pest', value: 'option1' , number: 12}        
+        ]}
+        children={undefined}>            
+      </Radio>    
+      <Radio
+        name='radio2'
+        options={[
+          { label: 'Kolera', value: 'option2' }        
+        ]}
+        children={undefined}>            
+      </Radio>    
+      </>
+  );}
+
+
