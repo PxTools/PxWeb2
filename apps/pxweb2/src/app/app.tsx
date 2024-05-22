@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import styles from './app.module.scss';
@@ -41,33 +41,27 @@ export function App() {
   const [tableid, setTableid] = useState('tab638');
   const [errorMsg, setErrorMsg] = useState('');
 
-  const [selected, setSelected] = useState<NavigationItem>('none');
+  const [selectedNavigationView, setSelectedNavigationView] =
+    useState<NavigationItem>('none');
   const [pxData, setPxData] = useState<string | null>('');
 
   //  TODO: How much memory does this take?
   //        Is it a problem to have two states for the same table metadata?
-  const [pxTable, setPxTable] = useState<PxTable | null>(null);
+  //        When will we need to use the original table metadata?
+  const [pxTable, setPxTable] = useState<PxTable | null>(null); // TODO: Is this needed? For a soft reset of the tabel view maybe?
   const [pxTableToRender, setPxTableToRender] = useState<PxTable | null>(null);
   //const [selectedVBValues, setSelectedVBValues] = useState<Value['code'][]>([]);
   //const [selectedVBValues, setSelectedVBValues] = useState<SelectedVBValuesType[]>([]);
 
-  //  TODO: Remove this logging
-  console.log('pxTable is: ');
-  console.log(pxTable);
-  console.log('pxTableToRender is: ');
-  console.log(pxTableToRender);
-
-  //  TODO: Add this here, or do this in the getTable function?
-  //        If the getTable function will be moved somewhere else, we should do it here
   if (pxTableToRender === null && pxTable !== null) {
     setPxTableToRender(structuredClone(pxTable));
   }
 
-  const changeSelected = (newSelected: NavigationItem) => {
-    if (selected === newSelected) {
-      setSelected('none');
+  const changeSelectedNavView = (newSelectedNavView: NavigationItem) => {
+    if (selectedNavigationView === newSelectedNavView) {
+      setSelectedNavigationView('none');
     } else {
-      setSelected(newSelected);
+      setSelectedNavigationView(newSelectedNavView);
     }
   };
 
@@ -77,9 +71,6 @@ export function App() {
     selectedItem
       ? console.log('Selected codelist - test: ' + selectedItem.label)
       : console.log('No codelist selected - test');
-
-    // TODO: On Monday, ask about modifying the state of the pxTable
-    //  or if we should instead have another state for a duplicate pxTable/codelist values?
 
     // What happens now?
     // - We need to query the API for the new, codelist specific values (not part of this task)
@@ -91,21 +82,17 @@ export function App() {
     // The selected value needs to be selected in the Modal list
     // - currently, this now only happens if the values dont change (component doesnt rerender)
     // - or does it?
-    // When the codelist is changed, the selected values should be updated to include the overlapping values?
-    // - or should the chosen values be reset? the value ids might not be unique between codelists
-    // - currently they are not reset, depending on the desired behavior, the chosen values might need to be cleaned or reset
+    // When the codelist is changed, the selected values HAVE to be reset
     // When the codelist is changed, the state of the checkboxes should be updated to reflect the new values
-    // - if the selected values are not in the new values, they should be removed
-    // - if the selected values are in the new values, they should be selected
-    // - the state of the mixed checkbox should be updated to reflect the current status
     // When changing language, the codelist texts do not change
-    // - this is because the codelist texts are from the api, is this as intented or should we make another api call?
-    // - - if we make a new api call everything needs to reset.
+    // - this is because the codelist texts are from the api
+    // - - we need to reset everything when changing language
 
     if (!selectedItem) {
       return;
     }
 
+    //  This currently returns dummy data until we have the API call setup for it
     const valuesForChosenCodeList: Value[] = getCodeListValues(
       selectedItem?.value
     );
@@ -121,6 +108,7 @@ export function App() {
                 if (tmpTable.variables[i].id === variable.id) {
                   if (valuesForChosenCodeList.length > 0) {
                     tmpTable.variables[i].values = valuesForChosenCodeList;
+
                     break;
                   }
 
@@ -134,6 +122,7 @@ export function App() {
                       codelist.id +
                       "' has no values"
                   );
+
                   break;
                 }
               }
@@ -151,6 +140,11 @@ export function App() {
       .then((tableMetadataResponse) => {
         const pxTab: PxTable = mapTableMetadataResponse(tableMetadataResponse);
         setPxTable(pxTab);
+
+        if (pxTableToRender !== null) {
+          setPxTableToRender(null);
+        }
+
         setErrorMsg('');
       })
       .catch((error) => {
@@ -178,8 +172,11 @@ export function App() {
   };
 
   const handleVBReset = () => {
-    //  TODO: Also need to reset the Select's selected value
-    setPxTableToRender(structuredClone(pxTable));
+    //  TODO: Also need to reset the entire selectedValues state
+    if (pxTableToRender !== null) {
+      setPxTableToRender(null);
+    }
+
     //setSelectedVBValues([]);
   };
 
@@ -221,9 +218,9 @@ export function App() {
       </Button>
       <div className={styles.variableBoxContainer}>
         {/* TODO: I think the warning in the console about unique IDs is the variable.id below*/}
-        {pxTable &&
-          pxTable.variables.length > 0 &&
-          pxTable.variables.map(
+        {pxTableToRender &&
+          pxTableToRender.variables.length > 0 &&
+          pxTableToRender.variables.map(
             (variable) =>
               variable.id && (
                 <VariableBox
@@ -249,26 +246,32 @@ export function App() {
       <Header />
       <div className={styles.main}>
         <div className={styles.desktopNavigation}>
-          <NavigationRail onChange={changeSelected} selected={selected} />
-          {selected !== 'none' && (
+          <NavigationRail
+            onChange={changeSelectedNavView}
+            selected={selectedNavigationView}
+          />
+          {selectedNavigationView !== 'none' && (
             <NavigationDrawer
               heading="Filtrer"
               onClose={() => {
-                setSelected('none');
+                setSelectedNavigationView('none');
               }}
             >
-              {selected === 'filter' && drawerFilter}
-              {selected === 'view' && drawerView}
-              {selected === 'edit' && drawerEdit}
-              {selected === 'save' && drawerSave}
-              {selected === 'help' && drawerHelp}
+              {selectedNavigationView === 'filter' && drawerFilter}
+              {selectedNavigationView === 'view' && drawerView}
+              {selectedNavigationView === 'edit' && drawerEdit}
+              {selectedNavigationView === 'save' && drawerSave}
+              {selectedNavigationView === 'help' && drawerHelp}
             </NavigationDrawer>
           )}
         </div>
         <div className={styles.mobileNavigation}>
-          <NavigationBar onChange={changeSelected} selected={selected} />
+          <NavigationBar
+            onChange={changeSelectedNavView}
+            selected={selectedNavigationView}
+          />
         </div>
-        <Content topLeftBorderRadius={selected === 'none'}>
+        <Content topLeftBorderRadius={selectedNavigationView === 'none'}>
           {pxData && <div dangerouslySetInnerHTML={{ __html: pxData }} />}{' '}
         </Content>
       </div>

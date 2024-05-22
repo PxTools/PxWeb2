@@ -10,6 +10,7 @@ import { Value } from '../../shared-types/value';
 
 export type SelectedVBValues = {
   id: string;
+  selectedCodeList: SelectOption | undefined;
   values: Value['code'][];
 };
 
@@ -47,6 +48,8 @@ VariableBoxProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedValues, setSelectedValues] = useState<SelectedVBValues[]>([]);
 
+  const capitalizedVariableName =
+    label.charAt(0).toUpperCase() + label.slice(1);
   const totalValues = values?.length;
   let totalChosenValues = 0;
   const chosenValuesLength = selectedValues.find(
@@ -57,11 +60,8 @@ VariableBoxProps) {
     totalChosenValues = chosenValuesLength;
   }
 
-  const capitalizedVariableName =
-    label.charAt(0).toUpperCase() + label.slice(1);
-
   return (
-    <div className={cl(classes.variablebox)} key={id}>
+    <div className={cl(classes.variablebox)} key={id + '-variablebox'}>
       <VariableBoxHeader
         label={capitalizedVariableName}
         mandatory={mandatory}
@@ -74,7 +74,7 @@ VariableBoxProps) {
 
       {isOpen && (
         <VariableBoxContent
-          id={id}
+          varId={id}
           label={capitalizedVariableName}
           values={values}
           codeLists={codeLists}

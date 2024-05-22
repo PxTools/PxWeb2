@@ -15,11 +15,12 @@ type MappedCodeList = {
   value: string;
   label: string;
 };
-type VariableBoxPropsToContent = Omit<VariableBoxProps, 'mandatory'>;
+type VariableBoxPropsToContent = Omit<VariableBoxProps, 'id' | 'mandatory'>;
 
 // TODO: should selectedValues and setSelectedValues be string[] or Value['code'][]?
 /* eslint-disable-next-line */
 type VariableBoxContentProps = VariableBoxPropsToContent & {
+  varId: string;
   selectedValues: SelectedVBValues[];
   setSelectedValues: (values: SelectedVBValues[]) => void;
   totalValues: number;
@@ -28,7 +29,7 @@ type VariableBoxContentProps = VariableBoxPropsToContent & {
 };
 
 export function VariableBoxContent({
-  id,
+  varId,
   label,
   values,
   codeLists,
@@ -85,51 +86,83 @@ export function VariableBoxContent({
   ]);
 
   const handleMixedCheckboxChange = () => {
-    const prevSelectedValues = selectedValues;
+    const prevSelectedValues = structuredClone(selectedValues);
+
+    function deselectAllValuesOfVariable(
+      selectedValuesArr: SelectedVBValues[]
+    ): SelectedVBValues[] {
+      const newValues: SelectedVBValues[] = selectedValuesArr
+        .map((variable) => {
+          if (variable.id === varId) {
+            if (variable.selectedCodeList !== undefined) {
+              return {
+                id: varId,
+                selectedCodeList: variable.selectedCodeList,
+                values: [],
+              };
+            }
+            if (variable.selectedCodeList === undefined) {
+              return null;
+            }
+          }
+
+          return variable;
+        })
+        .filter((value) => value !== null) as SelectedVBValues[];
+
+      return newValues;
+    }
 
     if (allValuesSelected === 'true') {
-      setSelectedValues(
-        prevSelectedValues.filter((variables) => variables.id !== id)
-      );
+      const newSelectedValues = deselectAllValuesOfVariable(prevSelectedValues);
+
+      setSelectedValues(newSelectedValues);
     }
     if (allValuesSelected === 'false' || allValuesSelected === 'mixed') {
       const variable = prevSelectedValues.find(
-        (variables) => variables.id === id
+        (variable) => variable.id === varId
       );
 
       if (variable) {
-        setSelectedValues(
-          prevSelectedValues.map((variables) => {
-            if (variables.id === id) {
-              variables.values = values.map((value) => value.code);
-            }
+        const newSelectedValues = prevSelectedValues.map((variable) => {
+          if (variable.id === varId) {
+            variable.values = values.map((value) => value.code);
+          }
 
-            return variables;
-          })
-        );
-      } else {
-        setSelectedValues([
+          return variable;
+        });
+
+        setSelectedValues(newSelectedValues);
+      }
+      if (!variable) {
+        const newSelectedValues = [
           ...prevSelectedValues,
-          { id, values: values.map((value) => value.code) },
-        ]);
+          {
+            id: varId,
+            selectedCodeList: undefined,
+            values: values.map((value) => value.code),
+          },
+        ];
+
+        setSelectedValues(newSelectedValues);
       }
     }
   };
 
   const handleCheckboxChange = (value: Value['code']) => {
     const hasVariable =
-      selectedValues.findIndex((variables) => variables.id === id) !== -1;
+      selectedValues.findIndex((variables) => variables.id === varId) !== -1;
     const hasValue = selectedValues
-      .find((variables) => variables.id === id)
+      .find((variables) => variables.id === varId)
       ?.values.includes(value);
-    const prevSelectedValues = selectedValues;
+    const prevSelectedValues = structuredClone(selectedValues);
 
     if (hasVariable) {
       // doesn't have value, add it
       if (!hasValue) {
         setSelectedValues(
           prevSelectedValues.map((variable) => {
-            if (variable.id === id) {
+            if (variable.id === varId) {
               variable.values = [...variable.values, value];
             }
 
@@ -144,7 +177,7 @@ export function VariableBoxContent({
 
         setSelectedValues(
           prevSelectedValues.map((variable) => {
-            if (variable.id === id) {
+            if (variable.id === varId) {
               hasMultipleValues = variable.values.length > 1;
 
               variable.values = variable.values.filter((val) => val !== value);
@@ -157,12 +190,16 @@ export function VariableBoxContent({
         // remove the variable if it now has no values
         if (!hasMultipleValues) {
           setSelectedValues(
-            prevSelectedValues.filter((variables) => variables.id !== id)
+            prevSelectedValues.filter((variables) => variables.id !== varId) // TODO: This wont work as intended. We need to check if the codeList is selected or not also
           );
         }
       }
-    } else {
-      setSelectedValues([...selectedValues, { id, values: [value] }]);
+    }
+    if (!hasVariable) {
+      setSelectedValues([
+        ...selectedValues,
+        { id: varId, selectedCodeList: undefined, values: [value] },
+      ]);
     }
   };
 
@@ -220,6 +257,10 @@ export function VariableBoxContent({
 
   console.log('selectedValues', selectedValues);
 
+  const currentVarSelectedCodeList = selectedValues.find(
+    (variable) => variable.id === varId
+  )?.selectedCodeList;
+
   return (
     <div className={cl(classes['variablebox-content'])}>
       {/* Add the Alert here, see note in figma about it. Need more functionality atm i think */}
@@ -237,13 +278,18 @@ export function VariableBoxContent({
                 'presentation_page.sidemenu.selection.variablebox.content.select.placeholder'
               )}
               options={mappedCodeList}
-              selectedOption={undefined} // TODO: Finish the logic for this. This is the selected option, like "region" or "age". Needs modal with radio logic inside.
+              selectedOption={
+                currentVarSelectedCodeList
+                  ? currentVarSelectedCodeList
+                  : undefined
+              } // TODO: Finish the logic for this. This is the selected option, like "region" or "age". Needs modal with radio logic inside.
               onChange={onChangeCodeList}
             />
           </div>
         )}
 
         <div
+          key={varId + '-values-list'}
           className={cl(
             classes['variablebox-content-values-list'],
             hasSevenOrMoreValues &&
@@ -282,7 +328,7 @@ export function VariableBoxContent({
 
             {hasTwoOrMoreValues && (
               <MixedCheckbox
-                id={id}
+                id={varId}
                 text={mixedCheckboxText}
                 value={allValuesSelected}
                 onChange={handleMixedCheckboxChange}
@@ -300,7 +346,7 @@ export function VariableBoxContent({
                 value={
                   selectedValues?.length > 0 &&
                   selectedValues
-                    .find((variables) => variables.id === id)
+                    .find((variables) => variables.id === varId)
                     ?.values.includes(value.code) === true
                 }
                 text={value.label}
