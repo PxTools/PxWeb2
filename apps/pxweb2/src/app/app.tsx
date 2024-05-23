@@ -46,7 +46,7 @@ export function App() {
     TableService.getMetadataById(id, i18n.resolvedLanguage)
       .then((tableMetadataResponse) => {
         const pxTabMetadata: PxTableMetadata = mapTableMetadataResponse(tableMetadataResponse);
-        const pxTable: PxTable = {metadata: pxTabMetadata, data: {}};
+        const pxTable: PxTable = {metadata: pxTabMetadata, data: {}, stub: [], heading: []};
         setPxTable(pxTable);
         setErrorMsg('');
       })
@@ -107,9 +107,9 @@ export function App() {
        mandatory: false, 
        values: Array.from(Array(5).keys()).map(i => {return {label: "" + (1968 + i), code: "" + (1968 + i) }})}
       ];
-  
+
       const tableMeta : PxTableMetadata = {id: "test01", label: "Test table", variables: variables};
-      const table : PxTable = {metadata: tableMeta, data: {}};
+      const table : PxTable = {metadata: tableMeta, data: {}, stub: [variables[0], variables[1]], heading: [variables[2], variables[3], variables[4]]};
       fakeData(table, [], 0, 0);
       setPxTable(table);
   }
