@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import styles from './app.module.scss';
-import { Button, PxTable, Variable, VariableBox, Table, VartypeEnum } from '@pxweb2/pxweb2-ui';
+import { Button, PxTableMetadata, VariableBox, Variable, Table, VartypeEnum, PxTable } from '@pxweb2/pxweb2-ui';
 import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
 //import { NumberFormatter } from '../i18n/formatters';
 import { TableService } from '@pxweb2/pxweb2-api-client';
@@ -46,8 +46,9 @@ export function App() {
   const getTable = (id: string) => {
     TableService.getMetadataById(id, i18n.resolvedLanguage)
       .then((tableMetadataResponse) => {
-        const pxTab: PxTable = mapTableMetadataResponse(tableMetadataResponse);
-        setPxTable(pxTab);
+        const pxTabMetadata: PxTableMetadata = mapTableMetadataResponse(tableMetadataResponse);
+        const pxTable: PxTable = {metadata: pxTabMetadata, data: {}};
+        setPxTable(pxTable);
         setErrorMsg('');
       })
       .catch((error) => {
@@ -108,7 +109,8 @@ export function App() {
        values: Array.from(Array(5).keys()).map(i => {return {label: "" + (1968 + i), code: "" + (1968 + i) }})}
       ];
   
-      const table : PxTable = {id: "test01", label: "Test table", variables: variables, data: {}};
+      const tableMeta : PxTableMetadata = {id: "test01", label: "Test table", variables: variables};
+      const table : PxTable = {metadata: tableMeta, data: {}};
       fakeData(table, [], 0, 0);
       setPxTable(table);
   }
@@ -133,9 +135,9 @@ export function App() {
       </Button>
       <div className={styles.variableBoxContainer}>
         {/* TODO: I think the warning in the console about unique IDs is the variable.id below*/}
-        {pxTable &&
-          pxTable.variables.length > 0 &&
-          pxTable.variables.map(
+        {pxTable?.metadata &&
+          pxTable.metadata.variables.length > 0 &&
+          pxTable.metadata.variables.map(
             (variable) =>
               variable.id && (
                 <VariableBox

@@ -1,25 +1,7 @@
-import { MultiDimensionalData } from './multiDimensionalData';
-import { Variable } from './variable';
+import { PxTableMetadata } from './pxTableMetadata';
+import { PxTableData } from './pxTableData';
 
 export type PxTable = {
-  /**
-   * Identifier for the table.
-   */
-  id: string;
-  /**
-   * A title for the table that describes the content of it.
-   */
-  label: string;
-  /**
-   * A description of the table.
-   */
-  description?: string;
-  /**
-   * The variables that are part of the table.
-   */
-  variables: Array<Variable>;
-  /**
-   * The data cube for the table.
-   */
-  data: MultiDimensionalData<number>;
+  metadata: PxTableMetadata;
+  data: PxTableData<number>;
 };
