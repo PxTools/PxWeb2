@@ -1,26 +1,6 @@
 import { PxTable } from '../../shared-types/pxTable';
+import { calculateRowAndColumnMeta, columnRowMeta } from './columnRowMeta';
 
-/**
- * Internal type holding metadata about the column and row structure of a table.
- */
-type columnRowMeta = {
-  /**
-   * The number of rows   
-   */
-  rows: number;
-  /**
-   * The number of columns
-   */
-  columns: number;
-  /**
-   * The number of columns that contain headers
-   */
-  columnOffset: number;
-  /**
-   * The number of rows that contain headers
-   */
-  rowOffset: number;
-};
 
 export interface TableProps {
   pxtable: PxTable
@@ -29,6 +9,9 @@ export interface TableProps {
 export function Table({
   pxtable
 }: TableProps) {
+
+  const tableMeta: columnRowMeta = calculateRowAndColumnMeta();
+
   return (
     <>
     <table>

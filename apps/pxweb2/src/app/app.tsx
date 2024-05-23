@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import styles from './app.module.scss';
-import { Button, PxTableMetadata, VariableBox, Variable, Table, VartypeEnum, PxTable } from '@pxweb2/pxweb2-ui';
+import { Button, PxTableMetadata, VariableBox, Variable, Table, VartypeEnum, PxTable, fakeData } from '@pxweb2/pxweb2-ui';
 import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
 //import { NumberFormatter } from '../i18n/formatters';
 import { TableService } from '@pxweb2/pxweb2-api-client';
@@ -12,7 +12,6 @@ import NavigationRail from './components/NavigationRail/NavigationRail';
 import { Content } from './components/Content/Content';
 import NavigationBar from './components/NavigationBar/NavigationBar';
 import NavigationDrawer from './components/NavigationDrawer/NavigationDrawer';
-import { fakeData } from '@pxweb2/pxweb2-ui';
 
 export type NavigationItem =
   | 'none'
