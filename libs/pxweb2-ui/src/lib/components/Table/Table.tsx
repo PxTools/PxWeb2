@@ -10,12 +10,14 @@ export function Table({
   pxtable
 }: TableProps) {
 
-  const tableMeta: columnRowMeta = calculateRowAndColumnMeta();
+  const tableMeta: columnRowMeta = calculateRowAndColumnMeta(pxtable);
+  console.log(tableMeta);
 
   return (
     <>
     <table>
       <thead>
+      
         {/* For each variable in heading */}
         <tr>
         <th>-</th> {/* If stub.count > 0 */}
