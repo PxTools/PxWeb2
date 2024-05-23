@@ -17,82 +17,17 @@ export function Table({
     <>
     <table>
       <thead>
-      
-        {/* For each variable in heading */}
-        <tr>
-        <th>-</th> {/* If stub.count > 0 */}
-        
-        {/* For each value in variable */}
-        {/* colspan = number of values for the next variable */}
-        <th colSpan={3} key="">var1-val1</th> 
-        <th colSpan={3} key="">var1-val2</th>
-        </tr>
-        
+        {createHeading(pxtable, tableMeta)}
       </thead>
       <tbody>
-        <tr>
-          <th>var3-val1</th> {/* If stub.count > 0 */}
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <th>--var4-val1</th>
-          <td>cell1</td>
-          <td>cell2</td>
-          <td>cell3</td>
-          <td>cell4</td>
-          <td>cell5</td>
-          <td>cell6</td>
-        </tr>
-        <tr>
-          <th>--var4-val2</th>
-          <td>cell1</td>
-          <td>cell2</td>
-          <td>cell3</td>
-          <td>cell4</td>
-          <td>cell5</td>
-          <td>cell6</td>
-        </tr>
-        <tr>
-          <th>var3-val2</th>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <th>--var4-val1</th>
-          <td>cell1</td>
-          <td>cell2</td>
-          <td>cell3</td>
-          <td>cell4</td>
-          <td>cell5</td>
-          <td>cell6</td>
-        </tr>
-        <tr>
-          <th>--var4-val2</th>
-          <td>cell1</td>
-          <td>cell2</td>
-          <td>cell3</td>
-          <td>cell4</td>
-          <td>cell5</td>
-          <td>cell6</td>
-        </tr>
-
       </tbody>
     </table>
 
 
+    <br />
 
 
-
-    <table>
+    {/* <table>
       <thead>
         <tr>
         <th>-</th>
@@ -166,9 +101,76 @@ export function Table({
         </tr>
 
       </tbody>
-    </table>
+    </table> */}
     </>
   );
 }
 
+export function createHeading(table: PxTable, tableMeta: columnRowMeta): JSX.Element[] {
+  let columnSpan = 1;
+  let repetitionsCurrentHeaderLevel = 1;
+
+  const headerRows: JSX.Element[] = [];
+  let headerRow: JSX.Element[] = [];
+
+  if (table.stub.length > 0) {
+    headerRow.push(<th>-</th>);
+  }
+
+  // If no variables in the header, create a empty column
+  if (table.heading.length === 0) {
+    headerRow.push(<th>-</th>);
+  }
+  else {
+    let headingValue = null;
+    //let currColumnSpan = 1;
+    //let totColumnSpan = 1;
+    //let exitLevel = false;
+
+    // Otherwise calculate columnspan start value
+    columnSpan = tableMeta.columns - tableMeta.columnOffset;
+
+    console.log("columnSpan: " + columnSpan);
+    
+    // Loop through all the variables in the header
+    for (let idxHeadingLevel = 0; idxHeadingLevel < table.heading.length; idxHeadingLevel++) {
+      //let headerOffset = 0;
+
+      // Set the column span for the header cells for the current row
+      columnSpan = columnSpan / table.heading[idxHeadingLevel].values.length;
+
+      //currColumnSpan = columnSpan;
+      //totColumnSpan = 0;
+      //exitLevel = false;
+
+      // Repeat for number of times in repetion, first time only once
+      for (let idxRepetitionCurrentHeadingLevel = 1; idxRepetitionCurrentHeadingLevel < repetitionsCurrentHeaderLevel; idxRepetitionCurrentHeadingLevel++) {
+        for (let idxHeadingValue = 0; idxHeadingValue < table.heading[idxHeadingLevel].values.length; idxHeadingValue++) {
+          //totColumnSpan += columnSpan;
+          headingValue = table.heading[idxHeadingLevel].values[idxHeadingValue];
+
+          // TODO: Implement CreateColumnHeaderCell()
+          headerRow.push(<th colSpan={columnSpan}>{headingValue.label}</th>);
+          //headerOffset += columnSpan
+        }
+        
+        headerRows.push(<tr>{headerRow}</tr>);
+        // Set repetiton for the next header variable
+        repetitionsCurrentHeaderLevel *= table.heading[idxHeadingLevel].values.length;
+        headerRow = [];
+      }
+    }
+  }
+
+  // headerRow.push(
+  //   <tr>
+  //     <th>-</th>
+  //     <th colSpan={3} key="">var1-val1</th>
+  //     <th colSpan={3} key="">var1-val2</th>
+  //   </tr>
+  // );
+
+   
+  return headerRows;
+}
 export default Table;
