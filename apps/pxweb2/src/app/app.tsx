@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import styles from './app.module.scss';
-import { Button, PxTable, VariableBox } from '@pxweb2/pxweb2-ui';
+import { Button, PxTableMetadata, VariableBox } from '@pxweb2/pxweb2-ui';
 import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
 //import { NumberFormatter } from '../i18n/formatters';
 import { TableService } from '@pxweb2/pxweb2-api-client';
@@ -26,7 +26,7 @@ export function App() {
 
   const [tableid, setTableid] = useState('tab638');
   const [errorMsg, setErrorMsg] = useState('');
-  const [pxTable, setPxTable] = useState<PxTable | null>(null);
+  const [pxTableMetadata, setPxTableMetadata] = useState<PxTableMetadata | null>(null);
   const [selected, setSelected] = useState<NavigationItem>('none');
   const [pxData, setPxData] = useState<string | null>('');
 
@@ -45,13 +45,13 @@ export function App() {
   const getTable = (id: string) => {
     TableService.getMetadataById(id, i18n.resolvedLanguage)
       .then((tableMetadataResponse) => {
-        const pxTab: PxTable = mapTableMetadataResponse(tableMetadataResponse);
-        setPxTable(pxTab);
+        const pxTabMetadata: PxTableMetadata = mapTableMetadataResponse(tableMetadataResponse);
+        setPxTableMetadata(pxTabMetadata);
         setErrorMsg('');
       })
       .catch((error) => {
         setErrorMsg('Could not get table: ' + id);
-        setPxTable(null);
+        setPxTableMetadata(null);
       });
     getData(id);
   };
@@ -74,7 +74,7 @@ export function App() {
       })
       .catch((error) => {
         setErrorMsg('Could not get table: ' + id);
-        setPxTable(null);
+        setPxTableMetadata(null);
       });
   };
 
@@ -95,9 +95,9 @@ export function App() {
       </Button>
       <div className={styles.variableBoxContainer}>
         {/* TODO: I think the warning in the console about unique IDs is the variable.id below*/}
-        {pxTable &&
-          pxTable.variables.length > 0 &&
-          pxTable.variables.map(
+        {pxTableMetadata &&
+          pxTableMetadata.variables.length > 0 &&
+          pxTableMetadata.variables.map(
             (variable) =>
               variable.id && (
                 <VariableBox
