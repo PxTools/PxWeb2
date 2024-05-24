@@ -19,34 +19,26 @@ export type VariableBoxPropsBase = Omit<Variable, 'type' | 'notes'>;
 
 export type VariableBoxProps = VariableBoxPropsBase & {
   onChangeCodeList: (selectedItem: SelectOption | undefined) => void;
-  //selectedValues: Value['code'][];
+  onChangeCheckbox: (varId: string, value: string) => void;
+  onChangeMixedCheckbox: (varId: string, allValuesSelected: string) => void;
+  selectedValues: SelectedVBValues[];
   //setSelectedValues: (values: Value['code'][]) => void;
 };
 
 export function VariableBox({
-  /*
-   * A component that displays a variable with its values and code lists
-   *
-   * @param id - The id of the variable
-   * @param label - The label of the variable
-   * @param mandatory - Whether the variable is mandatory or not
-   * @param values - The values of the variable
-   * @param codeLists - The code lists of the variable
-   * @param onChangeCodeList - The function to call when a code list is selected in VariableBoxContent's Select
-   *
-   * @returns A VariableBox component
-   */
   id,
   label,
   mandatory = false,
   values,
   codeLists,
+  selectedValues,
   onChangeCodeList,
-}: //selectedValues,
-//setSelectedValues,
+  onChangeCheckbox,
+  onChangeMixedCheckbox,
+}: //setSelectedValues,
 VariableBoxProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedValues, setSelectedValues] = useState<SelectedVBValues[]>([]);
+  //const [selectedValues, setSelectedValues] = useState<SelectedVBValues[]>([]);
 
   const capitalizedVariableName =
     label.charAt(0).toUpperCase() + label.slice(1);
@@ -79,11 +71,13 @@ VariableBoxProps) {
           values={values}
           codeLists={codeLists}
           selectedValues={selectedValues}
-          setSelectedValues={setSelectedValues}
+          //setSelectedValues={setSelectedValues}
           //selectedCodeList={}
           totalValues={totalValues}
           totalChosenValues={totalChosenValues}
           onChangeCodeList={onChangeCodeList}
+          onChangeMixedCheckbox={onChangeMixedCheckbox}
+          onChangeCheckbox={onChangeCheckbox}
         />
       )}
     </div>

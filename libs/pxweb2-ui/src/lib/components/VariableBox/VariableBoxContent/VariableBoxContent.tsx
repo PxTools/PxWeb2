@@ -22,10 +22,12 @@ type VariableBoxPropsToContent = Omit<VariableBoxProps, 'id' | 'mandatory'>;
 type VariableBoxContentProps = VariableBoxPropsToContent & {
   varId: string;
   selectedValues: SelectedVBValues[];
-  setSelectedValues: (values: SelectedVBValues[]) => void;
+  //setSelectedValues: (values: SelectedVBValues[]) => void;
   totalValues: number;
   totalChosenValues: number;
   onChangeCodeList: (selectedItem: SelectOption | undefined) => void;
+  onChangeCheckbox: (varId: string, value: string) => void;
+  onChangeMixedCheckbox: (varId: string, allValuesSelected: string) => void;
 };
 
 export function VariableBoxContent({
@@ -34,10 +36,12 @@ export function VariableBoxContent({
   values,
   codeLists,
   selectedValues,
-  setSelectedValues,
+  //setSelectedValues,
   totalValues,
   totalChosenValues,
   onChangeCodeList,
+  onChangeCheckbox,
+  onChangeMixedCheckbox,
 }: VariableBoxContentProps) {
   const { t } = useTranslation();
   const checkboxSelectAllText = t(
@@ -84,124 +88,6 @@ export function VariableBoxContent({
     checkboxSelectAllText,
     checkboxDeselectAllText,
   ]);
-
-  const handleMixedCheckboxChange = () => {
-    const prevSelectedValues = structuredClone(selectedValues);
-
-    function deselectAllValuesOfVariable(
-      selectedValuesArr: SelectedVBValues[]
-    ): SelectedVBValues[] {
-      const newValues: SelectedVBValues[] = selectedValuesArr
-        .map((variable) => {
-          if (variable.id === varId) {
-            if (variable.selectedCodeList !== undefined) {
-              return {
-                id: varId,
-                selectedCodeList: variable.selectedCodeList,
-                values: [],
-              };
-            }
-            if (variable.selectedCodeList === undefined) {
-              return null;
-            }
-          }
-
-          return variable;
-        })
-        .filter((value) => value !== null) as SelectedVBValues[];
-
-      return newValues;
-    }
-
-    if (allValuesSelected === 'true') {
-      const newSelectedValues = deselectAllValuesOfVariable(prevSelectedValues);
-
-      setSelectedValues(newSelectedValues);
-    }
-    if (allValuesSelected === 'false' || allValuesSelected === 'mixed') {
-      const variable = prevSelectedValues.find(
-        (variable) => variable.id === varId
-      );
-
-      if (variable) {
-        const newSelectedValues = prevSelectedValues.map((variable) => {
-          if (variable.id === varId) {
-            variable.values = values.map((value) => value.code);
-          }
-
-          return variable;
-        });
-
-        setSelectedValues(newSelectedValues);
-      }
-      if (!variable) {
-        const newSelectedValues = [
-          ...prevSelectedValues,
-          {
-            id: varId,
-            selectedCodeList: undefined,
-            values: values.map((value) => value.code),
-          },
-        ];
-
-        setSelectedValues(newSelectedValues);
-      }
-    }
-  };
-
-  const handleCheckboxChange = (value: Value['code']) => {
-    const hasVariable =
-      selectedValues.findIndex((variables) => variables.id === varId) !== -1;
-    const hasValue = selectedValues
-      .find((variables) => variables.id === varId)
-      ?.values.includes(value);
-    const prevSelectedValues = structuredClone(selectedValues);
-
-    if (hasVariable) {
-      // doesn't have value, add it
-      if (!hasValue) {
-        setSelectedValues(
-          prevSelectedValues.map((variable) => {
-            if (variable.id === varId) {
-              variable.values = [...variable.values, value];
-            }
-
-            return variable;
-          })
-        );
-      }
-
-      // has value, remove it
-      if (hasValue) {
-        let hasMultipleValues = false;
-
-        setSelectedValues(
-          prevSelectedValues.map((variable) => {
-            if (variable.id === varId) {
-              hasMultipleValues = variable.values.length > 1;
-
-              variable.values = variable.values.filter((val) => val !== value);
-            }
-
-            return variable;
-          })
-        );
-
-        // remove the variable if it now has no values
-        if (!hasMultipleValues) {
-          setSelectedValues(
-            prevSelectedValues.filter((variables) => variables.id !== varId) // TODO: This wont work as intended. We need to check if the codeList is selected or not also
-          );
-        }
-      }
-    }
-    if (!hasVariable) {
-      setSelectedValues([
-        ...selectedValues,
-        { id: varId, selectedCodeList: undefined, values: [value] },
-      ]);
-    }
-  };
 
   const handleScroll = () => {
     if (scrollRef.current) {
@@ -331,7 +217,7 @@ export function VariableBoxContent({
                 id={varId}
                 text={mixedCheckboxText}
                 value={allValuesSelected}
-                onChange={handleMixedCheckboxChange}
+                onChange={() => onChangeMixedCheckbox(varId, allValuesSelected)}
                 ariaControls={values.map((value) => value.code)}
                 strong={true}
                 inVariableBox={true}
@@ -350,7 +236,7 @@ export function VariableBoxContent({
                     ?.values.includes(value.code) === true
                 }
                 text={value.label}
-                onChange={() => handleCheckboxChange(value.code)}
+                onChange={() => onChangeCheckbox(varId, value.code)}
               />
             ))}
         </div>

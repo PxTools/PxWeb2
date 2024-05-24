@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import styles from './app.module.scss';
@@ -6,6 +6,7 @@ import {
   Button,
   PxTable,
   VariableBox,
+  SelectedVBValues,
   Value,
   SelectOption,
 } from '@pxweb2/pxweb2-ui';
@@ -19,6 +20,32 @@ import { Content } from './components/Content/Content';
 import NavigationBar from './components/NavigationBar/NavigationBar';
 import NavigationDrawer from './components/NavigationDrawer/NavigationDrawer';
 
+function deselectAllValuesOfVariable(
+  selectedValuesArr: SelectedVBValues[],
+  varId: string
+): SelectedVBValues[] {
+  const newValues: SelectedVBValues[] = selectedValuesArr
+    .map((variable) => {
+      if (variable.id === varId) {
+        if (variable.selectedCodeList !== undefined) {
+          return {
+            id: varId,
+            selectedCodeList: variable.selectedCodeList,
+            values: [],
+          };
+        }
+        if (variable.selectedCodeList === undefined) {
+          return null;
+        }
+      }
+
+      return variable;
+    })
+    .filter((value) => value !== null) as SelectedVBValues[];
+
+  return newValues;
+}
+
 export type NavigationItem =
   | 'none'
   | 'filter'
@@ -26,14 +53,6 @@ export type NavigationItem =
   | 'edit'
   | 'save'
   | 'help';
-
-interface SelectedVBValuesType {
-  variables: [
-    variableId: string,
-    selectedCodeList: string | undefined,
-    selectedVariables: Value['code'][] | undefined
-  ];
-}
 
 export function App() {
   const { i18n } = useTranslation();
@@ -50,8 +69,9 @@ export function App() {
   //        When will we need to use the original table metadata?
   const [pxTable, setPxTable] = useState<PxTable | null>(null); // TODO: Is this needed? For a soft reset of the tabel view maybe?
   const [pxTableToRender, setPxTableToRender] = useState<PxTable | null>(null);
-  //const [selectedVBValues, setSelectedVBValues] = useState<Value['code'][]>([]);
-  //const [selectedVBValues, setSelectedVBValues] = useState<SelectedVBValuesType[]>([]);
+  const [selectedVBValues, setSelectedVBValues] = useState<SelectedVBValues[]>(
+    []
+  );
 
   if (pxTableToRender === null && pxTable !== null) {
     setPxTableToRender(structuredClone(pxTable));
@@ -91,6 +111,21 @@ export function App() {
     if (!selectedItem) {
       return;
     }
+
+    if (selectedItem.label && selectedItem.value) {
+      //const hasVariable = selectedVBValues.findIndex((variables) => variables.id === varId) !== -1;
+      // if variable is already in state, update selected codelist
+      // if not, add variable to state with selected codelist
+    }
+
+    //  4 things need to happen here:
+    //  1. set the selected codelist for the variable in the state
+    //    - check if the variable is already in the state, and if so, update the selected codelist
+    //    - if not, add the variable to the state with the selected codelist
+    //    - with the default selection from the API, the selected codelist should never be undefined (not part of this task, but means we can skip some checks)
+    //  2. Get the values for the chosen code list from the API     (not part of this task)
+    //  3. Update the variable box with the new values              (done)
+    //  4. Reset the selected values for the variable in the state
 
     //  This currently returns dummy data until we have the API call setup for it
     const valuesForChosenCodeList: Value[] = getCodeListValues(
@@ -134,6 +169,108 @@ export function App() {
       setPxTableToRender(tmpTable);
     }
   }
+
+  const handleMixedCheckboxChange = (
+    varId: string,
+    allValuesSelected: string
+  ) => {
+    const prevSelectedValues = structuredClone(selectedVBValues);
+
+    if (allValuesSelected === 'true') {
+      const newSelectedValues = deselectAllValuesOfVariable(
+        prevSelectedValues,
+        varId
+      );
+
+      setSelectedVBValues(newSelectedValues);
+    }
+    if (allValuesSelected === 'false' || allValuesSelected === 'mixed') {
+      const variable = prevSelectedValues.find(
+        (variable) => variable.id === varId
+      );
+      const allValuesOfVariable =
+        pxTableToRender?.variables.find((variable) => variable.id === varId)
+          ?.values || [];
+
+      if (variable) {
+        const newSelectedValues = prevSelectedValues.map((variable) => {
+          if (variable.id === varId) {
+            variable.values = allValuesOfVariable.map((value) => value.code);
+          }
+
+          return variable;
+        });
+
+        setSelectedVBValues(newSelectedValues);
+      }
+      if (!variable) {
+        const newSelectedValues = [
+          ...prevSelectedValues,
+          {
+            id: varId,
+            selectedCodeList: undefined,
+            values: allValuesOfVariable.map((value) => value.code),
+          },
+        ];
+
+        setSelectedVBValues(newSelectedValues);
+      }
+    }
+  };
+
+  const handleCheckboxChange = (varId: string, value: Value['code']) => {
+    const hasVariable =
+      selectedVBValues.findIndex((variables) => variables.id === varId) !== -1;
+    const hasValue = selectedVBValues
+      .find((variables) => variables.id === varId)
+      ?.values.includes(value);
+    const prevSelectedValues = structuredClone(selectedVBValues);
+
+    if (hasVariable) {
+      // doesn't have value, add it
+      if (!hasValue) {
+        setSelectedVBValues(
+          prevSelectedValues.map((variable) => {
+            if (variable.id === varId) {
+              variable.values = [...variable.values, value];
+            }
+
+            return variable;
+          })
+        );
+      }
+
+      // has value, remove it
+      if (hasValue) {
+        let hasMultipleValues = false;
+
+        setSelectedVBValues(
+          prevSelectedValues.map((variable) => {
+            if (variable.id === varId) {
+              hasMultipleValues = variable.values.length > 1;
+
+              variable.values = variable.values.filter((val) => val !== value);
+            }
+
+            return variable;
+          })
+        );
+
+        // remove the variable if it now has no values
+        if (!hasMultipleValues) {
+          setSelectedVBValues(
+            prevSelectedValues.filter((variables) => variables.id !== varId) // TODO: This wont work as intended. We need to check if the codeList is selected or not also
+          );
+        }
+      }
+    }
+    if (!hasVariable) {
+      setSelectedVBValues([
+        ...prevSelectedValues,
+        { id: varId, selectedCodeList: undefined, values: [value] },
+      ]);
+    }
+  };
 
   const getTable = (id: string) => {
     TableService.getMetadataById(id, i18n.resolvedLanguage)
@@ -229,7 +366,10 @@ export function App() {
                   mandatory={variable.mandatory}
                   values={variable.values}
                   codeLists={variable.codeLists}
+                  selectedValues={selectedVBValues}
                   onChangeCodeList={selectedCodeListChanged}
+                  onChangeMixedCheckbox={handleMixedCheckboxChange}
+                  onChangeCheckbox={handleCheckboxChange}
                 />
               )
           )}
