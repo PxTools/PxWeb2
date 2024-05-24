@@ -6,7 +6,6 @@ import classes from './VariableBoxContent.module.scss';
 import { Checkbox, MixedCheckbox } from '../../Checkbox/Checkbox';
 import Search from '../../Search/Search';
 import { Select, SelectOption } from '../../Select/Select';
-import { Value } from '../../../shared-types/value';
 import { VariableBoxProps } from '../VariableBox';
 
 import { SelectedVBValues } from '../VariableBox';
@@ -17,15 +16,13 @@ type MappedCodeList = {
 };
 type VariableBoxPropsToContent = Omit<VariableBoxProps, 'id' | 'mandatory'>;
 
-// TODO: should selectedValues and setSelectedValues be string[] or Value['code'][]?
 /* eslint-disable-next-line */
 type VariableBoxContentProps = VariableBoxPropsToContent & {
   varId: string;
   selectedValues: SelectedVBValues[];
-  //setSelectedValues: (values: SelectedVBValues[]) => void;
   totalValues: number;
   totalChosenValues: number;
-  onChangeCodeList: (selectedItem: SelectOption | undefined) => void;
+  onChangeCodeList: (selectedItem: SelectOption | undefined, varId: string) => void;
   onChangeCheckbox: (varId: string, value: string) => void;
   onChangeMixedCheckbox: (varId: string, allValuesSelected: string) => void;
 };
@@ -36,7 +33,6 @@ export function VariableBoxContent({
   values,
   codeLists,
   selectedValues,
-  //setSelectedValues,
   totalValues,
   totalChosenValues,
   onChangeCodeList,
@@ -169,7 +165,7 @@ export function VariableBoxContent({
                   ? currentVarSelectedCodeList
                   : undefined
               } // TODO: Finish the logic for this. This is the selected option, like "region" or "age". Needs modal with radio logic inside.
-              onChange={onChangeCodeList}
+              onChange={ (selectedItem) => onChangeCodeList(selectedItem, varId)}
             />
           </div>
         )}

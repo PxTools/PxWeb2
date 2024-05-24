@@ -18,11 +18,13 @@ export type SelectedVBValues = {
 export type VariableBoxPropsBase = Omit<Variable, 'type' | 'notes'>;
 
 export type VariableBoxProps = VariableBoxPropsBase & {
-  onChangeCodeList: (selectedItem: SelectOption | undefined) => void;
+  onChangeCodeList: (
+    selectedItem: SelectOption | undefined,
+    varId: string
+  ) => void;
   onChangeCheckbox: (varId: string, value: string) => void;
   onChangeMixedCheckbox: (varId: string, allValuesSelected: string) => void;
   selectedValues: SelectedVBValues[];
-  //setSelectedValues: (values: Value['code'][]) => void;
 };
 
 export function VariableBox({
@@ -35,10 +37,8 @@ export function VariableBox({
   onChangeCodeList,
   onChangeCheckbox,
   onChangeMixedCheckbox,
-}: //setSelectedValues,
-VariableBoxProps) {
+}: VariableBoxProps) {
   const [isOpen, setIsOpen] = useState(false);
-  //const [selectedValues, setSelectedValues] = useState<SelectedVBValues[]>([]);
 
   const capitalizedVariableName =
     label.charAt(0).toUpperCase() + label.slice(1);
@@ -71,8 +71,6 @@ VariableBoxProps) {
           values={values}
           codeLists={codeLists}
           selectedValues={selectedValues}
-          //setSelectedValues={setSelectedValues}
-          //selectedCodeList={}
           totalValues={totalValues}
           totalChosenValues={totalChosenValues}
           onChangeCodeList={onChangeCodeList}

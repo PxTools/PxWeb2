@@ -87,47 +87,53 @@ export function App() {
 
   useLocalizeDocumentAttributes();
 
-  function selectedCodeListChanged(selectedItem: SelectOption | undefined) {
-    selectedItem
-      ? console.log('Selected codelist - test: ' + selectedItem.label)
-      : console.log('No codelist selected - test');
+  function selectedCodeListChanged(
+    selectedItem: SelectOption | undefined,
+    varId: string
+  ) {
+    const prevSelectedValues = structuredClone(selectedVBValues);
+    const variable = prevSelectedValues.find(
+      (variable) => variable.id === varId
+    );
 
-    // What happens now?
-    // - We need to query the API for the new, codelist specific values (not part of this task)
-    //  - We need to have some dummy values to test with
-    // - We need to update the variable box with the new, codelist specific values (the dummy data)
-
-    // TODOs:
-    // Select placeholder text needs to be updated to the chosen value
-    // The selected value needs to be selected in the Modal list
-    // - currently, this now only happens if the values dont change (component doesnt rerender)
-    // - or does it?
-    // When the codelist is changed, the selected values HAVE to be reset
-    // When the codelist is changed, the state of the checkboxes should be updated to reflect the new values
-    // When changing language, the codelist texts do not change
-    // - this is because the codelist texts are from the api
-    // - - we need to reset everything when changing language
-
-    if (!selectedItem) {
+    if (
+      !selectedItem ||
+      selectedItem.value === variable?.selectedCodeList?.value
+    ) {
+      // No new selection made, do nothing
       return;
     }
 
-    if (selectedItem.label && selectedItem.value) {
-      //const hasVariable = selectedVBValues.findIndex((variables) => variables.id === varId) !== -1;
-      // if variable is already in state, update selected codelist
-      // if not, add variable to state with selected codelist
+    if (!selectedItem.label || !selectedItem.value) {
+      return; //  TODO: Incomplete selectItem, maybe throw an error? Should not happen
     }
 
-    //  4 things need to happen here:
-    //  1. set the selected codelist for the variable in the state
-    //    - check if the variable is already in the state, and if so, update the selected codelist
-    //    - if not, add the variable to the state with the selected codelist
-    //    - with the default selection from the API, the selected codelist should never be undefined (not part of this task, but means we can skip some checks)
-    //  2. Get the values for the chosen code list from the API     (not part of this task)
-    //  3. Update the variable box with the new values              (done)
-    //  4. Reset the selected values for the variable in the state
+    if (variable) {
+      const newSelectedValues = prevSelectedValues.map((variable) => {
+        if (variable.id === varId) {
+          variable.selectedCodeList = selectedItem;
+          variable.values = [];
+        }
 
-    //  This currently returns dummy data until we have the API call setup for it
+        return variable;
+      });
+
+      setSelectedVBValues(newSelectedValues);
+    }
+    if (!variable) {
+      const newSelectedValues = [
+        ...prevSelectedValues,
+        {
+          id: varId,
+          selectedCodeList: selectedItem,
+          values: [],
+        },
+      ];
+
+      setSelectedVBValues(newSelectedValues);
+    }
+
+    //  TODO: This currently returns dummy data until we have the API call setup for it
     const valuesForChosenCodeList: Value[] = getCodeListValues(
       selectedItem?.value
     );
@@ -256,10 +262,15 @@ export function App() {
           })
         );
 
-        // remove the variable if it now has no values
+        // remove the variable if it now has no values or specified codelist
         if (!hasMultipleValues) {
           setSelectedVBValues(
-            prevSelectedValues.filter((variables) => variables.id !== varId) // TODO: This wont work as intended. We need to check if the codeList is selected or not also
+            prevSelectedValues.filter(
+              (variables) =>
+                variables.id !== varId ||
+                (variables.id === varId &&
+                  variables.selectedCodeList !== undefined)
+            )
           );
         }
       }
@@ -303,18 +314,18 @@ export function App() {
       { code: 'Dummy Code 6', label: 'Dummy Value 6' },
       { code: 'Dummy Code 7', label: 'Dummy Value 7' },
     ];
-    //const dummyValues: Value[] = [];
 
     return dummyValues;
   };
 
   const handleVBReset = () => {
-    //  TODO: Also need to reset the entire selectedValues state
+    // TODO: Do we need this?
     if (pxTableToRender !== null) {
       setPxTableToRender(null);
     }
-
-    //setSelectedVBValues([]);
+    if (selectedVBValues.length > 0) {
+      setSelectedVBValues([]);
+    }
   };
 
   const getData = (id: string) => {
