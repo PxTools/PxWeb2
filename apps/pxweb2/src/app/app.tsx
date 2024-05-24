@@ -97,7 +97,7 @@ export function App() {
       //  label: "civilstatus", 
       //  type: VartypeEnum.REGULAR_VARIABLE, 
       //  mandatory: false, 
-      //  values: Array.from(Array(6).keys()).map(i => {return {label: "CS_" + (i + 1), code: "" + (i + 1) }})},
+      //  values: Array.from(Array(5).keys()).map(i => {return {label: "CS_" + (i + 1), code: "" + (i + 1) }})},
        {id: "Kon", 
        label: "kön", 
        type: VartypeEnum.REGULAR_VARIABLE, 
