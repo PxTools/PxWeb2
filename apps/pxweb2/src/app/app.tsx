@@ -111,7 +111,7 @@ export function App() {
       ];
 
       const tableMeta : PxTableMetadata = {id: "test01", label: "Test table", variables: variables};
-      const table : PxTable = {metadata: tableMeta, data: {}, heading: [variables[0], variables[1]], stub: [variables[2],variables[3],variables[4]]};
+      const table : PxTable = {metadata: tableMeta, data: {}, heading: [variables[0], variables[1]], stub: [variables[2], variables[3], variables[4]]};
       fakeData(table, [], 0, 0);
       setPxTable(table);
   }

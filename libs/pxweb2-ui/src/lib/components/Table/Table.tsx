@@ -140,7 +140,14 @@ export function createHeading(table: PxTable, tableMeta: columnRowMeta): JSX.Ele
 export function createRows(table: PxTable, tableMeta: columnRowMeta): JSX.Element[] {
   const tableRows: JSX.Element[] = [];
 
-  createRow(0, tableMeta.rows - tableMeta.rowOffset, table, tableMeta, tableRows);
+  if (table.stub.length > 0) {
+    createRow(0, tableMeta.rows - tableMeta.rowOffset, table, tableMeta, tableRows);
+  }
+  else {
+    const tableRow: JSX.Element[] = [];
+    fillData(table, tableMeta, tableRow);
+    tableRows.push(<tr>{tableRow}</tr>);
+}
 
   return tableRows;
 }
