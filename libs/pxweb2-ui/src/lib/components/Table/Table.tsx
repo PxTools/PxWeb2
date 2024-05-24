@@ -1,5 +1,6 @@
 import { PxTable } from '../../shared-types/pxTable';
 import { calculateRowAndColumnMeta, columnRowMeta } from './columnRowMeta';
+import { getPxTableData } from './tableBuilder';
 
 
 export interface TableProps {
@@ -144,7 +145,7 @@ export function createRows(table: PxTable, tableMeta: columnRowMeta): JSX.Elemen
   return tableRows;
 }
 
-export function createRow(stubIndex: number, rowSpan: number, table: PxTable, tableMeta: columnRowMeta, tableRows: JSX.Element[]): JSX.Element[] {
+function createRow(stubIndex: number, rowSpan: number, table: PxTable, tableMeta: columnRowMeta, tableRows: JSX.Element[]): JSX.Element[] {
   // Calculate the rowspan for all the cells to add in this call
   rowSpan = rowSpan / table.stub[stubIndex].values.length;
 
@@ -165,18 +166,47 @@ export function createRow(stubIndex: number, rowSpan: number, table: PxTable, ta
 
     // If there are more stub variables that need to add headers to this row
     if (table.stub.length > stubIndex + 1) {
+      // make the rest of this row empty
+      fillEmpty(tableMeta, tableRow);
       tableRows.push(<tr>{tableRow}</tr>);
       tableRow = [];
       // Create a new row for the next stub
       createRow(stubIndex + 1, rowSpan, table, tableMeta, tableRows);
     }
     else {
+      // If no more stubs need to add headers then fill the row with data
+      fillData(table, tableMeta, tableRow);
       tableRows.push(<tr>{tableRow}</tr>);
       tableRow = [];
     }
   }
-  
-  
+    
   return tableRows;
 }
+
+// Fills an row with empty cells
+function fillEmpty(tableMeta: columnRowMeta, tableRow: JSX.Element[]): void {
+  const emptyText = "";
+
+  // Loop through cells that need to be added to the row
+  const maxCols = tableMeta.columns - tableMeta.columnOffset;
+
+  for (let i = 0; i < maxCols; i++) {
+    tableRow.push(<td>{emptyText}</td>);
+  }
+}
+
+// Fills a row with data cells
+function fillData(table: PxTable, tableMeta: columnRowMeta, tableRow: JSX.Element[]): void {
+ 
+  // Loop through cells that need to be added to the row
+  const maxCols = tableMeta.columns - tableMeta.columnOffset;
+
+  for (let i = 0; i < maxCols; i++) {
+    // TODO: Get the right data...
+    const dataValue = getPxTableData(table.data, ['R_2', '2', '3', '2', '1970']);
+    tableRow.push(<td>{dataValue}</td>);
+  }
+}
+
 export default Table;
