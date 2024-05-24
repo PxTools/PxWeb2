@@ -17,7 +17,7 @@ export function Table({
     <>
     <table>
       <thead>
-        {createHeading(pxtable, tableMeta)}
+        {createHeading2(pxtable, tableMeta)}
       </thead>
       <tbody>
       </tbody>
@@ -27,7 +27,7 @@ export function Table({
     <br />
 
 
-    {/* <table>
+     <table>
       <thead>
         <tr>
         <th>-</th>
@@ -101,9 +101,27 @@ export function Table({
         </tr>
 
       </tbody>
-    </table> */}
+    </table> 
     </>
   );
+}
+
+export function createHeading2(table: PxTable, tableMeta: columnRowMeta): JSX.Element[] {
+  const headerRows: JSX.Element[] = [];
+  let headerRow: JSX.Element[] = [];
+
+  console.log(tableMeta.columns);
+
+  for (let i = 0; i < table.heading.length; i++) {
+    const variable = table.heading[i];
+    for (let j = 0; j < variable.values.length; j++) {
+      headerRow.push(<th>{variable.values[j].label}</th>);
+    }
+    headerRows.push(<tr>{headerRow}</tr>);
+    headerRow = [];
+  }
+  
+  return headerRows;
 }
 
 export function createHeading(table: PxTable, tableMeta: columnRowMeta): JSX.Element[] {
