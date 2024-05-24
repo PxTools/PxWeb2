@@ -103,15 +103,15 @@ export function App() {
        type: VartypeEnum.REGULAR_VARIABLE, 
        mandatory: false, 
        values: Array.from(Array(2).keys()).map(i => {return {label: "G_" + (i + 1), code: "" + (i + 1) }})},
-      //  {id: "TIME", 
-      //  label: "tid", 
-      //  type: VartypeEnum.TIME_VARIABLE, 
-      //  mandatory: false, 
-      //  values: Array.from(Array(5).keys()).map(i => {return {label: "" + (1968 + i), code: "" + (1968 + i) }})}
+       {id: "TIME", 
+       label: "tid", 
+       type: VartypeEnum.TIME_VARIABLE, 
+       mandatory: false, 
+       values: Array.from(Array(2).keys()).map(i => {return {label: "" + (1968 + i), code: "" + (1968 + i) }})}
       ];
 
       const tableMeta : PxTableMetadata = {id: "test01", label: "Test table", variables: variables};
-      const table : PxTable = {metadata: tableMeta, data: {}, heading: [variables[0], variables[1]], stub: [variables[2]]};
+      const table : PxTable = {metadata: tableMeta, data: {}, heading: [variables[0], variables[1]], stub: [variables[2],variables[3]]};
       fakeData(table, [], 0, 0);
       setPxTable(table);
   }

@@ -20,6 +20,7 @@ export function Table({
         {createHeading(pxtable, tableMeta)}
       </thead>
       <tbody>
+        {createRows(pxtable, tableMeta)}
       </tbody>
     </table>
 
@@ -43,12 +44,26 @@ export function Table({
         </tr>
       </thead>
       <tbody>
-        <tr>
+      <tr>
           <th>var3-val1</th>
           <td></td>
           <td></td>
           <td></td>
           <td></td>
+        </tr>
+        <tr>
+          <th>--var4-val1</th>
+          <td>11</td>
+          <td>11</td>
+          <td>11</td>
+          <td>11</td>
+        </tr>
+        <tr>
+          <th>--var4-val2</th>
+          <td>22</td>
+          <td>22</td>
+          <td>22</td>
+          <td>22</td>
         </tr>
         <tr>
           <th>var3-val2</th>
@@ -57,11 +72,26 @@ export function Table({
           <td></td>
           <td></td>
         </tr>
+        <tr>
+          <th>--var4-val1</th>
+          <td>33</td>
+          <td>33</td>
+          <td>33</td>
+          <td>33</td>
+        </tr>
+        <tr>
+          <th>--var4-val2</th>
+          <td>44</td>
+          <td>44</td>
+          <td>44</td>
+          <td>44</td>
+        </tr>
       </tbody>
     </table> 
     </>
   );
 }
+
 
 export function createHeading(table: PxTable, tableMeta: columnRowMeta): JSX.Element[] {
   // Number of times to add all values for a variable, default to 1 for first header row
@@ -69,8 +99,8 @@ export function createHeading(table: PxTable, tableMeta: columnRowMeta): JSX.Ele
   let columnSpan = 1;
   const emptyText = "";
 
-  const headerRows: JSX.Element[] = [];
   let headerRow: JSX.Element[] = [];
+  const headerRows: JSX.Element[] = [];
 
   // If we have any variables in the stub create a empty cell at top left corner of the table
   if (table.stub.length > 0) {
@@ -105,4 +135,48 @@ export function createHeading(table: PxTable, tableMeta: columnRowMeta): JSX.Ele
   return headerRows;
 }
 
+
+export function createRows(table: PxTable, tableMeta: columnRowMeta): JSX.Element[] {
+  const tableRows: JSX.Element[] = [];
+
+  createRow(0, tableMeta.rows - tableMeta.rowOffset, table, tableMeta, tableRows);
+
+  return tableRows;
+}
+
+export function createRow(stubIndex: number, rowSpan: number, table: PxTable, tableMeta: columnRowMeta, tableRows: JSX.Element[]): JSX.Element[] {
+  // Calculate the rowspan for all the cells to add in this call
+  rowSpan = rowSpan / table.stub[stubIndex].values.length;
+
+  let tableRow: JSX.Element[] = [];
+
+  // Loop through all the values in the stub variable
+  for (let i = 0; i < table.stub[stubIndex].values.length; i++) {
+
+    const val = table.stub[stubIndex].values[i];
+    console.log(val.label);
+
+    // Fix the rowspan
+    if (rowSpan === 0) {
+      rowSpan = 1;
+    }
+
+    tableRow.push(<th>{val.label}</th>);
+
+    // If there are more stub variables that need to add headers to this row
+    if (table.stub.length > stubIndex + 1) {
+      tableRows.push(<tr>{tableRow}</tr>);
+      tableRow = [];
+      // Create a new row for the next stub
+      createRow(stubIndex + 1, rowSpan, table, tableMeta, tableRows);
+    }
+    else {
+      tableRows.push(<tr>{tableRow}</tr>);
+      tableRow = [];
+    }
+  }
+  
+  
+  return tableRows;
+}
 export default Table;
