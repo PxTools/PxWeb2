@@ -87,7 +87,7 @@ export function App() {
 
   useLocalizeDocumentAttributes();
 
-  function selectedCodeListChanged(
+  function handleCodeListChange(
     selectedItem: SelectOption | undefined,
     varId: string
   ) {
@@ -378,7 +378,7 @@ export function App() {
                   values={variable.values}
                   codeLists={variable.codeLists}
                   selectedValues={selectedVBValues}
-                  onChangeCodeList={selectedCodeListChanged}
+                  onChangeCodeList={handleCodeListChange}
                   onChangeMixedCheckbox={handleMixedCheckboxChange}
                   onChangeCheckbox={handleCheckboxChange}
                 />
