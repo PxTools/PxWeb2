@@ -1,5 +1,4 @@
 import type { Meta, StoryFn } from '@storybook/react';
-import React from 'react';
 
 import { Radio } from './Radio';
 
@@ -14,9 +13,9 @@ export const Default: StoryFn<typeof Radio> = () => {
     <Radio
       name='radio1'
       options={[
-        { label: 'Label', value: 'opt1' , number: 12}        
+        { label: 'Label', value: 'opt1' }        
       ]}
-      children={undefined}>                
+      onChange={undefined}>                
     </Radio>    
   );
 };
@@ -27,18 +26,16 @@ export const Variants: StoryFn<typeof Radio> = () => {
       <Radio
         name='radio2'        
         options={[
-          { label: 'Pest', value: 'option1' , number: 12}        
+          { label: 'Pest', value: 'option1' }        
         ]}
-        children={undefined}>            
+        onChange={undefined}>            
       </Radio>    
       <Radio
         name='radio2'
         options={[
           { label: 'Kolera', value: 'option2' }        
         ]}
-        children={undefined}>            
+        onChange={undefined}>       
       </Radio>    
       </>
   );}
-
-
