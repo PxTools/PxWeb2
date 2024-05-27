@@ -22,8 +22,8 @@
   }
 }
 
-// header-icon style moved here because of the hover effect needs to be applied when the parent is hovered
-// This won't work if the style is in the child components scss file, because we use .module.scss
+// header-icon style moved here because the hover effect needs to be applied when the parent is hovered
+// This won't work if the style is in the child components scss file, since css classes are made unique by with a hash
 .header-icon {
   /* Layout */
   display: flex;
