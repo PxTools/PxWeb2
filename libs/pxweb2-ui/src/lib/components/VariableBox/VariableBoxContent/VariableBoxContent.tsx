@@ -164,7 +164,7 @@ export function VariableBoxContent({
                 currentVarSelectedCodeList
                   ? currentVarSelectedCodeList
                   : undefined
-              } // TODO: Finish the logic for this. This is the selected option, like "region" or "age". Needs modal with radio logic inside.
+              }
               onChange={ (selectedItem) => onChangeCodeList(selectedItem, varId)}
             />
           </div>

@@ -20,6 +20,38 @@ import { Content } from './components/Content/Content';
 import NavigationBar from './components/NavigationBar/NavigationBar';
 import NavigationDrawer from './components/NavigationDrawer/NavigationDrawer';
 
+function addSelectedCodeListToVariable(
+  currentVariable: SelectedVBValues | undefined,
+  selectedValuesArr: SelectedVBValues[],
+  varId: string,
+  selectedItem: SelectOption
+): SelectedVBValues[] {
+  let newSelectedValues: SelectedVBValues[] = [];
+
+  if (currentVariable) {
+    newSelectedValues = selectedValuesArr.map((variable) => {
+      if (variable.id === varId) {
+        variable.selectedCodeList = selectedItem;
+        variable.values = []; // Always reset values when changing codelist
+      }
+
+      return variable;
+    });
+  }
+  if (!currentVariable) {
+    newSelectedValues = [
+      ...selectedValuesArr,
+      {
+        id: varId,
+        selectedCodeList: selectedItem,
+        values: [],
+      },
+    ];
+  }
+
+  return newSelectedValues;
+}
+
 function addValueToVariable(
   selectedValuesArr: SelectedVBValues[],
   varId: string,
@@ -186,14 +218,14 @@ export function App() {
     varId: string
   ) {
     const prevSelectedValues = structuredClone(selectedVBValues);
-    const variable = prevSelectedValues.find(
+    const currentVariable = prevSelectedValues.find(
       (variable) => variable.id === varId
     );
 
     // No new selection made, do nothing
     if (
       !selectedItem ||
-      selectedItem.value === variable?.selectedCodeList?.value
+      selectedItem.value === currentVariable?.selectedCodeList?.value
     ) {
       return;
     }
@@ -203,30 +235,14 @@ export function App() {
       return;
     }
 
-    if (variable) {
-      const newSelectedValues = prevSelectedValues.map((variable) => {
-        if (variable.id === varId) {
-          variable.selectedCodeList = selectedItem;
-          variable.values = []; // Always reset values when changing codelist
-        }
+    const newSelectedValues = addSelectedCodeListToVariable(
+      currentVariable,
+      prevSelectedValues,
+      varId,
+      selectedItem
+    );
 
-        return variable;
-      });
-
-      setSelectedVBValues(newSelectedValues);
-    }
-    if (!variable) {
-      const newSelectedValues = [
-        ...prevSelectedValues,
-        {
-          id: varId,
-          selectedCodeList: selectedItem,
-          values: [],
-        },
-      ];
-
-      setSelectedVBValues(newSelectedValues);
-    }
+    setSelectedVBValues(newSelectedValues);
 
     //  TODO: This currently returns dummy data until we have the API call setup for it
     const valuesForChosenCodeList: Value[] = getCodeListValues(
