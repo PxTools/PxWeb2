@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import styles from './app.module.scss';
 import {
   Button,
-  PxTable,
+  PxTableMetadata,
   VariableBox,
   SelectedVBValues,
   Value,
@@ -188,14 +188,16 @@ export function App() {
   const [selectedNavigationView, setSelectedNavigationView] =
     useState<NavigationItem>('none');
   const [pxData, setPxData] = useState<string | null>('');
-  const [pxTable, setPxTable] = useState<PxTable | null>(null);
-  const [pxTableToRender, setPxTableToRender] = useState<PxTable | null>(null);
+  const [pxTableMetadata, setPxTableMetadata] =
+    useState<PxTableMetadata | null>(null);
+  const [pxTableMetaToRender, setPxTableMetaToRender] =
+    useState<PxTableMetadata | null>(null);
   const [selectedVBValues, setSelectedVBValues] = useState<SelectedVBValues[]>(
     []
   );
 
-  if (pxTableToRender === null && pxTable !== null) {
-    setPxTableToRender(structuredClone(pxTable));
+  if (pxTableMetaToRender === null && pxTableMetadata !== null) {
+    setPxTableMetaToRender(structuredClone(pxTableMetadata));
   }
 
   const changeSelectedNavView = (newSelectedNavView: NavigationItem) => {
@@ -244,13 +246,14 @@ export function App() {
       selectedItem?.value
     );
 
-    if (pxTableToRender === null || valuesForChosenCodeList.length < 1) {
+    if (pxTableMetaToRender === null || valuesForChosenCodeList.length < 1) {
       return;
     }
 
-    const newPxTableToRender: PxTable = structuredClone(pxTableToRender);
+    const newPxTableMetaToRender: PxTableMetadata =
+      structuredClone(pxTableMetaToRender);
 
-    newPxTableToRender.variables.forEach((variable) => {
+    newPxTableMetaToRender.variables.forEach((variable) => {
       if (!variable.codeLists) {
         return;
       }
@@ -260,17 +263,17 @@ export function App() {
           return;
         }
 
-        for (let i = 0; i < newPxTableToRender.variables.length - 1; i++) {
-          if (newPxTableToRender.variables[i].id !== variable.id) {
+        for (let i = 0; i < newPxTableMetaToRender.variables.length - 1; i++) {
+          if (newPxTableMetaToRender.variables[i].id !== variable.id) {
             continue;
           }
 
-          newPxTableToRender.variables[i].values = valuesForChosenCodeList;
+          newPxTableMetaToRender.variables[i].values = valuesForChosenCodeList;
         }
       });
     });
 
-    setPxTableToRender(newPxTableToRender);
+    setPxTableMetaToRender(newPxTableMetaToRender);
   }
 
   const handleMixedCheckboxChange = (
@@ -289,7 +292,7 @@ export function App() {
     }
     if (allValuesSelected === 'false' || allValuesSelected === 'mixed') {
       const allValuesOfVariable =
-        pxTableToRender?.variables.find((variable) => variable.id === varId)
+        pxTableMetaToRender?.variables.find((variable) => variable.id === varId)
           ?.values || [];
       const newSelectedValues = addAllValuesToVariable(
         prevSelectedValues,
@@ -341,18 +344,20 @@ export function App() {
   const getTable = (id: string) => {
     TableService.getMetadataById(id, i18n.resolvedLanguage)
       .then((tableMetadataResponse) => {
-        const pxTab: PxTable = mapTableMetadataResponse(tableMetadataResponse);
-        setPxTable(pxTab);
+        const pxTabMetadata: PxTableMetadata = mapTableMetadataResponse(
+          tableMetadataResponse
+        );
+        setPxTableMetadata(pxTabMetadata);
 
-        if (pxTableToRender !== null) {
-          setPxTableToRender(null);
+        if (pxTableMetaToRender !== null) {
+          setPxTableMetaToRender(null);
         }
 
         setErrorMsg('');
       })
       .catch((error) => {
         setErrorMsg('Could not get table: ' + id);
-        setPxTable(null);
+        setPxTableMetadata(null);
       });
     getData(id);
   };
@@ -391,7 +396,7 @@ export function App() {
       })
       .catch((error) => {
         setErrorMsg('Could not get table: ' + id);
-        setPxTable(null);
+        setPxTableMetadata(null);
       });
   };
 
@@ -405,14 +410,16 @@ export function App() {
         <option value="TAB638">TAB638</option>
         <option value="TAB1292">TAB1292</option>
         <option value="TAB5659">TAB5659</option>
+        <option value="TAB1128">TAB1128 (LARGE)</option>
       </select>
       <Button variant="tertiary" onClick={() => getTable(tableid)}>
         Get table
       </Button>
       <div className={styles.variableBoxContainer}>
-        {pxTableToRender &&
-          pxTableToRender.variables.length > 0 &&
-          pxTableToRender.variables.map(
+        {/* TODO: I think the warning in the console about unique IDs is the variable.id below*/}
+        {pxTableMetaToRender &&
+          pxTableMetaToRender.variables.length > 0 &&
+          pxTableMetaToRender.variables.map(
             (variable) =>
               variable.id && (
                 <VariableBox

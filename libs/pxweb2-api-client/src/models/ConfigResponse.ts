@@ -1,9 +1,9 @@
-/* generated using openapi-typescript-codegen -- do no edit */
+/* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
 import type { ApiFeature } from './ApiFeature';
-import type { language } from './Language';
+import type { Language } from './Language';
 import type { MetadataOutputFormatType } from './MetadataOutputFormatType';
 import type { SourceReference } from './SourceReference';
 /**
@@ -17,7 +17,7 @@ export type ConfigResponse = {
     /**
      * A list of language that exists for the data.
      */
-    languages: Array<language>;
+    languages: Array<Language>;
     /**
      * The id of the language that is the default language.
      */

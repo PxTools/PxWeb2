@@ -3,6 +3,6 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * Spesification on json-stat.org -> [here](https://json-stat.org/full/#note)
+ * The language if the default is not what you want.
  */
-export type jsonstat_note = Array<string>;
+export type lang = string | null;
