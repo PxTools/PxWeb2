@@ -14,8 +14,16 @@ describe('VariableBox', () => {
         onChangeCodeList={() => {
           return;
         }}
+        onChangeCheckbox={() => {
+          return;
+        }}
+        onChangeMixedCheckbox={() => {
+          return;
+        }}
+        selectedValues={[]}
       />
     );
+    
     expect(baseElement).toBeTruthy();
   });
 });
