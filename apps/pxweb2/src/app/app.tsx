@@ -20,7 +20,101 @@ import { Content } from './components/Content/Content';
 import NavigationBar from './components/NavigationBar/NavigationBar';
 import NavigationDrawer from './components/NavigationDrawer/NavigationDrawer';
 
-function deselectAllValuesOfVariable(
+function addValueToVariable(
+  selectedValuesArr: SelectedVBValues[],
+  varId: string,
+  value: Value['code']
+) {
+  const newSelectedValues = selectedValuesArr.map((variable) => {
+    if (variable.id === varId) {
+      variable.values = [...variable.values, value];
+    }
+
+    return variable;
+  });
+
+  return newSelectedValues;
+}
+
+function addValueToNewVariable(
+  selectedValuesArr: SelectedVBValues[],
+  varId: string,
+  value: Value['code']
+) {
+  const newSelectedValues = [
+    ...selectedValuesArr,
+    { id: varId, selectedCodeList: undefined, values: [value] },
+  ];
+
+  return newSelectedValues;
+}
+
+function removeValueOfVariable(
+  selectedValuesArr: SelectedVBValues[],
+  varId: string,
+  value: Value['code']
+) {
+  const newSelectedValues = selectedValuesArr
+    .map((variable) => {
+      if (variable.id === varId) {
+        const hasMultipleValuesSelected = variable.values.length > 1;
+
+        if (
+          hasMultipleValuesSelected ||
+          (!hasMultipleValuesSelected &&
+            variable.selectedCodeList !== undefined)
+        ) {
+          variable.values = variable.values.filter((val) => val !== value);
+        }
+        if (
+          !hasMultipleValuesSelected &&
+          variable.selectedCodeList === undefined
+        ) {
+          return null;
+        }
+      }
+
+      return variable;
+    })
+    .filter((value) => value !== null) as SelectedVBValues[];
+
+  return newSelectedValues;
+}
+
+function addAllValuesToVariable(
+  selectedValuesArr: SelectedVBValues[],
+  varId: string,
+  allValuesOfVariable: Value[]
+): SelectedVBValues[] {
+  const currentVariable = selectedValuesArr.find(
+    (variable) => variable.id === varId
+  );
+  let newSelectedValues: SelectedVBValues[] = [];
+
+  if (currentVariable) {
+    newSelectedValues = selectedValuesArr.map((variable) => {
+      if (variable.id === varId) {
+        variable.values = allValuesOfVariable.map((value) => value.code);
+      }
+
+      return variable;
+    });
+  }
+  if (!currentVariable) {
+    newSelectedValues = [
+      ...selectedValuesArr,
+      {
+        id: varId,
+        selectedCodeList: undefined,
+        values: allValuesOfVariable.map((value) => value.code),
+      },
+    ];
+  }
+
+  return newSelectedValues;
+}
+
+function removeAllValuesOfVariable(
   selectedValuesArr: SelectedVBValues[],
   varId: string
 ): SelectedVBValues[] {
@@ -96,23 +190,24 @@ export function App() {
       (variable) => variable.id === varId
     );
 
+    // No new selection made, do nothing
     if (
       !selectedItem ||
       selectedItem.value === variable?.selectedCodeList?.value
     ) {
-      // No new selection made, do nothing
       return;
     }
 
+    //  TODO: Incomplete selectItem, maybe throw an error? This should not happen
     if (!selectedItem.label || !selectedItem.value) {
-      return; //  TODO: Incomplete selectItem, maybe throw an error? Should not happen
+      return;
     }
 
     if (variable) {
       const newSelectedValues = prevSelectedValues.map((variable) => {
         if (variable.id === varId) {
           variable.selectedCodeList = selectedItem;
-          variable.values = [];
+          variable.values = []; // Always reset values when changing codelist
         }
 
         return variable;
@@ -139,16 +234,21 @@ export function App() {
     );
 
     if (pxTableToRender !== null) {
-      const tmpTable: PxTable = structuredClone(pxTableToRender);
+      const newPxTableToRender: PxTable = structuredClone(pxTableToRender);
 
       pxTableToRender.variables.forEach((variable) => {
         if (variable.codeLists) {
           variable.codeLists.forEach((codelist) => {
             if (codelist.id === selectedItem?.value) {
-              for (let i = 0; i < tmpTable.variables.length - 1; i++) {
-                if (tmpTable.variables[i].id === variable.id) {
+              for (
+                let i = 0;
+                i < newPxTableToRender.variables.length - 1;
+                i++
+              ) {
+                if (newPxTableToRender.variables[i].id === variable.id) {
                   if (valuesForChosenCodeList.length > 0) {
-                    tmpTable.variables[i].values = valuesForChosenCodeList;
+                    newPxTableToRender.variables[i].values =
+                      valuesForChosenCodeList;
 
                     break;
                   }
@@ -172,7 +272,7 @@ export function App() {
         }
       });
 
-      setPxTableToRender(tmpTable);
+      setPxTableToRender(newPxTableToRender);
     }
   }
 
@@ -183,7 +283,7 @@ export function App() {
     const prevSelectedValues = structuredClone(selectedVBValues);
 
     if (allValuesSelected === 'true') {
-      const newSelectedValues = deselectAllValuesOfVariable(
+      const newSelectedValues = removeAllValuesOfVariable(
         prevSelectedValues,
         varId
       );
@@ -191,95 +291,53 @@ export function App() {
       setSelectedVBValues(newSelectedValues);
     }
     if (allValuesSelected === 'false' || allValuesSelected === 'mixed') {
-      const variable = prevSelectedValues.find(
-        (variable) => variable.id === varId
-      );
       const allValuesOfVariable =
         pxTableToRender?.variables.find((variable) => variable.id === varId)
           ?.values || [];
+      const newSelectedValues = addAllValuesToVariable(
+        prevSelectedValues,
+        varId,
+        allValuesOfVariable
+      );
 
-      if (variable) {
-        const newSelectedValues = prevSelectedValues.map((variable) => {
-          if (variable.id === varId) {
-            variable.values = allValuesOfVariable.map((value) => value.code);
-          }
-
-          return variable;
-        });
-
-        setSelectedVBValues(newSelectedValues);
-      }
-      if (!variable) {
-        const newSelectedValues = [
-          ...prevSelectedValues,
-          {
-            id: varId,
-            selectedCodeList: undefined,
-            values: allValuesOfVariable.map((value) => value.code),
-          },
-        ];
-
-        setSelectedVBValues(newSelectedValues);
-      }
+      setSelectedVBValues(newSelectedValues);
     }
   };
 
   const handleCheckboxChange = (varId: string, value: Value['code']) => {
+    const prevSelectedValues = structuredClone(selectedVBValues);
     const hasVariable =
       selectedVBValues.findIndex((variables) => variables.id === varId) !== -1;
     const hasValue = selectedVBValues
       .find((variables) => variables.id === varId)
       ?.values.includes(value);
-    const prevSelectedValues = structuredClone(selectedVBValues);
 
-    if (hasVariable) {
-      // doesn't have value, add it
-      if (!hasValue) {
-        setSelectedVBValues(
-          prevSelectedValues.map((variable) => {
-            if (variable.id === varId) {
-              variable.values = [...variable.values, value];
-            }
+    if (hasVariable && hasValue) {
+      const newSelectedValues = removeValueOfVariable(
+        prevSelectedValues,
+        varId,
+        value
+      );
 
-            return variable;
-          })
-        );
-      }
+      setSelectedVBValues(newSelectedValues);
+    }
+    if (hasVariable && !hasValue) {
+      const newSelectedValues = addValueToVariable(
+        prevSelectedValues,
+        varId,
+        value
+      );
 
-      // has value, remove it
-      if (hasValue) {
-        let hasMultipleValues = false;
-
-        setSelectedVBValues(
-          prevSelectedValues.map((variable) => {
-            if (variable.id === varId) {
-              hasMultipleValues = variable.values.length > 1;
-
-              variable.values = variable.values.filter((val) => val !== value);
-            }
-
-            return variable;
-          })
-        );
-
-        // remove the variable if it now has no values or specified codelist
-        if (!hasMultipleValues) {
-          setSelectedVBValues(
-            prevSelectedValues.filter(
-              (variables) =>
-                variables.id !== varId ||
-                (variables.id === varId &&
-                  variables.selectedCodeList !== undefined)
-            )
-          );
-        }
-      }
+      setSelectedVBValues(newSelectedValues);
     }
     if (!hasVariable) {
-      setSelectedVBValues([
-        ...prevSelectedValues,
-        { id: varId, selectedCodeList: undefined, values: [value] },
-      ]);
+      const newSelectedValues = addValueToNewVariable(
+        prevSelectedValues,
+        varId,
+        value
+      );
+
+      setSelectedVBValues(newSelectedValues);
     }
   };
 
