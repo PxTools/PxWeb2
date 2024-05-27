@@ -22,7 +22,10 @@ type VariableBoxContentProps = VariableBoxPropsToContent & {
   selectedValues: SelectedVBValues[];
   totalValues: number;
   totalChosenValues: number;
-  onChangeCodeList: (selectedItem: SelectOption | undefined, varId: string) => void;
+  onChangeCodeList: (
+    selectedItem: SelectOption | undefined,
+    varId: string
+  ) => void;
   onChangeCheckbox: (varId: string, value: string) => void;
   onChangeMixedCheckbox: (varId: string, allValuesSelected: string) => void;
 };
@@ -47,7 +50,6 @@ export function VariableBoxContent({
     'presentation_page.sidemenu.selection.variablebox.content.mixed_checkbox.deselect_all'
   );
 
-  // TODO: Do we need 3 states for animating the scrolling? Can we simplify this? Maybe use useReducer instead?
   const [scrolling, setScrolling] = useState<'atTop' | 'up' | 'down'>('atTop');
   const [hasScrolledUp, setHasScrolledUp] = useState(false);
   const [lastScrollPosition, setLastScrollPosition] = useState(0);
@@ -137,15 +139,13 @@ export function VariableBoxContent({
     });
   }
 
-  console.log('selectedValues', selectedValues);
-
   const currentVarSelectedCodeList = selectedValues.find(
     (variable) => variable.id === varId
   )?.selectedCodeList;
 
   return (
     <div className={cl(classes['variablebox-content'])}>
-      {/* Add the Alert here, see note in figma about it. Need more functionality atm i think */}
+      {/* TODO: Add the Alert here, see note in figma about it. Need more functionality atm i think */}
 
       <div className={cl(classes['variablebox-content-main'])}>
         {hasCodeLists === true && (
@@ -165,7 +165,7 @@ export function VariableBoxContent({
                   ? currentVarSelectedCodeList
                   : undefined
               }
-              onChange={ (selectedItem) => onChangeCodeList(selectedItem, varId)}
+              onChange={(selectedItem) => onChangeCodeList(selectedItem, varId)}
             />
           </div>
         )}

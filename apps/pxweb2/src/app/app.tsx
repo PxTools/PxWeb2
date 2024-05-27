@@ -11,7 +11,6 @@ import {
   SelectOption,
 } from '@pxweb2/pxweb2-ui';
 import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
-//import { NumberFormatter } from '../i18n/formatters';
 import { TableService } from '@pxweb2/pxweb2-api-client';
 import { mapTableMetadataResponse } from '../mappers/TableMetadataResponseMapper';
 import { Header } from './components/Header/Header';
@@ -189,11 +188,7 @@ export function App() {
   const [selectedNavigationView, setSelectedNavigationView] =
     useState<NavigationItem>('none');
   const [pxData, setPxData] = useState<string | null>('');
-
-  //  TODO: How much memory does this take?
-  //        Is it a problem to have two states for the same table metadata?
-  //        When will we need to use the original table metadata?
-  const [pxTable, setPxTable] = useState<PxTable | null>(null); // TODO: Is this needed? For a soft reset of the tabel view maybe?
+  const [pxTable, setPxTable] = useState<PxTable | null>(null);
   const [pxTableToRender, setPxTableToRender] = useState<PxTable | null>(null);
   const [selectedVBValues, setSelectedVBValues] = useState<SelectedVBValues[]>(
     []
@@ -230,7 +225,7 @@ export function App() {
       return;
     }
 
-    //  TODO: Incomplete selectItem, maybe throw an error? This should not happen
+    //  Incomplete selectItem
     if (!selectedItem.label || !selectedItem.value) {
       return;
     }
@@ -249,47 +244,33 @@ export function App() {
       selectedItem?.value
     );
 
-    if (pxTableToRender !== null) {
-      const newPxTableToRender: PxTable = structuredClone(pxTableToRender);
+    if (pxTableToRender === null || valuesForChosenCodeList.length < 1) {
+      return;
+    }
 
-      pxTableToRender.variables.forEach((variable) => {
-        if (variable.codeLists) {
-          variable.codeLists.forEach((codelist) => {
-            if (codelist.id === selectedItem?.value) {
-              for (
-                let i = 0;
-                i < newPxTableToRender.variables.length - 1;
-                i++
-              ) {
-                if (newPxTableToRender.variables[i].id === variable.id) {
-                  if (valuesForChosenCodeList.length > 0) {
-                    newPxTableToRender.variables[i].values =
-                      valuesForChosenCodeList;
+    const newPxTableToRender: PxTable = structuredClone(pxTableToRender);
 
-                    break;
-                  }
+    newPxTableToRender.variables.forEach((variable) => {
+      if (!variable.codeLists) {
+        return;
+      }
 
-                  // TODO: How to handle this? No values in response from API. Not possible, there will always be values?
-                  console.error(
-                    "Table: '" +
-                      pxTableToRender.id +
-                      "' Variable: '" +
-                      variable.id +
-                      "' CodeList: '" +
-                      codelist.id +
-                      "' has no values"
-                  );
+      variable.codeLists.forEach((codelist) => {
+        if (codelist.id !== selectedItem?.value) {
+          return;
+        }
 
-                  break;
-                }
-              }
-            }
-          });
+        for (let i = 0; i < newPxTableToRender.variables.length - 1; i++) {
+          if (newPxTableToRender.variables[i].id !== variable.id) {
+            continue;
+          }
+
+          newPxTableToRender.variables[i].values = valuesForChosenCodeList;
         }
       });
+    });
 
-      setPxTableToRender(newPxTableToRender);
-    }
+    setPxTableToRender(newPxTableToRender);
   }
 
   const handleMixedCheckboxChange = (
@@ -392,16 +373,6 @@ export function App() {
     return dummyValues;
   };
 
-  const handleVBReset = () => {
-    // TODO: Do we need this?
-    if (pxTableToRender !== null) {
-      setPxTableToRender(null);
-    }
-    if (selectedVBValues.length > 0) {
-      setSelectedVBValues([]);
-    }
-  };
-
   const getData = (id: string) => {
     const url =
       'https://api.scb.se/OV0104/v2beta/api/v2/tables/' +
@@ -439,7 +410,6 @@ export function App() {
         Get table
       </Button>
       <div className={styles.variableBoxContainer}>
-        {/* TODO: I think the warning in the console about unique IDs is the variable.id below*/}
         {pxTableToRender &&
           pxTableToRender.variables.length > 0 &&
           pxTableToRender.variables.map(
