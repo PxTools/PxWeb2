@@ -15,7 +15,7 @@ export const Default: StoryFn<typeof Radio> = () => {
       options={[
         { label: 'Label', value: 'opt1' }        
       ]}
-      onChange={undefined}>                
+      onChange={undefined}>                     
     </Radio>    
   );
 };
@@ -28,14 +28,17 @@ export const Variants: StoryFn<typeof Radio> = () => {
         options={[
           { label: 'Pest', value: 'option1' }        
         ]}
-        onChange={undefined}>            
+        onChange={undefined}
+        selectedOption='option1'>                   
       </Radio>    
       <Radio
         name='radio2'
         options={[
           { label: 'Kolera', value: 'option2' }        
         ]}
-        onChange={undefined}>       
+        onChange={undefined}
+        selectedOption='option2'>
+          
       </Radio>    
       </>
   );}

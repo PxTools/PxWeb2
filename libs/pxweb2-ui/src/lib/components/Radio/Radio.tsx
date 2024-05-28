@@ -11,12 +11,15 @@ export interface RadioProps extends React.InputHTMLAttributes<HTMLInputElement> 
   name: string;
   options: SelectOption[];
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  selectedOption?: string;
 }
 
 export function Radio({
   name,
   options,
   onChange, 
+  selectedOption,
+
 }: RadioProps) {
   return (
     <div className={cl(classes.radioGroup)}>
@@ -31,6 +34,7 @@ export function Radio({
               value={option.value}
               key={option.value}
               onChange={onChange}
+              checked={option.value === selectedOption}
             />
             <span className={cl(classes.checkmark)}></span>            
           </div>   

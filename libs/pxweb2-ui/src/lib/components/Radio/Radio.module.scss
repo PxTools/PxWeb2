@@ -4,7 +4,7 @@
   
   .container {
       display: flex;
-      width: 350px;
+      width: 340px;
       padding: 10px var(--spacing-2, 8px);
       position: relative;
       padding-left: 44px;
@@ -76,7 +76,7 @@
    
   }
   
-  .container input:checked ~ .checkmark:after {
+  .container input:checked ~ .checkmark::after {
     top: 3px;
     left: 3px;
     display: block;
@@ -87,3 +87,4 @@
     height: 14px;
     flex-shrink: 0;
   }
+  
