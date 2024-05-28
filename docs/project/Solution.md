@@ -1,7 +1,7 @@
 # PxWeb solution
 ## WCAG and Search Engine Optimization (SEO)
 - The new interface will follow the rules for A and AA in [WCAG 2.1](https://www.w3.org/TR/WCAG21/)
-- SEO is the use of methods that achieve beter visibility or "ranking" on search engines result page.
+- SEO is the use of methods that achieve better visibility or "ranking" on search engines result page.
 ## PxWeb 2.0 designsystem
 We build a design system that can be used by all so the same components can be used for all px products so they get a common expression and be recognizable. 
 [Design system in Storybook](https://pxweb2.pages.dev/storybook/)
