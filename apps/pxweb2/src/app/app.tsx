@@ -349,9 +349,7 @@ export function App() {
         );
         setPxTableMetadata(pxTabMetadata);
 
-        if (pxTableMetaToRender !== null) {
-          setPxTableMetaToRender(null);
-        }
+        handleVBReset();
 
         setErrorMsg('');
       })
@@ -361,6 +359,15 @@ export function App() {
       });
     getData(id);
   };
+
+  function handleVBReset() {
+    if (selectedVBValues.length > 0) {
+      setSelectedVBValues([]);
+    }
+    if (pxTableMetaToRender !== null) {
+      setPxTableMetaToRender(null);
+    }
+  }
 
   const getCodeListValues = (id: string) => {
     /* TODO: Implement querying the API */
