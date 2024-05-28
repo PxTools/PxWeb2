@@ -18,12 +18,14 @@ export function Table({ pxtable }: TableProps) {
   const tableMeta: columnRowMeta = calculateRowAndColumnMeta(pxtable);
   console.log(tableMeta);
   const tableColumnSize: number = tableMeta.columns - tableMeta.columnOffset;
-  const headingDataCellCodes = new Array<DataCellCodes>(tableColumnSize);  // Contains header variable and value codes for each column in the table
-  for (let i = 0; i < tableColumnSize; i++){
-    const datacellCodes:DataCellCodes= new Array<DataCellMeta>(pxtable.heading.length);
-    for (let j = 0; j < pxtable.heading.length ; j++){
-      const obj:DataCellMeta={varId:"",valCode:"",varPos:0}
-      datacellCodes[j] = obj  // add empty object
+  const headingDataCellCodes = new Array<DataCellCodes>(tableColumnSize); // Contains header variable and value codes for each column in the table
+  for (let i = 0; i < tableColumnSize; i++) {
+    const datacellCodes: DataCellCodes = new Array<DataCellMeta>(
+      pxtable.heading.length
+    );
+    for (let j = 0; j < pxtable.heading.length; j++) {
+      const obj: DataCellMeta = { varId: '', valCode: '', varPos: 0 };
+      datacellCodes[j] = obj; // add empty object
     }
     headingDataCellCodes[i] = datacellCodes;
   }
@@ -32,7 +34,7 @@ export function Table({ pxtable }: TableProps) {
   return (
     <>
       <table>
-        <thead>{createHeading(pxtable, tableMeta,headingDataCellCodes)}</thead>
+        <thead>{createHeading(pxtable, tableMeta, headingDataCellCodes)}</thead>
         <tbody>{createRows(pxtable, tableMeta)}</tbody>
       </table>
 
@@ -109,7 +111,7 @@ export function Table({ pxtable }: TableProps) {
 export function createHeading(
   table: PxTable,
   tableMeta: columnRowMeta,
-  headingDataCellCodes:DataCellCodes[]
+  headingDataCellCodes: DataCellCodes[]
 ): JSX.Element[] {
   // Number of times to add all values for a variable, default to 1 for first header row
   let repetitionsCurrentHeaderLevel = 1;
@@ -137,7 +139,7 @@ export function createHeading(
     columnSpan = columnSpan / table.heading[idxHeadingLevel].values.length;
 
     const variable = table.heading[idxHeadingLevel];
-
+    let columnIndex = 0;
     // Repeat for number of times in repetion, first time only once
     for (
       let idxRepetitionCurrentHeadingLevel = 1;
@@ -145,10 +147,16 @@ export function createHeading(
       idxRepetitionCurrentHeadingLevel++
     ) {
       // loop trough all the values for the header variable
-      for (let j = 0; j < variable.values.length; j++) {
+      for (let i = 0; i < variable.values.length; i++) {
         headerRow.push(
-          <th colSpan={columnSpan}>{variable.values[j].label}</th>
+          <th colSpan={columnSpan}>{variable.values[i].label}</th>
         );
+        for (let j = 0; j < columnSpan; j++) {
+          headingDataCellCodes[columnIndex][idxHeadingLevel].varId=variable.id;
+          headingDataCellCodes[columnIndex][idxHeadingLevel].valCode=variable.values[i].code;
+          headingDataCellCodes[columnIndex][idxHeadingLevel].varPos=0;
+          columnIndex++;
+        }
       }
     }
 
