@@ -1,90 +1,85 @@
 @use '../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixed;
 @use '../../text-styles.scss';
 
-  
-  .container {
-      display: flex;
-      width: 340px;
-      padding: 10px var(--spacing-2, 8px);
-      position: relative;
-      padding-left: 44px;
-      margin-top: 10px;
-      margin-bottom: 10px;
-      font-family: PxWeb-font-400;
-      letter-spacing: 0em;
-      color: var(--px-color-text-default);
-      line-height: 24px;
-      font-size: 16px;
-      
-      &:hover {
-        border-radius: var(--border-radius-small, 4px);
-        background: var(--px-color-surface-subtle-hover);
-      }
+.container {
+  display: flex;
+  width: 340px;
+  padding: 10px var(--spacing-2, 8px);
+  position: relative;
+  padding-left: 44px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-family: PxWeb-font-400;
+  letter-spacing: 0em;
+  color: var(--px-color-text-default);
+  line-height: 24px;
+  font-size: 16px;
 
-      &:active{
-        border-radius: var(--border-radius-small, 4px);
-        background: var(--px-color-surface-subtle-active);
-      }
-    
-    &:focus{
-        border-radius: var(--border-radius-small, 4px);
-        background: var(--px-color-surface-subtle-hover-active);
-    }
-
+  &:hover {
+    border-radius: var(--border-radius-small, 4px);
+    background: var(--px-color-surface-subtle-hover);
   }
-  
-  .radioGroup{
-    display: flex;    
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;  
+
+  &:active {
+    border-radius: var(--border-radius-small, 4px);
+    background: var(--px-color-surface-subtle-active);
+  }
+
+  &:focus {
+    border-radius: var(--border-radius-small, 4px);
+    background: var(--px-color-surface-subtle-hover-active);
+  }
 }
 
+.radioGroup {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
 
-  .divider {
-    padding: 10px var(--spacing-2, 8px);
-    align-items: flex-start; gap: var(--spacing-3, 12px);
-    gap: var(--spacing-3, 12px);
-  }
+.divider {
+  padding: 10px var(--spacing-2, 8px);
+  align-items: flex-start;
+  gap: var(--spacing-3, 12px);
+  gap: var(--spacing-3, 12px);
+}
 
-  .container input {
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  border-radius: var(--px-border-radius-xlarge);
+  border: 2px solid var(--px-color-text-default);
+  background: var(--color-surface-default, #FFF);
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 8px;
+
+  &::after {
+    content: "";
     position: absolute;
-    opacity: 0;
-    cursor: pointer;
+    display: none;
   }
-  
-  .checkmark {
-    position: absolute;
-    top: 0;
-    left: 0;    
-    width: 20px;
-    height: 20px;
-    flex-shrink: 0;
-    border-radius: var(--px-border-radius-xlarge);
-    border: 2px solid var(--px-color-text-default);    
-    background: var(--color-surface-default, #FFF);
-    margin-top: 10px;
-    margin-bottom: 10px;
-    margin-left: 8px;
+}
 
-    &::after
-    {
-      content: "";
-      position: absolute;
-      display: none;
-    }
-   
-  }
-  
-  .container input:checked ~ .checkmark::after {
-    top: 3px;
-    left: 3px;
-    display: block;
-    border-radius: 50%;
-    background: var(--color-surface-action, #274247);   
-    background: var(--px-color-text-default);   
-    width: 14px;
-    height: 14px;
-    flex-shrink: 0;
-  }
-  
+.container input:checked ~ .checkmark::after {
+  top: 3px;
+  left: 3px;
+  display: block;
+  border-radius: 50%;
+  background: var(--color-surface-action, #274247);
+  background: var(--px-color-text-default);
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
