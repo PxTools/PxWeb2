@@ -14,7 +14,7 @@ type MappedCodeList = {
   value: string;
   label: string;
 };
-type VariableBoxPropsToContent = Omit<VariableBoxProps, 'id' | 'mandatory'>;
+type VariableBoxPropsToContent = Omit<VariableBoxProps, 'id' | 'mandatory' | 'tableId'>;
 
 /* eslint-disable-next-line */
 type VariableBoxContentProps = VariableBoxPropsToContent & {

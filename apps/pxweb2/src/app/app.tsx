@@ -431,6 +431,7 @@ export function App() {
               variable.id && (
                 <VariableBox
                   id={variable.id}
+                  tableId={pxTableMetaToRender.id}
                   label={variable.label}
                   mandatory={variable.mandatory}
                   values={variable.values}

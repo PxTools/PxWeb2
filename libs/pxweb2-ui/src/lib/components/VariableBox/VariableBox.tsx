@@ -18,6 +18,7 @@ export type SelectedVBValues = {
 export type VariableBoxPropsBase = Omit<Variable, 'type' | 'notes'>;
 
 export type VariableBoxProps = VariableBoxPropsBase & {
+  tableId: string;
   onChangeCodeList: (
     selectedItem: SelectOption | undefined,
     varId: string
@@ -29,6 +30,7 @@ export type VariableBoxProps = VariableBoxPropsBase & {
 
 export function VariableBox({
   id,
+  tableId,
   label,
   mandatory = false,
   values,
@@ -39,6 +41,7 @@ export function VariableBox({
   onChangeMixedCheckbox,
 }: VariableBoxProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [prevTableId, setPrevTableId] = useState<string>(tableId);
 
   const capitalizedVariableName =
     label.charAt(0).toUpperCase() + label.slice(1);
@@ -47,6 +50,11 @@ export function VariableBox({
   const chosenValuesLength = selectedValues.find(
     (variables) => variables.id === id
   )?.values.length;
+
+  if (prevTableId !== tableId) {
+    setIsOpen(false);
+    setPrevTableId(tableId);
+  }
 
   if (chosenValuesLength !== undefined) {
     totalChosenValues = chosenValuesLength;
