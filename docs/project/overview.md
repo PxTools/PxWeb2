@@ -13,7 +13,23 @@ The user interface in PxWeb can no longer be further developed effectively due t
 - The project will test and establish good and sustained collaboration processes between SCB and SSB at both operational level and management level in the further development of PX-tools
 
 
-## Organization
+## Organization (under arbete)
+
+### Steering group
+
+### Project team
+Projektteam fulltid designer
+3.5 utvecklarresurser
+1 tech lead
+Arkitekter
+Testledare testare och specialistkompetenser
+
+Nordiska länderna är med
+
+## Contact for questions and comments
+Project leader: Kristin Glomsås
+Scrum master: Åsa Arrhén
+
 
 
 
