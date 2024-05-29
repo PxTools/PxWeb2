@@ -32,79 +32,10 @@ export function Table({ pxtable }: TableProps) {
 
   console.log(headingDataCellCodes);
   return (
-    <>
-      <table>
-        <thead>{createHeading(pxtable, tableMeta, headingDataCellCodes)}</thead>
-        <tbody>{createRows(pxtable, tableMeta)}</tbody>
-      </table>
-
-      <br />
-
-      <table>
-        <thead>
-          <tr>
-            <th>-</th>
-            <th colSpan={2} key="">
-              var1-val1
-            </th>
-            <th colSpan={2} key="">
-              var1-val2
-            </th>
-          </tr>
-          <tr>
-            <th>-</th>
-            <th key="">var2-val1</th>
-            <th key="">var2-val2</th>
-            <th key="">var2-val1</th>
-            <th key="">var2-val2</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th>var3-val1</th>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <th>--var4-val1</th>
-            <td>11</td>
-            <td>11</td>
-            <td>11</td>
-            <td>11</td>
-          </tr>
-          <tr>
-            <th>--var4-val2</th>
-            <td>22</td>
-            <td>22</td>
-            <td>22</td>
-            <td>22</td>
-          </tr>
-          <tr>
-            <th>var3-val2</th>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <th>--var4-val1</th>
-            <td>33</td>
-            <td>33</td>
-            <td>33</td>
-            <td>33</td>
-          </tr>
-          <tr>
-            <th>--var4-val2</th>
-            <td>44</td>
-            <td>44</td>
-            <td>44</td>
-            <td>44</td>
-          </tr>
-        </tbody>
-      </table>
-    </>
+    <table>
+      <thead>{createHeading(pxtable, tableMeta, headingDataCellCodes)}</thead>
+      <tbody>{createRows(pxtable, tableMeta)}</tbody>
+    </table>
   );
 }
 
@@ -152,9 +83,11 @@ export function createHeading(
           <th colSpan={columnSpan}>{variable.values[i].label}</th>
         );
         for (let j = 0; j < columnSpan; j++) {
-          headingDataCellCodes[columnIndex][idxHeadingLevel].varId=variable.id;
-          headingDataCellCodes[columnIndex][idxHeadingLevel].valCode=variable.values[i].code;
-          headingDataCellCodes[columnIndex][idxHeadingLevel].varPos=0;
+          headingDataCellCodes[columnIndex][idxHeadingLevel].varId =
+            variable.id;
+          headingDataCellCodes[columnIndex][idxHeadingLevel].valCode =
+            variable.values[i].code;
+          headingDataCellCodes[columnIndex][idxHeadingLevel].varPos = 0;  //TODO get varPos
           columnIndex++;
         }
       }
@@ -176,18 +109,19 @@ export function createRows(
   tableMeta: columnRowMeta
 ): JSX.Element[] {
   const tableRows: JSX.Element[] = [];
-
+  const datacellCodes: DataCellCodes = new Array<DataCellMeta>();
   if (table.stub.length > 0) {
     createRow(
       0,
       tableMeta.rows - tableMeta.rowOffset,
       table,
       tableMeta,
+      datacellCodes,
       tableRows
     );
   } else {
     const tableRow: JSX.Element[] = [];
-    fillData(table, tableMeta, tableRow);
+    fillData(table, tableMeta, datacellCodes, tableRow);
     tableRows.push(<tr>{tableRow}</tr>);
   }
 
@@ -199,6 +133,7 @@ function createRow(
   rowSpan: number,
   table: PxTable,
   tableMeta: columnRowMeta,
+  stubDataCellCodes: DataCellCodes,
   tableRows: JSX.Element[]
 ): JSX.Element[] {
   // Calculate the rowspan for all the cells to add in this call
@@ -209,8 +144,12 @@ function createRow(
   // Loop through all the values in the stub variable
   for (let i = 0; i < table.stub[stubIndex].values.length; i++) {
     const val = table.stub[stubIndex].values[i];
-    console.log(val.label);
-
+    const cellMeta: DataCellMeta = {
+      varId: table.stub[stubIndex].id,
+      valCode: val.code,
+      varPos: 0,
+    }; //todo get varPos
+    stubDataCellCodes.push(cellMeta);
     // Fix the rowspan
     if (rowSpan === 0) {
       rowSpan = 1;
@@ -224,13 +163,23 @@ function createRow(
       fillEmpty(tableMeta, tableRow);
       tableRows.push(<tr>{tableRow}</tr>);
       tableRow = [];
+
       // Create a new row for the next stub
-      createRow(stubIndex + 1, rowSpan, table, tableMeta, tableRows);
+      createRow(
+        stubIndex + 1,
+        rowSpan,
+        table,
+        tableMeta,
+        stubDataCellCodes,
+        tableRows
+      );
+      stubDataCellCodes.pop();
     } else {
       // If no more stubs need to add headers then fill the row with data
-      fillData(table, tableMeta, tableRow);
+      fillData(table, tableMeta, stubDataCellCodes, tableRow);
       tableRows.push(<tr>{tableRow}</tr>);
       tableRow = [];
+      stubDataCellCodes.pop();
     }
   }
 
@@ -253,6 +202,7 @@ function fillEmpty(tableMeta: columnRowMeta, tableRow: JSX.Element[]): void {
 function fillData(
   table: PxTable,
   tableMeta: columnRowMeta,
+  stubDataCellCodes: DataCellCodes,
   tableRow: JSX.Element[]
 ): void {
   // Loop through cells that need to be added to the row
