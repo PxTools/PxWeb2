@@ -10,16 +10,26 @@
   border: 2px solid transparent;
 
   &:hover,
-  &:focus-within,
   &:focus-visible {
     border-radius: var(--px-border-radius-large);
     border: 2px solid var(--px-color-border-action);
   }
 
   &:hover .header-icon,
-  &:focus-within .header-icon,
   &:focus-visible .header-icon {
     border-radius: var(--px-border-radius-medium);
     background: var(--px-color-surface-action-subtle-hover);
   }
+}
+
+// header-icon style moved here because the hover effect needs to be applied when the parent is hovered
+// This won't work if the style is in the child components scss file, since css classes are made unique by with a hash
+.header-icon {
+  /* Layout */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 2.75rem;
+  height: 2.75rem;
 }
