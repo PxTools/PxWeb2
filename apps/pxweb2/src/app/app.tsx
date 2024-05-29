@@ -188,9 +188,12 @@ export function App() {
   const [selectedNavigationView, setSelectedNavigationView] =
     useState<NavigationItem>('none');
   const [pxData, setPxData] = useState<string | null>('');
+
+  // Initial metadata from the api
   const [pxTableMetadata, setPxTableMetadata] =
     useState<PxTableMetadata | null>(null);
   const [pxTableMetaToRender, setPxTableMetaToRender] =
+    // Metadata to render in the UI
     useState<PxTableMetadata | null>(null);
   const [selectedVBValues, setSelectedVBValues] = useState<SelectedVBValues[]>(
     []

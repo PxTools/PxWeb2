@@ -7,6 +7,7 @@ describe('VariableBox', () => {
     const { baseElement } = render(
       <VariableBox
         id={'test-1'}
+        tableId={'test-tableid-1'}
         label={'test-1'}
         mandatory={false}
         values={[{ code: 'test-1', label: 'test-1' }]}
