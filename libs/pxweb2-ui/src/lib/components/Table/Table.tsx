@@ -34,7 +34,7 @@ export function Table({ pxtable }: TableProps) {
   return (
     <table>
       <thead>{createHeading(pxtable, tableMeta, headingDataCellCodes)}</thead>
-      <tbody>{createRows(pxtable, tableMeta)}</tbody>
+      <tbody>{createRows(pxtable, tableMeta, headingDataCellCodes)}</tbody>
     </table>
   );
 }
@@ -106,7 +106,8 @@ export function createHeading(
 
 export function createRows(
   table: PxTable,
-  tableMeta: columnRowMeta
+  tableMeta: columnRowMeta,
+  headingDataCellCodes: DataCellCodes[]
 ): JSX.Element[] {
   const tableRows: JSX.Element[] = [];
   const datacellCodes: DataCellCodes = new Array<DataCellMeta>();
@@ -117,11 +118,12 @@ export function createRows(
       table,
       tableMeta,
       datacellCodes,
+      headingDataCellCodes,
       tableRows
     );
   } else {
     const tableRow: JSX.Element[] = [];
-    fillData(table, tableMeta, datacellCodes, tableRow);
+    fillData(table, tableMeta, datacellCodes, headingDataCellCodes, tableRow);
     tableRows.push(<tr>{tableRow}</tr>);
   }
 
@@ -134,6 +136,7 @@ function createRow(
   table: PxTable,
   tableMeta: columnRowMeta,
   stubDataCellCodes: DataCellCodes,
+  headingDataCellCodes: DataCellCodes[],
   tableRows: JSX.Element[]
 ): JSX.Element[] {
   // Calculate the rowspan for all the cells to add in this call
@@ -171,12 +174,13 @@ function createRow(
         table,
         tableMeta,
         stubDataCellCodes,
+        headingDataCellCodes,
         tableRows
       );
       stubDataCellCodes.pop();
     } else {
       // If no more stubs need to add headers then fill the row with data
-      fillData(table, tableMeta, stubDataCellCodes, tableRow);
+      fillData(table, tableMeta, stubDataCellCodes, headingDataCellCodes, tableRow);
       tableRows.push(<tr>{tableRow}</tr>);
       tableRow = [];
       stubDataCellCodes.pop();
@@ -203,22 +207,35 @@ function fillData(
   table: PxTable,
   tableMeta: columnRowMeta,
   stubDataCellCodes: DataCellCodes,
+  headingDataCellCodes: DataCellCodes[],
   tableRow: JSX.Element[]
 ): void {
   // Loop through cells that need to be added to the row
   const maxCols = tableMeta.columns - tableMeta.columnOffset;
 
   for (let i = 0; i < maxCols; i++) {
+    const colDataCellCodes = headingDataCellCodes[i];
+    const tmpDataCellCodes = colDataCellCodes.concat(stubDataCellCodes);
+    console.log({tmpDataCellCodes});
+
+    const dimensions: string[] = [];
+    for (let j = 0; j < tmpDataCellCodes.length; j++) {
+      dimensions.push(tmpDataCellCodes[j].valCode);
+    }
+
     // TODO: Get the right data...
-    const dataValue = getPxTableData(table.data, [
-      'R_2',
-      '2',
-      '3',
-      '2',
-      '1970',
-    ]);
+    // const dataValue = getPxTableData(table.data, [
+    //   'R_2',
+    //   '2',
+    //   '3',
+    //   '2',
+    //   '1970',
+    // ]);    
+    const dataValue = getPxTableData(table.data, dimensions);
     tableRow.push(<td>{dataValue}</td>);
   }
 }
+
+
 
 export default Table;

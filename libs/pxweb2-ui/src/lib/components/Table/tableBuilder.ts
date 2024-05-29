@@ -45,7 +45,7 @@ export function fakeData(
         if (dimensionIndex === table?.metadata.variables.length - 1) {
             table.metadata.variables[dimensionIndex].values.forEach(value => {
                 dimensions[dimensionIndex] = value.code;
-                setPxTableData(table.data, dimensions, ++data);              
+                setPxTableData(table.data, dimensions, getNumber());              
             });
         } else {
             table?.metadata.variables[dimensionIndex].values.forEach(value => {
@@ -55,5 +55,10 @@ export function fakeData(
         }
 }
 
- 
+ let number = 0;
+
+ function getNumber() : number {
+    number = number + 1;
+    return number;  
+ }
 
