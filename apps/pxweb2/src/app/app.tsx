@@ -60,6 +60,7 @@ export function App() {
           data: {
             cube: {},
             variableOrder: [],
+            isLoaded: false
           },
           stub: [],
           heading: [],
@@ -157,11 +158,13 @@ export function App() {
       data: {
         cube: {},
         variableOrder: ['Region', 'Alder', 'Civilstatus', 'Kon', 'TIME'],
+        isLoaded: false
       },
       heading: [variables[0], variables[1]],
       stub: [variables[2], variables[3], variables[4]],
     };
     fakeData(table, [], 0, 0);
+    table.data.isLoaded = true;
     setPxTable(table);
   };
 
@@ -232,7 +235,7 @@ export function App() {
           <NavigationBar onChange={changeSelected} selected={selected} />
         </div>
         <Content topLeftBorderRadius={selected === 'none'}>
-          {pxTable?.data?.variableOrder.length && (
+          {pxTable?.data?.isLoaded && (
             <div>
               <Table pxtable={pxTable} />
             </div>

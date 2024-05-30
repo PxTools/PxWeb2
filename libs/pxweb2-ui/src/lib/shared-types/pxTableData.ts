@@ -1,6 +1,7 @@
 export type PxTableData = {
   cube: PxData<number>;
   variableOrder: string[];
+  isLoaded: boolean;
 };
 
 export type PxData<T> = {
