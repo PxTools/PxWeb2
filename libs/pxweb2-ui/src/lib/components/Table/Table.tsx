@@ -1,4 +1,3 @@
-import { table } from 'console';
 import { PxTable } from '../../shared-types/pxTable';
 import { calculateRowAndColumnMeta, columnRowMeta } from './columnRowMeta';
 import { getPxTableData } from './tableBuilder';
@@ -16,7 +15,7 @@ type DataCellCodes = DataCellMeta[];
 
 export function Table({ pxtable }: TableProps) {
   const tableMeta: columnRowMeta = calculateRowAndColumnMeta(pxtable);
-  console.log(tableMeta);
+  console.log({ tableMeta });
   const tableColumnSize: number = tableMeta.columns - tableMeta.columnOffset;
   const headingDataCellCodes = new Array<DataCellCodes>(tableColumnSize); // Contains header variable and value codes for each column in the table
   for (let i = 0; i < tableColumnSize; i++) {
@@ -30,7 +29,7 @@ export function Table({ pxtable }: TableProps) {
     headingDataCellCodes[i] = datacellCodes;
   }
 
-  console.log(headingDataCellCodes);
+  console.log({ headingDataCellCodes });
   return (
     <table>
       <thead>{createHeading(pxtable, tableMeta, headingDataCellCodes)}</thead>
@@ -87,7 +86,8 @@ export function createHeading(
             variable.id;
           headingDataCellCodes[columnIndex][idxHeadingLevel].valCode =
             variable.values[i].code;
-          headingDataCellCodes[columnIndex][idxHeadingLevel].varPos = 0;  //TODO get varPos
+          headingDataCellCodes[columnIndex][idxHeadingLevel].varPos =
+            table.data.variableOrder.indexOf(variable.id);
           columnIndex++;
         }
       }
@@ -150,8 +150,8 @@ function createRow(
     const cellMeta: DataCellMeta = {
       varId: table.stub[stubIndex].id,
       valCode: val.code,
-      varPos: 0,
-    }; //todo get varPos
+      varPos: table.data.variableOrder.indexOf(table.stub[stubIndex].id),
+    };
     stubDataCellCodes.push(cellMeta);
     // Fix the rowspan
     if (rowSpan === 0) {
@@ -180,7 +180,13 @@ function createRow(
       stubDataCellCodes.pop();
     } else {
       // If no more stubs need to add headers then fill the row with data
-      fillData(table, tableMeta, stubDataCellCodes, headingDataCellCodes, tableRow);
+      fillData(
+        table,
+        tableMeta,
+        stubDataCellCodes,
+        headingDataCellCodes,
+        tableRow
+      );
       tableRows.push(<tr>{tableRow}</tr>);
       tableRow = [];
       stubDataCellCodes.pop();
@@ -216,11 +222,12 @@ function fillData(
   for (let i = 0; i < maxCols; i++) {
     const colDataCellCodes = headingDataCellCodes[i];
     const tmpDataCellCodes = colDataCellCodes.concat(stubDataCellCodes);
-    console.log({tmpDataCellCodes});
+    //console.log(tmpDataCellCodes);
 
     const dimensions: string[] = [];
     for (let j = 0; j < tmpDataCellCodes.length; j++) {
-      dimensions.push(tmpDataCellCodes[j].valCode);
+      dimensions[tmpDataCellCodes[j].varPos] = tmpDataCellCodes[j].valCode;
+      //dimensions.push(tmpDataCellCodes[j].valCode);
     }
 
     // TODO: Get the right data...
@@ -230,12 +237,10 @@ function fillData(
     //   '3',
     //   '2',
     //   '1970',
-    // ]);    
-    const dataValue = getPxTableData(table.data, dimensions);
+    // ]);
+    const dataValue = getPxTableData(table.data.cube, dimensions);
     tableRow.push(<td>{dataValue}</td>);
   }
 }
-
-
 
 export default Table;

@@ -4,7 +4,7 @@ import { Variable } from './variable';
 
 export type PxTable = {
   metadata: PxTableMetadata;
-  data: PxTableData<number>;
+  data: PxTableData;
   stub: Variable[];
   heading: Variable[];
 };

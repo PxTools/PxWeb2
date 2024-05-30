@@ -1,6 +1,8 @@
-// import { PxTable } from "./pxTable";
+export type PxTableData = {
+  cube: PxData<number>;
+  variableOrder: string[];
+};
 
-export type PxTableData<T> = {
-    [key:string]:PxTableData<T> | T;
-}
-
+export type PxData<T> = {
+  [key: string]: PxData<T> | T;
+};

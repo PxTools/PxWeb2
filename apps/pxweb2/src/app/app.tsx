@@ -2,7 +2,16 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import styles from './app.module.scss';
-import { Button, PxTableMetadata, VariableBox, Variable, Table, VartypeEnum, PxTable, fakeData } from '@pxweb2/pxweb2-ui';
+import {
+  Button,
+  PxTableMetadata,
+  VariableBox,
+  Variable,
+  Table,
+  VartypeEnum,
+  PxTable,
+  fakeData,
+} from '@pxweb2/pxweb2-ui';
 import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
 //import { NumberFormatter } from '../i18n/formatters';
 import { TableService } from '@pxweb2/pxweb2-api-client';
@@ -30,8 +39,6 @@ export function App() {
   const [selected, setSelected] = useState<NavigationItem>('none');
   const [pxData, setPxData] = useState<string | null>('');
 
-
-
   const changeSelected = (newSelected: NavigationItem) => {
     if (selected === newSelected) {
       setSelected('none');
@@ -45,8 +52,18 @@ export function App() {
   const getTable = (id: string) => {
     TableService.getMetadataById(id, i18n.resolvedLanguage)
       .then((tableMetadataResponse) => {
-        const pxTabMetadata: PxTableMetadata = mapTableMetadataResponse(tableMetadataResponse);
-        const pxTable: PxTable = {metadata: pxTabMetadata, data: {}, stub: [], heading: []};
+        const pxTabMetadata: PxTableMetadata = mapTableMetadataResponse(
+          tableMetadataResponse
+        );
+        const pxTable: PxTable = {
+          metadata: pxTabMetadata,
+          data: {
+            cube: {},
+            variableOrder: [],
+          },
+          stub: [],
+          heading: [],
+        };
         setPxTable(pxTable);
         setErrorMsg('');
       })
@@ -81,42 +98,74 @@ export function App() {
 
   const getFakeTable = () => {
     const variables: Variable[] = [
-      {id: "Region", 
-       label: "region", 
-       type: VartypeEnum.GEOGRAPHICAL_VARIABLE, 
-       mandatory: false, 
-      //  values: Array.from(Array(293).keys()).map(i => {return {label: "region_" + (i + 1), code: "R_" + (i + 1) }})},
-       values: Array.from(Array(4).keys()).map(i => {return {label: "region_" + (i + 1), code: "R_" + (i + 1) }})},
-       {id: "Alder", 
-       label: "ålder", 
-       type: VartypeEnum.REGULAR_VARIABLE, 
-       mandatory: false, 
-      //  values: Array.from(Array(65).keys()).map(i => {return {label: "år " + (i + 1), code: "" + (i + 1) }})},
-       values: Array.from(Array(4).keys()).map(i => {return {label: "år " + (i + 1), code: "" + (i + 1) }})},
-       {id: "Civilstatus", 
-       label: "civilstatus", 
-       type: VartypeEnum.REGULAR_VARIABLE, 
-       mandatory: false, 
-       values: Array.from(Array(5).keys()).map(i => {return {label: "CS_" + (i + 1), code: "" + (i + 1) }})},
-       {id: "Kon", 
-       label: "kön", 
-       type: VartypeEnum.REGULAR_VARIABLE, 
-       mandatory: false, 
-       values: Array.from(Array(2).keys()).map(i => {return {label: "G_" + (i + 1), code: "" + (i + 1) }})},
-       {id: "TIME", 
-       label: "tid", 
-       type: VartypeEnum.TIME_VARIABLE, 
-       mandatory: false, 
-       values: Array.from(Array(5).keys()).map(i => {return {label: "" + (1968 + i), code: "" + (1968 + i) }})}
-      ];
+      {
+        id: 'Region',
+        label: 'region',
+        type: VartypeEnum.GEOGRAPHICAL_VARIABLE,
+        mandatory: false,
+        //  values: Array.from(Array(293).keys()).map(i => {return {label: "region_" + (i + 1), code: "R_" + (i + 1) }})},
+        values: Array.from(Array(4).keys()).map((i) => {
+          return { label: 'region_' + (i + 1), code: 'R_' + (i + 1) };
+        }),
+      },
+      {
+        id: 'Alder',
+        label: 'ålder',
+        type: VartypeEnum.REGULAR_VARIABLE,
+        mandatory: false,
+        //  values: Array.from(Array(65).keys()).map(i => {return {label: "år " + (i + 1), code: "" + (i + 1) }})},
+        values: Array.from(Array(4).keys()).map((i) => {
+          return { label: 'år ' + (i + 1), code: '' + (i + 1) };
+        }),
+      },
+      {
+        id: 'Civilstatus',
+        label: 'civilstatus',
+        type: VartypeEnum.REGULAR_VARIABLE,
+        mandatory: false,
+        values: Array.from(Array(5).keys()).map((i) => {
+          return { label: 'CS_' + (i + 1), code: '' + (i + 1) };
+        }),
+      },
+      {
+        id: 'Kon',
+        label: 'kön',
+        type: VartypeEnum.REGULAR_VARIABLE,
+        mandatory: false,
+        values: Array.from(Array(2).keys()).map((i) => {
+          return { label: 'G_' + (i + 1), code: '' + (i + 1) };
+        }),
+      },
+      {
+        id: 'TIME',
+        label: 'tid',
+        type: VartypeEnum.TIME_VARIABLE,
+        mandatory: false,
+        values: Array.from(Array(5).keys()).map((i) => {
+          return { label: '' + (1968 + i), code: '' + (1968 + i) };
+        }),
+      },
+    ];
 
-      const tableMeta : PxTableMetadata = {id: "test01", label: "Test table", variables: variables};
-      const table : PxTable = {metadata: tableMeta, data: {}, heading: [variables[0], variables[1]], stub: [variables[2], variables[3], variables[4]]};
-      fakeData(table, [], 0, 0);
-      setPxTable(table);
-  }
+    const tableMeta: PxTableMetadata = {
+      id: 'test01',
+      label: 'Test table',
+      variables: variables,
+    };
+    const table: PxTable = {
+      metadata: tableMeta,
+      data: {
+        cube: {},
+        variableOrder: ['Region', 'Alder', 'Civilstatus', 'Kon', 'TIME'],
+      },
+      heading: [variables[0], variables[1]],
+      stub: [variables[2], variables[3], variables[4]],
+    };
+    fakeData(table, [], 0, 0);
+    setPxTable(table);
+  };
 
-    const drawerFilter = (
+  const drawerFilter = (
     <>
       <select
         name="tabid"
@@ -182,16 +231,14 @@ export function App() {
         <div className={styles.mobileNavigation}>
           <NavigationBar onChange={changeSelected} selected={selected} />
         </div>
-          <Content topLeftBorderRadius={selected === 'none'}>
-            {pxTable?.data && (
-                <div>
-                  <Table pxtable={pxTable}/>
-                </div>
-              )}
-            {pxData && (
-              <div dangerouslySetInnerHTML={{ __html: pxData }} />
-            )} 
-          </Content>
+        <Content topLeftBorderRadius={selected === 'none'}>
+          {pxTable?.data?.variableOrder.length && (
+            <div>
+              <Table pxtable={pxTable} />
+            </div>
+          )}
+          {pxData && <div dangerouslySetInnerHTML={{ __html: pxData }} />}
+        </Content>
       </div>
     </>
   );
