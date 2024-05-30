@@ -17,12 +17,12 @@ if (location.href.indexOf('localhost') > -1) {
 
 root.render(
   <StrictMode>
-    <TableDataProvider>
-      <VariablesProvider>
+    <VariablesProvider>
+      <TableDataProvider>
         <Suspense fallback={<div>Loading...</div>}>
           <App />
         </Suspense>
-      </VariablesProvider>
-    </TableDataProvider>
+      </TableDataProvider>
+    </VariablesProvider>
   </StrictMode>
 );

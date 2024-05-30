@@ -1,8 +1,8 @@
 import { useContext } from 'react';
-import { VariablesContext, VariablesContextType } from './VariablesProvider';
+import { TableDataContext, TableDataContextType } from './TableDataProvider';
 
-const useTableData = (): VariablesContextType => {
-  const context = useContext(VariablesContext);
+const useTableData = (): TableDataContextType => {
+  const context = useContext(TableDataContext);
   if (context === undefined) {
     throw new Error('useData must be used within a DataProvider');
   }

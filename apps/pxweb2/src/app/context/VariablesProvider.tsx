@@ -10,6 +10,7 @@ export type VariablesContextType = {
   toggleSelectedVariable: (id: string, value: string) => void;
   getSelectedValuesById: (id: string) => string[];
   removeSelectedVariables: (id: string) => void;
+  getUniqueIds: () => string[];
   syncVariables: (values: SelectedVBValues[]) => void;
   toString: () => string;
 };
@@ -31,6 +32,8 @@ export const VariablesContext = createContext<VariablesContextType>({
   removeSelectedVariables: () => {},
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   syncVariables: () => {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  getUniqueIds: () => [],
   toString: () => '',
 });
 
@@ -90,6 +93,14 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
     });
   };
 
+  const getUniqueIds = () => {
+    const unique = new Set<string>();
+    variables.forEach((item) => {
+      unique.add(item.id);
+    });
+    return Array.from(unique);
+  };
+
   const syncVariables = (variables: SelectedVBValues[]) => {
     setVariables(new Map());
     variables.forEach((id) => {
@@ -115,6 +126,7 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
         toggleSelectedVariable,
         getSelectedValuesById,
         removeSelectedVariables,
+        getUniqueIds,
         syncVariables,
         toString,
       }}
