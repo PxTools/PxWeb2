@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import styles from './app.module.scss';
@@ -18,6 +18,7 @@ import NavigationRail from './components/NavigationRail/NavigationRail';
 import { Content } from './components/Content/Content';
 import NavigationBar from './components/NavigationBar/NavigationBar';
 import NavigationDrawer from './components/NavigationDrawer/NavigationDrawer';
+import useVariables from './context/useVariables';
 
 function addSelectedCodeListToVariable(
   currentVariable: SelectedVBValues | undefined,
@@ -181,7 +182,7 @@ export type NavigationItem =
 
 export function App() {
   const { i18n } = useTranslation();
-
+  const variables = useVariables();
   const [tableid, setTableid] = useState('tab638');
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -198,6 +199,10 @@ export function App() {
   const [selectedVBValues, setSelectedVBValues] = useState<SelectedVBValues[]>(
     []
   );
+
+  useEffect(() => {
+    variables.syncVariables(selectedVBValues);
+  }, [selectedVBValues]);
 
   if (pxTableMetaToRender === null && pxTableMetadata !== null) {
     setPxTableMetaToRender(structuredClone(pxTableMetadata));
