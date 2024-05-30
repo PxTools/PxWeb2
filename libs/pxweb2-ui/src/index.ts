@@ -10,7 +10,7 @@ export * from './lib/components/Typography/BodyLong/BodyLong';
 export * from './lib/components/Icon/Icon';
 export * from './lib/components/Search/Search';
 export * from './lib/components/Table/Table';
-export * from './lib/components/Table/tableBuilder';
+export * from './lib/components/Table/cubeHelper';
 export * from './lib/shared-types/codelist';
 export * from './lib/shared-types/codelistType';
 export * from './lib/shared-types/note';

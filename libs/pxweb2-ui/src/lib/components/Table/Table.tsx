@@ -1,10 +1,11 @@
 import { PxTable } from '../../shared-types/pxTable';
 import { calculateRowAndColumnMeta, columnRowMeta } from './columnRowMeta';
-import { getPxTableData } from './tableBuilder';
+import { getPxTableData } from './cubeHelper';
 
 export interface TableProps {
   pxtable: PxTable;
 }
+
 
 type DataCellMeta = {
   varId: string; // id of variable
@@ -15,7 +16,8 @@ type DataCellCodes = DataCellMeta[];
 
 export function Table({ pxtable }: TableProps) {
   const tableMeta: columnRowMeta = calculateRowAndColumnMeta(pxtable);
-  console.log({ tableMeta });
+  //console.log({ tableMeta });
+
   const tableColumnSize: number = tableMeta.columns - tableMeta.columnOffset;
   const headingDataCellCodes = new Array<DataCellCodes>(tableColumnSize); // Contains header variable and value codes for each column in the table
   for (let i = 0; i < tableColumnSize; i++) {
@@ -23,8 +25,8 @@ export function Table({ pxtable }: TableProps) {
       pxtable.heading.length
     );
     for (let j = 0; j < pxtable.heading.length; j++) {
-      const obj: DataCellMeta = { varId: '', valCode: '', varPos: 0 };
-      datacellCodes[j] = obj; // add empty object
+      const dataCellMeta: DataCellMeta = { varId: '', valCode: '', varPos: 0 };
+      datacellCodes[j] = dataCellMeta; // add empty object
     }
     headingDataCellCodes[i] = datacellCodes;
   }
