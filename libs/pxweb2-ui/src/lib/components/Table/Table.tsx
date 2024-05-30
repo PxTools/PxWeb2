@@ -6,12 +6,18 @@ export interface TableProps {
   pxtable: PxTable;
 }
 
-
+/**
+ * Represents the metadata for one dimension of a data cell.
+ */
 type DataCellMeta = {
   varId: string; // id of variable
   valCode: string; // value code
   varPos: number; // variable position in stored data
 };
+
+/**
+ * Represents the metadata for multiple dimensions of a data cell.
+ */
 type DataCellCodes = DataCellMeta[];
 
 export function Table({ pxtable }: TableProps) {
@@ -20,6 +26,9 @@ export function Table({ pxtable }: TableProps) {
 
   const tableColumnSize: number = tableMeta.columns - tableMeta.columnOffset;
   const headingDataCellCodes = new Array<DataCellCodes>(tableColumnSize); // Contains header variable and value codes for each column in the table
+  
+  // Create empty metadata structure for the dimensions in the header. 
+  // This structure will be filled with metadata when the header is created.
   for (let i = 0; i < tableColumnSize; i++) {
     const datacellCodes: DataCellCodes = new Array<DataCellMeta>(
       pxtable.heading.length
@@ -32,6 +41,7 @@ export function Table({ pxtable }: TableProps) {
   }
 
   console.log({ headingDataCellCodes });
+
   return (
     <table>
       <thead>{createHeading(pxtable, tableMeta, headingDataCellCodes)}</thead>
@@ -40,6 +50,15 @@ export function Table({ pxtable }: TableProps) {
   );
 }
 
+
+/**
+ * Creates the heading rows for the table.
+ * 
+ * @param table - The PxTable object representing the table data.
+ * @param tableMeta - The metadata for the table columns and rows.
+ * @param headingDataCellCodes - Empty metadata structure for the dimensions of the header cells.
+ * @returns An array of JSX.Element representing the heading rows.
+ */
 export function createHeading(
   table: PxTable,
   tableMeta: columnRowMeta,
@@ -61,7 +80,7 @@ export function createHeading(
   // Otherwise calculate columnspan start value
   columnSpan = tableMeta.columns - tableMeta.columnOffset;
 
-  // loop trough all the variables in the header - ln 572
+  // loop trough all the variables in the header 
   for (
     let idxHeadingLevel = 0;
     idxHeadingLevel < table.heading.length;
@@ -84,6 +103,7 @@ export function createHeading(
           <th colSpan={columnSpan}>{variable.values[i].label}</th>
         );
         for (let j = 0; j < columnSpan; j++) {
+          // Fill the metadata structure for the dimensions of the header cells
           headingDataCellCodes[columnIndex][idxHeadingLevel].varId =
             variable.id;
           headingDataCellCodes[columnIndex][idxHeadingLevel].valCode =
@@ -106,6 +126,13 @@ export function createHeading(
   return headerRows;
 }
 
+/**
+ * Creates an array of JSX elements representing the rows of a table.
+ * @param table The PxWeb table.
+ * @param tableMeta Metadata of the table structure - rows and columns.
+ * @param headingDataCellCodes  Metadata structure for the dimensions of the header cells.
+ * @returns An array of JSX elements representing the rows of the table.
+ */
 export function createRows(
   table: PxTable,
   tableMeta: columnRowMeta,
@@ -113,6 +140,7 @@ export function createRows(
 ): JSX.Element[] {
   const tableRows: JSX.Element[] = [];
   const datacellCodes: DataCellCodes = new Array<DataCellMeta>();
+
   if (table.stub.length > 0) {
     createRow(
       0,
@@ -132,6 +160,18 @@ export function createRows(
   return tableRows;
 }
 
+/**
+ * Creates the rows for the table based on the stub variables.
+ * 
+ * @param stubIndex - The index of the current stub variable.
+ * @param rowSpan - The rowspan for the cells to add in this call.
+ * @param table - The PxTable object representing the PxWeb table data.
+ * @param tableMeta - The metadata for the table columns and rows.
+ * @param stubDataCellCodes - The metadata structure for the dimensions of the stub cells.
+ * @param headingDataCellCodes - The metadata structure for the dimensions of the header cells.
+ * @param tableRows - An array of JSX.Element representing the rows of the table.
+ * @returns An array of JSX.Element representing the rows of the table.
+ */
 function createRow(
   stubIndex: number,
   rowSpan: number,
@@ -198,7 +238,12 @@ function createRow(
   return tableRows;
 }
 
-// Fills an row with empty cells
+/**
+ * Fills a row with empty cells. This is used when we are not on the last dimension of the stub. No data is available for these cells.
+ * 
+ * @param tableMeta - The metadata for the table columns and rows.
+ * @param tableRow - The array of JSX.Element representing the row of the table.
+ */
 function fillEmpty(tableMeta: columnRowMeta, tableRow: JSX.Element[]): void {
   const emptyText = '';
 
@@ -211,6 +256,15 @@ function fillEmpty(tableMeta: columnRowMeta, tableRow: JSX.Element[]): void {
 }
 
 // Fills a row with data cells
+/**
+ * Fills a row with data cells.
+ * 
+ * @param table - The PxTable object representing the PxWeb table.
+ * @param tableMeta - The metadata for the table columns and rows.
+ * @param stubDataCellCodes - The metadata structure for the dimensions of the stub cells.
+ * @param headingDataCellCodes - The metadata structure for the dimensions of the header cells.
+ * @param tableRow - The array of JSX.Element representing the row of the table.
+ */
 function fillData(
   table: PxTable,
   tableMeta: columnRowMeta,
@@ -222,24 +276,23 @@ function fillData(
   const maxCols = tableMeta.columns - tableMeta.columnOffset;
 
   for (let i = 0; i < maxCols; i++) {
-    const colDataCellCodes = headingDataCellCodes[i];
-    const tmpDataCellCodes = colDataCellCodes.concat(stubDataCellCodes);
-    //console.log(tmpDataCellCodes);
+    // Merge the metadata structure for the dimensions of the stub and header cells
+    const dataCellCodes = stubDataCellCodes.concat(headingDataCellCodes[i]);
+    //console.log(dataCellCodes);
 
     const dimensions: string[] = [];
-    for (let j = 0; j < tmpDataCellCodes.length; j++) {
-      dimensions[tmpDataCellCodes[j].varPos] = tmpDataCellCodes[j].valCode;
-      //dimensions.push(tmpDataCellCodes[j].valCode);
+    // Arrange the dimensons in the right order according to how data is stored is the cube
+    for (let j = 0; j < dataCellCodes.length; j++) {
+      dimensions[dataCellCodes[j].varPos] = dataCellCodes[j].valCode;
     }
 
-    // TODO: Get the right data...
+    // Example of how to get data from the cube (men in Stockholm in 1970):
     // const dataValue = getPxTableData(table.data, [
-    //   'R_2',
-    //   '2',
-    //   '3',
-    //   '2',
+    //   '0180', 
+    //   'men',
     //   '1970',
     // ]);
+
     const dataValue = getPxTableData(table.data.cube, dimensions);
     tableRow.push(<td>{dataValue}</td>);
   }
