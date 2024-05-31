@@ -16,19 +16,27 @@ The user interface in PxWeb can no longer be further developed effectively due t
 ## Organization (under arbete)
 
 ### Steering group
+The steering group consists of managers at Communication and IT in SCB and SSB. 
 
 ### Project team
-Projektteam fulltid designer
-3.5 utvecklarresurser
-1 tech lead
-Arkitekter
-Testledare testare och specialistkompetenser
+The team has participants from both Statistics Sweden and Statistics Norway.
+The team is set up with
+- Project leader
+- Scrum master
+- Architects
+- Designer (UX and UI)
+- Developers
+- Specialists
+- Tech lead
+- Test leader 
+- Testers 
+- 
 
-Nordiska länderna är med
+The other Nordic countries will be involved in tessting and participate at the demos.
 
 ## Contact for questions and comments
-Project leader: Kristin Glomsås
-Scrum master: Åsa Arrhén
+Project leader: Kristin Glomsås, Statistics Norway
+Scrum master: Åsa Arrhén, Statistics Sweden
 
 
 
