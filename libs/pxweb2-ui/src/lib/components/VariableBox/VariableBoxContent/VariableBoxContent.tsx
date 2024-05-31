@@ -6,33 +6,41 @@ import classes from './VariableBoxContent.module.scss';
 import { Checkbox, MixedCheckbox } from '../../Checkbox/Checkbox';
 import Search from '../../Search/Search';
 import { Select, SelectOption } from '../../Select/Select';
-import { Value } from '../../../shared-types/value';
 import { VariableBoxProps } from '../VariableBox';
+
+import { SelectedVBValues } from '../VariableBox';
 
 type MappedCodeList = {
   value: string;
   label: string;
 };
-type VariableBoxPropsToContent = Omit<VariableBoxProps, 'mandatory'>;
+type VariableBoxPropsToContent = Omit<VariableBoxProps, 'id' | 'mandatory' | 'tableId'>;
 
-// TODO: should selectedValues and setSelectedValues be string[] or Value['code'][]?
 /* eslint-disable-next-line */
 type VariableBoxContentProps = VariableBoxPropsToContent & {
-  selectedValues: Value['code'][];
-  setSelectedValues: (values: Value['code'][]) => void;
+  varId: string;
+  selectedValues: SelectedVBValues[];
   totalValues: number;
   totalChosenValues: number;
+  onChangeCodeList: (
+    selectedItem: SelectOption | undefined,
+    varId: string
+  ) => void;
+  onChangeCheckbox: (varId: string, value: string) => void;
+  onChangeMixedCheckbox: (varId: string, allValuesSelected: string) => void;
 };
 
 export function VariableBoxContent({
-  id,
+  varId,
   label,
   values,
   codeLists,
   selectedValues,
-  setSelectedValues,
   totalValues,
   totalChosenValues,
+  onChangeCodeList,
+  onChangeCheckbox,
+  onChangeMixedCheckbox,
 }: VariableBoxContentProps) {
   const { t } = useTranslation();
   const checkboxSelectAllText = t(
@@ -42,7 +50,6 @@ export function VariableBoxContent({
     'presentation_page.sidemenu.selection.variablebox.content.mixed_checkbox.deselect_all'
   );
 
-  // TODO: Do we need 3 states for animating the scrolling? Can we simplify this?
   const [scrolling, setScrolling] = useState<'atTop' | 'up' | 'down'>('atTop');
   const [hasScrolledUp, setHasScrolledUp] = useState(false);
   const [lastScrollPosition, setLastScrollPosition] = useState(0);
@@ -79,24 +86,6 @@ export function VariableBoxContent({
     checkboxSelectAllText,
     checkboxDeselectAllText,
   ]);
-
-  const handleMixedCheckboxChange = () => {
-    if (allValuesSelected === 'true') {
-      setSelectedValues([]);
-    }
-    if (allValuesSelected === 'false' || allValuesSelected === 'mixed') {
-      setSelectedValues(values.map((value) => value.code));
-    }
-  };
-
-  const handleCheckboxChange = (value: Value['code']) => {
-    if (selectedValues.includes(value)) {
-      setSelectedValues(selectedValues.filter((val) => val !== value));
-    }
-    if (!selectedValues.includes(value)) {
-      setSelectedValues([...selectedValues, value]);
-    }
-  };
 
   const handleScroll = () => {
     if (scrollRef.current) {
@@ -139,12 +128,6 @@ export function VariableBoxContent({
     console.log('Search');
   };
 
-  const handleSelectOnChange = (selectedItem: SelectOption | undefined) => {
-    selectedItem
-      ? console.log('Selected option: ' + selectedItem.label)
-      : console.log('No option selected');
-  };
-
   let mappedCodeList: MappedCodeList[] = [];
 
   if (hasCodeLists === true) {
@@ -156,9 +139,13 @@ export function VariableBoxContent({
     });
   }
 
+  const currentVarSelectedCodeList = selectedValues.find(
+    (variable) => variable.id === varId
+  )?.selectedCodeList;
+
   return (
     <div className={cl(classes['variablebox-content'])}>
-      {/* Add the Alert here, see note in figma about it. Need more functionality atm i think */}
+      {/* TODO: Add the Alert here, see note in figma about it. Need more functionality atm i think */}
 
       <div className={cl(classes['variablebox-content-main'])}>
         {hasCodeLists === true && (
@@ -173,13 +160,18 @@ export function VariableBoxContent({
                 'presentation_page.sidemenu.selection.variablebox.content.select.placeholder'
               )}
               options={mappedCodeList}
-              selectedOption={undefined} // TODO: Finish the logic for this. This is the selected option, like "region" or "age". Needs modal with radio logic inside.
-              onChange={handleSelectOnChange}
+              selectedOption={
+                currentVarSelectedCodeList
+                  ? currentVarSelectedCodeList
+                  : undefined
+              }
+              onChange={(selectedItem) => onChangeCodeList(selectedItem, varId)}
             />
           </div>
         )}
 
         <div
+          key={varId + '-values-list'}
           className={cl(
             classes['variablebox-content-values-list'],
             hasSevenOrMoreValues &&
@@ -218,10 +210,10 @@ export function VariableBoxContent({
 
             {hasTwoOrMoreValues && (
               <MixedCheckbox
-                id={id}
+                id={varId}
                 text={mixedCheckboxText}
                 value={allValuesSelected}
-                onChange={handleMixedCheckboxChange}
+                onChange={() => onChangeMixedCheckbox(varId, allValuesSelected)}
                 ariaControls={values.map((value) => value.code)}
                 strong={true}
                 inVariableBox={true}
@@ -233,9 +225,14 @@ export function VariableBoxContent({
             values.map((value) => (
               <Checkbox
                 id={value.code}
-                value={selectedValues.includes(value.code)}
+                value={
+                  selectedValues?.length > 0 &&
+                  selectedValues
+                    .find((variables) => variables.id === varId)
+                    ?.values.includes(value.code) === true
+                }
                 text={value.label}
-                onChange={() => handleCheckboxChange(value.code)}
+                onChange={() => onChangeCheckbox(varId, value.code)}
               />
             ))}
         </div>
