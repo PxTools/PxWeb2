@@ -13,7 +13,7 @@ The user interface in PxWeb can no longer be further developed effectively due t
 - The project will test and establish good and sustained collaboration processes between SCB and SSB at both operational level and management level in the further development of PX-tools
 
 
-## Organization (under arbete)
+## Organization 
 
 ### Steering group
 The steering group consists of managers at Communication and IT in SCB and SSB. 
