@@ -2,7 +2,6 @@ import { i18n } from 'i18next';
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import useVariables from './useVariables';
 import { TableService } from '@pxweb2/pxweb2-api-client';
-import { stringify } from 'querystring';
 
 // Define types for the context state and provider props
 export interface TableDataContextType {
@@ -36,6 +35,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     ids.forEach((id) => {
       valueCodes[id] = variables.getSelectedValuesById(id);
     });
+    console.log(valueCodes);
 
     const res = await TableService.getTableData(
       tableId,

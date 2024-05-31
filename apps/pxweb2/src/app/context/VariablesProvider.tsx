@@ -101,7 +101,37 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
     return Array.from(unique);
   };
 
+  const hasChanges = (newVariables: SelectedVBValues[]) => {
+    const newVars: Set<string> = new Set();
+    newVariables.forEach((variable) => {
+      variable.values.forEach((value) => {
+        newVars.add(variable.id + '-' + value);
+      });
+    });
+
+    if (newVars.size !== variables.size) {
+      return true;
+    }
+
+    variables.forEach((variable, key) => {
+      if (!newVars.has(key)) {
+        return true;
+      }
+    });
+
+    newVars.forEach((val) => {
+      if (!variables.has(val)) {
+        return true;
+      }
+    });
+
+    return false;
+  };
+
   const syncVariables = (variables: SelectedVBValues[]) => {
+    if (!hasChanges(variables)) {
+      return;
+    }
     setVariables(new Map());
     variables.forEach((id) => {
       addSelectedVariables(id.id, id.values);

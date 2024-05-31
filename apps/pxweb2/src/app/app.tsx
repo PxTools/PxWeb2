@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import styles from './app.module.scss';
@@ -189,7 +189,7 @@ export function App() {
   const [errorMsg, setErrorMsg] = useState('');
 
   const [selectedNavigationView, setSelectedNavigationView] =
-    useState<NavigationItem>('none');
+    useState<NavigationItem>('filter');
 
   // Initial metadata from the api
   const [pxTableMetadata, setPxTableMetadata] =
@@ -200,12 +200,31 @@ export function App() {
   const [selectedVBValues, setSelectedVBValues] = useState<SelectedVBValues[]>(
     []
   );
+
   useEffect(() => {
     variables.syncVariables(selectedVBValues);
     tableData.fetchTableData(tableid, i18n);
+  }, [i18n, selectedVBValues, tableid, variables]);
+
+  useEffect(() => {
+    TableService.getMetadataById(tableid, i18n.resolvedLanguage)
+      .then((tableMetadataResponse) => {
+        const pxTabMetadata: PxTableMetadata = mapTableMetadataResponse(
+          tableMetadataResponse
+        );
+        setPxTableMetadata(pxTabMetadata);
+
+        handleVBReset();
+
+        setErrorMsg('');
+      })
+      .catch((error) => {
+        setErrorMsg('Could not get table: ' + tableid);
+        setPxTableMetadata(null);
+      });
     // TODO: Fix this hook to work as intended instead of ignoring it like this
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedVBValues, tableid]);
+  }, [tableid]);
 
   if (pxTableMetaToRender === null && pxTableMetadata !== null) {
     setPxTableMetaToRender(structuredClone(pxTableMetadata));
@@ -350,25 +369,6 @@ export function App() {
 
       setSelectedVBValues(newSelectedValues);
     }
-  };
-
-  const getTable = (id: string) => {
-    TableService.getMetadataById(id, i18n.resolvedLanguage)
-      .then((tableMetadataResponse) => {
-        const pxTabMetadata: PxTableMetadata = mapTableMetadataResponse(
-          tableMetadataResponse
-        );
-        setPxTableMetadata(pxTabMetadata);
-
-        handleVBReset();
-
-        setErrorMsg('');
-      })
-      .catch((error) => {
-        setErrorMsg('Could not get table: ' + id);
-        setPxTableMetadata(null);
-      });
-    tableData.fetchTableData(id, i18n);
   };
 
   function handleVBReset() {
