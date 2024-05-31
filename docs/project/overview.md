@@ -30,8 +30,8 @@ The team is set up with
 - Tech lead
 - Test leader 
 - Testers 
-- 
-
+  
+### Cooperation
 The other Nordic countries will be involved in tessting and participate at the demos.
 
 ## Contact for questions and comments
