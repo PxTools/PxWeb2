@@ -21,6 +21,11 @@ export function setPxTableData<T>(
 ): void {
   let currentLevel: PxData<T> = data;
   dimensions.forEach((dimension, index) => {
+    // Check to avoid prototype pollution
+    if (dimension === '__proto__' || dimension === 'constructor') {
+      throw new Error('Invalid dimension');
+    }
+
     if (index === dimensions.length - 1) {
       currentLevel[dimension] = value;
     } else {
