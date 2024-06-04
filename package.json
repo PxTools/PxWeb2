@@ -8,6 +8,7 @@
     "prebuild": "npm run build-style-dictionary",
     "build": "nx run pxweb2:build && nx run pxweb2-ui:build-storybook",
     "test": "nx run-many -t test -p pxweb2 pxweb2-ui",
+    "lint": "nx run-many -t lint",
     "start-storybook": "npx nx run pxweb2-ui:storybook",
     "build-storybook": "npx nx run pxweb2-ui:build-storybook",
     "build-style-dictionary": "node libs/pxweb2-ui/style-dictionary/build.js",
