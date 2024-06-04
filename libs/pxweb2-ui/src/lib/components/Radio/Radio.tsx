@@ -25,7 +25,6 @@ export function Radio({
     <div className={cl(classes.radioGroup)}>
       {options.map((option) => (      
         <label className={cl(classes.container)} key={option.value}>
-          {option.label}
           <div className={cl(classes.divider)}>
             <input
               type="radio"
@@ -35,8 +34,7 @@ export function Radio({
               key={option.value}
               onChange={onChange}
               checked={option.value === selectedOption}
-            />
-            <span className={cl(classes.checkmark)}></span>            
+            />{option.label}
           </div>   
         </label>    
       ))}
