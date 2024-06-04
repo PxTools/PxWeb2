@@ -16,9 +16,11 @@ interface TableDataProviderProps {
 }
 
 // Create context with default values
-const TableDataContext = createContext<TableDataContextType | undefined>(
-  undefined
-);
+const TableDataContext = createContext<TableDataContextType | undefined>({
+  data: {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  fetchTableData: () => {},
+});
 const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   const [data, setData] = useState<string | null>('');
   const [errorMsg, setErrorMsg] = useState('');
