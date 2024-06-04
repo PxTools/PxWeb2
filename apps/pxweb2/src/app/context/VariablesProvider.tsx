@@ -101,6 +101,11 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
     return Array.from(unique);
   };
 
+  /**
+   * Checks if newVariables introduces changes to the state.
+   * @param newVariables
+   * @returns
+   */
   const hasChanges = (newVariables: SelectedVBValues[]) => {
     const newVars: Set<string> = new Set();
     newVariables.forEach((variable) => {
@@ -109,22 +114,26 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
       });
     });
 
+    // If size is different, there is changes
     if (newVars.size !== variables.size) {
       return true;
     }
 
+    // Check if there is a key that does not exist already
     variables.forEach((variable, key) => {
       if (!newVars.has(key)) {
         return true;
       }
     });
 
+    // Check if there is a key that does not exist already
     newVars.forEach((val) => {
       if (!variables.has(val)) {
         return true;
       }
     });
 
+    // No changes found
     return false;
   };
 

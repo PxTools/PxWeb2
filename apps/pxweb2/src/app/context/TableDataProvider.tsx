@@ -45,7 +45,14 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       undefined,
       'html5_table'
     );
-    setData(res);
+
+    const isoBytes = new Uint8Array(
+      res.split('').map((char) => char.charCodeAt(0))
+    );
+    const decoder = new TextDecoder('iso-8859-1');
+    const tableDataResponse = decoder.decode(isoBytes);
+
+    setData(tableDataResponse);
   };
 
   return (
