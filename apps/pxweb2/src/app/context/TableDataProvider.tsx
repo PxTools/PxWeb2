@@ -37,7 +37,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     ids.forEach((id) => {
       valueCodes[id] = variables.getSelectedValuesById(id);
     });
-    console.log(valueCodes);
 
     const res = await TableService.getTableData(
       tableId,
