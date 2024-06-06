@@ -13,6 +13,10 @@
   border-radius: var(--px-border-radius-xlarge);
   margin-bottom: fixed.$spacing-6;
 
+  .description {
+    max-width: 912px;
+  }
+
   .logos {
     display: flex;
     align-items: center;
@@ -25,8 +29,19 @@
   }
 
   .contactCopyrightWrapper {
-    display: flex;
+    display: block;
     justify-content: space-between;
     align-items: center;
+
+    @media (min-width: fixed.$breakpoints-large-min-width) {
+      display: flex;
+    }
+  }
+
+  .copyright {
+    margin-top: fixed.$spacing-4;
+    @media (min-width: fixed.$breakpoints-large-min-width) {
+      margin-top: initial;
+    }
   }
 }

@@ -12,10 +12,10 @@ export const Footer: React.FC = () => {
         <img alt="SCB logo" src="./images/scb-logo.png" />{' '}
         <img alt="SSB logo" src="./images/ssb-logo.png" />
       </div>
-      <div>
+      <div className={styles.description}>
         <BodyLong>
           {t('presentation_page.footer.description')}{' '}
-          <Link href="https://github.com/PxTools/PxWeb2">
+          <Link target="_blank" href="https://github.com/PxTools/PxWeb2">
             {t('presentation_page.footer.descriptionLink')}
           </Link>
         </BodyLong>
@@ -37,7 +37,7 @@ export const Footer: React.FC = () => {
             </BodyLong>
           </div>
 
-          <div>
+          <div className={styles.copyright}>
             <BodyLong>{t('presentation_page.footer.copyright')}</BodyLong>
           </div>
         </div>
