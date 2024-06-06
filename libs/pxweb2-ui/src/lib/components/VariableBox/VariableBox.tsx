@@ -42,7 +42,7 @@ export function VariableBox({
   onChangeCheckbox,
   onChangeMixedCheckbox,
 }: VariableBoxProps) {
-  const [isOpen, setIsOpen] = useState(initialIsOpen);
+  const [isOpen, setIsOpen] = useState(!!initialIsOpen);
   const [prevTableId, setPrevTableId] = useState<string>(tableId);
 
   const capitalizedVariableName =
