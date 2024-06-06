@@ -4,14 +4,14 @@ import React, { createContext, useState } from 'react';
 // Define the type for the context
 export type VariablesContextType = {
   variables: Map<string, { id: string; value: string }>;
-  addSelectedVariable: (id: string, value: string) => void;
-  addSelectedVariables: (id: string, values: string[]) => void;
-  removeSelectedVariable: (id: string, value: string) => void;
-  toggleSelectedVariable: (id: string, value: string) => void;
-  getSelectedValuesById: (id: string) => string[];
-  removeSelectedVariables: (id: string) => void;
+  addSelectedValue: (variableId: string, value: string) => void;
+  addSelectedValues: (variableId: string, values: string[]) => void;
+  removeSelectedValue: (variableId: string, value: string) => void;
+  toggleSelectedValue: (variableId: string, value: string) => void;
+  getSelectedValuesById: (variableId: string) => string[];
+  removeSelectedValues: (variableId: string) => void;
   getUniqueIds: () => string[];
-  syncVariables: (values: SelectedVBValues[]) => void;
+  syncVariablesAndValues: (values: SelectedVBValues[]) => void;
   toString: () => string;
 };
 
@@ -19,19 +19,19 @@ export type VariablesContextType = {
 export const VariablesContext = createContext<VariablesContextType>({
   variables: new Map(),
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  addSelectedVariable: () => {},
+  addSelectedValue: () => {},
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  addSelectedVariables: () => {},
+  addSelectedValues: () => {},
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  removeSelectedVariable: () => {},
+  removeSelectedValue: () => {},
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  toggleSelectedVariable: () => {},
+  toggleSelectedValue: () => {},
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   getSelectedValuesById: () => [],
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  removeSelectedVariables: () => {},
+  removeSelectedValues: () => {},
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  syncVariables: () => {},
+  syncVariablesAndValues: () => {},
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   getUniqueIds: () => [],
   toString: () => '',
@@ -45,20 +45,28 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
     Map<string, { id: string; value: string }>
   >(new Map());
 
-  const addSelectedVariable = (id: string, value: string) => {
-    setVariables((prev) => new Map(prev).set(id + '-' + value, { id, value }));
+  /**
+   * Adds single value for a given variable
+   */
+  const addSelectedValue = (variableId: string, value: string) => {
+    setVariables((prev) =>
+      new Map(prev).set(variableId + '-' + value, { id: variableId, value })
+    );
   };
 
-  const addSelectedVariables = (id: string, values: string[]) => {
+  /**
+   * Adds multiple values for a given variable
+   */
+  const addSelectedValues = (variableId: string, values: string[]) => {
     values.forEach((value) => {
-      addSelectedVariable(id, value);
+      addSelectedValue(variableId, value);
     });
   };
 
-  const getSelectedValuesById = (id: string) => {
+  const getSelectedValuesById = (variableId: string) => {
     const values: string[] = [];
     variables.forEach((item) => {
-      if (item.id === id) {
+      if (item.id === variableId) {
         values.push(item.value);
       }
     });
@@ -66,28 +74,28 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
     return values;
   };
 
-  const removeSelectedVariable = (id: string, value: string) => {
+  const removeSelectedValue = (variableId: string, value: string) => {
     setVariables((prev) => {
       const newVariables = new Map(prev);
-      newVariables.delete(id + '-' + value);
+      newVariables.delete(variableId + '-' + value);
       return newVariables;
     });
   };
 
-  const removeSelectedVariables = (id: string) => {
-    const values = getSelectedValuesById(id);
+  const removeSelectedValues = (variableId: string) => {
+    const values = getSelectedValuesById(variableId);
     values.forEach((value) => {
-      removeSelectedVariable(id, value);
+      removeSelectedValue(variableId, value);
     });
   };
 
-  const toggleSelectedVariable = (id: string, value: string) => {
+  const toggleSelectedValue = (variableId: string, value: string) => {
     setVariables((prev) => {
       const newVariables = new Map(prev);
-      if (newVariables.has(id + '-' + value)) {
-        newVariables.delete(id + '-' + value);
+      if (newVariables.has(variableId + '-' + value)) {
+        newVariables.delete(variableId + '-' + value);
       } else {
-        newVariables.set(id + '-' + value, { id, value });
+        newVariables.set(variableId + '-' + value, { id: variableId, value });
       }
       return newVariables;
     });
@@ -139,13 +147,13 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
     return false;
   };
 
-  const syncVariables = (variables: SelectedVBValues[]) => {
+  const syncVariablesAndValues = (variables: SelectedVBValues[]) => {
     if (!hasChanges(variables)) {
       return;
     }
     setVariables(new Map());
     variables.forEach((variable) => {
-      addSelectedVariables(variable.id, variable.values);
+      addSelectedValues(variable.id, variable.values);
     });
   };
 
@@ -161,14 +169,14 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
     <VariablesContext.Provider
       value={{
         variables,
-        addSelectedVariable,
-        addSelectedVariables,
-        removeSelectedVariable,
-        toggleSelectedVariable,
+        addSelectedValue,
+        addSelectedValues,
+        removeSelectedValue,
+        toggleSelectedValue,
+        removeSelectedValues,
         getSelectedValuesById,
-        removeSelectedVariables,
         getUniqueIds,
-        syncVariables,
+        syncVariablesAndValues,
         toString,
       }}
     >

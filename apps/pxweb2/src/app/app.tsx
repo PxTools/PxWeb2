@@ -202,8 +202,9 @@ export function App() {
   );
 
   useEffect(() => {
-    variables.syncVariables(selectedVBValues);
+    variables.syncVariablesAndValues(selectedVBValues);
     tableData.fetchTableData(tableid, i18n);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [i18n, selectedVBValues, tableid, variables]);
 
   useEffect(() => {
@@ -413,10 +414,11 @@ export function App() {
         {pxTableMetaToRender &&
           pxTableMetaToRender.variables.length > 0 &&
           pxTableMetaToRender.variables.map(
-            (variable) =>
+            (variable, index) =>
               variable.id && (
                 <VariableBox
                   id={variable.id}
+                  initialIsOpen={index === 0}
                   tableId={pxTableMetaToRender.id}
                   label={variable.label}
                   mandatory={variable.mandatory}

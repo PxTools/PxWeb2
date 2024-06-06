@@ -19,6 +19,7 @@ export type VariableBoxPropsBase = Omit<Variable, 'type' | 'notes'>;
 
 export type VariableBoxProps = VariableBoxPropsBase & {
   tableId: string;
+  initialIsOpen?: boolean;
   onChangeCodeList: (
     selectedItem: SelectOption | undefined,
     varId: string
@@ -30,6 +31,7 @@ export type VariableBoxProps = VariableBoxPropsBase & {
 
 export function VariableBox({
   id,
+  initialIsOpen,
   tableId,
   label,
   mandatory = false,
@@ -40,7 +42,7 @@ export function VariableBox({
   onChangeCheckbox,
   onChangeMixedCheckbox,
 }: VariableBoxProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(initialIsOpen);
   const [prevTableId, setPrevTableId] = useState<string>(tableId);
 
   const capitalizedVariableName =
