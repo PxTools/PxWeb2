@@ -119,14 +119,16 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
       return true;
     }
 
-    // Check if there is a key that does not exist already
+    // Check if there is a key in variables that is missing in newVars.
+    // If it is missing, that means there has been some changes
     variables.forEach((variable, key) => {
       if (!newVars.has(key)) {
         return true;
       }
     });
 
-    // Check if there is a key that does not exist already
+    // Check if newVars has some key that is missing in variables.
+    // If it is missing, that means there has been some changes
     newVars.forEach((val) => {
       if (!variables.has(val)) {
         return true;
@@ -142,8 +144,8 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
       return;
     }
     setVariables(new Map());
-    variables.forEach((id) => {
-      addSelectedVariables(id.id, id.values);
+    variables.forEach((variable) => {
+      addSelectedVariables(variable.id, variable.values);
     });
   };
 
