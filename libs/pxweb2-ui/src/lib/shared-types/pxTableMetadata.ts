@@ -1,5 +1,8 @@
 import { Variable } from './variable';
 
+/**
+ * Represents the metadata of a table in PxWeb.
+ */
 export type PxTableMetadata = {
   /**
    * Identifier for the table.
