@@ -15,7 +15,11 @@ export const Footer: React.FC = () => {
       <div className={styles.description}>
         <BodyLong>
           {t('presentation_page.footer.description')}{' '}
-          <Link target="_blank" href="https://github.com/PxTools/PxWeb2">
+          <Link
+            inline={true}
+            target="_blank"
+            href="https://github.com/PxTools/PxWeb2"
+          >
             {t('presentation_page.footer.descriptionLink')}
           </Link>
         </BodyLong>
@@ -27,13 +31,17 @@ export const Footer: React.FC = () => {
 
         <BodyLong>
           {t('presentation_page.footer.projectLeader')}: Kristin Glomsås,{' '}
-          <Link href="mailto:krg@ssb.no">krg@ssb.no</Link>
+          <Link inline={true} href="mailto:krg@ssb.no">
+            krg@ssb.no
+          </Link>
         </BodyLong>
         <div className={styles.contactCopyrightWrapper}>
           <div>
             <BodyLong>
               {t('presentation_page.footer.scrumMaster')}: Åsa Arrhén,{' '}
-              <Link href="mailto:asa.arrhen@scb.se">asa.arrhen@scb.se</Link>
+              <Link inline={true} href="mailto:asa.arrhen@scb.se">
+                asa.arrhen@scb.se
+              </Link>
             </BodyLong>
           </div>
 
