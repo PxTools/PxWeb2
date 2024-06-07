@@ -8,6 +8,10 @@ import { getConfig } from '../app/util/config/getConfig';
 export const defaultNS = 'translation';
 const config = getConfig();
 
+const supportedLanguages: string[] = config.language.supportedLanguages.map(
+  (item) => item.shorthand
+);
+
 i18n
   .use(HttpApi)
   .use(initReactI18next)
@@ -24,7 +28,7 @@ i18n
     defaultNS,
     // Explicitly tell i18next our
     // supported locales.
-    supportedLngs: config.language.supportedLanguages,
+    supportedLngs: supportedLanguages,
     debug: true,
     interpolation: {
       escapeValue: false,

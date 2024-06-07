@@ -1,6 +1,7 @@
 {
   "meta": {
-    "languageName": "العربية"
+    "languageName": "العربية",
+    "shorthand": "ar"
   },
   "common": {
     "title": "مرحبًا بك في PxWeb 2.0",
