@@ -32,10 +32,15 @@ export const Checkbox: React.FC<CheckboxProps> = ({
       aria-labelledby={id + '-label'}
       className={styles.checkboxWrapper}
       tabIndex={tabIndex ? tabIndex : 0}
-      onKeyDown={(event) => {
+      onKeyUp={(event) => {
         if (event.key === ' ' || event.key === 'Enter') {
           event.preventDefault();
           onChange(!value);
+        }
+      }}
+      onKeyDown={(event) => {
+        if (event.key === ' ' || event.key === 'Enter') {
+          event.preventDefault();
         }
       }}
       onClick={(event) => {
