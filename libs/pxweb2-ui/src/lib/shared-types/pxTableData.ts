@@ -2,21 +2,21 @@
  * Represents the data part for a table in PxWeb2.
  */
 export type PxTableData = {
-        /**
-         * The cube data containing the values for each cell in the table.
-         */
-        cube: PxData<number>;
+  /**
+   * The cube data containing the values for each cell in the table.
+   */
+  cube: PxData<number>;
 
-        /**
-         * The order of the variables in the table data.
-         * When getting or setting values in the cube, the order of the dimensions should be the same as this array.
-         */
-        variableOrder: string[];
+  /**
+   * The order of the variables in the table data.
+   * When getting or setting values in the cube, the order of the dimensions should be the same as this array.
+   */
+  variableOrder: string[];
 
-        /**
-         * Indicates whether the table data has been loaded.
-         */
-        isLoaded: boolean;
+  /**
+   * Indicates whether the table data has been loaded.
+   */
+  isLoaded: boolean;
 };
 
 /**
@@ -42,6 +42,5 @@ export type PxTableData = {
  *    }
  *} */
 export type PxData<T> = {
-    [key: string]: PxData<T> | T;
+  [key: string]: PxData<T> | T;
 };
-

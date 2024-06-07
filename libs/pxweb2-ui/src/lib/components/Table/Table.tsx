@@ -29,18 +29,22 @@ export function Table({ pxtable }: TableProps) {
   
   // Create empty metadata structure for the dimensions in the header. 
   // This structure will be filled with metadata when the header is created.
+
+  // Loop through all columns in the table. i is the column index
   for (let i = 0; i < tableColumnSize; i++) {
-    const datacellCodes: DataCellCodes = new Array<DataCellMeta>(
+    const dataCellCodes: DataCellCodes = new Array<DataCellMeta>(
       pxtable.heading.length
     );
+
+    // Loop through all header variables. j is the header variable index
     for (let j = 0; j < pxtable.heading.length; j++) {
       const dataCellMeta: DataCellMeta = { varId: '', valCode: '', varPos: 0 };
-      datacellCodes[j] = dataCellMeta; // add empty object
+      dataCellCodes[j] = dataCellMeta; // add empty object
     }
-    headingDataCellCodes[i] = datacellCodes;
+    headingDataCellCodes[i] = dataCellCodes;
   }
 
-  console.log({ headingDataCellCodes });
+  //console.log({ headingDataCellCodes });
 
   return (
     <table>
@@ -57,20 +61,20 @@ export function Table({ pxtable }: TableProps) {
  * @param table - The PxTable object representing the table data.
  * @param tableMeta - The metadata for the table columns and rows.
  * @param headingDataCellCodes - Empty metadata structure for the dimensions of the header cells.
- * @returns An array of JSX.Element representing the heading rows.
+ * @returns An array of React.JSX.Element representing the heading rows.
  */
 export function createHeading(
   table: PxTable,
   tableMeta: columnRowMeta,
   headingDataCellCodes: DataCellCodes[]
-): JSX.Element[] {
+): React.JSX.Element[] {
   // Number of times to add all values for a variable, default to 1 for first header row
   let repetitionsCurrentHeaderLevel = 1;
   let columnSpan = 1;
   const emptyText = '';
 
-  let headerRow: JSX.Element[] = [];
-  const headerRows: JSX.Element[] = [];
+  let headerRow: React.JSX.Element[] = [];
+  const headerRows: React.JSX.Element[] = [];
 
   // If we have any variables in the stub create a empty cell at top left corner of the table
   if (table.stub.length > 0) {
@@ -80,7 +84,7 @@ export function createHeading(
   // Otherwise calculate columnspan start value
   columnSpan = tableMeta.columns - tableMeta.columnOffset;
 
-  // loop trough all the variables in the header 
+  // loop trough all the variables in the header. idxHeadingLevel is the header variable index 
   for (
     let idxHeadingLevel = 0;
     idxHeadingLevel < table.heading.length;
@@ -91,7 +95,7 @@ export function createHeading(
 
     const variable = table.heading[idxHeadingLevel];
     let columnIndex = 0;
-    // Repeat for number of times in repetion, first time only once
+    // Repeat for number of times in repetion, first time only once. idxRepetitionCurrentHeadingLevel is the repetition counter 
     for (
       let idxRepetitionCurrentHeadingLevel = 1;
       idxRepetitionCurrentHeadingLevel <= repetitionsCurrentHeaderLevel;
@@ -102,6 +106,7 @@ export function createHeading(
         headerRow.push(
           <th colSpan={columnSpan}>{variable.values[i].label}</th>
         );
+        // Repeat for the number of columns in the column span
         for (let j = 0; j < columnSpan; j++) {
           // Fill the metadata structure for the dimensions of the header cells
           headingDataCellCodes[columnIndex][idxHeadingLevel].varId =
@@ -127,18 +132,18 @@ export function createHeading(
 }
 
 /**
- * Creates an array of JSX elements representing the rows of a table.
+ * Creates an array of React.JSX elements representing the rows of a table.
  * @param table The PxWeb table.
  * @param tableMeta Metadata of the table structure - rows and columns.
  * @param headingDataCellCodes  Metadata structure for the dimensions of the header cells.
- * @returns An array of JSX elements representing the rows of the table.
+ * @returns An array of React.JSX elements representing the rows of the table.
  */
 export function createRows(
   table: PxTable,
   tableMeta: columnRowMeta,
   headingDataCellCodes: DataCellCodes[]
-): JSX.Element[] {
-  const tableRows: JSX.Element[] = [];
+): React.JSX.Element[] {
+  const tableRows: React.JSX.Element[] = [];
   const datacellCodes: DataCellCodes = new Array<DataCellMeta>();
 
   if (table.stub.length > 0) {
@@ -152,7 +157,7 @@ export function createRows(
       tableRows
     );
   } else {
-    const tableRow: JSX.Element[] = [];
+    const tableRow: React.JSX.Element[] = [];
     fillData(table, tableMeta, datacellCodes, headingDataCellCodes, tableRow);
     tableRows.push(<tr>{tableRow}</tr>);
   }
@@ -169,8 +174,8 @@ export function createRows(
  * @param tableMeta - The metadata for the table columns and rows.
  * @param stubDataCellCodes - The metadata structure for the dimensions of the stub cells.
  * @param headingDataCellCodes - The metadata structure for the dimensions of the header cells.
- * @param tableRows - An array of JSX.Element representing the rows of the table.
- * @returns An array of JSX.Element representing the rows of the table.
+ * @param tableRows - An array of React.JSX.Element representing the rows of the table.
+ * @returns An array of React.JSX.Element representing the rows of the table.
  */
 function createRow(
   stubIndex: number,
@@ -179,12 +184,12 @@ function createRow(
   tableMeta: columnRowMeta,
   stubDataCellCodes: DataCellCodes,
   headingDataCellCodes: DataCellCodes[],
-  tableRows: JSX.Element[]
-): JSX.Element[] {
+  tableRows: React.JSX.Element[]
+): React.JSX.Element[] {
   // Calculate the rowspan for all the cells to add in this call
   rowSpan = rowSpan / table.stub[stubIndex].values.length;
 
-  let tableRow: JSX.Element[] = [];
+  let tableRow: React.JSX.Element[] = [];
 
   // Loop through all the values in the stub variable
   for (let i = 0; i < table.stub[stubIndex].values.length; i++) {
@@ -242,14 +247,15 @@ function createRow(
  * Fills a row with empty cells. This is used when we are not on the last dimension of the stub. No data is available for these cells.
  * 
  * @param tableMeta - The metadata for the table columns and rows.
- * @param tableRow - The array of JSX.Element representing the row of the table.
+ * @param tableRow - The array of React.JSX.Element representing the row of the table.
  */
-function fillEmpty(tableMeta: columnRowMeta, tableRow: JSX.Element[]): void {
+function fillEmpty(tableMeta: columnRowMeta, tableRow: React.JSX.Element[]): void {
   const emptyText = '';
 
   // Loop through cells that need to be added to the row
   const maxCols = tableMeta.columns - tableMeta.columnOffset;
 
+  // Loop through all data columns in the table
   for (let i = 0; i < maxCols; i++) {
     tableRow.push(<td>{emptyText}</td>);
   }
@@ -263,18 +269,19 @@ function fillEmpty(tableMeta: columnRowMeta, tableRow: JSX.Element[]): void {
  * @param tableMeta - The metadata for the table columns and rows.
  * @param stubDataCellCodes - The metadata structure for the dimensions of the stub cells.
  * @param headingDataCellCodes - The metadata structure for the dimensions of the header cells.
- * @param tableRow - The array of JSX.Element representing the row of the table.
+ * @param tableRow - The array of React.JSX.Element representing the row of the table.
  */
 function fillData(
   table: PxTable,
   tableMeta: columnRowMeta,
   stubDataCellCodes: DataCellCodes,
   headingDataCellCodes: DataCellCodes[],
-  tableRow: JSX.Element[]
+  tableRow: React.JSX.Element[]
 ): void {
   // Loop through cells that need to be added to the row
   const maxCols = tableMeta.columns - tableMeta.columnOffset;
 
+  // Loop through all data columns in the table
   for (let i = 0; i < maxCols; i++) {
     // Merge the metadata structure for the dimensions of the stub and header cells
     const dataCellCodes = stubDataCellCodes.concat(headingDataCellCodes[i]);
