@@ -38,6 +38,11 @@ export const Checkbox: React.FC<CheckboxProps> = ({
           onChange(!value);
         }
       }}
+      onKeyDown={(event) => {
+        if (event.key === ' ' || event.key === 'Enter') {
+          event.preventDefault();
+        }
+      }}
       onClick={(event) => {
         event.preventDefault();
         onChange(!value);
