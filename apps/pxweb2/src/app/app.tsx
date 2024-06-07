@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import styles from './app.module.scss';
@@ -18,6 +18,8 @@ import NavigationRail from './components/NavigationRail/NavigationRail';
 import { Content } from './components/Content/Content';
 import NavigationBar from './components/NavigationBar/NavigationBar';
 import NavigationDrawer from './components/NavigationDrawer/NavigationDrawer';
+import useVariables from './context/useVariables';
+import useTableData from './context/useTableData';
 
 function addSelectedCodeListToVariable(
   currentVariable: SelectedVBValues | undefined,
@@ -181,13 +183,13 @@ export type NavigationItem =
 
 export function App() {
   const { i18n } = useTranslation();
-
+  const variables = useVariables();
+  const tableData = useTableData();
   const [tableid, setTableid] = useState('tab638');
   const [errorMsg, setErrorMsg] = useState('');
 
   const [selectedNavigationView, setSelectedNavigationView] =
-    useState<NavigationItem>('none');
-  const [pxData, setPxData] = useState<string | null>('');
+    useState<NavigationItem>('filter');
 
   // Initial metadata from the api
   const [pxTableMetadata, setPxTableMetadata] =
@@ -198,6 +200,32 @@ export function App() {
   const [selectedVBValues, setSelectedVBValues] = useState<SelectedVBValues[]>(
     []
   );
+
+  useEffect(() => {
+    variables.syncVariablesAndValues(selectedVBValues);
+    tableData.fetchTableData(tableid, i18n);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [i18n, selectedVBValues, tableid, variables]);
+
+  useEffect(() => {
+    TableService.getMetadataById(tableid, i18n.resolvedLanguage)
+      .then((tableMetadataResponse) => {
+        const pxTabMetadata: PxTableMetadata = mapTableMetadataResponse(
+          tableMetadataResponse
+        );
+        setPxTableMetadata(pxTabMetadata);
+
+        handleVBReset();
+
+        setErrorMsg('');
+      })
+      .catch((error) => {
+        setErrorMsg('Could not get table: ' + tableid);
+        setPxTableMetadata(null);
+      });
+    // TODO: Fix this hook to work as intended instead of ignoring it like this
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tableid]);
 
   if (pxTableMetaToRender === null && pxTableMetadata !== null) {
     setPxTableMetaToRender(structuredClone(pxTableMetadata));
@@ -344,25 +372,6 @@ export function App() {
     }
   };
 
-  const getTable = (id: string) => {
-    TableService.getMetadataById(id, i18n.resolvedLanguage)
-      .then((tableMetadataResponse) => {
-        const pxTabMetadata: PxTableMetadata = mapTableMetadataResponse(
-          tableMetadataResponse
-        );
-        setPxTableMetadata(pxTabMetadata);
-
-        handleVBReset();
-
-        setErrorMsg('');
-      })
-      .catch((error) => {
-        setErrorMsg('Could not get table: ' + id);
-        setPxTableMetadata(null);
-      });
-    getData(id);
-  };
-
   function handleVBReset() {
     if (selectedVBValues.length > 0) {
       setSelectedVBValues([]);
@@ -388,28 +397,6 @@ export function App() {
     return dummyValues;
   };
 
-  const getData = (id: string) => {
-    const url =
-      'https://api.scb.se/OV0104/v2beta/api/v2/tables/' +
-      id +
-      '/data?lang=' +
-      i18n.resolvedLanguage +
-      '&outputFormat=html5_table';
-    fetch(url)
-      .then((response) => response.arrayBuffer())
-      .then((buffer) => {
-        const decoder = new TextDecoder('iso-8859-1');
-        const tableDataResponse = decoder.decode(buffer);
-        const thePxData: string = tableDataResponse;
-        setPxData(thePxData);
-        setErrorMsg('');
-      })
-      .catch((error) => {
-        setErrorMsg('Could not get table: ' + id);
-        setPxTableMetadata(null);
-      });
-  };
-
   const drawerFilter = (
     <>
       <select
@@ -422,18 +409,16 @@ export function App() {
         <option value="TAB5659">TAB5659</option>
         <option value="TAB1128">TAB1128 (LARGE)</option>
       </select>
-      <Button variant="tertiary" onClick={() => getTable(tableid)}>
-        Get table
-      </Button>
       <div className={styles.variableBoxContainer}>
         {/* TODO: I think the warning in the console about unique IDs is the variable.id below*/}
         {pxTableMetaToRender &&
           pxTableMetaToRender.variables.length > 0 &&
           pxTableMetaToRender.variables.map(
-            (variable) =>
+            (variable, index) =>
               variable.id && (
                 <VariableBox
                   id={variable.id}
+                  initialIsOpen={index === 0}
                   tableId={pxTableMetaToRender.id}
                   label={variable.label}
                   mandatory={variable.mandatory}
@@ -485,7 +470,9 @@ export function App() {
           />
         </div>
         <Content topLeftBorderRadius={selectedNavigationView === 'none'}>
-          {pxData && <div dangerouslySetInnerHTML={{ __html: pxData }} />}{' '}
+          {tableData.data && (
+            <div dangerouslySetInnerHTML={{ __html: tableData.data }} />
+          )}{' '}
         </Content>
       </div>
     </>
