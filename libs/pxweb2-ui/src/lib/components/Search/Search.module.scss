@@ -39,6 +39,7 @@
 .inVariableBox {
   border-radius: var(--px-border-radius-medium);
   background: var(--px-color-surface-subtle);
+  z-index: 1;
 
   &:hover {
     border-radius: var(--px-border-radius-medium);
