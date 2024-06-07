@@ -1,6 +1,7 @@
 {
   "meta": {
-    "languageName": "Norsk"
+    "languageName": "Norsk",
+    "shorthand": "no"
   },
   "common": {
     "title": "Velkommen til PxWeb 2.0",
