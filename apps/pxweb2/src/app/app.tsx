@@ -18,6 +18,7 @@ import NavigationRail from './components/NavigationRail/NavigationRail';
 import { Content } from './components/Content/Content';
 import NavigationBar from './components/NavigationBar/NavigationBar';
 import NavigationDrawer from './components/NavigationDrawer/NavigationDrawer';
+import { Footer } from './components/Footer/Footer';
 import useVariables from './context/useVariables';
 import useTableData from './context/useTableData';
 

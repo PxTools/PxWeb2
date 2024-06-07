@@ -30,8 +30,8 @@ interface Resources {
       "generic_buttons": {
         "ok": "OK",
         "cancel": "Cancel",
-        "search": "Search",
-        "save": "Save"
+        "save": "Save",
+        "search": "Search"
       },
       "generic_tags": {
         "mandatory": "Mandatory"
@@ -159,6 +159,14 @@ interface Resources {
           "title": "Related",
           "description": "Description text..."
         }
+      },
+      "footer": {
+        "description": "Statistics Sweden (SCB) and Statistics Norway (SSB) are building a new and more user-friendly interface for PxWeb. Follow the development of the new interface on the",
+        "descriptionLink": "project page at Github.",
+        "contact": "Contact",
+        "projectLeader": "Project leader",
+        "scrumMaster": "Scrum master",
+        "copyright": "Copyright © 2024 Statistics Sweden and Statistics Norway"
       }
     },
     "date": {
