@@ -14,7 +14,10 @@ type MappedCodeList = {
   value: string;
   label: string;
 };
-type VariableBoxPropsToContent = Omit<VariableBoxProps, 'id' | 'mandatory' | 'tableId'>;
+type VariableBoxPropsToContent = Omit<
+  VariableBoxProps,
+  'id' | 'mandatory' | 'tableId'
+>;
 
 /* eslint-disable-next-line */
 type VariableBoxContentProps = VariableBoxPropsToContent & {
@@ -231,7 +234,9 @@ export function VariableBoxContent({
                     .find((variables) => variables.id === varId)
                     ?.values.includes(value.code) === true
                 }
-                text={value.label}
+                text={
+                  value.label.charAt(0).toUpperCase() + value.label.slice(1)
+                }
                 onChange={() => onChangeCheckbox(varId, value.code)}
               />
             ))}
