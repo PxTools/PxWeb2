@@ -22,6 +22,7 @@ export const Header: React.FC = () => {
             <Button
               variant="tertiary"
               onClick={() => i18n.changeLanguage(locale)}
+              key={locale}
             >
               {locale}
             </Button>
