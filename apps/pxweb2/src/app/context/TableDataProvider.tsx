@@ -1,7 +1,8 @@
 import { i18n } from 'i18next';
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import useVariables from './useVariables';
-import { TableService } from '@pxweb2/pxweb2-api-client';
+import { Dataset, TableService } from '@pxweb2/pxweb2-api-client';
+import { createCube } from '@pxweb2/pxweb2-ui';
 
 // Define types for the context state and provider props
 export interface TableDataContextType {
@@ -44,16 +45,26 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       valueCodes,
       undefined,
       undefined,
-      'html5_table'
+      'json-stat2'
     );
 
-    const isoBytes = new Uint8Array(
-      res.split('').map((char) => char.charCodeAt(0))
-    );
-    const decoder = new TextDecoder('iso-8859-1');
-    const tableDataResponse = decoder.decode(isoBytes);
+    // const isoBytes = new Uint8Array(
+    //   res.split('').map((char) => char.charCodeAt(0))
+    // );
+    // const decoder = new TextDecoder('iso-8859-1');
+    // const tableDataResponse = decoder.decode(isoBytes);
 
-    setData(tableDataResponse);
+    // setData(tableDataResponse);
+
+    // Map response to json-stat2 Dataset
+    const pxDataobj: unknown = res;
+    const pxTabData = pxDataobj as Dataset;
+    console.log({pxTabData});
+
+    // Create PxTableData cube
+    createCube(pxTabData);
+    
+    setData(res);
   };
 
   return (
