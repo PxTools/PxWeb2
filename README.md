@@ -1,6 +1,6 @@
 # PxWeb 2
 
-Welcome to PxWeb 2, the new interface for PxWeb. Right no we are working hard on the new version of PxWeb 2.
+Welcome to PxWeb 2, the new interface for PxWeb. Right now we are working hard on the new version of PxWeb 2.
 
 
 For more detailed information about this project, please refer to our [Project pages](https://pxtools.github.io/PxWeb2/). 
