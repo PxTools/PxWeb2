@@ -12,7 +12,12 @@
   /* Style */
   background: var(--px-color-surface-default);
   border-radius: var(--px-border-radius-large);
+  border: 2px solid transparent;
   outline: none; // Remove focus outline, handled with focus marking
+
+  &:focus-visible {
+    border: 2px solid var(--px-color-border-action);
+  }
 }
 
 .variablebox-header-isopen {

@@ -62,8 +62,10 @@ export function VariableBoxContent({
   const [allValuesSelected, setAllValuesSelected] = useState<
     'mixed' | 'true' | 'false'
   >('mixed');
+  const [valuesTabIndex, setValuesTabIndex] = useState(-1);
 
   const scrollRef = useRef<HTMLDivElement>(null);
+  const valuesOnlyList = useRef<HTMLDivElement>(null);
   const hasCodeLists = codeLists && codeLists.length > 0;
   const hasSevenOrMoreValues = values && values.length > 6;
   const hasTwoOrMoreValues = values && values.length > 1;
@@ -176,9 +178,9 @@ export function VariableBoxContent({
         <div
           key={varId + '-values-list'}
           className={cl(
-            classes['variablebox-content-values-list'],
+            classes['variablebox-content-full-values-list'],
             hasSevenOrMoreValues &&
-              classes['variablebox-content-values-list-scroll']
+              classes['variablebox-content-full-values-list-scroll']
           )}
           ref={scrollRef}
           onScroll={handleScroll}
@@ -187,11 +189,11 @@ export function VariableBoxContent({
             className={cl(
               hasSevenOrMoreValues &&
                 scrolling === 'up' &&
-                classes['variablebox-content-values-list-scroll-up'],
+                classes['variablebox-content-full-values-list-scroll-up'],
               hasSevenOrMoreValues &&
                 scrolling === 'down' &&
                 hasScrolledUp === true &&
-                classes['variablebox-content-values-list-scroll-down']
+                classes['variablebox-content-full-values-list-scroll-down']
             )}
           >
             {hasSevenOrMoreValues && (
@@ -224,22 +226,61 @@ export function VariableBoxContent({
             )}
           </div>
 
-          {hasValues &&
-            values.map((value) => (
-              <Checkbox
-                id={value.code}
-                value={
-                  selectedValues?.length > 0 &&
-                  selectedValues
-                    .find((variables) => variables.id === varId)
-                    ?.values.includes(value.code) === true
+          {hasValues && (
+            <div
+              className={cl(classes['variablebox-content-values-only-list'])}
+              tabIndex={0}
+              ref={valuesOnlyList}
+              onKeyUp={(event) => {
+                if (event.key === 'ArrowDown') {
+                  event.preventDefault();
+
+                  const prevTabIndex = valuesTabIndex;
+
+                  setValuesTabIndex(0);
+
+                  if (prevTabIndex === -1) {
+                    const firstCheckbox = document.getElementById(
+                      values[0].code
+                    );
+
+                    firstCheckbox?.focus();
+                  }
                 }
-                text={
-                  value.label.charAt(0).toUpperCase() + value.label.slice(1)
+
+                if (event.key === 'ArrowUp') {
+                  event.preventDefault();
+
+                  setValuesTabIndex(-1);
+
+                  // Change focus to parent values list
+                  valuesOnlyList.current?.focus();
                 }
-                onChange={() => onChangeCheckbox(varId, value.code)}
-              />
-            ))}
+              }}
+              onKeyDown={(event) => {
+                if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+                  event.preventDefault();
+                }
+              }}
+            >
+              {values.map((value) => (
+                <Checkbox
+                  id={value.code}
+                  tabIndex={valuesTabIndex}
+                  value={
+                    selectedValues?.length > 0 &&
+                    selectedValues
+                      .find((variables) => variables.id === varId)
+                      ?.values.includes(value.code) === true
+                  }
+                  text={
+                    value.label.charAt(0).toUpperCase() + value.label.slice(1)
+                  }
+                  onChange={() => onChangeCheckbox(varId, value.code)}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
