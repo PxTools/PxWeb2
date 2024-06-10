@@ -1,7 +1,8 @@
 interface Resources {
   "translation": {
     "meta": {
-      "languageName": "English"
+      "languageName": "English",
+      "shorthand": "en"
     },
     "common": {
       "title": "Welcome to PxWeb 2.0",
@@ -70,6 +71,10 @@ interface Resources {
               "mixed_checkbox": {
                 "select_all": "Select all",
                 "deselect_all": "Deselect all"
+              },
+              "values_list": {
+                "aria_label": "List of values.",
+                "aria_description": "The variable's list of values. To enter the list, press the arrow down key. To exit the list, press the arrow up key."
               }
             }
           }

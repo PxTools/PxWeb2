@@ -70,6 +70,10 @@
             "mixed_checkbox": {
               "select_all": "Velg alle",
               "deselect_all": "Fjern valgte"
+            },
+            "values_list": {
+              "aria_label": "Liste over verdier.",
+              "aria_description": "Variabelens liste over verdier. For å gå inn i listen, trykk på pil ned-tasten. For å gå ut av listen, trykk på pil opp-tasten."
             }
           }
         }

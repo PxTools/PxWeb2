@@ -42,6 +42,10 @@
             "mixed_checkbox": {
               "select_all": "Välj alla",
               "deselect_all": "Välj bort alla"
+            },
+            "values_list": {
+              "aria_label": "Lista över värden.",
+              "aria_description": "Variabelns värdelista. För att komma in i listan, tryck på nedåtpilen. För att lämna listan, tryck på uppåtpilen."
             }
           }
         }
