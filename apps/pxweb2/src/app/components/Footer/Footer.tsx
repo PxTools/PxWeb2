@@ -22,6 +22,7 @@ export const Footer: React.FC = () => {
           >
             {t('presentation_page.footer.descriptionLink')}
           </Link>
+          .
         </BodyLong>
       </div>
       <div className={styles.contact}>
