@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import cl from 'clsx';
 
+import { useTranslation } from 'react-i18next';
 import classes from './Alert.module.scss';
 import BodyLong from '../Typography/BodyLong/BodyLong';
 import Heading from '../Typography/Heading/Heading';
@@ -27,6 +28,7 @@ export function Alert({
   onClick,
   children,
 }: AlertProps) {
+  const { t } = useTranslation();
   const [isVisible, setIsVisible] = useState(true);
   const HandleClose = () => {
     setIsVisible(false);
@@ -128,6 +130,7 @@ export function Alert({
               size="small"
               icon={iconClose}
               onClick={HandleClose}
+              aria-label={t('common.generic_buttons.close')}
             />
           </div>
         )}
