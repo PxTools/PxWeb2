@@ -3,8 +3,14 @@ import HttpApi from 'i18next-http-backend';
 import { initReactI18next } from 'react-i18next';
 
 import { pxNumber } from './formatters';
+import { getConfig } from '../app/util/config/getConfig';
 
 export const defaultNS = 'translation';
+const config = getConfig();
+
+const supportedLanguages: string[] = config.language.supportedLanguages.map(
+  (item) => item.shorthand
+);
 
 i18n
   .use(HttpApi)
@@ -17,12 +23,12 @@ i18n
         cache: 'no-store',
       },
     },
-    lng: 'en',
-    fallbackLng: 'en',
+    lng: config.language.defaultLanguage,
+    fallbackLng: config.language.fallbackLanguage,
     defaultNS,
     // Explicitly tell i18next our
     // supported locales.
-    supportedLngs: ['en', 'no', 'sv', 'ar'],
+    supportedLngs: supportedLanguages,
     debug: true,
     interpolation: {
       escapeValue: false,

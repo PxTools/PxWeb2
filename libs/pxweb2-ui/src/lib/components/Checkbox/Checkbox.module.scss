@@ -2,15 +2,22 @@
   min-height: 44px;
   display: flex;
   position: relative;
+  border-radius: 4px;
+
+  outline: none;
+
   &:hover {
     cursor: pointer;
-    background-color: var(--px-color-surface-subtle-hover);
+    background-color: var(--px-color-surface-action-subtle-hover);
+  }
+
+  &:focus {
+    background-color: var(--px-color-surface-action-subtle-hover);
   }
 
   &:active {
-    background-color: var(--px-color-surface-subtle-active);
+    background-color: var(--px-color-surface-action-subtle-active);
   }
-  border-radius: 4px;
 }
 
 .checkmark {
@@ -46,9 +53,13 @@
   font-family: PxWeb-font-400;
   letter-spacing: 0em;
   color: var(--px-color-text-default);
-  line-height: 24px;
-  font-size: 16px;
+  line-height: 1.5rem;
+  font-size: 1rem;
 }
 .strong {
   font-family: PxWeb-font-700;
+}
+
+.inVariableBox {
+  background-color: var(--px-color-surface-default);
 }

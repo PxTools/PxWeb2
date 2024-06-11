@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Config schema",
+  "type": "object",
+  "properties": {
+    "language": {
+      "type": "object",
+      "properties": {
+        "supportedLanguages": {
+          "description": "All supported languages",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "shorthand": {
+                "type": "string",
+                "description": "Two letter name for language"
+              },
+              "languageName": {
+                "type": "string",
+                "description": "The long name for the language. How the name is written in its own language."
+              }
+            }
+          }
+        },
+        "defaultLanguage": {
+          "description": "The language that should be used unless other is specified",
+          "type": "string"
+        },
+        "fallbackLanguage": {
+          "description": "If there is a missing string for another language, use a string from this language instead",
+          "type": "string"
+        }
+      },
+      "required": ["supportedLanguages", "defaultLanguage", "fallbackLanguage"]
+    }
+  },
+  "required": ["language"]
+}

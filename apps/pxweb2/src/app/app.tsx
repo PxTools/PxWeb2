@@ -1,298 +1,564 @@
-import { useTranslation, Trans } from 'react-i18next';
-import cl from 'clsx';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
-import classes from './app.module.scss';
+import styles from './app.module.scss';
 import {
   Button,
-  Heading,
-  BodyShort,
-  BodyLong,
-  Ingress,
-  Label,
-  Tag,
+  PxTableMetadata,
+  VariableBox,
+  Variable,
+  Table,
+  VartypeEnum,
   PxTable,
-  } from '@pxweb2/pxweb2-ui';
+  fakeData,
+  SelectedVBValues,
+  Value,
+  SelectOption,
+} from '@pxweb2/pxweb2-ui';
 import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
-//import { NumberFormatter } from '../i18n/formatters';
 import { TableService } from '@pxweb2/pxweb2-api-client';
-import { mapTableMetadataResponse } from '../mappers/TableMetadataResponseMapper'; 
-import { useState } from 'react';
+import { mapTableMetadataResponse } from '../mappers/TableMetadataResponseMapper';
+import { Header } from './components/Header/Header';
+import NavigationRail from './components/NavigationRail/NavigationRail';
+import { Content } from './components/Content/Content';
+import NavigationBar from './components/NavigationBar/NavigationBar';
+import NavigationDrawer from './components/NavigationDrawer/NavigationDrawer';
+import { Footer } from './components/Footer/Footer';
+import useVariables from './context/useVariables';
+import useTableData from './context/useTableData';
 
-function test(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-  event.preventDefault();
-  alert('test');
+function addSelectedCodeListToVariable(
+  currentVariable: SelectedVBValues | undefined,
+  selectedValuesArr: SelectedVBValues[],
+  varId: string,
+  selectedItem: SelectOption
+): SelectedVBValues[] {
+  let newSelectedValues: SelectedVBValues[] = [];
+
+  if (currentVariable) {
+    newSelectedValues = selectedValuesArr.map((variable) => {
+      if (variable.id === varId) {
+        variable.selectedCodeList = selectedItem;
+        variable.values = []; // Always reset values when changing codelist
+      }
+
+      return variable;
+    });
+  }
+  if (!currentVariable) {
+    newSelectedValues = [
+      ...selectedValuesArr,
+      {
+        id: varId,
+        selectedCodeList: selectedItem,
+        values: [],
+      },
+    ];
+  }
+
+  return newSelectedValues;
 }
-function testSubmit() {
-  alert('test submit');
+
+function addValueToVariable(
+  selectedValuesArr: SelectedVBValues[],
+  varId: string,
+  value: Value['code']
+) {
+  const newSelectedValues = selectedValuesArr.map((variable) => {
+    if (variable.id === varId) {
+      variable.values = [...variable.values, value];
+    }
+
+    return variable;
+  });
+
+  return newSelectedValues;
 }
+
+function addValueToNewVariable(
+  selectedValuesArr: SelectedVBValues[],
+  varId: string,
+  value: Value['code']
+) {
+  const newSelectedValues = [
+    ...selectedValuesArr,
+    { id: varId, selectedCodeList: undefined, values: [value] },
+  ];
+
+  return newSelectedValues;
+}
+
+function removeValueOfVariable(
+  selectedValuesArr: SelectedVBValues[],
+  varId: string,
+  value: Value['code']
+) {
+  const newSelectedValues = selectedValuesArr
+    .map((variable) => {
+      if (variable.id === varId) {
+        const hasMultipleValuesSelected = variable.values.length > 1;
+
+        if (
+          hasMultipleValuesSelected ||
+          (!hasMultipleValuesSelected &&
+            variable.selectedCodeList !== undefined)
+        ) {
+          variable.values = variable.values.filter((val) => val !== value);
+        }
+        if (
+          !hasMultipleValuesSelected &&
+          variable.selectedCodeList === undefined
+        ) {
+          return null;
+        }
+      }
+
+      return variable;
+    })
+    .filter((value) => value !== null) as SelectedVBValues[];
+
+  return newSelectedValues;
+}
+
+function addAllValuesToVariable(
+  selectedValuesArr: SelectedVBValues[],
+  varId: string,
+  allValuesOfVariable: Value[]
+): SelectedVBValues[] {
+  const currentVariable = selectedValuesArr.find(
+    (variable) => variable.id === varId
+  );
+  let newSelectedValues: SelectedVBValues[] = [];
+
+  if (currentVariable) {
+    newSelectedValues = selectedValuesArr.map((variable) => {
+      if (variable.id === varId) {
+        variable.values = allValuesOfVariable.map((value) => value.code);
+      }
+
+      return variable;
+    });
+  }
+  if (!currentVariable) {
+    newSelectedValues = [
+      ...selectedValuesArr,
+      {
+        id: varId,
+        selectedCodeList: undefined,
+        values: allValuesOfVariable.map((value) => value.code),
+      },
+    ];
+  }
+
+  return newSelectedValues;
+}
+
+function removeAllValuesOfVariable(
+  selectedValuesArr: SelectedVBValues[],
+  varId: string
+): SelectedVBValues[] {
+  const newValues: SelectedVBValues[] = selectedValuesArr
+    .map((variable) => {
+      if (variable.id === varId) {
+        if (variable.selectedCodeList !== undefined) {
+          return {
+            id: varId,
+            selectedCodeList: variable.selectedCodeList,
+            values: [],
+          };
+        }
+        if (variable.selectedCodeList === undefined) {
+          return null;
+        }
+      }
+
+      return variable;
+    })
+    .filter((value) => value !== null) as SelectedVBValues[];
+
+  return newValues;
+}
+
+export type NavigationItem =
+  | 'none'
+  | 'filter'
+  | 'view'
+  | 'edit'
+  | 'save'
+  | 'help';
 
 export function App() {
-  const { t, i18n } = useTranslation();
-
+  const { i18n } = useTranslation();
+  const variables = useVariables();
+  const tableData = useTableData();
   const [tableid, setTableid] = useState('tab638');
   const [errorMsg, setErrorMsg] = useState('');
   const [pxTable, setPxTable] = useState<PxTable | null>(null);
+  const [selectedNavigationView, setSelectedNavigationView] =
+    useState<NavigationItem>('filter');
 
-  const locales = {
-    en: { title: 'English' },
-    no: { title: 'Norsk' },
-    sv: { title: 'Svenska' },
-    ar: { title: 'العربية' },
+  // Initial metadata from the api
+  const [pxTableMetadata, setPxTableMetadata] =
+    useState<PxTableMetadata | null>(null);
+  const [pxTableMetaToRender, setPxTableMetaToRender] =
+    // Metadata to render in the UI
+    useState<PxTableMetadata | null>(null);
+  const [selectedVBValues, setSelectedVBValues] = useState<SelectedVBValues[]>(
+    []
+  );
+
+  useEffect(() => {
+    variables.syncVariablesAndValues(selectedVBValues);
+    tableData.fetchTableData(tableid, i18n);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [i18n, selectedVBValues, tableid, variables]);
+
+  useEffect(() => {
+    TableService.getMetadataById(tableid, i18n.resolvedLanguage)
+      .then((tableMetadataResponse) => {
+        const pxTabMetadata: PxTableMetadata = mapTableMetadataResponse(
+          tableMetadataResponse
+        );
+        setPxTableMetadata(pxTabMetadata);
+
+        handleVBReset();
+
+        setErrorMsg('');
+      })
+      .catch((error) => {
+        setErrorMsg('Could not get table: ' + tableid);
+        setPxTableMetadata(null);
+      });
+    // TODO: Fix this hook to work as intended instead of ignoring it like this
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tableid]);
+
+  if (pxTableMetaToRender === null && pxTableMetadata !== null) {
+    setPxTableMetaToRender(structuredClone(pxTableMetadata));
+  }
+
+  const changeSelectedNavView = (newSelectedNavView: NavigationItem) => {
+    if (selectedNavigationView === newSelectedNavView) {
+      setSelectedNavigationView('none');
+    } else {
+      setSelectedNavigationView(newSelectedNavView);
+    }
   };
-
-  const customRoundingMode = 'halfExpand';
-  const customMinDecimals = 2;
-  const customMaxDecimals = 4;
 
   useLocalizeDocumentAttributes();
 
-  const getTable = (id: string) => {
-    TableService.getMetadataById(id, i18n.resolvedLanguage)
-    .then((tableMetadataResponse) =>
-    {
-      const pxTab: PxTable = mapTableMetadataResponse(tableMetadataResponse);
-      setPxTable(pxTab); setErrorMsg('')
-    }
-    )
-    .catch((error) => 
-    {
-      setErrorMsg('Could not get table: ' + id); setPxTable(null)
-    }
+  function handleCodeListChange(
+    selectedItem: SelectOption | undefined,
+    varId: string
+  ) {
+    const prevSelectedValues = structuredClone(selectedVBValues);
+    const currentVariable = prevSelectedValues.find(
+      (variable) => variable.id === varId
     );
+
+    // No new selection made, do nothing
+    if (
+      !selectedItem ||
+      selectedItem.value === currentVariable?.selectedCodeList?.value
+    ) {
+      return;
+    }
+
+    //  Incomplete selectItem
+    if (!selectedItem.label || !selectedItem.value) {
+      return;
+    }
+
+    const newSelectedValues = addSelectedCodeListToVariable(
+      currentVariable,
+      prevSelectedValues,
+      varId,
+      selectedItem
+    );
+
+    setSelectedVBValues(newSelectedValues);
+
+    //  TODO: This currently returns dummy data until we have the API call setup for it
+    const valuesForChosenCodeList: Value[] = getCodeListValues(
+      selectedItem?.value
+    );
+
+    if (pxTableMetaToRender === null || valuesForChosenCodeList.length < 1) {
+      return;
+    }
+
+    const newPxTableMetaToRender: PxTableMetadata =
+      structuredClone(pxTableMetaToRender);
+
+    newPxTableMetaToRender.variables.forEach((variable) => {
+      if (!variable.codeLists) {
+        return;
+      }
+
+      variable.codeLists.forEach((codelist) => {
+        if (codelist.id !== selectedItem?.value) {
+          return;
+        }
+
+        for (let i = 0; i < newPxTableMetaToRender.variables.length - 1; i++) {
+          if (newPxTableMetaToRender.variables[i].id !== variable.id) {
+            continue;
+          }
+
+          newPxTableMetaToRender.variables[i].values = valuesForChosenCodeList;
+        }
+      });
+    });
+
+    setPxTableMetaToRender(newPxTableMetaToRender);
+  }
+
+  const handleMixedCheckboxChange = (
+    varId: string,
+    allValuesSelected: string
+  ) => {
+    const prevSelectedValues = structuredClone(selectedVBValues);
+
+    if (allValuesSelected === 'true') {
+      const newSelectedValues = removeAllValuesOfVariable(
+        prevSelectedValues,
+        varId
+      );
+
+      setSelectedVBValues(newSelectedValues);
+    }
+    if (allValuesSelected === 'false' || allValuesSelected === 'mixed') {
+      const allValuesOfVariable =
+        pxTableMetaToRender?.variables.find((variable) => variable.id === varId)
+          ?.values || [];
+      const newSelectedValues = addAllValuesToVariable(
+        prevSelectedValues,
+        varId,
+        allValuesOfVariable
+      );
+
+      setSelectedVBValues(newSelectedValues);
+    }
   };
 
-  return (
+  const handleCheckboxChange = (varId: string, value: Value['code']) => {
+    const prevSelectedValues = structuredClone(selectedVBValues);
+    const hasVariable =
+      selectedVBValues.findIndex((variables) => variables.id === varId) !== -1;
+    const hasValue = selectedVBValues
+      .find((variables) => variables.id === varId)
+      ?.values.includes(value);
+
+    if (hasVariable && hasValue) {
+      const newSelectedValues = removeValueOfVariable(
+        prevSelectedValues,
+        varId,
+        value
+      );
+
+      setSelectedVBValues(newSelectedValues);
+    }
+    if (hasVariable && !hasValue) {
+      const newSelectedValues = addValueToVariable(
+        prevSelectedValues,
+        varId,
+        value
+      );
+
+      setSelectedVBValues(newSelectedValues);
+    }
+    if (!hasVariable) {
+      const newSelectedValues = addValueToNewVariable(
+        prevSelectedValues,
+        varId,
+        value
+      );
+
+      setSelectedVBValues(newSelectedValues);
+    }
+  };
+
+  function handleVBReset() {
+    if (selectedVBValues.length > 0) {
+      setSelectedVBValues([]);
+    }
+    if (pxTableMetaToRender !== null) {
+      setPxTableMetaToRender(null);
+    }
+  }
+
+  const getCodeListValues = (id: string) => {
+    /* TODO: Implement querying the API */
+    const dummyValues: Value[] = [
+      { code: 'Dummy Code 1', label: 'Dummy Value 1' },
+      { code: '01', label: '01 Stockholm county' },
+      { code: 'Dummy Code 2', label: 'Dummy Value 2' },
+      { code: 'Dummy Code 3', label: 'Dummy Value 3' },
+      { code: 'Dummy Code 4', label: 'Dummy Value 4' },
+      { code: 'Dummy Code 5', label: 'Dummy Value 5' },
+      { code: 'Dummy Code 6', label: 'Dummy Value 6' },
+      { code: 'Dummy Code 7', label: 'Dummy Value 7' },
+    ];
+
+    return dummyValues;
+  };
+
+  const getFakeTable = () => {
+    const variables: Variable[] = [
+      {
+        id: 'Region',
+        label: 'region',
+        type: VartypeEnum.GEOGRAPHICAL_VARIABLE,
+        mandatory: false,
+        values: Array.from(Array(4).keys()).map((i) => {
+          return { label: 'region_' + (i + 1), code: 'R_' + (i + 1) };
+        }),
+      },
+      {
+        id: 'Alder',
+        label: 'ålder',
+        type: VartypeEnum.REGULAR_VARIABLE,
+        mandatory: false,
+        values: Array.from(Array(4).keys()).map((i) => {
+          return { label: 'år ' + (i + 1), code: '' + (i + 1) };
+        }),
+      },
+      {
+        id: 'Civilstatus',
+        label: 'civilstatus',
+        type: VartypeEnum.REGULAR_VARIABLE,
+        mandatory: false,
+        values: Array.from(Array(5).keys()).map((i) => {
+          return { label: 'CS_' + (i + 1), code: '' + (i + 1) };
+        }),
+      },
+      {
+        id: 'Kon',
+        label: 'kön',
+        type: VartypeEnum.REGULAR_VARIABLE,
+        mandatory: false,
+        values: Array.from(Array(2).keys()).map((i) => {
+          return { label: 'G_' + (i + 1), code: '' + (i + 1) };
+        }),
+      },
+      {
+        id: 'TIME',
+        label: 'tid',
+        type: VartypeEnum.TIME_VARIABLE,
+        mandatory: false,
+        values: Array.from(Array(5).keys()).map((i) => {
+          return { label: '' + (1968 + i), code: '' + (1968 + i) };
+        }),
+      },
+    ];
+
+    const tableMeta: PxTableMetadata = {
+      id: 'test01',
+      label: 'Test table',
+      variables: variables,
+    };
+    const table: PxTable = {
+      metadata: tableMeta,
+      data: {
+        cube: {},
+        variableOrder: ['Region', 'Alder', 'Civilstatus', 'Kon', 'TIME'],
+        isLoaded: false,
+      },
+      heading: [variables[0], variables[1]],
+      stub: [variables[2], variables[3], variables[4]],
+    };
+    fakeData(table, [], 0, 0);
+    table.data.isLoaded = true;
+    setPxTable(table);
+    setPxTableMetaToRender(tableMeta);
+  };
+
+  const drawerFilter = (
     <>
-      <ul>
-        {Object.keys(locales).map((locale) => (
-          <li key={locale}>
-            <button
-              style={{
-                fontWeight:
-                  i18n.resolvedLanguage === locale ? 'bold' : 'normal',
-              }}
-              type="submit"
-              onClick={() => i18n.changeLanguage(locale)}
-            >
-              {locales[locale as keyof typeof locales].title}
-            </button>
-          </li>
-        ))}
-      </ul>
-      <Heading level="1" size="xlarge">
-        {t('common.title')}
-      </Heading>
-      <br />
-      <Ingress spacing>{t('start_page.header')}</Ingress>
-      <BodyShort size="medium" spacing align="start" weight="regular">
-        BodyShort: This component will be used for text with not more than 80
-        characters.
-      </BodyShort>
-      <BodyLong size="medium" spacing align="start" weight="regular">
-        BodyLong: This is a story about Little Red Ridinghood. One day she went
-        into the wood to visit her grandmother. The day after too, She visited
-        her every day, every week, every month, every year. She never saw a
-        wolf, no even a little fox.
-      </BodyLong>
-      <Label htmlFor="tabid" textcolor="subtle">
-        Enter table id:
-      </Label>
-      <br />
-      <select onChange={(e) => setTableid(e.target.value)}>
+      <select
+        name="tabid"
+        id="tabid"
+        onChange={(e) => setTableid(e.target.value)}
+      >
         <option value="TAB638">TAB638</option>
         <option value="TAB1292">TAB1292</option>
         <option value="TAB5659">TAB5659</option>
+        <option value="TAB1128">TAB1128 (LARGE)</option>
       </select>
-      {/* <input
-        type="text"
-        id="tabid"
-        name="tabid"
-        defaultValue="tab638"
-        onChange={(e) => setTableid(e.target.value.trim())}
-      /> */}
-      &nbsp;
-      { errorMsg.length > 0 && <Tag size="small" variant="error" type='border'>{errorMsg}</Tag>
-      } 
-      <br />
-      <br />
-      <Button variant="secondary" onClick={() => getTable(tableid)}>
-        Get table
+      <Button variant="tertiary" onClick={() => getFakeTable()}>
+        Get fake table
       </Button>
-      <br />
-      {pxTable && (
-        <div>
-          <br></br>
-          <Label>{pxTable.label}</Label>
-          <ul>
-            {pxTable.variables.map((variable) => (
-              <li key={variable.id}><h3>{variable.label}</h3>
-                {variable.mandatory && <Tag size="xsmall" variant="info" type='border'>Mandatory</Tag>}
-                <ul><h4>Values:</h4>
-                  {variable.values.map((value) => (
-                    <li key={value.code}>{value.label}
-                      <ul>
-                        {value.notes?.map((note) => (
-                          <li key={note.text}>{note.text}</li>
-                        ))}
-                      </ul>
-                    </li>
-                  ))} 
-                </ul>
-                <ol><h4>CodeLists:</h4>
-                  {variable.codeLists?.map((codelist) => (
-                    <li key={codelist.id}>{codelist.label}</li>
-                  ))}
-                </ol>
-                <ul><h4>Notes:</h4>
-                  {variable.notes?.map((note) => (
-                    <li key={note.text}>{note.text}</li>
-                  ))}
-                </ul>
-              </li>
-            ))}
-          </ul>
+      <div className={styles.variableBoxContainer}>
+        {/* TODO: I think the warning in the console about unique IDs is the variable.id below*/}
+        {pxTableMetaToRender &&
+          pxTableMetaToRender.variables.length > 0 &&
+          pxTableMetaToRender.variables.map(
+            (variable, index) =>
+              variable.id && (
+                <VariableBox
+                  id={variable.id}
+                  initialIsOpen={index === 0}
+                  tableId={pxTableMetaToRender.id}
+                  label={variable.label}
+                  mandatory={variable.mandatory}
+                  values={variable.values}
+                  codeLists={variable.codeLists}
+                  selectedValues={selectedVBValues}
+                  onChangeCodeList={handleCodeListChange}
+                  onChangeMixedCheckbox={handleMixedCheckboxChange}
+                  onChangeCheckbox={handleCheckboxChange}
+                />
+              )
+          )}
+      </div>
+    </>
+  );
+  const drawerView = <>View content</>;
+  const drawerEdit = <>Edit content</>;
+  const drawerSave = <>Save content</>;
+  const drawerHelp = <>Help content</>;
+
+  return (
+    <>
+      <Header />
+      <div className={styles.main}>
+        <div className={styles.desktopNavigation}>
+          <NavigationRail
+            onChange={changeSelectedNavView}
+            selected={selectedNavigationView}
+          />
+          {selectedNavigationView !== 'none' && (
+            <NavigationDrawer
+              heading="Filtrer"
+              onClose={() => {
+                setSelectedNavigationView('none');
+              }}
+            >
+              {selectedNavigationView === 'filter' && drawerFilter}
+              {selectedNavigationView === 'view' && drawerView}
+              {selectedNavigationView === 'edit' && drawerEdit}
+              {selectedNavigationView === 'save' && drawerSave}
+              {selectedNavigationView === 'help' && drawerHelp}
+            </NavigationDrawer>
+          )}
         </div>
-      )}
-      <br />
-      <Tag size="medium" variant="info">
-        Mandatory
-      </Tag>
-      &nbsp;
-      <Tag size="medium" variant="info" type="border">
-        Mandatory
-      </Tag>
-      &nbsp;
-      <br />
-      <form id="form1" onSubmit={testSubmit}>
-        <Label htmlFor="fname" textcolor="subtle">
-          First name:
-        </Label>
-        <br />
-        <input type="text" id="fname" name="fname" defaultValue="John" />
-        <br />
-        <Label htmlFor="lname" textcolor="subtle">
-          Last name:
-        </Label>
-        <br />
-        <input type="text" id="lname" name="lname" defaultValue="Doe" />
-      </form>
-      <br />
-      <Button form="form1" variant="primary" type="submit">
-        Submit
-      </Button>
-      <br />
-      <Button variant="secondary" icon="FloppyDisk" onClick={test}></Button>
-      &nbsp;
-      <Button variant="secondary" icon="Heart" onClick={test}></Button>
-      <p>
-        {t('date.simple_date', {
-          value: new Date('2024-01-25'),
-        })}
-      </p>
-      <p>
-        {t('date.simple_date_with_time', {
-          value: new Date('2024-01-25 12:34:56'),
-        })}
-      </p>
-      <p>
-        <Trans i18nKey="start_page.welcome_trans_test">
-          "Welcome to the <b>app</b> for PxWeb 2.0!"
-        </Trans>
-      </p>
-      <BodyShort size="medium" spacing align="start" weight="regular">
-        Example of getting a translation from a nested translation key:&nbsp;
-        {t('presentation_page.sidemenu.edit.customize.pivot.title')}
-      </BodyShort>
-      {/*       <p>Test custom number formatter: {NumberFormatter(2000.6666666, 2)}</p>
-       */}{' '}
-      <p>
-        Simple number:{' '}
-        {t('number.simple_number', {
-          value: 2000.066666666,
-        })}
-      </p>
-      <p>
-        Simple number with custom decimals:{' '}
-        {t('number.simple_number', {
-          value: 2000.00007,
-          minimumFractionDigits: customMinDecimals,
-          maximumFractionDigits: customMaxDecimals,
-          roundingMode: customRoundingMode,
-        })}
-      </p>
-      <p>
-        Simple number with 0 decimals:{' '}
-        {t('number.simple_number_with_zero_decimal', {
-          value: 2000.044444444,
-        })}
-      </p>
-      <p>
-        Simple number with 1 decimal:{' '}
-        {t('number.simple_number_with_one_decimal', {
-          value: 2000.044444444,
-        })}
-      </p>
-      <p>
-        Simple number with 2 decimals:{' '}
-        {t('number.simple_number_with_two_decimals', {
-          value: 2000.044444444,
-        })}
-      </p>
-      <p>
-        Simple number with 3 decimals:{' '}
-        {t('number.simple_number_with_three_decimals', {
-          value: 2000.044444444,
-        })}
-      </p>
-      <p>
-        Simple number with 4 decimals:{' '}
-        {t('number.simple_number_with_four_decimals', {
-          value: 2000.044444444,
-        })}
-      </p>
-      <p>
-        Simple number with 5 decimals:{' '}
-        {t('number.simple_number_with_five_decimals', {
-          value: 2000.044447444,
-        })}
-      </p>
-      <p>
-        Round test:{' '}
-        {t('number.simple_number_with_one_decimal', {
-          value: 2.23,
-        })}
-      </p>
-      <p>
-        {' '}
-        {t('number.simple_number_with_one_decimal', {
-          value: 2.25,
-        })}
-      </p>
-      <p>
-        {' '}
-        {t('number.simple_number_with_one_decimal', {
-          value: 2.28,
-        })}
-      </p>
-      <p>
-        {' '}
-        {t('number.simple_number_with_one_decimal', {
-          value: -2.23,
-        })}
-      </p>
-      <p>
-        {' '}
-        {t('number.simple_number_with_one_decimal', {
-          value: -2.25,
-        })}
-      </p>
-      <p>
-        {' '}
-        {t('number.simple_number_with_one_decimal', {
-          value: -2.28,
-        })}
-      </p>
-      <div className={cl(classes.breakpoints)}>Breakpoint test</div>
+        <div className={styles.mobileNavigation}>
+          <NavigationBar
+            onChange={changeSelectedNavView}
+            selected={selectedNavigationView}
+          />
+        </div>
+        <Content topLeftBorderRadius={selectedNavigationView === 'none'}>
+          {pxTable?.data?.isLoaded && (
+            <div>
+              <Table pxtable={pxTable} />
+            </div>
+          )}
+          {tableData.data && (
+            <div dangerouslySetInnerHTML={{ __html: tableData.data }} />
+          )}{' '}
+        </Content>
+      </div>
     </>
   );
 }

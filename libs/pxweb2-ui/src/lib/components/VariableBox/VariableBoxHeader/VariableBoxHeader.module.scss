@@ -1,0 +1,46 @@
+@use '../../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixed;
+
+.variablebox-header {
+  /* Layout */
+  display: flex;
+  align-items: flex-start;
+  align-self: stretch;
+  padding: fixed.$spacing-3 fixed.$spacing-3 fixed.$spacing-5 fixed.$spacing-5;
+  gap: 1rem;
+  cursor: pointer;
+
+  /* Style */
+  background: var(--px-color-surface-default);
+  border-radius: var(--px-border-radius-large);
+  outline: none; // Remove focus outline, handled with focus marking
+}
+
+.variablebox-header-isopen {
+  border-radius: var(--px-border-radius-large) var(--px-border-radius-large) 0 0;
+}
+
+.header-title-and-tag {
+  /* Layout */
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  align-self: stretch;
+  flex: 1 0 0;
+  padding-top: 0.375rem;
+  gap: fixed.$spacing-2;
+}
+
+.header-title {
+  /* Layout */
+  display: flex;
+  align-items: flex-start;
+  align-self: stretch;
+  padding-top: 0.125rem;
+}
+
+.header-tags {
+  /* Layout */
+  display: flex;
+  align-items: flex-start;
+  gap: fixed.$spacing-2;
+}

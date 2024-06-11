@@ -1,9 +1,9 @@
 import { AbstractCodeListVariable, TableMetadataResponse, VariableTypeEnum } from "@pxweb2/pxweb2-api-client";
-import { PxTable, VartypeEnum } from "@pxweb2/pxweb2-ui";
+import { PxTableMetadata, VartypeEnum } from "@pxweb2/pxweb2-ui";
 
-export function mapTableMetadataResponse(response: TableMetadataResponse): PxTable {
+export function mapTableMetadataResponse(response: TableMetadataResponse): PxTableMetadata {
 
-    const pxTable: PxTable = {
+    const pxTableMetadata: PxTableMetadata = {
         id: response.id,
         label: response.label,
         variables: response.variables.map((variable ) => {
@@ -40,7 +40,7 @@ export function mapTableMetadataResponse(response: TableMetadataResponse): PxTab
         })
     };
 
-    return pxTable;
+    return pxTableMetadata;
 }
 
 function mapVariableTypeEnum(type: VariableTypeEnum): VartypeEnum {

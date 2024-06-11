@@ -5,9 +5,37 @@
   width: 100%;
 }
 
+.main {
+  display: flex;
+  width: 100%;
+}
+
+.desktopNavigation {
+  display: none;
+  @media (min-width: fixed.$breakpoints-medium-min-width) {
+    display: flex;
+  }
+}
+
+.mobileNavigation {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  @media (max-width: fixed.$breakpoints-small-max-width) {
+    display: block;
+  }
+}
+
+.variableBoxContainer {
+display: flex;
+flex-direction: column;
+gap:fixed.$spacing-2;
+}
+
 @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
   .breakpoints {
     max-width: 100px;
+
     color: white;
     background-color: black;
   }
@@ -39,4 +67,7 @@
     max-width: 700px;
     background-color: yellow;
   }
+}
+.selectWrapper {
+  width: 300px;
 }

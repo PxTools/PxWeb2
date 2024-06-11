@@ -1,20 +1,28 @@
+import { PxTableMetadata } from './pxTableMetadata';
+import { PxTableData } from './pxTableData';
 import { Variable } from './variable';
 
+/**
+ * Represents a table in PxWeb.
+ */
 export type PxTable = {
   /**
-   * Identifier for the table.
+   * The metadata part of the table.
    */
-  id: string;
+  metadata: PxTableMetadata;
+  
   /**
-   * A title for the table that describes the content of it.
+   * The data part of the table.
    */
-  label: string;
+  data: PxTableData;
+  
   /**
-   * A description of the table.
+   * The stub variables of the table.
    */
-  description?: string;
+  stub: Variable[];
+  
   /**
-   * The variables that are part of the table.
+   * The heading variables of the table.
    */
-  variables: Array<Variable>;
+  heading: Variable[];
 };

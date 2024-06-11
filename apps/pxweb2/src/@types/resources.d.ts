@@ -1,5 +1,8 @@
 interface Resources {
   "translation": {
+    "meta": {
+      "languageName": "English"
+    },
     "common": {
       "title": "Welcome to PxWeb 2.0",
       "header": {
@@ -26,7 +29,12 @@ interface Resources {
       },
       "generic_buttons": {
         "ok": "OK",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "save": "Save",
+        "search": "Search"
+      },
+      "generic_tags": {
+        "mandatory": "Mandatory"
       }
     },
     "start_page": {
@@ -34,10 +42,37 @@ interface Resources {
       "welcome_trans_test": "Welcome to the <1>app</1> for PxWeb 2.0!"
     },
     "presentation_page": {
+      "header": {
+        "searchbutton": "Search",
+        "languagebutton": "languages",
+        "statistics": "Statistikkbanken"
+      },
       "sidemenu": {
         "hide": "Hide menu",
         "selection": {
-          "title": "Filter"
+          "title": "Filter",
+          "variablebox": {
+            "search": {
+              "placeholder": "Search",
+              "label": "Search",
+              "arialabelicontext": "Search icon",
+              "ariallabelclearbuttontext": "Clear search icon"
+            },
+            "header": {
+              "tag_selected": "{{selected}} of {{total}} selected",
+              "tag_mandatory": "Mandatory"
+            },
+            "content": {
+              "select": {
+                "label": "Choose grouping",
+                "placeholder": "Make a selection"
+              },
+              "mixed_checkbox": {
+                "select_all": "Select all",
+                "deselect_all": "Deselect all"
+              }
+            }
+          }
         },
         "view": {
           "title": "View",
@@ -124,6 +159,14 @@ interface Resources {
           "title": "Related",
           "description": "Description text..."
         }
+      },
+      "footer": {
+        "description": "Statistics Sweden (SCB) and Statistics Norway (SSB) are building a new and more user-friendly interface for PxWeb. Follow the development of the new interface on the",
+        "descriptionLink": "project page at Github.",
+        "contact": "Contact",
+        "projectLeader": "Project leader",
+        "scrumMaster": "Scrum master",
+        "copyright": "Copyright © 2024 Statistics Sweden and Statistics Norway"
       }
     },
     "date": {

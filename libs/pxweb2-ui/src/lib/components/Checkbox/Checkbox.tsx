@@ -38,6 +38,11 @@ export const Checkbox: React.FC<CheckboxProps> = ({
           onChange(!value);
         }
       }}
+      onKeyDown={(event) => {
+        if (event.key === ' ' || event.key === 'Enter') {
+          event.preventDefault();
+        }
+      }}
       onClick={(event) => {
         event.preventDefault();
         onChange(!value);
@@ -66,6 +71,7 @@ interface MixedCheckboxProps {
   tabIndex?: number;
   strong?: boolean;
   noMargin?: boolean;
+  inVariableBox?: boolean;
 }
 export const MixedCheckbox: React.FC<MixedCheckboxProps> = ({
   id,
@@ -76,6 +82,7 @@ export const MixedCheckbox: React.FC<MixedCheckboxProps> = ({
   tabIndex,
   strong,
   noMargin,
+  inVariableBox = false,
 }) => {
   return (
     <div
@@ -84,7 +91,9 @@ export const MixedCheckbox: React.FC<MixedCheckboxProps> = ({
       aria-checked={value}
       aria-labelledby={id + '-label'}
       aria-controls={ariaControls.join(' ')}
-      className={styles.checkboxWrapper}
+      className={cl(styles.checkboxWrapper, {
+        [styles.inVariableBox]: inVariableBox,
+      })}
       tabIndex={tabIndex ? tabIndex : 0}
       onKeyUp={(event) => {
         if (event.key === ' ' || event.key === 'Enter') {

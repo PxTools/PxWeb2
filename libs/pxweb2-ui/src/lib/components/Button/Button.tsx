@@ -10,6 +10,7 @@ export interface ButtonProps
   variant: 'primary' | 'secondary' | 'tertiary';
   icon?: IconProps['iconName'];
   iconPosition?: 'left' | 'right';
+  className?: string;
   children?: string;
 }
 
@@ -19,8 +20,12 @@ export function Button({
   variant,
   size = 'medium',
   children,
+  className = '',
   ...rest
 }: ButtonProps) {
+
+  const cssClasses = className.length > 0 ? ' ' + className : '';
+
   return (
     <button
       className={cl(
@@ -34,7 +39,7 @@ export function Button({
         {
           [classes.iconOnlySmall]: !children && icon && size === 'small',
         }
-      )}
+      ) + cssClasses}
       {...rest}
     >
       {icon && iconPosition === 'left' && (

@@ -1,13 +1,51 @@
 {
+  "meta": {
+    "languageName": "العربية",
+    "shorthand": "ar"
+  },
   "common": {
     "title": "مرحبًا بك في PxWeb 2.0",
     "header": {
       "title": "PxWeb 2.0",
       "logo": "PxWeb 2.0"
+    },
+    "generic_buttons": {
+      "ok": "نعم",
+      "cancel": "يلغي",
+      "search": "يبحث",
+      "save": "يحفظ"
     }
   },
   "start_page": {
     "header": "مرحبا بكم في التطبيق!",
     "welcome_trans_test": "مرحبًا بك في <1>التطبيق</1> لـ PxWeb 2.0!"
+  },
+  "presentation_page": {
+    "sidemenu": {
+      "selection": {
+        "variablebox": {
+          "search": {
+            "placeholder": "عيب",
+            "label": "عيب",
+            "arialabelicontext": "أيقونة البحث",
+            "ariallabelclearbuttontext": "أيقونة لإزالة النص في حقل البحث"
+          },
+          "header": {
+            "tag_selected": "تم تحديد {{selected}} من {{total}}",
+            "tag_mandatory": "يجب أن يتم اختياره"
+          },
+          "content": {
+            "select": {
+              "label": "اختر القسم",
+              "placeholder": "اختر قسما"
+            },
+            "mixed_checkbox": {
+              "select_all": "اختر الكل",
+              "deselect_all": "الغاء تحديد الكل"
+            }
+          }
+        }
+      }
+    }
   }
 }

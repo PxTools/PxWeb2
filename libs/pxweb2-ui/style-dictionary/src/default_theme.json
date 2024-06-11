@@ -56,10 +56,10 @@
     "surface-action-active": {
       "value": "#162327"
     },
-    "surface-subtle-hover": {
+    "surface-action-subtle-hover": {
       "value": "#DBEBEB"
     },
-    "surface-subtle-active": {
+    "surface-action-subtle-active": {
       "value": "#C3DCDC"
     },
     "surface-info-subtle": {
@@ -85,6 +85,9 @@
     },
     "surface-error-moderate": {
       "value": "#FFCEC7"
+    },
+    "surface-scrim": {
+      "value": "#27424780"
     },
     "border-default": {
       "value": "#162327"
