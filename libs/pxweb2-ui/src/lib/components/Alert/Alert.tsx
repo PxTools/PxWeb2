@@ -8,15 +8,12 @@ import { Icon, IconProps } from '../Icon/Icon';
 import Button from '../Button/Button';
 import BodyShort from '../Typography/BodyShort/BodyShort';
 
-/* eslint-disable-next-line */
+
 export interface AlertProps {
   size?: 'small' | 'medium';
   variant: 'info' | 'success' | 'warning' | 'error';
-  // state: 'default|hover';
   clickable?: boolean;
   closeButton?: boolean;
-  //description: string;
-  // hasheading: boolean;
   heading?: string;
   onClick?: () => void;
   children?: string | React.ReactNode;
@@ -25,16 +22,12 @@ export interface AlertProps {
 export function Alert({
   size = 'medium',
   variant = 'info',
-  // state,
   clickable = false,
   closeButton = false,
-  //description,
-  // hasheading = false,
   heading = '',
   onClick,
   children,
 }: AlertProps) {
-  //let iconInfo:IconProps['iconName'];
   const [isVisible, setIsVisible] = useState(true);
   const HandleClose = () => {
     setIsVisible(false);
@@ -50,7 +43,6 @@ export function Alert({
   heading ? (hasheading = true) : (hasheading = false);
   const iconRight = 'ArrowRight';
   const iconClose = 'XMark';
-  // variant='warning';
   let variantIcon: IconProps['iconName'];
   switch (variant) {
     case 'info':
@@ -82,9 +74,6 @@ export function Alert({
     default:
       headingSize = 'small';
   }
-  //const iconInfo:IconProps['iconName']=variantIcon;
-  //closeButton = true;
-  //clickable = true;
   if (clickable) {
     closeButton = false;
   }
@@ -126,16 +115,13 @@ export function Alert({
         className={cl(
           classes[`alert-section-right`],
           {
-            // [classes[`alert-section-right-close-${size}`]]: closeButton,
             [classes[`alert-xmark`]]: closeButton,
           },
           {
-            // [classes[`alert-section-right-continue`]]: clickable,
             [classes[`alert-arrow-wrapper`]]: clickable,
           }
         )}
       >
-        {/* {closeButton && <Icon iconName={iconClose} className=""></Icon>} */}
         {closeButton && (
           <div className={cl(classes['alert-xmark-wrapper'])}>
             <Button
