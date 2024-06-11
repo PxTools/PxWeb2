@@ -2,7 +2,8 @@ import { i18n } from 'i18next';
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import useVariables from './useVariables';
 import { Dataset, TableService } from '@pxweb2/pxweb2-api-client';
-import { PxTable, createPxTable } from '@pxweb2/pxweb2-ui';
+import { PxTable } from '@pxweb2/pxweb2-ui';
+import { mapJsonStat2Response } from '../../mappers/JsonStat2ResponseMapper';
 
 // Define types for the context state and provider props
 export interface TableDataContextType {
@@ -61,8 +62,10 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     const pxTabData = pxDataobj as Dataset;
     console.log({pxTabData});
 
-    const pxTable: PxTable = createPxTable(pxTabData);
+    const pxTable: PxTable = mapJsonStat2Response(pxTabData);
 
+    console.log({pxTable});
+    
     // TODO: Create mapper that maps json-stat2 Dataset to PxTable object
 
     
