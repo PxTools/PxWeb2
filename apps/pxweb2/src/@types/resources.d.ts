@@ -1,7 +1,8 @@
 interface Resources {
   "translation": {
     "meta": {
-      "languageName": "English"
+      "languageName": "English",
+      "shorthand": "en"
     },
     "common": {
       "title": "Welcome to PxWeb 2.0",
@@ -31,7 +32,8 @@ interface Resources {
         "ok": "OK",
         "cancel": "Cancel",
         "save": "Save",
-        "search": "Search"
+        "search": "Search",
+        "close": "Close"
       },
       "generic_tags": {
         "mandatory": "Mandatory"
