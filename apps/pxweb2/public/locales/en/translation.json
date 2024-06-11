@@ -31,7 +31,8 @@
       "ok": "OK",
       "cancel": "Cancel",
       "save": "Save",
-      "search": "Search"
+      "search": "Search",
+      "close": "Close"
     },
     "generic_tags": {
       "mandatory": "Mandatory"

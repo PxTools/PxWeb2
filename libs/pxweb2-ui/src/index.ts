@@ -1,3 +1,4 @@
+export * from './lib/components/Alert/Alert';
 export * from './lib/components/VariableBox/VariableBox';
 export * from './lib/components/Tag/Tag';
 export * from './lib/components/Typography/Label/Label';
@@ -21,4 +22,3 @@ export * from './lib/shared-types/pxTableData';
 export * from './lib/shared-types/value';
 export * from './lib/shared-types/variable';
 export * from './lib/shared-types/vartypeEnum';
-

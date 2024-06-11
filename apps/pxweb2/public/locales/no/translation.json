@@ -31,7 +31,8 @@
       "ok": "OK",
       "cancel": "Avbryt",
       "search": "Søk",
-      "save": "Lagre"
+      "save": "Lagre",
+      "close": "Lukk"
     }
   },
   "generic_tags": {
