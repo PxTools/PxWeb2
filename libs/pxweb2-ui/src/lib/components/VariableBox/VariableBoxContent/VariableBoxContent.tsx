@@ -7,7 +7,6 @@ import { Checkbox, MixedCheckbox } from '../../Checkbox/Checkbox';
 import Search from '../../Search/Search';
 import { Select, SelectOption } from '../../Select/Select';
 import { VariableBoxProps } from '../VariableBox';
-
 import { SelectedVBValues } from '../VariableBox';
 
 type MappedCodeList = {
@@ -62,7 +61,8 @@ export function VariableBoxContent({
   const [allValuesSelected, setAllValuesSelected] = useState<
     'mixed' | 'true' | 'false'
   >('mixed');
-  const [valuesTabIndex, setValuesTabIndex] = useState(-1);
+  const [currentFocusedCheckboxIndex, setCurrentFocusedCheckboxIndexIndex] =
+    useState<number | null>(null);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const valuesOnlyList = useRef<HTMLDivElement>(null);
@@ -143,6 +143,71 @@ export function VariableBoxContent({
       };
     });
   }
+
+  const handleValueListKeyboardNavigation = (
+    event: React.KeyboardEvent<HTMLDivElement>
+  ) => {
+    const { key, shiftKey } = event; // TODO: Add support for shiftKey to select multiple values
+    const currentFocusedElement = document.activeElement;
+
+    if (
+      key === 'ArrowDown' &&
+      currentFocusedElement === valuesOnlyList.current
+    ) {
+      if (currentFocusedCheckboxIndex === null) {
+        setCurrentFocusedCheckboxIndexIndex(0);
+
+        const firstCheckbox = document.getElementById(values[0].code);
+
+        firstCheckbox?.focus();
+
+        return;
+      }
+
+      const currentFocusedCheckboxIndexElement = document.getElementById(
+        values[currentFocusedCheckboxIndex].code
+      );
+
+      currentFocusedCheckboxIndexElement?.focus();
+    }
+    if (
+      key === 'ArrowDown' &&
+      currentFocusedElement !== valuesOnlyList.current
+    ) {
+      if (currentFocusedCheckboxIndex === null) {
+        return;
+      }
+
+      if (currentFocusedCheckboxIndex === values.length - 1) {
+        return;
+      }
+
+      setCurrentFocusedCheckboxIndexIndex(currentFocusedCheckboxIndex + 1);
+
+      const nextCheckbox = document.getElementById(
+        values[currentFocusedCheckboxIndex + 1].code
+      );
+
+      nextCheckbox?.focus();
+    }
+    if (key === 'ArrowUp' && currentFocusedElement !== valuesOnlyList.current) {
+      if (currentFocusedCheckboxIndex === null) {
+        return;
+      }
+
+      if (currentFocusedCheckboxIndex === 0) {
+        return;
+      }
+
+      setCurrentFocusedCheckboxIndexIndex(currentFocusedCheckboxIndex - 1);
+
+      const prevCheckbox = document.getElementById(
+        values[currentFocusedCheckboxIndex - 1].code
+      );
+
+      prevCheckbox?.focus();
+    }
+  };
 
   const currentVarSelectedCodeList = selectedValues.find(
     (variable) => variable.id === varId
@@ -228,35 +293,20 @@ export function VariableBoxContent({
 
           {hasValues && (
             <div
-              aria-label={t('presentation_page.sidemenu.selection.variablebox.content.values_list.aria_label')}
-              aria-description={t('presentation_page.sidemenu.selection.variablebox.content.values_list.aria_description')} // Coming in WAI-ARIA 1.3 Though caniuse shows 88% support. https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/blob/main/docs/rules/aria-props.md
+              aria-label={t(
+                'presentation_page.sidemenu.selection.variablebox.content.values_list.aria_label'
+              )}
+              aria-description={t(
+                'presentation_page.sidemenu.selection.variablebox.content.values_list.aria_description'
+              )} // Coming in WAI-ARIA 1.3 Though caniuse shows 88% support. https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/blob/main/docs/rules/aria-props.md
               className={cl(classes['variablebox-content-values-only-list'])}
               tabIndex={0}
               ref={valuesOnlyList}
               onKeyUp={(event) => {
-                if (event.key === 'ArrowDown') {
+                if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
                   event.preventDefault();
 
-                  const prevTabIndex = valuesTabIndex;
-
-                  setValuesTabIndex(0);
-
-                  if (prevTabIndex === -1) {
-                    const firstCheckbox = document.getElementById(
-                      values[0].code
-                    );
-
-                    firstCheckbox?.focus();
-                  }
-                }
-
-                if (event.key === 'ArrowUp') {
-                  event.preventDefault();
-
-                  setValuesTabIndex(-1);
-
-                  // Change focus to parent values list
-                  valuesOnlyList.current?.focus();
+                  handleValueListKeyboardNavigation(event);
                 }
               }}
               onKeyDown={(event) => {
@@ -268,7 +318,7 @@ export function VariableBoxContent({
               {values.map((value) => (
                 <Checkbox
                   id={value.code}
-                  tabIndex={valuesTabIndex}
+                  tabIndex={-1}
                   value={
                     selectedValues?.length > 0 &&
                     selectedValues
