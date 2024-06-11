@@ -8,23 +8,24 @@ export type SelectOption = {
 };
 
 export interface RadioProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  variant?: 'default' | 'inModal';
   name: string;
   options: SelectOption[];
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  selectedOption?: string;
+  selectedOption?: string;  
 }
 
 export function Radio({
+  variant = 'default',
   name,
   options,
   onChange, 
-  selectedOption,
-
+  selectedOption, 
 }: RadioProps) {
   return (
-    <div className={cl(classes.radioGroup)}>
+    <div className={cl(classes.radioGroup)} >
       {options.map((option) => (      
-        <label className={cl(classes.container)} key={option.value}>
+        <label className={cl(classes.container,  classes[variant], classes[`bodyshort-medium`],)} key={option.value}>
           <div className={cl(classes.divider)}>
             <input
               type="radio"
@@ -33,7 +34,7 @@ export function Radio({
               value={option.value}
               key={option.value}
               onChange={onChange}
-              checked={option.value === selectedOption}
+              checked={option.value === selectedOption}              
             />{option.label}
           </div>   
         </label>    

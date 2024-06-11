@@ -7,6 +7,7 @@
   justify-content: space-between;
   align-items: flex-start;
   align-self: stretch;  
+  cursor: pointer;
 }
 
 .container {
@@ -16,14 +17,12 @@
   padding: 10px fixed.$spacing-2;
   position: relative;
   padding-left: 44px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  font-family: PxWeb-font-400;
-  letter-spacing: 0em;
-  color: var(--px-color-text-default);
-  line-height: 24px;
-  font-size: 16px;
-
+  cursor: pointer;
+  
+  &.inModal {
+    margin-left: 28px;
+  }
+   
   &:hover {
     border-radius: var(--px-border-radius-small);
     background: var(--px-color-surface-action-subtle-hover);   
@@ -37,7 +36,7 @@
 
 .divider {
   align-items: flex-start;
-  gap: fixed.$spacing-3;
+  gap: fixed.$spacing-3; 
 }
 
 .divider input[type="radio"] {
@@ -49,14 +48,16 @@
   height: 24px;
   flex-shrink: 0;
   border-radius: var(--px-border-radius-xlarge);
-  border: 2px solid var(--px-color-text-default);
-  background: var(-px-color-surface-default);
+  border: 2px solid var(--px-color-surface-action);
+  background-color: var(--px-color-surface-default);
   margin-top: 10px;
   margin-bottom: 10px;
   margin-left: 8px;  
+  cursor: pointer;
 }
 
 .divider input[type="radio"]:checked {
-   background-color: var(--px-color-text-default);
+   background-color: var(--px-color-surface-action);
    box-shadow:  inset 0 0 0 3px var(--px-color-surface-default)
 }  
+
