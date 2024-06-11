@@ -294,10 +294,14 @@ export function VariableBoxContent({
           {hasValues && (
             <div
               aria-label={t(
-                'presentation_page.sidemenu.selection.variablebox.content.values_list.aria_label'
+                'presentation_page.sidemenu.selection.variablebox.content.values_list.aria_label', {
+                  total: totalValues,
+                }
               )}
               aria-description={t(
-                'presentation_page.sidemenu.selection.variablebox.content.values_list.aria_description'
+                'presentation_page.sidemenu.selection.variablebox.content.values_list.aria_description', {
+                  total: totalValues,
+                }
               )} // Coming in WAI-ARIA 1.3 Though caniuse shows 88% support. https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/blob/main/docs/rules/aria-props.md
               className={cl(classes['variablebox-content-values-only-list'])}
               tabIndex={0}
