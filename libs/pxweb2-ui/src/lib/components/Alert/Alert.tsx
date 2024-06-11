@@ -8,7 +8,6 @@ import { Icon, IconProps } from '../Icon/Icon';
 import Button from '../Button/Button';
 import BodyShort from '../Typography/BodyShort/BodyShort';
 
-
 export interface AlertProps {
   size?: 'small' | 'medium';
   variant: 'info' | 'success' | 'warning' | 'error';
