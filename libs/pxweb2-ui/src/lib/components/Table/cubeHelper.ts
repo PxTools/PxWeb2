@@ -99,9 +99,28 @@ function getNumber(): number {
   return number;
 }
 
+export function createPxTable(jsonData: Dataset) : PxTable {
+  const table: PxTable = {
+    metadata: {
+      id: '',
+      label: '',
+      variables: []
+    },
+    data: {
+      cube: {},
+      variableOrder: [],
+      isLoaded: false,
+    },
+    heading: [],
+    stub: [],
+  };
 
+    // Create PxTableData cube
+    createCube(jsonData, table);
+  return table;
+}
 
-export function createCube(jsonData: Dataset) {
+export function createCube(jsonData: Dataset, table: PxTable) {
 
   // -- 1. Get variable value codes for each dimension --
 
@@ -142,62 +161,81 @@ export function createCube(jsonData: Dataset) {
   console.log({dimensions});
 
   // -- 2. Get data for each cell --
+  
+  // Get the data values from the json-stat2 object
+  const dataValues: (number | null)[] | null = jsonData.value;
+  console.log({dataValues});
+  console.log({cubeArraySize});
 
-  // const dataValues: (number | null)[] | null = jsonData.value;
-  // console.log(dataValues);
-  // console.log(cubeArraySize);
-  // const numberOfRows = cubeArraySize;
-  // const numberOfDims = jsonData.id.length;
-  // const cubeArray = createDimArray(numberOfRows, numberOfDims);
-  // function createDimArray(rows: number, cols: number): any[][] {
-  //   const arr: any[][] = new Array(rows);
-  //   for (let i = 0; i < rows; i++) {
-  //     arr[i] = new Array(cols);
-  //   }
-  //   return arr;
-  // }
-  // console.log(cubeArray);
-  // for (let i = 0; i < dimensions.length; i++) {
-  //   let rowcount = 0;
-  //   let factor = 1;
-  //   let repetition = 1;
-  //   for (let j = 0; j < i; j++) {
-  //     repetition = repetition * dimensions[j].length;
-  //   }
-  //   for (let j = i + 1; j < dimensions.length; j++) {
-  //     factor = factor * dimensions[j].length;
-  //   }
-  //   for (let j = 0; j < repetition; j++) {
-  //     for (let k = 0; k < dimensions[i].length; k++) {
-  //       const val = dimensions[i][k];
-  //       for (let l = 0; l < factor; l++) {
-  //         cubeArray[rowcount][i] = val;
-  //         rowcount++;
-  //       }
-  //     }
-  //   }
-  // }
-  // console.log(cubeArray);
-  // table.data.cube = {};
-  // if (dataValues) {
-  //   for (let i = 0; i < cubeArray.length; i++) {
-  //     setPxTableData(table.data.cube, cubeArray[i], dataValues[i]);
-  //   }
-  // }
-  // table.data.variableOrder = varIds;
-  //  jsonData.extension?.px?.heading?.forEach((headvar)=>{
-  //   const myVar= table.metadata.variables.find(i =>i.label===headvar)
-  //   if(myVar){
-  //     table.heading.push(myVar);
-  //   }
-  //  })
-  //  jsonData.extension?.px?.stub?.forEach((stubvar)=>{
-  //   const myVar= table.metadata.variables.find(i =>i.label===stubvar)
-  //   if(myVar){
-  //     table.stub.push(myVar);
-  //   }
-  //  })
-  // //table.heading=[table.metadata.variables.find()]
-  // table.data.isLoaded = true;
-  // console.log(table);
+  const numberOfRows = cubeArraySize; // Number of cells. One row per cell
+  const numberOfDims = jsonData.id.length;
+  const cubeArray = createDimArray(numberOfRows, numberOfDims);
+  
+  console.log({cubeArray});
+
+  // Fill cubeArray with associated value codes for each dimension that is associated with the data cell
+  // Example of how cubeArray may look like:
+  // [[0114, 0, 1998], [0114, 0, 1999], [0114, 1, 1998], [0114, 1, 1999], [0115, 0, 1998], [0115, 0, 1999], [0115, 1, 1998], [0115, 1, 1999]]
+  for (let i = 0; i < dimensions.length; i++) {
+    let rowcount = 0;
+    let factor = 1;
+    let repetition = 1;
+    for (let j = 0; j < i; j++) {
+      repetition = repetition * dimensions[j].length;
+    }
+    for (let j = i + 1; j < dimensions.length; j++) {
+      factor = factor * dimensions[j].length;
+    }
+    for (let j = 0; j < repetition; j++) {
+      for (let k = 0; k < dimensions[i].length; k++) {
+        const val = dimensions[i][k];
+        for (let l = 0; l < factor; l++) {
+          cubeArray[rowcount][i] = val;
+          rowcount++;
+        }
+      }
+    }
+  }
+  
+  console.log({cubeArray});
+
+  table.data.variableOrder = varIds;
+
+  // Fill the cube with data values
+  if (dataValues) {
+    for (let i = 0; i < cubeArray.length; i++) {
+      setPxTableData(table.data.cube, cubeArray[i], dataValues[i]);
+    }
+  }
+
+  // Set heading variables
+   jsonData.extension?.px?.heading?.forEach((headvar)=>{
+    const myVar= table.metadata.variables.find(i =>i.label===headvar)
+    if(myVar){
+      table.heading.push(myVar);
+    }
+   })
+
+   // Set stub variables
+   jsonData.extension?.px?.stub?.forEach((stubvar)=>{
+    const myVar= table.metadata.variables.find(i =>i.label===stubvar)
+    if(myVar){
+      table.stub.push(myVar);
+    }
+   })
+
+  table.data.isLoaded = true;
+
+  console.log({table});
 }
+
+  // Create a 2D array with the dimensions of the cube. One row per data cell. 
+  //Each row contains the values for each dimension that is associated with the data cell
+  function createDimArray(rows: number, cols: number): Dimensions[] {
+    const arr: Dimensions[] = new Array(rows);
+    for (let i = 0; i < rows; i++) {
+      arr[i] = new Array(cols);
+    }
+    return arr;
+  }
+

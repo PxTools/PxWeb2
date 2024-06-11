@@ -2,7 +2,7 @@ import { i18n } from 'i18next';
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import useVariables from './useVariables';
 import { Dataset, TableService } from '@pxweb2/pxweb2-api-client';
-import { createCube } from '@pxweb2/pxweb2-ui';
+import { PxTable, createPxTable } from '@pxweb2/pxweb2-ui';
 
 // Define types for the context state and provider props
 export interface TableDataContextType {
@@ -26,7 +26,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   const [data, setData] = useState<string | null>('');
   const [errorMsg, setErrorMsg] = useState('');
   const variables = useVariables();
-
+ 
   useEffect(() => {
     console.error('ERROR: TableDataProvider:', errorMsg);
   }, [errorMsg]);
@@ -61,9 +61,12 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     const pxTabData = pxDataobj as Dataset;
     console.log({pxTabData});
 
-    // Create PxTableData cube
-    createCube(pxTabData);
+    const pxTable: PxTable = createPxTable(pxTabData);
+
+    // TODO: Create mapper that maps json-stat2 Dataset to PxTable object
+
     
+    // TODO: Set pxTable in useState hook...
     setData(res);
   };
 
