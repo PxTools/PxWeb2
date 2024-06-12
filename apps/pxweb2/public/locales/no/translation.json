@@ -71,6 +71,10 @@
             "mixed_checkbox": {
               "select_all": "Velg alle",
               "deselect_all": "Fjern valgte"
+            },
+            "values_list": {
+              "aria_label": "Liste av {{total}} verdier.",
+              "aria_description": "Variabelens liste over {{total}} totale verdier. For å gå inn i listen, trykk på pil ned-tasten. Tab-tasten går ut av listen."
             }
           }
         }

@@ -43,6 +43,10 @@
             "mixed_checkbox": {
               "select_all": "Välj alla",
               "deselect_all": "Välj bort alla"
+            },
+            "values_list": {
+              "aria_label": "Lista över {{total}} värden.",
+              "aria_description": "Variabelns lista med {{total}} totala värden. För att komma in i listan, tryck på nedåtpilen. Tabbtangenten lämnar listan."
             }
           }
         }
