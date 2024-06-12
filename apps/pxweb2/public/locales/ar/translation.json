@@ -33,7 +33,8 @@
           },
           "header": {
             "tag_selected": "تم تحديد {{selected}} من {{total}}",
-            "tag_mandatory": "يجب أن يتم اختياره"
+            "tag_mandatory": "يجب أن يتم اختياره",
+            "alert_no_mandatory_values": "يجب عليك تحديد شيء ما في القائمة حتى يتم عرض الجدول"
           },
           "content": {
             "select": {
