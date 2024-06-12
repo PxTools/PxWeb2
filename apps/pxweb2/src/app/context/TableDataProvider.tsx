@@ -19,15 +19,29 @@ interface TableDataProviderProps {
 
 // Create context with default values
 const TableDataContext = createContext<TableDataContextType | undefined>({
-  data: {},
+  data: {
+    metadata: {
+      id: '',
+      label: '',
+      description: '',
+      variables: [],
+    },
+    data: {
+      cube: {},
+      variableOrder: [],
+      isLoaded: false,
+    },
+    stub: [],
+    heading: [],
+  },
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   fetchTableData: () => {},
 });
 const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
-  const [data, setData] = useState<string | null>('');
+  const [data, setData] = useState<PxTable | null>(null);
   const [errorMsg, setErrorMsg] = useState('');
   const variables = useVariables();
- 
+
   useEffect(() => {
     console.error('ERROR: TableDataProvider:', errorMsg);
   }, [errorMsg]);
@@ -60,17 +74,17 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     // Map response to json-stat2 Dataset
     const pxDataobj: unknown = res;
     const pxTabData = pxDataobj as Dataset;
-    console.log({pxTabData});
+    console.log({ pxTabData });
 
     const pxTable: PxTable = mapJsonStat2Response(pxTabData);
 
-    console.log({pxTable});
-    
+    console.log({ pxTable });
+
     // TODO: Create mapper that maps json-stat2 Dataset to PxTable object
 
-    
     // TODO: Set pxTable in useState hook...
-    setData(res);
+    //setData(res);
+    setData(pxTable);
   };
 
   return (

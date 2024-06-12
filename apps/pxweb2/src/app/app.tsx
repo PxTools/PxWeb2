@@ -549,13 +549,16 @@ export function App() {
           />
         </div>
         <Content topLeftBorderRadius={selectedNavigationView === 'none'}>
-          {pxTable?.data?.isLoaded && (
+          {/* {pxTable?.data?.isLoaded && (
             <div>
               <Table pxtable={pxTable} />
             </div>
-          )}
+          )} */}
           {tableData.data && (
-            <div dangerouslySetInnerHTML={{ __html: tableData.data }} />
+            <div>
+              {/* <Table pxtable={tableData.data} /> */}
+            </div>
+            // <div dangerouslySetInnerHTML={{ __html: tableData.data }} />
           )}{' '}
         </Content>
       </div>
