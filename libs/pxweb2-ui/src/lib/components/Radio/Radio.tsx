@@ -25,9 +25,10 @@ export function Radio({
   return (
     <div className={cl(classes.radioGroup)} >
       {options.map((option) => (      
-        <label className={cl(classes.container,  classes[variant], classes[`bodyshort-medium`],)} key={option.value}>
-          <div className={cl(classes.divider)}>
+        <label className={cl(classes.container,  classes[`bodyshort-medium`],)} key={option.value}>
+          <div className={cl(classes[variant],classes.divider)}>
             <input
+              className={cl(classes[variant])}
               type="radio"
               id={option.value}
               name={name}

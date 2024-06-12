@@ -33,7 +33,7 @@ export const inModal: StoryFn<typeof Radio> = () => {
   );
 };
 
-export const Group: StoryFn<typeof Radio> = () => {
+export const DefaultGroup: StoryFn<typeof Radio> = () => {
   return (
     <>
       <Radio
@@ -71,4 +71,46 @@ export const Group: StoryFn<typeof Radio> = () => {
       </>
   );}
 
+
+  export const InModalGroup: StoryFn<typeof Radio> = () => {
+    return (
+      <>
+        <Radio
+          name='radio2'        
+          options={[
+            { label: 'First option', value: 'option1' }        
+          ]}
+          onChange={undefined}
+          selectedOption='option1'
+          variant='inModal'>                   
+        </Radio>    
+        <Radio
+          name='radio2'
+          options={[
+            { label: 'Second option', value: 'option2' }        
+          ]}
+          onChange={undefined}
+          selectedOption='option2'
+          variant='inModal'>          
+        </Radio>
+        <Radio
+          name='radio2'
+          options={[
+            { label: 'Third option that has a long text to show what happens in the radio component whith this options and the others options when a text are stretched over several lines ', value: 'option3' }        
+          ]}
+          onChange={undefined}
+          selectedOption='option3'
+          variant='inModal'>          
+        </Radio>
+        <Radio
+          name='radio2'
+          options={[
+            { label: 'Fourth option', value: 'option4' }        
+          ]}
+          onChange={undefined}
+          selectedOption='option4'
+          variant='inModal'>          
+        </Radio>    
+        </>
+    );}
   

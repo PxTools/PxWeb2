@@ -224,36 +224,16 @@ function VariableBoxSelect({
           heading={modalHeading}
           isOpen={isModalOpen}
           onClose={handleCloseModal}
-        >
-          
+        >          
                 <Radio 
                   value={clickedItem?.value ?? ''}
                   name='option'
                   options={options}                  
                   selectedOption={clickedItem?.value}
                   onChange={handleRadioChange}
+                  variant='inModal'
                 >                
                 </Radio>
-
-         {/* <div className={cl(classes.modalRadioList)}>
-            {options.map((option) => (
-              <div className={cl(classes.modalRadio)} key={option.value} onClick={(event) => {setClickedItem(option)}}>
-                <input
-                  type="radio"
-                  id={option.value}
-                  name="option"
-                  value={option.value}
-                  key={option.value}
-                  // checked={option.value === clickedItem?.value}
-                  onChange={() => {
-                    setClickedItem(option);
-                  }}
-                />
-                <Label htmlFor={option.value}>{option.label}</Label>
-              </div>
-            ))}
-          </div> */}
-
        </Modal>
       )}
     </>
