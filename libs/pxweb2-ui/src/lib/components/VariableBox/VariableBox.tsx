@@ -53,7 +53,7 @@ export function VariableBox({
     (variables) => variables.id === id
   )?.values.length;
   const currentVariable = selectedValues.find((variable) => variable.id === id);
-  const hasMandatoryNoSelectedValuesError =
+  const isMissingMandatoryValueError =
     mandatory && (currentVariable?.values.length === 0 || !currentVariable);
 
   if (prevTableId !== tableId) {
@@ -69,7 +69,7 @@ export function VariableBox({
     <div
       className={cl(
         classes.variablebox,
-        hasMandatoryNoSelectedValuesError && classes['error']
+        isMissingMandatoryValueError && classes['error']
       )}
       key={id + '-variablebox'}
     >
@@ -81,7 +81,7 @@ export function VariableBox({
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         className={cl(classes['header-icon'])}
-        isMissingMandatoryValues={hasMandatoryNoSelectedValuesError}
+        isMissingMandatoryValues={isMissingMandatoryValueError}
       />
 
       {isOpen && (

@@ -98,15 +98,15 @@ export function VariableBoxHeader({
         </div>
       </div>
 
-      <div className={cl(classes['header-alert'])}>
-        {isMissingMandatoryValues && (
+      {isMissingMandatoryValues && (
+        <div className={cl(classes['header-alert'])}>
           <Alert variant="error" size="small">
             {t(
               'presentation_page.sidemenu.selection.variablebox.header.alert_no_mandatory_values'
             )}
           </Alert>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
