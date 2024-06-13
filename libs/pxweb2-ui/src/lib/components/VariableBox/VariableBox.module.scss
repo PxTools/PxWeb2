@@ -1,12 +1,3 @@
-@keyframes blink {
-  0% {
-    border-color: var(--px-color-border-error);
-  }
-  100% {
-    border-color: transparent;
-  }
-}
-
 .variablebox {
   /* Layout */
   display: flex;
@@ -39,7 +30,6 @@
 
 .error {
   border: 2px solid var(--px-color-border-error);
-  animation: blink 0.5s 3;
 }
 
 // header-icon style moved here because the hover effect needs to be applied when the parent is hovered
