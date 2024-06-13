@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import classes from './VariableBoxHeader.module.scss';
 import { Icon } from '../../Icon/Icon';
 import Tag from '../../Tag/Tag';
-import Heading from '../../Typography/Heading/Heading';
 import { VariableBoxProps } from '../VariableBox';
 
 /* eslint-disable-next-line */
@@ -53,10 +52,12 @@ export function VariableBoxHeader({
       tabIndex={tabIndex}
     >
       <div className={cl(classes['header-title-and-tag'])}>
-        {/* TODO: Is this the right level for Heading here? */}
-        <Heading level="3" className={cl(classes['header-title'])} size="small">
+        <p className={cl(
+          classes['header-title'],
+          classes['heading-small'],
+          )}>
           {label}
-        </Heading>
+        </p>
         <div className={cl(classes['header-tags'])}>
           <Tag variant="neutral">
             {t(
