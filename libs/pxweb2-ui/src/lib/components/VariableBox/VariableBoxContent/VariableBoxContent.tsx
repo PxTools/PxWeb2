@@ -215,8 +215,6 @@ export function VariableBoxContent({
 
   return (
     <div className={cl(classes['variablebox-content'])}>
-      {/* TODO: Add the Alert here, see note in figma about it. Need more functionality atm i think */}
-
       <div className={cl(classes['variablebox-content-main'])}>
         {hasCodeLists === true && (
           <div className={cl(classes['variablebox-content-select'])}>
@@ -294,12 +292,14 @@ export function VariableBoxContent({
           {hasValues && (
             <div
               aria-label={t(
-                'presentation_page.sidemenu.selection.variablebox.content.values_list.aria_label', {
+                'presentation_page.sidemenu.selection.variablebox.content.values_list.aria_label',
+                {
                   total: totalValues,
                 }
               )}
               aria-description={t(
-                'presentation_page.sidemenu.selection.variablebox.content.values_list.aria_description', {
+                'presentation_page.sidemenu.selection.variablebox.content.values_list.aria_description',
+                {
                   total: totalValues,
                 }
               )} // Coming in WAI-ARIA 1.3 Though caniuse shows 88% support. https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/blob/main/docs/rules/aria-props.md

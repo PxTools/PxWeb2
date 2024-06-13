@@ -15,6 +15,12 @@
     border: 2px solid var(--px-color-border-action);
   }
 
+  &:hover.error,
+  &:focus-visible.error {
+    border-radius: var(--px-border-radius-large);
+    border: 2px solid var(--px-color-border-error);
+  }
+
   &:hover .header-icon,
   &:focus-visible .header-icon {
     border-radius: var(--px-border-radius-medium);
@@ -22,8 +28,12 @@
   }
 }
 
+.error {
+  border: 2px solid var(--px-color-border-error);
+}
+
 // header-icon style moved here because the hover effect needs to be applied when the parent is hovered
-// This won't work if the style is in the child components scss file, since css classes are made unique by with a hash
+// This won't work if the style is in the child components scss file, since css classes are made unique with a hash
 .header-icon {
   /* Layout */
   display: flex;
