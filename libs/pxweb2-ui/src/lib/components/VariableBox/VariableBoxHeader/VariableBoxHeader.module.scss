@@ -3,6 +3,7 @@
 .variablebox-header {
   /* Layout */
   display: flex;
+  flex-wrap: wrap;
   align-items: flex-start;
   align-self: stretch;
   padding: fixed.$spacing-3 fixed.$spacing-3 fixed.$spacing-5 fixed.$spacing-5;
@@ -22,6 +23,11 @@
 
 .variablebox-header-isopen {
   border-radius: var(--px-border-radius-large) var(--px-border-radius-large) 0 0;
+}
+
+.header-content {
+  display: flex;
+  width: 100%;
 }
 
 .header-title-and-tag {

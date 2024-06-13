@@ -6,6 +6,7 @@ import { Icon } from '../../Icon/Icon';
 import Tag from '../../Tag/Tag';
 import Heading from '../../Typography/Heading/Heading';
 import { VariableBoxProps } from '../VariableBox';
+import Alert from '../../Alert/Alert';
 
 /* eslint-disable-next-line */
 type VariableBoxPropsToHeader = Pick<VariableBoxProps, 'label' | 'mandatory'>;
@@ -17,6 +18,7 @@ type VariableBoxHeaderProps = VariableBoxPropsToHeader & {
   setIsOpen: (open: boolean) => void;
   tabIndex?: number;
   className?: string;
+  isMissingMandatoryValues?: boolean;
 };
 
 export function VariableBoxHeader({
@@ -28,6 +30,7 @@ export function VariableBoxHeader({
   setIsOpen,
   tabIndex = 0,
   className = '',
+  isMissingMandatoryValues = false,
 }: VariableBoxHeaderProps) {
   const { t } = useTranslation();
   const cssClasses = className.length > 0 ? ' ' + className : '';
@@ -52,42 +55,58 @@ export function VariableBoxHeader({
       onKeyDown={(e) => handleKeyDown(e)}
       tabIndex={tabIndex}
     >
-      <div className={cl(classes['header-title-and-tag'])}>
-        {/* TODO: Is this the right level for Heading here? */}
-        <Heading level="3" className={cl(classes['header-title'])} size="small">
-          {label}
-        </Heading>
-        <div className={cl(classes['header-tags'])}>
-          <Tag variant="neutral">
-            {t(
-              'presentation_page.sidemenu.selection.variablebox.header.tag_selected',
-              {
-                selected: t('number.simple_number_with_zero_decimal', {
-                  value: totalChosenValues,
-                }),
-                total: t('number.simple_number_with_zero_decimal', {
-                  value: totalValues,
-                }),
-              }
-            )}
-          </Tag>
-          {mandatory && (
-            <Tag variant="info">
+      <div className={cl(classes['header-content'])}>
+        <div className={cl(classes['header-title-and-tag'])}>
+          {/* TODO: Is this the right level for Heading here? */}
+          <Heading
+            level="3"
+            className={cl(classes['header-title'])}
+            size="small"
+          >
+            {label}
+          </Heading>
+          <div className={cl(classes['header-tags'])}>
+            <Tag variant="neutral">
               {t(
-                'presentation_page.sidemenu.selection.variablebox.header.tag_mandatory'
+                'presentation_page.sidemenu.selection.variablebox.header.tag_selected',
+                {
+                  selected: t('number.simple_number_with_zero_decimal', {
+                    value: totalChosenValues,
+                  }),
+                  total: t('number.simple_number_with_zero_decimal', {
+                    value: totalValues,
+                  }),
+                }
               )}
             </Tag>
+            {mandatory && (
+              <Tag variant="info">
+                {t(
+                  'presentation_page.sidemenu.selection.variablebox.header.tag_mandatory'
+                )}
+              </Tag>
+            )}
+          </div>
+        </div>
+
+        <div className={cssClasses}>
+          {isOpen ? (
+            <Icon iconName="ChevronUp"></Icon>
+          ) : (
+            <Icon iconName="ChevronDown"></Icon>
           )}
         </div>
       </div>
 
-      <div className={cssClasses}>
-        {isOpen ? (
-          <Icon iconName="ChevronUp"></Icon>
-        ) : (
-          <Icon iconName="ChevronDown"></Icon>
-        )}
-      </div>
+      {isMissingMandatoryValues && (
+        <div className={cl(classes['header-alert'])}>
+          <Alert variant="error" size="small">
+            {t(
+              'presentation_page.sidemenu.selection.variablebox.header.alert_no_mandatory_values'
+            )}
+          </Alert>
+        </div>
+      )}
     </div>
   );
 }

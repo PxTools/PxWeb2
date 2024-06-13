@@ -62,7 +62,8 @@ interface Resources {
             },
             "header": {
               "tag_selected": "{{selected}} of {{total}} selected",
-              "tag_mandatory": "Mandatory"
+              "tag_mandatory": "Mandatory",
+              "alert_no_mandatory_values": "You must select something in the list for the table to be displayed"
             },
             "content": {
               "select": {
@@ -74,8 +75,8 @@ interface Resources {
                 "deselect_all": "Deselect all"
               },
               "values_list": {
-                "aria_label": "List of values.",
-                "aria_description": "The variable's list of values. To enter the list, press the arrow down key. To exit the list, press the arrow up key."
+                "aria_label": "List of {{total}} values.",
+                "aria_description": "The variable's list of {{total}} total values. To enter the list, press the arrow down key. The Tab key exits the list."
               }
             }
           }
