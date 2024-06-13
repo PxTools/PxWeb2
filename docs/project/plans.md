@@ -1,10 +1,10 @@
 # Plans
 
-The project has different goals, and one of them is to launch a beta-version of PxWeb in mid 2024.
-Another goal is to deliver a new user interface based on PxWebAPI during 2024.
+The project has different goals, and one of them is to launch a test-version of PxWeb in mid 2024.
+Another goal is to deliver a beta-version of PxWeb based on PxWebAPI 2.0 during 2024.
 
 
-## PxWeb 2.0 delivery betaversion June 2024
+## PxWeb 2.0 delivery testversion June 2024
 - New PxWeb page with variablebox and table, getting data from API 2.0 
 - Language management
 - Algorithm for choosing the best result for displaying a table
