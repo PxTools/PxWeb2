@@ -36,8 +36,13 @@ export function mapJsonStat2Response(response: Dataset): PxTable {
     heading: [],
   };
 
-  createCube(response, pxTable);
+  //console.log({ pxTable });
 
+  CreateData(response, pxTable);
+  //createCube(response, pxTable);
+  //Makedata(response,pxTable,[],0,0);
+
+  console.log({ pxTable });
   return pxTable;
 }
 
@@ -88,7 +93,79 @@ function mapJsonToVariables(jsonData: Dataset): Array<Variable> {
   return variables;
 }
 
-function createCube(jsonData: Dataset, table: PxTable) {
+type counter = {
+  number: number;
+}
+
+export function CreateData(jsonData: Dataset, table: PxTable): void {
+
+  const counter = {number: 0};
+  // Create data cube
+  createCube(jsonData, table, [], 0, counter);
+
+  table.data.variableOrder = jsonData.id; // Array containing the variable ids;
+
+  // Set heading variables
+  jsonData.extension?.px?.heading?.forEach((headvar) => {
+    const myVar = table.metadata.variables.find((i) => i.label === headvar);
+    if (myVar) {
+      table.heading.push(myVar);
+    }
+  });
+
+  // Set stub variables
+  jsonData.extension?.px?.stub?.forEach((stubvar) => {
+    const myVar = table.metadata.variables.find((i) => i.label === stubvar);
+    if (myVar) {
+      table.stub.push(myVar);
+    }
+  });
+
+  table.data.isLoaded = true;
+}
+
+  
+function getDataCellValue(jsonData:Dataset, counter: counter): number {
+    return jsonData.value?.[counter.number] ?? 0;
+}
+
+export function createCube(
+  jsonData: Dataset,
+  table: PxTable,
+  dimensions: Dimensions,
+  dimensionIndex: number,
+  counter: counter
+): void {
+  if (dimensionIndex === table?.metadata.variables.length - 1) {
+    table.metadata.variables[dimensionIndex].values.forEach((value) => {
+      dimensions[dimensionIndex] = value.code;
+      setPxTableData(table.data.cube, dimensions, getDataCellValue(jsonData, counter));
+      counter.number++;
+    });
+  } else {
+    table?.metadata.variables[dimensionIndex].values.forEach((value) => {
+      dimensions[dimensionIndex] = value.code;
+      createCube(jsonData, table, dimensions, dimensionIndex + 1, counter);
+    });
+  }
+}
+
+
+/**
+ * Generates a sequential number.
+ *
+ * @returns The next sequential number.
+ */
+// function getNumber(jsonData: Dataset): number {
+//   if (jsonData.value?.[counter]){
+//       return jsonData.value?.[counter] ?? 0;
+//   }
+//   else {
+//     return 0;
+//   }
+// }
+
+function createCubeOld(jsonData: Dataset, table: PxTable) {
   // -- 1. Get variable value codes for each dimension --
 
   // Two dimensional array consisting of values for each dimension
