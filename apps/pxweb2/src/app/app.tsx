@@ -556,7 +556,7 @@ export function App() {
           )} */}
           {tableData.data && (
             <div>
-              {/* <Table pxtable={tableData.data} /> */}
+              <Table pxtable={JSON.parse(tableData.data)} />
             </div>
             // <div dangerouslySetInnerHTML={{ __html: tableData.data }} />
           )}{' '}

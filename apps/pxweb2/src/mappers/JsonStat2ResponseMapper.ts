@@ -110,7 +110,7 @@ function createCube(jsonData: Dataset, table: PxTable) {
     const values: { [key: string]: number } =
       jsonData.dimension[varId]?.category?.index || {};
 
-    console.log({ values });
+    // console.log({ values });
 
     // Convert the object to an array of key-value pairs and sort it by the value
     const entries = Object.entries(values);
@@ -119,27 +119,27 @@ function createCube(jsonData: Dataset, table: PxTable) {
     // Extract the keys from the sorted array. Take only the keys (entry[0]), not the values.
     sortedValues = entries.map((entry) => entry[0]);
 
-    console.log({ sortedValues });
+    // console.log({ sortedValues });
 
     // Add the sorted values to the dimensions array and calculate the cube array size
     dimensions[i] = sortedValues;
     cubeArraySize = cubeArraySize * sortedValues.length;
   }
 
-  console.log({ dimensions });
+  // console.log({ dimensions });
 
   // -- 2. Get data for each cell --
 
   // Get the data values from the json-stat2 object
   const dataValues: (number | null)[] | null = jsonData.value;
-  console.log({ dataValues });
-  console.log({ cubeArraySize });
+  // console.log({ dataValues });
+  // console.log({ cubeArraySize });
 
   const numberOfRows = cubeArraySize; // Number of cells. One row per cell
   const numberOfDims = jsonData.id.length;
   const cubeArray = createDimArray(numberOfRows, numberOfDims);
 
-  console.log({ cubeArray });
+  // console.log({ cubeArray });
 
   // Fill cubeArray with associated value codes for each dimension that is associated with the data cell
   // Example of how cubeArray may look like:
@@ -165,7 +165,7 @@ function createCube(jsonData: Dataset, table: PxTable) {
     }
   }
 
-  console.log({ cubeArray });
+  // console.log({ cubeArray });
 
   table.data.variableOrder = varIds;
 
@@ -194,7 +194,7 @@ function createCube(jsonData: Dataset, table: PxTable) {
 
   table.data.isLoaded = true;
 
-  console.log({ table });
+  // console.log({ table });
 }
 
 // Create a 2D array with the dimensions of the cube. One row per data cell.
