@@ -1,4 +1,4 @@
-import { Dataset, VariableTypeEnum } from '@pxweb2/pxweb2-api-client';
+import { Dataset } from '@pxweb2/pxweb2-api-client';
 import {
   Dimensions,
   PxTable,
@@ -6,56 +6,117 @@ import {
   Variable,
   Value,
   VartypeEnum,
+  PxTableData,
+  PxTableMetadata,
 } from '@pxweb2/pxweb2-ui';
 
-// type Variable = {
-//   id: string;
-//   label: string;
-//   values: Array<Value>;
-// };
+/**
+ * Internal type. Used to keep track of index in json-stat2 value array
+ * Need to be an object to be passed by reference
+ */
+type counter = {
+  number: number;
+};
 
-// type Value = {
-//   code: string;
-//   label: string;
-// };
-
+/**
+ * Maps a JSONStat2 dataset response to a PxTable object.
+ *
+ * @param response - The JSONStat2 dataset response to be mapped.
+ * @returns The mapped PxTable object.
+ */
 export function mapJsonStat2Response(response: Dataset): PxTable {
-  const pxTable: PxTable = {
-    metadata: {
-      id: response.extension?.px?.tableid || '',
-      label: response.label || '',
-      description: '',
-      variables: mapJsonToVariables(response),
-    },
-    data: {
-      cube: {},
-      variableOrder: [],
-      isLoaded: false,
-    },
-    stub: [],
-    heading: [],
+  
+  // Create the metadata object
+  const metadata: PxTableMetadata = {
+    id: response.extension?.px?.tableid || '',
+    label: response.label || '',
+    description: '',
+    variables: mapJsonToVariables(response),
   };
 
-  //console.log({ pxTable });
+  // Create the data object
+  const data: PxTableData = CreateData(response, metadata);
 
-  CreateData(response, pxTable);
-  //createCube(response, pxTable);
-  //Makedata(response,pxTable,[],0,0);
+  // Create the PxTable object
+  const pxTable: PxTable = {
+    metadata: metadata,
+    data: data,
+    stub: CreateStub(response, metadata),
+    heading: CreateHeading(response, metadata)
+  };
 
-  console.log({ pxTable });
+  // // Set heading variables
+  // response.extension?.px?.heading?.forEach((headvar) => {
+  //   const myVar = pxTable.metadata.variables.find((i) => i.label === headvar);
+  //   if (myVar) {
+  //     pxTable.heading.push(myVar);
+  //   }
+  // });
+
+  // // Set stub variables
+  // response.extension?.px?.stub?.forEach((stubvar) => {
+  //   const myVar = pxTable.metadata.variables.find((i) => i.label === stubvar);
+  //   if (myVar) {
+  //     pxTable.stub.push(myVar);
+  //   }
+  // });
+
+
+
+  // const pxTable: PxTable = {
+  //   metadata: {
+  //     id: response.extension?.px?.tableid || '',
+  //     label: response.label || '',
+  //     description: '',
+  //     variables: mapJsonToVariables(response),
+  //   },
+  //   // data: {
+  //   //   cube: {},
+  //   //   variableOrder: [],
+  //   //   isLoaded: false,
+  //   // },
+  //   data: CreateData(response, pxTable.metadata),
+  //   stub: [],
+  //   heading: [],
+  // };
+
+  //CreateData(response, pxTable);
+
   return pxTable;
 }
 
-// function getStub(stub:Variable[]):Variable[]
-// {
-//   jsonData.extension?.px?.stub?.forEach((stubvar) => {
-//     const myVar = table.metadata.variables.find((i) => i.label === stubvar);
-//     if (myVar) {
-//       table.stub.push(myVar);
-//     }
-//   });
-// }
+function CreateStub(response: Dataset, metadata: PxTableMetadata) : Variable[] {
+  const stub: Variable[] = [];
 
+  response.extension?.px?.stub?.forEach((stubvar) => {
+    const myVar = metadata.variables.find((i) => i.label === stubvar);
+    if (myVar) {
+      stub.push(myVar);
+    }
+  });
+
+  return stub;
+}
+
+function CreateHeading(response: Dataset, metadata: PxTableMetadata) : Variable[] {
+  const heading: Variable[] = [];
+
+  response.extension?.px?.heading?.forEach((headingvar) => {
+    const myVar = metadata.variables.find((i) => i.label === headingvar);
+    if (myVar) {
+      heading.push(myVar);
+    }
+  });
+
+  return heading;
+}
+
+/**
+ * Maps the JSONStat2 dimensions to an array of Variable objects.
+ *
+ * @param jsonData - The JSONStat2 dataset containing the dimensions.
+ * @returns An array of Variable objects.
+ */
 function mapJsonToVariables(jsonData: Dataset): Array<Variable> {
   const variables: Array<Variable> = [];
 
@@ -93,63 +154,92 @@ function mapJsonToVariables(jsonData: Dataset): Array<Variable> {
   return variables;
 }
 
-type counter = {
-  number: number;
-}
+export function CreateData(
+  jsonData: Dataset,
+  metadata: PxTableMetadata
+): PxTableData {
+  const data: PxTableData = {
+    cube: {},
+    variableOrder: [],
+    isLoaded: false,
+  };
 
-export function CreateData(jsonData: Dataset, table: PxTable): void {
+  // Counter to keep track of index in json-stat2 value array
+  const counter = { number: 0 };
 
-  const counter = {number: 0};
   // Create data cube
-  createCube(jsonData, table, [], 0, counter);
+  createCube(jsonData, metadata, data, [], 0, counter);
 
-  table.data.variableOrder = jsonData.id; // Array containing the variable ids;
+  data.variableOrder = jsonData.id; // Array containing the variable ids;
 
-  // Set heading variables
-  jsonData.extension?.px?.heading?.forEach((headvar) => {
-    const myVar = table.metadata.variables.find((i) => i.label === headvar);
-    if (myVar) {
-      table.heading.push(myVar);
-    }
-  });
+  // // Set heading variables
+  // jsonData.extension?.px?.heading?.forEach((headvar) => {
+  //   const myVar = table.metadata.variables.find((i) => i.label === headvar);
+  //   if (myVar) {
+  //     table.heading.push(myVar);
+  //   }
+  // });
 
-  // Set stub variables
-  jsonData.extension?.px?.stub?.forEach((stubvar) => {
-    const myVar = table.metadata.variables.find((i) => i.label === stubvar);
-    if (myVar) {
-      table.stub.push(myVar);
-    }
-  });
+  // // Set stub variables
+  // jsonData.extension?.px?.stub?.forEach((stubvar) => {
+  //   const myVar = table.metadata.variables.find((i) => i.label === stubvar);
+  //   if (myVar) {
+  //     table.stub.push(myVar);
+  //   }
+  // });
 
-  table.data.isLoaded = true;
+  data.isLoaded = true;
+
+  return data;
 }
 
-  
-function getDataCellValue(jsonData:Dataset, counter: counter): number {
-    return jsonData.value?.[counter.number] ?? 0;
+/**
+ * Retrieves the data cell value from the JSON response based on the counter.
+ * If no value array is present in the JSON response, it returns null.
+ *
+ * @param jsonData - The JSON-stat2 response containing the data values.
+ * @param counter - The counter object used to track the current index in the json-stat2 value array.
+ * @returns The data cell value or null if not found.
+ */
+function getDataCellValue(jsonData: Dataset, counter: counter): number | null {
+  if (jsonData.value === undefined || jsonData.value === null) {
+    return null;
+  }
+  return jsonData.value?.[counter.number];
 }
 
 export function createCube(
   jsonData: Dataset,
-  table: PxTable,
+  metadata: PxTableMetadata,
+  data: PxTableData,
   dimensions: Dimensions,
   dimensionIndex: number,
   counter: counter
 ): void {
-  if (dimensionIndex === table?.metadata.variables.length - 1) {
-    table.metadata.variables[dimensionIndex].values.forEach((value) => {
+  if (dimensionIndex === metadata.variables.length - 1) {
+    metadata.variables[dimensionIndex].values.forEach((value) => {
       dimensions[dimensionIndex] = value.code;
-      setPxTableData(table.data.cube, dimensions, getDataCellValue(jsonData, counter));
+      setPxTableData(
+        data.cube,
+        dimensions,
+        getDataCellValue(jsonData, counter)
+      );
       counter.number++;
     });
   } else {
-    table?.metadata.variables[dimensionIndex].values.forEach((value) => {
+    metadata.variables[dimensionIndex].values.forEach((value) => {
       dimensions[dimensionIndex] = value.code;
-      createCube(jsonData, table, dimensions, dimensionIndex + 1, counter);
+      createCube(
+        jsonData,
+        metadata,
+        data,
+        dimensions,
+        dimensionIndex + 1,
+        counter
+      );
     });
   }
 }
-
 
 /**
  * Generates a sequential number.
