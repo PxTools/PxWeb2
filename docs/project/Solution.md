@@ -1,5 +1,5 @@
 # PxWeb solution
-In this project, we have made some choices about how we will work in this project across two countries, in order to create opportunities for other countries to contribute in the long term with both development and user testing of PxWeb 2.0. In addition, we have made some choices to find the best solution for those who will be setting up PxWeb.
+In this project, we have made some choices about how we will work in this project across two countries, in order to create opportunities for other countries to contribute in the long term with both development and user testing of PxWeb 2.0. In addition, we have made some choices to find the best solution for installing PxWeb. All this to reach the main goal to create a user-friendly PxWeb.
 ## WCAG and Search Engine Optimization (SEO)
 - The new interface will follow the rules for A and AA in [WCAG 2.1](https://www.w3.org/TR/WCAG21/)
 - SEO is the use of methods that achieve better visibility or "ranking" on search engines result page.
