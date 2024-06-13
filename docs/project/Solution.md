@@ -16,5 +16,7 @@ It will be possible to change
 ## Open source at GitHub
 The new interface will be able do install directly from GitHub. Also documentation will be found here. 
 [PxTools at GitHub](https://github.com/pxtools)
+## Usertest
+We have done four usertest so far in the project, and vi have a goal to build the new user interface for PxWeb on usertests
 ## Possibility for connection
 When PxWeb 2.0 inteface is ready for production, it is easy to connect other tools such as Highcharts, Tableau, Power BI and other AI products. This can be connected both by using saved queries from PxWeb 2.0 or by connecting directly to PxWebAPI 2.0.
