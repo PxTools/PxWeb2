@@ -6,14 +6,14 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
-  align-self: stretch;  
+  align-self: stretch;    
   cursor: pointer;
 }
 
 .container {
   align-items: flex-start;
+  align-self: stretch;    
   display: flex;
-  width:  100%;
   padding: 10px fixed.$spacing-2;
   position: relative;
   padding-left: 44px;

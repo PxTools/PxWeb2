@@ -224,17 +224,16 @@ function VariableBoxSelect({
           heading={modalHeading}
           isOpen={isModalOpen}
           onClose={handleCloseModal}
-        >          
-                <Radio 
-                  value={clickedItem?.value ?? ''}
-                  name='option'
-                  options={options}                  
-                  selectedOption={clickedItem?.value}
-                  onChange={handleRadioChange}
-                  variant='inModal'
-                >                
-                </Radio>
-       </Modal>
+        >
+          <Radio
+            value={clickedItem?.value ?? ''}
+            name="option"
+            options={options}
+            selectedOption={clickedItem?.value}
+            onChange={handleRadioChange}
+            variant="inModal"
+          ></Radio>
+        </Modal>
       )}
     </>
   );
