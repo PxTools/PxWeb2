@@ -15,18 +15,18 @@
 | Thirdparty code | Dependabot security and version updates,  |
 | | Dependabot alerts |
 |  | Use Snyk Advisor to check development and maintenance health of libraries |
-| Automated end-to-end tests | Playwright |
-| Acceptancetests | Playwright, Chromatic: UI Review (Manual test) |
-| Regressiontests  | Playwright  |
+| Automated end-to-end tests | Mabl|
+| Acceptancetests | Mabl, Chromatic: UI Review (Manual test) |
+| Regressiontests  | Mabl  |
 | |Chromatic: UI Test |
 | Accessibility testing |  @storybook/addon-a11ly    Shows relevant results automatically in Storybook,  | 
 |  | Axe browser extension |
 | |Lighthouse|
-| |Playwright with Axe?| 
+| |Mabl with Axe| 
 | |Valid HTML5 (W3C validator)  |
 | Security tests | [http://securityheaders.io/](http://securityheaders.io/)|
 | |Dynamic analysis:  |
 | |Detectify | 
 | |Nessus  |
-| Performance tests | Lighthouse |
+| Performance tests | Mabl and Lighthouse |
 | Container security | Trivy? |

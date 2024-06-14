@@ -13,7 +13,8 @@
       "ok": "OK",
       "cancel": "Avbryt",
       "search": "Sök",
-      "save": "Spara"
+      "save": "Spara",
+      "close": "Stänga"
     }
   },
   "start_page": {
@@ -32,7 +33,8 @@
           },
           "header": {
             "tag_selected": "{{selected}} av {{total}} valda",
-            "mandatory": "Måste väljas"
+            "mandatory": "Måste väljas",
+            "alert_no_mandatory_values": "Du måste välja något i listan för att tabellen ska visas"
           },
           "content": {
             "select": {
@@ -42,6 +44,10 @@
             "mixed_checkbox": {
               "select_all": "Välj alla",
               "deselect_all": "Välj bort alla"
+            },
+            "values_list": {
+              "aria_label": "Lista över {{total}} värden.",
+              "aria_description": "Variabelns lista med {{total}} totala värden. För att komma in i listan, tryck på nedåtpilen. Tabbtangenten lämnar listan."
             }
           }
         }

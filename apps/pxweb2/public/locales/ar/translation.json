@@ -13,7 +13,8 @@
       "ok": "نعم",
       "cancel": "يلغي",
       "search": "يبحث",
-      "save": "يحفظ"
+      "save": "يحفظ",
+      "close": "يغلق"
     }
   },
   "start_page": {
@@ -32,7 +33,8 @@
           },
           "header": {
             "tag_selected": "تم تحديد {{selected}} من {{total}}",
-            "tag_mandatory": "يجب أن يتم اختياره"
+            "tag_mandatory": "يجب أن يتم اختياره",
+            "alert_no_mandatory_values": "يجب عليك تحديد شيء ما في القائمة حتى يتم عرض الجدول"
           },
           "content": {
             "select": {
@@ -42,6 +44,10 @@
             "mixed_checkbox": {
               "select_all": "اختر الكل",
               "deselect_all": "الغاء تحديد الكل"
+            },
+            "values_list": {
+              "aria_label": "قائمة بقيم {{total}}.",
+              "aria_description": "قائمة المتغير بإجمالي {{total}} القيم. للدخول إلى القائمة، اضغط على مفتاح السهم لأسفل. يخرج المفتاح Tab من القائمة."
             }
           }
         }
