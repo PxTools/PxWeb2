@@ -1,3 +1,5 @@
+import { t } from 'i18next';
+
 import { PxTable } from '../../shared-types/pxTable';
 import { calculateRowAndColumnMeta, columnRowMeta } from './columnRowMeta';
 import { getPxTableData } from './cubeHelper';
@@ -22,7 +24,6 @@ type DataCellCodes = DataCellMeta[];
 
 export function Table({ pxtable }: TableProps) {
   const tableMeta: columnRowMeta = calculateRowAndColumnMeta(pxtable);
-  //console.log({ tableMeta });
 
   const tableColumnSize: number = tableMeta.columns - tableMeta.columnOffset;
   const headingDataCellCodes = new Array<DataCellCodes>(tableColumnSize); // Contains header variable and value codes for each column in the table
@@ -43,8 +44,6 @@ export function Table({ pxtable }: TableProps) {
     }
     headingDataCellCodes[i] = dataCellCodes;
   }
-
-  //console.log({ headingDataCellCodes });
 
   return (
     <table>
@@ -301,7 +300,8 @@ function fillData(
     // ]);
 
     const dataValue = getPxTableData(table.data.cube, dimensions);
-    tableRow.push(<td key={getNewKey()}>{dataValue}</td>);
+
+    tableRow.push(<td key={getNewKey()}>{t('number.simple_number', {value: dataValue ?? ''})}</td>); // TODO: Handle null values
   }
 }
 
