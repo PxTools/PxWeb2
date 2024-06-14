@@ -6,6 +6,7 @@ import Label from '../Typography/Label/Label';
 import BodyShort from '../Typography/BodyShort/BodyShort';
 import { Icon } from '../Icon/Icon';
 import Modal from '../Modal/Modal';
+import Radio from '../Radio/Radio';
 
 export type SelectOption = {
   label: string;
@@ -127,7 +128,7 @@ function DefaultSelect({
           size="medium"
           className={cl(classes.optionLayout, classes.optionTypography)}
         >
-          {selectedOption ? selectedOption.label : placeholder}
+         {selectedOption ? selectedOption.label : placeholder}
         </BodyShort>
         <Icon iconName="ChevronDown" className=""></Icon>
       </div>
@@ -160,16 +161,20 @@ function VariableBoxSelect({
   const cssClasses = className.length > 0 ? ' ' + className : '';
 
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
+  
   const [selectedItem, setSelectedItem] = useState<SelectOption | undefined>(
     selectedOption
   );
-  const [clickedItem, setClickedItem] = useState<SelectOption | undefined>(
+  const [clickedItem, setClickedItem] = useState<SelectOption | undefined>(   
     selectedOption
   );
-
   const handleOpenModal = () => {
     setModalOpen(true);
   };
+  
+  function handleRadioChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setClickedItem(options.find((option) => option.value === e.target.value));
+  }
 
   const handleCloseModal = (updated: boolean) => {
     setModalOpen(false);
@@ -220,24 +225,14 @@ function VariableBoxSelect({
           isOpen={isModalOpen}
           onClose={handleCloseModal}
         >
-          <div className={cl(classes.modalRadioList)}>
-            {options.map((option) => (
-              <div className={cl(classes.modalRadio)} key={option.value} onClick={(event) => {setClickedItem(option)}}>
-                <input
-                  type="radio"
-                  id={option.value}
-                  name="option"
-                  value={option.value}
-                  key={option.value}
-                  checked={option.value === clickedItem?.value}
-                  onChange={() => {
-                    setClickedItem(option);
-                  }}
-                />
-                <Label htmlFor={option.value}>{option.label}</Label>
-              </div>
-            ))}
-          </div>
+          <Radio
+            value={clickedItem?.value ?? ''}
+            name="option"
+            options={options}
+            selectedOption={clickedItem?.value}
+            onChange={handleRadioChange}
+            variant="inModal"
+          ></Radio>
         </Modal>
       )}
     </>
