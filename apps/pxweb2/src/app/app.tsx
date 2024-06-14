@@ -18,6 +18,7 @@ import {
 import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
 import { TableService } from '@pxweb2/pxweb2-api-client';
 import { mapTableMetadataResponse } from '../mappers/TableMetadataResponseMapper';
+import { mapTableSelectionResponse } from '../mappers/TableSelectionResponseMapper';
 import { Header } from './components/Header/Header';
 import NavigationRail from './components/NavigationRail/NavigationRail';
 import { Content } from './components/Content/Content';
@@ -209,9 +210,21 @@ export function App() {
 
   useEffect(() => {
     variables.syncVariablesAndValues(selectedVBValues);
-    tableData.fetchTableData(tableid, i18n);
+
+    const hasSelectedMandatoryVariables = pxTableMetadata?.variables
+      .filter((variable) => variable.mandatory)
+      .every((variable) =>
+        selectedVBValues.some(
+          (selectedVariable) => selectedVariable.id === variable.id
+        )
+      );
+
+    if (hasSelectedMandatoryVariables) {
+      tableData.fetchTableData(tableid, i18n);
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [i18n, selectedVBValues, tableid, variables]);
+  }, [i18n, selectedVBValues, tableid, variables, i18n.resolvedLanguage]);
 
   useEffect(() => {
     TableService.getMetadataById(tableid, i18n.resolvedLanguage)
@@ -225,13 +238,32 @@ export function App() {
 
         setErrorMsg('');
       })
+      .then(() => {
+        TableService.getDefaultSelection(tableid, i18n.resolvedLanguage)
+          .then((selectionResponse) => {
+            const defaultSelection = mapTableSelectionResponse(
+              selectionResponse
+            ).filter(
+              (variable) =>
+                variable.values.length > 0 ||
+                variable.selectedCodeList !== undefined
+            );
+
+            setSelectedVBValues(defaultSelection);
+          })
+          .catch((error) => {
+            setErrorMsg('Error getting default selection: ' + tableid);
+          });
+      })
       .catch((error) => {
         setErrorMsg('Could not get table: ' + tableid);
         setPxTableMetadata(null);
       });
+
     // TODO: Fix this hook to work as intended instead of ignoring it like this
+    // TODO: Fix unnecessary default selection call when changing language
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tableid]);
+  }, [tableid, i18n.resolvedLanguage]);
 
   if (pxTableMetaToRender === null && pxTableMetadata !== null) {
     setPxTableMetaToRender(structuredClone(pxTableMetadata));
