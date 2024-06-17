@@ -13,6 +13,10 @@ describe('TableSelectionResponseMapper', () => {
               variableCode: 'testVarCode',
               valueCodes: ['testValueCode'],
             },
+            {
+              variableCode: 'testVarCode2',
+              valueCodes: ['testValueCode2'],
+            },
           ],
         },
         links: [],
@@ -25,6 +29,11 @@ describe('TableSelectionResponseMapper', () => {
           id: 'testVarCode',
           selectedCodeList: undefined,
           values: ['testValueCode'],
+        },
+        {
+          id: 'testVarCode2',
+          selectedCodeList: undefined,
+          values: ['testValueCode2'],
         },
       ]);
     });
