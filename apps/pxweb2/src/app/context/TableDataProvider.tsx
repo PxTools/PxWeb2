@@ -1,7 +1,9 @@
 import { i18n } from 'i18next';
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import useVariables from './useVariables';
-import { TableService } from '@pxweb2/pxweb2-api-client';
+import { Dataset, TableService } from '@pxweb2/pxweb2-api-client';
+import { PxTable } from '@pxweb2/pxweb2-ui';
+import { mapJsonStat2Response } from '../../mappers/JsonStat2ResponseMapper';
 
 // Define types for the context state and provider props
 export interface TableDataContextType {
@@ -17,12 +19,12 @@ interface TableDataProviderProps {
 
 // Create context with default values
 const TableDataContext = createContext<TableDataContextType | undefined>({
-  data: {},
+  data: '',
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   fetchTableData: () => {},
 });
 const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
-  const [data, setData] = useState<string | null>('');
+  const [data, setData] = useState<string>();
   const [errorMsg, setErrorMsg] = useState('');
   const variables = useVariables();
 
@@ -44,16 +46,16 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       valueCodes,
       undefined,
       undefined,
-      'html5_table'
+      'json-stat2'
     );
 
-    const isoBytes = new Uint8Array(
-      res.split('').map((char) => char.charCodeAt(0))
-    );
-    const decoder = new TextDecoder('iso-8859-1');
-    const tableDataResponse = decoder.decode(isoBytes);
+    // Map response to json-stat2 Dataset
+    const pxDataobj: unknown = res;
+    const pxTabData = pxDataobj as Dataset;
 
-    setData(tableDataResponse);
+    const pxTable: PxTable = mapJsonStat2Response(pxTabData);
+
+    setData(JSON.stringify(pxTable));
   };
 
   return (

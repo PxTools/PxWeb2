@@ -435,76 +435,6 @@ export function App() {
     return dummyValues;
   };
 
-  const getFakeTable = () => {
-    const variables: Variable[] = [
-      {
-        id: 'Region',
-        label: 'region',
-        type: VartypeEnum.GEOGRAPHICAL_VARIABLE,
-        mandatory: false,
-        values: Array.from(Array(4).keys()).map((i) => {
-          return { label: 'region_' + (i + 1), code: 'R_' + (i + 1) };
-        }),
-      },
-      {
-        id: 'Alder',
-        label: 'ålder',
-        type: VartypeEnum.REGULAR_VARIABLE,
-        mandatory: false,
-        values: Array.from(Array(4).keys()).map((i) => {
-          return { label: 'år ' + (i + 1), code: '' + (i + 1) };
-        }),
-      },
-      {
-        id: 'Civilstatus',
-        label: 'civilstatus',
-        type: VartypeEnum.REGULAR_VARIABLE,
-        mandatory: false,
-        values: Array.from(Array(5).keys()).map((i) => {
-          return { label: 'CS_' + (i + 1), code: '' + (i + 1) };
-        }),
-      },
-      {
-        id: 'Kon',
-        label: 'kön',
-        type: VartypeEnum.REGULAR_VARIABLE,
-        mandatory: false,
-        values: Array.from(Array(2).keys()).map((i) => {
-          return { label: 'G_' + (i + 1), code: '' + (i + 1) };
-        }),
-      },
-      {
-        id: 'TIME',
-        label: 'tid',
-        type: VartypeEnum.TIME_VARIABLE,
-        mandatory: false,
-        values: Array.from(Array(5).keys()).map((i) => {
-          return { label: '' + (1968 + i), code: '' + (1968 + i) };
-        }),
-      },
-    ];
-
-    const tableMeta: PxTableMetadata = {
-      id: 'test01',
-      label: 'Test table',
-      variables: variables,
-    };
-    const table: PxTable = {
-      metadata: tableMeta,
-      data: {
-        cube: {},
-        variableOrder: ['Region', 'Alder', 'Civilstatus', 'Kon', 'TIME'],
-        isLoaded: false,
-      },
-      heading: [variables[0], variables[1]],
-      stub: [variables[2], variables[3], variables[4]],
-    };
-    fakeData(table, [], 0, 0);
-    table.data.isLoaded = true;
-    setPxTable(table);
-    setPxTableMetaToRender(tableMeta);
-  };
-
   const drawerFilter = (
     <>
       <select
@@ -515,11 +445,11 @@ export function App() {
         <option value="TAB638">TAB638</option>
         <option value="TAB1292">TAB1292</option>
         <option value="TAB5659">TAB5659</option>
-        <option value="TAB1128">TAB1128 (LARGE)</option>
+        <option value="TAB1544">TAB1544 (decimals)</option>
+        <option value="TAB4246">TAB4246 (decimals)</option>
+        <option value="TAB1128">TAB1128 (large)</option>
       </select>
-      <Button variant="tertiary" onClick={() => getFakeTable()}>
-        Get fake table
-      </Button>
+      <br/><br/>
       <div className={styles.variableBoxContainer}>
         {/* TODO: I think the warning in the console about unique IDs is the variable.id below*/}
         {pxTableMetaToRender &&
@@ -581,13 +511,10 @@ export function App() {
           />
         </div>
         <Content topLeftBorderRadius={selectedNavigationView === 'none'}>
-          {pxTable?.data?.isLoaded && (
-            <div>
-              <Table pxtable={pxTable} />
-            </div>
-          )}
           {tableData.data && (
-            <div dangerouslySetInnerHTML={{ __html: tableData.data }} />
+            <div>
+              <Table pxtable={JSON.parse(tableData.data)} />
+            </div>
           )}{' '}
         </Content>
       </div>

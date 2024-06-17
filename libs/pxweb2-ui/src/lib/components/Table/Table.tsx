@@ -1,3 +1,5 @@
+import { t } from 'i18next';
+
 import { PxTable } from '../../shared-types/pxTable';
 import { calculateRowAndColumnMeta, columnRowMeta } from './columnRowMeta';
 import { getPxTableData } from './cubeHelper';
@@ -22,7 +24,6 @@ type DataCellCodes = DataCellMeta[];
 
 export function Table({ pxtable }: TableProps) {
   const tableMeta: columnRowMeta = calculateRowAndColumnMeta(pxtable);
-  //console.log({ tableMeta });
 
   const tableColumnSize: number = tableMeta.columns - tableMeta.columnOffset;
   const headingDataCellCodes = new Array<DataCellCodes>(tableColumnSize); // Contains header variable and value codes for each column in the table
@@ -43,8 +44,6 @@ export function Table({ pxtable }: TableProps) {
     }
     headingDataCellCodes[i] = dataCellCodes;
   }
-
-  //console.log({ headingDataCellCodes });
 
   return (
     <table>
@@ -78,7 +77,7 @@ export function createHeading(
 
   // If we have any variables in the stub create a empty cell at top left corner of the table
   if (table.stub.length > 0) {
-    headerRow.push(<th rowSpan={table.heading.length}>{emptyText}</th>);
+    headerRow.push(<th rowSpan={table.heading.length} key={getNewKey()}>{emptyText}</th>);
   }
 
   // Otherwise calculate columnspan start value
@@ -104,7 +103,7 @@ export function createHeading(
       // loop trough all the values for the header variable
       for (let i = 0; i < variable.values.length; i++) {
         headerRow.push(
-          <th colSpan={columnSpan}>{variable.values[i].label}</th>
+          <th colSpan={columnSpan} key={getNewKey()}>{variable.values[i].label}</th>
         );
         // Repeat for the number of columns in the column span
         for (let j = 0; j < columnSpan; j++) {
@@ -120,7 +119,7 @@ export function createHeading(
       }
     }
 
-    headerRows.push(<tr>{headerRow}</tr>);
+    headerRows.push(<tr key={getNewKey()}>{headerRow}</tr>);
 
     // Set repetiton for the next header variable
     repetitionsCurrentHeaderLevel *=
@@ -159,7 +158,7 @@ export function createRows(
   } else {
     const tableRow: React.JSX.Element[] = [];
     fillData(table, tableMeta, datacellCodes, headingDataCellCodes, tableRow);
-    tableRows.push(<tr>{tableRow}</tr>);
+    tableRows.push(<tr key={getNewKey()}>{tableRow}</tr>);
   }
 
   return tableRows;
@@ -205,13 +204,13 @@ function createRow(
       rowSpan = 1;
     }
 
-    tableRow.push(<th>{val.label}</th>);
+    tableRow.push(<th key={getNewKey()}>{val.label}</th>);
 
     // If there are more stub variables that need to add headers to this row
     if (table.stub.length > stubIndex + 1) {
       // make the rest of this row empty
       fillEmpty(tableMeta, tableRow);
-      tableRows.push(<tr>{tableRow}</tr>);
+      tableRows.push(<tr key={getNewKey()}>{tableRow}</tr>);
       tableRow = [];
 
       // Create a new row for the next stub
@@ -234,7 +233,7 @@ function createRow(
         headingDataCellCodes,
         tableRow
       );
-      tableRows.push(<tr>{tableRow}</tr>);
+      tableRows.push(<tr key={getNewKey()}>{tableRow}</tr>);
       tableRow = [];
       stubDataCellCodes.pop();
     }
@@ -257,7 +256,7 @@ function fillEmpty(tableMeta: columnRowMeta, tableRow: React.JSX.Element[]): voi
 
   // Loop through all data columns in the table
   for (let i = 0; i < maxCols; i++) {
-    tableRow.push(<td>{emptyText}</td>);
+    tableRow.push(<td key={getNewKey()}>{emptyText}</td>);
   }
 }
 
@@ -301,8 +300,16 @@ function fillData(
     // ]);
 
     const dataValue = getPxTableData(table.data.cube, dimensions);
-    tableRow.push(<td>{dataValue}</td>);
+
+    tableRow.push(<td key={getNewKey()}>{t('number.simple_number', {value: dataValue ?? ''})}</td>); // TODO: Handle null values
   }
 }
 
+let number = 0;
+
+// TODO: Get keys from id:s in the PxTable object
+function getNewKey(): string {
+  number = number + 1;
+  return number.toString();
+}
 export default Table;
