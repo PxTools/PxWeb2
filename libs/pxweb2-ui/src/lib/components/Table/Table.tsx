@@ -1,5 +1,7 @@
 import { t } from 'i18next';
+import cl from 'clsx';
 
+import classes from './Table.module.scss';
 import { PxTable } from '../../shared-types/pxTable';
 import { calculateRowAndColumnMeta, columnRowMeta } from './columnRowMeta';
 import { getPxTableData } from './cubeHelper';
@@ -46,7 +48,7 @@ export function Table({ pxtable }: TableProps) {
   }
 
   return (
-    <table>
+    <table className={cl(classes.table,classes[`bodyshort-medium`])}>
       <thead>{createHeading(pxtable, tableMeta, headingDataCellCodes)}</thead>
       <tbody>{createRows(pxtable, tableMeta, headingDataCellCodes)}</tbody>
     </table>
@@ -204,7 +206,7 @@ function createRow(
       rowSpan = 1;
     }
 
-    tableRow.push(<th key={getNewKey()}>{val.label}</th>);
+    tableRow.push(<th className={cl(classes.stub, classes[`stub-${stubIndex}`] ) } key={getNewKey()}>{val.label}</th>);
 
     // If there are more stub variables that need to add headers to this row
     if (table.stub.length > stubIndex + 1) {
