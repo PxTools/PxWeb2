@@ -82,7 +82,7 @@ interface Resources {
           }
         },
         "view": {
-          "title": "Distplay",
+          "title": "Display",
           "table": {
             "title": "Table"
           },

@@ -97,11 +97,11 @@
             "title": "Pivotera"
           },
           "rearrange": {
-            "title": "Anpassa table",
+            "title": "Anpassa tabell",
             "description": "Beskrivande text..."
           },
           "change_order": {
-            "title": "Change order",
+            "title": "Ändra ordning",
             "description": "Beskrivande text..."
           }
         },
@@ -127,12 +127,12 @@
           "png": "Diagram (png)"
         },
         "link": {
-          "title": "Save as länk",
+          "title": "Spara som länk",
           "description": "Beskrivande text..."
         },
         "api": {
           "title": "API",
-          "description": "Description text..."
+          "description": "Beskrivande text..."
         }
       },
       "help": {
@@ -140,30 +140,30 @@
       }
     },
     "main_content": {
-      "last_updated": "Last updated",
-      "show_details": "Show details",
+      "last_updated": "Senast uppdaterad",
+      "show_details": "Visa detaljer",
       "about_table": {
-        "title": "About the table",
+        "title": "Om tabellen",
         "footnotes": {
-          "title": "Notes",
-          "show_all_footnotes": "Show all notes for table"
+          "title": "Fotnoter",
+          "show_all_footnotes": "Visa alla fotnoter för tabellen"
         },
         "information": {
           "title": "Information",
-          "description": "The table is part of the statistics {{statistics}}"
+          "description": "Tabellen är en del av statistiken {{statistics}}"
         },
         "definition": {
-          "title": "Definitions",
-          "description": "Description text..."
+            "title": "Definitioner",
+          "description": "Beskrivande text..."
         },
         "metadata": {
           "title": "Metadata",
-          "description": "Description text..."
+          "description": "Beskrivande text..."
         }
       },
       "related": {
-        "title": "Related",
-        "description": "Description text..."
+        "title": "Relaterat",
+        "description": "Beskrivande text..."
       }
     },
 
