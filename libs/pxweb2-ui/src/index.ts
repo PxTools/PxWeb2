@@ -13,6 +13,7 @@ export * from './lib/components/Search/Search';
 export * from './lib/components/Link/Link';
 export * from './lib/components/Table/Table';
 export * from './lib/components/Table/cubeHelper';
+export * from './lib/components/EmptyState/EmptyState';
 export * from './lib/shared-types/codelist';
 export * from './lib/shared-types/codelistType';
 export * from './lib/shared-types/note';

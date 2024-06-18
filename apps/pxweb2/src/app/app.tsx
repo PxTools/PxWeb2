@@ -14,6 +14,7 @@ import {
   SelectedVBValues,
   Value,
   SelectOption,
+  EmptyState,
 } from '@pxweb2/pxweb2-ui';
 import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
 import { TableService } from '@pxweb2/pxweb2-api-client';
@@ -189,7 +190,7 @@ export type NavigationItem =
   | 'help';
 
 export function App() {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   const variables = useVariables();
   const tableData = useTableData();
   const [tableid, setTableid] = useState('tab638');
@@ -197,6 +198,8 @@ export function App() {
   const [pxTable, setPxTable] = useState<PxTable | null>(null);
   const [selectedNavigationView, setSelectedNavigationView] =
     useState<NavigationItem>('filter');
+  const [isMissingMandatoryVariables, setIsMissingMandatoryVariables] =
+    useState(false);
 
   // Initial metadata from the api
   const [pxTableMetadata, setPxTableMetadata] =
@@ -221,6 +224,11 @@ export function App() {
 
     if (hasSelectedMandatoryVariables) {
       tableData.fetchTableData(tableid, i18n);
+
+      setIsMissingMandatoryVariables(false);
+    }
+    if (!hasSelectedMandatoryVariables) {
+      setIsMissingMandatoryVariables(true);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -581,14 +589,21 @@ export function App() {
           />
         </div>
         <Content topLeftBorderRadius={selectedNavigationView === 'none'}>
-          {pxTable?.data?.isLoaded && (
+          {!isMissingMandatoryVariables && pxTable?.data?.isLoaded && (
             <div>
               <Table pxtable={pxTable} />
             </div>
           )}
-          {tableData.data && (
+          {!isMissingMandatoryVariables && tableData.data && (
             <div dangerouslySetInnerHTML={{ __html: tableData.data }} />
-          )}{' '}
+          )}
+          {isMissingMandatoryVariables && (
+            <EmptyState
+              headingTxt={t('presentation_page.main_content.table.warnings.missing_mandatory.title')}
+            >
+              {t('presentation_page.main_content.table.warnings.missing_mandatory.description')}
+            </EmptyState>
+          )}
         </Content>
       </div>
     </>
