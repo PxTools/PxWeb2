@@ -1,10 +1,12 @@
 @use '../../text-styles.scss';
 
 .table {
+    border-collapse: collapse;
   th {
     padding: 8px 12px;
     text-align: center;
     border-bottom: 1px solid var(--px-color-border-default);
+    border-left: 1px solid var(--px-color-border-default);
   }
   th.stub {
     text-align: left;
