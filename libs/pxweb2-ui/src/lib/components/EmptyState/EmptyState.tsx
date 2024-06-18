@@ -15,8 +15,20 @@ export function EmptyState({ headingTxt, children }: EmptyStateProps) {
           // TODO: Add an illustration/svg here
         </div> */}
         <div className={cl(styles['empty-state-text'])}>
-          <div className={cl(styles['empty-state-heading'], styles['heading-small'])}>{headingTxt}</div>
-          <div className={cl(styles['empty-state-description'], styles['bodyshort-medium'])}>
+          <div
+            className={cl(
+              styles['empty-state-heading'],
+              styles['heading-small']
+            )}
+          >
+            {headingTxt}
+          </div>
+          <div
+            className={cl(
+              styles['empty-state-description'],
+              styles['bodyshort-medium']
+            )}
+          >
             <p>{children}</p>
           </div>
         </div>
