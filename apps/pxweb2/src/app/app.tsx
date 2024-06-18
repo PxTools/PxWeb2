@@ -1,7 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+
 import styles from './app.module.scss';
+import { ContentTop } from './components/ContentTop/ContentTop';
 import {
   Button,
   PxTableMetadata,
@@ -511,6 +513,7 @@ export function App() {
           />
         </div>
         <Content topLeftBorderRadius={selectedNavigationView === 'none'}>
+        <ContentTop />
           {tableData.data && (
             <div>
               <Table pxtable={JSON.parse(tableData.data)} />
