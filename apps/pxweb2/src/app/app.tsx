@@ -599,9 +599,13 @@ export function App() {
           )}
           {isMissingMandatoryVariables && (
             <EmptyState
-              headingTxt={t('presentation_page.main_content.table.warnings.missing_mandatory.title')}
+              headingTxt={t(
+                'presentation_page.main_content.table.warnings.missing_mandatory.title'
+              )}
             >
-              {t('presentation_page.main_content.table.warnings.missing_mandatory.description')}
+              {t(
+                'presentation_page.main_content.table.warnings.missing_mandatory.description'
+              )}
             </EmptyState>
           )}
         </Content>

@@ -20,6 +20,8 @@ export const Default: Story = {
     const canvas = within(canvasElement);
 
     expect(canvas.getByText(/Welcome to EmptyState!/gi)).toBeTruthy();
-    expect(canvas.getByText(/This is a description of the empty state./gi)).toBeTruthy();
+    expect(
+      canvas.getByText(/This is a description of the empty state./gi)
+    ).toBeTruthy();
   },
 };

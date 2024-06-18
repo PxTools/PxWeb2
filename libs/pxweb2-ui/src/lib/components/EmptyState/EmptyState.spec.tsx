@@ -7,6 +7,7 @@ describe('EmptyState', () => {
     const { baseElement } = render(
       <EmptyState headingTxt="test">'test'</EmptyState>
     );
+    
     expect(baseElement).toBeTruthy();
   });
 });
