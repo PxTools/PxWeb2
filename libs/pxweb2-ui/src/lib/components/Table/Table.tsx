@@ -29,8 +29,8 @@ export function Table({ pxtable }: TableProps) {
 
   const tableColumnSize: number = tableMeta.columns - tableMeta.columnOffset;
   const headingDataCellCodes = new Array<DataCellCodes>(tableColumnSize); // Contains header variable and value codes for each column in the table
-  
-  // Create empty metadata structure for the dimensions in the header. 
+
+  // Create empty metadata structure for the dimensions in the header.
   // This structure will be filled with metadata when the header is created.
 
   // Loop through all columns in the table. i is the column index
@@ -48,17 +48,16 @@ export function Table({ pxtable }: TableProps) {
   }
 
   return (
-    <table className={cl(classes.table,classes[`bodyshort-medium`])}>
+    <table className={cl(classes.table, classes[`bodyshort-medium`])}>
       <thead>{createHeading(pxtable, tableMeta, headingDataCellCodes)}</thead>
       <tbody>{createRows(pxtable, tableMeta, headingDataCellCodes)}</tbody>
     </table>
   );
 }
 
-
 /**
  * Creates the heading rows for the table.
- * 
+ *
  * @param table - The PxTable object representing the table data.
  * @param tableMeta - The metadata for the table columns and rows.
  * @param headingDataCellCodes - Empty metadata structure for the dimensions of the header cells.
@@ -79,13 +78,17 @@ export function createHeading(
 
   // If we have any variables in the stub create a empty cell at top left corner of the table
   if (table.stub.length > 0) {
-    headerRow.push(<th rowSpan={table.heading.length} key={getNewKey()}>{emptyText}</th>);
+    headerRow.push(
+      <th rowSpan={table.heading.length} key={getNewKey()}>
+        {emptyText}
+      </th>
+    );
   }
 
   // Otherwise calculate columnspan start value
   columnSpan = tableMeta.columns - tableMeta.columnOffset;
 
-  // loop trough all the variables in the header. idxHeadingLevel is the header variable index 
+  // loop trough all the variables in the header. idxHeadingLevel is the header variable index
   for (
     let idxHeadingLevel = 0;
     idxHeadingLevel < table.heading.length;
@@ -96,7 +99,7 @@ export function createHeading(
 
     const variable = table.heading[idxHeadingLevel];
     let columnIndex = 0;
-    // Repeat for number of times in repetion, first time only once. idxRepetitionCurrentHeadingLevel is the repetition counter 
+    // Repeat for number of times in repetion, first time only once. idxRepetitionCurrentHeadingLevel is the repetition counter
     for (
       let idxRepetitionCurrentHeadingLevel = 1;
       idxRepetitionCurrentHeadingLevel <= repetitionsCurrentHeaderLevel;
@@ -105,7 +108,9 @@ export function createHeading(
       // loop trough all the values for the header variable
       for (let i = 0; i < variable.values.length; i++) {
         headerRow.push(
-          <th colSpan={columnSpan} key={getNewKey()}>{variable.values[i].label}</th>
+          <th colSpan={columnSpan} key={getNewKey()}>
+            {variable.values[i].label}
+          </th>
         );
         // Repeat for the number of columns in the column span
         for (let j = 0; j < columnSpan; j++) {
@@ -168,7 +173,7 @@ export function createRows(
 
 /**
  * Creates the rows for the table based on the stub variables.
- * 
+ *
  * @param stubIndex - The index of the current stub variable.
  * @param rowSpan - The rowspan for the cells to add in this call.
  * @param table - The PxTable object representing the PxWeb table data.
@@ -206,7 +211,14 @@ function createRow(
       rowSpan = 1;
     }
 
-    tableRow.push(<th className={cl(classes.stub, classes[`stub-${stubIndex}`] ) } key={getNewKey()}>{val.label}</th>);
+    tableRow.push(
+      <th
+        className={cl(classes.stub, classes[`stub-${stubIndex}`])}
+        key={getNewKey()}
+      >
+        {val.label}
+      </th>
+    );
 
     // If there are more stub variables that need to add headers to this row
     if (table.stub.length > stubIndex + 1) {
@@ -246,11 +258,14 @@ function createRow(
 
 /**
  * Fills a row with empty cells. This is used when we are not on the last dimension of the stub. No data is available for these cells.
- * 
+ *
  * @param tableMeta - The metadata for the table columns and rows.
  * @param tableRow - The array of React.JSX.Element representing the row of the table.
  */
-function fillEmpty(tableMeta: columnRowMeta, tableRow: React.JSX.Element[]): void {
+function fillEmpty(
+  tableMeta: columnRowMeta,
+  tableRow: React.JSX.Element[]
+): void {
   const emptyText = '';
 
   // Loop through cells that need to be added to the row
@@ -265,7 +280,7 @@ function fillEmpty(tableMeta: columnRowMeta, tableRow: React.JSX.Element[]): voi
 // Fills a row with data cells
 /**
  * Fills a row with data cells.
- * 
+ *
  * @param table - The PxTable object representing the PxWeb table.
  * @param tableMeta - The metadata for the table columns and rows.
  * @param stubDataCellCodes - The metadata structure for the dimensions of the stub cells.
@@ -296,14 +311,18 @@ function fillData(
 
     // Example of how to get data from the cube (men in Stockholm in 1970):
     // const dataValue = getPxTableData(table.data, [
-    //   '0180', 
+    //   '0180',
     //   'men',
     //   '1970',
     // ]);
 
     const dataValue = getPxTableData(table.data.cube, dimensions);
 
-    tableRow.push(<td key={getNewKey()}>{t('number.simple_number', {value: dataValue ?? ''})}</td>); // TODO: Handle null values
+    tableRow.push(
+      <td key={getNewKey()}>
+        {t('number.simple_number', { value: dataValue ?? '' })}
+      </td>
+    ); // TODO: Handle null values
   }
 }
 
