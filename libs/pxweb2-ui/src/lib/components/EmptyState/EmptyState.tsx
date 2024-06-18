@@ -11,8 +11,10 @@ export function EmptyState({ headingTxt, children }: EmptyStateProps) {
   return (
     <div className={cl(styles['empty-state'])}>
       <div className={cl(styles['empty-state-content'])}>
-        {/* <div className={cl(styles['empty-state-illustration'])}>
-          // TODO: Add an illustration/svg here
+        {/* <div // TODO: Add an illustration/svg here
+          className={cl(styles['empty-state-illustration'])}
+          aria-label="Illustration of {something}"
+        >
         </div> */}
         <div className={cl(styles['empty-state-text'])}>
           <div
