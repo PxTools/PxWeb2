@@ -198,6 +198,7 @@ export function App() {
   const [pxTable, setPxTable] = useState<PxTable | null>(null);
   const [selectedNavigationView, setSelectedNavigationView] =
     useState<NavigationItem>('filter');
+  const [isLoadingMetadata, setIsLoadingMetadata] = useState<boolean>(true);
   const [isMissingMandatoryVariables, setIsMissingMandatoryVariables] =
     useState(false);
 
@@ -235,6 +236,10 @@ export function App() {
   }, [i18n, selectedVBValues, tableid, variables, i18n.resolvedLanguage]);
 
   useEffect(() => {
+    if (isLoadingMetadata === false) {
+      setIsLoadingMetadata(true);
+    }
+
     TableService.getMetadataById(tableid, i18n.resolvedLanguage)
       .then((tableMetadataResponse) => {
         const pxTabMetadata: PxTableMetadata = mapTableMetadataResponse(
@@ -258,6 +263,7 @@ export function App() {
             );
 
             setSelectedVBValues(defaultSelection);
+            setIsLoadingMetadata(false);
           })
           .catch((error) => {
             setErrorMsg('Error getting default selection: ' + tableid);
@@ -457,10 +463,12 @@ export function App() {
         <option value="TAB4246">TAB4246 (decimals)</option>
         <option value="TAB1128">TAB1128 (large)</option>
       </select>
-      <br/><br/>
+      <br />
+      <br />
       <div className={styles.variableBoxContainer}>
         {/* TODO: I think the warning in the console about unique IDs is the variable.id below*/}
-        {pxTableMetaToRender &&
+        {!isLoadingMetadata &&
+          pxTableMetaToRender &&
           pxTableMetaToRender.variables.length > 0 &&
           pxTableMetaToRender.variables.map(
             (variable, index) =>
@@ -524,7 +532,7 @@ export function App() {
               <Table pxtable={JSON.parse(tableData.data)} />
             </div>
           )}{' '}
-          {isMissingMandatoryVariables && (
+          {!isLoadingMetadata && isMissingMandatoryVariables && (
             <EmptyState
               headingTxt={t(
                 'presentation_page.main_content.table.warnings.missing_mandatory.title'
