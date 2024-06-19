@@ -243,13 +243,13 @@ export function App() {
     if (!tableId) {
       return;
     }
-    TableService.getMetadataById(selectedTableId, i18n.resolvedLanguage)
+    TableService.getMetadataById(selectedTableId, i18n.resolvedLanguage);
 
     if (isLoadingMetadata === false) {
       setIsLoadingMetadata(true);
     }
 
-    TableService.getMetadataById(tableid, i18n.resolvedLanguage)
+    TableService.getMetadataById(tableId, i18n.resolvedLanguage)
 
       .then((tableMetadataResponse) => {
         const pxTabMetadata: PxTableMetadata = mapTableMetadataResponse(
