@@ -2,7 +2,7 @@
   // Problem is that this min-height is trying to use the parent height, but the parent height is only max-height?
   // Removing this min-height fixes it, not sure if there are other things that happen though
   // Removing the parent min-height also fixes it
-  min-height: 44px;
+  //min-height: 44px;
   display: flex;
   position: relative;
   border-radius: 4px;
