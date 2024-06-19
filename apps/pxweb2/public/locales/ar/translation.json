@@ -52,6 +52,16 @@
           }
         }
       }
+    },
+    "main_content": {
+      "table": {
+        "warnings": {
+          "missing_mandatory": {
+            "title": "لا يمكن عرض الجدول",
+            "description": "يجب عليك تحديد شيء ما في الفلتر الموجود على اليسار"
+          }
+        }
+      }
     }
   }
 }
