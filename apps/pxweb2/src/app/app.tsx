@@ -189,7 +189,7 @@ export type NavigationItem =
   | 'help';
 
 export function App() {
-  const { i18n } = useTranslation();
+  const { i18n,t } = useTranslation();
   const variables = useVariables();
   const tableData = useTableData();
   const [tableid, setTableid] = useState('tab638');
@@ -549,7 +549,7 @@ export function App() {
   const drawerEdit = <>Edit content</>;
   const drawerSave = <>Save content</>;
   const drawerHelp = <>Help content</>;
-  const { t } = useTranslation();
+  
 
   return (
     <>
