@@ -23,9 +23,9 @@ import NavigationRail from './components/NavigationRail/NavigationRail';
 import { Content } from './components/Content/Content';
 import NavigationBar from './components/NavigationBar/NavigationBar';
 import NavigationDrawer from './components/NavigationDrawer/NavigationDrawer';
-import { Footer } from './components/Footer/Footer';
 import useVariables from './context/useVariables';
 import useTableData from './context/useTableData';
+import { useNavigate, useParams } from 'react-router-dom';
 
 function addSelectedCodeListToVariable(
   currentVariable: SelectedVBValues | undefined,
@@ -188,10 +188,15 @@ export type NavigationItem =
   | 'help';
 
 export function App() {
+  const { tableId } = useParams<{ tableId: string }>();
+  console.log(tableId);
+  const navigate = useNavigate();
   const { i18n } = useTranslation();
   const variables = useVariables();
   const tableData = useTableData();
-  const [tableid, setTableid] = useState('tab638');
+  const [selectedTableId, setSelectedTableId] = useState(
+    tableId ? tableId : 'tab638'
+  );
   const [errorMsg, setErrorMsg] = useState('');
   const [pxTable, setPxTable] = useState<PxTable | null>(null);
   const [selectedNavigationView, setSelectedNavigationView] =
@@ -209,12 +214,12 @@ export function App() {
 
   useEffect(() => {
     variables.syncVariablesAndValues(selectedVBValues);
-    tableData.fetchTableData(tableid, i18n);
+    tableData.fetchTableData(tableId ? tableId : 'tab638', i18n);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [i18n, selectedVBValues, tableid, variables]);
+  }, [i18n, selectedVBValues, selectedTableId, variables, tableId]);
 
   useEffect(() => {
-    TableService.getMetadataById(tableid, i18n.resolvedLanguage)
+    TableService.getMetadataById(selectedTableId, i18n.resolvedLanguage)
       .then((tableMetadataResponse) => {
         const pxTabMetadata: PxTableMetadata = mapTableMetadataResponse(
           tableMetadataResponse
@@ -226,12 +231,12 @@ export function App() {
         setErrorMsg('');
       })
       .catch((error) => {
-        setErrorMsg('Could not get table: ' + tableid);
+        setErrorMsg('Could not get table: ' + selectedTableId);
         setPxTableMetadata(null);
       });
     // TODO: Fix this hook to work as intended instead of ignoring it like this
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tableid]);
+  }, [selectedTableId]);
 
   if (pxTableMetaToRender === null && pxTableMetadata !== null) {
     setPxTableMetaToRender(structuredClone(pxTableMetadata));
@@ -478,7 +483,11 @@ export function App() {
       <select
         name="tabid"
         id="tabid"
-        onChange={(e) => setTableid(e.target.value)}
+        value={tableId}
+        onChange={(e) => {
+          setSelectedTableId(e.target.value);
+          navigate(`/table/${e.target.value}`);
+        }}
       >
         <option value="TAB638">TAB638</option>
         <option value="TAB1292">TAB1292</option>

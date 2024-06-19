@@ -9,8 +9,8 @@ export const Footer: React.FC = () => {
   return (
     <div className={styles.footer}>
       <div className={styles.logos}>
-        <img alt="SCB logo" src="./images/scb-logo.png" />{' '}
-        <img alt="SSB logo" src="./images/ssb-logo.png" />
+        <img alt="SCB logo" src="/images/scb-logo.svg" />{' '}
+        <img alt="SSB logo" src="/images/ssb-logo.svg" />
       </div>
       <div className={styles.description}>
         <BodyLong>
