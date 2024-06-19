@@ -164,9 +164,7 @@
       "related": {
         "title": "Relaterat",
         "description": "Beskrivande text..."
-      }
-    },
-    "main_content": {
+      },
       "table": {
         "warnings": {
           "missing_mandatory": {
