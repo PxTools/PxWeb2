@@ -189,7 +189,7 @@ export type NavigationItem =
   | 'help';
 
 export function App() {
-  const { i18n,t } = useTranslation();
+  const { i18n, t } = useTranslation();
   const variables = useVariables();
   const tableData = useTableData();
   const [tableid, setTableid] = useState('tab638');
