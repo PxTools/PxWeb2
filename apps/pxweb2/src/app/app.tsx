@@ -495,6 +495,7 @@ export function App() {
   const drawerEdit = <>Edit content</>;
   const drawerSave = <>Save content</>;
   const drawerHelp = <>Help content</>;
+  
 
   return (
     <>
@@ -507,7 +508,7 @@ export function App() {
           />
           {selectedNavigationView !== 'none' && (
             <NavigationDrawer
-              heading="Filtrer"
+              heading={t('presentation_page.sidemenu.selection.title')} 
               onClose={() => {
                 setSelectedNavigationView('none');
               }}
