@@ -202,6 +202,7 @@ export function App() {
   const [pxTable, setPxTable] = useState<PxTable | null>(null);
   const [selectedNavigationView, setSelectedNavigationView] =
     useState<NavigationItem>('filter');
+  const [isLoadingMetadata, setIsLoadingMetadata] = useState<boolean>(true);
   const [isMissingMandatoryVariables, setIsMissingMandatoryVariables] =
     useState(false);
 
@@ -243,6 +244,13 @@ export function App() {
       return;
     }
     TableService.getMetadataById(selectedTableId, i18n.resolvedLanguage)
+
+    if (isLoadingMetadata === false) {
+      setIsLoadingMetadata(true);
+    }
+
+    TableService.getMetadataById(tableid, i18n.resolvedLanguage)
+
       .then((tableMetadataResponse) => {
         const pxTabMetadata: PxTableMetadata = mapTableMetadataResponse(
           tableMetadataResponse
@@ -265,6 +273,7 @@ export function App() {
             );
 
             setSelectedVBValues(defaultSelection);
+            setIsLoadingMetadata(false);
           })
           .catch((error) => {
             setErrorMsg('Error getting default selection: ' + tableId);
@@ -472,7 +481,8 @@ export function App() {
       <br />
       <div className={styles.variableBoxContainer}>
         {/* TODO: I think the warning in the console about unique IDs is the variable.id below*/}
-        {pxTableMetaToRender &&
+        {!isLoadingMetadata &&
+          pxTableMetaToRender &&
           pxTableMetaToRender.variables.length > 0 &&
           pxTableMetaToRender.variables.map(
             (variable, index) =>
@@ -536,7 +546,7 @@ export function App() {
               <Table pxtable={JSON.parse(tableData.data)} />
             </div>
           )}{' '}
-          {isMissingMandatoryVariables && (
+          {!isLoadingMetadata && isMissingMandatoryVariables && (
             <EmptyState
               headingTxt={t(
                 'presentation_page.main_content.table.warnings.missing_mandatory.title'
