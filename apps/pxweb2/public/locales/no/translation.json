@@ -145,8 +145,8 @@
       "table": {
         "warnings": {
           "missing_mandatory": {
-            "title": "Mangler obligatoriske valg",
-            "description": "Tabellen kan ikke vises. Du må velge noe i filteret til venstre."
+            "title": "Tabellen kan ikke vises",
+            "description": "Du må velge noe i filteret til venstre"
           }
         }
       },

@@ -145,8 +145,8 @@
       "table": {
         "warnings": {
           "missing_mandatory": {
-            "title": "Missing mandatory selection",
-            "description": "The table cannot be displayed. You must select something in the filter on the left."
+            "title": "The table cannot be displayed",
+            "description": "You must select something in the filter on the left"
           }
         }
       },
