@@ -35,9 +35,9 @@ The team is set up with
 The other Nordic countries will be involved in tessting and participate at the demos.
 
 ## Contact for questions and comments
-Project leader: Kristin Glomsås, Statistics Norway kristin.glomsas@ssb.no
+Project leader: Kristin Glomsås, Statistics Norway [kristin.glomsas@ssb.no]
 
-Scrum master: Åsa Arrhén, Statistics Sweden asa.arrhen@scb.se
+Scrum master: Åsa Arrhén, Statistics Sweden (asa.arrhen@scb.se)
 
 
 
