@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './Content.module.scss';
 import cl from 'clsx';
+import { Footer } from '../Footer/Footer';
 
 export interface ContentProps {
   children: React.ReactNode;
@@ -17,7 +18,10 @@ export const Content: React.FC<ContentProps> = ({
         [styles.topLeftBorderRadius]: topLeftBorderRadius,
       })}
     >
-      <div className={styles.content}>{children}</div>
+      <div>
+        <div className={styles.content}>{children}</div>
+      </div>
+      <Footer />
     </div>
   );
 };

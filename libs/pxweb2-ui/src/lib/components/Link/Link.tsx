@@ -8,6 +8,7 @@ interface LinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   size?: 'small' | 'medium';
   icon?: IconProps['iconName'];
   iconPosition?: 'left' | 'right';
+  target?: '_blank' | '_self' | '_parent' | '_top';
   children: React.ReactNode;
   href: string;
   inline?: boolean;
@@ -17,6 +18,7 @@ export function Link({
   children,
   size,
   href,
+  target,
   icon,
   iconPosition,
   inline = false,
@@ -26,6 +28,7 @@ export function Link({
   return (
     <a
       href={href}
+      target={target ? target : ''}
       className={cl(classes.link, {
         [classes.no_underline]: noUnderline,
         [classes.inline]: inline,

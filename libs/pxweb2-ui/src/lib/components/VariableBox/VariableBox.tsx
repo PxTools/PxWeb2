@@ -19,6 +19,7 @@ export type VariableBoxPropsBase = Omit<Variable, 'type' | 'notes'>;
 
 export type VariableBoxProps = VariableBoxPropsBase & {
   tableId: string;
+  initialIsOpen?: boolean;
   onChangeCodeList: (
     selectedItem: SelectOption | undefined,
     varId: string
@@ -30,6 +31,7 @@ export type VariableBoxProps = VariableBoxPropsBase & {
 
 export function VariableBox({
   id,
+  initialIsOpen,
   tableId,
   label,
   mandatory = false,
@@ -40,7 +42,7 @@ export function VariableBox({
   onChangeCheckbox,
   onChangeMixedCheckbox,
 }: VariableBoxProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(!!initialIsOpen);
   const [prevTableId, setPrevTableId] = useState<string>(tableId);
 
   const capitalizedVariableName =
@@ -50,6 +52,9 @@ export function VariableBox({
   const chosenValuesLength = selectedValues.find(
     (variables) => variables.id === id
   )?.values.length;
+  const currentVariable = selectedValues.find((variable) => variable.id === id);
+  const isMissingMandatoryValueError =
+    mandatory && (currentVariable?.values.length === 0 || !currentVariable);
 
   if (prevTableId !== tableId) {
     setIsOpen(false);
@@ -61,7 +66,13 @@ export function VariableBox({
   }
 
   return (
-    <div className={cl(classes.variablebox)} key={id + '-variablebox'}>
+    <div
+      className={cl(
+        classes.variablebox,
+        isMissingMandatoryValueError && classes['error']
+      )}
+      key={id + '-variablebox'}
+    >
       <VariableBoxHeader
         label={capitalizedVariableName}
         mandatory={mandatory}
@@ -70,6 +81,7 @@ export function VariableBox({
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         className={cl(classes['header-icon'])}
+        isMissingMandatoryValues={isMissingMandatoryValueError}
       />
 
       {isOpen && (

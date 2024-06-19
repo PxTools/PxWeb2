@@ -10,7 +10,17 @@
           "description": "All supported languages",
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "object",
+            "properties": {
+              "shorthand": {
+                "type": "string",
+                "description": "Two letter name for language"
+              },
+              "languageName": {
+                "type": "string",
+                "description": "The long name for the language. How the name is written in its own language."
+              }
+            }
           }
         },
         "defaultLanguage": {

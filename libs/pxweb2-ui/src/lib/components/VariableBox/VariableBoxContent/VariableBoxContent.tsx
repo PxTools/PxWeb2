@@ -7,14 +7,16 @@ import { Checkbox, MixedCheckbox } from '../../Checkbox/Checkbox';
 import Search from '../../Search/Search';
 import { Select, SelectOption } from '../../Select/Select';
 import { VariableBoxProps } from '../VariableBox';
-
 import { SelectedVBValues } from '../VariableBox';
 
 type MappedCodeList = {
   value: string;
   label: string;
 };
-type VariableBoxPropsToContent = Omit<VariableBoxProps, 'id' | 'mandatory' | 'tableId'>;
+type VariableBoxPropsToContent = Omit<
+  VariableBoxProps,
+  'id' | 'mandatory' | 'tableId'
+>;
 
 /* eslint-disable-next-line */
 type VariableBoxContentProps = VariableBoxPropsToContent & {
@@ -59,8 +61,11 @@ export function VariableBoxContent({
   const [allValuesSelected, setAllValuesSelected] = useState<
     'mixed' | 'true' | 'false'
   >('mixed');
+  const [currentFocusedCheckboxIndex, setCurrentFocusedCheckboxIndexIndex] =
+    useState<number | null>(null);
 
   const scrollRef = useRef<HTMLDivElement>(null);
+  const valuesOnlyList = useRef<HTMLDivElement>(null);
   const hasCodeLists = codeLists && codeLists.length > 0;
   const hasSevenOrMoreValues = values && values.length > 6;
   const hasTwoOrMoreValues = values && values.length > 1;
@@ -139,14 +144,77 @@ export function VariableBoxContent({
     });
   }
 
+  const handleValueListKeyboardNavigation = (
+    event: React.KeyboardEvent<HTMLDivElement>
+  ) => {
+    const { key, shiftKey } = event; // TODO: Add support for shiftKey to select multiple values
+    const currentFocusedElement = document.activeElement;
+
+    if (
+      key === 'ArrowDown' &&
+      currentFocusedElement === valuesOnlyList.current
+    ) {
+      if (currentFocusedCheckboxIndex === null) {
+        setCurrentFocusedCheckboxIndexIndex(0);
+
+        const firstCheckbox = document.getElementById(values[0].code);
+
+        firstCheckbox?.focus();
+
+        return;
+      }
+
+      const currentFocusedCheckboxIndexElement = document.getElementById(
+        values[currentFocusedCheckboxIndex].code
+      );
+
+      currentFocusedCheckboxIndexElement?.focus();
+    }
+    if (
+      key === 'ArrowDown' &&
+      currentFocusedElement !== valuesOnlyList.current
+    ) {
+      if (currentFocusedCheckboxIndex === null) {
+        return;
+      }
+
+      if (currentFocusedCheckboxIndex === values.length - 1) {
+        return;
+      }
+
+      setCurrentFocusedCheckboxIndexIndex(currentFocusedCheckboxIndex + 1);
+
+      const nextCheckbox = document.getElementById(
+        values[currentFocusedCheckboxIndex + 1].code
+      );
+
+      nextCheckbox?.focus();
+    }
+    if (key === 'ArrowUp' && currentFocusedElement !== valuesOnlyList.current) {
+      if (currentFocusedCheckboxIndex === null) {
+        return;
+      }
+
+      if (currentFocusedCheckboxIndex === 0) {
+        return;
+      }
+
+      setCurrentFocusedCheckboxIndexIndex(currentFocusedCheckboxIndex - 1);
+
+      const prevCheckbox = document.getElementById(
+        values[currentFocusedCheckboxIndex - 1].code
+      );
+
+      prevCheckbox?.focus();
+    }
+  };
+
   const currentVarSelectedCodeList = selectedValues.find(
     (variable) => variable.id === varId
   )?.selectedCodeList;
 
   return (
     <div className={cl(classes['variablebox-content'])}>
-      {/* TODO: Add the Alert here, see note in figma about it. Need more functionality atm i think */}
-
       <div className={cl(classes['variablebox-content-main'])}>
         {hasCodeLists === true && (
           <div className={cl(classes['variablebox-content-select'])}>
@@ -173,9 +241,9 @@ export function VariableBoxContent({
         <div
           key={varId + '-values-list'}
           className={cl(
-            classes['variablebox-content-values-list'],
+            classes['variablebox-content-full-values-list'],
             hasSevenOrMoreValues &&
-              classes['variablebox-content-values-list-scroll']
+              classes['variablebox-content-full-values-list-scroll']
           )}
           ref={scrollRef}
           onScroll={handleScroll}
@@ -184,11 +252,11 @@ export function VariableBoxContent({
             className={cl(
               hasSevenOrMoreValues &&
                 scrolling === 'up' &&
-                classes['variablebox-content-values-list-scroll-up'],
+                classes['variablebox-content-full-values-list-scroll-up'],
               hasSevenOrMoreValues &&
                 scrolling === 'down' &&
                 hasScrolledUp === true &&
-                classes['variablebox-content-values-list-scroll-down']
+                classes['variablebox-content-full-values-list-scroll-down']
             )}
           >
             {hasSevenOrMoreValues && (
@@ -221,20 +289,54 @@ export function VariableBoxContent({
             )}
           </div>
 
-          {hasValues &&
-            values.map((value) => (
-              <Checkbox
-                id={value.code}
-                value={
-                  selectedValues?.length > 0 &&
-                  selectedValues
-                    .find((variables) => variables.id === varId)
-                    ?.values.includes(value.code) === true
+          {hasValues && (
+            <div
+              aria-label={t(
+                'presentation_page.sidemenu.selection.variablebox.content.values_list.aria_label',
+                {
+                  total: totalValues,
                 }
-                text={value.label}
-                onChange={() => onChangeCheckbox(varId, value.code)}
-              />
-            ))}
+              )}
+              aria-description={t(
+                'presentation_page.sidemenu.selection.variablebox.content.values_list.aria_description',
+                {
+                  total: totalValues,
+                }
+              )} // Coming in WAI-ARIA 1.3 Though caniuse shows 88% support. https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/blob/main/docs/rules/aria-props.md
+              className={cl(classes['variablebox-content-values-only-list'])}
+              tabIndex={0}
+              ref={valuesOnlyList}
+              onKeyUp={(event) => {
+                if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+                  event.preventDefault();
+
+                  handleValueListKeyboardNavigation(event);
+                }
+              }}
+              onKeyDown={(event) => {
+                if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+                  event.preventDefault();
+                }
+              }}
+            >
+              {values.map((value) => (
+                <Checkbox
+                  id={value.code}
+                  tabIndex={-1}
+                  value={
+                    selectedValues?.length > 0 &&
+                    selectedValues
+                      .find((variables) => variables.id === varId)
+                      ?.values.includes(value.code) === true
+                  }
+                  text={
+                    value.label.charAt(0).toUpperCase() + value.label.slice(1)
+                  }
+                  onChange={() => onChangeCheckbox(varId, value.code)}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
