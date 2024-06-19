@@ -143,6 +143,14 @@ interface Resources {
       "main_content": {
         "last_updated": "Last updated",
         "show_details": "Show details",
+        "table": {
+          "warnings": {
+            "missing_mandatory": {
+              "title": "Missing mandatory selection",
+              "description": "The table cannot be displayed. You must select something in the filter on the left."
+            }
+          }
+        },
         "about_table": {
           "title": "About the table",
           "footnotes": {

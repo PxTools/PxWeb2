@@ -32,6 +32,27 @@
     "background-subtle": {
       "value": "#F0F8F9"
     },
+    "base": {
+      "white": {
+        "value": "#FFFFFF"
+      }
+    },
+    "blue": {
+      "200": {
+        "value": "#C3E6FE"
+      }
+    },
+    "bluegray": {
+      "300": {
+        "value": "#9BC4C5"
+      },
+      "700": {
+        "value": "#2F555B"
+      },
+      "900": {
+        "value": "#162327"
+      }
+    },
     "surface-default": {
       "value": "#FFFFFF"
     },

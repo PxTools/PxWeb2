@@ -53,7 +53,16 @@
         }
       }
     },
-
+    "main_content": {
+      "table": {
+        "warnings": {
+          "missing_mandatory": {
+            "title": "Obligatoriskt val saknas",
+            "description": "Tabeller kan inte visas. Du måste välja något från filtret till vänster."
+          }
+        }
+      }
+    },
     "footer": {
       "description": "Statistiska centralbyrån (SCB) och Statistisk sentralbyrå (SSB) bygger ett nytt och mer användarvänligt gränssnitt för PxWeb. Följ utvecklingen av det nya gränssnittet på",
       "descriptionLink": "projektets sida på Github.",
