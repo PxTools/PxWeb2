@@ -59,6 +59,7 @@ function getPxTable() : PxTable {
   const tableMeta: PxTableMetadata = {
     id: 'test01',
     label: 'Test table',
+    updated:new Date('2023-01-14T09:00:05.123Z'),
     variables: variables,
   };
   const table: PxTable = {

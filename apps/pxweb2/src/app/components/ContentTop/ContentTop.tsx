@@ -1,5 +1,6 @@
 import cl from 'clsx';
 
+import { useTranslation } from 'react-i18next';
 import classes from './ContentTop.module.scss';
 
 import {
@@ -9,10 +10,16 @@ import {
   Heading,
   Icon,
   Link,
+  PxTable,
 } from '@pxweb2/pxweb2-ui';
-import styles from './ContentTop.module.scss';
 
-export function ContentTop() {
+export interface ContenetTopProps {
+  pxtable: PxTable;
+  staticTitle: string;
+}
+
+export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
+  const { t } = useTranslation();
   return (
     <div className={cl(classes[`content-top`])}>
       <div className={cl(classes.breadcrumbs)}>
@@ -21,14 +28,21 @@ export function ContentTop() {
             <BodyLong>PxWeb 2.0</BodyLong>
           </Link>
           <Icon iconName="ChevronRight"></Icon>
-          <BodyLong>Static title</BodyLong>
+          <BodyLong>{staticTitle}</BodyLong>
         </div>
       </div>
       <div className={cl(classes[`heading-information`])}>
-        <Heading size="large">Dymanic title</Heading>
+        <Heading size="large">{pxtable.metadata.label}</Heading>
         <div className={cl(classes.information)}>
           <Button variant="secondary">Information</Button>
-          <BodyShort size='medium'>Last updated</BodyShort>
+          {pxtable.metadata && (
+            <BodyShort size="medium">
+              {t('presentation_page.main_content.last_updated')}:{' '} 
+              {t('date.simple_date', {
+                value: new Date(pxtable.metadata.updated),
+              })}{' '}
+            </BodyShort>
+          )}
         </div>
       </div>
     </div>

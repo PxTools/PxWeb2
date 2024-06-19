@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-
 import styles from './app.module.scss';
 import { ContentTop } from './components/ContentTop/ContentTop';
 import {
@@ -18,7 +17,7 @@ import {
   SelectOption,
 } from '@pxweb2/pxweb2-ui';
 import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
-import { TableService } from '@pxweb2/pxweb2-api-client';
+import { Dataset, TableService } from '@pxweb2/pxweb2-api-client';
 import { mapTableMetadataResponse } from '../mappers/TableMetadataResponseMapper';
 import { mapTableSelectionResponse } from '../mappers/TableSelectionResponseMapper';
 import { Header } from './components/Header/Header';
@@ -451,7 +450,8 @@ export function App() {
         <option value="TAB4246">TAB4246 (decimals)</option>
         <option value="TAB1128">TAB1128 (large)</option>
       </select>
-      <br/><br/>
+      <br />
+      <br />
       <div className={styles.variableBoxContainer}>
         {/* TODO: I think the warning in the console about unique IDs is the variable.id below*/}
         {pxTableMetaToRender &&
@@ -513,11 +513,14 @@ export function App() {
           />
         </div>
         <Content topLeftBorderRadius={selectedNavigationView === 'none'}>
-        <ContentTop />
-          {tableData.data && (
-            <div>
-              <Table pxtable={JSON.parse(tableData.data)} />
-            </div>
+          {tableData.data && pxTableMetadata &&(
+            <>
+              <ContentTop staticTitle={pxTableMetadata?.label} pxtable={JSON.parse(tableData.data) } />
+
+              <div>
+                <Table pxtable={JSON.parse(tableData.data)} />
+              </div>
+            </>
           )}{' '}
         </Content>
       </div>
