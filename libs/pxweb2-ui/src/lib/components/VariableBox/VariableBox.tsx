@@ -52,6 +52,9 @@ export function VariableBox({
   const chosenValuesLength = selectedValues.find(
     (variables) => variables.id === id
   )?.values.length;
+  const currentVariable = selectedValues.find((variable) => variable.id === id);
+  const isMissingMandatoryValueError =
+    mandatory && (currentVariable?.values.length === 0 || !currentVariable);
 
   if (prevTableId !== tableId) {
     setIsOpen(false);
@@ -63,7 +66,13 @@ export function VariableBox({
   }
 
   return (
-    <div className={cl(classes.variablebox)} key={id + '-variablebox'}>
+    <div
+      className={cl(
+        classes.variablebox,
+        isMissingMandatoryValueError && classes['error']
+      )}
+      key={id + '-variablebox'}
+    >
       <VariableBoxHeader
         label={capitalizedVariableName}
         mandatory={mandatory}
@@ -72,6 +81,7 @@ export function VariableBox({
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         className={cl(classes['header-icon'])}
+        isMissingMandatoryValues={isMissingMandatoryValueError}
       />
 
       {isOpen && (

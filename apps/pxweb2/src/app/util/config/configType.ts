@@ -1,6 +1,6 @@
 export type Config = {
   language: {
-    supportedLanguages: string[];
+    supportedLanguages: { shorthand: string; languageName: string }[];
     defaultLanguage: string;
     fallbackLanguage: string;
   };

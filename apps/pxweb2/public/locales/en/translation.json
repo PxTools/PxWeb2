@@ -1,6 +1,7 @@
 {
   "meta": {
-    "languageName": "English"
+    "languageName": "English",
+    "shorthand": "en"
   },
   "common": {
     "title": "Welcome to PxWeb 2.0",
@@ -30,7 +31,8 @@
       "ok": "OK",
       "cancel": "Cancel",
       "save": "Save",
-      "search": "Search"
+      "search": "Search",
+      "close": "Close"
     },
     "generic_tags": {
       "mandatory": "Mandatory"
@@ -59,7 +61,8 @@
           },
           "header": {
             "tag_selected": "{{selected}} of {{total}} selected",
-            "tag_mandatory": "Mandatory"
+            "tag_mandatory": "Mandatory",
+            "alert_no_mandatory_values": "You must select something in the list for the table to be displayed"
           },
           "content": {
             "select": {
@@ -69,6 +72,10 @@
             "mixed_checkbox": {
               "select_all": "Select all",
               "deselect_all": "Deselect all"
+            },
+            "values_list": {
+              "aria_label": "List of {{total}} values.",
+              "aria_description": "The variable's list of {{total}} total values. To enter the list, press the arrow down key. The Tab key exits the list."
             }
           }
         }
@@ -135,6 +142,14 @@
     "main_content": {
       "last_updated": "Last updated",
       "show_details": "Show details",
+      "table": {
+        "warnings": {
+          "missing_mandatory": {
+            "title": "Missing mandatory selection",
+            "description": "The table cannot be displayed. You must select something in the filter on the left."
+          }
+        }
+      },
       "about_table": {
         "title": "About the table",
         "footnotes": {

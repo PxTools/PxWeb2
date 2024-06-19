@@ -4,7 +4,12 @@ import App from './app';
 import { MemoryRouter } from 'react-router-dom';
 window.PxWeb2Config = {
   language: {
-    supportedLanguages: ['en', 'no', 'ar', 'sv'],
+    supportedLanguages: [
+      { shorthand: 'en', languageName: 'English' },
+      { shorthand: 'no', languageName: 'Norsk' },
+      { shorthand: 'sv', languageName: 'Svenska' },
+      { shorthand: 'ar', languageName: 'العربية' },
+    ],
     defaultLanguage: 'en',
     fallbackLanguage: 'en',
   },

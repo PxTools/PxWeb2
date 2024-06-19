@@ -1,6 +1,7 @@
 {
   "meta": {
-    "languageName": "Svenska"
+    "languageName": "Svenska",
+    "shorthand": "sv"
   },
   "common": {
     "title": "Välkommen till PxWeb 2.0",
@@ -12,7 +13,8 @@
       "ok": "OK",
       "cancel": "Avbryt",
       "search": "Sök",
-      "save": "Spara"
+      "save": "Spara",
+      "close": "Stänga"
     }
   },
   "start_page": {
@@ -31,7 +33,8 @@
           },
           "header": {
             "tag_selected": "{{selected}} av {{total}} valda",
-            "mandatory": "Måste väljas"
+            "mandatory": "Måste väljas",
+            "alert_no_mandatory_values": "Du måste välja något i listan för att tabellen ska visas"
           },
           "content": {
             "select": {
@@ -41,12 +44,25 @@
             "mixed_checkbox": {
               "select_all": "Välj alla",
               "deselect_all": "Välj bort alla"
+            },
+            "values_list": {
+              "aria_label": "Lista över {{total}} värden.",
+              "aria_description": "Variabelns lista med {{total}} totala värden. För att komma in i listan, tryck på nedåtpilen. Tabbtangenten lämnar listan."
             }
           }
         }
       }
     },
-
+    "main_content": {
+      "table": {
+        "warnings": {
+          "missing_mandatory": {
+            "title": "Obligatoriskt val saknas",
+            "description": "Tabeller kan inte visas. Du måste välja något från filtret till vänster."
+          }
+        }
+      }
+    },
     "footer": {
       "description": "Statistiska centralbyrån (SCB) och Statistisk sentralbyrå (SSB) bygger ett nytt och mer användarvänligt gränssnitt för PxWeb. Följ utvecklingen av det nya gränssnittet på",
       "descriptionLink": "projektets sida på Github.",

@@ -1,6 +1,7 @@
 {
   "meta": {
-    "languageName": "Norsk"
+    "languageName": "Norsk",
+    "shorthand": "no"
   },
   "common": {
     "title": "Velkommen til PxWeb 2.0",
@@ -30,7 +31,8 @@
       "ok": "OK",
       "cancel": "Avbryt",
       "search": "Søk",
-      "save": "Lagre"
+      "save": "Lagre",
+      "close": "Lukk"
     }
   },
   "generic_tags": {
@@ -59,7 +61,8 @@
           },
           "header": {
             "tag_selected": "{{selected}} av {{total}} valgt",
-            "tag_mandatory": "Må velges"
+            "tag_mandatory": "Må velges",
+            "alert_no_mandatory_values": "Du må velge noe i listen for at tabellen skal kunne vises"
           },
           "content": {
             "select": {
@@ -69,6 +72,10 @@
             "mixed_checkbox": {
               "select_all": "Velg alle",
               "deselect_all": "Fjern valgte"
+            },
+            "values_list": {
+              "aria_label": "Liste av {{total}} verdier.",
+              "aria_description": "Variabelens liste over {{total}} totale verdier. For å gå inn i listen, trykk på pil ned-tasten. Tab-tasten går ut av listen."
             }
           }
         }
@@ -135,6 +142,14 @@
     "main_content": {
       "last_updated": "Sist oppdatert",
       "show_details": "Vis detaljer",
+      "table": {
+        "warnings": {
+          "missing_mandatory": {
+            "title": "Mangler obligatoriske valg",
+            "description": "Tabellen kan ikke vises. Du må velge noe i filteret til venstre."
+          }
+        }
+      },
       "about_table": {
         "title": "Om tabellen",
         "footnotes": {
