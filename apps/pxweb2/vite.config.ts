@@ -7,7 +7,7 @@ import path from 'path';
 export default defineConfig({
   root: __dirname,
   cacheDir: '../../node_modules/.vite/apps/pxweb2',
-  base: './',
+  base: '/',
   server: {
     port: 4200,
     host: 'localhost',
@@ -35,7 +35,7 @@ export default defineConfig({
 
   resolve: {
     alias: {
-      '$ui': path.resolve('libs/pxweb2-ui/'),
+      $ui: path.resolve('libs/pxweb2-ui/'),
     },
   },
 
