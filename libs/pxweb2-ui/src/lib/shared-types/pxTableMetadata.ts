@@ -17,6 +17,10 @@ export type PxTableMetadata = {
    */
   description?: string;
   /**
+   * Last updated of the table.
+   */
+  updated: Date;
+  /**
    * The variables that are part of the table.
    */
   variables: Array<Variable>;

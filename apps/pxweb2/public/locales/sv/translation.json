@@ -164,9 +164,7 @@
       "related": {
         "title": "Relaterat",
         "description": "Beskrivande text..."
-      }
-    },
-    "main_content": {
+      },
       "table": {
         "warnings": {
           "missing_mandatory": {
@@ -177,8 +175,8 @@
       }
     },
     "footer": {
-      "description": "Statistiska centralbyrån (SCB) och Statistisk sentralbyrå (SSB) bygger ett nytt och mer användarvänligt gränssnitt för PxWeb. Följ utvecklingen av det nya gränssnittet på",
-      "descriptionLink": "projektets sida på Github.",
+      "description": "På den här sidan kan du följa när Statistikmyndigheten SCB och Statistisk centralbyrå (SSB) tar fram ett nytt gränssnitt för PxWeb.",
+      "descriptionLink": "Läs mer om projektet på Github",
       "contact": "Kontakt",
       "projectLeader": "Projektledare",
       "scrumMaster": "Scrummaster",

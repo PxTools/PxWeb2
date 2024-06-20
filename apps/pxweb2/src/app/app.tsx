@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import styles from './app.module.scss';
+import { ContentTop } from './components/ContentTop/ContentTop';
 import {
   Button,
   PxTableMetadata,
@@ -17,7 +18,7 @@ import {
   EmptyState,
 } from '@pxweb2/pxweb2-ui';
 import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
-import { TableService } from '@pxweb2/pxweb2-api-client';
+import { Dataset, TableService } from '@pxweb2/pxweb2-api-client';
 import { mapTableMetadataResponse } from '../mappers/TableMetadataResponseMapper';
 import { mapTableSelectionResponse } from '../mappers/TableSelectionResponseMapper';
 import { Header } from './components/Header/Header';
@@ -25,9 +26,9 @@ import NavigationRail from './components/NavigationRail/NavigationRail';
 import { Content } from './components/Content/Content';
 import NavigationBar from './components/NavigationBar/NavigationBar';
 import NavigationDrawer from './components/NavigationDrawer/NavigationDrawer';
-import { Footer } from './components/Footer/Footer';
 import useVariables from './context/useVariables';
 import useTableData from './context/useTableData';
+import { useNavigate, useParams } from 'react-router-dom';
 
 function addSelectedCodeListToVariable(
   currentVariable: SelectedVBValues | undefined,
@@ -190,10 +191,14 @@ export type NavigationItem =
   | 'help';
 
 export function App() {
+  const { tableId } = useParams<{ tableId: string }>();
+  const navigate = useNavigate();
   const { i18n, t } = useTranslation();
   const variables = useVariables();
   const tableData = useTableData();
-  const [tableid, setTableid] = useState('tab638');
+  const [selectedTableId, setSelectedTableId] = useState(
+    tableId ? tableId : 'tab638'
+  );
   const [errorMsg, setErrorMsg] = useState('');
   const [pxTable, setPxTable] = useState<PxTable | null>(null);
   const [selectedNavigationView, setSelectedNavigationView] =
@@ -224,7 +229,7 @@ export function App() {
       );
 
     if (hasSelectedMandatoryVariables) {
-      tableData.fetchTableData(tableid, i18n);
+      tableData.fetchTableData(tableId ? tableId : 'tab638', i18n);
 
       setIsMissingMandatoryVariables(false);
     }
@@ -233,14 +238,20 @@ export function App() {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [i18n, selectedVBValues, tableid, variables, i18n.resolvedLanguage]);
+  }, [i18n, selectedVBValues, tableId, variables, i18n.resolvedLanguage]);
 
   useEffect(() => {
+    if (!tableId) {
+      return;
+    }
+    TableService.getMetadataById(selectedTableId, i18n.resolvedLanguage);
+
     if (isLoadingMetadata === false) {
       setIsLoadingMetadata(true);
     }
 
-    TableService.getMetadataById(tableid, i18n.resolvedLanguage)
+    TableService.getMetadataById(tableId, i18n.resolvedLanguage)
+
       .then((tableMetadataResponse) => {
         const pxTabMetadata: PxTableMetadata = mapTableMetadataResponse(
           tableMetadataResponse
@@ -252,7 +263,7 @@ export function App() {
         setErrorMsg('');
       })
       .then(() => {
-        TableService.getDefaultSelection(tableid, i18n.resolvedLanguage)
+        TableService.getDefaultSelection(tableId, i18n.resolvedLanguage)
           .then((selectionResponse) => {
             const defaultSelection = mapTableSelectionResponse(
               selectionResponse
@@ -266,18 +277,18 @@ export function App() {
             setIsLoadingMetadata(false);
           })
           .catch((error) => {
-            setErrorMsg('Error getting default selection: ' + tableid);
+            setErrorMsg('Error getting default selection: ' + tableId);
           });
       })
       .catch((error) => {
-        setErrorMsg('Could not get table: ' + tableid);
+        setErrorMsg('Could not get table: ' + selectedTableId);
         setPxTableMetadata(null);
       });
 
     // TODO: Fix this hook to work as intended instead of ignoring it like this
     // TODO: Fix unnecessary default selection call when changing language
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tableid, i18n.resolvedLanguage]);
+  }, [tableId, i18n.resolvedLanguage]);
 
   if (pxTableMetaToRender === null && pxTableMetadata !== null) {
     setPxTableMetaToRender(structuredClone(pxTableMetadata));
@@ -454,7 +465,11 @@ export function App() {
       <select
         name="tabid"
         id="tabid"
-        onChange={(e) => setTableid(e.target.value)}
+        value={tableId}
+        onChange={(e) => {
+          setSelectedTableId(e.target.value);
+          navigate(`/table/${e.target.value}`);
+        }}
       >
         <option value="TAB638">TAB638</option>
         <option value="TAB1292">TAB1292</option>
@@ -528,10 +543,16 @@ export function App() {
           />
         </div>
         <Content topLeftBorderRadius={selectedNavigationView === 'none'}>
-          {!isMissingMandatoryVariables && tableData.data && (
-            <div>
-              <Table pxtable={JSON.parse(tableData.data)} />
-            </div>
+
+          {!isMissingMandatoryVariables && tableData.data && pxTableMetadata && (
+            <>
+              <ContentTop staticTitle={pxTableMetadata?.label} pxtable={JSON.parse(tableData.data) } />
+
+              <div>
+                <Table pxtable={JSON.parse(tableData.data)} />
+              </div>
+            </>
+
           )}{' '}
           {!isLoadingMetadata && isMissingMandatoryVariables && (
             <EmptyState
