@@ -6,6 +6,7 @@ export function mapTableMetadataResponse(response: TableMetadataResponse): PxTab
     const pxTableMetadata: PxTableMetadata = {
         id: response.id,
         label: response.label,
+        updated: response.updated ? new Date(response.updated) : new Date(),
         variables: response.variables.map((variable ) => {
             return {
                 id: variable.id,
