@@ -1,8 +1,7 @@
 import cl from 'clsx';
-
 import { useTranslation } from 'react-i18next';
-import classes from './ContentTop.module.scss';
 
+import classes from './ContentTop.module.scss';
 import {
   BodyLong,
   BodyShort,
@@ -37,7 +36,7 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
           <Button variant="secondary">Information</Button>
           {pxtable.metadata && (
             <BodyShort size="medium">
-              {t('presentation_page.main_content.last_updated')}:{' '} 
+              {t('presentation_page.main_content.last_updated')}:{' '}
               {t('date.simple_date_with_time', {
                 value: new Date(pxtable.metadata.updated),
               })}{' '}

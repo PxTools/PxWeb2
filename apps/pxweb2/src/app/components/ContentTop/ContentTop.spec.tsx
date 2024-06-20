@@ -1,15 +1,15 @@
 import { render } from '@testing-library/react';
 
 import ContentTop from './ContentTop';
+import {
+  Variable,
+  VartypeEnum,
+  PxTableMetadata,
+  PxTable,
+  fakeData,
+} from '@pxweb2/pxweb2-ui';
 
-//import { Variable } from '@pxweb2-ui/src/lib/shared-types/variable';
-import { Variable, VartypeEnum ,PxTableMetadata,PxTable,fakeData} from '@pxweb2/pxweb2-ui';
-// import { VartypeEnum } from '../../shared-types/vartypeEnum';
-// import { PxTableMetadata } from '../../shared-types/pxTableMetadata';
-// import { PxTable } from '../../shared-types/pxTable';
-// import { fakeData } from './cubeHelper';
-
-function getPxTable() : PxTable {
+function getPxTable(): PxTable {
   const variables: Variable[] = [
     {
       id: 'Region',
@@ -61,7 +61,7 @@ function getPxTable() : PxTable {
   const tableMeta: PxTableMetadata = {
     id: 'test01',
     label: 'Test table',
-    updated:new Date('2023-01-14T09:00:05.123Z'),
+    updated: new Date('2023-01-14T09:00:05.123Z'),
     variables: variables,
   };
   const table: PxTable = {
@@ -82,11 +82,11 @@ function getPxTable() : PxTable {
 
 const pxTable = getPxTable();
 
-
-
 describe('ContentTop', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<ContentTop pxtable={pxTable} staticTitle='Tittel'    />);
+    const { baseElement } = render(
+      <ContentTop pxtable={pxTable} staticTitle="Tittel" />
+    );
     expect(baseElement).toBeTruthy();
   });
 });
