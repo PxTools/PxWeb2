@@ -1,7 +1,8 @@
 interface Resources {
   "translation": {
     "meta": {
-      "languageName": "English"
+      "languageName": "English",
+      "shorthand": "en"
     },
     "common": {
       "title": "Welcome to PxWeb 2.0",
@@ -31,7 +32,8 @@ interface Resources {
         "ok": "OK",
         "cancel": "Cancel",
         "save": "Save",
-        "search": "Search"
+        "search": "Search",
+        "close": "Close"
       },
       "generic_tags": {
         "mandatory": "Mandatory"
@@ -48,34 +50,39 @@ interface Resources {
         "statistics": "Statistikkbanken"
       },
       "sidemenu": {
-        "hide": "Hide menu",
+        "hide": "Hide",
         "selection": {
           "title": "Filter",
           "variablebox": {
             "search": {
-              "placeholder": "Search",
+              "placeholder": "Search in list",
               "label": "Search",
               "arialabelicontext": "Search icon",
               "ariallabelclearbuttontext": "Clear search icon"
             },
             "header": {
               "tag_selected": "{{selected}} of {{total}} selected",
-              "tag_mandatory": "Mandatory"
+              "tag_mandatory": "Mandatory",
+              "alert_no_mandatory_values": "You must select something in the list for the table to be displayed"
             },
             "content": {
               "select": {
-                "label": "Choose grouping",
+                "label": "Select grouping",
                 "placeholder": "Make a selection"
               },
               "mixed_checkbox": {
                 "select_all": "Select all",
                 "deselect_all": "Deselect all"
+              },
+              "values_list": {
+                "aria_label": "List of {{total}} values.",
+                "aria_description": "The variable's list of {{total}} total values. To enter the list, press the arrow down key. The Tab key exits the list."
               }
             }
           }
         },
         "view": {
-          "title": "View",
+          "title": "Display",
           "table": {
             "title": "Table"
           },
@@ -136,6 +143,14 @@ interface Resources {
       "main_content": {
         "last_updated": "Last updated",
         "show_details": "Show details",
+        "table": {
+          "warnings": {
+            "missing_mandatory": {
+              "title": "Missing mandatory selection",
+              "description": "The table cannot be displayed. You must select something in the filter on the left."
+            }
+          }
+        },
         "about_table": {
           "title": "About the table",
           "footnotes": {

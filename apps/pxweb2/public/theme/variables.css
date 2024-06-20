@@ -1,5 +1,6 @@
 /**
  * Do not edit directly
+ * Generated on Tue, 18 Jun 2024 11:31:42 GMT
  */
 
 :root {
@@ -13,6 +14,11 @@
   --px-border-radius-full: 9999px;
   --px-color-background-default: #ffffff;
   --px-color-background-subtle: #f0f8f9;
+  --px-color-base-white: #ffffff;
+  --px-color-blue-200: #c3e6fe;
+  --px-color-bluegray-300: #9bc4c5;
+  --px-color-bluegray-700: #2f555b;
+  --px-color-bluegray-900: #162327;
   --px-color-surface-default: #ffffff;
   --px-color-surface-subtle: #f0f8f9;
   --px-color-surface-moderate: #dbebeb;

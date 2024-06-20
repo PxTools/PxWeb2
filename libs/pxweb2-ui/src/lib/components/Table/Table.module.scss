@@ -1,7 +1,52 @@
-/*
- * Replace this with your own classes
- *
- * e.g.
- * .container {
- * }
-*/
+@use '../../text-styles.scss';
+
+.table {
+  border-collapse: collapse;
+  th {
+    padding: 8px 12px;
+    text-align: center;
+    border-bottom: 1px solid var(--px-color-border-default);
+    border-left: 1px solid var(--px-color-border-default);
+  }
+  th.stub {
+    text-align: left;
+  }
+  th.stub-0 {
+    padding-left: 12px;
+  }
+  th.stub-1 {
+    padding-left: 28px;
+  }
+  th.stub-2 {
+    padding-left: 44px;
+  }
+  th.stub-3 {
+    padding-left: 60px;
+  }
+  th.stub-4 {
+    padding-left: 76px;
+  }
+  th.stub-5 {
+    padding-left: 92px;
+  }
+  th.stub-6 {
+    padding-left: 108px;
+  }
+  th.stub-7 {
+    padding-left: 124px;
+  }
+  th.stub-8 {
+    padding-left: 140px;
+  }
+  th.stub-9 {
+    padding-left: 156px;
+  }
+  th.stub-10 {
+    padding-left: 172px;
+  }
+  td {
+    padding: 8px 12px;
+    text-align: right;
+    border-bottom: 1px solid var(--px-color-border-default);
+  }
+}

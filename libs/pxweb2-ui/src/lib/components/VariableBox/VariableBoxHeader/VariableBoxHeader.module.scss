@@ -1,8 +1,10 @@
 @use '../../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixed;
+@use '../../../text-styles.scss' as textStyles;
 
 .variablebox-header {
   /* Layout */
   display: flex;
+  flex-wrap: wrap;
   align-items: flex-start;
   align-self: stretch;
   padding: fixed.$spacing-3 fixed.$spacing-3 fixed.$spacing-5 fixed.$spacing-5;
@@ -12,11 +14,21 @@
   /* Style */
   background: var(--px-color-surface-default);
   border-radius: var(--px-border-radius-large);
+  border: 2px solid transparent;
   outline: none; // Remove focus outline, handled with focus marking
+
+  &:focus-visible {
+    border: 2px solid var(--px-color-border-action);
+  }
 }
 
 .variablebox-header-isopen {
   border-radius: var(--px-border-radius-large) var(--px-border-radius-large) 0 0;
+}
+
+.header-content {
+  display: flex;
+  width: 100%;
 }
 
 .header-title-and-tag {
@@ -36,6 +48,7 @@
   align-items: flex-start;
   align-self: stretch;
   padding-top: 0.125rem;
+  margin: 0;
 }
 
 .header-tags {

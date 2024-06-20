@@ -51,30 +51,41 @@
   align-self: stretch;
 }
 
-.variablebox-content-values-list {
+.variablebox-content-full-values-list {
   /* Layout */
   display: flex;
   flex-direction: column;
   align-self: stretch;
 }
 
-.variablebox-content-values-list-scroll {
+.variablebox-content-full-values-list-scroll {
   position: relative;
   max-height: 380px;
   overflow-y: auto;
 }
 
-.variablebox-content-values-list-scroll-up {
+.variablebox-content-full-values-list-scroll-up {
   position: sticky;
   top: 0;
   z-index: 1;
   animation: SlideDown 0.2s;
 }
 
-.variablebox-content-values-list-scroll-down {
+.variablebox-content-full-values-list-scroll-down {
   top: 0;
   z-index: 1;
   animation: slideUp 0.2s;
+}
+
+.variablebox-content-values-only-list {
+  &:focus-visible {
+    border-radius: var(--border-radius-large);
+    border: 3px solid var(--color-border-focus-boxshadow, #162327); // TODO: Remove defaults when adding focus-visible
+
+    outline: 3px solid var(--color-border-focus-outline, #7e4ef9); // TODO: Remove defaults when adding focus-visible
+    outline-offset: 2px;
+    z-index: 0;
+  }
 }
 
 .variablebox-content-metadata-link {
