@@ -472,7 +472,7 @@ export function App() {
         }}
       >
         <option value="TAB5659">TAB5659</option>
-        <option value="TAB4246">TAB4246 (decimals)</option>
+        <option value="TAB4246">TAB4246</option>
       </select>
       <br />
       <br />
