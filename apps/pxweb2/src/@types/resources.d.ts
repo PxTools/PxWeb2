@@ -50,12 +50,12 @@ interface Resources {
         "statistics": "Statistikkbanken"
       },
       "sidemenu": {
-        "hide": "Hide menu",
+        "hide": "Hide",
         "selection": {
           "title": "Filter",
           "variablebox": {
             "search": {
-              "placeholder": "Search",
+              "placeholder": "Search in list",
               "label": "Search",
               "arialabelicontext": "Search icon",
               "ariallabelclearbuttontext": "Clear search icon"
@@ -67,7 +67,7 @@ interface Resources {
             },
             "content": {
               "select": {
-                "label": "Choose grouping",
+                "label": "Select grouping",
                 "placeholder": "Make a selection"
               },
               "mixed_checkbox": {
@@ -82,7 +82,7 @@ interface Resources {
           }
         },
         "view": {
-          "title": "View",
+          "title": "Display",
           "table": {
             "title": "Table"
           },
