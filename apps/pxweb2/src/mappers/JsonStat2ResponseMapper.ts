@@ -33,6 +33,7 @@ export function mapJsonStat2Response(response: Dataset): PxTable {
     id: response.extension?.px?.tableid || '',
     label: response.label || '',
     description: '',
+    updated: response.updated ? new Date(response.updated) : new Date(),
     variables: mapJsonToVariables(response),
   };
 

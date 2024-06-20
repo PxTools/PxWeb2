@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import styles from './app.module.scss';
+import { ContentTop } from './components/ContentTop/ContentTop';
 import {
   Button,
   PxTableMetadata,
@@ -17,7 +18,7 @@ import {
   EmptyState,
 } from '@pxweb2/pxweb2-ui';
 import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
-import { TableService } from '@pxweb2/pxweb2-api-client';
+import { Dataset, TableService } from '@pxweb2/pxweb2-api-client';
 import { mapTableMetadataResponse } from '../mappers/TableMetadataResponseMapper';
 import { mapTableSelectionResponse } from '../mappers/TableSelectionResponseMapper';
 import { Header } from './components/Header/Header';
@@ -542,10 +543,16 @@ export function App() {
           />
         </div>
         <Content topLeftBorderRadius={selectedNavigationView === 'none'}>
-          {!isMissingMandatoryVariables && tableData.data && (
-            <div>
-              <Table pxtable={JSON.parse(tableData.data)} />
-            </div>
+
+          {!isMissingMandatoryVariables && tableData.data && pxTableMetadata && (
+            <>
+              <ContentTop staticTitle={pxTableMetadata?.label} pxtable={JSON.parse(tableData.data) } />
+
+              <div>
+                <Table pxtable={JSON.parse(tableData.data)} />
+              </div>
+            </>
+
           )}{' '}
           {!isLoadingMetadata && isMissingMandatoryVariables && (
             <EmptyState
