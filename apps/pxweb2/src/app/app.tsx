@@ -542,31 +542,32 @@ export function App() {
           />
         </div>
         <Content topLeftBorderRadius={selectedNavigationView === 'none'}>
-          {!isMissingMandatoryVariables &&
-            tableData.data &&
-            pxTableMetadata && (
-              <>
-                <ContentTop
-                  staticTitle={pxTableMetadata?.label}
-                  pxtable={JSON.parse(tableData.data)}
-                />
+          {tableData.data && pxTableMetadata && (
+            <>
+              <ContentTop
+                staticTitle={pxTableMetadata?.label}
+                pxtable={JSON.parse(tableData.data)}
+              />
 
+              {!isMissingMandatoryVariables && (
                 <div className={styles.tableWrapper}>
                   <Table pxtable={JSON.parse(tableData.data)} />
                 </div>
-              </>
-            )}{' '}
-          {!isLoadingMetadata && isMissingMandatoryVariables && (
-            <EmptyState
-              headingTxt={t(
-                'presentation_page.main_content.table.warnings.missing_mandatory.title'
               )}
-            >
-              {t(
-                'presentation_page.main_content.table.warnings.missing_mandatory.description'
+
+              {!isLoadingMetadata && isMissingMandatoryVariables && (
+                <EmptyState
+                  headingTxt={t(
+                    'presentation_page.main_content.table.warnings.missing_mandatory.title'
+                  )}
+                >
+                  {t(
+                    'presentation_page.main_content.table.warnings.missing_mandatory.description'
+                  )}
+                </EmptyState>
               )}
-            </EmptyState>
-          )}
+            </>
+          )}{' '}
         </Content>
       </div>
     </>
