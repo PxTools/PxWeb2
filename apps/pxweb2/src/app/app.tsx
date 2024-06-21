@@ -550,7 +550,7 @@ export function App() {
               />
 
               {!isMissingMandatoryVariables && (
-                <div>
+                <div className={styles.tableWrapper}>
                   <Table pxtable={JSON.parse(tableData.data)} />
                 </div>
               )}
