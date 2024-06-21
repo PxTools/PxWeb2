@@ -461,52 +461,35 @@ export function App() {
   };
 
   const drawerFilter = (
-    <>
-      <select
-        name="tabid"
-        id="tabid"
-        value={tableId}
-        onChange={(e) => {
-          setSelectedTableId(e.target.value);
-          navigate(`/table/${e.target.value}`);
-        }}
-      >
-        <option value="TAB5659">TAB5659</option>
-        <option value="TAB4246">TAB4246</option>
-      </select>
-      <br />
-      <br />
-      <div className={styles.variableBoxContainer}>
-        {/* TODO: I think the warning in the console about unique IDs is the variable.id below*/}
-        {!isLoadingMetadata &&
-          pxTableMetaToRender &&
-          pxTableMetaToRender.variables.length > 0 &&
-          pxTableMetaToRender.variables.map(
-            (variable, index) =>
-              variable.id && (
-                <VariableBox
-                  id={variable.id}
-                  initialIsOpen={index === 0}
-                  tableId={pxTableMetaToRender.id}
-                  label={variable.label}
-                  mandatory={variable.mandatory}
-                  values={variable.values}
-                  codeLists={variable.codeLists}
-                  selectedValues={selectedVBValues}
-                  onChangeCodeList={handleCodeListChange}
-                  onChangeMixedCheckbox={handleMixedCheckboxChange}
-                  onChangeCheckbox={handleCheckboxChange}
-                />
-              )
-          )}
-      </div>
-    </>
+    <div className={styles.variableBoxContainer}>
+      {/* TODO: I think the warning in the console about unique IDs is the variable.id below*/}
+      {!isLoadingMetadata &&
+        pxTableMetaToRender &&
+        pxTableMetaToRender.variables.length > 0 &&
+        pxTableMetaToRender.variables.map(
+          (variable, index) =>
+            variable.id && (
+              <VariableBox
+                id={variable.id}
+                initialIsOpen={index === 0}
+                tableId={pxTableMetaToRender.id}
+                label={variable.label}
+                mandatory={variable.mandatory}
+                values={variable.values}
+                codeLists={variable.codeLists}
+                selectedValues={selectedVBValues}
+                onChangeCodeList={handleCodeListChange}
+                onChangeMixedCheckbox={handleMixedCheckboxChange}
+                onChangeCheckbox={handleCheckboxChange}
+              />
+            )
+        )}
+    </div>
   );
   const drawerView = <>View content</>;
   const drawerEdit = <>Edit content</>;
   const drawerSave = <>Save content</>;
   const drawerHelp = <>Help content</>;
-  
 
   return (
     <>
@@ -519,7 +502,7 @@ export function App() {
           />
           {selectedNavigationView !== 'none' && (
             <NavigationDrawer
-              heading={t('presentation_page.sidemenu.selection.title')} 
+              heading={t('presentation_page.sidemenu.selection.title')}
               onClose={() => {
                 setSelectedNavigationView('none');
               }}
@@ -539,17 +522,20 @@ export function App() {
           />
         </div>
         <Content topLeftBorderRadius={selectedNavigationView === 'none'}>
+          {!isMissingMandatoryVariables &&
+            tableData.data &&
+            pxTableMetadata && (
+              <>
+                <ContentTop
+                  staticTitle={pxTableMetadata?.label}
+                  pxtable={JSON.parse(tableData.data)}
+                />
 
-          {!isMissingMandatoryVariables && tableData.data && pxTableMetadata && (
-            <>
-              <ContentTop staticTitle={pxTableMetadata?.label} pxtable={JSON.parse(tableData.data) } />
-
-              <div>
-                <Table pxtable={JSON.parse(tableData.data)} />
-              </div>
-            </>
-
-          )}{' '}
+                <div>
+                  <Table pxtable={JSON.parse(tableData.data)} />
+                </div>
+              </>
+            )}{' '}
           {!isLoadingMetadata && isMissingMandatoryVariables && (
             <EmptyState
               headingTxt={t(
