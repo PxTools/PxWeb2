@@ -510,7 +510,6 @@ export function App() {
   const drawerEdit = <>Edit content</>;
   const drawerSave = <>Save content</>;
   const drawerHelp = <>Help content</>;
-  
 
   return (
     <>
@@ -523,7 +522,7 @@ export function App() {
           />
           {selectedNavigationView !== 'none' && (
             <NavigationDrawer
-              heading={t('presentation_page.sidemenu.selection.title')} 
+              heading={t('presentation_page.sidemenu.selection.title')}
               onClose={() => {
                 setSelectedNavigationView('none');
               }}
@@ -543,17 +542,20 @@ export function App() {
           />
         </div>
         <Content topLeftBorderRadius={selectedNavigationView === 'none'}>
+          {!isMissingMandatoryVariables &&
+            tableData.data &&
+            pxTableMetadata && (
+              <>
+                <ContentTop
+                  staticTitle={pxTableMetadata?.label}
+                  pxtable={JSON.parse(tableData.data)}
+                />
 
-          {!isMissingMandatoryVariables && tableData.data && pxTableMetadata && (
-            <>
-              <ContentTop staticTitle={pxTableMetadata?.label} pxtable={JSON.parse(tableData.data) } />
-
-              <div>
-                <Table pxtable={JSON.parse(tableData.data)} />
-              </div>
-            </>
-
-          )}{' '}
+                <div className={styles.tableWrapper}>
+                  <Table pxtable={JSON.parse(tableData.data)} />
+                </div>
+              </>
+            )}{' '}
           {!isLoadingMetadata && isMissingMandatoryVariables && (
             <EmptyState
               headingTxt={t(

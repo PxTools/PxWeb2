@@ -27,9 +27,9 @@
 }
 
 .variableBoxContainer {
-display: flex;
-flex-direction: column;
-gap:fixed.$spacing-2;
+  display: flex;
+  flex-direction: column;
+  gap: fixed.$spacing-2;
 }
 
 @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
@@ -70,4 +70,9 @@ gap:fixed.$spacing-2;
 }
 .selectWrapper {
   width: 300px;
+}
+
+.tableWrapper {
+  overflow-x: scroll;
+  max-width: 100%;
 }
