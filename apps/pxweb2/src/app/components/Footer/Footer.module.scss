@@ -2,6 +2,7 @@
 
 .footer {
   width: calc(100% - fixed.$spacing-6 * 2);
+  max-width: 1320px;
   background-color: var(--px-color-background-default);
   display: flex;
   flex-direction: column;
