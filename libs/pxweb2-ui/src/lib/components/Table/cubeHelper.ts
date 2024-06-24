@@ -9,7 +9,7 @@ export type Dimensions = string[];
 /**
  * Sets the value in the PxTable data cube at the specified dimensions.
  * If any intermediate levels do not exist, they will be created.
- * 
+ *
  * @param data - The PxTable data cube object.
  * @param dimensions - The dimensions to set the value at.
  * @param value - The value to set.
@@ -39,7 +39,7 @@ export function setPxTableData<T>(
 
 /**
  * Retrieves the value from the PxTable data cube at the specified dimensions.
- * 
+ *
  * @param data - The PxTable data cube.
  * @param dimensions - The dimensions to retrieve the value from.
  * @returns The value at the specified dimensions, or undefined if not found.
@@ -61,7 +61,7 @@ export function getPxTableData<T>(
 
 /**
  * Generates fake data in the PxTable data cube by iterating through the dimensions.
- * 
+ *
  * @param table - The PxTable object.
  * @param dimensions - The dimensions to iterate through.
  * @param dimensionIndex - The current dimension index.
@@ -90,7 +90,7 @@ let number = 0;
 
 /**
  * Generates a sequential number.
- * 
+ *
  * @returns The next sequential number.
  */
 function getNumber(): number {

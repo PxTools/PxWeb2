@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import styles from './app.module.scss';
+import { ContentTop } from './components/ContentTop/ContentTop';
 import {
   Button,
   PxTableMetadata,
@@ -14,9 +15,10 @@ import {
   SelectedVBValues,
   Value,
   SelectOption,
+  EmptyState,
 } from '@pxweb2/pxweb2-ui';
 import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
-import { TableService } from '@pxweb2/pxweb2-api-client';
+import { Dataset, TableService } from '@pxweb2/pxweb2-api-client';
 import { mapTableMetadataResponse } from '../mappers/TableMetadataResponseMapper';
 import { mapTableSelectionResponse } from '../mappers/TableSelectionResponseMapper';
 import { Header } from './components/Header/Header';
@@ -24,9 +26,9 @@ import NavigationRail from './components/NavigationRail/NavigationRail';
 import { Content } from './components/Content/Content';
 import NavigationBar from './components/NavigationBar/NavigationBar';
 import NavigationDrawer from './components/NavigationDrawer/NavigationDrawer';
-import { Footer } from './components/Footer/Footer';
 import useVariables from './context/useVariables';
 import useTableData from './context/useTableData';
+import { useNavigate, useParams } from 'react-router-dom';
 
 function addSelectedCodeListToVariable(
   currentVariable: SelectedVBValues | undefined,
@@ -189,14 +191,21 @@ export type NavigationItem =
   | 'help';
 
 export function App() {
-  const { i18n } = useTranslation();
+  const { tableId } = useParams<{ tableId: string }>();
+  const navigate = useNavigate();
+  const { i18n, t } = useTranslation();
   const variables = useVariables();
   const tableData = useTableData();
-  const [tableid, setTableid] = useState('tab638');
+  const [selectedTableId, setSelectedTableId] = useState(
+    tableId ? tableId : 'tab638'
+  );
   const [errorMsg, setErrorMsg] = useState('');
   const [pxTable, setPxTable] = useState<PxTable | null>(null);
   const [selectedNavigationView, setSelectedNavigationView] =
     useState<NavigationItem>('filter');
+  const [isLoadingMetadata, setIsLoadingMetadata] = useState<boolean>(true);
+  const [isMissingMandatoryVariables, setIsMissingMandatoryVariables] =
+    useState(false);
 
   // Initial metadata from the api
   const [pxTableMetadata, setPxTableMetadata] =
@@ -220,14 +229,29 @@ export function App() {
       );
 
     if (hasSelectedMandatoryVariables) {
-      tableData.fetchTableData(tableid, i18n);
+      tableData.fetchTableData(tableId ? tableId : 'tab638', i18n);
+
+      setIsMissingMandatoryVariables(false);
+    }
+    if (!hasSelectedMandatoryVariables) {
+      setIsMissingMandatoryVariables(true);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [i18n, selectedVBValues, tableid, variables, i18n.resolvedLanguage]);
+  }, [i18n, selectedVBValues, tableId, variables, i18n.resolvedLanguage]);
 
   useEffect(() => {
-    TableService.getMetadataById(tableid, i18n.resolvedLanguage)
+    if (!tableId) {
+      return;
+    }
+    TableService.getMetadataById(selectedTableId, i18n.resolvedLanguage);
+
+    if (isLoadingMetadata === false) {
+      setIsLoadingMetadata(true);
+    }
+
+    TableService.getMetadataById(tableId, i18n.resolvedLanguage)
+
       .then((tableMetadataResponse) => {
         const pxTabMetadata: PxTableMetadata = mapTableMetadataResponse(
           tableMetadataResponse
@@ -239,7 +263,7 @@ export function App() {
         setErrorMsg('');
       })
       .then(() => {
-        TableService.getDefaultSelection(tableid, i18n.resolvedLanguage)
+        TableService.getDefaultSelection(tableId, i18n.resolvedLanguage)
           .then((selectionResponse) => {
             const defaultSelection = mapTableSelectionResponse(
               selectionResponse
@@ -250,20 +274,21 @@ export function App() {
             );
 
             setSelectedVBValues(defaultSelection);
+            setIsLoadingMetadata(false);
           })
           .catch((error) => {
-            setErrorMsg('Error getting default selection: ' + tableid);
+            setErrorMsg('Error getting default selection: ' + tableId);
           });
       })
       .catch((error) => {
-        setErrorMsg('Could not get table: ' + tableid);
+        setErrorMsg('Could not get table: ' + selectedTableId);
         setPxTableMetadata(null);
       });
 
     // TODO: Fix this hook to work as intended instead of ignoring it like this
     // TODO: Fix unnecessary default selection call when changing language
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tableid, i18n.resolvedLanguage]);
+  }, [tableId, i18n.resolvedLanguage]);
 
   if (pxTableMetaToRender === null && pxTableMetadata !== null) {
     setPxTableMetaToRender(structuredClone(pxTableMetadata));
@@ -435,94 +460,30 @@ export function App() {
     return dummyValues;
   };
 
-  const getFakeTable = () => {
-    const variables: Variable[] = [
-      {
-        id: 'Region',
-        label: 'region',
-        type: VartypeEnum.GEOGRAPHICAL_VARIABLE,
-        mandatory: false,
-        values: Array.from(Array(4).keys()).map((i) => {
-          return { label: 'region_' + (i + 1), code: 'R_' + (i + 1) };
-        }),
-      },
-      {
-        id: 'Alder',
-        label: 'ålder',
-        type: VartypeEnum.REGULAR_VARIABLE,
-        mandatory: false,
-        values: Array.from(Array(4).keys()).map((i) => {
-          return { label: 'år ' + (i + 1), code: '' + (i + 1) };
-        }),
-      },
-      {
-        id: 'Civilstatus',
-        label: 'civilstatus',
-        type: VartypeEnum.REGULAR_VARIABLE,
-        mandatory: false,
-        values: Array.from(Array(5).keys()).map((i) => {
-          return { label: 'CS_' + (i + 1), code: '' + (i + 1) };
-        }),
-      },
-      {
-        id: 'Kon',
-        label: 'kön',
-        type: VartypeEnum.REGULAR_VARIABLE,
-        mandatory: false,
-        values: Array.from(Array(2).keys()).map((i) => {
-          return { label: 'G_' + (i + 1), code: '' + (i + 1) };
-        }),
-      },
-      {
-        id: 'TIME',
-        label: 'tid',
-        type: VartypeEnum.TIME_VARIABLE,
-        mandatory: false,
-        values: Array.from(Array(5).keys()).map((i) => {
-          return { label: '' + (1968 + i), code: '' + (1968 + i) };
-        }),
-      },
-    ];
-
-    const tableMeta: PxTableMetadata = {
-      id: 'test01',
-      label: 'Test table',
-      variables: variables,
-    };
-    const table: PxTable = {
-      metadata: tableMeta,
-      data: {
-        cube: {},
-        variableOrder: ['Region', 'Alder', 'Civilstatus', 'Kon', 'TIME'],
-        isLoaded: false,
-      },
-      heading: [variables[0], variables[1]],
-      stub: [variables[2], variables[3], variables[4]],
-    };
-    fakeData(table, [], 0, 0);
-    table.data.isLoaded = true;
-    setPxTable(table);
-    setPxTableMetaToRender(tableMeta);
-  };
-
   const drawerFilter = (
     <>
       <select
         name="tabid"
         id="tabid"
-        onChange={(e) => setTableid(e.target.value)}
+        value={tableId}
+        onChange={(e) => {
+          setSelectedTableId(e.target.value);
+          navigate(`/table/${e.target.value}`);
+        }}
       >
         <option value="TAB638">TAB638</option>
         <option value="TAB1292">TAB1292</option>
         <option value="TAB5659">TAB5659</option>
-        <option value="TAB1128">TAB1128 (LARGE)</option>
+        <option value="TAB1544">TAB1544 (decimals)</option>
+        <option value="TAB4246">TAB4246 (decimals)</option>
+        <option value="TAB1128">TAB1128 (large)</option>
       </select>
-      <Button variant="tertiary" onClick={() => getFakeTable()}>
-        Get fake table
-      </Button>
+      <br />
+      <br />
       <div className={styles.variableBoxContainer}>
         {/* TODO: I think the warning in the console about unique IDs is the variable.id below*/}
-        {pxTableMetaToRender &&
+        {!isLoadingMetadata &&
+          pxTableMetaToRender &&
           pxTableMetaToRender.variables.length > 0 &&
           pxTableMetaToRender.variables.map(
             (variable, index) =>
@@ -561,7 +522,7 @@ export function App() {
           />
           {selectedNavigationView !== 'none' && (
             <NavigationDrawer
-              heading="Filtrer"
+              heading={t('presentation_page.sidemenu.selection.title')}
               onClose={() => {
                 setSelectedNavigationView('none');
               }}
@@ -581,13 +542,31 @@ export function App() {
           />
         </div>
         <Content topLeftBorderRadius={selectedNavigationView === 'none'}>
-          {pxTable?.data?.isLoaded && (
-            <div>
-              <Table pxtable={pxTable} />
-            </div>
-          )}
-          {tableData.data && (
-            <div dangerouslySetInnerHTML={{ __html: tableData.data }} />
+          {tableData.data && pxTableMetadata && (
+            <>
+              <ContentTop
+                staticTitle={pxTableMetadata?.label}
+                pxtable={JSON.parse(tableData.data)}
+              />
+
+              {!isMissingMandatoryVariables && (
+                <div className={styles.tableWrapper}>
+                  <Table pxtable={JSON.parse(tableData.data)} />
+                </div>
+              )}
+
+              {!isLoadingMetadata && isMissingMandatoryVariables && (
+                <EmptyState
+                  headingTxt={t(
+                    'presentation_page.main_content.table.warnings.missing_mandatory.title'
+                  )}
+                >
+                  {t(
+                    'presentation_page.main_content.table.warnings.missing_mandatory.description'
+                  )}
+                </EmptyState>
+              )}
+            </>
           )}{' '}
         </Content>
       </div>
