@@ -43,4 +43,3 @@ Scrum master: Åsa Arrhén, Statistics Sweden [asa.arrhen@scb.se](mailto:asa.arr
 
 
 
-
