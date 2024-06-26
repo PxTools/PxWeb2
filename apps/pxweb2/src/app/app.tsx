@@ -197,7 +197,7 @@ export function App() {
   const variables = useVariables();
   const tableData = useTableData();
   const [selectedTableId, setSelectedTableId] = useState(
-    tableId ? tableId : 'tab638'
+    tableId ? tableId : '04534'
   );
   const [errorMsg, setErrorMsg] = useState('');
   const [pxTable, setPxTable] = useState<PxTable | null>(null);
@@ -229,7 +229,7 @@ export function App() {
       );
 
     if (hasSelectedMandatoryVariables) {
-      tableData.fetchTableData(tableId ? tableId : 'tab638', i18n);
+      tableData.fetchTableData(tableId ? tableId : '04534', i18n);
 
       setIsMissingMandatoryVariables(false);
     }
