@@ -1,7 +1,7 @@
 import { i18n } from 'i18next';
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import useVariables from './useVariables';
-import { Dataset, TableService } from '@pxweb2/pxweb2-api-client';
+import { Dataset, TableService, VariableSelection, VariablesSelection } from '@pxweb2/pxweb2-api-client';
 import { PxTable } from '@pxweb2/pxweb2-ui';
 import { mapJsonStat2Response } from '../../mappers/JsonStat2ResponseMapper';
 
@@ -33,20 +33,24 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   }, [errorMsg]);
 
   const fetchTableData = async (tableId: string, i18n: i18n) => {
-    const valueCodes: Record<string, Array<string>> = {};
-
+   
+    const selections : Array<VariableSelection> = [];
     const ids = variables.getUniqueIds();
     ids.forEach((id) => {
-      valueCodes[id] = variables.getSelectedValuesById(id);
+      const selection: VariableSelection = {
+        variableCode: id,
+        valueCodes: variables.getSelectedValuesById(id),
+      };
+      selections.push(selection);
     });
+    
+    const variablesSelection : VariablesSelection = {selection: selections};
 
-    const res = await TableService.getTableData(
+    const res = await TableService.getTableDataByPost(
       tableId,
       i18n.language,
-      valueCodes,
-      undefined,
-      undefined,
-      'json-stat2'
+      'json-stat2',
+      variablesSelection
     );
 
     // Map response to json-stat2 Dataset
