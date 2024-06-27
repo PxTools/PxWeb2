@@ -82,7 +82,7 @@ function CreateHeading(response: Dataset, metadata: PxTableMetadata) : Variable[
   const heading: Variable[] = [];
 
   response.extension?.px?.heading?.forEach((headingvar) => {
-    const myVar = metadata.variables.find((i) => i.label === headingvar);
+    const myVar = metadata.variables.find((i) => i.id === headingvar);
     if (myVar) {
       heading.push(myVar);
     }
