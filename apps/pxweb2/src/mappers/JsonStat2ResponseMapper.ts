@@ -20,14 +20,13 @@ type counter = {
 
 /**
  * Maps a JSONStat2 dataset response to a PxTable object.
- * NOTE! At the moment this is not a total mapping of the json-stat2 response. 
+ * NOTE! At the moment this is not a total mapping of the json-stat2 response.
  * Only the parts that are needed for displaying the table are mapped.
  *
  * @param response - The JSONStat2 dataset response to be mapped.
  * @returns The mapped PxTable object.
  */
 export function mapJsonStat2Response(response: Dataset): PxTable {
-  
   // Create the metadata object
   const metadata: PxTableMetadata = {
     id: response.extension?.px?.tableid || '',
@@ -45,7 +44,7 @@ export function mapJsonStat2Response(response: Dataset): PxTable {
     metadata: metadata,
     data: data,
     stub: CreateStub(response, metadata),
-    heading: CreateHeading(response, metadata)
+    heading: CreateHeading(response, metadata),
   };
 
   return pxTable;
@@ -53,12 +52,12 @@ export function mapJsonStat2Response(response: Dataset): PxTable {
 
 /**
  * Creates an array with the variables in the stub based on the provided response and metadata.
- * 
+ *
  * @param response - The dataset response object.
  * @param metadata - The PxTableMetadata object containing variable information.
  * @returns An array of Variable objects representing the stub variables.
  */
-function CreateStub(response: Dataset, metadata: PxTableMetadata) : Variable[] {
+function CreateStub(response: Dataset, metadata: PxTableMetadata): Variable[] {
   const stub: Variable[] = [];
 
   response.extension?.px?.stub?.forEach((stubvar) => {
@@ -73,12 +72,15 @@ function CreateStub(response: Dataset, metadata: PxTableMetadata) : Variable[] {
 
 /**
  * Creates an array with the variables in the heading based on the provided response and metadata.
- * 
+ *
  * @param response - The dataset response object.
  * @param metadata - The PxTableMetadata object containing variable information.
  * @returns An array of Variable objects representing the heading variables.
  */
-function CreateHeading(response: Dataset, metadata: PxTableMetadata) : Variable[] {
+function CreateHeading(
+  response: Dataset,
+  metadata: PxTableMetadata
+): Variable[] {
   const heading: Variable[] = [];
 
   response.extension?.px?.heading?.forEach((headingvar) => {
@@ -100,14 +102,24 @@ function CreateHeading(response: Dataset, metadata: PxTableMetadata) : Variable[
 function mapJsonToVariables(jsonData: Dataset): Array<Variable> {
   const variables: Array<Variable> = [];
 
-  for (const dimensionKey in jsonData.dimension) { // For every dimension record in the json-stat2 object
+  for (const dimensionKey in jsonData.dimension) {
+    // For every dimension record in the json-stat2 object
     if (
       Object.prototype.hasOwnProperty.call(jsonData.dimension, dimensionKey) // dimensionKey === variable id
     ) {
       const dimension = jsonData.dimension[dimensionKey];
       const values: Array<Value> = [];
-      if (dimension.category?.index && dimension.category.label) {
-        for (const code in dimension.category?.index) {
+      if (
+        dimension.category &&
+        dimension.category.index &&
+        dimension.category.label
+      ) {
+        // sort the index based on index value
+        const indexEntries = Object.entries(dimension.category.index);
+        const sortedindexEntries = indexEntries.sort(
+          ([, valueA], [, valueB]) => valueA - valueB
+        );
+        for (const [code] of sortedindexEntries) {
           if (
             Object.prototype.hasOwnProperty.call(dimension.category.index, code)
           ) {
@@ -117,7 +129,6 @@ function mapJsonToVariables(jsonData: Dataset): Array<Variable> {
             });
           }
         }
-
         // TODO: Set variable type based on role
         if (dimension.label) {
           variables.push({
@@ -137,15 +148,12 @@ function mapJsonToVariables(jsonData: Dataset): Array<Variable> {
 
 /**
  * Creates the data object for the PxTable based on the provided JSONStat2 dataset and metadata.
- * 
+ *
  * @param jsonData - The JSONStat2 dataset containing the data values.
  * @param metadata - The PxTableMetadata object containing variable information.
  * @returns The created PxTableData object.
  */
-function CreateData(
-  jsonData: Dataset,
-  metadata: PxTableMetadata
-): PxTableData {
+function CreateData(jsonData: Dataset, metadata: PxTableMetadata): PxTableData {
   const data: PxTableData = {
     cube: {},
     variableOrder: [],
@@ -181,7 +189,7 @@ function getDataCellValue(jsonData: Dataset, counter: counter): number | null {
 
 /**
  * Recursively creates a data cube for the PxTable based on the provided JSONStat2 dataset and metadata.
- * 
+ *
  * @param jsonData - The JSONStat2 dataset containing the data values.
  * @param metadata - The PxTableMetadata object containing variable information.
  * @param data - The PxTableData object to store the data cube.
@@ -221,5 +229,3 @@ function createCube(
     });
   }
 }
-
-

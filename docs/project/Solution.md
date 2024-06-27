@@ -12,7 +12,7 @@ The changes will be possible to introduce both before and after installation of 
 It will be possible to change
 - colors
 - font
-- rounding of the corners of the elements in the interface.
+- corner radius of the elements in the interface.
 ## Open source at GitHub
 The new interface will be able do install directly from GitHub. Also documentation will be found here. 
 [PxTools at GitHub](https://github.com/pxtools)
