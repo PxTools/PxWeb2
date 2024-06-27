@@ -33,8 +33,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   }, [errorMsg]);
 
   const fetchTableData = async (tableId: string, i18n: i18n) => {
-    //const valueCodes: Record<string, Array<string>> = {};
-    
+   
     const selections : Array<VariableSelection> = [];
     const ids = variables.getUniqueIds();
     ids.forEach((id) => {
@@ -53,19 +52,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       'json-stat2',
       variablesSelection
     );
-    // const ids = variables.getUniqueIds();
-    // ids.forEach((id) => {
-    //   valueCodes[id] = variables.getSelectedValuesById(id);
-    // });
-
-    // const res = await TableService.getTableData(
-    //   tableId,
-    //   i18n.language,
-    //   valueCodes,
-    //   undefined,
-    //   undefined,
-    //   'json-stat2'
-    // );
 
     // Map response to json-stat2 Dataset
     const pxDataobj: unknown = res;
