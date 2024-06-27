@@ -62,7 +62,7 @@ function CreateStub(response: Dataset, metadata: PxTableMetadata) : Variable[] {
   const stub: Variable[] = [];
 
   response.extension?.px?.stub?.forEach((stubvar) => {
-    const myVar = metadata.variables.find((i) => i.label === stubvar);
+    const myVar = metadata.variables.find((i) => i.id === stubvar);
     if (myVar) {
       stub.push(myVar);
     }
