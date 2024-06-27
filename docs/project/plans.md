@@ -9,10 +9,12 @@ Another goal is to deliver a beta-version of PxWeb based on PxWebAPI 2.0 during 
 - Language management
 - Algorithm for choosing the best result for displaying a table
 - Chose different values in variable and see changes in the table
+  
 
-![Picture of detail-page of variabel and the table in PxWeb 2.0](https://github.com/PxTools/PxWeb2/assets/81364833/d1fd7888-1a43-4690-9014-a0e88dc5d0a0)
+![Picture of detail-page of variabel and the table in PxWeb 2.0](https://github.com/PxTools/PxWeb2/assets/81364833/39acd512-a589-4734-af96-4e76983f644d)
 
-## Remaining tasks - start autumn 2024
+
+## Maintasks autumn 2024
 
 - Main-page for PxWeb 2.0
 - Graph
