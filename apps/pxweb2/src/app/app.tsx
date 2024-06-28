@@ -217,8 +217,18 @@ export function App() {
     []
   );
 
-  useEffect(() => {
+  /**
+   * Updates useState hook and synchronizes variables context with the selected VB values.
+   *
+   * @param selectedVBValues - An array of selected VB values.
+   */
+  function updateAndSyncVBValues(selectedVBValues: SelectedVBValues[]) {
+    setSelectedVBValues(selectedVBValues);
     variables.syncVariablesAndValues(selectedVBValues);
+  }
+
+  useEffect(() => {
+    //variables.syncVariablesAndValues(selectedVBValues);
 
     const hasSelectedMandatoryVariables = pxTableMetadata?.variables
       .filter((variable) => variable.mandatory)
@@ -238,13 +248,13 @@ export function App() {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [i18n, selectedVBValues, tableId, variables, i18n.resolvedLanguage]);
+  }, [variables, i18n.resolvedLanguage]); // Should only run this useEffect when selectedVBValues are in sync with variables context
 
   useEffect(() => {
     if (!tableId) {
       return;
     }
-    TableService.getMetadataById(selectedTableId, i18n.resolvedLanguage);
+    //TableService.getMetadataById(selectedTableId, i18n.resolvedLanguage);
 
     if (isLoadingMetadata === false) {
       setIsLoadingMetadata(true);
@@ -273,7 +283,8 @@ export function App() {
                 variable.selectedCodeList !== undefined
             );
 
-            setSelectedVBValues(defaultSelection);
+            updateAndSyncVBValues(defaultSelection);
+            //setSelectedVBValues(defaultSelection);
             setIsLoadingMetadata(false);
           })
           .catch((error) => {
@@ -333,7 +344,8 @@ export function App() {
       selectedItem
     );
 
-    setSelectedVBValues(newSelectedValues);
+    updateAndSyncVBValues(newSelectedValues);
+    //setSelectedVBValues(newSelectedValues);
 
     //  TODO: This currently returns dummy data until we have the API call setup for it
     const valuesForChosenCodeList: Value[] = getCodeListValues(
@@ -382,7 +394,8 @@ export function App() {
         varId
       );
 
-      setSelectedVBValues(newSelectedValues);
+      updateAndSyncVBValues(newSelectedValues);
+      //setSelectedVBValues(newSelectedValues);
     }
     if (allValuesSelected === 'false' || allValuesSelected === 'mixed') {
       const allValuesOfVariable =
@@ -394,7 +407,8 @@ export function App() {
         allValuesOfVariable
       );
 
-      setSelectedVBValues(newSelectedValues);
+      updateAndSyncVBValues(newSelectedValues);
+      //setSelectedVBValues(newSelectedValues);
     }
   };
 
@@ -413,7 +427,8 @@ export function App() {
         value
       );
 
-      setSelectedVBValues(newSelectedValues);
+      updateAndSyncVBValues(newSelectedValues);
+      //setSelectedVBValues(newSelectedValues);
     }
     if (hasVariable && !hasValue) {
       const newSelectedValues = addValueToVariable(
@@ -422,7 +437,8 @@ export function App() {
         value
       );
 
-      setSelectedVBValues(newSelectedValues);
+      updateAndSyncVBValues(newSelectedValues);
+      //setSelectedVBValues(newSelectedValues);
     }
     if (!hasVariable) {
       const newSelectedValues = addValueToNewVariable(
@@ -431,12 +447,14 @@ export function App() {
         value
       );
 
-      setSelectedVBValues(newSelectedValues);
+      updateAndSyncVBValues(newSelectedValues);
+      //setSelectedVBValues(newSelectedValues);
     }
   };
 
   function handleVBReset() {
     if (selectedVBValues.length > 0) {
+      //updateAndSyncVBValues([]) - Do not sync with context when resetting
       setSelectedVBValues([]);
     }
     if (pxTableMetaToRender !== null) {
