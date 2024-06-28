@@ -217,10 +217,9 @@ export function App() {
     []
   );
 
-  
   /**
    * Updates useState hook and synchronizes variables context with the selected VB values.
-   * 
+   *
    * @param selectedVBValues - An array of selected VB values.
    */
   function updateAndSyncVBValues(selectedVBValues: SelectedVBValues[]) {
