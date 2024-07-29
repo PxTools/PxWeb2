@@ -228,7 +228,6 @@ export function App() {
   }
 
   useEffect(() => {
-    //variables.syncVariablesAndValues(selectedVBValues);
 
     const hasSelectedMandatoryVariables = pxTableMetadata?.variables
       .filter((variable) => variable.mandatory)
@@ -254,7 +253,6 @@ export function App() {
     if (!tableId) {
       return;
     }
-    //TableService.getMetadataById(selectedTableId, i18n.resolvedLanguage);
 
     if (isLoadingMetadata === false) {
       setIsLoadingMetadata(true);
@@ -284,7 +282,6 @@ export function App() {
             );
 
             updateAndSyncVBValues(defaultSelection);
-            //setSelectedVBValues(defaultSelection);
             setIsLoadingMetadata(false);
           })
           .catch((error) => {
@@ -345,7 +342,6 @@ export function App() {
     );
 
     updateAndSyncVBValues(newSelectedValues);
-    //setSelectedVBValues(newSelectedValues);
 
     //  TODO: This currently returns dummy data until we have the API call setup for it
     const valuesForChosenCodeList: Value[] = getCodeListValues(
@@ -395,7 +391,6 @@ export function App() {
       );
 
       updateAndSyncVBValues(newSelectedValues);
-      //setSelectedVBValues(newSelectedValues);
     }
     if (allValuesSelected === 'false' || allValuesSelected === 'mixed') {
       const allValuesOfVariable =
@@ -408,7 +403,6 @@ export function App() {
       );
 
       updateAndSyncVBValues(newSelectedValues);
-      //setSelectedVBValues(newSelectedValues);
     }
   };
 
@@ -428,7 +422,6 @@ export function App() {
       );
 
       updateAndSyncVBValues(newSelectedValues);
-      //setSelectedVBValues(newSelectedValues);
     }
     if (hasVariable && !hasValue) {
       const newSelectedValues = addValueToVariable(
@@ -438,7 +431,6 @@ export function App() {
       );
 
       updateAndSyncVBValues(newSelectedValues);
-      //setSelectedVBValues(newSelectedValues);
     }
     if (!hasVariable) {
       const newSelectedValues = addValueToNewVariable(
@@ -448,13 +440,11 @@ export function App() {
       );
 
       updateAndSyncVBValues(newSelectedValues);
-      //setSelectedVBValues(newSelectedValues);
     }
   };
 
   function handleVBReset() {
     if (selectedVBValues.length > 0) {
-      //updateAndSyncVBValues([]) - Do not sync with context when resetting
       setSelectedVBValues([]);
     }
     if (pxTableMetaToRender !== null) {
