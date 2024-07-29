@@ -75,7 +75,7 @@
     "nx": "19.5.3",
     "prettier": "^2.8.8",
     "sass": "^1.77.8",
-    "style-dictionary": "^3.9.2",
+    "style-dictionary": "4.0.1",
     "ts-node": "10.9.1",
     "typescript": "5.5.4",
     "vite": "^5.3.5",
