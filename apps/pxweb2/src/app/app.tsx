@@ -228,7 +228,6 @@ export function App() {
   }
 
   useEffect(() => {
-
     const hasSelectedMandatoryVariables = pxTableMetadata?.variables
       .filter((variable) => variable.mandatory)
       .every((variable) =>
@@ -489,7 +488,6 @@ export function App() {
       <br />
       <br />
       <div className={styles.variableBoxContainer}>
-        {/* TODO: I think the warning in the console about unique IDs is the variable.id below*/}
         {!isLoadingMetadata &&
           pxTableMetaToRender &&
           pxTableMetaToRender.variables.length > 0 &&
@@ -498,6 +496,7 @@ export function App() {
               variable.id && (
                 <VariableBox
                   id={variable.id}
+                  key={variable.id + pxTableMetaToRender.id}
                   initialIsOpen={index === 0}
                   tableId={pxTableMetaToRender.id}
                   label={variable.label}
