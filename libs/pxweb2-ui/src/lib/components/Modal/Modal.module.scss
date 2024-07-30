@@ -4,10 +4,6 @@
   display: flex;
   width: 412px;
 
-  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
-    width: 348px;
-  }
-
   flex-direction: column;
   align-items: center;
   border-radius: var(--px-border-radius-xlarge);
@@ -16,6 +12,10 @@
   // Not from Figma
   padding: 0px 0px 0px 0px;
   border-style: none;
+
+  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
+    width: 348px;
+  }
 }
 
 .modal::backdrop {
