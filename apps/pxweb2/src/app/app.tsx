@@ -216,6 +216,8 @@ export function App() {
   const [selectedVBValues, setSelectedVBValues] = useState<SelectedVBValues[]>(
     []
   );
+  const [hasLoadedDefaultSelection, setHasLoadedDefaultSelection] =
+    useState(false);
 
   /**
    * Updates useState hook and synchronizes variables context with the selected VB values.
@@ -228,7 +230,6 @@ export function App() {
   }
 
   useEffect(() => {
-
     const hasSelectedMandatoryVariables = pxTableMetadata?.variables
       .filter((variable) => variable.mandatory)
       .every((variable) =>
@@ -271,6 +272,12 @@ export function App() {
         setErrorMsg('');
       })
       .then(() => {
+        if (hasLoadedDefaultSelection) {
+          setIsLoadingMetadata(false);
+
+          return;
+        }
+
         TableService.getDefaultSelection(tableId, i18n.resolvedLanguage)
           .then((selectionResponse) => {
             const defaultSelection = mapTableSelectionResponse(
@@ -283,6 +290,7 @@ export function App() {
 
             updateAndSyncVBValues(defaultSelection);
             setIsLoadingMetadata(false);
+            setHasLoadedDefaultSelection(true);
           })
           .catch((error) => {
             setErrorMsg('Error getting default selection: ' + tableId);
@@ -293,8 +301,6 @@ export function App() {
         setPxTableMetadata(null);
       });
 
-    // TODO: Fix this hook to work as intended instead of ignoring it like this
-    // TODO: Fix unnecessary default selection call when changing language
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tableId, i18n.resolvedLanguage]);
 
@@ -444,9 +450,6 @@ export function App() {
   };
 
   function handleVBReset() {
-    if (selectedVBValues.length > 0) {
-      setSelectedVBValues([]);
-    }
     if (pxTableMetaToRender !== null) {
       setPxTableMetaToRender(null);
     }
