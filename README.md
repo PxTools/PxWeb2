@@ -18,4 +18,3 @@ Project leader: [Kristin Glomsås, krg@ssb.no](mailto:krg@ssb.no)
 
 Scrum master: [Åsa Arrhén, asa.arrhen@scb.se](asa.arrhen@scb.se)
 
-
