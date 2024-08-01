@@ -192,6 +192,7 @@ export type NavigationItem =
 
 export function App() {
   const { tableId } = useParams<{ tableId: string }>();
+  const [prevTableId, setPrevTableId] = useState('');
   const navigate = useNavigate();
   const { i18n, t } = useTranslation();
   const variables = useVariables();
@@ -251,8 +252,16 @@ export function App() {
   }, [variables, i18n.resolvedLanguage]); // Should only run this useEffect when selectedVBValues are in sync with variables context
 
   useEffect(() => {
+    let shouldGetDefaultSelection = !hasLoadedDefaultSelection;
+
     if (!tableId) {
       return;
+    }
+
+    if (prevTableId === '' || prevTableId !== tableId) {
+      setHasLoadedDefaultSelection(false);
+      shouldGetDefaultSelection = true;
+      setPrevTableId(tableId);
     }
 
     if (isLoadingMetadata === false) {
@@ -260,7 +269,6 @@ export function App() {
     }
 
     TableService.getMetadataById(tableId, i18n.resolvedLanguage)
-
       .then((tableMetadataResponse) => {
         const pxTabMetadata: PxTableMetadata = mapTableMetadataResponse(
           tableMetadataResponse
@@ -272,7 +280,7 @@ export function App() {
         setErrorMsg('');
       })
       .then(() => {
-        if (hasLoadedDefaultSelection) {
+        if (!shouldGetDefaultSelection) {
           setIsLoadingMetadata(false);
 
           return;
