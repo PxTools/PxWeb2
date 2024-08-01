@@ -473,7 +473,6 @@ export function App() {
 
   const drawerFilter = (
    <div className={styles.variableBoxContainer}>
-        {/* TODO: I think the warning in the console about unique IDs is the variable.id below*/}
         {!isLoadingMetadata &&
           pxTableMetaToRender &&
           pxTableMetaToRender.variables.length > 0 &&
