@@ -1,8 +1,12 @@
-const StyleDictionary = require('style-dictionary');
+import StyleDictionary from 'style-dictionary';
 
-function buildDictionary(config) {
+async function buildDictionary(config) {
   console.log(`Building styles from: ${config.source.join(', ')}`);
-  const sd = StyleDictionary.extend(config);
+  
+  const sd = new StyleDictionary(config);
+  
+  await sd.hasInitialized;
+  
   sd.buildAllPlatforms();
 }
 
