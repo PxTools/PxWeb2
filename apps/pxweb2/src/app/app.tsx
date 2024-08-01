@@ -472,50 +472,30 @@ export function App() {
   };
 
   const drawerFilter = (
-    <>
-      <select
-        name="tabid"
-        id="tabid"
-        value={tableId}
-        onChange={(e) => {
-          setSelectedTableId(e.target.value);
-          navigate(`/table/${e.target.value}`);
-        }}
-      >
-        <option value="TAB638">TAB638</option>
-        <option value="TAB1292">TAB1292</option>
-        <option value="TAB5659">TAB5659</option>
-        <option value="TAB1544">TAB1544 (decimals)</option>
-        <option value="TAB4246">TAB4246 (decimals)</option>
-        <option value="TAB1128">TAB1128 (large)</option>
-      </select>
-      <br />
-      <br />
-      <div className={styles.variableBoxContainer}>
-        {!isLoadingMetadata &&
-          pxTableMetaToRender &&
-          pxTableMetaToRender.variables.length > 0 &&
-          pxTableMetaToRender.variables.map(
-            (variable, index) =>
-              variable.id && (
-                <VariableBox
-                  id={variable.id}
-                  key={variable.id + pxTableMetaToRender.id}
-                  initialIsOpen={index === 0}
-                  tableId={pxTableMetaToRender.id}
-                  label={variable.label}
-                  mandatory={variable.mandatory}
-                  values={variable.values}
-                  codeLists={variable.codeLists}
-                  selectedValues={selectedVBValues}
-                  onChangeCodeList={handleCodeListChange}
-                  onChangeMixedCheckbox={handleMixedCheckboxChange}
-                  onChangeCheckbox={handleCheckboxChange}
-                />
-              )
-          )}
-      </div>
-    </>
+    <div className={styles.variableBoxContainer}>
+      {!isLoadingMetadata &&
+        pxTableMetaToRender &&
+        pxTableMetaToRender.variables.length > 0 &&
+        pxTableMetaToRender.variables.map(
+          (variable, index) =>
+            variable.id && (
+              <VariableBox
+                id={variable.id}
+                key={variable.id + pxTableMetaToRender.id}
+                initialIsOpen={index === 0}
+                tableId={pxTableMetaToRender.id}
+                label={variable.label}
+                mandatory={variable.mandatory}
+                values={variable.values}
+                codeLists={variable.codeLists}
+                selectedValues={selectedVBValues}
+                onChangeCodeList={handleCodeListChange}
+                onChangeMixedCheckbox={handleMixedCheckboxChange}
+                onChangeCheckbox={handleCheckboxChange}
+              />
+            )
+        )}
+    </div>   
   );
   const drawerView = <>View content</>;
   const drawerEdit = <>Edit content</>;
