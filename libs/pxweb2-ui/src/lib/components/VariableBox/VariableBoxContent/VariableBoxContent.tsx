@@ -322,6 +322,7 @@ export function VariableBoxContent({
               {values.map((value) => (
                 <Checkbox
                   id={value.code}
+                  key={varId + value.code}
                   tabIndex={-1}
                   value={
                     selectedValues?.length > 0 &&
