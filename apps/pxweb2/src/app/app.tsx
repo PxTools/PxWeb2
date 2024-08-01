@@ -495,7 +495,7 @@ export function App() {
               />
             )
         )}
-    </div>   
+    </div>
   );
   const drawerView = <>View content</>;
   const drawerEdit = <>Edit content</>;
