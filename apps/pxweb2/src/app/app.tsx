@@ -216,10 +216,20 @@ export function App() {
   const [selectedVBValues, setSelectedVBValues] = useState<SelectedVBValues[]>(
     []
   );
+  const [hasLoadedDefaultSelection, setHasLoadedDefaultSelection] =
+    useState(false);
+
+  /**
+   * Updates useState hook and synchronizes variables context with the selected VB values.
+   *
+   * @param selectedVBValues - An array of selected VB values.
+   */
+  function updateAndSyncVBValues(selectedVBValues: SelectedVBValues[]) {
+    setSelectedVBValues(selectedVBValues);
+    variables.syncVariablesAndValues(selectedVBValues);
+  }
 
   useEffect(() => {
-    variables.syncVariablesAndValues(selectedVBValues);
-
     const hasSelectedMandatoryVariables = pxTableMetadata?.variables
       .filter((variable) => variable.mandatory)
       .every((variable) =>
@@ -238,13 +248,12 @@ export function App() {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [i18n, selectedVBValues, tableId, variables, i18n.resolvedLanguage]);
+  }, [variables, i18n.resolvedLanguage]); // Should only run this useEffect when selectedVBValues are in sync with variables context
 
   useEffect(() => {
     if (!tableId) {
       return;
     }
-    TableService.getMetadataById(selectedTableId, i18n.resolvedLanguage);
 
     if (isLoadingMetadata === false) {
       setIsLoadingMetadata(true);
@@ -263,6 +272,12 @@ export function App() {
         setErrorMsg('');
       })
       .then(() => {
+        if (hasLoadedDefaultSelection) {
+          setIsLoadingMetadata(false);
+
+          return;
+        }
+
         TableService.getDefaultSelection(tableId, i18n.resolvedLanguage)
           .then((selectionResponse) => {
             const defaultSelection = mapTableSelectionResponse(
@@ -273,8 +288,9 @@ export function App() {
                 variable.selectedCodeList !== undefined
             );
 
-            setSelectedVBValues(defaultSelection);
+            updateAndSyncVBValues(defaultSelection);
             setIsLoadingMetadata(false);
+            setHasLoadedDefaultSelection(true);
           })
           .catch((error) => {
             setErrorMsg('Error getting default selection: ' + tableId);
@@ -285,8 +301,6 @@ export function App() {
         setPxTableMetadata(null);
       });
 
-    // TODO: Fix this hook to work as intended instead of ignoring it like this
-    // TODO: Fix unnecessary default selection call when changing language
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tableId, i18n.resolvedLanguage]);
 
@@ -333,7 +347,7 @@ export function App() {
       selectedItem
     );
 
-    setSelectedVBValues(newSelectedValues);
+    updateAndSyncVBValues(newSelectedValues);
 
     //  TODO: This currently returns dummy data until we have the API call setup for it
     const valuesForChosenCodeList: Value[] = getCodeListValues(
@@ -382,7 +396,7 @@ export function App() {
         varId
       );
 
-      setSelectedVBValues(newSelectedValues);
+      updateAndSyncVBValues(newSelectedValues);
     }
     if (allValuesSelected === 'false' || allValuesSelected === 'mixed') {
       const allValuesOfVariable =
@@ -394,7 +408,7 @@ export function App() {
         allValuesOfVariable
       );
 
-      setSelectedVBValues(newSelectedValues);
+      updateAndSyncVBValues(newSelectedValues);
     }
   };
 
@@ -413,7 +427,7 @@ export function App() {
         value
       );
 
-      setSelectedVBValues(newSelectedValues);
+      updateAndSyncVBValues(newSelectedValues);
     }
     if (hasVariable && !hasValue) {
       const newSelectedValues = addValueToVariable(
@@ -422,7 +436,7 @@ export function App() {
         value
       );
 
-      setSelectedVBValues(newSelectedValues);
+      updateAndSyncVBValues(newSelectedValues);
     }
     if (!hasVariable) {
       const newSelectedValues = addValueToNewVariable(
@@ -431,14 +445,11 @@ export function App() {
         value
       );
 
-      setSelectedVBValues(newSelectedValues);
+      updateAndSyncVBValues(newSelectedValues);
     }
   };
 
   function handleVBReset() {
-    if (selectedVBValues.length > 0) {
-      setSelectedVBValues([]);
-    }
     if (pxTableMetaToRender !== null) {
       setPxTableMetaToRender(null);
     }
@@ -461,30 +472,30 @@ export function App() {
   };
 
   const drawerFilter = (
-    <div className={styles.variableBoxContainer}>
-      {/* TODO: I think the warning in the console about unique IDs is the variable.id below*/}
-      {!isLoadingMetadata &&
-        pxTableMetaToRender &&
-        pxTableMetaToRender.variables.length > 0 &&
-        pxTableMetaToRender.variables.map(
-          (variable, index) =>
-            variable.id && (
-              <VariableBox
-                id={variable.id}
-                initialIsOpen={index === 0}
-                tableId={pxTableMetaToRender.id}
-                label={variable.label}
-                mandatory={variable.mandatory}
-                values={variable.values}
-                codeLists={variable.codeLists}
-                selectedValues={selectedVBValues}
-                onChangeCodeList={handleCodeListChange}
-                onChangeMixedCheckbox={handleMixedCheckboxChange}
-                onChangeCheckbox={handleCheckboxChange}
-              />
-            )
-        )}
-    </div>
+   <div className={styles.variableBoxContainer}>
+        {!isLoadingMetadata &&
+          pxTableMetaToRender &&
+          pxTableMetaToRender.variables.length > 0 &&
+          pxTableMetaToRender.variables.map(
+            (variable, index) =>
+              variable.id && (
+                <VariableBox
+                  id={variable.id}
+                  key={variable.id + pxTableMetaToRender.id}
+                  initialIsOpen={index === 0}
+                  tableId={pxTableMetaToRender.id}
+                  label={variable.label}
+                  mandatory={variable.mandatory}
+                  values={variable.values}
+                  codeLists={variable.codeLists}
+                  selectedValues={selectedVBValues}
+                  onChangeCodeList={handleCodeListChange}
+                  onChangeMixedCheckbox={handleMixedCheckboxChange}
+                  onChangeCheckbox={handleCheckboxChange}
+                />
+              )
+          )}
+      </div>
   );
   const drawerView = <>View content</>;
   const drawerEdit = <>Edit content</>;

@@ -18,7 +18,7 @@ export const Footer: React.FC = () => {
           <Link
             inline={true}
             target="_blank"
-            href="https://github.com/PxTools/PxWeb2"
+            href="https://pxtools.github.io/PxWeb2/"
           >
             {t('presentation_page.footer.descriptionLink')}
           </Link>
