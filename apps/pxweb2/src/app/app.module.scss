@@ -1,5 +1,10 @@
 @use '$ui/style-dictionary/dist/scss/fixed-variables.scss' as fixed;
 
+.scrollable {
+  height: 100vh;
+  overflow: auto; 
+}
+
 .breakpoints {
   height: 50px;
   width: 100%;
@@ -11,7 +16,7 @@
 }
 
 .desktopNavigation {
-  display: none;
+  display: none; 
   @media (min-width: fixed.$breakpoints-medium-min-width) {
     display: flex;
   }
@@ -77,3 +82,4 @@
   max-width: 100%;
   min-width: 100%;
 }
+
