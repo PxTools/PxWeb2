@@ -531,7 +531,7 @@ export function App() {
             onChange={changeSelectedNavView}
             selected={selectedNavigationView}
           />
-          {selectedNavigationView !== 'none' && (
+        {selectedNavigationView !== 'none' && (
         <div className={`${styles.scrollable}`}>    
             <NavigationDrawer
               heading={t('presentation_page.sidemenu.selection.title')}
