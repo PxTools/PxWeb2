@@ -554,36 +554,36 @@ export function App() {
             selected={selectedNavigationView}
           />         
         </div>
-        <Content topLeftBorderRadius={selectedNavigationView === 'none'}>
         <div className={`${styles.scrollable}`}>
-          {tableData.data && pxTableMetadata && (
-            <>
-              <ContentTop
-                staticTitle={pxTableMetadata?.label}
-                pxtable={JSON.parse(tableData.data)}
-              />
+          <Content topLeftBorderRadius={selectedNavigationView === 'none'}>
+            {tableData.data && pxTableMetadata && (
+              <>
+                <ContentTop
+                  staticTitle={pxTableMetadata?.label}
+                  pxtable={JSON.parse(tableData.data)}
+                />
 
-              {!isMissingMandatoryVariables && (
-                <div className={styles.tableWrapper}>
-                  <Table pxtable={JSON.parse(tableData.data)} />
-                </div>
-              )}
+                {!isMissingMandatoryVariables && (
+                  <div className={styles.tableWrapper}>
+                    <Table pxtable={JSON.parse(tableData.data)} />
+                  </div>
+                )}
 
-              {!isLoadingMetadata && isMissingMandatoryVariables && (
-                <EmptyState
-                  headingTxt={t(
-                    'presentation_page.main_content.table.warnings.missing_mandatory.title'
-                  )}
-                >
-                  {t(
-                    'presentation_page.main_content.table.warnings.missing_mandatory.description'
-                  )}
-                </EmptyState>
-              )}
-            </>
-          )}
-          </div>{' '}
-        </Content>
+                {!isLoadingMetadata && isMissingMandatoryVariables && (
+                  <EmptyState
+                    headingTxt={t(
+                      'presentation_page.main_content.table.warnings.missing_mandatory.title'
+                    )}
+                  >
+                    {t(
+                      'presentation_page.main_content.table.warnings.missing_mandatory.description'
+                    )}
+                  </EmptyState>
+                )}
+              </>
+            )}{' '}
+          </Content>
+        </div>
       </div>
     </>
   );
