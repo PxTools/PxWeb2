@@ -538,7 +538,7 @@ export function App() {
               onClose={() => {
                 setSelectedNavigationView('none');
               }}
-            >              
+            >
               {selectedNavigationView === 'filter' && drawerFilter}
               {selectedNavigationView === 'view' && drawerView}
               {selectedNavigationView === 'edit' && drawerEdit}
