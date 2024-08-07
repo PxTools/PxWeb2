@@ -1,24 +1,21 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import styles from './app.module.scss';
 import { ContentTop } from './components/ContentTop/ContentTop';
 import {
-  Button,
   PxTableMetadata,
   VariableBox,
-  Variable,
   Table,
-  VartypeEnum,
   PxTable,
-  fakeData,
   SelectedVBValues,
   Value,
   SelectOption,
   EmptyState,
 } from '@pxweb2/pxweb2-ui';
 import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
-import { Dataset, TableService } from '@pxweb2/pxweb2-api-client';
+import { TableService } from '@pxweb2/pxweb2-api-client';
 import { mapTableMetadataResponse } from '../mappers/TableMetadataResponseMapper';
 import { mapTableSelectionResponse } from '../mappers/TableSelectionResponseMapper';
 import { Header } from './components/Header/Header';
@@ -28,7 +25,6 @@ import NavigationBar from './components/NavigationBar/NavigationBar';
 import NavigationDrawer from './components/NavigationDrawer/NavigationDrawer';
 import useVariables from './context/useVariables';
 import useTableData from './context/useTableData';
-import { useNavigate, useParams } from 'react-router-dom';
 
 function addSelectedCodeListToVariable(
   currentVariable: SelectedVBValues | undefined,
