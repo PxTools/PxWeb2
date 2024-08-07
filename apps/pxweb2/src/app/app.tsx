@@ -274,9 +274,7 @@ export function App() {
           tableMetadataResponse
         );
         setPxTableMetadata(pxTabMetadata);
-
         handleVBReset();
-
         setErrorMsg('');
       })
       .then(() => {
