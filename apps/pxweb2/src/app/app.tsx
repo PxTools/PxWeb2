@@ -274,7 +274,11 @@ export function App() {
           tableMetadataResponse
         );
         setPxTableMetadata(pxTabMetadata);
-        handleVBReset();
+
+        if (pxTableMetaToRender !== null) {
+          setPxTableMetaToRender(null);
+        }
+
         setErrorMsg('');
       })
       .then(() => {
@@ -454,12 +458,6 @@ export function App() {
       updateAndSyncVBValues(newSelectedValues);
     }
   };
-
-  function handleVBReset() {
-    if (pxTableMetaToRender !== null) {
-      setPxTableMetaToRender(null);
-    }
-  }
 
   const getCodeListValues = (id: string) => {
     /* TODO: Implement querying the API */
