@@ -8,7 +8,6 @@ import {
   PxTableMetadata,
   VariableBox,
   Table,
-  PxTable,
   SelectedVBValues,
   Value,
   SelectOption,
@@ -197,7 +196,6 @@ export function App() {
     tableId ? tableId : 'tab638'
   );
   const [errorMsg, setErrorMsg] = useState('');
-  const [pxTable, setPxTable] = useState<PxTable | null>(null);
   const [selectedNavigationView, setSelectedNavigationView] =
     useState<NavigationItem>('filter');
   const [isLoadingMetadata, setIsLoadingMetadata] = useState<boolean>(true);
