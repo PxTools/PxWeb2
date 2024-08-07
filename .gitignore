@@ -43,5 +43,4 @@ Thumbs.db
 .nx/workspace-data
 
 # Style dictionary
-custom_theme.json
 theme/variables.css

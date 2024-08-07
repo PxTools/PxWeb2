@@ -12,21 +12,21 @@
   --px-border-radius-xlarge: 24px;
   --px-border-radius-full: 9999px;
   --px-color-background-default: #FFFFFF;
-  --px-color-background-subtle: #F0F8F9;
+  --px-color-background-subtle: #ECFEED;
   --px-color-base-white: #FFFFFF;
   --px-color-blue-200: #C3E6FE;
   --px-color-bluegray-300: #9BC4C5;
   --px-color-bluegray-700: #2F555B;
   --px-color-bluegray-900: #162327;
   --px-color-surface-default: #FFFFFF;
-  --px-color-surface-subtle: #F0F8F9;
-  --px-color-surface-moderate: #DBEBEB;
+  --px-color-surface-subtle: #ECFEED;
+  --px-color-surface-moderate: #B6E8B8;
   --px-color-surface-inverted: #274247;
   --px-color-surface-highlight: #ECFEED;
   --px-color-surface-action: #274247;
   --px-color-surface-action-hover: #274247;
   --px-color-surface-action-active: #162327;
-  --px-color-surface-action-subtle-hover: #DBEBEB;
+  --px-color-surface-action-subtle-hover: #B6E8B8;
   --px-color-surface-action-subtle-active: #C3DCDC;
   --px-color-surface-info-subtle: #D7ECFE;
   --px-color-surface-info-moderate: #C3E6FE;
@@ -46,7 +46,7 @@
   --px-color-border-hover: #62919A;
   --px-color-border-selected: #274247;
   --px-color-border-info: #0179C8;
-  --px-color-border-success: #00824D;
+  --px-color-border-success: #B6E8B8;
   --px-color-border-warning: #CB7603;
   --px-color-border-error: #E23822;
   --px-color-border-focus: #9272FC;
@@ -63,7 +63,7 @@
   --px-color-icon-on-action: #FFFFFF;
   --px-color-icon-on-action-subtle: #162327;
   --px-color-icon-info: #0179C8;
-  --px-color-icon-success: #00824D;
+  --px-color-icon-success: #B6E8B8;
   --px-color-icon-warning: #CB7603;
   --px-color-icon-error: #E23822;
 }

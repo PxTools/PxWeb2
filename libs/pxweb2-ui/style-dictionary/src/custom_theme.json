@@ -1,0 +1,22 @@
+{
+  "color": {
+    "background-subtle": {
+      "value": "#ECFEED"
+    },
+    "surface-subtle": {
+      "value": "#ECFEED"
+    },
+    "surface-moderate": {
+      "value": "#B6E8B8"
+    },
+    "surface-action-subtle-hover": {
+      "value": "#B6E8B8"
+    },
+    "border-success": {
+      "value": "#B6E8B8"
+    },
+    "icon-success": {
+      "value": "#B6E8B8"
+    }
+  }
+}
