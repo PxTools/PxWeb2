@@ -225,6 +225,12 @@ export function App() {
   }
 
   useEffect(() => {
+    if (errorMsg !== '') {
+      console.error('ERROR: App.tsx:', errorMsg);
+    }
+  }, [errorMsg]);
+
+  useEffect(() => {
     const hasSelectedMandatoryVariables = pxTableMetadata?.variables
       .filter((variable) => variable.mandatory)
       .every((variable) =>
