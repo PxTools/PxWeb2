@@ -1,0 +1,67 @@
+@use '../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixvar;
+@use '../../text-styles.scss';
+
+@keyframes loading {
+    to {
+      transform: rotate(360deg);
+    }
+}
+
+.spinner{
+    display: flex;
+    align-items: center;
+}
+
+.inverted-bg{ 
+border-radius: var(--px-border-radius-medium);
+background: var(--px-color-surface-inverted);
+}
+
+
+.text-color-default{
+    color: var(--px-text-color-default);
+}
+
+.text-color-inverted{
+    color: var(--px-color-text-on-inverted);
+}
+.spinner-xlarge {
+    gap: 16px;
+}
+.spinner-large {
+    gap: 12px;
+}
+.spinner-medium {
+    gap: 12px;
+}
+.spinner-small {
+    gap: 8px;
+}
+.spinner-xsmall {
+    gap: 8px;
+}
+
+.loading{
+    animation: loading 2s linear infinite;
+}
+.eclipse-xlarge {
+    width: 88px;
+    height: 88px;
+}
+
+.eclipse-large {
+    width: 64px;
+    height: 64px;
+}
+.eclipse-medium {
+    width: 44px;
+    height: 44px;
+}
+.eclipse-small {
+    width: 32px;
+    height: 32px;
+}
+.eclipse-xsmall {
+    width: 20px;
+    height: 20px;
+}
