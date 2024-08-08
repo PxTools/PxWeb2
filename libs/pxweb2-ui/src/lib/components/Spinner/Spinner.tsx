@@ -17,7 +17,15 @@ export function Spinner({
   let PathStrokeSubtle= "";
   let PathStrokeAction= "";
   let Eclipse = null;
-  let labelsize: 'small' | 'medium' = 'medium';
+  let Labelsize: 'small' | 'medium' = 'medium';
+  let LabelExist = false;
+  if (label!==undefined)
+    {
+      if (label.length > 0)
+        {
+          LabelExist =true;
+        }
+    }
 
   switch (variant) {
     case 'default':
@@ -54,7 +62,7 @@ export function Spinner({
           />
         </svg>
       );
-      labelsize = 'medium';
+      Labelsize = 'medium';
       break;
     case 'large':
       Eclipse = (
@@ -76,7 +84,7 @@ export function Spinner({
           />
         </svg>
       );
-      labelsize = 'medium';
+      Labelsize = 'medium';
       break;
     case 'medium':
       Eclipse = (
@@ -99,7 +107,7 @@ export function Spinner({
           />
         </svg>
       );
-      labelsize = 'medium';
+      Labelsize = 'medium';
       break;
     case 'small':
       Eclipse = (
@@ -122,7 +130,7 @@ export function Spinner({
           />
         </svg>
       );
-      labelsize = 'medium';
+      Labelsize = 'medium';
       break;
     case 'xsmall':
       Eclipse = (
@@ -145,7 +153,7 @@ export function Spinner({
           />
         </svg>
       );
-      labelsize = 'small';
+      Labelsize = 'small';
       break;
     default:
       Eclipse = (
@@ -168,14 +176,14 @@ export function Spinner({
           />
         </svg>
       );
-      labelsize = 'medium';
+      Labelsize = 'medium';
   }
 
   return (
 
-    <div className={cl(classes[`spinner`], classes[`spinner-${size}`],{[classes[`inverted-bg`]]:variant==='inverted'})}>
+    <div className={cl(classes[`spinner`], classes[`spinner-${size}`],{[classes[`inverted-bg`]]:variant==='inverted' && LabelExist})}>
       <div className={cl(classes[`eclipse-${size}`],classes[`loading`])}>{Eclipse}</div>
-      <label className={cl(classes[`label-${labelsize}`],{[classes[`text-color-inverted`]]:variant==='inverted'})}>{label} </label>
+      <label className={cl(classes[`label-${Labelsize}`],{[classes[`text-color-inverted`]]:variant==='inverted'})}>{label} </label>
     </div>
 
   );
