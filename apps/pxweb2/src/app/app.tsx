@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import cl from 'clsx';
+
 
 import styles from './app.module.scss';
 import { ContentTop } from './components/ContentTop/ContentTop';
@@ -526,35 +528,35 @@ export function App() {
     <>
       <Header />
       <div className={styles.main}>
-        <div className={`${styles.desktopNavigation}`}>
+        <div className={styles.desktopNavigation}>
           <NavigationRail
             onChange={changeSelectedNavView}
             selected={selectedNavigationView}
           />
-        {selectedNavigationView !== 'none' && (
-        <div className={`${styles.scrollable}`}>    
-            <NavigationDrawer
-              heading={t('presentation_page.sidemenu.selection.title')}
-              onClose={() => {
-                setSelectedNavigationView('none');
-              }}
-            >
-              {selectedNavigationView === 'filter' && drawerFilter}
-              {selectedNavigationView === 'view' && drawerView}
-              {selectedNavigationView === 'edit' && drawerEdit}
-              {selectedNavigationView === 'save' && drawerSave}
-              {selectedNavigationView === 'help' && drawerHelp}
-            </NavigationDrawer>
-        </div>
+          {selectedNavigationView !== 'none' && (
+            <div className={styles.scrollable}>
+              <NavigationDrawer
+                heading={t('presentation_page.sidemenu.selection.title')}
+                onClose={() => {
+                  setSelectedNavigationView('none');
+                }}
+              >
+                {selectedNavigationView === 'filter' && drawerFilter}
+                {selectedNavigationView === 'view' && drawerView}
+                {selectedNavigationView === 'edit' && drawerEdit}
+                {selectedNavigationView === 'save' && drawerSave}
+                {selectedNavigationView === 'help' && drawerHelp}
+              </NavigationDrawer>
+            </div>
           )}
         </div>
-        <div className={`${styles.mobileNavigation} ${styles.scrollable}` }>
+        <div className={cl(styles.mobileNavigation, styles.scrollable)}>
           <NavigationBar
             onChange={changeSelectedNavView}
             selected={selectedNavigationView}
-          />         
+          />
         </div>
-        <div className={`${styles.scrollable}`}>
+        <div className={styles.scrollable}>
           <Content topLeftBorderRadius={selectedNavigationView === 'none'}>
             {tableData.data && pxTableMetadata && (
               <>
