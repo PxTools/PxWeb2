@@ -80,5 +80,6 @@
 
 .scrollable {
   height: 100vh;
-  overflow: auto;   
+  align-self: stretch;
+  overflow-y: auto;  
 }

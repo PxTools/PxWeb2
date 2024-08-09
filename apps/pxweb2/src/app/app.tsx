@@ -545,7 +545,7 @@ export function App() {
               {selectedNavigationView === 'save' && drawerSave}
               {selectedNavigationView === 'help' && drawerHelp}
             </NavigationDrawer>
-            </div>
+        </div>
           )}
         </div>
         <div className={`${styles.mobileNavigation} ${styles.scrollable}` }>
