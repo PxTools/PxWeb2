@@ -62,7 +62,9 @@ export const label: StoryFn<typeof Spinner> = () => {
     <Spinner label='Tabellen lastes...'></Spinner>
     </div>
     <div>inverted
+      <div style={{backgroundColor:"red",width:"300px"}}>
     <Spinner variant='inverted' label='Tabellen lastes...'></Spinner>
+    </div>
     </div>
     </>
   );

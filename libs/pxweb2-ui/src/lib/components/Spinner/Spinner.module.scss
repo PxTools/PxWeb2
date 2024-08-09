@@ -2,9 +2,54 @@
 @use '../../text-styles.scss';
 
 @keyframes loading {
-    to {
-      transform: rotate(360deg);
+    100% {
+      transform: rotate(1turn);
     }
+}
+
+@keyframes circle-rotate {
+    0% {
+        stroke-dasharray: 1px, 200px;
+        stroke-dashoffset: 0;
+    }
+    
+    50% {
+        stroke-dasharray: 100px, 200px;
+        stroke-dashoffset: -15px;
+    }
+    100% {
+        stroke-dasharray: 100px, 200px;
+        stroke-dashoffset: -120px;
+    }
+}
+
+@keyframes circle-background {
+
+}
+
+
+@keyframes loadingx {
+    0% {
+      transform: rotate(0);
+    }
+    100% {
+        transform: rotate(360deg);
+      }
+}
+
+.path-stroke-background-default{
+    stroke:var(--px-color-border-subtle);
+}
+.path-stroke-background-inverted{
+    stroke:var(--px-color-border-subtle);
+}
+.path-stroke-circle-default{
+    stroke:var(--px-color-border-action);
+    animation: circle-rotate 1.8s ease-in infinite;
+}
+.path-stroke-circle-inverted{
+    stroke:var(--px-color-border-on-inverted);
+    animation: circle-rotate 1.8s ease-in infinite;
 }
 
 .spinner{
@@ -12,14 +57,9 @@
     align-items: center;
 }
 
-.inverted-bg{ 
-border-radius: var(--px-border-radius-medium);
-background: var(--px-color-surface-inverted);
-}
-
 
 .text-color-default{
-    color: var(--px-text-color-default);
+    color: var(--px-color-text-default);
 }
 
 .text-color-inverted{
@@ -42,7 +82,13 @@ background: var(--px-color-surface-inverted);
 }
 
 .loading{
-    animation: loading 2s linear infinite;
+    animation: loading 21.8s linear infinite;
+    display: inline-block;
+    position: relative;
+}
+
+.loading-circle{
+
 }
 .eclipse-xlarge {
     width: 88px;
