@@ -12,7 +12,7 @@ import { mapJsonStat2Response } from '../../mappers/JsonStat2ResponseMapper';
 
 // Define types for the context state and provider props
 export interface TableDataContextType {
-  data: any;
+  data: PxTable | undefined;
   /*   loading: boolean;
   error: string | null; */
   fetchTableData: (tableId: string, i18n: i18n) => void;
@@ -24,12 +24,12 @@ interface TableDataProviderProps {
 
 // Create context with default values
 const TableDataContext = createContext<TableDataContextType | undefined>({
-  data: '',
+  data: undefined,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   fetchTableData: () => {},
 });
 const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
-  const [data, setData] = useState<string>();
+  const [data, setData] = useState<PxTable | undefined>(undefined);
   const [errorMsg, setErrorMsg] = useState('');
   const variables = useVariables();
 
@@ -65,7 +65,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
     const pxTable: PxTable = mapJsonStat2Response(pxTabData);
 
-    setData(JSON.stringify(pxTable));
+    setData(pxTable);
   };
 
   return (
