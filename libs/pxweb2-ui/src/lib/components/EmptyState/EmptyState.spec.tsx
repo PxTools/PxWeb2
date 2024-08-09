@@ -40,12 +40,12 @@ describe('EmptyState', () => {
       <EmptyState
         svgName="ManWithMagnifyingGlass"
         headingTxt="test"
-        illustrationAltText="test"
+        illustrationAltText="illustrationAltTextTest"
       >
         test
       </EmptyState>
     );
 
-    expect(getByRole(baseElement, 'img')).toBeTruthy();
+    expect(getByRole(baseElement, 'img', { name: 'illustrationAltTextTest'})).toBeTruthy();
   });
 });
