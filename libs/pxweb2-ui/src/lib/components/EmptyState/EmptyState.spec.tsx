@@ -5,9 +5,11 @@ import EmptyState from './EmptyState';
 describe('EmptyState', () => {
   it('should render successfully', () => {
     const { baseElement } = render(
-      <EmptyState headingTxt="test">'test'</EmptyState>
+      <EmptyState svgName="ManWithMagnifyingGlass" headingTxt="test">
+        test
+      </EmptyState>
     );
-    
+
     expect(baseElement).toBeTruthy();
   });
 });

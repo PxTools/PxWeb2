@@ -572,6 +572,7 @@ export function App() {
 
               {!isLoadingMetadata && isMissingMandatoryVariables && (
                 <EmptyState
+                  svgName="ManWithMagnifyingGlass"
                   headingTxt={t(
                     'presentation_page.main_content.table.warnings.missing_mandatory.title'
                   )}

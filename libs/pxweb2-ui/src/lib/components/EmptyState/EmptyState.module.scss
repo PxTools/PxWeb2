@@ -35,7 +35,12 @@
 }
 
 .empty-state-illustration {
-  // TODO: Add styles for the illustration
+  display: flex;
+  width: 300px;
+  height: 160px;
+  padding: 8px 11.105px 8.48px 12px;
+  justify-content: center;
+  align-items: center;
 }
 
 .empty-state-text {
