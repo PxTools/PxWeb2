@@ -530,12 +530,13 @@ export function App() {
     <>
       <Header />
       <div className={styles.main}>
-        <div className={styles.desktopNavigation}>
+        <div className={`${styles.desktopNavigation}`}>
           <NavigationRail
             onChange={changeSelectedNavView}
             selected={selectedNavigationView}
           />
-          {selectedNavigationView !== 'none' && (
+        {selectedNavigationView !== 'none' && (
+        <div className={`${styles.scrollable}`}>    
             <NavigationDrawer
               heading={t('presentation_page.sidemenu.selection.title')}
               onClose={() => {
@@ -548,42 +549,45 @@ export function App() {
               {selectedNavigationView === 'save' && drawerSave}
               {selectedNavigationView === 'help' && drawerHelp}
             </NavigationDrawer>
+        </div>
           )}
         </div>
-        <div className={styles.mobileNavigation}>
+        <div className={`${styles.mobileNavigation} ${styles.scrollable}` }>
           <NavigationBar
             onChange={changeSelectedNavView}
             selected={selectedNavigationView}
-          />
+          />         
         </div>
-        <Content topLeftBorderRadius={selectedNavigationView === 'none'}>
-          {tableData.data && pxTableMetadata && (
-            <>
-              <ContentTop
-                staticTitle={pxTableMetadata?.label}
-                pxtable={JSON.parse(tableData.data)}
-              />
+        <div className={`${styles.scrollable}`}>
+          <Content topLeftBorderRadius={selectedNavigationView === 'none'}>
+            {tableData.data && pxTableMetadata && (
+              <>
+                <ContentTop
+                  staticTitle={pxTableMetadata?.label}
+                  pxtable={JSON.parse(tableData.data)}
+                />
 
-              {!isMissingMandatoryVariables && (
-                <div className={styles.tableWrapper}>
-                  <Table pxtable={JSON.parse(tableData.data)} />
-                </div>
-              )}
+                {!isMissingMandatoryVariables && (
+                  <div className={styles.tableWrapper}>
+                    <Table pxtable={JSON.parse(tableData.data)} />
+                  </div>
+                )}
 
-              {!isLoadingMetadata && isMissingMandatoryVariables && (
-                <EmptyState
-                  headingTxt={t(
-                    'presentation_page.main_content.table.warnings.missing_mandatory.title'
-                  )}
-                >
-                  {t(
-                    'presentation_page.main_content.table.warnings.missing_mandatory.description'
-                  )}
-                </EmptyState>
-              )}
-            </>
-          )}{' '}
-        </Content>
+                {!isLoadingMetadata && isMissingMandatoryVariables && (
+                  <EmptyState
+                    headingTxt={t(
+                      'presentation_page.main_content.table.warnings.missing_mandatory.title'
+                    )}
+                  >
+                    {t(
+                      'presentation_page.main_content.table.warnings.missing_mandatory.description'
+                    )}
+                  </EmptyState>
+                )}
+              </>
+            )}{' '}
+          </Content>
+        </div>
       </div>
     </>
   );
