@@ -8,16 +8,21 @@ import { BreakpointsXsmallMaxWidth } from '../../../../style-dictionary/dist/js/
 export interface EmptyStateProps {
   svgName: keyof typeof Illustrations;
   headingTxt: string;
+  illustrationAltText: string;
   children: React.ReactNode;
 }
 
-export function EmptyState({ svgName, headingTxt, children }: EmptyStateProps) {
+export function EmptyState({
+  svgName,
+  headingTxt,
+  illustrationAltText,
+  children,
+}: EmptyStateProps) {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   let illustration = Illustrations[svgName].large;
   let viewBoxSizes = '0 0 277 144';
   const breakpoint = Number(BreakpointsXsmallMaxWidth.replace('px', ''));
-  const ariaLabel = `Illustration of ${svgName}`;
 
   useEffect(() => {
     const handleResize = () => {
@@ -25,7 +30,7 @@ export function EmptyState({ svgName, headingTxt, children }: EmptyStateProps) {
     };
 
     window.addEventListener('resize', handleResize);
-    
+
     return () => {
       window.removeEventListener('resize', handleResize);
     };
@@ -52,23 +57,18 @@ export function EmptyState({ svgName, headingTxt, children }: EmptyStateProps) {
    *     but should we use color names here? then if someone wants to change the colors to non-blue
    *     they will have to overwrite "bluegray" with green for example
    *        maybe better to never use such color names?
-   *
+   * - Fix the styling, currently has not checked thoroughly
    */
-
-  console.log('viewBoxSizes: ' + viewBoxSizes);
-  console.log('windowWidth: ' + windowWidth);
 
   return (
     <div className={cl(styles['empty-state'])}>
       <div className={cl(styles['empty-state-content'])}>
-        <div
-          className={cl(styles['empty-state-illustration'])}
-          aria-label={ariaLabel}
-        >
+        <div className={cl(styles['empty-state-illustration'])}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox={viewBoxSizes}
-            //fill="none"
+            role="img"
+            aria-label={illustrationAltText}
           >
             {illustration}
           </svg>

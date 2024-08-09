@@ -169,7 +169,8 @@
         "warnings": {
           "missing_mandatory": {
             "title": "Tabellen kan inte visas",
-            "description": "Du måste välja något från filtret till vänster"
+            "description": "Du måste välja något från filtret till vänster",
+            "illustration_alt_description": "Illustration av en man med ett förstoringsglas som letar efter något"
           }
         }
       }

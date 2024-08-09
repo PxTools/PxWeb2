@@ -146,8 +146,9 @@ interface Resources {
         "table": {
           "warnings": {
             "missing_mandatory": {
-              "title": "Missing mandatory selection",
-              "description": "The table cannot be displayed. You must select something in the filter on the left."
+              "title": "The table cannot be displayed",
+              "description": "You must select something in the filter on the left",
+              "illustration_alt_description": "Illustration of a man with a magnifying glass looking for something"
             }
           }
         },
@@ -176,8 +177,8 @@ interface Resources {
         }
       },
       "footer": {
-        "description": "Statistics Sweden (SCB) and Statistics Norway (SSB) are building a new and more user-friendly interface for PxWeb. Follow the development of the new interface on the",
-        "descriptionLink": "project page at Github.",
+        "description": "On this site you can follow as Statistics Sweden (SCB) and Statistics Norway (SSB) are building a new and more user-friendly interface for PxWeb.",
+        "descriptionLink": "Read more about the project on Github",
         "contact": "Contact",
         "projectLeader": "Project leader",
         "scrumMaster": "Scrum master",
