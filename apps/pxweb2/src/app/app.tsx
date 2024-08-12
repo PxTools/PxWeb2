@@ -561,12 +561,12 @@ export function App() {
             <>
               <ContentTop
                 staticTitle={pxTableMetadata?.label}
-                pxtable={JSON.parse(tableData.data)}
+                pxtable={tableData.data}
               />
 
               {!isMissingMandatoryVariables && (
                 <div className={styles.tableWrapper}>
-                  <Table pxtable={JSON.parse(tableData.data)} />
+                  <Table pxtable={tableData.data} />
                 </div>
               )}
 
