@@ -45,11 +45,11 @@
 }
 .path-stroke-circle-default{
     stroke:var(--px-color-border-action);
-    animation: circle-rotate 1.8s ease-in infinite;
+    animation: circle-rotate 1.8s ease-in-out infinite;
 }
 .path-stroke-circle-inverted{
     stroke:var(--px-color-border-on-inverted);
-    animation: circle-rotate 1.8s ease-in infinite;
+    animation: circle-rotate 1.8s ease-in-out infinite;
 }
 
 .spinner{
@@ -82,7 +82,7 @@
 }
 
 .loading{
-    animation: loading 21.8s linear infinite;
+    animation: loading 1.8s linear infinite;
     display: inline-block;
     position: relative;
 }
