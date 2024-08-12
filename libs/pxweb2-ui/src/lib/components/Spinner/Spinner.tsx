@@ -47,8 +47,8 @@ export function Spinner({
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 50 50"
-          width="88px"
-          height="88px"
+          width="98px"
+          height="98px"
           fill="none"
           className={cl(classes[`spinner`], classes[`spinner-${size}`],classes[`loading`])}
         >
@@ -66,11 +66,11 @@ export function Spinner({
           <circle cx='25' cy='25' r='20'
             className={cl(classes[`path-stroke-background-${variant}`])}
             // stroke={PathStrokeSubtle}
-            stroke-width="5"></circle>
+            stroke-width="4"></circle>
          <circle cx='25' cy='25' r='20'
             className={cl(classes[`path-stroke-circle-${variant}`])}
             // stroke={PathStrokeAction}
-            stroke-width="5"
+            stroke-width="4"
             ></circle>
         
         </svg>
@@ -82,19 +82,19 @@ export function Spinner({
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 50 50"
-          width="64px"
-          height="64px"
+          width="74px"
+          height="74px"
           fill="none"
           className={cl(classes[`spinner`], classes[`spinner-${size}`],classes[`loading`])}
         >
             <circle cx='25' cy='25' r='20'
             className={cl(classes[`path-stroke-background-${variant}`])}
-            stroke-width="5">
+            stroke-width="4.7">
 
           </circle>
           <circle cx='25' cy='25' r='20'
             className={cl(classes[`path-stroke-circle-${variant}`])}
-            stroke-width="5">
+            stroke-width="4.7">
         </circle>
         </svg>
       );
@@ -105,19 +105,19 @@ export function Spinner({
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 50 50"
-          width="44px"
-          height="44px"
+          width="54px"
+          height="54px"
           fill="none"
           className={cl(classes[`spinner`], classes[`spinner-${size}`],classes[`loading`])}
         >
             <circle cx='25' cy='25' r='20'
             className={cl(classes[`path-stroke-background-${variant}`])}
-            stroke-width="5">
+            stroke-width="4.6">
 
           </circle>
           <circle cx='25' cy='25' r='20'
             className={cl(classes[`path-stroke-circle-${variant}`])}
-            stroke-width="5">
+            stroke-width="4.6">
         </circle>
         </svg>
       );
@@ -128,8 +128,8 @@ export function Spinner({
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 50 50"
-          width="32px"
-          height="32px"
+          width="40px"
+          height="40px"
           fill="none"
           className={cl(classes[`spinner`], classes[`spinner-${size}`],classes[`loading`])}
         >
@@ -151,19 +151,19 @@ export function Spinner({
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 50 50"
-          width="20px"
-          height="20px"
+          width="25px"
+          height="25px"
           fill="none"
           className={cl(classes[`spinner`], classes[`spinner-${size}`],classes[`loading`])}
         >
             <circle cx='25' cy='25' r='20'
             className={cl(classes[`path-stroke-background-${variant}`])}
-            stroke-width="5">
+            stroke-width="7">
 
           </circle>
           <circle cx='25' cy='25' r='20'
             className={cl(classes[`path-stroke-circle-${variant}`])}
-            stroke-width="5">
+            stroke-width="7">
         </circle>
         </svg>
       );
@@ -174,19 +174,19 @@ export function Spinner({
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 50 50"
-          width="44px"
-          height="44px"
+          width="54px"
+          height="54px"
           fill="none"
           className={cl(classes[`spinner`], classes[`spinner-${size}`],classes[`loading`])}
         >
             <circle cx='25' cy='25' r='20'
             className={cl(classes[`path-stroke-background-${variant}`])}
-            stroke-width="5">
+            stroke-width="4.6">
 
           </circle>
           <circle cx='25' cy='25' r='20'
             className={cl(classes[`path-stroke-circle-${variant}`])}
-            stroke-width="5">
+            stroke-width="4.6">
         </circle>
         </svg>
       );
