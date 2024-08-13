@@ -77,3 +77,9 @@
   max-width: 100%;
   min-width: 100%;
 }
+
+.scrollable {
+  height: 100vh;
+  align-self: stretch;
+  overflow-y: auto;
+}
