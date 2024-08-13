@@ -576,14 +576,10 @@ export function App() {
                   headingTxt={t(
                     'presentation_page.main_content.table.warnings.missing_mandatory.title'
                   )}
-                  illustrationAltText={t(
-                    'presentation_page.main_content.table.warnings.missing_mandatory.illustration_alt_description'
-                  )}
-                >
-                  {t(
+                  descriptionTxt={t(
                     'presentation_page.main_content.table.warnings.missing_mandatory.description'
                   )}
-                </EmptyState>
+                />
               )}
             </>
           )}{' '}

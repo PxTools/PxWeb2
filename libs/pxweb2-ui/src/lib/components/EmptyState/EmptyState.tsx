@@ -8,13 +8,13 @@ import { BreakpointsXsmallMaxWidth } from '../../../../style-dictionary/dist/js/
 export interface EmptyStateProps {
   svgName: keyof typeof Illustrations;
   headingTxt: string;
-  children: React.ReactNode;
+  descriptionTxt: string;
 }
 
 export function EmptyState({
   svgName,
   headingTxt,
-  children,
+  descriptionTxt,
 }: EmptyStateProps) {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
@@ -58,7 +58,7 @@ export function EmptyState({
    * - Fix the styling, currently has not checked thoroughly
    * - - What in EmptyState in figma is there only to make it look good in figma? What should be ignored there?
    * - - The breakpoint seems to not look correct all the time, 500ish width starts clipping the illustration
-   * 
+   *
    * -- Hvor jeg var --
    *  - Jeg driver å ser på CSS og breakpoints. Det er problemer med selve Content-Containeren. Den har ikke riktig margin og padding.
    *    Hvis jeg forandrer på det, så ser selve EmptyState riktig ut. Ihvertfall på den minste størrelsen.
@@ -72,7 +72,7 @@ export function EmptyState({
             xmlns="http://www.w3.org/2000/svg"
             viewBox={viewBoxSizes}
             role="img"
-            aria-label={headingTxt + '. ' + children}
+            aria-label={headingTxt + '. ' + descriptionTxt}
           >
             {illustration}
           </svg>
@@ -92,7 +92,7 @@ export function EmptyState({
               styles['bodyshort-medium']
             )}
           >
-            {children}
+            {descriptionTxt}
           </div>
         </div>
       </div>
