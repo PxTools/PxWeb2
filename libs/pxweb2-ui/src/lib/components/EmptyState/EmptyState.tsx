@@ -8,14 +8,12 @@ import { BreakpointsXsmallMaxWidth } from '../../../../style-dictionary/dist/js/
 export interface EmptyStateProps {
   svgName: keyof typeof Illustrations;
   headingTxt: string;
-  illustrationAltText: string;
   children: React.ReactNode;
 }
 
 export function EmptyState({
   svgName,
   headingTxt,
-  illustrationAltText,
   children,
 }: EmptyStateProps) {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -42,7 +40,7 @@ export function EmptyState({
   }
 
   if (!illustration) {
-    return null;
+    return null; // TODO:Add error message here?
   }
 
   /*
@@ -52,12 +50,18 @@ export function EmptyState({
    * - - should these be hardcoded like this? will all illustrations have the same viewBox values? for large and small?
    * - how do we handle the colors of the illustrations? should you be able to customize them?
    * - - the colors are now hardcoded, since one illustration has many lines of different colors
-   * - - - can fix
+   * - - - can fix, but wanted?
    * - - in figma some colors are name as "bluegray" etc,
    *     but should we use color names here? then if someone wants to change the colors to non-blue
    *     they will have to overwrite "bluegray" with green for example
    *        maybe better to never use such color names?
    * - Fix the styling, currently has not checked thoroughly
+   * - - What in EmptyState in figma is there only to make it look good in figma? What should be ignored there?
+   * - - The breakpoint seems to not look correct all the time, 500ish width starts clipping the illustration
+   * 
+   * -- Hvor jeg var --
+   *  - Jeg driver å ser på CSS og breakpoints. Det er problemer med selve Content-Containeren. Den har ikke riktig margin og padding.
+   *    Hvis jeg forandrer på det, så ser selve EmptyState riktig ut. Ihvertfall på den minste størrelsen.
    */
 
   return (
@@ -68,7 +72,7 @@ export function EmptyState({
             xmlns="http://www.w3.org/2000/svg"
             viewBox={viewBoxSizes}
             role="img"
-            aria-label={illustrationAltText}
+            aria-label={headingTxt + '. ' + children}
           >
             {illustration}
           </svg>
@@ -88,7 +92,7 @@ export function EmptyState({
               styles['bodyshort-medium']
             )}
           >
-            <p>{children}</p>
+            {children}
           </div>
         </div>
       </div>

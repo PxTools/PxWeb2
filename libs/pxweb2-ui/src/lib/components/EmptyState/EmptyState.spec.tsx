@@ -8,7 +8,6 @@ describe('EmptyState', () => {
       <EmptyState
         svgName="ManWithMagnifyingGlass"
         headingTxt="test"
-        illustrationAltText="test"
       >
         test
       </EmptyState>
@@ -22,7 +21,6 @@ describe('EmptyState', () => {
       <EmptyState
         svgName="ManWithMagnifyingGlass"
         headingTxt="heading test text"
-        illustrationAltText="illustration alt text test"
       >
         description test text
       </EmptyState>
@@ -31,7 +29,7 @@ describe('EmptyState', () => {
     expect(getByText(baseElement, 'heading test text')).toBeTruthy();
     expect(getByText(baseElement, 'description test text')).toBeTruthy();
     expect(
-      getByRole(baseElement, 'img', { name: 'illustration alt text test' })
+      getByRole(baseElement, 'img', { name: 'heading test text. description test text' })
     ).toBeTruthy();
   });
 
@@ -40,12 +38,11 @@ describe('EmptyState', () => {
       <EmptyState
         svgName="ManWithMagnifyingGlass"
         headingTxt="test"
-        illustrationAltText="illustrationAltTextTest"
       >
         test
       </EmptyState>
     );
 
-    expect(getByRole(baseElement, 'img', { name: 'illustrationAltTextTest'})).toBeTruthy();
+    expect(getByRole(baseElement, 'img', { name: 'test. test'})).toBeTruthy();
   });
 });
