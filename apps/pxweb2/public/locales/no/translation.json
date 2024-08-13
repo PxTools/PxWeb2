@@ -146,8 +146,7 @@
         "warnings": {
           "missing_mandatory": {
             "title": "Tabellen kan ikke vises",
-            "description": "Du må velge noe i filteret til venstre",
-            "illustration_alt_description": "Illustrasjon av en mann med et forstørrelsesglass som leter etter noe"
+            "description": "Du må velge noe i filteret til venstre"
           }
         }
       },
