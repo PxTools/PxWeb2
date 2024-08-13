@@ -1,26 +1,20 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import cl from 'clsx';
-
-
+import { useNavigate, useParams } from 'react-router-dom';
 import styles from './app.module.scss';
 import { ContentTop } from './components/ContentTop/ContentTop';
 import {
-  Button,
   PxTableMetadata,
   VariableBox,
-  Variable,
   Table,
-  VartypeEnum,
-  PxTable,
-  fakeData,
   SelectedVBValues,
   Value,
   SelectOption,
   EmptyState,
 } from '@pxweb2/pxweb2-ui';
 import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
-import { Dataset, TableService } from '@pxweb2/pxweb2-api-client';
+import { TableService } from '@pxweb2/pxweb2-api-client';
 import { mapTableMetadataResponse } from '../mappers/TableMetadataResponseMapper';
 import { mapTableSelectionResponse } from '../mappers/TableSelectionResponseMapper';
 import { Header } from './components/Header/Header';
@@ -30,7 +24,6 @@ import NavigationBar from './components/NavigationBar/NavigationBar';
 import NavigationDrawer from './components/NavigationDrawer/NavigationDrawer';
 import useVariables from './context/useVariables';
 import useTableData from './context/useTableData';
-import { useNavigate, useParams } from 'react-router-dom';
 
 function addSelectedCodeListToVariable(
   currentVariable: SelectedVBValues | undefined,
@@ -194,6 +187,7 @@ export type NavigationItem =
 
 export function App() {
   const { tableId } = useParams<{ tableId: string }>();
+  const [prevTableId, setPrevTableId] = useState('');
   const navigate = useNavigate();
   const { i18n, t } = useTranslation();
   const variables = useVariables();
@@ -202,7 +196,6 @@ export function App() {
     tableId ? tableId : 'tab638'
   );
   const [errorMsg, setErrorMsg] = useState('');
-  const [pxTable, setPxTable] = useState<PxTable | null>(null);
   const [selectedNavigationView, setSelectedNavigationView] =
     useState<NavigationItem>('filter');
   const [isLoadingMetadata, setIsLoadingMetadata] = useState<boolean>(true);
@@ -232,6 +225,12 @@ export function App() {
   }
 
   useEffect(() => {
+    if (errorMsg !== '') {
+      console.error('ERROR: App.tsx:', errorMsg);
+    }
+  }, [errorMsg]);
+
+  useEffect(() => {
     const hasSelectedMandatoryVariables = pxTableMetadata?.variables
       .filter((variable) => variable.mandatory)
       .every((variable) =>
@@ -253,8 +252,16 @@ export function App() {
   }, [variables, i18n.resolvedLanguage]); // Should only run this useEffect when selectedVBValues are in sync with variables context
 
   useEffect(() => {
+    let shouldGetDefaultSelection = !hasLoadedDefaultSelection;
+
     if (!tableId) {
       return;
+    }
+
+    if (prevTableId === '' || prevTableId !== tableId) {
+      setHasLoadedDefaultSelection(false);
+      shouldGetDefaultSelection = true;
+      setPrevTableId(tableId);
     }
 
     if (isLoadingMetadata === false) {
@@ -262,19 +269,20 @@ export function App() {
     }
 
     TableService.getMetadataById(tableId, i18n.resolvedLanguage)
-
       .then((tableMetadataResponse) => {
         const pxTabMetadata: PxTableMetadata = mapTableMetadataResponse(
           tableMetadataResponse
         );
         setPxTableMetadata(pxTabMetadata);
 
-        handleVBReset();
+        if (pxTableMetaToRender !== null) {
+          setPxTableMetaToRender(null);
+        }
 
         setErrorMsg('');
       })
       .then(() => {
-        if (hasLoadedDefaultSelection) {
+        if (!shouldGetDefaultSelection) {
           setIsLoadingMetadata(false);
 
           return;
@@ -451,12 +459,6 @@ export function App() {
     }
   };
 
-  function handleVBReset() {
-    if (pxTableMetaToRender !== null) {
-      setPxTableMetaToRender(null);
-    }
-  }
-
   const getCodeListValues = (id: string) => {
     /* TODO: Implement querying the API */
     const dummyValues: Value[] = [
@@ -562,12 +564,12 @@ export function App() {
               <>
                 <ContentTop
                   staticTitle={pxTableMetadata?.label}
-                  pxtable={JSON.parse(tableData.data)}
+                  pxtable={tableData.data}
                 />
 
                 {!isMissingMandatoryVariables && (
                   <div className={styles.tableWrapper}>
-                    <Table pxtable={JSON.parse(tableData.data)} />
+                    <Table pxtable={tableData.data} />
                   </div>
                 )}
 
@@ -586,7 +588,6 @@ export function App() {
             )}{' '}
           </Content>
         </div>
-      </div>
     </>
   );
 }
