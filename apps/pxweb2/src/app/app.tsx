@@ -588,6 +588,7 @@ export function App() {
             )}{' '}
           </Content>
         </div>
+      </div>
     </>
   );
 }
