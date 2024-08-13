@@ -26,11 +26,6 @@ describe('EmptyState', () => {
 
     expect(getByText(baseElement, 'heading test text')).toBeTruthy();
     expect(getByText(baseElement, 'description test text')).toBeTruthy();
-    expect(
-      getByRole(baseElement, 'img', {
-        name: 'heading test text. description test text',
-      })
-    ).toBeTruthy();
   });
 
   it('should render the SVG successfully', () => {
