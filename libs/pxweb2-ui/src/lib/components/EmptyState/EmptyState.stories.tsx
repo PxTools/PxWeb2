@@ -14,10 +14,8 @@ type Story = StoryObj<typeof EmptyState>;
 export const Default: Story = {
   args: {
     headingTxt: 'Welcome to EmptyState!',
-    children: 'This is a description of the empty state.',
+    descriptionTxt: 'This is a description of the empty state.',
     svgName: 'ManWithMagnifyingGlass',
-    illustrationAltText:
-      'Illustration of a man with a magnifying glass looking for something',
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

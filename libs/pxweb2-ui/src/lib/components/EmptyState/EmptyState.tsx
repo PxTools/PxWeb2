@@ -55,9 +55,10 @@ export function EmptyState({
    *     but should we use color names here? then if someone wants to change the colors to non-blue
    *     they will have to overwrite "bluegray" with green for example
    *        maybe better to never use such color names?
-   * - Fix the styling, currently has not checked thoroughly
+   * - Fix the styling
    * - - What in EmptyState in figma is there only to make it look good in figma? What should be ignored there?
    * - - The breakpoint seems to not look correct all the time, 500ish width starts clipping the illustration
+   * - - - see below
    *
    * -- Hvor jeg var --
    *  - Jeg driver å ser på CSS og breakpoints. Det er problemer med selve Content-Containeren. Den har ikke riktig margin og padding.
