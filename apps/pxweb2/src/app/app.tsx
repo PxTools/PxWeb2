@@ -572,7 +572,7 @@ export function App() {
                     <Table pxtable={tableData.data} />
                   </div>
                 )}
-                
+
                 {!isLoadingMetadata && isMissingMandatoryVariables && (
                   <EmptyState
                     svgName="ManWithMagnifyingGlass"
