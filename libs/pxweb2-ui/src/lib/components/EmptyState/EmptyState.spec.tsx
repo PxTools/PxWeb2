@@ -1,4 +1,4 @@
-import { getByRole, getByText, render } from '@testing-library/react';
+import { getByText, render } from '@testing-library/react';
 
 import EmptyState from './EmptyState';
 
@@ -28,7 +28,7 @@ describe('EmptyState', () => {
     expect(getByText(baseElement, 'description test text')).toBeTruthy();
   });
 
-  it('should render the SVG successfully', () => {
+  it('should render an SVG', () => {
     const { baseElement } = render(
       <EmptyState
         svgName="ManWithMagnifyingGlass"
@@ -37,6 +37,8 @@ describe('EmptyState', () => {
       />
     );
 
-    expect(getByRole(baseElement, 'img', { name: 'test. test' })).toBeTruthy();
+    const svg = baseElement.querySelector('svg');
+
+    expect(svg).toBeTruthy();
   });
 });

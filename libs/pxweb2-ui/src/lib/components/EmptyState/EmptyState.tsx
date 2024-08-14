@@ -18,9 +18,6 @@ export function EmptyState({
 }: EmptyStateProps) {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
-  let illustration = Illustrations[svgName].large;
-  const breakpoint = Number(BreakpointsXsmallMaxWidth.replace('px', ''));
-
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
@@ -33,12 +30,17 @@ export function EmptyState({
     };
   }, []);
 
-  if (breakpoint > windowWidth) {
-    illustration = Illustrations[svgName].small;
+  if (!Illustrations[svgName]) {
+    console.log(`EmptyState: Illustration ${svgName} not found`);
+
+    return null;
   }
 
-  if (!illustration) {
-    return null; // TODO:Add error message here?
+  let illustration = Illustrations[svgName].large;
+  const breakpoint = Number(BreakpointsXsmallMaxWidth.replace('px', ''));
+
+  if (breakpoint > windowWidth) {
+    illustration = Illustrations[svgName].small;
   }
 
   return (
@@ -48,8 +50,6 @@ export function EmptyState({
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox={illustration.viewBox}
-            role="img"
-            aria-label={headingTxt + '. ' + descriptionTxt}
           >
             {illustration.paths}
           </svg>
