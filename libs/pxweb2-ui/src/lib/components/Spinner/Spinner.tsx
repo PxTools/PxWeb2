@@ -12,25 +12,9 @@ export function Spinner({
   variant = 'default',
   label,
 }: SpinnerProps) {
-  let PathStrokeSubtle = '';
-  let PathStrokeAction = '';
   let Eclipse = null;
   let Labelsize: 'small' | 'medium' = 'medium';
 
-  switch (variant) {
-    case 'default':
-      PathStrokeSubtle = 'var(--px-color-border-subtle)';
-      PathStrokeAction = 'var(--px-color-border-action)';
-      break;
-    case 'inverted':
-      PathStrokeSubtle = 'var(--px-color-border-subtle)';
-      PathStrokeAction = 'var(--px-color-border-on-inverted)';
-      break;
-    default:
-      PathStrokeSubtle = 'var(--px-color-border-subtle)';
-      PathStrokeAction = 'var(--px-color-border-action)';
-      break;
-  }
   switch (size) {
     case 'xlarge':
       Eclipse = (
