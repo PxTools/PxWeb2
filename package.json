@@ -4,8 +4,9 @@
   "license": "MIT",
   "scripts": {
     "prestart": "npm run build-style-dictionary",
-    "start": "npx nx run pxweb2:serve",
     "prebuild": "npm run build-style-dictionary",
+    "pretest": "npm run build-style-dictionary",
+    "start": "npx nx run pxweb2:serve",
     "build": "nx run pxweb2:build && nx run pxweb2-ui:build-storybook",
     "test": "nx run-many -t test -p pxweb2 pxweb2-ui",
     "lint": "nx run-many -t lint",
