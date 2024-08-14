@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import cl from 'clsx';
 import { useNavigate, useParams } from 'react-router-dom';
-
 import styles from './app.module.scss';
 import { ContentTop } from './components/ContentTop/ContentTop';
 import {
@@ -536,54 +536,58 @@ export function App() {
             selected={selectedNavigationView}
           />
           {selectedNavigationView !== 'none' && (
-            <NavigationDrawer
-              heading={t('presentation_page.sidemenu.selection.title')}
-              onClose={() => {
-                setSelectedNavigationView('none');
-              }}
-            >
-              {selectedNavigationView === 'filter' && drawerFilter}
-              {selectedNavigationView === 'view' && drawerView}
-              {selectedNavigationView === 'edit' && drawerEdit}
-              {selectedNavigationView === 'save' && drawerSave}
-              {selectedNavigationView === 'help' && drawerHelp}
-            </NavigationDrawer>
+            <div className={styles.scrollable}>
+              <NavigationDrawer
+                heading={t('presentation_page.sidemenu.selection.title')}
+                onClose={() => {
+                  setSelectedNavigationView('none');
+                }}
+              >
+                {selectedNavigationView === 'filter' && drawerFilter}
+                {selectedNavigationView === 'view' && drawerView}
+                {selectedNavigationView === 'edit' && drawerEdit}
+                {selectedNavigationView === 'save' && drawerSave}
+                {selectedNavigationView === 'help' && drawerHelp}
+              </NavigationDrawer>
+            </div>
           )}
         </div>
-        <div className={styles.mobileNavigation}>
+        <div className={cl(styles.mobileNavigation, styles.scrollable)}>
           <NavigationBar
             onChange={changeSelectedNavView}
             selected={selectedNavigationView}
           />
         </div>
-        <Content topLeftBorderRadius={selectedNavigationView === 'none'}>
-          {tableData.data && pxTableMetadata && (
-            <>
-              <ContentTop
-                staticTitle={pxTableMetadata?.label}
-                pxtable={JSON.parse(tableData.data)}
-              />
-
-              {!isMissingMandatoryVariables && (
-                <div className={styles.tableWrapper}>
-                  <Table pxtable={JSON.parse(tableData.data)} />
-                </div>
-              )}
-
-              {!isLoadingMetadata && isMissingMandatoryVariables && (
-                <EmptyState
-                  svgName="ManWithMagnifyingGlass"
-                  headingTxt={t(
-                    'presentation_page.main_content.table.warnings.missing_mandatory.title'
-                  )}
-                  descriptionTxt={t(
-                    'presentation_page.main_content.table.warnings.missing_mandatory.description'
-                  )}
+        <div className={styles.scrollable}>
+          <Content topLeftBorderRadius={selectedNavigationView === 'none'}>
+            {tableData.data && pxTableMetadata && (
+              <>
+                <ContentTop
+                  staticTitle={pxTableMetadata?.label}
+                  pxtable={tableData.data}
                 />
-              )}
-            </>
-          )}{' '}
-        </Content>
+
+                {!isMissingMandatoryVariables && (
+                  <div className={styles.tableWrapper}>
+                    <Table pxtable={tableData.data} />
+                  </div>
+                )}
+                
+                {!isLoadingMetadata && isMissingMandatoryVariables && (
+                  <EmptyState
+                    svgName="ManWithMagnifyingGlass"
+                    headingTxt={t(
+                      'presentation_page.main_content.table.warnings.missing_mandatory.title'
+                    )}
+                    descriptionTxt={t(
+                      'presentation_page.main_content.table.warnings.missing_mandatory.description'
+                    )}
+                  />
+                )}
+              </>
+            )}{' '}
+          </Content>
+        </div>
       </div>
     </>
   );
