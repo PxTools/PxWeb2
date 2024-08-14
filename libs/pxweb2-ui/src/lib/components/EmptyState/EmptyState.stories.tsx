@@ -1,4 +1,4 @@
-import type { Meta, StoryObj, StoryFn } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 import { EmptyState } from './EmptyState';
 
 import { within } from '@storybook/testing-library';
@@ -25,27 +25,4 @@ export const Default: Story = {
       canvas.getByText(/This is a description of the empty state./gi)
     ).toBeTruthy();
   },
-};
-
-export const Illustration_Sizes: StoryFn<typeof EmptyState> = () => {
-  return (
-    <>
-      <br />
-      <div style={{ width: '520px' }}>
-        <EmptyState
-          headingTxt="Welcome to EmptyState!"
-          descriptionTxt="This shows a large illustration."
-          svgName="ManWithMagnifyingGlass"
-        />
-      </div>
-      <br />
-      <div style={{ width: '479px' }}>
-        <EmptyState
-          headingTxt="Welcome to EmptyState!"
-          descriptionTxt="This shows a small illustration."
-          svgName="ManWithMagnifyingGlass"
-        />
-      </div>
-    </>
-  );
 };
