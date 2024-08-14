@@ -147,8 +147,7 @@ interface Resources {
           "warnings": {
             "missing_mandatory": {
               "title": "The table cannot be displayed",
-              "description": "You must select something in the filter on the left",
-              "illustration_alt_description": "Illustration of a man with a magnifying glass looking for something"
+              "description": "You must select something in the filter on the left"
             }
           }
         },
