@@ -14,200 +14,85 @@ export function Spinner({
 }: SpinnerProps) {
   let Eclipse = null;
   let Labelsize: 'small' | 'medium' = 'medium';
+  let Width = '';
+  let Height = '';
+  let Radius = '';
+  let StrokeWidth = '';
 
   switch (size) {
     case 'xlarge':
-      Eclipse = (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 50 50"
-          width="88px"
-          height="88px"
-          fill="none"
-          className={cl(
-            classes[`spinner`],
-            classes[`spinner-${size}`],
-            classes[`loading`]
-          )}
-        >
-          <circle
-            cx="25"
-            cy="25"
-            r="22.5"
-            className={cl(classes[`path-stroke-background-${variant}`])}
-            stroke-width="4.54"
-          ></circle>
-          <circle
-            cx="25"
-            cy="25"
-            r="22.5"
-            className={cl(classes[`path-stroke-circle-${variant}`])}
-            stroke-width="4.54"
-          ></circle>
-        </svg>
-      );
+      Width = '88px';
+      Height = '88px';
+      Radius = '22.5';
+      StrokeWidth = '4.54';
       Labelsize = 'medium';
       break;
     case 'large':
-      Eclipse = (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 50 50"
-          width="64px"
-          height="64px"
-          fill="none"
-          className={cl(
-            classes[`spinner`],
-            classes[`spinner-${size}`],
-            classes[`loading`]
-          )}
-        >
-          <circle
-            cx="25"
-            cy="25"
-            r="22.5"
-            className={cl(classes[`path-stroke-background-${variant}`])}
-            stroke-width="5.47"
-          ></circle>
-          <circle
-            cx="25"
-            cy="25"
-            r="22.5"
-            className={cl(classes[`path-stroke-circle-${variant}`])}
-            stroke-width="5.47"
-          ></circle>
-        </svg>
-      );
+      Width = '64px';
+      Height = '64px';
+      Radius = '22.5';
+      StrokeWidth = '5.47';
       Labelsize = 'medium';
       break;
     case 'medium':
-      Eclipse = (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 50 50"
-          width="44px"
-          height="44px"
-          fill="none"
-          className={cl(
-            classes[`spinner`],
-            classes[`spinner-${size}`],
-            classes[`loading`]
-          )}
-        >
-          <circle
-            cx="25"
-            cy="25"
-            r="21.6"
-            className={cl(classes[`path-stroke-background-${variant}`])}
-            stroke-width="5.68"
-          ></circle>
-          <circle
-            cx="25"
-            cy="25"
-            r="21.6"
-            className={cl(classes[`path-stroke-circle-${variant}`])}
-            stroke-width="5.68"
-          ></circle>
-        </svg>
-      );
+      Width = '44px';
+      Height = '44px';
+      Radius = '21.6';
+      StrokeWidth = '5.68';
       Labelsize = 'medium';
       break;
     case 'small':
-      Eclipse = (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 50 50"
-          width="32px"
-          height="32px"
-          fill="none"
-          className={cl(
-            classes[`spinner`],
-            classes[`spinner-${size}`],
-            classes[`loading`]
-          )}
-        >
-          <circle
-            cx="25"
-            cy="25"
-            r="21.5"
-            className={cl(classes[`path-stroke-background-${variant}`])}
-            stroke-width="6.25"
-          ></circle>
-          <circle
-            cx="25"
-            cy="25"
-            r="21.5"
-            className={cl(classes[`path-stroke-circle-${variant}`])}
-            stroke-width="6.25"
-          ></circle>
-        </svg>
-      );
+      Width = '32px';
+      Height = '32px';
+      Radius = '21.5';
+      StrokeWidth = '6.25';
       Labelsize = 'medium';
       break;
     case 'xsmall':
-      Eclipse = (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 50 50"
-          width="20px"
-          height="20px"
-          fill="none"
-          className={cl(
-            classes[`spinner`],
-            classes[`spinner-${size}`],
-            classes[`loading`]
-          )}
-        >
-          <circle
-            cx="25"
-            cy="25"
-            r="21.05"
-            className={cl(classes[`path-stroke-background-${variant}`])}
-            stroke-width="7.5"
-          ></circle>
-          <circle
-            cx="25"
-            cy="25"
-            r="21.05"
-            className={cl(classes[`path-stroke-circle-${variant}`])}
-            stroke-width="7.5"
-          ></circle>
-        </svg>
-      );
+      Width = '20px';
+      Height = '20px';
+      Radius = '21.05';
+      StrokeWidth = '7.5';
       Labelsize = 'small';
       break;
     default:
-      Eclipse = (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 50 50"
-          width="44px"
-          height="44px"
-          fill="none"
-          className={cl(
-            classes[`spinner`],
-            classes[`spinner-${size}`],
-            classes[`loading`]
-          )}
-        >
-          <circle
-            cx="25"
-            cy="25"
-            r="21.6"
-            className={cl(classes[`path-stroke-background-${variant}`])}
-            stroke-width="5.68"
-          ></circle>
-          <circle
-            cx="25"
-            cy="25"
-            r="21.6"
-            className={cl(classes[`path-stroke-circle-${variant}`])}
-            stroke-width="5.68"
-          ></circle>
-        </svg>
-      );
+      Width = '44px';
+      Height = '44px';
+      Radius = '21.6';
+      StrokeWidth = '5.68';
       Labelsize = 'medium';
+      break;
   }
+
+  Eclipse = (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 50 50"
+      width={Width}
+      height={Height}
+      fill="none"
+      className={cl(
+        classes[`spinner`],
+        classes[`spinner-${size}`],
+        classes[`loading`]
+      )}
+    >
+      <circle
+        cx="25"
+        cy="25"
+        r={Radius}
+        className={cl(classes[`path-stroke-background-${variant}`])}
+        stroke-width={StrokeWidth}
+      ></circle>
+      <circle
+        cx="25"
+        cy="25"
+        r={Radius}
+        className={cl(classes[`path-stroke-circle-${variant}`])}
+        stroke-width={StrokeWidth}
+      ></circle>
+    </svg>
+  );
 
   return (
     <div className={cl(classes[`spinner`], classes[`spinner-${size}`])}>
