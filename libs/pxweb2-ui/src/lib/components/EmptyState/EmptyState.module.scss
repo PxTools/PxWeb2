@@ -43,7 +43,7 @@
 
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
     width: 225px;
-  }  
+  }
 }
 
 .empty-state-text {
@@ -56,14 +56,22 @@
 
 .empty-state-heading {
   align-self: stretch;
-
   color: var(--px-color-text-default);
   text-align: center;
+  max-width: 440px;
+
+  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
+    max-width: 300px;
+  }
 }
 
 .empty-state-description {
   align-self: stretch;
-
   color: var(--color-text-default);
   text-align: center;
+  max-width: 440px;
+
+  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
+    max-width: 300px;
+  }
 }
