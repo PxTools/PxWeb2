@@ -509,6 +509,7 @@ export function App() {
                   tableId={pxTableMetaToRender.id}
                   label={variable.label}
                   mandatory={variable.mandatory}
+                  type={variable.type}
                   values={variable.values}
                   codeLists={variable.codeLists}
                   selectedValues={selectedVBValues}
