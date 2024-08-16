@@ -169,7 +169,7 @@
         "warnings": {
           "missing_mandatory": {
             "title": "Tabellen kan inte visas",
-            "description": "Du måste välja något från filtret"
+            "description": "Du måste välja något i listan för att tabellen ska visas"
           }
         }
       }
