@@ -1,5 +1,6 @@
 @use '../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixed;
 @use '../../text-styles.scss';
+// TODO: import textstyles so the bodyshort-medium class can be used
 
 .empty-state {
   display: flex;
@@ -67,7 +68,7 @@
 
 .empty-state-description {
   align-self: stretch;
-  color: var(--color-text-default);
+  color: var(--px-color-text-default);
   text-align: center;
   max-width: 440px;
 
