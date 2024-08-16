@@ -20,9 +20,9 @@ export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    expect(canvas.getByText(/Welcome to EmptyState!/gi)).toBeTruthy();
+    expect(canvas.getByText(/Welcome to EmptyState!/i)).toBeTruthy();
     expect(
-      canvas.getByText(/This is a description of the empty state./gi)
+      canvas.getByText(/This is a description of the empty state./i)
     ).toBeTruthy();
   },
 };
