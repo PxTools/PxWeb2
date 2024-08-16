@@ -5,7 +5,7 @@ import { Link } from '../Link/Link';
 
 const meta: Meta<typeof Alert> = {
   component: Alert,
-  title: 'Alert',
+  title: 'Components/Alert',
   parameters: {
     layout: 'padded',
   },
