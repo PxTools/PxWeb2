@@ -8,6 +8,7 @@ import Search from '../../Search/Search';
 import { Select, SelectOption } from '../../Select/Select';
 import { VariableBoxProps } from '../VariableBox';
 import { SelectedVBValues } from '../VariableBox';
+import { VartypeEnum } from '../../../shared-types/vartypeEnum';
 
 type MappedCodeList = {
   value: string;
@@ -35,6 +36,7 @@ type VariableBoxContentProps = VariableBoxPropsToContent & {
 export function VariableBoxContent({
   varId,
   label,
+  type,
   values,
   codeLists,
   selectedValues,
@@ -213,6 +215,14 @@ export function VariableBoxContent({
     (variable) => variable.id === varId
   )?.selectedCodeList;
 
+  const valuesToRender = structuredClone(values);
+
+  //  The API always returns the oldest values first,
+  //  so we can just reverse the values array when the type is TIME_VARIABLE
+  if (type === VartypeEnum.TIME_VARIABLE) {
+    valuesToRender.reverse();
+  }
+
   return (
     <div className={cl(classes['variablebox-content'])}>
       <div className={cl(classes['variablebox-content-main'])}>
@@ -282,7 +292,7 @@ export function VariableBoxContent({
                 text={mixedCheckboxText}
                 value={allValuesSelected}
                 onChange={() => onChangeMixedCheckbox(varId, allValuesSelected)}
-                ariaControls={values.map((value) => value.code)}
+                ariaControls={valuesToRender.map((value) => value.code)}
                 strong={true}
                 inVariableBox={true}
               />
@@ -319,7 +329,7 @@ export function VariableBoxContent({
                 }
               }}
             >
-              {values.map((value) => (
+              {valuesToRender.map((value) => (
                 <Checkbox
                   id={value.code}
                   key={varId + value.code}
