@@ -9,6 +9,9 @@
   height: 88px;
   padding-left: fixed.$spacing-4;
   padding-right: 0;
+  position: sticky;
+  top: 0;
+  z-index: 999;
 
   .headerRight {
     display: flex;

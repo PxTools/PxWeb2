@@ -6,8 +6,8 @@
 }
 
 .main {
-  display: flex;
-  width: 100%;
+  display: flex;  
+  width: 100%;   
 }
 
 .desktopNavigation {
@@ -73,7 +73,7 @@
 }
 
 .tableWrapper {
-  overflow-x: scroll;
+  overflow-x: auto;
   max-width: 100%;
   min-width: 100%;
 }
