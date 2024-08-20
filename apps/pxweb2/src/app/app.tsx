@@ -6,12 +6,12 @@ import styles from './app.module.scss';
 import { ContentTop } from './components/ContentTop/ContentTop';
 import {
   PxTableMetadata,
-  VariableBox,
   Table,
   SelectedVBValues,
   Value,
   SelectOption,
   EmptyState,
+  VariableBoxList,
 } from '@pxweb2/pxweb2-ui';
 import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
 import { TableService } from '@pxweb2/pxweb2-api-client';
@@ -496,29 +496,15 @@ export function App() {
       <br />
       <br />
       <div className={styles.variableBoxContainer}>
-        {!isLoadingMetadata &&
-          pxTableMetaToRender &&
-          pxTableMetaToRender.variables.length > 0 &&
-          pxTableMetaToRender.variables.map(
-            (variable, index) =>
-              variable.id && (
-                <VariableBox
-                  id={variable.id}
-                  key={variable.id + pxTableMetaToRender.id}
-                  initialIsOpen={index === 0}
-                  tableId={pxTableMetaToRender.id}
-                  label={variable.label}
-                  mandatory={variable.mandatory}
-                  type={variable.type}
-                  values={variable.values}
-                  codeLists={variable.codeLists}
-                  selectedValues={selectedVBValues}
-                  onChangeCodeList={handleCodeListChange}
-                  onChangeMixedCheckbox={handleMixedCheckboxChange}
-                  onChangeCheckbox={handleCheckboxChange}
-                />
-              )
-          )}
+        <VariableBoxList
+          pxTableMetadata={pxTableMetaToRender}
+          selectedVBValues={selectedVBValues}
+          isLoadingMetadata={isLoadingMetadata}
+          hasLoadedDefaultSelection={hasLoadedDefaultSelection}
+          handleCodeListChange={handleCodeListChange}
+          handleCheckboxChange={handleCheckboxChange}
+          handleMixedCheckboxChange={handleMixedCheckboxChange}
+        />
       </div>
     </>
   );
