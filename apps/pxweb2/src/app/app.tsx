@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import cl from 'clsx';
 import { useNavigate, useParams } from 'react-router-dom';
+
 import styles from './app.module.scss';
 import { ContentTop } from './components/ContentTop/ContentTop';
 import {
@@ -11,7 +12,7 @@ import {
   Value,
   SelectOption,
   EmptyState,
-  VariableBoxList,
+  VariableList,
 } from '@pxweb2/pxweb2-ui';
 import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
 import { TableService } from '@pxweb2/pxweb2-api-client';
@@ -495,8 +496,8 @@ export function App() {
       </select>
       <br />
       <br />
-      <div className={styles.variableBoxContainer}>
-        <VariableBoxList
+      <div className={styles.variableListContainer}>
+        <VariableList
           pxTableMetadata={pxTableMetaToRender}
           selectedVBValues={selectedVBValues}
           isLoadingMetadata={isLoadingMetadata}

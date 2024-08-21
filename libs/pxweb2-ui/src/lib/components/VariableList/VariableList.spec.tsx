@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 
-import VariableBoxList from './VariableBoxList';
+import VariableBoxList from './VariableList';
 import { PxTableMetadata } from '../../shared-types/pxTableMetadata';
 import { VartypeEnum } from '../../shared-types/vartypeEnum';
 
