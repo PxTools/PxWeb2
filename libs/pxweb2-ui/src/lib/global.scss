@@ -1,15 +1,52 @@
+html,
+body {
+  padding: 0;
+  margin: 0;
+  * {
+    box-sizing: border-box;
+  }
+}
+
+table {
+  font-family: 'PxWeb-font-400';
+  src: url('/fonts/PxWeb-font-400.ttf') format('truetype');
+  font-weight: normal;
+  width: 100%;
+
+  border-radius: var(--px-border-radius-small);
+  border: 1px solid var(--px-color-border-default);
+}
+th {
+  background: var(--px-color-surface-subtle);
+  border-bottom: 1px solid var(--px-color-border-default);
+  text-align: left;
+  width: 40px;
+
+  font-family: 'PxWeb-font-400';
+  src: url('/fonts/PxWeb-font-400.ttf') format('truetype');
+  font-weight: normal;
+}
+td {
+  border-bottom: 1px solid var(--px-color-border-default);
+  border-left: 1px solid var(--px-color-border-default);
+
+  font-family: 'PxWeb-font-400';
+  src: url('/fonts/PxWeb-font-400.ttf') format('truetype');
+  font-weight: normal;
+  width: 40px;
+}
+tbody {
+}
+
 @font-face {
-    font-family: "PxWeb-font-400";
-    src:
-    url("./fonts/PxWeb-font-400.ttf") format("truetype");
-    }
+  font-family: 'PxWeb-font-400';
+  src: url('./fonts/PxWeb-font-400.ttf') format('truetype');
+}
 @font-face {
-    font-family: "PxWeb-font-500";
-    src:
-    url("./fonts/PxWeb-font-500.ttf") format("truetype");
-    }
+  font-family: 'PxWeb-font-500';
+  src: url('./fonts/PxWeb-font-500.ttf') format('truetype');
+}
 @font-face {
-    font-family: "PxWeb-font-700";
-    src:
-    url("./fonts/PxWeb-font-700.ttf") format("truetype");
-    }   
+  font-family: 'PxWeb-font-700';
+  src: url('./fonts/PxWeb-font-700.ttf') format('truetype');
+}
