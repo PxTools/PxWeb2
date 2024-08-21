@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { EmptyState } from './EmptyState';
 
-import { within } from '@storybook/testing-library';
-import { expect } from '@storybook/jest';
+import { expect, within } from '@storybook/test';
 
 const meta: Meta<typeof EmptyState> = {
   component: EmptyState,
@@ -19,9 +18,9 @@ export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    expect(canvas.getByText(/Welcome to EmptyState!/gi)).toBeTruthy();
+    expect(canvas.getByText(/Welcome to EmptyState!/i)).toBeTruthy();
     expect(
-      canvas.getByText(/This is a description of the empty state./gi)
+      canvas.getByText(/This is a description of the empty state./i)
     ).toBeTruthy();
   },
 };
