@@ -4,7 +4,6 @@ import React, { createContext, useState } from 'react';
 // Define the type for the context
 export type VariablesContextType = {
   variables: Map<string, { id: string; value: string }>;
-  addSelectedValue: (variableId: string, value: string) => void;
   addSelectedValues: (variableId: string, values: string[]) => void;
   removeSelectedValue: (variableId: string, value: string) => void;
   toggleSelectedValue: (variableId: string, value: string) => void;
@@ -18,8 +17,6 @@ export type VariablesContextType = {
 // Create the context with default values
 export const VariablesContext = createContext<VariablesContextType>({
   variables: new Map(),
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  addSelectedValue: () => {},
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   addSelectedValues: () => {},
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -45,23 +42,18 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
     Map<string, { id: string; value: string }>
   >(new Map());
 
-  /**
-   * Adds single value for a given variable
-   */
-  const addSelectedValue = (variableId: string, value: string) => {
-    setVariables((prev) =>
-      new Map(prev).set(variableId + '-' + value, { id: variableId, value })
-    );
-  };
-
-  /**
-   * Adds multiple values for a given variable
-   */
-  const addSelectedValues = (variableId: string, values: string[]) => {
-    values.forEach((value) => {
-      addSelectedValue(variableId, value);
+/**
+ * Adds multiple values for a given variable
+ */
+const addSelectedValues = (variableId: string, values: string[]) => {
+    setVariables((prev) => {
+        const newVariables = new Map(prev);
+        values.forEach((value) => {
+            newVariables.set(variableId + '-' + value, { id: variableId, value });
+        });
+        return newVariables;
     });
-  };
+};
 
   const getSelectedValuesById = (variableId: string) => {
     const values: string[] = [];
@@ -169,7 +161,6 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
     <VariablesContext.Provider
       value={{
         variables,
-        addSelectedValue,
         addSelectedValues,
         removeSelectedValue,
         toggleSelectedValue,

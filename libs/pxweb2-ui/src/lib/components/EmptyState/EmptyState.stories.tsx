@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { EmptyState } from './EmptyState';
 
-import { within } from '@storybook/testing-library';
-import { expect } from '@storybook/jest';
+import { expect, within } from '@storybook/test';
 
 const meta: Meta<typeof EmptyState> = {
   component: EmptyState,

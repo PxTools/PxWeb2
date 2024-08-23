@@ -8,7 +8,7 @@ The user interface in PxWeb can no longer be further developed effectively due t
 - The project is a cooperation between Statistics Sweden and Statistics Norway
 
 ## Two project goals
-- The project will work on a new userfriendly interface based on PxWebAPI 2.0 during 2024 with the launch of the first test-version in mid-2024
+- The project will work on a new userfriendly interface based on PxWebAPI 2.0 during 2024 - 2025 with the launch of the first test-version in mid-2024
 
 - The project will test and establish good and sustained collaboration processes between SCB and SSB at both operational level and management level in the further development of PX-tools
 
