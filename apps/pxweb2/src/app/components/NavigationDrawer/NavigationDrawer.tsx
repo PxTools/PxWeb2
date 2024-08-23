@@ -18,6 +18,8 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
   const { t } = useTranslation();
 
   return (
+    <>
+    <div className={styles.backdrop}></div>
     <div className={styles.navigationDrawer}>
       <div className={styles.heading}>
         <Heading level="2" size="small">
@@ -29,6 +31,7 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
       </div>
       <div>{children}</div>
     </div>
+    </>
   );
 };
 export default NavigationDrawer;

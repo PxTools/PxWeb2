@@ -523,6 +523,14 @@ export function App() {
             onChange={changeSelectedNavView}
             selected={selectedNavigationView}
           />
+        </div>
+        <div className={cl(styles.mobileNavigation, styles.scrollable)}>
+          <NavigationBar
+            onChange={changeSelectedNavView}
+            selected={selectedNavigationView}
+          />
+        </div>
+        <div>
           {selectedNavigationView !== 'none' && (
             <div className={styles.scrollable}>
               <NavigationDrawer
@@ -539,12 +547,6 @@ export function App() {
               </NavigationDrawer>
             </div>
           )}
-        </div>
-        <div className={cl(styles.mobileNavigation, styles.scrollable)}>
-          <NavigationBar
-            onChange={changeSelectedNavView}
-            selected={selectedNavigationView}
-          />
         </div>
         <div className={styles.scrollable}>
           <Content topLeftBorderRadius={selectedNavigationView === 'none'}>
