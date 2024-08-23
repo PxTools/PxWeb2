@@ -1,14 +1,21 @@
 @use '$ui/style-dictionary/dist/scss/fixed-variables.scss' as fixed;
 
 .navigationRail {
-  padding-top: 8px;
-  height: 100vh;
-  margin: 0;
-  width: 120px;
-  min-width: 120px;
+  // padding-top: 8px;
+  // height: 100vh;
+  // margin: 0;
+  // width: 120px;
+  // min-width: 120px;
+  // display: flex;
+  // flex-direction: column;
+  // align-items: center;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+width: 120px;
+height: 992px;
+padding: fixed.$spacing-8 0px fixed.$spacing-14 0px;
+flex-direction: column;
+align-items: center;
+flex-shrink: 0;
 }
 
 .item {
