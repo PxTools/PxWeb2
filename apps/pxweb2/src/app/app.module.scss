@@ -8,6 +8,7 @@
 .main {
   display: flex;  
   width: 100%;   
+  height: calc(100vh - 88px);
 }
 
 .desktopNavigation {
@@ -79,7 +80,7 @@
 }
 
 .scrollable {
-  height: 100vh;
+  height: calc(100vh - 88px);
   align-self: stretch;
   overflow-y: auto;
 }
