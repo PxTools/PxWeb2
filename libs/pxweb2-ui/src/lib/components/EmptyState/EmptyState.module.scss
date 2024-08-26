@@ -47,6 +47,10 @@
     height: 120px;
     padding: 6px 8.329px 6.36px 9px;
   }
+
+  svg {
+    height: fit-content; // Fix for Safari, will not render SVGs without height or width
+  }
 }
 
 .empty-state-text {
