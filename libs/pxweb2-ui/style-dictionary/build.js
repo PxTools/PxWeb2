@@ -33,6 +33,20 @@ const configs = [
           },
         ],
       },
+      ts: {
+        transformGroup: 'js',
+        buildPath: './libs/pxweb2-ui/style-dictionary/dist/js/',
+        files: [
+          {
+            destination: 'css-variables.js',
+            format: 'javascript/es6',
+          },
+          {
+            destination: 'css-variables.d.ts',
+            format: 'typescript/es6-declarations',
+          }
+        ],
+      },
     },
   },
   {
@@ -51,7 +65,7 @@ const configs = [
           },
         ],
       },
-      js: {
+      ts: {
         transformGroup: 'js',
         buildPath: './libs/pxweb2-ui/style-dictionary/dist/js/',
         files: [
@@ -59,6 +73,10 @@ const configs = [
             destination: 'fixed-variables.js',
             format: 'javascript/es6',
           },
+          {
+            destination: 'fixed-variables.d.ts',
+            format: 'typescript/es6-declarations',
+          }
         ],
       },
     },
