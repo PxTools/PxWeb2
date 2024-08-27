@@ -146,7 +146,7 @@
         "warnings": {
           "missing_mandatory": {
             "title": "The table cannot be displayed",
-            "description": "You must select something in the filter on the left"
+            "description": "You must select something in the filter"
           }
         }
       },

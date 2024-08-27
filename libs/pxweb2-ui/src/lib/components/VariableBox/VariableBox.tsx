@@ -15,7 +15,7 @@ export type SelectedVBValues = {
 };
 
 /* eslint-disable-next-line */
-export type VariableBoxPropsBase = Omit<Variable, 'type' | 'notes'>;
+export type VariableBoxPropsBase = Omit<Variable, 'notes'>;
 
 export type VariableBoxProps = VariableBoxPropsBase & {
   tableId: string;
@@ -35,6 +35,7 @@ export function VariableBox({
   tableId,
   label,
   mandatory = false,
+  type,
   values,
   codeLists,
   selectedValues,
@@ -87,6 +88,7 @@ export function VariableBox({
       {isOpen && (
         <VariableBoxContent
           varId={id}
+          type={type}
           label={capitalizedVariableName}
           values={values}
           codeLists={codeLists}
