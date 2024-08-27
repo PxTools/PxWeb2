@@ -42,5 +42,9 @@ Thumbs.db
 .nx/cache
 .nx/workspace-data
 
+# Logs
+doctor-storybook.log
+storybook-migration-summary.md
+
 # Style dictionary
 theme/variables.css

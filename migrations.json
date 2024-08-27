@@ -1,12 +1,12 @@
 {
   "migrations": [
     {
-      "version": "19.2.4-beta.0",
-      "description": "Set project name in nx.json explicitly",
-      "implementation": "./src/migrations/update-19-2-4/set-project-name",
-      "x-repair-skip": true,
-      "package": "nx",
-      "name": "19-2-4-set-project-name"
+      "cli": "nx",
+      "version": "19.6.1-beta.0",
+      "description": "Ensure Target Defaults are set correctly for Module Federation.",
+      "factory": "./src/migrations/update-19-6-1/ensure-depends-on-for-mf",
+      "package": "@nx/react",
+      "name": "update-19-6-1-ensure-module-federation-target-defaults"
     }
   ]
 }
