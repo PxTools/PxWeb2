@@ -1,103 +1,404 @@
 @use '$ui/style-dictionary/dist/scss/fixed-variables.scss' as fixed;
 
-.mainContainer
+.testHeader {
+  display: flex;
+  width: 100vw;
+  height: 88px;
+  padding: fixed.$spacing-6 fixed.$spacing-12 fixed.$spacing-6 fixed.$spacing-6;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+  background: var(--px-Primr-Hvit);
+
+  @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
+    padding: fixed.$spacing-6 fixed.$spacing-4;
+  }
+
+  @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
+    //width: 1258px;
+  }
+
+  @media (min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width) {
+    //width: 1598px;
+  }
+
+  @media (min-width: fixed.$breakpoints-xlarge-min-width) {
+    //width: 1920px;
+  }
+  
+  background-color: blue;
+}
+
+.extra1
 {
   display: flex;
   flex-direction: row;
-  height: 100vh;
-  width: 100vw;
-  overflow: hidden;
 }
 
-// .breakpoints {
-//   height: 50px;
-//   width: 100%;
-// }
-
-.main {
-  // display: flex;
-  // width: 100%;
-  display: flex;
-
-width: 1800px;
-height: 992px;
-padding: fixed.$spacing-10 fixed.$spacing-6 0px fixed.$spacing-6;
-
-justify-content: center;
-align-items: flex-start;
-flex-shrink: 0;
-}
-
-.desktopNavigation {
-   display: none;
-  @media (min-width: fixed.$breakpoints-medium-min-width) {
-    display: flex;
-  }
-}
-
-.mobileNavigation {
+.testNavigationRail {
   display: none;
-  position: fixed;
-  bottom: 0;
-  @media (max-width: fixed.$breakpoints-small-max-width) {
-    display: block;
+  width: 120px;
+  height: calc(100vh - 88px);
+  padding: fixed.$spacing-8 0px fixed.$spacing-14 0px;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  background: var(--px-color-surface-default);
+
+  @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
+    display: flex;
+    //height: 632px;
+  }
+
+  @media (min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width) {
+    display: flex;
+    //height: 632px;
+  }
+
+  @media (min-width: fixed.$breakpoints-xlarge-min-width) {
+    display: flex;
+    //height: 992px;
+  }
+
+  background-color: red;
+}
+
+.testMainContainer {
+  display: flex;
+  // width: calc(100vw - 120px);
+  // height: calc(100vh - 88px);
+  // justify-content: center;
+  // align-items: flex-start;
+  // flex-shrink: 0;
+  // border-radius: var(--px-border-radius-xlarge) var(--px-border-radius-none) var(--px-border-radius-none) var(--px-border-radius-none);
+  background: var(--px-color-surface-subtle);
+
+  @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
+  }
+
+  @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
+    width: calc(100vw - 120px);
+    height: calc(100vh - 88px);
+    justify-content: center;
+    align-items: flex-start;
+    flex-shrink: 0;
+    border-radius: var(--px-border-radius-xlarge) var(--px-border-radius-none) var(--px-border-radius-none) var(--px-border-radius-none);
+    padding: fixed.$spacing-6 fixed.$spacing-6 0px fixed.$spacing-6;
+    gap: fixed.$spacing-6;
+  }
+
+  @media (min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width) {
+    width: calc(100vw - 120px);
+    height: calc(100vh - 88px);
+    justify-content: center;
+    align-items: flex-start;
+    flex-shrink: 0;
+    border-radius: var(--px-border-radius-xlarge) var(--px-border-radius-none) var(--px-border-radius-none) var(--px-border-radius-none);
+    padding: fixed.$spacing-6 fixed.$spacing-6 0px fixed.$spacing-6;
+  }
+
+  @media (min-width: fixed.$breakpoints-xlarge-min-width) {
+    width: calc(100vw - 120px);
+    height: calc(100vh - 88px);
+    justify-content: center;
+    align-items: flex-start;
+    flex-shrink: 0;
+    border-radius: var(--px-border-radius-xlarge) var(--px-border-radius-none) var(--px-border-radius-none) var(--px-border-radius-none);
+    padding: fixed.$spacing-10 fixed.$spacing-6 0px fixed.$spacing-6;
+  }
+
+  background-color: yellow;
+
+}
+
+.testNavigationDrawer {
+  display: flex;
+  padding: 0px fixed.$spacing-6 fixed.$spacing-6 0px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: fixed.$spacing-3;
+  flex-shrink: 0;
+  align-self: stretch;
+  border-radius: var(--px-border-radius-none);
+  background: var(--px-color-background-subtle);
+
+  @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
+    width: 380px;
+    height: 100vh;
+    padding: fixed.$spacing-6;
+    border-radius: var(--px-border-radius-none) var(--px-border-radius-xlarge) var(--px-border-radius-xlarge) var(--px-border-radius-none);
+    position: absolute; // Micke extra
+    top: 0; // Micke extra
+    z-index: 1; // Micke extra
+  }
+
+  @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
+    width: 380px;
+    height: calc(100vh - 88px);
+    padding: fixed.$spacing-6;
+    position: absolute;
+    left: 120px; // Micke extra
+    top: 88px; // Micke extra
+    border-radius: var(--px-border-radius-none) var(--px-border-radius-xlarge) var(--px-border-radius-xlarge) var(--px-border-radius-none);
+  }
+
+  @media (min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width) {
+    width: 348px;
+  }
+
+  @media (min-width: fixed.$breakpoints-xlarge-min-width) {
+    width: 348px;
+  }
+
+  background-color: green;
+}
+
+.testContentAndFooter {
+  background-color: purple;
+
+  @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
+    width: 100vw; 
+    flex-direction: column;
+    gap: fixed.$spacing-6;
   }
 }
 
-.variableListContainer {
+.testContentContainer {
+  display: flex;
+  max-width: 1320px;
+  padding: fixed.$spacing-10 fixed.$spacing-12;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: fixed.$spacing-10;
+  align-self: stretch;
+  border-radius: var(--px-border-radius-xlarge);
+  background: var(--px-color-surface-default);
+
+  @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
+    padding: fixed.$spacing-6;
+    gap: fixed.$spacing-9;
+    border-radius: var(--px-border-radius-none);
+  }
+
+  @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
+    padding: fixed.$spacing-10;
+  }
+
+  @media (min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width) {
+  }
+
+  @media (min-width: fixed.$breakpoints-xlarge-min-width) {
+  }
+
+  background-color: orange;
+}
+
+.testContentTop {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
+  gap: fixed.$spacing-16;
+  align-self: stretch;
+
+  @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
+  }
+
+  @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
+  }
+
+  @media (min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width) {
+  }
+
+  @media (min-width: fixed.$breakpoints-xlarge-min-width) {
+  }
+
+  background-color: pink;
+}
+
+.testTable {
+  display: flex;
+  align-items: flex-start;
+  align-self: stretch;
+  border-radius: var(--px-border-radius-medium);
+  border: 1px solid var(--px-color-border-default);
+
+  @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
+  }
+  
+  @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
+  }
+
+  @media (min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width) {
+  }
+
+  @media (min-width: fixed.$breakpoints-xlarge-min-width) {
+  }
+
+  background-color: brown;
+}
+
+.testFooter {
+  display: flex;
+  max-width: 1320px;
+  padding: fixed.$spacing-10 fixed.$spacing-12;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: fixed.$spacing-1;
+  align-self: stretch;
+  border-radius: var(--px-border-radius-xlarge);
+  background: var(--px-color-surface-default);
+
+  @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
+    padding: fixed.$spacing-6;
+    border-radius: var(--px-border-radius-none);
+  }
+  
+  @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
+    padding: fixed.$spacing-10;
+  }
+
+  @media (min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width) {
+  }
+
+  @media (min-width: fixed.$breakpoints-xlarge-min-width) {
+  }
+
+  background-color: grey;
+}
+
+.testNavigationBar {
+  display: none;
+  width: 100vw;
+  height: fixed.$spacing-20;
+  padding: 0px fixed.$spacing-2;
+  justify-content: center;
+  align-items: center;
   gap: fixed.$spacing-2;
+  flex-shrink: 0;
+  background: var(--px-color-surface-default);
+
+  position: fixed; // Micke extra
+  bottom: 0; // Micke extra
+
+  @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
+    display: flex;
+  }
+
+  background-color: red;
 }
 
-// @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
-//   .breakpoints {
-//     max-width: 100px;
-
-//     color: white;
-//     background-color: black;
-//   }
-// }
-
-// @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
-//   .breakpoints {
-//     max-width: 200px;
-//     background-color: red;
-//   }
-// }
-
-// @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
-//   .breakpoints {
-//     max-width: 300px;
-//     background-color: green;
-//   }
-// }
-
-// @media (min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width) {
-//   .breakpoints {
-//     max-width: 500px;
-//     background-color: blue;
-//   }
-// }
-
-// @media (min-width: fixed.$breakpoints-xlarge-min-width) {
-//   .breakpoints {
-//     max-width: 700px;
-//     background-color: yellow;
-//   }
-// }
-// .selectWrapper {
-//   width: 300px;
-// }
-
-.tableWrapper {
-  overflow-x: scroll;
-  max-width: 100%;
-  min-width: 100%;
-}
-
-// .scrollable {
+// .mainContainer
+// {
+//   display: flex;
+//   flex-direction: row;
 //   height: 100vh;
-//   align-self: stretch;
-//   overflow-y: auto;
+//   width: 100vw;
+//   overflow: hidden;
 // }
+
+// // .breakpoints {
+// //   height: 50px;
+// //   width: 100%;
+// // }
+
+// .main {
+//   // display: flex;
+//   // width: 100%;
+//   display: flex;
+
+//   width: 1800px;
+//   height: 992px;
+//   padding: fixed.$spacing-10 fixed.$spacing-6 0px fixed.$spacing-6;
+
+//   justify-content: center;
+//   align-items: flex-start;
+//   flex-shrink: 0;
+
+//   @media (min-width: fixed.$breakpoints-xlarge-min-width) {
+
+//     display: flex;
+//     width: 1800px;
+//     height: 992px;
+//     padding: fixed.$spacing-10 fixed.$spacing-6 0px fixed.$spacing-6;
+//     justify-content: center;
+//     align-items: flex-start;
+//     flex-shrink: 0;
+//     border-radius: var(--px-border-radius-xlarge) var(--px-border-radius-none) var(--px-border-radius-none) var(--px-border-radius-none);
+//     background: var(--px-color-surface-subtle);
+//     //background-color: yellow;
+//   }
+// }
+
+// .desktopNavigation {
+//    display: none;
+//   @media (min-width: fixed.$breakpoints-medium-min-width) {
+//     display: flex;
+//   }
+// }
+
+// .mobileNavigation {
+//   display: none;
+//   position: fixed;
+//   bottom: 0;
+//   @media (max-width: fixed.$breakpoints-small-max-width) {
+//     display: block;
+//   }
+// }
+
+// .variableListContainer {
+//   display: flex;
+//   flex-direction: column;
+//   gap: fixed.$spacing-2;
+// }
+
+// // @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
+// //   .breakpoints {
+// //     max-width: 100px;
+
+// //     color: white;
+// //     background-color: black;
+// //   }
+// // }
+
+// // @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
+// //   .breakpoints {
+// //     max-width: 200px;
+// //     background-color: red;
+// //   }
+// // }
+
+// // @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
+// //   .breakpoints {
+// //     max-width: 300px;
+// //     background-color: green;
+// //   }
+// // }
+
+// // @media (min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width) {
+// //   .breakpoints {
+// //     max-width: 500px;
+// //     background-color: blue;
+// //   }
+// // }
+
+// // @media (min-width: fixed.$breakpoints-xlarge-min-width) {
+// //   .breakpoints {
+// //     max-width: 700px;
+// //     background-color: yellow;
+// //   }
+// // }
+// // .selectWrapper {
+// //   width: 300px;
+// // }
+
+// .tableWrapper {
+//   overflow-x: scroll;
+//   max-width: 100%;
+//   min-width: 100%;
+// }
+
+// // .scrollable {
+// //   height: 100vh;
+// //   align-self: stretch;
+// //   overflow-y: auto;
+// // }
