@@ -1,7 +1,7 @@
-import React from 'react';
 import cl from 'clsx';
-import styles from './NavigationRail.module.scss';
 import { useTranslation } from 'react-i18next';
+
+import styles from './NavigationRail.module.scss';
 import { Icon, IconProps, Label } from '@pxweb2/pxweb2-ui';
 import { NavigationItem } from '../../app';
 
@@ -22,9 +22,7 @@ export const Item: React.FC<ItemProps> = ({
       <div className={cl(styles.icon, { [styles.selected]: selected })}>
         <Icon iconName={icon} />
       </div>
-      <div>
-        <Label>{label}</Label>
-      </div>
+      <Label>{label}</Label>
     </button>
   );
 };
