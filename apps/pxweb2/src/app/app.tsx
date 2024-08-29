@@ -25,6 +25,7 @@ import NavigationBar from './components/NavigationBar/NavigationBar';
 import NavigationDrawer from './components/NavigationDrawer/NavigationDrawer';
 import useVariables from './context/useVariables';
 import useTableData from './context/useTableData';
+import { Footer } from './components/Footer/Footer';
 
 function addSelectedCodeListToVariable(
   currentVariable: SelectedVBValues | undefined,
@@ -634,7 +635,7 @@ export function App() {
                 </>
               )}{' '}
             </div>
-            <div className={styles.testFooter}>Footer</div>
+            <Footer />
           </div>
         </div>
       </div>
