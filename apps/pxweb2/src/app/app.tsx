@@ -653,7 +653,10 @@ export function App() {
           </div>
         </div>
       </div>
-      <div className={styles.testNavigationBar}>NavBar</div>
+      <NavigationBar
+        onChange={changeSelectedNavView}
+        selected={selectedNavigationView}
+      />
     </>
 
     // <>
