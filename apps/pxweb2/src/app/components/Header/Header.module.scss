@@ -1,35 +1,64 @@
 @use '$ui/style-dictionary/dist/scss/fixed-variables.scss' as fixed;
 
 .header {
-  width: 100%;
-  background-color: white;
+  // width: 100%;
+  // background-color: white;
+  // display: flex;
+  // align-items: center;
+  // justify-content: space-between;
+  // height: 88px;
+  // padding-left: fixed.$spacing-4;
+  // padding-right: 0;
+
+  // .headerRight {
+  //   display: flex;
+  // }
+
+  // .desktopMenu {
+  //   display: none;
+  // }
+
+  // .mobileMenu {
+  //   display: block;
+  // }
+
+  // @media (min-width: fixed.$breakpoints-medium-min-width) {
+  //   padding-left: fixed.$spacing-6;
+  //   padding-right: fixed.$spacing-12;
+  //   .desktopMenu {
+  //     display: flex;
+  //   }
+  //   .mobileMenu {
+  //     display: none;
+  //   }
+  // }
+
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  width: 100%;
   height: 88px;
-  padding-left: fixed.$spacing-4;
-  padding-right: 0;
+  padding: fixed.$spacing-6 fixed.$spacing-12 fixed.$spacing-6 fixed.$spacing-6;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+  background: var(--px-Primr-Hvit);
 
-  .headerRight {
-    display: flex;
+  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
+    padding: fixed.$spacing-6 fixed.$spacing-4;
   }
 
-  .desktopMenu {
-    display: none;
+  @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
+    padding: fixed.$spacing-6 fixed.$spacing-4;
   }
 
-  .mobileMenu {
-    display: block;
-  }
+  // @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
+  //   //width: 1258px;
+  // }
 
-  @media (min-width: fixed.$breakpoints-medium-min-width) {
-    padding-left: fixed.$spacing-6;
-    padding-right: fixed.$spacing-12;
-    .desktopMenu {
-      display: flex;
-    }
-    .mobileMenu {
-      display: none;
-    }
-  }
+  // @media (min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width) {
+  //   //width: 1598px;
+  // }
+
+  // @media (min-width: fixed.$breakpoints-xlarge-min-width) {
+  //   //width: 1920px;
+  // }
 }
