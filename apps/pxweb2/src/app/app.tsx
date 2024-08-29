@@ -591,7 +591,7 @@ export function App() {
           onChange={changeSelectedNavView}
           selected={selectedNavigationView}
         />
-        <div className={styles.testMainContainer}>
+        <div className={styles.mainContainer}>
           <div className={styles.testNavigationDrawer}>NavDrawer</div>
           <div className={styles.testContentAndFooter}>
             ContentAndFooter
