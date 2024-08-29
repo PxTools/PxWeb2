@@ -7,22 +7,26 @@ import { NavigationItem } from '../../app';
 
 interface ItemProps {
   label: string;
+  parentName: string;
   selected: boolean;
   icon: IconProps['iconName'];
   onClick: () => void;
 }
 export const Item: React.FC<ItemProps> = ({
   label,
+  parentName,
   selected,
   icon,
   onClick,
 }) => {
+  const btnId = 'px-' + parentName + '-' + label;
+
   return (
-    <button className={styles.item} onClick={onClick}>
+    <button className={styles.item} onClick={onClick} type="button" id={btnId}>
       <div className={cl(styles.icon, { [styles.selected]: selected })}>
         <Icon iconName={icon} />
       </div>
-      <Label>{label}</Label>
+      <Label htmlFor={btnId}>{label}</Label>
     </button>
   );
 };
@@ -40,6 +44,7 @@ export const NavigationRail: React.FC<NavigationRailProps> = ({
   return (
     <div className={styles.navigationRail}>
       <Item
+        parentName="navRail"
         label={t('presentation_page.sidemenu.selection.title')}
         selected={selected === 'filter'}
         icon={'Controls'}
@@ -48,6 +53,7 @@ export const NavigationRail: React.FC<NavigationRailProps> = ({
         }}
       />
       <Item
+        parentName="navRail"
         label={t('presentation_page.sidemenu.view.title')}
         selected={selected === 'view'}
         icon={'BarChart'}
@@ -56,6 +62,7 @@ export const NavigationRail: React.FC<NavigationRailProps> = ({
         }}
       />
       <Item
+        parentName="navRail"
         label={t('presentation_page.sidemenu.edit.title')}
         selected={selected === 'edit'}
         icon={'ArrowsUpDown'}
@@ -64,6 +71,7 @@ export const NavigationRail: React.FC<NavigationRailProps> = ({
         }}
       />
       <Item
+        parentName="navRail"
         label={t('presentation_page.sidemenu.save.title')}
         selected={selected === 'save'}
         icon={'FloppyDisk'}
@@ -72,6 +80,7 @@ export const NavigationRail: React.FC<NavigationRailProps> = ({
         }}
       />
       <Item
+        parentName="navRail"
         label={t('presentation_page.sidemenu.help.title')}
         selected={selected === 'help'}
         icon={'QuestionMarkCircle'}
@@ -82,4 +91,5 @@ export const NavigationRail: React.FC<NavigationRailProps> = ({
     </div>
   );
 };
+
 export default NavigationRail;
