@@ -592,62 +592,26 @@ export function App() {
           selected={selectedNavigationView}
         />
         <div className={styles.mainContainer}>
-          <div className={styles.testNavigationDrawer}>NavDrawer</div>
+          {selectedNavigationView !== 'none' && (
+            <NavigationDrawer
+              heading={t('presentation_page.sidemenu.selection.title')}
+              onClose={() => {
+                setSelectedNavigationView('none');
+              }}
+            >
+              {selectedNavigationView === 'filter' && drawerFilter}
+              {selectedNavigationView === 'view' && drawerView}
+              {selectedNavigationView === 'edit' && drawerEdit}
+              {selectedNavigationView === 'save' && drawerSave}
+              {selectedNavigationView === 'help' && drawerHelp}
+            </NavigationDrawer>
+          )}
           <div className={styles.testContentAndFooter}>
             ContentAndFooter
             <div className={styles.testContentContainer}>
               ContentContainer
               <div className={styles.testContentTop}>ContentTop</div>
-              <div className={styles.testTable}>
-                <table>
-                  <tr>
-                    <th>Name</th>
-                    <th>Col1</th>
-                    <th>Col2</th>
-                    <th>Col3</th>
-                    <th>Col4</th>
-                    <th>Col5</th>
-                    <th>Col6</th>
-                    <th>Col7</th>
-                    <th>Col8</th>
-                    <th>Col9</th>
-                  </tr>
-                  <tr>
-                    <td rowSpan={3}>Mark Smith</td>
-                    <td>English</td>
-                    <td>67</td>
-                    <td>67</td>
-                    <td>67</td>
-                    <td>67</td>
-                    <td>67</td>
-                    <td>67</td>
-                    <td>67</td>
-                    <td>67</td>
-                  </tr>
-                  <tr>
-                    <td>Maths</td>
-                    <td>82</td>
-                    <td>67</td>
-                    <td>67</td>
-                    <td>67</td>
-                    <td>67</td>
-                    <td>67</td>
-                    <td>67</td>
-                    <td>67</td>
-                  </tr>
-                  <tr>
-                    <td>Science</td>
-                    <td>91</td>
-                    <td>67</td>
-                    <td>67</td>
-                    <td>67</td>
-                    <td>67</td>
-                    <td>67</td>
-                    <td>67</td>
-                    <td>67</td>
-                  </tr>
-                </table>
-              </div>
+              <div className={styles.testTable}>Table</div>
             </div>
             <div className={styles.testFooter}>Footer</div>
           </div>
