@@ -10,6 +10,10 @@
   flex-shrink: 0;
   background: var(--px-Primr-Hvit);
 
+  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
+    padding: fixed.$spacing-6 fixed.$spacing-4;
+  }
+
   @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
     padding: fixed.$spacing-6 fixed.$spacing-4;
   }
@@ -72,6 +76,9 @@
   // flex-shrink: 0;
   // border-radius: var(--px-border-radius-xlarge) var(--px-border-radius-none) var(--px-border-radius-none) var(--px-border-radius-none);
   background: var(--px-color-surface-subtle);
+  
+  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
+  }
 
   @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
   }
@@ -121,6 +128,16 @@
   align-self: stretch;
   border-radius: var(--px-border-radius-none);
   background: var(--px-color-background-subtle);
+  
+  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
+    width: 380px;
+    height: 100vh;
+    padding: fixed.$spacing-6;
+    border-radius: var(--px-border-radius-none) var(--px-border-radius-xlarge) var(--px-border-radius-xlarge) var(--px-border-radius-none);
+    position: absolute; // Micke extra
+    top: 0; // Micke extra
+    z-index: 1; // Micke extra
+  }
 
   @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
     width: 380px;
@@ -155,8 +172,17 @@
 
 .testContentAndFooter {
   background-color: purple;
-
+  
+  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
+    display: flex;
+    width: 479px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: fixed.$spacing-6;
+  }
+  
   @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
+    display: flex;
     width: 100vw; 
     flex-direction: column;
     gap: fixed.$spacing-6;
@@ -174,6 +200,12 @@
   border-radius: var(--px-border-radius-xlarge);
   background: var(--px-color-surface-default);
 
+  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
+    padding: fixed.$spacing-4;
+    gap: fixed.$spacing-7;
+    border-radius: var(--px-border-radius-none);
+  }
+  
   @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
     padding: fixed.$spacing-6;
     gap: fixed.$spacing-9;
@@ -199,6 +231,10 @@
   align-items: flex-start;
   gap: fixed.$spacing-16;
   align-self: stretch;
+  
+  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
+    gap: fixed.$spacing-7;
+  }
 
   @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
   }
@@ -221,6 +257,10 @@
   align-self: stretch;
   border-radius: var(--px-border-radius-medium);
   border: 1px solid var(--px-color-border-default);
+  
+  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
+    flex-direction: column;
+  }
 
   @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
   }
@@ -247,6 +287,11 @@
   align-self: stretch;
   border-radius: var(--px-border-radius-xlarge);
   background: var(--px-color-surface-default);
+  
+  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
+    padding: fixed.$spacing-4;
+    border-radius: var(--px-border-radius-none);
+  }
 
   @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
     padding: fixed.$spacing-6;
@@ -280,6 +325,16 @@
   position: fixed; // Micke extra
   bottom: 0; // Micke extra
 
+  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
+    display: flex;
+    padding: fixed.$spacing-4;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: fixed.$spacing-1;
+    align-self: stretch;
+    border-radius: var(--px-border-radius-none);
+  }
+  
   @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
     display: flex;
   }
