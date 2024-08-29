@@ -608,8 +608,15 @@ export function App() {
           )}
           <div className={styles.contentAndFooterContainer}>
             <div className={styles.contentContainer}>
-              <div className={styles.testContentTop}>ContentTop</div>
-              <div className={styles.testTable}>Table</div>
+              {tableData.data && pxTableMetadata && (
+                <>
+                  <ContentTop
+                    staticTitle={pxTableMetadata?.label}
+                    pxtable={tableData.data}
+                  />
+                  <div className={styles.testTable}>Table</div>
+                </>
+              )}{' '}
             </div>
             <div className={styles.testFooter}>Footer</div>
           </div>
