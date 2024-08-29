@@ -619,6 +619,18 @@ export function App() {
                       <Table pxtable={tableData.data} />
                     </div>
                   )}
+                  
+                  {!isLoadingMetadata && isMissingMandatoryVariables && (
+                    <EmptyState
+                      headingTxt={t(
+                        'presentation_page.main_content.table.warnings.missing_mandatory.title'
+                      )}
+                    >
+                      {t(
+                        'presentation_page.main_content.table.warnings.missing_mandatory.description'
+                      )}
+                    </EmptyState>
+                  )}
                 </>
               )}{' '}
             </div>
