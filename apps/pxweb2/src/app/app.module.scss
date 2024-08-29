@@ -170,9 +170,7 @@
   background-color: green;
 }
 
-.testContentAndFooter {
-  background-color: purple;
-  
+.contentAndFooterContainer {
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
     display: flex;
     width: 100vw;
@@ -189,7 +187,7 @@
   }
 }
 
-.testContentContainer {
+.contentContainer {
   display: flex;
   max-width: 1320px;
   padding: fixed.$spacing-10 fixed.$spacing-12;
@@ -222,7 +220,6 @@
   @media (min-width: fixed.$breakpoints-xlarge-min-width) {
   }
 
-  background-color: orange;
 }
 
 .testContentTop {

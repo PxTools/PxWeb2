@@ -606,10 +606,8 @@ export function App() {
               {selectedNavigationView === 'help' && drawerHelp}
             </NavigationDrawer>
           )}
-          <div className={styles.testContentAndFooter}>
-            ContentAndFooter
-            <div className={styles.testContentContainer}>
-              ContentContainer
+          <div className={styles.contentAndFooterContainer}>
+            <div className={styles.contentContainer}>
               <div className={styles.testContentTop}>ContentTop</div>
               <div className={styles.testTable}>Table</div>
             </div>
