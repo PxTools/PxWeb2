@@ -584,10 +584,13 @@ export function App() {
     //   </div>
     // </>
 
-<>
+    <>
       <Header />
       <div className={styles.extra1}>
-        <div className={styles.testNavigationRail}>NavRail</div>
+        <NavigationRail
+          onChange={changeSelectedNavView}
+          selected={selectedNavigationView}
+        />
         <div className={styles.testMainContainer}>
           <div className={styles.testNavigationDrawer}>NavDrawer</div>
           <div className={styles.testContentAndFooter}>

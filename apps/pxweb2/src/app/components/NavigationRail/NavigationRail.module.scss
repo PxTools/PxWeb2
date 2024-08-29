@@ -1,21 +1,45 @@
 @use '$ui/style-dictionary/dist/scss/fixed-variables.scss' as fixed;
 
 .navigationRail {
-  // padding-top: 8px;
-  // height: 100vh;
-  // margin: 0;
+  //   // padding-top: 8px;
+  //   // height: 100vh;
+  //   // margin: 0;
+  //   // width: 120px;
+  //   // min-width: 120px;
+  //   // display: flex;
+  //   // flex-direction: column;
+  //   // align-items: center;
+  //   display: flex;
   // width: 120px;
-  // min-width: 120px;
-  // display: flex;
+  // height: 992px;
+  // padding: fixed.$spacing-8 0px fixed.$spacing-14 0px;
   // flex-direction: column;
   // align-items: center;
-  display: flex;
-width: 120px;
-height: 992px;
-padding: fixed.$spacing-8 0px fixed.$spacing-14 0px;
-flex-direction: column;
-align-items: center;
-flex-shrink: 0;
+  // flex-shrink: 0;
+
+  display: none;
+  width: 120px;
+  height: calc(100vh - 88px);
+  padding: fixed.$spacing-8 0px fixed.$spacing-14 0px;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  background: var(--px-color-surface-default);
+
+  @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
+    display: flex;
+    //height: 632px;
+  }
+
+  @media (min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width) {
+    display: flex;
+    //height: 632px;
+  }
+
+  @media (min-width: fixed.$breakpoints-xlarge-min-width) {
+    display: flex;
+    //height: 992px;
+  }
 }
 
 .item {
