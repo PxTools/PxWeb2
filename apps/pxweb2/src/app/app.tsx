@@ -614,7 +614,11 @@ export function App() {
                     staticTitle={pxTableMetadata?.label}
                     pxtable={tableData.data}
                   />
-                  <div className={styles.testTable}>Table</div>
+                  {!isMissingMandatoryVariables && (
+                    <div className={styles.tableWrapper}>
+                      <Table pxtable={tableData.data} />
+                    </div>
+                  )}
                 </>
               )}{' '}
             </div>
