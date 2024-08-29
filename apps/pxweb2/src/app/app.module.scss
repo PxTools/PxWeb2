@@ -175,7 +175,7 @@
   
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
     display: flex;
-    width: 479px;
+    width: 100vw;
     flex-direction: column;
     align-items: flex-start;
     gap: fixed.$spacing-6;
