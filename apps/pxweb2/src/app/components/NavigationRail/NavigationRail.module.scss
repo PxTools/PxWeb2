@@ -20,6 +20,7 @@
   padding: 0 0 fixed.$spacing-1 0;
   gap: fixed.$spacing-1;
   border-radius: var(--px-border-radius-small);
+  cursor: pointer;
 
   // TODO: Fix focus styling later, when we have a design for it
   background: none;
@@ -33,6 +34,10 @@
     padding-top: fixed.$spacing-1;
     padding-bottom: fixed.$spacing-1;
     border-radius: 99px;;
+  }
+
+  > label {
+    cursor: pointer;
   }
 
   > .selected {
