@@ -13,6 +13,7 @@ import {
   SelectOption,
   EmptyState,
   VariableList,
+  Spinner
 } from '@pxweb2/pxweb2-ui';
 import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
 import { TableService } from '@pxweb2/pxweb2-api-client';
@@ -25,6 +26,7 @@ import NavigationBar from './components/NavigationBar/NavigationBar';
 import NavigationDrawer from './components/NavigationDrawer/NavigationDrawer';
 import useVariables from './context/useVariables';
 import useTableData from './context/useTableData';
+import { TableDataContext } from './context/TableDataProvider';
 
 function addSelectedCodeListToVariable(
   currentVariable: SelectedVBValues | undefined,
@@ -241,7 +243,14 @@ export function App() {
       );
 
     if (hasSelectedMandatoryVariables) {
+      const date = new Date();
+      const logtime = () =>{return date.getHours() 
+         + ':' + date.getMinutes() 
+         + ":" + date.getSeconds()
+       };
+       console.log('FØR tableData.fetchTableData'+logtime())
       tableData.fetchTableData(tableId ? tableId : 'tab638', i18n);
+      console.log('ETTER tableData.fetchTableData'+logtime())
 
       setIsMissingMandatoryVariables(false);
     }
@@ -555,7 +564,13 @@ export function App() {
                   pxtable={tableData.data}
                 />
 
-                {!isMissingMandatoryVariables && (
+                {!isMissingMandatoryVariables && tableData.isLoadingData&&(
+                  <div> 
+                    <Spinner label='Henter data'/>
+                  </div>
+                )}
+
+                {!isMissingMandatoryVariables && !tableData.isLoadingData&&(
                   <div className={styles.tableWrapper}>
                     <Table pxtable={tableData.data} />
                   </div>
