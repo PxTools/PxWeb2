@@ -23,7 +23,7 @@ export const Item: React.FC<ItemProps> = ({
 
   return (
     <button className={styles.item} onClick={onClick} type="button" id={btnId}>
-      <div className={cl(styles.icon, { [styles.selected]: selected })}>
+      <div className={cl({ [styles.selected]: selected }, styles.icon)}>
         <Icon iconName={icon} />
       </div>
       <Label htmlFor={btnId}>{label}</Label>
