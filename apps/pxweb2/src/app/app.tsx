@@ -635,7 +635,9 @@ export function App() {
                 </>
               )}{' '}
             </div>
-            <Footer />
+            <div className={styles.footerContainer}>
+              <Footer />
+            </div>
           </div>
         </div>
       </div>
