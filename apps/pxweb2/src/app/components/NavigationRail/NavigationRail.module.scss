@@ -48,7 +48,9 @@
     > .icon {
       background-color: var(--px-color-surface-action-subtle-hover);
     }
-    > .selected {
+  }
+  &:active {
+    > .icon {
       background-color: var(--px-color-surface-action-subtle-active);
     }
   }
