@@ -1,5 +1,6 @@
 @use '$ui/style-dictionary/dist/scss/fixed-variables.scss' as fixed;
 
+/** Styling */
 .navigationRail {
   display: flex;
   width: 120px;
@@ -33,7 +34,7 @@
     width: fixed.$spacing-14;
     padding-top: fixed.$spacing-1;
     padding-bottom: fixed.$spacing-1;
-    border-radius: 99px;;
+    border-radius: 99px;
   }
 
   > label {
