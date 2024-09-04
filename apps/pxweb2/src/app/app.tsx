@@ -593,7 +593,7 @@ export function App() {
           selected={selectedNavigationView}
         />
         <div className={styles.mainContainer}>
-          {selectedNavigationView !== 'none' && (
+           {selectedNavigationView !== 'none' && (
             <NavigationDrawer
               heading={t('presentation_page.sidemenu.selection.title')}
               onClose={() => {
@@ -616,8 +616,10 @@ export function App() {
                     pxtable={tableData.data}
                   />
                   {!isMissingMandatoryVariables && (
+                    <div className={styles.tableContainer}>
                     <div className={styles.tableWrapper}>
-                      <Table pxtable={tableData.data} />
+                       <Table pxtable={tableData.data} /> 
+                    </div>
                     </div>
                   )}
                   
@@ -638,7 +640,7 @@ export function App() {
             <div className={styles.footerContainer}>
               <Footer />
             </div>
-          </div>
+          </div> 
         </div>
       </div>
       <NavigationBar

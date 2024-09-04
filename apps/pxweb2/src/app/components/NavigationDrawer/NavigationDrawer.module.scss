@@ -97,8 +97,10 @@
     padding: fixed.$spacing-6;
     position: absolute;
     left: 120px; // Micke extra
+//    left: 0px; // Micke extra
     top: 88px; // Micke extra
     border-radius: var(--px-border-radius-none) var(--px-border-radius-xlarge) var(--px-border-radius-xlarge) var(--px-border-radius-none);
+    z-index: 1; // Micke extra
   }
 
   @media (min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width) {

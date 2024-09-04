@@ -4,17 +4,23 @@
 {
   display: flex;
   flex-direction: row;
+  //width: 100vw;
 }
 
 .mainContainer {
   display: flex;
-  width: 100%; // Micke extra
+  //width: calc(100% - 120px); // Micke extra
   background: var(--px-color-surface-subtle);
+  // position: fixed;
+  // left: 120px;
+  // overflow: auto;
   
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
+    left: 0px;
   }
 
   @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
+    left: 0px;
   }
 
   @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
@@ -24,7 +30,7 @@
     align-items: flex-start;
     flex-shrink: 0;
     border-radius: var(--px-border-radius-xlarge) var(--px-border-radius-none) var(--px-border-radius-none) var(--px-border-radius-none);
-    padding: fixed.$spacing-6 fixed.$spacing-6 0px fixed.$spacing-6;
+    padding: fixed.$spacing-6 fixed.$spacing-6 fixed.$spacing-6 fixed.$spacing-6;
     gap: fixed.$spacing-6;
   }
 
@@ -35,7 +41,7 @@
     align-items: flex-start;
     flex-shrink: 0;
     border-radius: var(--px-border-radius-xlarge) var(--px-border-radius-none) var(--px-border-radius-none) var(--px-border-radius-none);
-    padding: fixed.$spacing-6 fixed.$spacing-6 0px fixed.$spacing-6;
+    padding: fixed.$spacing-6 fixed.$spacing-6 fixed.$spacing-6 fixed.$spacing-6;
   }
 
   @media (min-width: fixed.$breakpoints-xlarge-min-width) {
@@ -45,7 +51,7 @@
     align-items: flex-start;
     flex-shrink: 0;
     border-radius: var(--px-border-radius-xlarge) var(--px-border-radius-none) var(--px-border-radius-none) var(--px-border-radius-none);
-    padding: fixed.$spacing-10 fixed.$spacing-6 0px fixed.$spacing-6;
+    padding: fixed.$spacing-10 fixed.$spacing-6 fixed.$spacing-6 fixed.$spacing-6;
   }
 }
 
@@ -54,6 +60,11 @@
   flex-direction: column; // Micke extra
   align-items: flex-start; // Micke extra
   gap: fixed.$spacing-6; // Micke extra
+  width: 100%; // Micke extra
+  max-width: 1320px; // Micke extra 
+  
+
+
 
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
     width: 100vw;
@@ -72,6 +83,7 @@
   background: var(--px-color-surface-default);
   align-self: stretch;
 
+ 
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
     padding: fixed.$spacing-4;
     gap: fixed.$spacing-7;
@@ -241,11 +253,28 @@
 // //   width: 300px;
 // // }
 
-.tableWrapper {
-  overflow-x: scroll;
-  max-width: 100%;
-  min-width: 100%;
-}
+.tableContainer {
+  container-type: inline-size;
+  container-name: tableCont;
+  //height: 300px; 
+  width: 100%;
+  display: flex;
+  
+
+  @container tableCont (width > 1px) {
+   .tableWrapper {
+     width: 100cqw;
+     overflow-x: scroll;
+   }
+ }} 
+
+// .tableWrapper {
+//   overflow-x: hidden;
+//   // max-width: 100%;
+//   // min-width: 100%;
+
+
+// }
 
 // // .scrollable {
 // //   height: 100vh;
