@@ -5,6 +5,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import styles from './app.module.scss';
 import { ContentTop } from './components/ContentTop/ContentTop';
+import { Selection } from './components/Selection/Selection';
+import { Presentation } from './components/Presentation/Presentation';
 import {
   PxTableMetadata,
   Table,
@@ -241,7 +243,7 @@ export function App() {
       );
 
     if (hasSelectedMandatoryVariables) {
-      tableData.fetchTableData(tableId ? tableId : 'tab638', i18n);
+    //     tableData.fetchTableData(tableId ? tableId : 'tab638', i18n);
 
       setIsMissingMandatoryVariables(false);
     }
@@ -546,9 +548,11 @@ export function App() {
             selected={selectedNavigationView}
           />
         </div>
-        <div className={styles.scrollable}>
+        {/* { pxTableMetadata  && <Presentation pxTablemetaData={pxTableMetadata} selectedNavigationView={selectedNavigationView} isMissingMandatoryVariables={isMissingMandatoryVariables} isLoadingMetadata={isLoadingMetadata} ></Presentation>} */}
+        { <Presentation pxTablemetaData={pxTableMetadata} selectedNavigationView={selectedNavigationView}  isLoadingMetadata={isLoadingMetadata} ></Presentation>}
+        {/* <div className={styles.scrollable}>
           <Content topLeftBorderRadius={selectedNavigationView === 'none'}>
-            {tableData.data && pxTableMetadata && (
+            {tableData.data && pxTableMetadata && ( 
               <>
                 <ContentTop
                   staticTitle={pxTableMetadata?.label}
@@ -575,7 +579,7 @@ export function App() {
               </>
             )}{' '}
           </Content>
-        </div>
+        </div> */}
       </div>
     </>
   );
