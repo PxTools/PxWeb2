@@ -40,7 +40,10 @@
   justify-content: space-between;
   align-items: center;
   flex-shrink: 0;
-  background: var(--px-Primr-Hvit);
+  background: var(--px-color-surface-default);
+  position: sticky;
+  top: 0;
+  z-index: 999;
 
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
     padding: fixed.$spacing-6 fixed.$spacing-4;
