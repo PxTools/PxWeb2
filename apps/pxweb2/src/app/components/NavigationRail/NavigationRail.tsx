@@ -59,42 +59,42 @@ export const Item: React.FC<ItemProps> = ({
   };
 
   return (
-    <LazyMotion features={loadFeatures}>
-      <MotionConfig reducedMotion="user">
-        <m.button
-          className={cl({ [styles.selected]: selected }, styles.item)}
-          onClick={onClick}
-          type="button"
-          id={btnId}
+    // <LazyMotion features={loadFeatures}>
+    //   <MotionConfig reducedMotion="user">
+    //     <m.button
+    //       className={cl({ [styles.selected]: selected }, styles.item)}
+    //       onClick={onClick}
+    //       type="button"
+    //       id={btnId}
 
-          // Framer Motion animations
-          key={selected.toString()} // Needed by framer-motion to re-run the animation when the selected state changes, toString for type compatibility
-          initial={'initial'}
-          whileHover={'hover'}
-          whileTap={'pressed'}
-        >
-          <m.div
-            className={cl(styles.icon)}
-            // Framer Motion animations
-            variants={buttonVariants}
-          >
-            <Icon iconName={icon} />
-          </m.div>
-          <Label htmlFor={btnId}>{label}</Label>
-        </m.button>
-      </MotionConfig>
-    </LazyMotion>
-    // <button
-    //   className={cl(styles.item)}
-    //   onClick={onClick}
-    //   type="button"
-    //   id={btnId}
-    // >
-    //   <div className={cl({ [styles.selected]: selected }, styles.icon)}>
-    //     <Icon iconName={icon} />
-    //   </div>
-    //   <Label htmlFor={btnId}>{label}</Label>
-    // </button>
+    //       // Framer Motion animations
+    //       key={selected.toString()} // Needed by framer-motion to re-run the animation when the selected state changes, toString for type compatibility
+    //       initial={'initial'}
+    //       whileHover={'hover'}
+    //       whileTap={'pressed'}
+    //     >
+    //       <m.div
+    //         className={cl(styles.icon)}
+    //         // Framer Motion animations
+    //         variants={buttonVariants}
+    //       >
+    //         <Icon iconName={icon} />
+    //       </m.div>
+    //       <Label htmlFor={btnId}>{label}</Label>
+    //     </m.button>
+    //   </MotionConfig>
+    // </LazyMotion>
+    <button
+      className={cl(styles.item)}
+      onClick={onClick}
+      type="button"
+      id={btnId}
+    >
+      <div className={cl({ [styles.selected]: selected }, styles.icon)}>
+        <Icon iconName={icon} />
+      </div>
+      <Label htmlFor={btnId}>{label}</Label>
+    </button>
   );
 };
 
