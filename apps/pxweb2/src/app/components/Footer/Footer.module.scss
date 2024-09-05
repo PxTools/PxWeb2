@@ -14,28 +14,62 @@
   // border-radius: var(--px-border-radius-xlarge);
   // margin-bottom: fixed.$spacing-6;
 
+  // display: flex;
+  // flex-direction: column;
+  // align-items: flex-start;
+  // align-self: stretch;
+  // gap: fixed.$spacing-10;
+  
+  // @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
+  //   gap: fixed.$spacing-12;
+  // }
+
+  // @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
+  // }
+  
+  // @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
+  // }
+
+  // @media (min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width) {
+  // }
+
+  // @media (min-width: fixed.$breakpoints-xlarge-min-width) {
+  // }
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   align-self: stretch;
-  gap: fixed.$spacing-10;
-  
+  gap: fixed.$spacing-1;
+  background: var(--px-color-surface-default);
+
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
-    gap: fixed.$spacing-12;
+    padding: fixed.$spacing-4;
+    border-radius: var(--px-border-radius-none);
   }
 
   @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
+    padding: fixed.$spacing-6;
+    border-radius: var(--px-border-radius-none);
   }
   
   @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
+    padding: fixed.$spacing-10;
+    border-radius: var(--px-border-radius-xlarge);
   }
 
   @media (min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width) {
+    max-width: 1320px;
+    padding: fixed.$spacing-10 fixed.$spacing-12;
+    border-radius: var(--px-border-radius-xlarge);
   }
 
   @media (min-width: fixed.$breakpoints-xlarge-min-width) {
+    max-width: 1320px;
+    padding: fixed.$spacing-10 fixed.$spacing-12;
+    border-radius: var(--px-border-radius-xlarge);
   }
 
+  
   .description {
     max-width: 912px;
   }
@@ -64,7 +98,7 @@
   .copyright {
     margin-top: fixed.$spacing-4;
     @media (min-width: fixed.$breakpoints-large-min-width) {
-      margin-top: initial;
+      margin-top: fixed.$spacing-8;
     }
   }
 }
