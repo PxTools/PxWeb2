@@ -22,6 +22,7 @@
     "@swc/helpers": "0.5.11",
     "ajv": "^6.12.6",
     "clsx": "^2.1.1",
+    "framer-motion": "^11.5.0",
     "i18next": "^23.14.0",
     "i18next-http-backend": "^2.6.1",
     "react": "18.3.1",

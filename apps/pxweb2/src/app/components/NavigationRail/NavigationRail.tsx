@@ -1,9 +1,27 @@
 import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
+import { LazyMotion, m, MotionConfig } from 'framer-motion';
 
 import styles from './NavigationRail.module.scss';
-import { Icon, IconProps, Label } from '@pxweb2/pxweb2-ui';
+import {
+  Icon,
+  IconProps,
+  Label,
+  ColorSurfaceDefault,
+  ColorSurfaceActionSubtleActive,
+  ColorSurfaceActionSubtleHover,
+} from '@pxweb2/pxweb2-ui';
 import { NavigationItem } from '../../app';
+
+const loadFeatures = () =>
+  import('./../../util/animationFeatures').then((res) => res.default);
+
+const springConfig = {
+  type: 'spring',
+  mass: 1,
+  stiffness: 200,
+  damping: 30,
+};
 
 interface ItemProps {
   label: string;
@@ -20,14 +38,63 @@ export const Item: React.FC<ItemProps> = ({
   onClick,
 }) => {
   const btnId = 'px-' + parentName + '-' + label;
+  const initialBackgroundColor = selected
+    ? ColorSurfaceActionSubtleActive
+    : ColorSurfaceDefault;
+  const buttonVariants = {
+    initial: {
+      backgroundColor: initialBackgroundColor,
+    },
+    hover: {
+      backgroundColor: [initialBackgroundColor, ColorSurfaceActionSubtleHover],
+      transition: springConfig,
+    },
+    pressed: {
+      backgroundColor: [
+        ColorSurfaceActionSubtleHover,
+        ColorSurfaceActionSubtleActive,
+      ],
+      transition: springConfig,
+    },
+  };
 
   return (
-    <button className={styles.item} onClick={onClick} type="button" id={btnId}>
-      <div className={cl({ [styles.selected]: selected }, styles.icon)}>
-        <Icon iconName={icon} />
-      </div>
-      <Label htmlFor={btnId}>{label}</Label>
-    </button>
+    <LazyMotion features={loadFeatures}>
+      <MotionConfig reducedMotion="user">
+        <m.button
+          className={cl({ [styles.selected]: selected }, styles.item)}
+          onClick={onClick}
+          type="button"
+          id={btnId}
+
+          // Framer Motion animations
+          key={selected.toString()} // Needed by framer-motion to re-run the animation when the selected state changes, toString for type compatibility
+          initial={'initial'}
+          whileHover={'hover'}
+          whileTap={'pressed'}
+        >
+          <m.div
+            className={cl(styles.icon)}
+            // Framer Motion animations
+            variants={buttonVariants}
+          >
+            <Icon iconName={icon} />
+          </m.div>
+          <Label htmlFor={btnId}>{label}</Label>
+        </m.button>
+      </MotionConfig>
+    </LazyMotion>
+    // <button
+    //   className={cl(styles.item)}
+    //   onClick={onClick}
+    //   type="button"
+    //   id={btnId}
+    // >
+    //   <div className={cl({ [styles.selected]: selected }, styles.icon)}>
+    //     <Icon iconName={icon} />
+    //   </div>
+    //   <Label htmlFor={btnId}>{label}</Label>
+    // </button>
   );
 };
 
