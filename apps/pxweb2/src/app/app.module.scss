@@ -69,7 +69,8 @@
   width: 100%; // Micke extra
   max-width: 1320px; // Micke extra 
   height: 100%; // Micke extra
-  overflow-y: auto; // Micke extra
+  overflow-y:auto; // Micke extra
+  scrollbar-width:thin; // Micke extra
 
 
 
@@ -238,6 +239,7 @@
    .tableWrapper {
      width: 100cqw;
      overflow-x: auto;
+     scrollbar-width:thin; // Micke extra
    }
  }} 
 

@@ -72,7 +72,8 @@
   background: var(--px-color-background-subtle);
   overflow-y: auto;
   // height: 100%;
-  
+  scrollbar-width:thin; // Micke extra
+
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
     width: 380px;
     height: 100vh;
