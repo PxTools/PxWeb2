@@ -36,7 +36,7 @@
     align-items: flex-start;
     flex-shrink: 0;
     border-radius: var(--px-border-radius-xlarge) var(--px-border-radius-none) var(--px-border-radius-none) var(--px-border-radius-none);
-    padding: fixed.$spacing-6 fixed.$spacing-6 fixed.$spacing-6 fixed.$spacing-6;
+    padding: fixed.$spacing-6 fixed.$spacing-6 0px fixed.$spacing-6;
     gap: fixed.$spacing-6;
   }
 
@@ -47,7 +47,7 @@
     align-items: flex-start;
     flex-shrink: 0;
     border-radius: var(--px-border-radius-xlarge) var(--px-border-radius-none) var(--px-border-radius-none) var(--px-border-radius-none);
-    padding: fixed.$spacing-6 fixed.$spacing-6 fixed.$spacing-6 fixed.$spacing-6;
+    padding: fixed.$spacing-6 fixed.$spacing-6 0px fixed.$spacing-6;
   }
 
   @media (min-width: fixed.$breakpoints-xlarge-min-width) {
@@ -57,7 +57,7 @@
     align-items: flex-start;
     flex-shrink: 0;
     border-radius: var(--px-border-radius-xlarge) var(--px-border-radius-none) var(--px-border-radius-none) var(--px-border-radius-none);
-    padding: fixed.$spacing-10 fixed.$spacing-6 fixed.$spacing-6 fixed.$spacing-6;
+    padding: fixed.$spacing-10 fixed.$spacing-6 0px fixed.$spacing-6;
   }
 }
 
@@ -80,6 +80,14 @@
   
   @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
     width: 100vw; 
+  }
+
+  @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-large-max-width) {
+    padding-bottom: fixed.$spacing-6;
+  }
+
+  @media (min-width: fixed.$breakpoints-xlarge-min-width) {
+    padding-bottom: fixed.$spacing-6;
   }
 }
 
