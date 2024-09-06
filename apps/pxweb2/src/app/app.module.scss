@@ -29,7 +29,7 @@
 
   @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
     width: calc(100% - 120px);
-    height: calc(100% - 88px);
+    height: calc(100vh - 88px);
     justify-content: center;
     align-items: flex-start;
     flex-shrink: 0;
@@ -40,7 +40,7 @@
 
   @media (min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width) {
     width: calc(100% - 120px);
-    height: calc(100% - 88px);
+    height: calc(100vh - 88px);
     justify-content: center;
     align-items: flex-start;
     flex-shrink: 0;
@@ -50,7 +50,7 @@
 
   @media (min-width: fixed.$breakpoints-xlarge-min-width) {
     width: calc(100% - 120px);
-    height: calc(100% - 88px);
+    height: calc(100vh - 88px);
     justify-content: center;
     align-items: flex-start;
     flex-shrink: 0;
@@ -66,7 +66,8 @@
   gap: fixed.$spacing-6; // Micke extra
   width: 100%; // Micke extra
   max-width: 1320px; // Micke extra 
-  
+  height: 100%; // Micke extra
+  overflow-y: auto; // Micke extra
 
 
 

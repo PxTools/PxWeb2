@@ -70,6 +70,8 @@
   align-self: stretch;
   border-radius: var(--px-border-radius-none);
   background: var(--px-color-background-subtle);
+  overflow-y: auto;
+  height: 100%;
   
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
     width: 380px;
@@ -93,7 +95,7 @@
 
   @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
     width: 380px;
-    //height: calc(100vh - 88px);
+    height: calc(100vh - 88px);
     padding: fixed.$spacing-6;
     position: absolute;
     left: 120px; // Micke extra
