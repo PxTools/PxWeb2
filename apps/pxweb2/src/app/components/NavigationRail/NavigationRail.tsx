@@ -13,9 +13,11 @@ import {
 } from '@pxweb2/pxweb2-ui';
 import { NavigationItem } from '../../app';
 
+// Lazy load the animation features
 const loadFeatures = () =>
   import('./../../util/animationFeatures').then((res) => res.default);
 
+// Framer Motion spring animation configuration
 const springConfig = {
   type: 'spring',
   mass: 1,
@@ -43,7 +45,8 @@ export const Item: React.FC<ItemProps> = ({
     : ColorSurfaceDefault;
   const buttonVariants = {
     initial: {
-      backgroundColor: initialBackgroundColor,
+      backgroundColor: initialBackgroundColor, // TODO: Fix bug, initial color flashes when clicking a selected button
+      transition: springConfig,
     },
     hover: {
       backgroundColor: [initialBackgroundColor, ColorSurfaceActionSubtleHover],
@@ -59,42 +62,26 @@ export const Item: React.FC<ItemProps> = ({
   };
 
   return (
-    // <LazyMotion features={loadFeatures}>
-    //   <MotionConfig reducedMotion="user">
-    //     <m.button
-    //       className={cl({ [styles.selected]: selected }, styles.item)}
-    //       onClick={onClick}
-    //       type="button"
-    //       id={btnId}
-
-    //       // Framer Motion animations
-    //       key={selected.toString()} // Needed by framer-motion to re-run the animation when the selected state changes, toString for type compatibility
-    //       initial={'initial'}
-    //       whileHover={'hover'}
-    //       whileTap={'pressed'}
-    //     >
-    //       <m.div
-    //         className={cl(styles.icon)}
-    //         // Framer Motion animations
-    //         variants={buttonVariants}
-    //       >
-    //         <Icon iconName={icon} />
-    //       </m.div>
-    //       <Label htmlFor={btnId}>{label}</Label>
-    //     </m.button>
-    //   </MotionConfig>
-    // </LazyMotion>
-    <button
-      className={cl(styles.item)}
+    <m.button
+      className={cl({ [styles.selected]: selected }, styles.item)}
       onClick={onClick}
       type="button"
       id={btnId}
+      // Framer Motion animations
+      key={selected.toString()} // Needed by framer-motion to re-run the animation when the selected state changes, toString for type compatibility
+      initial={'initial'}
+      whileHover={'hover'}
+      whileTap={'pressed'}
     >
-      <div className={cl({ [styles.selected]: selected }, styles.icon)}>
+      <m.div
+        className={cl(styles.icon)}
+        // Framer Motion animations
+        variants={buttonVariants}
+      >
         <Icon iconName={icon} />
-      </div>
+      </m.div>
       <Label htmlFor={btnId}>{label}</Label>
-    </button>
+    </m.button>
   );
 };
 
@@ -110,51 +97,55 @@ export const NavigationRail: React.FC<NavigationRailProps> = ({
 
   return (
     <div className={styles.navigationRail}>
-      <Item
-        parentName="navRail"
-        label={t('presentation_page.sidemenu.selection.title')}
-        selected={selected === 'filter'}
-        icon={'Controls'}
-        onClick={() => {
-          onChange('filter');
-        }}
-      />
-      <Item
-        parentName="navRail"
-        label={t('presentation_page.sidemenu.view.title')}
-        selected={selected === 'view'}
-        icon={'BarChart'}
-        onClick={() => {
-          onChange('view');
-        }}
-      />
-      <Item
-        parentName="navRail"
-        label={t('presentation_page.sidemenu.edit.title')}
-        selected={selected === 'edit'}
-        icon={'ArrowsUpDown'}
-        onClick={() => {
-          onChange('edit');
-        }}
-      />
-      <Item
-        parentName="navRail"
-        label={t('presentation_page.sidemenu.save.title')}
-        selected={selected === 'save'}
-        icon={'FloppyDisk'}
-        onClick={() => {
-          onChange('save');
-        }}
-      />
-      <Item
-        parentName="navRail"
-        label={t('presentation_page.sidemenu.help.title')}
-        selected={selected === 'help'}
-        icon={'QuestionMarkCircle'}
-        onClick={() => {
-          onChange('help');
-        }}
-      />
+      <LazyMotion features={loadFeatures}>
+        <MotionConfig reducedMotion="user">
+          <Item
+            parentName="navRail"
+            label={t('presentation_page.sidemenu.selection.title')}
+            selected={selected === 'filter'}
+            icon={'Controls'}
+            onClick={() => {
+              onChange('filter');
+            }}
+          />
+          <Item
+            parentName="navRail"
+            label={t('presentation_page.sidemenu.view.title')}
+            selected={selected === 'view'}
+            icon={'BarChart'}
+            onClick={() => {
+              onChange('view');
+            }}
+          />
+          <Item
+            parentName="navRail"
+            label={t('presentation_page.sidemenu.edit.title')}
+            selected={selected === 'edit'}
+            icon={'ArrowsUpDown'}
+            onClick={() => {
+              onChange('edit');
+            }}
+          />
+          <Item
+            parentName="navRail"
+            label={t('presentation_page.sidemenu.save.title')}
+            selected={selected === 'save'}
+            icon={'FloppyDisk'}
+            onClick={() => {
+              onChange('save');
+            }}
+          />
+          <Item
+            parentName="navRail"
+            label={t('presentation_page.sidemenu.help.title')}
+            selected={selected === 'help'}
+            icon={'QuestionMarkCircle'}
+            onClick={() => {
+              onChange('help');
+            }}
+          />
+        </MotionConfig>
+      </LazyMotion>
     </div>
   );
 };

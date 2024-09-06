@@ -35,7 +35,6 @@
     padding-top: fixed.$spacing-1;
     padding-bottom: fixed.$spacing-1;
     border-radius: 99px;
-    transition: background-color 400ms ease-in-out;
   }
 
   > label {
@@ -57,5 +56,3 @@
     }
   }
 }
-
-//.selected {}
