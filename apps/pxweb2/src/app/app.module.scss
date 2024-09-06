@@ -18,13 +18,15 @@
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
     left: 0px;
     background: var(--px-color-surface-default);
-    width: 100%;  
+    width: 100%; 
+    height: calc(100vh - 88px); 
   }
 
   @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
     left: 0px;
     background: var(--px-color-surface-default);
     width: 100%;
+    height: calc(100vh - 88px); 
   }
 
   @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
