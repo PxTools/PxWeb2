@@ -8,6 +8,7 @@ import { getPxTableData } from './cubeHelper';
 
 export interface TableProps {
   pxtable: PxTable;
+  className?: string;
 }
 
 /**
@@ -24,7 +25,9 @@ type DataCellMeta = {
  */
 type DataCellCodes = DataCellMeta[];
 
-export function Table({ pxtable }: TableProps) {
+export function Table({ pxtable, className = '' }: TableProps) {
+  const cssClasses = className.length > 0 ? ' ' + className : '';
+
   const tableMeta: columnRowMeta = calculateRowAndColumnMeta(pxtable);
 
   const tableColumnSize: number = tableMeta.columns - tableMeta.columnOffset;
@@ -48,7 +51,7 @@ export function Table({ pxtable }: TableProps) {
   }
 
   return (
-    <table className={cl(classes.table, classes[`bodyshort-medium`])}>
+    <table className={cl(classes.table, classes[`bodyshort-medium`]) + cssClasses}>
       <thead>{createHeading(pxtable, tableMeta, headingDataCellCodes)}</thead>
       <tbody>{createRows(pxtable, tableMeta, headingDataCellCodes)}</tbody>
     </table>

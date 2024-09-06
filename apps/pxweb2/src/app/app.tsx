@@ -617,9 +617,7 @@ export function App() {
                   />
                   {!isMissingMandatoryVariables && (
                     <div className={styles.tableContainer}>
-                    <div className={styles.tableWrapper}>
                        <Table pxtable={tableData.data} /> 
-                    </div>
                     </div>
                   )}
                   

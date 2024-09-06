@@ -128,6 +128,17 @@
     padding: fixed.$spacing-10 fixed.$spacing-12;
     gap: fixed.$spacing-10;
   }
+
+  container-type: inline-size;
+  container-name: contentCont;
+
+  @container contentCont (width > 1px) {
+   .tableContainer {
+     width: 100cqw;
+     overflow-x: auto;
+     scrollbar-width:thin; 
+   }
+ } 
 }
 
 
@@ -235,32 +246,4 @@
 // //   width: 300px;
 // // }
 
-.tableContainer {
-  container-type: inline-size;
-  container-name: tableCont;
-  //height: 300px; 
-  width: 100%;
-  display: flex;
-  
 
-  @container tableCont (width > 1px) {
-   .tableWrapper {
-     width: 100cqw;
-     overflow-x: auto;
-     scrollbar-width:thin; // Micke extra
-   }
- }} 
-
-// .tableWrapper {
-//   overflow-x: hidden;
-//   // max-width: 100%;
-//   // min-width: 100%;
-
-
-// }
-
-// // .scrollable {
-// //   height: 100vh;
-// //   align-self: stretch;
-// //   overflow-y: auto;
-// // }
