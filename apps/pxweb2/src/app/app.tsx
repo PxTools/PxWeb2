@@ -241,7 +241,8 @@ export function App() {
           (selectedVariable) => selectedVariable.id === variable.id
         )
       );
-
+      console.log('i APP tableid=' + tableId);
+      console.log('i APP ptablemeta tabid=' + pxTableMetadata?.id);
     if (hasSelectedMandatoryVariables) {
     //     tableData.fetchTableData(tableId ? tableId : 'tab638', i18n);
 
@@ -300,10 +301,10 @@ export function App() {
                 variable.values.length > 0 ||
                 variable.selectedCodeList !== undefined
             );
-
             updateAndSyncVBValues(defaultSelection);
-            setIsLoadingMetadata(false);
+           setIsLoadingMetadata(false);
             setHasLoadedDefaultSelection(true);
+            console.log('I APP 307 hasLoadedDefaultSelection=' + hasLoadedDefaultSelection)
           })
           .catch((error) => {
             setErrorMsg('Error getting default selection: ' + tableId);
@@ -549,7 +550,7 @@ export function App() {
           />
         </div>
         {/* { pxTableMetadata  && <Presentation pxTablemetaData={pxTableMetadata} selectedNavigationView={selectedNavigationView} isMissingMandatoryVariables={isMissingMandatoryVariables} isLoadingMetadata={isLoadingMetadata} ></Presentation>} */}
-        { <Presentation pxTablemetaData={pxTableMetadata} selectedNavigationView={selectedNavigationView}  isLoadingMetadata={isLoadingMetadata} ></Presentation>}
+        { <Presentation selectedTabId={selectedTableId} selectedVBValues={selectedVBValues} pxTablemetaData={pxTableMetadata} selectedNavigationView={selectedNavigationView} hasLoadetDefaultSelection={hasLoadedDefaultSelection}  isLoadingMetadata={isLoadingMetadata} ></Presentation>}
         {/* <div className={styles.scrollable}>
           <Content topLeftBorderRadius={selectedNavigationView === 'none'}>
             {tableData.data && pxTableMetadata && ( 
