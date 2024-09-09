@@ -47,8 +47,8 @@ export const Footer: React.FC = () => {
           </div>
         </div>
         <div className={styles.copyright}>
-            <BodyLong>{t('presentation_page.footer.copyright')}</BodyLong>
-          </div>
+          <BodyLong>{t('presentation_page.footer.copyright')}</BodyLong>
+        </div>
       </div>
     </div>
   );

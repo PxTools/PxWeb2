@@ -516,84 +516,15 @@ export function App() {
   const drawerHelp = <>Help content</>;
 
   return (
-    // <>
-    //   <Header />
-    //   <div className={styles.mainContainer}>
-    //     {/* <div className={styles.desktopNavigation}> */}
-    //     <div className={styles.desktopNavigation}>
-    //       <NavigationRail
-    //         onChange={changeSelectedNavView}
-    //         selected={selectedNavigationView}
-    //       />
-    //     </div>
-    //     <div className={styles.main}>
-    //       <div>
-    //       {selectedNavigationView !== 'none' && (
-    //         // <div className={styles.scrollable}>
-    //         <NavigationDrawer
-    //           heading={t('presentation_page.sidemenu.selection.title')}
-    //           onClose={() => {
-    //             setSelectedNavigationView('none');
-    //           }}
-    //         >
-    //           {selectedNavigationView === 'filter' && drawerFilter}
-    //           {selectedNavigationView === 'view' && drawerView}
-    //           {selectedNavigationView === 'edit' && drawerEdit}
-    //           {selectedNavigationView === 'save' && drawerSave}
-    //           {selectedNavigationView === 'help' && drawerHelp}
-    //         </NavigationDrawer>
-    //         // </div>
-    //       )}
-    //       </div>
-    //       {/* <div className={styles.scrollable}> */}
-    //       <Content topLeftBorderRadius={selectedNavigationView === 'none'}>
-    //         {tableData.data && pxTableMetadata && (
-    //           <>
-    //             <ContentTop
-    //               staticTitle={pxTableMetadata?.label}
-    //               pxtable={tableData.data}
-    //             />
-
-    //             {!isMissingMandatoryVariables && (
-    //               <div className={styles.tableWrapper}>
-    //                 <Table pxtable={tableData.data} />
-    //               </div>
-    //             )}
-
-    //             {!isLoadingMetadata && isMissingMandatoryVariables && (
-    //               <EmptyState
-    //                 headingTxt={t(
-    //                   'presentation_page.main_content.table.warnings.missing_mandatory.title'
-    //                 )}
-    //               >
-    //                 {t(
-    //                   'presentation_page.main_content.table.warnings.missing_mandatory.description'
-    //                 )}
-    //               </EmptyState>
-    //             )}
-    //           </>
-    //         )}{' '}
-    //       </Content>
-    //       {/* </div> */}
-    //     </div>
-    //     <div className={cl(styles.mobileNavigation, styles.scrollable)}>
-    //       <NavigationBar
-    //         onChange={changeSelectedNavView}
-    //         selected={selectedNavigationView}
-    //       />
-    //     </div>
-    //   </div>
-    // </>
-
     <>
       <Header />
-      <div className={styles.extra1}>
+      <div className={styles.navigationAndContentContainer}>
         <NavigationRail
           onChange={changeSelectedNavView}
           selected={selectedNavigationView}
         />
         <div className={styles.mainContainer}>
-           {selectedNavigationView !== 'none' && (
+          {selectedNavigationView !== 'none' && (
             <NavigationDrawer
               heading={t('presentation_page.sidemenu.selection.title')}
               onClose={() => {
@@ -617,10 +548,10 @@ export function App() {
                   />
                   {!isMissingMandatoryVariables && (
                     <div className={styles.tableContainer}>
-                       <Table pxtable={tableData.data} /> 
+                      <Table pxtable={tableData.data} />
                     </div>
                   )}
-                  
+
                   {!isLoadingMetadata && isMissingMandatoryVariables && (
                     <EmptyState
                       headingTxt={t(
@@ -636,7 +567,7 @@ export function App() {
               )}{' '}
             </div>
             <Footer />
-          </div> 
+          </div>
         </div>
       </div>
       <NavigationBar
@@ -644,75 +575,6 @@ export function App() {
         selected={selectedNavigationView}
       />
     </>
-
-    // <>
-    //   <div className={styles.testHeader}>Header</div>
-    //   <div className={styles.extra1}>
-    //     <div className={styles.testNavigationRail}>NavRail</div>
-    //     <div className={styles.testMainContainer}>
-    //       <div className={styles.testNavigationDrawer}>NavDrawer</div>
-    //       <div className={styles.testContentAndFooter}>
-    //         ContentAndFooter
-    //         <div className={styles.testContentContainer}>
-    //           ContentContainer
-    //           <div className={styles.testContentTop}>ContentTop</div>
-    //           <div className={styles.testTable}>
-    //             <table>
-    //               <tr>
-    //                 <th>Name</th>
-    //                 <th>Col1</th>
-    //                 <th>Col2</th>
-    //                 <th>Col3</th>
-    //                 <th>Col4</th>
-    //                 <th>Col5</th>
-    //                 <th>Col6</th>
-    //                 <th>Col7</th>
-    //                 <th>Col8</th>
-    //                 <th>Col9</th>
-    //               </tr>
-    //               <tr>
-    //                 <td rowSpan={3}>Mark Smith</td>
-    //                 <td>English</td>
-    //                 <td>67</td>
-    //                 <td>67</td>
-    //                 <td>67</td>
-    //                 <td>67</td>
-    //                 <td>67</td>
-    //                 <td>67</td>
-    //                 <td>67</td>
-    //                 <td>67</td>
-    //               </tr>
-    //               <tr>
-    //                 <td>Maths</td>
-    //                 <td>82</td>
-    //                 <td>67</td>
-    //                 <td>67</td>
-    //                 <td>67</td>
-    //                 <td>67</td>
-    //                 <td>67</td>
-    //                 <td>67</td>
-    //                 <td>67</td>
-    //               </tr>
-    //               <tr>
-    //                 <td>Science</td>
-    //                 <td>91</td>
-    //                 <td>67</td>
-    //                 <td>67</td>
-    //                 <td>67</td>
-    //                 <td>67</td>
-    //                 <td>67</td>
-    //                 <td>67</td>
-    //                 <td>67</td>
-    //               </tr>
-    //             </table>
-    //           </div>
-    //         </div>
-    //         <div className={styles.testFooter}>Footer</div>
-    //       </div>
-    //     </div>
-    //   </div>
-    //   <div className={styles.testNavigationBar}>NavBar</div>
-    // </>
   );
 }
 

@@ -19,18 +19,18 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
 
   return (
     <>
-    <div className={styles.backdrop}></div>
-    <div className={styles.navigationDrawer}>
-      <div className={styles.heading}>
-        <Heading level="2" size="small">
-          {heading}
-        </Heading>
-        <Button variant="tertiary" onClick={onClose} icon="ChevronLeft">
-          {t('presentation_page.sidemenu.hide')}
-        </Button>
+      <div className={styles.backdrop}></div>
+      <div className={styles.navigationDrawer}>
+        <div className={styles.heading}>
+          <Heading level="2" size="small">
+            {heading}
+          </Heading>
+          <Button variant="tertiary" onClick={onClose} icon="ChevronLeft">
+            {t('presentation_page.sidemenu.hide')}
+          </Button>
+        </div>
+        <div>{children}</div>
       </div>
-      <div>{children}</div>
-    </div>
     </>
   );
 };
