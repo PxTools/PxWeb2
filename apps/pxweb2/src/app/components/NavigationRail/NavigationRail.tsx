@@ -3,7 +3,7 @@ import cl from 'clsx';
 import styles from './NavigationRail.module.scss';
 import { useTranslation } from 'react-i18next';
 import { Icon, IconProps, Label } from '@pxweb2/pxweb2-ui';
-import { NavigationItem } from '../../app';
+import { NavigationItem } from '../../components/Pages/TableView/TableView';
 
 interface ItemProps {
   label: string;
