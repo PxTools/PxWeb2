@@ -10,14 +10,7 @@
   display: flex;
   background: var(--px-color-surface-subtle);
 
-  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
-    left: 0px;
-    background: var(--px-color-surface-default);
-    width: 100%;
-    height: calc(100vh - 88px);
-  }
-
-  @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
+  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
     left: 0px;
     background: var(--px-color-surface-default);
     width: 100%;
@@ -71,11 +64,7 @@
   overflow-y: auto;
   scrollbar-width: thin;
 
-  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
-    width: 100vw;
-  }
-
-  @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
+  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
     width: 100vw;
   }
 
