@@ -8,6 +8,7 @@ export type VariablesContextType = {
   removeSelectedValue: (variableId: string, value: string) => void;
   toggleSelectedValue: (variableId: string, value: string) => void;
   getSelectedValuesById: (variableId: string) => string[];
+  getNumberOfSelectedValues: () => number;
   removeSelectedValues: (variableId: string) => void;
   getUniqueIds: () => string[];
   syncVariablesAndValues: (values: SelectedVBValues[]) => void;
@@ -25,6 +26,8 @@ export const VariablesContext = createContext<VariablesContextType>({
   toggleSelectedValue: () => {},
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   getSelectedValuesById: () => [],
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  getNumberOfSelectedValues: () => 0,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   removeSelectedValues: () => {},
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -64,6 +67,10 @@ const addSelectedValues = (variableId: string, values: string[]) => {
     });
 
     return values;
+  };
+
+  const getNumberOfSelectedValues = () => {
+    return variables.size;
   };
 
   const removeSelectedValue = (variableId: string, value: string) => {
@@ -165,6 +172,7 @@ const addSelectedValues = (variableId: string, values: string[]) => {
         removeSelectedValue,
         toggleSelectedValue,
         removeSelectedValues,
+        getNumberOfSelectedValues,
         getSelectedValuesById,
         getUniqueIds,
         syncVariablesAndValues,

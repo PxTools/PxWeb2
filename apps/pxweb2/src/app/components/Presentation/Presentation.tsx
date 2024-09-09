@@ -60,13 +60,18 @@ export function Presentation({
 
     // if (mandatoryVariables) {
     //   for (const variable of mandatoryVariables) {
-    //     const selected = selectedVariables.getSelectedValuesById(variable.id);
+    //     const selected = variables.getSelectedValuesById(variable.id);
     //     console.log('Variables ' + selected[0]);
     //     if (selected.length < 1) {
     //       hasSelectedMandatoryVariables = false;
     //     }
     //   }
     // }
+
+    
+    const variablesAmount = variables.getNumberOfSelectedValues();
+    console.log("variablesAmount=" + variablesAmount);
+
     console.log(' 1 I IF hasLoadetDefaultSelection=' + hasLoadetDefaultSelection)
     const hasSelectedMandatoryVariables = pxTablemetaData?.variables
       .filter((variable) => variable.mandatory)

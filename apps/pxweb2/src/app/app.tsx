@@ -302,7 +302,7 @@ export function App() {
                 variable.selectedCodeList !== undefined
             );
             updateAndSyncVBValues(defaultSelection);
-           setIsLoadingMetadata(false);
+            setIsLoadingMetadata(false);
             setHasLoadedDefaultSelection(true);
             console.log('I APP 307 hasLoadedDefaultSelection=' + hasLoadedDefaultSelection)
           })
