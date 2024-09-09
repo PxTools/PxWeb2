@@ -38,6 +38,20 @@
   "generic_tags": {
     "mandatory": "Må velges"
   },
+  "routing_errors": {
+    "401": {
+      "title": "Ingen tilgang",
+      "description": "Du har ikke tilgang til denne siden."
+    },
+    "404": {
+      "title": "Finner ikke siden",
+      "description": "Siden du leter etter finnes ikke."
+    },
+    "500": {
+      "title": "Intern serverfeil",
+      "description": "Det oppstod en feil på serveren. Prøv igjen senere."
+    }
+  },
   "start_page": {
     "header": "Velkommen til appen!",
     "welcome_trans_test": "Velkommen til <1>appen</1> for PxWeb 2.0!"

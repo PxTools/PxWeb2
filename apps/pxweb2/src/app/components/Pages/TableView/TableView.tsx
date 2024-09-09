@@ -1,7 +1,7 @@
 import { Suspense, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import cl from 'clsx';
-import { useLoaderData, useParams } from 'react-router-dom';
+import { Await, useLoaderData, useParams } from 'react-router-dom';
 
 import styles from './TableView.module.scss';
 import { ContentTop } from './../../ContentTop/ContentTop';
@@ -17,7 +17,6 @@ import {
 import useLocalizeDocumentAttributes from '../../../../i18n/useLocalizeDocumentAttributes';
 import { TableService } from '@pxweb2/pxweb2-api-client';
 import { mapTableMetadataResponse } from '../../../../mappers/TableMetadataResponseMapper';
-import { mapTableSelectionResponse } from '../../../../mappers/TableSelectionResponseMapper';
 import { Header } from './../../../components/Header/Header';
 import NavigationRail from './../../../components/NavigationRail/NavigationRail';
 import { Content } from './../../../components/Content/Content';
@@ -189,12 +188,16 @@ export type NavigationItem =
 export function TableView() {
   const { tableId } = useParams<{ tableId: string }>();
 
-  const { tableMetaDataFromLoader, tableDefaultSelectionFromLoader, tableDataFromLoader } = useLoaderData() as any;
+  const {
+    tableMetaDataFromLoader,
+    tableDefaultSelectionFromLoader,
+    tableDataFromLoader,
+  } = useLoaderData() as any;
 
-  console.log(tableMetaDataFromLoader);
-  console.log(tableDefaultSelectionFromLoader);
-  console.log(tableDataFromLoader);
-
+  const [hasFinishedInitialMetadataLoad, setHasFinishedInitialMetadataLoad] =
+    useState(false);
+  const [hasFinishedInitialDataLoad, setHasFinishedInitialDataLoad] =
+    useState(false);
 
   const [prevTableId, setPrevTableId] = useState('');
   const { i18n, t } = useTranslation();
@@ -219,8 +222,6 @@ export function TableView() {
   const [selectedVBValues, setSelectedVBValues] = useState<SelectedVBValues[]>(
     []
   );
-  const [hasLoadedDefaultSelection, setHasLoadedDefaultSelection] =
-    useState(false);
 
   /**
    * Updates useState hook and synchronizes variables context with the selected VB values.
@@ -238,89 +239,69 @@ export function TableView() {
     }
   }, [errorMsg]);
 
-  // useEffect(() => {
-  //   const hasSelectedMandatoryVariables = pxTableMetadata?.variables
-  //     .filter((variable) => variable.mandatory)
-  //     .every((variable) =>
-  //       selectedVBValues.some(
-  //         (selectedVariable) => selectedVariable.id === variable.id
-  //       )
-  //     );
+  useEffect(() => {
+    if (!hasFinishedInitialDataLoad) {
+      return;
+    }
 
-  //   if (hasSelectedMandatoryVariables) {
-  //     tableData.fetchTableData(tableId ? tableId : 'tab638', i18n);
+    const hasSelectedMandatoryVariables = pxTableMetadata?.variables
+      .filter((variable) => variable.mandatory)
+      .every((variable) =>
+        selectedVBValues.some(
+          (selectedVariable) => selectedVariable.id === variable.id
+        )
+      );
 
-  //     setIsMissingMandatoryVariables(false);
-  //   }
-  //   if (!hasSelectedMandatoryVariables) {
-  //     setIsMissingMandatoryVariables(true);
-  //   }
+    if (hasSelectedMandatoryVariables) {
+      tableData.fetchTableData(tableId ? tableId : 'tab638', i18n);
 
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [variables, i18n.resolvedLanguage]); // Should only run this useEffect when selectedVBValues are in sync with variables context
+      setIsMissingMandatoryVariables(false);
+    }
+    if (!hasSelectedMandatoryVariables) {
+      setIsMissingMandatoryVariables(true);
+    }
 
-  // useEffect(() => {
-  //   let shouldGetDefaultSelection = !hasLoadedDefaultSelection;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [variables, i18n.resolvedLanguage]); // Should only run this useEffect when selectedVBValues are in sync with variables context
 
-  //   if (!tableId) {
-  //     return;
-  //   }
+  useEffect(() => {
+    if (!hasFinishedInitialMetadataLoad) {
+      return;
+    }
 
-  //   if (prevTableId === '' || prevTableId !== tableId) {
-  //     setHasLoadedDefaultSelection(false);
-  //     shouldGetDefaultSelection = true;
-  //     setPrevTableId(tableId);
-  //   }
+    if (!tableId) {
+      return;
+    }
 
-  //   if (isLoadingMetadata === false) {
-  //     setIsLoadingMetadata(true);
-  //   }
+    if (prevTableId === '' || prevTableId !== tableId) {
+      setPrevTableId(tableId);
+    }
 
-  //   TableService.getMetadataById(tableId, i18n.resolvedLanguage)
-  //     .then((tableMetadataResponse) => {
-  //       const pxTabMetadata: PxTableMetadata = mapTableMetadataResponse(
-  //         tableMetadataResponse
-  //       );
-  //       setPxTableMetadata(pxTabMetadata);
+    if (isLoadingMetadata === false) {
+      setIsLoadingMetadata(true);
+    }
 
-  //       if (pxTableMetaToRender !== null) {
-  //         setPxTableMetaToRender(null);
-  //       }
+    TableService.getMetadataById(tableId, i18n.resolvedLanguage)
+      .then((tableMetadataResponse) => {
+        const pxTabMetadata: PxTableMetadata = mapTableMetadataResponse(
+          tableMetadataResponse
+        );
+        setPxTableMetadata(pxTabMetadata);
 
-  //       setErrorMsg('');
-  //     })
-  //     .then(() => {
-  //       if (!shouldGetDefaultSelection) {
-  //         setIsLoadingMetadata(false);
+        if (pxTableMetaToRender !== null) {
+          setPxTableMetaToRender(null);
+        }
+        setIsLoadingMetadata(false);
 
-  //         return;
-  //       }
+        setErrorMsg('');
+      })
+      .catch((error) => {
+        setErrorMsg('Could not get table: ' + selectedTableId);
+        setPxTableMetadata(null);
+      });
 
-  //       TableService.getDefaultSelection(tableId, i18n.resolvedLanguage)
-  //         .then((selectionResponse) => {
-  //           const defaultSelection = mapTableSelectionResponse(
-  //             selectionResponse
-  //           ).filter(
-  //             (variable) =>
-  //               variable.values.length > 0 ||
-  //               variable.selectedCodeList !== undefined
-  //           );
-
-  //           updateAndSyncVBValues(defaultSelection);
-  //           setIsLoadingMetadata(false);
-  //           setHasLoadedDefaultSelection(true);
-  //         })
-  //         .catch((error) => {
-  //           setErrorMsg('Error getting default selection: ' + tableId);
-  //         });
-  //     })
-  //     .catch((error) => {
-  //       setErrorMsg('Could not get table: ' + selectedTableId);
-  //       setPxTableMetadata(null);
-  //     });
-
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [tableId, i18n.resolvedLanguage]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tableId, i18n.resolvedLanguage]);
 
   if (pxTableMetaToRender === null && pxTableMetadata !== null) {
     setPxTableMetaToRender(structuredClone(pxTableMetadata));
@@ -483,19 +464,44 @@ export function TableView() {
     return dummyValues;
   };
 
+  useEffect(() => {
+    if (tableMetaDataFromLoader && tableDefaultSelectionFromLoader) {
+      setPxTableMetadata(tableMetaDataFromLoader);
+      setPxTableMetaToRender(tableMetaDataFromLoader);
+      setSelectedVBValues(tableDefaultSelectionFromLoader);
+      setIsLoadingMetadata(false);
+      setHasFinishedInitialMetadataLoad(true);
+    }
+  }, [tableMetaDataFromLoader, tableDefaultSelectionFromLoader]);
+
+  useEffect(() => {
+    if (!tableDataFromLoader && !hasFinishedInitialDataLoad) {
+      // TODO: Is this correct?
+      return;
+    }
+
+    tableData.setTableData(tableDataFromLoader);
+    setHasFinishedInitialDataLoad(true);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tableDataFromLoader]);
+
   const drawerFilter = (
     <div className={styles.variableListContainer}>
-      <Suspense fallback={<div>Loading variables</div>} />
-        <VariableList
-          pxTableMetadata={pxTableMetaToRender}
-          selectedVBValues={selectedVBValues}
-          isLoadingMetadata={isLoadingMetadata}
-          hasLoadedDefaultSelection={hasLoadedDefaultSelection}
-          handleCodeListChange={handleCodeListChange}
-          handleCheckboxChange={handleCheckboxChange}
-          handleMixedCheckboxChange={handleMixedCheckboxChange}
-        />
-      <Suspense />
+      <Suspense fallback={<div>Loading variables</div>}>
+        <Await
+          resolve={tableMetaDataFromLoader && tableDefaultSelectionFromLoader}
+        >
+          <VariableList
+            pxTableMetadata={pxTableMetaToRender}
+            selectedVBValues={selectedVBValues}
+            isLoadingMetadata={isLoadingMetadata}
+            handleCodeListChange={handleCodeListChange}
+            handleCheckboxChange={handleCheckboxChange}
+            handleMixedCheckboxChange={handleMixedCheckboxChange}
+          />
+        </Await>
+      </Suspense>
     </div>
   );
   const drawerView = <>View content</>;
@@ -545,9 +551,11 @@ export function TableView() {
                 />
 
                 {!isMissingMandatoryVariables && (
-                  <div className={styles.tableWrapper}>
-                    <Table pxtable={tableData.data} />
-                  </div>
+                  <Await resolve={tableDataFromLoader}>
+                    <div className={styles.tableWrapper}>
+                      <Table pxtable={tableData.data} />
+                    </div>
+                  </Await>
                 )}
 
                 {!isLoadingMetadata && isMissingMandatoryVariables && (

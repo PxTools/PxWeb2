@@ -6,19 +6,19 @@ import { TableView } from './components/Pages/TableView/TableView';
 import { loader as tableLoader } from './routes/tableData';
 import { VariablesProvider } from './context/VariablesProvider';
 import { TableDataProvider } from './context/TableDataProvider';
-
+import { RouterError } from './components/RouterError/RouterError';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <Home />,
-    errorElement: <div>Error: 404</div>,
+    errorElement: <RouterError />,
   },
   {
     path: '/table/:tableId',
     element: <TableView />,
     loader: tableLoader,
-    errorElement: <div>Could not find table: 404</div>,
+    errorElement: <RouterError />,
   },
 ]);
 
