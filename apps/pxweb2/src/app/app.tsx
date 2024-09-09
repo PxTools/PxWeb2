@@ -552,19 +552,19 @@ export function App() {
                     </div>
                   )}
 
-                  {!isLoadingMetadata && isMissingMandatoryVariables && (
-                    <EmptyState
-                      headingTxt={t(
-                        'presentation_page.main_content.table.warnings.missing_mandatory.title'
-                      )}
-                    >
-                      {t(
-                        'presentation_page.main_content.table.warnings.missing_mandatory.description'
-                      )}
-                    </EmptyState>
+                {!isLoadingMetadata && isMissingMandatoryVariables && (
+                  <EmptyState
+                  svgName="ManWithMagnifyingGlass"
+                  headingTxt={t(
+                    'presentation_page.main_content.table.warnings.missing_mandatory.title'
                   )}
-                </>
-              )}{' '}
+                  descriptionTxt={t(
+                    'presentation_page.main_content.table.warnings.missing_mandatory.description'
+                  )}
+                />
+                )}
+              </>
+            )}{' '}
             </div>
             <Footer />
           </div>
