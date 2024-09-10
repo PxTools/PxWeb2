@@ -2,20 +2,19 @@
 
 .navigationDrawer {
   display: flex;
-  padding: 0px fixed.$spacing-6 fixed.$spacing-6 0px;
   flex-direction: column;
   align-items: flex-start;
   gap: fixed.$spacing-3;
   flex-shrink: 0;
   align-self: stretch;
-  border-radius: var(--px-border-radius-none);
   background: var(--px-color-background-subtle);
   overflow-y: auto;
 
   // Not from Figma
   scrollbar-width: thin;
 
-  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
+  // xsmall and small
+  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
     width: 380px;
     height: 100vh;
     padding: fixed.$spacing-6;
@@ -28,19 +27,7 @@
     z-index: 999;
   }
 
-  @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
-    width: 380px;
-    height: 100vh;
-    padding: fixed.$spacing-6;
-    border-radius: var(--px-border-radius-none) var(--px-border-radius-xlarge)
-      var(--px-border-radius-xlarge) var(--px-border-radius-none);
-
-    // Not from Figma
-    position: absolute;
-    top: 0;
-    z-index: 999;
-  }
-
+  // medium
   @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
     width: 380px;
     height: calc(100vh - 88px);
@@ -55,12 +42,11 @@
     z-index: 1;
   }
 
-  @media (min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width) {
+  // large and xlarge
+  @media ((min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width)) or ((min-width: fixed.$breakpoints-xlarge-min-width)) {
     width: 348px;
-  }
-
-  @media (min-width: fixed.$breakpoints-xlarge-min-width) {
-    width: 348px;
+    padding: 0px fixed.$spacing-6 fixed.$spacing-6 0px;
+    border-radius: var(--px-border-radius-none);
   }
 }
 
