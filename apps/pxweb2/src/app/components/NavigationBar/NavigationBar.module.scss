@@ -18,7 +18,7 @@
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
     display: flex;
     padding: fixed.$spacing-4;
-    flex-direction: column;
+    flex-direction: row;
     align-items: flex-start;
     gap: fixed.$spacing-1;
     align-self: stretch;
