@@ -9,29 +9,18 @@
 .mainContainer {
   display: flex;
   background: var(--px-color-surface-subtle);
+  height: calc(100vh - 88px);
 
+  // xsmall and small
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
     left: 0px;
     background: var(--px-color-surface-default);
     width: 100%;
-    height: calc(100vh - 88px);
   }
 
-  @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
+  // medium, large and xlarge
+  @media ((min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-large-max-width)) or ((min-width: fixed.$breakpoints-xlarge-min-width)) {
     width: calc(100% - 120px);
-    height: calc(100vh - 88px);
-    justify-content: center;
-    align-items: flex-start;
-    flex-shrink: 0;
-    border-radius: var(--px-border-radius-xlarge) var(--px-border-radius-none)
-      var(--px-border-radius-none) var(--px-border-radius-none);
-    padding: fixed.$spacing-6 fixed.$spacing-6 0px fixed.$spacing-6;
-    gap: fixed.$spacing-6;
-  }
-
-  @media (min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width) {
-    width: calc(100% - 120px);
-    height: calc(100vh - 88px);
     justify-content: center;
     align-items: flex-start;
     flex-shrink: 0;
@@ -40,14 +29,8 @@
     padding: fixed.$spacing-6 fixed.$spacing-6 0px fixed.$spacing-6;
   }
 
+  // xlarge
   @media (min-width: fixed.$breakpoints-xlarge-min-width) {
-    width: calc(100% - 120px);
-    height: calc(100vh - 88px);
-    justify-content: center;
-    align-items: flex-start;
-    flex-shrink: 0;
-    border-radius: var(--px-border-radius-xlarge) var(--px-border-radius-none)
-      var(--px-border-radius-none) var(--px-border-radius-none);
     padding: fixed.$spacing-10 fixed.$spacing-6 0px fixed.$spacing-6;
   }
 }
@@ -64,15 +47,13 @@
   overflow-y: auto;
   scrollbar-width: thin;
 
+  // xsmall and small
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
     width: 100vw;
   }
 
-  @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-large-max-width) {
-    padding-bottom: fixed.$spacing-6;
-  }
-
-  @media (min-width: fixed.$breakpoints-xlarge-min-width) {
+  // medium, large and xlarge
+  @media ((min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-large-max-width)) or ((min-width: fixed.$breakpoints-xlarge-min-width)) {
     padding-bottom: fixed.$spacing-6;
   }
 }
@@ -85,35 +66,32 @@
   background: var(--px-color-surface-default);
   align-self: stretch;
 
+  // xsmall 
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
     padding: fixed.$spacing-4;
     gap: fixed.$spacing-7;
     border-radius: var(--px-border-radius-none);
   }
 
+  // small
   @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
     padding: fixed.$spacing-6;
     gap: fixed.$spacing-9;
     border-radius: var(--px-border-radius-none);
   }
 
+  // medium
   @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
     padding: fixed.$spacing-10;
     gap: fixed.$spacing-10;
   }
 
-  @media (min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width) {
-    max-width: 1320px;
+  // large and xlarge
+  @media ((min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width)) or ((min-width: fixed.$breakpoints-xlarge-min-width)) {
     padding: fixed.$spacing-10 fixed.$spacing-12;
     gap: fixed.$spacing-10;
   }
-
-  @media (min-width: fixed.$breakpoints-xlarge-min-width) {
-    max-width: 1320px;
-    padding: fixed.$spacing-10 fixed.$spacing-12;
-    gap: fixed.$spacing-10;
-  }
-
+ 
   container-type: inline-size;
   container-name: contentCont;
 
