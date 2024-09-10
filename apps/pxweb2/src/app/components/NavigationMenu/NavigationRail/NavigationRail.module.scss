@@ -1,0 +1,12 @@
+/** Styling */
+.navigationRail {
+  display: flex;
+  width: 120px;
+  height: 100%;
+  padding: 32px 0px 56px 0px;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+
+  background-color: var(--px-color-surface-default);
+}
