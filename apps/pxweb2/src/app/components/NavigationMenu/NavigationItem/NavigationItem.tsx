@@ -57,8 +57,6 @@ export const Item: React.FC<ItemProps> = ({
     },
   };
 
-  //TODO: Check styling of backgrounds
-
   return (
     <m.button
       className={cl(
