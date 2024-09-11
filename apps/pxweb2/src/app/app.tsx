@@ -497,17 +497,15 @@ export function App() {
       </select>
       <br />
       <br />
-      <div className={styles.variableListContainer}>
-        <VariableList
-          pxTableMetadata={pxTableMetaToRender}
-          selectedVBValues={selectedVBValues}
-          isLoadingMetadata={isLoadingMetadata}
-          hasLoadedDefaultSelection={hasLoadedDefaultSelection}
-          handleCodeListChange={handleCodeListChange}
-          handleCheckboxChange={handleCheckboxChange}
-          handleMixedCheckboxChange={handleMixedCheckboxChange}
-        />
-      </div>
+      <VariableList
+        pxTableMetadata={pxTableMetaToRender}
+        selectedVBValues={selectedVBValues}
+        isLoadingMetadata={isLoadingMetadata}
+        hasLoadedDefaultSelection={hasLoadedDefaultSelection}
+        handleCodeListChange={handleCodeListChange}
+        handleCheckboxChange={handleCheckboxChange}
+        handleMixedCheckboxChange={handleMixedCheckboxChange}
+      />
     </>
   );
   const drawerView = <>View content</>;
@@ -552,19 +550,19 @@ export function App() {
                     </div>
                   )}
 
-                {!isLoadingMetadata && isMissingMandatoryVariables && (
-                  <EmptyState
-                  svgName="ManWithMagnifyingGlass"
-                  headingTxt={t(
-                    'presentation_page.main_content.table.warnings.missing_mandatory.title'
+                  {!isLoadingMetadata && isMissingMandatoryVariables && (
+                    <EmptyState
+                      svgName="ManWithMagnifyingGlass"
+                      headingTxt={t(
+                        'presentation_page.main_content.table.warnings.missing_mandatory.title'
+                      )}
+                      descriptionTxt={t(
+                        'presentation_page.main_content.table.warnings.missing_mandatory.description'
+                      )}
+                    />
                   )}
-                  descriptionTxt={t(
-                    'presentation_page.main_content.table.warnings.missing_mandatory.description'
-                  )}
-                />
-                )}
-              </>
-            )}{' '}
+                </>
+              )}{' '}
             </div>
             <Footer />
           </div>
