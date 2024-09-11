@@ -10,7 +10,6 @@ import {
   ColorSurfaceActionSubtleActive,
   ColorSurfaceActionSubtleHover,
 } from '@pxweb2/pxweb2-ui';
-
 import styles from './NavigationItem.module.scss';
 
 // Framer Motion spring animation configuration
