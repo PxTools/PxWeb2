@@ -477,37 +477,17 @@ export function App() {
   };
 
   const drawerFilter = (
-    <>
-      <select
-        name="tabid"
-        id="tabid"
-        value={tableId}
-        onChange={(e) => {
-          setSelectedTableId(e.target.value);
-          navigate(`/table/${e.target.value}`);
-        }}
-      >
-        <option value="TAB638">TAB638</option>
-        <option value="TAB1292">TAB1292</option>
-        <option value="TAB5659">TAB5659</option>
-        <option value="TAB1544">TAB1544 (decimals)</option>
-        <option value="TAB4246">TAB4246 (decimals)</option>
-        <option value="TAB1128">TAB1128 (large)</option>
-      </select>
-      <br />
-      <br />
-      <div className={styles.variableListContainer}>
-        <VariableList
-          pxTableMetadata={pxTableMetaToRender}
-          selectedVBValues={selectedVBValues}
-          isLoadingMetadata={isLoadingMetadata}
-          hasLoadedDefaultSelection={hasLoadedDefaultSelection}
-          handleCodeListChange={handleCodeListChange}
-          handleCheckboxChange={handleCheckboxChange}
-          handleMixedCheckboxChange={handleMixedCheckboxChange}
-        />
-      </div>
-    </>
+    <div className={styles.variableListContainer}>
+      <VariableList
+        pxTableMetadata={pxTableMetaToRender}
+        selectedVBValues={selectedVBValues}
+        isLoadingMetadata={isLoadingMetadata}
+        hasLoadedDefaultSelection={hasLoadedDefaultSelection}
+        handleCodeListChange={handleCodeListChange}
+        handleCheckboxChange={handleCheckboxChange}
+        handleMixedCheckboxChange={handleMixedCheckboxChange}
+      />
+    </div>
   );
   const drawerView = <>View content</>;
   const drawerEdit = <>Edit content</>;
