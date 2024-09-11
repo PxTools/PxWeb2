@@ -10,15 +10,8 @@
   flex-shrink: 0;
   background: var(--px-color-surface-default);
 
-  @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
-    display: flex;
-  }
-
-  @media (min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width) {
-    display: flex;
-  }
-
-  @media (min-width: fixed.$breakpoints-xlarge-min-width) {
+  // medium, large and xlarge
+  @media ((min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-large-max-width)) or ((min-width: fixed.$breakpoints-xlarge-min-width)) {
     display: flex;
   }
 }
