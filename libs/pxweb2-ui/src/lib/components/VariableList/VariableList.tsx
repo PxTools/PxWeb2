@@ -1,6 +1,3 @@
-import cl from 'clsx';
-
-import classes from './VariableList.module.scss';
 import { SelectedVBValues, VariableBox } from '../VariableBox/VariableBox';
 import { PxTableMetadata } from '../../shared-types/pxTableMetadata';
 import { SelectOption } from '../Select/Select';
@@ -8,7 +5,6 @@ import { SelectOption } from '../Select/Select';
 export type VariableListProps = {
   pxTableMetadata: PxTableMetadata | null;
   isLoadingMetadata: boolean;
-  hasLoadedDefaultSelection: boolean;
   selectedVBValues: SelectedVBValues[];
 
   // TODO: Optimise here? Duplicate with props in VariableBox
@@ -23,7 +19,6 @@ export type VariableListProps = {
 export function VariableList({
   pxTableMetadata,
   isLoadingMetadata,
-  hasLoadedDefaultSelection,
   selectedVBValues,
   handleCodeListChange,
   handleCheckboxChange,
@@ -31,7 +26,6 @@ export function VariableList({
 }: VariableListProps) {
   return (
     !isLoadingMetadata &&
-    hasLoadedDefaultSelection &&
     pxTableMetadata &&
     pxTableMetadata.variables.length > 0 &&
     pxTableMetadata.variables.map(

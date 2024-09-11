@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './NavigationBar.module.scss';
 import { useTranslation } from 'react-i18next';
 import { Item } from '../NavigationRail/NavigationRail';
-import { NavigationItem } from '../../app';
+import { NavigationItem } from '../../components/Pages/TableView/TableView';
 
 interface NavigationBarProps {
   selected: NavigationItem;
