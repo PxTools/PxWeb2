@@ -35,7 +35,8 @@ export const Item: React.FC<ItemProps> = ({
   onClick,
 }) => {
   const btnId = 'px-' + parentName + '-' + label;
-  const initialBaseBackgroundColor = parentName === 'navBar' ? ColorSurfaceSubtle : ColorSurfaceDefault;
+  const initialBaseBackgroundColor =
+    parentName === 'navBar' ? ColorSurfaceSubtle : ColorSurfaceDefault;
   const initialBackgroundColor = selected
     ? ColorSurfaceActionSubtleActive
     : initialBaseBackgroundColor;
