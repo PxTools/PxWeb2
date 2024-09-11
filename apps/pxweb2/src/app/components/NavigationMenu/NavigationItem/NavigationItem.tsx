@@ -6,6 +6,7 @@ import {
   IconProps,
   Label,
   ColorSurfaceDefault,
+  ColorSurfaceSubtle,
   ColorSurfaceActionSubtleActive,
   ColorSurfaceActionSubtleHover,
 } from '@pxweb2/pxweb2-ui';
@@ -22,7 +23,7 @@ const springConfig = {
 
 interface ItemProps {
   label: string;
-  parentName: string;
+  parentName: 'navBar' | 'navRail';
   selected: boolean;
   icon: IconProps['iconName'];
   onClick: () => void;
@@ -35,9 +36,10 @@ export const Item: React.FC<ItemProps> = ({
   onClick,
 }) => {
   const btnId = 'px-' + parentName + '-' + label;
+  const initialBaseBackgroundColor = parentName === 'navBar' ? ColorSurfaceSubtle : ColorSurfaceDefault;
   const initialBackgroundColor = selected
     ? ColorSurfaceActionSubtleActive
-    : ColorSurfaceDefault;
+    : initialBaseBackgroundColor;
   const buttonVariants = {
     initial: {
       backgroundColor: initialBackgroundColor, // TODO: Fix bug, initial color flashes when clicking a selected button
