@@ -24,7 +24,7 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
   return (
     <>
       <div className={styles.backdrop}></div>
-      <div className={styles.navigationDrawer}>
+      <div className={cl(styles.navigationDrawer, styles.fadein)}>
         <div className={styles.heading}>
           <Heading level="2" size="medium">
             {heading}

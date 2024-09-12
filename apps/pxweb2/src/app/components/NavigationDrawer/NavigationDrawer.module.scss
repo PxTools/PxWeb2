@@ -98,3 +98,16 @@
     z-index: 999;
   }
 }
+
+.fadein {
+  animation: fadeIn 200ms forwards;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
