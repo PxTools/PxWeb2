@@ -1,7 +1,7 @@
 import React from 'react';
 import cl from 'clsx';
 import styles from './NavigationDrawer.module.scss';
-import { Button, Heading, Icon, Label } from '@pxweb2/pxweb2-ui';
+import { Heading, Icon, Label } from '@pxweb2/pxweb2-ui';
 import { useTranslation } from 'react-i18next';
 import i18next from 'i18next';
 

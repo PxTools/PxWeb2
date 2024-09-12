@@ -34,3 +34,9 @@
   gap: fixed.$spacing-3;
   align-self: stretch;
 }
+
+.lastUpdatedLabel {
+  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
+    display: none;
+  }
+}

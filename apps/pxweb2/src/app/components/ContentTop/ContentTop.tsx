@@ -38,7 +38,7 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
           </Button>
           {pxtable.metadata && (
             <BodyShort size="medium">
-              {t('presentation_page.main_content.last_updated')}:{' '}
+              <span className={classes.lastUpdatedLabel}>{t('presentation_page.main_content.last_updated')}:{' '}</span>
               {t('date.simple_date_with_time', {
                 value: new Date(pxtable.metadata.updated),
               })}{' '}
