@@ -60,9 +60,30 @@
 
 .heading {
   display: flex;
-  align-items: center;
+  height: fixed.$spacing-11;
+  padding: 0px fixed.$spacing-4 0px fixed.$spacing-5;
   justify-content: space-between;
-  width: 100%;
+  align-items: center;
+  flex-shrink: 0;
+  align-self: stretch;
+  border-radius: var(--px-border-radius-large);
+}
+
+.hideMenu {
+  display: flex;
+  flex-direction: row;
+}
+
+.clickable {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.hideIconWrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: fixed.$spacing-1;
 }
 
 // Not from Figma
