@@ -24,8 +24,13 @@
     justify-content: center;
     align-items: flex-start;
     flex-shrink: 0;
-    border-radius: var(--px-border-radius-xlarge) var(--px-border-radius-none)
-      var(--px-border-radius-none) var(--px-border-radius-none);
+
+    // Handle rtl languages
+    border-start-start-radius: var(--px-border-radius-xlarge);
+    border-start-end-radius: var(--px-border-radius-none);
+    border-end-end-radius: var(--px-border-radius-none);
+    border-end-start-radius: var(--px-border-radius-none);
+    
     padding: fixed.$spacing-6 fixed.$spacing-6 0px fixed.$spacing-6;
   }
 
