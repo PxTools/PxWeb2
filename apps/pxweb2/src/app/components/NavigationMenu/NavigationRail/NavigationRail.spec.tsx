@@ -72,7 +72,12 @@ describe('NavigationRail', () => {
     const filterButton = baseElement.querySelector(`[class^="_selected"]`);
 
     // Since i18n is used in a test, it returns the translation key instead of the actual text
-    expect(getByText(filterButton as HTMLElement, 'presentation_page.sidemenu.selection.title')).toBeTruthy();
+    expect(
+      getByText(
+        filterButton as HTMLElement,
+        'presentation_page.sidemenu.selection.title'
+      )
+    ).toBeTruthy();
   });
 
   it('should render an SVG', () => {
@@ -90,3 +95,4 @@ describe('NavigationRail', () => {
     expect(svg).toBeTruthy();
   });
 });
+ 
