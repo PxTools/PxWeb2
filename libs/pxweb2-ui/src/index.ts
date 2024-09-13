@@ -24,3 +24,4 @@ export * from './lib/shared-types/pxTableData';
 export * from './lib/shared-types/value';
 export * from './lib/shared-types/variable';
 export * from './lib/shared-types/vartypeEnum';
+export * from './../style-dictionary/dist/js/css-variables';

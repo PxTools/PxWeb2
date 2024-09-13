@@ -480,6 +480,7 @@ export function App() {
     <>
       <select
         name="tabid"
+        title='Select a table'
         id="tabid"
         value={tableId}
         onChange={(e) => {
