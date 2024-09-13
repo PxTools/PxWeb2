@@ -19,9 +19,10 @@ import { TableService } from '@pxweb2/pxweb2-api-client';
 import { mapTableMetadataResponse } from '../mappers/TableMetadataResponseMapper';
 import { mapTableSelectionResponse } from '../mappers/TableSelectionResponseMapper';
 import { Header } from './components/Header/Header';
-import NavigationRail from './components/NavigationRail/NavigationRail';
 import { Content } from './components/Content/Content';
-import NavigationBar from './components/NavigationBar/NavigationBar';
+import { NavigationItem } from './components/NavigationMenu/NavigationItem/NavigationItemType';
+import NavigationRail from './components/NavigationMenu/NavigationRail/NavigationRail';
+import NavigationBar from './components/NavigationMenu/NavigationBar/NavigationBar';
 import NavigationDrawer from './components/NavigationDrawer/NavigationDrawer';
 import useVariables from './context/useVariables';
 import useTableData from './context/useTableData';
@@ -178,14 +179,6 @@ function removeAllValuesOfVariable(
 
   return newValues;
 }
-
-export type NavigationItem =
-  | 'none'
-  | 'filter'
-  | 'view'
-  | 'edit'
-  | 'save'
-  | 'help';
 
 export function App() {
   const { tableId } = useParams<{ tableId: string }>();
@@ -481,6 +474,7 @@ export function App() {
     <>
       <select
         name="tabid"
+        title="Select a table"
         id="tabid"
         value={tableId}
         onChange={(e) => {

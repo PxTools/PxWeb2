@@ -51,7 +51,7 @@
     "sidemenu": {
       "hide": "Skjul meny",
       "selection": {
-        "title": "Filter",
+        "title": "Filtrer",
         "variablebox": {
           "search": {
             "placeholder": "Søk",
@@ -81,7 +81,7 @@
         }
       },
       "view": {
-        "title": "Vis",
+        "title": "Visning",
         "table": {
           "title": "Tabell"
         },
