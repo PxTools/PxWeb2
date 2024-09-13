@@ -15,7 +15,7 @@
 
   // xsmall and small
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
-    width: 380px;
+    width: 384px;
     height: 100vh;
     padding: fixed.$spacing-6;
 
@@ -33,7 +33,7 @@
 
   // medium
   @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
-    width: 380px;
+    width: 384x;
     height: calc(100vh - 88px);
     padding: fixed.$spacing-6;
 
@@ -52,7 +52,7 @@
 
   // large and xlarge
   @media ((min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width)) or ((min-width: fixed.$breakpoints-xlarge-min-width)) {
-    width: 348px;
+    width: 360px;
     padding: 0px fixed.$spacing-6 fixed.$spacing-6 0px;
     border-radius: var(--px-border-radius-none);
   }
