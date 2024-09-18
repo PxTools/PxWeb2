@@ -1,7 +1,6 @@
-/*
- * Replace this with your own classes
- *
- * e.g.
- * .container {
- * }
-*/
+@use '$ui/style-dictionary/dist/scss/fixed-variables.scss' as fixed;
+.variableListContainer {
+    display: flex;
+    flex-direction: column;
+    gap: fixed.$spacing-2;
+  }
