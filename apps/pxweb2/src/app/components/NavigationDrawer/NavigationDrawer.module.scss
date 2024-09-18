@@ -32,7 +32,7 @@
     border-start-end-radius: var(--px-border-radius-xlarge);
     border-end-end-radius: var(--px-border-radius-xlarge);
     border-end-start-radius: var(--px-border-radius-none);
-  
+
     // Not from Figma
     position: absolute;
     top: 0;
@@ -50,7 +50,7 @@
     border-start-end-radius: var(--px-border-radius-xlarge);
     border-end-end-radius: var(--px-border-radius-xlarge);
     border-end-start-radius: var(--px-border-radius-none);
-  
+
     // Not from Figma
     position: absolute;
     inset-inline-start: 120px; // Instead of "left" to handle rtl languages
@@ -81,6 +81,11 @@
   display: flex;
   flex-direction: row;
 }
+.hideMenu:hover {
+  .hideIconWrapper {
+    left: -2px;
+  }
+}
 
 .clickable {
   &:hover {
@@ -92,6 +97,9 @@
   display: flex;
   align-items: flex-start;
   gap: fixed.$spacing-1;
+  position: relative;
+  left: 0;
+  transition: left ease 0.1s;
 }
 
 // Not from Figma
