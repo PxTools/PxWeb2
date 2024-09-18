@@ -41,7 +41,7 @@
 
   // medium
   @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
-    width: 384x;
+    width: 384px;
     height: calc(100vh - 88px);
     padding: fixed.$spacing-6;
 
