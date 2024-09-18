@@ -74,7 +74,7 @@ export function Presentation({
         tableData.fetchTableData(tableId ? tableId : 'tab1292', i18n);
         setIsMissingMandatoryVariables(false);
       }
-      if (!hasSelectedMandatoryVariables) {
+      if (!hasSelectedMandatoryVariables && !initialRun) {
         setIsMissingMandatoryVariables(true);
       }
       if (initialRun) {
@@ -89,13 +89,13 @@ export function Presentation({
           <>
             <ContentTop staticTitle={label} pxtable={tableData.data} />
 
-            {!isMissingMandatoryVariables && (
+            {(!isMissingMandatoryVariables) && (
               <div className={styles.tableWrapper}>
                 <Table pxtable={tableData.data} />
               </div>
             )}
 
-            {!isLoadingMetadata && isMissingMandatoryVariables && (
+            {!isLoadingMetadata && isMissingMandatoryVariables &&(
               <EmptyState
                 svgName="ManWithMagnifyingGlass"
                 headingTxt={t(

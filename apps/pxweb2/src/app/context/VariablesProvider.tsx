@@ -110,8 +110,13 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
         if (!shouldGetDefaultSelection) {
           setIsLoadingMetadata(false);
 
-          return;
+      
         }
+      }).catch((error) => {
+        setErrorMsg('Could not get table: ' + tableId);
+        setPxTableMetadata(null);
+      });
+if (shouldGetDefaultSelection){
 
         TableService.getDefaultSelection(tableId, i18n.resolvedLanguage)
           .then((selectionResponse) => {
@@ -138,12 +143,7 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
         console.log(
           'PROVIDER 2 HasLoadedDefaultSelection=' + hasLoadedDefaultSelection
         );
-      })
-      .catch((error) => {
-        setErrorMsg('Could not get table: ' + tableId);
-        setPxTableMetadata(null);
-      });
-
+      }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   };
 
