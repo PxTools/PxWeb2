@@ -19,7 +19,7 @@ import { TableService } from '@pxweb2/pxweb2-api-client';
 import { mapTableMetadataResponse } from '../mappers/TableMetadataResponseMapper';
 import { mapTableSelectionResponse } from '../mappers/TableSelectionResponseMapper';
 import { Header } from './components/Header/Header';
-import { Content } from './components/Content/Content';
+//import { Content } from './components/Content/Content';
 import { NavigationItem } from './components/NavigationMenu/NavigationItem/NavigationItemType';
 import NavigationRail from './components/NavigationMenu/NavigationRail/NavigationRail';
 import NavigationBar from './components/NavigationMenu/NavigationBar/NavigationBar';
@@ -27,6 +27,7 @@ import NavigationDrawer from './components/NavigationDrawer/NavigationDrawer';
 import useVariables from './context/useVariables';
 import useTableData from './context/useTableData';
 import { Footer } from './components/Footer/Footer';
+import { BreakpointsSmallMaxWidth } from '@pxweb2/pxweb2-ui';
 
 function addSelectedCodeListToVariable(
   currentVariable: SelectedVBValues | undefined,
@@ -208,6 +209,21 @@ export function App() {
   );
   const [hasLoadedDefaultSelection, setHasLoadedDefaultSelection] =
     useState(false);
+
+  const mobileBreakpoint = Number(BreakpointsSmallMaxWidth.replace('px', ''));
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= mobileBreakpoint);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= mobileBreakpoint);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [mobileBreakpoint]);
 
   /**
    * Updates useState hook and synchronizes variables context with the selected VB values.
@@ -509,12 +525,14 @@ export function App() {
 
   return (
     <>
-      <Header />
+      {!isMobile && <Header />}{' '}
       <div className={styles.navigationAndContentContainer}>
-        <NavigationRail
-          onChange={changeSelectedNavView}
-          selected={selectedNavigationView}
-        />
+        {!isMobile && (
+          <NavigationRail
+            onChange={changeSelectedNavView}
+            selected={selectedNavigationView}
+          />
+        )}{' '}
         <div className={styles.mainContainer}>
           {selectedNavigationView !== 'none' && (
             <NavigationDrawer
@@ -529,8 +547,9 @@ export function App() {
               {selectedNavigationView === 'save' && drawerSave}
               {selectedNavigationView === 'help' && drawerHelp}
             </NavigationDrawer>
-          )}
+          )}{' '}
           <div className={styles.contentAndFooterContainer}>
+            {isMobile && <Header />}{' '}
             <div className={styles.contentContainer}>
               {tableData.data && pxTableMetadata && (
                 <>
@@ -562,10 +581,12 @@ export function App() {
           </div>
         </div>
       </div>
-      <NavigationBar
-        onChange={changeSelectedNavView}
-        selected={selectedNavigationView}
-      />
+      {isMobile && (
+        <NavigationBar
+          onChange={changeSelectedNavView}
+          selected={selectedNavigationView}
+        />
+      )}{' '}
     </>
   );
 }
