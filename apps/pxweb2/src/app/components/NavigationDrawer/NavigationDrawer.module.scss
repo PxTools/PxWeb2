@@ -83,7 +83,7 @@
 }
 .hideMenu:hover {
   .hideIconWrapper {
-    left: -2px;
+    inset-inline-start: -2px;
   }
 }
 
@@ -98,8 +98,8 @@
   align-items: flex-start;
   gap: fixed.$spacing-1;
   position: relative;
-  left: 0;
-  transition: left ease 0.1s;
+  inset-inline-start: 0;
+  transition: inset-inline-start ease 0.1s;
 }
 
 // Not from Figma
