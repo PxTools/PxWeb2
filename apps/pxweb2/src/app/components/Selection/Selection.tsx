@@ -434,23 +434,6 @@ export function Selection({
     )}
 
 </div>
-
-
-    // <div>
-    //   <div className={styles.variableListContainer}>
-    //     {selectedNavigationView && (
-    //       <VariableList
-    //         pxTableMetadata={pxTableMetaToRender}
-    //         selectedVBValues={selectedVBValues}
-    //         isLoadingMetadata={isLoadingMetadata}
-    //         hasLoadedDefaultSelection={hasLoadedDefaultSelection}
-    //         handleCodeListChange={handleCodeListChange}
-    //         handleCheckboxChange={handleCheckboxChange}
-    //         handleMixedCheckboxChange={handleMixedCheckboxChange}
-    //       />
-    //     )}
-    //   </div>
-    // </div>
   );
 }
 

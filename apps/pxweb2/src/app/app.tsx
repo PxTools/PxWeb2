@@ -65,38 +65,72 @@ export function App() {
 
 
   
+  // return (
+  //   <>
+  //     <Header />
+  //     <div className={styles.main}>
+  //       <div className={styles.desktopNavigation}>
+  //         <NavigationRail
+  //           onChange={changeSelectedNavView}
+  //           selected={selectedNavigationView}
+  //         />
+  //         <Selection
+  //           selectedNavigationView={selectedNavigationView}
+  //           selectedTabId={selectedTableId}
+  //           setSelectedNavigationView={changeSelectedNavView}
+  //           setSelectedTableId={setSelectedTableId}
+  //         />
+  //       </div>
+  //       <div className={cl(styles.mobileNavigation, styles.scrollable)}>
+  //         <NavigationBar
+  //           onChange={changeSelectedNavView}
+  //           selected={selectedNavigationView}
+  //         />
+  //       </div>
+  //       {
+  //         <Presentation
+  //           selectedTabId={selectedTableId}
+  //           selectedNavigationView={selectedNavigationView}
+  //         ></Presentation>
+  //       }
+  //       {}
+  //     </div>
+  //   </>
+  // );
+
   return (
     <>
       <Header />
-      <div className={styles.main}>
-        <div className={styles.desktopNavigation}>
-          <NavigationRail
-            onChange={changeSelectedNavView}
-            selected={selectedNavigationView}
-          />
-          <Selection
+      <div className={styles.navigationAndContentContainer}>
+        <NavigationRail
+          onChange={changeSelectedNavView}
+          selected={selectedNavigationView}
+        />
+        <div className={styles.mainContainer}>
+        <Selection
             selectedNavigationView={selectedNavigationView}
             selectedTabId={selectedTableId}
             setSelectedNavigationView={changeSelectedNavView}
             setSelectedTableId={setSelectedTableId}
           />
+          <div className={styles.contentAndFooterContainer}>
+            <div className={styles.contentContainer}>
+                 <Presentation
+           selectedTabId={selectedTableId}
+           selectedNavigationView={selectedNavigationView}
+         ></Presentation>
+            </div>
+            {/* <Footer /> */}
+          </div>
         </div>
-        <div className={cl(styles.mobileNavigation, styles.scrollable)}>
-          <NavigationBar
-            onChange={changeSelectedNavView}
-            selected={selectedNavigationView}
-          />
-        </div>
-        {
-          <Presentation
-            selectedTabId={selectedTableId}
-            selectedNavigationView={selectedNavigationView}
-          ></Presentation>
-        }
-        {}
       </div>
+      <NavigationBar
+        onChange={changeSelectedNavView}
+        selected={selectedNavigationView}
+      />
     </>
   );
+
 }
 
 export default App;
