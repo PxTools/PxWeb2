@@ -4,3 +4,8 @@
     flex-direction: column;
     gap: fixed.$spacing-2;
   }
+  .scrollable {
+    height: 100vh;
+    align-self: stretch;
+    overflow-y: auto;
+  }

@@ -1,6 +1,7 @@
 import styles from './Selection.module.scss';
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import cl from 'clsx';
 
 import {
@@ -15,6 +16,8 @@ import { mapTableMetadataResponse } from '../../../mappers/TableMetadataResponse
 import { mapTableSelectionResponse } from '../../../mappers/TableSelectionResponseMapper';
 import NavigationDrawer from '../../components/NavigationDrawer/NavigationDrawer';
 import useVariables from '../../context/useVariables';
+import {NavigationItem} from '../../app'
+import { table } from 'console';
 
 function addSelectedCodeListToVariable(
   currentVariable: SelectedVBValues | undefined,
@@ -172,10 +175,14 @@ function removeAllValuesOfVariable(
 type propsType = {
   selectedNavigationView: string;
   selectedTabId: string;
+  setSelectedTableId: React.Dispatch<React.SetStateAction<string>>;
+  setSelectedNavigationView:(view:NavigationItem)=>void;
 };
 export function Selection({
   selectedNavigationView,
   selectedTabId,
+  setSelectedNavigationView,
+  setSelectedTableId
 }: propsType) {
   const { selectedVBValues, setSelectedVBValues } = useVariables();
 
@@ -193,6 +200,10 @@ export function Selection({
 
   const { isLoadingMetadata } = useVariables();
   const { pxTableMetadata } = useVariables();
+  // const [selectedTableId, setSelectedTableId] = useState(
+  //   selectedTabId ? selectedTabId : 'tab638'
+  // );
+  // const navigate=useNavigate();
 
   useEffect(() => {
     variables.fetchMetaData(selectedTabId);
@@ -366,22 +377,80 @@ export function Selection({
     return dummyValues;
   };
 
+  const drawerFilter = (
+    <>
+      <select
+        name="tabid"
+        title="Select a table"
+        id="tabid"
+        value={pxTableMetadata?.id}
+        onChange={(e) => {
+          setSelectedTableId(e.target.value);        
+          // navigate(`/table/${e.target.value}`);
+        }}
+      >
+        <option value="TAB638">TAB638</option>
+        <option value="TAB1292">TAB1292</option>
+        <option value="TAB5659">TAB5659</option>
+        <option value="TAB1544">TAB1544 (decimals)</option>
+        <option value="TAB4246">TAB4246 (decimals)</option>
+        <option value="TAB1128">TAB1128 (large)</option>
+      </select>
+      <br />
+      <br />
+      <VariableList
+        pxTableMetadata={pxTableMetaToRender}
+        selectedVBValues={selectedVBValues}
+        isLoadingMetadata={isLoadingMetadata}
+        hasLoadedDefaultSelection={hasLoadedDefaultSelection}
+        handleCodeListChange={handleCodeListChange}
+        handleCheckboxChange={handleCheckboxChange}
+        handleMixedCheckboxChange={handleMixedCheckboxChange}
+      />
+    </>
+  );
+  const drawerView = <>View content</>;
+  const drawerEdit = <>Edit content</>;
+  const drawerSave = <>Save content</>;
+  const drawerHelp = <>Help content</>;
+
+
+
   return (
-    <div>
-      <div className={styles.variableListContainer}>
-        {selectedNavigationView && (
-          <VariableList
-            pxTableMetadata={pxTableMetaToRender}
-            selectedVBValues={selectedVBValues}
-            isLoadingMetadata={isLoadingMetadata}
-            hasLoadedDefaultSelection={hasLoadedDefaultSelection}
-            handleCodeListChange={handleCodeListChange}
-            handleCheckboxChange={handleCheckboxChange}
-            handleMixedCheckboxChange={handleMixedCheckboxChange}
-          />
-        )}
-      </div>
-    </div>
+    <div className={styles.scrollable}> 
+    {selectedNavigationView !== 'none' && (
+      <NavigationDrawer
+        heading={t('presentation_page.sidemenu.selection.title')}
+        onClose={() => {
+          setSelectedNavigationView('none');
+        }}
+      >
+        {selectedNavigationView === 'filter' && drawerFilter}
+        {selectedNavigationView === 'view' && drawerView}
+        {selectedNavigationView === 'edit' && drawerEdit}
+        {selectedNavigationView === 'save' && drawerSave}
+        {selectedNavigationView === 'help' && drawerHelp}
+      </NavigationDrawer>
+    )}
+
+</div>
+
+
+    // <div>
+    //   <div className={styles.variableListContainer}>
+    //     {selectedNavigationView && (
+    //       <VariableList
+    //         pxTableMetadata={pxTableMetaToRender}
+    //         selectedVBValues={selectedVBValues}
+    //         isLoadingMetadata={isLoadingMetadata}
+    //         hasLoadedDefaultSelection={hasLoadedDefaultSelection}
+    //         handleCodeListChange={handleCodeListChange}
+    //         handleCheckboxChange={handleCheckboxChange}
+    //         handleMixedCheckboxChange={handleMixedCheckboxChange}
+    //       />
+    //     )}
+    //   </div>
+    // </div>
   );
 }
 
