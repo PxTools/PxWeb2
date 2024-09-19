@@ -127,3 +127,19 @@
     opacity: 1;
   }
 }
+
+// Animation that slides in NavigationDrawer from the left when opened.
+// Needs position to be absolute so it only works on screen size xsmall, small and medium at the moment.
+// Add class "slidein" to NavigationDrawer component in NavigationDrawer.tsx to use this animation.
+// .slidein {
+//   animation: slideIn 300ms forwards;
+// }
+
+// @keyframes slideIn {
+//   0% {
+//     left: -400px;
+//   }
+//   100% {
+//     left: 0;
+//   }
+// }
