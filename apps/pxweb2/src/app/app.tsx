@@ -11,19 +11,13 @@ import { Presentation } from './components/Presentation/Presentation';
 import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
 
 import { Header } from './components/Header/Header';
-import NavigationRail from './components/NavigationRail/NavigationRail';
-import NavigationBar from './components/NavigationBar/NavigationBar';
-// import NavigationDrawer from './components/NavigationDrawer/NavigationDrawer';
-// import useVariables from './context/useVariables';
-// import useTableData from './context/useTableData';
 
-export type NavigationItem =
-  | 'none'
-  | 'filter'
-  | 'view'
-  | 'edit'
-  | 'save'
-  | 'help';
+import { NavigationItem } from './components/NavigationMenu/NavigationItem/NavigationItemType';
+import NavigationRail from './components/NavigationMenu/NavigationRail/NavigationRail';
+import NavigationBar from './components/NavigationMenu/NavigationBar/NavigationBar';
+
+import { Footer } from './components/Footer/Footer';
+
 
 export function App() {
   const { tableId } = useParams<{ tableId: string }>();
@@ -64,40 +58,6 @@ export function App() {
 
 
 
-  
-  // return (
-  //   <>
-  //     <Header />
-  //     <div className={styles.main}>
-  //       <div className={styles.desktopNavigation}>
-  //         <NavigationRail
-  //           onChange={changeSelectedNavView}
-  //           selected={selectedNavigationView}
-  //         />
-  //         <Selection
-  //           selectedNavigationView={selectedNavigationView}
-  //           selectedTabId={selectedTableId}
-  //           setSelectedNavigationView={changeSelectedNavView}
-  //           setSelectedTableId={setSelectedTableId}
-  //         />
-  //       </div>
-  //       <div className={cl(styles.mobileNavigation, styles.scrollable)}>
-  //         <NavigationBar
-  //           onChange={changeSelectedNavView}
-  //           selected={selectedNavigationView}
-  //         />
-  //       </div>
-  //       {
-  //         <Presentation
-  //           selectedTabId={selectedTableId}
-  //           selectedNavigationView={selectedNavigationView}
-  //         ></Presentation>
-  //       }
-  //       {}
-  //     </div>
-  //   </>
-  // );
-
   return (
     <>
       <Header />
@@ -107,6 +67,7 @@ export function App() {
           selected={selectedNavigationView}
         />
         <div className={styles.mainContainer}>
+
         <Selection
             selectedNavigationView={selectedNavigationView}
             selectedTabId={selectedTableId}
@@ -120,7 +81,8 @@ export function App() {
            selectedNavigationView={selectedNavigationView}
          ></Presentation>
             </div>
-            {/* <Footer /> */}
+             <Footer /> 
+
           </div>
         </div>
       </div>

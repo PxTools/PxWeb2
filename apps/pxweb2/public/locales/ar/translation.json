@@ -22,8 +22,10 @@
     "welcome_trans_test": "مرحبًا بك في <1>التطبيق</1> لـ PxWeb 2.0!"
   },
   "presentation_page": {
+    "hide": "يخفي",
     "sidemenu": {
       "selection": {
+        "title": "صفى",
         "variablebox": {
           "search": {
             "placeholder": "عيب",
@@ -51,6 +53,24 @@
             }
           }
         }
+      },
+      "view": {
+        "title": "عرض",
+        "table": {
+          "title": "طاولة"
+        },
+        "graph": {
+          "title": "الرسم البياني"
+        }
+      },
+      "edit": {
+        "title": "يحرر"
+      },
+      "save": {
+        "title": "يحفظ"
+      },
+      "help": {
+        "title": "يساعد"
       }
     },
     "main_content": {

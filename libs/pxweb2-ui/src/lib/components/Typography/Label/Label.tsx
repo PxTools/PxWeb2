@@ -9,6 +9,7 @@ export interface LabelProps
   textcolor?: 'default' | 'subtle';
   visuallyHidden?: boolean;
   children?: React.ReactNode;
+  className?: string;
 }
 
 export function Label({
@@ -16,8 +17,11 @@ export function Label({
   textcolor = 'default',
   visuallyHidden = false,
   children,
+  className = '',
   ...rest
 }: LabelProps) {
+  const cssClasses = className.length > 0 ? ' ' + className : '';
+
   return (
     <label
       className={cl(
@@ -25,7 +29,7 @@ export function Label({
         classes[`label-${size}`],
         cl({ [classes[`textcolor-${textcolor}`]]: textcolor }),
         cl({ [classes['visually-hidden']]: visuallyHidden })
-      )}
+      ) + cssClasses}
       {...rest}
     >
       {children}

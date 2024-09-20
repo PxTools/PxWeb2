@@ -1,4 +1,9 @@
+@use '../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixed;
+
 .variableList {
   width: auto;
   height: auto;
+  display: flex;
+  flex-direction: column;
+  gap: fixed.$spacing-3;
 }
