@@ -16,7 +16,7 @@ import { mapTableMetadataResponse } from '../../../mappers/TableMetadataResponse
 import { mapTableSelectionResponse } from '../../../mappers/TableSelectionResponseMapper';
 import NavigationDrawer from '../../components/NavigationDrawer/NavigationDrawer';
 import useVariables from '../../context/useVariables';
-import {NavigationItem} from '../../app'
+import { NavigationItem } from '../../components/NavigationMenu/NavigationItem/NavigationItemType';
 import { table } from 'console';
 
 function addSelectedCodeListToVariable(
