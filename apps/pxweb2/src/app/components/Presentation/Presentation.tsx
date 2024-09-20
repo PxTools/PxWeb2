@@ -83,33 +83,61 @@ export function Presentation({
     }
   }, [tableId,selectedVBValues, i18n.resolvedLanguage]);
   return (
-    <div className={styles.scrollable}>
-      <Content topLeftBorderRadius={selectedNavigationView === 'none'}>
-        {tableData.data && pxTableMetadata && (
-          <>
-            <ContentTop staticTitle={label} pxtable={tableData.data} />
+    <>
+    {tableData.data && pxTableMetadata && (
+      <>
+        <ContentTop
+          staticTitle={pxTableMetadata?.label}
+          pxtable={tableData.data}
+        />
+        {!isMissingMandatoryVariables && (
+          <div className={styles.tableContainer}>
+            <Table pxtable={tableData.data} />
+          </div>
+        )}
 
-            {(!isMissingMandatoryVariables) && (
-              <div className={styles.tableWrapper}>
-                <Table pxtable={tableData.data} />
-              </div>
+        {!isLoadingMetadata && isMissingMandatoryVariables && (
+          <EmptyState
+            svgName="ManWithMagnifyingGlass"
+            headingTxt={t(
+              'presentation_page.main_content.table.warnings.missing_mandatory.title'
             )}
+            descriptionTxt={t(
+              'presentation_page.main_content.table.warnings.missing_mandatory.description'
+            )}
+          />
+        )}
+      </>
+    )}{' '}
+</>
 
-            {!isLoadingMetadata && isMissingMandatoryVariables &&(
-              <EmptyState
-                svgName="ManWithMagnifyingGlass"
-                headingTxt={t(
-                  'presentation_page.main_content.table.warnings.missing_mandatory.title'
-                )}
-                descriptionTxt={t(
-                  'presentation_page.main_content.table.warnings.missing_mandatory.description'
-                )}
-              />
-            )}
-          </>
-        )}{' '}
-      </Content>
-    </div>
+    // <div className={styles.scrollable}>
+    //   <Content topLeftBorderRadius={selectedNavigationView === 'none'}>
+    //     {tableData.data && pxTableMetadata && (
+    //       <>
+    //         <ContentTop staticTitle={label} pxtable={tableData.data} />
+
+    //         {(!isMissingMandatoryVariables) && (
+    //           <div className={styles.tableWrapper}>
+    //             <Table pxtable={tableData.data} />
+    //           </div>
+    //         )}
+
+    //         {!isLoadingMetadata && isMissingMandatoryVariables &&(
+    //           <EmptyState
+    //             svgName="ManWithMagnifyingGlass"
+    //             headingTxt={t(
+    //               'presentation_page.main_content.table.warnings.missing_mandatory.title'
+    //             )}
+    //             descriptionTxt={t(
+    //               'presentation_page.main_content.table.warnings.missing_mandatory.description'
+    //             )}
+    //           />
+    //         )}
+    //       </>
+    //     )}{' '}
+    //   </Content>
+    // </div>
   );
 }
 
