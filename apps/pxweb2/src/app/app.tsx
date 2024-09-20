@@ -210,6 +210,10 @@ export function App() {
   const [hasLoadedDefaultSelection, setHasLoadedDefaultSelection] =
     useState(false);
 
+
+/**
+ * Keep state if window screen size is mobile or desktop.
+ */
   const mobileBreakpoint = Number(BreakpointsSmallMaxWidth.replace('px', ''));
   const [isMobile, setIsMobile] = useState(window.innerWidth <= mobileBreakpoint);
 
