@@ -18,7 +18,6 @@ import NavigationBar from './components/NavigationMenu/NavigationBar/NavigationB
 
 import { Footer } from './components/Footer/Footer';
 
-
 export function App() {
   const { tableId } = useParams<{ tableId: string }>();
   const navigate = useNavigate();
@@ -53,11 +52,6 @@ export function App() {
 
   useLocalizeDocumentAttributes();
 
-
-
-
-
-
   return (
     <>
       <Header />
@@ -67,8 +61,7 @@ export function App() {
           selected={selectedNavigationView}
         />
         <div className={styles.mainContainer}>
-
-        <Selection
+          <Selection
             selectedNavigationView={selectedNavigationView}
             selectedTabId={selectedTableId}
             setSelectedNavigationView={changeSelectedNavView}
@@ -76,13 +69,12 @@ export function App() {
           />
           <div className={styles.contentAndFooterContainer}>
             <div className={styles.contentContainer}>
-                 <Presentation
-           selectedTabId={selectedTableId}
-           selectedNavigationView={selectedNavigationView}
-         ></Presentation>
+              <Presentation
+                selectedTabId={selectedTableId}
+                selectedNavigationView={selectedNavigationView}
+              ></Presentation>
             </div>
-             <Footer /> 
-
+            <Footer />
           </div>
         </div>
       </div>
@@ -92,7 +84,6 @@ export function App() {
       />
     </>
   );
-
 }
 
 export default App;

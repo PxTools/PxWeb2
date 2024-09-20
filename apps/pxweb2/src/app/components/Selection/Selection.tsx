@@ -417,8 +417,8 @@ export function Selection({
 
 
   return (
-    <div className={styles.scrollable}> 
-    {selectedNavigationView !== 'none' && (
+    // <div className={styles.scrollable}> 
+     selectedNavigationView !== 'none' && (
       <NavigationDrawer
         heading={t('presentation_page.sidemenu.selection.title')}
         onClose={() => {
@@ -431,9 +431,9 @@ export function Selection({
         {selectedNavigationView === 'save' && drawerSave}
         {selectedNavigationView === 'help' && drawerHelp}
       </NavigationDrawer>
-    )}
+   )
 
-</div>
+// </div>
   );
 }
 
