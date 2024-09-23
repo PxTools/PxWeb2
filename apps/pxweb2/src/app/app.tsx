@@ -22,7 +22,6 @@ export function App() {
   const { tableId } = useParams<{ tableId: string }>();
   const navigate = useNavigate();
   const { i18n, t } = useTranslation();
-
   const [selectedTableId, setSelectedTableId] = useState(
     tableId ? tableId : 'tab638'
   );

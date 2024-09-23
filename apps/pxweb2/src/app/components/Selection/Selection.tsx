@@ -11,13 +11,9 @@ import {
   Value,
   SelectOption,
 } from '@pxweb2/pxweb2-ui';
-import { TableService } from '@pxweb2/pxweb2-api-client';
-import { mapTableMetadataResponse } from '../../../mappers/TableMetadataResponseMapper';
-import { mapTableSelectionResponse } from '../../../mappers/TableSelectionResponseMapper';
 import NavigationDrawer from '../../components/NavigationDrawer/NavigationDrawer';
 import useVariables from '../../context/useVariables';
 import { NavigationItem } from '../../components/NavigationMenu/NavigationItem/NavigationItemType';
-import { table } from 'console';
 
 function addSelectedCodeListToVariable(
   currentVariable: SelectedVBValues | undefined,
@@ -149,7 +145,6 @@ function removeAllValuesOfVariable(
   selectedValuesArr: SelectedVBValues[],
   varId: string
 ): SelectedVBValues[] {
-  // console.log('selectedValuesArr=' + JSON.stringify(selectedValuesArr))
   const newValues: SelectedVBValues[] = selectedValuesArr
     .map((variable) => {
       if (variable.id === varId) {
@@ -176,49 +171,31 @@ type propsType = {
   selectedNavigationView: string;
   selectedTabId: string;
   setSelectedTableId: React.Dispatch<React.SetStateAction<string>>;
-  setSelectedNavigationView:(view:NavigationItem)=>void;
+  setSelectedNavigationView: (view: NavigationItem) => void;
 };
 export function Selection({
   selectedNavigationView,
   selectedTabId,
   setSelectedNavigationView,
-  setSelectedTableId
+  setSelectedTableId,
 }: propsType) {
   const { selectedVBValues, setSelectedVBValues } = useVariables();
-
   const variables = useVariables();
-
   const [errorMsg, setErrorMsg] = useState('');
-
   const [pxTableMetaToRender, setPxTableMetaToRender] =
     // Metadata to render in the UI
     useState<PxTableMetadata | null>(null);
-
   const { i18n, t } = useTranslation();
-
   const { hasLoadedDefaultSelection } = useVariables();
-
   const { isLoadingMetadata } = useVariables();
   const { pxTableMetadata } = useVariables();
-  // const [selectedTableId, setSelectedTableId] = useState(
-  //   selectedTabId ? selectedTabId : 'tab638'
-  // );
-  // const navigate=useNavigate();
 
   useEffect(() => {
     variables.fetchMetaData(selectedTabId);
-    console.log('SELECT IsLoadingMetadata=' + isLoadingMetadata);
-    console.log(
-      'SELECT HasLoadedDefaultSelection=' + hasLoadedDefaultSelection
-    );
     if (pxTableMetaToRender !== null) {
       setPxTableMetaToRender(null);
     }
   }, [selectedTabId, i18n.resolvedLanguage]);
-
-  // if (pxTableMetaToRender !== null) {
-  //   setPxTableMetaToRender(null);
-  // }
 
   if (pxTableMetaToRender === null && pxTableMetadata !== null) {
     setPxTableMetaToRender(structuredClone(pxTableMetadata));
@@ -240,7 +217,6 @@ export function Selection({
     ) {
       return;
     }
-
     //  Incomplete selectItem
     if (!selectedItem.label || !selectedItem.value) {
       return;
@@ -331,7 +307,6 @@ export function Selection({
     varId: string,
     allValuesSelected: string
   ) => {
-    //console.log('2 selectedVBValues='+ JSON.stringify(selectedVBValues))
     const prevSelectedValues = structuredClone(selectedVBValues);
 
     if (allValuesSelected === 'true') {
@@ -339,7 +314,6 @@ export function Selection({
         prevSelectedValues,
         varId
       );
-
       updateAndSyncVBValues(newSelectedValues);
     }
     if (allValuesSelected === 'false' || allValuesSelected === 'mixed') {
@@ -385,7 +359,7 @@ export function Selection({
         id="tabid"
         value={pxTableMetadata?.id}
         onChange={(e) => {
-          setSelectedTableId(e.target.value);        
+          setSelectedTableId(e.target.value);
           // navigate(`/table/${e.target.value}`);
         }}
       >
@@ -414,11 +388,8 @@ export function Selection({
   const drawerSave = <>Save content</>;
   const drawerHelp = <>Help content</>;
 
-
-
   return (
-    // <div className={styles.scrollable}> 
-     selectedNavigationView !== 'none' && (
+    selectedNavigationView !== 'none' && (
       <NavigationDrawer
         heading={t('presentation_page.sidemenu.selection.title')}
         onClose={() => {
@@ -431,9 +402,7 @@ export function Selection({
         {selectedNavigationView === 'save' && drawerSave}
         {selectedNavigationView === 'help' && drawerHelp}
       </NavigationDrawer>
-   )
-
-// </div>
+    )
   );
 }
 

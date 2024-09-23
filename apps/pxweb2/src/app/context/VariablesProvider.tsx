@@ -91,8 +91,6 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
       shouldGetDefaultSelection = true;
       setPrevTableId(tableId);
     }
-
-    console.log('PROVIDER 22222 IsLoadingMetadata=' + isLoadingMetadata);
     if (isLoadingMetadata === false) {
       setIsLoadingMetadata(true);
     }
@@ -129,18 +127,10 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
           syncVariablesAndValues(defaultSelection);
           setIsLoadingMetadata(false);
           setHasLoadedDefaultSelection(true);
-          console.log('PROVIDER IsLoadingMetadata=' + isLoadingMetadata);
-          console.log(
-            'PROVIDER HasLoadedDefaultSelection=' + hasLoadedDefaultSelection
-          );
         })
         .catch((error) => {
           setErrorMsg('Error getting default selection: ' + tableId);
         });
-      console.log('PROVIDER 2 IsLoadingMetadata=' + isLoadingMetadata);
-      console.log(
-        'PROVIDER 2 HasLoadedDefaultSelection=' + hasLoadedDefaultSelection
-      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   };
