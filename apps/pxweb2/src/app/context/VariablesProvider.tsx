@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 
 // Define the type for the context
 export type VariablesContextType = {
-  variables: Map<string, { id: string; value: string }>;
+  // variables: Map<string, { id: string; value: string }>;
   addSelectedValues: (variableId: string, values: string[]) => void;
   removeSelectedValue: (variableId: string, value: string) => void;
   toggleSelectedValue: (variableId: string, value: string) => void;
@@ -23,14 +23,14 @@ export type VariablesContextType = {
   hasLoadedDefaultSelection: boolean;
   setSelectedVBValues: React.Dispatch<React.SetStateAction<SelectedVBValues[]>>;
   selectedVBValues: SelectedVBValues[];
-  setIsLoadingMetadata: React.Dispatch<React.SetStateAction<boolean>>;
+  // setIsLoadingMetadata: React.Dispatch<React.SetStateAction<boolean>>;
   isLoadingMetadata: boolean;
   pxTableMetadata: PxTableMetadata | null;
 };
 
 // Create the context with default values
 export const VariablesContext = createContext<VariablesContextType>({
-  variables: new Map(),
+  // variables: new Map(),
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   addSelectedValues: () => {},
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -53,7 +53,7 @@ export const VariablesContext = createContext<VariablesContextType>({
   hasLoadedDefaultSelection: false,
   setSelectedVBValues: () => [],
   selectedVBValues: [],
-  setIsLoadingMetadata: () => false,
+  // setIsLoadingMetadata: () => false,
   isLoadingMetadata: false,
   pxTableMetadata: null,
 });
@@ -109,41 +109,39 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
       .then(() => {
         if (!shouldGetDefaultSelection) {
           setIsLoadingMetadata(false);
-
-      
         }
-      }).catch((error) => {
+      })
+      .catch((error) => {
         setErrorMsg('Could not get table: ' + tableId);
         setPxTableMetadata(null);
       });
-if (shouldGetDefaultSelection){
-
-        TableService.getDefaultSelection(tableId, i18n.resolvedLanguage)
-          .then((selectionResponse) => {
-            const defaultSelection = mapTableSelectionResponse(
-              selectionResponse
-            ).filter(
-              (variable) =>
-                variable.values.length > 0 ||
-                variable.selectedCodeList !== undefined
-            );
-            setSelectedVBValues(defaultSelection);
-            syncVariablesAndValues(defaultSelection);
-            setIsLoadingMetadata(false);
-            setHasLoadedDefaultSelection(true);
-            console.log('PROVIDER IsLoadingMetadata=' + isLoadingMetadata);
-            console.log(
-              'PROVIDER HasLoadedDefaultSelection=' + hasLoadedDefaultSelection
-            );
-          })
-          .catch((error) => {
-            setErrorMsg('Error getting default selection: ' + tableId);
-          });
-        console.log('PROVIDER 2 IsLoadingMetadata=' + isLoadingMetadata);
-        console.log(
-          'PROVIDER 2 HasLoadedDefaultSelection=' + hasLoadedDefaultSelection
-        );
-      }
+    if (shouldGetDefaultSelection) {
+      TableService.getDefaultSelection(tableId, i18n.resolvedLanguage)
+        .then((selectionResponse) => {
+          const defaultSelection = mapTableSelectionResponse(
+            selectionResponse
+          ).filter(
+            (variable) =>
+              variable.values.length > 0 ||
+              variable.selectedCodeList !== undefined
+          );
+          setSelectedVBValues(defaultSelection);
+          syncVariablesAndValues(defaultSelection);
+          setIsLoadingMetadata(false);
+          setHasLoadedDefaultSelection(true);
+          console.log('PROVIDER IsLoadingMetadata=' + isLoadingMetadata);
+          console.log(
+            'PROVIDER HasLoadedDefaultSelection=' + hasLoadedDefaultSelection
+          );
+        })
+        .catch((error) => {
+          setErrorMsg('Error getting default selection: ' + tableId);
+        });
+      console.log('PROVIDER 2 IsLoadingMetadata=' + isLoadingMetadata);
+      console.log(
+        'PROVIDER 2 HasLoadedDefaultSelection=' + hasLoadedDefaultSelection
+      );
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   };
 
@@ -269,7 +267,7 @@ if (shouldGetDefaultSelection){
   return (
     <VariablesContext.Provider
       value={{
-        variables,
+        // variables,
         addSelectedValues,
         removeSelectedValue,
         toggleSelectedValue,
@@ -283,7 +281,7 @@ if (shouldGetDefaultSelection){
         hasLoadedDefaultSelection,
         selectedVBValues,
         setSelectedVBValues,
-        setIsLoadingMetadata,
+        // setIsLoadingMetadata,
         isLoadingMetadata,
         pxTableMetadata,
       }}
