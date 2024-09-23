@@ -1,17 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import cl from 'clsx';
-import { useNavigate, useParams } from 'react-router-dom';
+import {useParams } from 'react-router-dom';
 
 import styles from './app.module.scss';
-// import { ContentTop } from './components/ContentTop/ContentTop';
 import { Selection } from './components/Selection/Selection';
 import { Presentation } from './components/Presentation/Presentation';
-// import { PxTableMetadata, SelectedVBValues } from '@pxweb2/pxweb2-ui';
 import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
-
 import { Header } from './components/Header/Header';
-
 import { NavigationItem } from './components/NavigationMenu/NavigationItem/NavigationItemType';
 import NavigationRail from './components/NavigationMenu/NavigationRail/NavigationRail';
 import NavigationBar from './components/NavigationMenu/NavigationBar/NavigationBar';
@@ -20,8 +14,6 @@ import { Footer } from './components/Footer/Footer';
 
 export function App() {
   const { tableId } = useParams<{ tableId: string }>();
-  const navigate = useNavigate();
-  const { i18n, t } = useTranslation();
   const [selectedTableId, setSelectedTableId] = useState(
     tableId ? tableId : 'tab638'
   );

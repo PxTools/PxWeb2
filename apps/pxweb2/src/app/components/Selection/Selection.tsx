@@ -1,8 +1,5 @@
-import styles from './Selection.module.scss';
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import cl from 'clsx';
 
 import {
   PxTableMetadata,
@@ -195,6 +192,7 @@ export function Selection({
     if (pxTableMetaToRender !== null) {
       setPxTableMetaToRender(null);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTabId, i18n.resolvedLanguage]);
 
   if (pxTableMetaToRender === null && pxTableMetadata !== null) {
@@ -353,7 +351,7 @@ export function Selection({
 
   const drawerFilter = (
     <>
-      <select
+      {/* <select
         name="tabid"
         title="Select a table"
         id="tabid"
@@ -371,7 +369,7 @@ export function Selection({
         <option value="TAB1128">TAB1128 (large)</option>
       </select>
       <br />
-      <br />
+      <br /> */}
       <VariableList
         pxTableMetadata={pxTableMetaToRender}
         selectedVBValues={selectedVBValues}

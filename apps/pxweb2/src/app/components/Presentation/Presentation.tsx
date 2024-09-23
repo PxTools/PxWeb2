@@ -6,7 +6,7 @@ import { ContentTop } from '../ContentTop/ContentTop';
 import { Table, EmptyState } from '@pxweb2/pxweb2-ui';
 import useTableData from '../../context/useTableData';
 import useVariables from '../../context/useVariables';
-import React from 'react';
+
 
 type propsType = {
   selectedNavigationView: string;
@@ -60,6 +60,7 @@ export function Presentation({
         SetInitialRun(false);
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tableId, selectedVBValues, i18n.resolvedLanguage]);
   return (
     <>
