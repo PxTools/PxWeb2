@@ -61,7 +61,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     // 2. Check if we have data and metadata from earlier API-calls. Check if accumulatedData contains all we need.
     // Handle if variable is eliminated - If elim then reload all data
     // Take out the variables in variablesSelection that have at least one value. That list should match the variable list in accumulatedData. Otherwise reload everything.
-    if (isAllDataAlreadyLoaded(variablesSelection)) {
+    if (isAllDataAlreadyLoaded(variablesSelection, i18n.language)) {
       console.log('All data already loaded');
 
       // 3. accumulatedData contains all variables and values selected by user
@@ -93,8 +93,9 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     const pxTable: PxTable = mapJsonStat2Response(pxTabData);
 
     setData(pxTable);
-    
-    if (accumulatedData !== undefined && tableId !== accumulatedData.metadata.id) {
+
+    // If tableId or language has changed, create a deep copy of the new pxTable
+    if (accumulatedData !== undefined && (tableId !== accumulatedData.metadata.id || i18n.language !== accumulatedData.metadata.language)) {
       console.log('New table loaded. Create a deep copy of the new pxTable');
       // New table loaded. Create a deep copy of the new pxTable
       setAccumulatedData(structuredClone(pxTable));
@@ -113,13 +114,21 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * Checks if all data the user asks for is already loaded in the accumulated data.
    *
    * @param variablesSelection - User selection of variables and their values.
+   * @param language - Language of the current request.
    * @returns `true` if all data the user asks for is already loaded in the accumulated data, `false` otherwise.
    */
   function isAllDataAlreadyLoaded(
-    variablesSelection: VariablesSelection
+    variablesSelection: VariablesSelection,
+    language: string
   ): boolean {
     //console.log({ variablesSelection });
     if (accumulatedData !== undefined) {
+
+      // Check if the language of the accumulated data matches the language of the current request
+      if (language !== accumulatedData.metadata.language) {
+        return false;
+      }
+
       //console.log({ accumulatedData });
       // We have data and metadata from earlier API-calls
       for (const selection of variablesSelection.selection) {
