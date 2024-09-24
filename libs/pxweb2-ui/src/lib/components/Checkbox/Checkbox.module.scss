@@ -18,7 +18,7 @@
     background-color: var(--px-color-surface-action-subtle-active);
   }
 
-  &:focus .checkmark {
+  &:focus-visible .checkmark {
     outline: 3px solid var(--px-color-border-focus-outline);
     outline-offset: 3px;
     box-shadow: inset 0 0 0 3px var(--px-color-border-focus-boxshadow);
