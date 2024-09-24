@@ -186,28 +186,28 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     // Create a deep copy of accumulatedData
     const pxTable: PxTable = structuredClone(accumulatedData);
 
+    // Create a map for quick lookup of selected variable codes and their values
+    const selectionMap = new Map(
+      variablesSelection.selection.map((selection) => [
+      selection.variableCode,
+      new Set(selection.valueCodes),
+      ])
+    );
+
     // Filter out variables in pxTable that are not present in variablesSelection
     pxTable.metadata.variables = pxTable.metadata.variables.filter((variable) =>
-      variablesSelection.selection.some(
-        (selection) => selection.variableCode === variable.id
-      )
+      selectionMap.has(variable.id)
     );
 
     // Filter out values in each variable that are not present in variablesSelection
     pxTable.metadata.variables.forEach((variable) => {
-      const selection = variablesSelection.selection.find(
-        (sel) => sel.variableCode === variable.id
+      const selectedValues = selectionMap.get(variable.id);
+      if (selectedValues) {
+      variable.values = variable.values.filter((value) =>
+        selectedValues.has(value.code)
       );
-
-      if (selection) {
-        if (selection.valueCodes !== undefined) {
-          variable.values = variable.values.filter(
-            (value) =>
-              selection.valueCodes && selection.valueCodes.includes(value.code)
-          );
-        } else {
-          variable.values = [];
-        }
+      } else {
+      variable.values = [];
       }
     });
 
