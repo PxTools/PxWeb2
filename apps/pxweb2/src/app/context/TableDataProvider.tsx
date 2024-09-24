@@ -95,7 +95,11 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     setData(pxTable);
 
     // If tableId or language has changed, create a deep copy of the new pxTable
-    if (accumulatedData !== undefined && (tableId !== accumulatedData.metadata.id || i18n.language !== accumulatedData.metadata.language)) {
+    if (
+      accumulatedData !== undefined &&
+      (tableId !== accumulatedData.metadata.id ||
+        i18n.language !== accumulatedData.metadata.language)
+    ) {
       console.log('New table loaded. Create a deep copy of the new pxTable');
       // New table loaded. Create a deep copy of the new pxTable
       setAccumulatedData(structuredClone(pxTable));
@@ -123,7 +127,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   ): boolean {
     //console.log({ variablesSelection });
     if (accumulatedData !== undefined) {
-
       // Check if the language of the accumulated data matches the language of the current request
       if (language !== accumulatedData.metadata.language) {
         return false;
@@ -131,25 +134,30 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
       //console.log({ accumulatedData });
       // We have data and metadata from earlier API-calls
+      const variableMap = new Map(
+        accumulatedData.metadata.variables.map((variable) => [
+          variable.id,
+          new Set(variable.values.map((value) => value.code)),
+        ])
+      );
+
       for (const selection of variablesSelection.selection) {
         if (
           selection.valueCodes !== undefined &&
           selection.valueCodes.length > 0
         ) {
-          const accumulatedVariable = accumulatedData.metadata.variables.find(
-            (variable) => variable.id === selection.variableCode
+          const accumulatedVariableValues = variableMap.get(
+            selection.variableCode
           );
 
-          if (!accumulatedVariable) {
+          if (!accumulatedVariableValues) {
             return false;
           }
 
-          const allValuesLoaded = selection.valueCodes.every((valueCode) =>
-            accumulatedVariable.values.some((value) => value.code === valueCode)
-          );
-
-          if (!allValuesLoaded) {
-            return false;
+          for (const valueCode of selection.valueCodes) {
+            if (!accumulatedVariableValues.has(valueCode)) {
+              return false;
+            }
           }
         }
       }
