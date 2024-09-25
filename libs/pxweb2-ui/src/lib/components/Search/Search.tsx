@@ -46,7 +46,7 @@ export function Search({
   const hasValue = inputValue.length > 0;
 
   return (
-    <div className={classes.search}>
+    <div className={cl(classes.search,classes[variant])}tabIndex={0}>
       {showLabel && <Label size="medium">{labelText}</Label>}
       <div className={cl(classes.wrapper, classes.border, classes[variant], {
               [classes.variableboxSearchAndSelectBorderOverride]: variableBoxTopBorderOverride,
