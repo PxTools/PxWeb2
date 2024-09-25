@@ -19,12 +19,14 @@ import { TableService } from '@pxweb2/pxweb2-api-client';
 import { mapTableMetadataResponse } from '../mappers/TableMetadataResponseMapper';
 import { mapTableSelectionResponse } from '../mappers/TableSelectionResponseMapper';
 import { Header } from './components/Header/Header';
-import NavigationRail from './components/NavigationRail/NavigationRail';
 import { Content } from './components/Content/Content';
-import NavigationBar from './components/NavigationBar/NavigationBar';
+import { NavigationItem } from './components/NavigationMenu/NavigationItem/NavigationItemType';
+import NavigationRail from './components/NavigationMenu/NavigationRail/NavigationRail';
+import NavigationBar from './components/NavigationMenu/NavigationBar/NavigationBar';
 import NavigationDrawer from './components/NavigationDrawer/NavigationDrawer';
 import useVariables from './context/useVariables';
 import useTableData from './context/useTableData';
+import { Footer } from './components/Footer/Footer';
 
 function addSelectedCodeListToVariable(
   currentVariable: SelectedVBValues | undefined,
@@ -177,14 +179,6 @@ function removeAllValuesOfVariable(
 
   return newValues;
 }
-
-export type NavigationItem =
-  | 'none'
-  | 'filter'
-  | 'view'
-  | 'edit'
-  | 'save'
-  | 'help';
 
 export function App() {
   const { tableId } = useParams<{ tableId: string }>();
@@ -480,6 +474,7 @@ export function App() {
     <>
       <select
         name="tabid"
+        title="Select a table"
         id="tabid"
         value={tableId}
         onChange={(e) => {
@@ -496,17 +491,15 @@ export function App() {
       </select>
       <br />
       <br />
-      <div className={styles.variableListContainer}>
-        <VariableList
-          pxTableMetadata={pxTableMetaToRender}
-          selectedVBValues={selectedVBValues}
-          isLoadingMetadata={isLoadingMetadata}
-          hasLoadedDefaultSelection={hasLoadedDefaultSelection}
-          handleCodeListChange={handleCodeListChange}
-          handleCheckboxChange={handleCheckboxChange}
-          handleMixedCheckboxChange={handleMixedCheckboxChange}
-        />
-      </div>
+      <VariableList
+        pxTableMetadata={pxTableMetaToRender}
+        selectedVBValues={selectedVBValues}
+        isLoadingMetadata={isLoadingMetadata}
+        hasLoadedDefaultSelection={hasLoadedDefaultSelection}
+        handleCodeListChange={handleCodeListChange}
+        handleCheckboxChange={handleCheckboxChange}
+        handleMixedCheckboxChange={handleMixedCheckboxChange}
+      />
     </>
   );
   const drawerView = <>View content</>;
@@ -517,66 +510,62 @@ export function App() {
   return (
     <>
       <Header />
-      <div className={styles.main}>
-        <div className={styles.desktopNavigation}>
-          <NavigationRail
-            onChange={changeSelectedNavView}
-            selected={selectedNavigationView}
-          />
+      <div className={styles.navigationAndContentContainer}>
+        <NavigationRail
+          onChange={changeSelectedNavView}
+          selected={selectedNavigationView}
+        />
+        <div className={styles.mainContainer}>
           {selectedNavigationView !== 'none' && (
-            <div className={styles.scrollable}>
-              <NavigationDrawer
-                heading={t('presentation_page.sidemenu.selection.title')}
-                onClose={() => {
-                  setSelectedNavigationView('none');
-                }}
-              >
-                {selectedNavigationView === 'filter' && drawerFilter}
-                {selectedNavigationView === 'view' && drawerView}
-                {selectedNavigationView === 'edit' && drawerEdit}
-                {selectedNavigationView === 'save' && drawerSave}
-                {selectedNavigationView === 'help' && drawerHelp}
-              </NavigationDrawer>
-            </div>
+            <NavigationDrawer
+              heading={t('presentation_page.sidemenu.selection.title')}
+              onClose={() => {
+                setSelectedNavigationView('none');
+              }}
+            >
+              {selectedNavigationView === 'filter' && drawerFilter}
+              {selectedNavigationView === 'view' && drawerView}
+              {selectedNavigationView === 'edit' && drawerEdit}
+              {selectedNavigationView === 'save' && drawerSave}
+              {selectedNavigationView === 'help' && drawerHelp}
+            </NavigationDrawer>
           )}
-        </div>
-        <div className={cl(styles.mobileNavigation, styles.scrollable)}>
-          <NavigationBar
-            onChange={changeSelectedNavView}
-            selected={selectedNavigationView}
-          />
-        </div>
-        <div className={styles.scrollable}>
-          <Content topLeftBorderRadius={selectedNavigationView === 'none'}>
-            {tableData.data && pxTableMetadata && (
-              <>
-                <ContentTop
-                  staticTitle={pxTableMetadata?.label}
-                  pxtable={tableData.data}
-                />
-
-                {!isMissingMandatoryVariables && (
-                  <div className={styles.tableWrapper}>
-                    <Table pxtable={tableData.data} />
-                  </div>
-                )}
-
-                {!isLoadingMetadata && isMissingMandatoryVariables && (
-                  <EmptyState
-                    svgName="ManWithMagnifyingGlass"
-                    headingTxt={t(
-                      'presentation_page.main_content.table.warnings.missing_mandatory.title'
-                    )}
-                    descriptionTxt={t(
-                      'presentation_page.main_content.table.warnings.missing_mandatory.description'
-                    )}
+          <div className={styles.contentAndFooterContainer}>
+            <div className={styles.contentContainer}>
+              {tableData.data && pxTableMetadata && (
+                <>
+                  <ContentTop
+                    staticTitle={pxTableMetadata?.label}
+                    pxtable={tableData.data}
                   />
-                )}
-              </>
-            )}{' '}
-          </Content>
+                  {!isMissingMandatoryVariables && (
+                    <div className={styles.tableContainer}>
+                      <Table pxtable={tableData.data} />
+                    </div>
+                  )}
+
+                  {!isLoadingMetadata && isMissingMandatoryVariables && (
+                    <EmptyState
+                      svgName="ManWithMagnifyingGlass"
+                      headingTxt={t(
+                        'presentation_page.main_content.table.warnings.missing_mandatory.title'
+                      )}
+                      descriptionTxt={t(
+                        'presentation_page.main_content.table.warnings.missing_mandatory.description'
+                      )}
+                    />
+                  )}
+                </>
+              )}{' '}
+            </div>
+            <Footer />
+          </div>
         </div>
       </div>
+      <NavigationBar
+        onChange={changeSelectedNavView}
+        selected={selectedNavigationView}
+      />
     </>
   );
 }

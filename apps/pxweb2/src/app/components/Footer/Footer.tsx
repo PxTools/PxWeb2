@@ -45,10 +45,9 @@ export const Footer: React.FC = () => {
               </Link>
             </BodyLong>
           </div>
-
-          <div className={styles.copyright}>
-            <BodyLong>{t('presentation_page.footer.copyright')}</BodyLong>
-          </div>
+        </div>
+        <div className={styles.copyright}>
+          <BodyLong>{t('presentation_page.footer.copyright')}</BodyLong>
         </div>
       </div>
     </div>
