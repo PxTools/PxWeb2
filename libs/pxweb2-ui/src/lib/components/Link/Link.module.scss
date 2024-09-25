@@ -16,11 +16,11 @@
     background-color: var(--px-color-surface-action-subtle-hover);
   }
 
-  // &:focus {    
-  //   outline: 3px solid var(--px-color-border-focus-outline);
-  //   outline-offset: 5px;
-  //   box-shadow:  0 0 0 3px var(--px-color-border-focus-boxshadow);
-  // }
+  &:focus {
+    text-decoration-line: none;
+    color: var(--px-color-text-on-action-subtle);
+    background-color: var(--px-color-surface-action-subtle-active);
+  }
 
   &:focus-visible {
     outline: 3px solid var(--px-color-border-focus-outline);

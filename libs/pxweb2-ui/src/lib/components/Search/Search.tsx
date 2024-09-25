@@ -69,7 +69,7 @@ export function Search({
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={handleKeyDown}
           {...rest}
-        ></input>   
+        ></input>
         {hasValue && (
           <Button
             variant="tertiary"
