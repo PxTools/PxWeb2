@@ -58,14 +58,11 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
     const variablesSelection: VariablesSelection = { selection: selections };
 
-    // 2. Check if we have data and metadata from earlier API-calls. Check if accumulatedData contains all we need.
-    // Handle if variable is eliminated - If elim then reload all data
-    // Take out the variables in variablesSelection that have at least one value. That list should match the variable list in accumulatedData. Otherwise reload everything.
+    // Check if all data and metadata asked for by the user is already loaded from earlier API-calls
     if (isAllDataAlreadyLoaded(variablesSelection, i18n.language)) {
       console.log('All data already loaded');
 
-      // 3. accumulatedData contains all variables and values selected by user
-      //    ---> Create pxTable with deep copy data and metadata from accumulatedData (only the variables and values selected by user)
+      // All data and metadata asked for by the user is already loaded in accumulatedData. No need for a new API-call. Create a pxTable from accumulatedData instead.
       const pxTable = createPxTableFromAccumulatedData(variablesSelection);
 
       if (pxTable) {
@@ -106,7 +103,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     }
 
     if (accumulatedData === undefined) {
-      // 1. First API-call. Create a deep copy of pxTable
+      // First API-call. Create a deep copy of pxTable
       console.log('First API-call. Create a deep copy of pxTable');
       setAccumulatedData(structuredClone(pxTable));
     } else {
@@ -115,7 +112,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   };
 
   /**
-   * Checks if all data the user asks for is already loaded in the accumulated data.
+   * Checks if all data and metadata the user asks for is already loaded in the accumulated data.
    *
    * @param variablesSelection - User selection of variables and their values.
    * @param language - Language of the current request.
@@ -125,15 +122,15 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     variablesSelection: VariablesSelection,
     language: string
   ): boolean {
-    //console.log({ variablesSelection });
     if (accumulatedData !== undefined) {
+      // We have data and metadata from earlier API-calls
+
       // Check if the language of the accumulated data matches the language of the current request
       if (language !== accumulatedData.metadata.language) {
         return false;
       }
 
-      //console.log({ accumulatedData });
-      // We have data and metadata from earlier API-calls
+      // Create a map for quick lookup of selected variable codes and their values
       const variableMap = new Map(
         accumulatedData.metadata.variables.map((variable) => [
           variable.id,
