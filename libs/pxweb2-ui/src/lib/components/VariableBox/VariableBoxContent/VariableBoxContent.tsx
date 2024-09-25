@@ -9,6 +9,13 @@ import { Select, SelectOption } from '../../Select/Select';
 import { VariableBoxProps } from '../VariableBox';
 import { SelectedVBValues } from '../VariableBox';
 import { VartypeEnum } from '../../../shared-types/vartypeEnum';
+import {
+  VariableSizeList as List,
+  ListChildComponentProps,
+  VariableSizeList,
+} from 'react-window';
+import AutoSizer from 'react-virtualized-auto-sizer';
+import { Value } from '../../../shared-types/value';
 
 type MappedCodeList = {
   value: string;
@@ -223,6 +230,110 @@ export function VariableBoxContent({
     valuesToRender.reverse();
   }
 
+  // Create an array of items for the list
+  const items: { type: string; value?: Value }[] = [];
+
+  if (hasSevenOrMoreValues) {
+    items.push({ type: 'search' });
+  }
+
+  if (hasTwoOrMoreValues) {
+    items.push({ type: 'mixedCheckbox' });
+  }
+
+  valuesToRender.forEach((value) => {
+    items.push({ type: 'value', value });
+  });
+
+  // Function to get the size of each item
+  const getItemSize = (index: number) => {
+    const item = items[index];
+    if (item.type === 'search') {
+      return 48; // Height of the Search component
+    } else if (item.type === 'mixedCheckbox') {
+      return 44; // Height of the MixedCheckbox component
+    } else if (item.type === 'value') {
+      if (item.value?.label && item.value?.label.length > 20) {
+        return 88;
+      }
+      return 44; // Height of each Checkbox component
+    }
+    return 0;
+  };
+
+  const itemRenderer = ({ index, style }: ListChildComponentProps) => {
+    const item = items[index];
+
+    if (item.type === 'search') {
+      return (
+        <div style={style}>
+          <Search
+            variant="inVariableBox"
+            showLabel={false}
+            searchPlaceHolder={t(
+              'presentation_page.sidemenu.selection.variablebox.search.placeholder'
+            )}
+            ariaLabelIconText={t(
+              'presentation_page.sidemenu.selection.variablebox.search.arialabelicontext'
+            )}
+            arialLabelClearButtonText={t(
+              'presentation_page.sidemenu.selection.variablebox.search.ariallabelclearbuttontext'
+            )}
+            variableBoxTopBorderOverride={hasSelectAndSearch}
+          />
+        </div>
+      );
+    } else if (item.type === 'mixedCheckbox') {
+      return (
+        <div style={style}>
+          <MixedCheckbox
+            id={varId}
+            text={mixedCheckboxText}
+            value={allValuesSelected}
+            onChange={() => onChangeMixedCheckbox(varId, allValuesSelected)}
+            ariaControls={valuesToRender.map((value) => value.code)}
+            strong={true}
+            inVariableBox={true}
+          />
+        </div>
+      );
+    } else if (item.type === 'value' && item.value) {
+      const value = item.value;
+      return (
+        <div style={style}>
+          <Checkbox
+            id={value.code}
+            key={varId + value.code}
+            tabIndex={-1}
+            value={
+              selectedValues?.length > 0 &&
+              selectedValues
+                .find((variables) => variables.id === varId)
+                ?.values.includes(value.code) === true
+            }
+            text={value.label.charAt(0).toUpperCase() + value.label.slice(1)}
+            onChange={() => onChangeCheckbox(varId, value.code)}
+          />
+        </div>
+      );
+    } else {
+      return null;
+    }
+  };
+  const listWrapperRef = useRef<HTMLDivElement | null>(null);
+  const listRef = useRef<VariableSizeList<unknown> | null>(null);
+  const getTotalHeight = () => {
+    let height = 44;
+    items.map((item, index) => {
+      height += getItemSize(index);
+    });
+
+    if (height > 380) {
+      return '380px';
+    }
+    return height + 'px';
+  };
+
   return (
     <div className={cl(classes['variablebox-content'])}>
       <div className={cl(classes['variablebox-content-main'])}>
@@ -247,7 +358,6 @@ export function VariableBoxContent({
             />
           </div>
         )}
-
         <div
           key={varId + '-values-list'}
           className={cl(
@@ -259,95 +369,54 @@ export function VariableBoxContent({
           onScroll={handleScroll}
         >
           <div
-            className={cl(
-              hasSevenOrMoreValues &&
-                scrolling === 'up' &&
-                classes['variablebox-content-full-values-list-scroll-up'],
-              hasSevenOrMoreValues &&
-                scrolling === 'down' &&
-                hasScrolledUp === true &&
-                classes['variablebox-content-full-values-list-scroll-down']
+            aria-label={t(
+              'presentation_page.sidemenu.selection.variablebox.content.values_list.aria_label',
+              {
+                total: totalValues,
+              }
             )}
+            aria-description={t(
+              'presentation_page.sidemenu.selection.variablebox.content.values_list.aria_description',
+              {
+                total: totalValues,
+              }
+            )} // Coming in WAI-ARIA 1.3 Though caniuse shows 88% support. https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/blob/main/docs/rules/aria-props.md
+            className={cl(classes['variablebox-content-values-only-list'])}
+            tabIndex={0}
+            ref={valuesOnlyList}
+            onKeyUp={(event) => {
+              if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+                event.preventDefault();
+
+                handleValueListKeyboardNavigation(event);
+              }
+            }}
+            onKeyDown={(event) => {
+              if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+                event.preventDefault();
+              }
+            }}
           >
-            {hasSevenOrMoreValues && (
-              <Search
-                variant="inVariableBox"
-                showLabel={false}
-                searchPlaceHolder={t(
-                  'presentation_page.sidemenu.selection.variablebox.search.placeholder'
-                )}
-                ariaLabelIconText={t(
-                  'presentation_page.sidemenu.selection.variablebox.search.arialabelicontext'
-                )}
-                arialLabelClearButtonText={t(
-                  'presentation_page.sidemenu.selection.variablebox.search.ariallabelclearbuttontext'
-                )}
-                variableBoxTopBorderOverride={hasSelectAndSearch}
-              />
-            )}
-
-            {hasTwoOrMoreValues && (
-              <MixedCheckbox
-                id={varId}
-                text={mixedCheckboxText}
-                value={allValuesSelected}
-                onChange={() => onChangeMixedCheckbox(varId, allValuesSelected)}
-                ariaControls={valuesToRender.map((value) => value.code)}
-                strong={true}
-                inVariableBox={true}
-              />
-            )}
-          </div>
-
-          {hasValues && (
             <div
-              aria-label={t(
-                'presentation_page.sidemenu.selection.variablebox.content.values_list.aria_label',
-                {
-                  total: totalValues,
-                }
-              )}
-              aria-description={t(
-                'presentation_page.sidemenu.selection.variablebox.content.values_list.aria_description',
-                {
-                  total: totalValues,
-                }
-              )} // Coming in WAI-ARIA 1.3 Though caniuse shows 88% support. https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/blob/main/docs/rules/aria-props.md
-              className={cl(classes['variablebox-content-values-only-list'])}
-              tabIndex={0}
-              ref={valuesOnlyList}
-              onKeyUp={(event) => {
-                if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-                  event.preventDefault();
-
-                  handleValueListKeyboardNavigation(event);
-                }
-              }}
-              onKeyDown={(event) => {
-                if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-                  event.preventDefault();
-                }
+              style={{
+                height: getTotalHeight(items.length),
               }}
             >
-              {valuesToRender.map((value) => (
-                <Checkbox
-                  id={value.code}
-                  key={varId + value.code}
-                  tabIndex={-1}
-                  value={
-                    selectedValues?.length > 0 &&
-                    selectedValues
-                      .find((variables) => variables.id === varId)
-                      ?.values.includes(value.code) === true
-                  }
-                  text={
-                    value.label.charAt(0).toUpperCase() + value.label.slice(1)
-                  }
-                  onChange={() => onChangeCheckbox(varId, value.code)}
-                />
-              ))}
+              <AutoSizer>
+                {({ height, width }) => (
+                  <List
+                    ref={listRef}
+                    height={height}
+                    itemCount={items.length}
+                    itemSize={getItemSize}
+                    width={width}
+                  >
+                    {itemRenderer}
+                  </List>
+                )}
+              </AutoSizer>
             </div>
-          )}
+          </div>
         </div>
       </div>
 
