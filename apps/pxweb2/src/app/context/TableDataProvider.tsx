@@ -69,6 +69,8 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       tableId
     );
 
+    // TODO: Split into to functions, one with validAccData and one without
+
     // Check if all data and metadata asked for by the user is already loaded from earlier API-calls
     if (validAccData && isAllDataAlreadyLoaded(variablesSelection)) {
       console.log('All data already loaded');
@@ -88,11 +90,10 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     let varSelection: VariablesSelection;
 
     // We need to make a new API-call to get the data and metadata not already loaded in accumulatedData
-    if (validAccData) { 
+    if (validAccData) {
       // Make the API-call as small as possible
       varSelection = getMinimumVariablesSelection(variablesSelection);
-    }
-    else {
+    } else {
       varSelection = variablesSelection;
     }
 
@@ -109,9 +110,13 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
     const pxTable: PxTable = mapJsonStat2Response(pxTabData);
 
+    //TODO: If getMinimumVariablesSelection called:
+    // 1. Merge pxTable with accumulatedData
+    // 2. call: pxTable = createPxTableFromAccumulatedData(variablesSelection);
+
     setData(pxTable);
 
-      if (!validAccData) {
+    if (!validAccData) {
       console.log('Create accumulatedData from pxTable');
       setAccumulatedData(structuredClone(pxTable));
     }
@@ -128,7 +133,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     language: string,
     tableId: string
   ): boolean {
-
     // accumulatedData must exist
     if (accumulatedData === undefined) {
       return false;
@@ -253,7 +257,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   function getMinimumVariablesSelection(
     variablesSelection: VariablesSelection
   ): VariablesSelection {
-    if ( accumulatedData !== undefined) {
+    if (accumulatedData !== undefined) {
       // We have data and metadata from earlier API-calls.
       console.log({ variablesSelection });
 
@@ -295,6 +299,8 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
             return false;
           }
         });
+
+      // TODO: If diffVariablesSelection contains more than 1 variable - Reload everything!
       console.log({ diffVariablesSelection });
 
       // Create the new VariablesSelection
