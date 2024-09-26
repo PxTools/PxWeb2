@@ -45,6 +45,12 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     }
   }, [errorMsg]);
 
+  /**
+   * Fetches table data from the API.
+   *
+   * @param tableId - The id of the table to fetch data for.
+   * @param i18n - The i18n object for handling langauages
+   */
   const fetchTableData = async (tableId: string, i18n: i18n) => {
     const selections: Array<VariableSelection> = [];
     const ids = variables.getUniqueIds();
@@ -57,9 +63,14 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     });
 
     const variablesSelection: VariablesSelection = { selection: selections };
+    const validAccData: boolean = isAccumulatedDataValid(
+      variablesSelection,
+      i18n.language,
+      tableId
+    );
 
     // Check if all data and metadata asked for by the user is already loaded from earlier API-calls
-    if (isAllDataAlreadyLoaded(variablesSelection, i18n.language)) {
+    if (validAccData && isAllDataAlreadyLoaded(variablesSelection)) {
       console.log('All data already loaded');
 
       // All data and metadata asked for by the user is already loaded in accumulatedData. No need for a new API-call. Create a pxTable from accumulatedData instead.
@@ -74,13 +85,22 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       console.log('All data not loaded');
     }
 
-    // 4A. accumulatedData did not contain all we need ---> Fetch data from API
-    // (Create a minimal API-call to get only whats missing in accumulatedData)
+    let varSelection: VariablesSelection;
+
+    // We need to make a new API-call to get the data and metadata not already loaded in accumulatedData
+    if (validAccData) { 
+      // Make the API-call as small as possible
+      varSelection = getMinimumVariablesSelection(variablesSelection);
+    }
+    else {
+      varSelection = variablesSelection;
+    }
+
     const res = await TableService.getTableDataByPost(
       tableId,
       i18n.language,
       'json-stat2',
-      variablesSelection
+      varSelection
     );
 
     // Map response to json-stat2 Dataset
@@ -91,44 +111,56 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
     setData(pxTable);
 
-    // If tableId or language has changed, create a deep copy of the new pxTable
-    if (
-      accumulatedData !== undefined &&
-      (tableId !== accumulatedData.metadata.id ||
-        i18n.language !== accumulatedData.metadata.language)
-    ) {
-      console.log('New table loaded. Create a deep copy of the new pxTable');
-      // New table loaded. Create a deep copy of the new pxTable
+      if (!validAccData) {
+      console.log('Create accumulatedData from pxTable');
       setAccumulatedData(structuredClone(pxTable));
-    }
-
-    if (accumulatedData === undefined) {
-      // First API-call. Create a deep copy of pxTable
-      console.log('First API-call. Create a deep copy of pxTable');
-      setAccumulatedData(structuredClone(pxTable));
-    } else {
-      // 4B. Add all new data and metadata from API-call to accumulatedData
     }
   };
+
+  /**
+   * Checks if the accumulated data is valid.
+   * @param variablesSelection - User selection of variables and their values.
+   * @param language - Language of the current request.
+   * @returns `true` if the accumulated data is valid, `false` otherwise.
+   */
+  function isAccumulatedDataValid(
+    variablesSelection: VariablesSelection,
+    language: string,
+    tableId: string
+  ): boolean {
+
+    // accumulatedData must exist
+    if (accumulatedData === undefined) {
+      return false;
+    }
+
+    // accumulatedData must be in the right language
+    if (accumulatedData.metadata.language !== language) {
+      return false;
+    }
+
+    // accumulatedData must be from the same table
+    if (accumulatedData.metadata.id !== tableId) {
+      return false;
+    }
+
+    // TODO: Check that the dimensions are the same in accumulatedData and variablesSelection.
+    // The variables must be the same and they must all have at least one value
+
+    return true;
+  }
 
   /**
    * Checks if all data and metadata the user asks for is already loaded in the accumulated data.
    *
    * @param variablesSelection - User selection of variables and their values.
-   * @param language - Language of the current request.
    * @returns `true` if all data the user asks for is already loaded in the accumulated data, `false` otherwise.
    */
   function isAllDataAlreadyLoaded(
-    variablesSelection: VariablesSelection,
-    language: string
+    variablesSelection: VariablesSelection
   ): boolean {
     if (accumulatedData !== undefined) {
       // We have data and metadata from earlier API-calls
-
-      // Check if the language of the accumulated data matches the language of the current request
-      if (language !== accumulatedData.metadata.language) {
-        return false;
-      }
 
       // Create a map for quick lookup of selected variable codes and their values
       const variableMap = new Map(
@@ -186,8 +218,8 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     // Create a map for quick lookup of selected variable codes and their values
     const selectionMap = new Map(
       variablesSelection.selection.map((selection) => [
-      selection.variableCode,
-      new Set(selection.valueCodes),
+        selection.variableCode,
+        new Set(selection.valueCodes),
       ])
     );
 
@@ -200,15 +232,90 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     pxTable.metadata.variables.forEach((variable) => {
       const selectedValues = selectionMap.get(variable.id);
       if (selectedValues) {
-      variable.values = variable.values.filter((value) =>
-        selectedValues.has(value.code)
-      );
+        variable.values = variable.values.filter((value) =>
+          selectedValues.has(value.code)
+        );
       } else {
-      variable.values = [];
+        variable.values = [];
       }
     });
 
     return pxTable;
+  }
+
+  /**
+   * Creates a VariablesSelection containing only the minimum information needed to make a new API-call to
+   * get the variables and values not already loaded in the accumulated data.
+   *
+   * @param variablesSelection - Variables selection to copy.
+   * @returns A minimum VariablesSelection containing only the minimum information needed to make a new API-call.
+   */
+  function getMinimumVariablesSelection(
+    variablesSelection: VariablesSelection
+  ): VariablesSelection {
+    if ( accumulatedData !== undefined) {
+      // We have data and metadata from earlier API-calls.
+      console.log({ variablesSelection });
+
+      // Find whats missing in accumulatedData
+      const diffVariablesSelection: VariablesSelection =
+        structuredClone(variablesSelection);
+
+      // Create a map for quick lookup of accumulated variable codes and their values
+      const accumulatedVariableMap = new Map(
+        accumulatedData.metadata.variables.map((variable) => [
+          variable.id,
+          new Set(variable.values.map((value) => value.code)),
+        ])
+      );
+
+      // Filter out variables and values already loaded in accumulatedData
+      diffVariablesSelection.selection =
+        diffVariablesSelection.selection.filter((selection) => {
+          const accumulatedValues = accumulatedVariableMap.get(
+            selection.variableCode
+          );
+
+          if (!accumulatedValues) {
+            // Variable not found in accumulatedData, keep it in diffVariablesSelection
+            return true;
+          }
+
+          // Filter out values already loaded in accumulatedData
+          if (selection.valueCodes) {
+            selection.valueCodes = selection.valueCodes.filter(
+              (valueCode) => !accumulatedValues.has(valueCode)
+            );
+          }
+
+          // Keep the variable if it has any values left after filtering
+          if (selection.valueCodes) {
+            return selection.valueCodes.length > 0;
+          } else {
+            return false;
+          }
+        });
+      console.log({ diffVariablesSelection });
+
+      // Create the new VariablesSelection
+      const newVariablesSelection: VariablesSelection =
+        structuredClone(variablesSelection);
+
+      newVariablesSelection.selection = newVariablesSelection.selection.map(
+        (selection) => {
+          const diffSelection = diffVariablesSelection.selection.find(
+            (diff) => diff.variableCode === selection.variableCode
+          );
+          return diffSelection ? diffSelection : selection;
+        }
+      );
+
+      console.log({ newVariablesSelection });
+
+      return newVariablesSelection;
+    } else {
+      return variablesSelection;
+    }
   }
 
   return (
