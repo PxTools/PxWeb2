@@ -9,12 +9,7 @@ import { Select, SelectOption } from '../../Select/Select';
 import { VariableBoxProps } from '../VariableBox';
 import { SelectedVBValues } from '../VariableBox';
 import { VartypeEnum } from '../../../shared-types/vartypeEnum';
-import {
-  VariableSizeList as List,
-  ListChildComponentProps,
-  VariableSizeList,
-} from 'react-window';
-import AutoSizer from 'react-virtualized-auto-sizer';
+import { Virtuoso } from 'react-virtuoso';
 import { Value } from '../../../shared-types/value';
 
 type MappedCodeList = {
@@ -73,7 +68,6 @@ export function VariableBoxContent({
   const [currentFocusedCheckboxIndex, setCurrentFocusedCheckboxIndexIndex] =
     useState<number | null>(null);
 
-  const scrollRef = useRef<HTMLDivElement>(null);
   const valuesOnlyList = useRef<HTMLDivElement>(null);
   const hasCodeLists = codeLists && codeLists.length > 0;
   const hasSevenOrMoreValues = values && values.length > 6;
@@ -101,44 +95,39 @@ export function VariableBoxContent({
     checkboxDeselectAllText,
   ]);
 
-  const handleScroll = () => {
-    if (scrollRef.current) {
-      const { scrollTop } = scrollRef.current;
-      const isScrolling = scrollTop > 0;
-      const isIntentionalScrollUp = scrollTop < lastScrollPosition - 5;
-      const isIntentionalScrollDown = scrollTop > lastScrollPosition + 5;
-      const isBelowFirstTwoElements =
-        scrollTop > scrollRef.current.children[0].clientHeight;
+  const handleScroll = (scrollTop: number) => {
+    const isScrolling = scrollTop > 0;
+    const isIntentionalScrollUp = scrollTop < lastScrollPosition - 5;
+    const isIntentionalScrollDown = scrollTop > lastScrollPosition + 5;
 
-      //  Reset scrolling state when at the top of the list
-      if (scrollTop === 0 && scrolling !== 'atTop') {
-        setScrolling('atTop');
-        setHasScrolledUp(false);
+    // Reset scrolling state when at the top of the list
+    if (scrollTop === 0 && scrolling !== 'atTop') {
+      setScrolling('atTop');
+      setHasScrolledUp(false);
+    }
+
+    if (isScrolling) {
+      if (isIntentionalScrollUp) {
+        setLastScrollPosition(scrollTop);
+
+        if (scrolling !== 'up') {
+          setScrolling('up');
+          setHasScrolledUp(true);
+        }
       }
 
-      if (isScrolling) {
-        if (isIntentionalScrollUp && isBelowFirstTwoElements) {
-          setLastScrollPosition(scrollTop);
+      if (isIntentionalScrollDown) {
+        setLastScrollPosition(scrollTop);
 
-          if (scrolling !== 'up') {
-            setScrolling('up');
-            setHasScrolledUp(true);
-          }
-        }
-
-        if (isIntentionalScrollDown && isBelowFirstTwoElements) {
-          setLastScrollPosition(scrollTop);
-
-          if (scrolling !== 'down') {
-            setScrolling('down');
-          }
+        if (scrolling !== 'down') {
+          setScrolling('down');
         }
       }
     }
   };
 
   const handleSearch = () => {
-    //  TODO: Implement search functionality
+    // TODO: Implement search functionality
     console.log('Search');
   };
 
@@ -224,8 +213,8 @@ export function VariableBoxContent({
 
   const valuesToRender = structuredClone(values);
 
-  //  The API always returns the oldest values first,
-  //  so we can just reverse the values array when the type is TIME_VARIABLE
+  // The API always returns the oldest values first,
+  // so we can just reverse the values array when the type is TIME_VARIABLE
   if (type === VartypeEnum.TIME_VARIABLE) {
     valuesToRender.reverse();
   }
@@ -245,28 +234,12 @@ export function VariableBoxContent({
     items.push({ type: 'value', value });
   });
 
-  // Function to get the size of each item
-  const getItemSize = (index: number) => {
-    const item = items[index];
-    if (item.type === 'search') {
-      return 48; // Height of the Search component
-    } else if (item.type === 'mixedCheckbox') {
-      return 44; // Height of the MixedCheckbox component
-    } else if (item.type === 'value') {
-      if (item.value?.label && item.value?.label.length > 20) {
-        return 88;
-      }
-      return 44; // Height of each Checkbox component
-    }
-    return 0;
-  };
-
-  const itemRenderer = ({ index, style }: ListChildComponentProps) => {
+  const itemRenderer = (index: number) => {
     const item = items[index];
 
     if (item.type === 'search') {
       return (
-        <div style={style}>
+        <div>
           <Search
             variant="inVariableBox"
             showLabel={false}
@@ -285,7 +258,7 @@ export function VariableBoxContent({
       );
     } else if (item.type === 'mixedCheckbox') {
       return (
-        <div style={style}>
+        <div>
           <MixedCheckbox
             id={varId}
             text={mixedCheckboxText}
@@ -300,7 +273,7 @@ export function VariableBoxContent({
     } else if (item.type === 'value' && item.value) {
       const value = item.value;
       return (
-        <div style={style}>
+        <div>
           <Checkbox
             id={value.code}
             key={varId + value.code}
@@ -320,19 +293,8 @@ export function VariableBoxContent({
       return null;
     }
   };
-  const listWrapperRef = useRef<HTMLDivElement | null>(null);
-  const listRef = useRef<VariableSizeList<unknown> | null>(null);
-  const getTotalHeight = () => {
-    let height = 44;
-    items.map((item, index) => {
-      height += getItemSize(index);
-    });
 
-    if (height > 380) {
-      return '380px';
-    }
-    return height + 'px';
-  };
+  const listRef = useRef<Virtuoso | null>(null);
 
   return (
     <div className={cl(classes['variablebox-content'])}>
@@ -365,8 +327,6 @@ export function VariableBoxContent({
             hasSevenOrMoreValues &&
               classes['variablebox-content-full-values-list-scroll']
           )}
-          ref={scrollRef}
-          onScroll={handleScroll}
         >
           <div
             aria-label={t(
@@ -380,7 +340,7 @@ export function VariableBoxContent({
               {
                 total: totalValues,
               }
-            )} // Coming in WAI-ARIA 1.3 Though caniuse shows 88% support. https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/blob/main/docs/rules/aria-props.md
+            )} // Coming in WAI-ARIA 1.3
             className={cl(classes['variablebox-content-values-only-list'])}
             tabIndex={0}
             ref={valuesOnlyList}
@@ -397,25 +357,13 @@ export function VariableBoxContent({
               }
             }}
           >
-            <div
-              style={{
-                height: getTotalHeight(items.length),
-              }}
-            >
-              <AutoSizer>
-                {({ height, width }) => (
-                  <List
-                    ref={listRef}
-                    height={height}
-                    itemCount={items.length}
-                    itemSize={getItemSize}
-                    width={width}
-                  >
-                    {itemRenderer}
-                  </List>
-                )}
-              </AutoSizer>
-            </div>
+            <Virtuoso
+              ref={listRef}
+              style={{ height: '380px', maxHeight: '380px', width: '100%' }}
+              totalCount={items.length}
+              itemContent={itemRenderer}
+              onScroll={(event) => handleScroll(event.scrollTop)}
+            />
           </div>
         </div>
       </div>
