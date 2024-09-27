@@ -69,6 +69,8 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       tableId
     );
 
+    console.log({ validAccData });
+
     // TODO: Split into to functions, one with validAccData and one without
 
     // Check if all data and metadata asked for by the user is already loaded from earlier API-calls
@@ -139,12 +141,12 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     }
 
     // accumulatedData must be in the right language
-    if (accumulatedData.metadata.language !== language) {
+    if (accumulatedData.metadata.language.toLowerCase() !== language.toLowerCase()) {
       return false;
     }
 
     // accumulatedData must be from the same table
-    if (accumulatedData.metadata.id !== tableId) {
+    if (accumulatedData.metadata.id.toLowerCase() !== tableId.toLowerCase()) {
       return false;
     }
 
