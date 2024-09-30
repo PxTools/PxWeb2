@@ -5,7 +5,6 @@ export function mapTableSelectionResponse(
   response: SelectionResponse
 ): SelectedVBValues[] {
   // TODO:  Check if selection.selection is intended,
-  // console.log('response i MAPPER=' + response.selection.selection[0].variableCode)
   const selectedVBValues: SelectedVBValues[] = response.selection.selection.map(
     (variable) => {
       return {
@@ -18,7 +17,5 @@ export function mapTableSelectionResponse(
       };
     }
   );
-// console.log('selectedVBValues i MAPPER=' + selectedVBValues[1].values[0])
-// console.log('selectedVBValues OBJ='+ JSON.stringify(selectedVBValues))
   return selectedVBValues;
 }
