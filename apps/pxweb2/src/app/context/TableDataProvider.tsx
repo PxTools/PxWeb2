@@ -69,7 +69,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       tableId
     );
 
-    console.log({ validAccData });
+    //console.log({ validAccData });
 
     // TODO: Split into to functions, one with validAccData and one without
 
@@ -94,6 +94,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     // We need to make a new API-call to get the data and metadata not already loaded in accumulatedData
     if (validAccData) {
       // Make the API-call as small as possible
+      // TODO: Return diff
       varSelection = getMinimumVariablesSelection(variablesSelection);
     } else {
       varSelection = variablesSelection;
@@ -110,11 +111,20 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     const pxDataobj: unknown = res;
     const pxTabData = pxDataobj as Dataset;
 
-    const pxTable: PxTable = mapJsonStat2Response(pxTabData);
+    let pxTable: PxTable = mapJsonStat2Response(pxTabData);
 
-    //TODO: If getMinimumVariablesSelection called:
-    // 1. Merge pxTable with accumulatedData
-    // 2. call: pxTable = createPxTableFromAccumulatedData(variablesSelection);
+    if (validAccData) {
+      //TODO: If getMinimumVariablesSelection called:
+      // 1. Merge pxTable with accumulatedData
+      mergeWithAccumulatedData(pxTable);
+      const pxTableMerged =
+        createPxTableFromAccumulatedData(variablesSelection);
+      if (pxTableMerged) {
+        pxTable = pxTableMerged;
+      } else {
+        throw new Error('Failed to create PxTable from accumulated data');
+      }
+    }
 
     setData(pxTable);
 
@@ -141,7 +151,9 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     }
 
     // accumulatedData must be in the right language
-    if (accumulatedData.metadata.language.toLowerCase() !== language.toLowerCase()) {
+    if (
+      accumulatedData.metadata.language.toLowerCase() !== language.toLowerCase()
+    ) {
       return false;
     }
 
@@ -323,6 +335,51 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       return newVariablesSelection;
     } else {
       return variablesSelection;
+    }
+  }
+
+  // Merge pxTable with accumulatedData
+  function mergeWithAccumulatedData(pxTable: PxTable): void {
+    if (accumulatedData !== undefined) {
+      console.log('Merging pxTable with accumulatedData');
+      console.log({pxTable});
+      console.log({accumulatedData});
+
+      // TODO: Get value-positions from variablesSelection
+
+      const mergedVariables = new Map(
+        accumulatedData.metadata.variables.map((variable) => [
+          variable.id,
+          variable,
+        ])
+      );
+
+      pxTable.metadata.variables.forEach((variable) => {
+        if (mergedVariables.has(variable.id)) {
+          const existingVariable = mergedVariables.get(variable.id);
+          const existingValues = new Set(
+            existingVariable?.values.map((v) => v.code)
+          );
+
+          variable.values.forEach((value) => {
+            if (!existingValues.has(value.code)) {
+              existingVariable?.values.push(value);
+              console.log(
+                'Merging variable:',
+                variable.id,
+                'with value:',
+                value.code
+              );
+            }
+          });
+        } else {
+          mergedVariables.set(variable.id, variable);
+        }
+      });
+
+      accumulatedData.metadata.variables = Array.from(mergedVariables.values());
+
+ 
     }
   }
 
