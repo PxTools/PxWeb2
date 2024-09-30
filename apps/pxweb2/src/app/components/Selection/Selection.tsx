@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
+
 import { TableService } from '@pxweb2/pxweb2-api-client';
 import { mapTableMetadataResponse } from '../../../mappers/TableMetadataResponseMapper';
 import { mapTableSelectionResponse } from '../../../mappers/TableSelectionResponseMapper';
-
 import {
   PxTableMetadata,
   SelectedVBValues,
@@ -189,7 +189,6 @@ export function Selection({
   const { isLoadingMetadata } = useVariables();
   const { pxTableMetadata, setPxTableMetadata } = useVariables();
 
-
   const [prevTableId, setPrevTableId] = useState('');
 
   useEffect(() => {
@@ -228,6 +227,7 @@ export function Selection({
         setErrorMsg('Could not get table: ' + selectedTabId);
         setPxTableMetadata(null);
       });
+      
     if (shouldGetDefaultSelection) {
       TableService.getDefaultSelection(selectedTabId, i18n.resolvedLanguage)
         .then((selectionResponse) => {
@@ -247,9 +247,6 @@ export function Selection({
           setErrorMsg('Error getting default selection: ' + selectedTabId);
         });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    // };
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTabId, i18n.resolvedLanguage]);
 
@@ -298,9 +295,6 @@ export function Selection({
 
     const newPxTableMetaToRender: PxTableMetadata =
       structuredClone(pxTableMetaToRender);
-
-    // console.log('newPxTableMetaToRender=' + JSON.stringify(newPxTableMetaToRender))
-
     newPxTableMetaToRender.variables.forEach((variable) => {
       if (!variable.codeLists) {
         return;
@@ -409,16 +403,15 @@ export function Selection({
     return dummyValues;
   };
   const drawerFilter = (
-      <VariableList
-        pxTableMetadata={pxTableMetaToRender}
-        selectedVBValues={selectedVBValues}
-        isLoadingMetadata={isLoadingMetadata}
-        hasLoadedDefaultSelection={hasLoadedDefaultSelection}
-        handleCodeListChange={handleCodeListChange}
-        handleCheckboxChange={handleCheckboxChange}
-        handleMixedCheckboxChange={handleMixedCheckboxChange}
-      />
-
+    <VariableList
+      pxTableMetadata={pxTableMetaToRender}
+      selectedVBValues={selectedVBValues}
+      isLoadingMetadata={isLoadingMetadata}
+      hasLoadedDefaultSelection={hasLoadedDefaultSelection}
+      handleCodeListChange={handleCodeListChange}
+      handleCheckboxChange={handleCheckboxChange}
+      handleMixedCheckboxChange={handleMixedCheckboxChange}
+    />
   );
   const drawerView = <>View content</>;
   const drawerEdit = <>Edit content</>;

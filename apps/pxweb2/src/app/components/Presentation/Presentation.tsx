@@ -14,7 +14,6 @@ type propsType = {
 };
 
 export function Presentation({
-  selectedNavigationView,
   selectedTabId,
 }: propsType) {
   const { i18n, t } = useTranslation();
@@ -31,8 +30,6 @@ export function Presentation({
 
   useEffect(() => {
     const hasSelectedValues = variables.getNumberOfSelectedValues() > 0;
-    // const SelectedValues = variables.getNumberOfSelectedValues();
-
     const hasSelectedMandatoryVariables = pxTableMetadata?.variables
       .filter((variable) => variable.mandatory)
       .every((variable) =>
