@@ -36,6 +36,7 @@ export function Presentation({
           (selectedVariable) => selectedVariable.id === variable.id
         )
       );
+      //initial load of data should maybe be done in react-router 
     if (initialRun && !hasSelectedValues) {
       tableData.fetchTableData(tableId ? tableId : 'tab1292', i18n);
       setIsMissingMandatoryVariables(false);
