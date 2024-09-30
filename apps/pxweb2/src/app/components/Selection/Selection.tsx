@@ -1,5 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
+import { TableService } from '@pxweb2/pxweb2-api-client';
+import { mapTableMetadataResponse } from '../../../mappers/TableMetadataResponseMapper';
+import { mapTableSelectionResponse } from '../../../mappers/TableSelectionResponseMapper';
 
 import {
   PxTableMetadata,
@@ -174,7 +177,6 @@ export function Selection({
   selectedNavigationView,
   selectedTabId,
   setSelectedNavigationView,
-  setSelectedTableId,
 }: propsType) {
   const { selectedVBValues, setSelectedVBValues } = useVariables();
   const variables = useVariables();
@@ -185,14 +187,70 @@ export function Selection({
   const { i18n, t } = useTranslation();
   const { hasLoadedDefaultSelection } = useVariables();
   const { isLoadingMetadata } = useVariables();
-  const { pxTableMetadata } = useVariables();
+  const { pxTableMetadata, setPxTableMetadata } = useVariables();
+
+
+  const [prevTableId, setPrevTableId] = useState('');
 
   useEffect(() => {
-    variables.fetchMetaData(selectedTabId);
-    if (pxTableMetaToRender !== null) {
-      setPxTableMetaToRender(null);
+    let shouldGetDefaultSelection = !hasLoadedDefaultSelection;
+
+    if (!selectedTabId) {
+      return;
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    if (prevTableId === '' || prevTableId !== selectedTabId) {
+      variables.setHasLoadedDefaultSelection(false);
+      shouldGetDefaultSelection = true;
+      setPrevTableId(selectedTabId);
+    }
+    if (isLoadingMetadata === false) {
+      variables.setIsLoadingMetadata(true);
+    }
+
+    TableService.getMetadataById(selectedTabId, i18n.resolvedLanguage)
+      .then((tableMetadataResponse) => {
+        const pxTabMetadata: PxTableMetadata = mapTableMetadataResponse(
+          tableMetadataResponse
+        );
+        setPxTableMetadata(pxTabMetadata);
+        if (pxTableMetaToRender !== null) {
+          setPxTableMetaToRender(null);
+        }
+        setErrorMsg('');
+      })
+      .then(() => {
+        if (!shouldGetDefaultSelection) {
+          variables.setIsLoadingMetadata(false);
+        }
+      })
+      .catch((error) => {
+        setErrorMsg('Could not get table: ' + selectedTabId);
+        setPxTableMetadata(null);
+      });
+    if (shouldGetDefaultSelection) {
+      TableService.getDefaultSelection(selectedTabId, i18n.resolvedLanguage)
+        .then((selectionResponse) => {
+          const defaultSelection = mapTableSelectionResponse(
+            selectionResponse
+          ).filter(
+            (variable) =>
+              variable.values.length > 0 ||
+              variable.selectedCodeList !== undefined
+          );
+          setSelectedVBValues(defaultSelection);
+          variables.syncVariablesAndValues(defaultSelection);
+          variables.setIsLoadingMetadata(false);
+          variables.setHasLoadedDefaultSelection(true);
+        })
+        .catch((error) => {
+          setErrorMsg('Error getting default selection: ' + selectedTabId);
+        });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTabId, i18n.resolvedLanguage]);
 
   if (pxTableMetaToRender === null && pxTableMetadata !== null) {
@@ -240,6 +298,8 @@ export function Selection({
 
     const newPxTableMetaToRender: PxTableMetadata =
       structuredClone(pxTableMetaToRender);
+
+    // console.log('newPxTableMetaToRender=' + JSON.stringify(newPxTableMetaToRender))
 
     newPxTableMetaToRender.variables.forEach((variable) => {
       if (!variable.codeLists) {
@@ -348,28 +408,7 @@ export function Selection({
 
     return dummyValues;
   };
-
   const drawerFilter = (
-    <>
-      {/* <select
-        name="tabid"
-        title="Select a table"
-        id="tabid"
-        value={pxTableMetadata?.id}
-        onChange={(e) => {
-          setSelectedTableId(e.target.value);
-          // navigate(`/table/${e.target.value}`);
-        }}
-      >
-        <option value="TAB638">TAB638</option>
-        <option value="TAB1292">TAB1292</option>
-        <option value="TAB5659">TAB5659</option>
-        <option value="TAB1544">TAB1544 (decimals)</option>
-        <option value="TAB4246">TAB4246 (decimals)</option>
-        <option value="TAB1128">TAB1128 (large)</option>
-      </select>
-      <br />
-      <br /> */}
       <VariableList
         pxTableMetadata={pxTableMetaToRender}
         selectedVBValues={selectedVBValues}
@@ -379,7 +418,7 @@ export function Selection({
         handleCheckboxChange={handleCheckboxChange}
         handleMixedCheckboxChange={handleMixedCheckboxChange}
       />
-    </>
+
   );
   const drawerView = <>View content</>;
   const drawerEdit = <>Edit content</>;

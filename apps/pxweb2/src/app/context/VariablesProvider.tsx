@@ -1,15 +1,11 @@
 import { SelectedVBValues } from '@pxweb2/pxweb2-ui';
 import React, { createContext, useState } from 'react';
 
-import { TableService } from '@pxweb2/pxweb2-api-client';
 import { PxTableMetadata } from '@pxweb2/pxweb2-ui';
-import { mapTableMetadataResponse } from '../../mappers/TableMetadataResponseMapper';
-import { mapTableSelectionResponse } from '../../mappers/TableSelectionResponseMapper';
 import { useTranslation } from 'react-i18next';
 
 // Define the type for the context
 export type VariablesContextType = {
-  // variables: Map<string, { id: string; value: string }>;
   addSelectedValues: (variableId: string, values: string[]) => void;
   removeSelectedValue: (variableId: string, value: string) => void;
   toggleSelectedValue: (variableId: string, value: string) => void;
@@ -19,13 +15,17 @@ export type VariablesContextType = {
   getUniqueIds: () => string[];
   syncVariablesAndValues: (values: SelectedVBValues[]) => void;
   toString: () => string;
-  fetchMetaData: (selectedTableId: string) => void;
   hasLoadedDefaultSelection: boolean;
+  setHasLoadedDefaultSelection: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedVBValues: React.Dispatch<React.SetStateAction<SelectedVBValues[]>>;
   selectedVBValues: SelectedVBValues[];
-  // setIsLoadingMetadata: React.Dispatch<React.SetStateAction<boolean>>;
   isLoadingMetadata: boolean;
+  setIsLoadingMetadata: React.Dispatch<React.SetStateAction<boolean>>;
   pxTableMetadata: PxTableMetadata | null;
+  setPxTableMetadata: React.Dispatch<React.SetStateAction<PxTableMetadata|null>>;
+  pxTableMetaToRender: PxTableMetadata | null;
+  
+  
 };
 
 // Create the context with default values
@@ -49,13 +49,15 @@ export const VariablesContext = createContext<VariablesContextType>({
   getUniqueIds: () => [],
   toString: () => '',
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  fetchMetaData: (selectedTableId: string) => {},
   hasLoadedDefaultSelection: false,
+  setHasLoadedDefaultSelection:()=>false,
   setSelectedVBValues: () => [],
   selectedVBValues: [],
-  // setIsLoadingMetadata: () => false,
+  setIsLoadingMetadata: () => false,
   isLoadingMetadata: false,
   pxTableMetadata: null,
+  setPxTableMetadata:()=>null,
+  pxTableMetaToRender:null
 });
 
 // Provider component
@@ -70,7 +72,7 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
   const [pxTableMetadata, setPxTableMetadata] =
     useState<PxTableMetadata | null>(null);
 
-  const [prevTableId, setPrevTableId] = useState('');
+  // const [prevTableId, setPrevTableId] = useState('');
   const [isLoadingMetadata, setIsLoadingMetadata] = useState<boolean>(false);
   const [hasLoadedDefaultSelection, setHasLoadedDefaultSelection] =
     useState(false);
@@ -78,62 +80,10 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
   const [selectedVBValues, setSelectedVBValues] = useState<SelectedVBValues[]>(
     []
   );
+  const [pxTableMetaToRender, setPxTableMetaToRender] =
+  // Metadata to render in the UI
+  useState<PxTableMetadata | null>(null);
 
-  const fetchMetaData = async (tableId: string) => {
-    let shouldGetDefaultSelection = !hasLoadedDefaultSelection;
-
-    if (!tableId) {
-      return;
-    }
-
-    if (prevTableId === '' || prevTableId !== tableId) {
-      setHasLoadedDefaultSelection(false);
-      shouldGetDefaultSelection = true;
-      setPrevTableId(tableId);
-    }
-    if (isLoadingMetadata === false) {
-      setIsLoadingMetadata(true);
-    }
-
-    TableService.getMetadataById(tableId, i18n.resolvedLanguage)
-      .then((tableMetadataResponse) => {
-        const pxTabMetadata: PxTableMetadata = mapTableMetadataResponse(
-          tableMetadataResponse
-        );
-        setPxTableMetadata(pxTabMetadata);
-
-        setErrorMsg('');
-      })
-      .then(() => {
-        if (!shouldGetDefaultSelection) {
-          setIsLoadingMetadata(false);
-        }
-      })
-      .catch((error) => {
-        setErrorMsg('Could not get table: ' + tableId);
-        setPxTableMetadata(null);
-      });
-    if (shouldGetDefaultSelection) {
-      TableService.getDefaultSelection(tableId, i18n.resolvedLanguage)
-        .then((selectionResponse) => {
-          const defaultSelection = mapTableSelectionResponse(
-            selectionResponse
-          ).filter(
-            (variable) =>
-              variable.values.length > 0 ||
-              variable.selectedCodeList !== undefined
-          );
-          setSelectedVBValues(defaultSelection);
-          syncVariablesAndValues(defaultSelection);
-          setIsLoadingMetadata(false);
-          setHasLoadedDefaultSelection(true);
-        })
-        .catch((error) => {
-          setErrorMsg('Error getting default selection: ' + tableId);
-        });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  };
 
   /**
    * Adds multiple values for a given variable
@@ -257,7 +207,6 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
   return (
     <VariablesContext.Provider
       value={{
-        // variables,
         addSelectedValues,
         removeSelectedValue,
         toggleSelectedValue,
@@ -267,13 +216,15 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
         getUniqueIds,
         syncVariablesAndValues,
         toString,
-        fetchMetaData,
         hasLoadedDefaultSelection,
         selectedVBValues,
         setSelectedVBValues,
-        // setIsLoadingMetadata,
         isLoadingMetadata,
         pxTableMetadata,
+        pxTableMetaToRender,
+        setHasLoadedDefaultSelection,
+        setIsLoadingMetadata,
+        setPxTableMetadata
       }}
     >
       {children}
