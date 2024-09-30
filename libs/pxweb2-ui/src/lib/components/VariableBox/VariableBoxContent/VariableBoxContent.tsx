@@ -65,8 +65,11 @@ export function VariableBoxContent({
   const [allValuesSelected, setAllValuesSelected] = useState<
     'mixed' | 'true' | 'false'
   >('mixed');
-  const [currentFocusedCheckboxIndex, setCurrentFocusedCheckboxIndexIndex] =
-    useState<number | null>(null);
+
+  // Track the index of the currently focused item
+  const [currentFocusedItemIndex, setCurrentFocusedItemIndex] = useState<
+    number | null
+  >(null);
 
   const valuesOnlyList = useRef<HTMLDivElement>(null);
   const hasCodeLists = codeLists && codeLists.length > 0;
@@ -106,22 +109,20 @@ export function VariableBoxContent({
       setHasScrolledUp(false);
     }
 
-    if (isScrolling) {
-      if (isIntentionalScrollUp) {
-        setLastScrollPosition(scrollTop);
+    if (isScrolling && isIntentionalScrollUp) {
+      setLastScrollPosition(scrollTop);
 
-        if (scrolling !== 'up') {
-          setScrolling('up');
-          setHasScrolledUp(true);
-        }
+      if (scrolling !== 'up') {
+        setScrolling('up');
+        setHasScrolledUp(true);
       }
+    }
 
-      if (isIntentionalScrollDown) {
-        setLastScrollPosition(scrollTop);
+    if (isScrolling && isIntentionalScrollDown) {
+      setLastScrollPosition(scrollTop);
 
-        if (scrolling !== 'down') {
-          setScrolling('down');
-        }
+      if (scrolling !== 'down') {
+        setScrolling('down');
       }
     }
   };
@@ -142,68 +143,62 @@ export function VariableBoxContent({
     });
   }
 
+  // Reference to the Virtuoso list
+  const listRef = useRef<Virtuoso | null>(null);
+
   const handleValueListKeyboardNavigation = (
     event: React.KeyboardEvent<HTMLDivElement>
   ) => {
-    const { key, shiftKey } = event; // TODO: Add support for shiftKey to select multiple values
-    const currentFocusedElement = document.activeElement;
+    const { key } = event;
 
-    if (
-      key === 'ArrowDown' &&
-      currentFocusedElement === valuesOnlyList.current
-    ) {
-      if (currentFocusedCheckboxIndex === null) {
-        setCurrentFocusedCheckboxIndexIndex(0);
-
-        const firstCheckbox = document.getElementById(values[0].code);
-
-        firstCheckbox?.focus();
-
-        return;
-      }
-
-      const currentFocusedCheckboxIndexElement = document.getElementById(
-        values[currentFocusedCheckboxIndex].code
-      );
-
-      currentFocusedCheckboxIndexElement?.focus();
+    if (key !== 'ArrowDown' && key !== 'ArrowUp') {
+      return;
     }
-    if (
-      key === 'ArrowDown' &&
-      currentFocusedElement !== valuesOnlyList.current
-    ) {
-      if (currentFocusedCheckboxIndex === null) {
-        return;
+    event.preventDefault();
+    let newIndex = currentFocusedItemIndex;
+
+    if (key === 'ArrowDown') {
+      if (
+        currentFocusedItemIndex === null ||
+        currentFocusedItemIndex < items.length - 1
+      ) {
+        newIndex = (currentFocusedItemIndex ?? -1) + 1;
       }
-
-      if (currentFocusedCheckboxIndex === values.length - 1) {
-        return;
+    } else if (key === 'ArrowUp') {
+      if (currentFocusedItemIndex !== null && currentFocusedItemIndex > 0) {
+        newIndex = currentFocusedItemIndex - 1;
       }
-
-      setCurrentFocusedCheckboxIndexIndex(currentFocusedCheckboxIndex + 1);
-
-      const nextCheckbox = document.getElementById(
-        values[currentFocusedCheckboxIndex + 1].code
-      );
-
-      nextCheckbox?.focus();
     }
-    if (key === 'ArrowUp' && currentFocusedElement !== valuesOnlyList.current) {
-      if (currentFocusedCheckboxIndex === null) {
-        return;
+
+    if (newIndex !== null && newIndex !== currentFocusedItemIndex) {
+      setCurrentFocusedItemIndex(newIndex);
+
+      // Focus the new item
+      const item = items[newIndex];
+      let elementId: string | null = null;
+
+      if (item.type === 'value' && item.value) {
+        elementId = item.value.code;
+      } else if (item.type === 'search') {
+        elementId = `${varId}-search`;
+      } else if (item.type === 'mixedCheckbox') {
+        elementId = varId;
       }
 
-      if (currentFocusedCheckboxIndex === 0) {
-        return;
+      if (elementId) {
+        const element = document.getElementById(elementId);
+        if (element) {
+          element.focus();
+        }
       }
 
-      setCurrentFocusedCheckboxIndexIndex(currentFocusedCheckboxIndex - 1);
-
-      const prevCheckbox = document.getElementById(
-        values[currentFocusedCheckboxIndex - 1].code
-      );
-
-      prevCheckbox?.focus();
+      // Scroll the list to the index
+      if (listRef.current) {
+        listRef.current.scrollToIndex({
+          index: newIndex,
+          align: 'center',
+        });
+      }
     }
   };
 
@@ -234,12 +229,13 @@ export function VariableBoxContent({
     items.push({ type: 'value', value });
   });
 
+  // Modify the itemRenderer to assign IDs and tabIndex
   const itemRenderer = (index: number) => {
     const item = items[index];
 
     if (item.type === 'search') {
       return (
-        <div>
+        <div id={`${varId}-search`} tabIndex={-1}>
           <Search
             variant="inVariableBox"
             showLabel={false}
@@ -258,7 +254,7 @@ export function VariableBoxContent({
       );
     } else if (item.type === 'mixedCheckbox') {
       return (
-        <div>
+        <div id={varId} tabIndex={-1}>
           <MixedCheckbox
             id={varId}
             text={mixedCheckboxText}
@@ -273,7 +269,7 @@ export function VariableBoxContent({
     } else if (item.type === 'value' && item.value) {
       const value = item.value;
       return (
-        <div>
+        <div id={value.code} tabIndex={-1}>
           <Checkbox
             id={value.code}
             key={varId + value.code}
@@ -293,8 +289,6 @@ export function VariableBoxContent({
       return null;
     }
   };
-
-  const listRef = useRef<Virtuoso | null>(null);
 
   return (
     <div className={cl(classes['variablebox-content'])}>
@@ -344,25 +338,18 @@ export function VariableBoxContent({
             className={cl(classes['variablebox-content-values-only-list'])}
             tabIndex={0}
             ref={valuesOnlyList}
-            onKeyUp={(event) => {
-              if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-                event.preventDefault();
-
-                handleValueListKeyboardNavigation(event);
-              }
-            }}
-            onKeyDown={(event) => {
-              if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-                event.preventDefault();
-              }
-            }}
+            onKeyDown={handleValueListKeyboardNavigation}
           >
             <Virtuoso
               ref={listRef}
               style={{ height: '380px', maxHeight: '380px', width: '100%' }}
+              className=""
               totalCount={items.length}
-              itemContent={itemRenderer}
-              onScroll={(event) => handleScroll(event.scrollTop)}
+              itemContent={(index) => itemRenderer(index)}
+              onScroll={(event) => {
+                const target = event.target as HTMLDivElement;
+                handleScroll(target.scrollTop);
+              }}
             />
           </div>
         </div>
