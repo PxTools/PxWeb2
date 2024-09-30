@@ -9,7 +9,6 @@ import useVariables from '../../context/useVariables';
 
 
 type propsType = {
-  selectedNavigationView: string;
   selectedTabId: string;
 };
 

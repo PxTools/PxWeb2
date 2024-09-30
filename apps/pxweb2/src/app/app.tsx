@@ -56,13 +56,11 @@ export function App() {
             selectedNavigationView={selectedNavigationView}
             selectedTabId={selectedTableId}
             setSelectedNavigationView={changeSelectedNavView}
-            setSelectedTableId={setSelectedTableId}
           />
           <div className={styles.contentAndFooterContainer}>
             <div className={styles.contentContainer}>
               <Presentation
                 selectedTabId={selectedTableId}
-                selectedNavigationView={selectedNavigationView}
               ></Presentation>
             </div>
             <Footer />

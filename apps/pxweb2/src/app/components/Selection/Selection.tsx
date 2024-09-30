@@ -170,7 +170,6 @@ function removeAllValuesOfVariable(
 type propsType = {
   selectedNavigationView: string;
   selectedTabId: string;
-  setSelectedTableId: React.Dispatch<React.SetStateAction<string>>;
   setSelectedNavigationView: (view: NavigationItem) => void;
 };
 export function Selection({
@@ -227,7 +226,7 @@ export function Selection({
         setErrorMsg('Could not get table: ' + selectedTabId);
         setPxTableMetadata(null);
       });
-      
+
     if (shouldGetDefaultSelection) {
       TableService.getDefaultSelection(selectedTabId, i18n.resolvedLanguage)
         .then((selectionResponse) => {
