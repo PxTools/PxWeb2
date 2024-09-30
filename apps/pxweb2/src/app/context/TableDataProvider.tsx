@@ -69,6 +69,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       tableId
     );
 
+    //console.log({variablesSelection});
     //console.log({ validAccData });
 
     // TODO: Split into to functions, one with validAccData and one without
@@ -89,16 +90,26 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       console.log('All data not loaded');
     }
 
-    let varSelection: VariablesSelection;
+    let varSelection: VariablesSelection = variablesSelection;
+    let diffVariablesSelection: VariablesSelection = { selection: [] };
 
     // We need to make a new API-call to get the data and metadata not already loaded in accumulatedData
     if (validAccData) {
       // Make the API-call as small as possible
-      // TODO: Return diff
-      varSelection = getMinimumVariablesSelection(variablesSelection);
-    } else {
-      varSelection = variablesSelection;
+      diffVariablesSelection = GetDiffVariablesSelection(variablesSelection);
+      //console.log({ diffVariablesSelection });
+
+      if (diffVariablesSelection.selection.length > 0) {
+        varSelection = getMinimumVariablesSelection(
+          variablesSelection,
+          diffVariablesSelection
+        );
+        //console.log({ varSelection });
+      }
     }
+    // else {
+    //   varSelection = variablesSelection;
+    // }
 
     const res = await TableService.getTableDataByPost(
       tableId,
@@ -116,7 +127,11 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     if (validAccData) {
       //TODO: If getMinimumVariablesSelection called:
       // 1. Merge pxTable with accumulatedData
-      mergeWithAccumulatedData(pxTable);
+      mergeWithAccumulatedData(
+        pxTable,
+        diffVariablesSelection,
+        variablesSelection
+      );
       const pxTableMerged =
         createPxTableFromAccumulatedData(variablesSelection);
       if (pxTableMerged) {
@@ -262,18 +277,17 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   }
 
   /**
-   * Creates a VariablesSelection containing only the minimum information needed to make a new API-call to
-   * get the variables and values not already loaded in the accumulated data.
+   * Creates a VariablesSelection containing only the variables and values not already loaded in the accumulated data.
    *
-   * @param variablesSelection - Variables selection to copy.
-   * @returns A minimum VariablesSelection containing only the minimum information needed to make a new API-call.
+   * @param variablesSelection - Variables selection containing all variables and values selected by the user.
+   * @returns A VariablesSelection object containing only the variables and values not already loaded in the accumulated data.
    */
-  function getMinimumVariablesSelection(
+  function GetDiffVariablesSelection(
     variablesSelection: VariablesSelection
   ): VariablesSelection {
     if (accumulatedData !== undefined) {
       // We have data and metadata from earlier API-calls.
-      console.log({ variablesSelection });
+      //console.log({ variablesSelection });
 
       // Find whats missing in accumulatedData
       const diffVariablesSelection: VariablesSelection =
@@ -314,8 +328,104 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
           }
         });
 
-      // TODO: If diffVariablesSelection contains more than 1 variable - Reload everything!
-      console.log({ diffVariablesSelection });
+      return diffVariablesSelection;
+    } else {
+      const emptyVariablesSelection: VariablesSelection = { selection: [] };
+      return emptyVariablesSelection;
+    }
+  }
+
+  // /**
+  //  * Creates a VariablesSelection containing only the minimum information needed to make a new API-call to
+  //  * get the variables and values not already loaded in the accumulated data.
+  //  *
+  //  * @param variablesSelection - Variables selection to copy.
+  //  * @returns A minimum VariablesSelection containing only the minimum information needed to make a new API-call.
+  //  */
+  // function getMinimumVariablesSelection(
+  //   variablesSelection: VariablesSelection
+  // ): VariablesSelection {
+  //   if (accumulatedData !== undefined) {
+  //     // We have data and metadata from earlier API-calls.
+  //     //console.log({ variablesSelection });
+
+  //     // Find whats missing in accumulatedData
+  //     const diffVariablesSelection: VariablesSelection =
+  //       structuredClone(variablesSelection);
+
+  //     // Create a map for quick lookup of accumulated variable codes and their values
+  //     const accumulatedVariableMap = new Map(
+  //       accumulatedData.metadata.variables.map((variable) => [
+  //         variable.id,
+  //         new Set(variable.values.map((value) => value.code)),
+  //       ])
+  //     );
+
+  //     // Filter out variables and values already loaded in accumulatedData
+  //     diffVariablesSelection.selection =
+  //       diffVariablesSelection.selection.filter((selection) => {
+  //         const accumulatedValues = accumulatedVariableMap.get(
+  //           selection.variableCode
+  //         );
+
+  //         if (!accumulatedValues) {
+  //           // Variable not found in accumulatedData, keep it in diffVariablesSelection
+  //           return true;
+  //         }
+
+  //         // Filter out values already loaded in accumulatedData
+  //         if (selection.valueCodes) {
+  //           selection.valueCodes = selection.valueCodes.filter(
+  //             (valueCode) => !accumulatedValues.has(valueCode)
+  //           );
+  //         }
+
+  //         // Keep the variable if it has any values left after filtering
+  //         if (selection.valueCodes) {
+  //           return selection.valueCodes.length > 0;
+  //         } else {
+  //           return false;
+  //         }
+  //       });
+
+  //     // TODO: If diffVariablesSelection contains more than 1 variable - Reload everything!
+  //     //console.log({ diffVariablesSelection });
+
+  //     // Create the new VariablesSelection
+  //     const newVariablesSelection: VariablesSelection =
+  //       structuredClone(variablesSelection);
+
+  //     newVariablesSelection.selection = newVariablesSelection.selection.map(
+  //       (selection) => {
+  //         const diffSelection = diffVariablesSelection.selection.find(
+  //           (diff) => diff.variableCode === selection.variableCode
+  //         );
+  //         return diffSelection ? diffSelection : selection;
+  //       }
+  //     );
+
+  //     //console.log({ newVariablesSelection });
+
+  //     return newVariablesSelection;
+  //   } else {
+  //     return variablesSelection;
+  //   }
+  // }
+
+  /**
+   * Creates a VariablesSelection containing only the minimum information needed to make a new API-call to
+   * get the variables and values not already loaded in the accumulated data.
+   *
+   * @param variablesSelection - Variables selection containing all variables and values selected by the user.
+   * @param diffVariablesSelection - Variables selection containing only the variables and values not already loaded in the accumulated data.
+   * @returns A minimum VariablesSelection containing only the minimum information needed to make a new API-call.
+   */
+  function getMinimumVariablesSelection(
+    variablesSelection: VariablesSelection,
+    diffVariablesSelection: VariablesSelection
+  ): VariablesSelection {
+    if (accumulatedData !== undefined) {
+      // We have data and metadata from earlier API-calls.
 
       // Create the new VariablesSelection
       const newVariablesSelection: VariablesSelection =
@@ -330,7 +440,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         }
       );
 
-      console.log({ newVariablesSelection });
+      //console.log({ newVariablesSelection });
 
       return newVariablesSelection;
     } else {
@@ -339,11 +449,20 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   }
 
   // Merge pxTable with accumulatedData
-  function mergeWithAccumulatedData(pxTable: PxTable): void {
-    if (accumulatedData !== undefined) {
+  function mergeWithAccumulatedData(
+    pxTable: PxTable,
+    diffVariablesSelection: VariablesSelection,
+    variablesSelection: VariablesSelection
+  ): void {
+    if (
+      accumulatedData !== undefined &&
+      diffVariablesSelection.selection.length === 1
+    ) {
       console.log('Merging pxTable with accumulatedData');
-      console.log({pxTable});
-      console.log({accumulatedData});
+      console.log({ pxTable });
+      console.log({ accumulatedData });
+      console.log({ diffVariablesSelection });
+      console.log({ variablesSelection });
 
       // TODO: Get value-positions from variablesSelection
 
@@ -354,32 +473,74 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         ])
       );
 
-      pxTable.metadata.variables.forEach((variable) => {
-        if (mergedVariables.has(variable.id)) {
-          const existingVariable = mergedVariables.get(variable.id);
-          const existingValues = new Set(
-            existingVariable?.values.map((v) => v.code)
-          );
+      // Find the variable that has new values
+      if (
+        mergedVariables.has(diffVariablesSelection.selection[0].variableCode)
+      ) {
+        const existingVariable = mergedVariables.get(
+          diffVariablesSelection.selection[0].variableCode
+        );
+        const existingValues = new Set(
+          existingVariable?.values.map((v) => v.code)
+        );
 
-          variable.values.forEach((value) => {
+        const selection = variablesSelection.selection.find(
+          (sel) => sel.variableCode === diffVariablesSelection.selection[0].variableCode
+        );
+        
+        const newValues = pxTable.metadata.variables.find(
+          (variable) =>
+            variable.id === diffVariablesSelection.selection[0].variableCode
+        )?.values;
+        console.log({ newValues });
+
+        if (newValues) {
+          newValues.forEach((value) => {
             if (!existingValues.has(value.code)) {
-              existingVariable?.values.push(value);
+              const valueIndex = selection?.valueCodes?.indexOf(value.code);
+              //valueIndex = 0;
+              if (valueIndex !== undefined && valueIndex !== -1) {
+                existingVariable?.values.splice(valueIndex, 0, value);
+              } else {
+                existingVariable?.values.push(value);
+              }
               console.log(
                 'Merging variable:',
-                variable.id,
+                diffVariablesSelection.selection[0].variableCode,
                 'with value:',
-                value.code
+                value.code,
+                'at index:',
+                valueIndex
               );
             }
           });
-        } else {
-          mergedVariables.set(variable.id, variable);
         }
-      });
+      }
 
-      accumulatedData.metadata.variables = Array.from(mergedVariables.values());
+      // pxTable.metadata.variables.forEach((variable) => {
+      //   if (mergedVariables.has(variable.id)) {
+      //     const existingVariable = mergedVariables.get(variable.id);
+      //     const existingValues = new Set(
+      //       existingVariable?.values.map((v) => v.code)
+      //     );
 
- 
+      //     variable.values.forEach((value) => {
+      //       if (!existingValues.has(value.code)) {
+      //         existingVariable?.values.push(value);
+      //         console.log(
+      //           'Merging variable:',
+      //           variable.id,
+      //           'with value:',
+      //           value.code
+      //         );
+      //       }
+      //     });
+      //   } else {
+      //     mergedVariables.set(variable.id, variable);
+      //   }
+      // });
+
+      // accumulatedData.metadata.variables = Array.from(mergedVariables.values());
     }
   }
 
