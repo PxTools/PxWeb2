@@ -250,9 +250,9 @@ export function VariableBoxContent({
           className={classes['focusableItem']}
         >
           <Search
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-              console.log('setSearch!', event.currentTarget.value);
-              setSearch(event.currentTarget.value);
+            onChange={(value: string) => {
+              console.log('setSearch!', value);
+              setSearch(value);
             }}
             variant="inVariableBox"
             showLabel={false}

@@ -6,8 +6,7 @@ import { Icon } from '../Icon/Icon';
 import { Label } from '../Typography/Label/Label';
 import { Button } from '../Button/Button';
 
-export interface SearchProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface SearchProps {
   variant: 'default' | 'inVariableBox';
   labelText?: string;
   searchPlaceHolder?: string;
@@ -15,6 +14,7 @@ export interface SearchProps
   variableBoxTopBorderOverride?: boolean;
   ariaLabelIconText?: string;
   arialLabelClearButtonText?: string;
+  onChange?: (value: string) => void;
 }
 
 export function Search({
@@ -71,10 +71,12 @@ export function Search({
           placeholder={searchPlaceHolder}
           value={inputValue}
           onChange={(e) => {
-            onChange && onChange(e);
+            onChange && onChange(e.target.value);
             setInputValue(e.target.value);
           }}
-          onKeyDown={handleKeyDown}
+          onKeyDown={(e) => {
+            handleKeyDown(e);
+          }}
           {...rest}
         ></input>
         {hasValue && (
@@ -82,7 +84,10 @@ export function Search({
             variant="tertiary"
             icon="XMark"
             size="small"
-            onClick={handleClear}
+            onClick={() => {
+              onChange && onChange('');
+              handleClear();
+            }}
             aria-label={arialLabelClearButtonText}
           ></Button>
         )}
