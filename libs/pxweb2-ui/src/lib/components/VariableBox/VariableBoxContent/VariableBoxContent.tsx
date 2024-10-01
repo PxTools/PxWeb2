@@ -134,35 +134,6 @@ export function VariableBoxContent({
     checkboxDeselectAllText,
   ]);
 
-  const handleScroll = (scrollTop: number) => {
-    const isScrolling = scrollTop > 0;
-    const isIntentionalScrollUp = scrollTop < lastScrollPosition - 5;
-    const isIntentionalScrollDown = scrollTop > lastScrollPosition + 5;
-
-    // Reset scrolling state when at the top of the list
-    if (scrollTop === 0 && scrolling !== 'atTop') {
-      setScrolling('atTop');
-      setHasScrolledUp(false);
-    }
-
-    if (isScrolling && isIntentionalScrollUp) {
-      setLastScrollPosition(scrollTop);
-
-      if (scrolling !== 'up') {
-        setScrolling('up');
-        setHasScrolledUp(true);
-      }
-    }
-
-    if (isScrolling && isIntentionalScrollDown) {
-      setLastScrollPosition(scrollTop);
-
-      if (scrolling !== 'down') {
-        setScrolling('down');
-      }
-    }
-  };
-
   let mappedCodeList: MappedCodeList[] = [];
 
   if (hasCodeLists === true) {
@@ -360,14 +331,29 @@ export function VariableBoxContent({
             {' '}
             {items.length > 0 && (
               <Virtuoso
+                computeItemKey={(key) => `item-${key}`}
                 ref={listRef}
                 style={{ height: '380px', maxHeight: '380px', width: '100%' }}
                 className=""
                 totalCount={items.length}
                 itemContent={(index) => itemRenderer(items, index)}
-                onScroll={(event) => {
-                  const target = event.target as HTMLDivElement;
-                  handleScroll(target.scrollTop);
+                scrollSeekConfiguration={{
+                  enter: (velocity) => Math.abs(velocity) > 1000,
+                  exit: (velocity) => Math.abs(velocity) < 30,
+                }}
+                components={{
+                  ScrollSeekPlaceholder: ({ height }) => (
+                    <div
+                      aria-label="placeholder"
+                      style={{
+                        height: '20px',
+                        backgroundColor: '#efefef',
+                        margin: '20px',
+                        borderRadius: '4px',
+                        maxWidth: 50 + Math.ceil(Math.random() * 10) + '%',
+                      }}
+                    ></div>
+                  ),
                 }}
               />
             )}
