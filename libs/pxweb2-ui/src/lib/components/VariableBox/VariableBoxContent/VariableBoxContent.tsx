@@ -343,6 +343,8 @@ export function VariableBoxContent({
                         height: '25px',
                         backgroundColor: '#efefef',
                         margin: '20px',
+                        marginLeft: '10px',
+                        marginRight: '10px',
                         borderRadius: '4px',
                         maxWidth: 50 + Math.ceil(Math.random() * 15) + '%',
                       }}

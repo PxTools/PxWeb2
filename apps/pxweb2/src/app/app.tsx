@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import cl from 'clsx';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import styles from './app.module.scss';
@@ -19,7 +18,6 @@ import { TableService } from '@pxweb2/pxweb2-api-client';
 import { mapTableMetadataResponse } from '../mappers/TableMetadataResponseMapper';
 import { mapTableSelectionResponse } from '../mappers/TableSelectionResponseMapper';
 import { Header } from './components/Header/Header';
-import { Content } from './components/Content/Content';
 import { NavigationItem } from './components/NavigationMenu/NavigationItem/NavigationItemType';
 import NavigationRail from './components/NavigationMenu/NavigationRail/NavigationRail';
 import NavigationBar from './components/NavigationMenu/NavigationBar/NavigationBar';
