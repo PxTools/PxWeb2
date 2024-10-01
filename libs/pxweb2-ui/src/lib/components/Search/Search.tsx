@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import cl from 'clsx';
 
 import classes from './Search.module.scss';
@@ -25,6 +25,7 @@ export function Search({
   ariaLabelIconText = 'Search icon',
   arialLabelClearButtonText = 'Clear search button',
   variableBoxTopBorderOverride = false,
+  onChange,
   ...rest
 }: SearchProps) {
   const [inputValue, setInputValue] = useState('');
@@ -48,9 +49,12 @@ export function Search({
   return (
     <div className={classes.search}>
       {showLabel && <Label size="medium">{labelText}</Label>}
-      <div className={cl(classes.wrapper, classes.border, classes[variant], {
-              [classes.variableboxSearchAndSelectBorderOverride]: variableBoxTopBorderOverride,
-            })}>
+      <div
+        className={cl(classes.wrapper, classes.border, classes[variant], {
+          [classes.variableboxSearchAndSelectBorderOverride]:
+            variableBoxTopBorderOverride,
+        })}
+      >
         <Icon
           iconName="MagnifyingGlass"
           className={classes.searchIcon}
@@ -66,7 +70,10 @@ export function Search({
           )}
           placeholder={searchPlaceHolder}
           value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
+          onChange={(e) => {
+            onChange && onChange(e);
+            setInputValue(e.target.value);
+          }}
           onKeyDown={handleKeyDown}
           {...rest}
         ></input>

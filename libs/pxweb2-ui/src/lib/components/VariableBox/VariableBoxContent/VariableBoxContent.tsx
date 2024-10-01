@@ -9,7 +9,7 @@ import { Select, SelectOption } from '../../Select/Select';
 import { VariableBoxProps } from '../VariableBox';
 import { SelectedVBValues } from '../VariableBox';
 import { VartypeEnum } from '../../../shared-types/vartypeEnum';
-import { Virtuoso } from 'react-virtuoso';
+import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 import { Value } from '../../../shared-types/value';
 
 type MappedCodeList = {
@@ -62,6 +62,10 @@ export function VariableBoxContent({
   const [mixedCheckboxText, setMixedCheckboxText] = useState<string>(
     checkboxSelectAllText
   );
+  const [search, setSearch] = useState<string>('');
+  const [filteredItems, setFilteredItems] = useState<
+    { type: string; value?: Value }[]
+  >([]);
   const [allValuesSelected, setAllValuesSelected] = useState<
     'mixed' | 'true' | 'false'
   >('mixed');
@@ -71,12 +75,41 @@ export function VariableBoxContent({
     number | null
   >(null);
 
+  const [items, setItems] = useState<{ type: string; value?: Value }[]>([]);
+
   const valuesOnlyList = useRef<HTMLDivElement>(null);
   const hasCodeLists = codeLists && codeLists.length > 0;
   const hasSevenOrMoreValues = values && values.length > 6;
   const hasTwoOrMoreValues = values && values.length > 1;
   const hasValues = values && values.length > 0;
   const hasSelectAndSearch = hasCodeLists && hasSevenOrMoreValues;
+  const valuesToRender = structuredClone(values);
+
+  // The API always returns the oldest values first,
+  // so we can just reverse the values array when the type is TIME_VARIABLE
+  if (type === VartypeEnum.TIME_VARIABLE) {
+    valuesToRender.reverse();
+  }
+
+  useEffect(() => {
+    const newItems: { type: string; value?: Value }[] = [];
+
+    if (hasSevenOrMoreValues) {
+      newItems.push({ type: 'search' });
+    }
+
+    if (hasTwoOrMoreValues) {
+      newItems.push({ type: 'mixedCheckbox' });
+    }
+
+    values
+      .filter((value) => value.label.indexOf(search) > -1)
+      .forEach((value) => {
+        newItems.push({ type: 'value', value });
+      });
+
+    setItems(newItems);
+  }, [hasSevenOrMoreValues, hasTwoOrMoreValues, search, values]);
 
   useEffect(() => {
     if (totalChosenValues === 0) {
@@ -127,11 +160,6 @@ export function VariableBoxContent({
     }
   };
 
-  const handleSearch = () => {
-    // TODO: Implement search functionality
-    console.log('Search');
-  };
-
   let mappedCodeList: MappedCodeList[] = [];
 
   if (hasCodeLists === true) {
@@ -144,7 +172,7 @@ export function VariableBoxContent({
   }
 
   // Reference to the Virtuoso list
-  const listRef = useRef<Virtuoso | null>(null);
+  const listRef = useRef<VirtuosoHandle | null>(null);
 
   const handleValueListKeyboardNavigation = (
     event: React.KeyboardEvent<HTMLDivElement>
@@ -207,31 +235,8 @@ export function VariableBoxContent({
     (variable) => variable.id === varId
   )?.selectedCodeList;
 
-  const valuesToRender = structuredClone(values);
-
-  // The API always returns the oldest values first,
-  // so we can just reverse the values array when the type is TIME_VARIABLE
-  if (type === VartypeEnum.TIME_VARIABLE) {
-    valuesToRender.reverse();
-  }
-
-  // Create an array of items for the list
-  const items: { type: string; value?: Value }[] = [];
-
-  if (hasSevenOrMoreValues) {
-    items.push({ type: 'search' });
-  }
-
-  if (hasTwoOrMoreValues) {
-    items.push({ type: 'mixedCheckbox' });
-  }
-
-  valuesToRender.forEach((value) => {
-    items.push({ type: 'value', value });
-  });
-
   // Modify the itemRenderer to assign IDs and tabIndex
-  const itemRenderer = (index: number) => {
+  const itemRenderer = (items: any, index: number) => {
     const item = items[index];
 
     if (item.type === 'search') {
@@ -242,6 +247,10 @@ export function VariableBoxContent({
           className={classes['focusableItem']}
         >
           <Search
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+              console.log('setSearch!', event.currentTarget.value);
+              setSearch(event.currentTarget.value);
+            }}
             variant="inVariableBox"
             showLabel={false}
             searchPlaceHolder={t(
@@ -345,17 +354,20 @@ export function VariableBoxContent({
             ref={valuesOnlyList}
             onKeyDown={handleValueListKeyboardNavigation}
           >
-            <Virtuoso
-              ref={listRef}
-              style={{ height: '380px', maxHeight: '380px', width: '100%' }}
-              className=""
-              totalCount={items.length}
-              itemContent={(index) => itemRenderer(index)}
-              onScroll={(event) => {
-                const target = event.target as HTMLDivElement;
-                handleScroll(target.scrollTop);
-              }}
-            />
+            {' '}
+            {items.length > 0 && (
+              <Virtuoso
+                ref={listRef}
+                style={{ height: '380px', maxHeight: '380px', width: '100%' }}
+                className=""
+                totalCount={items.length}
+                itemContent={(index) => itemRenderer(items, index)}
+                onScroll={(event) => {
+                  const target = event.target as HTMLDivElement;
+                  handleScroll(target.scrollTop);
+                }}
+              />
+            )}
           </div>
         </div>
       </div>
