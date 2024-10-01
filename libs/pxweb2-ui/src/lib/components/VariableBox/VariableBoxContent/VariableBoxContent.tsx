@@ -57,16 +57,10 @@ export function VariableBoxContent({
     'presentation_page.sidemenu.selection.variablebox.content.mixed_checkbox.deselect_all'
   );
 
-  const [scrolling, setScrolling] = useState<'atTop' | 'up' | 'down'>('atTop');
-  const [hasScrolledUp, setHasScrolledUp] = useState(false);
-  const [lastScrollPosition, setLastScrollPosition] = useState(0);
   const [mixedCheckboxText, setMixedCheckboxText] = useState<string>(
     checkboxSelectAllText
   );
   const [search, setSearch] = useState<string>('');
-  const [filteredItems, setFilteredItems] = useState<
-    { type: string; value?: Value }[]
-  >([]);
   const [allValuesSelected, setAllValuesSelected] = useState<
     'mixed' | 'true' | 'false'
   >('mixed');
