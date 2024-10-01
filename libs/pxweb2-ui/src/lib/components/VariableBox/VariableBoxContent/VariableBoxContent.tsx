@@ -346,11 +346,11 @@ export function VariableBoxContent({
                     <div
                       aria-label="placeholder"
                       style={{
-                        height: '20px',
+                        height: '25px',
                         backgroundColor: '#efefef',
                         margin: '20px',
                         borderRadius: '4px',
-                        maxWidth: 50 + Math.ceil(Math.random() * 10) + '%',
+                        maxWidth: 50 + Math.ceil(Math.random() * 15) + '%',
                       }}
                     ></div>
                   ),

@@ -52,7 +52,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
     const variablesSelection: VariablesSelection = { selection: selections };
 
-    const res = await TableService.getTableDataByPost(
+    const res = await TableService.getTableDataByPostDebounced(
       tableId,
       i18n.language,
       'json-stat2',
