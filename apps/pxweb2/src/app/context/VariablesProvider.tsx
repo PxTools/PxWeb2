@@ -7,6 +7,7 @@ import { PxTableMetadata } from '@pxweb2/pxweb2-ui';
 export type VariablesContextType = {
   addSelectedValues: (variableId: string, values: string[]) => void;
   getSelectedValuesById: (variableId: string) => string[];
+  getSelectedValuesByIdSorted: (variableId: string) => string[];
   getNumberOfSelectedValues: () => number;
   getUniqueIds: () => string[];
   syncVariablesAndValues: (values: SelectedVBValues[]) => void;
@@ -29,6 +30,7 @@ export const VariablesContext = createContext<VariablesContextType>({
   addSelectedValues: () => {},
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   getSelectedValuesById: () => [],
+  getSelectedValuesByIdSorted: () => [],
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   getNumberOfSelectedValues: () => 0,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -91,6 +93,21 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
     });
 
     return values;
+  };
+
+  // not in use so far, but maybe to use it in TableDataProvdider when update Cube.
+  const getSelectedValuesByIdSorted = (variableId: string) => {
+    let sortedValues:string[] =[] 
+    pxTableMetadata?.variables.forEach((item) => {
+      if (item.id === variableId) {
+        sortedValues = (item.values.filter((value) =>
+          selectedVBValues.find(
+            (selvar) => selvar.id === variableId
+          )?.values.includes(value.code)).map(value=>value.code)
+        );
+      }
+    });
+    return sortedValues
   };
 
   const getNumberOfSelectedValues = () => {
@@ -167,6 +184,7 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
         addSelectedValues,
         getNumberOfSelectedValues,
         getSelectedValuesById,
+        getSelectedValuesByIdSorted,
         getUniqueIds,
         syncVariablesAndValues,
         toString,
