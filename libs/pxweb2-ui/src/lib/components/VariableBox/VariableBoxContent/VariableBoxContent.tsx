@@ -11,6 +11,7 @@ import { SelectedVBValues } from '../VariableBox';
 import { VartypeEnum } from '../../../shared-types/vartypeEnum';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 import { Value } from '../../../shared-types/value';
+import { useDebounce } from '@uidotdev/usehooks';
 
 type MappedCodeList = {
   value: string;
@@ -70,6 +71,8 @@ export function VariableBoxContent({
     'mixed' | 'true' | 'false'
   >('mixed');
 
+  const debouncedSearch = useDebounce(search, 300);
+
   // Track the index of the currently focused item
   const [currentFocusedItemIndex, setCurrentFocusedItemIndex] = useState<
     number | null
@@ -103,13 +106,13 @@ export function VariableBoxContent({
     }
 
     values
-      .filter((value) => value.label.indexOf(search) > -1)
+      .filter((value) => value.label.indexOf(debouncedSearch) > -1)
       .forEach((value) => {
         newItems.push({ type: 'value', value });
       });
 
     setItems(newItems);
-  }, [hasSevenOrMoreValues, hasTwoOrMoreValues, search, values]);
+  }, [hasSevenOrMoreValues, hasTwoOrMoreValues, debouncedSearch, values]);
 
   useEffect(() => {
     if (totalChosenValues === 0) {
