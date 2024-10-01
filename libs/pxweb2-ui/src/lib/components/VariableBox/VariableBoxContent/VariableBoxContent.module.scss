@@ -96,3 +96,8 @@
   align-self: stretch;
   gap: fixed.$spacing-1;
 }
+
+.focusableItem:focus-within {
+  background-color: #c3dcdc;
+  outline: none;
+}

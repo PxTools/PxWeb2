@@ -188,6 +188,7 @@ export function VariableBoxContent({
       if (elementId) {
         const element = document.getElementById(elementId);
         if (element) {
+          console.log('focused on this', element);
           element.focus();
         }
       }
@@ -235,7 +236,11 @@ export function VariableBoxContent({
 
     if (item.type === 'search') {
       return (
-        <div id={`${varId}-search`} tabIndex={-1}>
+        <div
+          id={`${varId}-search`}
+          tabIndex={-1}
+          className={classes['focusableItem']}
+        >
           <Search
             variant="inVariableBox"
             showLabel={false}
@@ -254,7 +259,7 @@ export function VariableBoxContent({
       );
     } else if (item.type === 'mixedCheckbox') {
       return (
-        <div id={varId} tabIndex={-1}>
+        <div id={varId} tabIndex={-1} className={classes['focusableItem']}>
           <MixedCheckbox
             id={varId}
             text={mixedCheckboxText}
@@ -269,7 +274,7 @@ export function VariableBoxContent({
     } else if (item.type === 'value' && item.value) {
       const value = item.value;
       return (
-        <div id={value.code} tabIndex={-1}>
+        <div id={value.code} tabIndex={-1} className={classes['focusableItem']}>
           <Checkbox
             id={value.code}
             key={varId + value.code}
