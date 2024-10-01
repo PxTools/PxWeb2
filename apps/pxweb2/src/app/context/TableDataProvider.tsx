@@ -8,7 +8,8 @@ import {
   VariablesSelection,
 } from '@pxweb2/pxweb2-api-client';
 import { PxTable } from '@pxweb2/pxweb2-ui';
-import { mapJsonStat2Response } from '../../mappers/JsonStat2ResponseMapper';
+//import { getPxTableData, setPxTableData } from '@pxweb2/pxweb2-ui';
+import { mapJsonStat2Response, createCube } from '../../mappers/JsonStat2ResponseMapper';
 
 // Define types for the context state and provider props
 export interface TableDataContextType {
@@ -70,7 +71,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     );
 
     //console.log({variablesSelection});
-    //console.log({ validAccData });
+    console.log({ validAccData });
 
     // TODO: Split into to functions, one with validAccData and one without
 
@@ -130,7 +131,8 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       mergeWithAccumulatedData(
         pxTable,
         diffVariablesSelection,
-        variablesSelection
+        variablesSelection,
+        pxTabData
       );
       const pxTableMerged =
         createPxTableFromAccumulatedData(variablesSelection);
@@ -177,8 +179,20 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       return false;
     }
 
-    // TODO: Check that the dimensions are the same in accumulatedData and variablesSelection.
+    // Check that the dimensions are the same in accumulatedData and variablesSelection.
     // The variables must be the same and they must all have at least one value
+    if (variablesSelection.selection.length !== accumulatedData.metadata.variables.length) {
+      return false;
+    }
+
+    for (const selection of variablesSelection.selection) {
+      const variableExists = accumulatedData.metadata.variables.some(
+        (variable) => variable.id === selection.variableCode
+      );
+      if (!variableExists) {
+        return false;
+      }
+    }
 
     return true;
   }
@@ -452,17 +466,18 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   function mergeWithAccumulatedData(
     pxTable: PxTable,
     diffVariablesSelection: VariablesSelection,
-    variablesSelection: VariablesSelection
+    variablesSelection: VariablesSelection,
+    jsonData: Dataset
   ): void {
     if (
       accumulatedData !== undefined &&
       diffVariablesSelection.selection.length === 1
     ) {
-      console.log('Merging pxTable with accumulatedData');
+      // console.log('Merging pxTable with accumulatedData');
       console.log({ pxTable });
       console.log({ accumulatedData });
-      console.log({ diffVariablesSelection });
-      console.log({ variablesSelection });
+      // console.log({ diffVariablesSelection });
+      // console.log({ variablesSelection });
 
       // TODO: Get value-positions from variablesSelection
 
@@ -485,9 +500,16 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         );
 
         const selection = variablesSelection.selection.find(
-          (sel) => sel.variableCode === diffVariablesSelection.selection[0].variableCode
+          (sel) =>
+            sel.variableCode ===
+            diffVariablesSelection.selection[0].variableCode
         );
-        
+
+        // Just for test...
+        // if (selection?.valueCodes) {
+        //   selection.valueCodes.sort((a, b) => a.localeCompare(b));
+        // }
+
         const newValues = pxTable.metadata.variables.find(
           (variable) =>
             variable.id === diffVariablesSelection.selection[0].variableCode
@@ -497,6 +519,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         if (newValues) {
           newValues.forEach((value) => {
             if (!existingValues.has(value.code)) {
+              // Values are assumed to be sorted in the right order in the VariablesProvider
               const valueIndex = selection?.valueCodes?.indexOf(value.code);
               //valueIndex = 0;
               if (valueIndex !== undefined && valueIndex !== -1) {
@@ -512,10 +535,62 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
                 'at index:',
                 valueIndex
               );
+
+              // // const dimensions: string[] = accumulatedData.metadata.variables.map(variable => variable.id);
+              // const dimensions: string[] = ['01', '1', 'BE0101N1', '2023'];
+              // console.log({ dimensions });
+
+              // // Get data value from pxTable
+              // const dataValue = getPxTableData(pxTable.data.cube, dimensions);
+              // console.log({ dataValue });
+
+              // // Set data in accumulated data cube
+              // setPxTableData(
+              //   accumulatedData.data.cube,
+              //   dimensions,
+              //   structuredClone(dataValue)
+              // );
             }
           });
         }
       }
+
+      // Counter to keep track of index in json-stat2 value array
+      const counter = { number: 0 };
+
+      // Update accumulated data cube
+      createCube(jsonData, pxTable.metadata, accumulatedData.data, [], 0, counter);
+
+
+      // // Merge data
+      // const dimensions: string[] = [];
+      // for (let i = 0; i < pxTable.metadata.variables.length; i++) {
+      //   const code = pxTable.metadata.variables[i].id;
+      //   console.log ({ code });
+
+      //   for (let j = 0; j < pxTable.metadata.variables[i].values.length; j++) {
+      //     dimensions[i] = pxTable.metadata.variables[i].values[j].code;
+      //     const varCode = pxTable.metadata.variables[i].values[j].code;
+      //     console.log ({ varCode });
+      //     console.log ({ dimensions });
+
+      //     if (i === pxTable.metadata.variables.length - 1) {
+      //       // All dimensions are set - copy data
+      //       console.log ('COPY DATA');
+
+      //       // Get data value from pxTable
+      //       const dataValue = getPxTableData(pxTable.data.cube, dimensions);
+      //       console.log({ dataValue });
+
+      //       // Set data in accumulated data cube
+      //       setPxTableData(
+      //         accumulatedData.data.cube,
+      //         dimensions,
+      //         structuredClone(dataValue)
+      //       );
+      //     }
+      //   }
+      // }
 
       // pxTable.metadata.variables.forEach((variable) => {
       //   if (mergedVariables.has(variable.id)) {
