@@ -9,10 +9,10 @@
   align-self: stretch;
   background: var(--px-color-background-subtle);
   overflow-y: auto;
-
+ 
   // Not from Figma
   scrollbar-width: thin;
-
+ 
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
     width: calc(100vw - 40px);
     max-width: 384px;
@@ -114,6 +114,11 @@
     background-color: var(--px-color-surface-scrim);
     z-index: 999;
   }
+}
+
+// Not from Figma
+.children {
+    width: 100%;
 }
 
 .fadein {

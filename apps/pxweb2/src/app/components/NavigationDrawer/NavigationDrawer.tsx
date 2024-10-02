@@ -36,7 +36,7 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
             <Label size="medium" className={styles.clickable}>{t('presentation_page.sidemenu.hide')}</Label>
           </div>
         </div>
-        <div>{children}</div>
+        <div className={styles.children}>{children}</div>
       </div>
     </>
   );
