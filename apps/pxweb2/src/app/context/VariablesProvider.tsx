@@ -1,37 +1,53 @@
-import { SelectedVBValues } from '@pxweb2/pxweb2-ui';
 import React, { createContext, useState } from 'react';
+
+import { SelectedVBValues } from '@pxweb2/pxweb2-ui';
+import { PxTableMetadata } from '@pxweb2/pxweb2-ui';
 
 // Define the type for the context
 export type VariablesContextType = {
-  variables: Map<string, { id: string; value: string }>;
   addSelectedValues: (variableId: string, values: string[]) => void;
-  removeSelectedValue: (variableId: string, value: string) => void;
-  toggleSelectedValue: (variableId: string, value: string) => void;
   getSelectedValuesById: (variableId: string) => string[];
-  removeSelectedValues: (variableId: string) => void;
+  getSelectedValuesByIdSorted: (variableId: string) => string[];
+  getNumberOfSelectedValues: () => number;
   getUniqueIds: () => string[];
   syncVariablesAndValues: (values: SelectedVBValues[]) => void;
   toString: () => string;
+  hasLoadedDefaultSelection: boolean;
+  setHasLoadedDefaultSelection: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectedVBValues: React.Dispatch<React.SetStateAction<SelectedVBValues[]>>;
+  selectedVBValues: SelectedVBValues[];
+  isLoadingMetadata: boolean;
+  setIsLoadingMetadata: React.Dispatch<React.SetStateAction<boolean>>;
+  pxTableMetadata: PxTableMetadata | null;
+  setPxTableMetadata: React.Dispatch<
+    React.SetStateAction<PxTableMetadata | null>
+  >;
 };
 
 // Create the context with default values
 export const VariablesContext = createContext<VariablesContextType>({
-  variables: new Map(),
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   addSelectedValues: () => {},
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  removeSelectedValue: () => {},
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  toggleSelectedValue: () => {},
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   getSelectedValuesById: () => [],
+  getSelectedValuesByIdSorted: () => [],
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  removeSelectedValues: () => {},
+  getNumberOfSelectedValues: () => 0,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   syncVariablesAndValues: () => {},
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   getUniqueIds: () => [],
   toString: () => '',
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  hasLoadedDefaultSelection: false,
+  setHasLoadedDefaultSelection: () => false,
+  setSelectedVBValues: () => [],
+  selectedVBValues: [],
+  setIsLoadingMetadata: () => false,
+  isLoadingMetadata: false,
+  pxTableMetadata: null,
+  setPxTableMetadata: () => null,
+  // pxTableMetaToRender:null
 });
 
 // Provider component
@@ -42,18 +58,31 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
     Map<string, { id: string; value: string }>
   >(new Map());
 
-/**
- * Adds multiple values for a given variable
- */
-const addSelectedValues = (variableId: string, values: string[]) => {
+  const [errorMsg, setErrorMsg] = useState('');
+  const [pxTableMetadata, setPxTableMetadata] =
+    useState<PxTableMetadata | null>(null);
+
+  // const [prevTableId, setPrevTableId] = useState('');
+  const [isLoadingMetadata, setIsLoadingMetadata] = useState<boolean>(false);
+  const [hasLoadedDefaultSelection, setHasLoadedDefaultSelection] =
+    useState(false);
+  // const { i18n, t } = useTranslation();
+  const [selectedVBValues, setSelectedVBValues] = useState<SelectedVBValues[]>(
+    []
+  );
+
+  /**
+   * Adds multiple values for a given variable
+   */
+  const addSelectedValues = (variableId: string, values: string[]) => {
     setVariables((prev) => {
-        const newVariables = new Map(prev);
-        values.forEach((value) => {
-            newVariables.set(variableId + '-' + value, { id: variableId, value });
-        });
-        return newVariables;
+      const newVariables = new Map(prev);
+      values.forEach((value) => {
+        newVariables.set(variableId + '-' + value, { id: variableId, value });
+      });
+      return newVariables;
     });
-};
+  };
 
   const getSelectedValuesById = (variableId: string) => {
     const values: string[] = [];
@@ -66,31 +95,23 @@ const addSelectedValues = (variableId: string, values: string[]) => {
     return values;
   };
 
-  const removeSelectedValue = (variableId: string, value: string) => {
-    setVariables((prev) => {
-      const newVariables = new Map(prev);
-      newVariables.delete(variableId + '-' + value);
-      return newVariables;
-    });
-  };
-
-  const removeSelectedValues = (variableId: string) => {
-    const values = getSelectedValuesById(variableId);
-    values.forEach((value) => {
-      removeSelectedValue(variableId, value);
-    });
-  };
-
-  const toggleSelectedValue = (variableId: string, value: string) => {
-    setVariables((prev) => {
-      const newVariables = new Map(prev);
-      if (newVariables.has(variableId + '-' + value)) {
-        newVariables.delete(variableId + '-' + value);
-      } else {
-        newVariables.set(variableId + '-' + value, { id: variableId, value });
+  // not in use so far, but maybe to use it in TableDataProvdider when update Cube.
+  const getSelectedValuesByIdSorted = (variableId: string) => {
+    let sortedValues:string[] =[] 
+    pxTableMetadata?.variables.forEach((item) => {
+      if (item.id === variableId) {
+        sortedValues = (item.values.filter((value) =>
+          selectedVBValues.find(
+            (selvar) => selvar.id === variableId
+          )?.values.includes(value.code)).map(value=>value.code)
+        );
       }
-      return newVariables;
     });
+    return sortedValues
+  };
+
+  const getNumberOfSelectedValues = () => {
+    return variables.size;
   };
 
   const getUniqueIds = () => {
@@ -160,15 +181,21 @@ const addSelectedValues = (variableId: string, values: string[]) => {
   return (
     <VariablesContext.Provider
       value={{
-        variables,
         addSelectedValues,
-        removeSelectedValue,
-        toggleSelectedValue,
-        removeSelectedValues,
+        getNumberOfSelectedValues,
         getSelectedValuesById,
+        getSelectedValuesByIdSorted,
         getUniqueIds,
         syncVariablesAndValues,
         toString,
+        hasLoadedDefaultSelection,
+        selectedVBValues,
+        setSelectedVBValues,
+        isLoadingMetadata,
+        pxTableMetadata,
+        setHasLoadedDefaultSelection,
+        setIsLoadingMetadata,
+        setPxTableMetadata,
       }}
     >
       {children}
