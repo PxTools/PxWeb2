@@ -31,7 +31,7 @@
     border-start-end-radius: var(--px-border-radius-none);
     border-end-end-radius: var(--px-border-radius-none);
     border-end-start-radius: var(--px-border-radius-none);
-    
+
     padding: fixed.$spacing-6 fixed.$spacing-6 0px fixed.$spacing-6;
   }
 
@@ -53,6 +53,11 @@
   overflow-y: auto;
   scrollbar-width: thin;
 
+  // xsmall 
+  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
+    gap: fixed.$spacing-4;
+  }
+
   // xsmall and small
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
     width: 100vw;
@@ -72,7 +77,7 @@
   background: var(--px-color-surface-default);
   align-self: stretch;
 
-  // xsmall 
+  // xsmall
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
     padding: 0px fixed.$spacing-4;
     gap: fixed.$spacing-7;
@@ -97,7 +102,7 @@
     padding: fixed.$spacing-10 fixed.$spacing-12;
     gap: fixed.$spacing-10;
   }
- 
+
   container-type: inline-size;
   container-name: contentCont;
 
