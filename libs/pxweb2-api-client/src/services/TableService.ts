@@ -13,7 +13,6 @@ import type { VariablesSelection } from '../models/VariablesSelection';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
-import { debounce } from 'lodash';
 export class TableService {
   /**
    * Get all Tables.
@@ -246,8 +245,26 @@ export class TableService {
     });
   }
 
-  public static getTableDataByPostDebounced = debounce(
-    TableService.getTableDataByPost,
-    500
-  );
+  private static debouncePromise<T extends (...args: any[]) => Promise<any>>(
+    func: T,
+    wait: number
+  ): T {
+    let timeout: NodeJS.Timeout | null = null;
+    let pendingPromise: Promise<any> | null = null;
+    let lastArgs: Parameters<T> | null = null;
+
+    return function (...args: Parameters<T>): ReturnType<T> {
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+
+      return new Promise((resolve, reject) => {
+        timeout = setTimeout(() => {
+          func(...args)
+            .then(resolve)
+            .catch(reject);
+        }, wait);
+      }) as ReturnType<T>;
+    } as unknown as T;
+  }
 }

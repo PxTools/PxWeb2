@@ -78,7 +78,6 @@ export function VariableBoxContent({
   const hasCodeLists = codeLists && codeLists.length > 0;
   const hasSevenOrMoreValues = values && values.length > 6;
   const hasTwoOrMoreValues = values && values.length > 1;
-  const hasValues = values && values.length > 0;
   const hasSelectAndSearch = hasCodeLists && hasSevenOrMoreValues;
   const valuesToRender = structuredClone(values);
 
