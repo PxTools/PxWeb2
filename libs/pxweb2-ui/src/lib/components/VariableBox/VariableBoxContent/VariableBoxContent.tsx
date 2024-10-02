@@ -215,7 +215,6 @@ export function VariableBoxContent({
         >
           <Search
             onChange={(value: string) => {
-              console.log('setSearch!', value);
               setSearch(value);
             }}
             variant="inVariableBox"
