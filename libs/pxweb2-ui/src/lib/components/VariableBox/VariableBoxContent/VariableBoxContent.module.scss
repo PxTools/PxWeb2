@@ -82,7 +82,6 @@
   &:focus-visible {
     border-radius: var(--border-radius-large);
     border: 3px solid var(--color-border-focus-boxshadow, #162327); // TODO: Remove defaults when adding focus-visible
-
     outline: 3px solid var(--color-border-focus-outline, #7e4ef9); // TODO: Remove defaults when adding focus-visible
     outline-offset: 2px;
     z-index: 0;
@@ -96,4 +95,8 @@
   align-items: flex-end;
   align-self: stretch;
   gap: fixed.$spacing-1;
+}
+
+.focusableItem:focus-within {
+  background-color: #c3dcdc;
 }

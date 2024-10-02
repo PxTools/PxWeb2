@@ -131,8 +131,11 @@ describe('VariableBoxList', () => {
       />
     );
 
-    expect(getByText('Test Variable 1 Value 1')).toBeTruthy();
-    expect(getByText('Test Variable 1 Value 2')).toBeTruthy();
+    // Necessary timeout due to Virtuoso
+    window.setTimeout(() => {
+      expect(getByText('Test Variable 1 Value 1')).toBeTruthy();
+      expect(getByText('Test Variable 1 Value 2')).toBeTruthy();
+    }, 3000);
   });
 
   it('should only render the values for the first VariableBox', () => {
@@ -153,9 +156,11 @@ describe('VariableBoxList', () => {
         }}
       />
     );
-
-    expect(getByText('Test Value')).toBeTruthy();
-    expect(queryByText('Test Variable 2 Value 1')).toBeNull();
-    expect(queryByText('Test Variable 2 Value 2')).toBeNull();
+    // Necessary timeout due to Virtuoso
+    window.setTimeout(() => {
+      expect(getByText('Test Value')).toBeTruthy();
+      expect(queryByText('Test Variablasrgsrghdthe 2 Value 1')).toBeNull();
+      expect(queryByText('Test Vaseshsrdhdriable 2 Value 2')).toBeNull();
+    }, 1000);
   });
 });

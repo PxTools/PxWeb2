@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import cl from 'clsx';
 
 import classes from './Search.module.scss';
@@ -6,8 +6,7 @@ import { Icon } from '../Icon/Icon';
 import { Label } from '../Typography/Label/Label';
 import { Button } from '../Button/Button';
 
-export interface SearchProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface SearchProps {
   variant: 'default' | 'inVariableBox';
   labelText?: string;
   searchPlaceHolder?: string;
@@ -15,6 +14,7 @@ export interface SearchProps
   variableBoxTopBorderOverride?: boolean;
   ariaLabelIconText?: string;
   arialLabelClearButtonText?: string;
+  onChange?: (value: string) => void;
 }
 
 export function Search({
@@ -25,6 +25,7 @@ export function Search({
   ariaLabelIconText = 'Search icon',
   arialLabelClearButtonText = 'Clear search button',
   variableBoxTopBorderOverride = false,
+  onChange,
   ...rest
 }: SearchProps) {
   const [inputValue, setInputValue] = useState('');
@@ -48,9 +49,12 @@ export function Search({
   return (
     <div className={classes.search}>
       {showLabel && <Label size="medium">{labelText}</Label>}
-      <div className={cl(classes.wrapper, classes.border, classes[variant], {
-              [classes.variableboxSearchAndSelectBorderOverride]: variableBoxTopBorderOverride,
-            })}>
+      <div
+        className={cl(classes.wrapper, classes.border, classes[variant], {
+          [classes.variableboxSearchAndSelectBorderOverride]:
+            variableBoxTopBorderOverride,
+        })}
+      >
         <Icon
           iconName="MagnifyingGlass"
           className={classes.searchIcon}
@@ -66,8 +70,13 @@ export function Search({
           )}
           placeholder={searchPlaceHolder}
           value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onKeyDown={handleKeyDown}
+          onChange={(e) => {
+            onChange && onChange(e.target.value);
+            setInputValue(e.target.value);
+          }}
+          onKeyDown={(e) => {
+            handleKeyDown(e);
+          }}
           {...rest}
         ></input>
         {hasValue && (
@@ -75,7 +84,10 @@ export function Search({
             variant="tertiary"
             icon="XMark"
             size="small"
-            onClick={handleClear}
+            onClick={() => {
+              onChange && onChange('');
+              handleClear();
+            }}
             aria-label={arialLabelClearButtonText}
           ></Button>
         )}
