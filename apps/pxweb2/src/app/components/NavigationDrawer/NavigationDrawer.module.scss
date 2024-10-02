@@ -9,22 +9,33 @@
   align-self: stretch;
   background: var(--px-color-background-subtle);
   overflow-y: auto;
-
+ 
   // Not from Figma
   scrollbar-width: thin;
+ 
+  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
+    width: calc(100vw - 40px);
+//    max-width: 384px;
+    max-width: 395px;
+    padding: fixed.$spacing-4;
+  }
+
+  @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
+//    width: 384px;
+    width: 395px;
+    padding: fixed.$spacing-6;
+  }
 
   // xsmall and small
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
-    width: 384px;
     height: 100vh;
-    padding: fixed.$spacing-6;
 
     // Handle rtl languages
     border-start-start-radius: var(--px-border-radius-none);
     border-start-end-radius: var(--px-border-radius-xlarge);
     border-end-end-radius: var(--px-border-radius-xlarge);
     border-end-start-radius: var(--px-border-radius-none);
-  
+
     // Not from Figma
     position: absolute;
     top: 0;
@@ -33,7 +44,8 @@
 
   // medium
   @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
-    width: 384x;
+    //width: 384px;
+    width: 395px;
     height: calc(100vh - 88px);
     padding: fixed.$spacing-6;
 
@@ -42,7 +54,7 @@
     border-start-end-radius: var(--px-border-radius-xlarge);
     border-end-end-radius: var(--px-border-radius-xlarge);
     border-end-start-radius: var(--px-border-radius-none);
-  
+
     // Not from Figma
     position: absolute;
     inset-inline-start: 120px; // Instead of "left" to handle rtl languages
@@ -52,7 +64,8 @@
 
   // large and xlarge
   @media ((min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width)) or ((min-width: fixed.$breakpoints-xlarge-min-width)) {
-    width: 360px;
+    //width: 360px;
+    width: 371px;
     padding: 0px fixed.$spacing-6 fixed.$spacing-6 0px;
     border-radius: var(--px-border-radius-none);
   }
@@ -61,7 +74,7 @@
 .heading {
   display: flex;
   height: fixed.$spacing-11;
-  padding: 0px fixed.$spacing-4 0px fixed.$spacing-5;
+  padding: 0px fixed.$spacing-6 0px fixed.$spacing-5;
   justify-content: space-between;
   align-items: center;
   flex-shrink: 0;
@@ -72,6 +85,11 @@
 .hideMenu {
   display: flex;
   flex-direction: row;
+}
+.hideMenu:hover {
+  .hideIconWrapper {
+    inset-inline-start: -2px;
+  }
 }
 
 .clickable {
@@ -84,6 +102,9 @@
   display: flex;
   align-items: flex-start;
   gap: fixed.$spacing-1;
+  position: relative;
+  inset-inline-start: 0;
+  transition: inset-inline-start ease 0.1s;
 }
 
 // Not from Figma
@@ -99,6 +120,11 @@
   }
 }
 
+// Not from Figma
+.children {
+    width: 100%;
+}
+
 .fadein {
   animation: fadeIn 200ms forwards;
 }
@@ -111,3 +137,19 @@
     opacity: 1;
   }
 }
+
+// Animation that slides in NavigationDrawer from the left when opened.
+// Needs position to be absolute so it only works on screen size xsmall, small and medium at the moment.
+// Add class "slidein" to NavigationDrawer component in NavigationDrawer.tsx to use this animation.
+// .slidein {
+//   animation: slideIn 300ms forwards;
+// }
+
+// @keyframes slideIn {
+//   0% {
+//     left: -400px;
+//   }
+//   100% {
+//     left: 0;
+//   }
+// }

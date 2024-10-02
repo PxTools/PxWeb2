@@ -11,6 +11,8 @@ import NavigationRail from './components/NavigationMenu/NavigationRail/Navigatio
 import NavigationBar from './components/NavigationMenu/NavigationBar/NavigationBar';
 
 import { Footer } from './components/Footer/Footer';
+import { BreakpointsSmallMaxWidth } from '@pxweb2/pxweb2-ui';
+
 
 export function App() {
   const { tableId } = useParams<{ tableId: string }>();
@@ -21,11 +23,25 @@ export function App() {
   const [selectedNavigationView, setSelectedNavigationView] =
     useState<NavigationItem>('filter');
 
-  /**
-   * Updates useState hook and synchronizes variables context with the selected VB values.
-   *
-   * @param selectedVBValues - An array of selected VB values.
-   */
+
+/**
+ * Keep state if window screen size is mobile or desktop.
+ */
+  const mobileBreakpoint = Number(BreakpointsSmallMaxWidth.replace('px', ''));
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= mobileBreakpoint);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= mobileBreakpoint);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [mobileBreakpoint]);
+
 
   useEffect(() => {
     if (errorMsg !== '') {
@@ -45,12 +61,14 @@ export function App() {
 
   return (
     <>
-      <Header />
+      {!isMobile && <Header />}{' '}
       <div className={styles.navigationAndContentContainer}>
-        <NavigationRail
-          onChange={changeSelectedNavView}
-          selected={selectedNavigationView}
-        />
+        {!isMobile && (
+          <NavigationRail
+            onChange={changeSelectedNavView}
+            selected={selectedNavigationView}
+          />
+        )}{' '}
         <div className={styles.mainContainer}>
           <Selection
             selectedNavigationView={selectedNavigationView}
@@ -58,15 +76,18 @@ export function App() {
             setSelectedNavigationView={changeSelectedNavView}
           />
           <div className={styles.contentAndFooterContainer}>
+            {isMobile && <Header />}{' '}
             <Presentation selectedTabId={selectedTableId}></Presentation>
             <Footer />
           </div>
         </div>
       </div>
-      <NavigationBar
-        onChange={changeSelectedNavView}
-        selected={selectedNavigationView}
-      />
+      {isMobile && (
+        <NavigationBar
+          onChange={changeSelectedNavView}
+          selected={selectedNavigationView}
+        />
+      )}{' '}
     </>
   );
 }

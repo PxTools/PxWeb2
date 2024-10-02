@@ -16,7 +16,7 @@
     left: 0px;
     background: var(--px-color-surface-default);
     width: 100%;
-    height: calc(100vh - 88px - 80px);
+    height: calc(100vh - 80px);
   }
 
   // medium, large and xlarge
@@ -52,6 +52,11 @@
   height: 100%;
   overflow-y: auto;
   scrollbar-width: thin;
+
+  // xsmall 
+  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
+    gap: fixed.$spacing-4;
+  }
 
   // xsmall and small
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
