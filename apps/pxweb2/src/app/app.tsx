@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import {useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import styles from './app.module.scss';
 import { Selection } from './components/Selection/Selection';
@@ -58,11 +58,7 @@ export function App() {
             setSelectedNavigationView={changeSelectedNavView}
           />
           <div className={styles.contentAndFooterContainer}>
-            <div className={styles.contentContainer}>
-              <Presentation
-                selectedTabId={selectedTableId}
-              ></Presentation>
-            </div>
+            <Presentation selectedTabId={selectedTableId}></Presentation>
             <Footer />
           </div>
         </div>

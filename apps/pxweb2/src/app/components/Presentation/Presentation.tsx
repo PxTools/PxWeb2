@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 
 import styles from './Presentation.module.scss';
 import { ContentTop } from '../ContentTop/ContentTop';
@@ -7,14 +7,11 @@ import { Table, EmptyState } from '@pxweb2/pxweb2-ui';
 import useTableData from '../../context/useTableData';
 import useVariables from '../../context/useVariables';
 
-
 type propsType = {
   selectedTabId: string;
 };
 
-export function Presentation({
-  selectedTabId,
-}: propsType) {
+export function Presentation({ selectedTabId }: propsType) {
   const { i18n, t } = useTranslation();
   const tableData = useTableData();
   const variables = useVariables();
@@ -36,7 +33,7 @@ export function Presentation({
           (selectedVariable) => selectedVariable.id === variable.id
         )
       );
-      //initial load of data should maybe be done in react-router 
+    //initial load of data should maybe be done in react-router
     if (initialRun && !hasSelectedValues) {
       tableData.fetchTableData(tableId ? tableId : 'tab1292', i18n);
       setIsMissingMandatoryVariables(false);
@@ -57,10 +54,10 @@ export function Presentation({
         SetInitialRun(false);
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tableId, selectedVBValues, i18n.resolvedLanguage]);
   return (
-    <>
+    <div className={styles.contentContainer}>
       {tableData.data && pxTableMetadata && (
         <>
           <ContentTop
@@ -86,7 +83,7 @@ export function Presentation({
           )}
         </>
       )}{' '}
-    </>
+    </div>
   );
 }
 
