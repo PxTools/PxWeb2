@@ -17,6 +17,5 @@ export function mapTableSelectionResponse(
       };
     }
   );
-
   return selectedVBValues;
 }
