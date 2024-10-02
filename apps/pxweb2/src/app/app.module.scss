@@ -31,7 +31,7 @@
     border-start-end-radius: var(--px-border-radius-none);
     border-end-end-radius: var(--px-border-radius-none);
     border-end-start-radius: var(--px-border-radius-none);
-    
+
     padding: fixed.$spacing-6 fixed.$spacing-6 0px fixed.$spacing-6;
   }
 
@@ -61,51 +61,5 @@
   // medium, large and xlarge
   @media ((min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-large-max-width)) or ((min-width: fixed.$breakpoints-xlarge-min-width)) {
     padding-bottom: fixed.$spacing-6;
-  }
-}
-
-.contentContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  border-radius: var(--px-border-radius-xlarge);
-  background: var(--px-color-surface-default);
-  align-self: stretch;
-
-  // xsmall 
-  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
-    padding: fixed.$spacing-4;
-    gap: fixed.$spacing-7;
-    border-radius: var(--px-border-radius-none);
-  }
-
-  // small
-  @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
-    padding: fixed.$spacing-6;
-    gap: fixed.$spacing-9;
-    border-radius: var(--px-border-radius-none);
-  }
-
-  // medium
-  @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
-    padding: fixed.$spacing-10;
-    gap: fixed.$spacing-10;
-  }
-
-  // large and xlarge
-  @media ((min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width)) or ((min-width: fixed.$breakpoints-xlarge-min-width)) {
-    padding: fixed.$spacing-10 fixed.$spacing-12;
-    gap: fixed.$spacing-10;
-  }
- 
-  container-type: inline-size;
-  container-name: contentCont;
-
-  @container contentCont (width > 1px) {
-    .tableContainer {
-      width: 100cqw;
-      overflow-x: auto;
-      scrollbar-width: thin;
-    }
   }
 }
