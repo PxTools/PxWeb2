@@ -244,27 +244,4 @@ export class TableService {
       },
     });
   }
-
-  private static debouncePromise<T extends (...args: any[]) => Promise<any>>(
-    func: T,
-    wait: number
-  ): T {
-    let timeout: NodeJS.Timeout | null = null;
-    let pendingPromise: Promise<any> | null = null;
-    let lastArgs: Parameters<T> | null = null;
-
-    return function (...args: Parameters<T>): ReturnType<T> {
-      if (timeout) {
-        clearTimeout(timeout);
-      }
-
-      return new Promise((resolve, reject) => {
-        timeout = setTimeout(() => {
-          func(...args)
-            .then(resolve)
-            .catch(reject);
-        }, wait);
-      }) as ReturnType<T>;
-    } as unknown as T;
-  }
 }
