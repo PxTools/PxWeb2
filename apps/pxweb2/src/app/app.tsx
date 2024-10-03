@@ -13,7 +13,6 @@ import NavigationBar from './components/NavigationMenu/NavigationBar/NavigationB
 import { Footer } from './components/Footer/Footer';
 import { BreakpointsSmallMaxWidth } from '@pxweb2/pxweb2-ui';
 
-
 export function App() {
   const { tableId } = useParams<{ tableId: string }>();
   const [selectedTableId, setSelectedTableId] = useState(
@@ -23,12 +22,13 @@ export function App() {
   const [selectedNavigationView, setSelectedNavigationView] =
     useState<NavigationItem>('filter');
 
-
-/**
- * Keep state if window screen size is mobile or desktop.
- */
+  /**
+   * Keep state if window screen size is mobile or desktop.
+   */
   const mobileBreakpoint = Number(BreakpointsSmallMaxWidth.replace('px', ''));
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= mobileBreakpoint);
+  const [isMobile, setIsMobile] = useState(
+    window.innerWidth <= mobileBreakpoint
+  );
 
   useEffect(() => {
     const handleResize = () => {
@@ -41,7 +41,6 @@ export function App() {
       window.removeEventListener('resize', handleResize);
     };
   }, [mobileBreakpoint]);
-
 
   useEffect(() => {
     if (errorMsg !== '') {
