@@ -146,6 +146,12 @@
     "border-error": {
       "value": "#E23822"
     },
+    "border-focus-outline": {
+      "value": "#7E4EF9"
+    },
+    "border-focus-boxshadow": {
+      "value": "#162327"
+    },
     "border-focus": {
       "value": "#9272FC"
     },
