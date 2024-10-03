@@ -23,7 +23,7 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
 
   return (
     <>
-      <div className={styles.backdrop}></div>
+      <div onClick={onClose} className={styles.backdrop}></div>
       <div className={cl(styles.navigationDrawer, styles.fadein)}>
         <div className={styles.heading}>
           <Heading level="2" size="medium">
@@ -36,7 +36,7 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
             <Label size="medium" className={styles.clickable}>{t('presentation_page.sidemenu.hide')}</Label>
           </div>
         </div>
-        <div>{children}</div>
+        <div className={styles.children}>{children}</div>
       </div>
     </>
   );
