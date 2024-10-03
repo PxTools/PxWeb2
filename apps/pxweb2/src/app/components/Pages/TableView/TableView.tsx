@@ -18,9 +18,9 @@ import useLocalizeDocumentAttributes from '../../../../i18n/useLocalizeDocumentA
 import { TableService } from '@pxweb2/pxweb2-api-client';
 import { mapTableMetadataResponse } from '../../../../mappers/TableMetadataResponseMapper';
 import { Header } from './../../../components/Header/Header';
-import NavigationRail from './../../../components/NavigationRail/NavigationRail';
+import NavigationRail from './../../../components/NavigationMenu/NavigationRail/NavigationRail';
 import { Content } from './../../../components/Content/Content';
-import NavigationBar from './../../../components/NavigationBar/NavigationBar';
+import NavigationBar from './../../../components/NavigationMenu/NavigationBar/NavigationBar';
 import NavigationDrawer from './../../../components/NavigationDrawer/NavigationDrawer';
 import useVariables from './../../../context/useVariables';
 import useTableData from './../../../context/useTableData';
