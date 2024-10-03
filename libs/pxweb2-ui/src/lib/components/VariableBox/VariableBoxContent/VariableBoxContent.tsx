@@ -138,9 +138,6 @@ export function VariableBoxContent({
     });
   }
 
-  // Reference to the Virtuoso list
-  const listRef = useRef<VirtuosoHandle | null>(null);
-
   const handleValueListKeyboardNavigation = (
     event: React.KeyboardEvent<HTMLDivElement>
   ) => {
@@ -186,14 +183,6 @@ export function VariableBoxContent({
           console.log('focused on this', element);
           element.focus();
         }
-      }
-
-      // Scroll the list to the index
-      if (listRef.current) {
-        listRef.current.scrollToIndex({
-          index: newIndex,
-          align: 'center',
-        });
       }
     }
   };
@@ -324,7 +313,6 @@ export function VariableBoxContent({
             {items.length > 0 && (
               <Virtuoso
                 computeItemKey={(key) => `item-${key}`}
-                ref={listRef}
                 style={{ height: '380px', maxHeight: '380px', width: '100%' }}
                 className=""
                 totalCount={items.length}
