@@ -339,7 +339,7 @@ export function VariableBoxContent({
                       aria-label="placeholder"
                       style={{
                         height: '25px',
-                        backgroundColor: '#efefef',
+                        backgroundColor: '#D9D9D9',
                         margin: '20px',
                         marginLeft: '10px',
                         marginRight: '10px',
