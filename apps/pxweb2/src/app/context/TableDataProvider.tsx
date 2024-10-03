@@ -16,6 +16,7 @@ export interface TableDataContextType {
   /*   loading: boolean;
   error: string | null; */
   fetchTableData: (tableId: string, i18n: i18n) => void;
+  setTableData: (tableData: PxTable) => void;
 }
 
 interface TableDataProviderProps {
@@ -27,6 +28,8 @@ const TableDataContext = createContext<TableDataContextType | undefined>({
   data: undefined,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   fetchTableData: () => {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  setTableData: () => {},
 });
 const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   const [data, setData] = useState<PxTable | undefined>(undefined);
@@ -68,9 +71,13 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     setData(pxTable);
   };
 
+  const setTableData = (tableData: PxTable) => {
+    setData(tableData);
+  };
+
   return (
     <TableDataContext.Provider
-      value={{ data, /* loading, error  */ fetchTableData }}
+      value={{ data, /* loading, error  */ fetchTableData, setTableData }}
     >
       {children}
     </TableDataContext.Provider>

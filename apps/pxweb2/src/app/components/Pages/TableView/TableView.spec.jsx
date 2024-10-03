@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 
-import App from './app';
+import TableView from './TableView';
 import { MemoryRouter } from 'react-router-dom';
 window.PxWeb2Config = {
   language: {
@@ -15,12 +15,12 @@ window.PxWeb2Config = {
   },
 };
 
-describe('App', () => {
-  // TODO: fix test
+describe('TableView', () => {
+  //  TODO: fix test
   // it('should render successfully', () => {
   //   const { baseElement } = render(
   //   <MemoryRouter>
-  //     <App />
+  //     <TableView />
   //   </MemoryRouter>);
   //   expect(baseElement).toBeTruthy();
   // });

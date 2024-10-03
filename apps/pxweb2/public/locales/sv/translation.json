@@ -35,19 +35,33 @@
       "close": "Stänga"
     },
     "generic_tags": {
-      "mandatory": "Måste väljas"    
+      "mandatory": "Måste väljas"
+    },
+    "routing_errors": {
+      "401": {
+        "title": "Ingen åtkomst",
+        "description": "Du kan inte komma åt den här sidan."
+      },
+      "404": {
+        "title": "Sidan kan inte hittas",
+        "description": "Sidan du letar efter finns inte."
+      },
+      "500": {
+        "title": "Internt serverfel",
+        "description": "Ett fel uppstod på servern. Försök igen senare."
+      }
     }
   },
   "start_page": {
     "header": "Välkommen till appen!",
     "welcome_trans_test": "Välkommen till <1>appen</1> för PxWeb 2.0!"
   },
-  "presentation_page": { 
+  "presentation_page": {
     "header": {
-    "searchbutton": "Sök",
-    "languagebutton": "språk",
-    "statistics": "Statistikdatabasen"
-  },
+      "searchbutton": "Sök",
+      "languagebutton": "språk",
+      "statistics": "Statistikdatabasen"
+    },
     "sidemenu": {
       "hide": "Dölj",
       "selection": {
@@ -86,7 +100,7 @@
           "title": "Tabell"
         },
         "graph": {
-            "title": "Diagram"
+          "title": "Diagram"
         }
       },
       "edit": {
@@ -106,7 +120,7 @@
           }
         },
         "calculate": {
-          "title": "Beräkna", 
+          "title": "Beräkna",
           "sum": {
             "title": "Summera",
             "description": "Beskrivande text..."
@@ -153,7 +167,7 @@
           "description": "Tabellen är en del av statistiken {{statistics}}"
         },
         "definition": {
-            "title": "Definitioner",
+          "title": "Definitioner",
           "description": "Beskrivande text..."
         },
         "metadata": {
