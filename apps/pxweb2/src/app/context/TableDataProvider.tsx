@@ -527,7 +527,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
                 existingVariable?.values.push(value);
               }
               console.log(
-                'Merging variable:',
+                'Merging variable :',
                 diffVariablesSelection.selection[0].variableCode,
                 'with value:',
                 value.code,
