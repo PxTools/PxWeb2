@@ -100,7 +100,10 @@ export function VariableBoxContent({
     }
 
     values
-      .filter((value) => value.label.indexOf(debouncedSearch) > -1)
+      .filter(
+        (value) =>
+          value.label.toLowerCase().indexOf(debouncedSearch.toLowerCase()) > -1
+      )
       .forEach((value) => {
         newItems.push({ type: 'value', value });
       });
