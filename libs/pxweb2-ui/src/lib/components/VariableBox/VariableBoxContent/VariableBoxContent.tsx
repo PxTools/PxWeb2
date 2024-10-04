@@ -12,6 +12,7 @@ import { VartypeEnum } from '../../../shared-types/vartypeEnum';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 import { Value } from '../../../shared-types/value';
 import { useDebounce } from '@uidotdev/usehooks';
+import Skeleton from '../../Skeleton/Skeleton';
 
 type MappedCodeList = {
   value: string;
@@ -323,18 +324,11 @@ export function VariableBoxContent({
                 }}
                 components={{
                   ScrollSeekPlaceholder: ({ height }) => (
-                    <div
+                    <Skeleton
                       aria-label="placeholder"
-                      style={{
-                        height: '25px',
-                        backgroundColor: '#D9D9D9',
-                        margin: '20px',
-                        marginLeft: '10px',
-                        marginRight: '10px',
-                        borderRadius: '4px',
-                        maxWidth: 50 + Math.ceil(Math.random() * 15) + '%',
-                      }}
-                    ></div>
+                      height={'25px'}
+                      width={50 + Math.ceil(Math.random() * 15) + '%'}
+                    />
                   ),
                 }}
               />
