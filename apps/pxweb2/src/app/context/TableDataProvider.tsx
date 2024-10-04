@@ -71,7 +71,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     );
 
     //console.log({variablesSelection});
-    console.log({ validAccData });
+    //console.log({ validAccData });
 
     // TODO: Split into to functions, one with validAccData and one without
 
@@ -112,6 +112,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     //   varSelection = variablesSelection;
     // }
 
+    console.log('Fetching data from API');
     const res = await TableService.getTableDataByPost(
       tableId,
       i18n.language,
@@ -472,8 +473,8 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       diffVariablesSelection.selection.length === 1
     ) {
       // console.log('Merging pxTable with accumulatedData');
-      console.log({ pxTable });
-      console.log({ accumulatedData });
+      //console.log({ pxTable });
+      //console.log({ accumulatedData });
       // console.log({ diffVariablesSelection });
       // console.log({ variablesSelection });
 
@@ -512,7 +513,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
           (variable) =>
             variable.id === diffVariablesSelection.selection[0].variableCode
         )?.values;
-        console.log({ newValues });
+        //console.log({ newValues });
 
         if (newValues) {
           newValues.forEach((value) => {
@@ -571,7 +572,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       // Map for dimensions in new data
       const dimensionsMap: number[] = getDimensionsMap(accumulatedData.metadata,  pxTable.metadata);
 
-      console.log ({ dimensionsMap });
+      //console.log ({ dimensionsMap });
 
       updateCube(accumulatedData, pxTable, dimensions, 0, dimensionsMap);
 
@@ -677,7 +678,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         variableInNewData.values.forEach((value) => {
           dimensions[dimensionIndex] = value.code;
 
-          console.log({ dimensions });
+          //console.log({ dimensions });
           const newDataDimensions: string[] = new Array(accData.metadata.variables.length);
 
           for (let i = 0; i < dimensions.length; i++) {
@@ -685,10 +686,10 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
             newDataDimensions[i] = dimensions[index];
           }
 
-          console.log({ newDataDimensions });
+          //console.log({ newDataDimensions });
           // Get data value from newData
           const dataValue = getPxTableData(newData.data.cube, newDataDimensions);
-          console.log({ dataValue });
+          //console.log({ dataValue });
 
           // Set data in accumulated data cube
           setPxTableData(
