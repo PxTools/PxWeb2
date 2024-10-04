@@ -7,9 +7,9 @@ import {
   VariableSelection,
   VariablesSelection,
 } from '@pxweb2/pxweb2-api-client';
-import { PxTable } from '@pxweb2/pxweb2-ui';
-//import { getPxTableData, setPxTableData } from '@pxweb2/pxweb2-ui';
-import { mapJsonStat2Response, createCube } from '../../mappers/JsonStat2ResponseMapper';
+import { PxTable, PxTableMetadata } from '@pxweb2/pxweb2-ui';
+import { getPxTableData, setPxTableData } from '@pxweb2/pxweb2-ui';
+import { mapJsonStat2Response } from '../../mappers/JsonStat2ResponseMapper';
 
 // Define types for the context state and provider props
 export interface TableDataContextType {
@@ -58,7 +58,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     ids.forEach((id) => {
       const selection: VariableSelection = {
         variableCode: id,
-        valueCodes: variables.getSelectedValuesById(id),
+        valueCodes: variables.getSelectedValuesByIdSorted(id),
       };
       selections.push(selection);
     });
@@ -131,8 +131,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       mergeWithAccumulatedData(
         pxTable,
         diffVariablesSelection,
-        variablesSelection,
-        pxTabData
+        variablesSelection
       );
       const pxTableMerged =
         createPxTableFromAccumulatedData(variablesSelection);
@@ -466,8 +465,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   function mergeWithAccumulatedData(
     pxTable: PxTable,
     diffVariablesSelection: VariablesSelection,
-    variablesSelection: VariablesSelection,
-    jsonData: Dataset
+    variablesSelection: VariablesSelection
   ): void {
     if (
       accumulatedData !== undefined &&
@@ -556,13 +554,48 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       }
 
       // Counter to keep track of index in json-stat2 value array
-      const counter = { number: 0 };
+      // const counter = { number: 0 };
 
-      // Update accumulated data cube
-      createCube(jsonData, pxTable.metadata, accumulatedData.data, [], 0, counter);
+      // // Update accumulated data cube
+      // createCube(jsonData, pxTable.metadata, accumulatedData.data, [], 0, counter);
 
 
-      // // Merge data
+      // Merge data
+      // Variables from the new API-call must be in the same order as the variables in accumulatedData.
+      // This might not be the case because the metadata in accumulatedData can be from default selection. 
+      // If that is the case the variables in accumulatedData are pivoted.
+
+      // Dimensions in accumulatedData
+      const dimensions: string[] = [];
+
+      // Map for dimensions in new data
+      const dimensionsMap: number[] = getDimensionsMap(accumulatedData.metadata,  pxTable.metadata);
+
+      console.log ({ dimensionsMap });
+
+      updateCube(accumulatedData, pxTable, dimensions, 0, dimensionsMap);
+
+      // for (let i = 0; i < accumulatedData.metadata.variables.length; i++) {
+      //   const variableInPxTable = pxTable.metadata.variables.find(
+      //     (variable) => variable.id === accumulatedData.metadata.variables[i].id
+      //   );
+
+      //   if (variableInPxTable) {
+      //     for (let j = 0; j < variableInPxTable.values.length; j++) {
+            
+      //     }
+      //   }
+
+      //     // variableInPxTable.values.forEach((value) => {
+      //     //   const existingVariable = accumulatedData.metadata.variables[i];
+      //     //   const existingValues = new Set(existingVariable.values.map((v) => v.code));
+
+      //     //   if (!existingValues.has(value.code)) {
+      //     //     existingVariable.values.push(value);
+      //     //   }
+      //     // });
+      // }
+
       // const dimensions: string[] = [];
       // for (let i = 0; i < pxTable.metadata.variables.length; i++) {
       //   const code = pxTable.metadata.variables[i].id;
@@ -616,6 +649,62 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       // });
 
       // accumulatedData.metadata.variables = Array.from(mergedVariables.values());
+    }
+  }
+
+  // Get dimension mapper for how variables are located in new data vs in accumulated data
+  function getDimensionsMap(accumulatedMetadata : PxTableMetadata, newMetadata : PxTableMetadata) : number[] {
+    const dimensionsMap: number[] = [];
+
+    for (let i = 0; i < accumulatedMetadata.variables.length; i++) {
+        const index = newMetadata.variables.findIndex(
+          (variable) => variable.id === accumulatedMetadata.variables[i].id
+        );
+        dimensionsMap[i] = index;
+    }
+
+    return dimensionsMap;
+  }
+
+  function updateCube(accData : PxTable, newData : PxTable, dimensions : string[], dimensionIndex : number, dimensionsMap: number[]) : void {
+        
+    const variableInNewData = newData.metadata.variables.find(
+      (variable) => variable.id === accData.metadata.variables[dimensionIndex].id
+    );
+
+    if (variableInNewData) {
+      if (dimensionIndex === accData.metadata.variables.length - 1) {
+        variableInNewData.values.forEach((value) => {
+          dimensions[dimensionIndex] = value.code;
+
+          console.log({ dimensions });
+          const newDataDimensions: string[] = new Array(accData.metadata.variables.length);
+
+          for (let i = 0; i < dimensions.length; i++) {
+            const index = dimensionsMap[i];
+            newDataDimensions[i] = dimensions[index];
+          }
+
+          console.log({ newDataDimensions });
+          // Get data value from newData
+          const dataValue = getPxTableData(newData.data.cube, newDataDimensions);
+          console.log({ dataValue });
+
+          // Set data in accumulated data cube
+          setPxTableData(
+            accData.data.cube,
+            dimensions,
+            structuredClone(dataValue)
+          );
+
+        }); 
+      }
+      else {
+        variableInNewData.values.forEach((value) => {
+          dimensions[dimensionIndex] = value.code;
+          updateCube(accData, newData, dimensions, dimensionIndex + 1, dimensionsMap);
+        });
+      }
     }
   }
 
