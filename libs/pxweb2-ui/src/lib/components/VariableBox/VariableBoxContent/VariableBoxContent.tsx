@@ -9,7 +9,7 @@ import { Select, SelectOption } from '../../Select/Select';
 import { VariableBoxProps } from '../VariableBox';
 import { SelectedVBValues } from '../VariableBox';
 import { VartypeEnum } from '../../../shared-types/vartypeEnum';
-import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
+import { Virtuoso } from 'react-virtuoso';
 import { Value } from '../../../shared-types/value';
 import { useDebounce } from '@uidotdev/usehooks';
 import Skeleton from '../../Skeleton/Skeleton';

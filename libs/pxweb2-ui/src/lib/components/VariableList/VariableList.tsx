@@ -1,5 +1,3 @@
-import cl from 'clsx';
-
 import styles from './VariableList.module.scss';
 import { SelectedVBValues, VariableBox } from '../VariableBox/VariableBox';
 import { PxTableMetadata } from '../../shared-types/pxTableMetadata';
