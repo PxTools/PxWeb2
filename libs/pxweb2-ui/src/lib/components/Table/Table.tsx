@@ -51,7 +51,9 @@ export function Table({ pxtable, className = '' }: TableProps) {
   }
 
   return (
-    <table className={cl(classes.table, classes[`bodyshort-medium`]) + cssClasses}>
+    <table
+      className={cl(classes.table, classes[`bodyshort-medium`]) + cssClasses}
+    >
       <thead>{createHeading(pxtable, tableMeta, headingDataCellCodes)}</thead>
       <tbody>{createRows(pxtable, tableMeta, headingDataCellCodes)}</tbody>
     </table>

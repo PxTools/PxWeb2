@@ -9,6 +9,10 @@ import { Select, SelectOption } from '../../Select/Select';
 import { VariableBoxProps } from '../VariableBox';
 import { SelectedVBValues } from '../VariableBox';
 import { VartypeEnum } from '../../../shared-types/vartypeEnum';
+import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
+import { Value } from '../../../shared-types/value';
+import { useDebounce } from '@uidotdev/usehooks';
+import Skeleton from '../../Skeleton/Skeleton';
 
 type MappedCodeList = {
   value: string;
@@ -54,25 +58,58 @@ export function VariableBoxContent({
     'presentation_page.sidemenu.selection.variablebox.content.mixed_checkbox.deselect_all'
   );
 
-  const [scrolling, setScrolling] = useState<'atTop' | 'up' | 'down'>('atTop');
-  const [hasScrolledUp, setHasScrolledUp] = useState(false);
-  const [lastScrollPosition, setLastScrollPosition] = useState(0);
   const [mixedCheckboxText, setMixedCheckboxText] = useState<string>(
     checkboxSelectAllText
   );
+  const [search, setSearch] = useState<string>('');
   const [allValuesSelected, setAllValuesSelected] = useState<
     'mixed' | 'true' | 'false'
   >('mixed');
-  const [currentFocusedCheckboxIndex, setCurrentFocusedCheckboxIndexIndex] =
-    useState<number | null>(null);
 
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const debouncedSearch = useDebounce(search, 300);
+
+  // Track the index of the currently focused item
+  const [currentFocusedItemIndex, setCurrentFocusedItemIndex] = useState<
+    number | null
+  >(null);
+
+  const [items, setItems] = useState<{ type: string; value?: Value }[]>([]);
+
   const valuesOnlyList = useRef<HTMLDivElement>(null);
   const hasCodeLists = codeLists && codeLists.length > 0;
   const hasSevenOrMoreValues = values && values.length > 6;
   const hasTwoOrMoreValues = values && values.length > 1;
-  const hasValues = values && values.length > 0;
   const hasSelectAndSearch = hasCodeLists && hasSevenOrMoreValues;
+  const valuesToRender = structuredClone(values);
+
+  // The API always returns the oldest values first,
+  // so we can just reverse the values array when the type is TIME_VARIABLE
+  if (type === VartypeEnum.TIME_VARIABLE) {
+    valuesToRender.reverse();
+  }
+
+  useEffect(() => {
+    const newItems: { type: string; value?: Value }[] = [];
+
+    if (hasSevenOrMoreValues) {
+      newItems.push({ type: 'search' });
+    }
+
+    if (hasTwoOrMoreValues) {
+      newItems.push({ type: 'mixedCheckbox' });
+    }
+
+    values
+      .filter(
+        (value) =>
+          value.label.toLowerCase().indexOf(debouncedSearch.toLowerCase()) > -1
+      )
+      .forEach((value) => {
+        newItems.push({ type: 'value', value });
+      });
+
+    setItems(newItems);
+  }, [hasSevenOrMoreValues, hasTwoOrMoreValues, debouncedSearch, values]);
 
   useEffect(() => {
     if (totalChosenValues === 0) {
@@ -94,47 +131,6 @@ export function VariableBoxContent({
     checkboxDeselectAllText,
   ]);
 
-  const handleScroll = () => {
-    if (scrollRef.current) {
-      const { scrollTop } = scrollRef.current;
-      const isScrolling = scrollTop > 0;
-      const isIntentionalScrollUp = scrollTop < lastScrollPosition - 5;
-      const isIntentionalScrollDown = scrollTop > lastScrollPosition + 5;
-      const isBelowFirstTwoElements =
-        scrollTop > scrollRef.current.children[0].clientHeight;
-
-      //  Reset scrolling state when at the top of the list
-      if (scrollTop === 0 && scrolling !== 'atTop') {
-        setScrolling('atTop');
-        setHasScrolledUp(false);
-      }
-
-      if (isScrolling) {
-        if (isIntentionalScrollUp && isBelowFirstTwoElements) {
-          setLastScrollPosition(scrollTop);
-
-          if (scrolling !== 'up') {
-            setScrolling('up');
-            setHasScrolledUp(true);
-          }
-        }
-
-        if (isIntentionalScrollDown && isBelowFirstTwoElements) {
-          setLastScrollPosition(scrollTop);
-
-          if (scrolling !== 'down') {
-            setScrolling('down');
-          }
-        }
-      }
-    }
-  };
-
-  const handleSearch = () => {
-    //  TODO: Implement search functionality
-    console.log('Search');
-  };
-
   let mappedCodeList: MappedCodeList[] = [];
 
   if (hasCodeLists === true) {
@@ -149,65 +145,49 @@ export function VariableBoxContent({
   const handleValueListKeyboardNavigation = (
     event: React.KeyboardEvent<HTMLDivElement>
   ) => {
-    const { key, shiftKey } = event; // TODO: Add support for shiftKey to select multiple values
-    const currentFocusedElement = document.activeElement;
+    const { key } = event;
 
-    if (
-      key === 'ArrowDown' &&
-      currentFocusedElement === valuesOnlyList.current
-    ) {
-      if (currentFocusedCheckboxIndex === null) {
-        setCurrentFocusedCheckboxIndexIndex(0);
-
-        const firstCheckbox = document.getElementById(values[0].code);
-
-        firstCheckbox?.focus();
-
-        return;
-      }
-
-      const currentFocusedCheckboxIndexElement = document.getElementById(
-        values[currentFocusedCheckboxIndex].code
-      );
-
-      currentFocusedCheckboxIndexElement?.focus();
+    if (key !== 'ArrowDown' && key !== 'ArrowUp') {
+      return;
     }
-    if (
-      key === 'ArrowDown' &&
-      currentFocusedElement !== valuesOnlyList.current
-    ) {
-      if (currentFocusedCheckboxIndex === null) {
-        return;
+    event.preventDefault();
+    let newIndex = currentFocusedItemIndex;
+
+    if (key === 'ArrowDown') {
+      if (
+        currentFocusedItemIndex === null ||
+        currentFocusedItemIndex < items.length - 1
+      ) {
+        newIndex = (currentFocusedItemIndex ?? -1) + 1;
       }
-
-      if (currentFocusedCheckboxIndex === values.length - 1) {
-        return;
+    } else if (key === 'ArrowUp') {
+      if (currentFocusedItemIndex !== null && currentFocusedItemIndex > 0) {
+        newIndex = currentFocusedItemIndex - 1;
       }
-
-      setCurrentFocusedCheckboxIndexIndex(currentFocusedCheckboxIndex + 1);
-
-      const nextCheckbox = document.getElementById(
-        values[currentFocusedCheckboxIndex + 1].code
-      );
-
-      nextCheckbox?.focus();
     }
-    if (key === 'ArrowUp' && currentFocusedElement !== valuesOnlyList.current) {
-      if (currentFocusedCheckboxIndex === null) {
-        return;
+
+    if (newIndex !== null && newIndex !== currentFocusedItemIndex) {
+      setCurrentFocusedItemIndex(newIndex);
+
+      // Focus the new item
+      const item = items[newIndex];
+      let elementId: string | null = null;
+
+      if (item.type === 'value' && item.value) {
+        elementId = item.value.code;
+      } else if (item.type === 'search') {
+        elementId = `${varId}-search`;
+      } else if (item.type === 'mixedCheckbox') {
+        elementId = varId;
       }
 
-      if (currentFocusedCheckboxIndex === 0) {
-        return;
+      if (elementId) {
+        const element = document.getElementById(elementId);
+        if (element) {
+          console.log('focused on this', element);
+          element.focus();
+        }
       }
-
-      setCurrentFocusedCheckboxIndexIndex(currentFocusedCheckboxIndex - 1);
-
-      const prevCheckbox = document.getElementById(
-        values[currentFocusedCheckboxIndex - 1].code
-      );
-
-      prevCheckbox?.focus();
     }
   };
 
@@ -215,13 +195,73 @@ export function VariableBoxContent({
     (variable) => variable.id === varId
   )?.selectedCodeList;
 
-  const valuesToRender = structuredClone(values);
+  // Modify the itemRenderer to assign IDs and tabIndex
+  const itemRenderer = (items: any, index: number) => {
+    const item = items[index];
 
-  //  The API always returns the oldest values first,
-  //  so we can just reverse the values array when the type is TIME_VARIABLE
-  if (type === VartypeEnum.TIME_VARIABLE) {
-    valuesToRender.reverse();
-  }
+    if (item.type === 'search') {
+      return (
+        <div
+          id={`${varId}-search`}
+          tabIndex={-1}
+          className={classes['focusableItem']}
+        >
+          <Search
+            onChange={(value: string) => {
+              setSearch(value);
+            }}
+            variant="inVariableBox"
+            showLabel={false}
+            searchPlaceHolder={t(
+              'presentation_page.sidemenu.selection.variablebox.search.placeholder'
+            )}
+            ariaLabelIconText={t(
+              'presentation_page.sidemenu.selection.variablebox.search.arialabelicontext'
+            )}
+            arialLabelClearButtonText={t(
+              'presentation_page.sidemenu.selection.variablebox.search.ariallabelclearbuttontext'
+            )}
+            variableBoxTopBorderOverride={hasSelectAndSearch}
+          />
+        </div>
+      );
+    } else if (item.type === 'mixedCheckbox') {
+      return (
+        <div id={varId} tabIndex={-1} className={classes['focusableItem']}>
+          <MixedCheckbox
+            id={varId}
+            text={mixedCheckboxText}
+            value={allValuesSelected}
+            onChange={() => onChangeMixedCheckbox(varId, allValuesSelected)}
+            ariaControls={valuesToRender.map((value) => value.code)}
+            strong={true}
+            inVariableBox={true}
+          />
+        </div>
+      );
+    } else if (item.type === 'value' && item.value) {
+      const value = item.value;
+      return (
+        <div id={value.code} tabIndex={-1} className={classes['focusableItem']}>
+          <Checkbox
+            id={value.code}
+            key={varId + value.code}
+            tabIndex={-1}
+            value={
+              selectedValues?.length > 0 &&
+              selectedValues
+                .find((variables) => variables.id === varId)
+                ?.values.includes(value.code) === true
+            }
+            text={value.label.charAt(0).toUpperCase() + value.label.slice(1)}
+            onChange={() => onChangeCheckbox(varId, value.code)}
+          />
+        </div>
+      );
+    } else {
+      return null;
+    }
+  };
 
   return (
     <div className={cl(classes['variablebox-content'])}>
@@ -247,7 +287,6 @@ export function VariableBoxContent({
             />
           </div>
         )}
-
         <div
           key={varId + '-values-list'}
           className={cl(
@@ -255,99 +294,49 @@ export function VariableBoxContent({
             hasSevenOrMoreValues &&
               classes['variablebox-content-full-values-list-scroll']
           )}
-          ref={scrollRef}
-          onScroll={handleScroll}
         >
           <div
-            className={cl(
-              hasSevenOrMoreValues &&
-                scrolling === 'up' &&
-                classes['variablebox-content-full-values-list-scroll-up'],
-              hasSevenOrMoreValues &&
-                scrolling === 'down' &&
-                hasScrolledUp === true &&
-                classes['variablebox-content-full-values-list-scroll-down']
+            aria-label={t(
+              'presentation_page.sidemenu.selection.variablebox.content.values_list.aria_label',
+              {
+                total: totalValues,
+              }
             )}
+            aria-description={t(
+              'presentation_page.sidemenu.selection.variablebox.content.values_list.aria_description',
+              {
+                total: totalValues,
+              }
+            )} // Coming in WAI-ARIA 1.3
+            className={cl(classes['variablebox-content-values-only-list'])}
+            tabIndex={0}
+            ref={valuesOnlyList}
+            onKeyDown={handleValueListKeyboardNavigation}
           >
-            {hasSevenOrMoreValues && (
-              <Search
-                variant="inVariableBox"
-                showLabel={false}
-                searchPlaceHolder={t(
-                  'presentation_page.sidemenu.selection.variablebox.search.placeholder'
-                )}
-                ariaLabelIconText={t(
-                  'presentation_page.sidemenu.selection.variablebox.search.arialabelicontext'
-                )}
-                arialLabelClearButtonText={t(
-                  'presentation_page.sidemenu.selection.variablebox.search.ariallabelclearbuttontext'
-                )}
-                variableBoxTopBorderOverride={hasSelectAndSearch}
-              />
-            )}
-
-            {hasTwoOrMoreValues && (
-              <MixedCheckbox
-                id={varId}
-                text={mixedCheckboxText}
-                value={allValuesSelected}
-                onChange={() => onChangeMixedCheckbox(varId, allValuesSelected)}
-                ariaControls={valuesToRender.map((value) => value.code)}
-                strong={true}
-                inVariableBox={true}
+            {' '}
+            {items.length > 0 && (
+              <Virtuoso
+                computeItemKey={(key) => `item-${key}`}
+                style={{ height: '380px', maxHeight: '380px', width: '100%' }}
+                className=""
+                totalCount={items.length}
+                itemContent={(index) => itemRenderer(items, index)}
+                scrollSeekConfiguration={{
+                  enter: (velocity) => Math.abs(velocity) > 1000,
+                  exit: (velocity) => Math.abs(velocity) < 30,
+                }}
+                components={{
+                  ScrollSeekPlaceholder: ({ height }) => (
+                    <Skeleton
+                      aria-label="placeholder"
+                      height={'25px'}
+                      width={50 + Math.ceil(Math.random() * 15) + '%'}
+                    />
+                  ),
+                }}
               />
             )}
           </div>
-
-          {hasValues && (
-            <div
-              aria-label={t(
-                'presentation_page.sidemenu.selection.variablebox.content.values_list.aria_label',
-                {
-                  total: totalValues,
-                }
-              )}
-              aria-description={t(
-                'presentation_page.sidemenu.selection.variablebox.content.values_list.aria_description',
-                {
-                  total: totalValues,
-                }
-              )} // Coming in WAI-ARIA 1.3 Though caniuse shows 88% support. https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/blob/main/docs/rules/aria-props.md
-              className={cl(classes['variablebox-content-values-only-list'])}
-              tabIndex={0}
-              ref={valuesOnlyList}
-              onKeyUp={(event) => {
-                if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-                  event.preventDefault();
-
-                  handleValueListKeyboardNavigation(event);
-                }
-              }}
-              onKeyDown={(event) => {
-                if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-                  event.preventDefault();
-                }
-              }}
-            >
-              {valuesToRender.map((value) => (
-                <Checkbox
-                  id={value.code}
-                  key={varId + value.code}
-                  tabIndex={-1}
-                  value={
-                    selectedValues?.length > 0 &&
-                    selectedValues
-                      .find((variables) => variables.id === varId)
-                      ?.values.includes(value.code) === true
-                  }
-                  text={
-                    value.label.charAt(0).toUpperCase() + value.label.slice(1)
-                  }
-                  onChange={() => onChangeCheckbox(varId, value.code)}
-                />
-              ))}
-            </div>
-          )}
         </div>
       </div>
 
