@@ -8,7 +8,6 @@ import { SelectOption } from '../Select/Select';
 export type VariableListProps = {
   pxTableMetadata: PxTableMetadata | null;
   isLoadingMetadata: boolean;
-  hasLoadedDefaultSelection: boolean;
   selectedVBValues: SelectedVBValues[];
 
   // TODO: Optimise here? Duplicate with props in VariableBox
@@ -23,39 +22,35 @@ export type VariableListProps = {
 export function VariableList({
   pxTableMetadata,
   isLoadingMetadata,
-  hasLoadedDefaultSelection,
   selectedVBValues,
   handleCodeListChange,
   handleCheckboxChange,
   handleMixedCheckboxChange,
 }: VariableListProps) {
   return (
-    <div className={styles.variableList}>
-      {!isLoadingMetadata &&
-        hasLoadedDefaultSelection &&
-        pxTableMetadata &&
-        pxTableMetadata.variables.length > 0 &&
-        pxTableMetadata.variables.map(
-          (variable, index) =>
-            variable.id && (
-              <VariableBox
-                id={variable.id}
-                key={variable.id + pxTableMetadata.id}
-                initialIsOpen={index === 0}
-                tableId={pxTableMetadata.id}
-                label={variable.label}
-                mandatory={variable.mandatory}
-                type={variable.type}
-                values={variable.values}
-                codeLists={variable.codeLists}
-                selectedValues={selectedVBValues}
-                onChangeCodeList={handleCodeListChange}
-                onChangeMixedCheckbox={handleMixedCheckboxChange}
-                onChangeCheckbox={handleCheckboxChange}
-              />
-            )
-        )}
-    </div>
+    !isLoadingMetadata &&
+    pxTableMetadata &&
+    pxTableMetadata.variables.length > 0 &&
+    pxTableMetadata.variables.map(
+      (variable, index) =>
+        variable.id && (
+          <VariableBox
+            id={variable.id}
+            key={variable.id + pxTableMetadata.id}
+            initialIsOpen={index === 0}
+            tableId={pxTableMetadata.id}
+            label={variable.label}
+            mandatory={variable.mandatory}
+            type={variable.type}
+            values={variable.values}
+            codeLists={variable.codeLists}
+            selectedValues={selectedVBValues}
+            onChangeCodeList={handleCodeListChange}
+            onChangeMixedCheckbox={handleMixedCheckboxChange}
+            onChangeCheckbox={handleCheckboxChange}
+          />
+        )
+    )
   );
 }
 
