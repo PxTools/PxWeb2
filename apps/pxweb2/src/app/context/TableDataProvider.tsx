@@ -33,7 +33,7 @@ const TableDataContext = createContext<TableDataContextType | undefined>({
 const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   // Data (metadata) that reflects variables and values selected by user right now
   const [data, setData] = useState<PxTable | undefined>(undefined);
-  // Accumulated data (and metadata) from all API calls made by user
+  // Accumulated data (and metadata) from all API calls made by user. Stored in the data cube.
   const [accumulatedData, setAccumulatedData] = useState<PxTable | undefined>(
     undefined
   );
@@ -65,7 +65,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
     const variablesSelection: VariablesSelection = { selection: selections };
 
-    // Check if the accumulated data is valid. If not we cannot use it.
+    // Check if the accumulated data in the data cube is valid. If not we cannot use it.
     const validAccData: boolean = isAccumulatedDataValid(
       variablesSelection,
       i18n.language,
@@ -89,20 +89,9 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * @param variablesSelection - User selection of variables and their values.
    */
   const fetchWithoutValidAccData = async (tableId: string, i18n: i18n, variablesSelection: VariablesSelection) => {
-    console.log('Fetching data from API WITHOUT valid accumulated data');
-    const res = await TableService.getTableDataByPost(
-      tableId,
-      i18n.language,
-      'json-stat2',
-      variablesSelection
-    );
+    console.log('Fetch data WITHOUT valid accumulated data');
 
-    // Map response to json-stat2 Dataset
-    const pxDataobj: unknown = res;
-    const pxTabData = pxDataobj as Dataset;
-
-    const pxTable: PxTable = mapJsonStat2Response(pxTabData);
-
+    const pxTable: PxTable = await fetchFromApi(tableId, i18n, variablesSelection);
     setData(pxTable);
 
     console.log('Create accumulatedData from pxTable');
@@ -117,7 +106,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * @param variablesSelection - User selection of variables and their values.
    */
   const fetchWithValidAccData = async (tableId: string, i18n: i18n, variablesSelection: VariablesSelection) => {
-    console.log('Fetching data from API WITH valid accumulated data');
+    console.log('Fetch data WITH valid accumulated data');
 
         // Check if all data and metadata asked for by the user is already loaded from earlier API-calls
         if (isAllDataAlreadyLoaded(variablesSelection)) {
@@ -151,19 +140,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
           //console.log({ varSelection });
         }
     
-        console.log('Fetching data from API');
-        const res = await TableService.getTableDataByPost(
-          tableId,
-          i18n.language,
-          'json-stat2',
-          varSelection
-        );
-    
-        // Map response to json-stat2 Dataset
-        const pxDataobj: unknown = res;
-        const pxTabData = pxDataobj as Dataset;
-    
-        let pxTable: PxTable = mapJsonStat2Response(pxTabData);
+        let pxTable: PxTable = await fetchFromApi(tableId, i18n, varSelection);
     
         // Merge pxTable with accumulatedData
         mergeWithAccumulatedData(
@@ -181,6 +158,33 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     
         setData(pxTable);
     
+  };
+
+  /**
+   * Make a call to the API to fetch table data
+   *
+   * @param tableId - The id of the table to fetch data for.
+   * @param i18n - The i18n object for handling langauages
+   * @param variablesSelection - User selection of variables and their values.
+   * @returns A PxTable object with the data and metadata.
+   */
+  const fetchFromApi = async (tableId: string, i18n: i18n, variablesSelection: VariablesSelection) => {
+    console.log('Fetching data from API');
+    
+    const res = await TableService.getTableDataByPost(
+      tableId,
+      i18n.language,
+      'json-stat2',
+      variablesSelection
+    );
+
+    // Map response to json-stat2 Dataset
+    const pxDataobj: unknown = res;
+    const pxTabData = pxDataobj as Dataset;
+
+    const pxTable: PxTable = mapJsonStat2Response(pxTabData);
+
+    return pxTable;
   };
 
   /**
