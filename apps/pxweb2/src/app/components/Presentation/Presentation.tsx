@@ -1,7 +1,7 @@
 import cl from 'clsx';
 import classes from './Presentation.module.scss';
 import { useTranslation } from 'react-i18next';
-import { useEffect, useState,useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useLoaderData } from 'react-router-dom';
 
 import styles from './Presentation.module.scss';
@@ -27,7 +27,8 @@ export function Presentation({ selectedTabId }: propsType) {
   const [initialRun, SetInitialRun] = useState(true);
   const { selectedVBValues } = useVariables();
 
-  const{isLoadingTable,setIsLoadingTable,isFadingTable,setIsFadingTable}= useVariables();
+  const { isLoadingTable, setIsLoadingTable, isFadingTable, setIsFadingTable } =
+    useVariables();
 
   //const [IsLoadingData, setIsLoadingData] = useState(false);
   //const [IsFadingTable, setIsFadingTable] = useState(true);
@@ -38,12 +39,14 @@ export function Presentation({ selectedTabId }: propsType) {
   // const [tableIsReady, setTableIsReady] =
   // useState(false);
   let spinnerTimer: ReturnType<typeof setTimeout>;
-  const loadingTimer = useRef<NodeJS.Timeout |undefined>(undefined);
+  const loadingTimer = useRef<NodeJS.Timeout | undefined>(undefined);
   const { tableDataFromLoader } = useLoaderData() as any;
+
+  const { tableMetaDataFromLoader } = useLoaderData() as any;
 
   // let spinnerTimer:ReturnType<typeof setTimeout>;
   useEffect(() => {
-   // variables.setTableIsReady(true); //could be local?
+    // variables.setTableIsReady(true); //could be local?
     setIsLoadingTable(true);
     setIsFadingTable(false);
     // const spinnerTimer = setTimeout(() => {
@@ -64,7 +67,6 @@ export function Presentation({ selectedTabId }: propsType) {
     // clearTimeout(spinnerTimer); // Clear spinner timeout if data arrives in less than 6 seconds
   }, [tableDataFromLoader]);
 
-
   useEffect(() => {
     if (!hasFinishedInitialDataLoad) {
       return;
@@ -79,19 +81,19 @@ export function Presentation({ selectedTabId }: propsType) {
       );
 
     if (hasSelectedMandatoryVariables) {
-     // setIsLoadingTable(false);
-     // setIsFadingTable(true);
- //     console.log ('Spinner 1 = ' + JSON.stringify(loadingTimer.current))
+      // setIsLoadingTable(false);
+      // setIsFadingTable(true);
+      //     console.log ('Spinner 1 = ' + JSON.stringify(loadingTimer.current))
       loadingTimer.current = setTimeout(() => {
         setIsLoadingTable(true); // Show spinner after 6 seconds
         setIsFadingTable(false); // Stop fading since spinner will be shown
       }, 2000);
       // variables.setTableIsReady(false);
       tableData.fetchTableData(tableId ? tableId : 'tab638', i18n);
-    
-   //  console.log ('Spinner 2 = ' + JSON.stringify(loadingTimer.current))
+
+      //  console.log ('Spinner 2 = ' + JSON.stringify(loadingTimer.current))
       // clearTimeout(spinnerTimer); // Clear spinner timeout if data arrives in less than 6 seconds
-     // console.log ('Spinner 3 = ' + JSON.stringify(loadingTimer.current))
+      // console.log ('Spinner 3 = ' + JSON.stringify(loadingTimer.current))
       setIsMissingMandatoryVariables(false);
     }
     if (!hasSelectedMandatoryVariables) {
@@ -109,8 +111,10 @@ export function Presentation({ selectedTabId }: propsType) {
     clearTimeout(loadingTimer.current); // Clear spinner timeout if data arrives in less than 6 seconds
     loadingTimer.current = undefined;
     //console.log ('Spinner 5= ' + JSON.stringify(loadingTimer.current))
-  }, [tableData.data]); 
+  }, [tableData.data]);
 
+  console.log('tableMetaDataFromLoader='+JSON.stringify(tableMetaDataFromLoader))
+  console.log('tableDataFromLoader=' + JSON.stringify(tableDataFromLoader))
   return (
     // <div  className={cl(classes.contentContainer,{[classes.fadeTable]: !variables.tableIsReady })}>
     <div
@@ -118,6 +122,9 @@ export function Presentation({ selectedTabId }: propsType) {
         [classes.fadeTable]: isFadingTable,
       })}
     >
+      {tableMetaDataFromLoader && !hasFinishedInitialDataLoad && (
+        <Spinner label="Vennligst vent" />
+      )}
       {tableData.data && pxTableMetadata && (
         <>
           <ContentTop
@@ -125,10 +132,14 @@ export function Presentation({ selectedTabId }: propsType) {
             pxtable={tableData.data}
           />
           {!isMissingMandatoryVariables && (
-            <div className={styles.tableContainer} style={{ position: 'relative' }}>
+            <div
+              className={styles.tableContainer}
+              style={{ position: 'relative' }}
+            >
               <Table pxtable={tableData.data} />
               {isLoadingTable && (
-                <div className={cl(classes.loading)} //not working??
+                <div
+                  className={cl(classes.loading)} //not working??
                   style={{
                     position: 'absolute',
                     top: 0,
@@ -142,7 +153,7 @@ export function Presentation({ selectedTabId }: propsType) {
                     zIndex: 1, // Make sure spinner is above the table
                   }}
                 >
-                  <Spinner  label='Vennligst vent' />
+                  <Spinner label="Vennligst vent" />
                 </div>
               )}
             </div>
