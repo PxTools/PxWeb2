@@ -153,7 +153,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         if (pxTableMerged) {
           pxTable = pxTableMerged;
         } else {
-          throw new Error('Failed to create PxTable from accumulated data');
+          console.log('Failed to create PxTable from accumulated data');
         }
     
         setData(pxTable);
@@ -439,8 +439,8 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       diffVariablesSelection.selection.length === 1
     ) {
       // console.log('Merging pxTable with accumulatedData');
-      //console.log({ pxTable });
-      //console.log({ accumulatedData });
+      // console.log({ pxTable });
+      // console.log({ accumulatedData });
       // console.log({ diffVariablesSelection });
       // console.log({ variablesSelection });
 
@@ -564,7 +564,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
           for (let i = 0; i < dimensions.length; i++) {
             const index = dimensionsMap[i];
-            newDataDimensions[i] = dimensions[index];
+            newDataDimensions[index] = dimensions[i];
           }
 
           //console.log({ newDataDimensions });
