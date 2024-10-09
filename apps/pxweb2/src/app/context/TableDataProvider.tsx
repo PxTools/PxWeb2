@@ -64,91 +64,123 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     });
 
     const variablesSelection: VariablesSelection = { selection: selections };
+
+    // Check if the accumulated data is valid. If not we cannot use it.
     const validAccData: boolean = isAccumulatedDataValid(
       variablesSelection,
       i18n.language,
       tableId
     );
 
-    //console.log({variablesSelection});
-    //console.log({ validAccData });
-
-    // TODO: Split into to functions, one with validAccData and one without
-
-    // Check if all data and metadata asked for by the user is already loaded from earlier API-calls
-    if (validAccData && isAllDataAlreadyLoaded(variablesSelection)) {
-      console.log('All data already loaded');
-
-      // All data and metadata asked for by the user is already loaded in accumulatedData. No need for a new API-call. Create a pxTable from accumulatedData instead.
-      const pxTable = createPxTableFromAccumulatedData(variablesSelection);
-
-      if (pxTable) {
-        console.log('pxTable created from accumulatedData');
-        setData(pxTable);
-        return;
-      }
-    } else {
-      console.log('All data not loaded');
-    }
-
-    let varSelection: VariablesSelection = variablesSelection;
-    let diffVariablesSelection: VariablesSelection = { selection: [] };
-
-    // We need to make a new API-call to get the data and metadata not already loaded in accumulatedData
     if (validAccData) {
-      // Make the API-call as small as possible
-      diffVariablesSelection = GetDiffVariablesSelection(variablesSelection);
-      //console.log({ diffVariablesSelection });
-
-      if (diffVariablesSelection.selection.length > 0) {
-        varSelection = getMinimumVariablesSelection(
-          variablesSelection,
-          diffVariablesSelection
-        );
-        //console.log({ varSelection });
-      }
+      fetchWithValidAccData(tableId, i18n, variablesSelection);
+    } 
+    else {  
+      fetchWithoutValidAccData(tableId, i18n, variablesSelection);
     }
-    // else {
-    //   varSelection = variablesSelection;
-    // }
 
-    console.log('Fetching data from API');
+  };
+
+  /**
+   * Fetch data. We DO NOT have valid accumulated data in the data cube.
+   *
+   * @param tableId - The id of the table to fetch data for.
+   * @param i18n - The i18n object for handling langauages
+   * @param variablesSelection - User selection of variables and their values.
+   */
+  const fetchWithoutValidAccData = async (tableId: string, i18n: i18n, variablesSelection: VariablesSelection) => {
+    console.log('Fetching data from API WITHOUT valid accumulated data');
     const res = await TableService.getTableDataByPost(
       tableId,
       i18n.language,
       'json-stat2',
-      varSelection
+      variablesSelection
     );
 
     // Map response to json-stat2 Dataset
     const pxDataobj: unknown = res;
     const pxTabData = pxDataobj as Dataset;
 
-    let pxTable: PxTable = mapJsonStat2Response(pxTabData);
-
-    if (validAccData) {
-      //TODO: If getMinimumVariablesSelection called:
-      // 1. Merge pxTable with accumulatedData
-      mergeWithAccumulatedData(
-        pxTable,
-        diffVariablesSelection,
-        variablesSelection
-      );
-      const pxTableMerged =
-        createPxTableFromAccumulatedData(variablesSelection);
-      if (pxTableMerged) {
-        pxTable = pxTableMerged;
-      } else {
-        throw new Error('Failed to create PxTable from accumulated data');
-      }
-    }
+    const pxTable: PxTable = mapJsonStat2Response(pxTabData);
 
     setData(pxTable);
 
-    if (!validAccData) {
-      console.log('Create accumulatedData from pxTable');
-      setAccumulatedData(structuredClone(pxTable));
-    }
+    console.log('Create accumulatedData from pxTable');
+    setAccumulatedData(structuredClone(pxTable));
+  };
+
+  /**
+   * Fetch data. We DO have valid accumulated data in the data cube.
+   *
+   * @param tableId - The id of the table to fetch data for.
+   * @param i18n - The i18n object for handling langauages
+   * @param variablesSelection - User selection of variables and their values.
+   */
+  const fetchWithValidAccData = async (tableId: string, i18n: i18n, variablesSelection: VariablesSelection) => {
+    console.log('Fetching data from API WITH valid accumulated data');
+
+        // Check if all data and metadata asked for by the user is already loaded from earlier API-calls
+        if (isAllDataAlreadyLoaded(variablesSelection)) {
+          console.log('All data already loaded');
+    
+          // All data and metadata asked for by the user is already loaded in accumulatedData. No need for a new API-call. Create a pxTable from accumulatedData instead.
+          const pxTable = createPxTableFromAccumulatedData(variablesSelection);
+    
+          if (pxTable) {
+            console.log('pxTable created from accumulatedData');
+            setData(pxTable);
+            return;
+          }
+        } else {
+          console.log('All data not loaded');
+        }
+    
+        let varSelection: VariablesSelection = variablesSelection;
+        let diffVariablesSelection: VariablesSelection = { selection: [] };
+    
+        // We need to make a new API-call to get the data and metadata not already loaded in accumulatedData
+        // Make the API-call as small as possible
+        diffVariablesSelection = GetDiffVariablesSelection(variablesSelection);
+        //console.log({ diffVariablesSelection });
+  
+        if (diffVariablesSelection.selection.length > 0) {
+          varSelection = getMinimumVariablesSelection(
+            variablesSelection,
+            diffVariablesSelection
+          );
+          //console.log({ varSelection });
+        }
+    
+        console.log('Fetching data from API');
+        const res = await TableService.getTableDataByPost(
+          tableId,
+          i18n.language,
+          'json-stat2',
+          varSelection
+        );
+    
+        // Map response to json-stat2 Dataset
+        const pxDataobj: unknown = res;
+        const pxTabData = pxDataobj as Dataset;
+    
+        let pxTable: PxTable = mapJsonStat2Response(pxTabData);
+    
+        // Merge pxTable with accumulatedData
+        mergeWithAccumulatedData(
+          pxTable,
+          diffVariablesSelection,
+          variablesSelection
+        );
+        const pxTableMerged =
+          createPxTableFromAccumulatedData(variablesSelection);
+        if (pxTableMerged) {
+          pxTable = pxTableMerged;
+        } else {
+          throw new Error('Failed to create PxTable from accumulated data');
+        }
+    
+        setData(pxTable);
+    
   };
 
   /**
