@@ -15,12 +15,9 @@ type propsType = {
 };
 
 const MemoizedTable = React.memo(
-  function MemoizedTable({ pxtable }: { pxtable: PxTable }) {
-    return <Table pxtable={pxtable} />;
-  },
+  ({ pxtable }: { pxtable: PxTable }) => <Table pxtable={pxtable} />,
   (prevProps, nextProps) => isEqual(prevProps.pxtable, nextProps.pxtable)
 );
-
 export function Presentation({ selectedTabId }: propsType) {
   const { i18n, t } = useTranslation();
   const tableData = useTableData();
