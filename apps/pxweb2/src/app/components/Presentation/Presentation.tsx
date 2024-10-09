@@ -44,7 +44,7 @@ export function Presentation({ selectedTabId }: propsType) {
       );
 
     if (initialRun && !hasSelectedValues) {
-      tableData.fetchTableData(tableId || 'tab1292', i18n);
+      tableData.fetchTableData(tableId ? tableId : 'tab1292', i18n);
       setIsMissingMandatoryVariables(false);
     } else {
       if (
@@ -53,7 +53,7 @@ export function Presentation({ selectedTabId }: propsType) {
         !isLoadingMetadata &&
         !initialRun
       ) {
-        tableData.fetchTableData(tableId || 'tab1292', i18n);
+        tableData.fetchTableData(tableId ? tableId : 'tab1292', i18n);
         setIsMissingMandatoryVariables(false);
       }
       if (!hasSelectedMandatoryVariables && !initialRun) {
