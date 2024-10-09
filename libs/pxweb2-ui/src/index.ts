@@ -11,6 +11,7 @@ export * from './lib/components/Typography/Heading/Heading';
 export * from './lib/components/Typography/BodyLong/BodyLong';
 export * from './lib/components/Icon/Icon';
 export * from './lib/components/Search/Search';
+export * from './lib/components/Spinner/Spinner';
 export * from './lib/components/Link/Link';
 export * from './lib/components/Table/Table';
 export * from './lib/components/Table/cubeHelper';

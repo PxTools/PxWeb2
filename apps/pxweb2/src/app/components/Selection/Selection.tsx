@@ -1,5 +1,8 @@
+
+import cl from 'clsx';
+import { Await, useLoaderData, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useState, useEffect } from 'react';
+import { useState, useEffect,Suspense } from 'react';
 
 import { TableService } from '@pxweb2/pxweb2-api-client';
 import { mapTableMetadataResponse } from '../../../mappers/TableMetadataResponseMapper';
@@ -190,16 +193,40 @@ export function Selection({
 
   const [prevTableId, setPrevTableId] = useState('');
 
+  const {
+    tableMetaDataFromLoader,
+    tableDefaultSelectionFromLoader
+  } = useLoaderData() as any;
+
   useEffect(() => {
-    let shouldGetDefaultSelection = !hasLoadedDefaultSelection;
+    console.log('In tableMetaDataFromLoader loader=' + JSON.stringify(tableMetaDataFromLoader))
+    console.log('In tableDefaultSelectionFromLoader loader' + JSON.stringify(tableDefaultSelectionFromLoader))
+    if (tableMetaDataFromLoader && tableDefaultSelectionFromLoader) {
+      setPxTableMetadata(tableMetaDataFromLoader);
+      setPxTableMetaToRender(tableMetaDataFromLoader);
+      setSelectedVBValues(tableDefaultSelectionFromLoader);
+      variables.setIsLoadingMetadata(false);
+      variables.setHasFinishedInitialMetadataLoad(true);
+    }
+  }, [tableMetaDataFromLoader, tableDefaultSelectionFromLoader]);
+
+
+
+  useEffect(() => {
+    console.log('I useeffect  hasFinishedInitialMetadataLoad')
+    const shouldGetDefaultSelection = !hasLoadedDefaultSelection;
+    if (!variables.hasFinishedInitialMetadataLoad) {
+      return;
+    }
+    
 
     if (!selectedTabId) {
       return;
     }
 
     if (prevTableId === '' || prevTableId !== selectedTabId) {
-      variables.setHasLoadedDefaultSelection(false);
-      shouldGetDefaultSelection = true;
+    //  variables.setHasLoadedDefaultSelection(false);
+    //  shouldGetDefaultSelection = true;
       setPrevTableId(selectedTabId);
     }
     if (isLoadingMetadata === false) {
@@ -406,7 +433,7 @@ export function Selection({
       pxTableMetadata={pxTableMetaToRender}
       selectedVBValues={selectedVBValues}
       isLoadingMetadata={isLoadingMetadata}
-      hasLoadedDefaultSelection={hasLoadedDefaultSelection}
+     // hasLoadedDefaultSelection={hasLoadedDefaultSelection}
       handleCodeListChange={handleCodeListChange}
       handleCheckboxChange={handleCheckboxChange}
       handleMixedCheckboxChange={handleMixedCheckboxChange}

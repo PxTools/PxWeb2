@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState,useRef } from 'react';
 
 import { SelectedVBValues } from '@pxweb2/pxweb2-ui';
 import { PxTableMetadata } from '@pxweb2/pxweb2-ui';
@@ -17,10 +17,15 @@ export type VariablesContextType = {
   setSelectedVBValues: React.Dispatch<React.SetStateAction<SelectedVBValues[]>>;
   selectedVBValues: SelectedVBValues[];
   isLoadingMetadata: boolean;
+  hasFinishedInitialMetadataLoad: boolean;
+  isLoadingTable:boolean;
+  isFadingTable:boolean,
   setIsLoadingMetadata: React.Dispatch<React.SetStateAction<boolean>>;
+  setHasFinishedInitialMetadataLoad: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsLoadingTable:React.Dispatch<React.SetStateAction<boolean>>;
+  setIsFadingTable:React.Dispatch<React.SetStateAction<boolean>>;
   pxTableMetadata: PxTableMetadata | null;
-  setPxTableMetadata: React.Dispatch<
-    React.SetStateAction<PxTableMetadata | null>
+  setPxTableMetadata: React.Dispatch<React.SetStateAction<PxTableMetadata | null>
   >;
 };
 
@@ -40,11 +45,17 @@ export const VariablesContext = createContext<VariablesContextType>({
   toString: () => '',
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   hasLoadedDefaultSelection: false,
+  isLoadingTable:false,
+  isFadingTable:true,
   setHasLoadedDefaultSelection: () => false,
   setSelectedVBValues: () => [],
   selectedVBValues: [],
   setIsLoadingMetadata: () => false,
+  setHasFinishedInitialMetadataLoad:() => false,
+  setIsLoadingTable:() => false,
+  setIsFadingTable:() => true,
   isLoadingMetadata: false,
+  hasFinishedInitialMetadataLoad: false,
   pxTableMetadata: null,
   setPxTableMetadata: () => null,
   // pxTableMetaToRender:null
@@ -64,12 +75,24 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // const [prevTableId, setPrevTableId] = useState('');
   const [isLoadingMetadata, setIsLoadingMetadata] = useState<boolean>(false);
+  const [hasFinishedInitialMetadataLoad, setHasFinishedInitialMetadataLoad] = useState<boolean>(false);
+
+  
+  
+  
   const [hasLoadedDefaultSelection, setHasLoadedDefaultSelection] =
     useState(false);
   // const { i18n, t } = useTranslation();
   const [selectedVBValues, setSelectedVBValues] = useState<SelectedVBValues[]>(
     []
   );
+  
+  const [isLoadingTable, setIsLoadingTable] = useState(false);
+  const [isFadingTable, setIsFadingTable] = useState(true);
+  const loadingTimer = useRef<NodeJS.Timeout | null>(null);
+
+
+
 
   /**
    * Adds multiple values for a given variable
@@ -168,6 +191,8 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
     variables.forEach((variable) => {
       addSelectedValues(variable.id, variable.values);
     });
+    console.log('isFadingTable='+ isFadingTable)
+    setIsFadingTable(true);
   };
 
   const toString = () => {
@@ -177,6 +202,24 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
     });
     return str;
   };
+
+    // Start Timer
+    const startLoadingTimer = () => {
+      if (!loadingTimer.current) {
+        loadingTimer.current = setTimeout(() => {
+          setIsLoadingTable(true); // Show spinner after 6 seconds
+          setIsFadingTable(false); // Stop fading since spinner will be shown
+        }, 2000);
+      }
+    };
+  
+    // Reset Timer
+    const restLoadingTimer = () => {
+      if (loadingTimer.current) {
+        clearInterval(loadingTimer.current);
+        loadingTimer.current = null;
+      }
+    };
 
   return (
     <VariablesContext.Provider
@@ -192,9 +235,15 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
         selectedVBValues,
         setSelectedVBValues,
         isLoadingMetadata,
+        hasFinishedInitialMetadataLoad,
+        isLoadingTable,
+        isFadingTable,
         pxTableMetadata,
         setHasLoadedDefaultSelection,
         setIsLoadingMetadata,
+        setIsLoadingTable,
+        setIsFadingTable,
+        setHasFinishedInitialMetadataLoad,
         setPxTableMetadata,
       }}
     >

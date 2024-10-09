@@ -32,7 +32,8 @@ export function Table({ pxtable, className = '' }: TableProps) {
 
   const tableColumnSize: number = tableMeta.columns - tableMeta.columnOffset;
   const headingDataCellCodes = new Array<DataCellCodes>(tableColumnSize); // Contains header variable and value codes for each column in the table
-
+ console.log('I table')
+// console.log(JSON.stringify(pxtable))
   // Create empty metadata structure for the dimensions in the header.
   // This structure will be filled with metadata when the header is created.
 
