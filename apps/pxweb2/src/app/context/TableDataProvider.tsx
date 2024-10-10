@@ -31,7 +31,7 @@ const TableDataContext = createContext<TableDataContextType | undefined>({
 });
 
 const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
-  // Data (metadata) that reflects variables and values selected by user right now
+  // Data (metadata) that reflects variables and values selected by user right now. Used as data source for the table
   const [data, setData] = useState<PxTable | undefined>(undefined);
   // Accumulated data (and metadata) from all API calls made by user. Stored in the data cube.
   const [accumulatedData, setAccumulatedData] = useState<PxTable | undefined>(
@@ -47,7 +47,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   }, [errorMsg]);
 
   /**
-   * Fetches table data from the API (or from accuumulated data in the data cube if possible).
+   * Fetches table data from the API (or from accumulated data in the data cube if possible).
    *
    * @param tableId - The id of the table to fetch data for.
    * @param i18n - The i18n object for handling langauages
@@ -65,7 +65,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
     const variablesSelection: VariablesSelection = { selection: selections };
 
-    // Check if the accumulated data in the data cube is valid. If not we cannot use it.
+    // Check if we have accumulated data in the data cube and if it is valid. If not we cannot use it.
     const validAccData: boolean = isAccumulatedDataValid(
       variablesSelection,
       i18n.language,
@@ -74,11 +74,9 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
     if (validAccData) {
       fetchWithValidAccData(tableId, i18n, variablesSelection);
-    } 
-    else {  
+    } else {
       fetchWithoutValidAccData(tableId, i18n, variablesSelection);
     }
-
   };
 
   /**
@@ -88,13 +86,21 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * @param i18n - The i18n object for handling langauages
    * @param variablesSelection - User selection of variables and their values.
    */
-  const fetchWithoutValidAccData = async (tableId: string, i18n: i18n, variablesSelection: VariablesSelection) => {
-    console.log('Fetch data WITHOUT valid accumulated data');
+  const fetchWithoutValidAccData = async (
+    tableId: string,
+    i18n: i18n,
+    variablesSelection: VariablesSelection
+  ) => {
 
-    const pxTable: PxTable = await fetchFromApi(tableId, i18n, variablesSelection);
+    const pxTable: PxTable = await fetchFromApi(
+      tableId,
+      i18n,
+      variablesSelection
+    );
+
     setData(pxTable);
 
-    console.log('Create accumulatedData from pxTable');
+    // Store as accumulated data
     setAccumulatedData(structuredClone(pxTable));
   };
 
@@ -105,59 +111,53 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * @param i18n - The i18n object for handling langauages
    * @param variablesSelection - User selection of variables and their values.
    */
-  const fetchWithValidAccData = async (tableId: string, i18n: i18n, variablesSelection: VariablesSelection) => {
-    console.log('Fetch data WITH valid accumulated data');
+  const fetchWithValidAccData = async (
+    tableId: string,
+    i18n: i18n,
+    variablesSelection: VariablesSelection
+  ) => {
 
-        // Check if all data and metadata asked for by the user is already loaded from earlier API-calls
-        if (isAllDataAlreadyLoaded(variablesSelection)) {
-          console.log('All data already loaded');
-    
-          // All data and metadata asked for by the user is already loaded in accumulatedData. No need for a new API-call. Create a pxTable from accumulatedData instead.
-          const pxTable = createPxTableFromAccumulatedData(variablesSelection);
-    
-          if (pxTable) {
-            console.log('pxTable created from accumulatedData');
-            setData(pxTable);
-            return;
-          }
-        } else {
-          console.log('All data not loaded');
-        }
-    
-        let varSelection: VariablesSelection = variablesSelection;
-        let diffVariablesSelection: VariablesSelection = { selection: [] };
-    
-        // We need to make a new API-call to get the data and metadata not already loaded in accumulatedData
-        // Make the API-call as small as possible
-        diffVariablesSelection = GetDiffVariablesSelection(variablesSelection);
-        //console.log({ diffVariablesSelection });
-  
-        if (diffVariablesSelection.selection.length > 0) {
-          varSelection = getMinimumVariablesSelection(
-            variablesSelection,
-            diffVariablesSelection
-          );
-          //console.log({ varSelection });
-        }
-    
-        let pxTable: PxTable = await fetchFromApi(tableId, i18n, varSelection);
-    
-        // Merge pxTable with accumulatedData
-        mergeWithAccumulatedData(
-          pxTable,
-          diffVariablesSelection,
-          variablesSelection
-        );
-        const pxTableMerged =
-          createPxTableFromAccumulatedData(variablesSelection);
-        if (pxTableMerged) {
-          pxTable = pxTableMerged;
-        } else {
-          console.log('Failed to create PxTable from accumulated data');
-        }
-    
+    // Check if all data and metadata asked for by the user is already loaded from earlier API-calls
+    if (isAllDataAlreadyLoaded(variablesSelection)) {
+
+      // All data and metadata asked for by the user is already loaded in accumulatedData. No need for a new API-call. Create a pxTable from accumulatedData instead.
+      const pxTable = createPxTableFromAccumulatedData(variablesSelection);
+
+      if (pxTable) {
         setData(pxTable);
-    
+        return;
+      }
+    } 
+
+    let varSelection: VariablesSelection = variablesSelection;
+    let diffVariablesSelection: VariablesSelection = { selection: [] };
+
+    // We need to make a new API-call to get the data and metadata not already loaded in accumulatedData
+    // Make the API-call as small as possible
+    diffVariablesSelection = GetDiffVariablesSelection(variablesSelection);
+
+    if (diffVariablesSelection.selection.length > 0) {
+      varSelection = getMinimumVariablesSelection(
+        variablesSelection,
+        diffVariablesSelection
+      );
+    }
+
+    // Make the minimal API-call
+    let pxTable: PxTable = await fetchFromApi(tableId, i18n, varSelection);
+
+    // Merge pxTable with accumulatedData
+    mergeWithAccumulatedData(
+      pxTable,
+      diffVariablesSelection,
+      variablesSelection
+    );
+    const pxTableMerged = createPxTableFromAccumulatedData(variablesSelection);
+    if (pxTableMerged) {
+      pxTable = pxTableMerged;
+    } 
+
+    setData(pxTable);
   };
 
   /**
@@ -168,9 +168,12 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * @param variablesSelection - User selection of variables and their values.
    * @returns A PxTable object with the data and metadata.
    */
-  const fetchFromApi = async (tableId: string, i18n: i18n, variablesSelection: VariablesSelection) => {
-    console.log('Fetching data from API');
-    
+  const fetchFromApi = async (
+    tableId: string,
+    i18n: i18n,
+    variablesSelection: VariablesSelection
+  ) => {
+
     const res = await TableService.getTableDataByPost(
       tableId,
       i18n.language,
@@ -217,7 +220,10 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
     // Check that the dimensions are the same in accumulatedData and variablesSelection.
     // The variables must be the same and they must all have at least one value
-    if (variablesSelection.selection.length !== accumulatedData.metadata.variables.length) {
+    if (
+      variablesSelection.selection.length !==
+      accumulatedData.metadata.variables.length
+    ) {
       return false;
     }
 
@@ -336,8 +342,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     variablesSelection: VariablesSelection
   ): VariablesSelection {
     if (accumulatedData !== undefined) {
-      // We have data and metadata from earlier API-calls.
-      //console.log({ variablesSelection });
 
       // Find whats missing in accumulatedData
       const diffVariablesSelection: VariablesSelection =
@@ -413,17 +417,14 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         }
       );
 
-      //console.log({ newVariablesSelection });
-
       return newVariablesSelection;
     } else {
       return variablesSelection;
     }
   }
 
-  
-   /**
-   * Merge pxTable from new API call into the accumulatedData in the data cube.
+  /**
+   * Merge pxTable from new API call into the accumulatedData in the data cube. Both data and metadata are merged.
    *
    * @param pxTable - PxTable containing the data and metadata from the new API-call.
    * @param diffVariablesSelection - Variables selection containing only the variables and values not already loaded in the accumulated data.
@@ -434,85 +435,82 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     diffVariablesSelection: VariablesSelection,
     variablesSelection: VariablesSelection
   ): void {
+    
+    // Check that it is possible to merge the new data with the accumulated data. If more than one variable changed, it is not possible to merge.
     if (
       accumulatedData !== undefined &&
-      diffVariablesSelection.selection.length === 1
+      diffVariablesSelection.selection.length === 1 
     ) {
-      // console.log('Merging pxTable with accumulatedData');
-      // console.log({ pxTable });
-      // console.log({ accumulatedData });
-      // console.log({ diffVariablesSelection });
-      // console.log({ variablesSelection });
 
-      const mergedVariables = new Map(
+      // --- Merge metadata ---
+
+      // Create a map of the variables in accumulated data for quick lookup
+      const accDataVariables = new Map(
         accumulatedData.metadata.variables.map((variable) => [
           variable.id,
           variable,
         ])
       );
 
-      // Find the variable that has new values
+      // 1. Find the variable in accumulated data that we are going to merge new values into
       if (
-        mergedVariables.has(diffVariablesSelection.selection[0].variableCode)
+        accDataVariables.has(diffVariablesSelection.selection[0].variableCode)
       ) {
-        const existingVariable = mergedVariables.get(
+        // The existing variable in accumulated data
+        const existingVariable = accDataVariables.get(
           diffVariablesSelection.selection[0].variableCode
         );
+        // Create a map of existing values for the variable for quick lookup
         const existingValues = new Set(
           existingVariable?.values.map((v) => v.code)
         );
 
+        // 2. Find the variable in variablesSelection that we are going to merge new values from
         const selection = variablesSelection.selection.find(
           (sel) =>
             sel.variableCode ===
             diffVariablesSelection.selection[0].variableCode
         );
 
-        const newValues = pxTable.metadata.variables.find(
+        // 3. Find the variable in pxTable (from the new API call) that we are going to merge new values from
+        const updatedVariable = pxTable.metadata.variables.find(
           (variable) =>
             variable.id === diffVariablesSelection.selection[0].variableCode
         )?.values;
-        //console.log({ newValues });
 
-        if (newValues) {
-          newValues.forEach((value) => {
+        if (updatedVariable) {
+          updatedVariable.forEach((value) => {
             if (!existingValues.has(value.code)) {
+              // It's a new value that we need to add to the existing variable!
+              const newValue = structuredClone(value);
+
               // Values are assumed to be sorted in the right order in the VariablesProvider
+              // Find the index where the new value should be inserted
               const valueIndex = selection?.valueCodes?.indexOf(value.code);
               if (valueIndex !== undefined && valueIndex !== -1) {
-                existingVariable?.values.splice(valueIndex, 0, value);
+                existingVariable?.values.splice(valueIndex, 0, newValue);
               } else {
-                existingVariable?.values.push(value);
+                existingVariable?.values.push(newValue);
               }
-              console.log(
-                'Merging variable :',
-                diffVariablesSelection.selection[0].variableCode,
-                'with value:',
-                value.code,
-                'at index:',
-                valueIndex
-              );
-
             }
           });
         }
       }
 
-      // Merge data
-      // Variables from the new API-call must be in the same order as the variables in accumulatedData.
-      // This might not be the case because the metadata in accumulatedData can be from default selection. 
-      // If that is the case the variables in accumulatedData are pivoted.
+      // --- Merge data ---
 
       // Dimensions in accumulatedData
       const dimensions: string[] = [];
 
-      // Map for dimensions in new data
-      const dimensionsMap: number[] = getDimensionsMap(accumulatedData.metadata,  pxTable.metadata);
+      // Variable order in accumulatedData can be different from the variable order in the new API-call.
+      // Because of this we need to create a mapping of the variable order in accumulatedData to the variable order in the new API-call.
+      const dimensionsMap: number[] = getDimensionsMap(
+        accumulatedData.metadata,
+        pxTable.metadata
+      );
 
-      //console.log ({ dimensionsMap });
-
+      // Update the accumulated data cube with the new data
       updateCube(accumulatedData, pxTable, dimensions, 0, dimensionsMap);
-
     }
   }
 
@@ -523,19 +521,21 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * @param newMetadata - PxTableMetadata object for the new data.
    * @returns An array with the index of the variables in the new data.
    */
-  function getDimensionsMap(accumulatedMetadata : PxTableMetadata, newMetadata : PxTableMetadata) : number[] {
+  function getDimensionsMap(
+    accumulatedMetadata: PxTableMetadata,
+    newMetadata: PxTableMetadata
+  ): number[] {
     const dimensionsMap: number[] = [];
 
     for (let i = 0; i < accumulatedMetadata.variables.length; i++) {
-        const index = newMetadata.variables.findIndex(
-          (variable) => variable.id === accumulatedMetadata.variables[i].id
-        );
-        dimensionsMap[i] = index;
+      const index = newMetadata.variables.findIndex(
+        (variable) => variable.id === accumulatedMetadata.variables[i].id
+      );
+      dimensionsMap[i] = index;
     }
 
     return dimensionsMap;
   }
-
 
   /**
    * Updates the accumulated data cube (`accData`) with new data from `newData` based on the specified dimensions.
@@ -548,29 +548,42 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    *
    * This function recursively navigates through the dimensions of the data cubes. For each dimension, it finds the corresponding variable in the new data cube and updates the accumulated data cube with the new values. If the current dimension is the last one, it retrieves the data value from the new data cube and sets it in the accumulated data cube. Otherwise, it continues to the next dimension.
    */
-  function updateCube(accData : PxTable, newData : PxTable, dimensions : string[], dimensionIndex : number, dimensionsMap: number[]) : void {
-        
+  function updateCube(
+    accData: PxTable,
+    newData: PxTable,
+    dimensions: string[],
+    dimensionIndex: number,
+    dimensionsMap: number[]
+  ): void {
+    // 1. Find the variable in the new data that corresponds to the current dimension
     const variableInNewData = newData.metadata.variables.find(
-      (variable) => variable.id === accData.metadata.variables[dimensionIndex].id
+      (variable) =>
+        variable.id === accData.metadata.variables[dimensionIndex].id
     );
 
     if (variableInNewData) {
+      // Has the last dimension been reached? If so we can merge the data from the new data into the accumulated data
       if (dimensionIndex === accData.metadata.variables.length - 1) {
         variableInNewData.values.forEach((value) => {
           dimensions[dimensionIndex] = value.code;
 
-          //console.log({ dimensions });
-          const newDataDimensions: string[] = new Array(accData.metadata.variables.length);
+          // Variable order in accumulatedData can be different from the variable order in the new API-call.
+          // Because of this we need to create a mapping of the variable order in accumulatedData to the variable order in the new API-call.
+          const newDataDimensions: string[] = new Array(
+            accData.metadata.variables.length
+          );
 
+          // Do the dimension mapping
           for (let i = 0; i < dimensions.length; i++) {
             const index = dimensionsMap[i];
             newDataDimensions[index] = dimensions[i];
           }
 
-          //console.log({ newDataDimensions });
           // Get data value from newData
-          const dataValue = getPxTableData(newData.data.cube, newDataDimensions);
-          //console.log({ dataValue });
+          const dataValue = getPxTableData(
+            newData.data.cube,
+            newDataDimensions
+          );
 
           // Set data in accumulated data cube
           setPxTableData(
@@ -578,13 +591,18 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
             dimensions,
             structuredClone(dataValue)
           );
-
-        }); 
-      }
-      else {
+        });
+      } else {
+        // Continue to the next dimension
         variableInNewData.values.forEach((value) => {
           dimensions[dimensionIndex] = value.code;
-          updateCube(accData, newData, dimensions, dimensionIndex + 1, dimensionsMap);
+          updateCube(
+            accData,
+            newData,
+            dimensions,
+            dimensionIndex + 1,
+            dimensionsMap
+          );
         });
       }
     }

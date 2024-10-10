@@ -189,7 +189,7 @@ function getDataCellValue(jsonData: Dataset, counter: counter): number | null {
 }
 
 /**
- * Recursively creates or updates a data cube for the PxTable based on the provided JSONStat2 dataset and metadata.
+ * Recursively creates a data cube for the PxTable based on the provided JSONStat2 dataset and metadata.
  *
  * @param jsonData - The JSONStat2 dataset containing the data values.
  * @param metadata - The PxTableMetadata object containing variable information.
@@ -198,7 +198,7 @@ function getDataCellValue(jsonData: Dataset, counter: counter): number | null {
  * @param dimensionIndex - The index of the current dimension being processed.
  * @param counter - The counter object used to track the current index in the json-stat2 value array.
  */
-export function createCube(
+function createCube(
   jsonData: Dataset,
   metadata: PxTableMetadata,
   data: PxTableData,
