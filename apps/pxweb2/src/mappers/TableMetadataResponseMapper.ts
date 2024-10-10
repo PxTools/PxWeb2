@@ -7,12 +7,12 @@ export function mapTableMetadataResponse(response: TableMetadataResponse): PxTab
         id: response.id,
         label: response.label,
         updated: response.updated ? new Date(response.updated) : new Date(),
-        variables: response.variables.map((variable ) => {
+        variables: response.variables.map((variable) => {
             return {
                 id: variable.id,
                 label: variable.label,
-                type: mapVariableTypeEnum(variable.type), 
-                mandatory: (variable as AbstractCodeListVariable).elimination != null ? !(variable as AbstractCodeListVariable).elimination : true, 
+                type: mapVariableTypeEnum(variable.type),
+                mandatory: (variable as AbstractCodeListVariable).elimination != null ? !(variable as AbstractCodeListVariable).elimination : true,
                 values: (variable as AbstractCodeListVariable).values.map((value) => {
                     return {
                         label: value.label,
@@ -21,24 +21,25 @@ export function mapTableMetadataResponse(response: TableMetadataResponse): PxTab
                             return {
                                 text: note.text,
                                 mandatory: note.mandatory != null ? note.mandatory : false
-                            }   
-                        }) 
-                    }
+                            };
+                        })
+                    };
                 }),
                 codeLists: (variable as AbstractCodeListVariable).codeLists?.map((codeList) => {
                     return {
                         id: codeList.id,
                         label: codeList.label,
-                    }
+                    };
                 }),
                 notes: variable.notes?.map((note) => {
                     return {
                         text: note.text,
                         mandatory: note.mandatory != null ? note.mandatory : false
-                    }
+                    };
                 })
             };
-        })
+        }),
+        language: ""
     };
 
     return pxTableMetadata;

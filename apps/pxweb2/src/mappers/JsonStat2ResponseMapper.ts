@@ -30,6 +30,7 @@ export function mapJsonStat2Response(response: Dataset): PxTable {
   // Create the metadata object
   const metadata: PxTableMetadata = {
     id: response.extension?.px?.tableid || '',
+    language: response.extension?.px?.language || '',
     label: response.label || '',
     description: '',
     updated: response.updated ? new Date(response.updated) : new Date(),
