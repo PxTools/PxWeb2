@@ -649,17 +649,24 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         }
       });
 
-      // Find all new variables
+      // Find all new variables and add them to the stub
       const remainingVariables = pxTable.metadata.variables.filter(
-        (variable) => !stub.includes(variable.id) && !heading.includes(variable.id)
+        (variable) =>
+          !stub.includes(variable.id) && !heading.includes(variable.id)
       );
-      remainingVariables.forEach((variable) => {
-        pxTable.stub.push(variable);
-        setStub((prevStub) => [...prevStub, variable.id]);
-      });
 
+      if (remainingVariables.length > 0) {
+        const newStub = structuredClone(stub);
+
+        remainingVariables.forEach((variable) => {
+          if (!newStub.includes(variable.id)) {
+            pxTable.stub.push(variable);
+            newStub.push(variable.id);
+          }
+        });
+        setStub(newStub);
+      }
     }
-
   }
 
   return (
