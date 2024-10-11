@@ -1,3 +1,5 @@
+import cl from 'clsx';
+import classes from './Presentation.module.scss';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 
@@ -23,6 +25,7 @@ export function Presentation({ selectedTabId }: propsType) {
     useState(false);
   const [initialRun, SetInitialRun] = useState(true);
   const { selectedVBValues } = useVariables();
+  const [isFadingTable, setIsFadingTable] = useState(false);
 
   useEffect(() => {
     const hasSelectedValues = variables.getNumberOfSelectedValues() > 0;
@@ -44,7 +47,8 @@ export function Presentation({ selectedTabId }: propsType) {
         !isLoadingMetadata &&
         !initialRun
       ) {
-        tableData.fetchTableData(tableId ? tableId : 'tab1292', i18n);
+        setIsFadingTable(true);
+        tableData.fetchTableData(tableId ? tableId : 'tab638', i18n);
         setIsMissingMandatoryVariables(false);
       }
       if (!hasSelectedMandatoryVariables && !initialRun) {
@@ -56,8 +60,17 @@ export function Presentation({ selectedTabId }: propsType) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tableId, selectedVBValues, i18n.resolvedLanguage]);
+
+  useEffect(() => {
+    setIsFadingTable(false); // Stop fading once data is loaded
+  }, [tableData.data]);
+
   return (
-    <div className={styles.contentContainer}>
+    <div
+      className={cl(classes.contentContainer, {
+        [classes.fadeTable]: isFadingTable,
+      })}
+    >
       {tableData.data && pxTableMetadata && (
         <>
           <ContentTop
@@ -65,7 +78,9 @@ export function Presentation({ selectedTabId }: propsType) {
             pxtable={tableData.data}
           />
           {!isMissingMandatoryVariables && (
-            <div className={styles.tableContainer}>
+            <div
+              className={styles.tableContainer}
+            >
               <Table pxtable={tableData.data} />
             </div>
           )}
