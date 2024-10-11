@@ -1,3 +1,5 @@
+import cl from 'clsx';
+import classes from './Presentation.module.scss';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import React from 'react';
@@ -21,6 +23,7 @@ const MemoizedTable = React.memo(
 export function Presentation({ selectedTabId }: propsType) {
   const { i18n, t } = useTranslation();
   const tableData = useTableData();
+  const variablesChanged = useVariables();
   const variables = useDebounce(useVariables(), 500);
   const {
     pxTableMetadata,
@@ -32,6 +35,7 @@ export function Presentation({ selectedTabId }: propsType) {
   const [isMissingMandatoryVariables, setIsMissingMandatoryVariables] =
     useState(false);
   const [initialRun, setInitialRun] = useState(true);
+  const [isFadingTable, setIsFadingTable] = useState(false);
 
   useEffect(() => {
     const hasSelectedValues = variables.getNumberOfSelectedValues() > 0;
@@ -53,7 +57,8 @@ export function Presentation({ selectedTabId }: propsType) {
         !isLoadingMetadata &&
         !initialRun
       ) {
-        tableData.fetchTableData(tableId ? tableId : 'tab1292', i18n);
+        setIsFadingTable(true);
+        tableData.fetchTableData(tableId ? tableId : 'tab638', i18n);
         setIsMissingMandatoryVariables(false);
       }
       if (!hasSelectedMandatoryVariables && !initialRun) {
@@ -66,8 +71,20 @@ export function Presentation({ selectedTabId }: propsType) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tableId, selectedVBValues, i18n.resolvedLanguage]);
 
+  useEffect(() => {
+    setIsFadingTable(true);
+  }, [variablesChanged]);
+
+  useEffect(() => {
+    setIsFadingTable(false); // Stop fading once data is loaded
+  }, [tableData.data, variables]);
+
   return (
-    <div className={styles.contentContainer}>
+    <div
+      className={cl(classes.contentContainer, {
+        [classes.fadeTable]: isFadingTable,
+      })}
+    >
       {tableData.data && pxTableMetadata && (
         <>
           <ContentTop
