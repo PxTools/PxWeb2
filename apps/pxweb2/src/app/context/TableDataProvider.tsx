@@ -37,6 +37,12 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   const [accumulatedData, setAccumulatedData] = useState<PxTable | undefined>(
     undefined
   );
+
+  // Handle with variables are in the stub
+  const [stub, setStub] = useState<string[]>([]);
+  // Handle with variables are in the heading
+  const [heading, setHeading] = useState<string[]>([]);
+
   const [errorMsg, setErrorMsg] = useState('');
   const variables = useVariables();
 
@@ -91,13 +97,13 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     i18n: i18n,
     variablesSelection: VariablesSelection
   ) => {
-
     const pxTable: PxTable = await fetchFromApi(
       tableId,
       i18n,
       variablesSelection
     );
 
+    handleStubAndHeading(pxTable, i18n);
     setData(pxTable);
 
     // Store as accumulated data
@@ -116,10 +122,8 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     i18n: i18n,
     variablesSelection: VariablesSelection
   ) => {
-
     // Check if all data and metadata asked for by the user is already loaded from earlier API-calls
     if (isAllDataAlreadyLoaded(variablesSelection)) {
-
       // All data and metadata asked for by the user is already loaded in accumulatedData. No need for a new API-call. Create a pxTable from accumulatedData instead.
       const pxTable = createPxTableFromAccumulatedData(variablesSelection);
 
@@ -127,7 +131,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         setData(pxTable);
         return;
       }
-    } 
+    }
 
     let varSelection: VariablesSelection = variablesSelection;
     let diffVariablesSelection: VariablesSelection = { selection: [] };
@@ -155,7 +159,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     const pxTableMerged = createPxTableFromAccumulatedData(variablesSelection);
     if (pxTableMerged) {
       pxTable = pxTableMerged;
-    } 
+    }
 
     setData(pxTable);
   };
@@ -173,7 +177,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     i18n: i18n,
     variablesSelection: VariablesSelection
   ) => {
-
     const res = await TableService.getTableDataByPost(
       tableId,
       i18n.language,
@@ -342,7 +345,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     variablesSelection: VariablesSelection
   ): VariablesSelection {
     if (accumulatedData !== undefined) {
-
       // Find whats missing in accumulatedData
       const diffVariablesSelection: VariablesSelection =
         structuredClone(variablesSelection);
@@ -435,13 +437,11 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     diffVariablesSelection: VariablesSelection,
     variablesSelection: VariablesSelection
   ): void {
-    
     // Check that it is possible to merge the new data with the accumulated data. If more than one variable changed, it is not possible to merge.
     if (
       accumulatedData !== undefined &&
-      diffVariablesSelection.selection.length === 1 
+      diffVariablesSelection.selection.length === 1
     ) {
-
       // --- Merge metadata ---
 
       // Create a map of the variables in accumulated data for quick lookup
@@ -606,6 +606,60 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         });
       }
     }
+  }
+
+  /**
+   * Remember order of variables in stub and heading when table setup is changed.
+   *
+   * @param pxTable - PxTable containing the data and metadata for display in table.
+   * @param i18n - The i18n object for handling langauages
+   */
+  function handleStubAndHeading(pxTable: PxTable, i18n: i18n) {
+    if (
+      accumulatedData === undefined ||
+      accumulatedData.metadata.id !== pxTable.metadata.id
+    ) {
+      // First time we get data OR we have a new table.
+      // -> Set stub and heading according to the order in pxTable
+      const stubOrder: string[] = pxTable.stub.map((variable) => variable.id);
+      const headingOrder: string[] = pxTable.heading.map(
+        (variable) => variable.id
+      );
+      setStub(stubOrder);
+      setHeading(headingOrder);
+    } else {
+      // Language has changed.
+      // -> Set stub and heading in pxTable according to the order in state
+      pxTable.stub = [];
+      stub.forEach((id) => {
+        const variable = pxTable.metadata.variables.find(
+          (variable) => variable.id === id
+        );
+        if (variable) {
+          pxTable.stub.push(variable);
+        }
+      });
+      pxTable.heading = [];
+      heading.forEach((id) => {
+        const variable = pxTable.metadata.variables.find(
+          (variable) => variable.id === id
+        );
+        if (variable) {
+          pxTable.heading.push(variable);
+        }
+      });
+
+      // Find all new variables
+      const remainingVariables = pxTable.metadata.variables.filter(
+        (variable) => !stub.includes(variable.id) && !heading.includes(variable.id)
+      );
+      remainingVariables.forEach((variable) => {
+        pxTable.stub.push(variable);
+        setStub((prevStub) => [...prevStub, variable.id]);
+      });
+
+    }
+
   }
 
   return (
