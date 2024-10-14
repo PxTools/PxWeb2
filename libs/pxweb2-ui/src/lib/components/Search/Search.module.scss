@@ -6,7 +6,7 @@
   flex-direction: column;
   gap: 4px;
   align-self: stretch;
-}
+ }
 
 .wrapper {
   display: flex;
@@ -18,7 +18,7 @@
   box-sizing: border-box;
 }
 
-.default {
+.wrapper.default {
   border-radius: var(--px-border-radius-small);
   outline: 2px solid var(--px-color-border-default);
   background: var(--px-color-surface-default);
@@ -33,10 +33,10 @@
     border-radius: var(--px-border-radius-small);
     outline: 2px solid var(--px-color-border-action);
     background: var(--px-color-surface-default);
-  }
+  } 
 }
 
-.inVariableBox {
+.wrapper.inVariableBox {
   border-radius: var(--px-border-radius-medium);
   background: var(--px-color-surface-subtle);
   z-index: 1;
@@ -86,7 +86,7 @@
     box-shadow: none;
     outline: none;
   }
-
+  
   &:focus-visible {
     border: none;
     box-shadow: none;
@@ -112,4 +112,18 @@
   border-radius: var(--px-border-radius-medium);
   outline: 2px solid var(--px-color-border-action);
   background: var(--px-color-surface-default);
+}
+
+.wrapper.default:focus-visible {
+  border-radius: var(--px-border-radius-small);
+  outline: 3px solid var(--px-color-border-focus-outline);
+  outline-offset: 5px;
+  box-shadow: 0 0 0 3px var(--px-color-border-focus-boxshadow);
+}
+
+.wrapper.inVariableBox:focus-visible {
+  border-radius: var(--px-border-radius-medium);
+  outline: 3px solid var(--px-color-border-focus-outline);
+  outline-offset: 5px;
+  box-shadow: 0 0 0 3px var(--px-color-border-focus-boxshadow);
 }
