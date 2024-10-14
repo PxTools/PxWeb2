@@ -1,0 +1,91 @@
+@use '$ui/style-dictionary/dist/scss/fixed-variables.scss' as fixed;
+
+.item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: fixed.$spacing-1;
+  border-radius: var(--px-border-radius-small);
+  cursor: pointer;
+
+  // TODO: Fix focus styling later, when we have a design for it
+  background: none;
+  border: none;
+
+  > .icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding-top: fixed.$spacing-1;
+    padding-bottom: fixed.$spacing-1;
+    border-radius: 99px;
+
+    color: var(--px-color-icon-action);
+  }
+
+  > label {
+    cursor: pointer;
+    color: var(--px-color-text-action);
+  }
+
+  &.selected {
+    > .icon {
+      background-color: var(--px-color-surface-action-subtle-active);
+      color: var(--px-color-icon-default);
+    }
+    > label {
+      color: var(--px-color-text-default);
+    }
+  }
+
+  &:hover {
+    > .icon {
+      background-color: var(--px-color-surface-action-subtle-hover);
+      color: var(--px-color-icon-default);
+    }
+    > label {
+      color: var(--px-color-text-default);
+    }
+  }
+  &:active {
+    > .icon {
+      background-color: var(--px-color-surface-action-subtle-active);
+      color: var(--px-color-icon-default);
+    }
+    > label {
+      color: var(--px-color-text-default);
+    }
+  }
+}
+
+.navBarItem {
+  width: 100%;
+  padding: fixed.$spacing-2 0px;
+  justify-content: center;
+  flex: 1 0 0;
+
+  > .icon {
+    width: fixed.$spacing-16;
+  }
+  &:focus-visible {
+    outline: 3px solid var(--px-color-border-focus-outline);
+    outline-offset: 3px;
+    box-shadow: inset 0 0 0 3px var(--px-color-border-focus-boxshadow);
+  }
+}
+
+.navRailItem {
+  width: 100px;
+  padding: 0px 0px fixed.$spacing-1 0px;
+
+  > .icon {
+    width: fixed.$spacing-14;   
+  }
+  &:focus-visible {
+    outline: 3px solid var(--px-color-border-focus-outline);
+    outline-offset: 6px;
+    box-shadow: 0 0 0 3px var(--px-color-border-focus-boxshadow);    
+  }
+}

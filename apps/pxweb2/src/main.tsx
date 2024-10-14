@@ -1,15 +1,16 @@
 import { StrictMode, Suspense } from 'react';
 import * as ReactDOM from 'react-dom/client';
-import { validateConfig } from './app/util/validate';
-import App from './app/app';
-import './i18n/config';
-import { VariablesProvider } from './app/context/VariablesProvider';
-import { TableDataProvider } from './app/context/TableDataProvider';
 import {
   createBrowserRouter,
   Navigate,
   RouterProvider,
 } from 'react-router-dom';
+
+import './i18n/config';
+import App from './app/app';
+import { validateConfig } from './app/util/validate';
+import { VariablesProvider } from './app/context/VariablesProvider';
+import { TableDataProvider } from './app/context/TableDataProvider';
 
 const router = createBrowserRouter([
   {
