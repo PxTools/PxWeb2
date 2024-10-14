@@ -7,6 +7,17 @@
   background: var(--px-color-surface-default);
   align-self: stretch;
 
+  container-type: inline-size;
+  container-name: contentCont;
+
+  @container contentCont (width > 1px) {
+    .tableContainer {
+      width: 100cqw;
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+  }
+
   // xsmall
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
     padding: fixed.$spacing-4;
@@ -31,17 +42,6 @@
   @media ((min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width)) or ((min-width: fixed.$breakpoints-xlarge-min-width)) {
     padding: fixed.$spacing-10 fixed.$spacing-12;
     gap: fixed.$spacing-10;
-  }
-
-  container-type: inline-size;
-  container-name: contentCont;
-
-  @container contentCont (width > 1px) {
-    .tableContainer {
-      width: 100cqw;
-      overflow-x: auto;
-      scrollbar-width: thin;
-    }
   }
 }
 
