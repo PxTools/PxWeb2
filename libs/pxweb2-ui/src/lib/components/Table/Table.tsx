@@ -229,7 +229,7 @@ function createRow(
     if (table.stub.length > stubIndex + 1) {
       // make the rest of this row empty
       fillEmpty(tableMeta, tableRow);
-      tableRows.push(<tr key={getNewKey()}>{tableRow}</tr>);
+      tableRows.push(<tr className={cl({[classes.firstdim]:stubIndex===0})} key={getNewKey()}>{tableRow}</tr>);
       tableRow = [];
 
       // Create a new row for the next stub
