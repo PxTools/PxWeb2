@@ -34,7 +34,7 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
         <Heading size="large">{pxtable.metadata.label}</Heading>
         <div className={cl(classes.information)}>
           <Button icon="InformationCircle" variant="secondary">
-            Information
+            {t('presentation_page.main_content.about_table.information.title')}
           </Button>
           {pxtable.metadata && (
             <BodyShort size="medium">
