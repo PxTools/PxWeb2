@@ -30,13 +30,13 @@
     "generic_buttons": {
       "ok": "OK",
       "cancel": "Avbryt",
-      "search": "Søk",
       "save": "Lagre",
+      "search": "Søk",
       "close": "Lukk"
+    },
+    "generic_tags": {
+      "mandatory": "Må velges"
     }
-  },
-  "generic_tags": {
-    "mandatory": "Må velges"
   },
   "start_page": {
     "header": "Velkommen til appen!",
@@ -49,12 +49,12 @@
       "statistics": "Statistikkbanken"
     },
     "sidemenu": {
-      "hide": "Skjul meny",
+      "hide": "Skjul",
       "selection": {
         "title": "Filtrer",
         "variablebox": {
           "search": {
-            "placeholder": "Søk",
+            "placeholder": "Søk i listen",
             "label": "Søk",
             "arialabelicontext": "Søkeikon",
             "ariallabelclearbuttontext": "Ikon for å fjerne tekst i søkefeltet"
@@ -67,11 +67,11 @@
           "content": {
             "select": {
               "label": "Velg inndeling",
-              "placeholder": "Velg en inndeling"
+              "placeholder": "Ikke valgt"
             },
             "mixed_checkbox": {
               "select_all": "Velg alle",
-              "deselect_all": "Fjern valgte"
+              "deselect_all": "Fjern alle"
             },
             "values_list": {
               "aria_label": "Liste av {{total}} verdier.",
@@ -173,6 +173,14 @@
         "title": "Relatert",
         "description": "Beskrivelsestekst..."
       }
+    },
+    "footer": {
+      "description": "På denne siden kan du følge med når Statistiska centralbyrån (SCB) og Statistisk sentralbyrå (SSB) bygger et nytt og mer brukervennlig grensesnitt for PxWeb.",
+      "descriptionLink": "Les mer om prosjektet på GitHub",
+      "contact": "Kontakt",
+      "projectLeader": "Prosjektleder",
+      "scrumMaster": "Scrummaster",
+      "copyright": "Opphavsrett © 2024 Statistiska centralbyrån and Statistisk sentralbyrå"
     }
   }
 }
