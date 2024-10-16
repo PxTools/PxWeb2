@@ -67,7 +67,7 @@
           "content": {
             "select": {
               "label": "Välj indelning",
-              "placeholder": "Välj en division",
+              "placeholder": "Inget valt",
               "modal": {
                 "cancel_button": "Avbryt",
                 "confirm_button": "Spara"
