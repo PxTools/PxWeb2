@@ -274,6 +274,12 @@ export function VariableBoxContent({
                 'presentation_page.sidemenu.selection.variablebox.content.select.label'
               )}
               modalHeading={label}
+              modalCancelLabel={t(
+                'presentation_page.sidemenu.selection.variablebox.content.select.modal.cancel_button'
+              )}
+              modalConfirmLabel={t(
+                'presentation_page.sidemenu.selection.variablebox.content.select.modal.confirm_button'
+              )}
               placeholder={t(
                 'presentation_page.sidemenu.selection.variablebox.content.select.placeholder'
               )}

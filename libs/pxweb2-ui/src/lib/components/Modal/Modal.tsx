@@ -10,6 +10,8 @@ import Button from '../Button/Button';
 export interface ModalProps {
   label?: string;
   heading?: string;
+  cancelLabel?: string;
+  confirmLabel?: string;
   isOpen: boolean;
   onClose?: (updated: boolean) => void;
   className?: string;
@@ -19,6 +21,8 @@ export interface ModalProps {
 export function Modal({
   label,
   heading,
+  cancelLabel = '',
+  confirmLabel = '',
   isOpen,
   onClose,
   className = '',
@@ -28,6 +32,15 @@ export function Modal({
   const cssClasses = className.length > 0 ? ' ' + className : '';
   const [isModalOpen, setModalOpen] = useState(isOpen);
   const modalRef = useRef<HTMLDialogElement | null>(null);
+  let cancelLabelValue = cancelLabel;
+  let confirmLabelValue = confirmLabel;
+
+  if (cancelLabelValue === '') {
+    cancelLabelValue = t('common.generic_buttons.cancel');
+  }
+  if (confirmLabelValue === '') {
+    confirmLabelValue = t('common.generic_buttons.save');
+  }
 
   useEffect(() => {
     setModalOpen(isOpen);
@@ -43,7 +56,7 @@ export function Modal({
         modalElement.close();
         setWindowScroll(true);
       }
-     }
+    }
   }, [isModalOpen]);
 
   const setWindowScroll = (scroll: boolean) => {
@@ -95,7 +108,7 @@ export function Modal({
               size="small"
               icon="XMark"
               onClick={() => handleCloseModal(false)}
-              aria-label={t('common.generic_buttons.cancel')}
+              aria-label={cancelLabelValue}
             ></Button>
           </div>
         </div>
@@ -107,17 +120,17 @@ export function Modal({
             variant="primary"
             size="medium"
             onClick={() => handleCloseModal(true)}
-            aria-label={t('common.generic_buttons.save')}
+            aria-label={confirmLabelValue}
           >
-            {t('common.generic_buttons.save')}
+            {confirmLabelValue}
           </Button>
           <Button
             variant="secondary"
             size="medium"
             onClick={() => handleCloseModal(false)}
-            aria-label={t('common.generic_buttons.cancel')}
+            aria-label={cancelLabelValue}
           >
-            {t('common.generic_buttons.cancel')}
+            {cancelLabelValue}
           </Button>
         </div>
       </div>

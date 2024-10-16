@@ -67,7 +67,11 @@
           "content": {
             "select": {
               "label": "Välj indelning",
-              "placeholder": "Välj en division"
+              "placeholder": "Välj en division",
+              "modal": {
+                "cancel_button": "Avbryt",
+                "confirm_button": "Spara"
+              }
             },
             "mixed_checkbox": {
               "select_all": "Välj alla",

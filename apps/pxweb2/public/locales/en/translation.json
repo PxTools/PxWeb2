@@ -67,7 +67,11 @@
           "content": {
             "select": {
               "label": "Select grouping",
-              "placeholder": "Make a selection"
+              "placeholder": "Make a selection",
+              "modal": {
+                "cancel_button": "Cancel",
+                "confirm_button": "Save"
+              }
             },
             "mixed_checkbox": {
               "select_all": "Select all",

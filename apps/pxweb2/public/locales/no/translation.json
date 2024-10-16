@@ -67,7 +67,11 @@
           "content": {
             "select": {
               "label": "Velg inndeling",
-              "placeholder": "Ikke valgt"
+              "placeholder": "Ikke valgt",
+              "modal": {
+                "cancel_button": "Avbryt",
+                "confirm_button": "Bekreft"
+              }
             },
             "mixed_checkbox": {
               "select_all": "Velg alle",

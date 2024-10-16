@@ -68,7 +68,10 @@
             "select": {
               "label": "حدد التجميع",
               "placeholder": "قم بالاختيار",
-              "save": "يحفظ"
+              "modal": {
+                "cancel_button": "يلغي",
+                "confirm_button": "يحفظ"
+              }
             },
             "mixed_checkbox": {
               "select_all": "حدد الكل",
