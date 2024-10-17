@@ -33,7 +33,11 @@
         }
       },
       "required": ["supportedLanguages", "defaultLanguage", "fallbackLanguage"]
+    }, 
+    "apiUrl": {
+      "type": "string",
+      "description": "The base url for the pxweb api"
     }
   },
-  "required": ["language"]
+  "required": ["language", "apiUrl"]
 }

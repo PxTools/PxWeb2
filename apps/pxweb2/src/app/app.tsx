@@ -12,8 +12,13 @@ import NavigationBar from './components/NavigationMenu/NavigationBar/NavigationB
 
 import { Footer } from './components/Footer/Footer';
 import { BreakpointsSmallMaxWidth } from '@pxweb2/pxweb2-ui';
+import { getConfig } from './util/config/getConfig';
+import { OpenAPI } from '@pxweb2/pxweb2-api-client';
 
 export function App() {
+  const config = getConfig();
+  OpenAPI.BASE = config.apiUrl;
+
   const { tableId } = useParams<{ tableId: string }>();
   const [selectedTableId, setSelectedTableId] = useState(
     tableId ? tableId : 'tab638'
