@@ -9,6 +9,10 @@ export type PxTableMetadata = {
    */
   id: string;
   /**
+   * Table language.
+   */
+  language: string;
+  /**
    * A title for the table that describes the content of it.
    */
   label: string;

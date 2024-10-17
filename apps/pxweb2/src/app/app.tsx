@@ -55,7 +55,6 @@ export function App() {
       setSelectedNavigationView(newSelectedNavView);
     }
   };
-
   useLocalizeDocumentAttributes();
 
   return (
