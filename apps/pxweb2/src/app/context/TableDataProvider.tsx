@@ -7,8 +7,7 @@ import {
   VariableSelection,
   VariablesSelection,
 } from '@pxweb2/pxweb2-api-client';
-import { PxTable, PxTableMetadata } from '@pxweb2/pxweb2-ui';
-import { getPxTableData, setPxTableData } from '@pxweb2/pxweb2-ui';
+import { PxTable, PxTableMetadata, getPxTableData, setPxTableData } from '@pxweb2/pxweb2-ui';
 import { mapJsonStat2Response } from '../../mappers/JsonStat2ResponseMapper';
 
 // Define types for the context state and provider props
@@ -138,7 +137,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
     // We need to make a new API-call to get the data and metadata not already loaded in accumulatedData
     // Make the API-call as small as possible
-    diffVariablesSelection = GetDiffVariablesSelection(variablesSelection);
+    diffVariablesSelection = getDiffVariablesSelection(variablesSelection);
 
     if (diffVariablesSelection.selection.length > 0) {
       varSelection = getMinimumVariablesSelection(
@@ -341,7 +340,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * @param variablesSelection - Variables selection containing all variables and values selected by the user.
    * @returns A VariablesSelection object containing only the variables and values not already loaded in the accumulated data.
    */
-  function GetDiffVariablesSelection(
+  function getDiffVariablesSelection(
     variablesSelection: VariablesSelection
   ): VariablesSelection {
     if (accumulatedData !== undefined) {
@@ -546,7 +545,10 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * @param dimensionIndex - The current index of the dimension being processed.
    * @param dimensionsMap - A mapping of dimension indices to their corresponding positions in the dimensions array.
    *
-   * This function recursively navigates through the dimensions of the data cubes. For each dimension, it finds the corresponding variable in the new data cube and updates the accumulated data cube with the new values. If the current dimension is the last one, it retrieves the data value from the new data cube and sets it in the accumulated data cube. Otherwise, it continues to the next dimension.
+   * This function recursively navigates through the dimensions of the data cubes. For each dimension, it finds the 
+   * corresponding variable in the new data cube and updates the accumulated data cube with the new values. If the 
+   * current dimension is the last one, it retrieves the data value from the new data cube and sets it in the 
+   * accumulated data cube. Otherwise, it continues to the next dimension.
    */
   function updateCube(
     accData: PxTable,
