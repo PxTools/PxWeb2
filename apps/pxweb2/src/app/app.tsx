@@ -16,7 +16,7 @@ import { BreakpointsSmallMaxWidth } from '@pxweb2/pxweb2-ui';
 export function App() {
   const { tableId } = useParams<{ tableId: string }>();
   const [selectedTableId, setSelectedTableId] = useState(
-    tableId ? tableId : 'tab638'
+    tableId ? tableId : '04534'
   );
   const [errorMsg, setErrorMsg] = useState('');
   const [selectedNavigationView, setSelectedNavigationView] =
