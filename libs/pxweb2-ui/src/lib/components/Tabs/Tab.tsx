@@ -66,7 +66,7 @@ export default function Tab({ id, controls, label, ...rest }: TabProps) {
       className={cl(classes.tab)}
       {...rest}
     >
-      <span className={cl(classes.label)} >{label}</span>
+      <span className={cl(classes['label-medium'])} >{label}</span>
         {activeTab === id && (
         <m.span layoutId="underline" className={cl(classes.underline)} transition={{type: 'tween', duration: 0.25}} />
         )}

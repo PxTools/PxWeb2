@@ -1,5 +1,7 @@
+@use '../../text-styles.scss';
+
 .tabs {
-  border-bottom: 1px solid var(--color-border-divider-subtle, #c3dcdc);
+  border-bottom: 1px solid var(--px-color-border-divider-subtle);
   width: 100%;
   align-items: flex-end;
 
@@ -21,22 +23,22 @@
   align-items: center;
   gap: 4px;
   position: relative;
-  border-radius: var(--border-radius-xsmall, 2px);
+  border-radius: var(--px-border-radius-xsmall);
   border: none;
   cursor: pointer;
   background-color: var(--px-color-background-default);
 
   &:hover {
-    background: var(--color-surface-action-subtle-hover, #dbebeb);
+    background: var(--px-color-surface-action-subtle-hover);
   }
 
   &:active {
-    background: var(--color-surface-action-subtle-active, #c3dcdc);
+    background: var(--px-color-surface-action-subtle-active);
   }
 
   &:focus-visible {
-    border: 3px solid var(--color-border-focus-boxshadow, #162327);
-    outline: 3px solid var(--color-border-focus-outline, #7e4ef9);
+    border: 3px solid var(--px-color-border-focus-boxshadow);
+    outline: 3px solid var(--px-color-border-focus-outline);
     outline-offset: 3px;
     z-index: 1;
   }
@@ -46,18 +48,8 @@
   position: absolute;
   bottom: 0px;
   height: 4px;
-  border-radius: var(--border-radius-full, 9999px);
-  background: var(--color-border-selected, #274247);
+  border-radius: var(--px-border-radius-full);
+  background: var(--px-color-border-selected);
   width: 100%;
   z-index: 1;
-}
-
-.label {
-  color: var(--color-text-default, #162327);
-  /* Label/Medium */
-  font-family: Roboto;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 24px; /* 150% */
 }
