@@ -37,7 +37,7 @@
   }
 
   &:focus-visible {
-    border: 3px solid var(--px-color-border-focus-boxshadow);
+    box-shadow: inset 0 0 0 3px var(--px-color-border-focus-boxshadow);
     outline: 3px solid var(--px-color-border-focus-outline);
     outline-offset: 3px;
     z-index: 1;
