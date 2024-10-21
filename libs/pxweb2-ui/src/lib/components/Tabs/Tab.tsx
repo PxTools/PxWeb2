@@ -1,5 +1,5 @@
 //Adapted from: Juliana Godoy Viana, a11ytabs (Original copyright notice included in copyright_notice.txt)
-//Modifications: 
+//Modifications:
 // - Replaced children prop with label
 // - changed handlekeydown to not set active tab, only focus, when using arrow keys
 // - import TabContext from TabsProvider
@@ -8,7 +8,7 @@
 // - added span for label
 // - added motion span to animate tab switching
 
-import React, { useContext } from "react";
+import React, { useContext } from 'react';
 import { motion as m } from 'framer-motion';
 import cl from 'clsx';
 
@@ -21,13 +21,13 @@ export interface TabProps {
   label: string;
 }
 
-export default function Tab({ id, controls, label, ...rest }: TabProps) {
+export function Tab({ id, controls, label, ...rest }: TabProps) {
   const { activeTab, setActiveTab } = useContext(TabContext);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
     const tabList = event.currentTarget.parentElement;
 
-    if (event.code === "ArrowRight" || event.code === "ArrowDown") {
+    if (event.code === 'ArrowRight' || event.code === 'ArrowDown') {
       const nextTab = event.currentTarget.nextElementSibling as HTMLElement;
       if (nextTab) {
         nextTab.focus();
@@ -37,7 +37,7 @@ export default function Tab({ id, controls, label, ...rest }: TabProps) {
       }
     }
 
-    if (event.code === "ArrowLeft" || event.code === "ArrowUp") {
+    if (event.code === 'ArrowLeft' || event.code === 'ArrowUp') {
       const previousTab = event.currentTarget
         .previousElementSibling as HTMLElement;
       if (previousTab) {
@@ -48,7 +48,7 @@ export default function Tab({ id, controls, label, ...rest }: TabProps) {
       }
     }
 
-    if (event.code === "Enter" || event.code === "Space") {
+    if (event.code === 'Enter' || event.code === 'Space') {
       setActiveTab(id);
     }
   };
@@ -58,7 +58,7 @@ export default function Tab({ id, controls, label, ...rest }: TabProps) {
       type="button"
       role="tab"
       tabIndex={activeTab === id ? 0 : -1}
-      aria-selected={activeTab === id ? "true" : "false"}
+      aria-selected={activeTab === id ? 'true' : 'false'}
       onClick={() => setActiveTab(id)}
       onKeyDown={(e) => handleKeyDown(e)}
       id={id}
@@ -66,10 +66,16 @@ export default function Tab({ id, controls, label, ...rest }: TabProps) {
       className={cl(classes.tab)}
       {...rest}
     >
-      <span className={cl(classes['label-medium'])} >{label}</span>
-        {activeTab === id && (
-        <m.span layoutId="underline" className={cl(classes.underline)} transition={{type: 'tween', duration: 0.25}} />
-        )}
+      <span className={cl(classes['label-medium'])}>{label}</span>
+      {activeTab === id && (
+        <m.span
+          layoutId="underline"
+          className={cl(classes.underline)}
+          transition={{ type: 'tween', duration: 0.25 }}
+        />
+      )}
     </button>
   );
 }
+
+export default Tab;

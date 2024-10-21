@@ -2,9 +2,9 @@
 //Modifications:
 //- import TabContext from TabsProvider
 
-import { ReactNode, useContext } from "react";
+import { ReactNode, useContext } from 'react';
 
-import { TabContext } from "./TabsProvider";
+import { TabContext } from './TabsProvider';
 
 export interface TabPanelProps {
   id: string;
@@ -12,7 +12,7 @@ export interface TabPanelProps {
   children: ReactNode;
 }
 
-export default function TabPanel({
+export function TabPanel({
   id,
   controlledBy,
   children,
@@ -32,3 +32,5 @@ export default function TabPanel({
     </div>
   ) : null;
 }
+
+export default TabPanel;

@@ -1,5 +1,5 @@
 //Adapted from: Juliana Godoy Viana, a11ytabs (Original copyright notice included in copyright_notice.txt)
-//Modifications: 
+//Modifications:
 // - added prop 'variant' to handle different styling
 // - added prop 'LayoutGroupId'
 // - made ariaLabelledBy optional
@@ -22,13 +22,27 @@ export interface TabsProps {
   children: ReactNode;
 }
 
-export default function Tabs({ variant = 'fixed', children, layoutGroupId, ariaLabel, ariaLabelledBy, ...rest }: TabsProps) {
-  const ariaProps = ariaLabel ? { 'aria-label': ariaLabel } : { 'aria-labelledby': ariaLabelledBy };
+export function Tabs({
+  variant = 'fixed',
+  children,
+  layoutGroupId,
+  ariaLabel,
+  ariaLabelledBy,
+  ...rest
+}: TabsProps) {
+  const ariaProps = ariaLabel
+    ? { 'aria-label': ariaLabel }
+    : { 'aria-labelledby': ariaLabelledBy };
   return (
-    <div role="tablist" className={cl(classes.tabs, classes[variant])} {...ariaProps} {...rest}>
-      <LayoutGroup id={layoutGroupId}>
-        {children}
-      </LayoutGroup>
+    <div
+      role="tablist"
+      className={cl(classes.tabs, classes[variant])}
+      {...ariaProps}
+      {...rest}
+    >
+      <LayoutGroup id={layoutGroupId}>{children}</LayoutGroup>
     </div>
   );
 }
+
+export default Tabs;

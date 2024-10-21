@@ -17,7 +17,7 @@ export const FixedTabs: StoryFn<typeof Tabs> = () => {
 
   return (
     <TabsProvider activeTab={activeTab} setActiveTab={setActiveTab}>
-      <Tabs variant="fixed" ariaLabel='Fixed tabs'>
+      <Tabs variant="fixed" ariaLabel="Fixed tabs">
         <Tab id="px-tab1" label="Tab1"></Tab>
         <Tab id="px-tab2" label="Tab2"></Tab>
         <Tab id="px-tab3" label="Tab3"></Tab>
@@ -32,7 +32,7 @@ export const SrollableTabs: StoryFn<typeof Tabs> = () => {
 
   return (
     <TabsProvider activeTab={activeTab} setActiveTab={setActiveTab}>
-      <Tabs variant="scrollable" ariaLabel='Scrollable tabs'>
+      <Tabs variant="scrollable" ariaLabel="Scrollable tabs">
         <Tab id="px-tab1" label="Tab1"></Tab>
         <Tab id="px-tab2" label="Tab2"></Tab>
         <Tab id="px-tab3" label="Tab3"></Tab>
