@@ -16,26 +16,28 @@
     text-align: center;
 
     background: var(--px-color-surface-moderate);
-    border-bottom: 1px solid var(--px-color-border-default);
+    // border-bottom: 1px solid var(--px-color-border-default);
+    border-top: 1px solid var(--px-color-border-default);
     border-left: 1px solid var(--px-color-border-default);
   }
   thead th {
     font-weight: bold;
   }
-  thead tr:last-child th{
+  thead tr:last-child th {
     text-align: end;
+    border-bottom-width: 2px;
   }
   th.stub {
     text-align: left;
   }
 
-  tr:first-child th:first-child{
+  tr:first-child th:first-child {
     border-left: none;
   }
-  tbody tr:last-child td  {
+  tbody tr:last-child td {
     border-bottom: none;
   }
-  tbody tr:last-child th  {
+  tbody tr:last-child th {
     border-bottom: none;
   }
 
@@ -88,16 +90,24 @@
     width: 40px;
     text-align: right;
 
-    border-bottom: 1px solid var(--px-color-border-default);
+    border-top: 1px solid var(--px-color-border-default);
     border-left: 1px solid var(--px-color-border-default);
   }
 }
-tr.firstdim th{
+tr.firstdim th {
   border-top: 2px solid var(--px-color-border-default);
   font-weight: bold;
 }
-tr.firstdim td{
+tr.firstdim td {
   border-top: 2px solid var(--px-color-border-default);
   font-weight: bold;
+}
+thead tr:first-of-type th,
+thead tr:first-of-type td {
+  border-top: none;
 }
 
+tbody tr:first-of-type th,
+tbody tr:first-of-type td {
+  border-top: 2px solid var(--px-color-border-default);
+}
