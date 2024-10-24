@@ -93,6 +93,9 @@
     border-top: 1px solid var(--px-color-border-default);
     border-left: 1px solid var(--px-color-border-default);
   }
+  tr th::first-letter{
+    text-transform: capitalize;
+  }
 }
 tr.firstdim th {
   border-top: 2px solid var(--px-color-border-default);
