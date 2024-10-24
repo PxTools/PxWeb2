@@ -68,7 +68,11 @@ interface Resources {
             "content": {
               "select": {
                 "label": "Select grouping",
-                "placeholder": "Make a selection"
+                "placeholder": "Nothing selected",
+                "modal": {
+                  "cancel_button": "Cancel",
+                  "confirm_button": "Save"
+                }
               },
               "mixed_checkbox": {
                 "select_all": "Select all",
@@ -147,7 +151,7 @@ interface Resources {
           "warnings": {
             "missing_mandatory": {
               "title": "The table cannot be displayed",
-              "description": "You must select something in the filter on the left"
+              "description": "You must select something in the filter"
             }
           }
         },
