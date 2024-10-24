@@ -45,7 +45,43 @@
   }
 }
 
+// .contentContainer ::after{
+//   content: '';
+//   position: absolute;
+//   top: 50px;
+//   right: 0;
+//   height: 100%;
+//   width: 100px; /* Adjust this value to your liking */
+//   pointer-events: none; /* So the gradient won't block scroll */
+//   background: linear-gradient(to right, red, rgba(255, 255, 255, 1)); /* Adjust color to match your background */
+// }
+
 .fadeTable table {
   opacity: 0.6;
   transition: 'opacity 0.3s ease-in-out';
+}
+
+.gradientContainer {
+  position: relative;
+  overflow-x: auto;
+  max-width: 100%; /* Set this to limit table width to screen */
+}
+.gradientContainer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 30px; /* Adjust this value to your liking */
+  pointer-events: none; /* So the gradient won't block scroll */
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 20%,
+    rgba(255, 255, 255, 1) 100%
+  );
+  background-repeat: no-repeat;
+  z-index: 1;
+}
+.gradientContainer.hidegradient::after {
+  opacity: 0; /* Hide gradient when fully scrolled */
 }
