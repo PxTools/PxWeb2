@@ -1,4 +1,4 @@
-//Adapted from: Juliana Godoy Viana, a11ytabs (Original copyright notice included in copyright_notice.txt)
+//Adapted from: Juliana Godoy Viana, a11ytabs (MIT licensed, original copyright notice included in copyright_notice.txt)
 //Modifications:
 // - Replaced children prop with label
 // - changed handlekeydown to not set active tab, only focus, when using arrow keys

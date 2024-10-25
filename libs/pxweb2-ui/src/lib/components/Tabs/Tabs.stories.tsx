@@ -27,7 +27,7 @@ export const FixedTabs: StoryFn<typeof Tabs> = () => {
   );
 };
 
-export const SrollableTabs: StoryFn<typeof Tabs> = () => {
+export const ScrollableTabs: StoryFn<typeof Tabs> = () => {
   const [activeTab, setActiveTab] = useState('px-tab1');
 
   return (

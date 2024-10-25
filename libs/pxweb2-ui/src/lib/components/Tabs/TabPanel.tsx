@@ -1,4 +1,4 @@
-//Adapted from: Juliana Godoy Viana, a11ytabs (Original copyright notice included in copyright_notice.txt)
+//Adapted from: Juliana Godoy Viana, a11ytabs (MIT licensed, original copyright notice included in copyright_notice.txt)
 //Modifications:
 //- import TabContext from TabsProvider
 

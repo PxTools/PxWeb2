@@ -1,4 +1,4 @@
-//Adapted from: Juliana Godoy Viana, a11ytabs (Original copyright notice included in copyright_notice.txt)
+//Adapted from: Juliana Godoy Viana, a11ytabs (MIT licensed, original copyright notice included in copyright_notice.txt)
 //Modification: Merged together code from TabsContext.tsx and TabContainer.tsx to TabsProvider.tsx
 import { createContext, ReactNode, Dispatch, SetStateAction } from 'react';
 
