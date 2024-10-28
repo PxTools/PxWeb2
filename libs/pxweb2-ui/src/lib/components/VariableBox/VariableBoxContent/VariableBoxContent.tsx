@@ -191,6 +191,9 @@ export function VariableBoxContent({
     }
   };
 
+  //How many items should be sticky
+  const stickyTopValueCount = hasSevenOrMoreValues ? 2 : hasTwoOrMoreValues ? 1 : 0;
+
   const currentVarSelectedCodeList = selectedValues.find(
     (variable) => variable.id === varId
   )?.selectedCodeList;
@@ -327,6 +330,7 @@ export function VariableBoxContent({
                 className=""
                 totalCount={items.length}
                 itemContent={(index) => itemRenderer(items, index)}
+                topItemCount={stickyTopValueCount}
                 scrollSeekConfiguration={{
                   enter: (velocity) => Math.abs(velocity) > 1000,
                   exit: (velocity) => Math.abs(velocity) < 30,
