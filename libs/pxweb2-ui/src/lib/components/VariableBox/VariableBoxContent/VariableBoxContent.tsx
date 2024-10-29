@@ -99,7 +99,7 @@ export function VariableBoxContent({
       newItems.push({ type: 'mixedCheckbox' });
     }
 
-    values
+    valuesToRender
       .filter(
         (value) =>
           value.label.toLowerCase().indexOf(debouncedSearch.toLowerCase()) > -1
@@ -109,6 +109,8 @@ export function VariableBoxContent({
       });
 
     setItems(newItems);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasSevenOrMoreValues, hasTwoOrMoreValues, debouncedSearch, values]);
 
   useEffect(() => {
