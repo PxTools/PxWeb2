@@ -99,6 +99,7 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
   const getSelectedValuesByIdSorted = (variableId: string) => {
     let sortedValues:string[] =[] 
     pxTableMetadata?.variables.forEach((item) => {
+      //console.log(item); //TODO: remove
       if (item.id === variableId) {
         sortedValues = (item.values.filter((value) =>
           selectedVBValues.find(

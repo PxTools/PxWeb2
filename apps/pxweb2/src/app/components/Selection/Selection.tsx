@@ -232,10 +232,15 @@ export function Selection({
       shouldGetDefaultSelection = true;
       setPrevTableId(selectedTabId);
     }
+
+    // TODO:  Look into fixing the table state and rendering,
+    //        now it doesn't work with a new codelist, but the
+    //        variable state seems to be updated correctly.
+    //        maybe it has to do with pxTableMetaToRender?
     if (prevLanguage === '') {
       setPrevLanguage(i18n.resolvedLanguage || '');
     }
-    if (prevLanguage !== i18n.resolvedLanguage && prevLanguage !== '') {
+    if (prevLanguage !== '' && prevLanguage !== i18n.resolvedLanguage) {
       const newSelectedVBValues = removeAllSelectedCodeLists(selectedVBValues);
 
       setSelectedVBValues(newSelectedVBValues);
@@ -269,6 +274,7 @@ export function Selection({
     if (shouldGetDefaultSelection) {
       TableService.getDefaultSelection(selectedTabId, i18n.resolvedLanguage)
         .then((selectionResponse) => {
+          //console.log(selectionResponse); TODO: remove
           const defaultSelection = mapTableSelectionResponse(
             selectionResponse
           ).filter(

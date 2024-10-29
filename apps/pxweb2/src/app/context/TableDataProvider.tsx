@@ -63,8 +63,17 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     ids.forEach((id) => {
       const selection: VariableSelection = {
         variableCode: id,
-        valueCodes: variables.getSelectedValuesByIdSorted(id),
+        valueCodes: variables.getSelectedValuesByIdSorted(id), // is this the problem?
+
+        // TODO/FIXME: Is the problem that pxTable.metadata.variables[i].values still has the old values?
+        
+        // this actually gets the values,
+        // but also has a "500 (Internal Server Error)" in the console
+        //valueCodes: variables.getSelectedValuesById(id),
       };
+
+      //console.log('selection', selection); //TODO: remove
+
       selections.push(selection);
     });
 
@@ -76,6 +85,8 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       i18n.language,
       tableId
     );
+
+    //console.log('validAccData', validAccData); //TODO: remove
 
     if (validAccData) {
       fetchWithValidAccData(tableId, i18n, variablesSelection);
@@ -96,6 +107,8 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     i18n: i18n,
     variablesSelection: VariablesSelection
   ) => {
+    //console.log('fetchWithoutValidAccData variablesSelection', variablesSelection); //TODO: remove
+
     const pxTable: PxTable = await fetchFromApi(
       tableId,
       i18n,
@@ -176,6 +189,8 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     i18n: i18n,
     variablesSelection: VariablesSelection
   ) => {
+    //console.log("fetchFromApi variablesSelection", variablesSelection); //TODO: remove
+
     const res = await TableService.getTableDataByPost(
       tableId,
       i18n.language,
