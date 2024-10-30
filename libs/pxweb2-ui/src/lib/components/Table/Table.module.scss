@@ -29,6 +29,7 @@
   }
   th.stub {
     text-align: left;
+    min-width: 200px
   }
 
   tr:first-child th:first-child {
@@ -96,21 +97,22 @@
   tr th::first-letter{
     text-transform: capitalize;
   }
-}
-tr.firstdim th {
-  border-top: 2px solid var(--px-color-border-default);
-  font-weight: bold;
-}
-tr.firstdim td {
-  border-top: 2px solid var(--px-color-border-default);
-  font-weight: bold;
-}
-thead tr:first-of-type th,
-thead tr:first-of-type td {
-  border-top: none;
+  tr.firstdim th {
+    border-top: 2px solid var(--px-color-border-default);
+    font-weight: bold;
+  }
+  tr.firstdim td {
+    border-top: 2px solid var(--px-color-border-default);
+    font-weight: bold;
+  }
+  thead tr:first-of-type th,
+  thead tr:first-of-type td {
+    border-top: none;
+  }
+  tbody tr:first-of-type th,
+  tbody tr:first-of-type td {
+    border-top: 2px solid var(--px-color-border-default);
+  }
+  
 }
 
-tbody tr:first-of-type th,
-tbody tr:first-of-type td {
-  border-top: 2px solid var(--px-color-border-default);
-}
