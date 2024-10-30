@@ -111,9 +111,10 @@ function removeValueOfVariable(
 function addAllValuesToVariable(
   selectedValuesArr: SelectedVBValues[],
   varId: string,
-  allValuesOfVariable: Value[]
+  allValuesOfVariable: Value[],
+  searchedValues: Value[]
 ): SelectedVBValues[] {
-  const currentVariable = selectedValuesArr.find(
+const currentVariable = selectedValuesArr.find(
     (variable) => variable.id === varId
   );
   let newSelectedValues: SelectedVBValues[] = [];
@@ -121,9 +122,8 @@ function addAllValuesToVariable(
   if (currentVariable) {
     newSelectedValues = selectedValuesArr.map((variable) => {
       if (variable.id === varId) {
-        variable.values = allValuesOfVariable.map((value) => value.code);
+        variable.values = allValuesOfVariable.filter(v => searchedValues.includes(v)).map((value) => value.code);
       }
-
       return variable;
     });
   }
@@ -133,7 +133,7 @@ function addAllValuesToVariable(
       {
         id: varId,
         selectedCodeList: undefined,
-        values: allValuesOfVariable.map((value) => value.code),
+        values: allValuesOfVariable.filter(v => searchedValues.includes(v)).map((value) => value.code),
       },
     ];
   }
@@ -356,7 +356,8 @@ export function Selection({
 
   const handleMixedCheckboxChange = (
     varId: string,
-    allValuesSelected: string
+    allValuesSelected: string,
+    searchValues: Value[]
   ) => {
     const prevSelectedValues = structuredClone(selectedVBValues);
 
@@ -374,10 +375,10 @@ export function Selection({
       const newSelectedValues = addAllValuesToVariable(
         prevSelectedValues,
         varId,
-        allValuesOfVariable
+        allValuesOfVariable,
+        searchValues
       );
-
-      updateAndSyncVBValues(newSelectedValues);
+     updateAndSyncVBValues(newSelectedValues);
     }
   };
 

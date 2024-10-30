@@ -34,7 +34,7 @@ type VariableBoxContentProps = VariableBoxPropsToContent & {
     varId: string
   ) => void;
   onChangeCheckbox: (varId: string, value: string) => void;
-  onChangeMixedCheckbox: (varId: string, allValuesSelected: string) => void;
+  onChangeMixedCheckbox: (varId: string, allValuesSelected: string, searchValues: Value[]) => void;
 };
 
 export function VariableBoxContent({
@@ -109,7 +109,7 @@ export function VariableBoxContent({
       });
 
     setItems(newItems);
-  }, [hasSevenOrMoreValues, hasTwoOrMoreValues, debouncedSearch, values]);
+  }, [hasSevenOrMoreValues, hasTwoOrMoreValues, debouncedSearch, values, selectedValues]);
 
   useEffect(() => {
     if (totalChosenValues === 0) {
@@ -195,6 +195,8 @@ export function VariableBoxContent({
     (variable) => variable.id === varId
   )?.selectedCodeList;
 
+  const searchedValues  = items.filter((item) => item.type === 'value' && item.value !== undefined).map((item) => item.value as Value);
+
   // Modify the itemRenderer to assign IDs and tabIndex
   const itemRenderer = (items: any, index: number) => {
     const item = items[index];
@@ -232,7 +234,7 @@ export function VariableBoxContent({
             id={varId}
             text={mixedCheckboxText}
             value={allValuesSelected}
-            onChange={() => onChangeMixedCheckbox(varId, allValuesSelected)}
+            onChange={() => onChangeMixedCheckbox(varId, allValuesSelected, searchedValues)}
             ariaControls={valuesToRender.map((value) => value.code)}
             strong={true}
             inVariableBox={true}
@@ -254,6 +256,7 @@ export function VariableBoxContent({
                 ?.values.includes(value.code) === true
             }
             text={value.label.charAt(0).toUpperCase() + value.label.slice(1)}
+            searchTerm={search}
             onChange={() => onChangeCheckbox(varId, value.code)}
           />
         </div>
