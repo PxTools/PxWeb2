@@ -111,7 +111,7 @@ export function VariableBoxContent({
     setItems(newItems);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasSevenOrMoreValues, hasTwoOrMoreValues, debouncedSearch, values, selectedValues]);
+  }, [hasSevenOrMoreValues, hasTwoOrMoreValues, debouncedSearch, values]);
 
   useEffect(() => {
     if (totalChosenValues === 0) {
@@ -197,7 +197,8 @@ export function VariableBoxContent({
     (variable) => variable.id === varId
   )?.selectedCodeList;
 
-  const searchedValues  = items.filter((item) => item.type === 'value' && item.value !== undefined).map((item) => item.value as Value);
+  const searchedValues : Value[] = values.filter((value) => value.label.toLowerCase().indexOf(debouncedSearch.toLowerCase()) > -1);
+  //const searchedValues  = items.filter((item) => item.type === 'value' && item.value !== undefined).map((item) => item.value as Value);
 
   // Modify the itemRenderer to assign IDs and tabIndex
   const itemRenderer = (items: any, index: number) => {
