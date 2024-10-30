@@ -121,9 +121,13 @@ const currentVariable = selectedValuesArr.find(
 
   if (currentVariable) {
     newSelectedValues = selectedValuesArr.map((variable) => {
-      if (variable.id === varId) {
-        variable.values = allValuesOfVariable.filter(v => searchedValues.includes(v)).map((value) => value.code);
-      }
+       if (variable.id === varId) {
+        const prevValues = [...variable.values];
+        const valuesList = allValuesOfVariable
+          .filter(v => prevValues.includes(v.code) || searchedValues.includes(v))
+          .map(value => value.code);
+        variable.values = valuesList;
+       }
       return variable;
     });
   }
