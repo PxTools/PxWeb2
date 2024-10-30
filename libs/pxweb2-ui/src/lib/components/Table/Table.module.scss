@@ -22,7 +22,8 @@
     border-left: 1px solid var(--px-color-border-default);
   }
   thead th {
-    font-weight: bold;
+    //font-weight: bold;
+    font-family: PxWeb-font-700;
   }
   thead tr:last-child th {
     text-align: end;
@@ -100,11 +101,13 @@
   }
   tr.firstdim th {
     border-top: 2px solid var(--px-color-border-default);
-    font-weight: bold;
+    //font-weight: bold;
+    font-family: PxWeb-font-700;
   }
   tr.firstdim td {
     border-top: 2px solid var(--px-color-border-default);
-    font-weight: bold;
+    //font-weight: bold;
+    font-family: PxWeb-font-700;
   }
   thead tr:first-of-type th,
   thead tr:first-of-type td {
