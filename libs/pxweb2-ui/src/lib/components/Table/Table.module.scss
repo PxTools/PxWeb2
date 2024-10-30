@@ -8,6 +8,7 @@
   border-radius: var(--px-border-radius-medium);
   border: 1px solid var(--px-color-border-default);
   overflow: hidden; /* Ensures content stays within rounded borders */
+  color: var(--px-color-text-default);
 
   th {
     width: 40px;
