@@ -150,7 +150,7 @@ const Highlight: React.FC<HighlightProps> = ({
   searchTerm,
   highlightStyle = defaultHighlightStyle,
 }) => {
-  if (!searchTerm || searchTerm.length <= 1) {
+  if (!searchTerm || searchTerm.length < 1) {
     return <span>{text}</span>;
   }
   const regex = new RegExp(`(${searchTerm})`, 'gi');
