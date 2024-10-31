@@ -45,17 +45,6 @@
   }
 }
 
-// .contentContainer ::after{
-//   content: '';
-//   position: absolute;
-//   top: 50px;
-//   right: 0;
-//   height: 100%;
-//   width: 100px; /* Adjust this value to your liking */
-//   pointer-events: none; /* So the gradient won't block scroll */
-//   background: linear-gradient(to right, red, rgba(255, 255, 255, 1)); /* Adjust color to match your background */
-// }
-
 .fadeTable table {
   opacity: 0.6;
   transition: 'opacity 0.3s ease-in-out';
@@ -85,7 +74,6 @@
 .gradientContainer.hidegradientRight::after {
   opacity: 0; /* Hide gradient when fully scrolled */
 }
-
 
 .gradientContainer::before {
   content: '';

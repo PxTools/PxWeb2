@@ -43,7 +43,7 @@ export function Presentation({ selectedTabId }: propsType) {
   useEffect(() => {
     const checkScrollAndGradient = () => {
       const container = tableContainerRef.current;
-      // container to keep the gradient 
+      // container to keep the gradient
       const containerGradient = gradientContainerRef.current;
       if (container && containerGradient) {
         // is the table scrollable horisontally?
@@ -60,10 +60,8 @@ export function Presentation({ selectedTabId }: propsType) {
           ) {
             containerGradient.classList.add(styles.hidegradientRight);
           }
-          if (
-            container.scrollLeft >0
-          ) {
-            console.log(" HIT container.scrollLeft=" +  container.scrollLeft)
+          // scrolled, show left gradient
+          if (container.scrollLeft > 0) {
             containerGradient.classList.remove(styles.hidegradientLeft);
           }
         } else {
@@ -87,7 +85,6 @@ export function Presentation({ selectedTabId }: propsType) {
       }
     };
   });
-
 
   useEffect(() => {
     const hasSelectedValues = variables.getNumberOfSelectedValues() > 0;
