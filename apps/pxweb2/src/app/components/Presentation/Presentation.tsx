@@ -50,17 +50,25 @@ export function Presentation({ selectedTabId }: propsType) {
         // had to substract 3 from scrollwidth. Because of border?
         const needsScroll = container.scrollWidth - 3 > container.clientWidth;
         if (needsScroll) {
-          containerGradient.classList.remove(styles.hidegradient);
+          containerGradient.classList.remove(styles.hidegradientRight);
+          containerGradient.classList.add(styles.hidegradientLeft);
           //  Check if scrolled to the rightmost side
           // had to substract 3 from scrollwidth. Because of border?
           if (
             container.scrollLeft + container.clientWidth >=
             container.scrollWidth - 3
           ) {
-            containerGradient.classList.add(styles.hidegradient);
+            containerGradient.classList.add(styles.hidegradientRight);
+          }
+          if (
+            container.scrollLeft >0
+          ) {
+            console.log(" HIT container.scrollLeft=" +  container.scrollLeft)
+            containerGradient.classList.remove(styles.hidegradientLeft);
           }
         } else {
-          containerGradient.classList.add(styles.hidegradient);
+          containerGradient.classList.add(styles.hidegradientRight);
+          containerGradient.classList.add(styles.hidegradientLeft);
         }
       }
     };
