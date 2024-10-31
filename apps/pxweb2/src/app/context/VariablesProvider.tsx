@@ -97,17 +97,19 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // not in use so far, but maybe to use it in TableDataProvdider when update Cube.
   const getSelectedValuesByIdSorted = (variableId: string) => {
-    let sortedValues:string[] =[] 
+    let sortedValues: string[] = [];
     pxTableMetadata?.variables.forEach((item) => {
       if (item.id === variableId) {
-        sortedValues = (item.values.filter((value) =>
-          selectedVBValues.find(
-            (selvar) => selvar.id === variableId
-          )?.values.includes(value.code)).map(value=>value.code)
-        );
+        sortedValues = item.values
+          .filter((value) =>
+            selectedVBValues
+              .find((selvar) => selvar.id === variableId)
+              ?.values.includes(value.code)
+          )
+          .map((value) => value.code);
       }
     });
-    return sortedValues
+    return sortedValues;
   };
 
   const getNumberOfSelectedValues = () => {
