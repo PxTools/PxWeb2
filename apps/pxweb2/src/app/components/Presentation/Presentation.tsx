@@ -1,7 +1,7 @@
 import cl from 'clsx';
 import classes from './Presentation.module.scss';
 import { useTranslation } from 'react-i18next';
-import { useEffect, useState } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import React from 'react';
 import isEqual from 'lodash/isEqual';
 
@@ -36,6 +36,55 @@ export function Presentation({ selectedTabId }: propsType) {
     useState(false);
   const [initialRun, setInitialRun] = useState(true);
   const [isFadingTable, setIsFadingTable] = useState(false);
+
+  const tableContainerRef = useRef<HTMLDivElement | null>(null);
+  const gradientContainerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const checkScrollAndGradient = () => {
+      const container = tableContainerRef.current;
+      // container to keep the gradient
+      const containerGradient = gradientContainerRef.current;
+      if (container && containerGradient) {
+        // is the table scrollable horisontally?
+        // had to substract 3 from scrollwidth. Because of border?
+        const needsScroll = container.scrollWidth - 3 > container.clientWidth;
+        if (needsScroll) {
+          containerGradient.classList.remove(styles.hidegradientRight);
+          containerGradient.classList.add(styles.hidegradientLeft);
+          //  Check if scrolled to the rightmost side
+          // had to substract 3 from scrollwidth. Because of border?
+          if (
+            container.scrollLeft + container.clientWidth >=
+            container.scrollWidth - 3
+          ) {
+            containerGradient.classList.add(styles.hidegradientRight);
+          }
+          // scrolled, show left gradient
+          if (container.scrollLeft > 0) {
+            containerGradient.classList.remove(styles.hidegradientLeft);
+          }
+        } else {
+          containerGradient.classList.add(styles.hidegradientRight);
+          containerGradient.classList.add(styles.hidegradientLeft);
+        }
+      }
+    };
+    const currentContainer = tableContainerRef.current;
+    // Add event listener and initial check to see if gradient should be hiddden or shown
+    if (currentContainer) {
+      currentContainer.addEventListener('scroll', checkScrollAndGradient);
+      checkScrollAndGradient(); // Initial check on mount
+    }
+    // Add resize event listener to update on window resize
+    window.addEventListener('resize', checkScrollAndGradient);
+
+    return () => {
+      if (currentContainer) {
+        currentContainer.removeEventListener('scroll', checkScrollAndGradient);
+      }
+    };
+  });
 
   useEffect(() => {
     const hasSelectedValues = variables.getNumberOfSelectedValues() > 0;
@@ -92,8 +141,13 @@ export function Presentation({ selectedTabId }: propsType) {
             pxtable={tableData.data}
           />
           {!isMissingMandatoryVariables && (
-            <div className={styles.tableContainer}>
-              <MemoizedTable pxtable={tableData.data} />
+            <div
+              className={styles.gradientContainer}
+              ref={gradientContainerRef}
+            >
+              <div className={styles.tableContainer} ref={tableContainerRef}>
+                <MemoizedTable pxtable={tableData.data} />
+              </div>
             </div>
           )}
 
