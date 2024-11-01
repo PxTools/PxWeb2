@@ -170,8 +170,4 @@ const Highlight: React.FC<HighlightProps> = ({
   );
 };
 
-//export default Highlight;
-
-
-
 export default Checkbox;

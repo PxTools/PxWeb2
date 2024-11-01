@@ -108,10 +108,10 @@ function removeValueOfVariable(
   return newSelectedValues;
 }
 
-function addAllValuesToVariable(
+function addMultipleValuesToVariable(
   selectedValuesArr: SelectedVBValues[],
   varId: string,
-  allValuesOfVariable: Value[],
+  valuesToAdd: Value[],
   searchedValues: Value[]
 ): SelectedVBValues[] {
 const currentVariable = selectedValuesArr.find(
@@ -123,7 +123,7 @@ const currentVariable = selectedValuesArr.find(
     newSelectedValues = selectedValuesArr.map((variable) => {
        if (variable.id === varId) {
         const prevValues = [...variable.values];
-        const valuesList = allValuesOfVariable
+        const valuesList = valuesToAdd
           .filter(v => prevValues.includes(v.code) || searchedValues.includes(v))
           .map(value => value.code);
         variable.values = valuesList;
@@ -137,7 +137,7 @@ const currentVariable = selectedValuesArr.find(
       {
         id: varId,
         selectedCodeList: undefined,
-        values: allValuesOfVariable.filter(v => searchedValues.includes(v)).map((value) => value.code),
+        values: valuesToAdd.filter(v => searchedValues.includes(v)).map((value) => value.code),
       },
     ];
   }
@@ -376,7 +376,7 @@ export function Selection({
       const allValuesOfVariable =
         pxTableMetaToRender?.variables.find((variable) => variable.id === varId)
           ?.values || [];
-      const newSelectedValues = addAllValuesToVariable(
+      const newSelectedValues = addMultipleValuesToVariable(
         prevSelectedValues,
         varId,
         allValuesOfVariable,

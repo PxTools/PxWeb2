@@ -198,7 +198,6 @@ export function VariableBoxContent({
   )?.selectedCodeList;
 
   const searchedValues : Value[] = values.filter((value) => value.label.toLowerCase().indexOf(debouncedSearch.toLowerCase()) > -1);
-  //const searchedValues  = items.filter((item) => item.type === 'value' && item.value !== undefined).map((item) => item.value as Value);
 
   // Modify the itemRenderer to assign IDs and tabIndex
   const itemRenderer = (items: any, index: number) => {
