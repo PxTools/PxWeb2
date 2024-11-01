@@ -10,7 +10,7 @@ import { Value } from '../../shared-types/value';
 
 export type SelectedVBValues = {
   id: string;
-  selectedCodeList: SelectOption | undefined;
+  selectedCodeList: string | undefined;
   values: Value['code'][];
 };
 
