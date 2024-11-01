@@ -25,7 +25,7 @@ export type VariableBoxProps = VariableBoxPropsBase & {
     varId: string
   ) => void;
   onChangeCheckbox: (varId: string, value: string) => void;
-  onChangeMixedCheckbox: (varId: string, allValuesSelected: string) => void;
+  onChangeMixedCheckbox: (varId: string, allValuesSelected: string, searchValues: Value[]) => void;
   selectedValues: SelectedVBValues[];
 };
 

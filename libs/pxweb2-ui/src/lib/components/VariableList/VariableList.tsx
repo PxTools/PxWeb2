@@ -2,6 +2,7 @@ import styles from './VariableList.module.scss';
 import { SelectedVBValues, VariableBox } from '../VariableBox/VariableBox';
 import { PxTableMetadata } from '../../shared-types/pxTableMetadata';
 import { SelectOption } from '../Select/Select';
+import { Value } from '../../shared-types/value';
 
 export type VariableListProps = {
   pxTableMetadata: PxTableMetadata | null;
@@ -15,7 +16,7 @@ export type VariableListProps = {
     varId: string
   ) => void;
   handleCheckboxChange: (varId: string, value: string) => void;
-  handleMixedCheckboxChange: (varId: string, allValuesSelected: string) => void;
+  handleMixedCheckboxChange: (varId: string, allValuesSelected: string, searchValues: Value[]) => void;
 };
 
 export function VariableList({

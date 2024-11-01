@@ -109,22 +109,26 @@ function removeValueOfVariable(
   return newSelectedValues;
 }
 
-function addAllValuesToVariable(
+function addMultipleValuesToVariable(
   selectedValuesArr: SelectedVBValues[],
   varId: string,
-  allValuesOfVariable: Value[]
+  valuesToAdd: Value[],
+  searchedValues: Value[]
 ): SelectedVBValues[] {
-  const currentVariable = selectedValuesArr.find(
+const currentVariable = selectedValuesArr.find(
     (variable) => variable.id === varId
   );
   let newSelectedValues: SelectedVBValues[] = [];
 
   if (currentVariable) {
     newSelectedValues = selectedValuesArr.map((variable) => {
-      if (variable.id === varId) {
-        variable.values = allValuesOfVariable.map((value) => value.code);
-      }
-
+       if (variable.id === varId) {
+        const prevValues = [...variable.values];
+        const valuesList = valuesToAdd
+          .filter(v => prevValues.includes(v.code) || searchedValues.includes(v))
+          .map(value => value.code);
+        variable.values = valuesList;
+       }
       return variable;
     });
   }
@@ -134,7 +138,7 @@ function addAllValuesToVariable(
       {
         id: varId,
         selectedCodeList: undefined,
-        values: allValuesOfVariable.map((value) => value.code),
+        values: valuesToAdd.filter(v => searchedValues.includes(v)).map((value) => value.code),
       },
     ];
   }
@@ -368,7 +372,8 @@ export function Selection({
 
   const handleMixedCheckboxChange = (
     varId: string,
-    allValuesSelected: string
+    allValuesSelected: string,
+    searchValues: Value[]
   ) => {
     const prevSelectedValues = structuredClone(selectedVBValues);
 
@@ -383,13 +388,13 @@ export function Selection({
       const allValuesOfVariable =
         pxTableMetaToRender?.variables.find((variable) => variable.id === varId)
           ?.values || [];
-      const newSelectedValues = addAllValuesToVariable(
+      const newSelectedValues = addMultipleValuesToVariable(
         prevSelectedValues,
         varId,
-        allValuesOfVariable
+        allValuesOfVariable,
+        searchValues
       );
-
-      updateAndSyncVBValues(newSelectedValues);
+     updateAndSyncVBValues(newSelectedValues);
     }
   };
 
