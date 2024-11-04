@@ -10,7 +10,7 @@ export const Header: React.FC = () => {
   return (
     <div className={styles.header}>
       <div>
-        <Heading size="medium">PxWeb 2.0 test</Heading>
+        <Heading size="medium">{t('common.header.title')}</Heading>
       </div>
       <div>
         {config.language.supportedLanguages.map(
