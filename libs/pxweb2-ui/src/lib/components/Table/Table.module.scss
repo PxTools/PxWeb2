@@ -31,7 +31,7 @@
   }
   th.stub {
     text-align: left;
-    min-width: 200px
+    min-width: 200px;
   }
 
   tr:first-child th:first-child {
@@ -96,7 +96,7 @@
     border-top: 1px solid var(--px-color-border-default);
     border-left: 1px solid var(--px-color-border-default);
   }
-  tr th::first-letter{
+  tr th::first-letter {
     text-transform: capitalize;
   }
   tr.firstdim th {
@@ -117,6 +117,11 @@
   tbody tr:first-of-type td {
     border-top: 2px solid var(--px-color-border-default);
   }
-  
-}
+  tr.firstColNoStub > td:first-child {
+    border-left: none;
+  }
 
+  .firstColNoStub {
+    border-left: none;
+  }
+}
