@@ -7,7 +7,7 @@ interface Resources {
     "common": {
       "title": "Welcome to PxWeb 2.0",
       "header": {
-        "title": "PxWeb 2.0",
+        "title": "PxWeb 2.0 [Main]",
         "logo": "PxWeb 2.0"
       },
       "footer": {

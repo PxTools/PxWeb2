@@ -1,12 +1,14 @@
 @use '../../text-styles.scss';
 
 .table {
+  border-collapse: separate; /* Ensure border-radius works */
+  border-spacing: 0; /* Optional: Makes sure there is no spacing between the cells */
   width: 100%;
-  font-weight: normal;
 
-  border-collapse: collapse;
-  border-radius: var(--px-border-radius-small);
+  border-radius: var(--px-border-radius-medium);
   border: 1px solid var(--px-color-border-default);
+  overflow: hidden; /* Ensures content stays within rounded borders */
+  color: var(--px-color-text-default);
 
   th {
     width: 40px;
@@ -15,51 +17,111 @@
     text-align: center;
 
     background: var(--px-color-surface-moderate);
-    border-bottom: 1px solid var(--px-color-border-default);
+    // border-bottom: 1px solid var(--px-color-border-default);
+    border-top: 1px solid var(--px-color-border-default);
     border-left: 1px solid var(--px-color-border-default);
+  }
+  thead th {
+    //font-weight: bold;
+    font-family: PxWeb-font-700;
+  }
+  thead tr:last-child th {
+    text-align: end;
+    border-bottom-width: 2px;
   }
   th.stub {
     text-align: left;
+    min-width: 200px;
   }
+
+  tr:first-child th:first-child {
+    border-left: none;
+  }
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
+  tbody tr:last-child th {
+    border-bottom: none;
+  }
+
   th.stub-0 {
     padding-left: 12px;
+    border-left: none;
   }
   th.stub-1 {
     padding-left: 28px;
+    border-left: none;
   }
   th.stub-2 {
     padding-left: 44px;
+    border-left: none;
   }
   th.stub-3 {
     padding-left: 60px;
+    border-left: none;
   }
   th.stub-4 {
     padding-left: 76px;
+    border-left: none;
   }
   th.stub-5 {
     padding-left: 92px;
+    border-left: none;
   }
   th.stub-6 {
     padding-left: 108px;
+    border-left: none;
   }
   th.stub-7 {
     padding-left: 124px;
+    border-left: none;
   }
   th.stub-8 {
     padding-left: 140px;
+    border-left: none;
   }
   th.stub-9 {
     padding-left: 156px;
+    border-left: none;
   }
   th.stub-10 {
     padding-left: 172px;
+    border-left: none;
   }
   td {
     padding: 8px 12px;
     width: 40px;
     text-align: right;
 
-    border-bottom: 1px solid var(--px-color-border-default);
+    border-top: 1px solid var(--px-color-border-default);
     border-left: 1px solid var(--px-color-border-default);
+  }
+  tr th::first-letter {
+    text-transform: capitalize;
+  }
+  tr.firstdim th {
+    border-top: 2px solid var(--px-color-border-default);
+    //font-weight: bold;
+    font-family: PxWeb-font-700;
+  }
+  tr.firstdim td {
+    border-top: 2px solid var(--px-color-border-default);
+    //font-weight: bold;
+    font-family: PxWeb-font-700;
+  }
+  thead tr:first-of-type th,
+  thead tr:first-of-type td {
+    border-top: none;
+  }
+  tbody tr:first-of-type th,
+  tbody tr:first-of-type td {
+    border-top: 2px solid var(--px-color-border-default);
+  }
+  tr.firstColNoStub > td:first-child {
+    border-left: none;
+  }
+
+  .firstColNoStub {
+    border-left: none;
   }
 }

@@ -48,3 +48,5 @@ storybook-migration-summary.md
 
 # Style dictionary
 theme/variables.css
+
+vite.config.*.timestamp*

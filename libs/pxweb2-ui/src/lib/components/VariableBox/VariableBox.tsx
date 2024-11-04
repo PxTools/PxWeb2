@@ -10,7 +10,7 @@ import { Value } from '../../shared-types/value';
 
 export type SelectedVBValues = {
   id: string;
-  selectedCodeList: SelectOption | undefined;
+  selectedCodeList: string | undefined;
   values: Value['code'][];
 };
 
@@ -25,7 +25,7 @@ export type VariableBoxProps = VariableBoxPropsBase & {
     varId: string
   ) => void;
   onChangeCheckbox: (varId: string, value: string) => void;
-  onChangeMixedCheckbox: (varId: string, allValuesSelected: string) => void;
+  onChangeMixedCheckbox: (varId: string, allValuesSelected: string, searchValues: Value[]) => void;
   selectedValues: SelectedVBValues[];
 };
 

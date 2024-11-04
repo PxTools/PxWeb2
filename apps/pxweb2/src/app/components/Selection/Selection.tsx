@@ -10,6 +10,7 @@ import {
   VariableList,
   Value,
   SelectOption,
+  mapCodeListToSelectOption,
 } from '@pxweb2/pxweb2-ui';
 import NavigationDrawer from '../../components/NavigationDrawer/NavigationDrawer';
 import useVariables from '../../context/useVariables';
@@ -26,7 +27,7 @@ function addSelectedCodeListToVariable(
   if (currentVariable) {
     newSelectedValues = selectedValuesArr.map((variable) => {
       if (variable.id === varId) {
-        variable.selectedCodeList = selectedItem;
+        variable.selectedCodeList = selectedItem.value;
         variable.values = []; // Always reset values when changing codelist
       }
 
@@ -38,7 +39,7 @@ function addSelectedCodeListToVariable(
       ...selectedValuesArr,
       {
         id: varId,
-        selectedCodeList: selectedItem,
+        selectedCodeList: selectedItem.value,
         values: [],
       },
     ];
@@ -108,22 +109,26 @@ function removeValueOfVariable(
   return newSelectedValues;
 }
 
-function addAllValuesToVariable(
+function addMultipleValuesToVariable(
   selectedValuesArr: SelectedVBValues[],
   varId: string,
-  allValuesOfVariable: Value[]
+  valuesToAdd: Value[],
+  searchedValues: Value[]
 ): SelectedVBValues[] {
-  const currentVariable = selectedValuesArr.find(
+const currentVariable = selectedValuesArr.find(
     (variable) => variable.id === varId
   );
   let newSelectedValues: SelectedVBValues[] = [];
 
   if (currentVariable) {
     newSelectedValues = selectedValuesArr.map((variable) => {
-      if (variable.id === varId) {
-        variable.values = allValuesOfVariable.map((value) => value.code);
-      }
-
+       if (variable.id === varId) {
+        const prevValues = [...variable.values];
+        const valuesList = valuesToAdd
+          .filter(v => prevValues.includes(v.code) || searchedValues.includes(v))
+          .map(value => value.code);
+        variable.values = valuesList;
+       }
       return variable;
     });
   }
@@ -133,7 +138,7 @@ function addAllValuesToVariable(
       {
         id: varId,
         selectedCodeList: undefined,
-        values: allValuesOfVariable.map((value) => value.code),
+        values: valuesToAdd.filter(v => searchedValues.includes(v)).map((value) => value.code),
       },
     ];
   }
@@ -258,34 +263,45 @@ export function Selection({
     varId: string
   ) {
     const prevSelectedValues = structuredClone(selectedVBValues);
+    const currentVariableMetadata = pxTableMetaToRender?.variables.find(
+      (variable) => variable.id === varId
+    );
     const currentVariable = prevSelectedValues.find(
       (variable) => variable.id === varId
     );
+    const currentCodeList = currentVariable?.selectedCodeList;
 
     // No new selection made, do nothing
-    if (
-      !selectedItem ||
-      selectedItem.value === currentVariable?.selectedCodeList?.value
-    ) {
-      return;
-    }
-    //  Incomplete selectItem
-    if (!selectedItem.label || !selectedItem.value) {
+    if (!selectedItem || selectedItem.value === currentCodeList) {
       return;
     }
 
+    if (pxTableMetaToRender === null) {
+      return;
+    }
+
+    const newSelectedCodeList = currentVariableMetadata?.codeLists?.find(
+      (codelist) => codelist.id === selectedItem.value
+    );
+
+    if (!newSelectedCodeList) {
+      return;
+    }
+
+    const newMappedSelectedCodeList =
+      mapCodeListToSelectOption(newSelectedCodeList);
     const newSelectedValues = addSelectedCodeListToVariable(
       currentVariable,
       prevSelectedValues,
       varId,
-      selectedItem
+      newMappedSelectedCodeList
     );
 
     updateAndSyncVBValues(newSelectedValues);
 
     //  TODO: This currently returns dummy data until we have the API call setup for it
     const valuesForChosenCodeList: Value[] = getCodeListValues(
-      selectedItem?.value
+      newMappedSelectedCodeList.value
     );
 
     if (pxTableMetaToRender === null || valuesForChosenCodeList.length < 1) {
@@ -300,7 +316,7 @@ export function Selection({
       }
 
       variable.codeLists.forEach((codelist) => {
-        if (codelist.id !== selectedItem?.value) {
+        if (codelist.id !== newMappedSelectedCodeList.value) {
           return;
         }
 
@@ -356,7 +372,8 @@ export function Selection({
 
   const handleMixedCheckboxChange = (
     varId: string,
-    allValuesSelected: string
+    allValuesSelected: string,
+    searchValues: Value[]
   ) => {
     const prevSelectedValues = structuredClone(selectedVBValues);
 
@@ -371,13 +388,13 @@ export function Selection({
       const allValuesOfVariable =
         pxTableMetaToRender?.variables.find((variable) => variable.id === varId)
           ?.values || [];
-      const newSelectedValues = addAllValuesToVariable(
+      const newSelectedValues = addMultipleValuesToVariable(
         prevSelectedValues,
         varId,
-        allValuesOfVariable
+        allValuesOfVariable,
+        searchValues
       );
-
-      updateAndSyncVBValues(newSelectedValues);
+     updateAndSyncVBValues(newSelectedValues);
     }
   };
 
