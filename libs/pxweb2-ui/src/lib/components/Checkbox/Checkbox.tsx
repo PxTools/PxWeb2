@@ -8,6 +8,7 @@ import Label from '../Typography/Label/Label';
 interface CheckboxProps {
   id: string;
   text: string;
+  searchTerm?: string
   value: boolean;
   onChange: (str: boolean) => void;
   tabIndex?: number;
@@ -19,6 +20,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   id,
   value,
   text,
+  searchTerm,
   onChange,
   tabIndex,
   strong,
@@ -57,7 +59,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
         {value && <Icon iconName="CheckMark"></Icon>}
       </span>
       <div className={styles.label} id={id + '-label'}>
-        <span className={cl({ [styles.strong]: strong })}>{text}</span>
+        <span className={cl({ [styles.strong]: strong })}><Highlight text={text} searchTerm={searchTerm}/></span>
       </div>
     </div>
   );
@@ -132,6 +134,39 @@ export const MixedCheckbox: React.FC<MixedCheckboxProps> = ({
         {text}
       </div>
     </div>
+  );
+};
+
+interface HighlightProps {
+  text: string;
+  searchTerm?: string;
+  highlightStyle?: React.CSSProperties;
+}
+const defaultHighlightStyle: React.CSSProperties = {
+  backgroundColor: 'lightblue',
+};
+const Highlight: React.FC<HighlightProps> = ({
+  text,
+  searchTerm,
+  highlightStyle = defaultHighlightStyle,
+}) => {
+  if (!searchTerm || searchTerm.length < 1) {
+    return <span>{text}</span>;
+  }
+  const regex = new RegExp(`(${searchTerm})`, 'gi');
+  const parts = text.split(regex);
+  return (
+    <span>
+      {parts.map((part, index) =>
+        part.toLowerCase() === searchTerm.toLowerCase() ? (
+          <span key={index} style={highlightStyle}>
+            {part}
+          </span>
+        ) : (
+          <React.Fragment key={index}>{part}</React.Fragment>
+        ),
+      )}
+    </span>
   );
 };
 

@@ -4,4 +4,5 @@ export type Config = {
     defaultLanguage: string;
     fallbackLanguage: string;
   };
+  apiUrl: string;
 };

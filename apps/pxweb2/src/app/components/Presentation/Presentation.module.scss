@@ -49,3 +49,49 @@
   opacity: 0.6;
   transition: 'opacity 0.3s ease-in-out';
 }
+
+.gradientContainer {
+  position: relative;
+  overflow-x: auto;
+  max-width: 100%; /* Set this to limit table width to screen */
+}
+.gradientContainer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 30px; /* Adjust this value to your liking */
+  pointer-events: none; /* So the gradient won't block scroll */
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 20%,
+    rgba(255, 255, 255, 1) 100%
+  );
+  background-repeat: no-repeat;
+  z-index: 1;
+}
+.gradientContainer.hidegradientRight::after {
+  opacity: 0; /* Hide gradient when fully scrolled */
+}
+
+.gradientContainer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 30px; /* Adjust this value to your liking */
+  pointer-events: none; /* So the gradient won't block scroll */
+  background: linear-gradient(
+    to left,
+    rgba(255, 255, 255, 0) 20%,
+    rgba(255, 255, 255, 1) 100%
+  );
+  background-repeat: no-repeat;
+  z-index: 1;
+}
+
+.gradientContainer.hidegradientLeft::before {
+  opacity: 0; /* Hide when not scrolled  */
+}
