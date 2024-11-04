@@ -7,5 +7,5 @@ window.PxWeb2Config = {
     defaultLanguage: 'en',
     fallbackLanguage: 'en',
   },
-  apiUrl: "https://api.scb.se/OV0104/v2beta/api/v2",
+  apiUrl: "https://data.qa.ssb.no/api/pxwebapi/v2-beta",
 };
