@@ -113,7 +113,7 @@ export function createHeading(
       // loop trough all the values for the header variable
       for (let i = 0; i < variable.values.length; i++) {
         headerRow.push(
-          <th colSpan={columnSpan} key={getNewKey()}>
+          <th colSpan={columnSpan} key={getNewKey()} className={cl({[classes.firstColNoStub]:i===0&&table.stub.length===0})}>
             {variable.values[i].label}
           </th>
         );
@@ -170,7 +170,7 @@ export function createRows(
   } else {
     const tableRow: React.JSX.Element[] = [];
     fillData(table, tableMeta, datacellCodes, headingDataCellCodes, tableRow);
-    tableRows.push(<tr key={getNewKey()}>{tableRow}</tr>);
+    tableRows.push(<tr key={getNewKey()} className={cl(classes.firstColNoStub)} >{tableRow}</tr>);
   }
 
   return tableRows;
