@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { useDebounce } from '@uidotdev/usehooks';
-import { Virtuoso } from 'react-virtuoso';
+import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 
 import classes from './VariableBoxContent.module.scss';
 import { Checkbox, MixedCheckbox } from '../../Checkbox/Checkbox';
@@ -264,6 +264,38 @@ export function VariableBoxContent({
     }
   };
 
+  //How many items should be sticky
+  const stickyTopValueCount = hasSevenOrMoreValues
+    ? 2
+    : hasTwoOrMoreValues
+    ? 1
+    : 0;
+
+  const virtuosoRef = useRef<VirtuosoHandle>(null);
+  const [lastScrollPosition, setLastScrollPosition] = useState(0);
+  const [scrollingDown, setScrollingDown] = useState(false);
+
+  const handleVirtuosoScroll = () => {
+    if (virtuosoRef.current) {
+      virtuosoRef.current.getState((state) => {
+        const scrollTop = state.scrollTop;
+        const isIntentionalScrollUp = scrollTop < lastScrollPosition - 5;
+        const isIntentionalScrollDown = scrollTop > lastScrollPosition + 5;
+
+        if (isIntentionalScrollDown && !scrollingDown) {
+          setScrollingDown(true);
+        } else if (isIntentionalScrollUp && scrollingDown) {
+          setScrollingDown(false);
+        }
+        setLastScrollPosition(scrollTop);
+      });
+    }
+  };
+
+  // To override element styling added by Virtuoso when scrolling down
+  /* eslint-disable-next-line */
+  const TopItemListEmptyFragment = () => <></>;
+
   return (
     <div className={cl(classes['variablebox-content'])}>
       <div className={cl(classes['variablebox-content-main'])}>
@@ -328,6 +360,9 @@ export function VariableBoxContent({
                   enter: (velocity) => Math.abs(velocity) > 1000,
                   exit: (velocity) => Math.abs(velocity) < 30,
                 }}
+                topItemCount={stickyTopValueCount}
+                ref={virtuosoRef}
+                isScrolling={handleVirtuosoScroll}
                 components={{
                   ScrollSeekPlaceholder: ({ height }) => (
                     <Skeleton
@@ -336,6 +371,9 @@ export function VariableBoxContent({
                       width={50 + Math.ceil(Math.random() * 15) + '%'}
                     />
                   ),
+                  TopItemList: scrollingDown
+                    ? TopItemListEmptyFragment
+                    : undefined,
                 }}
               />
             )}
