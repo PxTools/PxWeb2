@@ -362,7 +362,7 @@ export function VariableBoxContent({
                 }}
                 topItemCount={stickyTopValueCount}
                 ref={virtuosoRef}
-                isScrolling={handleVirtuosoScroll}
+                onScroll={handleVirtuosoScroll}
                 components={{
                   ScrollSeekPlaceholder: ({ height }) => (
                     <Skeleton
