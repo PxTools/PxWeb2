@@ -9,6 +9,7 @@ nav:
   - Home: index.md
   - Project PxWeb 2.0:
     - Overview: project/overview.md
+    - Try PxWeb 2.0: project/try.md
     - Solution: project/Solution.md
     - Plans: project/plans.md
     - Process: project/process.md
