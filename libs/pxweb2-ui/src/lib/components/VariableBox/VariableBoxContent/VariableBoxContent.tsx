@@ -78,7 +78,7 @@ export function VariableBoxContent({
   const hasTwoOrMoreValues = values && values.length > 1;
   const hasSelectAndSearch = hasCodeLists && hasSevenOrMoreValues;
   const valuesToRender = structuredClone(values);
-
+  const searchedValues : Value[] = values.filter((value) => value.label.toLowerCase().indexOf(debouncedSearch.toLowerCase()) > -1);
   // The API always returns the oldest values first,
   // so we can just reverse the values array when the type is TIME_VARIABLE
   if (type === VartypeEnum.TIME_VARIABLE) {
@@ -119,7 +119,7 @@ export function VariableBoxContent({
       setMixedCheckboxText(checkboxSelectAllText);
       setAllValuesSelected('mixed');
     }
-    if (totalChosenValues === totalValues) {
+    if (totalChosenValues === totalValues || totalChosenValues === searchedValues.length) {
       setMixedCheckboxText(checkboxDeselectAllText);
       setAllValuesSelected('true');
     }
@@ -128,6 +128,7 @@ export function VariableBoxContent({
     totalValues,
     checkboxSelectAllText,
     checkboxDeselectAllText,
+    searchedValues,
   ]);
 
   let mappedCodeLists: SelectOption[] = [];
@@ -192,8 +193,6 @@ export function VariableBoxContent({
       }
     }
   };
-
-  const searchedValues : Value[] = values.filter((value) => value.label.toLowerCase().indexOf(debouncedSearch.toLowerCase()) > -1);
 
   // Modify the itemRenderer to assign IDs and tabIndex
   const itemRenderer = (items: any, index: number) => {
