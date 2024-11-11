@@ -1,6 +1,7 @@
 import { render } from '@testing-library/react';
 
 import VariableBox from './VariableBox';
+import { VartypeEnum } from '../../../lib/shared-types/vartypeEnum';
 
 describe('VariableBox', () => {
   it('should render successfully', () => {
@@ -22,9 +23,10 @@ describe('VariableBox', () => {
           return;
         }}
         selectedValues={[]}
+        type={VartypeEnum.CONTENTS_VARIABLE}
       />
     );
-    
+
     expect(baseElement).toBeTruthy();
   });
 });
