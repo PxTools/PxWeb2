@@ -232,7 +232,7 @@ export function Selection({
 
   useEffect(() => {
     let shouldGetDefaultSelection = !hasLoadedDefaultSelection;
-    let shouldNotResetVariables = false;
+    //let shouldNotResetVariables = false;
 
     if (!selectedTabId) {
       return;
