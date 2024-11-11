@@ -48,21 +48,6 @@ function addSelectedCodeListToVariable(
   return newSelectedValues;
 }
 
-function removeAllSelectedCodeLists(selectedValuesArr: SelectedVBValues[]) {
-  let newSelectedValues: SelectedVBValues[] = [];
-
-  newSelectedValues = selectedValuesArr.map((variable) => {
-    if (variable.selectedCodeList) {
-      variable.selectedCodeList = undefined;
-      variable.values = []; // Always reset values when changing codelist
-    }
-
-    return variable;
-  });
-
-  return newSelectedValues;
-}
-
 function addValueToVariable(
   selectedValuesArr: SelectedVBValues[],
   varId: string,
@@ -146,20 +131,22 @@ function addMultipleValuesToVariable(
   valuesToAdd: Value[],
   searchedValues: Value[]
 ): SelectedVBValues[] {
-const currentVariable = selectedValuesArr.find(
+  const currentVariable = selectedValuesArr.find(
     (variable) => variable.id === varId
   );
   let newSelectedValues: SelectedVBValues[] = [];
 
   if (currentVariable) {
     newSelectedValues = selectedValuesArr.map((variable) => {
-       if (variable.id === varId) {
+      if (variable.id === varId) {
         const prevValues = [...variable.values];
         const valuesList = valuesToAdd
-          .filter(v => prevValues.includes(v.code) || searchedValues.includes(v))
-          .map(value => value.code);
+          .filter(
+            (v) => prevValues.includes(v.code) || searchedValues.includes(v)
+          )
+          .map((value) => value.code);
         variable.values = valuesList;
-       }
+      }
       return variable;
     });
   }
@@ -169,7 +156,9 @@ const currentVariable = selectedValuesArr.find(
       {
         id: varId,
         selectedCodeList: undefined,
-        values: valuesToAdd.filter(v => searchedValues.includes(v)).map((value) => value.code),
+        values: valuesToAdd
+          .filter((v) => searchedValues.includes(v))
+          .map((value) => value.code),
       },
     ];
   }
@@ -203,6 +192,21 @@ function removeAllValuesOfVariable(
   return newValues;
 }
 
+function removeAllSelectedCodeLists(selectedValuesArr: SelectedVBValues[]) {
+  let newSelectedValues: SelectedVBValues[] = [];
+
+  newSelectedValues = selectedValuesArr.map((variable) => {
+    if (variable.selectedCodeList) {
+      variable.selectedCodeList = undefined;
+      variable.values = []; // Always reset values when changing codelist
+    }
+
+    return variable;
+  });
+
+  return newSelectedValues;
+}
+
 type propsType = {
   selectedNavigationView: string;
   selectedTabId: string;
@@ -228,6 +232,7 @@ export function Selection({
 
   useEffect(() => {
     let shouldGetDefaultSelection = !hasLoadedDefaultSelection;
+    let shouldNotResetVariables = false;
 
     if (!selectedTabId) {
       return;
@@ -238,19 +243,17 @@ export function Selection({
       setPrevTableId(selectedTabId);
     }
 
-    // TODO:  Look into fixing the table state and rendering,
-    //        now it doesn't work with a new codelist, but the
-    //        variable state seems to be updated correctly.
-    //        maybe it has to do with pxTableMetaToRender?
-    if (prevLanguage === '') {
-      setPrevLanguage(i18n.resolvedLanguage || '');
-    }
-    if (prevLanguage !== '' && prevLanguage !== i18n.resolvedLanguage) {
-      const newSelectedVBValues = removeAllSelectedCodeLists(selectedVBValues);
+    // // Reset all variables with codelists if language has changed
+    // // make sure we get the default selection again, for the new language
+    // if (prevLanguage === '' || prevLanguage !== i18n.resolvedLanguage) {
+    //   const newSelectedValues = removeAllSelectedCodeLists(selectedVBValues);
+    //   shouldGetDefaultSelection = true;
+    //   shouldNotResetVariables = true;
 
-      setSelectedVBValues(newSelectedVBValues);
-      setPrevLanguage(i18n.resolvedLanguage || '');
-    }
+    //   setSelectedVBValues(newSelectedValues);
+    //   setPrevLanguage(i18n.resolvedLanguage || '');
+    // }
+
     if (isLoadingMetadata === false) {
       variables.setIsLoadingMetadata(true);
     }
@@ -279,7 +282,6 @@ export function Selection({
     if (shouldGetDefaultSelection) {
       TableService.getDefaultSelection(selectedTabId, i18n.resolvedLanguage)
         .then((selectionResponse) => {
-          //console.log(selectionResponse); TODO: remove
           const defaultSelection = mapTableSelectionResponse(
             selectionResponse
           ).filter(
@@ -350,7 +352,7 @@ export function Selection({
 
     updateAndSyncVBValues(newSelectedValues);
 
-    //  TODO: This currently returns dummy data until we have the API call setup for it
+    //  Get the values for the chosen code list
     const valuesForChosenCodeList: Value[] = await getCodeListValues(
       newMappedSelectedCodeList.value,
       lang
@@ -382,7 +384,9 @@ export function Selection({
       });
     });
 
-    setPxTableMetaToRender(newPxTableMetaToRender);
+    // update the metadata state in the variablesProvider
+    setPxTableMetadata(newPxTableMetaToRender);
+    setPxTableMetaToRender(null);
   }
 
   const handleCheckboxChange = (varId: string, value: Value['code']) => {
@@ -446,7 +450,7 @@ export function Selection({
         allValuesOfVariable,
         searchValues
       );
-     updateAndSyncVBValues(newSelectedValues);
+      updateAndSyncVBValues(newSelectedValues);
     }
   };
 

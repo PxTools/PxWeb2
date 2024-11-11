@@ -7,7 +7,12 @@ import {
   VariableSelection,
   VariablesSelection,
 } from '@pxweb2/pxweb2-api-client';
-import { PxTable, PxTableMetadata, getPxTableData, setPxTableData } from '@pxweb2/pxweb2-ui';
+import {
+  PxTable,
+  PxTableMetadata,
+  getPxTableData,
+  setPxTableData,
+} from '@pxweb2/pxweb2-ui';
 import { mapJsonStat2Response } from '../../mappers/JsonStat2ResponseMapper';
 
 // Define types for the context state and provider props
@@ -61,18 +66,16 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     const selections: Array<VariableSelection> = [];
     const ids = variables.getUniqueIds();
     ids.forEach((id) => {
+      const selectedCodeList = variables.getSelectedCodelistById(id);
       const selection: VariableSelection = {
         variableCode: id,
-        valueCodes: variables.getSelectedValuesByIdSorted(id), // is this the problem?
-
-        // TODO/FIXME: Is the problem that pxTable.metadata.variables[i].values still has the old values?
-        
-        // this actually gets the values,
-        // but also has a "500 (Internal Server Error)" in the console
-        //valueCodes: variables.getSelectedValuesById(id),
+        valueCodes: variables.getSelectedValuesByIdSorted(id),
       };
 
-      //console.log('selection', selection); //TODO: remove
+      // Add selected codelist to selection if it exists
+      if (selectedCodeList) {
+        selection.codeList = selectedCodeList;
+      }
 
       selections.push(selection);
     });
@@ -85,8 +88,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       i18n.language,
       tableId
     );
-
-    //console.log('validAccData', validAccData); //TODO: remove
 
     if (validAccData) {
       fetchWithValidAccData(tableId, i18n, variablesSelection);
@@ -107,7 +108,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     i18n: i18n,
     variablesSelection: VariablesSelection
   ) => {
-    //console.log('fetchWithoutValidAccData variablesSelection', variablesSelection); //TODO: remove
 
     const pxTable: PxTable = await fetchFromApi(
       tableId,
@@ -189,7 +189,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     i18n: i18n,
     variablesSelection: VariablesSelection
   ) => {
-    //console.log("fetchFromApi variablesSelection", variablesSelection); //TODO: remove
 
     const res = await TableService.getTableDataByPost(
       tableId,
@@ -560,9 +559,9 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * @param dimensionIndex - The current index of the dimension being processed.
    * @param dimensionsMap - A mapping of dimension indices to their corresponding positions in the dimensions array.
    *
-   * This function recursively navigates through the dimensions of the data cubes. For each dimension, it finds the 
-   * corresponding variable in the new data cube and updates the accumulated data cube with the new values. If the 
-   * current dimension is the last one, it retrieves the data value from the new data cube and sets it in the 
+   * This function recursively navigates through the dimensions of the data cubes. For each dimension, it finds the
+   * corresponding variable in the new data cube and updates the accumulated data cube with the new values. If the
+   * current dimension is the last one, it retrieves the data value from the new data cube and sets it in the
    * accumulated data cube. Otherwise, it continues to the next dimension.
    */
   function updateCube(

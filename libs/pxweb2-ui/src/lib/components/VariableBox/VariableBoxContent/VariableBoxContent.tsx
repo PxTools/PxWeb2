@@ -88,6 +88,10 @@ export function VariableBoxContent({
   useEffect(() => {
     const newItems: { type: string; value?: Value }[] = [];
 
+    if (!valuesToRender || valuesToRender.length === 0) {
+      return
+    }
+
     if (hasSevenOrMoreValues) {
       newItems.push({ type: 'search' });
     }
