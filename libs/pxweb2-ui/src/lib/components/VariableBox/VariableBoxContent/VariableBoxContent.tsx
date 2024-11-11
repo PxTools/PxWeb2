@@ -209,6 +209,9 @@ export function VariableBoxContent({
           <Search
             onChange={(value: string) => {
               setSearch(value);
+              if(value === '') {
+                setScrollingDown(false);
+              }
             }}
             variant="inVariableBox"
             showLabel={false}
@@ -279,8 +282,8 @@ export function VariableBoxContent({
     if (virtuosoRef.current) {
       virtuosoRef.current.getState((state) => {
         const scrollTop = state.scrollTop;
-        const isIntentionalScrollUp = scrollTop < lastScrollPosition - 5;
-        const isIntentionalScrollDown = scrollTop > lastScrollPosition + 5;
+        const isIntentionalScrollUp = scrollTop < lastScrollPosition - 2;
+        const isIntentionalScrollDown = scrollTop > lastScrollPosition + 2;
 
         if (isIntentionalScrollDown && !scrollingDown) {
           setScrollingDown(true);
@@ -371,7 +374,7 @@ export function VariableBoxContent({
                       width={50 + Math.ceil(Math.random() * 15) + '%'}
                     />
                   ),
-                  TopItemList: scrollingDown
+                  TopItemList: (scrollingDown && search === '')
                     ? TopItemListEmptyFragment
                     : undefined,
                 }}
