@@ -32,6 +32,7 @@ export function Search({
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleClear = () => {
+    onChange && onChange('');
     setInputValue('');
     if (inputRef.current !== null) {
       inputRef.current.focus();
