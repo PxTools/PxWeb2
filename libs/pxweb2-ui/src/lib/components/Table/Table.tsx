@@ -18,6 +18,7 @@ type DataCellMeta = {
   varId: string; // id of variable
   valCode: string; // value code
   varPos: number; // variable position in stored data
+  htmlId: string; // id used in th. Will build up the headers attribute fpr datacells. For accesability
 };
 
 /**
@@ -44,7 +45,12 @@ export function Table({ pxtable, className = '' }: TableProps) {
 
     // Loop through all header variables. j is the header variable index
     for (let j = 0; j < pxtable.heading.length; j++) {
-      const dataCellMeta: DataCellMeta = { varId: '', valCode: '', varPos: 0 };
+      const dataCellMeta: DataCellMeta = {
+        varId: '',
+        valCode: '',
+        varPos: 0,
+        htmlId: '',
+      };
       dataCellCodes[j] = dataCellMeta; // add empty object
     }
     headingDataCellCodes[i] = dataCellCodes;
@@ -53,6 +59,7 @@ export function Table({ pxtable, className = '' }: TableProps) {
   return (
     <table
       className={cl(classes.table, classes[`bodyshort-medium`]) + cssClasses}
+      aria-label={pxtable.metadata.label}
     >
       <thead>{createHeading(pxtable, tableMeta, headingDataCellCodes)}</thead>
       <tbody>{createRows(pxtable, tableMeta, headingDataCellCodes)}</tbody>
@@ -90,6 +97,7 @@ export function createHeading(
     );
   }
 
+  // console.log('tableMeta=' + JSON.stringify(tableMeta));
   // Otherwise calculate columnspan start value
   columnSpan = tableMeta.columns - tableMeta.columnOffset;
 
@@ -99,9 +107,12 @@ export function createHeading(
     idxHeadingLevel < table.heading.length;
     idxHeadingLevel++
   ) {
+    // console.log('idxHeadingLevel=' + idxHeadingLevel);
+    // console.log('columnSpan1=' + columnSpan);
+    // console.log(JSON.stringify(table.heading[idxHeadingLevel].values));
     // Set the column span for the header cells for the current row
     columnSpan = columnSpan / table.heading[idxHeadingLevel].values.length;
-
+    // console.log('columnSpan2=' + columnSpan);
     const variable = table.heading[idxHeadingLevel];
     let columnIndex = 0;
     // Repeat for number of times in repetion, first time only once. idxRepetitionCurrentHeadingLevel is the repetition counter
@@ -112,8 +123,18 @@ export function createHeading(
     ) {
       // loop trough all the values for the header variable
       for (let i = 0; i < variable.values.length; i++) {
+        const htmlId: string =
+          'H' +
+          idxHeadingLevel +
+          '.' +
+          variable.values[i].code +
+          '.I' +
+          idxRepetitionCurrentHeadingLevel;
         headerRow.push(
           <th
+            id={htmlId}
+            // id={'C' + idxHeadingLevel +variable.values[i].code + "R" + idxRepetitionCurrentHeadingLevel}
+            scope="col"
             colSpan={columnSpan}
             key={getNewKey()}
             className={cl({
@@ -132,6 +153,8 @@ export function createHeading(
             variable.values[i].code;
           headingDataCellCodes[columnIndex][idxHeadingLevel].varPos =
             table.data.variableOrder.indexOf(variable.id);
+          headingDataCellCodes[columnIndex][idxHeadingLevel].htmlId = htmlId;
+          // console.log(htmlId);
           columnIndex++;
         }
       }
@@ -167,6 +190,7 @@ export function createRows(
     createRow(
       0,
       tableMeta.rows - tableMeta.rowOffset,
+      0,
       table,
       tableMeta,
       datacellCodes,
@@ -201,6 +225,7 @@ export function createRows(
 function createRow(
   stubIndex: number,
   rowSpan: number,
+  stubIteration: number,
   table: PxTable,
   tableMeta: columnRowMeta,
   stubDataCellCodes: DataCellCodes,
@@ -214,11 +239,17 @@ function createRow(
 
   // Loop through all the values in the stub variable
   for (let i = 0; i < table.stub[stubIndex].values.length; i++) {
+    if (stubIndex === 0) {
+      stubIteration++;
+      // console.log('stubIteration=' + stubIteration);
+    }
+
     const val = table.stub[stubIndex].values[i];
     const cellMeta: DataCellMeta = {
       varId: table.stub[stubIndex].id,
       valCode: val.code,
       varPos: table.data.variableOrder.indexOf(table.stub[stubIndex].id),
+      htmlId: 'R.' + stubIndex + val.code + '.I' + stubIteration,
     };
     stubDataCellCodes.push(cellMeta);
     // Fix the rowspan
@@ -228,6 +259,9 @@ function createRow(
 
     tableRow.push(
       <th
+        id={cellMeta.htmlId}
+        scope="row"
+        role="rowheader"
         className={cl(classes.stub, classes[`stub-${stubIndex}`])}
         key={getNewKey()}
       >
@@ -253,6 +287,7 @@ function createRow(
       createRow(
         stubIndex + 1,
         rowSpan,
+        stubIteration,
         table,
         tableMeta,
         stubDataCellCodes,
@@ -320,10 +355,26 @@ function fillData(
   const maxCols = tableMeta.columns - tableMeta.columnOffset;
 
   // Loop through all data columns in the table
+
   for (let i = 0; i < maxCols; i++) {
     // Merge the metadata structure for the dimensions of the stub and header cells
     const dataCellCodes = stubDataCellCodes.concat(headingDataCellCodes[i]);
-    //console.log(dataCellCodes);
+    // console.log("HEADERS="+JSON.stringify(dataCellCodes));
+    const datacellHeadersARR: string[] = dataCellCodes.map((obj) => obj.htmlId);
+    const headers: string = datacellHeadersARR
+      .toString()
+      .replace(new RegExp(',', 'g'), ' ');
+    // console.log('HEADERS=' + headers);
+    // const stubDataCellCodesValue: string[] = stubDataCellCodes.map(
+    //   (obj) => obj.valCode
+    // );
+    // const rowHeaders = createHeader(stubDataCellCodesValue, 'R');
+
+    // const headingDataCellCodesValue: string[] = headingDataCellCodes[i].map(
+    //   (obj) => obj.valCode
+    // );
+    // const columnHeaders = createHeader(headingDataCellCodesValue, 'C');
+    // //const headers = rowHeaders + " " + columnHeaders;
 
     const dimensions: string[] = [];
     // Arrange the dimensons in the right order according to how data is stored is the cube
@@ -341,7 +392,7 @@ function fillData(
     const dataValue = getPxTableData(table.data.cube, dimensions);
 
     tableRow.push(
-      <td key={getNewKey()}>
+      <td key={getNewKey()} headers={headers}>
         {t('number.simple_number', { value: dataValue ?? '' })}
       </td>
     ); // TODO: Handle null values
@@ -355,4 +406,12 @@ function getNewKey(): string {
   number = number + 1;
   return number.toString();
 }
+
+// function createHeader(valuecodes: string[], HeaderType: 'R' | 'C') {
+//   const formattedHeaders: string[] = [];
+//   for (let i = 0; i < valuecodes.length; i++ ) {
+//     formattedHeaders.push(HeaderType + i + valuecodes[i]);
+//   }
+//   return formattedHeaders.toString().replace(new RegExp(',', 'g'), ' ');
+// }
 export default Table;
