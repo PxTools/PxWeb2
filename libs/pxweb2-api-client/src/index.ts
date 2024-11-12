@@ -71,6 +71,7 @@ export { TimeVariable } from './models/TimeVariable';
 export type { updated } from './models/updated';
 export type { Value } from './models/Value';
 export type { ValueMap } from './models/ValueMap';
+export type { VariablePlacementType } from './models/VariablePlacementType';
 export type { VariableSelection } from './models/VariableSelection';
 export type { VariablesSelection } from './models/VariablesSelection';
 export { VariableTypeEnum } from './models/VariableTypeEnum';
