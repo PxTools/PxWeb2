@@ -11,9 +11,13 @@ import type { SourceReference } from './SourceReference';
  */
 export type ConfigResponse = {
     /**
-     * The version of then API
+     * The version of the API spesification
      */
     apiVersion: string;
+    /**
+     * The version of the API implementation
+     */
+    appVersion: string;
     /**
      * A list of language that exists for the data.
      */
