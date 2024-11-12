@@ -192,21 +192,6 @@ function removeAllValuesOfVariable(
   return newValues;
 }
 
-function removeAllSelectedCodeLists(selectedValuesArr: SelectedVBValues[]) {
-  let newSelectedValues: SelectedVBValues[] = [];
-
-  newSelectedValues = selectedValuesArr.map((variable) => {
-    if (variable.selectedCodeList) {
-      variable.selectedCodeList = undefined;
-      variable.values = []; // Always reset values when changing codelist
-    }
-
-    return variable;
-  });
-
-  return newSelectedValues;
-}
-
 type propsType = {
   selectedNavigationView: string;
   selectedTabId: string;
@@ -228,11 +213,9 @@ export function Selection({
     // Metadata to render in the UI
     useState<PxTableMetadata | null>(null);
   const [prevTableId, setPrevTableId] = useState('');
-  const [prevLanguage, setPrevLanguage] = useState('');
 
   useEffect(() => {
     let shouldGetDefaultSelection = !hasLoadedDefaultSelection;
-    //let shouldNotResetVariables = false;
 
     if (!selectedTabId) {
       return;
@@ -242,17 +225,6 @@ export function Selection({
       shouldGetDefaultSelection = true;
       setPrevTableId(selectedTabId);
     }
-
-    // // Reset all variables with codelists if language has changed
-    // // make sure we get the default selection again, for the new language
-    // if (prevLanguage === '' || prevLanguage !== i18n.resolvedLanguage) {
-    //   const newSelectedValues = removeAllSelectedCodeLists(selectedVBValues);
-    //   shouldGetDefaultSelection = true;
-    //   shouldNotResetVariables = true;
-
-    //   setSelectedVBValues(newSelectedValues);
-    //   setPrevLanguage(i18n.resolvedLanguage || '');
-    // }
 
     if (isLoadingMetadata === false) {
       variables.setIsLoadingMetadata(true);
