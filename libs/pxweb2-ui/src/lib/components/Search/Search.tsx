@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import cl from 'clsx';
 
 import classes from './Search.module.scss';
@@ -45,8 +45,6 @@ export function Search({
     }
   };
 
-  const hasValue = inputValue.length > 0;
-
   return (
     <div className={cl(classes.search, classes[variant])}>
       {showLabel && <Label size="medium">{labelText}</Label>}
@@ -81,7 +79,7 @@ export function Search({
           }}
           {...rest}
         ></input>
-        {hasValue && (
+        {inputValue.length > 0 && (
           <Button
             variant="tertiary"
             icon="XMark"

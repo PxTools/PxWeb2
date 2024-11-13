@@ -81,8 +81,8 @@ interface Resources {
               "values_list": {
                 "aria_label": "List of {{total}} values.",
                 "aria_description": "The variable's list of {{total}} total values. To enter the list, press the arrow down key. The Tab key exits the list.",
-                "no_results": "No results found for <<{{search}}>>",
-                "no_results_bodyshort": "Try another search term or a different spelling"
+                "no_results": "No results for <<{{search}}>>",
+                "no_results_bodyshort": "Try a different keyword or spelling."
               }
             }
           }
