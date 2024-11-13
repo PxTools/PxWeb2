@@ -264,19 +264,26 @@ export function VariableBoxContent({
     } else if (searchedValues.length === 0) {
       return (
         <div className={cl(classes['variablebox-content-values-list-no-results'])}>
-          <Heading
+          {/* <Heading
             size="xsmall"
             textcolor="default"
             align="center"
             className={cl(classes['variablebox-content-values-list-no-results-heading'])}>
               {t('presentation_page.sidemenu.selection.variablebox.content.values_list.no_results_label',{search})}
+          </Heading> */}
+          <Heading
+            size="xsmall"
+            textcolor="default"
+            align="center"
+            className={cl(classes['variablebox-content-values-list-no-results-heading'])}>
+              Kalas
           </Heading>
           <BodyShort
             size="medium"
             textcolor="default"
             align="center">
               {t('presentation_page.sidemenu.selection.variablebox.content.values_list.no_results_bodyshort')}
-          </BodyShort>
+            </BodyShort>
         </div>
       );
     }
