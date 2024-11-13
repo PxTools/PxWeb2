@@ -269,7 +269,7 @@ export function VariableBoxContent({
             textcolor="default"
             align="center"
             className={cl(classes['variablebox-content-values-list-no-results-heading'])}>
-              {t('presentation_page.sidemenu.selection.variablebox.content.values_list.no_results_label')}
+              {t('presentation_page.sidemenu.selection.variablebox.content.values_list.no_results_heading',{ search : search })}
           </Heading>
           <BodyShort
             size="medium"

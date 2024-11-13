@@ -80,7 +80,7 @@
             "values_list": {
               "aria_label": "قائمة {{total}} قيم.",
               "aria_description": "قائمة المتغير {{total}} القيم الإجمالية. ",
-              "no_results_label": "<<{{search}}>> لا توجد نتائج ل",
+              "no_results_heading": "<<{{search}}>> لا توجد نتائج ل",
               "no_results_bodyshort": "جرّب كلمة رئيسية أو تهجئة مختلفة."
             }
           }
