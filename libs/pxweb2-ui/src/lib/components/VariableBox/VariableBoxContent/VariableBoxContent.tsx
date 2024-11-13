@@ -362,7 +362,7 @@ export function VariableBoxContent({
             {items.length > 0 && (
               <Virtuoso
                 computeItemKey={(key) => `item-${key}`}
-                style={{ height: Math.min(380, calcedHeight), width: '100%' }}
+                style={{ height: hasSevenOrMoreValues ? 380 : Math.min(380, calcedHeight), width: '100%' }}
                 className=""
                 totalCount={items.length}
                 itemContent={(index) => itemRenderer(items, index)}
