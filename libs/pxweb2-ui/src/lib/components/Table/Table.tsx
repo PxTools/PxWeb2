@@ -117,7 +117,7 @@ export function createHeading(
             colSpan={columnSpan}
             key={getNewKey()}
             className={cl({
-              [classes.firstColNoStub]: i === 0 && table.stub.length === 0,
+              [classes.firstColNoStub]: i === 0 && idxRepetitionCurrentHeadingLevel===1 && table.stub.length === 0,
             })}
           >
             {variable.values[i].label}
