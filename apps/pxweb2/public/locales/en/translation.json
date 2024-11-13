@@ -79,7 +79,9 @@
             },
             "values_list": {
               "aria_label": "List of {{total}} values.",
-              "aria_description": "The variable's list of {{total}} total values. To enter the list, press the arrow down key. The Tab key exits the list."
+              "aria_description": "The variable's list of {{total}} total values. To enter the list, press the arrow down key. The Tab key exits the list.",
+              "no_results_label": "No results found for <<{{search}}>>",
+              "no_results_bodyshort": "Try another search term or a different spelling"
             }
           }
         }

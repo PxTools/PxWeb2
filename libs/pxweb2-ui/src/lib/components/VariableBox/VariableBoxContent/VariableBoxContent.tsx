@@ -14,6 +14,9 @@ import { VartypeEnum } from '../../../shared-types/vartypeEnum';
 import { Value } from '../../../shared-types/value';
 import Skeleton from '../../Skeleton/Skeleton';
 import { mapCodeListsToSelectOptions } from '../../../util/util';
+import { BodyShort } from '../../Typography/BodyShort/BodyShort';
+import Heading from '../../Typography/Heading/Heading';
+
 
 type VariableBoxPropsToContent = Omit<
   VariableBoxProps,
@@ -79,7 +82,7 @@ export function VariableBoxContent({
   const hasSelectAndSearch = hasCodeLists && hasSevenOrMoreValues;
   const valuesToRender = structuredClone(values);
   const searchedValues : Value[] = values.filter((value) => value.label.toLowerCase().indexOf(debouncedSearch.toLowerCase()) > -1);
-  // The API always returns the oldest values first,
+    // The API always returns the oldest values first,
   // so we can just reverse the values array when the type is TIME_VARIABLE
   if (type === VartypeEnum.TIME_VARIABLE) {
     valuesToRender.reverse();
@@ -224,7 +227,7 @@ export function VariableBoxContent({
           />
         </div>
       );
-    } else if (item.type === 'mixedCheckbox') {
+    } else if (item.type === 'mixedCheckbox' && searchedValues.length > 0) {
       return (
         <div id={varId} tabIndex={-1} className={classes['focusableItem']}>
           <MixedCheckbox
@@ -238,7 +241,7 @@ export function VariableBoxContent({
           />
         </div>
       );
-    } else if (item.type === 'value' && item.value) {
+    } else if (item.type === 'value' && item.value && searchedValues.length > 0) {
       const value = item.value;
       return (
         <div id={value.code} tabIndex={-1} className={classes['focusableItem']}>
@@ -258,7 +261,19 @@ export function VariableBoxContent({
           />
         </div>
       );
-    } else {
+    } else if (searchedValues.length === 0) {
+      return (
+        <div className={cl(classes['variablebox-content-values-list-no-results'])}>
+          <Heading size="xsmall" textcolor="default" align="center" className={cl(classes['variablebox-content-values-list-no-results-heading'] ) }>
+            {t('presentation_page.sidemenu.selection.variablebox.content.values_list.no_results_label', { search })}
+          </Heading>
+          <BodyShort size="medium" textcolor="default" align="center">
+            {t('presentation_page.sidemenu.selection.variablebox.content.values_list.no_results_bodyshort')}
+          </BodyShort>
+        </div>
+);
+    }
+     else {
       return null;
     }
   };
