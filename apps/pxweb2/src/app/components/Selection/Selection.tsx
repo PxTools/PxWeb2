@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
 
-import { TableService } from '@pxweb2/pxweb2-api-client';
+import { metadataOutputFormat, MetadataOutputFormatType, TableService } from '@pxweb2/pxweb2-api-client';
 import { mapTableMetadataResponse } from '../../../mappers/TableMetadataResponseMapper';
 import { mapTableSelectionResponse } from '../../../mappers/TableSelectionResponseMapper';
 import {
@@ -230,11 +230,15 @@ export function Selection({
       variables.setIsLoadingMetadata(true);
     }
 
-    TableService.getMetadataById(selectedTabId, i18n.resolvedLanguage)
+    const outputFormat: metadataOutputFormat = MetadataOutputFormatType.JSON_PX;
+    const metaDataDefaultSelection = true;
+    
+    TableService.getMetadataById(selectedTabId, i18n.resolvedLanguage, outputFormat, metaDataDefaultSelection)
       .then((tableMetadataResponse) => {
         const pxTabMetadata: PxTableMetadata = mapTableMetadataResponse(
           tableMetadataResponse
         );
+        
         setPxTableMetadata(pxTabMetadata);
         if (pxTableMetaToRender !== null) {
           setPxTableMetaToRender(null);
