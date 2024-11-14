@@ -334,7 +334,7 @@ export function Selection({
       lang
     );
 
-    if (pxTableMetaToRender === null || valuesForChosenCodeList.length < 1) {
+    if (valuesForChosenCodeList.length < 1) {
       return;
     }
 
