@@ -354,7 +354,6 @@ export function VariableBoxContent({
               }
             )} // Coming in WAI-ARIA 1.3
             className={cl(classes['variablebox-content-values-only-list'])}
-            tabIndex={0}
             ref={valuesOnlyList}
             onKeyDown={handleValueListKeyboardNavigation}
           >
@@ -364,6 +363,7 @@ export function VariableBoxContent({
                 computeItemKey={(key) => `item-${key}`}
                 style={{ height: hasSevenOrMoreValues ? 380 : Math.min(380, calcedHeight), width: '100%' }}
                 className=""
+                tabIndex={-1}
                 totalCount={items.length}
                 itemContent={(index) => itemRenderer(items, index)}
                 scrollSeekConfiguration={{
