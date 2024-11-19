@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState,useMemo } from 'react';
 import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { useDebounce } from '@uidotdev/usehooks';
@@ -82,6 +82,9 @@ export function VariableBoxContent({
   const hasSelectAndSearch = hasCodeLists && hasSevenOrMoreValues;
   const valuesToRender = structuredClone(values);
   const searchedValues : Value[] = values.filter((value) => value.label.toLowerCase().indexOf(debouncedSearch.toLowerCase()) > -1);
+  const selectedValuesForVar = useMemo(() => {
+    return selectedValues.find((variables) => variables.id === varId)?.values.sort() || [];
+  }, [selectedValues, varId]);
     // The API always returns the oldest values first,
   // so we can just reverse the values array when the type is TIME_VARIABLE
   if (type === VartypeEnum.TIME_VARIABLE) {
@@ -114,15 +117,30 @@ export function VariableBoxContent({
   }, [hasSevenOrMoreValues, hasTwoOrMoreValues, debouncedSearch, values]);
 
   useEffect(() => {
-    if (totalChosenValues === 0) {
+
+    function compareTwoArrays(arr1: string | any[], arr2: string | any[]) {
+      const arr3 = Array.isArray(arr1)
+        ? arr1.map((searchedValue) => searchedValue.code).sort().filter((value: string) => arr2.includes(value))
+        : [];
+
+      if (arr3.length === 0) {
+        return "none";
+      } else if (arr3.length === arr1.length) {
+        return "all";
+      } else {
+        return "some";
+      }
+    }
+
+    if (totalChosenValues === 0 && searchedValues.length === 0 || searchedValues.length > 0 && compareTwoArrays(searchedValues, selectedValuesForVar) === "none") {
       setMixedCheckboxText(checkboxSelectAllText);
       setAllValuesSelected('false');
     }
-    if (totalChosenValues > 0 && totalChosenValues < totalValues) {
+    else if (totalChosenValues > 0 && totalChosenValues < totalValues && searchedValues.length === 0 || searchedValues.length > 0 && compareTwoArrays(searchedValues, selectedValuesForVar) === "some") {
       setMixedCheckboxText(checkboxSelectAllText);
       setAllValuesSelected('mixed');
     }
-    if (totalChosenValues === totalValues || totalChosenValues === searchedValues.length) {
+    else if (totalChosenValues === totalValues && searchedValues.length === 0 || searchedValues.length > 0 && compareTwoArrays(searchedValues, selectedValuesForVar) === "all") {
       setMixedCheckboxText(checkboxDeselectAllText);
       setAllValuesSelected('true');
     }
@@ -132,7 +150,9 @@ export function VariableBoxContent({
     checkboxSelectAllText,
     checkboxDeselectAllText,
     searchedValues,
+    selectedValuesForVar
   ]);
+
 
   let mappedCodeLists: SelectOption[] = [];
 
