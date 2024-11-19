@@ -287,6 +287,7 @@ export function VariableBoxContent({
           <Heading
             size="xsmall"
             textcolor="default"
+            level='4'
             align="center"
             className={cl(classes['variablebox-content-values-list-no-results-heading'])}>
               {t('presentation_page.sidemenu.selection.variablebox.content.values_list.no_results_heading',{ search : search })}
