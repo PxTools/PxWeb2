@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { useDebounce } from '@uidotdev/usehooks';
-import { Virtuoso } from 'react-virtuoso';
+import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 
 import classes from './VariableBoxContent.module.scss';
 import { Checkbox, MixedCheckbox } from '../../Checkbox/Checkbox';
@@ -209,6 +209,9 @@ export function VariableBoxContent({
           <Search
             onChange={(value: string) => {
               setSearch(value);
+              if(value === '') {
+                setScrollingDown(false);
+              }
             }}
             variant="inVariableBox"
             showLabel={false}
@@ -262,6 +265,45 @@ export function VariableBoxContent({
     } else {
       return null;
     }
+  };
+
+  //How many items should be sticky
+  const stickyTopValueCount = hasSevenOrMoreValues
+    ? 2
+    : hasTwoOrMoreValues
+    ? 1
+    : 0;
+
+  const virtuosoRef = useRef<VirtuosoHandle>(null);
+  const [lastScrollPosition, setLastScrollPosition] = useState(0);
+  const [scrollingDown, setScrollingDown] = useState(false);
+
+  const handleVirtuosoScroll = () => {
+    if (virtuosoRef.current) {
+      virtuosoRef.current.getState((state) => {
+        const scrollTop = state.scrollTop;
+        const isIntentionalScrollUp = scrollTop < lastScrollPosition - 2;
+        const isIntentionalScrollDown = scrollTop > lastScrollPosition + 2;
+
+        if (isIntentionalScrollDown && !scrollingDown) {
+          setScrollingDown(true);
+        } else if (isIntentionalScrollUp && scrollingDown) {
+          setScrollingDown(false);
+        }
+        setLastScrollPosition(scrollTop);
+      });
+    }
+  };
+
+  // To override element styling added by Virtuoso when scrolling down
+  /* eslint-disable-next-line */
+  const TopItemListEmptyFragment = () => <></>;
+
+  //Set inital height to 44
+  const [calcedHeight, setCalcedHeight] = useState(44);
+
+  const handleTotalListHeightChanged = (height: number) => {
+    setCalcedHeight(height);
   };
 
   return (
@@ -320,7 +362,7 @@ export function VariableBoxContent({
             {items.length > 0 && (
               <Virtuoso
                 computeItemKey={(key) => `item-${key}`}
-                style={{ height: '380px', maxHeight: '380px', width: '100%' }}
+                style={{ height: hasSevenOrMoreValues ? 380 : Math.min(380, calcedHeight), width: '100%' }}
                 className=""
                 totalCount={items.length}
                 itemContent={(index) => itemRenderer(items, index)}
@@ -328,6 +370,10 @@ export function VariableBoxContent({
                   enter: (velocity) => Math.abs(velocity) > 1000,
                   exit: (velocity) => Math.abs(velocity) < 30,
                 }}
+                topItemCount={stickyTopValueCount}
+                ref={virtuosoRef}
+                onScroll={handleVirtuosoScroll}
+                totalListHeightChanged={handleTotalListHeightChanged}
                 components={{
                   ScrollSeekPlaceholder: ({ height }) => (
                     <Skeleton
@@ -336,6 +382,9 @@ export function VariableBoxContent({
                       width={50 + Math.ceil(Math.random() * 15) + '%'}
                     />
                   ),
+                  TopItemList: (scrollingDown && search === '')
+                    ? TopItemListEmptyFragment
+                    : undefined,
                 }}
               />
             )}
