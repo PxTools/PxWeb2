@@ -120,7 +120,7 @@ export function VariableBoxContent({
 
     function compareSearchedAndChosenValues (searchedValues: string | any[], chosenValues: string | any[]) {
       const arr3 = Array.isArray(searchedValues)
-        ? searchedValues.map((searchedValue) => searchedValue.code).sort().filter((value: string) => chosenValues.includes(value))
+        ? searchedValues.map((searchedValue) => searchedValue.code).filter((value: string) => chosenValues.includes(value))
         : [];
 
       if (arr3.length === 0) {
