@@ -118,29 +118,29 @@ export function VariableBoxContent({
 
   useEffect(() => {
 
-    function compareTwoArrays(arr1: string | any[], arr2: string | any[]) {
-      const arr3 = Array.isArray(arr1)
-        ? arr1.map((searchedValue) => searchedValue.code).sort().filter((value: string) => arr2.includes(value))
+    function compareSearchedAndChosenValues (searchedValues: string | any[], chosenValues: string | any[]) {
+      const arr3 = Array.isArray(searchedValues)
+        ? searchedValues.map((searchedValue) => searchedValue.code).sort().filter((value: string) => chosenValues.includes(value))
         : [];
 
       if (arr3.length === 0) {
         return "none";
-      } else if (arr3.length === arr1.length) {
+      } else if (arr3.length === searchedValues.length) {
         return "all";
       } else {
-        return "some";
+        return "mixed";
       }
     }
 
-    if (totalChosenValues === 0 && searchedValues.length === 0 || searchedValues.length > 0 && compareTwoArrays(searchedValues, selectedValuesForVar) === "none") {
+    if (totalChosenValues === 0 && searchedValues.length === 0 || searchedValues.length > 0 && compareSearchedAndChosenValues(searchedValues, selectedValuesForVar) === "none") {
       setMixedCheckboxText(checkboxSelectAllText);
       setAllValuesSelected('false');
     }
-    else if (totalChosenValues > 0 && totalChosenValues < totalValues && searchedValues.length === 0 || searchedValues.length > 0 && compareTwoArrays(searchedValues, selectedValuesForVar) === "some") {
+    else if (totalChosenValues > 0 && totalChosenValues < totalValues && searchedValues.length === 0 || searchedValues.length > 0 && compareSearchedAndChosenValues(searchedValues, selectedValuesForVar) === "mixed") {
       setMixedCheckboxText(checkboxSelectAllText);
       setAllValuesSelected('mixed');
     }
-    else if (totalChosenValues === totalValues && searchedValues.length === 0 || searchedValues.length > 0 && compareTwoArrays(searchedValues, selectedValuesForVar) === "all") {
+    else if (totalChosenValues === totalValues && searchedValues.length === 0 || searchedValues.length > 0 && compareSearchedAndChosenValues(searchedValues, selectedValuesForVar) === "all") {
       setMixedCheckboxText(checkboxDeselectAllText);
       setAllValuesSelected('true');
     }
