@@ -8,6 +8,9 @@ RUN npm ci \
 # production environment
 FROM nginxinc/nginx-unprivileged:1.27-alpine3.20
 COPY --from=build /app/dist/apps/pxweb2 /usr/share/nginx/html
+USER root
+RUN chmod -R 777 /usr/share/nginx/html/config
+USER nginx
 COPY nginx/conf.d/default.conf /etc/nginx/conf.d
 EXPOSE 8080
 CMD ["nginx", "-g", "daemon off;"]
