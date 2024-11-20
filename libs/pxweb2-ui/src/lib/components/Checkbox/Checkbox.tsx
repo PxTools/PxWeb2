@@ -8,7 +8,7 @@ import Label from '../Typography/Label/Label';
 interface CheckboxProps {
   id: string;
   text: string;
-  searchTerm?: string
+  searchTerm?: string;
   value: boolean;
   onChange: (str: boolean) => void;
   tabIndex?: number;
@@ -59,7 +59,9 @@ export const Checkbox: React.FC<CheckboxProps> = ({
         {value && <Icon iconName="CheckMark"></Icon>}
       </span>
       <div className={styles.label} id={id + '-label'}>
-        <span className={cl({ [styles.strong]: strong })}><Highlight text={text} searchTerm={searchTerm}/></span>
+        <span className={cl({ [styles.strong]: strong })}>
+          <Highlight text={text} searchTerm={searchTerm} />
+        </span>
       </div>
     </div>
   );
@@ -87,18 +89,30 @@ export const MixedCheckbox: React.FC<MixedCheckboxProps> = ({
   inVariableBox = false,
 }) => {
   return (
-    <div
-      id={id}
-      role="checkbox"
-      aria-checked={value}
-      aria-labelledby={id + '-label'}
-      aria-controls={ariaControls.join(' ')}
-      className={cl(styles.checkboxWrapper, {
-        [styles.inVariableBox]: inVariableBox,
-      })}
-      tabIndex={tabIndex ? tabIndex : 0}
-      onKeyUp={(event) => {
-        if (event.key === ' ' || event.key === 'Enter') {
+    <>
+      <div className={styles.mixedCheckboxSpacer}></div>
+      <div
+        id={id}
+        role="checkbox"
+        aria-checked={value}
+        aria-labelledby={id + '-label'}
+        aria-controls={ariaControls.join(' ')}
+        className={cl(styles.checkboxWrapper, styles.mixedCheckboxWrapper, {
+          [styles.inVariableBox]: inVariableBox,
+        })}
+        tabIndex={tabIndex ? tabIndex : 0}
+        onKeyUp={(event) => {
+          if (event.key === ' ' || event.key === 'Enter') {
+            event.preventDefault();
+            if (value === 'false') {
+              onChange('true');
+            }
+            if (value === 'mixed' || value === 'true') {
+              onChange('false');
+            }
+          }
+        }}
+        onClick={(event) => {
           event.preventDefault();
           if (value === 'false') {
             onChange('true');
@@ -106,34 +120,25 @@ export const MixedCheckbox: React.FC<MixedCheckboxProps> = ({
           if (value === 'mixed' || value === 'true') {
             onChange('false');
           }
-        }
-      }}
-      onClick={(event) => {
-        event.preventDefault();
-        if (value === 'false') {
-          onChange('true');
-        }
-        if (value === 'mixed' || value === 'true') {
-          onChange('false');
-        }
-      }}
-    >
-      <span
-        className={cl(styles.checkmark, {
-          [styles.checked]: value === 'mixed' || value === 'true',
-          [styles.checkmarkWithoutMargin]: noMargin,
-        })}
+        }}
       >
-        {value === 'true' && <Icon iconName="CheckMark"></Icon>}
-        {value === 'mixed' && <Icon iconName="IndeterminateCheckMark"></Icon>}
-      </span>
-      <div
-        className={cl(styles.label, { [styles.strong]: strong })}
-        id={id + '-label'}
-      >
-        {text}
+        <span
+          className={cl(styles.checkmark, {
+            [styles.checked]: value === 'mixed' || value === 'true',
+            [styles.checkmarkWithoutMargin]: noMargin,
+          })}
+        >
+          {value === 'true' && <Icon iconName="CheckMark"></Icon>}
+          {value === 'mixed' && <Icon iconName="IndeterminateCheckMark"></Icon>}
+        </span>
+        <div
+          className={cl(styles.label, { [styles.strong]: strong })}
+          id={id + '-label'}
+        >
+          {text}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
@@ -164,7 +169,7 @@ const Highlight: React.FC<HighlightProps> = ({
           </span>
         ) : (
           <React.Fragment key={index}>{part}</React.Fragment>
-        ),
+        )
       )}
     </span>
   );
