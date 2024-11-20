@@ -40,14 +40,14 @@ export function Search({
     }
   };
 
-  const handleKeyDown = (e: { keyCode: number; target: EventTarget & HTMLInputElement; element: HTMLElement }) => {
-    if (e.keyCode === 27) {
-        if (e.target.value.trim() === ""){
-          inputRef.current?.blur();
-        }
-        else{
-          handleClear();
-        }
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Escape' ) {
+      if (inputRef.current?.value.trim() === ""){
+        inputRef.current?.blur();
+      }
+      else{
+        handleClear();
+      }
     }
   };
 
