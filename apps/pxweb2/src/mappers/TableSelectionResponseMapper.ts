@@ -1,15 +1,10 @@
 import { SelectionResponse } from '@pxweb2/pxweb2-api-client';
 import { SelectedVBValues } from '@pxweb2/pxweb2-ui';
 
-type VariableWithoutCodelist = Omit<SelectedVBValues, 'selectedCodeList'>;
-type VariableWithCodelistValue = VariableWithoutCodelist & {
-  selectedCodeList: string | undefined;
-};
-
 export function mapTableSelectionResponse(
   response: SelectionResponse
-): VariableWithCodelistValue[] {
-  const selectedVBValues: VariableWithCodelistValue[] =
+): SelectedVBValues[] {
+  const selectedVBValues: SelectedVBValues[] =
     response.selection.selection.map((variable) => {
       return {
         id: variable.variableCode,
