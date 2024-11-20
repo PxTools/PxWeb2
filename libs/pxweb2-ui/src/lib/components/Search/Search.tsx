@@ -5,6 +5,7 @@ import classes from './Search.module.scss';
 import { Icon } from '../Icon/Icon';
 import { Label } from '../Typography/Label/Label';
 import { Button } from '../Button/Button';
+import { table } from 'console';
 
 export interface SearchProps {
   variant: 'default' | 'inVariableBox';
@@ -39,9 +40,14 @@ export function Search({
     }
   };
 
-  const handleKeyDown = (e: { keyCode: number }) => {
+  const handleKeyDown = (e: { keyCode: number; target: EventTarget & HTMLInputElement; element: HTMLElement }) => {
     if (e.keyCode === 27) {
-      handleClear();
+        if (e.target.value.trim() === ""){
+          inputRef.current?.blur();
+        }
+        else{
+          handleClear();
+        }
     }
   };
 
