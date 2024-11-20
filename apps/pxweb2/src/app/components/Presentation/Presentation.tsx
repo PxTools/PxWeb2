@@ -92,7 +92,9 @@ export function Presentation({ selectedTabId }: propsType) {
       .filter((variable) => variable.mandatory)
       .every((variable) =>
         selectedVBValues.some(
-          (selectedVariable) => selectedVariable.id === variable.id
+          (selectedVariable) =>
+            selectedVariable.id === variable.id &&
+            selectedVariable.values.length > 0
         )
       );
 
