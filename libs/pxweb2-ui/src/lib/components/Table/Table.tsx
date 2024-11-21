@@ -8,6 +8,7 @@ import { getPxTableData } from './cubeHelper';
 
 export interface TableProps {
   pxtable: PxTable;
+  isMobile: boolean;
   className?: string;
 }
 
@@ -26,7 +27,7 @@ type DataCellMeta = {
  */
 type DataCellCodes = DataCellMeta[];
 
-export function Table({ pxtable, className = '' }: TableProps) {
+export function Table({ pxtable, isMobile, className = '' }: TableProps) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
 
   const tableMeta: columnRowMeta = calculateRowAndColumnMeta(pxtable);
@@ -57,13 +58,19 @@ export function Table({ pxtable, className = '' }: TableProps) {
   }
 
   return (
-    <table
+    <>
+    {isMobile && (
+      <span>Mobile</span>
+    )}{' '}
+
+  <table
       className={cl(classes.table, classes[`bodyshort-medium`]) + cssClasses}
       aria-label={pxtable.metadata.label}
     >
       <thead>{createHeading(pxtable, tableMeta, headingDataCellCodes)}</thead>
       <tbody>{createRows(pxtable, tableMeta, headingDataCellCodes)}</tbody>
     </table>
+    </>
   );
 }
 

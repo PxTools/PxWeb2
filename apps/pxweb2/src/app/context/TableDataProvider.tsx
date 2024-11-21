@@ -16,6 +16,8 @@ export interface TableDataContextType {
   /*   loading: boolean;
   error: string | null; */
   fetchTableData: (tableId: string, i18n: i18n) => void;
+  pivotToMobile: () => void;
+  pivotToDesktop: () => void;
 }
 
 interface TableDataProviderProps {
@@ -27,6 +29,10 @@ const TableDataContext = createContext<TableDataContextType | undefined>({
   data: undefined,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   fetchTableData: () => {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  pivotToMobile: () => {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  pivotToDesktop: () => {},
 });
 
 const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
@@ -83,6 +89,50 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       fetchWithoutValidAccData(tableId, i18n, variablesSelection);
     }
   };
+
+  const pivotToMobile = () => {
+    if (data?.heading !== undefined) {
+      const tmpTable = structuredClone(data);
+
+      if (tmpTable !== undefined) {
+        tmpTable.heading.forEach((variable) => {
+          tmpTable.stub.push(variable);
+        });
+        tmpTable.heading = [];
+      }
+      setData(tmpTable);
+    }
+  };
+
+  const pivotToDesktop = () => {
+    if (data?.heading !== undefined) {
+      const tmpTable = structuredClone(data);
+
+      if (tmpTable !== undefined) {
+        tmpTable.stub = [];
+        stub.forEach((id) => {
+          const variable = tmpTable.metadata.variables.find(
+            (variable) => variable.id === id
+          );
+          if (variable) {
+            tmpTable.stub.push(variable);
+          }
+        });
+
+        tmpTable.heading = [];
+        heading.forEach((id) => {
+          const variable = tmpTable.metadata.variables.find(
+            (variable) => variable.id === id
+          );
+          if (variable) {
+            tmpTable.heading.push(variable);
+          }
+        });
+      }
+      setData(tmpTable);
+    }
+  };
+
 
   /**
    * Fetch data. We DO NOT have valid accumulated data in the data cube.
@@ -673,7 +723,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
   return (
     <TableDataContext.Provider
-      value={{ data, /* loading, error  */ fetchTableData }}
+      value={{ data, /* loading, error  */ fetchTableData, pivotToMobile, pivotToDesktop }}
     >
       {children}
     </TableDataContext.Provider>
