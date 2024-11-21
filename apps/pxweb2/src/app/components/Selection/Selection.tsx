@@ -236,21 +236,6 @@ export function Selection({
       variables.setIsLoadingMetadata(true);
     }
 
-    // TODO:  When having changed a codelist, after making some selections, and then
-    //        changing the language, it does not work correctly.
-    //         - The selections are kept
-    //         - The codelist values is from the default selection
-    //            -- There is a mismatch between the codelist values and the selected values
-    //         ! which means the values are not updated correctly. api calls fail!
-    //        What should happen in this task:
-    //         - The selections should be cleared
-    //         - The codelist values should be updated to the new language
-    //         - The default selection should be loaded for the codelist
-
-    //        When not changing the language, it works as expected?
-    //         - The table does not update correctly if the variable is mandatory, with no values selected
-    //           NOT PART OF THIS TASK!
-
     const outputFormat: metadataOutputFormat = MetadataOutputFormatType.JSON_PX;
     const metaDataDefaultSelection = true;
     
