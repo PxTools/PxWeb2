@@ -213,6 +213,8 @@ export function Selection({
     // Metadata to render in the UI
     useState<PxTableMetadata | null>(null);
   const [prevTableId, setPrevTableId] = useState('');
+  
+  //  Needed to know when the language has changed, so we can reload the default selection
   const [prevLang, setPrevLang] = useState('');
 
   useEffect(() => {
@@ -221,6 +223,8 @@ export function Selection({
     if (!selectedTabId) {
       return;
     }
+
+    //  If the table has changed, or the language has changed, we need to reload the default selection
     if (prevTableId === '' || prevTableId !== selectedTabId || prevLang !== i18n.resolvedLanguage) {
       variables.setHasLoadedDefaultSelection(false);
       shouldGetDefaultSelection = true;
