@@ -10,5 +10,11 @@
       "require": "./index.js"
     }
   },
-  "dependencies": {}
+  "description": "This library was generated with [Nx](https://nx.dev).",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT"
 }

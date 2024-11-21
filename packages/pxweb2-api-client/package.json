@@ -1,8 +1,14 @@
 {
   "name": "@pxweb2/pxweb2-api-client",
   "version": "0.0.1",
-  "dependencies": {},
   "main": "./index.js",
   "module": "./index.mjs",
-  "typings": "./index.d.ts"
+  "typings": "./index.d.ts",
+  "description": "This library was generated with [Nx](https://nx.dev).",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT"
 }
