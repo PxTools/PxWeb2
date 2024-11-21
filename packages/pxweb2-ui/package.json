@@ -13,7 +13,8 @@
   "description": "This library was generated with [Nx](https://nx.dev).",
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npm run build-style-dictionary && vite build",
+    "build-style-dictionary": "node ./style-dictionary/build.js"
   },
   "author": "",
   "license": "MIT"
