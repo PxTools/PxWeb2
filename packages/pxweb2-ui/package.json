@@ -10,11 +10,23 @@
       "require": "./index.js"
     }
   },
-  "description": "This library was generated with [Nx](https://nx.dev).",
-  "devDependencies": {},
+  "devDependencies": {
+    "@chromatic-com/storybook": "^3.2.2",
+    "@storybook/addon-essentials": "^8.4.5",
+    "@storybook/addon-interactions": "^8.4.5",
+    "@storybook/addon-onboarding": "^8.4.5",
+    "@storybook/blocks": "^8.4.5",
+    "@storybook/react": "^8.4.5",
+    "@storybook/react-vite": "^8.4.5",
+    "@storybook/test": "^8.4.5",
+    "prop-types": "^15.8.1",
+    "storybook": "^8.4.5"
+  },
   "scripts": {
     "build": "npm run build-style-dictionary && vite build",
-    "build-style-dictionary": "node ./style-dictionary/build.js"
+    "build-style-dictionary": "node ./style-dictionary/build.js",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "author": "",
   "license": "MIT"
