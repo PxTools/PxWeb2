@@ -7,8 +7,14 @@ import {
   VariableSelection,
   VariablesSelection,
 } from '@pxweb2/pxweb2-api-client';
-import { PxTable, PxTableMetadata, getPxTableData, setPxTableData } from '@pxweb2/pxweb2-ui';
+import {
+  PxTable,
+  PxTableMetadata,
+  getPxTableData,
+  setPxTableData,
+} from '@pxweb2/pxweb2-ui';
 import { mapJsonStat2Response } from '../../mappers/JsonStat2ResponseMapper';
+import { template } from 'lodash';
 
 // Define types for the context state and provider props
 export interface TableDataContextType {
@@ -100,6 +106,11 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         });
         tmpTable.heading = [];
       }
+      //console.log("FØR" + JSON.stringify(tmpTable.stub))
+      tmpTable.stub.forEach((stub) => console.log(stub.id));
+      tmpTable.stub.sort((a, b) => b.values.length - a.values.length);
+      //console.log("ETTER" +JSON.stringify(tmpTable.stub));
+      tmpTable.stub.forEach((stub) => console.log(stub.id));
       setData(tmpTable);
     }
   };
@@ -132,7 +143,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       setData(tmpTable);
     }
   };
-
 
   /**
    * Fetch data. We DO NOT have valid accumulated data in the data cube.
@@ -595,9 +605,9 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * @param dimensionIndex - The current index of the dimension being processed.
    * @param dimensionsMap - A mapping of dimension indices to their corresponding positions in the dimensions array.
    *
-   * This function recursively navigates through the dimensions of the data cubes. For each dimension, it finds the 
-   * corresponding variable in the new data cube and updates the accumulated data cube with the new values. If the 
-   * current dimension is the last one, it retrieves the data value from the new data cube and sets it in the 
+   * This function recursively navigates through the dimensions of the data cubes. For each dimension, it finds the
+   * corresponding variable in the new data cube and updates the accumulated data cube with the new values. If the
+   * current dimension is the last one, it retrieves the data value from the new data cube and sets it in the
    * accumulated data cube. Otherwise, it continues to the next dimension.
    */
   function updateCube(
@@ -723,7 +733,12 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
   return (
     <TableDataContext.Provider
-      value={{ data, /* loading, error  */ fetchTableData, pivotToMobile, pivotToDesktop }}
+      value={{
+        data,
+        /* loading, error  */ fetchTableData,
+        pivotToMobile,
+        pivotToDesktop,
+      }}
     >
       {children}
     </TableDataContext.Provider>
