@@ -28,7 +28,7 @@ public
 
 ### config.js
 
-``` json
+``` javascript
 window.PxWeb2Config = {
   language: {
     supportedLanguages: [
@@ -94,9 +94,9 @@ PxWeb
 ### appsettings.json
 
 Your can have several [appsettings](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/configuration/)
-configs. The [docker](docker.md) example runs i Development mode and use most 
+configs. The [docker](docker.md) example runs i Development mode and use most
 values from `appsettings.json`. There are currently only two places you need to
-add more languages 
+add more languages
 
 ``` json
 ...
