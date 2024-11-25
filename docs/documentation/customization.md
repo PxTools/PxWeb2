@@ -118,3 +118,23 @@ add more languages
 ### SqlDb.config
 
 Curently it is exactly as in PxWeb 2023
+
+``` xml
+<?xml version="1.0" encoding="iso-8859-1"?>
+<SqlDbConfig version="2008"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="SqlDbConfig.xsd">
+  <Database id="<ID>" metaModel="2.4">
+...
+```
+
+But you have to change `appsettings.json` to use CNMM like this
+
+``` json
+{
+  "DataSource": {
+    "DataSourceType": "CNMM",
+    "CNMM": {
+      "DatabaseID": "<ID>"
+    }
+```
