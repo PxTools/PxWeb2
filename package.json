@@ -16,9 +16,6 @@
   "readme": "ERROR: No README data found!",
   "_id": "@pxweb2/source@0.0.0",
   "workspaces": [
-    "packages/pxweb2",
-    "packages/pxweb2-api-client",
-    "packages/pxweb2-e2e",
-    "packages/pxweb2-ui"
+    "packages/*"
   ]
 }

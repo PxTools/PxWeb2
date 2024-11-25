@@ -1,14 +1,14 @@
 {
   "name": "@pxweb2/pxweb2-ui",
   "version": "0.0.1",
-  "main": "./index.js",
+  "main": "./dist/index.ts",
   "type": "module",
   "private": true,
-  "types": "./index.d.ts",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./index.mjs",
-      "require": "./index.js"
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
     }
   },
   "devDependencies": {

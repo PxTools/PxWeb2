@@ -4,6 +4,9 @@
   "description": "",
   "private": true,
   "main": "index.js",
+  "dependencies": {
+    "@pxweb2/pxweb2-ui": "*"
+  },
   "devDependencies": {},
   "scripts": {
     "build": "vite"

@@ -23,7 +23,7 @@ export const Header: React.FC = () => {
               >
                 {language.languageName}
               </Button>
-            )
+            ),
         )}
       </div>
     </div>
