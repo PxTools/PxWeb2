@@ -27,8 +27,11 @@ function addSelectedCodeListToVariable(
   if (currentVariable) {
     newSelectedValues = selectedValuesArr.map((variable) => {
       if (variable.id === varId) {
-        variable.selectedCodeList = selectedItem.value;
-        variable.values = []; // Always reset values when changing codelist
+        return {
+          ...variable,
+          selectedCodeList: selectedItem.value,
+          values: [], // Always reset values when changing codelist
+        };
       }
 
       return variable;
