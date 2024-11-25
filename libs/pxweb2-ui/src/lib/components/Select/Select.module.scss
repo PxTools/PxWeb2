@@ -86,11 +86,6 @@
     cursor: pointer;
   }
 
-  // &:focus {
-  //   border-radius: var(--px-border-radius-medium);
-  //   outline: 2px solid var(--px-color-border-action);
-  // }
-
   &:active {
     border-radius: var(--px-border-radius-medium);
     outline: 2px solid var(--px-color-border-selected);
