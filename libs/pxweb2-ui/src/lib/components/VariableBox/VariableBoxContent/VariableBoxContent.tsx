@@ -119,13 +119,13 @@ export function VariableBoxContent({
   useEffect(() => {
 
     function compareSearchedAndChosenValues (searchedValues: string | any[], chosenValues: string | any[]) {
-      const arr3 = Array.isArray(searchedValues)
+      const compareArrays = Array.isArray(searchedValues)
         ? searchedValues.map((searchedValue) => searchedValue.code).filter((value: string) => chosenValues.includes(value))
         : [];
 
-      if (arr3.length === 0) {
+      if (compareArrays.length === 0) {
         return "none";
-      } else if (arr3.length === searchedValues.length) {
+      } else if (compareArrays.length === searchedValues.length) {
         return "all";
       } else {
         return "mixed";
