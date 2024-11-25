@@ -1,7 +1,11 @@
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
 
-import { metadataOutputFormat, MetadataOutputFormatType, TableService } from '@pxweb2/pxweb2-api-client';
+import {
+  metadataOutputFormat,
+  MetadataOutputFormatType,
+  TableService,
+} from '@pxweb2/pxweb2-api-client';
 import { mapTableMetadataResponse } from '../../../mappers/TableMetadataResponseMapper';
 import { mapTableSelectionResponse } from '../../../mappers/TableSelectionResponseMapper';
 import {
@@ -90,7 +94,7 @@ async function getCodeListValues(id: string, lang: string): Promise<Value[]> {
       });
     })
     .catch((error) => {
-      console.error('Could not get code list: ', id);
+      throw new Error(error);
     });
 
   return values;
@@ -216,7 +220,7 @@ export function Selection({
     // Metadata to render in the UI
     useState<PxTableMetadata | null>(null);
   const [prevTableId, setPrevTableId] = useState('');
-  
+
   //  Needed to know when the language has changed, so we can reload the default selection
   const [prevLang, setPrevLang] = useState('');
 
@@ -228,7 +232,11 @@ export function Selection({
     }
 
     //  If the table has changed, or the language has changed, we need to reload the default selection
-    if (prevTableId === '' || prevTableId !== selectedTabId || prevLang !== i18n.resolvedLanguage) {
+    if (
+      prevTableId === '' ||
+      prevTableId !== selectedTabId ||
+      prevLang !== i18n.resolvedLanguage
+    ) {
       variables.setHasLoadedDefaultSelection(false);
       shouldGetDefaultSelection = true;
       setPrevTableId(selectedTabId);
@@ -241,13 +249,18 @@ export function Selection({
 
     const outputFormat: metadataOutputFormat = MetadataOutputFormatType.JSON_PX;
     const metaDataDefaultSelection = true;
-    
-    TableService.getMetadataById(selectedTabId, i18n.resolvedLanguage, outputFormat, metaDataDefaultSelection)
+
+    TableService.getMetadataById(
+      selectedTabId,
+      i18n.resolvedLanguage,
+      outputFormat,
+      metaDataDefaultSelection
+    )
       .then((tableMetadataResponse) => {
         const pxTabMetadata: PxTableMetadata = mapTableMetadataResponse(
           tableMetadataResponse
         );
-        
+
         setPxTableMetadata(pxTabMetadata);
         if (pxTableMetaToRender !== null) {
           setPxTableMetaToRender(null);
@@ -298,7 +311,7 @@ export function Selection({
     const currentVariableMetadata = pxTableMetaToRender?.variables.find(
       (variable) => variable.id === varId
     );
-    const currentVariable = prevSelectedValues.find(
+    const currentSelectedVariable = prevSelectedValues.find(
       (variable) => variable.id === varId
     );
     const lang = i18n.resolvedLanguage;
@@ -307,7 +320,7 @@ export function Selection({
     if (lang === undefined) {
       return;
     }
-    const currentCodeList = currentVariable?.selectedCodeList;
+    const currentCodeList = currentSelectedVariable?.selectedCodeList;
 
     // No new selection made, do nothing
     if (!selectedItem || selectedItem.value === currentCodeList) {
@@ -329,19 +342,25 @@ export function Selection({
     const newMappedSelectedCodeList =
       mapCodeListToSelectOption(newSelectedCodeList);
     const newSelectedValues = addSelectedCodeListToVariable(
-      currentVariable,
+      currentSelectedVariable,
       prevSelectedValues,
       varId,
       newMappedSelectedCodeList
     );
 
-    updateAndSyncVBValues(newSelectedValues);
-
     //  Get the values for the chosen code list
     const valuesForChosenCodeList: Value[] = await getCodeListValues(
       newMappedSelectedCodeList.value,
       lang
-    );
+    ).catch((error) => {
+      console.error(
+        'Could not get values for code list: ' +
+          newMappedSelectedCodeList.value +
+          ' ' +
+          error
+      );
+      return [];
+    });
 
     if (valuesForChosenCodeList.length < 1) {
       return;
@@ -369,7 +388,8 @@ export function Selection({
       });
     });
 
-    // update the metadata state in the variablesProvider
+    // update the state
+    updateAndSyncVBValues(newSelectedValues);
     setPxTableMetadata(newPxTableMetaToRender);
     setPxTableMetaToRender(null);
   }
