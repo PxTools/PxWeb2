@@ -108,7 +108,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       }
       //console.log("FØR" + JSON.stringify(tmpTable.stub))
       tmpTable.stub.forEach((stub) => console.log(stub.id));
-      tmpTable.stub.sort((a, b) => b.values.length - a.values.length);
+      tmpTable.stub.sort((a, b) => a.values.length - b.values.length);
       //console.log("ETTER" +JSON.stringify(tmpTable.stub));
       tmpTable.stub.forEach((stub) => console.log(stub.id));
       setData(tmpTable);
