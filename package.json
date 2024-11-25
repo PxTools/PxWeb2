@@ -6,7 +6,10 @@
     "build-style-dictionary": "cd ./packages/pxweb2-ui && npm run build-style-dictionary"
   },
   "private": true,
-  "dependencies": {},
+  "dependencies": {
+    "@uidotdev/usehooks": "^2.4.1",
+    "react-virtuoso": "^4.12.1"
+  },
   "devDependencies": {
     "style-dictionary": "^4.2.0"
   },

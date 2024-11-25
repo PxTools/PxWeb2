@@ -2,6 +2,7 @@
   "name": "pxweb2",
   "version": "1.0.0",
   "description": "",
+  "private": true,
   "main": "index.js",
   "devDependencies": {},
   "scripts": {
