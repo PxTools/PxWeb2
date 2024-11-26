@@ -4,12 +4,11 @@
 /* eslint-disable */
 import type { Link } from './Link';
 import type { VariablesSelection } from './VariablesSelection';
-export type SelectionResponse = {
+export type SelectionResponse = (VariablesSelection & {
     /**
      * The language code for the language used in this response
      */
     language: string;
-    selection: VariablesSelection;
     links: Array<Link>;
-};
+});
 
