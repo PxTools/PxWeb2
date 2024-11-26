@@ -80,7 +80,7 @@
             "values_list": {
               "aria_label": "Lista över {{total}} värden.",
               "aria_description": "Variabelns lista med {{total}} totala värden. För att komma in i listan, tryck på nedåtpilen. Tabbtangenten lämnar listan.",
-              "no_results_heading": "Tyvärr hittades inte “{{search}}“",
+              "no_results_heading": "Tyvärr hittades inte ”{{search}}”",
               "no_results_bodyshort": "Försök med en annan stavning eller ett annat ord."
             }
           }
