@@ -15,7 +15,7 @@ export interface TableDataContextType {
   data: PxTable | undefined;
   /*   loading: boolean;
   error: string | null; */
-  fetchTableData: (tableId: string, i18n: i18n) => void;
+  fetchTableData: (tableId: string, i18n: i18n, isMobile: boolean) => void;
   pivotToMobile: () => void;
   pivotToDesktop: () => void;
 }
@@ -43,6 +43,8 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     undefined
   );
 
+  const [isMobileMode, setIsMobileMode] = useState<boolean>(false);  
+
   // Handle with variables are in the stub
   const [stub, setStub] = useState<string[]>([]);
   // Handle with variables are in the heading
@@ -63,7 +65,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * @param tableId - The id of the table to fetch data for.
    * @param i18n - The i18n object for handling langauages
    */
-  const fetchTableData = async (tableId: string, i18n: i18n) => {
+  const fetchTableData = async (tableId: string, i18n: i18n, isMobile: boolean) => {
     const selections: Array<VariableSelection> = [];
     const ids = variables.getUniqueIds();
     ids.forEach((id) => {
@@ -86,7 +88,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     if (validAccData) {
       fetchWithValidAccData(tableId, i18n, variablesSelection);
     } else {
-      fetchWithoutValidAccData(tableId, i18n, variablesSelection);
+      fetchWithoutValidAccData(tableId, i18n, isMobile, variablesSelection);
     }
   };
 
@@ -102,6 +104,20 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       }
       setData(tmpTable);
     }
+  };
+
+  const pivotToMobile2 = (pxTable: PxTable) => {
+    // if (data?.heading !== undefined) {
+    //   const tmpTable = structuredClone(data);
+
+      if (pxTable !== undefined) {
+        pxTable.heading.forEach((variable) => {
+          pxTable.stub.push(variable);
+        });
+        pxTable.heading = [];
+      }
+    //   setData(tmpTable);
+    // }
   };
 
   const pivotToDesktop = () => {
@@ -143,7 +159,8 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    */
   const fetchWithoutValidAccData = async (
     tableId: string,
-    i18n: i18n,
+    i18n: i18n, 
+    isMobile: boolean,
     variablesSelection: VariablesSelection
   ) => {
     const pxTable: PxTable = await fetchFromApi(
@@ -151,6 +168,10 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       i18n,
       variablesSelection
     );
+
+    if (isMobile) {
+      pivotToMobile2(pxTable);
+    }
 
     handleStubAndHeading(pxTable, i18n);
     setData(pxTable);
@@ -672,11 +693,11 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       accumulatedData.metadata.id !== pxTable.metadata.id
     ) {
       // First time we get data OR we have a new table.
-      // -> Set stub and heading according to the order in pxTable
-      const stubOrder: string[] = pxTable.stub.map((variable) => variable.id);
-      const headingOrder: string[] = pxTable.heading.map(
-        (variable) => variable.id
-      );
+        // -> Set stub and heading according to the order in pxTable
+        const stubOrder: string[] = pxTable.stub.map((variable) => variable.id);
+        const headingOrder: string[] = pxTable.heading.map(
+            (variable) => variable.id
+        );
       setStub(stubOrder);
       setHeading(headingOrder);
     } else {
