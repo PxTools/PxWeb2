@@ -1,9 +1,9 @@
 FROM node:20.18.0-slim AS build
 WORKDIR /app
 COPY . ./
-RUN npm ci
-RUN npx nx reset
-RUN npm run build
+RUN npm ci \
+ && npx nx reset \
+ && npm run build 
 
 # production environment
 FROM nginxinc/nginx-unprivileged:1.27.2-alpine3.20
