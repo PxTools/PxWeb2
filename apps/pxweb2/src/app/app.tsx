@@ -21,7 +21,7 @@ export function App() {
 
   const { tableId } = useParams<{ tableId: string }>();
   const [selectedTableId, setSelectedTableId] = useState(
-    tableId ? tableId : 'tab638'
+    tableId ? tableId : '04534'
   );
   const [errorMsg, setErrorMsg] = useState('');
   const [selectedNavigationView, setSelectedNavigationView] =
