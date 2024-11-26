@@ -67,9 +67,9 @@ export class TableService {
                 'lang': lang,
             },
             errors: {
-                400: `Error respsone for 400`,
-                404: `Error respsone for 404`,
-                429: `Error respsone for 429`,
+                400: `Error response for 400`,
+                404: `Error response for 404`,
+                429: `Error response for 429`,
             },
         });
     }
@@ -113,9 +113,9 @@ export class TableService {
                 'defaultSelection': defaultSelection,
             },
             errors: {
-                400: `Error respsone for 400`,
-                404: `Error respsone for 404`,
-                429: `Error respsone for 429`,
+                400: `Error response for 400`,
+                404: `Error response for 404`,
+                429: `Error response for 429`,
             },
         });
     }
@@ -141,9 +141,9 @@ export class TableService {
                 'lang': lang,
             },
             errors: {
-                400: `Error respsone for 400`,
-                404: `Error respsone for 404`,
-                429: `Error respsone for 429`,
+                400: `Error response for 400`,
+                404: `Error response for 404`,
+                429: `Error response for 429`,
             },
         });
     }
@@ -168,9 +168,9 @@ export class TableService {
                 'lang': lang,
             },
             errors: {
-                400: `Error respsone for 400`,
-                404: `Error respsone for 404`,
-                429: `Error respsone for 429`,
+                400: `Error response for 400`,
+                404: `Error response for 404`,
+                429: `Error response for 429`,
             },
         });
     }
@@ -213,10 +213,10 @@ export class TableService {
                 'stub': stub,
             },
             errors: {
-                400: `Error respsone for 400`,
-                403: `Error respsone for 403`,
-                404: `Error respsone for 404`,
-                429: `Error respsone for 429`,
+                400: `Error response for 400`,
+                403: `Error response for 403`,
+                404: `Error response for 404`,
+                429: `Error response for 429`,
             },
         });
     }
@@ -248,10 +248,10 @@ export class TableService {
             body: requestBody,
             mediaType: 'application/json',
             errors: {
-                400: `Error respsone for 400`,
-                403: `Error respsone for 403`,
-                404: `Error respsone for 404`,
-                429: `Error respsone for 429`,
+                400: `Error response for 400`,
+                403: `Error response for 403`,
+                404: `Error response for 404`,
+                429: `Error response for 429`,
             },
         });
     }
