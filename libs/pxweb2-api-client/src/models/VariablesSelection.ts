@@ -6,6 +6,6 @@ import type { VariablePlacementType } from './VariablePlacementType';
 import type { VariableSelection } from './VariableSelection';
 export type VariablesSelection = {
     selection: Array<VariableSelection>;
-    palcement?: VariablePlacementType;
+    placement?: VariablePlacementType;
 };
 
