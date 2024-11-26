@@ -7,8 +7,7 @@ describe('TableSelectionResponseMapper', () => {
     it('should map the selection response to an array of SelectedVBValues', () => {
       const response: SelectionResponse = {
         language: '',
-        selection: {
-          selection: [
+        selection: [
             {
               variableCode: 'testVarCode',
               valueCodes: ['testValueCode'],
@@ -19,7 +18,6 @@ describe('TableSelectionResponseMapper', () => {
               valueCodes: ['testValueCode2'],
             },
           ],
-        },
         links: [],
       };
 
