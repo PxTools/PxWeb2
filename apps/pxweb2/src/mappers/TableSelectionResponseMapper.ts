@@ -5,7 +5,7 @@ export function mapTableSelectionResponse(
   response: SelectionResponse
 ): SelectedVBValues[] {
   const selectedVBValues: SelectedVBValues[] =
-    response.selection.selection.map((variable) => {
+    response.selection.map((variable) => {
       return {
         id: variable.variableCode,
         selectedCodeList: variable.codeList ? variable.codeList : undefined,
