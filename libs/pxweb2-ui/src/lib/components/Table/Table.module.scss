@@ -161,6 +161,16 @@
     border-bottom:none ;
     border-top: none ;
   }
+  
+  .mobileRowHeadSecondLastStub >th,
+  .mobileRowHeadSecondLastStub >td{
+    background:none;
+    border-left:none   ;
+    border-right:none;
+    border-bottom:none ;
+    border-top: none ;
+    font-family: PxWeb-font-700;
+  }
   @media screen and (min-width: fixed.$breakpoints-small-max-width) {
     border: 1px solid var(--px-color-border-default);
      }

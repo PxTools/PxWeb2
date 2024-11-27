@@ -257,6 +257,12 @@ function createRow(
     if (rowSpan === 0) {
       rowSpan = 1;
     }
+    let secondLastStubMultipleValues;
+    if (isMobile && stubIndex===table.stub.length-2 &&  table.stub[stubIndex].values.length>1) // second last level
+    {
+     secondLastStubMultipleValues=true;
+     console.log("secondLastStubMultipleValues= "+ secondLastStubMultipleValues)
+    }
 
     tableRow.push(
       <th
@@ -276,7 +282,7 @@ function createRow(
       fillEmpty(tableMeta, tableRow,isMobile);
       tableRows.push(
         <tr
-          className={cl({ [classes.firstdim]: stubIndex === 0 },{ [classes.mobileEmptyRowCell]: isMobile })}
+          className={cl({ [classes.firstdim]: stubIndex === 0 },{ [classes.mobileEmptyRowCell]: isMobile && !secondLastStubMultipleValues },{[classes.mobileRowHeadSecondLastStub]: secondLastStubMultipleValues})}
           key={getNewKey()}
         >
           {tableRow}
