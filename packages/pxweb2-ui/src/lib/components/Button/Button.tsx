@@ -23,23 +23,24 @@ export function Button({
   className = '',
   ...rest
 }: ButtonProps) {
-
   const cssClasses = className.length > 0 ? ' ' + className : '';
 
   return (
     <button
-      className={cl(
-        classes.button,
-        classes[size],
-        classes[`label-${size}`],
-        classes[variant],
-        {
-          [classes.iconOnlyMedium]: !children && icon && size === 'medium',
-        },
-        {
-          [classes.iconOnlySmall]: !children && icon && size === 'small',
-        }
-      ) + cssClasses}
+      className={
+        cl(
+          classes.button,
+          classes[size],
+          classes[`label-${size}`],
+          classes[variant],
+          {
+            [classes.iconOnlyMedium]: !children && icon && size === 'medium',
+          },
+          {
+            [classes.iconOnlySmall]: !children && icon && size === 'small',
+          },
+        ) + cssClasses
+      }
       {...rest}
     >
       {icon && iconPosition === 'left' && (

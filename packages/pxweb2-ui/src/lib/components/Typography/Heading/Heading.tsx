@@ -31,14 +31,16 @@ export function Heading({
 
   return (
     <Component
-      className={cl(
-        classes.heading,
-        classes[size],
-        classes[`heading-${size}`],
-        { [classes.spacing]: spacing },
-        classes[`align-${align}`],
-        classes[`text-color-${textcolor}`]
-      ) + cssClasses}
+      className={
+        cl(
+          classes.heading,
+          classes[size],
+          classes[`heading-${size}`],
+          { [classes.spacing]: spacing },
+          classes[`align-${align}`],
+          classes[`text-color-${textcolor}`],
+        ) + cssClasses
+      }
       {...rest}
     >
       {children}

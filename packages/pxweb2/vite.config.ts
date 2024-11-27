@@ -25,7 +25,7 @@ export default defineConfig({
   // },
 
   build: {
-    outDir: '../../dist/apps/pxweb2',
+    outDir: './dist/',
     reportCompressedSize: true,
     commonjsOptions: {
       transformMixedEsModules: true,
@@ -34,7 +34,7 @@ export default defineConfig({
 
   resolve: {
     alias: {
-      $ui: path.resolve('libs/pxweb2-ui/'),
+      $ui: path.resolve('../pxweb2-ui/'),
     },
   },
 
