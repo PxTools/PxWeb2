@@ -1,39 +1,29 @@
 {
   "root": true,
   "ignorePatterns": ["**/*"],
-  "plugins": ["import"],
+  "plugins": ["@nx"],
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
       "rules": {
-        "import/no-extraneous-dependencies": [
+        "@nx/enforce-module-boundaries": [
           "error",
           {
-            "devDependencies": false,
-            "optionalDependencies": false,
-            "peerDependencies": false
+            "enforceBuildableLibDependency": true,
+            "allow": [],
+            "depConstraints": [
+              {
+                "sourceTag": "*",
+                "onlyDependOnLibsWithTags": ["*"]
+              }
+            ]
           }
-        ],
-        "import/order": [
-          "error",
-          {
-            "groups": [
-              ["builtin", "external"],
-              ["internal", "parent", "sibling", "index"]
-            ],
-            "newlines-between": "always"
-          }
-        ],
-        "import/no-cycle": "error"
+        ]
       }
     },
     {
       "files": ["*.ts", "*.tsx"],
-      "extends": [
-        "eslint:recommended",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:import/typescript"
-      ],
+      "extends": ["plugin:@nx/typescript"],
       "rules": {
         "@typescript-eslint/no-extra-semi": "error",
         "no-extra-semi": "off"
@@ -41,11 +31,7 @@
     },
     {
       "files": ["*.js", "*.jsx"],
-      "extends": [
-        "eslint:recommended",
-        "plugin:react/recommended",
-        "plugin:jsx-a11y/recommended"
-      ],
+      "extends": ["plugin:@nx/javascript"],
       "rules": {
         "@typescript-eslint/no-extra-semi": "error",
         "no-extra-semi": "off"

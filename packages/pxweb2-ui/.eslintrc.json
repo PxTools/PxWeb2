@@ -1,9 +1,5 @@
 {
-  "extends": [
-    "plugin:react/recommended",
-    "plugin:react-hooks/recommended",
-    "../../.eslintrc.json"
-  ],
+  "extends": ["plugin:@nx/react", "../../.eslintrc.json"],
   "ignorePatterns": ["!**/*"],
   "overrides": [
     {
@@ -12,7 +8,6 @@
     },
     {
       "files": ["*.ts", "*.tsx"],
-      "extends": ["plugin:@typescript-eslint/recommended"],
       "rules": {}
     },
     {
