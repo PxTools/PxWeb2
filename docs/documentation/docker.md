@@ -19,6 +19,12 @@ to run alt least two containers.
     - [Rancher](https://rancherdesktop.io) - Rancher desktop
     - [Podman](https://podman-desktop.io) - Podman desktop
 
+    !!! info
+        We use services lifecycle hooks from
+        [docker-compose v2.30.0](https://docs.docker.com/compose/releases/release-notes/#2300)
+        so you may need to upgrade your installation to the latest version for
+        this example to work
+
 - clone or download this repo <https://github.com/PxTools/PxWebApi>
 
     ```sh
@@ -57,7 +63,7 @@ to run alt least two containers.
 
 - Your API should now be running on
 
-    - <http://localhost:8081/api/v2>
+    - <http://localhost:8081/api/v2/>
     - <http://localhost:8081/api/v2/navigation>
     - <http://localhost:8081/api/v2/tables>
 
