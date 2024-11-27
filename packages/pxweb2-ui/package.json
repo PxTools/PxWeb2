@@ -18,7 +18,8 @@
     "build": "npm run build-style-dictionary && vite build",
     "build-style-dictionary": "node ./style-dictionary/build.js",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "lint": "eslint"
   },
   "author": "",
   "license": "MIT",
