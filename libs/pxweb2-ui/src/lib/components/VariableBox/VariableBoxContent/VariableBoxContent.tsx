@@ -31,7 +31,11 @@ type VariableBoxContentProps = VariableBoxPropsToContent & {
     varId: string
   ) => void;
   onChangeCheckbox: (varId: string, value: string) => void;
-  onChangeMixedCheckbox: (varId: string, allValuesSelected: string, searchValues: Value[]) => void;
+  onChangeMixedCheckbox: (
+    varId: string,
+    allValuesSelected: string,
+    searchValues: Value[]
+  ) => void;
 };
 
 export function VariableBoxContent({
@@ -89,7 +93,7 @@ export function VariableBoxContent({
     const newItems: { type: string; value?: Value }[] = [];
 
     if (!valuesToRender || valuesToRender.length === 0) {
-      return
+      return;
     }
 
     if (hasSevenOrMoreValues) {
@@ -197,11 +201,19 @@ export function VariableBoxContent({
     }
   };
 
-  const searchedValues : Value[] = values.filter((value) => value.label.toLowerCase().indexOf(debouncedSearch.toLowerCase()) > -1);
+  const searchedValues: Value[] = values.filter(
+    (value) =>
+      value.label.toLowerCase().indexOf(debouncedSearch.toLowerCase()) > -1
+  );
 
   // Modify the itemRenderer to assign IDs and tabIndex
   const itemRenderer = (items: any, index: number) => {
     const item = items[index];
+
+    // There is a race condition with virtuoso where item can be undefined
+    if (item === undefined) {
+      return;
+    }
 
     if (item.type === 'search') {
       return (
@@ -213,7 +225,7 @@ export function VariableBoxContent({
           <Search
             onChange={(value: string) => {
               setSearch(value);
-              if(value === '') {
+              if (value === '') {
                 setScrollingDown(false);
               }
             }}
@@ -239,7 +251,9 @@ export function VariableBoxContent({
             id={varId}
             text={mixedCheckboxText}
             value={allValuesSelected}
-            onChange={() => onChangeMixedCheckbox(varId, allValuesSelected, searchedValues)}
+            onChange={() =>
+              onChangeMixedCheckbox(varId, allValuesSelected, searchedValues)
+            }
             ariaControls={valuesToRender.map((value) => value.code)}
             strong={true}
             inVariableBox={true}
@@ -366,7 +380,12 @@ export function VariableBoxContent({
             {items.length > 0 && (
               <Virtuoso
                 computeItemKey={(key) => `item-${key}`}
-                style={{ height: hasSevenOrMoreValues ? 380 : Math.min(380, calcedHeight), width: '100%' }}
+                style={{
+                  height: hasSevenOrMoreValues
+                    ? 380
+                    : Math.min(380, calcedHeight),
+                  width: '100%',
+                }}
                 className=""
                 totalCount={items.length}
                 itemContent={(index) => itemRenderer(items, index)}
@@ -386,9 +405,10 @@ export function VariableBoxContent({
                       width={50 + Math.ceil(Math.random() * 15) + '%'}
                     />
                   ),
-                  TopItemList: (scrollingDown && search === '')
-                    ? TopItemListEmptyFragment
-                    : undefined,
+                  TopItemList:
+                    scrollingDown && search === ''
+                      ? TopItemListEmptyFragment
+                      : undefined,
                 }}
               />
             )}
