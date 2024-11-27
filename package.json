@@ -3,12 +3,12 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "build-i18n-interface": "npx i18next-resources-for-ts interface -i ./packages/pxweb2/public/locales/en -o ./packages/pxweb2/src/@types/resources.d.ts",
-    "build-style-dictionary": "cd ./packages/pxweb2-ui && npm run build-style-dictionary",
-    "build-api-client": "npx openapi-typescript-codegen --input https://raw.githubusercontent.com/PxTools/PxApiSpecs/master/PxAPI-2.yml --output ./packages/pxweb2-api-client/src",
     "prepare": "husky",
     "lint": "npm run lint --workspaces",
-    "test": "echo 'test'"
+    "test": "npm run test --workspaces",
+    "build-i18n-interface": "npx i18next-resources-for-ts interface -i ./packages/pxweb2/public/locales/en -o ./packages/pxweb2/src/@types/resources.d.ts",
+    "build-style-dictionary": "cd ./packages/pxweb2-ui && npm run build-style-dictionary",
+    "build-api-client": "npx openapi-typescript-codegen --input https://raw.githubusercontent.com/PxTools/PxApiSpecs/master/PxAPI-2.yml --output ./packages/pxweb2-api-client/src"
   },
   "private": true,
   "dependencies": {
