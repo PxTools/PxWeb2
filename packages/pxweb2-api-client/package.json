@@ -1,10 +1,8 @@
 {
   "name": "@pxweb2/pxweb2-api-client",
   "version": "0.0.1",
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
+  "main": "./src/index.ts",
   "private": "true",
-  "typings": "./dist/index.d.ts",
   "devDependencies": {},
   "scripts": {
     "build": "vite build",
