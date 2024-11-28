@@ -17,7 +17,7 @@
     "vitest": "^2.1.6"
   },
   "scripts": {
-    "build": "npm run build-style-dictionary && vite build",
+    "build": "vite build",
     "build-style-dictionary": "node ./style-dictionary/build.mjs",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
