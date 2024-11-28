@@ -1,0 +1,14 @@
+{
+  "name": "@pxweb2/pxweb2-api-client",
+  "version": "0.0.1",
+  "main": "./src/index.ts",
+  "private": "true",
+  "devDependencies": {},
+  "scripts": {
+    "build": "vite build",
+    "lint": "eslint",
+    "test": "echo 'No tests for @pxweb2/pxweb2-api-client'"
+  },
+  "author": "",
+  "license": "MIT"
+}
