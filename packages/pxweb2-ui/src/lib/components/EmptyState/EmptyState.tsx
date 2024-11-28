@@ -3,7 +3,7 @@ import cl from 'clsx';
 
 import styles from './EmptyState.module.scss';
 import * as Illustrations from './Illustrations';
-import { BreakpointsXsmallMaxWidth } from '../../../../style-dictionary/dist/js/fixed-variables.js';
+import { BreakpointsXsmallMaxWidth } from '../../../../style-dictionary/dist/js/fixed-variables';
 
 export interface EmptyStateProps {
   svgName: keyof typeof Illustrations;
@@ -58,7 +58,7 @@ export function EmptyState({
           <div
             className={cl(
               styles['empty-state-heading'],
-              styles['heading-small']
+              styles['heading-small'],
             )}
           >
             {headingTxt}
@@ -66,7 +66,7 @@ export function EmptyState({
           <div
             className={cl(
               styles['empty-state-description'],
-              styles['bodyshort-medium']
+              styles['bodyshort-medium'],
             )}
           >
             {descriptionTxt}
