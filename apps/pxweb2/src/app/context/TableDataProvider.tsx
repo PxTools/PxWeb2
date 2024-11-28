@@ -7,8 +7,14 @@ import {
   VariableSelection,
   VariablesSelection,
 } from '@pxweb2/pxweb2-api-client';
-import { PxTable, PxTableMetadata, getPxTableData, setPxTableData } from '@pxweb2/pxweb2-ui';
+import {
+  PxTable,
+  PxTableMetadata,
+  getPxTableData,
+  setPxTableData,
+} from '@pxweb2/pxweb2-ui';
 import { mapJsonStat2Response } from '../../mappers/JsonStat2ResponseMapper';
+import { template } from 'lodash';
 
 // Define types for the context state and provider props
 export interface TableDataContextType {
@@ -16,6 +22,8 @@ export interface TableDataContextType {
   /*   loading: boolean;
   error: string | null; */
   fetchTableData: (tableId: string, i18n: i18n) => void;
+  pivotToMobile: () => void;
+  pivotToDesktop: () => void;
 }
 
 interface TableDataProviderProps {
@@ -27,6 +35,10 @@ const TableDataContext = createContext<TableDataContextType | undefined>({
   data: undefined,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   fetchTableData: () => {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  pivotToMobile: () => {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  pivotToDesktop: () => {},
 });
 
 const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
@@ -81,6 +93,54 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       fetchWithValidAccData(tableId, i18n, variablesSelection);
     } else {
       fetchWithoutValidAccData(tableId, i18n, variablesSelection);
+    }
+  };
+
+  const pivotToMobile = () => {
+    if (data?.heading !== undefined) {
+      const tmpTable = structuredClone(data);
+
+      if (tmpTable !== undefined) {
+        tmpTable.heading.forEach((variable) => {
+          tmpTable.stub.push(variable);
+        });
+        tmpTable.heading = [];
+      }
+      //console.log("FØR" + JSON.stringify(tmpTable.stub))
+      tmpTable.stub.forEach((stub) => console.log(stub.id));
+      tmpTable.stub.sort((a, b) => a.values.length - b.values.length);
+      //console.log("ETTER" +JSON.stringify(tmpTable.stub));
+      tmpTable.stub.forEach((stub) => console.log(stub.id));
+      setData(tmpTable);
+    }
+  };
+
+  const pivotToDesktop = () => {
+    if (data?.heading !== undefined) {
+      const tmpTable = structuredClone(data);
+
+      if (tmpTable !== undefined) {
+        tmpTable.stub = [];
+        stub.forEach((id) => {
+          const variable = tmpTable.metadata.variables.find(
+            (variable) => variable.id === id
+          );
+          if (variable) {
+            tmpTable.stub.push(variable);
+          }
+        });
+
+        tmpTable.heading = [];
+        heading.forEach((id) => {
+          const variable = tmpTable.metadata.variables.find(
+            (variable) => variable.id === id
+          );
+          if (variable) {
+            tmpTable.heading.push(variable);
+          }
+        });
+      }
+      setData(tmpTable);
     }
   };
 
@@ -545,9 +605,9 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * @param dimensionIndex - The current index of the dimension being processed.
    * @param dimensionsMap - A mapping of dimension indices to their corresponding positions in the dimensions array.
    *
-   * This function recursively navigates through the dimensions of the data cubes. For each dimension, it finds the 
-   * corresponding variable in the new data cube and updates the accumulated data cube with the new values. If the 
-   * current dimension is the last one, it retrieves the data value from the new data cube and sets it in the 
+   * This function recursively navigates through the dimensions of the data cubes. For each dimension, it finds the
+   * corresponding variable in the new data cube and updates the accumulated data cube with the new values. If the
+   * current dimension is the last one, it retrieves the data value from the new data cube and sets it in the
    * accumulated data cube. Otherwise, it continues to the next dimension.
    */
   function updateCube(
@@ -673,7 +733,12 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
   return (
     <TableDataContext.Provider
-      value={{ data, /* loading, error  */ fetchTableData }}
+      value={{
+        data,
+        /* loading, error  */ fetchTableData,
+        pivotToMobile,
+        pivotToDesktop,
+      }}
     >
       {children}
     </TableDataContext.Provider>
