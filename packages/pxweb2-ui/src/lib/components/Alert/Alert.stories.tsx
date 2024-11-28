@@ -20,7 +20,7 @@ export const Variant = {
       'Statistikkbanken er for øyeblikket nede. Vi jobber med feilen og forventer å være opp igjen i løpet av ei uke eller 2, beklager så mye',
     onClick: () => {
       alert(
-        'Statistikkbanken er for øyeblikket nede. Vi jobber med feilen og forventer å være opp igjen i løpet av ei uke eller 2, beklager så mye '
+        'Statistikkbanken er for øyeblikket nede. Vi jobber med feilen og forventer å være opp igjen i løpet av ei uke eller 2, beklager så mye ',
       );
     },
   },
@@ -32,7 +32,7 @@ export const withlink: StoryFn<typeof Alert> = () => {
       <br />
       <div style={{ width: '480px' }}>
         <Alert variant="info" closeButton>
-          <Link href="http://www.ssb.no" inline>
+          <Link href="https://www.ssb.no" inline>
             SSB
           </Link>
         </Alert>
@@ -48,7 +48,7 @@ export const withtextandlink: StoryFn<typeof Alert> = () => {
       <div style={{ width: '480px' }}>
         <Alert variant="info" closeButton>
           Det finnes mer metadata om emnet. Dette kan du lese mer om her:{' '}
-          <Link href="http://www.ssb.no" inline>
+          <Link href="https://www.ssb.no" inline>
             SSB
           </Link>
         </Alert>
