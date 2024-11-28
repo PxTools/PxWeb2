@@ -8,7 +8,8 @@
   "devDependencies": {},
   "scripts": {
     "build": "vite build",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "echo 'No tests for @pxweb2/pxweb2-api-client'"
   },
   "author": "",
   "license": "MIT"
