@@ -211,8 +211,10 @@ export function VariableBoxContent({
     const item = items[index];
 
     // There is a race condition with virtuoso where item can be undefined
+    // Virtuoso will also complain if we return null or similar, so we return an empty div
+    // This empty div will be removed by the Virtuoso component, and won't be rendered
     if (item === undefined) {
-      return;
+      return <div></div>;
     }
 
     if (item.type === 'search') {
