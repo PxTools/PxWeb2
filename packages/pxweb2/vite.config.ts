@@ -19,11 +19,6 @@ export default defineConfig({
 
   plugins: [react()],
 
-  // Uncomment this if you are using workers.
-  // worker: {
-  //  plugins: [ nxViteTsPaths() ],
-  // },
-
   build: {
     outDir: './dist/',
     reportCompressedSize: true,
