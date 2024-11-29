@@ -14,7 +14,6 @@ import {
   setPxTableData,
 } from '@pxweb2/pxweb2-ui';
 import { mapJsonStat2Response } from '../../mappers/JsonStat2ResponseMapper';
-import { set } from 'lodash';
 
 // Define types for the context state and provider props
 export interface TableDataContextType {
@@ -52,6 +51,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     undefined
   );
 
+  // State for mobile mode. If mobile mode data will be pivoted so that all variables are in the stub.
   const [isMobileMode, setIsMobileMode] = useState<boolean>(false);
 
   // Variables in the stub (desktop table)
@@ -137,7 +137,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     );
 
     //handleStubAndHeading(pxTable, i18n, isMobile);
-    initializeStubAndHeading(pxTable, i18n, isMobile);
+    initializeStubAndHeading(pxTable, isMobile);
     setData(pxTable);
 
     // Store as accumulated data
@@ -163,7 +163,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       const pxTable = createPxTableFromAccumulatedData(variablesSelection);
 
       if (pxTable) {
-        handleStubAndHeading2(pxTable, isMobile);
+        pivotForDevice(pxTable, isMobile);
         setData(pxTable);
         return;
       }
@@ -197,7 +197,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       pxTable = pxTableMerged;
     }
 
-    handleStubAndHeading2(pxTable, isMobile);
+    pivotForDevice(pxTable, isMobile);
     setData(pxTable);
   };
 
@@ -648,83 +648,79 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     }
   }
 
+  // /**
+  //  * Remember order of variables in stub and heading when table setup is changed.
+  //  *
+  //  * @param pxTable - PxTable containing the data and metadata for display in table.
+  //  * @param i18n - The i18n object for handling langauages
+  //  */
+  // function handleStubAndHeading(
+  //   pxTable: PxTable,
+  //   i18n: i18n,
+  //   isMobile: boolean
+  // ) {
+  //   if (
+  //     accumulatedData === undefined ||
+  //     accumulatedData.metadata.id !== pxTable.metadata.id
+  //   ) {
+  //     // First time we get data OR we have a new table.
+  //     // -> Set stub and heading according to the order in pxTable
+  //     const stubOrder: string[] = pxTable.stub.map((variable) => variable.id);
+  //     const headingOrder: string[] = pxTable.heading.map(
+  //       (variable) => variable.id
+  //     );
+  //     setStubDesktop(stubOrder);
+  //     setHeadingDesktop(headingOrder);
+  //   } else {
+  //     // Language has changed.
+  //     // -> Set stub and heading in pxTable according to the order in state
+  //     pxTable.stub = [];
+  //     stubDesktop.forEach((id) => {
+  //       const variable = pxTable.metadata.variables.find(
+  //         (variable) => variable.id === id
+  //       );
+  //       if (variable) {
+  //         pxTable.stub.push(variable);
+  //       }
+  //     });
+  //     pxTable.heading = [];
+  //     headingDesktop.forEach((id) => {
+  //       const variable = pxTable.metadata.variables.find(
+  //         (variable) => variable.id === id
+  //       );
+  //       if (variable) {
+  //         pxTable.heading.push(variable);
+  //       }
+  //     });
+
+  //     // Find all new variables and add them to the stub
+  //     const remainingVariables = pxTable.metadata.variables.filter(
+  //       (variable) =>
+  //         !stubDesktop.includes(variable.id) &&
+  //         !headingDesktop.includes(variable.id)
+  //     );
+
+  //     if (remainingVariables.length > 0) {
+  //       const newStub = structuredClone(stubDesktop);
+
+  //       remainingVariables.forEach((variable) => {
+  //         if (!newStub.includes(variable.id)) {
+  //           pxTable.stub.push(variable);
+  //           newStub.push(variable.id);
+  //         }
+  //       });
+  //       setStubDesktop(newStub);
+  //     }
+  //   }
+  // }
+
   /**
    * Remember order of variables in stub and heading when table setup is changed.
    *
    * @param pxTable - PxTable containing the data and metadata for display in table.
-   * @param i18n - The i18n object for handling langauages
+   * @param isMobile - If the device is mobile or not.
    */
-  function handleStubAndHeading(
-    pxTable: PxTable,
-    i18n: i18n,
-    isMobile: boolean
-  ) {
-    if (
-      accumulatedData === undefined ||
-      accumulatedData.metadata.id !== pxTable.metadata.id
-    ) {
-      // First time we get data OR we have a new table.
-      // -> Set stub and heading according to the order in pxTable
-      const stubOrder: string[] = pxTable.stub.map((variable) => variable.id);
-      const headingOrder: string[] = pxTable.heading.map(
-        (variable) => variable.id
-      );
-      setStubDesktop(stubOrder);
-      setHeadingDesktop(headingOrder);
-    } else {
-      // Language has changed.
-      // -> Set stub and heading in pxTable according to the order in state
-      pxTable.stub = [];
-      stubDesktop.forEach((id) => {
-        const variable = pxTable.metadata.variables.find(
-          (variable) => variable.id === id
-        );
-        if (variable) {
-          pxTable.stub.push(variable);
-        }
-      });
-      pxTable.heading = [];
-      headingDesktop.forEach((id) => {
-        const variable = pxTable.metadata.variables.find(
-          (variable) => variable.id === id
-        );
-        if (variable) {
-          pxTable.heading.push(variable);
-        }
-      });
-
-      // Find all new variables and add them to the stub
-      const remainingVariables = pxTable.metadata.variables.filter(
-        (variable) =>
-          !stubDesktop.includes(variable.id) &&
-          !headingDesktop.includes(variable.id)
-      );
-
-      if (remainingVariables.length > 0) {
-        const newStub = structuredClone(stubDesktop);
-
-        remainingVariables.forEach((variable) => {
-          if (!newStub.includes(variable.id)) {
-            pxTable.stub.push(variable);
-            newStub.push(variable.id);
-          }
-        });
-        setStubDesktop(newStub);
-      }
-    }
-  }
-
-  /**
-   * Remember order of variables in stub and heading when table setup is changed.
-   *
-   * @param pxTable - PxTable containing the data and metadata for display in table.
-   * @param i18n - The i18n object for handling langauages
-   */
-  function initializeStubAndHeading(
-    pxTable: PxTable,
-    i18n: i18n,
-    isMobile: boolean
-  ) {
+  function initializeStubAndHeading(pxTable: PxTable, isMobile: boolean) {
     if (
       accumulatedData === undefined ||
       accumulatedData.metadata.id !== pxTable.metadata.id
@@ -792,6 +788,10 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     }
   }
 
+  /**
+   * Pivots the table to mobile layout.
+   * This function updates the table structure to fit a mobile layout by adjusting the stub and heading order.
+   */
   const pivotToMobile = () => {
     if (data?.heading !== undefined) {
       const tmpTable = structuredClone(data);
@@ -804,6 +804,10 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     }
   };
 
+  /**
+   * Pivots the table to desktop layout.
+   * This function updates the table structure to fit a desktop layout by adjusting the stub and heading order.
+   */
   const pivotToDesktop = () => {
     if (data?.heading !== undefined) {
       const tmpTable = structuredClone(data);
@@ -841,12 +845,10 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
         if (stub.length > 0 && heading.length > 0) {
           stub.push(heading.pop() as string);
-          heading.unshift(stub.shift() as string)
-        }
-        else if (stub.length === 0) {
+          heading.unshift(stub.shift() as string);
+        } else if (stub.length === 0) {
           heading.unshift(heading.pop() as string);
-        }
-        else if (heading.length === 0) {
+        } else if (heading.length === 0) {
           stub.unshift(stub.pop() as string);
         }
 
@@ -864,6 +866,23 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     }
   }
 
+  /**
+   * Adjusts the table layout based on the device type.
+   *
+   * @param {PxTable} pxTable - The table to be pivoted.
+   * @param {boolean} isMobile - A flag indicating if the device is mobile.
+   */
+  function pivotForDevice(pxTable: PxTable, isMobile: boolean) {
+    if (isMobile) {
+      pivotTable(pxTable, stubMobile, headingMobile);
+    } else {
+      pivotTable(pxTable, stubDesktop, headingDesktop);
+    }
+  }
+
+  /**
+   * Pivots the table according to the stub- and heading order.
+   */
   function pivotTable(pxTable: PxTable, stub: string[], heading: string[]) {
     // - pivot pxTable according to stub- and heading order
     pxTable.stub = [];
@@ -884,15 +903,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         pxTable.heading.push(variable);
       }
     });
-  }
-
-  // Called after we got a PxTable from the API. Fixes pivot of stub and heading.
-  function handleStubAndHeading2(pxTable: PxTable, isMobile: boolean) {
-    if (isMobile) {
-      pivotTable(pxTable, stubMobile, headingMobile);
-    } else {
-      pivotTable(pxTable, stubDesktop, headingDesktop);
-    }
   }
 
   return (
