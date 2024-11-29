@@ -7,7 +7,7 @@ import isEqual from 'lodash/isEqual';
 
 import styles from './Presentation.module.scss';
 import { ContentTop } from '../ContentTop/ContentTop';
-import { Table, EmptyState, PxTable } from '@pxweb2/pxweb2-ui';
+import { Table, EmptyState, PxTable, Button } from '@pxweb2/pxweb2-ui';
 import useTableData from '../../context/useTableData';
 import useVariables from '../../context/useVariables';
 import { useDebounce } from '@uidotdev/usehooks';
@@ -89,11 +89,9 @@ export function Presentation({ selectedTabId, isMobile }: propsType) {
 
   useEffect(() => {
     if (isMobile) {
-      console.log('pivot to mobile');
       tableData.pivotToMobile();
     }
     else {
-      console.log('pivot to desktop');
       tableData.pivotToDesktop();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps    
@@ -160,6 +158,13 @@ export function Presentation({ selectedTabId, isMobile }: propsType) {
               className={styles.gradientContainer}
               ref={gradientContainerRef}
             >
+              <Button
+              variant="primary"
+              size="medium"
+              onClick={() => tableData.pivotCW()}
+              >
+                Pivot CW
+              </Button>
               <div className={styles.tableContainer} ref={tableContainerRef}>
                 <MemoizedTable pxtable={tableData.data} isMobile={isMobile} />
               </div>

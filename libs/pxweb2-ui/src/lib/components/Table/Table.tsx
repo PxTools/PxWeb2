@@ -58,19 +58,13 @@ export function Table({ pxtable, isMobile, className = '' }: TableProps) {
   }
 
   return (
-    <>
-    {isMobile && (
-      <span>Mobile</span>
-    )}{' '}
-
-  <table
+    <table
       className={cl(classes.table, classes[`bodyshort-medium`]) + cssClasses}
       aria-label={pxtable.metadata.label}
     >
       <thead>{createHeading(pxtable, tableMeta, headingDataCellCodes)}</thead>
       <tbody>{createRows(pxtable, tableMeta, headingDataCellCodes)}</tbody>
     </table>
-    </>
   );
 }
 
