@@ -5,7 +5,6 @@ import classes from './Search.module.scss';
 import { Icon } from '../Icon/Icon';
 import { Label } from '../Typography/Label/Label';
 import { Button } from '../Button/Button';
-import { table } from 'console';
 
 export interface SearchProps {
   variant: 'default' | 'inVariableBox';
