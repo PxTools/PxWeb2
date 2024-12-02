@@ -14,10 +14,9 @@ nav:
     - Plans: project/plans.md
     - Process: project/process.md
   - Documentation:
-    - Customization:
-      - Themes: documentation/customization/themes.md
-      - Languages: documentation/customization/languages.md
-      
+    - Docker: documentation/docker.md
+    - Customization: documentation/customization.md
+
 
 
 extra_css:
@@ -98,7 +97,7 @@ markdown_extensions:
       generic: true
   - pymdownx.betterem:
       smart_enable: all
-  - pymdownx.caret  
+  - pymdownx.caret
   - pymdownx.details
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
