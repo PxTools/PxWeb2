@@ -1,0 +1,38 @@
+{
+  "name": "@pxweb2/pxweb2-ui",
+  "version": "0.0.1",
+  "main": "./src/index.ts",
+  "scripts": {
+    "start": "npm run storybook",
+    "build": "vite build",
+    "build-style-dictionary": "node ./style-dictionary/build.mjs",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "lint": "eslint",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@vitejs/plugin-react": "^4.3.3",
+    "clsx": "^2.1.1",
+    "framer-motion": "^11.11.17",
+    "react-i18next": "^15.1.1",
+    "vite-plugin-dts": "^4.3.0"
+  },
+  "devDependencies": {
+    "@chromatic-com/storybook": "^3.2.2",
+    "@storybook/addon-essentials": "^8.4.5",
+    "@storybook/addon-interactions": "^8.4.5",
+    "@storybook/addon-onboarding": "^8.4.5",
+    "@storybook/blocks": "^8.4.5",
+    "@storybook/react": "^8.4.5",
+    "@storybook/react-vite": "^8.4.5",
+    "@storybook/test": "^8.4.5",
+    "@testing-library/react": "^15.0.7",
+    "prop-types": "^15.8.1",
+    "storybook": "^8.4.5",
+    "vitest": "^2.1.6"
+  }
+}
