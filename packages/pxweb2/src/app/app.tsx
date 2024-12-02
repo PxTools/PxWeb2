@@ -11,7 +11,7 @@ import NavigationRail from './components/NavigationMenu/NavigationRail/Navigatio
 import NavigationBar from './components/NavigationMenu/NavigationBar/NavigationBar';
 
 import { Footer } from './components/Footer/Footer';
-import { BreakpointsSmallMaxWidth } from '@pxweb2/pxweb2-ui';
+import { BreakpointsSmallMaxWidth, BreakpointsXsmallMaxWidth } from '@pxweb2/pxweb2-ui';
 import { getConfig } from './util/config/getConfig';
 import { OpenAPI } from '@pxweb2/pxweb2-api-client';
 
@@ -28,16 +28,25 @@ export function App() {
     useState<NavigationItem>('filter');
 
   /**
-   * Keep state if window screen size is mobile or desktop.
+   * Keep state if window screen size is a small device (mobile or pad).
    */
-  const mobileBreakpoint = Number(BreakpointsSmallMaxWidth.replace('px', ''));
-  const [isMobile, setIsMobile] = useState(
-    window.innerWidth <= mobileBreakpoint
+  const smallBreakpoint = Number(BreakpointsSmallMaxWidth.replace('px', ''));
+  const [isSmallDevice, setIsSmallDevice] = useState(
+    window.innerWidth <= smallBreakpoint
   );
 
+  /**
+   * Keep state if window screen size is a xsmall device (mobile).
+   */
+  const xSmallBreakpoint = Number(BreakpointsXsmallMaxWidth.replace('px', ''));
+  const [isXSmallDevice, setIsXSmallDevice] = useState(
+    window.innerWidth <= xSmallBreakpoint
+  );
+  
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= mobileBreakpoint);
+      setIsSmallDevice(window.innerWidth <= smallBreakpoint);
+      setIsXSmallDevice(window.innerWidth <= xSmallBreakpoint);
     };
 
     window.addEventListener('resize', handleResize);
@@ -45,7 +54,7 @@ export function App() {
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, [mobileBreakpoint]);
+  }, [smallBreakpoint]);
 
   useEffect(() => {
     if (errorMsg !== '') {
@@ -64,9 +73,9 @@ export function App() {
 
   return (
     <>
-      {!isMobile && <Header />}{' '}
+      {!isSmallDevice && <Header />}{' '}
       <div className={styles.navigationAndContentContainer}>
-        {!isMobile && (
+        {!isSmallDevice && (
           <NavigationRail
             onChange={changeSelectedNavView}
             selected={selectedNavigationView}
@@ -79,13 +88,13 @@ export function App() {
             setSelectedNavigationView={changeSelectedNavView}
           />
           <div className={styles.contentAndFooterContainer}>
-            {isMobile && <Header />}{' '}
-            <Presentation selectedTabId={selectedTableId} isMobile={isMobile}></Presentation>
+            {isSmallDevice && <Header />}{' '}
+            <Presentation selectedTabId={selectedTableId} isMobile={isXSmallDevice}></Presentation>
             <Footer />
           </div>
         </div>
       </div>
-      {isMobile && (
+      {isSmallDevice && (
         <NavigationBar
           onChange={changeSelectedNavView}
           selected={selectedNavigationView}
