@@ -5,6 +5,7 @@ updates:
     schedule:
       interval: "weekly"
     versioning-strategy: lockfile-only
+    open-pull-requests-limit: 20
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
