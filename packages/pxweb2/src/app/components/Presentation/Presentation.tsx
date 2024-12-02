@@ -18,7 +18,7 @@ type propsType = {
 
 const MemoizedTable = React.memo(
   ({ pxtable }: { pxtable: PxTable }) => <Table pxtable={pxtable} />,
-  (prevProps, nextProps) => isEqual(prevProps.pxtable, nextProps.pxtable)
+  (prevProps, nextProps) => isEqual(prevProps.pxtable, nextProps.pxtable),
 );
 export function Presentation({ selectedTabId }: propsType) {
   const { i18n, t } = useTranslation();
@@ -94,8 +94,8 @@ export function Presentation({ selectedTabId }: propsType) {
         selectedVBValues.some(
           (selectedVariable) =>
             selectedVariable.id === variable.id &&
-            selectedVariable.values.length > 0
-        )
+            selectedVariable.values.length > 0,
+        ),
       );
 
     if (initialRun && !hasSelectedValues) {
@@ -157,10 +157,10 @@ export function Presentation({ selectedTabId }: propsType) {
             <EmptyState
               svgName="ManWithMagnifyingGlass"
               headingTxt={t(
-                'presentation_page.main_content.table.warnings.missing_mandatory.title'
+                'presentation_page.main_content.table.warnings.missing_mandatory.title',
               )}
               descriptionTxt={t(
-                'presentation_page.main_content.table.warnings.missing_mandatory.description'
+                'presentation_page.main_content.table.warnings.missing_mandatory.description',
               )}
             />
           )}

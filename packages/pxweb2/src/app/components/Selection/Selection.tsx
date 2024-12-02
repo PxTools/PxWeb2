@@ -24,7 +24,7 @@ function addSelectedCodeListToVariable(
   currentVariable: SelectedVBValues | undefined,
   selectedValuesArr: SelectedVBValues[],
   varId: string,
-  selectedItem: SelectOption
+  selectedItem: SelectOption,
 ): SelectedVBValues[] {
   let newSelectedValues: SelectedVBValues[] = [];
 
@@ -58,7 +58,7 @@ function addSelectedCodeListToVariable(
 function addValueToVariable(
   selectedValuesArr: SelectedVBValues[],
   varId: string,
-  value: Value['code']
+  value: Value['code'],
 ) {
   const newSelectedValues = selectedValuesArr.map((variable) => {
     if (variable.id === varId) {
@@ -74,7 +74,7 @@ function addValueToVariable(
 function addValueToNewVariable(
   selectedValuesArr: SelectedVBValues[],
   varId: string,
-  value: Value['code']
+  value: Value['code'],
 ) {
   const newSelectedValues = [
     ...selectedValuesArr,
@@ -103,7 +103,7 @@ async function getCodeListValues(id: string, lang: string): Promise<Value[]> {
 function removeValueOfVariable(
   selectedValuesArr: SelectedVBValues[],
   varId: string,
-  value: Value['code']
+  value: Value['code'],
 ) {
   const newSelectedValues = selectedValuesArr
     .map((variable) => {
@@ -136,10 +136,10 @@ function addMultipleValuesToVariable(
   selectedValuesArr: SelectedVBValues[],
   varId: string,
   valuesToAdd: Value[],
-  searchedValues: Value[]
+  searchedValues: Value[],
 ): SelectedVBValues[] {
   const currentVariable = selectedValuesArr.find(
-    (variable) => variable.id === varId
+    (variable) => variable.id === varId,
   );
   let newSelectedValues: SelectedVBValues[] = [];
 
@@ -149,7 +149,7 @@ function addMultipleValuesToVariable(
         const prevValues = [...variable.values];
         const valuesList = valuesToAdd
           .filter(
-            (v) => prevValues.includes(v.code) || searchedValues.includes(v)
+            (v) => prevValues.includes(v.code) || searchedValues.includes(v),
           )
           .map((value) => value.code);
         variable.values = valuesList;
@@ -175,7 +175,7 @@ function addMultipleValuesToVariable(
 
 function removeAllValuesOfVariable(
   selectedValuesArr: SelectedVBValues[],
-  varId: string
+  varId: string,
 ): SelectedVBValues[] {
   const newValues: SelectedVBValues[] = selectedValuesArr
     .map((variable) => {
@@ -254,11 +254,11 @@ export function Selection({
       selectedTabId,
       i18n.resolvedLanguage,
       outputFormat,
-      metaDataDefaultSelection
+      metaDataDefaultSelection,
     )
       .then((tableMetadataResponse) => {
         const pxTabMetadata: PxTableMetadata = mapTableMetadataResponse(
-          tableMetadataResponse
+          tableMetadataResponse,
         );
 
         setPxTableMetadata(pxTabMetadata);
@@ -281,11 +281,11 @@ export function Selection({
       TableService.getDefaultSelection(selectedTabId, i18n.resolvedLanguage)
         .then((selectionResponse) => {
           const defaultSelection = mapTableSelectionResponse(
-            selectionResponse
+            selectionResponse,
           ).filter(
             (variable) =>
               variable.values.length > 0 ||
-              variable.selectedCodeList !== undefined
+              variable.selectedCodeList !== undefined,
           );
           setSelectedVBValues(defaultSelection);
           variables.syncVariablesAndValues(defaultSelection);
@@ -305,14 +305,14 @@ export function Selection({
 
   async function handleCodeListChange(
     selectedItem: SelectOption | undefined,
-    varId: string
+    varId: string,
   ) {
     const prevSelectedValues = structuredClone(selectedVBValues);
     const currentVariableMetadata = pxTableMetaToRender?.variables.find(
-      (variable) => variable.id === varId
+      (variable) => variable.id === varId,
     );
     const currentSelectedVariable = prevSelectedValues.find(
-      (variable) => variable.id === varId
+      (variable) => variable.id === varId,
     );
     const lang = i18n.resolvedLanguage;
 
@@ -332,7 +332,7 @@ export function Selection({
     }
 
     const newSelectedCodeList = currentVariableMetadata?.codeLists?.find(
-      (codelist) => codelist.id === selectedItem.value
+      (codelist) => codelist.id === selectedItem.value,
     );
 
     if (!newSelectedCodeList) {
@@ -345,19 +345,19 @@ export function Selection({
       currentSelectedVariable,
       prevSelectedValues,
       varId,
-      newMappedSelectedCodeList
+      newMappedSelectedCodeList,
     );
 
     //  Get the values for the chosen code list
     const valuesForChosenCodeList: Value[] = await getCodeListValues(
       newMappedSelectedCodeList.value,
-      lang
+      lang,
     ).catch((error) => {
       console.error(
         'Could not get values for code list: ' +
           newMappedSelectedCodeList.value +
           ' ' +
-          error
+          error,
       );
       return [];
     });
@@ -406,7 +406,7 @@ export function Selection({
       const newSelectedValues = removeValueOfVariable(
         prevSelectedValues,
         varId,
-        value
+        value,
       );
 
       updateAndSyncVBValues(newSelectedValues);
@@ -415,7 +415,7 @@ export function Selection({
       const newSelectedValues = addValueToVariable(
         prevSelectedValues,
         varId,
-        value
+        value,
       );
 
       updateAndSyncVBValues(newSelectedValues);
@@ -424,7 +424,7 @@ export function Selection({
       const newSelectedValues = addValueToNewVariable(
         prevSelectedValues,
         varId,
-        value
+        value,
       );
 
       updateAndSyncVBValues(newSelectedValues);
@@ -434,14 +434,14 @@ export function Selection({
   const handleMixedCheckboxChange = (
     varId: string,
     allValuesSelected: string,
-    searchValues: Value[]
+    searchValues: Value[],
   ) => {
     const prevSelectedValues = structuredClone(selectedVBValues);
 
     if (allValuesSelected === 'true') {
       const newSelectedValues = removeAllValuesOfVariable(
         prevSelectedValues,
-        varId
+        varId,
       );
       updateAndSyncVBValues(newSelectedValues);
     }
@@ -453,7 +453,7 @@ export function Selection({
         prevSelectedValues,
         varId,
         allValuesOfVariable,
-        searchValues
+        searchValues,
       );
       updateAndSyncVBValues(newSelectedValues);
     }

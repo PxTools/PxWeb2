@@ -21,7 +21,7 @@ export function App() {
 
   const { tableId } = useParams<{ tableId: string }>();
   const [selectedTableId, setSelectedTableId] = useState(
-    tableId ? tableId : 'tab638'
+    tableId ? tableId : 'tab638',
   );
   const [errorMsg, setErrorMsg] = useState('');
   const [selectedNavigationView, setSelectedNavigationView] =
@@ -32,7 +32,7 @@ export function App() {
    */
   const mobileBreakpoint = Number(BreakpointsSmallMaxWidth.replace('px', ''));
   const [isMobile, setIsMobile] = useState(
-    window.innerWidth <= mobileBreakpoint
+    window.innerWidth <= mobileBreakpoint,
   );
 
   useEffect(() => {
