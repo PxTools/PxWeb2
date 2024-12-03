@@ -118,7 +118,7 @@ export function VariableBoxContent({
 
   useEffect(() => {
 
-    function compareSearchedAndChosenValues (searchedValues: string | any[], chosenValues: string | any[]) {
+    function compareSearchedAndChosenValues (searchedValues: string | Value[], chosenValues: string | Value[]) {
       const compareArrays = Array.isArray(searchedValues)
         ? searchedValues.map((searchedValue) => searchedValue.code).filter((value: string) => chosenValues.includes(value))
         : [];
