@@ -31,7 +31,11 @@ to run alt least two containers.
     git clone https://github.com/PxTools/PxWebApi.git
     ```
 
-## PX-file database
+## Database
+
+Follow instructions for one of the databases
+
+### PX-file database
 
 - Obtain a **copy** of a PX-file database from a PxWeb 2023 (or older) installation
 
@@ -51,15 +55,31 @@ to run alt least two containers.
     cd ../../../
     ```
 
+### CNMM database
+
+- It is possible to connect to a CNMM database from Docker, subject to your
+  office's local security policies.
+
+    These are the files you need to change. A detailed description is in the
+    [customization chapter](customization.md).
+
+    ```sh
+    docker/pxwebapi/appsettings.json
+    docker/pxwebapi/SqlDb.config
+    ```
+
+## Start Docker
+
 - Start PxWebApi and PxWeb
 
     ```sh
     docker compose up
     ```
 
-  During (every) startup in this demo, the `Menu.xml` and searchindex `_INDEX`
-  folder will be regenerated. This can take some time on lager databases. Since
-  we are still in beta, please do not run this on your production servers.
+  During (every) startup in this demo, the `Menu.xml` (PX-file database) and
+  searchindex `_INDEX` folder will be regenerated. This can take some time on
+  lager databases. Since we are still in beta, please do not run this on your
+  production servers.
 
 - Your API should now be running on
 
@@ -75,7 +95,3 @@ to run alt least two containers.
     If you used the tinydatabase.zip this is a valid link
 
     - <http://localhost:8080/table/TAB004>
-
-## CNMM database
-
-comming soon
