@@ -752,13 +752,24 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       setHeadingDesktop(headingOrderDesktop);
 
       // -> Set stub and heading order for mobile according to the order in pxTable
-      const stubOrderMobile: string[] = pxTable.stub.map(
+      const tmpStubMobile = structuredClone(pxTable.stub);
+      const tmpHeadingMobile = structuredClone(pxTable.heading);
+
+      tmpHeadingMobile.forEach((variable) => {
+        tmpStubMobile.push(variable);
+      });
+
+      tmpStubMobile.sort((a, b) => a.values.length - b.values.length);
+
+      const stubOrderMobile: string[] = tmpStubMobile.map(
         (variable) => variable.id
       );
-      pxTable.heading.forEach((variable) => {
-        stubOrderMobile.push(variable.id);
-      });
+      // pxTable.heading.forEach((variable) => {
+      //   stubOrderMobile.push(variable.id);
+      // });
+      
       const headingOrderMobile: string[] = [];
+      
       setStubMobile(stubOrderMobile);
       setHeadingMobile(headingOrderMobile);
 

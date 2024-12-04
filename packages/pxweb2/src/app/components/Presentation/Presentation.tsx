@@ -158,13 +158,13 @@ export function Presentation({ selectedTabId, isMobile }: propsType) {
               className={styles.gradientContainer}
               ref={gradientContainerRef}
             >
-              <Button
+              {/* <Button
               variant="primary"
               size="medium"
               onClick={() => tableData.pivotCW()}
               >
                 Pivot CW
-              </Button>
+              </Button> */}
               <div className={styles.tableContainer} ref={tableContainerRef}>
                 <MemoizedTable pxtable={tableData.data} isMobile={isMobile} />
               </div>
