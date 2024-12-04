@@ -16,7 +16,8 @@
   "dependencies": {
     "@uidotdev/usehooks": "^2.4.1",
     "react-virtuoso": "^4.12.1",
-    "sass": "^1.81.0"
+    "sass": "^1.81.0",
+    "vite": "^6.0.2"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "7.17.0",
