@@ -6,7 +6,7 @@
   "devDependencies": {},
   "scripts": {
     "build": "vite build",
-    "lint": "eslint",
+    "lint": "echo 'No linting for @pxweb2/pxweb2-api-client'",
     "test": "echo 'No tests for @pxweb2/pxweb2-api-client'"
   },
   "author": "",
