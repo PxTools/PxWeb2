@@ -103,6 +103,8 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       tableId,
     );
 
+    //console.log({ validAccData });
+
     if (validAccData) {
       fetchWithValidAccData(tableId, i18n, isMobile, variablesSelection);
     } else {
@@ -158,16 +160,26 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     variablesSelection: VariablesSelection
   ) => {
     // Check if all data and metadata asked for by the user is already loaded from earlier API-calls
+    // BUG!
+    // TODO: There is a bug in isAllDataAlreadyLoaded. Sometimes the function thinks everything has been loaded when it accually is not.
+    // Rewrite isAllDataAlreadyLoaded to check if data cells exists in accumulated data cube?
     if (isAllDataAlreadyLoaded(variablesSelection)) {
+      //console.log('All data already loaded');
       // All data and metadata asked for by the user is already loaded in accumulatedData. No need for a new API-call. Create a pxTable from accumulatedData instead.
       const pxTable = createPxTableFromAccumulatedData(variablesSelection);
 
       if (pxTable) {
+        // BUG QUICKFIX
+        // TODO: This is a quick fix for the bug mentioned above. When the user has deselected values we store the new table as the accumeulated data.
+        // This is not very good since we will lose data already loaded...
+        // setAccumulatedData(structuredClone(pxTable));
+
         pivotForDevice(pxTable, isMobile);
         setData(pxTable);
         return;
       }
     }
+    //console.log('All data NOT already loaded');
 
     let varSelection: VariablesSelection = variablesSelection;
     let diffVariablesSelection: VariablesSelection = { selection: [] };
@@ -175,6 +187,8 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     // We need to make a new API-call to get the data and metadata not already loaded in accumulatedData
     // Make the API-call as small as possible
     diffVariablesSelection = getDiffVariablesSelection(variablesSelection);
+
+    console.log({ diffVariablesSelection });
 
     if (diffVariablesSelection.selection.length > 0) {
       varSelection = getMinimumVariablesSelection(
