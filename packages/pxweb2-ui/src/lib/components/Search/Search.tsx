@@ -40,11 +40,10 @@ export function Search({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'Escape' ) {
-      if (inputRef.current?.value.trim() === ""){
+    if (e.key === 'Escape') {
+      if (inputRef.current?.value.trim() === '') {
         inputRef.current?.blur();
-      }
-      else{
+      } else {
         handleClear();
       }
     }

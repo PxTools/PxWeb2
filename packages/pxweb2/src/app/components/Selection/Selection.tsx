@@ -158,22 +158,22 @@ function removeMultipleValuesToVariable(
   selectedValuesArr: SelectedVBValues[],
   varId: string,
   valuesToAdd: Value[],
-  searchedValues: Value[]
+  searchedValues: Value[],
 ): SelectedVBValues[] {
-const currentVariable = selectedValuesArr.find(
-    (variable) => variable.id === varId
+  const currentVariable = selectedValuesArr.find(
+    (variable) => variable.id === varId,
   );
   let newSelectedValues: SelectedVBValues[] = [];
 
   if (currentVariable) {
     newSelectedValues = selectedValuesArr.map((variable) => {
-       if (variable.id === varId) {
+      if (variable.id === varId) {
         const prevValues = [...variable.values];
-        const valuesList = valuesToAdd
-          .filter(v => prevValues.includes(v.code) || searchedValues.includes(v))
-          .map(value => value.code);
+        const valuesList = prevValues.filter(
+          (val) => !searchedValues.some((v) => v.code === val),
+        );
         variable.values = valuesList;
-       }
+      }
       return variable;
     });
   }
@@ -183,49 +183,15 @@ const currentVariable = selectedValuesArr.find(
       {
         id: varId,
         selectedCodeList: undefined,
-        values: valuesToAdd.filter(v => searchedValues.includes(v)).map((value) => value.code),
+        values: valuesToAdd
+          .filter((v) => searchedValues.includes(v))
+          .map((value) => value.code),
       },
     ];
   }
 
   return newSelectedValues;
 }
-
-function removeMultipleValuesToVariable(
-  selectedValuesArr: SelectedVBValues[],
-  varId: string,
-  valuesToAdd: Value[],
-  searchedValues: Value[]
-): SelectedVBValues[] {
-const currentVariable = selectedValuesArr.find(
-    (variable) => variable.id === varId
-  );
-  let newSelectedValues: SelectedVBValues[] = [];
-
-  if (currentVariable) {
-    newSelectedValues = selectedValuesArr.map((variable) => {
-       if (variable.id === varId) {
-        const prevValues = [...variable.values];
-        const valuesList = prevValues.filter(val => !searchedValues.some(v => v.code === val));
-        variable.values = valuesList;
-       }
-      return variable;
-    });
-  }
-  if (!currentVariable) {
-    newSelectedValues = [
-      ...selectedValuesArr,
-      {
-        id: varId,
-        selectedCodeList: undefined,
-        values: valuesToAdd.filter(v => searchedValues.includes(v)).map((value) => value.code),
-      },
-    ];
-  }
-
-  return newSelectedValues;
-}
-
 
 function removeAllValuesOfVariable(
   selectedValuesArr: SelectedVBValues[],
@@ -467,7 +433,7 @@ export function Selection({
   ) => {
     const prevSelectedValues = structuredClone(selectedVBValues);
 
-    if (allValuesSelected === 'false' || allValuesSelected === 'mixed')  {
+    if (allValuesSelected === 'false' || allValuesSelected === 'mixed') {
       const allValuesOfVariable =
         pxTableMetaToRender?.variables.find((variable) => variable.id === varId)
           ?.values || [];
@@ -478,8 +444,7 @@ export function Selection({
         searchValues,
       );
       updateAndSyncVBValues(newSelectedValues);
-    }
-    else if (allValuesSelected === 'true' &&  searchValues.length > 0) {
+    } else if (allValuesSelected === 'true' && searchValues.length > 0) {
       const allValuesOfVariable =
         pxTableMetaToRender?.variables.find((variable) => variable.id === varId)
           ?.values || [];
@@ -487,11 +452,10 @@ export function Selection({
         prevSelectedValues,
         varId,
         allValuesOfVariable,
-        searchValues
+        searchValues,
       );
-     updateAndSyncVBValues(newSelectedValues);
-    }
-    else if (allValuesSelected === 'true' &&  searchValues.length > 0) {
+      updateAndSyncVBValues(newSelectedValues);
+    } else if (allValuesSelected === 'true' && searchValues.length > 0) {
       const allValuesOfVariable =
         pxTableMetaToRender?.variables.find((variable) => variable.id === varId)
           ?.values || [];
@@ -499,14 +463,13 @@ export function Selection({
         prevSelectedValues,
         varId,
         allValuesOfVariable,
-        searchValues
+        searchValues,
       );
-     updateAndSyncVBValues(newSelectedValues);
-    }
-    else if (allValuesSelected === 'true') {
+      updateAndSyncVBValues(newSelectedValues);
+    } else if (allValuesSelected === 'true') {
       const newSelectedValues = removeAllValuesOfVariable(
         prevSelectedValues,
-        varId
+        varId,
       );
       updateAndSyncVBValues(newSelectedValues);
     }

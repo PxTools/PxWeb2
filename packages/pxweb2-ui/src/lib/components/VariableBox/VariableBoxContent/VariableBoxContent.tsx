@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState,useMemo } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { useDebounce } from '@uidotdev/usehooks';
@@ -16,7 +16,6 @@ import Skeleton from '../../Skeleton/Skeleton';
 import { mapCodeListsToSelectOptions } from '../../../util/util';
 import { BodyShort } from '../../Typography/BodyShort/BodyShort';
 import Heading from '../../Typography/Heading/Heading';
-
 
 type VariableBoxPropsToContent = Omit<
   VariableBoxProps,
@@ -85,11 +84,18 @@ export function VariableBoxContent({
   const hasTwoOrMoreValues = values && values.length > 1;
   const hasSelectAndSearch = hasCodeLists && hasSevenOrMoreValues;
   const valuesToRender = structuredClone(values);
-  const searchedValues : Value[] = values.filter((value) => value.label.toLowerCase().indexOf(debouncedSearch.toLowerCase()) > -1);
+  const searchedValues: Value[] = values.filter(
+    (value) =>
+      value.label.toLowerCase().indexOf(debouncedSearch.toLowerCase()) > -1,
+  );
   const selectedValuesForVar = useMemo(() => {
-    return selectedValues.find((variables) => variables.id === varId)?.values.sort() || [];
+    return (
+      selectedValues
+        .find((variables) => variables.id === varId)
+        ?.values.sort() || []
+    );
   }, [selectedValues, varId]);
-    // The API always returns the oldest values first,
+  // The API always returns the oldest values first,
   // so we can just reverse the values array when the type is TIME_VARIABLE
   if (type === VartypeEnum.TIME_VARIABLE) {
     valuesToRender.reverse();
@@ -121,30 +127,49 @@ export function VariableBoxContent({
   }, [hasSevenOrMoreValues, hasTwoOrMoreValues, debouncedSearch, values]);
 
   useEffect(() => {
-
-    function compareSearchedAndChosenValues (searchedValues: string | Value[], chosenValues: string | Value[]) {
+    function compareSearchedAndChosenValues(
+      searchedValues: string | Value[],
+      chosenValues: string | Value[],
+    ) {
       const compareArrays = Array.isArray(searchedValues)
-        ? searchedValues.map((searchedValue) => searchedValue.code).filter((value: string) => chosenValues.includes(value))
+        ? searchedValues
+            .map((searchedValue) => searchedValue.code)
+            .filter((value: string) => chosenValues.includes(value))
         : [];
 
       if (compareArrays.length === 0) {
-        return "none";
+        return 'none';
       } else if (compareArrays.length === searchedValues.length) {
-        return "all";
+        return 'all';
       } else {
-        return "mixed";
+        return 'mixed';
       }
     }
 
-    if (totalChosenValues === 0 && searchedValues.length === 0 || searchedValues.length > 0 && compareSearchedAndChosenValues(searchedValues, selectedValuesForVar) === "none") {
+    if (
+      (totalChosenValues === 0 && searchedValues.length === 0) ||
+      (searchedValues.length > 0 &&
+        compareSearchedAndChosenValues(searchedValues, selectedValuesForVar) ===
+          'none')
+    ) {
       setMixedCheckboxText(checkboxSelectAllText);
       setAllValuesSelected('false');
-    }
-    else if (totalChosenValues > 0 && totalChosenValues < totalValues && searchedValues.length === 0 || searchedValues.length > 0 && compareSearchedAndChosenValues(searchedValues, selectedValuesForVar) === "mixed") {
+    } else if (
+      (totalChosenValues > 0 &&
+        totalChosenValues < totalValues &&
+        searchedValues.length === 0) ||
+      (searchedValues.length > 0 &&
+        compareSearchedAndChosenValues(searchedValues, selectedValuesForVar) ===
+          'mixed')
+    ) {
       setMixedCheckboxText(checkboxSelectAllText);
       setAllValuesSelected('mixed');
-    }
-    else if (totalChosenValues === totalValues && searchedValues.length === 0 || searchedValues.length > 0 && compareSearchedAndChosenValues(searchedValues, selectedValuesForVar) === "all") {
+    } else if (
+      (totalChosenValues === totalValues && searchedValues.length === 0) ||
+      (searchedValues.length > 0 &&
+        compareSearchedAndChosenValues(searchedValues, selectedValuesForVar) ===
+          'all')
+    ) {
       setMixedCheckboxText(checkboxDeselectAllText);
       setAllValuesSelected('true');
     }
@@ -154,9 +179,8 @@ export function VariableBoxContent({
     checkboxSelectAllText,
     checkboxDeselectAllText,
     searchedValues,
-    selectedValuesForVar
+    selectedValuesForVar,
   ]);
-
 
   let mappedCodeLists: SelectOption[] = [];
 
@@ -270,7 +294,11 @@ export function VariableBoxContent({
           />
         </div>
       );
-    } else if (item.type === 'value' && item.value && searchedValues.length > 0) {
+    } else if (
+      item.type === 'value' &&
+      item.value &&
+      searchedValues.length > 0
+    ) {
       const value = item.value;
       return (
         <div id={value.code} tabIndex={-1} className={classes['focusableItem']}>
@@ -292,25 +320,31 @@ export function VariableBoxContent({
       );
     } else if (searchedValues.length === 0) {
       return (
-        <div className={cl(classes['variablebox-content-values-list-no-results'])}>
+        <div
+          className={cl(classes['variablebox-content-values-list-no-results'])}
+        >
           <Heading
             size="xsmall"
             textcolor="default"
-            level='4'
+            level="4"
             align="center"
-            className={cl(classes['variablebox-content-values-list-no-results-heading'])}>
-              {t('presentation_page.sidemenu.selection.variablebox.content.values_list.no_results_heading',{ search : search })}
+            className={cl(
+              classes['variablebox-content-values-list-no-results-heading'],
+            )}
+          >
+            {t(
+              'presentation_page.sidemenu.selection.variablebox.content.values_list.no_results_heading',
+              { search: search },
+            )}
           </Heading>
-          <BodyShort
-            size="medium"
-            textcolor="default"
-            align="center">
-              {t('presentation_page.sidemenu.selection.variablebox.content.values_list.no_results_bodyshort')}
-            </BodyShort>
+          <BodyShort size="medium" textcolor="default" align="center">
+            {t(
+              'presentation_page.sidemenu.selection.variablebox.content.values_list.no_results_bodyshort',
+            )}
+          </BodyShort>
         </div>
       );
-    }
-     else {
+    } else {
       return null;
     }
   };
