@@ -52,6 +52,13 @@
     outline: 2px solid var(--px-color-border-action);
     background: var(--px-color-surface-default);
   }
+
+  &:focus-within {
+    border-radius: var(--px-border-radius-medium);
+    outline: 3px solid var(--px-color-border-focus-outline);
+    background: var(--px-color-surface-default);
+    outline-offset: -3px;
+  }
 }
 
 .variableboxSearchAndSelectBorderOverride {
@@ -104,12 +111,6 @@
 
 .wrapper.default:focus-within {
   border-radius: var(--px-border-radius-small);
-  outline: 2px solid var(--px-color-border-action);
-  background: var(--px-color-surface-default);
-}
-
-.wrapper.inVariableBox:focus-within {
-  border-radius: var(--px-border-radius-medium);
   outline: 2px solid var(--px-color-border-action);
   background: var(--px-color-surface-default);
 }

@@ -50,7 +50,6 @@ export function Search({
     <div className={cl(classes.search, classes[variant])}>
       {showLabel && <Label size="medium">{labelText}</Label>}
       <div
-        tabIndex={0}
         className={cl(classes.wrapper, classes.border, classes[variant], {
           [classes.variableboxSearchAndSelectBorderOverride]:
             variableBoxTopBorderOverride,
