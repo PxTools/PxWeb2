@@ -10,6 +10,7 @@ interface Resources {
         title: 'PxWeb 2.0 [Main]';
         logo: 'PxWeb 2.0';
       };
+      skip_to_main: 'Skip to main content';
       footer: {
         contact: {
           title: 'Contact';
