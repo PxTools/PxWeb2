@@ -7,15 +7,16 @@ type VariableWithCodelistValue = VariableWithoutCodelist & {
 };
 
 export function mapTableSelectionResponse(
-  response: SelectionResponse
+  response: SelectionResponse,
 ): VariableWithCodelistValue[] {
-  const selectedVBValues: VariableWithCodelistValue[] =
-    response.selection.map((variable) => {
+  const selectedVBValues: VariableWithCodelistValue[] = response.selection.map(
+    (variable) => {
       return {
         id: variable.variableCode,
         selectedCodeList: variable.codeList ? variable.codeList : undefined,
         values: variable.valueCodes ? variable.valueCodes : [],
       };
-    });
+    },
+  );
   return selectedVBValues;
 }

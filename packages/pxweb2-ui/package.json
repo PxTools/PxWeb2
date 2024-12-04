@@ -7,9 +7,10 @@
     "build": "npm run build-style-dictionary && storybook build && mv ./storybook-static ../pxweb2/dist/storybook",
     "build-style-dictionary": "node ./style-dictionary/build.mjs",
     "storybook": "storybook dev -p 6006",
-    "lint": "eslint",
+    "lint": "eslint --fix",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "prettier": "prettier --config ../../.prettierrc --check ./src/** --write --ignore-path ../../.prettierignore"
   },
   "author": "",
   "license": "MIT",

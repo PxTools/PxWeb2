@@ -1,11 +1,11 @@
-import { PxTable } from "../../shared-types/pxTable";
+import { PxTable } from '../../shared-types/pxTable';
 
 /**
  * Internal type holding metadata about the column and row structure of a table.
  */
 export type columnRowMeta = {
   /**
-   * The number of rows   
+   * The number of rows
    */
   rows: number;
   /**
@@ -29,7 +29,7 @@ export type columnRowMeta = {
  * - The number of rows in the table
  * - The number of columns that contain headers
  * - The number of rows that contain headers
- * 
+ *
  * @param pxtable The PxTable object for which to calculate the metadata.
  * @returns The calculated columnRowMeta object containing the table metadata.
  */
@@ -38,7 +38,7 @@ export function calculateRowAndColumnMeta(pxtable: PxTable): columnRowMeta {
   let rowCount = 1;
   const columnOffset = 1;
   const rowOffset = pxtable.heading.length;
-  
+
   for (let i = 0; i < pxtable.heading.length; i++) {
     columnCount *= pxtable.heading[i].values.length;
   }
@@ -49,6 +49,11 @@ export function calculateRowAndColumnMeta(pxtable: PxTable): columnRowMeta {
 
   rowCount += pxtable.heading.length;
   columnCount += columnOffset;
-    
-  return {rows: rowCount, columns: columnCount, columnOffset: columnOffset, rowOffset: rowOffset};    
+
+  return {
+    rows: rowCount,
+    columns: columnCount,
+    columnOffset: columnOffset,
+    rowOffset: rowOffset,
+  };
 }

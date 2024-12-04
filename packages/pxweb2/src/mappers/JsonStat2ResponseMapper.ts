@@ -80,7 +80,7 @@ function CreateStub(response: Dataset, metadata: PxTableMetadata): Variable[] {
  */
 function CreateHeading(
   response: Dataset,
-  metadata: PxTableMetadata
+  metadata: PxTableMetadata,
 ): Variable[] {
   const heading: Variable[] = [];
 
@@ -118,7 +118,7 @@ function mapJsonToVariables(jsonData: Dataset): Array<Variable> {
         // sort the index based on index value
         const indexEntries = Object.entries(dimension.category.index);
         const sortedindexEntries = indexEntries.sort(
-          ([, valueA], [, valueB]) => valueA - valueB
+          ([, valueA], [, valueB]) => valueA - valueB,
         );
         for (const [code] of sortedindexEntries) {
           if (
@@ -204,7 +204,7 @@ function createCube(
   data: PxTableData,
   dimensions: Dimensions,
   dimensionIndex: number,
-  counter: counter
+  counter: counter,
 ): void {
   if (dimensionIndex === metadata.variables.length - 1) {
     metadata.variables[dimensionIndex].values.forEach((value) => {
@@ -212,7 +212,7 @@ function createCube(
       setPxTableData(
         data.cube,
         dimensions,
-        getDataCellValue(jsonData, counter)
+        getDataCellValue(jsonData, counter),
       );
       counter.number++;
     });
@@ -225,7 +225,7 @@ function createCube(
         data,
         dimensions,
         dimensionIndex + 1,
-        counter
+        counter,
       );
     });
   }

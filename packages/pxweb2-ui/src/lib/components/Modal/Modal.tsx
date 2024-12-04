@@ -75,7 +75,7 @@ export function Modal({
   };
 
   const handleKeyDown = async (
-    event: React.KeyboardEvent<HTMLDialogElement>
+    event: React.KeyboardEvent<HTMLDialogElement>,
   ) => {
     if (event.key === 'Escape') {
       handleCloseModal(false);

@@ -6,8 +6,9 @@
   "devDependencies": {},
   "scripts": {
     "build": "vite build",
-    "lint": "eslint",
-    "test": "echo 'No tests for @pxweb2/pxweb2-api-client'"
+    "lint": "echo 'No linting for @pxweb2/pxweb2-api-client'",
+    "test": "echo 'No tests for @pxweb2/pxweb2-api-client'",
+    "prettier": "echo 'No prettier for @pxweb2/pxweb2-api-client'"
   },
   "author": "",
   "license": "MIT"

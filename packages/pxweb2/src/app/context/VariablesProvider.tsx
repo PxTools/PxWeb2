@@ -68,7 +68,7 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
     useState(false);
   // const { i18n, t } = useTranslation();
   const [selectedVBValues, setSelectedVBValues] = useState<SelectedVBValues[]>(
-    []
+    [],
   );
 
   /**
@@ -104,7 +104,7 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
           .filter((value) =>
             selectedVBValues
               .find((selvar) => selvar.id === variableId)
-              ?.values.includes(value.code)
+              ?.values.includes(value.code),
           )
           .map((value) => value.code);
       }

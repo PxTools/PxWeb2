@@ -21,7 +21,7 @@ describe('Modal', () => {
     const { baseElement } = render(
       <Modal isOpen={true}>
         <span>test</span>
-      </Modal>
+      </Modal>,
     );
 
     expect(baseElement).toBeTruthy();
@@ -31,7 +31,7 @@ describe('Modal', () => {
     const { baseElement } = render(
       <Modal isOpen={true}>
         <span>test</span>
-      </Modal>
+      </Modal>,
     );
 
     const buttons = baseElement.getElementsByTagName('button');
@@ -44,7 +44,7 @@ describe('Modal', () => {
     const { baseElement } = render(
       <Modal isOpen={true}>
         <span>test</span>
-      </Modal>
+      </Modal>,
     );
 
     // Modal has 3 buttons, and the second and third have the text content
@@ -64,7 +64,7 @@ describe('Modal', () => {
         cancelLabel="custom.cancel"
       >
         <span>test</span>
-      </Modal>
+      </Modal>,
     );
 
     // Modal has 3 buttons, and the second and third have the text content

@@ -13,10 +13,14 @@ export type VariableListProps = {
   // TODO: Optimise here? Duplicate with props in VariableBox
   handleCodeListChange: (
     selectedItem: SelectOption | undefined,
-    varId: string
+    varId: string,
   ) => void;
   handleCheckboxChange: (varId: string, value: string) => void;
-  handleMixedCheckboxChange: (varId: string, allValuesSelected: string, searchValues: Value[]) => void;
+  handleMixedCheckboxChange: (
+    varId: string,
+    allValuesSelected: string,
+    searchValues: Value[],
+  ) => void;
 };
 
 export function VariableList({
@@ -52,7 +56,7 @@ export function VariableList({
                 onChangeMixedCheckbox={handleMixedCheckboxChange}
                 onChangeCheckbox={handleCheckboxChange}
               />
-            )
+            ),
         )}
     </div>
   );

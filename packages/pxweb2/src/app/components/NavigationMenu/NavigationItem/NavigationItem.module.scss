@@ -81,11 +81,11 @@
   padding: 0px 0px fixed.$spacing-1 0px;
 
   > .icon {
-    width: fixed.$spacing-14;   
+    width: fixed.$spacing-14;
   }
   &:focus-visible {
     outline: 3px solid var(--px-color-border-focus-outline);
     outline-offset: 6px;
-    box-shadow: 0 0 0 3px var(--px-color-border-focus-boxshadow);    
+    box-shadow: 0 0 0 3px var(--px-color-border-focus-boxshadow);
   }
 }

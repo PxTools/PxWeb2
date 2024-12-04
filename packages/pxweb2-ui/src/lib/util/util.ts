@@ -8,7 +8,7 @@ export const getCSSVariable = (variable: string): string => {
 };
 
 export const mapCodeListToSelectOption = (
-  codeList: CodeList
+  codeList: CodeList,
 ): SelectOption => ({
   label: codeList.label,
   value: codeList.id,
@@ -16,7 +16,7 @@ export const mapCodeListToSelectOption = (
 
 // return array of SelectOption objects
 export const mapCodeListsToSelectOptions = (
-  codeList: CodeList[]
+  codeList: CodeList[],
 ): SelectOption[] => {
   return codeList.map((code) => ({
     label: code.label,
