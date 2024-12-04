@@ -10,7 +10,7 @@ describe('NavigationBar', () => {
         onChange={() => {
           return;
         }}
-      />
+      />,
     );
 
     expect(baseElement).toBeTruthy();
@@ -23,11 +23,11 @@ describe('NavigationBar', () => {
         onChange={() => {
           return;
         }}
-      />
+      />,
     );
 
     expect(
-      getByText(baseElement, 'presentation_page.sidemenu.selection.title')
+      getByText(baseElement, 'presentation_page.sidemenu.selection.title'),
     ).toBeTruthy();
   });
 
@@ -38,23 +38,23 @@ describe('NavigationBar', () => {
         onChange={() => {
           return;
         }}
-      />
+      />,
     );
 
     expect(
-      getByText(baseElement, 'presentation_page.sidemenu.selection.title')
+      getByText(baseElement, 'presentation_page.sidemenu.selection.title'),
     ).toBeTruthy();
     expect(
-      getByText(baseElement, 'presentation_page.sidemenu.view.title')
+      getByText(baseElement, 'presentation_page.sidemenu.view.title'),
     ).toBeTruthy();
     expect(
-      getByText(baseElement, 'presentation_page.sidemenu.edit.title')
+      getByText(baseElement, 'presentation_page.sidemenu.edit.title'),
     ).toBeTruthy();
     expect(
-      getByText(baseElement, 'presentation_page.sidemenu.save.title')
+      getByText(baseElement, 'presentation_page.sidemenu.save.title'),
     ).toBeTruthy();
     expect(
-      getByText(baseElement, 'presentation_page.sidemenu.help.title')
+      getByText(baseElement, 'presentation_page.sidemenu.help.title'),
     ).toBeTruthy();
   });
 
@@ -65,7 +65,7 @@ describe('NavigationBar', () => {
         onChange={() => {
           return;
         }}
-      />
+      />,
     );
     // This relies on the CSS class name being the first one on the element, which is not ideal.
     // But since CSS class names are generated with a hash, it's the best we can do without changing how we style components
@@ -75,8 +75,8 @@ describe('NavigationBar', () => {
     expect(
       getByText(
         filterButton as HTMLElement,
-        'presentation_page.sidemenu.selection.title'
-      )
+        'presentation_page.sidemenu.selection.title',
+      ),
     ).toBeTruthy();
   });
 
@@ -87,7 +87,7 @@ describe('NavigationBar', () => {
         onChange={() => {
           return;
         }}
-      />
+      />,
     );
 
     const svg = baseElement.querySelector('svg');

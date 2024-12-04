@@ -14,7 +14,7 @@ describe('VariableBoxHeader', () => {
         setIsOpen={() => {
           return;
         }}
-      />
+      />,
     );
 
     expect(baseElement).toBeTruthy();

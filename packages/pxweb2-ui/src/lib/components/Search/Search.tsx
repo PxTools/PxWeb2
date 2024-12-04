@@ -66,7 +66,7 @@ export function Search({
           className={cl(
             classes[`bodyshort-medium`],
             classes.input,
-            classes[variant]
+            classes[variant],
           )}
           placeholder={searchPlaceHolder}
           value={inputValue}

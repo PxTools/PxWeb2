@@ -8,16 +8,16 @@ describe('TableSelectionResponseMapper', () => {
       const response: SelectionResponse = {
         language: '',
         selection: [
-            {
-              variableCode: 'testVarCode',
-              valueCodes: ['testValueCode'],
-            },
-            {
-              variableCode: 'testVarCode2',
-              codeList: 'testCodeList',
-              valueCodes: ['testValueCode2'],
-            },
-          ],
+          {
+            variableCode: 'testVarCode',
+            valueCodes: ['testValueCode'],
+          },
+          {
+            variableCode: 'testVarCode2',
+            codeList: 'testCodeList',
+            valueCodes: ['testValueCode2'],
+          },
+        ],
         links: [],
       };
 

@@ -10,7 +10,7 @@
     "lint": "eslint --fix",
     "test": "vitest run",
     "test:watch": "vitest",
-    "prettier": "prettier --config ../../.prettierrc --check ./src/** --write"
+    "prettier": "prettier --config ../../.prettierrc --check ./src/** --write --ignore-path ../../.prettierignore"
   },
   "author": "",
   "license": "MIT",
