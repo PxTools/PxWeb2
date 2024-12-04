@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
+import cl from 'clsx';
 
 import {
   metadataOutputFormat,
@@ -19,6 +20,7 @@ import {
 import NavigationDrawer from '../../components/NavigationDrawer/NavigationDrawer';
 import useVariables from '../../context/useVariables';
 import { NavigationItem } from '../../components/NavigationMenu/NavigationItem/NavigationItemType';
+import classes from './Selection.module.scss';
 
 function addSelectedCodeListToVariable(
   currentVariable: SelectedVBValues | undefined,
@@ -220,6 +222,7 @@ export function Selection({
     // Metadata to render in the UI
     useState<PxTableMetadata | null>(null);
   const [prevTableId, setPrevTableId] = useState('');
+  const [isFadingVariableList, setIsFadingVariableList] = useState(false);
 
   //  Needed to know when the language has changed, so we can reload the default selection
   const [prevLang, setPrevLang] = useState('');
@@ -348,19 +351,25 @@ export function Selection({
       newMappedSelectedCodeList,
     );
 
+    setIsFadingVariableList(true);
+
     //  Get the values for the chosen code list
     const valuesForChosenCodeList: Value[] = await getCodeListValues(
       newMappedSelectedCodeList.value,
       lang,
-    ).catch((error) => {
-      console.error(
-        'Could not get values for code list: ' +
-          newMappedSelectedCodeList.value +
-          ' ' +
-          error,
-      );
-      return [];
-    });
+    )
+      .finally(() => {
+        setIsFadingVariableList(false);
+      })
+      .catch((error) => {
+        console.error(
+          'Could not get values for code list: ' +
+            newMappedSelectedCodeList.value +
+            ' ' +
+            error,
+        );
+        return [];
+      });
 
     if (valuesForChosenCodeList.length < 1) {
       return;
@@ -470,6 +479,7 @@ export function Selection({
       selectedVBValues={selectedVBValues}
       isLoadingMetadata={isLoadingMetadata}
       hasLoadedDefaultSelection={hasLoadedDefaultSelection}
+      isChangingCodeList={isFadingVariableList}
       handleCodeListChange={handleCodeListChange}
       handleCheckboxChange={handleCheckboxChange}
       handleMixedCheckboxChange={handleMixedCheckboxChange}

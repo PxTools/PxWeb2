@@ -1,3 +1,5 @@
+import cl from 'clsx';
+
 import styles from './VariableList.module.scss';
 import { SelectedVBValues, VariableBox } from '../VariableBox/VariableBox';
 import { PxTableMetadata } from '../../shared-types/pxTableMetadata';
@@ -8,28 +10,38 @@ export type VariableListProps = {
   pxTableMetadata: PxTableMetadata | null;
   isLoadingMetadata: boolean;
   hasLoadedDefaultSelection: boolean;
+  isChangingCodeList: boolean;
   selectedVBValues: SelectedVBValues[];
 
   // TODO: Optimise here? Duplicate with props in VariableBox
   handleCodeListChange: (
     selectedItem: SelectOption | undefined,
-    varId: string
+    varId: string,
   ) => void;
   handleCheckboxChange: (varId: string, value: string) => void;
-  handleMixedCheckboxChange: (varId: string, allValuesSelected: string, searchValues: Value[]) => void;
+  handleMixedCheckboxChange: (
+    varId: string,
+    allValuesSelected: string,
+    searchValues: Value[],
+  ) => void;
 };
 
 export function VariableList({
   pxTableMetadata,
   isLoadingMetadata,
   hasLoadedDefaultSelection,
+  isChangingCodeList = false,
   selectedVBValues,
   handleCodeListChange,
   handleCheckboxChange,
   handleMixedCheckboxChange,
 }: VariableListProps) {
   return (
-    <div className={styles.variableList}>
+    <div
+      className={cl(styles.variableList, {
+        [styles.fadeVariableList]: isChangingCodeList,
+      })}
+    >
       {!isLoadingMetadata &&
         hasLoadedDefaultSelection &&
         pxTableMetadata &&
@@ -52,7 +64,7 @@ export function VariableList({
                 onChangeMixedCheckbox={handleMixedCheckboxChange}
                 onChangeCheckbox={handleCheckboxChange}
               />
-            )
+            ),
         )}
     </div>
   );
