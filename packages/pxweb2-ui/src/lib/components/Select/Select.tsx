@@ -173,10 +173,10 @@ function VariableBoxSelect({
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
 
   const [selectedItem, setSelectedItem] = useState<SelectOption | undefined>(
-    selectedOption
+    selectedOption,
   );
   const [clickedItem, setClickedItem] = useState<SelectOption | undefined>(
-    selectedOption
+    selectedOption,
   );
   const handleOpenModal = () => {
     setModalOpen(true);
@@ -218,7 +218,7 @@ function VariableBoxSelect({
             size="medium"
             className={cl(
               classes.optionLayoutVariablebox,
-              classes.optionTypography
+              classes.optionTypography,
             )}
           >
             {selectedItem ? selectedItem.label : placeholder}

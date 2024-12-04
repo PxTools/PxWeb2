@@ -7,7 +7,7 @@
   gap: fixed.$spacing-16;
   align-self: stretch;
 
-  // xsmall 
+  // xsmall
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
     gap: fixed.$spacing-7;
   }

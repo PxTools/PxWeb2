@@ -6,7 +6,7 @@
   flex-direction: column;
   gap: 4px;
   align-self: stretch;
- }
+}
 
 .wrapper {
   display: flex;
@@ -33,7 +33,7 @@
     border-radius: var(--px-border-radius-small);
     outline: 2px solid var(--px-color-border-action);
     background: var(--px-color-surface-default);
-  } 
+  }
 }
 
 .wrapper.inVariableBox {
@@ -62,7 +62,8 @@
 }
 
 .variableboxSearchAndSelectBorderOverride {
-  border-radius: 0 0 var(--px-border-radius-medium) var(--px-border-radius-medium);
+  border-radius: 0 0 var(--px-border-radius-medium)
+    var(--px-border-radius-medium);
 }
 
 .input {
@@ -93,7 +94,7 @@
     box-shadow: none;
     outline: none;
   }
-  
+
   &:focus-visible {
     border: none;
     box-shadow: none;

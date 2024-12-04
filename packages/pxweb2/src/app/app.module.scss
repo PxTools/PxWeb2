@@ -53,7 +53,7 @@
   overflow-y: auto;
   scrollbar-width: thin;
 
-  // xsmall 
+  // xsmall
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
     gap: fixed.$spacing-4;
   }

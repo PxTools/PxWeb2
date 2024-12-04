@@ -13,6 +13,6 @@
   // xsmall and small
   @media ((min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width)) or ((min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width)) {
     padding: fixed.$spacing-6 fixed.$spacing-4;
-    border-bottom: 1px solid var(--color-border-subtle, #C3DCDC);
+    border-bottom: 1px solid var(--color-border-subtle, #c3dcdc);
   }
 }

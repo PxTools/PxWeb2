@@ -86,7 +86,7 @@ describe('VariableList', () => {
         handleMixedCheckboxChange={() => {
           return;
         }}
-      />
+      />,
     );
 
     expect(baseElement).toBeTruthy();
@@ -117,7 +117,7 @@ describe('VariableList', () => {
             {children}
           </VirtuosoMockContext.Provider>
         ),
-      }
+      },
     );
 
     expect(getByText('Test Variable')).toBeTruthy();
@@ -149,7 +149,7 @@ describe('VariableList', () => {
             {children}
           </VirtuosoMockContext.Provider>
         ),
-      }
+      },
     );
 
     expect(getByText('Test Variable 1 Value 1')).toBeTruthy();
@@ -181,7 +181,7 @@ describe('VariableList', () => {
             {children}
           </VirtuosoMockContext.Provider>
         ),
-      }
+      },
     );
     expect(getByText('Test Value')).toBeTruthy();
     expect(queryByText('Test Variable 2 Value 1')).toBeNull();

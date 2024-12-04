@@ -24,7 +24,7 @@ describe('VariableBox', () => {
         }}
         selectedValues={[]}
         type={VartypeEnum.CONTENTS_VARIABLE}
-      />
+      />,
     );
 
     expect(baseElement).toBeTruthy();

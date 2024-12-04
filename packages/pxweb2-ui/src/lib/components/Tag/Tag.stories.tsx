@@ -14,7 +14,7 @@ export const Default = {
     size: 'medium',
     variant: 'neutral',
     type: 'default',
-    children: text  
+    children: text,
   },
   argTypes: {
     size: {
@@ -61,19 +61,19 @@ export const Variant: StoryFn<typeof Tag> = () => {
       <Tag>{text}</Tag>
 
       <h2>neutral:</h2>
-      <Tag variant='neutral'>{text}</Tag>
+      <Tag variant="neutral">{text}</Tag>
 
       <h2>info:</h2>
-      <Tag variant='info'>{text}</Tag>
+      <Tag variant="info">{text}</Tag>
 
       <h2>success:</h2>
-      <Tag variant='success'>{text}</Tag>
+      <Tag variant="success">{text}</Tag>
 
       <h2>warning:</h2>
-      <Tag variant='warning'>{text}</Tag>
+      <Tag variant="warning">{text}</Tag>
 
       <h2>error:</h2>
-      <Tag variant='error'>{text}</Tag>
+      <Tag variant="error">{text}</Tag>
     </>
   );
 };
@@ -84,10 +84,10 @@ export const Type: StoryFn<typeof Tag> = () => {
       <h1>Type</h1>
 
       <h2>default:</h2>
-      <Tag type='default'>{text}</Tag>
+      <Tag type="default">{text}</Tag>
 
       <h2>border:</h2>
-      <Tag type='border'>{text}</Tag>
+      <Tag type="border">{text}</Tag>
     </>
   );
 };

@@ -23,7 +23,7 @@ describe('VariableBoxContent', () => {
         selectedValues={[]}
         totalValues={1}
         totalChosenValues={0}
-      />
+      />,
     );
 
     expect(baseElement).toBeTruthy();

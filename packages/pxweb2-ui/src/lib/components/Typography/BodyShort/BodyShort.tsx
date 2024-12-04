@@ -1,7 +1,8 @@
 import cl from 'clsx';
 import classes from './BodyShort.module.scss';
 
-export interface BodyShortProps extends React.HTMLAttributes<HTMLParagraphElement> {
+export interface BodyShortProps
+  extends React.HTMLAttributes<HTMLParagraphElement> {
   size?: 'medium' | 'small';
   spacing?: boolean;
   align?: 'start' | 'center' | 'end';
@@ -12,7 +13,7 @@ export interface BodyShortProps extends React.HTMLAttributes<HTMLParagraphElemen
 }
 
 export function BodyShort({
-  size = 'medium', 
+  size = 'medium',
   spacing = false,
   align = 'start',
   weight = 'regular',
@@ -21,22 +22,23 @@ export function BodyShort({
   className = '',
   ...rest
 }: BodyShortProps) {
-
   const cssClasses = className.length > 0 ? ' ' + className : '';
   const weightClassExtension = weight === 'regular' ? '' : '-' + weight;
 
   return (
-    <p 
-      className={cl(
-        classes.bodyShort,
-        classes[`bodyshort-${size}${weightClassExtension}`],
-        cl({[classes[`spacing-${size}`]]: spacing}),
-        cl({[classes[`align-${align}`]]: align}),
-        cl({[classes[`textcolor-${textcolor}`]]: textcolor})
-        ) + cssClasses}
-        {...rest}
-        >
-        {children}
+    <p
+      className={
+        cl(
+          classes.bodyShort,
+          classes[`bodyshort-${size}${weightClassExtension}`],
+          cl({ [classes[`spacing-${size}`]]: spacing }),
+          cl({ [classes[`align-${align}`]]: align }),
+          cl({ [classes[`textcolor-${textcolor}`]]: textcolor }),
+        ) + cssClasses
+      }
+      {...rest}
+    >
+      {children}
     </p>
   );
 }
