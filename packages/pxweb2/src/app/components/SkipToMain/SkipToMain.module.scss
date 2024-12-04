@@ -27,8 +27,8 @@
   }
 }
 
-.screen-reader-only a {
-  &:not(:focus) {
+.screen-reader-only {
+  &:not(:focus-within) {
     width: 1px !important;
     height: 1px !important;
     padding: 0 !important;
