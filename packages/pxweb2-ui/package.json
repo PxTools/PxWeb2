@@ -9,7 +9,8 @@
     "storybook": "storybook dev -p 6006",
     "lint": "eslint --fix",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "prettier": "prettier --config ../../.prettierrc --check ./src/** --write"
   },
   "author": "",
   "license": "MIT",
