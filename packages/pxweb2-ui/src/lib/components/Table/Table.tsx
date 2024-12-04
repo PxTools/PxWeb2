@@ -8,6 +8,7 @@ import { getPxTableData } from './cubeHelper';
 
 export interface TableProps {
   pxtable: PxTable;
+  isMobile: boolean;
   className?: string;
 }
 
@@ -26,7 +27,7 @@ type DataCellMeta = {
  */
 type DataCellCodes = DataCellMeta[];
 
-export function Table({ pxtable, className = '' }: TableProps) {
+export function Table({ pxtable, isMobile, className = '' }: TableProps) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
 
   const tableMeta: columnRowMeta = calculateRowAndColumnMeta(pxtable);
@@ -57,12 +58,12 @@ export function Table({ pxtable, className = '' }: TableProps) {
   }
 
   return (
-    <table
+  <table
       className={cl(classes.table, classes[`bodyshort-medium`]) + cssClasses}
       aria-label={pxtable.metadata.label}
     >
       <thead>{createHeading(pxtable, tableMeta, headingDataCellCodes)}</thead>
-      <tbody>{createRows(pxtable, tableMeta, headingDataCellCodes)}</tbody>
+      <tbody>{createRows(pxtable, tableMeta, headingDataCellCodes,isMobile)}</tbody>
     </table>
   );
 }
@@ -173,7 +174,8 @@ export function createHeading(
 export function createRows(
   table: PxTable,
   tableMeta: columnRowMeta,
-  headingDataCellCodes: DataCellCodes[]
+  headingDataCellCodes: DataCellCodes[],
+  isMobile:boolean
 ): React.JSX.Element[] {
   const tableRows: React.JSX.Element[] = [];
   const datacellCodes: DataCellCodes = new Array<DataCellMeta>();
@@ -187,7 +189,8 @@ export function createRows(
       tableMeta,
       datacellCodes,
       headingDataCellCodes,
-      tableRows
+      tableRows,
+      isMobile
     );
   } else {
     const tableRow: React.JSX.Element[] = [];
@@ -222,7 +225,8 @@ function createRow(
   tableMeta: columnRowMeta,
   stubDataCellCodes: DataCellCodes,
   headingDataCellCodes: DataCellCodes[],
-  tableRows: React.JSX.Element[]
+  tableRows: React.JSX.Element[],
+  isMobile:boolean
 ): React.JSX.Element[] {
   // Calculate the rowspan for all the cells to add in this call
   rowSpan = rowSpan / table.stub[stubIndex].values.length;
@@ -247,6 +251,12 @@ function createRow(
     if (rowSpan === 0) {
       rowSpan = 1;
     }
+    let secondLastStubMultipleValues;
+    if (isMobile && stubIndex===table.stub.length-2 &&  table.stub[stubIndex].values.length>1) // second last level
+    {
+     secondLastStubMultipleValues=true;
+     console.log("secondLastStubMultipleValues= "+ secondLastStubMultipleValues)
+    }
 
     tableRow.push(
       <th
@@ -263,10 +273,10 @@ function createRow(
     // If there are more stub variables that need to add headers to this row
     if (table.stub.length > stubIndex + 1) {
       // make the rest of this row empty
-      fillEmpty(tableMeta, tableRow);
+      fillEmpty(tableMeta, tableRow,isMobile);
       tableRows.push(
         <tr
-          className={cl({ [classes.firstdim]: stubIndex === 0 })}
+          className={cl({ [classes.firstdim]: stubIndex === 0 },{ [classes.mobileEmptyRowCell]: isMobile && !secondLastStubMultipleValues },{[classes.mobileRowHeadSecondLastStub]: secondLastStubMultipleValues})}
           key={getNewKey()}
         >
           {tableRow}
@@ -283,7 +293,8 @@ function createRow(
         tableMeta,
         stubDataCellCodes,
         headingDataCellCodes,
-        tableRows
+        tableRows,
+        isMobile
       );
       stubDataCellCodes.pop();
     } else {
@@ -295,7 +306,7 @@ function createRow(
         headingDataCellCodes,
         tableRow
       );
-      tableRows.push(<tr key={getNewKey()}>{tableRow}</tr>);
+      tableRows.push(<tr key={getNewKey()} className={cl({[classes.mobileRowHeadLastStub]: isMobile} )}>{tableRow}</tr>);
       tableRow = [];
       stubDataCellCodes.pop();
     }
@@ -312,7 +323,8 @@ function createRow(
  */
 function fillEmpty(
   tableMeta: columnRowMeta,
-  tableRow: React.JSX.Element[]
+  tableRow: React.JSX.Element[],
+  isMobile:boolean
 ): void {
   const emptyText = '';
 
@@ -321,7 +333,7 @@ function fillEmpty(
 
   // Loop through all data columns in the table
   for (let i = 0; i < maxCols; i++) {
-    tableRow.push(<td key={getNewKey()}>{emptyText}</td>);
+    tableRow.push(<td key={getNewKey()}   >{emptyText}</td>);
   }
 }
 
