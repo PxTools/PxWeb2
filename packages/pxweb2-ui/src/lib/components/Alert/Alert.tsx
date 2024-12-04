@@ -120,7 +120,7 @@ export function Alert({
           },
           {
             [classes[`alert-arrow-wrapper`]]: clickable,
-          }
+          },
         )}
       >
         {closeButton && (

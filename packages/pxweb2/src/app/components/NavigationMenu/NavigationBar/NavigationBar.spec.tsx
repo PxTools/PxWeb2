@@ -10,10 +10,11 @@ describe('NavigationBar', () => {
         onChange={() => {
           return;
         }}
-      />
+      />,
     );
+    const navbar = baseElement;
 
-    expect(baseElement).toBeTruthy();
+    expect(navbar).toBeTruthy();
   });
 
   it('should render the text successfully', () => {
@@ -23,11 +24,12 @@ describe('NavigationBar', () => {
         onChange={() => {
           return;
         }}
-      />
+      />,
     );
+    const navbar = baseElement;
 
     expect(
-      getByText(baseElement, 'presentation_page.sidemenu.selection.title')
+      getByText(navbar, 'presentation_page.sidemenu.selection.title'),
     ).toBeTruthy();
   });
 
@@ -38,23 +40,23 @@ describe('NavigationBar', () => {
         onChange={() => {
           return;
         }}
-      />
+      />,
     );
-
+    const navbar = baseElement;
     expect(
-      getByText(baseElement, 'presentation_page.sidemenu.selection.title')
+      getByText(navbar, 'presentation_page.sidemenu.selection.title'),
     ).toBeTruthy();
     expect(
-      getByText(baseElement, 'presentation_page.sidemenu.view.title')
+      getByText(navbar, 'presentation_page.sidemenu.view.title'),
     ).toBeTruthy();
     expect(
-      getByText(baseElement, 'presentation_page.sidemenu.edit.title')
+      getByText(navbar, 'presentation_page.sidemenu.edit.title'),
     ).toBeTruthy();
     expect(
-      getByText(baseElement, 'presentation_page.sidemenu.save.title')
+      getByText(navbar, 'presentation_page.sidemenu.save.title'),
     ).toBeTruthy();
     expect(
-      getByText(baseElement, 'presentation_page.sidemenu.help.title')
+      getByText(navbar, 'presentation_page.sidemenu.help.title'),
     ).toBeTruthy();
   });
 
@@ -65,18 +67,20 @@ describe('NavigationBar', () => {
         onChange={() => {
           return;
         }}
-      />
+      />,
     );
+
+    const navbar = baseElement;
     // This relies on the CSS class name being the first one on the element, which is not ideal.
     // But since CSS class names are generated with a hash, it's the best we can do without changing how we style components
-    const filterButton = baseElement.querySelector(`[class^="_selected"]`);
+    const filterButton = navbar.querySelector(`[class^="_selected"]`);
 
     // Since i18n is used in a test, it returns the translation key instead of the actual text
     expect(
       getByText(
         filterButton as HTMLElement,
-        'presentation_page.sidemenu.selection.title'
-      )
+        'presentation_page.sidemenu.selection.title',
+      ),
     ).toBeTruthy();
   });
 
@@ -87,10 +91,10 @@ describe('NavigationBar', () => {
         onChange={() => {
           return;
         }}
-      />
+      />,
     );
-
-    const svg = baseElement.querySelector('svg');
+    const navbar = baseElement;
+    const svg = navbar.querySelector('svg');
 
     expect(svg).toBeTruthy();
   });

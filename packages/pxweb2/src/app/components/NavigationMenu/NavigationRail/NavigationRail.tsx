@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { LazyMotion, MotionConfig } from 'framer-motion';
+import { LazyMotion, MotionConfig } from 'motion/react';
 
 import styles from './NavigationRail.module.scss';
 import { NavigationItem } from '../NavigationItem/NavigationItemType';

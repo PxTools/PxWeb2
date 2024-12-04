@@ -58,7 +58,7 @@ function getPxTable(): PxTable {
     label: 'Test table',
     updated: new Date('2023-01-14T09:00:05.123Z'),
     variables: variables,
-    language: 'en'
+    language: 'en',
   };
   const table: PxTable = {
     metadata: tableMeta,

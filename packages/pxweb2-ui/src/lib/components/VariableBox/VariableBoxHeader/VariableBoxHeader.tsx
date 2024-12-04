@@ -48,11 +48,10 @@ export function VariableBoxHeader({
     <div
       className={cl(
         classes['variablebox-header'],
-        isOpen && classes['variablebox-header-isopen']
+        isOpen && classes['variablebox-header-isopen'],
       )}
       onClick={handleHeaderClick}
       onKeyDown={(e) => handleKeyDown(e)}
-      tabIndex={tabIndex}
     >
       <div className={cl(classes['header-content'])}>
         <div className={cl(classes['header-title-and-tag'])}>
@@ -70,20 +69,20 @@ export function VariableBoxHeader({
                   total: t('number.simple_number_with_zero_decimal', {
                     value: totalValues,
                   }),
-                }
+                },
               )}
             </Tag>
             {mandatory && (
               <Tag variant="info">
                 {t(
-                  'presentation_page.sidemenu.selection.variablebox.header.tag_mandatory'
+                  'presentation_page.sidemenu.selection.variablebox.header.tag_mandatory',
                 )}
               </Tag>
             )}
           </div>
         </div>
 
-        <div className={cssClasses}>
+        <div className={cssClasses} tabIndex={tabIndex}>
           {isOpen ? (
             <Icon iconName="ChevronUp"></Icon>
           ) : (
@@ -96,7 +95,7 @@ export function VariableBoxHeader({
         <div className={cl(classes['header-alert'])}>
           <Alert variant="error" size="small">
             {t(
-              'presentation_page.sidemenu.selection.variablebox.header.alert_no_mandatory_values'
+              'presentation_page.sidemenu.selection.variablebox.header.alert_no_mandatory_values',
             )}
           </Alert>
         </div>

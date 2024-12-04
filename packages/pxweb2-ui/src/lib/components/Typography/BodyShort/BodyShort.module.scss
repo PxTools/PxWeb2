@@ -2,55 +2,55 @@
 @use '../../../text-styles.scss';
 
 .bodyShort {
-    text-align: left;
-    letter-spacing: 0em;
-    margin: 0;
+  text-align: left;
+  letter-spacing: 0em;
+  margin: 0;
 }
 
 .small {
-    font-size: 14px;
-    line-height: 20px;
+  font-size: 14px;
+  line-height: 20px;
 }
 
 .medium {
-    font-size: 16px;
-    line-height: 24px;
+  font-size: 16px;
+  line-height: 24px;
 }
 
-.spacing-small{
-    margin-bottom: fixed.$spacing-2;
+.spacing-small {
+  margin-bottom: fixed.$spacing-2;
 }
 
-.spacing-medium{
-    margin-bottom: fixed.$spacing-3;
+.spacing-medium {
+  margin-bottom: fixed.$spacing-3;
 }
 
-.align-start{
-    text-align: start;
+.align-start {
+  text-align: start;
 }
 
-.align-center{
-    text-align: center;
+.align-center {
+  text-align: center;
 }
 
-.align-end{
-    text-align: end;
+.align-end {
+  text-align: end;
 }
 
-.weight-regular{
-    font-family: PxWeb-font-400;
-    font-weight: 400;
+.weight-regular {
+  font-family: PxWeb-font-400;
+  font-weight: 400;
 }
 
-.weight-bold{
-    font-family: PxWeb-font-700;
-    font-weight: 700;
+.weight-bold {
+  font-family: PxWeb-font-700;
+  font-weight: 700;
 }
 
-.textcolor-default{
-    color: var(--px-color-text-default);
+.textcolor-default {
+  color: var(--px-color-text-default);
 }
 
-.textcolor-subtle{
-    color: var(--px-color-text-subtle);
+.textcolor-subtle {
+  color: var(--px-color-text-subtle);
 }

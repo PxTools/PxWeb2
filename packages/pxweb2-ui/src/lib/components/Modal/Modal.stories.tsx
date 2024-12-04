@@ -20,16 +20,13 @@ export const Default = {
       console.log('Modal closed');
     },
   },
-  
+
   render: (args: ModalProps) => (
-    <Modal {...args}>
-      {content && (<div>{content}</div>)}
-    </Modal>
+    <Modal {...args}>{content && <div>{content}</div>}</Modal>
   ),
-  
+
   return: Modal,
 };
-
 
 export const Open: StoryFn<typeof Modal> = () => {
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
@@ -37,11 +34,16 @@ export const Open: StoryFn<typeof Modal> = () => {
     <>
       <button onClick={() => setModalOpen(true)}>Open modal</button>
       {isModalOpen && (
-      <Modal label="Label" heading="Heading" isOpen={isModalOpen} onClose={() => {
-                setModalOpen(false);
-              }}>
-        <div>Any content</div>
-      </Modal>
+        <Modal
+          label="Label"
+          heading="Heading"
+          isOpen={isModalOpen}
+          onClose={() => {
+            setModalOpen(false);
+          }}
+        >
+          <div>Any content</div>
+        </Modal>
       )}
     </>
   );

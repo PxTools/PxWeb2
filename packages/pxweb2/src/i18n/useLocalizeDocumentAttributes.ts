@@ -11,6 +11,5 @@ export default function useLocalizeDocumentAttributes() {
     }
 
     document.title = t('common.title');
-    
   }, [i18n, i18n.resolvedLanguage, t]);
 }

@@ -9,7 +9,7 @@
 // - aria-label/aria-labelledby are set based on aria-prop
 
 import { ReactNode } from 'react';
-import { LayoutGroup } from 'framer-motion';
+import { LayoutGroup } from 'motion/react';
 import cl from 'clsx';
 
 import classes from './Tabs.module.scss';

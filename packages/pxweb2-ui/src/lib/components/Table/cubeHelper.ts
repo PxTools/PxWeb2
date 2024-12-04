@@ -17,7 +17,7 @@ export type Dimensions = string[];
 export function setPxTableData<T>(
   data: PxData<T>,
   dimensions: Dimensions,
-  value: T
+  value: T,
 ): void {
   let currentLevel: PxData<T> = data;
   dimensions.forEach((dimension, index) => {
@@ -46,7 +46,7 @@ export function setPxTableData<T>(
  */
 export function getPxTableData<T>(
   data: PxData<T>,
-  dimensions: Dimensions
+  dimensions: Dimensions,
 ): T | undefined {
   let currentLevel: PxData<T> = data;
   for (let i = 0; i < dimensions.length; i++) {
@@ -71,7 +71,7 @@ export function fakeData(
   table: PxTable,
   dimensions: Dimensions,
   dimensionIndex: number,
-  data: number
+  data: number,
 ): void {
   if (dimensionIndex === table?.metadata.variables.length - 1) {
     table.metadata.variables[dimensionIndex].values.forEach((value) => {

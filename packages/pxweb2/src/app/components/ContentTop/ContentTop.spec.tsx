@@ -85,7 +85,7 @@ const pxTable = getPxTable();
 describe('ContentTop', () => {
   it('should render successfully', () => {
     const { baseElement } = render(
-      <ContentTop pxtable={pxTable} staticTitle="Tittel" />
+      <ContentTop pxtable={pxTable} staticTitle="Tittel" />,
     );
     expect(baseElement).toBeTruthy();
   });
