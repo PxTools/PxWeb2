@@ -6,10 +6,12 @@
   border-spacing: 0; /* Optional: Makes sure there is no spacing between the cells */
   width: 100%;
 
+  @media screen and (max-width: fixed.$breakpoints-xsmall-max-width) {
+  line-height:fixed.$spacing-6;
+  }
+
   border-radius: var(--px-border-radius-medium);
-  @media screen and (min-width: fixed.$breakpoints-small-max-width) {
-  border: 1px solid var(--px-color-border-default);
-   }
+   border: 1px solid var(--px-color-border-default);
   overflow: hidden; /* Ensures content stays within rounded borders */
   color: var(--px-color-text-default);
 
@@ -113,14 +115,14 @@
     text-transform: capitalize;
   }
   tr.firstdim th {
-    @media screen and (max-width: fixed.$breakpoints-xsmall-min-width) {
+     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
     border-top: 2px solid var(--px-color-border-default);
     }
     //font-weight: bold;
     font-family: PxWeb-font-700;
   }
   tr.firstdim td {
-    @media screen and (max-width: fixed.$breakpoints-xsmall-min-width) {
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
     border-top: 2px solid var(--px-color-border-default);
     }
     //font-weight: bold;
@@ -132,7 +134,7 @@
   }
   tbody tr:first-of-type th,
   tbody tr:first-of-type td {
-    @media screen and (max-width: fixed.$breakpoints-xsmall-min-width) {
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
     border-top: 2px solid var(--px-color-border-default);
     }
   }
@@ -171,8 +173,8 @@
     border-top: none ;
     font-family: PxWeb-font-700;
   }
-  @media screen and (min-width: fixed.$breakpoints-xsmall-max-width) {
-    border: 1px solid var(--px-color-border-default);
-     }
+  // @media screen and (min-width: fixed.$breakpoints-xsmall-max-width) {
+  //   border: 1px solid var(--px-color-border-default);
+  //    }
 
 }
