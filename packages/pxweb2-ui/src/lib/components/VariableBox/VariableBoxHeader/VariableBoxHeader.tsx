@@ -52,7 +52,6 @@ export function VariableBoxHeader({
       )}
       onClick={handleHeaderClick}
       onKeyDown={(e) => handleKeyDown(e)}
-      tabIndex={tabIndex}
     >
       <div className={cl(classes['header-content'])}>
         <div className={cl(classes['header-title-and-tag'])}>
@@ -83,7 +82,9 @@ export function VariableBoxHeader({
           </div>
         </div>
 
-        <div className={cssClasses}>
+        <div 
+          className={cssClasses}
+          tabIndex={tabIndex}>
           {isOpen ? (
             <Icon iconName="ChevronUp"></Icon>
           ) : (

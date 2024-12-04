@@ -86,11 +86,6 @@
     cursor: pointer;
   }
 
-  &:focus {
-    border-radius: var(--px-border-radius-medium);
-    outline: 2px solid var(--px-color-border-action);
-  }
-
   &:active {
     border-radius: var(--px-border-radius-medium);
     outline: 2px solid var(--px-color-border-selected);
@@ -100,6 +95,8 @@
     outline: 3px solid var(--px-color-border-focus-outline);
     outline-offset: 3px;
     box-shadow: inset 0 0 0 3px var(--px-color-border-focus-boxshadow);
+    z-index: 999;
+    position: relative; 
   }
 
   &:hover ~ .divider,
