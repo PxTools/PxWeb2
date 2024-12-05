@@ -108,7 +108,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     i18n: i18n,
     variablesSelection: VariablesSelection,
   ) => {
-
     const pxTable: PxTable = await fetchFromApi(
       tableId,
       i18n,
@@ -189,7 +188,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     i18n: i18n,
     variablesSelection: VariablesSelection,
   ) => {
-
     const res = await TableService.getTableDataByPost(
       tableId,
       i18n.language,
