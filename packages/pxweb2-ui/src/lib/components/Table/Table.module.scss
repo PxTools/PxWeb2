@@ -17,7 +17,10 @@
 
   th {
     width: 40px;
+    padding-left: 16px;
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
     padding: 8px 12px;
+    }
     font-weight: normal;
     text-align: center;
 
@@ -50,35 +53,37 @@
   }
 
   th.stub-0 {
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
     padding-left: 12px;
+    }
     border-left: none;
   }
   th.stub-1 {
-    @media screen and (max-width: fixed.$breakpoints-xsmall-min-width) {
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       padding-left: 28px;
     }
     border-left: none;
   }
   th.stub-2 {
-    @media screen and (max-width: fixed.$breakpoints-xsmall-min-width) {
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       padding-left: 44px;
     }
     border-left: none;
   }
   th.stub-3 {
-    @media screen and (max-width: fixed.$breakpoints-xsmall-min-width) {
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       padding-left: 60px;
     }
     border-left: none;
   }
   th.stub-4 {
-    @media screen and (max-width: fixed.$breakpoints-xsmall-min-width) {
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
     padding-left: 76px;
     }
     border-left: none;
   }
   th.stub-5 {
-    @media screen and (max-width: fixed.$breakpoints-xsmall-min-width) {
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
     padding-left: 92px;
     }
     border-left: none;
@@ -104,7 +109,10 @@
     border-left: none;
   }
   td {
+    padding-right: 16px;
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
     padding: 8px 12px;
+    }
     width: 40px;
     text-align: right;
 
@@ -117,6 +125,9 @@
   tr.firstdim th {
      @media screen and (min-width: fixed.$breakpoints-small-min-width) {
     border-top: 2px solid var(--px-color-border-default);
+    }
+    @media screen and (max-width: fixed.$breakpoints-xsmall-max-width) {
+      padding-top: 16px;
     }
     //font-weight: bold;
     font-family: PxWeb-font-700;
@@ -166,6 +177,8 @@
   
   .mobileRowHeadSecondLastStub >th,
   .mobileRowHeadSecondLastStub >td{
+    padding-top: 4px;
+    padding-bottom: 4px;
     background:none;
     border-left:none   ;
     border-right:none;
@@ -176,5 +189,11 @@
   // @media screen and (min-width: fixed.$breakpoints-xsmall-max-width) {
   //   border: 1px solid var(--px-color-border-default);
   //    }
+
+  .mobileRowHeadThirdLastStub>th,
+  .mobileRowHeadThirdLastStub >td{
+    padding-bottom: 16px;
+  }
+
 
 }

@@ -41,7 +41,7 @@ export function Table({ pxtable, isMobile, className = '' }: TableProps) {
   // Loop through all columns in the table. i is the column index
   for (let i = 0; i < tableColumnSize; i++) {
     const dataCellCodes: DataCellCodes = new Array<DataCellMeta>(
-      pxtable.heading.length
+      pxtable.heading.length,
     );
 
     // Loop through all header variables. j is the header variable index
@@ -58,12 +58,14 @@ export function Table({ pxtable, isMobile, className = '' }: TableProps) {
   }
 
   return (
-  <table
+    <table
       className={cl(classes.table, classes[`bodyshort-medium`]) + cssClasses}
       aria-label={pxtable.metadata.label}
     >
       <thead>{createHeading(pxtable, tableMeta, headingDataCellCodes)}</thead>
-      <tbody>{createRows(pxtable, tableMeta, headingDataCellCodes,isMobile)}</tbody>
+      <tbody>
+        {createRows(pxtable, tableMeta, headingDataCellCodes, isMobile)}
+      </tbody>
     </table>
   );
 }
@@ -79,7 +81,7 @@ export function Table({ pxtable, isMobile, className = '' }: TableProps) {
 export function createHeading(
   table: PxTable,
   tableMeta: columnRowMeta,
-  headingDataCellCodes: DataCellCodes[]
+  headingDataCellCodes: DataCellCodes[],
 ): React.JSX.Element[] {
   // Number of times to add all values for a variable, default to 1 for first header row
   let repetitionsCurrentHeaderLevel = 1;
@@ -94,7 +96,7 @@ export function createHeading(
     headerRow.push(
       <th rowSpan={table.heading.length} key={getNewKey()}>
         {emptyText}
-      </th>
+      </th>,
     );
   }
   // Otherwise calculate columnspan start value
@@ -132,11 +134,14 @@ export function createHeading(
             colSpan={columnSpan}
             key={getNewKey()}
             className={cl({
-              [classes.firstColNoStub]: i === 0 && idxRepetitionCurrentHeadingLevel===1 && table.stub.length === 0,
+              [classes.firstColNoStub]:
+                i === 0 &&
+                idxRepetitionCurrentHeadingLevel === 1 &&
+                table.stub.length === 0,
             })}
           >
             {variable.values[i].label}
-          </th>
+          </th>,
         );
         // Repeat for the number of columns in the column span
         for (let j = 0; j < columnSpan; j++) {
@@ -175,7 +180,7 @@ export function createRows(
   table: PxTable,
   tableMeta: columnRowMeta,
   headingDataCellCodes: DataCellCodes[],
-  isMobile:boolean
+  isMobile: boolean,
 ): React.JSX.Element[] {
   const tableRows: React.JSX.Element[] = [];
   const datacellCodes: DataCellCodes = new Array<DataCellMeta>();
@@ -190,7 +195,7 @@ export function createRows(
       datacellCodes,
       headingDataCellCodes,
       tableRows,
-      isMobile
+      isMobile,
     );
   } else {
     const tableRow: React.JSX.Element[] = [];
@@ -198,7 +203,7 @@ export function createRows(
     tableRows.push(
       <tr key={getNewKey()} className={cl(classes.firstColNoStub)}>
         {tableRow}
-      </tr>
+      </tr>,
     );
   }
 
@@ -226,7 +231,7 @@ function createRow(
   stubDataCellCodes: DataCellCodes,
   headingDataCellCodes: DataCellCodes[],
   tableRows: React.JSX.Element[],
-  isMobile:boolean
+  isMobile: boolean,
 ): React.JSX.Element[] {
   // Calculate the rowspan for all the cells to add in this call
   rowSpan = rowSpan / table.stub[stubIndex].values.length;
@@ -252,10 +257,18 @@ function createRow(
       rowSpan = 1;
     }
     let secondLastStubMultipleValues;
-    if (isMobile && stubIndex===table.stub.length-2 &&  table.stub[stubIndex].values.length>1) // second last level
-    {
-     secondLastStubMultipleValues=true;
-     console.log("secondLastStubMultipleValues= "+ secondLastStubMultipleValues)
+    if (
+      isMobile &&
+      stubIndex === table.stub.length - 2 &&
+      table.stub[stubIndex].values.length > 1
+    ) {
+      // second last level
+      secondLastStubMultipleValues = true;
+    }
+    let thirdLastStub;
+    if (isMobile && stubIndex === table.stub.length - 3) {
+      // third last level
+      thirdLastStub = true;
     }
 
     tableRow.push(
@@ -267,20 +280,34 @@ function createRow(
         key={getNewKey()}
       >
         {val.label}
-      </th>
+      </th>,
     );
 
     // If there are more stub variables that need to add headers to this row
     if (table.stub.length > stubIndex + 1) {
       // make the rest of this row empty
-      fillEmpty(tableMeta, tableRow,isMobile);
+      fillEmpty(tableMeta, tableRow, isMobile);
       tableRows.push(
         <tr
-          className={cl({ [classes.firstdim]: stubIndex === 0 },{ [classes.mobileEmptyRowCell]: isMobile && !secondLastStubMultipleValues },{[classes.mobileRowHeadSecondLastStub]: secondLastStubMultipleValues})}
+          className={cl(
+            { [classes.firstdim]: stubIndex === 0 },
+            {
+              [classes.mobileEmptyRowCell]:
+                isMobile && !secondLastStubMultipleValues,
+            },
+            {
+              [classes.mobileRowHeadSecondLastStub]:
+                secondLastStubMultipleValues,
+            },
+            {
+              [classes.mobileRowHeadThirdLastStub]:
+                thirdLastStub,
+            },            
+          )}
           key={getNewKey()}
         >
           {tableRow}
-        </tr>
+        </tr>,
       );
       tableRow = [];
 
@@ -294,7 +321,7 @@ function createRow(
         stubDataCellCodes,
         headingDataCellCodes,
         tableRows,
-        isMobile
+        isMobile,
       );
       stubDataCellCodes.pop();
     } else {
@@ -304,9 +331,16 @@ function createRow(
         tableMeta,
         stubDataCellCodes,
         headingDataCellCodes,
-        tableRow
+        tableRow,
       );
-      tableRows.push(<tr key={getNewKey()} className={cl({[classes.mobileRowHeadLastStub]: isMobile} )}>{tableRow}</tr>);
+      tableRows.push(
+        <tr
+          key={getNewKey()}
+          className={cl({ [classes.mobileRowHeadLastStub]: isMobile })}
+        >
+          {tableRow}
+        </tr>,
+      );
       tableRow = [];
       stubDataCellCodes.pop();
     }
@@ -324,7 +358,7 @@ function createRow(
 function fillEmpty(
   tableMeta: columnRowMeta,
   tableRow: React.JSX.Element[],
-  isMobile:boolean
+  isMobile: boolean,
 ): void {
   const emptyText = '';
 
@@ -333,7 +367,7 @@ function fillEmpty(
 
   // Loop through all data columns in the table
   for (let i = 0; i < maxCols; i++) {
-    tableRow.push(<td key={getNewKey()}   >{emptyText}</td>);
+    tableRow.push(<td key={getNewKey()}>{emptyText}</td>);
   }
 }
 
@@ -352,7 +386,7 @@ function fillData(
   tableMeta: columnRowMeta,
   stubDataCellCodes: DataCellCodes,
   headingDataCellCodes: DataCellCodes[],
-  tableRow: React.JSX.Element[]
+  tableRow: React.JSX.Element[],
 ): void {
   // Loop through cells that need to be added to the row
   const maxCols = tableMeta.columns - tableMeta.columnOffset;
@@ -384,7 +418,7 @@ function fillData(
     tableRow.push(
       <td key={getNewKey()} headers={headers}>
         {t('number.simple_number', { value: dataValue ?? '' })}
-      </td>
+      </td>,
     ); // TODO: Handle null values
   }
 }
