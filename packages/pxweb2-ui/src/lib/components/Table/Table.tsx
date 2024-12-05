@@ -256,6 +256,19 @@ function createRow(
     if (rowSpan === 0) {
       rowSpan = 1;
     }
+    let lastValueOfLastStub;
+    if (
+      isMobile &&
+      stubIndex === table.stub.length - 1 &&
+      i === table.stub[stubIndex].values.length - 1
+    ) {
+      // the last value of last level stub
+      lastValueOfLastStub = true;
+      console.log(
+        'lastValueOfLastStub=' +
+          JSON.stringify(table.stub[stubIndex].values[i]),
+      );
+    }
     let secondLastStubMultipleValues;
     if (
       isMobile &&
@@ -300,9 +313,8 @@ function createRow(
                 secondLastStubMultipleValues,
             },
             {
-              [classes.mobileRowHeadThirdLastStub]:
-                thirdLastStub,
-            },            
+              [classes.mobileRowHeadThirdLastStub]: thirdLastStub,
+            },
           )}
           key={getNewKey()}
         >
@@ -336,7 +348,12 @@ function createRow(
       tableRows.push(
         <tr
           key={getNewKey()}
-          className={cl({ [classes.mobileRowHeadLastStub]: isMobile })}
+          className={cl(
+            { [classes.mobileRowHeadLastStub]: isMobile },
+            {
+              [classes.mobileRowHeadlastValueOfLastStub]: lastValueOfLastStub,
+            },
+          )}
         >
           {tableRow}
         </tr>,
