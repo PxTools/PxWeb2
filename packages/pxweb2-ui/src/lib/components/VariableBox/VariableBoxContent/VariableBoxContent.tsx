@@ -129,7 +129,7 @@ export function VariableBoxContent({
   useEffect(() => {
     function compareSearchedAndChosenValues(
       searchedValues: string | Value[],
-      chosenValues: string | Value[],
+      chosenValues: string | string[],
     ) {
       const compareArrays = Array.isArray(searchedValues)
         ? searchedValues
