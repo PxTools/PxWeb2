@@ -73,7 +73,6 @@ export function VariableBoxContent({
   const [currentFocusedItemIndex, setCurrentFocusedItemIndex] = useState<
     number | null
   >(null);
-
   const [items, setItems] = useState<{ type: string; value?: Value }[]>([]);
 
   const valuesOnlyList = useRef<HTMLDivElement>(null);
@@ -201,6 +200,30 @@ export function VariableBoxContent({
     }
   };
 
+  const handleChangingCodeListInVariableBox = (
+    selectedItem: SelectOption | undefined,
+    varId: string,
+    virtuosoRef: React.RefObject<VirtuosoHandle>,
+  ) => {
+    // Call the parent function to change the code list
+    onChangeCodeList(selectedItem, varId);
+
+    // Reset search state
+    if (search !== '') {
+      setSearch('');
+    }
+
+    // Reset the scroll show/hide state
+    if (scrollingDown) {
+      setScrollingDown(false);
+    }
+
+    // Reset the virtuoso list to the top/first item
+    if (virtuosoRef.current) {
+      virtuosoRef.current.scrollToIndex(0);
+    }
+  };
+
   const searchedValues: Value[] = values.filter(
     (value) =>
       value.label.toLowerCase().indexOf(debouncedSearch.toLowerCase()) > -1,
@@ -225,6 +248,7 @@ export function VariableBoxContent({
           className={classes['focusableItem']}
         >
           <Search
+            value={search}
             onChange={(value: string) => {
               setSearch(value);
               if (value === '') {
@@ -348,7 +372,13 @@ export function VariableBoxContent({
               )}
               options={mappedCodeLists}
               selectedOption={selectedCodeListOrUndefined}
-              onChange={(selectedItem) => onChangeCodeList(selectedItem, varId)}
+              onChange={(selectedItem) =>
+                handleChangingCodeListInVariableBox(
+                  selectedItem,
+                  varId,
+                  virtuosoRef,
+                )
+              }
             />
           </div>
         )}
