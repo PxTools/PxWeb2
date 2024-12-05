@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
-import cl from 'clsx';
 
 import {
   metadataOutputFormat,
@@ -20,7 +19,6 @@ import {
 import NavigationDrawer from '../../components/NavigationDrawer/NavigationDrawer';
 import useVariables from '../../context/useVariables';
 import { NavigationItem } from '../../components/NavigationMenu/NavigationItem/NavigationItemType';
-import classes from './Selection.module.scss';
 
 function addSelectedCodeListToVariable(
   currentVariable: SelectedVBValues | undefined,
