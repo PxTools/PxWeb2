@@ -27,7 +27,7 @@ export function Tag({
         classes[size],
         classes[textStyle],
         classes[variant],
-        classes[type]
+        classes[type],
       )}
     >
       {children}

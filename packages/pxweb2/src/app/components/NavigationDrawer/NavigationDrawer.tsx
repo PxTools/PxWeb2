@@ -19,7 +19,7 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
   const { t } = useTranslation();
 
   // Handle RTL languages
-  const hideIcon = i18next.dir() === 'rtl' ? 'ChevronRight' : 'ChevronLeft'
+  const hideIcon = i18next.dir() === 'rtl' ? 'ChevronRight' : 'ChevronLeft';
 
   return (
     <>
@@ -29,11 +29,16 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
           <Heading level="2" size="medium">
             {heading}
           </Heading>
-          <div onClick={onClose} className={cl(styles.hideMenu, styles.clickable)}>
+          <div
+            onClick={onClose}
+            className={cl(styles.hideMenu, styles.clickable)}
+          >
             <div className={styles.hideIconWrapper}>
               <Icon iconName={hideIcon} className=""></Icon>
             </div>
-            <Label size="medium" className={styles.clickable}>{t('presentation_page.sidemenu.hide')}</Label>
+            <Label size="medium" className={styles.clickable}>
+              {t('presentation_page.sidemenu.hide')}
+            </Label>
           </div>
         </div>
         <div className={styles.children}>{children}</div>

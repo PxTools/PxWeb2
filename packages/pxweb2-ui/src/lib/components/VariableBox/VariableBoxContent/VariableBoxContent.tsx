@@ -28,13 +28,13 @@ type VariableBoxContentProps = VariableBoxPropsToContent & {
   totalChosenValues: number;
   onChangeCodeList: (
     selectedItem: SelectOption | undefined,
-    varId: string
+    varId: string,
   ) => void;
   onChangeCheckbox: (varId: string, value: string) => void;
   onChangeMixedCheckbox: (
     varId: string,
     allValuesSelected: string,
-    searchValues: Value[]
+    searchValues: Value[],
   ) => void;
 };
 
@@ -53,14 +53,14 @@ export function VariableBoxContent({
 }: VariableBoxContentProps) {
   const { t } = useTranslation();
   const checkboxSelectAllText = t(
-    'presentation_page.sidemenu.selection.variablebox.content.mixed_checkbox.select_all'
+    'presentation_page.sidemenu.selection.variablebox.content.mixed_checkbox.select_all',
   );
   const checkboxDeselectAllText = t(
-    'presentation_page.sidemenu.selection.variablebox.content.mixed_checkbox.deselect_all'
+    'presentation_page.sidemenu.selection.variablebox.content.mixed_checkbox.deselect_all',
   );
 
   const [mixedCheckboxText, setMixedCheckboxText] = useState<string>(
-    checkboxSelectAllText
+    checkboxSelectAllText,
   );
   const [search, setSearch] = useState<string>('');
   const [allValuesSelected, setAllValuesSelected] = useState<
@@ -107,7 +107,7 @@ export function VariableBoxContent({
     valuesToRender
       .filter(
         (value) =>
-          value.label.toLowerCase().indexOf(debouncedSearch.toLowerCase()) > -1
+          value.label.toLowerCase().indexOf(debouncedSearch.toLowerCase()) > -1,
       )
       .forEach((value) => {
         newItems.push({ type: 'value', value });
@@ -146,15 +146,15 @@ export function VariableBoxContent({
 
   // needs the selected, mapped code list for the current variable
   const currentVarSelectedCodeListId = selectedValues.find(
-    (variable) => variable.id === varId
+    (variable) => variable.id === varId,
   )?.selectedCodeList;
   const selectedCodeListMapped = mappedCodeLists.find(
-    (codeList) => codeList.value === currentVarSelectedCodeListId
+    (codeList) => codeList.value === currentVarSelectedCodeListId,
   );
   const selectedCodeListOrUndefined = selectedCodeListMapped ?? undefined;
 
   const handleValueListKeyboardNavigation = (
-    event: React.KeyboardEvent<HTMLDivElement>
+    event: React.KeyboardEvent<HTMLDivElement>,
   ) => {
     const { key } = event;
 
@@ -203,7 +203,7 @@ export function VariableBoxContent({
 
   const searchedValues: Value[] = values.filter(
     (value) =>
-      value.label.toLowerCase().indexOf(debouncedSearch.toLowerCase()) > -1
+      value.label.toLowerCase().indexOf(debouncedSearch.toLowerCase()) > -1,
   );
 
   // Modify the itemRenderer to assign IDs and tabIndex
@@ -234,13 +234,13 @@ export function VariableBoxContent({
             variant="inVariableBox"
             showLabel={false}
             searchPlaceHolder={t(
-              'presentation_page.sidemenu.selection.variablebox.search.placeholder'
+              'presentation_page.sidemenu.selection.variablebox.search.placeholder',
             )}
             ariaLabelIconText={t(
-              'presentation_page.sidemenu.selection.variablebox.search.arialabelicontext'
+              'presentation_page.sidemenu.selection.variablebox.search.arialabelicontext',
             )}
             arialLabelClearButtonText={t(
-              'presentation_page.sidemenu.selection.variablebox.search.ariallabelclearbuttontext'
+              'presentation_page.sidemenu.selection.variablebox.search.ariallabelclearbuttontext',
             )}
             variableBoxTopBorderOverride={hasSelectAndSearch}
           />
@@ -291,8 +291,8 @@ export function VariableBoxContent({
   const stickyTopValueCount = hasSevenOrMoreValues
     ? 2
     : hasTwoOrMoreValues
-    ? 1
-    : 0;
+      ? 1
+      : 0;
 
   const virtuosoRef = useRef<VirtuosoHandle>(null);
   const [lastScrollPosition, setLastScrollPosition] = useState(0);
@@ -334,17 +334,17 @@ export function VariableBoxContent({
             <Select
               variant="inVariableBox"
               label={t(
-                'presentation_page.sidemenu.selection.variablebox.content.select.label'
+                'presentation_page.sidemenu.selection.variablebox.content.select.label',
               )}
               modalHeading={label}
               modalCancelLabel={t(
-                'presentation_page.sidemenu.selection.variablebox.content.select.modal.cancel_button'
+                'presentation_page.sidemenu.selection.variablebox.content.select.modal.cancel_button',
               )}
               modalConfirmLabel={t(
-                'presentation_page.sidemenu.selection.variablebox.content.select.modal.confirm_button'
+                'presentation_page.sidemenu.selection.variablebox.content.select.modal.confirm_button',
               )}
               placeholder={t(
-                'presentation_page.sidemenu.selection.variablebox.content.select.placeholder'
+                'presentation_page.sidemenu.selection.variablebox.content.select.placeholder',
               )}
               options={mappedCodeLists}
               selectedOption={selectedCodeListOrUndefined}
@@ -357,7 +357,7 @@ export function VariableBoxContent({
           className={cl(
             classes['variablebox-content-full-values-list'],
             hasSevenOrMoreValues &&
-              classes['variablebox-content-full-values-list-scroll']
+              classes['variablebox-content-full-values-list-scroll'],
           )}
         >
           <div
@@ -365,16 +365,15 @@ export function VariableBoxContent({
               'presentation_page.sidemenu.selection.variablebox.content.values_list.aria_label',
               {
                 total: totalValues,
-              }
+              },
             )}
             aria-description={t(
               'presentation_page.sidemenu.selection.variablebox.content.values_list.aria_description',
               {
                 total: totalValues,
-              }
+              },
             )} // Coming in WAI-ARIA 1.3
             className={cl(classes['variablebox-content-values-only-list'])}
-            tabIndex={0}
             ref={valuesOnlyList}
             onKeyDown={handleValueListKeyboardNavigation}
           >
@@ -389,6 +388,7 @@ export function VariableBoxContent({
                   width: '100%',
                 }}
                 className=""
+                tabIndex={-1}
                 totalCount={items.length}
                 itemContent={(index) => itemRenderer(items, index)}
                 scrollSeekConfiguration={{

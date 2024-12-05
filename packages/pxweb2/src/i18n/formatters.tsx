@@ -23,7 +23,7 @@ const customRoundingMode = 'halfExpand';
 export function NumberFormatter(
   value: number,
   decimals: number,
-  maxDecimals?: number
+  maxDecimals?: number,
 ): string {
   const { i18n } = useTranslation();
   const max = maxDecimals ? maxDecimals : decimals;
@@ -55,7 +55,7 @@ export function NumberFormatter(
 export function pxNumber(
   value: number,
   lng: string | undefined,
-  options?: Intl.NumberFormatOptions
+  options?: Intl.NumberFormatOptions,
 ): string {
   if (!options) {
     return new Intl.NumberFormat(lng, {

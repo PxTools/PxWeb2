@@ -9,19 +9,19 @@
   align-self: stretch;
   background: var(--px-color-background-subtle);
   overflow-y: auto;
- 
+
   // Not from Figma
   scrollbar-width: thin;
- 
+
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
     width: calc(100vw - 40px);
-//    max-width: 384px;
+    //    max-width: 384px;
     max-width: 395px;
     padding: fixed.$spacing-4;
   }
 
   @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
-//    width: 384px;
+    //    width: 384px;
     width: 395px;
     padding: fixed.$spacing-6;
   }
@@ -122,7 +122,7 @@
 
 // Not from Figma
 .children {
-    width: 100%;
+  width: 100%;
 }
 
 .fadein {

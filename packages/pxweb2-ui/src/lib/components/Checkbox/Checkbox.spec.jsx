@@ -12,7 +12,7 @@ describe('Checkbox', () => {
           console.log(val);
         }}
         value={true}
-      />
+      />,
     );
     expect(baseElement).toBeTruthy();
   });
@@ -29,7 +29,7 @@ describe('Checkbox', () => {
           console.log('inside onchange');
         }}
         value={selected}
-      />
+      />,
     );
 
     baseElement.querySelector('#test').click();

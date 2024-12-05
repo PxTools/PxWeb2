@@ -24,12 +24,14 @@ export function Label({
 
   return (
     <label
-      className={cl(
-        classes.label,
-        classes[`label-${size}`],
-        cl({ [classes[`textcolor-${textcolor}`]]: textcolor }),
-        cl({ [classes['visually-hidden']]: visuallyHidden })
-      ) + cssClasses}
+      className={
+        cl(
+          classes.label,
+          classes[`label-${size}`],
+          cl({ [classes[`textcolor-${textcolor}`]]: textcolor }),
+          cl({ [classes['visually-hidden']]: visuallyHidden }),
+        ) + cssClasses
+      }
       {...rest}
     >
       {children}

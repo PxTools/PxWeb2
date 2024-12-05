@@ -9,7 +9,7 @@
 // - added motion span to animate tab switching
 
 import React, { useContext } from 'react';
-import { motion as m } from 'framer-motion';
+import { motion as m } from 'motion/react';
 import cl from 'clsx';
 
 import { TabContext } from './TabsProvider';

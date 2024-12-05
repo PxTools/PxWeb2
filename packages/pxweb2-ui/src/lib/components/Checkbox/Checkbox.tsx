@@ -8,7 +8,7 @@ import Label from '../Typography/Label/Label';
 interface CheckboxProps {
   id: string;
   text: string;
-  searchTerm?: string
+  searchTerm?: string;
   value: boolean;
   onChange: (str: boolean) => void;
   tabIndex?: number;
@@ -59,7 +59,9 @@ export const Checkbox: React.FC<CheckboxProps> = ({
         {value && <Icon iconName="CheckMark"></Icon>}
       </span>
       <div className={styles.label} id={id + '-label'}>
-        <span className={cl({ [styles.strong]: strong })}><Highlight text={text} searchTerm={searchTerm}/></span>
+        <span className={cl({ [styles.strong]: strong })}>
+          <Highlight text={text} searchTerm={searchTerm} />
+        </span>
       </div>
     </div>
   );

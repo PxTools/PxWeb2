@@ -40,7 +40,7 @@ export function Table({ pxtable, className = '' }: TableProps) {
   // Loop through all columns in the table. i is the column index
   for (let i = 0; i < tableColumnSize; i++) {
     const dataCellCodes: DataCellCodes = new Array<DataCellMeta>(
-      pxtable.heading.length
+      pxtable.heading.length,
     );
 
     // Loop through all header variables. j is the header variable index
@@ -78,7 +78,7 @@ export function Table({ pxtable, className = '' }: TableProps) {
 export function createHeading(
   table: PxTable,
   tableMeta: columnRowMeta,
-  headingDataCellCodes: DataCellCodes[]
+  headingDataCellCodes: DataCellCodes[],
 ): React.JSX.Element[] {
   // Number of times to add all values for a variable, default to 1 for first header row
   let repetitionsCurrentHeaderLevel = 1;
@@ -93,7 +93,7 @@ export function createHeading(
     headerRow.push(
       <th rowSpan={table.heading.length} key={getNewKey()}>
         {emptyText}
-      </th>
+      </th>,
     );
   }
   // Otherwise calculate columnspan start value
@@ -131,11 +131,14 @@ export function createHeading(
             colSpan={columnSpan}
             key={getNewKey()}
             className={cl({
-              [classes.firstColNoStub]: i === 0 && idxRepetitionCurrentHeadingLevel===1 && table.stub.length === 0,
+              [classes.firstColNoStub]:
+                i === 0 &&
+                idxRepetitionCurrentHeadingLevel === 1 &&
+                table.stub.length === 0,
             })}
           >
             {variable.values[i].label}
-          </th>
+          </th>,
         );
         // Repeat for the number of columns in the column span
         for (let j = 0; j < columnSpan; j++) {
@@ -173,7 +176,7 @@ export function createHeading(
 export function createRows(
   table: PxTable,
   tableMeta: columnRowMeta,
-  headingDataCellCodes: DataCellCodes[]
+  headingDataCellCodes: DataCellCodes[],
 ): React.JSX.Element[] {
   const tableRows: React.JSX.Element[] = [];
   const datacellCodes: DataCellCodes = new Array<DataCellMeta>();
@@ -187,7 +190,7 @@ export function createRows(
       tableMeta,
       datacellCodes,
       headingDataCellCodes,
-      tableRows
+      tableRows,
     );
   } else {
     const tableRow: React.JSX.Element[] = [];
@@ -195,7 +198,7 @@ export function createRows(
     tableRows.push(
       <tr key={getNewKey()} className={cl(classes.firstColNoStub)}>
         {tableRow}
-      </tr>
+      </tr>,
     );
   }
 
@@ -222,7 +225,7 @@ function createRow(
   tableMeta: columnRowMeta,
   stubDataCellCodes: DataCellCodes,
   headingDataCellCodes: DataCellCodes[],
-  tableRows: React.JSX.Element[]
+  tableRows: React.JSX.Element[],
 ): React.JSX.Element[] {
   // Calculate the rowspan for all the cells to add in this call
   rowSpan = rowSpan / table.stub[stubIndex].values.length;
@@ -257,7 +260,7 @@ function createRow(
         key={getNewKey()}
       >
         {val.label}
-      </th>
+      </th>,
     );
 
     // If there are more stub variables that need to add headers to this row
@@ -270,7 +273,7 @@ function createRow(
           key={getNewKey()}
         >
           {tableRow}
-        </tr>
+        </tr>,
       );
       tableRow = [];
 
@@ -283,7 +286,7 @@ function createRow(
         tableMeta,
         stubDataCellCodes,
         headingDataCellCodes,
-        tableRows
+        tableRows,
       );
       stubDataCellCodes.pop();
     } else {
@@ -293,7 +296,7 @@ function createRow(
         tableMeta,
         stubDataCellCodes,
         headingDataCellCodes,
-        tableRow
+        tableRow,
       );
       tableRows.push(<tr key={getNewKey()}>{tableRow}</tr>);
       tableRow = [];
@@ -312,7 +315,7 @@ function createRow(
  */
 function fillEmpty(
   tableMeta: columnRowMeta,
-  tableRow: React.JSX.Element[]
+  tableRow: React.JSX.Element[],
 ): void {
   const emptyText = '';
 
@@ -340,7 +343,7 @@ function fillData(
   tableMeta: columnRowMeta,
   stubDataCellCodes: DataCellCodes,
   headingDataCellCodes: DataCellCodes[],
-  tableRow: React.JSX.Element[]
+  tableRow: React.JSX.Element[],
 ): void {
   // Loop through cells that need to be added to the row
   const maxCols = tableMeta.columns - tableMeta.columnOffset;
@@ -372,7 +375,7 @@ function fillData(
     tableRow.push(
       <td key={getNewKey()} headers={headers}>
         {t('number.simple_number', { value: dataValue ?? '' })}
-      </td>
+      </td>,
     ); // TODO: Handle null values
   }
 }

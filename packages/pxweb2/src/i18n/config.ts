@@ -9,7 +9,7 @@ export const defaultNS = 'translation';
 const config = getConfig();
 
 const supportedLanguages: string[] = config.language.supportedLanguages.map(
-  (item) => item.shorthand
+  (item) => item.shorthand,
 );
 
 i18n

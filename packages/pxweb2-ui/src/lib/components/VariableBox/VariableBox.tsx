@@ -22,10 +22,14 @@ export type VariableBoxProps = VariableBoxPropsBase & {
   initialIsOpen?: boolean;
   onChangeCodeList: (
     selectedItem: SelectOption | undefined,
-    varId: string
+    varId: string,
   ) => void;
   onChangeCheckbox: (varId: string, value: string) => void;
-  onChangeMixedCheckbox: (varId: string, allValuesSelected: string, searchValues: Value[]) => void;
+  onChangeMixedCheckbox: (
+    varId: string,
+    allValuesSelected: string,
+    searchValues: Value[],
+  ) => void;
   selectedValues: SelectedVBValues[];
 };
 
@@ -51,7 +55,7 @@ export function VariableBox({
   const totalValues = values?.length;
   let totalChosenValues = 0;
   const chosenValuesLength = selectedValues.find(
-    (variables) => variables.id === id
+    (variables) => variables.id === id,
   )?.values.length;
   const currentVariable = selectedValues.find((variable) => variable.id === id);
   const isMissingMandatoryValueError =
@@ -70,7 +74,7 @@ export function VariableBox({
     <div
       className={cl(
         classes.variablebox,
-        isMissingMandatoryValueError && classes['error']
+        isMissingMandatoryValueError && classes['error'],
       )}
       key={id + '-variablebox'}
     >

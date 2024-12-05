@@ -7,6 +7,7 @@
     "lint": "npm run lint --workspaces",
     "test": "npm run test --workspaces",
     "build": "npm run build-style-dictionary && npm run build --workspaces",
+    "prettier": "npm run prettier --workspaces",
     "build-storybook": "cd ./packages/pxweb2-ui && storybook build",
     "build-i18n-interface": "npx i18next-resources-for-ts interface -i ./packages/pxweb2/public/locales/en -o ./packages/pxweb2/src/@types/resources.d.ts",
     "build-style-dictionary": "cd ./packages/pxweb2-ui && npm run build-style-dictionary",
