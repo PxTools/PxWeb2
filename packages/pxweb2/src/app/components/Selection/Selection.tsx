@@ -173,6 +173,45 @@ function addMultipleValuesToVariable(
   return newSelectedValues;
 }
 
+function removeMultipleValuesToVariable(
+  selectedValuesArr: SelectedVBValues[],
+  varId: string,
+  valuesToAdd: Value[],
+  searchedValues: Value[],
+): SelectedVBValues[] {
+  const currentVariable = selectedValuesArr.find(
+    (variable) => variable.id === varId,
+  );
+  let newSelectedValues: SelectedVBValues[] = [];
+
+  if (currentVariable) {
+    newSelectedValues = selectedValuesArr.map((variable) => {
+      if (variable.id === varId) {
+        const prevValues = [...variable.values];
+        const valuesList = prevValues.filter(
+          (val) => !searchedValues.some((v) => v.code === val),
+        );
+        variable.values = valuesList;
+      }
+      return variable;
+    });
+  }
+  if (!currentVariable) {
+    newSelectedValues = [
+      ...selectedValuesArr,
+      {
+        id: varId,
+        selectedCodeList: undefined,
+        values: valuesToAdd
+          .filter((v) => searchedValues.includes(v))
+          .map((value) => value.code),
+      },
+    ];
+  }
+
+  return newSelectedValues;
+}
+
 function removeAllValuesOfVariable(
   selectedValuesArr: SelectedVBValues[],
   varId: string,
@@ -445,13 +484,6 @@ export function Selection({
   ) => {
     const prevSelectedValues = structuredClone(selectedVBValues);
 
-    if (allValuesSelected === 'true') {
-      const newSelectedValues = removeAllValuesOfVariable(
-        prevSelectedValues,
-        varId,
-      );
-      updateAndSyncVBValues(newSelectedValues);
-    }
     if (allValuesSelected === 'false' || allValuesSelected === 'mixed') {
       const allValuesOfVariable =
         pxTableMetaToRender?.variables.find((variable) => variable.id === varId)
@@ -461,6 +493,23 @@ export function Selection({
         varId,
         allValuesOfVariable,
         searchValues,
+      );
+      updateAndSyncVBValues(newSelectedValues);
+    } else if (allValuesSelected === 'true' && searchValues.length > 0) {
+      const allValuesOfVariable =
+        pxTableMetaToRender?.variables.find((variable) => variable.id === varId)
+          ?.values || [];
+      const newSelectedValues = removeMultipleValuesToVariable(
+        prevSelectedValues,
+        varId,
+        allValuesOfVariable,
+        searchValues,
+      );
+      updateAndSyncVBValues(newSelectedValues);
+    } else if (allValuesSelected === 'true') {
+      const newSelectedValues = removeAllValuesOfVariable(
+        prevSelectedValues,
+        varId,
       );
       updateAndSyncVBValues(newSelectedValues);
     }
