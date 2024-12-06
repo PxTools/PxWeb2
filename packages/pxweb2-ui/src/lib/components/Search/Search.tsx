@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import cl from 'clsx';
 
 import classes from './Search.module.scss';
@@ -32,19 +32,22 @@ export function Search({
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleClear = () => {
+    onChange && onChange('');
     setInputValue('');
     if (inputRef.current !== null) {
       inputRef.current.focus();
     }
   };
 
-  const handleKeyDown = (e: { keyCode: number }) => {
-    if (e.keyCode === 27) {
-      handleClear();
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Escape') {
+      if (inputRef.current?.value.trim() === '') {
+        inputRef.current?.blur();
+      } else {
+        handleClear();
+      }
     }
   };
-
-  const hasValue = inputValue.length > 0;
 
   return (
     <div className={cl(classes.search, classes[variant])}>
@@ -79,7 +82,7 @@ export function Search({
           }}
           {...rest}
         ></input>
-        {hasValue && (
+        {inputValue.length > 0 && (
           <Button
             variant="tertiary"
             icon="XMark"

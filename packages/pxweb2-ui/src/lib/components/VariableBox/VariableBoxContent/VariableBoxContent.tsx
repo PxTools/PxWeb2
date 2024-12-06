@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { useDebounce } from '@uidotdev/usehooks';
@@ -14,6 +14,8 @@ import { VartypeEnum } from '../../../shared-types/vartypeEnum';
 import { Value } from '../../../shared-types/value';
 import Skeleton from '../../Skeleton/Skeleton';
 import { mapCodeListsToSelectOptions } from '../../../util/util';
+import { BodyShort } from '../../Typography/BodyShort/BodyShort';
+import Heading from '../../Typography/Heading/Heading';
 
 type VariableBoxPropsToContent = Omit<
   VariableBoxProps,
@@ -82,7 +84,17 @@ export function VariableBoxContent({
   const hasTwoOrMoreValues = values && values.length > 1;
   const hasSelectAndSearch = hasCodeLists && hasSevenOrMoreValues;
   const valuesToRender = structuredClone(values);
-
+  const searchedValues: Value[] = values.filter(
+    (value) =>
+      value.label.toLowerCase().indexOf(debouncedSearch.toLowerCase()) > -1,
+  );
+  const selectedValuesForVar = useMemo(() => {
+    return (
+      selectedValues
+        .find((variables) => variables.id === varId)
+        ?.values.sort() || []
+    );
+  }, [selectedValues, varId]);
   // The API always returns the oldest values first,
   // so we can just reverse the values array when the type is TIME_VARIABLE
   if (type === VartypeEnum.TIME_VARIABLE) {
@@ -114,16 +126,56 @@ export function VariableBoxContent({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasSevenOrMoreValues, hasTwoOrMoreValues, debouncedSearch, values]);
 
+  // Function to compare the searched values with the chosen values
+  function compareSearchedAndChosenValues(
+    searchedValues: string | Value[],
+    chosenValues: string | string[],
+  ): 'mixed' | 'none' | 'all' {
+    const compareArrays = Array.isArray(searchedValues)
+      ? searchedValues
+          .map((searchedValue) => searchedValue.code)
+          .filter((value: string) => chosenValues.includes(value))
+      : [];
+
+    if (compareArrays.length === 0) {
+      return 'none';
+    } else if (compareArrays.length === searchedValues.length) {
+      return 'all';
+    } else {
+      return 'mixed';
+    }
+  }
+
   useEffect(() => {
-    if (totalChosenValues === 0) {
+    const searcedResult = compareSearchedAndChosenValues(
+      searchedValues,
+      selectedValuesForVar,
+    );
+
+    if (
+      // If no values are chosen and no values are searched for
+      (totalChosenValues === 0 && searchedValues.length === 0) ||
+      // If there are searched values and searched and chosen values do not match
+      (searchedValues.length > 0 && searcedResult === 'none')
+    ) {
       setMixedCheckboxText(checkboxSelectAllText);
       setAllValuesSelected('false');
-    }
-    if (totalChosenValues > 0 && totalChosenValues < totalValues) {
+    } else if (
+      // If some values are chosen and no values are searched for
+      (totalChosenValues > 0 &&
+        totalChosenValues < totalValues &&
+        searchedValues.length === 0) ||
+      // If some values are chosen and some values are searched for and they do match
+      (searchedValues.length > 0 && searcedResult === 'mixed')
+    ) {
       setMixedCheckboxText(checkboxSelectAllText);
       setAllValuesSelected('mixed');
-    }
-    if (totalChosenValues === totalValues) {
+    } else if (
+      // If all values are chosen and no values are searched for
+      (totalChosenValues === totalValues && searchedValues.length === 0) ||
+      // If all values chosen and matching searched values
+      (searchedValues.length > 0 && searcedResult === 'all')
+    ) {
       setMixedCheckboxText(checkboxDeselectAllText);
       setAllValuesSelected('true');
     }
@@ -132,6 +184,8 @@ export function VariableBoxContent({
     totalValues,
     checkboxSelectAllText,
     checkboxDeselectAllText,
+    searchedValues,
+    selectedValuesForVar,
   ]);
 
   let mappedCodeLists: SelectOption[] = [];
@@ -197,11 +251,6 @@ export function VariableBoxContent({
     }
   };
 
-  const searchedValues: Value[] = values.filter(
-    (value) =>
-      value.label.toLowerCase().indexOf(debouncedSearch.toLowerCase()) > -1,
-  );
-
   // Modify the itemRenderer to assign IDs and tabIndex
   const itemRenderer = (items: any, index: number) => {
     const item = items[index];
@@ -235,7 +284,7 @@ export function VariableBoxContent({
           />
         </div>
       );
-    } else if (item.type === 'mixedCheckbox') {
+    } else if (item.type === 'mixedCheckbox' && searchedValues.length > 0) {
       return (
         <div id={varId} tabIndex={-1} className={classes['focusableItem']}>
           <MixedCheckbox
@@ -251,7 +300,11 @@ export function VariableBoxContent({
           />
         </div>
       );
-    } else if (item.type === 'value' && item.value) {
+    } else if (
+      item.type === 'value' &&
+      item.value &&
+      searchedValues.length > 0
+    ) {
       const value = item.value;
       return (
         <div id={value.code} tabIndex={-1} className={classes['focusableItem']}>
@@ -269,6 +322,32 @@ export function VariableBoxContent({
             searchTerm={search}
             onChange={() => onChangeCheckbox(varId, value.code)}
           />
+        </div>
+      );
+    } else if (searchedValues.length === 0) {
+      return (
+        <div
+          className={cl(classes['variablebox-content-values-list-no-results'])}
+        >
+          <Heading
+            size="xsmall"
+            textcolor="default"
+            level="4"
+            align="center"
+            className={cl(
+              classes['variablebox-content-values-list-no-results-heading'],
+            )}
+          >
+            {t(
+              'presentation_page.sidemenu.selection.variablebox.content.values_list.no_results_heading',
+              { search: search },
+            )}
+          </Heading>
+          <BodyShort size="medium" textcolor="default" align="center">
+            {t(
+              'presentation_page.sidemenu.selection.variablebox.content.values_list.no_results_bodyshort',
+            )}
+          </BodyShort>
         </div>
       );
     } else {
