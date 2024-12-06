@@ -130,7 +130,7 @@ export function VariableBoxContent({
   function compareSearchedAndChosenValues(
     searchedValues: string | Value[],
     chosenValues: string | string[],
-  ): "mixed" | "none" | "all" {
+  ): 'mixed' | 'none' | 'all' {
     const compareArrays = Array.isArray(searchedValues)
       ? searchedValues
           .map((searchedValue) => searchedValue.code)
@@ -147,9 +147,10 @@ export function VariableBoxContent({
   }
 
   useEffect(() => {
-
-    const searcedResult = compareSearchedAndChosenValues(searchedValues, selectedValuesForVar)
-
+    const searcedResult = compareSearchedAndChosenValues(
+      searchedValues,
+      selectedValuesForVar,
+    );
 
     if (
       // If no values are chosen and no values are searched for
@@ -161,10 +162,11 @@ export function VariableBoxContent({
       setAllValuesSelected('false');
     } else if (
       // If some values are chosen and no values are searched for
-      (totalChosenValues > 0 &&  totalChosenValues < totalValues && searchedValues.length === 0) ||
+      (totalChosenValues > 0 &&
+        totalChosenValues < totalValues &&
+        searchedValues.length === 0) ||
       // If some values are chosen and some values are searched for and they do match
-      (searchedValues.length > 0 &&
-        searcedResult === 'mixed')
+      (searchedValues.length > 0 && searcedResult === 'mixed')
     ) {
       setMixedCheckboxText(checkboxSelectAllText);
       setAllValuesSelected('mixed');
@@ -172,7 +174,7 @@ export function VariableBoxContent({
       // If all values are chosen and no values are searched for
       (totalChosenValues === totalValues && searchedValues.length === 0) ||
       // If all values chosen and matching searched values
-      (searchedValues.length > 0 &&  searcedResult === 'all')
+      (searchedValues.length > 0 && searcedResult === 'all')
     ) {
       setMixedCheckboxText(checkboxDeselectAllText);
       setAllValuesSelected('true');
