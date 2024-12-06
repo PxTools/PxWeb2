@@ -126,49 +126,53 @@ export function VariableBoxContent({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasSevenOrMoreValues, hasTwoOrMoreValues, debouncedSearch, values]);
 
-  useEffect(() => {
-    function compareSearchedAndChosenValues(
-      searchedValues: string | Value[],
-      chosenValues: string | string[],
-    ) {
-      const compareArrays = Array.isArray(searchedValues)
-        ? searchedValues
-            .map((searchedValue) => searchedValue.code)
-            .filter((value: string) => chosenValues.includes(value))
-        : [];
+  // Function to compare the searched values with the chosen values
+  function compareSearchedAndChosenValues(
+    searchedValues: string | Value[],
+    chosenValues: string | string[],
+  ): "mixed" | "none" | "all" {
+    const compareArrays = Array.isArray(searchedValues)
+      ? searchedValues
+          .map((searchedValue) => searchedValue.code)
+          .filter((value: string) => chosenValues.includes(value))
+      : [];
 
-      if (compareArrays.length === 0) {
-        return 'none';
-      } else if (compareArrays.length === searchedValues.length) {
-        return 'all';
-      } else {
-        return 'mixed';
-      }
+    if (compareArrays.length === 0) {
+      return 'none';
+    } else if (compareArrays.length === searchedValues.length) {
+      return 'all';
+    } else {
+      return 'mixed';
     }
+  }
+
+  useEffect(() => {
+
+    const searcedResult = compareSearchedAndChosenValues(searchedValues, selectedValuesForVar)
+
 
     if (
+      // If no values are chosen and no values are searched for
       (totalChosenValues === 0 && searchedValues.length === 0) ||
-      (searchedValues.length > 0 &&
-        compareSearchedAndChosenValues(searchedValues, selectedValuesForVar) ===
-          'none')
+      // If there are searched values and searched and chosen values do not match
+      (searchedValues.length > 0 && searcedResult === 'none')
     ) {
       setMixedCheckboxText(checkboxSelectAllText);
       setAllValuesSelected('false');
     } else if (
-      (totalChosenValues > 0 &&
-        totalChosenValues < totalValues &&
-        searchedValues.length === 0) ||
+      // If some values are chosen and no values are searched for
+      (totalChosenValues > 0 &&  totalChosenValues < totalValues && searchedValues.length === 0) ||
+      // If some values are chosen and some values are searched for and they do match
       (searchedValues.length > 0 &&
-        compareSearchedAndChosenValues(searchedValues, selectedValuesForVar) ===
-          'mixed')
+        searcedResult === 'mixed')
     ) {
       setMixedCheckboxText(checkboxSelectAllText);
       setAllValuesSelected('mixed');
     } else if (
+      // If all values are chosen and no values are searched for
       (totalChosenValues === totalValues && searchedValues.length === 0) ||
-      (searchedValues.length > 0 &&
-        compareSearchedAndChosenValues(searchedValues, selectedValuesForVar) ===
-          'all')
+      // If all values chosen and matching searched values
+      (searchedValues.length > 0 &&  searcedResult === 'all')
     ) {
       setMixedCheckboxText(checkboxDeselectAllText);
       setAllValuesSelected('true');
