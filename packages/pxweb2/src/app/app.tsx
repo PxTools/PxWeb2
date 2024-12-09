@@ -9,6 +9,7 @@ import { Header } from './components/Header/Header';
 import { NavigationItem } from './components/NavigationMenu/NavigationItem/NavigationItemType';
 import NavigationRail from './components/NavigationMenu/NavigationRail/NavigationRail';
 import NavigationBar from './components/NavigationMenu/NavigationBar/NavigationBar';
+import { SkipToMain } from './components/SkipToMain/SkipToMain';
 
 import { Footer } from './components/Footer/Footer';
 import { BreakpointsSmallMaxWidth } from '@pxweb2/pxweb2-ui';
@@ -64,6 +65,7 @@ export function App() {
 
   return (
     <>
+      <SkipToMain />
       {!isMobile && <Header />}{' '}
       <div className={styles.navigationAndContentContainer}>
         {!isMobile && (
