@@ -32,7 +32,7 @@
     "@storybook/test": "^8.4.5",
     "@testing-library/react": "^15.0.7",
     "prop-types": "^15.8.1",
-    "storybook": "^8.4.5",
+    "storybook": "^8.4.7",
     "vitest": "^2.1.6"
   }
 }
