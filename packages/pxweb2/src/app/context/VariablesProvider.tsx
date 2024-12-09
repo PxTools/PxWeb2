@@ -8,6 +8,7 @@ export type VariablesContextType = {
   addSelectedValues: (variableId: string, values: string[]) => void;
   getSelectedValuesById: (variableId: string) => string[];
   getSelectedValuesByIdSorted: (variableId: string) => string[];
+  getSelectedCodelistById: (variableId: string) => string | undefined;
   getNumberOfSelectedValues: () => number;
   getUniqueIds: () => string[];
   syncVariablesAndValues: (values: SelectedVBValues[]) => void;
@@ -31,6 +32,7 @@ export const VariablesContext = createContext<VariablesContextType>({
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   getSelectedValuesById: () => [],
   getSelectedValuesByIdSorted: () => [],
+  getSelectedCodelistById: () => undefined,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   getNumberOfSelectedValues: () => 0,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -112,6 +114,20 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
     return sortedValues;
   };
 
+  /**
+   * Get selected codelist for a given variable by it's id
+   *
+   * @param variableId
+   * @returns selected codelist for the given variable or undefined if not found
+   */
+  const getSelectedCodelistById = (variableId: string) => {
+    const selectedCodelist = selectedVBValues?.find(
+      (item) => item.id === variableId,
+    )?.selectedCodeList;
+
+    return selectedCodelist;
+  };
+
   const getNumberOfSelectedValues = () => {
     return variables.size;
   };
@@ -187,6 +203,7 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
         getNumberOfSelectedValues,
         getSelectedValuesById,
         getSelectedValuesByIdSorted,
+        getSelectedCodelistById,
         getUniqueIds,
         syncVariablesAndValues,
         toString,

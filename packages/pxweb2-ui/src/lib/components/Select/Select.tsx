@@ -171,15 +171,17 @@ function VariableBoxSelect({
   const cssClasses = className.length > 0 ? ' ' + className : '';
 
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
-
-  const [selectedItem, setSelectedItem] = useState<SelectOption | undefined>(
-    selectedOption,
-  );
   const [clickedItem, setClickedItem] = useState<SelectOption | undefined>(
     selectedOption,
   );
+
+  const selectedItem: SelectOption | undefined = selectedOption;
+
   const handleOpenModal = () => {
     setModalOpen(true);
+
+    // Reset clicked item to selected item, incase user made changes and then closed the modal
+    setClickedItem(selectedItem);
   };
 
   function handleRadioChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -189,7 +191,6 @@ function VariableBoxSelect({
   const handleCloseModal = (updated: boolean) => {
     setModalOpen(false);
     if (updated) {
-      setSelectedItem(clickedItem);
       onChange(clickedItem);
     } else {
       setClickedItem(selectedItem);
