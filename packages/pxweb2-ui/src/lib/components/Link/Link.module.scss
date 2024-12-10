@@ -1,0 +1,48 @@
+@use '../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixvar;
+@use '../../text-styles.scss';
+
+.link {
+  text-decoration-line: underline;
+  color: var(--px-color-text-action);
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 4px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  align-items: center;
+
+  &:hover {
+    text-decoration: none;
+    background-color: var(--px-color-surface-action-subtle-hover);
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--px-color-border-focus-outline);
+    outline-offset: 5px;
+    box-shadow: 0 0 0 3px var(--px-color-border-focus-boxshadow);
+  }
+
+  &:active {
+    text-decoration-line: none;
+    color: var(--px-color-text-on-action-subtle);
+    background-color: var(--px-color-surface-action-subtle-active);
+  }
+}
+.no_underline {
+  text-decoration-line: none;
+}
+.inline {
+  display: inline-flex;
+  gap: 0px;
+  padding: 0px;
+}
+
+.padding-small {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.padding-medium {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
