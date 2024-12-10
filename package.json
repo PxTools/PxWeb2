@@ -15,7 +15,11 @@
   },
   "private": true,
   "dependencies": {
+    "@types/react": "19.0.1",
+    "@types/react-dom": "19.0.2",
     "@uidotdev/usehooks": "^2.4.1",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
     "react-virtuoso": "^4.12.1",
     "sass": "^1.81.0",
     "vite": "^6.0.2"
