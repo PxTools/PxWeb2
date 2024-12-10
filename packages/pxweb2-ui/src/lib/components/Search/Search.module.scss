@@ -1,0 +1,131 @@
+@use '../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixed;
+@use '../../text-styles.scss';
+
+.search {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-self: stretch;
+}
+
+.wrapper {
+  display: flex;
+  padding: fixed.$spacing-2;
+  align-items: center;
+  gap: fixed.$spacing-2;
+  align-self: stretch;
+  height: fixed.$spacing-12;
+  box-sizing: border-box;
+}
+
+.wrapper.default {
+  border-radius: var(--px-border-radius-small);
+  outline: 2px solid var(--px-color-border-default);
+  background: var(--px-color-surface-default);
+
+  &:hover {
+    border-radius: var(--px-border-radius-small);
+    outline: 2px solid var(--px-color-border-hover);
+    background: var(--px-color-surface-default);
+  }
+
+  &:active {
+    border-radius: var(--px-border-radius-small);
+    outline: 2px solid var(--px-color-border-action);
+    background: var(--px-color-surface-default);
+  }
+}
+
+.wrapper.inVariableBox {
+  border-radius: var(--px-border-radius-medium);
+  background: var(--px-color-surface-subtle);
+  z-index: 1;
+  outline-offset: -2px;
+
+  &:hover {
+    border-radius: var(--px-border-radius-medium);
+    outline: 2px solid var(--px-color-border-action);
+  }
+
+  &:active {
+    border-radius: var(--px-border-radius-medium);
+    outline: 2px solid var(--px-color-border-action);
+    background: var(--px-color-surface-default);
+  }
+
+  &:focus-within {
+    border-radius: var(--px-border-radius-medium);
+    outline: 3px solid var(--px-color-border-focus-outline);
+    background: var(--px-color-surface-default);
+    outline-offset: -3px;
+  }
+}
+
+.variableboxSearchAndSelectBorderOverride {
+  border-radius: 0 0 var(--px-border-radius-medium)
+    var(--px-border-radius-medium);
+}
+
+.input {
+  display: flex;
+  height: 1.875rem;
+  min-height: 1.875rem;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1 0 0;
+  overflow: hidden;
+  color: var(--px-color-text-default);
+  white-space: nowrap;
+  border: none;
+  background-color: inherit;
+  box-shadow: none;
+  inset-block: 0;
+  padding: 0;
+  outline: none;
+
+  &:hover {
+    border: none;
+    box-shadow: none;
+    outline: none;
+  }
+
+  &:active {
+    border: none;
+    box-shadow: none;
+    outline: none;
+  }
+
+  &:focus-visible {
+    border: none;
+    box-shadow: none;
+    outline: none;
+  }
+}
+
+::placeholder {
+  color: var(--px-color-text-subtle);
+}
+
+.searchIcon {
+  color: var(--px-color-icon-default);
+}
+
+.wrapper.default:focus-within {
+  border-radius: var(--px-border-radius-small);
+  outline: 2px solid var(--px-color-border-action);
+  background: var(--px-color-surface-default);
+}
+
+.wrapper.default:focus-visible {
+  border-radius: var(--px-border-radius-small);
+  outline: 3px solid var(--px-color-border-focus-outline);
+  outline-offset: 5px;
+  box-shadow: 0 0 0 3px var(--px-color-border-focus-boxshadow);
+}
+
+.wrapper.inVariableBox:focus-visible {
+  border-radius: var(--px-border-radius-medium);
+  outline: 3px solid var(--px-color-border-focus-outline);
+  outline-offset: 5px;
+  box-shadow: 0 0 0 3px var(--px-color-border-focus-boxshadow);
+}
