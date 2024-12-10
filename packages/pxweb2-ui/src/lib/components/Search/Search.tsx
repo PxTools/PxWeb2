@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import cl from 'clsx';
 
 import classes from './Search.module.scss';
@@ -7,6 +7,7 @@ import { Label } from '../Typography/Label/Label';
 import { Button } from '../Button/Button';
 
 export interface SearchProps {
+  value?: string;
   variant: 'default' | 'inVariableBox';
   labelText?: string;
   searchPlaceHolder?: string;
@@ -18,6 +19,7 @@ export interface SearchProps {
 }
 
 export function Search({
+  value = '',
   variant,
   labelText,
   searchPlaceHolder,
@@ -28,8 +30,12 @@ export function Search({
   onChange,
   ...rest
 }: SearchProps) {
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState(value);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setInputValue(value);
+  }, [value]);
 
   const handleClear = () => {
     onChange && onChange('');

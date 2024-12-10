@@ -1,3 +1,5 @@
+import cl from 'clsx';
+
 import styles from './VariableList.module.scss';
 import { SelectedVBValues, VariableBox } from '../VariableBox/VariableBox';
 import { PxTableMetadata } from '../../shared-types/pxTableMetadata';
@@ -8,6 +10,7 @@ export type VariableListProps = {
   pxTableMetadata: PxTableMetadata | null;
   isLoadingMetadata: boolean;
   hasLoadedDefaultSelection: boolean;
+  isChangingCodeList: boolean;
   selectedVBValues: SelectedVBValues[];
 
   // TODO: Optimise here? Duplicate with props in VariableBox
@@ -27,13 +30,18 @@ export function VariableList({
   pxTableMetadata,
   isLoadingMetadata,
   hasLoadedDefaultSelection,
+  isChangingCodeList = false,
   selectedVBValues,
   handleCodeListChange,
   handleCheckboxChange,
   handleMixedCheckboxChange,
 }: VariableListProps) {
   return (
-    <div className={styles.variableList}>
+    <div
+      className={cl(styles.variableList, {
+        [styles.fadeVariableList]: isChangingCodeList,
+      })}
+    >
       {!isLoadingMetadata &&
         hasLoadedDefaultSelection &&
         pxTableMetadata &&
