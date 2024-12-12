@@ -31,8 +31,11 @@ function addSelectedCodeListToVariable(
   if (currentVariable) {
     newSelectedValues = selectedValuesArr.map((variable) => {
       if (variable.id === varId) {
-        variable.selectedCodeList = selectedItem.value;
-        variable.values = []; // Always reset values when changing codelist
+        return {
+          ...variable,
+          selectedCodeList: selectedItem.value,
+          values: [], // Always reset values when changing codelist
+        };
       }
 
       return variable;
@@ -79,6 +82,22 @@ function addValueToNewVariable(
   ];
 
   return newSelectedValues;
+}
+
+async function getCodeListValues(id: string, lang: string): Promise<Value[]> {
+  let values: Value[] = [];
+
+  await TableService.getTableCodeListById(id, lang)
+    .then((response) => {
+      response.values.forEach((value) => {
+        values = [...values, { code: value.code, label: value.label }];
+      });
+    })
+    .catch((error) => {
+      throw new Error(error);
+    });
+
+  return values;
 }
 
 function removeValueOfVariable(
@@ -232,15 +251,18 @@ export function Selection({
   const { selectedVBValues, setSelectedVBValues } = useVariables();
   const variables = useVariables();
   const [errorMsg, setErrorMsg] = useState('');
-  const [pxTableMetaToRender, setPxTableMetaToRender] =
-    // Metadata to render in the UI
-    useState<PxTableMetadata | null>(null);
   const { i18n, t } = useTranslation();
   const { hasLoadedDefaultSelection } = useVariables();
   const { isLoadingMetadata } = useVariables();
   const { pxTableMetadata, setPxTableMetadata } = useVariables();
-
+  const [pxTableMetaToRender, setPxTableMetaToRender] =
+    // Metadata to render in the UI
+    useState<PxTableMetadata | null>(null);
   const [prevTableId, setPrevTableId] = useState('');
+  const [isFadingVariableList, setIsFadingVariableList] = useState(false);
+
+  //  Needed to know when the language has changed, so we can reload the default selection
+  const [prevLang, setPrevLang] = useState('');
 
   useEffect(() => {
     let shouldGetDefaultSelection = !hasLoadedDefaultSelection;
@@ -249,11 +271,18 @@ export function Selection({
       return;
     }
 
-    if (prevTableId === '' || prevTableId !== selectedTabId) {
+    //  If the table has changed, or the language has changed, we need to reload the default selection
+    if (
+      prevTableId === '' ||
+      prevTableId !== selectedTabId ||
+      prevLang !== i18n.resolvedLanguage
+    ) {
       variables.setHasLoadedDefaultSelection(false);
       shouldGetDefaultSelection = true;
       setPrevTableId(selectedTabId);
+      setPrevLang(i18n.resolvedLanguage || '');
     }
+
     if (isLoadingMetadata === false) {
       variables.setIsLoadingMetadata(true);
     }
@@ -314,7 +343,7 @@ export function Selection({
     setPxTableMetaToRender(structuredClone(pxTableMetadata));
   }
 
-  function handleCodeListChange(
+  async function handleCodeListChange(
     selectedItem: SelectOption | undefined,
     varId: string,
   ) {
@@ -322,10 +351,16 @@ export function Selection({
     const currentVariableMetadata = pxTableMetaToRender?.variables.find(
       (variable) => variable.id === varId,
     );
-    const currentVariable = prevSelectedValues.find(
+    const currentSelectedVariable = prevSelectedValues.find(
       (variable) => variable.id === varId,
     );
-    const currentCodeList = currentVariable?.selectedCodeList;
+    const lang = i18n.resolvedLanguage;
+
+    // No language, do nothing
+    if (lang === undefined) {
+      return;
+    }
+    const currentCodeList = currentSelectedVariable?.selectedCodeList;
 
     // No new selection made, do nothing
     if (!selectedItem || selectedItem.value === currentCodeList) {
@@ -347,20 +382,33 @@ export function Selection({
     const newMappedSelectedCodeList =
       mapCodeListToSelectOption(newSelectedCodeList);
     const newSelectedValues = addSelectedCodeListToVariable(
-      currentVariable,
+      currentSelectedVariable,
       prevSelectedValues,
       varId,
       newMappedSelectedCodeList,
     );
 
-    updateAndSyncVBValues(newSelectedValues);
+    setIsFadingVariableList(true);
 
-    //  TODO: This currently returns dummy data until we have the API call setup for it
-    const valuesForChosenCodeList: Value[] = getCodeListValues(
+    //  Get the values for the chosen code list
+    const valuesForChosenCodeList: Value[] = await getCodeListValues(
       newMappedSelectedCodeList.value,
-    );
+      lang,
+    )
+      .finally(() => {
+        setIsFadingVariableList(false);
+      })
+      .catch((error) => {
+        console.error(
+          'Could not get values for code list: ' +
+            newMappedSelectedCodeList.value +
+            ' ' +
+            error,
+        );
+        return [];
+      });
 
-    if (pxTableMetaToRender === null || valuesForChosenCodeList.length < 1) {
+    if (valuesForChosenCodeList.length < 1) {
       return;
     }
 
@@ -386,7 +434,10 @@ export function Selection({
       });
     });
 
-    setPxTableMetaToRender(newPxTableMetaToRender);
+    // update the state
+    updateAndSyncVBValues(newSelectedValues);
+    setPxTableMetadata(newPxTableMetaToRender);
+    setPxTableMetaToRender(null);
   }
 
   const handleCheckboxChange = (varId: string, value: Value['code']) => {
@@ -469,27 +520,13 @@ export function Selection({
     variables.syncVariablesAndValues(selectedVBValues);
   }
 
-  const getCodeListValues = (id: string) => {
-    /* TODO: Implement querying the API */
-    const dummyValues: Value[] = [
-      { code: 'Dummy Code 1', label: 'Dummy Value 1' },
-      { code: '01', label: '01 Stockholm county' },
-      { code: 'Dummy Code 2', label: 'Dummy Value 2' },
-      { code: 'Dummy Code 3', label: 'Dummy Value 3' },
-      { code: 'Dummy Code 4', label: 'Dummy Value 4' },
-      { code: 'Dummy Code 5', label: 'Dummy Value 5' },
-      { code: 'Dummy Code 6', label: 'Dummy Value 6' },
-      { code: 'Dummy Code 7', label: 'Dummy Value 7' },
-    ];
-
-    return dummyValues;
-  };
   const drawerFilter = (
     <VariableList
       pxTableMetadata={pxTableMetaToRender}
       selectedVBValues={selectedVBValues}
       isLoadingMetadata={isLoadingMetadata}
       hasLoadedDefaultSelection={hasLoadedDefaultSelection}
+      isChangingCodeList={isFadingVariableList}
       handleCodeListChange={handleCodeListChange}
       handleCheckboxChange={handleCheckboxChange}
       handleMixedCheckboxChange={handleMixedCheckboxChange}
