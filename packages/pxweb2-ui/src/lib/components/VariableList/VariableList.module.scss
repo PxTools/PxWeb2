@@ -7,3 +7,8 @@
   flex-direction: column;
   gap: fixed.$spacing-3;
 }
+
+.fadeVariableList {
+  opacity: 0.6;
+  transition: 'opacity 0.3s ease-in-out';
+}

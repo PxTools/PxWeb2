@@ -30,7 +30,7 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
           <BodyLong>{staticTitle}</BodyLong>
         </div>
       </div>
-      <div className={cl(classes[`heading-information`])}>
+      <div id="px-main-content" className={cl(classes[`heading-information`])}>
         <Heading size="large">{pxtable.metadata.label}</Heading>
         <div className={cl(classes.information)}>
           <Button icon="InformationCircle" variant="secondary">
@@ -38,10 +38,12 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
           </Button>
           {pxtable.metadata && (
             <BodyShort size="medium">
-              <span className={classes.lastUpdatedLabel}>{t('presentation_page.main_content.last_updated')}:{' '}
-              {t('date.simple_date_with_time', {
-                value: new Date(pxtable.metadata.updated),
-              })}{' '}</span>
+              <span className={classes.lastUpdatedLabel}>
+                {t('presentation_page.main_content.last_updated')}:{' '}
+                {t('date.simple_date_with_time', {
+                  value: new Date(pxtable.metadata.updated),
+                })}{' '}
+              </span>
             </BodyShort>
           )}
         </div>

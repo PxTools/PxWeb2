@@ -1,7 +1,11 @@
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
 
-import { metadataOutputFormat, MetadataOutputFormatType, TableService } from '@pxweb2/pxweb2-api-client';
+import {
+  metadataOutputFormat,
+  MetadataOutputFormatType,
+  TableService,
+} from '@pxweb2/pxweb2-api-client';
 import { mapTableMetadataResponse } from '../../../mappers/TableMetadataResponseMapper';
 import { mapTableSelectionResponse } from '../../../mappers/TableSelectionResponseMapper';
 import {
@@ -20,15 +24,18 @@ function addSelectedCodeListToVariable(
   currentVariable: SelectedVBValues | undefined,
   selectedValuesArr: SelectedVBValues[],
   varId: string,
-  selectedItem: SelectOption
+  selectedItem: SelectOption,
 ): SelectedVBValues[] {
   let newSelectedValues: SelectedVBValues[] = [];
 
   if (currentVariable) {
     newSelectedValues = selectedValuesArr.map((variable) => {
       if (variable.id === varId) {
-        variable.selectedCodeList = selectedItem.value;
-        variable.values = []; // Always reset values when changing codelist
+        return {
+          ...variable,
+          selectedCodeList: selectedItem.value,
+          values: [], // Always reset values when changing codelist
+        };
       }
 
       return variable;
@@ -51,7 +58,7 @@ function addSelectedCodeListToVariable(
 function addValueToVariable(
   selectedValuesArr: SelectedVBValues[],
   varId: string,
-  value: Value['code']
+  value: Value['code'],
 ) {
   const newSelectedValues = selectedValuesArr.map((variable) => {
     if (variable.id === varId) {
@@ -67,7 +74,7 @@ function addValueToVariable(
 function addValueToNewVariable(
   selectedValuesArr: SelectedVBValues[],
   varId: string,
-  value: Value['code']
+  value: Value['code'],
 ) {
   const newSelectedValues = [
     ...selectedValuesArr,
@@ -77,10 +84,26 @@ function addValueToNewVariable(
   return newSelectedValues;
 }
 
+async function getCodeListValues(id: string, lang: string): Promise<Value[]> {
+  let values: Value[] = [];
+
+  await TableService.getTableCodeListById(id, lang)
+    .then((response) => {
+      response.values.forEach((value) => {
+        values = [...values, { code: value.code, label: value.label }];
+      });
+    })
+    .catch((error) => {
+      throw new Error(error);
+    });
+
+  return values;
+}
+
 function removeValueOfVariable(
   selectedValuesArr: SelectedVBValues[],
   varId: string,
-  value: Value['code']
+  value: Value['code'],
 ) {
   const newSelectedValues = selectedValuesArr
     .map((variable) => {
@@ -113,22 +136,24 @@ function addMultipleValuesToVariable(
   selectedValuesArr: SelectedVBValues[],
   varId: string,
   valuesToAdd: Value[],
-  searchedValues: Value[]
+  searchedValues: Value[],
 ): SelectedVBValues[] {
-const currentVariable = selectedValuesArr.find(
-    (variable) => variable.id === varId
+  const currentVariable = selectedValuesArr.find(
+    (variable) => variable.id === varId,
   );
   let newSelectedValues: SelectedVBValues[] = [];
 
   if (currentVariable) {
     newSelectedValues = selectedValuesArr.map((variable) => {
-       if (variable.id === varId) {
+      if (variable.id === varId) {
         const prevValues = [...variable.values];
         const valuesList = valuesToAdd
-          .filter(v => prevValues.includes(v.code) || searchedValues.includes(v))
-          .map(value => value.code);
+          .filter(
+            (v) => prevValues.includes(v.code) || searchedValues.includes(v),
+          )
+          .map((value) => value.code);
         variable.values = valuesList;
-       }
+      }
       return variable;
     });
   }
@@ -138,7 +163,48 @@ const currentVariable = selectedValuesArr.find(
       {
         id: varId,
         selectedCodeList: undefined,
-        values: valuesToAdd.filter(v => searchedValues.includes(v)).map((value) => value.code),
+        values: valuesToAdd
+          .filter((v) => searchedValues.includes(v))
+          .map((value) => value.code),
+      },
+    ];
+  }
+
+  return newSelectedValues;
+}
+
+function removeMultipleValuesToVariable(
+  selectedValuesArr: SelectedVBValues[],
+  varId: string,
+  valuesToAdd: Value[],
+  searchedValues: Value[],
+): SelectedVBValues[] {
+  const currentVariable = selectedValuesArr.find(
+    (variable) => variable.id === varId,
+  );
+  let newSelectedValues: SelectedVBValues[] = [];
+
+  if (currentVariable) {
+    newSelectedValues = selectedValuesArr.map((variable) => {
+      if (variable.id === varId) {
+        const prevValues = [...variable.values];
+        const valuesList = prevValues.filter(
+          (val) => !searchedValues.some((v) => v.code === val),
+        );
+        variable.values = valuesList;
+      }
+      return variable;
+    });
+  }
+  if (!currentVariable) {
+    newSelectedValues = [
+      ...selectedValuesArr,
+      {
+        id: varId,
+        selectedCodeList: undefined,
+        values: valuesToAdd
+          .filter((v) => searchedValues.includes(v))
+          .map((value) => value.code),
       },
     ];
   }
@@ -148,7 +214,7 @@ const currentVariable = selectedValuesArr.find(
 
 function removeAllValuesOfVariable(
   selectedValuesArr: SelectedVBValues[],
-  varId: string
+  varId: string,
 ): SelectedVBValues[] {
   const newValues: SelectedVBValues[] = selectedValuesArr
     .map((variable) => {
@@ -185,15 +251,18 @@ export function Selection({
   const { selectedVBValues, setSelectedVBValues } = useVariables();
   const variables = useVariables();
   const [errorMsg, setErrorMsg] = useState('');
-  const [pxTableMetaToRender, setPxTableMetaToRender] =
-    // Metadata to render in the UI
-    useState<PxTableMetadata | null>(null);
   const { i18n, t } = useTranslation();
   const { hasLoadedDefaultSelection } = useVariables();
   const { isLoadingMetadata } = useVariables();
   const { pxTableMetadata, setPxTableMetadata } = useVariables();
-
+  const [pxTableMetaToRender, setPxTableMetaToRender] =
+    // Metadata to render in the UI
+    useState<PxTableMetadata | null>(null);
   const [prevTableId, setPrevTableId] = useState('');
+  const [isFadingVariableList, setIsFadingVariableList] = useState(false);
+
+  //  Needed to know when the language has changed, so we can reload the default selection
+  const [prevLang, setPrevLang] = useState('');
 
   useEffect(() => {
     let shouldGetDefaultSelection = !hasLoadedDefaultSelection;
@@ -202,24 +271,36 @@ export function Selection({
       return;
     }
 
-    if (prevTableId === '' || prevTableId !== selectedTabId) {
+    //  If the table has changed, or the language has changed, we need to reload the default selection
+    if (
+      prevTableId === '' ||
+      prevTableId !== selectedTabId ||
+      prevLang !== i18n.resolvedLanguage
+    ) {
       variables.setHasLoadedDefaultSelection(false);
       shouldGetDefaultSelection = true;
       setPrevTableId(selectedTabId);
+      setPrevLang(i18n.resolvedLanguage || '');
     }
+
     if (isLoadingMetadata === false) {
       variables.setIsLoadingMetadata(true);
     }
 
     const outputFormat: metadataOutputFormat = MetadataOutputFormatType.JSON_PX;
     const metaDataDefaultSelection = true;
-    
-    TableService.getMetadataById(selectedTabId, i18n.resolvedLanguage, outputFormat, metaDataDefaultSelection)
+
+    TableService.getMetadataById(
+      selectedTabId,
+      i18n.resolvedLanguage,
+      outputFormat,
+      metaDataDefaultSelection,
+    )
       .then((tableMetadataResponse) => {
         const pxTabMetadata: PxTableMetadata = mapTableMetadataResponse(
-          tableMetadataResponse
+          tableMetadataResponse,
         );
-        
+
         setPxTableMetadata(pxTabMetadata);
         if (pxTableMetaToRender !== null) {
           setPxTableMetaToRender(null);
@@ -240,11 +321,11 @@ export function Selection({
       TableService.getDefaultSelection(selectedTabId, i18n.resolvedLanguage)
         .then((selectionResponse) => {
           const defaultSelection = mapTableSelectionResponse(
-            selectionResponse
+            selectionResponse,
           ).filter(
             (variable) =>
               variable.values.length > 0 ||
-              variable.selectedCodeList !== undefined
+              variable.selectedCodeList !== undefined,
           );
           setSelectedVBValues(defaultSelection);
           variables.syncVariablesAndValues(defaultSelection);
@@ -262,18 +343,24 @@ export function Selection({
     setPxTableMetaToRender(structuredClone(pxTableMetadata));
   }
 
-  function handleCodeListChange(
+  async function handleCodeListChange(
     selectedItem: SelectOption | undefined,
-    varId: string
+    varId: string,
   ) {
     const prevSelectedValues = structuredClone(selectedVBValues);
     const currentVariableMetadata = pxTableMetaToRender?.variables.find(
-      (variable) => variable.id === varId
+      (variable) => variable.id === varId,
     );
-    const currentVariable = prevSelectedValues.find(
-      (variable) => variable.id === varId
+    const currentSelectedVariable = prevSelectedValues.find(
+      (variable) => variable.id === varId,
     );
-    const currentCodeList = currentVariable?.selectedCodeList;
+    const lang = i18n.resolvedLanguage;
+
+    // No language, do nothing
+    if (lang === undefined) {
+      return;
+    }
+    const currentCodeList = currentSelectedVariable?.selectedCodeList;
 
     // No new selection made, do nothing
     if (!selectedItem || selectedItem.value === currentCodeList) {
@@ -285,7 +372,7 @@ export function Selection({
     }
 
     const newSelectedCodeList = currentVariableMetadata?.codeLists?.find(
-      (codelist) => codelist.id === selectedItem.value
+      (codelist) => codelist.id === selectedItem.value,
     );
 
     if (!newSelectedCodeList) {
@@ -295,20 +382,33 @@ export function Selection({
     const newMappedSelectedCodeList =
       mapCodeListToSelectOption(newSelectedCodeList);
     const newSelectedValues = addSelectedCodeListToVariable(
-      currentVariable,
+      currentSelectedVariable,
       prevSelectedValues,
       varId,
-      newMappedSelectedCodeList
+      newMappedSelectedCodeList,
     );
 
-    updateAndSyncVBValues(newSelectedValues);
+    setIsFadingVariableList(true);
 
-    //  TODO: This currently returns dummy data until we have the API call setup for it
-    const valuesForChosenCodeList: Value[] = getCodeListValues(
-      newMappedSelectedCodeList.value
-    );
+    //  Get the values for the chosen code list
+    const valuesForChosenCodeList: Value[] = await getCodeListValues(
+      newMappedSelectedCodeList.value,
+      lang,
+    )
+      .finally(() => {
+        setIsFadingVariableList(false);
+      })
+      .catch((error) => {
+        console.error(
+          'Could not get values for code list: ' +
+            newMappedSelectedCodeList.value +
+            ' ' +
+            error,
+        );
+        return [];
+      });
 
-    if (pxTableMetaToRender === null || valuesForChosenCodeList.length < 1) {
+    if (valuesForChosenCodeList.length < 1) {
       return;
     }
 
@@ -334,7 +434,10 @@ export function Selection({
       });
     });
 
-    setPxTableMetaToRender(newPxTableMetaToRender);
+    // update the state
+    updateAndSyncVBValues(newSelectedValues);
+    setPxTableMetadata(newPxTableMetaToRender);
+    setPxTableMetaToRender(null);
   }
 
   const handleCheckboxChange = (varId: string, value: Value['code']) => {
@@ -349,7 +452,7 @@ export function Selection({
       const newSelectedValues = removeValueOfVariable(
         prevSelectedValues,
         varId,
-        value
+        value,
       );
 
       updateAndSyncVBValues(newSelectedValues);
@@ -358,7 +461,7 @@ export function Selection({
       const newSelectedValues = addValueToVariable(
         prevSelectedValues,
         varId,
-        value
+        value,
       );
 
       updateAndSyncVBValues(newSelectedValues);
@@ -367,7 +470,7 @@ export function Selection({
       const newSelectedValues = addValueToNewVariable(
         prevSelectedValues,
         varId,
-        value
+        value,
       );
 
       updateAndSyncVBValues(newSelectedValues);
@@ -377,17 +480,10 @@ export function Selection({
   const handleMixedCheckboxChange = (
     varId: string,
     allValuesSelected: string,
-    searchValues: Value[]
+    searchValues: Value[],
   ) => {
     const prevSelectedValues = structuredClone(selectedVBValues);
 
-    if (allValuesSelected === 'true') {
-      const newSelectedValues = removeAllValuesOfVariable(
-        prevSelectedValues,
-        varId
-      );
-      updateAndSyncVBValues(newSelectedValues);
-    }
     if (allValuesSelected === 'false' || allValuesSelected === 'mixed') {
       const allValuesOfVariable =
         pxTableMetaToRender?.variables.find((variable) => variable.id === varId)
@@ -396,9 +492,26 @@ export function Selection({
         prevSelectedValues,
         varId,
         allValuesOfVariable,
-        searchValues
+        searchValues,
       );
-     updateAndSyncVBValues(newSelectedValues);
+      updateAndSyncVBValues(newSelectedValues);
+    } else if (allValuesSelected === 'true' && searchValues.length > 0) {
+      const allValuesOfVariable =
+        pxTableMetaToRender?.variables.find((variable) => variable.id === varId)
+          ?.values || [];
+      const newSelectedValues = removeMultipleValuesToVariable(
+        prevSelectedValues,
+        varId,
+        allValuesOfVariable,
+        searchValues,
+      );
+      updateAndSyncVBValues(newSelectedValues);
+    } else if (allValuesSelected === 'true') {
+      const newSelectedValues = removeAllValuesOfVariable(
+        prevSelectedValues,
+        varId,
+      );
+      updateAndSyncVBValues(newSelectedValues);
     }
   };
 
@@ -407,27 +520,13 @@ export function Selection({
     variables.syncVariablesAndValues(selectedVBValues);
   }
 
-  const getCodeListValues = (id: string) => {
-    /* TODO: Implement querying the API */
-    const dummyValues: Value[] = [
-      { code: 'Dummy Code 1', label: 'Dummy Value 1' },
-      { code: '01', label: '01 Stockholm county' },
-      { code: 'Dummy Code 2', label: 'Dummy Value 2' },
-      { code: 'Dummy Code 3', label: 'Dummy Value 3' },
-      { code: 'Dummy Code 4', label: 'Dummy Value 4' },
-      { code: 'Dummy Code 5', label: 'Dummy Value 5' },
-      { code: 'Dummy Code 6', label: 'Dummy Value 6' },
-      { code: 'Dummy Code 7', label: 'Dummy Value 7' },
-    ];
-
-    return dummyValues;
-  };
   const drawerFilter = (
     <VariableList
       pxTableMetadata={pxTableMetaToRender}
       selectedVBValues={selectedVBValues}
       isLoadingMetadata={isLoadingMetadata}
       hasLoadedDefaultSelection={hasLoadedDefaultSelection}
+      isChangingCodeList={isFadingVariableList}
       handleCodeListChange={handleCodeListChange}
       handleCheckboxChange={handleCheckboxChange}
       handleMixedCheckboxChange={handleMixedCheckboxChange}

@@ -32,7 +32,7 @@ export function BodyLong({
           classes[`align-${align}`],
           classes[`text-color-${textcolor}`],
           classes[`bodylong-${size}${weightClassExtension}`],
-          cl({ [classes[`${size}-spacing`]]: spacing })
+          cl({ [classes[`${size}-spacing`]]: spacing }),
         ) + cssClasses
       }
       {...rest}

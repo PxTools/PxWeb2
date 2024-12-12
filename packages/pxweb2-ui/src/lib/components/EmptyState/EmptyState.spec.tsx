@@ -9,7 +9,7 @@ describe('EmptyState', () => {
         svgName="ManWithMagnifyingGlass"
         headingTxt="test"
         descriptionTxt="test"
-      />
+      />,
     );
 
     expect(baseElement).toBeTruthy();
@@ -21,7 +21,7 @@ describe('EmptyState', () => {
         svgName="ManWithMagnifyingGlass"
         headingTxt="heading test text"
         descriptionTxt="description test text"
-      />
+      />,
     );
 
     expect(getByText(baseElement, 'heading test text')).toBeTruthy();
@@ -34,7 +34,7 @@ describe('EmptyState', () => {
         svgName="ManWithMagnifyingGlass"
         headingTxt="test"
         descriptionTxt="test"
-      />
+      />,
     );
 
     const svg = baseElement.querySelector('svg');

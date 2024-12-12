@@ -1,5 +1,5 @@
 import cl from 'clsx';
-import { m } from 'framer-motion';
+import { m } from 'motion/react';
 
 import {
   Icon,
@@ -63,13 +63,13 @@ export const Item: React.FC<ItemProps> = ({
       className={cl(
         { [styles.selected]: selected },
         styles.item,
-        styles[`${parentName}Item`]
+        styles[`${parentName}Item`],
       )}
       onClick={onClick}
       type="button"
       id={btnId}
       // Framer Motion animations
-      key={selected.toString()} // Needed by framer-motion to re-run the animation when the selected state changes, toString for type compatibility
+      key={selected.toString()} // Needed by motion to re-run the animation when the selected state changes, toString for type compatibility
       initial={'initial'}
       whileHover={'hover'}
       whileTap={'pressed'}

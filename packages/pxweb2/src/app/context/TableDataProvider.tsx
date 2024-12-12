@@ -87,10 +87,17 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     const selections: Array<VariableSelection> = [];
     const ids = variables.getUniqueIds();
     ids.forEach((id) => {
+      const selectedCodeList = variables.getSelectedCodelistById(id);
       const selection: VariableSelection = {
         variableCode: id,
         valueCodes: variables.getSelectedValuesByIdSorted(id),
       };
+
+      // Add selected codelist to selection if it exists
+      if (selectedCodeList) {
+        selection.codeList = selectedCodeList;
+      }
+
       selections.push(selection);
     });
 

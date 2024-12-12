@@ -100,3 +100,14 @@
 .focusableItem:focus-within {
   background-color: #c3dcdc;
 }
+
+.variablebox-content-values-list-no-results {
+  display: flex;
+  height: 306px;
+  padding: 0px 30px 8px 30px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}

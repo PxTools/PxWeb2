@@ -4,20 +4,20 @@
   "main": "./src/index.ts",
   "scripts": {
     "start": "npm run storybook",
-    "build": "vite build",
+    "build": "npm run build-style-dictionary && storybook build && mv ./storybook-static ../pxweb2/dist/storybook",
     "build-style-dictionary": "node ./style-dictionary/build.mjs",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
-    "lint": "eslint",
+    "lint": "eslint --fix",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "prettier": "prettier --config ../../.prettierrc --check ./src/** --write --ignore-path ../../.prettierignore"
   },
   "author": "",
   "license": "MIT",
   "dependencies": {
     "@vitejs/plugin-react": "^4.3.3",
     "clsx": "^2.1.1",
-    "framer-motion": "^11.11.17",
+    "motion": "^11.13.1",
     "react-i18next": "^15.1.1",
     "vite-plugin-dts": "^4.3.0"
   },

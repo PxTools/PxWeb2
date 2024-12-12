@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import cl from 'clsx';
 
 import classes from './Search.module.scss';
@@ -7,6 +7,7 @@ import { Label } from '../Typography/Label/Label';
 import { Button } from '../Button/Button';
 
 export interface SearchProps {
+  value?: string;
   variant: 'default' | 'inVariableBox';
   labelText?: string;
   searchPlaceHolder?: string;
@@ -18,6 +19,7 @@ export interface SearchProps {
 }
 
 export function Search({
+  value = '',
   variant,
   labelText,
   searchPlaceHolder,
@@ -28,29 +30,35 @@ export function Search({
   onChange,
   ...rest
 }: SearchProps) {
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState(value);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  useEffect(() => {
+    setInputValue(value);
+  }, [value]);
+
   const handleClear = () => {
+    onChange && onChange('');
     setInputValue('');
     if (inputRef.current !== null) {
       inputRef.current.focus();
     }
   };
 
-  const handleKeyDown = (e: { keyCode: number }) => {
-    if (e.keyCode === 27) {
-      handleClear();
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Escape') {
+      if (inputRef.current?.value.trim() === '') {
+        inputRef.current?.blur();
+      } else {
+        handleClear();
+      }
     }
   };
-
-  const hasValue = inputValue.length > 0;
 
   return (
     <div className={cl(classes.search, classes[variant])}>
       {showLabel && <Label size="medium">{labelText}</Label>}
       <div
-        tabIndex={0}
         className={cl(classes.wrapper, classes.border, classes[variant], {
           [classes.variableboxSearchAndSelectBorderOverride]:
             variableBoxTopBorderOverride,
@@ -67,7 +75,7 @@ export function Search({
           className={cl(
             classes[`bodyshort-medium`],
             classes.input,
-            classes[variant]
+            classes[variant],
           )}
           placeholder={searchPlaceHolder}
           value={inputValue}
@@ -80,7 +88,7 @@ export function Search({
           }}
           {...rest}
         ></input>
-        {hasValue && (
+        {inputValue.length > 0 && (
           <Button
             variant="tertiary"
             icon="XMark"

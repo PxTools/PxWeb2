@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 
 import styles from './app.module.scss';
 import { Selection } from './components/Selection/Selection';
@@ -9,6 +9,7 @@ import { Header } from './components/Header/Header';
 import { NavigationItem } from './components/NavigationMenu/NavigationItem/NavigationItemType';
 import NavigationRail from './components/NavigationMenu/NavigationRail/NavigationRail';
 import NavigationBar from './components/NavigationMenu/NavigationBar/NavigationBar';
+import { SkipToMain } from './components/SkipToMain/SkipToMain';
 
 import { Footer } from './components/Footer/Footer';
 import { BreakpointsSmallMaxWidth, BreakpointsXsmallMaxWidth } from '@pxweb2/pxweb2-ui';
@@ -21,7 +22,7 @@ export function App() {
 
   const { tableId } = useParams<{ tableId: string }>();
   const [selectedTableId, setSelectedTableId] = useState(
-    tableId ? tableId : 'tab638'
+    tableId ? tableId : 'tab638',
   );
   const [errorMsg, setErrorMsg] = useState('');
   const [selectedNavigationView, setSelectedNavigationView] =
@@ -73,6 +74,7 @@ export function App() {
 
   return (
     <>
+      <SkipToMain />
       {!isSmallDevice && <Header />}{' '}
       <div className={styles.navigationAndContentContainer}>
         {!isSmallDevice && (
