@@ -91,8 +91,10 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
     if (validAccData) {
       //fetchWithValidAccData(tableId, i18n, variablesSelection);
+      console.log('Valid accumulated data');
       fetchWithValidAccData2(tableId, i18n, variablesSelection);
     } else {
+      console.log('NOT valid accumulated data');
       fetchWithoutValidAccData(tableId, i18n, variablesSelection);
     }
   };
@@ -185,9 +187,11 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     // BUG!
     // TODO: There is a bug in isAllDataAlreadyLoaded. Sometimes the function thinks everything has been loaded when it accually is not.
     // Rewrite isAllDataAlreadyLoaded to check if data cells exists in accumulated data cube?
-    let diffVarSelection: VariablesSelection = { selection: [] };
+    
+    // VariablesSelection for the data that is not already loaded in accumulatedData
+    let notLoadedVarSelection: VariablesSelection = { selection: [] };
 
-    if (isAllDataAlreadyLoaded2(variablesSelection, diffVarSelection)) {
+    if (isAllDataAlreadyLoaded2(variablesSelection, notLoadedVarSelection)) {
       // All data and metadata asked for by the user is already loaded in accumulatedData. No need for a new API-call. Create a pxTable from accumulatedData instead.
       const pxTable = createPxTableFromAccumulatedData(variablesSelection);
 
@@ -197,9 +201,9 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       }
     }
 
-    console.log({ diffVarSelection });
+    console.log({ notLoadedVarSelection });
 
-    let varSelection: VariablesSelection = variablesSelection;
+    //let varSelection: VariablesSelection = variablesSelection;
     //let diffVariablesSelection: VariablesSelection = { selection: [] };
 
     // We need to make a new API-call to get the data and metadata not already loaded in accumulatedData
@@ -214,7 +218,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     // }
 
     // Get the right codelists for the variables - OR SHOULD ACCDATA NOT BE VALID IF WE CHANGE CODELISTS?
-    diffVarSelection.selection.forEach((diffSelection) => {
+    notLoadedVarSelection.selection.forEach((diffSelection) => {
       const selection = variablesSelection.selection.find(
         (sel) => sel.variableCode === diffSelection.variableCode,
       );
@@ -223,13 +227,13 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       }
     });
 
-    // Make the minimal API-call
-    let pxTable: PxTable = await fetchFromApi(tableId, i18n, diffVarSelection);
+    // Get the not already loaded data from the API
+    let pxTable: PxTable = await fetchFromApi(tableId, i18n, notLoadedVarSelection);
 
     //console.log({ pxTable });
 
     // Merge pxTable with accumulatedData
-    mergeWithAccumulatedData2(pxTable, diffVarSelection, variablesSelection);
+    mergeWithAccumulatedData2(pxTable, notLoadedVarSelection, variablesSelection);
     const pxTableMerged = createPxTableFromAccumulatedData(variablesSelection);
     if (pxTableMerged) {
       pxTable = pxTableMerged;
@@ -366,7 +370,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   // Try to fix the bug in isAllDataAlreadyLoaded
   function isAllDataAlreadyLoaded2(
     variablesSelection: VariablesSelection,
-    diffVariablesSelection: VariablesSelection,
+    notLoadedVarSelection: VariablesSelection,
   ): boolean {
     if (accumulatedData !== undefined) {
       // We have data and metadata from earlier API-calls
@@ -391,12 +395,12 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       // }
       // console.log({ dimensionsMap });
 
-      checkDataCube(variablesSelection, dimensions, 0, diffVariablesSelection);
+      checkDataCube(variablesSelection, dimensions, 0, notLoadedVarSelection);
 
-      const dataValue = getPxTableData(accumulatedData.data.cube, dimensions);
+      //const dataValue = getPxTableData(accumulatedData.data.cube, dimensions);
     }
 
-    if (diffVariablesSelection.selection.length > 0) {
+    if (notLoadedVarSelection.selection.length > 0) {
       return false;
     } else {
       return true;
@@ -408,14 +412,11 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     variablesSelection: VariablesSelection,
     dimensions: string[],
     dimensionIndex: number,
-    //  dimensionsMap: number[],
-    diffVariablesSelection: VariablesSelection,
+    notLoadedVarSelection: VariablesSelection,
   ): void {
     if (accumulatedData === undefined) {
       return undefined;
     }
-
-    //    const diffVariablesSelection: VariablesSelection = { selection: [] };
 
     // 1. Find the variable in the new data that corresponds to the current dimension
     const variableInSelection = variablesSelection.selection.find(
@@ -453,9 +454,9 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
           );
 
           if (dataValue === undefined) {
-            // TODO: Add data cell to diffVariablesSelection (that will be used for API-call later)
+            // Add data cell metadata to notLoadedVarSelection (that will be used for API-call to ge the data later)
             dimensions.forEach((dimension, index) => {
-              const existingSelection = diffVariablesSelection.selection.find(
+              const existingSelection = notLoadedVarSelection.selection.find(
                 (sel) =>
                   sel.variableCode ===
                   accumulatedData.metadata.variables[index].id,
@@ -465,7 +466,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
                   existingSelection.valueCodes?.push(dimension);
                 }
               } else {
-                diffVariablesSelection.selection.push({
+                notLoadedVarSelection.selection.push({
                   variableCode: accumulatedData.metadata.variables[index].id,
                   valueCodes: [dimension],
                 });
@@ -483,7 +484,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
             variablesSelection,
             dimensions,
             dimensionIndex + 1,
-            diffVariablesSelection,
+            notLoadedVarSelection,
           );
         });
       }
