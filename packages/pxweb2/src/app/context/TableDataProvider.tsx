@@ -187,7 +187,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     // BUG!
     // TODO: There is a bug in isAllDataAlreadyLoaded. Sometimes the function thinks everything has been loaded when it accually is not.
     // Rewrite isAllDataAlreadyLoaded to check if data cells exists in accumulated data cube?
-    
+
     // VariablesSelection for the data that is not already loaded in accumulatedData
     let notLoadedVarSelection: VariablesSelection = { selection: [] };
 
@@ -228,12 +228,20 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     });
 
     // Get the not already loaded data from the API
-    let pxTable: PxTable = await fetchFromApi(tableId, i18n, notLoadedVarSelection);
+    let pxTable: PxTable = await fetchFromApi(
+      tableId,
+      i18n,
+      notLoadedVarSelection,
+    );
 
     //console.log({ pxTable });
 
     // Merge pxTable with accumulatedData
-    mergeWithAccumulatedData2(pxTable, notLoadedVarSelection, variablesSelection);
+    mergeWithAccumulatedData2(
+      pxTable,
+      notLoadedVarSelection,
+      variablesSelection,
+    );
     const pxTableMerged = createPxTableFromAccumulatedData(variablesSelection);
     if (pxTableMerged) {
       pxTable = pxTableMerged;
