@@ -18,7 +18,7 @@ export interface TableProps {
 type DataCellMeta = {
   varId: string; // id of variable
   valCode: string; // value code
-  valLabel:string; // value label
+  valLabel: string; // value label
   varPos: number; // variable position in stored data
   htmlId: string; // id used in th. Will build up the headers attribute for datacells. For accesability
 };
@@ -50,7 +50,7 @@ export function Table({ pxtable, isMobile, className = '' }: TableProps) {
       const dataCellMeta: DataCellMeta = {
         varId: '',
         valCode: '',
-        valLabel:'',
+        valLabel: '',
         varPos: 0,
         htmlId: '',
       };
@@ -187,7 +187,7 @@ export function createRows(
   const tableRows: React.JSX.Element[] = [];
   const tableRowsHeadAcc: React.JSX.Element[] = [];
   const stubDatacellCodes: DataCellCodes = new Array<DataCellMeta>();
-  const accStubHeader: DataCellMeta[] = new Array<DataCellMeta>();
+  //const accStubHeader: DataCellMeta[] = new Array<DataCellMeta>();
   if (table.stub.length > 0) {
     createRow(
       0,
@@ -200,7 +200,7 @@ export function createRows(
       tableRows,
       tableRowsHeadAcc,
       isMobile,
-      accStubHeader,
+      /*  accStubHeader,*/
     );
   } else {
     const tableRow: React.JSX.Element[] = [];
@@ -244,7 +244,7 @@ function createRow(
   tableRows: React.JSX.Element[],
   tableRowsHeadAcc: React.JSX.Element[],
   isMobile: boolean,
-  accStubHeader: DataCellMeta[],
+  // accStubHeader: DataCellMeta[],
 ): React.JSX.Element[] {
   // Calculate the rowspan for all the cells to add in this call
   rowSpan = rowSpan / table.stub[stubIndex].values.length;
@@ -261,12 +261,11 @@ function createRow(
     const cellMeta: DataCellMeta = {
       varId: table.stub[stubIndex].id,
       valCode: val.code,
-      valLabel:val.label,
+      valLabel: val.label,
       varPos: table.data.variableOrder.indexOf(table.stub[stubIndex].id),
       htmlId: 'R.' + stubIndex + val.code + '.I' + stubIteration,
     };
     stubDataCellCodes.push(cellMeta);
-    // accStubHeader.push(cellMeta);
     // Fix the rowspan
     if (rowSpan === 0) {
       rowSpan = 1;
@@ -274,20 +273,106 @@ function createRow(
 
     // If there are more stub variables that need to add headers to this row
     if (table.stub.length > stubIndex + 1) {
-      tableRow.push(
-        <th
-          id={cellMeta.htmlId}
-          scope="row"
-          role="rowheader"
-          className={cl(classes.stub, classes[`stub-${stubIndex}`])}
-          key={getNewKey()}
-        >
-          {val.label}
-        </th>,
-      );
+      // new
+      if (stubIndex === table.stub.length - 3) {
+        for (let n = 0; n < table.stub.length - 2; n++) {
+          tableRow.push(
+            <th
+              id={stubDataCellCodes[n].htmlId}
+              scope="row"
+              role="rowheader"
+              className={cl(classes.stub, classes[`stub-${stubIndex}`])}
+              key={getNewKey()}
+            >
+              {stubDataCellCodes[n].valLabel}
+            </th>,
+          );
+          fillEmpty(tableMeta, tableRow, isMobile);
+          tableRows.push(
+            <tr
+              className={cl(
+                { [classes.firstdim]: n === 0 },
+                { [classes.mobileEmptyRowCell]: isMobile }
+              )}
+              key={getNewKey()}
+            >
+              {tableRow}
+            </tr>,
+          );
+          tableRow = [];
+        }
 
-      // make the rest of this row empty
-      fillEmpty(tableMeta, tableRow, isMobile);
+        //end new
+      } else  {
+      if(stubIndex > table.stub.length - 3) {
+        tableRow.push(
+          <th
+            id={cellMeta.htmlId}
+            scope="row"
+            role="rowheader"
+            className={cl(classes.stub, classes[`stub-${stubIndex}`])}
+            key={getNewKey()}
+          >
+            {val.label}
+          </th>,
+        );
+
+        // make the rest of this row empty
+        fillEmpty(tableMeta, tableRow, isMobile);
+
+        tableRows.push(
+          <tr
+            className={cl(
+              { [classes.firstdim]: stubIndex === 0 },
+              { [classes.mobileEmptyRowCell]: isMobile },
+              {
+               [classes.mobileRowHeadSecondLastStub]:
+                 isMobile
+             }
+            )}
+            key={getNewKey()}
+          >
+            {tableRow}
+          </tr>,
+        );
+        tableRow = [];
+      }
+    }
+      // console.log('table.stub.length=' + table.stub.length);
+      // if (table.stub.length >= 3) {
+      //   if (stubIndex < table.stub.length - 2 ) {
+      //     if (i === 0) {
+      //       for (let n = 0; n < table.stub.length - 2; n++) {
+      //         // console.log('JAJA=' + JSON.stringify(stubDataCellCodes[n]));
+      //         tableRow.push(
+      //           <th
+      //             id={stubDataCellCodes[n].htmlId}
+      //             scope="row"
+      //             role="rowheader"
+      //             className={cl(classes.stub, classes[`stub-${stubIndex}`])}
+      //             key={getNewKey()}
+      //           >
+      //             {stubDataCellCodes[n].valLabel}
+      //           </th>,
+      //         );
+      //         fillEmpty(tableMeta, tableRow, isMobile);
+      //         tableRows.push(
+      //           <tr
+      //             className={cl(
+      //               { [classes.firstdim]: stubIndex === 0 },
+      //               { [classes.mobileEmptyRowCell]: isMobile },
+      //             )}
+      //             key={getNewKey()}
+      //           >
+      //             {tableRow}
+      //           </tr>,
+      //         );
+      //         tableRow = [];
+      //       }
+      //     }
+      //   }
+      // }
+
 
       // Create a new row for the next stub
       createRow(
@@ -301,39 +386,43 @@ function createRow(
         tableRows,
         tableRowsHeadAcc,
         isMobile,
-        accStubHeader,
+        // accStubHeader,
       );
       // accStubHeader.pop();
-      stubDataCellCodes.pop();
 
+      stubDataCellCodes.pop();
     } else {
       // If no more stubs need to add headers then fill the row with data
-      if (i === 0) {
-        for (let n = 0; n < table.stub.length - 1; n++) {
-          console.log('JAJA=' + JSON.stringify(stubDataCellCodes[n]));
-          tableRow.push(
-            <th
-              id={cellMeta.htmlId}
-              scope="row"
-              role="rowheader"
-              className={cl(classes.stub, classes[`stub-${stubIndex}`])}
-              key={getNewKey()}
-            >
-              {stubDataCellCodes[n].valLabel}
-            </th>,
-          );
-          fillEmpty(tableMeta, tableRow, isMobile);
-          tableRows.push(
-           <tr
-           className={cl({ [classes.firstdim]: stubIndex === 0 },{ [classes.mobileEmptyRowCell]: isMobile})}
-          key={getNewKey()}
-         >
-            {tableRow}
-            </tr>
-          );
-          tableRow = [];
-        }
-      }
+      // if (i === 0) {
+      //   for (let n = 0; n < table.stub.length - 1; n++) {
+      //     console.log('JAJA=' + JSON.stringify(stubDataCellCodes[n]));
+      //     tableRow.push(
+      //       <th
+      //         id={stubDataCellCodes[n].htmlId}
+      //         scope="row"
+      //         role="rowheader"
+      //         className={cl(classes.stub, classes[`stub-${stubIndex}`])}
+      //         key={getNewKey()}
+      //       >
+      //         {stubDataCellCodes[n].valLabel}
+      //       </th>,
+      //     );
+      //     fillEmpty(tableMeta, tableRow, isMobile);
+      //     tableRows.push(
+      //       <tr
+      //         className={cl(
+      //           { [classes.firstdim]: n === 0 },
+      //           { [classes.se]: n === 0 },
+      //           { [classes.mobileEmptyRowCell]: isMobile },
+      //         )}
+      //         key={getNewKey()}
+      //       >
+      //         {tableRow}
+      //       </tr>,
+      //     );
+      //     tableRow = [];
+      //   }
+      // }
       tableRow.push(
         <th
           id={cellMeta.htmlId}
