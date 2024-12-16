@@ -155,7 +155,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       const selection = variablesSelection.selection.find(
         (sel) => sel.variableCode === diffSelection.variableCode,
       );
-      if (selection && selection.codeList) {
+      if (selection?.codeList) {
         diffSelection.codeList = selection.codeList;
       }
     });
@@ -255,7 +255,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       if (!variable) {
         return false;
       }
-      // TODO: Check that the variable codelist has not been changed
+      // We need to check that the variable codelist has not been changed
       // else {
       //   if (selection.codeList) {
       //     if (variable.codeList !== selection.codeList) {
@@ -354,8 +354,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
                 });
               }
             });
-
-            return;
           }
         });
       } else {
