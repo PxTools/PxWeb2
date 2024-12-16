@@ -123,14 +123,13 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     setAccumulatedData(structuredClone(pxTable));
   };
 
-
   /**
-  * Fetch data. We DO have valid accumulated data in the data cube.
-  *
-  * @param tableId - The id of the table to fetch data for.
-  * @param i18n - The i18n object for handling langauages
-  * @param variablesSelection - User selection of variables and their values.
-  */
+   * Fetch data. We DO have valid accumulated data in the data cube.
+   *
+   * @param tableId - The id of the table to fetch data for.
+   * @param i18n - The i18n object for handling langauages
+   * @param variablesSelection - User selection of variables and their values.
+   */
   const fetchWithValidAccData = async (
     tableId: string,
     i18n: i18n,
@@ -151,7 +150,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       }
     }
 
-    // Get the right codelists for the variables 
+    // Get the right codelists for the variables
     notLoadedVarSelection.selection.forEach((diffSelection) => {
       const selection = variablesSelection.selection.find(
         (sel) => sel.variableCode === diffSelection.variableCode,
@@ -262,18 +261,17 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       //     if (variable.codeList !== selection.codeList) {
       //       return false;
       //     }
-      //   } 
+      //   }
       // }
     }
 
     return true;
   }
 
-
-   /**
+  /**
    * Checks if all data and metadata the user asks for is already loaded in the accumulated data.
    * If there are missing datacells in the accumulated data, the missing variables and values are added to the notLoadedVarSelection.
-   * 
+   *
    * @param variablesSelection - User selection of variables and their values.
    * @param notLoadedVarSelection - Out parameter. After the method has finished notLoadedVarSelection contains the VariablesSelection for the variables and values not already loaded in the accumulated data.
    * @returns `true` if all data the user asks for is already loaded in the accumulated data, `false` otherwise.
@@ -337,7 +335,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
           );
 
           if (dataValue === undefined) {
-            // If the data cell does not exist in the accumulated data: 
+            // If the data cell does not exist in the accumulated data:
             // --> Add data cell metadata to notLoadedVarSelection (that will be used for API-call to ge the data later)
             dimensions.forEach((dimension, index) => {
               const existingSelection = notLoadedVarSelection.selection.find(
@@ -421,7 +419,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     return pxTable;
   }
 
-
   /**
    * Merge pxTable from new API call into the accumulatedData in the data cube. Both data and metadata are merged.
    *
@@ -436,7 +433,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   ): void {
     // Check that it is possible to merge the new data with the accumulated data. If more than one variable changed, it is not possible to merge.
     if (accumulatedData !== undefined) {
-      
       // --- Merge metadata ---
 
       // Create a map of the variables in accumulated data for quick lookup
@@ -476,8 +472,8 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
                 // It's a new value that we need to add to the existing variable!
                 const newValue = structuredClone(value);
 
-               // Values are assumed to be sorted in the right order in the VariablesProvider
-               // Find the index where the new value should be inserted
+                // Values are assumed to be sorted in the right order in the VariablesProvider
+                // Find the index where the new value should be inserted
                 const valueIndex = selection?.valueCodes?.indexOf(value.code);
                 if (valueIndex !== undefined && valueIndex !== -1) {
                   existingVariable?.values.splice(valueIndex, 0, newValue);
