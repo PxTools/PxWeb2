@@ -337,7 +337,10 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
           if (dataValue === undefined) {
             // If the data cell does not exist in the accumulated data:
             // --> Add data cell metadata to notLoadedVarSelection (that will be used for API-call to ge the data later)
-            addCellMetadataToNotLoadedSelection(dimensions, notLoadedVarSelection);
+            addCellMetadataToNotLoadedSelection(
+              dimensions,
+              notLoadedVarSelection,
+            );
           }
         });
       } else {
