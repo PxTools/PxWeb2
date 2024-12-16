@@ -337,23 +337,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
           if (dataValue === undefined) {
             // If the data cell does not exist in the accumulated data:
             // --> Add data cell metadata to notLoadedVarSelection (that will be used for API-call to ge the data later)
-            dimensions.forEach((dimension, index) => {
-              const existingSelection = notLoadedVarSelection.selection.find(
-                (sel) =>
-                  sel.variableCode ===
-                  accumulatedData.metadata.variables[index].id,
-              );
-              if (existingSelection) {
-                if (!existingSelection.valueCodes?.includes(dimension)) {
-                  existingSelection.valueCodes?.push(dimension);
-                }
-              } else {
-                notLoadedVarSelection.selection.push({
-                  variableCode: accumulatedData.metadata.variables[index].id,
-                  valueCodes: [dimension],
-                });
-              }
-            });
+            addCellMetadataToNotLoadedSelection(dimensions, notLoadedVarSelection);
           }
         });
       } else {
@@ -368,6 +352,36 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
           );
         });
       }
+    }
+  }
+
+  /**
+   * Adds data cell metadata to the notLoadedVarSelection.
+   *
+   * @param dimensions - An array of dimension values that identifies the data cell in the data cube.
+   * @param notLoadedVarSelection - Contains the VariablesSelection for the variables and values not already loaded in the accumulated data.
+   */
+  function addCellMetadataToNotLoadedSelection(
+    dimensions: string[],
+    notLoadedVarSelection: VariablesSelection,
+  ): void {
+    if (accumulatedData != undefined) {
+      dimensions.forEach((dimension, index) => {
+        const existingSelection = notLoadedVarSelection.selection.find(
+          (sel) =>
+            sel.variableCode === accumulatedData.metadata.variables[index].id,
+        );
+        if (existingSelection) {
+          if (!existingSelection.valueCodes?.includes(dimension)) {
+            existingSelection.valueCodes?.push(dimension);
+          }
+        } else {
+          notLoadedVarSelection.selection.push({
+            variableCode: accumulatedData.metadata.variables[index].id,
+            valueCodes: [dimension],
+          });
+        }
+      });
     }
   }
 
