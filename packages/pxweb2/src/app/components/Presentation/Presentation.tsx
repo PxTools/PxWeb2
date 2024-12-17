@@ -18,8 +18,12 @@ type propsType = {
 };
 
 const MemoizedTable = React.memo(
-  ({ pxtable, isMobile }: { pxtable: PxTable, isMobile: boolean }) => <Table pxtable={pxtable} isMobile={isMobile} />,
-  (prevProps, nextProps) => isEqual(prevProps.pxtable, nextProps.pxtable) && prevProps.isMobile === nextProps.isMobile
+  ({ pxtable, isMobile }: { pxtable: PxTable; isMobile: boolean }) => (
+    <Table pxtable={pxtable} isMobile={isMobile} />
+  ),
+  (prevProps, nextProps) =>
+    isEqual(prevProps.pxtable, nextProps.pxtable) &&
+    prevProps.isMobile === nextProps.isMobile,
 );
 export function Presentation({ selectedTabId, isMobile }: propsType) {
   const { i18n, t } = useTranslation();
@@ -90,11 +94,10 @@ export function Presentation({ selectedTabId, isMobile }: propsType) {
   useEffect(() => {
     if (isMobile) {
       tableData.pivotToMobile();
-    }
-    else {
+    } else {
       tableData.pivotToDesktop();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps    
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMobile]);
 
   useEffect(() => {

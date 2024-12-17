@@ -12,7 +12,7 @@ import {
   PxTableMetadata,
   getPxTableData,
   setPxTableData,
-} from '@pxweb2/pxweb2-ui/'
+} from '@pxweb2/pxweb2-ui/';
 import { mapJsonStat2Response } from '../../mappers/JsonStat2ResponseMapper';
 
 // Define types for the context state and provider props
@@ -82,7 +82,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   const fetchTableData = async (
     tableId: string,
     i18n: i18n,
-    isMobile: boolean
+    isMobile: boolean,
   ) => {
     const selections: Array<VariableSelection> = [];
     const ids = variables.getUniqueIds();
@@ -135,7 +135,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     tableId: string,
     i18n: i18n,
     isMobile: boolean,
-    variablesSelection: VariablesSelection
+    variablesSelection: VariablesSelection,
   ) => {
     const pxTable: PxTable = await fetchFromApi(
       tableId,
@@ -161,7 +161,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     tableId: string,
     i18n: i18n,
     isMobile: boolean,
-    variablesSelection: VariablesSelection
+    variablesSelection: VariablesSelection,
   ) => {
     // Check if all data and metadata asked for by the user is already loaded from earlier API-calls
     if (isAllDataAlreadyLoaded(variablesSelection)) {
@@ -669,10 +669,10 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
       // -> Set stub and heading order for desktop according to the order in pxTable
       const stubOrderDesktop: string[] = pxTable.stub.map(
-        (variable) => variable.id
+        (variable) => variable.id,
       );
       const headingOrderDesktop: string[] = pxTable.heading.map(
-        (variable) => variable.id
+        (variable) => variable.id,
       );
       setStubDesktop(stubOrderDesktop);
       setHeadingDesktop(headingOrderDesktop);
@@ -688,11 +688,11 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       tmpStubMobile.sort((a, b) => a.values.length - b.values.length);
 
       const stubOrderMobile: string[] = tmpStubMobile.map(
-        (variable) => variable.id
+        (variable) => variable.id,
       );
-      
+
       const headingOrderMobile: string[] = [];
-      
+
       setStubMobile(stubOrderMobile);
       setHeadingMobile(headingOrderMobile);
 
@@ -714,7 +714,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       const remainingVariables = pxTable.metadata.variables.filter(
         (variable) =>
           !stubDesktop.includes(variable.id) &&
-          !headingDesktop.includes(variable.id)
+          !headingDesktop.includes(variable.id),
       );
 
       if (remainingVariables.length > 0) {
@@ -836,7 +836,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     pxTable.stub = [];
     stub.forEach((id) => {
       const variable = pxTable.metadata.variables.find(
-        (variable) => variable.id === id
+        (variable) => variable.id === id,
       );
       if (variable) {
         pxTable.stub.push(variable);
@@ -845,7 +845,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     pxTable.heading = [];
     heading.forEach((id) => {
       const variable = pxTable.metadata.variables.find(
-        (variable) => variable.id === id
+        (variable) => variable.id === id,
       );
       if (variable) {
         pxTable.heading.push(variable);

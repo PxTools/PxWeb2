@@ -7,11 +7,11 @@
   width: 100%;
 
   @media screen and (max-width: fixed.$breakpoints-xsmall-max-width) {
-  line-height:fixed.$spacing-6;
+    line-height: fixed.$spacing-6;
   }
 
   border-radius: var(--px-border-radius-medium);
-   border: 1px solid var(--px-color-border-default);
+  border: 1px solid var(--px-color-border-default);
   overflow: hidden; /* Ensures content stays within rounded borders */
   color: var(--px-color-text-default);
 
@@ -19,7 +19,7 @@
     width: 40px;
     padding-left: 16px;
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
-    padding: 8px 12px;
+      padding: 8px 12px;
     }
     font-weight: normal;
     text-align: center;
@@ -54,7 +54,7 @@
 
   th.stub-0 {
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
-    padding-left: 12px;
+      padding-left: 12px;
     }
     border-left: none;
   }
@@ -78,13 +78,13 @@
   }
   th.stub-4 {
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
-    padding-left: 76px;
+      padding-left: 76px;
     }
     border-left: none;
   }
   th.stub-5 {
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
-    padding-left: 92px;
+      padding-left: 92px;
     }
     border-left: none;
   }
@@ -111,7 +111,7 @@
   td {
     padding-right: 16px;
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
-    padding: 8px 12px;
+      padding: 8px 12px;
     }
     width: 40px;
     text-align: right;
@@ -123,8 +123,8 @@
     text-transform: capitalize;
   }
   tr.firstdim th {
-     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
-    border-top: 2px solid var(--px-color-border-default);
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+      border-top: 2px solid var(--px-color-border-default);
     }
     @media screen and (max-width: fixed.$breakpoints-xsmall-max-width) {
       padding-top: 16px;
@@ -134,7 +134,7 @@
   }
   tr.firstdim td {
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
-    border-top: 2px solid var(--px-color-border-default);
+      border-top: 2px solid var(--px-color-border-default);
     }
     //font-weight: bold;
     font-family: PxWeb-font-700;
@@ -146,7 +146,7 @@
   tbody tr:first-of-type th,
   tbody tr:first-of-type td {
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
-    border-top: 2px solid var(--px-color-border-default);
+      border-top: 2px solid var(--px-color-border-default);
     }
   }
   tr.firstColNoStub > td:first-child {
@@ -158,46 +158,43 @@
   }
 
   .mobileEmptyRowCell > th,
-  .mobileEmptyRowCell > td
-  {
+  .mobileEmptyRowCell > td {
     background: var(--px-color-surface-moderate);
-    border-left:none ;
-    border-bottom:none ;
-    border-top: none ;
+    border-left: none;
+    border-bottom: none;
+    border-top: none;
   }
 
-  .mobileRowHeadLastStub >th,
-  .mobileRowHeadLastStub >td{
-    background:none;
-    border-left:none   ;
-    border-right:none;
-    border-bottom:none ;
-    border-top: none ;
+  .mobileRowHeadLastStub > th,
+  .mobileRowHeadLastStub > td {
+    background: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    border-top: none;
   }
-  
-  .mobileRowHeadSecondLastStub >th,
-  .mobileRowHeadSecondLastStub >td{
+
+  .mobileRowHeadSecondLastStub > th,
+  .mobileRowHeadSecondLastStub > td {
     padding-top: 4px;
     padding-bottom: 4px;
-    background:none;
-    border-left:none   ;
-    border-right:none;
-    border-bottom:none ;
-    border-top: none ;
+    background: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    border-top: none;
     font-family: PxWeb-font-700;
   }
   // @media screen and (min-width: fixed.$breakpoints-xsmall-max-width) {
   //   border: 1px solid var(--px-color-border-default);
   //    }
 
-  .mobileRowHeadThirdLastStub>th,
-  .mobileRowHeadThirdLastStub >td{
+  .mobileRowHeadThirdLastStub > th,
+  .mobileRowHeadThirdLastStub > td {
     padding-bottom: 16px;
   }
-  .mobileRowHeadlastValueOfLastStub>th,
-  .mobileRowHeadlastValueOfLastStub>td {
+  .mobileRowHeadlastValueOfLastStub > th,
+  .mobileRowHeadlastValueOfLastStub > td {
     padding-bottom: 16px;
   }
-
-
 }

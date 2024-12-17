@@ -12,7 +12,10 @@ import NavigationBar from './components/NavigationMenu/NavigationBar/NavigationB
 import { SkipToMain } from './components/SkipToMain/SkipToMain';
 
 import { Footer } from './components/Footer/Footer';
-import { BreakpointsSmallMaxWidth, BreakpointsXsmallMaxWidth } from '@pxweb2/pxweb2-ui';
+import {
+  BreakpointsSmallMaxWidth,
+  BreakpointsXsmallMaxWidth,
+} from '@pxweb2/pxweb2-ui';
 import { getConfig } from './util/config/getConfig';
 import { OpenAPI } from '@pxweb2/pxweb2-api-client';
 
@@ -33,7 +36,7 @@ export function App() {
    */
   const smallBreakpoint = Number(BreakpointsSmallMaxWidth.replace('px', ''));
   const [isSmallDevice, setIsSmallDevice] = useState(
-    window.innerWidth <= smallBreakpoint
+    window.innerWidth <= smallBreakpoint,
   );
 
   /**
@@ -41,9 +44,9 @@ export function App() {
    */
   const xSmallBreakpoint = Number(BreakpointsXsmallMaxWidth.replace('px', ''));
   const [isXSmallDevice, setIsXSmallDevice] = useState(
-    window.innerWidth <= xSmallBreakpoint
+    window.innerWidth <= xSmallBreakpoint,
   );
-  
+
   useEffect(() => {
     const handleResize = () => {
       setIsSmallDevice(window.innerWidth <= smallBreakpoint);
@@ -91,7 +94,10 @@ export function App() {
           />
           <div className={styles.contentAndFooterContainer}>
             {isSmallDevice && <Header />}{' '}
-            <Presentation selectedTabId={selectedTableId} isMobile={isXSmallDevice}></Presentation>
+            <Presentation
+              selectedTabId={selectedTableId}
+              isMobile={isXSmallDevice}
+            ></Presentation>
             <Footer />
           </div>
         </div>
