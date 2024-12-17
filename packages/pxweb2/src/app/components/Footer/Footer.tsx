@@ -7,7 +7,7 @@ export const Footer: React.FC = () => {
   const { t } = useTranslation();
 
   return (
-    <div className={styles.footer}>
+    <footer className={styles.footer}>
       <div className={styles.logos}>
         <img alt="SCB logo" src="/images/scb-logo.svg" />{' '}
         <img alt="SSB logo" src="/images/ssb-logo.svg" />
@@ -50,6 +50,6 @@ export const Footer: React.FC = () => {
           <BodyLong>{t('presentation_page.footer.copyright')}</BodyLong>
         </div>
       </div>
-    </div>
+    </footer>
   );
 };
