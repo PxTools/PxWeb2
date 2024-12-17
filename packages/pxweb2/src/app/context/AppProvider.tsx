@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useMemo } from 'react';
 
 import {
   BreakpointsSmallMaxWidth,
@@ -51,15 +51,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
     };
   }, [mobileBreakpoint, tabletBreakpoint]);
 
+  const cachedValues = useMemo(
+    () => ({
+      isInitialized,
+      isTablet,
+      isMobile,
+    }),
+    [isInitialized, isTablet, isMobile],
+  );
+
   return (
-    <AppContext.Provider
-      value={{
-        isInitialized,
-        isTablet,
-        isMobile,
-      }}
-    >
-      {children}
-    </AppContext.Provider>
+    <AppContext.Provider value={cachedValues}>{children}</AppContext.Provider>
   );
 };
