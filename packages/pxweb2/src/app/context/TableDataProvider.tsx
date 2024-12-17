@@ -110,8 +110,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       tableId,
     );
 
-    //console.log({ validAccData });
-
     if (validAccData) {
       fetchWithValidAccData(tableId, i18n, isMobile, variablesSelection);
     } else {
@@ -145,7 +143,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       variablesSelection,
     );
 
-    //handleStubAndHeading(pxTable, i18n, isMobile);
     initializeStubAndHeading(pxTable, isMobile);
     setData(pxTable);
 
@@ -167,26 +164,16 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     variablesSelection: VariablesSelection
   ) => {
     // Check if all data and metadata asked for by the user is already loaded from earlier API-calls
-    // BUG!
-    // TODO: There is a bug in isAllDataAlreadyLoaded. Sometimes the function thinks everything has been loaded when it accually is not.
-    // Rewrite isAllDataAlreadyLoaded to check if data cells exists in accumulated data cube?
     if (isAllDataAlreadyLoaded(variablesSelection)) {
-      //console.log('All data already loaded');
       // All data and metadata asked for by the user is already loaded in accumulatedData. No need for a new API-call. Create a pxTable from accumulatedData instead.
       const pxTable = createPxTableFromAccumulatedData(variablesSelection);
 
       if (pxTable) {
-        // BUG QUICKFIX
-        // TODO: This is a quick fix for the bug mentioned above. When the user has deselected values we store the new table as the accumeulated data.
-        // This is not very good since we will lose data already loaded...
-        // setAccumulatedData(structuredClone(pxTable));
-
         pivotForDevice(pxTable, isMobile);
         setData(pxTable);
         return;
       }
     }
-    //console.log('All data NOT already loaded');
 
     let varSelection: VariablesSelection = variablesSelection;
     let diffVariablesSelection: VariablesSelection = { selection: [] };
@@ -194,8 +181,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     // We need to make a new API-call to get the data and metadata not already loaded in accumulatedData
     // Make the API-call as small as possible
     diffVariablesSelection = getDiffVariablesSelection(variablesSelection);
-
-    console.log({ diffVariablesSelection });
 
     if (diffVariablesSelection.selection.length > 0) {
       varSelection = getMinimumVariablesSelection(
@@ -669,72 +654,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     }
   }
 
-  // /**
-  //  * Remember order of variables in stub and heading when table setup is changed.
-  //  *
-  //  * @param pxTable - PxTable containing the data and metadata for display in table.
-  //  * @param i18n - The i18n object for handling langauages
-  //  */
-  // function handleStubAndHeading(
-  //   pxTable: PxTable,
-  //   i18n: i18n,
-  //   isMobile: boolean
-  // ) {
-  //   if (
-  //     accumulatedData === undefined ||
-  //     accumulatedData.metadata.id !== pxTable.metadata.id
-  //   ) {
-  //     // First time we get data OR we have a new table.
-  //     // -> Set stub and heading according to the order in pxTable
-  //     const stubOrder: string[] = pxTable.stub.map((variable) => variable.id);
-  //     const headingOrder: string[] = pxTable.heading.map(
-  //       (variable) => variable.id
-  //     );
-  //     setStubDesktop(stubOrder);
-  //     setHeadingDesktop(headingOrder);
-  //   } else {
-  //     // Language has changed.
-  //     // -> Set stub and heading in pxTable according to the order in state
-  //     pxTable.stub = [];
-  //     stubDesktop.forEach((id) => {
-  //       const variable = pxTable.metadata.variables.find(
-  //         (variable) => variable.id === id
-  //       );
-  //       if (variable) {
-  //         pxTable.stub.push(variable);
-  //       }
-  //     });
-  //     pxTable.heading = [];
-  //     headingDesktop.forEach((id) => {
-  //       const variable = pxTable.metadata.variables.find(
-  //         (variable) => variable.id === id
-  //       );
-  //       if (variable) {
-  //         pxTable.heading.push(variable);
-  //       }
-  //     });
-
-  //     // Find all new variables and add them to the stub
-  //     const remainingVariables = pxTable.metadata.variables.filter(
-  //       (variable) =>
-  //         !stubDesktop.includes(variable.id) &&
-  //         !headingDesktop.includes(variable.id)
-  //     );
-
-  //     if (remainingVariables.length > 0) {
-  //       const newStub = structuredClone(stubDesktop);
-
-  //       remainingVariables.forEach((variable) => {
-  //         if (!newStub.includes(variable.id)) {
-  //           pxTable.stub.push(variable);
-  //           newStub.push(variable.id);
-  //         }
-  //       });
-  //       setStubDesktop(newStub);
-  //     }
-  //   }
-  // }
-
   /**
    * Remember order of variables in stub and heading when table setup is changed.
    *
@@ -771,9 +690,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       const stubOrderMobile: string[] = tmpStubMobile.map(
         (variable) => variable.id
       );
-      // pxTable.heading.forEach((variable) => {
-      //   stubOrderMobile.push(variable.id);
-      // });
       
       const headingOrderMobile: string[] = [];
       
