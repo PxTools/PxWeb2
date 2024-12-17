@@ -11,7 +11,7 @@ import { TableDataProvider } from './app/context/TableDataProvider';
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Navigate to="/table/tab638" replace={true} />,
+    element: <Navigate to="/table/04534" replace={true} />,
   },
   {
     path: '/table/:tableId',
