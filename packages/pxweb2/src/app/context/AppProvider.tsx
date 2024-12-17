@@ -23,8 +23,7 @@ export const AppContext = createContext<AppContextType>({
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [errorMsg, setErrorMsg] = useState('');
-  const [isInitialized, setIsInitialized] = useState(true);
+  const [isInitialized] = useState(true);
 
   /**
    * Keep state if window screen size is mobile, pad or desktop.
