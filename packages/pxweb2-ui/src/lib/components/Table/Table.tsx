@@ -187,9 +187,9 @@ export function createRows(
   const tableRows: React.JSX.Element[] = [];
   const tableRowsHeadAcc: React.JSX.Element[] = [];
   const stubDatacellCodes: DataCellCodes = new Array<DataCellMeta>();
-  //const accStubHeader: DataCellMeta[] = new Array<DataCellMeta>();
   if (table.stub.length > 0) {
-    createRow(
+    if (isMobile){
+    createRowMobile(
       0,
       tableMeta.rows - tableMeta.rowOffset,
       0,
@@ -200,8 +200,21 @@ export function createRows(
       tableRows,
       tableRowsHeadAcc,
       isMobile,
-      /*  accStubHeader,*/
     );
+  }else
+  {
+    createRow(
+      0,
+      tableMeta.rows - tableMeta.rowOffset,
+      0,
+      table,
+      tableMeta,
+      stubDatacellCodes,
+      headingDataCellCodes,
+      tableRows,
+      isMobile,
+    );
+  }
   } else {
     const tableRow: React.JSX.Element[] = [];
     fillData(
@@ -221,6 +234,165 @@ export function createRows(
   return tableRows;
 }
 
+
+
+
+function createRow(
+  stubIndex: number,
+  rowSpan: number,
+  stubIteration: number,
+  table: PxTable,
+  tableMeta: columnRowMeta,
+  stubDataCellCodes: DataCellCodes,
+  headingDataCellCodes: DataCellCodes[],
+  tableRows: React.JSX.Element[],
+  isMobile: boolean,
+): React.JSX.Element[] {
+
+  console.log("I create row");
+  // Calculate the rowspan for all the cells to add in this call
+  rowSpan = rowSpan / table.stub[stubIndex].values.length;
+
+  let tableRow: React.JSX.Element[] = [];
+
+  // Loop through all the values in the stub variable
+  for (let i = 0; i < table.stub[stubIndex].values.length; i++) {
+    if (stubIndex === 0) {
+      stubIteration++;
+    }
+
+    const val = table.stub[stubIndex].values[i];
+    const cellMeta: DataCellMeta = {
+      varId: table.stub[stubIndex].id,
+      valCode: val.code,
+      valLabel: val.label,
+      varPos: table.data.variableOrder.indexOf(table.stub[stubIndex].id),
+      htmlId: 'R.' + stubIndex + val.code + '.I' + stubIteration,
+    };
+    stubDataCellCodes.push(cellMeta);
+    // Fix the rowspan
+    if (rowSpan === 0) {
+      rowSpan = 1;
+    }
+    let lastValueOfLastStub;
+    if (
+      isMobile &&
+      stubIndex === table.stub.length - 1 &&
+      i === table.stub[stubIndex].values.length - 1
+    ) {
+      // the last value of last level stub
+      lastValueOfLastStub = true;
+    }
+    let secondLastStubMultipleValues;
+    if (
+      isMobile &&
+      stubIndex === table.stub.length - 2 &&
+      table.stub[stubIndex].values.length > 1
+    ) {
+      // second last level
+      secondLastStubMultipleValues = true;
+    }
+    let thirdLastStub;
+    if (isMobile && stubIndex === table.stub.length - 3) {
+      // third last level
+      thirdLastStub = true;
+    }
+
+    tableRow.push(
+      <th
+        id={cellMeta.htmlId}
+        scope="row"
+        role="rowheader"
+        className={cl(classes.stub, classes[`stub-${stubIndex}`])}
+        key={getNewKey()}
+      >
+        {val.label}
+      </th>,
+    );
+
+    // If there are more stub variables that need to add headers to this row
+    if (table.stub.length > stubIndex + 1) {
+      // make the rest of this row empty
+      fillEmpty(tableMeta, tableRow, isMobile);
+      tableRows.push(
+        <tr
+          className={cl(
+            { [classes.firstdim]: stubIndex === 0 },
+            {
+              [classes.mobileEmptyRowCell]:
+                isMobile && !secondLastStubMultipleValues,
+            },
+            {
+              [classes.mobileRowHeadSecondLastStub]:
+                secondLastStubMultipleValues,
+            },
+            {
+              [classes.mobileRowHeadThirdLastStub]: thirdLastStub,
+            },
+          )}
+          key={getNewKey()}
+        >
+          {tableRow}
+        </tr>,
+      );
+      tableRow = [];
+
+      // Create a new row for the next stub
+      createRow(
+        stubIndex + 1,
+        rowSpan,
+        stubIteration,
+        table,
+        tableMeta,
+        stubDataCellCodes,
+        headingDataCellCodes,
+        tableRows,
+        isMobile,
+      );
+      stubDataCellCodes.pop();
+    } else {
+      // If no more stubs need to add headers then fill the row with data
+      fillData(
+        table,
+        tableMeta,
+        stubDataCellCodes,
+        headingDataCellCodes,
+        tableRow,
+      );
+      tableRows.push(
+        <tr
+          key={getNewKey()}
+          className={cl(
+            { [classes.mobileRowHeadLastStub]: isMobile },
+            {
+              [classes.mobileRowHeadlastValueOfLastStub]: lastValueOfLastStub,
+            },
+          )}
+        >
+          {tableRow}
+        </tr>,
+      );
+      tableRow = [];
+      stubDataCellCodes.pop();
+    }
+  }
+
+  return tableRows;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
  * Creates the rows for the table based on the stub variables.
  *
@@ -233,7 +405,7 @@ export function createRows(
  * @param tableRows - An array of React.JSX.Element representing the rows of the table.
  * @returns An array of React.JSX.Element representing the rows of the table.
  */
-function createRow(
+function createRowMobile(
   stubIndex: number,
   rowSpan: number,
   stubIteration: number,
@@ -246,6 +418,8 @@ function createRow(
   isMobile: boolean,
   // accStubHeader: DataCellMeta[],
 ): React.JSX.Element[] {
+  
+  console.log("I createRowMobile");
   // Calculate the rowspan for all the cells to add in this call
   rowSpan = rowSpan / table.stub[stubIndex].values.length;
 
@@ -283,7 +457,7 @@ function createRow(
     if (table.stub.length > stubIndex + 1) {
       // Repeat the headers for all stubs except the 2 last levels
       if (stubIndex === table.stub.length - 3) {
-        for (let n = 0; n < table.stub.length - 2; n++) {
+        for (let n = 0; n <= table.stub.length - 3; n++) {
           tableRow.push(
             <th
               id={stubDataCellCodes[n].htmlId}
@@ -348,7 +522,7 @@ function createRow(
       }
 
       // Create a new row for the next stub
-      createRow(
+      createRowMobile(
         stubIndex + 1,
         rowSpan,
         stubIteration,
