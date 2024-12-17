@@ -270,10 +270,18 @@ function createRow(
     if (rowSpan === 0) {
       rowSpan = 1;
     }
-
+    let lastValueOfLastStub;
+    if (
+      isMobile &&
+      stubIndex === table.stub.length - 1 &&
+      i === table.stub[stubIndex].values.length - 1
+    ) {
+      // the last value of last level stub
+      lastValueOfLastStub = true;
+    }
     // If there are more stub variables that need to add headers to this row
     if (table.stub.length > stubIndex + 1) {
-      // new
+      // Repeat the headers for all stubs except the 2 last levels
       if (stubIndex === table.stub.length - 3) {
         for (let n = 0; n < table.stub.length - 2; n++) {
           tableRow.push(
@@ -292,7 +300,8 @@ function createRow(
             <tr
               className={cl(
                 { [classes.firstdim]: n === 0 },
-                { [classes.mobileEmptyRowCell]: isMobile }
+                { [classes.mobileRowHeadThirdLastStub]: n === table.stub.length - 3 },
+                { [classes.mobileEmptyRowCell]: isMobile },
               )}
               key={getNewKey()}
             >
@@ -301,78 +310,42 @@ function createRow(
           );
           tableRow = [];
         }
+      } else {
+        // second last level
+         // if (stubIndex > table.stub.length - 3) {
+            if (stubIndex === table.stub.length - 2) {
+          tableRow.push(
+            <th
+              id={cellMeta.htmlId}
+              scope="row"
+              role="rowheader"
+              className={cl(classes.stub, classes[`stub-${stubIndex}`])}
+              key={getNewKey()}
+            >
+              {val.label}
+            </th>,
+          );
 
-        //end new
-      } else  {
-      if(stubIndex > table.stub.length - 3) {
-        tableRow.push(
-          <th
-            id={cellMeta.htmlId}
-            scope="row"
-            role="rowheader"
-            className={cl(classes.stub, classes[`stub-${stubIndex}`])}
-            key={getNewKey()}
-          >
-            {val.label}
-          </th>,
-        );
+          // make the rest of this row empty
+          fillEmpty(tableMeta, tableRow, isMobile);
 
-        // make the rest of this row empty
-        fillEmpty(tableMeta, tableRow, isMobile);
-
-        tableRows.push(
-          <tr
-            className={cl(
-              { [classes.firstdim]: stubIndex === 0 },
-              { [classes.mobileEmptyRowCell]: isMobile },
-              {
-               [classes.mobileRowHeadSecondLastStub]:
-                 isMobile
-             }
-            )}
-            key={getNewKey()}
-          >
-            {tableRow}
-          </tr>,
-        );
-        tableRow = [];
+          tableRows.push(
+            <tr
+              className={cl(
+                { [classes.firstdim]: stubIndex === 0 },
+                { [classes.mobileEmptyRowCell]: isMobile },
+                {
+                  [classes.mobileRowHeadSecondLastStub]: isMobile,
+                },
+              )}
+              key={getNewKey()}
+            >
+              {tableRow}
+            </tr>,
+          );
+          tableRow = [];
+        }
       }
-    }
-      // console.log('table.stub.length=' + table.stub.length);
-      // if (table.stub.length >= 3) {
-      //   if (stubIndex < table.stub.length - 2 ) {
-      //     if (i === 0) {
-      //       for (let n = 0; n < table.stub.length - 2; n++) {
-      //         // console.log('JAJA=' + JSON.stringify(stubDataCellCodes[n]));
-      //         tableRow.push(
-      //           <th
-      //             id={stubDataCellCodes[n].htmlId}
-      //             scope="row"
-      //             role="rowheader"
-      //             className={cl(classes.stub, classes[`stub-${stubIndex}`])}
-      //             key={getNewKey()}
-      //           >
-      //             {stubDataCellCodes[n].valLabel}
-      //           </th>,
-      //         );
-      //         fillEmpty(tableMeta, tableRow, isMobile);
-      //         tableRows.push(
-      //           <tr
-      //             className={cl(
-      //               { [classes.firstdim]: stubIndex === 0 },
-      //               { [classes.mobileEmptyRowCell]: isMobile },
-      //             )}
-      //             key={getNewKey()}
-      //           >
-      //             {tableRow}
-      //           </tr>,
-      //         );
-      //         tableRow = [];
-      //       }
-      //     }
-      //   }
-      // }
-
 
       // Create a new row for the next stub
       createRow(
@@ -386,43 +359,11 @@ function createRow(
         tableRows,
         tableRowsHeadAcc,
         isMobile,
-        // accStubHeader,
       );
-      // accStubHeader.pop();
 
       stubDataCellCodes.pop();
     } else {
-      // If no more stubs need to add headers then fill the row with data
-      // if (i === 0) {
-      //   for (let n = 0; n < table.stub.length - 1; n++) {
-      //     console.log('JAJA=' + JSON.stringify(stubDataCellCodes[n]));
-      //     tableRow.push(
-      //       <th
-      //         id={stubDataCellCodes[n].htmlId}
-      //         scope="row"
-      //         role="rowheader"
-      //         className={cl(classes.stub, classes[`stub-${stubIndex}`])}
-      //         key={getNewKey()}
-      //       >
-      //         {stubDataCellCodes[n].valLabel}
-      //       </th>,
-      //     );
-      //     fillEmpty(tableMeta, tableRow, isMobile);
-      //     tableRows.push(
-      //       <tr
-      //         className={cl(
-      //           { [classes.firstdim]: n === 0 },
-      //           { [classes.se]: n === 0 },
-      //           { [classes.mobileEmptyRowCell]: isMobile },
-      //         )}
-      //         key={getNewKey()}
-      //       >
-      //         {tableRow}
-      //       </tr>,
-      //     );
-      //     tableRow = [];
-      //   }
-      // }
+      // last level
       tableRow.push(
         <th
           id={cellMeta.htmlId}
@@ -444,14 +385,17 @@ function createRow(
       tableRows.push(
         <tr
           key={getNewKey()}
-          className={cl({ [classes.mobileRowHeadLastStub]: isMobile })}
+          className={cl({ [classes.mobileRowHeadLastStub]: isMobile },
+            {
+              [classes.mobileRowHeadlastValueOfLastStub]: lastValueOfLastStub,
+            },
+          )}
         >
           {tableRow}
         </tr>,
       );
       tableRow = [];
       stubDataCellCodes.pop();
-      // accStubHeader.pop();
     }
   }
 

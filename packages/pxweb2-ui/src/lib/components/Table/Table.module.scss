@@ -123,6 +123,7 @@
     text-transform: capitalize;
   }
   tr.firstdim th {
+    border-top: 1px solid var(--px-color-border-default);
      @media screen and (min-width: fixed.$breakpoints-small-min-width) {
     border-top: 2px solid var(--px-color-border-default);
     }
@@ -133,6 +134,7 @@
     font-family: PxWeb-font-700;
   }
   tr.firstdim td {
+    border-top: 1px solid var(--px-color-border-default);
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
     border-top: 2px solid var(--px-color-border-default);
     }
@@ -177,7 +179,7 @@
   
   .mobileRowHeadSecondLastStub >th,
   .mobileRowHeadSecondLastStub >td{
-    padding-top: 4px;
+    padding-top: 12px;
     padding-bottom: 4px;
     background:none;
     border-left:none   ;
