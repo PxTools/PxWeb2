@@ -7,6 +7,7 @@ import App from './app/app';
 import { validateConfig } from './app/util/validate';
 import { VariablesProvider } from './app/context/VariablesProvider';
 import { TableDataProvider } from './app/context/TableDataProvider';
+import { AppProvider } from './app/context/AppProvider';
 
 const router = createBrowserRouter([
   {
@@ -30,12 +31,14 @@ if (location.href.indexOf('localhost') > -1) {
 
 root.render(
   <StrictMode>
-    <VariablesProvider>
-      <TableDataProvider>
-        <Suspense fallback={<div>Loading...</div>}>
-          <RouterProvider router={router} />
-        </Suspense>
-      </TableDataProvider>
-    </VariablesProvider>
+    <AppProvider>
+      <VariablesProvider>
+        <TableDataProvider>
+          <Suspense fallback={<div>Loading...</div>}>
+            <RouterProvider router={router} />
+          </Suspense>
+        </TableDataProvider>
+      </VariablesProvider>
+    </AppProvider>
   </StrictMode>,
 );
