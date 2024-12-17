@@ -274,29 +274,6 @@ function createRow(
     if (rowSpan === 0) {
       rowSpan = 1;
     }
-    let lastValueOfLastStub;
-    if (
-      isMobile &&
-      stubIndex === table.stub.length - 1 &&
-      i === table.stub[stubIndex].values.length - 1
-    ) {
-      // the last value of last level stub
-      lastValueOfLastStub = true;
-    }
-    let secondLastStubMultipleValues;
-    if (
-      isMobile &&
-      stubIndex === table.stub.length - 2 &&
-      table.stub[stubIndex].values.length > 1
-    ) {
-      // second last level
-      secondLastStubMultipleValues = true;
-    }
-    let thirdLastStub;
-    if (isMobile && stubIndex === table.stub.length - 3) {
-      // third last level
-      thirdLastStub = true;
-    }
 
     tableRow.push(
       <th
@@ -317,18 +294,7 @@ function createRow(
       tableRows.push(
         <tr
           className={cl(
-            { [classes.firstdim]: stubIndex === 0 },
-            {
-              [classes.mobileEmptyRowCell]:
-                isMobile && !secondLastStubMultipleValues,
-            },
-            {
-              [classes.mobileRowHeadSecondLastStub]:
-                secondLastStubMultipleValues,
-            },
-            {
-              [classes.mobileRowHeadThirdLastStub]: thirdLastStub,
-            },
+            { [classes.firstdim]: stubIndex === 0 }
           )}
           key={getNewKey()}
         >
@@ -362,12 +328,6 @@ function createRow(
       tableRows.push(
         <tr
           key={getNewKey()}
-          className={cl(
-            { [classes.mobileRowHeadLastStub]: isMobile },
-            {
-              [classes.mobileRowHeadlastValueOfLastStub]: lastValueOfLastStub,
-            },
-          )}
         >
           {tableRow}
         </tr>,
