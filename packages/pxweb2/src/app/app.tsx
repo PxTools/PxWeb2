@@ -82,7 +82,9 @@ export function App() {
           />
           <div className={styles.contentAndFooterContainer}>
             {isMobile && <Header />}{' '}
-            <Presentation selectedTabId={selectedTableId}></Presentation>
+            <main>
+              <Presentation selectedTabId={selectedTableId}></Presentation>
+            </main>
             <Footer />
           </div>
         </div>
