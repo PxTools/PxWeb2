@@ -290,7 +290,7 @@ function createRow(
     // If there are more stub variables that need to add headers to this row
     if (table.stub.length > stubIndex + 1) {
       // make the rest of this row empty
-      fillEmpty(tableMeta, tableRow, isMobile);
+      fillEmpty(tableMeta, tableRow);
       tableRows.push(
         <tr
           className={cl(
@@ -406,7 +406,7 @@ function createRowMobile(
     }
     let lastValueOfLastStub;
     if (
-      isMobile &&
+      // isMobile &&
       stubIndex === table.stub.length - 1 &&
       i === table.stub[stubIndex].values.length - 1
     ) {
@@ -429,13 +429,13 @@ function createRowMobile(
               {stubDataCellCodes[n].valLabel}
             </th>,
           );
-          fillEmpty(tableMeta, tableRow, isMobile);
+          fillEmpty(tableMeta, tableRow);
           tableRows.push(
             <tr
               className={cl(
                 { [classes.firstdim]: n === 0 },
                 { [classes.mobileRowHeadThirdLastStub]: n === table.stub.length - 3 },
-                { [classes.mobileEmptyRowCell]: isMobile },
+                classes.mobileEmptyRowCell,
               )}
               key={getNewKey()}
             >
@@ -461,16 +461,14 @@ function createRowMobile(
           );
 
           // make the rest of this row empty
-          fillEmpty(tableMeta, tableRow, isMobile);
+          fillEmpty(tableMeta, tableRow);
 
           tableRows.push(
             <tr
               className={cl(
                 { [classes.firstdim]: stubIndex === 0 },
-                { [classes.mobileEmptyRowCell]: isMobile },
-                {
-                  [classes.mobileRowHeadSecondLastStub]: isMobile,
-                },
+                classes.mobileEmptyRowCell,
+  classes.mobileRowHeadSecondLastStub
               )}
               key={getNewKey()}
             >
@@ -545,7 +543,6 @@ function createRowMobile(
 function fillEmpty(
   tableMeta: columnRowMeta,
   tableRow: React.JSX.Element[],
-  isMobile: boolean,
 ): void {
   const emptyText = '';
 
