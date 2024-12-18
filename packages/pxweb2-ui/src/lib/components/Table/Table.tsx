@@ -185,36 +185,31 @@ export function createRows(
   isMobile: boolean,
 ): React.JSX.Element[] {
   const tableRows: React.JSX.Element[] = [];
-  const tableRowsHeadAcc: React.JSX.Element[] = [];
   const stubDatacellCodes: DataCellCodes = new Array<DataCellMeta>();
   if (table.stub.length > 0) {
-    if (isMobile){
-    createRowMobile(
-      0,
-      tableMeta.rows - tableMeta.rowOffset,
-      0,
-      table,
-      tableMeta,
-      stubDatacellCodes,
-      headingDataCellCodes,
-      tableRows,
-      tableRowsHeadAcc,
-      isMobile,
-    );
-  }else
-  {
-    createRow(
-      0,
-      tableMeta.rows - tableMeta.rowOffset,
-      0,
-      table,
-      tableMeta,
-      stubDatacellCodes,
-      headingDataCellCodes,
-      tableRows,
-      isMobile,
-    );
-  }
+    if (isMobile) {
+      createRowMobile(
+        0,
+        tableMeta.rows - tableMeta.rowOffset,
+        0,
+        table,
+        tableMeta,
+        stubDatacellCodes,
+        headingDataCellCodes,
+        tableRows
+      );
+    } else {
+      createRowDesktop(
+        0,
+        tableMeta.rows - tableMeta.rowOffset,
+        0,
+        table,
+        tableMeta,
+        stubDatacellCodes,
+        headingDataCellCodes,
+        tableRows,
+      );
+    }
   } else {
     const tableRow: React.JSX.Element[] = [];
     fillData(
@@ -233,11 +228,20 @@ export function createRows(
 
   return tableRows;
 }
-
-
-
-
-function createRow(
+/**
+ * Creates the rows for the table based on the stub variables. For mobile devices
+ *
+ * @param stubIndex - The index of the current stub variable.
+ * @param rowSpan - The rowspan for the cells to add in this call.
+ * @param stubIteration - Iteration for the value 
+ * @param table - The PxTable object representing the PxWeb table data.
+ * @param tableMeta - The metadata for the table columns and rows.
+ * @param stubDataCellCodes - The metadata structure for the dimensions of the stub cells.
+ * @param headingDataCellCodes - The metadata structure for the dimensions of the header cells.
+ * @param tableRows - An array of React.JSX.Element representing the rows of the table.
+ * @returns An array of React.JSX.Element representing the rows of the table.
+ */
+function createRowDesktop(
   stubIndex: number,
   rowSpan: number,
   stubIteration: number,
@@ -246,10 +250,7 @@ function createRow(
   stubDataCellCodes: DataCellCodes,
   headingDataCellCodes: DataCellCodes[],
   tableRows: React.JSX.Element[],
-  isMobile: boolean,
 ): React.JSX.Element[] {
-
-  console.log("I create row");
   // Calculate the rowspan for all the cells to add in this call
   rowSpan = rowSpan / table.stub[stubIndex].values.length;
 
@@ -293,9 +294,7 @@ function createRow(
       fillEmpty(tableMeta, tableRow);
       tableRows.push(
         <tr
-          className={cl(
-            { [classes.firstdim]: stubIndex === 0 }
-          )}
+          className={cl({ [classes.firstdim]: stubIndex === 0 })}
           key={getNewKey()}
         >
           {tableRow}
@@ -304,7 +303,7 @@ function createRow(
       tableRow = [];
 
       // Create a new row for the next stub
-      createRow(
+      createRowDesktop(
         stubIndex + 1,
         rowSpan,
         stubIteration,
@@ -313,7 +312,6 @@ function createRow(
         stubDataCellCodes,
         headingDataCellCodes,
         tableRows,
-        isMobile,
       );
       stubDataCellCodes.pop();
     } else {
@@ -325,13 +323,7 @@ function createRow(
         headingDataCellCodes,
         tableRow,
       );
-      tableRows.push(
-        <tr
-          key={getNewKey()}
-        >
-          {tableRow}
-        </tr>,
-      );
+      tableRows.push(<tr key={getNewKey()}>{tableRow}</tr>);
       tableRow = [];
       stubDataCellCodes.pop();
     }
@@ -340,24 +332,12 @@ function createRow(
   return tableRows;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 /**
- * Creates the rows for the table based on the stub variables.
+ * Creates the rows for the table based on the stub variables. For mobile devices
  *
  * @param stubIndex - The index of the current stub variable.
  * @param rowSpan - The rowspan for the cells to add in this call.
+ * @param stubIteration - Iteration for the value 
  * @param table - The PxTable object representing the PxWeb table data.
  * @param tableMeta - The metadata for the table columns and rows.
  * @param stubDataCellCodes - The metadata structure for the dimensions of the stub cells.
@@ -373,13 +353,9 @@ function createRowMobile(
   tableMeta: columnRowMeta,
   stubDataCellCodes: DataCellCodes,
   headingDataCellCodes: DataCellCodes[],
-  tableRows: React.JSX.Element[],
-  tableRowsHeadAcc: React.JSX.Element[],
-  isMobile: boolean,
-  // accStubHeader: DataCellMeta[],
+  tableRows: React.JSX.Element[]
 ): React.JSX.Element[] {
   
-  console.log("I createRowMobile");
   // Calculate the rowspan for all the cells to add in this call
   rowSpan = rowSpan / table.stub[stubIndex].values.length;
 
@@ -434,7 +410,10 @@ function createRowMobile(
             <tr
               className={cl(
                 { [classes.firstdim]: n === 0 },
-                { [classes.mobileRowHeadThirdLastStub]: n === table.stub.length - 3 },
+                {
+                  [classes.mobileRowHeadThirdLastStub]:
+                    n === table.stub.length - 3,
+                },
                 classes.mobileEmptyRowCell,
               )}
               key={getNewKey()}
@@ -446,8 +425,8 @@ function createRowMobile(
         }
       } else {
         // second last level
-         // if (stubIndex > table.stub.length - 3) {
-            if (stubIndex === table.stub.length - 2) {
+        // if (stubIndex > table.stub.length - 3) {
+        if (stubIndex === table.stub.length - 2) {
           tableRow.push(
             <th
               id={cellMeta.htmlId}
@@ -468,7 +447,7 @@ function createRowMobile(
               className={cl(
                 { [classes.firstdim]: stubIndex === 0 },
                 classes.mobileEmptyRowCell,
-  classes.mobileRowHeadSecondLastStub
+                classes.mobileRowHeadSecondLastStub,
               )}
               key={getNewKey()}
             >
@@ -488,9 +467,7 @@ function createRowMobile(
         tableMeta,
         stubDataCellCodes,
         headingDataCellCodes,
-        tableRows,
-        tableRowsHeadAcc,
-        isMobile,
+        tableRows
       );
 
       stubDataCellCodes.pop();
@@ -517,11 +494,9 @@ function createRowMobile(
       tableRows.push(
         <tr
           key={getNewKey()}
-          className={cl({ [classes.mobileRowHeadLastStub]: isMobile },
-            {
-              [classes.mobileRowHeadlastValueOfLastStub]: lastValueOfLastStub,
-            },
-          )}
+          className={cl(classes.mobileRowHeadLastStub, {
+            [classes.mobileRowHeadlastValueOfLastStub]: lastValueOfLastStub,
+          })}
         >
           {tableRow}
         </tr>,
