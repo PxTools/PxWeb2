@@ -19,6 +19,7 @@ import {
 import NavigationDrawer from '../../components/NavigationDrawer/NavigationDrawer';
 import useVariables from '../../context/useVariables';
 import { NavigationItem } from '../../components/NavigationMenu/NavigationItem/NavigationItemType';
+import React from 'react';
 
 function addSelectedCodeListToVariable(
   currentVariable: SelectedVBValues | undefined,
@@ -239,14 +240,16 @@ function removeAllValuesOfVariable(
 }
 
 type propsType = {
-  selectedNavigationView: string;
+  selectedNavigationView: "filter" | "view" | "edit" | "save" | "help" | "none";
   selectedTabId: string;
   setSelectedNavigationView: (view: NavigationItem) => void;
+  setFocusFunction: (str: "filter" | "view" | "edit" | "save" | "help") => void;
 };
 export function Selection({
   selectedNavigationView,
   selectedTabId,
   setSelectedNavigationView,
+  setFocusFunction,
 }: propsType) {
   const { selectedVBValues, setSelectedVBValues } = useVariables();
   const variables = useVariables();
@@ -264,6 +267,9 @@ export function Selection({
   //  Needed to know when the language has changed, so we can reload the default selection
   const [prevLang, setPrevLang] = useState('');
 
+  const hideRef = React.useRef<HTMLDivElement>(null);
+
+  
   useEffect(() => {
     let shouldGetDefaultSelection = !hasLoadedDefaultSelection;
 
@@ -540,9 +546,12 @@ export function Selection({
   return (
     selectedNavigationView !== 'none' && (
       <NavigationDrawer
+        ref={hideRef}
         heading={t('presentation_page.sidemenu.selection.title')}
-        onClose={() => {
+        view={selectedNavigationView}
+        onClose={(str: "filter" | "view" | "edit" | "save" | "help") => {
           setSelectedNavigationView('none');
+          setFocusFunction(str);
         }}
       >
         {selectedNavigationView === 'filter' && drawerFilter}

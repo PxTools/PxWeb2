@@ -11,6 +11,7 @@ import {
   ColorSurfaceActionSubtleHover,
 } from '@pxweb2/pxweb2-ui';
 import styles from './NavigationItem.module.scss';
+import React from 'react';
 
 // Framer Motion spring animation configuration
 const springConfig = {
@@ -27,13 +28,14 @@ interface ItemProps {
   icon: IconProps['iconName'];
   onClick: () => void;
 }
-export const Item: React.FC<ItemProps> = ({
+
+export const Item = React.forwardRef<HTMLButtonElement, ItemProps>(({
   label,
   parentName,
   selected,
   icon,
   onClick,
-}) => {
+}, ref) => {
   const btnId = 'px-' + parentName + '-' + label;
   const initialBaseBackgroundColor =
     parentName === 'navBar' ? ColorSurfaceSubtle : ColorSurfaceDefault;
@@ -60,6 +62,7 @@ export const Item: React.FC<ItemProps> = ({
 
   return (
     <m.button
+      ref={ref}
       className={cl(
         { [styles.selected]: selected },
         styles.item,
@@ -84,4 +87,6 @@ export const Item: React.FC<ItemProps> = ({
       <Label htmlFor={btnId}>{label}</Label>
     </m.button>
   );
-};
+});
+
+Item.displayName = 'Item';

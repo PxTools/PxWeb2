@@ -24,10 +24,16 @@ export function App() {
   const [selectedTableId, setSelectedTableId] = useState(
     tableId ? tableId : 'tab638',
   );
+
+  const [focus, setFocus] = useState<"filter" | "view" | "edit" | "save" | "help" | "none">("none");
   const [errorMsg, setErrorMsg] = useState('');
   const [selectedNavigationView, setSelectedNavigationView] =
     useState<NavigationItem>('filter');
 
+
+  useEffect(()=> {
+    console.log("selectedNavigationView: ", selectedNavigationView)
+  }, [selectedNavigationView])  
   /**
    * Keep state if window screen size is mobile or desktop.
    */
@@ -72,6 +78,7 @@ export function App() {
           <NavigationRail
             onChange={changeSelectedNavView}
             selected={selectedNavigationView}
+            focus={focus}
           />
         )}{' '}
         <div className={styles.mainContainer}>
@@ -79,6 +86,10 @@ export function App() {
             selectedNavigationView={selectedNavigationView}
             selectedTabId={selectedTableId}
             setSelectedNavigationView={changeSelectedNavView}
+            setFocusFunction={(str: "filter" | "view" | "edit" | "save" | "help") =>{
+              console.log("app focus on: , ", str)
+              setFocus(str);
+            }}
           />
           <div className={styles.contentAndFooterContainer}>
             {isMobile && <Header />}{' '}

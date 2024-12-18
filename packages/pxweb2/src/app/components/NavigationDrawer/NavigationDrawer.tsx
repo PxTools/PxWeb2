@@ -8,28 +8,25 @@ import i18next from 'i18next';
 export interface NavigationDrawerProps {
   children: React.ReactNode;
   heading: string;
-  onClose: () => void;
+  view: "filter" | "view" | "edit" | "save" | "help";
+  onClose: (str: "filter" | "view" | "edit" | "save" | "help") => void;
 }
 
-export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
+export const NavigationDrawer = React.forwardRef<HTMLDivElement, NavigationDrawerProps>(({
   children,
   heading,
+  view,
   onClose,
-}) => {
+}, ref) => {
   const { t } = useTranslation();
+  const hideButtonRef = React.useRef<HTMLDivElement>(null);
 
   // Handle RTL languages
   const hideIcon = i18next.dir() === 'rtl' ? 'ChevronRight' : 'ChevronLeft';
 
-  const setFocus = (element:HTMLDivElement | null) => {
-    if (element) {
-      element.focus();
-    }
-  };
-
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     if (event.key === 'Enter' || event.key === ' ') {
-      onClose();
+      onClose(view);
       
       console.log('initiator: ', children )
     }
@@ -37,17 +34,17 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
 
   return (
     <>
-      <div onClick={onClose} className={styles.backdrop}></div>
-      <div className={cl(styles.navigationDrawer, styles.fadein)}>
+      <div onClick={() => onClose(view)} className={styles.backdrop}></div>
+      <div ref={ref} className={cl(styles.navigationDrawer, styles.fadein)}>
         <div className={styles.heading}>
           <Heading level="2" size="medium">
             {heading}
           </Heading>
           <div
-            onClick={onClose}
+            onClick={() => onClose(view)}
             className={cl(styles.hideMenu, styles.clickable)}
             tabIndex={0}
-            ref={setFocus}
+            ref={hideButtonRef}
             onKeyDown={(e) => handleKeyDown(e)}
           >
             <div className={styles.hideIconWrapper}>
@@ -62,5 +59,6 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
       </div>
     </>
   );
-};
+});
+
 export default NavigationDrawer;
