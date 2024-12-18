@@ -8,12 +8,10 @@
   &:hover {
     cursor: pointer;
     background-color: var(--px-color-surface-action-subtle-hover);
-
   }
 
   &:active {
     background-color: var(--px-color-surface-action-subtle-active);
-
   }
 
   &:focus-visible .checkmark {
