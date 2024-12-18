@@ -21,6 +21,20 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
   // Handle RTL languages
   const hideIcon = i18next.dir() === 'rtl' ? 'ChevronRight' : 'ChevronLeft';
 
+  const setFocus = (element:HTMLDivElement | null) => {
+    if (element) {
+      element.focus();
+    }
+  };
+
+  function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      onClose();
+      
+      console.log('initiator: ', children )
+    }
+  }
+
   return (
     <>
       <div onClick={onClose} className={styles.backdrop}></div>
@@ -32,6 +46,9 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
           <div
             onClick={onClose}
             className={cl(styles.hideMenu, styles.clickable)}
+            tabIndex={0}
+            ref={setFocus}
+            onKeyDown={(e) => handleKeyDown(e)}
           >
             <div className={styles.hideIconWrapper}>
               <Icon iconName={hideIcon} className=""></Icon>
