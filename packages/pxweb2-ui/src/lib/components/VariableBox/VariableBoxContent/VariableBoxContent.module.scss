@@ -49,6 +49,7 @@
 
 .variablebox-content-select {
   align-self: stretch;
+  height:63px;
 }
 
 .variablebox-content-full-values-list {
@@ -97,8 +98,20 @@
   gap: fixed.$spacing-1;
 }
 
+.focusableItem {
+
+  margin-left:4px;
+  margin-right:4px;
+  &:active {
+    margin-left:4px;
+    margin-right:4px;
+  }
+}
+
 .focusableItem:focus-within {
-  background-color: #c3dcdc;
+  background-color: #c3dcdc;  
+  margin-left:4px;
+  margin-right:4px;
 }
 
 .variablebox-content-values-list-no-results {
