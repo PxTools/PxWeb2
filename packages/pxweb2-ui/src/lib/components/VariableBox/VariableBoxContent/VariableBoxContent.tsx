@@ -210,11 +210,18 @@ export function VariableBoxContent({
     event: React.KeyboardEvent<HTMLDivElement>,
   ) => {
     const { key } = event;
-    console.log('KEY', key);
+    const isSearchFocused = document.activeElement?.id === `${varId}-search`;
+
+    // Allow typing if search is focused and not pressing arrow keys
+    if (isSearchFocused && key !== 'ArrowDown') {
+      return;
+    }
+
     if (key !== 'ArrowDown' && key !== 'ArrowUp' && key !== ' ') {
       return;
     }
     event.preventDefault();
+
     let newIndex = currentFocusedItemIndex;
 
     if (key === ' ') {
@@ -225,7 +232,10 @@ export function VariableBoxContent({
     }
 
     if (key === 'ArrowDown') {
-      if (
+      if (isSearchFocused) {
+        // If search is focused, move to first item after search
+        newIndex = 1;
+      } else if (
         currentFocusedItemIndex === null ||
         currentFocusedItemIndex < items.length - 1
       ) {
@@ -234,6 +244,8 @@ export function VariableBoxContent({
     } else if (key === 'ArrowUp') {
       if (currentFocusedItemIndex !== null && currentFocusedItemIndex > 0) {
         newIndex = currentFocusedItemIndex - 1;
+        setScrollingDown(false);
+        virtuosoRef.current?.scrollToIndex(0);
       }
     }
 
@@ -446,11 +458,20 @@ export function VariableBoxContent({
     }
   }, [currentFocusedItemIndex]);
 
+  const handleSelectFocus = () => {
+    setScrollingDown(false);
+
+    console.log('SCROLLED TO TOP');
+  };
+
   return (
     <div className={cl(classes['variablebox-content'])}>
       <div className={cl(classes['variablebox-content-main'])}>
         {hasCodeLists === true && (
-          <div className={cl(classes['variablebox-content-select'])}>
+          <div
+            onFocus={handleSelectFocus}
+            className={cl(classes['variablebox-content-select'])}
+          >
             <Select
               variant="inVariableBox"
               label={t(
