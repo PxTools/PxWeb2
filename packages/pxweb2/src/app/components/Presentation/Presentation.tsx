@@ -7,14 +7,14 @@ import isEqual from 'lodash/isEqual';
 
 import styles from './Presentation.module.scss';
 import { ContentTop } from '../ContentTop/ContentTop';
-import { Table, EmptyState, PxTable, Button } from '@pxweb2/pxweb2-ui';
+import { Table, EmptyState, PxTable } from '@pxweb2/pxweb2-ui';
 import useTableData from '../../context/useTableData';
 import useVariables from '../../context/useVariables';
 import { useDebounce } from '@uidotdev/usehooks';
 
 type propsType = {
-  selectedTabId: string;
-  isMobile: boolean;
+  readonly selectedTabId: string;
+  readonly isMobile: boolean;
 };
 
 const MemoizedTable = React.memo(

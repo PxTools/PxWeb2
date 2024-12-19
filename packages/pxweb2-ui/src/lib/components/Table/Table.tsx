@@ -7,9 +7,9 @@ import { calculateRowAndColumnMeta, columnRowMeta } from './columnRowMeta';
 import { getPxTableData } from './cubeHelper';
 
 export interface TableProps {
-  pxtable: PxTable;
-  isMobile: boolean;
-  className?: string;
+  readonly pxtable: PxTable;
+  readonly isMobile: boolean;
+  readonly className?: string;
 }
 
 /**
