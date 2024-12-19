@@ -765,45 +765,48 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * Pivots the table clockwise.
    */
   function pivotCW(): void {
-    if (data?.heading !== undefined) {
-      const tmpTable = structuredClone(data);
+    if (data?.heading === undefined) {
+      return;
+    }
 
-      if (tmpTable !== undefined) {
-        let stub: string[];
-        let heading: string[];
+    const tmpTable = structuredClone(data);
+    if (tmpTable === undefined) {
+      return;
+    }
 
-        if (isMobileMode) {
-          stub = structuredClone(stubMobile);
-          heading = structuredClone(headingMobile);
-        } else {
-          stub = structuredClone(stubDesktop);
-          heading = structuredClone(headingDesktop);
-        }
+    let stub: string[];
+    let heading: string[];
 
-        if (stub.length === 0 && heading.length === 0) {
-          return;
-        }
+    if (isMobileMode) {
+      stub = structuredClone(stubMobile);
+      heading = structuredClone(headingMobile);
+    } else {
+      stub = structuredClone(stubDesktop);
+      heading = structuredClone(headingDesktop);
+    }
 
-        if (stub.length > 0 && heading.length > 0) {
-          stub.push(heading.pop() as string);
-          heading.unshift(stub.shift() as string);
-        } else if (stub.length === 0) {
-          heading.unshift(heading.pop() as string);
-        } else if (heading.length === 0) {
-          stub.unshift(stub.pop() as string);
-        }
+    if (stub.length === 0 && heading.length === 0) {
+      return;
+    }
 
-        pivotTable(tmpTable, stub, heading);
-        setData(tmpTable);
+    if (stub.length > 0 && heading.length > 0) {
+      stub.push(heading.pop() as string);
+      heading.unshift(stub.shift() as string);
+    } else if (stub.length === 0) {
+      heading.unshift(heading.pop() as string);
+    } else if (heading.length === 0) {
+      stub.unshift(stub.pop() as string);
+    }
 
-        if (isMobileMode) {
-          setStubMobile(stub);
-          setHeadingMobile(heading);
-        } else {
-          setStubDesktop(stub);
-          setHeadingDesktop(heading);
-        }
-      }
+    pivotTable(tmpTable, stub, heading);
+    setData(tmpTable);
+
+    if (isMobileMode) {
+      setStubMobile(stub);
+      setHeadingMobile(heading);
+    } else {
+      setStubDesktop(stub);
+      setHeadingDesktop(heading);
     }
   }
 
