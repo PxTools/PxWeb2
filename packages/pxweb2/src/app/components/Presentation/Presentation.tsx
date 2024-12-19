@@ -113,7 +113,7 @@ export function Presentation({ selectedTabId, isMobile }: propsType) {
       );
 
     if (initialRun && !hasSelectedValues) {
-      tableData.fetchTableData(tableId ? tableId : 'tab1292', i18n, isMobile);
+      tableData.fetchTableData(tableId, i18n, isMobile);
       setIsMissingMandatoryVariables(false);
     } else {
       if (
@@ -123,7 +123,7 @@ export function Presentation({ selectedTabId, isMobile }: propsType) {
         !initialRun
       ) {
         setIsFadingTable(true);
-        tableData.fetchTableData(tableId ? tableId : 'tab638', i18n, isMobile);
+        tableData.fetchTableData(tableId, i18n, isMobile);
         setIsMissingMandatoryVariables(false);
       }
       if (!hasSelectedMandatoryVariables && !initialRun) {
