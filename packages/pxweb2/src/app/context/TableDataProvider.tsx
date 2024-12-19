@@ -177,11 +177,10 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       if (pxTable) {
         if (isMobile) {
           pivotForMobile(pxTable);
-        }
-        else {
+        } else {
           pivotForDesktop(pxTable);
         }
-        
+
         setData(pxTable);
         return;
       }
@@ -217,8 +216,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
     if (isMobile) {
       pivotForMobile(pxTable);
-    }
-    else {
+    } else {
       pivotForDesktop(pxTable);
     }
 
