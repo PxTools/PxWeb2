@@ -175,7 +175,13 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       const pxTable = createPxTableFromAccumulatedData(variablesSelection);
 
       if (pxTable) {
-        pivotForDevice(pxTable, isMobile);
+        if (isMobile) {
+          pivotForMobile(pxTable);
+        }
+        else {
+          pivotForDesktop(pxTable);
+        }
+        
         setData(pxTable);
         return;
       }
@@ -209,7 +215,13 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       pxTable = pxTableMerged;
     }
 
-    pivotForDevice(pxTable, isMobile);
+    if (isMobile) {
+      pivotForMobile(pxTable);
+    }
+    else {
+      pivotForDesktop(pxTable);
+    }
+
     setData(pxTable);
   };
 
@@ -807,20 +819,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     } else {
       setStubDesktop(stub);
       setHeadingDesktop(heading);
-    }
-  }
-
-  /**
-   * Adjusts the table layout based on the device type.
-   *
-   * @param {PxTable} pxTable - The table to be pivoted.
-   * @param {boolean} isMobile - A flag indicating if the device is mobile.
-   */
-  function pivotForDevice(pxTable: PxTable, isMobile: boolean) {
-    if (isMobile) {
-      pivotForMobile(pxTable);
-    } else {
-      pivotForDesktop(pxTable);
     }
   }
 
