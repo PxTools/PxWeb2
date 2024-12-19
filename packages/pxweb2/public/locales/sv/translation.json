@@ -50,6 +50,7 @@
       "statistics": "Statistikdatabasen"
     },
     "sidemenu": {
+      "arialabeltoolsidemenu": "Verktygsmeny för tabell",
       "hide": "Dölj",
       "selection": {
         "title": "Filtrera",

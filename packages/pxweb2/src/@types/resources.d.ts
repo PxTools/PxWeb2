@@ -51,6 +51,7 @@ interface Resources {
         statistics: 'Statistikkbanken';
       };
       sidemenu: {
+        arialabeltoolsidemenu: 'Tools menu for table';
         hide: 'Hide';
         selection: {
           title: 'Filter';

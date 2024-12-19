@@ -50,6 +50,7 @@
       "statistics": "بنك الإحصائيات"
     },
     "sidemenu": {
+      "arialabeltoolsidemenu": "قائمة الأدوات للجدول",
       "hide": "يخفي",
       "selection": {
         "title": "فلتر",

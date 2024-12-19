@@ -20,7 +20,8 @@ export const NavigationRail: React.FC<NavigationRailProps> = ({
   const { t } = useTranslation();
 
   return (
-    <div className={styles.navigationRail}>
+    <div className={styles.navigationRail}
+       aria-label={pxtable.metadata.label}>
       <LazyMotion features={loadFeatures}>
         <MotionConfig reducedMotion="user">
           <Item

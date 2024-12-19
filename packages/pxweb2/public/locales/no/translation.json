@@ -50,6 +50,7 @@
       "statistics": "Statistikkbanken"
     },
     "sidemenu": {
+      "arialabeltoolsidemenu": "Verktøymeny for tabell",
       "hide": "Skjul",
       "selection": {
         "title": "Filtrer",
