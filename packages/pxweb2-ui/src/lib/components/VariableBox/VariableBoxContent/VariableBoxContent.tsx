@@ -210,12 +210,19 @@ export function VariableBoxContent({
     event: React.KeyboardEvent<HTMLDivElement>,
   ) => {
     const { key } = event;
-
-    if (key !== 'ArrowDown' && key !== 'ArrowUp') {
+    console.log('KEY', key);
+    if (key !== 'ArrowDown' && key !== 'ArrowUp' && key !== ' ') {
       return;
     }
     event.preventDefault();
     let newIndex = currentFocusedItemIndex;
+
+    if (key === ' ') {
+      const item = items[currentFocusedItemIndex ?? 0];
+      if (item && item.type === 'value' && item.value) {
+        onChangeCheckbox(varId, item.value.code);
+      }
+    }
 
     if (key === 'ArrowDown') {
       if (
@@ -428,6 +435,16 @@ export function VariableBoxContent({
   const handleTotalListHeightChanged = (height: number) => {
     setCalcedHeight(height);
   };
+
+  // Effect to scroll to focused item
+  useEffect(() => {
+    if (currentFocusedItemIndex !== null && virtuosoRef.current) {
+      virtuosoRef.current.scrollToIndex({
+        index: currentFocusedItemIndex,
+        align: 'center',
+      });
+    }
+  }, [currentFocusedItemIndex]);
 
   return (
     <div className={cl(classes['variablebox-content'])}>
