@@ -2,7 +2,6 @@
   display: flex;
   position: relative;
   border-radius: 4px;
-
   outline: none;
 
   &:hover {
@@ -69,4 +68,9 @@
 
 .inVariableBox {
   background-color: var(--px-color-surface-default);
+}
+
+.mixedCheckbox {
+  box-shadow: 0px -4px 0px 0px var(--px-color-surface-default);
+  margin-top: 4px;
 }

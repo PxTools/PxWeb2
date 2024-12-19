@@ -95,7 +95,7 @@ export const MixedCheckbox: React.FC<MixedCheckboxProps> = ({
       aria-checked={value}
       aria-labelledby={id + '-label'}
       aria-controls={ariaControls.join(' ')}
-      className={cl(styles.checkboxWrapper, {
+      className={cl(styles.checkboxWrapper, styles.mixedCheckbox, {
         [styles.inVariableBox]: inVariableBox,
       })}
       tabIndex={tabIndex ? tabIndex : 0}
