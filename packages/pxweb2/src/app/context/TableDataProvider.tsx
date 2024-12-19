@@ -818,10 +818,28 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    */
   function pivotForDevice(pxTable: PxTable, isMobile: boolean) {
     if (isMobile) {
-      pivotTable(pxTable, stubMobile, headingMobile);
+      pivotForMobile(pxTable);
     } else {
-      pivotTable(pxTable, stubDesktop, headingDesktop);
+      pivotForDesktop(pxTable);
     }
+  }
+
+  /**
+   * Adjusts the table for mobile layout.
+   *
+   * @param {PxTable} pxTable - The table to be pivoted.
+   */
+  function pivotForMobile(pxTable: PxTable) {
+    pivotTable(pxTable, stubMobile, headingMobile);
+  }
+
+  /**
+   * Adjusts the table for desktop layout.
+   *
+   * @param {PxTable} pxTable - The table to be pivoted.
+   */
+  function pivotForDesktop(pxTable: PxTable) {
+    pivotTable(pxTable, stubDesktop, headingDesktop);
   }
 
   /**
