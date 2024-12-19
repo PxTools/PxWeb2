@@ -182,7 +182,7 @@ export function createRows(
   table: PxTable,
   tableMeta: columnRowMeta,
   headingDataCellCodes: DataCellCodes[],
-  isMobile: boolean
+  isMobile: boolean,
 ): React.JSX.Element[] {
   const tableRows: React.JSX.Element[] = [];
   const stubDatacellCodes: DataCellCodes = new Array<DataCellMeta>();
@@ -196,7 +196,7 @@ export function createRows(
         tableMeta,
         stubDatacellCodes,
         headingDataCellCodes,
-        tableRows
+        tableRows,
       );
     } else {
       createRowDesktop(
@@ -233,7 +233,7 @@ export function createRows(
  *
  * @param stubIndex - The index of the current stub variable.
  * @param rowSpan - The rowspan for the cells to add in this call.
- * @param stubIteration - Iteration for the value 
+ * @param stubIteration - Iteration for the value
  * @param table - The PxTable object representing the PxWeb table data.
  * @param tableMeta - The metadata for the table columns and rows.
  * @param stubDataCellCodes - The metadata structure for the dimensions of the stub cells.
@@ -337,7 +337,7 @@ function createRowDesktop(
  *
  * @param stubIndex - The index of the current stub variable.
  * @param rowSpan - The rowspan for the cells to add in this call.
- * @param stubIteration - Iteration for the value 
+ * @param stubIteration - Iteration for the value
  * @param table - The PxTable object representing the PxWeb table data.
  * @param tableMeta - The metadata for the table columns and rows.
  * @param stubDataCellCodes - The metadata structure for the dimensions of the stub cells.
@@ -353,9 +353,8 @@ function createRowMobile(
   tableMeta: columnRowMeta,
   stubDataCellCodes: DataCellCodes,
   headingDataCellCodes: DataCellCodes[],
-  tableRows: React.JSX.Element[]
+  tableRows: React.JSX.Element[],
 ): React.JSX.Element[] {
-  
   // Calculate the rowspan for all the cells to add in this call
   rowSpan = rowSpan / table.stub[stubIndex].values.length;
 
@@ -467,7 +466,7 @@ function createRowMobile(
         tableMeta,
         stubDataCellCodes,
         headingDataCellCodes,
-        tableRows
+        tableRows,
       );
 
       stubDataCellCodes.pop();
