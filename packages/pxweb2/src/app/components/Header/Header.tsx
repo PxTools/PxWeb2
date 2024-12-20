@@ -17,7 +17,7 @@ export const Header: React.FC = () => {
           (language) =>
             i18n.language !== language.shorthand && (
               <Button
-                role='search'
+                role="search"
                 variant="tertiary"
                 onClick={() => i18n.changeLanguage(language.shorthand)}
                 key={language.shorthand}
