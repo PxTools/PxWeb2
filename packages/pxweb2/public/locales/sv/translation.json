@@ -7,7 +7,8 @@
     "title": "Välkommen till PxWeb 2.0",
     "header": {
       "title": "PxWeb 2.0 [Main]",
-      "logo": "PxWeb 2.0"
+      "logo": "PxWeb 2.0",
+      "arialabelheader": "Huvudnavigation"
     },
     "skip_to_main": "Gå direkt till huvudinnehållet",
     "footer": {
