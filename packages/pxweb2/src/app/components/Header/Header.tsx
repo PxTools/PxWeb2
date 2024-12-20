@@ -8,15 +8,16 @@ export const Header: React.FC = () => {
   const config = getConfig();
 
   return (
-    <div className={styles.header}>
+    <header className={styles.header}>
       <div>
         <Heading size="medium">{t('common.header.title')}</Heading>
       </div>
-      <div>
+      <div aria-label={t('common.header.arialabelheader')}>
         {config.language.supportedLanguages.map(
           (language) =>
             i18n.language !== language.shorthand && (
               <Button
+                role="search"
                 variant="tertiary"
                 onClick={() => i18n.changeLanguage(language.shorthand)}
                 key={language.shorthand}
@@ -26,6 +27,6 @@ export const Header: React.FC = () => {
             ),
         )}
       </div>
-    </div>
+    </header>
   );
 };

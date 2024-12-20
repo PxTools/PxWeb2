@@ -9,6 +9,7 @@ interface Resources {
       header: {
         title: 'PxWeb 2.0 [Main]';
         logo: 'PxWeb 2.0';
+        arialabelheader: 'Header navigation';
       };
       skip_to_main: 'Skip to main content';
       footer: {
@@ -51,6 +52,7 @@ interface Resources {
         statistics: 'Statistikkbanken';
       };
       sidemenu: {
+        arialabeltoolsidemenu: 'Tools menu for table';
         hide: 'Hide';
         selection: {
           title: 'Filter';
