@@ -1,7 +1,9 @@
 import { render } from '@testing-library/react';
+import { MemoryRouter } from 'react-router';
 
 import App from './app';
-import { MemoryRouter } from 'react-router';
+import { AppProvider } from './context/AppProvider';
+
 window.PxWeb2Config = {
   language: {
     supportedLanguages: [
@@ -19,9 +21,12 @@ describe('App', () => {
   it('should render successfully', () => {
     const { baseElement } = render(
       <MemoryRouter>
-        <App />
+        <AppProvider>
+          <App />
+        </AppProvider>
       </MemoryRouter>,
     );
+
     expect(baseElement).toBeTruthy();
   });
 });
