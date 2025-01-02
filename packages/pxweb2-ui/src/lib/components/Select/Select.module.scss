@@ -75,6 +75,7 @@
   display: flex;
   padding: fixed.$spacing-2 fixed.$spacing-3;
   align-items: center;
+  height: 63px;
   gap: fixed.$spacing-2;
   background: var(--px-color-surface-default);
   border-radius: var(--px-border-radius-medium) var(--px-border-radius-medium)

@@ -16,6 +16,7 @@ import Skeleton from '../../Skeleton/Skeleton';
 import { mapCodeListsToSelectOptions } from '../../../util/util';
 import { BodyShort } from '../../Typography/BodyShort/BodyShort';
 import Heading from '../../Typography/Heading/Heading';
+import clsx from 'clsx';
 
 type VariableBoxPropsToContent = Omit<
   VariableBoxProps,
@@ -321,19 +322,28 @@ export function VariableBoxContent({
       );
     } else if (item.type === 'mixedCheckbox' && searchedValues.length > 0) {
       return (
-        <div id={varId} tabIndex={-1} className={classes['focusableItem']}>
-          <MixedCheckbox
+        <>
+          <div className={classes['spacer']}></div>
+          <div
             id={varId}
-            text={mixedCheckboxText}
-            value={allValuesSelected}
-            onChange={() =>
-              onChangeMixedCheckbox(varId, allValuesSelected, searchedValues)
-            }
-            ariaControls={valuesToRender.map((value) => value.code)}
-            strong={true}
-            inVariableBox={true}
-          />
-        </div>
+            tabIndex={-1}
+            className={clsx(classes['focusableItem'], {
+              [classes['mixedCheckbox']]: true,
+            })}
+          >
+            <MixedCheckbox
+              id={varId}
+              text={mixedCheckboxText}
+              value={allValuesSelected}
+              onChange={() =>
+                onChangeMixedCheckbox(varId, allValuesSelected, searchedValues)
+              }
+              ariaControls={valuesToRender.map((value) => value.code)}
+              strong={true}
+              inVariableBox={true}
+            />
+          </div>
+        </>
       );
     } else if (
       item.type === 'value' &&
@@ -342,7 +352,13 @@ export function VariableBoxContent({
     ) {
       const value = item.value;
       return (
-        <div id={value.code} tabIndex={-1} className={classes['focusableItem']}>
+        <div
+          id={value.code}
+          tabIndex={-1}
+          className={clsx(classes['focusableItem'], {
+            [classes['firstCheckbox']]: index === 2,
+          })}
+        >
           <Checkbox
             id={value.code}
             key={varId + value.code}

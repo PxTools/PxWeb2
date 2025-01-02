@@ -21,6 +21,15 @@
   }
 }
 
+.firstCheckbox {
+  margin-top: 1px;
+}
+
+.spacer {
+  height: 4px;
+  background-color: var(--px-color-surface-default);
+}
+
 /* STYLES */
 .variablebox-content {
   /* Layout */
@@ -49,6 +58,7 @@
 
 .variablebox-content-select {
   align-self: stretch;
+  height: 65px;
 }
 
 .variablebox-content-full-values-list {
@@ -97,8 +107,20 @@
   gap: fixed.$spacing-1;
 }
 
+.focusableItem {
+  margin-left: 4px;
+  margin-right: 4px;
+  &:active {
+    margin-left: 4px;
+    margin-right: 4px;
+  }
+}
+
 .focusableItem:focus-within {
   background-color: #c3dcdc;
+  margin-left: 4px;
+  margin-right: 4px;
+  border-radius: 4px;
 }
 
 .variablebox-content-values-list-no-results {
