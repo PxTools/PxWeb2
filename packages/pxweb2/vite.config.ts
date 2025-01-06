@@ -42,6 +42,7 @@ export default defineConfig({
     themeInjectorPlugin(),
   ],
 
+
   build: {
     outDir: './dist/',
     reportCompressedSize: true,

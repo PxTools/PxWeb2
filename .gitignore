@@ -40,9 +40,6 @@ testem.log
 .DS_Store
 Thumbs.db
 
-.nx/cache
-.nx/workspace-data
-
 # Logs
 doctor-storybook.log
 storybook-migration-summary.md
