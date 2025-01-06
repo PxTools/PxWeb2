@@ -450,7 +450,12 @@ export function VariableBoxContent({
 
   return (
     <div className={cl(classes['variablebox-content'])}>
-      <div className={cl(classes['variablebox-content-main'])}>
+      <div
+        className={cl(classes['variablebox-content-main'])}
+        style={{
+          paddingTop: items.length > 6 ? '0px' : '4px',
+        }}
+      >
         {hasCodeLists === true && (
           <div className={cl(classes['variablebox-content-select'])}>
             <Select
