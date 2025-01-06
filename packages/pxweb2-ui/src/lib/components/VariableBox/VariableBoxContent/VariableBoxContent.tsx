@@ -323,7 +323,10 @@ export function VariableBoxContent({
     } else if (item.type === 'mixedCheckbox' && searchedValues.length > 0) {
       return (
         <>
-          <div className={classes['spacer']}></div>
+          <div
+            className={classes['spacer']}
+            style={{ height: items.length > 6 ? '4px' : '0px' }}
+          ></div>
           <div
             id={varId}
             tabIndex={-1}
