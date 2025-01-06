@@ -6,7 +6,7 @@ import {
 import { PxTableMetadata, VartypeEnum } from '@pxweb2/pxweb2-ui';
 
 export function mapTableMetadataResponse(
-  response: TableMetadataResponse
+  response: TableMetadataResponse,
 ): PxTableMetadata {
   try {
     const pxTableMetadata: PxTableMetadata = {
@@ -40,7 +40,7 @@ export function mapTableMetadataResponse(
                 id: codeList.id,
                 label: codeList.label,
               };
-            }
+            },
           ),
           notes: variable.notes?.map((note) => {
             return {
@@ -72,7 +72,7 @@ function mapVariableTypeEnum(type: VariableTypeEnum): VartypeEnum {
       return VartypeEnum.REGULAR_VARIABLE;
     default:
       throw new Error(
-        `Unknown variable type in mapTableMetadataResponse: ${type}`
+        `Unknown variable type in mapTableMetadataResponse: ${type}`,
       );
   }
 }

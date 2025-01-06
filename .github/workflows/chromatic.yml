@@ -7,12 +7,12 @@ on:
     branches:
       - main
     paths:
-      - 'libs/pxweb2-ui/**'
+      - 'packages/pxweb2-ui/**'
   pull_request:
     branches:
       - main
     paths:
-      - 'libs/pxweb2-ui/**'
+      - 'packages/pxweb2-ui/**'
 
 jobs:
   chromatic:

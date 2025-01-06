@@ -3,14 +3,14 @@
 import { createContext, ReactNode, Dispatch, SetStateAction } from 'react';
 
 interface TabContextType {
-    activeTab: string;
-    setActiveTab: (id: string) => void;
+  activeTab: string;
+  setActiveTab: (id: string) => void;
 }
 
 const TabContext = createContext<TabContextType>({
-    activeTab: "",
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    setActiveTab: (_id: string) => {}
+  activeTab: '',
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  setActiveTab: (_id: string) => {},
 });
 
 interface TabProviderProps {
@@ -19,12 +19,16 @@ interface TabProviderProps {
   setActiveTab: Dispatch<SetStateAction<string>>;
 }
 
-const TabsProvider: React.FC<TabProviderProps> = ({ children, activeTab, setActiveTab }) => {
+const TabsProvider: React.FC<TabProviderProps> = ({
+  children,
+  activeTab,
+  setActiveTab,
+}) => {
   return (
     <TabContext.Provider value={{ activeTab, setActiveTab }}>
       {children}
     </TabContext.Provider>
   );
-}
+};
 
-export { TabContext, TabsProvider }
+export { TabContext, TabsProvider };

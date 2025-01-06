@@ -74,7 +74,7 @@ export function Spinner({
       className={cl(
         classes[`spinner`],
         classes[`spinner-${size}`],
-        classes[`loading`]
+        classes[`loading`],
       )}
     >
       <circle
@@ -101,7 +101,7 @@ export function Spinner({
         className={cl(
           classes[`label-${Labelsize}`],
           { [classes[`text-color-default`]]: variant === 'default' },
-          { [classes[`text-color-inverted`]]: variant === 'inverted' }
+          { [classes[`text-color-inverted`]]: variant === 'inverted' },
         )}
       >
         {label}{' '}

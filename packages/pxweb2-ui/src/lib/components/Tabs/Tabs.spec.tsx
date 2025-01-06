@@ -9,8 +9,8 @@ describe('Tabs', () => {
     const { baseElement } = render(
       <div>
         <Tabs>
-          <Tab id="testId" controls='panel' label="test"></Tab>
-          <Tab id="testId2" controls='panel2 'label="test2"></Tab>
+          <Tab id="testId" controls="panel" label="test"></Tab>
+          <Tab id="testId2" controls="panel2 " label="test2"></Tab>
         </Tabs>
         <TabPanel id="panel" controlledBy="testId1">
           Test
@@ -18,7 +18,7 @@ describe('Tabs', () => {
         <TabPanel id="panel2" controlledBy="testId2">
           Test2
         </TabPanel>
-      </div>
+      </div>,
     );
     expect(baseElement).toBeTruthy();
   });
