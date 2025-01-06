@@ -1,8 +1,7 @@
 /// <reference types='vitest' />
-import { defineConfig } from 'vite';
+import { Plugin, defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
-import { Plugin } from 'vite';
 
 // Custom plugin to handle theme CSS injection
 const themeInjectorPlugin = (): Plugin => ({
