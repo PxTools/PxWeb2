@@ -326,7 +326,7 @@ export function VariableBoxContent({
         <>
           <div
             className={classes['spacer']}
-            style={{ height: items.length > 6 ? '4px' : '0px' }}
+            style={{ height: initiallyHadSevenOrMoreValues ? '4px' : '0px' }}
           ></div>
           <div
             id={varId}
