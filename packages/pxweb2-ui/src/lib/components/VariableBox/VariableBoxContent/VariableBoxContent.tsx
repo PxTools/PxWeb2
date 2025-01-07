@@ -81,6 +81,7 @@ export function VariableBoxContent({
   const valuesOnlyList = useRef<HTMLDivElement>(null);
   const hasCodeLists = codeLists && codeLists.length > 0;
   const hasSevenOrMoreValues = values && values.length > 6;
+  const [initiallyHadSevenOrMoreValues] = useState(hasSevenOrMoreValues);
   const hasTwoOrMoreValues = values && values.length > 1;
   const hasSelectAndSearch = hasCodeLists && hasSevenOrMoreValues;
   const valuesToRender = structuredClone(values);
@@ -184,7 +185,7 @@ export function VariableBoxContent({
       setAllValuesSelected('true');
     }
   }, [
-    totalChosenValues,
+    --totalChosenValues,
     totalValues,
     checkboxSelectAllText,
     checkboxDeselectAllText,
@@ -355,28 +356,31 @@ export function VariableBoxContent({
     ) {
       const value = item.value;
       return (
-        <div
-          id={value.code}
-          tabIndex={-1}
-          className={clsx(classes['focusableItem'], {
-            [classes['firstCheckbox']]: index === 2,
-          })}
-        >
-          <Checkbox
+        <>
+          <div
             id={value.code}
-            key={varId + value.code}
             tabIndex={-1}
-            value={
-              selectedValues?.length > 0 &&
-              selectedValues
-                .find((variables) => variables.id === varId)
-                ?.values.includes(value.code) === true
-            }
-            text={value.label.charAt(0).toUpperCase() + value.label.slice(1)}
-            searchTerm={search}
-            onChange={() => onChangeCheckbox(varId, value.code)}
-          />
-        </div>
+            className={clsx(classes['focusableItem'])}
+          >
+            <Checkbox
+              id={value.code}
+              key={varId + value.code}
+              tabIndex={-1}
+              value={
+                selectedValues?.length > 0 &&
+                selectedValues
+                  .find((variables) => variables.id === varId)
+                  ?.values.includes(value.code) === true
+              }
+              text={value.label.charAt(0).toUpperCase() + value.label.slice(1)}
+              searchTerm={search}
+              onChange={() => onChangeCheckbox(varId, value.code)}
+            />
+          </div>
+          {index === items.length - 1 && (
+            <div className={classes['spacer']}></div>
+          )}
+        </>
       );
     } else if (searchedValues.length === 0) {
       return (
@@ -453,7 +457,7 @@ export function VariableBoxContent({
       <div
         className={cl(classes['variablebox-content-main'])}
         style={{
-          paddingTop: items.length > 6 ? '0px' : '4px',
+          paddingTop: initiallyHadSevenOrMoreValues ? '0px' : '4px',
         }}
       >
         {hasCodeLists === true && (
