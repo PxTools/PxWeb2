@@ -423,10 +423,8 @@ function createRowMobile(
           );
           tableRow = [];
         }
-      } else {
         // second last level
-        // if (stubIndex > table.stub.length - 3) {
-        if (stubIndex === table.stub.length - 2) {
+      } else if (stubIndex === table.stub.length - 2) {
           tableRow.push(
             <th
               id={cellMeta.htmlId}
@@ -456,7 +454,7 @@ function createRowMobile(
           );
           tableRow = [];
         }
-      }
+      
 
       // Create a new row for the next stub
       createRowMobile(
