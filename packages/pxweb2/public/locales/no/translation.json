@@ -7,7 +7,8 @@
     "title": "Velkommen til PxWeb 2.0",
     "header": {
       "title": "PxWeb 2.0 [Main]",
-      "logo": "PxWeb 2.0"
+      "logo": "PxWeb 2.0",
+      "arialabelheader": "Hovenavigasjon"
     },
     "skip_to_main": "Hopp til hovedinnhold",
     "footer": {
@@ -50,6 +51,7 @@
       "statistics": "Statistikkbanken"
     },
     "sidemenu": {
+      "arialabeltoolsidemenu": "Verktøymeny for tabell",
       "hide": "Skjul",
       "selection": {
         "title": "Filtrer",
@@ -81,7 +83,7 @@
             "values_list": {
               "aria_label": "Liste av {{total}} verdier.",
               "aria_description": "Variabelens liste over {{total}} totale verdier. For å gå inn i listen, trykk på pil ned-tasten. Tab-tasten går ut av listen.",
-              "no_results_heading": "Ingen treff på <<{{search}}>>",
+              "no_results_heading": "Ingen treff på «{{search}}»",
               "no_results_bodyshort": "Prøv med et annet søkeord eller en annen stavemåte."
             }
           }
