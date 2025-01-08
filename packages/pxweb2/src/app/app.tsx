@@ -15,6 +15,7 @@ import { Footer } from './components/Footer/Footer';
 import { BreakpointsSmallMaxWidth } from '@pxweb2/pxweb2-ui';
 import { getConfig } from './util/config/getConfig';
 import { OpenAPI } from '@pxweb2/pxweb2-api-client';
+import { set } from 'lodash';
 
 export function App() {
   const config = getConfig();
@@ -27,7 +28,8 @@ export function App() {
   const [errorMsg, setErrorMsg] = useState('');
   const [selectedNavigationView, setSelectedNavigationView] =
     useState<NavigationItem>('filter');
-
+  const [hasFocus, setHasFocus] = useState<NavigationItem>('none');
+  const [openedWithKeyboard, setOpenedWithKeyboard] = useState(false);
   /**
    * Keep state if window screen size is mobile or desktop.
    */
@@ -59,19 +61,32 @@ export function App() {
     close: boolean,
     newSelectedNavView: NavigationItem,
   ) => {
-    console.log(
-      'changeSelectedNavView: ',
-      newSelectedNavView,
-      'keyboard: ',
-      keyboard,
-      'close: ',
-      close,
-    );
-    if (close) {
-      console.log('close');
+    if (close && keyboard) {
+      console.log('close and keyboard');
       setSelectedNavigationView('none');
-    } else {
-      console.log('set new selected nav view', newSelectedNavView);
+      setHasFocus(newSelectedNavView);
+      return;
+    }
+
+    if (close && !keyboard) {
+      console.log('close and not keyboard');
+      setSelectedNavigationView('none');
+      setHasFocus('none');
+      return;
+    }
+
+    if (!close && keyboard) {
+      console.log('not close and keyboard');
+      setOpenedWithKeyboard(true);
+      setSelectedNavigationView(newSelectedNavView);
+      setHasFocus(newSelectedNavView);
+      return;
+    }
+
+    if (!close && !keyboard) {
+      console.log('not close and not keyboard');
+      setOpenedWithKeyboard(false);
+      setHasFocus(newSelectedNavView);
       setSelectedNavigationView(newSelectedNavView);
     }
   };
@@ -86,6 +101,7 @@ export function App() {
           <NavigationRail
             onChange={changeSelectedNavView}
             selected={selectedNavigationView}
+            hasFocus={hasFocus}
           />
         )}{' '}
         <div className={styles.mainContainer}>
@@ -93,6 +109,7 @@ export function App() {
             selectedNavigationView={selectedNavigationView}
             selectedTabId={selectedTableId}
             setSelectedNavigationView={changeSelectedNavView}
+            openedWithKeyboard={openedWithKeyboard}
           />
           <div className={styles.contentAndFooterContainer}>
             {isMobile && <Header />}{' '}

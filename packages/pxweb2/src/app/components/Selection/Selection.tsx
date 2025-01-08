@@ -241,6 +241,7 @@ function removeAllValuesOfVariable(
 type propsType = {
   selectedNavigationView: string;
   selectedTabId: string;
+  openedWithKeyboard: boolean;
   setSelectedNavigationView: (
     keyboard: boolean,
     close: boolean,
@@ -250,6 +251,7 @@ type propsType = {
 export function Selection({
   selectedNavigationView,
   selectedTabId,
+  openedWithKeyboard,
   setSelectedNavigationView,
 }: propsType) {
   const { selectedVBValues, setSelectedVBValues } = useVariables();
@@ -544,13 +546,13 @@ export function Selection({
   return (
     selectedNavigationView !== 'none' && (
       <NavigationDrawer
+        openedWithKeyboard={openedWithKeyboard}
         heading={t('presentation_page.sidemenu.selection.title')}
         onClose={(
           keyboard: boolean,
           str: 'filter' | 'view' | 'edit' | 'save' | 'help',
         ) => {
-          console.log('PRESSED HIDE with keyboard: ', keyboard);
-          setSelectedNavigationView(keyboard, true, str);
+          setSelectedNavigationView(keyboard, true, 'none');
         }}
         view={
           selectedNavigationView as 'filter' | 'view' | 'edit' | 'save' | 'help'

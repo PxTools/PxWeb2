@@ -17,7 +17,7 @@ interface NavigationRailProps {
     close: boolean,
     newSelected: NavigationItem,
   ) => void;
-  hasFocus?: 'filter' | 'view' | 'edit' | 'save' | 'help';
+  hasFocus: 'filter' | 'view' | 'edit' | 'save' | 'help' | 'none';
 }
 export const NavigationRail: React.FC<NavigationRailProps> = ({
   onChange,
@@ -33,8 +33,6 @@ export const NavigationRail: React.FC<NavigationRailProps> = ({
   const helpRef = React.useRef<HTMLButtonElement>(null);
 
   /*   React.useEffect(() => {
-    console.log('hasFocus: ', hasFocus);
-    console.log('HAS FOCUS');
     if (hasFocus === 'filter') {
       filterRef.current?.focus();
     } else if (hasFocus === 'view') {
@@ -46,7 +44,7 @@ export const NavigationRail: React.FC<NavigationRailProps> = ({
     } else if (hasFocus === 'help') {
       helpRef.current?.focus();
     }
-  }, [hasFocus]); */
+  }, [hasFocus, selected]); */
   return (
     <div className={styles.navigationRail}>
       <LazyMotion features={loadFeatures}>
@@ -57,13 +55,12 @@ export const NavigationRail: React.FC<NavigationRailProps> = ({
             label={t('presentation_page.sidemenu.selection.title')}
             selected={selected === 'filter'}
             icon={'Controls'}
-            onClick={() => {
-              console.log('PRESSED HIDE FILTER WITH MOUSE');
-              onChange(false, selected === 'filter', 'filter');
-            }}
-            onKeyDown={(key: React.KeyboardEvent<HTMLButtonElement>) => {
-              console.log('PRESSED HIDE FILTER WITH KEYBOARD');
-              onChange(true, false, 'filter');
+            onClick={(event: any) => {
+              if (event.screenX === 0 && event.screenY === 0) {
+                onChange(true, selected === 'filter', 'filter');
+              } else {
+                onChange(false, selected === 'filter', 'filter');
+              }
             }}
           />
           <Item
@@ -72,14 +69,11 @@ export const NavigationRail: React.FC<NavigationRailProps> = ({
             label={t('presentation_page.sidemenu.view.title')}
             selected={selected === 'view'}
             icon={'BarChart'}
-            onClick={() => {
-              console.log('PRESSED HIDE VIEW WITH MOUSE');
-              onChange(false, selected === 'view', 'view');
-            }}
-            onKeyDown={(key: React.KeyboardEvent<HTMLButtonElement>) => {
-              console.log('PRESSED HIDE VIEW WITH KEYBOARD');
-              if (key.key === 'Enter' || key.key === ' ') {
+            onClick={(event: any) => {
+              if (event.screenX === 0 && event.screenY === 0) {
                 onChange(true, selected === 'view', 'view');
+              } else {
+                onChange(false, selected === 'view', 'view');
               }
             }}
           />
@@ -89,14 +83,11 @@ export const NavigationRail: React.FC<NavigationRailProps> = ({
             label={t('presentation_page.sidemenu.edit.title')}
             selected={selected === 'edit'}
             icon={'ArrowsUpDown'}
-            onClick={() => {
-              console.log('PRESSED HIDE EDIT WITH MOUSE');
-              onChange(false, selected === 'edit', 'edit');
-            }}
-            onKeyDown={(key: React.KeyboardEvent<HTMLButtonElement>) => {
-              console.log('PRESSED HIDE EDIT WITH KEYBOARD');
-              if (key.key === 'Enter' || key.key === ' ') {
+            onClick={(event: any) => {
+              if (event.screenX === 0 && event.screenY === 0) {
                 onChange(true, selected === 'edit', 'edit');
+              } else {
+                onChange(false, selected === 'edit', 'edit');
               }
             }}
           />
@@ -106,14 +97,11 @@ export const NavigationRail: React.FC<NavigationRailProps> = ({
             label={t('presentation_page.sidemenu.save.title')}
             selected={selected === 'save'}
             icon={'FloppyDisk'}
-            onClick={() => {
-              console.log('PRESSED HIDE SAVE WITH MOUSE');
-              onChange(false, selected === 'save', 'save');
-            }}
-            onKeyDown={(key: React.KeyboardEvent<HTMLButtonElement>) => {
-              console.log('PRESSED HIDE SAVE WITH KEYBOARD');
-              if (key.key === 'Enter' || key.key === ' ') {
+            onClick={(event: any) => {
+              if (event.screenX === 0 && event.screenY === 0) {
                 onChange(true, selected === 'save', 'save');
+              } else {
+                onChange(false, selected === 'save', 'save');
               }
             }}
           />
@@ -123,14 +111,11 @@ export const NavigationRail: React.FC<NavigationRailProps> = ({
             label={t('presentation_page.sidemenu.help.title')}
             selected={selected === 'help'}
             icon={'QuestionMarkCircle'}
-            onClick={() => {
-              console.log('PRESSED HIDE HELP WITH MOUSE');
-              onChange(false, selected === 'help', 'help');
-            }}
-            onKeyDown={(key: React.KeyboardEvent<HTMLButtonElement>) => {
-              console.log('PRESSED HIDE HELP WITH KEYBOARD');
-              if (key.key === 'Enter' || key.key === ' ') {
+            onClick={(event: any) => {
+              if (event.screenX === 0 && event.screenY === 0) {
                 onChange(true, selected === 'help', 'help');
+              } else {
+                onChange(false, selected === 'help', 'help');
               }
             }}
           />

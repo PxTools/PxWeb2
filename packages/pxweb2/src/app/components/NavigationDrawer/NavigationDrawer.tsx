@@ -9,6 +9,7 @@ export interface NavigationDrawerProps {
   children: React.ReactNode;
   heading: string;
   view: 'filter' | 'view' | 'edit' | 'save' | 'help';
+  openedWithKeyboard: boolean;
   onClose: (
     keyboard: boolean,
     str: 'filter' | 'view' | 'edit' | 'save' | 'help',
@@ -19,6 +20,7 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
   children,
   heading,
   view,
+  openedWithKeyboard,
   onClose,
 }) => {
   const { t } = useTranslation();
@@ -26,11 +28,20 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
   // Handle RTL languages
   const hideIcon = i18next.dir() === 'rtl' ? 'ChevronRight' : 'ChevronLeft';
 
+  const hideMenuRef = React.useRef<HTMLDivElement>(null);
+
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     if (event.key === 'Enter' || event.key === ' ') {
       onClose(true, view);
     }
   }
+
+  React.useEffect(() => {
+    console.log('openedWithKeyboard: ', openedWithKeyboard);
+    if (openedWithKeyboard) {
+      hideMenuRef.current?.focus();
+    }
+  }, [openedWithKeyboard]);
 
   return (
     <>
@@ -44,6 +55,7 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
             {heading}
           </Heading>
           <div
+            ref={hideMenuRef}
             tabIndex={0}
             onClick={() => onClose(false, view)}
             onKeyDown={handleKeyDown}

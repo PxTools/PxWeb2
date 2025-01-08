@@ -26,8 +26,7 @@ interface ItemProps {
   parentName: 'navBar' | 'navRail';
   selected: boolean;
   icon: IconProps['iconName'];
-  onClick: () => void;
-  onKeyDown: (key: React.KeyboardEvent<HTMLButtonElement>) => void;
+  onClick: (event: any) => void;
 }
 
 export const Item = forwardRef<HTMLButtonElement, ItemProps>(
@@ -67,12 +66,7 @@ export const Item = forwardRef<HTMLButtonElement, ItemProps>(
           styles.item,
           styles[`${parentName}Item`],
         )}
-        onClick={onClick}
-        onKeyDown={(event: React.KeyboardEvent<HTMLButtonElement>) => {
-          if (event.key === 'Enter' || event.key === ' ') {
-            onKeyDown(event);
-          }
-        }}
+        onClick={(event: any) => onClick(event)}
         type="button"
         id={btnId}
         // Framer Motion animations
