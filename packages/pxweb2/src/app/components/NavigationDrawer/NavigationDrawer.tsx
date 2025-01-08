@@ -37,7 +37,6 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
   }
 
   React.useEffect(() => {
-    console.log('openedWithKeyboard: ', openedWithKeyboard);
     if (openedWithKeyboard) {
       hideMenuRef.current?.focus();
     }

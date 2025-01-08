@@ -30,7 +30,7 @@ interface ItemProps {
 }
 
 export const Item = forwardRef<HTMLButtonElement, ItemProps>(
-  ({ label, parentName, selected, icon, onClick, onKeyDown }, ref) => {
+  ({ label, parentName, selected, icon, onClick }, ref) => {
     const btnId = 'px-' + parentName + '-' + label;
     const initialBaseBackgroundColor =
       parentName === 'navBar' ? ColorSurfaceSubtle : ColorSurfaceDefault;

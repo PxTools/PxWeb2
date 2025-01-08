@@ -17,112 +17,113 @@ interface NavigationRailProps {
     close: boolean,
     newSelected: NavigationItem,
   ) => void;
-  hasFocus: 'filter' | 'view' | 'edit' | 'save' | 'help' | 'none';
 }
-export const NavigationRail: React.FC<NavigationRailProps> = ({
-  onChange,
-  selected,
-  hasFocus,
-}) => {
+
+export const NavigationRail = React.forwardRef<
+  {
+    filter: HTMLButtonElement;
+    view: HTMLButtonElement;
+    edit: HTMLButtonElement;
+    save: HTMLButtonElement;
+    help: HTMLButtonElement;
+  },
+  NavigationRailProps
+>(({ onChange, selected }, ref) => {
   const { t } = useTranslation();
+  const refs = {
+    filter: React.useRef<HTMLButtonElement>(null),
+    view: React.useRef<HTMLButtonElement>(null),
+    edit: React.useRef<HTMLButtonElement>(null),
+    save: React.useRef<HTMLButtonElement>(null),
+    help: React.useRef<HTMLButtonElement>(null),
+  };
 
-  const filterRef = React.useRef<HTMLButtonElement>(null);
-  const viewRef = React.useRef<HTMLButtonElement>(null);
-  const editRef = React.useRef<HTMLButtonElement>(null);
-  const saveRef = React.useRef<HTMLButtonElement>(null);
-  const helpRef = React.useRef<HTMLButtonElement>(null);
+  React.useImperativeHandle(ref, () => ({
+    filter: refs.filter.current!,
+    view: refs.view.current!,
+    edit: refs.edit.current!,
+    save: refs.save.current!,
+    help: refs.help.current!,
+  }));
 
-  /*   React.useEffect(() => {
-    if (hasFocus === 'filter') {
-      filterRef.current?.focus();
-    } else if (hasFocus === 'view') {
-      viewRef.current?.focus();
-    } else if (hasFocus === 'edit') {
-      editRef.current?.focus();
-    } else if (hasFocus === 'save') {
-      saveRef.current?.focus();
-    } else if (hasFocus === 'help') {
-      helpRef.current?.focus();
-    }
-  }, [hasFocus, selected]); */
   return (
     <div className={styles.navigationRail}>
       <LazyMotion features={loadFeatures}>
         <MotionConfig reducedMotion="user">
           <Item
-            ref={filterRef}
+            ref={refs.filter}
             parentName="navRail"
             label={t('presentation_page.sidemenu.selection.title')}
             selected={selected === 'filter'}
             icon={'Controls'}
             onClick={(event: any) => {
-              if (event.screenX === 0 && event.screenY === 0) {
-                onChange(true, selected === 'filter', 'filter');
-              } else {
-                onChange(false, selected === 'filter', 'filter');
-              }
+              onChange(
+                event.screenX === 0 && event.screenY === 0,
+                selected === 'filter',
+                'filter',
+              );
             }}
           />
           <Item
-            ref={viewRef}
+            ref={refs.view}
             parentName="navRail"
             label={t('presentation_page.sidemenu.view.title')}
             selected={selected === 'view'}
             icon={'BarChart'}
             onClick={(event: any) => {
-              if (event.screenX === 0 && event.screenY === 0) {
-                onChange(true, selected === 'view', 'view');
-              } else {
-                onChange(false, selected === 'view', 'view');
-              }
+              onChange(
+                event.screenX === 0 && event.screenY === 0,
+                selected === 'view',
+                'view',
+              );
             }}
           />
           <Item
-            ref={editRef}
+            ref={refs.edit}
             parentName="navRail"
             label={t('presentation_page.sidemenu.edit.title')}
             selected={selected === 'edit'}
             icon={'ArrowsUpDown'}
             onClick={(event: any) => {
-              if (event.screenX === 0 && event.screenY === 0) {
-                onChange(true, selected === 'edit', 'edit');
-              } else {
-                onChange(false, selected === 'edit', 'edit');
-              }
+              onChange(
+                event.screenX === 0 && event.screenY === 0,
+                selected === 'edit',
+                'edit',
+              );
             }}
           />
           <Item
-            ref={saveRef}
+            ref={refs.save}
             parentName="navRail"
             label={t('presentation_page.sidemenu.save.title')}
             selected={selected === 'save'}
             icon={'FloppyDisk'}
             onClick={(event: any) => {
-              if (event.screenX === 0 && event.screenY === 0) {
-                onChange(true, selected === 'save', 'save');
-              } else {
-                onChange(false, selected === 'save', 'save');
-              }
+              onChange(
+                event.screenX === 0 && event.screenY === 0,
+                selected === 'save',
+                'save',
+              );
             }}
           />
           <Item
-            ref={helpRef}
+            ref={refs.help}
             parentName="navRail"
             label={t('presentation_page.sidemenu.help.title')}
             selected={selected === 'help'}
             icon={'QuestionMarkCircle'}
             onClick={(event: any) => {
-              if (event.screenX === 0 && event.screenY === 0) {
-                onChange(true, selected === 'help', 'help');
-              } else {
-                onChange(false, selected === 'help', 'help');
-              }
+              onChange(
+                event.screenX === 0 && event.screenY === 0,
+                selected === 'help',
+                'help',
+              );
             }}
           />
         </MotionConfig>
       </LazyMotion>
     </div>
   );
-};
+});
 
 export default NavigationRail;

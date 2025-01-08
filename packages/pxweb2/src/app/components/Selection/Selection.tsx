@@ -19,6 +19,7 @@ import {
 import NavigationDrawer from '../../components/NavigationDrawer/NavigationDrawer';
 import useVariables from '../../context/useVariables';
 import { NavigationItem } from '../../components/NavigationMenu/NavigationItem/NavigationItemType';
+import { sassNull } from 'sass';
 
 function addSelectedCodeListToVariable(
   currentVariable: SelectedVBValues | undefined,
@@ -246,6 +247,7 @@ type propsType = {
     keyboard: boolean,
     close: boolean,
     view: NavigationItem,
+    ref?: React.RefObject<HTMLButtonElement>,
   ) => void;
 };
 export function Selection({
@@ -552,7 +554,7 @@ export function Selection({
           keyboard: boolean,
           str: 'filter' | 'view' | 'edit' | 'save' | 'help',
         ) => {
-          setSelectedNavigationView(keyboard, true, 'none');
+          setSelectedNavigationView(keyboard, true, str);
         }}
         view={
           selectedNavigationView as 'filter' | 'view' | 'edit' | 'save' | 'help'

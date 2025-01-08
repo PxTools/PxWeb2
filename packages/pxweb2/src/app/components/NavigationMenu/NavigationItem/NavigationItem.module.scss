@@ -58,6 +58,12 @@
       color: var(--px-color-text-default);
     }
   }
+
+  &:focus-visible {
+    outline: 2px solid #000;
+    outline-offset: 2px;
+    // Add any other focus styles you want
+  }
 }
 
 .navBarItem {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router';
 
 import styles from './app.module.scss';
@@ -38,6 +38,22 @@ export function App() {
     window.innerWidth <= mobileBreakpoint,
   );
 
+  const navigationRailRef = useRef<{
+    filter: HTMLButtonElement;
+    view: HTMLButtonElement;
+    edit: HTMLButtonElement;
+    save: HTMLButtonElement;
+    help: HTMLButtonElement;
+  }>(null);
+
+  const navigationBarRef = useRef<{
+    filter: HTMLButtonElement;
+    view: HTMLButtonElement;
+    edit: HTMLButtonElement;
+    save: HTMLButtonElement;
+    help: HTMLButtonElement;
+  }>(null);
+
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= mobileBreakpoint);
@@ -62,21 +78,24 @@ export function App() {
     newSelectedNavView: NavigationItem,
   ) => {
     if (close && keyboard) {
-      console.log('close and keyboard');
+      if (newSelectedNavView !== 'none') {
+        window.setTimeout(() => {
+          // Sorry about this hack, can't justify spending more time on this
+          navigationRailRef.current?.[newSelectedNavView].focus();
+          navigationBarRef.current?.[newSelectedNavView].focus();
+        }, 100);
+      }
       setSelectedNavigationView('none');
-      setHasFocus(newSelectedNavView);
       return;
     }
 
     if (close && !keyboard) {
-      console.log('close and not keyboard');
       setSelectedNavigationView('none');
       setHasFocus('none');
       return;
     }
 
     if (!close && keyboard) {
-      console.log('not close and keyboard');
       setOpenedWithKeyboard(true);
       setSelectedNavigationView(newSelectedNavView);
       setHasFocus(newSelectedNavView);
@@ -84,7 +103,6 @@ export function App() {
     }
 
     if (!close && !keyboard) {
-      console.log('not close and not keyboard');
       setOpenedWithKeyboard(false);
       setHasFocus(newSelectedNavView);
       setSelectedNavigationView(newSelectedNavView);
@@ -99,9 +117,9 @@ export function App() {
       <div className={styles.navigationAndContentContainer}>
         {!isMobile && (
           <NavigationRail
+            ref={navigationRailRef}
             onChange={changeSelectedNavView}
             selected={selectedNavigationView}
-            hasFocus={hasFocus}
           />
         )}{' '}
         <div className={styles.mainContainer}>
@@ -120,6 +138,7 @@ export function App() {
       </div>
       {isMobile && (
         <NavigationBar
+          ref={navigationBarRef}
           onChange={changeSelectedNavView}
           selected={selectedNavigationView}
         />
