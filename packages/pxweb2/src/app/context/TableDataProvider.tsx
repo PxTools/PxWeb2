@@ -863,15 +863,20 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     });
   }
 
+  const memoData = React.useMemo(
+    () => ({
+      data,
+      /* loading, error  */ fetchTableData,
+      pivotToMobile,
+      pivotToDesktop,
+      pivotCW,
+    }),
+    [data, fetchTableData, pivotToMobile, pivotToDesktop, pivotCW]
+    );
+
   return (
     <TableDataContext.Provider
-      value={{
-        data,
-        /* loading, error  */ fetchTableData,
-        pivotToMobile,
-        pivotToDesktop,
-        pivotCW,
-      }}
+      value={memoData}
     >
       {children}
     </TableDataContext.Provider>
