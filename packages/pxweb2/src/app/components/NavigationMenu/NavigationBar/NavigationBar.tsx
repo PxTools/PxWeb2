@@ -11,7 +11,11 @@ const loadFeatures = () =>
 
 interface NavigationBarProps {
   selected: NavigationItem;
-  onChange: (newSelected: NavigationItem) => void;
+  onChange: (
+    keyboard: boolean,
+    close: boolean,
+    newSelected: NavigationItem,
+  ) => void;
 }
 export const NavigationBar: React.FC<NavigationBarProps> = ({
   selected,
@@ -29,7 +33,10 @@ export const NavigationBar: React.FC<NavigationBarProps> = ({
             selected={selected === 'filter'}
             icon={'Controls'}
             onClick={() => {
-              onChange('filter');
+              onChange(false, selected === 'filter', 'filter');
+            }}
+            onKeyDown={() => {
+              onChange(true, selected === 'filter', 'filter');
             }}
           />
           <Item
@@ -38,7 +45,10 @@ export const NavigationBar: React.FC<NavigationBarProps> = ({
             selected={selected === 'view'}
             icon={'BarChart'}
             onClick={() => {
-              onChange('view');
+              onChange(false, selected === 'view', 'view');
+            }}
+            onKeyDown={() => {
+              onChange(true, selected === 'view', 'view');
             }}
           />
           <Item
@@ -47,7 +57,10 @@ export const NavigationBar: React.FC<NavigationBarProps> = ({
             selected={selected === 'edit'}
             icon={'ArrowsUpDown'}
             onClick={() => {
-              onChange('edit');
+              onChange(false, selected === 'edit', 'edit');
+            }}
+            onKeyDown={() => {
+              onChange(true, selected === 'edit', 'edit');
             }}
           />
           <Item
@@ -56,7 +69,10 @@ export const NavigationBar: React.FC<NavigationBarProps> = ({
             selected={selected === 'save'}
             icon={'FloppyDisk'}
             onClick={() => {
-              onChange('save');
+              onChange(false, selected === 'save', 'save');
+            }}
+            onKeyDown={() => {
+              onChange(true, selected === 'save', 'save');
             }}
           />
           <Item
@@ -65,7 +81,10 @@ export const NavigationBar: React.FC<NavigationBarProps> = ({
             selected={selected === 'help'}
             icon={'QuestionMarkCircle'}
             onClick={() => {
-              onChange('help');
+              onChange(false, selected === 'help', 'help');
+            }}
+            onKeyDown={() => {
+              onChange(true, selected === 'help', 'help');
             }}
           />
         </MotionConfig>

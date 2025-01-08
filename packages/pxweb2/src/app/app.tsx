@@ -54,10 +54,24 @@ export function App() {
     }
   }, [errorMsg]);
 
-  const changeSelectedNavView = (newSelectedNavView: NavigationItem) => {
-    if (selectedNavigationView === newSelectedNavView) {
+  const changeSelectedNavView = (
+    keyboard: boolean,
+    close: boolean,
+    newSelectedNavView: NavigationItem,
+  ) => {
+    console.log(
+      'changeSelectedNavView: ',
+      newSelectedNavView,
+      'keyboard: ',
+      keyboard,
+      'close: ',
+      close,
+    );
+    if (close) {
+      console.log('close');
       setSelectedNavigationView('none');
     } else {
+      console.log('set new selected nav view', newSelectedNavView);
       setSelectedNavigationView(newSelectedNavView);
     }
   };

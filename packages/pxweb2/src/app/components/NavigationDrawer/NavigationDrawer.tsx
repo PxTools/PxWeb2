@@ -9,7 +9,10 @@ export interface NavigationDrawerProps {
   children: React.ReactNode;
   heading: string;
   view: 'filter' | 'view' | 'edit' | 'save' | 'help';
-  onClose: (str: 'filter' | 'view' | 'edit' | 'save' | 'help') => void;
+  onClose: (
+    keyboard: boolean,
+    str: 'filter' | 'view' | 'edit' | 'save' | 'help',
+  ) => void;
 }
 
 export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
@@ -25,15 +28,16 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     if (event.key === 'Enter' || event.key === ' ') {
-      onClose(view);
-
-      console.log('initiator: ', children);
+      onClose(true, view);
     }
   }
 
   return (
     <>
-      <div onClick={() => onClose(view)} className={styles.backdrop}></div>
+      <div
+        onClick={() => onClose(false, view)}
+        className={styles.backdrop}
+      ></div>
       <div className={cl(styles.navigationDrawer, styles.fadein)}>
         <div className={styles.heading}>
           <Heading level="2" size="medium">
@@ -41,7 +45,7 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
           </Heading>
           <div
             tabIndex={0}
-            onClick={() => onClose(view)}
+            onClick={() => onClose(false, view)}
             onKeyDown={handleKeyDown}
             className={cl(styles.hideMenu, styles.clickable)}
           >
