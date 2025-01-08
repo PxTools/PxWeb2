@@ -871,13 +871,11 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       pivotToDesktop,
       pivotCW,
     }),
-    [data, fetchTableData, pivotToMobile, pivotToDesktop, pivotCW]
-    );
+    [data, fetchTableData, pivotToMobile, pivotToDesktop, pivotCW],
+  );
 
   return (
-    <TableDataContext.Provider
-      value={memoData}
-    >
+    <TableDataContext.Provider value={memoData}>
       {children}
     </TableDataContext.Provider>
   );
