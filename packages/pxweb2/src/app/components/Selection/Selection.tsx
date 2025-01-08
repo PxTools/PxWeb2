@@ -541,9 +541,13 @@ export function Selection({
     selectedNavigationView !== 'none' && (
       <NavigationDrawer
         heading={t('presentation_page.sidemenu.selection.title')}
-        onClose={() => {
-          setSelectedNavigationView('none');
+        onClose={(str: 'filter' | 'view' | 'edit' | 'save' | 'help') => {
+          setSelectedNavigationView(str);
+          console.log('selectedNavigationView: ', selectedNavigationView);
         }}
+        view={
+          selectedNavigationView as 'filter' | 'view' | 'edit' | 'save' | 'help'
+        }
       >
         {selectedNavigationView === 'filter' && drawerFilter}
         {selectedNavigationView === 'view' && drawerView}
