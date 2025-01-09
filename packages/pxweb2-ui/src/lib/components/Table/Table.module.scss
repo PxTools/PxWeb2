@@ -167,18 +167,33 @@
     border-top: none;
   }
 
-  .mobileRowHeadLastStub > th,
-  .mobileRowHeadLastStub > td {
+  .mobileRowHeadLastStub > th {
+    padding-bottom: 4px;
+    padding-top: 4px;
     background: none;
     border-left: none;
     border-right: none;
     border-bottom: none;
     border-top: none;
+    vertical-align: top;
+  }
+
+  .mobileRowHeadLastStub > td {
+    padding-bottom: 4px;
+    padding-top: 4px;
+    background: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    border-top: none;
+    vertical-align: top;
+    padding-left: 16px;
+    width: 80px;
   }
 
   .mobileRowHeadSecondLastStub > th,
   .mobileRowHeadSecondLastStub > td {
-    padding-top: 12px;
+    padding-top: 0px;
     padding-bottom: 4px;
     background: none;
     border-left: none;
@@ -194,6 +209,10 @@
   }
   .mobileRowHeadlastValueOfLastStub > th,
   .mobileRowHeadlastValueOfLastStub > td {
-    padding-bottom: 16px;
+    padding-bottom: 24px;
+  }
+  .mobileRowHeadFirstValueOfSecondLastStub > th,
+  .mobileRowHeadFirstValueOfSecondLastStub > td {
+    padding-top: 24px;
   }
 }
