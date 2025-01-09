@@ -4,24 +4,44 @@ import { CodeList } from '../../shared-types/codelist';
 import { SelectOption } from '../Select/Select';
 import { sortSelectOptionsGroupingsLast, mapAndSortCodeLists } from './utils';
 
+const vsOptions: SelectOption[] = [
+  { label: 'VS Option 1', value: 'vs_1' },
+  { label: 'VS Option 2', value: 'vs_2' },
+  { label: 'VS Option 3', value: 'vs_3' },
+];
+const aggOptions: SelectOption[] = [
+  { label: 'Option 1', value: '1' },
+  { label: 'Option 2', value: '2' },
+];
+const mixedOptions: SelectOption[] = [
+  { label: 'VS Option 1', value: 'vs_1' },
+  { label: 'Option 1', value: '1' },
+  { label: 'VS Option 2', value: 'vs_2' },
+  { label: 'Option 2', value: '2' },
+  { label: 'VS Option 3', value: 'vs_3' },
+];
+const vsResults: SelectOption[] = [
+  { label: 'VS Option 1', value: 'vs_1' },
+  { label: 'VS Option 2', value: 'vs_2' },
+  { label: 'VS Option 3', value: 'vs_3' },
+];
+const aggResults: SelectOption[] = [
+  { label: 'Option 1', value: '1' },
+  { label: 'Option 2', value: '2' },
+];
+const mixedResults: SelectOption[] = [
+  { label: 'VS Option 1', value: 'vs_1' },
+  { label: 'VS Option 2', value: 'vs_2' },
+  { label: 'VS Option 3', value: 'vs_3' },
+  { label: 'Option 1', value: '1' },
+  { label: 'Option 2', value: '2' },
+];
+
 describe('sortSelectOptionsGroupingsFirst', () => {
   it('should sort options with "vs_" prefix to the top', () => {
-    const options: SelectOption[] = [
-      { label: 'VS Option 1', value: 'vs_1' },
-      { label: 'Option 1', value: '1' },
-      { label: 'VS Option 2', value: 'vs_2' },
-      { label: 'Option 2', value: '2' },
-      { label: 'VS Option 3', value: 'vs_3' },
-    ];
-    const result: SelectOption[] = sortSelectOptionsGroupingsLast(options);
+    const result: SelectOption[] = sortSelectOptionsGroupingsLast(mixedOptions);
 
-    expect(result).toEqual([
-      { label: 'VS Option 1', value: 'vs_1' },
-      { label: 'VS Option 2', value: 'vs_2' },
-      { label: 'VS Option 3', value: 'vs_3' },
-      { label: 'Option 1', value: '1' },
-      { label: 'Option 2', value: '2' },
-    ]);
+    expect(result).toEqual(mixedResults);
   });
 
   it('should return an empty array if options is empty', () => {
@@ -30,32 +50,16 @@ describe('sortSelectOptionsGroupingsFirst', () => {
     expect(result).toEqual([]);
   });
 
-  it('should work when there are no options vs_ prefix', () => {
-    const options: SelectOption[] = [
-      { label: 'AGG Option 1', value: 'agg_1' },
-      { label: 'AGG Option 2', value: 'agg_2' },
-    ];
-    const result: SelectOption[] = sortSelectOptionsGroupingsLast(options);
+  it('should work when there are only options with agg_ prefix', () => {
+    const result: SelectOption[] = sortSelectOptionsGroupingsLast(aggOptions);
 
-    expect(result).toEqual([
-      { label: 'AGG Option 1', value: 'agg_1' },
-      { label: 'AGG Option 2', value: 'agg_2' },
-    ]);
+    expect(result).toEqual(aggResults);
   });
 
-  it('should work when there are no options agg_ prefix', () => {
-    const options: SelectOption[] = [
-      { label: 'VS Option 1', value: 'vs_1' },
-      { label: 'VS Option 2', value: 'vs_2' },
-      { label: 'VS Option 3', value: 'vs_3' },
-    ];
-    const result: SelectOption[] = sortSelectOptionsGroupingsLast(options);
+  it('should work when there are only options with vs_ prefix', () => {
+    const result: SelectOption[] = sortSelectOptionsGroupingsLast(vsOptions);
 
-    expect(result).toEqual([
-      { label: 'VS Option 1', value: 'vs_1' },
-      { label: 'VS Option 2', value: 'vs_2' },
-      { label: 'VS Option 3', value: 'vs_3' },
-    ]);
+    expect(result).toEqual(vsResults);
   });
 });
 
