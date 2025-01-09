@@ -6,6 +6,7 @@ import { Icon } from '../../Icon/Icon';
 import Tag from '../../Tag/Tag';
 import { VariableBoxProps } from '../VariableBox';
 import Alert from '../../Alert/Alert';
+import Heading from '../../Typography/Heading/Heading';
 
 /* eslint-disable-next-line */
 type VariableBoxPropsToHeader = Pick<VariableBoxProps, 'label' | 'mandatory'>;
@@ -55,9 +56,9 @@ export function VariableBoxHeader({
     >
       <div className={cl(classes['header-content'])}>
         <div className={cl(classes['header-title-and-tag'])}>
-          <p className={cl(classes['header-title'], classes['heading-small'])}>
+          <Heading level="3" className={cl(classes['header-title'], classes['heading-small'])}>
             {label}
-          </p>
+          </Heading>
           <div className={cl(classes['header-tags'])}>
             <Tag variant="neutral">
               {t(
