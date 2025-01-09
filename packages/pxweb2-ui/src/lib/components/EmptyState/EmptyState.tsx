@@ -56,17 +56,15 @@ export function EmptyState({
           </svg>
         </div>
         <div className={cl(styles['empty-state-text'])}>
-          <div>
-            <Heading
-              level="2"
-              className={cl(
-                styles['empty-state-heading'],
-                styles['heading-small'],
-              )}
-            >
-              {headingTxt}
-            </Heading>
-          </div>
+          <Heading
+            level="2"
+            className={cl(
+              styles['empty-state-heading'],
+              styles['heading-small'],
+            )}
+          >
+            {headingTxt}
+          </Heading>
           <div
             className={cl(
               styles['empty-state-description'],
