@@ -10,7 +10,7 @@ export interface HeadingProps extends React.HTMLAttributes<HTMLHeadingElement> {
   align?: 'start' | 'center' | 'end';
   textcolor?: 'default' | 'subtle';
   spacing?: boolean;
-  children: string;
+  children: string | React.ReactNode;
   className?: string;
   as?: React.ElementType;
 }
