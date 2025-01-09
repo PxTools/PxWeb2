@@ -394,7 +394,7 @@ function createRowMobile(
         for (let n = 0; n <= table.stub.length - 3; n++) {
           tableRow.push(
             <th
-             colSpan={2}
+              colSpan={2}
               id={stubDataCellCodes[n].htmlId}
               scope="row"
               role="rowheader"
@@ -404,7 +404,7 @@ function createRowMobile(
               {stubDataCellCodes[n].valLabel}
             </th>,
           );
-        //  fillEmpty(tableMeta, tableRow);
+          //  fillEmpty(tableMeta, tableRow);
           tableRows.push(
             <tr
               className={cl(
@@ -426,7 +426,7 @@ function createRowMobile(
         // second last level
         tableRow.push(
           <th
-             colSpan={2}
+            colSpan={2}
             id={cellMeta.htmlId}
             scope="row"
             role="rowheader"
