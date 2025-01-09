@@ -393,17 +393,18 @@ function createRowMobile(
       if (stubIndex === table.stub.length - 3) {
         for (let n = 0; n <= table.stub.length - 3; n++) {
           tableRow.push(
-            <th colSpan={2}
+            <th
+             colSpan={2}
               id={stubDataCellCodes[n].htmlId}
               scope="row"
               role="rowheader"
               className={cl(classes.stub, classes[`stub-${stubIndex}`])}
-              key={getNewKey()} 
+              key={getNewKey()}
             >
               {stubDataCellCodes[n].valLabel}
             </th>,
           );
-          fillEmpty(tableMeta, tableRow);
+        //  fillEmpty(tableMeta, tableRow);
           tableRows.push(
             <tr
               className={cl(
@@ -424,7 +425,8 @@ function createRowMobile(
       } else if (stubIndex === table.stub.length - 2) {
         // second last level
         tableRow.push(
-          <th colSpan={2}
+          <th
+             colSpan={2}
             id={cellMeta.htmlId}
             scope="row"
             role="rowheader"
@@ -436,7 +438,7 @@ function createRowMobile(
         );
 
         // make the rest of this row empty
-        fillEmpty(tableMeta, tableRow);
+        //fillEmpty(tableMeta, tableRow);
 
         tableRows.push(
           <tr
@@ -445,8 +447,8 @@ function createRowMobile(
               classes.mobileEmptyRowCell,
               classes.mobileRowHeadSecondLastStub,
               {
-                [classes.mobileRowHeadFirstValueOfSecondLastStub]: i===0
-              }
+                [classes.mobileRowHeadFirstValueOfSecondLastStub]: i === 0,
+              },
             )}
             key={getNewKey()}
           >
@@ -493,7 +495,7 @@ function createRowMobile(
         <tr
           key={getNewKey()}
           className={cl(classes.mobileRowHeadLastStub, {
-            [classes.mobileRowHeadlastValueOfLastStub]: lastValueOfLastStub
+            [classes.mobileRowHeadlastValueOfLastStub]: lastValueOfLastStub,
           })}
         >
           {tableRow}
