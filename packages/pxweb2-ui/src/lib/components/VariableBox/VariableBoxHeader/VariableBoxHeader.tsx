@@ -56,7 +56,10 @@ export function VariableBoxHeader({
     >
       <div className={cl(classes['header-content'])}>
         <div className={cl(classes['header-title-and-tag'])}>
-          <Heading level="3" className={cl(classes['header-title'], classes['heading-small'])}>
+          <Heading
+            level="3"
+            className={cl(classes['header-title'], classes['heading-small'])}
+          >
             {label}
           </Heading>
           <div className={cl(classes['header-tags'])}>
