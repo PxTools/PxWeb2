@@ -130,12 +130,11 @@ function mapJsonToVariables(jsonData: Dataset): Array<Variable> {
             });
           }
         }
-        // TODO: Set variable type based on role
         if (dimension.label) {
           variables.push({
             id: dimensionKey,
             label: dimension.label,
-            type: VartypeEnum.REGULAR_VARIABLE,
+            type: mapVariableTypeEnum(dimensionKey, jsonData),
             mandatory: true, // TODO: Set based on elimination
             values,
           });
@@ -147,6 +146,33 @@ function mapJsonToVariables(jsonData: Dataset): Array<Variable> {
   return variables;
 }
 
+
+/**
+ * Map variable type.
+ *
+ * @param id - The ID of the variable to be mapped.
+ * @param jsonData - The dataset containing role information for variables.
+ * @returns The corresponding `VartypeEnum` for the given variable ID.
+ */
+function mapVariableTypeEnum(id: string, jsonData: Dataset): VartypeEnum {
+  if (!jsonData.role) {
+    return VartypeEnum.REGULAR_VARIABLE;
+  }
+
+  if (jsonData.role.time?.includes(id)) {
+    return VartypeEnum.TIME_VARIABLE;
+  }
+  else if (jsonData.role.geo?.includes(id)) {
+    return VartypeEnum.GEOGRAPHICAL_VARIABLE;
+  }
+  else if (jsonData.role.metric?.includes(id)) {
+    return VartypeEnum.CONTENTS_VARIABLE;
+  }
+  else {
+    return VartypeEnum.REGULAR_VARIABLE;
+  }
+}
+ 
 /**
  * Creates the data object for the PxTable based on the provided JSONStat2 dataset and metadata.
  *
