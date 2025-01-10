@@ -146,7 +146,6 @@ function mapJsonToVariables(jsonData: Dataset): Array<Variable> {
   return variables;
 }
 
-
 /**
  * Map variable type.
  *
@@ -161,18 +160,15 @@ function mapVariableTypeEnum(id: string, jsonData: Dataset): VartypeEnum {
 
   if (jsonData.role.time?.includes(id)) {
     return VartypeEnum.TIME_VARIABLE;
-  }
-  else if (jsonData.role.geo?.includes(id)) {
+  } else if (jsonData.role.geo?.includes(id)) {
     return VartypeEnum.GEOGRAPHICAL_VARIABLE;
-  }
-  else if (jsonData.role.metric?.includes(id)) {
+  } else if (jsonData.role.metric?.includes(id)) {
     return VartypeEnum.CONTENTS_VARIABLE;
-  }
-  else {
+  } else {
     return VartypeEnum.REGULAR_VARIABLE;
   }
 }
- 
+
 /**
  * Creates the data object for the PxTable based on the provided JSONStat2 dataset and metadata.
  *
