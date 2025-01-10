@@ -25,7 +25,6 @@
     text-align: center;
 
     background: var(--px-color-surface-moderate);
-    // border-bottom: 1px solid var(--px-color-border-default);
     border-top: 1px solid var(--px-color-border-default);
     border-left: 1px solid var(--px-color-border-default);
   }
@@ -129,6 +128,7 @@
     }
     @media screen and (max-width: fixed.$breakpoints-xsmall-max-width) {
       padding-top: 16px;
+      padding-right: 16px;
     }
     //font-weight: bold;
     font-family: PxWeb-font-700;
@@ -188,13 +188,14 @@
     border-top: none;
     vertical-align: top;
     padding-left: 16px;
-    width: 80px;
+    // width: 80px;
   }
 
   .mobileRowHeadSecondLastStub > th,
   .mobileRowHeadSecondLastStub > td {
     padding-top: 0px;
     padding-bottom: 4px;
+    padding-right: 16px;
     background: none;
     border-left: none;
     border-right: none;
