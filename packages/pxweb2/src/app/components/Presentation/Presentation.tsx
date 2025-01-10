@@ -13,14 +13,19 @@ import useVariables from '../../context/useVariables';
 import { useDebounce } from '@uidotdev/usehooks';
 
 type propsType = {
-  selectedTabId: string;
+  readonly selectedTabId: string;
+  readonly isMobile: boolean;
 };
 
 const MemoizedTable = React.memo(
-  ({ pxtable }: { pxtable: PxTable }) => <Table pxtable={pxtable} />,
-  (prevProps, nextProps) => isEqual(prevProps.pxtable, nextProps.pxtable),
+  ({ pxtable, isMobile }: { pxtable: PxTable; isMobile: boolean }) => (
+    <Table pxtable={pxtable} isMobile={isMobile} />
+  ),
+  (prevProps, nextProps) =>
+    isEqual(prevProps.pxtable, nextProps.pxtable) &&
+    prevProps.isMobile === nextProps.isMobile,
 );
-export function Presentation({ selectedTabId }: propsType) {
+export function Presentation({ selectedTabId, isMobile }: propsType) {
   const { i18n, t } = useTranslation();
   const tableData = useTableData();
   const variablesChanged = useVariables();
@@ -87,6 +92,15 @@ export function Presentation({ selectedTabId }: propsType) {
   });
 
   useEffect(() => {
+    if (isMobile) {
+      tableData.pivotToMobile();
+    } else {
+      tableData.pivotToDesktop();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isMobile]);
+
+  useEffect(() => {
     const hasSelectedValues = variables.getNumberOfSelectedValues() > 0;
     const hasSelectedMandatoryVariables = pxTableMetadata?.variables
       .filter((variable) => variable.mandatory)
@@ -99,7 +113,7 @@ export function Presentation({ selectedTabId }: propsType) {
       );
 
     if (initialRun && !hasSelectedValues) {
-      tableData.fetchTableData(tableId ? tableId : 'tab1292', i18n);
+      tableData.fetchTableData(tableId, i18n, isMobile);
       setIsMissingMandatoryVariables(false);
     } else {
       if (
@@ -109,7 +123,7 @@ export function Presentation({ selectedTabId }: propsType) {
         !initialRun
       ) {
         setIsFadingTable(true);
-        tableData.fetchTableData(tableId ? tableId : 'tab638', i18n);
+        tableData.fetchTableData(tableId, i18n, isMobile);
         setIsMissingMandatoryVariables(false);
       }
       if (!hasSelectedMandatoryVariables && !initialRun) {
@@ -147,8 +161,15 @@ export function Presentation({ selectedTabId }: propsType) {
               className={styles.gradientContainer}
               ref={gradientContainerRef}
             >
+              {/* <Button
+              variant="primary"
+              size="medium"
+              onClick={() => tableData.pivotCW()}
+              >
+                Pivot CW
+              </Button> */}
               <div className={styles.tableContainer} ref={tableContainerRef}>
-                <MemoizedTable pxtable={tableData.data} />
+                <MemoizedTable pxtable={tableData.data} isMobile={isMobile} />
               </div>
             </div>
           )}

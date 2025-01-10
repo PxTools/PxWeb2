@@ -7,8 +7,9 @@ import { calculateRowAndColumnMeta, columnRowMeta } from './columnRowMeta';
 import { getPxTableData } from './cubeHelper';
 
 export interface TableProps {
-  pxtable: PxTable;
-  className?: string;
+  readonly pxtable: PxTable;
+  readonly isMobile: boolean;
+  readonly className?: string;
 }
 
 /**
@@ -17,6 +18,7 @@ export interface TableProps {
 type DataCellMeta = {
   varId: string; // id of variable
   valCode: string; // value code
+  valLabel: string; // value label
   varPos: number; // variable position in stored data
   htmlId: string; // id used in th. Will build up the headers attribute for datacells. For accesability
 };
@@ -26,7 +28,7 @@ type DataCellMeta = {
  */
 type DataCellCodes = DataCellMeta[];
 
-export function Table({ pxtable, className = '' }: TableProps) {
+export function Table({ pxtable, isMobile, className = '' }: TableProps) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
 
   const tableMeta: columnRowMeta = calculateRowAndColumnMeta(pxtable);
@@ -48,6 +50,7 @@ export function Table({ pxtable, className = '' }: TableProps) {
       const dataCellMeta: DataCellMeta = {
         varId: '',
         valCode: '',
+        valLabel: '',
         varPos: 0,
         htmlId: '',
       };
@@ -62,7 +65,9 @@ export function Table({ pxtable, className = '' }: TableProps) {
       aria-label={pxtable.metadata.label}
     >
       <thead>{createHeading(pxtable, tableMeta, headingDataCellCodes)}</thead>
-      <tbody>{createRows(pxtable, tableMeta, headingDataCellCodes)}</tbody>
+      <tbody>
+        {createRows(pxtable, tableMeta, headingDataCellCodes, isMobile)}
+      </tbody>
     </table>
   );
 }
@@ -177,24 +182,43 @@ export function createRows(
   table: PxTable,
   tableMeta: columnRowMeta,
   headingDataCellCodes: DataCellCodes[],
+  isMobile: boolean,
 ): React.JSX.Element[] {
   const tableRows: React.JSX.Element[] = [];
-  const datacellCodes: DataCellCodes = new Array<DataCellMeta>();
-
+  const stubDatacellCodes: DataCellCodes = new Array<DataCellMeta>();
   if (table.stub.length > 0) {
-    createRow(
-      0,
-      tableMeta.rows - tableMeta.rowOffset,
-      0,
-      table,
-      tableMeta,
-      datacellCodes,
-      headingDataCellCodes,
-      tableRows,
-    );
+    if (isMobile) {
+      createRowMobile(
+        0,
+        tableMeta.rows - tableMeta.rowOffset,
+        0,
+        table,
+        tableMeta,
+        stubDatacellCodes,
+        headingDataCellCodes,
+        tableRows,
+      );
+    } else {
+      createRowDesktop(
+        0,
+        tableMeta.rows - tableMeta.rowOffset,
+        0,
+        table,
+        tableMeta,
+        stubDatacellCodes,
+        headingDataCellCodes,
+        tableRows,
+      );
+    }
   } else {
     const tableRow: React.JSX.Element[] = [];
-    fillData(table, tableMeta, datacellCodes, headingDataCellCodes, tableRow);
+    fillData(
+      table,
+      tableMeta,
+      stubDatacellCodes,
+      headingDataCellCodes,
+      tableRow,
+    );
     tableRows.push(
       <tr key={getNewKey()} className={cl(classes.firstColNoStub)}>
         {tableRow}
@@ -204,12 +228,12 @@ export function createRows(
 
   return tableRows;
 }
-
 /**
- * Creates the rows for the table based on the stub variables.
+ * Creates the rows for the table based on the stub variables. For mobile devices
  *
  * @param stubIndex - The index of the current stub variable.
  * @param rowSpan - The rowspan for the cells to add in this call.
+ * @param stubIteration - Iteration for the value
  * @param table - The PxTable object representing the PxWeb table data.
  * @param tableMeta - The metadata for the table columns and rows.
  * @param stubDataCellCodes - The metadata structure for the dimensions of the stub cells.
@@ -217,7 +241,7 @@ export function createRows(
  * @param tableRows - An array of React.JSX.Element representing the rows of the table.
  * @returns An array of React.JSX.Element representing the rows of the table.
  */
-function createRow(
+function createRowDesktop(
   stubIndex: number,
   rowSpan: number,
   stubIteration: number,
@@ -242,6 +266,7 @@ function createRow(
     const cellMeta: DataCellMeta = {
       varId: table.stub[stubIndex].id,
       valCode: val.code,
+      valLabel: val.label,
       varPos: table.data.variableOrder.indexOf(table.stub[stubIndex].id),
       htmlId: 'R.' + stubIndex + val.code + '.I' + stubIteration,
     };
@@ -278,7 +303,7 @@ function createRow(
       tableRow = [];
 
       // Create a new row for the next stub
-      createRow(
+      createRowDesktop(
         stubIndex + 1,
         rowSpan,
         stubIteration,
@@ -299,6 +324,182 @@ function createRow(
         tableRow,
       );
       tableRows.push(<tr key={getNewKey()}>{tableRow}</tr>);
+      tableRow = [];
+      stubDataCellCodes.pop();
+    }
+  }
+
+  return tableRows;
+}
+
+/**
+ * Creates the rows for the table based on the stub variables. For mobile devices
+ *
+ * @param stubIndex - The index of the current stub variable.
+ * @param rowSpan - The rowspan for the cells to add in this call.
+ * @param stubIteration - Iteration for the value
+ * @param table - The PxTable object representing the PxWeb table data.
+ * @param tableMeta - The metadata for the table columns and rows.
+ * @param stubDataCellCodes - The metadata structure for the dimensions of the stub cells.
+ * @param headingDataCellCodes - The metadata structure for the dimensions of the header cells.
+ * @param tableRows - An array of React.JSX.Element representing the rows of the table.
+ * @returns An array of React.JSX.Element representing the rows of the table.
+ */
+function createRowMobile(
+  stubIndex: number,
+  rowSpan: number,
+  stubIteration: number,
+  table: PxTable,
+  tableMeta: columnRowMeta,
+  stubDataCellCodes: DataCellCodes,
+  headingDataCellCodes: DataCellCodes[],
+  tableRows: React.JSX.Element[],
+): React.JSX.Element[] {
+  // Calculate the rowspan for all the cells to add in this call
+  rowSpan = rowSpan / table.stub[stubIndex].values.length;
+
+  let tableRow: React.JSX.Element[] = [];
+
+  // Loop through all the values in the stub variable
+  for (let i = 0; i < table.stub[stubIndex].values.length; i++) {
+    if (stubIndex === 0) {
+      stubIteration++;
+    }
+
+    const val = table.stub[stubIndex].values[i];
+    const cellMeta: DataCellMeta = {
+      varId: table.stub[stubIndex].id,
+      valCode: val.code,
+      valLabel: val.label,
+      varPos: table.data.variableOrder.indexOf(table.stub[stubIndex].id),
+      htmlId: 'R.' + stubIndex + val.code + '.I' + stubIteration,
+    };
+    stubDataCellCodes.push(cellMeta);
+    // Fix the rowspan
+    if (rowSpan === 0) {
+      rowSpan = 1;
+    }
+    let lastValueOfLastStub;
+    if (
+      // isMobile &&
+      stubIndex === table.stub.length - 1 &&
+      i === table.stub[stubIndex].values.length - 1
+    ) {
+      // the last value of last level stub
+      lastValueOfLastStub = true;
+    }
+    // If there are more stub variables that need to add headers to this row
+    if (table.stub.length > stubIndex + 1) {
+      // Repeat the headers for all stubs except the 2 last levels
+      if (stubIndex === table.stub.length - 3) {
+        for (let n = 0; n <= table.stub.length - 3; n++) {
+          tableRow.push(
+            <th
+              id={stubDataCellCodes[n].htmlId}
+              scope="row"
+              role="rowheader"
+              className={cl(classes.stub, classes[`stub-${stubIndex}`])}
+              key={getNewKey()}
+            >
+              {stubDataCellCodes[n].valLabel}
+            </th>,
+          );
+          fillEmpty(tableMeta, tableRow);
+          tableRows.push(
+            <tr
+              className={cl(
+                { [classes.firstdim]: n === 0 },
+                {
+                  [classes.mobileRowHeadThirdLastStub]:
+                    n === table.stub.length - 3,
+                },
+                classes.mobileEmptyRowCell,
+              )}
+              key={getNewKey()}
+            >
+              {tableRow}
+            </tr>,
+          );
+          tableRow = [];
+        }
+      } else {
+        // second last level
+        // if (stubIndex > table.stub.length - 3) {
+        if (stubIndex === table.stub.length - 2) {
+          tableRow.push(
+            <th
+              id={cellMeta.htmlId}
+              scope="row"
+              role="rowheader"
+              className={cl(classes.stub, classes[`stub-${stubIndex}`])}
+              key={getNewKey()}
+            >
+              {val.label}
+            </th>,
+          );
+
+          // make the rest of this row empty
+          fillEmpty(tableMeta, tableRow);
+
+          tableRows.push(
+            <tr
+              className={cl(
+                { [classes.firstdim]: stubIndex === 0 },
+                classes.mobileEmptyRowCell,
+                classes.mobileRowHeadSecondLastStub,
+              )}
+              key={getNewKey()}
+            >
+              {tableRow}
+            </tr>,
+          );
+          tableRow = [];
+        }
+      }
+
+      // Create a new row for the next stub
+      createRowMobile(
+        stubIndex + 1,
+        rowSpan,
+        stubIteration,
+        table,
+        tableMeta,
+        stubDataCellCodes,
+        headingDataCellCodes,
+        tableRows,
+      );
+
+      stubDataCellCodes.pop();
+    } else {
+      // last level
+      tableRow.push(
+        <th
+          id={cellMeta.htmlId}
+          scope="row"
+          role="rowheader"
+          className={cl(classes.stub, classes[`stub-${stubIndex}`])}
+          key={getNewKey()}
+        >
+          {val.label}
+        </th>,
+      );
+      fillData(
+        table,
+        tableMeta,
+        stubDataCellCodes,
+        headingDataCellCodes,
+        tableRow,
+      );
+      tableRows.push(
+        <tr
+          key={getNewKey()}
+          className={cl(classes.mobileRowHeadLastStub, {
+            [classes.mobileRowHeadlastValueOfLastStub]: lastValueOfLastStub,
+          })}
+        >
+          {tableRow}
+        </tr>,
+      );
       tableRow = [];
       stubDataCellCodes.pop();
     }
