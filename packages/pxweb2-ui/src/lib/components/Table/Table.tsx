@@ -381,7 +381,6 @@ function createRowMobile(
     }
     let lastValueOfLastStub;
     if (
-      // isMobile &&
       stubIndex === table.stub.length - 1 &&
       i === table.stub[stubIndex].values.length - 1
     ) {
@@ -395,6 +394,7 @@ function createRowMobile(
         for (let n = 0; n <= table.stub.length - 3; n++) {
           tableRow.push(
             <th
+              colSpan={2}
               id={stubDataCellCodes[n].htmlId}
               scope="row"
               role="rowheader"
@@ -404,7 +404,7 @@ function createRowMobile(
               {stubDataCellCodes[n].valLabel}
             </th>,
           );
-          fillEmpty(tableMeta, tableRow);
+          //  fillEmpty(tableMeta, tableRow);
           tableRows.push(
             <tr
               className={cl(
@@ -422,39 +422,40 @@ function createRowMobile(
           );
           tableRow = [];
         }
-      } else {
+      } else if (stubIndex === table.stub.length - 2) {
         // second last level
-        // if (stubIndex > table.stub.length - 3) {
-        if (stubIndex === table.stub.length - 2) {
-          tableRow.push(
-            <th
-              id={cellMeta.htmlId}
-              scope="row"
-              role="rowheader"
-              className={cl(classes.stub, classes[`stub-${stubIndex}`])}
-              key={getNewKey()}
-            >
-              {val.label}
-            </th>,
-          );
+        tableRow.push(
+          <th
+            colSpan={2}
+            id={cellMeta.htmlId}
+            scope="row"
+            role="rowheader"
+            className={cl(classes.stub, classes[`stub-${stubIndex}`])}
+            key={getNewKey()}
+          >
+            {val.label}
+          </th>,
+        );
 
-          // make the rest of this row empty
-          fillEmpty(tableMeta, tableRow);
+        // make the rest of this row empty
+        //fillEmpty(tableMeta, tableRow);
 
-          tableRows.push(
-            <tr
-              className={cl(
-                { [classes.firstdim]: stubIndex === 0 },
-                classes.mobileEmptyRowCell,
-                classes.mobileRowHeadSecondLastStub,
-              )}
-              key={getNewKey()}
-            >
-              {tableRow}
-            </tr>,
-          );
-          tableRow = [];
-        }
+        tableRows.push(
+          <tr
+            className={cl(
+              { [classes.firstdim]: stubIndex === 0 },
+              classes.mobileEmptyRowCell,
+              classes.mobileRowHeadSecondLastStub,
+              {
+                [classes.mobileRowHeadFirstValueOfSecondLastStub]: i === 0,
+              },
+            )}
+            key={getNewKey()}
+          >
+            {tableRow}
+          </tr>,
+        );
+        tableRow = [];
       }
 
       // Create a new row for the next stub
