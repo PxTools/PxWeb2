@@ -134,9 +134,7 @@ function mapDimension(id: string, dimension: any, role: any): Variable | null {
 
   const values: Array<Value> = [];
   const indexEntries = Object.entries(dimension.category.index);
-  indexEntries.sort(
-    ([, valueA], [, valueB]) => (valueA as number) - (valueB as number),
-  );
+  indexEntries.sort(([valueA], [valueB]) => Number(valueA) - Number(valueB));
 
   for (const [code] of indexEntries) {
     if (Object.prototype.hasOwnProperty.call(dimension.category.index, code)) {
