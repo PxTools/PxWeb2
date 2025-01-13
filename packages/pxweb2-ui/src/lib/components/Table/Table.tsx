@@ -257,12 +257,11 @@ function createRowDesktop(
   let tableRow: React.JSX.Element[] = [];
 
   // Loop through all the values in the stub variable
-  for (let i = 0; i < table.stub[stubIndex].values.length; i++) {
+  for (const val of table.stub[stubIndex].values) {
     if (stubIndex === 0) {
       stubIteration++;
     }
 
-    const val = table.stub[stubIndex].values[i];
     const cellMeta: DataCellMeta = {
       varId: table.stub[stubIndex].id,
       valCode: val.code,
@@ -361,7 +360,8 @@ function createRowMobile(
   let tableRow: React.JSX.Element[] = [];
 
   // Loop through all the values in the stub variable
-  for (let i = 0; i < table.stub[stubIndex].values.length; i++) {
+  const stubValuesLength = table.stub[stubIndex].values.length;
+  for (let i = 0; i < stubValuesLength; i++) {
     if (stubIndex === 0) {
       stubIteration++;
     }
@@ -379,7 +379,7 @@ function createRowMobile(
     if (rowSpan === 0) {
       rowSpan = 1;
     }
-    let lastValueOfLastStub;
+    let lastValueOfLastStub = false;
     if (
       stubIndex === table.stub.length - 1 &&
       i === table.stub[stubIndex].values.length - 1
@@ -404,7 +404,7 @@ function createRowMobile(
               {stubDataCellCodes[n].valLabel}
             </th>,
           );
-          //  fillEmpty(tableMeta, tableRow);
+          
           tableRows.push(
             <tr
               className={cl(
@@ -558,11 +558,11 @@ function fillData(
     const datacellIds: string[] = dataCellCodes.map((obj) => obj.htmlId);
     const headers: string = datacellIds
       .toString()
-      .replace(new RegExp(',', 'g'), ' ');
+      .replace(/,/g, ' ');
     const dimensions: string[] = [];
     // Arrange the dimensons in the right order according to how data is stored is the cube
-    for (let j = 0; j < dataCellCodes.length; j++) {
-      dimensions[dataCellCodes[j].varPos] = dataCellCodes[j].valCode;
+    for (const dataCell of dataCellCodes) {
+      dimensions[dataCell.varPos] = dataCell.valCode;
     }
 
     // Example of how to get data from the cube (men in Stockholm in 1970):
