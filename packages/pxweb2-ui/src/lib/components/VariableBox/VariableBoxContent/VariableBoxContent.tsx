@@ -23,7 +23,7 @@ type VariableBoxPropsToContent = Omit<
   'id' | 'mandatory' | 'tableId'
 >;
 
-/* eslint-disable-next-line */
+ 
 type VariableBoxContentProps = VariableBoxPropsToContent & {
   varId: string;
   selectedValues: SelectedVBValues[];
@@ -442,7 +442,7 @@ export function VariableBoxContent({
   };
 
   // To override element styling added by Virtuoso when scrolling down
-  /* eslint-disable-next-line */
+   
   const TopItemListEmptyFragment = () => <></>;
 
   //Set inital height to 44
