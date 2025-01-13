@@ -12,10 +12,9 @@ import { VariableBoxProps, SelectedVBValues } from '../VariableBox';
 import { VartypeEnum } from '../../../shared-types/vartypeEnum';
 import { Value } from '../../../shared-types/value';
 import Skeleton from '../../Skeleton/Skeleton';
-import { mapCodeListsToSelectOptions } from '../../../util/util';
+import { mapAndSortCodeLists } from '../utils';
 import { BodyShort } from '../../Typography/BodyShort/BodyShort';
 import Heading from '../../Typography/Heading/Heading';
-import clsx from 'clsx';
 
 const ScrollSeekPlaceholder = () => (
   <Skeleton
@@ -102,6 +101,7 @@ export function VariableBoxContent({
         ?.values.sort() || []
     );
   }, [selectedValues, varId]);
+
   // The API always returns the oldest values first,
   // so we can just reverse the values array when the type is TIME_VARIABLE
   if (type === VartypeEnum.TIME_VARIABLE) {
@@ -199,17 +199,14 @@ export function VariableBoxContent({
     selectedValuesForVar,
   ]);
 
-  let mappedCodeLists: SelectOption[] = [];
-
-  if (hasCodeLists === true) {
-    mappedCodeLists = mapCodeListsToSelectOptions(codeLists);
-  }
+  const mappedAndSortedCodeLists: SelectOption[] =
+    mapAndSortCodeLists(codeLists);
 
   // needs the selected, mapped code list for the current variable
   const currentVarSelectedCodeListId = selectedValues.find(
     (variable) => variable.id === varId,
   )?.selectedCodeList;
-  const selectedCodeListMapped = mappedCodeLists.find(
+  const selectedCodeListMapped = mappedAndSortedCodeLists.find(
     (codeList) => codeList.value === currentVarSelectedCodeListId,
   );
   const selectedCodeListOrUndefined = selectedCodeListMapped ?? undefined;
@@ -337,7 +334,7 @@ export function VariableBoxContent({
           <div
             id={varId}
             tabIndex={-1}
-            className={clsx(classes['focusableItem'], {
+            className={cl(classes['focusableItem'], {
               [classes['mixedCheckbox']]: true,
             })}
           >
@@ -366,7 +363,7 @@ export function VariableBoxContent({
           <div
             id={value.code}
             tabIndex={-1}
-            className={clsx(classes['focusableItem'])}
+            className={cl(classes['focusableItem'])}
           >
             <Checkbox
               id={value.code}
@@ -483,7 +480,7 @@ export function VariableBoxContent({
               placeholder={t(
                 'presentation_page.sidemenu.selection.variablebox.content.select.placeholder',
               )}
-              options={mappedCodeLists}
+              options={mappedAndSortedCodeLists}
               selectedOption={selectedCodeListOrUndefined}
               onChange={(selectedItem) =>
                 handleChangingCodeListInVariableBox(
