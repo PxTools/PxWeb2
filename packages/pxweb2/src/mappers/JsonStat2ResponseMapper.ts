@@ -135,7 +135,7 @@ function mapJsonToVariables(jsonData: Dataset): Array<Variable> {
             id: dimensionKey,
             label: dimension.label,
             type: mapVariableTypeEnum(dimensionKey, jsonData),
-            mandatory: true, // TODO: Set based on elimination
+            mandatory: true, // How shall we handle this? The value for elimination may differ in the jsonstat2-response depending on if all values are seleccted or not...
             values,
           });
         }
