@@ -1,8 +1,7 @@
 import cl from 'clsx';
 import classes from './Presentation.module.scss';
 import { useTranslation } from 'react-i18next';
-import { useRef, useEffect, useState } from 'react';
-import React from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import isEqual from 'lodash/isEqual';
 
 import styles from './Presentation.module.scss';
