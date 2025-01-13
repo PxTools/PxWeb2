@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "prepare": "husky",
-    "lint": "eslint",
+    "lint": "eslint --fix",
     "test": "npm run test --workspaces",
     "build": "npm run build-style-dictionary && npm run build --workspaces",
     "prettier": "npm run prettier --workspaces",
