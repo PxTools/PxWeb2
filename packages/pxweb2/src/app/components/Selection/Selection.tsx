@@ -251,7 +251,6 @@ export function Selection({
   const { selectedVBValues, setSelectedVBValues } = useVariables();
   const variables = useVariables();
   const [errorMsg, setErrorMsg] = useState('');
-  console.error('Selection.tsx', errorMsg);
   const { i18n, t } = useTranslation();
   const { hasLoadedDefaultSelection } = useVariables();
   const { isLoadingMetadata } = useVariables();
@@ -264,6 +263,12 @@ export function Selection({
 
   //  Needed to know when the language has changed, so we can reload the default selection
   const [prevLang, setPrevLang] = useState('');
+
+  useEffect(() => {
+    if (errorMsg) {
+      console.error('Selection.tsx', errorMsg);
+    }
+  }, [errorMsg]);
 
   useEffect(() => {
     let shouldGetDefaultSelection = !hasLoadedDefaultSelection;
