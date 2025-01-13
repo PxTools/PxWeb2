@@ -8,12 +8,19 @@ import i18next from 'i18next';
 export interface NavigationDrawerProps {
   children: React.ReactNode;
   heading: string;
-  onClose: () => void;
+  view: 'filter' | 'view' | 'edit' | 'save' | 'help';
+  openedWithKeyboard: boolean;
+  onClose: (
+    keyboard: boolean,
+    str: 'filter' | 'view' | 'edit' | 'save' | 'help',
+  ) => void;
 }
 
 export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
   children,
   heading,
+  view,
+  openedWithKeyboard,
   onClose,
 }) => {
   const { t } = useTranslation();
@@ -21,16 +28,36 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
   // Handle RTL languages
   const hideIcon = i18next.dir() === 'rtl' ? 'ChevronRight' : 'ChevronLeft';
 
+  const hideMenuRef = React.useRef<HTMLDivElement>(null);
+
+  function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      onClose(true, view);
+    }
+  }
+
+  React.useEffect(() => {
+    if (openedWithKeyboard) {
+      hideMenuRef.current?.focus();
+    }
+  }, [openedWithKeyboard]);
+
   return (
     <>
-      <div onClick={onClose} className={styles.backdrop}></div>
+      <div
+        onClick={() => onClose(false, view)}
+        className={styles.backdrop}
+      ></div>
       <div className={cl(styles.navigationDrawer, styles.fadein)}>
         <div className={styles.heading}>
           <Heading level="2" size="medium">
             {heading}
           </Heading>
           <div
-            onClick={onClose}
+            ref={hideMenuRef}
+            tabIndex={0}
+            onClick={() => onClose(false, view)}
+            onKeyDown={handleKeyDown}
             className={cl(styles.hideMenu, styles.clickable)}
           >
             <div className={styles.hideIconWrapper}>

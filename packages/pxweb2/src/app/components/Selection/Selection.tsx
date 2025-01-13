@@ -19,6 +19,7 @@ import {
 import NavigationDrawer from '../../components/NavigationDrawer/NavigationDrawer';
 import useVariables from '../../context/useVariables';
 import { NavigationItem } from '../../components/NavigationMenu/NavigationItem/NavigationItemType';
+import { sassNull } from 'sass';
 
 function addSelectedCodeListToVariable(
   currentVariable: SelectedVBValues | undefined,
@@ -241,11 +242,18 @@ function removeAllValuesOfVariable(
 type propsType = {
   selectedNavigationView: string;
   selectedTabId: string;
-  setSelectedNavigationView: (view: NavigationItem) => void;
+  openedWithKeyboard: boolean;
+  setSelectedNavigationView: (
+    keyboard: boolean,
+    close: boolean,
+    view: NavigationItem,
+    ref?: React.RefObject<HTMLButtonElement>,
+  ) => void;
 };
 export function Selection({
   selectedNavigationView,
   selectedTabId,
+  openedWithKeyboard,
   setSelectedNavigationView,
 }: propsType) {
   const { selectedVBValues, setSelectedVBValues } = useVariables();
@@ -540,10 +548,17 @@ export function Selection({
   return (
     selectedNavigationView !== 'none' && (
       <NavigationDrawer
+        openedWithKeyboard={openedWithKeyboard}
         heading={t('presentation_page.sidemenu.selection.title')}
-        onClose={() => {
-          setSelectedNavigationView('none');
+        onClose={(
+          keyboard: boolean,
+          str: 'filter' | 'view' | 'edit' | 'save' | 'help',
+        ) => {
+          setSelectedNavigationView(keyboard, true, str);
         }}
+        view={
+          selectedNavigationView as 'filter' | 'view' | 'edit' | 'save' | 'help'
+        }
       >
         {selectedNavigationView === 'filter' && drawerFilter}
         {selectedNavigationView === 'view' && drawerView}

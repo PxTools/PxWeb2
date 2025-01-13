@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router';
 
 import styles from './app.module.scss';
@@ -15,6 +15,7 @@ import { Footer } from './components/Footer/Footer';
 import { BreakpointsSmallMaxWidth } from '@pxweb2/pxweb2-ui';
 import { getConfig } from './util/config/getConfig';
 import { OpenAPI } from '@pxweb2/pxweb2-api-client';
+import { set } from 'lodash';
 
 export function App() {
   const config = getConfig();
@@ -27,7 +28,8 @@ export function App() {
   const [errorMsg, setErrorMsg] = useState('');
   const [selectedNavigationView, setSelectedNavigationView] =
     useState<NavigationItem>('filter');
-
+  const [hasFocus, setHasFocus] = useState<NavigationItem>('none');
+  const [openedWithKeyboard, setOpenedWithKeyboard] = useState(false);
   /**
    * Keep state if window screen size is mobile or desktop.
    */
@@ -35,6 +37,22 @@ export function App() {
   const [isMobile, setIsMobile] = useState(
     window.innerWidth <= mobileBreakpoint,
   );
+
+  const navigationRailRef = useRef<{
+    filter: HTMLButtonElement;
+    view: HTMLButtonElement;
+    edit: HTMLButtonElement;
+    save: HTMLButtonElement;
+    help: HTMLButtonElement;
+  }>(null);
+
+  const navigationBarRef = useRef<{
+    filter: HTMLButtonElement;
+    view: HTMLButtonElement;
+    edit: HTMLButtonElement;
+    save: HTMLButtonElement;
+    help: HTMLButtonElement;
+  }>(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -54,10 +72,39 @@ export function App() {
     }
   }, [errorMsg]);
 
-  const changeSelectedNavView = (newSelectedNavView: NavigationItem) => {
-    if (selectedNavigationView === newSelectedNavView) {
+  const changeSelectedNavView = (
+    keyboard: boolean,
+    close: boolean,
+    newSelectedNavView: NavigationItem,
+  ) => {
+    if (close && keyboard) {
+      if (newSelectedNavView !== 'none') {
+        window.setTimeout(() => {
+          // Sorry about this hack, can't justify spending more time on this
+          navigationRailRef.current?.[newSelectedNavView].focus();
+          navigationBarRef.current?.[newSelectedNavView].focus();
+        }, 100);
+      }
       setSelectedNavigationView('none');
-    } else {
+      return;
+    }
+
+    if (close && !keyboard) {
+      setSelectedNavigationView('none');
+      setHasFocus('none');
+      return;
+    }
+
+    if (!close && keyboard) {
+      setOpenedWithKeyboard(true);
+      setSelectedNavigationView(newSelectedNavView);
+      setHasFocus(newSelectedNavView);
+      return;
+    }
+
+    if (!close && !keyboard) {
+      setOpenedWithKeyboard(false);
+      setHasFocus(newSelectedNavView);
       setSelectedNavigationView(newSelectedNavView);
     }
   };
@@ -70,6 +117,7 @@ export function App() {
       <div className={styles.navigationAndContentContainer}>
         {!isMobile && (
           <NavigationRail
+            ref={navigationRailRef}
             onChange={changeSelectedNavView}
             selected={selectedNavigationView}
           />
@@ -79,6 +127,7 @@ export function App() {
             selectedNavigationView={selectedNavigationView}
             selectedTabId={selectedTableId}
             setSelectedNavigationView={changeSelectedNavView}
+            openedWithKeyboard={openedWithKeyboard}
           />
           <div className={styles.contentAndFooterContainer}>
             {isMobile && <Header />}{' '}
@@ -89,6 +138,7 @@ export function App() {
       </div>
       {isMobile && (
         <NavigationBar
+          ref={navigationBarRef}
           onChange={changeSelectedNavView}
           selected={selectedNavigationView}
         />
