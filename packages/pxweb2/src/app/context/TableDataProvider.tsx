@@ -57,7 +57,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   // Handle with variables are in the heading
   const [heading, setHeading] = useState<string[]>([]);
 
-  const [errorMsg] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
   const variables = useVariables();
 
   useEffect(() => {
