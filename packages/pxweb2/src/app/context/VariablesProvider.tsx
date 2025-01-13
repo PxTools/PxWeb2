@@ -1,6 +1,7 @@
 import React, { createContext, useState } from 'react';
 
-import { SelectedVBValues , PxTableMetadata } from '@pxweb2/pxweb2-ui';
+import { SelectedVBValues } from '@pxweb2/pxweb2-ui';
+import { PxTableMetadata } from '@pxweb2/pxweb2-ui';
 
 // Define the type for the context
 export type VariablesContextType = {
@@ -26,20 +27,20 @@ export type VariablesContextType = {
 
 // Create the context with default values
 export const VariablesContext = createContext<VariablesContextType>({
-   
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   addSelectedValues: () => {},
-   
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   getSelectedValuesById: () => [],
   getSelectedValuesByIdSorted: () => [],
   getSelectedCodelistById: () => undefined,
-   
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   getNumberOfSelectedValues: () => 0,
-   
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   syncVariablesAndValues: () => {},
-   
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   getUniqueIds: () => [],
   toString: () => '',
-   
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   hasLoadedDefaultSelection: false,
   setHasLoadedDefaultSelection: () => false,
   setSelectedVBValues: () => [],

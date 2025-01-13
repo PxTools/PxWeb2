@@ -30,7 +30,7 @@ interface TableDataProviderProps {
 // Create context with default values
 const TableDataContext = createContext<TableDataContextType | undefined>({
   data: undefined,
-   
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   fetchTableData: () => {},
 });
 
