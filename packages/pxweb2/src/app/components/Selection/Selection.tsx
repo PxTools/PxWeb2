@@ -251,6 +251,7 @@ export function Selection({
   const { selectedVBValues, setSelectedVBValues } = useVariables();
   const variables = useVariables();
   const [errorMsg, setErrorMsg] = useState('');
+  console.error('Selection.tsx', errorMsg);
   const { i18n, t } = useTranslation();
   const { hasLoadedDefaultSelection } = useVariables();
   const { isLoadingMetadata } = useVariables();
@@ -312,7 +313,7 @@ export function Selection({
           variables.setIsLoadingMetadata(false);
         }
       })
-      .catch((error) => {
+      .catch(() => {
         setErrorMsg('Could not get table: ' + selectedTabId);
         setPxTableMetadata(null);
       });
@@ -332,7 +333,7 @@ export function Selection({
           variables.setIsLoadingMetadata(false);
           variables.setHasLoadedDefaultSelection(true);
         })
-        .catch((error) => {
+        .catch(() => {
           setErrorMsg('Error getting default selection: ' + selectedTabId);
         });
     }

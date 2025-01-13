@@ -23,7 +23,6 @@ type VariableBoxPropsToContent = Omit<
   'id' | 'mandatory' | 'tableId'
 >;
 
- 
 type VariableBoxContentProps = VariableBoxPropsToContent & {
   varId: string;
   selectedValues: SelectedVBValues[];
@@ -442,7 +441,7 @@ export function VariableBoxContent({
   };
 
   // To override element styling added by Virtuoso when scrolling down
-   
+
   const TopItemListEmptyFragment = () => <></>;
 
   //Set inital height to 44
@@ -537,7 +536,7 @@ export function VariableBoxContent({
                 onScroll={handleVirtuosoScroll}
                 totalListHeightChanged={handleTotalListHeightChanged}
                 components={{
-                  ScrollSeekPlaceholder: ({ height }) => (
+                  ScrollSeekPlaceholder: () => (
                     <Skeleton
                       aria-label="placeholder"
                       height={'25px'}
