@@ -109,7 +109,7 @@ function mapJsonToVariables(jsonData: Dataset): Array<Variable> {
       Object.prototype.hasOwnProperty.call(jsonData.dimension, dimensionKey) // dimensionKey === variable id
     ) {
       const dimension = jsonData.dimension[dimensionKey];
-      const variable = mapDimension(dimensionKey, dimension);
+      const variable = mapDimension(dimensionKey, dimension, jsonData.role);
       if (variable) {
         variables.push(variable);
       }
@@ -124,9 +124,10 @@ function mapJsonToVariables(jsonData: Dataset): Array<Variable> {
  *
  * @param id - The identifier of the dimension.
  * @param dimension - The dimension object from the JSON-stat 2.0 response.
+ * @param role - The role object from the JSON-stat 2.0 response.
  * @returns A Variable object if the dimension has valid categories; otherwise, null.
  */
-function mapDimension(id: string, dimension: any): Variable | null {
+function mapDimension(id: string, dimension: any, role: any): Variable | null {
   if (!dimension.category?.index || !dimension.category.label) {
     return null;
   }
@@ -149,7 +150,7 @@ function mapDimension(id: string, dimension: any): Variable | null {
   const variable: Variable = {
     id: id,
     label: dimension.label,
-    type: mapVariableTypeEnum(dimension.id, dimension),
+    type: mapVariableTypeEnum(id, role),
     mandatory: true, // How shall we handle this? The value for elimination may differ in the jsonstat2-response depending on if all values are seleccted or not...
     values,
   };
@@ -161,19 +162,19 @@ function mapDimension(id: string, dimension: any): Variable | null {
  * Map variable type.
  *
  * @param id - The ID of the variable to be mapped.
- * @param jsonData - The dataset containing role information for variables.
+ * @param role - The role object from the JSON-stat 2.0 response.
  * @returns The corresponding `VartypeEnum` for the given variable ID.
  */
-function mapVariableTypeEnum(id: string, jsonData: Dataset): VartypeEnum {
-  if (!jsonData.role) {
+function mapVariableTypeEnum(id: string, role: any): VartypeEnum {
+  if (!role) {
     return VartypeEnum.REGULAR_VARIABLE;
   }
 
-  if (jsonData.role.time?.includes(id)) {
+  if (role.time?.includes(id)) {
     return VartypeEnum.TIME_VARIABLE;
-  } else if (jsonData.role.geo?.includes(id)) {
+  } else if (role.geo?.includes(id)) {
     return VartypeEnum.GEOGRAPHICAL_VARIABLE;
-  } else if (jsonData.role.metric?.includes(id)) {
+  } else if (role.metric?.includes(id)) {
     return VartypeEnum.CONTENTS_VARIABLE;
   } else {
     return VartypeEnum.REGULAR_VARIABLE;
