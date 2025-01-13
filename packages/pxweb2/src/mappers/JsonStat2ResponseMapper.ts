@@ -29,9 +29,9 @@ type counter = {
 export function mapJsonStat2Response(response: Dataset): PxTable {
   // Create the metadata object
   const metadata: PxTableMetadata = {
-    id: response.extension?.px?.tableid || '',
-    language: response.extension?.px?.language || '',
-    label: response.label || '',
+    id: response.extension?.px?.tableid ?? '',
+    language: response.extension?.px?.language ?? '',
+    label: response.label ?? '',
     description: '',
     updated: response.updated ? new Date(response.updated) : new Date(),
     variables: mapJsonToVariables(response),
@@ -113,10 +113,8 @@ function mapJsonToVariables(jsonData: Dataset): Array<Variable> {
       if (dimension.category?.index && dimension.category.label) {
         // sort the index based on index value
         const indexEntries = Object.entries(dimension.category.index);
-        const sortedindexEntries = indexEntries.sort(
-          ([, valueA], [, valueB]) => valueA - valueB,
-        );
-        for (const [code] of sortedindexEntries) {
+        indexEntries.sort(([, valueA], [, valueB]) => valueA - valueB);
+        for (const [code] of indexEntries) {
           if (
             Object.prototype.hasOwnProperty.call(dimension.category.index, code)
           ) {
