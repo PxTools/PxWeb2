@@ -1,6 +1,5 @@
 import classes from './Skeleton.module.scss';
 
- 
 export interface SkeletonProps {
   width: string;
   height: string;

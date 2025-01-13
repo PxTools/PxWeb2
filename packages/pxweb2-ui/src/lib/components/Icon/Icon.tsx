@@ -1,7 +1,6 @@
 import styles from './Icon.module.scss';
 import * as Icons from './Icons';
 
- 
 export interface IconProps {
   iconName: keyof typeof Icons;
   className?: string;

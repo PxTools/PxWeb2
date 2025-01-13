@@ -8,7 +8,6 @@ import { VariableBoxProps } from '../VariableBox';
 import Alert from '../../Alert/Alert';
 import Heading from '../../Typography/Heading/Heading';
 
- 
 type VariableBoxPropsToHeader = Pick<VariableBoxProps, 'label' | 'mandatory'>;
 
 type VariableBoxHeaderProps = VariableBoxPropsToHeader & {
