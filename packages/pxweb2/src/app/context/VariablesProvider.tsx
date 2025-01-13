@@ -29,18 +29,18 @@ export type VariablesContextType = {
 export const VariablesContext = createContext<VariablesContextType>({
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   addSelectedValues: () => {},
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+
   getSelectedValuesById: () => [],
   getSelectedValuesByIdSorted: () => [],
   getSelectedCodelistById: () => undefined,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+
   getNumberOfSelectedValues: () => 0,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   syncVariablesAndValues: () => {},
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+
   getUniqueIds: () => [],
   toString: () => '',
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+
   hasLoadedDefaultSelection: false,
   setHasLoadedDefaultSelection: () => false,
   setSelectedVBValues: () => [],
@@ -60,7 +60,6 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
     Map<string, { id: string; value: string }>
   >(new Map());
 
-  const [errorMsg, setErrorMsg] = useState('');
   const [pxTableMetadata, setPxTableMetadata] =
     useState<PxTableMetadata | null>(null);
 
