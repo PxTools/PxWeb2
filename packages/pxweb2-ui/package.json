@@ -16,7 +16,7 @@
   "dependencies": {
     "@vitejs/plugin-react": "^4.3.3",
     "clsx": "^2.1.1",
-    "motion": "^11.15.0",
+    "motion": "^11.17.0",
     "react-i18next": "^15.4.0",
     "vite-plugin-dts": "^4.5.0"
   },
