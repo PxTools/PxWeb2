@@ -8,8 +8,7 @@ import classes from './VariableBoxContent.module.scss';
 import { Checkbox, MixedCheckbox } from '../../Checkbox/Checkbox';
 import Search from '../../Search/Search';
 import { Select, SelectOption } from '../../Select/Select';
-import { VariableBoxProps } from '../VariableBox';
-import { SelectedVBValues } from '../VariableBox';
+import { VariableBoxProps, SelectedVBValues } from '../VariableBox';
 import { VartypeEnum } from '../../../shared-types/vartypeEnum';
 import { Value } from '../../../shared-types/value';
 import Skeleton from '../../Skeleton/Skeleton';
@@ -18,12 +17,19 @@ import { BodyShort } from '../../Typography/BodyShort/BodyShort';
 import Heading from '../../Typography/Heading/Heading';
 import clsx from 'clsx';
 
+const ScrollSeekPlaceholder = () => (
+  <Skeleton
+    aria-label="placeholder"
+    height={'25px'}
+    width={50 + Math.ceil(Math.random() * 15) + '%'}
+  />
+);
+
 type VariableBoxPropsToContent = Omit<
   VariableBoxProps,
   'id' | 'mandatory' | 'tableId'
 >;
 
-/* eslint-disable-next-line */
 type VariableBoxContentProps = VariableBoxPropsToContent & {
   varId: string;
   selectedValues: SelectedVBValues[];
@@ -442,7 +448,7 @@ export function VariableBoxContent({
   };
 
   // To override element styling added by Virtuoso when scrolling down
-  /* eslint-disable-next-line */
+
   const TopItemListEmptyFragment = () => <></>;
 
   //Set inital height to 44
@@ -537,13 +543,7 @@ export function VariableBoxContent({
                 onScroll={handleVirtuosoScroll}
                 totalListHeightChanged={handleTotalListHeightChanged}
                 components={{
-                  ScrollSeekPlaceholder: ({ height }) => (
-                    <Skeleton
-                      aria-label="placeholder"
-                      height={'25px'}
-                      width={50 + Math.ceil(Math.random() * 15) + '%'}
-                    />
-                  ),
+                  ScrollSeekPlaceholder,
                   TopItemList:
                     scrollingDown && search === ''
                       ? TopItemListEmptyFragment

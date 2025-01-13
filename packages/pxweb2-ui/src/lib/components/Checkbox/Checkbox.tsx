@@ -3,7 +3,6 @@ import cl from 'clsx';
 
 import styles from './Checkbox.module.scss';
 import { Icon } from '../Icon/Icon';
-import Label from '../Typography/Label/Label';
 
 interface CheckboxProps {
   id: string;

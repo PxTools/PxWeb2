@@ -57,7 +57,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   // Handle with variables are in the heading
   const [heading, setHeading] = useState<string[]>([]);
 
-  const [errorMsg, setErrorMsg] = useState('');
+  const [errorMsg] = useState('');
   const variables = useVariables();
 
   useEffect(() => {
@@ -130,7 +130,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       variablesSelection,
     );
 
-    handleStubAndHeading(pxTable, i18n);
+    handleStubAndHeading(pxTable);
     setData(pxTable);
 
     // Store as accumulated data
@@ -635,7 +635,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * @param pxTable - PxTable containing the data and metadata for display in table.
    * @param i18n - The i18n object for handling langauages
    */
-  function handleStubAndHeading(pxTable: PxTable, i18n: i18n) {
+  function handleStubAndHeading(pxTable: PxTable) {
     if (
       accumulatedData === undefined ||
       accumulatedData.metadata.id !== pxTable.metadata.id

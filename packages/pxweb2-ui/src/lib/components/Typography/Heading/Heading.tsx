@@ -3,14 +3,13 @@ import cl from 'clsx';
 
 import classes from './Heading.module.scss';
 
-/* eslint-disable-next-line */
 export interface HeadingProps extends React.HTMLAttributes<HTMLHeadingElement> {
   size?: 'xsmall' | 'small' | 'medium' | 'large' | 'xlarge';
   level?: '1' | '2' | '3' | '4' | '5' | '6';
   align?: 'start' | 'center' | 'end';
   textcolor?: 'default' | 'subtle';
   spacing?: boolean;
-  children: string;
+  children: string | React.ReactNode;
   className?: string;
   as?: React.ElementType;
 }

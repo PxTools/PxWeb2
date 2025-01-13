@@ -3,7 +3,6 @@ import cl from 'clsx';
 import classes from './Button.module.scss';
 import { Icon, IconProps } from '../Icon/Icon';
 
-/* eslint-disable-next-line */
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: 'small' | 'medium';

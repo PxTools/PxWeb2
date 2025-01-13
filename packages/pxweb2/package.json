@@ -9,7 +9,6 @@
   "scripts": {
     "start": "vite",
     "build": "vite build",
-    "lint": "eslint --fix",
     "test": "vitest run",
     "test:watch": "vitest",
     "prettier": "prettier --config ../../.prettierrc --check ./src/** --write --ignore-path ../../.prettierignore"
