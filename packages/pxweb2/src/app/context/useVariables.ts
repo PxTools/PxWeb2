@@ -3,7 +3,7 @@ import { VariablesContext, VariablesContextType } from './VariablesProvider';
 
 const useVariables = (): VariablesContextType => {
   const context = useContext(VariablesContext);
-  if (context === undefined) {
+  if (context.isInitialized === false) {
     throw new Error('useVariables must be used within a VariableProvider');
   }
   return context;
