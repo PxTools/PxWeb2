@@ -109,35 +109,52 @@ function mapJsonToVariables(jsonData: Dataset): Array<Variable> {
       Object.prototype.hasOwnProperty.call(jsonData.dimension, dimensionKey) // dimensionKey === variable id
     ) {
       const dimension = jsonData.dimension[dimensionKey];
-      const values: Array<Value> = [];
-      if (dimension.category?.index && dimension.category.label) {
-        // sort the index based on index value
-        const indexEntries = Object.entries(dimension.category.index);
-        indexEntries.sort(([, valueA], [, valueB]) => valueA - valueB);
-        for (const [code] of indexEntries) {
-          if (
-            Object.prototype.hasOwnProperty.call(dimension.category.index, code)
-          ) {
-            values.push({
-              code: code,
-              label: dimension.category.label[code],
-            });
-          }
-        }
-        if (dimension.label) {
-          variables.push({
-            id: dimensionKey,
-            label: dimension.label,
-            type: mapVariableTypeEnum(dimensionKey, jsonData),
-            mandatory: true, // How shall we handle this? The value for elimination may differ in the jsonstat2-response depending on if all values are seleccted or not...
-            values,
-          });
-        }
+      const variable = mapDimension(dimensionKey, dimension);
+      if (variable) {
+        variables.push(variable);
       }
     }
   }
 
   return variables;
+}
+
+/**
+ * Maps a dimension from a JSON-stat 2.0 response to a Variable object.
+ *
+ * @param id - The identifier of the dimension.
+ * @param dimension - The dimension object from the JSON-stat 2.0 response.
+ * @returns A Variable object if the dimension has valid categories; otherwise, null.
+ */
+function mapDimension(id: string, dimension: any): Variable | null {
+  if (!dimension.category?.index || !dimension.category.label) {
+    return null;
+  }
+
+  const values: Array<Value> = [];
+  const indexEntries = Object.entries(dimension.category.index);
+  indexEntries.sort(
+    ([, valueA], [, valueB]) => (valueA as number) - (valueB as number),
+  );
+
+  for (const [code] of indexEntries) {
+    if (Object.prototype.hasOwnProperty.call(dimension.category.index, code)) {
+      values.push({
+        code: code,
+        label: dimension.category.label[code],
+      });
+    }
+  }
+
+  const variable: Variable = {
+    id: id,
+    label: dimension.label,
+    type: mapVariableTypeEnum(dimension.id, dimension),
+    mandatory: true, // How shall we handle this? The value for elimination may differ in the jsonstat2-response depending on if all values are seleccted or not...
+    values,
+  };
+
+  return variable;
 }
 
 /**
