@@ -107,8 +107,12 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       } else {
         await fetchWithoutValidAccData(tableId, i18n, variablesSelection);
       }
-    } catch (error) {
-      setErrorMsg('Failed to fetch table data. Please try again later.');
+    } catch (error: unknown) {
+      const err = error as Error;
+
+      setErrorMsg(
+        'Failed to fetch table data. Please try again later. ' + err.message,
+      );
     }
   };
 
