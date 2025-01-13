@@ -110,10 +110,7 @@ function mapJsonToVariables(jsonData: Dataset): Array<Variable> {
     ) {
       const dimension = jsonData.dimension[dimensionKey];
       const values: Array<Value> = [];
-      if (
-        dimension.category?.index &&
-        dimension.category.label
-      ) {
+      if (dimension.category?.index && dimension.category.label) {
         // sort the index based on index value
         const indexEntries = Object.entries(dimension.category.index);
         const sortedindexEntries = indexEntries.sort(
