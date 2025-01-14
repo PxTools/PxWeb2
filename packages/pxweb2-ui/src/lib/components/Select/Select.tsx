@@ -238,6 +238,11 @@ function VariableBoxSelect({
           onClose={handleCloseModal}
         >
           <Radio
+            ref={(element) => {
+              if (element && element.value === clickedItem?.value) {
+                element.focus();
+              }
+            }}
             value={clickedItem?.value ?? ''}
             name="option"
             options={options}
