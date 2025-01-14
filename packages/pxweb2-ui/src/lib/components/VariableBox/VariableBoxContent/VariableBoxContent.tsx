@@ -385,10 +385,11 @@ export function VariableBoxContent({
           )}
         </>
       );
-    } else if (searchedValues.length === 0) {
+    } else if (searchedValues.length === 0 && search !== '') {
       return (
         <div
           className={cl(classes['variablebox-content-values-list-no-results'])}
+          aria-live="polite"
         >
           <Heading
             size="xsmall"
