@@ -1,11 +1,5 @@
 import { i18n } from 'i18next';
-import React, {
-  createContext,
-  useEffect,
-  useMemo,
-  useState,
-  ReactNode,
-} from 'react';
+import React, { createContext, useEffect, useState, ReactNode } from 'react';
 
 import useVariables from './useVariables';
 import {
@@ -113,30 +107,39 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
         selections.push(selection);
       });
-  
+
       const variablesSelection: VariablesSelection = { selection: selections };
-  
+
       // Check if we have accumulated data in the data cube and if it is valid. If not we cannot use it.
       const validAccData: boolean = isAccumulatedDataValid(
         variablesSelection,
         i18n.language,
         tableId,
       );
-  
+
       if (validAccData) {
-        await fetchWithValidAccData(tableId, i18n, isMobile, variablesSelection);
+        await fetchWithValidAccData(
+          tableId,
+          i18n,
+          isMobile,
+          variablesSelection,
+        );
       } else {
-        await fetchWithoutValidAccData(tableId, i18n, isMobile, variablesSelection);
+        await fetchWithoutValidAccData(
+          tableId,
+          i18n,
+          isMobile,
+          variablesSelection,
+        );
       }
-  
+
       if (isMobile && !isMobileMode) {
         setIsMobileMode(true);
       }
       if (!isMobile && isMobileMode) {
         setIsMobileMode(false);
-      } 
-    }
-      catch (error: unknown) {
+      }
+    } catch (error: unknown) {
       const err = error as Error;
 
       setErrorMsg(
@@ -889,9 +892,16 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       pivotToMobile,
       pivotToDesktop,
       pivotCW,
-      isInitialized
+      isInitialized,
     }),
-    [data, fetchTableData, pivotToMobile, pivotToDesktop, pivotCW, isInitialized],
+    [
+      data,
+      fetchTableData,
+      pivotToMobile,
+      pivotToDesktop,
+      pivotCW,
+      isInitialized,
+    ],
   );
 
   return (
