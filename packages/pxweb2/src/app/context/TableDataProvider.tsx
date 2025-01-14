@@ -1,5 +1,12 @@
 import { i18n } from 'i18next';
-import React, { createContext, useState, useEffect, ReactNode } from 'react';
+import React, {
+  createContext,
+  useEffect,
+  useMemo,
+  useState,
+  ReactNode,
+} from 'react';
+
 import useVariables from './useVariables';
 import {
   Dataset,
@@ -17,6 +24,7 @@ import { mapJsonStat2Response } from '../../mappers/JsonStat2ResponseMapper';
 
 // Define types for the context state and provider props
 export interface TableDataContextType {
+  isInitialized: boolean;
   data: PxTable | undefined;
   /*   loading: boolean;
   error: string | null; */
@@ -29,12 +37,14 @@ interface TableDataProviderProps {
 
 // Create context with default values
 const TableDataContext = createContext<TableDataContextType | undefined>({
+  isInitialized: false,
   data: undefined,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   fetchTableData: () => {},
 });
 
 const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
+  const [isInitialized] = useState(true);
   // Data (metadata) that reflects variables and values selected by user right now. Used as data source for the table
   const [data, setData] = useState<PxTable | undefined>(undefined);
   // Accumulated data (and metadata) from all API calls made by user. Stored in the data cube.
@@ -63,38 +73,46 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * @param i18n - The i18n object for handling langauages
    */
   const fetchTableData = async (tableId: string, i18n: i18n) => {
-    const selections: Array<VariableSelection> = [];
+    try {
+      const selections: Array<VariableSelection> = [];
 
-    // Get selection from Selection provider
-    const ids = variables.getUniqueIds();
-    ids.forEach((id) => {
-      const selectedCodeList = variables.getSelectedCodelistById(id);
-      const selection: VariableSelection = {
-        variableCode: id,
-        valueCodes: variables.getSelectedValuesByIdSorted(id),
-      };
+      // Get selection from Selection provider
+      const ids = variables.getUniqueIds();
+      ids.forEach((id) => {
+        const selectedCodeList = variables.getSelectedCodelistById(id);
+        const selection: VariableSelection = {
+          variableCode: id,
+          valueCodes: variables.getSelectedValuesByIdSorted(id),
+        };
 
-      // Add selected codelist to selection if it exists
-      if (selectedCodeList) {
-        selection.codeList = selectedCodeList;
+        // Add selected codelist to selection if it exists
+        if (selectedCodeList) {
+          selection.codeList = selectedCodeList;
+        }
+
+        selections.push(selection);
+      });
+
+      const variablesSelection: VariablesSelection = { selection: selections };
+
+      // Check if we have accumulated data in the data cube and if it is valid. If not we cannot use it.
+      const validAccData: boolean = isAccumulatedDataValid(
+        variablesSelection,
+        i18n.language,
+        tableId,
+      );
+
+      if (validAccData) {
+        await fetchWithValidAccData(tableId, i18n, variablesSelection);
+      } else {
+        await fetchWithoutValidAccData(tableId, i18n, variablesSelection);
       }
+    } catch (error: unknown) {
+      const err = error as Error;
 
-      selections.push(selection);
-    });
-
-    const variablesSelection: VariablesSelection = { selection: selections };
-
-    // Check if we have accumulated data in the data cube and if it is valid. If not we cannot use it.
-    const validAccData: boolean = isAccumulatedDataValid(
-      variablesSelection,
-      i18n.language,
-      tableId,
-    );
-
-    if (validAccData) {
-      fetchWithValidAccData(tableId, i18n, variablesSelection);
-    } else {
-      fetchWithoutValidAccData(tableId, i18n, variablesSelection);
+      setErrorMsg(
+        'Failed to fetch table data. Please try again later. ' + err.message,
+      );
     }
   };
 
@@ -116,7 +134,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       variablesSelection,
     );
 
-    handleStubAndHeading(pxTable, i18n);
+    handleStubAndHeading(pxTable);
     setData(pxTable);
 
     // Store as accumulated data
@@ -621,7 +639,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * @param pxTable - PxTable containing the data and metadata for display in table.
    * @param i18n - The i18n object for handling langauages
    */
-  function handleStubAndHeading(pxTable: PxTable, i18n: i18n) {
+  function handleStubAndHeading(pxTable: PxTable) {
     if (
       accumulatedData === undefined ||
       accumulatedData.metadata.id !== pxTable.metadata.id
@@ -676,10 +694,25 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     }
   }
 
+  const memoizedValues = useMemo(
+    () => ({
+      isInitialized,
+      data,
+      // loading,
+      // error,
+      fetchTableData,
+    }),
+    [
+      isInitialized,
+      data,
+      // loading,
+      // error,
+      fetchTableData,
+    ],
+  );
+
   return (
-    <TableDataContext.Provider
-      value={{ data, /* loading, error  */ fetchTableData }}
-    >
+    <TableDataContext.Provider value={memoizedValues}>
       {children}
     </TableDataContext.Provider>
   );

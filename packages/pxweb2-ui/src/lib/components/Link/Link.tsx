@@ -35,6 +35,7 @@ export function Link({
         [classes[`bodyshort-${size}`]]: size,
         [classes[`padding-${size}`]]: size,
       })}
+      {...rest}
     >
       {icon && iconPosition === 'left' && (
         <Icon iconName={icon} className=""></Icon>

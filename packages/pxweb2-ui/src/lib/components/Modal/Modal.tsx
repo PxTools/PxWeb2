@@ -90,18 +90,14 @@ export function Modal({
     >
       <div className={cl(classes.header)}>
         <div className={cl(classes.headerContent)}>
-          <div className={cl(classes.headings)}>
+          <Heading level="3" className={cl(classes.headings)}>
             {label && (
               <Label size="medium" textcolor="default">
                 {label}
               </Label>
             )}
-            {heading && (
-              <Heading size="medium" textcolor="default">
-                {heading}
-              </Heading>
-            )}
-          </div>
+            {heading && <span>{heading}</span>}
+          </Heading>
           <div className={cl(classes.xMarkWrapper)}>
             <Button
               variant="tertiary"

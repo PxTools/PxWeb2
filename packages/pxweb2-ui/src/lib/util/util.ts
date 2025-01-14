@@ -7,12 +7,12 @@ export const getCSSVariable = (variable: string): string => {
   return cssVar;
 };
 
-export const mapCodeListToSelectOption = (
-  codeList: CodeList,
-): SelectOption => ({
-  label: codeList.label,
-  value: codeList.id,
-});
+export const mapCodeListToSelectOption = (codeList: CodeList): SelectOption => {
+  return {
+    label: codeList.label,
+    value: codeList.id,
+  };
+};
 
 // return array of SelectOption objects
 export const mapCodeListsToSelectOptions = (
