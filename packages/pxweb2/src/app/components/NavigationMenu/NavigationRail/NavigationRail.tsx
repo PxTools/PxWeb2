@@ -21,57 +21,57 @@ export const NavigationRail: React.FC<NavigationRailProps> = ({
 
   return (
     <div
-      role='list'
+      role="list"
       className={styles.navigationRail}
       aria-label={t('presentation_page.sidemenu.arialabeltoolsidemenu')}
     >
       <LazyMotion features={loadFeatures}>
         <MotionConfig reducedMotion="user">
-             <Item
-                parentName="navRail"
-                label={t('presentation_page.sidemenu.selection.title')}
-                selected={selected === 'filter'}
-                icon={'Controls'}
-                onClick={() => {
-                  onChange('filter');
-                }}
-              />
-              <Item
-                parentName="navRail"
-                label={t('presentation_page.sidemenu.view.title')}
-                selected={selected === 'view'}
-                icon={'BarChart'}
-                onClick={() => {
-                  onChange('view');
-                }}
-              />
-              <Item
-                parentName="navRail"
-                label={t('presentation_page.sidemenu.edit.title')}
-                selected={selected === 'edit'}
-                icon={'ArrowsUpDown'}
-                onClick={() => {
-                  onChange('edit');
-                }}
-              />
-              <Item
-                parentName="navRail"
-                label={t('presentation_page.sidemenu.save.title')}
-                selected={selected === 'save'}
-                icon={'FloppyDisk'}
-                onClick={() => {
-                  onChange('save');
-                }}
-              />
-              <Item
-                parentName="navRail"
-                label={t('presentation_page.sidemenu.help.title')}
-                selected={selected === 'help'}
-                icon={'QuestionMarkCircle'}
-                onClick={() => {
-                  onChange('help');
-                }}
-              />
+          <Item
+            parentName="navRail"
+            label={t('presentation_page.sidemenu.selection.title')}
+            selected={selected === 'filter'}
+            icon={'Controls'}
+            onClick={() => {
+              onChange('filter');
+            }}
+          />
+          <Item
+            parentName="navRail"
+            label={t('presentation_page.sidemenu.view.title')}
+            selected={selected === 'view'}
+            icon={'BarChart'}
+            onClick={() => {
+              onChange('view');
+            }}
+          />
+          <Item
+            parentName="navRail"
+            label={t('presentation_page.sidemenu.edit.title')}
+            selected={selected === 'edit'}
+            icon={'ArrowsUpDown'}
+            onClick={() => {
+              onChange('edit');
+            }}
+          />
+          <Item
+            parentName="navRail"
+            label={t('presentation_page.sidemenu.save.title')}
+            selected={selected === 'save'}
+            icon={'FloppyDisk'}
+            onClick={() => {
+              onChange('save');
+            }}
+          />
+          <Item
+            parentName="navRail"
+            label={t('presentation_page.sidemenu.help.title')}
+            selected={selected === 'help'}
+            icon={'QuestionMarkCircle'}
+            onClick={() => {
+              onChange('help');
+            }}
+          />
         </MotionConfig>
       </LazyMotion>
     </div>

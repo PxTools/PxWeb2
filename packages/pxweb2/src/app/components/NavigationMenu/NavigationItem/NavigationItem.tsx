@@ -60,7 +60,7 @@ export const Item: React.FC<ItemProps> = ({
 
   return (
     <m.button
-      role='listitem'
+      role="listitem"
       className={cl(
         { [styles.selected]: selected },
         styles.item,
