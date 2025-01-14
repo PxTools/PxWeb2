@@ -36,15 +36,18 @@ interface AccessibilityProviderProps {
 export const AccessibilityProvider = ({
   children,
 }: AccessibilityProviderProps) => {
-  const [focusableElements, setFocusableElements] = useState<
-    FocusableElement[]
-  >([]);
   const [modals, setModals] = useState<
     {
       name: string;
       closeFunction: () => void;
     }[]
   >([]);
+
+  React.useEffect(() => {
+    if (location.href.indexOf('localhost') > -1) {
+      console.log('PxWeb2 - AccessibilityProvider - Modals:', modals);
+    }
+  }, [modals]);
 
   const closeModal = React.useCallback(() => {
     setModals((prev) => {
