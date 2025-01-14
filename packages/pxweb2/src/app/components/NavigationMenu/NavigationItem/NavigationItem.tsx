@@ -60,6 +60,7 @@ export const Item: React.FC<ItemProps> = ({
 
   return (
     <m.button
+      role='listitem'
       className={cl(
         { [styles.selected]: selected },
         styles.item,
@@ -68,6 +69,7 @@ export const Item: React.FC<ItemProps> = ({
       onClick={onClick}
       type="button"
       id={btnId}
+      aria-current={selected}
       // Framer Motion animations
       key={selected.toString()} // Needed by motion to re-run the animation when the selected state changes, toString for type compatibility
       initial={'initial'}
