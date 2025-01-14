@@ -4,6 +4,7 @@ import styles from './NavigationDrawer.module.scss';
 import { Heading, Icon, Label } from '@pxweb2/pxweb2-ui';
 import { useTranslation } from 'react-i18next';
 import i18next from 'i18next';
+import { useAccessibility } from '../../context/AccessibilityProvider';
 
 export interface NavigationDrawerProps {
   children: React.ReactNode;
@@ -24,6 +25,17 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
   onClose,
 }) => {
   const { t } = useTranslation();
+  const { addModal, removeModal } = useAccessibility();
+
+  React.useEffect(() => {
+    addModal('NavigationDrawer', () => {
+      onClose(true, view);
+    });
+
+    return () => {
+      removeModal('NavigationDrawer');
+    };
+  }, [addModal, removeModal, onClose, view]);
 
   // Handle RTL languages
   const hideIcon = i18next.dir() === 'rtl' ? 'ChevronRight' : 'ChevronLeft';

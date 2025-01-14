@@ -2,6 +2,8 @@ import { render } from '@testing-library/react';
 
 import App from './app';
 import { MemoryRouter } from 'react-router';
+import { AccessibilityProvider } from './context/AccessibilityProvider';
+
 window.PxWeb2Config = {
   language: {
     supportedLanguages: [
@@ -18,9 +20,11 @@ window.PxWeb2Config = {
 describe('App', () => {
   it('should render successfully', () => {
     const { baseElement } = render(
-      <MemoryRouter>
-        <App />
-      </MemoryRouter>,
+      <AccessibilityProvider>
+        <MemoryRouter>
+          <App />
+        </MemoryRouter>
+      </AccessibilityProvider>,
     );
     expect(baseElement).toBeTruthy();
   });

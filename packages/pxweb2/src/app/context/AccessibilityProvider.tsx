@@ -4,6 +4,7 @@ import React, {
   useEffect,
   useState,
   ReactNode,
+  useMemo,
 } from 'react';
 
 interface FocusableElement {
@@ -13,10 +14,9 @@ interface FocusableElement {
 }
 
 interface AccessibilityContextType {
-  registerFocusable: (id: string, element: HTMLElement, order?: number) => void;
-  unregisterFocusable: (id: string) => void;
-  updateFocusOrder: (id: string, newOrder: number) => void;
-  closeModals: () => void;
+  addModal: (name: string, closeFunction: () => void) => void;
+  closeModal: () => void;
+  removeModal: (name: string) => void;
 }
 
 const AccessibilityContext = createContext<AccessibilityContextType | null>(
@@ -27,74 +27,63 @@ interface AccessibilityProviderProps {
   children: ReactNode;
 }
 
+/**
+ * AccessibilityProvider makes it easier to handle which modal should be closed when pressing escape.
+ * It also makes it easier to handle focus order for focusable elements.
+ * If there are focusable elements it will override the default focus order and use the current order until the end of the order.
+ */
+
 export const AccessibilityProvider = ({
   children,
 }: AccessibilityProviderProps) => {
   const [focusableElements, setFocusableElements] = useState<
     FocusableElement[]
   >([]);
-  const [openModals, setOpenModals] = useState<string[]>([]);
+  const [modals, setModals] = useState<
+    {
+      name: string;
+      closeFunction: () => void;
+    }[]
+  >([]);
 
-  const registerFocusable = (id: string, element: HTMLElement, order = 0) => {
-    setFocusableElements((prev) =>
-      [...prev, { id, ref: element, order }].sort((a, b) => a.order - b.order),
-    );
-  };
+  const closeModal = React.useCallback(() => {
+    setModals((prev) => {
+      if (prev.length === 0) return prev;
+      prev[prev.length - 1].closeFunction();
+      return prev.slice(0, -1);
+    });
+  }, []);
 
-  const unregisterFocusable = (id: string) => {
-    setFocusableElements((prev) => prev.filter((element) => element.id !== id));
-  };
+  const removeModal = React.useCallback((name: string) => {
+    setModals((prev) => prev.filter((modal) => modal.name !== name));
+  }, []);
 
-  const updateFocusOrder = (id: string, newOrder: number) => {
-    setFocusableElements((prev) =>
-      prev
-        .map((element) =>
-          element.id === id ? { ...element, order: newOrder } : element,
-        )
-        .sort((a, b) => a.order - b.order),
-    );
-  };
-
-  const closeModals = () => {
-    setOpenModals([]);
-    // You might want to emit an event or call a callback here
-    // to let modal components know they should close
-  };
+  const addModal = React.useCallback(
+    (name: string, closeFunction: () => void) => {
+      setModals((prev) => [...prev, { name, closeFunction }]);
+    },
+    [],
+  );
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        closeModals();
-      }
-
-      if (event.key === 'Tab') {
-        const focusableRefs = focusableElements.map((el) => el.ref);
-        const currentIndex = focusableRefs.indexOf(
-          document.activeElement as HTMLElement,
-        );
-
-        if (event.shiftKey) {
-          if (currentIndex <= 0) {
-            event.preventDefault();
-            focusableRefs[focusableRefs.length - 1]?.focus();
-          }
-        } else if (currentIndex === focusableRefs.length - 1) {
-          event.preventDefault();
-          focusableRefs[0]?.focus();
-        }
+        closeModal();
       }
     };
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [focusableElements]);
+  }, [closeModal]);
 
-  const value = {
-    registerFocusable,
-    unregisterFocusable,
-    updateFocusOrder,
-    closeModals,
-  };
+  const value = React.useMemo(
+    () => ({
+      addModal,
+      closeModal,
+      removeModal,
+    }),
+    [addModal, closeModal, removeModal],
+  );
 
   return (
     <AccessibilityContext.Provider value={value}>

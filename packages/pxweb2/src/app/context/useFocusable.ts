@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+/* import { useEffect, useRef } from 'react';
 import { useAccessibility } from './AccessibilityProvider';
 
 interface UseFocusableProps {
@@ -22,3 +22,4 @@ export const useFocusable = ({ id, order = 0 }: UseFocusableProps) => {
 
   return ref;
 };
+ */
