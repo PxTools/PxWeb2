@@ -30,7 +30,7 @@ export function Modal({
 }: ModalProps) {
   const { t } = useTranslation();
   const cssClasses = className.length > 0 ? ' ' + className : '';
-  const [isModalOpen, setModalOpen] = useState(isOpen);
+  const [isModalOpen, setIsModalOpen] = useState(isOpen);
   const modalRef = useRef<HTMLDialogElement | null>(null);
   let cancelLabelValue = cancelLabel;
   let confirmLabelValue = confirmLabel;
@@ -43,7 +43,7 @@ export function Modal({
   }
 
   useEffect(() => {
-    setModalOpen(isOpen);
+    setIsModalOpen(isOpen);
   }, [isOpen]);
 
   useEffect(() => {
@@ -71,7 +71,7 @@ export function Modal({
     if (onClose) {
       onClose(updated);
     }
-    setModalOpen(false); // Ensure that the modal's state is updated when it's closed
+    setIsModalOpen(false); // Ensure that the modal's state is updated when it's closed
   };
 
   const handleKeyDown = async (
