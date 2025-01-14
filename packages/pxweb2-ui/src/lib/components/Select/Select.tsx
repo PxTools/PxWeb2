@@ -202,6 +202,8 @@ function VariableBoxSelect({
       <div
         className={cl(classes.selectVariabelbox) + cssClasses}
         tabIndex={tabIndex}
+        role="button"
+        aria-haspopup="dialog"
         onClick={() => {
           handleOpenModal();
         }}
