@@ -39,6 +39,8 @@ type VariableBoxContentProps = VariableBoxPropsToContent & {
     allValuesSelected: string,
     searchValues: Value[],
   ) => void;
+  addModal: (name: string, closeFunction: () => void) => void;
+  removeModal: (name: string) => void;
 };
 
 export function VariableBoxContent({
@@ -53,6 +55,8 @@ export function VariableBoxContent({
   onChangeCodeList,
   onChangeCheckbox,
   onChangeMixedCheckbox,
+  addModal,
+  removeModal,
 }: VariableBoxContentProps) {
   const { t } = useTranslation();
   const checkboxSelectAllText = t(
@@ -477,6 +481,8 @@ export function VariableBoxContent({
               placeholder={t(
                 'presentation_page.sidemenu.selection.variablebox.content.select.placeholder',
               )}
+              addModal={addModal}
+              removeModal={removeModal}
               options={mappedCodeLists}
               selectedOption={selectedCodeListOrUndefined}
               onChange={(selectedItem) =>

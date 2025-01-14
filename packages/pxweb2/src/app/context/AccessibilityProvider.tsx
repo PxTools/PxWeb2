@@ -60,7 +60,10 @@ export const AccessibilityProvider = ({
 
   const addModal = React.useCallback(
     (name: string, closeFunction: () => void) => {
-      setModals((prev) => [...prev, { name, closeFunction }]);
+      setModals((prev) => {
+        const filteredModals = prev.filter((modal) => modal.name !== name);
+        return [...filteredModals, { name, closeFunction }];
+      });
     },
     [],
   );

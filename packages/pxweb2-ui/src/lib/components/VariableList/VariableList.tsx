@@ -24,6 +24,8 @@ export type VariableListProps = {
     allValuesSelected: string,
     searchValues: Value[],
   ) => void;
+  addModal: (name: string, closeFunction: () => void) => void;
+  removeModal: (name: string) => void;
 };
 
 export function VariableList({
@@ -35,6 +37,8 @@ export function VariableList({
   handleCodeListChange,
   handleCheckboxChange,
   handleMixedCheckboxChange,
+  addModal,
+  removeModal,
 }: VariableListProps) {
   return (
     <div
@@ -63,6 +67,8 @@ export function VariableList({
                 onChangeCodeList={handleCodeListChange}
                 onChangeMixedCheckbox={handleMixedCheckboxChange}
                 onChangeCheckbox={handleCheckboxChange}
+                addModal={addModal}
+                removeModal={removeModal}
               />
             ),
         )}

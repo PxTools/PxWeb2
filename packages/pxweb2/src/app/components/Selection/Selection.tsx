@@ -20,6 +20,7 @@ import NavigationDrawer from '../../components/NavigationDrawer/NavigationDrawer
 import useVariables from '../../context/useVariables';
 import { NavigationItem } from '../../components/NavigationMenu/NavigationItem/NavigationItemType';
 import { sassNull } from 'sass';
+import { useAccessibility } from '../../context/AccessibilityProvider';
 
 function addSelectedCodeListToVariable(
   currentVariable: SelectedVBValues | undefined,
@@ -271,6 +272,7 @@ export function Selection({
 
   //  Needed to know when the language has changed, so we can reload the default selection
   const [prevLang, setPrevLang] = useState('');
+  const { addModal, removeModal } = useAccessibility();
 
   useEffect(() => {
     let shouldGetDefaultSelection = !hasLoadedDefaultSelection;
@@ -538,6 +540,8 @@ export function Selection({
       handleCodeListChange={handleCodeListChange}
       handleCheckboxChange={handleCheckboxChange}
       handleMixedCheckboxChange={handleMixedCheckboxChange}
+      addModal={addModal}
+      removeModal={removeModal}
     />
   );
   const drawerView = <>View content</>;
