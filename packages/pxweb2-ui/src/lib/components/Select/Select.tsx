@@ -170,7 +170,7 @@ function VariableBoxSelect({
 }: VariableBoxSelectProps) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
 
-  const [isModalOpen, setModalOpen] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [clickedItem, setClickedItem] = useState<SelectOption | undefined>(
     selectedOption,
   );
@@ -178,7 +178,7 @@ function VariableBoxSelect({
   const selectedItem: SelectOption | undefined = selectedOption;
 
   const handleOpenModal = () => {
-    setModalOpen(true);
+    setIsModalOpen(true);
 
     // Reset clicked item to selected item, incase user made changes and then closed the modal
     setClickedItem(selectedItem);
@@ -189,7 +189,7 @@ function VariableBoxSelect({
   }
 
   const handleCloseModal = (updated: boolean) => {
-    setModalOpen(false);
+    setIsModalOpen(false);
     if (updated) {
       onChange(clickedItem);
     } else {
