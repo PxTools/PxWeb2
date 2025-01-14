@@ -7,7 +7,6 @@
     "build": "npm run build-style-dictionary && storybook build && mv ./storybook-static ../pxweb2/dist/storybook",
     "build-style-dictionary": "node ./style-dictionary/build.mjs",
     "storybook": "storybook dev -p 6006",
-    "lint": "eslint --fix",
     "test": "vitest run",
     "test:watch": "vitest",
     "prettier": "prettier --config ../../.prettierrc --check ./src/** --write --ignore-path ../../.prettierignore"
@@ -17,9 +16,9 @@
   "dependencies": {
     "@vitejs/plugin-react": "^4.3.3",
     "clsx": "^2.1.1",
-    "motion": "^11.15.0",
+    "motion": "^11.17.0",
     "react-i18next": "^15.4.0",
-    "vite-plugin-dts": "^4.4.0"
+    "vite-plugin-dts": "^4.5.0"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^3.2.2",

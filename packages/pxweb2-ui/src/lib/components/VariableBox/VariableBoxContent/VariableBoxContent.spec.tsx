@@ -1,4 +1,4 @@
-import { getAllByRole, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 
 import VariableBoxContent from './VariableBoxContent';
 import { VartypeEnum } from '../../../shared-types/vartypeEnum';

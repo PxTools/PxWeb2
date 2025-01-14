@@ -265,6 +265,12 @@ export function Selection({
   const [prevLang, setPrevLang] = useState('');
 
   useEffect(() => {
+    if (errorMsg) {
+      console.error('Selection.tsx', errorMsg);
+    }
+  }, [errorMsg]);
+
+  useEffect(() => {
     let shouldGetDefaultSelection = !hasLoadedDefaultSelection;
 
     if (!selectedTabId) {
@@ -312,7 +318,7 @@ export function Selection({
           variables.setIsLoadingMetadata(false);
         }
       })
-      .catch((error) => {
+      .catch(() => {
         setErrorMsg('Could not get table: ' + selectedTabId);
         setPxTableMetadata(null);
       });
@@ -332,7 +338,7 @@ export function Selection({
           variables.setIsLoadingMetadata(false);
           variables.setHasLoadedDefaultSelection(true);
         })
-        .catch((error) => {
+        .catch(() => {
           setErrorMsg('Error getting default selection: ' + selectedTabId);
         });
     }

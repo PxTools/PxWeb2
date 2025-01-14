@@ -33,7 +33,9 @@ export function Alert({
   const HandleClose = () => {
     setIsVisible(false);
   };
-  if (!isVisible) return null;
+  if (!isVisible) {
+    return null;
+  }
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
