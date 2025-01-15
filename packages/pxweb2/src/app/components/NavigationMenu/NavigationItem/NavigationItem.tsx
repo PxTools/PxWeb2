@@ -64,7 +64,7 @@ export const Item: React.FC<ItemProps> = ({
         className={cl(
           { [styles.selected]: selected },
           styles.item,
-          styles[`${parentName}Item`]
+          styles[`${parentName}Item`],
         )}
         onClick={onClick}
         type="button"
