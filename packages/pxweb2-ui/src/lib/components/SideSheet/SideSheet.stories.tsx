@@ -13,6 +13,9 @@ const content = 'Any content...';
 export const Default = {
   args: {
     isOpen: true,
+    onClose: () => {
+      console.log('Modal closed');
+    },
     children: <div>{content}</div>,
   },
 
@@ -25,7 +28,12 @@ export const Default = {
 
 export const Open: StoryFn<typeof SideSheet> = () => {
   return (
-    <SideSheet isOpen={true}>
+    <SideSheet
+      isOpen={true}
+      onClose={() => {
+        alert('SideSheet closed');
+      }}
+    >
       <div>Any content</div>
     </SideSheet>
   );
