@@ -216,15 +216,32 @@ export function VariableBoxContent({
     event: React.KeyboardEvent<HTMLDivElement>,
   ) => {
     const { key } = event;
+    const isSearchFocused = document.activeElement?.id === `${varId}-search`;
 
-    if (key !== 'ArrowDown' && key !== 'ArrowUp') {
+    // Allow typing if search is focused and not pressing arrow keys
+    if (isSearchFocused && key !== 'ArrowDown') {
+      return;
+    }
+
+    if (key !== 'ArrowDown' && key !== 'ArrowUp' && key !== ' ') {
       return;
     }
     event.preventDefault();
+
     let newIndex = currentFocusedItemIndex;
 
+    if (key === ' ') {
+      const item = items[currentFocusedItemIndex ?? 0];
+      if (item && item.type === 'value' && item.value) {
+        onChangeCheckbox(varId, item.value.code);
+      }
+    }
+
     if (key === 'ArrowDown') {
-      if (
+      if (isSearchFocused) {
+        // If search is focused, move to first item after search
+        newIndex = 1;
+      } else if (
         currentFocusedItemIndex === null ||
         currentFocusedItemIndex < items.length - 1
       ) {
@@ -233,6 +250,8 @@ export function VariableBoxContent({
     } else if (key === 'ArrowUp') {
       if (currentFocusedItemIndex !== null && currentFocusedItemIndex > 0) {
         newIndex = currentFocusedItemIndex - 1;
+        setScrollingDown(false);
+        virtuosoRef.current?.scrollToIndex(0);
       }
     }
 
@@ -456,6 +475,22 @@ export function VariableBoxContent({
     setCalcedHeight(height);
   };
 
+  // Effect to scroll to focused item
+  useEffect(() => {
+    if (currentFocusedItemIndex !== null && virtuosoRef.current) {
+      virtuosoRef.current.scrollToIndex({
+        index: currentFocusedItemIndex,
+        align: 'center',
+      });
+    }
+  }, [currentFocusedItemIndex]);
+
+  const handleSelectFocus = () => {
+    setScrollingDown(false);
+
+    console.log('SCROLLED TO TOP');
+  };
+
   return (
     <div className={cl(classes['variablebox-content'])}>
       <div
@@ -465,7 +500,10 @@ export function VariableBoxContent({
         }}
       >
         {hasCodeLists === true && (
-          <div className={cl(classes['variablebox-content-select'])}>
+          <div
+            onFocus={handleSelectFocus}
+            className={cl(classes['variablebox-content-select'])}
+          >
             <Select
               variant="inVariableBox"
               label={t(
