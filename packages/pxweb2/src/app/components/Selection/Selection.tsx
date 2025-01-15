@@ -559,7 +559,9 @@ export function Selection({
         onClose={(keyboard, view) =>
           setSelectedNavigationView(keyboard, true, view)
         }
-        view="filter"
+        view={
+          selectedNavigationView as 'filter' | 'view' | 'edit' | 'save' | 'help'
+        }
         openedWithKeyboard={openedWithKeyboard}
       >
         {selectedNavigationView === 'filter' && drawerFilter}

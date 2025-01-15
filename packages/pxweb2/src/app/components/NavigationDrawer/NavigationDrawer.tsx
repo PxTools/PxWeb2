@@ -43,6 +43,11 @@ export const NavigationDrawer = forwardRef<
       onClose(true, view);
     }
   }
+  React.useEffect(() => {
+    if (ref && typeof ref !== 'function') {
+      ref.current?.focus();
+    }
+  }, [view]);
 
   React.useEffect(() => {
     if (openedWithKeyboard && ref && typeof ref !== 'function') {
