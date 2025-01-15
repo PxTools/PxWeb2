@@ -150,6 +150,7 @@ interface Resources {
         };
       };
       main_content: {
+        arialabelbreadcrumb: 'breadcrumb';
         last_updated: 'Last updated';
         show_details: 'Show details';
         table: {

@@ -25,8 +25,8 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
     <>
       <div onClick={onClose} className={styles.backdrop}></div>
       <div className={cl(styles.navigationDrawer, styles.fadein)}>
-        <div className={styles.heading}>
-          <Heading level="2" size="medium">
+        <div role="region" aria-labelledby={heading} className={styles.heading}>
+          <Heading level="2" size="medium" >
             {heading}
           </Heading>
           <div

@@ -149,6 +149,7 @@
       }
     },
     "main_content": {
+      "arialabelbreadcrumb": "مسار التنقل",
       "last_updated": "آخر تحديث",
       "show_details": "إظهار التفاصيل",
       "table": {
