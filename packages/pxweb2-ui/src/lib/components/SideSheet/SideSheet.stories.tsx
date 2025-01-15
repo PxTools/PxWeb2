@@ -24,8 +24,8 @@ export const Default = {
 
 export const Open: StoryFn<typeof SideSheet> = () => {
   return (
-        <SideSheet>
-          <div>Any content</div>
-        </SideSheet>
+    <SideSheet>
+      <div>Any content</div>
+    </SideSheet>
   );
 };
