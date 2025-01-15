@@ -21,7 +21,10 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
   const { t } = useTranslation();
   return (
     <div className={cl(classes[`content-top`])}>
-      <div className={cl(classes.breadcrumbs)} aria-label={t('presentation_page.main_content.arialabelbreadcrumb')}>
+      <div
+        className={cl(classes.breadcrumbs)}
+        aria-label={t('presentation_page.main_content.arialabelbreadcrumb')}
+      >
         <div className={cl(classes[`breadcrumbs-wrapper`])}>
           <Link href="#" inline>
             <BodyLong>PxWeb 2.0</BodyLong>
