@@ -452,8 +452,8 @@ function createRowMobile({
           //   tableRow = [];
           break;
         }
-        case stubLength - 2: // speacia
-        {
+        case stubLength - 2: {
+          // speacia
           createSecondLastMobileHeader(stubIndex, cellMeta, val, i, tableRows);
           // second last level
           // tableRow.push(
