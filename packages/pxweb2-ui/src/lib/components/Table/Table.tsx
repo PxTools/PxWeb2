@@ -5,6 +5,7 @@ import classes from './Table.module.scss';
 import { PxTable } from '../../shared-types/pxTable';
 import { calculateRowAndColumnMeta, columnRowMeta } from './columnRowMeta';
 import { getPxTableData } from './cubeHelper';
+import { Value } from '../../shared-types/value';
 
 export interface TableProps {
   readonly pxtable: PxTable;
@@ -22,6 +23,17 @@ type DataCellMeta = {
   varPos: number; // variable position in stored data
   htmlId: string; // id used in th. Will build up the headers attribute for datacells. For accesability
 };
+
+interface CreateRowParams {
+  stubIndex: number;
+  rowSpan: number;
+  stubIteration: number;
+  table: PxTable;
+  tableMeta: columnRowMeta;
+  stubDataCellCodes: DataCellCodes;
+  headingDataCellCodes: DataCellCodes[];
+  tableRows: React.JSX.Element[];
+}
 
 /**
  * Represents the metadata for multiple dimensions of a data cell.
@@ -188,27 +200,27 @@ export function createRows(
   const stubDatacellCodes: DataCellCodes = new Array<DataCellMeta>();
   if (table.stub.length > 0) {
     if (isMobile) {
-      createRowMobile(
-        0,
-        tableMeta.rows - tableMeta.rowOffset,
-        0,
+      createRowMobile({
+        stubIndex: 0,
+        rowSpan: tableMeta.rows - tableMeta.rowOffset,
+        stubIteration: 0,
         table,
         tableMeta,
-        stubDatacellCodes,
+        stubDataCellCodes: stubDatacellCodes,
         headingDataCellCodes,
         tableRows,
-      );
+      });
     } else {
-      createRowDesktop(
-        0,
-        tableMeta.rows - tableMeta.rowOffset,
-        0,
+      createRowDesktop({
+        stubIndex: 0,
+        rowSpan: tableMeta.rows - tableMeta.rowOffset,
+        stubIteration: 0,
         table,
         tableMeta,
-        stubDatacellCodes,
+        stubDataCellCodes: stubDatacellCodes,
         headingDataCellCodes,
         tableRows,
-      );
+      });
     }
   } else {
     const tableRow: React.JSX.Element[] = [];
@@ -228,6 +240,7 @@ export function createRows(
 
   return tableRows;
 }
+
 /**
  * Creates the rows for the table based on the stub variables. For mobile devices
  *
@@ -241,28 +254,34 @@ export function createRows(
  * @param tableRows - An array of React.JSX.Element representing the rows of the table.
  * @returns An array of React.JSX.Element representing the rows of the table.
  */
-function createRowDesktop(
-  stubIndex: number,
-  rowSpan: number,
-  stubIteration: number,
-  table: PxTable,
-  tableMeta: columnRowMeta,
-  stubDataCellCodes: DataCellCodes,
-  headingDataCellCodes: DataCellCodes[],
-  tableRows: React.JSX.Element[],
-): React.JSX.Element[] {
+
+/**
+ * Creates the rows for the table based on the stub variables. For desktop devices.
+ *
+ * @param params - The parameters for creating the row.
+ * @returns An array of React.JSX.Element representing the rows of the table.
+ */
+function createRowDesktop({
+  stubIndex,
+  rowSpan,
+  stubIteration,
+  table,
+  tableMeta,
+  stubDataCellCodes,
+  headingDataCellCodes,
+  tableRows,
+}: CreateRowParams): React.JSX.Element[] {
   // Calculate the rowspan for all the cells to add in this call
   rowSpan = rowSpan / table.stub[stubIndex].values.length;
 
   let tableRow: React.JSX.Element[] = [];
 
   // Loop through all the values in the stub variable
-  for (let i = 0; i < table.stub[stubIndex].values.length; i++) {
+  for (const val of table.stub[stubIndex].values) {
     if (stubIndex === 0) {
       stubIteration++;
     }
 
-    const val = table.stub[stubIndex].values[i];
     const cellMeta: DataCellMeta = {
       varId: table.stub[stubIndex].id,
       valCode: val.code,
@@ -303,8 +322,8 @@ function createRowDesktop(
       tableRow = [];
 
       // Create a new row for the next stub
-      createRowDesktop(
-        stubIndex + 1,
+      createRowDesktop({
+        stubIndex: stubIndex + 1,
         rowSpan,
         stubIteration,
         table,
@@ -312,7 +331,7 @@ function createRowDesktop(
         stubDataCellCodes,
         headingDataCellCodes,
         tableRows,
-      );
+      });
       stubDataCellCodes.pop();
     } else {
       // If no more stubs need to add headers then fill the row with data
@@ -345,23 +364,26 @@ function createRowDesktop(
  * @param tableRows - An array of React.JSX.Element representing the rows of the table.
  * @returns An array of React.JSX.Element representing the rows of the table.
  */
-function createRowMobile(
-  stubIndex: number,
-  rowSpan: number,
-  stubIteration: number,
-  table: PxTable,
-  tableMeta: columnRowMeta,
-  stubDataCellCodes: DataCellCodes,
-  headingDataCellCodes: DataCellCodes[],
-  tableRows: React.JSX.Element[],
-): React.JSX.Element[] {
+function createRowMobile({
+  stubIndex,
+  rowSpan,
+  stubIteration,
+  table,
+  tableMeta,
+  stubDataCellCodes,
+  headingDataCellCodes,
+  tableRows,
+}: CreateRowParams): React.JSX.Element[] {
+  const stubValuesLength = table.stub[stubIndex].values.length;
+  const stubLength = table.stub.length;
   // Calculate the rowspan for all the cells to add in this call
-  rowSpan = rowSpan / table.stub[stubIndex].values.length;
+  rowSpan = rowSpan / stubValuesLength;
 
   let tableRow: React.JSX.Element[] = [];
 
   // Loop through all the values in the stub variable
-  for (let i = 0; i < table.stub[stubIndex].values.length; i++) {
+  //const stubValuesLength = table.stub[stubIndex].values.length;
+  for (let i = 0; i < stubValuesLength; i++) {
     if (stubIndex === 0) {
       stubIteration++;
     }
@@ -379,87 +401,34 @@ function createRowMobile(
     if (rowSpan === 0) {
       rowSpan = 1;
     }
-    let lastValueOfLastStub;
-    if (
-      // isMobile &&
-      stubIndex === table.stub.length - 1 &&
-      i === table.stub[stubIndex].values.length - 1
-    ) {
+    let lastValueOfLastStub = false;
+    if (stubIndex === stubLength - 1 && i === stubValuesLength - 1) {
       // the last value of last level stub
       lastValueOfLastStub = true;
     }
     // If there are more stub variables that need to add headers to this row
-    if (table.stub.length > stubIndex + 1) {
-      // Repeat the headers for all stubs except the 2 last levels
-      if (stubIndex === table.stub.length - 3) {
-        for (let n = 0; n <= table.stub.length - 3; n++) {
-          tableRow.push(
-            <th
-              id={stubDataCellCodes[n].htmlId}
-              scope="row"
-              role="rowheader"
-              className={cl(classes.stub, classes[`stub-${stubIndex}`])}
-              key={getNewKey()}
-            >
-              {stubDataCellCodes[n].valLabel}
-            </th>,
+    if (stubLength > stubIndex + 1) {
+      switch (stubIndex) {
+        case stubLength - 3: {
+          // third last level
+          // Repeat the headers for all stubs except the 2 last levels
+          createRepeatedMobileHeader(
+            stubLength,
+            stubIndex,
+            stubDataCellCodes,
+            tableRows,
           );
-          fillEmpty(tableMeta, tableRow);
-          tableRows.push(
-            <tr
-              className={cl(
-                { [classes.firstdim]: n === 0 },
-                {
-                  [classes.mobileRowHeadThirdLastStub]:
-                    n === table.stub.length - 3,
-                },
-                classes.mobileEmptyRowCell,
-              )}
-              key={getNewKey()}
-            >
-              {tableRow}
-            </tr>,
-          );
-          tableRow = [];
+          break;
         }
-      } else {
-        // second last level
-        // if (stubIndex > table.stub.length - 3) {
-        if (stubIndex === table.stub.length - 2) {
-          tableRow.push(
-            <th
-              id={cellMeta.htmlId}
-              scope="row"
-              role="rowheader"
-              className={cl(classes.stub, classes[`stub-${stubIndex}`])}
-              key={getNewKey()}
-            >
-              {val.label}
-            </th>,
-          );
-
-          // make the rest of this row empty
-          fillEmpty(tableMeta, tableRow);
-
-          tableRows.push(
-            <tr
-              className={cl(
-                { [classes.firstdim]: stubIndex === 0 },
-                classes.mobileEmptyRowCell,
-                classes.mobileRowHeadSecondLastStub,
-              )}
-              key={getNewKey()}
-            >
-              {tableRow}
-            </tr>,
-          );
-          tableRow = [];
+        case stubLength - 2: {
+          // second last level
+          createSecondLastMobileHeader(stubIndex, cellMeta, val, i, tableRows);
+          break;
         }
       }
-
       // Create a new row for the next stub
-      createRowMobile(
-        stubIndex + 1,
+      createRowMobile({
+        stubIndex: stubIndex + 1,
         rowSpan,
         stubIteration,
         table,
@@ -467,7 +436,7 @@ function createRowMobile(
         stubDataCellCodes,
         headingDataCellCodes,
         tableRows,
-      );
+      });
 
       stubDataCellCodes.pop();
     } else {
@@ -529,8 +498,7 @@ function fillEmpty(
   }
 }
 
-// Fills a row with data cells
-/**
+/*
  * Fills a row with data cells.
  *
  * @param table - The PxTable object representing the PxWeb table.
@@ -555,13 +523,11 @@ function fillData(
     // Merge the metadata structure for the dimensions of the stub and header cells
     const dataCellCodes = stubDataCellCodes.concat(headingDataCellCodes[i]);
     const datacellIds: string[] = dataCellCodes.map((obj) => obj.htmlId);
-    const headers: string = datacellIds
-      .toString()
-      .replace(new RegExp(',', 'g'), ' ');
+    const headers: string = datacellIds.toString().replace(/,/g, ' ');
     const dimensions: string[] = [];
     // Arrange the dimensons in the right order according to how data is stored is the cube
-    for (let j = 0; j < dataCellCodes.length; j++) {
-      dimensions[dataCellCodes[j].varPos] = dataCellCodes[j].valCode;
+    for (const dataCell of dataCellCodes) {
+      dimensions[dataCell.varPos] = dataCell.valCode;
     }
 
     // Example of how to get data from the cube (men in Stockholm in 1970):
@@ -579,6 +545,99 @@ function fillData(
       </td>,
     ); // TODO: Handle null values
   }
+}
+/**
+ * Creates repeated mobile headers for a table and appends them to the provided table rows.
+ *
+ * @param {number} stubLength - The length of the stub.
+ * @param {number} stubIndex - The index of the stub.
+ * @param {DataCellCodes} stubDataCellCodes - An array of data cell codes containing HTML IDs and value labels.
+ * @param {React.JSX.Element[]} tableRows - An array of table row elements to which the repeated headers will be appended.
+ */
+function createRepeatedMobileHeader(
+  stubLength: number,
+  stubIndex: number,
+  stubDataCellCodes: DataCellCodes,
+  tableRows: React.JSX.Element[],
+) {
+  let tableRowRepeatHeader: React.JSX.Element[] = [];
+  for (let n = 0; n <= stubLength - 3; n++) {
+    tableRowRepeatHeader.push(
+      <th
+        colSpan={2}
+        id={stubDataCellCodes[n].htmlId}
+        scope="row"
+        role="rowheader"
+        className={cl(classes.stub, classes[`stub-${stubIndex}`])}
+        key={getNewKey()}
+      >
+        {stubDataCellCodes[n].valLabel}
+      </th>,
+    );
+    tableRows.push(
+      <tr
+        className={cl(
+          { [classes.firstdim]: n === 0 },
+          {
+            [classes.mobileRowHeadThirdLastStub]: n === stubLength - 3,
+          },
+          classes.mobileEmptyRowCell,
+        )}
+        key={getNewKey()}
+      >
+        {tableRowRepeatHeader}
+      </tr>,
+    );
+    tableRowRepeatHeader = [];
+  }
+}
+
+/**
+ * Creates and appends a second last level mobile header row to the table rows.
+ *
+ * @param {number} stubIndex - The index of the stub.
+ * @param {DataCellMeta} cellMeta - Metadata for the data cell.
+ * @param {Value} val - The value object containing the label.
+ * @param {number} i - The index of the current iteration.
+ * @param {React.JSX.Element[]} tableRows - The array of table rows to which the new row will be appended.
+ */
+function createSecondLastMobileHeader(
+  stubIndex: number,
+  cellMeta: DataCellMeta,
+  val: Value,
+  i: number,
+  tableRows: React.JSX.Element[],
+): void {
+  // second last level
+  let tableRowSecondLastHeader: React.JSX.Element[] = [];
+  tableRowSecondLastHeader.push(
+    <th
+      colSpan={2}
+      id={cellMeta.htmlId}
+      scope="row"
+      role="rowheader"
+      className={cl(classes.stub, classes[`stub-${stubIndex}`])}
+      key={getNewKey()}
+    >
+      {val.label}
+    </th>,
+  );
+
+  tableRows.push(
+    <tr
+      className={cl(
+        { [classes.firstdim]: stubIndex === 0 },
+        classes.mobileEmptyRowCell,
+        classes.mobileRowHeadSecondLastStub,
+        {
+          [classes.mobileRowHeadFirstValueOfSecondLastStub]: i === 0,
+        },
+      )}
+      key={getNewKey()}
+    >
+      {tableRowSecondLastHeader}
+    </tr>,
+  );
 }
 
 let number = 0;

@@ -14,6 +14,15 @@
   border: 1px solid var(--px-color-border-default);
   overflow: hidden; /* Ensures content stays within rounded borders */
   color: var(--px-color-text-default);
+  tbody tr {
+    &:hover {
+      background: var(--px-color-surface-subtle) !important;
+
+      th {
+        background: var(--px-color-surface-subtle) !important;
+      }
+    }
+  }
 
   th {
     width: 40px;
@@ -21,17 +30,18 @@
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       padding: 8px 12px;
     }
+    @media screen and (max-width: fixed.$breakpoints-xsmall-max-width) {
+      width: fit-content;
+    }
     font-weight: normal;
     text-align: center;
 
     background: var(--px-color-surface-moderate);
-    // border-bottom: 1px solid var(--px-color-border-default);
     border-top: 1px solid var(--px-color-border-default);
     border-left: 1px solid var(--px-color-border-default);
   }
   thead th {
-    //font-weight: bold;
-    font-family: PxWeb-font-700;
+    font-family: PxWeb-font-700, sans-serif;
   }
   thead tr:last-child th {
     text-align: end;
@@ -44,6 +54,9 @@
 
   tr:first-child th:first-child {
     border-left: none;
+    @media screen and (max-width: fixed.$breakpoints-xsmall-max-width) {
+      border-top: none;
+    }
   }
   tbody tr:last-child td {
     border-bottom: none;
@@ -114,6 +127,9 @@
       padding: 8px 12px;
     }
     width: 40px;
+    @media screen and (max-width: fixed.$breakpoints-xsmall-max-width) {
+      width: fit-content;
+    }
     text-align: right;
 
     border-top: 1px solid var(--px-color-border-default);
@@ -129,17 +145,16 @@
     }
     @media screen and (max-width: fixed.$breakpoints-xsmall-max-width) {
       padding-top: 16px;
+      padding-right: 16px;
     }
-    //font-weight: bold;
-    font-family: PxWeb-font-700;
+    font-family: PxWeb-font-700, sans-serif;
   }
   tr.firstdim td {
     border-top: 1px solid var(--px-color-border-default);
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       border-top: 2px solid var(--px-color-border-default);
     }
-    //font-weight: bold;
-    font-family: PxWeb-font-700;
+    font-family: PxWeb-font-700, sans-serif;
   }
   thead tr:first-of-type th,
   thead tr:first-of-type td {
@@ -167,25 +182,40 @@
     border-top: none;
   }
 
-  .mobileRowHeadLastStub > th,
-  .mobileRowHeadLastStub > td {
+  .mobileRowHeadLastStub > th {
+    padding-bottom: 4px;
+    padding-top: 4px;
     background: none;
     border-left: none;
     border-right: none;
     border-bottom: none;
     border-top: none;
+    vertical-align: top;
+  }
+
+  .mobileRowHeadLastStub > td {
+    padding-bottom: 4px;
+    padding-top: 4px;
+    background: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    border-top: none;
+    vertical-align: top;
+    padding-left: 16px;
   }
 
   .mobileRowHeadSecondLastStub > th,
   .mobileRowHeadSecondLastStub > td {
-    padding-top: 12px;
+    padding-top: 0px;
     padding-bottom: 4px;
+    padding-right: 16px;
     background: none;
     border-left: none;
     border-right: none;
     border-bottom: none;
     border-top: none;
-    font-family: PxWeb-font-700;
+    font-family: PxWeb-font-700, sans-serif;
   }
 
   .mobileRowHeadThirdLastStub > th,
@@ -194,6 +224,10 @@
   }
   .mobileRowHeadlastValueOfLastStub > th,
   .mobileRowHeadlastValueOfLastStub > td {
-    padding-bottom: 16px;
+    padding-bottom: 28px;
+  }
+  .mobileRowHeadFirstValueOfSecondLastStub > th,
+  .mobileRowHeadFirstValueOfSecondLastStub > td {
+    padding-top: 28px;
   }
 }
