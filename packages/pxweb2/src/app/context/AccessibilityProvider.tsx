@@ -4,33 +4,37 @@ import React, {
   useEffect,
   useState,
   ReactNode,
-  useMemo,
 } from 'react';
-
-interface FocusableElement {
-  id: string;
-  ref: HTMLElement;
-  order: number;
-}
 
 interface AccessibilityContextType {
   addModal: (name: string, closeFunction: () => void) => void;
   closeModal: () => void;
   removeModal: (name: string) => void;
-  addFocusableElement: (name: string, ref: HTMLElement) => void;
-  removeFocusableElement: (name: string) => void;
-  removeAllFocusableElements: () => void;
-  addFocusableElements: (elements: FocusableElement[]) => void;
-  removeFocusableElements: (elements: FocusableElement[]) => void;
+  addFocusOverride: (
+    name: string,
+    element: HTMLElement,
+    previous?: HTMLElement,
+    next?: HTMLElement,
+  ) => void;
+  removeFocusOverride: (name: string) => void;
 }
 
-const AccessibilityContext = createContext<AccessibilityContextType | null>(
-  null,
-);
+export const AccessibilityContext = createContext<AccessibilityContextType>({
+  addModal: () => {},
+  closeModal: () => {},
+  removeModal: () => {},
+  removeFocusOverride: () => {},
+  addFocusOverride: () => {},
+});
 
 interface AccessibilityProviderProps {
   children: ReactNode;
 }
+type FocusOverride = {
+  self: HTMLElement;
+  previous?: HTMLElement;
+  next?: HTMLElement;
+};
 
 /**
  * AccessibilityProvider
@@ -39,12 +43,9 @@ interface AccessibilityProviderProps {
  * Makes it easier to handle which modal should be closed when pressing escape. It works like a stack.
  *
  * Focus:
- * Makes it easier to handle focus order for focusable elements. It works like a queue.
- * If there are focusable elements it will override the default focus order and
- * use the current order until the first element after the end of the order or
- * the first element before the start of the order.
+ * Add ref for override and previous and next element based on what is relevant. When the browser
+ * sets focus on the element that next / previous has an override for it will select the next or previous element based on the override.
  */
-
 export const AccessibilityProvider = ({
   children,
 }: AccessibilityProviderProps) => {
@@ -55,24 +56,14 @@ export const AccessibilityProvider = ({
     }[]
   >([]);
 
-  const [focusableElements, setFocusableElements] = useState<
-    {
-      name: string;
-      ref: HTMLElement;
-    }[]
-  >([]);
-
-  const [currentFocus, setCurrentFocus] = useState<string | null>(null);
+  const [focusOverrides, setFocusOverrides] = useState<FocusOverride[]>([]);
 
   React.useEffect(() => {
     if (location.href.indexOf('localhost') > -1) {
       console.log('PxWeb2 - a11y - Modals (Stack):', modals);
-      console.log(
-        'PxWeb2 - a11y - Focusable elements (Queue):',
-        focusableElements,
-      );
+      console.log('PxWeb2 - a11y - Focus overrides:', focusOverrides);
     }
-  }, [modals, focusableElements]);
+  }, [modals, focusOverrides]);
 
   const closeModal = React.useCallback(() => {
     setModals((prev) => {
@@ -81,6 +72,18 @@ export const AccessibilityProvider = ({
       return prev.slice(0, -1);
     });
   }, []);
+
+  const removeFocusOverride = React.useCallback(
+    (name: string) => {
+      setFocusOverrides((prev) =>
+        prev.filter(
+          (override) =>
+            override.self.getAttribute('data-focus-override-id') !== name,
+        ),
+      );
+    },
+    [focusOverrides, setFocusOverrides],
+  );
 
   const removeModal = React.useCallback((name: string) => {
     setModals((prev) => prev.filter((modal) => modal.name !== name));
@@ -96,98 +99,106 @@ export const AccessibilityProvider = ({
     [],
   );
 
-  const getCurrentFocusIndex = React.useCallback(() => {
-    return focusableElements.findIndex(
-      (element) => element.name === currentFocus,
-    );
-  }, [focusableElements, currentFocus]);
+  const findFocusOverride = React.useCallback(
+    (element: HTMLElement) => {
+      const override = focusOverrides.find(
+        (override) =>
+          override.self.getAttribute('data-focus-override-id') ===
+          element.getAttribute('data-focus-override-id'),
+      );
+      if (override) {
+        return override;
+      }
+      return null;
+    },
+    [focusOverrides],
+  );
 
-  const focusNextElement = React.useCallback(() => {
-    const nextElement = focusableElements[getCurrentFocusIndex() + 1];
-    if (nextElement) {
-      nextElement.ref.focus();
-    }
-  }, [focusableElements]);
+  const addFocusOverride = React.useCallback(
+    (
+      name: string,
+      element: HTMLElement,
+      previous?: HTMLElement,
+      next?: HTMLElement,
+    ) => {
+      element.setAttribute('data-focus-override-id', name);
+      setFocusOverrides((prev) => {
+        const filteredOverrides = prev.filter(
+          (override) =>
+            override.self.getAttribute('data-focus-override-id') !== name,
+        );
 
-  const focusPreviousElement = React.useCallback(() => {
-    const previousElement = focusableElements[getCurrentFocusIndex() - 1];
-    if (previousElement) {
-      setCurrentFocus(previousElement.name);
-      previousElement.ref.focus();
-    }
-  }, [focusableElements]);
+        const newState = [
+          ...filteredOverrides,
+          {
+            self: element,
+            previous,
+            next,
+          },
+        ];
+        return newState;
+      });
+    },
+    [focusOverrides],
+  );
+
+  const focusNext = React.useCallback(
+    (element: HTMLElement, event: KeyboardEvent) => {
+      const next = findFocusOverride(element)?.next;
+      if (next) {
+        event.preventDefault();
+        next.focus();
+      }
+    },
+    [focusOverrides],
+  );
+
+  const focusPrevious = React.useCallback(
+    (element: HTMLElement, event: KeyboardEvent) => {
+      const previous = findFocusOverride(element)?.previous;
+      if (previous) {
+        event.preventDefault();
+        previous.focus();
+      }
+    },
+    [focusOverrides],
+  );
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         closeModal();
       }
-      if (event.key === 'Tab') {
-        focusNextElement();
+
+      if (event.key === 'Tab' && !event.shiftKey) {
+        console.log('PxWeb2 - a11y - Tab pressed');
+        if (event.target) {
+          focusNext(event.target as HTMLElement, event);
+        }
       }
+
       if (event.shiftKey && event.key === 'Tab') {
-        focusPreviousElement();
+        console.log('PxWeb2 - a11y - Shift + Tab pressed');
+
+        if (event.target) {
+          focusPrevious(event.target as HTMLElement, event);
+        }
       }
     };
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [closeModal]);
-
-  const addFocusableElement = React.useCallback(
-    (name: string, ref: HTMLElement) => {
-      setFocusableElements((prev) => [...prev, { name, ref }]);
-    },
-    [],
-  );
-
-  const removeFocusableElement = React.useCallback((name: string) => {
-    setFocusableElements((prev) =>
-      prev.filter((element) => element.name !== name),
-    );
-  }, []);
-
-  const removeAllFocusableElements = React.useCallback(() => {
-    setFocusableElements([]);
-  }, []);
-
-  const addFocusableElements = React.useCallback(
-    (elements: { name: string; ref: HTMLElement }[]) => {
-      setFocusableElements((prev) => [...prev, ...elements]);
-    },
-    [],
-  );
-
-  const removeFocusableElements = React.useCallback(
-    (elements: { name: string; ref: HTMLElement }[]) => {
-      setFocusableElements((prev) =>
-        prev.filter((element) => !elements.includes(element)),
-      );
-    },
-    [],
-  );
+  }, [closeModal, focusNext, focusPrevious, findFocusOverride]);
 
   const value = React.useMemo(
     () => ({
       addModal,
       closeModal,
       removeModal,
-      addFocusableElement,
-      removeFocusableElement,
-      removeAllFocusableElements,
-      addFocusableElements,
-      removeFocusableElements,
+      addFocusOverride,
+      removeFocusOverride,
     }),
-    [
-      addModal,
-      closeModal,
-      removeModal,
-      addFocusableElement,
-      removeFocusableElement,
-      removeAllFocusableElements,
-      addFocusableElements,
-      removeFocusableElements,
-    ],
+    [addModal, closeModal, removeModal],
   );
 
   return (
@@ -195,16 +206,4 @@ export const AccessibilityProvider = ({
       {children}
     </AccessibilityContext.Provider>
   );
-};
-
-export const useAccessibility = () => {
-  const context = useContext(AccessibilityContext);
-
-  if (!context) {
-    throw new Error(
-      'useAccessibility must be used within an AccessibilityProvider',
-    );
-  }
-
-  return context;
 };

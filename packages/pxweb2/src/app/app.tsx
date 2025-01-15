@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useContext } from 'react';
 import { useParams } from 'react-router';
 
 import styles from './app.module.scss';
@@ -15,10 +15,11 @@ import { Footer } from './components/Footer/Footer';
 import { BreakpointsSmallMaxWidth } from '@pxweb2/pxweb2-ui';
 import { getConfig } from './util/config/getConfig';
 import { OpenAPI } from '@pxweb2/pxweb2-api-client';
-import { set } from 'lodash';
+import { AccessibilityContext } from './context/AccessibilityProvider';
 
 export function App() {
   const config = getConfig();
+  const accessibility = useContext(AccessibilityContext);
   OpenAPI.BASE = config.apiUrl;
 
   const { tableId } = useParams<{ tableId: string }>();
@@ -53,6 +54,76 @@ export function App() {
     save: HTMLButtonElement;
     help: HTMLButtonElement;
   }>(null);
+
+  const hideMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!navigationRailRef.current || !hideMenuRef.current) {
+      return;
+    }
+    let item = null;
+
+    if (selectedNavigationView === 'filter') {
+      item = navigationRailRef.current.filter;
+      accessibility.addFocusOverride(
+        'filterButton',
+        navigationRailRef.current.filter,
+        undefined,
+        hideMenuRef.current,
+      );
+    }
+
+    if (selectedNavigationView === 'view') {
+      item = navigationRailRef.current.view;
+      accessibility.addFocusOverride(
+        'viewButton',
+        navigationRailRef.current.view,
+        undefined,
+        hideMenuRef.current,
+      );
+    }
+    if (selectedNavigationView === 'edit') {
+      item = navigationRailRef.current.edit;
+      accessibility.addFocusOverride(
+        'editButton',
+        navigationRailRef.current.edit,
+        undefined,
+        hideMenuRef.current,
+      );
+    }
+    if (selectedNavigationView === 'save') {
+      item = navigationRailRef.current.save;
+      accessibility.addFocusOverride(
+        'saveButton',
+        navigationRailRef.current.save,
+        undefined,
+        hideMenuRef.current,
+      );
+    }
+    if (selectedNavigationView === 'help') {
+      item = navigationRailRef.current.help;
+      accessibility.addFocusOverride(
+        'helpButton',
+        navigationRailRef.current.help,
+        undefined,
+        hideMenuRef.current,
+      );
+    }
+
+    if (item) {
+      accessibility.addFocusOverride(
+        'hideButton',
+        hideMenuRef.current,
+        item,
+        undefined,
+      );
+    }
+  }, [
+    accessibility,
+    navigationRailRef.current,
+    hideMenuRef.current,
+    selectedNavigationView,
+  ]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -128,6 +199,7 @@ export function App() {
             selectedTabId={selectedTableId}
             setSelectedNavigationView={changeSelectedNavView}
             openedWithKeyboard={openedWithKeyboard}
+            hideMenuRef={hideMenuRef}
           />
           <div className={styles.contentAndFooterContainer}>
             {isMobile && <Header />}{' '}

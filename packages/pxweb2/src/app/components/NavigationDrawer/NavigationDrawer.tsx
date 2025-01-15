@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import cl from 'clsx';
 import styles from './NavigationDrawer.module.scss';
 import { Heading, Icon, Label } from '@pxweb2/pxweb2-ui';
 import { useTranslation } from 'react-i18next';
 import i18next from 'i18next';
-import { useAccessibility } from '../../context/AccessibilityProvider';
+import { AccessibilityContext } from '../../context/AccessibilityProvider';
+import { useContext } from 'react';
 
 export interface NavigationDrawerProps {
   children: React.ReactNode;
@@ -17,15 +18,12 @@ export interface NavigationDrawerProps {
   ) => void;
 }
 
-export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
-  children,
-  heading,
-  view,
-  openedWithKeyboard,
-  onClose,
-}) => {
+export const NavigationDrawer = forwardRef<
+  HTMLDivElement,
+  NavigationDrawerProps
+>(({ children, heading, view, openedWithKeyboard, onClose }, ref) => {
   const { t } = useTranslation();
-  const { addModal, removeModal } = useAccessibility();
+  const { addModal, removeModal } = useContext(AccessibilityContext);
 
   React.useEffect(() => {
     addModal('NavigationDrawer', () => {
@@ -40,8 +38,6 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
   // Handle RTL languages
   const hideIcon = i18next.dir() === 'rtl' ? 'ChevronRight' : 'ChevronLeft';
 
-  const hideMenuRef = React.useRef<HTMLDivElement>(null);
-
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     if (event.key === 'Enter' || event.key === ' ') {
       onClose(true, view);
@@ -49,10 +45,10 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
   }
 
   React.useEffect(() => {
-    if (openedWithKeyboard) {
-      hideMenuRef.current?.focus();
+    if (openedWithKeyboard && ref && typeof ref !== 'function') {
+      ref.current?.focus();
     }
-  }, [openedWithKeyboard]);
+  }, [openedWithKeyboard, ref]);
 
   return (
     <>
@@ -66,7 +62,7 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
             {heading}
           </Heading>
           <div
-            ref={hideMenuRef}
+            ref={ref}
             tabIndex={0}
             onClick={() => onClose(false, view)}
             onKeyDown={handleKeyDown}
@@ -84,5 +80,6 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
       </div>
     </>
   );
-};
+});
+
 export default NavigationDrawer;

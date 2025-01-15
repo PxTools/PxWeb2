@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 
 import {
   metadataOutputFormat,
@@ -20,7 +20,7 @@ import NavigationDrawer from '../../components/NavigationDrawer/NavigationDrawer
 import useVariables from '../../context/useVariables';
 import { NavigationItem } from '../../components/NavigationMenu/NavigationItem/NavigationItemType';
 import { sassNull } from 'sass';
-import { useAccessibility } from '../../context/AccessibilityProvider';
+import { AccessibilityContext } from '../../context/AccessibilityProvider';
 
 function addSelectedCodeListToVariable(
   currentVariable: SelectedVBValues | undefined,
@@ -248,14 +248,16 @@ type propsType = {
     keyboard: boolean,
     close: boolean,
     view: NavigationItem,
-    ref?: React.RefObject<HTMLButtonElement>,
   ) => void;
+  hideMenuRef?: React.RefObject<HTMLDivElement>;
 };
+
 export function Selection({
   selectedNavigationView,
   selectedTabId,
   openedWithKeyboard,
   setSelectedNavigationView,
+  hideMenuRef,
 }: propsType) {
   const { selectedVBValues, setSelectedVBValues } = useVariables();
   const variables = useVariables();
@@ -272,7 +274,7 @@ export function Selection({
 
   //  Needed to know when the language has changed, so we can reload the default selection
   const [prevLang, setPrevLang] = useState('');
-  const { addModal, removeModal } = useAccessibility();
+  const { addModal, removeModal } = useContext(AccessibilityContext);
 
   useEffect(() => {
     let shouldGetDefaultSelection = !hasLoadedDefaultSelection;
@@ -552,17 +554,13 @@ export function Selection({
   return (
     selectedNavigationView !== 'none' && (
       <NavigationDrawer
-        openedWithKeyboard={openedWithKeyboard}
+        ref={hideMenuRef}
         heading={t('presentation_page.sidemenu.selection.title')}
-        onClose={(
-          keyboard: boolean,
-          str: 'filter' | 'view' | 'edit' | 'save' | 'help',
-        ) => {
-          setSelectedNavigationView(keyboard, true, str);
-        }}
-        view={
-          selectedNavigationView as 'filter' | 'view' | 'edit' | 'save' | 'help'
+        onClose={(keyboard, view) =>
+          setSelectedNavigationView(keyboard, true, view)
         }
+        view="filter"
+        openedWithKeyboard={openedWithKeyboard}
       >
         {selectedNavigationView === 'filter' && drawerFilter}
         {selectedNavigationView === 'view' && drawerView}
