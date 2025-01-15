@@ -563,8 +563,7 @@ function fillEmpty(
   }
 }
 
-// Fills a row with data cells
-/**
+/*
  * Fills a row with data cells.
  *
  * @param table - The PxTable object representing the PxWeb table.
