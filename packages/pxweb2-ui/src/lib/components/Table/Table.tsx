@@ -13,7 +13,6 @@ export interface TableProps {
   readonly className?: string;
 }
 
-
 /**
  * Represents the metadata for one dimension of a data cell.
  */
@@ -256,7 +255,6 @@ export function createRows(
  * @returns An array of React.JSX.Element representing the rows of the table.
  */
 
-
 /**
  * Creates the rows for the table based on the stub variables. For desktop devices.
  *
@@ -377,7 +375,7 @@ function createRowMobile({
   tableRows,
 }: CreateRowParams): React.JSX.Element[] {
   const stubValuesLength = table.stub[stubIndex].values.length;
-  const stubLength= table.stub.length;
+  const stubLength = table.stub.length;
   // Calculate the rowspan for all the cells to add in this call
   rowSpan = rowSpan / stubValuesLength;
 
@@ -404,10 +402,7 @@ function createRowMobile({
       rowSpan = 1;
     }
     let lastValueOfLastStub = false;
-    if (
-      stubIndex === stubLength - 1 &&
-      i === stubValuesLength - 1
-    ) {
+    if (stubIndex === stubLength - 1 && i === stubValuesLength - 1) {
       // the last value of last level stub
       lastValueOfLastStub = true;
     }
@@ -416,7 +411,12 @@ function createRowMobile({
       switch (stubIndex) {
         case stubLength - 3: {
           // Repeat the headers for all stubs except the 2 last levels
- createRepeatedMobileHeader(stubLength,stubIndex,  stubDataCellCodes, tableRows);
+          createRepeatedMobileHeader(
+            stubLength,
+            stubIndex,
+            stubDataCellCodes,
+            tableRows,
+          );
 
           // for (let n = 0; n <= stubLength - 3; n++) {
           //   tableRow.push(
@@ -449,49 +449,47 @@ function createRowMobile({
           //   );
           //   tableRow = [];
           // }
-       //   tableRow = [];
+          //   tableRow = [];
           break;
         }
-        case stubLength - 2:
-          // speacia
-          {
-            createSecondLastMobileHeader(stubIndex, cellMeta, val, i, tableRows);
-            // second last level
-            // tableRow.push(
-            //   <th
-            //     colSpan={2}
-            //     id={cellMeta.htmlId}
-            //     scope="row"
-            //     role="rowheader"
-            //     className={cl(classes.stub, classes[`stub-${stubIndex}`])}
-            //     key={getNewKey()}
-            //   >
-            //     {val.label}
-            //   </th>,
-            // );
+        case stubLength - 2: // speacia
+        {
+          createSecondLastMobileHeader(stubIndex, cellMeta, val, i, tableRows);
+          // second last level
+          // tableRow.push(
+          //   <th
+          //     colSpan={2}
+          //     id={cellMeta.htmlId}
+          //     scope="row"
+          //     role="rowheader"
+          //     className={cl(classes.stub, classes[`stub-${stubIndex}`])}
+          //     key={getNewKey()}
+          //   >
+          //     {val.label}
+          //   </th>,
+          // );
 
-            // // make the rest of this row empty
-            // //fillEmpty(tableMeta, tableRow);
+          // // make the rest of this row empty
+          // //fillEmpty(tableMeta, tableRow);
 
-            // tableRows.push(
-            //   <tr
-            //     className={cl(
-            //       { [classes.firstdim]: stubIndex === 0 },
-            //       classes.mobileEmptyRowCell,
-            //       classes.mobileRowHeadSecondLastStub,
-            //       {
-            //         [classes.mobileRowHeadFirstValueOfSecondLastStub]: i === 0,
-            //       },
-            //     )}
-            //     key={getNewKey()}
-            //   >
-            //     {tableRow}
-            //   </tr>,
-            // );
-            // tableRow = [];
-            break;
-          }
-
+          // tableRows.push(
+          //   <tr
+          //     className={cl(
+          //       { [classes.firstdim]: stubIndex === 0 },
+          //       classes.mobileEmptyRowCell,
+          //       classes.mobileRowHeadSecondLastStub,
+          //       {
+          //         [classes.mobileRowHeadFirstValueOfSecondLastStub]: i === 0,
+          //       },
+          //     )}
+          //     key={getNewKey()}
+          //   >
+          //     {tableRow}
+          //   </tr>,
+          // );
+          // tableRow = [];
+          break;
+        }
       }
       // Create a new row for the next stub
       createRowMobile({
@@ -615,11 +613,14 @@ function fillData(
   }
 }
 
-
-function createRepeatedMobileHeader(stubLength:number,stubIndex:number,  stubDataCellCodes:DataCellCodes, tableRows:React.JSX.Element[] ) {
-
+function createRepeatedMobileHeader(
+  stubLength: number,
+  stubIndex: number,
+  stubDataCellCodes: DataCellCodes,
+  tableRows: React.JSX.Element[],
+) {
   let tableRowRepeatHeader: React.JSX.Element[] = [];
-  console.log('i createRepeatedMobileHeader, tableRow=', tableRowRepeatHeader)
+  console.log('i createRepeatedMobileHeader, tableRow=', tableRowRepeatHeader);
   for (let n = 0; n <= stubLength - 3; n++) {
     tableRowRepeatHeader.push(
       <th
@@ -634,14 +635,16 @@ function createRepeatedMobileHeader(stubLength:number,stubIndex:number,  stubDat
       </th>,
     );
 
-    console.log('i createRepeatedMobileHeader 2, tableRow=', tableRowRepeatHeader)
+    console.log(
+      'i createRepeatedMobileHeader 2, tableRow=',
+      tableRowRepeatHeader,
+    );
     tableRows.push(
       <tr
         className={cl(
           { [classes.firstdim]: n === 0 },
           {
-            [classes.mobileRowHeadThirdLastStub]:
-              n === stubLength - 3,
+            [classes.mobileRowHeadThirdLastStub]: n === stubLength - 3,
           },
           classes.mobileEmptyRowCell,
         )}
@@ -654,7 +657,13 @@ function createRepeatedMobileHeader(stubLength:number,stubIndex:number,  stubDat
   }
 }
 
-function createSecondLastMobileHeader(stubIndex: number, cellMeta: DataCellMeta, val:Value, i: number, tableRows: React.JSX.Element[]): void {
+function createSecondLastMobileHeader(
+  stubIndex: number,
+  cellMeta: DataCellMeta,
+  val: Value,
+  i: number,
+  tableRows: React.JSX.Element[],
+): void {
   // second last level
   let tableRowSecondLastHeader: React.JSX.Element[] = [];
   tableRowSecondLastHeader.push(
