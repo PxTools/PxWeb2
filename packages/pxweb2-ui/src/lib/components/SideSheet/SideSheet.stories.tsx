@@ -12,6 +12,7 @@ const content = 'Any content...';
 
 export const Default = {
   args: {
+    isOpen: true,
     children: <div>{content}</div>,
   },
 
@@ -24,7 +25,7 @@ export const Default = {
 
 export const Open: StoryFn<typeof SideSheet> = () => {
   return (
-    <SideSheet>
+    <SideSheet isOpen={true}>
       <div>Any content</div>
     </SideSheet>
   );
