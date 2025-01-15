@@ -410,6 +410,7 @@ function createRowMobile({
     if (stubLength > stubIndex + 1) {
       switch (stubIndex) {
         case stubLength - 3: {
+          // third last level
           // Repeat the headers for all stubs except the 2 last levels
           createRepeatedMobileHeader(
             stubLength,
@@ -417,77 +418,11 @@ function createRowMobile({
             stubDataCellCodes,
             tableRows,
           );
-
-          // for (let n = 0; n <= stubLength - 3; n++) {
-          //   tableRow.push(
-          //     <th
-          //       colSpan={2}
-          //       id={stubDataCellCodes[n].htmlId}
-          //       scope="row"
-          //       role="rowheader"
-          //       className={cl(classes.stub, classes[`stub-${stubIndex}`])}
-          //       key={getNewKey()}
-          //     >
-          //       {stubDataCellCodes[n].valLabel}
-          //     </th>,
-          //   );
-
-          //   tableRows.push(
-          //     <tr
-          //       className={cl(
-          //         { [classes.firstdim]: n === 0 },
-          //         {
-          //           [classes.mobileRowHeadThirdLastStub]:
-          //             n === stubLength - 3,
-          //         },
-          //         classes.mobileEmptyRowCell,
-          //       )}
-          //       key={getNewKey()}
-          //     >
-          //       {tableRow}
-          //     </tr>,
-          //   );
-          //   tableRow = [];
-          // }
-          //   tableRow = [];
           break;
         }
         case stubLength - 2: {
-          // speacia
-          createSecondLastMobileHeader(stubIndex, cellMeta, val, i, tableRows);
           // second last level
-          // tableRow.push(
-          //   <th
-          //     colSpan={2}
-          //     id={cellMeta.htmlId}
-          //     scope="row"
-          //     role="rowheader"
-          //     className={cl(classes.stub, classes[`stub-${stubIndex}`])}
-          //     key={getNewKey()}
-          //   >
-          //     {val.label}
-          //   </th>,
-          // );
-
-          // // make the rest of this row empty
-          // //fillEmpty(tableMeta, tableRow);
-
-          // tableRows.push(
-          //   <tr
-          //     className={cl(
-          //       { [classes.firstdim]: stubIndex === 0 },
-          //       classes.mobileEmptyRowCell,
-          //       classes.mobileRowHeadSecondLastStub,
-          //       {
-          //         [classes.mobileRowHeadFirstValueOfSecondLastStub]: i === 0,
-          //       },
-          //     )}
-          //     key={getNewKey()}
-          //   >
-          //     {tableRow}
-          //   </tr>,
-          // );
-          // tableRow = [];
+          createSecondLastMobileHeader(stubIndex, cellMeta, val, i, tableRows);
           break;
         }
       }
@@ -611,7 +546,14 @@ function fillData(
     ); // TODO: Handle null values
   }
 }
-
+/**
+ * Creates repeated mobile headers for a table and appends them to the provided table rows.
+ *
+ * @param {number} stubLength - The length of the stub.
+ * @param {number} stubIndex - The index of the stub.
+ * @param {DataCellCodes} stubDataCellCodes - An array of data cell codes containing HTML IDs and value labels.
+ * @param {React.JSX.Element[]} tableRows - An array of table row elements to which the repeated headers will be appended.
+ */
 function createRepeatedMobileHeader(
   stubLength: number,
   stubIndex: number,
@@ -619,7 +561,6 @@ function createRepeatedMobileHeader(
   tableRows: React.JSX.Element[],
 ) {
   let tableRowRepeatHeader: React.JSX.Element[] = [];
-  console.log('i createRepeatedMobileHeader, tableRow=', tableRowRepeatHeader);
   for (let n = 0; n <= stubLength - 3; n++) {
     tableRowRepeatHeader.push(
       <th
@@ -632,11 +573,6 @@ function createRepeatedMobileHeader(
       >
         {stubDataCellCodes[n].valLabel}
       </th>,
-    );
-
-    console.log(
-      'i createRepeatedMobileHeader 2, tableRow=',
-      tableRowRepeatHeader,
     );
     tableRows.push(
       <tr
@@ -656,6 +592,15 @@ function createRepeatedMobileHeader(
   }
 }
 
+/**
+ * Creates and appends a second last level mobile header row to the table rows.
+ *
+ * @param {number} stubIndex - The index of the stub.
+ * @param {DataCellMeta} cellMeta - Metadata for the data cell.
+ * @param {Value} val - The value object containing the label.
+ * @param {number} i - The index of the current iteration.
+ * @param {React.JSX.Element[]} tableRows - The array of table rows to which the new row will be appended.
+ */
 function createSecondLastMobileHeader(
   stubIndex: number,
   cellMeta: DataCellMeta,

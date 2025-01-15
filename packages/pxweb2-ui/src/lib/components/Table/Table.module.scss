@@ -6,7 +6,6 @@
   border-spacing: 0; /* Optional: Makes sure there is no spacing between the cells */
   width: 100%;
 
-
   @media screen and (max-width: fixed.$breakpoints-xsmall-max-width) {
     line-height: fixed.$spacing-6;
   }
