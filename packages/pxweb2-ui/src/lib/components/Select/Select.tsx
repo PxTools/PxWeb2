@@ -199,10 +199,9 @@ function VariableBoxSelect({
 
   return (
     <>
-      <div
+      <button
         className={cl(classes.selectVariabelbox) + cssClasses}
         tabIndex={tabIndex}
-        role="button"
         aria-haspopup="dialog"
         onClick={() => {
           handleOpenModal();
@@ -228,7 +227,7 @@ function VariableBoxSelect({
           </BodyShort>
         </div>
         <Icon iconName="ChevronDown" className=""></Icon>
-      </div>
+      </button>
       <div className={cl(classes.divider)}></div>
       {isModalOpen && (
         <Modal
