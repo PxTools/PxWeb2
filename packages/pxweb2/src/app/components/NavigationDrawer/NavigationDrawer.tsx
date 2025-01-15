@@ -44,7 +44,11 @@ export const NavigationDrawer = forwardRef<
     }
   }
   React.useEffect(() => {
-    if (ref && typeof ref !== 'function') {
+    if (
+      document.activeElement !== document.body &&
+      ref &&
+      typeof ref !== 'function'
+    ) {
       ref.current?.focus();
     }
   }, [view]);
