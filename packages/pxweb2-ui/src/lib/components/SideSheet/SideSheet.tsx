@@ -7,6 +7,7 @@ import Label from '../Typography/Label/Label';
 import Button from '../Button/Button';
 
 export interface SideSheetProps {
+  readonly heading: string;
   readonly isOpen: boolean;
   readonly onClose?: () => void;
   readonly className?: string;
@@ -14,6 +15,7 @@ export interface SideSheetProps {
 }
 
 export function SideSheet({
+  heading,
   isOpen,
   onClose,
   className = '',
@@ -54,7 +56,7 @@ export function SideSheet({
         <div className={cl(classes.titleAndxMarkWrapper)}>
           <Heading level="2">
             <Label size="medium" textcolor="default">
-              SideSheet
+              {heading}
             </Label>
           </Heading>
           <div className={cl(classes.xMarkWrapper)}>
