@@ -4,7 +4,7 @@
 .sideSheet {
   display: flex;
   width: 540px;
-  height: 100%;
+  height: 100vh;
   flex-direction: column;
   align-items: flex-start;
 
@@ -15,6 +15,7 @@
   // Not from Figma
   padding: 0px 0px 0px 0px;
   border-style: none;
+  max-height: 100vh; // Override default margins at top and bottom for <dialog>
 }
 
 .sideSheet::backdrop {
