@@ -2,6 +2,8 @@ import cl from 'clsx';
 import { useEffect, useRef, useState } from 'react';
 
 import classes from './SideSheet.module.scss';
+import Heading from '../Typography/Heading/Heading';
+import Label from '../Typography/Label/Label';
 import Button from '../Button/Button';
 
 export interface SideSheetProps {
@@ -45,14 +47,27 @@ export function SideSheet({
 
   return (
     <dialog ref={sideSheetRef} className={cl(classes.sideSheet) + cssClasses}>
-      <span>SideSheet</span>
-      <Button
-        variant="tertiary"
-        size="small"
-        icon="XMark"
-        onClick={() => handleCloseSideSheet()}
-      ></Button>
-      <div>{children}</div>
+      <div className={cl(classes.header)}>
+        <div className={cl(classes.titleAndxMarkWrapper)}>
+          <Heading level="2">
+            <Label size="medium" textcolor="default">
+              SideSheet
+            </Label>
+          </Heading>
+          <div className={cl(classes.xMarkWrapper)}>
+            <Button
+              variant="tertiary"
+              size="small"
+              icon="XMark"
+              onClick={() => handleCloseSideSheet()}
+            ></Button>
+          </div>
+        </div>
+        {/* <div className={cl(classes.tabs)}></div> */}
+      </div>
+      <div className={cl(classes.content, classes['bodyshort-medium'])}>
+        {children}
+      </div>
     </dialog>
   );
 }
