@@ -53,7 +53,6 @@ export function SideSheet({
         onClick={() => handleCloseSideSheet()}
       ></Button>
       <div>{children}</div>
-      {isSideSheetOpen && <span>SideSheet is open</span>}
     </dialog>
   );
 }

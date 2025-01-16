@@ -1,4 +1,5 @@
 import type { Meta, StoryFn } from '@storybook/react';
+import { useState } from 'react';
 
 import { SideSheet, SideSheetProps } from './SideSheet';
 
@@ -27,14 +28,20 @@ export const Default = {
 };
 
 export const Open: StoryFn<typeof SideSheet> = () => {
+  const [isSideSheetOpen, setIsSideSheetOpen] = useState<boolean>(false);
   return (
-    <SideSheet
-      isOpen={true}
-      onClose={() => {
-        alert('SideSheet closed');
-      }}
-    >
-      <div>Any content</div>
-    </SideSheet>
+    <>
+      <button onClick={() => setIsSideSheetOpen(true)}>Open SideSheet</button>
+      {isSideSheetOpen && (
+        <SideSheet
+          isOpen={true}
+          onClose={() => {
+            setIsSideSheetOpen(false);
+          }}
+        >
+          <div>Any content</div>
+        </SideSheet>
+      )}
+    </>
   );
 };
