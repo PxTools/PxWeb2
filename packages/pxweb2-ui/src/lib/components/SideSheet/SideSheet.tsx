@@ -46,7 +46,10 @@ export function SideSheet({
   };
 
   return (
-    <dialog ref={sideSheetRef} className={cl(classes.sideSheet) + cssClasses}>
+    <dialog
+      ref={sideSheetRef}
+      className={cl(classes.sideSheet, classes.slidein) + cssClasses}
+    >
       <div className={cl(classes.header)}>
         <div className={cl(classes.titleAndxMarkWrapper)}>
           <Heading level="2">

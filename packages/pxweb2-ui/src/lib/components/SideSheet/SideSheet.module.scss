@@ -59,3 +59,17 @@
   flex: 1 0 0;
   align-self: stretch;
 }
+
+// Animation that slides in NavigationDrawer from the right when opened.
+.slidein {
+  animation: slideIn 250ms forwards;
+}
+
+@keyframes slideIn {
+  0% {
+    left: calc(100vw);
+  }
+  100% {
+    left: calc(100vw - 540px);
+  }
+}
