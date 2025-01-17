@@ -47,8 +47,18 @@ export function SideSheet({
     setIsSideSheetOpen(false); // Ensure that the modal's state is updated when it's closed
   };
 
+  interface HandleClickEvent extends React.MouseEvent<HTMLDialogElement> {}
+
+  const handleClick = (event: HandleClickEvent) => {
+    // If the click is on the backdrop, close the side sheet
+    if (sideSheetRef.current?.isEqualNode(event.target as Node)) {
+      handleCloseSideSheet();
+    }
+  };
+
   return (
     <dialog
+      onClick={(event) => handleClick(event)}
       ref={sideSheetRef}
       className={cl(classes.sideSheet, classes.slidein) + cssClasses}
     >
