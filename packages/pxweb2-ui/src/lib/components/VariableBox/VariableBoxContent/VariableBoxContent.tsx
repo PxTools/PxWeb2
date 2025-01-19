@@ -231,18 +231,21 @@ export function VariableBoxContent({
     }
     event.preventDefault();
 
-    let newIndex = 1;
+    let newIndex = currentFocusedItemIndex ?? 1;
 
     if (key === ' ') {
       const item = items[currentFocusedItemIndex ?? 0];
       if (item && item.type === 'value' && item.value) {
         onChangeCheckbox(varId, item.value.code);
       }
+      if (item && item.type === 'mixedCheckbox') {
+        onChangeMixedCheckbox(varId, allValuesSelected, searchedValues);
+      }
     }
 
     if (isSearchFocused && key === 'ArrowDown') {
-      console.log('search is focused and down was clicked');
       setCurrentFocusedItemIndex(1);
+      newIndex = 1;
     }
 
     if (!isSearchFocused && key === 'ArrowDown') {
@@ -254,7 +257,6 @@ export function VariableBoxContent({
       currentFocusedItemIndex !== null &&
       currentFocusedItemIndex > 0
     ) {
-      console.log('HERE');
       newIndex = currentFocusedItemIndex - 1;
       if (hasSevenOrMoreValues && newIndex === 0) {
         setCurrentFocusedItemIndex(0);
@@ -266,9 +268,7 @@ export function VariableBoxContent({
       virtuosoRef.current?.scrollToIndex(0);
     }
 
-    if (newIndex !== null && newIndex !== currentFocusedItemIndex) {
-      console.log('newIndex', newIndex);
-
+    if (newIndex !== null) {
       if (hasSevenOrMoreValues) {
         newIndex = Math.min(newIndex, searchedValues.length - 1 + 2);
       } else {
@@ -343,7 +343,9 @@ export function VariableBoxContent({
             ref={searchRef}
             value={search}
             onChange={(value: string) => {
-              setSearch(value);
+              // Escape special characters in search value
+              const escapedValue = value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+              setSearch(escapedValue);
               setCurrentFocusedItemIndex(-1);
               if (value === '') {
                 setScrollingDown(false);
@@ -374,9 +376,7 @@ export function VariableBoxContent({
           <div
             id={varId}
             tabIndex={-1}
-            className={clsx(classes['focusableItem'], {
-              [classes['mixedCheckbox']]: true,
-            })}
+            className={clsx(classes['focusableItem'], classes['mixedCheckbox'])}
           >
             <MixedCheckbox
               id={varId}
@@ -507,8 +507,6 @@ export function VariableBoxContent({
 
   const handleSelectFocus = () => {
     setScrollingDown(false);
-
-    console.log('SCROLLED TO TOP');
   };
 
   return (
