@@ -218,10 +218,11 @@ export function VariableBoxContent({
     event: React.KeyboardEvent<HTMLDivElement>,
   ) => {
     const { key } = event;
-    const isSearchFocused = document.activeElement?.id === `${varId}-search`;
+    const isSearchFocused = document.activeElement === searchRef.current;
 
     // Allow typing if search is focused and not pressing arrow keys
     if (isSearchFocused && key !== 'ArrowDown') {
+      setCurrentFocusedItemIndex(0);
       return;
     }
 
@@ -230,7 +231,7 @@ export function VariableBoxContent({
     }
     event.preventDefault();
 
-    let newIndex = currentFocusedItemIndex;
+    let newIndex = 1;
 
     if (key === ' ') {
       const item = items[currentFocusedItemIndex ?? 0];
@@ -239,34 +240,40 @@ export function VariableBoxContent({
       }
     }
 
-    if (key === 'ArrowDown') {
-      if (isSearchFocused) {
-        // If search is focused, move to first item after search
-        console.log('search is focused and down was clicked');
-        newIndex = 1;
-        setCurrentFocusedItemIndex(1);
-      } else if (
-        currentFocusedItemIndex === null ||
-        currentFocusedItemIndex < items.length - 1
-      ) {
-        newIndex = (currentFocusedItemIndex ?? -1) + 1;
-      }
-    } else if (key === 'ArrowUp') {
-      if (currentFocusedItemIndex !== null && currentFocusedItemIndex > 0) {
-        newIndex = currentFocusedItemIndex - 1;
-        if (hasSevenOrMoreValues && newIndex === 0) {
-          setCurrentFocusedItemIndex(0);
-          searchRef.current?.focus();
-          return;
-        }
+    if (isSearchFocused && key === 'ArrowDown') {
+      console.log('search is focused and down was clicked');
+      setCurrentFocusedItemIndex(1);
+    }
 
-        setScrollingDown(false);
-        virtuosoRef.current?.scrollToIndex(0);
+    if (!isSearchFocused && key === 'ArrowDown') {
+      newIndex = (currentFocusedItemIndex ?? 0) + 1;
+    }
+
+    if (
+      key === 'ArrowUp' &&
+      currentFocusedItemIndex !== null &&
+      currentFocusedItemIndex > 0
+    ) {
+      console.log('HERE');
+      newIndex = currentFocusedItemIndex - 1;
+      if (hasSevenOrMoreValues && newIndex === 0) {
+        setCurrentFocusedItemIndex(0);
+        searchRef.current?.focus();
+        return;
       }
+
+      setScrollingDown(false);
+      virtuosoRef.current?.scrollToIndex(0);
     }
 
     if (newIndex !== null && newIndex !== currentFocusedItemIndex) {
       console.log('newIndex', newIndex);
+
+      if (hasSevenOrMoreValues) {
+        newIndex = Math.min(newIndex, searchedValues.length - 1 + 2);
+      } else {
+        newIndex = Math.min(items.length - 1, newIndex);
+      }
       setCurrentFocusedItemIndex(newIndex);
 
       // Focus the new item
