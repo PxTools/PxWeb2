@@ -106,6 +106,8 @@ export function VariableBoxContent({
     valuesToRender.reverse();
   }
 
+  const searchRef = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
     const newItems: { type: string; value?: Value }[] = [];
 
@@ -240,7 +242,9 @@ export function VariableBoxContent({
     if (key === 'ArrowDown') {
       if (isSearchFocused) {
         // If search is focused, move to first item after search
+        console.log('search is focused and down was clicked');
         newIndex = 1;
+        setCurrentFocusedItemIndex(1);
       } else if (
         currentFocusedItemIndex === null ||
         currentFocusedItemIndex < items.length - 1
@@ -250,12 +254,19 @@ export function VariableBoxContent({
     } else if (key === 'ArrowUp') {
       if (currentFocusedItemIndex !== null && currentFocusedItemIndex > 0) {
         newIndex = currentFocusedItemIndex - 1;
+        if (hasSevenOrMoreValues && newIndex === 0) {
+          setCurrentFocusedItemIndex(0);
+          searchRef.current?.focus();
+          return;
+        }
+
         setScrollingDown(false);
         virtuosoRef.current?.scrollToIndex(0);
       }
     }
 
     if (newIndex !== null && newIndex !== currentFocusedItemIndex) {
+      console.log('newIndex', newIndex);
       setCurrentFocusedItemIndex(newIndex);
 
       // Focus the new item
@@ -322,9 +333,11 @@ export function VariableBoxContent({
           className={classes['focusableItem']}
         >
           <Search
+            ref={searchRef}
             value={search}
             onChange={(value: string) => {
               setSearch(value);
+              setCurrentFocusedItemIndex(-1);
               if (value === '') {
                 setScrollingDown(false);
               }
