@@ -11,6 +11,7 @@
     "build": "vite build",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:w3c": "npm run build && concurrently \"serve ./dist\" \"node test/w3c-validator.js\"",
     "prettier": "prettier --config ../../.prettierrc --check ./src/** --write --ignore-path ../../.prettierignore"
   },
   "dependencies": {
@@ -22,8 +23,11 @@
   "devDependencies": {
     "@testing-library/react": "^16.0.1",
     "@types/react-dom": "^18.3.1",
+    "concurrently": "^9.1.2",
+    "html-validate": "^9.1.3",
     "husky": "^9.1.7",
     "jsdom": "^26.0.0",
+    "playwright": "^1.49.1",
     "vitest": "^2.1.6"
   }
 }
