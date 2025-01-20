@@ -2,9 +2,10 @@ const validator = require('html-validate');
 const { firefox } = require('playwright');
 
 const validateLocalhost = async () => {
+  let browser;
   try {
     // Launch firefox instead of chromium
-    const browser = await firefox.launch();
+    browser = await firefox.launch();
     const page = await browser.newPage();
 
     // Wait for React to finish rendering
@@ -21,14 +22,31 @@ const validateLocalhost = async () => {
 
     if (report.valid) {
       console.log('✅ HTML validation passed');
+      await browser.close();
+      process.exit(0);
     } else {
-      console.log('❌ HTML validation failed');
-      console.log(report.results[0].messages);
+      const errorCount = report.results[0].messages.length;
+      console.log(
+        `❌ HTML validation failed with ${errorCount} error${errorCount === 1 ? '' : 's'}`,
+      );
+      report.results[0].messages.forEach((error, index) => {
+        console.log(`\n🔍 Validation Error (${index + 1}/${errorCount}):`);
+        console.log(`Rule:     ${error.ruleId}`);
+        console.log(`Message:  ${error.message}`);
+        console.log(`Location: Line ${error.line}, Column ${error.column}`);
+        if (error.ruleUrl) {
+          console.log(`More Info: ${error.ruleUrl}`);
+        }
+      });
+      await browser.close();
+      process.exit(1);
     }
-
-    await browser.close();
   } catch (error) {
     console.error('Error validating HTML:', error);
+    if (browser) {
+      await browser.close();
+    }
+    process.exit(1);
   }
 };
 
