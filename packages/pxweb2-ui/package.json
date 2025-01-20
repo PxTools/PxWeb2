@@ -27,7 +27,7 @@
     "@storybook/addon-onboarding": "^8.4.5",
     "@storybook/blocks": "^8.4.5",
     "@storybook/react": "^8.4.5",
-    "@storybook/react-vite": "^8.4.5",
+    "@storybook/react-vite": "^8.5.0",
     "@storybook/test": "^8.4.5",
     "@testing-library/react": "^16.0.1",
     "prop-types": "^15.8.1",
