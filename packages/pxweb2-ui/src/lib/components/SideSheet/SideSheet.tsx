@@ -87,9 +87,7 @@ export function SideSheet({
         </div>
         {/* <div className={cl(classes.tabs)}></div> */}
       </div>
-      <div className={cl(classes.content, classes['bodyshort-medium'])}>
-        {children}
-      </div>
+      <div className={cl(classes.content)}>{children}</div>
     </dialog>
   );
 }
