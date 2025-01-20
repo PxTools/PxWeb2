@@ -11,7 +11,7 @@
     "build": "vite build",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:w3c": "npm run build && concurrently \"serve ./dist\" \"node test/w3c-validator.js\"",
+    "test:html-validate": "npm run build && concurrently \"npx serve ./dist\" \"node test/html-validator.js\"",
     "prettier": "prettier --config ../../.prettierrc --check ./src/** --write --ignore-path ../../.prettierignore"
   },
   "dependencies": {
