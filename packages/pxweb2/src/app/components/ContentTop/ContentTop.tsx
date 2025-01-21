@@ -34,7 +34,9 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
         </div>
       </nav>
       <div id="px-main-content" className={cl(classes[`heading-information`])}>
-        <Heading size="large">{pxtable.metadata.label}</Heading>
+        <Heading level="1" size="large">
+          {pxtable.metadata.label}
+        </Heading>
         <div className={cl(classes.information)}>
           <Button icon="InformationCircle" variant="secondary">
             {t('presentation_page.main_content.about_table.information.title')}

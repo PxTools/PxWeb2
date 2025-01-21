@@ -1,10 +1,16 @@
-import { render } from '@testing-library/react';
-
+import { renderWithProviders } from '../../util/testing-utils';
 import Selection from './Selection';
 
 describe('Selection', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<Selection />);
+    const { baseElement } = renderWithProviders(
+      <Selection
+        selectedNavigationView=""
+        selectedTabId="1"
+        setSelectedNavigationView={() => {}}
+      />,
+    );
+
     expect(baseElement).toBeTruthy();
   });
 });
