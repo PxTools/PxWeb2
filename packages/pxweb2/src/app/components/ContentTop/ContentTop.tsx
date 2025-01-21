@@ -21,7 +21,7 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
   const { t } = useTranslation();
   return (
     <div className={cl(classes[`content-top`])}>
-      <div
+      <nav
         className={cl(classes.breadcrumbs)}
         aria-label={t('presentation_page.main_content.arialabelbreadcrumb')}
       >
@@ -32,7 +32,7 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
           <Icon iconName="ChevronRight"></Icon>
           <BodyLong>{staticTitle}</BodyLong>
         </div>
-      </div>
+      </nav>
       <div id="px-main-content" className={cl(classes[`heading-information`])}>
         <Heading size="large">{pxtable.metadata.label}</Heading>
         <div className={cl(classes.information)}>
