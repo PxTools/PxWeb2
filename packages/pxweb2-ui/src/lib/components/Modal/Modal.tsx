@@ -12,6 +12,7 @@ export interface ModalProps {
   heading?: string;
   cancelLabel?: string;
   confirmLabel?: string;
+  screenReaderLabel?: string;
   isOpen: boolean;
   onClose?: (updated: boolean) => void;
   className?: string;
@@ -23,6 +24,7 @@ export function Modal({
   heading,
   cancelLabel = '',
   confirmLabel = '',
+  screenReaderLabel,
   isOpen,
   onClose,
   className = '',
@@ -87,6 +89,7 @@ export function Modal({
       ref={modalRef}
       onKeyDown={handleKeyDown}
       className={cl(classes.modal) + cssClasses}
+      aria-label={screenReaderLabel}
     >
       <div className={cl(classes.header)}>
         <div className={cl(classes.headerContent)}>

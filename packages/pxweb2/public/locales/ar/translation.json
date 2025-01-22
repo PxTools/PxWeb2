@@ -71,7 +71,8 @@
               "placeholder": "قم بالاختيار",
               "modal": {
                 "cancel_button": "يلغي",
-                "confirm_button": "يحفظ"
+                "confirm_button": "يحفظ",
+                "aria_label": "{{selectedOption}} الخيار المحدد حاليا هو .{{variabelHeading}} مربع حوار مع أزرار اختيار لاختيار التجميع للمتغير"
               }
             },
             "mixed_checkbox": {

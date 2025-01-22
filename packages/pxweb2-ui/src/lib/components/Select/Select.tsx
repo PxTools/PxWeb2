@@ -1,4 +1,5 @@
 import cl from 'clsx';
+import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 
 import classes from './Select.module.scss';
@@ -168,6 +169,7 @@ function VariableBoxSelect({
   tabIndex,
   className = '',
 }: VariableBoxSelectProps) {
+  const { t } = useTranslation();
   const cssClasses = className.length > 0 ? ' ' + className : '';
 
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
@@ -238,6 +240,10 @@ function VariableBoxSelect({
           confirmLabel={modalConfirmLabel}
           isOpen={isModalOpen}
           onClose={handleCloseModal}
+          screenReaderLabel={t('presentation_page.sidemenu.selection.variablebox.content.select.modal.aria_label', {
+            variabelHeading: modalHeading,
+            selectedOption: selectedItem?.label,
+          })}
         >
           <Radio
             value={clickedItem?.value ?? ''}

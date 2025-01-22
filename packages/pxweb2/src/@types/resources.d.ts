@@ -73,6 +73,7 @@ interface Resources {
                 modal: {
                   cancel_button: 'Cancel';
                   confirm_button: 'Save';
+                  aria_label: 'Dialog with radio buttons for selecting grouping for variable {{variabelHeading}}. Currently selected option is {{selectedOption}}.';
                 };
               };
               mixed_checkbox: {
