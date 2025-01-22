@@ -72,7 +72,7 @@
               "modal": {
                 "cancel_button": "Avbryt",
                 "confirm_button": "Bekreft",
-                "aria_label": "Dialog med radioknapper for å velge gruppering for variablen {{variabelHeading}}. Nåværenede valgt gruppering er {{selectedOption}}."
+                "aria_label": "Dialog med radioknapper for å velge inndeling for variablen {{variabelHeading}}. Nåværenede valgt inndeling er {{selectedOption}}."
               }
             },
             "mixed_checkbox": {

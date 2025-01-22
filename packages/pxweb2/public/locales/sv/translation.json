@@ -72,7 +72,7 @@
               "modal": {
                 "cancel_button": "Avbryt",
                 "confirm_button": "Spara",
-                "aria_label": "Dialog med radioknappar för val av gruppering för variabel {{variabelHeading}}. Det för närvarande valda alternativet är {{selectedOption}}"
+                "aria_label": "Dialog med radioknappar för val av indelning för variabel {{variabelHeading}}. Det för närvarande valda alternativet är {{selectedOption}}"
               }
             },
             "mixed_checkbox": {
