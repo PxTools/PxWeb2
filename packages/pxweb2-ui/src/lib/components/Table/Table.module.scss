@@ -6,14 +6,15 @@
   border-spacing: 0; /* Optional: Makes sure there is no spacing between the cells */
   width: 100%;
 
-  @media screen and (max-width: fixed.$breakpoints-xsmall-max-width) {
-    line-height: fixed.$spacing-6;
-  }
-
   border-radius: var(--px-border-radius-medium);
   border: 1px solid var(--px-color-border-default);
   overflow: hidden; /* Ensures content stays within rounded borders */
   color: var(--px-color-text-default);
+
+  @media screen and (max-width: fixed.$breakpoints-xsmall-max-width) {
+    line-height: fixed.$spacing-6;
+  }
+
   tbody tr {
     &:hover {
       background: var(--px-color-surface-subtle) !important;
@@ -27,18 +28,19 @@
   th {
     width: 40px;
     padding-left: 16px;
-    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
-      padding: 8px 12px;
-    }
-    @media screen and (max-width: fixed.$breakpoints-xsmall-max-width) {
-      width: fit-content;
-    }
     font-weight: normal;
     text-align: center;
 
     background: var(--px-color-surface-moderate);
     border-top: 1px solid var(--px-color-border-default);
     border-left: 1px solid var(--px-color-border-default);
+
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+      padding: 8px 12px;
+    }
+    @media screen and (max-width: fixed.$breakpoints-xsmall-max-width) {
+      width: fit-content;
+    }
   }
   thead th {
     font-family: PxWeb-font-700, sans-serif;
@@ -66,80 +68,91 @@
   }
 
   th.stub-0 {
+    border-left: none;
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       padding-left: 12px;
     }
-    border-left: none;
   }
   th.stub-1 {
+    border-left: none;
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       padding-left: 28px;
     }
-    border-left: none;
   }
   th.stub-2 {
+    border-left: none;
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       padding-left: 44px;
     }
-    border-left: none;
   }
   th.stub-3 {
+    border-left: none;
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       padding-left: 60px;
     }
-    border-left: none;
   }
   th.stub-4 {
+    border-left: none;
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       padding-left: 76px;
     }
-    border-left: none;
   }
   th.stub-5 {
+    border-left: none;
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       padding-left: 92px;
     }
-    border-left: none;
   }
   th.stub-6 {
-    padding-left: 108px;
     border-left: none;
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+      padding-left: 108px;
+    }
   }
   th.stub-7 {
-    padding-left: 124px;
     border-left: none;
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+      padding-left: 124px;
+    }
   }
   th.stub-8 {
-    padding-left: 140px;
     border-left: none;
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+      padding-left: 140px;
+    }
   }
   th.stub-9 {
-    padding-left: 156px;
     border-left: none;
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+      padding-left: 156px;
+    }
   }
   th.stub-10 {
-    padding-left: 172px;
     border-left: none;
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+      padding-left: 172px;
+    }
   }
   td {
     padding-right: 16px;
+    width: 40px;
+    text-align: right;
+    border-top: 1px solid var(--px-color-border-default);
+    border-left: 1px solid var(--px-color-border-default);
+
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       padding: 8px 12px;
     }
-    width: 40px;
     @media screen and (max-width: fixed.$breakpoints-xsmall-max-width) {
       width: fit-content;
     }
-    text-align: right;
-
-    border-top: 1px solid var(--px-color-border-default);
-    border-left: 1px solid var(--px-color-border-default);
   }
   tr th::first-letter {
     text-transform: capitalize;
   }
   tr.firstdim th {
     border-top: 1px solid var(--px-color-border-default);
+    font-family: PxWeb-font-700, sans-serif;
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       border-top: 2px solid var(--px-color-border-default);
     }
@@ -147,14 +160,13 @@
       padding-top: 16px;
       padding-right: 16px;
     }
-    font-family: PxWeb-font-700, sans-serif;
   }
   tr.firstdim td {
     border-top: 1px solid var(--px-color-border-default);
+    font-family: PxWeb-font-700, sans-serif;
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       border-top: 2px solid var(--px-color-border-default);
     }
-    font-family: PxWeb-font-700, sans-serif;
   }
   thead tr:first-of-type th,
   thead tr:first-of-type td {

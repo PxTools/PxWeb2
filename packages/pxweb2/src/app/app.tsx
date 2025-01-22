@@ -10,16 +10,13 @@ import { NavigationItem } from './components/NavigationMenu/NavigationItem/Navig
 import NavigationRail from './components/NavigationMenu/NavigationRail/NavigationRail';
 import NavigationBar from './components/NavigationMenu/NavigationBar/NavigationBar';
 import { SkipToMain } from './components/SkipToMain/SkipToMain';
-
 import { Footer } from './components/Footer/Footer';
-import {
-  BreakpointsSmallMaxWidth,
-  BreakpointsXsmallMaxWidth,
-} from '@pxweb2/pxweb2-ui';
 import { getConfig } from './util/config/getConfig';
 import { OpenAPI } from '@pxweb2/pxweb2-api-client';
+import useApp from './context/useApp';
 
 export function App() {
+  const { isTablet } = useApp();
   const config = getConfig();
   OpenAPI.BASE = config.apiUrl;
 
@@ -27,36 +24,7 @@ export function App() {
   const [selectedTableId] = useState(tableId ?? 'tab638');
   const [errorMsg] = useState('');
   const [selectedNavigationView, setSelectedNavigationView] =
-    useState<NavigationItem>('filter');
-
-  /**
-   * Keep state if window screen size is a small device (mobile or pad).
-   */
-  const smallBreakpoint = Number(BreakpointsSmallMaxWidth.replace('px', ''));
-  const [isSmallDevice, setIsSmallDevice] = useState(
-    window.innerWidth <= smallBreakpoint,
-  );
-
-  /**
-   * Keep state if window screen size is a xsmall device (mobile).
-   */
-  const xSmallBreakpoint = Number(BreakpointsXsmallMaxWidth.replace('px', ''));
-  const [isXSmallDevice, setIsXSmallDevice] = useState(
-    window.innerWidth <= xSmallBreakpoint,
-  );
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsSmallDevice(window.innerWidth <= smallBreakpoint);
-      setIsXSmallDevice(window.innerWidth <= xSmallBreakpoint);
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, [smallBreakpoint]);
+    useState<NavigationItem>(isTablet ? 'none' : 'filter');
 
   useEffect(() => {
     if (errorMsg !== '') {
@@ -76,9 +44,9 @@ export function App() {
   return (
     <>
       <SkipToMain />
-      {!isSmallDevice && <Header />}{' '}
+      {!isTablet && <Header />}{' '}
       <div className={styles.navigationAndContentContainer}>
-        {!isSmallDevice && (
+        {!isTablet && (
           <NavigationRail
             onChange={changeSelectedNavView}
             selected={selectedNavigationView}
@@ -91,16 +59,13 @@ export function App() {
             setSelectedNavigationView={changeSelectedNavView}
           />
           <div className={styles.contentAndFooterContainer}>
-            {isSmallDevice && <Header />}{' '}
-            <Presentation
-              selectedTabId={selectedTableId}
-              isMobile={isXSmallDevice}
-            ></Presentation>
+            {isTablet && <Header />}{' '}
+            <Presentation selectedTabId={selectedTableId}></Presentation>
             <Footer />
           </div>
         </div>
       </div>
-      {isSmallDevice && (
+      {isTablet && (
         <NavigationBar
           onChange={changeSelectedNavView}
           selected={selectedNavigationView}
