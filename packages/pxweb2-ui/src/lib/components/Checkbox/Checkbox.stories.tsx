@@ -33,7 +33,7 @@ export const MixedStateCheckbox: StoryFn<typeof Checkbox> = () => {
       <MixedCheckbox
         id="test"
         text="Select all"
-        onChange={(val) => {
+        onChange={() => {
           if (selectedHusky && selectedMalamute && selectedYorkshireTerrier) {
             setSelectedHusky(false);
             setSelectedMalamute(false);

@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "prepare": "husky",
-    "lint": "npm run lint --workspaces",
+    "lint": "eslint --fix",
     "test": "npm run test --workspaces",
     "build": "npm run build-style-dictionary && npm run build --workspaces",
     "prettier": "npm run prettier --workspaces",
@@ -17,20 +17,20 @@
   "dependencies": {
     "@uidotdev/usehooks": "^2.4.1",
     "react-virtuoso": "^4.12.1",
-    "sass": "^1.82.0",
+    "sass": "^1.83.0",
     "vite": "^6.0.2"
   },
   "devDependencies": {
     "@types/lodash": "^4.17.13",
-    "@typescript-eslint/eslint-plugin": "7.17.0",
-    "@typescript-eslint/parser": "7.18.0",
-    "eslint": "8.57.0",
+    "@typescript-eslint/eslint-plugin": "^8.19.0",
+    "@typescript-eslint/parser": "^8.19.0",
+    "eslint": "^9.18.0",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-cypress": "^2.15.2",
     "eslint-plugin-import": "2.31.0",
-    "eslint-plugin-jsx-a11y": "6.7.1",
-    "eslint-plugin-react": "7.32.2",
-    "eslint-plugin-react-hooks": "4.6.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.3",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "eslint-plugin-unused-imports": "^4.1.4",
     "style-dictionary": "^4.3.0"
   },
   "readme": "ERROR: No README data found!",

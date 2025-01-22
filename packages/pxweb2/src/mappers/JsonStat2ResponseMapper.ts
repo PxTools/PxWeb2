@@ -29,9 +29,9 @@ type counter = {
 export function mapJsonStat2Response(response: Dataset): PxTable {
   // Create the metadata object
   const metadata: PxTableMetadata = {
-    id: response.extension?.px?.tableid || '',
-    language: response.extension?.px?.language || '',
-    label: response.label || '',
+    id: response.extension?.px?.tableid ?? '',
+    language: response.extension?.px?.language ?? '',
+    label: response.label ?? '',
     description: '',
     updated: response.updated ? new Date(response.updated) : new Date(),
     variables: mapJsonToVariables(response),
@@ -109,42 +109,74 @@ function mapJsonToVariables(jsonData: Dataset): Array<Variable> {
       Object.prototype.hasOwnProperty.call(jsonData.dimension, dimensionKey) // dimensionKey === variable id
     ) {
       const dimension = jsonData.dimension[dimensionKey];
-      const values: Array<Value> = [];
-      if (
-        dimension.category &&
-        dimension.category.index &&
-        dimension.category.label
-      ) {
-        // sort the index based on index value
-        const indexEntries = Object.entries(dimension.category.index);
-        const sortedindexEntries = indexEntries.sort(
-          ([, valueA], [, valueB]) => valueA - valueB,
-        );
-        for (const [code] of sortedindexEntries) {
-          if (
-            Object.prototype.hasOwnProperty.call(dimension.category.index, code)
-          ) {
-            values.push({
-              code: code,
-              label: dimension.category.label[code],
-            });
-          }
-        }
-        // TODO: Set variable type based on role
-        if (dimension.label) {
-          variables.push({
-            id: dimensionKey,
-            label: dimension.label,
-            type: VartypeEnum.REGULAR_VARIABLE,
-            mandatory: true, // TODO: Set based on elimination
-            values,
-          });
-        }
+      const variable = mapDimension(dimensionKey, dimension, jsonData.role);
+      if (variable) {
+        variables.push(variable);
       }
     }
   }
 
   return variables;
+}
+
+/**
+ * Maps a dimension from a JSON-stat 2.0 response to a Variable object.
+ *
+ * @param id - The identifier of the dimension.
+ * @param dimension - The dimension object from the JSON-stat 2.0 response.
+ * @param role - The role object from the JSON-stat 2.0 response.
+ * @returns A Variable object if the dimension has valid categories; otherwise, null.
+ */
+function mapDimension(id: string, dimension: any, role: any): Variable | null {
+  if (!dimension.category?.index || !dimension.category.label) {
+    return null;
+  }
+
+  const values: Array<Value> = [];
+  const indexEntries = Object.entries(dimension.category.index);
+  indexEntries.sort(([valueA], [valueB]) => Number(valueA) - Number(valueB));
+
+  for (const [code] of indexEntries) {
+    if (Object.prototype.hasOwnProperty.call(dimension.category.index, code)) {
+      values.push({
+        code: code,
+        label: dimension.category.label[code],
+      });
+    }
+  }
+
+  const variable: Variable = {
+    id: id,
+    label: dimension.label,
+    type: mapVariableTypeEnum(id, role),
+    mandatory: true, // How shall we handle this? The value for elimination may differ in the jsonstat2-response depending on if all values are seleccted or not...
+    values,
+  };
+
+  return variable;
+}
+
+/**
+ * Map variable type.
+ *
+ * @param id - The ID of the variable to be mapped.
+ * @param role - The role object from the JSON-stat 2.0 response.
+ * @returns The corresponding `VartypeEnum` for the given variable ID.
+ */
+function mapVariableTypeEnum(id: string, role: any): VartypeEnum {
+  if (!role) {
+    return VartypeEnum.REGULAR_VARIABLE;
+  }
+
+  if (role.time?.includes(id)) {
+    return VartypeEnum.TIME_VARIABLE;
+  } else if (role.geo?.includes(id)) {
+    return VartypeEnum.GEOGRAPHICAL_VARIABLE;
+  } else if (role.metric?.includes(id)) {
+    return VartypeEnum.CONTENTS_VARIABLE;
+  } else {
+    return VartypeEnum.REGULAR_VARIABLE;
+  }
 }
 
 /**
