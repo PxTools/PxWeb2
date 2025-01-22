@@ -85,7 +85,6 @@ export function SideSheet({
             ></Button>
           </div>
         </div>
-        {/* <div className={cl(classes.tabs)}></div> */}
       </div>
       <div className={cl(classes.content)}>{children}</div>
     </dialog>
