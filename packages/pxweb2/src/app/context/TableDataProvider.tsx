@@ -7,13 +7,13 @@ import {
   TableService,
   VariableSelection,
   VariablesSelection,
-} from '@pxweb2/pxweb2-api-client/';
+} from '@pxweb2/pxweb2-api-client';
 import {
   PxTable,
   PxTableMetadata,
   getPxTableData,
   setPxTableData,
-} from '@pxweb2/pxweb2-ui/';
+} from '@pxweb2/pxweb2-ui';
 import { mapJsonStat2Response } from '../../mappers/JsonStat2ResponseMapper';
 
 // Define types for the context state and provider props
