@@ -1,6 +1,7 @@
 import { MemoryRouter } from 'react-router';
 
 import App from './app';
+import { AppProvider } from './context/AppProvider';
 import { renderWithProviders } from './util/testing-utils';
 import { Config } from './util/config/configType';
 
@@ -29,7 +30,9 @@ describe('App', () => {
   it('should render successfully', () => {
     const { baseElement } = renderWithProviders(
       <MemoryRouter>
-        <App />
+        <AppProvider>
+          <App />
+        </AppProvider>
       </MemoryRouter>,
     );
 
