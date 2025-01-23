@@ -1,0 +1,30 @@
+@use '../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixvar;
+@use '../../text-styles.scss';
+
+.heading-wrapper {
+  padding-bottom: 12px;
+}
+
+.list-wrapper {
+  ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    li::before {
+      content: '•'; /* Custom marker */
+      padding-inline-end: 12px;
+      padding-top: 10px;
+    }
+  }
+
+  ol {
+    list-style-type: lower-latin;
+    padding: 0;
+    margin: 0;
+    li::before {
+      content: counter(name);
+      padding-inline-end: 12px;
+      padding-top: 10px;
+    }
+  }
+}
