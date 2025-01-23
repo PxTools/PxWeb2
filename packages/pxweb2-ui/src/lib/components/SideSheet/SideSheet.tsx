@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from 'react';
 
 import classes from './SideSheet.module.scss';
 import Heading from '../Typography/Heading/Heading';
-import Label from '../Typography/Label/Label';
 import Button from '../Button/Button';
 
 export interface SideSheetProps {
@@ -69,24 +68,24 @@ export function SideSheet({
       ref={sideSheetRef}
       className={cl(classes.sideSheet, classes.slidein) + cssClasses}
     >
-      <div className={cl(classes.header)}>
-        <div className={cl(classes.titleAndxMarkWrapper)}>
-          <Heading level="2">
-            <Label size="medium" textcolor="default">
+      <aside className={cl(classes.aside)}>
+        <div className={cl(classes.header)}>
+          <div className={cl(classes.titleAndxMarkWrapper)}>
+            <Heading level="2" size="medium" textcolor="default">
               {heading}
-            </Label>
-          </Heading>
-          <div className={cl(classes.xMarkWrapper)}>
-            <Button
-              variant="tertiary"
-              size="small"
-              icon="XMark"
-              onClick={() => handleCloseSideSheet()}
-            ></Button>
+            </Heading>
+            <div className={cl(classes.xMarkWrapper)}>
+              <Button
+                variant="tertiary"
+                size="small"
+                icon="XMark"
+                onClick={() => handleCloseSideSheet()}
+              ></Button>
+            </div>
           </div>
         </div>
-      </div>
-      <div className={cl(classes.content)}>{children}</div>
+        <div className={cl(classes.content)}>{children}</div>
+      </aside>
     </dialog>
   );
 }
