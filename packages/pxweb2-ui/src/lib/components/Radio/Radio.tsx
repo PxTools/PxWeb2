@@ -1,5 +1,5 @@
 import cl from 'clsx';
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import classes from './Radio.module.scss';
 
@@ -24,6 +24,16 @@ export function Radio({
   onChange,
   selectedOption,
 }: RadioProps) {
+  // Focus the selected radio button when the component mounts
+  const radioButtonRef = useCallback(
+    (radioButton: HTMLInputElement | null) => {
+      if (radioButton && radioButton.value === selectedOption) {
+        radioButton.focus();
+      }
+    },
+    [selectedOption],
+  );
+
   return (
     <div className={cl(classes.radioGroup)}>
       {options.map((option) => (
@@ -42,6 +52,7 @@ export function Radio({
               onChange={onChange}
               checked={option.value === selectedOption}
               tabIndex={option.value === selectedOption ? 0 : undefined}
+              ref={radioButtonRef}
             />
             {option.label}
           </div>
