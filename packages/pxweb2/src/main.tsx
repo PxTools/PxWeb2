@@ -7,6 +7,7 @@ import App from './app/app';
 import { validateConfig } from './app/util/validate';
 import { VariablesProvider } from './app/context/VariablesProvider';
 import { TableDataProvider } from './app/context/TableDataProvider';
+import { AppProvider } from './app/context/AppProvider';
 
 const router = createBrowserRouter([
   {
@@ -23,19 +24,20 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
 );
 
-// eslint-disable-next-line no-restricted-globals
 if (location.href.indexOf('localhost') > -1) {
   validateConfig();
 }
 
 root.render(
   <StrictMode>
-    <VariablesProvider>
-      <TableDataProvider>
-        <Suspense fallback={<div>Loading...</div>}>
-          <RouterProvider router={router} />
-        </Suspense>
-      </TableDataProvider>
-    </VariablesProvider>
+    <AppProvider>
+      <VariablesProvider>
+        <TableDataProvider>
+          <Suspense fallback={<div>Loading...</div>}>
+            <RouterProvider router={router} />
+          </Suspense>
+        </TableDataProvider>
+      </VariablesProvider>
+    </AppProvider>
   </StrictMode>,
 );

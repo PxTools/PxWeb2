@@ -1,7 +1,19 @@
 /// <reference types='vitest' />
-import { defineConfig } from 'vite';
+import { Plugin, defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
+
+// Custom plugin to handle theme CSS injection
+const themeInjectorPlugin = (): Plugin => ({
+  name: 'theme-injector',
+  transformIndexHtml(html) {
+    // Remove the theme CSS link from the original HTML
+    html = html.replace('<link rel="stylesheet" href="/theme/variables.css" />', '');
+    
+    // Inject it at the end of head to ensure it loads last
+    return html.replace('</head>', '<link rel="stylesheet" href="/theme/variables.css" /></head>');
+  },
+});
 
 export default defineConfig({
   root: __dirname,
@@ -24,12 +36,11 @@ export default defineConfig({
     host: 'localhost',
   },
 
-  plugins: [react()],
+  plugins: [
+    react(),
+    themeInjectorPlugin(),
+  ],
 
-  // Uncomment this if you are using workers.
-  // worker: {
-  //  plugins: [ nxViteTsPaths() ],
-  // },
 
   build: {
     outDir: './dist/',

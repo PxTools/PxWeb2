@@ -29,6 +29,7 @@ export function Tag({
         classes[variant],
         classes[type],
       )}
+      {...rest}
     >
       {children}
     </span>

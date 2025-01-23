@@ -26,7 +26,7 @@ export const Footer: React.FC = () => {
         </BodyLong>
       </div>
       <div className={styles.contact}>
-        <Heading size="xsmall" level="3">
+        <Heading size="xsmall" level="2">
           {t('presentation_page.footer.contact')}
         </Heading>
 

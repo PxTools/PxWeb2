@@ -1,6 +1,5 @@
 import classes from './Skeleton.module.scss';
 
-/* eslint-disable-next-line */
 export interface SkeletonProps {
   width: string;
   height: string;
