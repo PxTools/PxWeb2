@@ -5,7 +5,9 @@ import { pxTable } from './testData';
 
 describe('Table', () => {
   it('should render successfully desktop', () => {
-    const { baseElement } = render(<Table pxtable={pxTable} isMobile={false} />);
+    const { baseElement } = render(
+      <Table pxtable={pxTable} isMobile={false} />,
+    );
     expect(baseElement).toBeTruthy();
   });
 
@@ -15,10 +17,12 @@ describe('Table', () => {
   });
 
   it('should have a th header named 1968', () => {
-    const { baseElement } = render(<Table pxtable={pxTable} isMobile={false} />);
+    const { baseElement } = render(
+      <Table pxtable={pxTable} isMobile={false} />,
+    );
     const ths = baseElement.querySelectorAll('th');
     let found = false;
-    ths.forEach(th => {
+    ths.forEach((th) => {
       if (th.innerHTML === '1968') {
         found = true;
       }
@@ -28,10 +32,12 @@ describe('Table', () => {
   });
 
   it('should NOT have a th header named 1967', () => {
-    const { baseElement } = render(<Table pxtable={pxTable} isMobile={false} />);
+    const { baseElement } = render(
+      <Table pxtable={pxTable} isMobile={false} />,
+    );
     const ths = baseElement.querySelectorAll('th');
     let found = false;
-    ths.forEach(th => {
+    ths.forEach((th) => {
       if (th.innerHTML === '1967') {
         found = true;
       }
@@ -39,5 +45,3 @@ describe('Table', () => {
     expect(found).toBe(false);
   });
 });
-
-
