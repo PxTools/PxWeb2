@@ -1,11 +1,10 @@
 import cl from 'clsx';
-import classes from './Presentation.module.scss';
 import { useTranslation } from 'react-i18next';
-import { useRef, useEffect, useState } from 'react';
-import React from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import isEqual from 'lodash/isEqual';
 
-import styles from './Presentation.module.scss';
+import classes from './Presentation.module.scss';
+import useApp from '../../context/useApp';
 import { ContentTop } from '../ContentTop/ContentTop';
 import { Table, EmptyState, PxTable } from '@pxweb2/pxweb2-ui';
 import useTableData from '../../context/useTableData';
@@ -13,14 +12,19 @@ import useVariables from '../../context/useVariables';
 import { useDebounce } from '@uidotdev/usehooks';
 
 type propsType = {
-  selectedTabId: string;
+  readonly selectedTabId: string;
 };
 
 const MemoizedTable = React.memo(
-  ({ pxtable }: { pxtable: PxTable }) => <Table pxtable={pxtable} />,
-  (prevProps, nextProps) => isEqual(prevProps.pxtable, nextProps.pxtable),
+  ({ pxtable, isMobile }: { pxtable: PxTable; isMobile: boolean }) => (
+    <Table pxtable={pxtable} isMobile={isMobile} />
+  ),
+  (prevProps, nextProps) =>
+    isEqual(prevProps.pxtable, nextProps.pxtable) &&
+    prevProps.isMobile === nextProps.isMobile,
 );
 export function Presentation({ selectedTabId }: propsType) {
+  const { isMobile } = useApp();
   const { i18n, t } = useTranslation();
   const tableData = useTableData();
   const variablesChanged = useVariables();
@@ -50,23 +54,23 @@ export function Presentation({ selectedTabId }: propsType) {
         // had to substract 3 from scrollwidth. Because of border?
         const needsScroll = container.scrollWidth - 3 > container.clientWidth;
         if (needsScroll) {
-          containerGradient.classList.remove(styles.hidegradientRight);
-          containerGradient.classList.add(styles.hidegradientLeft);
+          containerGradient.classList.remove(classes.hidegradientRight);
+          containerGradient.classList.add(classes.hidegradientLeft);
           //  Check if scrolled to the rightmost side
           // had to substract 3 from scrollwidth. Because of border?
           if (
             container.scrollLeft + container.clientWidth >=
             container.scrollWidth - 3
           ) {
-            containerGradient.classList.add(styles.hidegradientRight);
+            containerGradient.classList.add(classes.hidegradientRight);
           }
           // scrolled, show left gradient
           if (container.scrollLeft > 0) {
-            containerGradient.classList.remove(styles.hidegradientLeft);
+            containerGradient.classList.remove(classes.hidegradientLeft);
           }
         } else {
-          containerGradient.classList.add(styles.hidegradientRight);
-          containerGradient.classList.add(styles.hidegradientLeft);
+          containerGradient.classList.add(classes.hidegradientRight);
+          containerGradient.classList.add(classes.hidegradientLeft);
         }
       }
     };
@@ -87,6 +91,15 @@ export function Presentation({ selectedTabId }: propsType) {
   });
 
   useEffect(() => {
+    if (isMobile) {
+      tableData.pivotToMobile();
+    } else {
+      tableData.pivotToDesktop();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isMobile]);
+
+  useEffect(() => {
     const hasSelectedValues = variables.getNumberOfSelectedValues() > 0;
     const hasSelectedMandatoryVariables = pxTableMetadata?.variables
       .filter((variable) => variable.mandatory)
@@ -99,7 +112,7 @@ export function Presentation({ selectedTabId }: propsType) {
       );
 
     if (initialRun && !hasSelectedValues) {
-      tableData.fetchTableData(tableId ? tableId : 'tab1292', i18n);
+      tableData.fetchTableData(tableId, i18n, isMobile);
       setIsMissingMandatoryVariables(false);
     } else {
       if (
@@ -109,7 +122,7 @@ export function Presentation({ selectedTabId }: propsType) {
         !initialRun
       ) {
         setIsFadingTable(true);
-        tableData.fetchTableData(tableId ? tableId : 'tab638', i18n);
+        tableData.fetchTableData(tableId, i18n, isMobile);
         setIsMissingMandatoryVariables(false);
       }
       if (!hasSelectedMandatoryVariables && !initialRun) {
@@ -144,11 +157,11 @@ export function Presentation({ selectedTabId }: propsType) {
           />
           {!isMissingMandatoryVariables && (
             <div
-              className={styles.gradientContainer}
+              className={classes.gradientContainer}
               ref={gradientContainerRef}
             >
-              <div className={styles.tableContainer} ref={tableContainerRef}>
-                <MemoizedTable pxtable={tableData.data} />
+              <div className={classes.tableContainer} ref={tableContainerRef}>
+                <MemoizedTable pxtable={tableData.data} isMobile={isMobile} />
               </div>
             </div>
           )}
