@@ -1,5 +1,6 @@
 import { i18n } from 'i18next';
-import React, { createContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useEffect, useState, ReactNode } from 'react';
+
 import useVariables from './useVariables';
 import {
   Dataset,
@@ -17,10 +18,14 @@ import { mapJsonStat2Response } from '../../mappers/JsonStat2ResponseMapper';
 
 // Define types for the context state and provider props
 export interface TableDataContextType {
+  isInitialized: boolean;
   data: PxTable | undefined;
   /*   loading: boolean;
   error: string | null; */
-  fetchTableData: (tableId: string, i18n: i18n) => void;
+  fetchTableData: (tableId: string, i18n: i18n, isMobile: boolean) => void;
+  pivotToMobile: () => void;
+  pivotToDesktop: () => void;
+  pivotCW: () => void;
 }
 
 interface TableDataProviderProps {
@@ -29,12 +34,20 @@ interface TableDataProviderProps {
 
 // Create context with default values
 const TableDataContext = createContext<TableDataContextType | undefined>({
+  isInitialized: false,
   data: undefined,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   fetchTableData: () => {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  pivotToMobile: () => {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  pivotToDesktop: () => {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  pivotCW: () => {},
 });
 
 const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
+  const [isInitialized] = useState(true);
   // Data (metadata) that reflects variables and values selected by user right now. Used as data source for the table
   const [data, setData] = useState<PxTable | undefined>(undefined);
   // Accumulated data (and metadata) from all API calls made by user. Stored in the data cube.
@@ -42,10 +55,18 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     undefined,
   );
 
-  // Handle with variables are in the stub
-  const [stub, setStub] = useState<string[]>([]);
-  // Handle with variables are in the heading
-  const [heading, setHeading] = useState<string[]>([]);
+  // State for mobile mode. If mobile mode data will be pivoted so that all variables are in the stub.
+  const [isMobileMode, setIsMobileMode] = useState<boolean>(false);
+
+  // Variables in the stub (desktop table)
+  const [stubDesktop, setStubDesktop] = useState<string[]>([]);
+  // Variables in the heading (desktop table)
+  const [headingDesktop, setHeadingDesktop] = useState<string[]>([]);
+
+  // Variables in the stub (mobile table)
+  const [stubMobile, setStubMobile] = useState<string[]>([]);
+  // Variables in the heading (mobile table)
+  const [headingMobile, setHeadingMobile] = useState<string[]>([]);
 
   const [errorMsg, setErrorMsg] = useState('');
   const variables = useVariables();
@@ -62,37 +83,68 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * @param tableId - The id of the table to fetch data for.
    * @param i18n - The i18n object for handling langauages
    */
-  const fetchTableData = async (tableId: string, i18n: i18n) => {
-    const selections: Array<VariableSelection> = [];
-    const ids = variables.getUniqueIds();
-    ids.forEach((id) => {
-      const selectedCodeList = variables.getSelectedCodelistById(id);
-      const selection: VariableSelection = {
-        variableCode: id,
-        valueCodes: variables.getSelectedValuesByIdSorted(id),
-      };
+  const fetchTableData = async (
+    tableId: string,
+    i18n: i18n,
+    isMobile: boolean,
+  ) => {
+    try {
+      const selections: Array<VariableSelection> = [];
 
-      // Add selected codelist to selection if it exists
-      if (selectedCodeList) {
-        selection.codeList = selectedCodeList;
+      // Get selection from Selection provider
+      const ids = variables.getUniqueIds();
+      ids.forEach((id) => {
+        const selectedCodeList = variables.getSelectedCodelistById(id);
+        const selection: VariableSelection = {
+          variableCode: id,
+          valueCodes: variables.getSelectedValuesByIdSorted(id),
+        };
+
+        // Add selected codelist to selection if it exists
+        if (selectedCodeList) {
+          selection.codeList = selectedCodeList;
+        }
+
+        selections.push(selection);
+      });
+
+      const variablesSelection: VariablesSelection = { selection: selections };
+
+      // Check if we have accumulated data in the data cube and if it is valid. If not we cannot use it.
+      const validAccData: boolean = isAccumulatedDataValid(
+        variablesSelection,
+        i18n.language,
+        tableId,
+      );
+
+      if (validAccData) {
+        await fetchWithValidAccData(
+          tableId,
+          i18n,
+          isMobile,
+          variablesSelection,
+        );
+      } else {
+        await fetchWithoutValidAccData(
+          tableId,
+          i18n,
+          isMobile,
+          variablesSelection,
+        );
       }
 
-      selections.push(selection);
-    });
+      if (isMobile && !isMobileMode) {
+        setIsMobileMode(true);
+      }
+      if (!isMobile && isMobileMode) {
+        setIsMobileMode(false);
+      }
+    } catch (error: unknown) {
+      const err = error as Error;
 
-    const variablesSelection: VariablesSelection = { selection: selections };
-
-    // Check if we have accumulated data in the data cube and if it is valid. If not we cannot use it.
-    const validAccData: boolean = isAccumulatedDataValid(
-      variablesSelection,
-      i18n.language,
-      tableId,
-    );
-
-    if (validAccData) {
-      fetchWithValidAccData(tableId, i18n, variablesSelection);
-    } else {
-      fetchWithoutValidAccData(tableId, i18n, variablesSelection);
+      setErrorMsg(
+        'Failed to fetch table data. Please try again later. ' + err.message,
+      );
     }
   };
 
@@ -106,6 +158,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   const fetchWithoutValidAccData = async (
     tableId: string,
     i18n: i18n,
+    isMobile: boolean,
     variablesSelection: VariablesSelection,
   ) => {
     const pxTable: PxTable = await fetchFromApi(
@@ -114,7 +167,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       variablesSelection,
     );
 
-    handleStubAndHeading(pxTable, i18n);
+    initializeStubAndHeading(pxTable, isMobile);
     setData(pxTable);
 
     // Store as accumulated data
@@ -131,45 +184,62 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   const fetchWithValidAccData = async (
     tableId: string,
     i18n: i18n,
+    isMobile: boolean,
     variablesSelection: VariablesSelection,
   ) => {
     // Check if all data and metadata asked for by the user is already loaded from earlier API-calls
-    if (isAllDataAlreadyLoaded(variablesSelection)) {
+
+    // VariablesSelection for the data that is not already loaded in accumulatedData
+    let notLoadedVarSelection: VariablesSelection = { selection: [] };
+
+    if (isAllDataAlreadyLoaded(variablesSelection, notLoadedVarSelection)) {
       // All data and metadata asked for by the user is already loaded in accumulatedData. No need for a new API-call. Create a pxTable from accumulatedData instead.
       const pxTable = createPxTableFromAccumulatedData(variablesSelection);
 
       if (pxTable) {
+        if (isMobile) {
+          pivotForMobile(pxTable);
+        } else {
+          pivotForDesktop(pxTable);
+        }
+
         setData(pxTable);
         return;
       }
     }
 
-    let varSelection: VariablesSelection = variablesSelection;
-    let diffVariablesSelection: VariablesSelection = { selection: [] };
-
-    // We need to make a new API-call to get the data and metadata not already loaded in accumulatedData
-    // Make the API-call as small as possible
-    diffVariablesSelection = getDiffVariablesSelection(variablesSelection);
-
-    if (diffVariablesSelection.selection.length > 0) {
-      varSelection = getMinimumVariablesSelection(
-        variablesSelection,
-        diffVariablesSelection,
+    // Get the right codelists for the variables
+    notLoadedVarSelection.selection.forEach((diffSelection) => {
+      const selection = variablesSelection.selection.find(
+        (sel) => sel.variableCode === diffSelection.variableCode,
       );
-    }
+      if (selection?.codeList) {
+        diffSelection.codeList = selection.codeList;
+      }
+    });
 
-    // Make the minimal API-call
-    let pxTable: PxTable = await fetchFromApi(tableId, i18n, varSelection);
+    // Get the not already loaded data from the API
+    let pxTable: PxTable = await fetchFromApi(
+      tableId,
+      i18n,
+      notLoadedVarSelection,
+    );
 
     // Merge pxTable with accumulatedData
     mergeWithAccumulatedData(
       pxTable,
-      diffVariablesSelection,
+      notLoadedVarSelection,
       variablesSelection,
     );
     const pxTableMerged = createPxTableFromAccumulatedData(variablesSelection);
     if (pxTableMerged) {
       pxTable = pxTableMerged;
+    }
+
+    if (isMobile) {
+      pivotForMobile(pxTable);
+    } else {
+      pivotForDesktop(pxTable);
     }
 
     setData(pxTable);
@@ -242,12 +312,21 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     }
 
     for (const selection of variablesSelection.selection) {
-      const variableExists = accumulatedData.metadata.variables.some(
+      // Check that the variable exists in accumulatedData
+      const variable = accumulatedData.metadata.variables.find(
         (variable) => variable.id === selection.variableCode,
       );
-      if (!variableExists) {
+      if (!variable) {
         return false;
       }
+      // We need to check that the variable codelist has not been changed
+      // else {
+      //   if (selection.codeList) {
+      //     if (variable.codeList !== selection.codeList) {
+      //       return false;
+      //     }
+      //   }
+      // }
     }
 
     return true;
@@ -255,49 +334,122 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
   /**
    * Checks if all data and metadata the user asks for is already loaded in the accumulated data.
+   * If there are missing datacells in the accumulated data, the missing variables and values are added to the notLoadedVarSelection.
    *
    * @param variablesSelection - User selection of variables and their values.
+   * @param notLoadedVarSelection - Out parameter. After the method has finished notLoadedVarSelection contains the VariablesSelection for the variables and values not already loaded in the accumulated data.
    * @returns `true` if all data the user asks for is already loaded in the accumulated data, `false` otherwise.
    */
   function isAllDataAlreadyLoaded(
     variablesSelection: VariablesSelection,
+    notLoadedVarSelection: VariablesSelection,
   ): boolean {
     if (accumulatedData !== undefined) {
       // We have data and metadata from earlier API-calls
 
-      // Create a map for quick lookup of selected variable codes and their values
-      const variableMap = new Map(
-        accumulatedData.metadata.variables.map((variable) => [
-          variable.id,
-          new Set(variable.values.map((value) => value.code)),
-        ]),
-      );
+      // Dimensions in accumulatedData
+      const dimensions: string[] = [];
 
-      for (const selection of variablesSelection.selection) {
-        if (
-          selection.valueCodes !== undefined &&
-          selection.valueCodes.length > 0
-        ) {
-          const accumulatedVariableValues = variableMap.get(
-            selection.variableCode,
-          );
-
-          if (!accumulatedVariableValues) {
-            return false;
-          }
-
-          for (const valueCode of selection.valueCodes) {
-            if (!accumulatedVariableValues.has(valueCode)) {
-              return false;
-            }
-          }
-        }
-      }
-
-      return true;
+      checkDataCube(variablesSelection, dimensions, 0, notLoadedVarSelection);
     }
 
-    return false;
+    if (notLoadedVarSelection.selection.length > 0) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  /**
+   * Recursively checks if all data and metadata the user asks for is already loaded in the accumulated data.
+   * If there are missing datacells in the accumulated data, the missing variables and values are added to the notLoadedVarSelection.
+   *
+   * @param variablesSelection - User selection of variables and their values.
+   * @param dimensions - An array of dimension values used to navigate through the data cubes.
+   * @param dimensionIndex - The current index of the dimension being processed.
+   * @param notLoadedVarSelection - Out parameter. After the method has finished notLoadedVarSelection contains the VariablesSelection for the variables and values not already loaded in the accumulated data.
+   */
+  function checkDataCube(
+    variablesSelection: VariablesSelection,
+    dimensions: string[],
+    dimensionIndex: number,
+    notLoadedVarSelection: VariablesSelection,
+  ): void {
+    if (accumulatedData === undefined) {
+      return undefined;
+    }
+
+    // 1. Find the variable in the new data that corresponds to the current dimension
+    const variableInSelection = variablesSelection.selection.find(
+      (varSel) =>
+        varSel.variableCode ===
+        accumulatedData.metadata.variables[dimensionIndex].id,
+    );
+
+    if (variableInSelection) {
+      // Has the last dimension been reached? If so we can check if the data from the selection exists in the accumulated data
+      if (dimensionIndex === accumulatedData.metadata.variables.length - 1) {
+        variableInSelection.valueCodes?.forEach((value) => {
+          dimensions[dimensionIndex] = value;
+
+          // Try to get the data value from accumulatedData
+          const dataValue = getPxTableData(
+            accumulatedData.data.cube,
+            dimensions,
+          );
+
+          if (dataValue === undefined) {
+            // If the data cell does not exist in the accumulated data:
+            // --> Add data cell metadata to notLoadedVarSelection (that will be used for API-call to ge the data later)
+            addCellMetadataToNotLoadedSelection(
+              dimensions,
+              notLoadedVarSelection,
+            );
+          }
+        });
+      } else {
+        // Continue to the next dimension
+        variableInSelection.valueCodes?.forEach((value) => {
+          dimensions[dimensionIndex] = value;
+          checkDataCube(
+            variablesSelection,
+            dimensions,
+            dimensionIndex + 1,
+            notLoadedVarSelection,
+          );
+        });
+      }
+    }
+  }
+
+  /**
+   * Adds data cell metadata to the notLoadedVarSelection.
+   *
+   * @param dimensions - An array of dimension values that identifies the data cell in the data cube.
+   * @param notLoadedVarSelection - Contains the VariablesSelection for the variables and values not already loaded in the accumulated data.
+   */
+  function addCellMetadataToNotLoadedSelection(
+    dimensions: string[],
+    notLoadedVarSelection: VariablesSelection,
+  ): void {
+    if (accumulatedData != undefined) {
+      dimensions.forEach((dimension, index) => {
+        const existingSelection = notLoadedVarSelection.selection.find(
+          (sel) =>
+            sel.variableCode === accumulatedData.metadata.variables[index].id,
+        );
+        if (existingSelection) {
+          if (!existingSelection.valueCodes?.includes(dimension)) {
+            existingSelection.valueCodes?.push(dimension);
+          }
+        } else {
+          notLoadedVarSelection.selection.push({
+            variableCode: accumulatedData.metadata.variables[index].id,
+            valueCodes: [dimension],
+          });
+        }
+      });
+    }
   }
 
   /**
@@ -347,96 +499,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   }
 
   /**
-   * Creates a VariablesSelection containing only the variables and values not already loaded in the accumulated data.
-   *
-   * @param variablesSelection - Variables selection containing all variables and values selected by the user.
-   * @returns A VariablesSelection object containing only the variables and values not already loaded in the accumulated data.
-   */
-  function getDiffVariablesSelection(
-    variablesSelection: VariablesSelection,
-  ): VariablesSelection {
-    if (accumulatedData !== undefined) {
-      // Find whats missing in accumulatedData
-      const diffVariablesSelection: VariablesSelection =
-        structuredClone(variablesSelection);
-
-      // Create a map for quick lookup of accumulated variable codes and their values
-      const accumulatedVariableMap = new Map(
-        accumulatedData.metadata.variables.map((variable) => [
-          variable.id,
-          new Set(variable.values.map((value) => value.code)),
-        ]),
-      );
-
-      // Filter out variables and values already loaded in accumulatedData
-      diffVariablesSelection.selection =
-        diffVariablesSelection.selection.filter((selection) => {
-          const accumulatedValues = accumulatedVariableMap.get(
-            selection.variableCode,
-          );
-
-          if (!accumulatedValues) {
-            // Variable not found in accumulatedData, keep it in diffVariablesSelection
-            return true;
-          }
-
-          // Filter out values already loaded in accumulatedData
-          if (selection.valueCodes) {
-            selection.valueCodes = selection.valueCodes.filter(
-              (valueCode) => !accumulatedValues.has(valueCode),
-            );
-          }
-
-          // Keep the variable if it has any values left after filtering
-          if (selection.valueCodes) {
-            return selection.valueCodes.length > 0;
-          } else {
-            return false;
-          }
-        });
-
-      return diffVariablesSelection;
-    } else {
-      const emptyVariablesSelection: VariablesSelection = { selection: [] };
-      return emptyVariablesSelection;
-    }
-  }
-
-  /**
-   * Creates a VariablesSelection containing only the minimum information needed to make a new API-call to
-   * get the variables and values not already loaded in the accumulated data.
-   *
-   * @param variablesSelection - Variables selection containing all variables and values selected by the user.
-   * @param diffVariablesSelection - Variables selection containing only the variables and values not already loaded in the accumulated data.
-   * @returns A minimum VariablesSelection containing only the minimum information needed to make a new API-call.
-   */
-  function getMinimumVariablesSelection(
-    variablesSelection: VariablesSelection,
-    diffVariablesSelection: VariablesSelection,
-  ): VariablesSelection {
-    if (accumulatedData !== undefined) {
-      // We have data and metadata from earlier API-calls.
-
-      // Create the new VariablesSelection
-      const newVariablesSelection: VariablesSelection =
-        structuredClone(variablesSelection);
-
-      newVariablesSelection.selection = newVariablesSelection.selection.map(
-        (selection) => {
-          const diffSelection = diffVariablesSelection.selection.find(
-            (diff) => diff.variableCode === selection.variableCode,
-          );
-          return diffSelection ? diffSelection : selection;
-        },
-      );
-
-      return newVariablesSelection;
-    } else {
-      return variablesSelection;
-    }
-  }
-
-  /**
    * Merge pxTable from new API call into the accumulatedData in the data cube. Both data and metadata are merged.
    *
    * @param pxTable - PxTable containing the data and metadata from the new API-call.
@@ -449,10 +511,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     variablesSelection: VariablesSelection,
   ): void {
     // Check that it is possible to merge the new data with the accumulated data. If more than one variable changed, it is not possible to merge.
-    if (
-      accumulatedData !== undefined &&
-      diffVariablesSelection.selection.length === 1
-    ) {
+    if (accumulatedData !== undefined) {
       // --- Merge metadata ---
 
       // Create a map of the variables in accumulated data for quick lookup
@@ -463,50 +522,48 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         ]),
       );
 
-      // 1. Find the variable in accumulated data that we are going to merge new values into
-      if (
-        accDataVariables.has(diffVariablesSelection.selection[0].variableCode)
-      ) {
-        // The existing variable in accumulated data
-        const existingVariable = accDataVariables.get(
-          diffVariablesSelection.selection[0].variableCode,
-        );
-        // Create a map of existing values for the variable for quick lookup
-        const existingValues = new Set(
-          existingVariable?.values.map((v) => v.code),
-        );
+      diffVariablesSelection.selection.forEach((diffSelection) => {
+        // Find the variable in accumulated data that we are going to merge new values into
+        if (accDataVariables.has(diffSelection.variableCode)) {
+          // The existing variable in accumulated data
+          const existingVariable = accDataVariables.get(
+            diffSelection.variableCode,
+          );
 
-        // 2. Find the variable in variablesSelection that we are going to merge new values from
-        const selection = variablesSelection.selection.find(
-          (sel) =>
-            sel.variableCode ===
-            diffVariablesSelection.selection[0].variableCode,
-        );
+          // Create a map of existing values for the variable for quick lookup
+          const existingValues = new Set(
+            existingVariable?.values.map((v) => v.code),
+          );
 
-        // 3. Find the variable in pxTable (from the new API call) that we are going to merge new values from
-        const updatedVariable = pxTable.metadata.variables.find(
-          (variable) =>
-            variable.id === diffVariablesSelection.selection[0].variableCode,
-        )?.values;
+          // Find the variable in variablesSelection that we are going to merge new values from
+          const selection = variablesSelection.selection.find(
+            (sel) => sel.variableCode === diffSelection.variableCode,
+          );
 
-        if (updatedVariable) {
-          updatedVariable.forEach((value) => {
-            if (!existingValues.has(value.code)) {
-              // It's a new value that we need to add to the existing variable!
-              const newValue = structuredClone(value);
+          // Find the variable in pxTable (from the new API call) that we are going to merge new values from
+          const updatedVariable = pxTable.metadata.variables.find(
+            (variable) => variable.id === diffSelection.variableCode,
+          )?.values;
 
-              // Values are assumed to be sorted in the right order in the VariablesProvider
-              // Find the index where the new value should be inserted
-              const valueIndex = selection?.valueCodes?.indexOf(value.code);
-              if (valueIndex !== undefined && valueIndex !== -1) {
-                existingVariable?.values.splice(valueIndex, 0, newValue);
-              } else {
-                existingVariable?.values.push(newValue);
+          if (updatedVariable) {
+            updatedVariable.forEach((value) => {
+              if (!existingValues.has(value.code)) {
+                // It's a new value that we need to add to the existing variable!
+                const newValue = structuredClone(value);
+
+                // Values are assumed to be sorted in the right order in the VariablesProvider
+                // Find the index where the new value should be inserted
+                const valueIndex = selection?.valueCodes?.indexOf(value.code);
+                if (valueIndex !== undefined && valueIndex !== -1) {
+                  existingVariable?.values.splice(valueIndex, 0, newValue);
+                } else {
+                  existingVariable?.values.push(newValue);
+                }
               }
-            }
-          });
+            });
+          }
         }
-      }
+      });
 
       // --- Merge data ---
 
@@ -626,67 +683,229 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * Remember order of variables in stub and heading when table setup is changed.
    *
    * @param pxTable - PxTable containing the data and metadata for display in table.
-   * @param i18n - The i18n object for handling langauages
+   * @param isMobile - If the device is mobile or not.
    */
-  function handleStubAndHeading(pxTable: PxTable, i18n: i18n) {
+  function initializeStubAndHeading(pxTable: PxTable, isMobile: boolean) {
     if (
       accumulatedData === undefined ||
       accumulatedData.metadata.id !== pxTable.metadata.id
     ) {
       // First time we get data OR we have a new table.
-      // -> Set stub and heading according to the order in pxTable
-      const stubOrder: string[] = pxTable.stub.map((variable) => variable.id);
-      const headingOrder: string[] = pxTable.heading.map(
+
+      // -> Set stub and heading order for desktop according to the order in pxTable
+      const stubOrderDesktop: string[] = pxTable.stub.map(
         (variable) => variable.id,
       );
-      setStub(stubOrder);
-      setHeading(headingOrder);
-    } else {
-      // Language has changed.
-      // -> Set stub and heading in pxTable according to the order in state
-      pxTable.stub = [];
-      stub.forEach((id) => {
-        const variable = pxTable.metadata.variables.find(
-          (variable) => variable.id === id,
-        );
-        if (variable) {
-          pxTable.stub.push(variable);
-        }
-      });
-      pxTable.heading = [];
-      heading.forEach((id) => {
-        const variable = pxTable.metadata.variables.find(
-          (variable) => variable.id === id,
-        );
-        if (variable) {
-          pxTable.heading.push(variable);
-        }
+      const headingOrderDesktop: string[] = pxTable.heading.map(
+        (variable) => variable.id,
+      );
+      setStubDesktop(stubOrderDesktop);
+      setHeadingDesktop(headingOrderDesktop);
+
+      // -> Set stub and heading order for mobile according to the order in pxTable
+      const tmpStubMobile = structuredClone(pxTable.stub);
+      const tmpHeadingMobile = structuredClone(pxTable.heading);
+
+      tmpHeadingMobile.forEach((variable) => {
+        tmpStubMobile.push(variable);
       });
 
-      // Find all new variables and add them to the stub
+      tmpStubMobile.sort((a, b) => a.values.length - b.values.length);
+
+      const stubOrderMobile: string[] = tmpStubMobile.map(
+        (variable) => variable.id,
+      );
+
+      const headingOrderMobile: string[] = [];
+
+      setStubMobile(stubOrderMobile);
+      setHeadingMobile(headingOrderMobile);
+
+      if (isMobile) {
+        pivotTable(pxTable, stubOrderMobile, headingOrderMobile);
+      } else {
+        pivotTable(pxTable, stubOrderDesktop, headingOrderDesktop);
+      }
+    } else {
+      // Language has changed.
+
+      if (isMobile) {
+        pivotTable(pxTable, stubMobile, headingMobile);
+      } else {
+        pivotTable(pxTable, stubDesktop, headingDesktop);
+      }
+
+      // Find all new variables and add them to the stub - Desktop
       const remainingVariables = pxTable.metadata.variables.filter(
         (variable) =>
-          !stub.includes(variable.id) && !heading.includes(variable.id),
+          !stubDesktop.includes(variable.id) &&
+          !headingDesktop.includes(variable.id),
       );
 
       if (remainingVariables.length > 0) {
-        const newStub = structuredClone(stub);
+        const newStubDesktop = structuredClone(stubDesktop);
+        const newStubMobile = structuredClone(stubMobile);
 
         remainingVariables.forEach((variable) => {
-          if (!newStub.includes(variable.id)) {
+          if (!newStubDesktop.includes(variable.id)) {
             pxTable.stub.push(variable);
-            newStub.push(variable.id);
+            newStubDesktop.push(variable.id);
+          }
+          if (!newStubMobile.includes(variable.id)) {
+            newStubMobile.push(variable.id);
           }
         });
-        setStub(newStub);
+        setStubDesktop(newStubDesktop);
+        setStubMobile(newStubMobile);
       }
     }
   }
 
+  /**
+   * Pivots the table to mobile layout.
+   * This function updates the table structure to fit a mobile layout by adjusting the stub and heading order.
+   */
+  const pivotToMobile = () => {
+    if (data?.heading !== undefined) {
+      const tmpTable = structuredClone(data);
+
+      if (tmpTable !== undefined) {
+        pivotTable(tmpTable, stubMobile, headingMobile);
+        setData(tmpTable);
+        setIsMobileMode(true);
+      }
+    }
+  };
+
+  /**
+   * Pivots the table to desktop layout.
+   * This function updates the table structure to fit a desktop layout by adjusting the stub and heading order.
+   */
+  const pivotToDesktop = () => {
+    if (data?.heading !== undefined) {
+      const tmpTable = structuredClone(data);
+
+      if (tmpTable !== undefined) {
+        pivotTable(tmpTable, stubDesktop, headingDesktop);
+        setData(tmpTable);
+        setIsMobileMode(false);
+      }
+    }
+  };
+
+  /**
+   * Pivots the table clockwise.
+   */
+  function pivotCW(): void {
+    if (data?.heading === undefined) {
+      return;
+    }
+
+    const tmpTable = structuredClone(data);
+    if (tmpTable === undefined) {
+      return;
+    }
+
+    let stub: string[];
+    let heading: string[];
+
+    if (isMobileMode) {
+      stub = structuredClone(stubMobile);
+      heading = structuredClone(headingMobile);
+    } else {
+      stub = structuredClone(stubDesktop);
+      heading = structuredClone(headingDesktop);
+    }
+
+    if (stub.length === 0 && heading.length === 0) {
+      return;
+    }
+
+    if (stub.length > 0 && heading.length > 0) {
+      stub.push(heading.pop() as string);
+      heading.unshift(stub.shift() as string);
+    } else if (stub.length === 0) {
+      heading.unshift(heading.pop() as string);
+    } else if (heading.length === 0) {
+      stub.unshift(stub.pop() as string);
+    }
+
+    pivotTable(tmpTable, stub, heading);
+    setData(tmpTable);
+
+    if (isMobileMode) {
+      setStubMobile(stub);
+      setHeadingMobile(heading);
+    } else {
+      setStubDesktop(stub);
+      setHeadingDesktop(heading);
+    }
+  }
+
+  /**
+   * Adjusts the table for mobile layout.
+   *
+   * @param {PxTable} pxTable - The table to be pivoted.
+   */
+  function pivotForMobile(pxTable: PxTable) {
+    pivotTable(pxTable, stubMobile, headingMobile);
+  }
+
+  /**
+   * Adjusts the table for desktop layout.
+   *
+   * @param {PxTable} pxTable - The table to be pivoted.
+   */
+  function pivotForDesktop(pxTable: PxTable) {
+    pivotTable(pxTable, stubDesktop, headingDesktop);
+  }
+
+  /**
+   * Pivots the table according to the stub- and heading order.
+   */
+  function pivotTable(pxTable: PxTable, stub: string[], heading: string[]) {
+    // - pivot pxTable according to stub- and heading order
+    pxTable.stub = [];
+    stub.forEach((id) => {
+      const variable = pxTable.metadata.variables.find(
+        (variable) => variable.id === id,
+      );
+      if (variable) {
+        pxTable.stub.push(variable);
+      }
+    });
+    pxTable.heading = [];
+    heading.forEach((id) => {
+      const variable = pxTable.metadata.variables.find(
+        (variable) => variable.id === id,
+      );
+      if (variable) {
+        pxTable.heading.push(variable);
+      }
+    });
+  }
+
+  const memoData = React.useMemo(
+    () => ({
+      data,
+      /* loading, error  */ fetchTableData,
+      pivotToMobile,
+      pivotToDesktop,
+      pivotCW,
+      isInitialized,
+    }),
+    [
+      data,
+      fetchTableData,
+      pivotToMobile,
+      pivotToDesktop,
+      pivotCW,
+      isInitialized,
+    ],
+  );
+
   return (
-    <TableDataContext.Provider
-      value={{ data, /* loading, error  */ fetchTableData }}
-    >
+    <TableDataContext.Provider value={memoData}>
       {children}
     </TableDataContext.Provider>
   );

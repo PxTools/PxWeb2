@@ -9,7 +9,7 @@ interface TabContextType {
 
 const TabContext = createContext<TabContextType>({
   activeTab: '',
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
   setActiveTab: (_id: string) => {},
 });
 

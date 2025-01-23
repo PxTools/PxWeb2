@@ -1,6 +1,8 @@
 import React from 'react';
+import cl from 'clsx';
+
 import styles from './Header.module.scss';
-import { Button, Heading } from '@pxweb2/pxweb2-ui';
+import { Button } from '@pxweb2/pxweb2-ui';
 import { getConfig } from '../../util/config/getConfig';
 import { useTranslation } from 'react-i18next';
 export const Header: React.FC = () => {
@@ -10,7 +12,9 @@ export const Header: React.FC = () => {
   return (
     <div className={styles.header}>
       <div>
-        <Heading size="medium">{t('common.header.title')}</Heading>
+        <span className={cl(styles['heading-medium'])}>
+          {t('common.header.title')}
+        </span>
       </div>
       <div>
         {config.language.supportedLanguages.map(
