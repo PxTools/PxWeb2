@@ -577,6 +577,7 @@ function fillData(
 /**
  * Creates repeated mobile headers for a table and appends them to the provided table rows.
  *
+ * @param {PxTable} table - The PxTable object.
  * @param {number} stubLength - The length of the stub.
  * @param {number} stubIndex - The index of the stub.
  * @param {DataCellCodes} stubDataCellCodes - An array of data cell codes containing HTML IDs and value labels.
@@ -633,6 +634,7 @@ function createRepeatedMobileHeader(
  *
  * @param {number} stubIndex - The index of the stub.
  * @param {DataCellMeta} cellMeta - Metadata for the data cell.
+ * @param {Variable} variable - The variable object containing the label.
  * @param {Value} val - The value object containing the label.
  * @param {number} i - The index of the current iteration.
  * @param {React.JSX.Element[]} tableRows - The array of table rows to which the new row will be appended.
