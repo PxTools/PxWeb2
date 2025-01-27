@@ -46,6 +46,10 @@ export const NavigationRail = React.forwardRef<
     help: refs.help.current!,
   }));
 
+  const isKeyboardClick = (event: any) => {
+    return event.screenX === 0 && event.screenY === 0;
+  };
+
   return (
     <div className={styles.navigationRail}>
       <LazyMotion features={loadFeatures}>
@@ -57,11 +61,7 @@ export const NavigationRail = React.forwardRef<
             selected={selected === 'filter'}
             icon={'Controls'}
             onClick={(event: any) => {
-              onChange(
-                event.screenX === 0 && event.screenY === 0,
-                selected === 'filter',
-                'filter',
-              );
+              onChange(isKeyboardClick(event), selected === 'filter', 'filter');
             }}
           />
           <Item
@@ -71,11 +71,7 @@ export const NavigationRail = React.forwardRef<
             selected={selected === 'view'}
             icon={'BarChart'}
             onClick={(event: any) => {
-              onChange(
-                event.screenX === 0 && event.screenY === 0,
-                selected === 'view',
-                'view',
-              );
+              onChange(isKeyboardClick(event), selected === 'view', 'view');
             }}
           />
           <Item
@@ -85,11 +81,7 @@ export const NavigationRail = React.forwardRef<
             selected={selected === 'edit'}
             icon={'ArrowsUpDown'}
             onClick={(event: any) => {
-              onChange(
-                event.screenX === 0 && event.screenY === 0,
-                selected === 'edit',
-                'edit',
-              );
+              onChange(isKeyboardClick(event), selected === 'edit', 'edit');
             }}
           />
           <Item
@@ -99,11 +91,7 @@ export const NavigationRail = React.forwardRef<
             selected={selected === 'save'}
             icon={'FloppyDisk'}
             onClick={(event: any) => {
-              onChange(
-                event.screenX === 0 && event.screenY === 0,
-                selected === 'save',
-                'save',
-              );
+              onChange(isKeyboardClick(event), selected === 'save', 'save');
             }}
           />
           <Item
@@ -113,11 +101,7 @@ export const NavigationRail = React.forwardRef<
             selected={selected === 'help'}
             icon={'QuestionMarkCircle'}
             onClick={(event: any) => {
-              onChange(
-                event.screenX === 0 && event.screenY === 0,
-                selected === 'help',
-                'help',
-              );
+              onChange(isKeyboardClick(event), selected === 'help', 'help');
             }}
           />
         </MotionConfig>
