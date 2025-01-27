@@ -36,14 +36,6 @@ export function App() {
   const mobileBreakpoint = Number(BreakpointsSmallMaxWidth.replace('px', ''));
   const [, setIsMobile] = useState(window.innerWidth <= mobileBreakpoint);
 
-  const navigationRailRef = useRef<{
-    navRailFilter: HTMLButtonElement;
-    navRailView: HTMLButtonElement;
-    navRailEdit: HTMLButtonElement;
-    navRailSave: HTMLButtonElement;
-    navRailHelp: HTMLButtonElement;
-  }>(null);
-
   const navigationBarRef = useRef<{
     filter: HTMLButtonElement;
     view: HTMLButtonElement;
@@ -55,53 +47,53 @@ export function App() {
   const hideMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!navigationRailRef.current || !hideMenuRef.current) {
+    if (!navigationBarRef.current || !hideMenuRef.current) {
       return;
     }
     let item = null;
 
     if (selectedNavigationView === 'filter') {
-      item = navigationRailRef.current.navRailFilter;
+      item = navigationBarRef.current.filter;
       accessibility.addFocusOverride(
         'filterButton',
-        navigationRailRef.current.navRailFilter,
+        navigationBarRef.current.filter,
         undefined,
         hideMenuRef.current,
       );
     }
 
     if (selectedNavigationView === 'view') {
-      item = navigationRailRef.current.navRailView;
+      item = navigationBarRef.current.view;
       accessibility.addFocusOverride(
         'viewButton',
-        navigationRailRef.current.navRailView,
+        navigationBarRef.current.view,
         undefined,
         hideMenuRef.current,
       );
     }
     if (selectedNavigationView === 'edit') {
-      item = navigationRailRef.current.navRailEdit;
+      item = navigationBarRef.current.edit;
       accessibility.addFocusOverride(
         'editButton',
-        navigationRailRef.current.navRailEdit,
+        navigationBarRef.current.edit,
         undefined,
         hideMenuRef.current,
       );
     }
     if (selectedNavigationView === 'save') {
-      item = navigationRailRef.current.navRailSave;
+      item = navigationBarRef.current.save;
       accessibility.addFocusOverride(
         'saveButton',
-        navigationRailRef.current.navRailSave,
+        navigationBarRef.current.save,
         undefined,
         hideMenuRef.current,
       );
     }
     if (selectedNavigationView === 'help') {
-      item = navigationRailRef.current.navRailHelp;
+      item = navigationBarRef.current.help;
       accessibility.addFocusOverride(
         'helpButton',
-        navigationRailRef.current.navRailHelp,
+        navigationBarRef.current.help,
         undefined,
         hideMenuRef.current,
       );
@@ -117,7 +109,7 @@ export function App() {
     }
   }, [
     accessibility,
-    navigationRailRef.current,
+    navigationBarRef.current,
     hideMenuRef.current,
     selectedNavigationView,
   ]);
@@ -150,8 +142,8 @@ export function App() {
       if (newSelectedNavView !== 'none') {
         window.setTimeout(() => {
           // Sorry about this hack, can't justify spending more time on this
-          navigationRailRef.current?.[
-            newSelectedNavView as keyof typeof navigationRailRef.current
+          navigationBarRef.current?.[
+            newSelectedNavView as keyof typeof navigationBarRef.current
           ].focus();
           navigationBarRef.current?.[newSelectedNavView].focus();
         }, 100);
@@ -188,7 +180,7 @@ export function App() {
       <div className={styles.navigationAndContentContainer}>
         {!isTablet && (
           <NavigationRail
-            ref={navigationRailRef}
+            ref={navigationBarRef}
             onChange={changeSelectedNavView}
             selected={selectedNavigationView}
           />
