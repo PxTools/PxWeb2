@@ -24,11 +24,12 @@ export const NavigationRail: React.FC<NavigationRailProps> = ({
       <LazyMotion features={loadFeatures}>
         <MotionConfig reducedMotion="user">
           <nav
-              aria-labelledby="navigation-rail-heading"
-              aria-describedby="navigation-rail-description"
-              aria-label={t('presentation_page.sidemenu.arialabeltoolsidemenu')}>
+            aria-labelledby="navigation-rail-heading"
+            aria-describedby="navigation-rail-description"
+            aria-label={t('presentation_page.sidemenu.arialabeltoolsidemenu')}
+          >
             <ul className={styles.navigationRailList}>
-                          <Item
+              <Item
                 parentName="navRail"
                 label={t('presentation_page.sidemenu.selection.title')}
                 selected={selected === 'filter'}
