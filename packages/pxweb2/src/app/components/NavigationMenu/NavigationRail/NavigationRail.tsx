@@ -21,29 +21,29 @@ interface NavigationRailProps {
 
 export const NavigationRail = React.forwardRef<
   {
-    filter: HTMLButtonElement;
-    view: HTMLButtonElement;
-    edit: HTMLButtonElement;
-    save: HTMLButtonElement;
-    help: HTMLButtonElement;
+    navRailFilter: HTMLButtonElement;
+    navRailView: HTMLButtonElement;
+    navRailEdit: HTMLButtonElement;
+    navRailSave: HTMLButtonElement;
+    navRailHelp: HTMLButtonElement;
   },
   NavigationRailProps
 >(({ onChange, selected }, ref) => {
   const { t } = useTranslation();
   const refs = {
-    filter: React.useRef<HTMLButtonElement>(null),
-    view: React.useRef<HTMLButtonElement>(null),
-    edit: React.useRef<HTMLButtonElement>(null),
-    save: React.useRef<HTMLButtonElement>(null),
-    help: React.useRef<HTMLButtonElement>(null),
+    navRailFilter: React.useRef<HTMLButtonElement>(null),
+    navRailView: React.useRef<HTMLButtonElement>(null),
+    navRailEdit: React.useRef<HTMLButtonElement>(null),
+    navRailSave: React.useRef<HTMLButtonElement>(null),
+    navRailHelp: React.useRef<HTMLButtonElement>(null),
   };
 
   React.useImperativeHandle(ref, () => ({
-    filter: refs.filter.current!,
-    view: refs.view.current!,
-    edit: refs.edit.current!,
-    save: refs.save.current!,
-    help: refs.help.current!,
+    navRailFilter: refs.navRailFilter.current!,
+    navRailView: refs.navRailView.current!,
+    navRailEdit: refs.navRailEdit.current!,
+    navRailSave: refs.navRailSave.current!,
+    navRailHelp: refs.navRailHelp.current!,
   }));
 
   const isKeyboardClick = (event: any) => {
@@ -55,7 +55,7 @@ export const NavigationRail = React.forwardRef<
       <LazyMotion features={loadFeatures}>
         <MotionConfig reducedMotion="user">
           <Item
-            ref={refs.filter}
+            ref={refs.navRailFilter}
             parentName="navRail"
             label={t('presentation_page.sidemenu.selection.title')}
             selected={selected === 'filter'}
@@ -65,7 +65,7 @@ export const NavigationRail = React.forwardRef<
             }}
           />
           <Item
-            ref={refs.view}
+            ref={refs.navRailView}
             parentName="navRail"
             label={t('presentation_page.sidemenu.view.title')}
             selected={selected === 'view'}
@@ -75,7 +75,7 @@ export const NavigationRail = React.forwardRef<
             }}
           />
           <Item
-            ref={refs.edit}
+            ref={refs.navRailEdit}
             parentName="navRail"
             label={t('presentation_page.sidemenu.edit.title')}
             selected={selected === 'edit'}
@@ -85,7 +85,7 @@ export const NavigationRail = React.forwardRef<
             }}
           />
           <Item
-            ref={refs.save}
+            ref={refs.navRailSave}
             parentName="navRail"
             label={t('presentation_page.sidemenu.save.title')}
             selected={selected === 'save'}
@@ -95,7 +95,7 @@ export const NavigationRail = React.forwardRef<
             }}
           />
           <Item
-            ref={refs.help}
+            ref={refs.navRailHelp}
             parentName="navRail"
             label={t('presentation_page.sidemenu.help.title')}
             selected={selected === 'help'}
