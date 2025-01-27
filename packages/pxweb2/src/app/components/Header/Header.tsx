@@ -10,27 +10,26 @@ export const Header: React.FC = () => {
   const config = getConfig();
 
   return (
-    <header
-      className={styles.header}
-      aria-label={t('common.header.arialabelheader')}
-    >
+    <header className={styles.header}>
       <div>
         <span className={cl(styles['heading-medium'])}>
           {t('common.header.title')}
         </span>
       </div>
-      {config.language.supportedLanguages.map(
-        (language) =>
-          i18n.language !== language.shorthand && (
-            <Button
-              variant="tertiary"
-              onClick={() => i18n.changeLanguage(language.shorthand)}
-              key={language.shorthand}
-            >
-              {language.languageName}
-            </Button>
-          ),
-      )}
+      <nav aria-label={t('common.header.arialabelheader')}>
+        {config.language.supportedLanguages.map(
+          (language) =>
+            i18n.language !== language.shorthand && (
+              <Button
+                variant="tertiary"
+                onClick={() => i18n.changeLanguage(language.shorthand)}
+                key={language.shorthand}
+              >
+                {language.languageName}
+              </Button>
+            ),
+        )}
+      </nav>
     </header>
   );
 };
