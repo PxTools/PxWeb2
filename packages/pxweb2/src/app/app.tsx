@@ -15,7 +15,7 @@ import { getConfig } from './util/config/getConfig';
 import { OpenAPI } from '@pxweb2/pxweb2-api-client';
 import { AccessibilityContext } from './context/AccessibilityProvider';
 import useApp from './context/useApp';
-import { BreakpointsSmallMaxWidth } from 'packages/pxweb2-ui/src';
+import { BreakpointsSmallMaxWidth } from '../../../pxweb2-ui/style-dictionary/dist/js/fixed-variables';
 
 export function App() {
   const { isTablet } = useApp();
