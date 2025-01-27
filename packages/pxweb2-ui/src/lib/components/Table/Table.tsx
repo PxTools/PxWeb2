@@ -598,8 +598,8 @@ function createRepeatedMobileHeader(
       <th
         colSpan={2}
         id={stubDataCellCodes[n].htmlId}
-        scope="row"
-        role="rowheader"
+        scope="col"
+        role="columnheader"
         aria-label={
           variable.type === VartypeEnum.TIME_VARIABLE
             ? `${variable.label} ${stubDataCellCodes[n].valLabel}`
@@ -653,8 +653,8 @@ function createSecondLastMobileHeader(
     <th
       colSpan={2}
       id={cellMeta.htmlId}
-      scope="row"
-      role="rowheader"
+      scope="col"
+      role="columnheader"
       aria-label={
         variable.type === VartypeEnum.TIME_VARIABLE
           ? `${variable.label} ${val.label}`
