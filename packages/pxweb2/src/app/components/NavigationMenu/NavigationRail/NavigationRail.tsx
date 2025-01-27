@@ -30,12 +30,9 @@ export const NavigationRail = React.forwardRef<
   NavigationRailProps
 >(({ onChange, selected }, ref) => {
   const { t } = useTranslation();
-  const refs = {
-    filter: React.useRef<HTMLButtonElement>(null),
-    view: React.useRef<HTMLButtonElement>(null),
-    edit: React.useRef<HTMLButtonElement>(null),
-    save: React.useRef<HTMLButtonElement>(null),
-    help: React.useRef<HTMLButtonElement>(null),
+
+  const isKeyboardClick = (event: any) => {
+    return event.screenX === 0 && event.screenY === 0;
   };
 
   React.useImperativeHandle(ref, () => ({
@@ -46,8 +43,12 @@ export const NavigationRail = React.forwardRef<
     help: refs.help.current!,
   }));
 
-  const isKeyboardClick = (event: any) => {
-    return event.screenX === 0 && event.screenY === 0;
+  const refs = {
+    filter: React.useRef<HTMLButtonElement>(),
+    view: React.useRef<HTMLButtonElement>(),
+    edit: React.useRef<HTMLButtonElement>(),
+    save: React.useRef<HTMLButtonElement>(),
+    help: React.useRef<HTMLButtonElement>(),
   };
 
   return (
