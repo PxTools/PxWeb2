@@ -23,13 +23,12 @@ export const NavigationRail: React.FC<NavigationRailProps> = ({
     <div className={styles.navigationRail}>
       <LazyMotion features={loadFeatures}>
         <MotionConfig reducedMotion="user">
-          <ul className={styles.navigationRailList}>
-            <nav
+          <nav
               aria-labelledby="navigation-rail-heading"
               aria-describedby="navigation-rail-description"
-              aria-label={t('presentation_page.sidemenu.arialabeltoolsidemenu')}
-            >
-              <Item
+              aria-label={t('presentation_page.sidemenu.arialabeltoolsidemenu')}>
+            <ul className={styles.navigationRailList}>
+                          <Item
                 parentName="navRail"
                 label={t('presentation_page.sidemenu.selection.title')}
                 selected={selected === 'filter'}
@@ -74,8 +73,8 @@ export const NavigationRail: React.FC<NavigationRailProps> = ({
                   onChange('help');
                 }}
               />
-            </nav>
-          </ul>
+            </ul>
+          </nav>
         </MotionConfig>
       </LazyMotion>
     </div>
