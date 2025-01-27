@@ -44,11 +44,11 @@ export const NavigationRail = React.forwardRef<
   }));
 
   const refs = {
-    filter: React.useRef<HTMLButtonElement>(),
-    view: React.useRef<HTMLButtonElement>(),
-    edit: React.useRef<HTMLButtonElement>(),
-    save: React.useRef<HTMLButtonElement>(),
-    help: React.useRef<HTMLButtonElement>(),
+    save: React.useRef<HTMLButtonElement>(null),
+    help: React.useRef<HTMLButtonElement>(null),
+    filter: React.useRef<HTMLButtonElement>(null),
+    view: React.useRef<HTMLButtonElement>(null),
+    edit: React.useRef<HTMLButtonElement>(null),
   };
 
   return (
