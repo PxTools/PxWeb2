@@ -19,7 +19,6 @@ import {
 import NavigationDrawer from '../../components/NavigationDrawer/NavigationDrawer';
 import useVariables from '../../context/useVariables';
 import { NavigationItem } from '../../components/NavigationMenu/NavigationItem/NavigationItemType';
-import { sassNull } from 'sass';
 import { AccessibilityContext } from '../../context/AccessibilityProvider';
 
 function addSelectedCodeListToVariable(

@@ -1,10 +1,4 @@
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  ReactNode,
-} from 'react';
+import React, { createContext, useEffect, useState, ReactNode } from 'react';
 
 interface AccessibilityContextType {
   addModal: (name: string, closeFunction: () => void) => void;
@@ -67,7 +61,9 @@ export const AccessibilityProvider = ({
 
   const closeModal = React.useCallback(() => {
     setModals((prev) => {
-      if (prev.length === 0) return prev;
+      if (prev.length === 0) {
+        return prev;
+      }
       prev[prev.length - 1].closeFunction();
       return prev.slice(0, -1);
     });
