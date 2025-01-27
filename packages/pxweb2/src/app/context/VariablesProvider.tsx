@@ -1,10 +1,10 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useMemo, useState } from 'react';
 
-import { SelectedVBValues } from '@pxweb2/pxweb2-ui';
-import { PxTableMetadata } from '@pxweb2/pxweb2-ui';
+import { SelectedVBValues, PxTableMetadata } from '@pxweb2/pxweb2-ui';
 
 // Define the type for the context
 export type VariablesContextType = {
+  isInitialized: boolean;
   addSelectedValues: (variableId: string, values: string[]) => void;
   getSelectedValuesById: (variableId: string) => string[];
   getSelectedValuesByIdSorted: (variableId: string) => string[];
@@ -27,20 +27,21 @@ export type VariablesContextType = {
 
 // Create the context with default values
 export const VariablesContext = createContext<VariablesContextType>({
+  isInitialized: false,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   addSelectedValues: () => {},
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+
   getSelectedValuesById: () => [],
   getSelectedValuesByIdSorted: () => [],
   getSelectedCodelistById: () => undefined,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+
   getNumberOfSelectedValues: () => 0,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   syncVariablesAndValues: () => {},
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+
   getUniqueIds: () => [],
   toString: () => '',
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+
   hasLoadedDefaultSelection: false,
   setHasLoadedDefaultSelection: () => false,
   setSelectedVBValues: () => [],
@@ -56,19 +57,17 @@ export const VariablesContext = createContext<VariablesContextType>({
 export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const [isInitialized] = useState(true);
   const [variables, setVariables] = useState<
     Map<string, { id: string; value: string }>
   >(new Map());
 
-  const [errorMsg, setErrorMsg] = useState('');
   const [pxTableMetadata, setPxTableMetadata] =
     useState<PxTableMetadata | null>(null);
 
-  // const [prevTableId, setPrevTableId] = useState('');
   const [isLoadingMetadata, setIsLoadingMetadata] = useState<boolean>(false);
   const [hasLoadedDefaultSelection, setHasLoadedDefaultSelection] =
     useState(false);
-  // const { i18n, t } = useTranslation();
   const [selectedVBValues, setSelectedVBValues] = useState<SelectedVBValues[]>(
     [],
   );
@@ -196,27 +195,49 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
     return str;
   };
 
+  const memoizedValues = useMemo(
+    () => ({
+      isInitialized,
+      addSelectedValues,
+      getNumberOfSelectedValues,
+      getSelectedValuesById,
+      getSelectedValuesByIdSorted,
+      getSelectedCodelistById,
+      getUniqueIds,
+      syncVariablesAndValues,
+      toString,
+      hasLoadedDefaultSelection,
+      setHasLoadedDefaultSelection,
+      setSelectedVBValues,
+      selectedVBValues,
+      isLoadingMetadata,
+      setIsLoadingMetadata,
+      pxTableMetadata,
+      setPxTableMetadata,
+    }),
+    [
+      isInitialized,
+      addSelectedValues,
+      getNumberOfSelectedValues,
+      getSelectedValuesById,
+      getSelectedValuesByIdSorted,
+      getSelectedCodelistById,
+      getUniqueIds,
+      syncVariablesAndValues,
+      toString,
+      hasLoadedDefaultSelection,
+      setHasLoadedDefaultSelection,
+      setSelectedVBValues,
+      selectedVBValues,
+      isLoadingMetadata,
+      setIsLoadingMetadata,
+      pxTableMetadata,
+      setPxTableMetadata,
+    ],
+  );
+
   return (
-    <VariablesContext.Provider
-      value={{
-        addSelectedValues,
-        getNumberOfSelectedValues,
-        getSelectedValuesById,
-        getSelectedValuesByIdSorted,
-        getSelectedCodelistById,
-        getUniqueIds,
-        syncVariablesAndValues,
-        toString,
-        hasLoadedDefaultSelection,
-        selectedVBValues,
-        setSelectedVBValues,
-        isLoadingMetadata,
-        pxTableMetadata,
-        setHasLoadedDefaultSelection,
-        setIsLoadingMetadata,
-        setPxTableMetadata,
-      }}
-    >
+    <VariablesContext.Provider value={memoizedValues}>
       {children}
     </VariablesContext.Provider>
   );

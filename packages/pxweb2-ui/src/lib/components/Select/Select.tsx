@@ -125,7 +125,7 @@ function DefaultSelect({
       <div
         className={cl(classes.contentStyle)}
         tabIndex={tabIndex}
-        onClick={(event) => {
+        onClick={() => {
           openOptions(options); // TODO: Get option
           onChange(options[0]); // TODO: Use selected option
         }}
@@ -222,7 +222,7 @@ function VariableBoxSelect({
       <div
         className={cl(classes.selectVariabelbox) + cssClasses}
         tabIndex={tabIndex}
-        onClick={(event) => {
+        onClick={() => {
           handleOpenModal();
         }}
         onKeyUp={(event) => {

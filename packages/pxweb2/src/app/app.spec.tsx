@@ -1,8 +1,15 @@
-import { render } from '@testing-library/react';
-
-import App from './app';
 import { MemoryRouter } from 'react-router';
+import App from './app';
 import { AccessibilityProvider } from './context/AccessibilityProvider';
+import { renderWithProviders } from './util/testing-utils';
+import { Config } from './util/config/configType';
+
+// Declare the global variable for this file
+declare global {
+  interface Window {
+    PxWeb2Config: Config;
+  }
+}
 
 window.PxWeb2Config = {
   language: {
@@ -15,11 +22,12 @@ window.PxWeb2Config = {
     defaultLanguage: 'en',
     fallbackLanguage: 'en',
   },
+  apiUrl: '',
 };
 
 describe('App', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(
+    const { baseElement } = renderWithProviders(
       <AccessibilityProvider>
         <MemoryRouter>
           <App />

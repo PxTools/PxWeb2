@@ -33,7 +33,9 @@ export function Alert({
   const HandleClose = () => {
     setIsVisible(false);
   };
-  if (!isVisible) return null;
+  if (!isVisible) {
+    return null;
+  }
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
@@ -97,7 +99,9 @@ export function Alert({
       <div className={cl(classes[`alert-section-middle-${size}`])}>
         {hasheading && (
           <div className={classes[`alert-heading`]}>
-            <Heading size={headingSize}>{heading}</Heading>
+            <Heading size={headingSize} level="2">
+              {heading}
+            </Heading>
           </div>
         )}
         <div

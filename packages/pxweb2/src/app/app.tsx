@@ -10,41 +10,38 @@ import { NavigationItem } from './components/NavigationMenu/NavigationItem/Navig
 import NavigationRail from './components/NavigationMenu/NavigationRail/NavigationRail';
 import NavigationBar from './components/NavigationMenu/NavigationBar/NavigationBar';
 import { SkipToMain } from './components/SkipToMain/SkipToMain';
-
 import { Footer } from './components/Footer/Footer';
-import { BreakpointsSmallMaxWidth } from '@pxweb2/pxweb2-ui';
 import { getConfig } from './util/config/getConfig';
 import { OpenAPI } from '@pxweb2/pxweb2-api-client';
 import { AccessibilityContext } from './context/AccessibilityProvider';
+import useApp from './context/useApp';
+import { BreakpointsSmallMaxWidth } from 'packages/pxweb2-ui/src';
 
 export function App() {
+  const { isTablet } = useApp();
   const config = getConfig();
   const accessibility = useContext(AccessibilityContext);
   OpenAPI.BASE = config.apiUrl;
 
   const { tableId } = useParams<{ tableId: string }>();
-  const [selectedTableId, setSelectedTableId] = useState(
-    tableId ? tableId : 'tab638',
-  );
-  const [errorMsg, setErrorMsg] = useState('');
+  const [selectedTableId] = useState(tableId ?? 'tab638');
+  const [errorMsg] = useState('');
   const [selectedNavigationView, setSelectedNavigationView] =
     useState<NavigationItem>('filter');
-  const [hasFocus, setHasFocus] = useState<NavigationItem>('none');
+  const [, setHasFocus] = useState<NavigationItem>('none');
   const [openedWithKeyboard, setOpenedWithKeyboard] = useState(false);
   /**
    * Keep state if window screen size is mobile or desktop.
    */
   const mobileBreakpoint = Number(BreakpointsSmallMaxWidth.replace('px', ''));
-  const [isMobile, setIsMobile] = useState(
-    window.innerWidth <= mobileBreakpoint,
-  );
+  const [, setIsMobile] = useState(window.innerWidth <= mobileBreakpoint);
 
   const navigationRailRef = useRef<{
-    filter: HTMLButtonElement;
-    view: HTMLButtonElement;
-    edit: HTMLButtonElement;
-    save: HTMLButtonElement;
-    help: HTMLButtonElement;
+    navRailFilter: HTMLButtonElement;
+    navRailView: HTMLButtonElement;
+    navRailEdit: HTMLButtonElement;
+    navRailSave: HTMLButtonElement;
+    navRailHelp: HTMLButtonElement;
   }>(null);
 
   const navigationBarRef = useRef<{
@@ -64,47 +61,47 @@ export function App() {
     let item = null;
 
     if (selectedNavigationView === 'filter') {
-      item = navigationRailRef.current.filter;
+      item = navigationRailRef.current.navRailFilter;
       accessibility.addFocusOverride(
         'filterButton',
-        navigationRailRef.current.filter,
+        navigationRailRef.current.navRailFilter,
         undefined,
         hideMenuRef.current,
       );
     }
 
     if (selectedNavigationView === 'view') {
-      item = navigationRailRef.current.view;
+      item = navigationRailRef.current.navRailView;
       accessibility.addFocusOverride(
         'viewButton',
-        navigationRailRef.current.view,
+        navigationRailRef.current.navRailView,
         undefined,
         hideMenuRef.current,
       );
     }
     if (selectedNavigationView === 'edit') {
-      item = navigationRailRef.current.edit;
+      item = navigationRailRef.current.navRailEdit;
       accessibility.addFocusOverride(
         'editButton',
-        navigationRailRef.current.edit,
+        navigationRailRef.current.navRailEdit,
         undefined,
         hideMenuRef.current,
       );
     }
     if (selectedNavigationView === 'save') {
-      item = navigationRailRef.current.save;
+      item = navigationRailRef.current.navRailSave;
       accessibility.addFocusOverride(
         'saveButton',
-        navigationRailRef.current.save,
+        navigationRailRef.current.navRailSave,
         undefined,
         hideMenuRef.current,
       );
     }
     if (selectedNavigationView === 'help') {
-      item = navigationRailRef.current.help;
+      item = navigationRailRef.current.navRailHelp;
       accessibility.addFocusOverride(
         'helpButton',
-        navigationRailRef.current.help,
+        navigationRailRef.current.navRailHelp,
         undefined,
         hideMenuRef.current,
       );
@@ -136,6 +133,7 @@ export function App() {
       window.removeEventListener('resize', handleResize);
     };
   }, [mobileBreakpoint]);
+  useState<NavigationItem>(isTablet ? 'none' : 'filter');
 
   useEffect(() => {
     if (errorMsg !== '') {
@@ -152,7 +150,9 @@ export function App() {
       if (newSelectedNavView !== 'none') {
         window.setTimeout(() => {
           // Sorry about this hack, can't justify spending more time on this
-          navigationRailRef.current?.[newSelectedNavView].focus();
+          navigationRailRef.current?.[
+            newSelectedNavView as keyof typeof navigationRailRef.current
+          ].focus();
           navigationBarRef.current?.[newSelectedNavView].focus();
         }, 100);
       }
@@ -184,9 +184,9 @@ export function App() {
   return (
     <>
       <SkipToMain />
-      {!isMobile && <Header />}{' '}
+      {!isTablet && <Header />}{' '}
       <div className={styles.navigationAndContentContainer}>
-        {!isMobile && (
+        {!isTablet && (
           <NavigationRail
             ref={navigationRailRef}
             onChange={changeSelectedNavView}
@@ -202,13 +202,13 @@ export function App() {
             hideMenuRef={hideMenuRef}
           />
           <div className={styles.contentAndFooterContainer}>
-            {isMobile && <Header />}{' '}
+            {isTablet && <Header />}{' '}
             <Presentation selectedTabId={selectedTableId}></Presentation>
             <Footer />
           </div>
         </div>
       </div>
-      {isMobile && (
+      {isTablet && (
         <NavigationBar
           ref={navigationBarRef}
           onChange={changeSelectedNavView}

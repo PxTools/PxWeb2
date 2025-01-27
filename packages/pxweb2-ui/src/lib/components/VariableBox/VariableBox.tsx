@@ -14,7 +14,6 @@ export type SelectedVBValues = {
   values: Value['code'][];
 };
 
-/* eslint-disable-next-line */
 export type VariableBoxPropsBase = Omit<Variable, 'notes'>;
 
 export type VariableBoxProps = VariableBoxPropsBase & {

@@ -1,15 +1,20 @@
-import { render } from '@testing-library/react';
-
+import { renderWithProviders } from '../../util/testing-utils';
 import Selection from './Selection';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 
 describe('Selection', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(
+    const { baseElement } = renderWithProviders(
       <AccessibilityProvider>
-        <Selection />
+        <Selection
+          openedWithKeyboard={false}
+          selectedNavigationView=""
+          selectedTabId="1"
+          setSelectedNavigationView={() => {}}
+        />
       </AccessibilityProvider>,
     );
+
     expect(baseElement).toBeTruthy();
   });
 });
