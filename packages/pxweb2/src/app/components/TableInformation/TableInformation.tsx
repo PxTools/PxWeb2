@@ -14,15 +14,18 @@ export interface TableInformationProps {
   readonly onClose: (isOpen: boolean) => void;
 }
 
-export function TableInformation({ isOpen, selectedTab, onClose }: TableInformationProps) {
+export function TableInformation({
+  isOpen,
+  selectedTab,
+  onClose,
+}: TableInformationProps) {
   const [activeTab, setActiveTab] = useState('');
 
-
-useEffect(() => {
+  useEffect(() => {
     if (isOpen && selectedTab) {
-        setActiveTab(selectedTab);
+      setActiveTab(selectedTab);
     }
-}, [isOpen, selectedTab]);
+  }, [isOpen, selectedTab]);
 
   return (
     <SideSheet
