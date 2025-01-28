@@ -51,6 +51,8 @@ export type { Link } from './models/Link';
 export type { metadataOutputFormat } from './models/metadataOutputFormat';
 export { MetadataOutputFormatType } from './models/MetadataOutputFormatType';
 export type { Note } from './models/Note';
+export { outputFormat } from './models/outputFormat';
+export type { outputFormatParams } from './models/outputFormatParams';
 export type { PageInfo } from './models/PageInfo';
 export type { pageNumber } from './models/pageNumber';
 export type { pageSize } from './models/pageSize';
