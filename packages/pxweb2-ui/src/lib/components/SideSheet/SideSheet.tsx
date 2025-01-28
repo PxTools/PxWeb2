@@ -71,17 +71,17 @@ export function SideSheet({
       <aside className={cl(classes.aside)}>
         <div className={cl(classes.header)}>
           <div className={cl(classes.titleAndxMarkWrapper)}>
-            <Heading level="2" size="medium" textcolor="default">
-              {heading}
-            </Heading>
-            <div className={cl(classes.xMarkWrapper)}>
-              <Button
-                variant="tertiary"
-                size="small"
-                icon="XMark"
-                onClick={() => handleCloseSideSheet()}
-              ></Button>
+            <div className={cl(classes.titleWrapper)}>
+              <Heading level="2" size="medium" textcolor="default">
+                {heading}
+              </Heading>
             </div>
+            <Button
+              variant="tertiary"
+              size="medium"
+              icon="XMark"
+              onClick={() => handleCloseSideSheet()}
+            ></Button>
           </div>
         </div>
         <div className={cl(classes.content)}>{children}</div>
