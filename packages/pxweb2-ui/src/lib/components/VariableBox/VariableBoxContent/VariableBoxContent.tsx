@@ -44,6 +44,8 @@ type VariableBoxContentProps = VariableBoxPropsToContent & {
     allValuesSelected: string,
     searchValues: Value[],
   ) => void;
+  addModal: (name: string, closeFunction: () => void) => void;
+  removeModal: (name: string) => void;
 };
 
 export function VariableBoxContent({
@@ -58,6 +60,8 @@ export function VariableBoxContent({
   onChangeCodeList,
   onChangeCheckbox,
   onChangeMixedCheckbox,
+  addModal,
+  removeModal,
 }: VariableBoxContentProps) {
   const { t } = useTranslation();
   const checkboxSelectAllText = t(
@@ -107,6 +111,8 @@ export function VariableBoxContent({
   if (type === VartypeEnum.TIME_VARIABLE) {
     valuesToRender.reverse();
   }
+
+  const searchRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const newItems: { type: string; value?: Value }[] = [];
@@ -215,27 +221,62 @@ export function VariableBoxContent({
     event: React.KeyboardEvent<HTMLDivElement>,
   ) => {
     const { key } = event;
+    const isSearchFocused = document.activeElement === searchRef.current;
 
-    if (key !== 'ArrowDown' && key !== 'ArrowUp') {
+    // Allow typing if search is focused and not pressing arrow keys
+    if (isSearchFocused && key !== 'ArrowDown') {
+      setCurrentFocusedItemIndex(0);
+      return;
+    }
+
+    if (key !== 'ArrowDown' && key !== 'ArrowUp' && key !== ' ') {
       return;
     }
     event.preventDefault();
-    let newIndex = currentFocusedItemIndex;
 
-    if (key === 'ArrowDown') {
-      if (
-        currentFocusedItemIndex === null ||
-        currentFocusedItemIndex < items.length - 1
-      ) {
-        newIndex = (currentFocusedItemIndex ?? -1) + 1;
+    let newIndex = currentFocusedItemIndex ?? 1;
+
+    if (key === ' ') {
+      const item = items[currentFocusedItemIndex ?? 0];
+      if (item && item.type === 'value' && item.value) {
+        onChangeCheckbox(varId, item.value.code);
       }
-    } else if (key === 'ArrowUp') {
-      if (currentFocusedItemIndex !== null && currentFocusedItemIndex > 0) {
-        newIndex = currentFocusedItemIndex - 1;
+      if (item && item.type === 'mixedCheckbox') {
+        onChangeMixedCheckbox(varId, allValuesSelected, searchedValues);
       }
     }
 
-    if (newIndex !== null && newIndex !== currentFocusedItemIndex) {
+    if (isSearchFocused && key === 'ArrowDown') {
+      setCurrentFocusedItemIndex(1);
+      newIndex = 1;
+    }
+
+    if (!isSearchFocused && key === 'ArrowDown') {
+      newIndex = (currentFocusedItemIndex ?? 0) + 1;
+    }
+
+    if (
+      key === 'ArrowUp' &&
+      currentFocusedItemIndex !== null &&
+      currentFocusedItemIndex > 0
+    ) {
+      newIndex = currentFocusedItemIndex - 1;
+      if (hasSevenOrMoreValues && newIndex === 0) {
+        setCurrentFocusedItemIndex(0);
+        searchRef.current?.focus();
+        return;
+      }
+
+      setScrollingDown(false);
+      virtuosoRef.current?.scrollToIndex(0);
+    }
+
+    if (newIndex !== null) {
+      if (hasSevenOrMoreValues) {
+        newIndex = Math.min(newIndex, searchedValues.length - 1 + 2);
+      } else {
+        newIndex = Math.min(items.length - 1, newIndex);
+      }
       setCurrentFocusedItemIndex(newIndex);
 
       // Focus the new item
@@ -302,9 +343,13 @@ export function VariableBoxContent({
           className={classes['focusableItem']}
         >
           <Search
+            ref={searchRef}
             value={search}
             onChange={(value: string) => {
-              setSearch(value);
+              // Escape special characters in search value
+              const escapedValue = value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+              setSearch(escapedValue);
+              setCurrentFocusedItemIndex(-1);
               if (value === '') {
                 setScrollingDown(false);
               }
@@ -456,6 +501,20 @@ export function VariableBoxContent({
     setCalcedHeight(height);
   };
 
+  // Effect to scroll to focused item
+  useEffect(() => {
+    if (currentFocusedItemIndex !== null && virtuosoRef.current) {
+      virtuosoRef.current.scrollToIndex({
+        index: currentFocusedItemIndex,
+        align: 'center',
+      });
+    }
+  }, [currentFocusedItemIndex]);
+
+  const handleSelectFocus = () => {
+    setScrollingDown(false);
+  };
+
   return (
     <div className={cl(classes['variablebox-content'])}>
       <div
@@ -465,7 +524,10 @@ export function VariableBoxContent({
         }}
       >
         {hasCodeLists === true && (
-          <div className={cl(classes['variablebox-content-select'])}>
+          <div
+            onFocus={handleSelectFocus}
+            className={cl(classes['variablebox-content-select'])}
+          >
             <Select
               variant="inVariableBox"
               label={t(
@@ -481,6 +543,8 @@ export function VariableBoxContent({
               placeholder={t(
                 'presentation_page.sidemenu.selection.variablebox.content.select.placeholder',
               )}
+              addModal={addModal}
+              removeModal={removeModal}
               options={mappedAndSortedCodeLists}
               selectedOption={selectedCodeListOrUndefined}
               onChange={(selectedItem) =>

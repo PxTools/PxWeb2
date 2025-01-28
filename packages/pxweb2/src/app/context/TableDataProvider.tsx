@@ -262,6 +262,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       tableId,
       i18n.language,
       'json-stat2',
+      undefined,
       variablesSelection,
     );
 
