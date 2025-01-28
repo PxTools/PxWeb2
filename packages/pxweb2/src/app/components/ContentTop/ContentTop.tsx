@@ -21,7 +21,8 @@ export interface ContenetTopProps {
 
 export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
   const { t } = useTranslation();
-  const [isTableInformationOpen, setIsTableInformationOpen] = useState<boolean>(false);
+  const [isTableInformationOpen, setIsTableInformationOpen] =
+    useState<boolean>(false);
 
   const handleOpenTableInformation = () => {
     setIsTableInformationOpen(true);
@@ -76,7 +77,8 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
           isOpen={isTableInformationOpen}
           onClose={() => {
             setIsTableInformationOpen(false);
-          }}></TableInformation>  
+          }}
+        ></TableInformation>
       )}
     </>
   );

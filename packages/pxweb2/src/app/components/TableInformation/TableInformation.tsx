@@ -14,8 +14,8 @@ export interface TableInformationProps {
 }
 
 export function TableInformation({ isOpen, onClose }: TableInformationProps) {
-      const [activeTab, setActiveTab] = useState('px-tab1');
-    
+  const [activeTab, setActiveTab] = useState('px-tab1');
+
   return (
     <SideSheet
       heading="Information"
