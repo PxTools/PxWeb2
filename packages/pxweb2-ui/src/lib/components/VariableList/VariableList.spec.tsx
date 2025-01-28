@@ -1,3 +1,8 @@
+// Mock react-i18next's useTranslation hook
+// needs to be imported before the component
+import { mockReactI18next } from '../../../lib/util/testing-utils';
+mockReactI18next();
+
 import { render } from '@testing-library/react';
 import { VirtuosoMockContext } from 'react-virtuoso';
 import { VariableList } from './VariableList';
@@ -86,6 +91,13 @@ describe('VariableList', () => {
         handleMixedCheckboxChange={() => {
           return;
         }}
+        isChangingCodeList={false}
+        addModal={() => {
+          return;
+        }}
+        removeModal={() => {
+          return;
+        }}
       />,
     );
 
@@ -106,6 +118,13 @@ describe('VariableList', () => {
           return;
         }}
         handleMixedCheckboxChange={() => {
+          return;
+        }}
+        isChangingCodeList={false}
+        addModal={() => {
+          return;
+        }}
+        removeModal={() => {
           return;
         }}
       />,
@@ -140,6 +159,13 @@ describe('VariableList', () => {
         handleMixedCheckboxChange={() => {
           return;
         }}
+        isChangingCodeList={false}
+        addModal={() => {
+          return;
+        }}
+        removeModal={() => {
+          return;
+        }}
       />,
       {
         wrapper: ({ children }) => (
@@ -170,6 +196,13 @@ describe('VariableList', () => {
           return;
         }}
         handleMixedCheckboxChange={() => {
+          return;
+        }}
+        isChangingCodeList={true}
+        addModal={() => {
+          return;
+        }}
+        removeModal={() => {
           return;
         }}
       />,
