@@ -23,8 +23,12 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
   const { t } = useTranslation();
   const [isTableInformationOpen, setIsTableInformationOpen] =
     useState<boolean>(false);
+  const [activeTab, setActiveTab] = useState('');
 
-  const handleOpenTableInformation = () => {
+  const handleOpenTableInformation = (selectedTab?: string) => {
+    if (selectedTab) {
+      setActiveTab(selectedTab);
+    }
     setIsTableInformationOpen(true);
   };
 
@@ -52,7 +56,7 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
               icon="InformationCircle"
               variant="secondary"
               onClick={() => {
-                handleOpenTableInformation();
+                handleOpenTableInformation('tab-footnotes');
               }}
             >
               {t(
@@ -75,6 +79,7 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
       {isTableInformationOpen && (
         <TableInformation
           isOpen={isTableInformationOpen}
+          selectedTab={activeTab}
           onClose={() => {
             setIsTableInformationOpen(false);
           }}

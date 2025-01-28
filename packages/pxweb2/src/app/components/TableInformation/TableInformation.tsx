@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import {
   SideSheet,
@@ -10,11 +10,19 @@ import {
 
 export interface TableInformationProps {
   readonly isOpen: boolean;
+  readonly selectedTab?: string;
   readonly onClose: (isOpen: boolean) => void;
 }
 
-export function TableInformation({ isOpen, onClose }: TableInformationProps) {
-  const [activeTab, setActiveTab] = useState('px-tab1');
+export function TableInformation({ isOpen, selectedTab, onClose }: TableInformationProps) {
+  const [activeTab, setActiveTab] = useState('');
+
+
+useEffect(() => {
+    if (isOpen && selectedTab) {
+        setActiveTab(selectedTab);
+    }
+}, [isOpen, selectedTab]);
 
   return (
     <SideSheet
