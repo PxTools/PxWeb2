@@ -31,8 +31,8 @@ if (location.href.indexOf('localhost') > -1) {
 
 root.render(
   <StrictMode>
-    <AccessibilityProvider>
-      <AppProvider>
+    <AppProvider>
+      <AccessibilityProvider>
         <VariablesProvider>
           <TableDataProvider>
             <Suspense fallback={<div>Loading...</div>}>
@@ -40,7 +40,7 @@ root.render(
             </Suspense>
           </TableDataProvider>
         </VariablesProvider>
-      </AppProvider>
-    </AccessibilityProvider>
+      </AccessibilityProvider>
+    </AppProvider>
   </StrictMode>,
 );

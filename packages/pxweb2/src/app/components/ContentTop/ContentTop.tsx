@@ -1,6 +1,6 @@
 import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
-import { useState } from 'react';
+import { useState, useContext, useEffect } from 'react';
 
 import classes from './ContentTop.module.scss';
 import {
@@ -13,6 +13,7 @@ import {
   PxTable,
 } from '@pxweb2/pxweb2-ui';
 import TableInformation from '../TableInformation/TableInformation';
+import { AccessibilityContext } from '../../context/AccessibilityProvider';
 
 export interface ContenetTopProps {
   readonly pxtable: PxTable;
@@ -24,6 +25,7 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
   const [isTableInformationOpen, setIsTableInformationOpen] =
     useState<boolean>(false);
   const [activeTab, setActiveTab] = useState('');
+  const accessibility = useContext(AccessibilityContext);
 
   const handleOpenTableInformation = (selectedTab?: string) => {
     if (selectedTab) {
@@ -31,6 +33,16 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
     }
     setIsTableInformationOpen(true);
   };
+
+  useEffect(() => {
+    accessibility.addModal('tableInformation', () => {
+      setIsTableInformationOpen(false);
+    });
+
+    return () => {
+      accessibility.removeModal('tableInformation');
+    };
+  }, [accessibility, isTableInformationOpen]);
 
   return (
     <>
