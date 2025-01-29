@@ -1,5 +1,4 @@
-klika på Commit changes... 
-Det skapas då en ny branch som du fortsäter jobba i# Follow the development of PxWeb 2.0
+# Follow the development of PxWeb 2.0
 The new interface is updated continously during the project. Follow the development via these pages.
 ## Tables from the Swedish database
 - [Table5659](https://test.pxweb2.pages.dev/table/TAB5659)
