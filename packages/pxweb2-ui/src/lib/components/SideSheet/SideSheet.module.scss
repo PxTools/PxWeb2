@@ -19,6 +19,7 @@
 
 .sideSheet::backdrop {
   background-color: var(--px-color-surface-scrim);
+  animation: fadeInBackdrop 280ms forwards;
 }
 
 .aside {
@@ -60,7 +61,6 @@
     fixed.$spacing-10;
   flex-direction: column;
   align-items: flex-start;
-  //gap: fixed.$spacing-11;
   flex: 1 0 0;
   align-self: stretch;
   background: var(--px-color-surface-default);
@@ -72,7 +72,7 @@
 
 // Animation that slides in NavigationDrawer from the right when opened.
 .slidein {
-  animation: slideIn 250ms forwards;
+  animation: slideIn 280ms forwards;
 }
 
 @keyframes slideIn {
@@ -83,3 +83,14 @@
     left: calc(100vw - 540px);
   }
 }
+
+@keyframes fadeInBackdrop {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+
