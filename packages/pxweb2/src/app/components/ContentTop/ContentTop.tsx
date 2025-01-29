@@ -67,9 +67,17 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
               <BodyShort size="medium">
                 <span className={classes.lastUpdatedLabel}>
                   {t('presentation_page.main_content.last_updated')}:{' '}
-                  {t('date.simple_date_with_time', {
-                    value: new Date(pxtable.metadata.updated),
-                  })}{' '}
+                  <Link
+                    href="#"
+                    inline
+                    onClick={() => {
+                      handleOpenTableInformation('tab-details');
+                    }}
+                  >
+                    {t('date.simple_date_with_time', {
+                      value: new Date(pxtable.metadata.updated),
+                    })}
+                  </Link>{' '}
                 </span>
               </BodyShort>
             )}
