@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import cl from 'clsx';
+
+import classes from './TableInformation.module.scss';
 
 import {
   SideSheet,
@@ -38,48 +41,93 @@ export function TableInformation({
       }}
     >
       <TabsProvider activeTab={activeTab} setActiveTab={setActiveTab}>
-        <Tabs variant="fixed">
-          <Tab
-            id="tab-footnotes"
-            label={t(
-              'presentation_page.main_content.about_table.footnotes.title',
-            )}
-            controls="pnl-footnotes"
-          ></Tab>
-          <Tab
-            id="tab-definitions"
-            label={t(
-              'presentation_page.main_content.about_table.definitions.title',
-            )}
-            controls="pnl-definitions"
-          ></Tab>
-          <Tab
-            id="tab-details"
-            label={t(
-              'presentation_page.main_content.about_table.details.title',
-            )}
-            controls="pnl-details"
-          ></Tab>
-          <Tab
-            id="tab-contact"
-            label={t(
-              'presentation_page.main_content.about_table.contact.title',
-            )}
-            controls="pnl-contact"
-          ></Tab>
-        </Tabs>
-        <TabPanel id="pnl-footnotes" controlledBy="tab-footnotes">
-          Footnotes
-        </TabPanel>
-        <TabPanel id="pnl-definitions" controlledBy="tab-definitions">
-          Definitions
-        </TabPanel>
-        <TabPanel id="pnl-details" controlledBy="tab-details">
-          Details
-        </TabPanel>
-        <TabPanel id="pnl-contact" controlledBy="tab-contact">
-          Contact
-        </TabPanel>
+        <div className={cl(classes.tabs)}>
+          <Tabs variant="fixed">
+            <Tab
+              id="tab-footnotes"
+              label={t(
+                'presentation_page.main_content.about_table.footnotes.title',
+              )}
+              controls="pnl-footnotes"
+            ></Tab>
+            <Tab
+              id="tab-definitions"
+              label={t(
+                'presentation_page.main_content.about_table.definitions.title',
+              )}
+              controls="pnl-definitions"
+            ></Tab>
+            <Tab
+              id="tab-details"
+              label={t(
+                'presentation_page.main_content.about_table.details.title',
+              )}
+              controls="pnl-details"
+            ></Tab>
+            <Tab
+              id="tab-contact"
+              label={t(
+                'presentation_page.main_content.about_table.contact.title',
+              )}
+              controls="pnl-contact"
+            ></Tab>
+          </Tabs>
+        </div>
+        <div className={cl(classes.tabsContent)}>
+          <TabPanel id="pnl-footnotes" controlledBy="tab-footnotes">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+            aliquip ex ea commodo consequat. Duis aute irure dolor in
+            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+            culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum
+            dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+            incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+            veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
+            ea commodo consequat. Duis aute irure dolor in reprehenderit in
+            voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
+            officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit
+            amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+            ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+            nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+            consequat. Duis aute irure dolor in reprehenderit in voluptate velit
+            esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+            cupidatat non proident, sunt in culpa qui officia deserunt mollit
+            anim id est laborum. Lorem ipsum dolor sit amet, consectetur
+            adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+            dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+            exercitation ullamco laboris nisi ut aliquip ex ea commodo
+            consequat. Duis aute irure dolor in reprehenderit in voluptate velit
+            esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+            cupidatat non proident, sunt in culpa qui officia deserunt mollit
+            anim id est laborum. Lorem ipsum dolor sit amet, consectetur
+            adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+            dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+            exercitation ullamco laboris nisi ut aliquip ex ea commodo
+            consequat. Duis aute irure dolor in reprehenderit in voluptate velit
+            esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+            cupidatat non proident, sunt in culpa qui officia deserunt mollit
+            anim id est laborum. Lorem ipsum dolor sit amet, consectetur
+            adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+            dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+            exercitation ullamco laboris nisi ut aliquip ex ea commodo
+            consequat. Duis aute irure dolor in reprehenderit in voluptate velit
+            esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+            cupidatat non proident, sunt in culpa qui officia deserunt mollit
+            anim id est laborum.
+          </TabPanel>
+          <TabPanel id="pnl-definitions" controlledBy="tab-definitions">
+            Definitions
+          </TabPanel>
+          <TabPanel id="pnl-details" controlledBy="tab-details">
+            Details
+          </TabPanel>
+          <TabPanel id="pnl-contact" controlledBy="tab-contact">
+            Contact
+          </TabPanel>
+        </div>
       </TabsProvider>
     </SideSheet>
   );

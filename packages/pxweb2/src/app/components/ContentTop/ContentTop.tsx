@@ -55,6 +55,7 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
             <Button
               icon="InformationCircle"
               variant="secondary"
+              aria-haspopup="dialog"
               onClick={() => {
                 handleOpenTableInformation('tab-footnotes');
               }}
@@ -68,6 +69,7 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
                   <Link
                     href="#"
                     inline
+                    aria-haspopup="dialog"
                     onClick={() => {
                       handleOpenTableInformation('tab-details');
                     }}

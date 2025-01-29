@@ -65,6 +65,9 @@
   align-self: stretch;
   background: var(--px-color-surface-default);
   color: var(--px-color-text-default);
+
+  // Not from Figma
+  overflow-y: auto;
 }
 
 // Animation that slides in NavigationDrawer from the right when opened.
