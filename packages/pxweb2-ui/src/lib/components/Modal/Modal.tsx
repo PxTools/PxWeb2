@@ -75,10 +75,18 @@ export function Modal({
   };
 
   return (
-    <dialog ref={modalRef} className={cl(classes.modal) + cssClasses}>
+    <dialog
+      ref={modalRef}
+      className={cl(classes.modal) + cssClasses}
+      aria-labelledby="px-modal-heading"
+    >
       <div className={cl(classes.header)}>
         <div className={cl(classes.headerContent)}>
-          <Heading level="3" className={cl(classes.headings)}>
+          <Heading
+            id="px-modal-heading"
+            level="3"
+            className={cl(classes.headings)}
+          >
             {label && (
               <Label size="medium" textcolor="default">
                 {label}
