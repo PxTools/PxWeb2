@@ -73,7 +73,7 @@ export function TableInformation({
             ></Tab>
           </Tabs>
         </div>
-        <div className={cl(classes.tabsContent)}>
+        <div className={cl(classes.tabsContent, classes['bodyshort-medium'])}>
           <TabPanel id="pnl-footnotes" controlledBy="tab-footnotes">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim

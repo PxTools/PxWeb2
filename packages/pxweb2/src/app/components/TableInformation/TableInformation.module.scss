@@ -1,4 +1,7 @@
+@use '$ui/src/lib/text-styles.scss';
+
 .tabs {
+  display: flex;
 }
 
 .tabsContent {
