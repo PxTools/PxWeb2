@@ -60,7 +60,7 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
               }}
             >
               {t(
-                'presentation_page.main_content.about_table.information.title',
+                'presentation_page.main_content.about_table.title',
               )}
             </Button>
             {pxtable.metadata && (

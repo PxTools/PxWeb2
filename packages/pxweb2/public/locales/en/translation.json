@@ -158,21 +158,21 @@
         }
       },
       "about_table": {
-        "title": "About the table",
+        "title": "Information",
         "footnotes": {
           "title": "Notes",
           "show_all_footnotes": "Show all notes for table"
         },
-        "information": {
-          "title": "Information",
+        "definitions": {
+          "title": "Definitions",
           "description": "The table is part of the statistics {{statistics}}"
         },
-        "definition": {
-          "title": "Definitions",
+        "details": {
+          "title": "Details",
           "description": "Description text..."
         },
-        "metadata": {
-          "title": "Metadata",
+        "contact": {
+          "title": "Contact",
           "description": "Description text..."
         }
       },

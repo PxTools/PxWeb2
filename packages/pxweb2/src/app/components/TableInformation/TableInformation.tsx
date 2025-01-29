@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import {
   SideSheet,
@@ -19,6 +20,7 @@ export function TableInformation({
   selectedTab,
   onClose,
 }: TableInformationProps) {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('');
 
   useEffect(() => {
@@ -29,7 +31,7 @@ export function TableInformation({
 
   return (
     <SideSheet
-      heading="Information"
+      heading={t('presentation_page.main_content.about_table.title')}
       isOpen={isOpen}
       onClose={() => {
         onClose(false);
@@ -39,16 +41,32 @@ export function TableInformation({
         <Tabs variant="fixed">
           <Tab
             id="tab-footnotes"
-            label="Footnotes"
+            label={t(
+              'presentation_page.main_content.about_table.footnotes.title',
+            )}
             controls="pnl-footnotes"
           ></Tab>
           <Tab
             id="tab-definitions"
-            label="Definitions"
+            label={t(
+              'presentation_page.main_content.about_table.definitions.title',
+            )}
             controls="pnl-definitions"
           ></Tab>
-          <Tab id="tab-details" label="Details" controls="pnl-details"></Tab>
-          <Tab id="tab-contact" label="Contact" controls="pnl-contact"></Tab>
+          <Tab
+            id="tab-details"
+            label={t(
+              'presentation_page.main_content.about_table.details.title',
+            )}
+            controls="pnl-details"
+          ></Tab>
+          <Tab
+            id="tab-contact"
+            label={t(
+              'presentation_page.main_content.about_table.contact.title',
+            )}
+            controls="pnl-contact"
+          ></Tab>
         </Tabs>
         <TabPanel id="pnl-footnotes" controlledBy="tab-footnotes">
           Footnotes
