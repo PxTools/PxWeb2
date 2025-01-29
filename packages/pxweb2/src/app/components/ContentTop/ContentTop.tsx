@@ -59,9 +59,7 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
                 handleOpenTableInformation('tab-footnotes');
               }}
             >
-              {t(
-                'presentation_page.main_content.about_table.title',
-              )}
+              {t('presentation_page.main_content.about_table.title')}
             </Button>
             {pxtable.metadata && (
               <BodyShort size="medium">
