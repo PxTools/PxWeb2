@@ -28,7 +28,7 @@ export function App() {
   const [errorMsg] = useState('');
   const [selectedNavigationView, setSelectedNavigationView] =
     useState<NavigationItem>('filter');
-  const [, setHasFocus] = useState<NavigationItem>('none');
+  const [hasFocus, setHasFocus] = useState<NavigationItem>('none');
   const [openedWithKeyboard, setOpenedWithKeyboard] = useState(false);
   /**
    * Keep state if window screen size is mobile or desktop.
@@ -45,6 +45,12 @@ export function App() {
   }>(null);
 
   const hideMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (hasFocus !== 'none' && navigationBarRef.current) {
+      hideMenuRef.current?.focus();
+    }
+  }, [hasFocus]);
 
   useEffect(() => {
     if (!navigationBarRef.current || !hideMenuRef.current) {
