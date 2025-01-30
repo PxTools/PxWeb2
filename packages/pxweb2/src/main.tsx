@@ -25,14 +25,14 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
 );
 
-if (location.href.indexOf('localhost') > -1) {
+if (location.href.includes('localhost')) {
   validateConfig();
 }
 
 root.render(
   <StrictMode>
-    <AccessibilityProvider>
-      <AppProvider>
+    <AppProvider>
+      <AccessibilityProvider>
         <VariablesProvider>
           <TableDataProvider>
             <Suspense fallback={<div>Loading...</div>}>
@@ -40,7 +40,7 @@ root.render(
             </Suspense>
           </TableDataProvider>
         </VariablesProvider>
-      </AppProvider>
-    </AccessibilityProvider>
+      </AccessibilityProvider>
+    </AppProvider>
   </StrictMode>,
 );
