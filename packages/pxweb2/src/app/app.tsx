@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useContext } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router';
 
 import styles from './app.module.scss';
@@ -13,14 +13,14 @@ import { SkipToMain } from './components/SkipToMain/SkipToMain';
 import { Footer } from './components/Footer/Footer';
 import { getConfig } from './util/config/getConfig';
 import { OpenAPI } from '@pxweb2/pxweb2-api-client';
-import { AccessibilityContext } from './context/AccessibilityProvider';
+import useAccessibility from './context/useAccessibility';
 import useApp from './context/useApp';
 import { BreakpointsSmallMaxWidth } from '../../../pxweb2-ui/style-dictionary/dist/js/fixed-variables';
 
 export function App() {
   const { isTablet } = useApp();
   const config = getConfig();
-  const accessibility = useContext(AccessibilityContext);
+  const accessibility = useAccessibility();
   OpenAPI.BASE = config.apiUrl;
 
   const { tableId } = useParams<{ tableId: string }>();
