@@ -13,4 +13,4 @@ export const useAccessibility = () => {
   return context;
 };
 
-export default useAccessibility; 
+export default useAccessibility;
