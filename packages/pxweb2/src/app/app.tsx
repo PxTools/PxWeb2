@@ -15,7 +15,6 @@ import { getConfig } from './util/config/getConfig';
 import { OpenAPI } from '@pxweb2/pxweb2-api-client';
 import useAccessibility from './context/useAccessibility';
 import useApp from './context/useApp';
-import { BreakpointsSmallMaxWidth } from '../../../pxweb2-ui/style-dictionary/dist/js/fixed-variables';
 
 export function App() {
   const { isTablet } = useApp();
@@ -27,14 +26,12 @@ export function App() {
   const [selectedTableId] = useState(tableId ?? 'tab638');
   const [errorMsg] = useState('');
   const [selectedNavigationView, setSelectedNavigationView] =
-    useState<NavigationItem>('filter');
+    useState<NavigationItem>(isTablet ? 'none' : 'filter');
   const [hasFocus, setHasFocus] = useState<NavigationItem>('none');
   const [openedWithKeyboard, setOpenedWithKeyboard] = useState(false);
   /**
    * Keep state if window screen size is mobile or desktop.
    */
-  const mobileBreakpoint = Number(BreakpointsSmallMaxWidth.replace('px', ''));
-  const [, setIsMobile] = useState(window.innerWidth <= mobileBreakpoint);
 
   const navigationBarRef = useRef<{
     filter: HTMLButtonElement;
@@ -119,19 +116,6 @@ export function App() {
     hideMenuRef.current,
     selectedNavigationView,
   ]);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= mobileBreakpoint);
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, [mobileBreakpoint]);
-  useState<NavigationItem>(isTablet ? 'none' : 'filter');
 
   useEffect(() => {
     if (errorMsg !== '') {
