@@ -29,6 +29,5 @@ export * from './lib/shared-types/value';
 export * from './lib/shared-types/variable';
 export * from './lib/shared-types/vartypeEnum';
 export * from './lib/util/util';
-export * from './lib/util/testing-utils';
 export * from './../style-dictionary/dist/js/css-variables';
 export * from './../style-dictionary/dist/js/fixed-variables';

@@ -1,4 +1,3 @@
-/// <reference types='vitest' />
 import { Plugin, defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
@@ -51,20 +50,6 @@ export default defineConfig({
   resolve: {
     alias: {
       $ui: path.resolve('../pxweb2-ui/'),
-    },
-  },
-  test: {
-    globals: true,
-    cache: {
-      dir: '../../node_modules/.vitest',
-    },
-    environment: 'jsdom',
-    include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-
-    reporters: ['default'],
-    coverage: {
-      reportsDirectory: '../../coverage/apps/pxweb2',
-      provider: 'v8',
     },
   },
 });
