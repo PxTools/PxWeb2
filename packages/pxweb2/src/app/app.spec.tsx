@@ -1,8 +1,3 @@
-// Mock react-i18next's useTranslation hook
-// needs to be imported before the component
-import { mockReactI18next } from '@pxweb2/pxweb2-ui';
-mockReactI18next();
-
 import { MemoryRouter } from 'react-router';
 import App from './app';
 import { AccessibilityProvider } from './context/AccessibilityProvider';

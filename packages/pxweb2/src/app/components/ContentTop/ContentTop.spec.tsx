@@ -1,16 +1,11 @@
-// Mock react-i18next's useTranslation hook
-// needs to be imported before the component
+import { render } from '@testing-library/react';
 import {
   Variable,
   VartypeEnum,
   PxTableMetadata,
   PxTable,
   fakeData,
-  mockReactI18next,
 } from '@pxweb2/pxweb2-ui';
-mockReactI18next();
-
-import { render } from '@testing-library/react';
 
 import ContentTop from './ContentTop';
 
