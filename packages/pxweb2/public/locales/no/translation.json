@@ -8,7 +8,7 @@
     "header": {
       "title": "PxWeb 2.0 [Main]",
       "logo": "PxWeb 2.0",
-      "arialabelheader": "Hovenavigasjon"
+      "arialabelheader": "Velg språk"
     },
     "skip_to_main": "Hopp til hovedinnhold",
     "footer": {
@@ -149,7 +149,7 @@
       }
     },
     "main_content": {
-      "arialabelbreadcrumb": "brødsmulesti",
+      "arialabelbreadcrumb": "Brødsmulesti",
       "last_updated": "Sist oppdatert",
       "show_details": "Vis detaljer",
       "table": {
