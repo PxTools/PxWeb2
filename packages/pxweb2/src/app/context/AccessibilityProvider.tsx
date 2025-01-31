@@ -1,4 +1,22 @@
-import React, { createContext, useEffect, useState, ReactNode } from 'react';
+import {
+  createContext,
+  useEffect,
+  useState,
+  ReactNode,
+  useCallback,
+  useMemo,
+} from 'react';
+
+type Modal = {
+  name: string;
+  closeFunction: () => void;
+};
+
+type FocusOverride = {
+  self: HTMLElement;
+  previous?: HTMLElement;
+  next?: HTMLElement;
+};
 
 interface AccessibilityContextType {
   addModal: (name: string, closeFunction: () => void) => void;
@@ -13,22 +31,12 @@ interface AccessibilityContextType {
   removeFocusOverride: (name: string) => void;
 }
 
-export const AccessibilityContext = createContext<AccessibilityContextType>({
-  addModal: () => {},
-  closeModal: () => {},
-  removeModal: () => {},
-  removeFocusOverride: () => {},
-  addFocusOverride: () => {},
-});
+export const AccessibilityContext =
+  createContext<AccessibilityContextType | null>(null);
 
 interface AccessibilityProviderProps {
   children: ReactNode;
 }
-type FocusOverride = {
-  self: HTMLElement;
-  previous?: HTMLElement;
-  next?: HTMLElement;
-};
 
 /**
  * AccessibilityProvider
@@ -43,23 +51,18 @@ type FocusOverride = {
 export const AccessibilityProvider = ({
   children,
 }: AccessibilityProviderProps) => {
-  const [modals, setModals] = useState<
-    {
-      name: string;
-      closeFunction: () => void;
-    }[]
-  >([]);
-
+  const [modals, setModals] = useState<Modal[]>([]);
   const [focusOverrides, setFocusOverrides] = useState<FocusOverride[]>([]);
 
-  React.useEffect(() => {
-    if (location.href.indexOf('localhost') > -1) {
+  // Debug logging in development
+  useEffect(() => {
+    if (location.href.includes('localhost')) {
       console.log('PxWeb2 - a11y - Modals (Stack):', modals);
       console.log('PxWeb2 - a11y - Focus overrides:', focusOverrides);
     }
   }, [modals, focusOverrides]);
 
-  const closeModal = React.useCallback(() => {
+  const closeModal = useCallback(() => {
     setModals((prev) => {
       if (prev.length === 0) {
         return prev;
@@ -69,48 +72,40 @@ export const AccessibilityProvider = ({
     });
   }, []);
 
-  const removeFocusOverride = React.useCallback(
-    (name: string) => {
-      setFocusOverrides((prev) =>
-        prev.filter(
-          (override) =>
-            override.self.getAttribute('data-focus-override-id') !== name,
-        ),
-      );
-    },
-    [focusOverrides, setFocusOverrides],
-  );
+  const removeFocusOverride = useCallback((name: string) => {
+    setFocusOverrides((prev) =>
+      prev.filter(
+        (override) =>
+          override.self.getAttribute('data-focus-override-id') !== name,
+      ),
+    );
+  }, []);
 
-  const removeModal = React.useCallback((name: string) => {
+  const removeModal = useCallback((name: string) => {
     setModals((prev) => prev.filter((modal) => modal.name !== name));
   }, []);
 
-  const addModal = React.useCallback(
-    (name: string, closeFunction: () => void) => {
-      setModals((prev) => {
-        const filteredModals = prev.filter((modal) => modal.name !== name);
-        return [...filteredModals, { name, closeFunction }];
-      });
-    },
-    [],
-  );
+  const addModal = useCallback((name: string, closeFunction: () => void) => {
+    setModals((prev) => {
+      const filteredModals = prev.filter((modal) => modal.name !== name);
+      return [...filteredModals, { name, closeFunction }];
+    });
+  }, []);
 
-  const findFocusOverride = React.useCallback(
+  const findFocusOverride = useCallback(
     (element: HTMLElement) => {
-      const override = focusOverrides.find(
-        (override) =>
-          override.self.getAttribute('data-focus-override-id') ===
-          element.getAttribute('data-focus-override-id'),
+      return (
+        focusOverrides.find(
+          (override) =>
+            override.self.getAttribute('data-focus-override-id') ===
+            element.getAttribute('data-focus-override-id'),
+        ) || null
       );
-      if (override) {
-        return override;
-      }
-      return null;
     },
     [focusOverrides],
   );
 
-  const addFocusOverride = React.useCallback(
+  const addFocusOverride = useCallback(
     (
       name: string,
       element: HTMLElement,
@@ -124,7 +119,7 @@ export const AccessibilityProvider = ({
             override.self.getAttribute('data-focus-override-id') !== name,
         );
 
-        const newState = [
+        return [
           ...filteredOverrides,
           {
             self: element,
@@ -132,13 +127,12 @@ export const AccessibilityProvider = ({
             next,
           },
         ];
-        return newState;
       });
     },
-    [focusOverrides],
+    [],
   );
 
-  const focusNext = React.useCallback(
+  const focusNext = useCallback(
     (element: HTMLElement, event: KeyboardEvent) => {
       const next = findFocusOverride(element)?.next;
       if (next) {
@@ -146,10 +140,10 @@ export const AccessibilityProvider = ({
         next.focus();
       }
     },
-    [focusOverrides],
+    [findFocusOverride],
   );
 
-  const focusPrevious = React.useCallback(
+  const focusPrevious = useCallback(
     (element: HTMLElement, event: KeyboardEvent) => {
       const previous = findFocusOverride(element)?.previous;
       if (previous) {
@@ -157,7 +151,7 @@ export const AccessibilityProvider = ({
         previous.focus();
       }
     },
-    [focusOverrides],
+    [findFocusOverride],
   );
 
   useEffect(() => {
@@ -166,27 +160,28 @@ export const AccessibilityProvider = ({
         closeModal();
       }
 
-      if (event.key === 'Tab' && !event.shiftKey) {
-        console.log('PxWeb2 - a11y - Tab pressed');
-        if (event.target) {
-          focusNext(event.target as HTMLElement, event);
-        }
-      }
+      if (event.key === 'Tab') {
+        const target = event.target as HTMLElement;
 
-      if (event.shiftKey && event.key === 'Tab') {
-        console.log('PxWeb2 - a11y - Shift + Tab pressed');
-
-        if (event.target) {
-          focusPrevious(event.target as HTMLElement, event);
+        if (!event.shiftKey) {
+          if (location.href.includes('localhost')) {
+            console.log('PxWeb2 - a11y - Tab pressed');
+          }
+          focusNext(target, event);
+        } else {
+          if (location.href.includes('localhost')) {
+            console.log('PxWeb2 - a11y - Shift + Tab pressed');
+          }
+          focusPrevious(target, event);
         }
       }
     };
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [closeModal, focusNext, focusPrevious, findFocusOverride]);
+  }, [closeModal, focusNext, focusPrevious]);
 
-  const value = React.useMemo(
+  const value = useMemo(
     () => ({
       addModal,
       closeModal,
@@ -194,7 +189,7 @@ export const AccessibilityProvider = ({
       addFocusOverride,
       removeFocusOverride,
     }),
-    [addModal, closeModal, removeModal],
+    [addModal, closeModal, removeModal, addFocusOverride, removeFocusOverride],
   );
 
   return (

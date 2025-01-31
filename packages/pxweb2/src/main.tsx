@@ -25,7 +25,7 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
 );
 
-if (location.href.indexOf('localhost') > -1) {
+if (location.href.includes('localhost')) {
   validateConfig();
 }
 
