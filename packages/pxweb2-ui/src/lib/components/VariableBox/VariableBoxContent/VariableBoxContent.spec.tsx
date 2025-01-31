@@ -19,6 +19,12 @@ describe('VariableBoxContent', () => {
         onChangeMixedCheckbox={() => {
           return;
         }}
+        addModal={() => {
+          return;
+        }}
+        removeModal={() => {
+          return;
+        }}
         varId="test-1"
         selectedValues={[]}
         totalValues={1}

@@ -1,6 +1,4 @@
 import { render } from '@testing-library/react';
-
-import ContentTop from './ContentTop';
 import {
   Variable,
   VartypeEnum,
@@ -8,6 +6,8 @@ import {
   PxTable,
   fakeData,
 } from '@pxweb2/pxweb2-ui';
+
+import ContentTop from './ContentTop';
 
 function getPxTable(): PxTable {
   const variables: Variable[] = [
@@ -61,6 +61,7 @@ function getPxTable(): PxTable {
   const tableMeta: PxTableMetadata = {
     id: 'test01',
     label: 'Test table',
+    language: 'no',
     updated: new Date('2023-01-14T09:00:05.123Z'),
     variables: variables,
   };

@@ -134,6 +134,7 @@ export const MixedCheckbox: React.FC<MixedCheckboxProps> = ({
       >
         {text}
       </div>
+      <div className={styles.checkboxBackgroundCover}></div>
     </div>
   );
 };

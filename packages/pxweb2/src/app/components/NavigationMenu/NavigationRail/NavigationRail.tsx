@@ -1,3 +1,4 @@
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { LazyMotion, MotionConfig } from 'motion/react';
 
@@ -11,13 +12,44 @@ const loadFeatures = () =>
 
 interface NavigationRailProps {
   selected: NavigationItem;
-  onChange: (newSelected: NavigationItem) => void;
+  onChange: (
+    keyboard: boolean,
+    close: boolean,
+    newSelected: NavigationItem,
+  ) => void;
 }
-export const NavigationRail: React.FC<NavigationRailProps> = ({
-  onChange,
-  selected,
-}) => {
+
+export const NavigationRail = React.forwardRef<
+  {
+    filter: HTMLButtonElement;
+    view: HTMLButtonElement;
+    edit: HTMLButtonElement;
+    save: HTMLButtonElement;
+    help: HTMLButtonElement;
+  },
+  NavigationRailProps
+>(({ onChange, selected }, ref) => {
   const { t } = useTranslation();
+
+  const isKeyboardClick = (event: any) => {
+    return event.screenX === 0 && event.screenY === 0;
+  };
+
+  React.useImperativeHandle(ref, () => ({
+    filter: refs.filter.current!,
+    view: refs.view.current!,
+    edit: refs.edit.current!,
+    save: refs.save.current!,
+    help: refs.help.current!,
+  }));
+
+  const refs = {
+    save: React.useRef<HTMLButtonElement>(null),
+    help: React.useRef<HTMLButtonElement>(null),
+    filter: React.useRef<HTMLButtonElement>(null),
+    view: React.useRef<HTMLButtonElement>(null),
+    edit: React.useRef<HTMLButtonElement>(null),
+  };
 
   return (
     <div className={styles.navigationRail}>
@@ -30,48 +62,53 @@ export const NavigationRail: React.FC<NavigationRailProps> = ({
           >
             <ul className={styles.navigationRailList}>
               <Item
-                parentName="navRail"
+                ref={refs.filter}
+            parentName="navRail"
                 label={t('presentation_page.sidemenu.selection.title')}
                 selected={selected === 'filter'}
                 icon={'Controls'}
-                onClick={() => {
-                  onChange('filter');
+                onClick={(event: any) => {
+                  onChange(isKeyboardClick(event), selected === 'filter', 'filter');
                 }}
               />
               <Item
-                parentName="navRail"
+                ref={refs.view}
+            parentName="navRail"
                 label={t('presentation_page.sidemenu.view.title')}
                 selected={selected === 'view'}
                 icon={'BarChart'}
-                onClick={() => {
-                  onChange('view');
+                onClick={(event: any) => {
+                  onChange(isKeyboardClick(event), selected === 'view', 'view');
                 }}
               />
               <Item
-                parentName="navRail"
+                ref={refs.edit}
+            parentName="navRail"
                 label={t('presentation_page.sidemenu.edit.title')}
                 selected={selected === 'edit'}
                 icon={'ArrowsUpDown'}
-                onClick={() => {
-                  onChange('edit');
+                onClick={(event: any) => {
+                  onChange(isKeyboardClick(event), selected === 'edit', 'edit');
                 }}
               />
               <Item
-                parentName="navRail"
+                ref={refs.save}
+            parentName="navRail"
                 label={t('presentation_page.sidemenu.save.title')}
                 selected={selected === 'save'}
                 icon={'FloppyDisk'}
-                onClick={() => {
-                  onChange('save');
+                onClick={(event: any) => {
+                  onChange(isKeyboardClick(event), selected === 'save', 'save');
                 }}
               />
               <Item
-                parentName="navRail"
+                ref={refs.help}
+            parentName="navRail"
                 label={t('presentation_page.sidemenu.help.title')}
                 selected={selected === 'help'}
                 icon={'QuestionMarkCircle'}
-                onClick={() => {
-                  onChange('help');
+                onClick={(event: any) => {
+                  onChange(isKeyboardClick(event), selected === 'help', 'help');
                 }}
               />
             </ul>
@@ -80,6 +117,6 @@ export const NavigationRail: React.FC<NavigationRailProps> = ({
       </LazyMotion>
     </div>
   );
-};
+});
 
 export default NavigationRail;
