@@ -371,7 +371,7 @@ export function VariableBoxContent({
             id={varId + uniqueId}
             tabIndex={-1}
             onFocus={(event) => {
-              event.target.childNodes[0].focus();
+              (event.target.childNodes[0] as HTMLElement).focus();
               if (hasSevenOrMoreValues) {
                 setCurrentFocusedItemIndex(1);
               } else {
@@ -408,7 +408,7 @@ export function VariableBoxContent({
             id={value.code + uniqueId}
             tabIndex={-1}
             onFocus={(event) => {
-              event.target.childNodes[0].focus();
+              (event.target.childNodes[0] as HTMLElement).focus();
             }}
             className={cl(classes['focusableItem'])}
           >
