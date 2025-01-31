@@ -24,7 +24,7 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
   return (
     <>
       <div onClick={onClose} className={styles.backdrop}></div>
-      <nav
+      <div
         role="region"
         aria-labelledby={heading}
         className={cl(styles.navigationDrawer, styles.fadein)}
@@ -46,7 +46,7 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
           </div>
         </div>
         <div className={styles.children}>{children}</div>
-      </nav>
+      </div>
     </>
   );
 };
