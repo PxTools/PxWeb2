@@ -27,6 +27,7 @@
   border: none;
   cursor: pointer;
   background-color: var(--px-color-background-default);
+  color: var(--px-color-text-default);
 
   &:hover {
     background: var(--px-color-surface-action-subtle-hover);

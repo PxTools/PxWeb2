@@ -158,21 +158,21 @@
         }
       },
       "about_table": {
-        "title": "Om tabellen",
+        "title": "Informasjon",
         "footnotes": {
-          "title": "Noter",
+          "title": "Merknader",
           "show_all_footnotes": "Vis alle noter for tabellen"
         },
-        "information": {
-          "title": "Informasjon",
+        "definitions": {
+          "title": "Definisjoner",
           "description": "Tabellen er en del av statistikken {{statistics}}"
         },
-        "definition": {
-          "title": "Definisjoner",
+        "details": {
+          "title": "Detaljer",
           "description": "Beskrivelsestekst..."
         },
-        "metadata": {
-          "title": "Metadata",
+        "contact": {
+          "title": "Kontakt",
           "description": "Beskrivelsestekst..."
         }
       },

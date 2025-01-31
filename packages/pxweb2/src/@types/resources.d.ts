@@ -5,7 +5,7 @@ interface Resources {
       shorthand: 'en';
     };
     common: {
-      title: 'Welcome to PxWeb 2.0';
+      title: 'PxWeb 2.0';
       header: {
         title: 'PxWeb 2.0 [Main]';
         logo: 'PxWeb 2.0';
@@ -159,20 +159,20 @@ interface Resources {
           };
         };
         about_table: {
-          title: 'About the table';
+          title: 'Information';
           footnotes: {
             title: 'Notes';
             show_all_footnotes: 'Show all notes for table';
           };
-          information: {
+          definitions: {
             title: 'Information';
             description: 'The table is part of the statistics {{statistics}}';
           };
-          definition: {
+          details: {
             title: 'Definitions';
             description: 'Description text...';
           };
-          metadata: {
+          contact: {
             title: 'Metadata';
             description: 'Description text...';
           };
