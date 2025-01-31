@@ -15,7 +15,7 @@ import {
 export interface TableInformationProps {
   readonly isOpen: boolean;
   readonly selectedTab?: string;
-  readonly onClose: (isOpen: boolean) => void;
+  readonly onClose: () => void;
 }
 
 export function TableInformation({
@@ -37,7 +37,7 @@ export function TableInformation({
       heading={t('presentation_page.main_content.about_table.title')}
       isOpen={isOpen}
       onClose={() => {
-        onClose(false);
+        onClose();
       }}
     >
       <TabsProvider activeTab={activeTab} setActiveTab={setActiveTab}>

@@ -1,6 +1,6 @@
 import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext, useEffect, useRef } from 'react';
 
 import classes from './ContentTop.module.scss';
 import {
@@ -25,9 +25,13 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
   const [isTableInformationOpen, setIsTableInformationOpen] =
     useState<boolean>(false);
   const [activeTab, setActiveTab] = useState('');
+  const [tableInformationOpener, setTableInformationOpener] = useState('');
   const accessibility = useContext(AccessibilityContext);
+  const openInformationButtonRef = useRef<HTMLButtonElement>(null);
+  const openInformationLinkRef = useRef<HTMLAnchorElement>(null);
 
-  const handleOpenTableInformation = (selectedTab?: string) => {
+  const handleOpenTableInformation = (opener: string, selectedTab?: string) => {
+    setTableInformationOpener(opener);
     if (selectedTab) {
       setActiveTab(selectedTab);
     }
@@ -35,6 +39,14 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
   };
 
   useEffect(() => {
+    if (!isTableInformationOpen) {
+      if (tableInformationOpener === 'table-information-button') {
+        openInformationButtonRef.current?.focus();
+      } else {
+        // table-information-link
+        openInformationLinkRef.current?.focus();
+      }
+    }
     accessibility?.addModal('tableInformation', () => {
       setIsTableInformationOpen(false);
     });
@@ -42,7 +54,7 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
     return () => {
       accessibility?.removeModal('tableInformation');
     };
-  }, [accessibility, isTableInformationOpen]);
+  }, [accessibility, isTableInformationOpen, tableInformationOpener]);
 
   return (
     <>
@@ -65,11 +77,15 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
           </Heading>
           <div className={cl(classes.information)}>
             <Button
+              ref={openInformationButtonRef}
               icon="InformationCircle"
               variant="secondary"
               aria-haspopup="dialog"
               onClick={() => {
-                handleOpenTableInformation('tab-footnotes');
+                handleOpenTableInformation(
+                  'table-information-button',
+                  'tab-footnotes',
+                );
               }}
             >
               {t('presentation_page.main_content.about_table.title')}
@@ -79,11 +95,15 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
                 <span className={classes.lastUpdatedLabel}>
                   {t('presentation_page.main_content.last_updated')}:{' '}
                   <Link
+                    ref={openInformationLinkRef}
                     href="#"
                     inline
                     aria-haspopup="dialog"
                     onClick={() => {
-                      handleOpenTableInformation('tab-details');
+                      handleOpenTableInformation(
+                        'table-information-link',
+                        'tab-details',
+                      );
                     }}
                   >
                     {t('date.simple_date_with_time', {
