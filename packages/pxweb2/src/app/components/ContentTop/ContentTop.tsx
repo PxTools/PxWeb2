@@ -35,12 +35,12 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
   };
 
   useEffect(() => {
-    accessibility.addModal('tableInformation', () => {
+    accessibility?.addModal('tableInformation', () => {
       setIsTableInformationOpen(false);
     });
 
     return () => {
-      accessibility.removeModal('tableInformation');
+      accessibility?.removeModal('tableInformation');
     };
   }, [accessibility, isTableInformationOpen]);
 
