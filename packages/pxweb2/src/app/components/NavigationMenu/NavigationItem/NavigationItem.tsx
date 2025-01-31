@@ -60,8 +60,8 @@ export const Item = forwardRef<HTMLButtonElement, ItemProps>(
 
     return (
       <li className={cl(styles.itemWrapper)}>
-      <m.button
-        ref={ref}
+        <m.button
+          ref={ref}
           className={cl(
             { [styles.selected]: selected },
             styles.item,
@@ -71,7 +71,7 @@ export const Item = forwardRef<HTMLButtonElement, ItemProps>(
           type="button"
           id={btnId}
           aria-expanded={selected}
-        // Framer Motion animations
+          // Framer Motion animations
           key={selected.toString()} // Needed by motion to re-run the animation when the selected state changes, toString for type compatibility
           initial={'initial'}
           whileHover={'hover'}
@@ -87,6 +87,6 @@ export const Item = forwardRef<HTMLButtonElement, ItemProps>(
           <Label htmlFor={btnId}>{label}</Label>
         </m.button>
       </li>
-  );
+    );
   },
 );

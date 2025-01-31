@@ -63,17 +63,21 @@ export const NavigationRail = React.forwardRef<
             <ul className={styles.navigationRailList}>
               <Item
                 ref={refs.filter}
-            parentName="navRail"
+                parentName="navRail"
                 label={t('presentation_page.sidemenu.selection.title')}
                 selected={selected === 'filter'}
                 icon={'Controls'}
                 onClick={(event: any) => {
-                  onChange(isKeyboardClick(event), selected === 'filter', 'filter');
+                  onChange(
+                    isKeyboardClick(event),
+                    selected === 'filter',
+                    'filter',
+                  );
                 }}
               />
               <Item
                 ref={refs.view}
-            parentName="navRail"
+                parentName="navRail"
                 label={t('presentation_page.sidemenu.view.title')}
                 selected={selected === 'view'}
                 icon={'BarChart'}
@@ -83,7 +87,7 @@ export const NavigationRail = React.forwardRef<
               />
               <Item
                 ref={refs.edit}
-            parentName="navRail"
+                parentName="navRail"
                 label={t('presentation_page.sidemenu.edit.title')}
                 selected={selected === 'edit'}
                 icon={'ArrowsUpDown'}
@@ -93,7 +97,7 @@ export const NavigationRail = React.forwardRef<
               />
               <Item
                 ref={refs.save}
-            parentName="navRail"
+                parentName="navRail"
                 label={t('presentation_page.sidemenu.save.title')}
                 selected={selected === 'save'}
                 icon={'FloppyDisk'}
@@ -103,7 +107,7 @@ export const NavigationRail = React.forwardRef<
               />
               <Item
                 ref={refs.help}
-            parentName="navRail"
+                parentName="navRail"
                 label={t('presentation_page.sidemenu.help.title')}
                 selected={selected === 'help'}
                 icon={'QuestionMarkCircle'}
