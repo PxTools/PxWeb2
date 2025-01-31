@@ -86,7 +86,7 @@ export function VariableBoxContent({
     number | null
   >(null);
   const [items, setItems] = useState<{ type: string; value?: Value }[]>([]);
-
+  const [uniqueId] = useState(Math.random());
   const valuesOnlyList = useRef<HTMLDivElement>(null);
   const hasCodeLists = codeLists && codeLists.length > 0;
   const hasSevenOrMoreValues = values && values.length > 6;
@@ -236,16 +236,6 @@ export function VariableBoxContent({
 
     let newIndex = currentFocusedItemIndex ?? 1;
 
-    if (key === ' ') {
-      const item = items[currentFocusedItemIndex ?? 0];
-      if (item && item.type === 'value' && item.value) {
-        onChangeCheckbox(varId, item.value.code);
-      }
-      if (item && item.type === 'mixedCheckbox') {
-        onChangeMixedCheckbox(varId, allValuesSelected, searchedValues);
-      }
-    }
-
     if (isSearchFocused && key === 'ArrowDown') {
       setCurrentFocusedItemIndex(1);
       newIndex = 1;
@@ -292,7 +282,7 @@ export function VariableBoxContent({
       }
 
       if (elementId) {
-        const element = document.getElementById(elementId);
+        const element = document.getElementById(elementId + uniqueId);
         if (element) {
           element.focus();
         }
@@ -338,9 +328,10 @@ export function VariableBoxContent({
     if (item.type === 'search') {
       return (
         <div
-          id={`${varId}-search`}
+          id={`${varId}-search` + uniqueId}
           tabIndex={-1}
           className={classes['focusableItem']}
+          onFocus={() => setCurrentFocusedItemIndex(0)}
         >
           <Search
             ref={searchRef}
@@ -377,15 +368,22 @@ export function VariableBoxContent({
             style={{ height: initiallyHadSevenOrMoreValues ? '4px' : '0px' }}
           ></div>
           <div
-            id={varId}
+            id={varId + uniqueId}
             tabIndex={-1}
-            onFocus={(event) => event.target.childNodes[0].focus()}
+            onFocus={(event) => {
+              event.target.childNodes[0].focus();
+              if (hasSevenOrMoreValues) {
+                setCurrentFocusedItemIndex(1);
+              } else {
+                setCurrentFocusedItemIndex(0);
+              }
+            }}
             className={cl(classes['focusableItem'], {
               [classes['mixedCheckbox']]: true,
             })}
           >
             <MixedCheckbox
-              id={varId}
+              id={varId + uniqueId}
               text={mixedCheckboxText}
               value={allValuesSelected}
               onChange={() =>
@@ -407,13 +405,15 @@ export function VariableBoxContent({
       return (
         <>
           <div
-            id={value.code}
+            id={value.code + uniqueId}
             tabIndex={-1}
-            onFocus={(event) => event.target.childNodes[0].focus()}
+            onFocus={(event) => {
+              event.target.childNodes[0].focus();
+            }}
             className={cl(classes['focusableItem'])}
           >
             <Checkbox
-              id={value.code}
+              id={value.code + uniqueId}
               key={varId + value.code}
               tabIndex={-1}
               value={
