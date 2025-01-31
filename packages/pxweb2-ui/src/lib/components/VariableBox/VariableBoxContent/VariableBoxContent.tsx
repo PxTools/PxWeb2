@@ -379,6 +379,7 @@ export function VariableBoxContent({
           <div
             id={varId}
             tabIndex={-1}
+            onFocus={(event) => event.target.childNodes[0].focus()}
             className={cl(classes['focusableItem'], {
               [classes['mixedCheckbox']]: true,
             })}
@@ -408,6 +409,7 @@ export function VariableBoxContent({
           <div
             id={value.code}
             tabIndex={-1}
+            onFocus={(event) => event.target.childNodes[0].focus()}
             className={cl(classes['focusableItem'])}
           >
             <Checkbox
