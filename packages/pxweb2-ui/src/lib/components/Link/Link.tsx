@@ -27,7 +27,7 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(function Link(
     noUnderline = false,
     ...rest
   }: LinkProps,
-  ref
+  ref,
 ) {
   return (
     <a

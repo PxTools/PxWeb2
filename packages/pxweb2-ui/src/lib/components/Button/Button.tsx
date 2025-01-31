@@ -26,7 +26,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       className = '',
       ...rest
     },
-    ref
+    ref,
   ) => {
     const cssClasses = className.length > 0 ? ' ' + className : '';
 
@@ -58,7 +58,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         )}
       </button>
     );
-  }
+  },
 );
 
 Button.displayName = 'Button';
