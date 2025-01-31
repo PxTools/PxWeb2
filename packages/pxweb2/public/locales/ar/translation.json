@@ -7,7 +7,8 @@
     "title": "مرحبًا بك في PxWeb 2.0",
     "header": {
       "title": "PxWeb 2.0 [Main]",
-      "logo": "بيكس ويب 2.0"
+      "logo": "بيكس ويب 2.0",
+      "arialabelheader": "اختر اللغة"
     },
     "skip_to_main": "انتقل إلى المحتوى الرئيسي",
     "footer": {
@@ -50,6 +51,7 @@
       "statistics": "بنك الإحصائيات"
     },
     "sidemenu": {
+      "arialabeltoolsidemenu": "قائمة الأدوات للجدول",
       "hide": "يخفي",
       "selection": {
         "title": "فلتر",
@@ -147,6 +149,7 @@
       }
     },
     "main_content": {
+      "arialabelbreadcrumb": "مسار التنقل",
       "last_updated": "آخر تحديث",
       "show_details": "إظهار التفاصيل",
       "table": {

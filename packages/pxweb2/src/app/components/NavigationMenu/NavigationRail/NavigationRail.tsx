@@ -55,56 +55,68 @@ export const NavigationRail = React.forwardRef<
     <div className={styles.navigationRail}>
       <LazyMotion features={loadFeatures}>
         <MotionConfig reducedMotion="user">
-          <Item
-            ref={refs.filter}
-            parentName="navRail"
-            label={t('presentation_page.sidemenu.selection.title')}
-            selected={selected === 'filter'}
-            icon={'Controls'}
-            onClick={(event: any) => {
-              onChange(isKeyboardClick(event), selected === 'filter', 'filter');
-            }}
-          />
-          <Item
-            ref={refs.view}
-            parentName="navRail"
-            label={t('presentation_page.sidemenu.view.title')}
-            selected={selected === 'view'}
-            icon={'BarChart'}
-            onClick={(event: any) => {
-              onChange(isKeyboardClick(event), selected === 'view', 'view');
-            }}
-          />
-          <Item
-            ref={refs.edit}
-            parentName="navRail"
-            label={t('presentation_page.sidemenu.edit.title')}
-            selected={selected === 'edit'}
-            icon={'ArrowsUpDown'}
-            onClick={(event: any) => {
-              onChange(isKeyboardClick(event), selected === 'edit', 'edit');
-            }}
-          />
-          <Item
-            ref={refs.save}
-            parentName="navRail"
-            label={t('presentation_page.sidemenu.save.title')}
-            selected={selected === 'save'}
-            icon={'FloppyDisk'}
-            onClick={(event: any) => {
-              onChange(isKeyboardClick(event), selected === 'save', 'save');
-            }}
-          />
-          <Item
-            ref={refs.help}
-            parentName="navRail"
-            label={t('presentation_page.sidemenu.help.title')}
-            selected={selected === 'help'}
-            icon={'QuestionMarkCircle'}
-            onClick={(event: any) => {
-              onChange(isKeyboardClick(event), selected === 'help', 'help');
-            }}
-          />
+          <nav
+            aria-labelledby="navigation-rail-heading"
+            aria-describedby="navigation-rail-description"
+            aria-label={t('presentation_page.sidemenu.arialabeltoolsidemenu')}
+          >
+            <ul className={styles.navigationRailList}>
+              <Item
+                ref={refs.filter}
+                parentName="navRail"
+                label={t('presentation_page.sidemenu.selection.title')}
+                selected={selected === 'filter'}
+                icon={'Controls'}
+                onClick={(event: any) => {
+                  onChange(
+                    isKeyboardClick(event),
+                    selected === 'filter',
+                    'filter',
+                  );
+                }}
+              />
+              <Item
+                ref={refs.view}
+                parentName="navRail"
+                label={t('presentation_page.sidemenu.view.title')}
+                selected={selected === 'view'}
+                icon={'BarChart'}
+                onClick={(event: any) => {
+                  onChange(isKeyboardClick(event), selected === 'view', 'view');
+                }}
+              />
+              <Item
+                ref={refs.edit}
+                parentName="navRail"
+                label={t('presentation_page.sidemenu.edit.title')}
+                selected={selected === 'edit'}
+                icon={'ArrowsUpDown'}
+                onClick={(event: any) => {
+                  onChange(isKeyboardClick(event), selected === 'edit', 'edit');
+                }}
+              />
+              <Item
+                ref={refs.save}
+                parentName="navRail"
+                label={t('presentation_page.sidemenu.save.title')}
+                selected={selected === 'save'}
+                icon={'FloppyDisk'}
+                onClick={(event: any) => {
+                  onChange(isKeyboardClick(event), selected === 'save', 'save');
+                }}
+              />
+              <Item
+                ref={refs.help}
+                parentName="navRail"
+                label={t('presentation_page.sidemenu.help.title')}
+                selected={selected === 'help'}
+                icon={'QuestionMarkCircle'}
+                onClick={(event: any) => {
+                  onChange(isKeyboardClick(event), selected === 'help', 'help');
+                }}
+              />
+            </ul>
+          </nav>
         </MotionConfig>
       </LazyMotion>
     </div>
