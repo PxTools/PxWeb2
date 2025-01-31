@@ -8,7 +8,7 @@ import {
   VartypeEnum,
   PxTableData,
   PxTableMetadata,
-  CodeList
+  CodeList,
 } from '@pxweb2/pxweb2-ui';
 
 /**
