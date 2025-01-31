@@ -25,11 +25,8 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   strong,
   noMargin,
 }) => {
-  const checkboxRef = React.useRef<HTMLDivElement>(null);
-
   return (
     <div
-      ref={checkboxRef}
       id={id}
       role="checkbox"
       aria-checked={value}
