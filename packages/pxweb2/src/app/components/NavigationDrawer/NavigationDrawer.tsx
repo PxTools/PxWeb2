@@ -4,8 +4,7 @@ import styles from './NavigationDrawer.module.scss';
 import { Heading, Icon, Label } from '@pxweb2/pxweb2-ui';
 import { useTranslation } from 'react-i18next';
 import i18next from 'i18next';
-import { AccessibilityContext } from '../../context/AccessibilityProvider';
-import { useContext } from 'react';
+import useAccessibility from '../../context/useAccessibility';
 
 export interface NavigationDrawerProps {
   children: React.ReactNode;
@@ -23,7 +22,7 @@ export const NavigationDrawer = forwardRef<
   NavigationDrawerProps
 >(({ children, heading, view, openedWithKeyboard, onClose }, ref) => {
   const { t } = useTranslation();
-  const { addModal, removeModal } = useContext(AccessibilityContext);
+  const { addModal, removeModal } = useAccessibility();
 
   React.useEffect(() => {
     addModal('NavigationDrawer', () => {
