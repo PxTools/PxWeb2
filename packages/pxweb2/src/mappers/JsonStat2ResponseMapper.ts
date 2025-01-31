@@ -8,6 +8,7 @@ import {
   VartypeEnum,
   PxTableData,
   PxTableMetadata,
+  CodeList
 } from '@pxweb2/pxweb2-ui';
 
 /**
@@ -132,6 +133,7 @@ function mapDimension(id: string, dimension: any, role: any): Variable | null {
     return null;
   }
 
+  // Map the values
   const values: Array<Value> = [];
   const indexEntries = Object.entries(dimension.category.index);
   indexEntries.sort(([valueA], [valueB]) => Number(valueA) - Number(valueB));
@@ -145,12 +147,16 @@ function mapDimension(id: string, dimension: any, role: any): Variable | null {
     }
   }
 
+  // Map the codelists
+  const codeLists: Array<CodeList> = [];
+
   const variable: Variable = {
     id: id,
     label: dimension.label,
     type: mapVariableTypeEnum(id, role),
     mandatory: true, // How shall we handle this? The value for elimination may differ in the jsonstat2-response depending on if all values are seleccted or not...
     values,
+    codeLists,
   };
 
   return variable;

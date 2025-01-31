@@ -13,6 +13,7 @@ import type { VariablesSelection } from '../models/VariablesSelection';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
+import { Dataset } from '../models/Dataset';
 export class TableService {
     /**
      * Get all Tables.
@@ -100,7 +101,7 @@ export class TableService {
         lang?: string | null,
         outputFormat?: MetadataOutputFormatType,
         defaultSelection: boolean = false,
-    ): CancelablePromise<TableMetadataResponse> {
+    ): CancelablePromise<Dataset> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/tables/{id}/metadata',
