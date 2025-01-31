@@ -86,7 +86,7 @@ export function VariableBoxContent({
     number | null
   >(null);
   const [items, setItems] = useState<{ type: string; value?: Value }[]>([]);
-  const [uniqueId] = useState(Math.random());
+  const [uniqueId] = useState(() => crypto.randomUUID());
   const valuesOnlyList = useRef<HTMLDivElement>(null);
   const hasCodeLists = codeLists && codeLists.length > 0;
   const hasSevenOrMoreValues = values && values.length > 6;
@@ -383,7 +383,7 @@ export function VariableBoxContent({
             })}
           >
             <MixedCheckbox
-              id={varId + uniqueId}
+              id={varId + uniqueId + 'mixedCheckbox'}
               text={mixedCheckboxText}
               value={allValuesSelected}
               onChange={() =>
@@ -413,7 +413,7 @@ export function VariableBoxContent({
             className={cl(classes['focusableItem'])}
           >
             <Checkbox
-              id={value.code + uniqueId}
+              id={value.code + uniqueId + 'checkbox'}
               key={varId + value.code}
               tabIndex={-1}
               value={
