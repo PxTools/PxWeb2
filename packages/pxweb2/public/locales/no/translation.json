@@ -159,6 +159,7 @@
       },
       "about_table": {
         "title": "Informasjon",
+        "close_dialog": "Lukk tabellinformasjon",
         "footnotes": {
           "title": "Merknader",
           "show_all_footnotes": "Vis alle noter for tabellen"

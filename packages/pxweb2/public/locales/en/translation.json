@@ -159,6 +159,7 @@
       },
       "about_table": {
         "title": "Information",
+        "close_dialog": "Close table information",
         "footnotes": {
           "title": "Notes",
           "show_all_footnotes": "Show all notes for table"

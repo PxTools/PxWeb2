@@ -35,6 +35,7 @@ export function TableInformation({
   return (
     <SideSheet
       heading={t('presentation_page.main_content.about_table.title')}
+      closeLabel={t('presentation_page.main_content.about_table.close_dialog')}
       isOpen={isOpen}
       onClose={() => {
         onClose();

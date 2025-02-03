@@ -159,6 +159,7 @@
       },
       "about_table": {
         "title": "معلومة",
+        "close_dialog": "إغلاق معلومات الجدول",
         "footnotes": {
           "title": "ملحوظات",
           "show_all_footnotes": "إظهار كافة الملاحظات للجدول"

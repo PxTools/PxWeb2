@@ -7,6 +7,7 @@ import Button from '../Button/Button';
 
 export interface SideSheetProps {
   readonly heading: string;
+  readonly closeLabel?: string;
   readonly isOpen: boolean;
   readonly onClose?: () => void;
   readonly className?: string;
@@ -15,6 +16,7 @@ export interface SideSheetProps {
 
 export function SideSheet({
   heading,
+  closeLabel = 'Close',
   isOpen,
   onClose,
   className = '',
@@ -80,6 +82,7 @@ export function SideSheet({
               variant="tertiary"
               size="medium"
               icon="XMark"
+              aria-label={closeLabel}
               onClick={() => handleCloseSideSheet()}
             ></Button>
           </div>
