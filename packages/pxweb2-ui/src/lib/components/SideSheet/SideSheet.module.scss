@@ -57,8 +57,7 @@
 
 .content {
   display: flex;
-  padding: fixed.$spacing-5 fixed.$spacing-10 fixed.$spacing-10
-    fixed.$spacing-10;
+  padding: fixed.$spacing-5 fixed.$spacing-10 0px fixed.$spacing-10;
   flex-direction: column;
   align-items: flex-start;
   flex: 1 0 0;
