@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 
 import {
   metadataOutputFormat,
@@ -21,7 +21,7 @@ import {
 import NavigationDrawer from '../../components/NavigationDrawer/NavigationDrawer';
 import useVariables from '../../context/useVariables';
 import { NavigationItem } from '../../components/NavigationMenu/NavigationItem/NavigationItemType';
-import { AccessibilityContext } from '../../context/AccessibilityProvider';
+import useAccessibility from '../../context/useAccessibility';
 
 function addSelectedCodeListToVariable(
   currentVariable: SelectedVBValues | undefined,
@@ -275,7 +275,7 @@ export function Selection({
 
   //  Needed to know when the language has changed, so we can reload the default selection
   const [prevLang, setPrevLang] = useState('');
-  const { addModal, removeModal } = useContext(AccessibilityContext);
+  const { addModal, removeModal } = useAccessibility();
 
   useEffect(() => {
     if (errorMsg) {
