@@ -21,6 +21,14 @@
   }
 }
 
+.checkboxBackgroundCover {
+  position: absolute;
+  background-color: var(--px-color-surface-default);
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
 .checkmark {
   margin-top: 10px;
   margin-bottom: 10px;
@@ -64,10 +72,6 @@
 }
 .strong {
   font-family: PxWeb-font-700;
-}
-
-.inVariableBox {
-  background-color: var(--px-color-surface-default);
 }
 
 .mixedCheckbox {

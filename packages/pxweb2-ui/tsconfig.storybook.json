@@ -5,9 +5,7 @@
     "outDir": ""
   },
   "files": [
-    "../../node_modules/@nx/react/typings/styled-jsx.d.ts",
-    "../../node_modules/@nx/react/typings/cssmodule.d.ts",
-    "../../node_modules/@nx/react/typings/image.d.ts"
+    "vite.config.ts",
   ],
   "exclude": [
     "src/**/*.spec.ts",
