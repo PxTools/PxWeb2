@@ -159,7 +159,7 @@
       },
       "about_table": {
         "title": "Information",
-        "close_dialog": "Stäng tabellinformation",
+        "close_dialog": "Stäng",
         "footnotes": {
           "title": "Noter",
           "show_all_footnotes": "Visa alla fotnoter för tabellen"

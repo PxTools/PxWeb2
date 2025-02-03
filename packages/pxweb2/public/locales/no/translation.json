@@ -159,7 +159,7 @@
       },
       "about_table": {
         "title": "Informasjon",
-        "close_dialog": "Lukk tabellinformasjon",
+        "close_dialog": "Lukk",
         "footnotes": {
           "title": "Merknader",
           "show_all_footnotes": "Vis alle noter for tabellen"
