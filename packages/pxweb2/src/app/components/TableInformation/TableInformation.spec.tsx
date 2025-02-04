@@ -13,7 +13,7 @@ describe('TableInformation', () => {
       <TableInformation
         isOpen={true}
         onClose={() => {
-          console.log('close');
+          return;
         }}
       />,
     );
