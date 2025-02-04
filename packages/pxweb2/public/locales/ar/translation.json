@@ -159,7 +159,6 @@
       },
       "about_table": {
         "title": "معلومة",
-        "close_dialog": "يغلق",
         "footnotes": {
           "title": "ملحوظات",
           "show_all_footnotes": "إظهار كافة الملاحظات للجدول"
