@@ -14,7 +14,7 @@ describe('SideSheet', () => {
         isOpen={true}
         heading="test"
         onClose={() => {
-          console.log('close');
+          return;
         }}
       >
         <span>test</span>
