@@ -64,7 +64,11 @@ export const NavigationDrawer = forwardRef<
         onClick={() => onClose(false, view)}
         className={styles.backdrop}
       ></div>
-      <div className={cl(styles.navigationDrawer, styles.fadein)}>
+      <div
+        className={cl(styles.navigationDrawer, styles.fadein)}
+        role="region"
+        aria-label={heading}
+      >
         <div className={styles.heading}>
           <Heading level="2" size="medium">
             {heading}

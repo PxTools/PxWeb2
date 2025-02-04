@@ -7,7 +7,8 @@
     "title": "PxWeb 2.0",
     "header": {
       "title": "PxWeb 2.0 [Main]",
-      "logo": "PxWeb 2.0"
+      "logo": "PxWeb 2.0",
+      "arialabelheader": "Select language"
     },
     "skip_to_main": "Skip to main content",
     "footer": {
@@ -50,6 +51,7 @@
       "statistics": "Statistikkbanken"
     },
     "sidemenu": {
+      "arialabeltoolsidemenu": "Tool menu for table",
       "hide": "Hide",
       "selection": {
         "title": "Filter",
@@ -147,6 +149,7 @@
       }
     },
     "main_content": {
+      "arialabelbreadcrumb": "Breadcrumb",
       "last_updated": "Last updated",
       "show_details": "Show details",
       "table": {
