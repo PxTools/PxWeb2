@@ -27,7 +27,10 @@ type counter = {
  * @param response - The JSONStat2 dataset response to be mapped.
  * @returns The mapped PxTable object.
  */
-export function mapJsonStat2Response(response: Dataset): PxTable {
+export function mapJsonStat2Response(
+  response: Dataset,
+  mapData: boolean = true,
+): PxTable {
   // Create the metadata object
   const metadata: PxTableMetadata = {
     id: response.extension?.px?.tableid ?? '',
@@ -39,7 +42,15 @@ export function mapJsonStat2Response(response: Dataset): PxTable {
   };
 
   // Create the data object
-  const data: PxTableData = CreateData(response, metadata);
+  let data: PxTableData = {
+    cube: {},
+    variableOrder: [],
+    isLoaded: false,
+  };
+
+  if (mapData) {
+    data = CreateData(response, metadata);
+  }
 
   // Create the PxTable object
   const pxTable: PxTable = {
