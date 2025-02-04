@@ -32,6 +32,9 @@ export function TableInformation({
     }
   }, [isOpen, selectedTab]);
 
+  // TableInformation tabs should be type in some way. Maybe like this:
+  // export type TabType = 'tab-footnotes' | 'tab-definitions' | 'tab-details' | 'tab-contact';
+
   return (
     <SideSheet
       heading={t('presentation_page.main_content.about_table.title')}
