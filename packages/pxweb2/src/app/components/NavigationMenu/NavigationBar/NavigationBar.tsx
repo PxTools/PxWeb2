@@ -50,6 +50,7 @@ export const NavigationBar = React.forwardRef<
     <div className={styles.navigationBar}>
       <LazyMotion features={loadFeatures}>
         <MotionConfig reducedMotion="user">
+        <ul className={styles.navigationBarList}>
           <Item
             ref={refs.filter}
             parentName="navBar"
@@ -120,6 +121,7 @@ export const NavigationBar = React.forwardRef<
               );
             }}
           />
+        </ul>
         </MotionConfig>
       </LazyMotion>
     </div>
