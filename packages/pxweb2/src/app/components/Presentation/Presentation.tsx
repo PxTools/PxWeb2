@@ -144,7 +144,7 @@ export function Presentation({ selectedTabId }: propsType) {
   }, [tableData.data, variables]);
 
   return (
-    <div
+    <main
       className={cl(classes.contentContainer, {
         [classes.fadeTable]: isFadingTable,
       })}
@@ -179,7 +179,7 @@ export function Presentation({ selectedTabId }: propsType) {
           )}
         </>
       )}
-    </div>
+    </main>
   );
 }
 

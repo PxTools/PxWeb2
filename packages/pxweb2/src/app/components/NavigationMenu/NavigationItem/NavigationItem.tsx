@@ -59,31 +59,34 @@ export const Item = forwardRef<HTMLButtonElement, ItemProps>(
     };
 
     return (
-      <m.button
-        ref={ref}
-        className={cl(
-          { [styles.selected]: selected },
-          styles.item,
-          styles[`${parentName}Item`],
-        )}
-        onClick={(event: any) => onClick(event)}
-        type="button"
-        id={btnId}
-        // Framer Motion animations
-        key={selected.toString()} // Needed by motion to re-run the animation when the selected state changes, toString for type compatibility
-        initial={'initial'}
-        whileHover={'hover'}
-        whileTap={'pressed'}
-      >
-        <m.div
-          className={cl(styles.icon)}
+      <li className={cl(styles.itemWrapper)}>
+        <m.button
+          ref={ref}
+          className={cl(
+            { [styles.selected]: selected },
+            styles.item,
+            styles[`${parentName}Item`],
+          )}
+          onClick={(event: any) => onClick(event)}
+          type="button"
+          id={btnId}
+          aria-expanded={selected}
           // Framer Motion animations
-          variants={buttonVariants}
+          key={selected.toString()} // Needed by motion to re-run the animation when the selected state changes, toString for type compatibility
+          initial={'initial'}
+          whileHover={'hover'}
+          whileTap={'pressed'}
         >
-          <Icon iconName={icon} />
-        </m.div>
-        <Label htmlFor={btnId}>{label}</Label>
-      </m.button>
+          <m.div
+            className={cl(styles.icon)}
+            // Framer Motion animations
+            variants={buttonVariants}
+          >
+            <Icon iconName={icon} />
+          </m.div>
+          <Label htmlFor={btnId}>{label}</Label>
+        </m.button>
+      </li>
     );
   },
 );

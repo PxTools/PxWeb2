@@ -59,7 +59,10 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
   return (
     <>
       <div className={cl(classes[`content-top`])}>
-        <div className={cl(classes.breadcrumbs)}>
+        <nav
+          className={cl(classes.breadcrumbs)}
+          aria-label={t('presentation_page.main_content.arialabelbreadcrumb')}
+        >
           <div className={cl(classes[`breadcrumbs-wrapper`])}>
             <Link href="#" inline>
               <BodyLong>PxWeb 2.0</BodyLong>
@@ -67,7 +70,7 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
             <Icon iconName="ChevronRight"></Icon>
             <BodyLong>{staticTitle}</BodyLong>
           </div>
-        </div>
+        </nav>
         <div
           id="px-main-content"
           className={cl(classes[`heading-information`])}
