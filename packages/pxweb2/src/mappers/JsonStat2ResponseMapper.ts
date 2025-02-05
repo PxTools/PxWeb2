@@ -165,7 +165,10 @@ function mapDimension(id: string, dimension: any, role: any): Variable | null {
     id: id,
     label: dimension.label,
     type: mapVariableTypeEnum(id, role),
-    mandatory: true, // How shall we handle this? The value for elimination may differ in the jsonstat2-response depending on if all values are seleccted or not...
+    // About mandatory: The value for elimination may differ in the jsonstat2-response depending on if all values are seleccted or not...
+    // - When all values are selected like in the call for metadata, the value will be correct. 
+    // - Otherwise like in the call for data, the value may not be correct...
+    mandatory: dimension.extension?.elimination !== undefined ? !dimension.extension.elimination : true,
     values,
     codeLists,
   };

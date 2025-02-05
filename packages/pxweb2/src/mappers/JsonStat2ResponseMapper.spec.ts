@@ -20,6 +20,7 @@ describe('JsonStat2ResponseMapper', () => {
                 '2022': '2022',
               },
             },
+            extension: {elimination: false},
           },
           country: {
             label: 'Country',
@@ -33,6 +34,7 @@ describe('JsonStat2ResponseMapper', () => {
                 UK: 'United Kingdom',
               },
             },
+            extension: {elimination: true},
           },
         },
         value: [100, 200, 300, 400],
@@ -50,6 +52,8 @@ describe('JsonStat2ResponseMapper', () => {
       // Add more assertions here to validate the mapping
       expect(pxTable.metadata.variables.length).equals(2);
       expect(pxTable.metadata.variables[0].values.length).equals(2);
+      expect(pxTable.metadata.variables[0].mandatory).equals(true);
+      expect(pxTable.metadata.variables[1].mandatory).equals(false);
     });
   });
 });
