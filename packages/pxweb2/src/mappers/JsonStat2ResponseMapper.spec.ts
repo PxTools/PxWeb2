@@ -20,7 +20,7 @@ describe('JsonStat2ResponseMapper', () => {
                 '2022': '2022',
               },
             },
-            extension: {elimination: false},
+            extension: { elimination: false },
           },
           country: {
             label: 'Country',
@@ -34,7 +34,7 @@ describe('JsonStat2ResponseMapper', () => {
                 UK: 'United Kingdom',
               },
             },
-            extension: {elimination: true},
+            extension: { elimination: true },
           },
         },
         value: [100, 200, 300, 400],
