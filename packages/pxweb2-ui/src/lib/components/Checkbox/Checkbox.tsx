@@ -99,7 +99,7 @@ export const MixedCheckbox: React.FC<MixedCheckboxProps> = ({
       })}
       tabIndex={tabIndex ? tabIndex : 0}
       onKeyUp={(event) => {
-        if (event.key === ' ' || event.key === 'Enter') {
+        if (event.key === ' ') {
           event.preventDefault();
           if (value === 'false') {
             onChange('true');
