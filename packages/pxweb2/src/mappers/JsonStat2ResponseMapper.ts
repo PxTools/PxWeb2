@@ -165,18 +165,27 @@ function mapDimension(id: string, dimension: any, role: any): Variable | null {
     id: id,
     label: dimension.label,
     type: mapVariableTypeEnum(id, role),
-    // About mandatory: The value for elimination may differ in the jsonstat2-response depending on if all values are seleccted or not...
-    // - When all values are selected like in the call for metadata, the value will be correct.
-    // - Otherwise like in the call for data, the value may not be correct...
-    mandatory:
-      dimension.extension?.elimination !== undefined
-        ? !dimension.extension.elimination
-        : true,
+    mandatory: true, // Default value
     values,
     codeLists,
   };
 
+  mapDimensionExtension(dimension.extension, variable);
+
   return variable;
+}
+
+function mapDimensionExtension(extension: any, variable: Variable): void {
+  if (extension === undefined) {
+    return;
+  }
+
+  // About mandatory: The value for elimination may differ in the jsonstat2-response depending on if all values are seleccted or not...
+  // - When all values are selected like in the call for metadata, the value will be correct.
+  // - Otherwise like in the call for data, the value may not be correct...
+  if (extension.elimination !== undefined) {
+    variable.mandatory = !extension.elimination;
+  }
 }
 
 /**

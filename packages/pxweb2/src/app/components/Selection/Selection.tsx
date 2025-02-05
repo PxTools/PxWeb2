@@ -322,7 +322,7 @@ export function Selection({
       //     tableMetadataResponse,
       //   );
       .then((Dataset) => {
-        const pxTable: PxTable = mapJsonStat2Response(Dataset);
+        const pxTable: PxTable = mapJsonStat2Response(Dataset, false);
 
         setPxTableMetadata(pxTable.metadata);
         if (pxTableMetaToRender !== null) {
