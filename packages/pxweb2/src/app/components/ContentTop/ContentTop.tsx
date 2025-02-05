@@ -42,7 +42,7 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
     if (!isTableInformationOpen) {
       if (tableInformationOpener === 'table-information-button') {
         openInformationButtonRef.current?.focus();
-      } else {
+      } else if (tableInformationOpener === 'table-information-link') {
         // table-information-link
         openInformationLinkRef.current?.focus();
       }
