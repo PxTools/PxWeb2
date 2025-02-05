@@ -22,5 +22,8 @@ const config = {
     name: getAbsolutePath('@storybook/react-vite'),
     options: {},
   },
+  staticDirs: [
+    {from: './../src/lib/fonts/', to: 'fonts'},
+  ],
 };
 export default config;
