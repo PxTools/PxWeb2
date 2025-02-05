@@ -23,7 +23,7 @@ const config = {
     options: {},
   },
   staticDirs: [
-    {from: './../src/lib/fonts/', to: 'fonts'},
+    {from: './../src/lib/fonts/', to: 'fonts'}, // Load static font files into storybook/chromatic
   ],
 };
 export default config;
