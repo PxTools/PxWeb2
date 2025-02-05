@@ -158,8 +158,7 @@ function mapDimension(id: string, dimension: any, role: any): Variable | null {
     }
   }
 
-  // Map the codelists
-  const codeLists: Array<CodeList> = [];
+  const codeLists: Array<CodeList> = []; // Default empty array
 
   const variable: Variable = {
     id: id,
@@ -175,6 +174,12 @@ function mapDimension(id: string, dimension: any, role: any): Variable | null {
   return variable;
 }
 
+/**
+ * Maps the extension object of a dimension from a JSON-stat 2.0 response to a Variable object.
+ *
+ * @param extension - The extension object from the JSON-stat 2.0 response.
+ * @param variable - The Variable object to which the extension should be added.
+ */
 function mapDimensionExtension(extension: any, variable: Variable): void {
   if (extension === undefined) {
     return;
@@ -186,6 +191,36 @@ function mapDimensionExtension(extension: any, variable: Variable): void {
   if (extension.elimination !== undefined) {
     variable.mandatory = !extension.elimination;
   }
+
+  // Map the codelists
+  if (extension.codeLists) {
+    for (const codeList of extension.codeLists) {
+      mapCodeList(codeList, variable);
+    }
+  }
+}
+
+/**
+ * Maps a code list from a JSON-stat 2.0 response to a CodeList object and adds it to the variable.
+ *
+ * @param codeList - The code list object from the JSON-stat 2.0 response.
+ * @param variable - The variable object to which the code list should be added.
+ */
+function mapCodeList(codeList: any, variable: Variable): void {
+  if (!codeList) {
+    return;
+  }
+  if (!variable.codeLists) {
+    variable.codeLists = [];
+  }
+
+  const mappedCodeList: CodeList = {
+    id: codeList.id,
+    label: codeList.label,
+    // type: codeList.type,
+  };
+
+  variable.codeLists.push(mappedCodeList);
 }
 
 /**

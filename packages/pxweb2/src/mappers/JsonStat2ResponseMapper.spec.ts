@@ -34,7 +34,23 @@ describe('JsonStat2ResponseMapper', () => {
                 UK: 'United Kingdom',
               },
             },
-            extension: { elimination: true },
+            extension: {
+              elimination: true,
+              codeLists: [
+                // {
+                //   id: 'cd1',
+                //   label: 'Codelist 1',
+                //   type: 'Aggregation',
+                //   links: [],
+                // },
+                //   {
+                //     id: 'cd2',
+                //     label: 'Codelist 2',
+                //     type: CodeListType.VALUESET,
+                //     links: [],
+                //   },
+              ],
+            },
           },
         },
         value: [100, 200, 300, 400],
@@ -53,7 +69,9 @@ describe('JsonStat2ResponseMapper', () => {
       expect(pxTable.metadata.variables.length).equals(2);
       expect(pxTable.metadata.variables[0].values.length).equals(2);
       expect(pxTable.metadata.variables[0].mandatory).equals(true);
+      expect(pxTable.metadata.variables[0].codeLists?.length).equals(0);
       expect(pxTable.metadata.variables[1].mandatory).equals(false);
+      expect(pxTable.metadata.variables[1].codeLists?.length).equals(0);
     });
   });
 });
