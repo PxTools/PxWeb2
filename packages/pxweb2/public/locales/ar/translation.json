@@ -161,21 +161,21 @@
         }
       },
       "about_table": {
-        "title": "حول الطاولة",
+        "title": "معلومة",
         "footnotes": {
           "title": "ملحوظات",
           "show_all_footnotes": "إظهار كافة الملاحظات للجدول"
         },
-        "information": {
-          "title": "معلومة",
+        "definitions": {
+          "title": "التعاريف",
           "description": "الجدول جزء من الإحصائيات {{statistics}}"
         },
-        "definition": {
-          "title": "التعاريف",
+        "details": {
+          "title": "تفاصيل",
           "description": "نص الوصف..."
         },
-        "metadata": {
-          "title": "البيانات الوصفية",
+        "contact": {
+          "title": "اتصال",
           "description": "نص الوصف..."
         }
       },

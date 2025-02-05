@@ -13,44 +13,54 @@ export interface ButtonProps
   children?: string;
 }
 
-export function Button({
-  icon,
-  iconPosition = 'left',
-  variant,
-  size = 'medium',
-  children,
-  className = '',
-  ...rest
-}: ButtonProps) {
-  const cssClasses = className.length > 0 ? ' ' + className : '';
+import React, { forwardRef } from 'react';
 
-  return (
-    <button
-      className={
-        cl(
-          classes.button,
-          classes[size],
-          classes[`label-${size}`],
-          classes[variant],
-          {
-            [classes.iconOnlyMedium]: !children && icon && size === 'medium',
-          },
-          {
-            [classes.iconOnlySmall]: !children && icon && size === 'small',
-          },
-        ) + cssClasses
-      }
-      {...rest}
-    >
-      {icon && iconPosition === 'left' && (
-        <Icon iconName={icon} className=""></Icon>
-      )}
-      {children}
-      {icon && iconPosition === 'right' && (
-        <Icon iconName={icon} className=""></Icon>
-      )}
-    </button>
-  );
-}
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  (
+    {
+      icon,
+      iconPosition = 'left',
+      variant,
+      size = 'medium',
+      children,
+      className = '',
+      ...rest
+    },
+    ref,
+  ) => {
+    const cssClasses = className.length > 0 ? ' ' + className : '';
+
+    return (
+      <button
+        ref={ref}
+        className={
+          cl(
+            classes.button,
+            classes[size],
+            classes[`label-${size}`],
+            classes[variant],
+            {
+              [classes.iconOnlyMedium]: !children && icon && size === 'medium',
+            },
+            {
+              [classes.iconOnlySmall]: !children && icon && size === 'small',
+            },
+          ) + cssClasses
+        }
+        {...rest}
+      >
+        {icon && iconPosition === 'left' && (
+          <Icon iconName={icon} className=""></Icon>
+        )}
+        {children}
+        {icon && iconPosition === 'right' && (
+          <Icon iconName={icon} className=""></Icon>
+        )}
+      </button>
+    );
+  },
+);
+
+Button.displayName = 'Button';
 
 export default Button;

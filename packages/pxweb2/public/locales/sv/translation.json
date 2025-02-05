@@ -34,7 +34,7 @@
       "cancel": "Avbryt",
       "save": "Spara",
       "search": "Sök",
-      "close": "Stänga"
+      "close": "Stäng"
     },
     "generic_tags": {
       "mandatory": "Obligatorisk"
@@ -161,21 +161,21 @@
         }
       },
       "about_table": {
-        "title": "Om tabellen",
+        "title": "Information",
         "footnotes": {
-          "title": "Fotnoter",
+          "title": "Noter",
           "show_all_footnotes": "Visa alla fotnoter för tabellen"
         },
-        "information": {
-          "title": "Information",
+        "definitions": {
+          "title": "Definitioner",
           "description": "Tabellen är en del av statistiken {{statistics}}"
         },
-        "definition": {
-          "title": "Definitioner",
+        "details": {
+          "title": "Detaljer",
           "description": "Beskrivande text..."
         },
-        "metadata": {
-          "title": "Metadata",
+        "contact": {
+          "title": "Kontakt",
           "description": "Beskrivande text..."
         }
       },

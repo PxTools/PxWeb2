@@ -56,7 +56,10 @@ export const AccessibilityProvider = ({
 
   // Debug logging in development
   useEffect(() => {
-    if (location.href.includes('localhost')) {
+    if (
+      location.href.includes('localhost') &&
+      process.env.NODE_ENV !== 'test'
+    ) {
       console.log('PxWeb2 - a11y - Modals (Stack):', modals);
       console.log('PxWeb2 - a11y - Focus overrides:', focusOverrides);
     }
