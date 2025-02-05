@@ -84,6 +84,7 @@
 .navRailItem {
   width: 100px;
   padding: 0px 0px fixed.$spacing-1 0px;
+  margin-bottom: 25px;
 
   > .icon {
     width: fixed.$spacing-14;
@@ -95,6 +96,3 @@
   }
 }
 
-.itemWrapper {
-  margin-bottom: 25px;
-}

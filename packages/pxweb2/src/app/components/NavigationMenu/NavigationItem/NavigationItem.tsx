@@ -59,7 +59,7 @@ export const Item = forwardRef<HTMLButtonElement, ItemProps>(
     };
 
     return (
-      <li className={cl(styles.itemWrapper)}>
+      <li>
         <m.button
           ref={ref}
           className={cl(
