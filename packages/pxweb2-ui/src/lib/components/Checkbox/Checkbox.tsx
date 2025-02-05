@@ -34,13 +34,13 @@ export const Checkbox: React.FC<CheckboxProps> = ({
       className={styles.checkboxWrapper}
       tabIndex={tabIndex ? tabIndex : 0}
       onKeyUp={(event) => {
-        if (event.key === ' ' || event.key === 'Enter') {
+        if (event.key === ' ') {
           event.preventDefault();
           onChange(!value);
         }
       }}
       onKeyDown={(event) => {
-        if (event.key === ' ' || event.key === 'Enter') {
+        if (event.key === ' ') {
           event.preventDefault();
         }
       }}
