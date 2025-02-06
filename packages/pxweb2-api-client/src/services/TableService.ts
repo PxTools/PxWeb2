@@ -101,7 +101,7 @@ export class TableService {
         lang?: string | null,
         outputFormat?: MetadataOutputFormatType,
         defaultSelection: boolean = false,
-    ): CancelablePromise<Dataset> {
+    ): CancelablePromise<Dataset> { // Manually edited to return Dataset. Should be generated from the API spec!
         return __request(OpenAPI, {
             method: 'GET',
             url: '/tables/{id}/metadata',
