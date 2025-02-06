@@ -145,20 +145,20 @@ function mapJsonToVariables(jsonData: Dataset): Array<Variable> {
  * @returns A Variable object if the dimension has valid categories; otherwise, null.
  */
 function mapDimension(id: string, dimension: any, role: any): Variable | null {
-  if (!dimension.category?.index || !dimension.category.label) {
-    return null;
+  if (dimension.category?.index && dimension.category.label) {
+    const variable: Variable = {
+      id: id,
+      label: dimension.label,
+      type: mapVariableTypeEnum(id, role),
+      mandatory: getMandatoryVariable(dimension.extension),
+      values: getVariableValues(dimension),
+      codeLists: getCodelists(dimension.extension),
+    };
+
+    return variable;
   }
 
-  const variable: Variable = {
-    id: id,
-    label: dimension.label,
-    type: mapVariableTypeEnum(id, role),
-    mandatory: getMandatoryVariable(dimension.extension),
-    values: getVariableValues(dimension),
-    codeLists: getCodelists(dimension.extension),
-  };
-
-  return variable;
+  return null;
 }
 
 /**
@@ -239,10 +239,10 @@ function getLabelText(
  * @returns True if the variable is mandatory; otherwise, false.
  */
 function getMandatoryVariable(extension: any): boolean {
-  if (extension === undefined || extension.elimination === undefined) {
-    return true;
+  if (extension?.elimination) {
+    return !extension.elimination;
   }
-  return !extension.elimination;
+  return true;
 }
 
 /**
@@ -252,16 +252,16 @@ function getMandatoryVariable(extension: any): boolean {
  * @returns An array of CodeList objects.
  */
 function getCodelists(extension: any): CodeList[] {
-  if (extension === undefined || extension.codeLists === undefined) {
-    return [];
+  if (extension?.codeLists) {
+    return extension.codeLists.map((codeList: any) => {
+      return {
+        id: codeList.id,
+        label: codeList.label,
+      };
+    });
   }
 
-  return extension.codeLists.map((codeList: any) => {
-    return {
-      id: codeList.id,
-      label: codeList.label,
-    };
-  });
+  return [];
 }
 
 /**
