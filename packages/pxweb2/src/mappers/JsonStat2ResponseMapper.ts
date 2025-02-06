@@ -118,7 +118,7 @@ function CreateHeading(
  * @returns An array of Variable objects.
  */
 function mapJsonToVariables(jsonData: Dataset): Array<Variable> {
-  const variables: Array<Variable> = [];
+  const variables: Variable[] = [];
 
   for (const dimensionKey in jsonData.dimension) {
     // For every dimension record in the json-stat2 object
@@ -152,7 +152,7 @@ function mapDimension(id: string, dimension: any, role: any): Variable | null {
   const valueDisplayType: ValueDisplayType = getValueDisplayType(dimension);
 
   // Map the values
-  const values: Array<Value> = [];
+  const values: Value[] = [];
   const indexEntries = Object.entries(dimension.category.index);
   indexEntries.sort(([valueA], [valueB]) => Number(valueA) - Number(valueB));
 
@@ -171,7 +171,7 @@ function mapDimension(id: string, dimension: any, role: any): Variable | null {
     }
   }
 
-  const codeLists: Array<CodeList> = []; // Default empty array
+  const codeLists: CodeList[] = []; // Default empty array
 
   const variable: Variable = {
     id: id,
