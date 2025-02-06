@@ -20,6 +20,11 @@ type counter = {
 };
 
 /**
+ * Internal type. Controls how variable values are displayed (code, value, code + value)
+ */
+type ValueDisplayType = 'code' | 'value' | 'code_value';
+
+/**
  * Maps a JSONStat2 dataset response to a PxTable object.
  * NOTE! At the moment this is not a total mapping of the json-stat2 response.
  * Only the parts that are needed for displaying the table are mapped.
@@ -144,6 +149,8 @@ function mapDimension(id: string, dimension: any, role: any): Variable | null {
     return null;
   }
 
+  const valueDisplayType: ValueDisplayType = getValueDisplayType(dimension);
+
   // Map the values
   const values: Array<Value> = [];
   const indexEntries = Object.entries(dimension.category.index);
@@ -151,9 +158,15 @@ function mapDimension(id: string, dimension: any, role: any): Variable | null {
 
   for (const [code] of indexEntries) {
     if (Object.prototype.hasOwnProperty.call(dimension.category.index, code)) {
+      const labelText: string = getLabelText(
+        valueDisplayType,
+        code,
+        dimension.category.label[code],
+      );
+
       values.push({
         code: code,
-        label: dimension.category.label[code],
+        label: labelText,
       });
     }
   }
@@ -172,6 +185,47 @@ function mapDimension(id: string, dimension: any, role: any): Variable | null {
   mapDimensionExtension(dimension.extension, variable);
 
   return variable;
+}
+
+/**
+ * Maps the value display type for a dimension.
+ *
+ * @param dimension - The dimension object from the JSON-stat 2.0 response.
+ * @returns The value display type for the dimension.
+ */
+function getValueDisplayType(dimension: any): ValueDisplayType {
+  if (dimension.extension?.show) {
+    if (dimension.extension.show === 'code') {
+      return 'code';
+    } else if (dimension.extension.show === 'value') {
+      return 'value';
+    } else if (dimension.extension.show === 'code_value') {
+      return 'code_value';
+    }
+  }
+  return 'value';
+}
+
+/**
+ * Returns the label text for a value based on the value display type.
+ *
+ * @param valueDisplayType - The value display type for the dimension.
+ * @param code - The code of the value.
+ * @param label - The label of the value.
+ * @returns The label text for the value.
+ */
+function getLabelText(
+  valueDisplayType: ValueDisplayType,
+  code: string,
+  label: string,
+): string {
+  if (valueDisplayType === 'code') {
+    return code;
+  } else if (valueDisplayType === 'value') {
+    return label;
+  } else {
+    return `${code} ${label}`;
+  }
 }
 
 /**
