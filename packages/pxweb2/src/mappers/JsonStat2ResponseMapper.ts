@@ -239,7 +239,7 @@ function getLabelText(
  * @returns True if the variable is mandatory; otherwise, false.
  */
 function getMandatoryVariable(extension: any): boolean {
-  if (extension === undefined) {
+  if (extension === undefined || extension.elimination === undefined) {
     return true;
   }
   return !extension.elimination;
@@ -252,20 +252,16 @@ function getMandatoryVariable(extension: any): boolean {
  * @returns An array of CodeList objects.
  */
 function getCodelists(extension: any): CodeList[] {
-  if (extension === undefined) {
+  if (extension === undefined || extension.codeLists === undefined) {
     return [];
   }
 
-  if (extension.codeLists) {
-    return extension.codeLists.map((codeList: any) => {
-      return {
-        id: codeList.id,
-        label: codeList.label,
-      };
-    });
-  }
-
-  return [];
+  return extension.codeLists.map((codeList: any) => {
+    return {
+      id: codeList.id,
+      label: codeList.label,
+    };
+  });
 }
 
 /**
