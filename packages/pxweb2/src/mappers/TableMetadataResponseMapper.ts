@@ -5,6 +5,7 @@ import {
 } from '@pxweb2/pxweb2-api-client';
 import { PxTableMetadata, VartypeEnum } from '@pxweb2/pxweb2-ui';
 
+
 export function mapTableMetadataResponse(
   response: TableMetadataResponse,
 ): PxTableMetadata {
