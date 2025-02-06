@@ -149,9 +149,26 @@ function mapDimension(id: string, dimension: any, role: any): Variable | null {
     return null;
   }
 
-  const valueDisplayType: ValueDisplayType = getValueDisplayType(dimension);
+  const variable: Variable = {
+    id: id,
+    label: dimension.label,
+    type: mapVariableTypeEnum(id, role),
+    mandatory: getMandatoryVariable(dimension.extension),
+    values: getVariableValues(dimension),
+    codeLists: getCodelists(dimension.extension),
+  };
 
-  // Map the values
+  return variable;
+}
+
+/**
+ * Maps the values of a dimension from a JSON-stat 2.0 response to an array of Value objects.
+ *
+ * @param dimension - The dimension object from the JSON-stat 2.0 response.
+ * @returns An array of Value objects.
+ */
+function getVariableValues(dimension: any): Value[] {
+  const valueDisplayType: ValueDisplayType = getValueDisplayType(dimension);
   const values: Value[] = [];
   const indexEntries = Object.entries(dimension.category.index);
   indexEntries.sort(([valueA], [valueB]) => Number(valueA) - Number(valueB));
@@ -171,20 +188,7 @@ function mapDimension(id: string, dimension: any, role: any): Variable | null {
     }
   }
 
-  const codeLists: CodeList[] = []; // Default empty array
-
-  const variable: Variable = {
-    id: id,
-    label: dimension.label,
-    type: mapVariableTypeEnum(id, role),
-    mandatory: true, // Default value
-    values,
-    codeLists,
-  };
-
-  mapDimensionExtension(dimension.extension, variable);
-
-  return variable;
+  return values;
 }
 
 /**
@@ -229,52 +233,39 @@ function getLabelText(
 }
 
 /**
- * Maps the extension object of a dimension from a JSON-stat 2.0 response to a Variable object.
+ * Returns whether a variable is mandatory.
  *
  * @param extension - The extension object from the JSON-stat 2.0 response.
- * @param variable - The Variable object to which the extension should be added.
+ * @returns True if the variable is mandatory; otherwise, false.
  */
-function mapDimensionExtension(extension: any, variable: Variable): void {
+function getMandatoryVariable(extension: any): boolean {
   if (extension === undefined) {
-    return;
+    return true;
   }
-
-  // About mandatory: The value for elimination may differ in the jsonstat2-response depending on if all values are seleccted or not...
-  // - When all values are selected like in the call for metadata, the value will be correct.
-  // - Otherwise like in the call for data, the value may not be correct...
-  if (extension.elimination !== undefined) {
-    variable.mandatory = !extension.elimination;
-  }
-
-  // Map the codelists
-  if (extension.codeLists) {
-    for (const codeList of extension.codeLists) {
-      mapCodeList(codeList, variable);
-    }
-  }
+  return !extension.elimination;
 }
 
 /**
- * Maps a code list from a JSON-stat 2.0 response to a CodeList object and adds it to the variable.
+ * Maps the code lists of a dimension from a JSON-stat 2.0 response to an array of CodeList objects.
  *
- * @param codeList - The code list object from the JSON-stat 2.0 response.
- * @param variable - The variable object to which the code list should be added.
+ * @param extension - The extension object from the JSON-stat 2.0 response.
+ * @returns An array of CodeList objects.
  */
-function mapCodeList(codeList: any, variable: Variable): void {
-  if (!codeList) {
-    return;
-  }
-  if (!variable.codeLists) {
-    variable.codeLists = [];
+function getCodelists(extension: any): CodeList[] {
+  if (extension === undefined) {
+    return [];
   }
 
-  const mappedCodeList: CodeList = {
-    id: codeList.id,
-    label: codeList.label,
-    // type: codeList.type,
-  };
+  if (extension.codeLists) {
+    return extension.codeLists.map((codeList: any) => {
+      return {
+        id: codeList.id,
+        label: codeList.label,
+      };
+    });
+  }
 
-  variable.codeLists.push(mappedCodeList);
+  return [];
 }
 
 /**
