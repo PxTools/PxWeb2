@@ -36,9 +36,11 @@
   }
 }
 
-.navigationBarList {
-  list-style: none;
-  padding-inline-start: unset;
-  margin: 0;
-  display: inherit;
-}
+ .navigationBarList {
+   list-style: none;
+   width: 100%;
+   justify-content: space-between;
+   padding-inline-start: 20px;
+   padding-inline-end: 20px;
+   display: inherit;
+ }
