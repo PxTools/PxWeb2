@@ -16,7 +16,7 @@ export const Header: React.FC = () => {
           {t('common.header.title')}
         </span>
       </div>
-      <div aria-label={t('common.header.arialabelheader')}>
+      <div>
         {config.language.supportedLanguages.map(
           (language) =>
             i18n.language !== language.shorthand && (
