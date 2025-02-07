@@ -95,3 +95,9 @@
     box-shadow: 0 0 0 3px var(--px-color-border-focus-boxshadow);
   }
 }
+
+.navigationBarListItem{
+  flex: 1;
+  width: 100%;
+  padding: 0px fixed.$spacing-2;
+}
