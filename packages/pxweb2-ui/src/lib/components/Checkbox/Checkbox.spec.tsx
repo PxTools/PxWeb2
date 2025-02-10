@@ -26,13 +26,12 @@ describe('Checkbox', () => {
         text="Variable 1"
         onChange={(val) => {
           selected = val;
-          console.log('inside onchange');
         }}
         value={selected}
       />,
     );
 
-    baseElement.querySelector('#test').click();
+    (baseElement.querySelector('#test') as HTMLElement)?.click();
 
     expect(selected).toBe(true);
   });

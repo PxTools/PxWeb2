@@ -8,14 +8,17 @@ body {
 }
 
 @font-face {
-  font-family: 'PxWeb-font-400';
+  font-family: 'PxWeb-font';
   src: url('/fonts/PxWeb-font-400.ttf') format('truetype');
+  font-weight: 400;
 }
 @font-face {
-  font-family: 'PxWeb-font-500';
+  font-family: 'PxWeb-font';
   src: url('/fonts/PxWeb-font-500.ttf') format('truetype');
+  font-weight: 500;
 }
 @font-face {
-  font-family: 'PxWeb-font-700';
+  font-family: 'PxWeb-font';
   src: url('/fonts/PxWeb-font-700.ttf') format('truetype');
+  font-weight: 700;
 }

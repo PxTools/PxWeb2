@@ -64,14 +64,15 @@
 .label {
   margin-top: 10px;
   margin-bottom: 10px;
-  font-family: PxWeb-font-400;
+  font-family: PxWeb-font, sans-serif;
+  font-weight: 400;
   letter-spacing: 0em;
   color: var(--px-color-text-default);
   line-height: 1.5rem;
   font-size: 1rem;
 }
 .strong {
-  font-family: PxWeb-font-700;
+  font-weight: 700;
 }
 
 .mixedCheckbox {
