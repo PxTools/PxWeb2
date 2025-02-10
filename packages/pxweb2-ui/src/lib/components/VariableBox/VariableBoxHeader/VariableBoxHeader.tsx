@@ -15,6 +15,7 @@ type VariableBoxHeaderProps = VariableBoxPropsToHeader & {
   totalChosenValues: number;
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
+  id: string;
   tabIndex?: number;
   className?: string;
   isMissingMandatoryValues?: boolean;
@@ -27,6 +28,7 @@ export function VariableBoxHeader({
   totalChosenValues,
   isOpen,
   setIsOpen,
+  id,
   tabIndex = 0,
   className = '',
   isMissingMandatoryValues = false,
@@ -48,6 +50,7 @@ export function VariableBoxHeader({
 
   return (
     <div
+      id={id}
       className={cl(
         classes['variablebox-header'],
         isOpen && classes['variablebox-header-isopen'],
@@ -87,7 +90,12 @@ export function VariableBoxHeader({
           </div>
         </div>
 
-        <div className={cssClasses} tabIndex={tabIndex}>
+        <div className={cssClasses} 
+          tabIndex={tabIndex}
+          role="button"
+          aria-expanded={isOpen}
+          aria-labelledby={id}
+        >
           {isOpen ? (
             <Icon iconName="ChevronUp"></Icon>
           ) : (
