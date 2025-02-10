@@ -19,7 +19,6 @@
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
     display: flex;
     flex-direction: row;
-    align-items: flex-start;
     gap: fixed.$spacing-1;
     align-self: stretch;
     border-radius: var(--px-border-radius-none);
@@ -34,4 +33,13 @@
     outline-offset: 3px;
     box-shadow: inset 0 0 0 3px var(--px-color-border-focus-boxshadow);
   }
+}
+
+.navigationBarList {
+  padding: 8px 0px;
+  list-style: none;
+  width: 100%;
+  justify-content: center;
+  display: inherit;
+  gap: fixed.$spacing-1;
 }

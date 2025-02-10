@@ -56,8 +56,6 @@ export const NavigationRail = React.forwardRef<
       <LazyMotion features={loadFeatures}>
         <MotionConfig reducedMotion="user">
           <nav
-            aria-labelledby="navigation-rail-heading"
-            aria-describedby="navigation-rail-description"
             aria-label={t('presentation_page.sidemenu.arialabeltoolsidemenu')}
           >
             <ul className={styles.navigationRailList}>
