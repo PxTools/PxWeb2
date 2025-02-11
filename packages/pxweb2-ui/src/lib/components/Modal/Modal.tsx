@@ -1,6 +1,6 @@
 import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, KeyboardEvent, MouseEvent } from 'react';
 
 import classes from './Modal.module.scss';
 import Label from '../Typography/Label/Label';
@@ -13,7 +13,7 @@ export interface ModalProps {
   cancelLabel?: string;
   confirmLabel?: string;
   isOpen: boolean;
-  onClose?: (updated: boolean) => void;
+  onClose?: (updated: boolean, keyPress?: ' ' | 'Enter') => void;
   className?: string;
   children: React.ReactNode;
 }
@@ -27,10 +27,10 @@ export function Modal({
   onClose,
   className = '',
   children,
-}: ModalProps) {
+}: Readonly<ModalProps>) {
   const { t } = useTranslation();
   const cssClasses = className.length > 0 ? ' ' + className : '';
-  const [isModalOpen, setModalOpen] = useState(isOpen);
+  const [isModalOpen, setIsModalOpen] = useState(isOpen);
   const modalRef = useRef<HTMLDialogElement | null>(null);
   let cancelLabelValue = cancelLabel;
   let confirmLabelValue = confirmLabel;
@@ -43,7 +43,7 @@ export function Modal({
   }
 
   useEffect(() => {
-    setModalOpen(isOpen);
+    setIsModalOpen(isOpen);
   }, [isOpen]);
 
   useEffect(() => {
@@ -66,12 +66,23 @@ export function Modal({
     }
   };
 
-  const handleCloseModal = (updated: boolean) => {
-    setWindowScroll(true);
-    if (onClose) {
+  const handleCloseModal = (
+    updated: boolean,
+    event?: KeyboardEvent | MouseEvent,
+  ) => {
+    if (event && (event as KeyboardEvent).key) {
+      const keyPress = (event as KeyboardEvent).key;
+
+      if (onClose && (keyPress === ' ' || keyPress === 'Enter')) {
+        setWindowScroll(true);
+        onClose(updated, keyPress);
+        setIsModalOpen(false); // Ensure that the modal's state is updated when it's closed
+      }
+    } else if (onClose) {
+      setWindowScroll(true);
       onClose(updated);
+      setIsModalOpen(false); // Ensure that the modal's state is updated when it's closed
     }
-    setModalOpen(false); // Ensure that the modal's state is updated when it's closed
   };
 
   return (
@@ -99,19 +110,24 @@ export function Modal({
               variant="tertiary"
               size="small"
               icon="XMark"
-              onClick={() => handleCloseModal(false)}
+              onKeyUp={(event) => handleCloseModal(false, event)}
+              onClick={(event) => handleCloseModal(false, event)}
               aria-label={cancelLabelValue}
             ></Button>
           </div>
         </div>
       </div>
-      <div className={cl(classes.body)}>{children}</div>
+      {/* tabIndex to fix the div being focusable for some reason */}
+      <div className={cl(classes.body)} tabIndex={-1}>
+        {children}
+      </div>
       <div className={cl(classes.footer)}>
         <div className={cl(classes.buttonGroup)}>
           <Button
             variant="primary"
             size="medium"
-            onClick={() => handleCloseModal(true)}
+            onKeyUp={(event) => handleCloseModal(true, event)}
+            onClick={(event) => handleCloseModal(true, event)}
             aria-label={confirmLabelValue}
           >
             {confirmLabelValue}
@@ -119,7 +135,8 @@ export function Modal({
           <Button
             variant="secondary"
             size="medium"
-            onClick={() => handleCloseModal(false)}
+            onKeyUp={(event) => handleCloseModal(false, event)}
+            onClick={(event) => handleCloseModal(false, event)}
             aria-label={cancelLabelValue}
           >
             {cancelLabelValue}
