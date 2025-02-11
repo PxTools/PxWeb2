@@ -42,6 +42,8 @@ export function VariableBoxHeader({
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault(); // Prevent scrolling with spacebar
+
       setIsOpen(!isOpen);
     }
   }

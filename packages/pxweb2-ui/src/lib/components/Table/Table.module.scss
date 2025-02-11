@@ -43,7 +43,8 @@
     }
   }
   thead th {
-    font-family: PxWeb-font-700, sans-serif;
+    font-family: PxWeb-font, sans-serif;
+    font-weight: 700;
   }
   thead tr:last-child th {
     text-align: end;
@@ -152,7 +153,8 @@
   }
   tr.firstdim th {
     border-top: 1px solid var(--px-color-border-default);
-    font-family: PxWeb-font-700, sans-serif;
+    font-family: PxWeb-font, sans-serif;
+    font-weight: 700;
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       border-top: 2px solid var(--px-color-border-default);
     }
@@ -163,7 +165,8 @@
   }
   tr.firstdim td {
     border-top: 1px solid var(--px-color-border-default);
-    font-family: PxWeb-font-700, sans-serif;
+    font-family: PxWeb-font, sans-serif;
+    font-weight: 700;
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       border-top: 2px solid var(--px-color-border-default);
     }
@@ -227,7 +230,8 @@
     border-right: none;
     border-bottom: none;
     border-top: none;
-    font-family: PxWeb-font-700, sans-serif;
+    font-family: PxWeb-font, sans-serif;
+    font-weight: 700;
   }
 
   .mobileRowHeadThirdLastStub > th,
