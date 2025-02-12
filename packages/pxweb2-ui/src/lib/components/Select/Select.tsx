@@ -234,7 +234,10 @@ function VariableBoxSelect({
       removeModal('VariableBoxSelect');
     } else {
       addModal('VariableBoxSelect', () => {
-        setIsModalOpen(false);
+        // Hack for correct focus handling when closing the modal with the escape key
+        setTimeout(() => {
+          setIsModalOpen(false);
+        }, 0);
       });
 
       // Set focus to the radio button for the selected option when the modal is opened
