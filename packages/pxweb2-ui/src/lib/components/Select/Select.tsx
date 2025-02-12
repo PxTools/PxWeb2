@@ -212,6 +212,9 @@ function VariableBoxSelect({
     // Set focus back to the select element
     if (selectRef.current && (keyPress === ' ' || keyPress === 'Enter')) {
       programmaticFocusRef.current = true;
+
+      // This hack is needed to ensure that the focus is set correctly,
+      // otherwise the focus will be set during render and be gone before the render phase is done
       setTimeout(() => {
         selectRef.current?.focus();
       }, 0);
@@ -231,11 +234,7 @@ function VariableBoxSelect({
       removeModal('VariableBoxSelect');
     } else {
       addModal('VariableBoxSelect', () => {
-        // This hack is needed to ensure that the focus is set correctly,
-        // otherwise the focus will be set during render and be gone before the render phase is done
-        setTimeout(() => {
-          setIsModalOpen(false);
-        }, 0);
+        setIsModalOpen(false);
       });
 
       // Set focus to the radio button for the selected option when the modal is opened
