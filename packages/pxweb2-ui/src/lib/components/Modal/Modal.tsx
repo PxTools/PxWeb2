@@ -1,6 +1,13 @@
 import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
-import { useEffect, useRef, useState, KeyboardEvent, MouseEvent } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  KeyboardEvent as ReactKeyboardEvent,
+  MouseEvent,
+} from 'react';
 
 import classes from './Modal.module.scss';
 import Label from '../Typography/Label/Label';
@@ -13,7 +20,7 @@ export interface ModalProps {
   cancelLabel?: string;
   confirmLabel?: string;
   isOpen: boolean;
-  onClose?: (updated: boolean, keyPress?: ' ' | 'Enter') => void;
+  onClose?: (updated: boolean, keyPress?: ' ' | 'Enter' | 'Escape') => void;
   className?: string;
   children: React.ReactNode;
 }
@@ -66,31 +73,48 @@ export function Modal({
     }
   };
 
-  const handleCloseModal = (
-    updated: boolean,
-    event?: KeyboardEvent | MouseEvent,
-  ) => {
-    // If the event is passed, it means that the user pressed a key
-    if (event) {
-      const keyPress = (event as KeyboardEvent)?.key;
-      const isValidKeyPress = keyPress === 'Enter' || keyPress === ' ';
+  const handleCloseModal = useCallback(
+    (updated: boolean, event?: ReactKeyboardEvent | MouseEvent) => {
+      // If the event is passed, it means that the user pressed a key
+      if (event) {
+        const keyPress = (event as ReactKeyboardEvent)?.key;
+        const isValidKeyPress =
+          keyPress === 'Enter' || keyPress === ' ' || keyPress === 'Escape';
 
-      if (onClose && isValidKeyPress) {
-        setWindowScroll(true);
-        onClose(updated, keyPress);
-        setIsModalOpen(false); // Ensure that the modal's state is updated when it's closed
+        if (onClose && isValidKeyPress) {
+          setWindowScroll(true);
+          onClose(updated, keyPress);
+          setIsModalOpen(false); // Ensure that the modal's state is updated when it's closed
 
-        return;
+          return;
+        }
       }
-    }
 
-    // If the event is not passed, it means that the user clicked on the button with the mouse
-    if (!event && onClose) {
-      setWindowScroll(true);
-      onClose(updated);
-      setIsModalOpen(false); // Ensure that the modal's state is updated when it's closed
-    }
-  };
+      // If the event is not passed, it means that the user clicked on the button with the mouse
+      if (!event && onClose) {
+        setWindowScroll(true);
+        onClose(updated);
+        setIsModalOpen(false); // Ensure that the modal's state is updated when it's closed
+      }
+    },
+    [onClose],
+  );
+
+  useEffect(() => {
+    // Handle the Escape key to close the modal
+    const handleKeyDownInModal = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        // 'as unknown as ReactKeyboardEvent' is a hack to avoid the type error when passing the event to the function
+        handleCloseModal(false, event as unknown as ReactKeyboardEvent);
+      }
+      if (event.key === 'Enter') {
+        event.preventDefault(); // Prevent the default behavior of the Enter key on buttons (turns it into a mouse click event)
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDownInModal);
+    return () => document.removeEventListener('keydown', handleKeyDownInModal);
+  }, [handleCloseModal]);
 
   return (
     <dialog
@@ -120,11 +144,6 @@ export function Modal({
               type="button"
               onClick={() => handleCloseModal(false)}
               onKeyUp={(event) => handleCloseModal(false, event)}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter') {
-                  event.preventDefault(); // Prevent the default behavior of the Enter key on buttons (turns it into a mouse click event)
-                }
-              }}
               aria-label={cancelLabelValue}
             ></Button>
           </div>
@@ -142,11 +161,6 @@ export function Modal({
             type="button"
             onClick={() => handleCloseModal(true)}
             onKeyUp={(event) => handleCloseModal(true, event)}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') {
-                event.preventDefault(); // Prevent the default behavior of the Enter key on buttons (turns it into a mouse click event)
-              }
-            }}
             aria-label={confirmLabelValue}
           >
             {confirmLabelValue}
@@ -157,11 +171,6 @@ export function Modal({
             type="button"
             onClick={() => handleCloseModal(false)}
             onKeyUp={(event) => handleCloseModal(false, event)}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') {
-                event.preventDefault(); // Prevent the default behavior of the Enter key on buttons (turns it into a mouse click event)
-              }
-            }}
             aria-label={cancelLabelValue}
           >
             {cancelLabelValue}

@@ -195,7 +195,10 @@ function VariableBoxSelect({
     setClickedItem(selectedItem);
   };
 
-  const handleCloseModal = (updated: boolean, keyPress?: ' ' | 'Enter') => {
+  const handleCloseModal = (
+    updated: boolean,
+    keyPress?: ' ' | 'Enter' | 'Escape',
+  ) => {
     if (keyPress) {
       handleCloseModalWithKeyPress(keyPress);
     }
@@ -208,9 +211,12 @@ function VariableBoxSelect({
     }
   };
 
-  function handleCloseModalWithKeyPress(keyPress: ' ' | 'Enter') {
+  function handleCloseModalWithKeyPress(keyPress: ' ' | 'Enter' | 'Escape') {
     // Set focus back to the select element
-    if (selectRef.current && (keyPress === ' ' || keyPress === 'Enter')) {
+    if (
+      selectRef.current &&
+      (keyPress === ' ' || keyPress === 'Enter' || keyPress === 'Escape')
+    ) {
       programmaticFocusRef.current = true;
 
       // This hack is needed to ensure that the focus is set correctly,
