@@ -15,7 +15,6 @@ type VariableBoxHeaderProps = VariableBoxPropsToHeader & {
   totalChosenValues: number;
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
-  id: string;
   className?: string;
   isMissingMandatoryValues?: boolean;
 };
@@ -27,7 +26,6 @@ export function VariableBoxHeader({
   totalChosenValues,
   isOpen,
   setIsOpen,
-  id,
   className = '',
   isMissingMandatoryValues = false,
 }: VariableBoxHeaderProps) {
@@ -48,7 +46,6 @@ export function VariableBoxHeader({
 
   return (
     <div
-      id={id}
       className={cl(
         classes['variablebox-header'],
         isOpen && classes['variablebox-header-isopen'],

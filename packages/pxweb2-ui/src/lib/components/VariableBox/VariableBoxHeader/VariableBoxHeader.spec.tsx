@@ -14,7 +14,6 @@ describe('VariableBoxHeader', () => {
         setIsOpen={() => {
           return;
         }}
-        id="testid-1"
       />,
     );
 
