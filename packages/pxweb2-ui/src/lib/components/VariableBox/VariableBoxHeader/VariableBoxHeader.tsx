@@ -33,12 +33,7 @@ export function VariableBoxHeader({
 }: VariableBoxHeaderProps) {
   const { t } = useTranslation();
   const cssClasses = className.length > 0 ? ' ' + className : '';
-  const chevronAriaLabel = isOpen ? (
-    t('presentation_page.sidemenu.selection.variablebox.header.chevron_up')
-  ) : (
-    t('presentation_page.sidemenu.selection.variablebox.header.chevron_down')
-  );
-
+  
   function handleHeaderClick() {
     setIsOpen(!isOpen);
   }
@@ -95,7 +90,7 @@ export function VariableBoxHeader({
 
         <button className={cl(classes['variablebox-header-button']) + cssClasses} 
           aria-expanded={isOpen}
-          aria-label={chevronAriaLabel}
+          aria-label={t('presentation_page.sidemenu.selection.variablebox.header.show_more')}
         >
           {isOpen ? (
             <Icon iconName="ChevronUp"></Icon>

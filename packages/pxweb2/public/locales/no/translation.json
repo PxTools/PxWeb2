@@ -66,8 +66,7 @@
             "tag_selected": "{{selected}} av {{total}} valgt",
             "tag_mandatory": "Må velges",
             "alert_no_mandatory_values": "Du må velge noe i listen for at tabellen skal kunne vises",
-            "chevron_up": "Lukk",
-            "chevron_down": "Vis mer"
+            "show_more": "Vis mer"
           },
           "content": {
             "select": {
