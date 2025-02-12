@@ -75,26 +75,32 @@ export function Modal({
 
   const handleCloseModal = useCallback(
     (updated: boolean, event?: ReactKeyboardEvent | MouseEvent) => {
-      // If the event is passed, it means that the user pressed a key
-      if (event) {
-        const keyPress = (event as ReactKeyboardEvent)?.key;
+      const handleKeyboardEvent = (
+        updated: boolean,
+        event: ReactKeyboardEvent,
+      ) => {
+        const keyPress = event.key;
         const isValidKeyPress =
           keyPress === 'Enter' || keyPress === ' ' || keyPress === 'Escape';
 
         if (onClose && isValidKeyPress) {
           setWindowScroll(true);
           onClose(updated, keyPress);
-          setIsModalOpen(false); // Ensure that the modal's state is updated when it's closed
-
-          return;
+          setIsModalOpen(false);
         }
-      }
+      };
 
-      // If the event is not passed, it means that the user clicked on the button with the mouse
-      if (!event && onClose) {
-        setWindowScroll(true);
-        onClose(updated);
-        setIsModalOpen(false); // Ensure that the modal's state is updated when it's closed
+      const handleMouseEvent = (updated: boolean) => {
+        if (onClose) {
+          setWindowScroll(true);
+          onClose(updated);
+          setIsModalOpen(false);
+        }
+      };
+      if (event) {
+        handleKeyboardEvent(updated, event as ReactKeyboardEvent);
+      } else {
+        handleMouseEvent(updated);
       }
     },
     [onClose],
