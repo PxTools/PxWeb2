@@ -30,6 +30,8 @@ export type VariableBoxProps = VariableBoxPropsBase & {
     searchValues: Value[],
   ) => void;
   selectedValues: SelectedVBValues[];
+  addModal: (name: string, closeFunction: () => void) => void;
+  removeModal: (name: string) => void;
 };
 
 export function VariableBox({
@@ -45,6 +47,8 @@ export function VariableBox({
   onChangeCodeList,
   onChangeCheckbox,
   onChangeMixedCheckbox,
+  addModal,
+  removeModal,
 }: VariableBoxProps) {
   const [isOpen, setIsOpen] = useState(!!initialIsOpen);
   const [prevTableId, setPrevTableId] = useState<string>(tableId);
@@ -101,6 +105,8 @@ export function VariableBox({
           onChangeCodeList={onChangeCodeList}
           onChangeMixedCheckbox={onChangeMixedCheckbox}
           onChangeCheckbox={onChangeCheckbox}
+          addModal={addModal}
+          removeModal={removeModal}
         />
       )}
     </div>

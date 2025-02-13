@@ -1,0 +1,93 @@
+@use '../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixed;
+
+.sideSheet {
+  display: flex;
+  width: 540px;
+  height: 100vh;
+  flex-direction: column;
+  align-items: flex-start;
+
+  background: var(--px-color-surface-default);
+  border-radius: var(--px-border-radius-xlarge) 0px 0px
+    var(--px-border-radius-xlarge);
+
+  // Not from Figma
+  padding: 0px 0px 0px 0px;
+  border-style: none;
+  max-height: 100vh; // Override default margins at top and bottom for <dialog>
+}
+
+.sideSheet::backdrop {
+  background-color: var(--px-color-surface-scrim);
+  animation: fadeInBackdrop 280ms forwards;
+}
+
+.aside {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 540px;
+  height: 100vh;
+}
+
+.header {
+  display: flex;
+  padding: fixed.$spacing-10 fixed.$spacing-10 1.5px fixed.$spacing-10;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: fixed.$spacing-6;
+  align-self: stretch;
+  border-radius: var(--px-border-radius-xlarge) 0px 0px 0px;
+  background: var(--px-color-surface-default);
+}
+
+.titleAndxMarkWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  align-self: stretch;
+}
+
+.titleWrapper {
+  display: flex;
+  padding: fixed.$spacing-1 fixed.$spacing-2 0px 0px;
+  align-items: flex-start;
+  flex: 1 0 0;
+}
+
+.content {
+  display: flex;
+  padding: fixed.$spacing-5 fixed.$spacing-10 0px fixed.$spacing-10;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1 0 0;
+  align-self: stretch;
+  background: var(--px-color-surface-default);
+  color: var(--px-color-text-default);
+
+  // Not from Figma
+  overflow-y: auto;
+}
+
+// Animation that slides in NavigationDrawer from the right when opened.
+.slidein {
+  animation: slideIn 280ms forwards;
+}
+
+@keyframes slideIn {
+  0% {
+    left: calc(100vw);
+  }
+  100% {
+    left: calc(100vw - 540px);
+  }
+}
+
+@keyframes fadeInBackdrop {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

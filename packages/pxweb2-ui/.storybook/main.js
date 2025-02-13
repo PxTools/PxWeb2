@@ -16,10 +16,14 @@ const config = {
     getAbsolutePath('@storybook/addon-essentials'),
     getAbsolutePath('@chromatic-com/storybook'),
     getAbsolutePath('@storybook/addon-interactions'),
+    getAbsolutePath("@storybook/addon-a11y")
   ],
   framework: {
     name: getAbsolutePath('@storybook/react-vite'),
     options: {},
   },
+  staticDirs: [
+    {from: './../src/lib/fonts/', to: 'fonts'}, // Load static font files into storybook/chromatic
+  ],
 };
 export default config;

@@ -82,14 +82,14 @@ export function Spinner({
         cy="25"
         r={Radius}
         className={cl(classes[`path-stroke-background-${variant}`])}
-        stroke-width={StrokeWidth}
+        strokeWidth={StrokeWidth}
       ></circle>
       <circle
         cx="25"
         cy="25"
         r={Radius}
         className={cl(classes[`path-stroke-circle-${variant}`])}
-        stroke-width={StrokeWidth}
+        strokeWidth={StrokeWidth}
       ></circle>
     </svg>
   );

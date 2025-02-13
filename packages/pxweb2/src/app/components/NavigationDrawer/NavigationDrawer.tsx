@@ -1,36 +1,83 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import cl from 'clsx';
 import styles from './NavigationDrawer.module.scss';
 import { Heading, Icon, Label } from '@pxweb2/pxweb2-ui';
 import { useTranslation } from 'react-i18next';
 import i18next from 'i18next';
+import useAccessibility from '../../context/useAccessibility';
 
 export interface NavigationDrawerProps {
   children: React.ReactNode;
   heading: string;
-  onClose: () => void;
+  view: 'filter' | 'view' | 'edit' | 'save' | 'help';
+  openedWithKeyboard: boolean;
+  onClose: (
+    keyboard: boolean,
+    str: 'filter' | 'view' | 'edit' | 'save' | 'help',
+  ) => void;
 }
 
-export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
-  children,
-  heading,
-  onClose,
-}) => {
+export const NavigationDrawer = forwardRef<
+  HTMLDivElement,
+  NavigationDrawerProps
+>(({ children, heading, view, openedWithKeyboard, onClose }, ref) => {
   const { t } = useTranslation();
+  const { addModal, removeModal } = useAccessibility();
+
+  React.useEffect(() => {
+    addModal('NavigationDrawer', () => {
+      onClose(true, view);
+    });
+
+    return () => {
+      removeModal('NavigationDrawer');
+    };
+  }, [addModal, removeModal, onClose, view]);
 
   // Handle RTL languages
   const hideIcon = i18next.dir() === 'rtl' ? 'ChevronRight' : 'ChevronLeft';
 
+  function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      onClose(true, view);
+    }
+  }
+  React.useEffect(() => {
+    if (
+      document.activeElement !== document.body &&
+      ref &&
+      typeof ref !== 'function'
+    ) {
+      ref.current?.focus();
+    }
+  }, [view]);
+
+  React.useEffect(() => {
+    if (openedWithKeyboard && ref && typeof ref !== 'function') {
+      ref.current?.focus();
+    }
+  }, [openedWithKeyboard, ref]);
+
   return (
     <>
-      <div onClick={onClose} className={styles.backdrop}></div>
-      <div className={cl(styles.navigationDrawer, styles.fadein)}>
+      <div
+        onClick={() => onClose(false, view)}
+        className={styles.backdrop}
+      ></div>
+      <div
+        className={cl(styles.navigationDrawer, styles.fadein)}
+        role="region"
+        aria-label={heading}
+      >
         <div className={styles.heading}>
           <Heading level="2" size="medium">
             {heading}
           </Heading>
           <div
-            onClick={onClose}
+            ref={ref}
+            tabIndex={0}
+            onClick={() => onClose(false, view)}
+            onKeyDown={handleKeyDown}
             className={cl(styles.hideMenu, styles.clickable)}
           >
             <div className={styles.hideIconWrapper}>
@@ -45,5 +92,6 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
       </div>
     </>
   );
-};
+});
+
 export default NavigationDrawer;

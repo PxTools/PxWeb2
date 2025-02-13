@@ -58,6 +58,11 @@
       color: var(--px-color-text-default);
     }
   }
+
+  &:focus-visible {
+    outline: 2px solid #000;
+    outline-offset: 2px;
+  }
 }
 
 .navBarItem {
@@ -79,6 +84,7 @@
 .navRailItem {
   width: 100px;
   padding: 0px 0px fixed.$spacing-1 0px;
+  margin-bottom: 25px;
 
   > .icon {
     width: fixed.$spacing-14;
@@ -88,4 +94,9 @@
     outline-offset: 6px;
     box-shadow: 0 0 0 3px var(--px-color-border-focus-boxshadow);
   }
+}
+
+.navigationBarListItem {
+  flex: 1;
+  width: 100%;
 }

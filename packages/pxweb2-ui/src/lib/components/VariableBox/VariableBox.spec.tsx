@@ -24,6 +24,12 @@ describe('VariableBox', () => {
         }}
         selectedValues={[]}
         type={VartypeEnum.CONTENTS_VARIABLE}
+        addModal={() => {
+          return;
+        }}
+        removeModal={() => {
+          return;
+        }}
       />,
     );
 

@@ -7,6 +7,7 @@ import App from './app/app';
 import { validateConfig } from './app/util/validate';
 import { VariablesProvider } from './app/context/VariablesProvider';
 import { TableDataProvider } from './app/context/TableDataProvider';
+import { AccessibilityProvider } from './app/context/AccessibilityProvider';
 import { AppProvider } from './app/context/AppProvider';
 
 const router = createBrowserRouter([
@@ -24,20 +25,22 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
 );
 
-if (location.href.indexOf('localhost') > -1) {
+if (location.href.includes('localhost')) {
   validateConfig();
 }
 
 root.render(
   <StrictMode>
     <AppProvider>
-      <VariablesProvider>
-        <TableDataProvider>
-          <Suspense fallback={<div>Loading...</div>}>
-            <RouterProvider router={router} />
-          </Suspense>
-        </TableDataProvider>
-      </VariablesProvider>
+      <AccessibilityProvider>
+        <VariablesProvider>
+          <TableDataProvider>
+            <Suspense fallback={<div>Loading...</div>}>
+              <RouterProvider router={router} />
+            </Suspense>
+          </TableDataProvider>
+        </VariablesProvider>
+      </AccessibilityProvider>
     </AppProvider>
   </StrictMode>,
 );

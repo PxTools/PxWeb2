@@ -4,10 +4,11 @@
     "shorthand": "sv"
   },
   "common": {
-    "title": "Välkommen till PxWeb 2.0",
+    "title": "PxWeb 2.0",
     "header": {
-      "title": "PxWeb 2.0 [Sprint 16 (SSB)]",
-      "logo": "PxWeb 2.0"
+      "title": "PxWeb 2.0 [Sprint 17 (SSB)]",
+      "logo": "PxWeb 2.0",
+      "arialabelheader": "Velg språk"
     },
     "skip_to_main": "Gå direkt till huvudinnehållet",
     "footer": {
@@ -33,7 +34,7 @@
       "cancel": "Avbryt",
       "save": "Spara",
       "search": "Sök",
-      "close": "Stänga"
+      "close": "Stäng"
     },
     "generic_tags": {
       "mandatory": "Obligatorisk"
@@ -50,6 +51,7 @@
       "statistics": "Statistikdatabasen"
     },
     "sidemenu": {
+      "arialabeltoolsidemenu": "Verktygsmeny för tabell",
       "hide": "Dölj",
       "selection": {
         "title": "Filtrera",
@@ -147,6 +149,7 @@
       }
     },
     "main_content": {
+      "arialabelbreadcrumb": "Brödsmulor",
       "last_updated": "Senast uppdaterad",
       "show_details": "Visa detaljer",
       "table": {
@@ -158,21 +161,21 @@
         }
       },
       "about_table": {
-        "title": "Om tabellen",
+        "title": "Information",
         "footnotes": {
-          "title": "Fotnoter",
+          "title": "Noter",
           "show_all_footnotes": "Visa alla fotnoter för tabellen"
         },
-        "information": {
-          "title": "Information",
+        "definitions": {
+          "title": "Definitioner",
           "description": "Tabellen är en del av statistiken {{statistics}}"
         },
-        "definition": {
-          "title": "Definitioner",
+        "details": {
+          "title": "Detaljer",
           "description": "Beskrivande text..."
         },
-        "metadata": {
-          "title": "Metadata",
+        "contact": {
+          "title": "Kontakt",
           "description": "Beskrivande text..."
         }
       },
