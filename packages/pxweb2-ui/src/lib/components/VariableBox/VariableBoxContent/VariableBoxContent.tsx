@@ -389,7 +389,9 @@ export function VariableBoxContent({
               onChange={() =>
                 onChangeMixedCheckbox(varId, allValuesSelected, searchedValues)
               }
-              ariaControls={valuesToRender.map((value) => value.code + uniqueId)}
+              ariaControls={valuesToRender.map(
+                (value) => value.code + uniqueId,
+              )}
               strong={true}
               inVariableBox={true}
             />
