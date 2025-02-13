@@ -10,13 +10,13 @@ export const Header: React.FC = () => {
   const config = getConfig();
 
   return (
-    <div className={styles.header}>
+    <header className={styles.header}>
       <div>
         <span className={cl(styles['heading-medium'])}>
           {t('common.header.title')}
         </span>
       </div>
-      <div>
+      <div aria-label={t('common.header.arialabelheader')}>
         {config.language.supportedLanguages.map(
           (language) =>
             i18n.language !== language.shorthand && (
@@ -30,6 +30,6 @@ export const Header: React.FC = () => {
             ),
         )}
       </div>
-    </div>
+    </header>
   );
 };

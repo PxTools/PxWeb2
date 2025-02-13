@@ -19,6 +19,7 @@ import {
 import NavigationDrawer from '../../components/NavigationDrawer/NavigationDrawer';
 import useVariables from '../../context/useVariables';
 import { NavigationItem } from '../../components/NavigationMenu/NavigationItem/NavigationItemType';
+import useAccessibility from '../../context/useAccessibility';
 
 function addSelectedCodeListToVariable(
   currentVariable: SelectedVBValues | undefined,
@@ -241,12 +242,21 @@ function removeAllValuesOfVariable(
 type propsType = {
   selectedNavigationView: string;
   selectedTabId: string;
-  setSelectedNavigationView: (view: NavigationItem) => void;
+  openedWithKeyboard: boolean;
+  setSelectedNavigationView: (
+    keyboard: boolean,
+    close: boolean,
+    view: NavigationItem,
+  ) => void;
+  hideMenuRef?: React.RefObject<HTMLDivElement>;
 };
+
 export function Selection({
   selectedNavigationView,
   selectedTabId,
+  openedWithKeyboard,
   setSelectedNavigationView,
+  hideMenuRef,
 }: propsType) {
   const { selectedVBValues, setSelectedVBValues } = useVariables();
   const variables = useVariables();
@@ -263,6 +273,7 @@ export function Selection({
 
   //  Needed to know when the language has changed, so we can reload the default selection
   const [prevLang, setPrevLang] = useState('');
+  const { addModal, removeModal } = useAccessibility();
 
   useEffect(() => {
     if (errorMsg) {
@@ -536,6 +547,8 @@ export function Selection({
       handleCodeListChange={handleCodeListChange}
       handleCheckboxChange={handleCheckboxChange}
       handleMixedCheckboxChange={handleMixedCheckboxChange}
+      addModal={addModal}
+      removeModal={removeModal}
     />
   );
   const drawerView = <>View content</>;
@@ -546,10 +559,15 @@ export function Selection({
   return (
     selectedNavigationView !== 'none' && (
       <NavigationDrawer
+        ref={hideMenuRef}
         heading={t('presentation_page.sidemenu.selection.title')}
-        onClose={() => {
-          setSelectedNavigationView('none');
-        }}
+        onClose={(keyboard, view) =>
+          setSelectedNavigationView(keyboard, true, view)
+        }
+        view={
+          selectedNavigationView as 'filter' | 'view' | 'edit' | 'save' | 'help'
+        }
+        openedWithKeyboard={openedWithKeyboard}
       >
         {selectedNavigationView === 'filter' && drawerFilter}
         {selectedNavigationView === 'view' && drawerView}

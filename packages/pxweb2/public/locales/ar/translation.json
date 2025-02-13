@@ -6,8 +6,9 @@
   "common": {
     "title": "مرحبًا بك في PxWeb 2.0",
     "header": {
-      "title": "PxWeb 2.0 [Sprint 16]",
-      "logo": "بيكس ويب 2.0"
+      "title": "PxWeb 2.0 [Sprint 17]",
+      "logo": "بيكس ويب 2.0",
+      "arialabelheader": "اختر اللغة"
     },
     "skip_to_main": "انتقل إلى المحتوى الرئيسي",
     "footer": {
@@ -50,6 +51,7 @@
       "statistics": "بنك الإحصائيات"
     },
     "sidemenu": {
+      "arialabeltoolsidemenu": "قائمة الأدوات للجدول",
       "hide": "يخفي",
       "selection": {
         "title": "فلتر",
@@ -147,6 +149,7 @@
       }
     },
     "main_content": {
+      "arialabelbreadcrumb": "مسار التنقل",
       "last_updated": "آخر تحديث",
       "show_details": "إظهار التفاصيل",
       "table": {
@@ -158,21 +161,21 @@
         }
       },
       "about_table": {
-        "title": "حول الطاولة",
+        "title": "معلومة",
         "footnotes": {
           "title": "ملحوظات",
           "show_all_footnotes": "إظهار كافة الملاحظات للجدول"
         },
-        "information": {
-          "title": "معلومة",
+        "definitions": {
+          "title": "التعاريف",
           "description": "الجدول جزء من الإحصائيات {{statistics}}"
         },
-        "definition": {
-          "title": "التعاريف",
+        "details": {
+          "title": "تفاصيل",
           "description": "نص الوصف..."
         },
-        "metadata": {
-          "title": "البيانات الوصفية",
+        "contact": {
+          "title": "اتصال",
           "description": "نص الوصف..."
         }
       },

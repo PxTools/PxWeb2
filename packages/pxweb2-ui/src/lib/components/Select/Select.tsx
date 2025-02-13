@@ -1,5 +1,5 @@
 import cl from 'clsx';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import classes from './Select.module.scss';
 import Label from '../Typography/Label/Label';
@@ -26,6 +26,8 @@ export type SelectProps = {
   onChange: (selectedItem: SelectOption | undefined) => void;
   tabIndex?: number;
   className?: string;
+  addModal: (name: string, closeFunction: () => void) => void;
+  removeModal: (name: string) => void;
 };
 
 function openOptions(options: SelectOption[]) {
@@ -46,6 +48,8 @@ export function Select({
   onChange,
   tabIndex = 0,
   className = '',
+  addModal,
+  removeModal,
 }: SelectProps) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
 
@@ -75,6 +79,8 @@ export function Select({
           onChange={onChange}
           tabIndex={tabIndex}
           className={cssClasses}
+          addModal={addModal}
+          removeModal={removeModal}
         />
       )}
     </>
@@ -154,7 +160,10 @@ type VariableBoxSelectProps = Pick<
   | 'onChange'
   | 'tabIndex'
   | 'className'
->;
+> & {
+  addModal: (id: string, onClose: () => void) => void;
+  removeModal: (name: string) => void;
+};
 
 function VariableBoxSelect({
   label,
@@ -167,6 +176,8 @@ function VariableBoxSelect({
   onChange,
   tabIndex,
   className = '',
+  addModal,
+  removeModal,
 }: VariableBoxSelectProps) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
 
@@ -179,7 +190,6 @@ function VariableBoxSelect({
 
   const handleOpenModal = () => {
     setModalOpen(true);
-
     // Reset clicked item to selected item, incase user made changes and then closed the modal
     setClickedItem(selectedItem);
   };
@@ -187,6 +197,16 @@ function VariableBoxSelect({
   function handleRadioChange(e: React.ChangeEvent<HTMLInputElement>) {
     setClickedItem(options.find((option) => option.value === e.target.value));
   }
+
+  useEffect(() => {
+    if (!isModalOpen) {
+      removeModal('VariableBoxSelect');
+    } else {
+      addModal('VariableBoxSelect', () => {
+        setModalOpen(false);
+      });
+    }
+  }, [removeModal, isModalOpen]);
 
   const handleCloseModal = (updated: boolean) => {
     setModalOpen(false);
@@ -202,6 +222,8 @@ function VariableBoxSelect({
       <div
         className={cl(classes.selectVariabelbox) + cssClasses}
         tabIndex={tabIndex}
+        role="button"
+        aria-haspopup="dialog"
         onClick={() => {
           handleOpenModal();
         }}

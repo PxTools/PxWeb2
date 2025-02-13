@@ -74,23 +74,19 @@ export function Modal({
     setModalOpen(false); // Ensure that the modal's state is updated when it's closed
   };
 
-  const handleKeyDown = async (
-    event: React.KeyboardEvent<HTMLDialogElement>,
-  ) => {
-    if (event.key === 'Escape') {
-      handleCloseModal(false);
-    }
-  };
-
   return (
     <dialog
       ref={modalRef}
-      onKeyDown={handleKeyDown}
       className={cl(classes.modal) + cssClasses}
+      aria-labelledby="px-modal-heading"
     >
       <div className={cl(classes.header)}>
         <div className={cl(classes.headerContent)}>
-          <Heading level="3" className={cl(classes.headings)}>
+          <Heading
+            id="px-modal-heading"
+            level="3"
+            className={cl(classes.headings)}
+          >
             {label && (
               <Label size="medium" textcolor="default">
                 {label}

@@ -10,7 +10,15 @@ const options = [
 
 describe('Radio', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<Radio options={options} name="Radio1" />);
+    const { baseElement } = render(
+      <Radio
+        options={options}
+        name="Radio1"
+        onChange={() => {
+          return;
+        }}
+      />,
+    );
     expect(baseElement).toBeTruthy();
   });
 });

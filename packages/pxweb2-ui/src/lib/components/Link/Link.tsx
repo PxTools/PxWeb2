@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import cl from 'clsx';
 
 import classes from './Link.module.scss';
@@ -14,17 +14,21 @@ interface LinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   inline?: boolean;
   noUnderline?: boolean;
 }
-export function Link({
-  children,
-  size,
-  href,
-  target,
-  icon,
-  iconPosition,
-  inline = false,
-  noUnderline = false,
-  ...rest
-}: LinkProps) {
+
+export const Link = forwardRef<HTMLAnchorElement, LinkProps>(function Link(
+  {
+    children,
+    size,
+    href,
+    target,
+    icon,
+    iconPosition,
+    inline = false,
+    noUnderline = false,
+    ...rest
+  }: LinkProps,
+  ref,
+) {
   return (
     <a
       href={href}
@@ -35,6 +39,7 @@ export function Link({
         [classes[`bodyshort-${size}`]]: size,
         [classes[`padding-${size}`]]: size,
       })}
+      ref={ref}
       {...rest}
     >
       {icon && iconPosition === 'left' && (
@@ -46,5 +51,5 @@ export function Link({
       )}
     </a>
   );
-}
+});
 export default Link;
