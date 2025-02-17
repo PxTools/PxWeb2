@@ -278,6 +278,7 @@ export function Selection({
   useEffect(() => {
     if (errorMsg) {
       console.error('Selection.tsx', errorMsg);
+      throw new Error(errorMsg);
     }
   }, [errorMsg]);
 
