@@ -13,15 +13,17 @@ interface ErrorBoundaryState {
   error: Error | null;
 }
 
+class ErrorBoundary extends React.Component<
+  ErrorBoundaryProps,
+  ErrorBoundaryState
+> {
+  state: ErrorBoundaryState = { hasError: false, error: null };
 
-class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
-    state : ErrorBoundaryState = { hasError: false , error: null };
-
-  static getDerivedStateFromError(error: Error) : ErrorBoundaryState {
+  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
     return { hasError: true, error };
   }
 
-  componentDidCatch(error: Error , info : ErrorInfo) {
+  componentDidCatch(error: Error, info: ErrorInfo) {
     console.log(error, info);
     // logErrorToMyService(
     //   error,
