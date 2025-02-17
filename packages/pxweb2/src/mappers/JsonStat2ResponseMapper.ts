@@ -171,7 +171,9 @@ function getVariableValues(dimension: any): Value[] {
   const valueDisplayType: ValueDisplayType = getValueDisplayType(dimension);
   const values: Value[] = [];
   const indexEntries = Object.entries(dimension.category.index);
-  indexEntries.sort(([, valueA], [, valueB]) => Number(valueA) - Number(valueB));
+  indexEntries.sort(
+    ([, valueA], [, valueB]) => Number(valueA) - Number(valueB),
+  );
 
   for (const [code] of indexEntries) {
     if (Object.prototype.hasOwnProperty.call(dimension.category.index, code)) {
