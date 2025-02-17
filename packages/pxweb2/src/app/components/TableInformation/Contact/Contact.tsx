@@ -11,22 +11,22 @@ export type ContactProps = {
 export function ContactComponent({ contact }: ContactProps) {
   return (
     <div className={cl(classes.contact)}>
-      <Heading level='3'>{contact.name}</Heading>
+      <Heading level='3' size='small' spacing={true}>{contact.name}</Heading>
       {contact.org && (
         <div className={classes.contactItem}>
           <BodyLong>{contact.org}</BodyLong>
-        </div>
-      )}
-      {contact.phone && (
-        <div className={classes.contactItem}>
-          <Icon iconName="Phone" />
-          <Link inline={true} href={`tel:${contact.phone}`}>{contact.phone}</Link>
         </div>
       )}
       {contact.mail && (
         <div className={classes.contactItem}>
           <Icon iconName="EnvelopeClosed" />
           <Link inline={true} href={`mailto:${contact.mail}`}>{contact.mail}</Link>
+        </div>
+      )}
+      {contact.phone && (
+        <div className={classes.contactItem}>
+          <Icon iconName="Phone" />
+          <Link inline={true} href={`tel:${contact.phone}`}>{contact.phone}</Link>
         </div>
       )}
       {contact.freeText && (
@@ -42,7 +42,7 @@ export function MissingContact() {
   const { t } = useTranslation();
   return (
     <>
-      <Heading level='3'>{t('presentation_page.main_content.about_table.contact.missing_heading')}</Heading>
+      <Heading level='3' size='small' spacing={true}>{t('presentation_page.main_content.about_table.contact.missing_heading')}</Heading>
       <BodyLong>{t('presentation_page.main_content.about_table.contact.missing_text')}</BodyLong>
     </>
   );
