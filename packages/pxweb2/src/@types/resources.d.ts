@@ -66,6 +66,7 @@ interface Resources {
               tag_selected: '{{selected}} of {{total}} selected';
               tag_mandatory: 'Mandatory';
               alert_no_mandatory_values: 'You must select something in the list for the table to be displayed';
+              show_more: 'Show more';
             };
             content: {
               select: {
