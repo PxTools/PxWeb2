@@ -41,9 +41,9 @@ export function ContactComponent({ contact }: ContactProps) {
 export function MissingContact() {
   const { t } = useTranslation();
   return (
-    <>
+    <div className={cl(classes.contact)}>
       <Heading level='3' size='small' spacing={true}>{t('presentation_page.main_content.about_table.contact.missing_heading')}</Heading>
       <BodyLong>{t('presentation_page.main_content.about_table.contact.missing_text')}</BodyLong>
-    </>
+    </div>
   );
 }
