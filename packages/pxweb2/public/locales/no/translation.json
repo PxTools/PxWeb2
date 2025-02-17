@@ -7,8 +7,7 @@
     "title": "PxWeb 2.0",
     "header": {
       "title": "PxWeb 2.0 [Main]",
-      "logo": "PxWeb 2.0",
-      "arialabelheader": "Velg språk"
+      "logo": "PxWeb 2.0"
     },
     "skip_to_main": "Hopp til hovedinnhold",
     "footer": {
@@ -65,7 +64,8 @@
           "header": {
             "tag_selected": "{{selected}} av {{total}} valgt",
             "tag_mandatory": "Må velges",
-            "alert_no_mandatory_values": "Du må velge noe i listen for at tabellen skal kunne vises"
+            "alert_no_mandatory_values": "Du må velge noe i listen for at tabellen skal kunne vises",
+            "show_more": "Vis mer"
           },
           "content": {
             "select": {

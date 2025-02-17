@@ -15,7 +15,6 @@ type VariableBoxHeaderProps = VariableBoxPropsToHeader & {
   totalChosenValues: number;
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
-  tabIndex?: number;
   className?: string;
   isMissingMandatoryValues?: boolean;
 };
@@ -27,19 +26,20 @@ export function VariableBoxHeader({
   totalChosenValues,
   isOpen,
   setIsOpen,
-  tabIndex = 0,
   className = '',
   isMissingMandatoryValues = false,
 }: VariableBoxHeaderProps) {
   const { t } = useTranslation();
   const cssClasses = className.length > 0 ? ' ' + className : '';
-
+  
   function handleHeaderClick() {
     setIsOpen(!isOpen);
   }
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault(); // Prevent scrolling with spacebar
+
       setIsOpen(!isOpen);
     }
   }
@@ -85,13 +85,16 @@ export function VariableBoxHeader({
           </div>
         </div>
 
-        <div className={cssClasses} tabIndex={tabIndex}>
+        <button className={cl(classes['variablebox-header-button']) + cssClasses} 
+          aria-expanded={isOpen}
+          aria-label={t('presentation_page.sidemenu.selection.variablebox.header.show_more')}
+        >
           {isOpen ? (
             <Icon iconName="ChevronUp"></Icon>
           ) : (
             <Icon iconName="ChevronDown"></Icon>
           )}
-        </div>
+        </button>
       </div>
 
       {isMissingMandatoryValues && (
