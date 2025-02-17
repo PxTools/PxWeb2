@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import cl from 'clsx';
 
 import classes from './TableInformation.module.scss';
+import useTableData from '../../context/useTableData';
+import { ContactTab } from './Contact/ContactTab';
 
 import {
   SideSheet,
@@ -25,6 +27,7 @@ export function TableInformation({
 }: TableInformationProps) {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('');
+  const tableData = useTableData();
 
   useEffect(() => {
     if (isOpen && selectedTab) {
@@ -34,6 +37,15 @@ export function TableInformation({
 
   // TableInformation tabs should be type in some way. Maybe like this:
   // export type TabType = 'tab-footnotes' | 'tab-definitions' | 'tab-details' | 'tab-contact';
+
+  // This is a test data for contacts. It should be fetched from the table data
+  const contactsTestData = [
+    { name: 'John Doe', mail: 'john.doe@example.com', phone: '123-456-7890', org: 'SCB' },
+    { name: 'Jane Smith', phone: '098-765-4321'},
+    { name: 'Population statistics', org: 'SCB', mail: 'populationstatistics@example.com'},
+    { freeText: 'This is a text which can contain anything. link etc..' },
+    { name: 'Im am a heading', freeText: 'This is a text which can contain anything. link etc..' }
+  ];
 
   return (
     <SideSheet
@@ -129,7 +141,8 @@ export function TableInformation({
             Details
           </TabPanel>
           <TabPanel id="pnl-contact" controlledBy="tab-contact">
-            Contact
+            <ContactTab contacts={contactsTestData} />
+            <ContactTab contacts={tableData.data?.metadata.contacts || []} />
           </TabPanel>
         </div>
       </TabsProvider>

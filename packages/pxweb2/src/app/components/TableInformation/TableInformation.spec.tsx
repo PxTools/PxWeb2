@@ -1,7 +1,6 @@
-import { render } from '@testing-library/react';
-
 import TableInformation from './TableInformation';
 import { mockHTMLDialogElement } from '@pxweb2/pxweb2-ui/src/lib/util/test-utils';
+import { renderWithProviders } from '../../util/testing-utils';
 
 describe('TableInformation', () => {
   beforeEach(() => {
@@ -9,7 +8,7 @@ describe('TableInformation', () => {
   });
 
   it('should render successfully', () => {
-    const { baseElement } = render(
+    const { baseElement } = renderWithProviders(
       <TableInformation
         isOpen={true}
         onClose={() => {

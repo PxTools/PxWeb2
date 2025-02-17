@@ -1,4 +1,5 @@
 import { Variable } from './variable';
+import { Contact } from './contact';
 
 /**
  * Represents the metadata of a table in PxWeb.
@@ -28,4 +29,8 @@ export type PxTableMetadata = {
    * The variables that are part of the table.
    */
   variables: Array<Variable>;
+   /**
+   * The contacts defined for the table
+   */
+   contacts?: Array<Contact>;
 };
