@@ -20,6 +20,7 @@ describe('JsonStat2ResponseMapper', () => {
                 '2022': '2022',
               },
             },
+            extension: { elimination: false },
           },
           country: {
             label: 'Country',
@@ -32,6 +33,23 @@ describe('JsonStat2ResponseMapper', () => {
                 US: 'United States',
                 UK: 'United Kingdom',
               },
+            },
+            extension: {
+              elimination: true,
+              codeLists: [
+                // {
+                //   id: 'cd1',
+                //   label: 'Codelist 1',
+                //   type: 'Aggregation',
+                //   links: [],
+                // },
+                //   {
+                //     id: 'cd2',
+                //     label: 'Codelist 2',
+                //     type: CodeListType.VALUESET,
+                //     links: [],
+                //   },
+              ],
             },
           },
         },
@@ -50,6 +68,10 @@ describe('JsonStat2ResponseMapper', () => {
       // Add more assertions here to validate the mapping
       expect(pxTable.metadata.variables.length).equals(2);
       expect(pxTable.metadata.variables[0].values.length).equals(2);
+      expect(pxTable.metadata.variables[0].mandatory).equals(true);
+      expect(pxTable.metadata.variables[0].codeLists?.length).equals(0);
+      expect(pxTable.metadata.variables[1].mandatory).equals(false);
+      expect(pxTable.metadata.variables[1].codeLists?.length).equals(0);
     });
   });
 });
