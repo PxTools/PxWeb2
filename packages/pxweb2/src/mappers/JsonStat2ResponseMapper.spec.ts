@@ -58,6 +58,22 @@ describe('JsonStat2ResponseMapper', () => {
         class: ClassType.DATASET,
         id: ['Time', 'Country'],
         size: [2, 2],
+        extension: {
+          contact: [
+            {
+              name: ' Contact 1',
+              phone: '111-1111 11 11',
+              mail: 'information@company.com',
+              raw: ' Contact 1, Company# 111-1111 11 11#information@company.com',
+            },
+            {
+              name: ' Contact 2',
+              phone: '222-2222 22 22',
+              mail: 'information2@company.com',
+              raw: ' Contact 2, Company# 222-2222 22 22#information2@company.com',
+            },
+          ],
+        },
       };
 
       // Act
@@ -72,6 +88,7 @@ describe('JsonStat2ResponseMapper', () => {
       expect(pxTable.metadata.variables[0].codeLists?.length).equals(0);
       expect(pxTable.metadata.variables[1].mandatory).equals(false);
       expect(pxTable.metadata.variables[1].codeLists?.length).equals(0);
+      expect(pxTable.metadata.contacts?.length).equals(2);
     });
   });
 });
