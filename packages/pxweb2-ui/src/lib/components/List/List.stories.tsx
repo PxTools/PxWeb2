@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Meta, StoryObj, StoryFn } from '@storybook/react';
+import type { Meta, StoryFn } from '@storybook/react';
 import List from './List';
 import ListItem from './ListItem';
 import Link from '../Link/Link';
@@ -10,17 +10,17 @@ const meta: Meta<typeof List> = {
 };
 export default meta;
 
-type Story = StoryObj<typeof List>;
-export const variants: Story = {
-  args: {
-    heading: 'List heading',
-    subHeading: 'List subheading',
-    listType: 'ul',
-    children: <ListItem>Item1</ListItem>,
-  },
-};
+// type Story = StoryObj<typeof List>;
+// export const variants: Story = {
+//   args: {
+//     heading: 'List heading',
+//     subHeading: 'List subheading',
+//     listType: 'ul',
+//     children: <ListItem>Item1</ListItem>,
+//   },
+// };
 
-export const OrdereAndUnordered: StoryFn<typeof List> = () => {
+export const OrderedAndUnordered: StoryFn<typeof List> = () => {
   return (
     <>
       <h1>Heading and subheading Unordered list</h1>
@@ -34,12 +34,15 @@ export const OrdereAndUnordered: StoryFn<typeof List> = () => {
 
       <h1>Heading and subheading Ordered list</h1>
 
-      <List subHeading="List subheading" listType="ol">
+      <List heading="List heading" subHeading="List subheading" listType="ol">
         <ListItem>Item1</ListItem>
         <ListItem>Item2</ListItem>
         <ListItem>Item3</ListItem>
         <ListItem>
-          Item4 <Link href="wwww.ssb.no">testlenke </Link>
+          Item4{' '}
+          <Link href="wwww.ssb.no" inline>
+            testlenke{' '}
+          </Link>
         </ListItem>
         <ListItem>
           <Link href="wwww.ssb.no">testlenke 2 </Link>

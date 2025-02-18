@@ -15,102 +15,79 @@
   padding-bottom: 4px;
 }
 
-.list-wrapper {
+.list-wrapper-listgroup {
   ul {
+    list-style-type: none;
+    padding-inline-start: 0px;
+    margin-left: 0px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    li {
+      padding-bottom: 28px;
+    }
+    li li {
+      padding-bottom: 0px;
+    }
+  }
+}
+
+.list-wrapper {
+  color: var(--px-color-text-default);
+  ul {
+    list-style: none;
     list-style-position: outside; /* Default: marker outside */
-    padding-left: 0px; /* Adjusts spacing */
+    // padding-left: 0px; /* Adjusts spacing */
+    padding-inline-start: 12px;
+    margin: 0;
+
     li {
       padding-left: 12px;
-      padding-top: 10px;
     }
     li::marker {
       content: '\25CF';
       font-size: 1em;
     }
   }
-}
-
-.list-wrapperx {
-  ul {
-    list-style-type: none;
-    padding-inline-start: 0px;
-
-    margin: 0;
-    margin-block-start: 0px;
-    li {
-    }
-    li::before {
-      content: '\25CF';
-      padding-inline-end: 12px;
-      padding-top: 10px;
-    }
-  }
-
   ol {
     list-style: none;
+    list-style-position: outside; /* Default: marker outside */
     counter-reset: number;
-    padding-inline-start: 0px;
+    padding-inline-start: 12px;
     margin: 0;
     li {
+      padding-left: 12px;
       counter-increment: number;
     }
-    li::before {
+    li::marker {
       content: counter(number) '.';
-      padding-inline-end: 4px;
     }
   }
 }
-
 .list-wrapper-nested {
   ul {
     list-style-type: none;
-    padding-inline-start: 21px;
-    margin: 0;
+    padding-inline-start: 5px;
     margin-block-start: 0px;
-    li {
-    }
 
+    li {
+      margin-left: 0px;
+    }
     li::marker {
       content: '\25CB';
       font-size: 1em;
     }
-    // li::before {
-    //   content: '\25CB'; /* Custom marker */
-    //   padding-inline-end: 12px;
-    //   padding-top: 10px;
-    // }
   }
 
   ol {
     list-style: none;
     counter-reset: number;
     padding-inline-start: 21px;
-    margin: 0;
+    margin-block-start: 0px;
     li {
       counter-increment: number;
     }
     li::marker {
       content: counter(number) '.';
-      padding-inline-end: 4px;
-    }
-  }
-}
-
-.list-wrapper-listgroup {
-  ul {
-    list-style-type: none;
-    padding-inline-start: 21px;
-    margin: 0;
-    margin-block-start: 0px;
-  }
-
-  ol {
-    list-style: none;
-    counter-reset: number;
-    padding-inline-start: 21px;
-    margin: 0;
-    li {
-      counter-increment: number;
     }
   }
 }

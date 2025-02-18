@@ -9,7 +9,7 @@ interface ListItemProps {
 }
 export function ListItem({ children, ...rest }: ListItemProps) {
   return (
-    <li {...rest} className={cl(classes[`bodylong-medium`], classes[`list`])}>
+    <li {...rest} className={cl(classes[`bodylong-medium`])}>
       {children}
     </li>
   );
