@@ -4,7 +4,7 @@
   "main": "./src/index.ts",
   "scripts": {
     "start": "npm run storybook",
-    "build": "npm run build-style-dictionary && storybook build && mv ./storybook-static ../pxweb2/dist/storybook",
+    "build": "npm run build-style-dictionary && storybook build && move-file ./storybook-static ../pxweb2/dist/storybook",
     "build-style-dictionary": "node ./style-dictionary/build.mjs",
     "storybook": "storybook dev -p 6006",
     "test": "vitest run",

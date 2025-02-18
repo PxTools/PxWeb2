@@ -1,30 +1,116 @@
 @use '../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixvar;
 @use '../../text-styles.scss';
 
+.list-component-wrapper {
+  display: flex;
+  width: 200px;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
 .heading-wrapper {
   padding-bottom: 12px;
+}
+.sub-heading-wrapper {
+  padding-bottom: 4px;
 }
 
 .list-wrapper {
   ul {
+    list-style-position: outside; /* Default: marker outside */
+    padding-left: 0px; /* Adjusts spacing */
+    li {
+      padding-left: 12px;
+      padding-top: 10px;
+    }
+    li::marker {
+      content: '\25CF';
+      font-size: 1em;
+    }
+  }
+}
+
+.list-wrapperx {
+  ul {
     list-style-type: none;
-    padding: 0;
+    padding-inline-start: 0px;
+
     margin: 0;
+    margin-block-start: 0px;
+    li {
+    }
     li::before {
-      content: '•'; /* Custom marker */
+      content: '\25CF';
       padding-inline-end: 12px;
       padding-top: 10px;
     }
   }
 
   ol {
-    list-style-type: lower-latin;
-    padding: 0;
+    list-style: none;
+    counter-reset: number;
+    padding-inline-start: 0px;
     margin: 0;
+    li {
+      counter-increment: number;
+    }
     li::before {
-      content: counter(name);
-      padding-inline-end: 12px;
-      padding-top: 10px;
+      content: counter(number) '.';
+      padding-inline-end: 4px;
+    }
+  }
+}
+
+.list-wrapper-nested {
+  ul {
+    list-style-type: none;
+    padding-inline-start: 21px;
+    margin: 0;
+    margin-block-start: 0px;
+    li {
+    }
+
+    li::marker {
+      content: '\25CB';
+      font-size: 1em;
+    }
+    // li::before {
+    //   content: '\25CB'; /* Custom marker */
+    //   padding-inline-end: 12px;
+    //   padding-top: 10px;
+    // }
+  }
+
+  ol {
+    list-style: none;
+    counter-reset: number;
+    padding-inline-start: 21px;
+    margin: 0;
+    li {
+      counter-increment: number;
+    }
+    li::marker {
+      content: counter(number) '.';
+      padding-inline-end: 4px;
+    }
+  }
+}
+
+.list-wrapper-listgroup {
+  ul {
+    list-style-type: none;
+    padding-inline-start: 21px;
+    margin: 0;
+    margin-block-start: 0px;
+  }
+
+  ol {
+    list-style: none;
+    counter-reset: number;
+    padding-inline-start: 21px;
+    margin: 0;
+    li {
+      counter-increment: number;
     }
   }
 }
