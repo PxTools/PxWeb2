@@ -9,6 +9,7 @@ import {
   PxTableData,
   PxTableMetadata,
   CodeList,
+  Contact,
 } from '@pxweb2/pxweb2-ui';
 
 /**
@@ -43,7 +44,8 @@ export function mapJsonStat2Response(
     label: response.label ?? '',
     description: '',
     updated: response.updated ? new Date(response.updated) : new Date(),
-    variables: mapJsonToVariables(response),
+    variables: mapVariables(response),
+    contacts: mapContacts(response.extension?.contact),
   };
 
   // Create the data object
@@ -117,7 +119,7 @@ function CreateHeading(
  * @param jsonData - The JSONStat2 dataset containing the dimensions.
  * @returns An array of Variable objects.
  */
-function mapJsonToVariables(jsonData: Dataset): Array<Variable> {
+function mapVariables(jsonData: Dataset): Array<Variable> {
   const variables: Variable[] = [];
 
   for (const dimensionKey in jsonData.dimension) {
@@ -134,6 +136,28 @@ function mapJsonToVariables(jsonData: Dataset): Array<Variable> {
   }
 
   return variables;
+}
+
+/**
+ * Maps the contact information from a JSON-stat 2.0 response to an array of Contact objects.
+ *
+ * @param contacts - The contact object from the JSON-stat 2.0 response.
+ * @returns An array of Contact objects.
+ */
+function mapContacts(contacts: any): Contact[] {
+  if (contacts) {
+    return contacts.map((contact: any) => {
+      return {
+        name: contact.name,
+        phone: contact.phone,
+        mail: contact.mail,
+        organization: contact.organization,
+        raw: contact.raw,
+      };
+    });
+  } else {
+    return [];
+  }
 }
 
 /**

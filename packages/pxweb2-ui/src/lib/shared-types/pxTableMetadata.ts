@@ -1,3 +1,4 @@
+import { Contact } from './contact';
 import { Variable } from './variable';
 
 /**
@@ -27,5 +28,9 @@ export type PxTableMetadata = {
   /**
    * The variables that are part of the table.
    */
-  variables: Array<Variable>;
+  variables: Variable[];
+  /**
+   * The contacts that are associated with the table.
+   */
+  contacts: Contact[];
 };
