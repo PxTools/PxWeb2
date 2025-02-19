@@ -37,9 +37,9 @@ export function List({
           <Heading size={'small'}>{heading}</Heading>
         </div>
       )}
-      {listSubType !== 'listgroup' && (
+      {listSubType !== 'listgroup' && subHeading && (
         <div className={cl(classes[`sub-heading-wrapper`])}>
-          {subHeading && <Heading size={'xsmall'}>{subHeading}</Heading>}
+          {<Heading size={'xsmall'}>{subHeading}</Heading>}
         </div>
       )}
       <div className={cl(classes[`list-wrapper${listclassextension}`])}>
