@@ -24,6 +24,7 @@ describe('JsonStat2ResponseMapper', () => {
           },
           country: {
             label: 'Country',
+            note: ['Variable note 1', 'Variable note 2'],
             category: {
               index: {
                 US: 0,
@@ -36,6 +37,9 @@ describe('JsonStat2ResponseMapper', () => {
             },
             extension: {
               elimination: true,
+              noteMandatory: {
+                '0': true,
+              },
               codeLists: [
                 // {
                 //   id: 'cd1',
@@ -97,6 +101,9 @@ describe('JsonStat2ResponseMapper', () => {
       expect(pxTable.metadata.notes?.length).equals(3);
       expect(pxTable.metadata.notes[0].mandatory).equals(true);
       expect(pxTable.metadata.notes[2].mandatory).equals(false);
+      expect(pxTable.metadata.variables[1].notes?.length).equals(2);
+      expect(pxTable.metadata.variables[1].notes?.[0].mandatory).equals(true);
+      expect(pxTable.metadata.variables[1].notes?.[1].mandatory).equals(false);
     });
   });
 });

@@ -220,6 +220,7 @@ function mapDimension(id: string, dimension: any, role: any): Variable | null {
       mandatory: getMandatoryVariable(dimension.extension),
       values: getVariableValues(dimension),
       codeLists: getCodelists(dimension.extension),
+      notes: mapNotes(dimension.note, dimension.extension?.noteMandatory),
     };
 
     return variable;
