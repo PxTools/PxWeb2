@@ -15,6 +15,7 @@ import { getConfig } from './util/config/getConfig';
 import { OpenAPI } from '@pxweb2/pxweb2-api-client';
 import useAccessibility from './context/useAccessibility';
 import useApp from './context/useApp';
+import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 
 export function App() {
   const { isTablet } = useApp();
@@ -166,37 +167,39 @@ export function App() {
   return (
     <>
       <SkipToMain />
-      {!isTablet && <Header />}{' '}
-      <div className={styles.navigationAndContentContainer}>
-        {!isTablet && (
-          <NavigationRail
+      <ErrorBoundary>
+        {!isTablet && <Header />}{' '}
+        <div className={styles.navigationAndContentContainer}>
+          {!isTablet && (
+            <NavigationRail
+              ref={navigationBarRef}
+              onChange={changeSelectedNavView}
+              selected={selectedNavigationView}
+            />
+          )}{' '}
+          <div className={styles.mainContainer}>
+            <Selection
+              selectedNavigationView={selectedNavigationView}
+              selectedTabId={selectedTableId}
+              setSelectedNavigationView={changeSelectedNavView}
+              openedWithKeyboard={openedWithKeyboard}
+              hideMenuRef={hideMenuRef}
+            />
+            <div className={styles.contentAndFooterContainer}>
+              {isTablet && <Header />}{' '}
+              <Presentation selectedTabId={selectedTableId}></Presentation>
+              <Footer />
+            </div>
+          </div>
+        </div>
+        {isTablet && (
+          <NavigationBar
             ref={navigationBarRef}
             onChange={changeSelectedNavView}
             selected={selectedNavigationView}
           />
         )}{' '}
-        <div className={styles.mainContainer}>
-          <Selection
-            selectedNavigationView={selectedNavigationView}
-            selectedTabId={selectedTableId}
-            setSelectedNavigationView={changeSelectedNavView}
-            openedWithKeyboard={openedWithKeyboard}
-            hideMenuRef={hideMenuRef}
-          />
-          <div className={styles.contentAndFooterContainer}>
-            {isTablet && <Header />}{' '}
-            <Presentation selectedTabId={selectedTableId}></Presentation>
-            <Footer />
-          </div>
-        </div>
-      </div>
-      {isTablet && (
-        <NavigationBar
-          ref={navigationBarRef}
-          onChange={changeSelectedNavView}
-          selected={selectedNavigationView}
-        />
-      )}{' '}
+      </ErrorBoundary>
     </>
   );
 }
