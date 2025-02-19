@@ -8,6 +8,8 @@ import {
   VartypeEnum,
   PxTableData,
   PxTableMetadata,
+  CodeList,
+  Contact,
 } from '@pxweb2/pxweb2-ui';
 
 /**
@@ -19,6 +21,11 @@ type counter = {
 };
 
 /**
+ * Internal type. Controls how variable values are displayed (code, value, code + value)
+ */
+type ValueDisplayType = 'code' | 'value' | 'code_value';
+
+/**
  * Maps a JSONStat2 dataset response to a PxTable object.
  * NOTE! At the moment this is not a total mapping of the json-stat2 response.
  * Only the parts that are needed for displaying the table are mapped.
@@ -26,7 +33,10 @@ type counter = {
  * @param response - The JSONStat2 dataset response to be mapped.
  * @returns The mapped PxTable object.
  */
-export function mapJsonStat2Response(response: Dataset): PxTable {
+export function mapJsonStat2Response(
+  response: Dataset,
+  mapData: boolean = true,
+): PxTable {
   // Create the metadata object
   const metadata: PxTableMetadata = {
     id: response.extension?.px?.tableid ?? '',
@@ -34,11 +44,20 @@ export function mapJsonStat2Response(response: Dataset): PxTable {
     label: response.label ?? '',
     description: '',
     updated: response.updated ? new Date(response.updated) : new Date(),
-    variables: mapJsonToVariables(response),
+    variables: mapVariables(response),
+    contacts: mapContacts(response.extension?.contact),
   };
 
   // Create the data object
-  const data: PxTableData = CreateData(response, metadata);
+  let data: PxTableData = {
+    cube: {},
+    variableOrder: [],
+    isLoaded: false,
+  };
+
+  if (mapData) {
+    data = CreateData(response, metadata);
+  }
 
   // Create the PxTable object
   const pxTable: PxTable = {
@@ -100,8 +119,8 @@ function CreateHeading(
  * @param jsonData - The JSONStat2 dataset containing the dimensions.
  * @returns An array of Variable objects.
  */
-function mapJsonToVariables(jsonData: Dataset): Array<Variable> {
-  const variables: Array<Variable> = [];
+function mapVariables(jsonData: Dataset): Array<Variable> {
+  const variables: Variable[] = [];
 
   for (const dimensionKey in jsonData.dimension) {
     // For every dimension record in the json-stat2 object
@@ -120,6 +139,28 @@ function mapJsonToVariables(jsonData: Dataset): Array<Variable> {
 }
 
 /**
+ * Maps the contact information from a JSON-stat 2.0 response to an array of Contact objects.
+ *
+ * @param contacts - The contact object from the JSON-stat 2.0 response.
+ * @returns An array of Contact objects.
+ */
+function mapContacts(contacts: any): Contact[] {
+  if (contacts) {
+    return contacts.map((contact: any) => {
+      return {
+        name: contact.name,
+        phone: contact.phone,
+        mail: contact.mail,
+        organization: contact.organization,
+        raw: contact.raw,
+      };
+    });
+  } else {
+    return [];
+  }
+}
+
+/**
  * Maps a dimension from a JSON-stat 2.0 response to a Variable object.
  *
  * @param id - The identifier of the dimension.
@@ -128,32 +169,125 @@ function mapJsonToVariables(jsonData: Dataset): Array<Variable> {
  * @returns A Variable object if the dimension has valid categories; otherwise, null.
  */
 function mapDimension(id: string, dimension: any, role: any): Variable | null {
-  if (!dimension.category?.index || !dimension.category.label) {
-    return null;
+  if (dimension.category?.index && dimension.category.label) {
+    const variable: Variable = {
+      id: id,
+      label: dimension.label,
+      type: mapVariableTypeEnum(id, role),
+      mandatory: getMandatoryVariable(dimension.extension),
+      values: getVariableValues(dimension),
+      codeLists: getCodelists(dimension.extension),
+    };
+
+    return variable;
   }
 
-  const values: Array<Value> = [];
+  return null;
+}
+
+/**
+ * Maps the values of a dimension from a JSON-stat 2.0 response to an array of Value objects.
+ *
+ * @param dimension - The dimension object from the JSON-stat 2.0 response.
+ * @returns An array of Value objects.
+ */
+function getVariableValues(dimension: any): Value[] {
+  const valueDisplayType: ValueDisplayType = getValueDisplayType(dimension);
+  const values: Value[] = [];
   const indexEntries = Object.entries(dimension.category.index);
-  indexEntries.sort(([valueA], [valueB]) => Number(valueA) - Number(valueB));
+  indexEntries.sort(
+    ([, valueA], [, valueB]) => Number(valueA) - Number(valueB),
+  );
 
   for (const [code] of indexEntries) {
     if (Object.prototype.hasOwnProperty.call(dimension.category.index, code)) {
+      const labelText: string = getLabelText(
+        valueDisplayType,
+        code,
+        dimension.category.label[code],
+      );
+
       values.push({
         code: code,
-        label: dimension.category.label[code],
+        label: labelText,
       });
     }
   }
 
-  const variable: Variable = {
-    id: id,
-    label: dimension.label,
-    type: mapVariableTypeEnum(id, role),
-    mandatory: true, // How shall we handle this? The value for elimination may differ in the jsonstat2-response depending on if all values are seleccted or not...
-    values,
-  };
+  return values;
+}
 
-  return variable;
+/**
+ * Maps the value display type for a dimension.
+ *
+ * @param dimension - The dimension object from the JSON-stat 2.0 response.
+ * @returns The value display type for the dimension.
+ */
+function getValueDisplayType(dimension: any): ValueDisplayType {
+  if (dimension.extension?.show) {
+    if (dimension.extension.show === 'code') {
+      return 'code';
+    } else if (dimension.extension.show === 'value') {
+      return 'value';
+    } else if (dimension.extension.show === 'code_value') {
+      return 'code_value';
+    }
+  }
+  return 'value';
+}
+
+/**
+ * Returns the label text for a value based on the value display type.
+ *
+ * @param valueDisplayType - The value display type for the dimension.
+ * @param code - The code of the value.
+ * @param label - The label of the value.
+ * @returns The label text for the value.
+ */
+function getLabelText(
+  valueDisplayType: ValueDisplayType,
+  code: string,
+  label: string,
+): string {
+  if (valueDisplayType === 'code') {
+    return code;
+  } else if (valueDisplayType === 'value') {
+    return label;
+  } else {
+    return `${code} ${label}`;
+  }
+}
+
+/**
+ * Returns whether a variable is mandatory.
+ *
+ * @param extension - The extension object from the JSON-stat 2.0 response.
+ * @returns True if the variable is mandatory; otherwise, false.
+ */
+function getMandatoryVariable(extension: any): boolean {
+  if (extension?.elimination) {
+    return !extension.elimination;
+  }
+  return true;
+}
+
+/**
+ * Maps the code lists of a dimension from a JSON-stat 2.0 response to an array of CodeList objects.
+ *
+ * @param extension - The extension object from the JSON-stat 2.0 response.
+ * @returns An array of CodeList objects.
+ */
+function getCodelists(extension: any): CodeList[] {
+  if (extension?.codeLists) {
+    return extension.codeLists.map((codeList: any) => {
+      return {
+        id: codeList.id,
+        label: codeList.label,
+      };
+    });
+  }
+
+  return [];
 }
 
 /**
