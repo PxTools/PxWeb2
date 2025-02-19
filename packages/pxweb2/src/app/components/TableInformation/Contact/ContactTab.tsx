@@ -1,7 +1,6 @@
 import cl from 'clsx';
-import classes from './Contact.module.scss';
-import { Contact} from '@pxweb2/pxweb2-ui';
-import { ContactComponent, MissingContact } from './Contact';
+import classes from './ContactTab.module.scss';
+import { Contact, ContactComponent, MissingContact} from '@pxweb2/pxweb2-ui';
 
 export type ContactTabProps = {
   readonly contacts: Contact[];

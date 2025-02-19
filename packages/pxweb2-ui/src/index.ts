@@ -20,6 +20,7 @@ export * from './lib/components/Tabs/Tab';
 export * from './lib/components/Tabs/Tabs';
 export * from './lib/components/Tabs/TabsProvider';
 export * from './lib/components/Tabs/TabPanel';
+export * from './lib/components/Contact/Contact';
 export * from './lib/shared-types/codelist';
 export * from './lib/shared-types/codelistType';
 export * from './lib/shared-types/contact';
