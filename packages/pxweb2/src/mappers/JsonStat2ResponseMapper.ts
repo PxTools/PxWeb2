@@ -10,6 +10,7 @@ import {
   PxTableMetadata,
   CodeList,
   Contact,
+  Note,
 } from '@pxweb2/pxweb2-ui';
 
 /**
@@ -46,6 +47,7 @@ export function mapJsonStat2Response(
     updated: response.updated ? new Date(response.updated) : new Date(),
     variables: mapVariables(response),
     contacts: mapContacts(response.extension?.contact),
+    notes: mapNotes(response.note, response.extension?.noteMandatory),
   };
 
   // Create the data object
@@ -158,6 +160,47 @@ function mapContacts(contacts: any): Contact[] {
   } else {
     return [];
   }
+}
+
+/**
+ * Maps the notes from a JSON-stat 2.0 response to an array of Note objects.
+ *
+ * @param notes - The notes object from the JSON-stat 2.0 response.
+ * @param noteMandatory - The noteMandatory object from the JSON-stat 2.0 response.
+ * @returns An array of Note objects.
+ */
+function mapNotes(notes: any, noteMandatory: any): Note[] {
+  if (notes) {
+    let noteIndex = 0;
+    return notes.map((note: any) => {
+      const mappedNote = {
+        mandatory: getMandatoryNote(noteMandatory, noteIndex),
+        text: note,
+      };
+      noteIndex++;
+      return mappedNote;
+    });
+  } else {
+    return [];
+  }
+}
+
+/**
+ * Returns whether a note is mandatory.
+ *
+ * @param noteMandatory - The noteMandatory object from the JSON-stat 2.0 response.
+ * @param noteIndex - The index of the note.
+ * @returns True if the note is mandatory; otherwise, false.
+ */
+function getMandatoryNote(noteMandatory: any, noteIndex: number): boolean {
+  if (noteMandatory) {
+    if (noteMandatory[noteIndex]) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  return false;
 }
 
 /**
