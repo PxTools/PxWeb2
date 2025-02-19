@@ -14,8 +14,8 @@ export function ContactTab({ contacts }: ContactTabProps) {
 
   return (
     <div className={cl(classes.contactTab)}>
-      {contacts.map((contact) => (
-        <ContactComponent contact={contact} />
+      {contacts.map((contact, index) => (
+        <ContactComponent key={index} contact={contact} />
       ))}
     </div>
   );

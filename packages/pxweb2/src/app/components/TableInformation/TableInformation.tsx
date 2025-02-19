@@ -38,15 +38,6 @@ export function TableInformation({
   // TableInformation tabs should be type in some way. Maybe like this:
   // export type TabType = 'tab-footnotes' | 'tab-definitions' | 'tab-details' | 'tab-contact';
 
-  // This is a test data for contacts. It should be fetched from the table data
-  const contactsTestData = [
-    { name: 'John Doe', mail: 'john.doe@example.com', phone: '123-456-7890', org: 'SCB' },
-    { name: 'Jane Smith', phone: '098-765-4321'},
-    { name: 'Population statistics', org: 'SCB', mail: 'populationstatistics@example.com'},
-    { freeText: 'This is a text which can contain anything. link etc..' },
-    { name: 'Im am a heading', freeText: 'This is a text which can contain anything. link etc..' }
-  ];
-
   return (
     <SideSheet
       heading={t('presentation_page.main_content.about_table.title')}
@@ -141,7 +132,6 @@ export function TableInformation({
             Details
           </TabPanel>
           <TabPanel id="pnl-contact" controlledBy="tab-contact">
-            <ContactTab contacts={contactsTestData} />
             <ContactTab contacts={tableData.data?.metadata.contacts || []} />
           </TabPanel>
         </div>

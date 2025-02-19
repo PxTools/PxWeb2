@@ -9,12 +9,14 @@ export type ContactProps = {
 };
 
 export function ContactComponent({ contact }: ContactProps) {
+  const displayRaw = contact.raw && !contact.name && !contact.mail && !contact.phone && !contact.organization;
+  
   return (
     <div className={cl(classes.contact)}>
       <Heading level='3' size='small' spacing={true}>{contact.name}</Heading>
-      {contact.org && (
+      {contact.organization && (
         <div className={classes.contactItem}>
-          <BodyLong>{contact.org}</BodyLong>
+          <BodyLong>{contact.organization}</BodyLong>
         </div>
       )}
       {contact.mail && (
@@ -29,9 +31,9 @@ export function ContactComponent({ contact }: ContactProps) {
           <Link inline={true} href={`tel:${contact.phone}`}>{contact.phone}</Link>
         </div>
       )}
-      {contact.freeText && (
+      {displayRaw && (
         <div className={classes.contactItem}>
-          <BodyLong>{contact.freeText}</BodyLong>
+          <BodyLong>{contact.raw}</BodyLong>
         </div>
       )}
     </div>

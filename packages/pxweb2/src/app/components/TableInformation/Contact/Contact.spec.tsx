@@ -3,44 +3,52 @@ import { ContactComponent, MissingContact } from './Contact';
 import { Contact } from '@pxweb2/pxweb2-ui';
 
 describe('ContactComponent', () => {
-    const contact: Contact = {
+    it('should display contact.raw if all other properties are undefined', () => {
+      const contact: Contact = {
+        name: '',
+        organization: '',
+        mail: '',
+        phone: '',
+        raw: 'Raw contact information'
+      };
+  
+      const { getByText } = render(<ContactComponent contact={contact} />);
+  
+      expect(getByText('Raw contact information')).toBeTruthy();
+    });
+  
+    it('should not display contact.raw if any other property is defined', () => {
+      const contact: Contact = {
         name: 'John Doe',
-        org: 'Organization',
-        phone: '123456789',
+        organization: '',
+        mail: '',
+        phone: '',
+        raw: 'Raw contact information'
+      };
+  
+      const { queryByText } = render(<ContactComponent contact={contact} />);
+  
+      expect(queryByText('Raw contact information')).toBeFalsy();
+    });
+  
+    it('should display other contact properties if they are defined', () => {
+      const contact: Contact = {
+        name: 'John Doe',
+        organization: 'Organization',
         mail: 'john.doe@example.com',
-        freeText: 'Some free text',
-    };
-
-    it('should render successfully', () => {
-        const { baseElement } = render(<ContactComponent contact={contact} />);
-        expect(baseElement).toBeTruthy();
+        phone: '123-456-7890',
+        raw: 'Raw contact information'
+      };
+  
+      const { getByText, queryByText } = render(<ContactComponent contact={contact} />);
+  
+      expect(getByText('John Doe')).toBeTruthy();
+      expect(getByText('Organization')).toBeTruthy();
+      expect(getByText('john.doe@example.com')).toBeTruthy();
+      expect(getByText('123-456-7890')).toBeTruthy();
+      expect(queryByText('Raw contact information')).toBeFalsy();
     });
-
-    it('should render contact name', () => {
-        const { getByText } = render(<ContactComponent contact={contact} />);
-        expect(getByText('John Doe')).toBeTruthy();
-    });
-
-    it('should render contact organization', () => {
-        const { getByText } = render(<ContactComponent contact={contact} />);
-        expect(getByText('Organization')).toBeTruthy();
-    });
-
-    it('should render contact phone', () => {
-        const { getByText } = render(<ContactComponent contact={contact} />);
-        expect(getByText('123456789')).toBeTruthy();
-    });
-
-    it('should render contact email', () => {
-        const { getByText } = render(<ContactComponent contact={contact} />);
-        expect(getByText('john.doe@example.com')).toBeTruthy();
-    });
-
-    it('should render contact free text', () => {
-        const { getByText } = render(<ContactComponent contact={contact} />);
-        expect(getByText('Some free text')).toBeTruthy();
-    });
-});
+  });
 
 describe('MissingContact', () => {
     it('should render missing contact message', () => {
