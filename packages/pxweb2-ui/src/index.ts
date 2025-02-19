@@ -22,6 +22,7 @@ export * from './lib/components/Tabs/TabsProvider';
 export * from './lib/components/Tabs/TabPanel';
 export * from './lib/shared-types/codelist';
 export * from './lib/shared-types/codelistType';
+export * from './lib/shared-types/contact';
 export * from './lib/shared-types/note';
 export * from './lib/shared-types/pxTable';
 export * from './lib/shared-types/pxTableMetadata';
