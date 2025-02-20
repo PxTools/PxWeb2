@@ -121,13 +121,13 @@ function CreateHeading(
  * @param jsonData - The JSONStat2 dataset containing the dimensions.
  * @returns An array of Variable objects.
  */
-function mapVariables(jsonData: Dataset): Array<Variable> {
+function mapVariables(jsonData: Dataset): Variable[] {
   const variables: Variable[] = [];
 
   for (const dimensionKey in jsonData.dimension) {
     // For every dimension record in the json-stat2 object
     if (
-      Object.prototype.hasOwnProperty.call(jsonData.dimension, dimensionKey) // dimensionKey === variable id
+      Object.hasOwn(jsonData.dimension, dimensionKey) // dimensionKey === variable id
     ) {
       const dimension = jsonData.dimension[dimensionKey];
       const variable = mapDimension(dimensionKey, dimension, jsonData.role);
@@ -244,7 +244,7 @@ function mapVariableValues(dimension: any): Value[] {
   );
 
   for (const [code] of indexEntries) {
-    if (Object.prototype.hasOwnProperty.call(dimension.category.index, code)) {
+    if (Object.hasOwn(dimension.category.index, code)) {
       const labelText: string = getLabelText(
         valueDisplayType,
         code,
