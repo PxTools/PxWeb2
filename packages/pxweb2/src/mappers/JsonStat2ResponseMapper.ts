@@ -12,6 +12,7 @@ import {
   Contact,
   Note,
 } from '@pxweb2/pxweb2-ui';
+import { get } from 'lodash';
 
 /**
  * Internal type. Used to keep track of index in json-stat2 value array
@@ -282,25 +283,57 @@ function mapValueNotes(dimension: any, mappedValues: Value[]): void {
         for (let i = 0; i < noteTexts.length; i++) {
           let newNote: Note = {
             text: noteTexts[i],
-            mandatory: false,
+            mandatory: getMandatoryValueNote(
+              dimension.extension?.categoryNoteMandatory,
+              code,
+              i,
+            ),
           };
 
-          if (dimension.extension?.categoryNoteMandatory) {
-            if (dimension.extension?.categoryNoteMandatory[code][i] === true) {
-              newNote.mandatory = true;
-            }
-          }
-
-          const mappedValue = mappedValues.find((v) => v.code === code);
-          if (mappedValue) {
-            if (!mappedValue.notes) {
-              mappedValue.notes = [];
-            }
-            mappedValue.notes?.push(newNote);
-          }
+          addNoteToItsValue(code, newNote, mappedValues);
         }
       }
     }
+  }
+}
+
+/**
+ * Returns whether a note at value level is mandatory.
+ *
+ * @param categoryNoteMandatory - The categoryNoteMandatory object from the JSON-stat 2.0 response.
+ * @param code - The code of the value.
+ * @param noteIndex - The index of the note.
+ * @returns True if the note is mandatory; otherwise, false.
+ */
+function getMandatoryValueNote(
+  categoryNoteMandatory: any,
+  code: string,
+  noteIndex: number,
+): boolean {
+  if (categoryNoteMandatory) {
+    if (categoryNoteMandatory[code]) {
+      if (categoryNoteMandatory[code][noteIndex]) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+/**
+ * Adds a note to its corresponding value.
+ *
+ * @param code - The code of the value.
+ * @param note - The note to add.
+ * @param values - The array of Value objects to add the note to.
+ */
+function addNoteToItsValue(code: string, note: Note, values: Value[]): void {
+  const mappedValue = values.find((v) => v.code === code);
+  if (mappedValue) {
+    if (!mappedValue.notes) {
+      mappedValue.notes = [];
+    }
+    mappedValue.notes?.push(note);
   }
 }
 
