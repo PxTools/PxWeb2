@@ -12,5 +12,5 @@ export type Value = {
   /**
    * Optional notes that are associated with the value
    */
-  notes?: Array<Note>;
+  notes?: Note[];
 };

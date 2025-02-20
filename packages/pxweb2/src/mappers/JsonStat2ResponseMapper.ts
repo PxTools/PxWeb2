@@ -218,7 +218,7 @@ function mapDimension(id: string, dimension: any, role: any): Variable | null {
       label: dimension.label,
       type: mapVariableTypeEnum(id, role),
       mandatory: getMandatoryVariable(dimension.extension),
-      values: getVariableValues(dimension),
+      values: mapVariableValues(dimension),
       codeLists: getCodelists(dimension.extension),
       notes: mapNotes(dimension.note, dimension.extension?.noteMandatory),
     };
@@ -235,7 +235,7 @@ function mapDimension(id: string, dimension: any, role: any): Variable | null {
  * @param dimension - The dimension object from the JSON-stat 2.0 response.
  * @returns An array of Value objects.
  */
-function getVariableValues(dimension: any): Value[] {
+function mapVariableValues(dimension: any): Value[] {
   const valueDisplayType: ValueDisplayType = getValueDisplayType(dimension);
   const values: Value[] = [];
   const indexEntries = Object.entries(dimension.category.index);
@@ -251,14 +251,57 @@ function getVariableValues(dimension: any): Value[] {
         dimension.category.label[code],
       );
 
-      values.push({
-        code: code,
-        label: labelText,
-      });
+      const mappedValue: Value = { code: code, label: labelText };
+      values.push(mappedValue);
     }
   }
 
+  mapValueNotes(dimension, values);
+
   return values;
+}
+
+/**
+ * Maps the notes at value level for the given dimension.
+ *
+ * @param dimension - The dimension object from the JSON-stat 2.0 response.
+ * @param mappedValues - The array of Value objects to map the notes to.
+ */
+function mapValueNotes(dimension: any, mappedValues: Value[]): void {
+  if (
+    dimension.category?.index &&
+    dimension.category.label &&
+    dimension.category.note
+  ) {
+    const noteEntries = Object.entries(dimension.category.note);
+
+    for (const [code] of noteEntries) {
+      if (Object.hasOwn(dimension.category.note, code)) {
+        const noteTexts = dimension.category.note[code];
+
+        for (let i = 0; i < noteTexts.length; i++) {
+          let newNote: Note = {
+            text: noteTexts[i],
+            mandatory: false,
+          };
+
+          if (dimension.extension?.categoryNoteMandatory) {
+            if (dimension.extension?.categoryNoteMandatory[code][i] === true) {
+              newNote.mandatory = true;
+            }
+          }
+
+          const mappedValue = mappedValues.find((v) => v.code === code);
+          if (mappedValue) {
+            if (!mappedValue.notes) {
+              mappedValue.notes = [];
+            }
+            mappedValue.notes?.push(newNote);
+          }
+        }
+      }
+    }
+  }
 }
 
 /**
