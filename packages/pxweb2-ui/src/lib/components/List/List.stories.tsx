@@ -144,7 +144,14 @@ export const OrderedAndUnordered: StoryFn<typeof List> = () => {
             <ListItem>Nested item2.3</ListItem>
           </List>
         </ListItem>
-        <ListItem>item3</ListItem>
+        <ListItem>
+          item3
+          <List listType="ol">
+            <ListItem>Nested item3.1</ListItem>
+            <ListItem>Nested item3.2</ListItem>
+            <ListItem>Nested item3.3</ListItem>
+          </List>
+        </ListItem>
       </List>
 
       <h1>

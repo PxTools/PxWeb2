@@ -30,101 +30,276 @@
 }
 
 .list-wrapper {
-  color: var(--px-color-text-default);
-  ul {
-    list-style: none;
-    list-style-position: outside;
-    padding-inline-start: 12px;
-    margin-left: -4px;
-    margin-bottom: 0px;
-    margin-top: 0px;
-    li {
-      padding-left: 12px;
-      margin-top: 4px;
-      margin-bottom: 4px;
-      // margin-left: -4px;
-    }
-    li::marker {
-      content: '\25CF';
-      font-size: 0.8rem;
-      line-height: 1.75rem;
-      margin-bottom: 4px;
-    }
-    //test
-    li ul {
-      // margin-left: -4px;
-      padding-left: 12px;
-      // color: red;
-    }
-    li ul li::marker {
-      content: '\25CB';
-      font-size: 0.8rem;
-    }
-
-    li ol {
-      // margin-left: -4px;
-      padding-left: 12px;
-      // color: rgb(28, 235, 111);
-    }
-  }
+  ul,
   ol {
     list-style: none;
-    list-style-position: outside; /* Default: marker outside */
+    padding: 0;
     counter-reset: number;
-    padding-inline-start: 12px;
-    margin-left: -0px;
-    margin-bottom: 0px;
-    margin-top: 0px;
-    li {
-      padding-left: 12px;
-      counter-increment: number;
-      margin-top: 4px;
-      margin-bottom: 4px;
-    }
-    li::marker {
-      content: counter(number) '.';
-    }
-    //test
-    li ol {
-      // margin-left: -0px;
-      padding-left: 12px;
-      // color: rgb(214, 29, 147);
-    }
-    li ul {
-      // margin-left: -0px;
-      padding-left: 12px;
-      // color: rgb(162, 233, 9);
-    }
-    li ul li::marker {
-      content: '\25CB';
-      font-size: 0.8rem;
-    }
-    //test
   }
+
+  li {
+    display: block;
+    position: relative;
+    padding-left: 22px;
+    margin: 8px 0;
+  }
+
+  li:first-child {
+    margin-top: 0;
+  }
+
+  li::before {
+    position: absolute;
+    left: 0;
+    // transform: translateY(-2px);
+  }
+
+  ul li::before {
+    content: '\25CF';
+    transform: translateY(-2px);
+  }
+
+  ul li ul li::before,
+  ol li ul li::before {
+    content: '\25CB';
+  }
+
+  ol li {
+    counter-increment: number;
+  }
+
+  ol li::before,
+  ol li ol li::before {
+    content: counter(number) '.';
+  }
+
+  // ul li ol li {
+  //   color: rgb(154, 236, 13);
+  // }
+
+  // ol li {
+  //   color: blue;
+  // }
+
+  // ol li ol li {
+  //   color: red;
+  // }
+
+  // ol li ul li {
+  //   color: green;
+  // }
 }
 
-// .list-wrapper-nestedx {
+//
+// .list-wrapper-big-ok {
 //   ul {
-//     list-style-type: none;
-//     padding-inline-start: 5px;
-//     //margin-block-start: 0px;
+//     list-style: none;
+//     padding: 0;
+//   }
+//   ul li {
+//     display: block; /* Change to block to ensure nested lists appear below */
+//     position: relative; /* For positioning the marker */
+//     padding-left: 22px; /* Space for the marker */
 
-//     li {
-//       margin-left: 0px;
-//     }
-//     li::marker {
-//       content: '\25CB';
-//       font-size: 1em;
-//     }
+//     margin-top: 4px;
+//     margin-bottom: 4px;
+//   }
+
+//   ul li:first-child {
+//     margin-top: 0;
+//   }
+//   ul li::before {
+//     content: '\25CF';
+//     position: absolute; /* Position marker absolutely */
+//     left: 0; /* Align marker to the left */
+//     transform: translateY(-2px); /* Adjusts the marker 2px higher */
+//   }
+//   /* Styles for nested list */
+
+//   ul li ul li {
+//     display: block; /* Ensure nested list items are block elements */
+//     position: relative; /* For positioning the marker */
+//     padding-left: 22px; /* Space for the marker */
+//   }
+//   ul li ul li::before {
+//     content: '\25CB';
+//     position: absolute; /* Position marker absolutely */
+//     left: 0; /* Align marker to the left */
+//     transform: translateY(-2px); /* Adjusts the marker 2px higher */
+//   }
+
+//   ul li ol {
+//     //padding-left: 20px; /* Indent nested list */
+//     counter-reset: number;
+//   }
+//   ul li ol li {
+//     display: block; /* Ensure nested list items are block elements */
+//     position: relative; /* For positioning the marker */
+//     padding-left: 22px; /* Space for the marker */
+//     counter-increment: number;
+//     color: rgb(154, 236, 13);
+//   }
+//   ul li ol li::before {
+//     content: counter(number) '.';
+//     position: absolute; /* Position marker absolutely */
+//     left: 0; /* Align marker to the left */
+//     transform: translateY(-2px); /* Adjusts the marker 2px higher */
+//   }
+
+//   ol li ul {
+//     list-style: none;
+//     padding: 0;
+//     counter-reset: number;
+//   }
+//   ol li ul li {
+//     display: block; /* Ensure nested list items are block elements */
+//     position: relative; /* For positioning the marker */
+//     padding-left: 22px; /* Space for the marker */
+
+//     color: green;
+//   }
+//   ol li ul li::before {
+//     content: '\25CB';
+//     position: absolute; /* Position marker absolutely */
+//     left: 0; /* Align marker to the left */
+//     transform: translateY(-2px); /* Adjusts the marker 2px higher */
 //   }
 
 //   ol {
 //     list-style: none;
+//     padding: 0;
 //     counter-reset: number;
-//     padding-inline-start: 21px;
+//   }
+//   ol li {
+//     display: block; /* Change to block to ensure nested lists appear below */
+//     position: relative; /* For positioning the marker */
+//     padding-left: 22px; /* Space for the marker */
+//     counter-increment: number;
+//     color: blue;
 
+//     margin-top: 4px;
+//     margin-bottom: 4px;
+//   }
+//   ol li:first-child {
+//     margin-top: 0;
+//   }
+//   ol li::before {
+//     content: counter(number) '.';
+//     position: absolute; /* Position marker absolutely */
+//     left: 0; /* Align marker to the left */
+//     transform: translateY(-2px); /* Adjusts the marker 2px higher */
+//   }
+//   /* Styles for nested list */
+//   ol li ol {
+//     //padding-left: 20px; /* Indent nested list */
+//     counter-reset: number;
+//   }
+//   ol li ol li {
+//     display: block; /* Ensure nested list items are block elements */
+//     position: relative; /* For positioning the marker */
+//     padding-left: 22px; /* Space for the marker */
+//     counter-increment: number;
+//     color: red;
+//   }
+//   ol li ol li::before {
+//     content: counter(number) '.';
+//     position: absolute; /* Position marker absolutely */
+//     left: 0; /* Align marker to the left */
+//     transform: translateY(-2px); /* Adjusts the marker 2px higher */
+//   }
+
+//   ol li ul {
+//     list-style: none;
+//     padding: 0;
+//     counter-reset: number;
+//   }
+//   ol li ul li {
+//     display: block; /* Ensure nested list items are block elements */
+//     position: relative; /* For positioning the marker */
+//     padding-left: 22px; /* Space for the marker */
+
+//     color: green;
+//   }
+//   ol li ul li::before {
+//     content: '\25CB';
+//     position: absolute; /* Position marker absolutely */
+//     left: 0; /* Align marker to the left */
+//     transform: translateY(-2px); /* Adjusts the marker 2px higher */
+//   }
+// }
+
+//
+
+// .list-wrapperx {
+//   color: var(--px-color-text-default);
+//   ul {
+//     list-style: none;
+//     list-style-position: outside;
+//     padding-inline-start: 12px;
+//     margin-left: -4px;
+//     margin-bottom: 0px;
+//     margin-top: 0px;
+//     li {
+//       padding-left: 22px;
+//       margin-top: 4px;
+//       margin-bottom: 4px;
+//       // margin-left: -4px;
+//     }
+//     li::marker {
+//       content: '\25CF';
+//       font-size: 0.8rem;
+//       line-height: 1.75rem;
+//       margin-bottom: 4px;
+//     }
+//     //test
+//     li ul {
+//       // margin-left: -4px;
+//       padding-left: 12px;
+//       // color: red;
+//     }
+//     li ul li::marker {
+//       content: '\25CB';
+//       font-size: 0.8rem;
+//     }
+
+//     li ol {
+//       // margin-left: -4px;
+//       padding-left: 12px;
+//       // color: rgb(28, 235, 111);
+//     }
+//   }
+//   ol {
+//     list-style: none;
+//     list-style-position: outside; /* Default: marker outside */
+//     counter-reset: number;
+//     padding-inline-start: 12px;
+//     margin-left: -0px;
+//     margin-bottom: 0px;
+//     margin-top: 0px;
+//     li {
+//       padding-left: 12px;
+//       counter-increment: number;
+//       margin-top: 4px;
+//       margin-bottom: 4px;
+//     }
 //     li::marker {
 //       content: counter(number) '.';
 //     }
+//     //test
+//     li ol {
+//       // margin-left: -0px;
+//       padding-left: 12px;
+//       // color: rgb(214, 29, 147);
+//     }
+//     li ul {
+//       // margin-left: -0px;
+//       padding-left: 12px;
+//       // color: rgb(162, 233, 9);
+//     }
+//     li ul li::marker {
+//       content: '\25CB';
+//       font-size: 0.8rem;
+//     }
+//     //test
 //   }
 // }
