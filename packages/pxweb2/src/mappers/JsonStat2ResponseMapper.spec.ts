@@ -34,12 +34,28 @@ describe('JsonStat2ResponseMapper', () => {
                 US: 'United States',
                 UK: 'United Kingdom',
               },
+              note: {
+                US: [
+                  'This note is NOT mandatory. Value note for US',
+                  'This note is mandatory! Value note for US',
+                ],
+                UK: ['This note is mandatory! Value note for UK'],
+              },
             },
             extension: {
               elimination: true,
               noteMandatory: {
                 '0': true,
               },
+              categoryNoteMandatory: {
+                US: {
+                    "1": true
+                },
+                UK: {
+                    "0": true
+                }
+            },
+
               codeLists: [
                 // {
                 //   id: 'cd1',
@@ -104,6 +120,10 @@ describe('JsonStat2ResponseMapper', () => {
       expect(pxTable.metadata.variables[1].notes?.length).equals(2);
       expect(pxTable.metadata.variables[1].notes?.[0].mandatory).equals(true);
       expect(pxTable.metadata.variables[1].notes?.[1].mandatory).equals(false);
+      expect(pxTable.metadata.variables[1].values[0].notes?.length).equals(2);
+      expect(pxTable.metadata.variables[1].values[1].notes?.length).equals(1);
+      expect(pxTable.metadata.variables[1].values[0].notes?.[0].mandatory).equals(false);
+      expect(pxTable.metadata.variables[1].values[0].notes?.[1].mandatory).equals(true);
     });
   });
 });
