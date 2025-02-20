@@ -49,12 +49,12 @@ describe('JsonStat2ResponseMapper', () => {
               },
               categoryNoteMandatory: {
                 US: {
-                    "1": true
+                  '1': true,
                 },
                 UK: {
-                    "0": true
-                }
-            },
+                  '0': true,
+                },
+              },
 
               codeLists: [
                 // {
@@ -122,8 +122,12 @@ describe('JsonStat2ResponseMapper', () => {
       expect(pxTable.metadata.variables[1].notes?.[1].mandatory).equals(false);
       expect(pxTable.metadata.variables[1].values[0].notes?.length).equals(2);
       expect(pxTable.metadata.variables[1].values[1].notes?.length).equals(1);
-      expect(pxTable.metadata.variables[1].values[0].notes?.[0].mandatory).equals(false);
-      expect(pxTable.metadata.variables[1].values[0].notes?.[1].mandatory).equals(true);
+      expect(
+        pxTable.metadata.variables[1].values[0].notes?.[0].mandatory,
+      ).equals(false);
+      expect(
+        pxTable.metadata.variables[1].values[0].notes?.[1].mandatory,
+      ).equals(true);
     });
   });
 });
