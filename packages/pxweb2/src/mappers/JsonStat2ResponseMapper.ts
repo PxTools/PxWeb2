@@ -12,7 +12,6 @@ import {
   Contact,
   Note,
 } from '@pxweb2/pxweb2-ui';
-import { get } from 'lodash';
 
 /**
  * Internal type. Used to keep track of index in json-stat2 value array
