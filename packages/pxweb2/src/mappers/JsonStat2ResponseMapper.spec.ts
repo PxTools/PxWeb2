@@ -75,12 +75,48 @@ describe('JsonStat2ResponseMapper', () => {
               ],
             },
           },
+          ContentsCode: {
+            label: 'observations',
+            category: {
+              index: {
+                CONTENT1: 0,
+                CONTENT2: 1,
+              },
+              label: {
+                CONTENT1: 'Population',
+                CONTENT2: 'Population growth',
+              },
+              unit: {
+                CONTENT1: {
+                  base: 'number of persons',
+                  decimals: 0,
+                },
+                CONTENT2: {
+                  base: 'number of persons',
+                  decimals: 1,
+                },
+              },
+            },
+            extension: {
+              elimination: false,
+              refperiod: {
+                CONTENT1: '31 December each year',
+                CONTENT2: '1 January each year',
+              },
+              show: 'value',
+              codeLists: [],
+            },
+          },
         },
-        value: [100, 200, 300, 400],
+        value: [100, 200, 300, 400, 500, 600, 700, 800],
         version: Dataset.version._2_0,
         class: ClassType.DATASET,
-        id: ['Time', 'Country'],
-        size: [2, 2],
+        role: {
+          time: ['Time'],
+          metric: ['ContentsCode'],
+        },
+        id: ['Time', 'Country', 'ContentsCode'],
+        size: [2, 2, 2],
         note: ['Note 1', 'Note 2', 'Note 3'],
         extension: {
           noteMandatory: {
@@ -139,7 +175,7 @@ describe('JsonStat2ResponseMapper', () => {
       expect(pxTable.metadata.infofile).equals('TEST01');
       expect(pxTable.metadata.subjectCode).equals('POP');
       expect(pxTable.metadata.subjectArea).equals('Population');
-      expect(pxTable.metadata.variables.length).equals(2);
+      expect(pxTable.metadata.variables.length).equals(3);
       expect(pxTable.metadata.variables[0].values.length).equals(2);
       expect(pxTable.metadata.variables[0].mandatory).equals(true);
       expect(pxTable.metadata.variables[0].codeLists?.length).equals(0);
@@ -160,6 +196,15 @@ describe('JsonStat2ResponseMapper', () => {
       expect(
         pxTable.metadata.variables[1].values[0].notes?.[1].mandatory,
       ).equals(true);
+      expect(pxTable.metadata.variables[2].values[0].contentInfo?.unit).equals(
+        'number of persons',
+      );
+      expect(
+        pxTable.metadata.variables[2].values[0].contentInfo?.referencePeriod,
+      ).equals('31 December each year');
+      expect(
+        pxTable.metadata.variables[2].values[1].contentInfo?.decimals,
+      ).equals(1);
     });
   });
 });
