@@ -50,6 +50,10 @@
     margin-top: 0;
   }
 
+  li:last-child {
+    margin-bottom: 0;
+  }
+
   li::before {
     position: absolute;
     left: 0;
@@ -59,7 +63,7 @@
   ul li::before {
     content: '\25CF';
     font-size: 0.8rem;
-    transform: translateY(-2px);
+    transform: translateY(-1.5px);
   }
 
   ul li ul li::before,
