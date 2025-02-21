@@ -35,6 +35,8 @@
     list-style: none;
     padding: 0;
     counter-reset: number;
+    margin-block-start: 0px;
+    margin-block-end: 0px;
   }
 
   li {
@@ -56,12 +58,14 @@
 
   ul li::before {
     content: '\25CF';
+    font-size: 0.8rem;
     transform: translateY(-2px);
   }
 
   ul li ul li::before,
   ol li ul li::before {
     content: '\25CB';
+    font-size: 0.8rem;
   }
 
   ol li {
