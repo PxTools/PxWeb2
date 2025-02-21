@@ -12,6 +12,7 @@ import {
   Contact,
   Note,
 } from '@pxweb2/pxweb2-ui';
+import { ContentInfo } from 'packages/pxweb2-ui/src/lib/shared-types/contentInfo';
 
 /**
  * Internal type. Used to keep track of index in json-stat2 value array
@@ -224,12 +225,15 @@ function getMandatoryNote(noteMandatory: any, noteIndex: number): boolean {
  */
 function mapDimension(id: string, dimension: any, role: any): Variable | null {
   if (dimension.category?.index && dimension.category.label) {
+    const variableType = mapVariableTypeEnum(id, role);
+    const isContentVariable = variableType === VartypeEnum.CONTENTS_VARIABLE;
+
     const variable: Variable = {
       id: id,
       label: dimension.label,
-      type: mapVariableTypeEnum(id, role),
+      type: variableType,
       mandatory: getMandatoryVariable(dimension.extension),
-      values: mapVariableValues(dimension),
+      values: mapVariableValues(dimension, isContentVariable),
       codeLists: getCodelists(dimension.extension),
       notes: mapNotes(dimension.note, dimension.extension?.noteMandatory),
     };
@@ -244,9 +248,13 @@ function mapDimension(id: string, dimension: any, role: any): Variable | null {
  * Maps the values of a dimension from a JSON-stat 2.0 response to an array of Value objects.
  *
  * @param dimension - The dimension object from the JSON-stat 2.0 response.
+ * @param isContentVariable - If the variable is a content variable or not.
  * @returns An array of Value objects.
  */
-function mapVariableValues(dimension: any): Value[] {
+function mapVariableValues(
+  dimension: any,
+  isContentVariable: boolean,
+): Value[] {
   const valueDisplayType: ValueDisplayType = getValueDisplayType(dimension);
   const values: Value[] = [];
   const indexEntries = Object.entries(dimension.category.index);
@@ -263,6 +271,11 @@ function mapVariableValues(dimension: any): Value[] {
       );
 
       const mappedValue: Value = { code: code, label: labelText };
+
+      if (isContentVariable) {
+        mappedValue.contentInfo = mapContentInfo(dimension, code);
+      }
+
       values.push(mappedValue);
     }
   }
@@ -270,6 +283,23 @@ function mapVariableValues(dimension: any): Value[] {
   mapValueNotes(dimension, values);
 
   return values;
+}
+
+/**
+ * Maps the content information for a value.
+ *
+ * @param dimension - The dimension object from the JSON-stat 2.0 response.
+ * @param code - The code of the value.
+ * @returns The ContentInfo object for the value.
+ */
+function mapContentInfo(dimension: any, code: string): ContentInfo {
+  const unit = dimension.category.unit?.[code] ?? '';
+
+  return {
+    unit: unit.base,
+    decimals: unit.decimals,
+    referencePeriod: dimension.extension?.refperiod?.[code] ?? '',
+  };
 }
 
 /**
