@@ -338,11 +338,7 @@ function mapValueNotes(dimension: any, mappedValues: Value[]): void {
         for (let i = 0; i < noteTexts.length; i++) {
           let newNote: Note = {
             text: noteTexts[i],
-            mandatory: getMandatoryValueNote(
-              dimension.extension,
-              code,
-              i,
-            ),
+            mandatory: getMandatoryValueNote(dimension.extension, code, i),
           };
 
           addNoteToItsValue(code, newNote, mappedValues);
