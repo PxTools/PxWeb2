@@ -8,7 +8,7 @@ export type Variable = {
   label: string;
   type: VartypeEnum;
   mandatory: boolean;
-  values: Array<Value>;
-  codeLists?: Array<CodeList>;
-  notes?: Array<Note>;
+  values: Value[];
+  codeLists?: CodeList[];
+  notes?: Note[];
 };
