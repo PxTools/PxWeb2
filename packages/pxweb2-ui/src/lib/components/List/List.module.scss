@@ -65,14 +65,12 @@
     content: '\25CF'/ '';
     font-size: 0.8rem;
     transform: translateY(-1.5px);
-    aria-hidden: true;
   }
 
   ul li ul li::before,
   ol li ul li::before {
-    content: '\25CB';
+    content: '\25CB'/ '';
     font-size: 0.8rem;
-    aria-hidden: true;
   }
 
   ol li {
