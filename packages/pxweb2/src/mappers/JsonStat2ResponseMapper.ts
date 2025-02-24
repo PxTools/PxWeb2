@@ -3,6 +3,8 @@ import {
   Contact as apiContact,
   jsonstat_note,
   jsonstat_noteMandatory,
+  extension_dimension,
+  CodeListInformation,
 } from '@pxweb2/pxweb2-api-client';
 import {
   Dimensions,
@@ -266,7 +268,9 @@ function mapVariableValues(
   dimension: any,
   isContentVariable: boolean,
 ): Value[] {
-  const valueDisplayType: ValueDisplayType = getValueDisplayType(dimension);
+  const valueDisplayType: ValueDisplayType = getValueDisplayType(
+    dimension.extension,
+  );
   const values: Value[] = [];
   const indexEntries = Object.entries(dimension.category.index);
   indexEntries.sort(
@@ -391,16 +395,18 @@ function addNoteToItsValue(code: string, note: Note, values: Value[]): void {
 /**
  * Maps the value display type for a dimension.
  *
- * @param dimension - The dimension object from the JSON-stat 2.0 response.
+ * @param dimensionExtension - The dimension extension object from the JSON-stat 2.0 response.
  * @returns The value display type for the dimension.
  */
-function getValueDisplayType(dimension: any): ValueDisplayType {
-  if (dimension.extension?.show) {
-    if (dimension.extension.show === 'code') {
+function getValueDisplayType(
+  dimensionExtension: extension_dimension,
+): ValueDisplayType {
+  if (dimensionExtension?.show) {
+    if (dimensionExtension.show === 'code') {
       return 'code';
-    } else if (dimension.extension.show === 'value') {
+    } else if (dimensionExtension.show === 'value') {
       return 'value';
-    } else if (dimension.extension.show === 'code_value') {
+    } else if (dimensionExtension.show === 'code_value') {
       return 'code_value';
     }
   }
@@ -432,12 +438,14 @@ function getLabelText(
 /**
  * Returns whether a variable is mandatory.
  *
- * @param extension - The extension object from the JSON-stat 2.0 response.
+ * @param dimensionExtension - The dimension extension object from the JSON-stat 2.0 response.
  * @returns True if the variable is mandatory; otherwise, false.
  */
-function getMandatoryVariable(extension: any): boolean {
-  if (extension?.elimination) {
-    return !extension.elimination;
+function getMandatoryVariable(
+  dimensionExtension: extension_dimension,
+): boolean {
+  if (dimensionExtension?.elimination) {
+    return !dimensionExtension.elimination;
   }
   return true;
 }
@@ -445,12 +453,12 @@ function getMandatoryVariable(extension: any): boolean {
 /**
  * Maps the code lists of a dimension from a JSON-stat 2.0 response to an array of CodeList objects.
  *
- * @param extension - The extension object from the JSON-stat 2.0 response.
+ * @param dimensionExtension - The dimension extension object from the JSON-stat 2.0 response.
  * @returns An array of CodeList objects.
  */
-function getCodelists(extension: any): CodeList[] {
-  if (extension?.codeLists) {
-    return extension.codeLists.map((codeList: any) => {
+function getCodelists(dimensionExtension: extension_dimension): CodeList[] {
+  if (dimensionExtension?.codeLists) {
+    return dimensionExtension.codeLists.map((codeList: CodeListInformation) => {
       return {
         id: codeList.id,
         label: codeList.label,
