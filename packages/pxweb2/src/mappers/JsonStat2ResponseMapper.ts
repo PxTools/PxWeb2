@@ -1,4 +1,9 @@
-import { Dataset } from '@pxweb2/pxweb2-api-client';
+import {
+  Dataset,
+  Contact as apiContact,
+  jsonstat_note,
+  jsonstat_noteMandatory,
+} from '@pxweb2/pxweb2-api-client';
 import {
   Dimensions,
   PxTable,
@@ -158,14 +163,14 @@ function mapVariables(jsonData: Dataset): Variable[] {
  * @param contacts - The contact object from the JSON-stat 2.0 response.
  * @returns An array of Contact objects.
  */
-function mapContacts(contacts: any): Contact[] {
+function mapContacts(contacts: apiContact[] | undefined): Contact[] {
   if (contacts) {
-    return contacts.map((contact: any) => {
+    return contacts.map((contact: apiContact) => {
       return {
         name: contact.name,
         phone: contact.phone,
         mail: contact.mail,
-        organization: contact.organization,
+        //organization: contact.organization,
         raw: contact.raw,
       };
     });
@@ -181,10 +186,13 @@ function mapContacts(contacts: any): Contact[] {
  * @param noteMandatory - The noteMandatory object from the JSON-stat 2.0 response.
  * @returns An array of Note objects.
  */
-function mapNotes(notes: any, noteMandatory: any): Note[] {
+function mapNotes(
+  notes: jsonstat_note | undefined,
+  noteMandatory: jsonstat_noteMandatory | undefined,
+): Note[] {
   if (notes) {
     let noteIndex = 0;
-    return notes.map((note: any) => {
+    return notes.map((note: string) => {
       const mappedNote = {
         mandatory: getMandatoryNote(noteMandatory, noteIndex),
         text: note,
@@ -204,7 +212,10 @@ function mapNotes(notes: any, noteMandatory: any): Note[] {
  * @param noteIndex - The index of the note.
  * @returns True if the note is mandatory; otherwise, false.
  */
-function getMandatoryNote(noteMandatory: any, noteIndex: number): boolean {
+function getMandatoryNote(
+  noteMandatory: jsonstat_noteMandatory | undefined,
+  noteIndex: number,
+): boolean {
   if (noteMandatory) {
     if (noteMandatory[noteIndex]) {
       return true;
