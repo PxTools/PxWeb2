@@ -178,6 +178,8 @@ interface Resources {
           contact: {
             title: 'Contact';
             description: 'Description text...';
+            missing_heading: 'No contact information';
+            missing_text: 'The table has no contact information';
           };
         };
         related: {

@@ -176,7 +176,9 @@
         },
         "contact": {
           "title": "اتصال",
-          "description": "نص الوصف..."
+          "description": "نص الوصف...",
+          "missing_heading": "لا يوجد معلومات الاتصال",
+          "missing_text": "الجدول ليس لديه معلومات الاتصال."
         }
       },
       "related": {
