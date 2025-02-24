@@ -4,7 +4,7 @@ COPY . ./
 RUN npm ci && npm run build
 
 # production environment
-FROM nginxinc/nginx-unprivileged:1.27.3-alpine3.20-slim
+FROM nginxinc/nginx-unprivileged:1.27.3-alpine-slim
 COPY --from=build /app/packages/pxweb2/dist /usr/share/nginx/html
 COPY nginx/conf.d/default.conf /etc/nginx/conf.d
 EXPOSE 8080
