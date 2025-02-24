@@ -197,7 +197,7 @@ export function VariableBoxContent({
       setAllValuesSelected('true');
     }
   }, [
-    --totalChosenValues,
+    totalChosenValues,
     totalValues,
     checkboxSelectAllText,
     checkboxDeselectAllText,

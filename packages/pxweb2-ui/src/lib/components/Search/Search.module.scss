@@ -8,6 +8,13 @@
   align-self: stretch;
   margin-left: -4px;
   margin-right: -4px;
+
+  &:focus {
+    border-radius: var(--px-border-radius-medium);
+    outline: 3px solid var(--px-color-border-focus-outline);
+    background: var(--px-color-surface-default);
+    outline-offset: -3px;
+  }
 }
 
 .wrapper {
@@ -36,6 +43,20 @@
     outline: 2px solid var(--px-color-border-action);
     background: var(--px-color-surface-default);
   }
+
+  /* Remove default focus-within so focusing the button doesn't highlight the wrapper */
+  &:focus-within {
+    outline: none;
+    background: var(--px-color-surface-default);
+  }
+
+  /* Apply focus styles only if the input is focused (not if the button is focused) */
+  &:focus-within:has(input:focus) {
+    border-radius: var(--px-border-radius-small);
+    outline: 3px solid var(--px-color-border-focus-outline);
+    outline-offset: 5px;
+    box-shadow: 0 0 0 3px var(--px-color-border-focus-boxshadow);
+  }
 }
 
 .wrapper.inVariableBox {
@@ -55,8 +76,14 @@
     background: var(--px-color-surface-default);
   }
 
+  /* Remove default focus-within outline, so focusing the button doesn't highlight the wrapper */
   &:focus-within {
-    border-radius: var(--px-border-radius-medium);
+    outline: none;
+    background: var(--px-color-surface-subtle);
+  }
+
+  /* Apply focus styles ONLY if the input is focused (not if the button is focused) */
+  &:focus-within:has(input:focus) {
     outline: 3px solid var(--px-color-border-focus-outline);
     background: var(--px-color-surface-default);
     outline-offset: -3px;
@@ -110,24 +137,4 @@
 
 .searchIcon {
   color: var(--px-color-icon-default);
-}
-
-.wrapper.default:focus-within {
-  border-radius: var(--px-border-radius-small);
-  outline: 2px solid var(--px-color-border-action);
-  background: var(--px-color-surface-default);
-}
-
-.wrapper.default:focus-visible {
-  border-radius: var(--px-border-radius-small);
-  outline: 3px solid var(--px-color-border-focus-outline);
-  outline-offset: 5px;
-  box-shadow: 0 0 0 3px var(--px-color-border-focus-boxshadow);
-}
-
-.wrapper.inVariableBox:focus-visible {
-  border-radius: var(--px-border-radius-medium);
-  outline: 3px solid var(--px-color-border-focus-outline);
-  outline-offset: 5px;
-  box-shadow: 0 0 0 3px var(--px-color-border-focus-boxshadow);
 }

@@ -49,14 +49,20 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
       }
     };
 
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-      if (e.key === 'Escape') {
+    const handleKeyDown = (
+      e:
+        | React.KeyboardEvent<HTMLDivElement>
+        | React.KeyboardEvent<HTMLButtonElement>,
+      isCancelButton?: boolean,
+    ) => {
+      const isEscape = e.key === 'Escape';
+      const isEnterOrSpace = e.key === 'Enter' || e.key === ' ';
+      const shouldClear = (isCancelButton && isEnterOrSpace) || isEscape;
+
+      if (shouldClear) {
         e.stopPropagation();
-        if (inputRef.current?.value.trim() === '') {
-          inputRef.current?.blur();
-        } else {
-          handleClear();
-        }
+        e.preventDefault();
+        handleClear();
       }
     };
 
@@ -89,7 +95,7 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
               setInputValue(e.target.value);
             }}
             onKeyDown={(e) => {
-              handleKeyDown(e);
+              handleKeyDown(e, false);
             }}
             {...rest}
           ></input>
@@ -99,8 +105,12 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
               icon="XMark"
               size="small"
               onClick={() => {
-                onChange && onChange('');
                 handleClear();
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  handleKeyDown(e, true);
+                }
               }}
               aria-label={arialLabelClearButtonText}
             ></Button>
