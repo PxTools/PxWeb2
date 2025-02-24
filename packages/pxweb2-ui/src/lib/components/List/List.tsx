@@ -7,7 +7,9 @@ interface ListProps {
   heading?: string;
   subHeading?: string;
   listType: 'ul' | 'ol';
-  listSubType?: 'nested' | 'listgroup' | 'default';
+  listGroup?: boolean;
+  nested?: boolean;
+  // listSubType?: 'nested' | 'listgroup' | 'default';
   children: React.ReactNode;
 }
 
@@ -15,20 +17,29 @@ export function List({
   heading,
   subHeading,
   listType: listType = 'ol',
-  listSubType = 'default',
+  listGroup = false,
+  nested = false,
+  // listSubType = 'default',
   children,
 }: ListProps) {
-  let listclassextension = '';
-  switch (listSubType) {
-    case 'nested':
-      listclassextension = '-nested';
-      break;
-    case 'listgroup':
-      listclassextension = '-listgroup';
-      break;
-    default:
-      break;
+  const listclassextension = listGroup ? '-listgroup' : '';
+  if (nested) {
+    heading = undefined;
+    subHeading = undefined;
+    listGroup = false;
   }
+
+  // let listclassextension = '';
+  // switch (listSubType) {
+  //   case 'nested':
+  //     listclassextension = '-nested';
+  //     break;
+  //   case 'listgroup':
+  //     listclassextension = '-listgroup';
+  //     break;
+  //   default:
+  //     break;
+  // }
 
   return (
     <div className={cl(classes[`list-component-wrapper`])}>
@@ -37,13 +48,14 @@ export function List({
           <Heading size={'small'}>{heading}</Heading>
         </div>
       )}
-      {listSubType !== 'listgroup' && subHeading && (
+      {/* {listSubType !== 'listgroup' && subHeading && ( */}
+      {!listGroup && subHeading && (
         <div className={cl(classes[`sub-heading-wrapper`])}>
           {<Heading size={'xsmall'}>{subHeading}</Heading>}
         </div>
       )}
       <div className={cl(classes[`list-wrapper${listclassextension}`])}>
-        {React.createElement(listType, {}, children)}
+        {React.createElement(listType, { role: 'list' }, children)}
       </div>
     </div>
   );

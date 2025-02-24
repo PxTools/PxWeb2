@@ -10,16 +10,6 @@ const meta: Meta<typeof List> = {
 };
 export default meta;
 
-// type Story = StoryObj<typeof List>;
-// export const variants: Story = {
-//   args: {
-//     heading: 'List heading',
-//     subHeading: 'List subheading',
-//     listType: 'ul',
-//     children: <ListItem>Item1</ListItem>,
-//   },
-// };
-
 export const OrderedAndUnordered: StoryFn<typeof List> = () => {
   return (
     <>
@@ -77,28 +67,6 @@ export const OrderedAndUnordered: StoryFn<typeof List> = () => {
         </ListItem>
       </List>
 
-      {/* <h1>Nested list</h1> */}
-
-      {/* <List heading="Heading" listType="ul">
-        <ListItem>
-          item1
-          <List listType="ul" listSubType="nested">
-            <ListItem>Nested item1.1</ListItem>
-            <ListItem>Nested item1.2</ListItem>
-            <ListItem>Nested item1.3</ListItem>
-          </List>
-        </ListItem>
-        <ListItem>
-          item2
-          <List listType="ol" listSubType="nested">
-            <ListItem>Nested item2.1</ListItem>
-            <ListItem>Nested item2.2</ListItem>
-            <ListItem>Nested item2.3</ListItem>
-          </List>
-        </ListItem>
-        <ListItem>item3</ListItem>
-      </List> */}
-
       <h1>
         <i>Nested unordered list </i>{' '}
       </h1>
@@ -106,7 +74,7 @@ export const OrderedAndUnordered: StoryFn<typeof List> = () => {
       <List heading="Heading" listType="ul">
         <ListItem>
           item1
-          <List listType="ul">
+          <List listType="ul" nested>
             <ListItem>Nested item1.1</ListItem>
             <ListItem>Nested item1.2</ListItem>
             <ListItem>Nested item1.3</ListItem>
@@ -114,7 +82,7 @@ export const OrderedAndUnordered: StoryFn<typeof List> = () => {
         </ListItem>
         <ListItem>
           item2
-          <List listType="ol">
+          <List listType="ol" nested>
             <ListItem>Nested item2.1</ListItem>
             <ListItem>Nested item2.2</ListItem>
             <ListItem>Nested item2.3</ListItem>
@@ -130,7 +98,12 @@ export const OrderedAndUnordered: StoryFn<typeof List> = () => {
       <List heading="Heading" listType="ol">
         <ListItem>
           item1
-          <List listType="ol">
+          <List
+            listType="ol"
+            heading="skal ikke vises"
+            subHeading="skal ikke vises"
+            nested
+          >
             <ListItem>Nested item1.1</ListItem>
             <ListItem>Nested item1.2</ListItem>
             <ListItem>Nested item1.3</ListItem>
@@ -138,7 +111,7 @@ export const OrderedAndUnordered: StoryFn<typeof List> = () => {
         </ListItem>
         <ListItem>
           item2
-          <List listType="ul">
+          <List listType="ul" nested>
             <ListItem>Nested item2.1</ListItem>
             <ListItem>Nested item2.2</ListItem>
             <ListItem>Nested item2.3</ListItem>
@@ -158,7 +131,7 @@ export const OrderedAndUnordered: StoryFn<typeof List> = () => {
         <i>Listgroup</i>
       </h1>
 
-      <List heading="Land" listType="ul" listSubType="listgroup">
+      <List heading="Land" subHeading="skal ikke vises" listType="ul" listGroup>
         <ListItem>
           <List subHeading="Belarus (BY)" listType="ul">
             <ListItem>Ble kalt Hviterussland fram til 2022.</ListItem>
