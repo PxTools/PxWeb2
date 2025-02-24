@@ -29,7 +29,7 @@ export const OnlyRaw: Story = {
       organization: '',
       mail: '',
       phone: '',
-        raw: 'Only raw contact information',
+      raw: 'Only raw contact information',
     } as Contact,
   },
 };
