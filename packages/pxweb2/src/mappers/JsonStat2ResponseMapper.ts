@@ -339,7 +339,7 @@ function mapValueNotes(dimension: any, mappedValues: Value[]): void {
           let newNote: Note = {
             text: noteTexts[i],
             mandatory: getMandatoryValueNote(
-              dimension.extension?.categoryNoteMandatory,
+              dimension.extension,
               code,
               i,
             ),
@@ -355,19 +355,19 @@ function mapValueNotes(dimension: any, mappedValues: Value[]): void {
 /**
  * Returns whether a note at value level is mandatory.
  *
- * @param categoryNoteMandatory - The categoryNoteMandatory object from the JSON-stat 2.0 response.
+ * @param dimensionExtension - The dimension extension object from the JSON-stat 2.0 response.
  * @param code - The code of the value.
  * @param noteIndex - The index of the note.
  * @returns True if the note is mandatory; otherwise, false.
  */
 function getMandatoryValueNote(
-  categoryNoteMandatory: any,
+  dimensionExtension: extension_dimension,
   code: string,
   noteIndex: number,
 ): boolean {
-  if (categoryNoteMandatory) {
-    if (categoryNoteMandatory[code]) {
-      if (categoryNoteMandatory[code][noteIndex]) {
+  if (dimensionExtension?.categoryNoteMandatory) {
+    if (dimensionExtension.categoryNoteMandatory[code]) {
+      if (dimensionExtension.categoryNoteMandatory[code][noteIndex]) {
         return true;
       }
     }
