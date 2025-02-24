@@ -1,5 +1,5 @@
-import React from 'react';
 import type { Meta, StoryFn } from '@storybook/react';
+
 import List from './List';
 import ListItem from './ListItem';
 import Link from '../Link/Link';
