@@ -62,7 +62,7 @@
   }
 
   ul li::before {
-    content: '\25CF';
+    content: '\25CF'/ '';
     font-size: 0.8rem;
     transform: translateY(-1.5px);
     aria-hidden: true;
