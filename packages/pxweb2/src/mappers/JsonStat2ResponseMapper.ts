@@ -17,9 +17,9 @@ import {
   PxTableMetadata,
   CodeList,
   Contact,
+  ContentInfo,
   Note,
 } from '@pxweb2/pxweb2-ui';
-import { ContentInfo } from 'packages/pxweb2-ui/src/lib/shared-types/contentInfo';
 
 /**
  * Internal type. Used to keep track of index in json-stat2 value array
