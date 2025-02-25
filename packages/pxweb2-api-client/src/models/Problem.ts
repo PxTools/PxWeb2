@@ -33,7 +33,6 @@ export type Problem = {
      * An absolute URI that identifies the specific occurrence of the problem.
      * It may or may not yield further information if dereferenced.
      *
-     *
      */
     instance?: string;
 };
