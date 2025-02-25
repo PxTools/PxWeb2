@@ -98,7 +98,10 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
               setInputValue(e.target.value);
             }}
             onKeyDown={(e) => {
-              handleKeyDown(e, false);
+              // Only handle keydown if there is a searchvalue
+              if (inputValue !== '') {
+                handleKeyDown(e, false);
+              }
             }}
             {...rest}
           ></input>
