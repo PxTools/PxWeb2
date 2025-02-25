@@ -202,9 +202,9 @@ function mapNotes(
       noteIndex++;
       return mappedNote;
     });
-  } else {
-    return [];
   }
+
+  return [];
 }
 
 /**
@@ -221,8 +221,6 @@ function getMandatoryNote(
   if (noteMandatory) {
     if (noteMandatory[noteIndex]) {
       return true;
-    } else {
-      return false;
     }
   }
   return false;
@@ -361,12 +359,8 @@ function getMandatoryValueNote(
   code: string,
   noteIndex: number,
 ): boolean {
-  if (dimensionExtension?.categoryNoteMandatory) {
-    if (dimensionExtension.categoryNoteMandatory[code]) {
-      if (dimensionExtension.categoryNoteMandatory[code][noteIndex]) {
-        return true;
-      }
-    }
+  if (dimensionExtension?.categoryNoteMandatory?.[code]?.[noteIndex]) {
+    return true;
   }
   return false;
 }
@@ -400,9 +394,13 @@ function getValueDisplayType(
   if (dimensionExtension?.show) {
     if (dimensionExtension.show === 'code') {
       return 'code';
-    } else if (dimensionExtension.show === 'value') {
+    }
+
+    if (dimensionExtension.show === 'value') {
       return 'value';
-    } else if (dimensionExtension.show === 'code_value') {
+    }
+
+    if (dimensionExtension.show === 'code_value') {
       return 'code_value';
     }
   }
