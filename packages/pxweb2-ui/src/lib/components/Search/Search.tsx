@@ -44,19 +44,28 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
     const handleClear = () => {
       onChange && onChange('');
       setInputValue('');
-      if (inputRef.current !== null) {
+
+      if (ref?.hasOwnProperty('current')) {
+        (ref as React.MutableRefObject<HTMLInputElement>).current.focus();
+      } else if (inputRef.current !== null) {
         inputRef.current.focus();
       }
     };
 
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-      if (e.key === 'Escape') {
+    const handleKeyDown = (
+      e:
+        | React.KeyboardEvent<HTMLDivElement>
+        | React.KeyboardEvent<HTMLButtonElement>,
+      isCancelButton?: boolean,
+    ) => {
+      const isEscape = e.key === 'Escape';
+      const isEnterOrSpace = e.key === 'Enter' || e.key === ' ';
+      const shouldClear = isEscape || (isCancelButton && isEnterOrSpace);
+
+      if (shouldClear) {
         e.stopPropagation();
-        if (inputRef.current?.value.trim() === '') {
-          inputRef.current?.blur();
-        } else {
-          handleClear();
-        }
+        e.preventDefault();
+        handleClear();
       }
     };
 
@@ -89,7 +98,10 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
               setInputValue(e.target.value);
             }}
             onKeyDown={(e) => {
-              handleKeyDown(e);
+              // Only handle keydown if there is a searchvalue
+              if (inputValue !== '') {
+                handleKeyDown(e, false);
+              }
             }}
             {...rest}
           ></input>
@@ -99,8 +111,10 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
               icon="XMark"
               size="small"
               onClick={() => {
-                onChange && onChange('');
                 handleClear();
+              }}
+              onKeyDown={(e) => {
+                handleKeyDown(e, true);
               }}
               aria-label={arialLabelClearButtonText}
             ></Button>
