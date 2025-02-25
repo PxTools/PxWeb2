@@ -44,18 +44,24 @@
     background: var(--px-color-surface-default);
   }
 
-  /* Remove default focus-within so focusing the button doesn't highlight the wrapper */
+  /* Reset both focus-within states */
   &:focus-within {
     outline: none;
     background: var(--px-color-surface-default);
   }
 
-  /* Apply focus styles only if the input is focused (not if the button is focused) */
-  &:focus-within:has(input:focus) {
+  /* Apply outline when the INPUT has keyboard focus */
+  &:has(input:focus-visible) {
     border-radius: var(--px-border-radius-small);
     outline: 3px solid var(--px-color-border-focus-outline);
     outline-offset: 5px;
     box-shadow: 0 0 0 3px var(--px-color-border-focus-boxshadow);
+  }
+
+  /* No outline when the button has focus */
+  &:has(button:focus-visible):not(:has(input:focus-visible)) {
+    outline: none;
+    box-shadow: none;
   }
 }
 
@@ -76,17 +82,23 @@
     background: var(--px-color-surface-default);
   }
 
-  /* Remove default focus-within outline, so focusing the button doesn't highlight the wrapper */
+  /* Reset both focus-within states */
   &:focus-within {
     outline: none;
     background: var(--px-color-surface-subtle);
   }
 
-  /* Apply focus styles ONLY if the input is focused (not if the button is focused) */
-  &:focus-within:has(input:focus) {
+  /* Apply outline when the INPUT has keyboard focus */
+  &:has(input:focus-visible) {
     outline: 3px solid var(--px-color-border-focus-outline);
     background: var(--px-color-surface-default);
     outline-offset: -3px;
+  }
+
+  /* No outline when the button has focus */
+  &:has(button:focus-visible):not(:has(input:focus-visible)) {
+    outline: none;
+    background: var(--px-color-surface-subtle);
   }
 }
 
@@ -124,7 +136,8 @@
     outline: none;
   }
 
-  &:focus-visible {
+  &:focus,
+  :focus-visible {
     border: none;
     box-shadow: none;
     outline: none;
