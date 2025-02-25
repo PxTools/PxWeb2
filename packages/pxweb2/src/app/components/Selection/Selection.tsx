@@ -2,8 +2,6 @@ import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
 
 import {
-  metadataOutputFormat,
-  MetadataOutputFormatType,
   TableService,
 } from '@pxweb2/pxweb2-api-client';
 import { mapJsonStat2Response } from '../../../mappers/JsonStat2ResponseMapper';
@@ -305,14 +303,11 @@ export function Selection({
       variables.setIsLoadingMetadata(true);
     }
 
-    const outputFormat: metadataOutputFormat =
-      MetadataOutputFormatType.JSON_STAT2;
     const metaDataDefaultSelection = true;
 
     TableService.getMetadataById(
       selectedTabId,
       i18n.resolvedLanguage,
-      outputFormat,
       metaDataDefaultSelection,
     )
       .then((Dataset) => {

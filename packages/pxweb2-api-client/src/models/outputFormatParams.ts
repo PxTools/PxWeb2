@@ -2,4 +2,5 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type outputFormatParams = Array<'UseCodes' | 'UseTexts' | 'UseCodesAndTexts' | 'IncludeTitle' | 'SeparatorTab' | 'SeparatorSpace' | 'SeparatorSemicolon'>;
+import type { OutputFormatParamType } from './OutputFormatParamType';
+export type outputFormatParams = Array<OutputFormatParamType>;

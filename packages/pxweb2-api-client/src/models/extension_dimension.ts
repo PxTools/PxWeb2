@@ -2,8 +2,12 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { Adjustment } from './Adjustment';
+import type { BasePeriod } from './BasePeriod';
 import type { CodeLists } from './CodeLists';
 import type { jsonstat_noteMandatory } from './jsonstat_noteMandatory';
+import type { MeasuringType } from './MeasuringType';
+import type { PriceType } from './PriceType';
 /**
  * extension at dimension
  */
@@ -31,16 +35,20 @@ export type extension_dimension = {
     show?: string;
     codeLists?: CodeLists;
     /**
-     * How often a table is updated
+     * Indicates if data is stock, flow or average.
      */
-    frequency?: string;
+    measuringType?: Record<string, MeasuringType>;
     /**
-     * Earliest time period in table
+     * Indicates if data is in current or fixed prices.
      */
-    firstPeriod?: string;
+    priceType?: Record<string, PriceType>;
     /**
-     * Latest time period in table
+     * Describes adjustments made to the data
      */
-    lastPeriod?: string;
+    adjustment?: Record<string, Adjustment>;
+    /**
+     * Base period for, for instance index series. Is shown with the footnote. If there is a contents variable the keyword is repeated for each value of the contents variable.
+     */
+    basePeriod?: Record<string, BasePeriod>;
 };
 
