@@ -167,7 +167,6 @@ export function App() {
   return (
     <>
       <SkipToMain />
-      <ErrorBoundary>
         {!isTablet && <Header />}{' '}
         <div className={styles.navigationAndContentContainer}>
           {!isTablet && (
@@ -178,16 +177,20 @@ export function App() {
             />
           )}{' '}
           <div className={styles.mainContainer}>
-            <Selection
-              selectedNavigationView={selectedNavigationView}
-              selectedTabId={selectedTableId}
-              setSelectedNavigationView={changeSelectedNavView}
-              openedWithKeyboard={openedWithKeyboard}
-              hideMenuRef={hideMenuRef}
-            />
+            <ErrorBoundary>
+              <Selection
+                selectedNavigationView={selectedNavigationView}
+                selectedTabId={selectedTableId}
+                setSelectedNavigationView={changeSelectedNavView}
+                openedWithKeyboard={openedWithKeyboard}
+                hideMenuRef={hideMenuRef}
+              />
+            </ErrorBoundary>
             <div className={styles.contentAndFooterContainer}>
               {isTablet && <Header />}{' '}
-              <Presentation selectedTabId={selectedTableId}></Presentation>
+              <ErrorBoundary>
+                <Presentation selectedTabId={selectedTableId}></Presentation>
+              </ErrorBoundary>
               <Footer />
             </div>
           </div>
@@ -199,7 +202,6 @@ export function App() {
             selected={selectedNavigationView}
           />
         )}{' '}
-      </ErrorBoundary>
     </>
   );
 }
