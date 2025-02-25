@@ -44,7 +44,10 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
     const handleClear = () => {
       onChange && onChange('');
       setInputValue('');
-      if (inputRef.current !== null) {
+
+      if (ref?.hasOwnProperty('current')) {
+        (ref as React.MutableRefObject<HTMLInputElement>).current.focus();
+      } else if (inputRef.current !== null) {
         inputRef.current.focus();
       }
     };
@@ -57,7 +60,7 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
     ) => {
       const isEscape = e.key === 'Escape';
       const isEnterOrSpace = e.key === 'Enter' || e.key === ' ';
-      const shouldClear = (isCancelButton && isEnterOrSpace) || isEscape;
+      const shouldClear = isEscape || (isCancelButton && isEnterOrSpace);
 
       if (shouldClear) {
         e.stopPropagation();
@@ -108,9 +111,7 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
                 handleClear();
               }}
               onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  handleKeyDown(e, true);
-                }
+                handleKeyDown(e, true);
               }}
               aria-label={arialLabelClearButtonText}
             ></Button>
