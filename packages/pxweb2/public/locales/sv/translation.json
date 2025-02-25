@@ -7,8 +7,7 @@
     "title": "PxWeb 2.0",
     "header": {
       "title": "PxWeb 2.0 [Main]",
-      "logo": "PxWeb 2.0",
-      "arialabelheader": "Velg språk"
+      "logo": "PxWeb 2.0"
     },
     "skip_to_main": "Gå direkt till huvudinnehållet",
     "footer": {
@@ -65,7 +64,8 @@
           "header": {
             "tag_selected": "{{selected}} av {{total}} valda",
             "tag_mandatory": "Obligatorisk",
-            "alert_no_mandatory_values": "Du måste välja något i listan för att tabellen ska visas"
+            "alert_no_mandatory_values": "Du måste välja något i listan för att tabellen ska visas",
+            "show_more": "Visa mer"
           },
           "content": {
             "select": {
@@ -176,7 +176,9 @@
         },
         "contact": {
           "title": "Kontakt",
-          "description": "Beskrivande text..."
+          "description": "Beskrivande text...",
+          "missing_heading": "Ingen kontaktinformation",
+          "missing_text": "Tabellen har ingen kontaktinformation."
         }
       },
       "related": {

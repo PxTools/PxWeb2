@@ -6,7 +6,7 @@ import {
   MetadataOutputFormatType,
   TableService,
 } from '@pxweb2/pxweb2-api-client';
-import { mapTableMetadataResponse } from '../../../mappers/TableMetadataResponseMapper';
+import { mapJsonStat2Response } from '../../../mappers/JsonStat2ResponseMapper';
 import { mapTableSelectionResponse } from '../../../mappers/TableSelectionResponseMapper';
 import {
   PxTableMetadata,
@@ -15,6 +15,7 @@ import {
   Value,
   SelectOption,
   mapCodeListToSelectOption,
+  PxTable,
 } from '@pxweb2/pxweb2-ui';
 import NavigationDrawer from '../../components/NavigationDrawer/NavigationDrawer';
 import useVariables from '../../context/useVariables';
@@ -305,7 +306,8 @@ export function Selection({
       variables.setIsLoadingMetadata(true);
     }
 
-    const outputFormat: metadataOutputFormat = MetadataOutputFormatType.JSON_PX;
+    const outputFormat: metadataOutputFormat =
+      MetadataOutputFormatType.JSON_STAT2;
     const metaDataDefaultSelection = true;
 
     TableService.getMetadataById(
@@ -314,12 +316,10 @@ export function Selection({
       outputFormat,
       metaDataDefaultSelection,
     )
-      .then((tableMetadataResponse) => {
-        const pxTabMetadata: PxTableMetadata = mapTableMetadataResponse(
-          tableMetadataResponse,
-        );
+      .then((Dataset) => {
+        const pxTable: PxTable = mapJsonStat2Response(Dataset, false);
 
-        setPxTableMetadata(pxTabMetadata);
+        setPxTableMetadata(pxTable.metadata);
         if (pxTableMetaToRender !== null) {
           setPxTableMetaToRender(null);
         }

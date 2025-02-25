@@ -1,5 +1,5 @@
 import cl from 'clsx';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import classes from './Select.module.scss';
 import Label from '../Typography/Label/Label';
@@ -50,12 +50,12 @@ export function Select({
   className = '',
   addModal,
   removeModal,
-}: SelectProps) {
+}: Readonly<SelectProps>) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
 
   return (
     <>
-      {variant && variant === 'default' && (
+      {variant === 'default' && (
         <DefaultSelect
           hideLabel={hideLabel}
           label={label}
@@ -67,7 +67,7 @@ export function Select({
           className={cssClasses}
         />
       )}
-      {variant && variant === 'inVariableBox' && (
+      {variant === 'inVariableBox' && (
         <VariableBoxSelect
           label={label}
           modalHeading={modalHeading}
@@ -108,7 +108,7 @@ function DefaultSelect({
   onChange,
   tabIndex,
   className = '',
-}: DefaultSelectProps) {
+}: Readonly<DefaultSelectProps>) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
 
   return (
@@ -181,7 +181,7 @@ function VariableBoxSelect({
 }: VariableBoxSelectProps) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
 
-  const [isModalOpen, setModalOpen] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [clickedItem, setClickedItem] = useState<SelectOption | undefined>(
     selectedOption,
   );
@@ -189,33 +189,69 @@ function VariableBoxSelect({
   const selectedItem: SelectOption | undefined = selectedOption;
 
   const handleOpenModal = () => {
-    setModalOpen(true);
+    setIsModalOpen(true);
+
     // Reset clicked item to selected item, incase user made changes and then closed the modal
     setClickedItem(selectedItem);
   };
 
-  function handleRadioChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setClickedItem(options.find((option) => option.value === e.target.value));
-  }
-
-  useEffect(() => {
-    if (!isModalOpen) {
-      removeModal('VariableBoxSelect');
-    } else {
-      addModal('VariableBoxSelect', () => {
-        setModalOpen(false);
-      });
+  const handleCloseModal = (
+    updated: boolean,
+    keyPress?: ' ' | 'Enter' | 'Escape',
+  ) => {
+    if (keyPress) {
+      handleCloseModalWithKeyPress(keyPress);
     }
-  }, [removeModal, isModalOpen]);
 
-  const handleCloseModal = (updated: boolean) => {
-    setModalOpen(false);
+    setIsModalOpen(false);
     if (updated) {
       onChange(clickedItem);
     } else {
       setClickedItem(selectedItem);
     }
   };
+
+  function handleCloseModalWithKeyPress(keyPress: ' ' | 'Enter' | 'Escape') {
+    // Set focus back to the select element
+    if (
+      selectRef.current &&
+      (keyPress === ' ' || keyPress === 'Enter' || keyPress === 'Escape')
+    ) {
+      programmaticFocusRef.current = true;
+
+      // This hack is needed to ensure that the focus is set correctly,
+      // otherwise the focus will be set during render and be gone before the render phase is done
+      setTimeout(() => {
+        selectRef.current?.focus();
+      }, 0);
+    }
+  }
+
+  function handleRadioChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setClickedItem(options.find((option) => option.value === e.target.value));
+  }
+
+  const selectRef = useRef<HTMLDivElement>(null);
+  const selectedRadioOptionRef = useRef<HTMLInputElement>(null);
+  const programmaticFocusRef = useRef<boolean>(false);
+
+  useEffect(() => {
+    if (!isModalOpen) {
+      removeModal('VariableBoxSelect');
+    } else {
+      addModal('VariableBoxSelect', () => {
+        // Hack for correct focus handling when closing the modal with the escape key
+        setTimeout(() => {
+          setIsModalOpen(false);
+        }, 0);
+      });
+
+      // Set focus to the radio button for the selected option when the modal is opened
+      if (selectedRadioOptionRef.current) {
+        selectedRadioOptionRef.current.focus();
+      }
+    }
+  }, [removeModal, isModalOpen, addModal]);
 
   return (
     <>
@@ -224,12 +260,23 @@ function VariableBoxSelect({
         tabIndex={tabIndex}
         role="button"
         aria-haspopup="dialog"
-        onClick={() => {
+        ref={selectRef}
+        onClick={(event) => {
+          if (programmaticFocusRef.current) {
+            programmaticFocusRef.current = false;
+            event.preventDefault();
+            return;
+          }
           handleOpenModal();
         }}
         onKeyUp={(event) => {
-          if (event.key === ' ' || event.key === 'Enter') {
+          if (event.key === ' ') {
             handleOpenModal();
+          }
+        }}
+        onKeyDown={(event) => {
+          if (event.key === ' ') {
+            event.preventDefault(); // Prevent scrolling with spacebar
           }
         }}
       >
@@ -264,6 +311,7 @@ function VariableBoxSelect({
             name="option"
             options={options}
             selectedOption={clickedItem?.value}
+            ref={selectedRadioOptionRef}
             onChange={handleRadioChange}
             variant="inModal"
           ></Radio>

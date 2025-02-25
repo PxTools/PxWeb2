@@ -1,0 +1,86 @@
+@use '../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixvar;
+@use '../../text-styles.scss';
+
+.list-component-wrapper {
+  display: flex;
+  width: 200px;
+  flex-direction: column;
+  align-items: flex-start;
+  color: var(--px-color-text-default);
+}
+
+.heading-wrapper {
+  padding-bottom: 12px;
+}
+.sub-heading-wrapper {
+  padding-bottom: 4px;
+}
+
+.list-wrapper-listgroup {
+  ul {
+    list-style-type: none;
+    padding-inline-start: 0px;
+    margin: 0px;
+    li {
+      padding-bottom: 28px;
+    }
+    li li {
+      padding-bottom: 0px;
+    }
+  }
+}
+
+.list-wrapper {
+  ul,
+  ol {
+    list-style: none;
+    padding: 0;
+    counter-reset: number;
+    margin-block-start: 0px;
+    margin-block-end: 0px;
+  }
+
+  li {
+    display: block;
+    position: relative;
+    padding-left: 22px;
+    margin: 8px 0;
+  }
+
+  li:first-child {
+    margin-top: 0;
+  }
+
+  li:last-child {
+    margin-bottom: 0;
+  }
+
+  li::before {
+    position: absolute;
+    left: 0;
+  }
+
+  ul li::before {
+    content: '\25CF'/ '';
+    font-size: 0.8rem;
+    transform: translateY(-1.5px);
+  }
+
+  ul li ul li::before,
+  ol li ul li::before {
+    content: '\25CB'/ '';
+    font-size: 0.8rem;
+  }
+
+  ol li {
+    counter-increment: number;
+  }
+
+  ol li::before,
+  ul li ol li ::before,
+  ol li ol li::before {
+    content: counter(number) '.';
+    font-size: 1rem;
+    transform: translateY(0px);
+  }
+}
