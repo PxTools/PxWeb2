@@ -65,7 +65,8 @@
           "header": {
             "tag_selected": "{{selected}} ل {{total}} مختارة",
             "tag_mandatory": "إلزامي",
-            "alert_no_mandatory_values": "يجب عليك تحديد شيء ما في القائمة حتى يتم عرض الجدول"
+            "alert_no_mandatory_values": "يجب عليك تحديد شيء ما في القائمة حتى يتم عرض الجدول",
+            "show_more": "اظهر المزيد"
           },
           "content": {
             "select": {
@@ -176,7 +177,9 @@
         },
         "contact": {
           "title": "اتصال",
-          "description": "نص الوصف..."
+          "description": "نص الوصف...",
+          "missing_heading": "لا يوجد معلومات الاتصال",
+          "missing_text": "الجدول ليس لديه معلومات الاتصال."
         }
       },
       "related": {

@@ -49,3 +49,6 @@ theme/variables.css
 
 vite.config.*.timestamp*
 *storybook.log
+
+# AI
+.qodo
