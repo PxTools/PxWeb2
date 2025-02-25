@@ -13,7 +13,7 @@ import { AppProvider } from './app/context/AppProvider';
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Navigate to="/table/TAB5659" replace={true} />,
+    element: <Navigate to="/table/TAB5603" replace={true} />,
   },
   {
     path: '/table/:tableId',
