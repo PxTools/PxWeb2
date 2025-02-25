@@ -1,4 +1,5 @@
 import { Contact } from './contact';
+import { Note } from './note';
 import { Variable } from './variable';
 
 /**
@@ -26,6 +27,46 @@ export type PxTableMetadata = {
    */
   updated: Date;
   /**
+   * The table's source.
+   */
+  source: string;
+  /**
+   * The table's info file.
+   */
+  infofile: string;
+  /**
+   * Number of decimals when displaying table data
+   */
+  decimals: number;
+  /**
+   * If the table is official statistics or not.
+   */
+  officialStatistics: boolean;
+  /**
+   * If aggregation is allowed or not
+   */
+  aggregationAllowed: boolean;
+  /**
+   * Table content
+   */
+  contents: string;
+  /**
+   * If the table description shall be used by default or not.
+   */
+  descriptionDefault: boolean;
+  /**
+   * Table matrix
+   */
+  matrix: string;
+  /**
+   * Table subject code
+   */
+  subjectCode: string;
+  /**
+   * Table subject area
+   */
+  subjectArea: string;
+  /**
    * The variables that are part of the table.
    */
   variables: Variable[];
@@ -33,4 +74,8 @@ export type PxTableMetadata = {
    * The contacts that are associated with the table.
    */
   contacts: Contact[];
+  /**
+   * Notes that are associated with the table.
+   */
+  notes: Note[];
 };

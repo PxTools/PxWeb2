@@ -1,4 +1,11 @@
-import { Dataset } from '@pxweb2/pxweb2-api-client';
+import {
+  Dataset,
+  Contact as apiContact,
+  jsonstat_note,
+  jsonstat_noteMandatory,
+  extension_dimension,
+  CodeListInformation,
+} from '@pxweb2/pxweb2-api-client';
 import {
   Dimensions,
   PxTable,
@@ -10,6 +17,8 @@ import {
   PxTableMetadata,
   CodeList,
   Contact,
+  ContentInfo,
+  Note,
 } from '@pxweb2/pxweb2-ui';
 
 /**
@@ -44,8 +53,20 @@ export function mapJsonStat2Response(
     label: response.label ?? '',
     description: '',
     updated: response.updated ? new Date(response.updated) : new Date(),
+    source: response.source ?? '',
+    infofile: response.extension?.px?.infofile ?? '',
+    decimals: response.extension?.px?.decimals ?? 0,
+    officialStatistics:
+      response.extension?.px?.['official-statistics'] ?? false,
+    aggregationAllowed: response.extension?.px?.aggregallowed ?? true,
+    contents: response.extension?.px?.contents ?? '',
+    descriptionDefault: response.extension?.px?.descriptiondefault ?? false,
+    matrix: response.extension?.px?.matrix ?? '',
+    subjectCode: response.extension?.px?.['subject-code'] ?? '',
+    subjectArea: response.extension?.px?.['subject-area'] ?? '',
     variables: mapVariables(response),
     contacts: mapContacts(response.extension?.contact),
+    notes: mapNotes(response.note, response.extension?.noteMandatory),
   };
 
   // Create the data object
@@ -119,13 +140,13 @@ function CreateHeading(
  * @param jsonData - The JSONStat2 dataset containing the dimensions.
  * @returns An array of Variable objects.
  */
-function mapVariables(jsonData: Dataset): Array<Variable> {
+function mapVariables(jsonData: Dataset): Variable[] {
   const variables: Variable[] = [];
 
   for (const dimensionKey in jsonData.dimension) {
     // For every dimension record in the json-stat2 object
     if (
-      Object.prototype.hasOwnProperty.call(jsonData.dimension, dimensionKey) // dimensionKey === variable id
+      Object.hasOwn(jsonData.dimension, dimensionKey) // dimensionKey === variable id
     ) {
       const dimension = jsonData.dimension[dimensionKey];
       const variable = mapDimension(dimensionKey, dimension, jsonData.role);
@@ -144,20 +165,65 @@ function mapVariables(jsonData: Dataset): Array<Variable> {
  * @param contacts - The contact object from the JSON-stat 2.0 response.
  * @returns An array of Contact objects.
  */
-function mapContacts(contacts: any): Contact[] {
+function mapContacts(contacts: apiContact[] | undefined): Contact[] {
   if (contacts) {
-    return contacts.map((contact: any) => {
+    return contacts.map((contact: apiContact) => {
       return {
         name: contact.name,
         phone: contact.phone,
         mail: contact.mail,
-        organization: contact.organization,
+        //organization: contact.organization,
         raw: contact.raw,
       };
     });
   } else {
     return [];
   }
+}
+
+/**
+ * Maps the notes from a JSON-stat 2.0 response to an array of Note objects.
+ *
+ * @param notes - The notes object from the JSON-stat 2.0 response.
+ * @param noteMandatory - The noteMandatory object from the JSON-stat 2.0 response.
+ * @returns An array of Note objects.
+ */
+function mapNotes(
+  notes: jsonstat_note | undefined,
+  noteMandatory: jsonstat_noteMandatory | undefined,
+): Note[] {
+  if (notes) {
+    let noteIndex = 0;
+    return notes.map((note: string) => {
+      const mappedNote = {
+        mandatory: getMandatoryNote(noteMandatory, noteIndex),
+        text: note,
+      };
+      noteIndex++;
+      return mappedNote;
+    });
+  }
+
+  return [];
+}
+
+/**
+ * Returns whether a note is mandatory.
+ *
+ * @param noteMandatory - The noteMandatory object from the JSON-stat 2.0 response.
+ * @param noteIndex - The index of the note.
+ * @returns True if the note is mandatory; otherwise, false.
+ */
+function getMandatoryNote(
+  noteMandatory: jsonstat_noteMandatory | undefined,
+  noteIndex: number,
+): boolean {
+  if (noteMandatory) {
+    if (noteMandatory[noteIndex]) {
+      return true;
+    }
+  }
+  return false;
 }
 
 /**
@@ -170,13 +236,17 @@ function mapContacts(contacts: any): Contact[] {
  */
 function mapDimension(id: string, dimension: any, role: any): Variable | null {
   if (dimension.category?.index && dimension.category.label) {
+    const variableType = mapVariableTypeEnum(id, role);
+    const isContentVariable = variableType === VartypeEnum.CONTENTS_VARIABLE;
+
     const variable: Variable = {
       id: id,
       label: dimension.label,
-      type: mapVariableTypeEnum(id, role),
+      type: variableType,
       mandatory: getMandatoryVariable(dimension.extension),
-      values: getVariableValues(dimension),
+      values: mapVariableValues(dimension, isContentVariable),
       codeLists: getCodelists(dimension.extension),
+      notes: mapNotes(dimension.note, dimension.extension?.noteMandatory),
     };
 
     return variable;
@@ -189,10 +259,16 @@ function mapDimension(id: string, dimension: any, role: any): Variable | null {
  * Maps the values of a dimension from a JSON-stat 2.0 response to an array of Value objects.
  *
  * @param dimension - The dimension object from the JSON-stat 2.0 response.
+ * @param isContentVariable - If the variable is a content variable or not.
  * @returns An array of Value objects.
  */
-function getVariableValues(dimension: any): Value[] {
-  const valueDisplayType: ValueDisplayType = getValueDisplayType(dimension);
+function mapVariableValues(
+  dimension: any,
+  isContentVariable: boolean,
+): Value[] {
+  const valueDisplayType: ValueDisplayType = getValueDisplayType(
+    dimension.extension,
+  );
   const values: Value[] = [];
   const indexEntries = Object.entries(dimension.category.index);
   indexEntries.sort(
@@ -200,36 +276,131 @@ function getVariableValues(dimension: any): Value[] {
   );
 
   for (const [code] of indexEntries) {
-    if (Object.prototype.hasOwnProperty.call(dimension.category.index, code)) {
+    if (Object.hasOwn(dimension.category.index, code)) {
       const labelText: string = getLabelText(
         valueDisplayType,
         code,
         dimension.category.label[code],
       );
 
-      values.push({
-        code: code,
-        label: labelText,
-      });
+      const mappedValue: Value = { code: code, label: labelText };
+
+      if (isContentVariable) {
+        mappedValue.contentInfo = mapContentInfo(dimension, code);
+      }
+
+      values.push(mappedValue);
     }
   }
+
+  mapValueNotes(dimension, values);
 
   return values;
 }
 
 /**
- * Maps the value display type for a dimension.
+ * Maps the content information for a value.
  *
  * @param dimension - The dimension object from the JSON-stat 2.0 response.
+ * @param code - The code of the value.
+ * @returns The ContentInfo object for the value.
+ */
+function mapContentInfo(dimension: any, code: string): ContentInfo {
+  const unit = dimension.category.unit?.[code] ?? '';
+
+  return {
+    unit: unit.base,
+    decimals: unit.decimals,
+    referencePeriod: dimension.extension?.refperiod?.[code] ?? '',
+  };
+}
+
+/**
+ * Maps the notes at value level for the given dimension.
+ *
+ * @param dimension - The dimension object from the JSON-stat 2.0 response.
+ * @param mappedValues - The array of Value objects to map the notes to.
+ */
+function mapValueNotes(dimension: any, mappedValues: Value[]): void {
+  if (
+    dimension.category?.index &&
+    dimension.category.label &&
+    dimension.category.note
+  ) {
+    const noteEntries = Object.entries(dimension.category.note);
+
+    for (const [code] of noteEntries) {
+      if (Object.hasOwn(dimension.category.note, code)) {
+        const noteTexts = dimension.category.note[code];
+
+        for (let i = 0; i < noteTexts.length; i++) {
+          let newNote: Note = {
+            text: noteTexts[i],
+            mandatory: getMandatoryValueNote(dimension.extension, code, i),
+          };
+
+          addNoteToItsValue(code, newNote, mappedValues);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Returns whether a note at value level is mandatory.
+ *
+ * @param dimensionExtension - The dimension extension object from the JSON-stat 2.0 response.
+ * @param code - The code of the value.
+ * @param noteIndex - The index of the note.
+ * @returns True if the note is mandatory; otherwise, false.
+ */
+function getMandatoryValueNote(
+  dimensionExtension: extension_dimension,
+  code: string,
+  noteIndex: number,
+): boolean {
+  if (dimensionExtension?.categoryNoteMandatory?.[code]?.[noteIndex]) {
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Adds a note to its corresponding value.
+ *
+ * @param code - The code of the value.
+ * @param note - The note to add.
+ * @param values - The array of Value objects to add the note to.
+ */
+function addNoteToItsValue(code: string, note: Note, values: Value[]): void {
+  const mappedValue = values.find((v) => v.code === code);
+  if (mappedValue) {
+    if (!mappedValue.notes) {
+      mappedValue.notes = [];
+    }
+    mappedValue.notes?.push(note);
+  }
+}
+
+/**
+ * Maps the value display type for a dimension.
+ *
+ * @param dimensionExtension - The dimension extension object from the JSON-stat 2.0 response.
  * @returns The value display type for the dimension.
  */
-function getValueDisplayType(dimension: any): ValueDisplayType {
-  if (dimension.extension?.show) {
-    if (dimension.extension.show === 'code') {
+function getValueDisplayType(
+  dimensionExtension: extension_dimension,
+): ValueDisplayType {
+  if (dimensionExtension?.show) {
+    if (dimensionExtension.show === 'code') {
       return 'code';
-    } else if (dimension.extension.show === 'value') {
+    }
+
+    if (dimensionExtension.show === 'value') {
       return 'value';
-    } else if (dimension.extension.show === 'code_value') {
+    }
+
+    if (dimensionExtension.show === 'code_value') {
       return 'code_value';
     }
   }
@@ -261,12 +432,14 @@ function getLabelText(
 /**
  * Returns whether a variable is mandatory.
  *
- * @param extension - The extension object from the JSON-stat 2.0 response.
+ * @param dimensionExtension - The dimension extension object from the JSON-stat 2.0 response.
  * @returns True if the variable is mandatory; otherwise, false.
  */
-function getMandatoryVariable(extension: any): boolean {
-  if (extension?.elimination) {
-    return !extension.elimination;
+function getMandatoryVariable(
+  dimensionExtension: extension_dimension,
+): boolean {
+  if (dimensionExtension?.elimination) {
+    return !dimensionExtension.elimination;
   }
   return true;
 }
@@ -274,12 +447,12 @@ function getMandatoryVariable(extension: any): boolean {
 /**
  * Maps the code lists of a dimension from a JSON-stat 2.0 response to an array of CodeList objects.
  *
- * @param extension - The extension object from the JSON-stat 2.0 response.
+ * @param dimensionExtension - The dimension extension object from the JSON-stat 2.0 response.
  * @returns An array of CodeList objects.
  */
-function getCodelists(extension: any): CodeList[] {
-  if (extension?.codeLists) {
-    return extension.codeLists.map((codeList: any) => {
+function getCodelists(dimensionExtension: extension_dimension): CodeList[] {
+  if (dimensionExtension?.codeLists) {
+    return dimensionExtension.codeLists.map((codeList: CodeListInformation) => {
       return {
         id: codeList.id,
         label: codeList.label,
