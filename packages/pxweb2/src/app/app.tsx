@@ -167,41 +167,41 @@ export function App() {
   return (
     <>
       <SkipToMain />
-        {!isTablet && <Header />}{' '}
-        <div className={styles.navigationAndContentContainer}>
-          {!isTablet && (
-            <NavigationRail
-              ref={navigationBarRef}
-              onChange={changeSelectedNavView}
-              selected={selectedNavigationView}
-            />
-          )}{' '}
-          <div className={styles.mainContainer}>
-            <ErrorBoundary>
-              <Selection
-                selectedNavigationView={selectedNavigationView}
-                selectedTabId={selectedTableId}
-                setSelectedNavigationView={changeSelectedNavView}
-                openedWithKeyboard={openedWithKeyboard}
-                hideMenuRef={hideMenuRef}
-              />
-            </ErrorBoundary>
-            <div className={styles.contentAndFooterContainer}>
-              {isTablet && <Header />}{' '}
-              <ErrorBoundary>
-                <Presentation selectedTabId={selectedTableId}></Presentation>
-              </ErrorBoundary>
-              <Footer />
-            </div>
-          </div>
-        </div>
-        {isTablet && (
-          <NavigationBar
+      {!isTablet && <Header />}{' '}
+      <div className={styles.navigationAndContentContainer}>
+        {!isTablet && (
+          <NavigationRail
             ref={navigationBarRef}
             onChange={changeSelectedNavView}
             selected={selectedNavigationView}
           />
         )}{' '}
+        <div className={styles.mainContainer}>
+          <ErrorBoundary>
+            <Selection
+              selectedNavigationView={selectedNavigationView}
+              selectedTabId={selectedTableId}
+              setSelectedNavigationView={changeSelectedNavView}
+              openedWithKeyboard={openedWithKeyboard}
+              hideMenuRef={hideMenuRef}
+            />
+          </ErrorBoundary>
+          <div className={styles.contentAndFooterContainer}>
+            {isTablet && <Header />}{' '}
+            <ErrorBoundary>
+              <Presentation selectedTabId={selectedTableId}></Presentation>
+            </ErrorBoundary>
+            <Footer />
+          </div>
+        </div>
+      </div>
+      {isTablet && (
+        <NavigationBar
+          ref={navigationBarRef}
+          onChange={changeSelectedNavView}
+          selected={selectedNavigationView}
+        />
+      )}{' '}
     </>
   );
 }

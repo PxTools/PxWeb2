@@ -29,9 +29,9 @@ class ErrorBoundary extends React.Component<
   render() {
     if (this.state.hasError) {
       return (
-         <Alert variant="error" size="small">
-            {this.state.error?.message}
-          </Alert>
+        <Alert variant="error" size="small">
+          {this.state.error?.message}
+        </Alert>
       );
     }
     return this.props.children;
