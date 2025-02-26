@@ -4,7 +4,6 @@
 /* eslint-disable */
 import type { ApiFeature } from './ApiFeature';
 import type { Language } from './Language';
-import type { MetadataOutputFormatType } from './MetadataOutputFormatType';
 import type { SourceReference } from './SourceReference';
 /**
  * API configuration
@@ -46,10 +45,6 @@ export type ConfigResponse = {
      * A list of how the data should be cite for diffrent languages.
      */
     sourceReferences?: Array<SourceReference>;
-    /**
-     * The default metadata format to used when no format is specified in the request.
-     */
-    defaultMetadataFormat: MetadataOutputFormatType;
     /**
      * The default data format to used when no format is specified in the request.
      */

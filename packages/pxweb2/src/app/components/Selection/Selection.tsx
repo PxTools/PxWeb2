@@ -1,12 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
 
-import {
-  metadataOutputFormat,
-  MetadataOutputFormatType,
-  TableService,
-} from '@pxweb2/pxweb2-api-client';
-import { mapTableMetadataResponse } from '../../../mappers/TableMetadataResponseMapper';
+import { TableService } from '@pxweb2/pxweb2-api-client';
+import { mapJsonStat2Response } from '../../../mappers/JsonStat2ResponseMapper';
 import { mapTableSelectionResponse } from '../../../mappers/TableSelectionResponseMapper';
 import {
   PxTableMetadata,
@@ -15,10 +11,12 @@ import {
   Value,
   SelectOption,
   mapCodeListToSelectOption,
+  PxTable,
 } from '@pxweb2/pxweb2-ui';
 import NavigationDrawer from '../../components/NavigationDrawer/NavigationDrawer';
 import useVariables from '../../context/useVariables';
 import { NavigationItem } from '../../components/NavigationMenu/NavigationItem/NavigationItemType';
+import useAccessibility from '../../context/useAccessibility';
 
 function addSelectedCodeListToVariable(
   currentVariable: SelectedVBValues | undefined,
@@ -241,12 +239,21 @@ function removeAllValuesOfVariable(
 type propsType = {
   selectedNavigationView: string;
   selectedTabId: string;
-  setSelectedNavigationView: (view: NavigationItem) => void;
+  openedWithKeyboard: boolean;
+  setSelectedNavigationView: (
+    keyboard: boolean,
+    close: boolean,
+    view: NavigationItem,
+  ) => void;
+  hideMenuRef?: React.RefObject<HTMLDivElement>;
 };
+
 export function Selection({
   selectedNavigationView,
   selectedTabId,
+  openedWithKeyboard,
   setSelectedNavigationView,
+  hideMenuRef,
 }: propsType) {
   const { selectedVBValues, setSelectedVBValues } = useVariables();
   const variables = useVariables();
@@ -263,6 +270,7 @@ export function Selection({
 
   //  Needed to know when the language has changed, so we can reload the default selection
   const [prevLang, setPrevLang] = useState('');
+  const { addModal, removeModal } = useAccessibility();
 
   useEffect(() => {
     if (errorMsg) {
@@ -293,21 +301,17 @@ export function Selection({
       variables.setIsLoadingMetadata(true);
     }
 
-    const outputFormat: metadataOutputFormat = MetadataOutputFormatType.JSON_PX;
     const metaDataDefaultSelection = true;
 
     TableService.getMetadataById(
       selectedTabId,
       i18n.resolvedLanguage,
-      outputFormat,
       metaDataDefaultSelection,
     )
-      .then((tableMetadataResponse) => {
-        const pxTabMetadata: PxTableMetadata = mapTableMetadataResponse(
-          tableMetadataResponse,
-        );
+      .then((Dataset) => {
+        const pxTable: PxTable = mapJsonStat2Response(Dataset, false);
 
-        setPxTableMetadata(pxTabMetadata);
+        setPxTableMetadata(pxTable.metadata);
         if (pxTableMetaToRender !== null) {
           setPxTableMetaToRender(null);
         }
@@ -536,6 +540,8 @@ export function Selection({
       handleCodeListChange={handleCodeListChange}
       handleCheckboxChange={handleCheckboxChange}
       handleMixedCheckboxChange={handleMixedCheckboxChange}
+      addModal={addModal}
+      removeModal={removeModal}
     />
   );
   const drawerView = <>View content</>;
@@ -546,10 +552,15 @@ export function Selection({
   return (
     selectedNavigationView !== 'none' && (
       <NavigationDrawer
+        ref={hideMenuRef}
         heading={t('presentation_page.sidemenu.selection.title')}
-        onClose={() => {
-          setSelectedNavigationView('none');
-        }}
+        onClose={(keyboard, view) =>
+          setSelectedNavigationView(keyboard, true, view)
+        }
+        view={
+          selectedNavigationView as 'filter' | 'view' | 'edit' | 'save' | 'help'
+        }
+        openedWithKeyboard={openedWithKeyboard}
       >
         {selectedNavigationView === 'filter' && drawerFilter}
         {selectedNavigationView === 'view' && drawerView}

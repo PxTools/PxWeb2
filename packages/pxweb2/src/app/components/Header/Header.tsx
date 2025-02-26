@@ -10,7 +10,7 @@ export const Header: React.FC = () => {
   const config = getConfig();
 
   return (
-    <div className={styles.header}>
+    <header className={styles.header}>
       <div>
         <span className={cl(styles['heading-medium'])}>
           {t('common.header.title')}
@@ -30,6 +30,6 @@ export const Header: React.FC = () => {
             ),
         )}
       </div>
-    </div>
+    </header>
   );
 };

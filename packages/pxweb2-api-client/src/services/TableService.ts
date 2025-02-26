@@ -2,11 +2,11 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CodeListOutputValuesType } from '../models/CodeListOutputValuesType';
 import type { CodeListResponse } from '../models/CodeListResponse';
-import type { MetadataOutputFormatType } from '../models/MetadataOutputFormatType';
+import type { Dataset } from '../models/Dataset';
+import type { OutputFormatParamType } from '../models/OutputFormatParamType';
+import type { OutputFormatType } from '../models/OutputFormatType';
 import type { SelectionResponse } from '../models/SelectionResponse';
-import type { TableMetadataResponse } from '../models/TableMetadataResponse';
 import type { TableResponse } from '../models/TableResponse';
 import type { TablesResponse } from '../models/TablesResponse';
 import type { VariablesSelection } from '../models/VariablesSelection';
@@ -88,19 +88,17 @@ export class TableService {
      *
      * @param id Id
      * @param lang The language if the default is not what you want.
-     * @param outputFormat The format of the resulting metadata
      * @param defaultSelection If metadata should be included as if default selection would have been applied.
      * This is a technical parameter that is used by PxWeb for initial loading of tables.
      *
-     * @returns TableMetadataResponse Success
+     * @returns Dataset Success
      * @throws ApiError
      */
     public static getMetadataById(
         id: string,
         lang?: string | null,
-        outputFormat?: MetadataOutputFormatType,
         defaultSelection: boolean = false,
-    ): CancelablePromise<TableMetadataResponse> {
+    ): CancelablePromise<Dataset> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/tables/{id}/metadata',
@@ -109,7 +107,6 @@ export class TableService {
             },
             query: {
                 'lang': lang,
-                'outputFormat': outputFormat,
                 'defaultSelection': defaultSelection,
             },
             errors: {
@@ -180,8 +177,8 @@ export class TableService {
      * @param lang The language if the default is not what you want.
      * @param valuecodes
      * @param codelist
-     * @param outputvalues
      * @param outputFormat
+     * @param outputFormatParams
      * @param heading Commaseparated list of variable codes that should be placed in the heading in the resulting data
      * @param stub Commaseparated list of variable codes that should be placed in the stub in the resulting data
      * @returns string Success
@@ -192,8 +189,8 @@ export class TableService {
         lang?: string | null,
         valuecodes?: Record<string, Array<string>>,
         codelist?: Record<string, string>,
-        outputvalues?: Record<string, CodeListOutputValuesType>,
-        outputFormat?: string,
+        outputFormat?: OutputFormatType,
+        outputFormatParams?: Array<OutputFormatParamType>,
         heading?: Array<string>,
         stub?: Array<string>,
     ): CancelablePromise<string> {
@@ -207,8 +204,8 @@ export class TableService {
                 'lang': lang,
                 'valuecodes': valuecodes,
                 'codelist': codelist,
-                'outputvalues': outputvalues,
                 'outputFormat': outputFormat,
+                'outputFormatParams': outputFormatParams,
                 'heading': heading,
                 'stub': stub,
             },
@@ -225,6 +222,7 @@ export class TableService {
      * @param id Id
      * @param lang The language if the default is not what you want.
      * @param outputFormat
+     * @param outputFormatParams
      * @param requestBody A selection
      * @returns string Success
      * @throws ApiError
@@ -232,7 +230,8 @@ export class TableService {
     public static getTableDataByPost(
         id: string,
         lang?: string | null,
-        outputFormat?: string,
+        outputFormat?: OutputFormatType,
+        outputFormatParams?: Array<OutputFormatParamType>,
         requestBody?: VariablesSelection,
     ): CancelablePromise<string> {
         return __request(OpenAPI, {
@@ -244,6 +243,7 @@ export class TableService {
             query: {
                 'lang': lang,
                 'outputFormat': outputFormat,
+                'outputFormatParams': outputFormatParams,
             },
             body: requestBody,
             mediaType: 'application/json',

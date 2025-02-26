@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { Discontinued } from './Discontinued';
 import type { FolderContentItem } from './FolderContentItem';
 import type { Link } from './Link';
 /**
@@ -29,7 +30,7 @@ export type Table = (FolderContentItem & {
      * List of varibles name
      */
     variableNames: Array<string>;
-    discontinued?: boolean | null;
+    discontinued?: Discontinued;
     /**
      * Links to ...
      */

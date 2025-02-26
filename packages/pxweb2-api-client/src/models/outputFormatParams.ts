@@ -2,7 +2,5 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export enum CodeListOutputValuesType {
-    AGGREGATED = 'aggregated',
-    SINGLE = 'single',
-}
+import type { OutputFormatParamType } from './OutputFormatParamType';
+export type outputFormatParams = Array<OutputFormatParamType>;

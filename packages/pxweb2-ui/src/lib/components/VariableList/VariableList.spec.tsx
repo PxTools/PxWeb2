@@ -86,6 +86,13 @@ describe('VariableList', () => {
         handleMixedCheckboxChange={() => {
           return;
         }}
+        isChangingCodeList={false}
+        addModal={() => {
+          return;
+        }}
+        removeModal={() => {
+          return;
+        }}
       />,
     );
 
@@ -106,6 +113,13 @@ describe('VariableList', () => {
           return;
         }}
         handleMixedCheckboxChange={() => {
+          return;
+        }}
+        isChangingCodeList={false}
+        addModal={() => {
+          return;
+        }}
+        removeModal={() => {
           return;
         }}
       />,
@@ -140,6 +154,13 @@ describe('VariableList', () => {
         handleMixedCheckboxChange={() => {
           return;
         }}
+        isChangingCodeList={false}
+        addModal={() => {
+          return;
+        }}
+        removeModal={() => {
+          return;
+        }}
       />,
       {
         wrapper: ({ children }) => (
@@ -170,6 +191,13 @@ describe('VariableList', () => {
           return;
         }}
         handleMixedCheckboxChange={() => {
+          return;
+        }}
+        isChangingCodeList={true}
+        addModal={() => {
+          return;
+        }}
+        removeModal={() => {
           return;
         }}
       />,
