@@ -100,11 +100,11 @@
     outline: none;
     background: var(--px-color-surface-subtle);
   }
-}
 
-.variableboxSearchAndSelectBorderOverride {
-  border-radius: 0 0 var(--px-border-radius-medium)
-    var(--px-border-radius-medium);
+  &.variableboxSearchAndSelectBorderOverride {
+    border-radius: 0 0 var(--px-border-radius-medium)
+      var(--px-border-radius-medium);
+  }
 }
 
 .input {
