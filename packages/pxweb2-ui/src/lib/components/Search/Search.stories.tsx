@@ -32,6 +32,8 @@ const meta: Meta<typeof Search> = {
     },
   },
   parameters: {
+    // Center the search in the canvas, needed for chromatic snapshots to work correctly
+    layout: 'centered',
     docs: {
       description: {
         component:
