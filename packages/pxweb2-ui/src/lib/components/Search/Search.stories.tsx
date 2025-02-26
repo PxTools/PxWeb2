@@ -31,9 +31,15 @@ const meta: Meta<typeof Search> = {
       description: 'Accessibility label for the clear button',
     },
   },
+  decorators: [
+    (Story) => (
+      <div style={{ margin: '3em' }}>
+        {/* 👇 Decorators in Storybook also accept a function. Replace <Story/> with Story() to enable it  */}
+        <Story />
+      </div>
+    ),
+  ],
   parameters: {
-    // Center the search in the canvas, needed for chromatic snapshots to work correctly
-    layout: 'centered',
     docs: {
       description: {
         component:
