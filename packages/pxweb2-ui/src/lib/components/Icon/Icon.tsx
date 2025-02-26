@@ -4,9 +4,10 @@ import * as Icons from './Icons';
 export interface IconProps {
   iconName: keyof typeof Icons;
   className?: string;
+  ariaLabel?: string;
 }
 
-const Icon: React.FC<IconProps> = ({ iconName, className }) => {
+const Icon: React.FC<IconProps> = ({ iconName, className, ariaLabel }) => {
   const icon = Icons[iconName];
 
   if (!icon) {
@@ -19,6 +20,7 @@ const Icon: React.FC<IconProps> = ({ iconName, className }) => {
       viewBox="0 0 24 24"
       className={className + ' ' + styles['icon']}
       fill="currentColor"
+      {...(ariaLabel ? { 'aria-label': ariaLabel } : {})}
     >
       {icon}
     </svg>
