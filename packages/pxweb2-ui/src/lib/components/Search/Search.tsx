@@ -8,7 +8,7 @@ import { Button } from '../Button/Button';
 
 export interface SearchProps {
   value?: string;
-  variant: 'default' | 'inVariableBox';
+  variant?: 'default' | 'inVariableBox';
   labelText?: string;
   searchPlaceHolder?: string;
   showLabel?: boolean;
@@ -22,7 +22,7 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
   (
     {
       value = '',
-      variant,
+      variant = 'default',
       labelText,
       searchPlaceHolder,
       showLabel = false,
@@ -81,7 +81,7 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
           <Icon
             iconName="MagnifyingGlass"
             className={classes.searchIcon}
-            aria-label={ariaLabelIconText}
+            ariaLabel={ariaLabelIconText}
           ></Icon>
           <input
             type="text"

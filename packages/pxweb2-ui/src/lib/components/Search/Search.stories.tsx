@@ -25,7 +25,7 @@ export const Variants: StoryFn<typeof Search> = () => {
       Default
       <br />
       <br />
-      <Search variant="default" searchPlaceHolder={placeholder}></Search>
+      <Search searchPlaceHolder={placeholder}></Search>
       <br />
       In a variable box
       <br />
@@ -37,7 +37,6 @@ export const Variants: StoryFn<typeof Search> = () => {
       <br />
       <Search
         showLabel={true}
-        variant="default"
         searchPlaceHolder={placeholder}
         labelText={labelText}
       ></Search>
@@ -45,7 +44,7 @@ export const Variants: StoryFn<typeof Search> = () => {
       Default without label
       <br />
       <br />
-      <Search variant="default" searchPlaceHolder={placeholder}></Search>
+      <Search searchPlaceHolder={placeholder}></Search>
       <br />
       In variable box
       <br />
