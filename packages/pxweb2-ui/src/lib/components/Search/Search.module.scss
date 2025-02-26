@@ -8,13 +8,6 @@
   align-self: stretch;
   margin-left: -4px;
   margin-right: -4px;
-
-  &:focus {
-    border-radius: var(--px-border-radius-medium);
-    outline: 3px solid var(--px-color-border-focus-outline);
-    background: var(--px-color-surface-default);
-    outline-offset: -3px;
-  }
 }
 
 .wrapper {
@@ -104,6 +97,11 @@
   &.variableboxSearchAndSelectBorderOverride {
     border-radius: 0 0 var(--px-border-radius-medium)
       var(--px-border-radius-medium);
+
+    &:hover,
+    &:has(input:focus-visible) {
+      border-radius: var(--px-border-radius-medium);
+    }
   }
 }
 

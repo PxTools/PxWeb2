@@ -128,18 +128,6 @@ describe('Search component', () => {
       expect(document.activeElement).toBe(input);
     });
 
-    it('invokes onChange while typing', async () => {
-      const user = userEvent.setup();
-      const handleChange = vi.fn();
-      const { getByRole } = render(<Search onChange={handleChange} />);
-      const input = getByRole('textbox');
-
-      await user.type(input, 'hello');
-
-      expect(handleChange).toHaveBeenCalledWith('h');
-      expect(handleChange).toHaveBeenCalledWith('hello');
-    });
-
     it('clears input and refocuses upon clicking the clear button', async () => {
       const user = userEvent.setup();
       const handleChange = vi.fn();
@@ -176,6 +164,18 @@ describe('Search component', () => {
       fireEvent.keyDown(input, { key: 'Escape' });
 
       expect(handleChange).not.toHaveBeenCalled();
+    });
+
+    it('invokes onChange while typing', async () => {
+      const user = userEvent.setup();
+      const handleChange = vi.fn();
+      const { getByRole } = render(<Search onChange={handleChange} />);
+      const input = getByRole('textbox');
+
+      await user.type(input, 'hello');
+
+      expect(handleChange).toHaveBeenCalledWith('h');
+      expect(handleChange).toHaveBeenCalledWith('hello');
     });
 
     it('maintains external ref focus after clearing', async () => {
