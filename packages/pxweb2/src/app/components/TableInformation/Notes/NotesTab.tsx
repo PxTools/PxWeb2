@@ -8,10 +8,13 @@ export type NotesTabProps = {
 };
 
 export function NotesTab({ pxtable }: NotesTabProps) {
+  if (!pxtable?.metadata.notes || pxtable.metadata.notes.length === 0) {
+    return <NoNotes tableLevel={false} />;
+  }
+
   return (
     <div className={cl(classes.notesTab)}>
       {pxtable?.metadata.notes[0].text}
-      <NoNotes tableLevel={false} />
     </div>
   );
 }
