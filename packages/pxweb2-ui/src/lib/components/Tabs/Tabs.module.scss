@@ -27,6 +27,7 @@
   border: none;
   cursor: pointer;
   background-color: var(--px-color-background-default);
+  color: var(--px-color-text-default);
 
   &:hover {
     background: var(--px-color-surface-action-subtle-hover);
@@ -52,4 +53,11 @@
   background: var(--px-color-border-selected);
   width: 100%;
   z-index: 1;
+}
+
+.tabPanel {
+  &:focus-visible {
+    outline: 2px solid var(--px-color-border-focus-outline);
+    outline-offset: -2px;
+  }
 }

@@ -19,6 +19,22 @@ We recommend the following tools for our development environment:
 
 By using these tools, we ensure a streamlined and efficient development process, enabling us to deliver high-quality code.
 
+## Technical debt
+
+An overview of the current technical debt in the project:
+
+### Long running tasks:
+
+1. Updating the packages used in the project. This includes both Dependabot PRs and other outdated packages.
+2. Fix SonrQube issues/codesmells
+3. Fix warnings when running 'npm run lint'
+4. See if any configurationfiles need to be updated. For example: tsconfig.base.json currently (25.02.2025) has some older versions that should be updated.
+
+### Onetime tasks:
+
+1. The package we use to generate the api-client is no longer maintained, and needs to be updated. It recommends a fork that is activly maintained.
+2. We have not specified a React version, except the types for React 18 in the web application. We should specify them so we have control over the React versions used.
+
 ## Git Branching Strategy
 
 We use a simple and effective Git branching strategy to keep our project organized and maintainable.

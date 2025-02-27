@@ -5,7 +5,7 @@ interface Resources {
       shorthand: 'en';
     };
     common: {
-      title: 'Welcome to PxWeb 2.0';
+      title: 'PxWeb 2.0';
       header: {
         title: 'PxWeb 2.0 [Main]';
         logo: 'PxWeb 2.0';
@@ -51,6 +51,7 @@ interface Resources {
         statistics: 'Statistikkbanken';
       };
       sidemenu: {
+        arialabeltoolsidemenu: 'Tools menu for table';
         hide: 'Hide';
         selection: {
           title: 'Filter';
@@ -65,6 +66,7 @@ interface Resources {
               tag_selected: '{{selected}} of {{total}} selected';
               tag_mandatory: 'Mandatory';
               alert_no_mandatory_values: 'You must select something in the list for the table to be displayed';
+              show_more: 'Show more';
             };
             content: {
               select: {
@@ -148,6 +150,7 @@ interface Resources {
         };
       };
       main_content: {
+        arialabelbreadcrumb: 'breadcrumb';
         last_updated: 'Last updated';
         show_details: 'Show details';
         table: {
@@ -159,22 +162,24 @@ interface Resources {
           };
         };
         about_table: {
-          title: 'About the table';
+          title: 'Information';
           footnotes: {
             title: 'Notes';
             show_all_footnotes: 'Show all notes for table';
           };
-          information: {
-            title: 'Information';
+          definitions: {
+            title: 'Definitions';
             description: 'The table is part of the statistics {{statistics}}';
           };
-          definition: {
-            title: 'Definitions';
+          details: {
+            title: 'Details';
             description: 'Description text...';
           };
-          metadata: {
-            title: 'Metadata';
+          contact: {
+            title: 'Contact';
             description: 'Description text...';
+            missing_heading: 'No contact information';
+            missing_text: 'The table has no contact information';
           };
         };
         related: {

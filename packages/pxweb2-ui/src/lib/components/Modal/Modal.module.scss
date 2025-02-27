@@ -23,10 +23,10 @@
 }
 
 .modal[open] {
-  animation: fade-in 200ms forwards;
+  animation: fade-in 280ms forwards;
 }
 .modal[open]::backdrop {
-  animation: fade-in 200ms forwards;
+  animation: fade-in 280ms forwards;
 }
 
 @keyframes fade-in {

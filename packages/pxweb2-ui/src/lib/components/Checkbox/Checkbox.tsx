@@ -34,13 +34,13 @@ export const Checkbox: React.FC<CheckboxProps> = ({
       className={styles.checkboxWrapper}
       tabIndex={tabIndex ? tabIndex : 0}
       onKeyUp={(event) => {
-        if (event.key === ' ' || event.key === 'Enter') {
+        if (event.key === ' ') {
           event.preventDefault();
           onChange(!value);
         }
       }}
       onKeyDown={(event) => {
-        if (event.key === ' ' || event.key === 'Enter') {
+        if (event.key === ' ') {
           event.preventDefault();
         }
       }}
@@ -99,7 +99,7 @@ export const MixedCheckbox: React.FC<MixedCheckboxProps> = ({
       })}
       tabIndex={tabIndex ? tabIndex : 0}
       onKeyUp={(event) => {
-        if (event.key === ' ' || event.key === 'Enter') {
+        if (event.key === ' ') {
           event.preventDefault();
           if (value === 'false') {
             onChange('true');
@@ -134,6 +134,7 @@ export const MixedCheckbox: React.FC<MixedCheckboxProps> = ({
       >
         {text}
       </div>
+      <div className={styles.checkboxBackgroundCover}></div>
     </div>
   );
 };

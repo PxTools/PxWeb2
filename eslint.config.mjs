@@ -12,6 +12,7 @@ export default [
       '**/.next/**',
       '**/build/**',
       '**/packages/pxweb2-api-client/**',
+      '**/storybook-static/**',
       '**/.cache/**',
     ],
   },

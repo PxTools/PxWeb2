@@ -1,5 +1,6 @@
 import cl from 'clsx';
 import { m } from 'motion/react';
+import { forwardRef } from 'react';
 
 import {
   Icon,
@@ -25,63 +26,67 @@ interface ItemProps {
   parentName: 'navBar' | 'navRail';
   selected: boolean;
   icon: IconProps['iconName'];
-  onClick: () => void;
+  onClick: (event: any) => void;
 }
-export const Item: React.FC<ItemProps> = ({
-  label,
-  parentName,
-  selected,
-  icon,
-  onClick,
-}) => {
-  const btnId = 'px-' + parentName + '-' + label;
-  const initialBaseBackgroundColor =
-    parentName === 'navBar' ? ColorSurfaceSubtle : ColorSurfaceDefault;
-  const initialBackgroundColor = selected
-    ? ColorSurfaceActionSubtleActive
-    : initialBaseBackgroundColor;
-  const buttonVariants = {
-    initial: {
-      backgroundColor: initialBackgroundColor, // TODO: Fix bug, initial color flashes when clicking a selected button
-      transition: springConfig,
-    },
-    hover: {
-      backgroundColor: [initialBackgroundColor, ColorSurfaceActionSubtleHover],
-      transition: springConfig,
-    },
-    pressed: {
-      backgroundColor: [
-        ColorSurfaceActionSubtleHover,
-        ColorSurfaceActionSubtleActive,
-      ],
-      transition: springConfig,
-    },
-  };
 
-  return (
-    <m.button
-      className={cl(
-        { [styles.selected]: selected },
-        styles.item,
-        styles[`${parentName}Item`],
-      )}
-      onClick={onClick}
-      type="button"
-      id={btnId}
-      // Framer Motion animations
-      key={selected.toString()} // Needed by motion to re-run the animation when the selected state changes, toString for type compatibility
-      initial={'initial'}
-      whileHover={'hover'}
-      whileTap={'pressed'}
-    >
-      <m.div
-        className={cl(styles.icon)}
-        // Framer Motion animations
-        variants={buttonVariants}
-      >
-        <Icon iconName={icon} />
-      </m.div>
-      <Label htmlFor={btnId}>{label}</Label>
-    </m.button>
-  );
-};
+export const Item = forwardRef<HTMLButtonElement, ItemProps>(
+  ({ label, parentName, selected, icon, onClick }, ref) => {
+    const btnId = 'px-' + parentName + '-' + label;
+    const initialBaseBackgroundColor =
+      parentName === 'navBar' ? ColorSurfaceSubtle : ColorSurfaceDefault;
+    const initialBackgroundColor = selected
+      ? ColorSurfaceActionSubtleActive
+      : initialBaseBackgroundColor;
+    const buttonVariants = {
+      initial: {
+        backgroundColor: initialBackgroundColor, // TODO: Fix bug, initial color flashes when clicking a selected button
+        transition: springConfig,
+      },
+      hover: {
+        backgroundColor: [
+          initialBackgroundColor,
+          ColorSurfaceActionSubtleHover,
+        ],
+        transition: springConfig,
+      },
+      pressed: {
+        backgroundColor: [
+          ColorSurfaceActionSubtleHover,
+          ColorSurfaceActionSubtleActive,
+        ],
+        transition: springConfig,
+      },
+    };
+
+    return (
+      <li className={cl(styles.navigationBarListItem, styles.fadein)}>
+        <m.button
+          ref={ref}
+          className={cl(
+            { [styles.selected]: selected },
+            styles.item,
+            styles[`${parentName}Item`],
+          )}
+          onClick={(event: any) => onClick(event)}
+          type="button"
+          id={btnId}
+          aria-expanded={selected}
+          // Framer Motion animations
+          key={selected.toString()} // Needed by motion to re-run the animation when the selected state changes, toString for type compatibility
+          initial={'initial'}
+          whileHover={'hover'}
+          whileTap={'pressed'}
+        >
+          <m.div
+            className={cl(styles.icon)}
+            // Framer Motion animations
+            variants={buttonVariants}
+          >
+            <Icon iconName={icon} />
+          </m.div>
+          <Label htmlFor={btnId}>{label}</Label>
+        </m.button>
+      </li>
+    );
+  },
+);

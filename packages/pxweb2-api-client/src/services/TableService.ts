@@ -13,6 +13,7 @@ import type { VariablesSelection } from '../models/VariablesSelection';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
+import { Dataset } from '../models/Dataset';
 export class TableService {
     /**
      * Get all Tables.
@@ -100,7 +101,7 @@ export class TableService {
         lang?: string | null,
         outputFormat?: MetadataOutputFormatType,
         defaultSelection: boolean = false,
-    ): CancelablePromise<TableMetadataResponse> {
+    ): CancelablePromise<Dataset> { // Manually edited to return Dataset. Should be generated from the API spec!
         return __request(OpenAPI, {
             method: 'GET',
             url: '/tables/{id}/metadata',
@@ -182,6 +183,7 @@ export class TableService {
      * @param codelist
      * @param outputvalues
      * @param outputFormat
+     * @param outputFormatParams
      * @param heading Commaseparated list of variable codes that should be placed in the heading in the resulting data
      * @param stub Commaseparated list of variable codes that should be placed in the stub in the resulting data
      * @returns string Success
@@ -193,7 +195,8 @@ export class TableService {
         valuecodes?: Record<string, Array<string>>,
         codelist?: Record<string, string>,
         outputvalues?: Record<string, CodeListOutputValuesType>,
-        outputFormat?: string,
+        outputFormat?: 'px' | 'json-stat2' | 'csv' | 'xlsx' | 'html' | 'json-px' | 'parquet',
+        outputFormatParams?: Array<'UseCodes' | 'UseTexts' | 'UseCodesAndTexts' | 'IncludeTitle' | 'SeparatorTab' | 'SeparatorSpace' | 'SeparatorSemicolon'>,
         heading?: Array<string>,
         stub?: Array<string>,
     ): CancelablePromise<string> {
@@ -209,6 +212,7 @@ export class TableService {
                 'codelist': codelist,
                 'outputvalues': outputvalues,
                 'outputFormat': outputFormat,
+                'outputFormatParams': outputFormatParams,
                 'heading': heading,
                 'stub': stub,
             },
@@ -225,6 +229,7 @@ export class TableService {
      * @param id Id
      * @param lang The language if the default is not what you want.
      * @param outputFormat
+     * @param outputFormatParams
      * @param requestBody A selection
      * @returns string Success
      * @throws ApiError
@@ -232,7 +237,8 @@ export class TableService {
     public static getTableDataByPost(
         id: string,
         lang?: string | null,
-        outputFormat?: string,
+        outputFormat?: 'px' | 'json-stat2' | 'csv' | 'xlsx' | 'html' | 'json-px' | 'parquet',
+        outputFormatParams?: Array<'UseCodes' | 'UseTexts' | 'UseCodesAndTexts' | 'IncludeTitle' | 'SeparatorTab' | 'SeparatorSpace' | 'SeparatorSemicolon'>,
         requestBody?: VariablesSelection,
     ): CancelablePromise<string> {
         return __request(OpenAPI, {
@@ -244,6 +250,7 @@ export class TableService {
             query: {
                 'lang': lang,
                 'outputFormat': outputFormat,
+                'outputFormatParams': outputFormatParams,
             },
             body: requestBody,
             mediaType: 'application/json',
