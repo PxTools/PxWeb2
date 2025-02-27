@@ -167,6 +167,7 @@
           "missing_heading": "Inga noter",
           "missing_text_table": "Tabellen har inga noter.",
           "missing_text_selection": "Det finns ingen not för vald filtrering.",
+          "mandatory_heading": "Viktigt om tabellen",
           "show_all_footnotes": "Visa alla fotnoter för tabellen"
         },
         "definitions": {

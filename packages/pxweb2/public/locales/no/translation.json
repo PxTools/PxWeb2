@@ -167,6 +167,7 @@
           "missing_heading": "Ingen merknader",
           "missing_text_table": "Tabellen har ingen merknader.",
           "missing_text_selection": "Det er ingen merknader for valgt filtrering.",
+          "mandatory_heading": "Viktig om tabellen",
           "show_all_footnotes": "Vis alle noter for tabellen"
         },
         "definitions": {
