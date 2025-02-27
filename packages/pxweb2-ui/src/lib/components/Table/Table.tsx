@@ -435,7 +435,6 @@ function createRowMobile({
         case stubLength - 2: {
           // second last level
           createSecondLastMobileHeader(stubIndex, cellMeta, val, i, tableRows);
-          // console.log('stubIteration-2', stubIteration);
           break;
         }
       }
@@ -457,8 +456,6 @@ function createRowMobile({
       tableRow.push(
         <th
           id={cellMeta.htmlId}
-          // scope="row"
-          // role="rowheader"
           className={cl(classes.stub, classes[`stub-${stubIndex}`])}
           key={getNewKey()}
         >
@@ -579,8 +576,6 @@ function createRepeatedMobileHeader(
       <th
         colSpan={2}
         id={stubDataCellCodes[n].htmlId}
-        // scope="col"
-        // role="columnheader"
         className={cl(classes.stub, classes[`stub-${stubIndex}`])}
         key={getNewKey()}
       >
@@ -627,8 +622,6 @@ function createSecondLastMobileHeader(
     <th
       colSpan={2}
       id={cellMeta.htmlId}
-      // scope="col"
-      // role="columnheader"
       className={cl(classes.stub, classes[`stub-${stubIndex}`])}
       key={getNewKey()}
     >
