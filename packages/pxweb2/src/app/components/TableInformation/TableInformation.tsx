@@ -83,7 +83,7 @@ export function TableInformation({
         </div>
         <div className={cl(classes.tabsContent, classes['bodyshort-medium'])}>
           <TabPanel id="pnl-footnotes" controlledBy="tab-footnotes">
-            <NotesTab pxtable={tableData.data} />
+            <NotesTab pxTableMetadata={tableData.data?.metadata} />
           </TabPanel>
           <TabPanel id="pnl-definitions" controlledBy="tab-definitions">
             Definitions

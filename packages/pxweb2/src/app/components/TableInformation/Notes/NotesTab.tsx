@@ -1,20 +1,20 @@
 import cl from 'clsx';
 
 import classes from './NotesTab.module.scss';
-import { MandatoryNotes, NoNotes, PxTable } from '@pxweb2/pxweb2-ui';
+import { MandatoryNotes, NoNotes, PxTableMetadata } from '@pxweb2/pxweb2-ui';
 
 export type NotesTabProps = {
-  readonly pxtable: PxTable | undefined;
+  readonly pxTableMetadata: PxTableMetadata | undefined;
 };
 
-export function NotesTab({ pxtable }: NotesTabProps) {
-  if (!pxtable?.metadata.notes || pxtable.metadata.notes.length === 0) {
+export function NotesTab({ pxTableMetadata }: NotesTabProps) {
+  if (!pxTableMetadata?.notes || pxTableMetadata.notes.length === 0) {
     return <NoNotes tableLevel={false} />;
   }
 
   return (
     <div className={cl(classes.notesTab)}>
-      <MandatoryNotes pxTable={pxtable} />
+      <MandatoryNotes pxTableMetadata={pxTableMetadata} />
     </div>
   );
 }
