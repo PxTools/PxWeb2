@@ -2,7 +2,12 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export enum MetadataOutputFormatType {
-    JSON_PX = 'json-px',
+export enum OutputFormatType {
+    PX = 'px',
     JSON_STAT2 = 'json-stat2',
+    CSV = 'csv',
+    XLSX = 'xlsx',
+    HTML = 'html',
+    JSON_PX = 'json-px',
+    PARQUET = 'parquet',
 }
