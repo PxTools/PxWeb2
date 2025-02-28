@@ -1,3 +1,4 @@
+import { ContentInfo } from './contentInfo';
 import { Note } from './note';
 
 export type Value = {
@@ -12,5 +13,9 @@ export type Value = {
   /**
    * Optional notes that are associated with the value
    */
-  notes?: Array<Note>;
+  notes?: Note[];
+  /**
+   * Optional content information. Only used if the value belongs to a content variable and hence is a content.
+   */
+  contentInfo?: ContentInfo;
 };

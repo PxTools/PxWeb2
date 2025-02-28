@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import cl from 'clsx';
 
 import classes from './TableInformation.module.scss';
+import useTableData from '../../context/useTableData';
+import { ContactTab } from './Contact/ContactTab';
 
 import {
   SideSheet,
@@ -25,6 +27,7 @@ export function TableInformation({
 }: TableInformationProps) {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('');
+  const tableData = useTableData();
 
   useEffect(() => {
     if (isOpen && selectedTab) {
@@ -129,7 +132,7 @@ export function TableInformation({
             Details
           </TabPanel>
           <TabPanel id="pnl-contact" controlledBy="tab-contact">
-            Contact
+            <ContactTab contacts={tableData.data?.metadata.contacts || []} />
           </TabPanel>
         </div>
       </TabsProvider>

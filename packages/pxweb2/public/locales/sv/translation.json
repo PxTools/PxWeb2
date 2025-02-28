@@ -176,7 +176,9 @@
         },
         "contact": {
           "title": "Kontakt",
-          "description": "Beskrivande text..."
+          "description": "Beskrivande text...",
+          "missing_heading": "Ingen kontaktinformation",
+          "missing_text": "Tabellen har ingen kontaktinformation."
         }
       },
       "related": {
