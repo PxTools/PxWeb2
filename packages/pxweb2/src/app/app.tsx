@@ -15,6 +15,7 @@ import { getConfig } from './util/config/getConfig';
 import { OpenAPI } from '@pxweb2/pxweb2-api-client';
 import useAccessibility from './context/useAccessibility';
 import useApp from './context/useApp';
+import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 
 export function App() {
   const { isTablet } = useApp();
@@ -176,16 +177,20 @@ export function App() {
           />
         )}{' '}
         <div className={styles.mainContainer}>
-          <Selection
-            selectedNavigationView={selectedNavigationView}
-            selectedTabId={selectedTableId}
-            setSelectedNavigationView={changeSelectedNavView}
-            openedWithKeyboard={openedWithKeyboard}
-            hideMenuRef={hideMenuRef}
-          />
+          <ErrorBoundary>
+            <Selection
+              selectedNavigationView={selectedNavigationView}
+              selectedTabId={selectedTableId}
+              setSelectedNavigationView={changeSelectedNavView}
+              openedWithKeyboard={openedWithKeyboard}
+              hideMenuRef={hideMenuRef}
+            />
+          </ErrorBoundary>
           <div className={styles.contentAndFooterContainer}>
             {isTablet && <Header />}{' '}
-            <Presentation selectedTabId={selectedTableId}></Presentation>
+            <ErrorBoundary>
+              <Presentation selectedTabId={selectedTableId}></Presentation>
+            </ErrorBoundary>
             <Footer />
           </div>
         </div>
