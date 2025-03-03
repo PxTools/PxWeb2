@@ -3,7 +3,10 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { Contact } from './Contact';
+import type { Discontinued } from './Discontinued';
 import type { jsonstat_noteMandatory } from './jsonstat_noteMandatory';
+import type { TimeUnit } from './TimeUnit';
+import type { updated } from './updated';
 /**
  * extension at root level
  */
@@ -76,15 +79,37 @@ export type extension_root = {
          * Subject area
          */
         'subject-area'?: string;
+        /**
+         * Date for next update
+         */
+        nextUpdate?: updated;
+        /**
+         * Survey for table
+         */
+        survey?: string;
+        /**
+         * Links for tables
+         */
+        link?: string;
+        /**
+         * How often a table is updated
+         */
+        updateFrequency?: string;
     };
+    /**
+     * Earliest time period in table
+     */
+    firstPeriod?: string;
+    /**
+     * Latest time period in table
+     */
+    lastPeriod?: string;
+    timeUnit?: TimeUnit;
     /**
      * Tag for table
      */
     tags?: Array<string>;
-    /**
-     * Table will no longer be updated
-     */
-    discontinued?: boolean | null;
+    discontinued?: Discontinued;
     /**
      * A list of contacts associated with the table.
      */
