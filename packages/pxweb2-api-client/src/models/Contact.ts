@@ -4,6 +4,7 @@
 /* eslint-disable */
 export type Contact = {
     name?: string;
+    organization?: string;
     phone?: string;
     mail?: string;
     /**

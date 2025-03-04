@@ -20,9 +20,7 @@ export type OpenAPIConfig = {
 };
 
 export const OpenAPI: OpenAPIConfig = {
-    //BASE: 'https://api.scb.se/OV0104/v2beta/api/v2',
-    //BASE: 'https://pxapi2-master-px.scb.se/api/v2',
-    BASE: 'https://data.qa.ssb.no/api/pxwebapi/v2-beta',
+    BASE: '',
     VERSION: '2.0',
     WITH_CREDENTIALS: false,
     CREDENTIALS: 'include',
