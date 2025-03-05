@@ -26,32 +26,138 @@
     }
   },
   "color": {
+    "base": {
+      "white": {
+        "value": "#FFFFFF"
+      },
+      "transparent": {
+        "value": "#FFFFFF00"
+      },
+      "bluegrayalpha": {
+        "value": "#27424750"
+      }
+    },
+    "red": {
+      "50": {},
+      "100": {},
+      "200": {},
+      "300": {},
+      "400": {},
+      "500": {},
+      "600": {},
+      "700": {},
+      "800": {},
+      "900": {}
+    },
+    "yellow": {
+      "50": {},
+      "100": {},
+      "200": {},
+      "300": {},
+      "400": {},
+      "500": {},
+      "600": {},
+      "700": {},
+      "800": {},
+      "900": {}
+    },
+    "green": {
+      "50": {},
+      "100": {},
+      "200": {},
+      "300": {},
+      "400": {},
+      "500": {},
+      "600": {},
+      "700": {},
+      "800": {},
+      "900": {}
+    },
+    "blue": {
+      "50": {},
+      "100": {},
+      "200": {
+        "value": "#C3E6FE"
+      },
+      "300": {},
+      "400": {},
+      "500": {},
+      "600": {},
+      "700": {},
+      "800": {},
+      "900": {}
+    },
+    "bluegray": {
+      "50": {},
+      "100": {},
+      "200": {
+        "value": "#C3DCDC"
+      },
+      "300": {
+        "value": "#9BC4C5"
+      },
+      "400": {},
+      "500": {},
+      "600": {},
+      "700": {
+        "value": "#2F555B"
+      },
+      "800": {},
+      "900": {
+        "value": "#162327"
+      }
+    },
+    "purple": {
+      "50": {},
+      "100": {},
+      "200": {},
+      "300": {
+        "value": "#BEAFFD"
+      },
+      "400": {},
+      "500": {},
+      "600": {},
+      "700": {},
+      "800": {},
+      "900": {}
+    },
+    "gray": {
+      "50": {
+        "value": "#F2F3F5"
+      },
+      "100": {
+        "value": "#ECEEF0"
+      },
+      "200": {
+        "value": "#DFE3E6"
+      },
+      "300": {
+        "value": "#CACFD5"
+      },
+      "400": {
+        "value": "#AAB0BA"
+      },
+      "500": {
+        "value": "#828C9A"
+      },
+      "600": {
+        "value": "#676F7B"
+      },
+      "700": {
+        "value": "#525962"
+      },
+      "800": {
+        "value": "#42474F"
+      },
+      "900": {
+        "value": "#22262A"
+      }
+    },
     "background-default": {
       "value": "#FFFFFF"
     },
     "background-subtle": {
       "value": "#F0F8F9"
-    },
-    "base": {
-      "white": {
-        "value": "#FFFFFF"
-      }
-    },
-    "blue": {
-      "200": {
-        "value": "#C3E6FE"
-      }
-    },
-    "bluegray": {
-      "300": {
-        "value": "#9BC4C5"
-      },
-      "700": {
-        "value": "#2F555B"
-      },
-      "900": {
-        "value": "#162327"
-      }
     },
     "surface-default": {
       "value": "#FFFFFF"
@@ -62,11 +168,14 @@
     "surface-moderate": {
       "value": "#DBEBEB"
     },
+    "surface-neutral-subtle": {
+      "value": "{color.gray.100}"
+    },
+    "surface-neutral-moderate": {
+      "value": "{color.gray.200}"
+    },
     "surface-inverted": {
       "value": "#274247"
-    },
-    "surface-highlight": {
-      "value": "#ECFEED"
     },
     "surface-action": {
       "value": "#274247"
@@ -88,6 +197,9 @@
     },
     "surface-info-moderate": {
       "value": "#C3E6FE"
+    },
+    "surface-search-string-highlight": {
+      "value": "{color.bluegray.200}"
     },
     "surface-success-subtle": {
       "value": "#DBF5DC"
@@ -146,17 +258,20 @@
     "border-error": {
       "value": "#E23822"
     },
-    "border-focus-outline": {
-      "value": "#7E4EF9"
-    },
-    "border-focus-boxshadow": {
-      "value": "#162327"
-    },
     "border-focus": {
       "value": "#9272FC"
     },
     "border-focus-on-inverted": {
       "value": "#9272FC"
+    },
+    "border-focus-boxshadow": {
+      "value": "#162327"
+    },
+    "border-focus-outline": {
+      "value": "#7E4EF9"
+    },
+    "border-focus-outline-on-inverted": {
+      "value": "{color.purple.300}"
     },
     "border-on-inverted": {
       "value": "#FFFFFF"
