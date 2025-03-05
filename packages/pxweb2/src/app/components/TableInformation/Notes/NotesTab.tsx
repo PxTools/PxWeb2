@@ -97,10 +97,10 @@ export function NotesTab({ pxTableMetadata }: NotesTabProps) {
 
   return (
     <div className={cl(classes.notesTab)}>
-      {notes && notes.hasMandatoryNotes && (
+      {notes && notes.mandatoryNotes.notesCount > 0 && (
         <MandatoryNotes notes={notes.mandatoryNotes} />
       )}
-      {notes && notes.hasNonMandatoryNotes && (
+      {notes && notes.nonMandatoryNotes.notesCount > 0 && (
         <NonMandatoryNotes notes={notes.nonMandatoryNotes} />
       )}
     </div>

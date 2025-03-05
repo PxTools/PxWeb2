@@ -20,7 +20,7 @@ export function NonMandatoryNotes({ notes }: NonMandatoryNotesProps) {
   );
 
   return (
-    <List heading={heading} listType="ul" listGroup>
+    <List heading={heading} listType="ul" listGroup={notes.notesCount === 1}>
       {notes.tableLevelNotes.map((note) => (
         <ListItem key={getNonMandatoryNoteKey()}>{note}</ListItem>
       ))}
