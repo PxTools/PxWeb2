@@ -3,6 +3,7 @@ import useVariables from '../../../context/useVariables';
 
 import classes from './NotesTab.module.scss';
 import {
+  getNotes,
   MandatoryNotes,
   NoNotes,
   PxTableMetadata,
@@ -91,9 +92,11 @@ export function NotesTab({ pxTableMetadata }: NotesTabProps) {
     return <NoNotes tableLevel={false} />; // No notes for this specific selection
   }
 
+  const notes = getNotes(pxTableMetadata);
+
   return (
     <div className={cl(classes.notesTab)}>
-      <MandatoryNotes pxTableMetadata={pxTableMetadata} />
+      <MandatoryNotes notes={notes} />
     </div>
   );
 }
