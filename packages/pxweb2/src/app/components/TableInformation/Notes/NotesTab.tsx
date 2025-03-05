@@ -5,6 +5,7 @@ import classes from './NotesTab.module.scss';
 import {
   getNotes,
   MandatoryNotes,
+  NonMandatoryNotes,
   NoNotes,
   PxTableMetadata,
   Variable,
@@ -98,6 +99,9 @@ export function NotesTab({ pxTableMetadata }: NotesTabProps) {
     <div className={cl(classes.notesTab)}>
       {notes && notes.hasMandatoryNotes && (
         <MandatoryNotes notes={notes.mandatoryNotes} />
+      )}
+      {notes && notes.hasNonMandatoryNotes && (
+        <NonMandatoryNotes notes={notes.nonMandatoryNotes} />
       )}
     </div>
   );

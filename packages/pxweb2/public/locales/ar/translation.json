@@ -168,6 +168,7 @@
           "missing_text_table": "الجدول لا يحتوي على ملاحظات.",
           "missing_text_selection": "لا توجد ملاحظات للتصفية المحددة.",
           "mandatory_heading": "مهم بخصوص الطاولة",
+          "non_mandatory_heading": "للجدول بأكمله",
           "show_all_footnotes": "إظهار كافة الملاحظات للجدول"
         },
         "definitions": {

@@ -23,6 +23,7 @@ export * from './lib/components/Tabs/TabPanel';
 export * from './lib/components/Contact/Contact';
 export * from './lib/components/Notes/NoNotes';
 export * from './lib/components/Notes/MandatoryNotes';
+export * from './lib/components/Notes/NonMandatoryNotes';
 export * from './lib/components/Notes/noteCollection';
 export * from './lib/shared-types/codelist';
 export * from './lib/shared-types/codelistType';
