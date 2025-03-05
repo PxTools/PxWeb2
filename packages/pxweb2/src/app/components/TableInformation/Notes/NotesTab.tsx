@@ -96,7 +96,9 @@ export function NotesTab({ pxTableMetadata }: NotesTabProps) {
 
   return (
     <div className={cl(classes.notesTab)}>
-      <MandatoryNotes notes={notes} />
+      {notes && notes.hasMandatoryNotes && (
+        <MandatoryNotes notes={notes.mandatoryNotes} />
+      )}
     </div>
   );
 }

@@ -21,16 +21,12 @@ export function MandatoryNotes({ notes }: MandatoryNotesProps) {
   );
 
   return (
-    <>
-      {notes && notes.hasMandatoryNotes && (
-        <Alert heading={heading} variant="info">
-          <List listType="ul" listGroup>
-            {notes.tableLevelMandatoryNotes.map((note) => (
-              <ListItem key={getMandatoryNoteKey()}>{note}</ListItem>
-            ))}
-          </List>
-        </Alert>
-      )}
-    </>
+    <Alert heading={heading} variant="info">
+      <List listType="ul" listGroup>
+        {notes.tableLevelNotes.map((note) => (
+          <ListItem key={getMandatoryNoteKey()}>{note}</ListItem>
+        ))}
+      </List>
+    </Alert>
   );
 }
