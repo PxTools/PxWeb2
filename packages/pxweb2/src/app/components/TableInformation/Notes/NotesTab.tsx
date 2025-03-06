@@ -4,7 +4,8 @@ import useVariables from '../../../context/useVariables';
 import classes from './NotesTab.module.scss';
 import {
   getNotes,
-  MandatoryNotes,
+  MandatoryTableNotes,
+  MandatoryVariableNotes,
   NonMandatoryNotes,
   NoNotes,
   PxTableMetadata,
@@ -93,13 +94,42 @@ export function NotesTab({ pxTableMetadata }: NotesTabProps) {
     return <NoNotes tableLevel={false} />; // No notes for this specific selection
   }
 
+  // pxTableMetadata?.notes?.push({
+  //   text: 'This is table test note 1',
+  //   mandatory: true,
+  // });
+  // pxTableMetadata?.notes?.push({
+  //   text: 'This is table test note 2',
+  //   mandatory: true,
+  // });
+  // pxTableMetadata?.variables[0].notes?.push({
+  //   text: 'This is a variable test note 1',
+  //   mandatory: true,
+  // });
+  // pxTableMetadata?.variables[1].notes?.push({
+  //   text: 'This is a variable test note a',
+  //   mandatory: true,
+  // });
+  // pxTableMetadata?.variables[1].notes?.push({
+  //   text: 'This is a variable test note b',
+  //   mandatory: true,
+  // });
+
   const notes = getNotes(pxTableMetadata);
 
   return (
     <div className={cl(classes.notesTab)}>
-      {notes && notes.mandatoryNotes.notesCount > 0 && (
-        <MandatoryNotes notes={notes.mandatoryNotes} />
+      {notes && notes.mandatoryNotes.tableLevelNotes.length > 0 && (
+        <MandatoryTableNotes notes={notes.mandatoryNotes.tableLevelNotes} />
       )}
+      {notes && notes.mandatoryNotes.variableNotes.length > 0 && (
+        <>
+          {notes.mandatoryNotes.variableNotes.map((varNotes) => (
+            <MandatoryVariableNotes variableNotes={varNotes} />
+          ))}
+        </>
+      )}
+
       {notes && notes.nonMandatoryNotes.notesCount > 0 && (
         <NonMandatoryNotes notes={notes.nonMandatoryNotes} />
       )}
