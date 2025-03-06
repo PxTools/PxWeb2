@@ -20,10 +20,33 @@ export function NonMandatoryNotes({ notes }: NonMandatoryNotesProps) {
   );
 
   return (
-    <List heading={heading} listType="ul" listGroup={notes.notesCount === 1}>
-      {notes.tableLevelNotes.map((note) => (
-        <ListItem key={getNonMandatoryNoteKey()}>{note}</ListItem>
-      ))}
-    </List>
+    <>
+      {notes && notes.tableLevelNotes.length > 0 && (
+        <List
+          heading={heading}
+          listType="ul"
+          listGroup={notes.notesCount === 1}
+        >
+          {notes.tableLevelNotes.map((note) => (
+            <ListItem key={getNonMandatoryNoteKey()}>{note}</ListItem>
+          ))}
+        </List>
+      )}
+      {notes && notes.variableNotes.length > 0 && (
+        <>
+          {notes.variableNotes.map((varNotes) => (
+            <List
+              heading={varNotes.variableName}
+              listType="ul"
+              listGroup={varNotes.notes.length === 1}
+            >
+              {varNotes.notes.map((note) => (
+                <ListItem key={getNonMandatoryNoteKey()}>{note}</ListItem>
+              ))}
+            </List>
+          ))}
+        </>
+      )}
+    </>
   );
 }
