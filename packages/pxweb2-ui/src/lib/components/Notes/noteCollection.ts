@@ -3,7 +3,6 @@ import { PxTableMetadata } from '../../shared-types/pxTableMetadata';
 import { Value } from '../../shared-types/value';
 import { Variable } from '../../shared-types/variable';
 
-
 // Internal type holding table notes.
 export type noteCollection = {
   notesCount: number;
@@ -110,7 +109,6 @@ function getNotesForValue(
       }
     }
   }
-
 }
 
 // Add a note to a variable
@@ -129,7 +127,7 @@ function addVariableNote(
       variableCode: variable.id,
       variableName: variable.label,
       notes: [note.text],
-      valueNotes: []
+      valueNotes: [],
     };
     collection.variableNotes.push(newVariableNote);
   }
