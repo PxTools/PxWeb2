@@ -1,18 +1,29 @@
 import { Note } from '../../shared-types/note';
 import { PxTableMetadata } from '../../shared-types/pxTableMetadata';
+import { Value } from '../../shared-types/value';
 import { Variable } from '../../shared-types/variable';
 
-export type variableNotes = {
-  variableCode: string;
-  variableName: string;
-  notes: string[];
-};
 
 // Internal type holding table notes.
 export type noteCollection = {
   notesCount: number;
   tableLevelNotes: string[];
   variableNotes: variableNotes[];
+};
+
+// Internal type holding notes for a variable.
+export type variableNotes = {
+  variableCode: string;
+  variableName: string;
+  notes: string[];
+  valueNotes: valueNotes[];
+};
+
+// Internal type holding notes for a value.
+export type valueNotes = {
+  valueCode: string;
+  valueName: string;
+  notes: string[];
 };
 
 // Internal type holding mandatory and non mandatory notes for a table
@@ -66,6 +77,7 @@ function getNotesForVariable(
   variable: Variable,
   notes: tableNoteCollection,
 ): void {
+  // Get notes at variable level
   if (variable.notes && variable.notes.length > 0) {
     for (const note of variable.notes) {
       if (note.mandatory) {
@@ -75,8 +87,33 @@ function getNotesForVariable(
       }
     }
   }
+  // Get notes at value level
+  if (variable.values) {
+    for (const value of variable.values) {
+      getNotesForValue(variable, value, notes);
+    }
+  }
 }
 
+// Get all notes for value
+function getNotesForValue(
+  variable: Variable,
+  value: Value,
+  notes: tableNoteCollection,
+): void {
+  if (value.notes && value.notes.length > 0) {
+    for (const note of value.notes) {
+      if (note.mandatory) {
+        addValueNote(variable, value, note, notes.mandatoryNotes);
+      } else {
+        addValueNote(variable, value, note, notes.nonMandatoryNotes);
+      }
+    }
+  }
+
+}
+
+// Add a note to a variable
 function addVariableNote(
   variable: Variable,
   note: Note,
@@ -92,6 +129,48 @@ function addVariableNote(
       variableCode: variable.id,
       variableName: variable.label,
       notes: [note.text],
+      valueNotes: []
+    };
+    collection.variableNotes.push(newVariableNote);
+  }
+}
+
+// Add a note to a value
+function addValueNote(
+  variable: Variable,
+  value: Value,
+  note: Note,
+  collection: noteCollection,
+): void {
+  const existingVariableNote = collection.variableNotes.find(
+    (vn) => vn.variableCode === variable.id,
+  );
+  if (existingVariableNote) {
+    const existingValueNote = existingVariableNote.valueNotes.find(
+      (vn) => vn.valueCode === value.code,
+    );
+    if (existingValueNote) {
+      existingValueNote.notes.push(note.text);
+    } else {
+      const newValueNote: valueNotes = {
+        valueCode: value.code,
+        valueName: value.label,
+        notes: [note.text],
+      };
+      existingVariableNote.valueNotes.push(newValueNote);
+    }
+  } else {
+    const newVariableNote: variableNotes = {
+      variableCode: variable.id,
+      variableName: variable.label,
+      notes: [],
+      valueNotes: [
+        {
+          valueCode: value.code,
+          valueName: value.label,
+          notes: [note.text],
+        },
+      ],
     };
     collection.variableNotes.push(newVariableNote);
   }

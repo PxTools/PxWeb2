@@ -94,26 +94,26 @@ export function NotesTab({ pxTableMetadata }: NotesTabProps) {
     return <NoNotes tableLevel={false} />; // No notes for this specific selection
   }
 
-  pxTableMetadata?.notes?.push({
-    text: 'This is table test note 1',
-    mandatory: true,
-  });
-  pxTableMetadata?.notes?.push({
-    text: 'This is table test note 2',
-    mandatory: true,
-  });
-  pxTableMetadata?.variables[0].notes?.push({
-    text: 'This is a variable test note 1',
-    mandatory: false,
-  });
-  pxTableMetadata?.variables[1].notes?.push({
-    text: 'This is a variable test note a',
-    mandatory: false,
-  });
-  pxTableMetadata?.variables[1].notes?.push({
-    text: 'This is a variable test note b',
-    mandatory: true,
-  });
+  // pxTableMetadata?.notes?.push({
+  //   text: 'This is table test note 1',
+  //   mandatory: true,
+  // });
+  // pxTableMetadata?.notes?.push({
+  //   text: 'This is table test note 2',
+  //   mandatory: true,
+  // });
+  // pxTableMetadata?.variables[0].notes?.push({
+  //   text: 'This is a variable test note 1',
+  //   mandatory: false,
+  // });
+  // pxTableMetadata?.variables[1].notes?.push({
+  //   text: 'This is a variable test note a',
+  //   mandatory: false,
+  // });
+  // pxTableMetadata?.variables[1].notes?.push({
+  //   text: 'This is a variable test note b',
+  //   mandatory: true,
+  // });
 
   const notes = getNotes(pxTableMetadata);
 
