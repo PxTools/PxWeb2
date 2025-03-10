@@ -60,7 +60,17 @@ function getPxTable(): PxTable {
     variables: variables,
     language: 'en',
     contacts: [],
+    source: '',
+    infofile: '',
     decimals: 0,
+    officialStatistics: false,
+    notes: [],
+    matrix: '',
+    subjectCode: '',
+    subjectArea: '',
+    aggregationAllowed: false,
+    contents: '',
+    descriptionDefault: false,
   };
   const table: PxTable = {
     metadata: tableMeta,
