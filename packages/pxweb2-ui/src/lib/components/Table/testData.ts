@@ -60,6 +60,7 @@ function getPxTable(): PxTable {
     variables: variables,
     language: 'en',
     contacts: [],
+    decimals: 0,
   };
   const table: PxTable = {
     metadata: tableMeta,
