@@ -22,7 +22,7 @@ export function MandatoryTableNotes({ notes }: MandatoryTableNotesProps) {
 
   return (
     <Alert heading={heading} variant="info">
-      <List listType="ul" listGroup={notes.length === 1}>
+      <List listType="ul">
         {notes.map((note) => (
           <ListItem key={getMandatoryTableNoteKey()}>{note}</ListItem>
         ))}
