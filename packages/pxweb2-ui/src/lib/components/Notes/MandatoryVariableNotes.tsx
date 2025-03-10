@@ -18,23 +18,26 @@ export function MandatoryVariableNotes({
 }: MandatoryVariableNotesProps) {
   return (
     <Alert heading={variableNotes.variableName} variant="info">
-      {variableNotes && variableNotes.notes.length > 0 && (
-        <List listType="ul" listGroup={variableNotes.notes.length === 1}>
+      {(variableNotes.notes.length > 0 ||
+        variableNotes.valueNotes.length > 0) && (
+        <List listType="ul" listGroup={variableNotes.valueNotes.length > 0}>
           {variableNotes.notes.map((note) => (
             <ListItem key={getMandatoryVariableNoteKey()}>{note}</ListItem>
           ))}
-        </List>
-      )}
-      {variableNotes?.valueNotes && variableNotes.valueNotes.length > 0 && (
-        <>
-          {variableNotes.valueNotes.map((value) => (
-            <List listType="ul" subHeading={value.valueName}>
-              {value.notes.map((note) => (
-                <ListItem key={getMandatoryVariableNoteKey()}>{note}</ListItem>
+          {variableNotes?.valueNotes && variableNotes.valueNotes.length > 0 && (
+            <ListItem key={getMandatoryVariableNoteKey()}>
+              {variableNotes.valueNotes.map((value) => (
+                <List listType="ul" subHeading={value.valueName}>
+                  {value.notes.map((note) => (
+                    <ListItem key={getMandatoryVariableNoteKey()}>
+                      {note}
+                    </ListItem>
+                  ))}
+                </List>
               ))}
-            </List>
-          ))}
-        </>
+            </ListItem>
+          )}
+        </List>
       )}
     </Alert>
   );
