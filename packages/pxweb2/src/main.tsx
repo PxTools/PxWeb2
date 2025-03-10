@@ -9,11 +9,13 @@ import { VariablesProvider } from './app/context/VariablesProvider';
 import { TableDataProvider } from './app/context/TableDataProvider';
 import { AccessibilityProvider } from './app/context/AccessibilityProvider';
 import { AppProvider } from './app/context/AppProvider';
+import ErrorPage from './app/components/ErrorPage/ErrorPage';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <Navigate to="/table/tab638" replace={true} />,
+    errorElement: <ErrorPage />,
   },
   {
     path: '/table/:tableId',
