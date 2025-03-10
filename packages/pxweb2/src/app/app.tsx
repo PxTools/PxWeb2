@@ -114,12 +114,7 @@ export function App() {
         undefined,
       );
     }
-  }, [
-    accessibility,
-    navigationBarRef.current,
-    hideMenuRef.current,
-    selectedNavigationView,
-  ]);
+  }, [accessibility, selectedNavigationView]);
 
   useEffect(() => {
     if (errorMsg !== '') {
