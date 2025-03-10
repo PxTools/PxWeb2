@@ -73,6 +73,16 @@
   overflow-y: auto;
   scrollbar-width: thin;
   border-radius: 7px;
+
+  &.no-border-radius-top {
+    border-radius: 0 0 7px 7px;
+
+    // Show correct border radius when hovering or focusing
+    &:has(input:focus-visible),
+    &:has(:hover) {
+      border-radius: 7px;
+    }
+  }
 }
 
 .variablebox-content-full-values-list-scroll-up {
