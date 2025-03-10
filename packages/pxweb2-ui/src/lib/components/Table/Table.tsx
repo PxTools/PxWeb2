@@ -603,21 +603,6 @@ function fillData(
     // ]);
 
     // Get the number of decimals for the contents variable
-
-    // var numberOfDecimals: number;
-
-    // if (
-    //   contentsVariableDecimals &&
-    //   contentsVariableDecimals[dimensions[contentVarIndex]]
-    // ) {
-    //   numberOfDecimals =
-    //     contentsVariableDecimals[dimensions[contentVarIndex]].decimals;
-    // } else if (table.metadata.decimals) {
-    //   numberOfDecimals = table.metadata.decimals;
-    // } else {
-    //   numberOfDecimals = 6;
-    // }
-
     const numberOfDecimals: number =
       contentsVariableDecimals?.[dimensions[contentVarIndex]]?.decimals ??
       table.metadata.decimals ??
