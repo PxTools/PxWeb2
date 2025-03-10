@@ -57,7 +57,7 @@ export const NavigationBar = React.forwardRef<
               label={t('presentation_page.sidemenu.selection.title')}
               selected={selected === 'filter'}
               icon={'Controls'}
-              onClick={(event: any) => {
+              onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
                 onChange(
                   event.screenX === 0 && event.screenY === 0,
                   selected === 'filter',
@@ -71,7 +71,7 @@ export const NavigationBar = React.forwardRef<
               label={t('presentation_page.sidemenu.view.title')}
               selected={selected === 'view'}
               icon={'BarChart'}
-              onClick={(event: any) => {
+              onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
                 onChange(
                   event.screenX === 0 && event.screenY === 0,
                   selected === 'view',
@@ -85,7 +85,7 @@ export const NavigationBar = React.forwardRef<
               label={t('presentation_page.sidemenu.edit.title')}
               selected={selected === 'edit'}
               icon={'ArrowsUpDown'}
-              onClick={(event: any) => {
+              onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
                 onChange(
                   event.screenX === 0 && event.screenY === 0,
                   selected === 'edit',
@@ -99,7 +99,7 @@ export const NavigationBar = React.forwardRef<
               label={t('presentation_page.sidemenu.save.title')}
               selected={selected === 'save'}
               icon={'FloppyDisk'}
-              onClick={(event: any) => {
+              onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
                 onChange(
                   event.screenX === 0 && event.screenY === 0,
                   selected === 'save',
@@ -113,7 +113,7 @@ export const NavigationBar = React.forwardRef<
               label={t('presentation_page.sidemenu.help.title')}
               selected={selected === 'help'}
               icon={'QuestionMarkCircle'}
-              onClick={(event: any) => {
+              onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
                 onChange(
                   event.screenX === 0 && event.screenY === 0,
                   selected === 'help',
