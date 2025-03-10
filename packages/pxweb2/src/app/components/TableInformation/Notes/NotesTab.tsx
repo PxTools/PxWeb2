@@ -110,9 +110,25 @@ export function NotesTab({ pxTableMetadata }: NotesTabProps) {
   //   text: 'This is a variable test note a',
   //   mandatory: false,
   // });
-  // pxTableMetadata?.variables[1].notes?.push({
+  // pxTableMetadata?.variables[2].notes?.push({
+  //   text: 'This is a variable test note uuuu',
+  //   mandatory: false,
+  // });
+  // pxTableMetadata?.variables[3].notes?.push({
   //   text: 'This is a variable test note b',
-  //   mandatory: true,
+  //   mandatory: false,
+  // });
+  // pxTableMetadata?.variables[3].notes?.push({
+  //   text: 'This is a variable test note c',
+  //   mandatory: false,
+  // });
+  // pxTableMetadata?.variables[3].values[0].notes?.push({
+  //   text: 'This is a value test note 3',
+  //   mandatory: false,
+  // });
+  // pxTableMetadata?.variables[3].values[0].notes?.push({
+  //   text: 'This is a value test note 4',
+  //   mandatory: false,
   // });
 
   const notes = getNotes(pxTableMetadata);

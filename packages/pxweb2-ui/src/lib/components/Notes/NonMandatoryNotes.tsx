@@ -35,34 +35,34 @@ export function NonMandatoryNotes({ notes }: NonMandatoryNotesProps) {
       {notes && notes.variableNotes.length > 0 && (
         <>
           {notes.variableNotes.map((varNotes) => (
-            <div key={getNonMandatoryNoteKey()}>
-              <List
-                heading={varNotes.variableName}
-                listType="ul"
-                listGroup={varNotes.notes.length === 1}
-              >
-                {varNotes.notes.map((note) => (
-                  <ListItem key={getNonMandatoryNoteKey()}>{note}</ListItem>
-                ))}
-              </List>
+            <List
+              heading={varNotes.variableName}
+              listType="ul"
+              listGroup={varNotes.valueNotes.length > 0}
+            >
+              {varNotes.notes.map((note) => (
+                <ListItem key={getNonMandatoryNoteKey()}>{note}</ListItem>
+              ))}
               {varNotes.valueNotes && varNotes.valueNotes.length > 0 && (
                 <>
                   {varNotes.valueNotes.map((value) => (
-                    <List
-                      key={getNonMandatoryNoteKey()}
-                      subHeading={value.valueName}
-                      listType="ul"
-                    >
-                      {value.notes.map((note) => (
-                        <ListItem key={getNonMandatoryNoteKey()}>
-                          {note}
-                        </ListItem>
-                      ))}
-                    </List>
+                    <ListItem key={getNonMandatoryNoteKey()}>
+                      <List
+                        key={getNonMandatoryNoteKey()}
+                        subHeading={value.valueName}
+                        listType="ul"
+                      >
+                        {value.notes.map((note) => (
+                          <ListItem key={getNonMandatoryNoteKey()}>
+                            {note}
+                          </ListItem>
+                        ))}
+                      </List>
+                    </ListItem>
                   ))}
                 </>
               )}
-            </div>
+            </List>
           ))}
         </>
       )}
