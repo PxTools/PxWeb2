@@ -69,17 +69,16 @@ export function Table({ pxtable, isMobile, className = '' }: TableProps) {
     ? pxtable.data.variableOrder.indexOf(contentsVariable.id)
     : (pxtable.metadata.decimals ?? 6);
 
-  const contentsVariableDecimals = pxtable.metadata.variables
-    .filter((variable) => variable.type === 'ContentsVariable')
-    .reduce(
-      (acc, variable) => {
-        variable.values.forEach((value) => {
-          acc[value.code] = { decimals: value.contentInfo?.decimals ?? 6 };
-        });
-        return acc;
-      },
-      {} as Record<string, { decimals: number }>,
-    );
+  const contentsVariableDecimals = Object.fromEntries(
+    pxtable.metadata.variables
+      .filter((variable) => variable.type === 'ContentsVariable')
+      .flatMap((variable) =>
+        variable.values.map((value) => [
+          value.code,
+          { decimals: value.contentInfo?.decimals ?? 6 },
+        ]),
+      ),
+  );
 
   // Create empty metadata structure for the dimensions in the header.
   // This structure will be filled with metadata when the header is created.
@@ -604,19 +603,26 @@ function fillData(
     // ]);
 
     // Get the number of decimals for the contents variable
-    var numberOfDecimals: number;
 
-    if (
-      contentsVariableDecimals &&
-      contentsVariableDecimals[dimensions[contentVarIndex]]
-    ) {
-      numberOfDecimals =
-        contentsVariableDecimals[dimensions[contentVarIndex]].decimals;
-    } else if (table.metadata.decimals) {
-      numberOfDecimals = table.metadata.decimals;
-    } else {
-      numberOfDecimals = 6;
-    }
+    // var numberOfDecimals: number;
+
+    // if (
+    //   contentsVariableDecimals &&
+    //   contentsVariableDecimals[dimensions[contentVarIndex]]
+    // ) {
+    //   numberOfDecimals =
+    //     contentsVariableDecimals[dimensions[contentVarIndex]].decimals;
+    // } else if (table.metadata.decimals) {
+    //   numberOfDecimals = table.metadata.decimals;
+    // } else {
+    //   numberOfDecimals = 6;
+    // }
+
+
+    const numberOfDecimals: number =
+    contentsVariableDecimals?.[dimensions[contentVarIndex]]?.decimals ??
+    table.metadata.decimals ??
+    6;
 
     const dataValue = getPxTableData(table.data.cube, dimensions);
 
