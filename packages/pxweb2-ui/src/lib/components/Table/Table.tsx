@@ -618,11 +618,10 @@ function fillData(
     //   numberOfDecimals = 6;
     // }
 
-
     const numberOfDecimals: number =
-    contentsVariableDecimals?.[dimensions[contentVarIndex]]?.decimals ??
-    table.metadata.decimals ??
-    6;
+      contentsVariableDecimals?.[dimensions[contentVarIndex]]?.decimals ??
+      table.metadata.decimals ??
+      6;
 
     const dataValue = getPxTableData(table.data.cube, dimensions);
 
