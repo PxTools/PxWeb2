@@ -44,8 +44,7 @@ interface CreateRowMobileParams {
   stubDataCellCodes: DataCellCodes;
   headingDataCellCodes: DataCellCodes[];
   tableRows: React.JSX.Element[];
-  repeatHeaderCounter: { count: number };
-  idCounter: { count: number };
+  uniqueIdCounter: { repeatHeaderCounter: number; idCounter: number };
 }
 
 /**
@@ -226,8 +225,7 @@ export function createRows(
         stubDataCellCodes: stubDatacellCodes,
         headingDataCellCodes,
         tableRows,
-        repeatHeaderCounter: { count: 0 },
-        idCounter: { count: 0 },
+        uniqueIdCounter: { repeatHeaderCounter: 0, idCounter: 0 },
       });
     } else {
       createRowDesktop({
@@ -398,8 +396,7 @@ function createRowMobile({
   stubDataCellCodes,
   headingDataCellCodes,
   tableRows,
-  repeatHeaderCounter,
-  idCounter,
+  uniqueIdCounter,
 }: CreateRowMobileParams): React.JSX.Element[] {
   const stubValuesLength = table.stub[stubIndex].values.length;
   const stubLength = table.stub.length;
@@ -412,7 +409,7 @@ function createRowMobile({
   //const stubValuesLength = table.stub[stubIndex].values.length;
   for (let i = 0; i < stubValuesLength; i++) {
     const variable = table.stub[stubIndex];
-    idCounter.count++;
+    uniqueIdCounter.idCounter++;
     const val = table.stub[stubIndex].values[i];
     const cellMeta: DataCellMeta = {
       varId: table.stub[stubIndex].id,
@@ -438,15 +435,14 @@ function createRowMobile({
         case stubLength - 3: {
           // third last level
           // Repeat the headers for all stubs except the 2 last levels
-          repeatHeaderCounter.count++;
+          uniqueIdCounter.repeatHeaderCounter++;
           createRepeatedMobileHeader(
             table,
             stubLength,
             stubIndex,
             stubDataCellCodes,
             tableRows,
-            repeatHeaderCounter,
-            idCounter,
+            uniqueIdCounter,
           );
           break;
         }
@@ -459,8 +455,7 @@ function createRowMobile({
             val,
             i,
             tableRows,
-            repeatHeaderCounter,
-            idCounter,
+            uniqueIdCounter,
           );
           break;
         }
@@ -474,8 +469,7 @@ function createRowMobile({
         stubDataCellCodes,
         headingDataCellCodes,
         tableRows,
-        repeatHeaderCounter,
-        idCounter,
+        uniqueIdCounter,
       });
       stubDataCellCodes.pop();
     } else {
@@ -485,9 +479,9 @@ function createRowMobile({
         '_' +
         cellMeta.valCode +
         '_I' +
-        idCounter.count +
+        uniqueIdCounter.idCounter +
         '_N' +
-        repeatHeaderCounter.count;
+        uniqueIdCounter.repeatHeaderCounter;
       cellMeta.htmlId = tempid;
       tableRow.push(
         <th
@@ -614,8 +608,7 @@ function createRepeatedMobileHeader(
   stubIndex: number,
   stubDataCellCodes: DataCellCodes,
   tableRows: React.JSX.Element[],
-  repeatHeaderCounter: { count: number },
-  idCounter: { count: number },
+  uniqueIdCounter: { repeatHeaderCounter: number; idCounter: number },
 ) {
   let tableRowRepeatHeader: React.JSX.Element[] = [];
   for (let n = 0; n <= stubLength - 3; n++) {
@@ -625,9 +618,9 @@ function createRepeatedMobileHeader(
       '_' +
       stubDataCellCodes[n].valCode +
       '_I' +
-      idCounter.count +
+      uniqueIdCounter.idCounter +
       '_N' +
-      repeatHeaderCounter.count;
+      uniqueIdCounter.repeatHeaderCounter;
 
     stubDataCellCodes[n].htmlId = tempid;
     tableRowRepeatHeader.push(
@@ -682,8 +675,7 @@ function createSecondLastMobileHeader(
   val: Value,
   i: number,
   tableRows: React.JSX.Element[],
-  repeatHeaderCounter: { count: number },
-  idCounter: { count: number },
+  uniuniqueIdCounter: { repeatHeaderCounter: number; idCounter: number },
 ): void {
   // second last level
   let tableRowSecondLastHeader: React.JSX.Element[] = [];
@@ -692,9 +684,9 @@ function createSecondLastMobileHeader(
     '_' +
     cellMeta.valCode +
     '_I' +
-    idCounter.count +
+    uniuniqueIdCounter.idCounter +
     '_N' +
-    repeatHeaderCounter.count;
+    uniuniqueIdCounter.repeatHeaderCounter;
   cellMeta.htmlId = tempid;
   tableRowSecondLastHeader.push(
     <th
