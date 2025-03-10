@@ -141,7 +141,10 @@ export function NotesTab({ pxTableMetadata }: NotesTabProps) {
       {notes && notes.mandatoryNotes.variableNotes.length > 0 && (
         <>
           {notes.mandatoryNotes.variableNotes.map((varNotes) => (
-            <MandatoryVariableNotes variableNotes={varNotes} />
+            <MandatoryVariableNotes
+              variableNotes={varNotes}
+              key={'mandatory-var-notes-' + varNotes.variableCode}
+            />
           ))}
         </>
       )}

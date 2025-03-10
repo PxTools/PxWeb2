@@ -47,11 +47,7 @@ export function NonMandatoryNotes({ notes }: NonMandatoryNotesProps) {
                 <>
                   {varNotes.valueNotes.map((value) => (
                     <ListItem key={getNonMandatoryNoteKey()}>
-                      <List
-                        key={getNonMandatoryNoteKey()}
-                        subHeading={value.valueName}
-                        listType="ul"
-                      >
+                      <List subHeading={value.valueName} listType="ul">
                         {value.notes.map((note) => (
                           <ListItem key={getNonMandatoryNoteKey()}>
                             {note}

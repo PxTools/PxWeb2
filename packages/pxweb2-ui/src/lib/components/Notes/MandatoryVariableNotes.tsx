@@ -8,8 +8,9 @@ export type MandatoryVariableNotesProps = {
 };
 
 let number = 0;
-function getMandatoryVariableNoteKey(): string {
-  return 'mandatory-variable-note-' + number++;
+function getMandatoryVariableNoteKey(name: string): string {
+  const key = 'mandatory-variable-note-' + name + number++;
+  return key;
 }
 
 /// Displays mandatory notes for a variable
@@ -22,14 +23,28 @@ export function MandatoryVariableNotes({
         variableNotes.valueNotes.length > 0) && (
         <List listType="ul" listGroup={variableNotes.valueNotes.length > 0}>
           {variableNotes.notes.map((note) => (
-            <ListItem key={getMandatoryVariableNoteKey()}>{note}</ListItem>
+            <ListItem
+              key={getMandatoryVariableNoteKey(variableNotes.variableCode)}
+            >
+              {note}
+            </ListItem>
           ))}
           {variableNotes?.valueNotes && variableNotes.valueNotes.length > 0 && (
-            <ListItem key={getMandatoryVariableNoteKey()}>
+            <ListItem
+              key={getMandatoryVariableNoteKey(variableNotes.variableCode)}
+            >
               {variableNotes.valueNotes.map((value) => (
-                <List listType="ul" subHeading={value.valueName}>
+                <List
+                  listType="ul"
+                  subHeading={value.valueName}
+                  key={getMandatoryVariableNoteKey(variableNotes.variableCode)}
+                >
                   {value.notes.map((note) => (
-                    <ListItem key={getMandatoryVariableNoteKey()}>
+                    <ListItem
+                      key={getMandatoryVariableNoteKey(
+                        variableNotes.variableCode,
+                      )}
+                    >
                       {note}
                     </ListItem>
                   ))}
