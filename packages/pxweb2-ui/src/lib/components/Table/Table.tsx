@@ -62,19 +62,24 @@ export function Table({ pxtable, isMobile, className = '' }: TableProps) {
 
   // Find one ore more contents variables
   const contentsVariable = pxtable.metadata.variables.find(
-    (variable) => variable.type === "ContentsVariable"
+    (variable) => variable.type === 'ContentsVariable',
   );
 
-  const contentVarIndex = contentsVariable ? pxtable.data.variableOrder.indexOf(contentsVariable.id) : (pxtable.metadata.decimals ?? 6);
+  const contentVarIndex = contentsVariable
+    ? pxtable.data.variableOrder.indexOf(contentsVariable.id)
+    : (pxtable.metadata.decimals ?? 6);
 
   const contentsVariableDecimals = pxtable.metadata.variables
-    .filter((variable) => variable.type === "ContentsVariable")
-    .reduce((acc, variable) => {
-      variable.values.forEach((value) => {
-        acc[value.code] = { decimals: value.contentInfo?.decimals ?? 6 };
-      });
-      return acc;
-    }, {} as Record<string, { decimals: number }>);
+    .filter((variable) => variable.type === 'ContentsVariable')
+    .reduce(
+      (acc, variable) => {
+        variable.values.forEach((value) => {
+          acc[value.code] = { decimals: value.contentInfo?.decimals ?? 6 };
+        });
+        return acc;
+      },
+      {} as Record<string, { decimals: number }>,
+    );
 
   // Create empty metadata structure for the dimensions in the header.
   // This structure will be filled with metadata when the header is created.
@@ -106,7 +111,14 @@ export function Table({ pxtable, isMobile, className = '' }: TableProps) {
     >
       <thead>{createHeading(pxtable, tableMeta, headingDataCellCodes)}</thead>
       <tbody>
-        {createRows(pxtable, tableMeta, headingDataCellCodes, isMobile, contentVarIndex, contentsVariableDecimals)}
+        {createRows(
+          pxtable,
+          tableMeta,
+          headingDataCellCodes,
+          isMobile,
+          contentVarIndex,
+          contentsVariableDecimals,
+        )}
       </tbody>
     </table>
   );
@@ -571,7 +583,7 @@ function fillData(
   // Loop through cells that need to be added to the row
   const maxCols = tableMeta.columns - tableMeta.columnOffset;
 
- // Loop through all data columns in the table
+  // Loop through all data columns in the table
 
   for (let i = 0; i < maxCols; i++) {
     // Merge the metadata structure for the dimensions of the stub and header cells
@@ -592,18 +604,17 @@ function fillData(
     // ]);
 
     // Get the number of decimals for the contents variable
-    var numberOfDecimals : number;
+    var numberOfDecimals: number;
 
-    if (contentsVariableDecimals && contentsVariableDecimals[dimensions[contentVarIndex]])
-    {
-      numberOfDecimals = contentsVariableDecimals[dimensions[contentVarIndex]].decimals;
-    }
-    else if (table.metadata.decimals)
-    {
+    if (
+      contentsVariableDecimals &&
+      contentsVariableDecimals[dimensions[contentVarIndex]]
+    ) {
+      numberOfDecimals =
+        contentsVariableDecimals[dimensions[contentVarIndex]].decimals;
+    } else if (table.metadata.decimals) {
       numberOfDecimals = table.metadata.decimals;
-    }
-    else
-    {
+    } else {
       numberOfDecimals = 6;
     }
 
@@ -611,7 +622,9 @@ function fillData(
 
     tableRow.push(
       <td key={getNewKey()} headers={headers}>
-        {t(decimalFormats[numberOfDecimals] || 'number.simple_number', { value: dataValue ?? '' })}
+        {t(decimalFormats[numberOfDecimals] || 'number.simple_number', {
+          value: dataValue ?? '',
+        })}
       </td>,
     ); // TODO: Handle null values
   }
