@@ -112,7 +112,9 @@ export function Alert({
           {size === 'small' ? (
             <BodyShort size={bodySize}>{children}</BodyShort>
           ) : (
-            <BodyLong size={bodySize}>{children}</BodyLong>
+            <BodyLong as="div" size={bodySize}>
+              {children}
+            </BodyLong>
           )}
         </div>
       </div>
