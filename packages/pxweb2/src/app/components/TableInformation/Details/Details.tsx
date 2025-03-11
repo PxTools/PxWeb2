@@ -27,7 +27,9 @@ export function Details({
         <Icon iconName={icon} />
       </div>
       <div className={cl(classes.textContainer)}>
-        <Heading size="small">{heading}</Heading>
+        <Heading level="3" spacing={true} size="small">
+          {heading}
+        </Heading>
         {type === 'text' && !children && <BodyShort>{value}</BodyShort>}
         {type === 'boolean' && (
           <BodyShort>
@@ -40,10 +42,14 @@ export function Details({
                 )}
           </BodyShort>
         )}
-        {children?.map((content) => (
+        {children?.map((content, index) => (
           <div className={cl(classes.contentDetail)} key={content.subHeading}>
-            <Heading size="xsmall">{content.subHeading}</Heading>
-            <BodyShort>{content.text}</BodyShort>
+            <Heading level="4" spacing={true} size="xsmall">
+              {content.subHeading}
+            </Heading>
+            <BodyShort spacing={index !== children.length - 1}>
+              {content.text}
+            </BodyShort>
           </div>
         ))}
       </div>
