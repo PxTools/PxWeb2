@@ -6,6 +6,8 @@ import { PxTable } from '../../shared-types/pxTable';
 import { calculateRowAndColumnMeta, columnRowMeta } from './columnRowMeta';
 import { getPxTableData } from './cubeHelper';
 import { Value } from '../../shared-types/value';
+import { VartypeEnum } from '../../shared-types/vartypeEnum';
+import { Variable } from '../../shared-types/variable';
 
 export interface TableProps {
   readonly pxtable: PxTable;
@@ -33,6 +35,16 @@ interface CreateRowParams {
   stubDataCellCodes: DataCellCodes;
   headingDataCellCodes: DataCellCodes[];
   tableRows: React.JSX.Element[];
+}
+interface CreateRowMobileParams {
+  stubIndex: number;
+  rowSpan: number;
+  table: PxTable;
+  tableMeta: columnRowMeta;
+  stubDataCellCodes: DataCellCodes;
+  headingDataCellCodes: DataCellCodes[];
+  tableRows: React.JSX.Element[];
+  uniqueIdCounter: { repeatHeaderCounter: number; idCounter: number };
 }
 
 /**
@@ -147,6 +159,11 @@ export function createHeading(
             scope="col"
             colSpan={columnSpan}
             key={getNewKey()}
+            aria-label={
+              variable.type === VartypeEnum.TIME_VARIABLE
+                ? `${variable.label} ${variable.values[i].label}`
+                : undefined
+            }
             className={cl({
               [classes.firstColNoStub]:
                 i === 0 &&
@@ -203,12 +220,12 @@ export function createRows(
       createRowMobile({
         stubIndex: 0,
         rowSpan: tableMeta.rows - tableMeta.rowOffset,
-        stubIteration: 0,
         table,
         tableMeta,
         stubDataCellCodes: stubDatacellCodes,
         headingDataCellCodes,
         tableRows,
+        uniqueIdCounter: { repeatHeaderCounter: 0, idCounter: 0 },
       });
     } else {
       createRowDesktop({
@@ -276,6 +293,8 @@ function createRowDesktop({
 
   let tableRow: React.JSX.Element[] = [];
 
+  const variable = table.stub[stubIndex];
+
   // Loop through all the values in the stub variable
   for (const val of table.stub[stubIndex].values) {
     if (stubIndex === 0) {
@@ -283,10 +302,10 @@ function createRowDesktop({
     }
 
     const cellMeta: DataCellMeta = {
-      varId: table.stub[stubIndex].id,
+      varId: variable.id,
       valCode: val.code,
       valLabel: val.label,
-      varPos: table.data.variableOrder.indexOf(table.stub[stubIndex].id),
+      varPos: table.data.variableOrder.indexOf(variable.id),
       htmlId: 'R.' + stubIndex + val.code + '.I' + stubIteration,
     };
     stubDataCellCodes.push(cellMeta);
@@ -300,6 +319,11 @@ function createRowDesktop({
         id={cellMeta.htmlId}
         scope="row"
         role="rowheader"
+        aria-label={
+          variable.type === VartypeEnum.TIME_VARIABLE
+            ? `${variable.label} ${val.label}`
+            : undefined
+        }
         className={cl(classes.stub, classes[`stub-${stubIndex}`])}
         key={getNewKey()}
       >
@@ -367,13 +391,13 @@ function createRowDesktop({
 function createRowMobile({
   stubIndex,
   rowSpan,
-  stubIteration,
   table,
   tableMeta,
   stubDataCellCodes,
   headingDataCellCodes,
   tableRows,
-}: CreateRowParams): React.JSX.Element[] {
+  uniqueIdCounter,
+}: CreateRowMobileParams): React.JSX.Element[] {
   const stubValuesLength = table.stub[stubIndex].values.length;
   const stubLength = table.stub.length;
   // Calculate the rowspan for all the cells to add in this call
@@ -384,17 +408,16 @@ function createRowMobile({
   // Loop through all the values in the stub variable
   //const stubValuesLength = table.stub[stubIndex].values.length;
   for (let i = 0; i < stubValuesLength; i++) {
-    if (stubIndex === 0) {
-      stubIteration++;
-    }
-
+    const variable = table.stub[stubIndex];
+    uniqueIdCounter.idCounter++;
     const val = table.stub[stubIndex].values[i];
     const cellMeta: DataCellMeta = {
       varId: table.stub[stubIndex].id,
       valCode: val.code,
       valLabel: val.label,
       varPos: table.data.variableOrder.indexOf(table.stub[stubIndex].id),
-      htmlId: 'R.' + stubIndex + val.code + '.I' + stubIteration,
+      //htmlId: 'R' + stubIndex + '.' + val.code + '.I' + idCounter.count,
+      htmlId: '',
     };
     stubDataCellCodes.push(cellMeta);
     // Fix the rowspan
@@ -412,17 +435,28 @@ function createRowMobile({
         case stubLength - 3: {
           // third last level
           // Repeat the headers for all stubs except the 2 last levels
+          uniqueIdCounter.repeatHeaderCounter++;
           createRepeatedMobileHeader(
+            table,
             stubLength,
             stubIndex,
             stubDataCellCodes,
             tableRows,
+            uniqueIdCounter,
           );
           break;
         }
         case stubLength - 2: {
           // second last level
-          createSecondLastMobileHeader(stubIndex, cellMeta, val, i, tableRows);
+          createSecondLastMobileHeader(
+            stubIndex,
+            cellMeta,
+            variable,
+            val,
+            i,
+            tableRows,
+            uniqueIdCounter,
+          );
           break;
         }
       }
@@ -430,22 +464,35 @@ function createRowMobile({
       createRowMobile({
         stubIndex: stubIndex + 1,
         rowSpan,
-        stubIteration,
         table,
         tableMeta,
         stubDataCellCodes,
         headingDataCellCodes,
         tableRows,
+        uniqueIdCounter,
       });
-
       stubDataCellCodes.pop();
     } else {
       // last level
+      let tempid =
+        cellMeta.varId +
+        '_' +
+        cellMeta.valCode +
+        '_I' +
+        uniqueIdCounter.idCounter +
+        '_N' +
+        uniqueIdCounter.repeatHeaderCounter;
+      cellMeta.htmlId = tempid;
       tableRow.push(
         <th
           id={cellMeta.htmlId}
           scope="row"
           role="rowheader"
+          aria-label={
+            variable.type === VartypeEnum.TIME_VARIABLE
+              ? `${variable.label} ${val.label}`
+              : undefined
+          }
           className={cl(classes.stub, classes[`stub-${stubIndex}`])}
           key={getNewKey()}
         >
@@ -549,25 +596,44 @@ function fillData(
 /**
  * Creates repeated mobile headers for a table and appends them to the provided table rows.
  *
+ * @param {PxTable} table - The PxTable object.
  * @param {number} stubLength - The length of the stub.
  * @param {number} stubIndex - The index of the stub.
  * @param {DataCellCodes} stubDataCellCodes - An array of data cell codes containing HTML IDs and value labels.
  * @param {React.JSX.Element[]} tableRows - An array of table row elements to which the repeated headers will be appended.
  */
 function createRepeatedMobileHeader(
+  table: PxTable,
   stubLength: number,
   stubIndex: number,
   stubDataCellCodes: DataCellCodes,
   tableRows: React.JSX.Element[],
+  uniqueIdCounter: { repeatHeaderCounter: number; idCounter: number },
 ) {
   let tableRowRepeatHeader: React.JSX.Element[] = [];
   for (let n = 0; n <= stubLength - 3; n++) {
+    let variable = table.stub[n];
+    let tempid =
+      stubDataCellCodes[n].varId +
+      '_' +
+      stubDataCellCodes[n].valCode +
+      '_I' +
+      uniqueIdCounter.idCounter +
+      '_N' +
+      uniqueIdCounter.repeatHeaderCounter;
+
+    stubDataCellCodes[n].htmlId = tempid;
     tableRowRepeatHeader.push(
       <th
         colSpan={2}
         id={stubDataCellCodes[n].htmlId}
-        scope="row"
-        role="rowheader"
+        scope="col"
+        role="columnheader"
+        aria-label={
+          variable.type === VartypeEnum.TIME_VARIABLE
+            ? `${variable.label} ${stubDataCellCodes[n].valLabel}`
+            : undefined
+        }
         className={cl(classes.stub, classes[`stub-${stubIndex}`])}
         key={getNewKey()}
       >
@@ -597,6 +663,7 @@ function createRepeatedMobileHeader(
  *
  * @param {number} stubIndex - The index of the stub.
  * @param {DataCellMeta} cellMeta - Metadata for the data cell.
+ * @param {Variable} variable - The variable object containing the label.
  * @param {Value} val - The value object containing the label.
  * @param {number} i - The index of the current iteration.
  * @param {React.JSX.Element[]} tableRows - The array of table rows to which the new row will be appended.
@@ -604,18 +671,34 @@ function createRepeatedMobileHeader(
 function createSecondLastMobileHeader(
   stubIndex: number,
   cellMeta: DataCellMeta,
+  variable: Variable,
   val: Value,
   i: number,
   tableRows: React.JSX.Element[],
+  uniuniqueIdCounter: { repeatHeaderCounter: number; idCounter: number },
 ): void {
   // second last level
   let tableRowSecondLastHeader: React.JSX.Element[] = [];
+  let tempid =
+    cellMeta.varId +
+    '_' +
+    cellMeta.valCode +
+    '_I' +
+    uniuniqueIdCounter.idCounter +
+    '_N' +
+    uniuniqueIdCounter.repeatHeaderCounter;
+  cellMeta.htmlId = tempid;
   tableRowSecondLastHeader.push(
     <th
       colSpan={2}
       id={cellMeta.htmlId}
-      scope="row"
-      role="rowheader"
+      scope="col"
+      role="columnheader"
+      aria-label={
+        variable.type === VartypeEnum.TIME_VARIABLE
+          ? `${variable.label} ${val.label}`
+          : undefined
+      }
       className={cl(classes.stub, classes[`stub-${stubIndex}`])}
       key={getNewKey()}
     >
