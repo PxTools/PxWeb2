@@ -31,12 +31,18 @@ export function List({
     <div className={cl(classes[`list-component-wrapper`])}>
       {heading && (
         <div className={cl(classes[`heading-wrapper`])}>
-          <Heading size={'small'} level={'3'}>{heading}</Heading>
+          <Heading size={'small'} level={'3'}>
+            {heading}
+          </Heading>
         </div>
       )}
       {!listGroup && subHeading && (
         <div className={cl(classes[`sub-heading-wrapper`])}>
-          {<Heading size={'xsmall'} level={'4'}>{subHeading}</Heading>}
+          {
+            <Heading size={'xsmall'} level={'4'}>
+              {subHeading}
+            </Heading>
+          }
         </div>
       )}
       <div className={cl(classes[`list-wrapper${listclassextension}`])}>
