@@ -60,16 +60,17 @@ export function Table({ pxtable, isMobile, className = '' }: TableProps) {
   const tableColumnSize: number = tableMeta.columns - tableMeta.columnOffset;
   const headingDataCellCodes = new Array<DataCellCodes>(tableColumnSize); // Contains header variable and value codes for each column in the table
 
-  // Find one ore more contents variables
+  // Find the contents variable
   const contentsVariable = pxtable.metadata.variables.find(
     (variable) => variable.type === 'ContentsVariable',
   );
 
-  const contentVarIndex = contentsVariable
-    ? pxtable.data.variableOrder.indexOf(contentsVariable.id)
-    : (pxtable.metadata.decimals ?? 6);
+  let contentVarIndex: number ;
+  if (contentsVariable) {
+    contentVarIndex = pxtable.data.variableOrder.indexOf(contentsVariable.id);
+  }
 
-  const contentsVariableDecimals = Object.fromEntries(
+    const contentsVariableDecimals = Object.fromEntries(
     pxtable.metadata.variables
       .filter((variable) => variable.type === 'ContentsVariable')
       .flatMap((variable) =>
@@ -289,7 +290,7 @@ export function createRows(
 }
 
 /**
- * Creates the rows for the table based on the stub variables. For mobile devices
+ * Creates the rows for the table based on the stub variables. For desktop devices.
  *
  * @param stubIndex - The index of the current stub variable.
  * @param rowSpan - The rowspan for the cells to add in this call.
@@ -301,13 +302,6 @@ export function createRows(
  * @param tableRows - An array of React.JSX.Element representing the rows of the table.
  * @param contentsVariableDecimals - The metadata structure for the contents variable decimals.
  * @param contentsVarIndex - The index of the contents variable in the variable order.
- * @returns An array of React.JSX.Element representing the rows of the table.
- */
-
-/**
- * Creates the rows for the table based on the stub variables. For desktop devices.
- *
- * @param params - The parameters for creating the row.
  * @returns An array of React.JSX.Element representing the rows of the table.
  */
 function createRowDesktop({
