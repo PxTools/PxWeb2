@@ -65,7 +65,7 @@ export function Table({ pxtable, isMobile, className = '' }: TableProps) {
     (variable) => variable.type === 'ContentsVariable',
   );
 
-  let contentVarIndex: number;
+  let contentVarIndex: number = -1;
   if (contentsVariable) {
     contentVarIndex = pxtable.data.variableOrder.indexOf(contentsVariable.id);
   }
@@ -300,8 +300,8 @@ export function createRows(
  * @param stubDataCellCodes - The metadata structure for the dimensions of the stub cells.
  * @param headingDataCellCodes - The metadata structure for the dimensions of the header cells.
  * @param tableRows - An array of React.JSX.Element representing the rows of the table.
- * @param contentsVariableDecimals - The metadata structure for the contents variable decimals.
  * @param contentsVarIndex - The index of the contents variable in the variable order.
+ * @param contentsVariableDecimals - The metadata structure for the contents variable decimals.
  * @returns An array of React.JSX.Element representing the rows of the table.
  */
 function createRowDesktop({
@@ -411,8 +411,8 @@ function createRowDesktop({
  * @param stubDataCellCodes - The metadata structure for the dimensions of the stub cells.
  * @param headingDataCellCodes - The metadata structure for the dimensions of the header cells.
  * @param tableRows - An array of React.JSX.Element representing the rows of the table.
- * @param contentsVariableDecimals - The metadata structure for the contents variable decimals.
  * @param contentsVarIndex - The index of the contents variable in the variable order.
+ * @param contentsVariableDecimals - The metadata structure for the contents variable decimals.
  * @returns An array of React.JSX.Element representing the rows of the table.
  */
 function createRowMobile({
