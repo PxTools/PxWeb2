@@ -65,12 +65,12 @@ export function Table({ pxtable, isMobile, className = '' }: TableProps) {
     (variable) => variable.type === 'ContentsVariable',
   );
 
-  let contentVarIndex: number ;
+  let contentVarIndex: number;
   if (contentsVariable) {
     contentVarIndex = pxtable.data.variableOrder.indexOf(contentsVariable.id);
   }
 
-    const contentsVariableDecimals = Object.fromEntries(
+  const contentsVariableDecimals = Object.fromEntries(
     pxtable.metadata.variables
       .filter((variable) => variable.type === 'ContentsVariable')
       .flatMap((variable) =>
