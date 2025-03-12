@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 import Alert from '../Alert/Alert';
 import List from '../List/List';
 import ListItem from '../List/ListItem';
@@ -17,8 +19,16 @@ function getMandatoryVariableNoteKey(name: string): string {
 export function MandatoryVariableNotes({
   variableNotes,
 }: MandatoryVariableNotesProps) {
+  const { t } = useTranslation();
+  const heading =
+    t(
+      'presentation_page.main_content.about_table.footnotes.mandatory_variable_heading',
+    ) +
+    ' ' +
+    variableNotes.variableName;
+
   return (
-    <Alert heading={variableNotes.variableName} variant="info">
+    <Alert heading={heading} variant="info">
       {(variableNotes.notes.length > 0 ||
         variableNotes.valueNotes.length > 0) && (
         <List listType="ul" listGroup={variableNotes.valueNotes.length > 0}>
