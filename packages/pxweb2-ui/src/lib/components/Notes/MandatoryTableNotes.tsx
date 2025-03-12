@@ -1,5 +1,7 @@
 import { useTranslation } from 'react-i18next';
+import cl from 'clsx';
 
+import classes from './Notes.module.scss';
 import List from '../List/List';
 import ListItem from '../List/ListItem';
 import Alert from '../Alert/Alert';
@@ -22,7 +24,11 @@ export function MandatoryTableNotes({ notes }: MandatoryTableNotesProps) {
   );
 
   return (
-    <Alert heading={heading} variant="info">
+    <Alert
+      heading={heading}
+      variant="info"
+      className={cl(classes.mandatorybox)}
+    >
       <List listType="ul">
         {notes.map((note) => (
           <ListItem key={getMandatoryTableNoteKey()}>{note}</ListItem>
