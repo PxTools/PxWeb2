@@ -13,6 +13,16 @@ export interface TableProps {
   readonly className?: string;
 }
 
+const decimalFormats: Record<number, string> = {
+  0: 'number.simple_number_with_zero_decimal',
+  1: 'number.simple_number_with_one_decimal',
+  2: 'number.simple_number_with_two_decimals',
+  3: 'number.simple_number_with_three_decimals',
+  4: 'number.simple_number_with_four_decimals',
+  5: 'number.simple_number_with_five_decimals',
+  6: 'number.simple_number',
+};
+
 /**
  * Represents the metadata for one dimension of a data cell.
  */
@@ -33,6 +43,8 @@ interface CreateRowParams {
   stubDataCellCodes: DataCellCodes;
   headingDataCellCodes: DataCellCodes[];
   tableRows: React.JSX.Element[];
+  contentVarIndex: number;
+  contentsVariableDecimals?: Record<string, { decimals: number }>;
 }
 
 /**
@@ -47,6 +59,27 @@ export function Table({ pxtable, isMobile, className = '' }: TableProps) {
 
   const tableColumnSize: number = tableMeta.columns - tableMeta.columnOffset;
   const headingDataCellCodes = new Array<DataCellCodes>(tableColumnSize); // Contains header variable and value codes for each column in the table
+
+  // Find the contents variable
+  const contentsVariable = pxtable.metadata.variables.find(
+    (variable) => variable.type === 'ContentsVariable',
+  );
+
+  let contentVarIndex: number = -1;
+  if (contentsVariable) {
+    contentVarIndex = pxtable.data.variableOrder.indexOf(contentsVariable.id);
+  }
+
+  const contentsVariableDecimals = Object.fromEntries(
+    pxtable.metadata.variables
+      .filter((variable) => variable.type === 'ContentsVariable')
+      .flatMap((variable) =>
+        variable.values.map((value) => [
+          value.code,
+          { decimals: value.contentInfo?.decimals ?? 6 },
+        ]),
+      ),
+  );
 
   // Create empty metadata structure for the dimensions in the header.
   // This structure will be filled with metadata when the header is created.
@@ -78,7 +111,14 @@ export function Table({ pxtable, isMobile, className = '' }: TableProps) {
     >
       <thead>{createHeading(pxtable, tableMeta, headingDataCellCodes)}</thead>
       <tbody>
-        {createRows(pxtable, tableMeta, headingDataCellCodes, isMobile)}
+        {createRows(
+          pxtable,
+          tableMeta,
+          headingDataCellCodes,
+          isMobile,
+          contentVarIndex,
+          contentsVariableDecimals,
+        )}
       </tbody>
     </table>
   );
@@ -195,6 +235,8 @@ export function createRows(
   tableMeta: columnRowMeta,
   headingDataCellCodes: DataCellCodes[],
   isMobile: boolean,
+  contentVarIndex: number,
+  contentsVariableDecimals?: Record<string, { decimals: number }>,
 ): React.JSX.Element[] {
   const tableRows: React.JSX.Element[] = [];
   const stubDatacellCodes: DataCellCodes = new Array<DataCellMeta>();
@@ -209,6 +251,8 @@ export function createRows(
         stubDataCellCodes: stubDatacellCodes,
         headingDataCellCodes,
         tableRows,
+        contentsVariableDecimals,
+        contentVarIndex,
       });
     } else {
       createRowDesktop({
@@ -220,6 +264,8 @@ export function createRows(
         stubDataCellCodes: stubDatacellCodes,
         headingDataCellCodes,
         tableRows,
+        contentsVariableDecimals,
+        contentVarIndex,
       });
     }
   } else {
@@ -230,6 +276,8 @@ export function createRows(
       stubDatacellCodes,
       headingDataCellCodes,
       tableRow,
+      contentVarIndex,
+      contentsVariableDecimals,
     );
     tableRows.push(
       <tr key={getNewKey()} className={cl(classes.firstColNoStub)}>
@@ -242,7 +290,7 @@ export function createRows(
 }
 
 /**
- * Creates the rows for the table based on the stub variables. For mobile devices
+ * Creates the rows for the table based on the stub variables. For desktop devices.
  *
  * @param stubIndex - The index of the current stub variable.
  * @param rowSpan - The rowspan for the cells to add in this call.
@@ -252,13 +300,8 @@ export function createRows(
  * @param stubDataCellCodes - The metadata structure for the dimensions of the stub cells.
  * @param headingDataCellCodes - The metadata structure for the dimensions of the header cells.
  * @param tableRows - An array of React.JSX.Element representing the rows of the table.
- * @returns An array of React.JSX.Element representing the rows of the table.
- */
-
-/**
- * Creates the rows for the table based on the stub variables. For desktop devices.
- *
- * @param params - The parameters for creating the row.
+ * @param contentsVarIndex - The index of the contents variable in the variable order.
+ * @param contentsVariableDecimals - The metadata structure for the contents variable decimals.
  * @returns An array of React.JSX.Element representing the rows of the table.
  */
 function createRowDesktop({
@@ -270,6 +313,8 @@ function createRowDesktop({
   stubDataCellCodes,
   headingDataCellCodes,
   tableRows,
+  contentVarIndex,
+  contentsVariableDecimals,
 }: CreateRowParams): React.JSX.Element[] {
   // Calculate the rowspan for all the cells to add in this call
   rowSpan = rowSpan / table.stub[stubIndex].values.length;
@@ -331,6 +376,8 @@ function createRowDesktop({
         stubDataCellCodes,
         headingDataCellCodes,
         tableRows,
+        contentVarIndex,
+        contentsVariableDecimals,
       });
       stubDataCellCodes.pop();
     } else {
@@ -341,6 +388,8 @@ function createRowDesktop({
         stubDataCellCodes,
         headingDataCellCodes,
         tableRow,
+        contentVarIndex,
+        contentsVariableDecimals,
       );
       tableRows.push(<tr key={getNewKey()}>{tableRow}</tr>);
       tableRow = [];
@@ -362,6 +411,8 @@ function createRowDesktop({
  * @param stubDataCellCodes - The metadata structure for the dimensions of the stub cells.
  * @param headingDataCellCodes - The metadata structure for the dimensions of the header cells.
  * @param tableRows - An array of React.JSX.Element representing the rows of the table.
+ * @param contentsVarIndex - The index of the contents variable in the variable order.
+ * @param contentsVariableDecimals - The metadata structure for the contents variable decimals.
  * @returns An array of React.JSX.Element representing the rows of the table.
  */
 function createRowMobile({
@@ -373,6 +424,8 @@ function createRowMobile({
   stubDataCellCodes,
   headingDataCellCodes,
   tableRows,
+  contentVarIndex,
+  contentsVariableDecimals,
 }: CreateRowParams): React.JSX.Element[] {
   const stubValuesLength = table.stub[stubIndex].values.length;
   const stubLength = table.stub.length;
@@ -436,6 +489,8 @@ function createRowMobile({
         stubDataCellCodes,
         headingDataCellCodes,
         tableRows,
+        contentVarIndex,
+        contentsVariableDecimals,
       });
 
       stubDataCellCodes.pop();
@@ -458,6 +513,8 @@ function createRowMobile({
         stubDataCellCodes,
         headingDataCellCodes,
         tableRow,
+        contentVarIndex,
+        contentsVariableDecimals,
       );
       tableRows.push(
         <tr
@@ -513,6 +570,8 @@ function fillData(
   stubDataCellCodes: DataCellCodes,
   headingDataCellCodes: DataCellCodes[],
   tableRow: React.JSX.Element[],
+  contentVarIndex: number,
+  contentsVariableDecimals?: Record<string, { decimals: number }>,
 ): void {
   // Loop through cells that need to be added to the row
   const maxCols = tableMeta.columns - tableMeta.columnOffset;
@@ -537,11 +596,19 @@ function fillData(
     //   '1970',
     // ]);
 
+    // Get the number of decimals for the contents variable
+    const numberOfDecimals: number =
+      contentsVariableDecimals?.[dimensions[contentVarIndex]]?.decimals ??
+      table.metadata.decimals ??
+      6;
+
     const dataValue = getPxTableData(table.data.cube, dimensions);
 
     tableRow.push(
       <td key={getNewKey()} headers={headers}>
-        {t('number.simple_number', { value: dataValue ?? '' })}
+        {t(decimalFormats[numberOfDecimals] || 'number.simple_number', {
+          value: dataValue ?? '',
+        })}
       </td>,
     ); // TODO: Handle null values
   }
