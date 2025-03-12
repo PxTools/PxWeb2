@@ -77,8 +77,65 @@ function variableHasAnyNotes(variable: Variable): boolean {
   return false;
 }
 
+/**
+ * Get a copy of the "total metadata" with only the variables and values that are present in the selection.
+ *
+ * @param totalMetadata - The total metadata of the table.
+ * @param selection - The selection of variables and values.
+ * @returns A copy of the total metadata with only the variables and values that are present in the selection.
+ */
+function getMetadataCopyForSelection(
+  totalMetadata: PxTableMetadata,
+  selection: PxTableMetadata,
+): PxTableMetadata {
+  const totalMetadataCopy = structuredClone(totalMetadata);
+
+  // Create a map of variable ids and their value codes in the selection for quick lookup
+  const selectionVariableValueMap = new Map<string, Set<string>>();
+  if (selection.variables) {
+    for (const variable of selection.variables) {
+      const valueCodes = new Set<string>();
+      if (variable.values) {
+        for (const value of variable.values) {
+          valueCodes.add(value.code);
+        }
+      }
+      selectionVariableValueMap.set(variable.id, valueCodes);
+    }
+  }
+
+  // Filter out variables in totalMetadataCopy that are not present in the selection
+  totalMetadataCopy.variables = totalMetadataCopy.variables.filter((variable) =>
+    selectionVariableValueMap.has(variable.id),
+  );
+
+  // Filter out values in each variable that are not present in the selection
+  totalMetadataCopy.variables.forEach((variable) => {
+    const selectedValues = selectionVariableValueMap.get(variable.id);
+    if (selectedValues) {
+      variable.values = variable.values.filter((value) =>
+        selectedValues.has(value.code),
+      );
+    } else {
+      variable.values = [];
+    }
+  });
+
+  return totalMetadataCopy;
+}
+
 export function NotesTab({ pxTableMetadata }: NotesTabProps) {
   const pxMetaTotal = useVariables(); // All metadata for table
+
+  if (!pxMetaTotal.pxTableMetadata || !pxTableMetadata) {
+    return <NoNotes tableLevel={true} />; // No notes on entire table;
+  }
+
+  // Get metatadata from "Total metadata" for the part (variables and values) that is selected by the user
+  const metadataCopyForSelection = getMetadataCopyForSelection(
+    pxMetaTotal.pxTableMetadata,
+    pxTableMetadata,
+  );
 
   // Check if there are any notes at all in the total metadata
   if (!tableHasAnyNotes(pxMetaTotal.pxTableMetadata)) {
@@ -90,7 +147,7 @@ export function NotesTab({ pxTableMetadata }: NotesTabProps) {
     }
   }
 
-  if (!tableHasAnyNotes(pxTableMetadata)) {
+  if (!tableHasAnyNotes(metadataCopyForSelection)) {
     return <NoNotes tableLevel={false} />; // No notes for this specific selection
   }
 
@@ -131,7 +188,7 @@ export function NotesTab({ pxTableMetadata }: NotesTabProps) {
   //   mandatory: false,
   // });
 
-  const notes = getNotes(pxTableMetadata);
+  const notes = getNotes(metadataCopyForSelection);
 
   return (
     <div className={cl(classes.notesTab)}>
