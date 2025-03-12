@@ -59,6 +59,26 @@ export type PxTableMetadata = {
    */
   matrix: string;
   /**
+   * Survey
+   */
+  survey?: string;
+  /**
+   * Table update freqency
+   */
+  updateFrequency?: string;
+  /**
+   * Table link
+   */
+  link?: string;
+  /**
+   * Table copyright
+   */
+  copyright?: boolean;
+  /**
+   * Last updated of the table.
+   */
+  nextUpdate?: Date;
+  /**
    * Table subject code
    */
   subjectCode: string;

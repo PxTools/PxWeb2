@@ -14,4 +14,8 @@ export type ContentInfo = {
    * The content's reference period.
    */
   referencePeriod: string;
+  /**
+   * The content's base period.
+   */
+  basePeriod: string;
 };

@@ -62,6 +62,12 @@ export function mapJsonStat2Response(
     contents: response.extension?.px?.contents ?? '',
     descriptionDefault: response.extension?.px?.descriptiondefault ?? false,
     matrix: response.extension?.px?.matrix ?? '',
+    survey: response.extension?.px?.survey ?? '',
+    updateFrequency: response.extension?.px?.updateFrequency ?? '',
+    link: response.extension?.px?.link ?? '',
+    nextUpdate: response.extension?.px?.nextUpdate
+      ? new Date(response.extension?.px?.nextUpdate)
+      : undefined,
     subjectCode: response.extension?.px?.['subject-code'] ?? '',
     subjectArea: response.extension?.px?.['subject-area'] ?? '',
     variables: mapVariables(response),
@@ -312,6 +318,7 @@ function mapContentInfo(dimension: any, code: string): ContentInfo {
     unit: unit.base,
     decimals: unit.decimals,
     referencePeriod: dimension.extension?.refperiod?.[code] ?? '',
+    basePeriod: dimension.extension?.basePeriod?.[code] ?? '',
   };
 }
 

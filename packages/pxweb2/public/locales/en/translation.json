@@ -172,7 +172,21 @@
         },
         "details": {
           "title": "Details",
-          "description": "Description text..."
+          "description": "Description text...",
+          "boolean_true": "Yes",
+          "boolean_false": "No",
+          "base_time": "Base time",
+          "update_frequency": "Update frequency",
+          "survey": "Survey",
+          "link": "Link",
+          "copyright": "Copyright",
+          "matrix": "Matrix",
+          "last_updated": "Last updated",
+          "next_update": "Next update",
+          "source": "Source",
+          "official_statistics": "Official statistics",
+          "unit": "Unit",
+          "reference_time": "Reference time"
         },
         "contact": {
           "title": "Contact",
