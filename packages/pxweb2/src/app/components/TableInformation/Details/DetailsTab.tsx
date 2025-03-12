@@ -60,16 +60,14 @@ export function DetailsTab({ tableMetadata }: DetailsTabProps) {
           value={tableMetadata.source}
         ></Details>
       )}
-      {tableMetadata.officialStatistics && (
-        <Details
-          heading={t(
-            'presentation_page.main_content.about_table.details.official_statistics',
-          )}
-          icon="SealCheckmark"
-          type="boolean"
-          value={tableMetadata.officialStatistics}
-        ></Details>
-      )}
+      <Details
+        heading={t(
+          'presentation_page.main_content.about_table.details.official_statistics',
+        )}
+        icon="SealCheckmark"
+        type="boolean"
+        value={tableMetadata.officialStatistics}
+      ></Details>
       {unitDetails.length > 0 && (
         <Details
           heading={t('presentation_page.main_content.about_table.details.unit')}
