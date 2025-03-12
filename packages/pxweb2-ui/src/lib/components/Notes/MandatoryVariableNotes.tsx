@@ -1,5 +1,7 @@
 import { useTranslation } from 'react-i18next';
+import cl from 'clsx';
 
+import classes from './Notes.module.scss';
 import Alert from '../Alert/Alert';
 import List from '../List/List';
 import ListItem from '../List/ListItem';
@@ -28,7 +30,11 @@ export function MandatoryVariableNotes({
     variableNotes.variableName;
 
   return (
-    <Alert heading={heading} variant="info">
+    <Alert
+      heading={heading}
+      variant="info"
+      className={cl(classes.mandatorybox)}
+    >
       {(variableNotes.notes.length > 0 ||
         variableNotes.valueNotes.length > 0) && (
         <List listType="ul" listGroup={variableNotes.valueNotes.length > 0}>

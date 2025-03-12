@@ -10,13 +10,14 @@ import Button from '../Button/Button';
 import BodyShort from '../Typography/BodyShort/BodyShort';
 
 export interface AlertProps {
-  size?: 'small' | 'medium';
-  variant: 'info' | 'success' | 'warning' | 'error';
-  clickable?: boolean;
-  closeButton?: boolean;
-  heading?: string;
-  onClick?: () => void;
-  children?: string | React.ReactNode;
+  readonly size?: 'small' | 'medium';
+  readonly variant: 'info' | 'success' | 'warning' | 'error';
+  readonly clickable?: boolean;
+  readonly closeButton?: boolean;
+  readonly heading?: string;
+  readonly onClick?: () => void;
+  readonly className?: string;
+  readonly children?: string | React.ReactNode;
 }
 
 export function Alert({
@@ -26,8 +27,10 @@ export function Alert({
   closeButton = false,
   heading = '',
   onClick,
+  className = '',
   children,
 }: AlertProps) {
+  const cssClasses = className.length > 0 ? ' ' + className : '';
   const { t } = useTranslation();
   const [isVisible, setIsVisible] = useState(true);
   const HandleClose = () => {
@@ -84,9 +87,11 @@ export function Alert({
     <div
       onKeyDown={clickable ? handleKeyDown : undefined}
       tabIndex={clickable ? 0 : undefined}
-      className={cl(classes[`alert-${size}`], classes[variant], {
-        [classes[`${variant}-clickable`]]: clickable,
-      })}
+      className={
+        cl(classes[`alert-${size}`], classes[variant], {
+          [classes[`${variant}-clickable`]]: clickable,
+        }) + cssClasses
+      }
       onClick={clickable ? onClick : undefined}
       style={{ cursor: clickable ? 'pointer' : 'default' }}
     >
