@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams, useLocation } from 'react-router';
+import cl from 'clsx';
 
 import styles from './app.module.scss';
 import { Selection } from './components/Selection/Selection';
@@ -17,7 +18,8 @@ import useAccessibility from './context/useAccessibility';
 import useApp from './context/useApp';
 
 export function App() {
-  const { isTablet } = useApp();
+  const { isMobile, isTablet, skipToMainFocused, setSkipToMainFocused } =
+    useApp();
   const config = getConfig();
   const accessibility = useAccessibility();
 
@@ -46,6 +48,7 @@ export function App() {
   }>(null);
 
   const hideMenuRef = useRef<HTMLDivElement>(null);
+  const skipToMainRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (hasFocus !== 'none' && navigationBarRef.current) {
@@ -114,12 +117,26 @@ export function App() {
         undefined,
       );
     }
-  }, [
-    accessibility,
-    navigationBarRef.current,
-    hideMenuRef.current,
-    selectedNavigationView,
-  ]);
+  }, [accessibility, selectedNavigationView]);
+
+  // Monitor focus on SkipToMain
+  useEffect(() => {
+    const skipElement = skipToMainRef.current;
+    if (!skipElement) {
+      return;
+    }
+
+    const handleFocus = () => setSkipToMainFocused(true);
+    const handleBlur = () => setSkipToMainFocused(false);
+
+    skipElement.addEventListener('focusin', handleFocus);
+    skipElement.addEventListener('focusout', handleBlur);
+
+    return () => {
+      skipElement.removeEventListener('focusin', handleFocus);
+      skipElement.removeEventListener('focusout', handleBlur);
+    };
+  }, [setSkipToMainFocused]);
 
   useEffect(() => {
     if (errorMsg !== '') {
@@ -167,19 +184,34 @@ export function App() {
   };
   useLocalizeDocumentAttributes();
 
+  const isSmallScreen = isTablet === true || isMobile === true;
+
   return (
     <>
-      <SkipToMain />
-      {!isTablet && <Header />}{' '}
+      <SkipToMain ref={skipToMainRef} />
+      {!isSmallScreen && <Header />}
       <div className={styles.navigationAndContentContainer}>
-        {!isTablet && (
+        {isSmallScreen ? (
+          <>
+            <Header />
+            <NavigationBar
+              ref={navigationBarRef}
+              onChange={changeSelectedNavView}
+              selected={selectedNavigationView}
+            />
+          </>
+        ) : (
           <NavigationRail
             ref={navigationBarRef}
             onChange={changeSelectedNavView}
             selected={selectedNavigationView}
           />
         )}{' '}
-        <div className={styles.mainContainer}>
+        <div
+          className={cl(styles.mainContainer, {
+            [styles.skipToMainContentVisible]: skipToMainFocused,
+          })}
+        >
           <Selection
             selectedNavigationView={selectedNavigationView}
             selectedTabId={selectedTableId}
@@ -188,19 +220,11 @@ export function App() {
             hideMenuRef={hideMenuRef}
           />
           <div className={styles.contentAndFooterContainer}>
-            {isTablet && <Header />}{' '}
             <Presentation selectedTabId={selectedTableId}></Presentation>
             <Footer />
           </div>
         </div>
       </div>
-      {isTablet && (
-        <NavigationBar
-          ref={navigationBarRef}
-          onChange={changeSelectedNavView}
-          selected={selectedNavigationView}
-        />
-      )}{' '}
     </>
   );
 }

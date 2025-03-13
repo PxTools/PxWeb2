@@ -31,7 +31,7 @@ export const NavigationRail = React.forwardRef<
 >(({ onChange, selected }, ref) => {
   const { t } = useTranslation();
 
-  const isKeyboardClick = (event: any) => {
+  const isKeyboardClick = (event: React.MouseEvent<HTMLElement>) => {
     return event.screenX === 0 && event.screenY === 0;
   };
 
@@ -65,7 +65,7 @@ export const NavigationRail = React.forwardRef<
                 label={t('presentation_page.sidemenu.selection.title')}
                 selected={selected === 'filter'}
                 icon={'Controls'}
-                onClick={(event: any) => {
+                onClick={(event) => {
                   onChange(
                     isKeyboardClick(event),
                     selected === 'filter',
@@ -79,7 +79,7 @@ export const NavigationRail = React.forwardRef<
                 label={t('presentation_page.sidemenu.view.title')}
                 selected={selected === 'view'}
                 icon={'BarChart'}
-                onClick={(event: any) => {
+                onClick={(event) => {
                   onChange(isKeyboardClick(event), selected === 'view', 'view');
                 }}
               />
@@ -89,7 +89,7 @@ export const NavigationRail = React.forwardRef<
                 label={t('presentation_page.sidemenu.edit.title')}
                 selected={selected === 'edit'}
                 icon={'ArrowsUpDown'}
-                onClick={(event: any) => {
+                onClick={(event) => {
                   onChange(isKeyboardClick(event), selected === 'edit', 'edit');
                 }}
               />
@@ -99,7 +99,7 @@ export const NavigationRail = React.forwardRef<
                 label={t('presentation_page.sidemenu.save.title')}
                 selected={selected === 'save'}
                 icon={'FloppyDisk'}
-                onClick={(event: any) => {
+                onClick={(event) => {
                   onChange(isKeyboardClick(event), selected === 'save', 'save');
                 }}
               />
@@ -109,7 +109,7 @@ export const NavigationRail = React.forwardRef<
                 label={t('presentation_page.sidemenu.help.title')}
                 selected={selected === 'help'}
                 icon={'QuestionMarkCircle'}
-                onClick={(event: any) => {
+                onClick={(event) => {
                   onChange(isKeyboardClick(event), selected === 'help', 'help');
                 }}
               />
