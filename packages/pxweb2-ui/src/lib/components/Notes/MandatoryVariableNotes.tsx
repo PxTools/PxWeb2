@@ -33,7 +33,7 @@ export function MandatoryVariableNotes({
     <Alert
       heading={heading}
       variant="info"
-      className={cl(classes.mandatorybox)}
+      className={cl(classes[`mandatory-box`])}
     >
       {(variableNotes.notes.length > 0 ||
         variableNotes.valueNotes.length > 0) && (

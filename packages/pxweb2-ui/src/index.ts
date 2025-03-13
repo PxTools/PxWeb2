@@ -22,6 +22,7 @@ export * from './lib/components/Tabs/TabsProvider';
 export * from './lib/components/Tabs/TabPanel';
 export * from './lib/components/Contact/Contact';
 export * from './lib/components/Notes/NoNotes';
+export * from './lib/components/Notes/MandatoryNotes';
 export * from './lib/components/Notes/MandatoryTableNotes';
 export * from './lib/components/Notes/MandatoryVariableNotes';
 export * from './lib/components/Notes/NonMandatoryNotes';

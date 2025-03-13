@@ -4,8 +4,7 @@ import useVariables from '../../../context/useVariables';
 import classes from './NotesTab.module.scss';
 import {
   getNotes,
-  MandatoryTableNotes,
-  MandatoryVariableNotes,
+  MandatoryNotes,
   NonMandatoryNotes,
   NoNotes,
   PxTableMetadata,
@@ -150,7 +149,8 @@ export function NotesTab({ pxTableMetadata }: NotesTabProps) {
   // metadataCopyForSelection?.notes?.push({
   //   text: 'This is table test note 1',
   //   mandatory: true,
-  // });  metadataCopyForSelection?.notes?.push({
+  // });
+  // metadataCopyForSelection?.notes?.push({
   //   text: 'This is table test note 2',
   //   mandatory: true,
   // });
@@ -200,18 +200,8 @@ export function NotesTab({ pxTableMetadata }: NotesTabProps) {
 
   return (
     <div className={cl(classes.notesTab)}>
-      {notes && notes.mandatoryNotes.tableLevelNotes.length > 0 && (
-        <MandatoryTableNotes notes={notes.mandatoryNotes.tableLevelNotes} />
-      )}
-      {notes && notes.mandatoryNotes.variableNotes.length > 0 && (
-        <>
-          {notes.mandatoryNotes.variableNotes.map((varNotes) => (
-            <MandatoryVariableNotes
-              variableNotes={varNotes}
-              key={'mandatory-var-notes-' + varNotes.variableCode}
-            />
-          ))}
-        </>
+      {notes && notes.mandatoryNotes.notesCount > 0 && (
+        <MandatoryNotes notes={notes.mandatoryNotes} />
       )}
 
       {notes && notes.nonMandatoryNotes.notesCount > 0 && (

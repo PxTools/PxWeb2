@@ -27,7 +27,7 @@ export function MandatoryTableNotes({ notes }: MandatoryTableNotesProps) {
     <Alert
       heading={heading}
       variant="info"
-      className={cl(classes.mandatorybox)}
+      className={cl(classes[`mandatory-box`])}
     >
       {notes.length === 1 ? (
         <span>{notes[0]}</span>
