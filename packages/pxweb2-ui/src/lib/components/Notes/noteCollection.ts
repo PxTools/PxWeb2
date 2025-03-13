@@ -2,6 +2,7 @@ import { Note } from '../../shared-types/note';
 import { PxTableMetadata } from '../../shared-types/pxTableMetadata';
 import { Value } from '../../shared-types/value';
 import { Variable } from '../../shared-types/variable';
+import { VartypeEnum } from '../../shared-types/vartypeEnum';
 
 // Internal type holding table notes.
 export type noteCollection = {
@@ -101,6 +102,24 @@ function getNotesForVariable(
       getNotesForValue(variable, value, notes);
     }
   }
+  if (variable.type === VartypeEnum.TIME_VARIABLE) {
+    sortTimeValueNotes(variable, notes);
+  }
+}
+
+// Sort value notes for time variables. Last value should be first in the list
+function sortTimeValueNotes(
+  variable: Variable,
+  notes: tableNoteCollection,
+): void {
+  const variableNotes = notes.mandatoryNotes.variableNotes.find(
+    (vn) => vn.variableCode === variable.id,
+  );
+  if (variableNotes) {
+    variableNotes.valueNotes.sort((b, a) =>
+      a.valueCode.localeCompare(b.valueCode),
+    );
+  }
 }
 
 // Get all notes for value
@@ -140,6 +159,7 @@ function addVariableNote(
     };
     collection.variableNotes.push(newVariableNote);
   }
+  collection.notesCount++;
 }
 
 // Add a note to a value
@@ -181,4 +201,5 @@ function addValueNote(
     };
     collection.variableNotes.push(newVariableNote);
   }
+  collection.notesCount++;
 }
