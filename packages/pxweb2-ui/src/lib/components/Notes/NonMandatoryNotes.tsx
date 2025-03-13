@@ -35,6 +35,7 @@ export function NonMandatoryNotes({ notes }: NonMandatoryNotesProps) {
               heading={captitalizeFirstLetter(varNotes.variableName)}
               listType="ul"
               listGroup={varNotes.valueNotes.length > 0}
+              key={'non-mandatory-var-notes-list-' + varNotes.variableCode}
             >
               {varNotes.notes.map((note) => (
                 <ListItem key={getNonMandatoryNoteKey()}>{note}</ListItem>
