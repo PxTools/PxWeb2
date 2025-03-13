@@ -7,7 +7,9 @@
 
   // Tablet and mobile sizes
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
-    flex-direction: column-reverse;
+    flex-direction: column;
+    overflow-y: auto;
+    scrollbar-width: thin;
   }
 }
 
@@ -68,15 +70,13 @@
   width: 100%;
   max-width: 1320px;
   height: 100%;
-  overflow-y: auto;
-  scrollbar-width: thin;
 
   // xsmall
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
     padding-top: fixed.$spacing-4;
   }
 
-  // xsmall and small
+  // small
   @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
     padding-top: fixed.$spacing-6;
   }
@@ -84,5 +84,7 @@
   // medium, large and xlarge
   @media ((min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-large-max-width)) or ((min-width: fixed.$breakpoints-xlarge-min-width)) {
     padding-bottom: fixed.$spacing-6;
+    overflow-y: auto;
+    scrollbar-width: thin;
   }
 }

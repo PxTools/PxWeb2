@@ -184,19 +184,22 @@ export function App() {
   };
   useLocalizeDocumentAttributes();
 
-  const shouldShowNavigationBar = isTablet === true || isMobile === true;
+  const isSmallScreen = isTablet === true || isMobile === true;
 
   return (
     <>
       <SkipToMain ref={skipToMainRef} />
-      <Header />
+      {!isSmallScreen && <Header />}
       <div className={styles.navigationAndContentContainer}>
-        {shouldShowNavigationBar ? (
-          <NavigationBar
-            ref={navigationBarRef}
-            onChange={changeSelectedNavView}
-            selected={selectedNavigationView}
-          />
+        {isSmallScreen ? (
+          <>
+            <Header />
+            <NavigationBar
+              ref={navigationBarRef}
+              onChange={changeSelectedNavView}
+              selected={selectedNavigationView}
+            />
+          </>
         ) : (
           <NavigationRail
             ref={navigationBarRef}
