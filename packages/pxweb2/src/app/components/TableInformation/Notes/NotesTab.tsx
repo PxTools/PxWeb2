@@ -147,6 +147,14 @@ export function NotesTab({ pxTableMetadata }: NotesTabProps) {
     }
   }
 
+  // metadataCopyForSelection?.notes?.push({
+  //   text: 'This is table test note 1',
+  //   mandatory: true,
+  // });  metadataCopyForSelection?.notes?.push({
+  //   text: 'This is table test note 2',
+  //   mandatory: true,
+  // });
+
   if (!tableHasAnyNotes(metadataCopyForSelection)) {
     return <NoNotes tableLevel={false} />; // No notes for this specific selection
   }

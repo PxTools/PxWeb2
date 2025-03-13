@@ -29,11 +29,15 @@ export function MandatoryTableNotes({ notes }: MandatoryTableNotesProps) {
       variant="info"
       className={cl(classes.mandatorybox)}
     >
-      <List listType="ul">
-        {notes.map((note) => (
-          <ListItem key={getMandatoryTableNoteKey()}>{note}</ListItem>
-        ))}
-      </List>
+      {notes.length === 1 ? (
+        <span>{notes[0]}</span>
+      ) : (
+        <List listType="ul">
+          {notes.map((note) => (
+            <ListItem key={getMandatoryTableNoteKey()}>{note}</ListItem>
+          ))}
+        </List>
+      )}
     </Alert>
   );
 }
