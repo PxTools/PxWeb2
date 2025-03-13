@@ -10,6 +10,10 @@
   gap: fixed.$spacing-2;
   flex-shrink: 0;
   background-color: var(--px-color-surface-subtle);
+
+  // fix the navigation bar to the bottom of the screen
+  position: fixed;
+  bottom: 0;
   z-index: 1;
 
   // xsmall and small
