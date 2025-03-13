@@ -26,6 +26,7 @@ export function MandatoryTableNotes({ notes }: MandatoryTableNotesProps) {
   return (
     <Alert
       heading={heading}
+      headingLevel="3"
       variant="info"
       className={cl(classes[`mandatory-box`])}
     >

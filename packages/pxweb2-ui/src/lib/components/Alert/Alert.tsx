@@ -15,6 +15,7 @@ export interface AlertProps {
   readonly clickable?: boolean;
   readonly closeButton?: boolean;
   readonly heading?: string;
+  readonly headingLevel?: '1' | '2' | '3' | '4' | '5' | '6';
   readonly onClick?: () => void;
   readonly className?: string;
   readonly children?: string | React.ReactNode;
@@ -26,6 +27,7 @@ export function Alert({
   clickable = false,
   closeButton = false,
   heading = '',
+  headingLevel = '2',
   onClick,
   className = '',
   children,
@@ -104,7 +106,7 @@ export function Alert({
       <div className={cl(classes[`alert-section-middle-${size}`])}>
         {hasheading && (
           <div className={classes[`alert-heading`]}>
-            <Heading size={headingSize} level="2">
+            <Heading size={headingSize} level={headingLevel}>
               {heading}
             </Heading>
           </div>

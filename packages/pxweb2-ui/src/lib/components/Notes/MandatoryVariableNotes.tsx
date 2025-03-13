@@ -33,6 +33,7 @@ export function MandatoryVariableNotes({
   return (
     <Alert
       heading={heading}
+      headingLevel="3"
       variant="info"
       className={cl(classes[`mandatory-box`])}
     >
