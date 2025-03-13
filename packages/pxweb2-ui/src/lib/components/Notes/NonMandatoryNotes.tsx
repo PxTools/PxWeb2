@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import List from '../List/List';
 import ListItem from '../List/ListItem';
-import { noteCollection } from './noteCollection';
+import { captitalizeFirstLetter, noteCollection } from './noteCollection';
 
 export type NonMandatoryNotesProps = {
   readonly notes: noteCollection;
@@ -32,7 +32,7 @@ export function NonMandatoryNotes({ notes }: NonMandatoryNotesProps) {
         <>
           {notes.variableNotes.map((varNotes) => (
             <List
-              heading={varNotes.variableName}
+              heading={captitalizeFirstLetter(varNotes.variableName)}
               listType="ul"
               listGroup={varNotes.valueNotes.length > 0}
             >
@@ -43,7 +43,10 @@ export function NonMandatoryNotes({ notes }: NonMandatoryNotesProps) {
                 <>
                   {varNotes.valueNotes.map((value) => (
                     <ListItem key={getNonMandatoryNoteKey()}>
-                      <List subHeading={value.valueName} listType="ul">
+                      <List
+                        subHeading={captitalizeFirstLetter(value.valueName)}
+                        listType="ul"
+                      >
                         {value.notes.map((note) => (
                           <ListItem key={getNonMandatoryNoteKey()}>
                             {note}

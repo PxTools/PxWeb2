@@ -5,7 +5,7 @@ import classes from './Notes.module.scss';
 import Alert from '../Alert/Alert';
 import List from '../List/List';
 import ListItem from '../List/ListItem';
-import { variableNotes } from './noteCollection';
+import { captitalizeFirstLetter, variableNotes } from './noteCollection';
 
 export type MandatoryVariableNotesProps = {
   readonly variableNotes: variableNotes;
@@ -22,12 +22,13 @@ export function MandatoryVariableNotes({
   variableNotes,
 }: MandatoryVariableNotesProps) {
   const { t } = useTranslation();
+
   const heading =
     t(
       'presentation_page.main_content.about_table.footnotes.mandatory_variable_heading',
     ) +
     ' ' +
-    variableNotes.variableName;
+    captitalizeFirstLetter(variableNotes.variableName);
 
   return (
     <Alert
@@ -52,7 +53,7 @@ export function MandatoryVariableNotes({
               {variableNotes.valueNotes.map((value) => (
                 <List
                   listType="ul"
-                  subHeading={value.valueName}
+                  subHeading={captitalizeFirstLetter(value.valueName)}
                   key={getMandatoryVariableNoteKey(variableNotes.variableCode)}
                 >
                   {value.notes.map((note) => (

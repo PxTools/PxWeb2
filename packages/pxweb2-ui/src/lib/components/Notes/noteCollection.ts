@@ -72,6 +72,15 @@ export function getNotes(
   return notes;
 }
 
+// Makes the first letter of a string uppercase
+export function captitalizeFirstLetter(string: string): string {
+  if (!string) {
+    return '';
+  }
+  const returnString = structuredClone(string);
+  return returnString.charAt(0).toUpperCase() + returnString.slice(1);
+}
+
 function getNotesForVariable(
   variable: Variable,
   notes: tableNoteCollection,
