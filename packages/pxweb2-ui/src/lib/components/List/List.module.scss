@@ -38,6 +38,10 @@ ul li.variableNote:nth-last-child(1 of .variableNote) {
   margin-bottom: 0px;
 }
 
+ul li.variableNote:nth-child(1 of .variableNote) {
+  margin-top: 0px;
+}
+
 ul li.variableNote::before {
   content: '\25CF'/ '';
   font-size: 0.8rem;
