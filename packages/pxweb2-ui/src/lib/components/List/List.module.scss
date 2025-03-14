@@ -29,6 +29,33 @@
   }
 }
 
+ul li.variableNote {
+  padding-bottom: 0px;
+}
+
+ul li.variableNote:nth-last-child(1 of .variableNote) {
+  padding-bottom: 28px;
+  margin-bottom: 0px;
+}
+
+ul li.variableNote:nth-child(1 of .variableNote) {
+  margin-top: 0px;
+}
+
+ul li.variableNote::before {
+  content: '\25CF'/ '';
+  font-size: 0.8rem;
+  transform: translateY(-1.5px);
+  position: absolute;
+  left: 0;
+}
+li.variableNote {
+  display: block;
+  position: relative;
+  padding-left: 22px;
+  margin: 8px 0;
+}
+
 .list-wrapper {
   ul,
   ol {
