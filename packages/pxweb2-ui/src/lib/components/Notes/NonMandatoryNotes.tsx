@@ -38,7 +38,9 @@ export function NonMandatoryNotes({ notes }: NonMandatoryNotesProps) {
               key={'non-mandatory-var-notes-list-' + varNotes.variableCode}
             >
               {varNotes.notes.map((note) => (
-                <ListItem key={getNonMandatoryNoteKey()}>{note}</ListItem>
+                <ListItem key={getNonMandatoryNoteKey()} isVariableNote>
+                  {note}
+                </ListItem>
               ))}
               {varNotes.valueNotes && varNotes.valueNotes.length > 0 && (
                 <>

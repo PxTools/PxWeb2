@@ -43,6 +43,7 @@ export function MandatoryVariableNotes({
           {variableNotes.notes.map((note) => (
             <ListItem
               key={getMandatoryVariableNoteKey(variableNotes.variableCode)}
+              isVariableNote
             >
               {note}
             </ListItem>
