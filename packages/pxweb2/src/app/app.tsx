@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { useParams } from 'react-router';
+import { useParams, useLocation } from 'react-router';
 
 import styles from './app.module.scss';
 import { Selection } from './components/Selection/Selection';
@@ -21,7 +21,11 @@ export function App() {
   const { isTablet } = useApp();
   const config = getConfig();
   const accessibility = useAccessibility();
-  OpenAPI.BASE = config.apiUrl;
+
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const baseUrl = searchParams.get('apiUrl') ?? config.apiUrl;
+  OpenAPI.BASE = baseUrl;
 
   const { tableId } = useParams<{ tableId: string }>();
   const [selectedTableId] = useState(tableId ?? 'tab638');

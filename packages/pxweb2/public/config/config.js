@@ -3,6 +3,7 @@ window.PxWeb2Config = {
     supportedLanguages: [
       { shorthand: 'en', languageName: 'English' },
       { shorthand: 'sv', languageName: 'Svenska' },
+      { shorthand: 'no', languageName: 'Norsk' },
     ],
     defaultLanguage: 'en',
     fallbackLanguage: 'en',
