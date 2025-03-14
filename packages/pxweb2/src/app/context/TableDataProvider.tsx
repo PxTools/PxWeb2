@@ -145,6 +145,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       setErrorMsg(
         'Failed to fetch table data. Please try again later. ' + err.message,
       );
+      //throw new Error(err.message);
     }
   };
 
