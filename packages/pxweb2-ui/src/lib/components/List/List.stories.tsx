@@ -149,6 +149,38 @@ export const OrderedAndUnordered: StoryFn<typeof List> = () => {
           </List>
         </ListItem>
       </List>
+
+      <h1>
+        <i>Listgroup with listitem on variable level</i>
+      </h1>
+      <List heading="Land" subHeading="skal ikke vises" listType="ul" listGroup>
+        <ListItem isVariableNote>
+          {' '}
+          <Link href="wwww.ssb.no" inline>
+            Se liste over endringene i de regionale inndelingene
+          </Link>
+        </ListItem>
+        <ListItem isVariableNote>
+          Variable note 2 very very long and maybe even longer.
+        </ListItem>
+        <ListItem isVariableNote>Variable note 3.</ListItem>
+        <ListItem>
+          <List subHeading="Belarus (BY)" listType="ul">
+            <ListItem>Ble kalt Hviterussland fram til 2022.</ListItem>
+          </List>
+        </ListItem>
+        <ListItem>
+          <List subHeading="Eswatini (SZ)" listType="ul">
+            <ListItem>Ble kalt Swaziland før 2018.</ListItem>
+          </List>
+        </ListItem>
+        <ListItem>
+          <List subHeading="Palestina (2013-) (PS)" listType="ul">
+            <ListItem>Tidligere: Vestbredden/Gazastripen (2001-2012)</ListItem>
+            <ListItem>Vi later som denne har to</ListItem>
+          </List>
+        </ListItem>
+      </List>
     </>
   );
 };
