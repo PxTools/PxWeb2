@@ -5,9 +5,6 @@ import { createBrowserRouter, Navigate, RouterProvider } from 'react-router';
 import './i18n/config';
 import TableViewer from './app/pages/TableViewer/TableViewer';
 import { validateConfig } from './app/util/validate';
-import { VariablesProvider } from './app/context/VariablesProvider';
-import { TableDataProvider } from './app/context/TableDataProvider';
-import { AccessibilityProvider } from './app/context/AccessibilityProvider';
 import { AppProvider } from './app/context/AppProvider';
 
 const router = createBrowserRouter([
@@ -32,15 +29,9 @@ if (location.href.includes('localhost')) {
 root.render(
   <StrictMode>
     <AppProvider>
-      <AccessibilityProvider>
-        <VariablesProvider>
-          <TableDataProvider>
-            <Suspense fallback={<div>Loading...</div>}>
-              <RouterProvider router={router} />
-            </Suspense>
-          </TableDataProvider>
-        </VariablesProvider>
-      </AccessibilityProvider>
+      <Suspense fallback={<div>Loading...</div>}>
+        <RouterProvider router={router} />
+      </Suspense>
     </AppProvider>
   </StrictMode>,
 );

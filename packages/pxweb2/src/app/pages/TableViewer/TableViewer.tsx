@@ -16,6 +16,11 @@ import { OpenAPI } from '@pxweb2/pxweb2-api-client';
 import useAccessibility from '../../context/useAccessibility';
 import useApp from '../../context/useApp';
 
+import { AppProvider } from '../../context/AppProvider';
+import { AccessibilityProvider } from '../../context/AccessibilityProvider';
+import { VariablesProvider } from '../../context/VariablesProvider';
+import { TableDataProvider } from '../../context/TableDataProvider';
+
 export function TableViewer() {
   const { isTablet } = useApp();
   const config = getConfig();
@@ -205,4 +210,18 @@ export function TableViewer() {
   );
 }
 
-export default TableViewer;
+function Render() {
+  return (
+    <AppProvider>
+      <AccessibilityProvider>
+        <VariablesProvider>
+          <TableDataProvider>
+            <TableViewer />
+          </TableDataProvider>
+        </VariablesProvider>
+      </AccessibilityProvider>
+    </AppProvider>
+  );
+}
+
+export default Render;
