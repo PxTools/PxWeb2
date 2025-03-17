@@ -6,11 +6,16 @@ import './i18n/config';
 import TableViewer from './app/pages/TableViewer/TableViewer';
 import { validateConfig } from './app/util/validate';
 import { AppProvider } from './app/context/AppProvider';
+import StartPage from './app/pages/StartPage/StartPage';
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: '/table',
     element: <Navigate to="/table/tab638" replace={true} />,
+  },
+  {
+    path: '/',
+    element: <StartPage />,
   },
   {
     path: '/table/:tableId',
