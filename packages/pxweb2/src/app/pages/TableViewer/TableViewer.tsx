@@ -1,22 +1,22 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams, useLocation } from 'react-router';
 
-import styles from './app.module.scss';
-import { Selection } from './components/Selection/Selection';
-import { Presentation } from './components/Presentation/Presentation';
-import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
-import { Header } from './components/Header/Header';
-import { NavigationItem } from './components/NavigationMenu/NavigationItem/NavigationItemType';
-import NavigationRail from './components/NavigationMenu/NavigationRail/NavigationRail';
-import NavigationBar from './components/NavigationMenu/NavigationBar/NavigationBar';
-import { SkipToMain } from './components/SkipToMain/SkipToMain';
-import { Footer } from './components/Footer/Footer';
-import { getConfig } from './util/config/getConfig';
+import styles from './TableViewer.module.scss';
+import { Selection } from '../../components/Selection/Selection';
+import { Presentation } from '../../components/Presentation/Presentation';
+import useLocalizeDocumentAttributes from '../../../i18n/useLocalizeDocumentAttributes';
+import { Header } from '../../components/Header/Header';
+import { NavigationItem } from '../../components/NavigationMenu/NavigationItem/NavigationItemType';
+import NavigationRail from '../../components/NavigationMenu/NavigationRail/NavigationRail';
+import NavigationBar from '../../components/NavigationMenu/NavigationBar/NavigationBar';
+import { SkipToMain } from '../../components/SkipToMain/SkipToMain';
+import { Footer } from '../../components/Footer/Footer';
+import { getConfig } from '../../util/config/getConfig';
 import { OpenAPI } from '@pxweb2/pxweb2-api-client';
-import useAccessibility from './context/useAccessibility';
-import useApp from './context/useApp';
+import useAccessibility from '../../context/useAccessibility';
+import useApp from '../../context/useApp';
 
-export function App() {
+export function TableViewer() {
   const { isTablet } = useApp();
   const config = getConfig();
   const accessibility = useAccessibility();
@@ -205,4 +205,4 @@ export function App() {
   );
 }
 
-export default App;
+export default TableViewer;

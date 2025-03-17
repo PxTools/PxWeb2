@@ -3,7 +3,7 @@ import * as ReactDOM from 'react-dom/client';
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router';
 
 import './i18n/config';
-import App from './app/app';
+import TableViewer from './app/pages/TableViewer/TableViewer';
 import { validateConfig } from './app/util/validate';
 import { VariablesProvider } from './app/context/VariablesProvider';
 import { TableDataProvider } from './app/context/TableDataProvider';
@@ -17,7 +17,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/table/:tableId',
-    element: <App />,
+    element: <TableViewer />,
   },
 ]);
 
