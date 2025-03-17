@@ -8,6 +8,7 @@ import {
   NonMandatoryNotes,
   NoNotes,
   PxTableMetadata,
+  SymbolExplanationNotes,
   Variable,
 } from '@pxweb2/pxweb2-ui';
 
@@ -130,6 +131,11 @@ export function NotesTab({ pxTableMetadata }: NotesTabProps) {
     return <NoNotes tableLevel={true} />; // No notes on entire table;
   }
 
+  // TODO: Call GetNotes(pxMetaTotal, pxMetaSelection) here.
+  // 1. Add boolean to check if notes exist in the table
+  // 2. Add boolean to check if notes exist in the selection
+  // 3. Add SymbolExplanationNotes to tableNoteCollection
+
   // Get metatadata from "Total metadata" for the part (variables and values) that is selected by the user
   const metadataCopyForSelection = getMetadataCopyForSelection(
     pxMetaTotal.pxTableMetadata,
@@ -196,15 +202,19 @@ export function NotesTab({ pxTableMetadata }: NotesTabProps) {
   //   mandatory: false,
   // });
 
-  const notes = getNotes(metadataCopyForSelection);
+  const notes = getNotes(metadataCopyForSelection, pxTableMetadata);
 
   return (
     <div className={cl(classes.notesTab)}>
-      {notes && notes.mandatoryNotes.notesCount > 0 && (
+      {notes.SymbolExplanationNotes.length > 0 && (
+        <SymbolExplanationNotes notes={notes.SymbolExplanationNotes} />
+      )}
+
+      {notes.mandatoryNotes.notesCount > 0 && (
         <MandatoryNotes notes={notes.mandatoryNotes} />
       )}
 
-      {notes && notes.nonMandatoryNotes.notesCount > 0 && (
+      {notes.nonMandatoryNotes.notesCount > 0 && (
         <NonMandatoryNotes notes={notes.nonMandatoryNotes} />
       )}
     </div>

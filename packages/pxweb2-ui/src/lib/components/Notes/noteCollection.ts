@@ -4,7 +4,14 @@ import { Value } from '../../shared-types/value';
 import { Variable } from '../../shared-types/variable';
 import { VartypeEnum } from '../../shared-types/vartypeEnum';
 
-// Internal type holding table notes.
+// Internal type holding mandatory and non mandatory notes for a table
+export type tableNoteCollection = {
+  SymbolExplanationNotes: string[];
+  mandatoryNotes: noteCollection;
+  nonMandatoryNotes: noteCollection;
+};
+
+// Internal type holding table, variable and value notes.
 export type noteCollection = {
   notesCount: number;
   tableLevelNotes: string[];
@@ -26,16 +33,12 @@ export type valueNotes = {
   notes: string[];
 };
 
-// Internal type holding mandatory and non mandatory notes for a table
-export type tableNoteCollection = {
-  mandatoryNotes: noteCollection;
-  nonMandatoryNotes: noteCollection;
-};
-
 export function getNotes(
-  pxTableMetadata: PxTableMetadata | undefined,
+  totalMetadata: PxTableMetadata, // PxTableMetadata from the /metadata API-endpoint
+  selectionMetadata: PxTableMetadata, // PxTableMetadata from the /data API-endpoint
 ): tableNoteCollection {
   const notes: tableNoteCollection = {
+    SymbolExplanationNotes: [],
     mandatoryNotes: {
       notesCount: 0,
       tableLevelNotes: [],
@@ -48,13 +51,15 @@ export function getNotes(
     },
   };
 
-  if (!pxTableMetadata) {
+  if (!totalMetadata || !selectionMetadata) {
     return notes;
   }
 
-  if (pxTableMetadata.notes) {
+  //notes.SymbolExplanationNotes.push('.. = Secret value');
+
+  if (totalMetadata.notes) {
     // Get notes at table level
-    for (const note of pxTableMetadata.notes) {
+    for (const note of totalMetadata.notes) {
       if (note.mandatory) {
         notes.mandatoryNotes.notesCount++;
         notes.mandatoryNotes.tableLevelNotes.push(note.text);
@@ -65,7 +70,7 @@ export function getNotes(
     }
 
     // Get notes for variables
-    for (const variable of pxTableMetadata.variables) {
+    for (const variable of totalMetadata.variables) {
       getNotesForVariable(variable, notes);
     }
   }

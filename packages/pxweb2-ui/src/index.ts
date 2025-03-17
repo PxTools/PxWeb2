@@ -26,6 +26,7 @@ export * from './lib/components/Notes/MandatoryNotes';
 export * from './lib/components/Notes/MandatoryTableNotes';
 export * from './lib/components/Notes/MandatoryVariableNotes';
 export * from './lib/components/Notes/NonMandatoryNotes';
+export * from './lib/components/Notes/SymbolExplanationNotes';
 export * from './lib/components/Notes/noteCollection';
 export * from './lib/shared-types/codelist';
 export * from './lib/shared-types/codelistType';
