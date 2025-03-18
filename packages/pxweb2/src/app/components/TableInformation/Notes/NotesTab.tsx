@@ -1,6 +1,7 @@
 import cl from 'clsx';
 import useVariables from '../../../context/useVariables';
 
+import { getConfig } from '../../../util/config/getConfig';
 import classes from './NotesTab.module.scss';
 import {
   getNotes,
@@ -202,7 +203,13 @@ export function NotesTab({ pxTableMetadata }: NotesTabProps) {
   //   mandatory: false,
   // });
 
-  const notes = getNotes(metadataCopyForSelection, pxTableMetadata);
+  const config = getConfig();
+  const specialCharacters = config.specialCharacters;
+  const notes = getNotes(
+    metadataCopyForSelection,
+    pxTableMetadata,
+    specialCharacters,
+  );
 
   return (
     <div className={cl(classes.notesTab)}>

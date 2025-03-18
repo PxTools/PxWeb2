@@ -36,6 +36,7 @@ export type valueNotes = {
 export function getNotes(
   totalMetadata: PxTableMetadata, // PxTableMetadata from the /metadata API-endpoint
   selectionMetadata: PxTableMetadata, // PxTableMetadata from the /data API-endpoint
+  specialCharacters: string[], // Special characters from the config
 ): tableNoteCollection {
   const notes: tableNoteCollection = {
     SymbolExplanationNotes: [],
@@ -55,7 +56,7 @@ export function getNotes(
     return notes;
   }
 
-  //notes.SymbolExplanationNotes.push('.. = Secret value');
+  getSymbolExplanationNotes(selectionMetadata, notes, specialCharacters);
 
   if (totalMetadata.notes) {
     // Get notes at table level
@@ -76,6 +77,22 @@ export function getNotes(
   }
 
   return notes;
+}
+
+// Get autogenereated notes for special characters. They are notes that start with a special character and an equal sign.
+function getSymbolExplanationNotes(
+  selectionMetadata: PxTableMetadata,
+  notes: tableNoteCollection,
+  specialCharacters: string[],
+): void {
+  if (selectionMetadata.notes) {
+    const startStrings = specialCharacters.map((char) => char + ' =');
+    for (const note of selectionMetadata.notes) {
+      if (startStrings.some((char) => note.text.startsWith(char))) {
+        notes.SymbolExplanationNotes.push(note.text);
+      }
+    }
+  }
 }
 
 // Makes the first letter of a string uppercase
