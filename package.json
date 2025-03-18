@@ -17,8 +17,8 @@
   "dependencies": {
     "@uidotdev/usehooks": "^2.4.1",
     "react-virtuoso": "^4.12.5",
-    "sass": "^1.85.1",
-    "vite": "^6.2.1"
+    "sass": "^1.86.0",
+    "vite": "^6.2.2"
   },
   "devDependencies": {
     "@types/lodash": "^4.17.16",
