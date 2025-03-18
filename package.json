@@ -36,7 +36,8 @@
     "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-unused-imports": "^4.1.4",
-    "style-dictionary": "^4.3.3"
+    "style-dictionary": "^4.3.3",
+    "typescript": "^5.8.2"
   },
   "readme": "ERROR: No README data found!",
   "_id": "@pxweb2/source@0.0.0",
