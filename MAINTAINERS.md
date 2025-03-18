@@ -33,8 +33,7 @@ An overview of the current technical debt in the project:
 ### Onetime tasks:
 
 1. The package we use to generate the api-client is no longer maintained, and needs to be updated. It recommends a fork that is activly maintained.
-2. We have not specified a React or Typescript version, except the types for React 18 in the web application. We should specify them so we have control over the React versions used. Should probably be in the root project until we need to specify them per project.
-3. We have to check why StoryBook upgrade says that we goes from v 0.0.0
+2. We have to check why StoryBook upgrade says that we goes from v 0.0.0
 
 ## Git Branching Strategy
 
