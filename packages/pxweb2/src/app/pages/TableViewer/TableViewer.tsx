@@ -1,26 +1,34 @@
 import { useEffect, useState, useRef } from 'react';
-import { useParams } from 'react-router';
+import { useParams, useLocation } from 'react-router';
 
-import styles from './app.module.scss';
-import { Selection } from './components/Selection/Selection';
-import { Presentation } from './components/Presentation/Presentation';
-import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
-import { Header } from './components/Header/Header';
-import { NavigationItem } from './components/NavigationMenu/NavigationItem/NavigationItemType';
-import NavigationRail from './components/NavigationMenu/NavigationRail/NavigationRail';
-import NavigationBar from './components/NavigationMenu/NavigationBar/NavigationBar';
-import { SkipToMain } from './components/SkipToMain/SkipToMain';
-import { Footer } from './components/Footer/Footer';
-import { getConfig } from './util/config/getConfig';
+import styles from './TableViewer.module.scss';
+import { Selection } from '../../components/Selection/Selection';
+import { Presentation } from '../../components/Presentation/Presentation';
+import useLocalizeDocumentAttributes from '../../../i18n/useLocalizeDocumentAttributes';
+import { Header } from '../../components/Header/Header';
+import { NavigationItem } from '../../components/NavigationMenu/NavigationItem/NavigationItemType';
+import NavigationRail from '../../components/NavigationMenu/NavigationRail/NavigationRail';
+import NavigationBar from '../../components/NavigationMenu/NavigationBar/NavigationBar';
+import { SkipToMain } from '../../components/SkipToMain/SkipToMain';
+import { Footer } from '../../components/Footer/Footer';
+import { getConfig } from '../../util/config/getConfig';
 import { OpenAPI } from '@pxweb2/pxweb2-api-client';
-import useAccessibility from './context/useAccessibility';
-import useApp from './context/useApp';
+import useAccessibility from '../../context/useAccessibility';
+import useApp from '../../context/useApp';
 
-export function App() {
+import { AccessibilityProvider } from '../../context/AccessibilityProvider';
+import { VariablesProvider } from '../../context/VariablesProvider';
+import { TableDataProvider } from '../../context/TableDataProvider';
+
+export function TableViewer() {
   const { isTablet } = useApp();
   const config = getConfig();
   const accessibility = useAccessibility();
-  OpenAPI.BASE = config.apiUrl;
+
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const baseUrl = searchParams.get('apiUrl') ?? config.apiUrl;
+  OpenAPI.BASE = baseUrl;
 
   const { tableId } = useParams<{ tableId: string }>();
   const [selectedTableId] = useState(tableId ?? 'tab638');
@@ -201,4 +209,16 @@ export function App() {
   );
 }
 
-export default App;
+function Render() {
+  return (
+    <AccessibilityProvider>
+      <VariablesProvider>
+        <TableDataProvider>
+          <TableViewer />
+        </TableDataProvider>
+      </VariablesProvider>
+    </AccessibilityProvider>
+  );
+}
+
+export default Render;

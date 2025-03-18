@@ -197,7 +197,7 @@ export function VariableBoxContent({
       setAllValuesSelected('true');
     }
   }, [
-    --totalChosenValues,
+    totalChosenValues,
     totalValues,
     checkboxSelectAllText,
     checkboxDeselectAllText,
@@ -567,6 +567,7 @@ export function VariableBoxContent({
             classes['variablebox-content-full-values-list'],
             hasSevenOrMoreValues &&
               classes['variablebox-content-full-values-list-scroll'],
+            hasCodeLists && classes['no-border-radius-top'],
           )}
         >
           <div

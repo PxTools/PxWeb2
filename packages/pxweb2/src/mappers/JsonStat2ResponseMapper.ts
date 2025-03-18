@@ -172,7 +172,7 @@ function mapContacts(contacts: apiContact[] | undefined): Contact[] {
         name: contact.name,
         phone: contact.phone,
         mail: contact.mail,
-        //organization: contact.organization,
+        organization: contact.organization,
         raw: contact.raw,
       };
     });

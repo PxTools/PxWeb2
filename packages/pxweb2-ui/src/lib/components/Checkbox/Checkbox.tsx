@@ -2,6 +2,7 @@ import React from 'react';
 import cl from 'clsx';
 
 import styles from './Checkbox.module.scss';
+import { Highlight } from './Highlight/Highlight';
 import { Icon } from '../Icon/Icon';
 
 interface CheckboxProps {
@@ -136,39 +137,6 @@ export const MixedCheckbox: React.FC<MixedCheckboxProps> = ({
       </div>
       <div className={styles.checkboxBackgroundCover}></div>
     </div>
-  );
-};
-
-interface HighlightProps {
-  text: string;
-  searchTerm?: string;
-  highlightStyle?: React.CSSProperties;
-}
-const defaultHighlightStyle: React.CSSProperties = {
-  backgroundColor: 'lightblue',
-};
-const Highlight: React.FC<HighlightProps> = ({
-  text,
-  searchTerm,
-  highlightStyle = defaultHighlightStyle,
-}) => {
-  if (!searchTerm || searchTerm.length < 1) {
-    return <span>{text}</span>;
-  }
-  const regex = new RegExp(`(${searchTerm})`, 'gi');
-  const parts = text.split(regex);
-  return (
-    <span>
-      {parts.map((part, index) =>
-        part.toLowerCase() === searchTerm.toLowerCase() ? (
-          <span key={index} style={highlightStyle}>
-            {part}
-          </span>
-        ) : (
-          <React.Fragment key={index}>{part}</React.Fragment>
-        ),
-      )}
-    </span>
   );
 };
 
