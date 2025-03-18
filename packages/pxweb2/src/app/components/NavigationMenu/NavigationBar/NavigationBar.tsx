@@ -50,78 +50,82 @@ export const NavigationBar = React.forwardRef<
     <div className={styles.navigationBar}>
       <LazyMotion features={loadFeatures}>
         <MotionConfig reducedMotion="user">
-          <ul className={styles.navigationBarList}>
-            <Item
-              ref={refs.filter}
-              parentName="navBar"
-              label={t('presentation_page.sidemenu.selection.title')}
-              selected={selected === 'filter'}
-              icon={'Controls'}
-              onClick={(event: any) => {
-                onChange(
-                  event.screenX === 0 && event.screenY === 0,
-                  selected === 'filter',
-                  'filter',
-                );
-              }}
-            />
-            <Item
-              ref={refs.view}
-              parentName="navBar"
-              label={t('presentation_page.sidemenu.view.title')}
-              selected={selected === 'view'}
-              icon={'BarChart'}
-              onClick={(event: any) => {
-                onChange(
-                  event.screenX === 0 && event.screenY === 0,
-                  selected === 'view',
-                  'view',
-                );
-              }}
-            />
-            <Item
-              ref={refs.edit}
-              parentName="navBar"
-              label={t('presentation_page.sidemenu.edit.title')}
-              selected={selected === 'edit'}
-              icon={'ArrowsUpDown'}
-              onClick={(event: any) => {
-                onChange(
-                  event.screenX === 0 && event.screenY === 0,
-                  selected === 'edit',
-                  'edit',
-                );
-              }}
-            />
-            <Item
-              ref={refs.save}
-              parentName="navBar"
-              label={t('presentation_page.sidemenu.save.title')}
-              selected={selected === 'save'}
-              icon={'FloppyDisk'}
-              onClick={(event: any) => {
-                onChange(
-                  event.screenX === 0 && event.screenY === 0,
-                  selected === 'save',
-                  'save',
-                );
-              }}
-            />
-            <Item
-              ref={refs.help}
-              parentName="navBar"
-              label={t('presentation_page.sidemenu.help.title')}
-              selected={selected === 'help'}
-              icon={'QuestionMarkCircle'}
-              onClick={(event: any) => {
-                onChange(
-                  event.screenX === 0 && event.screenY === 0,
-                  selected === 'help',
-                  'help',
-                );
-              }}
-            />
-          </ul>
+          <nav
+            aria-label={t('presentation_page.sidemenu.arialabeltoolsidemenu')}
+          >
+            <ul className={styles.navigationBarList}>
+              <Item
+                ref={refs.filter}
+                parentName="navBar"
+                label={t('presentation_page.sidemenu.selection.title')}
+                selected={selected === 'filter'}
+                icon={'Controls'}
+                onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+                  onChange(
+                    event.screenX === 0 && event.screenY === 0,
+                    selected === 'filter',
+                    'filter',
+                  );
+                }}
+              />
+              <Item
+                ref={refs.view}
+                parentName="navBar"
+                label={t('presentation_page.sidemenu.view.title')}
+                selected={selected === 'view'}
+                icon={'BarChart'}
+                onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+                  onChange(
+                    event.screenX === 0 && event.screenY === 0,
+                    selected === 'view',
+                    'view',
+                  );
+                }}
+              />
+              <Item
+                ref={refs.edit}
+                parentName="navBar"
+                label={t('presentation_page.sidemenu.edit.title')}
+                selected={selected === 'edit'}
+                icon={'ArrowsUpDown'}
+                onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+                  onChange(
+                    event.screenX === 0 && event.screenY === 0,
+                    selected === 'edit',
+                    'edit',
+                  );
+                }}
+              />
+              <Item
+                ref={refs.save}
+                parentName="navBar"
+                label={t('presentation_page.sidemenu.save.title')}
+                selected={selected === 'save'}
+                icon={'FloppyDisk'}
+                onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+                  onChange(
+                    event.screenX === 0 && event.screenY === 0,
+                    selected === 'save',
+                    'save',
+                  );
+                }}
+              />
+              <Item
+                ref={refs.help}
+                parentName="navBar"
+                label={t('presentation_page.sidemenu.help.title')}
+                selected={selected === 'help'}
+                icon={'QuestionMarkCircle'}
+                onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+                  onChange(
+                    event.screenX === 0 && event.screenY === 0,
+                    selected === 'help',
+                    'help',
+                  );
+                }}
+              />
+            </ul>
+          </nav>
         </MotionConfig>
       </LazyMotion>
     </div>
