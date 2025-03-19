@@ -679,6 +679,7 @@ function createRepeatedMobileHeader(
 ) {
   let tableRowRepeatHeader: React.JSX.Element[] = [];
   for (let n = 0; n <= stubLength - 3; n++) {
+    uniqueIdCounter.idCounter++;
     let variable = table.stub[n];
     let tempid =
       stubDataCellCodes[n].varId +
