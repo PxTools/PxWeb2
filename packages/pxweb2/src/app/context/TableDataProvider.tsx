@@ -4,6 +4,7 @@ import React, { createContext, useEffect, useState, ReactNode } from 'react';
 import useVariables from './useVariables';
 import {
   Dataset,
+  OutputFormatType,
   TableService,
   VariableSelection,
   VariablesSelection,
@@ -261,7 +262,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     const res = await TableService.getTableDataByPost(
       tableId,
       i18n.language,
-      'json-stat2',
+      OutputFormatType.JSON_STAT2,
       undefined,
       variablesSelection,
     );
