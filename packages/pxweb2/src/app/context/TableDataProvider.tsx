@@ -313,6 +313,13 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       return false;
     }
 
+    // Check if any variable has an empty or undefined valueCodes array
+    for (const selection of variablesSelection.selection) {
+      if (!selection.valueCodes || selection.valueCodes.length === 0) {
+      return false;
+      }
+    }
+
     for (const selection of variablesSelection.selection) {
       // Check that the variable exists in accumulatedData
       const variable = accumulatedData.metadata.variables.find(
