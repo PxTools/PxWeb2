@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams, useLocation } from 'react-router';
+import cl from 'clsx';
 
 import styles from './TableViewer.module.scss';
 import { Selection } from '../../components/Selection/Selection';
@@ -15,13 +16,13 @@ import { getConfig } from '../../util/config/getConfig';
 import { OpenAPI } from '@pxweb2/pxweb2-api-client';
 import useAccessibility from '../../context/useAccessibility';
 import useApp from '../../context/useApp';
-
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import { VariablesProvider } from '../../context/VariablesProvider';
 import { TableDataProvider } from '../../context/TableDataProvider';
 
 export function TableViewer() {
-  const { isTablet } = useApp();
+  const { isMobile, isTablet, skipToMainFocused, setSkipToMainFocused } =
+    useApp();
   const config = getConfig();
   const accessibility = useAccessibility();
 
@@ -50,6 +51,7 @@ export function TableViewer() {
   }>(null);
 
   const hideMenuRef = useRef<HTMLDivElement>(null);
+  const skipToMainRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (hasFocus !== 'none' && navigationBarRef.current) {
@@ -118,12 +120,26 @@ export function TableViewer() {
         undefined,
       );
     }
-  }, [
-    accessibility,
-    navigationBarRef.current,
-    hideMenuRef.current,
-    selectedNavigationView,
-  ]);
+  }, [accessibility, selectedNavigationView]);
+
+  // Monitor focus on SkipToMain
+  useEffect(() => {
+    const skipElement = skipToMainRef.current;
+    if (!skipElement) {
+      return;
+    }
+
+    const handleFocus = () => setSkipToMainFocused(true);
+    const handleBlur = () => setSkipToMainFocused(false);
+
+    skipElement.addEventListener('focusin', handleFocus);
+    skipElement.addEventListener('focusout', handleBlur);
+
+    return () => {
+      skipElement.removeEventListener('focusin', handleFocus);
+      skipElement.removeEventListener('focusout', handleBlur);
+    };
+  }, [setSkipToMainFocused]);
 
   useEffect(() => {
     if (errorMsg !== '') {
@@ -171,19 +187,35 @@ export function TableViewer() {
   };
   useLocalizeDocumentAttributes();
 
+  const isSmallScreen = isTablet === true || isMobile === true;
+
   return (
     <>
-      <SkipToMain />
-      {!isTablet && <Header />}{' '}
-      <div className={styles.navigationAndContentContainer}>
-        {!isTablet && (
+      <SkipToMain ref={skipToMainRef} />
+      {!isSmallScreen && <Header />}
+      {/* tabindex={-1} to fix firefox focusing this div*/}
+      <div className={styles.navigationAndContentContainer} tabIndex={-1}>
+        {isSmallScreen ? (
+          <>
+            <Header />
+            <NavigationBar
+              ref={navigationBarRef}
+              onChange={changeSelectedNavView}
+              selected={selectedNavigationView}
+            />
+          </>
+        ) : (
           <NavigationRail
             ref={navigationBarRef}
             onChange={changeSelectedNavView}
             selected={selectedNavigationView}
           />
         )}{' '}
-        <div className={styles.mainContainer}>
+        <div
+          className={cl(styles.mainContainer, {
+            [styles.skipToMainContentVisible]: skipToMainFocused,
+          })}
+        >
           <Selection
             selectedNavigationView={selectedNavigationView}
             selectedTabId={selectedTableId}
@@ -192,19 +224,11 @@ export function TableViewer() {
             hideMenuRef={hideMenuRef}
           />
           <div className={styles.contentAndFooterContainer}>
-            {isTablet && <Header />}{' '}
             <Presentation selectedTabId={selectedTableId}></Presentation>
             <Footer />
           </div>
         </div>
       </div>
-      {isTablet && (
-        <NavigationBar
-          ref={navigationBarRef}
-          onChange={changeSelectedNavView}
-          selected={selectedNavigationView}
-        />
-      )}{' '}
     </>
   );
 }
