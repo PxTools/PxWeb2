@@ -61,6 +61,11 @@
 
     // Position NavigationDrawer below the header
     top: fixed.$spacing-22;
+
+    &.skipToMainContentVisible {
+      // Calculate position of NavigationDrawer below the header and SkipToMainContent
+      top: calc(fixed.$spacing-22 + var(--skip-to-main-content-height));
+    }
   }
 
   // large and xlarge
