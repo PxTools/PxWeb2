@@ -41,6 +41,8 @@ export const NavigationDrawer = forwardRef<
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault(); // Prevent scrolling with space
+
       onClose(true, view);
     }
   }
@@ -52,7 +54,7 @@ export const NavigationDrawer = forwardRef<
     ) {
       ref.current?.focus();
     }
-  }, [view]);
+  }, [view, ref]);
 
   React.useEffect(() => {
     if (openedWithKeyboard && ref && typeof ref !== 'function') {
