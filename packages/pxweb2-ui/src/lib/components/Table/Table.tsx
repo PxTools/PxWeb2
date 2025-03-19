@@ -56,7 +56,7 @@ interface CreateRowMobileParams {
   stubDataCellCodes: DataCellCodes;
   headingDataCellCodes: DataCellCodes[];
   tableRows: React.JSX.Element[];
-  uniqueIdCounter: { repeatHeaderCounter: number; idCounter: number };
+  uniqueIdCounter: { idCounter: number };
   contentVarIndex: number;
   contentsVariableDecimals?: Record<string, { decimals: number }>;
 }
@@ -269,7 +269,7 @@ export function createRows(
         stubDataCellCodes: stubDatacellCodes,
         headingDataCellCodes,
         tableRows,
-        uniqueIdCounter: { repeatHeaderCounter: 0, idCounter: 0 },
+        uniqueIdCounter: { idCounter: 0 },
         contentsVariableDecimals,
         contentVarIndex,
       });
@@ -488,7 +488,6 @@ function createRowMobile({
         case stubLength - 3: {
           // third last level
           // Repeat the headers for all stubs except the 2 last levels
-          uniqueIdCounter.repeatHeaderCounter++;
           createRepeatedMobileHeader(
             table,
             stubLength,
@@ -534,9 +533,7 @@ function createRowMobile({
         '_' +
         cellMeta.valCode +
         '_I' +
-        uniqueIdCounter.idCounter +
-        '_N' +
-        uniqueIdCounter.repeatHeaderCounter;
+        uniqueIdCounter.idCounter;
       cellMeta.htmlId = tempid;
       tableRow.push(
         <th
@@ -674,7 +671,7 @@ function createRepeatedMobileHeader(
   stubIndex: number,
   stubDataCellCodes: DataCellCodes,
   tableRows: React.JSX.Element[],
-  uniqueIdCounter: { repeatHeaderCounter: number; idCounter: number },
+  uniqueIdCounter: { idCounter: number },
 ) {
   let tableRowRepeatHeader: React.JSX.Element[] = [];
   for (let n = 0; n <= stubLength - 3; n++) {
@@ -685,9 +682,7 @@ function createRepeatedMobileHeader(
       '_' +
       stubDataCellCodes[n].valCode +
       '_I' +
-      uniqueIdCounter.idCounter +
-      '_N' +
-      uniqueIdCounter.repeatHeaderCounter;
+      uniqueIdCounter.idCounter;
 
     stubDataCellCodes[n].htmlId = tempid;
     tableRowRepeatHeader.push(
@@ -741,18 +736,12 @@ function createSecondLastMobileHeader(
   val: Value,
   i: number,
   tableRows: React.JSX.Element[],
-  uniuniqueIdCounter: { repeatHeaderCounter: number; idCounter: number },
+  uniqueIdCounter: { idCounter: number },
 ): void {
   // second last level
   let tableRowSecondLastHeader: React.JSX.Element[] = [];
   let tempid =
-    cellMeta.varId +
-    '_' +
-    cellMeta.valCode +
-    '_I' +
-    uniuniqueIdCounter.idCounter +
-    '_N' +
-    uniuniqueIdCounter.repeatHeaderCounter;
+    cellMeta.varId + '_' + cellMeta.valCode + '_I' + uniqueIdCounter.idCounter;
   cellMeta.htmlId = tempid;
   tableRowSecondLastHeader.push(
     <th
