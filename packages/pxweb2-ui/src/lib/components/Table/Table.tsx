@@ -470,7 +470,6 @@ function createRowMobile({
       valCode: val.code,
       valLabel: val.label,
       varPos: table.data.variableOrder.indexOf(table.stub[stubIndex].id),
-      //htmlId: 'R' + stubIndex + '.' + val.code + '.I' + idCounter.count,
       htmlId: '',
     };
     stubDataCellCodes.push(cellMeta);
