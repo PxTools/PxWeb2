@@ -365,7 +365,6 @@ function createRowDesktop({
       <th
         id={cellMeta.htmlId}
         scope="row"
-        role="rowheader"
         aria-label={
           variable.type === VartypeEnum.TIME_VARIABLE
             ? `${variable.label} ${val.label}`
@@ -544,7 +543,6 @@ function createRowMobile({
         <th
           id={cellMeta.htmlId}
           scope="row"
-          role="rowheader"
           aria-label={
             variable.type === VartypeEnum.TIME_VARIABLE
               ? `${variable.label} ${val.label}`
@@ -697,7 +695,6 @@ function createRepeatedMobileHeader(
         colSpan={2}
         id={stubDataCellCodes[n].htmlId}
         scope="col"
-        role="columnheader"
         aria-label={
           variable.type === VartypeEnum.TIME_VARIABLE
             ? `${variable.label} ${stubDataCellCodes[n].valLabel}`
@@ -762,7 +759,6 @@ function createSecondLastMobileHeader(
       colSpan={2}
       id={cellMeta.htmlId}
       scope="col"
-      role="columnheader"
       aria-label={
         variable.type === VartypeEnum.TIME_VARIABLE
           ? `${variable.label} ${val.label}`
