@@ -316,7 +316,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     // Check if any variable has an empty or undefined valueCodes array
     for (const selection of variablesSelection.selection) {
       if (!selection.valueCodes || selection.valueCodes.length === 0) {
-      return false;
+        return false;
       }
     }
 
