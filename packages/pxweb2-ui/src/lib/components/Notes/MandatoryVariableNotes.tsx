@@ -28,7 +28,7 @@ export function MandatoryVariableNotes({
       'presentation_page.main_content.about_table.footnotes.mandatory_variable_heading',
     ) +
     ' ' +
-    captitalizeFirstLetter(variableNotes.variableName);
+    variableNotes.variableName;
 
   return (
     <Alert
@@ -43,7 +43,7 @@ export function MandatoryVariableNotes({
           {variableNotes.notes.map((note) => (
             <ListItem
               key={getMandatoryVariableNoteKey(variableNotes.variableCode)}
-              isVariableNote
+              isVariableNote={variableNotes.valueNotes.length > 0}
             >
               {note}
             </ListItem>
