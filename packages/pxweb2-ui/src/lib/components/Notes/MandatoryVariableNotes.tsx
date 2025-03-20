@@ -30,12 +30,6 @@ export function MandatoryVariableNotes({
     ' ' +
     variableNotes.variableName;
 
-  // if (
-  //   variableNotes.notes.length === 1 &&
-  //   variableNotes.valueNotes.length === 0
-  // ) {
-  //   return <span>variableNotes.notes[0]</span>;
-  // }
   return (
     <Alert
       heading={heading}
