@@ -1,0 +1,375 @@
+{
+  "language": "en",
+  "tables": [
+    {
+      "type": "Table",
+      "id": "TAB1391",
+      "paths": [
+        [
+          {
+            "id": "NV",
+            "label": "Business activities"
+          },
+          {
+            "id": "NV0103",
+            "label": "Balance statistics"
+          }
+        ]
+      ],
+      "source": "Staistics Sweden",
+      "timeUnit": "Quarterly",
+      "label": "Corporations Financial Assets and Liabilities by item. Quarterly 1998K2-2024K4",
+      "description": "",
+      "updated": "2025-03-10T07:00:00Z",
+      "firstPeriod": "1998K2",
+      "lastPeriod": "2024K4",
+      "category": "public",
+      "variableNames": [
+        "item",
+        "observations",
+        "quarter"
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "en",
+          "href": "https://api.scb.se/OV0104/v2beta/api/v2/tables/TAB1391?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "en",
+          "href": "https://api.scb.se/OV0104/v2beta/api/v2/tables/TAB1391/metadata?lang=en"
+        },
+        {
+          "rel": "data",
+          "hreflang": "en",
+          "href": "https://api.scb.se/OV0104/v2beta/api/v2/tables/TAB1391/data?lang=en&outputFormat=px"
+        }
+      ]
+    },
+    {
+      "type": "Table",
+      "id": "TAB1872",
+      "paths": [
+        [
+          {
+            "id": "NV",
+            "label": "Business activities"
+          },
+          {
+            "id": "NV0402",
+            "label": "Industrial production index (IPI)"
+          },
+          {
+            "id": "NV0402A",
+            "label": "Industrial production index (IPI)"
+          }
+        ]
+      ],
+      "source": "Staistics Sweden",
+      "timeUnit": "Monthly",
+      "label": "Industrial production index. Chain index, 2021=100, by industral classification NACE Rev.2.  Monthly 2000M01-2025M01",
+      "description": "",
+      "updated": "2025-03-10T07:00:00Z",
+      "firstPeriod": "2000M01",
+      "lastPeriod": "2025M01",
+      "category": "public",
+      "variableNames": [
+        "industrial classification (NACE Rev. 2)",
+        "observations",
+        "month"
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "en",
+          "href": "https://api.scb.se/OV0104/v2beta/api/v2/tables/TAB1872?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "en",
+          "href": "https://api.scb.se/OV0104/v2beta/api/v2/tables/TAB1872/metadata?lang=en"
+        },
+        {
+          "rel": "data",
+          "hreflang": "en",
+          "href": "https://api.scb.se/OV0104/v2beta/api/v2/tables/TAB1872/data?lang=en&outputFormat=px"
+        }
+      ]
+    },
+    {
+      "type": "Table",
+      "id": "TAB1411",
+      "paths": [
+        [
+          {
+            "id": "NV",
+            "label": "Business activities"
+          },
+          {
+            "id": "NV0118",
+            "label": "Non financial corporations: Foreign trade credits"
+          }
+        ]
+      ],
+      "source": "Staistics Sweden",
+      "timeUnit": "Quarterly",
+      "label": "Corporations Foreign Trade Credits by item. Quarterly 1997K1-2024K4",
+      "description": "",
+      "updated": "2025-03-07T07:00:00Z",
+      "firstPeriod": "1997K1",
+      "lastPeriod": "2024K4",
+      "category": "public",
+      "variableNames": [
+        "item",
+        "observations",
+        "quarter"
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "en",
+          "href": "https://api.scb.se/OV0104/v2beta/api/v2/tables/TAB1411?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "en",
+          "href": "https://api.scb.se/OV0104/v2beta/api/v2/tables/TAB1411/metadata?lang=en"
+        },
+        {
+          "rel": "data",
+          "hreflang": "en",
+          "href": "https://api.scb.se/OV0104/v2beta/api/v2/tables/TAB1411/data?lang=en&outputFormat=px"
+        }
+      ]
+    },
+    {
+      "type": "Table",
+      "id": "TAB2641",
+      "paths": [
+        [
+          {
+            "id": "ME",
+            "label": "Democracy"
+          },
+          {
+            "id": "ME0002",
+            "label": "Survey of local democracy in municipalities and county councils"
+          },
+          {
+            "id": "ME0002A",
+            "label": "Political organization in municipalities"
+          }
+        ]
+      ],
+      "source": "Staistics Sweden",
+      "timeUnit": "Other",
+      "label": "Governing parties by municipality. Term of office (2002-2006)-(2022-2026)",
+      "description": "NULL",
+      "updated": "2025-03-06T07:00:00Z",
+      "firstPeriod": "2002-2006",
+      "lastPeriod": "2022-2026",
+      "category": "public",
+      "variableNames": [
+        "region",
+        "observations",
+        "period"
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "en",
+          "href": "https://api.scb.se/OV0104/v2beta/api/v2/tables/TAB2641?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "en",
+          "href": "https://api.scb.se/OV0104/v2beta/api/v2/tables/TAB2641/metadata?lang=en"
+        },
+        {
+          "rel": "data",
+          "hreflang": "en",
+          "href": "https://api.scb.se/OV0104/v2beta/api/v2/tables/TAB2641/data?lang=en&outputFormat=px"
+        }
+      ]
+    },
+    {
+      "type": "Table",
+      "id": "TAB2677",
+      "paths": [
+        [
+          {
+            "id": "ME",
+            "label": "Democracy"
+          },
+          {
+            "id": "ME0002",
+            "label": "Survey of local democracy in municipalities and county councils"
+          },
+          {
+            "id": "ME0002J",
+            "label": "Political organization in country council"
+          }
+        ]
+      ],
+      "source": "Staistics Sweden",
+      "timeUnit": "Other",
+      "label": "Governing parties by region. Term of office (2006-2010)-(2022-2026)",
+      "description": "NULL",
+      "updated": "2025-03-06T07:00:00Z",
+      "firstPeriod": "2006-2010",
+      "lastPeriod": "2022-2026",
+      "category": "public",
+      "variableNames": [
+        "region",
+        "observations",
+        "period"
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "en",
+          "href": "https://api.scb.se/OV0104/v2beta/api/v2/tables/TAB2677?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "en",
+          "href": "https://api.scb.se/OV0104/v2beta/api/v2/tables/TAB2677/metadata?lang=en"
+        },
+        {
+          "rel": "data",
+          "hreflang": "en",
+          "href": "https://api.scb.se/OV0104/v2beta/api/v2/tables/TAB2677/data?lang=en&outputFormat=px"
+        }
+      ]
+    },
+    {
+      "type": "Table",
+      "id": "TAB3571",
+      "paths": [
+        [
+          {
+            "id": "EN",
+            "label": "Energy"
+          },
+          {
+            "id": "EN0301",
+            "label": "Electricity prices and electricity contracts"
+          },
+          {
+            "id": "EN0301A",
+            "label": "Electricity prices and electricity contracts"
+          }
+        ]
+      ],
+      "source": "Staistics Sweden",
+      "timeUnit": "Monthly",
+      "label": "Distribution of electricity contracts by bidding zone and contract type. Month 2013M04-2025M01",
+      "description": "",
+      "updated": "2025-02-24T07:00:00Z",
+      "firstPeriod": "2013M04",
+      "lastPeriod": "2025M01",
+      "category": "public",
+      "variableNames": [
+        "bidding zone",
+        "contract type",
+        "observations",
+        "month"
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "en",
+          "href": "https://api.scb.se/OV0104/v2beta/api/v2/tables/TAB3571?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "en",
+          "href": "https://api.scb.se/OV0104/v2beta/api/v2/tables/TAB3571/metadata?lang=en"
+        },
+        {
+          "rel": "data",
+          "hreflang": "en",
+          "href": "https://api.scb.se/OV0104/v2beta/api/v2/tables/TAB3571/data?lang=en&outputFormat=px"
+        }
+      ]
+    },
+    {
+      "type": "Table",
+      "id": "TAB3819",
+      "paths": [
+        [
+          {
+            "id": "EN",
+            "label": "Energy"
+          },
+          {
+            "id": "EN0301",
+            "label": "Electricity prices and electricity contracts"
+          },
+          {
+            "id": "EN0301A",
+            "label": "Electricity prices and electricity contracts"
+          }
+        ]
+      ],
+      "source": "Staistics Sweden",
+      "timeUnit": "Monthly",
+      "label": "Prices on electric energy (excl. taxes and fees) by contract type, bidding zone and type of customer. Month 2013M04-2025M01",
+      "description": "",
+      "updated": "2025-02-24T07:00:00Z",
+      "firstPeriod": "2013M04",
+      "lastPeriod": "2025M01",
+      "category": "public",
+      "variableNames": [
+        "contract type",
+        "bidding zone",
+        "type of customer",
+        "observations",
+        "month"
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "en",
+          "href": "https://api.scb.se/OV0104/v2beta/api/v2/tables/TAB3819?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "en",
+          "href": "https://api.scb.se/OV0104/v2beta/api/v2/tables/TAB3819/metadata?lang=en"
+        },
+        {
+          "rel": "data",
+          "hreflang": "en",
+          "href": "https://api.scb.se/OV0104/v2beta/api/v2/tables/TAB3819/data?lang=en&outputFormat=px"
+        }
+      ]
+    }
+  ],
+  "page": {
+    "pageNumber": 1,
+    "pageSize": 25,
+    "totalElements": 6,
+    "totalPages": 1,
+    "links": [
+      {
+        "rel": "next",
+        "hreflang": "en",
+        "href": "https://api.scb.se/OV0104/v2beta/api/v2/tables/?lang=en&pagesize=25&pageNumber=2"
+      },
+      {
+        "rel": "last",
+        "hreflang": "en",
+        "href": "https://api.scb.se/OV0104/v2beta/api/v2/tables/?lang=en&pagesize=25&pageNumber=11"
+      }
+    ]
+  },
+  "links": [
+    {
+      "rel": "self",
+      "hreflang": "en",
+      "href": "https://api.scb.se/OV0104/v2beta/api/v2/tables/?lang=en&pagesize=25&pageNumber=1"
+    }
+  ]
+}
