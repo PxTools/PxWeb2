@@ -5,6 +5,7 @@ import cl from 'clsx';
 import classes from './TableInformation.module.scss';
 import useTableData from '../../context/useTableData';
 import { ContactTab } from './Contact/ContactTab';
+import { DetailsTab } from './Details/DetailsTab';
 
 import {
   SideSheet,
@@ -89,7 +90,9 @@ export function TableInformation({
             Definitions
           </TabPanel>
           <TabPanel id="pnl-details" controlledBy="tab-details">
-            Details
+            {tableData.data?.metadata && (
+              <DetailsTab tableMetadata={tableData.data.metadata} />
+            )}
           </TabPanel>
           <TabPanel id="pnl-contact" controlledBy="tab-contact">
             <ContactTab contacts={tableData.data?.metadata.contacts || []} />

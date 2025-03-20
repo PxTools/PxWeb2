@@ -1,8 +1,8 @@
 import { MemoryRouter } from 'react-router';
-import App from './app';
-import { AccessibilityProvider } from './context/AccessibilityProvider';
-import { renderWithProviders } from './util/testing-utils';
-import { Config } from './util/config/configType';
+import TableViewer from './TableViewer';
+import { AccessibilityProvider } from '../../context/AccessibilityProvider';
+import { renderWithProviders } from '../../util/testing-utils';
+import { Config } from '../../util/config/configType';
 
 // Declare the global variable for this file
 declare global {
@@ -25,12 +25,12 @@ window.PxWeb2Config = {
   apiUrl: '',
 };
 
-describe('App', () => {
+describe('TableViewer', () => {
   it('should render successfully', () => {
     const { baseElement } = renderWithProviders(
       <AccessibilityProvider>
         <MemoryRouter>
-          <App />
+          <TableViewer />
         </MemoryRouter>
       </AccessibilityProvider>,
     );

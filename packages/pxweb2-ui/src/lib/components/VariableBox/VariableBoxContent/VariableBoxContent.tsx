@@ -293,7 +293,7 @@ export function VariableBoxContent({
   const handleChangingCodeListInVariableBox = (
     selectedItem: SelectOption | undefined,
     varId: string,
-    virtuosoRef: React.RefObject<VirtuosoHandle>,
+    virtuosoRef: React.RefObject<VirtuosoHandle | null>,
   ) => {
     // Call the parent function to change the code list
     onChangeCodeList(selectedItem, varId);

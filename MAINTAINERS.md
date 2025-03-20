@@ -23,17 +23,17 @@ By using these tools, we ensure a streamlined and efficient development process,
 
 An overview of the current technical debt in the project:
 
-### Long running tasks:
+### Long running tasks
 
 1. Updating the packages used in the project. This includes both Dependabot PRs and other outdated packages.
-2. Fix SonrQube issues/codesmells
-3. Fix warnings when running 'npm run lint'
-4. See if any configurationfiles need to be updated. For example: tsconfig.base.json currently (25.02.2025) has some older versions that should be updated.
+2. Fix [SonarQube issues/codesmells](https://sonarcloud.io/project/overview?id=PxTools_PxWeb2)
+3. Fix warnings when running `npm run lint`
+4. See if any configurationfiles need to be updated. For example: `tsconfig.base.json` currently (25.02.2025) has some older versions that should be updated.
 
-### Onetime tasks:
+### Onetime tasks
 
 1. The package we use to generate the api-client is no longer maintained, and needs to be updated. It recommends a fork that is activly maintained.
-2. We have not specified a React or Typescript version, except the types for React 18 in the web application. We should specify them so we have control over the React versions used. Should probably be in the root project until we need to specify them per project.
+2. We have to check why StoryBook upgrade says that we goes from v 0.0.0
 
 ## Git Branching Strategy
 
@@ -56,7 +56,7 @@ We use a simple and effective Git branching strategy to keep our project organiz
 5. **Pull Requests**: After making your changes in these branches, merge them back into `main` via a pull request. The pull request should be reviewed and tested before it is merged.
 
 > Make sure that the JIRA id is included in the branch name and that this should be in capital letters.
-
+>
 > We prefer hyphens instead of underscores for word separator in branch names.
 
 This strategy ensures that our `main` branch always has "production-ready" code that has been reviewed and tested.
@@ -80,9 +80,16 @@ To get started with contributing code, please follow these steps:
    - Documentation updates if necessary.
    - Passed all the continuous integration checks (like build, linting and tests).
 
-> Your PR will have automatic deploys to Cloudflare Pages that can be used by the reviewers
+   > Your PR will have automatic deploys to Cloudflare Pages that can be used by the reviewers
 
-8. Assign reviewers to your PR and once approved by at least one reviewer you can continue and merge the PR.
+8. Reviewers will be automatically assigned from [CODEOWNERS](CODEOWNERS) to your PR and once approved by at least one reviewer you can continue with one of the following options
+   - Create a merge commit
+   - Squash and merge (recomended for most/smaller changes)
+   - Rebase and merge
+
+> [!IMPORTANT]
+> We use [Automatically generated release notes](https://docs.github.com/en/repositories/releasing-projects-on-github/automatically-generated-release-notes)
+> so a descriptive PR title is essential for the release notes.
 
 ## Reviewing Pull Requests
 
