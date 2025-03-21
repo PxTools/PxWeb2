@@ -482,11 +482,6 @@ function createRowMobile({
       // the last value of last level stub
       lastValueOfLastStub = true;
     }
-    let firstValueOfLastStub = false;
-    if (stubIndex === stubLength - 1 && i === 0) {
-      // the last value of last level stub
-      firstValueOfLastStub = true;
-    }
     // If there are more stub variables that need to add headers to this row
     if (stubLength > stubIndex + 1) {
       switch (stubIndex) {
