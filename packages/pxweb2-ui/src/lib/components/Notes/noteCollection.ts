@@ -6,7 +6,8 @@ import { VartypeEnum } from '../../shared-types/vartypeEnum';
 
 // Internal type holding mandatory and non mandatory notes for a table
 export type tableNoteCollection = {
-  SymbolExplanationNotes: string[];
+  //SymbolExplanationNotes: string[];
+  SymbolExplanationNotes: { [key: string]: string };
   mandatoryNotes: noteCollection;
   nonMandatoryNotes: noteCollection;
 };
@@ -39,7 +40,7 @@ export function getNotes(
   specialCharacters: string[], // Special characters from the config
 ): tableNoteCollection {
   const notes: tableNoteCollection = {
-    SymbolExplanationNotes: [],
+    SymbolExplanationNotes: {},
     mandatoryNotes: {
       notesCount: 0,
       tableLevelNotes: [],
@@ -56,8 +57,9 @@ export function getNotes(
     return notes;
   }
 
+  getSymbolExplanationNotes(totalMetadata, notes, specialCharacters);
   getSymbolExplanationNotes(selectionMetadata, notes, specialCharacters);
-
+  
   if (totalMetadata.notes) {
     // Get notes at table level
     for (const note of totalMetadata.notes) {
@@ -86,11 +88,14 @@ function getSymbolExplanationNotes(
   specialCharacters: string[],
 ): void {
   if (selectionMetadata.notes) {
-    const startStrings = specialCharacters.map((char) => char + ' =');
+    // const startStrings = specialCharacters.map((char) => char + ' ');
+    // const containsStrings = specialCharacters.map((char) => '(' + char + ')');
     for (const note of selectionMetadata.notes) {
-      if (startStrings.some((char) => note.text.startsWith(char))) {
-        notes.SymbolExplanationNotes.push(note.text);
-      }
+        //notes.SymbolExplanationNotes.push(note.text);
+        const specialChar = specialCharacters.find((char) => note.text.startsWith(char + ' ') || note.text.includes('(' + char + ')'));
+        if (specialChar && !notes.SymbolExplanationNotes[specialChar]) {
+          notes.SymbolExplanationNotes[specialChar] = note.text;
+        }
     }
   }
 }

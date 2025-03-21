@@ -4,7 +4,7 @@ import List from '../List/List';
 import ListItem from '../List/ListItem';
 
 export type SymbolExplanationNotesProps = {
-  readonly notes: string[];
+  readonly notes: { [key: string]: string };
 };
 
 let number = 0;
@@ -21,7 +21,16 @@ export function SymbolExplanationNotes({ notes }: SymbolExplanationNotesProps) {
 
   return (
     <List heading={heading} listType="ul" listGroup>
-      {notes.length === 1 ? (
+      {Object.keys(notes).length === 1 ? (
+        <span>{Object.values(notes)[0]}</span>
+      ) : (
+        <List listType="ul">
+          {Object.entries(notes).map(([note]) => (
+            <ListItem key={getNoteKey()}>{note}</ListItem>
+          ))}
+        </List>
+      )}
+      {/* {notes.length === 1 ? (
         <span>{notes[0]}</span>
       ) : (
         <List listType="ul">
@@ -29,7 +38,7 @@ export function SymbolExplanationNotes({ notes }: SymbolExplanationNotesProps) {
             <ListItem key={getNoteKey()}>{note}</ListItem>
           ))}
         </List>
-      )}
+      )} */}
     </List>
   );
 }

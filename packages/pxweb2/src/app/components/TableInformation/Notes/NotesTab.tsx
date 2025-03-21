@@ -213,9 +213,12 @@ export function NotesTab({ pxTableMetadata }: NotesTabProps) {
 
   return (
     <div className={cl(classes.notesTab)}>
-      {notes.SymbolExplanationNotes.length > 0 && (
+      {Object.keys(notes.SymbolExplanationNotes).length > 0 && (
         <SymbolExplanationNotes notes={notes.SymbolExplanationNotes} />
       )}
+      {/* {notes.SymbolExplanationNotes.length > 0 && (
+      <SymbolExplanationNotes notes={notes.SymbolExplanationNotes} />
+      )} */}
 
       {notes.mandatoryNotes.notesCount > 0 && (
         <MandatoryNotes notes={notes.mandatoryNotes} />
