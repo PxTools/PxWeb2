@@ -59,7 +59,7 @@ export function getNotes(
 
   getSymbolExplanationNotes(totalMetadata, notes, specialCharacters);
   getSymbolExplanationNotes(selectionMetadata, notes, specialCharacters);
-  
+
   if (totalMetadata.notes) {
     // Get notes at table level
     for (const note of totalMetadata.notes) {
@@ -91,11 +91,15 @@ function getSymbolExplanationNotes(
     // const startStrings = specialCharacters.map((char) => char + ' ');
     // const containsStrings = specialCharacters.map((char) => '(' + char + ')');
     for (const note of selectionMetadata.notes) {
-        //notes.SymbolExplanationNotes.push(note.text);
-        const specialChar = specialCharacters.find((char) => note.text.startsWith(char + ' ') || note.text.includes('(' + char + ')'));
-        if (specialChar && !notes.SymbolExplanationNotes[specialChar]) {
-          notes.SymbolExplanationNotes[specialChar] = note.text;
-        }
+      //notes.SymbolExplanationNotes.push(note.text);
+      const specialChar = specialCharacters.find(
+        (char) =>
+          note.text.startsWith(char + ' ') ||
+          note.text.includes('(' + char + ')'),
+      );
+      if (specialChar && !notes.SymbolExplanationNotes[specialChar]) {
+        notes.SymbolExplanationNotes[specialChar] = note.text;
+      }
     }
   }
 }
