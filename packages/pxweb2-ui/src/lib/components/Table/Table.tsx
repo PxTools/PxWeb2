@@ -566,10 +566,15 @@ function createRowMobile({
           className={cl(
             classes.mobileRowHeadLastStub,
             {
-              [classes.mobileRowHeadlastValueOfLastStub]: lastValueOfLastStub,
+              [classes.mobileRowHeadlastValueOfLastStub]:
+                lastValueOfLastStub && stubLength > 2,
             },
             {
-              [classes.mobileRowHeadfirstValueOfLastStub]:
+              [classes.mobileRowHeadlastValueOfLastStub2Dim]:
+                lastValueOfLastStub && stubLength === 2,
+            },
+            {
+              [classes.mobileRowHeadfirstValueOfLastStub2Dim]:
                 i === 0 && stubLength === 2,
             },
           )}
