@@ -164,6 +164,13 @@
         "title": "معلومة",
         "footnotes": {
           "title": "ملحوظات",
+          "missing_heading": "لا توجد ملاحظات",
+          "missing_text_table": "الجدول لا يحتوي على ملاحظات.",
+          "missing_text_selection": "لا توجد ملاحظات للتصفية المحددة.",
+          "symbol_explanation_heading": "شرح الرمز",
+          "mandatory_heading": "مهم بخصوص الطاولة",
+          "mandatory_variable_heading": "مهم حول",
+          "non_mandatory_heading": "للجدول بأكمله",
           "show_all_footnotes": "إظهار كافة الملاحظات للجدول"
         },
         "definitions": {
