@@ -1,0 +1,60 @@
+@use '../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixvar;
+@use '../../../../style-dictionary/dist/css/variables.css' as var;
+@use '../../text-styles.scss';
+
+.tableCard {
+  display: flex;
+  border: 1px solid var(--color-border-subtle, #c3dcdc);
+  border-radius: var(--border-radius-large, 16px);
+  background: var(--color-surface-default, #fff);
+  padding: 20px;
+}
+
+.iconWrapper {
+  width: 70px;
+  height: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  svg {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+.iconWrapper-active,
+.iconWrapper-closed {
+  width: 72px;
+  height: 72px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: var(--border-radius-medium, 8px);
+  margin-right: 16px;
+
+  svg {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+.iconWrapper-active {
+  background-color: #dbebeb;
+}
+
+.iconWrapper-closed {
+  background-color: #ffe4e0;
+}
+
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  row-gap: 16px;
+}
+
+.tableMeta {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
