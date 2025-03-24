@@ -7,10 +7,8 @@ export type SymbolExplanationNotesProps = {
   readonly notes: { [key: string]: string };
 };
 
-let number = 0;
-
-function getNoteKey(): string {
-  return 'symbol-note-' + number++;
+function getNoteKey(key: string): string {
+  return 'symbol-note-' + key;
 }
 
 export function SymbolExplanationNotes({ notes }: SymbolExplanationNotesProps) {
@@ -25,8 +23,8 @@ export function SymbolExplanationNotes({ notes }: SymbolExplanationNotesProps) {
         <span>{Object.values(notes)[0]}</span>
       ) : (
         <List listType="ul">
-          {Object.entries(notes).map(([note]) => (
-            <ListItem key={getNoteKey()}>{note}</ListItem>
+          {Object.entries(notes).map(([key, value]) => (
+            <ListItem key={getNoteKey(key)}>{value}</ListItem>
           ))}
         </List>
       )}
