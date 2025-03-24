@@ -30,10 +30,16 @@ export const TableCard: React.FC<TableCardProps> = ({
         {title}
       </Heading>
       <div className={cl(styles.tableMeta)}>
-        {period && <BodyShort className={cl(styles.period)}>{period}</BodyShort>}
-        {frequency && <BodyShort className={cl(styles.frequency)}>{frequency}</BodyShort>}
+        {period && (
+          <BodyShort className={cl(styles.period)}>{period}</BodyShort>
+        )}
+        {frequency && (
+          <BodyShort className={cl(styles.frequency)}>{frequency}</BodyShort>
+        )}
         {lastUpdated && (
-          <BodyShort className={cl(styles.lastUpdated)}>{lastUpdated}</BodyShort>
+          <BodyShort className={cl(styles.lastUpdated)}>
+            {lastUpdated}
+          </BodyShort>
         )}
         {tableId && <span className={cl(styles.tableId)}>{tableId}</span>}
       </div>

@@ -11,7 +11,7 @@ export default meta;
 export const FixedTabs: StoryFn<typeof TableCard> = () => {
   return (
     <TableCard
-      icon={<AgricultureForestryHuntingAndFishing  />}
+      icon={<AgricultureForestryHuntingAndFishing />}
       title="Utenrikshandel med varer, etter varenummer (HS) og land"
       tableId="08799"
       period="1988–2024"
