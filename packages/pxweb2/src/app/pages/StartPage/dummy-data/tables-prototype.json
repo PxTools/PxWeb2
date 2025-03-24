@@ -24,11 +24,7 @@
       "firstPeriod": "1998K2",
       "lastPeriod": "2024K4",
       "category": "public",
-      "variableNames": [
-        "item",
-        "observations",
-        "quarter"
-      ],
+      "variableNames": ["item", "observations", "quarter"],
       "links": [
         {
           "rel": "self",
@@ -120,11 +116,7 @@
       "firstPeriod": "1997K1",
       "lastPeriod": "2024K4",
       "category": "public",
-      "variableNames": [
-        "item",
-        "observations",
-        "quarter"
-      ],
+      "variableNames": ["item", "observations", "quarter"],
       "links": [
         {
           "rel": "self",
@@ -170,11 +162,7 @@
       "firstPeriod": "2002-2006",
       "lastPeriod": "2022-2026",
       "category": "public",
-      "variableNames": [
-        "region",
-        "observations",
-        "period"
-      ],
+      "variableNames": ["region", "observations", "period"],
       "links": [
         {
           "rel": "self",
@@ -220,11 +208,7 @@
       "firstPeriod": "2006-2010",
       "lastPeriod": "2022-2026",
       "category": "public",
-      "variableNames": [
-        "region",
-        "observations",
-        "period"
-      ],
+      "variableNames": ["region", "observations", "period"],
       "links": [
         {
           "rel": "self",

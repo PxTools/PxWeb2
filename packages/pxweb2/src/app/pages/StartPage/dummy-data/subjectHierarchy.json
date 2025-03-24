@@ -119,9 +119,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "d424fc8c-757c-4773-8a84-0b4544e43d04"
-            ]
+            "secondarySubject": ["d424fc8c-757c-4773-8a84-0b4544e43d04"]
           }
         ]
       },
@@ -156,9 +154,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "cce28fa9-af63-4902-bead-e68a6f22f9c5"
-            ]
+            "secondarySubject": ["cce28fa9-af63-4902-bead-e68a6f22f9c5"]
           },
           {
             "path": "/ssb/arbeid-og-lonn/arbeidsmiljo-sykefravaer-og-arbeidskonflikter/statistikk/fagforeiningsmedlemmer-og-streikar",
@@ -176,9 +172,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "f25340d1-8609-41b4-af1d-1c54492d11d3"
-            ]
+            "secondarySubject": ["f25340d1-8609-41b4-af1d-1c54492d11d3"]
           },
           {
             "path": "/ssb/arbeid-og-lonn/arbeidsmiljo-sykefravaer-og-arbeidskonflikter/statistikk/sykefravaer",
@@ -236,9 +230,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "0e6d8e4a-fb99-491a-b879-fb4aa84b71c1"
-            ]
+            "secondarySubject": ["0e6d8e4a-fb99-491a-b879-fb4aa84b71c1"]
           }
         ]
       },
@@ -327,9 +319,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "c4cf34cd-cd7e-40c9-a2c8-231a07a94672"
-            ]
+            "secondarySubject": ["c4cf34cd-cd7e-40c9-a2c8-231a07a94672"]
           },
           {
             "path": "/ssb/arbeid-og-lonn/sysselsetting/statistikk/antall-arbeidsforhold-og-lonn",
@@ -427,9 +417,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "61e486fd-e8a2-4f22-b969-8c997065be41"
-            ]
+            "secondarySubject": ["61e486fd-e8a2-4f22-b969-8c997065be41"]
           },
           {
             "path": "/ssb/arbeid-og-lonn/sysselsetting/statistikk/ledige-stillingar",
@@ -447,9 +435,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "d424fc8c-757c-4773-8a84-0b4544e43d04"
-            ]
+            "secondarySubject": ["d424fc8c-757c-4773-8a84-0b4544e43d04"]
           },
           {
             "path": "/ssb/arbeid-og-lonn/sysselsetting/statistikk/sysselsetting-blant-innvandrere-registerbasert",
@@ -467,9 +453,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "c4cf34cd-cd7e-40c9-a2c8-231a07a94672"
-            ]
+            "secondarySubject": ["c4cf34cd-cd7e-40c9-a2c8-231a07a94672"]
           },
           {
             "path": "/ssb/arbeid-og-lonn/sysselsetting/statistikk/sysselsetting-registerbasert",
@@ -487,9 +471,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "1640ebb9-70b0-43f1-8eeb-7dec37459dc4"
-            ]
+            "secondarySubject": ["1640ebb9-70b0-43f1-8eeb-7dec37459dc4"]
           },
           {
             "path": "/ssb/arbeid-og-lonn/sysselsetting/statistikk/tilknytning-til-arbeid-utdanning-og-velferdsordninger",
@@ -680,9 +662,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "a640f65d-6fbd-4d9a-8ad0-34b5ef578256"
-            ]
+            "secondarySubject": ["a640f65d-6fbd-4d9a-8ad0-34b5ef578256"]
           },
           {
             "path": "/ssb/virksomheter-foretak-og-regnskap/konkurser/statistikk/opna-konkursar",
@@ -1025,9 +1005,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "ffb02d62-f21c-43d3-a06d-ac704bf12d3a"
-            ]
+            "secondarySubject": ["ffb02d62-f21c-43d3-a06d-ac704bf12d3a"]
           }
         ]
       }
@@ -1267,9 +1245,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "399224d2-b173-4edf-a2e8-6ad1f7e113a6"
-            ]
+            "secondarySubject": ["399224d2-b173-4edf-a2e8-6ad1f7e113a6"]
           },
           {
             "path": "/ssb/befolkning/befolkningsframskrivinger/statistikk/regionale-befolkningsframskrivinger",
@@ -1287,9 +1263,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "399224d2-b173-4edf-a2e8-6ad1f7e113a6"
-            ]
+            "secondarySubject": ["399224d2-b173-4edf-a2e8-6ad1f7e113a6"]
           }
         ]
       },
@@ -1383,9 +1357,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "fc3e8def-5943-45f5-b0e9-e54078dfcdb2"
-            ]
+            "secondarySubject": ["fc3e8def-5943-45f5-b0e9-e54078dfcdb2"]
           },
           {
             "path": "/ssb/befolkning/folketall/statistikk/samiske-forhold",
@@ -1421,9 +1393,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "11212d1a-34d9-4adf-adb7-2eba5f196645"
-            ]
+            "secondarySubject": ["11212d1a-34d9-4adf-adb7-2eba5f196645"]
           },
           {
             "path": "/ssb/befolkning/folketall",
@@ -1624,9 +1594,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "399224d2-b173-4edf-a2e8-6ad1f7e113a6"
-            ]
+            "secondarySubject": ["399224d2-b173-4edf-a2e8-6ad1f7e113a6"]
           },
           {
             "path": "/ssb/befolkning/innvandrere/statistikk/personer-med-flyktningbakgrunn",
@@ -1665,9 +1633,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "399224d2-b173-4edf-a2e8-6ad1f7e113a6"
-            ]
+            "secondarySubject": ["399224d2-b173-4edf-a2e8-6ad1f7e113a6"]
           }
         ]
       },
@@ -1798,9 +1764,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "39809bc8-87d2-4505-8bec-3452045a8c89"
-            ]
+            "secondarySubject": ["39809bc8-87d2-4505-8bec-3452045a8c89"]
           },
           {
             "path": "/ssb/befolkning/innvandrere/statistikk/innvandrere-etter-innvandringsgrunn",
@@ -1818,9 +1782,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "39809bc8-87d2-4505-8bec-3452045a8c89"
-            ]
+            "secondarySubject": ["39809bc8-87d2-4505-8bec-3452045a8c89"]
           },
           {
             "path": "/ssb/befolkning/innvandrere/statistikk/innvandrere-og-norskfodte-med-innvandrerforeldre",
@@ -1859,9 +1821,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "39809bc8-87d2-4505-8bec-3452045a8c89"
-            ]
+            "secondarySubject": ["39809bc8-87d2-4505-8bec-3452045a8c89"]
           },
           {
             "path": "/ssb/befolkning/innvandrere/statistikk/personer-med-flyktningbakgrunn",
@@ -2064,9 +2024,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "cce28fa9-af63-4902-bead-e68a6f22f9c5"
-            ]
+            "secondarySubject": ["cce28fa9-af63-4902-bead-e68a6f22f9c5"]
           },
           {
             "path": "/ssb/bygg-bolig-og-eiendom/bolig-og-boforhold/statistikk/boforhold-registerbasert",
@@ -2105,9 +2063,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "fc3e8def-5943-45f5-b0e9-e54078dfcdb2"
-            ]
+            "secondarySubject": ["fc3e8def-5943-45f5-b0e9-e54078dfcdb2"]
           },
           {
             "path": "/ssb/bygg-bolig-og-eiendom/bolig-og-boforhold/statistikk/brann-og-ulukkesvern",
@@ -2125,9 +2081,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "df5a5468-87f2-40db-bfc6-4b99e9ce6916"
-            ]
+            "secondarySubject": ["df5a5468-87f2-40db-bfc6-4b99e9ce6916"]
           },
           {
             "path": "/ssb/bygg-bolig-og-eiendom/bolig-og-boforhold/statistikk/kommunale-boliger",
@@ -2166,9 +2120,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "df5a5468-87f2-40db-bfc6-4b99e9ce6916"
-            ]
+            "secondarySubject": ["df5a5468-87f2-40db-bfc6-4b99e9ce6916"]
           },
           {
             "path": "/ssb/bygg-bolig-og-eiendom/bolig-og-boforhold",
@@ -2300,9 +2252,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "2d77a0a1-a30d-4101-8385-454334044c32"
-            ]
+            "secondarySubject": ["2d77a0a1-a30d-4101-8385-454334044c32"]
           },
           {
             "path": "/ssb/priser-og-prisindekser/boligpriser-og-boligprisindekser/statistikk/prisindeks-for-brukte-boliger",
@@ -2320,9 +2270,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "2d77a0a1-a30d-4101-8385-454334044c32"
-            ]
+            "secondarySubject": ["2d77a0a1-a30d-4101-8385-454334044c32"]
           },
           {
             "path": "/ssb/priser-og-prisindekser/boligpriser-og-boligprisindekser/statistikk/prisindeks-for-nye-boliger",
@@ -2340,9 +2288,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "2d77a0a1-a30d-4101-8385-454334044c32"
-            ]
+            "secondarySubject": ["2d77a0a1-a30d-4101-8385-454334044c32"]
           }
         ]
       },
@@ -2377,9 +2323,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "fc3e8def-5943-45f5-b0e9-e54078dfcdb2"
-            ]
+            "secondarySubject": ["fc3e8def-5943-45f5-b0e9-e54078dfcdb2"]
           },
           {
             "path": "/ssb/bygg-bolig-og-eiendom/bygg-og-anlegg/statistikk/bygningsmassen",
@@ -2472,9 +2416,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "83c1dd2b-0341-4ee9-86e1-15c54b39418d"
-            ]
+            "secondarySubject": ["83c1dd2b-0341-4ee9-86e1-15c54b39418d"]
           },
           {
             "path": "/ssb/natur-og-miljo/areal/statistikk/byggeaktivitet-i-strandsonen",
@@ -2492,9 +2434,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "83c1dd2b-0341-4ee9-86e1-15c54b39418d"
-            ]
+            "secondarySubject": ["83c1dd2b-0341-4ee9-86e1-15c54b39418d"]
           },
           {
             "path": "/ssb/priser-og-prisindekser/byggekostnadsindekser/statistikk/byggjekostnadsindeks-for-bustader",
@@ -2533,9 +2473,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "83c1dd2b-0341-4ee9-86e1-15c54b39418d"
-            ]
+            "secondarySubject": ["83c1dd2b-0341-4ee9-86e1-15c54b39418d"]
           },
           {
             "path": "/ssb/priser-og-prisindekser/byggekostnadsindekser/statistikk/byggekostnadsindeks-for-veganlegg",
@@ -2660,9 +2598,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "43d53019-df5a-4f0c-9ff9-f305b80fd04b"
-            ]
+            "secondarySubject": ["43d53019-df5a-4f0c-9ff9-f305b80fd04b"]
           },
           {
             "path": "/ssb/jord-skog-jakt-og-fiskeri/landbrukseiendommer/statistikk/overdragelser-av-landbrukseiendommer",
@@ -2680,9 +2616,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "43d53019-df5a-4f0c-9ff9-f305b80fd04b"
-            ]
+            "secondarySubject": ["43d53019-df5a-4f0c-9ff9-f305b80fd04b"]
           },
           {
             "path": "/ssb/jord-skog-jakt-og-fiskeri/skogbruk/statistikk/skogeiendommer",
@@ -2700,9 +2634,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "43d53019-df5a-4f0c-9ff9-f305b80fd04b"
-            ]
+            "secondarySubject": ["43d53019-df5a-4f0c-9ff9-f305b80fd04b"]
           }
         ]
       }
@@ -2753,9 +2685,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "0f5dea7e-e8a8-4cda-9a6c-e3f5a5f3c8dc"
-            ]
+            "secondarySubject": ["0f5dea7e-e8a8-4cda-9a6c-e3f5a5f3c8dc"]
           },
           {
             "path": "/ssb/energi-og-industri/energi/statistikk/elektrisitetspriser",
@@ -2773,9 +2703,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "35da2baa-2a2b-473c-9143-c173e6c8d326"
-            ]
+            "secondarySubject": ["35da2baa-2a2b-473c-9143-c173e6c8d326"]
           },
           {
             "path": "/ssb/energi-og-industri/energi/statistikk/energibruk-i-husholdningene",
@@ -2811,9 +2739,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "28089cf6-e3f3-43dd-bd13-1dfc25df7aaa"
-            ]
+            "secondarySubject": ["28089cf6-e3f3-43dd-bd13-1dfc25df7aaa"]
           },
           {
             "path": "/ssb/energi-og-industri/energi/statistikk/fjernvarme-og-fjernkjoling",
@@ -2849,9 +2775,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "a462970d-b375-479c-84e0-2280ee5a5c04"
-            ]
+            "secondarySubject": ["a462970d-b375-479c-84e0-2280ee5a5c04"]
           },
           {
             "path": "/ssb/energi-og-industri/energi",
@@ -2959,9 +2883,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "141dbc3a-b95f-4bbb-b06e-20a36a22d141"
-            ]
+            "secondarySubject": ["141dbc3a-b95f-4bbb-b06e-20a36a22d141"]
           },
           {
             "path": "/ssb/energi-og-industri/industri-og-bergverksdrift/statistikk/investeringer-i-olje-og-gass-industri-bergverk-og-kraftforsyning",
@@ -2979,9 +2901,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "141dbc3a-b95f-4bbb-b06e-20a36a22d141"
-            ]
+            "secondarySubject": ["141dbc3a-b95f-4bbb-b06e-20a36a22d141"]
           },
           {
             "path": "/ssb/virksomheter-foretak-og-regnskap/virksomheter-og-foretak/statistikk/naeringenes-okonomiske-utvikling",
@@ -3112,9 +3032,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "141dbc3a-b95f-4bbb-b06e-20a36a22d141"
-            ]
+            "secondarySubject": ["141dbc3a-b95f-4bbb-b06e-20a36a22d141"]
           },
           {
             "path": "/ssb/energi-og-industri/industri-og-bergverksdrift/statistikk/konjunkturbarometer-for-industri-og-bergverk",
@@ -3132,9 +3050,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "41beda52-aaf9-4b12-9ee5-7aafa0832193"
-            ]
+            "secondarySubject": ["41beda52-aaf9-4b12-9ee5-7aafa0832193"]
           },
           {
             "path": "/ssb/energi-og-industri/industri-og-bergverksdrift/statistikk/omsetning-i-olje-og-gass-industri-bergverk-og-kraftforsyning",
@@ -3267,9 +3183,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "28089cf6-e3f3-43dd-bd13-1dfc25df7aaa"
-            ]
+            "secondarySubject": ["28089cf6-e3f3-43dd-bd13-1dfc25df7aaa"]
           },
           {
             "path": "/ssb/energi-og-industri/energi/statistikk/energibruk-i-industrien",
@@ -3287,9 +3201,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "28089cf6-e3f3-43dd-bd13-1dfc25df7aaa"
-            ]
+            "secondarySubject": ["28089cf6-e3f3-43dd-bd13-1dfc25df7aaa"]
           },
           {
             "path": "/ssb/jord-skog-jakt-og-fiskeri/jordbruk/statistikk/kjotproduksjon",
@@ -3307,9 +3219,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "28089cf6-e3f3-43dd-bd13-1dfc25df7aaa"
-            ]
+            "secondarySubject": ["28089cf6-e3f3-43dd-bd13-1dfc25df7aaa"]
           },
           {
             "path": "/ssb/natur-og-miljo/miljoregnskap/statistikk/miljovernutgifter",
@@ -3327,9 +3237,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "28089cf6-e3f3-43dd-bd13-1dfc25df7aaa"
-            ]
+            "secondarySubject": ["28089cf6-e3f3-43dd-bd13-1dfc25df7aaa"]
           },
           {
             "path": "/ssb/virksomheter-foretak-og-regnskap/virksomheter-og-foretak/statistikk/naeringenes-okonomiske-utvikling",
@@ -3456,9 +3364,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "dc8e8ad1-db3f-4d72-b145-1b27ab692f75"
-            ]
+            "secondarySubject": ["dc8e8ad1-db3f-4d72-b145-1b27ab692f75"]
           },
           {
             "path": "/ssb/energi-og-industri/olje-og-gass",
@@ -3551,9 +3457,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "a462970d-b375-479c-84e0-2280ee5a5c04"
-            ]
+            "secondarySubject": ["a462970d-b375-479c-84e0-2280ee5a5c04"]
           },
           {
             "path": "/ssb/energi-og-industri/industri-og-bergverksdrift/statistikk/produksjonsindeks-for-olje-og-gass-industri-bergverk-og-kraftforsyning",
@@ -3670,9 +3574,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "cce28fa9-af63-4902-bead-e68a6f22f9c5"
-            ]
+            "secondarySubject": ["cce28fa9-af63-4902-bead-e68a6f22f9c5"]
           }
         ]
       },
@@ -3707,9 +3609,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "0e6d8e4a-fb99-491a-b879-fb4aa84b71c1"
-            ]
+            "secondarySubject": ["0e6d8e4a-fb99-491a-b879-fb4aa84b71c1"]
           },
           {
             "path": "/ssb/helse/helseforhold-og-levevaner/statistikk/helseforhold-levekarsundersokelsen",
@@ -3727,9 +3627,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "cce28fa9-af63-4902-bead-e68a6f22f9c5"
-            ]
+            "secondarySubject": ["cce28fa9-af63-4902-bead-e68a6f22f9c5"]
           },
           {
             "path": "/ssb/helse/helseforhold-og-levevaner/statistikk/kosthald",
@@ -3837,9 +3735,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "a4489cd5-4704-4762-831c-544f30c1c7ef"
-            ]
+            "secondarySubject": ["a4489cd5-4704-4762-831c-544f30c1c7ef"]
           },
           {
             "path": "/ssb/sosiale-forhold-og-kriminalitet/levekar/statistikk/sosial-kontakt-levekarsundersokelsen",
@@ -3857,9 +3753,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "a4489cd5-4704-4762-831c-544f30c1c7ef"
-            ]
+            "secondarySubject": ["a4489cd5-4704-4762-831c-544f30c1c7ef"]
           },
           {
             "path": "/ssb/arbeid-og-lonn/arbeidsmiljo-sykefravaer-og-arbeidskonflikter/statistikk/sykefravaer",
@@ -3916,9 +3810,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "b628827d-0df8-4df2-b56f-87dcf78d253b"
-            ]
+            "secondarySubject": ["b628827d-0df8-4df2-b56f-87dcf78d253b"]
           },
           {
             "path": "/ssb/helse/helsetjenester/statistikk/kommunehelsetenesta",
@@ -3936,9 +3828,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "df5a5468-87f2-40db-bfc6-4b99e9ce6916"
-            ]
+            "secondarySubject": ["df5a5468-87f2-40db-bfc6-4b99e9ce6916"]
           },
           {
             "path": "/ssb/helse/helsetjenester/statistikk/pasienter-pa-sykehus",
@@ -3974,9 +3864,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "df5a5468-87f2-40db-bfc6-4b99e9ce6916"
-            ]
+            "secondarySubject": ["df5a5468-87f2-40db-bfc6-4b99e9ce6916"]
           },
           {
             "path": "/ssb/helse/helsetjenester/statistikk/spesialisthelsetjenesten",
@@ -4012,9 +3900,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "df5a5468-87f2-40db-bfc6-4b99e9ce6916"
-            ]
+            "secondarySubject": ["df5a5468-87f2-40db-bfc6-4b99e9ce6916"]
           },
           {
             "path": "/ssb/helse/helsetjenester/statistikk/ulonnet-omsorgsarbeid-levekarsundersokelsen",
@@ -4032,9 +3918,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "cce28fa9-af63-4902-bead-e68a6f22f9c5"
-            ]
+            "secondarySubject": ["cce28fa9-af63-4902-bead-e68a6f22f9c5"]
           },
           {
             "path": "/ssb/helse/helsetjenester",
@@ -4070,9 +3954,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "61e486fd-e8a2-4f22-b969-8c997065be41"
-            ]
+            "secondarySubject": ["61e486fd-e8a2-4f22-b969-8c997065be41"]
           },
           {
             "path": "/ssb/nasjonalregnskap-og-konjunkturer/nasjonalregnskap/statistikk/helseregnskap",
@@ -4090,9 +3972,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "61e486fd-e8a2-4f22-b969-8c997065be41"
-            ]
+            "secondarySubject": ["61e486fd-e8a2-4f22-b969-8c997065be41"]
           },
           {
             "path": "/ssb/bygg-bolig-og-eiendom/bolig-og-boforhold/statistikk/kommunale-boliger",
@@ -4200,9 +4080,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "a50d5422-ebe9-4813-95a1-b355dadc00b5"
-            ]
+            "secondarySubject": ["a50d5422-ebe9-4813-95a1-b355dadc00b5"]
           },
           {
             "path": "/ssb/priser-og-prisindekser/konsumpriser/statistikk/konsumprisindeksen",
@@ -4220,9 +4098,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "a50d5422-ebe9-4813-95a1-b355dadc00b5"
-            ]
+            "secondarySubject": ["a50d5422-ebe9-4813-95a1-b355dadc00b5"]
           },
           {
             "path": "/ssb/varehandel-og-tjenesteyting/varehandel/statistikk/varehandelsindeksen",
@@ -4240,9 +4116,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "a50d5422-ebe9-4813-95a1-b355dadc00b5"
-            ]
+            "secondarySubject": ["a50d5422-ebe9-4813-95a1-b355dadc00b5"]
           },
           {
             "path": "/ssb/varehandel-og-tjenesteyting/varehandel/statistikk/varekonsumindeksen",
@@ -4298,9 +4172,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "31e5fb4c-b39f-47f9-b48e-25fbc33d55d4"
-            ]
+            "secondarySubject": ["31e5fb4c-b39f-47f9-b48e-25fbc33d55d4"]
           },
           {
             "path": "/ssb/inntekt-og-forbruk/inntekt-og-formue/statistikk/inntekts-og-formuesstatistikk-for-husholdninger",
@@ -4318,9 +4190,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "2165436e-e618-4708-8a1e-e58e5a9a2c31"
-            ]
+            "secondarySubject": ["2165436e-e618-4708-8a1e-e58e5a9a2c31"]
           },
           {
             "path": "/ssb/inntekt-og-forbruk/inntekt-og-formue",
@@ -4374,9 +4244,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "2c31670a-70ef-4e58-8af9-99adb3b90052"
-            ]
+            "secondarySubject": ["2c31670a-70ef-4e58-8af9-99adb3b90052"]
           },
           {
             "path": "/ssb/inntekt-og-forbruk/skatt-for-personer/statistikk/skatt-for-personer",
@@ -4415,9 +4283,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "2c31670a-70ef-4e58-8af9-99adb3b90052"
-            ]
+            "secondarySubject": ["2c31670a-70ef-4e58-8af9-99adb3b90052"]
           }
         ]
       },
@@ -4509,9 +4375,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "31e5fb4c-b39f-47f9-b48e-25fbc33d55d4"
-            ]
+            "secondarySubject": ["31e5fb4c-b39f-47f9-b48e-25fbc33d55d4"]
           }
         ]
       }
@@ -4648,9 +4512,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "c4cf34cd-cd7e-40c9-a2c8-231a07a94672"
-            ]
+            "secondarySubject": ["c4cf34cd-cd7e-40c9-a2c8-231a07a94672"]
           },
           {
             "path": "/ssb/arbeid-og-lonn/arbeidsmiljo-sykefravaer-og-arbeidskonflikter/statistikk/sykefravaer",
@@ -4690,9 +4552,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "c4cf34cd-cd7e-40c9-a2c8-231a07a94672"
-            ]
+            "secondarySubject": ["c4cf34cd-cd7e-40c9-a2c8-231a07a94672"]
           },
           {
             "path": "/ssb/arbeid-og-lonn/sysselsetting/statistikk/tilknytning-til-arbeid-utdanning-og-velferdsordninger",
@@ -4872,9 +4732,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "39809bc8-87d2-4505-8bec-3452045a8c89"
-            ]
+            "secondarySubject": ["39809bc8-87d2-4505-8bec-3452045a8c89"]
           },
           {
             "path": "/ssb/befolkning/innvandrere/statistikk/innvandrere-etter-innvandringsgrunn",
@@ -4892,9 +4750,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "39809bc8-87d2-4505-8bec-3452045a8c89"
-            ]
+            "secondarySubject": ["39809bc8-87d2-4505-8bec-3452045a8c89"]
           },
           {
             "path": "/ssb/befolkning/innvandrere/statistikk/innvandrere-og-norskfodte-med-innvandrerforeldre",
@@ -4933,9 +4789,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "39809bc8-87d2-4505-8bec-3452045a8c89"
-            ]
+            "secondarySubject": ["39809bc8-87d2-4505-8bec-3452045a8c89"]
           },
           {
             "path": "/ssb/befolkning/innvandrere/statistikk/personer-med-flyktningbakgrunn",
@@ -5026,9 +4880,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "b628827d-0df8-4df2-b56f-87dcf78d253b"
-            ]
+            "secondarySubject": ["b628827d-0df8-4df2-b56f-87dcf78d253b"]
           },
           {
             "path": "/ssb/arbeid-og-lonn/arbeidsmiljo-sykefravaer-og-arbeidskonflikter/statistikk/sykefravaer",
@@ -5085,9 +4937,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "2165436e-e618-4708-8a1e-e58e5a9a2c31"
-            ]
+            "secondarySubject": ["2165436e-e618-4708-8a1e-e58e5a9a2c31"]
           },
           {
             "path": "/ssb/inntekt-og-forbruk/inntekt-og-formue/statistikk/inntekts-og-formuesstatistikk-for-husholdninger",
@@ -5105,9 +4955,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "2165436e-e618-4708-8a1e-e58e5a9a2c31"
-            ]
+            "secondarySubject": ["2165436e-e618-4708-8a1e-e58e5a9a2c31"]
           }
         ]
       },
@@ -5142,9 +4990,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "44eff6da-c051-4b59-b84f-80b0da9f6de3"
-            ]
+            "secondarySubject": ["44eff6da-c051-4b59-b84f-80b0da9f6de3"]
           }
         ]
       },
@@ -5197,9 +5043,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "50fc97fd-75d8-4dc8-9ad4-806979e37a65"
-            ]
+            "secondarySubject": ["50fc97fd-75d8-4dc8-9ad4-806979e37a65"]
           },
           {
             "path": "/ssb/sosiale-forhold-og-kriminalitet/kriminalitet-og-rettsvesen/statistikk/anmeldte-lovbrudd-og-ofre",
@@ -5238,9 +5082,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "50fc97fd-75d8-4dc8-9ad4-806979e37a65"
-            ]
+            "secondarySubject": ["50fc97fd-75d8-4dc8-9ad4-806979e37a65"]
           },
           {
             "path": "/ssb/sosiale-forhold-og-kriminalitet/barne-og-familievern/statistikk/barnevern",
@@ -5321,9 +5163,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "50fc97fd-75d8-4dc8-9ad4-806979e37a65"
-            ]
+            "secondarySubject": ["50fc97fd-75d8-4dc8-9ad4-806979e37a65"]
           },
           {
             "path": "/ssb/sosiale-forhold-og-kriminalitet/kriminalitet-og-rettsvesen/statistikk/straffereaksjoner",
@@ -5341,9 +5181,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "50fc97fd-75d8-4dc8-9ad4-806979e37a65"
-            ]
+            "secondarySubject": ["50fc97fd-75d8-4dc8-9ad4-806979e37a65"]
           },
           {
             "path": "/ssb/arbeid-og-lonn/sysselsetting/statistikk/tilknytning-til-arbeid-utdanning-og-velferdsordninger",
@@ -5385,9 +5223,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "50fc97fd-75d8-4dc8-9ad4-806979e37a65"
-            ]
+            "secondarySubject": ["50fc97fd-75d8-4dc8-9ad4-806979e37a65"]
           },
           {
             "path": "/ssb/sosiale-forhold-og-kriminalitet/trygd-og-stonad/statistikk/velferdsytelser-arbeid-og-stonadsmottak",
@@ -5405,9 +5241,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "50fc97fd-75d8-4dc8-9ad4-806979e37a65"
-            ]
+            "secondarySubject": ["50fc97fd-75d8-4dc8-9ad4-806979e37a65"]
           },
           {
             "path": "/ssb/sosiale-forhold-og-kriminalitet/trygd-og-stonad/statistikk/okonomisk-sosialhjelp",
@@ -5511,9 +5345,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "ca3feb53-d356-420d-96e2-244a847f947c"
-            ]
+            "secondarySubject": ["ca3feb53-d356-420d-96e2-244a847f947c"]
           },
           {
             "path": "/ssb/utdanning/grunnskoler/statistikk/elevar-i-grunnskolen",
@@ -5573,9 +5405,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "ca3feb53-d356-420d-96e2-244a847f947c"
-            ]
+            "secondarySubject": ["ca3feb53-d356-420d-96e2-244a847f947c"]
           },
           {
             "path": "/ssb/utdanning/fagskoleutdanning/statistikk/hoyere-yrkesfaglig-utdanning",
@@ -5593,9 +5423,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "ca3feb53-d356-420d-96e2-244a847f947c"
-            ]
+            "secondarySubject": ["ca3feb53-d356-420d-96e2-244a847f947c"]
           },
           {
             "path": "/ssb/utdanning/voksenopplaering/statistikk/introduksjonsordningen-for-nyankomne-innvandrere",
@@ -5634,9 +5462,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "ca3feb53-d356-420d-96e2-244a847f947c"
-            ]
+            "secondarySubject": ["ca3feb53-d356-420d-96e2-244a847f947c"]
           },
           {
             "path": "/ssb/utdanning/voksenopplaering/statistikk/norskopplaering-for-voksne-innvandrere",
@@ -5654,9 +5480,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "ca3feb53-d356-420d-96e2-244a847f947c"
-            ]
+            "secondarySubject": ["ca3feb53-d356-420d-96e2-244a847f947c"]
           },
           {
             "path": "/ssb/utdanning/hoyere-utdanning/statistikk/studenter-i-universitets-og-hogskoleutdanning",
@@ -5674,9 +5498,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "ca3feb53-d356-420d-96e2-244a847f947c"
-            ]
+            "secondarySubject": ["ca3feb53-d356-420d-96e2-244a847f947c"]
           },
           {
             "path": "/ssb/utdanning/hoyere-utdanning/statistikk/studiepoeng-og-fullfort-universitets-og-hogskoleutdanning",
@@ -5694,9 +5516,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "ca3feb53-d356-420d-96e2-244a847f947c"
-            ]
+            "secondarySubject": ["ca3feb53-d356-420d-96e2-244a847f947c"]
           },
           {
             "path": "/ssb/arbeid-og-lonn/sysselsetting/statistikk/tilknytning-til-arbeid-utdanning-og-velferdsordninger",
@@ -5776,9 +5596,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "07bcecae-5f66-41c4-8fd2-ff3296a8e1db"
-            ]
+            "secondarySubject": ["07bcecae-5f66-41c4-8fd2-ff3296a8e1db"]
           },
           {
             "path": "/ssb/valg/kommunestyre-og-fylkestingsvalg/statistikk/kommunestyre-og-fylkestingsvalget-velgerundersokelsen",
@@ -5796,9 +5614,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "07bcecae-5f66-41c4-8fd2-ff3296a8e1db"
-            ]
+            "secondarySubject": ["07bcecae-5f66-41c4-8fd2-ff3296a8e1db"]
           },
           {
             "path": "/ssb/valg/stortingsvalg/statistikk/personer-med-stemmerett",
@@ -6022,9 +5838,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "27d20e8e-1288-4e4d-a384-a6f7e12feb7b"
-            ]
+            "secondarySubject": ["27d20e8e-1288-4e4d-a384-a6f7e12feb7b"]
           }
         ]
       },
@@ -6238,9 +6052,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "2165436e-e618-4708-8a1e-e58e5a9a2c31"
-            ]
+            "secondarySubject": ["2165436e-e618-4708-8a1e-e58e5a9a2c31"]
           },
           {
             "path": "/ssb/jord-skog-jakt-og-fiskeri/jordbruk/statistikk/hagebruksavlingar",
@@ -6294,9 +6106,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "28089cf6-e3f3-43dd-bd13-1dfc25df7aaa"
-            ]
+            "secondarySubject": ["28089cf6-e3f3-43dd-bd13-1dfc25df7aaa"]
           },
           {
             "path": "/ssb/jord-skog-jakt-og-fiskeri/jordbruk/statistikk/korn-og-oljevekster-areal-og-avlinger",
@@ -6350,9 +6160,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "adc9dcb7-a773-4cd6-90c8-8be0aa3ff374"
-            ]
+            "secondarySubject": ["adc9dcb7-a773-4cd6-90c8-8be0aa3ff374"]
           },
           {
             "path": "/ssb/jord-skog-jakt-og-fiskeri/jordbruk/statistikk/potet-og-grovforavlingar",
@@ -6503,9 +6311,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "43d53019-df5a-4f0c-9ff9-f305b80fd04b"
-            ]
+            "secondarySubject": ["43d53019-df5a-4f0c-9ff9-f305b80fd04b"]
           },
           {
             "path": "/ssb/jord-skog-jakt-og-fiskeri/landbrukseiendommer/statistikk/overdragelser-av-landbrukseiendommer",
@@ -6523,9 +6329,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "43d53019-df5a-4f0c-9ff9-f305b80fd04b"
-            ]
+            "secondarySubject": ["43d53019-df5a-4f0c-9ff9-f305b80fd04b"]
           }
         ]
       },
@@ -6649,9 +6453,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "43d53019-df5a-4f0c-9ff9-f305b80fd04b"
-            ]
+            "secondarySubject": ["43d53019-df5a-4f0c-9ff9-f305b80fd04b"]
           },
           {
             "path": "/ssb/jord-skog-jakt-og-fiskeri/skogbruk/statistikk/skogeiernes-inntekt",
@@ -6669,9 +6471,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "2c31670a-70ef-4e58-8af9-99adb3b90052"
-            ]
+            "secondarySubject": ["2c31670a-70ef-4e58-8af9-99adb3b90052"]
           },
           {
             "path": "/ssb/jord-skog-jakt-og-fiskeri/skogbruk/statistikk/skogkultur",
@@ -6816,9 +6616,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "cce28fa9-af63-4902-bead-e68a6f22f9c5"
-            ]
+            "secondarySubject": ["cce28fa9-af63-4902-bead-e68a6f22f9c5"]
           },
           {
             "path": "/ssb/kultur-og-fritid/kultur/statistikk/norsk-kulturbarometer",
@@ -6836,9 +6634,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "4a5b3a30-ce09-4b6b-9466-15ee76c9f52a"
-            ]
+            "secondarySubject": ["4a5b3a30-ce09-4b6b-9466-15ee76c9f52a"]
           }
         ]
       },
@@ -6894,9 +6690,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "df5a5468-87f2-40db-bfc6-4b99e9ce6916"
-            ]
+            "secondarySubject": ["df5a5468-87f2-40db-bfc6-4b99e9ce6916"]
           },
           {
             "path": "/ssb/kultur-og-fritid/kultur/statistikk/museum-og-samlingar",
@@ -6914,9 +6708,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "56960bf8-8db3-45b3-bd63-e6ff3d7b3489"
-            ]
+            "secondarySubject": ["56960bf8-8db3-45b3-bd63-e6ff3d7b3489"]
           },
           {
             "path": "/ssb/kultur-og-fritid/kultur/statistikk/norsk-kulturbarometer",
@@ -6934,9 +6726,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "4a5b3a30-ce09-4b6b-9466-15ee76c9f52a"
-            ]
+            "secondarySubject": ["4a5b3a30-ce09-4b6b-9466-15ee76c9f52a"]
           }
         ]
       },
@@ -6992,9 +6782,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "f25340d1-8609-41b4-af1d-1c54492d11d3"
-            ]
+            "secondarySubject": ["f25340d1-8609-41b4-af1d-1c54492d11d3"]
           },
           {
             "path": "/ssb/valg/partifinansiering/statistikk/finansiering-av-politiske-partier",
@@ -7012,9 +6800,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "f25340d1-8609-41b4-af1d-1c54492d11d3"
-            ]
+            "secondarySubject": ["f25340d1-8609-41b4-af1d-1c54492d11d3"]
           },
           {
             "path": "/ssb/nasjonalregnskap-og-konjunkturer/nasjonalregnskap/statistikk/satellittregnskap-for-ideelle-og-frivillige-organisasjoner",
@@ -7032,9 +6818,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "f25340d1-8609-41b4-af1d-1c54492d11d3"
-            ]
+            "secondarySubject": ["f25340d1-8609-41b4-af1d-1c54492d11d3"]
           }
         ]
       },
@@ -7069,9 +6853,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "df5a5468-87f2-40db-bfc6-4b99e9ce6916"
-            ]
+            "secondarySubject": ["df5a5468-87f2-40db-bfc6-4b99e9ce6916"]
           },
           {
             "path": "/ssb/kultur-og-fritid/religion-og-livssyn/statistikk/trus-og-livssynssamfunn-utanfor-den-norske-kyrkja",
@@ -7089,9 +6871,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "44eff6da-c051-4b59-b84f-80b0da9f6de3"
-            ]
+            "secondarySubject": ["44eff6da-c051-4b59-b84f-80b0da9f6de3"]
           },
           {
             "path": "/ssb/kultur-og-fritid/organisasjoner-og-medlemskap/statistikk/organisasjonsaktivitet-politisk-deltakelse-og-sosialt-nettverk-levekarsundersokelsen",
@@ -7130,9 +6910,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "b586798c-a10b-4130-8202-1fb1dfa9a971"
-            ]
+            "secondarySubject": ["b586798c-a10b-4130-8202-1fb1dfa9a971"]
           }
         ]
       },
@@ -7167,9 +6945,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "db58500f-bbb7-40c2-a081-e74521811e39"
-            ]
+            "secondarySubject": ["db58500f-bbb7-40c2-a081-e74521811e39"]
           },
           {
             "path": "/ssb/kultur-og-fritid/tids-og-mediebruk/statistikk/tidsbruksundersokelsen",
@@ -7205,9 +6981,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "0d622599-7b94-4f68-b84b-148d1da230ba"
-            ]
+            "secondarySubject": ["0d622599-7b94-4f68-b84b-148d1da230ba"]
           }
         ]
       }
@@ -7258,9 +7032,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "a640f65d-6fbd-4d9a-8ad0-34b5ef578256"
-            ]
+            "secondarySubject": ["a640f65d-6fbd-4d9a-8ad0-34b5ef578256"]
           },
           {
             "path": "/ssb/nasjonalregnskap-og-konjunkturer/finansregnskap",
@@ -7367,9 +7139,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "41beda52-aaf9-4b12-9ee5-7aafa0832193"
-            ]
+            "secondarySubject": ["41beda52-aaf9-4b12-9ee5-7aafa0832193"]
           },
           {
             "path": "/ssb/energi-og-industri/industri-og-bergverksdrift/statistikk/produksjonsindeks-for-olje-og-gass-industri-bergverk-og-kraftforsyning",
@@ -7449,9 +7219,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "5548eeb3-03e4-44f2-8842-86e5809d7598"
-            ]
+            "secondarySubject": ["5548eeb3-03e4-44f2-8842-86e5809d7598"]
           },
           {
             "path": "/ssb/nasjonalregnskap-og-konjunkturer/nasjonalregnskap/statistikk/helseregnskap",
@@ -7469,9 +7237,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "61e486fd-e8a2-4f22-b969-8c997065be41"
-            ]
+            "secondarySubject": ["61e486fd-e8a2-4f22-b969-8c997065be41"]
           },
           {
             "path": "/ssb/nasjonalregnskap-og-konjunkturer/nasjonalregnskap/statistikk/nasjonalregnskap",
@@ -7525,9 +7291,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "f25340d1-8609-41b4-af1d-1c54492d11d3"
-            ]
+            "secondarySubject": ["f25340d1-8609-41b4-af1d-1c54492d11d3"]
           },
           {
             "path": "/ssb/nasjonalregnskap-og-konjunkturer/nasjonalregnskap/statistikk/satellittregnskap-for-turisme",
@@ -7545,9 +7309,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "777edb56-c23e-4762-b3da-45a07d8d84ec"
-            ]
+            "secondarySubject": ["777edb56-c23e-4762-b3da-45a07d8d84ec"]
           },
           {
             "path": "/ssb/nasjonalregnskap-og-konjunkturer/nasjonalregnskap/statistikk/utdanningsregnskap",
@@ -7703,9 +7465,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "9404a757-c27a-48ae-b619-cff029932a10"
-            ]
+            "secondarySubject": ["9404a757-c27a-48ae-b619-cff029932a10"]
           },
           {
             "path": "/ssb/natur-og-miljo/areal/statistikk/arealbruk-i-tettsteder",
@@ -7741,9 +7501,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "9404a757-c27a-48ae-b619-cff029932a10"
-            ]
+            "secondarySubject": ["9404a757-c27a-48ae-b619-cff029932a10"]
           },
           {
             "path": "/ssb/natur-og-miljo/areal/statistikk/byggeaktivitet-i-strandsonen",
@@ -7761,9 +7519,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "83c1dd2b-0341-4ee9-86e1-15c54b39418d"
-            ]
+            "secondarySubject": ["83c1dd2b-0341-4ee9-86e1-15c54b39418d"]
           },
           {
             "path": "/ssb/natur-og-miljo/areal/statistikk/fritidsbyggomrader",
@@ -7799,9 +7555,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "df5a5468-87f2-40db-bfc6-4b99e9ce6916"
-            ]
+            "secondarySubject": ["df5a5468-87f2-40db-bfc6-4b99e9ce6916"]
           },
           {
             "path": "/ssb/natur-og-miljo/areal/statistikk/plan-og-byggesaksbehandling",
@@ -7819,9 +7573,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "df5a5468-87f2-40db-bfc6-4b99e9ce6916"
-            ]
+            "secondarySubject": ["df5a5468-87f2-40db-bfc6-4b99e9ce6916"]
           },
           {
             "path": "/ssb/natur-og-miljo/areal/statistikk/rekreasjonsareal-og-naerturterreng",
@@ -7857,9 +7609,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "9404a757-c27a-48ae-b619-cff029932a10"
-            ]
+            "secondarySubject": ["9404a757-c27a-48ae-b619-cff029932a10"]
           },
           {
             "path": "/ssb/natur-og-miljo/areal",
@@ -7895,9 +7645,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "11212d1a-34d9-4adf-adb7-2eba5f196645"
-            ]
+            "secondarySubject": ["11212d1a-34d9-4adf-adb7-2eba5f196645"]
           }
         ]
       },
@@ -7932,9 +7680,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "83c1dd2b-0341-4ee9-86e1-15c54b39418d"
-            ]
+            "secondarySubject": ["83c1dd2b-0341-4ee9-86e1-15c54b39418d"]
           },
           {
             "path": "/ssb/natur-og-miljo/avfall/statistikk/avfall-fra-industrien",
@@ -7952,9 +7698,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "28089cf6-e3f3-43dd-bd13-1dfc25df7aaa"
-            ]
+            "secondarySubject": ["28089cf6-e3f3-43dd-bd13-1dfc25df7aaa"]
           },
           {
             "path": "/ssb/natur-og-miljo/avfall/statistikk/avfall-fra-tjenesteytende-naeringer",
@@ -7972,9 +7716,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "3a27b235-5298-44e0-b40a-ce41977c7e67"
-            ]
+            "secondarySubject": ["3a27b235-5298-44e0-b40a-ce41977c7e67"]
           },
           {
             "path": "/ssb/natur-og-miljo/avfall/statistikk/avfall-fra-hushalda",
@@ -8183,9 +7925,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "adc9dcb7-a773-4cd6-90c8-8be0aa3ff374"
-            ]
+            "secondarySubject": ["adc9dcb7-a773-4cd6-90c8-8be0aa3ff374"]
           },
           {
             "path": "/ssb/natur-og-miljo/miljoregnskap/statistikk/utslipp-fra-norsk-okonomisk-aktivitet",
@@ -8259,9 +7999,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "28089cf6-e3f3-43dd-bd13-1dfc25df7aaa"
-            ]
+            "secondarySubject": ["28089cf6-e3f3-43dd-bd13-1dfc25df7aaa"]
           },
           {
             "path": "/ssb/natur-og-miljo/miljoregnskap/statistikk/miljookonomiske-virkemidler",
@@ -8335,9 +8073,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "df5a5468-87f2-40db-bfc6-4b99e9ce6916"
-            ]
+            "secondarySubject": ["df5a5468-87f2-40db-bfc6-4b99e9ce6916"]
           },
           {
             "path": "/ssb/natur-og-miljo/vann-og-avlop/statistikk/utslipp-og-rensing-av-kommunalt-avlop",
@@ -8514,9 +8250,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "b586798c-a10b-4130-8202-1fb1dfa9a971"
-            ]
+            "secondarySubject": ["b586798c-a10b-4130-8202-1fb1dfa9a971"]
           },
           {
             "path": "/ssb/offentlig-sektor/kommunale-finanser",
@@ -8612,9 +8346,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "50b7cb8a-56b5-4b10-829a-f841628d169e"
-            ]
+            "secondarySubject": ["50b7cb8a-56b5-4b10-829a-f841628d169e"]
           }
         ]
       },
@@ -8743,9 +8475,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "5548eeb3-03e4-44f2-8842-86e5809d7598"
-            ]
+            "secondarySubject": ["5548eeb3-03e4-44f2-8842-86e5809d7598"]
           },
           {
             "path": "/ssb/offentlig-sektor/offentlig-forvaltning",
@@ -8817,9 +8547,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "fd15323c-36f6-4b3e-81b1-38984592d06e"
-            ]
+            "secondarySubject": ["fd15323c-36f6-4b3e-81b1-38984592d06e"]
           }
         ]
       },
@@ -8854,9 +8582,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "5548eeb3-03e4-44f2-8842-86e5809d7598"
-            ]
+            "secondarySubject": ["5548eeb3-03e4-44f2-8842-86e5809d7598"]
           },
           {
             "path": "/ssb/offentlig-sektor/kommunale-finanser/statistikk/eiendomsskatt",
@@ -8930,9 +8656,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "50b7cb8a-56b5-4b10-829a-f841628d169e"
-            ]
+            "secondarySubject": ["50b7cb8a-56b5-4b10-829a-f841628d169e"]
           },
           {
             "path": "/ssb/offentlig-sektor/statlige-finanser/statistikk/statsregnskapets-inntekter-og-utgifter",
@@ -9187,9 +8911,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "2d77a0a1-a30d-4101-8385-454334044c32"
-            ]
+            "secondarySubject": ["2d77a0a1-a30d-4101-8385-454334044c32"]
           },
           {
             "path": "/ssb/priser-og-prisindekser/boligpriser-og-boligprisindekser/statistikk/prisindeks-for-brukte-boliger",
@@ -9207,9 +8929,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "2d77a0a1-a30d-4101-8385-454334044c32"
-            ]
+            "secondarySubject": ["2d77a0a1-a30d-4101-8385-454334044c32"]
           },
           {
             "path": "/ssb/priser-og-prisindekser/boligpriser-og-boligprisindekser/statistikk/prisindeks-for-nye-boliger",
@@ -9227,9 +8947,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "2d77a0a1-a30d-4101-8385-454334044c32"
-            ]
+            "secondarySubject": ["2d77a0a1-a30d-4101-8385-454334044c32"]
           },
           {
             "path": "/ssb/priser-og-prisindekser/boligpriser-og-boligprisindekser/statistikk/prisindeks-for-utleie-av-naeringseiendom",
@@ -9357,9 +9075,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "83c1dd2b-0341-4ee9-86e1-15c54b39418d"
-            ]
+            "secondarySubject": ["83c1dd2b-0341-4ee9-86e1-15c54b39418d"]
           },
           {
             "path": "/ssb/priser-og-prisindekser/byggekostnadsindekser/statistikk/byggekostnadsindeks-for-veganlegg",
@@ -9415,9 +9131,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "a50d5422-ebe9-4813-95a1-b355dadc00b5"
-            ]
+            "secondarySubject": ["a50d5422-ebe9-4813-95a1-b355dadc00b5"]
           },
           {
             "path": "/ssb/priser-og-prisindekser/konsumpriser/statistikk/konsumprisindeksen",
@@ -9435,9 +9149,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "a50d5422-ebe9-4813-95a1-b355dadc00b5"
-            ]
+            "secondarySubject": ["a50d5422-ebe9-4813-95a1-b355dadc00b5"]
           },
           {
             "path": "/ssb/priser-og-prisindekser/konsumpriser/statistikk/sammenlikning-av-prisniva-i-europa",
@@ -9509,9 +9221,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "d648ded4-26eb-402c-abd3-943102f9f8ee"
-            ]
+            "secondarySubject": ["d648ded4-26eb-402c-abd3-943102f9f8ee"]
           }
         ]
       },
@@ -9587,9 +9297,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "77b2032b-b62b-4343-89e1-1df0f782f09f"
-            ]
+            "secondarySubject": ["77b2032b-b62b-4343-89e1-1df0f782f09f"]
           },
           {
             "path": "/ssb/priser-og-prisindekser/produsent-og-engrosprisindekser",
@@ -9679,9 +9387,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "35da2baa-2a2b-473c-9143-c173e6c8d326"
-            ]
+            "secondarySubject": ["35da2baa-2a2b-473c-9143-c173e6c8d326"]
           }
         ]
       }
@@ -9866,9 +9572,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "50fc97fd-75d8-4dc8-9ad4-806979e37a65"
-            ]
+            "secondarySubject": ["50fc97fd-75d8-4dc8-9ad4-806979e37a65"]
           },
           {
             "path": "/ssb/sosiale-forhold-og-kriminalitet/kriminalitet-og-rettsvesen/statistikk/straffereaksjoner",
@@ -9886,9 +9590,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "50fc97fd-75d8-4dc8-9ad4-806979e37a65"
-            ]
+            "secondarySubject": ["50fc97fd-75d8-4dc8-9ad4-806979e37a65"]
           },
           {
             "path": "/ssb/sosiale-forhold-og-kriminalitet/kriminalitet-og-rettsvesen/statistikk/utsatthet-og-uro-for-lovbrudd-levekarsundersokelsen",
@@ -9906,9 +9608,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "cce28fa9-af63-4902-bead-e68a6f22f9c5"
-            ]
+            "secondarySubject": ["cce28fa9-af63-4902-bead-e68a6f22f9c5"]
           },
           {
             "path": "/ssb/sosiale-forhold-og-kriminalitet/kriminalitet-og-rettsvesen",
@@ -10015,9 +9715,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "2c31670a-70ef-4e58-8af9-99adb3b90052"
-            ]
+            "secondarySubject": ["2c31670a-70ef-4e58-8af9-99adb3b90052"]
           },
           {
             "path": "/ssb/sosiale-forhold-og-kriminalitet/levekar/statistikk/livskvalitet",
@@ -10035,9 +9733,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "a4489cd5-4704-4762-831c-544f30c1c7ef"
-            ]
+            "secondarySubject": ["a4489cd5-4704-4762-831c-544f30c1c7ef"]
           },
           {
             "path": "/ssb/sosiale-forhold-og-kriminalitet/levekar/statistikk/sosial-kontakt-levekarsundersokelsen",
@@ -10055,9 +9751,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "a4489cd5-4704-4762-831c-544f30c1c7ef"
-            ]
+            "secondarySubject": ["a4489cd5-4704-4762-831c-544f30c1c7ef"]
           },
           {
             "path": "/ssb/sosiale-forhold-og-kriminalitet/levekar",
@@ -10093,9 +9787,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "cce28fa9-af63-4902-bead-e68a6f22f9c5"
-            ]
+            "secondarySubject": ["cce28fa9-af63-4902-bead-e68a6f22f9c5"]
           },
           {
             "path": "/ssb/bygg-bolig-og-eiendom/bolig-og-boforhold/statistikk/boforhold-levekarsundersokelsen",
@@ -10113,9 +9805,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "cce28fa9-af63-4902-bead-e68a6f22f9c5"
-            ]
+            "secondarySubject": ["cce28fa9-af63-4902-bead-e68a6f22f9c5"]
           },
           {
             "path": "/ssb/bygg-bolig-og-eiendom/bolig-og-boforhold/statistikk/boforhold-registerbasert",
@@ -10175,9 +9865,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "cce28fa9-af63-4902-bead-e68a6f22f9c5"
-            ]
+            "secondarySubject": ["cce28fa9-af63-4902-bead-e68a6f22f9c5"]
           },
           {
             "path": "/ssb/kultur-og-fritid/idrett-og-friluftsliv/statistikk/idrett-og-friluftsliv-levekarsundersokelsen",
@@ -10195,9 +9883,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "cce28fa9-af63-4902-bead-e68a6f22f9c5"
-            ]
+            "secondarySubject": ["cce28fa9-af63-4902-bead-e68a6f22f9c5"]
           },
           {
             "path": "/ssb/helse/funksjonsevne/statistikk/levekar-hos-personer-med-funksjonsnedsettelse",
@@ -10215,9 +9901,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "cce28fa9-af63-4902-bead-e68a6f22f9c5"
-            ]
+            "secondarySubject": ["cce28fa9-af63-4902-bead-e68a6f22f9c5"]
           },
           {
             "path": "/ssb/helse/helsetjenester/statistikk/ulonnet-omsorgsarbeid-levekarsundersokelsen",
@@ -10235,9 +9919,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "cce28fa9-af63-4902-bead-e68a6f22f9c5"
-            ]
+            "secondarySubject": ["cce28fa9-af63-4902-bead-e68a6f22f9c5"]
           },
           {
             "path": "/ssb/sosiale-forhold-og-kriminalitet/kriminalitet-og-rettsvesen/statistikk/utsatthet-og-uro-for-lovbrudd-levekarsundersokelsen",
@@ -10255,9 +9937,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "cce28fa9-af63-4902-bead-e68a6f22f9c5"
-            ]
+            "secondarySubject": ["cce28fa9-af63-4902-bead-e68a6f22f9c5"]
           }
         ]
       },
@@ -10292,9 +9972,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "50fc97fd-75d8-4dc8-9ad4-806979e37a65"
-            ]
+            "secondarySubject": ["50fc97fd-75d8-4dc8-9ad4-806979e37a65"]
           },
           {
             "path": "/ssb/sosiale-forhold-og-kriminalitet/trygd-og-stonad/statistikk/arbeidsavklaringspenger",
@@ -10312,9 +9990,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "50fc97fd-75d8-4dc8-9ad4-806979e37a65"
-            ]
+            "secondarySubject": ["50fc97fd-75d8-4dc8-9ad4-806979e37a65"]
           },
           {
             "path": "/ssb/sosiale-forhold-og-kriminalitet/trygd-og-stonad/statistikk/uforetrygdede",
@@ -10332,9 +10008,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "50fc97fd-75d8-4dc8-9ad4-806979e37a65"
-            ]
+            "secondarySubject": ["50fc97fd-75d8-4dc8-9ad4-806979e37a65"]
           },
           {
             "path": "/ssb/sosiale-forhold-og-kriminalitet/trygd-og-stonad/statistikk/velferdsytelser-arbeid-og-stonadsmottak",
@@ -10352,9 +10026,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "50fc97fd-75d8-4dc8-9ad4-806979e37a65"
-            ]
+            "secondarySubject": ["50fc97fd-75d8-4dc8-9ad4-806979e37a65"]
           },
           {
             "path": "/ssb/sosiale-forhold-og-kriminalitet/trygd-og-stonad/statistikk/okonomisk-sosialhjelp",
@@ -10508,9 +10180,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "1640ebb9-70b0-43f1-8eeb-7dec37459dc4"
-            ]
+            "secondarySubject": ["1640ebb9-70b0-43f1-8eeb-7dec37459dc4"]
           },
           {
             "path": "/ssb/inntekt-og-forbruk/skatt-for-personer/statistikk/skatt-for-personer",
@@ -10549,9 +10219,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "1640ebb9-70b0-43f1-8eeb-7dec37459dc4"
-            ]
+            "secondarySubject": ["1640ebb9-70b0-43f1-8eeb-7dec37459dc4"]
           }
         ]
       },
@@ -10586,9 +10254,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "fc3e8def-5943-45f5-b0e9-e54078dfcdb2"
-            ]
+            "secondarySubject": ["fc3e8def-5943-45f5-b0e9-e54078dfcdb2"]
           },
           {
             "path": "/ssb/bygg-bolig-og-eiendom/bolig-og-boforhold/statistikk/boliger",
@@ -10606,9 +10272,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "fc3e8def-5943-45f5-b0e9-e54078dfcdb2"
-            ]
+            "secondarySubject": ["fc3e8def-5943-45f5-b0e9-e54078dfcdb2"]
           },
           {
             "path": "/ssb/bygg-bolig-og-eiendom/bygg-og-anlegg/statistikk/byggeareal",
@@ -10626,9 +10290,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "fc3e8def-5943-45f5-b0e9-e54078dfcdb2"
-            ]
+            "secondarySubject": ["fc3e8def-5943-45f5-b0e9-e54078dfcdb2"]
           },
           {
             "path": "/ssb/bygg-bolig-og-eiendom/bygg-og-anlegg/statistikk/bygningsmassen",
@@ -10765,9 +10427,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "56960bf8-8db3-45b3-bd63-e6ff3d7b3489"
-            ]
+            "secondarySubject": ["56960bf8-8db3-45b3-bd63-e6ff3d7b3489"]
           }
         ]
       },
@@ -10802,9 +10462,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "9404a757-c27a-48ae-b619-cff029932a10"
-            ]
+            "secondarySubject": ["9404a757-c27a-48ae-b619-cff029932a10"]
           },
           {
             "path": "/ssb/natur-og-miljo/areal/statistikk/arealbruk-og-arealressurser",
@@ -10822,9 +10480,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "9404a757-c27a-48ae-b619-cff029932a10"
-            ]
+            "secondarySubject": ["9404a757-c27a-48ae-b619-cff029932a10"]
           },
           {
             "path": "/ssb/natur-og-miljo/avfall/statistikk/avfall-fra-hushalda",
@@ -10863,9 +10519,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "9404a757-c27a-48ae-b619-cff029932a10"
-            ]
+            "secondarySubject": ["9404a757-c27a-48ae-b619-cff029932a10"]
           },
           {
             "path": "/ssb/natur-og-miljo/avfall/statistikk/farlig-avfall",
@@ -10904,9 +10558,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "9404a757-c27a-48ae-b619-cff029932a10"
-            ]
+            "secondarySubject": ["9404a757-c27a-48ae-b619-cff029932a10"]
           },
           {
             "path": "/ssb/transport-og-reiseliv/luftfart/statistikk/lufttransport",
@@ -10924,9 +10576,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "9404a757-c27a-48ae-b619-cff029932a10"
-            ]
+            "secondarySubject": ["9404a757-c27a-48ae-b619-cff029932a10"]
           },
           {
             "path": "/ssb/transport-og-reiseliv/reiseliv/statistikk/overnattingar",
@@ -10944,9 +10594,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "9404a757-c27a-48ae-b619-cff029932a10"
-            ]
+            "secondarySubject": ["9404a757-c27a-48ae-b619-cff029932a10"]
           },
           {
             "path": "/ssb/natur-og-miljo/areal/statistikk/vernede-omrader",
@@ -10964,9 +10612,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "9404a757-c27a-48ae-b619-cff029932a10"
-            ]
+            "secondarySubject": ["9404a757-c27a-48ae-b619-cff029932a10"]
           }
         ]
       },
@@ -11001,9 +10647,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "0f5dea7e-e8a8-4cda-9a6c-e3f5a5f3c8dc"
-            ]
+            "secondarySubject": ["0f5dea7e-e8a8-4cda-9a6c-e3f5a5f3c8dc"]
           },
           {
             "path": "/ssb/virksomheter-foretak-og-regnskap/eierskap-og-roller/statistikk/etablerere-i-naeringslivet",
@@ -11042,9 +10686,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "0f5dea7e-e8a8-4cda-9a6c-e3f5a5f3c8dc"
-            ]
+            "secondarySubject": ["0f5dea7e-e8a8-4cda-9a6c-e3f5a5f3c8dc"]
           },
           {
             "path": "/ssb/virksomheter-foretak-og-regnskap/virksomheter-og-foretak/statistikk/naeringenes-okonomiske-utvikling",
@@ -11092,9 +10734,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "0f5dea7e-e8a8-4cda-9a6c-e3f5a5f3c8dc"
-            ]
+            "secondarySubject": ["0f5dea7e-e8a8-4cda-9a6c-e3f5a5f3c8dc"]
           },
           {
             "path": "/ssb/virksomheter-foretak-og-regnskap/konkurser/statistikk/opna-konkursar",
@@ -11133,9 +10773,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "0f5dea7e-e8a8-4cda-9a6c-e3f5a5f3c8dc"
-            ]
+            "secondarySubject": ["0f5dea7e-e8a8-4cda-9a6c-e3f5a5f3c8dc"]
           },
           {
             "path": "/ssb/virksomheter-foretak-og-regnskap/eierskap-og-roller/statistikk/styre-og-leiing-i-aksjeselskap",
@@ -11209,9 +10847,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "5548eeb3-03e4-44f2-8842-86e5809d7598"
-            ]
+            "secondarySubject": ["5548eeb3-03e4-44f2-8842-86e5809d7598"]
           },
           {
             "path": "/ssb/offentlig-sektor/offentlig-forvaltning/statistikk/offentlig-sektor-pa-svalbard",
@@ -11229,9 +10865,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "5548eeb3-03e4-44f2-8842-86e5809d7598"
-            ]
+            "secondarySubject": ["5548eeb3-03e4-44f2-8842-86e5809d7598"]
           },
           {
             "path": "/ssb/offentlig-sektor/skatteregnskap/statistikk/skatterekneskap",
@@ -11249,9 +10883,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "5548eeb3-03e4-44f2-8842-86e5809d7598"
-            ]
+            "secondarySubject": ["5548eeb3-03e4-44f2-8842-86e5809d7598"]
           }
         ]
       }
@@ -11341,9 +10973,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "77b2032b-b62b-4343-89e1-1df0f782f09f"
-            ]
+            "secondarySubject": ["77b2032b-b62b-4343-89e1-1df0f782f09f"]
           },
           {
             "path": "/ssb/teknologi-og-innovasjon/forskning-og-innovasjon-i-naeringslivet/statistikk/forskning-og-utvikling-i-universitets-og-hogskolesektoren",
@@ -11361,9 +10991,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "485348ec-ee97-4e15-aa85-736809ded2f5"
-            ]
+            "secondarySubject": ["485348ec-ee97-4e15-aa85-736809ded2f5"]
           },
           {
             "path": "/ssb/teknologi-og-innovasjon/forskning-og-innovasjon-i-naeringslivet/statistikk/innovasjon-i-naeringslivet",
@@ -11381,9 +11009,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "77b2032b-b62b-4343-89e1-1df0f782f09f"
-            ]
+            "secondarySubject": ["77b2032b-b62b-4343-89e1-1df0f782f09f"]
           },
           {
             "path": "/ssb/teknologi-og-innovasjon/forskning-og-innovasjon-i-naeringslivet/statistikk/naeringspolitiske-virkemidler",
@@ -11401,9 +11027,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "77b2032b-b62b-4343-89e1-1df0f782f09f"
-            ]
+            "secondarySubject": ["77b2032b-b62b-4343-89e1-1df0f782f09f"]
           },
           {
             "path": "/ssb/teknologi-og-innovasjon/forskning-og-innovasjon-i-naeringslivet/statistikk/patenter-design-og-varemerker",
@@ -11474,9 +11098,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "77b2032b-b62b-4343-89e1-1df0f782f09f"
-            ]
+            "secondarySubject": ["77b2032b-b62b-4343-89e1-1df0f782f09f"]
           },
           {
             "path": "/ssb/teknologi-og-innovasjon/informasjons-og-kommunikasjonsteknologi-ikt/statistikk/digitalisering-og-ikt-i-offentlig-sektor",
@@ -11494,9 +11116,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "fd15323c-36f6-4b3e-81b1-38984592d06e"
-            ]
+            "secondarySubject": ["fd15323c-36f6-4b3e-81b1-38984592d06e"]
           },
           {
             "path": "/ssb/teknologi-og-innovasjon/informasjons-og-kommunikasjonsteknologi-ikt",
@@ -11586,9 +11206,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "db58500f-bbb7-40c2-a081-e74521811e39"
-            ]
+            "secondarySubject": ["db58500f-bbb7-40c2-a081-e74521811e39"]
           }
         ]
       }
@@ -11639,9 +11257,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "9404a757-c27a-48ae-b619-cff029932a10"
-            ]
+            "secondarySubject": ["9404a757-c27a-48ae-b619-cff029932a10"]
           },
           {
             "path": "/ssb/transport-og-reiseliv/landtransport/statistikk/drosjetransport",
@@ -11752,9 +11368,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "8ada95a0-1bac-44f2-93d4-7cb93427734a"
-            ]
+            "secondarySubject": ["8ada95a0-1bac-44f2-93d4-7cb93427734a"]
           },
           {
             "path": "/ssb/transport-og-reiseliv/landtransport/statistikk/kostnadsindeks-for-buss",
@@ -12005,9 +11619,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "9404a757-c27a-48ae-b619-cff029932a10"
-            ]
+            "secondarySubject": ["9404a757-c27a-48ae-b619-cff029932a10"]
           },
           {
             "path": "/ssb/transport-og-reiseliv/landtransport/statistikk/innenlandsk-transport",
@@ -12093,9 +11705,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "9404a757-c27a-48ae-b619-cff029932a10"
-            ]
+            "secondarySubject": ["9404a757-c27a-48ae-b619-cff029932a10"]
           },
           {
             "path": "/ssb/transport-og-reiseliv/reiseliv/statistikk/reiseundersokelsen",
@@ -12113,9 +11723,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "0d622599-7b94-4f68-b84b-148d1da230ba"
-            ]
+            "secondarySubject": ["0d622599-7b94-4f68-b84b-148d1da230ba"]
           },
           {
             "path": "/ssb/transport-og-reiseliv/reiseliv",
@@ -12169,9 +11777,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "777edb56-c23e-4762-b3da-45a07d8d84ec"
-            ]
+            "secondarySubject": ["777edb56-c23e-4762-b3da-45a07d8d84ec"]
           },
           {
             "path": "/ssb/virksomheter-foretak-og-regnskap/virksomheter-og-foretak/statistikk/naeringenes-okonomiske-utvikling",
@@ -12219,9 +11825,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "777edb56-c23e-4762-b3da-45a07d8d84ec"
-            ]
+            "secondarySubject": ["777edb56-c23e-4762-b3da-45a07d8d84ec"]
           }
         ]
       },
@@ -12274,9 +11878,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "9404a757-c27a-48ae-b619-cff029932a10"
-            ]
+            "secondarySubject": ["9404a757-c27a-48ae-b619-cff029932a10"]
           },
           {
             "path": "/ssb/transport-og-reiseliv/sjotransport/statistikk/handelsflaten-norskregistrerte-skip",
@@ -12441,9 +12043,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "8ada95a0-1bac-44f2-93d4-7cb93427734a"
-            ]
+            "secondarySubject": ["8ada95a0-1bac-44f2-93d4-7cb93427734a"]
           },
           {
             "path": "/ssb/virksomheter-foretak-og-regnskap/virksomheter-og-foretak/statistikk/naeringenes-okonomiske-utvikling",
@@ -12593,9 +12193,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "d648ded4-26eb-402c-abd3-943102f9f8ee"
-            ]
+            "secondarySubject": ["d648ded4-26eb-402c-abd3-943102f9f8ee"]
           },
           {
             "path": "/ssb/utdanning/barnehager/statistikk/regnskap-for-private-barnehager",
@@ -12613,9 +12211,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "1640ebb9-70b0-43f1-8eeb-7dec37459dc4"
-            ]
+            "secondarySubject": ["1640ebb9-70b0-43f1-8eeb-7dec37459dc4"]
           }
         ]
       },
@@ -12671,9 +12267,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "ca3feb53-d356-420d-96e2-244a847f947c"
-            ]
+            "secondarySubject": ["ca3feb53-d356-420d-96e2-244a847f947c"]
           },
           {
             "path": "/ssb/utdanning/grunnskoler",
@@ -12812,9 +12406,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "ca3feb53-d356-420d-96e2-244a847f947c"
-            ]
+            "secondarySubject": ["ca3feb53-d356-420d-96e2-244a847f947c"]
           },
           {
             "path": "/ssb/utdanning/barnehager/statistikk/ansatte-i-barnehage-og-skole",
@@ -12917,9 +12509,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "ca3feb53-d356-420d-96e2-244a847f947c"
-            ]
+            "secondarySubject": ["ca3feb53-d356-420d-96e2-244a847f947c"]
           },
           {
             "path": "/ssb/utdanning/hoyere-utdanning/statistikk/studiepoeng-og-fullfort-universitets-og-hogskoleutdanning",
@@ -12937,9 +12527,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "ca3feb53-d356-420d-96e2-244a847f947c"
-            ]
+            "secondarySubject": ["ca3feb53-d356-420d-96e2-244a847f947c"]
           },
           {
             "path": "/ssb/utdanning/hoyere-utdanning",
@@ -13071,9 +12659,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "485348ec-ee97-4e15-aa85-736809ded2f5"
-            ]
+            "secondarySubject": ["485348ec-ee97-4e15-aa85-736809ded2f5"]
           },
           {
             "path": "/ssb/en/teknologi-og-innovasjon/forskning-og-innovasjon-i-naeringslivet/statistikk/forskning-og-utvikling-i-universitets-og-hogskolesektoren",
@@ -13091,9 +12677,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "485348ec-ee97-4e15-aa85-736809ded2f5"
-            ]
+            "secondarySubject": ["485348ec-ee97-4e15-aa85-736809ded2f5"]
           },
           {
             "path": "/ssb/nasjonalregnskap-og-konjunkturer/nasjonalregnskap/statistikk/utdanningsregnskap",
@@ -13152,9 +12736,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "ca3feb53-d356-420d-96e2-244a847f947c"
-            ]
+            "secondarySubject": ["ca3feb53-d356-420d-96e2-244a847f947c"]
           },
           {
             "path": "/ssb/utdanning/utdanningsniva/statistikk/leseferdigheter-og-tallforstaelse",
@@ -13249,9 +12831,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "ca3feb53-d356-420d-96e2-244a847f947c"
-            ]
+            "secondarySubject": ["ca3feb53-d356-420d-96e2-244a847f947c"]
           },
           {
             "path": "/ssb/utdanning/videregaende-utdanning/statistikk/videregaende-opplaering-og-annen-videregaende-utdanning",
@@ -13450,9 +13030,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "ca3feb53-d356-420d-96e2-244a847f947c"
-            ]
+            "secondarySubject": ["ca3feb53-d356-420d-96e2-244a847f947c"]
           },
           {
             "path": "/ssb/utdanning/voksenopplaering/statistikk/opplaering-i-bedrifter",
@@ -13470,9 +13048,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "77b2032b-b62b-4343-89e1-1df0f782f09f"
-            ]
+            "secondarySubject": ["77b2032b-b62b-4343-89e1-1df0f782f09f"]
           },
           {
             "path": "/ssb/utdanning/voksenopplaering/statistikk/studieforbundenes-opplaeringsvirksomhet",
@@ -13699,9 +13275,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "77b2032b-b62b-4343-89e1-1df0f782f09f"
-            ]
+            "secondarySubject": ["77b2032b-b62b-4343-89e1-1df0f782f09f"]
           },
           {
             "path": "/ssb/utenriksokonomi/fordringer-og-gjeld-overfor-utlandet/statistikk/portefoljeinvesteringer-i-utlandet",
@@ -13776,9 +13350,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "51acd3fc-200f-46f9-b2f9-73901c93e3e4"
-            ]
+            "secondarySubject": ["51acd3fc-200f-46f9-b2f9-73901c93e3e4"]
           },
           {
             "path": "/ssb/utenriksokonomi/utenriksregnskap/statistikk/utenriksregnskap",
@@ -13834,9 +13406,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "27d20e8e-1288-4e4d-a384-a6f7e12feb7b"
-            ]
+            "secondarySubject": ["27d20e8e-1288-4e4d-a384-a6f7e12feb7b"]
           },
           {
             "path": "/ssb/utenriksokonomi/utenrikshandel/statistikk/globale-verdikjeder-og-outsourcing",
@@ -13908,9 +13478,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "749af23c-db2b-4bd9-86f4-bf0075b48242"
-            ]
+            "secondarySubject": ["749af23c-db2b-4bd9-86f4-bf0075b48242"]
           },
           {
             "path": "/ssb/utenriksokonomi/utenrikshandel",
@@ -14044,9 +13612,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "749af23c-db2b-4bd9-86f4-bf0075b48242"
-            ]
+            "secondarySubject": ["749af23c-db2b-4bd9-86f4-bf0075b48242"]
           }
         ]
       }
@@ -14097,9 +13663,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "df5a5468-87f2-40db-bfc6-4b99e9ce6916"
-            ]
+            "secondarySubject": ["df5a5468-87f2-40db-bfc6-4b99e9ce6916"]
           },
           {
             "path": "/ssb/valg/folkeavstemninger",
@@ -14152,9 +13716,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "07bcecae-5f66-41c4-8fd2-ff3296a8e1db"
-            ]
+            "secondarySubject": ["07bcecae-5f66-41c4-8fd2-ff3296a8e1db"]
           },
           {
             "path": "/ssb/valg/kommunestyre-og-fylkestingsvalg/statistikk/kommunestyre-og-fylkestingsvalget-velgerundersokelsen",
@@ -14172,9 +13734,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "07bcecae-5f66-41c4-8fd2-ff3296a8e1db"
-            ]
+            "secondarySubject": ["07bcecae-5f66-41c4-8fd2-ff3296a8e1db"]
           },
           {
             "path": "/ssb/valg/kommunestyre-og-fylkestingsvalg/statistikk/valgresultat-for-kommunestyre-og-fylkestingsvalget",
@@ -14326,9 +13886,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "f25340d1-8609-41b4-af1d-1c54492d11d3"
-            ]
+            "secondarySubject": ["f25340d1-8609-41b4-af1d-1c54492d11d3"]
           },
           {
             "path": "/ssb/valg/stortingsvalg/statistikk/valgkampbidrag",
@@ -14677,9 +14235,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "3a27b235-5298-44e0-b40a-ce41977c7e67"
-            ]
+            "secondarySubject": ["3a27b235-5298-44e0-b40a-ce41977c7e67"]
           },
           {
             "path": "/ssb/virksomheter-foretak-og-regnskap/virksomheter-og-foretak/statistikk/naeringenes-okonomiske-utvikling",
@@ -14762,9 +14318,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "777edb56-c23e-4762-b3da-45a07d8d84ec"
-            ]
+            "secondarySubject": ["777edb56-c23e-4762-b3da-45a07d8d84ec"]
           },
           {
             "path": "/ssb/varehandel-og-tjenesteyting/varehandel/statistikk/investeringsindeks-for-detaljhandel",
@@ -14836,9 +14390,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "a50d5422-ebe9-4813-95a1-b355dadc00b5"
-            ]
+            "secondarySubject": ["a50d5422-ebe9-4813-95a1-b355dadc00b5"]
           },
           {
             "path": "/ssb/varehandel-og-tjenesteyting/varehandel/statistikk/varekonsumindeksen",
@@ -14943,9 +14495,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "dc8e8ad1-db3f-4d72-b145-1b27ab692f75"
-            ]
+            "secondarySubject": ["dc8e8ad1-db3f-4d72-b145-1b27ab692f75"]
           }
         ]
       }
@@ -14996,9 +14546,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "ffb02d62-f21c-43d3-a06d-ac704bf12d3a"
-            ]
+            "secondarySubject": ["ffb02d62-f21c-43d3-a06d-ac704bf12d3a"]
           },
           {
             "path": "/ssb/virksomheter-foretak-og-regnskap/eierskap-og-roller/statistikk/etablerere-i-naeringslivet",
@@ -15167,9 +14715,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "51acd3fc-200f-46f9-b2f9-73901c93e3e4"
-            ]
+            "secondarySubject": ["51acd3fc-200f-46f9-b2f9-73901c93e3e4"]
           },
           {
             "path": "/ssb/virksomheter-foretak-og-regnskap/regnskap",
@@ -15258,9 +14804,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "0f5dea7e-e8a8-4cda-9a6c-e3f5a5f3c8dc"
-            ]
+            "secondarySubject": ["0f5dea7e-e8a8-4cda-9a6c-e3f5a5f3c8dc"]
           },
           {
             "path": "/ssb/virksomheter-foretak-og-regnskap/skatt-for-naeringsvirksomhet",
@@ -15313,9 +14857,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "141dbc3a-b95f-4bbb-b06e-20a36a22d141"
-            ]
+            "secondarySubject": ["141dbc3a-b95f-4bbb-b06e-20a36a22d141"]
           },
           {
             "path": "/ssb/virksomheter-foretak-og-regnskap/virksomheter-og-foretak/statistikk/foretak",
@@ -15333,9 +14875,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "0f5dea7e-e8a8-4cda-9a6c-e3f5a5f3c8dc"
-            ]
+            "secondarySubject": ["0f5dea7e-e8a8-4cda-9a6c-e3f5a5f3c8dc"]
           },
           {
             "path": "/ssb/virksomheter-foretak-og-regnskap/virksomheter-og-foretak/statistikk/naeringenes-okonomiske-utvikling",
@@ -15383,9 +14923,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "0f5dea7e-e8a8-4cda-9a6c-e3f5a5f3c8dc"
-            ]
+            "secondarySubject": ["0f5dea7e-e8a8-4cda-9a6c-e3f5a5f3c8dc"]
           },
           {
             "path": "/ssb/virksomheter-foretak-og-regnskap/virksomheter-og-foretak/statistikk/utenlandske-datterselskap-i-norge",
@@ -15442,9 +14980,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "77b2032b-b62b-4343-89e1-1df0f782f09f"
-            ]
+            "secondarySubject": ["77b2032b-b62b-4343-89e1-1df0f782f09f"]
           },
           {
             "path": "/ssb/teknologi-og-innovasjon/forskning-og-innovasjon-i-naeringslivet/statistikk/forskning-og-utvikling-i-naeringslivet",
@@ -15462,9 +14998,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "77b2032b-b62b-4343-89e1-1df0f782f09f"
-            ]
+            "secondarySubject": ["77b2032b-b62b-4343-89e1-1df0f782f09f"]
           },
           {
             "path": "/ssb/teknologi-og-innovasjon/forskning-og-innovasjon-i-naeringslivet/statistikk/innovasjon-i-naeringslivet",
@@ -15482,9 +15016,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "77b2032b-b62b-4343-89e1-1df0f782f09f"
-            ]
+            "secondarySubject": ["77b2032b-b62b-4343-89e1-1df0f782f09f"]
           },
           {
             "path": "/ssb/utenriksokonomi/fordringer-og-gjeld-overfor-utlandet/statistikk/norske-dotterselskap-i-utlandet",
@@ -15502,9 +15034,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "77b2032b-b62b-4343-89e1-1df0f782f09f"
-            ]
+            "secondarySubject": ["77b2032b-b62b-4343-89e1-1df0f782f09f"]
           },
           {
             "path": "/ssb/teknologi-og-innovasjon/forskning-og-innovasjon-i-naeringslivet/statistikk/naeringspolitiske-virkemidler",
@@ -15522,9 +15052,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "77b2032b-b62b-4343-89e1-1df0f782f09f"
-            ]
+            "secondarySubject": ["77b2032b-b62b-4343-89e1-1df0f782f09f"]
           },
           {
             "path": "/ssb/utdanning/voksenopplaering/statistikk/opplaering-i-bedrifter",
@@ -15542,9 +15070,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "77b2032b-b62b-4343-89e1-1df0f782f09f"
-            ]
+            "secondarySubject": ["77b2032b-b62b-4343-89e1-1df0f782f09f"]
           },
           {
             "path": "/ssb/priser-og-prisindekser/produsent-og-engrosprisindekser/statistikk/produsentprisindekser-for-tjenester",
@@ -15562,9 +15088,7 @@
               }
             ],
             "hideFromList": false,
-            "secondarySubject": [
-              "77b2032b-b62b-4343-89e1-1df0f782f09f"
-            ]
+            "secondarySubject": ["77b2032b-b62b-4343-89e1-1df0f782f09f"]
           }
         ]
       }
