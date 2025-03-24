@@ -266,7 +266,7 @@
         "value": "{color.base.white}"
       },
       "subtle": {
-        "value": "{color.bluegray.50}"
+        "value": "{color.green.50}"
       }
     },
     "surface": {
