@@ -65,9 +65,6 @@ const StartPage = () => {
             ?.toLowerCase()
             .includes(filter.value.toLowerCase());
         }
-        if (filter.type === 'category') {
-          return table?.variableNames.includes(filter.value);
-        }
         if (filter.type === 'variableName') {
           return table.variableNames.includes(filter.value);
         }
@@ -93,9 +90,11 @@ const StartPage = () => {
         </div>
         <div>
           <button
-            onClick={() => setFilters([{ type: 'category', value: 'region' }])}
+            onClick={() =>
+              setFilters([{ type: 'variableName', value: 'region' }])
+            }
           >
-            Filter: Only "Region" tables
+            Filter: Only tables with variableName "region"
           </button>
         </div>
         <div>
