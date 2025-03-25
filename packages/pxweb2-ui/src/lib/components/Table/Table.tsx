@@ -501,6 +501,7 @@ function createRowMobile({
         case stubLength - 2: {
           // second last level
           createSecondLastMobileHeader(
+            stubLength,
             stubIndex,
             cellMeta,
             variable,
@@ -562,9 +563,16 @@ function createRowMobile({
       tableRows.push(
         <tr
           key={getNewKey()}
-          className={cl(classes.mobileRowHeadLastStub, {
-            [classes.mobileRowHeadlastValueOfLastStub]: lastValueOfLastStub,
-          })}
+          className={cl(
+            classes.mobileRowHeadLastStub,
+            {
+              [classes.mobileRowHeadlastValueOfLastStub]: lastValueOfLastStub,
+            },
+            {
+              [classes.mobileRowHeadfirstValueOfLastStub2Dim]:
+                i === 0 && stubLength === 2,
+            },
+          )}
         >
           {tableRow}
         </tr>,
@@ -706,7 +714,7 @@ function createRepeatedMobileHeader(
         className={cl(
           { [classes.firstdim]: n === 0 },
           {
-            [classes.mobileRowHeadThirdLastStub]: n === stubLength - 3,
+            [classes.mobileRowHeadLevel1]: n === stubLength - 3,
           },
           classes.mobileEmptyRowCell,
         )}
@@ -730,6 +738,7 @@ function createRepeatedMobileHeader(
  * @param {React.JSX.Element[]} tableRows - The array of table rows to which the new row will be appended.
  */
 function createSecondLastMobileHeader(
+  stubLength: number,
   stubIndex: number,
   cellMeta: DataCellMeta,
   variable: Variable,
@@ -765,7 +774,14 @@ function createSecondLastMobileHeader(
       className={cl(
         { [classes.firstdim]: stubIndex === 0 },
         classes.mobileEmptyRowCell,
-        classes.mobileRowHeadSecondLastStub,
+        // classes.mobileRowHeadSecondLastStub,
+        {
+          [classes.mobileRowHeadLevel2]: stubLength > 2,
+        },
+        {
+          [classes.mobileRowHeadLevel1]: stubLength === 2,
+        },
+
         {
           [classes.mobileRowHeadFirstValueOfSecondLastStub]: i === 0,
         },
