@@ -10,7 +10,7 @@ import StartPage from './app/pages/StartPage/StartPage';
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: '/table',
     element: <Navigate to="/table/TAB5603" replace={true} />,
   },
   {
