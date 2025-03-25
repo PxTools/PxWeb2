@@ -120,7 +120,8 @@ const StartPage = () => {
                 <div>Updated: {table.updated}</div>
                 <div>First period: {table.firstPeriod}</div>
                 <div>Last period: {table.lastPeriod}</div>
-                <div>Time unit: {table.timeUnit}</div>
+                {/* <div>Time unit: {table.timeUnit}</div> */}
+                <div>Variable names: {table.variableNames.join(', ')}</div>
               </p>
             </div>
           ))}
