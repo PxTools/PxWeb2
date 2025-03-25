@@ -15,6 +15,7 @@
   height: 44px;
 
   &:focus-visible {
+    outline: 3px solid var(--px-color-border-focus-outline-on-inverted);
     outline-offset: -6px;
     padding: 0px 12px;
     box-shadow: none;

@@ -15,13 +15,11 @@
 
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
     width: calc(100vw - 40px);
-    //    max-width: 384px;
     max-width: 395px;
     padding: fixed.$spacing-4;
   }
 
   @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
-    //    width: 384px;
     width: 395px;
     padding: fixed.$spacing-6;
   }
@@ -44,10 +42,11 @@
 
   // medium
   @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
-    //width: 384px;
     width: 395px;
-    height: calc(100vh - 88px);
     padding: fixed.$spacing-6;
+
+    // Calculate height of main container, minus the header height
+    height: calc(100vh - fixed.$spacing-22);
 
     // Handle rtl languages
     border-start-start-radius: var(--px-border-radius-xlarge);
@@ -58,13 +57,19 @@
     // Not from Figma
     position: absolute;
     inset-inline-start: 120px; // Instead of "left" to handle rtl languages
-    top: 88px;
     z-index: 1;
+
+    // Position NavigationDrawer below the header
+    top: fixed.$spacing-22;
+
+    &.skipToMainContentVisible {
+      // Calculate position of NavigationDrawer below the header and SkipToMainContent
+      top: calc(fixed.$spacing-22 + var(--skip-to-main-content-height));
+    }
   }
 
   // large and xlarge
   @media ((min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width)) or ((min-width: fixed.$breakpoints-xlarge-min-width)) {
-    //width: 360px;
     width: 371px;
     padding: 0px fixed.$spacing-6 fixed.$spacing-6 0px;
     border-radius: var(--px-border-radius-none);

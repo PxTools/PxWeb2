@@ -3,12 +3,10 @@ import * as ReactDOM from 'react-dom/client';
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router';
 
 import './i18n/config';
-import App from './app/app';
+import TableViewer from './app/pages/TableViewer/TableViewer';
 import { validateConfig } from './app/util/validate';
-import { VariablesProvider } from './app/context/VariablesProvider';
-import { TableDataProvider } from './app/context/TableDataProvider';
-import { AccessibilityProvider } from './app/context/AccessibilityProvider';
 import { AppProvider } from './app/context/AppProvider';
+import StartPage from './app/pages/StartPage/StartPage';
 
 const router = createBrowserRouter([
   {
@@ -16,8 +14,12 @@ const router = createBrowserRouter([
     element: <Navigate to="/table/TAB5603" replace={true} />,
   },
   {
+    path: '/',
+    element: <StartPage />,
+  },
+  {
     path: '/table/:tableId',
-    element: <App />,
+    element: <TableViewer />,
   },
 ]);
 
@@ -32,15 +34,9 @@ if (location.href.includes('localhost')) {
 root.render(
   <StrictMode>
     <AppProvider>
-      <AccessibilityProvider>
-        <VariablesProvider>
-          <TableDataProvider>
-            <Suspense fallback={<div>Loading...</div>}>
-              <RouterProvider router={router} />
-            </Suspense>
-          </TableDataProvider>
-        </VariablesProvider>
-      </AccessibilityProvider>
+      <Suspense fallback={<div>Loading...</div>}>
+        <RouterProvider router={router} />
+      </Suspense>
     </AppProvider>
   </StrictMode>,
 );

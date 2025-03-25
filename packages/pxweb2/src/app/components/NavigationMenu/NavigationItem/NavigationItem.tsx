@@ -1,6 +1,6 @@
 import cl from 'clsx';
 import { m } from 'motion/react';
-import { forwardRef } from 'react';
+import { forwardRef, MouseEvent } from 'react';
 
 import {
   Icon,
@@ -26,7 +26,7 @@ interface ItemProps {
   parentName: 'navBar' | 'navRail';
   selected: boolean;
   icon: IconProps['iconName'];
-  onClick: (event: any) => void;
+  onClick: (event: MouseEvent<HTMLButtonElement>) => void;
 }
 
 export const Item = forwardRef<HTMLButtonElement, ItemProps>(
@@ -67,7 +67,7 @@ export const Item = forwardRef<HTMLButtonElement, ItemProps>(
             styles.item,
             styles[`${parentName}Item`],
           )}
-          onClick={(event: any) => onClick(event)}
+          onClick={(event) => onClick(event)}
           type="button"
           id={btnId}
           aria-expanded={selected}

@@ -11,19 +11,31 @@ function getAbsolutePath(value) {
 /** @type { import('@storybook/react-vite').StorybookConfig } */
 const config = {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+
   addons: [
     getAbsolutePath('@storybook/addon-onboarding'),
     getAbsolutePath('@storybook/addon-essentials'),
     getAbsolutePath('@chromatic-com/storybook'),
     getAbsolutePath('@storybook/addon-interactions'),
-    getAbsolutePath("@storybook/addon-a11y")
+    getAbsolutePath("@storybook/addon-a11y"),
+    '@chromatic-com/storybook'
   ],
+
   framework: {
     name: getAbsolutePath('@storybook/react-vite'),
     options: {},
   },
+
+  typescript: {
+    // Use the slower, but more accurate Typescript parser for React docgen, since some of our types are not supported by react-docgen
+    reactDocgen: 'react-docgen-typescript',
+  },
+
   staticDirs: [
     {from: './../src/lib/fonts/', to: 'fonts'}, // Load static font files into storybook/chromatic
   ],
+
+  docs: {}
 };
+
 export default config;

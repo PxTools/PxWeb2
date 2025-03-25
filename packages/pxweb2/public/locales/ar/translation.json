@@ -173,7 +173,21 @@
         },
         "details": {
           "title": "تفاصيل",
-          "description": "نص الوصف..."
+          "description": "نص الوصف...",
+          "boolean_true": "نعم",
+          "boolean_false": "لا",
+          "base_time": "الوقت الأساسي",
+          "update_frequency": "تردد التحديث",
+          "survey": "استطلاع",
+          "link": "وصلة",
+          "copyright": "حقوق الطبع والنشر",
+          "matrix": "مصفوفة",
+          "last_updated": "آخر تحديث",
+          "next_update": "التحديث القادم",
+          "source": "مصدر",
+          "official_statistics": "الإحصاءات الرسمية",
+          "unit": "وحدة",
+          "reference_time": "وقت المرجع"
         },
         "contact": {
           "title": "اتصال",
