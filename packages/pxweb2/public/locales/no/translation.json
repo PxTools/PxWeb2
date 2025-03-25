@@ -173,7 +173,21 @@
         },
         "details": {
           "title": "Detaljer",
-          "description": "Beskrivelsestekst..."
+          "description": "Beskrivelsestekst...",
+          "boolean_true": "Ja",
+          "boolean_false": "Nei",
+          "base_time": "Basisperiode",
+          "update_frequency": "Oppdateringsfrekvens",
+          "survey": "Undersøkelse",
+          "link": "Lenke",
+          "copyright": "Opphavsrett",
+          "matrix": "Matrise",
+          "last_updated": "Sist oppdatert",
+          "next_update": "Neste oppdatering",
+          "source": "Kilde",
+          "official_statistics": "Offisiell statistikk",
+          "unit": "Måleenhet",
+          "reference_time": "Referansetid"
         },
         "contact": {
           "title": "Kontakt",

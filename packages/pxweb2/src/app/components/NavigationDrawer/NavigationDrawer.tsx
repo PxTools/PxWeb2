@@ -5,6 +5,7 @@ import { Heading, Icon, Label } from '@pxweb2/pxweb2-ui';
 import { useTranslation } from 'react-i18next';
 import i18next from 'i18next';
 import useAccessibility from '../../context/useAccessibility';
+import useApp from '../../context/useApp';
 
 export interface NavigationDrawerProps {
   children: React.ReactNode;
@@ -23,6 +24,7 @@ export const NavigationDrawer = forwardRef<
 >(({ children, heading, view, openedWithKeyboard, onClose }, ref) => {
   const { t } = useTranslation();
   const { addModal, removeModal } = useAccessibility();
+  const { skipToMainFocused } = useApp();
 
   React.useEffect(() => {
     addModal('NavigationDrawer', () => {
@@ -39,6 +41,8 @@ export const NavigationDrawer = forwardRef<
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault(); // Prevent scrolling with space
+
       onClose(true, view);
     }
   }
@@ -50,7 +54,7 @@ export const NavigationDrawer = forwardRef<
     ) {
       ref.current?.focus();
     }
-  }, [view]);
+  }, [view, ref]);
 
   React.useEffect(() => {
     if (openedWithKeyboard && ref && typeof ref !== 'function') {
@@ -65,7 +69,9 @@ export const NavigationDrawer = forwardRef<
         className={styles.backdrop}
       ></div>
       <div
-        className={cl(styles.navigationDrawer, styles.fadein)}
+        className={cl(styles.navigationDrawer, styles.fadein, {
+          [styles.skipToMainContentVisible]: skipToMainFocused,
+        })}
         role="region"
         aria-label={heading}
       >

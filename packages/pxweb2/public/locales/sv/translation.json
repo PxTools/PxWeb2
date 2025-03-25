@@ -173,7 +173,21 @@
         },
         "details": {
           "title": "Detaljer",
-          "description": "Beskrivande text..."
+          "description": "Beskrivande text...",
+          "boolean_true": "Ja",
+          "boolean_false": "Nej",
+          "base_time": "Bastid",
+          "update_frequency": "Uppdateringsfrekvens",
+          "survey": "Undersökning",
+          "link": "Länk",
+          "copyright": "Upphovsrättsskyddat",
+          "matrix": "Matris",
+          "last_updated": "Senast uppdaterad",
+          "next_update": "Nästa uppdatering",
+          "source": "Statistikansvarig myndighet (SAM)",
+          "official_statistics": "Officiell statistik",
+          "unit": "Enhet",
+          "reference_time": "Referenstid"
         },
         "contact": {
           "title": "Kontakt",
