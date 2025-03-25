@@ -17,7 +17,7 @@ const configs = [
       './style-dictionary/src/custom_theme.json',
     ],
     platforms: {
-      css: {
+      css_ui: {
         prefix: 'px-',
         transformGroup: 'css',
         buildPath: './style-dictionary/dist/css/',
@@ -26,8 +26,15 @@ const configs = [
             destination: 'variables.css',
             format: 'css/variables',
           },
+        ],
+      },
+      css: {
+        prefix: 'px-',
+        transformGroup: 'css',
+        buildPath: '../pxweb2/public/theme/',
+        files: [
           {
-            destination: '../pxweb2/public/theme/variables.css',
+            destination: 'variables.css',
             format: 'css/variables',
           },
         ],
