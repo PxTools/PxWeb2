@@ -1,1 +1,25 @@
 @use '$ui/style-dictionary/dist/scss/fixed-variables.scss' as fixed;
+
+.startPage {
+  display: grid;
+  grid-template-areas:
+    // "header header"
+    "sideBar listTables"
+    "footer footer";
+  grid-template-columns: 400px 1fr;
+  grid-template-rows: 1fr 100px;
+  // grid-template-rows: 100px 1fr 100px;
+  min-height: 100vh;
+}
+
+.listTables {
+  grid-area: listTables;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.sideBar {
+  grid-area: sideBar;
+  padding: 20px;
+  overflow-y: auto;
+}

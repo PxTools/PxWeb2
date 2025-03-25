@@ -1,4 +1,7 @@
 import { useEffect, useState } from 'react';
+import styles from './StartPage.module.scss';
+
+import { Header } from '../../components/Header/Header';
 import { TablesResponse, Table } from '@pxweb2/pxweb2-api-client';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import { type Filter } from './tableTypes';
@@ -81,40 +84,44 @@ const StartPage = () => {
 
   return (
     <AccessibilityProvider>
-      <div>
-        <h1>Start Page</h1>
-        <p>This is the start page for the application.</p>
-        <p>There are {countAlder} tables available.</p>
-        <p>There are {variableNames.length} variables avilable.</p>
-        <div>
-          <button onClick={doTheCount}>Count tables with Alder</button>
+      <Header />
+      <div className={styles.startPage}>
+        <div className={styles.sideBar}>
+          <h1>Start Page</h1>
+          <p>This is the start page for the application.</p>
+          <p>There are {countAlder} tables available.</p>
+          <p>There are {variableNames.length} variables avilable.</p>
+          <div>
+            <button onClick={doTheCount}>Count tables with Alder</button>
+          </div>
+          <div>
+            <button onClick={findVariablesFromTables}>
+              List all the variableNames
+            </button>
+          </div>
+          <div>
+            <button
+              onClick={() =>
+                setFilters([{ type: 'variableName', value: 'region' }])
+              }
+            >
+              Filter: Only tables with variableName "region"
+            </button>
+          </div>
+          <div>
+            <button onClick={resetFilters}>Filter: Reset!</button>
+          </div>
         </div>
-        <div>
-          <button onClick={findVariablesFromTables}>
-            List all the variableNames
-          </button>
-        </div>
-        <div>
-          <button
-            onClick={() =>
-              setFilters([{ type: 'variableName', value: 'region' }])
-            }
-          >
-            Filter: Only tables with variableName "region"
-          </button>
-        </div>
-        <div>
-          <button onClick={resetFilters}>Filter: Reset!</button>
-        </div>
-        <p>
-          The available variableNames are:
-          <ul>
-            {variableNames.map((variableName, index) => (
-              <li key={index}>{variableName}, </li>
-            ))}
-          </ul>
-        </p>
-        <div>
+
+        <div className={styles.listTables}>
+          <p>
+            The available variableNames are:
+            <ul>
+              {variableNames.map((variableName, index) => (
+                <li key={index}>{variableName}, </li>
+              ))}
+            </ul>
+          </p>
           <h2>Prototype tables</h2>
           {ptList.map((table, index) => (
             <div key={index}>
@@ -130,10 +137,10 @@ const StartPage = () => {
               </div>
             </div>
           ))}
+          <p>
+            <a href="/table/tab638">Go to table viewer</a>
+          </p>
         </div>
-        <p>
-          <a href="/table/tab638">Go to table viewer</a>
-        </p>
       </div>
     </AccessibilityProvider>
   );
