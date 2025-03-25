@@ -6,8 +6,9 @@
   "common": {
     "title": "مرحبًا بك في PxWeb 2.0",
     "header": {
-      "title": "PxWeb 2.0 [Main]",
-      "logo": "بيكس ويب 2.0"
+      "title": "PxWeb 2.0 [Sprint 19 (SSB)]",
+      "logo": "بيكس ويب 2.0",
+      "arialabelheader": "اختر اللغة"
     },
     "skip_to_main": "انتقل إلى المحتوى الرئيسي",
     "footer": {
