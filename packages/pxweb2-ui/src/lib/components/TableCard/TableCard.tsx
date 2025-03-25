@@ -2,7 +2,6 @@ import React, { type ReactNode } from 'react';
 import cl from 'clsx';
 import styles from './TableCard.module.scss';
 import Heading from '../Typography/Heading/Heading';
-import BodyShort from '../Typography/BodyShort/BodyShort';
 
 interface TableCardProps {
   tableId?: string;
@@ -11,7 +10,8 @@ interface TableCardProps {
   period?: string;
   frequency?: string;
   lastUpdated?: string;
-  status?: string;
+  size?: 'medium' | 'small' | 'xsmall';
+  status?: 'active' | 'closed';
 }
 
 export const TableCard: React.FC<TableCardProps> = ({
@@ -21,27 +21,40 @@ export const TableCard: React.FC<TableCardProps> = ({
   period,
   frequency,
   lastUpdated,
+  size = 'medium',
   status = 'active',
 }) => (
-  <div className={cl(styles.tableCard)}>
-    {icon && <div className={cl(styles[`iconWrapper-${status}`])}>{icon}</div>}
+  <div className={cl(styles.tableCard, styles[size])}>
+    {icon && (
+      <div className={cl(styles.iconWrapper, styles[status])}>{icon}</div>
+    )}
     <div className={cl(styles.cardContent)}>
-      <Heading size="small" level="2">
-        {title}
-      </Heading>
+      <div className={cl(styles.titleWrapper)}>
+        <Heading size="small" level="2">
+          {title}
+        </Heading>
+      </div>
       <div className={cl(styles.tableMeta)}>
         {period && (
-          <BodyShort className={cl(styles.period)}>{period}</BodyShort>
+          <span className={cl(styles.period, styles['heading-xsmall'])}>
+            {period}
+          </span>
         )}
         {frequency && (
-          <BodyShort className={cl(styles.frequency)}>{frequency}</BodyShort>
+          <span className={cl(styles.frequency, styles['label-small'])}>
+            {frequency}
+          </span>
         )}
-        {lastUpdated && (
-          <BodyShort className={cl(styles.lastUpdated)}>
+        {lastUpdated && size === 'medium' && (
+          <span className={cl(styles.lastUpdated, styles['bodyshort-small'])}>
             {lastUpdated}
-          </BodyShort>
+          </span>
         )}
-        {tableId && <span className={cl(styles.tableId)}>{tableId}</span>}
+        {tableId && (
+          <span className={cl(styles.tableId, styles['label-small'])}>
+            {tableId}
+          </span>
+        )}
       </div>
     </div>
   </div>
