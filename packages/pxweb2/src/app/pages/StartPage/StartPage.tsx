@@ -8,6 +8,18 @@ import prototypeList from './dummy-data/tables-prototype.json' with { type: 'jso
 const tables = list as TablesResponse;
 const prototypeTables = prototypeList as TablesResponse;
 
+function shouldTableBeIncluded(table: Table, filters: Filter[]) {
+  return filters.some((filter) => {
+    if (filter.type === 'text') {
+      return table.label?.toLowerCase().includes(filter.value.toLowerCase());
+    }
+    if (filter.type === 'variableName') {
+      return table.variableNames.includes(filter.value);
+    }
+    return false;
+  });
+}
+
 const StartPage = () => {
   const [countAlder, setCountAlder] = useState(0);
   const [variableNames, setVariableNames] = useState<Array<string>>([]);
@@ -18,13 +30,12 @@ const StartPage = () => {
     resetFilters();
   }, []);
 
-  /// Y U NO WORKY!?
   useEffect(() => {
-    // dette blir feil men ok vi tester
-    filters.forEach((filter) => filterTables(filter));
+    filterTables(filters);
   }, [filters]);
 
   function resetFilters() {
+    console.count('resetFilters');
     setFilters([]);
     setPtList(prototypeTables.tables);
   }
@@ -57,21 +68,16 @@ const StartPage = () => {
     console.timeEnd('findVariables');
   }
 
-  const filterTables = (filter: Filter) => {
+  function filterTables(filter: Filter[]) {
+    if (filter.length === 0) {
+      return;
+    }
     setPtList(
       prototypeTables.tables.filter((table) => {
-        if (filter.type === 'text') {
-          return table?.label
-            ?.toLowerCase()
-            .includes(filter.value.toLowerCase());
-        }
-        if (filter.type === 'variableName') {
-          return table.variableNames.includes(filter.value);
-        }
-        return false;
+        return shouldTableBeIncluded(table, filter);
       }),
     );
-  };
+  }
 
   return (
     <AccessibilityProvider>
@@ -113,7 +119,7 @@ const StartPage = () => {
           {ptList.map((table, index) => (
             <div key={index}>
               <h3>{table.label}</h3>
-              <p>
+              <div>
                 <div>Description: {table.description}</div>
                 <div>Category: {table.category}</div>
                 <div>Updated: {table.updated}</div>
@@ -121,7 +127,7 @@ const StartPage = () => {
                 <div>Last period: {table.lastPeriod}</div>
                 {/* <div>Time unit: {table.timeUnit}</div> */}
                 <div>Variable names: {table.variableNames.join(', ')}</div>
-              </p>
+              </div>
             </div>
           ))}
         </div>
