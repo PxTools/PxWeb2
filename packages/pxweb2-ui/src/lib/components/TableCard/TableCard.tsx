@@ -1,6 +1,7 @@
 import React, { type ReactNode } from 'react';
 import cl from 'clsx';
 import styles from './TableCard.module.scss';
+import { Icon } from '@pxweb2/pxweb2-ui';
 
 interface TableCardProps {
   href?: string;
@@ -54,9 +55,10 @@ export const TableCard: React.FC<TableCardProps> = ({
           </span>
         )}
         {lastUpdated && size === 'medium' && (
-          <span className={cl(styles.lastUpdated, styles['bodyshort-small'])}>
-            {lastUpdated}
-          </span>
+          <div className={cl(styles.lastUpdated)}>
+            <Icon iconName="Clock" />
+            <span className={cl(styles['bodyshort-small'])}>{lastUpdated}</span>
+          </div>
         )}
         {tableId && (
           <span className={cl(styles.tableId, styles['label-small'])}>

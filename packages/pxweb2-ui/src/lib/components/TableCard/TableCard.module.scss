@@ -4,17 +4,31 @@
 
 .tableCard {
   display: flex;
-  border: 1px solid var(--color-border-subtle, #c3dcdc);
-  border-radius: var(--border-radius-large, 16px);
-  background: var(--color-surface-default, #fff);
-  color: var(--px-color-text-action);
+  border: 1px solid var(--px-color-border-subtle);
+  border-radius: var(--px-border-radius-large);
+  background: var(--px-color-surface-default);
   padding: 20px;
   position: relative;
+
+  &:hover {
+    outline: 2px solid var(--px-color-border-subtle);
+  }
+
+  &:focus-within {
+    border-radius: var(--px-border-radius-large);
+    outline: 3px solid var(--px-color-border-focus-outline);
+    outline-offset: 5px;
+    box-shadow: 0 0 0 3px var(--px-color-border-focus-boxshadow);
+  }
 }
 
 a.title {
   &:hover {
     text-decoration: underline;
+  }
+
+  &:focus {
+    outline: none;
   }
 
   &::after {
@@ -85,20 +99,27 @@ a.title {
 .frequency {
   padding: 1.5px 4px 2px 4px;
   align-items: center;
-  border-radius: var(--border-radius-xsmall, 2px);
-  background: var(--color-surface-subtle, #f0f8f9);
-  margin-right: 8px;
+  border-radius: var(--px-border-radius-xsmall);
+  background: var(--px-color-surface-subtle);
+  margin-right: 20px;
 }
 
 .lastUpdated {
-  margin-right: 8px;
+  display: flex;
+  align-items: center;
+
+  svg {
+    width: 24px;
+    height: 24px;
+    margin-right: 4px;
+  }
 }
 
 .tableId {
   padding: 1.5px 4px 2px 4px;
   align-items: center;
-  border-radius: var(--border-radius-xsmall, 2px);
-  border: 1px solid var(--color-border-subtle, #c3dcdc);
+  border-radius: var(--px-border-radius-xsmall);
+  border: 1px solid var(--px-color-border-subtle);
   margin-left: auto;
 }
 
