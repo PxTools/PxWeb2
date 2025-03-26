@@ -178,9 +178,9 @@ export function NotesTab({ pxTableMetadata }: NotesTabProps) {
   //   text: 'This is a variable test note 1',
   //   mandatory: false,
   // });
-  // pxTableMetadata?.variables[1].notes?.push({
+  // metadataCopyForSelection?.variables[1].notes?.push({
   //   text: 'This is a variable test note a',
-  //   mandatory: false,
+  //   mandatory: true,
   // });
   // pxTableMetadata?.variables[2].notes?.push({
   //   text: 'This is a variable test note uuuu',

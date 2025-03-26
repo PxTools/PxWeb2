@@ -41,45 +41,44 @@ export function MandatoryVariableNotes({
       variableNotes.valueNotes.length === 0 ? (
         <span>{variableNotes.notes[0]}</span>
       ) : (
-        (variableNotes.notes.length > 0 ||
-          variableNotes.valueNotes.length > 0) && (
-          <List listType="ul" listGroup={variableNotes.valueNotes.length > 0}>
-            {variableNotes.notes.map((note) => (
-              <ListItem
-                key={getMandatoryVariableNoteKey(variableNotes.variableCode)}
-                isVariableNote={variableNotes.valueNotes.length > 0}
-              >
-                {note}
-              </ListItem>
-            ))}
-            {variableNotes?.valueNotes &&
-              variableNotes.valueNotes.length > 0 && (
+        <List
+          listType="ul"
+          listGroup={variableNotes.valueNotes.length > 0}
+          key={'non-mandatory-var-notes-list-' + variableNotes.variableCode}
+        >
+          {variableNotes.notes.map((note) => (
+            <ListItem
+              key={getMandatoryVariableNoteKey(variableNotes.variableCode)}
+              isVariableNote={variableNotes.valueNotes.length > 0}
+            >
+              {note}
+            </ListItem>
+          ))}
+          {variableNotes.valueNotes && variableNotes.valueNotes.length > 0 && (
+            <>
+              {variableNotes.valueNotes.map((value) => (
                 <ListItem
                   key={getMandatoryVariableNoteKey(variableNotes.variableCode)}
                 >
-                  {variableNotes.valueNotes.map((value) => (
-                    <List
-                      listType="ul"
-                      subHeading={captitalizeFirstLetter(value.valueName)}
-                      key={getMandatoryVariableNoteKey(
-                        variableNotes.variableCode,
-                      )}
-                    >
-                      {value.notes.map((note) => (
-                        <ListItem
-                          key={getMandatoryVariableNoteKey(
-                            variableNotes.variableCode,
-                          )}
-                        >
-                          {note}
-                        </ListItem>
-                      ))}
-                    </List>
-                  ))}
+                  <List
+                    subHeading={captitalizeFirstLetter(value.valueName)}
+                    listType="ul"
+                  >
+                    {value.notes.map((note) => (
+                      <ListItem
+                        key={getMandatoryVariableNoteKey(
+                          variableNotes.variableCode,
+                        )}
+                      >
+                        {note}
+                      </ListItem>
+                    ))}
+                  </List>
                 </ListItem>
-              )}
-          </List>
-        )
+              ))}
+            </>
+          )}
+        </List>
       )}
     </Alert>
   );
