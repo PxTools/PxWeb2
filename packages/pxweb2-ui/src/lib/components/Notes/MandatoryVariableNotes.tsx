@@ -3,19 +3,12 @@ import cl from 'clsx';
 
 import classes from './Notes.module.scss';
 import Alert from '../Alert/Alert';
-import List from '../List/List';
-import ListItem from '../List/ListItem';
-import { captitalizeFirstLetter, variableNotes } from './noteCollection';
+import { variableNotes } from './noteCollection';
+import { VariableNotes } from './VariableNotes';
 
 export type MandatoryVariableNotesProps = {
   readonly variableNotes: variableNotes;
 };
-
-let number = 0;
-function getMandatoryVariableNoteKey(name: string): string {
-  const key = 'mandatory-variable-note-' + name + number++;
-  return key;
-}
 
 /// Displays mandatory notes for a variable
 export function MandatoryVariableNotes({
@@ -37,49 +30,7 @@ export function MandatoryVariableNotes({
       variant="info"
       className={cl(classes[`mandatory-box`])}
     >
-      {variableNotes.notes.length === 1 &&
-      variableNotes.valueNotes.length === 0 ? (
-        <span>{variableNotes.notes[0]}</span>
-      ) : (
-        <List
-          listType="ul"
-          listGroup={variableNotes.valueNotes.length > 0}
-          key={'non-mandatory-var-notes-list-' + variableNotes.variableCode}
-        >
-          {variableNotes.notes.map((note) => (
-            <ListItem
-              key={getMandatoryVariableNoteKey(variableNotes.variableCode)}
-              isVariableNote={variableNotes.valueNotes.length > 0}
-            >
-              {note}
-            </ListItem>
-          ))}
-          {variableNotes.valueNotes && variableNotes.valueNotes.length > 0 && (
-            <>
-              {variableNotes.valueNotes.map((value) => (
-                <ListItem
-                  key={getMandatoryVariableNoteKey(variableNotes.variableCode)}
-                >
-                  <List
-                    subHeading={captitalizeFirstLetter(value.valueName)}
-                    listType="ul"
-                  >
-                    {value.notes.map((note) => (
-                      <ListItem
-                        key={getMandatoryVariableNoteKey(
-                          variableNotes.variableCode,
-                        )}
-                      >
-                        {note}
-                      </ListItem>
-                    ))}
-                  </List>
-                </ListItem>
-              ))}
-            </>
-          )}
-        </List>
-      )}
+      <VariableNotes variableNotes={variableNotes} showVariableName={false} />
     </Alert>
   );
 }

@@ -1,7 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import List from '../List/List';
 import ListItem from '../List/ListItem';
-import { captitalizeFirstLetter, noteCollection } from './noteCollection';
+import { noteCollection } from './noteCollection';
+import { VariableNotes } from './VariableNotes';
 
 export type NonMandatoryNotesProps = {
   readonly notes: noteCollection;
@@ -31,39 +32,10 @@ export function NonMandatoryNotes({ notes }: NonMandatoryNotesProps) {
       {notes && notes.variableNotes.length > 0 && (
         <>
           {notes.variableNotes.map((varNotes) => (
-            <List
-              heading={captitalizeFirstLetter(varNotes.variableName)}
-              listType="ul"
-              listGroup={varNotes.valueNotes.length > 0}
-              key={'non-mandatory-var-notes-list-' + varNotes.variableCode}
-            >
-              {varNotes.notes.map((note) => (
-                <ListItem
-                  key={getNonMandatoryNoteKey()}
-                  isVariableNote={varNotes.valueNotes.length > 0}
-                >
-                  {note}
-                </ListItem>
-              ))}
-              {varNotes.valueNotes && varNotes.valueNotes.length > 0 && (
-                <>
-                  {varNotes.valueNotes.map((value) => (
-                    <ListItem key={getNonMandatoryNoteKey()}>
-                      <List
-                        subHeading={captitalizeFirstLetter(value.valueName)}
-                        listType="ul"
-                      >
-                        {value.notes.map((note) => (
-                          <ListItem key={getNonMandatoryNoteKey()}>
-                            {note}
-                          </ListItem>
-                        ))}
-                      </List>
-                    </ListItem>
-                  ))}
-                </>
-              )}
-            </List>
+            <VariableNotes
+              variableNotes={varNotes}
+              key={'non-mandatory-var-notes-' + varNotes.variableCode}
+            />
           ))}
         </>
       )}
