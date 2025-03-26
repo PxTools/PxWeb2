@@ -1,9 +1,9 @@
 import React, { type ReactNode } from 'react';
 import cl from 'clsx';
 import styles from './TableCard.module.scss';
-import Heading from '../Typography/Heading/Heading';
 
 interface TableCardProps {
+  href?: string;
   tableId?: string;
   title?: string;
   icon?: ReactNode;
@@ -15,6 +15,7 @@ interface TableCardProps {
 }
 
 export const TableCard: React.FC<TableCardProps> = ({
+  href,
   icon,
   tableId,
   title,
@@ -30,9 +31,16 @@ export const TableCard: React.FC<TableCardProps> = ({
     )}
     <div className={cl(styles.cardContent)}>
       <div className={cl(styles.titleWrapper)}>
-        <Heading size="small" level="2">
+        <a
+          href={href}
+          className={cl(
+            styles.title,
+            styles['heading-small'],
+            styles['no_underline'],
+          )}
+        >
           {title}
-        </Heading>
+        </a>
       </div>
       <div className={cl(styles.tableMeta)}>
         {period && (

@@ -7,7 +7,21 @@
   border: 1px solid var(--color-border-subtle, #c3dcdc);
   border-radius: var(--border-radius-large, 16px);
   background: var(--color-surface-default, #fff);
+  color: var(--px-color-text-action);
   padding: 20px;
+  position: relative;
+}
+
+a.title {
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
 }
 
 .small {
@@ -57,6 +71,11 @@
 
 .titleWrapper {
   max-width: 672px;
+}
+
+.title {
+  text-decoration: none;
+  color: var(--px-color-text-action);
 }
 
 .period {

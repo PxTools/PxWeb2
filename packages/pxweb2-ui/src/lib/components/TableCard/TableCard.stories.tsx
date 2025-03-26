@@ -28,6 +28,7 @@ export const size: StoryFn<typeof TableCard> = () => {
 
       <h2>default:</h2>
       <TableCard
+        href="/"
         icon={<AgricultureForestryHuntingAndFishing />}
         title="Utenrikshandel med varer, etter varenummer (HS) og land"
         tableId="08799"
@@ -38,6 +39,7 @@ export const size: StoryFn<typeof TableCard> = () => {
 
       <h2>Small:</h2>
       <TableCard
+        href="/"
         icon={<AgricultureForestryHuntingAndFishing />}
         title="Utenrikshandel med varer, etter varenummer (HS) og land"
         tableId="08799"
