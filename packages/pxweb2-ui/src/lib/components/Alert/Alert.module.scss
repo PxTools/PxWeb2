@@ -4,19 +4,21 @@
 
 .alert-medium {
   display: flex;
-  padding: fixvar.$spacing-4 fixvar.$spacing-5;
+  padding: fixvar.$spacing-5 fixvar.$spacing-6;
   align-items: flex-start;
   gap: fixvar.$spacing-3;
+  border-radius: var(--px-border-radius-large);
 }
 .alert-small {
   display: flex;
   padding: fixvar.$spacing-3;
   align-items: flex-start;
   gap: fixvar.$spacing-2;
+  border-radius: var(--px-border-radius-medium);
 }
 
 .info {
-  border-radius: var(--px-border-radius-medium);
+  //border-radius: var(--px-border-radius-medium);
   background: var(--px-color-surface-info-moderate);
 }
 
@@ -37,7 +39,7 @@
 }
 
 .success {
-  border-radius: var(--px-border-radius-medium);
+  // border-radius: var(--px-border-radius-medium);
   background: var(--px-color-surface-success-moderate);
 }
 .success-clickable {
@@ -56,7 +58,7 @@
   }
 }
 .warning {
-  border-radius: var(--px-border-radius-medium);
+  // border-radius: var(--px-border-radius-medium);
   background: var(--px-color-surface-warning-moderate);
 }
 .warning-clickable {
@@ -75,7 +77,7 @@
   }
 }
 .error {
-  border-radius: var(--px-border-radius-medium);
+  // border-radius: var(--px-border-radius-medium);
   background: var(--px-color-surface-error-moderate);
 }
 .error-clickable {
@@ -117,7 +119,13 @@
   display: flex;
   flex-direction: column;
   padding-top: 2px;
-  row-gap: fixvar.$spacing-1;
+  row-gap: fixvar.$spacing-2;
+}
+.alert-section-middle-medium:has(ol) {
+  row-gap: fixvar.$spacing-4;
+}
+.alert-section-middle-medium:has(ul) {
+  row-gap: fixvar.$spacing-4;
 }
 
 .alert-section-middle-small {
@@ -133,6 +141,10 @@
   align-items: flex-start;
   padding-top: 1px;
   flex: 1 0 0;
+}
+.alert-heading-clickable:hover {
+  cursor: pointer;
+  text-decoration: underline;
 }
 
 .alert-body-small {
@@ -156,6 +168,14 @@
 }
 
 .truncate-text-medium {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+}
+
+.truncate-text-medium ul {
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 2;

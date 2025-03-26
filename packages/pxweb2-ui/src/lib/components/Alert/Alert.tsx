@@ -98,7 +98,11 @@ export function Alert({
       </div>
       <div className={cl(classes[`alert-section-middle-${size}`])}>
         {hasheading && (
-          <div className={classes[`alert-heading`]}>
+          <div
+            className={cl(classes[`alert-heading`], {
+              [classes[`alert-heading-clickable`]]: clickable,
+            })}
+          >
             <Heading size={headingSize} level="2">
               {heading}
             </Heading>
