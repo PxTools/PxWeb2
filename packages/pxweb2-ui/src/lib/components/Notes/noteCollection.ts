@@ -1,4 +1,3 @@
-import { get } from 'http';
 import { Note } from '../../shared-types/note';
 import { PxTableMetadata } from '../../shared-types/pxTableMetadata';
 import { Value } from '../../shared-types/value';
