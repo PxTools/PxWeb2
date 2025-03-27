@@ -8,17 +8,13 @@ import { TablesResponse, Table } from '@pxweb2/pxweb2-api-client';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import { type Filter } from './tableTypes';
 import list from './dummy-data/tables.json' with { type: 'json' };
-// import prototypeList from './dummy-data/tables-prototype.json' with { type: 'json' };
 
 const bigTableList = list as TablesResponse;
-// const prototypeTables = prototypeList as TablesResponse;
 
 // TODO:
 // - Add typing for the reducer action
 // - Consider a custom hook for filtering
 // - Add a reducer for counting filters
-// - Pagination? Hmm.
-// - Performance LMAO
 // - Filter must be exclusive, not inclusive. So if you filter on "region" and "timeUnit" you should only get tables that have both the selected "region" and "timeUnit" as variables.
 
 function shouldTableBeIncluded(table: Table, filters: Filter[]) {
