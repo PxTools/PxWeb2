@@ -12,7 +12,6 @@ interface TableCardProps {
   frequency?: string;
   updatedLabel?: string;
   lastUpdated?: string;
-  size?: 'medium' | 'small';
   status?: 'active' | 'closed';
 }
 
@@ -25,10 +24,9 @@ export const TableCard: React.FC<TableCardProps> = ({
   frequency,
   updatedLabel,
   lastUpdated,
-  size = 'medium',
   status = 'active',
 }) => (
-  <div className={cl(styles.tableCard, styles[size])}>
+  <div className={cl(styles.tableCard)}>
     {icon && (
       <div className={cl(styles.iconWrapper, styles[status])}>{icon}</div>
     )}
@@ -57,7 +55,7 @@ export const TableCard: React.FC<TableCardProps> = ({
               {frequency}
             </span>
           )}
-          {lastUpdated && size === 'medium' && (
+          {lastUpdated && (
             <div className={cl(styles.lastUpdated)}>
               <Icon iconName="Clock" />
               <span className={cl(styles['bodyshort-small'])}>

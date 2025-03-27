@@ -20,20 +20,20 @@
     outline-offset: 5px;
     box-shadow: 0 0 0 3px var(--px-color-border-focus-boxshadow);
   }
-}
 
-.small {
-  max-width: 360px;
-  padding: 18px 16px 20px;
+  @media screen and (max-width: fixvar.$breakpoints-small-max-width) {
+    max-width: 360px;
+    padding: 18px 16px 20px;
 
-  .iconWrapper {
-    min-width: 52px;
-    height: 52px;
-    margin-right: 12px;
-    border-radius: var(--border-radius-full, 9999px);
-    svg {
-      width: 28px;
-      height: 28px;
+    .iconWrapper {
+      min-width: 52px;
+      height: 52px;
+      margin-right: 12px;
+      border-radius: var(--border-radius-full, 9999px);
+      svg {
+        width: 28px;
+        height: 28px;
+      }
     }
   }
 }
@@ -127,6 +127,10 @@
       width: 24px;
       height: 24px;
       margin-right: 4px;
+    }
+
+    @media screen and (max-width: fixvar.$breakpoints-small-max-width) {
+      display: none;
     }
   }
 }

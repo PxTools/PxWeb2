@@ -15,7 +15,6 @@ export const Default: Story = {
     icon: <AgricultureForestryHuntingAndFishing />,
     href: '#',
     title: 'Table title',
-    size: 'medium',
     tableId: '00000',
     period: 'yyyy–yyyy',
     frequency: 'Time interval',
@@ -24,120 +23,46 @@ export const Default: Story = {
   },
 };
 
-export const Size: StoryFn<typeof TableCard> = () => {
+export const withoutIcon: StoryFn<typeof TableCard> = () => {
   return (
-    <>
-      <h3>Medium:</h3>
-      <TableCard
-        href="/"
-        icon={<AgricultureForestryHuntingAndFishing />}
-        title="Table title"
-        tableId="00000"
-        period="yyyy–yyyy"
-        frequency="Time interval"
-        updatedLabel="Oppdatert"
-        lastUpdated="dd.mm.yyyy"
-      />
-      <h3>Small:</h3>
-      <TableCard
-        href="/"
-        icon={<AgricultureForestryHuntingAndFishing />}
-        title="Table title"
-        tableId="00000"
-        period="yyyy–yyyy"
-        frequency="Time interval"
-        updatedLabel="Oppdatert"
-        lastUpdated="dd.mm.yyyy"
-        size="small"
-      />
-    </>
-  );
-};
-export const WithoutIcon: StoryFn<typeof TableCard> = () => {
-  return (
-    <>
-      <h3>Medium:</h3>
-      <TableCard
-        href="/"
-        title="Table title"
-        tableId="00000"
-        period="yyyy–yyyy"
-        frequency="Time interval"
-        updatedLabel="Oppdatert"
-        lastUpdated="dd.mm.yyyy"
-      />
-
-      <h3>Small:</h3>
-      <TableCard
-        href="/"
-        title="Table title"
-        tableId="00000"
-        period="yyyy–yyyy"
-        frequency="Time interval"
-        updatedLabel="Oppdatert"
-        lastUpdated="dd.mm.yyyy"
-        size="small"
-      />
-    </>
+    <TableCard
+      href="/"
+      title="Table title"
+      tableId="00000"
+      period="yyyy–yyyy"
+      frequency="Time interval"
+      updatedLabel="Oppdatert"
+      lastUpdated="dd.mm.yyyy"
+    />
   );
 };
 
-export const withoutTableId: StoryFn<typeof TableCard> = () => {
+export const withoutTableNumber: StoryFn<typeof TableCard> = () => {
   return (
-    <>
-      <h3>Medium:</h3>
-      <TableCard
-        href="/"
-        icon={<AgricultureForestryHuntingAndFishing />}
-        title="Table title"
-        period="yyyy–yyyy"
-        frequency="Time interval"
-        updatedLabel="Oppdatert"
-        lastUpdated="dd.mm.yyyy"
-      />
-      <h3>Small:</h3>
-      <TableCard
-        href="/"
-        icon={<AgricultureForestryHuntingAndFishing />}
-        title="Table title"
-        period="yyyy–yyyy"
-        frequency="Time interval"
-        updatedLabel="Oppdatert"
-        lastUpdated="dd.mm.yyyy"
-        size="small"
-      />
-    </>
+    <TableCard
+      href="/"
+      icon={<AgricultureForestryHuntingAndFishing />}
+      title="Table title"
+      period="yyyy–yyyy"
+      frequency="Time interval"
+      updatedLabel="Oppdatert"
+      lastUpdated="dd.mm.yyyy"
+    />
   );
 };
 
 export const StatusClosed: StoryFn<typeof TableCard> = () => {
   return (
-    <>
-      <h3>Medium:</h3>
-      <TableCard
-        href="/"
-        icon={<AgricultureForestryHuntingAndFishing />}
-        title="Table title"
-        tableId="00000"
-        period="yyyy–yyyy"
-        frequency="Time interval"
-        updatedLabel="Oppdatert"
-        lastUpdated="dd.mm.yyyy"
-        status="closed"
-      />
-      <h3>Small:</h3>
-      <TableCard
-        href="/"
-        icon={<AgricultureForestryHuntingAndFishing />}
-        title="Table title"
-        tableId="00000"
-        period="yyyy–yyyy"
-        frequency="Time interval"
-        updatedLabel="Oppdatert"
-        lastUpdated="dd.mm.yyyy"
-        size="small"
-        status="closed"
-      />
-    </>
+    <TableCard
+      href="/"
+      icon={<AgricultureForestryHuntingAndFishing />}
+      title="Table title"
+      tableId="00000"
+      period="yyyy–yyyy"
+      frequency="Time interval"
+      updatedLabel="Oppdatert"
+      lastUpdated="dd.mm.yyyy"
+      status="closed"
+    />
   );
 };
