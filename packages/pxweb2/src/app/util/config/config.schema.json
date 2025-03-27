@@ -37,7 +37,11 @@
     "apiUrl": {
       "type": "string",
       "description": "The base url for the pxweb api"
+    },
+    "maxDataCells": {
+      "type": "number",
+      "description": "The maximum number of cells allowed to be shown in a table"
     }
   },
-  "required": ["language", "apiUrl"]
+  "required": ["language", "apiUrl", "maxDataCells"]
 }
