@@ -31,10 +31,6 @@ export function NumberFormatter(
   const nf = new Intl.NumberFormat(i18n.resolvedLanguage, {
     minimumFractionDigits: decimals,
     maximumFractionDigits: max,
-
-    //  Missing in the type definition in typescript, but a commit was merged to fix this
-    //  in end of Feb, early March. So it should be available soon.
-    // @ts-expect-error Remove when typescript is updated with fix
     roundingMode: customRoundingMode,
   });
 
@@ -59,12 +55,10 @@ export function pxNumber(
 ): string {
   if (!options) {
     return new Intl.NumberFormat(lng, {
-      // @ts-expect-error See earlier comment. Remove when typescript is updated with fix
       roundingMode: customRoundingMode,
     }).format(value);
   }
 
-  // @ts-expect-error See earlier comment. Remove when typescript is updated with fix
   options.roundingMode = customRoundingMode;
 
   return new Intl.NumberFormat(lng, options).format(value);
