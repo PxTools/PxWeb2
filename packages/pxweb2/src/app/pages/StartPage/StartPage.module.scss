@@ -3,24 +3,25 @@
 .startPage {
   display: grid;
   grid-template-areas:
-    'sideBar listTables'
-    'footer footer';
+    'sideBar listTables';
   grid-template-columns: 400px 1fr;
-  grid-template-rows: 1fr 100px;
-  min-height: 100vh;
+  grid-template-rows: 1fr;
+  height: calc(100vh - fixed.$spacing-22);
 }
 
 .listTables {
   grid-area: listTables;
-  padding: 20px;
+  background-color: var(--px-color-surface-subtle);
+  // padding: 20px;
   overflow-y: auto;
 }
 
 .sideBar {
   grid-area: sideBar;
-  padding: 20px;
+  background-color: var(--px-color-surface-subtle);
+  padding: 0 20px 0 20px;
   overflow-y: auto;
   position: sticky;
   top: 0;
-  height: 100vh;
+  height: 100%;
 }

@@ -1,4 +1,6 @@
 import { useReducer } from 'react';
+import { Virtuoso } from 'react-virtuoso';
+
 import styles from './StartPage.module.scss';
 
 import { Header } from '../../components/Header/Header';
@@ -91,6 +93,7 @@ const StartPage = () => {
   return (
     <AccessibilityProvider>
       <Header />
+      {/* <Information /> */}
       <div className={styles.startPage}>
         <div className={styles.sideBar}>
           <h2>Filter</h2>
@@ -121,26 +124,30 @@ const StartPage = () => {
               ))}
             </ul>
           </div>
+          <p>
+            <a href="/table/tab638">Go to table viewer</a>
+          </p>
         </div>
 
         <div className={styles.listTables}>
           <h2>Filtered tables: ({state.tables.length})</h2>
-          {state.tables.map((table, index) => (
-            <div key={index}>
-              <h3>{table.label}</h3>
+          <Virtuoso
+            style={{ height: '93%' }}
+            data={state.tables}
+            itemContent={(_, table: Table) => (
               <div>
-                <div>Category: {table.category}</div>
-                <div>Updated: {table.updated}</div>
-                <div>First period: {table.firstPeriod}</div>
-                <div>Last period: {table.lastPeriod}</div>
-                <div>Time unit: {table.timeUnit}</div>
-                <div>Variable names: {table.variableNames.join(', ')}</div>
+                <h3>{table.label}</h3>
+                <div>
+                  <div>Category: {table.category}</div>
+                  <div>Updated: {table.updated}</div>
+                  <div>First period: {table.firstPeriod}</div>
+                  <div>Last period: {table.lastPeriod}</div>
+                  <div>Time unit: {table.timeUnit}</div>
+                  <div>Variable names: {table.variableNames.join(', ')}</div>
+                </div>
               </div>
-            </div>
-          ))}
-          <p>
-            <a href="/table/tab638">Go to table viewer</a>
-          </p>
+            )}
+          />
         </div>
       </div>
     </AccessibilityProvider>
