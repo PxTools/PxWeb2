@@ -1,4 +1,4 @@
-import { useState, useReducer } from 'react';
+import { useReducer } from 'react';
 import styles from './StartPage.module.scss';
 
 import { Header } from '../../components/Header/Header';
@@ -56,8 +56,6 @@ const initialState: {
 };
 
 const StartPage = () => {
-  const [countAlder, setCountAlder] = useState(0);
-  const [variableNames, setVariableNames] = useState<Array<string>>([]);
   const [state, dispatch] = useReducer(reducer, initialState);
 
   function handleResetFilter() {
@@ -90,51 +88,12 @@ const StartPage = () => {
     }
   }
 
-  function doTheCount() {
-    console.time('countAlder');
-
-    if (!bigTableList || !('tables' in bigTableList)) {
-      console.error('No tables found');
-    } else {
-      const alderTable = bigTableList.tables.filter((table) =>
-        table.variableNames.includes('alder'),
-      );
-      setCountAlder(alderTable ? alderTable.length : 0);
-    }
-    console.timeEnd('countAlder');
-  }
-
-  function findVariablesFromTables() {
-    console.time('findVariables');
-    if (!bigTableList || !('tables' in bigTableList)) {
-      console.error('No tables found');
-    } else {
-      const variableNames = bigTableList.tables
-        .map((table) => table.variableNames)
-        .flat();
-      const uniqueVariableNames = [...new Set(variableNames)].sort();
-      setVariableNames(uniqueVariableNames);
-    }
-    console.timeEnd('findVariables');
-  }
-
   return (
     <AccessibilityProvider>
       <Header />
       <div className={styles.startPage}>
         <div className={styles.sideBar}>
-          <h1>Start Page</h1>
-          <p>This is the start page for the application.</p>
-          <p>There are {countAlder} tables available.</p>
-          <p>There are {variableNames.length} variables avilable.</p>
-          <div>
-            <button onClick={doTheCount}>Count tables with Alder</button>
-          </div>
-          <div>
-            <button onClick={findVariablesFromTables}>
-              List all the variableNames
-            </button>
-          </div>
+          <h2>Filter</h2>
           <div>
             <button
               onClick={() =>
@@ -148,7 +107,7 @@ const StartPage = () => {
             <button onClick={handleResetFilter}>Filter: Reset!</button>
           </div>
           <div>
-            The available timeUnit filters:
+            <h3>Tidsintervall:</h3>
             <ul>
               {Array.from(state.availableFilters).map(([key, value]) => (
                 <li
@@ -165,13 +124,7 @@ const StartPage = () => {
         </div>
 
         <div className={styles.listTables}>
-          The available variableNames are:
-          <ul>
-            {variableNames.map((variableName, index) => (
-              <li key={index}>{variableName}, </li>
-            ))}
-          </ul>
-          <h2>Prototype tables</h2>
+          <h2>Filtered tables: ({state.tables.length})</h2>
           {state.tables.map((table, index) => (
             <div key={index}>
               <h3>{table.label}</h3>
