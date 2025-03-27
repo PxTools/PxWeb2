@@ -1,0 +1,12 @@
+.information-card {
+  align-self: stretch;
+  color: var(--color-text-default, #162327);
+
+  /* Heading/Desktop/Small */
+  font-family: Roboto;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 28px; /* 140% */
+  letter-spacing: 0.1px;
+}
