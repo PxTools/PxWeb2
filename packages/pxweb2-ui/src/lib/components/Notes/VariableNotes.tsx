@@ -1,6 +1,6 @@
 import List from '../List/List';
 import ListItem from '../List/ListItem';
-import { captitalizeFirstLetter, variableNotes } from './noteCollection';
+import { variableNotes } from './noteCollection';
 
 export type VariableNotesProps = {
   readonly variableNotes: variableNotes;
@@ -11,6 +11,15 @@ let number = 0;
 function getVariableNoteKey(name: string): string {
   const key = 'variable-note-' + name + number++;
   return key;
+}
+
+// Makes the first letter of a string uppercase
+export function captitalizeFirstLetter(string: string): string {
+  if (!string) {
+    return '';
+  }
+  const returnString = structuredClone(string);
+  return returnString.charAt(0).toUpperCase() + returnString.slice(1);
 }
 
 export function VariableNotes({
