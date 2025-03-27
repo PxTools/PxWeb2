@@ -1,4 +1,4 @@
-import type { Meta, StoryFn } from '@storybook/react';
+import type { Meta, StoryObj, StoryFn } from '@storybook/react';
 import { TableCard } from './TableCard';
 import { AgricultureForestryHuntingAndFishing } from './IconsTopic';
 
@@ -8,45 +8,135 @@ const meta: Meta<typeof TableCard> = {
 };
 export default meta;
 
-export const Default: StoryFn<typeof TableCard> = () => {
+type Story = StoryObj<typeof TableCard>;
+
+export const Default: Story = {
+  args: {
+    icon: <AgricultureForestryHuntingAndFishing />,
+    href: '#',
+    title: 'Table title',
+    size: 'medium',
+    tableId: '00000',
+    period: 'yyyy–yyyy',
+    frequency: 'Time interval',
+    updatedLabel: 'Oppdatert',
+    lastUpdated: 'dd.mm.yyyy',
+  },
+};
+
+export const Size: StoryFn<typeof TableCard> = () => {
   return (
-    <TableCard
-      icon={<AgricultureForestryHuntingAndFishing />}
-      title="Utenrikshandel med varer, etter varenummer (HS) og land"
-      tableId="08799"
-      period="1988–2024"
-      frequency="Månedlig"
-      lastUpdated="15.10.2024"
-    />
+    <>
+      <h3>Medium:</h3>
+      <TableCard
+        href="/"
+        icon={<AgricultureForestryHuntingAndFishing />}
+        title="Table title"
+        tableId="00000"
+        period="yyyy–yyyy"
+        frequency="Time interval"
+        updatedLabel="Oppdatert"
+        lastUpdated="dd.mm.yyyy"
+      />
+      <h3>Small:</h3>
+      <TableCard
+        href="/"
+        icon={<AgricultureForestryHuntingAndFishing />}
+        title="Table title"
+        tableId="00000"
+        period="yyyy–yyyy"
+        frequency="Time interval"
+        updatedLabel="Oppdatert"
+        lastUpdated="dd.mm.yyyy"
+        size="small"
+      />
+    </>
+  );
+};
+export const WithoutIcon: StoryFn<typeof TableCard> = () => {
+  return (
+    <>
+      <h3>Medium:</h3>
+      <TableCard
+        href="/"
+        title="Table title"
+        tableId="00000"
+        period="yyyy–yyyy"
+        frequency="Time interval"
+        updatedLabel="Oppdatert"
+        lastUpdated="dd.mm.yyyy"
+      />
+
+      <h3>Small:</h3>
+      <TableCard
+        href="/"
+        title="Table title"
+        tableId="00000"
+        period="yyyy–yyyy"
+        frequency="Time interval"
+        updatedLabel="Oppdatert"
+        lastUpdated="dd.mm.yyyy"
+        size="small"
+      />
+    </>
   );
 };
 
-export const size: StoryFn<typeof TableCard> = () => {
+export const withoutTableId: StoryFn<typeof TableCard> = () => {
   return (
     <>
-      <h1>Size</h1>
-
-      <h2>default:</h2>
+      <h3>Medium:</h3>
       <TableCard
         href="/"
         icon={<AgricultureForestryHuntingAndFishing />}
-        title="Utenrikshandel med varer, etter varenummer (HS) og land"
-        tableId="08799"
-        period="1988–2024"
-        frequency="Månedlig"
-        lastUpdated="15.10.2024"
+        title="Table title"
+        period="yyyy–yyyy"
+        frequency="Time interval"
+        updatedLabel="Oppdatert"
+        lastUpdated="dd.mm.yyyy"
       />
-
-      <h2>Small:</h2>
+      <h3>Small:</h3>
       <TableCard
         href="/"
         icon={<AgricultureForestryHuntingAndFishing />}
-        title="Utenrikshandel med varer, etter varenummer (HS) og land"
-        tableId="08799"
-        period="1988–2024"
-        frequency="Månedlig"
-        lastUpdated="15.10.2024"
+        title="Table title"
+        period="yyyy–yyyy"
+        frequency="Time interval"
+        updatedLabel="Oppdatert"
+        lastUpdated="dd.mm.yyyy"
         size="small"
+      />
+    </>
+  );
+};
+
+export const StatusClosed: StoryFn<typeof TableCard> = () => {
+  return (
+    <>
+      <h3>Medium:</h3>
+      <TableCard
+        href="/"
+        icon={<AgricultureForestryHuntingAndFishing />}
+        title="Table title"
+        tableId="00000"
+        period="yyyy–yyyy"
+        frequency="Time interval"
+        updatedLabel="Oppdatert"
+        lastUpdated="dd.mm.yyyy"
+        status="closed"
+      />
+      <h3>Small:</h3>
+      <TableCard
+        href="/"
+        icon={<AgricultureForestryHuntingAndFishing />}
+        title="Table title"
+        tableId="00000"
+        period="yyyy–yyyy"
+        frequency="Time interval"
+        updatedLabel="Oppdatert"
+        lastUpdated="dd.mm.yyyy"
+        size="small"
+        status="closed"
       />
     </>
   );

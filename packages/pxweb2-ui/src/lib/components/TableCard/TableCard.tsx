@@ -1,7 +1,7 @@
 import React, { type ReactNode } from 'react';
 import cl from 'clsx';
 import styles from './TableCard.module.scss';
-import { Icon } from '@pxweb2/pxweb2-ui';
+import { Icon } from '../Icon/Icon';
 
 interface TableCardProps {
   href?: string;
@@ -10,8 +10,9 @@ interface TableCardProps {
   icon?: ReactNode;
   period?: string;
   frequency?: string;
+  updatedLabel?: string;
   lastUpdated?: string;
-  size?: 'medium' | 'small' | 'xsmall';
+  size?: 'medium' | 'small';
   status?: 'active' | 'closed';
 }
 
@@ -22,6 +23,7 @@ export const TableCard: React.FC<TableCardProps> = ({
   title,
   period,
   frequency,
+  updatedLabel,
   lastUpdated,
   size = 'medium',
   status = 'active',
@@ -44,22 +46,26 @@ export const TableCard: React.FC<TableCardProps> = ({
         </a>
       </div>
       <div className={cl(styles.tableMeta)}>
-        {period && (
-          <span className={cl(styles.period, styles['heading-xsmall'])}>
-            {period}
-          </span>
-        )}
-        {frequency && (
-          <span className={cl(styles.frequency, styles['label-small'])}>
-            {frequency}
-          </span>
-        )}
-        {lastUpdated && size === 'medium' && (
-          <div className={cl(styles.lastUpdated)}>
-            <Icon iconName="Clock" />
-            <span className={cl(styles['bodyshort-small'])}>{lastUpdated}</span>
-          </div>
-        )}
+        <div className={cl(styles.timeWrapper)}>
+          {period && (
+            <span className={cl(styles.period, styles['heading-xsmall'])}>
+              {period}
+            </span>
+          )}
+          {frequency && (
+            <span className={cl(styles.frequency, styles['label-small'])}>
+              {frequency}
+            </span>
+          )}
+          {lastUpdated && size === 'medium' && (
+            <div className={cl(styles.lastUpdated)}>
+              <Icon iconName="Clock" />
+              <span className={cl(styles['bodyshort-small'])}>
+                {updatedLabel} {lastUpdated}
+              </span>
+            </div>
+          )}
+        </div>
         {tableId && (
           <span className={cl(styles.tableId, styles['label-small'])}>
             {tableId}

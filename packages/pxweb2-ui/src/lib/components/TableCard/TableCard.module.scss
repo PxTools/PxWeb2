@@ -22,22 +22,6 @@
   }
 }
 
-a.title {
-  &:hover {
-    text-decoration: underline;
-  }
-
-  &:focus {
-    outline: none;
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-  }
-}
-
 .small {
   max-width: 360px;
   padding: 18px 16px 20px;
@@ -55,7 +39,7 @@ a.title {
 }
 
 .iconWrapper {
-  width: 72px;
+  min-width: 72px;
   height: 72px;
   display: flex;
   justify-content: center;
@@ -85,46 +69,64 @@ a.title {
 
 .titleWrapper {
   max-width: 672px;
-}
 
-.title {
-  text-decoration: none;
-  color: var(--px-color-text-action);
-}
+  .title {
+    text-decoration: none;
+    color: var(--px-color-text-action);
 
-.period {
-  margin-right: 8px !important;
-}
+    &:hover {
+      text-decoration: underline;
+    }
 
-.frequency {
-  padding: 1.5px 4px 2px 4px;
-  align-items: center;
-  border-radius: var(--px-border-radius-xsmall);
-  background: var(--px-color-surface-subtle);
-  margin-right: 20px;
-}
+    &:focus {
+      outline: none;
+    }
 
-.lastUpdated {
-  display: flex;
-  align-items: center;
-
-  svg {
-    width: 24px;
-    height: 24px;
-    margin-right: 4px;
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+    }
   }
-}
-
-.tableId {
-  padding: 1.5px 4px 2px 4px;
-  align-items: center;
-  border-radius: var(--px-border-radius-xsmall);
-  border: 1px solid var(--px-color-border-subtle);
-  margin-left: auto;
 }
 
 .tableMeta {
   display: flex;
   justify-content: space-between;
   width: 100%;
+
+  .tableId {
+    padding: 1.5px 4px 2px 4px;
+    align-items: center;
+    border-radius: var(--px-border-radius-xsmall);
+    border: 1px solid var(--px-color-border-subtle);
+    margin-left: auto;
+  }
+}
+
+.timeWrapper {
+  display: flex;
+
+  .period {
+    margin-right: 8px !important;
+  }
+
+  .frequency {
+    padding: 1.5px 4px 2px 4px;
+    align-items: center;
+    border-radius: var(--px-border-radius-xsmall);
+    background: var(--px-color-surface-subtle);
+    margin-right: 20px;
+  }
+
+  .lastUpdated {
+    display: flex;
+    align-items: center;
+
+    svg {
+      width: 24px;
+      height: 24px;
+      margin-right: 4px;
+    }
+  }
 }
