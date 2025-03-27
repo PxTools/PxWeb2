@@ -6,7 +6,12 @@ import styles from './StartPage.module.scss';
 import { Header } from '../../components/Header/Header';
 import { TablesResponse, Table } from '@pxweb2/pxweb2-api-client';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
-import { type Filter } from './tableTypes';
+import {
+  type Filter,
+  type ReducerActionTypes,
+  type State,
+  ActionType,
+} from './tableTypes';
 import list from './dummy-data/tables.json' with { type: 'json' };
 
 const bigTableList = list as TablesResponse;
@@ -43,11 +48,7 @@ function getFilters(tables: Table[]): Map<string, number> {
   return filters;
 }
 
-const initialState: {
-  tables: Table[];
-  availableFilters: Map<string, number>;
-  activeFilters: Filter[];
-} = {
+const initialState: State = {
   tables: bigTableList.tables,
   availableFilters: getFilters(bigTableList.tables),
   activeFilters: [],
@@ -57,18 +58,21 @@ const StartPage = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   function handleResetFilter() {
-    dispatch({ type: 'resetFilters' });
+    dispatch({ type: ActionType.RESET_FILTERS });
   }
 
   function handleAddFilter(filter: Filter[]) {
-    dispatch({ type: 'addFilter', payload: filter });
+    dispatch({ type: ActionType.ADD_FILTER, payload: filter });
   }
 
-  function reducer(state: StartPageState, action) {
+  function reducer(
+    state: StartPageState,
+    action: ReducerActionTypes,
+  ): StartPageState {
     switch (action.type) {
-      case 'resetFilters':
+      case ActionType.RESET_FILTERS:
         return initialState;
-      case 'addFilter':
+      case ActionType.ADD_FILTER:
         console.time('filterTables');
         const newFilters = [...state.activeFilters, ...action.payload];
         const newTables = state.tables.filter((table) => {
