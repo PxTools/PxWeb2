@@ -78,9 +78,16 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
   const addSelectedValues = (variableId: string, values: string[]) => {
     setVariables((prev) => {
       const newVariables = new Map(prev);
-      values.forEach((value) => {
-        newVariables.set(variableId + '-' + value, { id: variableId, value });
-      });
+      if (values.length === 0) {
+        newVariables.set(variableId + '-none-selected', {
+          id: variableId,
+          value: 'none-selected',
+        });
+      } else {
+        values.forEach((value) => {
+          newVariables.set(variableId + '-' + value, { id: variableId, value });
+        });
+      }
       return newVariables;
     });
   };
