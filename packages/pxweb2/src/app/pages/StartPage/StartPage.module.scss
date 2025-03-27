@@ -2,8 +2,7 @@
 
 .startPage {
   display: grid;
-  grid-template-areas:
-    'sideBar listTables';
+  grid-template-areas: 'sideBar listTables';
   grid-template-columns: 400px 1fr;
   grid-template-rows: 1fr;
   height: calc(100vh - fixed.$spacing-22);
