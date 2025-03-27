@@ -275,6 +275,7 @@ export function Selection({
   useEffect(() => {
     if (errorMsg) {
       console.error('Selection.tsx', errorMsg);
+      throw Error(errorMsg);
     }
   }, [errorMsg]);
 
@@ -322,8 +323,10 @@ export function Selection({
           variables.setIsLoadingMetadata(false);
         }
       })
-      .catch(() => {
-        setErrorMsg('Could not get table: ' + selectedTabId);
+      .catch((error) => {
+        setErrorMsg(
+          'Could not get table: ' + selectedTabId + ' ' + error.message,
+        );
         setPxTableMetadata(null);
       });
 
@@ -342,8 +345,13 @@ export function Selection({
           variables.setIsLoadingMetadata(false);
           variables.setHasLoadedDefaultSelection(true);
         })
-        .catch(() => {
-          setErrorMsg('Error getting default selection: ' + selectedTabId);
+        .catch((error) => {
+          setErrorMsg(
+            'Error getting default selection: ' +
+              selectedTabId +
+              ' ' +
+              error.message,
+          );
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
