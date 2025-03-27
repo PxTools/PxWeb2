@@ -28,7 +28,8 @@ export function VariableNotes({
 }: VariableNotesProps) {
   return (
     <>
-      {variableNotes.notes.length === 1 &&
+      {!showVariableName &&
+      variableNotes.notes.length === 1 &&
       variableNotes.valueNotes.length === 0 ? (
         <span>{variableNotes.notes[0]}</span>
       ) : (
