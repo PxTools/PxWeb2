@@ -6,16 +6,18 @@ import { TablesResponse, Table } from '@pxweb2/pxweb2-api-client';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import { type Filter } from './tableTypes';
 import list from './dummy-data/tables.json' with { type: 'json' };
-import prototypeList from './dummy-data/tables-prototype.json' with { type: 'json' };
+// import prototypeList from './dummy-data/tables-prototype.json' with { type: 'json' };
 
-const tables = list as TablesResponse;
-const prototypeTables = prototypeList as TablesResponse;
+const bigTableList = list as TablesResponse;
+// const prototypeTables = prototypeList as TablesResponse;
 
 // TODO:
 // - Add typing for the reducer action
 // - Consider a custom hook for filtering
 // - Add a reducer for counting filters
 // - Pagination? Hmm.
+// - Performance LMAO
+// - Filter must be exclusive, not inclusive. So if you filter on "region" and "timeUnit" you should only get tables that have both the selected "region" and "timeUnit" as variables.
 
 function shouldTableBeIncluded(table: Table, filters: Filter[]) {
   return filters.some((filter) => {
@@ -48,8 +50,8 @@ const initialState: {
   availableFilters: Map<string, number>;
   activeFilters: Filter[];
 } = {
-  tables: prototypeTables.tables,
-  availableFilters: getFilters(prototypeTables.tables),
+  tables: bigTableList.tables,
+  availableFilters: getFilters(bigTableList.tables),
   activeFilters: [],
 };
 
@@ -71,12 +73,15 @@ const StartPage = () => {
       case 'resetFilters':
         return initialState;
       case 'addFilter':
-        const newTables = prototypeTables.tables.filter((table) => {
-          return shouldTableBeIncluded(table, action.payload);
+        console.time('filterTables');
+        const newFilters = [...state.activeFilters, ...action.payload];
+        const newTables = state.tables.filter((table) => {
+          return shouldTableBeIncluded(table, newFilters);
         });
+        console.timeEnd('filterTables');
         return {
           ...state,
-          activeFilters: action.payload,
+          activeFilters: newFilters,
           tables: newTables,
           availableFilters: getFilters(newTables),
         };
@@ -88,10 +93,10 @@ const StartPage = () => {
   function doTheCount() {
     console.time('countAlder');
 
-    if (!tables || !('tables' in tables)) {
+    if (!bigTableList || !('tables' in bigTableList)) {
       console.error('No tables found');
     } else {
-      const alderTable = tables.tables.filter((table) =>
+      const alderTable = bigTableList.tables.filter((table) =>
         table.variableNames.includes('alder'),
       );
       setCountAlder(alderTable ? alderTable.length : 0);
@@ -101,10 +106,10 @@ const StartPage = () => {
 
   function findVariablesFromTables() {
     console.time('findVariables');
-    if (!tables || !('tables' in tables)) {
+    if (!bigTableList || !('tables' in bigTableList)) {
       console.error('No tables found');
     } else {
-      const variableNames = tables.tables
+      const variableNames = bigTableList.tables
         .map((table) => table.variableNames)
         .flat();
       const uniqueVariableNames = [...new Set(variableNames)].sort();
@@ -160,14 +165,12 @@ const StartPage = () => {
         </div>
 
         <div className={styles.listTables}>
-          <p>
-            The available variableNames are:
-            <ul>
-              {variableNames.map((variableName, index) => (
-                <li key={index}>{variableName}, </li>
-              ))}
-            </ul>
-          </p>
+          The available variableNames are:
+          <ul>
+            {variableNames.map((variableName, index) => (
+              <li key={index}>{variableName}, </li>
+            ))}
+          </ul>
           <h2>Prototype tables</h2>
           {state.tables.map((table, index) => (
             <div key={index}>

@@ -3,12 +3,10 @@
 .startPage {
   display: grid;
   grid-template-areas:
-    // "header header"
     'sideBar listTables'
     'footer footer';
   grid-template-columns: 400px 1fr;
   grid-template-rows: 1fr 100px;
-  // grid-template-rows: 100px 1fr 100px;
   min-height: 100vh;
 }
 
@@ -22,4 +20,7 @@
   grid-area: sideBar;
   padding: 20px;
   overflow-y: auto;
+  position: sticky;
+  top: 0;
+  height: 100vh;
 }
