@@ -25,6 +25,9 @@ function shouldTableBeIncluded(table: Table, filters: Filter[]) {
     if (filter.type === 'variableName') {
       return table.variableNames.includes(filter.value);
     }
+    if (filter.type === 'timeUnit') {
+      return table?.timeUnit?.toLowerCase() === filter.value.toLowerCase();
+    }
     return false;
   });
 }
@@ -143,7 +146,12 @@ const StartPage = () => {
             The available timeUnit filters:
             <ul>
               {Array.from(state.availableFilters).map(([key, value]) => (
-                <li key={key}>
+                <li
+                  key={key}
+                  onClick={() =>
+                    handleAddFilter([{ type: 'timeUnit', value: key }])
+                  }
+                >
                   {key}: {value}
                 </li>
               ))}
