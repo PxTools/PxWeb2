@@ -132,11 +132,6 @@ export function NotesTab({ pxTableMetadata }: NotesTabProps) {
     return <NoNotes tableLevel={true} />; // No notes on entire table;
   }
 
-  // TODO: Call GetNotes(pxMetaTotal, pxMetaSelection) here.
-  // 1. Add boolean to check if notes exist in the table
-  // 2. Add boolean to check if notes exist in the selection
-  // 3. Add SymbolExplanationNotes to tableNoteCollection
-
   // Get metatadata from "Total metadata" for the part (variables and values) that is selected by the user
   const metadataCopyForSelection = getMetadataCopyForSelection(
     pxMetaTotal.pxTableMetadata,
@@ -153,55 +148,9 @@ export function NotesTab({ pxTableMetadata }: NotesTabProps) {
     }
   }
 
-  // metadataCopyForSelection?.notes?.push({
-  //   text: 'This is table test note 1',
-  //   mandatory: true,
-  // });
-  // metadataCopyForSelection?.notes?.push({
-  //   text: 'This is table test note 2',
-  //   mandatory: true,
-  // });
-
   if (!tableHasAnyNotes(metadataCopyForSelection)) {
     return <NoNotes tableLevel={false} />; // No notes for this specific selection
   }
-
-  // pxTableMetadata?.notes?.push({
-  //   text: 'This is table test note 1',
-  //   mandatory: true,
-  // });
-  // pxTableMetadata?.notes?.push({
-  //   text: 'This is table test note 2',
-  //   mandatory: true,
-  // });
-  // pxTableMetadata?.variables[0].notes?.push({
-  //   text: 'This is a variable test note 1',
-  //   mandatory: false,
-  // });
-  // metadataCopyForSelection?.variables[1].notes?.push({
-  //   text: 'This is a variable test note a',
-  //   mandatory: true,
-  // });
-  // pxTableMetadata?.variables[2].notes?.push({
-  //   text: 'This is a variable test note uuuu',
-  //   mandatory: false,
-  // });
-  // pxTableMetadata?.variables[3].notes?.push({
-  //   text: 'This is a variable test note b',
-  //   mandatory: false,
-  // });
-  // pxTableMetadata?.variables[3].notes?.push({
-  //   text: 'This is a variable test note c',
-  //   mandatory: false,
-  // });
-  // pxTableMetadata?.variables[3].values[0].notes?.push({
-  //   text: 'This is a value test note 3',
-  //   mandatory: false,
-  // });
-  // pxTableMetadata?.variables[3].values[0].notes?.push({
-  //   text: 'This is a value test note 4',
-  //   mandatory: false,
-  // });
 
   const config = getConfig();
   const specialCharacters = config.specialCharacters;
@@ -216,14 +165,9 @@ export function NotesTab({ pxTableMetadata }: NotesTabProps) {
       {Object.keys(notes.SymbolExplanationNotes).length > 0 && (
         <SymbolExplanationNotes notes={notes.SymbolExplanationNotes} />
       )}
-      {/* {notes.SymbolExplanationNotes.length > 0 && (
-      <SymbolExplanationNotes notes={notes.SymbolExplanationNotes} />
-      )} */}
-
       {notes.mandatoryNotes.notesCount > 0 && (
         <MandatoryNotes notes={notes.mandatoryNotes} />
       )}
-
       {notes.nonMandatoryNotes.notesCount > 0 && (
         <NonMandatoryNotes notes={notes.nonMandatoryNotes} />
       )}

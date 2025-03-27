@@ -28,15 +28,6 @@ export function SymbolExplanationNotes({ notes }: SymbolExplanationNotesProps) {
           ))}
         </List>
       )}
-      {/* {notes.length === 1 ? (
-        <span>{notes[0]}</span>
-      ) : (
-        <List listType="ul">
-          {notes.map((note) => (
-            <ListItem key={getNoteKey()}>{note}</ListItem>
-          ))}
-        </List>
-      )} */}
     </List>
   );
 }
