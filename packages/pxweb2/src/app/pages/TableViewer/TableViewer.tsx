@@ -1,24 +1,29 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams, useLocation } from 'react-router';
+import cl from 'clsx';
 
-import styles from './app.module.scss';
-import { Selection } from './components/Selection/Selection';
-import { Presentation } from './components/Presentation/Presentation';
-import useLocalizeDocumentAttributes from '../i18n/useLocalizeDocumentAttributes';
-import { Header } from './components/Header/Header';
-import { NavigationItem } from './components/NavigationMenu/NavigationItem/NavigationItemType';
-import NavigationRail from './components/NavigationMenu/NavigationRail/NavigationRail';
-import NavigationBar from './components/NavigationMenu/NavigationBar/NavigationBar';
-import { SkipToMain } from './components/SkipToMain/SkipToMain';
-import { Footer } from './components/Footer/Footer';
-import { getConfig } from './util/config/getConfig';
+import styles from './TableViewer.module.scss';
+import { Selection } from '../../components/Selection/Selection';
+import { Presentation } from '../../components/Presentation/Presentation';
+import useLocalizeDocumentAttributes from '../../../i18n/useLocalizeDocumentAttributes';
+import { Header } from '../../components/Header/Header';
+import { NavigationItem } from '../../components/NavigationMenu/NavigationItem/NavigationItemType';
+import NavigationRail from '../../components/NavigationMenu/NavigationRail/NavigationRail';
+import NavigationBar from '../../components/NavigationMenu/NavigationBar/NavigationBar';
+import { SkipToMain } from '../../components/SkipToMain/SkipToMain';
+import { Footer } from '../../components/Footer/Footer';
+import { getConfig } from '../../util/config/getConfig';
 import { OpenAPI } from '@pxweb2/pxweb2-api-client';
-import useAccessibility from './context/useAccessibility';
-import useApp from './context/useApp';
-import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
+import useAccessibility from '../../context/useAccessibility';
+import useApp from '../../context/useApp';
+import { AccessibilityProvider } from '../../context/AccessibilityProvider';
+import { VariablesProvider } from '../../context/VariablesProvider';
+import { TableDataProvider } from '../../context/TableDataProvider';
+import ErrorBoundary from '../../components/ErrorBoundary/ErrorBoundary';
 
-export function App() {
-  const { isTablet } = useApp();
+export function TableViewer() {
+  const { isMobile, isTablet, skipToMainFocused, setSkipToMainFocused } =
+    useApp();
   const config = getConfig();
   const accessibility = useAccessibility();
 
@@ -47,6 +52,7 @@ export function App() {
   }>(null);
 
   const hideMenuRef = useRef<HTMLDivElement>(null);
+  const skipToMainRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (hasFocus !== 'none' && navigationBarRef.current) {
@@ -115,12 +121,26 @@ export function App() {
         undefined,
       );
     }
-  }, [
-    accessibility,
-    navigationBarRef.current,
-    hideMenuRef.current,
-    selectedNavigationView,
-  ]);
+  }, [accessibility, selectedNavigationView]);
+
+  // Monitor focus on SkipToMain
+  useEffect(() => {
+    const skipElement = skipToMainRef.current;
+    if (!skipElement) {
+      return;
+    }
+
+    const handleFocus = () => setSkipToMainFocused(true);
+    const handleBlur = () => setSkipToMainFocused(false);
+
+    skipElement.addEventListener('focusin', handleFocus);
+    skipElement.addEventListener('focusout', handleBlur);
+
+    return () => {
+      skipElement.removeEventListener('focusin', handleFocus);
+      skipElement.removeEventListener('focusout', handleBlur);
+    };
+  }, [setSkipToMainFocused]);
 
   useEffect(() => {
     if (errorMsg !== '') {
@@ -168,46 +188,64 @@ export function App() {
   };
   useLocalizeDocumentAttributes();
 
+  const isSmallScreen = isTablet === true || isMobile === true;
+
   return (
     <>
-      <SkipToMain />
-      {!isTablet && <Header />}{' '}
-      <div className={styles.navigationAndContentContainer}>
-        {!isTablet && (
+      <SkipToMain ref={skipToMainRef} />
+      {!isSmallScreen && <Header />}
+      {/* tabindex={-1} to fix firefox focusing this div*/}
+      <div className={styles.navigationAndContentContainer} tabIndex={-1}>
+        {isSmallScreen ? (
+          <>
+            <Header />
+            <NavigationBar
+              ref={navigationBarRef}
+              onChange={changeSelectedNavView}
+              selected={selectedNavigationView}
+            />
+          </>
+        ) : (
           <NavigationRail
             ref={navigationBarRef}
             onChange={changeSelectedNavView}
             selected={selectedNavigationView}
           />
         )}{' '}
-        <div className={styles.mainContainer}>
-          <ErrorBoundary>
-            <Selection
-              selectedNavigationView={selectedNavigationView}
-              selectedTabId={selectedTableId}
-              setSelectedNavigationView={changeSelectedNavView}
-              openedWithKeyboard={openedWithKeyboard}
-              hideMenuRef={hideMenuRef}
-            />
-          </ErrorBoundary>
+        <div
+          className={cl(styles.mainContainer, {
+            [styles.skipToMainContentVisible]: skipToMainFocused,
+          })}
+        >
+          <Selection
+            selectedNavigationView={selectedNavigationView}
+            selectedTabId={selectedTableId}
+            setSelectedNavigationView={changeSelectedNavView}
+            openedWithKeyboard={openedWithKeyboard}
+            hideMenuRef={hideMenuRef}
+          />
           <div className={styles.contentAndFooterContainer}>
-            {isTablet && <Header />}{' '}
-            <ErrorBoundary>
-              <Presentation selectedTabId={selectedTableId}></Presentation>
-            </ErrorBoundary>
+            <Presentation selectedTabId={selectedTableId}></Presentation>
             <Footer />
           </div>
         </div>
       </div>
-      {isTablet && (
-        <NavigationBar
-          ref={navigationBarRef}
-          onChange={changeSelectedNavView}
-          selected={selectedNavigationView}
-        />
-      )}{' '}
     </>
   );
 }
 
-export default App;
+function Render() {
+  return (
+    <AccessibilityProvider>
+      <ErrorBoundary>
+        <VariablesProvider>
+          <TableDataProvider>
+            <TableViewer />
+          </TableDataProvider>
+        </VariablesProvider>
+      </ErrorBoundary>
+    </AccessibilityProvider>
+  );
+}
+
+export default Render;

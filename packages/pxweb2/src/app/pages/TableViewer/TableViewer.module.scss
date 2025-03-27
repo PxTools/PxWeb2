@@ -4,19 +4,40 @@
 .navigationAndContentContainer {
   display: flex;
   flex-direction: row;
+
+  // Tablet and mobile sizes
+  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
+    flex-direction: column;
+    overflow-y: auto;
+    scrollbar-width: thin;
+  }
 }
 
 .mainContainer {
+  --skip-to-main-content-height: 49px;
+
   display: flex;
   background: var(--px-color-surface-subtle);
-  height: calc(100vh - 88px);
+
+  // Calculate height of main container, minus the header
+  height: calc(100vh - fixed.$spacing-22);
 
   // xsmall and small
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
     left: 0px;
     background: var(--px-color-surface-default);
     width: 100%;
-    height: calc(100vh - 80px);
+
+    // Calculate height of main container, minus the header and navigation bar heights
+    height: calc(100vh - fixed.$spacing-22 - fixed.$spacing-20);
+
+    &.skipToMainContentVisible {
+      // Calculate height of main container, minus the header and navigation bar and SkipToMainContent heights
+      height: calc(
+        100vh - fixed.$spacing-22 -
+          fixed.$spacing-20 - var(--skip-to-main-content-height)
+      );
+    }
   }
 
   // medium, large and xlarge
@@ -46,25 +67,25 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: fixed.$spacing-6;
   width: 100%;
   max-width: 1320px;
   height: 100%;
-  overflow-y: auto;
-  scrollbar-width: thin;
 
   // xsmall
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
-    gap: fixed.$spacing-4;
+    padding-top: fixed.$spacing-4;
   }
 
-  // xsmall and small
-  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
-    width: 100vw;
+  // small
+  @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
+    padding-top: fixed.$spacing-6;
   }
 
   // medium, large and xlarge
   @media ((min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-large-max-width)) or ((min-width: fixed.$breakpoints-xlarge-min-width)) {
     padding-bottom: fixed.$spacing-6;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    gap: fixed.$spacing-6;
   }
 }
