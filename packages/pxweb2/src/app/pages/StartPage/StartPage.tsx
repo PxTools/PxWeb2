@@ -111,7 +111,7 @@ const StartPage = () => {
           </div>
           <div>
             <h3>Tidsintervall:</h3>
-            <ul>
+            <ul className={styles.filterList}>
               {Array.from(state.availableFilters).map(([key, value]) => (
                 <li
                   key={key}
