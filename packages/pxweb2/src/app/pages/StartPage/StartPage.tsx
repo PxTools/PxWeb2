@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState, useReducer } from 'react';
 import styles from './StartPage.module.scss';
 
 import { Header } from '../../components/Header/Header';
@@ -10,6 +10,12 @@ import prototypeList from './dummy-data/tables-prototype.json' with { type: 'jso
 
 const tables = list as TablesResponse;
 const prototypeTables = prototypeList as TablesResponse;
+
+// TODO:
+// - Add typing for the reducer action
+// - Consider a custom hook for filtering
+// - Add a reducer for counting filters
+// - Pagination? Hmm.
 
 function shouldTableBeIncluded(table: Table, filters: Filter[]) {
   return filters.some((filter) => {
@@ -23,24 +29,57 @@ function shouldTableBeIncluded(table: Table, filters: Filter[]) {
   });
 }
 
+function getFilters(tables: Table[]): Map<string, number> {
+  const filters = new Map<string, number>();
+  tables.forEach((table) => {
+    const timeUnit = table.timeUnit ?? 'unknown';
+    if (table.timeUnit) {
+      filters.set(timeUnit, (filters.get(timeUnit) ?? 0) + 1);
+    }
+  });
+  return filters;
+}
+
+const initialState: {
+  tables: Table[];
+  availableFilters: Map<string, number>;
+  activeFilters: Filter[];
+} = {
+  tables: prototypeTables.tables,
+  availableFilters: getFilters(prototypeTables.tables),
+  activeFilters: [],
+};
+
 const StartPage = () => {
   const [countAlder, setCountAlder] = useState(0);
   const [variableNames, setVariableNames] = useState<Array<string>>([]);
-  const [ptList, setPtList] = useState<Array<Table>>([]);
-  const [filters, setFilters] = useState<Array<Filter>>([]);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
-  useEffect(() => {
-    resetFilters();
-  }, []);
+  function handleResetFilter() {
+    dispatch({ type: 'resetFilters' });
+  }
 
-  useEffect(() => {
-    filterTables(filters);
-  }, [filters]);
+  function handleAddFilter(filter: Filter[]) {
+    dispatch({ type: 'addFilter', payload: filter });
+  }
 
-  function resetFilters() {
-    console.count('resetFilters');
-    setFilters([]);
-    setPtList(prototypeTables.tables);
+  function reducer(state: StartPageState, action) {
+    switch (action.type) {
+      case 'resetFilters':
+        return initialState;
+      case 'addFilter':
+        const newTables = prototypeTables.tables.filter((table) => {
+          return shouldTableBeIncluded(table, action.payload);
+        });
+        return {
+          ...state,
+          activeFilters: action.payload,
+          tables: newTables,
+          availableFilters: getFilters(newTables),
+        };
+      default:
+        return state;
+    }
   }
 
   function doTheCount() {
@@ -71,17 +110,6 @@ const StartPage = () => {
     console.timeEnd('findVariables');
   }
 
-  function filterTables(filter: Filter[]) {
-    if (filter.length === 0) {
-      return;
-    }
-    setPtList(
-      prototypeTables.tables.filter((table) => {
-        return shouldTableBeIncluded(table, filter);
-      }),
-    );
-  }
-
   return (
     <AccessibilityProvider>
       <Header />
@@ -102,14 +130,24 @@ const StartPage = () => {
           <div>
             <button
               onClick={() =>
-                setFilters([{ type: 'variableName', value: 'region' }])
+                handleAddFilter([{ type: 'variableName', value: 'region' }])
               }
             >
               Filter: Only tables with variableName "region"
             </button>
           </div>
           <div>
-            <button onClick={resetFilters}>Filter: Reset!</button>
+            <button onClick={handleResetFilter}>Filter: Reset!</button>
+          </div>
+          <div>
+            The available timeUnit filters:
+            <ul>
+              {Array.from(state.availableFilters).map(([key, value]) => (
+                <li key={key}>
+                  {key}: {value}
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
 
@@ -123,16 +161,15 @@ const StartPage = () => {
             </ul>
           </p>
           <h2>Prototype tables</h2>
-          {ptList.map((table, index) => (
+          {state.tables.map((table, index) => (
             <div key={index}>
               <h3>{table.label}</h3>
               <div>
-                <div>Description: {table.description}</div>
                 <div>Category: {table.category}</div>
                 <div>Updated: {table.updated}</div>
                 <div>First period: {table.firstPeriod}</div>
                 <div>Last period: {table.lastPeriod}</div>
-                {/* <div>Time unit: {table.timeUnit}</div> */}
+                <div>Time unit: {table.timeUnit}</div>
                 <div>Variable names: {table.variableNames.join(', ')}</div>
               </div>
             </div>
@@ -144,6 +181,12 @@ const StartPage = () => {
       </div>
     </AccessibilityProvider>
   );
+};
+
+type StartPageState = {
+  tables: Table[];
+  availableFilters: Map<string, number>;
+  activeFilters: Filter[];
 };
 
 export default StartPage;

@@ -4,8 +4,8 @@
   display: grid;
   grid-template-areas:
     // "header header"
-    "sideBar listTables"
-    "footer footer";
+    'sideBar listTables'
+    'footer footer';
   grid-template-columns: 400px 1fr;
   grid-template-rows: 1fr 100px;
   // grid-template-rows: 100px 1fr 100px;
