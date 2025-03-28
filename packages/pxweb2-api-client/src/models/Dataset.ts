@@ -3,14 +3,13 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { ClassType } from './ClassType';
-import type { extension_dimension } from './extension_dimension';
+import type { Dimension } from './Dimension';
 import type { extension_root } from './extension_root';
 import type { href } from './href';
-import type { jsonstat_category } from './jsonstat_category';
-import type { jsonstat_extension_link } from './jsonstat_extension_link';
 import type { jsonstat_link } from './jsonstat_link';
 import type { jsonstat_note } from './jsonstat_note';
 import type { label } from './label';
+import type { Role } from './Role';
 import type { source } from './source';
 import type { strarray } from './strarray';
 import type { updated } from './updated';
@@ -38,20 +37,7 @@ export type Dataset = {
     /**
      * Specification on json-stat.org -> [here](https://json-stat.org/full/#role)
      */
-    role?: {
-        /**
-         * Specification on json-stat.org -> [here](https://json-stat.org/full/#time)
-         */
-        time?: strarray;
-        /**
-         * Specification on json-stat.org -> [here](https://json-stat.org/full/#geo)
-         */
-        geo?: strarray;
-        /**
-         * Specification on json-stat.org -> [here](https://json-stat.org/full/#metric)
-         */
-        metric?: strarray;
-    };
+    role?: Role;
     /**
      * Specification on json-stat.org -> [here](https://json-stat.org/full/#id)
      */
@@ -63,22 +49,7 @@ export type Dataset = {
     /**
      * Specification on json-stat.org -> [here](https://json-stat.org/full/#dimension)
      */
-    dimension: Record<string, {
-        /**
-         * Specification on json-stat.org -> [here](https://json-stat.org/full/#label)
-         */
-        label?: label;
-        /**
-         * Notes for variable
-         */
-        note?: jsonstat_note;
-        /**
-         * Specification on json-stat.org -> [here](https://json-stat.org/full/#category)
-         */
-        category?: jsonstat_category;
-        extension?: extension_dimension;
-        link?: jsonstat_extension_link;
-    }>;
+    dimension: Dimension;
     extension?: extension_root;
     /**
      * Specification on json-stat.org -> [here](https://json-stat.org/full/#value)

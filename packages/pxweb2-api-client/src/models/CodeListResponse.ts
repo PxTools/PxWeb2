@@ -18,6 +18,18 @@ export type CodeListResponse = {
      * The language code for the language used in this response
      */
     language: string;
+    /**
+     * The languages that the codelist is available in
+     */
+    languages: Array<string>;
+    /**
+     * If the codelist is eliminatable
+     */
+    elimination?: boolean;
+    /**
+     * The value code that should be used for elimination. If not set the variable will be eliminated by summing up all values.
+     */
+    eliminationValueCode?: string;
     type: CodeListType;
     values: Array<ValueMap>;
     links: Array<Link>;

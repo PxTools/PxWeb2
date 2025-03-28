@@ -5,6 +5,8 @@
 import type { Discontinued } from './Discontinued';
 import type { FolderContentItem } from './FolderContentItem';
 import type { Link } from './Link';
+import type { PathElement } from './PathElement';
+import type { TimeUnit } from './TimeUnit';
 /**
  * Table item
  */
@@ -31,6 +33,18 @@ export type Table = (FolderContentItem & {
      */
     variableNames: Array<string>;
     discontinued?: Discontinued;
+    /**
+     * The source of the table
+     */
+    source?: string;
+    /**
+     * The time unit for the table
+     */
+    timeUnit?: TimeUnit;
+    /**
+     * The path to the table
+     */
+    paths?: Array<Array<PathElement>>;
     /**
      * Links to ...
      */

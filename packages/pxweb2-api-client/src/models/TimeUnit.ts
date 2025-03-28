@@ -7,7 +7,6 @@
  */
 export enum TimeUnit {
     ANNUAL = 'Annual',
-    HALF_YEAR = 'HalfYear',
     QUARTERLY = 'Quarterly',
     MONTHLY = 'Monthly',
     WEEKLY = 'Weekly',
