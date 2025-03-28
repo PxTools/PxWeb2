@@ -1,36 +1,38 @@
-import React, { type ReactNode, forwardRef } from 'react';
+import { type ReactNode, forwardRef } from 'react';
 import cl from 'clsx';
 import styles from './TableCard.module.scss';
 import { Icon } from '../Icon/Icon';
 
 interface TableCardProps {
+  ariaLabel?: string;
+  frequency?: string;
   href?: string;
+  icon?: ReactNode;
+  lastUpdated?: string;
+  period?: string;
+  status?: 'active' | 'closed';
   tableId?: string;
   title?: string;
-  icon?: ReactNode;
-  period?: string;
-  frequency?: string;
   updatedLabel?: string;
-  lastUpdated?: string;
-  status?: 'active' | 'closed';
 }
 
 export const TableCard = forwardRef<HTMLAnchorElement, TableCardProps>(
   (
     {
+      ariaLabel,
+      frequency,
       href,
       icon,
+      lastUpdated,
+      period,
+      status = 'active',
       tableId,
       title,
-      period,
-      frequency,
       updatedLabel,
-      lastUpdated,
-      status = 'active',
     },
     ref,
   ) => (
-    <div className={cl(styles.tableCard)}>
+    <div className={cl(styles.tableCard)} aria-label={ariaLabel}>
       {icon && (
         <div className={cl(styles.iconWrapper, styles[status])}>{icon}</div>
       )}
