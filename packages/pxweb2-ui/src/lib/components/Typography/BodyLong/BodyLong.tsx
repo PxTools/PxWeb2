@@ -3,13 +3,14 @@ import classes from './BodyLong.module.scss';
 
 export interface BodyLongProps
   extends React.HTMLAttributes<HTMLParagraphElement> {
-  size?: 'medium' | 'small';
-  spacing?: boolean;
-  align?: 'start' | 'center' | 'end';
-  textcolor?: 'default' | 'subtle';
-  weight?: 'regular' | 'bold';
-  className?: string;
-  children: React.ReactNode;
+  readonly size?: 'medium' | 'small';
+  readonly spacing?: boolean;
+  readonly align?: 'start' | 'center' | 'end';
+  readonly textcolor?: 'default' | 'subtle';
+  readonly weight?: 'regular' | 'bold';
+  readonly className?: string;
+  readonly as?: React.ElementType;
+  readonly children: React.ReactNode;
 }
 
 export function BodyLong({
@@ -20,12 +21,14 @@ export function BodyLong({
   weight = 'regular',
   spacing = false,
   className = '',
+  as,
   ...rest
 }: BodyLongProps) {
+  const Component = as ?? (`p` as React.ElementType);
   const cssClasses = className.length > 0 ? ' ' + className : '';
   const weightClassExtension = weight === 'regular' ? '' : '-' + weight;
   return (
-    <p
+    <Component
       className={
         cl(
           classes.bodylong,
@@ -38,7 +41,7 @@ export function BodyLong({
       {...rest}
     >
       {children}
-    </p>
+    </Component>
   );
 }
 

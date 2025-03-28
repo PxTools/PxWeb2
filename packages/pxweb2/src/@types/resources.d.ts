@@ -51,7 +51,7 @@ interface Resources {
         statistics: 'Statistikkbanken';
       };
       sidemenu: {
-        arialabeltoolsidemenu: 'Tools menu for table';
+        arialabeltoolsidemenu: 'Tool menu for table';
         hide: 'Hide';
         selection: {
           title: 'Filter';
@@ -150,7 +150,7 @@ interface Resources {
         };
       };
       main_content: {
-        arialabelbreadcrumb: 'breadcrumb';
+        arialabelbreadcrumb: 'Breadcrumb';
         last_updated: 'Last updated';
         show_details: 'Show details';
         table: {
@@ -165,6 +165,13 @@ interface Resources {
           title: 'Information';
           footnotes: {
             title: 'Notes';
+            missing_heading: 'No notes';
+            missing_text_table: 'The table has no notes.';
+            missing_text_selection: 'There are no notes for the selected filtering.';
+            symbol_explanation_heading: 'Symbol explanation';
+            mandatory_heading: 'Important about the table';
+            mandatory_variable_heading: 'Important about';
+            non_mandatory_heading: 'For the entire table';
             show_all_footnotes: 'Show all notes for table';
           };
           definitions: {
@@ -193,7 +200,7 @@ interface Resources {
             title: 'Contact';
             description: 'Description text...';
             missing_heading: 'No contact information';
-            missing_text: 'The table has no contact information';
+            missing_text: 'The table has no contact information.';
           };
         };
         related: {

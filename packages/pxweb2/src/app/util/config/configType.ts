@@ -5,4 +5,5 @@ export type Config = {
     fallbackLanguage: string;
   };
   apiUrl: string;
+  specialCharacters: string[];
 };
