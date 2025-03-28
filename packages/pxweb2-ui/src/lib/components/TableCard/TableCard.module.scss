@@ -20,22 +20,6 @@
     outline-offset: 5px;
     box-shadow: 0 0 0 3px var(--px-color-border-focus-boxshadow);
   }
-
-  @media screen and (max-width: fixvar.$breakpoints-small-max-width) {
-    max-width: 360px;
-    padding: 18px 16px 20px;
-
-    .iconWrapper {
-      min-width: 52px;
-      height: 52px;
-      margin-right: 12px;
-      border-radius: var(--border-radius-full, 9999px);
-      svg {
-        width: 28px;
-        height: 28px;
-      }
-    }
-  }
 }
 
 .iconWrapper {
@@ -92,6 +76,8 @@
 
 .tableMeta {
   display: flex;
+  flex-wrap: wrap;
+  row-gap: 8px;
   justify-content: space-between;
   width: 100%;
 
@@ -100,7 +86,6 @@
     align-items: center;
     border-radius: var(--px-border-radius-xsmall);
     border: 1px solid var(--px-color-border-subtle);
-    margin-left: auto;
   }
 }
 
@@ -109,6 +94,7 @@
 
   .period {
     margin-right: 8px !important;
+    white-space: nowrap;
   }
 
   .frequency {
@@ -117,6 +103,7 @@
     border-radius: var(--px-border-radius-xsmall);
     background: var(--px-color-surface-subtle);
     margin-right: 20px;
+    white-space: nowrap;
   }
 
   .lastUpdated {
@@ -128,8 +115,27 @@
       height: 24px;
       margin-right: 4px;
     }
+  }
+}
 
-    @media screen and (max-width: fixvar.$breakpoints-small-max-width) {
+//SMALL
+@media screen and (max-width: fixvar.$breakpoints-small-max-width) {
+  .tableCard {
+    min-width: 280px;
+    padding: 18px 16px 20px;
+
+    .iconWrapper {
+      min-width: 52px;
+      height: 52px;
+      margin-right: 12px;
+      border-radius: var(--border-radius-full, 9999px);
+      svg {
+        width: 28px;
+        height: 28px;
+      }
+    }
+
+    .lastUpdated {
       display: none;
     }
   }

@@ -15,6 +15,7 @@ export * from './lib/components/Search/Search';
 export * from './lib/components/Link/Link';
 export * from './lib/components/Table/Table';
 export * from './lib/components/Table/cubeHelper';
+export * from './lib/components/TableCard/TableCard';
 export * from './lib/components/EmptyState/EmptyState';
 export * from './lib/components/Tabs/Tab';
 export * from './lib/components/Tabs/Tabs';
