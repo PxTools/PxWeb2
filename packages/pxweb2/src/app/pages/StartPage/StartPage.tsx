@@ -5,6 +5,7 @@ import styles from './StartPage.module.scss';
 
 import { Header } from '../../components/Header/Header';
 import { TablesResponse, Table } from '@pxweb2/pxweb2-api-client';
+import { Tag } from '@pxweb2/pxweb2-ui';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import {
   type Filter,
@@ -17,13 +18,12 @@ import list from './dummy-data/tables.json' with { type: 'json' };
 const bigTableList = list as TablesResponse;
 
 // TODO:
-// - Add typing for the reducer action
 // - Consider a custom hook for filtering
 // - Add a reducer for counting filters
 // - Filter must be exclusive, not inclusive. So if you filter on "region" and "timeUnit" you should only get tables that have both the selected "region" and "timeUnit" as variables.
 
 function shouldTableBeIncluded(table: Table, filters: Filter[]) {
-  return filters.some((filter) => {
+  return filters.every((filter) => {
     if (filter.type === 'text') {
       return table.label?.toLowerCase().includes(filter.value.toLowerCase());
     }
@@ -131,6 +131,11 @@ const StartPage = () => {
 
         <div className={styles.listTables}>
           <h2>Filtered tables: ({state.tables.length})</h2>
+          <div>
+            {state.activeFilters.map((filter, index) => (
+              <Tag key={index}>{filter.value}</Tag>
+            ))}
+          </div>
           <Virtuoso
             style={{ height: '93%' }}
             data={state.tables}
