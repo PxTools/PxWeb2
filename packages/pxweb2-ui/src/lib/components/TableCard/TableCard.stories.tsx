@@ -1,6 +1,6 @@
 import type { Meta, StoryObj, StoryFn } from '@storybook/react';
 import { TableCard } from './TableCard';
-import { AgricultureForestryHuntingAndFishing } from './IconsTopic';
+import { Icon } from '../Icon/Icon';
 
 const meta: Meta<typeof TableCard> = {
   component: TableCard,
@@ -10,9 +10,11 @@ export default meta;
 
 type Story = StoryObj<typeof TableCard>;
 
+const exampleIcon = <Icon iconName="Table" />
+
 export const Default: Story = {
   args: {
-    icon: <AgricultureForestryHuntingAndFishing />,
+    icon: exampleIcon,
     href: '#',
     title: 'Table title',
     tableId: '00000',
@@ -41,7 +43,7 @@ export const withoutTableNumber: StoryFn<typeof TableCard> = () => {
   return (
     <TableCard
       href="/"
-      icon={<AgricultureForestryHuntingAndFishing />}
+      icon={exampleIcon}
       title="Table title"
       period="yyyy–yyyy"
       frequency="Time interval"
@@ -55,7 +57,7 @@ export const StatusClosed: StoryFn<typeof TableCard> = () => {
   return (
     <TableCard
       href="/"
-      icon={<AgricultureForestryHuntingAndFishing />}
+      icon={exampleIcon}
       title="Table title"
       tableId="00000"
       period="yyyy–yyyy"
