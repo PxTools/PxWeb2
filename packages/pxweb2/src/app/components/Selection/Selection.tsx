@@ -323,7 +323,7 @@ export function Selection({
           variables.setIsLoadingMetadata(false);
         }
       })
-      .catch((apiError: ApiError ) => {
+      .catch((apiError: ApiError) => {
         const problem: Problem = apiError.body as Problem;
         setErrorMsg(buildProblemMessage(problem));
         setPxTableMetadata(null);
@@ -350,7 +350,7 @@ export function Selection({
           variables.setIsLoadingMetadata(false);
           variables.setHasLoadedDefaultSelection(true);
         })
-        .catch((apiError: ApiError ) => {
+        .catch((apiError: ApiError) => {
           const problem: Problem = apiError.body as Problem;
           setErrorMsg(buildProblemMessage(problem));
         })
@@ -425,20 +425,20 @@ export function Selection({
       .finally(() => {
         setIsFadingVariableList(false);
       })
-      .catch((apiError: ApiError ) => {
+      .catch((apiError: ApiError) => {
         const problem: Problem = apiError.body as Problem;
         setErrorMsg(buildProblemMessage(problem));
         return [];
       })
-      .catch((error) =>
-        {console.error(
-        'Could not get values for code list: ' +
-          newMappedSelectedCodeList.value +
-          ' ' +
-          error,
-      );
-      return [];
-    })
+      .catch((error) => {
+        console.error(
+          'Could not get values for code list: ' +
+            newMappedSelectedCodeList.value +
+            ' ' +
+            error,
+        );
+        return [];
+      });
 
     if (valuesForChosenCodeList.length < 1) {
       return;
@@ -552,17 +552,19 @@ export function Selection({
     variables.syncVariablesAndValues(selectedVBValues);
   }
 
-function buildProblemMessage(problem: Problem) {
-  debugger;
-  return 'Could not get table: ' +
-  selectedTabId +
-  ' ' +
-  problem?.type +
-  ' ' +
-  problem?.title +
-  ' ' +
-  problem?.status
-};
+  function buildProblemMessage(problem: Problem) {
+    debugger;
+    return (
+      'Could not get table: ' +
+      selectedTabId +
+      ' ' +
+      problem?.type +
+      ' ' +
+      problem?.title +
+      ' ' +
+      problem?.status
+    );
+  }
 
   const drawerFilter = (
     <VariableList
