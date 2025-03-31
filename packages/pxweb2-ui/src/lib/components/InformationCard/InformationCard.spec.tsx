@@ -1,6 +1,5 @@
 import { render } from '@testing-library/react';
 
-
 import { mockHTMLDialogElement } from '../../util/test-utils';
 import { InformationCard } from './InformationCard';
 describe('SideSheet', () => {
@@ -10,10 +9,7 @@ describe('SideSheet', () => {
 
   it('should render successfully', () => {
     const { baseElement } = render(
-      <InformationCard
-        headingText="test"
-        icon="Book"
-      >
+      <InformationCard headingText="test" icon="Book">
         <span>test</span>
       </InformationCard>,
     );

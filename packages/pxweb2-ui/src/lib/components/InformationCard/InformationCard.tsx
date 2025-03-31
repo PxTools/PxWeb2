@@ -1,16 +1,13 @@
 import React from 'react';
-import cl from 'clsx';
 import styles from './InformationCard.module.scss';
-import { Children } from 'react';
 
+import { Heading, Icon, IconProps } from '@pxweb2/pxweb2-ui';
 
-import { Heading, Icon, IconProps} from '@pxweb2/pxweb2-ui';
-
-  export interface InformationCardProps {
-    icon: IconProps['iconName'];
-    headingText?: string;
-    headingSize?: 'small' | 'xsmall' | 'medium' | 'large' | 'xlarge';
-    children: React.ReactNode;
+export interface InformationCardProps {
+  icon: IconProps['iconName'];
+  headingText?: string;
+  headingSize?: 'small' | 'xsmall' | 'medium' | 'large' | 'xlarge';
+  children: React.ReactNode;
 }
 
 export function InformationCard({
@@ -23,9 +20,7 @@ export function InformationCard({
     <div className="bg-white shadow-md rounded-lg p-6">
       <Icon iconName={icon} />
       <div className={styles['with-header']}>
-        {headingText && (
-          <Heading size={headingSize}>{headingText}</Heading>
-        )}
+        {headingText && <Heading size={headingSize}>{headingText}</Heading>}
         {children}
       </div>
     </div>

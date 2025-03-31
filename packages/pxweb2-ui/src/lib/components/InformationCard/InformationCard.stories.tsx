@@ -19,7 +19,7 @@ export const Default: Story = {
     children: 'This is an information card with heading.',
   },
   render: (args: InformationCardProps) => <InformationCard {...args} />,
-}
+};
 
 export const WithoutHeading: Story = {
   args: {
@@ -27,7 +27,7 @@ export const WithoutHeading: Story = {
     children: 'This is an information card without heading.',
   },
   render: (args) => <InformationCard {...args} />,
-}
+};
 
 export const WithList: Story = {
   args: {
@@ -36,18 +36,29 @@ export const WithList: Story = {
     icon: 'Book',
     children: (
       <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
-        <li><strong>( . ) = Ikke mulig å oppgi tall</strong><br />
-        Tall finnes ikke på dette tidspunktet fordi kategorien ikke var i bruk da tallene ble samlet inn.</li>
-        <li><strong>( .. ) = Tallgrunnlag mangler</strong><br />
-        Tall er ikke kommet inn i våre databaser eller er for usikre til å publiseres.</li>
-        <li><strong>( : ) = Vises ikke av konfidensialitetshensyn</strong><br />
-        Tall publiseres ikke for å unngå å identifisere personer eller virksomheter.</li>
+        <li>
+          <strong>( . ) = Ikke mulig å oppgi tall</strong>
+          <br />
+          Tall finnes ikke på dette tidspunktet fordi kategorien ikke var i bruk
+          da tallene ble samlet inn.
+        </li>
+        <li>
+          <strong>( .. ) = Tallgrunnlag mangler</strong>
+          <br />
+          Tall er ikke kommet inn i våre databaser eller er for usikre til å
+          publiseres.
+        </li>
+        <li>
+          <strong>( : ) = Vises ikke av konfidensialitetshensyn</strong>
+          <br />
+          Tall publiseres ikke for å unngå å identifisere personer eller
+          virksomheter.
+        </li>
       </ul>
     ),
   },
   render: (args) => <InformationCard {...args} />,
-}
-
+};
 
 export const WithListWithoutHeading: Story = {
   args: {
@@ -61,17 +72,17 @@ export const WithListWithoutHeading: Story = {
     ),
   },
   render: (args) => <InformationCard {...args} />,
-}
+};
 
 export const WithIcon: Story = {
   args: {
     headingText: 'Smiley',
     headingSize: 'large',
     icon: 'Book',
-    children: <Icon iconName="FaceSmile"  />,
+    children: <Icon iconName="FaceSmile" />,
   },
   render: (args) => <InformationCard {...args} />,
-}
+};
 
 export const WithImage: Story = {
   args: {
@@ -81,4 +92,4 @@ export const WithImage: Story = {
     children: <span style={{ fontSize: '64px' }}>☀️</span>,
   },
   render: (args) => <InformationCard {...args} />,
-}
+};
