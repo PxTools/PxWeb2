@@ -20,8 +20,8 @@ export const Default: Story = {
     tableId: '00000',
     period: 'yyyy–yyyy',
     frequency: 'Time interval',
-    updatedLabel: 'Oppdatert',
-    lastUpdated: 'dd.mm.yyyy',
+    updatedLabel: 'Updated',
+    lastUpdated: 'mm/dd/yyyy',
   },
 };
 
@@ -33,8 +33,8 @@ export const withoutIcon: StoryFn<typeof TableCard> = () => {
       tableId="00000"
       period="yyyy–yyyy"
       frequency="Time interval"
-      updatedLabel="Oppdatert"
-      lastUpdated="dd.mm.yyyy"
+      updatedLabel="Updated"
+      lastUpdated="mm/dd/yyyy"
     />
   );
 };
@@ -47,8 +47,8 @@ export const withoutTableNumber: StoryFn<typeof TableCard> = () => {
       title="Table title"
       period="yyyy–yyyy"
       frequency="Time interval"
-      updatedLabel="Oppdatert"
-      lastUpdated="dd.mm.yyyy"
+      updatedLabel="Updated"
+      lastUpdated="mm/dd/yyyy"
     />
   );
 };
@@ -62,8 +62,8 @@ export const StatusClosed: StoryFn<typeof TableCard> = () => {
       tableId="00000"
       period="yyyy–yyyy"
       frequency="Time interval"
-      updatedLabel="Oppdatert"
-      lastUpdated="dd.mm.yyyy"
+      updatedLabel="Updated"
+      lastUpdated="mm/dd/yyyy"
       status="closed"
     />
   );

@@ -7,11 +7,12 @@
   border: 1px solid var(--px-color-border-subtle);
   border-radius: var(--px-border-radius-large);
   background: var(--px-color-surface-default);
+  color: var(--px-color-text-default);
   padding: 20px;
   position: relative;
 
   &:hover {
-    outline: 2px solid var(--px-color-border-subtle);
+    outline: 1px solid var(--px-color-border-subtle);
   }
 
   &:focus-within {
@@ -56,7 +57,7 @@
 
   .title {
     text-decoration: none;
-    color: var(--px-color-text-action);
+    color: var(--px-color-text-default);
 
     &:hover {
       text-decoration: underline;
@@ -123,6 +124,10 @@
   .tableCard {
     min-width: 280px;
     padding: 18px 16px 20px;
+
+    .cardContent {
+      row-gap: 12px;
+    }
 
     .iconWrapper {
       min-width: 52px;
