@@ -10,7 +10,7 @@ export default meta;
 
 type Story = StoryObj<typeof TableCard>;
 
-const exampleIcon = <Icon iconName="Table" />
+const exampleIcon = <Icon iconName="Table" />;
 
 export const Default: Story = {
   args: {
