@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
 
-import { TableService } from '@pxweb2/pxweb2-api-client';
+import { ApiError, Problem, TableService } from '@pxweb2/pxweb2-api-client';
 import { mapJsonStat2Response } from '../../../mappers/JsonStat2ResponseMapper';
 import { mapTableSelectionResponse } from '../../../mappers/TableSelectionResponseMapper';
 import {
@@ -323,6 +323,11 @@ export function Selection({
           variables.setIsLoadingMetadata(false);
         }
       })
+      .catch((apiError: ApiError ) => {
+        const problem: Problem = apiError.body as Problem;
+        setErrorMsg(buildProblemMessage(problem));
+        setPxTableMetadata(null);
+      })
       .catch((error) => {
         setErrorMsg(
           'Could not get table: ' + selectedTabId + ' ' + error.message,
@@ -344,6 +349,10 @@ export function Selection({
           variables.syncVariablesAndValues(defaultSelection);
           variables.setIsLoadingMetadata(false);
           variables.setHasLoadedDefaultSelection(true);
+        })
+        .catch((apiError: ApiError ) => {
+          const problem: Problem = apiError.body as Problem;
+          setErrorMsg(buildProblemMessage(problem));
         })
         .catch((error) => {
           setErrorMsg(
@@ -416,15 +425,20 @@ export function Selection({
       .finally(() => {
         setIsFadingVariableList(false);
       })
-      .catch((error) => {
-        console.error(
-          'Could not get values for code list: ' +
-            newMappedSelectedCodeList.value +
-            ' ' +
-            error,
-        );
+      .catch((apiError: ApiError ) => {
+        const problem: Problem = apiError.body as Problem;
+        setErrorMsg(buildProblemMessage(problem));
         return [];
-      });
+      })
+      .catch((error) =>
+        {console.error(
+        'Could not get values for code list: ' +
+          newMappedSelectedCodeList.value +
+          ' ' +
+          error,
+      );
+      return [];
+    })
 
     if (valuesForChosenCodeList.length < 1) {
       return;
@@ -537,6 +551,18 @@ export function Selection({
     setSelectedVBValues(selectedVBValues);
     variables.syncVariablesAndValues(selectedVBValues);
   }
+
+function buildProblemMessage(problem: Problem) {
+  debugger;
+  return 'Could not get table: ' +
+  selectedTabId +
+  ' ' +
+  problem?.type +
+  ' ' +
+  problem?.title +
+  ' ' +
+  problem?.status
+};
 
   const drawerFilter = (
     <VariableList
