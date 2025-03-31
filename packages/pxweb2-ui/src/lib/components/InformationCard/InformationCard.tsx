@@ -1,33 +1,33 @@
-import { Heading, Icon, IconProps, BodyShort } from '@pxweb2/pxweb2-ui';
-
-export interface InformationCardProps extends React.HTMLAttributes<HTMLHeadingElement> {
-  //readonly heading: string;
-  readonly icon: IconProps['iconName'];
-  readonly type?: 'text' | 'boolean';
-  readonly value?: string | boolean;
-  //readonly children?: ContentDetails[];
+import React from 'react';
+import cl from 'clsx';
+import styles from './InformationCard.module.scss';
+import { Children } from 'react';
 
 
-  heading?: string;
+import { Heading, Icon, IconProps} from '@pxweb2/pxweb2-ui';
 
-  headingSize?: 'xsmall' | 'small' | 'medium' | 'large' | 'xlarge';
-  headingLevel?: '1' | '2' | '3' | '4' | '5' | '6';
-  align?: 'start' | 'center' | 'end';
-  textcolor?: 'default' | 'subtle';
-  spacing?: boolean;
-  children: string | React.ReactNode;
-  className?: string;
-  as?: React.ElementType;
+  export interface InformationCardProps {
+    icon: IconProps['iconName'];
+    headingText?: string;
+    headingSize?: 'small' | 'xsmall' | 'medium' | 'large' | 'xlarge';
+    children: React.ReactNode;
 }
 
-export function InformationCard({heading, headingSize, headingLevel, children } : InformationCardProps) {
+export function InformationCard({
+  icon,
+  headingText,
+  headingSize,
+  children,
+}: InformationCardProps) {
   return (
-    <div className="bg-white shadow-md rounded-lg p-6 ">
-      <Icon iconName="Book" className="text-primary-500 mb-4" />
-      <Heading size={headingSize} level={headingLevel} className="mb-4">
-          {heading}
-      </Heading>
-      {children}
+    <div className="bg-white shadow-md rounded-lg p-6">
+      <Icon iconName={icon} />
+      <div className={styles['with-header']}>
+        {headingText && (
+          <Heading size={headingSize}>{headingText}</Heading>
+        )}
+        {children}
+      </div>
     </div>
   );
 }

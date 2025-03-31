@@ -9,4 +9,19 @@
   font-weight: 700;
   line-height: 28px; /* 140% */
   letter-spacing: 0.1px;
+  display: flex;
+}
+
+.with-header {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+//  align-items: center;
+  padding: 0px 16px 0px 16px;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 8px;
 }
