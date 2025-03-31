@@ -6,9 +6,11 @@ import classes from './TableInformation.module.scss';
 import useTableData from '../../context/useTableData';
 import { ContactTab } from './Contact/ContactTab';
 import { DetailsTab } from './Details/DetailsTab';
+import useApp from '../../context/useApp';
 
 import {
   SideSheet,
+  BottomSheet,
   TabsProvider,
   Tabs,
   Tab,
@@ -29,6 +31,7 @@ export function TableInformation({
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('');
   const tableData = useTableData();
+  const { isMobile } = useApp();
 
   useEffect(() => {
     if (isOpen && selectedTab) {
@@ -39,8 +42,10 @@ export function TableInformation({
   // TableInformation tabs should be type in some way. Maybe like this:
   // export type TabType = 'tab-footnotes' | 'tab-definitions' | 'tab-details' | 'tab-contact';
 
+  const SheetComponent = isMobile ? BottomSheet : SideSheet;
+
   return (
-    <SideSheet
+    <SheetComponent
       heading={t('presentation_page.main_content.about_table.title')}
       closeLabel={t('common.generic_buttons.close')}
       isOpen={isOpen}
@@ -139,7 +144,7 @@ export function TableInformation({
           </TabPanel>
         </div>
       </TabsProvider>
-    </SideSheet>
+    </SheetComponent>
   );
 }
 
