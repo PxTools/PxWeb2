@@ -555,14 +555,14 @@ export function Selection({
   function buildProblemMessage(problem: Problem) {
     debugger;
     return (
-      'Could not get table: ' +
-      selectedTabId +
+      problem?.status +
       ' ' +
-      problem?.type +
+      'TableId: ' +
+      selectedTabId +
       ' ' +
       problem?.title +
       ' ' +
-      problem?.status
+      problem?.type
     );
   }
 
