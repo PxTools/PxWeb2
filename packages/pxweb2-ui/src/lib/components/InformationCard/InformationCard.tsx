@@ -25,7 +25,7 @@ export function InformationCard({heading, headingSize, headingLevel, children } 
     <div className="bg-white shadow-md rounded-lg p-6 ">
       <Icon iconName="Book" className="text-primary-500 mb-4" />
       <Heading size={headingSize} level={headingLevel} className="mb-4">
-        {heading}
+          {heading}
       </Heading>
       {children}
     </div>
