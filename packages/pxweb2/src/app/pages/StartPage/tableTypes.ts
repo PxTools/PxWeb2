@@ -3,6 +3,7 @@ import { Table } from '@pxweb2/pxweb2-api-client';
 export enum ActionType {
   RESET_FILTERS = 'RESET_FILTERS',
   ADD_FILTER = 'ADD_FILTER',
+  REMOVE_FILTER = 'REMOVE_FILTER',
 }
 
 export type Filter = {
@@ -16,7 +17,15 @@ export type State = {
   activeFilters: Filter[];
 };
 
-export type ReducerActionTypes = ResetFilterAction | AddFilterAction;
+export type ReducerActionTypes =
+  | ResetFilterAction
+  | AddFilterAction
+  | RemoveFilterAction;
+
+type RemoveFilterAction = {
+  type: ActionType.REMOVE_FILTER;
+  payload: Filter;
+};
 
 type ResetFilterAction = {
   type: ActionType.RESET_FILTERS;

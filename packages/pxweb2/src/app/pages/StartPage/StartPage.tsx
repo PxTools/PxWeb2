@@ -20,7 +20,9 @@ const bigTableList = list as TablesResponse;
 // TODO:
 // - Consider a custom hook for filtering
 // - Add a reducer for counting filters
-// - Filter must be exclusive, not inclusive. So if you filter on "region" and "timeUnit" you should only get tables that have both the selected "region" and "timeUnit" as variables.
+// - Consider: Should the active filters be a map instead of an array?
+// - Convert the filter buttons to a checkbox list, and handle the state in the reducer
+// - Split up this file into components, and add context provider to supply props to them
 
 function shouldTableBeIncluded(table: Table, filters: Filter[]) {
   return filters.every((filter) => {
@@ -65,6 +67,10 @@ const StartPage = () => {
     dispatch({ type: ActionType.ADD_FILTER, payload: filter });
   }
 
+  function handleRemoveFilter(filter: Filter) {
+    dispatch({ type: ActionType.REMOVE_FILTER, payload: filter });
+  }
+
   function reducer(
     state: StartPageState,
     action: ReducerActionTypes,
@@ -73,17 +79,29 @@ const StartPage = () => {
       case ActionType.RESET_FILTERS:
         return initialState;
       case ActionType.ADD_FILTER:
-        console.time('filterTables');
         const newFilters = [...state.activeFilters, ...action.payload];
         const newTables = state.tables.filter((table) => {
           return shouldTableBeIncluded(table, newFilters);
         });
-        console.timeEnd('filterTables');
         return {
           ...state,
           activeFilters: newFilters,
           tables: newTables,
           availableFilters: getFilters(newTables),
+        };
+      case ActionType.REMOVE_FILTER:
+        const filterToRemove = action.payload;
+        const updatedFilters = state.activeFilters.filter(
+          (filter) => filter.value !== filterToRemove.value,
+        );
+        const filteredTables = bigTableList.tables.filter((table) => {
+          return shouldTableBeIncluded(table, updatedFilters);
+        });
+        return {
+          ...state,
+          activeFilters: updatedFilters,
+          tables: filteredTables,
+          availableFilters: getFilters(filteredTables),
         };
       default:
         return state;
@@ -133,7 +151,9 @@ const StartPage = () => {
           <h2>Filtered tables: ({state.tables.length})</h2>
           <div>
             {state.activeFilters.map((filter, index) => (
-              <Tag key={index}>{filter.value}</Tag>
+              <Tag key={index} onClick={() => handleRemoveFilter(filter)}>
+                {'X ' + filter.value}
+              </Tag>
             ))}
           </div>
           <Virtuoso
