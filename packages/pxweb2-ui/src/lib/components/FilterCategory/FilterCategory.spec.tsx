@@ -22,7 +22,9 @@ const checkboxItems = [
 
 describe('FilterCategory', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<FilterCategory heading="Frekvens" items={checkboxItems}/>);
+    const { baseElement } = render(
+      <FilterCategory heading="Frekvens" items={checkboxItems} />,
+    );
     expect(baseElement).toBeTruthy();
   });
 });
