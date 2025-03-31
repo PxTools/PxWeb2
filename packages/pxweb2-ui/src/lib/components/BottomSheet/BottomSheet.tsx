@@ -90,7 +90,7 @@ export function BottomSheet({
     setIsDragging(true);
     setStartY(event.touches[0].clientY);
     setStartHeight(bottomSheetRef.current?.clientHeight ?? null);
-    document.addEventListener('touchmove', handleTouchMove);
+    document.addEventListener('touchmove', handleTouchMove, { passive: false });
     document.addEventListener('touchend', handleTouchEnd);
   };
 
