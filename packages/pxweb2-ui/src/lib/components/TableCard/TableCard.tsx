@@ -1,4 +1,4 @@
-import { type ReactNode, forwardRef } from 'react';
+import { type ReactNode, forwardRef, KeyboardEvent } from 'react';
 import cl from 'clsx';
 import styles from './TableCard.module.scss';
 import { Icon } from '../Icon/Icon';
@@ -16,7 +16,7 @@ interface TableCardProps {
   updatedLabel?: string;
 }
 
-export const TableCard = forwardRef<HTMLAnchorElement, TableCardProps>(
+export const TableCard = forwardRef<HTMLDivElement, TableCardProps>(
   (
     {
       ariaLabel,
@@ -31,50 +31,73 @@ export const TableCard = forwardRef<HTMLAnchorElement, TableCardProps>(
       updatedLabel,
     },
     ref,
-  ) => (
-    <div className={cl(styles.tableCard)} aria-label={ariaLabel}>
-      {icon && (
-        <div className={cl(styles.iconWrapper, styles[status])}>{icon}</div>
-      )}
-      <div className={cl(styles.cardContent)}>
-        <div className={cl(styles.titleWrapper)}>
-          <a
-            href={href}
-            ref={ref}
-            className={cl(styles.title, styles['heading-small'])}
-          >
-            {title}
-          </a>
-        </div>
-        <div className={cl(styles.tableMeta)}>
-          <div className={cl(styles.timeWrapper)}>
-            {period && (
-              <span className={cl(styles.period, styles['heading-xsmall'])}>
-                {period}
-              </span>
-            )}
-            {frequency && (
-              <span className={cl(styles.frequency, styles['label-small'])}>
-                {frequency}
-              </span>
-            )}
-            {lastUpdated && (
-              <div className={cl(styles.lastUpdated)}>
-                <Icon iconName="Clock" />
-                <span className={cl(styles['bodyshort-small'])}>
-                  {updatedLabel} {lastUpdated}
+  ) => {
+    const handleClick = () => {
+      const noTextSelected = !window.getSelection()?.toString();
+
+      if (noTextSelected && href) {
+        window.location.href = href;
+      }
+    };
+
+    const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        handleClick();
+      }
+    };
+
+    return (
+      <div
+        className={cl(styles.tableCard)}
+        aria-label={ariaLabel}
+        onClick={handleClick}
+        onKeyDown={handleKeyDown}
+        ref={ref}
+      >
+        {icon && (
+          <div className={cl(styles.iconWrapper, styles[status])}>{icon}</div>
+        )}
+        <div className={cl(styles.cardContent)}>
+          <div className={cl(styles.titleWrapper)}>
+            <a
+              href={href}
+              className={cl(styles.title, styles['heading-small'])}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {title}
+            </a>
+          </div>
+          <div className={cl(styles.tableMeta)}>
+            <div className={cl(styles.timeWrapper)}>
+              {period && (
+                <span className={cl(styles.period, styles['heading-xsmall'])}>
+                  {period}
                 </span>
-              </div>
+              )}
+              {frequency && (
+                <span className={cl(styles.frequency, styles['label-small'])}>
+                  {frequency}
+                </span>
+              )}
+              {lastUpdated && (
+                <div className={cl(styles.lastUpdated)}>
+                  <Icon iconName="Clock" />
+                  <span className={cl(styles['bodyshort-small'])}>
+                    {updatedLabel} {lastUpdated}
+                  </span>
+                </div>
+              )}
+            </div>
+            {tableId && (
+              <span className={cl(styles.tableId, styles['label-small'])}>
+                {tableId}
+              </span>
             )}
           </div>
-          {tableId && (
-            <span className={cl(styles.tableId, styles['label-small'])}>
-              {tableId}
-            </span>
-          )}
         </div>
       </div>
-    </div>
-  ),
+    );
+  },
 );
+
 export default TableCard;
