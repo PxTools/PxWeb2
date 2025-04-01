@@ -25,10 +25,9 @@ export function BottomSheet({
   const cssClasses = className.length > 0 ? ' ' + className : '';
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(isOpen);
   const bottomSheetRef = useRef<HTMLDialogElement | null>(null);
-  const [startY, setStartY] = useState<number | null>(null);
-  const [startHeight, setStartHeight] = useState<number | null>(null);
+  const startYRef = useRef<number | null>(null);
+  const startHeightRef = useRef<number | null>(null);
   const [isClosing, setIsClosing] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
 
   const defaultPos = window.innerHeight * 0.7;
   const maxPos = window.innerHeight * 0.9;
@@ -61,10 +60,7 @@ export function BottomSheet({
   };
   const handleClick = (event: React.MouseEvent<HTMLDialogElement>) => {
     // If the click is on the backdrop and not dragging, close the bottomsheet
-    if (
-      !isDragging &&
-      bottomSheetRef.current?.isEqualNode(event.target as Node)
-    ) {
+    if (bottomSheetRef.current?.isEqualNode(event.target as Node)) {
       handleCloseBottomSheet();
     }
   };
@@ -78,25 +74,28 @@ export function BottomSheet({
   };
 
   const handleMouseDown = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setIsDragging(true);
-    setStartY(event.clientY);
-    setStartHeight(bottomSheetRef.current?.clientHeight ?? null);
+    startYRef.current = event.clientY;
+    startHeightRef.current = bottomSheetRef.current?.clientHeight ?? null;
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
   };
 
   const handleTouchStart = (event: React.TouchEvent<HTMLButtonElement>) => {
     event.preventDefault(); // Prevent the page from scrolling on touch start
-    setIsDragging(true);
-    setStartY(event.touches[0].clientY);
-    setStartHeight(bottomSheetRef.current?.clientHeight ?? null);
-    document.addEventListener('touchmove', handleTouchMove, { passive: false });
+    startYRef.current = event.touches[0].clientY;
+    startHeightRef.current = bottomSheetRef.current?.clientHeight ?? null;
+    document.addEventListener('touchmove', handleTouchMove);
     document.addEventListener('touchend', handleTouchEnd);
   };
 
   const handleMouseMove = (event: MouseEvent) => {
-    if (startY !== null && startHeight !== null && bottomSheetRef.current) {
-      const newHeight = startHeight - (event.clientY - startY);
+    if (
+      startYRef.current !== null &&
+      startHeightRef.current !== null &&
+      bottomSheetRef.current
+    ) {
+      const newHeight =
+        startHeightRef.current - (event.clientY - startYRef.current);
       if (newHeight >= closingPos && newHeight <= maxPos) {
         bottomSheetRef.current.style.height = `${newHeight}px`;
       }
@@ -104,9 +103,14 @@ export function BottomSheet({
   };
 
   const handleTouchMove = (event: TouchEvent) => {
-    if (startY !== null && startHeight !== null && bottomSheetRef.current) {
+    if (
+      startYRef.current !== null &&
+      startHeightRef.current !== null &&
+      bottomSheetRef.current
+    ) {
       event.preventDefault(); // Prevent the page from scrolling
-      const newHeight = startHeight - (event.touches[0].clientY - startY);
+      const newHeight =
+        startHeightRef.current - (event.touches[0].clientY - startYRef.current);
       if (newHeight >= closingPos && newHeight <= maxPos) {
         bottomSheetRef.current.style.height = `${newHeight}px`;
       }
@@ -114,7 +118,6 @@ export function BottomSheet({
   };
 
   const handleMouseUp = () => {
-    setIsDragging(false);
     document.removeEventListener('mousemove', handleMouseMove);
     document.removeEventListener('mouseup', handleMouseUp);
     if (bottomSheetRef.current) {
@@ -135,7 +138,6 @@ export function BottomSheet({
   };
 
   const handleTouchEnd = () => {
-    setIsDragging(false);
     document.removeEventListener('touchmove', handleTouchMove);
     document.removeEventListener('touchend', handleTouchEnd);
     if (bottomSheetRef.current) {
