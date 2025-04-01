@@ -81,7 +81,6 @@ export function BottomSheet({
   };
 
   const handleTouchStart = (event: React.TouchEvent<HTMLButtonElement>) => {
-    event.preventDefault(); // Prevent the page from scrolling on touch start
     startYRef.current = event.touches[0].clientY;
     startHeightRef.current = bottomSheetRef.current?.clientHeight ?? null;
     document.addEventListener('touchmove', handleTouchMove);
@@ -108,7 +107,6 @@ export function BottomSheet({
       startHeightRef.current !== null &&
       bottomSheetRef.current
     ) {
-      event.preventDefault(); // Prevent the page from scrolling
       const newHeight =
         startHeightRef.current - (event.touches[0].clientY - startYRef.current);
       if (newHeight >= closingPos && newHeight <= maxPos) {
