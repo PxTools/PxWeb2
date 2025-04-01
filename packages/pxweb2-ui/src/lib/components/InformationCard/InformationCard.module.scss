@@ -23,6 +23,10 @@
   width: 6px;
   height: 100%;
   background: var(--px-color-surface-moderate);
-  border-top-left-radius: var(--px-border-radius-medium); // Curves the top-left corner
-  border-bottom-left-radius: var(--px-border-radius-medium); // Curves the bottom-left corner
+  border-top-left-radius: var(
+    --px-border-radius-medium
+  ); // Curves the top-left corner
+  border-bottom-left-radius: var(
+    --px-border-radius-medium
+  ); // Curves the bottom-left corner
 }
