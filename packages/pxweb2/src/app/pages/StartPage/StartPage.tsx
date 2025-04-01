@@ -13,6 +13,8 @@ import {
   type State,
   ActionType,
 } from './tableTypes';
+import { FilterSidebar } from '../../components/FilterSidebar/FilterSidebar';
+
 import list from './dummy-data/tables.json' with { type: 'json' };
 
 const bigTableList = list as TablesResponse;
@@ -113,40 +115,11 @@ const StartPage = () => {
       <Header />
       {/* <Information /> */}
       <div className={styles.startPage}>
-        <div className={styles.sideBar}>
-          <h2>Filter</h2>
-          <div>
-            <button
-              onClick={() =>
-                handleAddFilter([{ type: 'variableName', value: 'region' }])
-              }
-            >
-              Filter: Only tables with variableName "region"
-            </button>
-          </div>
-          <div>
-            <button onClick={handleResetFilter}>Filter: Reset!</button>
-          </div>
-          <div>
-            <h3>Tidsintervall:</h3>
-            <ul className={styles.filterList}>
-              {Array.from(state.availableFilters).map(([key, value]) => (
-                <li
-                  key={key}
-                  onClick={() =>
-                    handleAddFilter([{ type: 'timeUnit', value: key }])
-                  }
-                >
-                  {key}: {value}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <p>
-            <a href="/table/tab638">Go to table viewer</a>
-          </p>
-        </div>
-
+        <FilterSidebar
+          state={state}
+          handleAddFilter={handleAddFilter}
+          handleResetFilter={handleResetFilter}
+        />
         <div className={styles.listTables}>
           <h2>Filtered tables: ({state.tables.length})</h2>
           <div>
