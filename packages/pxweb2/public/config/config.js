@@ -9,5 +9,6 @@ window.PxWeb2Config = {
     fallbackLanguage: 'en',
   },
   apiUrl: "https://api.scb.se/OV0104/v2beta/api/v2",
+  maxDataCells: 150000,
   specialCharacters: ['.', '..']
 };
