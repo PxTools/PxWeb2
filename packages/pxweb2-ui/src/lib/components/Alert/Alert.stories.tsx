@@ -3,6 +3,7 @@ import type { Meta, StoryFn } from '@storybook/react';
 import { Alert } from './Alert';
 import { Link } from '../Link/Link';
 import List from '../List/List';
+import ListItem from '../List/ListItem';
 
 const meta: Meta<typeof Alert> = {
   component: Alert,
@@ -60,20 +61,25 @@ export const withtextandlink: StoryFn<typeof Alert> = () => {
 
 export const withOLList: StoryFn<typeof Alert> = () => {
   return (
-    <Alert variant="info" heading="Hode" closeButton>
-      <List listType="ol">
-        <li>1</li>
-        <li>2</li>
-        <li>3</li>
+    <Alert variant="info" heading="Heading alert" clickable closeButton>
+      <List listType="ol" heading="Heading list">
+        <ListItem>
+          {' '}
+          <Link href="wwww.ssb.no" inline>
+            Se liste over endringene i de regionale inndelingene
+          </Link>
+        </ListItem>
+        {/* <ListItem>note b</ListItem>
+        <ListItem>note c</ListItem> */}
       </List>
     </Alert>
   );
 };
 export const withULList: StoryFn<typeof Alert> = () => {
   return (
-    <Alert variant="info" heading="Heading" closeButton>
-      <List listType="ul">
-        <li>
+    <Alert variant="info" heading="Heading alert" closeButton>
+      <List listType="ul" heading="heading list">
+        <ListItem>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
           minim veniam, quis nostrud exercitation ullamco laboris nisi ut
@@ -83,14 +89,14 @@ export const withULList: StoryFn<typeof Alert> = () => {
           culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum
           dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
           incididunt ut labore et dolore magna aliqua
-        </li>
-        <li>
+        </ListItem>
+        <ListItem>
           Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
           nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
           reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
           pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
           culpa qui officia deserunt mollit anim id est laborum.
-        </li>
+        </ListItem>
         <li>Note c</li>
       </List>
     </Alert>
@@ -99,9 +105,9 @@ export const withULList: StoryFn<typeof Alert> = () => {
 
 export const withULListClickable: StoryFn<typeof Alert> = () => {
   return (
-    <Alert variant="info" heading="Heading" closeButton clickable>
-      <List listType="ul">
-        <li>
+    <Alert variant="info" heading="Heading Alert" closeButton clickable>
+      <List listType="ul" heading="heading list">
+        <ListItem>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
           minim veniam, quis nostrud exercitation ullamco laboris nisi ut
@@ -111,15 +117,76 @@ export const withULListClickable: StoryFn<typeof Alert> = () => {
           culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum
           dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
           incididunt ut labore et dolore magna aliqua
-        </li>
-        <li>
+        </ListItem>
+        <ListItem>
           Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
           nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
           reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
           pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
           culpa qui officia deserunt mollit anim id est laborum.
-        </li>
+        </ListItem>
         <li>Note c</li>
+      </List>
+    </Alert>
+  );
+};
+
+export const withListgroupClickable: StoryFn<typeof Alert> = () => {
+  return (
+    <Alert variant="info" heading="Heading Alert" closeButton clickable>
+      <List heading="Land" subHeading="Subheading" listType="ul" listGroup>
+        <ListItem isVariableNote>
+          <Link href="wwww.ssb.no" inline>
+            Se liste over endringene i de regionale inndelingene
+          </Link>
+          <List subHeading="Palestina (2013-) (PS)" listType="ul">
+            <ListItem>Tidligere: Vestbredden/Gazastripen (2001-2012)</ListItem>
+            <ListItem>Vi later som denne har to</ListItem>
+          </List>{' '}
+        </ListItem>
+        <ListItem isVariableNote>
+          Variable note 2 very very long and maybe even longer.
+        </ListItem>
+        <ListItem isVariableNote>Variable note 3.</ListItem>
+        <ListItem>
+          <List subHeading="Belarus (BY)" listType="ul">
+            <ListItem>Ble kalt Hviterussland fram til 2022.</ListItem>
+          </List>
+        </ListItem>
+        <ListItem>
+          <List subHeading="Eswatini (SZ)" listType="ul">
+            <ListItem>Ble kalt Swaziland før 2018.</ListItem>
+            <ListItem>Ble kalt Swaziland før 2018.</ListItem>
+          </List>
+        </ListItem>
+        <ListItem>
+          <List subHeading="Palestina (2013-) (PS)" listType="ul">
+            <ListItem>Tidligere: Vestbredden/Gazastripen (2001-2012)</ListItem>
+            <ListItem>Vi later som denne har to</ListItem>
+          </List>
+        </ListItem>
+      </List>
+    </Alert>
+  );
+};
+
+export const test: StoryFn<typeof Alert> = () => {
+  return (
+    <Alert variant="info" heading="Heading Alert" closeButton clickable>
+      <List listType="ul">
+        <ListItem>
+          <List heading="Land" subHeading="Subheading" listType="ul" listGroup>
+            <ListItem>test1x</ListItem>
+            <ListItem>test2</ListItem>
+            <ListItem>test3</ListItem>
+            <ListItem>test4</ListItem>
+          </List>
+          <List heading="Land" subHeading="Subheading" listType="ul" listGroup>
+            <ListItem>test21</ListItem>
+            <ListItem>test22</ListItem>
+            <ListItem>test23</ListItem>
+          </List>
+        </ListItem>
       </List>
     </Alert>
   );
