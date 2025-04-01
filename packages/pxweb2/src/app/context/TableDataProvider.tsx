@@ -304,23 +304,25 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       return false;
     }
 
+    // Get the selections that have values
+    const validSelections = variablesSelection.selection.filter(
+      (selection) => selection.valueCodes && selection.valueCodes.length > 0,
+    );
+
     // Check that the dimensions are the same in accumulatedData and variablesSelection.
     // The variables must be the same and they must all have at least one value
-    if (
-      variablesSelection.selection.length !==
-      accumulatedData.metadata.variables.length
-    ) {
+    if (validSelections.length !== accumulatedData.metadata.variables.length) {
       return false;
     }
 
     // Check if any variable has an empty or undefined valueCodes array
-    for (const selection of variablesSelection.selection) {
+    for (const selection of validSelections) {
       if (!selection.valueCodes || selection.valueCodes.length === 0) {
         return false;
       }
     }
 
-    for (const selection of variablesSelection.selection) {
+    for (const selection of validSelections) {
       // Check that the variable exists in accumulatedData
       const variable = accumulatedData.metadata.variables.find(
         (variable) => variable.id === selection.variableCode,
