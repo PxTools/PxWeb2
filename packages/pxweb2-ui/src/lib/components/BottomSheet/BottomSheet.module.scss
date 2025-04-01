@@ -62,9 +62,10 @@
 
 .content {
   display: flex;
-  padding: fixed.$spacing-5 fixed.$spacing-10 0px fixed.$spacing-10;
+  padding: fixed.$spacing-6 fixed.$spacing-5;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
+  gap: fixed.$spacing-3;
   flex: 1 0 0;
   align-self: stretch;
   background: var(--px-color-surface-default);
