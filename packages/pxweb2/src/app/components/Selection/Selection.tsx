@@ -12,11 +12,13 @@ import {
   SelectOption,
   mapCodeListToSelectOption,
   PxTable,
+  ValueDisplayType,
 } from '@pxweb2/pxweb2-ui';
 import NavigationDrawer from '../../components/NavigationDrawer/NavigationDrawer';
 import useVariables from '../../context/useVariables';
 import { NavigationItem } from '../../components/NavigationMenu/NavigationItem/NavigationItemType';
 import useAccessibility from '../../context/useAccessibility';
+import { getLabelText } from '../../util/utils';
 
 function addSelectedCodeListToVariable(
   currentVariable: SelectedVBValues | undefined,
@@ -82,17 +84,31 @@ function addValueToNewVariable(
   return newSelectedValues;
 }
 
-async function getCodeListValues(id: string, lang: string): Promise<Value[]> {
+async function getCodeListValues(
+  id: string,
+  lang: string,
+  valueDisplayType: ValueDisplayType,
+): Promise<Value[]> {
   let values: Value[] = [];
 
   await TableService.getTableCodeListById(id, lang)
     .then((response) => {
       response.values.forEach((value) => {
-        values = [...values, { code: value.code, label: value.label }];
+        values = [
+          ...values,
+          {
+            code: value.code,
+
+            // Set the label text based on the value display type
+            label: getLabelText(valueDisplayType, value.code, value.label),
+          },
+        ];
       });
     })
     .catch((error) => {
-      throw new Error(error);
+      throw new Error(
+        'Could not get values for code list: ' + id + ' ' + error,
+      );
     });
 
   return values;
@@ -377,7 +393,7 @@ export function Selection({
       return;
     }
 
-    if (pxTableMetaToRender === null) {
+    if (pxTableMetaToRender === null || currentVariableMetadata === undefined) {
       return;
     }
 
@@ -404,6 +420,7 @@ export function Selection({
     const valuesForChosenCodeList: Value[] = await getCodeListValues(
       newMappedSelectedCodeList.value,
       lang,
+      currentVariableMetadata.valueDisplayType,
     )
       .finally(() => {
         setIsFadingVariableList(false);
