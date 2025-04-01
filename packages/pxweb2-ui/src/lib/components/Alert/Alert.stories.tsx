@@ -162,7 +162,9 @@ export const withListgroupClickable: StoryFn<typeof Alert> = () => {
         <ListItem>
           <List subHeading="Palestina (2013-) (PS)" listType="ul">
             <ListItem>Tidligere: Vestbredden/Gazastripen (2001-2012)</ListItem>
-            <ListItem>Vi later som denne har to</ListItem>
+            <ListItem>Vi later som denne har to fotnoter</ListItem>
+            <ListItem>Vi later som denne har tre fotnoter</ListItem>
+            <ListItem>Vi later som denne har fire fotnoter</ListItem>
           </List>
         </ListItem>
       </List>
