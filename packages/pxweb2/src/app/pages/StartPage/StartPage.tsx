@@ -123,9 +123,11 @@ const StartPage = () => {
           <h2>Filtered tables: ({state.tables.length})</h2>
           <div>
             {state.activeFilters.map((filter, index) => (
-              <Tag key={index} onClick={() => handleRemoveFilter(filter)}>
-                {'X ' + filter.value}
-              </Tag>
+              <span key={index} className={styles.filterPill}>
+                <Tag onClick={() => handleRemoveFilter(filter)}>
+                  {'X ' + filter.value}
+                </Tag>
+              </span>
             ))}
           </div>
           <Virtuoso
