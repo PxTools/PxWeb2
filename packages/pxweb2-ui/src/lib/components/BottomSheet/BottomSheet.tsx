@@ -29,9 +29,10 @@ export function BottomSheet({
   const startHeightRef = useRef<number | null>(null);
   const [isClosing, setIsClosing] = useState(false);
 
-  const defaultPos = window.innerHeight * 0.7;
-  const maxPos = window.innerHeight * 0.9;
-  const closingPos = window.innerHeight * 0.1;
+  const defaultPos = window.innerHeight * 0.5;
+  const maxPos = window.innerHeight * 0.95;
+  const closingPos = window.innerHeight * 0.49;
+  const minPos = window.innerHeight * 0.1;
 
   useEffect(() => {
     setIsBottomSheetOpen(isOpen);
@@ -95,7 +96,7 @@ export function BottomSheet({
     ) {
       const newHeight =
         startHeightRef.current - (event.clientY - startYRef.current);
-      if (newHeight >= closingPos && newHeight <= maxPos) {
+      if (newHeight >= minPos && newHeight <= maxPos) {
         bottomSheetRef.current.style.height = `${newHeight}px`;
       }
     }
@@ -109,7 +110,7 @@ export function BottomSheet({
     ) {
       const newHeight =
         startHeightRef.current - (event.touches[0].clientY - startYRef.current);
-      if (newHeight >= closingPos && newHeight <= maxPos) {
+      if (newHeight >= minPos && newHeight <= maxPos) {
         bottomSheetRef.current.style.height = `${newHeight}px`;
       }
     }
