@@ -77,8 +77,8 @@ export const withOLList: StoryFn<typeof Alert> = () => {
 };
 export const withULList: StoryFn<typeof Alert> = () => {
   return (
-    <Alert variant="info" heading="Heading alert" closeButton>
-      <List listType="ul" heading="heading list">
+    <Alert variant="info" heading="Heading alert from notes" closeButton>
+      <List listType="ul">
         <ListItem>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
@@ -105,8 +105,13 @@ export const withULList: StoryFn<typeof Alert> = () => {
 
 export const withULListClickable: StoryFn<typeof Alert> = () => {
   return (
-    <Alert variant="info" heading="Heading Alert" closeButton clickable>
-      <List listType="ul" heading="heading list">
+    <Alert
+      variant="info"
+      heading="Heading Alert from notes"
+      closeButton
+      clickable
+    >
+      <List listType="ul">
         <ListItem>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad

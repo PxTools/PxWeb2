@@ -25,6 +25,12 @@
 .info-clickable {
   &:hover {
     box-shadow: inset 0px 0px 0px 2px var(--px-color-border-info);
+    h2 {
+      text-decoration: underline;
+      text-decoration-thickness: 7%;
+      text-underline-offset: 9%;
+      text-decoration-skip-ink: true;
+    }
   }
   &:hover .alert-arrow-wrapper {
     padding-left: 8px;
@@ -45,6 +51,9 @@
 .success-clickable {
   &:hover {
     box-shadow: inset 0px 0px 0px 2px var(--px-color-border-success);
+    h2 {
+      text-decoration: underline;
+    }
   }
   &:hover .alert-arrow-wrapper {
     padding-left: 8px;
@@ -64,6 +73,13 @@
 .warning-clickable {
   &:hover {
     box-shadow: inset 0px 0px 0px 2px var(--px-color-border-warning);
+    h2 {
+      text-decoration: underline solid;
+      text-decoration-thickness: 7%;
+      text-decoration-offset: 977%;
+      text-underline-offset: 977%;
+      text-decoration-skip-ink: true;
+    }
   }
   &:hover .alert-arrow-wrapper {
     padding-left: 8px;
@@ -83,6 +99,9 @@
 .error-clickable {
   &:hover {
     box-shadow: inset 0px 0px 0px 2px var(--px-color-border-error);
+    h2 {
+      text-decoration: underline;
+    }
   }
   &:hover .alert-arrow-wrapper {
     padding-left: 8px;
@@ -142,10 +161,10 @@
   padding-top: 1px;
   flex: 1 0 0;
 }
-.alert-heading-clickable:hover {
-  cursor: pointer;
-  text-decoration: underline;
-}
+// .alert-heading-clickable:hover {
+//   cursor: pointer;
+//   text-decoration: underline;
+// }
 
 .alert-body-small {
   display: flex;
