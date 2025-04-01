@@ -43,6 +43,7 @@ export function TableInformation({
   // export type TabType = 'tab-footnotes' | 'tab-definitions' | 'tab-details' | 'tab-contact';
 
   const SheetComponent = isMobile ? BottomSheet : SideSheet;
+  const tabsVariant = isMobile ? 'scrollable' : 'fixed';
 
   return (
     <SheetComponent
@@ -55,7 +56,7 @@ export function TableInformation({
     >
       <TabsProvider activeTab={activeTab} setActiveTab={setActiveTab}>
         <div className={cl(classes.tabs)}>
-          <Tabs variant="fixed">
+          <Tabs variant={tabsVariant}>
             <Tab
               id="tab-footnotes"
               label={t(
