@@ -1,3 +1,4 @@
+import cl from 'clsx';
 import React from 'react';
 import styles from './InformationCard.module.scss';
 
@@ -17,7 +18,7 @@ export function InformationCard({
   children,
 }: InformationCardProps) {
   return (
-    <div className="bg-white shadow-md rounded-lg p-6">
+    <div className={cl(styles['information-card'])}>
       <Icon iconName={icon} />
       <div className={styles['with-header']}>
         {headingText && <Heading size={headingSize}>{headingText}</Heading>}

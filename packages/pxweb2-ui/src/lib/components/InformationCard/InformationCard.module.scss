@@ -3,3 +3,26 @@
   flex-direction: column;
   padding: 0px 16px 0px 16px;
 }
+
+.information-card {
+  display: flex;
+  width: 500px;
+  padding: 20px 24px;
+  align-items: flex-start;
+  gap: 12px;
+  border-radius: var(--px-border-radius-medium);
+  background: var(--px-color-background-subtle);
+  position: relative;
+}
+
+.information-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 6px;
+  height: 100%;
+  background: var(--px-color-surface-moderate);
+  border-top-left-radius: var(--px-border-radius-medium); // Curves the top-left corner
+  border-bottom-left-radius: var(--px-border-radius-medium); // Curves the bottom-left corner
+}
