@@ -84,6 +84,7 @@
   cursor: grab; // Apply cursor to the entire wrapper
   user-select: none;
   border: none;
+  touch-action: none; // Prevent touch events from interfering with the drag handle
 }
 
 // Drag handle styles
