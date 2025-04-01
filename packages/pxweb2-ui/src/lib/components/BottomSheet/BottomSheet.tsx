@@ -73,14 +73,14 @@ export function BottomSheet({
     }
   };
 
-  const handleMouseDown = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
     startYRef.current = event.clientY;
     startHeightRef.current = bottomSheetRef.current?.clientHeight ?? null;
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
   };
 
-  const handleTouchStart = (event: React.TouchEvent<HTMLButtonElement>) => {
+  const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
     startYRef.current = event.touches[0].clientY;
     startHeightRef.current = bottomSheetRef.current?.clientHeight ?? null;
     document.addEventListener('touchmove', handleTouchMove);
@@ -167,16 +167,15 @@ export function BottomSheet({
         ) + cssClasses
       }
     >
-      <button
+      <div
         draggable={true}
         onDragStart={(e) => e.preventDefault()} // Prevent default drag behavior
         onMouseDown={handleMouseDown}
         onTouchStart={handleTouchStart}
         className={cl(classes.dragHandleWrapper)}
-        aria-label="Drag to resize"
       >
         <div className={cl(classes.dragHandle)}></div>
-      </button>
+      </div>
 
       <aside className={cl(classes.aside)}>
         <div className={cl(classes.header)}>
