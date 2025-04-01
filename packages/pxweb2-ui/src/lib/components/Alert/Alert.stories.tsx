@@ -175,16 +175,17 @@ export const test: StoryFn<typeof Alert> = () => {
     <Alert variant="info" heading="Heading Alert" closeButton clickable>
       <List listType="ul">
         <ListItem>
-          <List heading="Land" subHeading="Subheading" listType="ul" listGroup>
-            <ListItem>test1x</ListItem>
-            <ListItem>test2</ListItem>
-            <ListItem>test3</ListItem>
-            <ListItem>test4</ListItem>
+          <List heading="Land" subHeading="Subheading1" listType="ul" listGroup>
+            <ListItem>Fotnote 11</ListItem>
+            <ListItem>Fotnote 12</ListItem>
+            <ListItem>Fotnote 13</ListItem>
+            <ListItem>Fotnote 14</ListItem>
           </List>
-          <List heading="Land" subHeading="Subheading" listType="ul" listGroup>
-            <ListItem>test21</ListItem>
-            <ListItem>test22</ListItem>
-            <ListItem>test23</ListItem>
+          <List heading="Land" subHeading="Subheading2" listType="ul" listGroup>
+            <ListItem>Fotnote 21</ListItem>
+            <ListItem>Fotnote 22</ListItem>
+            <ListItem>Fotnote 23</ListItem>
+            <ListItem>Fotnote 24</ListItem>
           </List>
         </ListItem>
       </List>
