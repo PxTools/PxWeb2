@@ -31,7 +31,7 @@ export function BottomSheet({
 
   const defaultPos = window.innerHeight * 0.7;
   const maxPos = window.innerHeight * 0.9;
-  const closingPos = window.innerHeight * 0.15;
+  const closingPos = window.innerHeight * 0.1;
 
   useEffect(() => {
     setIsBottomSheetOpen(isOpen);
