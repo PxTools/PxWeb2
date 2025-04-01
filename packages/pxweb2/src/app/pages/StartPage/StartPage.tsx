@@ -20,14 +20,13 @@ import list from './dummy-data/tables.json' with { type: 'json' };
 const bigTableList = list as TablesResponse;
 
 // TODO:
-// - Consider a custom hook for filtering
-// - Add a reducer for counting filters
+// - Add a reducer for counting filters? Or just keep drilling them props!
 // - Consider: Should the active filters be a map instead of an array?
 // - Convert the filter buttons to a checkbox list, and handle the state in the reducer
-// - Split up this file into components, and add context provider to supply props to them
+// - Filters with no results should also be shown, but with a (0) next to the name!
 
 function shouldTableBeIncluded(table: Table, filters: Filter[]) {
-  return filters.every((filter) => {
+  return filters.some((filter) => {
     if (filter.type === 'text') {
       return table.label?.toLowerCase().includes(filter.value.toLowerCase());
     }
@@ -82,14 +81,14 @@ const StartPage = () => {
         return initialState;
       case ActionType.ADD_FILTER:
         const newFilters = [...state.activeFilters, ...action.payload];
-        const newTables = state.tables.filter((table) => {
+        const newTables = bigTableList.tables.filter((table) => {
           return shouldTableBeIncluded(table, newFilters);
         });
         return {
           ...state,
           activeFilters: newFilters,
           tables: newTables,
-          availableFilters: getFilters(newTables),
+          // availableFilters: getFilters(newTables),
         };
       case ActionType.REMOVE_FILTER:
         const filterToRemove = action.payload;
@@ -103,7 +102,7 @@ const StartPage = () => {
           ...state,
           activeFilters: updatedFilters,
           tables: filteredTables,
-          availableFilters: getFilters(filteredTables),
+          // availableFilters: getFilters(filteredTables),
         };
       default:
         return state;
