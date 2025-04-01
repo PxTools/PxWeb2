@@ -6,4 +6,5 @@ export type Config = {
   };
   apiUrl: string;
   maxDataCells: number;
+  specialCharacters: string[];
 };

@@ -23,6 +23,9 @@
     li {
       padding-bottom: 28px;
     }
+    li:last-child {
+      padding-bottom: 0px;
+    }
     li li {
       padding-bottom: 0px;
     }
