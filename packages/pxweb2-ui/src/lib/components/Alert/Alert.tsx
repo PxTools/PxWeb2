@@ -10,8 +10,6 @@ import Button from '../Button/Button';
 import BodyShort from '../Typography/BodyShort/BodyShort';
 import List, { ListProps } from '../List/List';
 
-//import { ListItem, ListProps } from 'react-virtuoso';
-
 export interface AlertProps {
   size?: 'small' | 'medium';
   variant: 'info' | 'success' | 'warning' | 'error';
@@ -30,7 +28,7 @@ export function Alert({
   heading = '',
   onClick,
   children,
-}: AlertProps) {
+}: Readonly<AlertProps>) {
   const { t } = useTranslation();
   const [isVisible, setIsVisible] = useState(true);
   const HandleClose = () => {
@@ -120,20 +118,11 @@ export function Alert({
     return textContent;
   };
 
-  // if (childIsList(children) && clickable) {
-  //   const listNote = children as React.ReactElement<ListProps>;
-  //   //const clickableFootnote = createClickableFootnote(listNote);
-  //   const clickableFootnote = createClickableFootnote2(listNote);
-  //   children = clickableFootnote;
-  //   console.log(clickableFootnote);
-  // }
-
   if (childIsList(children) && clickable) {
     let extractedText = '';
     if (React.isValidElement(children) && children.type === List) {
       const listProps = children.props as ListProps;
       extractedText = extractTextFromChildren(listProps.children);
-      console.log('Extracted Text:', children);
     }
     children = extractedText;
   }
