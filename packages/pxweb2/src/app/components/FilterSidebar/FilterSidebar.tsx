@@ -1,15 +1,18 @@
 import { type State, type Filter } from '../../pages/StartPage/tableTypes';
 import styles from './FilterSidebar.module.scss';
 
+import { Checkbox } from '@pxweb2/pxweb2-ui';
 interface FilterProps {
   state: State;
   handleAddFilter: (filter: Filter[]) => void;
+  handleRemoveFilter: (filter: Filter) => void;
   handleResetFilter: () => void;
 }
 
 export const FilterSidebar: React.FC<FilterProps> = ({
   state,
   handleAddFilter,
+  handleRemoveFilter,
   handleResetFilter,
 }) => {
   return (
@@ -31,14 +34,21 @@ export const FilterSidebar: React.FC<FilterProps> = ({
         <h3>Tidsintervall:</h3>
         <ul className={styles.filterList}>
           {Array.from(state.availableFilters).map(([key, value]) => (
-            <li
-              key={key}
-              onClick={() =>
-                handleAddFilter([{ type: 'timeUnit', value: key }])
-              }
-            >
-              {key}: {value}
-            </li>
+            <div key={key} className={styles.filterItem}>
+              <Checkbox
+                id={key}
+                text={`${key}: ${value}`}
+                value={state.activeFilters.some(
+                  (filter) =>
+                    filter.type === 'timeUnit' && filter.value === key,
+                )}
+                onChange={(value) => {
+                  value
+                    ? handleAddFilter([{ type: 'timeUnit', value: key }])
+                    : handleRemoveFilter({ type: 'timeUnit', value: key });
+                }}
+              />
+            </div>
           ))}
         </ul>
       </div>

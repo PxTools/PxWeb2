@@ -3,27 +3,29 @@ import { Virtuoso } from 'react-virtuoso';
 
 import styles from './StartPage.module.scss';
 
-import { Header } from '../../components/Header/Header';
-import { TablesResponse, Table } from '@pxweb2/pxweb2-api-client';
 import { Tag } from '@pxweb2/pxweb2-ui';
+import { TablesResponse, Table } from '@pxweb2/pxweb2-api-client';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
+import { Header } from '../../components/Header/Header';
+import { FilterSidebar } from '../../components/FilterSidebar/FilterSidebar';
 import {
   type Filter,
   type ReducerActionTypes,
   type State,
   ActionType,
 } from './tableTypes';
-import { FilterSidebar } from '../../components/FilterSidebar/FilterSidebar';
 
 import list from './dummy-data/tables.json' with { type: 'json' };
 
 const bigTableList = list as TablesResponse;
 
 // TODO:
-// - Add a reducer for counting filters? Or just keep drilling them props!
-// - Consider: Should the active filters be a map instead of an array?
-// - Convert the filter buttons to a checkbox list, and handle the state in the reducer
+// - styling - add from component library
+// - Consider: Should the active filters be a map instead of an array? Would ensure no duplicates.
 // - Filters with no results should also be shown, but with a (0) next to the name!
+// - Add a reducer for counting filters? Or just keep drilling them props!
+// - Improve Virtuoso styling - maybe add element inside the list
+// - Virtuoso: Mau need to add an empty element if list is empty to avoid a bug.
 
 function shouldTableBeIncluded(table: Table, filters: Filter[]) {
   return filters.some((filter) => {
@@ -88,21 +90,24 @@ const StartPage = () => {
           ...state,
           activeFilters: newFilters,
           tables: newTables,
-          // availableFilters: getFilters(newTables),
         };
       case ActionType.REMOVE_FILTER:
         const filterToRemove = action.payload;
         const updatedFilters = state.activeFilters.filter(
-          (filter) => filter.value !== filterToRemove.value,
+          (filter) => filter.value !== filterToRemove.value, // May need improving - must check for the whole array element to be identical, not just the value
         );
-        const filteredTables = bigTableList.tables.filter((table) => {
-          return shouldTableBeIncluded(table, updatedFilters);
-        });
+        let filteredTables: Table[];
+        if (updatedFilters.length == 0) {
+          filteredTables = initialState.tables;
+        } else {
+          filteredTables = bigTableList.tables.filter((table) => {
+            return shouldTableBeIncluded(table, updatedFilters);
+          });
+        }
         return {
           ...state,
           activeFilters: updatedFilters,
           tables: filteredTables,
-          // availableFilters: getFilters(filteredTables),
         };
       default:
         return state;
@@ -117,6 +122,7 @@ const StartPage = () => {
         <FilterSidebar
           state={state}
           handleAddFilter={handleAddFilter}
+          handleRemoveFilter={handleRemoveFilter}
           handleResetFilter={handleResetFilter}
         />
         <div className={styles.listTables}>
