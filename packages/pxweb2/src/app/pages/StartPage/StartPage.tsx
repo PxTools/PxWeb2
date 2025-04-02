@@ -21,14 +21,6 @@ import list from './dummy-data/tables.json' with { type: 'json' };
 
 const bigTableList = list as TablesResponse;
 
-// TODO:
-// - styling - add from component library
-// - Consider: Should the active filters be a map instead of an array? Would ensure no duplicates.
-// - Filters with no results should also be shown, but with a (0) next to the name!
-// - Add a reducer for counting filters? Or just keep drilling them props!
-// - Improve Virtuoso styling - maybe add element inside the list
-// - Virtuoso: Mau need to add an empty element if list is empty to avoid a bug.
-
 function shouldTableBeIncluded(table: Table, filters: Filter[]) {
   return filters.some((filter) => {
     if (filter.type === 'text') {
