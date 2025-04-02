@@ -143,8 +143,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       if (!isMobile && isMobileMode) {
         setIsMobileMode(false);
       }
-    }
-    catch (error) {
+    } catch (error) {
       const err = error as Error;
       console.error(err);
     }
@@ -268,7 +267,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       variablesSelection,
     ).catch((error: unknown) => {
       const err = error as ApiError;
-      setErrorMsg(problemMessage(err, tableId),);
+      setErrorMsg(problemMessage(err, tableId));
     });
 
     // Map response to json-stat2 Dataset
