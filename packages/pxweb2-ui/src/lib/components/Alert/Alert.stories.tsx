@@ -182,6 +182,9 @@ export const test: StoryFn<typeof Alert> = () => {
     <Alert variant="info" heading="Heading Alert" closeButton clickable>
       <List listType="ul">
         <ListItem>
+          <Link href="www.ssb.no">Gå til SSB</Link>
+        </ListItem>
+        <ListItem>
           <List heading="Land" subHeading="Subheading1" listType="ul" listGroup>
             <ListItem>Fotnote 11</ListItem>
             <ListItem>Fotnote 12</ListItem>

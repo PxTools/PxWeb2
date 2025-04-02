@@ -43,8 +43,7 @@ export function Alert({
       onClick && onClick();
     }
   };
-  let hasheading: boolean;
-  heading ? (hasheading = true) : (hasheading = false);
+  const hasheading = Boolean(heading);
   const iconRight = 'ArrowRight';
   const iconClose = 'XMark';
   let variantIcon: IconProps['iconName'];

@@ -18,7 +18,6 @@
 }
 
 .info {
-  //border-radius: var(--px-border-radius-medium);
   background: var(--px-color-surface-info-moderate);
 }
 
@@ -34,7 +33,6 @@
   }
   &:hover .alert-arrow-wrapper {
     padding-left: 8px;
-    transition-timing-function: ease-in-out;
     transition: 100ms;
   }
   &:focus-visible {
@@ -45,7 +43,6 @@
 }
 
 .success {
-  // border-radius: var(--px-border-radius-medium);
   background: var(--px-color-surface-success-moderate);
 }
 .success-clickable {
@@ -57,7 +54,6 @@
   }
   &:hover .alert-arrow-wrapper {
     padding-left: 8px;
-    transition-timing-function: ease-in-out;
     transition: 100ms;
   }
   &:focus-visible {
@@ -67,7 +63,6 @@
   }
 }
 .warning {
-  // border-radius: var(--px-border-radius-medium);
   background: var(--px-color-surface-warning-moderate);
 }
 .warning-clickable {
@@ -76,14 +71,12 @@
     h2 {
       text-decoration: underline solid;
       text-decoration-thickness: 7%;
-      text-decoration-offset: 977%;
-      text-underline-offset: 977%;
+      text-underline-offset: 9%;
       text-decoration-skip-ink: true;
     }
   }
   &:hover .alert-arrow-wrapper {
     padding-left: 8px;
-    transition-timing-function: ease-in-out;
     transition: 100ms;
   }
   &:focus-visible {
@@ -93,7 +86,6 @@
   }
 }
 .error {
-  // border-radius: var(--px-border-radius-medium);
   background: var(--px-color-surface-error-moderate);
 }
 .error-clickable {
@@ -105,7 +97,6 @@
   }
   &:hover .alert-arrow-wrapper {
     padding-left: 8px;
-    transition-timing-function: ease-in-out;
     transition: 100ms;
   }
   &:focus-visible {
@@ -161,10 +152,6 @@
   padding-top: 1px;
   flex: 1 0 0;
 }
-// .alert-heading-clickable:hover {
-//   cursor: pointer;
-//   text-decoration: underline;
-// }
 
 .alert-body-small {
   display: flex;
@@ -182,6 +169,7 @@
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   text-overflow: ellipsis;
 }
@@ -190,17 +178,10 @@
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   text-overflow: ellipsis;
 }
-
-// .truncate-text-medium ul {
-//   overflow: hidden;
-//   display: -webkit-box;
-//   -webkit-line-clamp: 2;
-//   -webkit-box-orient: vertical;
-//   text-overflow: ellipsis;
-// }
 
 .alert-section-right {
   display: flex;
