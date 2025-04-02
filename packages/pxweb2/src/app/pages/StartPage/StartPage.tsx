@@ -132,6 +132,17 @@ const StartPage = () => {
         />
         <div className={styles.listTables}>
           <div className={styles.filterPillContainer}>
+            {state.activeFilters.length >= 2 && (
+              <span className={styles.filterPill}>
+                <Tag
+                  type="border"
+                  variant="info"
+                  onClick={() => handleResetFilter()}
+                >
+                  {'Reset Filters'}
+                </Tag>
+              </span>
+            )}
             {state.activeFilters.map((filter, index) => (
               <span key={index} className={styles.filterPill}>
                 <Tag type="border" onClick={() => handleRemoveFilter(filter)}>
@@ -141,7 +152,9 @@ const StartPage = () => {
             ))}
           </div>
           <div className={cl(styles['label-medium'])}>
-            Treff på {state.tables.length} tabeller
+            {state.activeFilters.length
+              ? `Treff på ${state.tables.length} tabeller`
+              : `${state.tables.length} tabeller`}
           </div>
           <Virtuoso
             style={{ height: '93%' }}
