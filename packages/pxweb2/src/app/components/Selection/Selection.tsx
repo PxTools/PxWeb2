@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
 
-import { ApiError, Problem, TableService } from '@pxweb2/pxweb2-api-client';
+import { ApiError, TableService } from '@pxweb2/pxweb2-api-client';
 import { mapJsonStat2Response } from '../../../mappers/JsonStat2ResponseMapper';
 import { mapTableSelectionResponse } from '../../../mappers/TableSelectionResponseMapper';
 import {
@@ -548,8 +548,6 @@ export function Selection({
     setSelectedVBValues(selectedVBValues);
     variables.syncVariablesAndValues(selectedVBValues);
   }
-
-
 
   const drawerFilter = (
     <VariableList
