@@ -74,14 +74,14 @@ export function BottomSheet({
     }
   };
 
-  const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouseDown = (event: React.MouseEvent<HTMLDialogElement>) => {
     startYRef.current = event.clientY;
     startHeightRef.current = bottomSheetRef.current?.clientHeight ?? null;
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
   };
 
-  const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
+  const handleTouchStart = (event: React.TouchEvent<HTMLDialogElement>) => {
     startYRef.current = event.touches[0].clientY;
     startHeightRef.current = bottomSheetRef.current?.clientHeight ?? null;
     document.addEventListener('touchmove', handleTouchMove);
@@ -159,6 +159,10 @@ export function BottomSheet({
   return (
     <dialog
       onClick={(event) => handleClick(event)}
+      draggable={true}
+      onDragStart={(e) => e.preventDefault()} // Prevent default drag behavior
+      onMouseDown={handleMouseDown}
+      onTouchStart={handleTouchStart}
       onKeyDown={handleKeyDown}
       ref={bottomSheetRef}
       className={
@@ -168,13 +172,7 @@ export function BottomSheet({
         ) + cssClasses
       }
     >
-      <div
-        draggable={true}
-        onDragStart={(e) => e.preventDefault()} // Prevent default drag behavior
-        onMouseDown={handleMouseDown}
-        onTouchStart={handleTouchStart}
-        className={cl(classes.dragHandleWrapper)}
-      >
+      <div className={cl(classes.dragHandleWrapper)}>
         <div className={cl(classes.dragHandle)}></div>
       </div>
 
