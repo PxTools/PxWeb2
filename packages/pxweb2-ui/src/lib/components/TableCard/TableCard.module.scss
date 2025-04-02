@@ -16,9 +16,7 @@
     outline: 1px solid var(--px-color-border-subtle);
 
     .title {
-      text-decoration: underline;
-      text-underline-offset: 9%;
-      text-decoration-thickness: 8%;
+      @extend .heading-hover-underline;
     }
   }
 
