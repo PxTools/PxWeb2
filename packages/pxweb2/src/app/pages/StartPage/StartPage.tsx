@@ -1,5 +1,6 @@
 import { useReducer } from 'react';
 import { Virtuoso } from 'react-virtuoso';
+import cl from 'clsx';
 
 import styles from './StartPage.module.scss';
 
@@ -126,15 +127,17 @@ const StartPage = () => {
           handleResetFilter={handleResetFilter}
         />
         <div className={styles.listTables}>
-          <h2>Filtered tables: ({state.tables.length})</h2>
           <div>
             {state.activeFilters.map((filter, index) => (
               <span key={index} className={styles.filterPill}>
-                <Tag onClick={() => handleRemoveFilter(filter)}>
+                <Tag type="border" onClick={() => handleRemoveFilter(filter)}>
                   {'X ' + filter.value}
                 </Tag>
               </span>
             ))}
+          </div>
+          <div className={cl(styles['label-medium'])}>
+            Treff på {state.tables.length} tabeller
           </div>
           <Virtuoso
             style={{ height: '93%' }}

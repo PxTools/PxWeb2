@@ -1,3 +1,5 @@
+@use '$ui/src/lib/text-styles.scss';
+
 .sideBar {
   grid-area: sideBar;
   background-color: var(--px-color-surface-subtle);

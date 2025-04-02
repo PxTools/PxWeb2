@@ -1,3 +1,5 @@
+import cl from 'clsx';
+
 import { type State, type Filter } from '../../pages/StartPage/tableTypes';
 import styles from './FilterSidebar.module.scss';
 
@@ -17,27 +19,32 @@ export const FilterSidebar: React.FC<FilterProps> = ({
 }) => {
   return (
     <div className={styles.sideBar}>
-      <h2>Filter</h2>
+      <h2 className={cl(styles['heading-small'])}>Filter</h2>
       <div>
         <button
           onClick={() =>
             handleAddFilter([{ type: 'variableName', value: 'region' }])
           }
         >
-          Filter: Only tables with variableName "region"
+          <span className={cl(styles['label-medium'])}>
+            Filter: Only tables with variableName "region"
+          </span>
         </button>
       </div>
       <div>
-        <button onClick={handleResetFilter}>Filter: Reset!</button>
+        <button onClick={handleResetFilter}>
+          <span className={cl(styles['label-medium'])}>Filter: Reset!</span>
+        </button>
       </div>
       <div>
-        <h3>Tidsintervall:</h3>
+        <div className={cl(styles['heading-medium'])}>Filter</div>
+        <div className={cl(styles['heading-small'])}>Tidsintervall</div>
         <ul className={styles.filterList}>
           {Array.from(state.availableFilters).map(([key, value]) => (
             <div key={key} className={styles.filterItem}>
               <Checkbox
                 id={key}
-                text={`${key}: ${value}`}
+                text={`${key} (${value})`}
                 value={state.activeFilters.some(
                   (filter) =>
                     filter.type === 'timeUnit' && filter.value === key,
