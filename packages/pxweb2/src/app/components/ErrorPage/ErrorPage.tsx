@@ -5,6 +5,8 @@ import { useRouteError } from 'react-router';
 type RouteError = {
   statusText?: string;
   message?: string;
+  status?: number;
+  data?: string;
 };
 
 export const ErrorPage: React.FC = () => {
@@ -13,7 +15,7 @@ export const ErrorPage: React.FC = () => {
 
   return (
     <Alert variant="error" size="small">
-      {error?.statusText || error?.message}
+      <div>{error?.status} {error?.statusText} {error?.message} {error?.data}</div>
     </Alert>
   );
 };
