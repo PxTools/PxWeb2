@@ -1,6 +1,11 @@
 import type { Meta, StoryFn } from '@storybook/react';
+import { useState } from 'react';
 
 import { BottomSheet, BottomSheetProps } from './BottomSheet';
+import Tabs from '../Tabs/Tabs';
+import Tab from '../Tabs/Tab';
+import { TabsProvider } from '../Tabs/TabsProvider';
+import TabPanel from '../Tabs/TabPanel';
 
 const meta: Meta<typeof BottomSheet> = {
   component: BottomSheet,
@@ -28,6 +33,7 @@ export const Default = {
 };
 
 export const MobileView: StoryFn<typeof BottomSheet> = () => {
+  const [activeTab, setActiveTab] = useState('px-tab1');
   return (
     <BottomSheet
       heading="Information"
@@ -37,7 +43,24 @@ export const MobileView: StoryFn<typeof BottomSheet> = () => {
       }}
     >
       <div>
-        Any content for for this bottomsheet will make the padding show..
+        <TabsProvider activeTab={activeTab} setActiveTab={setActiveTab}>
+          <Tabs variant="scrollable">
+            <Tab id="px-tab1" label="Tab1" controls="panel1"></Tab>
+            <Tab id="px-tab2" label="Tab2" controls="panel2"></Tab>
+            <Tab id="px-tab3" label="Tab3" controls="panel3"></Tab>
+          </Tabs>
+          <TabPanel id="panel1" controlledBy="px-tab1">
+            Content for Tab 1 Content for Tab 1 Content for Tab 1 Content for
+            Tab 1
+          </TabPanel>
+          <TabPanel id="panel2" controlledBy="px-tab2">
+            Content for Tab 2 Content for Tab 2 Content for Tab 2 Content for
+            Tab 2
+          </TabPanel>
+          <TabPanel id="panel3" controlledBy="px-tab3">
+            Content for Tab 3 Content for Tab 3 Content for Tab 3
+          </TabPanel>
+        </TabsProvider>
       </div>
     </BottomSheet>
   );
