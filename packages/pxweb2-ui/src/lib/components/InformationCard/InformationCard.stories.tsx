@@ -68,6 +68,12 @@ export const WithListWithoutHeading: Story = {
         <li>First item</li>
         <li>Second item</li>
         <li>Third item</li>
+        <li>Fourth item</li>
+        <li>Tifth item</li>
+        <li>Sixth item</li>
+        <li>Seventh item</li>
+        <li>Eighth item</li>
+        <li>Ninth item</li>
       </ul>
     ),
   },

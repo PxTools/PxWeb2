@@ -19,10 +19,10 @@ export function InformationCard({
 }: InformationCardProps) {
   return (
     <div className={cl(styles['information-card'])}>
-      <Icon iconName={icon} />
-      <div className={styles['with-header']}>
+      <Icon iconName={icon} className={styles['icon-wrapper']} />
+      <div className={styles['content-wrapper']}>
         {headingText && <Heading size={headingSize}>{headingText}</Heading>}
-        {children}
+        <div className={styles['child-wrapper']}>{children}</div>
       </div>
     </div>
   );
