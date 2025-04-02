@@ -3,6 +3,7 @@ import React, { createContext, useEffect, useState, ReactNode } from 'react';
 
 import useVariables from './useVariables';
 import {
+  ApiError,
   Dataset,
   OutputFormatType,
   TableService,
@@ -16,6 +17,7 @@ import {
   setPxTableData,
 } from '@pxweb2/pxweb2-ui';
 import { mapJsonStat2Response } from '../../mappers/JsonStat2ResponseMapper';
+import { problemMessage } from '../../app/util/messageBuilder';
 
 // Define types for the context state and provider props
 export interface TableDataContextType {
@@ -75,6 +77,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   useEffect(() => {
     if (errorMsg !== '') {
       console.error('ERROR: TableDataProvider:', errorMsg);
+      throw new Error(errorMsg);
     }
   }, [errorMsg]);
 
@@ -140,13 +143,10 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       if (!isMobile && isMobileMode) {
         setIsMobileMode(false);
       }
-    } catch (error: unknown) {
+    }
+    catch (error) {
       const err = error as Error;
-
-      setErrorMsg(
-        'Failed to fetch table data. Please try again later. ' + err.message,
-      );
-      //throw new Error(err.message);
+      console.error(err);
     }
   };
 
@@ -266,7 +266,10 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       OutputFormatType.JSON_STAT2,
       undefined,
       variablesSelection,
-    );
+    ).catch((error: unknown) => {
+      const err = error as ApiError;
+      setErrorMsg(problemMessage(err, tableId),);
+    });
 
     // Map response to json-stat2 Dataset
     const pxDataobj: unknown = res;
