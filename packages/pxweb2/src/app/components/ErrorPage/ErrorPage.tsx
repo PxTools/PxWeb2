@@ -15,7 +15,9 @@ export const ErrorPage: React.FC = () => {
 
   return (
     <Alert variant="error" size="small">
-      <div>{error?.status} {error?.statusText} {error?.message} {error?.data}</div>
+      <div>
+        {error?.status} {error?.statusText} {error?.message} {error?.data}
+      </div>
     </Alert>
   );
 };
