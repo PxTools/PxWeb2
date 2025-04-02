@@ -10,7 +10,7 @@
   margin-bottom: 0;
 
   background: var(--px-color-surface-default);
-  border-radius: var(--px-border-radius-xlarge) var(--px-border-radius-xlarge)
+  border-radius: var(--px-border-radius-large) var(--px-border-radius-large)
     0px 0px;
 
   // Not from Figma
@@ -62,7 +62,7 @@
 
 .content {
   display: flex;
-  padding: fixed.$spacing-6 fixed.$spacing-5;
+  padding: fixed.$spacing-4 fixed.$spacing-5 fixed.$spacing-6 fixed.$spacing-5;
   flex-direction: column;
   align-items: center;
   gap: fixed.$spacing-3;
@@ -94,7 +94,6 @@
   height: 4px;
   border-radius: var(--px-border-radius-full);
   background: var(--px-color-icon-action);
-  margin: 10px auto;
 }
 
 // Animation that slides in BottomSheet from the bottom when opened.
