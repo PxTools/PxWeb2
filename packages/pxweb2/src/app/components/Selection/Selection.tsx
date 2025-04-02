@@ -17,6 +17,7 @@ import NavigationDrawer from '../../components/NavigationDrawer/NavigationDrawer
 import useVariables from '../../context/useVariables';
 import { NavigationItem } from '../../components/NavigationMenu/NavigationItem/NavigationItemType';
 import useAccessibility from '../../context/useAccessibility';
+import { problemMessage } from '../../util/messageBuilder';
 
 function addSelectedCodeListToVariable(
   currentVariable: SelectedVBValues | undefined,
@@ -274,7 +275,6 @@ export function Selection({
 
   useEffect(() => {
     if (errorMsg) {
-      console.error('Selection.tsx', errorMsg);
       throw Error(errorMsg);
     }
   }, [errorMsg]);
@@ -324,8 +324,7 @@ export function Selection({
         }
       })
       .catch((apiError: ApiError) => {
-        const problem: Problem = apiError.body as Problem;
-        setErrorMsg(buildProblemMessage(problem));
+        setErrorMsg(problemMessage(apiError, selectedTabId));
         setPxTableMetadata(null);
       })
       .catch((error) => {
@@ -351,8 +350,7 @@ export function Selection({
           variables.setHasLoadedDefaultSelection(true);
         })
         .catch((apiError: ApiError) => {
-          const problem: Problem = apiError.body as Problem;
-          setErrorMsg(buildProblemMessage(problem));
+          setErrorMsg(problemMessage(apiError, selectedTabId));
         })
         .catch((error) => {
           setErrorMsg(
@@ -426,8 +424,7 @@ export function Selection({
         setIsFadingVariableList(false);
       })
       .catch((apiError: ApiError) => {
-        const problem: Problem = apiError.body as Problem;
-        setErrorMsg(buildProblemMessage(problem));
+        setErrorMsg(problemMessage(apiError, selectedTabId));
         return [];
       })
       .catch((error) => {
@@ -552,19 +549,7 @@ export function Selection({
     variables.syncVariablesAndValues(selectedVBValues);
   }
 
-  function buildProblemMessage(problem: Problem) {
-    debugger;
-    return (
-      problem?.status +
-      ' ' +
-      'TableId: ' +
-      selectedTabId +
-      ' ' +
-      problem?.title +
-      ' ' +
-      problem?.type
-    );
-  }
+
 
   const drawerFilter = (
     <VariableList
