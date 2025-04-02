@@ -1,6 +1,5 @@
 import { ApiError, Problem } from 'packages/pxweb2-api-client/src';
 
-
 // This function is used to create a message for the user when an error occurs.
 // It takes an ApiError object and an optional selectedTabId string as parameters.
 // The function extracts the status, title, and type from the Problem object
