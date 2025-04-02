@@ -3,19 +3,34 @@
 
 .startPage {
   display: grid;
-  grid-template-areas: 'sideBar listTables';
-  grid-template-columns: 400px 1fr;
-  grid-template-rows: 1fr;
+  grid-template-areas:
+  'search search .'
+  'sideBar listTables listTables';
+  grid-template-columns: 400px 200px 1fr;
+  grid-template-rows: 120px 1fr;
   height: calc(100vh - fixed.$spacing-22);
+  background-color: var(--px-color-surface-subtle);
 }
 
 .listTables {
   grid-area: listTables;
-  background-color: var(--px-color-surface-subtle);
   // padding: 20px;
   overflow-y: auto;
 }
 
+.filterPillContainer {
+  // min-height: 72px; // Maybe we don't want a minimum height
+  padding-bottom: 40px;
+}
+
 .filterPill {
   margin-right: 10px;
+}
+
+.searchArea {
+  grid-area: search;
+  align-self: center;
+  max-width: 633px;
+  padding-left: 30px;
+  width: 100%;
 }

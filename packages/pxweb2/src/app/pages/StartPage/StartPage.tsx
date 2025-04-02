@@ -4,10 +4,11 @@ import cl from 'clsx';
 
 import styles from './StartPage.module.scss';
 
-import { Tag } from '@pxweb2/pxweb2-ui';
+import { Tag, Search } from '@pxweb2/pxweb2-ui';
 import { TablesResponse, Table } from '@pxweb2/pxweb2-api-client';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import { Header } from '../../components/Header/Header';
+import { Information } from '../../components/Information/Information';
 import { FilterSidebar } from '../../components/FilterSidebar/FilterSidebar';
 import {
   type Filter,
@@ -118,8 +119,11 @@ const StartPage = () => {
   return (
     <AccessibilityProvider>
       <Header />
-      {/* <Information /> */}
+      <Information />
       <div className={styles.startPage}>
+        <div className={styles.searchArea}>
+          <Search searchPlaceHolder="Search..." variant="default" />
+        </div>
         <FilterSidebar
           state={state}
           handleAddFilter={handleAddFilter}
@@ -127,7 +131,7 @@ const StartPage = () => {
           handleResetFilter={handleResetFilter}
         />
         <div className={styles.listTables}>
-          <div>
+          <div className={styles.filterPillContainer}>
             {state.activeFilters.map((filter, index) => (
               <span key={index} className={styles.filterPill}>
                 <Tag type="border" onClick={() => handleRemoveFilter(filter)}>

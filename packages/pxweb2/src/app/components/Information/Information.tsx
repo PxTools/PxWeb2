@@ -1,17 +1,17 @@
+import cl from 'clsx';
+
 import styles from './Information.module.scss';
 
-const Information = () => {
+export const Information = () => {
   return (
     <div className={styles.information}>
-      <h2>Information</h2>
-      <p>
-        This is a page where you can filter tables based on a filter. The filter
-        is a simple object with a type and a value. You can add multiple filters
-        and the tables will be filtered based on the filters. You can also reset
-        the filters.
+      <div className={cl(styles['heading-large'])}>Statistikkbanken</div>
+      <p className={cl(styles['bodyshort-medium'])}>
+        Her finner du alle tallene våre samlet på ett sted. Bruk søk og
+        filtrering for å finne tabellene du trenger. På grunn av
+        personvernhensyn kan ikke tabellene kombineres. Oppdatering av
+        Statistikkbanken skjer hver dag klokken 08:00.
       </p>
     </div>
   );
 };
-
-export default Information;
