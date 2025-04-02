@@ -76,33 +76,35 @@ const StartPage = () => {
       case ActionType.RESET_FILTERS:
         return initialState;
       case ActionType.ADD_FILTER:
-        const newFilters = [...state.activeFilters, ...action.payload];
-        const newTables = bigTableList.tables.filter((table) => {
-          return shouldTableBeIncluded(table, newFilters);
-        });
         return {
           ...state,
-          activeFilters: newFilters,
-          tables: newTables,
+          activeFilters: [...state.activeFilters, ...action.payload],
+          tables: bigTableList.tables.filter((table) => {
+            return shouldTableBeIncluded(table, [
+              ...state.activeFilters,
+              ...action.payload,
+            ]);
+          }),
         };
       case ActionType.REMOVE_FILTER:
-        const filterToRemove = action.payload;
-        const updatedFilters = state.activeFilters.filter(
-          (filter) => filter.value !== filterToRemove.value, // May need improving - must check for the whole array element to be identical, not just the value
-        );
-        let filteredTables: Table[];
-        if (updatedFilters.length == 0) {
-          filteredTables = initialState.tables;
+        if (state.activeFilters.length <= 1) {
+          return initialState;
         } else {
-          filteredTables = bigTableList.tables.filter((table) => {
-            return shouldTableBeIncluded(table, updatedFilters);
-          });
+          return {
+            ...state,
+            activeFilters: state.activeFilters.filter(
+              (filter) => filter.value !== action.payload.value,
+            ),
+            tables: bigTableList.tables.filter((table) => {
+              return shouldTableBeIncluded(
+                table,
+                state.activeFilters.filter(
+                  (filter) => filter.value !== action.payload.value,
+                ),
+              );
+            }),
+          };
         }
-        return {
-          ...state,
-          activeFilters: updatedFilters,
-          tables: filteredTables,
-        };
       default:
         return state;
     }
@@ -135,8 +137,8 @@ const StartPage = () => {
                 </Tag>
               </span>
             )}
-            {state.activeFilters.map((filter, index) => (
-              <span key={index} className={styles.filterPill}>
+            {state.activeFilters.map((filter) => (
+              <span key={filter.value} className={styles.filterPill}>
                 <Tag type="border" onClick={() => handleRemoveFilter(filter)}>
                   {'X ' + filter.value}
                 </Tag>
