@@ -15,9 +15,11 @@ export function getLabelText(
 ): string {
   if (valueDisplayType === 'code') {
     return code;
-  } else if (valueDisplayType === 'value') {
-    return label;
-  } else {
-    return `${code} ${label}`;
   }
+  if (valueDisplayType === 'value') {
+    return label;
+  }
+
+  // default to combining code and label
+  return `${code} ${label}`;
 }
