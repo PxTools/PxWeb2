@@ -40,23 +40,27 @@ export const FilterSidebar: React.FC<FilterProps> = ({
         <div className={cl(styles['heading-medium'])}>Filter</div>
         <div className={cl(styles['heading-small'])}>Tidsintervall</div>
         <ul className={styles.filterList}>
-          {Array.from(state.availableFilters).map(([key, value]) => (
-            <div key={key} className={styles.filterItem}>
-              <Checkbox
-                id={key}
-                text={`${key} (${value})`}
-                value={state.activeFilters.some(
-                  (filter) =>
-                    filter.type === 'timeUnit' && filter.value === key,
-                )}
-                onChange={(value) => {
-                  value
-                    ? handleAddFilter([{ type: 'timeUnit', value: key }])
-                    : handleRemoveFilter({ type: 'timeUnit', value: key });
-                }}
-              />
-            </div>
-          ))}
+          {Array.from(state.availableFilters)
+            .sort((a, b) => {
+              return b[1] - a[1];
+            })
+            .map(([key, value]) => (
+              <div key={key} className={styles.filterItem}>
+                <Checkbox
+                  id={key}
+                  text={`${key} (${value})`}
+                  value={state.activeFilters.some(
+                    (filter) =>
+                      filter.type === 'timeUnit' && filter.value === key,
+                  )}
+                  onChange={(value) => {
+                    value
+                      ? handleAddFilter([{ type: 'timeUnit', value: key }])
+                      : handleRemoveFilter({ type: 'timeUnit', value: key });
+                  }}
+                />
+              </div>
+            ))}
         </ul>
       </div>
       <p>
