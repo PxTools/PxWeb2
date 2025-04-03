@@ -22,7 +22,7 @@ export const Default = {
       control: { type: 'radio' },
     },
     variant: {
-      options: ['neutral', 'info', 'success', 'warning', 'error'],
+      options: ['neutral', 'subtle', 'info', 'success', 'warning', 'error'],
       control: { type: 'radio' },
     },
     type: {
@@ -56,22 +56,18 @@ export const Variant: StoryFn<typeof Tag> = () => {
   return (
     <>
       <h1>Variant</h1>
-
       <h2>default:</h2>
       <Tag>{text}</Tag>
-
+      <h2>subtle:</h2>
+      <Tag variant="subtle">{text}</Tag>
       <h2>neutral:</h2>
       <Tag variant="neutral">{text}</Tag>
-
       <h2>info:</h2>
       <Tag variant="info">{text}</Tag>
-
       <h2>success:</h2>
       <Tag variant="success">{text}</Tag>
-
       <h2>warning:</h2>
       <Tag variant="warning">{text}</Tag>
-
       <h2>error:</h2>
       <Tag variant="error">{text}</Tag>
     </>
