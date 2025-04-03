@@ -15,12 +15,8 @@ export function problemMessage(
 ): string {
   const problem: Problem = apiError.body as Problem;
 
-  return (
-    problem?.status +
-    ' ' +
-    (selectedTabId ? 'TableId: ' + selectedTabId + ' ' : '') +
-    problem?.title +
-    ' ' +
-    problem?.type
-  );
+  return `${problem?.status}
+          ${selectedTabId ? `TableId: ${selectedTabId} ` : ''}
+          ${problem?.title}
+          ${problem?.type}`;
 }

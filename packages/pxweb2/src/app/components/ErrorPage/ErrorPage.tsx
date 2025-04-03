@@ -12,7 +12,7 @@ type RouteError = {
 
 export const ErrorPage: React.FC = () => {
   const error = useRouteError() as RouteError | null;
-  console.log(error);
+  console.error(error);
 
   return (
     <>

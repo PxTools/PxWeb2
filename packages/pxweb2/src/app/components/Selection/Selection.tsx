@@ -329,9 +329,7 @@ export function Selection({
         setPxTableMetadata(null);
       })
       .catch((error) => {
-        setErrorMsg(
-          'Could not get table: ' + selectedTabId + ' ' + error.message,
-        );
+        setErrorMsg(`Could not get table: ${selectedTabId} ${error.message}`);
         setPxTableMetadata(null);
       });
 
@@ -354,12 +352,7 @@ export function Selection({
           setErrorMsg(problemMessage(apiError, selectedTabId));
         })
         .catch((error) => {
-          setErrorMsg(
-            'Error getting default selection: ' +
-              selectedTabId +
-              ' ' +
-              error.message,
-          );
+          setErrorMsg(`Error getting default selection: ${selectedTabId} ${error.message}`);
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -429,12 +422,7 @@ export function Selection({
         return [];
       })
       .catch((error) => {
-        console.error(
-          'Could not get values for code list: ' +
-            newMappedSelectedCodeList.value +
-            ' ' +
-            error,
-        );
+        console.error(`Could not get values for code list: ${newMappedSelectedCodeList.value} ${error}`);
         return [];
       });
 
