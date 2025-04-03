@@ -1,6 +1,7 @@
 import type { Meta, StoryObj, StoryFn } from '@storybook/react';
 import { Expandable } from './Expandable';
 import Checkbox from '../Checkbox/Checkbox';
+import { BodyLong } from '@pxweb2/pxweb2-ui';
 
 const meta: Meta<typeof Expandable> = {
   component: Expandable,
@@ -10,20 +11,23 @@ export default meta;
 
 type Story = StoryObj<typeof Expandable>;
 
+const text =
+  'This is a story about Little Red Ridinghood. One day she went into the wood to visit her grandmother. The day after too, She visited her every day, every week, every month, every year. She never saw a wolf, no even a little fox.';
+
 const filterItems = [
   {
     id: '1',
-    text: 'Kvartal',
-    value: false,
+    text: 'Weekly',
+    value: true,
   },
   {
     id: '2',
-    text: 'Måned',
+    text: 'Monthly',
     value: false,
   },
   {
     id: '3',
-    text: 'År',
+    text: 'Quarterly',
     value: false,
   },
 ];
@@ -47,14 +51,15 @@ const filterContent = (
 export const Default: Story = {
   args: {
     header: 'Heading',
-    content: (
-      <div>
-        <p>Content</p>
-      </div>
+    children: (
+      <>
+        <h3>Examle text</h3>
+        <BodyLong size="medium">{text}</BodyLong>
+      </>
     ),
   },
 };
 
 export const filterCategory: StoryFn<typeof Expandable> = () => {
-  return <Expandable header="Filter name" content={filterContent} />;
+  return <Expandable header="Filter name">{filterContent}</Expandable>;
 };

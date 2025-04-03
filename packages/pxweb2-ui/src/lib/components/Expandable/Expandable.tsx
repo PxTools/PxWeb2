@@ -5,10 +5,10 @@ import { Icon } from '../Icon/Icon';
 
 export interface ExpandableProps {
   header?: string;
-  content?: ReactNode;
+  children?: ReactNode;
 }
 
-export const Expandable: React.FC<ExpandableProps> = ({ header, content }) => {
+export const Expandable: React.FC<ExpandableProps> = ({ header, children }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -23,7 +23,9 @@ export const Expandable: React.FC<ExpandableProps> = ({ header, content }) => {
         </span>
         <div className={cl(styles.expandableIconWrapper)}>
           <Icon
-            className={cl(isOpen ? styles['open'] : styles['closed'])}
+            className={cl({
+              [styles[`open`]]: isOpen,
+            })}
             iconName="ChevronDown"
           />
         </div>
@@ -34,7 +36,7 @@ export const Expandable: React.FC<ExpandableProps> = ({ header, content }) => {
           isOpen ? styles['open'] : styles['closed'],
         )}
       >
-        {content}
+        {children}
       </div>
     </div>
   );

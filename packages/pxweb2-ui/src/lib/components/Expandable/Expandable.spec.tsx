@@ -8,10 +8,10 @@ const content = (
   </div>
 );
 
-describe('FilterCategory', () => {
+describe('Expandable', () => {
   it('should render successfully', () => {
     const { baseElement } = render(
-      <Expandable header="Frekvens" content={content} />,
+      <Expandable header="Filter name">{content}</Expandable>,
     );
     expect(baseElement).toBeTruthy();
   });
