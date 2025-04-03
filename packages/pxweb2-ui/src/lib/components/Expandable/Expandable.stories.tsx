@@ -56,9 +56,5 @@ export const Default: Story = {
 };
 
 export const filterCategory: StoryFn<typeof Expandable> = () => {
-  return (
-    <div style={{ display: 'flex', width: '400px' }}>
-      <Expandable header="Filter name" content={filterContent} />
-    </div>
-  );
+  return <Expandable header="Filter name" content={filterContent} />;
 };

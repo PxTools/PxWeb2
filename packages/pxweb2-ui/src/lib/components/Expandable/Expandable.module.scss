@@ -7,18 +7,12 @@
   width: 100%;
 
   &:hover {
+    //TODO: Bruke heading_underline når den er i main
     .expandableTitle {
       text-decoration: underline;
       text-underline-offset: 9%;
       text-decoration-thickness: 8%;
     }
-  }
-
-  &:focus-visible,
-  &:has(:focus-visible) {
-    outline: 3px solid var(--px-color-border-focus-outline);
-    outline-offset: 6px;
-    box-shadow: 0 0 0 3px var(--px-color-border-focus-boxshadow);
   }
 }
 
@@ -31,17 +25,26 @@
   display: flex;
   justify-content: space-between;
   padding: 12px 0;
+
+  &:focus-visible,
+  &:has(:focus-visible) {
+    outline: 3px solid var(--px-color-border-focus-outline);
+    outline-offset: 6px;
+    box-shadow: 0 0 0 3px var(--px-color-border-focus-boxshadow);
+  }
 }
 
 .expandableIconWrapper {
   align-self: center;
   display: grid;
   place-content: center;
+
+  .open {
+    transform: rotate(180deg);
+  }
 }
 
 .expandableContent {
-  overflow-x: auto;
-
   &.closed {
     display: none;
     height: 0;

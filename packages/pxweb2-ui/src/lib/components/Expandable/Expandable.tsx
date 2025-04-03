@@ -22,8 +22,10 @@ export const Expandable: React.FC<ExpandableProps> = ({ header, content }) => {
           {header}
         </span>
         <div className={cl(styles.expandableIconWrapper)}>
-          {!isOpen && <Icon iconName="ChevronDown" />}
-          {isOpen && <Icon iconName="ChevronUp" />}
+          <Icon
+            className={cl(isOpen ? styles['open'] : styles['closed'])}
+            iconName="ChevronDown"
+          />
         </div>
       </button>
       <div
