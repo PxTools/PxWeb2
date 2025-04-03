@@ -3,7 +3,7 @@ import cl from 'clsx';
 
 import classes from './List.module.scss';
 import Heading from '../Typography/Heading/Heading';
-interface ListProps {
+export interface ListProps {
   heading?: string;
   subHeading?: string;
   listType: 'ul' | 'ol';
