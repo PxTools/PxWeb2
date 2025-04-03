@@ -1,0 +1,49 @@
+@use '../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixvar;
+@use '../../../../style-dictionary/dist/css/variables.css' as var;
+@use '../../text-styles.scss';
+
+.expandable {
+  display: grid;
+  width: 100%;
+
+  &:hover {
+    .expandableTitle {
+      text-decoration: underline;
+      text-underline-offset: 9%;
+      text-decoration-thickness: 8%;
+    }
+  }
+
+  &:focus-visible,
+  &:has(:focus-visible) {
+    outline: 3px solid var(--px-color-border-focus-outline);
+    outline-offset: 6px;
+    box-shadow: 0 0 0 3px var(--px-color-border-focus-boxshadow);
+  }
+}
+
+.expandableHeader {
+  align-items: center;
+  background-color: transparent;
+  border: none;
+  color: var(--px-color-text-default);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+}
+
+.expandableIconWrapper {
+  align-self: center;
+  display: grid;
+  place-content: center;
+}
+
+.expandableContent {
+  overflow-x: auto;
+
+  &.closed {
+    display: none;
+    height: 0;
+  }
+}
