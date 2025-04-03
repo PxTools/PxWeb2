@@ -1,6 +1,7 @@
 import React from 'react';
 import { Alert } from '@pxweb2/pxweb2-ui';
 import { useRouteError } from 'react-router';
+import { Header } from '../Header/Header';
 
 type RouteError = {
   statusText?: string;
@@ -14,11 +15,14 @@ export const ErrorPage: React.FC = () => {
   console.log(error);
 
   return (
-    <Alert variant="error" size="small">
-      <div>
-        {error?.status} {error?.statusText} {error?.message} {error?.data}
-      </div>
-    </Alert>
+    <>
+      <Header></Header>
+      <Alert variant="error" size="small">
+        <div>
+          {error?.status} {error?.statusText} {error?.message} {error?.data}
+        </div>
+      </Alert>
+    </>
   );
 };
 

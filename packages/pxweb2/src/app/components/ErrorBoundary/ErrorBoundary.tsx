@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Alert } from '@pxweb2/pxweb2-ui';
 import { ErrorInfo } from 'react';
+import { Header } from '../Header/Header';
 
 interface ErrorBoundaryProps {
   children: React.ReactNode;
@@ -29,9 +30,12 @@ class ErrorBoundary extends React.Component<
   render() {
     if (this.state.hasError) {
       return (
+        <>
+        <Header></Header>
         <Alert variant="error" size="small">
           {this.state.error?.message}
         </Alert>
+        </>
       );
     }
     return this.props.children;
