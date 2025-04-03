@@ -31,10 +31,10 @@ class ErrorBoundary extends React.Component<
     if (this.state.hasError) {
       return (
         <>
-        <Header></Header>
-        <Alert variant="error" size="small">
-          {this.state.error?.message}
-        </Alert>
+          <Header></Header>
+          <Alert variant="error" size="small">
+            {this.state.error?.message}
+          </Alert>
         </>
       );
     }
