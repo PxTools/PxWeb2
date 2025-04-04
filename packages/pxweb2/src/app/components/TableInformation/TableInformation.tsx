@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import cl from 'clsx';
 
@@ -32,6 +32,7 @@ export function TableInformation({
   const [activeTab, setActiveTab] = useState('');
   const tableData = useTableData();
   const { isMobile } = useApp();
+  const tabsContentRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (isOpen && selectedTab) {
@@ -53,6 +54,7 @@ export function TableInformation({
       onClose={() => {
         onClose();
       }}
+      contentRef={tabsContentRef}
     >
       <TabsProvider activeTab={activeTab} setActiveTab={setActiveTab}>
         <div className={cl(classes.tabs)}>
@@ -87,7 +89,10 @@ export function TableInformation({
             ></Tab>
           </Tabs>
         </div>
-        <div className={cl(classes.tabsContent, classes['bodyshort-medium'])}>
+        <div
+          ref={tabsContentRef}
+          className={cl(classes.tabsContent, classes['bodyshort-medium'])}
+        >
           <TabPanel id="pnl-footnotes" controlledBy="tab-footnotes">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
