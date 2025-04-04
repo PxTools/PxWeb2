@@ -8,18 +8,33 @@
 }
 
 .medium {
-  padding: 4px 8px;
+  height: 32px;
+  padding: 5px 8px 4px 8px;
   border-radius: var(--px-border-radius-small);
 }
 
 .small {
-  padding: 1px 6px 2px 6px;
+  height: 24px;
+  padding: 2px 4px 2px 4px;
   border-radius: var(--px-border-radius-xsmall);
+  &.border {
+    padding: 1px 4px 2px 4px;
+  }
 }
 
 .xsmall {
-  padding: 0px 4px;
+  height: 20px;
+  padding: 2px 4px 0px;
   border-radius: var(--px-border-radius-xsmall);
+}
+
+.subtle {
+  background-color: var(--px-color-surface-subtle);
+  &.border {
+    background-color: var(--px-color-surface-default);
+    outline: 1px solid var(--px-color-border-subtle);
+    outline-offset: -1px;
+  }
 }
 
 .neutral {

@@ -12,6 +12,7 @@ import {
   setPxTableData,
   Variable,
   Value,
+  ValueDisplayType,
   VartypeEnum,
   PxTableData,
   PxTableMetadata,
@@ -20,6 +21,7 @@ import {
   ContentInfo,
   Note,
 } from '@pxweb2/pxweb2-ui';
+import { getLabelText } from '../app/util/utils';
 
 /**
  * Internal type. Used to keep track of index in json-stat2 value array
@@ -28,11 +30,6 @@ import {
 type counter = {
   number: number;
 };
-
-/**
- * Internal type. Controls how variable values are displayed (code, value, code + value)
- */
-type ValueDisplayType = 'code' | 'value' | 'code_value';
 
 /**
  * Maps a JSONStat2 dataset response to a PxTable object.
@@ -253,6 +250,7 @@ function mapDimension(id: string, dimension: any, role: any): Variable | null {
       values: mapVariableValues(dimension, isContentVariable),
       codeLists: getCodelists(dimension.extension),
       notes: mapNotes(dimension.note, dimension.extension?.noteMandatory),
+      valueDisplayType: getValueDisplayType(dimension.extension),
     };
 
     return variable;
@@ -412,28 +410,6 @@ function getValueDisplayType(
     }
   }
   return 'value';
-}
-
-/**
- * Returns the label text for a value based on the value display type.
- *
- * @param valueDisplayType - The value display type for the dimension.
- * @param code - The code of the value.
- * @param label - The label of the value.
- * @returns The label text for the value.
- */
-function getLabelText(
-  valueDisplayType: ValueDisplayType,
-  code: string,
-  label: string,
-): string {
-  if (valueDisplayType === 'code') {
-    return code;
-  } else if (valueDisplayType === 'value') {
-    return label;
-  } else {
-    return `${code} ${label}`;
-  }
 }
 
 /**
