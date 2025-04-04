@@ -11,6 +11,31 @@ interface FilterProps {
   handleResetFilter: () => void;
 }
 
+const renderFilters = (
+  state: State,
+  handleAddFilter: (filter: Filter[]) => void,
+  handleRemoveFilter: (filter: Filter) => void,
+) => {
+  return Array.from(state.availableFilters)
+    .sort((a, b) => b[1] - a[1])
+    .map(([key, value]) => (
+      <div key={key} className={styles.filterItem}>
+        <Checkbox
+          id={key}
+          text={`${key} (${value})`}
+          value={state.activeFilters.some(
+            (filter) => filter.type === 'timeUnit' && filter.value === key,
+          )}
+          onChange={(value) => {
+            value
+              ? handleAddFilter([{ type: 'timeUnit', value: key }])
+              : handleRemoveFilter({ type: 'timeUnit', value: key });
+          }}
+        />
+      </div>
+    ));
+};
+
 export const FilterSidebar: React.FC<FilterProps> = ({
   state,
   handleAddFilter,
@@ -40,27 +65,7 @@ export const FilterSidebar: React.FC<FilterProps> = ({
         <div className={cl(styles['heading-medium'])}>Filter</div>
         <div className={cl(styles['heading-small'])}>Tidsintervall</div>
         <ul className={styles.filterList}>
-          {Array.from(state.availableFilters)
-            .sort((a, b) => {
-              return b[1] - a[1];
-            })
-            .map(([key, value]) => (
-              <div key={key} className={styles.filterItem}>
-                <Checkbox
-                  id={key}
-                  text={`${key} (${value})`}
-                  value={state.activeFilters.some(
-                    (filter) =>
-                      filter.type === 'timeUnit' && filter.value === key,
-                  )}
-                  onChange={(value) => {
-                    value
-                      ? handleAddFilter([{ type: 'timeUnit', value: key }])
-                      : handleRemoveFilter({ type: 'timeUnit', value: key });
-                  }}
-                />
-              </div>
-            ))}
+          {renderFilters(state, handleAddFilter, handleRemoveFilter)}
         </ul>
       </div>
       <p>
