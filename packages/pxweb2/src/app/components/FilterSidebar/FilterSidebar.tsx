@@ -19,7 +19,7 @@ const renderFilters = (
   return Array.from(state.availableFilters)
     .sort((a, b) => b[1] - a[1])
     .map(([key, value]) => (
-      <div key={key} className={styles.filterItem}>
+      <li key={key} className={styles.filterItem}>
         <Checkbox
           id={key}
           text={`${key} (${value})`}
@@ -32,7 +32,7 @@ const renderFilters = (
               : handleRemoveFilter({ type: 'timeUnit', value: key });
           }}
         />
-      </div>
+      </li>
     ));
 };
 
