@@ -8,7 +8,10 @@ export interface FilterCategoryProps {
   children?: ReactNode;
 }
 
-export const FilterCategory: React.FC<FilterCategoryProps> = ({ header, children }) => {
+export const FilterCategory: React.FC<FilterCategoryProps> = ({
+  header,
+  children,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -18,7 +21,9 @@ export const FilterCategory: React.FC<FilterCategoryProps> = ({ header, children
         aria-expanded={isOpen ? 'true' : 'false'}
         onClick={() => setIsOpen(!isOpen)}
       >
-        <span className={cl(styles.filterCategoryTitle, styles['heading-small'])}>
+        <span
+          className={cl(styles.filterCategoryTitle, styles['heading-small'])}
+        >
           {header}
         </span>
         <div className={cl(styles.filterCategoryIconWrapper)}>
