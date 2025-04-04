@@ -1,7 +1,6 @@
-import type { Meta, StoryObj, StoryFn } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 import { FilterCategory } from './FilterCategory';
 import Checkbox from '../Checkbox/Checkbox';
-import { BodyLong } from '@pxweb2/pxweb2-ui';
 
 const meta: Meta<typeof FilterCategory> = {
   component: FilterCategory,
@@ -10,9 +9,6 @@ const meta: Meta<typeof FilterCategory> = {
 export default meta;
 
 type Story = StoryObj<typeof FilterCategory>;
-
-const text =
-  'This is a story about Little Red Ridinghood. One day she went into the wood to visit her grandmother. The day after too, She visited her every day, every week, every month, every year. She never saw a wolf, no even a little fox.';
 
 const filterItems = [
   {
@@ -50,16 +46,7 @@ const filterContent = (
 
 export const Default: Story = {
   args: {
-    header: 'Heading',
-    children: (
-      <>
-        <h3>Examle text</h3>
-        <BodyLong size="medium">{text}</BodyLong>
-      </>
-    ),
+    header: 'Filter name',
+    children: filterContent,
   },
-};
-
-export const filterCategory: StoryFn<typeof FilterCategory> = () => {
-  return <FilterCategory header="Filter name">{filterContent}</FilterCategory>;
 };
