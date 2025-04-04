@@ -1,4 +1,5 @@
 import type { Meta, StoryObj, StoryFn } from '@storybook/react';
+
 import { TableCard } from './TableCard';
 import { Icon } from '../Icon/Icon';
 

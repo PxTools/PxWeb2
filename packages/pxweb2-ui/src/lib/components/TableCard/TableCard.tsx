@@ -1,5 +1,6 @@
 import { type ReactNode, forwardRef, KeyboardEvent } from 'react';
 import cl from 'clsx';
+
 import styles from './TableCard.module.scss';
 import { Icon } from '../Icon/Icon';
 
