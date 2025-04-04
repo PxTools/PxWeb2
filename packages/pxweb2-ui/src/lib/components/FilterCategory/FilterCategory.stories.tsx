@@ -1,15 +1,15 @@
 import type { Meta, StoryObj, StoryFn } from '@storybook/react';
-import { Expandable } from './Expandable';
+import { FilterCategory } from './FilterCategory';
 import Checkbox from '../Checkbox/Checkbox';
 import { BodyLong } from '@pxweb2/pxweb2-ui';
 
-const meta: Meta<typeof Expandable> = {
-  component: Expandable,
-  title: 'Components/Expandable',
+const meta: Meta<typeof FilterCategory> = {
+  component: FilterCategory,
+  title: 'Components/FilterCategory',
 };
 export default meta;
 
-type Story = StoryObj<typeof Expandable>;
+type Story = StoryObj<typeof FilterCategory>;
 
 const text =
   'This is a story about Little Red Ridinghood. One day she went into the wood to visit her grandmother. The day after too, She visited her every day, every week, every month, every year. She never saw a wolf, no even a little fox.';
@@ -60,6 +60,6 @@ export const Default: Story = {
   },
 };
 
-export const filterCategory: StoryFn<typeof Expandable> = () => {
-  return <Expandable header="Filter name">{filterContent}</Expandable>;
+export const filterCategory: StoryFn<typeof FilterCategory> = () => {
+  return <FilterCategory header="Filter name">{filterContent}</FilterCategory>;
 };

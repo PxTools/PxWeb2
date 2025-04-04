@@ -2,13 +2,13 @@
 @use '../../../../style-dictionary/dist/css/variables.css' as var;
 @use '../../text-styles.scss';
 
-.expandable {
+.filterCategory {
   display: grid;
   width: 100%;
 
   &:hover {
     //TODO: Bruke heading_underline når den er i main
-    .expandableTitle {
+    .filterCategoryTitle {
       text-decoration: underline;
       text-underline-offset: 9%;
       text-decoration-thickness: 8%;
@@ -16,7 +16,7 @@
   }
 }
 
-.expandableHeader {
+.filterCategoryHeader {
   align-items: center;
   background-color: transparent;
   border: none;
@@ -34,7 +34,7 @@
   }
 }
 
-.expandableIconWrapper {
+.filterCategoryIconWrapper {
   align-self: center;
   display: grid;
   place-content: center;
@@ -44,7 +44,7 @@
   }
 }
 
-.expandableContent {
+.filterCategoryContent {
   &.closed {
     display: none;
     height: 0;

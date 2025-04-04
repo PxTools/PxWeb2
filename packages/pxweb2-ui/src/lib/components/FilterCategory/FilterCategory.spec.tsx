@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 
-import Expandable from './Expandable';
+import FilterCategory from './FilterCategory';
 
 const content = (
   <div>
@@ -8,10 +8,10 @@ const content = (
   </div>
 );
 
-describe('Expandable', () => {
+describe('FilterCategory', () => {
   it('should render successfully', () => {
     const { baseElement } = render(
-      <Expandable header="Filter name">{content}</Expandable>,
+      <FilterCategory header="Filter name">{content}</FilterCategory>,
     );
     expect(baseElement).toBeTruthy();
   });
