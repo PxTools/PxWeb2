@@ -9,13 +9,13 @@
 
 .medium {
   height: 32px;
-  padding: 4.5px 8px 4px 8px;
+  padding: 5px 8px 4px 8px;
   border-radius: var(--px-border-radius-small);
 }
 
 .small {
   height: 24px;
-  padding: 1.5px 4px 3px 4px;
+  padding: 2px 4px 2px 4px;
   border-radius: var(--px-border-radius-xsmall);
   &.border {
     padding: 1px 4px 2px 4px;
@@ -24,15 +24,15 @@
 
 .xsmall {
   height: 20px;
-  padding: 2px 4px 2px;
+  padding: 2px 4px 0px;
   border-radius: var(--px-border-radius-xsmall);
 }
 
 .subtle {
   background-color: var(--px-color-surface-subtle);
   &.border {
-    background-color: var(--px-color-surface-subtle);
-    outline: 1px solid var(--px-color-border-moderate);
+    background-color: var(--px-color-surface-default);
+    outline: 1px solid var(--px-color-border-subtle);
     outline-offset: -1px;
   }
 }
