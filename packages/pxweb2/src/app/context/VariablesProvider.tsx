@@ -10,6 +10,7 @@ export type VariablesContextType = {
   getSelectedValuesByIdSorted: (variableId: string) => string[];
   getSelectedCodelistById: (variableId: string) => string | undefined;
   getNumberOfSelectedValues: () => number;
+  getSelectedMatrixSize: () => number;
   getUniqueIds: () => string[];
   syncVariablesAndValues: (values: SelectedVBValues[]) => void;
   toString: () => string;
@@ -38,7 +39,7 @@ export const VariablesContext = createContext<VariablesContextType>({
   getNumberOfSelectedValues: () => 0,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   syncVariablesAndValues: () => {},
-
+  getSelectedMatrixSize: () => 1,
   getUniqueIds: () => [],
   toString: () => '',
 
@@ -71,6 +72,7 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
   const [selectedVBValues, setSelectedVBValues] = useState<SelectedVBValues[]>(
     [],
   );
+  const [selectedMatrixSize, setSelectedMatrixSize] = useState<number>(1);
 
   /**
    * Adds multiple values for a given variable
@@ -185,6 +187,7 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const syncVariablesAndValues = (variables: SelectedVBValues[]) => {
+    createSelectedMatrixSize(variables);
     if (!hasChanges(variables)) {
       return;
     }
@@ -202,6 +205,23 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
     return str;
   };
 
+  const createSelectedMatrixSize = (selectedValues: SelectedVBValues[]) => {
+    let matrixSize = 1;
+    let numberOfValues = 1;
+    selectedValues.forEach((variable) => {
+      if (variable.values.length === 0) {
+        numberOfValues = 1;
+      } else {
+        numberOfValues = variable.values.length;
+      }
+      matrixSize *= numberOfValues;
+    });
+    return setSelectedMatrixSize(matrixSize);
+  };
+
+  const getSelectedMatrixSize = () => {
+    return selectedMatrixSize;
+  };
   const memoizedValues = useMemo(
     () => ({
       isInitialized,
@@ -211,6 +231,7 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
       getSelectedValuesByIdSorted,
       getSelectedCodelistById,
       getUniqueIds,
+      getSelectedMatrixSize,
       syncVariablesAndValues,
       toString,
       hasLoadedDefaultSelection,
@@ -230,6 +251,7 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
       getSelectedValuesByIdSorted,
       getSelectedCodelistById,
       getUniqueIds,
+      getSelectedMatrixSize,
       syncVariablesAndValues,
       toString,
       hasLoadedDefaultSelection,
