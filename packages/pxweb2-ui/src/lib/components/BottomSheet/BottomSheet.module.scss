@@ -25,6 +25,11 @@
   cursor: grabbing;
 }
 
+.dragAllowed {
+  touch-action: none;
+  user-select: none;
+}
+
 .bottomSheet::backdrop {
   background-color: var(--px-color-surface-scrim);
   animation: fadeInBackdrop 280ms forwards;

@@ -149,11 +149,13 @@ export function BottomSheet({
         setDragState((prevState) => ({
           ...prevState,
           isDragging: true,
+          isScrolling: false,
         }));
       } else if (Math.abs(deltaX) > Math.abs(deltaY)) {
         setDragState((prevState) => ({
           ...prevState,
           isScrolling: true,
+          isDragging: false,
         }));
       }
     }
@@ -253,9 +255,6 @@ export function BottomSheet({
           handleCloseBottomSheet();
         } else {
           bottomSheetRef.current.style.height = `${closestPos}px`;
-          contentRef?.current?.scrollTo({
-            top: 0,
-          });
         }
       }
     }
@@ -301,7 +300,14 @@ export function BottomSheet({
             ></Button>
           </div>
         </div>
-        <div className={cl(classes.content)}>{children}</div>
+        <div
+          className={cl(
+            classes.content,
+            dragState.isDragAllowed ? classes.dragAllowed : '',
+          )}
+        >
+          {children}
+        </div>
       </aside>
     </dialog>
   );
