@@ -12,6 +12,7 @@ export interface BottomSheetProps {
   readonly onClose?: () => void;
   readonly className?: string;
   readonly children: React.ReactNode;
+  readonly contentRef?: React.RefObject<HTMLDivElement | null>;
 }
 
 export function BottomSheet({
@@ -21,13 +22,20 @@ export function BottomSheet({
   onClose,
   className = '',
   children,
+  contentRef,
 }: BottomSheetProps) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(isOpen);
   const bottomSheetRef = useRef<HTMLDialogElement | null>(null);
   const startYRef = useRef<number | null>(null);
+  const startXRef = useRef<number | null>(null);
   const startHeightRef = useRef<number | null>(null);
   const [isClosing, setIsClosing] = useState(false);
+  const [dragState, setDragState] = useState({
+    isDragging: false,
+    isScrolling: false,
+    isDragAllowed: false,
+  });
 
   const defaultPos = window.innerHeight * 0.5;
   const maxPos = window.innerHeight * 0.95;
@@ -74,7 +82,106 @@ export function BottomSheet({
     }
   };
 
+  const determineDragAllowed = (
+    event:
+      | React.TouchEvent<HTMLDialogElement>
+      | React.MouseEvent<HTMLDialogElement>,
+  ): boolean => {
+    const contentElement = contentRef?.current;
+    const isTouchOutsideContent =
+      contentElement && !contentElement.contains(event.target as Node);
+    if (
+      isTouchOutsideContent ||
+      (contentElement && contentElement.scrollTop === 0)
+    ) {
+      return true; // Allow dragging if the touch is outside the content or if the content is scrolled to the to
+    }
+
+    return false;
+  };
+
+  const SetPositionRefs = (
+    event:
+      | React.TouchEvent<HTMLDialogElement>
+      | React.MouseEvent<HTMLDialogElement>,
+  ) => {
+    const clientY =
+      'touches' in event ? event.touches[0].clientY : event.clientY;
+    const clientX =
+      'touches' in event ? event.touches[0].clientX : event.clientX;
+    startYRef.current = clientY;
+    startXRef.current = clientX;
+    startHeightRef.current = bottomSheetRef.current?.clientHeight ?? null;
+  };
+
+  const deltaXY = (
+    event:
+      | React.TouchEvent<HTMLDialogElement>
+      | React.MouseEvent<HTMLDialogElement>,
+  ): { deltaX: number; deltaY: number } => {
+    const clientY =
+      'touches' in event ? event.touches[0].clientY : event.clientY;
+    const clientX =
+      'touches' in event ? event.touches[0].clientX : event.clientX;
+    if (startYRef.current === null || startXRef.current === null) {
+      return { deltaX: 0, deltaY: 0 };
+    }
+    const deltaX = clientX - startXRef.current;
+    const deltaY = clientY - startYRef.current;
+    return { deltaX, deltaY };
+  };
+
+  const determineDragOrScroll = (deltaXY: {
+    deltaX: number;
+    deltaY: number;
+  }) => {
+    if (startYRef.current === null || startXRef.current === null) {
+      return;
+    }
+    const deltaX = deltaXY.deltaX;
+    const deltaY = deltaXY.deltaY;
+    if (
+      !dragState.isDragging &&
+      !dragState.isScrolling &&
+      dragState.isDragAllowed
+    ) {
+      if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 50) {
+        setDragState((prevState) => ({
+          ...prevState,
+          isDragging: true,
+        }));
+      } else if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        setDragState((prevState) => ({
+          ...prevState,
+          isScrolling: true,
+        }));
+      }
+    }
+  };
+
+  const handleDrag = (
+    event: React.TouchEvent<HTMLDialogElement> | MouseEvent,
+  ) => {
+    if (
+      startYRef.current !== null &&
+      startHeightRef.current !== null &&
+      bottomSheetRef.current
+    ) {
+      const clientY =
+        'touches' in event ? event.touches[0].clientY : event.clientY;
+      const newHeight = startHeightRef.current - (clientY - startYRef.current);
+      if (newHeight >= minPos && newHeight <= maxPos) {
+        bottomSheetRef.current.style.height = `${newHeight}px`;
+      }
+    }
+  };
+
   const handleMouseDown = (event: React.MouseEvent<HTMLDialogElement>) => {
+    setDragState((prevState) => ({
+      ...prevState,
+      isDragging: true,
+    }));
+
     startYRef.current = event.clientY;
     startHeightRef.current = bottomSheetRef.current?.clientHeight ?? null;
     document.addEventListener('mousemove', handleMouseMove);
@@ -82,41 +189,36 @@ export function BottomSheet({
   };
 
   const handleTouchStart = (event: React.TouchEvent<HTMLDialogElement>) => {
-    startYRef.current = event.touches[0].clientY;
-    startHeightRef.current = bottomSheetRef.current?.clientHeight ?? null;
-    document.addEventListener('touchmove', handleTouchMove);
-    document.addEventListener('touchend', handleTouchEnd);
+    setDragState({
+      isDragging: false,
+      isScrolling: false,
+      isDragAllowed: determineDragAllowed(event),
+    });
+    SetPositionRefs(event);
   };
 
   const handleMouseMove = (event: MouseEvent) => {
-    if (
-      startYRef.current !== null &&
-      startHeightRef.current !== null &&
-      bottomSheetRef.current
-    ) {
-      const newHeight =
-        startHeightRef.current - (event.clientY - startYRef.current);
-      if (newHeight >= minPos && newHeight <= maxPos) {
-        bottomSheetRef.current.style.height = `${newHeight}px`;
-      }
-    }
+    handleDrag(event);
   };
 
-  const handleTouchMove = (event: TouchEvent) => {
-    if (
-      startYRef.current !== null &&
-      startHeightRef.current !== null &&
-      bottomSheetRef.current
-    ) {
-      const newHeight =
-        startHeightRef.current - (event.touches[0].clientY - startYRef.current);
-      if (newHeight >= minPos && newHeight <= maxPos) {
-        bottomSheetRef.current.style.height = `${newHeight}px`;
-      }
+  const handleTouchMove = (event: React.TouchEvent<HTMLDialogElement>) => {
+    if (startYRef.current === null || startXRef.current === null) {
+      return;
+    }
+    const delta = deltaXY(event);
+    determineDragOrScroll(delta);
+
+    if (dragState.isDragging) {
+      handleDrag(event);
     }
   };
 
   const handleMouseUp = () => {
+    setDragState((prevState) => ({
+      ...prevState,
+      isDragging: false,
+    }));
+
     document.removeEventListener('mousemove', handleMouseMove);
     document.removeEventListener('mouseup', handleMouseUp);
     if (bottomSheetRef.current) {
@@ -137,21 +239,24 @@ export function BottomSheet({
   };
 
   const handleTouchEnd = () => {
-    document.removeEventListener('touchmove', handleTouchMove);
-    document.removeEventListener('touchend', handleTouchEnd);
-    if (bottomSheetRef.current) {
-      const currentHeight = bottomSheetRef.current.clientHeight;
-      const closestPos = [closingPos, defaultPos, maxPos].reduce(
-        (prev, curr) =>
-          Math.abs(curr - currentHeight) < Math.abs(prev - currentHeight)
-            ? curr
-            : prev,
-        closingPos,
-      );
-      if (closestPos === closingPos) {
-        handleCloseBottomSheet();
-      } else {
-        bottomSheetRef.current.style.height = `${closestPos}px`;
+    if (dragState.isDragging) {
+      if (bottomSheetRef.current) {
+        const currentHeight = bottomSheetRef.current.clientHeight;
+        const closestPos = [closingPos, defaultPos, maxPos].reduce(
+          (prev, curr) =>
+            Math.abs(curr - currentHeight) < Math.abs(prev - currentHeight)
+              ? curr
+              : prev,
+          closingPos,
+        );
+        if (closestPos === closingPos) {
+          handleCloseBottomSheet();
+        } else {
+          bottomSheetRef.current.style.height = `${closestPos}px`;
+          contentRef?.current?.scrollTo({
+            top: 0,
+          });
+        }
       }
     }
   };
@@ -163,12 +268,15 @@ export function BottomSheet({
       onDragStart={(e) => e.preventDefault()} // Prevent default drag behavior
       onMouseDown={handleMouseDown}
       onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
       onKeyDown={handleKeyDown}
       ref={bottomSheetRef}
       className={
         cl(
           classes.bottomSheet,
           isClosing ? classes.slideout : classes.slidein,
+          dragState.isDragging ? classes.dragging : '',
         ) + cssClasses
       }
     >
