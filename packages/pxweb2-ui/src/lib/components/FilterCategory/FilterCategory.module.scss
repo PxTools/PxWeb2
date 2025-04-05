@@ -1,0 +1,57 @@
+@use '../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixvar;
+@use '../../../../style-dictionary/dist/css/variables.css' as var;
+@use '../../text-styles.scss';
+
+.filterCategory {
+  display: grid;
+  width: 100%;
+
+  &:hover {
+    //TODO: Bruke heading_underline når den er i main
+    .filterCategoryTitle {
+      text-decoration: underline;
+      text-underline-offset: 9%;
+      text-decoration-thickness: 8%;
+    }
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+}
+
+.filterCategoryHeader {
+  align-items: center;
+  background-color: transparent;
+  border: none;
+  color: var(--px-color-text-default);
+  cursor: pointer;
+  display: flex;
+  height: 64px;
+  justify-content: space-between;
+  text-align: start;
+
+  &:focus-visible,
+  &:has(:focus-visible) {
+    outline: 3px solid var(--px-color-border-focus-outline);
+    outline-offset: 6px;
+    box-shadow: 0 0 0 3px var(--px-color-border-focus-boxshadow);
+  }
+}
+
+.filterCategoryIconWrapper {
+  align-self: center;
+  display: grid;
+  place-content: center;
+
+  .open {
+    transform: rotate(180deg);
+  }
+}
+
+.filterCategoryContent {
+  &.closed {
+    display: none;
+    height: 0;
+  }
+}
