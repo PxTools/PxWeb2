@@ -22,7 +22,7 @@
     "react-router": "^7.4.1"
   },
   "devDependencies": {
-    "@testing-library/react": "^16.2.0",
+    "@testing-library/react": "^16.3.0",
     "concurrently": "^9.1.2",
     "html-validate": "^9.5.2",
     "husky": "^9.1.7",
