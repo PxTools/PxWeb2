@@ -3,7 +3,7 @@
 .bottomSheet {
   display: flex;
   width: 100%;
-  height: 50vh;
+  height: 95vh;
   flex-direction: column;
   align-items: center;
   flex-shrink: 0;
@@ -18,10 +18,6 @@
   border-style: none;
   overflow: hidden;
   max-width: 100vw;
-}
-
-.dragging {
-  cursor: grabbing;
 }
 
 .bottomSheet::backdrop {
@@ -77,27 +73,6 @@
 
   // Not from Figma
   overflow: auto;
-}
-
-.dragHandleWrapper {
-  display: flex;
-  padding: 16px 0px 8px 0px;
-  flex-direction: column;
-  align-items: center;
-  align-self: stretch;
-  background: var(--px-color-surface-default);
-  cursor: grab; // Apply cursor to the entire wrapper
-  user-select: none;
-  border: none;
-  touch-action: none; // Prevent touch events from interfering with the drag handle
-}
-
-// Drag handle styles
-.dragHandle {
-  width: 40px;
-  height: 4px;
-  border-radius: var(--px-border-radius-full);
-  background: var(--px-color-icon-action);
 }
 
 // Animation that slides in BottomSheet from the bottom when opened.
