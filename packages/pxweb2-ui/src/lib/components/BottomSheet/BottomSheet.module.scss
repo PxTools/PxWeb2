@@ -18,16 +18,10 @@
   border-style: none;
   overflow: hidden;
   max-width: 100vw;
-  touch-action: none;
 }
 
 .dragging {
   cursor: grabbing;
-}
-
-.dragAllowed {
-  touch-action: none;
-  user-select: none;
 }
 
 .bottomSheet::backdrop {
