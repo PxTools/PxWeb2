@@ -4,7 +4,7 @@ import cl from 'clsx';
 
 import styles from './StartPage.module.scss';
 
-import { Tag, Search } from '@pxweb2/pxweb2-ui';
+import { Tag, Search, TableCard, Icon } from '@pxweb2/pxweb2-ui';
 import { TablesResponse, Table } from '@pxweb2/pxweb2-api-client';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import { Header } from '../../components/Header/Header';
@@ -154,16 +154,21 @@ const StartPage = () => {
             style={{ height: '93%' }}
             data={state.tables}
             itemContent={(_, table: Table) => (
-              <div>
-                <h3>{table.label}</h3>
-                <div>
-                  <div>Category: {table.category}</div>
-                  <div>Updated: {table.updated}</div>
-                  <div>First period: {table.firstPeriod}</div>
-                  <div>Last period: {table.lastPeriod}</div>
-                  <div>Time unit: {table.timeUnit}</div>
-                  <div>Variable names: {table.variableNames.join(', ')}</div>
-                </div>
+              <div className={styles.card}>
+                <TableCard
+                  title={`${table.label}`}
+                  href={`/table/${table.id}`}
+                  updatedLabel={table.updated ? 'Sist oppdatert' : undefined}
+                  lastUpdated={
+                    table.updated
+                      ? new Date(table.updated).toLocaleDateString('no') // We may want to get the locale from config!
+                      : undefined
+                  }
+                  period={`${table.firstPeriod} - ${table.lastPeriod}`}
+                  frequency={`${table.timeUnit}`}
+                  tableId={`${table.id}`}
+                  icon={<Icon iconName="Heart" />}
+                />
               </div>
             )}
           />
