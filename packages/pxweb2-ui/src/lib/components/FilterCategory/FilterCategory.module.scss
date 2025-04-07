@@ -31,6 +31,7 @@
   height: 64px;
   justify-content: space-between;
   text-align: start;
+  padding: 0;
 
   &:focus-visible,
   &:has(:focus-visible) {
