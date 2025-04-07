@@ -55,7 +55,7 @@ export function TableInformation({
       }}
     >
       <TabsProvider activeTab={activeTab} setActiveTab={setActiveTab}>
-        <div className={cl(classes.tabs)}>
+        <div className={cl(classes.tabs, isMobile && classes.isMobile)}>
           <Tabs variant={tabsVariant}>
             <Tab
               id="tab-footnotes"

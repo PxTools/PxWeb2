@@ -4,6 +4,28 @@
 .tabs {
   display: flex;
   width: 100%;
+
+  &.isMobile {
+    position: relative;
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0px;
+      width: calc(100% + 40px);
+      height: 1px;
+      background-color: var(--px-color-border-divider-subtle);
+    }
+
+    &::before {
+      left: -20px;
+    }
+
+    &::after {
+      right: -20px;
+    }
+  }
 }
 
 .tabsContent {
