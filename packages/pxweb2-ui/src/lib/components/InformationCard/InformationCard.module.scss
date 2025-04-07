@@ -61,12 +61,12 @@
   justify-content: flex-start; /* Align items at the top */
 }
 
-// .child-wrapper ul {
-//   list-style-type: none; /* Remove bullets */
-//   padding: 0; /* Remove default padding */
-//   margin: 0; /* Remove default margin */
-// }
+.child-wrapper ul {
+  list-style-type: none; /* Remove bullets */
+  padding: 0; /* Remove default padding */
+  margin: 0; /* Remove default margin */
+}
 
-// .child-wrapper li {
-//   margin: 0; /* Remove vertical margin */
-// }
+.child-wrapper li {
+  margin: 0; /* Remove vertical margin */
+}
