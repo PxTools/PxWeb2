@@ -35,7 +35,8 @@ export const WithList: Story = {
     headingSize: 'medium',
     icon: 'Book',
     children: (
-      <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
+      // <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
+      <ul>
         <li>
           <strong>( . ) = Ikke mulig å oppgi tall</strong>
           <br />
