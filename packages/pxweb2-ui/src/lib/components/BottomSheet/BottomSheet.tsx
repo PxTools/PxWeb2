@@ -211,6 +211,7 @@ export function BottomSheet({
     determineDragOrScroll(delta);
 
     if (dragState.isDragging) {
+      event.stopPropagation();
       handleDrag(event);
     }
   };
