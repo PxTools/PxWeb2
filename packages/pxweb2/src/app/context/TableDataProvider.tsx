@@ -67,6 +67,9 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   // Variables in the heading (mobile table)
   const [headingMobile, setHeadingMobile] = useState<string[]>([]);
 
+  // // Dictionary that keeps track of selected codelists per variable
+  // const [variableCodelists, setVariableCodelists] = useState<Record<string, string>>({});
+
   const [errorMsg, setErrorMsg] = useState('');
   const variables = useVariables();
 
@@ -75,6 +78,23 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       console.error('ERROR: TableDataProvider:', errorMsg);
     }
   }, [errorMsg]);
+
+  // const selectVariableCodelist = React.useCallback(
+  //   (variableId: string, codelistId: string) => {
+
+  //     console.log('TableDataProvider: selectVariableCodelist');
+  //     if (variableCodelists.hasOwnProperty(variableId)) {
+
+  //       return;
+  //     }
+
+  //     setVariableCodelists((prevCodelists) => ({
+  //       ...prevCodelists,
+  //       [variableId]: codelistId,
+  //     }));
+  //   },
+  //   []
+  // );
 
   /**
    * Remember order of variables in stub and heading when table setup is changed.
