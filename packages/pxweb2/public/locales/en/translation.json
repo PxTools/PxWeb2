@@ -157,6 +157,10 @@
           "missing_mandatory": {
             "title": "The table cannot be displayed",
             "description": "You must select something in the filter"
+          },
+          "to_many_values_selected": {
+            "title": "The table is to large and cannot be updated",
+            "description": "The filtering corresponds to {{selectedDataSize}} cells, but the table cannot show more than {{maxDataCells}}. Reduce the numer of selected in the filter , and when this message disappear the table will update as normal."
           }
         }
       },

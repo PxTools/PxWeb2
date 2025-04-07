@@ -157,6 +157,10 @@
           "missing_mandatory": {
             "title": "Tabellen kan inte visas",
             "description": "Du måste välja något i listan för att tabellen ska visas"
+          },
+          "to_many_values_selected": {
+            "title": "Tabellen er for stor og kan inte uppdateras",
+            "description": "Filtreringen du har gjord tilsvarer {{selectedDataSize}} celler, mens tabellen inte klarer av at visa mer enn {{maxDataCells}}. Reduser antall valde i filteret , og når denne meldingen er borte uppdaterar tabellen seg som normalt."
           }
         }
       },

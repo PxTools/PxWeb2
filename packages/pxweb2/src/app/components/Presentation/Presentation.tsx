@@ -6,7 +6,7 @@ import isEqual from 'lodash/isEqual';
 import classes from './Presentation.module.scss';
 import useApp from '../../context/useApp';
 import { ContentTop } from '../ContentTop/ContentTop';
-import { Table, EmptyState, PxTable } from '@pxweb2/pxweb2-ui';
+import { Table, EmptyState, PxTable, Alert } from '@pxweb2/pxweb2-ui';
 import useTableData from '../../context/useTableData';
 import useVariables from '../../context/useVariables';
 import { useDebounce } from '@uidotdev/usehooks';
@@ -26,6 +26,7 @@ const MemoizedTable = React.memo(
 );
 export function Presentation({ selectedTabId }: propsType) {
   const { isMobile } = useApp();
+  const { config } = useApp();
   const { i18n, t } = useTranslation();
   const tableData = useTableData();
   const variablesChanged = useVariables();
@@ -180,6 +181,41 @@ export function Presentation({ selectedTabId }: propsType) {
             staticTitle={pxTableMetadata?.label}
             pxtable={tableData.data}
           />
+          {!variables.isMatrixSizeAllowed && (
+            <div
+              style={{
+                width: '100%',
+              }}
+            >
+              <Alert
+                variant="warning"
+                heading={t(
+                  'presentation_page.main_content.table.warnings.to_many_values_selected.title',
+                )}
+              >
+                {' '}
+                {t(
+                  'presentation_page.main_content.table.warnings.to_many_values_selected.description',
+                  {
+                    selectedDataSize: t(
+                      'number.simple_number_with_zero_decimal',
+                      {
+                        value: variables.getSelectedMatrixSize(),
+                      },
+                    ),
+                    maxDataCells: t('number.simple_number_with_zero_decimal', {
+                      value: config.maxDataCells,
+                    }),
+                  },
+                )}
+                {/* Filtreringen du har gjort tilsvarer{' '}
+                {variables.getSelectedMatrixSize()} celler, mens tabellen ikke
+                klarer å vise mer enn {config.maxDataCells} celler,reduser
+                antall valgt i filteret , og når denne meldingen er borte
+                oppdaterer tabellen seg som normalt. */}
+              </Alert>
+            </div>
+          )}
           {!isMissingMandatoryVariables && (
             <div
               className={classes.gradientContainer}
@@ -190,7 +226,6 @@ export function Presentation({ selectedTabId }: propsType) {
               </div>
             </div>
           )}
-
           {!isLoadingMetadata && isMissingMandatoryVariables && (
             <EmptyState
               svgName="ManWithMagnifyingGlass"
