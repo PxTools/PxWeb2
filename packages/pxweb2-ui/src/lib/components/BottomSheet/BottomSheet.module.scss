@@ -36,7 +36,7 @@
 
 .header {
   display: flex;
-  padding-top: 4px;
+  padding-top: 20px;
   flex-direction: column;
   align-items: center;
   gap: fixed.$spacing-4;
@@ -62,10 +62,9 @@
 
 .content {
   display: flex;
-  padding: fixed.$spacing-4 fixed.$spacing-5 fixed.$spacing-6 fixed.$spacing-5;
+  padding: fixed.$spacing-4 fixed.$spacing-5 0px fixed.$spacing-5;
   flex-direction: column;
   align-items: center;
-  gap: fixed.$spacing-3;
   flex: 1 0 0;
   align-self: stretch;
   background: var(--px-color-surface-default);
