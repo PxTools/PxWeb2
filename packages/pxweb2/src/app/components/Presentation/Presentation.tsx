@@ -10,6 +10,7 @@ import { Table, EmptyState, PxTable } from '@pxweb2/pxweb2-ui';
 import useTableData from '../../context/useTableData';
 import useVariables from '../../context/useVariables';
 import { useDebounce } from '@uidotdev/usehooks';
+//import { getConfig } from '../../util/config/getConfig';
 
 type propsType = {
   readonly selectedTabId: string;
@@ -112,7 +113,8 @@ export function Presentation({ selectedTabId }: propsType) {
       );
 
     if (initialRun && !hasSelectedValues) {
-      tableData.fetchTableData(tableId, i18n, isMobile);
+      fetchTableDataIfAllowed();
+      //tableData.fetchTableData(tableId, i18n, isMobile);
       setIsMissingMandatoryVariables(false);
     } else {
       if (
@@ -122,7 +124,8 @@ export function Presentation({ selectedTabId }: propsType) {
         !initialRun
       ) {
         setIsFadingTable(true);
-        tableData.fetchTableData(tableId, i18n, isMobile);
+        fetchTableDataIfAllowed();
+        //tableData.fetchTableData(tableId, i18n, isMobile);
         setIsMissingMandatoryVariables(false);
       }
       if (!hasSelectedMandatoryVariables && !initialRun) {
@@ -140,8 +143,30 @@ export function Presentation({ selectedTabId }: propsType) {
   }, [variablesChanged]);
 
   useEffect(() => {
-    setIsFadingTable(false); // Stop fading once data is loaded
+    //if (isMatrixSizeIsAlloved()) {
+    if (variables.isMatrixSizeAllowed) {
+      setIsFadingTable(false); // Stop fading once data is loaded
+    }
   }, [tableData.data, variables]);
+
+  function fetchTableDataIfAllowed() {
+    //if (isMatrixSizeIsAlloved()) {
+    if (variables.isMatrixSizeAllowed) {
+      tableData.fetchTableData(tableId, i18n, isMobile);
+    } else {
+      setIsFadingTable(true);
+      console.log('FOR STOR');
+      // fade table and give error message
+    }
+  }
+
+  // function isMatrixSizeIsAlloved() {
+  //   const config = getConfig();
+  //   const selectedMatrixSize = variables.getSelectedMatrixSize();
+  //   const maxAllowedMatrixSize = config.maxDataCells;
+  //   console.log('maxAllowedMatrixSize' + maxAllowedMatrixSize);
+  //   return selectedMatrixSize <= maxAllowedMatrixSize;
+  // }
 
   return (
     <main

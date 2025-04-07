@@ -1,6 +1,7 @@
 import React, { createContext, useMemo, useState } from 'react';
 
 import { SelectedVBValues, PxTableMetadata } from '@pxweb2/pxweb2-ui';
+import { getConfig } from '../util/config/getConfig';
 
 // Define the type for the context
 export type VariablesContextType = {
@@ -18,6 +19,7 @@ export type VariablesContextType = {
   setHasLoadedDefaultSelection: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedVBValues: React.Dispatch<React.SetStateAction<SelectedVBValues[]>>;
   selectedVBValues: SelectedVBValues[];
+  isMatrixSizeAllowed: boolean;
   isLoadingMetadata: boolean;
   setIsLoadingMetadata: React.Dispatch<React.SetStateAction<boolean>>;
   pxTableMetadata: PxTableMetadata | null;
@@ -48,6 +50,7 @@ export const VariablesContext = createContext<VariablesContextType>({
   setSelectedVBValues: () => [],
   selectedVBValues: [],
   setIsLoadingMetadata: () => false,
+  isMatrixSizeAllowed: true,
   isLoadingMetadata: false,
   pxTableMetadata: null,
   setPxTableMetadata: () => null,
@@ -73,7 +76,9 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
     [],
   );
   const [selectedMatrixSize, setSelectedMatrixSize] = useState<number>(1);
+  const [isMatrixSizeAllowed, setIsMatrixSizeAllowed] = useState<boolean>(true);
 
+  const config = getConfig();
   /**
    * Adds multiple values for a given variable
    */
@@ -216,7 +221,15 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
       }
       matrixSize *= numberOfValues;
     });
-    return setSelectedMatrixSize(matrixSize);
+    setSelectedMatrixSize(matrixSize);
+    const maxAllowedMatrixSize = config.maxDataCells;
+    console.log(' provider matrixsize=' + matrixSize);
+    console.log(' provider maxAllowedMatrixSize=' + maxAllowedMatrixSize);
+    if (matrixSize > maxAllowedMatrixSize) {
+      setIsMatrixSizeAllowed(false);
+    } else {
+      setIsMatrixSizeAllowed(true);
+    }
   };
 
   const getSelectedMatrixSize = () => {
@@ -238,6 +251,7 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
       setHasLoadedDefaultSelection,
       setSelectedVBValues,
       selectedVBValues,
+      isMatrixSizeAllowed,
       isLoadingMetadata,
       setIsLoadingMetadata,
       pxTableMetadata,
@@ -258,6 +272,7 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
       setHasLoadedDefaultSelection,
       setSelectedVBValues,
       selectedVBValues,
+      isMatrixSizeAllowed,
       isLoadingMetadata,
       setIsLoadingMetadata,
       pxTableMetadata,
