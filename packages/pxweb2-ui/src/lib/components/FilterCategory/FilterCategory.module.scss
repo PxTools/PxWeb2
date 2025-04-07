@@ -3,6 +3,7 @@
 @use '../../text-styles.scss';
 
 .filterCategory {
+  border-bottom: 1px solid var(--px-color-border-subtle);
   display: grid;
   width: 100%;
 
@@ -24,7 +25,6 @@
   align-items: center;
   background-color: transparent;
   border: none;
-  border-bottom: 1px solid var(--px-color-border-subtle);
   color: var(--px-color-text-default);
   cursor: pointer;
   display: flex;
@@ -51,8 +51,12 @@
 }
 
 .filterCategoryContent {
-  &.closed {
-    display: none;
-    height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+  max-height: 0;
+
+  &.open {
+    max-height: 500px;
+    transition: max-height 0.2s ease-out;
   }
 }

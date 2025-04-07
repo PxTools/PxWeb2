@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+
 import { FilterCategory } from './FilterCategory';
 import Checkbox from '../Checkbox/Checkbox';
 
