@@ -98,7 +98,7 @@ export const NavigationRail = React.forwardRef<
                 parentName="navRail"
                 label={t('presentation_page.sidemenu.save.title')}
                 selected={selected === 'save'}
-                icon={'FloppyDisk'}
+                icon={'Download'}
                 onClick={(event) => {
                   onChange(isKeyboardClick(event), selected === 'save', 'save');
                 }}
