@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
 import { InformationCard, InformationCardProps } from './InformationCard';
-import { Icon } from '../Icon/Icon';
+import BodyLong from '../Typography/BodyLong/BodyLong';
+import Heading from '../Typography/Heading/Heading';
 
 const meta: Meta<typeof InformationCard> = {
   component: InformationCard,
@@ -14,7 +15,6 @@ type Story = StoryObj<typeof InformationCard>;
 export const Default: Story = {
   args: {
     headingText: 'Information card with header',
-    headingSize: 'medium',
     icon: 'Book',
     children: 'This is an information card with heading.',
   },
@@ -29,74 +29,20 @@ export const WithoutHeading: Story = {
   render: (args) => <InformationCard {...args} />,
 };
 
-export const WithList: Story = {
+export const WithHeadersAndBodylongs: Story = {
   args: {
-    headingText: 'With header and list withou bullets',
-    headingSize: 'medium',
+    headingText: 'Tegnforklaring',
     icon: 'Book',
     children: (
-      // <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
-      <ul>
-        <li>
-          <strong>( . ) = Ikke mulig å oppgi tall</strong>
-          <br />
-          Tall finnes ikke på dette tidspunktet fordi kategorien ikke var i bruk
-          da tallene ble samlet inn.
-        </li>
-        <li>
-          <strong>( .. ) = Tallgrunnlag mangler</strong>
-          <br />
-          Tall er ikke kommet inn i våre databaser eller er for usikre til å
-          publiseres.
-        </li>
-        <li>
-          <strong>( : ) = Vises ikke av konfidensialitetshensyn</strong>
-          <br />
-          Tall publiseres ikke for å unngå å identifisere personer eller
-          virksomheter.
-        </li>
-      </ul>
+    <div>
+      <Heading size='xsmall'>( . ) = Ikke mulig å oppgi tall</Heading>
+      <BodyLong>Tall finnes ikke på dette tidspunktet fordi kategorien ikke var i bruk da tallene ble samlet inn.</BodyLong>
+      <Heading size='xsmall'>( .. ) = Tallgrunnlag mangler</Heading>
+      <BodyLong>Tall er ikke kommet inn i våre databaser eller er for usikre til å publiseres.</BodyLong>
+      <Heading size='xsmall'>( : ) = Vises ikke av konfidensialitetshensyn</Heading>
+      <BodyLong>Tall publiseres ikke for å unngå å identifisere personer eller virksomheter.</BodyLong>
+    </div>
     ),
-  },
-  render: (args) => <InformationCard {...args} />,
-};
-
-export const WithListWithoutHeading: Story = {
-  args: {
-    icon: 'Book',
-    children: (
-      <ul>
-        <li>First item</li>
-        <li>Second item</li>
-        <li>Third item</li>
-        <li>Fourth item</li>
-        <li>Tifth item</li>
-        <li>Sixth item</li>
-        <li>Seventh item</li>
-        <li>Eighth item</li>
-        <li>Ninth item</li>
-      </ul>
-    ),
-  },
-  render: (args) => <InformationCard {...args} />,
-};
-
-export const WithIcon: Story = {
-  args: {
-    headingText: 'Smiley',
-    headingSize: 'large',
-    icon: 'Book',
-    children: <Icon iconName="FaceSmile" />,
-  },
-  render: (args) => <InformationCard {...args} />,
-};
-
-export const WithImage: Story = {
-  args: {
-    headingText: 'Sun is shining',
-    headingSize: 'medium',
-    icon: 'LightBulb',
-    children: <span style={{ fontSize: '64px' }}>☀️</span>,
   },
   render: (args) => <InformationCard {...args} />,
 };

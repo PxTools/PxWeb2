@@ -24,7 +24,8 @@
 .content-wrapper {
   display: inline-flex;
   flex-direction: column;
-  padding: 0px 16px 0px 16px;
+  background: var();
+  //padding: 0px 12px 0px 16px;
 }
 
 .icon-wrapper {
@@ -39,6 +40,8 @@
 }
 
 .heading-wrapper {
+  padding-top: var(--spacing-2, 2px);
+
   align-self: stretch;
   color: var(--color-text-default, #162327);
   font-family: Roboto;
@@ -55,7 +58,6 @@
   font-style: normal;
   font-weight: 400;
   padding: 8px 0px 8px 0px;
-  // background: var(--px-color-surface-moderate);
   display: flex;
   align-items: flex-start; /* Align items at the top */
   justify-content: flex-start; /* Align items at the top */
