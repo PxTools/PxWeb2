@@ -234,6 +234,9 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       isMobile: boolean,
       variablesSelection: VariablesSelection,
     ) => {
+      // Clear current table while fetching new data
+      setData(undefined);
+
       const pxTable: PxTable = await fetchFromApi(
         tableId,
         i18n,
