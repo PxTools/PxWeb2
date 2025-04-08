@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import cl from 'clsx';
 
@@ -32,12 +32,19 @@ export function TableInformation({
   const [activeTab, setActiveTab] = useState('');
   const tableData = useTableData();
   const { isMobile } = useApp();
+  const tabsContentRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (isOpen && selectedTab) {
       setActiveTab(selectedTab);
     }
   }, [isOpen, selectedTab]);
+
+  useEffect(() => {
+    if (tabsContentRef.current) {
+      tabsContentRef.current.scrollTop = 0;
+    }
+  }, [activeTab]);
 
   // TableInformation tabs should be type in some way. Maybe like this:
   // export type TabType = 'tab-footnotes' | 'tab-definitions' | 'tab-details' | 'tab-contact';
@@ -87,7 +94,10 @@ export function TableInformation({
             ></Tab>
           </Tabs>
         </div>
-        <div className={cl(classes.tabsContent, classes['bodyshort-medium'])}>
+        <div
+          ref={tabsContentRef}
+          className={cl(classes.tabsContent, classes['bodyshort-medium'])}
+        >
           <TabPanel id="pnl-footnotes" controlledBy="tab-footnotes">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
