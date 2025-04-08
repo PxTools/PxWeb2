@@ -8,6 +8,7 @@ import Heading from '../Typography/Heading/Heading';
 import { Icon, IconProps } from '../Icon/Icon';
 import Button from '../Button/Button';
 import BodyShort from '../Typography/BodyShort/BodyShort';
+import List, { ListProps } from '../List/List';
 
 export interface AlertProps {
   size?: 'small' | 'medium';
@@ -27,7 +28,7 @@ export function Alert({
   heading = '',
   onClick,
   children,
-}: AlertProps) {
+}: Readonly<AlertProps>) {
   const { t } = useTranslation();
   const [isVisible, setIsVisible] = useState(true);
   const HandleClose = () => {
@@ -42,8 +43,7 @@ export function Alert({
       onClick && onClick();
     }
   };
-  let hasheading: boolean;
-  heading ? (hasheading = true) : (hasheading = false);
+  const hasheading = Boolean(heading);
   const iconRight = 'ArrowRight';
   const iconClose = 'XMark';
   let variantIcon: IconProps['iconName'];
@@ -80,6 +80,52 @@ export function Alert({
   if (clickable) {
     closeButton = false;
   }
+
+  const childIsList = (node: React.ReactNode): boolean => {
+    if (React.isValidElement(node)) {
+      if (node.type === List) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  const extractTextFromChildren = (children: React.ReactNode): string => {
+    let textContent = '';
+
+    React.Children.forEach(children, (child) => {
+      if (React.isValidElement(child)) {
+        // If the child is a valid React element, check its children recursively
+        if (React.isValidElement(child) && child.type === List) {
+          textContent += ' ' + (child.props as ListProps)?.subHeading + ': ';
+        }
+        if (
+          typeof child.props === 'object' &&
+          child.props !== null &&
+          'children' in child.props
+        ) {
+          textContent += extractTextFromChildren(
+            child.props.children as React.ReactNode,
+          );
+        }
+      } else if (typeof child === 'string' || typeof child === 'number') {
+        // If the child is a string or number, add it to the text content
+        textContent += ' ' + child.toString();
+      }
+    });
+
+    return textContent;
+  };
+
+  if (childIsList(children) && clickable) {
+    let extractedText = '';
+    if (React.isValidElement(children) && children.type === List) {
+      const listProps = children.props as ListProps;
+      extractedText = extractTextFromChildren(listProps.children);
+    }
+    children = extractedText;
+  }
+
   return (
     <div
       onKeyDown={clickable ? handleKeyDown : undefined}
@@ -98,7 +144,7 @@ export function Alert({
       </div>
       <div className={cl(classes[`alert-section-middle-${size}`])}>
         {hasheading && (
-          <div className={classes[`alert-heading`]}>
+          <div className={cl(classes[`alert-heading`])}>
             <Heading size={headingSize} level="2">
               {heading}
             </Heading>
