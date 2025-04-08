@@ -21,7 +21,11 @@ export function InformationCard({
     <div className={cl(styles['information-card'])}>
       <Icon iconName={icon} className={styles['icon-wrapper']} />
       <div className={styles['content-wrapper']}>
-        {headingText && <Heading size={headingSize} className={cl(styles['heading-wrapper'])} >{headingText}</Heading>}
+        {headingText && (
+          <Heading size={headingSize} className={cl(styles['heading-wrapper'])}>
+            {headingText}
+          </Heading>
+        )}
         <div className={styles['child-wrapper']}>{children}</div>
       </div>
     </div>
