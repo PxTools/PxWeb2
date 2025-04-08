@@ -4,34 +4,16 @@
 .tabs {
   display: flex;
   width: 100%;
-
-  &.isMobile {
-    position: relative;
-
-    &::before,
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: 0px;
-      width: calc(100% + 40px);
-      height: 1px;
-      background-color: var(--px-color-border-divider-subtle);
-    }
-
-    &::before {
-      left: -20px;
-    }
-
-    &::after {
-      right: -20px;
-    }
-  }
 }
 
 .tabsContent {
   // Not from Figma
   overflow-y: auto;
-  padding-top: fixed.$spacing-8;
-  padding-bottom: fixed.$spacing-8;
+  padding-top: fixed.$spacing-10;
+  padding-bottom: fixed.$spacing-10;
   width: 100%;
+
+  &.mobileView {
+    padding: fixed.$spacing-6 fixed.$spacing-5 fixed.$spacing-6 fixed.$spacing-5;
+  }
 }

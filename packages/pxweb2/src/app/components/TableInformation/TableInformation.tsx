@@ -62,7 +62,7 @@ export function TableInformation({
       }}
     >
       <TabsProvider activeTab={activeTab} setActiveTab={setActiveTab}>
-        <div className={cl(classes.tabs, isMobile && classes.isMobile)}>
+        <div className={cl(classes.tabs)}>
           <Tabs variant={tabsVariant}>
             <Tab
               id="tab-footnotes"
@@ -96,7 +96,11 @@ export function TableInformation({
         </div>
         <div
           ref={tabsContentRef}
-          className={cl(classes.tabsContent, classes['bodyshort-medium'])}
+          className={cl(
+            classes.tabsContent,
+            classes['bodyshort-medium'],
+            isMobile && classes.mobileView,
+          )}
         >
           <TabPanel id="pnl-footnotes" controlledBy="tab-footnotes">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
