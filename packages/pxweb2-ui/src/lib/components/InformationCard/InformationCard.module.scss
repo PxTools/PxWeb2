@@ -25,7 +25,6 @@
   display: inline-flex;
   flex-direction: column;
   background: var();
-  //padding: 0px 12px 0px 16px;
 }
 
 .icon-wrapper {
@@ -41,34 +40,23 @@
 
 .heading-wrapper {
   padding-top: var(--spacing-2, 2px);
-
   align-self: stretch;
   color: var(--color-text-default, #162327);
-  font-family: Roboto;
+  font-family: PxWeb-font, sans-serif;
   font-size: 20px;
   font-style: normal;
   font-weight: 700;
-  line-height: 28px; /* 140% */
+  line-height: 28px;
   letter-spacing: 0.1px;
 }
 .child-wrapper {
   color: var(--color-text-default, #162327);
-  font-family: Roboto;
+  font-family: PxWeb-font, sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
   padding: 8px 0px 8px 0px;
   display: flex;
-  align-items: flex-start; /* Align items at the top */
-  justify-content: flex-start; /* Align items at the top */
-}
-
-.child-wrapper ul {
-  list-style-type: none; /* Remove bullets */
-  padding: 0; /* Remove default padding */
-  margin: 0; /* Remove default margin */
-}
-
-.child-wrapper li {
-  margin: 0; /* Remove vertical margin */
+  align-items: flex-start;
+  justify-content: flex-start;
 }
