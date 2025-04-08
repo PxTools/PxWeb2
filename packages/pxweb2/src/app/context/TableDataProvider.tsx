@@ -71,7 +71,9 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   const [codelistsInitialized, setCodelistsInitialized] = useState(false);
 
   // Dictionary that keeps track of selected codelists per variable
-  const [variableCodelists, setVariableCodelists] = useState<Record<string, string>>({});
+  const [variableCodelists, setVariableCodelists] = useState<
+    Record<string, string>
+  >({});
 
   const [errorMsg, setErrorMsg] = useState('');
   const variables = useVariables();
@@ -82,7 +84,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     }
   }, [errorMsg]);
 
-  
   /**
    * Initializes the codelists for the application context.
    *
@@ -125,12 +126,16 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       setCodelistsInitialized(true);
     }
   }, [codelistsInitialized, variables]);
-  
+
   useEffect(() => {
     if (!codelistsInitialized && variables.hasLoadedDefaultSelection) {
       initializeCodelists();
     }
-  }, [codelistsInitialized, initializeCodelists, variables.hasLoadedDefaultSelection]);
+  }, [
+    codelistsInitialized,
+    initializeCodelists,
+    variables.hasLoadedDefaultSelection,
+  ]);
 
   /**
    * Remember order of variables in stub and heading when table setup is changed.
@@ -807,13 +812,11 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * - The `setVariableCodelists` function is used to update the state with the new codelist values.
    */
   const manageSelectedCodelists = React.useCallback(
-    (
-      variablesSelection: VariablesSelection
-    ): boolean => {
+    (variablesSelection: VariablesSelection): boolean => {
       let codelistChanged: boolean = false;
 
-      console.log({variableCodelists});
-      console.log({variablesSelection});
+      console.log({ variableCodelists });
+      console.log({ variablesSelection });
 
       variablesSelection.selection.forEach((selection) => {
         const currentCodelist = variableCodelists[selection.variableCode];
@@ -827,7 +830,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       });
       return codelistChanged;
     },
-    [variableCodelists],  
+    [variableCodelists],
   );
 
   /**
@@ -863,17 +866,17 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         };
 
         const codelistChanged = manageSelectedCodelists(variablesSelection);
-        console.log({codelistChanged});
+        console.log({ codelistChanged });
 
         // Check if we have accumulated data in the data cube and if it is valid. If not we cannot use it.
         const validAccData: boolean = isAccumulatedDataValid(
           variablesSelection,
           i18n.language,
           tableId,
-          codelistChanged
+          codelistChanged,
         );
 
-        console.log({validAccData});
+        console.log({ validAccData });
 
         if (validAccData) {
           await fetchWithValidAccData(
@@ -905,7 +908,14 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         );
       }
     },
-    [variables, manageSelectedCodelists, isAccumulatedDataValid, isMobileMode, fetchWithValidAccData, fetchWithoutValidAccData],
+    [
+      variables,
+      manageSelectedCodelists,
+      isAccumulatedDataValid,
+      isMobileMode,
+      fetchWithValidAccData,
+      fetchWithoutValidAccData,
+    ],
   );
 
   /**
