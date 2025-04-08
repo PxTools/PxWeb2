@@ -67,8 +67,11 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   // Variables in the heading (mobile table)
   const [headingMobile, setHeadingMobile] = useState<string[]>([]);
 
-  // // Dictionary that keeps track of selected codelists per variable
-  // const [variableCodelists, setVariableCodelists] = useState<Record<string, string>>({});
+  // When default selection is loaded we need to initialize which codelists are selected for each variable.
+  const [codelistsInitialized, setCodelistsInitialized] = useState(false);
+
+  // Dictionary that keeps track of selected codelists per variable
+  const [variableCodelists, setVariableCodelists] = useState<Record<string, string>>({});
 
   const [errorMsg, setErrorMsg] = useState('');
   const variables = useVariables();
@@ -79,22 +82,55 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     }
   }, [errorMsg]);
 
-  // const selectVariableCodelist = React.useCallback(
-  //   (variableId: string, codelistId: string) => {
+  
+  /**
+   * Initializes the codelists for the application context.
+   *
+   * This function checks if the codelists have already been initialized and if the default selection
+   * of variables has been loaded. If both conditions are met, it retrieves the unique variable IDs,
+   * determines the corresponding codelist IDs for each variable, and updates the state with the
+   * mapping of variable IDs to codelist IDs. Once the codelists are initialized, it sets the
+   * `codelistsInitialized` flag to `true`.
+   *
+   * Dependencies:
+   * - `codelistsInitialized`: A boolean indicating whether the codelists have already been initialized.
+   * - `variables`: An object containing methods and properties related to variable management.
+   *   - `variables.hasLoadedDefaultSelection`: A boolean indicating if the default selection of variables has been loaded.
+   *   - `variables.getUniqueIds()`: A method that retrieves an array of unique variable IDs.
+   *   - `variables.getSelectedCodelistById(id: string)`: A method that retrieves the codelist ID for a given variable ID.
+   *
+   * Side Effects:
+   * - Updates the `setVariableCodelists` state with the mapping of variable IDs to codelist IDs.
+   * - Sets the `codelistsInitialized` state to `true` after initialization.
+   *
+   * Note:
+   * This function is memoized using `React.useCallback` to prevent unnecessary re-executions
+   * unless its dependencies (`codelistsInitialized` and `variables`) change.
+   */
+  const initializeCodelists = React.useCallback(() => {
+    if (!codelistsInitialized && variables.hasLoadedDefaultSelection) {
+      console.log('Initialize codelists!');
+      const ids = variables.getUniqueIds();
+      ids.forEach((id) => {
+        const codelistId = variables.getSelectedCodelistById(id);
+        console.log(`Variable ID: ${id}, Codelist ID: ${codelistId}`);
+        if (codelistId) {
+          setVariableCodelists((prevCodelists) => ({
+            ...prevCodelists,
+            [id]: codelistId,
+          }));
+        }
+      });
 
-  //     console.log('TableDataProvider: selectVariableCodelist');
-  //     if (variableCodelists.hasOwnProperty(variableId)) {
-
-  //       return;
-  //     }
-
-  //     setVariableCodelists((prevCodelists) => ({
-  //       ...prevCodelists,
-  //       [variableId]: codelistId,
-  //     }));
-  //   },
-  //   []
-  // );
+      setCodelistsInitialized(true);
+    }
+  }, [codelistsInitialized, variables]);
+  
+  useEffect(() => {
+    if (!codelistsInitialized && variables.hasLoadedDefaultSelection) {
+      initializeCodelists();
+    }
+  }, [codelistsInitialized, initializeCodelists, variables.hasLoadedDefaultSelection]);
 
   /**
    * Remember order of variables in stub and heading when table setup is changed.
@@ -688,6 +724,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       variablesSelection: VariablesSelection,
       language: string,
       tableId: string,
+      codelistChanged: boolean,
     ): boolean => {
       // accumulatedData must exist
       if (accumulatedData === undefined) {
@@ -704,6 +741,11 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
       // accumulatedData must be from the same table
       if (accumulatedData.metadata.id.toLowerCase() !== tableId.toLowerCase()) {
+        return false;
+      }
+
+      // If codelist has changed we cannot use the accumulated data
+      if (codelistChanged) {
         return false;
       }
 
@@ -751,6 +793,44 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   );
 
   /**
+   * Manages the selected codelists by comparing the current codelists with the provided selection
+   * and updating the state if there are any changes. Returns a boolean indicating whether any
+   * codelist was changed.
+   *
+   * @param variablesSelection - An object containing the selection of variables and their associated codelists.
+   * @returns A boolean value indicating whether any codelist was changed (`true` if changed, `false` otherwise).
+   *
+   * @remarks
+   * - The function uses `React.useCallback` to memoize the callback and avoid unnecessary re-renders.
+   * - It updates the `variableCodelists` state only when a mismatch between the current codelist and the
+   *   provided selection is detected.
+   * - The `setVariableCodelists` function is used to update the state with the new codelist values.
+   */
+  const manageSelectedCodelists = React.useCallback(
+    (
+      variablesSelection: VariablesSelection
+    ): boolean => {
+      let codelistChanged: boolean = false;
+
+      console.log({variableCodelists});
+      console.log({variablesSelection});
+
+      variablesSelection.selection.forEach((selection) => {
+        const currentCodelist = variableCodelists[selection.variableCode];
+        if (currentCodelist !== selection.codeList) {
+          codelistChanged = true;
+          setVariableCodelists((prevCodelists) => ({
+            ...prevCodelists,
+            [selection.variableCode]: selection.codeList ?? '',
+          }));
+        }
+      });
+      return codelistChanged;
+    },
+    [variableCodelists],  
+  );
+
+  /**
    * Fetches table data from the API (or from accumulated data in the data cube if possible).
    *
    * @param tableId - The id of the table to fetch data for.
@@ -782,12 +862,18 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
           selection: selections,
         };
 
+        const codelistChanged = manageSelectedCodelists(variablesSelection);
+        console.log({codelistChanged});
+
         // Check if we have accumulated data in the data cube and if it is valid. If not we cannot use it.
         const validAccData: boolean = isAccumulatedDataValid(
           variablesSelection,
           i18n.language,
           tableId,
+          codelistChanged
         );
+
+        console.log({validAccData});
 
         if (validAccData) {
           await fetchWithValidAccData(
@@ -819,13 +905,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         );
       }
     },
-    [
-      variables,
-      isMobileMode,
-      fetchWithValidAccData,
-      fetchWithoutValidAccData,
-      isAccumulatedDataValid,
-    ],
+    [variables, manageSelectedCodelists, isAccumulatedDataValid, isMobileMode, fetchWithValidAccData, fetchWithoutValidAccData],
   );
 
   /**
