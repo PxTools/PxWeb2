@@ -8,11 +8,8 @@
   width: 100%;
 
   &:hover {
-    //TODO: Bruke heading_underline når den er i main
     .filterCategoryTitle {
-      text-decoration: underline;
-      text-underline-offset: 9%;
-      text-decoration-thickness: 8%;
+      @extend .heading-underline;
     }
   }
 
