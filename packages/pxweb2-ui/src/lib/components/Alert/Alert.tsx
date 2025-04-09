@@ -33,8 +33,8 @@ export function Alert({
   className = '',
   children,
 }: Readonly<AlertProps>) {
-const cssClasses = className.length > 0 ? ' ' + className : '';
-const { t } = useTranslation();
+  const cssClasses = className.length > 0 ? ' ' + className : '';
+  const { t } = useTranslation();
   const [isVisible, setIsVisible] = useState(true);
   const HandleClose = () => {
     setIsVisible(false);
