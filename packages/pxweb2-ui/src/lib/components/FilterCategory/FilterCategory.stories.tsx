@@ -48,8 +48,12 @@ const filterContent = (
 export const Default: Story = {
   args: {
     header: 'Filter name',
-    children: filterContent,
+    children: 'Filter content',
   },
+};
+
+export const WithFilterContent: StoryFn<typeof FilterCategory> = () => {
+  return <FilterCategory header="Filter name">{filterContent}</FilterCategory>;
 };
 
 export const OpenByDefault: StoryFn<typeof FilterCategory> = () => {

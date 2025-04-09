@@ -50,8 +50,11 @@
 
 .filterCategoryContent {
   overflow: hidden;
-  transition: max-height 0.2s ease-out;
-  max-height: 0;
+
+  &.closed {
+    max-height: 0;
+    transition: max-height 0.2s ease-out;
+  }
 
   &.open {
     max-height: 500px;
