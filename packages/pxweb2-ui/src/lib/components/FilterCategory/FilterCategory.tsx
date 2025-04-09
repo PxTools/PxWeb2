@@ -7,13 +7,15 @@ import { Icon } from '../Icon/Icon';
 export interface FilterCategoryProps {
   header?: string;
   children?: ReactNode;
+  openByDefault?: boolean;
 }
 
 export const FilterCategory: React.FC<FilterCategoryProps> = ({
   header,
   children,
+  openByDefault = false,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(openByDefault);
   const [maxHeight, setMaxHeight] = useState('');
 
   const contentRef = useRef<HTMLDivElement>(null);

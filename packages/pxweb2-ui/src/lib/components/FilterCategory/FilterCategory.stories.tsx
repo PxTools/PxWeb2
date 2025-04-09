@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj, StoryFn } from '@storybook/react';
 
 import { FilterCategory } from './FilterCategory';
 import Checkbox from '../Checkbox/Checkbox';
@@ -50,4 +50,12 @@ export const Default: Story = {
     header: 'Filter name',
     children: filterContent,
   },
+};
+
+export const OpenByDefault: StoryFn<typeof FilterCategory> = () => {
+  return (
+    <FilterCategory header="Filter name" openByDefault>
+      {filterContent}
+    </FilterCategory>
+  );
 };
