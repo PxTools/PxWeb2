@@ -47,6 +47,17 @@ function getFilters(tables: Table[]): Map<string, number> {
   return filters;
 }
 
+function removeTableNumber(title: string): string {
+  //Check if title starts with table number, like "01234: Some Statistic"
+  const test = RegExp(/^\d{5}:*./, 'i');
+
+  if (test.exec(title) == null) {
+    return title;
+  } else {
+    return title.slice(6);
+  }
+}
+
 const initialState: State = {
   tables: bigTableList.tables,
   availableFilters: getFilters(bigTableList.tables),
@@ -145,18 +156,18 @@ const StartPage = () => {
               </span>
             ))}
           </div>
-          <div className={cl(styles['label-medium'])}>
+          <div className={cl(styles['label-medium'], styles.countLabel)}>
             {state.activeFilters.length
               ? `Treff på ${state.tables.length} tabeller`
               : `${state.tables.length} tabeller`}
           </div>
           <Virtuoso
-            style={{ height: '93%' }}
+            style={{ height: '90%' }}
             data={state.tables}
             itemContent={(_, table: Table) => (
-              <div className={styles.card}>
+              <div className={styles.tableListItem}>
                 <TableCard
-                  title={`${table.label}`}
+                  title={`${table.label && removeTableNumber(table.label)}`}
                   href={`/table/${table.id}`}
                   updatedLabel={table.updated ? 'Sist oppdatert' : undefined}
                   lastUpdated={
@@ -164,7 +175,8 @@ const StartPage = () => {
                       ? new Date(table.updated).toLocaleDateString('no') // We may want to get the locale from config!
                       : undefined
                   }
-                  period={`${table.firstPeriod} - ${table.lastPeriod}`}
+                  // We use slice here because we _only_ want 4digit year. Sometimes, month is appended in data set.
+                  period={`${table.firstPeriod?.slice(0, 4)} - ${table.lastPeriod?.slice(0, 4)}`}
                   frequency={`${table.timeUnit}`}
                   tableId={`${table.id}`}
                   icon={<Icon iconName="Heart" />}
