@@ -5,7 +5,6 @@
 import type { Contact } from './Contact';
 import type { Discontinued } from './Discontinued';
 import type { jsonstat_noteMandatory } from './jsonstat_noteMandatory';
-import type { TimeUnit } from './TimeUnit';
 import type { updated } from './updated';
 /**
  * extension at root level
@@ -40,9 +39,9 @@ export type extension_root = {
          */
         aggregallowed?: boolean;
         /**
-         * Copyright is given as YES or NO
+         * If the table is protected by copyright
          */
-        copyright?: string;
+        copyright?: boolean;
         /**
          * code (two characters) for language
          */
@@ -104,7 +103,6 @@ export type extension_root = {
      * Latest time period in table
      */
     lastPeriod?: string;
-    timeUnit?: TimeUnit;
     /**
      * Tag for table
      */
