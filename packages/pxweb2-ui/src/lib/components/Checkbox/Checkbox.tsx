@@ -34,6 +34,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
       role="checkbox"
       aria-checked={value}
       aria-labelledby={id + '-label'}
+      aria-disabled={subtle}
       className={cl(styles.checkboxWrapper, {
         [styles[`subtle`]]: subtle,
       })}
