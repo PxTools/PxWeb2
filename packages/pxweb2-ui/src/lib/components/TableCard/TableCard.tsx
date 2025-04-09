@@ -3,6 +3,7 @@ import cl from 'clsx';
 
 import styles from './TableCard.module.scss';
 import { Icon } from '../Icon/Icon';
+import { Tag } from '../Tag/Tag';
 
 interface TableCardProps {
   ariaLabel?: string;
@@ -76,9 +77,11 @@ export const TableCard = forwardRef<HTMLDivElement, TableCardProps>(
                 </span>
               )}
               {frequency && (
-                <span className={cl(styles.frequency, styles['label-small'])}>
-                  {frequency}
-                </span>
+                <div className={cl(styles.frequency)}>
+                  <Tag size="small" variant="subtle">
+                    {frequency}
+                  </Tag>
+                </div>
               )}
               {lastUpdated && (
                 <div className={cl(styles.lastUpdated)}>
@@ -90,9 +93,9 @@ export const TableCard = forwardRef<HTMLDivElement, TableCardProps>(
               )}
             </div>
             {tableId && (
-              <span className={cl(styles.tableId, styles['label-small'])}>
+              <Tag size="small" type="border" variant="subtle">
                 {tableId}
-              </span>
+              </Tag>
             )}
           </div>
         </div>
