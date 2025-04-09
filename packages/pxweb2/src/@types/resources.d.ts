@@ -51,7 +51,7 @@ interface Resources {
         statistics: 'Statistikkbanken';
       };
       sidemenu: {
-        arialabeltoolsidemenu: 'Tools menu for table';
+        arialabeltoolsidemenu: 'Tool menu for table';
         hide: 'Hide';
         selection: {
           title: 'Filter';
@@ -150,7 +150,7 @@ interface Resources {
         };
       };
       main_content: {
-        arialabelbreadcrumb: 'breadcrumb';
+        arialabelbreadcrumb: 'Breadcrumb';
         last_updated: 'Last updated';
         show_details: 'Show details';
         table: {
@@ -158,6 +158,10 @@ interface Resources {
             missing_mandatory: {
               title: 'The table cannot be displayed';
               description: 'You must select something in the filter';
+            };
+            to_many_values_selected: {
+              title: 'The table is too large and cannot be updated';
+              description: 'Your current selection makes {{selectedDataSize}} cells, while the table can display a maximum of {{maxDataCells}} cells. Reduce the number of selections in the filter, and once this message disappears, the table will update as usual.';
             };
           };
         };
@@ -193,7 +197,7 @@ interface Resources {
             title: 'Contact';
             description: 'Description text...';
             missing_heading: 'No contact information';
-            missing_text: 'The table has no contact information';
+            missing_text: 'The table has no contact information.';
           };
         };
         related: {
