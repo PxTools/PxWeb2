@@ -159,8 +159,8 @@
             "description": "Du måste välja något i listan för att tabellen ska visas"
           },
           "to_many_values_selected": {
-            "title": "Tabellen er for stor og kan inte uppdateras",
-            "description": "Filtreringen du har gjord tilsvarer {{selectedDataSize}} celler, mens tabellen inte klarer av at visa mer enn {{maxDataCells}}. Reduser antall valde i filteret , og når denne meldingen er borte uppdaterar tabellen seg som normalt."
+            "title": "Tabellen är för stor och kan inte uppdateras",
+            "description": "Dina val i filtren motsvarar {{selectedDataSize}} celler men tabellen kan bara visa {{maxDataCells}}. celler. Minska antalet val i filtren och när det här meddelandet försvinner kommer tabellen att uppdateras som vanligt."
           }
         }
       },

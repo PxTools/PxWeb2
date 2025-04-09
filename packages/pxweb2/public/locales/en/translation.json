@@ -159,8 +159,8 @@
             "description": "You must select something in the filter"
           },
           "to_many_values_selected": {
-            "title": "The table is to large and cannot be updated",
-            "description": "The filtering corresponds to {{selectedDataSize}} cells, but the table cannot show more than {{maxDataCells}}. Reduce the numer of selected in the filter , and when this message disappear the table will update as normal."
+            "title": "The table is too large and cannot be updated",
+            "description": "Your current selection makes {{selectedDataSize}} cells, while the table can display a maximum of {{maxDataCells}} cells. Reduce the number of selections in the filter, and once this message disappears, the table will update as usual."
           }
         }
       },
