@@ -42,6 +42,8 @@ export function Presentation({ selectedTabId }: propsType) {
     useState(false);
   const [initialRun, setInitialRun] = useState(true);
   const [isFadingTable, setIsFadingTable] = useState(false);
+  const [isMandatoryNotSelectedFirst, setIsMandatoryNotSelectedFirst] =
+    useState(true);
 
   const tableContainerRef = useRef<HTMLDivElement | null>(null);
   const gradientContainerRef = useRef<HTMLDivElement | null>(null);
@@ -156,11 +158,49 @@ export function Presentation({ selectedTabId }: propsType) {
       tableData.fetchTableData(tableId, i18n, isMobile);
     } else {
       setIsFadingTable(true);
+
       console.log('FOR STOR');
       // fade table and give error message
     }
   }
 
+  useEffect(() => {
+    if (isMissingMandatoryVariables) {
+      setIsMandatoryNotSelectedFirst(true);
+    } else {
+      setIsMandatoryNotSelectedFirst(false);
+    }
+    console.log(
+      'isMandatoryNotSelectedFirst should be true',
+      isMandatoryNotSelectedFirst,
+    );
+  }, [variables.isMatrixSizeAllowed]);
+
+  useEffect(() => {
+    if (!variables.isMatrixSizeAllowed) {
+      setIsMandatoryNotSelectedFirst(false);
+    }
+    console.log(
+      'isMandatoryNotSelectedFirst should be false',
+      isMandatoryNotSelectedFirst,
+    );
+  }, [isMissingMandatoryVariables]);
+
+  // function toStrong() {
+  //   const selectedDataSize = variables.getSelectedMatrixSize().toString();
+  //   console
+  //     .log
+  //     // 'TRANSLATE'
+  //     // (
+  //     //   // <Trans i18nKey="presentation_page.main_content.table.warnings.to_many_values_selected.description">
+  //     //   //   hallo <strong> t('{{'selected44}}</strong> maX= <strong>t({66})</strong>
+  //     //   // </Trans>
+  //     // ),
+  //     ();
+
+  //   return 44;
+  // }
+  // toStrong();
   // function isMatrixSizeIsAlloved() {
   //   const config = getConfig();
   //   const selectedMatrixSize = variables.getSelectedMatrixSize();
@@ -181,7 +221,7 @@ export function Presentation({ selectedTabId }: propsType) {
             staticTitle={pxTableMetadata?.label}
             pxtable={tableData.data}
           />
-          {!variables.isMatrixSizeAllowed && (
+          {!variables.isMatrixSizeAllowed && !isMandatoryNotSelectedFirst && (
             <div
               style={{
                 width: '100%',
@@ -208,11 +248,6 @@ export function Presentation({ selectedTabId }: propsType) {
                     }),
                   },
                 )}
-                {/* Filtreringen du har gjort tilsvarer{' '}
-                {variables.getSelectedMatrixSize()} celler, mens tabellen ikke
-                klarer å vise mer enn {config.maxDataCells} celler,reduser
-                antall valgt i filteret , og når denne meldingen er borte
-                oppdaterer tabellen seg som normalt. */}
               </Alert>
             </div>
           )}
@@ -226,17 +261,31 @@ export function Presentation({ selectedTabId }: propsType) {
               </div>
             </div>
           )}
-          {!isLoadingMetadata && isMissingMandatoryVariables && (
-            <EmptyState
-              svgName="ManWithMagnifyingGlass"
-              headingTxt={t(
-                'presentation_page.main_content.table.warnings.missing_mandatory.title',
-              )}
-              descriptionTxt={t(
-                'presentation_page.main_content.table.warnings.missing_mandatory.description',
-              )}
-            />
-          )}
+          {isMissingMandatoryVariables &&
+            !variables.isMatrixSizeAllowed &&
+            !isMandatoryNotSelectedFirst && (
+              <div
+                className={classes.gradientContainer}
+                ref={gradientContainerRef}
+              >
+                <div className={classes.tableContainer} ref={tableContainerRef}>
+                  <MemoizedTable pxtable={tableData.data} isMobile={isMobile} />
+                </div>
+              </div>
+            )}
+          {!isLoadingMetadata &&
+            isMissingMandatoryVariables &&
+            (variables.isMatrixSizeAllowed || isMandatoryNotSelectedFirst) && (
+              <EmptyState
+                svgName="ManWithMagnifyingGlass"
+                headingTxt={t(
+                  'presentation_page.main_content.table.warnings.missing_mandatory.title',
+                )}
+                descriptionTxt={t(
+                  'presentation_page.main_content.table.warnings.missing_mandatory.description',
+                )}
+              />
+            )}
         </>
       )}
     </main>
