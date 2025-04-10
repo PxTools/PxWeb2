@@ -10,7 +10,6 @@ import { Table, EmptyState, PxTable, Alert } from '@pxweb2/pxweb2-ui';
 import useTableData from '../../context/useTableData';
 import useVariables from '../../context/useVariables';
 import { useDebounce } from '@uidotdev/usehooks';
-//import { getConfig } from '../../util/config/getConfig';
 
 type propsType = {
   readonly selectedTabId: string;
@@ -117,7 +116,6 @@ export function Presentation({ selectedTabId }: propsType) {
 
     if (initialRun && !hasSelectedValues) {
       fetchTableDataIfAllowed();
-      //tableData.fetchTableData(tableId, i18n, isMobile);
       setIsMissingMandatoryVariables(false);
     } else {
       if (
@@ -128,7 +126,6 @@ export function Presentation({ selectedTabId }: propsType) {
       ) {
         setIsFadingTable(true);
         fetchTableDataIfAllowed();
-        //tableData.fetchTableData(tableId, i18n, isMobile);
         setIsMissingMandatoryVariables(false);
       }
       if (!hasSelectedMandatoryVariables && !initialRun) {
@@ -146,14 +143,12 @@ export function Presentation({ selectedTabId }: propsType) {
   }, [variablesChanged]);
 
   useEffect(() => {
-    //if (isMatrixSizeIsAlloved()) {
     if (variables.isMatrixSizeAllowed) {
       setIsFadingTable(false); // Stop fading once data is loaded
     }
   }, [tableData.data, variables]);
 
   function fetchTableDataIfAllowed() {
-    //if (isMatrixSizeIsAlloved()) {
     if (variables.isMatrixSizeAllowed) {
       tableData.fetchTableData(tableId, i18n, isMobile);
     } else {
