@@ -18,7 +18,7 @@ const config = {
     getAbsolutePath('@chromatic-com/storybook'),
     getAbsolutePath('@storybook/addon-interactions'),
     getAbsolutePath("@storybook/addon-a11y"),
-    '@chromatic-com/storybook'
+ 
   ],
 
   framework: {
@@ -35,7 +35,9 @@ const config = {
     {from: './../src/lib/fonts/', to: 'fonts'}, // Load static font files into storybook/chromatic
   ],
 
-  docs: {}
+  docs: {
+    autodocs: true
+  }
 };
 
 export default config;
