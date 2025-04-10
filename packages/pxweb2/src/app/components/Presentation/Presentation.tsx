@@ -214,7 +214,7 @@ export function Presentation({ selectedTabId }: propsType) {
                 {t(
                   'presentation_page.main_content.table.warnings.to_many_values_selected.description1',
                 )}{' '}
-                <strong>{variables.getNumberOfSelectedValues()}</strong>{' '}
+                <strong>{variables.getSelectedMatrixSize()}</strong>{' '}
                 {t(
                   'presentation_page.main_content.table.warnings.to_many_values_selected.description2',
                 )}{' '}
