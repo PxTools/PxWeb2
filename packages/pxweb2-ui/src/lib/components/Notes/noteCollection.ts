@@ -6,7 +6,6 @@ import { VartypeEnum } from '../../shared-types/vartypeEnum';
 
 // Internal type holding mandatory and non mandatory notes for a table
 export type tableNoteCollection = {
-  //SymbolExplanationNotes: string[];
   SymbolExplanationNotes: { [key: string]: string };
   mandatoryNotes: noteCollection;
   nonMandatoryNotes: noteCollection;

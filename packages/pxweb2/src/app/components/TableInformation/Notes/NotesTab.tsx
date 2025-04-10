@@ -1,6 +1,6 @@
 import cl from 'clsx';
-import useVariables from '../../../context/useVariables';
 
+import useVariables from '../../../context/useVariables';
 import { getConfig } from '../../../util/config/getConfig';
 import classes from './NotesTab.module.scss';
 import {
