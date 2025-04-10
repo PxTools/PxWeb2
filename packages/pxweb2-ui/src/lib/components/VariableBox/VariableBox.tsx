@@ -18,6 +18,7 @@ export type VariableBoxPropsBase = Omit<Variable, 'notes'>;
 
 export type VariableBoxProps = VariableBoxPropsBase & {
   tableId: string;
+  languageDirection: 'ltr' | 'rtl';
   initialIsOpen?: boolean;
   onChangeCodeList: (
     selectedItem: SelectOption | undefined,
@@ -39,6 +40,7 @@ export function VariableBox({
   initialIsOpen,
   tableId,
   label,
+  languageDirection,
   mandatory = false,
   type,
   values,
@@ -97,6 +99,7 @@ export function VariableBox({
           varId={id}
           type={type}
           label={capitalizedVariableName}
+          languageDirection={languageDirection}
           values={values}
           codeLists={codeLists}
           selectedValues={selectedValues}

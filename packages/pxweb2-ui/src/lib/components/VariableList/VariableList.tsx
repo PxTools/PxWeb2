@@ -9,6 +9,7 @@ import { Value } from '../../shared-types/value';
 export type VariableListProps = {
   pxTableMetadata: PxTableMetadata | null;
   isLoadingMetadata: boolean;
+  languageDirection: 'ltr' | 'rtl';
   hasLoadedDefaultSelection: boolean;
   isChangingCodeList: boolean;
   selectedVBValues: SelectedVBValues[];
@@ -31,6 +32,7 @@ export type VariableListProps = {
 export function VariableList({
   pxTableMetadata,
   isLoadingMetadata,
+  languageDirection,
   hasLoadedDefaultSelection,
   isChangingCodeList = false,
   selectedVBValues,
@@ -59,6 +61,7 @@ export function VariableList({
                 initialIsOpen={index === 0}
                 tableId={pxTableMetadata.id}
                 label={variable.label}
+                languageDirection={languageDirection}
                 mandatory={variable.mandatory}
                 type={variable.type}
                 values={variable.values}

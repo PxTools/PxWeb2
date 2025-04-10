@@ -34,6 +34,7 @@ type VariableBoxContentProps = VariableBoxPropsToContent & {
   selectedValues: SelectedVBValues[];
   totalValues: number;
   totalChosenValues: number;
+  languageDirection: 'ltr' | 'rtl';
   onChangeCodeList: (
     selectedItem: SelectOption | undefined,
     varId: string,
@@ -51,6 +52,7 @@ type VariableBoxContentProps = VariableBoxPropsToContent & {
 export function VariableBoxContent({
   varId,
   label,
+  languageDirection,
   type,
   values,
   codeLists,
@@ -537,6 +539,7 @@ export function VariableBoxContent({
               label={t(
                 'presentation_page.sidemenu.selection.variablebox.content.select.label',
               )}
+              languageDirection={languageDirection}
               modalHeading={label}
               modalCancelLabel={t(
                 'presentation_page.sidemenu.selection.variablebox.content.select.modal.cancel_button',
