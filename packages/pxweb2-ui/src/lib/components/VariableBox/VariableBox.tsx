@@ -2,7 +2,7 @@ import { useState } from 'react';
 import cl from 'clsx';
 
 import classes from './VariableBox.module.scss';
-import { SelectOption } from '../Select/Select';
+import { SelectOption } from '../Select/SelectOptionType';
 import { VariableBoxHeader } from './VariableBoxHeader/VariableBoxHeader';
 import { VariableBoxContent } from './VariableBoxContent/VariableBoxContent';
 import { Variable } from '../../shared-types/variable';

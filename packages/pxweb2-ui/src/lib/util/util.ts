@@ -1,5 +1,5 @@
 import { CodeList } from '../shared-types/codelist';
-import { SelectOption } from '../components/Select/Select';
+import { SelectOption } from '../components/Select/SelectOptionType';
 import { IconProps } from '../components/Icon/Icon';
 
 export const getCSSVariable = (variable: string): string => {

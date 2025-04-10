@@ -2,17 +2,13 @@ import cl from 'clsx';
 import { useState, useEffect, useRef } from 'react';
 
 import classes from './Select.module.scss';
+import { SelectOption } from './SelectOptionType';
 import Label from '../Typography/Label/Label';
 import BodyShort from '../Typography/BodyShort/BodyShort';
 import { Icon } from '../Icon/Icon';
 import Modal from '../Modal/Modal';
 import Radio from '../Radio/Radio';
 import { getIconDirection } from '../../util/util';
-
-export type SelectOption = {
-  label: string;
-  value: string;
-};
 
 export type SelectProps = {
   variant?: 'default' | 'inVariableBox';
