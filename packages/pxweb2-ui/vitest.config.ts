@@ -1,4 +1,8 @@
-import { defineConfig, mergeConfig } from 'vitest/config';
+import {
+  coverageConfigDefaults,
+  defineConfig,
+  mergeConfig,
+} from 'vitest/config';
 import viteConfig from './vite.config';
 
 export default mergeConfig(
@@ -16,6 +20,10 @@ export default mergeConfig(
       reporters: ['default'],
       coverage: {
         reporter: ['lcov', 'text'],
+        exclude: [
+          '**/*.stories.{js,ts,tsx}',
+          ...coverageConfigDefaults.exclude,
+        ],
         reportsDirectory: '../../coverage/libs/pxweb2-ui',
         provider: 'istanbul',
       },
