@@ -292,7 +292,7 @@
         "value": "{color.bluegray.800}"
       },
       "action-hover": {
-        "value": "{color.bluegray.800}"
+        "value": "{color.bluegray.900}"
       },
       "action-active": {
         "value": "{color.bluegray.900}"
