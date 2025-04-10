@@ -16,6 +16,8 @@ export default mergeConfig(
       reporters: ['default'],
       coverage: {
         reporter: ['lcov', 'text'],
+        include: ['src/**'],
+        exclude: ['src/**/*.stories.{js,ts,tsx}'],
         reportsDirectory: '../../coverage/libs/pxweb2-ui',
         provider: 'istanbul',
       },
