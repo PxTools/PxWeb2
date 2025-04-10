@@ -214,11 +214,32 @@ export function Presentation({ selectedTabId }: propsType) {
                 {t(
                   'presentation_page.main_content.table.warnings.to_many_values_selected.description1',
                 )}{' '}
-                <strong>{variables.getSelectedMatrixSize()}</strong>{' '}
+                <strong>
+                  {t(
+                    'presentation_page.main_content.table.warnings.to_many_values_selected.selectedCells',
+                    {
+                      selectedCells: t(
+                        'number.simple_number_with_zero_decimal',
+                        {
+                          value: variables.getSelectedMatrixSize(),
+                        },
+                      ),
+                    },
+                  )}
+                </strong>{' '}
                 {t(
                   'presentation_page.main_content.table.warnings.to_many_values_selected.description2',
                 )}{' '}
-                <strong>{config.maxDataCells}</strong>{' '}
+                <strong>
+                  {t(
+                    'presentation_page.main_content.table.warnings.to_many_values_selected.maxCells',
+                    {
+                      maxCells: t('number.simple_number_with_zero_decimal', {
+                        value: config.maxDataCells,
+                      }),
+                    },
+                  )}
+                </strong>{' '}
                 {t(
                   'presentation_page.main_content.table.warnings.to_many_values_selected.description3',
                 )}{' '}

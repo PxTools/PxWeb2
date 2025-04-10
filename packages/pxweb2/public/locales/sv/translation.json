@@ -162,7 +162,9 @@
             "title": "Tabellen är för stor och kan inte uppdateras",
             "description1": "Dina val i filtren motsvarar ",
             "description2": " celler men tabellen kan bara visa ",
-            "description3": " celler. Minska antalet val i filtren och när det här meddelandet försvinner kommer tabellen att uppdateras som vanligt."
+            "description3": " celler. Minska antalet val i filtren och när det här meddelandet försvinner kommer tabellen att uppdateras som vanligt.",
+            "selectedCells": "{{selectedCells}}",
+            "maxCells": "{{maxCells}}"
           }
         }
       },
