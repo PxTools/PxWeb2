@@ -160,7 +160,9 @@
           },
           "to_many_values_selected": {
             "title": "Tabellen är för stor och kan inte uppdateras",
-            "description": "Dina val i filtren motsvarar {{selectedDataSize}} celler men tabellen kan bara visa {{maxDataCells}}. celler. Minska antalet val i filtren och när det här meddelandet försvinner kommer tabellen att uppdateras som vanligt."
+            "description1": "Dina val i filtren motsvarar ",
+            "description2": " celler men tabellen kan bara visa ",
+            "description3": " celler. Minska antalet val i filtren och när det här meddelandet försvinner kommer tabellen att uppdateras som vanligt."
           }
         }
       },

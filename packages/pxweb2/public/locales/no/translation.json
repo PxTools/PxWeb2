@@ -160,7 +160,9 @@
           },
           "to_many_values_selected": {
             "title": "Tabellen er for stor og kan ikke oppdateres",
-            "description": "Filtreringen du har gjort tilsvarer {{selectedDataSize}} celler, mens tabellen ikke klarer å vise mer enn {{maxDataCells}}.celler. Reduser antall valg i filteret, og når denne meldingen er borte oppdaterer tabellen seg som normalt."
+            "description1": "Filtreringen du har gjort tilsvarer ",
+            "description2": " celler, mens tabellen ikke klarer å vise mer enn ",
+            "description3": " celler. Reduser antall valg i filteret, og når denne meldingen er borte oppdaterer tabellen seg som normalt."
           }
         }
       },

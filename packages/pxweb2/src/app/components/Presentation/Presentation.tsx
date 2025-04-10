@@ -186,29 +186,6 @@ export function Presentation({ selectedTabId }: propsType) {
     );
   }, [isMissingMandatoryVariables]);
 
-  // function toStrong() {
-  //   const selectedDataSize = variables.getSelectedMatrixSize().toString();
-  //   console
-  //     .log
-  //     // 'TRANSLATE'
-  //     // (
-  //     //   // <Trans i18nKey="presentation_page.main_content.table.warnings.to_many_values_selected.description">
-  //     //   //   hallo <strong> t('{{'selected44}}</strong> maX= <strong>t({66})</strong>
-  //     //   // </Trans>
-  //     // ),
-  //     ();
-
-  //   return 44;
-  // }
-  // toStrong();
-  // function isMatrixSizeIsAlloved() {
-  //   const config = getConfig();
-  //   const selectedMatrixSize = variables.getSelectedMatrixSize();
-  //   const maxAllowedMatrixSize = config.maxDataCells;
-  //   console.log('maxAllowedMatrixSize' + maxAllowedMatrixSize);
-  //   return selectedMatrixSize <= maxAllowedMatrixSize;
-  // }
-
   return (
     <main
       className={cl(classes.contentContainer, {
@@ -235,19 +212,16 @@ export function Presentation({ selectedTabId }: propsType) {
               >
                 {' '}
                 {t(
-                  'presentation_page.main_content.table.warnings.to_many_values_selected.description',
-                  {
-                    selectedDataSize: t(
-                      'number.simple_number_with_zero_decimal',
-                      {
-                        value: variables.getSelectedMatrixSize(),
-                      },
-                    ),
-                    maxDataCells: t('number.simple_number_with_zero_decimal', {
-                      value: config.maxDataCells,
-                    }),
-                  },
-                )}
+                  'presentation_page.main_content.table.warnings.to_many_values_selected.description1',
+                )}{' '}
+                <strong>{variables.getNumberOfSelectedValues()}</strong>{' '}
+                {t(
+                  'presentation_page.main_content.table.warnings.to_many_values_selected.description2',
+                )}{' '}
+                <strong>{config.maxDataCells}</strong>{' '}
+                {t(
+                  'presentation_page.main_content.table.warnings.to_many_values_selected.description3',
+                )}{' '}
               </Alert>
             </div>
           )}
