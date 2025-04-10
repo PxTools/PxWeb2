@@ -177,7 +177,7 @@ const StartPage = () => {
                       : undefined
                   }
                   // We use slice here because we _only_ want 4digit year. Sometimes, month is appended in data set.
-                  period={`${table.firstPeriod?.slice(0, 4)} - ${table.lastPeriod?.slice(0, 4)}`}
+                  period={`${table.firstPeriod?.slice(0, 4)}-${table.lastPeriod?.slice(0, 4)}`}
                   frequency={`${table.timeUnit}`}
                   tableId={`${table.id}`}
                   icon={<Icon iconName="Heart" />}
