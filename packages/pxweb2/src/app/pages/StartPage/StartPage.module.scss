@@ -6,7 +6,7 @@
   grid-template-areas:
     'search search .'
     'sideBar listTables listTables';
-  grid-template-columns: 400px 200px 1fr;
+  grid-template-columns: 348px 200px 1fr;
   grid-template-rows: 120px 1fr;
   height: calc(100vh - fixed.$spacing-22);
   background-color: var(--px-color-surface-subtle);
