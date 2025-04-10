@@ -47,6 +47,7 @@ function getFilters(tables: Table[]): Map<string, number> {
   return filters;
 }
 
+// TODO: Remove this function. We can not consider norwegian special cases in our code!
 function removeTableNumber(title: string): string {
   //Check if title starts with table number, like "01234: Some Statistic"
   const test = RegExp(/^\d{5}:*./, 'i');
