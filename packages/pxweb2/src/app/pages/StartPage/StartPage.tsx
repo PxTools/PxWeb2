@@ -47,16 +47,16 @@ function getFilters(tables: Table[]): Map<string, number> {
   return filters;
 }
 
-// function removeTableNumber(title: string): string {
-//   //Check if title starts with table number, like "01234: Some Statistic"
-//   const test = RegExp(/^\d{5}:*./, 'i');
+function removeTableNumber(title: string): string {
+  //Check if title starts with table number, like "01234: Some Statistic"
+  const test = RegExp(/^\d{5}:*./, 'i');
 
-//   if (test.exec(title) == null) {
-//     return title;
-//   } else {
-//     return title.slice(6);
-//   }
-// }
+  if (test.exec(title) == null) {
+    return title;
+  } else {
+    return title.slice(6);
+  }
+}
 
 const initialState: State = {
   tables: bigTableList.tables,
@@ -167,8 +167,7 @@ const StartPage = () => {
             itemContent={(_, table: Table) => (
               <div className={styles.tableListItem}>
                 <TableCard
-                  title={`${table.label}`}
-                  // title={`${table.label && removeTableNumber(table.label)}`}
+                  title={`${table.label && removeTableNumber(table.label)}`}
                   href={`/table/${table.id}`}
                   updatedLabel={table.updated ? 'Sist oppdatert' : undefined}
                   lastUpdated={
