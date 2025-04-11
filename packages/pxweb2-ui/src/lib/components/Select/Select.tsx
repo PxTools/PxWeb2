@@ -2,20 +2,18 @@ import cl from 'clsx';
 import { useState, useEffect, useRef } from 'react';
 
 import classes from './Select.module.scss';
+import { SelectOption } from './SelectOptionType';
 import Label from '../Typography/Label/Label';
 import BodyShort from '../Typography/BodyShort/BodyShort';
 import { Icon } from '../Icon/Icon';
 import Modal from '../Modal/Modal';
 import Radio from '../Radio/Radio';
-
-export type SelectOption = {
-  label: string;
-  value: string;
-};
+import { getIconDirection } from '../../util/util';
 
 export type SelectProps = {
   variant?: 'default' | 'inVariableBox';
   label: string;
+  languageDirection?: 'ltr' | 'rtl';
   modalHeading?: string;
   modalCancelLabel?: string;
   modalConfirmLabel?: string;
@@ -38,6 +36,7 @@ function openOptions(options: SelectOption[]) {
 export function Select({
   variant = 'default',
   label,
+  languageDirection = 'ltr',
   modalHeading = '',
   modalCancelLabel = '',
   modalConfirmLabel = '',
@@ -70,6 +69,7 @@ export function Select({
       {variant === 'inVariableBox' && (
         <VariableBoxSelect
           label={label}
+          languageDirection={languageDirection}
           modalHeading={modalHeading}
           modalCancelLabel={modalCancelLabel}
           modalConfirmLabel={modalConfirmLabel}
@@ -161,12 +161,14 @@ type VariableBoxSelectProps = Pick<
   | 'tabIndex'
   | 'className'
 > & {
+  languageDirection: 'ltr' | 'rtl';
   addModal: (id: string, onClose: () => void) => void;
   removeModal: (name: string) => void;
 };
 
 function VariableBoxSelect({
   label,
+  languageDirection,
   modalHeading,
   modalCancelLabel,
   modalConfirmLabel,
@@ -253,6 +255,13 @@ function VariableBoxSelect({
     }
   }, [removeModal, isModalOpen, addModal]);
 
+  // handle rtl for the icon
+  const chevronIcon = getIconDirection(
+    languageDirection,
+    'ChevronRight',
+    'ChevronLeft',
+  );
+
   return (
     <>
       <div
@@ -294,7 +303,7 @@ function VariableBoxSelect({
             {selectedItem ? selectedItem.label : placeholder}
           </BodyShort>
         </div>
-        <Icon iconName="ChevronDown" className=""></Icon>
+        <Icon iconName={chevronIcon} className=""></Icon>
       </div>
       <div className={cl(classes.divider)}></div>
       {isModalOpen && (

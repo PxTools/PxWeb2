@@ -13,6 +13,7 @@ import {
   mapCodeListToSelectOption,
   PxTable,
   ValueDisplayType,
+  Variable,
 } from '@pxweb2/pxweb2-ui';
 import NavigationDrawer from '../../components/NavigationDrawer/NavigationDrawer';
 import useVariables from '../../context/useVariables';
@@ -253,6 +254,10 @@ function removeAllValuesOfVariable(
   return newValues;
 }
 
+interface VariableWithDisplayType extends Variable {
+  valueDisplayType: ValueDisplayType;
+}
+
 type propsType = {
   selectedNavigationView: string;
   selectedTabId: string;
@@ -387,7 +392,7 @@ export function Selection({
     const prevSelectedValues = structuredClone(selectedVBValues);
     const currentVariableMetadata = pxTableMetaToRender?.variables.find(
       (variable) => variable.id === varId,
-    );
+    ) as VariableWithDisplayType;
     const currentSelectedVariable = prevSelectedValues.find(
       (variable) => variable.id === varId,
     );
@@ -562,6 +567,7 @@ export function Selection({
   const drawerFilter = (
     <VariableList
       pxTableMetadata={pxTableMetaToRender}
+      languageDirection={i18n.dir()}
       selectedVBValues={selectedVBValues}
       isLoadingMetadata={isLoadingMetadata}
       hasLoadedDefaultSelection={hasLoadedDefaultSelection}

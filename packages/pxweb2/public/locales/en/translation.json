@@ -164,6 +164,13 @@
         "title": "Information",
         "footnotes": {
           "title": "Notes",
+          "missing_heading": "No notes",
+          "missing_text_table": "The table has no notes.",
+          "missing_text_selection": "There are no notes for the selected filtering.",
+          "symbol_explanation_heading": "Symbol explanation",
+          "mandatory_heading": "Important about the table",
+          "mandatory_variable_heading": "Important about",
+          "non_mandatory_heading": "For the entire table",
           "show_all_footnotes": "Show all notes for table"
         },
         "definitions": {

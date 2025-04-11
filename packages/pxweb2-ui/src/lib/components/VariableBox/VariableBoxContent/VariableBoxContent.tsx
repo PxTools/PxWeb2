@@ -7,7 +7,8 @@ import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 import classes from './VariableBoxContent.module.scss';
 import { Checkbox, MixedCheckbox } from '../../Checkbox/Checkbox';
 import Search from '../../Search/Search';
-import { Select, SelectOption } from '../../Select/Select';
+import { Select } from '../../Select/Select';
+import { SelectOption } from '../../Select/SelectOptionType';
 import { VariableBoxProps, SelectedVBValues } from '../VariableBox';
 import { VartypeEnum } from '../../../shared-types/vartypeEnum';
 import { Value } from '../../../shared-types/value';
@@ -34,6 +35,7 @@ type VariableBoxContentProps = VariableBoxPropsToContent & {
   selectedValues: SelectedVBValues[];
   totalValues: number;
   totalChosenValues: number;
+  languageDirection: 'ltr' | 'rtl';
   onChangeCodeList: (
     selectedItem: SelectOption | undefined,
     varId: string,
@@ -51,6 +53,7 @@ type VariableBoxContentProps = VariableBoxPropsToContent & {
 export function VariableBoxContent({
   varId,
   label,
+  languageDirection,
   type,
   values,
   codeLists,
@@ -537,6 +540,7 @@ export function VariableBoxContent({
               label={t(
                 'presentation_page.sidemenu.selection.variablebox.content.select.label',
               )}
+              languageDirection={languageDirection}
               modalHeading={label}
               modalCancelLabel={t(
                 'presentation_page.sidemenu.selection.variablebox.content.select.modal.cancel_button',
