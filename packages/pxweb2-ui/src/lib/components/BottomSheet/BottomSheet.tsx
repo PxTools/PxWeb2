@@ -33,12 +33,14 @@ export function BottomSheet({
 
   useEffect(() => {
     const modalElement = bottomSheetRef.current;
-    if (modalElement) {
-      if (isBottomSheetOpen) {
-        modalElement.showModal();
-      } else {
-        modalElement.close();
-      }
+    if (!modalElement) {
+      return;
+    }
+
+    if (isBottomSheetOpen) {
+      modalElement.showModal();
+    } else {
+      modalElement.close();
     }
   }, [isBottomSheetOpen]);
 
