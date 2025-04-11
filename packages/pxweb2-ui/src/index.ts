@@ -8,6 +8,7 @@ export * from './lib/components/Link/Link';
 export * from './lib/components/Search/Search';
 export * from './lib/components/Select/Select';
 export * from './lib/components/SideSheet/SideSheet';
+export * from './lib/components/BottomSheet/BottomSheet';
 export * from './lib/components/Table/cubeHelper';
 export * from './lib/components/Table/Table';
 export * from './lib/components/TableCard/TableCard';
