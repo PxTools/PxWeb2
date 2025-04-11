@@ -31,6 +31,10 @@ type counter = {
   number: number;
 };
 
+interface VariableWithValueDisplayType extends Variable {
+  valueDisplayType: ValueDisplayType;
+}
+
 /**
  * Maps a JSONStat2 dataset response to a PxTable object.
  * NOTE! At the moment this is not a total mapping of the json-stat2 response.
@@ -242,7 +246,7 @@ function mapDimension(id: string, dimension: any, role: any): Variable | null {
     const variableType = mapVariableTypeEnum(id, role);
     const isContentVariable = variableType === VartypeEnum.CONTENTS_VARIABLE;
 
-    const variable: Variable = {
+    const variable: VariableWithValueDisplayType = {
       id: id,
       label: dimension.label,
       type: variableType,
