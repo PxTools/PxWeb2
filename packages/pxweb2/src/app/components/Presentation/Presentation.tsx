@@ -152,10 +152,8 @@ export function Presentation({ selectedTabId }: propsType) {
     if (variables.isMatrixSizeAllowed) {
       tableData.fetchTableData(tableId, i18n, isMobile);
     } else {
-      setIsFadingTable(true);
-
-      console.log('FOR STOR');
       // fade table and give error message
+      setIsFadingTable(true);
     }
   }
 
@@ -165,20 +163,12 @@ export function Presentation({ selectedTabId }: propsType) {
     } else {
       setIsMandatoryNotSelectedFirst(false);
     }
-    console.log(
-      'isMandatoryNotSelectedFirst should be true',
-      isMandatoryNotSelectedFirst,
-    );
   }, [variables.isMatrixSizeAllowed]);
 
   useEffect(() => {
     if (!variables.isMatrixSizeAllowed) {
       setIsMandatoryNotSelectedFirst(false);
     }
-    console.log(
-      'isMandatoryNotSelectedFirst should be false',
-      isMandatoryNotSelectedFirst,
-    );
   }, [isMissingMandatoryVariables]);
 
   return (

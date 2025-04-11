@@ -224,8 +224,6 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
     });
     setSelectedMatrixSize(matrixSize);
     const maxAllowedMatrixSize = config.maxDataCells;
-    console.log(' provider matrixsize=' + matrixSize);
-    console.log(' provider maxAllowedMatrixSize=' + maxAllowedMatrixSize);
     if (matrixSize > maxAllowedMatrixSize) {
       setIsMatrixSizeAllowed(false);
     } else {
