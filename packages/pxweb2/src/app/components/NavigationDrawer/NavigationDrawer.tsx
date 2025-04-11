@@ -1,8 +1,9 @@
 import React, { forwardRef } from 'react';
 import cl from 'clsx';
-import styles from './NavigationDrawer.module.scss';
-import { Heading, Icon, Label } from '@pxweb2/pxweb2-ui';
 import { useTranslation } from 'react-i18next';
+
+import styles from './NavigationDrawer.module.scss';
+import { Heading, Icon, getIconDirection, Label } from '@pxweb2/pxweb2-ui';
 import i18next from 'i18next';
 import useAccessibility from '../../context/useAccessibility';
 import useApp from '../../context/useApp';
@@ -36,8 +37,12 @@ export const NavigationDrawer = forwardRef<
     };
   }, [addModal, removeModal, onClose, view]);
 
-  // Handle RTL languages
-  const hideIcon = i18next.dir() === 'rtl' ? 'ChevronRight' : 'ChevronLeft';
+  // Handle RTL languages for the icon
+  const hideIcon = getIconDirection(
+    i18next.dir(),
+    'ChevronLeft',
+    'ChevronRight',
+  );
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     if (event.key === 'Enter' || event.key === ' ') {
