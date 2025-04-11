@@ -1,0 +1,51 @@
+@use '../../text-styles.scss';
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  list-style: none;
+}
+
+.chip {
+  align-items: center;
+  border: none;
+  border-radius: var(--px-border-radius-medium);
+  color: var(--px-color-text-default);
+  display: inline-flex;
+  height: 44px;
+  padding: 0 16px;
+}
+
+.removable {
+  background-color: green;
+  border: none;
+  border-radius: var(--px-border-radius-medium);
+  color: var(--px-color-text-default);
+  display: inline-flex;
+  height: 44px;
+  padding: 0 16px;
+
+  &.border {
+    border-width: 1px;
+  }
+
+  &.filled {
+    background-color: grey;
+  }
+}
+
+.toggle {
+  align-items: center;
+  background-color: pink;
+  border-width: 1px;
+  border-radius: var(--px-border-radius-medium);
+  color: var(--px-color-text-default);
+  display: inline-flex;
+  height: 44px;
+  padding: 0 16px;
+
+  &.selected {
+    background-color: blueviolet;
+  }
+}
