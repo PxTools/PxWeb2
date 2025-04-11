@@ -38,6 +38,7 @@ export function TableViewer() {
     useState<NavigationItem>(isTablet ? 'none' : 'filter');
   const [hasFocus, setHasFocus] = useState<NavigationItem>('none');
   const [openedWithKeyboard, setOpenedWithKeyboard] = useState(false);
+  const outerContainerRef = useRef<HTMLDivElement | null>(null);
   /**
    * Keep state if window screen size is mobile or desktop.
    */
@@ -223,8 +224,14 @@ export function TableViewer() {
             openedWithKeyboard={openedWithKeyboard}
             hideMenuRef={hideMenuRef}
           />
-          <div className={styles.contentAndFooterContainer}>
-            <Presentation selectedTabId={selectedTableId}></Presentation>
+          <div
+            ref={outerContainerRef}
+            className={styles.contentAndFooterContainer}
+          >
+            <Presentation
+              ref={outerContainerRef}
+              selectedTabId={selectedTableId}
+            ></Presentation>
             <Footer />
           </div>
         </div>
