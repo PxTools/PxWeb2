@@ -17,11 +17,15 @@ export const ChipToggle = forwardRef<HTMLButtonElement, ChipToggleProps>(
       <button
         {...rest}
         ref={ref}
-        className={cl(styles.toggle, {
-          [styles.selected]: selected,
-        }, {
-          [styles.withoutCheckmark]: !checkmark,
-        })}
+        className={cl(
+          styles.toggle,
+          {
+            [styles.selected]: selected,
+          },
+          {
+            [styles.withoutCheckmark]: !checkmark,
+          },
+        )}
       >
         {selected && checkmark && <Icon iconName="CheckMark" />}
         <span className={cl(styles.text, styles['label-medium'])}>
