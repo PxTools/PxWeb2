@@ -9,7 +9,6 @@
 
 .chip {
   align-items: center;
-  border: none;
   border-radius: var(--px-border-radius-medium);
   color: var(--px-color-text-default);
   display: inline-flex;
@@ -18,26 +17,34 @@
 }
 
 .removable {
-  background-color: green;
-  border: none;
-  border-radius: var(--px-border-radius-medium);
+  background-color: initial;
   color: var(--px-color-text-default);
   display: inline-flex;
   height: 44px;
   padding: 0 16px;
 
   &.border {
-    border-width: 1px;
+    border: 1px solid var(--px-color-border-action);
+    border-radius: var(--px-border-radius-medium);
+
+    &:hover {
+      background: var(--px-color-surface-action-subtle-hover);
+    }
   }
 
   &.filled {
-    background-color: grey;
+    background: var(--px-color-surface-action);
+    color: var(--px-color-text-on-inverted);
+
+    &:hover {
+      background: var(--px-color-surface-action-hover);
+    }
   }
 }
 
 .toggle {
   align-items: center;
-  background-color: pink;
+  background-color: initial;
   border-width: 1px;
   border-radius: var(--px-border-radius-medium);
   color: var(--px-color-text-default);
@@ -46,6 +53,19 @@
   padding: 0 16px;
 
   &.selected {
-    background-color: blueviolet;
+    background: var(--px-color-surface-action-subtle-hover);
+    border: none;
+    color: var(--px-color-text-action);
+  }
+
+  &.withoutCheckmark {
+    &.selected {
+      background: var(--px-color-surface-action);
+      color: var(--px-color-text-on-action);
+    }
+  }
+
+  &:hover {
+    background: var(--px-color-surface-action-subtle-hover);
   }
 }

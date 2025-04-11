@@ -20,7 +20,9 @@ export const ChipRemovable = forwardRef<HTMLButtonElement, ChipRemovableProps>(
         className={cl(styles.chip, styles.removable, styles[variant])}
         onClick={onClick}
       >
-        <span className={cl(styles.text)}>{children}</span>
+        <span className={cl(styles.text, styles['label-medium'])}>
+          {children}
+        </span>
         <span className={cl(styles.emovableIcon)}>
           <Icon iconName="XMark" />
         </span>
