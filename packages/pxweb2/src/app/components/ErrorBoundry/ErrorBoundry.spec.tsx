@@ -21,7 +21,7 @@ describe('ErrorBoundary', () => {
     render(
       <ErrorBoundary>
         <div>Child Component</div>
-      </ErrorBoundary>
+      </ErrorBoundary>,
     );
 
     // Assert that the child component is rendered
@@ -30,7 +30,9 @@ describe('ErrorBoundary', () => {
 
   it('renders fallback UI when an error occurs', () => {
     // Suppress React error logging
-    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const consoleErrorSpy = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
 
     // Create a component that throws an error
     const ErrorComponent = () => {
@@ -41,7 +43,7 @@ describe('ErrorBoundary', () => {
     render(
       <ErrorBoundary>
         <ErrorComponent />
-      </ErrorBoundary>
+      </ErrorBoundary>,
     );
 
     // Assert that the fallback UI is rendered
@@ -65,13 +67,13 @@ describe('ErrorBoundary', () => {
     render(
       <ErrorBoundary>
         <ErrorComponent />
-      </ErrorBoundary>
+      </ErrorBoundary>,
     );
 
     // Assert that the error was logged
     expect(consoleSpy).toHaveBeenCalledWith(
       expect.any(Error),
-      expect.objectContaining({ componentStack: expect.any(String) })
+      expect.objectContaining({ componentStack: expect.any(String) }),
     );
 
     // Restore the console.log mock
