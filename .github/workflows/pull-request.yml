@@ -25,7 +25,8 @@ jobs:
             pages deploy packages/pxweb2/dist --project-name=pxweb2 --branch=Preview
       - name: Display all outputs as JSON
         run: |
-          echo "${{ toJSON(steps.captureStatus.outputs) }}"
+          echo "Dumping context for debugging"
+          env
   test:
     runs-on: ubuntu-latest
     name: Test
