@@ -41,7 +41,7 @@ jobs:
           environment-id: ${{ secrets.MABL_ENVIRONMENT_ID}}
           app-url: ${{ steps.deploy.outputs.deployment-url }}
       - name: Add comment to PR
-        uses: the-wright-jamie/update-pr-info-action@master
+        uses: the-wright-jamie/update-pr-info-action@v1
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           head-branch-regex: 'PXWEB2-\d{2,4}'
