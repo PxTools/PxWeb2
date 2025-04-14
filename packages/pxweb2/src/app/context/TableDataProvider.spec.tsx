@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, act } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { TableDataProvider, TableDataContext } from './TableDataProvider';
 import { VariablesProvider } from './VariablesProvider';
 import { vi } from 'vitest';
@@ -16,7 +16,9 @@ it('should throw an error when triggered', () => {
     return null;
   };
 
-  const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+  const consoleErrorSpy = vi
+    .spyOn(console, 'error')
+    .mockImplementation(() => {});
 
   expect(() => {
     render(
