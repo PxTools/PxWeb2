@@ -46,7 +46,7 @@ jobs:
         uses: the-wright-jamie/update-pr-info-action@master
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
-          base-branch-regex: '^main$'
+          base-branch-regex: 'main'
           body-template: |
             ### Branch Deployment to Cloudflare Pages
             [🗄️ Visit the preview build here](${{ steps.deploy.outputs.deployment-url }})
