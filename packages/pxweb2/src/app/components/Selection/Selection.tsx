@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
 
-import {ApiError, TableService } from '@pxweb2/pxweb2-api-client';
+import { ApiError, TableService } from '@pxweb2/pxweb2-api-client';
 import { mapJsonStat2Response } from '../../../mappers/JsonStat2ResponseMapper';
 import { mapTableSelectionResponse } from '../../../mappers/TableSelectionResponseMapper';
 import {
@@ -373,7 +373,9 @@ export function Selection({
           setErrorMsg(problemMessage(apiError, selectedTabId));
         })
         .catch((error) => {
-          setErrorMsg(`Error getting default selection: ${selectedTabId} ${error.message}`,);
+          setErrorMsg(
+            `Error getting default selection: ${selectedTabId} ${error.message}`,
+          );
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -444,7 +446,8 @@ export function Selection({
         return [];
       })
       .catch((error) => {
-        console.error(`Could not get values for code list: ${newMappedSelectedCodeList.value} ${error}`,
+        console.error(
+          `Could not get values for code list: ${newMappedSelectedCodeList.value} ${error}`,
         );
         return [];
       });
