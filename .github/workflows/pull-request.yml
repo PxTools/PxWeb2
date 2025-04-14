@@ -42,3 +42,12 @@ jobs:
           application-id: ${{ secrets.MABL_APPLICATION_ID}}
           environment-id: ${{ secrets.MABL_ENVIRONMENT_ID}}
           app-url: ${{ steps.deploy.outputs.deployment-url }}
+      - name: Add comment to PR
+        uses: the-wright-jamie/update-pr-info-action@master
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          base-branch-regex: '^main$'
+          body-template: |
+            ### Branch Deployment to Cloudflare Pages
+            [🗄️ Visit the preview build here](${{ steps.deploy.outputs.deployment-url }})
+          body-update-action: "suffix"
