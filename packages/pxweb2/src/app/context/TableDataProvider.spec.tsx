@@ -26,7 +26,7 @@ it('should throw an error when triggered', () => {
         <TableDataProvider>
           <TestComponent />
         </TableDataProvider>
-      </VariablesProvider>
+      </VariablesProvider>,
     );
   }).toThrow('Simulated error');
 
