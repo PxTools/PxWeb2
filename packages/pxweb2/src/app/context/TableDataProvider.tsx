@@ -76,7 +76,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
   useEffect(() => {
     if (errorMsg !== '') {
-      console.error('ERROR: TableDataProvider:', errorMsg);
       throw new Error(errorMsg);
     }
   }, [errorMsg]);
