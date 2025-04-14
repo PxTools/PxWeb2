@@ -30,9 +30,10 @@ jobs:
         uses: thollander/actions-comment-pull-request@v3
         with:
           message: |
-            Branch Deployment to Cloudflare Pages
-            [🗄️ Visit the preview build here](${{ steps.deploy.outputs.deployment-url }})
-          pr-number: 635
+            ## Branch Deployment to Cloudflare Pages
+            | Status: | ${{ steps.deploy.outputs.command-output }} |
+            | Preview URL: | ${{ steps.deploy.outputs.deployment-url }} |
+            | Branch Preview URL: |  ${{ steps.deploy.outputs.pages-deployment-alias-url }} |
   test:
     runs-on: ubuntu-latest
     name: Test
