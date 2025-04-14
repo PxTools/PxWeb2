@@ -16,6 +16,6 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          preCommands: npm install && npm run build
           command: |
-            npm run build
-            pages deploy packages/pxweb2/dist --project-name=pxweb2
+            pages deploy packages/pxweb2/dist --project-name=pxweb2 --env=Preview
