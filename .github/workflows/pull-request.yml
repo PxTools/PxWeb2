@@ -23,6 +23,14 @@ jobs:
           preCommands: npm install && npm run build
           command: |
             pages deploy packages/pxweb2/dist --project-name=pxweb2 --branch=Preview
+      - name: Display all outputs as JSON
+        run: |
+          echo "${{ toJSON(steps.captureStatus.outputs) }}"
+  test:
+    runs-on: ubuntu-latest
+    name: Test
+    needs: deploy
+    steps:
       - uses: actions/checkout@v4
       - name: Functional test deployment
         id: mabl-test-deployment
@@ -40,6 +48,11 @@ jobs:
           application-id: ${{ secrets.MABL_APPLICATION_ID}}
           environment-id: ${{ secrets.MABL_ENVIRONMENT_ID}}
           app-url: ${{ steps.deploy.outputs.deployment-url }}
+  report:
+    runs-on: ubuntu-latest
+    name: Report
+    needs: deploy
+    steps:
       - name: Add comment to PR
         uses: the-wright-jamie/update-pr-info-action@v1
         with:
