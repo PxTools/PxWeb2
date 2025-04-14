@@ -10,7 +10,8 @@ import {
 import { VariablesProvider } from '../../context/VariablesProvider';
 import { vi } from 'vitest';
 
-test('should throw an error when triggered', () => {
+describe('Selection', () => {
+it('should throw an error when triggered', () => {
   const TestComponent = () => {
     const context = React.useContext(TableDataContext);
     React.useEffect(() => {
@@ -37,6 +38,7 @@ test('should throw an error when triggered', () => {
     );
   }).toThrow('Simulated error');
   consoleErrorSpy.mockRestore();
+});
 });
 
 describe('Selection', () => {
