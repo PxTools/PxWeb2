@@ -34,6 +34,7 @@ jobs:
             | Status: | ${{ steps.deploy.outputs.command-output }} |
             | Preview URL: | ${{ steps.deploy.outputs.deployment-url }} |
             | Branch Preview URL: |  ${{ steps.deploy.outputs.pages-deployment-alias-url }} |
+          pr-number: 635
   test:
     runs-on: ubuntu-latest
     name: Test
