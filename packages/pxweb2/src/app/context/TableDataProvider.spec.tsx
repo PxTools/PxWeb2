@@ -4,6 +4,7 @@ import { TableDataProvider, TableDataContext } from './TableDataProvider';
 import { VariablesProvider } from './VariablesProvider';
 import { vi } from 'vitest';
 
+describe('TableDataProvider', () => {
 it('should throw an error when triggered', () => {
   const TestComponent = () => {
     const context = React.useContext(TableDataContext);
@@ -32,3 +33,17 @@ it('should throw an error when triggered', () => {
 
   consoleErrorSpy.mockRestore();
 });
+
+it('should render successfully', () => {
+    const { baseElement } = render(
+      <VariablesProvider>
+        <TableDataProvider>
+          <div>Test</div>
+        </TableDataProvider>
+      </VariablesProvider>,
+    );
+
+    expect(baseElement).toBeTruthy();
+  });
+}
+);
