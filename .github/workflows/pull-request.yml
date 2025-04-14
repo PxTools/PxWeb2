@@ -13,12 +13,12 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     name: Deploy
-    id: deploy
     outputs:
       url: ${{ steps.deploy.outputs.deployment-url }}
     steps:
       - uses: actions/checkout@v4
       - name: deploy
+        id: deploy
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
