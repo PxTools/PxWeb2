@@ -1,0 +1,20 @@
+name: Deploy to Cloudflare, test with Mabl
+
+on:
+  pull_request:
+    branches: ['PXWEB2-665-mabl-branch-testing']
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: |
+            npm run build
+            pages deploy packages/pxweb2/dist --project-name=pxweb2
