@@ -11,34 +11,34 @@ import { VariablesProvider } from '../../context/VariablesProvider';
 import { vi } from 'vitest';
 
 describe('Selection', () => {
-it('should throw an error when triggered', () => {
-  const TestComponent = () => {
-    const context = React.useContext(TableDataContext);
-    React.useEffect(() => {
-      if (context) {
-        // Simulate the error being thrown
-        throw new Error('Simulated error');
-      }
-    }, [context]);
-    return null;
-  };
-  {
-  }
+  it('should throw an error when triggered', () => {
+    const TestComponent = () => {
+      const context = React.useContext(TableDataContext);
+      React.useEffect(() => {
+        if (context) {
+          // Simulate the error being thrown
+          throw new Error('Simulated error');
+        }
+      }, [context]);
+      return null;
+    };
+    {
+    }
 
-  const consoleErrorSpy = vi
-    .spyOn(console, 'error')
-    .mockImplementation(() => {});
-  expect(() => {
-    render(
-      <VariablesProvider>
-        <TableDataProvider>
-          <TestComponent />
-        </TableDataProvider>
-      </VariablesProvider>,
-    );
-  }).toThrow('Simulated error');
-  consoleErrorSpy.mockRestore();
-});
+    const consoleErrorSpy = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
+    expect(() => {
+      render(
+        <VariablesProvider>
+          <TableDataProvider>
+            <TestComponent />
+          </TableDataProvider>
+        </VariablesProvider>,
+      );
+    }).toThrow('Simulated error');
+    consoleErrorSpy.mockRestore();
+  });
 });
 
 describe('Selection', () => {
