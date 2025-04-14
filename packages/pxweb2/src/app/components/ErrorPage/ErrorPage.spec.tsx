@@ -1,4 +1,3 @@
-
 // import { render } from '@testing-library/react';
 // import { vi, Mock } from 'vitest';
 // import { useRouteError } from 'react-router';
@@ -26,7 +25,6 @@
 //     expect(baseElement).toBeTruthy();
 //   });
 // });
-import { render } from '@testing-library/react';
 import { vi, Mock } from 'vitest';
 import { useRouteError } from 'react-router';
 import { ErrorPage } from './ErrorPage';
@@ -54,8 +52,10 @@ vi.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string) => {
       const translations: { [key: string]: string } = {
-        'presentation_page.main_content.about_table.details.boolean_true': 'Yes',
-        'presentation_page.main_content.about_table.details.boolean_false': 'No',
+        'presentation_page.main_content.about_table.details.boolean_true':
+          'Yes',
+        'presentation_page.main_content.about_table.details.boolean_false':
+          'No',
       };
       return translations[key] || key;
     },
