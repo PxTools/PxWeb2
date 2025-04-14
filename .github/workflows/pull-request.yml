@@ -13,6 +13,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     name: Deploy
+    outputs:
+      url: ${{ steps.deploy.outputs.deployment-url }}
     steps:
       - uses: actions/checkout@v4
       - name: deploy
@@ -23,10 +25,6 @@ jobs:
           preCommands: npm install && npm run build
           command: |
             pages deploy packages/pxweb2/dist --project-name=pxweb2 --branch=Preview
-      - name: Display all outputs as JSON
-        run: |
-          echo "Dumping context for debugging"
-          env
   test:
     runs-on: ubuntu-latest
     name: Test
@@ -37,6 +35,7 @@ jobs:
         id: mabl-test-deployment
         uses: mablhq/github-run-tests-action@v1
         env:
+          URL: ${{needs.deploy.outputs.url}}
           # Use a "CI/CD Integration" type of mabl API key
           MABL_API_KEY: ${{ secrets.MABL_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -48,11 +47,13 @@ jobs:
             firefox
           application-id: ${{ secrets.MABL_APPLICATION_ID}}
           environment-id: ${{ secrets.MABL_ENVIRONMENT_ID}}
-          app-url: ${{ steps.deploy.outputs.deployment-url }}
+          app-url: $URL
   report:
     runs-on: ubuntu-latest
     name: Report
     needs: deploy
+    env:
+      URL: ${{needs.deploy.outputs.url}}
     steps:
       - name: Add comment to PR
         uses: the-wright-jamie/update-pr-info-action@v1
@@ -61,5 +62,5 @@ jobs:
           head-branch-regex: 'PXWEB2-\d{2,4}'
           body-template: |
             ### Branch Deployment to Cloudflare Pages
-            [🗄️ Visit the preview build here](${{ steps.deploy.outputs.deployment-url }})
+            [🗄️ Visit the preview build here]($URL)
           body-update-action: "suffix"
