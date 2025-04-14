@@ -5,6 +5,10 @@ on:
     branches:
       - PXWEB2-665-mabl-branch-testing
 
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
