@@ -26,14 +26,12 @@ jobs:
           preCommands: npm install && npm run build
           command: |
             pages deploy packages/pxweb2/dist --project-name=pxweb2 --branch=Preview
-      - name: print deployment-url
-        env:
-          DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment-url }}
-        run: echo $DEPLOYMENT_URL
-      - name: print pages-deployment-alias-url
-        env:
-          DEPLOYMENT_ALIAS_URL: ${{ steps.deploy.outputs.pages-deployment-alias-url }}
-        run: echo $DEPLOYMENT_ALIAS_URL
+      - name: Comment PR
+        uses: thollander/actions-comment-pull-request@v3
+        with:
+          message: |
+            Branch Deployment to Cloudflare Pages
+            [🗄️ Visit the preview build here](${{ steps.deploy.outputs.deployment-url }})
   test:
     runs-on: ubuntu-latest
     name: Test
@@ -57,19 +55,3 @@ jobs:
           application-id: ${{ secrets.MABL_APPLICATION_ID}}
           environment-id: ${{ secrets.MABL_ENVIRONMENT_ID}}
           app-url: $URL
-  report:
-    runs-on: ubuntu-latest
-    name: Report
-    needs: deploy
-    env:
-      URL: ${{needs.deploy.outputs.url}}
-    steps:
-      - name: Add comment to PR
-        uses: the-wright-jamie/update-pr-info-action@v1
-        with:
-          repo-token: "${{ secrets.GITHUB_TOKEN }}"
-          head-branch-regex: 'PXWEB2-\d{2,4}'
-          body-template: |
-            ### Branch Deployment to Cloudflare Pages
-            [🗄️ Visit the preview build here]($URL)
-          body-update-action: "suffix"
