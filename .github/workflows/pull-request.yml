@@ -23,13 +23,7 @@ jobs:
           preCommands: npm install && npm run build
           command: |
             pages deploy packages/pxweb2/dist --project-name=pxweb2 --branch=Preview
-  test:
-    name: mabl Test
-    needs: deploy
-    runs-on: ubuntu-latest
-    steps:
       - uses: actions/checkout@v4
-
       - name: Functional test deployment
         id: mabl-test-deployment
         uses: mablhq/github-run-tests-action@v1
