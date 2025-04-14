@@ -238,12 +238,11 @@ function Render() {
   return (
     <AccessibilityProvider>
       <ErrorBoundary>
-        <TableViewer />
-      <VariablesProvider>
-        <TableDataProvider>
-          <TableViewer />
-        </TableDataProvider>
-      </VariablesProvider>
+         <VariablesProvider>
+            <TableDataProvider>
+              <TableViewer />
+            </TableDataProvider>
+          </VariablesProvider>
       </ErrorBoundary>
     </AccessibilityProvider>
   );

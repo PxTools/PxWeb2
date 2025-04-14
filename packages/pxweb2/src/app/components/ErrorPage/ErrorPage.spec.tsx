@@ -1,30 +1,3 @@
-// import { render } from '@testing-library/react';
-// import { vi, Mock } from 'vitest';
-// import { useRouteError } from 'react-router';
-// import { ErrorPage } from './ErrorPage';
-// import '@testing-library/jest-dom/vitest';
-// import { renderWithProviders } from '../../util/testing-utils';
-
-// // import { render, screen } from '@testing-library/react';
-// // import { vi } from 'vitest';
-// //import '@testing-library/jest-dom/vitest';
-
-// // Mock the `useRouteError` hook from react-router
-// vi.mock('react-router', () => ({
-//   useRouteError: vi.fn(),
-// }));
-
-// describe('ErrorPage', () => {
-//   it('renders without crashing', () => {
-//     // Mock no error returned by `useRouteError`
-//     (useRouteError as Mock).mockReturnValue(null);
-
-//     // Render the component
-//     const { baseElement } = renderWithProviders(<ErrorPage />);
-
-//     expect(baseElement).toBeTruthy();
-//   });
-// });
 import { vi, Mock } from 'vitest';
 import { useRouteError } from 'react-router';
 import { ErrorPage } from './ErrorPage';
