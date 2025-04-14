@@ -270,7 +270,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     ).catch((error: unknown) => {
       const err = error as ApiError;
       setErrorMsg(problemMessage(err, tableId));
-    });;
+    });
 
     // Map response to json-stat2 Dataset
     const pxDataobj: unknown = res;
