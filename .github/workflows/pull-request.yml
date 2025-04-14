@@ -1,8 +1,9 @@
 name: Deploy to Cloudflare, test with Mabl
 
 on:
-  pull_request:
-    branches: ['PXWEB2-665-mabl-branch-testing']
+  push:
+    branches:
+      -'PXWEB2-665-mabl-branch-testing'
 
 jobs:
   deploy:
