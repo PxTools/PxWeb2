@@ -32,6 +32,7 @@ jobs:
           message: |
             Branch Deployment to Cloudflare Pages
             [🗄️ Visit the preview build here](${{ steps.deploy.outputs.deployment-url }})
+          pr-number: 635
   test:
     runs-on: ubuntu-latest
     name: Test
