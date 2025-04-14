@@ -21,6 +21,7 @@ jobs:
             pages deploy packages/pxweb2/dist --project-name=pxweb2 --branch=Preview
   test:
     name: mabl Test
+    needs: deploy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
