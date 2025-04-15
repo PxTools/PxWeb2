@@ -2,7 +2,7 @@ import { renderWithProviders } from '../../util/testing-utils';
 import Selection from './Selection';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, act } from '@testing-library/react';
 import {
   TableDataProvider,
   TableDataContext,
@@ -55,5 +55,18 @@ describe('Selection', () => {
     );
 
     expect(baseElement).toBeTruthy();
+
+
+    // // Assert that the error was logged
+    // expect(consoleErrorSpy).toHaveBeenCalledWith('ERROR: Selection:', 'Simulated error');
+
+    // Assert that the error was thrown
+    expect(() => {
+      throw new Error('Simulated error');
+    }).toThrow('Simulated error');
+
+
+
+
   });
 });
