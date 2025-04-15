@@ -5,10 +5,6 @@ on:
     branches:
       - PXWEB2-665-mabl-branch-testing
 
-permissions:
-  contents: read
-  pull-requests: write
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -31,9 +27,8 @@ jobs:
         with:
           message: |
             ## Branch Deployment to Cloudflare Pages
-            | Status: | ${{ steps.deploy.outputs.command-output }} |
-            | Preview URL: | ${{ steps.deploy.outputs.deployment-url }} |
-            | Branch Preview URL: |  ${{ steps.deploy.outputs.pages-deployment-alias-url }} |
+
+            :globe_with_meridians: Preview URL: ${{ steps.deploy.outputs.deployment-url }}
           pr-number: 635
   test:
     runs-on: ubuntu-latest
