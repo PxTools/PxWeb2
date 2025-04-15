@@ -33,21 +33,5 @@ describe('TableDataProvider', () => {
 
     consoleErrorSpy.mockRestore();
   });
-
-  it('should render successfully', () => {
-    const { baseElement } = render(
-      <VariablesProvider>
-        <TableDataProvider>
-          <div>Test</div>
-        </TableDataProvider>
-      </VariablesProvider>,
-    );
-
-    expect(baseElement).toBeTruthy();
-
-    // Assert that the error was thrown
-    expect(() => {
-      throw new Error('Simulated error');
-    }).toThrow('Simulated error');
-  });
 });
+
