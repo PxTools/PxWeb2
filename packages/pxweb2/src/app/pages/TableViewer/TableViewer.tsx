@@ -19,7 +19,6 @@ import useApp from '../../context/useApp';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import { VariablesProvider } from '../../context/VariablesProvider';
 import { TableDataProvider } from '../../context/TableDataProvider';
-import ErrorBoundary from '../../components/ErrorBoundry/ErrorBoundry';
 
 export function TableViewer() {
   const { isMobile, isTablet, skipToMainFocused, setSkipToMainFocused } =
