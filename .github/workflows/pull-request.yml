@@ -34,6 +34,15 @@ jobs:
 
             :globe_with_meridians: Preview URL: ${{ steps.deploy.outputs.deployment-url }}
           pr-number: 635
+  report:
+    runs-on: ubuntu-latest
+    name: Report
+    needs: deploy
+    steps:
+      - name: verify URL parameters
+        env:
+          URL: ${{needs.deploy.outputs.url}}
+        run: echo $URL
   test:
     runs-on: ubuntu-latest
     name: Test
