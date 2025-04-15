@@ -34,15 +34,6 @@ jobs:
 
             :globe_with_meridians: Preview URL: ${{ steps.deploy.outputs.deployment-url }}
           pr-number: 635
-  report:
-    runs-on: ubuntu-latest
-    name: Report
-    needs: deploy
-    steps:
-      - name: verify URL parameters
-        env:
-          URL: ${{needs.deploy.outputs.url}}
-        run: echo $URL
   test:
     runs-on: ubuntu-latest
     name: Test
@@ -53,7 +44,6 @@ jobs:
         id: mabl-test-deployment
         uses: mablhq/github-run-tests-action@v1
         env:
-          URL: ${{needs.deploy.outputs.url}}
           # Use a "CI/CD Integration" type of mabl API key
           MABL_API_KEY: ${{ secrets.MABL_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -65,4 +55,4 @@ jobs:
             firefox
           application-id: ${{ secrets.MABL_APPLICATION_ID}}
           environment-id: ${{ secrets.MABL_ENVIRONMENT_ID}}
-          app-url: $URL
+          app-url: ${{needs.deploy.outputs.url}}
