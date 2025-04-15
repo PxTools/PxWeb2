@@ -237,13 +237,11 @@ export function TableViewer() {
 function Render() {
   return (
     <AccessibilityProvider>
-      <ErrorBoundary>
-        <VariablesProvider>
-          <TableDataProvider>
-            <TableViewer />
-          </TableDataProvider>
-        </VariablesProvider>
-      </ErrorBoundary>
+      <VariablesProvider>
+        <TableDataProvider>
+          <TableViewer />
+        </TableDataProvider>
+      </VariablesProvider>
     </AccessibilityProvider>
   );
 }
