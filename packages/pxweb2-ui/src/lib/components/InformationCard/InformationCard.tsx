@@ -22,7 +22,11 @@ export function InformationCard({
       <Icon iconName={icon} className={styles['icon-wrapper']} />
       <div className={styles['content-wrapper']}>
         {headingText && (
-          <Heading size="medium" level={headingLevel} className={cl(styles['heading-wrapper'])}>
+          <Heading
+            size="medium"
+            level={headingLevel}
+            className={cl(styles['heading-wrapper'])}
+          >
             {headingText}
           </Heading>
         )}
