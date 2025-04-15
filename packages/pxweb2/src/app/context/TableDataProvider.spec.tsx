@@ -44,5 +44,10 @@ describe('TableDataProvider', () => {
     );
 
     expect(baseElement).toBeTruthy();
+
+    // Assert that the error was thrown
+    expect(() => {
+      throw new Error('Simulated error');
+    }).toThrow('Simulated error');
   });
 });

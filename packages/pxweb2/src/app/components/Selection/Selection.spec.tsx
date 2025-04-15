@@ -56,9 +56,6 @@ describe('Selection', () => {
 
     expect(baseElement).toBeTruthy();
 
-    // // Assert that the error was logged
-    // expect(consoleErrorSpy).toHaveBeenCalledWith('ERROR: Selection:', 'Simulated error');
-
     // Assert that the error was thrown
     expect(() => {
       throw new Error('Simulated error');
