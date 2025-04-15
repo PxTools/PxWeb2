@@ -1,0 +1,58 @@
+name: Deploy to Cloudflare, test with Mabl
+
+on:
+  pull_request:
+    branches: ['main']
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy
+    outputs:
+      url: ${{ steps.deploy.outputs.deployment-url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: deploy
+        id: deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          preCommands: npm install && npm run build
+          command: |
+            pages deploy packages/pxweb2/dist --project-name=pxweb2 --branch=Preview
+      - name: Add deployment info to PR description
+        uses: the-wright-jamie/update-pr-info-action@v1
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          head-branch-regex: 'pxweb2-\d{2,4}'
+          body-template: |
+            ## Branch Deployment to Cloudflare Pages
+
+            :articulated_lorry: Link to branch deployment: ${{ steps.deploy.outputs.deployment-url }}
+          body-update-action: "suffix"
+  test:
+    runs-on: ubuntu-latest
+    name: Test
+    needs: deploy
+    steps:
+      - uses: actions/checkout@v4
+      - name: Regression test against feature branch
+        id: mabl-test-deployment
+        uses: mablhq/github-run-tests-action@v1
+        env:
+          # Use a "CI/CD Integration" type of mabl API key
+          MABL_API_KEY: ${{ secrets.MABL_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          plan-labels: |
+            PxWeb 2.0 Regression Test
+          browser-types: |
+            firefox
+          application-id: ${{ secrets.MABL_APPLICATION_ID}}
+          environment-id: ${{ secrets.MABL_ENVIRONMENT_ID}}
+          app-url: ${{needs.deploy.outputs.url}}
