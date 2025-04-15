@@ -1,9 +1,8 @@
 name: Deploy to Cloudflare, test with Mabl
 
 on:
-  push:
-    branches:
-      - PXWEB2-665-mabl-branch-testing
+  pull_request:
+    branches: ['main']
 
 permissions:
   contents: read
@@ -33,14 +32,13 @@ jobs:
             ## Branch Deployment to Cloudflare Pages
 
             :globe_with_meridians: Preview URL: ${{ steps.deploy.outputs.deployment-url }}
-          pr-number: 635
   test:
     runs-on: ubuntu-latest
     name: Test
     needs: deploy
     steps:
       - uses: actions/checkout@v4
-      - name: Functional test deployment
+      - name: Regression test against feature branch
         id: mabl-test-deployment
         uses: mablhq/github-run-tests-action@v1
         env:
@@ -51,7 +49,6 @@ jobs:
           plan-labels: |
             PxWeb 2.0 Regression Test
           browser-types: |
-            chrome
             firefox
           application-id: ${{ secrets.MABL_APPLICATION_ID}}
           environment-id: ${{ secrets.MABL_ENVIRONMENT_ID}}
