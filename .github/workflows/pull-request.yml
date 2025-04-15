@@ -25,13 +25,16 @@ jobs:
           preCommands: npm install && npm run build
           command: |
             pages deploy packages/pxweb2/dist --project-name=pxweb2 --branch=Preview
-      - name: Comment PR
-        uses: thollander/actions-comment-pull-request@v3
+      - name: Add deployment info to PR description
+        uses: the-wright-jamie/update-pr-info-action@v1
         with:
-          message: |
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          head-branch-regex: 'PXWEB2-\d{2,4}'
+          body-template: |
             ## Branch Deployment to Cloudflare Pages
 
-            :globe_with_meridians: Preview URL: ${{ steps.deploy.outputs.deployment-url }}
+            :articulated_lorry: Link to branch deployment: ${{ steps.deploy.outputs.deployment-url }}
+          body-update-action: "suffix"
   test:
     runs-on: ubuntu-latest
     name: Test
