@@ -7,14 +7,14 @@ import { Heading, Icon, IconProps } from '@pxweb2/pxweb2-ui';
 export interface InformationCardProps {
   icon: IconProps['iconName'];
   headingText?: string;
-  headingSize?: 'small' | 'xsmall' | 'medium' | 'large' | 'xlarge';
+  headingLevel?: '1' | '2' | '3' | '4' | '5' | '6';
   children: React.ReactNode;
 }
 
 export function InformationCard({
   icon,
   headingText,
-  headingSize = 'small',
+  headingLevel = '3',
   children,
 }: InformationCardProps) {
   return (
@@ -22,7 +22,7 @@ export function InformationCard({
       <Icon iconName={icon} className={styles['icon-wrapper']} />
       <div className={styles['content-wrapper']}>
         {headingText && (
-          <Heading size={headingSize} className={cl(styles['heading-wrapper'])}>
+          <Heading size="medium" level={headingLevel} className={cl(styles['heading-wrapper'])}>
             {headingText}
           </Heading>
         )}
