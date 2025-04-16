@@ -16,7 +16,6 @@ describe('Selection', () => {
       const context = React.useContext(TableDataContext);
       React.useEffect(() => {
         if (context) {
-          // Simulate the error being thrown
           throw new Error('Simulated error');
         }
       }, [context]);
@@ -56,7 +55,6 @@ describe('Selection', () => {
 
     expect(baseElement).toBeTruthy();
 
-    // Assert that the error was thrown
     expect(() => {
       throw new Error('Simulated error');
     }).toThrow('Simulated error');
