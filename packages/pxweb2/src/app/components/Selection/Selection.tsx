@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
 
-import { TableService } from '@pxweb2/pxweb2-api-client';
+import { ApiError, TableService } from '@pxweb2/pxweb2-api-client';
 import { mapJsonStat2Response } from '../../../mappers/JsonStat2ResponseMapper';
 import { mapTableSelectionResponse } from '../../../mappers/TableSelectionResponseMapper';
 import {
@@ -20,6 +20,7 @@ import useVariables from '../../context/useVariables';
 import { NavigationItem } from '../../components/NavigationMenu/NavigationItem/NavigationItemType';
 import useAccessibility from '../../context/useAccessibility';
 import { getLabelText } from '../../util/utils';
+import { problemMessage } from '../../util/problemMessage';
 
 function addSelectedCodeListToVariable(
   currentVariable: SelectedVBValues | undefined,
@@ -295,7 +296,8 @@ export function Selection({
 
   useEffect(() => {
     if (errorMsg) {
-      console.error('Selection.tsx', errorMsg);
+      console.error('ERROR: Selection:', errorMsg);
+      throw Error(errorMsg);
     }
   }, [errorMsg]);
 
@@ -343,8 +345,12 @@ export function Selection({
           variables.setIsLoadingMetadata(false);
         }
       })
-      .catch(() => {
-        setErrorMsg('Could not get table: ' + selectedTabId);
+      .catch((apiError: ApiError) => {
+        setErrorMsg(problemMessage(apiError, selectedTabId));
+        setPxTableMetadata(null);
+      })
+      .catch((error) => {
+        setErrorMsg(`Could not get table: ${selectedTabId} ${error.message}`);
         setPxTableMetadata(null);
       });
 
@@ -363,8 +369,13 @@ export function Selection({
           variables.setIsLoadingMetadata(false);
           variables.setHasLoadedDefaultSelection(true);
         })
-        .catch(() => {
-          setErrorMsg('Error getting default selection: ' + selectedTabId);
+        .catch((apiError: ApiError) => {
+          setErrorMsg(problemMessage(apiError, selectedTabId));
+        })
+        .catch((error) => {
+          setErrorMsg(
+            `Error getting default selection: ${selectedTabId} ${error.message}`,
+          );
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -430,12 +441,13 @@ export function Selection({
       .finally(() => {
         setIsFadingVariableList(false);
       })
+      .catch((apiError: ApiError) => {
+        setErrorMsg(problemMessage(apiError, selectedTabId));
+        return [];
+      })
       .catch((error) => {
         console.error(
-          'Could not get values for code list: ' +
-            newMappedSelectedCodeList.value +
-            ' ' +
-            error,
+          `Could not get values for code list: ${newMappedSelectedCodeList.value} ${error}`,
         );
         return [];
       });
