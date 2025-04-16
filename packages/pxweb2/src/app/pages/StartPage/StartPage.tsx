@@ -5,11 +5,12 @@ import cl from 'clsx';
 import styles from './StartPage.module.scss';
 
 import { Tag, Search, TableCard, Icon } from '@pxweb2/pxweb2-ui';
-import { TablesResponse, Table } from '@pxweb2/pxweb2-api-client';
+import { type Table, TableService, OpenAPI } from '@pxweb2/pxweb2-api-client';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import { Header } from '../../components/Header/Header';
 import { Information } from '../../components/Information/Information';
 import { FilterSidebar } from '../../components/FilterSidebar/FilterSidebar';
+import { getConfig } from '../../util/config/getConfig';
 import {
   type Filter,
   type ReducerActionTypes,
@@ -17,9 +18,12 @@ import {
   ActionType,
 } from './tableTypes';
 
-import list from './dummy-data/tables.json' with { type: 'json' };
+// import list from './dummy-data/tables.json' with { type: 'json' };
 
-const bigTableList = list as TablesResponse;
+// TODO
+// - Ensure result of API call is added to state
+// - The API call is a side effect, should be in a useEffect
+// - Cache the result of the call locally. Use localStore maybe, and ensure it is fetched at least hourly.
 
 function shouldTableBeIncluded(table: Table, filters: Filter[]) {
   return filters.some((filter) => {
@@ -68,6 +72,12 @@ const initialState: State = {
 const StartPage = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  const config = getConfig();
+  const baseUrl = config.apiUrl;
+  OpenAPI.BASE = baseUrl;
+
+  let bigTableList: { tables: Table[] } = { tables: [] };
+
   function handleResetFilter() {
     dispatch({ type: ActionType.RESET_FILTERS });
   }
@@ -80,6 +90,12 @@ const StartPage = () => {
     dispatch({ type: ActionType.REMOVE_FILTER, payload: filter });
   }
 
+  // OW OUCH MY REDUCERS
+  // finish this omg
+  function handleUpdateTables(tables: Table[]) {
+    dispatch({ type: ActionType.UPDATE_TABLES, payload: tables });
+  }
+
   function reducer(
     state: StartPageState,
     action: ReducerActionTypes,
@@ -87,6 +103,11 @@ const StartPage = () => {
     switch (action.type) {
       case ActionType.RESET_FILTERS:
         return initialState;
+      case ActionType.UPDATE_TABLES:
+        return {
+          ...initialState,
+          tables: action.payload,
+        };
       case ActionType.ADD_FILTER:
         return {
           ...state,
@@ -121,6 +142,16 @@ const StartPage = () => {
         return state;
     }
   }
+
+  use;
+
+  TableService.listAllTables('sv', undefined, undefined, true, 1, 10000)
+    .then((response) => {
+      bigTableList = { tables: response.tables };
+    })
+    .catch((error) => {
+      console.error('Failed to fetch tables:', error);
+    });
 
   return (
     <AccessibilityProvider>

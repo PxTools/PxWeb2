@@ -4,6 +4,7 @@ export enum ActionType {
   RESET_FILTERS = 'RESET_FILTERS',
   ADD_FILTER = 'ADD_FILTER',
   REMOVE_FILTER = 'REMOVE_FILTER',
+  UPDATE_TABLES = 'UPDATE_TABLES',
 }
 
 export type Filter = {
