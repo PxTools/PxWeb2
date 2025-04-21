@@ -21,7 +21,7 @@
     "react-dom": "^19.1.0",
     "react-virtuoso": "^4.12.6",
     "sass": "^1.86.3",
-    "vite": "^6.2.5"
+    "vite": "^6.3.2"
   },
   "devDependencies": {
     "@types/lodash": "^4.17.16",
