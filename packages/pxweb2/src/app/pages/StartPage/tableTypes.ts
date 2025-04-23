@@ -12,8 +12,9 @@ export type Filter = {
   value: string;
 };
 
-export type State = {
-  tables: Table[];
+export type StartPageState = {
+  availableTables: Table[];
+  filteredTables: Table[];
   availableFilters: Map<string, number>;
   activeFilters: Filter[];
 };
@@ -21,18 +22,25 @@ export type State = {
 export type ReducerActionTypes =
   | ResetFilterAction
   | AddFilterAction
-  | RemoveFilterAction;
+  | RemoveFilterAction
+  | UpdateTablesAction;
 
 type RemoveFilterAction = {
   type: ActionType.REMOVE_FILTER;
-  payload: Filter;
+  payload: { filter: Filter; tables: Table[] };
 };
 
 type ResetFilterAction = {
   type: ActionType.RESET_FILTERS;
+  payload: Table[];
 };
 
 type AddFilterAction = {
   type: ActionType.ADD_FILTER;
   payload: Filter[];
+};
+
+type UpdateTablesAction = {
+  type: ActionType.UPDATE_TABLES;
+  payload: Table[];
 };

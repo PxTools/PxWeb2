@@ -1,11 +1,11 @@
-import { useReducer } from 'react';
+import { useEffect, useReducer } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import cl from 'clsx';
 
 import styles from './StartPage.module.scss';
 
 import { Tag, Search, TableCard, Icon } from '@pxweb2/pxweb2-ui';
-import { type Table, TableService, OpenAPI } from '@pxweb2/pxweb2-api-client';
+import { type Table, OpenAPI } from '@pxweb2/pxweb2-api-client';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import { Header } from '../../components/Header/Header';
 import { Information } from '../../components/Information/Information';
@@ -14,9 +14,10 @@ import { getConfig } from '../../util/config/getConfig';
 import {
   type Filter,
   type ReducerActionTypes,
-  type State,
+  type StartPageState,
   ActionType,
 } from './tableTypes';
+import { getFullTable } from './tableHandler';
 
 // import list from './dummy-data/tables.json' with { type: 'json' };
 
@@ -24,6 +25,8 @@ import {
 // - Ensure result of API call is added to state
 // - The API call is a side effect, should be in a useEffect
 // - Cache the result of the call locally. Use localStore maybe, and ensure it is fetched at least hourly.
+// - The initialState needs to be updated to take in the cached api call
+// - ok MAAAAYBE we want this to be a custom hook yeah that sounds pretty pretty pretty good yeah
 
 function shouldTableBeIncluded(table: Table, filters: Filter[]) {
   return filters.some((filter) => {
@@ -63,9 +66,10 @@ function removeTableNumber(title: string): string {
   }
 }
 
-const initialState: State = {
-  tables: bigTableList.tables,
-  availableFilters: getFilters(bigTableList.tables),
+const initialState: StartPageState = {
+  availableTables: [],
+  filteredTables: [],
+  availableFilters: getFilters([]),
   activeFilters: [],
 };
 
@@ -76,25 +80,26 @@ const StartPage = () => {
   const baseUrl = config.apiUrl;
   OpenAPI.BASE = baseUrl;
 
-  let bigTableList: { tables: Table[] } = { tables: [] };
-
-  function handleResetFilter() {
-    dispatch({ type: ActionType.RESET_FILTERS });
+  async function handleResetFilter() {
+    dispatch({ type: ActionType.RESET_FILTERS, payload: await getFullTable() });
   }
 
   function handleAddFilter(filter: Filter[]) {
     dispatch({ type: ActionType.ADD_FILTER, payload: filter });
   }
 
-  function handleRemoveFilter(filter: Filter) {
-    dispatch({ type: ActionType.REMOVE_FILTER, payload: filter });
+  async function handleRemoveFilter(filter: Filter) {
+    dispatch({
+      type: ActionType.REMOVE_FILTER,
+      payload: filter,
+    });
   }
 
   // OW OUCH MY REDUCERS
   // finish this omg
-  function handleUpdateTables(tables: Table[]) {
-    dispatch({ type: ActionType.UPDATE_TABLES, payload: tables });
-  }
+  // function handleInitializeTables(tables: Table[]) {
+  //   dispatch({ type: ActionType.UPDATE_TABLES, payload: tables });
+  // }
 
   function reducer(
     state: StartPageState,
@@ -102,17 +107,17 @@ const StartPage = () => {
   ): StartPageState {
     switch (action.type) {
       case ActionType.RESET_FILTERS:
-        return initialState;
-      case ActionType.UPDATE_TABLES:
         return {
           ...initialState,
-          tables: action.payload,
+          availableTables: action.payload,
+          filteredTables: action.payload,
+          availableFilters: getFilters(action.payload),
         };
       case ActionType.ADD_FILTER:
         return {
           ...state,
           activeFilters: [...state.activeFilters, ...action.payload],
-          tables: bigTableList.tables.filter((table) => {
+          filteredTables: state.availableTables.filter((table) => {
             return shouldTableBeIncluded(table, [
               ...state.activeFilters,
               ...action.payload,
@@ -121,18 +126,18 @@ const StartPage = () => {
         };
       case ActionType.REMOVE_FILTER:
         if (state.activeFilters.length <= 1) {
-          return initialState;
+          return {};
         } else {
           return {
             ...state,
             activeFilters: state.activeFilters.filter(
-              (filter) => filter.value !== action.payload.value,
+              (filter) => filter.value !== action.payload.filter.value,
             ),
-            tables: bigTableList.tables.filter((table) => {
+            filteredTables: state.availableTables.filter((table) => {
               return shouldTableBeIncluded(
                 table,
                 state.activeFilters.filter(
-                  (filter) => filter.value !== action.payload.value,
+                  (filter) => filter.value !== action.payload.filter.value,
                 ),
               );
             }),
@@ -143,15 +148,9 @@ const StartPage = () => {
     }
   }
 
-  use;
-
-  TableService.listAllTables('sv', undefined, undefined, true, 1, 10000)
-    .then((response) => {
-      bigTableList = { tables: response.tables };
-    })
-    .catch((error) => {
-      console.error('Failed to fetch tables:', error);
-    });
+  useEffect(() => {
+    handleResetFilter();
+  }, []);
 
   return (
     <AccessibilityProvider>
@@ -190,12 +189,12 @@ const StartPage = () => {
           </div>
           <div className={cl(styles['label-medium'], styles.countLabel)}>
             {state.activeFilters.length
-              ? `Treff på ${state.tables.length} tabeller`
-              : `${state.tables.length} tabeller`}
+              ? `Treff på ${state.filteredTables.length} tabeller`
+              : `${state.filteredTables.length} tabeller`}
           </div>
           <Virtuoso
             style={{ height: '90%' }}
-            data={state.tables}
+            data={state.filteredTables}
             itemContent={(_, table: Table) => (
               <div className={styles.tableListItem}>
                 <TableCard
@@ -220,12 +219,6 @@ const StartPage = () => {
       </div>
     </AccessibilityProvider>
   );
-};
-
-type StartPageState = {
-  tables: Table[];
-  availableFilters: Map<string, number>;
-  activeFilters: Filter[];
 };
 
 export default StartPage;
