@@ -8,6 +8,7 @@ describe('VariableBoxContent', () => {
     const { baseElement } = render(
       <VariableBoxContent
         label="test-1"
+        languageDirection="ltr"
         type={VartypeEnum.REGULAR_VARIABLE}
         values={[{ code: 'test-1', label: 'test-1' }]}
         onChangeCodeList={() => {

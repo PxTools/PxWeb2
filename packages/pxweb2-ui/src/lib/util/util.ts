@@ -1,5 +1,6 @@
 import { CodeList } from '../shared-types/codelist';
-import { SelectOption } from '../components/Select/Select';
+import { SelectOption } from '../components/Select/SelectOptionType';
+import { IconProps } from '../components/Icon/Icon';
 
 export const getCSSVariable = (variable: string): string => {
   const rootStyle = getComputedStyle(document.documentElement);
@@ -23,3 +24,21 @@ export const mapCodeListsToSelectOptions = (
     value: code.id,
   }));
 };
+
+/**
+ * Returns the icon direction based on the RTL setting.
+ *
+ * @param isRtl - A boolean indicating whether the layout is RTL (right-to-left).
+ * @param iconLeft - The icon to use for left-to-right layout.
+ * @param iconRight - The icon to use for right-to-left layout.
+ * @returns The icon direction as a string.
+ */
+export function getIconDirection(
+  langDir: 'ltr' | 'rtl',
+  iconForLtl: IconProps['iconName'],
+  iconForRtl: IconProps['iconName'],
+): IconProps['iconName'] {
+  const isRtl = langDir === 'rtl';
+
+  return isRtl ? iconForRtl : iconForLtl;
+}

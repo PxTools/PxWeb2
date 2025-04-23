@@ -6,6 +6,7 @@ vi.mock('react-i18next', () => ({
     i18n: {
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       changeLanguage: () => new Promise(() => {}),
+      dir: () => 'ltr',
     },
   }),
   initReactI18next: {
