@@ -18,6 +18,7 @@ export const ChipToggle = forwardRef<HTMLButtonElement, ChipToggleProps>(
         {...rest}
         ref={ref}
         className={cl(
+          styles.chip,
           styles.toggle,
           {
             [styles.selected]: selected,

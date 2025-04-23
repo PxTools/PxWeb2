@@ -8,24 +8,20 @@ export interface ChipRemovableProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: string;
   variant?: 'border' | 'filled';
-  onClick?: () => void;
 }
 
 export const ChipRemovable = forwardRef<HTMLButtonElement, ChipRemovableProps>(
-  ({ children, variant = 'border', onClick, ...rest }, ref) => {
+  ({ children, variant = 'border', ...rest }, ref) => {
     return (
       <button
         {...rest}
         ref={ref}
         className={cl(styles.chip, styles.removable, styles[variant])}
-        onClick={onClick}
       >
         <span className={cl(styles.text, styles['label-medium'])}>
           {children}
         </span>
-        <span className={cl(styles.emovableIcon)}>
-          <Icon iconName="XMark" />
-        </span>
+        <Icon iconName="XMark" />
       </button>
     );
   },

@@ -9,20 +9,23 @@
 
 .chip {
   align-items: center;
+  background-color: initial;
+  border-width: 1px;
   border-radius: var(--px-border-radius-medium);
   color: var(--px-color-text-default);
   display: inline-flex;
+  gap: 4px;
   height: 44px;
   padding: 0 16px;
+
+  &:focus-visible {
+    outline: 3px solid var(--px-color-border-focus-outline);
+    outline-offset: 3px;
+    box-shadow: inset 0 0 0 3px var(--px-color-border-focus-boxshadow);
+  }
 }
 
 .removable {
-  background-color: initial;
-  color: var(--px-color-text-default);
-  display: inline-flex;
-  height: 44px;
-  padding: 0 16px;
-
   &.border {
     border: 1px solid var(--px-color-border-action);
     border-radius: var(--px-border-radius-medium);
@@ -35,6 +38,7 @@
   &.filled {
     background: var(--px-color-surface-action);
     color: var(--px-color-text-on-inverted);
+    border: none;
 
     &:hover {
       background: var(--px-color-surface-action-hover);
@@ -43,15 +47,6 @@
 }
 
 .toggle {
-  align-items: center;
-  background-color: initial;
-  border-width: 1px;
-  border-radius: var(--px-border-radius-medium);
-  color: var(--px-color-text-default);
-  display: inline-flex;
-  height: 44px;
-  padding: 0 16px;
-
   &.selected {
     background: var(--px-color-surface-action-subtle-hover);
     border: none;
@@ -62,6 +57,14 @@
     &.selected {
       background: var(--px-color-surface-action);
       color: var(--px-color-text-on-action);
+    }
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+    &:hover {
+      background: initial;
     }
   }
 
