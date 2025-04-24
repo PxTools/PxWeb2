@@ -153,7 +153,7 @@ export function Presentation({ selectedTabId, scrollRef }: propsType) {
     if (variables.isMatrixSizeAllowed) {
       tableData.fetchTableData(tableId, i18n, isMobile);
     } else {
-      // fade table and give error message
+      // fade table and give warning
       setIsFadingTable(true);
     }
   }
