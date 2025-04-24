@@ -13,7 +13,7 @@ The project has launched two test-versions of PxWeb 2.0. The goal is to deliver 
 - Save to file
 - Saved query
 - URL and breadcrumb
-- Saved queary replaces algorithm
+- Saved queary as alternative to the algorithm
 - Pivoting
 - Head and footer
 - Show PxWebApi 2.0
