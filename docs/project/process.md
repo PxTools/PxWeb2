@@ -5,7 +5,6 @@
 - Developers have an open Teams-link where they cooperate daily.
 - The project group meet physically once a quarter.
 ## Test tools
-**We are exploring what test tools we are going to use so this list can be changed.**
 
 | Type of test | Testing tools |
 | --- | ----------- |
@@ -28,5 +27,5 @@
 | |Dynamic analysis:  |
 | |Detectify | 
 | |Nessus  |
-| Performance tests | Mabl and Lighthouse |
+| Performance tests | JMeter |
 | Container security | Trivy? |
