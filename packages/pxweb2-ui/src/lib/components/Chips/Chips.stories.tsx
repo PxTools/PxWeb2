@@ -1,5 +1,5 @@
 import { Meta } from '@storybook/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { Chips } from './Chips';
 
@@ -9,11 +9,17 @@ const meta: Meta<typeof Chips> = {
 };
 export default meta;
 
-const chips = ['Norsk', 'Dansk', 'Svensk', 'Tysk', 'Spansk'];
+const removableChips = [
+  'Fjern alle filter',
+  'Ledige stillinger',
+  'Kommune',
+  'Måned',
+];
+const toggleChips = ['.xlxs', '.csv', '.html'];
 
 interface StoryProps {
   type?: 'toggle' | 'removable';
-  variant?: 'border' | 'filled';
+  filled?: boolean;
   checkmark?: boolean;
 }
 
@@ -39,7 +45,13 @@ const handleRemovableClick = (
 
 export const Default = (props: StoryProps) => {
   const [selected, setSelected] = useState<number[]>([1, 2]);
-  const [options, setOptions] = useState(chips);
+  const [options, setOptions] = useState(toggleChips);
+
+  useEffect(() => {
+    if (props.type !== 'toggle') {
+      setOptions(removableChips);
+    }
+  }, [props.type]);
 
   if (props.type === 'toggle') {
     return (
@@ -62,7 +74,7 @@ export const Default = (props: StoryProps) => {
     <Chips>
       {options.map((c) => (
         <Chips.Removable
-          variant={props.variant}
+          filled={props.filled}
           key={c}
           onClick={() => handleRemovableClick(options, setOptions, c)}
         >
@@ -82,18 +94,23 @@ Default.argTypes = {
     control: { type: 'boolean' },
     if: { arg: 'type', eq: 'toggle' },
   },
-  variant: {
-    control: { type: 'radio' },
-    options: ['border', 'filled'],
+  filled: {
+    control: { type: 'boolean' },
     if: { arg: 'type', eq: 'removable' },
   },
+};
+
+Default.args = {
+  type: 'toggle',
+  checkmark: true,
+  filled: false,
 };
 
 export const ToggleCheckmark = () => {
   const [selected, setSelected] = useState<number[]>([2, 4]);
   return (
     <Chips>
-      {chips.map((c, i) => (
+      {toggleChips.map((c, i) => (
         <Chips.Toggle
           selected={selected.includes(i)}
           onClick={() => handleToggleClick(selected, setSelected, i)}
@@ -111,7 +128,7 @@ export const ToggleNoCheckmark = () => {
 
   return (
     <Chips>
-      {chips.map((c, i) => (
+      {toggleChips.map((c, i) => (
         <Chips.Toggle
           selected={selected.includes(i)}
           checkmark={false}
@@ -130,11 +147,11 @@ export const ToggleWithDisabled = () => {
 
   return (
     <Chips>
-      {chips.map((c, i) => (
+      {toggleChips.map((c, i) => (
         <Chips.Toggle
           selected={selected.includes(i)}
           checkmark={false}
-          disabled={i === 4}
+          disabled={i === 2}
           key={i}
           onClick={() => handleToggleClick(selected, setSelected, i)}
         >
@@ -146,7 +163,7 @@ export const ToggleWithDisabled = () => {
 };
 
 export const RemovableBorder = () => {
-  const [options, setOptions] = useState(chips);
+  const [options, setOptions] = useState(removableChips);
   return (
     <Chips>
       {options.map((c, i) => (
@@ -162,12 +179,12 @@ export const RemovableBorder = () => {
 };
 
 export const RemovableFilled = () => {
-  const [options, setOptions] = useState(chips);
+  const [options, setOptions] = useState(removableChips);
   return (
     <Chips>
       {options.map((c, i) => (
         <Chips.Removable
-          variant="filled"
+          filled
           key={i}
           onClick={() => handleRemovableClick(options, setOptions, c)}
         >

@@ -26,13 +26,11 @@
 }
 
 .removable {
-  &.border {
-    border: 1px solid var(--px-color-border-action);
-    border-radius: var(--px-border-radius-medium);
+  border: 1px solid var(--px-color-border-action);
+  border-radius: var(--px-border-radius-medium);
 
-    &:hover {
-      background: var(--px-color-surface-action-subtle-hover);
-    }
+  &:hover {
+    background: var(--px-color-surface-action-subtle-hover);
   }
 
   &.filled {

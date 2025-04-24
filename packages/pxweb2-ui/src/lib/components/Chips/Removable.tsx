@@ -7,16 +7,18 @@ import styles from './Chips.module.scss';
 export interface ChipRemovableProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: string;
-  variant?: 'border' | 'filled';
+  filled?: boolean;
 }
 
 export const ChipRemovable = forwardRef<HTMLButtonElement, ChipRemovableProps>(
-  ({ children, variant = 'border', ...rest }, ref) => {
+  ({ children, filled, ...rest }, ref) => {
     return (
       <button
         {...rest}
         ref={ref}
-        className={cl(styles.chip, styles.removable, styles[variant])}
+        className={cl(styles.chip, styles.removable, {
+          [styles.filled]: filled,
+        })}
       >
         <span className={cl(styles.text, styles['label-medium'])}>
           {children}
