@@ -6,7 +6,7 @@ import {
   mapCodeListsToSelectOptions,
 } from './util';
 import { CodeList } from '../shared-types/codelist';
-import { SelectOption } from '../components/Select/Select';
+import { SelectOption } from '../components/Select/SelectOptionType';
 
 describe('getCSSVariable', () => {
   beforeEach(() => {

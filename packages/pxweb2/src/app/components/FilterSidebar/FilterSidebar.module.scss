@@ -1,0 +1,17 @@
+@use '$ui/src/lib/text-styles.scss';
+
+.sideBar {
+  grid-area: sideBar;
+  background-color: var(--px-color-surface-subtle);
+  padding: 0 32px 0 20px;
+  overflow-y: auto;
+  position: sticky;
+  top: 0;
+  height: 100%;
+}
+
+.filterList {
+  margin: 20px 0 0;
+  padding: 0;
+  list-style-type: none;
+}

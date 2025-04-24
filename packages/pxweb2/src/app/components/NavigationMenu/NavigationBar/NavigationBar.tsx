@@ -101,7 +101,7 @@ export const NavigationBar = React.forwardRef<
                 parentName="navBar"
                 label={t('presentation_page.sidemenu.save.title')}
                 selected={selected === 'save'}
-                icon={'FloppyDisk'}
+                icon={'Download'}
                 onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
                   onChange(
                     event.screenX === 0 && event.screenY === 0,

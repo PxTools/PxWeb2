@@ -158,3 +158,40 @@ export const NoMargin: StoryFn<typeof Checkbox> = () => {
     </div>
   );
 };
+
+export const WithSubtle: StoryFn<typeof Checkbox> = () => {
+  const [selectedVar1, setSelectedVar1] = React.useState(true);
+  const [selectedVar2, setSelectedVar2] = React.useState(false);
+  const [selectedVar3, setSelectedVar3] = React.useState(false);
+
+  return (
+    <div style={{ width: '400px' }}>
+      <Checkbox
+        id="var1"
+        text="Checkbox 1"
+        onChange={(val) => {
+          setSelectedVar2(val);
+        }}
+        value={selectedVar2}
+      />
+
+      <Checkbox
+        id="var2"
+        text="Checkbox 2"
+        onChange={(val) => {
+          setSelectedVar1(val);
+        }}
+        value={selectedVar1}
+      />
+      <Checkbox
+        id="var3"
+        text="Subtle checkbox (0)"
+        onChange={(val) => {
+          setSelectedVar3(val);
+        }}
+        value={selectedVar3}
+        subtle
+      />
+    </div>
+  );
+};
