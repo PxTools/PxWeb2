@@ -1,6 +1,7 @@
 # Plans
 
-The project has launched two test-versions of PxWeb 2.0. The goal is to deliver a version of PxWeb 2.0 based on PxWebAPI 2.0 during September 2025.
+The project launched two test versions up to June and from then and on the new interface of PxWeb 2.0 is updated every third Monday after the demo. 
+The goal is to deliver a version of PxWeb 2.0 based on PxWebAPI 2.0 during September 2025.
 
 ## PxWebApi 2.0 Release end of August 2025
 - Follows JSON-stat2 format
