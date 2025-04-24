@@ -13,7 +13,7 @@ import { useDebounce } from '@uidotdev/usehooks';
 
 type propsType = {
   readonly selectedTabId: string;
-  ref?: React.Ref<HTMLDivElement>;
+  scrollRef?: React.Ref<HTMLDivElement>;
 };
 
 const MemoizedTable = React.memo(
@@ -24,8 +24,7 @@ const MemoizedTable = React.memo(
     isEqual(prevProps.pxtable, nextProps.pxtable) &&
     prevProps.isMobile === nextProps.isMobile,
 );
-export function Presentation({ selectedTabId, ref }: propsType) {
-  const scrollableContainerRef = ref;
+export function Presentation({ selectedTabId, scrollRef }: propsType) {
   const { isMobile } = useApp();
   const { config } = useApp();
   const { i18n, t } = useTranslation();
@@ -176,20 +175,14 @@ export function Presentation({ selectedTabId, ref }: propsType) {
   useEffect(() => {
     if (!variables.isMatrixSizeAllowed && !isMandatoryNotSelectedFirst) {
       // Scroll to the top of the page when the Alert is shown
-      if (
-        scrollableContainerRef &&
-        typeof scrollableContainerRef !== 'function' &&
-        scrollableContainerRef.current
-      ) {
-        scrollableContainerRef.current.scrollTo({
+      if (scrollRef && typeof scrollRef !== 'function' && scrollRef.current) {
+        scrollRef.current.scrollTo({
           top: 0,
           behavior: 'instant',
         });
-        console.log('scroll to top');
       }
-      console.log('scroll to topppp' + typeof ref);
     }
-  }, [variables.isMatrixSizeAllowed, isMandatoryNotSelectedFirst, ref]);
+  }, [variables.isMatrixSizeAllowed, isMandatoryNotSelectedFirst, scrollRef]);
 
   return (
     <main

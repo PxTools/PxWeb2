@@ -195,7 +195,11 @@ export function TableViewer() {
       <SkipToMain ref={skipToMainRef} />
       {!isSmallScreen && <Header />}
       {/* tabindex={-1} to fix firefox focusing this div*/}
-      <div className={styles.navigationAndContentContainer} tabIndex={-1}>
+      <div
+        ref={isSmallScreen ? outerContainerRef : undefined}
+        className={styles.navigationAndContentContainer}
+        tabIndex={-1}
+      >
         {isSmallScreen ? (
           <>
             <Header />
@@ -225,11 +229,11 @@ export function TableViewer() {
             hideMenuRef={hideMenuRef}
           />
           <div
-            ref={outerContainerRef}
+            ref={!isSmallScreen ? outerContainerRef : undefined}
             className={styles.contentAndFooterContainer}
           >
             <Presentation
-              ref={outerContainerRef}
+              scrollRef={outerContainerRef}
               selectedTabId={selectedTableId}
             ></Presentation>
             <Footer />
