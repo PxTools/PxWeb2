@@ -1,19 +1,24 @@
-import { type Table, TableService } from '@pxweb2/pxweb2-api-client';
+import { type Table, TableService, OpenAPI } from '@pxweb2/pxweb2-api-client';
+import { getConfig } from '../../util/config/getConfig';
 
-export async function getFullTable(): Promise<Table[]> {
+export const getFullTable: Promise<Table[]> = new Promise((resolve, reject) => {
+  const config = getConfig();
+  const baseUrl = config.apiUrl;
+  OpenAPI.BASE = baseUrl;
+
   let table = localStorage.getItem('table');
   if (table) {
-    return JSON.parse(table) as Table[];
+    resolve(JSON.parse(table) as Table[]);
   } else {
     TableService.listAllTables('sv', undefined, undefined, true, 1, 10000)
       .then((response) => {
         console.info('We have a response here!');
         localStorage.setItem('table', JSON.stringify(response.tables));
-        table = JSON.stringify(response.tables);
+        resolve(response.tables);
       })
-      .catch((error) => {
+      .catch((error: Error) => {
         console.error('Failed to fetch tables:', error);
+        reject(error);
       });
-    return JSON.parse(table ?? '[]');
   }
-}
+});

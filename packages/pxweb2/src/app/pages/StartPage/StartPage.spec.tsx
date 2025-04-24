@@ -22,7 +22,9 @@ window.PxWeb2Config = {
     defaultLanguage: 'en',
     fallbackLanguage: 'en',
   },
-  apiUrl: '',
+  apiUrl: 'https://api.scb.se/OV0104/v2beta/api/v2',
+  maxDataCells: 100000,
+  specialCharacters: ['.', '..', ':', '-', '...', '*'],
 };
 
 describe('StartPage', () => {

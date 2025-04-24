@@ -27,7 +27,7 @@ export type ReducerActionTypes =
 
 type RemoveFilterAction = {
   type: ActionType.REMOVE_FILTER;
-  payload: { filter: Filter; tables: Table[] };
+  payload: Filter;
 };
 
 type ResetFilterAction = {

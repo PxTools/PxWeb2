@@ -5,12 +5,11 @@ import cl from 'clsx';
 import styles from './StartPage.module.scss';
 
 import { Tag, Search, TableCard, Icon } from '@pxweb2/pxweb2-ui';
-import { type Table, OpenAPI } from '@pxweb2/pxweb2-api-client';
+import { type Table } from '@pxweb2/pxweb2-api-client';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import { Header } from '../../components/Header/Header';
 import { Information } from '../../components/Information/Information';
 import { FilterSidebar } from '../../components/FilterSidebar/FilterSidebar';
-import { getConfig } from '../../util/config/getConfig';
 import {
   type Filter,
   type ReducerActionTypes,
@@ -76,12 +75,8 @@ const initialState: StartPageState = {
 const StartPage = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const config = getConfig();
-  const baseUrl = config.apiUrl;
-  OpenAPI.BASE = baseUrl;
-
-  async function handleResetFilter() {
-    dispatch({ type: ActionType.RESET_FILTERS, payload: await getFullTable() });
+  function handleResetFilter(tables: Table[]) {
+    dispatch({ type: ActionType.RESET_FILTERS, payload: tables });
   }
 
   function handleAddFilter(filter: Filter[]) {
@@ -107,6 +102,7 @@ const StartPage = () => {
   ): StartPageState {
     switch (action.type) {
       case ActionType.RESET_FILTERS:
+        // Reset from API or cache
         return {
           ...initialState,
           availableTables: action.payload,
@@ -126,20 +122,22 @@ const StartPage = () => {
         };
       case ActionType.REMOVE_FILTER:
         if (state.activeFilters.length <= 1) {
-          return {};
-        } else {
+          // Reset from state
           return {
             ...state,
-            activeFilters: state.activeFilters.filter(
-              (filter) => filter.value !== action.payload.filter.value,
-            ),
+            activeFilters: [],
+            filteredTables: state.availableTables,
+            availableFilters: getFilters(state.availableTables),
+          };
+        } else {
+          const currentFilters = state.activeFilters.filter(
+            (filter) => filter.value !== action.payload.value,
+          );
+          return {
+            ...state,
+            activeFilters: currentFilters,
             filteredTables: state.availableTables.filter((table) => {
-              return shouldTableBeIncluded(
-                table,
-                state.activeFilters.filter(
-                  (filter) => filter.value !== action.payload.filter.value,
-                ),
-              );
+              return shouldTableBeIncluded(table, currentFilters);
             }),
           };
         }
@@ -149,7 +147,9 @@ const StartPage = () => {
   }
 
   useEffect(() => {
-    handleResetFilter();
+    getFullTable.then((tables: Table[]) => {
+      handleResetFilter(tables);
+    });
   }, []);
 
   return (
@@ -164,7 +164,9 @@ const StartPage = () => {
           state={state}
           handleAddFilter={handleAddFilter}
           handleRemoveFilter={handleRemoveFilter}
-          handleResetFilter={handleResetFilter}
+          handleResetFilter={() => {
+            getFullTable.then((t) => handleResetFilter(t));
+          }}
         />
         <div className={styles.listTables}>
           <div className={styles.filterPillContainer}>
@@ -173,7 +175,9 @@ const StartPage = () => {
                 <Tag
                   type="border"
                   variant="info"
-                  onClick={() => handleResetFilter()}
+                  onClick={() => {
+                    getFullTable.then((t) => handleResetFilter(t));
+                  }}
                 >
                   {'Reset Filters'}
                 </Tag>
