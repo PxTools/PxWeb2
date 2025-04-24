@@ -9,12 +9,7 @@ const meta: Meta<typeof Chips> = {
 };
 export default meta;
 
-const removableChips = [
-  'Fjern alle filter',
-  'Ledige stillinger',
-  'Kommune',
-  'Måned',
-];
+const removableChips = ['Ledige stillinger', 'Kommune', 'Måned'];
 const toggleChips = ['.xlxs', '.csv', '.html'];
 
 interface StoryProps {

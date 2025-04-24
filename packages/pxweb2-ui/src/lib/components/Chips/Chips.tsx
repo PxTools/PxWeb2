@@ -1,5 +1,6 @@
 import React, { HTMLAttributes, forwardRef } from 'react';
 import cl from 'clsx';
+
 import { OverridableComponent } from '../../util/OverridableComponent';
 import ChipRemovable, { ChipRemovableProps } from './Removable';
 import ChipToggle, { ChipToggleProps } from './Toogle';
