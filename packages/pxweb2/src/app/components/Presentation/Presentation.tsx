@@ -198,6 +198,7 @@ export function Presentation({ selectedTabId, scrollRef }: propsType) {
           />
           {!variables.isMatrixSizeAllowed && !isMandatoryNotSelectedFirst && (
             <div
+              role="alert"
               style={{
                 width: '100%',
               }}
