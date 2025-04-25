@@ -50,15 +50,17 @@
 
 .toggle {
   height: 36px;
+  padding-left: 16px;
 
   &.selected {
     background: var(--px-color-surface-action-subtle-active);
     box-sizing: border-box;
     border: 1px solid transparent;
     color: var(--px-color-text-action);
+    padding-left: 12px;
 
     &:hover {
-      border: 1px solid var(--px-color-border-action);
+      background: var(--px-color-surface-action-subtle-hover);
     }
   }
 
@@ -69,6 +71,7 @@
 
       &:hover {
         background: var(--px-color-surface-action-subtle-hover);
+        border: 1px solid var(--px-color-border-action);
         color: var(--px-color-text-action);
       }
     }
