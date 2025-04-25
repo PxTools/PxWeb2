@@ -165,6 +165,7 @@ export const RemovableBorder = () => {
         <Chips.Removable
           key={i}
           onClick={() => handleRemovableClick(options, setOptions, c)}
+          aria-label={`Slett ${c}`}
         >
           {c}
         </Chips.Removable>

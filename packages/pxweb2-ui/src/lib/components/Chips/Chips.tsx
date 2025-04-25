@@ -3,7 +3,7 @@ import cl from 'clsx';
 
 import { OverridableComponent } from '../../util/OverridableComponent';
 import ChipRemovable, { ChipRemovableProps } from './Removable';
-import ChipToggle, { ChipToggleProps } from './Toogle';
+import ChipToggle, { ChipToggleProps } from './Toggle';
 import styles from './Chips.module.scss';
 
 export interface ChipsProps extends HTMLAttributes<HTMLUListElement> {
