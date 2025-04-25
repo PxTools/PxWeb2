@@ -93,12 +93,18 @@ Default.argTypes = {
     control: { type: 'boolean' },
     if: { arg: 'type', eq: 'removable' },
   },
+  truncate: {
+    control: { type: 'boolean' },
+    description: 'Truncate text if it is too long',
+    if: { arg: 'type', eq: 'removable' },
+  },
 };
 
 Default.args = {
   type: 'toggle',
   checkmark: true,
   filled: false,
+  truncate: false
 };
 
 export const ToggleCheckmark = () => {
@@ -183,6 +189,28 @@ export const RemovableFilled = () => {
           filled
           key={i}
           onClick={() => handleRemovableClick(options, setOptions, c)}
+        >
+          {c}
+        </Chips.Removable>
+      ))}
+    </Chips>
+  );
+};
+
+export const RemovableTruncate = () => {
+  const chipsLongText = [
+    'Registrerte arbeidsledige blant innvandrere (avsluttet i Statistisk sentralbyrå)',
+    'Byggekostnadsindeks for røyrleggjararbeid i kontor- og forretningsbygg',
+    'Frivillighet, politisk deltakelse og tillit, levekårsundersøkelsen',
+  ];
+  const [options, setOptions] = useState(chipsLongText);
+  return (
+    <Chips>
+      {options.map((c, i) => (
+        <Chips.Removable
+          key={i}
+          onClick={() => handleRemovableClick(options, setOptions, c)}
+          truncate
         >
           {c}
         </Chips.Removable>

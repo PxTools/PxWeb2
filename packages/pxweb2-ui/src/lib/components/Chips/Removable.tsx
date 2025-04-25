@@ -8,10 +8,11 @@ export interface ChipRemovableProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: string;
   filled?: boolean;
+  truncate?: boolean;
 }
 
 export const ChipRemovable = forwardRef<HTMLButtonElement, ChipRemovableProps>(
-  ({ children, filled, ...rest }, ref) => {
+  ({ children, filled, truncate, ...rest }, ref) => {
     return (
       <button
         {...rest}
@@ -19,8 +20,13 @@ export const ChipRemovable = forwardRef<HTMLButtonElement, ChipRemovableProps>(
         className={cl(styles.chip, styles.removable, {
           [styles.filled]: filled,
         })}
+        title={truncate ? children : undefined}
       >
-        <span className={cl(styles.text, styles['label-medium'])}>
+        <span
+          className={cl(styles.text, styles['label-medium'], {
+            [styles.truncate]: truncate,
+          })}
+        >
           {children}
         </span>
         <Icon iconName="XMark" />
