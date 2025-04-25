@@ -1,4 +1,4 @@
-import { ClassType, Dataset } from '@pxweb2/pxweb2-api-client';
+import { ClassType, CodeListType, Dataset } from '@pxweb2/pxweb2-api-client';
 import { mapJsonStat2Response } from '../mappers/JsonStat2ResponseMapper';
 
 describe('JsonStat2ResponseMapper', () => {
@@ -60,18 +60,18 @@ describe('JsonStat2ResponseMapper', () => {
               },
 
               codeLists: [
-                // {
-                //   id: 'cd1',
-                //   label: 'Codelist 1',
-                //   type: 'Aggregation',
-                //   links: [],
-                // },
-                //   {
-                //     id: 'cd2',
-                //     label: 'Codelist 2',
-                //     type: CodeListType.VALUESET,
-                //     links: [],
-                //   },
+                {
+                  id: 'cd1',
+                  label: 'Codelist 1',
+                  type: CodeListType.AGGREGATION,
+                  links: [],
+                },
+                {
+                  id: 'cd2',
+                  label: 'Codelist 2',
+                  type: CodeListType.VALUESET,
+                  links: [],
+                },
               ],
             },
           },
@@ -180,7 +180,7 @@ describe('JsonStat2ResponseMapper', () => {
       expect(pxTable.metadata.variables[0].mandatory).equals(true);
       expect(pxTable.metadata.variables[0].codeLists?.length).equals(0);
       expect(pxTable.metadata.variables[1].mandatory).equals(false);
-      expect(pxTable.metadata.variables[1].codeLists?.length).equals(0);
+      expect(pxTable.metadata.variables[1].codeLists?.length).equals(2);
       expect(pxTable.metadata.contacts?.length).equals(2);
       expect(pxTable.metadata.notes?.length).equals(3);
       expect(pxTable.metadata.notes[0].mandatory).equals(true);

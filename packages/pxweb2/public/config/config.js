@@ -10,4 +10,5 @@ window.PxWeb2Config = {
   },
   apiUrl: 'https://api.scb.se/OV0104/v2beta/api/v2',
   maxDataCells: 3000,
+  specialCharacters: ['.', '..', ':', '-', '...', '*']
 };

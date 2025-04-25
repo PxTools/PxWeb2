@@ -2,7 +2,7 @@ import { useState } from 'react';
 import cl from 'clsx';
 
 import classes from './VariableBox.module.scss';
-import { SelectOption } from '../Select/Select';
+import { SelectOption } from '../Select/SelectOptionType';
 import { VariableBoxHeader } from './VariableBoxHeader/VariableBoxHeader';
 import { VariableBoxContent } from './VariableBoxContent/VariableBoxContent';
 import { Variable } from '../../shared-types/variable';
@@ -18,6 +18,7 @@ export type VariableBoxPropsBase = Omit<Variable, 'notes'>;
 
 export type VariableBoxProps = VariableBoxPropsBase & {
   tableId: string;
+  languageDirection: 'ltr' | 'rtl';
   initialIsOpen?: boolean;
   onChangeCodeList: (
     selectedItem: SelectOption | undefined,
@@ -39,6 +40,7 @@ export function VariableBox({
   initialIsOpen,
   tableId,
   label,
+  languageDirection,
   mandatory = false,
   type,
   values,
@@ -97,6 +99,7 @@ export function VariableBox({
           varId={id}
           type={type}
           label={capitalizedVariableName}
+          languageDirection={languageDirection}
           values={values}
           codeLists={codeLists}
           selectedValues={selectedValues}
