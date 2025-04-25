@@ -222,19 +222,7 @@ function addValueNote(
     (vn) => vn.variableCode === variable.id,
   );
   if (existingVariableNote) {
-    const existingValueNote = existingVariableNote.valueNotes.find(
-      (vn) => vn.valueCode === value.code,
-    );
-    if (existingValueNote) {
-      existingValueNote.notes.push(note.text);
-    } else {
-      const newValueNote: valueNotes = {
-        valueCode: value.code,
-        valueName: value.label,
-        notes: [note.text],
-      };
-      existingVariableNote.valueNotes.push(newValueNote);
-    }
+    addValueNoteToVariableNote(existingVariableNote, value, note);
   } else {
     const newVariableNote: variableNotes = {
       variableCode: variable.id,
@@ -251,4 +239,25 @@ function addValueNote(
     collection.variableNotes.push(newVariableNote);
   }
   collection.notesCount++;
+}
+
+// Adds a value note to an existing variable note
+function addValueNoteToVariableNote(
+  variableNote: variableNotes,
+  value: Value,
+  note: Note,
+): void {
+  const existingValueNote = variableNote.valueNotes.find(
+    (vn) => vn.valueCode === value.code,
+  );
+  if (existingValueNote) {
+    existingValueNote.notes.push(note.text);
+  } else {
+    const newValueNote: valueNotes = {
+      valueCode: value.code,
+      valueName: value.label,
+      notes: [note.text],
+    };
+    variableNote.valueNotes.push(newValueNote);
+  }
 }
