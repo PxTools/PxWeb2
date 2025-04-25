@@ -9,13 +9,18 @@ const meta: Meta<typeof Chips> = {
 };
 export default meta;
 
-const removableChips = ['Ledige stillinger', 'Kommune', 'Måned'];
+const removableChips = [
+  'Byggekostnadsindeks for røyrleggjararbeid i kontor- og forretningsbygg',
+  'Kommune',
+  'Måned',
+];
 const toggleChips = ['.xlxs', '.csv', '.html'];
 
 interface StoryProps {
   type?: 'toggle' | 'removable';
   filled?: boolean;
   checkmark?: boolean;
+  truncate?: boolean;
 }
 
 const handleToggleClick = (
@@ -72,6 +77,7 @@ export const Default = (props: StoryProps) => {
           filled={props.filled}
           key={c}
           onClick={() => handleRemovableClick(options, setOptions, c)}
+          truncate={props.truncate}
         >
           {c}
         </Chips.Removable>
@@ -104,7 +110,7 @@ Default.args = {
   type: 'toggle',
   checkmark: true,
   filled: false,
-  truncate: false
+  truncate: false,
 };
 
 export const ToggleCheckmark = () => {
