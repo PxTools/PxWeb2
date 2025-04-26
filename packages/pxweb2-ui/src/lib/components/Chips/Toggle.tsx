@@ -29,7 +29,9 @@ export const ChipToggle = forwardRef<HTMLButtonElement, ChipToggleProps>(
         )}
         aria-pressed={selected}
       >
-        {selected && checkmark && <Icon iconName="Check" />}
+        {selected && checkmark && (
+          <Icon className="check-icon" iconName="Check" />
+        )}
         <span className={cl(styles.text, styles['label-medium'])}>
           {children}
         </span>
