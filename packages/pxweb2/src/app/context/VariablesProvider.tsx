@@ -1,7 +1,6 @@
 import React, { createContext, useMemo, useState } from 'react';
 
 import { SelectedVBValues, PxTableMetadata } from '@pxweb2/pxweb2-ui';
-//import useApp from '../context/useApp';
 import { getConfig } from '../util/config/getConfig';
 
 // Define the type for the context
@@ -79,7 +78,6 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
   const [selectedMatrixSize, setSelectedMatrixSize] = useState<number>(1);
   const [isMatrixSizeAllowed, setIsMatrixSizeAllowed] = useState<boolean>(true);
 
-  //const config = useApp().config;
   const config = getConfig();
 
   /**

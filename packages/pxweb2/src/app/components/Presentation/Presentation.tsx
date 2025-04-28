@@ -27,7 +27,6 @@ const MemoizedTable = React.memo(
 );
 export function Presentation({ selectedTabId, scrollRef }: propsType) {
   const { isMobile } = useApp();
-  //const { config } = useApp();
   const config = getConfig();
   const { i18n, t } = useTranslation();
   const tableData = useTableData();
