@@ -14,7 +14,17 @@ export const dummyNotes: tableNoteCollection = {
   },
 };
 
-let varNotes: variableNotes = {
+let mandatoryTableNotes: string[] = [
+  'This is a mandatory note for the table.',
+  'This is another mandatory note for the table.',
+  'This is a third mandatory note for the table.',
+];
+mandatoryTableNotes.forEach((note) => {
+  dummyNotes.mandatoryNotes.tableLevelNotes.push(note);
+  dummyNotes.mandatoryNotes.notesCount++;
+});
+
+let mandatoryVariableNotes1: variableNotes = {
   variableName: 'Variable 1',
   notes: [
     'This is a note for Variable 1.',
@@ -41,5 +51,5 @@ let varNotes: variableNotes = {
   ],
 };
 
-dummyNotes.mandatoryNotes.variableNotes.push(varNotes);
-dummyNotes.mandatoryNotes.notesCount = 1;
+dummyNotes.mandatoryNotes.variableNotes.push(mandatoryVariableNotes1);
+dummyNotes.mandatoryNotes.notesCount++;
