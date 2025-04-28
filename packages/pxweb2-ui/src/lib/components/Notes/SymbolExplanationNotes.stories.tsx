@@ -1,5 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react';
 import { SymbolExplanationNotes } from './SymbolExplanationNotes';
+import { dummyNotes } from './notesDummyData';
 
 const meta: Meta<typeof SymbolExplanationNotes> = {
   component: SymbolExplanationNotes,
@@ -11,9 +12,6 @@ type Story = StoryObj<typeof SymbolExplanationNotes>;
 
 export const Default: Story = {
   args: {
-    notes: {
-      '.': '. = This is a note for symbol .',
-      '..': '.. = This is a note for symbol ..',
-    },
+    notes: dummyNotes.SymbolExplanationNotes,
   },
 };

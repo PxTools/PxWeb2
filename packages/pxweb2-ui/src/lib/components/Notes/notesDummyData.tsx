@@ -14,6 +14,10 @@ export const dummyNotes: tableNoteCollection = {
   },
 };
 
+// Dummy data for symbol explanation notes
+dummyNotes.SymbolExplanationNotes['.'] = '. = This is a note for symbol .';
+dummyNotes.SymbolExplanationNotes['..'] = '.. = This is a note for symbol ..';
+
 // Dummy data for mandatory notes
 let mandatoryTableNotes: string[] = [
   'This is a mandatory note for the table.',

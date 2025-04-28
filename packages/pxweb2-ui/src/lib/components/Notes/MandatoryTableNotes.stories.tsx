@@ -1,5 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react';
 import { MandatoryTableNotes } from './MandatoryTableNotes';
+import { dummyNotes } from './notesDummyData';
 
 const meta: Meta<typeof MandatoryTableNotes> = {
   component: MandatoryTableNotes,
@@ -11,11 +12,7 @@ type Story = StoryObj<typeof MandatoryTableNotes>;
 
 export const Default: Story = {
   args: {
-    notes: [
-      'This is a mandatory note for the table.',
-      'This is another mandatory note for the table.',
-      'This is a third mandatory note for the table.',
-    ],
+    notes: dummyNotes.mandatoryNotes.tableLevelNotes,
   },
 };
 
