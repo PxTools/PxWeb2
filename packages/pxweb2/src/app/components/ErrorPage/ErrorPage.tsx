@@ -3,6 +3,7 @@ import { Alert } from '@pxweb2/pxweb2-ui';
 import { useRouteError } from 'react-router';
 import { Header } from '../Header/Header';
 
+// ErrorPage component to display error messages
 type RouteError = {
   statusText?: string;
   message?: string;
