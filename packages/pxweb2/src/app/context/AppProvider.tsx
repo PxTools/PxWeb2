@@ -1,7 +1,5 @@
 import React, { createContext, useState, useEffect, useMemo } from 'react';
 
-//import { getConfig } from '../util/config/getConfig';
-//import { Config } from '../util/config/configType';
 import {
   BreakpointsSmallMaxWidth,
   BreakpointsXsmallMaxWidth,
