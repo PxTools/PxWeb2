@@ -18,15 +18,6 @@ import {
 } from './tableTypes';
 import { getFullTable } from './tableHandler';
 
-// import list from './dummy-data/tables.json' with { type: 'json' };
-
-// TODO
-// - Ensure result of API call is added to state
-// - The API call is a side effect, should be in a useEffect
-// - Cache the result of the call locally. Use localStore maybe, and ensure it is fetched at least hourly.
-// - The initialState needs to be updated to take in the cached api call
-// - ok MAAAAYBE we want this to be a custom hook yeah that sounds pretty pretty pretty good yeah
-
 function shouldTableBeIncluded(table: Table, filters: Filter[]) {
   return filters.some((filter) => {
     if (filter.type === 'text') {
@@ -89,12 +80,6 @@ const StartPage = () => {
       payload: filter,
     });
   }
-
-  // OW OUCH MY REDUCERS
-  // finish this omg
-  // function handleInitializeTables(tables: Table[]) {
-  //   dispatch({ type: ActionType.UPDATE_TABLES, payload: tables });
-  // }
 
   function reducer(
     state: StartPageState,

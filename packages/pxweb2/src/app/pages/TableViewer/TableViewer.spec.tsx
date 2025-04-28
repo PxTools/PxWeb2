@@ -23,6 +23,8 @@ window.PxWeb2Config = {
     fallbackLanguage: 'en',
   },
   apiUrl: '',
+  maxDataCells: 100000,
+  specialCharacters: ['.', '..', ':', '-', '...', '*'],
 };
 
 describe('TableViewer', () => {
