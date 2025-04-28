@@ -20,7 +20,7 @@ export function InformationCard({
   return (
     <div className={cl(styles['information-card'])}>
       <div className={cl(styles['icon-wrapper'])}>
-        <Icon iconName={icon}/>
+        <Icon iconName={icon} />
       </div>
       <div className={styles['content-wrapper']}>
         {headingText && (

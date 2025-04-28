@@ -39,7 +39,6 @@ export const WithoutHeading1: Story = {
   render: (args: InformationCardProps) => <InformationCard {...args} />,
 };
 
-
 export const WithHeadersAndBodylongs: Story = {
   args: {
     headingText: 'Tegnforklaring',
