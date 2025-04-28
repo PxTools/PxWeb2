@@ -23,11 +23,22 @@ export const Default: Story = {
 
 export const WithoutHeading: Story = {
   args: {
-    icon: 'Sparkles',
+    icon: 'Book',
     children: 'This is an information card without heading.',
   },
   render: (args) => <InformationCard {...args} />,
 };
+
+export const WithoutHeading1: Story = {
+  args: {
+    headingText: 'Information card with header level 1',
+    icon: 'Book',
+    children: 'This is an information card with heading.',
+    headingLevel: '1',
+  },
+  render: (args: InformationCardProps) => <InformationCard {...args} />,
+};
+
 
 export const WithHeadersAndBodylongs: Story = {
   args: {

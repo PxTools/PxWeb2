@@ -19,7 +19,9 @@ export function InformationCard({
 }: InformationCardProps) {
   return (
     <div className={cl(styles['information-card'])}>
-      <Icon iconName={icon} className={styles['icon-wrapper']} />
+      <div className={cl(styles['icon-wrapper'])}>
+        <Icon iconName={icon}/>
+      </div>
       <div className={styles['content-wrapper']}>
         {headingText && (
           <Heading
