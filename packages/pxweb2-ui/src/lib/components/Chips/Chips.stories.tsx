@@ -121,7 +121,7 @@ export const ToggleCheckmark = () => {
         <Chips.Toggle
           selected={selected.includes(i)}
           onClick={() => handleToggleClick(selected, setSelected, i)}
-          key={i}
+          key={c}
         >
           {c}
         </Chips.Toggle>
@@ -140,7 +140,7 @@ export const ToggleNoCheckmark = () => {
           selected={selected.includes(i)}
           checkmark={false}
           onClick={() => handleToggleClick(selected, setSelected, i)}
-          key={i}
+          key={c}
         >
           {c}
         </Chips.Toggle>
@@ -159,7 +159,7 @@ export const ToggleWithDisabled = () => {
           selected={selected.includes(i)}
           checkmark={false}
           disabled={i === 2}
-          key={i}
+          key={c}
           onClick={() => handleToggleClick(selected, setSelected, i)}
         >
           {c}
@@ -173,9 +173,9 @@ export const RemovableBorder = () => {
   const [options, setOptions] = useState(removableChips);
   return (
     <Chips>
-      {options.map((c, i) => (
+      {options.map((c) => (
         <Chips.Removable
-          key={i}
+          key={c}
           onClick={() => handleRemovableClick(options, setOptions, c)}
           aria-label={`Slett ${c}`}
         >
@@ -190,10 +190,10 @@ export const RemovableFilled = () => {
   const [options, setOptions] = useState(removableChips);
   return (
     <Chips>
-      {options.map((c, i) => (
+      {options.map((c) => (
         <Chips.Removable
           filled
-          key={i}
+          key={c}
           onClick={() => handleRemovableClick(options, setOptions, c)}
         >
           {c}
@@ -212,9 +212,9 @@ export const RemovableTruncate = () => {
   const [options, setOptions] = useState(chipsLongText);
   return (
     <Chips>
-      {options.map((c, i) => (
+      {options.map((c) => (
         <Chips.Removable
-          key={i}
+          key={c}
           onClick={() => handleRemovableClick(options, setOptions, c)}
           truncate
         >

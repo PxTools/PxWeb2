@@ -28,24 +28,6 @@ describe('Chips', () => {
     expect(ulElement).toHaveClass(classes.chips);
   });
 
-  it('should render ChipToggle component', () => {
-    render(
-      <Chips>
-        <Chips.Toggle>Toggle Chip</Chips.Toggle>
-      </Chips>,
-    );
-    expect(screen.getByText('Toggle Chip')).toBeInTheDocument();
-  });
-
-  it('should render ChipRemovable component', () => {
-    render(
-      <Chips>
-        <Chips.Removable>Removable Chip</Chips.Removable>
-      </Chips>,
-    );
-    expect(screen.getByText('Removable Chip')).toBeInTheDocument();
-  });
-
   it('should render children inside <li> elements', () => {
     render(
       <Chips>

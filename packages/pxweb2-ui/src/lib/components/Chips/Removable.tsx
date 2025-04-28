@@ -29,7 +29,7 @@ export const ChipRemovable = forwardRef<HTMLButtonElement, ChipRemovableProps>(
         >
           {children}
         </span>
-        <Icon className="xmark-icon" iconName="XMark" />
+        <Icon className={cl(styles.icon, ['xmark-icon'])} iconName="XMark" />
       </button>
     );
   },
