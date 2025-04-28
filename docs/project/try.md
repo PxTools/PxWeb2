@@ -1,5 +1,5 @@
 # Follow the development of PxWeb 2.0
-The new interface is updated continously during the project. Follow the development on these pages.
+The new interface is updated every third Monday after the demo. Follow the development on these pages.
 ## Tables from the Swedish database
 - [Table5603](https://test.pxweb2.pages.dev/table/TAB5603)
 - [Table4246](https://test.pxweb2.pages.dev/table/TAB4246)
