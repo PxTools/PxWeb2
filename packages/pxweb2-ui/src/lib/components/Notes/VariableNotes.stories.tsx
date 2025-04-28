@@ -12,7 +12,7 @@ type Story = StoryObj<typeof VariableNotes>;
 
 export const Default: Story = {
   args: {
-    variableNotes: dummyNotes.mandatoryNotes.variableNotes[0],
+    variableNotes: dummyNotes.nonMandatoryNotes.variableNotes[0],
     showVariableName: true,
   },
 };

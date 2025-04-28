@@ -14,6 +14,7 @@ export const dummyNotes: tableNoteCollection = {
   },
 };
 
+// Dummy data for mandatory notes
 let mandatoryTableNotes: string[] = [
   'This is a mandatory note for the table.',
   'This is another mandatory note for the table.',
@@ -21,23 +22,77 @@ let mandatoryTableNotes: string[] = [
 ];
 mandatoryTableNotes.forEach((note) => {
   dummyNotes.mandatoryNotes.tableLevelNotes.push(note);
-  dummyNotes.mandatoryNotes.notesCount++;
 });
 
 let mandatoryVariableNotes1: variableNotes = {
   variableName: 'Variable 1',
   notes: [
-    'This is a note for Variable 1.',
-    'This is another note for Variable 1.',
-    'This is a third note for Variable 1.',
+    'This is a mandatory note for Variable 1.',
+    'This is another mandatory note for Variable 1.',
+    'This is a third mandatory note for Variable 1.',
   ],
   variableCode: 'var1',
   valueNotes: [
     {
       valueName: 'Value 1',
-      notes: ['Note for Value 1'],
+      notes: ['Mandatory note for Value 1'],
       valueCode: 'val1',
     },
+    {
+      valueName: 'Value 2',
+      notes: [
+        'Mandatory note for Value 2',
+        'Another mandatory note for Value 2',
+      ],
+      valueCode: 'val2',
+    },
+    {
+      valueName: 'Value 3',
+      notes: ['Mandatory note for Value 3'],
+      valueCode: 'val3',
+    },
+  ],
+};
+
+let mandatoryVariableNotes2: variableNotes = {
+  variableName: 'Variable 2',
+  notes: ['This is a mandatory note for Variable 2.'],
+  variableCode: 'var2',
+  valueNotes: [
+    {
+      valueName: 'Value A',
+      notes: ['Mandatory note for Value A'],
+      valueCode: 'vala',
+    },
+    {
+      valueName: 'Value B',
+      notes: ['Mandatory note for Value B'],
+      valueCode: 'valb',
+    },
+  ],
+};
+
+dummyNotes.mandatoryNotes.variableNotes.push(mandatoryVariableNotes1);
+dummyNotes.mandatoryNotes.variableNotes.push(mandatoryVariableNotes2);
+dummyNotes.mandatoryNotes.notesCount = 13;
+
+// Dummy data for non-mandatory notes
+let nonMandatoryTableNotes: string[] = [
+  'This is a note for the table.',
+  'This is another note for the table.',
+];
+nonMandatoryTableNotes.forEach((note) => {
+  dummyNotes.nonMandatoryNotes.tableLevelNotes.push(note);
+});
+
+let nonMandatoryVariableNotes1: variableNotes = {
+  variableName: 'Variable 1',
+  notes: [
+    'This is a note for Variable 1.',
+    'This is another note for Variable 1.',
+  ],
+  variableCode: 'var1',
+  valueNotes: [
     {
       valueName: 'Value 2',
       notes: ['Note for Value 2', 'Another note for Value 2'],
@@ -51,5 +106,5 @@ let mandatoryVariableNotes1: variableNotes = {
   ],
 };
 
-dummyNotes.mandatoryNotes.variableNotes.push(mandatoryVariableNotes1);
-dummyNotes.mandatoryNotes.notesCount++;
+dummyNotes.nonMandatoryNotes.variableNotes.push(nonMandatoryVariableNotes1);
+dummyNotes.nonMandatoryNotes.notesCount = 5;
