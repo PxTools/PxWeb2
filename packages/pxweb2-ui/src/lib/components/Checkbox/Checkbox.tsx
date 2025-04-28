@@ -14,6 +14,7 @@ interface CheckboxProps {
   tabIndex?: number;
   strong?: boolean;
   noMargin?: boolean;
+  subtle?: boolean;
 }
 
 export const Checkbox: React.FC<CheckboxProps> = ({
@@ -25,6 +26,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   tabIndex,
   strong,
   noMargin,
+  subtle,
 }) => {
   return (
     <div
@@ -32,22 +34,27 @@ export const Checkbox: React.FC<CheckboxProps> = ({
       role="checkbox"
       aria-checked={value}
       aria-labelledby={id + '-label'}
-      className={styles.checkboxWrapper}
-      tabIndex={tabIndex ? tabIndex : 0}
+      aria-disabled={subtle}
+      className={cl(styles.checkboxWrapper, {
+        [styles[`subtle`]]: subtle,
+      })}
+      tabIndex={subtle ? -1 : (tabIndex ?? 0)}
       onKeyUp={(event) => {
-        if (event.key === ' ') {
+        if (event.key === ' ' && !subtle) {
           event.preventDefault();
           onChange(!value);
         }
       }}
       onKeyDown={(event) => {
-        if (event.key === ' ') {
+        if (event.key === ' ' && !subtle) {
           event.preventDefault();
         }
       }}
       onClick={(event) => {
         event.preventDefault();
-        onChange(!value);
+        if (!subtle) {
+          onChange(!value);
+        }
       }}
     >
       <span
@@ -98,7 +105,7 @@ export const MixedCheckbox: React.FC<MixedCheckboxProps> = ({
       className={cl(styles.checkboxWrapper, {
         [styles.inVariableBox]: inVariableBox,
       })}
-      tabIndex={tabIndex ? tabIndex : 0}
+      tabIndex={tabIndex ?? 0}
       onKeyUp={(event) => {
         if (event.key === ' ') {
           event.preventDefault();
