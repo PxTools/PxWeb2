@@ -37,6 +37,7 @@ jobs:
             :construction: Branch preview URL: ${{ steps.deploy.outputs.pages-deployment-alias-url }}
   test:
     runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
     name: Test
     needs: deploy
     steps:
