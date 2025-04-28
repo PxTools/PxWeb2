@@ -6,13 +6,15 @@ import isEqual from 'lodash/isEqual';
 import classes from './Presentation.module.scss';
 import useApp from '../../context/useApp';
 import { ContentTop } from '../ContentTop/ContentTop';
-import { Table, EmptyState, PxTable } from '@pxweb2/pxweb2-ui';
+import { Table, EmptyState, PxTable, Alert } from '@pxweb2/pxweb2-ui';
 import useTableData from '../../context/useTableData';
 import useVariables from '../../context/useVariables';
 import { useDebounce } from '@uidotdev/usehooks';
+import { getConfig } from '../../util/config/getConfig';
 
 type propsType = {
   readonly selectedTabId: string;
+  scrollRef?: React.Ref<HTMLDivElement>;
 };
 
 const MemoizedTable = React.memo(
@@ -23,8 +25,9 @@ const MemoizedTable = React.memo(
     isEqual(prevProps.pxtable, nextProps.pxtable) &&
     prevProps.isMobile === nextProps.isMobile,
 );
-export function Presentation({ selectedTabId }: propsType) {
+export function Presentation({ selectedTabId, scrollRef }: propsType) {
   const { isMobile } = useApp();
+  const config = getConfig();
   const { i18n, t } = useTranslation();
   const tableData = useTableData();
   const variablesChanged = useVariables();
@@ -40,6 +43,8 @@ export function Presentation({ selectedTabId }: propsType) {
     useState(false);
   const [initialRun, setInitialRun] = useState(true);
   const [isFadingTable, setIsFadingTable] = useState(false);
+  const [isMandatoryNotSelectedFirst, setIsMandatoryNotSelectedFirst] =
+    useState(true);
 
   const tableContainerRef = useRef<HTMLDivElement | null>(null);
   const gradientContainerRef = useRef<HTMLDivElement | null>(null);
@@ -112,7 +117,7 @@ export function Presentation({ selectedTabId }: propsType) {
       );
 
     if (initialRun && !hasSelectedValues) {
-      tableData.fetchTableData(tableId, i18n, isMobile);
+      fetchTableDataIfAllowed();
       setIsMissingMandatoryVariables(false);
     } else {
       if (
@@ -122,7 +127,7 @@ export function Presentation({ selectedTabId }: propsType) {
         !initialRun
       ) {
         setIsFadingTable(true);
-        tableData.fetchTableData(tableId, i18n, isMobile);
+        fetchTableDataIfAllowed();
         setIsMissingMandatoryVariables(false);
       }
       if (!hasSelectedMandatoryVariables && !initialRun) {
@@ -140,8 +145,45 @@ export function Presentation({ selectedTabId }: propsType) {
   }, [variablesChanged]);
 
   useEffect(() => {
-    setIsFadingTable(false); // Stop fading once data is loaded
+    if (variables.isMatrixSizeAllowed) {
+      setIsFadingTable(false); // Stop fading once data is loaded
+    }
   }, [tableData.data, variables]);
+
+  function fetchTableDataIfAllowed() {
+    if (variables.isMatrixSizeAllowed) {
+      tableData.fetchTableData(tableId, i18n, isMobile);
+    } else {
+      // fade table and give warning
+      setIsFadingTable(true);
+    }
+  }
+
+  useEffect(() => {
+    if (isMissingMandatoryVariables) {
+      setIsMandatoryNotSelectedFirst(true);
+    } else {
+      setIsMandatoryNotSelectedFirst(false);
+    }
+  }, [variables.isMatrixSizeAllowed]);
+
+  useEffect(() => {
+    if (!variables.isMatrixSizeAllowed) {
+      setIsMandatoryNotSelectedFirst(false);
+    }
+  }, [isMissingMandatoryVariables]);
+
+  useEffect(() => {
+    if (!variables.isMatrixSizeAllowed && !isMandatoryNotSelectedFirst) {
+      // Scroll to the top of the page when the Alert is shown
+      if (scrollRef && typeof scrollRef !== 'function' && scrollRef.current) {
+        scrollRef.current.scrollTo({
+          top: 0,
+          behavior: 'instant',
+        });
+      }
+    }
+  }, [variables.isMatrixSizeAllowed, isMandatoryNotSelectedFirst, scrollRef]);
 
   return (
     <main
@@ -155,6 +197,55 @@ export function Presentation({ selectedTabId }: propsType) {
             staticTitle={pxTableMetadata?.label}
             pxtable={tableData.data}
           />
+          {!variables.isMatrixSizeAllowed && !isMandatoryNotSelectedFirst && (
+            <div
+              role="alert"
+              style={{
+                width: '100%',
+              }}
+            >
+              <Alert
+                variant="warning"
+                heading={t(
+                  'presentation_page.main_content.table.warnings.to_many_values_selected.title',
+                )}
+              >
+                {' '}
+                {t(
+                  'presentation_page.main_content.table.warnings.to_many_values_selected.description1',
+                )}{' '}
+                <strong>
+                  {t(
+                    'presentation_page.main_content.table.warnings.to_many_values_selected.selectedCells',
+                    {
+                      selectedCells: t(
+                        'number.simple_number_with_zero_decimal',
+                        {
+                          value: variables.getSelectedMatrixSize(),
+                        },
+                      ),
+                    },
+                  )}
+                </strong>{' '}
+                {t(
+                  'presentation_page.main_content.table.warnings.to_many_values_selected.description2',
+                )}{' '}
+                <strong>
+                  {t(
+                    'presentation_page.main_content.table.warnings.to_many_values_selected.maxCells',
+                    {
+                      maxCells: t('number.simple_number_with_zero_decimal', {
+                        value: config.maxDataCells,
+                      }),
+                    },
+                  )}
+                </strong>{' '}
+                {t(
+                  'presentation_page.main_content.table.warnings.to_many_values_selected.description3',
+                )}{' '}
+              </Alert>
+            </div>
+          )}
           {!isMissingMandatoryVariables && (
             <div
               className={classes.gradientContainer}
@@ -165,18 +256,31 @@ export function Presentation({ selectedTabId }: propsType) {
               </div>
             </div>
           )}
-
-          {!isLoadingMetadata && isMissingMandatoryVariables && (
-            <EmptyState
-              svgName="ManWithMagnifyingGlass"
-              headingTxt={t(
-                'presentation_page.main_content.table.warnings.missing_mandatory.title',
-              )}
-              descriptionTxt={t(
-                'presentation_page.main_content.table.warnings.missing_mandatory.description',
-              )}
-            />
-          )}
+          {isMissingMandatoryVariables &&
+            !variables.isMatrixSizeAllowed &&
+            !isMandatoryNotSelectedFirst && (
+              <div
+                className={classes.gradientContainer}
+                ref={gradientContainerRef}
+              >
+                <div className={classes.tableContainer} ref={tableContainerRef}>
+                  <MemoizedTable pxtable={tableData.data} isMobile={isMobile} />
+                </div>
+              </div>
+            )}
+          {!isLoadingMetadata &&
+            isMissingMandatoryVariables &&
+            (variables.isMatrixSizeAllowed || isMandatoryNotSelectedFirst) && (
+              <EmptyState
+                svgName="ManWithMagnifyingGlass"
+                headingTxt={t(
+                  'presentation_page.main_content.table.warnings.missing_mandatory.title',
+                )}
+                descriptionTxt={t(
+                  'presentation_page.main_content.table.warnings.missing_mandatory.description',
+                )}
+              />
+            )}
         </>
       )}
     </main>

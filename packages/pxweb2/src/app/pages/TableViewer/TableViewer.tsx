@@ -39,6 +39,7 @@ export function TableViewer() {
     useState<NavigationItem>(isTablet ? 'none' : 'filter');
   const [hasFocus, setHasFocus] = useState<NavigationItem>('none');
   const [openedWithKeyboard, setOpenedWithKeyboard] = useState(false);
+  const outerContainerRef = useRef<HTMLDivElement | null>(null);
   /**
    * Keep state if window screen size is mobile or desktop.
    */
@@ -195,7 +196,11 @@ export function TableViewer() {
       <SkipToMain ref={skipToMainRef} />
       {!isSmallScreen && <Header />}
       {/* tabindex={-1} to fix firefox focusing this div*/}
-      <div className={styles.navigationAndContentContainer} tabIndex={-1}>
+      <div
+        ref={isSmallScreen ? outerContainerRef : undefined}
+        className={styles.navigationAndContentContainer}
+        tabIndex={-1}
+      >
         {isSmallScreen ? (
           <>
             <Header />
@@ -224,8 +229,14 @@ export function TableViewer() {
             openedWithKeyboard={openedWithKeyboard}
             hideMenuRef={hideMenuRef}
           />
-          <div className={styles.contentAndFooterContainer}>
-            <Presentation selectedTabId={selectedTableId}></Presentation>
+          <div
+            ref={!isSmallScreen ? outerContainerRef : undefined}
+            className={styles.contentAndFooterContainer}
+          >
+            <Presentation
+              scrollRef={outerContainerRef}
+              selectedTabId={selectedTableId}
+            ></Presentation>
             <Footer />
           </div>
         </div>
