@@ -20,6 +20,7 @@ export default mergeConfig(
       reporters: ['default'],
       coverage: {
         reporter: ['lcov', 'text'],
+        include: ['src/**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
         exclude: [
           '**/*.stories.{js,ts,tsx}',
           ...coverageConfigDefaults.exclude,
