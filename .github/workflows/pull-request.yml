@@ -16,6 +16,9 @@ jobs:
       deployment-url: ${{ steps.deploy.outputs.deployment-url }}
       alias-url: ${{ steps.deploy.outputs.pages-deployment-alias-url }}
     steps:
+      - name: Get branch names
+        id: branch-names
+        uses: tj-actions/branch-names@v8
       - uses: actions/checkout@v4
       - name: deploy
         id: deploy
@@ -25,7 +28,7 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           preCommands: npm install && npm run build
           command: |
-            pages deploy packages/pxweb2/dist --project-name=pxweb2 --branch=Preview
+            pages deploy packages/pxweb2/dist --project-name=pxweb2 --branch=${{ steps.branch-names.outputs.current_branch }}
       - name: Add deployment info to PR description
         uses: jupier/powerful-pr-comment@v0.0.5
         with:
