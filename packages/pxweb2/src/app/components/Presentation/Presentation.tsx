@@ -10,6 +10,7 @@ import { Table, EmptyState, PxTable, Alert } from '@pxweb2/pxweb2-ui';
 import useTableData from '../../context/useTableData';
 import useVariables from '../../context/useVariables';
 import { useDebounce } from '@uidotdev/usehooks';
+import { getConfig } from '../../util/config/getConfig';
 
 type propsType = {
   readonly selectedTabId: string;
@@ -26,7 +27,8 @@ const MemoizedTable = React.memo(
 );
 export function Presentation({ selectedTabId, scrollRef }: propsType) {
   const { isMobile } = useApp();
-  const { config } = useApp();
+  //const { config } = useApp();
+  const config = getConfig();
   const { i18n, t } = useTranslation();
   const tableData = useTableData();
   const variablesChanged = useVariables();

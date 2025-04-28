@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect, useMemo } from 'react';
 
-import { getConfig } from '../util/config/getConfig';
-import { Config } from '../util/config/configType';
+//import { getConfig } from '../util/config/getConfig';
+//import { Config } from '../util/config/configType';
 import {
   BreakpointsSmallMaxWidth,
   BreakpointsXsmallMaxWidth,
@@ -14,7 +14,7 @@ export type AppContextType = {
   isMobile: boolean;
   skipToMainFocused: boolean;
   setSkipToMainFocused: (focused: boolean) => void;
-  config: Config;
+  //config: Config;
 };
 
 // Create the context with default values
@@ -26,7 +26,7 @@ export const AppContext = createContext<AppContextType>({
   setSkipToMainFocused: () => {
     return;
   },
-  config: {} as Config,
+  //config: {} as Config,
 });
 
 // Provider component
@@ -36,7 +36,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isInitialized] = useState(true);
   const [skipToMainFocused, setSkipToMainFocused] = useState(false);
 
-  const config = getConfig();
+  //const config = getConfig();
 
   /**
    * Keep state if window screen size is mobile, pad or desktop.
@@ -71,7 +71,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
       isMobile,
       skipToMainFocused,
       setSkipToMainFocused,
-      config,
+      //  config,
     }),
     [
       isInitialized,
@@ -79,7 +79,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
       isMobile,
       skipToMainFocused,
       setSkipToMainFocused,
-      config,
+      //   config,
     ],
   );
 
