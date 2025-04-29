@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 
 import { CodeList } from '../../shared-types/codelist';
-import { SelectOption } from '../Select/Select';
+import { SelectOption } from '../Select/SelectOptionType';
 import { sortSelectOptionsGroupingsLast, mapAndSortCodeLists } from './utils';
 
 const vsOptions: SelectOption[] = [

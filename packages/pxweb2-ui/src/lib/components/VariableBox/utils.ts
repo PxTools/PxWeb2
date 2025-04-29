@@ -1,4 +1,4 @@
-import { SelectOption } from '../Select/Select';
+import { SelectOption } from '../Select/SelectOptionType';
 import { CodeList } from '../../shared-types/codelist';
 import { mapCodeListsToSelectOptions } from '../../util/util';
 

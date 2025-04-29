@@ -1,0 +1,112 @@
+@use '../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixed;
+
+.bottomSheet {
+  display: flex;
+  width: 100%;
+  height: 95vh;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  margin-bottom: 0;
+
+  background: var(--px-color-surface-default);
+  border-radius: var(--px-border-radius-large) var(--px-border-radius-large) 0px
+    0px;
+
+  // Not from Figma
+  padding: 0;
+  border-style: none;
+  overflow: hidden;
+  max-width: 100vw;
+}
+
+.bottomSheet::backdrop {
+  background-color: var(--px-color-surface-scrim);
+  animation: fadeInBackdrop 280ms forwards;
+}
+
+.aside {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.header {
+  display: flex;
+  padding-top: 20px;
+  flex-direction: column;
+  align-items: center;
+  gap: fixed.$spacing-4;
+  align-self: stretch;
+  border-radius: var(--px-border-radius-xlarge) 0px 0px 0px;
+  background: var(--px-color-surface-default);
+}
+
+.titleAndxMarkWrapper {
+  display: flex;
+  padding: 0px 8px 0px 20px;
+  align-items: flex-start;
+  gap: 20px;
+  align-self: stretch;
+}
+
+.titleWrapper {
+  display: flex;
+  padding-top: 6px;
+  align-items: flex-start;
+  flex: 1 0 0;
+}
+
+.content {
+  display: flex;
+  padding: fixed.$spacing-4 0px 0px 0px;
+  flex-direction: column;
+  align-items: center;
+  flex: 1 0 0;
+  align-self: stretch;
+  background: var(--px-color-surface-default);
+  color: var(--px-color-text-default);
+
+  // Not from Figma
+  overflow: auto;
+}
+
+// Animation that slides in BottomSheet from the bottom when opened.
+.slidein {
+  animation: slideIn 280ms forwards;
+}
+
+// Animation that slides out BottomSheet to the bottom when closed.
+.slideout {
+  animation: slideOut 280ms forwards;
+}
+
+@keyframes slideIn {
+  0% {
+    bottom: -70vh;
+  }
+  100% {
+    bottom: 0;
+  }
+}
+
+@keyframes slideOut {
+  0% {
+    bottom: 0;
+  }
+  100% {
+    bottom: -70vh;
+  }
+}
+
+@keyframes fadeInBackdrop {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
