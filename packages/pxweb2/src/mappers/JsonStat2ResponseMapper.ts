@@ -20,8 +20,10 @@ import {
   Contact,
   ContentInfo,
   Note,
+  DataCell,
 } from '@pxweb2/pxweb2-ui';
 import { getLabelText } from '../app/util/utils';
+import { n } from 'react-router/dist/development/fog-of-war-BLArG-qZ';
 
 /**
  * Internal type. Used to keep track of index in json-stat2 value array
@@ -513,7 +515,12 @@ function getDataCellValue(jsonData: Dataset, counter: counter): number | null {
   }
   return jsonData.value?.[counter.number];
 }
-
+function getDataCellStatues(jsonData: Dataset): Record<string, string> | null {
+  if (jsonData.status === undefined || jsonData.status === null) {
+    return null;
+  }
+  return jsonData.status;
+}
 /**
  * Recursively creates a data cube for the PxTable based on the provided JSONStat2 dataset and metadata.
  *
@@ -532,14 +539,26 @@ function createCube(
   dimensionIndex: number,
   counter: counter,
 ): void {
+  const statusCodes = getDataCellStatues(jsonData);
   if (dimensionIndex === metadata.variables.length - 1) {
     metadata.variables[dimensionIndex].values.forEach((value) => {
+      const tempDatacell: DataCell = {
+        value: null,
+        status: undefined,
+        presentation: undefined,
+      };
       dimensions[dimensionIndex] = value.code;
-      setPxTableData(
-        data.cube,
-        dimensions,
-        getDataCellValue(jsonData, counter),
-      );
+      tempDatacell.value = getDataCellValue(jsonData, counter);
+
+      if (statusCodes) {
+        tempDatacell.status = statusCodes[counter.number] ?? undefined;
+        console.log(
+          'counter.number:' + counter.number,
+          'statusCodes[counter.number]:',
+          statusCodes[counter.number],
+        );
+      }
+      setPxTableData(data.cube, dimensions, tempDatacell);
       counter.number++;
     });
   } else {

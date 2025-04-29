@@ -657,11 +657,13 @@ function fillData(
 
     tableRow.push(
       <td key={getNewKey()} headers={headers}>
-        {t(decimalFormats[numberOfDecimals] || 'number.simple_number', {
-          value: dataValue ?? '',
-        })}
+        {dataValue?.status ??
+          t(decimalFormats[numberOfDecimals] || 'number.simple_number', {
+            value: dataValue?.value ?? '',
+          })}
       </td>,
     ); // TODO: Handle null values
+    console.log('status i=', dataValue?.status);
   }
 }
 /**

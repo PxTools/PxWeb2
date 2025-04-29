@@ -46,7 +46,7 @@ export type PxData<T> = {
 };
 
 export type DataCell = {
-  value: number;
+  value: number | null;
   status?: string;
   presentation?: 'number' | 'sign' | 'both';
 };
