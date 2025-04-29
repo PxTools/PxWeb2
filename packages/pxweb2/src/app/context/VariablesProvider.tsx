@@ -1,6 +1,7 @@
 import React, { createContext, useMemo, useState } from 'react';
 
 import { SelectedVBValues, PxTableMetadata } from '@pxweb2/pxweb2-ui';
+import { getConfig } from '../util/config/getConfig';
 
 // Define the type for the context
 export type VariablesContextType = {
@@ -10,6 +11,7 @@ export type VariablesContextType = {
   getSelectedValuesByIdSorted: (variableId: string) => string[];
   getSelectedCodelistById: (variableId: string) => string | undefined;
   getNumberOfSelectedValues: () => number;
+  getSelectedMatrixSize: () => number;
   getUniqueIds: () => string[];
   syncVariablesAndValues: (values: SelectedVBValues[]) => void;
   toString: () => string;
@@ -17,6 +19,7 @@ export type VariablesContextType = {
   setHasLoadedDefaultSelection: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedVBValues: React.Dispatch<React.SetStateAction<SelectedVBValues[]>>;
   selectedVBValues: SelectedVBValues[];
+  isMatrixSizeAllowed: boolean;
   isLoadingMetadata: boolean;
   setIsLoadingMetadata: React.Dispatch<React.SetStateAction<boolean>>;
   pxTableMetadata: PxTableMetadata | null;
@@ -38,7 +41,7 @@ export const VariablesContext = createContext<VariablesContextType>({
   getNumberOfSelectedValues: () => 0,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   syncVariablesAndValues: () => {},
-
+  getSelectedMatrixSize: () => 1,
   getUniqueIds: () => [],
   toString: () => '',
 
@@ -47,6 +50,7 @@ export const VariablesContext = createContext<VariablesContextType>({
   setSelectedVBValues: () => [],
   selectedVBValues: [],
   setIsLoadingMetadata: () => false,
+  isMatrixSizeAllowed: true,
   isLoadingMetadata: false,
   pxTableMetadata: null,
   setPxTableMetadata: () => null,
@@ -71,6 +75,10 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
   const [selectedVBValues, setSelectedVBValues] = useState<SelectedVBValues[]>(
     [],
   );
+  const [selectedMatrixSize, setSelectedMatrixSize] = useState<number>(1);
+  const [isMatrixSizeAllowed, setIsMatrixSizeAllowed] = useState<boolean>(true);
+
+  const config = getConfig();
 
   /**
    * Adds multiple values for a given variable
@@ -185,6 +193,7 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const syncVariablesAndValues = (variables: SelectedVBValues[]) => {
+    createSelectedMatrixSize(variables);
     if (!hasChanges(variables)) {
       return;
     }
@@ -202,6 +211,29 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
     return str;
   };
 
+  const createSelectedMatrixSize = (selectedValues: SelectedVBValues[]) => {
+    let matrixSize = 1;
+    let numberOfValues = 1;
+    selectedValues.forEach((variable) => {
+      if (variable.values.length === 0) {
+        numberOfValues = 1;
+      } else {
+        numberOfValues = variable.values.length;
+      }
+      matrixSize *= numberOfValues;
+    });
+    setSelectedMatrixSize(matrixSize);
+    const maxAllowedMatrixSize = config.maxDataCells;
+    if (matrixSize > maxAllowedMatrixSize) {
+      setIsMatrixSizeAllowed(false);
+    } else {
+      setIsMatrixSizeAllowed(true);
+    }
+  };
+
+  const getSelectedMatrixSize = () => {
+    return selectedMatrixSize;
+  };
   const memoizedValues = useMemo(
     () => ({
       isInitialized,
@@ -211,12 +243,14 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
       getSelectedValuesByIdSorted,
       getSelectedCodelistById,
       getUniqueIds,
+      getSelectedMatrixSize,
       syncVariablesAndValues,
       toString,
       hasLoadedDefaultSelection,
       setHasLoadedDefaultSelection,
       setSelectedVBValues,
       selectedVBValues,
+      isMatrixSizeAllowed,
       isLoadingMetadata,
       setIsLoadingMetadata,
       pxTableMetadata,
@@ -230,12 +264,14 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
       getSelectedValuesByIdSorted,
       getSelectedCodelistById,
       getUniqueIds,
+      getSelectedMatrixSize,
       syncVariablesAndValues,
       toString,
       hasLoadedDefaultSelection,
       setHasLoadedDefaultSelection,
       setSelectedVBValues,
       selectedVBValues,
+      isMatrixSizeAllowed,
       isLoadingMetadata,
       setIsLoadingMetadata,
       pxTableMetadata,

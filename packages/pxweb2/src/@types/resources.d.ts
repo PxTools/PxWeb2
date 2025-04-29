@@ -159,6 +159,14 @@ interface Resources {
               title: 'The table cannot be displayed';
               description: 'You must select something in the filter';
             };
+            to_many_values_selected: {
+              title: 'The table is too large and cannot be updated';
+              description1: 'Your current selection makes ';
+              description2: ' cells, while the table can display a maximum of ';
+              description3: ' cells. Reduce the number of selections in the filter, and once this message disappears, the table will update as usual.';
+              selectedCells: '{{selectedCells}}';
+              maxCells: '{{maxCells}}';
+            };
           };
         };
         about_table: {
