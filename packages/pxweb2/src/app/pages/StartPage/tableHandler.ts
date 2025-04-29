@@ -12,7 +12,6 @@ export const getFullTable: Promise<Table[]> = new Promise((resolve, reject) => {
   } else {
     TableService.listAllTables('sv', undefined, undefined, true, 1, 10000)
       .then((response) => {
-        console.info('We have a response here!');
         localStorage.setItem('table', JSON.stringify(response.tables));
         resolve(response.tables);
       })
