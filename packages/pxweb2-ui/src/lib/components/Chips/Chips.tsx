@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, forwardRef } from 'react';
+import React, { HTMLAttributes } from 'react';
 import cl from 'clsx';
 
 import { OverridableComponent } from '../../util/OverridableComponent';
@@ -9,27 +9,27 @@ import styles from './Chips.module.scss';
 export interface ChipsProps extends HTMLAttributes<HTMLUListElement> {
   children: React.ReactNode;
   type?: 'removable' | 'toggle';
+  ref?: React.Ref<HTMLUListElement>;
 }
 
-interface ChipsComponent
-  extends React.ForwardRefExoticComponent<
-    ChipsProps & React.RefAttributes<HTMLUListElement>
-  > {
+interface ChipsComponent extends React.FC<ChipsProps> {
   Toggle: OverridableComponent<ChipToggleProps, HTMLButtonElement>;
   Removable: OverridableComponent<ChipRemovableProps, HTMLButtonElement>;
 }
 
-export const Chips: ChipsComponent = forwardRef<HTMLUListElement, ChipsProps>(
-  ({ children, ...rest }, ref) => {
-    return (
-      <ul {...rest} ref={ref} className={cl(styles.chips)}>
-        {React.Children.map(children, (chip) => {
-          return <li>{chip}</li>;
-        })}
-      </ul>
-    );
-  },
-) as ChipsComponent;
+export const Chips: ChipsComponent = ({
+  children,
+  ref,
+  ...rest
+}: ChipsProps) => {
+  return (
+    <ul {...rest} ref={ref} className={cl(styles.chips)}>
+      {React.Children.map(children, (chip) => {
+        return <li>{chip}</li>;
+      })}
+    </ul>
+  );
+};
 
 Chips.Toggle = ChipToggle;
 Chips.Removable = ChipRemovable;

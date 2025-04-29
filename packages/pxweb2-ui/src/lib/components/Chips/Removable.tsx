@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+import React from 'react';
 import cl from 'clsx';
 
 import { Icon } from '../Icon/Icon';
@@ -9,30 +9,35 @@ export interface ChipRemovableProps
   children: string;
   filled?: boolean;
   truncate?: boolean;
+  ref?: React.Ref<HTMLButtonElement>;
 }
 
-export const ChipRemovable = forwardRef<HTMLButtonElement, ChipRemovableProps>(
-  ({ children, filled, truncate, ...rest }, ref) => {
-    return (
-      <button
-        {...rest}
-        ref={ref}
-        className={cl(styles.chip, styles.removable, {
-          [styles.filled]: filled,
+export const ChipRemovable = ({
+  children,
+  filled,
+  truncate,
+  ref,
+  ...rest
+}: ChipRemovableProps) => {
+  return (
+    <button
+      {...rest}
+      ref={ref}
+      className={cl(styles.chip, styles.removable, {
+        [styles.filled]: filled,
+      })}
+      title={truncate ? children : undefined}
+    >
+      <span
+        className={cl(styles.text, styles['label-medium'], {
+          [styles.truncate]: truncate,
         })}
-        title={truncate ? children : undefined}
       >
-        <span
-          className={cl(styles.text, styles['label-medium'], {
-            [styles.truncate]: truncate,
-          })}
-        >
-          {children}
-        </span>
-        <Icon className={cl(styles.icon, ['xmark-icon'])} iconName="XMark" />
-      </button>
-    );
-  },
-);
+        {children}
+      </span>
+      <Icon className={cl(styles.icon, ['xmark-icon'])} iconName="XMark" />
+    </button>
+  );
+};
 
 export default ChipRemovable;
