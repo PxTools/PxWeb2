@@ -9,10 +9,12 @@ describe('NonMandatoryNotes', () => {
   it('renders non mandatory table notes when tableLevelNotes are present', () => {
     render(<NonMandatoryNotes notes={dummyNotes.nonMandatoryNotes} />);
 
-    Object.values(dummyNotes.nonMandatoryNotes.tableLevelNotes).forEach((note) => {
-      const noteContent = screen.getByText(note);
-      expect(noteContent).toBeInTheDocument();
-    });
+    Object.values(dummyNotes.nonMandatoryNotes.tableLevelNotes).forEach(
+      (note) => {
+        const noteContent = screen.getByText(note);
+        expect(noteContent).toBeInTheDocument();
+      },
+    );
   });
 
   it('renders non mandatory variable notes for each variable note', () => {
@@ -29,11 +31,13 @@ describe('NonMandatoryNotes', () => {
   it('renders non mandatory value notes for each value note', () => {
     render(<NonMandatoryNotes notes={dummyNotes.nonMandatoryNotes} />);
 
-    dummyNotes.nonMandatoryNotes.variableNotes[0].valueNotes.forEach((value) => {
-      value.notes.forEach((note) => {
-        const noteContent = screen.getByText(note);
-        expect(noteContent).toBeInTheDocument();
-      });
-    });
+    dummyNotes.nonMandatoryNotes.variableNotes[0].valueNotes.forEach(
+      (value) => {
+        value.notes.forEach((note) => {
+          const noteContent = screen.getByText(note);
+          expect(noteContent).toBeInTheDocument();
+        });
+      },
+    );
   });
 });
