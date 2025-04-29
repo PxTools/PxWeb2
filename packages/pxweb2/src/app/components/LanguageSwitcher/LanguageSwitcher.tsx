@@ -3,20 +3,12 @@ import { useTranslation } from 'react-i18next';
 
 import { Button } from '@pxweb2/pxweb2-ui';
 import { getConfig } from '../../util/config/getConfig';
+import { getLanguagePath } from '../../util/language/getLanguagePath';
 
 export const LanguageSwitcher = () => {
   const { i18n } = useTranslation();
   const config = getConfig();
   const location = useLocation();
-
-  const [firstURLElement, ...pathParts] = location.pathname.slice(1).split('/');
-  const isLanguagePath = config.language.supportedLanguages.some(
-    (lang) => lang.shorthand === firstURLElement,
-  );
-
-  const actualPath = isLanguagePath
-    ? pathParts.join('/')
-    : [firstURLElement, ...pathParts].join('/');
 
   return (
     <div>
@@ -26,10 +18,12 @@ export const LanguageSwitcher = () => {
           i18n.language !== language.shorthand && (
             <LinkRouter
               to={{
-                pathname:
-                  language.shorthand === config.language.fallbackLanguage
-                    ? `/${actualPath}`
-                    : `/${language.shorthand}/${actualPath}`,
+                pathname: getLanguagePath(
+                  location.pathname,
+                  language.shorthand,
+                  config.language.supportedLanguages,
+                  config.language.fallbackLanguage,
+                ),
               }}
               key={language.shorthand}
             >
