@@ -1,12 +1,26 @@
-import { vi, Mock } from 'vitest';
-import { useRouteError } from 'react-router';
-import { ErrorPage } from './ErrorPage';
+import { vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
+
+import { ErrorPage } from './ErrorPage';
 import { renderWithProviders } from '../../util/testing-utils';
 
-// Mock the `useRouteError` hook from react-router
+// Mock React Router - only need to mock this once
 vi.mock('react-router', () => ({
-  useRouteError: vi.fn(),
+  MemoryRouter: vi.fn().mockImplementation(({ children }) => children),
+  useRouteError: vi.fn().mockReturnValue({
+    status: 404,
+    statusText: 'Not Found',
+    message: 'The requested resource was not found.',
+    data: 'Additional error data',
+  }),
+  useLocation: vi.fn().mockReturnValue({
+    pathname: '/en/table/tab638',
+    search: '',
+    hash: '',
+    state: null,
+    key: 'default',
+  }),
+  Link: vi.fn(({ to, children }) => <a href={to}>{children}</a>),
 }));
 
 vi.mock('../../util/config/getConfig', () => ({
@@ -20,39 +34,20 @@ vi.mock('../../util/config/getConfig', () => ({
   })),
 }));
 
-// Mock the useTranslation hook
-vi.mock('react-i18next', () => ({
-  useTranslation: () => ({
-    t: (key: string) => {
-      const translations: { [key: string]: string } = {
-        'presentation_page.main_content.about_table.details.boolean_true':
-          'Yes',
-        'presentation_page.main_content.about_table.details.boolean_false':
-          'No',
-      };
-      return translations[key] || key;
-    },
-    i18n: {
-      language: 'en', // Mock the `language` property
-      config: {
-        language: 'en', // Add `config.language` to match the expected structure
-      },
-    },
-  }),
-}));
-
 describe('ErrorPage', () => {
   it('renders without crashing', () => {
-    // Mock no error returned by `useRouteError`
-    (useRouteError as Mock).mockReturnValue(null);
-
-    // Render the component
     const { baseElement } = renderWithProviders(<ErrorPage />);
 
     expect(baseElement).toBeTruthy();
   });
 
-  it('sanity check', () => {
-    expect(true).toBe(true);
+  it('displays the error message', () => {
+    const { getByText } = renderWithProviders(<ErrorPage />);
+
+    expect(
+      getByText(
+        '404 Not Found The requested resource was not found. Additional error data',
+      ),
+    ).toBeInTheDocument();
   });
 });

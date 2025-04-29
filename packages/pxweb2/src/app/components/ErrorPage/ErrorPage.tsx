@@ -1,6 +1,7 @@
-import React from 'react';
-import { Alert } from '@pxweb2/pxweb2-ui';
 import { useRouteError } from 'react-router';
+import React from 'react';
+
+import { Alert } from '@pxweb2/pxweb2-ui';
 import { Header } from '../Header/Header';
 
 // ErrorPage component to display error messages
@@ -11,8 +12,10 @@ type RouteError = {
   data?: string;
 };
 
+// This component is used to display error messages when a route error occurs
+// It will therefore always have a route error
 export const ErrorPage: React.FC = () => {
-  const error = useRouteError() as RouteError | null;
+  const error = useRouteError() as RouteError;
 
   return (
     <>
