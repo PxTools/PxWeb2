@@ -16,6 +16,7 @@ import {
   type State,
   ActionType,
 } from './tableTypes';
+import { getSubjectTree, type PathItem } from '../../util/startPageFilters';
 
 import list from './dummy-data/tables.json' with { type: 'json' };
 
@@ -64,6 +65,9 @@ const initialState: State = {
   availableFilters: getFilters(bigTableList.tables),
   activeFilters: [],
 };
+
+const subjectTree: PathItem[] = getSubjectTree(bigTableList.tables);
+console.log('Antall subject: ' + subjectTree.length);
 
 const StartPage = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
