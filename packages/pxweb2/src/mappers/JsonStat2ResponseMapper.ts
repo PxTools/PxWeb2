@@ -23,7 +23,6 @@ import {
   DataCell,
 } from '@pxweb2/pxweb2-ui';
 import { getLabelText } from '../app/util/utils';
-import { n } from 'react-router/dist/development/fog-of-war-BLArG-qZ';
 
 /**
  * Internal type. Used to keep track of index in json-stat2 value array

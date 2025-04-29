@@ -1,5 +1,5 @@
 import { PxTable } from '../../shared-types/pxTable';
-import { PxData } from '../../shared-types/pxTableData';
+import { DataCell, PxData } from '../../shared-types/pxTableData';
 
 /**
  * Represents an array of dimensions - one per variable in the table.
@@ -93,7 +93,11 @@ let number = 0;
  *
  * @returns The next sequential number.
  */
-function getNumber(): number {
-  number = number + 1;
-  return number;
+function getNumber(): DataCell {
+  const dataCell: DataCell = {
+    value: number,
+    status: '',
+    presentation: 'number',
+  };
+  return dataCell;
 }
