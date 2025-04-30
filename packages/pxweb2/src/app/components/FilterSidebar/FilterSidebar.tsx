@@ -1,18 +1,21 @@
 import cl from 'clsx';
 
-import { type State, type Filter } from '../../pages/StartPage/tableTypes';
+import {
+  type StartPageState,
+  type Filter,
+} from '../../pages/StartPage/tableTypes';
 import styles from './FilterSidebar.module.scss';
 
 import { Checkbox } from '@pxweb2/pxweb2-ui';
 interface FilterProps {
-  state: State;
+  state: StartPageState;
   handleAddFilter: (filter: Filter[]) => void;
   handleRemoveFilter: (filter: Filter) => void;
   handleResetFilter: () => void;
 }
 
 const renderFilters = (
-  state: State,
+  state: StartPageState,
   handleAddFilter: (filter: Filter[]) => void,
   handleRemoveFilter: (filter: Filter) => void,
 ) => {
