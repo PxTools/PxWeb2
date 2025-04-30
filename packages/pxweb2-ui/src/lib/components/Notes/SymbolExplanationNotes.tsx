@@ -34,8 +34,3 @@ export function SymbolExplanationNotes({ notes }: SymbolExplanationNotesProps) {
     </InformationCard>
   );
 }
-
-
-
-
-
