@@ -1,40 +1,53 @@
-import { vi } from 'vitest';
+import { vi, Mock } from 'vitest';
 import '@testing-library/jest-dom/vitest';
+import { useRouteError, useLocation } from 'react-router';
 
 import { ErrorPage } from './ErrorPage';
+import { getConfig } from '../../util/config/getConfig';
 import { renderWithProviders } from '../../util/testing-utils';
 
-// Mock React Router - only need to mock this once
+vi.mock('../../util/config/getConfig');
 vi.mock('react-router', () => ({
-  MemoryRouter: vi.fn().mockImplementation(({ children }) => children),
-  useRouteError: vi.fn().mockReturnValue({
+  useRouteError: vi.fn(),
+  useLocation: vi.fn(),
+  Link: vi.fn(({ to, children, ...props }) => (
+    <a href={to.pathname} {...props}>
+      {children}
+    </a>
+  )),
+}));
+
+describe('ErrorPage', () => {
+  const mockError = {
     status: 404,
     statusText: 'Not Found',
     message: 'The requested resource was not found.',
     data: 'Additional error data',
-  }),
-  useLocation: vi.fn().mockReturnValue({
+  };
+  const mockLocation = {
     pathname: '/en/table/tab638',
     search: '',
     hash: '',
     state: null,
     key: 'default',
-  }),
-  Link: vi.fn(({ to, children }) => <a href={to}>{children}</a>),
-}));
-
-vi.mock('../../util/config/getConfig', () => ({
-  getConfig: vi.fn(() => ({
+  };
+  const mockConfig = {
     language: {
       supportedLanguages: [
         { shorthand: 'en', languageName: 'English' },
         { shorthand: 'no', languageName: 'Norwegian' },
       ],
     },
-  })),
-}));
+  };
 
-describe('ErrorPage', () => {
+  beforeEach(() => {
+    vi.resetAllMocks();
+
+    // Default mocks
+    (useRouteError as Mock).mockReturnValue(mockError);
+    (useLocation as Mock).mockReturnValue(mockLocation);
+    (getConfig as Mock).mockReturnValue(mockConfig);
+  });
   it('renders without crashing', () => {
     const { baseElement } = renderWithProviders(<ErrorPage />);
 
