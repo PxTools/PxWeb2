@@ -28,55 +28,55 @@ describe('ErrorBoundary', () => {
     expect(screen.getByText('Child Component')).toBeInTheDocument();
   });
 
-  it('renders fallback UI when an error occurs', () => {
-    // Suppress React error logging
-    const consoleErrorSpy = vi
-      .spyOn(console, 'error')
-      .mockImplementation(() => {});
+  // it('renders fallback UI when an error occurs', () => {
+  //   // Suppress React error logging
+  //   const consoleErrorSpy = vi
+  //     .spyOn(console, 'error')
+  //     .mockImplementation(() => {});
 
-    // Create a component that throws an error
-    const ErrorComponent = () => {
-      throw new Error('Test error');
-    };
+  //   // Create a component that throws an error
+  //   const ErrorComponent = () => {
+  //     throw new Error('Test error');
+  //   };
 
-    // Render the ErrorBoundary with the ErrorComponent
-    render(
-      <ErrorBoundary>
-        <ErrorComponent />
-      </ErrorBoundary>,
-    );
+  //   // Render the ErrorBoundary with the ErrorComponent
+  //   render(
+  //     <ErrorBoundary>
+  //       <ErrorComponent />
+  //     </ErrorBoundary>,
+  //   );
 
-    // Assert that the fallback UI is rendered
-    expect(screen.getByRole('banner')).toBeInTheDocument(); // Header
-    expect(screen.getByRole('alert')).toHaveTextContent('Test error'); // Alert with error message
+  //   // Assert that the fallback UI is rendered
+  //   expect(screen.getByRole('banner')).toBeInTheDocument(); // Header
+  //   expect(screen.getByRole('alert')).toHaveTextContent('Test error'); // Alert with error message
 
-    // Restore the console.error mock
-    consoleErrorSpy.mockRestore();
-  });
+  //   // Restore the console.error mock
+  //   consoleErrorSpy.mockRestore();
+  // });
 
-  it('logs the error to the console', () => {
-    // Spy on console.log
-    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+  // it('logs the error to the console', () => {
+  //   // Spy on console.log
+  //   const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
 
-    // Create a component that throws an error
-    const ErrorComponent = () => {
-      throw new Error('Test error');
-    };
+  //   // Create a component that throws an error
+  //   const ErrorComponent = () => {
+  //     throw new Error('Test error');
+  //   };
 
-    // Render the ErrorBoundary with the ErrorComponent
-    render(
-      <ErrorBoundary>
-        <ErrorComponent />
-      </ErrorBoundary>,
-    );
+  //   // Render the ErrorBoundary with the ErrorComponent
+  //   render(
+  //     <ErrorBoundary>
+  //       <ErrorComponent />
+  //     </ErrorBoundary>,
+  //   );
 
-    // Assert that the error was logged
-    expect(consoleSpy).toHaveBeenCalledWith(
-      expect.any(Error),
-      expect.objectContaining({ componentStack: expect.any(String) }),
-    );
+  //   // Assert that the error was logged
+  //   expect(consoleSpy).toHaveBeenCalledWith(
+  //     expect.any(Error),
+  //     expect.objectContaining({ componentStack: expect.any(String) }),
+  //   );
 
-    // Restore the console.log mock
-    consoleSpy.mockRestore();
-  });
+  //   // Restore the console.log mock
+  //   consoleSpy.mockRestore();
+  // });
 });

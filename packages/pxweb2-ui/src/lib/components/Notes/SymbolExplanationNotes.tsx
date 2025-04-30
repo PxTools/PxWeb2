@@ -1,15 +1,11 @@
 import { useTranslation } from 'react-i18next';
 
-import List from '../List/List';
-import ListItem from '../List/ListItem';
+import { InformationCard } from '../InformationCard/InformationCard';
+import BodyLong from '../Typography/BodyLong/BodyLong';
 
 export type SymbolExplanationNotesProps = {
   readonly notes: { [key: string]: string };
 };
-
-function getNoteKey(key: string): string {
-  return 'symbol-note-' + key;
-}
 
 export function SymbolExplanationNotes({ notes }: SymbolExplanationNotesProps) {
   const { t } = useTranslation();
@@ -18,16 +14,28 @@ export function SymbolExplanationNotes({ notes }: SymbolExplanationNotesProps) {
   );
 
   return (
-    <List heading={heading} listType="ul" listGroup>
-      {Object.keys(notes).length === 1 ? (
-        <span>{Object.values(notes)[0]}</span>
-      ) : (
-        <List listType="ul">
-          {Object.entries(notes).map(([key, value]) => (
-            <ListItem key={getNoteKey(key)}>{value}</ListItem>
-          ))}
-        </List>
-      )}
-    </List>
+    <InformationCard icon="Book" headingText={heading} headingLevel="1">
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '20px',
+          paddingTop: '8px',
+          alignItems: 'flex-start',
+          alignSelf: 'stretch',
+        }}
+      >
+        {Object.entries(notes).map(([key, value]) => (
+          <div key={key}>
+            <BodyLong>{value}</BodyLong>
+          </div>
+        ))}
+      </div>
+    </InformationCard>
   );
 }
+
+
+
+
+
