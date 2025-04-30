@@ -90,7 +90,6 @@ Default.argTypes = {
     control: { type: 'radio' },
     options: ['toggle', 'removable'],
   },
-
   checkmark: {
     control: { type: 'boolean' },
     if: { arg: 'type', eq: 'toggle' },
@@ -132,7 +131,6 @@ export const ToggleCheckmark = () => {
 
 export const ToggleNoCheckmark = () => {
   const [selected, setSelected] = useState<number[]>([2]);
-
   return (
     <Chips>
       {toggleChips.map((c, i) => (
@@ -151,7 +149,6 @@ export const ToggleNoCheckmark = () => {
 
 export const ToggleWithDisabled = () => {
   const [selected, setSelected] = useState<number[]>([]);
-
   return (
     <Chips>
       {toggleChips.map((c, i) => (
