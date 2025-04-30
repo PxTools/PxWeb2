@@ -492,7 +492,29 @@ function CreateData(jsonData: Dataset, metadata: PxTableMetadata): PxTableData {
   const counter = { number: 0 };
 
   // Create data cube
-  createCube(jsonData, metadata, data, [], 0, counter);
+  const startTime = performance.now();
+
+  function createDataAndStatus(jsonData: Dataset): Record<string, DataCell> {
+    const dataAndStatus: Record<string, DataCell> = {};
+
+    jsonData.value?.map((value, index) => {
+      dataAndStatus[index] = {
+        value: value,
+        status: jsonData.status ? jsonData.status[index] : undefined,
+        presentation: undefined,
+      };
+    });
+    console.log('dataAndStatus', dataAndStatus);
+
+    return dataAndStatus;
+  }
+
+  const dataAndStatus = createDataAndStatus(jsonData);
+
+  //createCube(jsonData, metadata, data, [], 0, counter);
+  createCube(dataAndStatus, metadata, data, [], 0, counter);
+  const endTime = performance.now();
+  console.log(`createCube execution time: ${endTime - startTime} ms`);
 
   data.variableOrder = jsonData.id; // Array containing the variable ids;
   data.isLoaded = true;
@@ -508,18 +530,19 @@ function CreateData(jsonData: Dataset, metadata: PxTableMetadata): PxTableData {
  * @param counter - The counter object used to track the current index in the json-stat2 value array.
  * @returns The data cell value or null if not found.
  */
-function getDataCellValue(jsonData: Dataset, counter: counter): number | null {
-  if (jsonData.value === undefined || jsonData.value === null) {
-    return null;
-  }
-  return jsonData.value?.[counter.number];
-}
-function getDataCellStatues(jsonData: Dataset): Record<string, string> | null {
-  if (jsonData.status === undefined || jsonData.status === null) {
-    return null;
-  }
-  return jsonData.status;
-}
+// function getDataCellValue(jsonData: Dataset, counter: counter): number | null {
+//   if (jsonData.value === undefined || jsonData.value === null) {
+//     return null;
+//   }
+//   return jsonData.value?.[counter.number];
+// }
+// function getDataCellStatues(jsonData: Dataset): Record<string, string> | null {
+//   console.log('jsonData.status', jsonData.status);
+//   if (jsonData.status === undefined || jsonData.status === null) {
+//     return null;
+//   }
+//   return jsonData.status;
+// }
 /**
  * Recursively creates a data cube for the PxTable based on the provided JSONStat2 dataset and metadata.
  *
@@ -530,41 +553,28 @@ function getDataCellStatues(jsonData: Dataset): Record<string, string> | null {
  * @param dimensionIndex - The index of the current dimension being processed.
  * @param counter - The counter object used to track the current index in the json-stat2 value array.
  */
+
 function createCube(
-  jsonData: Dataset,
+  valueAndStatus: Record<string, DataCell>,
   metadata: PxTableMetadata,
   data: PxTableData,
   dimensions: Dimensions,
   dimensionIndex: number,
   counter: counter,
 ): void {
-  const statusCodes = getDataCellStatues(jsonData);
   if (dimensionIndex === metadata.variables.length - 1) {
     metadata.variables[dimensionIndex].values.forEach((value) => {
-      const tempDatacell: DataCell = {
-        value: null,
-        status: undefined,
-        presentation: undefined,
-      };
       dimensions[dimensionIndex] = value.code;
-      tempDatacell.value = getDataCellValue(jsonData, counter);
-
-      if (statusCodes) {
-        tempDatacell.status = statusCodes[counter.number] ?? undefined;
-        console.log(
-          'counter.number:' + counter.number,
-          'statusCodes[counter.number]:',
-          statusCodes[counter.number],
-        );
-      }
+      const tempDatacell = valueAndStatus[counter.number];
       setPxTableData(data.cube, dimensions, tempDatacell);
       counter.number++;
+      console.log('valueAndStatus:', valueAndStatus);
     });
   } else {
     metadata.variables[dimensionIndex].values.forEach((value) => {
       dimensions[dimensionIndex] = value.code;
       createCube(
-        jsonData,
+        valueAndStatus,
         metadata,
         data,
         dimensions,
