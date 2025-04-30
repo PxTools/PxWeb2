@@ -2,6 +2,7 @@
 @use '$ui/src/lib/text-styles.scss';
 
 .startPage {
+  color: var(--px-color-text-default);
   display: grid;
   grid-template-areas:
     'search search .'
@@ -19,10 +20,6 @@
 
 .filterPillContainer {
   padding-bottom: 40px;
-}
-
-.filterPill {
-  margin-right: 10px;
 }
 
 .searchArea {

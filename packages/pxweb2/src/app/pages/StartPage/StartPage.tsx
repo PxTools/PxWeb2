@@ -3,8 +3,8 @@ import { Virtuoso } from 'react-virtuoso';
 import cl from 'clsx';
 
 import styles from './StartPage.module.scss';
-
-import { Tag, Search, TableCard, Icon } from '@pxweb2/pxweb2-ui';
+import { useTranslation } from 'react-i18next';
+import { Search, TableCard, Icon, Chips } from '@pxweb2/pxweb2-ui';
 import { TablesResponse, Table } from '@pxweb2/pxweb2-api-client';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import { Header } from '../../components/Header/Header';
@@ -66,6 +66,7 @@ const initialState: State = {
 };
 
 const StartPage = () => {
+  const { t } = useTranslation();
   const [state, dispatch] = useReducer(reducer, initialState);
 
   function handleResetFilter() {
@@ -138,29 +139,42 @@ const StartPage = () => {
         />
         <div className={styles.listTables}>
           <div className={styles.filterPillContainer}>
-            {state.activeFilters.length >= 2 && (
-              <span className={styles.filterPill}>
-                <Tag
-                  type="border"
-                  variant="info"
-                  onClick={() => handleResetFilter()}
+            <Chips className={styles.filterPillContainer}>
+              {state.activeFilters.length >= 2 && (
+                <Chips.Removable filled onClick={() => handleResetFilter()}>
+                  {t('start_page.filter.remove_all_filter')}
+                </Chips.Removable>
+              )}
+              {state.activeFilters.map((filter) => (
+                <Chips.Removable
+                  key={filter.value}
+                  onClick={() => handleRemoveFilter(filter)}
+                  aria-label={t('start_page.filter.remove_filter_aria', {
+                    value: filter.value,
+                  })}
                 >
-                  {'Reset Filters'}
-                </Tag>
-              </span>
-            )}
-            {state.activeFilters.map((filter) => (
-              <span key={filter.value} className={styles.filterPill}>
-                <Tag type="border" onClick={() => handleRemoveFilter(filter)}>
-                  {'X ' + filter.value}
-                </Tag>
-              </span>
-            ))}
+                  {filter.value}
+                </Chips.Removable>
+              ))}
+            </Chips>
           </div>
-          <div className={cl(styles['label-medium'], styles.countLabel)}>
-            {state.activeFilters.length
-              ? `Treff på ${state.tables.length} tabeller`
-              : `${state.tables.length} tabeller`}
+          <div className={cl(styles['bodyshort-medium'], styles.countLabel)}>
+            {state.activeFilters.length ? (
+              <p>
+                Treff på{' '}
+                <span className={cl(styles['label-medium'])}>
+                  {state.tables.length}
+                </span>{' '}
+                tabeller
+              </p>
+            ) : (
+              <p>
+                <span className={cl(styles['label-medium'])}>
+                  {state.tables.length}
+                </span>{' '}
+                tabeller
+              </p>
+            )}
           </div>
           <Virtuoso
             style={{ height: '90%' }}
@@ -177,7 +191,7 @@ const StartPage = () => {
                       : undefined
                   }
                   // We use slice here because we _only_ want 4digit year. Sometimes, month is appended in data set.
-                  period={`${table.firstPeriod?.slice(0, 4)}-${table.lastPeriod?.slice(0, 4)}`}
+                  period={`${table.firstPeriod?.slice(0, 4)} - ${table.lastPeriod?.slice(0, 4)}`}
                   frequency={`${table.timeUnit}`}
                   tableId={`${table.id}`}
                   icon={<Icon iconName="Heart" />}
