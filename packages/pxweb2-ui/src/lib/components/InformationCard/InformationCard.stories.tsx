@@ -38,32 +38,3 @@ export const WithoutHeading1: Story = {
   },
   render: (args: InformationCardProps) => <InformationCard {...args} />,
 };
-
-export const WithHeadersAndBodylongs: Story = {
-  args: {
-    headingText: 'Tegnforklaring',
-    icon: 'Book',
-    children: (
-      <div>
-        <Heading size="xsmall">( . ) = Ikke mulig å oppgi tall</Heading>
-        <BodyLong>
-          Tall finnes ikke på dette tidspunktet fordi kategorien ikke var i bruk
-          da tallene ble samlet inn.
-        </BodyLong>
-        <Heading size="xsmall">( .. ) = Tallgrunnlag mangler</Heading>
-        <BodyLong>
-          Tall er ikke kommet inn i våre databaser eller er for usikre til å
-          publiseres.
-        </BodyLong>
-        <Heading size="xsmall">
-          ( : ) = Vises ikke av konfidensialitetshensyn
-        </Heading>
-        <BodyLong>
-          Tall publiseres ikke for å unngå å identifisere personer eller
-          virksomheter.
-        </BodyLong>
-      </div>
-    ),
-  },
-  render: (args) => <InformationCard {...args} />,
-};
