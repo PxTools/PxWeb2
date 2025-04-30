@@ -1,8 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
 import { InformationCard, InformationCardProps } from './InformationCard';
-import BodyLong from '../Typography/BodyLong/BodyLong';
-import Heading from '../Typography/Heading/Heading';
 
 const meta: Meta<typeof InformationCard> = {
   component: InformationCard,
