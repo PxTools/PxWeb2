@@ -11,6 +11,7 @@
   grid-template-rows: 120px 1fr;
   height: calc(100vh - fixed.$spacing-22);
   background-color: var(--px-color-surface-subtle);
+  padding-left: 40px;
 }
 
 .listTables {
@@ -30,7 +31,6 @@
   grid-area: search;
   align-self: center;
   max-width: 633px;
-  padding-left: 30px;
   width: 100%;
 }
 
@@ -40,5 +40,8 @@
 }
 
 .countLabel {
-  padding-bottom: 20px;
+  padding-bottom: 16px;
+  p {
+    margin: 0;
+  }
 }
