@@ -21,7 +21,7 @@ const renderFilters = (
 ) => {
   return Array.from(state.availableFilters)
     .sort((a, b) => b[1] - a[1])
-    .map(([key, value]) => (
+    .map(([key, value], i) => (
       <li key={key} className={styles.filterItem}>
         <Checkbox
           id={key}
@@ -31,8 +31,8 @@ const renderFilters = (
           )}
           onChange={(value) => {
             value
-              ? handleAddFilter([{ type: 'timeUnit', value: key }])
-              : handleRemoveFilter({ type: 'timeUnit', value: key });
+              ? handleAddFilter([{ type: 'timeUnit', value: key, index: i }])
+              : handleRemoveFilter({ type: 'timeUnit', value: key, index: i });
           }}
         />
       </li>

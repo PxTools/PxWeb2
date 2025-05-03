@@ -112,17 +112,17 @@ const StartPage = () => {
           filteredTables: action.payload,
           availableFilters: getFilters(action.payload),
         };
-      case ActionType.ADD_FILTER:
+      case ActionType.ADD_FILTER: {
+        const newFilters = [...state.activeFilters, ...action.payload];
+        const sortedFilters = [...newFilters].sort((a, b) => a.index - b.index);
         return {
           ...state,
-          activeFilters: [...state.activeFilters, ...action.payload],
+          activeFilters: sortedFilters,
           filteredTables: state.availableTables.filter((table) => {
-            return shouldTableBeIncluded(table, [
-              ...state.activeFilters,
-              ...action.payload,
-            ]);
+            return shouldTableBeIncluded(table, sortedFilters);
           }),
         };
+      }
       case ActionType.REMOVE_FILTER:
         if (state.activeFilters.length <= 1) {
           // Reset from state
