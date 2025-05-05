@@ -1,0 +1,102 @@
+@use '../../text-styles.scss';
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+}
+
+.chip {
+  align-items: center;
+  background: var(--px-color-surface-default);
+  border: 1px solid var(--px-color-border-action);
+  border-radius: var(--px-border-radius-medium);
+  color: var(--px-color-text-action);
+  cursor: pointer;
+  display: inline-flex;
+  gap: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+
+  &:focus-visible {
+    outline: 3px solid var(--px-color-border-focus-outline);
+    outline-offset: 3px;
+    box-shadow: inset 0 0 0 3px var(--px-color-border-focus-boxshadow);
+  }
+}
+
+.removable {
+  height: 44px;
+  padding-right: 12px;
+
+  &:hover {
+    background: var(--px-color-surface-action-subtle-hover);
+  }
+
+  &.filled {
+    background: var(--px-color-surface-action);
+    color: var(--px-color-text-on-inverted);
+    border: none;
+
+    &:hover {
+      background: var(--px-color-surface-action-hover);
+    }
+  }
+}
+
+.toggle {
+  height: 36px;
+  padding-left: 16px;
+  box-sizing: border-box;
+
+  &.selected {
+    background: var(--px-color-surface-action-subtle-active);
+    border: 1px solid transparent;
+    color: var(--px-color-text-action);
+    padding-left: 12px;
+
+    &:hover {
+      background: var(--px-color-surface-action-subtle-hover);
+    }
+  }
+
+  &.withoutCheckmark {
+    &.selected {
+      background: var(--px-color-surface-action);
+      border: 1px solid transparent;
+      color: var(--px-color-text-on-action);
+      padding-left: 16px;
+
+      &:hover {
+        background: var(--px-color-surface-action-hover);
+        color: var(--px-color-text-on-inverted);
+      }
+    }
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 40%;
+    &:hover {
+      background: initial;
+    }
+  }
+
+  &:hover {
+    background: var(--px-color-surface-action-subtle-hover);
+  }
+}
+
+.xmark-icon,
+.check-icon {
+  color: var(--px-color-icon-action);
+}
+
+.truncate {
+  max-width: 300px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
