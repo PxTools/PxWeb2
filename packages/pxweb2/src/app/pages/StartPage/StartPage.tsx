@@ -174,6 +174,21 @@ const StartPage = () => {
       });
   }, []);
 
+  function renderRemoveAllChips() {
+    if (state.activeFilters.length >= 2) {
+      return (
+        <Chips.Removable
+          filled
+          onClick={() => {
+            getFullTable.then((t) => handleResetFilter(t));
+          }}
+        >
+          {t('start_page.filter.remove_all_filter')}
+        </Chips.Removable>
+      );
+    }
+  }
+
   return (
     <AccessibilityProvider>
       <Header />
@@ -191,32 +206,24 @@ const StartPage = () => {
           }}
         />
         <div className={styles.listTables}>
-          <div className={styles.filterPillContainer}>
-            <Chips className={styles.filterPillContainer}>
-              {state.activeFilters.length >= 2 && (
-                <Chips.Removable
-                  filled
-                  onClick={() => {
-                    getFullTable.then((t) => handleResetFilter(t));
-                  }}
-                >
-                  {t('start_page.filter.remove_all_filter')}
-                </Chips.Removable>
-              )}
-              {state.activeFilters.map((filter) => (
-                <span key={filter.value} className={styles.filterPill}>
+          {state.activeFilters.length >= 1 && (
+            <div className={styles.filterPillContainer}>
+              <Chips className={styles.filterPillContainer}>
+                {renderRemoveAllChips()}
+                {state.activeFilters.map((filter) => (
                   <Chips.Removable
                     onClick={() => handleRemoveFilter(filter)}
                     aria-label={t('start_page.filter.remove_filter_aria', {
                       value: filter.value,
                     })}
+                    key={filter.value}
                   >
                     {filter.value}
                   </Chips.Removable>
-                </span>
-              ))}
-            </Chips>
-          </div>
+                ))}
+              </Chips>
+            </div>
+          )}
           <div className={cl(styles['bodyshort-medium'], styles.countLabel)}>
             {state.activeFilters.length ? (
               <p>
