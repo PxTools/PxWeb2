@@ -11,7 +11,6 @@ import ErrorPage from './app/components/ErrorPage/ErrorPage';
 
 const router = createBrowserRouter([
   {
-
     path: '/:lang?',
     children: [
       { index: true, element: <StartPage />, errorElement: <ErrorPage /> },
@@ -26,7 +25,6 @@ const router = createBrowserRouter([
         errorElement: <ErrorPage />,
       },
     ],
-
   },
 ]);
 
