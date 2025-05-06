@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import cl from 'clsx';
 
@@ -6,14 +6,17 @@ import classes from './TableInformation.module.scss';
 import useTableData from '../../context/useTableData';
 import { ContactTab } from './Contact/ContactTab';
 import { DetailsTab } from './Details/DetailsTab';
+import useApp from '../../context/useApp';
 
 import {
   SideSheet,
+  BottomSheet,
   TabsProvider,
   Tabs,
   Tab,
   TabPanel,
 } from '@pxweb2/pxweb2-ui';
+import { NotesTab } from './Notes/NotesTab';
 
 export interface TableInformationProps {
   readonly isOpen: boolean;
@@ -29,6 +32,8 @@ export function TableInformation({
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('');
   const tableData = useTableData();
+  const { isMobile } = useApp();
+  const tabsContentRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (isOpen && selectedTab) {
@@ -36,11 +41,20 @@ export function TableInformation({
     }
   }, [isOpen, selectedTab]);
 
+  useEffect(() => {
+    if (tabsContentRef.current) {
+      tabsContentRef.current.scrollTop = 0;
+    }
+  }, [activeTab]);
+
   // TableInformation tabs should be type in some way. Maybe like this:
   // export type TabType = 'tab-footnotes' | 'tab-definitions' | 'tab-details' | 'tab-contact';
 
+  const SheetComponent = isMobile ? BottomSheet : SideSheet;
+  const tabsVariant = isMobile ? 'scrollable' : 'fixed';
+
   return (
-    <SideSheet
+    <SheetComponent
       heading={t('presentation_page.main_content.about_table.title')}
       closeLabel={t('common.generic_buttons.close')}
       isOpen={isOpen}
@@ -50,7 +64,7 @@ export function TableInformation({
     >
       <TabsProvider activeTab={activeTab} setActiveTab={setActiveTab}>
         <div className={cl(classes.tabs)}>
-          <Tabs variant="fixed">
+          <Tabs variant={tabsVariant}>
             <Tab
               id="tab-footnotes"
               label={t(
@@ -81,50 +95,16 @@ export function TableInformation({
             ></Tab>
           </Tabs>
         </div>
-        <div className={cl(classes.tabsContent, classes['bodyshort-medium'])}>
+        <div
+          ref={tabsContentRef}
+          className={cl(
+            classes.tabsContent,
+            classes['bodyshort-medium'],
+            isMobile && classes.mobileView,
+          )}
+        >
           <TabPanel id="pnl-footnotes" controlledBy="tab-footnotes">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum
-            dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-            veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-            ea commodo consequat. Duis aute irure dolor in reprehenderit in
-            voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-            officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit
-            amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-            ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-            nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-            consequat. Duis aute irure dolor in reprehenderit in voluptate velit
-            esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-            cupidatat non proident, sunt in culpa qui officia deserunt mollit
-            anim id est laborum. Lorem ipsum dolor sit amet, consectetur
-            adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-            dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-            exercitation ullamco laboris nisi ut aliquip ex ea commodo
-            consequat. Duis aute irure dolor in reprehenderit in voluptate velit
-            esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-            cupidatat non proident, sunt in culpa qui officia deserunt mollit
-            anim id est laborum. Lorem ipsum dolor sit amet, consectetur
-            adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-            dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-            exercitation ullamco laboris nisi ut aliquip ex ea commodo
-            consequat. Duis aute irure dolor in reprehenderit in voluptate velit
-            esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-            cupidatat non proident, sunt in culpa qui officia deserunt mollit
-            anim id est laborum. Lorem ipsum dolor sit amet, consectetur
-            adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-            dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-            exercitation ullamco laboris nisi ut aliquip ex ea commodo
-            consequat. Duis aute irure dolor in reprehenderit in voluptate velit
-            esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-            cupidatat non proident, sunt in culpa qui officia deserunt mollit
-            anim id est laborum.
+            <NotesTab pxTableMetadata={tableData.data?.metadata} />
           </TabPanel>
           <TabPanel id="pnl-definitions" controlledBy="tab-definitions">
             Definitions
@@ -139,7 +119,7 @@ export function TableInformation({
           </TabPanel>
         </div>
       </TabsProvider>
-    </SideSheet>
+    </SheetComponent>
   );
 }
 

@@ -147,3 +147,10 @@
     line-height: 2.75rem; /* 275% */
   }
 }
+
+/* Add underline to heading */
+.heading-underline {
+  text-decoration: underline;
+  text-underline-offset: 9%;
+  text-decoration-thickness: 8%;
+}

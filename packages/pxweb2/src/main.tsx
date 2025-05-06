@@ -7,19 +7,26 @@ import TableViewer from './app/pages/TableViewer/TableViewer';
 import { validateConfig } from './app/util/validate';
 import { AppProvider } from './app/context/AppProvider';
 import StartPage from './app/pages/StartPage/StartPage';
+import ErrorPage from './app/components/ErrorPage/ErrorPage';
 
 const router = createBrowserRouter([
   {
-    path: '/table',
-    element: <Navigate to="/table/TAB5603" replace={true} />,
-  },
-  {
-    path: '/',
-    element: <StartPage />,
-  },
-  {
-    path: '/table/:tableId',
-    element: <TableViewer />,
+
+    path: '/:lang?',
+    children: [
+      { index: true, element: <StartPage />, errorElement: <ErrorPage /> },
+      {
+        path: 'table',
+        element: <Navigate to="/table/tab638" replace={true} />,
+        errorElement: <ErrorPage />,
+      },
+      {
+        path: 'table/:tableId',
+        element: <TableViewer />,
+        errorElement: <ErrorPage />,
+      },
+    ],
+
   },
 ]);
 

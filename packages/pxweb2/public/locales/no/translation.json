@@ -158,6 +158,14 @@
           "missing_mandatory": {
             "title": "Tabellen kan ikke vises",
             "description": "Du må velge noe i filteret"
+          },
+          "to_many_values_selected": {
+            "title": "Tabellen er for stor og kan ikke oppdateres",
+            "description1": "Filtreringen du har gjort tilsvarer ",
+            "description2": " celler, mens tabellen ikke klarer å vise mer enn ",
+            "description3": " celler. Reduser antall valg i filteret, og når denne meldingen er borte oppdaterer tabellen seg som normalt.",
+            "selectedCells": "{{selectedCells}}",
+            "maxCells": "{{maxCells}}"
           }
         }
       },
@@ -165,6 +173,13 @@
         "title": "Informasjon",
         "footnotes": {
           "title": "Merknader",
+          "missing_heading": "Ingen merknader",
+          "missing_text_table": "Tabellen har ingen merknader.",
+          "missing_text_selection": "Det er ingen merknader for valgt filtrering.",
+          "symbol_explanation_heading": "Tegnforklaring",
+          "mandatory_heading": "Viktig om tabellen",
+          "mandatory_variable_heading": "Viktig om",
+          "non_mandatory_heading": "Gjelder hele tabellen",
           "show_all_footnotes": "Vis alle noter for tabellen"
         },
         "definitions": {

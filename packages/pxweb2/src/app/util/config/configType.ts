@@ -5,4 +5,6 @@ export type Config = {
     fallbackLanguage: string;
   };
   apiUrl: string;
+  maxDataCells: number;
+  specialCharacters: string[];
 };

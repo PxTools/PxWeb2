@@ -1,5 +1,6 @@
 import type { Meta, StoryFn } from '@storybook/react';
-import { Select, SelectOption } from './Select';
+import { Select } from './Select';
+import { SelectOption } from './SelectOptionType';
 
 const meta: Meta<typeof Select> = {
   component: Select,
@@ -31,6 +32,13 @@ function selectedOptionChanged(selectedItem: SelectOption | undefined) {
     ? console.log('Selected option: ' + selectedItem.label)
     : console.log('No option selected');
 }
+function addModal(name: string, closeFunction: () => void) {
+  console.log('Add modal: ' + name);
+  closeFunction();
+}
+function closeModal() {
+  console.log('Close modal');
+}
 
 export const Default = {
   args: {
@@ -41,6 +49,8 @@ export const Default = {
     options: options,
     placeholder: placeholder,
     onChange: selectedOptionChanged,
+    addModal: addModal,
+    removeModal: closeModal,
   },
 };
 
@@ -129,5 +139,52 @@ export const SelectedOption: StoryFn<typeof Select> = () => {
         removeModal={() => {}}
       ></Select>
     </>
+  );
+};
+
+export const RTLLanguage: StoryFn<typeof Select> = () => {
+  const rtlOptions: SelectOption[] = [
+    { label: 'الخيار 1', value: 'opt1' },
+    { label: 'الخيار 2', value: 'opt2' },
+    { label: 'الخيار 3 هو خيار بنص طويل جدًا', value: 'opt3' },
+    { label: 'الخيار 4', value: 'opt4' },
+    { label: 'الخيار 5', value: 'opt5' },
+  ];
+
+  const rtlPlaceholder = 'اختر خيارًا';
+
+  return (
+    <div style={{ width: '100%' }}>
+      <h1>RTL Language Support</h1>
+
+      <h2>Arabic interface:</h2>
+      <div dir="rtl">
+        <Select
+          label="التصنيف"
+          variant="inVariableBox"
+          languageDirection="rtl"
+          options={rtlOptions}
+          placeholder={rtlPlaceholder}
+          onChange={selectedOptionChanged}
+          addModal={addModal}
+          removeModal={closeModal}
+        />
+      </div>
+
+      <h2>Selected option with RTL:</h2>
+      <div dir="rtl">
+        <Select
+          label="التصنيف"
+          variant="inVariableBox"
+          languageDirection="rtl"
+          options={rtlOptions}
+          placeholder={rtlPlaceholder}
+          selectedOption={rtlOptions[1]}
+          onChange={selectedOptionChanged}
+          addModal={addModal}
+          removeModal={closeModal}
+        />
+      </div>
+    </div>
   );
 };
