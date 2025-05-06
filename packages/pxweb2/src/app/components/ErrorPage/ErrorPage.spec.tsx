@@ -1,58 +1,66 @@
 import { vi, Mock } from 'vitest';
-import { useRouteError } from 'react-router';
-import { ErrorPage } from './ErrorPage';
 import '@testing-library/jest-dom/vitest';
+import { useRouteError, useLocation } from 'react-router';
+
+import { ErrorPage } from './ErrorPage';
+import { getConfig } from '../../util/config/getConfig';
 import { renderWithProviders } from '../../util/testing-utils';
 
-// Mock the `useRouteError` hook from react-router
+vi.mock('../../util/config/getConfig');
 vi.mock('react-router', () => ({
   useRouteError: vi.fn(),
+  useLocation: vi.fn(),
+  Link: vi.fn(({ to, children, ...props }) => (
+    <a href={to.pathname} {...props}>
+      {children}
+    </a>
+  )),
 }));
 
-vi.mock('../../util/config/getConfig', () => ({
-  getConfig: vi.fn(() => ({
+describe('ErrorPage', () => {
+  const mockError = {
+    status: 404,
+    statusText: 'Not Found',
+    message: 'The requested resource was not found.',
+    data: 'Additional error data',
+  };
+  const mockLocation = {
+    pathname: '/en/table/tab638',
+    search: '',
+    hash: '',
+    state: null,
+    key: 'default',
+  };
+  const mockConfig = {
     language: {
       supportedLanguages: [
         { shorthand: 'en', languageName: 'English' },
         { shorthand: 'no', languageName: 'Norwegian' },
       ],
     },
-  })),
-}));
+  };
 
-// Mock the useTranslation hook
-vi.mock('react-i18next', () => ({
-  useTranslation: () => ({
-    t: (key: string) => {
-      const translations: { [key: string]: string } = {
-        'presentation_page.main_content.about_table.details.boolean_true':
-          'Yes',
-        'presentation_page.main_content.about_table.details.boolean_false':
-          'No',
-      };
-      return translations[key] || key;
-    },
-    i18n: {
-      language: 'en', // Mock the `language` property
-      config: {
-        language: 'en', // Add `config.language` to match the expected structure
-      },
-    },
-  }),
-}));
+  beforeEach(() => {
+    vi.resetAllMocks();
 
-describe('ErrorPage', () => {
+    // Default mocks
+    (useRouteError as Mock).mockReturnValue(mockError);
+    (useLocation as Mock).mockReturnValue(mockLocation);
+    (getConfig as Mock).mockReturnValue(mockConfig);
+  });
   it('renders without crashing', () => {
-    // Mock no error returned by `useRouteError`
-    (useRouteError as Mock).mockReturnValue(null);
-
-    // Render the component
     const { baseElement } = renderWithProviders(<ErrorPage />);
 
     expect(baseElement).toBeTruthy();
   });
 
-  it('sanity check', () => {
-    expect(true).toBe(true);
+  it('displays the error message', () => {
+    const { getByText } = renderWithProviders(<ErrorPage />);
+
+    expect(
+      getByText(
+        '404 Not Found The requested resource was not found. Additional error data',
+      ),
+    ).toBeInTheDocument();
   });
 });
