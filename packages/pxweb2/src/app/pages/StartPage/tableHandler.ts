@@ -10,7 +10,14 @@ export const getFullTable: Promise<Table[]> = new Promise((resolve, reject) => {
   if (table) {
     resolve(JSON.parse(table) as Table[]);
   } else {
-    TableService.listAllTables('sv', undefined, undefined, true, 1, 10000)
+    TableService.listAllTables(
+      config.language.defaultLanguage,
+      undefined,
+      undefined,
+      true,
+      1,
+      3000,
+    )
       .then((response) => {
         localStorage.setItem('table', JSON.stringify(response.tables));
         resolve(response.tables);

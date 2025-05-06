@@ -23,8 +23,8 @@ import {
   type StartPageState,
   ActionType,
 } from './tableTypes';
-import { getSubjectTree, type PathItem } from '../../util/startPageFilters';
 import { getFullTable } from './tableHandler';
+import { getFilters, getSubjectTree } from '../../util/startPageFilters';
 
 function shouldTableBeIncluded(table: Table, filters: Filter[]) {
   return filters.some((filter) => {
@@ -39,17 +39,6 @@ function shouldTableBeIncluded(table: Table, filters: Filter[]) {
     }
     return false;
   });
-}
-
-function getFilters(tables: Table[]): Map<string, number> {
-  const filters = new Map<string, number>();
-  tables.forEach((table) => {
-    const timeUnit = table.timeUnit ?? 'unknown';
-    if (table.timeUnit) {
-      filters.set(timeUnit, (filters.get(timeUnit) ?? 0) + 1);
-    }
-  });
-  return filters;
 }
 
 // TODO: Remove this function. We can not consider norwegian special cases in our code!
@@ -73,14 +62,17 @@ const initialState: StartPageState = {
   error: '',
 };
 
-const subjectTree: PathItem[] = getSubjectTree(bigTableList.tables);
-console.log('Antall subject: ' + subjectTree.length);
+// const subjectTree: PathItem[] = getSubjectTree(bigTableList.tables);
+// console.log('Antall subject: ' + subjectTree.length);
 
 const StartPage = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   function handleResetFilter(tables: Table[]) {
-    dispatch({ type: ActionType.RESET_FILTERS, payload: tables });
+    dispatch({
+      type: ActionType.RESET_FILTERS,
+      payload: { tables: tables, subjects: getSubjectTree(tables) },
+    });
   }
 
   function handleAddFilter(filter: Filter[]) {
@@ -109,11 +101,12 @@ const StartPage = () => {
     switch (action.type) {
       case ActionType.RESET_FILTERS:
         // Reset from API or cache
+        // console.log(JSON.stringify(action.payload.subjects, null, 2));
         return {
           ...initialState,
-          availableTables: action.payload,
-          filteredTables: action.payload,
-          availableFilters: getFilters(action.payload),
+          availableTables: action.payload.tables,
+          filteredTables: action.payload.tables,
+          availableFilters: getFilters(action.payload.tables),
         };
       case ActionType.ADD_FILTER:
         return {

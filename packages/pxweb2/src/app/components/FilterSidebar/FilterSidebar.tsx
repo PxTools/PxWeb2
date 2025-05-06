@@ -19,7 +19,7 @@ const renderFilters = (
   handleAddFilter: (filter: Filter[]) => void,
   handleRemoveFilter: (filter: Filter) => void,
 ) => {
-  return Array.from(state.availableFilters)
+  return Array.from(state.availableFilters.timeUnits)
     .sort((a, b) => b[1] - a[1])
     .map(([key, value]) => (
       <li key={key} className={styles.filterItem}>

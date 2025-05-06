@@ -1,4 +1,5 @@
 import { Table } from '@pxweb2/pxweb2-api-client';
+import { PathItem } from '../../util/startPageFilters';
 
 export enum ActionType {
   RESET_FILTERS = 'RESET_FILTERS',
@@ -17,7 +18,7 @@ export type Filter = {
 export type StartPageState = {
   availableTables: Table[];
   filteredTables: Table[];
-  availableFilters: Map<string, number>;
+  availableFilters: StartPageFilters;
   activeFilters: Filter[];
   loading: boolean;
   error: string;
@@ -38,7 +39,7 @@ type RemoveFilterAction = {
 
 type ResetFilterAction = {
   type: ActionType.RESET_FILTERS;
-  payload: Table[];
+  payload: { tables: Table[]; subjects: PathItem[] };
 };
 
 type AddFilterAction = {
@@ -59,4 +60,9 @@ type SetErrorAction = {
 type SetLoadingAction = {
   type: ActionType.SET_LOADING;
   payload: boolean;
+};
+
+export type StartPageFilters = {
+  timeUnits: Map<string, number>;
+  subjectTree: PathItem[];
 };

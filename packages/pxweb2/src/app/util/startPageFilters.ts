@@ -1,4 +1,5 @@
 import { Table } from '@pxweb2/pxweb2-api-client';
+import { StartPageFilters } from '../pages/StartPage/tableTypes';
 
 export interface PathItem {
   id: string;
@@ -8,7 +9,6 @@ export interface PathItem {
 
 export function getSubjectTree(tables: Table[]): PathItem[] {
   const allPaths: PathItem[][] = getAllPath(tables);
-  console.log('allPaths: ' + JSON.stringify(allPaths, null, 4));
   return organizePaths(allPaths);
 }
 
@@ -47,4 +47,24 @@ function getAllPath(tables: Table[]): PathItem[][] {
   });
 
   return allPaths;
+}
+export function getFilters(tables: Table[]): StartPageFilters {
+  let filters: StartPageFilters = {
+    timeUnits: new Map<string, number>(),
+    subjectTree: [],
+  };
+
+  // Add timeUnit filters and calculate count
+  tables.forEach((table) => {
+    if (table.timeUnit) {
+      filters.timeUnits.set(
+        table.timeUnit,
+        (filters.timeUnits.get(table.timeUnit) ?? 0) + 1,
+      );
+    }
+  });
+
+  // Add subjectTree filters. Consider: Calculate count??
+  filters.subjectTree = getSubjectTree(tables);
+  return filters;
 }

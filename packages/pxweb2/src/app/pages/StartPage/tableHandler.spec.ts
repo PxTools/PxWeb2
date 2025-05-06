@@ -1,9 +1,10 @@
 import { vi } from 'vitest';
 import { getFullTable } from './tableHandler';
+import { Config } from '../../util/config/configType';
 
 vi.mock('../../util/config/getConfig', () => {
   return {
-    getConfig: vi.fn().mockResolvedValue({
+    getConfig: vi.fn().mockReturnValue({
       language: {
         supportedLanguages: [
           { shorthand: 'en', languageName: 'English' },
@@ -17,7 +18,7 @@ vi.mock('../../util/config/getConfig', () => {
       apiUrl: 'https://api.scb.se/OV0104/v2beta/api/v2',
       maxDataCells: 100000,
       specialCharacters: ['.', '..', ':', '-', '...', '*'],
-    }),
+    } as Config),
   };
 });
 
