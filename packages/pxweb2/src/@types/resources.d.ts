@@ -7,8 +7,9 @@ interface Resources {
     common: {
       title: 'PxWeb 2.0';
       header: {
-        title: 'PxWeb 2.0 [Main]';
+        title: 'PxWeb 2.0 [Sprint 21]';
         logo: 'PxWeb 2.0';
+        arialabelheader: 'Select language';
       };
       skip_to_main: 'Skip to main content';
       footer: {
@@ -218,7 +219,7 @@ interface Resources {
       };
       footer: {
         description: 'On this site you can follow as Statistics Sweden (SCB) and Statistics Norway (SSB) are building a new and more user-friendly interface for PxWeb.';
-        descriptionLink: 'Read more about the project on Github';
+        descriptionLink: 'Read more about the project on GitHub';
         contact: 'Contact';
         projectLeader: 'Project leader';
         scrumMaster: 'Scrum master';
