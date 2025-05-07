@@ -208,7 +208,7 @@ const StartPage = () => {
         <div className={styles.listTables}>
           {state.activeFilters.length >= 1 && (
             <div className={styles.filterPillContainer}>
-              <Chips className={styles.filterPillContainer}>
+              <Chips>
                 {renderRemoveAllChips()}
                 {state.activeFilters.map((filter) => (
                   <Chips.Removable
