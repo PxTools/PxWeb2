@@ -12,4 +12,8 @@
   padding-top: fixed.$spacing-10;
   padding-bottom: fixed.$spacing-10;
   width: 100%;
+
+  &.mobileView {
+    padding: fixed.$spacing-6 fixed.$spacing-5 fixed.$spacing-6 fixed.$spacing-5;
+  }
 }
