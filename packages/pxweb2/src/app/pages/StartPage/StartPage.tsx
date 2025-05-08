@@ -37,6 +37,11 @@ function shouldTableBeIncluded(table: Table, filters: Filter[]) {
     if (filter.type === 'timeUnit') {
       return table?.timeUnit?.toLowerCase() === filter.value.toLowerCase();
     }
+    if (filter.type === 'subject') {
+      return table?.paths?.flat().some((path) => {
+        return path.id === filter.value;
+      });
+    }
     return false;
   });
 }
@@ -53,17 +58,15 @@ function removeTableNumber(title: string): string {
   }
 }
 
-const initialState: StartPageState = {
+// Want to ensure this is never changed
+const initialState: StartPageState = Object.freeze({
   availableTables: [],
   filteredTables: [],
   availableFilters: getFilters([]),
   activeFilters: [],
   loading: false,
   error: '',
-};
-
-// const subjectTree: PathItem[] = getSubjectTree(bigTableList.tables);
-// console.log('Antall subject: ' + subjectTree.length);
+});
 
 const StartPage = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -124,7 +127,7 @@ const StartPage = () => {
           // Reset from state
           return {
             ...state,
-            activeFilters: [],
+            activeFilters: initialState.activeFilters,
             filteredTables: state.availableTables,
             availableFilters: getFilters(state.availableTables),
           };
@@ -183,7 +186,7 @@ const StartPage = () => {
           handleAddFilter={handleAddFilter}
           handleRemoveFilter={handleRemoveFilter}
           handleResetFilter={() => {
-            getFullTable.then((t) => handleResetFilter(t));
+            handleResetFilter(state.availableTables);
           }}
         />
         <div className={styles.listTables}>
@@ -194,7 +197,7 @@ const StartPage = () => {
                   type="border"
                   variant="info"
                   onClick={() => {
-                    getFullTable.then((t) => handleResetFilter(t));
+                    handleResetFilter(state.availableTables);
                   }}
                 >
                   {'Reset Filters'}
@@ -204,7 +207,7 @@ const StartPage = () => {
             {state.activeFilters.map((filter) => (
               <span key={filter.value} className={styles.filterPill}>
                 <Tag type="border" onClick={() => handleRemoveFilter(filter)}>
-                  {'X ' + filter.value}
+                  {'X ' + filter.label}
                 </Tag>
               </span>
             ))}

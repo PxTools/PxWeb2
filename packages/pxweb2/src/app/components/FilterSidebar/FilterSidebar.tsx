@@ -6,7 +6,8 @@ import {
 } from '../../pages/StartPage/tableTypes';
 import styles from './FilterSidebar.module.scss';
 
-import { Checkbox } from '@pxweb2/pxweb2-ui';
+import { Checkbox, FilterCategory } from '@pxweb2/pxweb2-ui';
+import { PathItem } from '../../util/startPageFilters';
 interface FilterProps {
   state: StartPageState;
   handleAddFilter: (filter: Filter[]) => void;
@@ -14,7 +15,67 @@ interface FilterProps {
   handleResetFilter: () => void;
 }
 
-const renderFilters = (
+// MAYBE we can make a new component, which USES the original checkbox, but wraps it with a chevron, and allows children?? And takes in an indentation level? HM!
+//
+
+const renderSubjectTreeFilters = (
+  state: StartPageState,
+  handleAddFilter: (filter: Filter[]) => void,
+  handleRemoveFilter: (filter: Filter) => void,
+) => {
+  return (
+    <>
+      {renderSubject(
+        state,
+        state.availableFilters.subjectTree,
+        handleAddFilter,
+        handleRemoveFilter,
+      )}
+    </>
+  );
+};
+
+const renderSubject = (
+  state: StartPageState,
+  filters: PathItem[],
+  handleAddFilter: (filter: Filter[]) => void,
+  handleRemoveFilter: (filter: Filter) => void,
+) => {
+  return filters.map((subject) => {
+    return (
+      <div key={subject.id} className={styles.subjectToggle}>
+        <Checkbox
+          id={subject.id}
+          text={subject.label}
+          value={state.activeFilters.some((filter) => {
+            return filter.type === 'subject' && filter.value === subject.id;
+          })}
+          onChange={(value) => {
+            value
+              ? handleAddFilter([
+                  { type: 'subject', value: subject.id, label: subject.label },
+                ])
+              : handleRemoveFilter({
+                  type: 'subject',
+                  value: subject.id,
+                  label: subject.label,
+                });
+          }}
+        />
+        {subject.children &&
+          // We're doing recursion
+          renderSubject(
+            state,
+            subject.children,
+            handleAddFilter,
+            handleRemoveFilter,
+          )}
+      </div>
+    );
+  });
+};
+
+const renderTimeUnitFilters = (
   state: StartPageState,
   handleAddFilter: (filter: Filter[]) => void,
   handleRemoveFilter: (filter: Filter) => void,
@@ -31,8 +92,12 @@ const renderFilters = (
           )}
           onChange={(value) => {
             value
-              ? handleAddFilter([{ type: 'timeUnit', value: key }])
-              : handleRemoveFilter({ type: 'timeUnit', value: key });
+              ? handleAddFilter([{ type: 'timeUnit', value: key, label: key }])
+              : handleRemoveFilter({
+                  type: 'timeUnit',
+                  value: key,
+                  label: key,
+                });
           }}
         />
       </li>
@@ -47,29 +112,22 @@ export const FilterSidebar: React.FC<FilterProps> = ({
 }) => {
   return (
     <div className={styles.sideBar}>
-      <h2 className={cl(styles['heading-small'])}>Filter</h2>
       <div>
-        <button
-          onClick={() =>
-            handleAddFilter([{ type: 'variableName', value: 'region' }])
-          }
-        >
-          <span className={cl(styles['label-medium'])}>
-            Filter: Only tables with variableName "region"
-          </span>
-        </button>
-      </div>
-      <div>
-        <button onClick={handleResetFilter}>
-          <span className={cl(styles['label-medium'])}>Filter: Reset!</span>
-        </button>
-      </div>
-      <div>
-        <div className={cl(styles['heading-medium'])}>Filter</div>
-        <div className={cl(styles['heading-small'])}>Tidsintervall</div>
-        <ul className={styles.filterList}>
-          {renderFilters(state, handleAddFilter, handleRemoveFilter)}
-        </ul>
+        <div className={cl(styles['heading-medium'])}>Filtre</div>
+        <FilterCategory header="Emner">
+          <ul className={styles.filterList}>
+            {renderSubjectTreeFilters(
+              state,
+              handleAddFilter,
+              handleRemoveFilter,
+            )}
+          </ul>
+        </FilterCategory>
+        <FilterCategory header="Tidsintervall">
+          <ul className={styles.filterList}>
+            {renderTimeUnitFilters(state, handleAddFilter, handleRemoveFilter)}
+          </ul>
+        </FilterCategory>
       </div>
       <p>
         <a href="/table/tab638">Go to table viewer</a>

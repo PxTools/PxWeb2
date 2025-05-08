@@ -11,8 +11,9 @@ export enum ActionType {
 }
 
 export type Filter = {
-  type: 'text' | 'category' | 'timeUnit' | 'path' | 'variableName';
+  type: 'text' | 'category' | 'timeUnit' | 'path' | 'variableName' | 'subject';
   value: string;
+  label: string;
 };
 
 export type StartPageState = {
