@@ -9,7 +9,6 @@ import {
   Line,
   BarChart,
   Bar,
-  LabelList,
 } from 'recharts';
 
 const data = [
