@@ -50,3 +50,4 @@ export * from './lib/shared-types/valueDisplayType';
 export * from './lib/shared-types/variable';
 export * from './lib/shared-types/vartypeEnum';
 export * from './lib/util/util';
+export * from './lib/components/Charts/LineChart';

@@ -20,6 +20,7 @@
     "clsx": "^2.1.1",
     "motion": "^12.9.1",
     "react-i18next": "^15.5.1",
+    "recharts": "^2.15.3",
     "vite-plugin-dts": "^4.5.3"
   },
   "devDependencies": {
