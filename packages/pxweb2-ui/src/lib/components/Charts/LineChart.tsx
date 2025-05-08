@@ -106,12 +106,14 @@ export function LineChartComponent() {
           {/* <Label value="Year" offset={-10} position="insideBottom" /> */}
           <Label value="Year" offset={0} position="bottom" />
         </XAxis>
-        <YAxis>
+        <YAxis type="number">
           <Label
+
             value="ValueValueValue"
-            offset={0}
+            offset={-3}
             angle={-90}
             position="insideLeft"
+            style={{ textAnchor: 'middle', dominantBaseline: 'middle' }}
           />
         </YAxis>
         <Tooltip />
@@ -130,18 +132,18 @@ export function LineChartComponent() {
       >
         <CartesianGrid stroke="#ccc" />
         <XAxis type="number">
-          <Label value="Year" offset={0} position="insideLeft" />
+          <Label value="Year" offset={0} position="bottom" />
         </XAxis>
         <YAxis type="category" dataKey="tid">
           <Label
             value="Age group"
             offset={0}
             angle={-90}
-            position="insideBottom"
+            position="insideLeft"
           />
         </YAxis>
         <Tooltip />
-        <Legend />
+        <Legend  wrapperStyle={{ margin: -20 }} />
         <Bar type="monotone" dataKey="10-19_BE0101N1_0180" fill="blue" />
         <Bar type="monotone" dataKey="20-29_BE0101N1_0180" fill="red" />
         <Bar type="monotone" dataKey="30-39_BE0101N1_0180" fill="green" />
