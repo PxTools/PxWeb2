@@ -16,7 +16,7 @@ const router = createBrowserRouter([
       { index: true, element: <StartPage />, errorElement: <ErrorPage /> },
       {
         path: 'table',
-        element: <Navigate to="/table/tab638" replace={true} />,
+        element: <Navigate to="/table/04931" replace={true} />,
         errorElement: <ErrorPage />,
       },
       {
