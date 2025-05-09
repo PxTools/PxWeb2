@@ -22,34 +22,9 @@ import {
   type ReducerActionTypes,
   type StartPageState,
   ActionType,
-} from './tableTypes';
-import { getFullTable } from './tableHandler';
-
-function shouldTableBeIncluded(table: Table, filters: Filter[]) {
-  return filters.some((filter) => {
-    if (filter.type === 'text') {
-      return table.label?.toLowerCase().includes(filter.value.toLowerCase());
-    }
-    if (filter.type === 'variableName') {
-      return table.variableNames.includes(filter.value);
-    }
-    if (filter.type === 'timeUnit') {
-      return table?.timeUnit?.toLowerCase() === filter.value.toLowerCase();
-    }
-    return false;
-  });
-}
-
-function getFilters(tables: Table[]): Map<string, number> {
-  const filters = new Map<string, number>();
-  tables.forEach((table) => {
-    const timeUnit = table.timeUnit ?? 'unknown';
-    if (table.timeUnit) {
-      filters.set(timeUnit, (filters.get(timeUnit) ?? 0) + 1);
-    }
-  });
-  return filters;
-}
+} from './StartPageTypes';
+import { getFullTable, shouldTableBeIncluded } from '../../util/tableHandler';
+import { getFilters, getSubjectTree } from '../../util/startPageFilters';
 
 // TODO: Remove this function. We can not consider norwegian special cases in our code!
 function removeTableNumber(title: string): string {
@@ -63,31 +38,35 @@ function removeTableNumber(title: string): string {
   }
 }
 
-const initialState: StartPageState = {
+// Want to ensure this is never changed
+const initialState: StartPageState = Object.freeze({
   availableTables: [],
   filteredTables: [],
   availableFilters: getFilters([]),
   activeFilters: [],
   loading: false,
   error: '',
-};
+});
 
 const StartPage = () => {
   const { t } = useTranslation();
   const [state, dispatch] = useReducer(reducer, initialState);
 
   function handleResetFilter(tables: Table[]) {
-    dispatch({ type: ActionType.RESET_FILTERS, payload: tables });
+    dispatch({
+      type: ActionType.RESET_FILTERS,
+      payload: { tables: tables, subjects: getSubjectTree(tables) },
+    });
   }
 
   function handleAddFilter(filter: Filter[]) {
     dispatch({ type: ActionType.ADD_FILTER, payload: filter });
   }
 
-  async function handleRemoveFilter(filter: Filter) {
+  async function handleRemoveFilter(filterId: string) {
     dispatch({
       type: ActionType.REMOVE_FILTER,
-      payload: filter,
+      payload: filterId,
     });
   }
 
@@ -106,11 +85,12 @@ const StartPage = () => {
     switch (action.type) {
       case ActionType.RESET_FILTERS:
         // Reset from API or cache
+        // console.log(JSON.stringify(action.payload.subjects, null, 2));
         return {
           ...initialState,
-          availableTables: action.payload,
-          filteredTables: action.payload,
-          availableFilters: getFilters(action.payload),
+          availableTables: action.payload.tables,
+          filteredTables: action.payload.tables,
+          availableFilters: getFilters(action.payload.tables),
         };
       case ActionType.ADD_FILTER: {
         const newFilters = [...state.activeFilters, ...action.payload];
@@ -128,13 +108,13 @@ const StartPage = () => {
           // Reset from state
           return {
             ...state,
-            activeFilters: [],
+            activeFilters: initialState.activeFilters,
             filteredTables: state.availableTables,
             availableFilters: getFilters(state.availableTables),
           };
         } else {
           const currentFilters = state.activeFilters.filter(
-            (filter) => filter.value !== action.payload.value,
+            (filter) => filter.value !== action.payload,
           );
           return {
             ...state,
@@ -202,7 +182,7 @@ const StartPage = () => {
           handleAddFilter={handleAddFilter}
           handleRemoveFilter={handleRemoveFilter}
           handleResetFilter={() => {
-            getFullTable.then((t) => handleResetFilter(t));
+            handleResetFilter(state.availableTables);
           }}
         />
         <div className={styles.listTables}>
@@ -212,13 +192,13 @@ const StartPage = () => {
                 {renderRemoveAllChips()}
                 {state.activeFilters.map((filter) => (
                   <Chips.Removable
-                    onClick={() => handleRemoveFilter(filter)}
+                    onClick={() => handleRemoveFilter(filter.value)}
                     aria-label={t('start_page.filter.remove_filter_aria', {
                       value: filter.value,
                     })}
                     key={filter.value}
                   >
-                    {filter.value}
+                    {filter.label}
                   </Chips.Removable>
                 ))}
               </Chips>

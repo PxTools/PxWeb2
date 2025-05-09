@@ -3,23 +3,82 @@ import cl from 'clsx';
 import {
   type StartPageState,
   type Filter,
-} from '../../pages/StartPage/tableTypes';
+} from '../../pages/StartPage/StartPageTypes';
 import styles from './FilterSidebar.module.scss';
 
-import { Checkbox } from '@pxweb2/pxweb2-ui';
+import { Checkbox, FilterCategory } from '@pxweb2/pxweb2-ui';
+import { PathItem } from '../../util/startPageFilters';
 interface FilterProps {
   state: StartPageState;
   handleAddFilter: (filter: Filter[]) => void;
-  handleRemoveFilter: (filter: Filter) => void;
+  handleRemoveFilter: (filterId: string) => void;
   handleResetFilter: () => void;
 }
 
-const renderFilters = (
+const renderSubjectTreeFilters = (
   state: StartPageState,
   handleAddFilter: (filter: Filter[]) => void,
-  handleRemoveFilter: (filter: Filter) => void,
+  handleRemoveFilter: (filterId: string) => void,
 ) => {
-  return Array.from(state.availableFilters)
+  return (
+    <>
+      {renderSubject(
+        state,
+        state.availableFilters.subjectTree,
+        handleAddFilter,
+        handleRemoveFilter,
+      )}
+    </>
+  );
+};
+
+const renderSubject = (
+  state: StartPageState,
+  filters: PathItem[],
+  handleAddFilter: (filter: Filter[]) => void,
+  handleRemoveFilter: (filterId: string) => void,
+) => {
+  return filters.map((subject, index) => {
+    return (
+      <div key={subject.id} className={styles.subjectToggle}>
+        <Checkbox
+          id={subject.id}
+          text={subject.label}
+          value={state.activeFilters.some((filter) => {
+            return filter.type === 'subject' && filter.value === subject.id;
+          })}
+          onChange={(value) => {
+            value
+              ? handleAddFilter([
+                  {
+                    type: 'subject',
+                    value: subject.id,
+                    label: subject.label,
+                    index: index,
+                  },
+                ])
+              : handleRemoveFilter(subject.id);
+          }}
+        />
+        {subject.children &&
+          // We're doing recursion
+          renderSubject(
+            state,
+            subject.children,
+            handleAddFilter,
+            handleRemoveFilter,
+          )}
+      </div>
+    );
+  });
+};
+
+const renderTimeUnitFilters = (
+  state: StartPageState,
+  handleAddFilter: (filter: Filter[]) => void,
+  handleRemoveFilter: (filterId: string) => void,
+) => {
+  return Array.from(state.availableFilters.timeUnits)
     .sort((a, b) => b[1] - a[1])
     .map(([key, value], i) => (
       <li key={key} className={styles.filterItem}>
@@ -31,8 +90,10 @@ const renderFilters = (
           )}
           onChange={(value) => {
             value
-              ? handleAddFilter([{ type: 'timeUnit', value: key, index: i }])
-              : handleRemoveFilter({ type: 'timeUnit', value: key, index: i });
+              ? handleAddFilter([
+                  { type: 'timeUnit', value: key, label: key, index: i },
+                ])
+              : handleRemoveFilter(key);
           }}
         />
       </li>
@@ -46,14 +107,25 @@ export const FilterSidebar: React.FC<FilterProps> = ({
 }) => {
   return (
     <div className={styles.sideBar}>
+      <h2 className={cl(styles['heading-small'])}>Filter</h2>
       <div>
         <div className={cl(styles['heading-medium'], styles.filterHeading)}>
           Filter
         </div>
-        <div className={cl(styles['heading-small'])}>Tidsintervall</div>
-        <ul className={styles.filterList}>
-          {renderFilters(state, handleAddFilter, handleRemoveFilter)}
-        </ul>
+        <FilterCategory header="Emner">
+          <ul className={styles.filterList}>
+            {renderSubjectTreeFilters(
+              state,
+              handleAddFilter,
+              handleRemoveFilter,
+            )}
+          </ul>
+        </FilterCategory>
+        <FilterCategory header="Tidsintervall">
+          <ul className={styles.filterList}>
+            {renderTimeUnitFilters(state, handleAddFilter, handleRemoveFilter)}
+          </ul>
+        </FilterCategory>
       </div>
       <p>
         <a href="/table/tab638">Go to table viewer</a>
