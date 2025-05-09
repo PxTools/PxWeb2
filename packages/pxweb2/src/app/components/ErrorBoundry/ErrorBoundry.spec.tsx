@@ -51,30 +51,30 @@ describe('ErrorBoundary', () => {
     expect(screen.getByText('Child Component')).toBeInTheDocument();
   });
 
-it('handles a mocked error correctly', () => {
-  // Mock a function that throws an error
-  const mockThrowError = vi.fn(() => {
-    throw new Error('Mocked error');
+  it('handles a mocked error correctly', () => {
+    // Mock a function that throws an error
+    const mockThrowError = vi.fn(() => {
+      throw new Error('Mocked error');
+    });
+
+    // Use the mock function in a component
+    const ErrorComponent = () => {
+      mockThrowError();
+      return null;
+    };
+
+    // Render the ErrorBoundary with the ErrorComponent
+    render(
+      <ErrorBoundary>
+        <ErrorComponent />
+      </ErrorBoundary>,
+    );
+
+    // Assert that the fallback UI is rendered
+    expect(screen.getByRole('banner')).toBeInTheDocument(); // Header
+    expect(screen.getByRole('alert')).toHaveTextContent('Mocked error'); // Alert with error message
+
+    // Assert that the mock function was called
+    expect(mockThrowError).toHaveBeenCalled();
   });
-
-  // Use the mock function in a component
-  const ErrorComponent = () => {
-    mockThrowError();
-    return null;
-  };
-
-  // Render the ErrorBoundary with the ErrorComponent
-  render(
-    <ErrorBoundary>
-      <ErrorComponent />
-    </ErrorBoundary>,
-  );
-
-  // Assert that the fallback UI is rendered
-  expect(screen.getByRole('banner')).toBeInTheDocument(); // Header
-  expect(screen.getByRole('alert')).toHaveTextContent('Mocked error'); // Alert with error message
-
-  // Assert that the mock function was called
-  expect(mockThrowError).toHaveBeenCalled();
-});
 });
