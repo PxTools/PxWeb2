@@ -3,14 +3,14 @@ import { Virtuoso } from 'react-virtuoso';
 import cl from 'clsx';
 
 import styles from './StartPage.module.scss';
-
+import { useTranslation } from 'react-i18next';
 import {
-  Tag,
   Search,
   TableCard,
   Icon,
   Spinner,
   Alert,
+  Chips,
 } from '@pxweb2/pxweb2-ui';
 import { type Table } from '@pxweb2/pxweb2-api-client';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
@@ -69,6 +69,7 @@ const initialState: StartPageState = Object.freeze({
 });
 
 const StartPage = () => {
+  const { t } = useTranslation();
   const [state, dispatch] = useReducer(reducer, initialState);
 
   function handleResetFilter(tables: Table[]) {
@@ -111,17 +112,17 @@ const StartPage = () => {
           filteredTables: action.payload.tables,
           availableFilters: getFilters(action.payload.tables),
         };
-      case ActionType.ADD_FILTER:
+      case ActionType.ADD_FILTER: {
+        const newFilters = [...state.activeFilters, ...action.payload];
+        const sortedFilters = [...newFilters].sort((a, b) => a.index - b.index);
         return {
           ...state,
-          activeFilters: [...state.activeFilters, ...action.payload],
+          activeFilters: sortedFilters,
           filteredTables: state.availableTables.filter((table) => {
-            return shouldTableBeIncluded(table, [
-              ...state.activeFilters,
-              ...action.payload,
-            ]);
+            return shouldTableBeIncluded(table, sortedFilters);
           }),
         };
+      }
       case ActionType.REMOVE_FILTER:
         if (state.activeFilters.length <= 1) {
           // Reset from state
@@ -173,6 +174,21 @@ const StartPage = () => {
       });
   }, []);
 
+  function renderRemoveAllChips() {
+    if (state.activeFilters.length >= 2) {
+      return (
+        <Chips.Removable
+          filled
+          onClick={() => {
+            getFullTable.then((t) => handleResetFilter(t));
+          }}
+        >
+          {t('start_page.filter.remove_all_filter')}
+        </Chips.Removable>
+      );
+    }
+  }
+
   return (
     <AccessibilityProvider>
       <Header />
@@ -190,33 +206,43 @@ const StartPage = () => {
           }}
         />
         <div className={styles.listTables}>
-          <div className={styles.filterPillContainer}>
-            {state.activeFilters.length >= 2 && (
-              <span className={styles.filterPill}>
-                <Tag
-                  type="border"
-                  variant="info"
-                  onClick={() => {
-                    handleResetFilter(state.availableTables);
-                  }}
-                >
-                  {'Reset Filters'}
-                </Tag>
-              </span>
+          {state.activeFilters.length >= 1 && (
+            <div className={styles.filterPillContainer}>
+              <Chips>
+                {renderRemoveAllChips()}
+                {state.activeFilters.map((filter) => (
+                  <Chips.Removable
+                    onClick={() => handleRemoveFilter(filter)}
+                    aria-label={t('start_page.filter.remove_filter_aria', {
+                      value: filter.value,
+                    })}
+                    key={filter.value}
+                  >
+                    {filter.value}
+                  </Chips.Removable>
+                ))}
+              </Chips>
+            </div>
+          )}
+          <div className={cl(styles['bodyshort-medium'], styles.countLabel)}>
+            {state.activeFilters.length ? (
+              <p>
+                Treff på{' '}
+                <span className={cl(styles['label-medium'])}>
+                  {state.filteredTables.length}
+                </span>{' '}
+                tabeller
+              </p>
+            ) : (
+              <p>
+                <span className={cl(styles['label-medium'])}>
+                  {state.filteredTables.length}
+                </span>{' '}
+                tabeller
+              </p>
             )}
-            {state.activeFilters.map((filter) => (
-              <span key={filter.value} className={styles.filterPill}>
-                <Tag type="border" onClick={() => handleRemoveFilter(filter)}>
-                  {'X ' + filter.label}
-                </Tag>
-              </span>
-            ))}
           </div>
-          <div className={cl(styles['label-medium'], styles.countLabel)}>
-            {state.activeFilters.length
-              ? `Treff på ${state.filteredTables.length} tabeller`
-              : `${state.filteredTables.length} tabeller`}
-          </div>
+
           {state.error && (
             <div className={styles.error}>
               <Alert
@@ -253,7 +279,7 @@ const StartPage = () => {
                         : undefined
                     }
                     // We use slice here because we _only_ want 4digit year. Sometimes, month is appended in data set.
-                    period={`${table.firstPeriod?.slice(0, 4)}-${table.lastPeriod?.slice(0, 4)}`}
+                    period={`${table.firstPeriod?.slice(0, 4)}–${table.lastPeriod?.slice(0, 4)}`}
                     frequency={`${table.timeUnit}`}
                     tableId={`${table.id}`}
                     icon={<Icon iconName="Heart" />}

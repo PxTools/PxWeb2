@@ -43,6 +43,11 @@ interface Resources {
     start_page: {
       header: 'Welcome to the app!';
       welcome_trans_test: 'Welcome to the <1>app</1> for PxWeb 2.0!';
+      filter: {
+        header: 'Filter';
+        remove_all_filter: 'Remove all filters';
+        remove_filter_aria: 'Delete {{value}}';
+      };
     };
     presentation_page: {
       header: {

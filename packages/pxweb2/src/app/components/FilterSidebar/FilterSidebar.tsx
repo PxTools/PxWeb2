@@ -82,7 +82,7 @@ const renderTimeUnitFilters = (
 ) => {
   return Array.from(state.availableFilters.timeUnits)
     .sort((a, b) => b[1] - a[1])
-    .map(([key, value]) => (
+    .map(([key, value], i) => (
       <li key={key} className={styles.filterItem}>
         <Checkbox
           id={key}
@@ -92,11 +92,14 @@ const renderTimeUnitFilters = (
           )}
           onChange={(value) => {
             value
-              ? handleAddFilter([{ type: 'timeUnit', value: key, label: key }])
+              ? handleAddFilter([
+                  { type: 'timeUnit', value: key, label: key, index: i },
+                ])
               : handleRemoveFilter({
                   type: 'timeUnit',
                   value: key,
                   label: key,
+                  index: i,
                 });
           }}
         />
@@ -108,12 +111,14 @@ export const FilterSidebar: React.FC<FilterProps> = ({
   state,
   handleAddFilter,
   handleRemoveFilter,
-  handleResetFilter,
 }) => {
   return (
     <div className={styles.sideBar}>
+      <h2 className={cl(styles['heading-small'])}>Filter</h2>
       <div>
-        <div className={cl(styles['heading-medium'])}>Filtre</div>
+        <div className={cl(styles['heading-medium'], styles.filterHeading)}>
+          Filter
+        </div>
         <FilterCategory header="Emner">
           <ul className={styles.filterList}>
             {renderSubjectTreeFilters(
