@@ -11,7 +11,7 @@ import { PathItem } from '../../util/startPageFilters';
 interface FilterProps {
   state: StartPageState;
   handleAddFilter: (filter: Filter[]) => void;
-  handleRemoveFilter: (filter: Filter) => void;
+  handleRemoveFilter: (filterId: string) => void;
   handleResetFilter: () => void;
 }
 
@@ -21,7 +21,7 @@ interface FilterProps {
 const renderSubjectTreeFilters = (
   state: StartPageState,
   handleAddFilter: (filter: Filter[]) => void,
-  handleRemoveFilter: (filter: Filter) => void,
+  handleRemoveFilter: (filterId: string) => void,
 ) => {
   return (
     <>
@@ -39,9 +39,9 @@ const renderSubject = (
   state: StartPageState,
   filters: PathItem[],
   handleAddFilter: (filter: Filter[]) => void,
-  handleRemoveFilter: (filter: Filter) => void,
+  handleRemoveFilter: (filterId: string) => void,
 ) => {
-  return filters.map((subject) => {
+  return filters.map((subject, index) => {
     return (
       <div key={subject.id} className={styles.subjectToggle}>
         <Checkbox
@@ -53,13 +53,14 @@ const renderSubject = (
           onChange={(value) => {
             value
               ? handleAddFilter([
-                  { type: 'subject', value: subject.id, label: subject.label },
+                  {
+                    type: 'subject',
+                    value: subject.id,
+                    label: subject.label,
+                    index: index,
+                  },
                 ])
-              : handleRemoveFilter({
-                  type: 'subject',
-                  value: subject.id,
-                  label: subject.label,
-                });
+              : handleRemoveFilter(subject.id);
           }}
         />
         {subject.children &&
@@ -78,7 +79,7 @@ const renderSubject = (
 const renderTimeUnitFilters = (
   state: StartPageState,
   handleAddFilter: (filter: Filter[]) => void,
-  handleRemoveFilter: (filter: Filter) => void,
+  handleRemoveFilter: (filterId: string) => void,
 ) => {
   return Array.from(state.availableFilters.timeUnits)
     .sort((a, b) => b[1] - a[1])
@@ -95,12 +96,7 @@ const renderTimeUnitFilters = (
               ? handleAddFilter([
                   { type: 'timeUnit', value: key, label: key, index: i },
                 ])
-              : handleRemoveFilter({
-                  type: 'timeUnit',
-                  value: key,
-                  label: key,
-                  index: i,
-                });
+              : handleRemoveFilter(key);
           }}
         />
       </li>

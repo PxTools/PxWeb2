@@ -83,10 +83,10 @@ const StartPage = () => {
     dispatch({ type: ActionType.ADD_FILTER, payload: filter });
   }
 
-  async function handleRemoveFilter(filter: Filter) {
+  async function handleRemoveFilter(filterId: string) {
     dispatch({
       type: ActionType.REMOVE_FILTER,
-      payload: filter,
+      payload: filterId,
     });
   }
 
@@ -134,7 +134,7 @@ const StartPage = () => {
           };
         } else {
           const currentFilters = state.activeFilters.filter(
-            (filter) => filter.value !== action.payload.value,
+            (filter) => filter.value !== action.payload,
           );
           return {
             ...state,
@@ -212,13 +212,13 @@ const StartPage = () => {
                 {renderRemoveAllChips()}
                 {state.activeFilters.map((filter) => (
                   <Chips.Removable
-                    onClick={() => handleRemoveFilter(filter)}
+                    onClick={() => handleRemoveFilter(filter.value)}
                     aria-label={t('start_page.filter.remove_filter_aria', {
                       value: filter.value,
                     })}
                     key={filter.value}
                   >
-                    {filter.value}
+                    {filter.label}
                   </Chips.Removable>
                 ))}
               </Chips>
