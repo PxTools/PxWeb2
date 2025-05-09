@@ -11,7 +11,7 @@ export enum ActionType {
 }
 
 export type Filter = {
-  type: 'text' | 'category' | 'timeUnit' | 'path' | 'variableName' | 'subject';
+  type: 'timeUnit' | 'subject';
   value: string;
   label: string;
   index: number;

@@ -1,6 +1,8 @@
 import { vi } from 'vitest';
-import { getFullTable } from './tableHandler';
+import { getFullTable, shouldTableBeIncluded } from './tableHandler';
 import { Config } from './config/configType';
+import { type Filter } from '../pages/StartPage/StartPageTypes';
+import { Table } from 'packages/pxweb2-api-client/src';
 
 vi.mock('./config/getConfig', () => {
   return {
@@ -108,4 +110,93 @@ describe('getFullTable', () => {
     expect(tables.length).toBeGreaterThan(0);
     expect(tables[0].id).toBe('TAB4707');
   });
+});
+
+const testFilterMonthYear: Filter[] = [
+  { type: 'timeUnit', value: 'Monthly', index: 1, label: 'Monthly' },
+  { type: 'timeUnit', value: 'Annual', index: 2, label: 'Annual' },
+];
+
+const testFilterQuarter: Filter[] = [
+  { type: 'timeUnit', value: 'Quarterly', index: 0, label: 'Quarterly' },
+];
+
+const testFilterSubjectTimeAllow: Filter[] = [
+  { type: 'timeUnit', value: 'Annual', index: 0, label: 'Monthly' },
+  { type: 'subject', value: 'al', index: 1, label: 'Arbeid og lønn' },
+];
+
+const testFilterSubjectTimeDisallow: Filter[] = [
+  { type: 'timeUnit', value: 'Annual', index: 0, label: 'Monthly' },
+  {
+    type: 'subject',
+    value: 'brrftt',
+    index: 1,
+    label: 'Testfilter Som Ikke Skal Være Gyldig',
+  },
+];
+
+const tableYear: Table = {
+  id: '13618',
+  label:
+    '13618: Personer, etter arbeidsstyrkestatus, kjønn og alder. Bruddjusterte tall 2009-2022',
+  description: '',
+  updated: '2023-04-11T06:00:00Z',
+  firstPeriod: '2009',
+  lastPeriod: '2022',
+  category: 'public',
+  variableNames: [
+    'arbeidsstyrkestatus',
+    'kjønn',
+    'alder',
+    'statistikkvariabel',
+    'år',
+  ],
+  source: 'Statistisk sentralbyrå',
+  timeUnit: 'Annual',
+  paths: [
+    [
+      {
+        id: 'al',
+        label: 'Arbeid og lønn',
+      },
+    ],
+  ],
+  links: [
+    {
+      rel: 'self',
+      hreflang: 'no',
+      href: 'https://data.qa.ssb.no/api/pxwebapi/v2-beta/tables/13618?lang=no',
+    },
+    {
+      rel: 'metadata',
+      hreflang: 'no',
+      href: 'https://data.qa.ssb.no/api/pxwebapi/v2-beta/tables/13618/metadata?lang=no',
+    },
+    {
+      rel: 'data',
+      hreflang: 'no',
+      href: 'https://data.qa.ssb.no/api/pxwebapi/v2-beta/tables/13618/data?lang=no&outputFormat=json-stat2',
+    },
+  ],
+};
+
+test('Yearly filter should accept Yearly data', () => {
+  expect(shouldTableBeIncluded(tableYear, testFilterMonthYear)).toBe(true);
+});
+
+test('Quarterly filter should reject Yearly data', () => {
+  expect(shouldTableBeIncluded(tableYear, testFilterQuarter)).toBe(false);
+});
+
+test('Time and subject filter 1 should allow test data', () => {
+  expect(shouldTableBeIncluded(tableYear, testFilterSubjectTimeAllow)).toBe(
+    true,
+  );
+});
+
+test('Time and subject filter 2 should disallow test data', () => {
+  expect(shouldTableBeIncluded(tableYear, testFilterSubjectTimeDisallow)).toBe(
+    false,
+  );
 });

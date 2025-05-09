@@ -23,28 +23,8 @@ import {
   type StartPageState,
   ActionType,
 } from './StartPageTypes';
-import { getFullTable } from '../../util/tableHandler';
+import { getFullTable, shouldTableBeIncluded } from '../../util/tableHandler';
 import { getFilters, getSubjectTree } from '../../util/startPageFilters';
-
-function shouldTableBeIncluded(table: Table, filters: Filter[]) {
-  return filters.some((filter) => {
-    if (filter.type === 'text') {
-      return table.label?.toLowerCase().includes(filter.value.toLowerCase());
-    }
-    if (filter.type === 'variableName') {
-      return table.variableNames.includes(filter.value);
-    }
-    if (filter.type === 'timeUnit') {
-      return table?.timeUnit?.toLowerCase() === filter.value.toLowerCase();
-    }
-    if (filter.type === 'subject') {
-      return table?.paths?.flat().some((path) => {
-        return path.id === filter.value;
-      });
-    }
-    return false;
-  });
-}
 
 // TODO: Remove this function. We can not consider norwegian special cases in our code!
 function removeTableNumber(title: string): string {

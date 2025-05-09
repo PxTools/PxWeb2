@@ -15,9 +15,6 @@ interface FilterProps {
   handleResetFilter: () => void;
 }
 
-// MAYBE we can make a new component, which USES the original checkbox, but wraps it with a chevron, and allows children?? And takes in an indentation level? HM!
-//
-
 const renderSubjectTreeFilters = (
   state: StartPageState,
   handleAddFilter: (filter: Filter[]) => void,
