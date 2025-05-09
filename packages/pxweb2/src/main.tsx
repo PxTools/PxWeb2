@@ -11,19 +11,20 @@ import ErrorPage from './app/components/ErrorPage/ErrorPage';
 
 const router = createBrowserRouter([
   {
-    path: '/table',
-    element: <Navigate to="/table/tab638" replace={true} />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: '/',
-    element: <StartPage />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: '/table/:tableId',
-    element: <TableViewer />,
-    errorElement: <ErrorPage />,
+    path: '/:lang?',
+    children: [
+      { index: true, element: <StartPage />, errorElement: <ErrorPage /> },
+      {
+        path: 'table',
+        element: <Navigate to="/table/tab638" replace={true} />,
+        errorElement: <ErrorPage />,
+      },
+      {
+        path: 'table/:tableId',
+        element: <TableViewer />,
+        errorElement: <ErrorPage />,
+      },
+    ],
   },
 ]);
 
