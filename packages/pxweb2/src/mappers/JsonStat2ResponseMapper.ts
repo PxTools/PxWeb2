@@ -488,40 +488,25 @@ function CreateData(jsonData: Dataset, metadata: PxTableMetadata): PxTableData {
     isLoaded: false,
   };
 
+  const dataAndStatus = createDataAndStatus(jsonData);
+
   // Counter to keep track of index in json-stat2 value array
   const counter = { number: 0 };
 
   // Create data cube
-  const startTime = performance.now();
-
-  //  function createDataAndStatus(jsonData: Dataset): Record<string, DataCell> {
-  //     const dataAndStatus: Record<string, DataCell> = {};
-
-  //     jsonData.value?.map((value, index) => {
-  //       dataAndStatus[index] = {
-  //         value: value,
-  //         status: jsonData.status ? jsonData.status[index] : undefined,
-  //         presentation: undefined,
-  //       };
-  //     });
-  //     console.log('dataAndStatus', dataAndStatus);
-
-  //     return dataAndStatus;
-  //   }
-
-  const dataAndStatus = createDataAndStatus(jsonData);
-
-  //createCube(jsonData, metadata, data, [], 0, counter);
   createCube(dataAndStatus, metadata, data, [], 0, counter);
-  const endTime = performance.now();
-  console.log(`createCube execution time: ${endTime - startTime} ms`);
-
   data.variableOrder = jsonData.id; // Array containing the variable ids;
   data.isLoaded = true;
-
   return data;
 }
-
+/**
+ * Create a data and status object from the JSONStat2 dataset
+ * @param jsonData - The JSONStat2 dataset containing the data values.
+ * @returns A record where the keys are the indices and the values are DataCell objects.
+ * Each DataCell object contains the value, status, and presentation information.
+ * The status is optional and may be undefined if not present in the dataset.
+ * The presentation is also optional and may be undefined if not present in the dataset.
+ */
 export function createDataAndStatus(
   jsonData: Dataset,
 ): Record<string, DataCell> {
@@ -534,31 +519,9 @@ export function createDataAndStatus(
       presentation: undefined,
     };
   });
-  console.log('dataAndStatus', dataAndStatus);
-
   return dataAndStatus;
 }
-/**
- * Retrieves the data cell value from the JSON response based on the counter.
- * If no value array is present in the JSON response, it returns null.
- *
- * @param jsonData - The JSON-stat2 response containing the data values.
- * @param counter - The counter object used to track the current index in the json-stat2 value array.
- * @returns The data cell value or null if not found.
- */
-// function getDataCellValue(jsonData: Dataset, counter: counter): number | null {
-//   if (jsonData.value === undefined || jsonData.value === null) {
-//     return null;
-//   }
-//   return jsonData.value?.[counter.number];
-// }
-// function getDataCellStatues(jsonData: Dataset): Record<string, string> | null {
-//   console.log('jsonData.status', jsonData.status);
-//   if (jsonData.status === undefined || jsonData.status === null) {
-//     return null;
-//   }
-//   return jsonData.status;
-// }
+
 /**
  * Recursively creates a data cube for the PxTable based on the provided JSONStat2 dataset and metadata.
  *
@@ -584,7 +547,6 @@ export function createCube(
       const tempDatacell = valueAndStatus[counter.number];
       setPxTableData(data.cube, dimensions, tempDatacell);
       counter.number++;
-      console.log('valueAndStatus:', valueAndStatus);
     });
   } else {
     metadata.variables[dimensionIndex].values.forEach((value) => {
