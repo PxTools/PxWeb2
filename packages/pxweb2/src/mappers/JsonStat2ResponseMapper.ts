@@ -494,20 +494,20 @@ function CreateData(jsonData: Dataset, metadata: PxTableMetadata): PxTableData {
   // Create data cube
   const startTime = performance.now();
 
-  function createDataAndStatus(jsonData: Dataset): Record<string, DataCell> {
-    const dataAndStatus: Record<string, DataCell> = {};
+  //  function createDataAndStatus(jsonData: Dataset): Record<string, DataCell> {
+  //     const dataAndStatus: Record<string, DataCell> = {};
 
-    jsonData.value?.map((value, index) => {
-      dataAndStatus[index] = {
-        value: value,
-        status: jsonData.status ? jsonData.status[index] : undefined,
-        presentation: undefined,
-      };
-    });
-    console.log('dataAndStatus', dataAndStatus);
+  //     jsonData.value?.map((value, index) => {
+  //       dataAndStatus[index] = {
+  //         value: value,
+  //         status: jsonData.status ? jsonData.status[index] : undefined,
+  //         presentation: undefined,
+  //       };
+  //     });
+  //     console.log('dataAndStatus', dataAndStatus);
 
-    return dataAndStatus;
-  }
+  //     return dataAndStatus;
+  //   }
 
   const dataAndStatus = createDataAndStatus(jsonData);
 
@@ -522,6 +522,22 @@ function CreateData(jsonData: Dataset, metadata: PxTableMetadata): PxTableData {
   return data;
 }
 
+export function createDataAndStatus(
+  jsonData: Dataset,
+): Record<string, DataCell> {
+  const dataAndStatus: Record<string, DataCell> = {};
+
+  jsonData.value?.map((value, index) => {
+    dataAndStatus[index] = {
+      value: value,
+      status: jsonData.status ? jsonData.status[index] : undefined,
+      presentation: undefined,
+    };
+  });
+  console.log('dataAndStatus', dataAndStatus);
+
+  return dataAndStatus;
+}
 /**
  * Retrieves the data cell value from the JSON response based on the counter.
  * If no value array is present in the JSON response, it returns null.
@@ -554,7 +570,7 @@ function CreateData(jsonData: Dataset, metadata: PxTableMetadata): PxTableData {
  * @param counter - The counter object used to track the current index in the json-stat2 value array.
  */
 
-function createCube(
+export function createCube(
   valueAndStatus: Record<string, DataCell>,
   metadata: PxTableMetadata,
   data: PxTableData,
