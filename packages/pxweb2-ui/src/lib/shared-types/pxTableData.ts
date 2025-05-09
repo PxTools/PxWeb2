@@ -5,7 +5,7 @@ export type PxTableData = {
   /**
    * The cube data containing the values for each cell in the table.
    */
-  cube: PxData<DataCell>; // TODO: Maybe change number to a type DataCell with properties Value (number) and Status (string to handle ..)
+  cube: PxData<DataCell>;
 
   /**
    * The order of the variables in the table data.
