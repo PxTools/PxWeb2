@@ -18,5 +18,5 @@ export function problemMessage(
   return `${problem?.status}
           ${selectedTabId ? `TableId: ${selectedTabId} ` : ''}
           ${problem?.title}
-          ${problem?.type}`;
+           - ${problem?.type}`;
 }
