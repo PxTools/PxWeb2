@@ -19,7 +19,10 @@ describe('TableDataProvider', () => {
 
     const consoleErrorSpy = vi
       .spyOn(console, 'error')
-      .mockImplementation(() => {});
+      .mockImplementation(() => {
+        // Suppress console error during test
+        return undefined;
+      });
 
     expect(() => {
       render(
