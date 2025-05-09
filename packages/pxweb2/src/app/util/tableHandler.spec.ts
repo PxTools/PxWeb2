@@ -2,7 +2,7 @@ import { vi } from 'vitest';
 import { getFullTable } from './tableHandler';
 import { Config } from './config/configType';
 
-vi.mock('.config/getConfig', () => {
+vi.mock('./config/getConfig', () => {
   return {
     getConfig: vi.fn().mockReturnValue({
       language: {
