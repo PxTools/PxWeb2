@@ -186,11 +186,9 @@ const StartPage = () => {
   function renderTopicIcon(table: Table) {
     const topicId = table.paths?.[0]?.[0]?.id;
     if (topicId) {
-      return (
-        <TopicIcon topicId={topicId} />
-      );
+      return <TopicIcon topicId={topicId} />;
     }
-    return null
+    return null;
   }
 
   return (
