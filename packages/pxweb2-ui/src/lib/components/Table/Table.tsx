@@ -653,7 +653,6 @@ function fillData(
       table.metadata.decimals ??
       6;
 
-    console.log('table.data.cube:', table.data.cube);
     const dataValue = getPxTableData(table.data.cube, dimensions);
 
     tableRow.push(
@@ -665,9 +664,7 @@ function fillData(
             })}
         {dataValue?.status ?? ''}
       </td>,
-    ); // TODO: Handle null values
-    console.log('status i table=', dataValue?.status);
-    console.log('value i table=', dataValue?.value);
+    );
   }
 }
 /**
