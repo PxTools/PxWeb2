@@ -3,7 +3,7 @@ import cl from 'clsx';
 import {
   type StartPageState,
   type Filter,
-} from '../../pages/StartPage/tableTypes';
+} from '../../pages/StartPage/StartPageTypes';
 import styles from './FilterSidebar.module.scss';
 
 import { Checkbox, FilterCategory } from '@pxweb2/pxweb2-ui';

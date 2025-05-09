@@ -1,5 +1,5 @@
 import { Table } from '@pxweb2/pxweb2-api-client';
-import { StartPageFilters } from '../pages/StartPage/tableTypes';
+import { StartPageFilters } from '../pages/StartPage/StartPageTypes';
 
 export interface PathItem {
   id: string;

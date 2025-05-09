@@ -1,5 +1,5 @@
 import { type Table, TableService, OpenAPI } from '@pxweb2/pxweb2-api-client';
-import { getConfig } from '../../util/config/getConfig';
+import { getConfig } from './config/getConfig';
 
 export const getFullTable: Promise<Table[]> = new Promise((resolve, reject) => {
   const config = getConfig();

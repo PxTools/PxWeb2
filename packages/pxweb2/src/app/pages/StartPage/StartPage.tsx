@@ -22,8 +22,8 @@ import {
   type ReducerActionTypes,
   type StartPageState,
   ActionType,
-} from './tableTypes';
-import { getFullTable } from './tableHandler';
+} from './StartPageTypes';
+import { getFullTable } from '../../util/tableHandler';
 import { getFilters, getSubjectTree } from '../../util/startPageFilters';
 
 function shouldTableBeIncluded(table: Table, filters: Filter[]) {
