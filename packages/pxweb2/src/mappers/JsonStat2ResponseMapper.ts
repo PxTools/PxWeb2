@@ -20,6 +20,7 @@ import {
   Contact,
   ContentInfo,
   Note,
+  DataCell,
 } from '@pxweb2/pxweb2-ui';
 import { getLabelText } from '../app/util/utils';
 
@@ -487,31 +488,38 @@ function CreateData(jsonData: Dataset, metadata: PxTableMetadata): PxTableData {
     isLoaded: false,
   };
 
+  const dataAndStatus = createDataAndStatus(jsonData);
+
   // Counter to keep track of index in json-stat2 value array
   const counter = { number: 0 };
 
   // Create data cube
-  createCube(jsonData, metadata, data, [], 0, counter);
-
+  createCube(dataAndStatus, metadata, data, [], 0, counter);
   data.variableOrder = jsonData.id; // Array containing the variable ids;
   data.isLoaded = true;
-
   return data;
 }
-
 /**
- * Retrieves the data cell value from the JSON response based on the counter.
- * If no value array is present in the JSON response, it returns null.
- *
- * @param jsonData - The JSON-stat2 response containing the data values.
- * @param counter - The counter object used to track the current index in the json-stat2 value array.
- * @returns The data cell value or null if not found.
+ * Create a data and status object from the JSONStat2 dataset
+ * @param jsonData - The JSONStat2 dataset containing the data values.
+ * @returns A record where the keys are the indices and the values are DataCell objects.
+ * Each DataCell object contains the value, status, and presentation information.
+ * The status is optional and may be undefined if not present in the dataset.
+ * The presentation is also optional and may be undefined if not present in the dataset.
  */
-function getDataCellValue(jsonData: Dataset, counter: counter): number | null {
-  if (jsonData.value === undefined || jsonData.value === null) {
-    return null;
-  }
-  return jsonData.value?.[counter.number];
+export function createDataAndStatus(
+  jsonData: Dataset,
+): Record<string, DataCell> {
+  const dataAndStatus: Record<string, DataCell> = {};
+
+  jsonData.value?.map((value, index) => {
+    dataAndStatus[index] = {
+      value: value,
+      status: jsonData.status ? jsonData.status[index] : undefined,
+      presentation: undefined,
+    };
+  });
+  return dataAndStatus;
 }
 
 /**
@@ -524,8 +532,9 @@ function getDataCellValue(jsonData: Dataset, counter: counter): number | null {
  * @param dimensionIndex - The index of the current dimension being processed.
  * @param counter - The counter object used to track the current index in the json-stat2 value array.
  */
-function createCube(
-  jsonData: Dataset,
+
+export function createCube(
+  valueAndStatus: Record<string, DataCell>,
   metadata: PxTableMetadata,
   data: PxTableData,
   dimensions: Dimensions,
@@ -535,18 +544,15 @@ function createCube(
   if (dimensionIndex === metadata.variables.length - 1) {
     metadata.variables[dimensionIndex].values.forEach((value) => {
       dimensions[dimensionIndex] = value.code;
-      setPxTableData(
-        data.cube,
-        dimensions,
-        getDataCellValue(jsonData, counter),
-      );
+      const tempDatacell = valueAndStatus[counter.number];
+      setPxTableData(data.cube, dimensions, tempDatacell);
       counter.number++;
     });
   } else {
     metadata.variables[dimensionIndex].values.forEach((value) => {
       dimensions[dimensionIndex] = value.code;
       createCube(
-        jsonData,
+        valueAndStatus,
         metadata,
         data,
         dimensions,
