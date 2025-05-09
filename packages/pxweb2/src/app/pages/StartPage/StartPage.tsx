@@ -4,14 +4,7 @@ import cl from 'clsx';
 
 import styles from './StartPage.module.scss';
 import { useTranslation } from 'react-i18next';
-import {
-  Search,
-  TableCard,
-  Icon,
-  Spinner,
-  Alert,
-  Chips,
-} from '@pxweb2/pxweb2-ui';
+import { Search, TableCard, Spinner, Alert, Chips } from '@pxweb2/pxweb2-ui';
 import { type Table } from '@pxweb2/pxweb2-api-client';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import { Header } from '../../components/Header/Header';
@@ -24,6 +17,7 @@ import {
   ActionType,
 } from './tableTypes';
 import { getFullTable } from './tableHandler';
+import { TopicIcon } from './TopicIcon';
 
 function shouldTableBeIncluded(table: Table, filters: Filter[]) {
   return filters.some((filter) => {
@@ -189,6 +183,16 @@ const StartPage = () => {
     }
   }
 
+  function renderTopicIcon(table: Table) {
+    const topicId = table.paths?.[0]?.[0]?.id;
+    if (topicId) {
+      return (
+        <TopicIcon topicId={topicId} />
+      );
+    }
+    return null
+  }
+
   return (
     <AccessibilityProvider>
       <Header />
@@ -282,7 +286,7 @@ const StartPage = () => {
                     period={`${table.firstPeriod?.slice(0, 4)}–${table.lastPeriod?.slice(0, 4)}`}
                     frequency={`${table.timeUnit}`}
                     tableId={`${table.id}`}
-                    icon={<Icon iconName="Heart" />}
+                    icon={renderTopicIcon(table)}
                   />
                 </div>
               )}
