@@ -112,11 +112,9 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    */
   const initializeCodelists = React.useCallback(() => {
     if (!codelistsInitialized && variables.hasLoadedDefaultSelection) {
-      console.log('Initialize codelists!');
       const ids = variables.getUniqueIds();
       ids.forEach((id) => {
         const codelistId = variables.getSelectedCodelistById(id);
-        console.log(`Variable ID: ${id}, Codelist ID: ${codelistId}`);
         if (codelistId) {
           setVariableCodelists((prevCodelists) => ({
             ...prevCodelists,
@@ -830,9 +828,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     (variablesSelection: VariablesSelection): boolean => {
       let codelistChanged: boolean = false;
 
-      console.log({ variableCodelists });
-      console.log({ variablesSelection });
-
       variablesSelection.selection.forEach((selection) => {
         const currentCodelist = variableCodelists[selection.variableCode];
         if (currentCodelist !== selection.codeList) {
@@ -881,7 +876,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         };
 
         const codelistChanged = manageSelectedCodelists(variablesSelection);
-        console.log({ codelistChanged });
 
         // Check if we have accumulated data in the data cube and if it is valid. If not we cannot use it.
         const validAccData: boolean = isAccumulatedDataValid(
@@ -890,8 +884,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
           tableId,
           codelistChanged,
         );
-
-        console.log({ validAccData });
 
         if (validAccData) {
           await fetchWithValidAccData(
