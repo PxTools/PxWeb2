@@ -94,6 +94,7 @@ let number = 0;
  * @returns The next sequential number.
  */
 function getNumber(): DataCell {
+  number = number + 1;
   const dataCell: DataCell = {
     value: number,
     status: '',
