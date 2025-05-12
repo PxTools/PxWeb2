@@ -23,6 +23,7 @@ export const LanguageSwitcher = () => {
                   language.shorthand,
                   config.language.supportedLanguages,
                   config.language.fallbackLanguage,
+                  config.language.showDefaultLanguageInPath,
                 ),
               }}
               key={language.shorthand}
