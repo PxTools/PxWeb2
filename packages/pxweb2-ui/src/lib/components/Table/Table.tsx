@@ -657,11 +657,14 @@ function fillData(
 
     tableRow.push(
       <td key={getNewKey()} headers={headers}>
-        {t(decimalFormats[numberOfDecimals] || 'number.simple_number', {
-          value: dataValue ?? '',
-        })}
+        {dataValue?.value === null || dataValue?.value === undefined
+          ? ''
+          : t(decimalFormats[numberOfDecimals] || 'number.simple_number', {
+              value: dataValue.value,
+            })}
+        {dataValue?.status ?? ''}
       </td>,
-    ); // TODO: Handle null values
+    );
   }
 }
 /**
