@@ -27,7 +27,7 @@ export const WithoutHeading: Story = {
   render: (args) => <InformationCard {...args} />,
 };
 
-export const WitHeading: Story = {
+export const WithHeading: Story = {
   args: {
     headingText: 'Information card with header level 1',
     icon: 'Book',
