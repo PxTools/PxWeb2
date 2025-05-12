@@ -11,7 +11,7 @@ export function SymbolExplanationNotes({ notes }: SymbolExplanationNotesProps) {
     'presentation_page.main_content.about_table.footnotes.symbol_explanation_heading',
   );
 
- return (
+  return (
     <InformationCard icon="Book" headingText={heading} headingLevel="1">
       <div
         style={{
@@ -24,9 +24,7 @@ export function SymbolExplanationNotes({ notes }: SymbolExplanationNotesProps) {
         }}
       >
         {Object.entries(notes).map(([key, value]) => (
-          <div key={key}>
-            {value}
-          </div>
+          <div key={key}>{value}</div>
         ))}
       </div>
     </InformationCard>
