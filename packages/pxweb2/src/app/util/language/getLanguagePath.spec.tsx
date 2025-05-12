@@ -8,7 +8,6 @@ describe('getLanguagePath', () => {
   ];
   const fallbackLanguage = 'en';
 
-  // Tests with showDefaultLanguageInPath = false (original behavior)
   describe('when showDefaultLanguageInPath is false', () => {
     it('should return the correct path when pathname starts with a language code and target is fallback', () => {
       const pathname = '/no/some/path';
@@ -101,7 +100,6 @@ describe('getLanguagePath', () => {
     });
   });
 
-  // New tests for showDefaultLanguageInPath = true
   describe('when showDefaultLanguageInPath is true', () => {
     it('should include fallback language in path when target is fallback', () => {
       const pathname = '/no/some/path';
