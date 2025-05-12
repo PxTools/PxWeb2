@@ -8,24 +8,64 @@ import { validateConfig } from './app/util/validate';
 import { AppProvider } from './app/context/AppProvider';
 import StartPage from './app/pages/StartPage/StartPage';
 import ErrorPage from './app/components/ErrorPage/ErrorPage';
+import { getConfig } from './app/util/config/getConfig';
+
+const config = getConfig();
+const showDefaultLanguageInPath =
+  config.language.showDefaultLanguageInPath || true;
+
+const childRoutes = [
+  { index: true, element: <StartPage />, errorElement: <ErrorPage /> },
+  {
+    path: 'table',
+    element: showDefaultLanguageInPath ? (
+      <Navigate to="/table/tab638" replace={true} />
+    ) : (
+      <Navigate
+        to={`/${config.language.defaultLanguage}/table/tab638`}
+        replace={true}
+      />
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: 'table/:tableId',
+    element: <TableViewer />,
+    errorElement: <ErrorPage />,
+  },
+];
+const routingWithDefaultLanguageInURL = {
+  path: '/',
+  errorElement: <ErrorPage />,
+  children: [
+    {
+      index: true,
+      element: (
+        <Navigate to={`/${config.language.defaultLanguage}`} replace={true} />
+      ),
+    },
+    { path: '/:lang', children: childRoutes },
+    {
+      path: '/table/:tableid',
+      element: (
+        <Navigate
+          to={`/${config.language.defaultLanguage}/table/tab638`}
+          replace={true}
+        />
+      ),
+    },
+    { path: '/*', element: <div>404 Not found</div> },
+  ],
+};
+const routingWithoutDefaultLanguageInURL = {
+  path: '/:lang?',
+  children: childRoutes,
+};
 
 const router = createBrowserRouter([
-  {
-    path: '/:lang?',
-    children: [
-      { index: true, element: <StartPage />, errorElement: <ErrorPage /> },
-      {
-        path: 'table',
-        element: <Navigate to="/table/tab638" replace={true} />,
-        errorElement: <ErrorPage />,
-      },
-      {
-        path: 'table/:tableId',
-        element: <TableViewer />,
-        errorElement: <ErrorPage />,
-      },
-    ],
-  },
+  showDefaultLanguageInPath
+    ? routingWithDefaultLanguageInURL
+    : routingWithoutDefaultLanguageInURL,
 ]);
 
 const root = ReactDOM.createRoot(
