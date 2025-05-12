@@ -42,21 +42,10 @@
   padding-top: var(--spacing-2, 2px);
   padding-bottom: var(--spacing-2, 4px);
   align-self: stretch;
-  color: var(--color-text-default, #162327);
-  font-family: PxWeb-font, sans-serif;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 1.75rem;
-  letter-spacing: 0.1px;
 }
 
 .child-wrapper {
   padding-top: var(--spacing-2, 2px);
-  color: var(--color-text-default, #162327);
-  font-family: PxWeb-font, sans-serif;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 1.75rem;
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;

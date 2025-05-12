@@ -2,7 +2,7 @@ import cl from 'clsx';
 import React from 'react';
 import styles from './InformationCard.module.scss';
 
-import { Heading, Icon, IconProps } from '@pxweb2/pxweb2-ui';
+import { BodyLong, Heading, Icon, IconProps } from '@pxweb2/pxweb2-ui';
 
 export interface InformationCardProps {
   icon: IconProps['iconName'];
@@ -32,7 +32,7 @@ export function InformationCard({
             {headingText}
           </Heading>
         )}
-        <div className={styles['child-wrapper']}>{children}</div>
+          <BodyLong className={styles['child-wrapper']} size='medium'>{children}</BodyLong>
       </div>
     </div>
   );
