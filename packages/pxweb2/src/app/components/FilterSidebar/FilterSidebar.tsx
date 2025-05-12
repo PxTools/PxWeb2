@@ -107,7 +107,9 @@ export const FilterSidebar: React.FC<FilterProps> = ({
 }) => {
   return (
     <div className={styles.sideBar}>
-      <Heading className={cl(styles.filterHeading)} size='medium' level='2'>Filter</Heading>
+      <Heading className={cl(styles.filterHeading)} size="medium" level="2">
+        Filter
+      </Heading>
       <div>
         <FilterCategory header="Emne">
           <ul className={styles.filterList}>
