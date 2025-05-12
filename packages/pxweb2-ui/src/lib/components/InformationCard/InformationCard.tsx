@@ -32,7 +32,9 @@ export function InformationCard({
             {headingText}
           </Heading>
         )}
-          <BodyLong className={styles['child-wrapper']} size='medium'>{children}</BodyLong>
+        <BodyLong className={styles['child-wrapper']} size="medium">
+          {children}
+        </BodyLong>
       </div>
     </div>
   );
