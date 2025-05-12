@@ -12,6 +12,7 @@ export enum ActionType {
 export type Filter = {
   type: 'text' | 'category' | 'timeUnit' | 'path' | 'variableName';
   value: string;
+  index: number;
 };
 
 export type StartPageState = {

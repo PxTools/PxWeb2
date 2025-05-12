@@ -41,7 +41,12 @@
   },
   "start_page": {
     "header": "Välkommen till appen!",
-    "welcome_trans_test": "Välkommen till <1>appen</1> för PxWeb 2.0!"
+    "welcome_trans_test": "Välkommen till <1>appen</1> för PxWeb 2.0!",
+    "filter": {
+      "header": "Filtrera",
+      "remove_all_filter": "Ta bort alla filter",
+      "remove_filter_aria": "Slett {{value}}"
+    }
   },
   "presentation_page": {
     "header": {
