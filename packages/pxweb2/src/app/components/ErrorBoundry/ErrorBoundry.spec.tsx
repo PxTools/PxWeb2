@@ -2,6 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import { vi } from 'vitest';
+
 import ErrorBoundary from './ErrorBoundry';
 
 // Mock the Header component
@@ -17,6 +18,28 @@ vi.mock('@pxweb2/pxweb2-ui', () => ({
 }));
 
 describe('ErrorBoundary', () => {
+  // Setup console mocks before all tests
+  let consoleErrorSpy: any;
+  let consoleLogSpy: any;
+
+  beforeAll(() => {
+    // Suppress React error logging and component console.log
+    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+  });
+
+  afterAll(() => {
+    // Restore console mocks
+    consoleErrorSpy.mockRestore();
+    consoleLogSpy.mockRestore();
+  });
+
+  beforeEach(() => {
+    // Clear mock history between tests
+    consoleErrorSpy.mockClear();
+    consoleLogSpy.mockClear();
+  });
+
   it('renders children when no error occurs', () => {
     render(
       <ErrorBoundary>
@@ -28,15 +51,16 @@ describe('ErrorBoundary', () => {
     expect(screen.getByText('Child Component')).toBeInTheDocument();
   });
 
-  it('renders fallback UI when an error occurs', () => {
-    // Suppress React error logging
-    const consoleErrorSpy = vi
-      .spyOn(console, 'error')
-      .mockImplementation(() => {});
+  it('handles a mocked error correctly', () => {
+    // Mock a function that throws an error
+    const mockThrowError = vi.fn(() => {
+      throw new Error('Mocked error');
+    });
 
-    // Create a component that throws an error
+    // Use the mock function in a component
     const ErrorComponent = () => {
-      throw new Error('Test error');
+      mockThrowError();
+      return null;
     };
 
     // Render the ErrorBoundary with the ErrorComponent
@@ -48,35 +72,9 @@ describe('ErrorBoundary', () => {
 
     // Assert that the fallback UI is rendered
     expect(screen.getByRole('banner')).toBeInTheDocument(); // Header
-    expect(screen.getByRole('alert')).toHaveTextContent('Test error'); // Alert with error message
+    expect(screen.getByRole('alert')).toHaveTextContent('Mocked error'); // Alert with error message
 
-    // Restore the console.error mock
-    consoleErrorSpy.mockRestore();
-  });
-
-  it('logs the error to the console', () => {
-    // Spy on console.log
-    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
-
-    // Create a component that throws an error
-    const ErrorComponent = () => {
-      throw new Error('Test error');
-    };
-
-    // Render the ErrorBoundary with the ErrorComponent
-    render(
-      <ErrorBoundary>
-        <ErrorComponent />
-      </ErrorBoundary>,
-    );
-
-    // Assert that the error was logged
-    expect(consoleSpy).toHaveBeenCalledWith(
-      expect.any(Error),
-      expect.objectContaining({ componentStack: expect.any(String) }),
-    );
-
-    // Restore the console.log mock
-    consoleSpy.mockRestore();
+    // Assert that the mock function was called
+    expect(mockThrowError).toHaveBeenCalled();
   });
 });

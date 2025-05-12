@@ -4,20 +4,11 @@ import '@testing-library/jest-dom/vitest';
 
 import { VariableNotes } from './VariableNotes';
 import { variableNotes } from './noteCollection';
+import { dummyNotes } from './notesDummyData';
 
 describe('VariableNotes Component', () => {
-  const mockVariableNotes: variableNotes = {
-    variableName: 'TestVariable',
-    variableCode: 'testCode',
-    notes: ['Note 1', 'Note 2'],
-    valueNotes: [
-      {
-        valueCode: 'valueCode1',
-        valueName: 'Value 1',
-        notes: ['Value Note 1', 'Value Note 2'],
-      },
-    ],
-  };
+  const mockVariableNotes: variableNotes =
+    dummyNotes.nonMandatoryNotes.variableNotes[0];
 
   it('renders a single note when showVariableName is false and there is only one note', () => {
     render(
@@ -40,16 +31,20 @@ describe('VariableNotes Component', () => {
         showVariableName={true}
       />,
     );
-    expect(screen.getByText('TestVariable')).toBeInTheDocument();
-    expect(screen.getByText('Note 1')).toBeInTheDocument();
-    expect(screen.getByText('Note 2')).toBeInTheDocument();
+    expect(screen.getByText('Variable 1')).toBeInTheDocument();
+    expect(
+      screen.getByText('This is a note for Variable 1.'),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText('This is another note for Variable 1.'),
+    ).toBeInTheDocument();
   });
 
   it('renders value notes as nested lists when valueNotes are present', () => {
     render(<VariableNotes variableNotes={mockVariableNotes} />);
-    expect(screen.getByText('Value 1')).toBeInTheDocument();
-    expect(screen.getByText('Value Note 1')).toBeInTheDocument();
-    expect(screen.getByText('Value Note 2')).toBeInTheDocument();
+    expect(screen.getByText('Value 2')).toBeInTheDocument();
+    expect(screen.getByText('Note for Value 2')).toBeInTheDocument();
+    expect(screen.getByText('Another note for Value 2')).toBeInTheDocument();
   });
 
   it('does not render a heading when showVariableName is false', () => {
@@ -59,7 +54,7 @@ describe('VariableNotes Component', () => {
         showVariableName={false}
       />,
     );
-    expect(screen.queryByText('TestVariable')).not.toBeInTheDocument();
+    expect(screen.queryByText('Variable 1')).not.toBeInTheDocument();
   });
 
   it('renders an empty component when notes and valueNotes are empty', () => {
@@ -68,7 +63,9 @@ describe('VariableNotes Component', () => {
         variableNotes={{ ...mockVariableNotes, notes: [], valueNotes: [] }}
       />,
     );
-    expect(screen.queryByText('Note 1')).not.toBeInTheDocument();
-    expect(screen.queryByText('Value 1')).not.toBeInTheDocument();
+    expect(screen.queryByText('Note for Value 2')).not.toBeInTheDocument();
+    expect(
+      screen.queryByText('Another note for Value 2'),
+    ).not.toBeInTheDocument();
   });
 });
