@@ -6,7 +6,7 @@ import {
 } from '../../pages/StartPage/StartPageTypes';
 import styles from './FilterSidebar.module.scss';
 
-import { Checkbox, FilterCategory } from '@pxweb2/pxweb2-ui';
+import { Checkbox, FilterCategory, Heading } from '@pxweb2/pxweb2-ui';
 import { PathItem } from '../../util/startPageFilters';
 interface FilterProps {
   state: StartPageState;
@@ -107,12 +107,9 @@ export const FilterSidebar: React.FC<FilterProps> = ({
 }) => {
   return (
     <div className={styles.sideBar}>
-      <h2 className={cl(styles['heading-small'])}>Filter</h2>
+      <Heading className={cl(styles.filterHeading)} size='medium' level='2'>Filter</Heading>
       <div>
-        <div className={cl(styles['heading-medium'], styles.filterHeading)}>
-          Filter
-        </div>
-        <FilterCategory header="Emner">
+        <FilterCategory header="Emne">
           <ul className={styles.filterList}>
             {renderSubjectTreeFilters(
               state,
