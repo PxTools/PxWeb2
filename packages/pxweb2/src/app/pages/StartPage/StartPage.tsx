@@ -18,6 +18,7 @@ import {
 } from './tableTypes';
 import { getFullTable } from './tableHandler';
 import { TopicIcon } from './TopicIcon';
+import useApp from '../../context/useApp';
 
 function shouldTableBeIncluded(table: Table, filters: Filter[]) {
   return filters.some((filter) => {
@@ -69,6 +70,8 @@ const initialState: StartPageState = {
 const StartPage = () => {
   const { t } = useTranslation();
   const [state, dispatch] = useReducer(reducer, initialState);
+  const { isMobile, isTablet } = useApp();
+  const isSmallScreen = isTablet === true || isMobile === true;
 
   function handleResetFilter(tables: Table[]) {
     dispatch({ type: ActionType.RESET_FILTERS, payload: tables });
@@ -185,8 +188,9 @@ const StartPage = () => {
 
   function renderTopicIcon(table: Table) {
     const topicId = table.paths?.[0]?.[0]?.id;
+    const size = isSmallScreen ? 'small' : 'medium';
     if (topicId) {
-      return <TopicIcon topicId={topicId} />;
+      return <TopicIcon topicId={topicId} size={size} />;
     }
     return null;
   }

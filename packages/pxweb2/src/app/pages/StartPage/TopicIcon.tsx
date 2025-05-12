@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 
 type Props = {
   topicId?: string;
+  size?: 'small' | 'medium';
 };
 
-const ICON_MAP_URL = '/icons/topicIcons/subjectIconMap.json';
-const ICON_BASE_PATH = '/icons/topicIcons/';
+const ICON_MAP_URL = '/icons/topicIconMap.json';
+const ICON_BASE_PATH = '/icons/topic/';
+const ICON_SMALL_BASE_PATH = '/icons/topic/small/';
 
-export const TopicIcon: React.FC<Props> = ({ topicId }) => {
+export const TopicIcon: React.FC<Props> = ({ topicId, size }) => {
   const [iconMap, setIconMap] = useState<Record<string, string>>({});
 
   useEffect(() => {
@@ -30,10 +32,8 @@ export const TopicIcon: React.FC<Props> = ({ topicId }) => {
 
   return (
     <img
-      src={`${ICON_BASE_PATH}${iconMap[topicId]}`}
+      src={`${size === 'small' ? ICON_SMALL_BASE_PATH : ICON_BASE_PATH}${iconMap[topicId]}`}
       alt=""
-      width={32}
-      height={32}
     />
   );
 };
