@@ -25,7 +25,7 @@ export function InformationCard({
       <div className={styles['content-wrapper']}>
         {headingText && (
           <Heading
-            size="medium"
+            size="small"
             level={headingLevel}
             className={cl(styles['heading-wrapper'])}
           >
