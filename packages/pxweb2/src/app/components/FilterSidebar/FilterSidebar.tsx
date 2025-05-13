@@ -23,8 +23,8 @@ const renderSubjectTreeFilters = (
   return (
     <>
       {renderSubject(
-        state,
         state.availableFilters.subjectTree,
+        state,
         handleAddFilter,
         handleRemoveFilter,
       )}
@@ -33,20 +33,24 @@ const renderSubjectTreeFilters = (
 };
 
 const renderSubject = (
+  subjects: PathItem[],
   state: StartPageState,
-  filters: PathItem[],
   handleAddFilter: (filter: Filter[]) => void,
   handleRemoveFilter: (filterId: string) => void,
 ) => {
-  return filters.map((subject, index) => {
+  return subjects.map((subject, index) => {
+    const isActive = state.activeFilters.some(
+      (filter) => filter.type === 'subject' && filter.value === subject.id
+    );
+    const count = subject.count ?? 0;
+
     return (
       <div key={subject.id} className={styles.subjectToggle}>
         <Checkbox
           id={subject.id}
-          text={subject.label + (subject.count && ` (${subject.count})`)}
-          value={state.activeFilters.some((filter) => {
-            return filter.type === 'subject' && filter.value === subject.id;
-          })}
+          text={`${subject.label} (${count})`}
+          value={isActive}
+          subtle={!isActive && count === 0}
           onChange={(value) => {
             value
               ? handleAddFilter([
@@ -61,13 +65,7 @@ const renderSubject = (
           }}
         />
         {subject.children &&
-          // We're doing recursion
-          renderSubject(
-            state,
-            subject.children,
-            handleAddFilter,
-            handleRemoveFilter,
-          )}
+          renderSubject(subject.children, state, handleAddFilter, handleRemoveFilter)}
       </div>
     );
   });
