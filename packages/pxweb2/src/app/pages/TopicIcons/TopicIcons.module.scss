@@ -1,0 +1,30 @@
+.iconGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  padding: 2rem;
+}
+
+.iconItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 200px;
+}
+
+.iconWrapper {
+  background-color: #dbebeb;
+  min-width: 72px;
+  height: 72px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: var(--px-border-radius-medium);
+}
+
+.iconLabel {
+  margin-top: 1rem;
+  font-size: 1rem;
+  text-align: center;
+  word-break: break-word;
+}

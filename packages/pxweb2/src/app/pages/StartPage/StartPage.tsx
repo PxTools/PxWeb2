@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from 'react';
+import { useEffect, useReducer } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import cl from 'clsx';
 
@@ -17,6 +17,7 @@ import {
   ActionType,
 } from './tableTypes';
 import { getFullTable } from './tableHandler';
+import { useTopicIcons } from '../../util/hooks/useTopicIcons';
 import useApp from '../../context/useApp';
 
 function shouldTableBeIncluded(table: Table, filters: Filter[]) {
@@ -69,13 +70,9 @@ const initialState: StartPageState = {
 const StartPage = () => {
   const { t } = useTranslation();
   const [state, dispatch] = useReducer(reducer, initialState);
-  const [topicIconComponents, setTopicIconComponents] = useState<
-    Record<string, { small: React.ReactNode; medium: React.ReactNode }>
-  >({});
-  const ICON_MAP_URL = '/icons/topicIconMap.json';
-  const ICON_BASE_PATH = '/icons/topic';
   const { isMobile, isTablet } = useApp();
   const isSmallScreen = isTablet === true || isMobile === true;
+  const topicIconComponents = useTopicIcons();
 
   function handleResetFilter(tables: Table[]) {
     dispatch({ type: ActionType.RESET_FILTERS, payload: tables });
@@ -175,26 +172,6 @@ const StartPage = () => {
       });
   }, []);
 
-  useEffect(() => {
-    fetch(ICON_MAP_URL)
-      .then((res) => res.json())
-      .then((data) => {
-        const components: Record<
-          string,
-          { small: React.ReactNode; medium: React.ReactNode }
-        > = {};
-        //src={`ICON_BASE_PATH}/${file}`}
-        Object.entries(data).forEach(([id, file]) => {
-          components[id] = {
-            small: <img src={`${ICON_BASE_PATH}/${file}`} alt="" />,
-            medium: <img src={`${ICON_BASE_PATH}/small/${file}`} alt="" />,
-          };
-        });
-        setTopicIconComponents(components);
-      })
-      .catch((err) => console.error('Kunne ikke laste ikon-mapping:', err));
-  }, []);
-
   function renderRemoveAllChips() {
     if (state.activeFilters.length >= 2) {
       return (
@@ -214,12 +191,10 @@ const StartPage = () => {
     const topicId = table.paths?.[0]?.[0]?.id;
     const size = isSmallScreen ? 'small' : 'medium';
 
-    if (!topicId) {
-      return null;
-    }
-
-    const icon = topicIconComponents[topicId]?.[size];
-    return icon || null;
+    return topicId
+      ? (topicIconComponents.find((icon) => icon.id === topicId)?.[size] ??
+          null)
+      : null;
   }
 
   return (
