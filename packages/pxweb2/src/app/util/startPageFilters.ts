@@ -82,7 +82,7 @@ export function getSubjectTreeFromAllTables(allTables: Table[]): PathItem[] {
   return getSubjectTree(allTables);
 }
 
-export function updateSubjectCounts(
+export function updateSubjectTreeCounts(
   originalTree: PathItem[],
   filteredTables: Table[],
 ): PathItem[] {

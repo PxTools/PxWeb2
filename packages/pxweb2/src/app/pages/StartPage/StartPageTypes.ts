@@ -20,10 +20,14 @@ export type Filter = {
 export type StartPageState = {
   availableTables: Table[];
   filteredTables: Table[];
-  availableFilters: StartPageFilters;
+  availableFilters: {
+    subjectTree: PathItem[];
+    timeUnits: Map<string, number>;
+  };
   activeFilters: Filter[];
   loading: boolean;
   error: string;
+  originalSubjectTree: PathItem[];
 };
 
 export type ReducerActionTypes =
