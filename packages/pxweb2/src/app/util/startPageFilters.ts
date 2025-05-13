@@ -52,7 +52,7 @@ function getAllPath(tables: Table[]): PathItem[][] {
   return allPaths;
 }
 
-function getTimeUnits(tables: Table[]) {
+export function getTimeUnits(tables: Table[]): Map<string, number> {
   const timeUnits = new Map<string, number>();
   tables.forEach((table) => {
     if (table.timeUnit) {
@@ -72,4 +72,8 @@ export function getFilters(tables: Table[]): StartPageFilters {
   filters.subjectTree = getSubjectTree(tables);
 
   return filters;
+}
+
+export function getSubjectTreeFromAllTables(allTables: Table[]): PathItem[] {
+  return getSubjectTree(allTables);
 }
