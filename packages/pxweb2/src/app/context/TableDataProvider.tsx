@@ -210,13 +210,32 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       }
     }
 
+    // // Get the right codelists for the variables
+    // notLoadedVarSelection.selection.forEach((diffSelection) => {
+    //   const selection = variablesSelection.selection.find(
+    //     (sel) => sel.variableCode === diffSelection.variableCode,
+    //   );
+    //   if (selection?.codeList) {
+    //     diffSelection.codeList = selection.codeList;
+    //   }
+    // });
     // Get the right codelists for the variables
-    notLoadedVarSelection.selection.forEach((diffSelection) => {
-      const selection = variablesSelection.selection.find(
-        (sel) => sel.variableCode === diffSelection.variableCode,
-      );
-      if (selection?.codeList) {
-        diffSelection.codeList = selection.codeList;
+    variablesSelection.selection.forEach((varSel) => {
+      if (varSel.codeList) {
+        const diffSelection = notLoadedVarSelection.selection.find(
+          (sel) => sel.variableCode === varSel.variableCode,
+        );
+        if (diffSelection) {
+          diffSelection.codeList = varSel.codeList;
+        } else {
+          // All variables that have codelists must be present in the API-call.
+          // If not present, we need to add them to the notLoadedVarSelection.
+          notLoadedVarSelection.selection.push({
+            variableCode: varSel.variableCode,
+            valueCodes: [],
+            codeList: varSel.codeList,
+          });
+        }
       }
     });
 
