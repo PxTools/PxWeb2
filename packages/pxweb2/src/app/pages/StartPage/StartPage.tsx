@@ -113,11 +113,11 @@ const StartPage = () => {
           filteredTables,
           availableFilters: {
             subjectTree: activeTypes.has('subject')
-              ? state.availableFilters.subjectTree 
-              : getSubjectTree(filteredTables), 
+              ? state.availableFilters.subjectTree
+              : getSubjectTree(filteredTables),
 
             timeUnits: activeTypes.has('timeUnit')
-              ? state.availableFilters.timeUnits 
+              ? state.availableFilters.timeUnits
               : getTimeUnits(filteredTables),
           },
         };
