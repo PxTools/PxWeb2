@@ -87,36 +87,6 @@ function addValueToNewVariable(
   return newSelectedValues;
 }
 
-// async function getCodeListValues(
-//   id: string,
-//   lang: string,
-//   valueDisplayType: ValueDisplayType,
-// ): Promise<Value[]> {
-//   let values: Value[] = [];
-
-//   await TableService.getTableCodeListById(id, lang)
-//     .then((response) => {
-//       response.values.forEach((value) => {
-//         values = [
-//           ...values,
-//           {
-//             code: value.code,
-
-//             // Set the label text based on the value display type
-//             label: getLabelText(valueDisplayType, value.code, value.label),
-//           },
-//         ];
-//       });
-//     })
-//     .catch((error) => {
-//       throw new Error(
-//         'Could not get values for code list: ' + id + ' ' + error,
-//       );
-//     });
-
-//   return values;
-// }
-
 async function getCodeList(
   id: string,
   lang: string,
@@ -468,8 +438,7 @@ export function Selection({
 
     setIsFadingVariableList(true);
 
-    //  Get the values for the chosen code list
-    //    const valuesForChosenCodeList: Value[] = await getCodeListValues(
+    //  Get the selected codelist
     const newCodelist: CodeList = await getCodeList(
       newMappedSelectedCodeList.value,
       lang,
@@ -480,7 +449,6 @@ export function Selection({
       })
       .catch((apiError: ApiError) => {
         setErrorMsg(problemMessage(apiError, selectedTabId));
-        //return [];
         return {
           id: '',
           label: '',
@@ -492,7 +460,6 @@ export function Selection({
         console.error(
           `Could not get values for code list: ${newMappedSelectedCodeList.value} ${error}`,
         );
-        //return [];
         return {
           id: '',
           label: '',
@@ -501,9 +468,7 @@ export function Selection({
         };
       });
 
-    // UPDATE VARIABLE!!!!
-    console.log({ newCodelist });
-    console.log({ currentVariableMetadata });
+    // Update variable mandatory according to the new codelist
     if (
       newCodelist.mandatory != undefined &&
       newCodelist.mandatory != currentVariableMetadata.mandatory
@@ -511,7 +476,6 @@ export function Selection({
       currentVariableMetadata.mandatory = newCodelist.mandatory;
     }
 
-    // if (valuesForChosenCodeList.length < 1) {
     if (newCodelist.values.length < 1) {
       return;
     }
@@ -533,7 +497,6 @@ export function Selection({
             continue;
           }
 
-          // newPxTableMetaToRender.variables[i].values = valuesForChosenCodeList;
           newPxTableMetaToRender.variables[i].values = newCodelist.values;
         }
       });
