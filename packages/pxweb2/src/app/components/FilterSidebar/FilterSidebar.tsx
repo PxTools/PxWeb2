@@ -40,7 +40,7 @@ const renderSubject = (
 ) => {
   return subjects.map((subject, index) => {
     const isActive = state.activeFilters.some(
-      (filter) => filter.type === 'subject' && filter.value === subject.id
+      (filter) => filter.type === 'subject' && filter.value === subject.id,
     );
     const count = subject.count ?? 0;
 
@@ -65,7 +65,12 @@ const renderSubject = (
           }}
         />
         {subject.children &&
-          renderSubject(subject.children, state, handleAddFilter, handleRemoveFilter)}
+          renderSubject(
+            subject.children,
+            state,
+            handleAddFilter,
+            handleRemoveFilter,
+          )}
       </div>
     );
   });

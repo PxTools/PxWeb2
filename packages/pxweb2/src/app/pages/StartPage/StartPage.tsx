@@ -29,7 +29,7 @@ import {
   getSubjectTree,
   getTimeUnits,
   updateSubjectCounts,
-  getSubjectTreeFromAllTables
+  getSubjectTreeFromAllTables,
 } from '../../util/startPageFilters';
 
 // TODO: Remove this function. We can not consider norwegian special cases in our code!
@@ -116,7 +116,10 @@ const StartPage = () => {
           availableFilters: {
             subjectTree: activeTypes.has('subject')
               ? state.availableFilters.subjectTree
-              : updateSubjectCounts(getSubjectTreeFromAllTables(state.availableTables), filteredTables),
+              : updateSubjectCounts(
+                  getSubjectTreeFromAllTables(state.availableTables),
+                  filteredTables,
+                ),
 
             timeUnits: activeTypes.has('timeUnit')
               ? state.availableFilters.timeUnits
@@ -137,7 +140,10 @@ const StartPage = () => {
             activeFilters: [],
             filteredTables: state.availableTables,
             availableFilters: {
-              subjectTree: updateSubjectCounts(getSubjectTreeFromAllTables(state.availableTables), filteredTables),
+              subjectTree: updateSubjectCounts(
+                getSubjectTreeFromAllTables(state.availableTables),
+                filteredTables,
+              ),
               timeUnits: getTimeUnits(state.availableTables),
             },
           };
