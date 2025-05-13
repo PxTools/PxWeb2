@@ -43,7 +43,7 @@ const renderSubject = (
       <div key={subject.id} className={styles.subjectToggle}>
         <Checkbox
           id={subject.id}
-          text={subject.label}
+          text={subject.label + (subject.count && ` (${subject.count})`)}
           value={state.activeFilters.some((filter) => {
             return filter.type === 'subject' && filter.value === subject.id;
           })}

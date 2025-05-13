@@ -25,32 +25,52 @@ describe('Test function organizePaths', () => {
       {
         id: 'al',
         label: 'Arbeid og lønn',
+        count: 2,
         children: [
           {
             id: 'al03',
             label: 'Arbeidsledighet',
+            count: 1,
             children: [
-              { id: 'aku', label: 'Arbeidskraftundersøkelsen', children: [] },
+              {
+                id: 'aku',
+                label: 'Arbeidskraftundersøkelsen',
+                count: 1,
+                children: [],
+              },
             ],
           },
           {
             id: 'al06',
             label: 'Sysselsetting',
+            count: 1,
             children: [
-              { id: 'aku', label: 'Arbeidskraftundersøkelsen', children: [] },
+              {
+                id: 'aku',
+                label: 'Arbeidskraftundersøkelsen',
+                count: 1,
+                children: [],
+              },
             ],
           },
         ],
       },
       {
         id: 'in',
+        count: 1,
         label: 'Innvandring og innvandrere',
         children: [
           {
             id: 'in01',
             label: 'Arbeid og lønn',
+            count: 1,
             children: [
-              { id: 'aku', label: 'Arbeidskraftundersøkelsen', children: [] },
+              {
+                id: 'aku',
+                label: 'Arbeidskraftundersøkelsen',
+                children: [],
+                count: 1,
+              },
             ],
           },
         ],

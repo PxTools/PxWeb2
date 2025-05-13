@@ -5,6 +5,7 @@ export interface PathItem {
   id: string;
   label: string;
   children?: PathItem[];
+  count?: number;
 }
 
 export function getSubjectTree(tables: Table[]): PathItem[] {
@@ -22,12 +23,14 @@ export function organizePaths(paths: PathItem[][]): PathItem[] {
       let existingItem = currentLevel.find((x) => x.id === item.id);
 
       if (existingItem) {
+        existingItem.count && existingItem.count++;
         currentLevel = existingItem.children || [];
       } else {
         const newItem: PathItem = {
           id: item.id,
           label: item.label,
           children: [],
+          count: 1,
         };
         currentLevel.push(newItem);
         currentLevel = newItem.children!;
@@ -48,23 +51,25 @@ function getAllPath(tables: Table[]): PathItem[][] {
 
   return allPaths;
 }
+
+function getTimeUnits(tables: Table[]) {
+  const timeUnits = new Map<string, number>();
+  tables.forEach((table) => {
+    if (table.timeUnit) {
+      timeUnits.set(table.timeUnit, (timeUnits.get(table.timeUnit) ?? 0) + 1);
+    }
+  });
+  return timeUnits;
+}
+
 export function getFilters(tables: Table[]): StartPageFilters {
   let filters: StartPageFilters = {
     timeUnits: new Map<string, number>(),
     subjectTree: [],
   };
 
-  // Add timeUnit filters and calculate count
-  tables.forEach((table) => {
-    if (table.timeUnit) {
-      filters.timeUnits.set(
-        table.timeUnit,
-        (filters.timeUnits.get(table.timeUnit) ?? 0) + 1,
-      );
-    }
-  });
-
-  // Add subjectTree filters. Consider: Calculate count??
+  filters.timeUnits = getTimeUnits(tables);
   filters.subjectTree = getSubjectTree(tables);
+
   return filters;
 }
