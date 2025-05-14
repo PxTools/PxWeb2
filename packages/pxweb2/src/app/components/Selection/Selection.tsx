@@ -87,6 +87,7 @@ function addValueToNewVariable(
   return newSelectedValues;
 }
 
+// Get the codelist from the API
 async function getCodeList(
   id: string,
   lang: string,
