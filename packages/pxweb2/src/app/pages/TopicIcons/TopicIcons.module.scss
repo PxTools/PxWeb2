@@ -1,8 +1,11 @@
+.topicIcons {
+  padding: 2rem;
+}
+
 .iconGrid {
   display: flex;
   flex-wrap: wrap;
   gap: 1.5rem;
-  padding: 2rem;
 }
 
 .iconItem {
@@ -20,6 +23,12 @@
   justify-content: center;
   align-items: center;
   border-radius: var(--px-border-radius-medium);
+
+  &.small {
+    min-width: 52px;
+    height: 52px;
+    border-radius: var(--px-border-radius-full);
+  }
 }
 
 .iconLabel {

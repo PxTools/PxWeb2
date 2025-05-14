@@ -21,8 +21,8 @@ export function useTopicIcons(): TopicIconComponents {
           ([id, fileName]) => ({
             id,
             fileName,
-            small: <img src={`${ICON_BASE_PATH}/${fileName}`} alt="" />,
-            medium: <img src={`${ICON_BASE_PATH}/small/${fileName}`} alt="" />,
+            medium: <img src={`${ICON_BASE_PATH}/${fileName}`} alt="" />,
+            small: <img src={`${ICON_BASE_PATH}/small/${fileName}`} alt="" />,
           }),
         );
         setIcons(components);
