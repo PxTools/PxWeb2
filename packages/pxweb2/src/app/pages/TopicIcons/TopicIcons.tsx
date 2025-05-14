@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { useTopicIcons } from '../../util/hooks/useTopicIcons';
+import { Heading, Label } from '@pxweb2/pxweb2-ui';
 import styles from './TopicIcons.module.scss';
 
 export const TopicIcons: React.FC = () => {
@@ -8,25 +9,14 @@ export const TopicIcons: React.FC = () => {
 
   return (
     <div className={styles.topicIcons}>
-      <h1>Topic icons</h1>
-      <h2>Medium</h2>
-      <div className={styles.iconGrid}>
+      <Heading level="1" size="large">
+        Topic icons
+      </Heading>
+      <div className={styles.iconList}>
         {icons.map(({ id, fileName, medium }) => (
           <div key={id} className={styles.iconItem}>
             <div className={styles.iconWrapper}>{medium}</div>
-            <div className={styles.iconLabel}>{fileName}</div>
-          </div>
-        ))}
-      </div>
-
-      <h2>Small</h2>
-      <div className={`${styles.iconGrid} ${styles.small}`}>
-        {icons.map(({ id, fileName, small }) => (
-          <div key={id} className={styles.iconItem}>
-            <div className={`${styles.iconWrapper} ${styles.small}`}>
-              {small}
-            </div>
-            <div className={styles.iconLabel}>{fileName}</div>
+            <Label className={styles.iconLabel}>{fileName}</Label>
           </div>
         ))}
       </div>
