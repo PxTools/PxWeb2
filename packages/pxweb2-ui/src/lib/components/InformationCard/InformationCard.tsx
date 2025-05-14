@@ -32,9 +32,7 @@ export function InformationCard({
             {headingText}
           </Heading>
         )}
-        <div className={styles['child-wrapper']}>
-          {children}
-        </div>
+        <div className={styles['child-wrapper']}>{children}</div>
       </div>
     </div>
   );

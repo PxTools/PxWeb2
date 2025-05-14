@@ -11,7 +11,7 @@ describe('InformationCard', () => {
     const { baseElement } = render(
       <InformationCard headingText="test" icon="Book">
         <span>test</span>
-      </InformationCard>
+      </InformationCard>,
     );
     expect(baseElement).toBeTruthy();
   });
@@ -20,7 +20,7 @@ describe('InformationCard', () => {
     render(
       <InformationCard headingText="Sample Heading" icon="Book">
         <span>test</span>
-      </InformationCard>
+      </InformationCard>,
     );
     const heading = screen.getByRole('heading', { name: /sample heading/i });
     expect(heading).not.toBeNull();
