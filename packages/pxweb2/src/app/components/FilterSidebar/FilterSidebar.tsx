@@ -23,8 +23,8 @@ const renderSubjectTreeFilters = (
   return (
     <>
       {renderSubject(
-        state,
         state.availableFilters.subjectTree,
+        state,
         handleAddFilter,
         handleRemoveFilter,
       )}
@@ -33,20 +33,24 @@ const renderSubjectTreeFilters = (
 };
 
 const renderSubject = (
+  subjects: PathItem[],
   state: StartPageState,
-  filters: PathItem[],
   handleAddFilter: (filter: Filter[]) => void,
   handleRemoveFilter: (filterId: string) => void,
 ) => {
-  return filters.map((subject, index) => {
+  return subjects.map((subject, index) => {
+    const isActive = state.activeFilters.some(
+      (filter) => filter.type === 'subject' && filter.value === subject.id,
+    );
+    const count = subject.count ?? 0;
+
     return (
       <div key={subject.id} className={styles.subjectToggle}>
         <Checkbox
           id={subject.id}
-          text={subject.label + (subject.count && ` (${subject.count})`)}
-          value={state.activeFilters.some((filter) => {
-            return filter.type === 'subject' && filter.value === subject.id;
-          })}
+          text={`${subject.label} (${count})`}
+          value={isActive}
+          subtle={!isActive && count === 0}
           onChange={(value) => {
             value
               ? handleAddFilter([
@@ -61,10 +65,9 @@ const renderSubject = (
           }}
         />
         {subject.children &&
-          // We're doing recursion
           renderSubject(
-            state,
             subject.children,
+            state,
             handleAddFilter,
             handleRemoveFilter,
           )}
@@ -78,26 +81,41 @@ const renderTimeUnitFilters = (
   handleAddFilter: (filter: Filter[]) => void,
   handleRemoveFilter: (filterId: string) => void,
 ) => {
-  return Array.from(state.availableFilters.timeUnits)
-    .sort((a, b) => b[1] - a[1])
-    .map(([key, value], i) => (
-      <li key={key} className={styles.filterItem}>
-        <Checkbox
-          id={key}
-          text={`${key} (${value})`}
-          value={state.activeFilters.some(
-            (filter) => filter.type === 'timeUnit' && filter.value === key,
-          )}
-          onChange={(value) => {
-            value
-              ? handleAddFilter([
-                  { type: 'timeUnit', value: key, label: key, index: i },
-                ])
-              : handleRemoveFilter(key);
-          }}
-        />
-      </li>
-    ));
+  const allTimeUnits = new Set(
+    state.availableTables.map((table) => table.timeUnit ?? 'Ukjent'),
+  );
+  console.log(allTimeUnits);
+
+  return Array.from(allTimeUnits)
+    .sort((a, b) => {
+      const aCount = state.availableFilters.timeUnits.get(a) ?? 0;
+      const bCount = state.availableFilters.timeUnits.get(b) ?? 0;
+      return bCount - aCount;
+    })
+    .map((key, i) => {
+      const count = state.availableFilters.timeUnits.get(key) ?? 0;
+      const isActive = state.activeFilters.some(
+        (filter) => filter.type === 'timeUnit' && filter.value === key,
+      );
+
+      return (
+        <li key={key} className={styles.filterItem}>
+          <Checkbox
+            id={key}
+            text={`${key} (${count})`}
+            value={isActive}
+            subtle={!isActive && count === 0}
+            onChange={(value) => {
+              value
+                ? handleAddFilter([
+                    { type: 'timeUnit', value: key, label: key, index: i },
+                  ])
+                : handleRemoveFilter(key);
+            }}
+          />
+        </li>
+      );
+    });
 };
 
 export const FilterSidebar: React.FC<FilterProps> = ({

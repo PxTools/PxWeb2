@@ -24,7 +24,12 @@ import {
   ActionType,
 } from './StartPageTypes';
 import { getFullTable, shouldTableBeIncluded } from '../../util/tableHandler';
-import { getFilters, getSubjectTree } from '../../util/startPageFilters';
+import {
+  getFilters,
+  getSubjectTree,
+  getTimeUnits,
+  updateSubjectTreeCounts,
+} from '../../util/startPageFilters';
 
 // TODO: Remove this function. We can not consider norwegian special cases in our code!
 function removeTableNumber(title: string): string {
@@ -46,6 +51,7 @@ const initialState: StartPageState = Object.freeze({
   activeFilters: [],
   loading: false,
   error: '',
+  originalSubjectTree: [],
 });
 
 const StartPage = () => {
@@ -78,6 +84,10 @@ const StartPage = () => {
     dispatch({ type: ActionType.SET_LOADING, payload: loadingState });
   }
 
+  function getActiveFilterTypes(filters: Filter[]): Set<string> {
+    return new Set(filters.map((f) => f.type));
+  }
+
   function reducer(
     state: StartPageState,
     action: ReducerActionTypes,
@@ -90,40 +100,72 @@ const StartPage = () => {
           ...initialState,
           availableTables: action.payload.tables,
           filteredTables: action.payload.tables,
-          availableFilters: getFilters(action.payload.tables),
+          originalSubjectTree: action.payload.subjects, // lagre full struktur én gang
+          availableFilters: {
+            subjectTree: action.payload.subjects,
+            timeUnits: getTimeUnits(action.payload.tables),
+          },
         };
       case ActionType.ADD_FILTER: {
         const newFilters = [...state.activeFilters, ...action.payload];
-        const sortedFilters = [...newFilters].sort((a, b) => a.index - b.index);
+        const sortedFilters = newFilters.sort((a, b) => a.index - b.index);
+        const filteredTables = state.availableTables.filter((table) =>
+          shouldTableBeIncluded(table, sortedFilters),
+        );
+        const activeTypes = getActiveFilterTypes(sortedFilters);
         return {
           ...state,
           activeFilters: sortedFilters,
-          filteredTables: state.availableTables.filter((table) => {
-            return shouldTableBeIncluded(table, sortedFilters);
-          }),
+          filteredTables,
+          availableFilters: {
+            subjectTree: activeTypes.has('subject')
+              ? state.availableFilters.subjectTree
+              : updateSubjectTreeCounts(
+                  state.originalSubjectTree,
+                  filteredTables,
+                ),
+            timeUnits: activeTypes.has('timeUnit')
+              ? state.availableFilters.timeUnits
+              : getTimeUnits(filteredTables),
+          },
         };
       }
-      case ActionType.REMOVE_FILTER:
-        if (state.activeFilters.length <= 1) {
-          // Reset from state
+      case ActionType.REMOVE_FILTER: {
+        const currentFilters = state.activeFilters.filter(
+          (filter) => filter.value !== action.payload,
+        );
+        if (currentFilters.length === 0) {
           return {
             ...state,
-            activeFilters: initialState.activeFilters,
+            activeFilters: [],
             filteredTables: state.availableTables,
-            availableFilters: getFilters(state.availableTables),
-          };
-        } else {
-          const currentFilters = state.activeFilters.filter(
-            (filter) => filter.value !== action.payload,
-          );
-          return {
-            ...state,
-            activeFilters: currentFilters,
-            filteredTables: state.availableTables.filter((table) => {
-              return shouldTableBeIncluded(table, currentFilters);
-            }),
+            availableFilters: {
+              subjectTree: state.originalSubjectTree,
+              timeUnits: getTimeUnits(state.availableTables),
+            },
           };
         }
+        const filteredTables = state.availableTables.filter((table) =>
+          shouldTableBeIncluded(table, currentFilters),
+        );
+        const activeTypes = getActiveFilterTypes(currentFilters);
+        return {
+          ...state,
+          activeFilters: currentFilters,
+          filteredTables,
+          availableFilters: {
+            subjectTree: activeTypes.has('subject')
+              ? state.availableFilters.subjectTree
+              : updateSubjectTreeCounts(
+                  state.originalSubjectTree,
+                  filteredTables,
+                ),
+            timeUnits: activeTypes.has('timeUnit')
+              ? state.availableFilters.timeUnits
+              : getTimeUnits(filteredTables),
+          },
+        };
+      }
       case ActionType.SET_ERROR:
         return {
           ...state,
