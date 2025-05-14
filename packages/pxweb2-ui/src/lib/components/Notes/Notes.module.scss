@@ -10,3 +10,12 @@
   width: 100%;
   gap: fixed.$spacing-5;
 }
+
+.symbolExplanationNotes {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-top: 8px;
+  align-items: flex-start;
+  align-self: stretch;
+}

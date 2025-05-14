@@ -1,5 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { InformationCard } from '../InformationCard/InformationCard';
+import styles from './Notes.module.scss';
+import BodyLong from '../Typography/BodyLong/BodyLong';
+import cl from 'clsx';
 
 export type SymbolExplanationNotesProps = {
   readonly notes: { [key: string]: string };
@@ -13,20 +16,11 @@ export function SymbolExplanationNotes({ notes }: SymbolExplanationNotesProps) {
 
   return (
     <InformationCard icon="Book" headingText={heading} headingLevel="1">
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '20px',
-          paddingTop: '8px',
-          alignItems: 'flex-start',
-          alignSelf: 'stretch',
-        }}
-      >
+      <BodyLong className={cl(styles['symbolExplanationNotes'])} size="medium">
         {Object.entries(notes).map(([key, value]) => (
           <div key={key}>{value}</div>
         ))}
-      </div>
+      </BodyLong>
     </InformationCard>
   );
 }
