@@ -97,7 +97,7 @@ export async function getCodeListTEST(
   return codelist;
 }
 
-// Get the codelist from the API
+// Get the selected codelist from the API
 async function getCodeList(
   id: string,
   lang: string,
