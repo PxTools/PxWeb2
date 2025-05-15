@@ -2,7 +2,10 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import { vi } from 'vitest';
 
-import { mockTableService, renderWithProviders } from '../../util/testing-utils';
+import {
+  mockTableService,
+  renderWithProviders,
+} from '../../util/testing-utils';
 import Selection, { getCodeListTEST } from './Selection';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import {
