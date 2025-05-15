@@ -68,5 +68,10 @@ describe('Selection', () => {
   it('should fetch and return a valid CodeList from the API', async () => {
     const codelist = await getCodeListTEST('vs_RegionLän07', 'en', 'value');
     expect(codelist.id).toBe('vs_RegionLän07');
+    expect(codelist.mandatory).toBe(true);
+    expect(codelist.values).toBeDefined();
+    expect(codelist.values.length).toBeGreaterThan(0);
+    expect(codelist.values[0].code).toBe('01');
+    expect(codelist.values[0].label).toBe('Stockholm county');
   });
 });
