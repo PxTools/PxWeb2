@@ -1,14 +1,18 @@
-import { renderWithProviders } from '../../util/testing-utils';
-import Selection from './Selection';
-import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import React from 'react';
 import { render } from '@testing-library/react';
+import { vi } from 'vitest';
+
+import { mockTableService, renderWithProviders } from '../../util/testing-utils';
+import Selection, { getCodeListTEST } from './Selection';
+import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import {
   TableDataProvider,
   TableDataContext,
 } from '../../context/TableDataProvider';
 import { VariablesProvider } from '../../context/VariablesProvider';
-import { vi } from 'vitest';
+
+// Mock API-responses from the table service
+mockTableService();
 
 describe('Selection', () => {
   it('should throw an error when triggered', () => {
@@ -38,9 +42,7 @@ describe('Selection', () => {
     }).toThrow('Simulated error');
     consoleErrorSpy.mockRestore();
   });
-});
 
-describe('Selection', () => {
   it('should render successfully', () => {
     const { baseElement } = renderWithProviders(
       <AccessibilityProvider>
@@ -58,5 +60,10 @@ describe('Selection', () => {
     expect(() => {
       throw new Error('Simulated error');
     }).toThrow('Simulated error');
+  });
+
+  it('should fetch and return a valid CodeList from the API', async () => {
+    const codelist = await getCodeListTEST('vs_RegionLän07', 'en', 'value');
+    expect(codelist.id).toBe('vs_RegionLän07');
   });
 });
