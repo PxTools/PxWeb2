@@ -8,6 +8,7 @@ import { validateConfig } from './app/util/validate';
 import { AppProvider } from './app/context/AppProvider';
 import StartPage from './app/pages/StartPage/StartPage';
 import ErrorPage from './app/components/ErrorPage/ErrorPage';
+import TopicIcons from './app/pages/TopicIcons/TopicIcons';
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
         path: 'table/:tableId',
         element: <TableViewer />,
         errorElement: <ErrorPage />,
+      },
+      {
+        path: 'topicIcons',
+        element: <TopicIcons />,
       },
     ],
   },
