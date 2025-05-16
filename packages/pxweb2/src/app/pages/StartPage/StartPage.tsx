@@ -145,7 +145,7 @@ const StartPage = () => {
             availableFilters: {
               subjectTree: updateSubjectTreeCounts(
                 state.originalSubjectTree,
-                state.availableTables
+                state.availableTables,
               ),
               timeUnits: getTimeUnits(state.availableTables),
             },
