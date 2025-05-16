@@ -148,7 +148,7 @@ export function Presentation({ selectedTabId, scrollRef }: propsType) {
     if (variables.isMatrixSizeAllowed) {
       setIsFadingTable(false); // Stop fading once data is loaded
     }
-  }, [tableData.data, variables.isMatrixSizeAllowed]);
+  }, [tableData.data, variables]);
 
   function fetchTableDataIfAllowed() {
     if (variables.isMatrixSizeAllowed) {
