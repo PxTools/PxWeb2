@@ -37,6 +37,7 @@ const renderSubject = (
   state: StartPageState,
   handleAddFilter: (filter: Filter[]) => void,
   handleRemoveFilter: (filterId: string) => void,
+  level: number = 0,
 ) => {
   return subjects.map((subject, index) => {
     const isActive = state.activeFilters.some(
@@ -45,7 +46,11 @@ const renderSubject = (
     const count = subject.count ?? 0;
 
     return (
-      <div key={subject.id} className={styles.subjectToggle}>
+      <div
+        key={subject.id}
+        className={styles.subjectToggle}
+        style={{ paddingLeft: `${level * 24}px` }}
+      >
         <Checkbox
           id={subject.id}
           text={`${subject.label} (${count})`}
@@ -70,6 +75,7 @@ const renderSubject = (
             state,
             handleAddFilter,
             handleRemoveFilter,
+            level + 1,
           )}
       </div>
     );
