@@ -20,6 +20,6 @@
   list-style-type: none;
 }
 
-.subjectToggle {
+.subjectToggle:not(:first-of-type) {
   padding-left: 20px;
 }
