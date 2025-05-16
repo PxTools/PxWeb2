@@ -49,15 +49,17 @@ export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
     return f.type === 'subject';
   });
 
+  const subjectIds = new Set(subjectFilters.map((f) => f.value));
+  const tableWithPaths = table as Table & {
+    paths?: { id: string; label: string }[][];
+  };
   const testSubjectFilters = function () {
     if (subjectFilters.length == 0) {
       return true;
     } else {
-      return subjectFilters.some((filter) => {
-        return table?.paths?.flat().some((path) => {
-          return path.id === filter.value;
-        });
-      });
+      return tableWithPaths.paths?.some((path) =>
+        [...subjectIds].every((id) => path.some((p) => p.id === id)),
+      );
     }
   };
   return testTimeUnitFilters() && testSubjectFilters();
