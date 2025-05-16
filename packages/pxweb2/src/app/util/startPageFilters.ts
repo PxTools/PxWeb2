@@ -9,6 +9,7 @@ export interface PathItem {
 }
 
 type TableWithPaths = Table & {
+  id: string;
   paths?: { id: string; label: string }[][];
 };
 
@@ -86,23 +87,24 @@ export function updateSubjectTreeCounts(
   originalTree: PathItem[],
   filteredTables: Table[],
 ): PathItem[] {
-  const tableSubjectCounts = new Map<string, number>();
+  const subjectToTableMap = new Map<string, Set<string>>();
 
   (filteredTables as TableWithPaths[]).forEach((table) => {
     table.paths?.forEach((path) => {
       path.forEach((level) => {
         if (level?.id) {
-          tableSubjectCounts.set(
-            level.id,
-            (tableSubjectCounts.get(level.id) || 0) + 1,
-          );
+          if (!subjectToTableMap.has(level.id)) {
+            subjectToTableMap.set(level.id, new Set());
+          }
+          subjectToTableMap.get(level.id)!.add(table.id);
         }
       });
     });
   });
 
+  // Oppdater counts i emnetreet
   function updateNode(node: PathItem): PathItem {
-    const count = tableSubjectCounts.get(node.id) || 0;
+    const count = subjectToTableMap.get(node.id)?.size ?? 0;
     return {
       ...node,
       count,

@@ -100,9 +100,12 @@ const StartPage = () => {
           ...initialState,
           availableTables: action.payload.tables,
           filteredTables: action.payload.tables,
-          originalSubjectTree: action.payload.subjects, // lagre full struktur én gang
+          originalSubjectTree: action.payload.subjects,
           availableFilters: {
-            subjectTree: action.payload.subjects,
+            subjectTree: updateSubjectTreeCounts(
+              action.payload.subjects,
+              action.payload.tables,
+            ),
             timeUnits: getTimeUnits(action.payload.tables),
           },
         };
