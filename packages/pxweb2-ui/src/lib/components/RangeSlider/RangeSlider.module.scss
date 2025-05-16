@@ -1,0 +1,94 @@
+.rangeSliderWrapper {
+  padding: 20px;
+  width: 100%;
+  max-width: 500px;
+  margin: auto;
+}
+
+.rangeSlider {
+  position: relative;
+  width: 100%;
+  height: 5px;
+  margin: 30px 0;
+  background-color: #8a8a8a;
+  border-radius: 5px;
+}
+
+.sliderTrack {
+  height: 100%;
+  position: absolute;
+  background: var(--px-color-surface-action);
+  border-radius: 5px;
+  width: 99%;
+  margin-left: 1px;
+}
+
+input[type='range'] {
+  position: absolute;
+  width: 100%;
+  transform: translateY(-50%);
+  background: transparent;
+  pointer-events: none;
+  appearance: none;
+  height: 5px;
+  margin-left: 0;
+}
+
+input[type='range']::-webkit-slider-thumb {
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+  background: var(--px-color-surface-action);
+  pointer-events: auto;
+  appearance: none;
+  cursor: pointer;
+  box-shadow: 0 0.125rem 0.5625rem -0.125rem rgba(0, 0, 0, 0.25);
+  position: relative;
+  z-index: 2; /* Ensure thumbs appear above the track */
+}
+
+input[type='range']::-moz-range-thumb {
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+  background: var(--px-color-surface-action);
+  pointer-events: auto;
+  cursor: pointer;
+  box-shadow: 0 0.125rem 0.5625rem -0.125rem rgba(0, 0, 0, 0.25);
+  position: relative;
+  z-index: 2;
+}
+
+.inputBox {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.minInput,
+.maxInput {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+input[type='number'] {
+  width: 60px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  text-align: center;
+}
+
+/* Chrome, Safari, Edge, and Opera */
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type='number'] {
+  -moz-appearance: textfield;
+}
