@@ -143,7 +143,10 @@ const StartPage = () => {
             activeFilters: [],
             filteredTables: state.availableTables,
             availableFilters: {
-              subjectTree: state.originalSubjectTree,
+              subjectTree: updateSubjectTreeCounts(
+                state.originalSubjectTree,
+                state.availableTables
+              ),
               timeUnits: getTimeUnits(state.availableTables),
             },
           };
