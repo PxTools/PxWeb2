@@ -7,7 +7,7 @@ import { vi } from 'vitest';
 import { waitFor } from '@testing-library/react';
 
 // Mock the getFullTable function
-vi.mock('./tableHandler', () => {
+vi.mock('../../util/tableHandler', () => {
   return {
     getFullTable: Promise.resolve([
       {
