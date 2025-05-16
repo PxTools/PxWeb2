@@ -146,6 +146,11 @@ export const FilterSidebar: React.FC<FilterProps> = ({
       <p>
         <a href="/table/tab638">Go to table viewer</a>
       </p>
+      <div>
+        <button onClick={() => localStorage.removeItem('table')}>
+          Tøm Cache
+        </button>
+      </div>
     </div>
   );
 };
