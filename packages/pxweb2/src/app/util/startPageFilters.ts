@@ -90,13 +90,14 @@ export function updateSubjectTreeCounts(
 
   (filteredTables as TableWithPaths[]).forEach((table) => {
     table.paths?.forEach((path) => {
-      const firstLevel = path[0];
-      if (firstLevel?.id) {
-        tableSubjectCounts.set(
-          firstLevel.id,
-          (tableSubjectCounts.get(firstLevel.id) || 0) + 1,
-        );
-      }
+      path.forEach((level) => {
+        if (level?.id) {
+          tableSubjectCounts.set(
+            level.id,
+            (tableSubjectCounts.get(level.id) || 0) + 1,
+          );
+        }
+      });
     });
   });
 
