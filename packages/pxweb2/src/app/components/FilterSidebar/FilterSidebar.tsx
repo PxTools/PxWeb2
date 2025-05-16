@@ -47,7 +47,7 @@ const renderSubject = (
     return (
       <div key={subject.id} className={styles.subjectToggle}>
         <Checkbox
-          id={subject.id}
+          id={subject.id + index}
           text={`${subject.label} (${count})`}
           value={isActive}
           subtle={!isActive && count === 0}
@@ -84,7 +84,6 @@ const renderTimeUnitFilters = (
   const allTimeUnits = new Set(
     state.availableTables.map((table) => table.timeUnit ?? 'Ukjent'),
   );
-  console.log(allTimeUnits);
 
   return Array.from(allTimeUnits)
     .sort((a, b) => {

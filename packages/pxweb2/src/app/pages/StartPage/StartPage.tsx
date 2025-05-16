@@ -107,15 +107,16 @@ const StartPage = () => {
           },
         };
       case ActionType.ADD_FILTER: {
-        const newFilters = [...state.activeFilters, ...action.payload];
-        const sortedFilters = newFilters.sort((a, b) => a.index - b.index);
-        const filteredTables = state.availableTables.filter((table) =>
-          shouldTableBeIncluded(table, sortedFilters),
+        const newFilters = [...state.activeFilters, ...action.payload].sort(
+          (a, b) => a.index - b.index,
         );
-        const activeTypes = getActiveFilterTypes(sortedFilters);
+        const filteredTables = state.availableTables.filter((table) =>
+          shouldTableBeIncluded(table, newFilters),
+        );
+        const activeTypes = getActiveFilterTypes(newFilters);
         return {
           ...state,
-          activeFilters: sortedFilters,
+          activeFilters: newFilters,
           filteredTables,
           availableFilters: {
             subjectTree: activeTypes.has('subject')

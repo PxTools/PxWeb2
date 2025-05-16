@@ -8,10 +8,6 @@ export interface PathItem {
   count?: number;
 }
 
-type TableWithPaths = Table & {
-  paths?: { id: string; label: string }[][];
-};
-
 export function getSubjectTree(tables: Table[]): PathItem[] {
   const allPaths: PathItem[][] = getAllPath(tables);
   return organizePaths(allPaths);
@@ -82,26 +78,33 @@ export function getSubjectTreeFromAllTables(allTables: Table[]): PathItem[] {
   return getSubjectTree(allTables);
 }
 
+function deuplicatePathItems(paths: PathItem[]): PathItem[] {
+  return paths.filter((item, index) => {
+    return paths.indexOf(item) === index;
+  });
+}
+
 export function updateSubjectTreeCounts(
   originalTree: PathItem[],
   filteredTables: Table[],
 ): PathItem[] {
   const tableSubjectCounts = new Map<string, number>();
 
-  (filteredTables as TableWithPaths[]).forEach((table) => {
-    table.paths?.forEach((path) => {
-      const firstLevel = path[0];
-      if (firstLevel?.id) {
-        tableSubjectCounts.set(
-          firstLevel.id,
-          (tableSubjectCounts.get(firstLevel.id) || 0) + 1,
-        );
-      }
-    });
+  filteredTables.forEach((current) => {
+    if (current.paths != undefined) {
+      deuplicatePathItems(current.paths.flat()).forEach((path) => {
+        if (path?.id) {
+          tableSubjectCounts.set(
+            path.id,
+            (tableSubjectCounts.get(path.id) ?? 0) + 1,
+          );
+        }
+      });
+    }
   });
 
   function updateNode(node: PathItem): PathItem {
-    const count = tableSubjectCounts.get(node.id) || 0;
+    const count = tableSubjectCounts.get(node.id) ?? 0;
     return {
       ...node,
       count,
