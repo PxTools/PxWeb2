@@ -35,7 +35,7 @@
   // medium
   @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
     padding: fixed.$spacing-10;
-    gap: fixed.$spacing-10;
+    gap: fixed.$spacing-8;
   }
 
   // large and xlarge

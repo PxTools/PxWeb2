@@ -16,6 +16,11 @@
   @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
     gap: fixed.$spacing-12;
   }
+
+  // medium
+  @media (min-width: fixed.$breakpoints-medium-min-width ) and (max-width: fixed.$breakpoints-medium-max-width) {
+    gap: 60px;
+  }
 }
 
 .breadcrumbs {
