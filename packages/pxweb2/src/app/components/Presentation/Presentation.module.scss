@@ -21,7 +21,7 @@
   // xsmall
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
     padding: 0px fixed.$spacing-4 fixed.$spacing-4 fixed.$spacing-4;
-    gap: fixed.$spacing-7;
+    gap: fixed.$spacing-8;
     border-radius: var(--px-border-radius-none);
   }
 
