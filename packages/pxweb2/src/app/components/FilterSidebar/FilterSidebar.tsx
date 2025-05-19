@@ -110,8 +110,6 @@ const renderTimeUnitFilters = (
   const allTimeUnits = new Set(
     state.availableTables.map((table) => table.timeUnit ?? 'Ukjent'),
   );
-  console.log(allTimeUnits);
-
   return Array.from(allTimeUnits)
     .sort((a, b) => {
       const aCount = state.availableFilters.timeUnits.get(a) ?? 0;
