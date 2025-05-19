@@ -15,6 +15,7 @@ type VariableBoxHeaderProps = VariableBoxPropsToHeader & {
   totalChosenValues: number;
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
+  varId: string;
   className?: string;
   isMissingMandatoryValues?: boolean;
 };
@@ -26,6 +27,7 @@ export function VariableBoxHeader({
   totalChosenValues,
   isOpen,
   setIsOpen,
+  varId,
   className = '',
   isMissingMandatoryValues = false,
 }: VariableBoxHeaderProps) {
@@ -44,6 +46,10 @@ export function VariableBoxHeader({
     }
   }
 
+  const titleId = 'title-' + varId;
+  const tagsId = 'tags-' + varId;
+  const alertId = 'mandatory-alert-' + varId;
+
   return (
     <div
       className={cl(
@@ -54,14 +60,14 @@ export function VariableBoxHeader({
       onKeyDown={(e) => handleKeyDown(e)}
     >
       <div className={cl(classes['header-content'])}>
-        <div className={cl(classes['header-title-and-tag'])}>
+        <div id={titleId} className={cl(classes['header-title-and-tag'])}>
           <Heading
             level="3"
             className={cl(classes['header-title'], classes['heading-small'])}
           >
             {label}
           </Heading>
-          <div className={cl(classes['header-tags'])}>
+          <div id={tagsId} className={cl(classes['header-tags'])}>
             <Tag variant="neutral">
               {t(
                 'presentation_page.sidemenu.selection.variablebox.header.tag_selected',
@@ -88,9 +94,8 @@ export function VariableBoxHeader({
         <button
           className={cl(classes['variablebox-header-button']) + cssClasses}
           aria-expanded={isOpen}
-          aria-label={t(
-            'presentation_page.sidemenu.selection.variablebox.header.show_more',
-          )}
+          aria-labelledby={titleId + ' ' + tagsId}
+          aria-describedby={isMissingMandatoryValues ? alertId : undefined}
         >
           {isOpen ? (
             <Icon iconName="ChevronUp"></Icon>
@@ -101,7 +106,7 @@ export function VariableBoxHeader({
       </div>
 
       {isMissingMandatoryValues && (
-        <div className={cl(classes['header-alert'])} role="alert">
+        <div id={alertId} className={cl(classes['header-alert'])} role="alert">
           <Alert variant="error" size="small">
             {t(
               'presentation_page.sidemenu.selection.variablebox.header.alert_no_mandatory_values',
