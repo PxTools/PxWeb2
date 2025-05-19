@@ -24,8 +24,8 @@
     padding: fixed.$spacing-6;
   }
 
-  // xsmall and small
-  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
+  // xsmall, small and medium
+  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
     height: 100vh;
 
     // Handle rtl languages
@@ -40,8 +40,8 @@
     z-index: 999;
   }
 
-  // medium
-  @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
+  // large
+  @media (min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width) {
     width: 395px;
     padding: fixed.$spacing-6;
 
@@ -68,8 +68,8 @@
     }
   }
 
-  // large and xlarge
-  @media ((min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width)) or ((min-width: fixed.$breakpoints-xlarge-min-width)) {
+  // xlarge and xxlarge
+  @media ((min-width: fixed.$breakpoints-xlarge-min-width) and (max-width: fixed.$breakpoints-xlarge-max-width)) or ((min-width: fixed.$breakpoints-xxlarge-min-width)) {
     width: 371px;
     padding: 0px fixed.$spacing-6 fixed.$spacing-6 0px;
     border-radius: var(--px-border-radius-none);
@@ -124,7 +124,7 @@
 
 // Not from Figma
 .backdrop {
-  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
+  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
     position: fixed;
     top: 0;
     left: 0;

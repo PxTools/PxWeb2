@@ -6,7 +6,7 @@
   flex-direction: row;
 
   // Tablet and mobile sizes
-  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
+  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
     flex-direction: column;
     overflow-y: auto;
     scrollbar-width: thin;
@@ -56,7 +56,7 @@
     padding: fixed.$spacing-8 fixed.$spacing-8 0px fixed.$spacing-8;
   }
 
-  // xlarge
+  // xxlarge
   @media (min-width: fixed.$breakpoints-xxlarge-min-width) {
     padding: fixed.$spacing-10 fixed.$spacing-8 0px fixed.$spacing-8;
   }
@@ -81,8 +81,13 @@
     padding-top: fixed.$spacing-6;
   }
 
+  // medium
+  @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
+    padding-top: fixed.$spacing-6;
+  }
+
   // medium, large and xlarge
-  @media ((min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-large-max-width)) or ((min-width: fixed.$breakpoints-xlarge-min-width)) {
+  @media ((min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-xlarge-max-width)) or ((min-width: fixed.$breakpoints-xxlarge-min-width)) {
     padding-bottom: fixed.$spacing-6;
     overflow-y: auto;
     scrollbar-width: thin;
