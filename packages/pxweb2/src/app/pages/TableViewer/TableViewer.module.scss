@@ -86,7 +86,7 @@
     padding-top: fixed.$spacing-6;
   }
 
-  // medium, large and xlarge
+  // large, xlarge and xxlarge
   @media ((min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-xlarge-max-width)) or ((min-width: fixed.$breakpoints-xxlarge-min-width)) {
     padding-bottom: fixed.$spacing-6;
     overflow-y: auto;

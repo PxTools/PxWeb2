@@ -16,12 +16,11 @@
   bottom: 0;
   z-index: 1;
 
-  // xsmall, small and mediun
+  // xsmall, small and medium
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
     nav {
       display: flex;
       width: 688px;
-      //width: 100%;
     }
   }
 
@@ -40,13 +39,4 @@
   justify-content: center;
   display: inherit;
   gap: fixed.$spacing-1;
-
-  //width: 688px;
-
-  // display: flex;
-  // align-items: center;
-  // gap: 8px;
-  // flex: 1 0 0;
-  // align-self: stretch;
-  //  list-style: none;
 }
