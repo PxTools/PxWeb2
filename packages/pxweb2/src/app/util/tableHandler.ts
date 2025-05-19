@@ -58,7 +58,7 @@ export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
       return true;
     } else {
       return tableWithPaths.paths?.some((path) =>
-        [...subjectIds].every((id) => path.some((p) => p.id === id)),
+        path.some((p) => subjectIds.has(p.id)),
       );
     }
   };

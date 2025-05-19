@@ -7,7 +7,11 @@ import {
 import styles from './FilterSidebar.module.scss';
 
 import { Checkbox, FilterCategory, Heading } from '@pxweb2/pxweb2-ui';
-import { PathItem } from '../../util/startPageFilters';
+import {
+  PathItem,
+  getSubjectLevel,
+  getSubjectsAtLevel,
+} from '../../util/startPageFilters';
 interface FilterProps {
   state: StartPageState;
   handleAddFilter: (filter: Filter[]) => void;
@@ -52,16 +56,38 @@ const renderSubject = (
           value={isActive}
           subtle={!isActive && count === 0}
           onChange={(value) => {
-            value
-              ? handleAddFilter([
-                  {
-                    type: 'subject',
-                    value: subject.id,
-                    label: subject.label,
-                    index: index,
-                  },
-                ])
-              : handleRemoveFilter(subject.id);
+            if (value) {
+              const level = getSubjectLevel(
+                state.availableFilters.subjectTree,
+                subject.id,
+              );
+              if (level === null) {
+                console.warn('Fant ikke nivå for subject-id:', subject.id);
+                return;
+              }
+              const sameLevelSubjects = getSubjectsAtLevel(
+                state.availableFilters.subjectTree,
+                level,
+              );
+              const sameLevelIds = new Set(sameLevelSubjects.map((s) => s.id));
+              state.activeFilters
+                .filter(
+                  (f) => f.type === 'subject' && !sameLevelIds.has(f.value),
+                )
+                .forEach((f) => {
+                  handleRemoveFilter(f.value);
+                });
+              handleAddFilter([
+                {
+                  type: 'subject',
+                  value: subject.id,
+                  label: subject.label,
+                  index: index,
+                },
+              ]);
+            } else {
+              handleRemoveFilter(subject.id);
+            }
           }}
         />
         {subject.children &&
