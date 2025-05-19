@@ -43,9 +43,20 @@ const renderSubject = (
   handleRemoveFilter: (filterId: string) => void,
 ) => {
   return subjects.map((subject, index) => {
-    const isActive = state.activeFilters.some(
-      (filter) => filter.type === 'subject' && filter.value === subject.id,
-    );
+    const hasActiveDescendant = (subject: PathItem): boolean => {
+      return (
+        subject.children?.some(
+          (child) =>
+            state.activeFilters.some(
+              (f) => f.type === 'subject' && f.value === child.id,
+            ) || hasActiveDescendant(child),
+        ) ?? false
+      );
+    };
+    const isActive =
+      state.activeFilters.some(
+        (filter) => filter.type === 'subject' && filter.value === subject.id,
+      ) || hasActiveDescendant(subject);
     const count = subject.count ?? 0;
 
     return (
