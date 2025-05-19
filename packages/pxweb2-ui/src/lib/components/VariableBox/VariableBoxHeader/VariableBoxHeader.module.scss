@@ -59,6 +59,7 @@
   display: flex;
   align-items: flex-start;
   gap: fixed.$spacing-2;
+  flex-wrap: wrap;
 }
 
 .header-alert {
