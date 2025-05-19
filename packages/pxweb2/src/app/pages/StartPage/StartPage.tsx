@@ -4,14 +4,7 @@ import cl from 'clsx';
 
 import styles from './StartPage.module.scss';
 import { useTranslation } from 'react-i18next';
-import {
-  Search,
-  TableCard,
-  Icon,
-  Spinner,
-  Alert,
-  Chips,
-} from '@pxweb2/pxweb2-ui';
+import { Search, TableCard, Spinner, Alert, Chips } from '@pxweb2/pxweb2-ui';
 import { type Table } from '@pxweb2/pxweb2-api-client';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import { Header } from '../../components/Header/Header';
@@ -24,6 +17,8 @@ import {
   ActionType,
 } from './tableTypes';
 import { getFullTable } from './tableHandler';
+import { useTopicIcons } from '../../util/hooks/useTopicIcons';
+import useApp from '../../context/useApp';
 
 function shouldTableBeIncluded(table: Table, filters: Filter[]) {
   return filters.some((filter) => {
@@ -75,6 +70,9 @@ const initialState: StartPageState = {
 const StartPage = () => {
   const { t } = useTranslation();
   const [state, dispatch] = useReducer(reducer, initialState);
+  const { isMobile, isTablet } = useApp();
+  const isSmallScreen = isTablet === true || isMobile === true;
+  const topicIconComponents = useTopicIcons();
 
   function handleResetFilter(tables: Table[]) {
     dispatch({ type: ActionType.RESET_FILTERS, payload: tables });
@@ -189,6 +187,16 @@ const StartPage = () => {
     }
   }
 
+  function renderTopicIcon(table: Table) {
+    const topicId = table.paths?.[0]?.[0]?.id;
+    const size = isSmallScreen ? 'small' : 'medium';
+
+    return topicId
+      ? (topicIconComponents.find((icon) => icon.id === topicId)?.[size] ??
+          null)
+      : null;
+  }
+
   return (
     <AccessibilityProvider>
       <Header />
@@ -282,7 +290,7 @@ const StartPage = () => {
                     period={`${table.firstPeriod?.slice(0, 4)}–${table.lastPeriod?.slice(0, 4)}`}
                     frequency={`${table.timeUnit}`}
                     tableId={`${table.id}`}
-                    icon={<Icon iconName="Heart" />}
+                    icon={renderTopicIcon(table)}
                   />
                 </div>
               )}
