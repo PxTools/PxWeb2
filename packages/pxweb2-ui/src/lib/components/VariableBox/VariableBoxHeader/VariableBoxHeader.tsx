@@ -60,8 +60,9 @@ export function VariableBoxHeader({
       onKeyDown={(e) => handleKeyDown(e)}
     >
       <div className={cl(classes['header-content'])}>
-        <div id={titleId} className={cl(classes['header-title-and-tag'])}>
+        <div className={cl(classes['header-title-and-tag'])}>
           <Heading
+            id={titleId}
             level="3"
             className={cl(classes['header-title'], classes['heading-small'])}
           >
