@@ -22,6 +22,7 @@ import {
   getSubjectTree,
   getTimeUnits,
   updateSubjectTreeCounts,
+  getYearRanges,
 } from '../../util/startPageFilters';
 import { useTopicIcons } from '../../util/hooks/useTopicIcons';
 import useApp from '../../context/useApp';
@@ -105,6 +106,7 @@ const StartPage = () => {
               action.payload.tables,
             ),
             timeUnits: getTimeUnits(action.payload.tables),
+            yearRange: getYearRanges(action.payload.tables),
           },
         };
       case ActionType.ADD_FILTER: {
@@ -128,6 +130,9 @@ const StartPage = () => {
             timeUnits: activeTypes.has('timeUnit')
               ? state.availableFilters.timeUnits
               : getTimeUnits(filteredTables),
+            yearRange: activeTypes.has('year')
+              ? state.availableFilters.yearRange
+              : getYearRanges(filteredTables),
           },
         };
       }
@@ -146,6 +151,7 @@ const StartPage = () => {
                 state.availableTables,
               ),
               timeUnits: getTimeUnits(state.availableTables),
+              yearRange: getYearRanges(state.availableTables),
             },
           };
         }
@@ -167,6 +173,9 @@ const StartPage = () => {
             timeUnits: activeTypes.has('timeUnit')
               ? state.availableFilters.timeUnits
               : getTimeUnits(filteredTables),
+            yearRange: activeTypes.has('year')
+              ? state.availableFilters.yearRange
+              : getYearRanges(filteredTables),
           },
         };
       }

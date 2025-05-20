@@ -2,17 +2,19 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import styles from './RangeSlider.module.scss';
 import cl from 'clsx';
 
-export const RangeSlider: React.FC = () => {
-  const initialMinYear = 1900;
-  const initialMaxYear = 2025;
+type RangeSliderProps = {
+  min: number;
+  max: number;
+  onChange?: (range: { min: number; max: number }) => void;
+};
 
-  const [sliderMinValue] = useState<number>(initialMinYear);
-  const [sliderMaxValue] = useState<number>(initialMaxYear);
-
-  const [minVal, setMinVal] = useState<number>(initialMinYear);
-  const [maxVal, setMaxVal] = useState<number>(initialMaxYear);
-  const [minInput, setMinInput] = useState<number>(initialMinYear);
-  const [maxInput, setMaxInput] = useState<number>(initialMaxYear);
+export const RangeSlider = ({ min, max, onChange }: RangeSliderProps) => {
+  console.log('Komponent Min: ' + min);
+  console.log('Komponent Max: ' + max);
+  const [sliderMinValue] = useState<number>(min);
+  const [sliderMaxValue] = useState<number>(max);
+  const [minVal, setMinVal] = useState<number>(min);
+  const [maxVal, setMaxVal] = useState<number>(max);
 
   const sliderTrackRef = useRef<HTMLDivElement>(null);
   const minGap = 1;
@@ -24,7 +26,6 @@ export const RangeSlider: React.FC = () => {
         ((minVal - sliderMinValue) / (sliderMaxValue - sliderMinValue)) * 100;
       const maxPercent =
         ((maxVal - sliderMinValue) / (sliderMaxValue - sliderMinValue)) * 100;
-
       range.style.left = `${minPercent}%`;
       range.style.right = `${100 - maxPercent}%`;
     }
@@ -38,7 +39,7 @@ export const RangeSlider: React.FC = () => {
     const value = parseInt(e.target.value, 10);
     if (value >= sliderMinValue && maxVal - value >= minGap) {
       setMinVal(value);
-      setMinInput(value);
+      onChange?.({ min: value, max: maxVal });
     }
   };
 
@@ -46,7 +47,7 @@ export const RangeSlider: React.FC = () => {
     const value = parseInt(e.target.value, 10);
     if (value <= sliderMaxValue && value - minVal >= minGap) {
       setMaxVal(value);
-      setMaxInput(value);
+      onChange?.({ min: minVal, max: value });
     }
   };
 
@@ -54,8 +55,8 @@ export const RangeSlider: React.FC = () => {
     const value =
       e.target.value === '' ? sliderMinValue : parseInt(e.target.value, 10);
     if (value >= sliderMinValue && value < maxVal - minGap) {
-      setMinInput(value);
       setMinVal(value);
+      onChange?.({ min: value, max: maxVal });
     }
   };
 
@@ -63,30 +64,8 @@ export const RangeSlider: React.FC = () => {
     const value =
       e.target.value === '' ? sliderMaxValue : parseInt(e.target.value, 10);
     if (value <= sliderMaxValue && value > minVal + minGap) {
-      setMaxInput(value);
       setMaxVal(value);
-    }
-  };
-
-  const handleInputKeyDown = (
-    e: React.KeyboardEvent<HTMLInputElement>,
-    type: 'min' | 'max',
-  ) => {
-    if (e.key === 'Enter') {
-      const value = parseInt((e.target as HTMLInputElement).value, 10);
-      if (
-        type === 'min' &&
-        value >= sliderMinValue &&
-        value < maxVal - minGap
-      ) {
-        setMinVal(value);
-      } else if (
-        type === 'max' &&
-        value <= sliderMaxValue &&
-        value > minVal + minGap
-      ) {
-        setMaxVal(value);
-      }
+      onChange?.({ min: minVal, max: value });
     }
   };
 
@@ -95,18 +74,16 @@ export const RangeSlider: React.FC = () => {
       <div className={cl(styles.inputBox)}>
         <input
           type="number"
-          value={minInput}
+          value={minVal}
           onChange={handleMinInput}
-          onKeyDown={(e) => handleInputKeyDown(e, 'min')}
           className={cl(styles.minInput)}
           min={sliderMinValue}
           max={maxVal - minGap}
         />
         <input
           type="number"
-          value={maxInput}
+          value={maxVal}
           onChange={handleMaxInput}
-          onKeyDown={(e) => handleInputKeyDown(e, 'max')}
           className={cl(styles.maxInput)}
           min={minVal + minGap}
           max={sliderMaxValue}
@@ -134,5 +111,4 @@ export const RangeSlider: React.FC = () => {
     </div>
   );
 };
-
 export default RangeSlider;

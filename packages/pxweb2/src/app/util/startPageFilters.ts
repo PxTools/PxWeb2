@@ -13,6 +13,11 @@ type TableWithPaths = Table & {
   paths?: { id: string; label: string }[][];
 };
 
+export interface YearRange {
+  min: number;
+  max: number;
+}
+
 export function getSubjectTree(tables: Table[]): PathItem[] {
   const allPaths: PathItem[][] = getAllPath(tables);
   return organizePaths(allPaths);
@@ -69,12 +74,16 @@ export function getTimeUnits(tables: Table[]): Map<string, number> {
 
 export function getFilters(tables: Table[]): StartPageFilters {
   let filters: StartPageFilters = {
+    yearRange: { min: 1900, max: 2025 },
     timeUnits: new Map<string, number>(),
     subjectTree: [],
   };
 
+  console.log(getYearRanges(tables));
+
   filters.timeUnits = getTimeUnits(tables);
   filters.subjectTree = getSubjectTree(tables);
+  filters.yearRange = getYearRanges(tables);
 
   return filters;
 }
@@ -153,3 +162,32 @@ export function getSubjectsAtLevel(
 
   return result;
 }
+
+export function getYearRanges(tables: Table[]): YearRange {
+  const allYears = tables.flatMap((t) => {
+    const years: number[] = [];
+    const first = extractYear(t.firstPeriod);
+    const last = extractYear(t.lastPeriod);
+    if (first > 0) {
+      years.push(first);
+    }
+    if (last > 0) {
+      years.push(last);
+    }
+    return years;
+  });
+
+  if (allYears.length === 0) {
+    console.log('FALLBACK');
+    return { min: 2000, max: 2025 };
+  }
+  const minYear = Math.min(...allYears);
+  const maxYear = Math.max(...allYears);
+  return { min: minYear, max: maxYear };
+}
+
+export const extractYear = (period: string | null | undefined): number => {
+  const yearStr = period?.substring(0, 4);
+  const parsed = parseInt(yearStr ?? '', 10);
+  return isNaN(parsed) ? 0 : parsed;
+};

@@ -1,5 +1,5 @@
 import { Table } from '@pxweb2/pxweb2-api-client';
-import { PathItem } from '../../util/startPageFilters';
+import { PathItem, YearRange } from '../../util/startPageFilters';
 
 export enum ActionType {
   RESET_FILTERS = 'RESET_FILTERS',
@@ -11,7 +11,7 @@ export enum ActionType {
 }
 
 export type Filter = {
-  type: 'timeUnit' | 'subject';
+  type: 'timeUnit' | 'subject' | 'year';
   value: string;
   label: string;
   index: number;
@@ -23,6 +23,7 @@ export type StartPageState = {
   availableFilters: {
     subjectTree: PathItem[];
     timeUnits: Map<string, number>;
+    yearRange: { min: number; max: number };
   };
   activeFilters: Filter[];
   loading: boolean;
@@ -71,4 +72,5 @@ type SetLoadingAction = {
 export type StartPageFilters = {
   timeUnits: Map<string, number>;
   subjectTree: PathItem[];
+  yearRange: YearRange;
 };

@@ -5,12 +5,17 @@ import {
   type Filter,
 } from '../../pages/StartPage/StartPageTypes';
 import styles from './FilterSidebar.module.scss';
-
-import { Checkbox, FilterCategory, Heading } from '@pxweb2/pxweb2-ui';
+import {
+  Checkbox,
+  FilterCategory,
+  Heading,
+  RangeSlider,
+} from '@pxweb2/pxweb2-ui';
 import {
   PathItem,
   getSubjectLevel,
   getSubjectsAtLevel,
+  extractYear,
 } from '../../util/startPageFilters';
 interface FilterProps {
   state: StartPageState;
@@ -153,6 +158,28 @@ const renderTimeUnitFilters = (
     });
 };
 
+const renderYearFilters = (state: StartPageState) => {
+  const allYears = state.availableTables.flatMap((t) => {
+    const years: number[] = [];
+    const first = extractYear(t.firstPeriod);
+    const last = extractYear(t.lastPeriod);
+    if (first > 0) {
+      years.push(first);
+    }
+    if (last > 0) {
+      years.push(last);
+    }
+    return years;
+  });
+  const minYear = allYears.length ? Math.min(...allYears) : 1700;
+  const maxYear = allYears.length ? Math.max(...allYears) : 2025;
+  return (
+    <div>
+      <RangeSlider min={minYear} max={maxYear} />
+    </div>
+  );
+};
+
 export const FilterSidebar: React.FC<FilterProps> = ({
   state,
   handleAddFilter,
@@ -178,6 +205,7 @@ export const FilterSidebar: React.FC<FilterProps> = ({
             {renderTimeUnitFilters(state, handleAddFilter, handleRemoveFilter)}
           </ul>
         </FilterCategory>
+        <FilterCategory header="År">{renderYearFilters(state)}</FilterCategory>
       </div>
       <p>
         <a href="/table/tab638">Go to table viewer</a>
