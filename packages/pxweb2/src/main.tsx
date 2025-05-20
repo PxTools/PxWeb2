@@ -11,21 +11,54 @@ import ErrorPage from './app/components/ErrorPage/ErrorPage';
 import { getConfig } from './app/util/config/getConfig';
 
 const config = getConfig();
-const showDefaultLanguageInPath =
-  config.language.showDefaultLanguageInPath || true;
+const showDefaultLanguageInPath = config.language.showDefaultLanguageInPath;
 
-const childRoutes = [
-  { index: true, element: <StartPage />, errorElement: <ErrorPage /> },
+const supportedLangRoutes = config.language.supportedLanguages
+  .map((lang) => {
+    if (
+      !showDefaultLanguageInPath &&
+      lang.shorthand === config.language.defaultLanguage
+    ) {
+      return undefined;
+    }
+
+    return {
+      path: `/${lang.shorthand}/`,
+      children: [
+        {
+          index: true,
+          element: <StartPage />,
+          errorElement: <ErrorPage />,
+        },
+        {
+          path: 'table/:tableId',
+          element: <TableViewer />,
+          errorElement: <ErrorPage />,
+        },
+        {
+          path: '*',
+          element: <div>404 table not found</div>,
+        },
+      ],
+    };
+  })
+  .filter((route) => {
+    return route !== undefined;
+  });
+
+const routingWithDefaultLanguageInURL = [
   {
-    path: 'table',
-    element: showDefaultLanguageInPath ? (
-      <Navigate to="/table/tab638" replace={true} />
-    ) : (
-      <Navigate
-        to={`/${config.language.defaultLanguage}/table/tab638`}
-        replace={true}
-      />
+    index: true,
+    element: (
+      <Navigate to={`/${config.language.defaultLanguage}/`} replace={true} />
     ),
+  },
+  ...supportedLangRoutes,
+];
+const routingWithoutDefaultLanguageInURL = [
+  {
+    index: true,
+    element: <StartPage />,
     errorElement: <ErrorPage />,
   },
   {
@@ -33,39 +66,23 @@ const childRoutes = [
     element: <TableViewer />,
     errorElement: <ErrorPage />,
   },
+  ...supportedLangRoutes,
 ];
-const routingWithDefaultLanguageInURL = {
-  path: '/',
-  errorElement: <ErrorPage />,
-  children: [
-    {
-      index: true,
-      element: (
-        <Navigate to={`/${config.language.defaultLanguage}`} replace={true} />
-      ),
-    },
-    { path: '/:lang', children: childRoutes },
-    {
-      path: '/table/:tableid',
-      element: (
-        <Navigate
-          to={`/${config.language.defaultLanguage}/table/tab638`}
-          replace={true}
-        />
-      ),
-    },
-    { path: '/*', element: <div>404 Not found</div> },
-  ],
-};
-const routingWithoutDefaultLanguageInURL = {
-  path: '/:lang?',
-  children: childRoutes,
-};
 
 const router = createBrowserRouter([
-  showDefaultLanguageInPath
-    ? routingWithDefaultLanguageInURL
-    : routingWithoutDefaultLanguageInURL,
+  {
+    path: '/',
+    errorElement: <ErrorPage />,
+    children: [
+      ...(showDefaultLanguageInPath
+        ? routingWithDefaultLanguageInURL
+        : routingWithoutDefaultLanguageInURL),
+      {
+        path: '*',
+        element: <div>404 Not found root. Unsupported language</div>,
+      },
+    ],
+  },
 ]);
 
 const root = ReactDOM.createRoot(
@@ -75,6 +92,20 @@ const root = ReactDOM.createRoot(
 if (location.href.includes('localhost')) {
   validateConfig();
 }
+
+/**
+ * TODO:
+ * The routing works as expected when default language is in the URL
+ * - changes correctly to new, supported language DONE
+ * - shows language not supported when language part in URL does not match a supported language DONE
+ * - REDIRECT to default language when no language in url, does not work
+ *
+ * The routing works as expected when default language is not in the URL
+ * - correctly shows default language when it is NOT in the URL DONE
+ * - correctly shows new, supported language when it is in the URL DONE
+ * - shows language not supported when no language part in URL, or language part in URL does not match a supported language DONE
+ */
+console.log('router', router);
 
 root.render(
   <StrictMode>
