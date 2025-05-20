@@ -1,0 +1,13 @@
+# This is a comment
+# /secure/page:
+  # X-Frame-Options: DENY
+  # X-Content-Type-Options: nosniff
+  # Referrer-Policy: no-referrer
+
+/public/*:
+  Access-Control-Allow-Origin: "*"
+  # X-Robots-Tag: nosnippet
+  Content-Security-Policy: script-src 'self'
+  Strict-Transport-Security: "max-age=31536000; includeSubDomains"
+  X-Frame-Options: "SAMEORIGIN"
+  # Permissions-Policy: geolocation=(self "https://www.scb.se"), microphone=(), camera=(), magnetometer=(), gyroscope=(), speaker=(), vibrate=(), fullscreen=(self "https://www.scb.se"), payment=(self "https://www.scb.se"), usb=(), accelerometer=(), ambient-light-sensor=(), autoplay=(self "https://www.scb.se"), clipboard-read=(self "https://www.scb.se"), clipboard-write=(self "https://www.scb.se"), document-domain=(self "https://www.scb.se"), encrypted-media=(self "https://www.scb.se"), xr-spatial-tracking=(self "https://www.scb.se")
