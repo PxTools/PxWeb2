@@ -6,6 +6,12 @@ import { Icon } from '../Icon/Icon';
 const meta: Meta<typeof TableCard> = {
   component: TableCard,
   title: 'Components/TableCard',
+  args: {
+    status: 'active',
+  },
+  argTypes: {
+    icon: { control: false },
+  },
 };
 export default meta;
 
@@ -14,8 +20,8 @@ type Story = StoryObj<typeof TableCard>;
 const exampleIcon = <Icon iconName="Table" />;
 
 export const Default: Story = {
+  render: (args) => <TableCard {...args} icon={<Icon iconName="Table" />} />,
   args: {
-    icon: exampleIcon,
     href: '#',
     title: 'Table title',
     tableId: '00000',

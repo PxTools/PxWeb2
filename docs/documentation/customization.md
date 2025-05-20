@@ -23,7 +23,17 @@ public
 │   └── sv
 │       └── translation.json
 └── theme
-    └── variables.css
+│   └── variables.css
+└── icon
+    ├── topicIconMap.json
+    └── topic
+        ├── icon1.svg
+        ├── icon2.svg
+        ├── ...
+        └── small/
+            ├── icon1.svg
+            ├── icon2.svg
+            └── ...
 ```
 
 ### config.js
@@ -80,6 +90,19 @@ The css file will let you adjust colors to match you site profile.
   --px-color-background-subtle: #F0F8F9;
 ...
 ```
+
+### topicIconMap.json
+
+The startpage displays a list of tables using the `TableCard` component.  
+To associate an icon with the main topic a table belongs to, there must be a mapping between the **topic ID** and the corresponding **SVG filename**.  
+This mapping is defined in `/public/icon/topic/topicIconMap.json`
+
+If you want to add new icons, they must be placed in both of the following folders:
+
+- `/public/icon/topic/` — SVG file with dimensions **36x36**
+- `/public/icon/topic/small/` — SVG file with dimensions **28x28**
+
+> If you need to change an existing topic ID or add a new mapping to a new SVG icon, this must also be done in the `/public/icon/topic/topicIconMap.json` file.
 
 ## PxWebApi
 

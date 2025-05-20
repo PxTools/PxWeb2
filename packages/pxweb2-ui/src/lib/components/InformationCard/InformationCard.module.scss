@@ -1,0 +1,54 @@
+@use '../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixed;
+
+.information-card {
+  display: flex;
+  padding: 20px 24px;
+  align-items: flex-start;
+  gap: 0.75rem;
+  border-radius: var(--px-border-radius-medium);
+  background: var(--px-color-background-subtle);
+  position: relative;
+}
+
+.information-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 6px;
+  height: 100%;
+  background: var(--px-color-surface-moderate);
+  border-top-left-radius: var(--px-border-radius-medium);
+  border-bottom-left-radius: var(--px-border-radius-medium);
+}
+
+.content-wrapper {
+  display: inline-flex;
+  flex-direction: column;
+  background: var();
+}
+
+.icon-wrapper {
+  display: flex;
+  width: 24px;
+  height: 24px;
+  padding-top: 0.5rem;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  flex-shrink: 0;
+  color: var(--px-color-icon-default);
+}
+
+.heading-wrapper {
+  padding-bottom: fixed.$spacing-1;
+  padding-top: 2px;
+  align-self: stretch;
+}
+
+.child-wrapper {
+  padding-top: 2px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
