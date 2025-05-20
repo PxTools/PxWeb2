@@ -22,6 +22,7 @@ import {
   getSubjectTree,
   getTimeUnits,
   updateSubjectTreeCounts,
+  sortFilterChips,
 } from '../../util/startPageFilters';
 import { useTopicIcons } from '../../util/hooks/useTopicIcons';
 import useApp from '../../context/useApp';
@@ -93,7 +94,6 @@ const StartPage = () => {
     switch (action.type) {
       case ActionType.RESET_FILTERS:
         // Reset from API or cache
-        // console.log(JSON.stringify(action.payload.subjects, null, 2));
         return {
           ...initialState,
           availableTables: action.payload.tables,
@@ -108,9 +108,7 @@ const StartPage = () => {
           },
         };
       case ActionType.ADD_FILTER: {
-        const newFilters = [...state.activeFilters, ...action.payload].sort(
-          (a, b) => a.index - b.index,
-        );
+        const newFilters = [...state.activeFilters, ...action.payload];
         const filteredTables = state.availableTables.filter((table) =>
           shouldTableBeIncluded(table, newFilters),
         );
@@ -247,7 +245,7 @@ const StartPage = () => {
             <div className={styles.filterPillContainer}>
               <Chips>
                 {renderRemoveAllChips()}
-                {state.activeFilters.map((filter) => (
+                {sortFilterChips(state.activeFilters).map((filter) => (
                   <Chips.Removable
                     onClick={() => handleRemoveFilter(filter.value)}
                     aria-label={t('start_page.filter.remove_filter_aria', {

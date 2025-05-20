@@ -1,5 +1,5 @@
 import { Table } from '@pxweb2/pxweb2-api-client';
-import { StartPageFilters } from '../pages/StartPage/StartPageTypes';
+import { StartPageFilters, Filter } from '../pages/StartPage/StartPageTypes';
 
 export interface PathItem {
   id: string;
@@ -151,4 +151,16 @@ export function getSubjectsAtLevel(
   }
 
   return result;
+}
+
+export function sortFilterChips(filters: Filter[]): Filter[] {
+  const typeOrder = ['subject', 'timeUnit'];
+  return filters.sort((a, b) => {
+    const typeComparison =
+      typeOrder.indexOf(a.type) - typeOrder.indexOf(b.type);
+    if (typeComparison !== 0) {
+      return typeComparison;
+    }
+    return a.index - b.index;
+  });
 }
