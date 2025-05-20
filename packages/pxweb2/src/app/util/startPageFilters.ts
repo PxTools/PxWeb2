@@ -113,3 +113,42 @@ export function updateSubjectTreeCounts(
 
   return originalTree.map(updateNode);
 }
+
+export function getSubjectLevel(
+  tree: PathItem[],
+  targetId: string,
+  currentLevel: number = 0,
+): number | null {
+  for (const node of tree) {
+    if (node.id === targetId) {
+      return currentLevel;
+    }
+    if (node.children?.length) {
+      const level = getSubjectLevel(node.children, targetId, currentLevel + 1);
+      if (level !== null) {
+        return level;
+      }
+    }
+  }
+  return null;
+}
+
+export function getSubjectsAtLevel(
+  tree: PathItem[],
+  targetLevel: number,
+  currentLevel: number = 0,
+): PathItem[] {
+  let result: PathItem[] = [];
+
+  for (const node of tree) {
+    if (currentLevel === targetLevel) {
+      result.push(node);
+    } else if (node.children?.length) {
+      result = result.concat(
+        getSubjectsAtLevel(node.children, targetLevel, currentLevel + 1),
+      );
+    }
+  }
+
+  return result;
+}
