@@ -100,7 +100,10 @@ const StartPage = () => {
           filteredTables: action.payload.tables,
           originalSubjectTree: action.payload.subjects, // lagre full struktur én gang
           availableFilters: {
-            subjectTree: action.payload.subjects,
+            subjectTree: updateSubjectTreeCounts(
+              action.payload.subjects,
+              action.payload.tables,
+            ),
             timeUnits: getTimeUnits(action.payload.tables),
           },
         };
@@ -139,7 +142,10 @@ const StartPage = () => {
             activeFilters: [],
             filteredTables: state.availableTables,
             availableFilters: {
-              subjectTree: state.originalSubjectTree,
+              subjectTree: updateSubjectTreeCounts(
+                state.originalSubjectTree,
+                state.availableTables,
+              ),
               timeUnits: getTimeUnits(state.availableTables),
             },
           };

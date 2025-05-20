@@ -8,6 +8,11 @@ export interface PathItem {
   count?: number;
 }
 
+type TableWithPaths = Table & {
+  id: string;
+  paths?: { id: string; label: string }[][];
+};
+
 export function getSubjectTree(tables: Table[]): PathItem[] {
   const allPaths: PathItem[][] = getAllPath(tables);
   return organizePaths(allPaths);
@@ -78,33 +83,27 @@ export function getSubjectTreeFromAllTables(allTables: Table[]): PathItem[] {
   return getSubjectTree(allTables);
 }
 
-function deuplicatePathItems(paths: PathItem[]): PathItem[] {
-  return paths.filter((item, index) => {
-    return paths.indexOf(item) === index;
-  });
-}
-
 export function updateSubjectTreeCounts(
   originalTree: PathItem[],
   filteredTables: Table[],
 ): PathItem[] {
-  const tableSubjectCounts = new Map<string, number>();
+  const subjectToTableMap = new Map<string, Set<string>>();
 
-  filteredTables.forEach((current) => {
-    if (current.paths != undefined) {
-      deuplicatePathItems(current.paths.flat()).forEach((path) => {
-        if (path?.id) {
-          tableSubjectCounts.set(
-            path.id,
-            (tableSubjectCounts.get(path.id) ?? 0) + 1,
-          );
+  (filteredTables as TableWithPaths[]).forEach((table) => {
+    table.paths?.forEach((path) => {
+      path.forEach((level) => {
+        if (level?.id) {
+          if (!subjectToTableMap.has(level.id)) {
+            subjectToTableMap.set(level.id, new Set());
+          }
+          subjectToTableMap.get(level.id)!.add(table.id);
         }
       });
-    }
+    });
   });
 
   function updateNode(node: PathItem): PathItem {
-    const count = tableSubjectCounts.get(node.id) ?? 0;
+    const count = subjectToTableMap.get(node.id)?.size ?? 0;
     return {
       ...node,
       count,
