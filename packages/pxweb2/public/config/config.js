@@ -3,10 +3,9 @@ window.PxWeb2Config = {
     supportedLanguages: [
       { shorthand: 'en', languageName: 'English' },
       { shorthand: 'sv', languageName: 'Svenska' },
-      { shorthand: 'no', languageName: 'Norsk' },
     ],
-    defaultLanguage: 'en',
-    fallbackLanguage: 'en',
+    defaultLanguage: 'sv',
+    fallbackLanguage: 'sv',
   },
   apiUrl: 'https://api.scb.se/OV0104/v2beta/api/v2',
   maxDataCells: 150000,
