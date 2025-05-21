@@ -13,7 +13,7 @@ export const RangeSlider = ({
   min,
   max,
   minGap = 0,
-  onChange
+  onChange,
 }: RangeSliderProps) => {
   const [minVal, setMinVal] = useState<number>(min);
   const [maxVal, setMaxVal] = useState<number>(max);
@@ -34,8 +34,6 @@ export const RangeSlider = ({
     setSliderTrack();
   }, [setSliderTrack]);
 
-  
-
   const slideMin = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value);
     if (value >= min && value <= maxVal - minGap) {
@@ -43,7 +41,7 @@ export const RangeSlider = ({
       onChange?.({ min: value, max: maxVal });
     }
   };
-  
+
   const slideMax = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value);
     if (value <= max && value >= minVal + minGap) {
@@ -51,7 +49,7 @@ export const RangeSlider = ({
       onChange?.({ min: minVal, max: value });
     }
   };
-  
+
   const handleMinInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value);
     if (Number.isFinite(value) && value >= min && value <= maxVal - minGap) {
@@ -59,7 +57,7 @@ export const RangeSlider = ({
       onChange?.({ min: value, max: maxVal });
     }
   };
-  
+
   const handleMaxInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value);
     if (Number.isFinite(value) && value <= max && value >= minVal + minGap) {
