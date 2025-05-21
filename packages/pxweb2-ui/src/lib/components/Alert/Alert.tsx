@@ -20,6 +20,7 @@ export interface AlertProps {
   readonly onClick?: () => void;
   readonly className?: string;
   readonly children?: string | React.ReactNode;
+  id?: string;
 }
 
 export function Alert({
@@ -32,6 +33,7 @@ export function Alert({
   onClick,
   className = '',
   children,
+  id,
 }: Readonly<AlertProps>) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
   const { t } = useTranslation();
@@ -133,6 +135,7 @@ export function Alert({
 
   return (
     <div
+      id={id}
       onKeyDown={clickable ? handleKeyDown : undefined}
       tabIndex={clickable ? 0 : undefined}
       className={
