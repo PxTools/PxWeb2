@@ -9,8 +9,7 @@ import styles from './FilterSidebar.module.scss';
 import { Checkbox, FilterCategory, Heading } from '@pxweb2/pxweb2-ui';
 import {
   PathItem,
-  getSubjectLevel,
-  getSubjectsAtLevel,
+  findParent,
 } from '../../util/startPageFilters';
 interface FilterProps {
   state: StartPageState;
@@ -49,22 +48,11 @@ const renderSubject = (
     const count = subject.count ?? 0;
 
     const handleSubjectAdd = () => {
-      const level = getSubjectLevel(
-        state.availableFilters.subjectTree,
-        subject.id,
-      );
-      if (level === null) {
-        return;
-      }
-      const sameLevelSubjects = getSubjectsAtLevel(
-        state.availableFilters.subjectTree,
-        level,
-      );
-      const sameLevelIds = new Set(sameLevelSubjects.map((s) => s.id));
-
-      // Remove subject same level
+      const parent = findParent(state.availableFilters.subjectTree, subject.id);
+      
+      // Remove parent from activFilters, TODO: mark as indeterminate
       state.activeFilters
-        .filter((f) => f.type === 'subject' && !sameLevelIds.has(f.value))
+        .filter((f) => f.type === 'subject' && f.value === parent?.id)
         .forEach((f) => {
           handleRemoveFilter(f.value);
         });

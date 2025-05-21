@@ -111,45 +111,6 @@ export function updateSubjectTreeCounts(
   return originalTree.map(updateNode);
 }
 
-export function getSubjectLevel(
-  tree: PathItem[],
-  targetId: string,
-  currentLevel: number = 0,
-): number | null {
-  for (const node of tree) {
-    if (node.id === targetId) {
-      return currentLevel;
-    }
-    if (node.children?.length) {
-      const level = getSubjectLevel(node.children, targetId, currentLevel + 1);
-      if (level !== null) {
-        return level;
-      }
-    }
-  }
-  return null;
-}
-
-export function getSubjectsAtLevel(
-  tree: PathItem[],
-  targetLevel: number,
-  currentLevel: number = 0,
-): PathItem[] {
-  let result: PathItem[] = [];
-
-  for (const node of tree) {
-    if (currentLevel === targetLevel) {
-      result.push(node);
-    } else if (node.children?.length) {
-      result = result.concat(
-        getSubjectsAtLevel(node.children, targetLevel, currentLevel + 1),
-      );
-    }
-  }
-
-  return result;
-}
-
 export function sortFilterChips(filters: Filter[]): Filter[] {
   const typeOrder = ['subject', 'timeUnit'];
   return filters.sort((a, b) => {
@@ -160,4 +121,22 @@ export function sortFilterChips(filters: Filter[]): Filter[] {
     }
     return a.index - b.index;
   });
+}
+
+export function findParent(
+  subjectTree: PathItem[],
+  childId: string,
+): PathItem | null {
+  for (const node of subjectTree) {
+    if (node.children?.some((child) => child.id === childId)) {
+      return node;
+    }
+    if (node.children) {
+      const found = findParent(node.children, childId);
+      if (found) {
+        return found;
+      }
+    }
+  }
+  return null;
 }
