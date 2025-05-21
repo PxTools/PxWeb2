@@ -8,6 +8,7 @@ import { validateConfig } from './app/util/validate';
 import { AppProvider } from './app/context/AppProvider';
 import StartPage from './app/pages/StartPage/StartPage';
 import ErrorPage from './app/components/ErrorPage/ErrorPage';
+import TopicIcons from './app/pages/TopicIcons/TopicIcons';
 import { getConfig } from './app/util/config/getConfig';
 
 const config = getConfig();
@@ -80,6 +81,10 @@ const router = createBrowserRouter([
       {
         path: '*',
         element: <div>404 Not found root. Unsupported language</div>,
+      },
+      {
+        path: 'topicIcons',
+        element: <TopicIcons />,
       },
     ],
   },
