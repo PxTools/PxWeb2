@@ -90,7 +90,7 @@ describe('Router configuration', () => {
       expect(screen.getByTestId('table-viewer')).toBeInTheDocument();
     });
 
-    it('should render NotFound for non-existent paths', () => {
+    it('should render NotFound for non-existent paths and unsupported languages', () => {
       const testRouter = createMemoryRouter(routerConfig, {
         initialEntries: ['/non-existent'],
       });
@@ -172,6 +172,46 @@ describe('Router configuration', () => {
 
       render(<RouterProvider router={testRouter} />);
       expect(screen.getByTestId('table-viewer')).toBeInTheDocument();
+    });
+
+    it('should render StartPage for non-default language path', () => {
+      const testRouter = createMemoryRouter(routerConfig, {
+        initialEntries: ['/no/'],
+      });
+
+      render(<RouterProvider router={testRouter} />);
+      expect(screen.getByTestId('start-page')).toBeInTheDocument();
+    });
+
+    it('should render TableViewer for non-default language table path', () => {
+      const testRouter = createMemoryRouter(routerConfig, {
+        initialEntries: ['/no/table/12345'],
+      });
+
+      render(<RouterProvider router={testRouter} />);
+      expect(screen.getByTestId('table-viewer')).toBeInTheDocument();
+    });
+
+    it('should render NotFound for non-existent paths', () => {
+      const testRouter = createMemoryRouter(routerConfig, {
+        initialEntries: ['/en/non-existent'],
+      });
+
+      render(<RouterProvider router={testRouter} />);
+      expect(
+        screen.getByTestId('not-found-table_not_found'),
+      ).toBeInTheDocument();
+    });
+
+    it('should render NotFound when unsupported language is used', () => {
+      const testRouter = createMemoryRouter(routerConfig, {
+        initialEntries: ['/pl/table/12345'],
+      });
+
+      render(<RouterProvider router={testRouter} />);
+      expect(
+        screen.getByTestId('not-found-unsupported_language'),
+      ).toBeInTheDocument();
     });
   });
 
