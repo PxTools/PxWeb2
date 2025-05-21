@@ -1,6 +1,6 @@
 import { StrictMode, Suspense } from 'react';
 import * as ReactDOM from 'react-dom/client';
-import { createBrowserRouter, Navigate, RouterProvider } from 'react-router';
+import { createBrowserRouter, RouterProvider } from 'react-router';
 
 import './i18n/config';
 import TableViewer from './app/pages/TableViewer/TableViewer';
@@ -47,15 +47,7 @@ const supportedLangRoutes = config.language.supportedLanguages
     return route !== undefined;
   });
 
-const routingWithDefaultLanguageInURL = [
-  {
-    index: true,
-    element: (
-      <Navigate to={`/${config.language.defaultLanguage}/`} replace={true} />
-    ),
-  },
-  ...supportedLangRoutes,
-];
+const routingWithDefaultLanguageInURL = [...supportedLangRoutes];
 const routingWithoutDefaultLanguageInURL = [
   {
     index: true,
