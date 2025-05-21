@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router';
+import { Navigate } from 'react-router';
 
 import TableViewer from './pages/TableViewer/TableViewer';
 import StartPage from './pages/StartPage/StartPage';
@@ -43,7 +43,13 @@ const supportedLangRoutes = config.language.supportedLanguages
     return route !== undefined;
   });
 
-const routingWithDefaultLanguageInURL = [...supportedLangRoutes];
+const routingWithDefaultLanguageInURL = [
+  {
+    index: true,
+    element: <Navigate to={`/${config.language.defaultLanguage}/`} replace />,
+  },
+  ...supportedLangRoutes,
+];
 const routingWithoutDefaultLanguageInURL = [
   {
     index: true,
@@ -58,7 +64,7 @@ const routingWithoutDefaultLanguageInURL = [
   ...supportedLangRoutes,
 ];
 
-export const router = createBrowserRouter([
+export const routerConfig = [
   {
     path: '/',
     errorElement: <ErrorPage />,
@@ -76,4 +82,4 @@ export const router = createBrowserRouter([
       },
     ],
   },
-]);
+];
