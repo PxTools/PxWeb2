@@ -20,7 +20,7 @@ export const DefaultSlider: StoryFn<typeof RangeSlider> = () => {
       />
 
       <h2>
-        Valgt intervall: {range.min} – {range.max}
+        Valgt intervall: {range.min} - {range.max}
       </h2>
     </div>
   );

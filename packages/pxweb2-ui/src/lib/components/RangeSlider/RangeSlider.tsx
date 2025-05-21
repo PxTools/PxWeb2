@@ -5,18 +5,16 @@ import cl from 'clsx';
 type RangeSliderProps = {
   min: number;
   max: number;
-  minGap?: number;
   onChange?: (range: { min: number; max: number }) => void;
+  minGap?: number;
 };
 
 export const RangeSlider = ({
   min,
   max,
-  minGap = 1,
-  onChange,
+  minGap = 0,
+  onChange
 }: RangeSliderProps) => {
-  const [sliderMinValue] = useState<number>(min);
-  const [sliderMaxValue] = useState<number>(max);
   const [minVal, setMinVal] = useState<number>(min);
   const [maxVal, setMaxVal] = useState<number>(max);
 
@@ -25,48 +23,46 @@ export const RangeSlider = ({
   const setSliderTrack = useCallback(() => {
     const range = sliderTrackRef.current;
     if (range) {
-      const minPercent =
-        ((minVal - sliderMinValue) / (sliderMaxValue - sliderMinValue)) * 100;
-      const maxPercent =
-        ((maxVal - sliderMinValue) / (sliderMaxValue - sliderMinValue)) * 100;
+      const minPercent = ((minVal - min) / (max - min)) * 100;
+      const maxPercent = ((maxVal - min) / (max - min)) * 100;
       range.style.left = `${minPercent}%`;
       range.style.right = `${100 - maxPercent}%`;
     }
-  }, [minVal, maxVal, sliderMinValue, sliderMaxValue]);
+  }, [minVal, maxVal, min, max]);
 
   useEffect(() => {
     setSliderTrack();
   }, [setSliderTrack]);
 
+  
+
   const slideMin = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value, 10);
-    if (value >= sliderMinValue && maxVal - value >= minGap) {
+    const value = Number(e.target.value);
+    if (value >= min && value <= maxVal - minGap) {
       setMinVal(value);
       onChange?.({ min: value, max: maxVal });
     }
   };
-
+  
   const slideMax = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value, 10);
-    if (value <= sliderMaxValue && value - minVal >= minGap) {
+    const value = Number(e.target.value);
+    if (value <= max && value >= minVal + minGap) {
       setMaxVal(value);
       onChange?.({ min: minVal, max: value });
     }
   };
-
+  
   const handleMinInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value =
-      e.target.value === '' ? sliderMinValue : parseInt(e.target.value, 10);
-    if (value >= sliderMinValue && value < maxVal - minGap) {
+    const value = Number(e.target.value);
+    if (Number.isFinite(value) && value >= min && value <= maxVal - minGap) {
       setMinVal(value);
       onChange?.({ min: value, max: maxVal });
     }
   };
-
+  
   const handleMaxInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value =
-      e.target.value === '' ? sliderMaxValue : parseInt(e.target.value, 10);
-    if (value <= sliderMaxValue && value > minVal + minGap) {
+    const value = Number(e.target.value);
+    if (Number.isFinite(value) && value <= max && value >= minVal + minGap) {
       setMaxVal(value);
       onChange?.({ min: minVal, max: value });
     }
@@ -80,7 +76,7 @@ export const RangeSlider = ({
           value={minVal}
           onChange={handleMinInput}
           className={cl(styles.minInput)}
-          min={sliderMinValue}
+          min={min}
           max={maxVal - minGap}
         />
         <input
@@ -89,23 +85,23 @@ export const RangeSlider = ({
           onChange={handleMaxInput}
           className={cl(styles.maxInput)}
           min={minVal + minGap}
-          max={sliderMaxValue}
+          max={max}
         />
       </div>
       <div className={cl(styles.rangeSlider)}>
         <div ref={sliderTrackRef} className={cl(styles.sliderTrack)} />
         <input
           type="range"
-          min={sliderMinValue}
-          max={sliderMaxValue}
+          min={min}
+          max={max}
           value={minVal}
           onChange={slideMin}
           className={cl(styles.minVal)}
         />
         <input
           type="range"
-          min={sliderMinValue}
-          max={sliderMaxValue}
+          min={min}
+          max={max}
           value={maxVal}
           onChange={slideMax}
           className={cl(styles.maxVal)}
@@ -114,4 +110,5 @@ export const RangeSlider = ({
     </div>
   );
 };
+
 export default RangeSlider;
