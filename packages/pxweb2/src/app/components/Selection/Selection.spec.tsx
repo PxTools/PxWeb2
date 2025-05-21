@@ -6,7 +6,7 @@ import {
   mockTableService,
   renderWithProviders,
 } from '../../util/testing-utils';
-import Selection, { getCodeListTEST } from './Selection';
+import Selection, { getCodeList } from './Selection';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import {
   TableDataProvider,
@@ -66,9 +66,17 @@ describe('Selection', () => {
   });
 
   it('should fetch and return a valid CodeList from the API', async () => {
-    const codelist = await getCodeListTEST('vs_RegionLän07', 'en', 'value');
+    const codelist = await getCodeList('vs_RegionLän07', 'en', 'value');
     expect(codelist.id).toBe('vs_RegionLän07');
+  });
+
+  it('should fetch and return a valid mandatory CodeList from the API', async () => {
+    const codelist = await getCodeList('vs_RegionLän07', 'en', 'value');
     expect(codelist.mandatory).toBe(true);
+  });
+
+  it('should fetch and return a valid CodeList with values from the API', async () => {
+    const codelist = await getCodeList('vs_RegionLän07', 'en', 'value');
     expect(codelist.values).toBeDefined();
     expect(codelist.values.length).toBeGreaterThan(0);
     expect(codelist.values[0].code).toBe('01');

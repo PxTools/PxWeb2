@@ -87,18 +87,9 @@ function addValueToNewVariable(
   return newSelectedValues;
 }
 
-// TEST ONLY - Exported function only used for unit testing the internal getCodeList function
-export async function getCodeListTEST(
-  id: string,
-  lang: string,
-  valueDisplayType: ValueDisplayType,
-): Promise<CodeList> {
-  const codelist: CodeList = await getCodeList(id, lang, valueDisplayType);
-  return codelist;
-}
 
 // Get the selected codelist from the API
-async function getCodeList(
+export async function getCodeList(
   id: string,
   lang: string,
   valueDisplayType: ValueDisplayType,
