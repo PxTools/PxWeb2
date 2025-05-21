@@ -8,13 +8,13 @@
 }
 
 .medium {
-  height: 32px;
+  min-height: 32px;
   padding: 5px 8px 4px 8px;
   border-radius: var(--px-border-radius-small);
 }
 
 .small {
-  height: 24px;
+  min-height: 24px;
   padding: 2px 4px 2px 4px;
   border-radius: var(--px-border-radius-xsmall);
   &.border {
@@ -23,7 +23,7 @@
 }
 
 .xsmall {
-  height: 20px;
+  min-height: 20px;
   padding: 2px 4px 0px;
   border-radius: var(--px-border-radius-xsmall);
 }
