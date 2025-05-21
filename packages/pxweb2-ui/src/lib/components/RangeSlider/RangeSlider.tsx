@@ -5,19 +5,17 @@ import cl from 'clsx';
 type RangeSliderProps = {
   min: number;
   max: number;
+  minGap?: number;
   onChange?: (range: { min: number; max: number }) => void;
 };
 
-export const RangeSlider = ({ min, max, onChange }: RangeSliderProps) => {
-  console.log('Komponent Min: ' + min);
-  console.log('Komponent Max: ' + max);
+export const RangeSlider = ({ min, max, minGap = 1 ,onChange }: RangeSliderProps) => {
   const [sliderMinValue] = useState<number>(min);
   const [sliderMaxValue] = useState<number>(max);
   const [minVal, setMinVal] = useState<number>(min);
   const [maxVal, setMaxVal] = useState<number>(max);
 
   const sliderTrackRef = useRef<HTMLDivElement>(null);
-  const minGap = 1;
 
   const setSliderTrack = useCallback(() => {
     const range = sliderTrackRef.current;

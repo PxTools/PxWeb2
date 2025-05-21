@@ -15,7 +15,6 @@ import {
   PathItem,
   getSubjectLevel,
   getSubjectsAtLevel,
-  extractYear,
 } from '../../util/startPageFilters';
 interface FilterProps {
   state: StartPageState;
@@ -126,56 +125,67 @@ const renderTimeUnitFilters = (
   const allTimeUnits = new Set(
     state.availableTables.map((table) => table.timeUnit ?? 'Ukjent'),
   );
-  return Array.from(allTimeUnits)
-    .sort((a, b) => {
-      const aCount = state.availableFilters.timeUnits.get(a) ?? 0;
-      const bCount = state.availableFilters.timeUnits.get(b) ?? 0;
-      return bCount - aCount;
-    })
-    .map((key, i) => {
-      const count = state.availableFilters.timeUnits.get(key) ?? 0;
-      const isActive = state.activeFilters.some(
-        (filter) => filter.type === 'timeUnit' && filter.value === key,
-      );
+  return Array.from(allTimeUnits).map((key, i) => {
+    const count = state.availableFilters.timeUnits.get(key) ?? 0;
+    const isActive = state.activeFilters.some(
+      (filter) => filter.type === 'timeUnit' && filter.value === key,
+    );
 
-      return (
-        <li key={key} className={styles.filterItem}>
-          <Checkbox
-            id={key}
-            text={`${key} (${count})`}
-            value={isActive}
-            subtle={!isActive && count === 0}
-            onChange={(value) => {
-              value
-                ? handleAddFilter([
-                    { type: 'timeUnit', value: key, label: key, index: i },
-                  ])
-                : handleRemoveFilter(key);
-            }}
-          />
-        </li>
-      );
-    });
+    return (
+      <li key={key} className={styles.filterItem}>
+        <Checkbox
+          id={key}
+          text={`${key} (${count})`}
+          value={isActive}
+          subtle={!isActive && count === 0}
+          onChange={(value) => {
+            value
+              ? handleAddFilter([
+                  { type: 'timeUnit', value: key, label: key, index: i },
+                ])
+              : handleRemoveFilter(key);
+          }}
+        />
+      </li>
+    );
+  });
 };
 
-const renderYearFilters = (state: StartPageState) => {
-  const allYears = state.availableTables.flatMap((t) => {
-    const years: number[] = [];
-    const first = extractYear(t.firstPeriod);
-    const last = extractYear(t.lastPeriod);
-    if (first > 0) {
-      years.push(first);
-    }
-    if (last > 0) {
-      years.push(last);
-    }
-    return years;
-  });
-  const minYear = allYears.length ? Math.min(...allYears) : 1700;
-  const maxYear = allYears.length ? Math.max(...allYears) : 2025;
+const renderYearFilters = (
+  state: StartPageState,
+  handleAddFilter: (filter: Filter[]) => void,
+  handleRemoveFilter: (filterId: string) => void,
+) => {
+  const rawMin = Number(state?.availableFilters?.yearRange?.min);
+  const rawMax = Number(state?.availableFilters?.yearRange?.max);
+
+  const yearRangeAvailable = Number.isFinite(rawMin) && Number.isFinite(rawMax);
+
+  if (!yearRangeAvailable) {
+    return null;
+  } // eller en spinner
+
+  const minYear = rawMin;
+  const maxYear = rawMax;
+
   return (
     <div>
-      <RangeSlider min={minYear} max={maxYear} />
+      <RangeSlider
+        min={minYear}
+        max={maxYear}
+        minGap={0}
+        onChange={({ min, max }) => {
+          handleRemoveFilter('year');
+          handleAddFilter([
+            {
+              type: 'year',
+              value: `${min}-${max}`,
+              label: `${min} - ${max}`,
+              index: 0,
+            },
+          ]);
+        }}
+      />
     </div>
   );
 };
@@ -205,7 +215,9 @@ export const FilterSidebar: React.FC<FilterProps> = ({
             {renderTimeUnitFilters(state, handleAddFilter, handleRemoveFilter)}
           </ul>
         </FilterCategory>
-        <FilterCategory header="År">{renderYearFilters(state)}</FilterCategory>
+        <FilterCategory header="År">
+          {renderYearFilters(state, handleAddFilter, handleRemoveFilter)}
+        </FilterCategory>
       </div>
       <p>
         <a href="/table/tab638">Go to table viewer</a>

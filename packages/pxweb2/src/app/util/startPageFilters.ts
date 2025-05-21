@@ -164,30 +164,29 @@ export function getSubjectsAtLevel(
 }
 
 export function getYearRanges(tables: Table[]): YearRange {
-  const allYears = tables.flatMap((t) => {
-    const years: number[] = [];
-    const first = extractYear(t.firstPeriod);
-    const last = extractYear(t.lastPeriod);
-    if (first > 0) {
-      years.push(first);
+  const yearsPeriod: number[] = [];
+  tables.forEach((table) => {
+    if (table.firstPeriod && table.lastPeriod) {
+      yearsPeriod.push(extractYear(table.firstPeriod));
+      yearsPeriod.push(extractYear(table.lastPeriod));
     }
-    if (last > 0) {
-      years.push(last);
-    }
-    return years;
   });
-
-  if (allYears.length === 0) {
-    console.log('FALLBACK');
-    return { min: 2000, max: 2025 };
-  }
-  const minYear = Math.min(...allYears);
-  const maxYear = Math.max(...allYears);
-  return { min: minYear, max: maxYear };
+  return {
+    min: Math.min(...yearsPeriod),
+    max: Math.max(...yearsPeriod),
+  };
 }
 
-export const extractYear = (period: string | null | undefined): number => {
+export const extractYearOld = (period: string | null | undefined): number => {
   const yearStr = period?.substring(0, 4);
   const parsed = parseInt(yearStr ?? '', 10);
   return isNaN(parsed) ? 0 : parsed;
 };
+
+export function extractYear(period: string | null | undefined): number {
+  if (!period) {
+    return NaN;
+  }
+  const match = period.match(/\d{4}/);
+  return match ? parseInt(match[0], 10) : NaN;
+}

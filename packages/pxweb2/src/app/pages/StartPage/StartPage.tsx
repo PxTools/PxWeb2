@@ -69,6 +69,7 @@ const StartPage = () => {
   }
 
   async function handleRemoveFilter(filterId: string) {
+    console.log('Removing filter: ', filterId);
     dispatch({
       type: ActionType.REMOVE_FILTER,
       payload: filterId,
@@ -110,11 +111,24 @@ const StartPage = () => {
           },
         };
       case ActionType.ADD_FILTER: {
-        const newFilters = [...state.activeFilters, ...action.payload];
+        const incoming = action.payload;
+
+        // Hvis en av filtrene er av type yearRange, fjern tidligere yearRange-filter
+        const incomingTypes = new Set(incoming.map((f) => f.type));
+        const clearedFilters = state.activeFilters.filter(
+          (f) => !incomingTypes.has(f.type),
+        );
+        const newFilters = [...clearedFilters, ...incoming];
         const sortedFilters = newFilters.sort((a, b) => a.index - b.index);
         const filteredTables = state.availableTables.filter((table) =>
           shouldTableBeIncluded(table, sortedFilters),
         );
+
+        // const newFilters = [...state.activeFilters, ...action.payload];
+        //const sortedFilters = newFilters.sort((a, b) => a.index - b.index);
+        //const filteredTables = state.availableTables.filter((table) =>
+        // shouldTableBeIncluded(table, sortedFilters),
+        //);
         const activeTypes = getActiveFilterTypes(sortedFilters);
         return {
           ...state,
@@ -130,9 +144,7 @@ const StartPage = () => {
             timeUnits: activeTypes.has('timeUnit')
               ? state.availableFilters.timeUnits
               : getTimeUnits(filteredTables),
-            yearRange: activeTypes.has('year')
-              ? state.availableFilters.yearRange
-              : getYearRanges(filteredTables),
+            yearRange: getYearRanges(filteredTables),
           },
         };
       }
@@ -173,9 +185,7 @@ const StartPage = () => {
             timeUnits: activeTypes.has('timeUnit')
               ? state.availableFilters.timeUnits
               : getTimeUnits(filteredTables),
-            yearRange: activeTypes.has('year')
-              ? state.availableFilters.yearRange
-              : getYearRanges(filteredTables),
+            yearRange: getYearRanges(filteredTables),
           },
         };
       }
