@@ -16,7 +16,11 @@ export function SymbolExplanationNotes({ notes }: SymbolExplanationNotesProps) {
 
   return (
     <InformationCard icon="Book" headingText={heading} headingLevel="1">
-      <BodyLong as="div" className={cl(styles['symbolexplanationnotes'])} size="medium">
+      <BodyLong
+        as="div"
+        className={cl(styles['symbolexplanationnotes'])}
+        size="medium"
+      >
         {Object.entries(notes).map(([key, value]) => (
           <div key={key}>{value}</div>
         ))}
