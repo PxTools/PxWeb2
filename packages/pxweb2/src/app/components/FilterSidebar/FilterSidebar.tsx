@@ -7,10 +7,7 @@ import {
 import styles from './FilterSidebar.module.scss';
 
 import { Checkbox, FilterCategory, Heading } from '@pxweb2/pxweb2-ui';
-import {
-  PathItem,
-  findParent,
-} from '../../util/startPageFilters';
+import { PathItem, findParent } from '../../util/startPageFilters';
 interface FilterProps {
   state: StartPageState;
   handleAddFilter: (filter: Filter[]) => void;
@@ -49,7 +46,7 @@ const renderSubject = (
 
     const handleSubjectAdd = () => {
       const parent = findParent(state.availableFilters.subjectTree, subject.id);
-      
+
       // Remove parent from activFilters, TODO: mark as indeterminate
       state.activeFilters
         .filter((f) => f.type === 'subject' && f.value === parent?.id)
