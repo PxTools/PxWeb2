@@ -83,10 +83,6 @@ const StartPage = () => {
     dispatch({ type: ActionType.SET_LOADING, payload: loadingState });
   }
 
-  function getActiveFilterTypes(filters: Filter[]): Set<string> {
-    return new Set(filters.map((f) => f.type));
-  }
-
   function reducer(
     state: StartPageState,
     action: ReducerActionTypes,
@@ -100,10 +96,7 @@ const StartPage = () => {
           filteredTables: action.payload.tables,
           originalSubjectTree: action.payload.subjects, // lagre full struktur én gang
           availableFilters: {
-            subjectTree: updateSubjectTreeCounts(
-              action.payload.subjects,
-              action.payload.tables,
-            ),
+            subjectTree: action.payload.subjects,
             timeUnits: getTimeUnits(action.payload.tables),
           },
         };
@@ -112,21 +105,23 @@ const StartPage = () => {
         const filteredTables = state.availableTables.filter((table) =>
           shouldTableBeIncluded(table, newFilters),
         );
-        const activeTypes = getActiveFilterTypes(newFilters);
+        const addType = action.payload[0]?.type;
         return {
           ...state,
           activeFilters: newFilters,
           filteredTables,
           availableFilters: {
-            subjectTree: activeTypes.has('subject')
-              ? state.availableFilters.subjectTree
-              : updateSubjectTreeCounts(
-                  state.originalSubjectTree,
-                  filteredTables,
-                ),
-            timeUnits: activeTypes.has('timeUnit')
-              ? state.availableFilters.timeUnits
-              : getTimeUnits(filteredTables),
+            subjectTree:
+              addType !== 'subject'
+                ? updateSubjectTreeCounts(
+                    state.originalSubjectTree,
+                    filteredTables,
+                  )
+                : state.availableFilters.subjectTree,
+            timeUnits:
+              addType !== 'timeUnit'
+                ? getTimeUnits(filteredTables)
+                : state.availableFilters.timeUnits,
           },
         };
       }
@@ -151,21 +146,26 @@ const StartPage = () => {
         const filteredTables = state.availableTables.filter((table) =>
           shouldTableBeIncluded(table, currentFilters),
         );
-        const activeTypes = getActiveFilterTypes(currentFilters);
+        const removedFilter = state.activeFilters.find(
+          (filter) => filter.value === action.payload,
+        );
+        const removedType = removedFilter?.type;
         return {
           ...state,
           activeFilters: currentFilters,
           filteredTables,
           availableFilters: {
-            subjectTree: activeTypes.has('subject')
-              ? state.availableFilters.subjectTree
-              : updateSubjectTreeCounts(
-                  state.originalSubjectTree,
-                  filteredTables,
-                ),
-            timeUnits: activeTypes.has('timeUnit')
-              ? state.availableFilters.timeUnits
-              : getTimeUnits(filteredTables),
+            subjectTree:
+              removedType !== 'subject'
+                ? updateSubjectTreeCounts(
+                    state.originalSubjectTree,
+                    filteredTables,
+                  )
+                : state.availableFilters.subjectTree,
+            timeUnits:
+              removedType !== 'timeUnit'
+                ? getTimeUnits(filteredTables)
+                : state.availableFilters.timeUnits,
           },
         };
       }

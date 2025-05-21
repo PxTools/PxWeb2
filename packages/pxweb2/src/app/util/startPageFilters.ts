@@ -15,7 +15,8 @@ type TableWithPaths = Table & {
 
 export function getSubjectTree(tables: Table[]): PathItem[] {
   const allPaths: PathItem[][] = getAllPath(tables);
-  return organizePaths(allPaths);
+  const organizedPaths: PathItem[] = organizePaths(allPaths);
+  return updateSubjectTreeCounts(organizedPaths, tables);
 }
 
 export function organizePaths(paths: PathItem[][]): PathItem[] {
@@ -77,10 +78,6 @@ export function getFilters(tables: Table[]): StartPageFilters {
   filters.subjectTree = getSubjectTree(tables);
 
   return filters;
-}
-
-export function getSubjectTreeFromAllTables(allTables: Table[]): PathItem[] {
-  return getSubjectTree(allTables);
 }
 
 export function updateSubjectTreeCounts(
