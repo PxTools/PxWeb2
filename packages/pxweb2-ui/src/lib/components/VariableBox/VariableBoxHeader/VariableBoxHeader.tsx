@@ -95,8 +95,7 @@ export function VariableBoxHeader({
         <button
           className={cl(classes['variablebox-header-button']) + cssClasses}
           aria-expanded={isOpen}
-          aria-labelledby={titleId + ' ' + tagsId}
-          aria-describedby={isMissingMandatoryValues ? alertId : undefined}
+          aria-labelledby={titleId + ' ' + tagsId + ' ' + alertId}
         >
           {isOpen ? (
             <Icon iconName="ChevronUp"></Icon>
