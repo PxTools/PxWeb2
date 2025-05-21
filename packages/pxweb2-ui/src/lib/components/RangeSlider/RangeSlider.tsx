@@ -9,7 +9,12 @@ type RangeSliderProps = {
   onChange?: (range: { min: number; max: number }) => void;
 };
 
-export const RangeSlider = ({ min, max, minGap = 1 ,onChange }: RangeSliderProps) => {
+export const RangeSlider = ({
+  min,
+  max,
+  minGap = 1,
+  onChange,
+}: RangeSliderProps) => {
   const [sliderMinValue] = useState<number>(min);
   const [sliderMaxValue] = useState<number>(max);
   const [minVal, setMinVal] = useState<number>(min);
