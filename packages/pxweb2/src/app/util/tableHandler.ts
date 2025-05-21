@@ -64,7 +64,7 @@ export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
     }
   };
 
-  const yearRangeFilter = filters.find((f) => f.type === 'year');
+  const yearRangeFilter = filters.find((f) => f.type === 'yearRange');
   const testYearRangeFilter = () => {
     if (!yearRangeFilter) {
       return true;

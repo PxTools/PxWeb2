@@ -11,7 +11,7 @@ export enum ActionType {
 }
 
 export type Filter = {
-  type: 'timeUnit' | 'subject' | 'year';
+  type: 'timeUnit' | 'subject' | 'yearRange';
   value: string;
   label: string;
   index: number;
@@ -29,6 +29,7 @@ export type StartPageState = {
   loading: boolean;
   error: string;
   originalSubjectTree: PathItem[];
+  lastUsedYearRange: { min: number; max: number };
 };
 
 export type ReducerActionTypes =

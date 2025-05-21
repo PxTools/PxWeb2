@@ -48,6 +48,7 @@ const initialState: StartPageState = Object.freeze({
   loading: false,
   error: '',
   originalSubjectTree: [],
+  lastUsedYearRange: { min: 1899, max: 2050 },
 });
 
 const StartPage = () => {
@@ -69,7 +70,6 @@ const StartPage = () => {
   }
 
   async function handleRemoveFilter(filterId: string) {
-    console.log('Removing filter: ', filterId);
     dispatch({
       type: ActionType.REMOVE_FILTER,
       payload: filterId,
@@ -93,9 +93,8 @@ const StartPage = () => {
     action: ReducerActionTypes,
   ): StartPageState {
     switch (action.type) {
-      case ActionType.RESET_FILTERS:
-        // Reset from API or cache
-        // console.log(JSON.stringify(action.payload.subjects, null, 2));
+      case ActionType.RESET_FILTERS: {
+        const fullRange = getYearRanges(action.payload.tables);
         return {
           ...initialState,
           availableTables: action.payload.tables,
@@ -107,13 +106,13 @@ const StartPage = () => {
               action.payload.tables,
             ),
             timeUnits: getTimeUnits(action.payload.tables),
-            yearRange: getYearRanges(action.payload.tables),
+            yearRange: fullRange,
           },
+          lastUsedYearRange: fullRange,
         };
+      }
       case ActionType.ADD_FILTER: {
         const incoming = action.payload;
-
-        // Hvis en av filtrene er av type yearRange, fjern tidligere yearRange-filter
         const incomingTypes = new Set(incoming.map((f) => f.type));
         const clearedFilters = state.activeFilters.filter(
           (f) => !incomingTypes.has(f.type),
@@ -123,13 +122,16 @@ const StartPage = () => {
         const filteredTables = state.availableTables.filter((table) =>
           shouldTableBeIncluded(table, sortedFilters),
         );
-
-        // const newFilters = [...state.activeFilters, ...action.payload];
-        //const sortedFilters = newFilters.sort((a, b) => a.index - b.index);
-        //const filteredTables = state.availableTables.filter((table) =>
-        // shouldTableBeIncluded(table, sortedFilters),
-        //);
         const activeTypes = getActiveFilterTypes(sortedFilters);
+
+        // 🧠 Ikke oppdater lastUsedYearRange hvis eneste endring gjelder yearRange
+        const otherFilterAdded = Array.from(incomingTypes).some(
+          (t) => t !== 'yearRange',
+        );
+        const updatedLastUsedYearRange = otherFilterAdded
+          ? getYearRanges(filteredTables)
+          : state.lastUsedYearRange;
+
         return {
           ...state,
           activeFilters: sortedFilters,
@@ -146,13 +148,17 @@ const StartPage = () => {
               : getTimeUnits(filteredTables),
             yearRange: getYearRanges(filteredTables),
           },
+          lastUsedYearRange: updatedLastUsedYearRange,
         };
       }
+
       case ActionType.REMOVE_FILTER: {
         const currentFilters = state.activeFilters.filter(
           (filter) => filter.value !== action.payload,
         );
+
         if (currentFilters.length === 0) {
+          const fullRange = getYearRanges(state.availableTables);
           return {
             ...state,
             activeFilters: [],
@@ -163,14 +169,26 @@ const StartPage = () => {
                 state.availableTables,
               ),
               timeUnits: getTimeUnits(state.availableTables),
-              yearRange: getYearRanges(state.availableTables),
+              yearRange: fullRange,
             },
+            lastUsedYearRange: fullRange,
           };
         }
+
         const filteredTables = state.availableTables.filter((table) =>
           shouldTableBeIncluded(table, currentFilters),
         );
+
         const activeTypes = getActiveFilterTypes(currentFilters);
+
+        const yearRangeStillActive = currentFilters.some(
+          (f) => f.type === 'yearRange',
+        );
+
+        const updatedLastUsedYearRange = yearRangeStillActive
+          ? state.lastUsedYearRange
+          : getYearRanges(state.availableTables); // reset hvis årfilter fjernet
+
         return {
           ...state,
           activeFilters: currentFilters,
@@ -187,8 +205,10 @@ const StartPage = () => {
               : getTimeUnits(filteredTables),
             yearRange: getYearRanges(filteredTables),
           },
+          lastUsedYearRange: updatedLastUsedYearRange,
         };
       }
+
       case ActionType.SET_ERROR:
         return {
           ...state,

@@ -17,11 +17,18 @@ export const RangeSlider = ({
 }: RangeSliderProps) => {
   const [minVal, setMinVal] = useState<number>(min);
   const [maxVal, setMaxVal] = useState<number>(max);
-
   const [minInputValue, setMinInputValue] = useState<string>(String(min));
   const [maxInputValue, setMaxInputValue] = useState<string>(String(max));
 
   const sliderTrackRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    console.log('Resetting internal state to props:', { min, max });
+    setMinVal(min);
+    setMaxVal(max);
+    setMinInputValue(String(min));
+    setMaxInputValue(String(max));
+  }, [min, max]);
 
   const setSliderTrack = useCallback(() => {
     const range = sliderTrackRef.current;
@@ -54,7 +61,6 @@ export const RangeSlider = ({
   const handleMinInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setMinInputValue(value);
-
     const num = Number(value);
     if (Number.isFinite(num)) {
       applyMin(num);
@@ -64,7 +70,6 @@ export const RangeSlider = ({
   const handleMaxInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setMaxInputValue(value);
-
     const num = Number(value);
     if (Number.isFinite(num)) {
       applyMax(num);

@@ -156,17 +156,10 @@ const renderYearFilters = (
   handleAddFilter: (filter: Filter[]) => void,
   handleRemoveFilter: (filterId: string) => void,
 ) => {
-  const rawMin = Number(state?.availableFilters?.yearRange?.min);
-  const rawMax = Number(state?.availableFilters?.yearRange?.max);
+  const minYear = state.lastUsedYearRange.min;
+  const maxYear = state.lastUsedYearRange.max;
 
-  const yearRangeAvailable = Number.isFinite(rawMin) && Number.isFinite(rawMax);
-
-  if (!yearRangeAvailable) {
-    return null;
-  } // eller en spinner
-
-  const minYear = rawMin;
-  const maxYear = rawMax;
+  console.log('Rendering RangeSlider with:', { minYear, maxYear });
 
   return (
     <div>
@@ -175,10 +168,10 @@ const renderYearFilters = (
         max={maxYear}
         minGap={0}
         onChange={({ min, max }) => {
-          handleRemoveFilter('year');
+          handleRemoveFilter('yearRange');
           handleAddFilter([
             {
-              type: 'year',
+              type: 'yearRange',
               value: `${min}-${max}`,
               label: `${min} - ${max}`,
               index: 0,
