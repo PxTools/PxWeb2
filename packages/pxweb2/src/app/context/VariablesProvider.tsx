@@ -160,6 +160,8 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
    * @returns
    */
   const hasChanges = (newVariables: SelectedVBValues[]) => {
+    let selectionHasChanges = false;
+
     const newVars: Set<string> = new Set();
     newVariables.forEach((variable) => {
       variable.values.forEach((value) => {
@@ -176,17 +178,23 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
     // If it is missing, that means there has been some changes
     variables.forEach((variable, key) => {
       if (!newVars.has(key)) {
-        return true;
+        selectionHasChanges = true;
       }
     });
+    if (selectionHasChanges) {
+      return true;
+    }
 
     // Check if newVars has some key that is missing in variables.
     // If it is missing, that means there has been some changes
     newVars.forEach((val) => {
       if (!variables.has(val)) {
-        return true;
+        selectionHasChanges = true;
       }
     });
+    if (selectionHasChanges) {
+      return true;
+    }
 
     // No changes found
     return false;
