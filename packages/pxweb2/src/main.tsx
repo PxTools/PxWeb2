@@ -1,86 +1,11 @@
 import { StrictMode, Suspense } from 'react';
 import * as ReactDOM from 'react-dom/client';
-import { createBrowserRouter, RouterProvider } from 'react-router';
+import { RouterProvider } from 'react-router';
 
 import './i18n/config';
-import TableViewer from './app/pages/TableViewer/TableViewer';
 import { validateConfig } from './app/util/validate';
 import { AppProvider } from './app/context/AppProvider';
-import StartPage from './app/pages/StartPage/StartPage';
-import ErrorPage from './app/components/ErrorPage/ErrorPage';
-import TopicIcons from './app/pages/TopicIcons/TopicIcons';
-import { getConfig } from './app/util/config/getConfig';
-
-const config = getConfig();
-const showDefaultLanguageInPath = config.language.showDefaultLanguageInPath;
-
-const supportedLangRoutes = config.language.supportedLanguages
-  .map((lang) => {
-    if (
-      !showDefaultLanguageInPath &&
-      lang.shorthand === config.language.defaultLanguage
-    ) {
-      return undefined;
-    }
-
-    return {
-      path: `/${lang.shorthand}/`,
-      children: [
-        {
-          index: true,
-          element: <StartPage />,
-          errorElement: <ErrorPage />,
-        },
-        {
-          path: 'table/:tableId',
-          element: <TableViewer />,
-          errorElement: <ErrorPage />,
-        },
-        {
-          path: '*',
-          element: <div>404 table not found</div>,
-        },
-      ],
-    };
-  })
-  .filter((route) => {
-    return route !== undefined;
-  });
-
-const routingWithDefaultLanguageInURL = [...supportedLangRoutes];
-const routingWithoutDefaultLanguageInURL = [
-  {
-    index: true,
-    element: <StartPage />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: 'table/:tableId',
-    element: <TableViewer />,
-    errorElement: <ErrorPage />,
-  },
-  ...supportedLangRoutes,
-];
-
-const router = createBrowserRouter([
-  {
-    path: '/',
-    errorElement: <ErrorPage />,
-    children: [
-      ...(showDefaultLanguageInPath
-        ? routingWithDefaultLanguageInURL
-        : routingWithoutDefaultLanguageInURL),
-      {
-        path: '*',
-        element: <div>404 Not found root. Unsupported language</div>,
-      },
-      {
-        path: 'topicIcons',
-        element: <TopicIcons />,
-      },
-    ],
-  },
-]);
+import { router } from './app/routes';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
@@ -92,6 +17,7 @@ if (location.href.includes('localhost')) {
 
 /**
  * TODO:
+ * Routing:
  * The routing works as expected when default language is in the URL
  * - changes correctly to new, supported language DONE
  * - shows language not supported when language part in URL does not match a supported language DONE
@@ -101,7 +27,16 @@ if (location.href.includes('localhost')) {
  * - correctly shows default language when it is NOT in the URL DONE
  * - correctly shows new, supported language when it is in the URL DONE
  * - shows language not supported when no language part in URL, or language part in URL does not match a supported language DONE
+ *
+ * Routing:
+ * - Add NotFound component
+ *   - Make it take in language text
+ *
+ * Code:
+ * - Move the routing to a separate file
+ * - Tests?
  */
+
 console.log('router', router);
 
 root.render(

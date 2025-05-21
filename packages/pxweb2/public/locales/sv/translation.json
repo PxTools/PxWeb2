@@ -9,6 +9,16 @@
       "title": "PxWeb 2.0 [Main]",
       "logo": "PxWeb 2.0"
     },
+    "not_found": {
+      "table_not_found": {
+        "title": "Tabellen hittades inte",
+        "description": "Tabellen du letar efter finns inte. Kontrollera URL:en eller återgå till startsidan."
+      },
+      "unsupported_language": {
+        "title": "Ej stödat språk",
+        "description": "Det valda språket stöds inte."
+      }
+    },
     "skip_to_main": "Gå direkt till huvudinnehållet",
     "footer": {
       "contact": {
