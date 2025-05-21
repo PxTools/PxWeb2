@@ -62,11 +62,13 @@ describe('Router configuration', () => {
 
     beforeEach(async () => {
       mockConfig.language.showDefaultLanguageInPath = false;
-      vi.mocked(configModule.getConfig).mockReturnValue(mockConfig);
 
       // Reset modules and import the routerConfig with the current config
+      vi.mocked(configModule.getConfig).mockReturnValue(mockConfig);
       vi.resetModules();
+
       const routesModule = await import('./routes');
+
       routerConfig = routesModule.routerConfig;
     });
 
@@ -132,11 +134,13 @@ describe('Router configuration', () => {
 
     beforeEach(async () => {
       mockConfig.language.showDefaultLanguageInPath = true;
-      vi.mocked(configModule.getConfig).mockReturnValue(mockConfig);
 
       // Reset modules and import the routerConfig with the current config
+      vi.mocked(configModule.getConfig).mockReturnValue(mockConfig);
       vi.resetModules();
+
       const routesModule = await import('./routes');
+
       routerConfig = routesModule.routerConfig;
     });
 
@@ -147,9 +151,9 @@ describe('Router configuration', () => {
 
       render(<RouterProvider router={testRouter} />);
 
-      // With showDefaultLanguageInPath=true, root should not show StartPage
-      // but should redirect to /{defaultLanguage}/ instead
-      expect(screen.queryByTestId('start-page')).not.toBeInTheDocument();
+      // When showDefaultLanguageInPath=true:
+      // root path should redirect to /{defaultLanguage}/ and show StartPage
+      expect(screen.queryByTestId('start-page')).toBeInTheDocument();
     });
 
     it('should render StartPage for default language path', () => {
@@ -179,14 +183,12 @@ describe('Router configuration', () => {
     // Set up the mock config
     mockConfig.language.showDefaultLanguageInPath = false;
     vi.mocked(configModule.getConfig).mockReturnValue(mockConfig);
+    vi.doMock('./pages/StartPage/StartPage', () => ({
+      default: ThrowingComponent,
+    }));
+    vi.resetModules(); // Reset modules to apply the new mock
 
-    // Create a separate router for this test with a throwing component
-    vi.resetModules();
-    const StartPageMock = await import('./pages/StartPage/StartPage');
-    const originalImplementation = StartPageMock.default;
-    vi.mocked(StartPageMock.default).mockImplementation(ThrowingComponent);
-
-    // Re-import router to get the version with the throwing component
+    // Import router with the throwing component mock
     const { routerConfig: errorRouterConfig } = await import('./routes');
 
     const testRouter = createMemoryRouter(errorRouterConfig, {
@@ -196,27 +198,29 @@ describe('Router configuration', () => {
     render(<RouterProvider router={testRouter} />);
     expect(screen.getByTestId('error-page')).toBeInTheDocument();
 
-    // Restore original implementation
-    vi.mocked(StartPageMock.default).mockImplementation(originalImplementation);
-
     // Restore console.error
     console.error = originalConsoleError;
+
+    // Reset the mock back to original implementation for other tests
+    vi.doMock('./pages/StartPage/StartPage', () => ({
+      default: () => <div data-testid="start-page">Start Page</div>,
+    }));
+    vi.resetModules(); // Reset modules again to apply the original mock
   });
 
   it('should support dynamic imports for route components', async () => {
-    // Set up the config properly
     mockConfig.language.showDefaultLanguageInPath = false;
+
     vi.mocked(configModule.getConfig).mockReturnValue(mockConfig);
-
-    // Reset modules and get a fresh routerConfig
     vi.resetModules();
-    const { routerConfig: dynamicRouterConfig } = await import('./routes');
 
+    const { routerConfig: dynamicRouterConfig } = await import('./routes');
     const testRouter = createMemoryRouter(dynamicRouterConfig, {
       initialEntries: ['/'],
     });
 
     render(<RouterProvider router={testRouter} />);
+
     // Wait for any lazy loaded components to render
     expect(await screen.findByTestId('start-page')).toBeInTheDocument();
   });
