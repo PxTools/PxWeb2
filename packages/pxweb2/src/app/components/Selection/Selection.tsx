@@ -14,6 +14,7 @@ import {
   PxTable,
   ValueDisplayType,
   Variable,
+  CodeList,
 } from '@pxweb2/pxweb2-ui';
 import NavigationDrawer from '../../components/NavigationDrawer/NavigationDrawer';
 import useVariables from '../../context/useVariables';
@@ -86,18 +87,26 @@ function addValueToNewVariable(
   return newSelectedValues;
 }
 
-async function getCodeListValues(
+// Get the selected codelist from the API
+export async function getCodeList(
   id: string,
   lang: string,
   valueDisplayType: ValueDisplayType,
-): Promise<Value[]> {
-  let values: Value[] = [];
+): Promise<CodeList> {
+  let codelist: CodeList = {
+    id: id,
+    label: '',
+    values: [],
+    mandatory: false,
+  };
 
   await TableService.getTableCodeListById(id, lang)
     .then((response) => {
+      codelist.label = response.label;
+      codelist.mandatory = !response.elimination;
       response.values.forEach((value) => {
-        values = [
-          ...values,
+        codelist.values = [
+          ...codelist.values,
           {
             code: value.code,
 
@@ -108,12 +117,10 @@ async function getCodeListValues(
       });
     })
     .catch((error) => {
-      throw new Error(
-        'Could not get values for code list: ' + id + ' ' + error,
-      );
+      throw new Error('Could not get codelist: ' + id + ' ' + error);
     });
 
-  return values;
+  return codelist;
 }
 
 function removeValueOfVariable(
@@ -432,8 +439,8 @@ export function Selection({
 
     setIsFadingVariableList(true);
 
-    //  Get the values for the chosen code list
-    const valuesForChosenCodeList: Value[] = await getCodeListValues(
+    //  Get the selected codelist
+    const newCodelist: CodeList = await getCodeList(
       newMappedSelectedCodeList.value,
       lang,
       currentVariableMetadata.valueDisplayType,
@@ -443,16 +450,34 @@ export function Selection({
       })
       .catch((apiError: ApiError) => {
         setErrorMsg(problemMessage(apiError, selectedTabId));
-        return [];
+        return {
+          id: '',
+          label: '',
+          values: [],
+          mandatory: false,
+        };
       })
       .catch((error) => {
         console.error(
           `Could not get values for code list: ${newMappedSelectedCodeList.value} ${error}`,
         );
-        return [];
+        return {
+          id: '',
+          label: '',
+          values: [],
+          mandatory: false,
+        };
       });
 
-    if (valuesForChosenCodeList.length < 1) {
+    // Update variable mandatory according to the new codelist
+    if (
+      newCodelist.mandatory != undefined &&
+      newCodelist.mandatory != currentVariableMetadata.mandatory
+    ) {
+      currentVariableMetadata.mandatory = newCodelist.mandatory;
+    }
+
+    if (newCodelist.values.length < 1) {
       return;
     }
 
@@ -473,7 +498,7 @@ export function Selection({
             continue;
           }
 
-          newPxTableMetaToRender.variables[i].values = valuesForChosenCodeList;
+          newPxTableMetaToRender.variables[i].values = newCodelist.values;
         }
       });
     });
