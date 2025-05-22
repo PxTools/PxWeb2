@@ -5,10 +5,10 @@ window.PxWeb2Config = {
       { shorthand: 'sv', languageName: 'Svenska' },
       { shorthand: 'no', languageName: 'Norsk' },
     ],
-    defaultLanguage: 'no',
-    fallbackLanguage: 'no',
+    defaultLanguage: 'en',
+    fallbackLanguage: 'en',
   },
-  apiUrl: 'https://data.qa.ssb.no/api/pxwebapi/v2-beta',
+  apiUrl: 'https://api.scb.se/OV0104/v2beta/api/v2',
   maxDataCells: 150000,
   specialCharacters: ['.', '..', ':', '-', '...', '*'],
 };
