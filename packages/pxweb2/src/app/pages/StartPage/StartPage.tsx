@@ -146,15 +146,23 @@ const StartPage = () => {
         const filteredTables = state.availableTables.filter((table) =>
           shouldTableBeIncluded(table, currentFilters),
         );
+        //TODO: Add type to handleRemoveFilter instead
+        const removedFilter = state.activeFilters.find(
+          (filter) => filter.value === action.payload,
+        );
+        const removedType = removedFilter?.type;
         return {
           ...state,
           activeFilters: currentFilters,
           filteredTables,
           availableFilters: {
-            subjectTree: updateSubjectTreeCounts(
-              state.originalSubjectTree,
-              filteredTables,
-            ),
+            subjectTree:
+              removedType !== 'subject'
+                ? updateSubjectTreeCounts(
+                    state.originalSubjectTree,
+                    filteredTables,
+                  )
+                : state.availableFilters.subjectTree,
             timeUnits: getTimeUnits(filteredTables),
           },
         };
