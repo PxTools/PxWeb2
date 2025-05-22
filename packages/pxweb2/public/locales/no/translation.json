@@ -40,7 +40,7 @@
     }
   },
   "start_page": {
-     "header": "Velkommen til appen!",
+    "header": "Velkommen til appen!",
     "welcome_trans_test": "Velkommen til <1>appen</1> for PxWeb 2.0!",
     "filter": {
       "header": "Filtrer",
@@ -213,6 +213,10 @@
           "description": "Beskrivelsestekst...",
           "missing_heading": "Ingen kontaktinformasjon",
           "missing_text": "Tabellen har ikke kontaktinformasjon."
+        },
+        "notes": {
+          "important_about_table": "Viktig om tabellen",
+          "important_about_variable": "Viktig om "
         }
       },
       "related": {

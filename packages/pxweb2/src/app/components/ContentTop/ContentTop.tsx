@@ -4,6 +4,7 @@ import { useState, useContext, useEffect, useRef } from 'react';
 
 import classes from './ContentTop.module.scss';
 import {
+  Alert,
   BodyLong,
   BodyShort,
   Button,
@@ -14,6 +15,9 @@ import {
 } from '@pxweb2/pxweb2-ui';
 import TableInformation from '../TableInformation/TableInformation';
 import { AccessibilityContext } from '../../context/AccessibilityProvider';
+import { GetMandatoryNotesCompressed } from '../../util/notes/notesUtil';
+import useTableData from '../../context/useTableData';
+import useVariables from '../../context/useVariables';
 
 export interface ContenetTopProps {
   readonly pxtable: PxTable;
@@ -29,6 +33,7 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
   const accessibility = useContext(AccessibilityContext);
   const openInformationButtonRef = useRef<HTMLButtonElement>(null);
   const openInformationLinkRef = useRef<HTMLAnchorElement>(null);
+  const openInformationAlertRef = useRef<HTMLDivElement>(null);
 
   const handleOpenTableInformation = (opener: string, selectedTab?: string) => {
     setTableInformationOpener(opener);
@@ -38,6 +43,14 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
     setIsTableInformationOpen(true);
   };
 
+  const { pxTableMetadata } = useVariables();
+  const selMetadata = pxTableMetadata;
+  const metadata = useTableData().data?.metadata;
+  const noteInfo =
+    metadata && selMetadata
+      ? GetMandatoryNotesCompressed(metadata, selMetadata)
+      : undefined;
+
   useEffect(() => {
     if (!isTableInformationOpen) {
       if (tableInformationOpener === 'table-information-button') {
@@ -45,6 +58,8 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
       } else if (tableInformationOpener === 'table-information-link') {
         // table-information-link
         openInformationLinkRef.current?.focus();
+      } else if (tableInformationOpener === 'table-information-alert') {
+        openInformationAlertRef.current?.focus();
       }
     }
     accessibility?.addModal('tableInformation', () => {
@@ -117,6 +132,48 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
               </BodyShort>
             )}
           </div>
+        </div>
+        <div className={cl(classes.alertgroup)}>
+          {noteInfo?.tableNotes && (
+            <Alert
+              ref={openInformationAlertRef}
+              variant="info"
+              heading={t(
+                'presentation_page.main_content.about_table.notes.important_about_table',
+              )}
+              clickable
+              onClick={() => {
+                handleOpenTableInformation(
+                  'table-information-button',
+                  'tab-footnotes',
+                );
+              }}
+            >
+              {noteInfo.tableNotes}
+            </Alert>
+          )}
+          {noteInfo?.variableNotes &&
+            noteInfo.variableNotes.map((note, idx) => (
+              <Alert
+                //  ref={openInformationAlertRef}
+                key={idx}
+                variant="info"
+                clickable
+                onClick={() => {
+                  handleOpenTableInformation(
+                    'table-information-alert',
+                    'tab-footnotes',
+                  );
+                }}
+                heading={
+                  t(
+                    'presentation_page.main_content.about_table.notes.important_about_variable',
+                  ) + note.variableName
+                }
+              >
+                {note.compressednotes}
+              </Alert>
+            ))}
         </div>
       </div>
       {isTableInformationOpen && (

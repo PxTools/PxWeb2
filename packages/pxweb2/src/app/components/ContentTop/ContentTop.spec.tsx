@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+//import { render } from '@testing-library/react';
 import {
   Variable,
   VartypeEnum,
@@ -8,6 +8,7 @@ import {
 } from '@pxweb2/pxweb2-ui';
 
 import ContentTop from './ContentTop';
+import { renderWithProviders } from '../../util/testing-utils';
 
 function getPxTable(): PxTable {
   const variables: Variable[] = [
@@ -64,6 +65,18 @@ function getPxTable(): PxTable {
     language: 'no',
     updated: new Date('2023-01-14T09:00:05.123Z'),
     variables: variables,
+    source: '',
+    infofile: '',
+    decimals: 0,
+    officialStatistics: false,
+    aggregationAllowed: false,
+    contents: '',
+    descriptionDefault: false,
+    matrix: '',
+    subjectCode: '',
+    subjectArea: '',
+    contacts: [],
+    notes: [],
   };
   const table: PxTable = {
     metadata: tableMeta,
@@ -83,11 +96,21 @@ function getPxTable(): PxTable {
 
 const pxTable = getPxTable();
 
-describe('ContentTop', () => {
+// describe('ContentTop', () => {
+//   it('should render successfully', () => {
+//     const { baseElement } = render(
+//       <ContentTop pxtable={pxTable} staticTitle="Tittel" />,
+//     );
+//     expect(baseElement).toBeTruthy();
+//   });
+// });
+
+describe('Selection', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(
+    const { baseElement } = renderWithProviders(
       <ContentTop pxtable={pxTable} staticTitle="Tittel" />,
     );
+
     expect(baseElement).toBeTruthy();
   });
 });

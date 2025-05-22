@@ -20,6 +20,7 @@ export interface AlertProps {
   readonly onClick?: () => void;
   readonly className?: string;
   readonly children?: string | React.ReactNode;
+  ref?: React.Ref<HTMLDivElement>;
 }
 
 export function Alert({
@@ -32,6 +33,7 @@ export function Alert({
   onClick,
   className = '',
   children,
+  ref,
 }: Readonly<AlertProps>) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
   const { t } = useTranslation();
@@ -46,6 +48,8 @@ export function Alert({
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       onClick && onClick();
+      console.log('i ALERT handleKeyDown', event.key);
+      console.log('onClick', onClick);
     }
   };
   const hasheading = Boolean(heading);
@@ -142,6 +146,7 @@ export function Alert({
       }
       onClick={clickable ? onClick : undefined}
       style={{ cursor: clickable ? 'pointer' : 'default' }}
+      ref={ref}
     >
       <div className={classes[`alert-section-left-${size}`]}>
         <Icon
