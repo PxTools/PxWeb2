@@ -6,7 +6,12 @@ import {
 } from '../../pages/StartPage/StartPageTypes';
 import styles from './FilterSidebar.module.scss';
 
-import { Checkbox, FilterCategory, Heading } from '@pxweb2/pxweb2-ui';
+import {
+  Checkbox,
+  FilterCategory,
+  Heading,
+  RangeSlider,
+} from '@pxweb2/pxweb2-ui';
 import { PathItem, findParent } from '../../util/startPageFilters';
 interface FilterProps {
   state: StartPageState;
@@ -124,6 +129,33 @@ const renderTimeUnitFilters = (
   });
 };
 
+const renderYearFilters = (
+  state: StartPageState,
+  handleAddFilter: (filter: Filter[]) => void,
+) => {
+  const minYear = state.lastUsedYearRange.min;
+  const maxYear = state.lastUsedYearRange.max;
+  return (
+    <div>
+      <RangeSlider
+        min={minYear}
+        max={maxYear}
+        minGap={0}
+        onChange={({ min, max }) => {
+          handleAddFilter([
+            {
+              type: 'yearRange',
+              value: `${min}-${max}`,
+              label: `${min} - ${max}`,
+              index: 0,
+            },
+          ]);
+        }}
+      />
+    </div>
+  );
+};
+
 export const FilterSidebar: React.FC<FilterProps> = ({
   state,
   handleAddFilter,
@@ -148,6 +180,9 @@ export const FilterSidebar: React.FC<FilterProps> = ({
           <ul className={styles.filterList}>
             {renderTimeUnitFilters(state, handleAddFilter, handleRemoveFilter)}
           </ul>
+        </FilterCategory>
+        <FilterCategory header="År">
+          {renderYearFilters(state, handleAddFilter)}
         </FilterCategory>
       </div>
       <p>

@@ -1,6 +1,7 @@
 import { type Table, TableService, OpenAPI } from '@pxweb2/pxweb2-api-client';
 import { getConfig } from './config/getConfig';
 import type { Filter } from '../pages/StartPage/StartPageTypes';
+import { extractYear } from './startPageFilters';
 
 export const getFullTable: Promise<Table[]> = new Promise((resolve, reject) => {
   const config = getConfig();
@@ -60,5 +61,27 @@ export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
       });
     }
   };
-  return testTimeUnitFilters() && testSubjectFilters();
+
+  const yearRangeFilter = filters.find((f) => f.type === 'yearRange');
+  const testYearRangeFilter = () => {
+    if (!yearRangeFilter) {
+      return true;
+    }
+    const [minStr, maxStr] = yearRangeFilter.value.split('-');
+    const min = parseInt(minStr, 10);
+    const max = parseInt(maxStr, 10);
+    const firstYear = extractYear(table.firstPeriod);
+    const lastYear = extractYear(table.lastPeriod);
+
+    if (!Number.isFinite(firstYear) || !Number.isFinite(lastYear)) {
+      return false;
+    }
+    const isInRange =
+      (firstYear >= min && firstYear <= max) ||
+      (lastYear >= min && lastYear <= max) ||
+      (firstYear <= min && lastYear >= max);
+
+    return isInRange;
+  };
+  return testTimeUnitFilters() && testSubjectFilters() && testYearRangeFilter();
 }
