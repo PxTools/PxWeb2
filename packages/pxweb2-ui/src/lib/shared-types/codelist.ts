@@ -1,3 +1,5 @@
+import { Value } from './value';
+
 export type CodeList = {
   /**
    * The identiyer for the codelist
@@ -7,4 +9,12 @@ export type CodeList = {
    * The textual name  for the codelist.
    */
   label: string;
+  /**
+   * Codelist values
+   */
+  values: Value[];
+  /**
+   * Must value(s) be selected for the codelist?
+   */
+  mandatory?: boolean;
 };
