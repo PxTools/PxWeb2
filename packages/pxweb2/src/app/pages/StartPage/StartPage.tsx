@@ -146,26 +146,16 @@ const StartPage = () => {
         const filteredTables = state.availableTables.filter((table) =>
           shouldTableBeIncluded(table, currentFilters),
         );
-        const removedFilter = state.activeFilters.find(
-          (filter) => filter.value === action.payload,
-        );
-        const removedType = removedFilter?.type;
         return {
           ...state,
           activeFilters: currentFilters,
           filteredTables,
           availableFilters: {
-            subjectTree:
-              removedType !== 'subject'
-                ? updateSubjectTreeCounts(
-                    state.originalSubjectTree,
-                    filteredTables,
-                  )
-                : state.availableFilters.subjectTree,
-            timeUnits:
-              removedType !== 'timeUnit'
-                ? getTimeUnits(filteredTables)
-                : state.availableFilters.timeUnits,
+            subjectTree: updateSubjectTreeCounts(
+              state.originalSubjectTree,
+              filteredTables,
+            ),
+            timeUnits: getTimeUnits(filteredTables),
           },
         };
       }
