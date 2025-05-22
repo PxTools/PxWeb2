@@ -154,13 +154,9 @@ const renderTimeUnitFilters = (
 const renderYearFilters = (
   state: StartPageState,
   handleAddFilter: (filter: Filter[]) => void,
-  handleRemoveFilter: (filterId: string) => void,
 ) => {
   const minYear = state.lastUsedYearRange.min;
   const maxYear = state.lastUsedYearRange.max;
-
-  console.log('Rendering RangeSlider with:', { minYear, maxYear });
-
   return (
     <div>
       <RangeSlider
@@ -168,7 +164,6 @@ const renderYearFilters = (
         max={maxYear}
         minGap={0}
         onChange={({ min, max }) => {
-          handleRemoveFilter('yearRange');
           handleAddFilter([
             {
               type: 'yearRange',
@@ -209,7 +204,7 @@ export const FilterSidebar: React.FC<FilterProps> = ({
           </ul>
         </FilterCategory>
         <FilterCategory header="År">
-          {renderYearFilters(state, handleAddFilter, handleRemoveFilter)}
+          {renderYearFilters(state, handleAddFilter)}
         </FilterCategory>
       </div>
       <p>

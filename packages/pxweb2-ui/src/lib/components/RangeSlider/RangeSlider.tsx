@@ -78,14 +78,18 @@ export const RangeSlider = ({
 
   const slideMin = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value);
-    applyMin(value);
+    setMinVal(value);
     setMinInputValue(String(value));
   };
 
   const slideMax = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value);
-    applyMax(value);
+    setMaxVal(value);
     setMaxInputValue(String(value));
+  };
+
+  const handleSliderRelease = () => {
+    onChange?.({ min: minVal, max: maxVal });
   };
 
   return (
@@ -116,6 +120,8 @@ export const RangeSlider = ({
           max={max}
           value={minVal}
           onChange={slideMin}
+          onMouseUp={handleSliderRelease}
+          onTouchEnd={handleSliderRelease}
           className={cl(styles.minVal)}
         />
         <input
@@ -124,6 +130,8 @@ export const RangeSlider = ({
           max={max}
           value={maxVal}
           onChange={slideMax}
+          onMouseUp={handleSliderRelease}
+          onTouchEnd={handleSliderRelease}
           className={cl(styles.maxVal)}
         />
       </div>
