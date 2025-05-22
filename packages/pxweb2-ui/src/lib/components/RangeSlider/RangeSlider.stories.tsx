@@ -1,5 +1,5 @@
+import { useState } from 'react';
 import type { Meta, StoryFn } from '@storybook/react';
-
 import { RangeSlider } from './RangeSlider';
 
 const meta: Meta<typeof RangeSlider> = {
@@ -9,5 +9,19 @@ const meta: Meta<typeof RangeSlider> = {
 export default meta;
 
 export const DefaultSlider: StoryFn<typeof RangeSlider> = () => {
-  return <RangeSlider />;
+  const [range, setRange] = useState({ min: 2000, max: 2020 });
+  return (
+    <div className="p-6">
+      <h1>Velg år</h1>
+      <RangeSlider
+        min={1950}
+        max={2025}
+        onChange={(newRange) => setRange(newRange)}
+      />
+
+      <h2>
+        Valgt intervall: {range.min} - {range.max}
+      </h2>
+    </div>
+  );
 };
