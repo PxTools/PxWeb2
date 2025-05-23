@@ -33,14 +33,20 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
   const accessibility = useContext(AccessibilityContext);
   const openInformationButtonRef = useRef<HTMLButtonElement>(null);
   const openInformationLinkRef = useRef<HTMLAnchorElement>(null);
-  const openInformationAlertRef = useRef<HTMLDivElement>(null);
+  const openInformationAlertTableNotesRef = useRef<HTMLDivElement>(null);
+  const openInformationAlertVarNotesRef = useRef<Array<HTMLDivElement | null>>(
+    [],
+  );
 
   const handleOpenTableInformation = (opener: string, selectedTab?: string) => {
     setTableInformationOpener(opener);
     if (selectedTab) {
       setActiveTab(selectedTab);
     }
+    console.log('HIT?');
     setIsTableInformationOpen(true);
+    console.log('HIT da?', isTableInformationOpen);
+    console.log('opener', opener);
   };
 
   const { pxTableMetadata } = useVariables();
@@ -53,23 +59,36 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
 
   useEffect(() => {
     if (!isTableInformationOpen) {
-      if (tableInformationOpener === 'table-information-button') {
-        openInformationButtonRef.current?.focus();
-      } else if (tableInformationOpener === 'table-information-link') {
-        // table-information-link
-        openInformationLinkRef.current?.focus();
-      } else if (tableInformationOpener === 'table-information-alert') {
-        openInformationAlertRef.current?.focus();
+      //console.log('tableInformationOpener', tableInformationOpener);
+      const alertVarNotesRegex = /^table-information-alertVarNotes-(\d+)$/;
+      const execResult = alertVarNotesRegex.exec(tableInformationOpener ?? '');
+
+      switch (tableInformationOpener) {
+        case 'table-information-button':
+          openInformationButtonRef.current?.focus();
+          break;
+        case 'table-information-link':
+          console.log('table-information-link');
+          openInformationLinkRef.current?.focus();
+          break;
+        case 'table-information-alertTableNotes':
+          console.log('table-information-alertTableNotes');
+          openInformationAlertTableNotesRef.current?.focus();
+          break;
+        default: {
+          if (execResult) {
+            // Extract the index from the regex result
+            const idx = Number(execResult[1] ?? 0);
+            openInformationAlertVarNotesRef.current?.[idx]?.focus();
+          }
+          break;
+        }
       }
     }
     accessibility?.addModal('tableInformation', () => {
       setIsTableInformationOpen(false);
     });
-
-    return () => {
-      accessibility?.removeModal('tableInformation');
-    };
-  }, [accessibility, isTableInformationOpen, tableInformationOpener]);
+  }, [isTableInformationOpen, tableInformationOpener, accessibility]);
 
   return (
     <>
@@ -136,7 +155,7 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
         <div className={cl(classes.alertgroup)}>
           {noteInfo?.tableNotes && (
             <Alert
-              ref={openInformationAlertRef}
+              ref={openInformationAlertTableNotesRef}
               variant="info"
               heading={t(
                 'presentation_page.main_content.about_table.notes.important_about_table',
@@ -144,7 +163,7 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
               clickable
               onClick={() => {
                 handleOpenTableInformation(
-                  'table-information-button',
+                  'table-information-alertTableNotes',
                   'tab-footnotes',
                 );
               }}
@@ -155,13 +174,15 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
           {noteInfo?.variableNotes &&
             noteInfo.variableNotes.map((note, idx) => (
               <Alert
-                //  ref={openInformationAlertRef}
+                ref={(el) => {
+                  openInformationAlertVarNotesRef.current[idx] = el;
+                }}
                 key={idx}
                 variant="info"
                 clickable
                 onClick={() => {
                   handleOpenTableInformation(
-                    'table-information-alert',
+                    `table-information-alertVarNotes-${idx}`,
                     'tab-footnotes',
                   );
                 }}

@@ -45,10 +45,13 @@ export function Alert({
     return null;
   }
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+  //console.log('AAAAAAA onClick', onClick);
+  //console.log('Clickable', clickable);
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Enter') {
       onClick && onClick();
       console.log('i ALERT handleKeyDown', event.key);
+      console.log('clickable', clickable);
       console.log('onClick', onClick);
     }
   };
