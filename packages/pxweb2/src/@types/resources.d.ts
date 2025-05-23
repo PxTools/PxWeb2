@@ -10,6 +10,16 @@ interface Resources {
         title: 'PxWeb 2.0 [Main]';
         logo: 'PxWeb 2.0';
       };
+      not_found: {
+        page_not_found: {
+          title: 'Table not found';
+          description: 'The table you are looking for does not exist. Please check the URL or return to the homepage.';
+        };
+        unsupported_language: {
+          title: 'Unsupported language';
+          description: 'The selected language is not supported.';
+        };
+      };
       skip_to_main: 'Skip to main content';
       footer: {
         contact: {
