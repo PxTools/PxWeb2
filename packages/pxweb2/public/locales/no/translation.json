@@ -10,9 +10,9 @@
       "logo": "PxWeb 2.0"
     },
     "not_found": {
-      "table_not_found": {
-        "title": "Tabellen ble ikke funnet",
-        "description": "Tabellen du leter etter eksisterer ikke. Vennligst sjekk URL-en eller gå tilbake til startsiden."
+      "page_not_found": {
+        "title": "Side ikke funnet",
+        "description": "Siden du leter etter eksisterer ikke. Vennligst sjekk URL-en eller gå tilbake til startsiden."
       },
       "unsupported_language": {
         "title": "Ikke støttet språk",

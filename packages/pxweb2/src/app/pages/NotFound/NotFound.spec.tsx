@@ -42,14 +42,14 @@ describe('NotFound should render correctly', () => {
     (getConfig as Mock).mockReturnValue(mockConfig);
   });
 
-  it('with table_not_found type', () => {
-    renderWithProviders(<NotFound type="table_not_found" />);
+  it('with page_not_found type', () => {
+    renderWithProviders(<NotFound type="page_not_found" />);
 
     expect(
-      screen.getByText(/not_found.table_not_found.title/i),
+      screen.getByText(/not_found.page_not_found.title/i),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/not_found.table_not_found.description/i),
+      screen.getByText(/not_found.page_not_found.description/i),
     ).toBeInTheDocument();
   });
 

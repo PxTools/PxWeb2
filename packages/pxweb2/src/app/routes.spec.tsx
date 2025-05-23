@@ -199,7 +199,7 @@ describe('Router configuration', () => {
 
       render(<RouterProvider router={testRouter} />);
       expect(
-        screen.getByTestId('not-found-table_not_found'),
+        screen.getByTestId('not-found-page_not_found'),
       ).toBeInTheDocument();
     });
 

@@ -11,7 +11,7 @@ interface Resources {
         logo: 'PxWeb 2.0';
       };
       not_found: {
-        table_not_found: {
+        page_not_found: {
           title: 'Table not found';
           description: 'The table you are looking for does not exist. Please check the URL or return to the homepage.';
         };
