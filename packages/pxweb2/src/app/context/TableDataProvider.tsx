@@ -596,6 +596,18 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
           }
         });
 
+        // -- Merge notes at table level --
+
+        if (pxTable.metadata.notes) {
+          pxTable.metadata.notes.forEach((note) => {
+            if (
+              !accumulatedData.metadata.notes.some((n) => n.text === note.text)
+            ) {
+              accumulatedData.metadata.notes.push(note);
+            }
+          });
+        }
+
         // --- Merge data ---
 
         // Dimensions in accumulatedData
