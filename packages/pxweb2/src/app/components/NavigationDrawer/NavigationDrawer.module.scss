@@ -15,16 +15,16 @@
 
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
     width: calc(100vw - 40px);
-    max-width: 395px;
+    max-width: 403px;
     padding: fixed.$spacing-4;
   }
 
-  @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
-    width: 395px;
-    padding: fixed.$spacing-6;
+  @media ((min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width)) or ((min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width)) {
+    width: 403px;
+    padding: fixed.$spacing-8;
   }
 
-  // xsmall and small
+  // xsmall, small and medium
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
     height: 100vh;
 
@@ -40,10 +40,25 @@
     z-index: 999;
   }
 
-  // medium
-  @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
-    width: 395px;
-    padding: fixed.$spacing-6;
+  @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-large-max-width) {
+    height: calc(100vh - 80px);
+
+    // Handle rtl languages
+    border-start-start-radius: var(--px-border-radius-none);
+    border-start-end-radius: var(--px-border-radius-xlarge);
+    border-end-end-radius: var(--px-border-radius-xlarge);
+    border-end-start-radius: var(--px-border-radius-none);
+
+    // Not from Figma
+    position: absolute;
+    top: 0;
+    z-index: 999;
+  }
+
+  // large
+  @media (min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width) {
+    width: 403px;
+    padding: fixed.$spacing-8;
 
     // Calculate height of main container, minus the header height
     height: calc(100vh - fixed.$spacing-22);
@@ -68,10 +83,10 @@
     }
   }
 
-  // large and xlarge
-  @media ((min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width)) or ((min-width: fixed.$breakpoints-xlarge-min-width)) {
-    width: 371px;
-    padding: 0px fixed.$spacing-6 fixed.$spacing-6 0px;
+  // xlarge and xxlarge
+  @media ((min-width: fixed.$breakpoints-xlarge-min-width) and (max-width: fixed.$breakpoints-xlarge-max-width)) or ((min-width: fixed.$breakpoints-xxlarge-min-width)) {
+    width: 379px;
+    padding: 0px fixed.$spacing-8 fixed.$spacing-8 0px;
     border-radius: var(--px-border-radius-none);
   }
 }
