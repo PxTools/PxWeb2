@@ -97,7 +97,7 @@ const StartPage = () => {
           ...initialState,
           availableTables: action.payload.tables,
           filteredTables: action.payload.tables,
-          originalSubjectTree: action.payload.subjects, // lagre full struktur én gang
+          originalSubjectTree: action.payload.subjects,
           availableFilters: {
             subjectTree: action.payload.subjects,
             timeUnits: getTimeUnits(action.payload.tables),
@@ -108,19 +108,17 @@ const StartPage = () => {
       case ActionType.ADD_FILTER: {
         const incoming = action.payload;
         const incomingTypes = new Set(incoming.map((f) => f.type));
-        const clearedFilters = state.activeFilters.filter(
-          (f) => !incomingTypes.has(f.type),
+        const clearedFilters = state.activeFilters.filter((f) =>
+          incoming[0]?.type === 'yearRange' ? f.type !== 'yearRange' : true,
         );
         const newFilters = [...clearedFilters, ...incoming];
         const filteredTables = state.availableTables.filter((table) =>
           shouldTableBeIncluded(table, newFilters),
         );
         const addType = action.payload[0]?.type;
-
-        // Hvis årfilter legges til: reset til full range for visning i slider
         const updatedLastUsedYearRange = incomingTypes.has('yearRange')
-          ? getYearRanges(state.availableTables)
-          : state.lastUsedYearRange;
+          ? state.lastUsedYearRange
+          : getYearRanges(filteredTables);
         return {
           ...state,
           activeFilters: newFilters,
