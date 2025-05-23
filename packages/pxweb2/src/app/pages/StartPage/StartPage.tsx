@@ -117,11 +117,9 @@ const StartPage = () => {
         );
         const addType = action.payload[0]?.type;
 
-        const otherFilterAdded = Array.from(incomingTypes).some(
-          (t) => t !== 'yearRange',
-        );
-        const updatedLastUsedYearRange = otherFilterAdded
-          ? getYearRanges(filteredTables)
+        // Hvis årfilter legges til: reset til full range for visning i slider
+        const updatedLastUsedYearRange = incomingTypes.has('yearRange')
+          ? getYearRanges(state.availableTables)
           : state.lastUsedYearRange;
         return {
           ...state,
@@ -175,13 +173,14 @@ const StartPage = () => {
 
         const updatedLastUsedYearRange = yearRangeStillActive
           ? state.lastUsedYearRange
-          : getYearRanges(state.availableTables);
+          : getYearRanges(filteredTables);
 
-        //TODO: Add type to handleRemoveFilter instead
         const removedFilter = state.activeFilters.find(
           (filter) => filter.value === action.payload,
         );
+
         const removedType = removedFilter?.type;
+
         return {
           ...state,
           activeFilters: currentFilters,

@@ -1,69 +1,87 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import styles from './RangeSlider.module.scss';
 import cl from 'clsx';
 
-type RangeSliderProps = {
-  min: number;
-  max: number;
+import styles from './RangeSlider.module.scss';
+
+export interface RangeSliderProps {
+  rangeMin: number;
+  rangeMax: number;
+  initialMin?: number;
+  initialMax?: number;
   onChange?: (range: { min: number; max: number }) => void;
   minGap?: number;
-};
+}
 
 export const RangeSlider = ({
-  min,
-  max,
+  rangeMin,
+  rangeMax,
+  initialMin,
+  initialMax,
   onChange,
   minGap = 0,
 }: RangeSliderProps) => {
-  const [minVal, setMinVal] = useState<number>(min);
-  const [maxVal, setMaxVal] = useState<number>(max);
-  const [minInputValue, setMinInputValue] = useState<string>(String(min));
-  const [maxInputValue, setMaxInputValue] = useState<string>(String(max));
+  const [sliderMin, setSliderMin] = useState<number>(initialMin ?? rangeMin);
+  const [sliderMax, setSliderMax] = useState<number>(initialMax ?? rangeMax);
+  const [minInputValue, setMinInputValue] = useState<string>(
+    String(initialMin ?? rangeMin),
+  );
+  const [maxInputValue, setMaxInputValue] = useState<string>(
+    String(initialMax ?? rangeMax),
+  );
 
   const sliderTrackRef = useRef<HTMLDivElement>(null);
+  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    console.log('Resetting internal state to props:', { min, max });
-    setMinVal(min);
-    setMaxVal(max);
-    setMinInputValue(String(min));
-    setMaxInputValue(String(max));
-  }, [min, max]);
+    const startMin = initialMin ?? rangeMin;
+    const startMax = initialMax ?? rangeMax;
+    setSliderMin(startMin);
+    setSliderMax(startMax);
+    setMinInputValue(String(startMin));
+    setMaxInputValue(String(startMax));
+  }, [rangeMin, rangeMax, initialMin, initialMax]);
 
   const setSliderTrack = useCallback(() => {
     const range = sliderTrackRef.current;
     if (range) {
-      const minPercent = ((minVal - min) / (max - min)) * 100;
-      const maxPercent = ((maxVal - min) / (max - min)) * 100;
+      const minPercent = ((sliderMin - rangeMin) / (rangeMax - rangeMin)) * 100;
+      const maxPercent = ((sliderMax - rangeMin) / (rangeMax - rangeMin)) * 100;
       range.style.left = `${minPercent}%`;
       range.style.right = `${100 - maxPercent}%`;
     }
-  }, [minVal, maxVal, min, max]);
+  }, [sliderMin, sliderMax, rangeMin, rangeMax]);
 
   useEffect(() => {
     setSliderTrack();
   }, [setSliderTrack]);
 
-  const applyMin = (value: number) => {
-    if (value >= min && value <= maxVal - minGap) {
-      setMinVal(value);
-      onChange?.({ min: value, max: maxVal });
-    }
-  };
+  useEffect(() => {
+    return () => {
+      if (debounceTimeout.current) {
+        clearTimeout(debounceTimeout.current);
+      }
+    };
+  }, []);
 
-  const applyMax = (value: number) => {
-    if (value <= max && value >= minVal + minGap) {
-      setMaxVal(value);
-      onChange?.({ min: minVal, max: value });
-    }
-  };
+  const debouncedOnChange = useCallback(
+    (min: number, max: number) => {
+      if (debounceTimeout.current) {
+        clearTimeout(debounceTimeout.current);
+      }
+      debounceTimeout.current = setTimeout(() => {
+        onChange?.({ min, max });
+      }, 500);
+    },
+    [onChange],
+  );
 
   const handleMinInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setMinInputValue(value);
     const num = Number(value);
-    if (Number.isFinite(num)) {
-      applyMin(num);
+    if (Number.isFinite(num) && num >= rangeMin && num <= sliderMax - minGap) {
+      setSliderMin(num);
+      debouncedOnChange(num, sliderMax);
     }
   };
 
@@ -71,25 +89,26 @@ export const RangeSlider = ({
     const value = e.target.value;
     setMaxInputValue(value);
     const num = Number(value);
-    if (Number.isFinite(num)) {
-      applyMax(num);
+    if (Number.isFinite(num) && num <= rangeMax && num >= sliderMin + minGap) {
+      setSliderMax(num);
+      debouncedOnChange(sliderMin, num);
     }
   };
 
   const slideMin = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value);
-    setMinVal(value);
+    setSliderMin(value);
     setMinInputValue(String(value));
   };
 
   const slideMax = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value);
-    setMaxVal(value);
+    setSliderMax(value);
     setMaxInputValue(String(value));
   };
 
   const handleSliderRelease = () => {
-    onChange?.({ min: minVal, max: maxVal });
+    onChange?.({ min: sliderMin, max: sliderMax });
   };
 
   return (
@@ -100,25 +119,25 @@ export const RangeSlider = ({
           value={minInputValue}
           onChange={handleMinInput}
           className={cl(styles.minInput)}
-          min={min}
-          max={maxVal - minGap}
+          min={rangeMin}
+          max={sliderMax - minGap}
         />
         <input
           type="number"
           value={maxInputValue}
           onChange={handleMaxInput}
           className={cl(styles.maxInput)}
-          min={minVal + minGap}
-          max={max}
+          min={sliderMin + minGap}
+          max={rangeMax}
         />
       </div>
       <div className={cl(styles.rangeSlider)}>
         <div ref={sliderTrackRef} className={cl(styles.sliderTrack)} />
         <input
           type="range"
-          min={min}
-          max={max}
-          value={minVal}
+          min={rangeMin}
+          max={rangeMax}
+          value={sliderMin}
           onChange={slideMin}
           onMouseUp={handleSliderRelease}
           onTouchEnd={handleSliderRelease}
@@ -126,9 +145,9 @@ export const RangeSlider = ({
         />
         <input
           type="range"
-          min={min}
-          max={max}
-          value={maxVal}
+          min={rangeMin}
+          max={rangeMax}
+          value={sliderMax}
           onChange={slideMax}
           onMouseUp={handleSliderRelease}
           onTouchEnd={handleSliderRelease}
