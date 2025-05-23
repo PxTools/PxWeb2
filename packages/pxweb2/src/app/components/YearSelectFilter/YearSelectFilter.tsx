@@ -1,5 +1,8 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
+import cl from 'clsx';
+
 import styles from './YearSelectFilter.module.scss';
+import { Icon } from '@pxweb2/pxweb2-ui';
 
 type YearSelectFilterProps = {
   rangeMin: number;
@@ -39,7 +42,7 @@ export const YearSelectFilter: React.FC<YearSelectFilterProps> = ({
   };
 
   return (
-    <div className={styles.rangeFilter}>
+    <div className={cl(styles['bodyshort-medium'], styles.rangeFilter)}>
       <YearInput
         key={`from-${resetYearFilterInput}`}
         label="Fra år"
@@ -151,24 +154,26 @@ const YearInput = ({
   }, []);
 
   return (
-    <div className={styles.wrapper} ref={containerRef}>
-      <label className={styles.label}>{label}</label>
-      <input
-        ref={inputRef}
-        type="text"
-        placeholder={`Søk ${label.toLowerCase()}...`}
-        className={styles.searchInput}
-        value={searchTerm}
-        onFocus={() => setIsOpen(true)}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        onKeyDown={handleKeyDown}
-        aria-activedescendant={filtered[highlightIndex]?.value}
-        aria-controls={`${id}-option-list`}
-        role="combobox"
-        aria-expanded={isOpen}
-        aria-autocomplete="list"
-        autoComplete="off"
-      />
+    <div className={styles.yearSelectInput} ref={containerRef}>
+      <div className={styles.searchWrapper}>
+        <Icon className={styles.searchIcon} iconName="MagnifyingGlass" />
+        <input
+          ref={inputRef}
+          type="text"
+          placeholder={`${label}`}
+          className={cl(styles['bodyshort-medium'], styles.searchInput)}
+          value={searchTerm}
+          onFocus={() => setIsOpen(true)}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          onKeyDown={handleKeyDown}
+          aria-activedescendant={filtered[highlightIndex]?.value}
+          aria-controls={`${id}-option-list`}
+          role="combobox"
+          aria-expanded={isOpen}
+          aria-autocomplete="list"
+          autoComplete="off"
+        />
+      </div>
 
       {isOpen && filtered.length > 0 && (
         <ul

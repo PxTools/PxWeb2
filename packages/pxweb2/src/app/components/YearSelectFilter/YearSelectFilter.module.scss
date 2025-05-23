@@ -1,4 +1,10 @@
-.wrapper {
+.rangeFilter {
+  display: flex;
+  column-gap: 10px;
+  font-family: PxWeb-font, sans-serif;
+}
+
+.yearSelectInput {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -15,12 +21,26 @@
   color: var(--text-default, #222);
 }
 
+.searchWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 10px;
+  color: #999;
+  pointer-events: none;
+}
+
 .searchInput {
-  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  padding-left: 36px;
+  height: 32px;
+  width: 100%;
   border: 1px solid #ccc;
   border-radius: 4px;
-  font-size: 1rem;
-  width: 100%;
 }
 
 .optionList {

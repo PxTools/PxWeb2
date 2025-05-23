@@ -151,26 +151,24 @@ const renderYearFiltersSlider = (
   }
 
   return (
-    <div>
-      <RangeSlider
-        key={`slider-${minYear}-${maxYear}-${state.activeFilters.length}`}
-        rangeMin={state.lastUsedYearRange.min}
-        rangeMax={state.lastUsedYearRange.max}
-        initialMin={minYear}
-        initialMax={maxYear}
-        minGap={0}
-        onChange={({ min, max }) => {
-          handleAddFilter([
-            {
-              type: 'yearRange',
-              value: `${min}-${max}`,
-              label: `${min} - ${max}`,
-              index: 0,
-            },
-          ]);
-        }}
-      />
-    </div>
+    <RangeSlider
+      key={`slider-${minYear}-${maxYear}-${state.activeFilters.length}`}
+      rangeMin={state.lastUsedYearRange.min}
+      rangeMax={state.lastUsedYearRange.max}
+      initialMin={minYear}
+      initialMax={maxYear}
+      minGap={0}
+      onChange={({ min, max }) => {
+        handleAddFilter([
+          {
+            type: 'yearRange',
+            value: `${min}-${max}`,
+            label: `${min} - ${max}`,
+            index: 0,
+          },
+        ]);
+      }}
+    />
   );
 };
 
@@ -179,23 +177,21 @@ const renderYearFiltersSelect = (
   handleAddFilter: (filter: Filter[]) => void,
 ) => {
   return (
-    <div>
-      <YearSelectFilter
-        rangeMin={state.lastUsedYearRange.min}
-        rangeMax={state.lastUsedYearRange.max}
-        resetYearFilterInput={state.resetYearFilterInput}
-        onChange={({ min, max }) =>
-          handleAddFilter([
-            {
-              type: 'yearRange',
-              value: `${min}-${max}`,
-              label: `${min} - ${max}`,
-              index: 0,
-            },
-          ])
-        }
-      />
-    </div>
+    <YearSelectFilter
+      rangeMin={state.lastUsedYearRange.min}
+      rangeMax={state.lastUsedYearRange.max}
+      resetYearFilterInput={state.resetYearFilterInput}
+      onChange={({ min, max }) =>
+        handleAddFilter([
+          {
+            type: 'yearRange',
+            value: `${min}-${max}`,
+            label: `${min} - ${max}`,
+            index: 0,
+          },
+        ])
+      }
+    />
   );
 };
 
