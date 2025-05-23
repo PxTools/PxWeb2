@@ -6,8 +6,14 @@ import {
 } from '../../pages/StartPage/StartPageTypes';
 import styles from './FilterSidebar.module.scss';
 
-import { Checkbox, FilterCategory, Heading } from '@pxweb2/pxweb2-ui';
+import {
+  Checkbox,
+  FilterCategory,
+  Heading,
+  RangeSlider,
+} from '@pxweb2/pxweb2-ui';
 import { PathItem, findParent } from '../../util/startPageFilters';
+import { YearSelectFilter } from '../YearSelectFilter/YearSelectFilter';
 interface FilterProps {
   state: StartPageState;
   handleAddFilter: (filter: Filter[]) => void;
@@ -124,6 +130,71 @@ const renderTimeUnitFilters = (
   });
 };
 
+const renderYearFiltersSlider = (
+  state: StartPageState,
+  handleAddFilter: (filter: Filter[]) => void,
+) => {
+  const activeYearFilter = state.activeFilters.find(
+    (f) => f.type === 'yearRange',
+  );
+
+  let minYear: number;
+  let maxYear: number;
+
+  if (activeYearFilter) {
+    const [min, max] = activeYearFilter.value.split('-').map(Number);
+    minYear = min;
+    maxYear = max;
+  } else {
+    minYear = state.lastUsedYearRange.min;
+    maxYear = state.lastUsedYearRange.max;
+  }
+
+  return (
+    <RangeSlider
+      key={`slider-${minYear}-${maxYear}-${state.activeFilters.length}`}
+      rangeMin={state.lastUsedYearRange.min}
+      rangeMax={state.lastUsedYearRange.max}
+      initialMin={minYear}
+      initialMax={maxYear}
+      minGap={0}
+      onChange={({ min, max }) => {
+        handleAddFilter([
+          {
+            type: 'yearRange',
+            value: `${min}-${max}`,
+            label: `${min} - ${max}`,
+            index: 0,
+          },
+        ]);
+      }}
+    />
+  );
+};
+
+const renderYearFiltersSelect = (
+  state: StartPageState,
+  handleAddFilter: (filter: Filter[]) => void,
+) => {
+  return (
+    <YearSelectFilter
+      rangeMin={state.lastUsedYearRange.min}
+      rangeMax={state.lastUsedYearRange.max}
+      resetYearFilterInput={state.resetYearFilterInput}
+      onChange={({ min, max }) =>
+        handleAddFilter([
+          {
+            type: 'yearRange',
+            value: `${min}-${max}`,
+            label: `${min} - ${max}`,
+            index: 0,
+          },
+        ])
+      }
+    />
+  );
+};
+
 export const FilterSidebar: React.FC<FilterProps> = ({
   state,
   handleAddFilter,
@@ -148,6 +219,14 @@ export const FilterSidebar: React.FC<FilterProps> = ({
           <ul className={styles.filterList}>
             {renderTimeUnitFilters(state, handleAddFilter, handleRemoveFilter)}
           </ul>
+        </FilterCategory>
+        <FilterCategory header="År Slider">
+          {renderYearFiltersSlider(state, handleAddFilter)}
+        </FilterCategory>
+        <FilterCategory header="År Select">
+          <div className={cl(styles.filterYear)}>
+            {renderYearFiltersSelect(state, handleAddFilter)}
+          </div>
         </FilterCategory>
       </div>
       <p>
