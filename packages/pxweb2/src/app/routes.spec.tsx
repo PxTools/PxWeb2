@@ -90,6 +90,17 @@ describe('Router configuration', () => {
       expect(screen.getByTestId('table-viewer')).toBeInTheDocument();
     });
 
+    it('should render NotFound page for default language path', () => {
+      const testRouter = createMemoryRouter(routerConfig, {
+        initialEntries: ['/en/'],
+      });
+
+      render(<RouterProvider router={testRouter} />);
+      expect(
+        screen.getByTestId('not-found-page_not_found'),
+      ).toBeInTheDocument();
+    });
+
     it('should render NotFound for non-existent paths and unsupported languages', () => {
       const testRouter = createMemoryRouter(routerConfig, {
         initialEntries: ['/non-existent'],
