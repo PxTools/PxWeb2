@@ -159,6 +159,7 @@ const StartPage = () => {
               yearRange: fullRange,
             },
             lastUsedYearRange: fullRange,
+            resetYearFilterInput: Date.now(),
           };
         }
         const filteredTables = state.availableTables.filter((table) =>

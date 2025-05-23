@@ -12,11 +12,7 @@ import {
   Heading,
   RangeSlider,
 } from '@pxweb2/pxweb2-ui';
-import {
-  PathItem,
-  findParent,
-  generateYearRange,
-} from '../../util/startPageFilters';
+import { PathItem, findParent } from '../../util/startPageFilters';
 import { YearSelectFilter } from '../YearSelectFilter/YearSelectFilter';
 interface FilterProps {
   state: StartPageState;
@@ -182,27 +178,12 @@ const renderYearFiltersSelect = (
   state: StartPageState,
   handleAddFilter: (filter: Filter[]) => void,
 ) => {
-  const activeYearFilter = state.activeFilters.find(
-    (f) => f.type === 'yearRange',
-  );
-
-  let minYear: number;
-  let maxYear: number;
-
-  if (activeYearFilter) {
-    const [min, max] = activeYearFilter.value.split('-').map(Number);
-    minYear = min;
-    maxYear = max;
-  } else {
-    minYear = state.lastUsedYearRange.min;
-    maxYear = state.lastUsedYearRange.max;
-  }
-
-  const years = generateYearRange(minYear, maxYear);
   return (
     <div>
       <YearSelectFilter
-        availableYears={years}
+        rangeMin={state.lastUsedYearRange.min}
+        rangeMax={state.lastUsedYearRange.max}
+        resetYearFilterInput={state.resetYearFilterInput}
         onChange={({ min, max }) =>
           handleAddFilter([
             {

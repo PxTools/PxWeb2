@@ -139,14 +139,6 @@ export function extractYear(period: string | null | undefined): number {
   return match ? parseInt(match[0], 10) : NaN;
 }
 
-export function generateYearRange(minYear: number, maxYear: number): number[] {
-  const years: number[] = [];
-  for (let year = minYear; year <= maxYear; year++) {
-    years.push(year);
-  }
-  return years;
-}
-
 export function sortFilterChips(filters: Filter[]): Filter[] {
   const typeOrder = ['subject', 'timeUnit'];
   return filters.sort((a, b) => {

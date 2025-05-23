@@ -1,33 +1,39 @@
-// YearSelectFilter.tsx – skiller ut input-komponent for korrekt hook-bruk
-
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import styles from './YearSelectFilter.module.scss';
 
 type YearSelectFilterProps = {
-  availableYears: number[];
+  rangeMin: number;
+  rangeMax: number;
+  resetYearFilterInput?: number;
   onChange: (range: { min: number; max: number }) => void;
 };
 
 export const YearSelectFilter: React.FC<YearSelectFilterProps> = ({
-  availableYears,
+  rangeMin,
+  rangeMax,
+  resetYearFilterInput,
   onChange,
 }) => {
   const [fromYear, setFromYear] = useState('');
   const [toYear, setToYear] = useState('');
 
-  const options = useMemo(
-    () =>
-      availableYears.map((year) => ({
-        label: String(year),
-        value: String(year),
-      })),
-    [availableYears],
-  );
+  useEffect(() => {
+    setFromYear('');
+    setToYear('');
+  }, [resetYearFilterInput]);
+
+  const options = useMemo(() => {
+    const years = [];
+    for (let y = rangeMin; y <= rangeMax; y++) {
+      years.push({ label: String(y), value: String(y) });
+    }
+    return years;
+  }, [rangeMin, rangeMax]);
+
   const tryTriggerUpdate = (newFrom: string, newTo: string) => {
     const from = Number(newFrom);
     const to = Number(newTo);
-    if (from > 0 && to > 0) {
-      console.log('YearSelectFilter', { from, to });
+    if (!isNaN(from) && !isNaN(to) && from <= to) {
       onChange({ min: from, max: to });
     }
   };
@@ -35,6 +41,7 @@ export const YearSelectFilter: React.FC<YearSelectFilterProps> = ({
   return (
     <div className={styles.rangeFilter}>
       <YearInput
+        key={`from-${resetYearFilterInput}`}
         label="Fra år"
         value={fromYear}
         setValue={setFromYear}
@@ -44,6 +51,7 @@ export const YearSelectFilter: React.FC<YearSelectFilterProps> = ({
         id="from"
       />
       <YearInput
+        key={`to-${resetYearFilterInput}`}
         label="Til år"
         value={toYear}
         setValue={setToYear}
@@ -79,13 +87,18 @@ const YearInput = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const filtered = useMemo(
-    () =>
-      options.filter((opt) =>
-        opt.label.toLowerCase().includes(searchTerm.trim().toLowerCase()),
-      ),
-    [searchTerm, options],
-  );
+  useEffect(() => {
+    setSearchTerm(value);
+  }, [value]);
+
+  const filtered = useMemo(() => {
+    if (searchTerm.trim() === '') {
+      return options;
+    }
+    return options.filter((opt) =>
+      opt.label.toLowerCase().includes(searchTerm.trim().toLowerCase()),
+    );
+  }, [searchTerm, options]);
 
   const handleSelect = (selected: string) => {
     setValue(selected);

@@ -30,6 +30,7 @@ export type StartPageState = {
   error: string;
   originalSubjectTree: PathItem[];
   lastUsedYearRange: { min: number; max: number };
+  resetYearFilterInput: number;
 };
 
 export type ReducerActionTypes =
