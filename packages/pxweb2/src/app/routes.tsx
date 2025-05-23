@@ -16,6 +16,7 @@ const supportedLangRoutes = config.language.supportedLanguages.map((lang) => {
     lang.shorthand === config.language.defaultLanguage
   ) {
     return {
+      // Show "page not found" when default language is in URL but shouldn't be
       path: `/${lang.shorthand}/`,
       children: [
         {
@@ -81,12 +82,12 @@ export const routerConfig = [
         ? routingWithDefaultLanguageInURL
         : routingWithoutDefaultLanguageInURL),
       {
-        path: '*',
-        element: <NotFound type="unsupported_language" />,
-      },
-      {
         path: 'topicIcons',
         element: <TopicIcons />,
+      },
+      {
+        path: '*',
+        element: <NotFound type="unsupported_language" />,
       },
     ],
   },

@@ -46,9 +46,9 @@ describe('LanguageSwitcher', () => {
     // Default mocks
     (getConfig as Mock).mockReturnValue(mockConfig);
     (useLocation as Mock).mockReturnValue(mockLocation);
-    (getLanguagePath as Mock).mockImplementation((path, lang) =>
-      lang === 'en' ? path : `/${lang}${path}`,
-    );
+    (getLanguagePath as Mock).mockImplementation((path, lang) => ({
+      pathname: lang === 'en' ? path : `/${lang}${path}`,
+    }));
     (useTranslation as Mock).mockReturnValue({
       i18n: {
         language: 'en',
