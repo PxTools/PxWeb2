@@ -515,7 +515,7 @@ export function Selection({
   ) {
     const prevSelectedValues = structuredClone(selectedVBValues);
 
-    console.log({prevSelectedValues});
+    console.log({ prevSelectedValues });
 
     const currentVariableMetadata = pxTableMetaToRender?.variables.find(
       (variable) => variable.id === varId,
@@ -557,7 +557,7 @@ export function Selection({
       newMappedSelectedCodeList,
     );
 
-    console.log({newSelectedValues});
+    console.log({ newSelectedValues });
 
     setIsFadingVariableList(true);
 
@@ -604,7 +604,6 @@ export function Selection({
     // }
 
     // TODO: collect which codelists are selected for variables and add them + the newly selected codelist to the metadata API call
-    
 
     // Get table metadata in the new codelist context
     TableService.getMetadataById(selectedTabId, i18n.resolvedLanguage, false)
@@ -640,7 +639,6 @@ export function Selection({
         setPxTableMetadata(null);
       });
 
-
     // const newPxTableMetaToRender: PxTableMetadata =
     //   structuredClone(pxTableMetaToRender);
     // newPxTableMetaToRender.variables.forEach((variable) => {
@@ -668,7 +666,6 @@ export function Selection({
     // setPxTableMetadata(newPxTableMetaToRender);
     // setPxTableMetaToRender(null);
   }
-
 
   const handleCheckboxChange = (varId: string, value: Value['code']) => {
     const prevSelectedValues = structuredClone(selectedVBValues);
