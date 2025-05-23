@@ -21,6 +21,7 @@ window.PxWeb2Config = {
     ],
     defaultLanguage: 'en',
     fallbackLanguage: 'en',
+    showDefaultLanguageInPath: true,
   },
   apiUrl: '',
   maxDataCells: 100000,

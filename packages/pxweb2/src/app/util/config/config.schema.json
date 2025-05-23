@@ -30,6 +30,10 @@
         "fallbackLanguage": {
           "description": "If there is a missing string for another language, use a string from this language instead",
           "type": "string"
+        },
+        "showDefaultLanguageInPath": {
+          "description": "If true, the default language will be shown in the website path. If false, the default language will not be shown in the path.",
+          "type": "boolean"
         }
       },
       "required": ["supportedLanguages", "defaultLanguage", "fallbackLanguage"]
