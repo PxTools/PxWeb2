@@ -10,38 +10,46 @@ import { NotFound } from './pages/NotFound/NotFound';
 const config = getConfig();
 const showDefaultLanguageInPath = config.language.showDefaultLanguageInPath;
 
-const supportedLangRoutes = config.language.supportedLanguages
-  .map((lang) => {
-    if (
-      !showDefaultLanguageInPath &&
-      lang.shorthand === config.language.defaultLanguage
-    ) {
-      return undefined;
-    }
-
+const supportedLangRoutes = config.language.supportedLanguages.map((lang) => {
+  if (
+    !showDefaultLanguageInPath &&
+    lang.shorthand === config.language.defaultLanguage
+  ) {
     return {
       path: `/${lang.shorthand}/`,
       children: [
         {
           index: true,
-          element: <StartPage />,
-          errorElement: <ErrorPage />,
-        },
-        {
-          path: 'table/:tableId',
-          element: <TableViewer />,
-          errorElement: <ErrorPage />,
+          element: <NotFound type="page_not_found" />,
         },
         {
           path: '*',
-          element: <NotFound type="table_not_found" />,
+          element: <NotFound type="page_not_found" />,
         },
       ],
     };
-  })
-  .filter((route) => {
-    return route !== undefined;
-  });
+  }
+
+  return {
+    path: `/${lang.shorthand}/`,
+    children: [
+      {
+        index: true,
+        element: <StartPage />,
+        errorElement: <ErrorPage />,
+      },
+      {
+        path: 'table/:tableId',
+        element: <TableViewer />,
+        errorElement: <ErrorPage />,
+      },
+      {
+        path: '*',
+        element: <NotFound type="page_not_found" />,
+      },
+    ],
+  };
+});
 
 const routingWithDefaultLanguageInURL = [
   {
