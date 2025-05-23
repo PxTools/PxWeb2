@@ -50,6 +50,7 @@ const initialState: StartPageState = Object.freeze({
   error: '',
   originalSubjectTree: [],
   lastUsedYearRange: { min: 1899, max: 2050 },
+  resetYearFilterInput: 0,
 });
 
 const StartPage = () => {
