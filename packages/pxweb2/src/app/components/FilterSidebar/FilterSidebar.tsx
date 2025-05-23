@@ -12,7 +12,12 @@ import {
   Heading,
   RangeSlider,
 } from '@pxweb2/pxweb2-ui';
-import { PathItem, findParent } from '../../util/startPageFilters';
+import {
+  PathItem,
+  findParent,
+  generateYearRange,
+} from '../../util/startPageFilters';
+import { YearSelectFilter } from '../YearSelectFilter/YearSelectFilter';
 interface FilterProps {
   state: StartPageState;
   handleAddFilter: (filter: Filter[]) => void;
@@ -129,7 +134,7 @@ const renderTimeUnitFilters = (
   });
 };
 
-const renderYearFilters = (
+const renderYearFiltersSlider = (
   state: StartPageState,
   handleAddFilter: (filter: Filter[]) => void,
 ) => {
@@ -173,6 +178,46 @@ const renderYearFilters = (
   );
 };
 
+const renderYearFiltersSelect = (
+  state: StartPageState,
+  handleAddFilter: (filter: Filter[]) => void,
+) => {
+  const activeYearFilter = state.activeFilters.find(
+    (f) => f.type === 'yearRange',
+  );
+
+  let minYear: number;
+  let maxYear: number;
+
+  if (activeYearFilter) {
+    const [min, max] = activeYearFilter.value.split('-').map(Number);
+    minYear = min;
+    maxYear = max;
+  } else {
+    minYear = state.lastUsedYearRange.min;
+    maxYear = state.lastUsedYearRange.max;
+  }
+
+  const years = generateYearRange(minYear, maxYear);
+  return (
+    <div>
+      <YearSelectFilter
+        availableYears={years}
+        onChange={({ min, max }) =>
+          handleAddFilter([
+            {
+              type: 'yearRange',
+              value: `${min}-${max}`,
+              label: `${min} - ${max}`,
+              index: 0,
+            },
+          ])
+        }
+      />
+    </div>
+  );
+};
+
 export const FilterSidebar: React.FC<FilterProps> = ({
   state,
   handleAddFilter,
@@ -198,8 +243,13 @@ export const FilterSidebar: React.FC<FilterProps> = ({
             {renderTimeUnitFilters(state, handleAddFilter, handleRemoveFilter)}
           </ul>
         </FilterCategory>
-        <FilterCategory header="År">
-          {renderYearFilters(state, handleAddFilter)}
+        <FilterCategory header="År Slider">
+          {renderYearFiltersSlider(state, handleAddFilter)}
+        </FilterCategory>
+        <FilterCategory header="År Select">
+          <div className={cl(styles.filterYear)}>
+            {renderYearFiltersSelect(state, handleAddFilter)}
+          </div>
         </FilterCategory>
       </div>
       <p>
