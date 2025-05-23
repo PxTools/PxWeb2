@@ -22,7 +22,7 @@
   // Calculate height of main container, minus the header
   height: calc(100vh - fixed.$spacing-22);
 
-  // xsmall and small
+  // xsmall, small and medium
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
     left: 0px;
     background: var(--px-color-surface-default);
@@ -40,7 +40,7 @@
     }
   }
 
-  // medium, large and xlarge
+  // medium, large, xlarge and xxlarge
   @media ((min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-xlarge-max-width)) or ((min-width: fixed.$breakpoints-xxlarge-min-width)) {
     width: calc(100% - 120px);
     justify-content: center;
@@ -54,11 +54,6 @@
     border-end-start-radius: var(--px-border-radius-none);
 
     padding: fixed.$spacing-8 fixed.$spacing-8 0px fixed.$spacing-8;
-  }
-
-  // xxlarge
-  @media (min-width: fixed.$breakpoints-xxlarge-min-width) {
-    padding: fixed.$spacing-10 fixed.$spacing-8 0px fixed.$spacing-8;
   }
 }
 
@@ -78,17 +73,17 @@
 
   // small
   @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
-    padding-top: fixed.$spacing-6;
+    padding-top: fixed.$spacing-8;
   }
 
   // medium
   @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
-    padding-top: fixed.$spacing-6;
+    padding-top: fixed.$spacing-11;
   }
 
   // large, xlarge and xxlarge
   @media ((min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-xlarge-max-width)) or ((min-width: fixed.$breakpoints-xxlarge-min-width)) {
-    padding-bottom: fixed.$spacing-6;
+    padding-bottom: fixed.$spacing-8;
     overflow-y: auto;
     scrollbar-width: thin;
     gap: fixed.$spacing-6;
