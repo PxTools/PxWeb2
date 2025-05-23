@@ -855,6 +855,11 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    */
   const fetchTableData = React.useCallback(
     async (tableId: string, i18n: i18n, isMobile: boolean) => {
+
+      console.log(
+        'Fetch table data from API. TableId: ' + tableId + ', language: ' + i18n.language,
+      );
+
       try {
         const selections: Array<VariableSelection> = [];
 
