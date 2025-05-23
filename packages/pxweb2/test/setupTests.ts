@@ -1,4 +1,8 @@
 import { vi } from 'vitest';
+import { Blob as FetchBlob } from 'fetch-blob';
+
+// Always override, since jsdom's Blob lacks .stream()
+globalThis.Blob = FetchBlob as unknown as typeof Blob;
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
