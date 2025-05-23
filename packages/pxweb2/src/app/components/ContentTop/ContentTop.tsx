@@ -4,6 +4,7 @@ import { useState, useContext, useEffect, useRef } from 'react';
 
 import classes from './ContentTop.module.scss';
 import {
+  Alert,
   BodyLong,
   BodyShort,
   Button,
@@ -14,6 +15,9 @@ import {
 } from '@pxweb2/pxweb2-ui';
 import TableInformation from '../TableInformation/TableInformation';
 import { AccessibilityContext } from '../../context/AccessibilityProvider';
+import { GetMandatoryNotesCompressed } from '../../util/notes/notesUtil';
+import useTableData from '../../context/useTableData';
+import useVariables from '../../context/useVariables';
 
 export interface ContenetTopProps {
   readonly pxtable: PxTable;
@@ -29,32 +33,62 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
   const accessibility = useContext(AccessibilityContext);
   const openInformationButtonRef = useRef<HTMLButtonElement>(null);
   const openInformationLinkRef = useRef<HTMLAnchorElement>(null);
+  const openInformationAlertTableNotesRef = useRef<HTMLDivElement>(null);
+  const openInformationAlertVarNotesRef = useRef<Array<HTMLDivElement | null>>(
+    [],
+  );
 
   const handleOpenTableInformation = (opener: string, selectedTab?: string) => {
     setTableInformationOpener(opener);
     if (selectedTab) {
       setActiveTab(selectedTab);
     }
+    console.log('HIT?');
     setIsTableInformationOpen(true);
+    console.log('HIT da?', isTableInformationOpen);
+    console.log('opener', opener);
   };
+
+  const { pxTableMetadata } = useVariables();
+  const selMetadata = pxTableMetadata;
+  const metadata = useTableData().data?.metadata;
+  const noteInfo =
+    metadata && selMetadata
+      ? GetMandatoryNotesCompressed(metadata, selMetadata)
+      : undefined;
 
   useEffect(() => {
     if (!isTableInformationOpen) {
-      if (tableInformationOpener === 'table-information-button') {
-        openInformationButtonRef.current?.focus();
-      } else if (tableInformationOpener === 'table-information-link') {
-        // table-information-link
-        openInformationLinkRef.current?.focus();
+      //console.log('tableInformationOpener', tableInformationOpener);
+      const alertVarNotesRegex = /^table-information-alertVarNotes-(\d+)$/;
+      const execResult = alertVarNotesRegex.exec(tableInformationOpener ?? '');
+
+      switch (tableInformationOpener) {
+        case 'table-information-button':
+          openInformationButtonRef.current?.focus();
+          break;
+        case 'table-information-link':
+          console.log('table-information-link');
+          openInformationLinkRef.current?.focus();
+          break;
+        case 'table-information-alertTableNotes':
+          console.log('table-information-alertTableNotes');
+          openInformationAlertTableNotesRef.current?.focus();
+          break;
+        default: {
+          if (execResult) {
+            // Extract the index from the regex result
+            const idx = Number(execResult[1] ?? 0);
+            openInformationAlertVarNotesRef.current?.[idx]?.focus();
+          }
+          break;
+        }
       }
     }
     accessibility?.addModal('tableInformation', () => {
       setIsTableInformationOpen(false);
     });
-
-    return () => {
-      accessibility?.removeModal('tableInformation');
-    };
-  }, [accessibility, isTableInformationOpen, tableInformationOpener]);
+  }, [isTableInformationOpen, tableInformationOpener, accessibility]);
 
   return (
     <>
@@ -117,6 +151,50 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
               </BodyShort>
             )}
           </div>
+        </div>
+        <div className={cl(classes.alertgroup)}>
+          {noteInfo?.tableNotes && (
+            <Alert
+              ref={openInformationAlertTableNotesRef}
+              variant="info"
+              heading={t(
+                'presentation_page.main_content.about_table.notes.important_about_table',
+              )}
+              clickable
+              onClick={() => {
+                handleOpenTableInformation(
+                  'table-information-alertTableNotes',
+                  'tab-footnotes',
+                );
+              }}
+            >
+              {noteInfo.tableNotes}
+            </Alert>
+          )}
+          {noteInfo?.variableNotes &&
+            noteInfo.variableNotes.map((note, idx) => (
+              <Alert
+                ref={(el) => {
+                  openInformationAlertVarNotesRef.current[idx] = el;
+                }}
+                key={idx}
+                variant="info"
+                clickable
+                onClick={() => {
+                  handleOpenTableInformation(
+                    `table-information-alertVarNotes-${idx}`,
+                    'tab-footnotes',
+                  );
+                }}
+                heading={
+                  t(
+                    'presentation_page.main_content.about_table.notes.important_about_variable',
+                  ) + note.variableName
+                }
+              >
+                {note.compressednotes}
+              </Alert>
+            ))}
         </div>
       </div>
       {isTableInformationOpen && (
