@@ -15,7 +15,7 @@
         "description": "Sidan du letar efter finns inte. Kontrollera URL:en eller återgå till startsidan."
       },
       "unsupported_language": {
-        "title": "Ej stödat språk",
+        "title": "Ogiltigt språk",
         "description": "Det valda språket stöds inte."
       }
     },
