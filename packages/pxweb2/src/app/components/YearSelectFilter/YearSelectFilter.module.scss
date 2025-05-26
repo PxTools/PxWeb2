@@ -7,12 +7,10 @@
 .yearSelectInput {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
   width: 100%;
   max-width: 240px;
   margin-top: 1rem;
-
-  position: relative; // 👈 Nødvendig for at .optionList skal plasseres korrekt
+  position: relative;
 }
 
 .label {
@@ -36,10 +34,10 @@
 
 .searchInput {
   font-size: 1rem;
-  padding-left: 36px;
-  height: 32px;
+  height: 48px;
+  padding: 8px 12px;
   width: 100%;
-  border: 1px solid #ccc;
+  border: 1px solid var(--px-color-border-default);
   border-radius: 4px;
 }
 
@@ -49,19 +47,16 @@
   padding: 0;
   max-height: 200px;
   overflow-y: auto;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  background-color: white;
+  border: 2px solid var(--color-border-subtle, #c3dcdc);
+  border-radius: var(--border-radius-medium, 8px);
+  background: var(--color-surface-default, #fff);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-
-  /* Legg til disse for å sikre synlighet */
-  //position: absolute;
   z-index: 1000;
   width: 100%;
 }
 
 .optionItem {
-  padding: 0.5rem 0.75rem;
+  padding: 10px 12px;
   cursor: pointer;
   transition: background-color 0.2s;
 
@@ -76,5 +71,13 @@
 }
 
 .highlighted {
-  background-color: #edf5ff;
+  background-color: var(--px-color-surface-action-subtle-hover); //#edf5ff;
+}
+
+.noMatches {
+  border-radius: var(--border-radius-medium, 8px);
+  border: 2px solid var(--color-border-subtle, #c3dcdc);
+  background: var(--color-surface-default, #fff);
+  padding: 10px 12px;
+  margin-top: 5px;
 }

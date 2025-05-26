@@ -2,7 +2,6 @@ import React, { useState, useMemo, useRef, useEffect } from 'react';
 import cl from 'clsx';
 
 import styles from './YearSelectFilter.module.scss';
-import { Icon } from '@pxweb2/pxweb2-ui';
 
 type YearSelectFilterProps = {
   rangeMin: number;
@@ -114,6 +113,21 @@ const YearInput = ({
     }, 0);
   };
 
+  const handleManualInput = () => {
+    const matchedOption = options.find(
+      (opt) => opt.value === searchTerm.trim(),
+    );
+    if (matchedOption) {
+      setValue(matchedOption.value);
+      setSearchTerm(matchedOption.value);
+      const newFrom = id === 'from' ? matchedOption.value : otherValue;
+      const newTo = id === 'to' ? matchedOption.value : otherValue;
+      onComplete(newFrom, newTo);
+    } else {
+      setSearchTerm(value); // Tilbakestill til forrige gyldige verdi
+    }
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (!isOpen && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) {
       setIsOpen(true);
@@ -132,6 +146,8 @@ const YearInput = ({
       const selected = filtered[highlightIndex];
       if (selected) {
         handleSelect(selected.value);
+      } else {
+        handleManualInput();
       }
     } else if (e.key === 'Escape') {
       setIsOpen(false);
@@ -156,7 +172,7 @@ const YearInput = ({
   return (
     <div className={styles.yearSelectInput} ref={containerRef}>
       <div className={styles.searchWrapper}>
-        <Icon className={styles.searchIcon} iconName="MagnifyingGlass" />
+        {/*  <Icon className={styles.searchIcon} iconName="MagnifyingGlass" /> */}
         <input
           ref={inputRef}
           type="text"
@@ -166,6 +182,7 @@ const YearInput = ({
           onFocus={() => setIsOpen(true)}
           onChange={(e) => setSearchTerm(e.target.value)}
           onKeyDown={handleKeyDown}
+          onBlur={handleManualInput}
           aria-activedescendant={filtered[highlightIndex]?.value}
           aria-controls={`${id}-option-list`}
           role="combobox"
@@ -196,6 +213,10 @@ const YearInput = ({
             </li>
           ))}
         </ul>
+      )}
+      {/*  {isOpen && filtered.length === 0 && searchTerm.trim() !== '' && ( */}
+      {isOpen && filtered.length === 0 && searchTerm.trim() !== '' && (
+        <div className={styles.noMatches}>Ingen søketreff</div>
       )}
     </div>
   );
