@@ -18,10 +18,10 @@ export const getFullTable: Promise<Table[]> = new Promise((resolve, reject) => {
       undefined,
       true,
       1,
-      3000,
+      10000,
     )
       .then((response) => {
-        localStorage.setItem('table', JSON.stringify(response.tables));
+        //localStorage.setItem('table', JSON.stringify(response.tables));
         resolve(response.tables);
       })
       .catch((error: Error) => {
