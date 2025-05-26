@@ -96,7 +96,7 @@ function getMetadataCopyForSelection(
   selection: PxTableMetadata,
 ): PxTableMetadata {
   const totalMetadataCopy = structuredClone(totalMetadata);
-  console.log('selection i NotesTab=', selection);
+  // console.log('selection i NotesTab=', selection);
   // Create a map of variable ids and their value codes in the selection for quick lookup
   const selectionVariableValueMap = new Map<string, Set<string>>();
   if (selection.variables) {
@@ -135,6 +135,8 @@ export function GetMandatoryNotesCompressed(
   pxTableMetadata: PxTableMetadata,
   pxMetaTotal: PxTableMetadata,
 ): MandatoryCompressedUtilityNotesType {
+  console.log(' pxTableMetadata', pxTableMetadata);
+  console.log(' pxMetaTotal', pxMetaTotal);
   const mandatoryNotes = GetNoteInfo(pxTableMetadata, pxMetaTotal).Notes
     .mandatoryNotes;
   const tempTabletableNotes: MandatoryCompressedUtilityNotesType = {
@@ -143,33 +145,34 @@ export function GetMandatoryNotesCompressed(
     hasTableNotes: false,
     hasVariableNotes: false,
   };
+  console.log('mandatoryNotes.notesCount', mandatoryNotes.notesCount);
   if (mandatoryNotes.notesCount > 0) {
-    console.log('mandatoryNotes.notesCount', mandatoryNotes.notesCount);
+    // console.log('mandatoryNotes.notesCount', mandatoryNotes.notesCount);
     if (mandatoryNotes.tableLevelNotes.length > 0) {
       tempTabletableNotes.hasTableNotes = true;
-      console.log(
-        'mandatoryNotes.tableLevelNotes',
-        mandatoryNotes.tableLevelNotes,
-      );
+      // console.log(
+      //   'mandatoryNotes.tableLevelNotes',
+      //   mandatoryNotes.tableLevelNotes,
+      // );
       tempTabletableNotes.tableNotes = mandatoryNotes.tableLevelNotes.join(' ');
     }
-    console.log(
-      'mandatoryNotes.variableNotes.length',
-      mandatoryNotes.variableNotes.length,
-    );
-    console.log(
-      'XXXXmandatoryNotes.variableNotes',
-      mandatoryNotes.variableNotes,
-    );
+    // console.log(
+    //   'mandatoryNotes.variableNotes.length',
+    //   mandatoryNotes.variableNotes.length,
+    // );
+    // console.log(
+    //   'XXXXmandatoryNotes.variableNotes',
+    //   mandatoryNotes.variableNotes,
+    // );
     if (mandatoryNotes.variableNotes.length > 0) {
       tempTabletableNotes.hasVariableNotes = true;
       //let tempString = '';
       //let index = 0;
       for (const variableNotes of mandatoryNotes.variableNotes) {
-        console.log(
-          'YYYYvariableNotes.notes.length',
-          variableNotes.notes.length,
-        );
+        // console.log(
+        //   'YYYYvariableNotes.notes.length',
+        //   variableNotes.notes.length,
+        // );
 
         // Prepare the variableNotes entry
         const variableNoteEntry: MandatoryCompressedUtilityVariableNotesType = {
@@ -187,34 +190,34 @@ export function GetMandatoryNotesCompressed(
           }
         }
         for (const valueNotesTemp of variableNotes.valueNotes) {
-          console.log(
-            'ZZZZvalueNotesTemp.notes.length',
-            valueNotesTemp.notes.length,
-          );
+          // console.log(
+          //   'ZZZZvalueNotesTemp.notes.length',
+          //   valueNotesTemp.notes.length,
+          // );
           if (valueNotesTemp.notes.length > 0) {
             tempString += valueNotesTemp.valueName + ': ';
             for (const valueNote of valueNotesTemp.notes) {
-              tempString += valueNote;
+              tempString += valueNote + ' ';
             }
           }
         }
 
         variableNoteEntry.compressednotes = tempString;
 
-        console.log(
-          'tempString variable i GetMandatoryNotesCompressed',
-          tempString,
-        );
+        // console.log(
+        //   'tempString variable i GetMandatoryNotesCompressed',
+        //   tempString,
+        // );
 
         tempTabletableNotes.variableNotes.push(variableNoteEntry);
         // index++;
       }
     }
   }
-  console.log(
-    'tempTabletableNotes i GetMandatoryNotesCompressed=',
-    tempTabletableNotes,
-  );
+  // console.log(
+  //   'tempTabletableNotes i GetMandatoryNotesCompressed=',
+  //   tempTabletableNotes,
+  // );
   return tempTabletableNotes;
 }
 
