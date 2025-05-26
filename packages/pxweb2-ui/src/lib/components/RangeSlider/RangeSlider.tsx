@@ -96,13 +96,13 @@ export const RangeSlider = ({
   };
 
   const slideMin = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Number(e.target.value);
+    const value = Math.min(Number(e.target.value), sliderMax - minGap);
     setSliderMin(value);
     setMinInputValue(String(value));
   };
 
   const slideMax = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Number(e.target.value);
+    const value = Math.max(Number(e.target.value), sliderMin + minGap);
     setSliderMax(value);
     setMaxInputValue(String(value));
   };
