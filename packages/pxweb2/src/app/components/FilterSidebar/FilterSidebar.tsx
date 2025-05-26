@@ -56,7 +56,7 @@ export const FilterSidebar: React.FC<FilterProps> = ({
         </ul>
       </div>
       <p>
-        <a href="/table/tab638">Go to table viewer</a>
+        <a href="/en/table/tab638">Go to table viewer</a>
       </p>
     </div>
   );
