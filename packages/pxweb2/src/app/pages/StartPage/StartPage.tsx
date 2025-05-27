@@ -53,7 +53,7 @@ const initialState: StartPageState = Object.freeze({
 });
 
 const StartPage = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [state, dispatch] = useReducer(reducer, initialState);
   const { isMobile, isTablet } = useApp();
   const isSmallScreen = isTablet === true || isMobile === true;
@@ -230,7 +230,7 @@ const StartPage = () => {
             }
             lastUpdated={
               table.updated
-                ? new Date(table.updated).toLocaleDateString('no') // We may want to get the locale from config!
+                ? new Date(table.updated).toLocaleDateString(i18n.language)
                 : undefined
             }
             period={`${table.firstPeriod?.slice(0, 4)}–${table.lastPeriod?.slice(0, 4)}`}
