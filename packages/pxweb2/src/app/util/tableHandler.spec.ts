@@ -109,7 +109,7 @@ vi.mock('@pxweb2/pxweb2-api-client', () => {
 
 describe('getFullTable', () => {
   it('should fetch and return tables from TableService', async () => {
-    const tables = await getFullTable;
+    const tables = await getFullTable();
     expect(Array.isArray(tables)).toBe(true);
     expect(tables.length).toBeGreaterThan(0);
     expect(tables[0].id).toBe('TAB4707');

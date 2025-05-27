@@ -184,17 +184,18 @@ const StartPage = () => {
   }
 
   useEffect(() => {
-    handleSetLoading(true);
-    getFullTable
-      .then((tables: Table[]) => {
+    async function fetchTables() {
+      handleSetLoading(true);
+      try {
+        const tables = await getFullTable();
         handleResetFilter(tables);
-      })
-      .catch((error: Error) => {
-        handleSetError(error.message);
-      })
-      .finally(() => {
+      } catch (error) {
+        handleSetError((error as Error).message);
+      } finally {
         handleSetLoading(false);
-      });
+      }
+    }
+    fetchTables();
   }, []);
 
   function renderRemoveAllChips() {
@@ -202,8 +203,9 @@ const StartPage = () => {
       return (
         <Chips.Removable
           filled
-          onClick={() => {
-            getFullTable.then((t) => handleResetFilter(t));
+          onClick={async () => {
+            const t = await getFullTable();
+            handleResetFilter(t);
           }}
         >
           {t('start_page.filter.remove_all_filter')}

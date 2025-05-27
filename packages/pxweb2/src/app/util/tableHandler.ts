@@ -5,44 +5,41 @@ import { compress, decompress } from './compression';
 
 const TTL: number = 1000 * 60 * 60; // One hour, in milliseconds
 
-export const getFullTable: Promise<Table[]> = new Promise(
-  async (resolve, reject) => {
-    const config = getConfig();
-    const baseUrl = config.apiUrl;
-    OpenAPI.BASE = baseUrl;
+export const getFullTable = async (): Promise<Table[]> => {
+  const config = getConfig();
+  const baseUrl = config.apiUrl;
+  OpenAPI.BASE = baseUrl;
 
-    const lastUpdated = localStorage.getItem('cacheTime');
-    const shouldUseCache =
-      lastUpdated && isLessThanOneHourAgo(new Date().toString(), lastUpdated);
+  const lastUpdated = localStorage.getItem('cacheTime');
+  const shouldUseCache =
+    lastUpdated && isLessThanOneHourAgo(new Date().toString(), lastUpdated);
 
-    let storedTable = localStorage.getItem('compressedTables');
-    if (storedTable && shouldUseCache) {
-      const data = await decompress(storedTable);
-      resolve(JSON.parse(data) as Table[]);
-    } else {
-      TableService.listAllTables(
+  let storedTable = localStorage.getItem('compressedTables');
+  if (storedTable && shouldUseCache) {
+    const data = await decompress(storedTable);
+    return JSON.parse(data) as Table[];
+  } else {
+    try {
+      const response = await TableService.listAllTables(
         config.language.defaultLanguage,
         undefined,
         undefined,
         true,
         1,
         10000,
-      )
-        .then(async (response) => {
-          const compressedStringTables = await compress(
-            JSON.stringify(response.tables),
-          );
-          localStorage.setItem('compressedTables', compressedStringTables);
-          localStorage.setItem('cacheTime', new Date().toString());
-          resolve(response.tables);
-        })
-        .catch((error: Error) => {
-          console.error('Failed to fetch tables:', error);
-          reject(error);
-        });
+      );
+      const compressedStringTables = await compress(
+        JSON.stringify(response.tables),
+      );
+      localStorage.setItem('compressedTables', compressedStringTables);
+      localStorage.setItem('cacheTime', new Date().toString());
+      return response.tables;
+    } catch (error) {
+      console.error('Failed to fetch tables:', error);
+      throw error;
     }
-  },
-);
+  }
+};
 
 export function isLessThanOneHourAgo(
   current: string,
