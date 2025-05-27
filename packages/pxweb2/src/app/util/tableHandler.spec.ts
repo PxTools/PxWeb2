@@ -1,5 +1,9 @@
 import { vi } from 'vitest';
-import { getFullTable, shouldTableBeIncluded } from './tableHandler';
+import {
+  getFullTable,
+  shouldTableBeIncluded,
+  isLessThanOneHourAgo,
+} from './tableHandler';
 import { Config } from './config/configType';
 import { type Filter } from '../pages/StartPage/StartPageTypes';
 import { Table } from 'packages/pxweb2-api-client/src';
@@ -199,4 +203,31 @@ test('Time and subject filter 2 should disallow test data', () => {
   expect(shouldTableBeIncluded(tableYear, testFilterSubjectTimeDisallow)).toBe(
     false,
   );
+});
+
+test('Time difference of three hours should be false', () => {
+  expect(
+    isLessThanOneHourAgo(
+      'Tue May 27 2025 15:35:34 GMT+0200 (Central European Summer Time)',
+      'Tue May 27 2025 12:35:34 GMT+0200 (Central European Summer Time)',
+    ),
+  ).toBe(false);
+});
+
+test('Time difference of seven days should be false', () => {
+  expect(
+    isLessThanOneHourAgo(
+      'Tue May 27 2025 12:35:34 GMT+0200 (Central European Summer Time)',
+      'Tue May 20 2025 12:35:34 GMT+0200 (Central European Summer Time)',
+    ),
+  ).toBe(false);
+});
+
+test('Time difference of ten minutes should be true', () => {
+  expect(
+    isLessThanOneHourAgo(
+      'Tue May 27 2025 12:35:34 GMT+0200 (Central European Summer Time)',
+      'Tue May 27 2025 12:25:34 GMT+0200 (Central European Summer Time)',
+    ),
+  ).toBe(true);
 });

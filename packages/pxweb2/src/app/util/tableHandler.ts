@@ -3,14 +3,20 @@ import { getConfig } from './config/getConfig';
 import type { Filter } from '../pages/StartPage/StartPageTypes';
 import { compress, decompress } from './compression';
 
+const TTL: number = 1000 * 60 * 60; // One hour, in milliseconds
+
 export const getFullTable: Promise<Table[]> = new Promise(
   async (resolve, reject) => {
     const config = getConfig();
     const baseUrl = config.apiUrl;
     OpenAPI.BASE = baseUrl;
 
+    const lastUpdated = localStorage.getItem('cacheTime');
+    const shouldUseCache =
+      lastUpdated && isLessThanOneHourAgo(new Date().toString(), lastUpdated);
+
     let storedTable = localStorage.getItem('compressedTables');
-    if (storedTable) {
+    if (storedTable && shouldUseCache) {
       const data = await decompress(storedTable);
       resolve(JSON.parse(data) as Table[]);
     } else {
@@ -27,6 +33,7 @@ export const getFullTable: Promise<Table[]> = new Promise(
             JSON.stringify(response.tables),
           );
           localStorage.setItem('compressedTables', compressedStringTables);
+          localStorage.setItem('cacheTime', new Date().toString());
           resolve(response.tables);
         })
         .catch((error: Error) => {
@@ -36,6 +43,22 @@ export const getFullTable: Promise<Table[]> = new Promise(
     }
   },
 );
+
+export function isLessThanOneHourAgo(
+  current: string,
+  cacheAge: string,
+): boolean {
+  const now = new Date(current).getTime();
+  const check = new Date(cacheAge).getTime();
+
+  const timeDifference = now - check;
+
+  if (timeDifference < TTL) {
+    return true;
+  } else {
+    return false; // Also returns false if inputs are invalid dates
+  }
+}
 
 export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
   const timeUnitFilters = filters.filter((f) => {
