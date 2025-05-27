@@ -70,6 +70,22 @@ vi.mock('../../util/hooks/useTopicIcons', () => {
   };
 });
 
+vi.mock('react-i18next', async () => {
+  const actual =
+    await vi.importActual<typeof import('react-i18next')>('react-i18next');
+
+  return {
+    ...actual,
+    useTranslation: () => ({
+      t: (key: string) => key,
+      i18n: {
+        language: 'en',
+      },
+    }),
+    Trans: (props: { i18nKey: string }) => <>{props.i18nKey}</>,
+  };
+});
+
 // Declare the global variable for this file
 declare global {
   interface Window {

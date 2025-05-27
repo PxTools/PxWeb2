@@ -74,6 +74,8 @@ interface Resources {
         };
       };
       table: {
+        number_of_tables: '<number of> tables';
+        number_of_tables_found: '<number of> tables found';
         updated_label: 'Updated';
       };
     };

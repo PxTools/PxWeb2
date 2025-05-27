@@ -73,6 +73,8 @@
       }
     },
     "table": {
+      "number_of_tables": "<strong>{{count}}</strong> tabeller",
+      "number_of_tables_found": "Treff på <strong>{{count}}</strong> tabeller",
       "updated_label": "Oppdatert"
     }
   },

@@ -3,7 +3,7 @@ import { Virtuoso } from 'react-virtuoso';
 import cl from 'clsx';
 
 import styles from './StartPage.module.scss';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, Trans } from 'react-i18next';
 import type { TFunction } from 'i18next';
 import { Search, TableCard, Spinner, Alert, Chips } from '@pxweb2/pxweb2-ui';
 import { type Table } from '@pxweb2/pxweb2-api-client';
@@ -294,18 +294,23 @@ const StartPage = () => {
           <div className={cl(styles['bodyshort-medium'], styles.countLabel)}>
             {state.activeFilters.length ? (
               <p>
-                Treff på{' '}
-                <span className={cl(styles['label-medium'])}>
-                  {state.filteredTables.length}
-                </span>{' '}
-                tabeller
+                <Trans
+                  i18nKey="start_page.table.number_of_tables_found"
+                  values={{ count: state.filteredTables.length }}
+                  components={{
+                    strong: <span className={cl(styles['label-medium'])} />,
+                  }}
+                />
               </p>
             ) : (
               <p>
-                <span className={cl(styles['label-medium'])}>
-                  {state.filteredTables.length}
-                </span>{' '}
-                tabeller
+                <Trans
+                  i18nKey="start_page.table.number_of_tables"
+                  values={{ count: state.filteredTables.length }}
+                  components={{
+                    strong: <span className={cl(styles['label-medium'])} />,
+                  }}
+                />
               </p>
             )}
           </div>
