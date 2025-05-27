@@ -4,6 +4,7 @@ import cl from 'clsx';
 
 import styles from './StartPage.module.scss';
 import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { Search, TableCard, Spinner, Alert, Chips } from '@pxweb2/pxweb2-ui';
 import { type Table } from '@pxweb2/pxweb2-api-client';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
@@ -26,6 +27,7 @@ import {
 } from '../../util/startPageFilters';
 import { useTopicIcons } from '../../util/hooks/useTopicIcons';
 import useApp from '../../context/useApp';
+import { lowerCase } from 'lodash';
 
 // TODO: Remove this function. We can not consider norwegian special cases in our code!
 function removeTableNumber(title: string): string {
@@ -212,6 +214,35 @@ const StartPage = () => {
     }
   }
 
+  function renderTableCard(table: Table, t: TFunction) {
+    if (table) {
+      const translationKey = `start_page.filter.frequency.${lowerCase(table.timeUnit)}`;
+      const frequencyLabel = t(translationKey, {
+        defaultValue: table.timeUnit ?? '',
+      });
+      return (
+        <div className={styles.tableListItem}>
+          <TableCard
+            title={`${table.label && removeTableNumber(table.label)}`}
+            href={`/table/${table.id}`}
+            updatedLabel={
+              table.updated ? t('start_page.table.updated_label') : undefined
+            }
+            lastUpdated={
+              table.updated
+                ? new Date(table.updated).toLocaleDateString('no') // We may want to get the locale from config!
+                : undefined
+            }
+            period={`${table.firstPeriod?.slice(0, 4)}–${table.lastPeriod?.slice(0, 4)}`}
+            frequency={frequencyLabel}
+            tableId={`${table.id}`}
+            icon={renderTopicIcon(table)}
+          />
+        </div>
+      );
+    }
+  }
+
   function renderTopicIcon(table: Table) {
     const topicId = table.paths?.[0]?.[0]?.id;
     const size = isSmallScreen ? 'small' : 'medium';
@@ -228,7 +259,10 @@ const StartPage = () => {
       <Information />
       <div className={styles.startPage}>
         <div className={styles.searchArea}>
-          <Search searchPlaceHolder="Search..." variant="default" />
+          <Search
+            searchPlaceHolder={t('start_page.search_placeholder')}
+            variant="default"
+          />
         </div>
         <FilterSidebar
           state={state}
@@ -300,29 +334,7 @@ const StartPage = () => {
             <Virtuoso
               style={{ height: '90%' }}
               data={state.filteredTables}
-              itemContent={(_, table: Table) => (
-                <div className={styles.tableListItem}>
-                  <TableCard
-                    title={`${table.label && removeTableNumber(table.label)}`}
-                    href={`/table/${table.id}`}
-                    updatedLabel={
-                      table.updated
-                        ? t('start_page.table.updatedLabel')
-                        : undefined
-                    }
-                    lastUpdated={
-                      table.updated
-                        ? new Date(table.updated).toLocaleDateString('no') // We may want to get the locale from config!
-                        : undefined
-                    }
-                    // We use slice here because we _only_ want 4digit year. Sometimes, month is appended in data set.
-                    period={`${table.firstPeriod?.slice(0, 4)}–${table.lastPeriod?.slice(0, 4)}`}
-                    frequency={`${table.timeUnit}`}
-                    tableId={`${table.id}`}
-                    icon={renderTopicIcon(table)}
-                  />
-                </div>
-              )}
+              itemContent={(_, table: Table) => renderTableCard(table, t)}
             />
           )}
         </div>

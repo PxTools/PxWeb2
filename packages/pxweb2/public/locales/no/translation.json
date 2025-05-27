@@ -54,7 +54,7 @@
     "ingress": "Leter du etter den perfekte tabellen? Bruk søkefeltet og filtrene for å finne tallene du trenger. Enten du er på jakt etter trender, fakta eller bare et merkelig tilfredsstillende datasett, så har PxWeb 2.0 det du trenger.",
     "more_about_label": "Mer om <Statistikkbanken>",
     "more_about_text": "More about Text NO",
-    "searchText": "Søk i <Statistikkbanken>",
+    "search_placeholder": "Søk i <Statistikkbanken>",
     "filter": {
       "header": "Filtrer",
       "remove_all_filter": "Fjern alle filter",
@@ -73,7 +73,7 @@
       }
     },
     "table": {
-      "updatedLabel": "Oppdatert"
+      "updated_label": "Oppdatert"
     }
   },
   "presentation_page": {
