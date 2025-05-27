@@ -25,6 +25,7 @@ vi.mock('react-router', () => ({
 }));
 
 describe('LanguageSwitcher', () => {
+  // Mock implementations
   const mockChangeLanguage = vi.fn();
   const mockLocation = { pathname: '/test/path' };
   const mockConfig = {
@@ -35,6 +36,7 @@ describe('LanguageSwitcher', () => {
         { languageName: 'Swedish', shorthand: 'sv' },
       ],
       fallbackLanguage: 'en',
+      showDefaultLanguageInPath: true,
     },
   };
 
@@ -44,9 +46,9 @@ describe('LanguageSwitcher', () => {
     // Default mocks
     (getConfig as Mock).mockReturnValue(mockConfig);
     (useLocation as Mock).mockReturnValue(mockLocation);
-    (getLanguagePath as Mock).mockImplementation((path, lang) =>
-      lang === 'en' ? path : `/${lang}${path}`,
-    );
+    (getLanguagePath as Mock).mockImplementation((path, lang) => ({
+      pathname: lang === 'en' ? path : `/${lang}${path}`,
+    }));
     (useTranslation as Mock).mockReturnValue({
       i18n: {
         language: 'en',
@@ -76,12 +78,14 @@ describe('LanguageSwitcher', () => {
       'no',
       mockConfig.language.supportedLanguages,
       mockConfig.language.fallbackLanguage,
+      mockConfig.language.showDefaultLanguageInPath,
     );
     expect(getLanguagePath).toHaveBeenCalledWith(
       '/test/path',
       'sv',
       mockConfig.language.supportedLanguages,
       mockConfig.language.fallbackLanguage,
+      mockConfig.language.showDefaultLanguageInPath,
     );
 
     // Check that the getLanguagePath function was called twice (once for each language except the current one)
