@@ -4,6 +4,7 @@ import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import { renderWithProviders } from '../../util/testing-utils';
 import { Config } from '../../util/config/configType';
 import { vi } from 'vitest';
+import '@testing-library/jest-dom/vitest';
 import { waitFor } from '@testing-library/react';
 
 // Mock the getFullTable function
@@ -121,6 +122,38 @@ describe('StartPage', () => {
     );
     await waitFor(() => {
       expect(baseElement).toBeTruthy();
+    });
+  });
+
+  it('renders translated search placeholder', async () => {
+    const { getByPlaceholderText } = renderWithProviders(
+      <AccessibilityProvider>
+        <MemoryRouter>
+          <StartPage />
+        </MemoryRouter>
+      </AccessibilityProvider>,
+    );
+
+    await waitFor(() => {
+      expect(
+        getByPlaceholderText('start_page.search_placeholder'),
+      ).toBeInTheDocument();
+    });
+  });
+
+  it('renders default table count using Trans', async () => {
+    const { getByText } = renderWithProviders(
+      <AccessibilityProvider>
+        <MemoryRouter>
+          <StartPage />
+        </MemoryRouter>
+      </AccessibilityProvider>,
+    );
+
+    await waitFor(() => {
+      expect(
+        getByText('start_page.table.number_of_tables'),
+      ).toBeInTheDocument();
     });
   });
 });

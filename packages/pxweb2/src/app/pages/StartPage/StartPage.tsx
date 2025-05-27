@@ -27,7 +27,6 @@ import {
 } from '../../util/startPageFilters';
 import { useTopicIcons } from '../../util/hooks/useTopicIcons';
 import useApp from '../../context/useApp';
-import { lowerCase } from 'lodash';
 
 // TODO: Remove this function. We can not consider norwegian special cases in our code!
 function removeTableNumber(title: string): string {
@@ -216,7 +215,7 @@ const StartPage = () => {
 
   function renderTableCard(table: Table, t: TFunction) {
     if (table) {
-      const translationKey = `start_page.filter.frequency.${lowerCase(table.timeUnit)}`;
+      const translationKey = `start_page.filter.frequency.${table.timeUnit?.toLowerCase()}`;
       const frequencyLabel = t(translationKey, {
         defaultValue: table.timeUnit ?? '',
       });

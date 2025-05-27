@@ -9,7 +9,6 @@ import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
 import { Checkbox, FilterCategory, Heading } from '@pxweb2/pxweb2-ui';
 import { PathItem, findParent } from '../../util/startPageFilters';
-import { lowerCase } from 'lodash';
 interface FilterProps {
   state: StartPageState;
   handleAddFilter: (filter: Filter[]) => void;
@@ -106,7 +105,7 @@ const renderTimeUnitFilters = (
     const isActive = state.activeFilters.some(
       (filter) => filter.type === 'timeUnit' && filter.value === key,
     );
-    const translationKey = `start_page.filter.frequency.${lowerCase(key)}`;
+    const translationKey = `start_page.filter.frequency.${key.toLowerCase()}`;
     const label = t(translationKey, { defaultValue: key });
 
     return (
