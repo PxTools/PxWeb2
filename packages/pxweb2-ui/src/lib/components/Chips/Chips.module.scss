@@ -5,12 +5,13 @@
   flex-wrap: wrap;
   gap: 8px;
   list-style: none;
+  margin: 0;
   padding: 0;
 }
 
 .chip {
   align-items: center;
-  background: var(--px-color-surface-default);
+  background-color: initial;
   border: 1px solid var(--px-color-border-action);
   border-radius: var(--px-border-radius-medium);
   color: var(--px-color-text-action);

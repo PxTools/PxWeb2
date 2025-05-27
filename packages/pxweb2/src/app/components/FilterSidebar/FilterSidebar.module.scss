@@ -3,15 +3,23 @@
 .sideBar {
   grid-area: sideBar;
   background-color: var(--px-color-surface-subtle);
-  padding: 0 32px 0 20px;
+  padding-right: 32px;
   overflow-y: auto;
   position: sticky;
   top: 0;
   height: 100%;
 }
 
+.filterHeading {
+  margin-bottom: 4px;
+}
+
 .filterList {
   margin: 20px 0 0;
   padding: 0;
   list-style-type: none;
+}
+
+.subjectToggle:not(:first-of-type) {
+  padding-left: 24px;
 }

@@ -3,15 +3,8 @@ import { Virtuoso } from 'react-virtuoso';
 import cl from 'clsx';
 
 import styles from './StartPage.module.scss';
-
-import {
-  Tag,
-  Search,
-  TableCard,
-  Icon,
-  Spinner,
-  Alert,
-} from '@pxweb2/pxweb2-ui';
+import { useTranslation } from 'react-i18next';
+import { Search, TableCard, Spinner, Alert, Chips } from '@pxweb2/pxweb2-ui';
 import { type Table } from '@pxweb2/pxweb2-api-client';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import { Header } from '../../components/Header/Header';
@@ -22,34 +15,17 @@ import {
   type ReducerActionTypes,
   type StartPageState,
   ActionType,
-} from './tableTypes';
-import { getFullTable } from './tableHandler';
-
-function shouldTableBeIncluded(table: Table, filters: Filter[]) {
-  return filters.some((filter) => {
-    if (filter.type === 'text') {
-      return table.label?.toLowerCase().includes(filter.value.toLowerCase());
-    }
-    if (filter.type === 'variableName') {
-      return table.variableNames.includes(filter.value);
-    }
-    if (filter.type === 'timeUnit') {
-      return table?.timeUnit?.toLowerCase() === filter.value.toLowerCase();
-    }
-    return false;
-  });
-}
-
-function getFilters(tables: Table[]): Map<string, number> {
-  const filters = new Map<string, number>();
-  tables.forEach((table) => {
-    const timeUnit = table.timeUnit ?? 'unknown';
-    if (table.timeUnit) {
-      filters.set(timeUnit, (filters.get(timeUnit) ?? 0) + 1);
-    }
-  });
-  return filters;
-}
+} from './StartPageTypes';
+import { getFullTable, shouldTableBeIncluded } from '../../util/tableHandler';
+import {
+  getFilters,
+  getSubjectTree,
+  getTimeUnits,
+  updateSubjectTreeCounts,
+  sortFilterChips,
+} from '../../util/startPageFilters';
+import { useTopicIcons } from '../../util/hooks/useTopicIcons';
+import useApp from '../../context/useApp';
 
 // TODO: Remove this function. We can not consider norwegian special cases in our code!
 function removeTableNumber(title: string): string {
@@ -63,30 +39,39 @@ function removeTableNumber(title: string): string {
   }
 }
 
-const initialState: StartPageState = {
+// Want to ensure this is never changed
+const initialState: StartPageState = Object.freeze({
   availableTables: [],
   filteredTables: [],
   availableFilters: getFilters([]),
   activeFilters: [],
   loading: false,
   error: '',
-};
+  originalSubjectTree: [],
+});
 
 const StartPage = () => {
+  const { t } = useTranslation();
   const [state, dispatch] = useReducer(reducer, initialState);
+  const { isMobile, isTablet } = useApp();
+  const isSmallScreen = isTablet === true || isMobile === true;
+  const topicIconComponents = useTopicIcons();
 
   function handleResetFilter(tables: Table[]) {
-    dispatch({ type: ActionType.RESET_FILTERS, payload: tables });
+    dispatch({
+      type: ActionType.RESET_FILTERS,
+      payload: { tables: tables, subjects: getSubjectTree(tables) },
+    });
   }
 
   function handleAddFilter(filter: Filter[]) {
     dispatch({ type: ActionType.ADD_FILTER, payload: filter });
   }
 
-  async function handleRemoveFilter(filter: Filter) {
+  async function handleRemoveFilter(filterId: string) {
     dispatch({
       type: ActionType.REMOVE_FILTER,
-      payload: filter,
+      payload: filterId,
     });
   }
 
@@ -107,42 +92,81 @@ const StartPage = () => {
         // Reset from API or cache
         return {
           ...initialState,
-          availableTables: action.payload,
-          filteredTables: action.payload,
-          availableFilters: getFilters(action.payload),
+          availableTables: action.payload.tables,
+          filteredTables: action.payload.tables,
+          originalSubjectTree: action.payload.subjects, // lagre full struktur én gang
+          availableFilters: {
+            subjectTree: action.payload.subjects,
+            timeUnits: getTimeUnits(action.payload.tables),
+          },
         };
-      case ActionType.ADD_FILTER:
+      case ActionType.ADD_FILTER: {
+        const newFilters = [...state.activeFilters, ...action.payload];
+        const filteredTables = state.availableTables.filter((table) =>
+          shouldTableBeIncluded(table, newFilters),
+        );
+        const addType = action.payload[0]?.type;
         return {
           ...state,
-          activeFilters: [...state.activeFilters, ...action.payload],
-          filteredTables: state.availableTables.filter((table) => {
-            return shouldTableBeIncluded(table, [
-              ...state.activeFilters,
-              ...action.payload,
-            ]);
-          }),
+          activeFilters: newFilters,
+          filteredTables,
+          availableFilters: {
+            subjectTree:
+              addType !== 'subject'
+                ? updateSubjectTreeCounts(
+                    state.originalSubjectTree,
+                    filteredTables,
+                  )
+                : state.availableFilters.subjectTree,
+            timeUnits:
+              addType !== 'timeUnit'
+                ? getTimeUnits(filteredTables)
+                : state.availableFilters.timeUnits,
+          },
         };
-      case ActionType.REMOVE_FILTER:
-        if (state.activeFilters.length <= 1) {
-          // Reset from state
+      }
+      case ActionType.REMOVE_FILTER: {
+        const currentFilters = state.activeFilters.filter(
+          (filter) => filter.value !== action.payload,
+        );
+        if (currentFilters.length === 0) {
           return {
             ...state,
             activeFilters: [],
             filteredTables: state.availableTables,
-            availableFilters: getFilters(state.availableTables),
-          };
-        } else {
-          const currentFilters = state.activeFilters.filter(
-            (filter) => filter.value !== action.payload.value,
-          );
-          return {
-            ...state,
-            activeFilters: currentFilters,
-            filteredTables: state.availableTables.filter((table) => {
-              return shouldTableBeIncluded(table, currentFilters);
-            }),
+            availableFilters: {
+              subjectTree: updateSubjectTreeCounts(
+                state.originalSubjectTree,
+                state.availableTables,
+              ),
+              timeUnits: getTimeUnits(state.availableTables),
+            },
           };
         }
+        const filteredTables = state.availableTables.filter((table) =>
+          shouldTableBeIncluded(table, currentFilters),
+        );
+        //TODO: Add type to handleRemoveFilter instead
+        const removedFilter = state.activeFilters.find(
+          (filter) => filter.value === action.payload,
+        );
+        const removedType = removedFilter?.type;
+        return {
+          ...state,
+          activeFilters: currentFilters,
+          filteredTables,
+          availableFilters: {
+            subjectTree:
+              removedType !== 'subject'
+                ? updateSubjectTreeCounts(
+                    state.originalSubjectTree,
+                    filteredTables,
+                  )
+                : state.availableFilters.subjectTree,
+            timeUnits: getTimeUnits(filteredTables),
+          },
+        };
+      }
       case ActionType.SET_ERROR:
         return {
           ...state,
@@ -173,6 +197,31 @@ const StartPage = () => {
       });
   }, []);
 
+  function renderRemoveAllChips() {
+    if (state.activeFilters.length >= 2) {
+      return (
+        <Chips.Removable
+          filled
+          onClick={() => {
+            getFullTable.then((t) => handleResetFilter(t));
+          }}
+        >
+          {t('start_page.filter.remove_all_filter')}
+        </Chips.Removable>
+      );
+    }
+  }
+
+  function renderTopicIcon(table: Table) {
+    const topicId = table.paths?.[0]?.[0]?.id;
+    const size = isSmallScreen ? 'small' : 'medium';
+
+    return topicId
+      ? (topicIconComponents.find((icon) => icon.id === topicId)?.[size] ??
+          null)
+      : null;
+  }
+
   return (
     <AccessibilityProvider>
       <Header />
@@ -186,37 +235,47 @@ const StartPage = () => {
           handleAddFilter={handleAddFilter}
           handleRemoveFilter={handleRemoveFilter}
           handleResetFilter={() => {
-            getFullTable.then((t) => handleResetFilter(t));
+            handleResetFilter(state.availableTables);
           }}
         />
         <div className={styles.listTables}>
-          <div className={styles.filterPillContainer}>
-            {state.activeFilters.length >= 2 && (
-              <span className={styles.filterPill}>
-                <Tag
-                  type="border"
-                  variant="info"
-                  onClick={() => {
-                    getFullTable.then((t) => handleResetFilter(t));
-                  }}
-                >
-                  {'Reset Filters'}
-                </Tag>
-              </span>
+          {state.activeFilters.length >= 1 && (
+            <div className={styles.filterPillContainer}>
+              <Chips>
+                {renderRemoveAllChips()}
+                {sortFilterChips(state.activeFilters).map((filter) => (
+                  <Chips.Removable
+                    onClick={() => handleRemoveFilter(filter.value)}
+                    aria-label={t('start_page.filter.remove_filter_aria', {
+                      value: filter.value,
+                    })}
+                    key={filter.value}
+                  >
+                    {filter.label}
+                  </Chips.Removable>
+                ))}
+              </Chips>
+            </div>
+          )}
+          <div className={cl(styles['bodyshort-medium'], styles.countLabel)}>
+            {state.activeFilters.length ? (
+              <p>
+                Treff på{' '}
+                <span className={cl(styles['label-medium'])}>
+                  {state.filteredTables.length}
+                </span>{' '}
+                tabeller
+              </p>
+            ) : (
+              <p>
+                <span className={cl(styles['label-medium'])}>
+                  {state.filteredTables.length}
+                </span>{' '}
+                tabeller
+              </p>
             )}
-            {state.activeFilters.map((filter) => (
-              <span key={filter.value} className={styles.filterPill}>
-                <Tag type="border" onClick={() => handleRemoveFilter(filter)}>
-                  {'X ' + filter.value}
-                </Tag>
-              </span>
-            ))}
           </div>
-          <div className={cl(styles['label-medium'], styles.countLabel)}>
-            {state.activeFilters.length
-              ? `Treff på ${state.filteredTables.length} tabeller`
-              : `${state.filteredTables.length} tabeller`}
-          </div>
+
           {state.error && (
             <div className={styles.error}>
               <Alert
@@ -253,10 +312,10 @@ const StartPage = () => {
                         : undefined
                     }
                     // We use slice here because we _only_ want 4digit year. Sometimes, month is appended in data set.
-                    period={`${table.firstPeriod?.slice(0, 4)}-${table.lastPeriod?.slice(0, 4)}`}
+                    period={`${table.firstPeriod?.slice(0, 4)}–${table.lastPeriod?.slice(0, 4)}`}
                     frequency={`${table.timeUnit}`}
                     tableId={`${table.id}`}
-                    icon={<Icon iconName="Heart" />}
+                    icon={renderTopicIcon(table)}
                   />
                 </div>
               )}

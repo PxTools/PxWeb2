@@ -6,9 +6,19 @@
   "common": {
     "title": "PxWeb 2.0",
     "header": {
-      "title": "PxWeb 2.0 [Sprint 21]",
+      "title": "PxWeb 2.0 [Sprint 22]",
       "logo": "PxWeb 2.0",
       "arialabelheader": "Velg språk"
+    },
+    "not_found": {
+      "page_not_found": {
+        "title": "Side ikke funnet",
+        "description": "Siden du leter etter eksisterer ikke. Vennligst sjekk URL-en eller gå tilbake til startsiden."
+      },
+      "unsupported_language": {
+        "title": "Ikke støttet språk",
+        "description": "Det valgte språket støttes ikke."
+      }
     },
     "skip_to_main": "Hopp til hovedinnhold",
     "footer": {
@@ -42,7 +52,12 @@
   },
   "start_page": {
     "header": "Velkommen til appen!",
-    "welcome_trans_test": "Velkommen til <1>appen</1> for PxWeb 2.0!"
+    "welcome_trans_test": "Velkommen til <1>appen</1> for PxWeb 2.0!",
+    "filter": {
+      "header": "Filtrer",
+      "remove_all_filter": "Fjern alle filter",
+      "remove_filter_aria": "Slett {{value}}"
+    }
   },
   "presentation_page": {
     "header": {
@@ -65,8 +80,7 @@
           "header": {
             "tag_selected": "{{selected}} av {{total}} valgt",
             "tag_mandatory": "Må velges",
-            "alert_no_mandatory_values": "Du må velge noe i listen for at tabellen skal kunne vises",
-            "show_more": "Vis mer"
+            "alert_no_mandatory_values": "Du må velge noe i listen for at tabellen skal kunne vises"
           },
           "content": {
             "select": {
@@ -224,5 +238,19 @@
       "scrumMaster": "Scrummaster",
       "copyright": "Opphavsrett © 2024 Statistiska centralbyrån and Statistisk sentralbyrå"
     }
+  },
+  "date": {
+    "simple_date": "{{value, datetime}}",
+    "simple_date_with_time": "{{value, datetime(year: 'numeric'; month: 'numeric'; day: 'numeric'; hour: 'numeric'; minute: 'numeric')}}"
+  },
+  "number": {
+    "simple_number": "{{value, pxNumber}}",
+    "simple_number_with_zero_decimal": "{{value, pxNumber(minimumFractionDigits: 0; maximumFractionDigits: 0;)}}",
+    "simple_number_with_one_decimal": "{{value, pxNumber(minimumFractionDigits: 1; maximumFractionDigits: 1;)}}",
+    "simple_number_with_two_decimals": "{{value, pxNumber(minimumFractionDigits: 2; maximumFractionDigits: 2;)}}",
+    "simple_number_with_three_decimals": "{{value, pxNumber(minimumFractionDigits: 3; maximumFractionDigits: 3;)}}",
+    "simple_number_with_four_decimals": "{{value, pxNumber(minimumFractionDigits: 4; maximumFractionDigits: 4;)}}",
+    "simple_number_with_five_decimals": "{{value, pxNumber(minimumFractionDigits: 5; maximumFractionDigits: 5;)}}",
+    "simple_number_with_default_formatter": "{{value, number(minimumFractionDigits: 5; maximumFractionDigits: 5; roundingMode: 'halfExpand')}}"
   }
 }

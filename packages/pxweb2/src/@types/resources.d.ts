@@ -7,9 +7,19 @@ interface Resources {
     common: {
       title: 'PxWeb 2.0';
       header: {
-        title: 'PxWeb 2.0 [Sprint 21]';
+        title: 'PxWeb 2.0 [Sprint 22]';
         logo: 'PxWeb 2.0';
         arialabelheader: 'Select language';
+      };
+      not_found: {
+        page_not_found: {
+          title: 'Table not found';
+          description: 'The table you are looking for does not exist. Please check the URL or return to the homepage.';
+        };
+        unsupported_language: {
+          title: 'Unsupported language';
+          description: 'The selected language is not supported.';
+        };
       };
       skip_to_main: 'Skip to main content';
       footer: {
@@ -44,6 +54,11 @@ interface Resources {
     start_page: {
       header: 'Welcome to the app!';
       welcome_trans_test: 'Welcome to the <1>app</1> for PxWeb 2.0!';
+      filter: {
+        header: 'Filter';
+        remove_all_filter: 'Remove all filters';
+        remove_filter_aria: 'Delete {{value}}';
+      };
     };
     presentation_page: {
       header: {
@@ -67,7 +82,6 @@ interface Resources {
               tag_selected: '{{selected}} of {{total}} selected';
               tag_mandatory: 'Mandatory';
               alert_no_mandatory_values: 'You must select something in the list for the table to be displayed';
-              show_more: 'Show more';
             };
             content: {
               select: {

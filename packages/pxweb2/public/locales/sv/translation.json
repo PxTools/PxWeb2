@@ -6,9 +6,19 @@
   "common": {
     "title": "PxWeb 2.0",
     "header": {
-      "title": "PxWeb 2.0 [Sprint 21]",
+      "title": "PxWeb 2.0 [Sprint 22]",
       "logo": "PxWeb 2.0",
       "arialabelheader": "Velg språk"
+    },
+    "not_found": {
+      "page_not_found": {
+        "title": "Sidan hittades inte",
+        "description": "Sidan du letar efter finns inte. Kontrollera URL:en eller återgå till startsidan."
+      },
+      "unsupported_language": {
+        "title": "Ogiltigt språk",
+        "description": "Det valda språket stöds inte."
+      }
     },
     "skip_to_main": "Gå direkt till huvudinnehållet",
     "footer": {
@@ -42,7 +52,12 @@
   },
   "start_page": {
     "header": "Välkommen till appen!",
-    "welcome_trans_test": "Välkommen till <1>appen</1> för PxWeb 2.0!"
+    "welcome_trans_test": "Välkommen till <1>appen</1> för PxWeb 2.0!",
+    "filter": {
+      "header": "Filtrera",
+      "remove_all_filter": "Ta bort alla filter",
+      "remove_filter_aria": "Slett {{value}}"
+    }
   },
   "presentation_page": {
     "header": {
@@ -65,8 +80,7 @@
           "header": {
             "tag_selected": "{{selected}} av {{total}} valda",
             "tag_mandatory": "Obligatorisk",
-            "alert_no_mandatory_values": "Du måste välja något i listan för att tabellen ska visas",
-            "show_more": "Visa mer"
+            "alert_no_mandatory_values": "Du måste välja något i listan för att tabellen ska visas"
           },
           "content": {
             "select": {
