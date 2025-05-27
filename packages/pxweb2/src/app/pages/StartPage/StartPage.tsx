@@ -305,7 +305,11 @@ const StartPage = () => {
                   <TableCard
                     title={`${table.label && removeTableNumber(table.label)}`}
                     href={`/table/${table.id}`}
-                    updatedLabel={table.updated ? 'Sist oppdatert' : undefined}
+                    updatedLabel={
+                      table.updated
+                        ? t('start_page.table.updatedLabel')
+                        : undefined
+                    }
                     lastUpdated={
                       table.updated
                         ? new Date(table.updated).toLocaleDateString('no') // We may want to get the locale from config!

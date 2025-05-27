@@ -51,12 +51,30 @@ interface Resources {
       };
     };
     start_page: {
-      header: 'Welcome to the app!';
-      welcome_trans_test: 'Welcome to the <1>app</1> for PxWeb 2.0!';
+      header: 'Welcome to PxWeb 2.0';
+      ingress: `Looking for the perfect table? Use the search field and filters to dig into the numbers you need. Whether you're hunting for trends, facts, or just an oddly satisfying dataset, PxWeb 2.0 has your back.`;
+      more_about_label: 'More about <PxWeb 2.0>';
+      more_about_text: 'Fyll på more_about';
+      searchText: 'Search in <PxWeb 2.0>';
       filter: {
         header: 'Filter';
         remove_all_filter: 'Remove all filters';
         remove_filter_aria: 'Delete {{value}}';
+        subject: 'Topic';
+        timeUnit: 'Time period';
+        year: 'Year';
+        variabel: 'Variable';
+        frequency: {
+          annual: 'Year';
+          monthly: 'Month';
+          quarterly: 'Quarter';
+          term: 'Term';
+          weekly: 'Week';
+          other: 'Other';
+        };
+      };
+      table: {
+        updatedLabel: 'Updated';
       };
     };
     presentation_page: {

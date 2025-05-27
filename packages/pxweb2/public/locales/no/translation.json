@@ -50,12 +50,30 @@
     }
   },
   "start_page": {
-    "header": "Velkommen til appen!",
-    "welcome_trans_test": "Velkommen til <1>appen</1> for PxWeb 2.0!",
+    "header": "Velkommen til PxWeb 2.0",
+    "ingress": "Leter du etter den perfekte tabellen? Bruk søkefeltet og filtrene for å finne tallene du trenger. Enten du er på jakt etter trender, fakta eller bare et merkelig tilfredsstillende datasett, så har PxWeb 2.0 det du trenger.",
+    "more_about_label": "Mer om <Statistikkbanken>",
+    "more_about_text": "More about Text NO",
+    "searchText": "Søk i <Statistikkbanken>",
     "filter": {
       "header": "Filtrer",
       "remove_all_filter": "Fjern alle filter",
-      "remove_filter_aria": "Slett {{value}}"
+      "remove_filter_aria": "Slett {{value}}",
+      "subject": "Emne",
+      "timeUnit": "Tidsperiode",
+      "year": "Årstall",
+      "variabel": "Variabel",
+      "frequency": {
+        "annual": "År",
+        "monthly": "Måned",
+        "quarterly": "Kvartal",
+        "term": "Termin",
+        "weekly": "Uke",
+        "other": "Annet"
+      }
+    },
+    "table": {
+      "updatedLabel": "Oppdatert"
     }
   },
   "presentation_page": {
