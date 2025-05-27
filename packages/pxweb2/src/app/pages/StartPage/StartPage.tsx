@@ -23,6 +23,7 @@ import {
   getTimeUnits,
   updateSubjectTreeCounts,
   sortFilterChips,
+  getYearRanges,
 } from '../../util/startPageFilters';
 import { useTopicIcons } from '../../util/hooks/useTopicIcons';
 import useApp from '../../context/useApp';
@@ -48,6 +49,8 @@ const initialState: StartPageState = Object.freeze({
   loading: false,
   error: '',
   originalSubjectTree: [],
+  lastUsedYearRange: { min: 1899, max: 2050 },
+  resetYearFilterInput: 0,
 });
 
 const StartPage = () => {
@@ -90,22 +93,33 @@ const StartPage = () => {
     switch (action.type) {
       case ActionType.RESET_FILTERS:
         // Reset from API or cache
+        const fullRange = getYearRanges(action.payload.tables);
         return {
           ...initialState,
           availableTables: action.payload.tables,
           filteredTables: action.payload.tables,
-          originalSubjectTree: action.payload.subjects, // lagre full struktur én gang
+          originalSubjectTree: action.payload.subjects,
           availableFilters: {
             subjectTree: action.payload.subjects,
             timeUnits: getTimeUnits(action.payload.tables),
+            yearRange: fullRange,
           },
+          lastUsedYearRange: fullRange,
         };
       case ActionType.ADD_FILTER: {
-        const newFilters = [...state.activeFilters, ...action.payload];
+        const incoming = action.payload;
+        const incomingTypes = new Set(incoming.map((f) => f.type));
+        const clearedFilters = state.activeFilters.filter((f) =>
+          incoming[0]?.type === 'yearRange' ? f.type !== 'yearRange' : true,
+        );
+        const newFilters = [...clearedFilters, ...incoming];
         const filteredTables = state.availableTables.filter((table) =>
           shouldTableBeIncluded(table, newFilters),
         );
         const addType = action.payload[0]?.type;
+        const updatedLastUsedYearRange = incomingTypes.has('yearRange')
+          ? state.lastUsedYearRange
+          : getYearRanges(filteredTables);
         return {
           ...state,
           activeFilters: newFilters,
@@ -122,7 +136,9 @@ const StartPage = () => {
               addType !== 'timeUnit'
                 ? getTimeUnits(filteredTables)
                 : state.availableFilters.timeUnits,
+            yearRange: getYearRanges(filteredTables),
           },
+          lastUsedYearRange: updatedLastUsedYearRange,
         };
       }
       case ActionType.REMOVE_FILTER: {
@@ -130,6 +146,7 @@ const StartPage = () => {
           (filter) => filter.value !== action.payload,
         );
         if (currentFilters.length === 0) {
+          const fullRange = getYearRanges(state.availableTables);
           return {
             ...state,
             activeFilters: [],
@@ -140,17 +157,30 @@ const StartPage = () => {
                 state.availableTables,
               ),
               timeUnits: getTimeUnits(state.availableTables),
+              yearRange: fullRange,
             },
+            lastUsedYearRange: fullRange,
+            resetYearFilterInput: Date.now(),
           };
         }
         const filteredTables = state.availableTables.filter((table) =>
           shouldTableBeIncluded(table, currentFilters),
         );
-        //TODO: Add type to handleRemoveFilter instead
+
+        const yearRangeStillActive = currentFilters.some(
+          (f) => f.type === 'yearRange',
+        );
+
+        const updatedLastUsedYearRange = yearRangeStillActive
+          ? state.lastUsedYearRange
+          : getYearRanges(filteredTables);
+
         const removedFilter = state.activeFilters.find(
           (filter) => filter.value === action.payload,
         );
+
         const removedType = removedFilter?.type;
+
         return {
           ...state,
           activeFilters: currentFilters,
@@ -164,7 +194,9 @@ const StartPage = () => {
                   )
                 : state.availableFilters.subjectTree,
             timeUnits: getTimeUnits(filteredTables),
+            yearRange: getYearRanges(filteredTables),
           },
+          lastUsedYearRange: updatedLastUsedYearRange,
         };
       }
       case ActionType.SET_ERROR:

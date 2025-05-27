@@ -15,11 +15,15 @@
 }
 
 .filterList {
-  margin: 20px 0 0;
+  margin: 0;
   padding: 0;
   list-style-type: none;
 }
 
 .subjectToggle:not(:first-of-type) {
   padding-left: 24px;
+}
+
+.filterYear {
+  padding-bottom: 2rem;
 }

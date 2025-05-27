@@ -18,6 +18,7 @@ export * from './lib/components/Notes/NonMandatoryNotes';
 export * from './lib/components/Notes/NoNotes';
 export * from './lib/components/Notes/noteCollection';
 export * from './lib/components/Notes/SymbolExplanationNotes';
+export * from './lib/components/RangeSlider/RangeSlider';
 export * from './lib/components/Search/Search';
 export * from './lib/components/Select/Select';
 export * from './lib/components/Select/SelectOptionType';
