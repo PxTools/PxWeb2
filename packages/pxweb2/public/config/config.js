@@ -6,6 +6,7 @@ window.PxWeb2Config = {
     ],
     defaultLanguage: 'no',
     fallbackLanguage: 'no',
+    showDefaultLanguageInPath: false,
   },
   apiUrl: 'https://data.qa.ssb.no/api/pxwebapi/v2-beta',
   maxDataCells: 150000,

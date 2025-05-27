@@ -92,6 +92,7 @@ export function VariableBox({
         setIsOpen={setIsOpen}
         className={cl(classes['header-icon'])}
         isMissingMandatoryValues={isMissingMandatoryValueError}
+        varId={id}
       />
 
       {isOpen && (

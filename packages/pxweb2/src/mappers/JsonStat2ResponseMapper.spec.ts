@@ -1,5 +1,17 @@
 import { ClassType, CodeListType, Dataset } from '@pxweb2/pxweb2-api-client';
-import { mapJsonStat2Response } from '../mappers/JsonStat2ResponseMapper';
+import {
+  mapJsonStat2Response,
+  createDataAndStatus,
+  createCube,
+} from '../mappers/JsonStat2ResponseMapper';
+
+import {
+  Dimensions,
+  PxTableData,
+  PxTableMetadata,
+  VartypeEnum,
+  DataCell,
+} from '@pxweb2/pxweb2-ui';
 
 describe('JsonStat2ResponseMapper', () => {
   describe('mapJsonStat2Response', () => {
@@ -205,6 +217,315 @@ describe('JsonStat2ResponseMapper', () => {
       expect(
         pxTable.metadata.variables[2].values[1].contentInfo?.decimals,
       ).equals(1);
+    });
+  });
+  describe('createDataAndStatus', () => {
+    it('should map values and statuses correctly when both are provided', () => {
+      // Arrange
+      const dataset: Dataset = {
+        value: [100, 200, 300],
+        status: { '0': 'A', '1': 'B', '2': 'C' },
+        dimension: {},
+        id: [],
+        size: [],
+        class: ClassType.DATASET,
+        version: Dataset.version._2_0,
+      };
+
+      // Act
+      const result = createDataAndStatus(dataset);
+
+      // Assert
+      expect(result).toEqual({
+        0: { value: 100, status: 'A', presentation: undefined },
+        1: { value: 200, status: 'B', presentation: undefined },
+        2: { value: 300, status: 'C', presentation: undefined },
+      });
+    });
+
+    it('should map values correctly and set status as undefined when status is not provided', () => {
+      // Arrange
+      const dataset: Dataset = {
+        value: [100, 200, 300],
+        dimension: {},
+        id: [],
+        size: [],
+        class: ClassType.DATASET,
+        version: Dataset.version._2_0,
+      };
+
+      // Act
+      const result = createDataAndStatus(dataset);
+
+      // Assert
+      expect(result).toEqual({
+        0: { value: 100, status: undefined, presentation: undefined },
+        1: { value: 200, status: undefined, presentation: undefined },
+        2: { value: 300, status: undefined, presentation: undefined },
+      });
+    });
+
+    it('should return an empty object when no values are provided', () => {
+      // Arrange
+      const dataset: Dataset = {
+        value: [],
+        dimension: {},
+        id: [],
+        size: [],
+        class: ClassType.DATASET,
+        version: Dataset.version._2_0,
+      };
+
+      // Act
+      const result = createDataAndStatus(dataset);
+
+      // Assert
+      expect(result).toEqual({});
+    });
+
+    it('should handle cases where status array is shorter than value array', () => {
+      // Arrange
+      const dataset: Dataset = {
+        value: [100, 200, 300],
+        status: { '0': 'A' },
+        dimension: {},
+        id: [],
+        size: [],
+        class: ClassType.DATASET,
+        version: Dataset.version._2_0,
+      };
+
+      // Act
+      const result = createDataAndStatus(dataset);
+
+      // Assert
+      expect(result).toEqual({
+        0: { value: 100, status: 'A', presentation: undefined },
+        1: { value: 200, status: undefined, presentation: undefined },
+        2: { value: 300, status: undefined, presentation: undefined },
+      });
+    });
+
+    it('should populate the data cube correctly for a simple dataset', () => {
+      // Arrange
+      const valueAndStatus: Record<string, DataCell> = {
+        0: { value: 100, status: 'A', presentation: undefined },
+        1: { value: 200, status: 'B', presentation: undefined },
+        2: { value: 300, status: 'C', presentation: undefined },
+        3: { value: 400, status: 'D', presentation: undefined },
+      };
+
+      const metadata: PxTableMetadata = {
+        id: 'TAB001',
+        language: 'en',
+        label: 'Test Table',
+        description: '',
+        updated: new Date(),
+        source: 'Test Source',
+        infofile: '',
+        decimals: 0,
+        officialStatistics: true,
+        aggregationAllowed: true,
+        contents: '',
+        descriptionDefault: false,
+        matrix: '',
+        survey: '',
+        updateFrequency: '',
+        link: '',
+        nextUpdate: undefined,
+        subjectCode: '',
+        subjectArea: '',
+        variables: [
+          {
+            id: 'Time',
+            label: 'Time',
+            type: VartypeEnum.REGULAR_VARIABLE,
+            mandatory: true,
+            values: [
+              { code: '2021', label: '2021' },
+              { code: '2022', label: '2022' },
+            ],
+            codeLists: [],
+            notes: [],
+          },
+          {
+            id: 'Country',
+            label: 'Country',
+            type: VartypeEnum.REGULAR_VARIABLE,
+            mandatory: true,
+            values: [
+              { code: 'US', label: 'United States' },
+              { code: 'UK', label: 'United Kingdom' },
+            ],
+            codeLists: [],
+            notes: [],
+          },
+        ],
+        contacts: [],
+        notes: [],
+      };
+
+      const data: PxTableData = {
+        cube: {},
+        variableOrder: [],
+        isLoaded: false,
+      };
+
+      const dimensions: Dimensions = [];
+      const counter = { number: 0 };
+
+      // Act
+      createCube(valueAndStatus, metadata, data, dimensions, 0, counter);
+
+      // Assert
+      expect(data.cube).toEqual({
+        '2021': {
+          US: { value: 100, status: 'A', presentation: undefined },
+          UK: { value: 200, status: 'B', presentation: undefined },
+        },
+        '2022': {
+          US: { value: 300, status: 'C', presentation: undefined },
+          UK: { value: 400, status: 'D', presentation: undefined },
+        },
+      });
+    });
+
+    it('should handle an empty valueAndStatus object gracefully', () => {
+      // Arrange
+      const valueAndStatus: Record<string, DataCell> = {};
+
+      const metadata: PxTableMetadata = {
+        id: 'TAB001',
+        language: 'en',
+        label: 'Test Table',
+        description: '',
+        updated: new Date(),
+        source: 'Test Source',
+        infofile: '',
+        decimals: 0,
+        officialStatistics: true,
+        aggregationAllowed: true,
+        contents: '',
+        descriptionDefault: false,
+        matrix: '',
+        survey: '',
+        updateFrequency: '',
+        link: '',
+        nextUpdate: undefined,
+        subjectCode: '',
+        subjectArea: '',
+        variables: [
+          {
+            id: 'Time',
+            label: 'Time',
+            type: VartypeEnum.REGULAR_VARIABLE,
+            mandatory: true,
+            values: [
+              { code: '2021', label: '2021' },
+              { code: '2022', label: '2022' },
+            ],
+            codeLists: [],
+            notes: [],
+          },
+          {
+            id: 'Country',
+            label: 'Country',
+            type: VartypeEnum.REGULAR_VARIABLE,
+            mandatory: true,
+            values: [
+              { code: 'US', label: 'United States' },
+              { code: 'UK', label: 'United Kingdom' },
+            ],
+            codeLists: [],
+            notes: [],
+          },
+        ],
+        contacts: [],
+        notes: [],
+      };
+
+      const data: PxTableData = {
+        cube: {},
+        variableOrder: [],
+        isLoaded: false,
+      };
+
+      const dimensions: Dimensions = [];
+      const counter = { number: 0 };
+
+      // Act
+      createCube(valueAndStatus, metadata, data, dimensions, 0, counter);
+
+      // Assert
+      expect(data.cube).toEqual({
+        '2021': {
+          UK: undefined,
+          US: undefined,
+        },
+        '2022': {
+          UK: undefined,
+          US: undefined,
+        },
+      });
+    });
+
+    it('should handle a single variable with one value correctly', () => {
+      // Arrange
+      const valueAndStatus: Record<string, DataCell> = {
+        0: { value: 100, status: 'A', presentation: undefined },
+      };
+
+      const metadata: PxTableMetadata = {
+        id: 'TAB001',
+        language: 'en',
+        label: 'Test Table',
+        description: '',
+        updated: new Date(),
+        source: 'Test Source',
+        infofile: '',
+        decimals: 0,
+        officialStatistics: true,
+        aggregationAllowed: true,
+        contents: '',
+        descriptionDefault: false,
+        matrix: '',
+        survey: '',
+        updateFrequency: '',
+        link: '',
+        nextUpdate: undefined,
+        subjectCode: '',
+        subjectArea: '',
+        variables: [
+          {
+            id: 'Time',
+            label: 'Time',
+            type: VartypeEnum.REGULAR_VARIABLE,
+            mandatory: true,
+            values: [{ code: '2021', label: '2021' }],
+            codeLists: [],
+            notes: [],
+          },
+        ],
+        contacts: [],
+        notes: [],
+      };
+
+      const data: PxTableData = {
+        cube: {},
+        variableOrder: [],
+        isLoaded: false,
+      };
+
+      const dimensions: Dimensions = [];
+      const counter = { number: 0 };
+
+      // Act
+      createCube(valueAndStatus, metadata, data, dimensions, 0, counter);
+
+      // Assert
+      expect(data.cube).toEqual({
+        '2021': { value: 100, status: 'A', presentation: undefined },
+      });
     });
   });
 });
