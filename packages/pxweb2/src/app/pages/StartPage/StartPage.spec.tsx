@@ -58,6 +58,18 @@ vi.mock('../../util/tableHandler', () => {
   };
 });
 
+vi.mock('../../util/hooks/useTopicIcons', () => {
+  return {
+    useTopicIcons: () => [
+      {
+        id: 'al',
+        small: <div data-testid="mock-icon-small" />,
+        medium: <div data-testid="mock-icon-medium" />,
+      },
+    ],
+  };
+});
+
 // Declare the global variable for this file
 declare global {
   interface Window {
