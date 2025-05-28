@@ -11,7 +11,6 @@ import useTableData from '../../context/useTableData';
 import useVariables from '../../context/useVariables';
 import { useDebounce } from '@uidotdev/usehooks';
 import { getConfig } from '../../util/config/getConfig';
-//import { GetMandatoryNotesCompressed } from '../../util/notes/notesUtil';
 
 type propsType = {
   readonly selectedTabId: string;
@@ -103,14 +102,6 @@ export function Presentation({ selectedTabId, scrollRef }: propsType) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMobile]);
-
-  // const metadata = tableData.data?.metadata;
-  // const selMetadata = variables.pxTableMetadata;
-  // const noteInfo =
-  //   // metadata && selMetadata ? GetNoteInfo(metadata, selMetadata) : undefined;
-  //   metadata && selMetadata
-  //     ? GetMandatoryNotesCompressed(metadata, selMetadata)
-  //     : undefined;
 
   useEffect(() => {
     const hasSelectedValues = variables.getNumberOfSelectedValues() > 0;

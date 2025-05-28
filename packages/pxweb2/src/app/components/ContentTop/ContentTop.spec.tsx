@@ -1,4 +1,3 @@
-//import { render } from '@testing-library/react';
 import {
   Variable,
   VartypeEnum,
@@ -95,15 +94,6 @@ function getPxTable(): PxTable {
 }
 
 const pxTable = getPxTable();
-
-// describe('ContentTop', () => {
-//   it('should render successfully', () => {
-//     const { baseElement } = render(
-//       <ContentTop pxtable={pxTable} staticTitle="Tittel" />,
-//     );
-//     expect(baseElement).toBeTruthy();
-//   });
-// });
 
 describe('Selection', () => {
   it('should render successfully', () => {
