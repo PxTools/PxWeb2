@@ -29,7 +29,7 @@
     width: 100%;
 
     // Calculate height of main container, minus the header and navigation bar heights
-    height: calc(100vh - fixed.$spacing-22 - fixed.$spacing-20);
+    height: calc(100vh - fixed.$spacing-22 - 78px);
 
     &.skipToMainContentVisible {
       // Calculate height of main container, minus the header and navigation bar and SkipToMainContent heights
