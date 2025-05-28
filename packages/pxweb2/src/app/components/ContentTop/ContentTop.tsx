@@ -49,12 +49,18 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
     console.log('opener', opener);
   };
 
-  const { pxTableMetadata } = useVariables();
-  const selMetadata = pxTableMetadata;
-  const metadata = useTableData().data?.metadata;
+  const { pxTableMetadata, selectedVBValues } = useVariables();
+  const totalMetadata = pxTableMetadata;
+  const selectedMetadata = useTableData().data?.metadata;
+  console.log('selectedMetadata', selectedMetadata);
+  console.log('SELECTEDVBVALUES', selectedVBValues);
   const noteInfo =
-    metadata && selMetadata
-      ? GetMandatoryNotesCompressed(metadata, selMetadata)
+    selectedMetadata && totalMetadata
+      ? GetMandatoryNotesCompressed(
+          selectedMetadata,
+          totalMetadata,
+          selectedVBValues,
+        )
       : undefined;
 
   useEffect(() => {

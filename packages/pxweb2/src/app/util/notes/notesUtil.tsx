@@ -3,6 +3,7 @@ import { getConfig } from '../config/getConfig';
 import {
   getNotes,
   PxTableMetadata,
+  SelectedVBValues,
   tableNoteCollection,
   Variable,
 } from '@pxweb2/pxweb2-ui';
@@ -93,52 +94,67 @@ function variableHasAnyNotes(variable: Variable): boolean {
  */
 function getMetadataCopyForSelection(
   totalMetadata: PxTableMetadata,
-  selection: PxTableMetadata,
+  selectedVBValues: SelectedVBValues[],
 ): PxTableMetadata {
   const totalMetadataCopy = structuredClone(totalMetadata);
-  // console.log('selection i NotesTab=', selection);
-  // Create a map of variable ids and their value codes in the selection for quick lookup
-  const selectionVariableValueMap = new Map<string, Set<string>>();
-  if (selection.variables) {
-    for (const variable of selection.variables) {
-      const valueCodes = new Set<string>();
-      if (variable.values) {
-        for (const value of variable.values) {
-          valueCodes.add(value.code);
-        }
-      }
-      selectionVariableValueMap.set(variable.id, valueCodes);
-    }
-  }
 
+  console.log(
+    'totalMetadataCopy.variables i getMetadataCopyForSelection BEFORE=',
+    totalMetadataCopy.variables,
+  );
   // Filter out variables in totalMetadataCopy that are not present in the selection
   totalMetadataCopy.variables = totalMetadataCopy.variables.filter((variable) =>
-    selectionVariableValueMap.has(variable.id),
+    selectedVBValues.some(
+      (selectedVariable) =>
+        selectedVariable.id === variable.id &&
+        selectedVariable.values.length > 0,
+    ),
   );
+  console.log(
+    'totalMetadataCopy.variables i getMetadataCopyForSelection AFTER=',
+    totalMetadataCopy.variables,
+  );
+
+  // console.log('totalMetadataCopy.variables6', totalMetadataCopy.variables);
+  // For each variable, filter its values to only those present in selectedValues
+  // selectedValues is an array of value codes for the current variable
+  // variable.values is an array of value objects with a 'code' property
+  // Keep only those values whose code is present in selectedValues
 
   // Filter out values in each variable that are not present in the selection
   totalMetadataCopy.variables.forEach((variable) => {
-    const selectedValues = selectionVariableValueMap.get(variable.id);
+    const selectedValues = selectedVBValues.find(
+      (selectedVariable) => selectedVariable.id === variable.id,
+    )?.values;
+    console.log(
+      'selectedValues 5 i getMetadataCopyForSelection=' +
+        variable.id +
+        ' ' +
+        selectedValues,
+    );
     if (selectedValues) {
       variable.values = variable.values.filter((value) =>
-        selectedValues.has(value.code),
+        selectedValues.includes(value.code),
       );
     } else {
       variable.values = [];
     }
   });
 
+  console.log('RETURN=', totalMetadataCopy);
   return totalMetadataCopy;
 }
 
 export function GetMandatoryNotesCompressed(
   pxTableMetadata: PxTableMetadata,
   pxMetaTotal: PxTableMetadata,
+  selectedVBValues: SelectedVBValues[],
 ): MandatoryCompressedUtilityNotesType {
-  console.log(' pxTableMetadata', pxTableMetadata);
-  console.log(' pxMetaTotal', pxMetaTotal);
-  const mandatoryNotes = GetNoteInfo(pxTableMetadata, pxMetaTotal).Notes
-    .mandatoryNotes;
+  const mandatoryNotes = GetNoteInfo(
+    pxTableMetadata,
+    pxMetaTotal,
+    selectedVBValues,
+  ).Notes.mandatoryNotes;
   const tempTabletableNotes: MandatoryCompressedUtilityNotesType = {
     tableNotes: '',
     variableNotes: [],
@@ -147,33 +163,13 @@ export function GetMandatoryNotesCompressed(
   };
   console.log('mandatoryNotes.notesCount', mandatoryNotes.notesCount);
   if (mandatoryNotes.notesCount > 0) {
-    // console.log('mandatoryNotes.notesCount', mandatoryNotes.notesCount);
     if (mandatoryNotes.tableLevelNotes.length > 0) {
       tempTabletableNotes.hasTableNotes = true;
-      // console.log(
-      //   'mandatoryNotes.tableLevelNotes',
-      //   mandatoryNotes.tableLevelNotes,
-      // );
       tempTabletableNotes.tableNotes = mandatoryNotes.tableLevelNotes.join(' ');
     }
-    // console.log(
-    //   'mandatoryNotes.variableNotes.length',
-    //   mandatoryNotes.variableNotes.length,
-    // );
-    // console.log(
-    //   'XXXXmandatoryNotes.variableNotes',
-    //   mandatoryNotes.variableNotes,
-    // );
     if (mandatoryNotes.variableNotes.length > 0) {
       tempTabletableNotes.hasVariableNotes = true;
-      //let tempString = '';
-      //let index = 0;
       for (const variableNotes of mandatoryNotes.variableNotes) {
-        // console.log(
-        //   'YYYYvariableNotes.notes.length',
-        //   variableNotes.notes.length,
-        // );
-
         // Prepare the variableNotes entry
         const variableNoteEntry: MandatoryCompressedUtilityVariableNotesType = {
           variableName: '',
@@ -190,10 +186,6 @@ export function GetMandatoryNotesCompressed(
           }
         }
         for (const valueNotesTemp of variableNotes.valueNotes) {
-          // console.log(
-          //   'ZZZZvalueNotesTemp.notes.length',
-          //   valueNotesTemp.notes.length,
-          // );
           if (valueNotesTemp.notes.length > 0) {
             tempString += valueNotesTemp.valueName + ': ';
             for (const valueNote of valueNotesTemp.notes) {
@@ -203,27 +195,18 @@ export function GetMandatoryNotesCompressed(
         }
 
         variableNoteEntry.compressednotes = tempString;
-
-        // console.log(
-        //   'tempString variable i GetMandatoryNotesCompressed',
-        //   tempString,
-        // );
-
         tempTabletableNotes.variableNotes.push(variableNoteEntry);
         // index++;
       }
     }
   }
-  // console.log(
-  //   'tempTabletableNotes i GetMandatoryNotesCompressed=',
-  //   tempTabletableNotes,
-  // );
   return tempTabletableNotes;
 }
 
 export function GetNoteInfo(
   pxTableMetadata: PxTableMetadata,
   pxMetaTotal: PxTableMetadata,
+  selectedVBValues: SelectedVBValues[],
 ): NotesUtilityType {
   //const pxMetaTotal = useVariables(); // All metadata for table
   let tableNotes: NotesUtilityType = {
@@ -248,7 +231,7 @@ export function GetNoteInfo(
   // Get metatadata from "Total metadata" for the part (variables and values) that is selected by the user
   const metadataCopyForSelection = getMetadataCopyForSelection(
     pxMetaTotal,
-    pxTableMetadata,
+    selectedVBValues,
   );
 
   // Check if there are any notes at all in the total metadata

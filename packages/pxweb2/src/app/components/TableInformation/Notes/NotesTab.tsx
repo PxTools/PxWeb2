@@ -17,8 +17,14 @@ export type NotesTabProps = {
 
 export function NotesTab({ pxTableMetadata }: NotesTabProps) {
   const pxMetaTotal = useVariables().pxTableMetadata; // All metadata for table
+  const selectedVBValues = useVariables().selectedVBValues; // Selected values for table
+  console.log('pxMetaTotal', pxMetaTotal);
   if (pxTableMetadata && pxMetaTotal) {
-    const allNotes = GetNoteInfo(pxTableMetadata, pxMetaTotal);
+    const allNotes = GetNoteInfo(
+      pxTableMetadata,
+      pxMetaTotal,
+      selectedVBValues,
+    );
     console.log('allNotes i NotesTab=', allNotes);
     if (allNotes) {
       if (allNotes.noTableNotes) {
