@@ -15,7 +15,7 @@ import {
 } from '@pxweb2/pxweb2-ui';
 import TableInformation from '../TableInformation/TableInformation';
 import { AccessibilityContext } from '../../context/AccessibilityProvider';
-import { GetMandatoryNotesCompressed } from '../../util/notes/notesUtil';
+import { getMandatoryNotesCompressed } from '../../util/notes/notesUtil';
 import useTableData from '../../context/useTableData';
 import useVariables from '../../context/useVariables';
 
@@ -43,20 +43,15 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
     if (selectedTab) {
       setActiveTab(selectedTab);
     }
-    console.log('HIT?');
     setIsTableInformationOpen(true);
-    console.log('HIT da?', isTableInformationOpen);
-    console.log('opener', opener);
   };
 
   const { pxTableMetadata, selectedVBValues } = useVariables();
   const totalMetadata = pxTableMetadata;
   const selectedMetadata = useTableData().data?.metadata;
-  console.log('selectedMetadata', selectedMetadata);
-  console.log('SELECTEDVBVALUES', selectedVBValues);
   const noteInfo =
     selectedMetadata && totalMetadata
-      ? GetMandatoryNotesCompressed(
+      ? getMandatoryNotesCompressed(
           selectedMetadata,
           totalMetadata,
           selectedVBValues,
@@ -65,20 +60,16 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
 
   useEffect(() => {
     if (!isTableInformationOpen) {
-      //console.log('tableInformationOpener', tableInformationOpener);
       const alertVarNotesRegex = /^table-information-alertVarNotes-(\d+)$/;
       const execResult = alertVarNotesRegex.exec(tableInformationOpener ?? '');
-
       switch (tableInformationOpener) {
         case 'table-information-button':
           openInformationButtonRef.current?.focus();
           break;
         case 'table-information-link':
-          console.log('table-information-link');
           openInformationLinkRef.current?.focus();
           break;
         case 'table-information-alertTableNotes':
-          console.log('table-information-alertTableNotes');
           openInformationAlertTableNotesRef.current?.focus();
           break;
         default: {

@@ -1,7 +1,7 @@
 import cl from 'clsx';
 
 import useVariables from '../../../context/useVariables';
-import { GetNoteInfo } from '../../../util/notes/notesUtil';
+import { getNoteInfo } from '../../../util/notes/notesUtil';
 import classes from './NotesTab.module.scss';
 import {
   MandatoryNotes,
@@ -18,14 +18,12 @@ export type NotesTabProps = {
 export function NotesTab({ pxTableMetadata }: NotesTabProps) {
   const pxMetaTotal = useVariables().pxTableMetadata; // All metadata for table
   const selectedVBValues = useVariables().selectedVBValues; // Selected values for table
-  console.log('pxMetaTotal', pxMetaTotal);
   if (pxTableMetadata && pxMetaTotal) {
-    const allNotes = GetNoteInfo(
+    const allNotes = getNoteInfo(
       pxTableMetadata,
       pxMetaTotal,
       selectedVBValues,
     );
-    console.log('allNotes i NotesTab=', allNotes);
     if (allNotes) {
       if (allNotes.noTableNotes) {
         return <NoNotes tableLevel={true} />;
