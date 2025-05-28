@@ -22,6 +22,7 @@ export interface AlertProps {
   readonly className?: string;
   readonly children?: string | React.ReactNode;
   ref?: React.Ref<HTMLDivElement>;
+  id?: string;
 }
 
 export function Alert({
@@ -35,6 +36,7 @@ export function Alert({
   className = '',
   children,
   ref,
+  id,
 }: Readonly<AlertProps>) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
   const { t } = useTranslation();
@@ -143,6 +145,7 @@ export function Alert({
 
   return (
     <div
+      id={id}
       tabIndex={clickable ? 0 : undefined}
       className={
         cl(classes[`alert-${size}`], classes[variant], {

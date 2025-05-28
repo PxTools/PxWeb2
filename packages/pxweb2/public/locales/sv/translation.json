@@ -9,6 +9,16 @@
       "title": "PxWeb 2.0 [Main]",
       "logo": "PxWeb 2.0"
     },
+    "not_found": {
+      "page_not_found": {
+        "title": "Sidan hittades inte",
+        "description": "Sidan du letar efter finns inte. Kontrollera URL:en eller återgå till startsidan."
+      },
+      "unsupported_language": {
+        "title": "Ogiltigt språk",
+        "description": "Det valda språket stöds inte."
+      }
+    },
     "skip_to_main": "Gå direkt till huvudinnehållet",
     "footer": {
       "contact": {
@@ -69,8 +79,7 @@
           "header": {
             "tag_selected": "{{selected}} av {{total}} valda",
             "tag_mandatory": "Obligatorisk",
-            "alert_no_mandatory_values": "Du måste välja något i listan för att tabellen ska visas",
-            "show_more": "Visa mer"
+            "alert_no_mandatory_values": "Du måste välja något i listan för att tabellen ska visas"
           },
           "content": {
             "select": {
@@ -232,5 +241,19 @@
       "scrumMaster": "Scrummaster",
       "copyright": "Upphovsrätt © 2024 Statistiska centralbyrån och Statistisk sentralbyrå"
     }
+  },
+  "date": {
+    "simple_date": "{{value, datetime}}",
+    "simple_date_with_time": "{{value, datetime(year: 'numeric'; month: 'numeric'; day: 'numeric'; hour: 'numeric'; minute: 'numeric')}}"
+  },
+  "number": {
+    "simple_number": "{{value, pxNumber}}",
+    "simple_number_with_zero_decimal": "{{value, pxNumber(minimumFractionDigits: 0; maximumFractionDigits: 0;)}}",
+    "simple_number_with_one_decimal": "{{value, pxNumber(minimumFractionDigits: 1; maximumFractionDigits: 1;)}}",
+    "simple_number_with_two_decimals": "{{value, pxNumber(minimumFractionDigits: 2; maximumFractionDigits: 2;)}}",
+    "simple_number_with_three_decimals": "{{value, pxNumber(minimumFractionDigits: 3; maximumFractionDigits: 3;)}}",
+    "simple_number_with_four_decimals": "{{value, pxNumber(minimumFractionDigits: 4; maximumFractionDigits: 4;)}}",
+    "simple_number_with_five_decimals": "{{value, pxNumber(minimumFractionDigits: 5; maximumFractionDigits: 5;)}}",
+    "simple_number_with_default_formatter": "{{value, number(minimumFractionDigits: 5; maximumFractionDigits: 5; roundingMode: 'halfExpand')}}"
   }
 }

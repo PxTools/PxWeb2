@@ -7,7 +7,7 @@ import { vi } from 'vitest';
 import { waitFor } from '@testing-library/react';
 
 // Mock the getFullTable function
-vi.mock('./tableHandler', () => {
+vi.mock('../../util/tableHandler', () => {
   return {
     getFullTable: Promise.resolve([
       {
@@ -75,6 +75,7 @@ window.PxWeb2Config = {
     ],
     defaultLanguage: 'en',
     fallbackLanguage: 'en',
+    showDefaultLanguageInPath: true,
   },
   apiUrl: 'https://api.scb.se/OV0104/v2beta/api/v2',
   maxDataCells: 100000,
