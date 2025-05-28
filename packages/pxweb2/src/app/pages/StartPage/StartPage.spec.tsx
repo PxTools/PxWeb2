@@ -4,6 +4,7 @@ import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import { renderWithProviders } from '../../util/testing-utils';
 import { Config } from '../../util/config/configType';
 import { vi } from 'vitest';
+import '@testing-library/jest-dom/vitest';
 import { waitFor } from '@testing-library/react';
 
 // Mock the getFullTable function
@@ -58,6 +59,34 @@ vi.mock('../../util/tableHandler', () => {
   };
 });
 
+vi.mock('../../util/hooks/useTopicIcons', () => {
+  return {
+    useTopicIcons: () => [
+      {
+        id: 'al',
+        small: <div data-testid="mock-icon-small" />,
+        medium: <div data-testid="mock-icon-medium" />,
+      },
+    ],
+  };
+});
+
+vi.mock('react-i18next', async () => {
+  const actual =
+    await vi.importActual<typeof import('react-i18next')>('react-i18next');
+
+  return {
+    ...actual,
+    useTranslation: () => ({
+      t: (key: string) => key,
+      i18n: {
+        language: 'en',
+      },
+    }),
+    Trans: (props: { i18nKey: string }) => <>{props.i18nKey}</>,
+  };
+});
+
 // Declare the global variable for this file
 declare global {
   interface Window {
@@ -93,6 +122,38 @@ describe('StartPage', () => {
     );
     await waitFor(() => {
       expect(baseElement).toBeTruthy();
+    });
+  });
+
+  it('renders translated search placeholder', async () => {
+    const { getByPlaceholderText } = renderWithProviders(
+      <AccessibilityProvider>
+        <MemoryRouter>
+          <StartPage />
+        </MemoryRouter>
+      </AccessibilityProvider>,
+    );
+
+    await waitFor(() => {
+      expect(
+        getByPlaceholderText('start_page.search_placeholder'),
+      ).toBeInTheDocument();
+    });
+  });
+
+  it('renders default table count using Trans', async () => {
+    const { getByText } = renderWithProviders(
+      <AccessibilityProvider>
+        <MemoryRouter>
+          <StartPage />
+        </MemoryRouter>
+      </AccessibilityProvider>,
+    );
+
+    await waitFor(() => {
+      expect(
+        getByText('start_page.table.number_of_tables'),
+      ).toBeInTheDocument();
     });
   });
 });
