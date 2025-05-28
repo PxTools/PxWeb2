@@ -15,19 +15,28 @@ export interface RadioProps
   options: SelectOption[];
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   selectedOption?: string;
-  legend?: string;
+  legend: string;
+  hideLegend?: boolean;
 }
 
 export const Radio = forwardRef<HTMLInputElement, Readonly<RadioProps>>(
   (
-    { variant = 'default', name, options, onChange, selectedOption, legend },
+    {
+      variant = 'default',
+      name,
+      options,
+      onChange,
+      selectedOption,
+      legend,
+      hideLegend = true,
+    },
     ref,
   ) => {
     return (
       <fieldset className={cl(classes.fieldset)}>
-        {legend && (
-          <legend className={cl(classes.legendSrOnly)}>{legend}</legend>
-        )}
+        <legend className={cl({ [classes.legendSrOnly]: hideLegend })}>
+          {legend}
+        </legend>
         <div className={cl(classes.radioGroup)}>
           {options.map((option) => (
             <label
