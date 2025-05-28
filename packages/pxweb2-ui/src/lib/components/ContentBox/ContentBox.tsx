@@ -4,8 +4,8 @@ import cl from 'clsx';
 import styles from './ContentBox.module.scss';
 
 interface ContentBoxProps {
-  title?: string;
-  children: ReactNode;
+  readonly title?: string;
+  readonly children: ReactNode;
 }
 
 export function ContentBox({ title, children }: ContentBoxProps) {

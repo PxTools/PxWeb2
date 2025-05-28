@@ -27,14 +27,14 @@ export const withTitle: Story = {
   name: 'With title',
   args: {
     title: 'Edit',
-    children: <>Children goes here</>,
+    children: <span>Children goes here</span>,
   },
 };
 
 export const withoutTitle: Story = {
   name: 'Without title',
   args: {
-    children: <>Children goes here</>,
+    children: <span>Children goes here</span>,
   },
 };
 
@@ -44,7 +44,7 @@ export const withLongContent: Story = {
     title: 'Long Content Example',
     children: (
       <>
-        <>Children goes here</>
+        <span>Children goes here</span>
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
