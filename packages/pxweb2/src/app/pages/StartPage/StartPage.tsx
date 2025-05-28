@@ -203,9 +203,8 @@ const StartPage = () => {
       return (
         <Chips.Removable
           filled
-          onClick={async () => {
-            const t = await getFullTable();
-            handleResetFilter(t);
+          onClick={() => {
+            handleResetFilter(state.availableTables);
           }}
         >
           {t('start_page.filter.remove_all_filter')}
