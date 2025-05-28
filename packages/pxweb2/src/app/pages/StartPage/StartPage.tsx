@@ -230,97 +230,101 @@ const StartPage = () => {
         <div className={styles.searchArea}>
           <Search searchPlaceHolder="Search..." variant="default" />
         </div>
-        <FilterSidebar
-          state={state}
-          handleAddFilter={handleAddFilter}
-          handleRemoveFilter={handleRemoveFilter}
-          handleResetFilter={() => {
-            handleResetFilter(state.availableTables);
-          }}
-        />
-        <div className={styles.listTables}>
-          {state.activeFilters.length >= 1 && (
-            <div className={styles.filterPillContainer}>
-              <Chips>
-                {renderRemoveAllChips()}
-                {sortFilterChips(state.activeFilters).map((filter) => (
-                  <Chips.Removable
-                    onClick={() => handleRemoveFilter(filter.value)}
-                    aria-label={t('start_page.filter.remove_filter_aria', {
-                      value: filter.value,
-                    })}
-                    key={filter.value}
-                  >
-                    {filter.label}
-                  </Chips.Removable>
-                ))}
-              </Chips>
+        <div className={styles.filterAndListWrapper}>
+          <FilterSidebar
+            state={state}
+            handleAddFilter={handleAddFilter}
+            handleRemoveFilter={handleRemoveFilter}
+            handleResetFilter={() => {
+              handleResetFilter(state.availableTables);
+            }}
+          />
+          <div className={styles.listTables}>
+            {state.activeFilters.length >= 1 && (
+              <div className={styles.filterPillContainer}>
+                <Chips>
+                  {renderRemoveAllChips()}
+                  {sortFilterChips(state.activeFilters).map((filter) => (
+                    <Chips.Removable
+                      onClick={() => handleRemoveFilter(filter.value)}
+                      aria-label={t('start_page.filter.remove_filter_aria', {
+                        value: filter.value,
+                      })}
+                      key={filter.value}
+                    >
+                      {filter.label}
+                    </Chips.Removable>
+                  ))}
+                </Chips>
+              </div>
+            )}
+            <div className={cl(styles['bodyshort-medium'], styles.countLabel)}>
+              {state.activeFilters.length ? (
+                <p>
+                  Treff på{' '}
+                  <span className={cl(styles['label-medium'])}>
+                    {state.filteredTables.length}
+                  </span>{' '}
+                  tabeller
+                </p>
+              ) : (
+                <p>
+                  <span className={cl(styles['label-medium'])}>
+                    {state.filteredTables.length}
+                  </span>{' '}
+                  tabeller
+                </p>
+              )}
             </div>
-          )}
-          <div className={cl(styles['bodyshort-medium'], styles.countLabel)}>
-            {state.activeFilters.length ? (
-              <p>
-                Treff på{' '}
-                <span className={cl(styles['label-medium'])}>
-                  {state.filteredTables.length}
-                </span>{' '}
-                tabeller
-              </p>
+
+            {state.error && (
+              <div className={styles.error}>
+                <Alert
+                  heading="Feil i lasting av tabeller"
+                  onClick={() => {
+                    location.reload();
+                  }}
+                  variant="error"
+                  clickable
+                >
+                  Statistikkbanken kunne ikke vise listen over tabeller. Last
+                  inn siden på nytt eller klikk her for å forsøke igjen. <br />
+                  Feilmelding: {state.error}
+                </Alert>
+              </div>
+            )}
+            {state.loading ? (
+              <div className={styles.loadingSpinner}>
+                <Spinner size="xlarge" />
+              </div>
             ) : (
-              <p>
-                <span className={cl(styles['label-medium'])}>
-                  {state.filteredTables.length}
-                </span>{' '}
-                tabeller
-              </p>
+              <Virtuoso
+                style={{ height: '90%' }}
+                data={state.filteredTables}
+                itemContent={(_, table: Table) => (
+                  <div className={styles.tableListItem}>
+                    <TableCard
+                      title={`${table.label && removeTableNumber(table.label)}`}
+                      href={`/table/${table.id}`}
+                      updatedLabel={
+                        table.updated ? 'Sist oppdatert' : undefined
+                      }
+                      lastUpdated={
+                        table.updated
+                          ? new Date(table.updated).toLocaleDateString('no') // We may want to get the locale from config!
+                          : undefined
+                      }
+                      // We use slice here because we _only_ want 4digit year. Sometimes, month is appended in data set.
+                      period={`${table.firstPeriod?.slice(0, 4)}–${table.lastPeriod?.slice(0, 4)}`}
+                      frequency={`${table.timeUnit}`}
+                      tableId={`${table.id}`}
+                      icon={renderTopicIcon(table)}
+                    />
+                  </div>
+                )}
+              />
             )}
           </div>
-
-          {state.error && (
-            <div className={styles.error}>
-              <Alert
-                heading="Feil i lasting av tabeller"
-                onClick={() => {
-                  location.reload();
-                }}
-                variant="error"
-                clickable
-              >
-                Statistikkbanken kunne ikke vise listen over tabeller. Last inn
-                siden på nytt eller klikk her for å forsøke igjen. <br />
-                Feilmelding: {state.error}
-              </Alert>
-            </div>
-          )}
-          {state.loading ? (
-            <div className={styles.loadingSpinner}>
-              <Spinner size="xlarge" />
-            </div>
-          ) : (
-            <Virtuoso
-              style={{ height: '90%' }}
-              data={state.filteredTables}
-              itemContent={(_, table: Table) => (
-                <div className={styles.tableListItem}>
-                  <TableCard
-                    title={`${table.label && removeTableNumber(table.label)}`}
-                    href={`/table/${table.id}`}
-                    updatedLabel={table.updated ? 'Sist oppdatert' : undefined}
-                    lastUpdated={
-                      table.updated
-                        ? new Date(table.updated).toLocaleDateString('no') // We may want to get the locale from config!
-                        : undefined
-                    }
-                    // We use slice here because we _only_ want 4digit year. Sometimes, month is appended in data set.
-                    period={`${table.firstPeriod?.slice(0, 4)}–${table.lastPeriod?.slice(0, 4)}`}
-                    frequency={`${table.timeUnit}`}
-                    tableId={`${table.id}`}
-                    icon={renderTopicIcon(table)}
-                  />
-                </div>
-              )}
-            />
-          )}
         </div>
       </div>
     </AccessibilityProvider>

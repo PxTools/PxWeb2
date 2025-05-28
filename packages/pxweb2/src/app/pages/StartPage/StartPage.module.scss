@@ -1,7 +1,7 @@
 @use '$ui/style-dictionary/dist/scss/fixed-variables.scss' as fixed;
 @use '$ui/src/lib/text-styles.scss';
 
-.startPage {
+.startPageOld {
   color: var(--px-color-text-default);
   display: grid;
   grid-template-areas:
@@ -10,8 +10,19 @@
   grid-template-columns: 348px 200px 1fr;
   grid-template-rows: 120px 1fr;
   height: calc(100vh - fixed.$spacing-22);
+}
+
+.startPage {
+  color: var(--px-color-text-default);
   background-color: var(--px-color-surface-subtle);
   padding-left: 40px;
+}
+
+.filterAndListWrapper {
+  display: grid;
+  grid-template-areas: 'sideBar listTables listTables';
+  grid-template-columns: 348px 2000px;
+  height: calc(100vh - fixed.$spacing-22);
 }
 
 .listTables {
@@ -43,5 +54,49 @@
   padding-bottom: 16px;
   p {
     margin: 0;
+  }
+}
+
+.startPage {
+  // xsmall
+  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
+    &::after {
+      content: 'XSmall';
+    }
+  }
+
+  // small
+  @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
+    &::after {
+      content: 'Small';
+    }
+  }
+
+  // medium
+  @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
+    &::after {
+      content: 'Medium';
+    }
+  }
+
+  // Large
+  @media (min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width) {
+    &::after {
+      content: 'Large';
+    }
+  }
+
+  // XLarge
+  @media (min-width: fixed.$breakpoints-xlarge-min-width) and (max-width: fixed.$breakpoints-xlarge-max-width) {
+    &::after {
+      content: 'XLarge';
+    }
+  }
+
+  // XXLarge
+  @media (min-width: fixed.$breakpoints-xxlarge-min-width) {
+    &::after {
+      content: 'XXLarge';
+    }
   }
 }
