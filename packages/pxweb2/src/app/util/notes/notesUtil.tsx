@@ -98,10 +98,6 @@ function getMetadataCopyForSelection(
 ): PxTableMetadata {
   const totalMetadataCopy = structuredClone(totalMetadata);
 
-  console.log(
-    'totalMetadataCopy.variables i getMetadataCopyForSelection BEFORE=',
-    totalMetadataCopy.variables,
-  );
   // Filter out variables in totalMetadataCopy that are not present in the selection
   totalMetadataCopy.variables = totalMetadataCopy.variables.filter((variable) =>
     selectedVBValues.some(
@@ -110,18 +106,8 @@ function getMetadataCopyForSelection(
         selectedVariable.values.length > 0,
     ),
   );
-  console.log(
-    'totalMetadataCopy.variables i getMetadataCopyForSelection AFTER=',
-    totalMetadataCopy.variables,
-  );
 
-  // console.log('totalMetadataCopy.variables6', totalMetadataCopy.variables);
-  // For each variable, filter its values to only those present in selectedValues
-  // selectedValues is an array of value codes for the current variable
-  // variable.values is an array of value objects with a 'code' property
-  // Keep only those values whose code is present in selectedValues
-
-  // Filter out values in each variable that are not present in the selection
+  // Filter out values in each variable that are not present in the selectedValues
   totalMetadataCopy.variables.forEach((variable) => {
     const selectedValues = selectedVBValues.find(
       (selectedVariable) => selectedVariable.id === variable.id,
@@ -140,8 +126,6 @@ function getMetadataCopyForSelection(
       variable.values = [];
     }
   });
-
-  console.log('RETURN=', totalMetadataCopy);
   return totalMetadataCopy;
 }
 
@@ -196,7 +180,6 @@ export function GetMandatoryNotesCompressed(
 
         variableNoteEntry.compressednotes = tempString;
         tempTabletableNotes.variableNotes.push(variableNoteEntry);
-        // index++;
       }
     }
   }
@@ -208,7 +191,6 @@ export function GetNoteInfo(
   pxMetaTotal: PxTableMetadata,
   selectedVBValues: SelectedVBValues[],
 ): NotesUtilityType {
-  //const pxMetaTotal = useVariables(); // All metadata for table
   let tableNotes: NotesUtilityType = {
     Notes: {
       mandatoryNotes: { notesCount: 0, tableLevelNotes: [], variableNotes: [] },
