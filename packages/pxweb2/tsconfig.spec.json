@@ -1,6 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    "target": "es2021",
     "outDir": "../../dist/out-tsc",
     "types": [
       "vitest/globals",
