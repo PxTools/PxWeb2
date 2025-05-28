@@ -137,7 +137,7 @@ export const FilterSidebar: React.FC<FilterProps> = ({
   return (
     <div className={styles.sideBar}>
       <Heading className={cl(styles.filterHeading)} size="medium" level="2">
-        Filter
+        {t('start_page.filter.header')}
       </Heading>
       <div>
         <FilterCategory header={t('start_page.filter.subject')}>
