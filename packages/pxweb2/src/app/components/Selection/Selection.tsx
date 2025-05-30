@@ -606,7 +606,25 @@ export function Selection({
     // TODO: collect which codelists are selected for variables and add them + the newly selected codelist to the metadata API call
 
     // Get table metadata in the new codelist context
-    TableService.getMetadataById(selectedTabId, i18n.resolvedLanguage, false)
+    // Collect selected codelists for all variables, including the newly selected one
+    const selectedCodeLists: Record<string, string> = {};
+
+    // Add existing selected codelists
+    prevSelectedValues.forEach((variable) => {
+      if (variable.selectedCodeList) {
+        selectedCodeLists[variable.id] = variable.selectedCodeList;
+      }
+    });
+
+    // Add/overwrite with the newly selected codelist for this variable
+    selectedCodeLists[varId] = newMappedSelectedCodeList.value;
+
+    TableService.getMetadataById(
+      selectedTabId,
+      i18n.resolvedLanguage,
+      false,
+      selectedCodeLists,
+    )
       .then((Dataset) => {
         const pxTable: PxTable = mapJsonStat2Response(Dataset, false);
 
@@ -618,7 +636,7 @@ export function Selection({
         }
 
         // TODO: call updateAndSyncVBValues with the new selected values to trigger API data-call
-        //updateAndSyncVBValues(newSelectedValues);
+        updateAndSyncVBValues(newSelectedValues);
 
         setErrorMsg('');
       })
