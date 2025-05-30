@@ -91,6 +91,7 @@ export class TableService {
      * @param defaultSelection If metadata should be included as if default selection would have been applied.
      * This is a technical parameter that is used by PxWeb for initial loading of tables.
      *
+     * @param codelist
      * @returns Dataset Success
      * @throws ApiError
      */
@@ -98,6 +99,7 @@ export class TableService {
         id: string,
         lang?: string | null,
         defaultSelection: boolean = false,
+        codelist?: Record<string, string>,
     ): CancelablePromise<Dataset> {
         return __request(OpenAPI, {
             method: 'GET',
@@ -108,6 +110,7 @@ export class TableService {
             query: {
                 'lang': lang,
                 'defaultSelection': defaultSelection,
+                'codelist': codelist,
             },
             errors: {
                 400: `Error response for 400`,
