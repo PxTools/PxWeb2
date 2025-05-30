@@ -9,7 +9,7 @@ vi.mock('../../../context/useVariables', () => ({
   default: () => ({
     pxTableMetadata: {
       variables: [], // no variables
-      notes: [],     // no table-level notes
+      notes: [], // no table-level notes
     },
   }),
 }));
@@ -52,7 +52,11 @@ describe('NotesTab', () => {
       />,
     );
 
-    expect(screen.getByText('presentation_page.main_content.about_table.footnotes.missing_text_table')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'presentation_page.main_content.about_table.footnotes.missing_text_table',
+      ),
+    ).toBeInTheDocument();
   });
 
   it('displays a character explanation note when there are no other notes', () => {
@@ -70,7 +74,7 @@ describe('NotesTab', () => {
           contacts: [],
           officialStatistics: false,
           variables: [],
-          notes: [{text: '.. = No data', mandatory: false}],
+          notes: [{ text: '.. = No data', mandatory: false }],
           link: '',
           matrix: '',
           infofile: '',
@@ -85,5 +89,4 @@ describe('NotesTab', () => {
 
     expect(screen.getByText('.. = No data')).toBeInTheDocument();
   });
-
 });
