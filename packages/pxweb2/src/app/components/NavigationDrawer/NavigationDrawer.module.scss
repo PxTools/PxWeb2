@@ -19,14 +19,12 @@
     padding: fixed.$spacing-4;
   }
 
-  @media ((min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width)) {
+  @media ((min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-medium-max-width)) {
     width: 428px;
-    padding: fixed.$spacing-8;
-  }
-
-  @media ((min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width)) {
-    width: 442px;
-    padding: fixed.$spacing-6;
+    padding-left: fixed.$spacing-8;
+    padding-right: fixed.$spacing-8;
+    padding-top: fixed.$spacing-6;
+    padding-bottom: fixed.$spacing-6;
   }
 
   // xsmall, small and medium
@@ -45,7 +43,6 @@
   }
 
   @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
-    width: 412px;
     height: calc(100vh - 80px);
     // Handle rtl languages
     border-start-start-radius: var(--px-border-radius-none);
