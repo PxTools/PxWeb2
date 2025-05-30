@@ -9,6 +9,16 @@
       "title": "PxWeb 2.0 [Main]",
       "logo": "بيكس ويب 2.0"
     },
+    "not_found": {
+      "page_not_found": {
+        "title": "لم يتم العثور على الصفحة",
+        "description": "الصفحة التي تبحث عنها غير موجودة. يرجى التحقق من عنوان URL أو العودة إلى الصفحة الرئيسية."
+      },
+      "unsupported_language": {
+        "title": "لغة غير مدعومة",
+        "description": "اللغة المحددة غير مدعومة."
+      }
+    },
     "skip_to_main": "انتقل إلى المحتوى الرئيسي",
     "footer": {
       "contact": {
@@ -64,8 +74,7 @@
           "header": {
             "tag_selected": "{{selected}} ل {{total}} مختارة",
             "tag_mandatory": "إلزامي",
-            "alert_no_mandatory_values": "يجب عليك تحديد شيء ما في القائمة حتى يتم عرض الجدول",
-            "show_more": "اظهر المزيد"
+            "alert_no_mandatory_values": "يجب عليك تحديد شيء ما في القائمة حتى يتم عرض الجدول"
           },
           "content": {
             "select": {

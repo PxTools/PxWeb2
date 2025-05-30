@@ -8,6 +8,7 @@ export * from './lib/components/Chips/Chips';
 export * from './lib/components/Contact/Contact';
 export * from './lib/components/Contact/Contact';
 export * from './lib/components/EmptyState/EmptyState';
+export * from './lib/components/FilterCategory/FilterCategory';
 export * from './lib/components/Icon/Icon';
 export * from './lib/components/Link/Link';
 export * from './lib/components/Notes/MandatoryNotes';
