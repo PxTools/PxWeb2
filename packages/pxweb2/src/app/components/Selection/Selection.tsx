@@ -392,130 +392,11 @@ export function Selection({
     setPxTableMetaToRender(structuredClone(pxTableMetadata));
   }
 
-  // async function handleCodeListChange(
-  //   selectedItem: SelectOption | undefined,
-  //   varId: string,
-  // ) {
-  //   const prevSelectedValues = structuredClone(selectedVBValues);
-  //   const currentVariableMetadata = pxTableMetaToRender?.variables.find(
-  //     (variable) => variable.id === varId,
-  //   ) as VariableWithDisplayType;
-  //   const currentSelectedVariable = prevSelectedValues.find(
-  //     (variable) => variable.id === varId,
-  //   );
-  //   const lang = i18n.resolvedLanguage;
-
-  //   // No language, do nothing
-  //   if (lang === undefined) {
-  //     return;
-  //   }
-  //   const currentCodeList = currentSelectedVariable?.selectedCodeList;
-
-  //   // No new selection made, do nothing
-  //   if (!selectedItem || selectedItem.value === currentCodeList) {
-  //     return;
-  //   }
-
-  //   if (pxTableMetaToRender === null || currentVariableMetadata === undefined) {
-  //     return;
-  //   }
-
-  //   const newSelectedCodeList = currentVariableMetadata?.codeLists?.find(
-  //     (codelist) => codelist.id === selectedItem.value,
-  //   );
-
-  //   if (!newSelectedCodeList) {
-  //     return;
-  //   }
-
-  //   const newMappedSelectedCodeList =
-  //     mapCodeListToSelectOption(newSelectedCodeList);
-  //   const newSelectedValues = addSelectedCodeListToVariable(
-  //     currentSelectedVariable,
-  //     prevSelectedValues,
-  //     varId,
-  //     newMappedSelectedCodeList,
-  //   );
-
-  //   setIsFadingVariableList(true);
-
-  //   //  Get the selected codelist
-  //   const newCodelist: CodeList = await getCodeList(
-  //     newMappedSelectedCodeList.value,
-  //     lang,
-  //     currentVariableMetadata.valueDisplayType,
-  //   )
-  //     .finally(() => {
-  //       setIsFadingVariableList(false);
-  //     })
-  //     .catch((apiError: ApiError) => {
-  //       setErrorMsg(problemMessage(apiError, selectedTabId));
-  //       return {
-  //         id: '',
-  //         label: '',
-  //         values: [],
-  //         mandatory: false,
-  //       };
-  //     })
-  //     .catch((error) => {
-  //       console.error(
-  //         `Could not get values for code list: ${newMappedSelectedCodeList.value} ${error}`,
-  //       );
-  //       return {
-  //         id: '',
-  //         label: '',
-  //         values: [],
-  //         mandatory: false,
-  //       };
-  //     });
-
-  //   // Update variable mandatory according to the new codelist
-  //   if (
-  //     newCodelist.mandatory != undefined &&
-  //     newCodelist.mandatory != currentVariableMetadata.mandatory
-  //   ) {
-  //     currentVariableMetadata.mandatory = newCodelist.mandatory;
-  //   }
-
-  //   if (newCodelist.values.length < 1) {
-  //     return;
-  //   }
-
-  //   const newPxTableMetaToRender: PxTableMetadata =
-  //     structuredClone(pxTableMetaToRender);
-  //   newPxTableMetaToRender.variables.forEach((variable) => {
-  //     if (!variable.codeLists) {
-  //       return;
-  //     }
-
-  //     variable.codeLists.forEach((codelist) => {
-  //       if (codelist.id !== newMappedSelectedCodeList.value) {
-  //         return;
-  //       }
-
-  //       for (let i = 0; i < newPxTableMetaToRender.variables.length - 1; i++) {
-  //         if (newPxTableMetaToRender.variables[i].id !== variable.id) {
-  //           continue;
-  //         }
-
-  //         newPxTableMetaToRender.variables[i].values = newCodelist.values;
-  //       }
-  //     });
-  //   });
-
-  //   // update the state
-  //   updateAndSyncVBValues(newSelectedValues);
-  //   setPxTableMetadata(newPxTableMetaToRender);
-  //   setPxTableMetaToRender(null);
-  // }
-
   async function handleCodeListChange(
     selectedItem: SelectOption | undefined,
     varId: string,
   ) {
     const prevSelectedValues = structuredClone(selectedVBValues);
-
-    console.log({ prevSelectedValues });
 
     const currentVariableMetadata = pxTableMetaToRender?.variables.find(
       (variable) => variable.id === varId,
@@ -557,51 +438,7 @@ export function Selection({
       newMappedSelectedCodeList,
     );
 
-    console.log({ newSelectedValues });
-
     setIsFadingVariableList(true);
-
-    // //  Get the selected codelist
-    // const newCodelist: CodeList = await getCodeList(
-    //   newMappedSelectedCodeList.value,
-    //   lang,
-    //   currentVariableMetadata.valueDisplayType,
-    // )
-    //   .finally(() => {
-    //     setIsFadingVariableList(false);
-    //   })
-    //   .catch((apiError: ApiError) => {
-    //     setErrorMsg(problemMessage(apiError, selectedTabId));
-    //     return {
-    //       id: '',
-    //       label: '',
-    //       values: [],
-    //       mandatory: false,
-    //     };
-    //   })
-    //   .catch((error) => {
-    //     console.error(
-    //       `Could not get values for code list: ${newMappedSelectedCodeList.value} ${error}`,
-    //     );
-    //     return {
-    //       id: '',
-    //       label: '',
-    //       values: [],
-    //       mandatory: false,
-    //     };
-    //   });
-
-    // // Update variable mandatory according to the new codelist
-    // if (
-    //   newCodelist.mandatory != undefined &&
-    //   newCodelist.mandatory != currentVariableMetadata.mandatory
-    // ) {
-    //   currentVariableMetadata.mandatory = newCodelist.mandatory;
-    // }
-
-    // if (newCodelist.values.length < 1) {
-    //   return;
-    // }
 
     // TODO: collect which codelists are selected for variables and add them + the newly selected codelist to the metadata API call
 
@@ -635,16 +472,11 @@ export function Selection({
           setPxTableMetaToRender(null);
         }
 
-        // TODO: call updateAndSyncVBValues with the new selected values to trigger API data-call
+        // UpdateAndSyncVBValues with the new selected values to trigger API data-call
         updateAndSyncVBValues(newSelectedValues);
 
         setErrorMsg('');
       })
-      // .then(() => {
-      //   if (!shouldGetDefaultSelection) {
-      //     variables.setIsLoadingMetadata(false);
-      //   }
-      // })
       .finally(() => {
         setIsFadingVariableList(false);
       })
@@ -656,33 +488,6 @@ export function Selection({
         setErrorMsg(`Could not get table: ${selectedTabId} ${error.message}`);
         setPxTableMetadata(null);
       });
-
-    // const newPxTableMetaToRender: PxTableMetadata =
-    //   structuredClone(pxTableMetaToRender);
-    // newPxTableMetaToRender.variables.forEach((variable) => {
-    //   if (!variable.codeLists) {
-    //     return;
-    //   }
-
-    //   variable.codeLists.forEach((codelist) => {
-    //     if (codelist.id !== newMappedSelectedCodeList.value) {
-    //       return;
-    //     }
-
-    //     for (let i = 0; i < newPxTableMetaToRender.variables.length - 1; i++) {
-    //       if (newPxTableMetaToRender.variables[i].id !== variable.id) {
-    //         continue;
-    //       }
-
-    //       newPxTableMetaToRender.variables[i].values = newCodelist.values;
-    //     }
-    //   });
-    // });
-
-    // // update the state
-    // updateAndSyncVBValues(newSelectedValues);
-    // setPxTableMetadata(newPxTableMetaToRender);
-    // setPxTableMetaToRender(null);
   }
 
   const handleCheckboxChange = (varId: string, value: Value['code']) => {
