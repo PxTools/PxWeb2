@@ -3,19 +3,15 @@ import { render } from '@testing-library/react';
 import { vi } from 'vitest';
 
 import {
-  mockTableService,
   renderWithProviders,
 } from '../../util/testing-utils';
-import Selection, { getCodeList } from './Selection';
+import Selection from './Selection';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import {
   TableDataProvider,
   TableDataContext,
 } from '../../context/TableDataProvider';
 import { VariablesProvider } from '../../context/VariablesProvider';
-
-// Mock API-responses from the table service
-mockTableService();
 
 describe('Selection', () => {
   it('should throw an error when triggered', () => {
@@ -28,8 +24,6 @@ describe('Selection', () => {
       }, [context]);
       return null;
     };
-    {
-    }
 
     const consoleErrorSpy = vi
       .spyOn(console, 'error')
@@ -65,21 +59,4 @@ describe('Selection', () => {
     }).toThrow('Simulated error');
   });
 
-  it('should fetch and return a valid CodeList from the API', async () => {
-    const codelist = await getCodeList('vs_RegionLän07', 'en', 'value');
-    expect(codelist.id).toBe('vs_RegionLän07');
-  });
-
-  it('should fetch and return a valid mandatory CodeList from the API', async () => {
-    const codelist = await getCodeList('vs_RegionLän07', 'en', 'value');
-    expect(codelist.mandatory).toBe(true);
-  });
-
-  it('should fetch and return a valid CodeList with values from the API', async () => {
-    const codelist = await getCodeList('vs_RegionLän07', 'en', 'value');
-    expect(codelist.values).toBeDefined();
-    expect(codelist.values.length).toBeGreaterThan(0);
-    expect(codelist.values[0].code).toBe('01');
-    expect(codelist.values[0].label).toBe('Stockholm county');
-  });
 });
