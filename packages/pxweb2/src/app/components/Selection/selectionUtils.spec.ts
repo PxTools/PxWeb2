@@ -1,27 +1,20 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import {
   setSelectedCodelist,
   addSelectedCodeListToVariable,
   getSelectedCodelists,
 } from './selectionUtils';
-import { SelectedVBValues, SelectOption, Variable } from '@pxweb2/pxweb2-ui';
-
-// Mock mapCodeListToSelectOption
-vi.mock('@pxweb2/pxweb2-ui', async () => {
-  const actual = await vi.importActual<any>('@pxweb2/pxweb2-ui');
-  return {
-    ...actual,
-    mapCodeListToSelectOption: (codelist: any) => ({
-      label: codelist.label,
-      value: codelist.id,
-    }),
-  };
-});
+import {
+  SelectedVBValues,
+  SelectOption,
+  Variable,
+  VartypeEnum,
+} from '@pxweb2/pxweb2-ui';
 
 describe('selectionUtils', () => {
   const varId = 'var1';
-  const codeListA = { id: 'A', label: 'List A' };
-  const codeListB = { id: 'B', label: 'List B' };
+  const codeListA = { id: 'A', label: 'List A', values: [] };
+  const codeListB = { id: 'B', label: 'List B', values: [] };
 
   const selectOptionA: SelectOption = { label: 'List A', value: 'A' };
   const selectOptionB: SelectOption = { label: 'List B', value: 'B' };
@@ -29,7 +22,11 @@ describe('selectionUtils', () => {
   const variableMeta: Variable = {
     id: varId,
     codeLists: [codeListA, codeListB],
-  } as any;
+    label: '',
+    type: VartypeEnum.CONTENTS_VARIABLE,
+    mandatory: false,
+    values: [],
+  };
 
   let prevSelectedValues: SelectedVBValues[];
 
@@ -89,7 +86,11 @@ describe('selectionUtils', () => {
       const newMeta: Variable = {
         id: newVarId,
         codeLists: [codeListA],
-      } as any;
+        label: '',
+        type: VartypeEnum.CONTENTS_VARIABLE,
+        mandatory: false,
+        values: [],
+      };
       const result = setSelectedCodelist(
         selectOptionA,
         newVarId,
