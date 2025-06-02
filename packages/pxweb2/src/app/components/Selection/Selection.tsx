@@ -370,7 +370,7 @@ export function Selection({
 
     const currentVariableMetadata = pxTableMetaToRender?.variables.find(
       (variable) => variable.id === varId,
-    ) as VariableWithDisplayType;
+    );
 
     if (pxTableMetaToRender === null || currentVariableMetadata === undefined) {
       return;

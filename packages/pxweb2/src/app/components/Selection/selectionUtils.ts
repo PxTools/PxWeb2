@@ -2,14 +2,14 @@ import {
   mapCodeListToSelectOption,
   SelectedVBValues,
   SelectOption,
+  Variable,
 } from '@pxweb2/pxweb2-ui';
-import { VariableWithDisplayType } from './Selection';
 
 export function setSelectedCodelist(
   selectedItem: SelectOption | undefined,
   varId: string,
   prevSelectedValues: SelectedVBValues[],
-  currentVariableMetadata: VariableWithDisplayType,
+  currentVariableMetadata: Variable,
 ): SelectedVBValues[] | undefined {
   const currentSelectedVariable = prevSelectedValues.find(
     (variable) => variable.id === varId,

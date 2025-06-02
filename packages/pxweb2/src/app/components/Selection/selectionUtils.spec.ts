@@ -4,8 +4,7 @@ import {
   addSelectedCodeListToVariable,
   getSelectedCodelists,
 } from './selectionUtils';
-import { SelectedVBValues, SelectOption } from '@pxweb2/pxweb2-ui';
-import type { VariableWithDisplayType } from './Selection';
+import { SelectedVBValues, SelectOption, Variable } from '@pxweb2/pxweb2-ui';
 
 // Mock mapCodeListToSelectOption
 vi.mock('@pxweb2/pxweb2-ui', async () => {
@@ -27,7 +26,7 @@ describe('selectionUtils', () => {
   const selectOptionA: SelectOption = { label: 'List A', value: 'A' };
   const selectOptionB: SelectOption = { label: 'List B', value: 'B' };
 
-  const variableMeta: VariableWithDisplayType = {
+  const variableMeta: Variable = {
     id: varId,
     codeLists: [codeListA, codeListB],
   } as any;
@@ -87,7 +86,7 @@ describe('selectionUtils', () => {
 
     it('adds a new variable if it does not exist in prevSelectedValues', () => {
       const newVarId = 'var3';
-      const newMeta: VariableWithDisplayType = {
+      const newMeta: Variable = {
         id: newVarId,
         codeLists: [codeListA],
       } as any;
