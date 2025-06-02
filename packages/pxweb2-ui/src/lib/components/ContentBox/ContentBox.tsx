@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import cl from 'clsx';
 
 import styles from './ContentBox.module.scss';
+import Heading from '../Typography/Heading/Heading';
 
 interface ContentBoxProps {
   readonly title?: string;
@@ -13,9 +14,9 @@ export function ContentBox({ title, children }: ContentBoxProps) {
     <div className={cl(styles.contentBox)}>
       {title && (
         <div className={cl(styles.title)}>
-          <h3 className={cl(styles.titleText, styles[`label-small`])}>
+          <Heading level={'3'} size={'small'}>
             {title}
-          </h3>
+          </Heading>
         </div>
       )}
       {children}
