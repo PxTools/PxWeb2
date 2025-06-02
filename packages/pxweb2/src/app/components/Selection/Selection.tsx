@@ -10,7 +10,6 @@ import {
   VariableList,
   Value,
   SelectOption,
-  mapCodeListToSelectOption,
   PxTable,
   ValueDisplayType,
   Variable,
@@ -22,41 +21,7 @@ import { NavigationItem } from '../../components/NavigationMenu/NavigationItem/N
 import useAccessibility from '../../context/useAccessibility';
 import { getLabelText } from '../../util/utils';
 import { problemMessage } from '../../util/problemMessage';
-
-function addSelectedCodeListToVariable(
-  currentVariable: SelectedVBValues | undefined,
-  selectedValuesArr: SelectedVBValues[],
-  varId: string,
-  selectedItem: SelectOption,
-): SelectedVBValues[] {
-  let newSelectedValues: SelectedVBValues[] = [];
-
-  if (currentVariable) {
-    newSelectedValues = selectedValuesArr.map((variable) => {
-      if (variable.id === varId) {
-        return {
-          ...variable,
-          selectedCodeList: selectedItem.value,
-          values: [], // Always reset values when changing codelist
-        };
-      }
-
-      return variable;
-    });
-  }
-  if (!currentVariable) {
-    newSelectedValues = [
-      ...selectedValuesArr,
-      {
-        id: varId,
-        selectedCodeList: selectedItem.value,
-        values: [],
-      },
-    ];
-  }
-
-  return newSelectedValues;
-}
+import { getSelectedCodelists, setSelectedCodelist } from './selectionUtils';
 
 function addValueToVariable(
   selectedValuesArr: SelectedVBValues[],
@@ -261,7 +226,7 @@ function removeAllValuesOfVariable(
   return newValues;
 }
 
-interface VariableWithDisplayType extends Variable {
+export interface VariableWithDisplayType extends Variable {
   valueDisplayType: ValueDisplayType;
 }
 
@@ -396,66 +361,43 @@ export function Selection({
     selectedItem: SelectOption | undefined,
     varId: string,
   ) {
-    const prevSelectedValues = structuredClone(selectedVBValues);
-
-    const currentVariableMetadata = pxTableMetaToRender?.variables.find(
-      (variable) => variable.id === varId,
-    ) as VariableWithDisplayType;
-    const currentSelectedVariable = prevSelectedValues.find(
-      (variable) => variable.id === varId,
-    );
     const lang = i18n.resolvedLanguage;
 
     // No language, do nothing
     if (lang === undefined) {
       return;
     }
-    const currentCodeList = currentSelectedVariable?.selectedCodeList;
 
-    // No new selection made, do nothing
-    if (!selectedItem || selectedItem.value === currentCodeList) {
-      return;
-    }
+    const currentVariableMetadata = pxTableMetaToRender?.variables.find(
+      (variable) => variable.id === varId,
+    ) as VariableWithDisplayType;
 
     if (pxTableMetaToRender === null || currentVariableMetadata === undefined) {
       return;
     }
 
-    const newSelectedCodeList = currentVariableMetadata?.codeLists?.find(
-      (codelist) => codelist.id === selectedItem.value,
-    );
+    const prevSelectedValues = structuredClone(selectedVBValues);
 
-    if (!newSelectedCodeList) {
-      return;
+    const newSelectedValues = setSelectedCodelist(
+      selectedItem,
+      varId,
+      prevSelectedValues,
+      currentVariableMetadata,
+    );
+    if (!newSelectedValues) {
+      return; // No change in codelist selection
     }
 
-    const newMappedSelectedCodeList =
-      mapCodeListToSelectOption(newSelectedCodeList);
-    const newSelectedValues = addSelectedCodeListToVariable(
-      currentSelectedVariable,
+    // Collect selected codelists for all variables, including the newly selected one
+    const selectedCodeLists = getSelectedCodelists(
       prevSelectedValues,
+      selectedItem,
       varId,
-      newMappedSelectedCodeList,
     );
 
     setIsFadingVariableList(true);
 
-    // TODO: collect which codelists are selected for variables and add them + the newly selected codelist to the metadata API call
-
     // Get table metadata in the new codelist context
-    // Collect selected codelists for all variables, including the newly selected one
-    const selectedCodeLists: Record<string, string> = {};
-
-    // Add existing selected codelists
-    prevSelectedValues.forEach((variable) => {
-      if (variable.selectedCodeList) {
-        selectedCodeLists[variable.id] = variable.selectedCodeList;
-      }
-    });
-
-    // Add/overwrite with the newly selected codelist for this variable
-    selectedCodeLists[varId] = newMappedSelectedCodeList.value;
-
     TableService.getMetadataById(
       selectedTabId,
       i18n.resolvedLanguage,
@@ -465,7 +407,6 @@ export function Selection({
       .then((Dataset) => {
         const pxTable: PxTable = mapJsonStat2Response(Dataset, false);
 
-        // TODO: Find the variable with the new codelist in pxTableMetadata and replace it with the variable in pxTable
         setPxTableMetadata(pxTable.metadata);
 
         if (pxTableMetaToRender !== null) {
