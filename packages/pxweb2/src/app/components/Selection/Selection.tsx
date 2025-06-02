@@ -609,10 +609,10 @@ export function Selection({
   const drawerEdit = <>Edit content</>;
   const drawerSave = (
     <>
-      <ContentBox>This is inside a ContentBox</ContentBox>
       <ContentBox title="Contentbox with title">
         This is inside another with a title ContentBox
       </ContentBox>
+      <ContentBox>This is inside a ContentBox</ContentBox>
     </>
   );
   const drawerHelp = <>Help content</>;
