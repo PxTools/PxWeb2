@@ -2,7 +2,8 @@
 @use '$ui/src/lib/text-styles.scss';
 
 .information {
-  padding: 40px;
+  padding: 40px 0;
   background-color: white;
-  color: var(--px-color-text-default);
+  background-color: var(--px-color-surface-default);
+  max-width: 728px;
 }

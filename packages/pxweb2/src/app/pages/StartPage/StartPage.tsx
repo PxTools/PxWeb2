@@ -255,92 +255,103 @@ const StartPage = () => {
   return (
     <AccessibilityProvider>
       <Header />
-      <Information />
       <div className={styles.startPage}>
-        <div className={styles.searchArea}>
-          <Search
-            searchPlaceHolder={t('start_page.search_placeholder')}
-            variant="default"
-          />
+        <div className={styles.container}>
+          <Information />
         </div>
-        <FilterSidebar
-          state={state}
-          handleAddFilter={handleAddFilter}
-          handleRemoveFilter={handleRemoveFilter}
-          handleResetFilter={() => {
-            handleResetFilter(state.availableTables);
-          }}
-        />
-        <div className={styles.listTables}>
-          {state.activeFilters.length >= 1 && (
-            <div className={styles.filterPillContainer}>
-              <Chips>
-                {renderRemoveAllChips()}
-                {sortFilterChips(state.activeFilters).map((filter) => (
-                  <Chips.Removable
-                    onClick={() => handleRemoveFilter(filter.value)}
-                    aria-label={t('start_page.filter.remove_filter_aria', {
-                      value: filter.value,
-                    })}
-                    key={filter.value}
-                  >
-                    {filter.label}
-                  </Chips.Removable>
-                ))}
-              </Chips>
+        <div className={cl(styles.searchFilterResult)}>
+          <div className={cl(styles.searchAreaWrapper, styles.container)}>
+            <div className={cl(styles.search)}>
+              <Search
+                searchPlaceHolder={t('start_page.search_placeholder')}
+                variant="default"
+              />
             </div>
-          )}
-          <div className={cl(styles['bodyshort-medium'], styles.countLabel)}>
-            {state.activeFilters.length ? (
-              <p>
-                <Trans
-                  i18nKey="start_page.table.number_of_tables_found"
-                  values={{ count: state.filteredTables.length }}
-                  components={{
-                    strong: <span className={cl(styles['label-medium'])} />,
-                  }}
-                />
-              </p>
-            ) : (
-              <p>
-                <Trans
-                  i18nKey="start_page.table.number_of_tables"
-                  values={{ count: state.filteredTables.length }}
-                  components={{
-                    strong: <span className={cl(styles['label-medium'])} />,
-                  }}
-                />
-              </p>
-            )}
           </div>
-
-          {state.error && (
-            <div className={styles.error}>
-              <Alert
-                heading="Feil i lasting av tabeller"
-                onClick={() => {
-                  location.reload();
-                }}
-                variant="error"
-                clickable
-              >
-                Statistikkbanken kunne ikke vise listen over tabeller. Last inn
-                siden på nytt eller klikk her for å forsøke igjen. <br />
-                Feilmelding: {state.error}
-              </Alert>
-            </div>
-          )}
-          {state.loading ? (
-            <div className={styles.loadingSpinner}>
-              <Spinner size="xlarge" />
-            </div>
-          ) : (
-            <Virtuoso
-              style={{ height: '90%' }}
-              data={state.filteredTables}
-              itemContent={(_, table: Table) => renderTableCard(table, t)}
+          <div className={cl(styles.filterAndListWrapper, styles.container)}>
+            <FilterSidebar
+              state={state}
+              handleAddFilter={handleAddFilter}
+              handleRemoveFilter={handleRemoveFilter}
+              handleResetFilter={() => {
+                handleResetFilter(state.availableTables);
+              }}
             />
-          )}
+            <div className={styles.listTables}>
+              {state.activeFilters.length >= 1 && (
+                <div className={styles.filterPillContainer}>
+                  <Chips>
+                    {renderRemoveAllChips()}
+                    {sortFilterChips(state.activeFilters).map((filter) => (
+                      <Chips.Removable
+                        onClick={() => handleRemoveFilter(filter.value)}
+                        aria-label={t('start_page.filter.remove_filter_aria', {
+                          value: filter.value,
+                        })}
+                        key={filter.value}
+                      >
+                        {filter.label}
+                      </Chips.Removable>
+                    ))}
+                  </Chips>
+                </div>
+              )}
+              <div
+                className={cl(styles['bodyshort-medium'], styles.countLabel)}
+              >
+                {state.activeFilters.length ? (
+                  <p>
+                    <Trans
+                      i18nKey="start_page.table.number_of_tables_found"
+                      values={{ count: state.filteredTables.length }}
+                      components={{
+                        strong: <span className={cl(styles['label-medium'])} />,
+                      }}
+                    />
+                  </p>
+                ) : (
+                  <p>
+                    <Trans
+                      i18nKey="start_page.table.number_of_tables"
+                      values={{ count: state.filteredTables.length }}
+                      components={{
+                        strong: <span className={cl(styles['label-medium'])} />,
+                      }}
+                    />
+                  </p>
+                )}
+              </div>
+
+              {state.error && (
+                <div className={styles.error}>
+                  <Alert
+                    heading="Feil i lasting av tabeller"
+                    onClick={() => {
+                      location.reload();
+                    }}
+                    variant="error"
+                    clickable
+                  >
+                    Statistikkbanken kunne ikke vise listen over tabeller. Last
+                    inn siden på nytt eller klikk her for å forsøke igjen.{' '}
+                    <br />
+                    Feilmelding: {state.error}
+                  </Alert>
+                </div>
+              )}
+              {state.loading ? (
+                <div className={styles.loadingSpinner}>
+                  <Spinner size="xlarge" />
+                </div>
+              ) : (
+                <Virtuoso
+                  style={{ height: '90%' }}
+                  data={state.filteredTables}
+                  itemContent={(_, table: Table) => renderTableCard(table, t)}
+                />
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </AccessibilityProvider>

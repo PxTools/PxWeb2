@@ -1,27 +1,31 @@
 @use '$ui/style-dictionary/dist/scss/fixed-variables.scss' as fixed;
 @use '$ui/src/lib/text-styles.scss';
 
-.startPageOld {
-  color: var(--px-color-text-default);
-  display: grid;
-  grid-template-areas:
-    'search search .'
-    'sideBar listTables listTables';
-  grid-template-columns: 348px 200px 1fr;
-  grid-template-rows: 120px 1fr;
-  height: calc(100vh - fixed.$spacing-22);
-}
-
 .startPage {
   color: var(--px-color-text-default);
+}
+
+.searchFilterResult {
   background-color: var(--px-color-surface-subtle);
-  padding-left: 40px;
+}
+
+.searchAreaWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 60px 0 60px 0;
+}
+
+.search {
+  width: 60%;
+  max-width: 628px;
 }
 
 .filterAndListWrapper {
   display: grid;
-  grid-template-areas: 'sideBar listTables listTables';
-  grid-template-columns: 348px 2000px;
+  grid-template-areas: 'sideBar listTables';
+  grid-template-columns: 408px auto;
+  grid-column-gap: 32px;
   height: calc(100vh - fixed.$spacing-22);
 }
 
@@ -38,16 +42,8 @@
   padding-bottom: 40px;
 }
 
-.searchArea {
-  grid-area: search;
-  align-self: center;
-  max-width: 633px;
-  width: 100%;
-}
-
 .tableListItem {
   padding-bottom: 16px;
-  max-width: 802px;
 }
 
 .countLabel {
@@ -60,43 +56,81 @@
 .startPage {
   // xsmall
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
-    &::after {
+    &::before {
       content: 'XSmall';
     }
   }
 
   // small
   @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
-    &::after {
+    &::before {
       content: 'Small';
     }
   }
 
   // medium
   @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
-    &::after {
+    &::before {
       content: 'Medium';
     }
   }
 
   // Large
   @media (min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width) {
-    &::after {
+    &::before {
       content: 'Large';
     }
   }
 
   // XLarge
   @media (min-width: fixed.$breakpoints-xlarge-min-width) and (max-width: fixed.$breakpoints-xlarge-max-width) {
-    &::after {
+    &::before {
       content: 'XLarge';
+    }
+    .filterAndListWrapper {
+      grid-template-columns: 348px auto;
     }
   }
 
   // XXLarge
   @media (min-width: fixed.$breakpoints-xxlarge-min-width) {
-    &::after {
+    &::before {
       content: 'XXLarge';
     }
+  }
+}
+
+.container {
+  margin-left: auto;
+  margin-right: auto;
+
+  // xsmall
+  @media (max-width: fixed.$breakpoints-xsmall-max-width) {
+    //max-width: 508px;
+  }
+
+  // small
+  @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
+    max-width: 508px;
+  }
+
+  // medium
+  @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
+    max-width: 688px;
+  }
+
+  // Large
+  @media (min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width) {
+    max-width: 928px;
+  }
+
+  // XLarge
+  @media (min-width: fixed.$breakpoints-xlarge-min-width) and (max-width: fixed.$breakpoints-xlarge-max-width) {
+    max-width: 1108px;
+  }
+
+  // XXLarge
+  @media (min-width: fixed.$breakpoints-xxlarge-min-width) {
+    max-width: 1288px;
   }
 }
