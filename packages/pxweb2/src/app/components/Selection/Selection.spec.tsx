@@ -2,9 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import { vi } from 'vitest';
 
-import {
-  renderWithProviders,
-} from '../../util/testing-utils';
+import { renderWithProviders } from '../../util/testing-utils';
 import Selection from './Selection';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import {
@@ -58,5 +56,4 @@ describe('Selection', () => {
       throw new Error('Simulated error');
     }).toThrow('Simulated error');
   });
-
 });
