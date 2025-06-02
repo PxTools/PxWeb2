@@ -5,7 +5,8 @@ import {
   type Filter,
 } from '../../pages/StartPage/StartPageTypes';
 import styles from './FilterSidebar.module.scss';
-
+import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { Checkbox, FilterCategory, Heading } from '@pxweb2/pxweb2-ui';
 import { PathItem, findParent } from '../../util/startPageFilters';
 interface FilterProps {
@@ -93,6 +94,7 @@ const renderTimeUnitFilters = (
   state: StartPageState,
   handleAddFilter: (filter: Filter[]) => void,
   handleRemoveFilter: (filterId: string) => void,
+  t: TFunction,
 ) => {
   const allTimeUnits = new Set(
     state.availableTables.map((table) => table.timeUnit ?? ''),
@@ -103,18 +105,20 @@ const renderTimeUnitFilters = (
     const isActive = state.activeFilters.some(
       (filter) => filter.type === 'timeUnit' && filter.value === key,
     );
+    const translationKey = `start_page.filter.frequency.${key.toLowerCase()}`;
+    const label = t(translationKey, { defaultValue: key });
 
     return (
       <li key={key} className={styles.filterItem}>
         <Checkbox
           id={key}
-          text={`${key} (${count})`}
+          text={`${label} (${count})`}
           value={isActive}
           subtle={!isActive && count === 0}
           onChange={(value) => {
             value
               ? handleAddFilter([
-                  { type: 'timeUnit', value: key, label: key, index: i },
+                  { type: 'timeUnit', value: key, label, index: i },
                 ])
               : handleRemoveFilter(key);
           }}
@@ -129,13 +133,14 @@ export const FilterSidebar: React.FC<FilterProps> = ({
   handleAddFilter,
   handleRemoveFilter,
 }) => {
+  const { t } = useTranslation();
   return (
     <div className={styles.sideBar}>
       <Heading className={cl(styles.filterHeading)} size="medium" level="2">
-        Filter
+        {t('start_page.filter.header')}
       </Heading>
       <div>
-        <FilterCategory header="Emne">
+        <FilterCategory header={t('start_page.filter.subject')}>
           <ul className={styles.filterList}>
             {renderSubjectTreeFilters(
               state,
@@ -144,9 +149,14 @@ export const FilterSidebar: React.FC<FilterProps> = ({
             )}
           </ul>
         </FilterCategory>
-        <FilterCategory header="Tidsintervall">
+        <FilterCategory header={t('start_page.filter.timeUnit')}>
           <ul className={styles.filterList}>
-            {renderTimeUnitFilters(state, handleAddFilter, handleRemoveFilter)}
+            {renderTimeUnitFilters(
+              state,
+              handleAddFilter,
+              handleRemoveFilter,
+              t,
+            )}
           </ul>
         </FilterCategory>
       </div>
