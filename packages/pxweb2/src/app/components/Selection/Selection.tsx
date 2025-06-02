@@ -77,7 +77,7 @@ function removeValueOfVariable(
 
       return variable;
     })
-    .filter((value) => value !== null) as SelectedVBValues[];
+    .filter((value) => value !== null);
 
   return newSelectedValues;
 }
@@ -183,7 +183,7 @@ function removeAllValuesOfVariable(
 
       return variable;
     })
-    .filter((value) => value !== null) as SelectedVBValues[];
+    .filter((value) => value !== null);
 
   return newValues;
 }
@@ -251,7 +251,7 @@ export function Selection({
       variables.setHasLoadedDefaultSelection(false);
       shouldGetDefaultSelection = true;
       setPrevTableId(selectedTabId);
-      setPrevLang(i18n.resolvedLanguage || '');
+      setPrevLang(i18n.resolvedLanguage ?? '');
     }
 
     if (isLoadingMetadata === false) {
