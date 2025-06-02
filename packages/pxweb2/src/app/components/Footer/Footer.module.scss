@@ -12,14 +12,14 @@
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
     padding: fixed.$spacing-4;
     border-radius: var(--px-border-radius-none);
-    padding-bottom: fixed.$spacing-24;
+    padding-bottom: fixed.$spacing-4;
   }
 
   // small
   @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
     padding: fixed.$spacing-6;
     border-radius: var(--px-border-radius-none);
-    padding-bottom: fixed.$spacing-24;
+    padding-bottom: fixed.$spacing-6;
   }
 
   // medium

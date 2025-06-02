@@ -1,8 +1,8 @@
 import React, { createContext, useState, useEffect, useMemo } from 'react';
 
 import {
-  BreakpointsSmallMaxWidth,
   BreakpointsXsmallMaxWidth,
+  BreakpointsMediumMaxWidth,
 } from '@pxweb2/pxweb2-ui';
 
 // Define the type for the context
@@ -35,7 +35,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
   /**
    * Keep state if window screen size is mobile, pad or desktop.
    */
-  const tabletBreakpoint = Number(BreakpointsSmallMaxWidth.replace('px', ''));
+  const tabletBreakpoint = Number(BreakpointsMediumMaxWidth.replace('px', ''));
   const mobileBreakpoint = Number(BreakpointsXsmallMaxWidth.replace('px', ''));
   const [isTablet, setIsTablet] = useState(
     window.innerWidth <= tabletBreakpoint,
