@@ -2,7 +2,7 @@ import { type Table, TableService, OpenAPI } from '@pxweb2/pxweb2-api-client';
 import { getConfig } from './config/getConfig';
 import type { Filter } from '../pages/StartPage/StartPageTypes';
 
-export const getFullTable = async (): Promise<Table[]> => {
+export async function getFullTable() {
   const config = getConfig();
   const baseUrl = config.apiUrl;
   OpenAPI.BASE = baseUrl;
@@ -22,7 +22,7 @@ export const getFullTable = async (): Promise<Table[]> => {
     console.error('Failed to fetch tables:', error);
     throw error;
   }
-};
+}
 
 export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
   const timeUnitFilters = filters.filter((f) => {
