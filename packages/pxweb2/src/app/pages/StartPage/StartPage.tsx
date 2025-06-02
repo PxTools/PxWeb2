@@ -1,11 +1,19 @@
-import { useEffect, useReducer } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import cl from 'clsx';
 
 import styles from './StartPage.module.scss';
 import { useTranslation, Trans } from 'react-i18next';
 import type { TFunction } from 'i18next';
-import { Search, TableCard, Spinner, Alert, Chips } from '@pxweb2/pxweb2-ui';
+import {
+  Search,
+  TableCard,
+  Spinner,
+  Alert,
+  Chips,
+  Button,
+  Heading,
+} from '@pxweb2/pxweb2-ui';
 import { type Table } from '@pxweb2/pxweb2-api-client';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import { Header } from '../../components/Header/Header';
@@ -54,6 +62,7 @@ const initialState: StartPageState = Object.freeze({
 const StartPage = () => {
   const { t, i18n } = useTranslation();
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [isFilterOverlayOpen, setFilterOverlayOpen] = useState(false);
   const { isMobile, isTablet } = useApp();
   const isSmallScreen = isTablet === true || isMobile === true;
   const topicIconComponents = useTopicIcons();
@@ -252,6 +261,44 @@ const StartPage = () => {
       : null;
   }
 
+  function renderFilterOverlay() {
+    return (
+      <div className={styles.filterOverlay}>
+        <div className={styles.filterOverlayHeader}>
+          <Button
+            variant="tertiary"
+            icon="ArrowLeft"
+            onClick={() => setFilterOverlayOpen(false)}
+          />
+          <Heading size="medium">Filter</Heading>
+        </div>
+
+        <div className={styles.filterOverlayContent}>
+          <FilterSidebar
+            state={state}
+            handleAddFilter={handleAddFilter}
+            handleRemoveFilter={handleRemoveFilter}
+            handleResetFilter={() => {
+              handleResetFilter(state.availableTables);
+            }}
+          />
+        </div>
+
+        <div className={styles.filterOverlayFooter}>
+          <Button
+            variant="primary"
+            className={styles.showResultsButton}
+            onClick={() => setFilterOverlayOpen(false)}
+          >
+            {t('start_page.filter.show_results', {
+              count: state.filteredTables.length,
+            })}
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <AccessibilityProvider>
       <Header />
@@ -260,23 +307,50 @@ const StartPage = () => {
           <Information />
         </div>
         <div className={cl(styles.searchFilterResult)}>
-          <div className={cl(styles.searchAreaWrapper, styles.container)}>
-            <div className={cl(styles.search)}>
-              <Search
-                searchPlaceHolder={t('start_page.search_placeholder')}
-                variant="default"
-              />
+          <div className={styles.container}>
+            <div className={styles.searchAreaWrapper}>
+              <div className={cl(styles.search)}>
+                <Search
+                  searchPlaceHolder={t('start_page.search_placeholder')}
+                  variant="default"
+                />
+              </div>
+
+              <Button
+                variant="secondary"
+                iconPosition="left"
+                icon="Controls"
+                className={styles.filterToggleButton}
+                onClick={() => setFilterOverlayOpen(true)}
+              >
+                {t('start_page.filter.button')}
+              </Button>
             </div>
           </div>
+
           <div className={cl(styles.filterAndListWrapper, styles.container)}>
-            <FilterSidebar
-              state={state}
-              handleAddFilter={handleAddFilter}
-              handleRemoveFilter={handleRemoveFilter}
-              handleResetFilter={() => {
-                handleResetFilter(state.availableTables);
-              }}
-            />
+            {!isSmallScreen && (
+              <div>
+                <Heading
+                  className={cl(styles.filterHeading)}
+                  size="medium"
+                  level="2"
+                >
+                  {t('start_page.filter.header')}
+                </Heading>
+                <FilterSidebar
+                  state={state}
+                  handleAddFilter={handleAddFilter}
+                  handleRemoveFilter={handleRemoveFilter}
+                  handleResetFilter={() => {
+                    handleResetFilter(state.availableTables);
+                  }}
+                />
+              </div>
+            )}
+
+            {isSmallScreen && isFilterOverlayOpen && renderFilterOverlay()}
+
             <div className={styles.listTables}>
               {state.activeFilters.length >= 1 && (
                 <div className={styles.filterPillContainer}>

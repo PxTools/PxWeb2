@@ -1,4 +1,3 @@
-import cl from 'clsx';
 
 import {
   type StartPageState,
@@ -7,7 +6,7 @@ import {
 import styles from './FilterSidebar.module.scss';
 import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
-import { Checkbox, FilterCategory, Heading } from '@pxweb2/pxweb2-ui';
+import { Checkbox, FilterCategory } from '@pxweb2/pxweb2-ui';
 import { PathItem, findParent } from '../../util/startPageFilters';
 interface FilterProps {
   state: StartPageState;
@@ -136,9 +135,9 @@ export const FilterSidebar: React.FC<FilterProps> = ({
   const { t } = useTranslation();
   return (
     <div className={styles.sideBar}>
-      <Heading className={cl(styles.filterHeading)} size="medium" level="2">
+      {/* <Heading className={cl(styles.filterHeading)} size="medium" level="2">
         {t('start_page.filter.header')}
-      </Heading>
+      </Heading> */}
       <div>
         <FilterCategory header={t('start_page.filter.subject')}>
           <ul className={styles.filterList}>

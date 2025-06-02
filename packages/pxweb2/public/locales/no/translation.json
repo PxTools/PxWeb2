@@ -56,6 +56,9 @@
     "more_about_text": "More about Text NO",
     "search_placeholder": "Søk i Statistikkbanken",
     "filter": {
+      "button": "Filter",
+      "show_results": "Vis {{count}} treff",
+      "close": "Lukk filter",
       "header": "Filtrer",
       "remove_all_filter": "Fjern alle filter",
       "remove_filter_aria": "Slett {{value}}",

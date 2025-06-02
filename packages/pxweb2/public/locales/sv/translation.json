@@ -56,6 +56,9 @@
     "more_about_text": "more about text SV",
     "search_placeholder": "Sök i Statistikdatabasen",
     "filter": {
+      "button": "Filtrera",
+      "show_results": "Visa {{count}} treff",
+      "close": "Lukk filter",
       "header": "Filtrera",
       "remove_all_filter": "Ta bort alla filter",
       "remove_filter_aria": "Slett {{value}}",

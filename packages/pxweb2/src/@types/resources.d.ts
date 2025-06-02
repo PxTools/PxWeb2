@@ -57,6 +57,9 @@ interface Resources {
       more_about_text: 'Fyll på more_about';
       search_placeholder: 'Search in PxWeb 2.0';
       filter: {
+        button: 'Filter';
+        show_results: 'Vis {{count}} treff';
+        close: 'Close filter';
         header: 'Filter';
         remove_all_filter: 'Remove all filters';
         remove_filter_aria: 'Delete {{value}}';
