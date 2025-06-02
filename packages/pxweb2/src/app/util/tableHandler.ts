@@ -2,33 +2,27 @@ import { type Table, TableService, OpenAPI } from '@pxweb2/pxweb2-api-client';
 import { getConfig } from './config/getConfig';
 import type { Filter } from '../pages/StartPage/StartPageTypes';
 
-export const getFullTable: Promise<Table[]> = new Promise((resolve, reject) => {
+export async function getFullTable() {
   const config = getConfig();
   const baseUrl = config.apiUrl;
   OpenAPI.BASE = baseUrl;
 
-  let table = localStorage.getItem('table');
-  if (table) {
-    resolve(JSON.parse(table) as Table[]);
-  } else {
-    TableService.listAllTables(
+  try {
+    const response = await TableService.listAllTables(
       config.language.defaultLanguage,
       undefined,
       undefined,
       true,
       1,
-      3000,
-    )
-      .then((response) => {
-        localStorage.setItem('table', JSON.stringify(response.tables));
-        resolve(response.tables);
-      })
-      .catch((error: Error) => {
-        console.error('Failed to fetch tables:', error);
-        reject(error);
-      });
+      10000,
+    );
+
+    return response.tables;
+  } catch (error) {
+    console.error('Failed to fetch tables:', error);
+    throw error;
   }
-});
+}
 
 export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
   const timeUnitFilters = filters.filter((f) => {
