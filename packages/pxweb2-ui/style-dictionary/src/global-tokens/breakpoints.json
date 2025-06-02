@@ -5,36 +5,44 @@
         "value": "0px"
       },
       "MaxWidth": {
-        "value": "479px"
+        "value": "575px"
       }
     },
     "small": {
       "MinWidth": {
-        "value": "480px"
+        "value": "576px"
       },
       "MaxWidth": {
-        "value": "689px"
+        "value": "767px"
       }
     },
     "medium": {
       "MinWidth": {
-        "value": "690px"
+        "value": "768px"
       },
       "MaxWidth": {
-        "value": "1259px"
+        "value": "991px"
       }
     },
     "large": {
       "MinWidth": {
-        "value": "1260px"
+        "value": "992px"
       },
       "MaxWidth": {
-        "value": "1599px"
+        "value": "1199px"
       }
     },
     "xlarge": {
       "MinWidth": {
-        "value": "1600px"
+        "value": "1200px"
+      },
+      "MaxWidth": {
+        "value": "1399px"
+      }
+    },
+    "xxlarge": {
+      "MinWidth": {
+        "value": "1400px"
       }
     }
   }

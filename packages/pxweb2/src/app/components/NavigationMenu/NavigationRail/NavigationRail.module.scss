@@ -16,8 +16,8 @@
   background: var(--px-color-surface-default);
   gap: 24px;
 
-  // medium, large and xlarge
-  @media ((min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-large-max-width)) or ((min-width: fixed.$breakpoints-xlarge-min-width)) {
+  // large, xlarge and xxlarge
+  @media ((min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-xlarge-max-width)) or ((min-width: fixed.$breakpoints-xxlarge-min-width)) {
     display: flex;
   }
 
