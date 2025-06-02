@@ -5,6 +5,16 @@
   color: var(--px-color-text-default);
 }
 
+.information {
+  padding: 32px 0px 72px 0px;
+  background-color: var(--px-color-surface-default);
+  max-width: 728px;
+
+  .title {
+    margin-bottom: 1rem;
+  }
+}
+
 .searchFilterResult {
   background-color: var(--px-color-surface-subtle);
 }
@@ -17,8 +27,7 @@
 }
 
 .search {
-  width: 60%;
-  max-width: 628px;
+  width: 628px;
 }
 
 .filterAndListWrapper {
@@ -80,6 +89,12 @@
     &::before {
       content: 'Large';
     }
+    .filterAndListWrapper {
+      grid-template-columns: 288px auto;
+    }
+    .search {
+      width: 588px;
+    }
   }
 
   // XLarge
@@ -89,6 +104,10 @@
     }
     .filterAndListWrapper {
       grid-template-columns: 348px auto;
+    }
+
+    .search {
+      width: 613px;
     }
   }
 

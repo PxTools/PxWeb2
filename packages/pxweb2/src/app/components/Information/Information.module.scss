@@ -2,8 +2,11 @@
 @use '$ui/src/lib/text-styles.scss';
 
 .information {
-  padding: 40px 0;
-  background-color: white;
+  padding: 32px 0px 72px 0px;
   background-color: var(--px-color-surface-default);
   max-width: 728px;
+
+  .title {
+    margin-bottom: 1rem;
+  }
 }
