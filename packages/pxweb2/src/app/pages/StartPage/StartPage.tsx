@@ -1,5 +1,4 @@
 import { useEffect, useReducer, useState } from 'react';
-import { Virtuoso } from 'react-virtuoso';
 import cl from 'clsx';
 
 import styles from './StartPage.module.scss';
@@ -63,9 +62,14 @@ const StartPage = () => {
   const { t, i18n } = useTranslation();
   const [state, dispatch] = useReducer(reducer, initialState);
   const [isFilterOverlayOpen, setIsFilterOverlayOpen] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(15);
   const { isMobile, isTablet } = useApp();
   const isSmallScreen = isTablet === true || isMobile === true;
   const topicIconComponents = useTopicIcons();
+
+  const handleShowMore = () => {
+    setVisibleCount((prev) => prev + 15);
+  };
 
   function handleResetFilter(tables: Table[]) {
     dispatch({
@@ -313,6 +317,28 @@ const StartPage = () => {
     );
   }
 
+  function renderTableCardList() {
+    return (
+      <>
+        {state.filteredTables.slice(0, visibleCount).map((table) => (
+          <div key={table.id}>{renderTableCard(table, t)}</div>
+        ))}
+
+        {visibleCount < state.filteredTables.length && (
+          <div className={styles.loadMoreWrapper}>
+            <Button
+              variant="primary"
+              onClick={handleShowMore}
+              className={styles.loadMoreButton}
+            >
+              {t('start_page.table.show_more')}
+            </Button>
+          </div>
+        )}
+      </>
+    );
+  }
+
   return (
     <AccessibilityProvider>
       <Header />
@@ -438,11 +464,7 @@ const StartPage = () => {
                   <Spinner size="xlarge" />
                 </div>
               ) : (
-                <Virtuoso
-                  style={{ height: '90%' }}
-                  data={state.filteredTables}
-                  itemContent={(_, table: Table) => renderTableCard(table, t)}
-                />
+                renderTableCardList()
               )}
             </div>
           </div>

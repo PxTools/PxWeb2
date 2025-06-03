@@ -59,7 +59,7 @@
       "button": "Filter",
       "show_results": "Vis {{count}} treff",
       "close": "Lukk filter",
-      "header": "Filtrer",
+      "header": "Filter",
       "remove_all_filter": "Fjern alle filter",
       "remove_filter_aria": "Slett {{value}}",
       "subject": "Emne",
@@ -78,7 +78,8 @@
     "table": {
       "number_of_tables": "<strong>{{count}}</strong> tabeller",
       "number_of_tables_found": "Treff på <strong>{{count}}</strong> tabeller",
-      "updated_label": "Oppdatert"
+      "updated_label": "Oppdatert",
+      "show_more": "Vis flere"
     }
   },
   "presentation_page": {

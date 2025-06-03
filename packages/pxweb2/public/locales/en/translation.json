@@ -78,7 +78,8 @@
     "table": {
       "number_of_tables": "<strong>{{count}}</strong> tables",
       "number_of_tables_found": "<strong>{{count}}</strong> tables found",
-      "updated_label": "Updated"
+      "updated_label": "Updated",
+      "show_more": "Show more"
     }
   },
   "presentation_page": {

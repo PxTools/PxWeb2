@@ -9,10 +9,14 @@
 .information {
   padding: 60px 0px 72px 0px;
   background-color: var(--px-color-surface-default);
-  max-width: 728px;
+  max-width: 738px;
 
   .title {
     margin-bottom: 1rem;
+  }
+
+  @media #{breakpoint.$xlarge} {
+    max-width: 728px;
   }
 
   @media #{breakpoint.$xsmall} , #{breakpoint.$small} {
@@ -100,7 +104,7 @@
   grid-template-areas: 'sideBar listTables';
   grid-template-columns: 408px auto;
   grid-column-gap: 32px;
-  height: calc(100vh - fixed.$spacing-22);
+  //height: calc(100vh - fixed.$spacing-22);
 
   @media #{breakpoint.$xsmall}, #{breakpoint.$small} , #{breakpoint.$medium} {
     grid-template-areas: 'listTables';
@@ -157,6 +161,17 @@
 
 .listTables {
   grid-area: listTables;
+  padding-bottom: 1rem;
+}
+
+.loadMoreWrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+
+  .loadMoreButton {
+    min-width: 200px;
+  }
 }
 
 .loadingSpinner {

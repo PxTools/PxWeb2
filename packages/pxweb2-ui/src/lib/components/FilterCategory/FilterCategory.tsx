@@ -53,6 +53,7 @@ export const FilterCategory: React.FC<FilterCategoryProps> = ({
           styles.filterCategoryContent,
           isOpen ? styles['open'] : styles['closed'],
         )}
+        inert={!isOpen}
         ref={contentRef}
         style={{ maxHeight }}
       >
