@@ -168,30 +168,29 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
               {noteInfo.tableNotes}
             </Alert>
           )}
-          {noteInfo?.variableNotes &&
-            noteInfo.variableNotes.map((note, idx) => (
-              <Alert
-                ref={(el) => {
-                  openInformationAlertVarNotesRef.current[idx] = el;
-                }}
-                key={idx}
-                variant="info"
-                clickable
-                onClick={() => {
-                  handleOpenTableInformation(
-                    `table-information-alertVarNotes-${idx}`,
-                    'tab-footnotes',
-                  );
-                }}
-                heading={
-                  t(
-                    'presentation_page.main_content.about_table.notes.important_about_variable',
-                  ) + note.variableName
-                }
-              >
-                {note.compressednotes}
-              </Alert>
-            ))}
+          {noteInfo?.variableNotes?.map((note, idx) => (
+            <Alert
+              ref={(el) => {
+                openInformationAlertVarNotesRef.current[idx] = el;
+              }}
+              key={note?.variableName ?? idx}
+              variant="info"
+              clickable
+              onClick={() => {
+                handleOpenTableInformation(
+                  `table-information-alertVarNotes-${idx}`,
+                  'tab-footnotes',
+                );
+              }}
+              heading={
+                t(
+                  'presentation_page.main_content.about_table.notes.important_about_variable',
+                ) + note?.variableName
+              }
+            >
+              {note?.compressednotes}
+            </Alert>
+          ))}
         </div>
       </div>
       {isTableInformationOpen && (

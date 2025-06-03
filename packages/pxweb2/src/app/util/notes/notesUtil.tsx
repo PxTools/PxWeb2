@@ -6,6 +6,7 @@ import {
   SelectedVBValues,
   tableNoteCollection,
   Variable,
+  variableNotes,
 } from '@pxweb2/pxweb2-ui';
 
 export type NotesUtilityType = {
@@ -121,6 +122,31 @@ function getMetadataCopyForSelection(
   return totalMetadataCopy;
 }
 
+function compressVariableNotes(
+  variableNotes: variableNotes,
+): MandatoryCompressedUtilityVariableNotesType {
+  const variableNoteEntry: MandatoryCompressedUtilityVariableNotesType = {
+    variableName: variableNotes.variableName,
+    compressednotes: '',
+  };
+
+  let tempString = '';
+  console.log('variableNotes', variableNotes);
+  if (variableNotes.notes.length > 0) {
+    tempString += variableNotes.notes.join('');
+  }
+
+  for (const valueNotes of variableNotes.valueNotes) {
+    if (valueNotes.notes.length > 0) {
+      tempString += valueNotes.valueName + ': ';
+      tempString += valueNotes.notes.join(' ') + ' ';
+    }
+  }
+
+  variableNoteEntry.compressednotes = tempString;
+  return variableNoteEntry;
+}
+
 export function getMandatoryNotesCompressed(
   pxTableMetadata: PxTableMetadata,
   pxMetaTotal: PxTableMetadata,
@@ -131,43 +157,20 @@ export function getMandatoryNotesCompressed(
     pxMetaTotal,
     selectedVBValues,
   ).Notes.mandatoryNotes;
+
   const tempTabletableNotes: MandatoryCompressedUtilityNotesType = {
     tableNotes: '',
     variableNotes: [],
   };
+
   if (mandatoryNotes.notesCount > 0) {
     if (mandatoryNotes.tableLevelNotes.length > 0) {
       tempTabletableNotes.tableNotes = mandatoryNotes.tableLevelNotes.join(' ');
     }
     if (mandatoryNotes.variableNotes.length > 0) {
-      for (const variableNotes of mandatoryNotes.variableNotes) {
-        // Prepare the variableNotes entry
-        const variableNoteEntry: MandatoryCompressedUtilityVariableNotesType = {
-          variableName: '',
-          compressednotes: '',
-        };
-
-        variableNoteEntry.variableName = variableNotes.variableName;
-
-        let tempString = '';
-
-        if (variableNotes.notes.length > 0) {
-          for (const varnote of variableNotes.notes) {
-            tempString += varnote;
-          }
-        }
-        for (const valueNotes of variableNotes.valueNotes) {
-          if (valueNotes.notes.length > 0) {
-            tempString += valueNotes.valueName + ': ';
-            for (const valueNote of valueNotes.notes) {
-              tempString += valueNote + ' ';
-            }
-          }
-        }
-
-        variableNoteEntry.compressednotes = tempString;
-        tempTabletableNotes.variableNotes.push(variableNoteEntry);
-      }
+      tempTabletableNotes.variableNotes = mandatoryNotes.variableNotes.map(
+        compressVariableNotes,
+      );
     }
   }
   return tempTabletableNotes;
