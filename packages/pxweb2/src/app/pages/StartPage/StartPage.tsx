@@ -13,11 +13,11 @@ import {
   Chips,
   Button,
   Heading,
+  Ingress,
 } from '@pxweb2/pxweb2-ui';
 import { type Table } from '@pxweb2/pxweb2-api-client';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import { Header } from '../../components/Header/Header';
-import { Information } from '../../components/Information/Information';
 import { FilterSidebar } from '../../components/FilterSidebar/FilterSidebar';
 import {
   type Filter,
@@ -62,7 +62,7 @@ const initialState: StartPageState = Object.freeze({
 const StartPage = () => {
   const { t, i18n } = useTranslation();
   const [state, dispatch] = useReducer(reducer, initialState);
-  const [isFilterOverlayOpen, setFilterOverlayOpen] = useState(false);
+  const [isFilterOverlayOpen, setIsFilterOverlayOpen] = useState(false);
   const { isMobile, isTablet } = useApp();
   const isSmallScreen = isTablet === true || isMobile === true;
   const topicIconComponents = useTopicIcons();
@@ -269,7 +269,7 @@ const StartPage = () => {
           <Button
             variant="tertiary"
             icon="ArrowLeft"
-            onClick={() => setFilterOverlayOpen(false)}
+            onClick={() => setIsFilterOverlayOpen(false)}
           />
           <Heading size="medium">Filter</Heading>
         </div>
@@ -302,7 +302,7 @@ const StartPage = () => {
           <Button
             variant="primary"
             className={styles.showResultsButton}
-            onClick={() => setFilterOverlayOpen(false)}
+            onClick={() => setIsFilterOverlayOpen(false)}
           >
             {t('start_page.filter.show_results', {
               count: state.filteredTables.length,
@@ -319,7 +319,12 @@ const StartPage = () => {
       <div className={styles.startPage}>
         <div className={styles.debugBreakpoint} />
         <div className={styles.container}>
-          <Information />
+          <div className={styles.information}>
+            <Heading size="large" level="1" className={styles.title}>
+              {t('start_page.header')}
+            </Heading>
+            <Ingress>{t('start_page.ingress')}</Ingress>
+          </div>
         </div>
         <div className={cl(styles.searchFilterResult)}>
           <div className={styles.container}>
@@ -336,7 +341,7 @@ const StartPage = () => {
                 iconPosition="left"
                 icon="Controls"
                 className={styles.filterToggleButton}
-                onClick={() => setFilterOverlayOpen(true)}
+                onClick={() => setIsFilterOverlayOpen(true)}
               >
                 {t('start_page.filter.button')}
               </Button>
