@@ -18,7 +18,6 @@ export interface AlertProps {
   readonly heading?: string;
   readonly headingLevel?: '1' | '2' | '3' | '4' | '5' | '6';
   readonly onClick?: () => void;
-  //readonly onKeyDown?: (event: React.KeyboardEvent<HTMLDivElement>) => void;
   readonly className?: string;
   readonly children?: string | React.ReactNode;
   ref?: React.Ref<HTMLDivElement>;
@@ -47,9 +46,6 @@ export function Alert({
   if (!isVisible) {
     return null;
   }
-
-  //console.log('AAAAAAA onClick', onClick);
-  //console.log('Clickable', clickable);
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     console.log('I handerKeyDown', event.key);
     if (event.key === 'Enter') {
