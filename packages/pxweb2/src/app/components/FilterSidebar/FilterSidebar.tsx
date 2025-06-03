@@ -134,9 +134,6 @@ export const FilterSidebar: React.FC<FilterProps> = ({
   const { t } = useTranslation();
   return (
     <div className={styles.sideBar}>
-      {/* <Heading className={cl(styles.filterHeading)} size="medium" level="2">
-        {t('start_page.filter.header')}
-      </Heading> */}
       <div>
         <FilterCategory header={t('start_page.filter.subject')}>
           <ul className={styles.filterList}>
@@ -161,11 +158,6 @@ export const FilterSidebar: React.FC<FilterProps> = ({
       <p>
         <a href="/en/table/tab638">Go to table viewer</a>
       </p>
-      <div>
-        <button onClick={() => localStorage.removeItem('table')}>
-          Tøm Cache
-        </button>
-      </div>
     </div>
   );
 };

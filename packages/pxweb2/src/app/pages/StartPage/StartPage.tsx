@@ -304,6 +304,7 @@ const StartPage = () => {
     <AccessibilityProvider>
       <Header />
       <div className={styles.startPage}>
+        <div className={styles.debugBreakpoint} />
         <div className={styles.container}>
           <Information />
         </div>

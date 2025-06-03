@@ -1,5 +1,6 @@
 @use '$ui/style-dictionary/dist/scss/fixed-variables.scss' as fixed;
 @use '$ui/src/lib/text-styles.scss';
+@use '$ui/src/lib/breakpoints.scss' as breakpoint;
 
 .startPage {
   color: var(--px-color-text-default);
@@ -27,28 +28,28 @@
     width: 628px;
     align-items: flex-start;
 
-    @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
+    @media #{breakpoint.$xsmall}, #{breakpoint.$small} , #{breakpoint.$medium} {
       grid-template-areas: 'listTables';
       grid-template-columns: 1fr;
     }
 
-    @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
+    @media #{breakpoint.$xsmall} {
       width: 100%;
     }
 
-    @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
+    @media #{breakpoint.$small} {
       width: 391px;
     }
 
-    @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
+    @media #{breakpoint.$medium} {
       width: 551px;
     }
 
-    @media (min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width) {
+    @media #{breakpoint.$large} {
       width: 588px;
     }
 
-    @media (min-width: fixed.$breakpoints-xlarge-min-width) and (max-width: fixed.$breakpoints-xlarge-max-width) {
+    @media #{breakpoint.$xlarge} {
       width: 613px;
     }
   }
@@ -57,7 +58,7 @@
     display: none;
   }
 
-  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
+  @media #{breakpoint.$xsmall} {
     flex-direction: column;
     align-items: stretch;
 
@@ -66,7 +67,7 @@
     }
   }
 
-  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
+  @media #{breakpoint.$xsmall}, #{breakpoint.$small} , #{breakpoint.$medium} {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -85,16 +86,16 @@
   grid-column-gap: 32px;
   height: calc(100vh - fixed.$spacing-22);
 
-  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
+  @media #{breakpoint.$xsmall}, #{breakpoint.$small} , #{breakpoint.$medium} {
     grid-template-areas: 'listTables';
     grid-template-columns: 1fr;
   }
 
-  @media (min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width) {
+  @media #{breakpoint.$large} {
     grid-template-columns: 288px auto;
   }
 
-  @media (min-width: fixed.$breakpoints-xlarge-min-width) and (max-width: fixed.$breakpoints-xlarge-max-width) {
+  @media #{breakpoint.$xlarge} {
     grid-template-columns: 348px auto;
   }
 }
@@ -102,7 +103,7 @@
 .filterOverlay {
   position: fixed;
   inset: 0;
-  background: white;
+  background: var(--px-color-surface-default);
   z-index: 1000;
   display: flex;
   flex-direction: column;
@@ -121,7 +122,7 @@
   background-color: var(--px-color-surface-default);
   flex: 1;
   overflow-y: auto;
-  padding: 1rem;
+  padding: 1rem 2rem;
 }
 
 .filterOverlayFooter {
@@ -135,7 +136,6 @@
 
 .listTables {
   grid-area: listTables;
-  overflow-y: auto;
 }
 
 .loadingSpinner {
@@ -157,82 +157,73 @@
   }
 }
 
-.startPage {
-  // xsmall
-  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
+.container {
+  margin-left: auto;
+  margin-right: auto;
+
+  @media #{breakpoint.$xsmall} {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+
+  @media #{breakpoint.$small} {
+    max-width: 508px;
+  }
+
+  @media #{breakpoint.$medium} {
+    max-width: 688px;
+  }
+
+  @media #{breakpoint.$large} {
+    max-width: 928px;
+  }
+
+  @media #{breakpoint.$xlarge} {
+    max-width: 1108px;
+  }
+
+  @media #{breakpoint.$xxlarge} {
+    max-width: 1288px;
+  }
+}
+
+.debugBreakpoint {
+  float: right;
+  margin-right: 20px;
+
+  @media #{breakpoint.$xsmall} {
     &::before {
       content: 'XSmall';
     }
   }
 
-  // small
-  @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
+  @media #{breakpoint.$small} {
     &::before {
       content: 'Small';
     }
   }
 
-  // medium
-  @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
+  @media #{breakpoint.$medium} {
     &::before {
       content: 'Medium';
     }
   }
 
-  // Large
-  @media (min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width) {
+  @media #{breakpoint.$large} {
     &::before {
       content: 'Large';
     }
   }
 
-  // XLarge
-  @media (min-width: fixed.$breakpoints-xlarge-min-width) and (max-width: fixed.$breakpoints-xlarge-max-width) {
+  @media #{breakpoint.$xlarge} {
     &::before {
       content: 'XLarge';
     }
   }
 
-  // XXLarge
-  @media (min-width: fixed.$breakpoints-xxlarge-min-width) {
+  @media #{breakpoint.$xxlarge} {
     &::before {
       content: 'XXLarge';
     }
-  }
-}
-
-.container {
-  margin-left: auto;
-  margin-right: auto;
-
-  // xsmall
-  @media (max-width: fixed.$breakpoints-xsmall-max-width) {
-    margin-left: 1rem;
-    margin-right: 1rem;
-  }
-
-  // small
-  @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
-    max-width: 508px;
-  }
-
-  // medium
-  @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
-    max-width: 688px;
-  }
-
-  // Large
-  @media (min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width) {
-    max-width: 928px;
-  }
-
-  // XLarge
-  @media (min-width: fixed.$breakpoints-xlarge-min-width) and (max-width: fixed.$breakpoints-xlarge-max-width) {
-    max-width: 1108px;
-  }
-
-  // XXLarge
-  @media (min-width: fixed.$breakpoints-xxlarge-min-width) {
-    max-width: 1288px;
   }
 }

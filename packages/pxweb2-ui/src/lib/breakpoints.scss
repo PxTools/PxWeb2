@@ -1,0 +1,9 @@
+@use '../../style-dictionary/dist/scss/fixed-variables.scss' as fixed;
+
+// === Breakpoint-alias ===
+$xsmall: '(min-width: #{fixed.$breakpoints-xsmall-min-width}) and (max-width: #{fixed.$breakpoints-xsmall-max-width})';
+$small: '(min-width: #{fixed.$breakpoints-small-min-width}) and (max-width: #{fixed.$breakpoints-small-max-width})';
+$medium: '(min-width: #{fixed.$breakpoints-medium-min-width}) and (max-width: #{fixed.$breakpoints-medium-max-width})';
+$large: '(min-width: #{fixed.$breakpoints-large-min-width}) and (max-width: #{fixed.$breakpoints-large-max-width})';
+$xlarge: '(min-width: #{fixed.$breakpoints-xlarge-min-width}) and (max-width: #{fixed.$breakpoints-xlarge-max-width})';
+$xxlarge: '(min-width: #{fixed.$breakpoints-xxlarge-min-width})';
