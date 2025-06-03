@@ -286,6 +286,19 @@ const StartPage = () => {
         </div>
 
         <div className={styles.filterOverlayFooter}>
+          {state.activeFilters.length >= 1 && (
+            <Button
+              variant="secondary"
+              className={styles.removeFilterButton}
+              iconPosition="left"
+              icon="XMark"
+              onClick={() => {
+                handleResetFilter(state.availableTables);
+              }}
+            >
+              {t('start_page.filter.remove_all_filter')}
+            </Button>
+          )}
           <Button
             variant="primary"
             className={styles.showResultsButton}
