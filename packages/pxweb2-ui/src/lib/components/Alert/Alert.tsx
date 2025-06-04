@@ -47,13 +47,9 @@ export function Alert({
     return null;
   }
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    console.log('I handerKeyDown', event.key);
     if (event.key === 'Enter') {
       event.preventDefault();
       onClick && onClick();
-      console.log('i ALERT handleKeyDown', event.key);
-      console.log('clickable', clickable);
-      console.log('onClick', onClick);
     }
   };
   const hasheading = Boolean(heading);
