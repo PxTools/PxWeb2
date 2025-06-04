@@ -629,14 +629,7 @@ export function Selection({
         onClose={(keyboard, view) =>
           setSelectedNavigationView(keyboard, true, view)
         }
-        view={
-          selectedNavigationView as
-            | 'selection'
-            | 'view'
-            | 'edit'
-            | 'save'
-            | 'help'
-        }
+        view={selectedNavigationView}
         openedWithKeyboard={openedWithKeyboard}
       >
         {selectedNavigationView === 'selection' && drawerSelection}
