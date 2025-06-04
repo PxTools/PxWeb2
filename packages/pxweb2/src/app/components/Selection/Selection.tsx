@@ -5,16 +5,17 @@ import { ApiError, TableService } from '@pxweb2/pxweb2-api-client';
 import { mapJsonStat2Response } from '../../../mappers/JsonStat2ResponseMapper';
 import { mapTableSelectionResponse } from '../../../mappers/TableSelectionResponseMapper';
 import {
-  PxTableMetadata,
-  SelectedVBValues,
-  VariableList,
-  Value,
-  SelectOption,
-  mapCodeListToSelectOption,
+  CodeList,
+  ContentBox,
   PxTable,
+  PxTableMetadata,
+  mapCodeListToSelectOption,
+  SelectedVBValues,
+  SelectOption,
+  Value,
   ValueDisplayType,
   Variable,
-  CodeList,
+  VariableList,
 } from '@pxweb2/pxweb2-ui';
 import NavigationDrawer from '../../components/NavigationDrawer/NavigationDrawer';
 import useVariables from '../../context/useVariables';
@@ -606,7 +607,14 @@ export function Selection({
   );
   const drawerView = <>View content</>;
   const drawerEdit = <>Edit content</>;
-  const drawerSave = <>Save content</>;
+  const drawerSave = (
+    <>
+      <ContentBox title="Contentbox with title">
+        This is inside another with a title ContentBox
+      </ContentBox>
+      <ContentBox>This is inside a ContentBox</ContentBox>
+    </>
+  );
   const drawerHelp = <>Help content</>;
 
   return (
