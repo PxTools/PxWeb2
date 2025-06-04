@@ -244,10 +244,11 @@ const StartPage = () => {
         defaultValue: table.timeUnit ?? '',
       });
 
-      const config = getConfig();      
+      const config = getConfig();
       const language = i18n.language;
       const showLangInPath =
-      config.language.showDefaultLanguageInPath|| language !== config.language.defaultLanguage
+        config.language.showDefaultLanguageInPath ||
+        language !== config.language.defaultLanguage;
       const langPrefix = showLangInPath ? `/${language}` : '';
 
       return (
