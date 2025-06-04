@@ -5,6 +5,7 @@ import { ApiError, TableService } from '@pxweb2/pxweb2-api-client';
 import { mapJsonStat2Response } from '../../../mappers/JsonStat2ResponseMapper';
 import { mapTableSelectionResponse } from '../../../mappers/TableSelectionResponseMapper';
 import {
+  Button,
   CodeList,
   ContentBox,
   PxTable,
@@ -23,6 +24,7 @@ import { NavigationItem } from '../../components/NavigationMenu/NavigationItem/N
 import useAccessibility from '../../context/useAccessibility';
 import { getLabelText } from '../../util/utils';
 import { problemMessage } from '../../util/problemMessage';
+import useTableData from '../../context/useTableData';
 
 function addSelectedCodeListToVariable(
   currentVariable: SelectedVBValues | undefined,
@@ -285,13 +287,18 @@ export function Selection({
   setSelectedNavigationView,
   hideMenuRef,
 }: propsType) {
-  const { selectedVBValues, setSelectedVBValues } = useVariables();
   const variables = useVariables();
+  const {
+    selectedVBValues,
+    setSelectedVBValues,
+    hasLoadedDefaultSelection,
+    isLoadingMetadata,
+    pxTableMetadata,
+    setPxTableMetadata,
+  } = variables;
+  const pivotTableClockwise = useTableData().pivotCW;
   const [errorMsg, setErrorMsg] = useState('');
   const { i18n, t } = useTranslation();
-  const { hasLoadedDefaultSelection } = useVariables();
-  const { isLoadingMetadata } = useVariables();
-  const { pxTableMetadata, setPxTableMetadata } = useVariables();
   const [pxTableMetaToRender, setPxTableMetaToRender] =
     // Metadata to render in the UI
     useState<PxTableMetadata | null>(null);
@@ -606,7 +613,19 @@ export function Selection({
     />
   );
   const drawerView = <>View content</>;
-  const drawerEdit = <>Edit content</>;
+  const drawerEdit = (
+    <>
+      <ContentBox>
+        <Button
+          variant="primary"
+          onClick={() => pivotTableClockwise()}
+          icon="ArrowCirclepathClockwise"
+        >
+          {t('presentation_page.sidemenu.edit.customize.pivot.title')}
+        </Button>
+      </ContentBox>
+    </>
+  );
   const drawerSave = (
     <>
       <ContentBox title="Contentbox with title">
