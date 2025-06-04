@@ -1,9 +1,10 @@
 import { useEffect, useReducer, useState } from 'react';
 import cl from 'clsx';
-
 import styles from './StartPage.module.scss';
 import { useTranslation, Trans } from 'react-i18next';
 import type { TFunction } from 'i18next';
+import { motion, AnimatePresence } from 'framer-motion';
+
 import {
   Search,
   TableCard,
@@ -57,6 +58,13 @@ const initialState: StartPageState = Object.freeze({
   error: '',
   originalSubjectTree: [],
 });
+
+const springTransition = {
+  type: 'spring',
+  mass: 1,
+  stiffness: 320,
+  damping: 40,
+};
 
 const StartPage = () => {
   const { t, i18n } = useTranslation();
@@ -268,52 +276,61 @@ const StartPage = () => {
 
   function renderFilterOverlay() {
     return (
-      <div className={styles.filterOverlay}>
-        <div className={styles.filterOverlayHeader}>
-          <Button
-            variant="tertiary"
-            icon="ArrowLeft"
-            onClick={() => setIsFilterOverlayOpen(false)}
-          />
-          <Heading size="medium">Filter</Heading>
-        </div>
-
-        <div className={styles.filterOverlayContent}>
-          <FilterSidebar
-            state={state}
-            handleAddFilter={handleAddFilter}
-            handleRemoveFilter={handleRemoveFilter}
-            handleResetFilter={() => {
-              handleResetFilter(state.availableTables);
-            }}
-          />
-        </div>
-
-        <div className={styles.filterOverlayFooter}>
-          {state.activeFilters.length >= 1 && (
-            <Button
-              variant="secondary"
-              className={styles.removeFilterButton}
-              iconPosition="left"
-              icon="XMark"
-              onClick={() => {
-                handleResetFilter(state.availableTables);
-              }}
-            >
-              {t('start_page.filter.remove_all_filter')}
-            </Button>
-          )}
-          <Button
-            variant="primary"
-            className={styles.showResultsButton}
-            onClick={() => setIsFilterOverlayOpen(false)}
+      <AnimatePresence>
+        {isSmallScreen && isFilterOverlayOpen && (
+          <motion.div
+            key="filterOverlay"
+            initial={{ opacity: 0, y: 100 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 100 }}
+            transition={springTransition}
+            className={styles.filterOverlay}
           >
-            {t('start_page.filter.show_results', {
-              count: state.filteredTables.length,
-            })}
-          </Button>
-        </div>
-      </div>
+            <div className={styles.filterOverlayHeader}>
+              <Button
+                variant="tertiary"
+                icon="ArrowLeft"
+                onClick={() => setIsFilterOverlayOpen(false)}
+              />
+              <Heading size="medium">Filter</Heading>
+            </div>
+
+            <div className={styles.filterOverlayContent}>
+              <FilterSidebar
+                state={state}
+                handleAddFilter={handleAddFilter}
+                handleRemoveFilter={handleRemoveFilter}
+                handleResetFilter={() =>
+                  handleResetFilter(state.availableTables)
+                }
+              />
+            </div>
+
+            <div className={styles.filterOverlayFooter}>
+              {state.activeFilters.length >= 1 && (
+                <Button
+                  variant="secondary"
+                  className={styles.removeFilterButton}
+                  iconPosition="left"
+                  icon="XMark"
+                  onClick={() => handleResetFilter(state.availableTables)}
+                >
+                  {t('start_page.filter.remove_all_filter')}
+                </Button>
+              )}
+              <Button
+                variant="primary"
+                className={styles.showResultsButton}
+                onClick={() => setIsFilterOverlayOpen(false)}
+              >
+                {t('start_page.filter.show_results', {
+                  count: state.filteredTables.length,
+                })}
+              </Button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     );
   }
 
@@ -395,7 +412,7 @@ const StartPage = () => {
               </div>
             )}
 
-            {isSmallScreen && isFilterOverlayOpen && renderFilterOverlay()}
+            {renderFilterOverlay()}
 
             <div className={styles.listTables}>
               {state.activeFilters.length >= 1 && (
