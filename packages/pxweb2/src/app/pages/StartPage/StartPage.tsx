@@ -360,7 +360,6 @@ const StartPage = () => {
     <AccessibilityProvider>
       <Header />
       <div className={styles.startPage}>
-        <div className={styles.debugBreakpoint} />
         <div className={styles.container}>
           <div className={styles.information}>
             <Heading size="large" level="1" className={styles.title}>

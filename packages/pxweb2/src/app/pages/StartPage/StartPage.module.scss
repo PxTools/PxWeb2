@@ -36,14 +36,6 @@
   display: flex;
   padding: 60px 0 52px 0;
 
-  @media #{breakpoint.$xsmall} {
-    padding: 2rem 0;
-  }
-
-  @media #{breakpoint.$small} , #{breakpoint.$medium} {
-    padding: 60px 0 40px 0;
-  }
-
   .search {
     width: 628px;
     align-items: flex-start;
@@ -79,12 +71,17 @@
   }
 
   @media #{breakpoint.$xsmall} {
+    padding: 2rem 0;
     flex-direction: column;
     align-items: stretch;
 
     .filterToggleButton {
       width: 100%;
     }
+  }
+
+  @media #{breakpoint.$small} , #{breakpoint.$medium} {
+    padding: 60px 0 40px 0;
   }
 
   @media #{breakpoint.$xsmall}, #{breakpoint.$small} , #{breakpoint.$medium} {
@@ -104,7 +101,6 @@
   grid-template-areas: 'sideBar listTables';
   grid-template-columns: 408px auto;
   grid-column-gap: 32px;
-  //height: calc(100vh - fixed.$spacing-22);
 
   @media #{breakpoint.$xsmall}, #{breakpoint.$small} , #{breakpoint.$medium} {
     grid-template-areas: 'listTables';
@@ -184,7 +180,6 @@
 
 .tableListItem {
   padding-bottom: 16px;
-  //padding: 16px 12px 0 12px;
 }
 
 .countLabel {
@@ -221,46 +216,5 @@
 
   @media #{breakpoint.$xxlarge} {
     max-width: 1288px;
-  }
-}
-
-.debugBreakpoint {
-  float: right;
-  margin-right: 20px;
-
-  @media #{breakpoint.$xsmall} {
-    &::before {
-      content: 'XSmall';
-    }
-  }
-
-  @media #{breakpoint.$small} {
-    &::before {
-      content: 'Small';
-    }
-  }
-
-  @media #{breakpoint.$medium} {
-    &::before {
-      content: 'Medium';
-    }
-  }
-
-  @media #{breakpoint.$large} {
-    &::before {
-      content: 'Large';
-    }
-  }
-
-  @media #{breakpoint.$xlarge} {
-    &::before {
-      content: 'XLarge';
-    }
-  }
-
-  @media #{breakpoint.$xxlarge} {
-    &::before {
-      content: 'XXLarge';
-    }
   }
 }
