@@ -35,7 +35,7 @@ export const FilterCategory: React.FC<FilterCategoryProps> = ({
         aria-expanded={isOpen ? 'true' : 'false'}
         onClick={() => setIsOpen(!isOpen)}
       >
-        <Heading size="small" level="2" className={styles.filterCategoryTitle}>
+        <Heading size="small" level="3" className={styles.filterCategoryTitle}>
           {header}
         </Heading>
         <div className={cl(styles.filterCategoryIconWrapper)}>
