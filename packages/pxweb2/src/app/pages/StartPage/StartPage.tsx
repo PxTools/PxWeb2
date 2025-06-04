@@ -292,7 +292,7 @@ const StartPage = () => {
                 icon="ArrowLeft"
                 onClick={() => setIsFilterOverlayOpen(false)}
               />
-              <Heading size="medium">Filter</Heading>
+              <Heading size="medium">{t('start_page.filter.header')}</Heading>
             </div>
 
             <div className={styles.filterOverlayContent}>
