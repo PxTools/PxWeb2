@@ -18,6 +18,7 @@ import {
 import { type Table } from '@pxweb2/pxweb2-api-client';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import { Header } from '../../components/Header/Header';
+import { Footer } from '../../components/Footer/Footer';
 import { FilterSidebar } from '../../components/FilterSidebar/FilterSidebar';
 import {
   type Filter,
@@ -35,6 +36,7 @@ import {
 } from '../../util/startPageFilters';
 import { useTopicIcons } from '../../util/hooks/useTopicIcons';
 import useApp from '../../context/useApp';
+import { getConfig } from '../../util/config/getConfig';
 
 // TODO: Remove this function. We can not consider norwegian special cases in our code!
 function removeTableNumber(title: string): string {
@@ -241,17 +243,24 @@ const StartPage = () => {
       const frequencyLabel = t(translationKey, {
         defaultValue: table.timeUnit ?? '',
       });
+
+      const config = getConfig();      
+      const language = i18n.language;
+      const showLangInPath =
+      config.language.showDefaultLanguageInPath|| language !== config.language.defaultLanguage
+      const langPrefix = showLangInPath ? `/${language}` : '';
+
       return (
         <div className={styles.tableListItem}>
           <TableCard
             title={`${table.label && removeTableNumber(table.label)}`}
-            href={`/table/${table.id}`}
+            href={`${langPrefix}/table/${table.id}`}
             updatedLabel={
               table.updated ? t('start_page.table.updated_label') : undefined
             }
             lastUpdated={
               table.updated
-                ? new Date(table.updated).toLocaleDateString(i18n.language)
+                ? new Date(table.updated).toLocaleDateString(language)
                 : undefined
             }
             period={`${table.firstPeriod?.slice(0, 4)}–${table.lastPeriod?.slice(0, 4)}`}
@@ -486,6 +495,7 @@ const StartPage = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </AccessibilityProvider>
   );
 };
