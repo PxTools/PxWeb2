@@ -38,18 +38,6 @@ import { useTopicIcons } from '../../util/hooks/useTopicIcons';
 import useApp from '../../context/useApp';
 import { getConfig } from '../../util/config/getConfig';
 
-// TODO: Remove this function. We can not consider norwegian special cases in our code!
-function removeTableNumber(title: string): string {
-  //Check if title starts with table number, like "01234: Some Statistic"
-  const test = RegExp(/^\d{5}:*./, 'i');
-
-  if (test.exec(title) == null) {
-    return title;
-  } else {
-    return title.slice(6);
-  }
-}
-
 // Want to ensure this is never changed
 const initialState: StartPageState = Object.freeze({
   availableTables: [],
@@ -254,7 +242,7 @@ const StartPage = () => {
       return (
         <div className={styles.tableListItem}>
           <TableCard
-            title={`${table.label && removeTableNumber(table.label)}`}
+            title={`${table.label}`}
             href={`${langPrefix}/table/${table.id}`}
             updatedLabel={
               table.updated ? t('start_page.table.updated_label') : undefined
