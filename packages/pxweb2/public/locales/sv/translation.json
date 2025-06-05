@@ -163,7 +163,8 @@
         "title": "Spara",
         "file": {
           "title": "Spara som fil",
-          "excel": "Excel (xlsx)"
+          "excel": "Excel (.xlsx)",
+          "csv": "Semikolonavgränsad med rubrik (.csv)"
         },
         "imagefile": {
           "title": "Spara som diagram",

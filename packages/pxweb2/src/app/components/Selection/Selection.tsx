@@ -1,7 +1,13 @@
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
 
-import { ApiError, TableService } from '@pxweb2/pxweb2-api-client';
+import {
+  ApiError,
+  OutputFormatType,
+  TableService,
+  VariableSelection,
+  VariablesSelection,
+} from '@pxweb2/pxweb2-api-client';
 import { mapJsonStat2Response } from '../../../mappers/JsonStat2ResponseMapper';
 import { mapTableSelectionResponse } from '../../../mappers/TableSelectionResponseMapper';
 import {
@@ -16,6 +22,7 @@ import {
   ValueDisplayType,
   Variable,
   VariableList,
+  Button,
 } from '@pxweb2/pxweb2-ui';
 import NavigationDrawer from '../../components/NavigationDrawer/NavigationDrawer';
 import useVariables from '../../context/useVariables';
@@ -590,6 +597,64 @@ export function Selection({
     variables.syncVariablesAndValues(selectedVBValues);
   }
 
+  async function saveToFile(fileFormat: string): Promise<void> {
+    const selections: Array<VariableSelection> = [];
+
+    // Get selection from Selection provider
+    const ids = variables.getUniqueIds();
+    ids.forEach((id) => {
+      const selectedCodeList = variables.getSelectedCodelistById(id);
+      const selection: VariableSelection = {
+        variableCode: id,
+        valueCodes: variables.getSelectedValuesByIdSorted(id),
+      };
+
+      // Add selected codelist to selection if it exists
+      if (selectedCodeList) {
+        selection.codeList = selectedCodeList;
+      }
+
+      selections.push(selection);
+    });
+
+    const variablesSelection: VariablesSelection = {
+      selection: selections,
+    };
+
+    let outputFormat: OutputFormatType;
+    switch (fileFormat) {
+      case 'excel':
+        outputFormat = OutputFormatType.XLSX;
+        break;
+      case 'csv':
+        outputFormat = OutputFormatType.CSV;
+        break;
+      default:
+        outputFormat = OutputFormatType.CSV;
+        break;
+    }
+
+    await TableService.getTableDataByPost(
+      selectedTabId,
+      i18n.language,
+      outputFormat,
+      undefined,
+      variablesSelection,
+    )
+      .then((response) => {
+        const blob = new Blob([response], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `${selectedTabId}.csv`;
+        link.click();
+        URL.revokeObjectURL(link.href);
+      })
+      .catch((error: unknown) => {
+        const err = error as ApiError;
+        setErrorMsg(problemMessage(err, selectedTabId));
+      });
+  }
+
   const drawerFilter = (
     <VariableList
       pxTableMetadata={pxTableMetaToRender}
@@ -609,8 +674,13 @@ export function Selection({
   const drawerEdit = <>Edit content</>;
   const drawerSave = (
     <>
-      <ContentBox title="Contentbox with title">
-        This is inside another with a title ContentBox
+      <ContentBox title={t('presentation_page.sidemenu.save.file.title')}>
+        <Button variant="primary" onClick={() => saveToFile('excel')}>
+          {t('presentation_page.sidemenu.save.file.excel')}
+        </Button>
+        <Button variant="primary" onClick={() => saveToFile('csv')}>
+          {t('presentation_page.sidemenu.save.file.csv')}
+        </Button>
       </ContentBox>
       <ContentBox>This is inside a ContentBox</ContentBox>
     </>

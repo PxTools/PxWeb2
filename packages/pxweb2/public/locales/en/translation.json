@@ -163,7 +163,8 @@
         "title": "Save",
         "file": {
           "title": "Save as file",
-          "excel": "Excel (xlsx)"
+          "excel": "Excel (.xlsx)",
+          "csv": "Semicolon-delimited with heading (.csv)"
         },
         "imagefile": {
           "title": "Save as graph",

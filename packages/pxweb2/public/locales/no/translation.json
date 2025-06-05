@@ -163,7 +163,8 @@
         "title": "Lagre",
         "file": {
           "title": "Lagre som fil",
-          "excel": "Excel (xlsx)"
+          "excel": "Excel (.xlsx)",
+          "csv": "Semikolonseparert med overskrift (.csv)"
         },
         "imagefile": {
           "title": "Lagre som graf",
