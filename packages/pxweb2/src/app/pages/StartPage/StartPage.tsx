@@ -288,6 +288,7 @@ const StartPage = () => {
               <Button
                 variant="tertiary"
                 icon="ArrowLeft"
+                aria-label={t('start_page.filter.back')}
                 onClick={() => setIsFilterOverlayOpen(false)}
               />
               <Heading size="medium">{t('start_page.filter.header')}</Heading>

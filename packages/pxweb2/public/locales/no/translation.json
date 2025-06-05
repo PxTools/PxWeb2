@@ -57,6 +57,7 @@
     "search_placeholder": "Søk i Statistikkbanken",
     "filter": {
       "button": "Filter",
+      "back": "Tilbake",
       "show_results": "Vis {{count}} treff",
       "close": "Lukk filter",
       "header": "Filter",

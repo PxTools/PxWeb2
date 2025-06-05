@@ -57,6 +57,7 @@
     "search_placeholder": "Search in PxWeb 2.0",
     "filter": {
       "button": "Filter",
+      "back": "Back",
       "show_results": "Show {{count}} tables",
       "close": "Close filter",
       "header": "Filter",

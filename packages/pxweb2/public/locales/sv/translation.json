@@ -57,6 +57,7 @@
     "search_placeholder": "Sök i Statistikdatabasen",
     "filter": {
       "button": "Filter",
+      "back": "Tilbaka",
       "show_results": "Visa {{count}} treff",
       "close": "Lukk filter",
       "header": "Filter",

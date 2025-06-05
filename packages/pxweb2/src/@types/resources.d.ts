@@ -58,6 +58,7 @@ interface Resources {
       search_placeholder: 'Search in PxWeb 2.0';
       filter: {
         button: 'Filter';
+        back: 'Back';
         show_results: 'Vis {{count}} treff';
         close: 'Close filter';
         header: 'Filter';
