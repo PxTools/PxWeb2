@@ -95,6 +95,7 @@ export function VariableBoxContent({
   const hasSevenOrMoreValues = values && values.length > 6;
   const [initiallyHadSevenOrMoreValues] = useState(hasSevenOrMoreValues);
   const hasTwoOrMoreValues = values && values.length > 1;
+  const cbValueTabIndex = hasTwoOrMoreValues ? -1 : 0;
   const hasSelectAndSearch = hasCodeLists && hasSevenOrMoreValues;
   const valuesToRender = structuredClone(values);
   const searchedValues: Value[] = values.filter(
@@ -420,7 +421,7 @@ export function VariableBoxContent({
             <Checkbox
               id={value.code + uniqueId + 'checkbox'}
               key={varId + value.code}
-              tabIndex={-1}
+              tabIndex={cbValueTabIndex}
               value={
                 selectedValues?.length > 0 &&
                 selectedValues
