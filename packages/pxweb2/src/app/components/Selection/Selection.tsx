@@ -10,6 +10,7 @@ import {
   VariableList,
   Value,
   SelectOption,
+  ContentBox,
   PxTable,
   ValueDisplayType,
   Variable,
@@ -490,7 +491,14 @@ export function Selection({
   );
   const drawerView = <>View content</>;
   const drawerEdit = <>Edit content</>;
-  const drawerSave = <>Save content</>;
+  const drawerSave = (
+    <>
+      <ContentBox title="Contentbox with title">
+        This is inside another with a title ContentBox
+      </ContentBox>
+      <ContentBox>This is inside a ContentBox</ContentBox>
+    </>
+  );
   const drawerHelp = <>Help content</>;
 
   return (

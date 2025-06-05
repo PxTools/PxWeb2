@@ -14,6 +14,7 @@ describe('Radio', () => {
   const defaultProps = {
     name: 'test-radio',
     options: mockOptions,
+    legend: 'Test Radio Group',
     onChange: () => {
       return;
     },
@@ -42,6 +43,32 @@ describe('Radio', () => {
 
       const radioGroup = container.querySelector('[class*="inModal"]');
       expect(radioGroup).toBeDefined();
+    });
+
+    it('legend should not be visible when hideLegend is true', () => {
+      const { container } = render(
+        <Radio {...defaultProps} hideLegend={true} />,
+      );
+      const legend = container.querySelector('legend');
+      const hasLegendSrOnly =
+        legend !== null &&
+        Array.from(legend.classList).some((cls) =>
+          cls.includes('legendSrOnly'),
+        );
+      expect(hasLegendSrOnly).toBe(true);
+    });
+
+    it('legend should be visible when hideLegend is false', () => {
+      const { container } = render(
+        <Radio {...defaultProps} hideLegend={false} />,
+      );
+      const legend = container.querySelector('legend');
+      const hasLegendSrOnly =
+        legend !== null &&
+        Array.from(legend.classList).some((cls) =>
+          cls.includes('legendSrOnly'),
+        );
+      expect(hasLegendSrOnly).toBe(false);
     });
   });
 

@@ -323,6 +323,7 @@ function VariableBoxSelect({
             ref={selectedRadioOptionRef}
             onChange={handleRadioChange}
             variant="inModal"
+            legend={modalHeading ?? ''}
           ></Radio>
         </Modal>
       )}
