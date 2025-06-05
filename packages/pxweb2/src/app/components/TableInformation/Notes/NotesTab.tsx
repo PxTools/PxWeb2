@@ -25,10 +25,10 @@ export function NotesTab({ pxTableMetadata }: NotesTabProps) {
       selectedVBValues,
     );
     if (allNotes) {
-      if (allNotes.noTableNotes) {
+      if (allNotes.noNotes === 'tableLevel') {
         return <NoNotes tableLevel={true} />;
       }
-      if (allNotes.noVariableNotes) {
+      if (allNotes.noNotes === 'selectionLevel') {
         return <NoNotes tableLevel={false} />;
       }
       return (
