@@ -83,11 +83,6 @@ export function VariableBoxContent({
   >('mixed');
 
   const debouncedSearch = useDebounce(search, 300);
-
-  // Track the index of the currently focused item
-  const [currentFocusedItemIndex, setCurrentFocusedItemIndex] = useState<
-    number | null
-  >(null);
   const [items, setItems] = useState<{ type: string; value?: Value }[]>([]);
   const [uniqueId] = useState(() => crypto.randomUUID());
   const valuesOnlyList = useRef<HTMLDivElement>(null);
@@ -220,79 +215,6 @@ export function VariableBoxContent({
   );
   const selectedCodeListOrUndefined = selectedCodeListMapped ?? undefined;
 
-  const handleValueListKeyboardNavigation = (
-    event: React.KeyboardEvent<HTMLDivElement>,
-  ) => {
-    const { key } = event;
-    const isSearchFocused = document.activeElement === searchRef.current;
-
-    // Allow typing if search is focused and not pressing arrow keys
-    if (isSearchFocused && key !== 'ArrowDown') {
-      setCurrentFocusedItemIndex(0);
-      return;
-    }
-
-    if (key !== 'ArrowDown' && key !== 'ArrowUp' && key !== ' ') {
-      return;
-    }
-    event.preventDefault();
-
-    let newIndex = currentFocusedItemIndex ?? 1;
-
-    if (isSearchFocused && key === 'ArrowDown') {
-      setCurrentFocusedItemIndex(1);
-      newIndex = 1;
-    }
-
-    if (!isSearchFocused && key === 'ArrowDown') {
-      newIndex = (currentFocusedItemIndex ?? 0) + 1;
-    }
-
-    if (
-      key === 'ArrowUp' &&
-      currentFocusedItemIndex !== null &&
-      currentFocusedItemIndex > 0
-    ) {
-      newIndex = currentFocusedItemIndex - 1;
-      if (hasSevenOrMoreValues && newIndex === 0) {
-        setCurrentFocusedItemIndex(0);
-        searchRef.current?.focus();
-        return;
-      }
-
-      setScrollingDown(false);
-      virtuosoRef.current?.scrollToIndex(0);
-    }
-
-    if (newIndex !== null) {
-      if (hasSevenOrMoreValues) {
-        newIndex = Math.min(newIndex, searchedValues.length - 1 + 2);
-      } else {
-        newIndex = Math.min(items.length - 1, newIndex);
-      }
-      setCurrentFocusedItemIndex(newIndex);
-
-      // Focus the new item
-      const item = items[newIndex];
-      let elementId: string | null = null;
-
-      if (item.type === 'value' && item.value) {
-        elementId = item.value.code;
-      } else if (item.type === 'search') {
-        elementId = `${varId}-search`;
-      } else if (item.type === 'mixedCheckbox') {
-        elementId = varId;
-      }
-
-      if (elementId) {
-        const element = document.getElementById(elementId + uniqueId);
-        if (element) {
-          element.focus();
-        }
-      }
-    }
-  };
-
   const handleChangingCodeListInVariableBox = (
     selectedItem: SelectOption | undefined,
     varId: string,
@@ -328,13 +250,17 @@ export function VariableBoxContent({
       return <div></div>;
     }
 
+    const handleOnFocus = () => {
+      virtuosoRef.current?.scrollToIndex({ index, align: 'center' });
+    };
+
     if (item.type === 'search') {
       return (
         <div
           id={`${varId}-search` + uniqueId}
           tabIndex={-1}
           className={classes['focusableItem']}
-          onFocus={() => setCurrentFocusedItemIndex(0)}
+          onFocus={handleOnFocus}
         >
           <Search
             ref={searchRef}
@@ -343,7 +269,6 @@ export function VariableBoxContent({
               // Escape special characters in search value
               const escapedValue = value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
               setSearch(escapedValue);
-              setCurrentFocusedItemIndex(-1);
               if (value === '') {
                 setScrollingDown(false);
               }
@@ -373,14 +298,7 @@ export function VariableBoxContent({
           <div
             id={varId + uniqueId}
             tabIndex={-1}
-            onFocus={(event) => {
-              (event.target.childNodes[0] as HTMLElement).focus();
-              if (hasSevenOrMoreValues) {
-                setCurrentFocusedItemIndex(1);
-              } else {
-                setCurrentFocusedItemIndex(0);
-              }
-            }}
+            onFocus={handleOnFocus}
             className={cl(classes['focusableItem'], {
               [classes['mixedCheckbox']]: true,
             })}
@@ -412,15 +330,12 @@ export function VariableBoxContent({
           <div
             id={value.code + uniqueId}
             tabIndex={-1}
-            onFocus={(event) => {
-              (event.target.childNodes[0] as HTMLElement).focus();
-            }}
+            onFocus={handleOnFocus}
             className={cl(classes['focusableItem'])}
           >
             <Checkbox
               id={value.code + uniqueId + 'checkbox'}
               key={varId + value.code}
-              tabIndex={-1}
               value={
                 selectedValues?.length > 0 &&
                 selectedValues
@@ -508,16 +423,6 @@ export function VariableBoxContent({
     setCalcedHeight(height);
   };
 
-  // Effect to scroll to focused item
-  useEffect(() => {
-    if (currentFocusedItemIndex !== null && virtuosoRef.current) {
-      virtuosoRef.current.scrollToIndex({
-        index: currentFocusedItemIndex,
-        align: 'center',
-      });
-    }
-  }, [currentFocusedItemIndex]);
-
   const handleSelectFocus = () => {
     setScrollingDown(false);
   };
@@ -589,7 +494,6 @@ export function VariableBoxContent({
             )} // Coming in WAI-ARIA 1.3
             className={cl(classes['variablebox-content-values-only-list'])}
             ref={valuesOnlyList}
-            onKeyDown={handleValueListKeyboardNavigation}
           >
             {' '}
             {items.length > 0 && (
