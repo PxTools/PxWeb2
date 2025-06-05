@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from 'react';
+import { useEffect, useContext } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import cl from 'clsx';
 
@@ -11,22 +11,12 @@ import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import { Header } from '../../components/Header/Header';
 import { Information } from '../../components/Information/Information';
 import { FilterSidebar } from '../../components/FilterSidebar/FilterSidebar';
-import {
-  type Filter,
-  type ReducerActionTypes,
-  type StartPageState,
-  ActionType,
-} from './StartPageTypes';
-import { getFullTable, shouldTableBeIncluded } from '../../util/tableHandler';
-import {
-  getFilters,
-  getSubjectTree,
-  getTimeUnits,
-  updateSubjectTreeCounts,
-  sortFilterChips,
-} from '../../util/startPageFilters';
+import { ActionType } from './StartPageTypes';
+import { getSubjectTree, sortFilterChips } from '../../util/startPageFilters';
 import { useTopicIcons } from '../../util/hooks/useTopicIcons';
 import useApp from '../../context/useApp';
+import { FilterContext } from '../../context/FilterContext';
+import { getAllTables } from '../../util/tableHandler';
 
 // TODO: Remove this function. We can not consider norwegian special cases in our code!
 function removeTableNumber(title: string): string {
@@ -40,164 +30,36 @@ function removeTableNumber(title: string): string {
   }
 }
 
-// Want to ensure this is never changed
-const initialState: StartPageState = Object.freeze({
-  availableTables: [],
-  filteredTables: [],
-  availableFilters: getFilters([]),
-  activeFilters: [],
-  loading: false,
-  error: '',
-  originalSubjectTree: [],
-});
-
 const StartPage = () => {
   const { t, i18n } = useTranslation();
-  const [state, dispatch] = useReducer(reducer, initialState);
   const { isMobile, isTablet } = useApp();
   const isSmallScreen = isTablet === true || isMobile === true;
   const topicIconComponents = useTopicIcons();
 
-  function handleResetFilter(tables: Table[]) {
-    dispatch({
-      type: ActionType.RESET_FILTERS,
-      payload: { tables: tables, subjects: getSubjectTree(tables) },
-    });
-  }
-
-  function handleAddFilter(filter: Filter[]) {
-    dispatch({ type: ActionType.ADD_FILTER, payload: filter });
-  }
-
-  async function handleRemoveFilter(filterId: string) {
-    dispatch({
-      type: ActionType.REMOVE_FILTER,
-      payload: filterId,
-    });
-  }
-
-  function handleSetError(error: string) {
-    dispatch({ type: ActionType.SET_ERROR, payload: error });
-  }
-
-  function handleSetLoading(loadingState: boolean) {
-    dispatch({ type: ActionType.SET_LOADING, payload: loadingState });
-  }
-
-  function reducer(
-    state: StartPageState,
-    action: ReducerActionTypes,
-  ): StartPageState {
-    switch (action.type) {
-      case ActionType.RESET_FILTERS:
-        // Reset from API or cache
-        return {
-          ...initialState,
-          availableTables: action.payload.tables,
-          filteredTables: action.payload.tables,
-          originalSubjectTree: action.payload.subjects, // lagre full struktur én gang
-          availableFilters: {
-            subjectTree: action.payload.subjects,
-            timeUnits: getTimeUnits(action.payload.tables),
-          },
-        };
-      case ActionType.ADD_FILTER: {
-        const newFilters = [...state.activeFilters, ...action.payload];
-        const filteredTables = state.availableTables.filter((table) =>
-          shouldTableBeIncluded(table, newFilters),
-        );
-        const addType = action.payload[0]?.type;
-        return {
-          ...state,
-          activeFilters: newFilters,
-          filteredTables,
-          availableFilters: {
-            subjectTree:
-              addType !== 'subject'
-                ? updateSubjectTreeCounts(
-                    state.originalSubjectTree,
-                    filteredTables,
-                  )
-                : state.availableFilters.subjectTree,
-            timeUnits:
-              addType !== 'timeUnit'
-                ? getTimeUnits(filteredTables)
-                : state.availableFilters.timeUnits,
-          },
-        };
-      }
-      case ActionType.REMOVE_FILTER: {
-        const currentFilters = state.activeFilters.filter(
-          (filter) => filter.value !== action.payload,
-        );
-        if (currentFilters.length === 0) {
-          return {
-            ...state,
-            activeFilters: [],
-            filteredTables: state.availableTables,
-            availableFilters: {
-              subjectTree: updateSubjectTreeCounts(
-                state.originalSubjectTree,
-                state.availableTables,
-              ),
-              timeUnits: getTimeUnits(state.availableTables),
-            },
-          };
-        }
-        const filteredTables = state.availableTables.filter((table) =>
-          shouldTableBeIncluded(table, currentFilters),
-        );
-        //TODO: Add type to handleRemoveFilter instead
-        const removedFilter = state.activeFilters.find(
-          (filter) => filter.value === action.payload,
-        );
-        const removedType = removedFilter?.type;
-        return {
-          ...state,
-          activeFilters: currentFilters,
-          filteredTables,
-          availableFilters: {
-            subjectTree:
-              removedType !== 'subject'
-                ? updateSubjectTreeCounts(
-                    state.originalSubjectTree,
-                    filteredTables,
-                  )
-                : state.availableFilters.subjectTree,
-            timeUnits: getTimeUnits(filteredTables),
-          },
-        };
-      }
-      case ActionType.SET_ERROR:
-        return {
-          ...state,
-          error: action.payload,
-        };
-      case ActionType.SET_LOADING:
-        return {
-          ...state,
-          loading: action.payload,
-        };
-
-      default:
-        return state;
-    }
-  }
+  const { state, dispatch } = useContext(FilterContext);
 
   useEffect(() => {
     async function fetchTables() {
-      handleSetLoading(true);
+      console.log('Now Loading!');
+      dispatch({ type: ActionType.SET_LOADING, payload: true });
       try {
-        const tables = await getFullTable();
-        handleResetFilter(tables);
+        const tables = await getAllTables();
+        console.log('Fetching Data!');
+        dispatch({
+          type: ActionType.RESET_FILTERS,
+          payload: { tables: tables, subjects: getSubjectTree(tables) },
+        });
       } catch (error) {
-        handleSetError((error as Error).message);
+        dispatch({
+          type: ActionType.SET_ERROR,
+          payload: (error as Error).message,
+        });
       } finally {
-        handleSetLoading(false);
+        dispatch({ type: ActionType.SET_LOADING, payload: false });
       }
     }
     fetchTables();
-  }, []);
+  }, [dispatch]);
 
   function renderRemoveAllChips() {
     if (state.activeFilters.length >= 2) {
@@ -205,7 +67,13 @@ const StartPage = () => {
         <Chips.Removable
           filled
           onClick={() => {
-            handleResetFilter(state.availableTables);
+            dispatch({
+              type: ActionType.RESET_FILTERS,
+              payload: {
+                tables: state.availableTables,
+                subjects: getSubjectTree(state.availableTables),
+              },
+            });
           }}
         >
           {t('start_page.filter.remove_all_filter')}
@@ -264,14 +132,7 @@ const StartPage = () => {
             variant="default"
           />
         </div>
-        <FilterSidebar
-          state={state}
-          handleAddFilter={handleAddFilter}
-          handleRemoveFilter={handleRemoveFilter}
-          handleResetFilter={() => {
-            handleResetFilter(state.availableTables);
-          }}
-        />
+        <FilterSidebar />
         <div className={styles.listTables}>
           {state.activeFilters.length >= 1 && (
             <div className={styles.filterPillContainer}>
@@ -279,7 +140,12 @@ const StartPage = () => {
                 {renderRemoveAllChips()}
                 {sortFilterChips(state.activeFilters).map((filter) => (
                   <Chips.Removable
-                    onClick={() => handleRemoveFilter(filter.value)}
+                    onClick={() => {
+                      dispatch({
+                        type: ActionType.REMOVE_FILTER,
+                        payload: filter.value,
+                      });
+                    }}
                     aria-label={t('start_page.filter.remove_filter_aria', {
                       value: filter.value,
                     })}

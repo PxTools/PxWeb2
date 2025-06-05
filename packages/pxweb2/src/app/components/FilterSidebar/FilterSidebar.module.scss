@@ -20,6 +20,14 @@
   list-style-type: none;
 }
 
-.subjectToggle:not(:first-of-type) {
+.subjectToggle {
   padding-left: 24px;
+}
+
+.hiddenChildren {
+  display: none;
+}
+
+.collapsibleElement {
+  display: flex;
 }
