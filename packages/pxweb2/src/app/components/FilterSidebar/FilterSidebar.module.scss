@@ -1,11 +1,17 @@
 @use '$ui/src/lib/text-styles.scss';
+@use '$ui/src/lib/breakpoints.scss' as breakpoint;
 
 .sideBar {
   grid-area: sideBar;
-  overflow-y: auto;
+  overflow-y: visible;
   position: sticky;
   top: 0;
   height: 100%;
+
+  @media #{breakpoint.$xsmall}, #{breakpoint.$small} , #{breakpoint.$medium} {
+    padding: 0 10px;
+    overflow-y: auto;
+  }
 }
 
 .filterHeading {
