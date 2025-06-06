@@ -63,11 +63,6 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
     };
   }, [accessibility, isTableInformationOpen, tableInformationOpener]);
 
-  console.log('pxtable', pxtable);
-  console.log('staticTitle', staticTitle);
-  console.log('pxtable.metadata.label', pxtable.metadata.label);
-  console.log('pxtable.metadata.contents', pxtable.metadata.contents);
-
   const { firstTitlePart, lastTitlePart } = buildTableTitle(
     pxtable.stub,
     pxtable.heading,
