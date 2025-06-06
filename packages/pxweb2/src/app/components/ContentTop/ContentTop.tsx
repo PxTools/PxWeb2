@@ -14,6 +14,10 @@ import {
 } from '@pxweb2/pxweb2-ui';
 import TableInformation from '../TableInformation/TableInformation';
 import { AccessibilityContext } from '../../context/AccessibilityProvider';
+import {
+  TableDataContext,
+  TableDataContextType,
+} from '../../context/TableDataProvider';
 
 export interface ContenetTopProps {
   readonly pxtable: PxTable;
@@ -26,6 +30,9 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
     useState<boolean>(false);
   const [activeTab, setActiveTab] = useState('');
   const [tableInformationOpener, setTableInformationOpener] = useState('');
+  const { buildTableTitle } = useContext(
+    TableDataContext,
+  ) as TableDataContextType;
   const accessibility = useContext(AccessibilityContext);
   const openInformationButtonRef = useRef<HTMLButtonElement>(null);
   const openInformationLinkRef = useRef<HTMLAnchorElement>(null);
@@ -56,6 +63,23 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
     };
   }, [accessibility, isTableInformationOpen, tableInformationOpener]);
 
+  console.log('pxtable', pxtable);
+  console.log('staticTitle', staticTitle);
+  console.log('pxtable.metadata.label', pxtable.metadata.label);
+  console.log('pxtable.metadata.contents', pxtable.metadata.contents);
+
+  const { firstTitlePart, lastTitlePart } = buildTableTitle(
+    pxtable.stub,
+    pxtable.heading,
+  );
+
+  // Example title: "Population by region, observations, year and sex"
+  const tableTitle = t('presentation_page.main_content.dynamic_table_title', {
+    table_content_type: pxtable.metadata.contents,
+    table_content_label_first_part: firstTitlePart,
+    table_content_label_last_part: lastTitlePart,
+  });
+
   return (
     <>
       <div className={cl(classes[`content-top`])}>
@@ -76,7 +100,7 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
           className={cl(classes[`heading-information`])}
         >
           <Heading level="1" size="large">
-            {pxtable.metadata.label}
+            {tableTitle}
           </Heading>
           <div className={cl(classes.information)}>
             <Button

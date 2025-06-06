@@ -268,7 +268,7 @@ interface VariableWithDisplayType extends Variable {
   valueDisplayType: ValueDisplayType;
 }
 
-type propsType = {
+type SelectionProps = {
   selectedNavigationView: string;
   selectedTabId: string;
   openedWithKeyboard: boolean;
@@ -286,7 +286,7 @@ export function Selection({
   openedWithKeyboard,
   setSelectedNavigationView,
   hideMenuRef,
-}: propsType) {
+}: SelectionProps) {
   const variables = useVariables();
   const {
     selectedVBValues,
@@ -614,17 +614,15 @@ export function Selection({
   );
   const drawerView = <>View content</>;
   const drawerEdit = (
-    <>
-      <ContentBox>
-        <Button
-          variant="primary"
-          onClick={() => pivotTableClockwise()}
-          icon="ArrowCirclepathClockwise"
-        >
-          {t('presentation_page.sidemenu.edit.customize.pivot.title')}
-        </Button>
-      </ContentBox>
-    </>
+    <ContentBox>
+      <Button
+        variant="primary"
+        onClick={() => pivotTableClockwise()}
+        icon="ArrowCirclepathClockwise"
+      >
+        {t('presentation_page.sidemenu.edit.customize.pivot.title')}
+      </Button>
+    </ContentBox>
   );
   const drawerSave = (
     <>
