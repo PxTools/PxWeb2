@@ -7,24 +7,28 @@
 }
 
 .information {
-  padding: 60px 0px 72px 0px;
+  padding: 84px 0px 72px 0px;
   background-color: var(--px-color-surface-default);
-  max-width: 738px;
+  max-width: 848px;
 
   .title {
     margin-bottom: 1rem;
   }
 
-  @media #{breakpoint.$xlarge} {
-    max-width: 728px;
-  }
-
   @media #{breakpoint.$xsmall} , #{breakpoint.$small} {
-    padding: 38px 0 48px 0;
+    padding: 62px 0 48px 0;
   }
 
   @media #{breakpoint.$medium} {
-    padding: 52px 0 72px 0;
+    padding: 76px 0 72px 0;
+  }
+
+  @media #{breakpoint.$large} {
+    max-width: 688px;
+  }
+
+  @media #{breakpoint.$xlarge} {
+    max-width: 728px;
   }
 }
 
@@ -58,11 +62,11 @@
     }
 
     @media #{breakpoint.$large} {
-      width: 588px;
+      width: 608px;
     }
 
     @media #{breakpoint.$xlarge} {
-      width: 613px;
+      width: 633px;
     }
   }
 
@@ -70,7 +74,7 @@
     display: none;
   }
 
-  @media #{breakpoint.$xsmall} {
+  @media (max-width: 399px) {
     padding: 2rem 0;
     flex-direction: column;
     align-items: stretch;
@@ -80,7 +84,11 @@
     }
   }
 
-  @media #{breakpoint.$small} , #{breakpoint.$medium} {
+  @media #{breakpoint.$small} {
+    padding: 48px 0 40px 0;
+  }
+
+  @media #{breakpoint.$medium} {
     padding: 60px 0 40px 0;
   }
 
@@ -88,12 +96,16 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 1rem;
+    gap: 12px;
 
     .filterToggleButton {
       display: inline-flex;
     }
   }
+}
+
+.filterHeading {
+  margin-bottom: 4px;
 }
 
 .filterAndListWrapper {
@@ -180,6 +192,10 @@
 
 .tableListItem {
   padding-bottom: 16px;
+
+  @media #{breakpoint.$xsmall} , #{breakpoint.$small} {
+    padding-bottom: 12px;
+  }
 }
 
 .countLabel {
