@@ -58,7 +58,7 @@
     "filter": {
       "button": "Filter",
       "back": "Tilbake",
-      "show_results": "Vis {{count}} treff",
+      "show_results": "Vis {{value}} treff",
       "close": "Lukk filter",
       "header": "Filter",
       "remove_all_filter": "Fjern alle filter",

@@ -143,13 +143,13 @@
     justify-content: flex-start;
     align-items: center;
     padding: 1rem;
+    column-gap: 8px;
   }
 
   .filterOverlayContent {
     background-color: var(--px-color-surface-default);
     flex: 1;
     overflow-y: auto;
-    padding: 16px 22px;
   }
 
   .filterOverlayFooter {

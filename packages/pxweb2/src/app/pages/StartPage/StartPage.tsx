@@ -49,13 +49,6 @@ const initialState: StartPageState = Object.freeze({
   originalSubjectTree: [],
 });
 
-const springTransition = {
-  type: 'spring',
-  mass: 1,
-  stiffness: 320,
-  damping: 40,
-};
-
 const StartPage = () => {
   const { t, i18n } = useTranslation();
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -210,6 +203,10 @@ const StartPage = () => {
     fetchTables();
   }, []);
 
+  const formatNumber = (value: number, locale = 'nb-NO') => {
+    return new Intl.NumberFormat(locale).format(value);
+  };
+
   const renderRemoveAllChips = () => {
     if (state.activeFilters.length >= 2) {
       return (
@@ -278,10 +275,10 @@ const StartPage = () => {
         {isSmallScreen && isFilterOverlayOpen && (
           <motion.div
             key="filterOverlay"
-            initial={{ opacity: 0, y: 100 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 100 }}
-            transition={springTransition}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25, ease: 'easeInOut' }}
             className={styles.filterOverlay}
           >
             <div className={styles.filterOverlayHeader}>
@@ -323,7 +320,10 @@ const StartPage = () => {
                 onClick={() => setIsFilterOverlayOpen(false)}
               >
                 {t('start_page.filter.show_results', {
-                  count: state.filteredTables.length,
+                  value: formatNumber(
+                    state.filteredTables.length,
+                    i18n.language,
+                  ),
                 })}
               </Button>
             </div>
@@ -356,8 +356,9 @@ const StartPage = () => {
   };
 
   const renderTableCount = () => {
-    const formattedCount = new Intl.NumberFormat(i18n.language).format(
+    const formattedCount = formatNumber(
       state.filteredTables.length,
+      i18n.language,
     );
     if (state.activeFilters.length) {
       return (

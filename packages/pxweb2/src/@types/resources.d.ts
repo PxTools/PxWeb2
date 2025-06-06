@@ -59,7 +59,7 @@ interface Resources {
       filter: {
         button: 'Filter';
         back: 'Back';
-        show_results: 'Vis {{count}} treff';
+        show_results: 'Show {{value}} results';
         close: 'Close filter';
         header: 'Filter';
         remove_all_filter: 'Remove all filters';

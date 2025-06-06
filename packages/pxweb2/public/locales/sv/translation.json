@@ -58,7 +58,7 @@
     "filter": {
       "button": "Filter",
       "back": "Tilbaka",
-      "show_results": "Visa {{count}} treff",
+      "show_results": "Visa {{value}} träffar",
       "close": "Lukk filter",
       "header": "Filter",
       "remove_all_filter": "Ta bort alla filter",
