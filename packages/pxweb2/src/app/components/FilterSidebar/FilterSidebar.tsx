@@ -1,101 +1,130 @@
 import cl from 'clsx';
 
-import {
-  type StartPageState,
-  type Filter,
-} from '../../pages/StartPage/StartPageTypes';
+import { ActionType } from '../../pages/StartPage/StartPageTypes';
 import styles from './FilterSidebar.module.scss';
 import { useTranslation } from 'react-i18next';
-import type { TFunction } from 'i18next';
-import { Checkbox, FilterCategory, Heading } from '@pxweb2/pxweb2-ui';
-import { PathItem, findParent } from '../../util/startPageFilters';
-interface FilterProps {
-  state: StartPageState;
-  handleAddFilter: (filter: Filter[]) => void;
-  handleRemoveFilter: (filterId: string) => void;
-  handleResetFilter: () => void;
+import { Checkbox, FilterCategory, Heading, Icon } from '@pxweb2/pxweb2-ui';
+import {
+  PathItem,
+  findParent,
+  getSubjectTree,
+} from '../../util/startPageFilters';
+import { FilterContext } from '../../context/FilterContext';
+import { ReactNode, useContext, useState } from 'react';
+import { getAllTables } from '../../util/tableHandler';
+
+interface CollapsibleProps {
+  subject: PathItem;
+  index: number;
+  count: number;
+  isActive: boolean;
+  children: ReactNode;
 }
 
-const renderSubjectTreeFilters = (
-  state: StartPageState,
-  handleAddFilter: (filter: Filter[]) => void,
-  handleRemoveFilter: (filterId: string) => void,
-) => {
+const Collapsible: React.FC<CollapsibleProps> = ({
+  subject,
+  index,
+  count,
+  isActive,
+  children,
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const { state, dispatch } = useContext(FilterContext);
+
   return (
     <>
-      {renderSubject(
-        state.availableFilters.subjectTree,
-        state,
-        handleAddFilter,
-        handleRemoveFilter,
-      )}
+      <div className={styles.collapsibleElement}>
+        <span
+          onClick={() => setIsOpen(!isOpen)}
+          className={styles.collapsibleChevron}
+        >
+          {subject.children ? (
+            <Icon iconName={isOpen ? 'ChevronUp' : 'ChevronDown'} />
+          ) : (
+            ''
+          )}
+        </span>
+        <span onClick={() => setIsOpen(true)}>
+          <Checkbox
+            id={subject.id + index}
+            text={`${subject.label} (${count})`}
+            value={isActive}
+            subtle={!isActive && count === 0}
+            onChange={(value) => {
+              if (value) {
+                const parent = findParent(
+                  state.availableFilters.subjectTree,
+                  subject.id,
+                );
+
+                // Remove parent from activeFilters
+                state.activeFilters
+                  .filter((f) => f.type === 'subject' && f.value === parent?.id)
+                  .forEach((f) => {
+                    dispatch({
+                      type: ActionType.REMOVE_FILTER,
+                      payload: f.value,
+                    });
+                  });
+
+                // TODO: Mark parent as indeterminate in UI if needed
+
+                dispatch({
+                  type: ActionType.ADD_FILTER,
+                  payload: [
+                    {
+                      type: 'subject',
+                      value: subject.id,
+                      label: subject.label,
+                      index: index,
+                    },
+                  ],
+                });
+              } else {
+                dispatch({
+                  type: ActionType.REMOVE_FILTER,
+                  payload: subject.id,
+                });
+              }
+            }}
+          />
+        </span>
+      </div>
+      <div className={!isOpen ? styles.hiddenChildren : ''}>{children}</div>
     </>
   );
 };
 
-const renderSubject = (
-  subjects: PathItem[],
-  state: StartPageState,
-  handleAddFilter: (filter: Filter[]) => void,
-  handleRemoveFilter: (filterId: string) => void,
-) => {
+const RenderSubjects: React.FC<{
+  subjects: PathItem[];
+}> = ({ subjects }) => {
+  const { state } = useContext(FilterContext);
+
   return subjects.map((subject, index) => {
     const isActive = state.activeFilters.some(
       (filter) => filter.type === 'subject' && filter.value === subject.id,
     );
     const count = subject.count ?? 0;
 
-    const handleSubjectAdd = () => {
-      const parent = findParent(state.availableFilters.subjectTree, subject.id);
-
-      // Remove parent from activFilters, TODO: mark as indeterminate
-      state.activeFilters
-        .filter((f) => f.type === 'subject' && f.value === parent?.id)
-        .forEach((f) => {
-          handleRemoveFilter(f.value);
-        });
-      handleAddFilter([
-        {
-          type: 'subject',
-          value: subject.id,
-          label: subject.label,
-          index: index,
-        },
-      ]);
-    };
-    const handleSubjectRemove = () => {
-      handleRemoveFilter(subject.id);
-    };
-
     return (
       <div key={subject.id} className={styles.subjectToggle}>
-        <Checkbox
-          id={subject.id + index}
-          text={`${subject.label} (${count})`}
-          value={isActive}
-          subtle={!isActive && count === 0}
-          onChange={(value) => {
-            value ? handleSubjectAdd() : handleSubjectRemove();
-          }}
-        />
-        {subject.children &&
-          renderSubject(
-            subject.children,
-            state,
-            handleAddFilter,
-            handleRemoveFilter,
-          )}
+        <Collapsible
+          subject={subject}
+          index={index}
+          count={count}
+          isActive={isActive}
+        >
+          {subject.children && <RenderSubjects subjects={subject.children} />}
+        </Collapsible>
       </div>
     );
   });
 };
 
-const renderTimeUnitFilters = (
-  state: StartPageState,
-  handleAddFilter: (filter: Filter[]) => void,
-  handleRemoveFilter: (filterId: string) => void,
-  t: TFunction,
-) => {
+const RenderTimeUnitFilters: React.FC = () => {
+  const { state, dispatch } = useContext(FilterContext);
+  const { t } = useTranslation();
+
   const allTimeUnits = new Set(
     state.availableTables.map((table) => table.timeUnit ?? ''),
   );
@@ -117,10 +146,14 @@ const renderTimeUnitFilters = (
           subtle={!isActive && count === 0}
           onChange={(value) => {
             value
-              ? handleAddFilter([
-                  { type: 'timeUnit', value: key, label, index: i },
-                ])
-              : handleRemoveFilter(key);
+              ? dispatch({
+                  type: ActionType.ADD_FILTER,
+                  payload: [{ type: 'timeUnit', value: key, label, index: i }],
+                })
+              : dispatch({
+                  type: ActionType.REMOVE_FILTER,
+                  payload: key,
+                });
           }}
         />
       </li>
@@ -128,12 +161,10 @@ const renderTimeUnitFilters = (
   });
 };
 
-export const FilterSidebar: React.FC<FilterProps> = ({
-  state,
-  handleAddFilter,
-  handleRemoveFilter,
-}) => {
+export const FilterSidebar: React.FC = () => {
+  const { state, dispatch } = useContext(FilterContext);
   const { t } = useTranslation();
+
   return (
     <div className={styles.sideBar}>
       <Heading className={cl(styles.filterHeading)} size="medium" level="2">
@@ -142,21 +173,12 @@ export const FilterSidebar: React.FC<FilterProps> = ({
       <div>
         <FilterCategory header={t('start_page.filter.subject')}>
           <ul className={styles.filterList}>
-            {renderSubjectTreeFilters(
-              state,
-              handleAddFilter,
-              handleRemoveFilter,
-            )}
+            <RenderSubjects subjects={state.availableFilters.subjectTree} />
           </ul>
         </FilterCategory>
         <FilterCategory header={t('start_page.filter.timeUnit')}>
           <ul className={styles.filterList}>
-            {renderTimeUnitFilters(
-              state,
-              handleAddFilter,
-              handleRemoveFilter,
-              t,
-            )}
+            <RenderTimeUnitFilters />
           </ul>
         </FilterCategory>
       </div>
@@ -164,8 +186,20 @@ export const FilterSidebar: React.FC<FilterProps> = ({
         <a href="/en/table/tab638">Go to table viewer</a>
       </p>
       <div>
-        <button onClick={() => localStorage.removeItem('table')}>
-          Tøm Cache
+        <button
+          onClick={() => {
+            async function get() {
+              const tables = await getAllTables();
+              console.log('Fetching Data!');
+              dispatch({
+                type: ActionType.RESET_FILTERS,
+                payload: { tables: tables, subjects: getSubjectTree(tables) },
+              });
+            }
+            get();
+          }}
+        >
+          REset==???!
         </button>
       </div>
     </div>

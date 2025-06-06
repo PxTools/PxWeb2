@@ -2,7 +2,7 @@ import { type Table, TableService, OpenAPI } from '@pxweb2/pxweb2-api-client';
 import { getConfig } from './config/getConfig';
 import type { Filter } from '../pages/StartPage/StartPageTypes';
 
-export async function getFullTable() {
+export async function getAllTables() {
   const config = getConfig();
   const baseUrl = config.apiUrl;
   OpenAPI.BASE = baseUrl;

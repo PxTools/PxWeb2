@@ -1,5 +1,5 @@
 import { vi } from 'vitest';
-import { getFullTable, shouldTableBeIncluded } from './tableHandler';
+import { getAllTables, shouldTableBeIncluded } from './tableHandler';
 import { Config } from './config/configType';
 import { type Filter } from '../pages/StartPage/StartPageTypes';
 import { Table } from 'packages/pxweb2-api-client/src';
@@ -105,7 +105,7 @@ vi.mock('@pxweb2/pxweb2-api-client', () => {
 
 describe('getFullTable', () => {
   it('should fetch and return tables from TableService', async () => {
-    const tables = await getFullTable();
+    const tables = await getAllTables();
     expect(Array.isArray(tables)).toBe(true);
     expect(tables.length).toBeGreaterThan(0);
     expect(tables[0].id).toBe('TAB4707');
