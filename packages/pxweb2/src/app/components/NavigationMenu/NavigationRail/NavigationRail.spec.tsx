@@ -6,7 +6,7 @@ describe('NavigationRail', () => {
   it('should render successfully', () => {
     const { baseElement } = render(
       <NavigationRail
-        selected="filter"
+        selected="selection"
         onChange={() => {
           return;
         }}
@@ -19,7 +19,7 @@ describe('NavigationRail', () => {
   it('should render the text successfully', () => {
     const { baseElement } = render(
       <NavigationRail
-        selected="filter"
+        selected="selection"
         onChange={() => {
           return;
         }}
@@ -34,7 +34,7 @@ describe('NavigationRail', () => {
   it('should render all menu items', () => {
     const { baseElement } = render(
       <NavigationRail
-        selected="filter"
+        selected="selection"
         onChange={() => {
           return;
         }}
@@ -61,7 +61,7 @@ describe('NavigationRail', () => {
   it('should render the selected item', () => {
     const { baseElement } = render(
       <NavigationRail
-        selected="filter"
+        selected="selection"
         onChange={() => {
           return;
         }}
@@ -69,12 +69,12 @@ describe('NavigationRail', () => {
     );
     // This relies on the CSS class name being the first one on the element, which is not ideal.
     // But since CSS class names are generated with a hash, it's the best we can do without changing how we style components
-    const filterButton = baseElement.querySelector(`[class^="_selected"]`);
+    const selectionButton = baseElement.querySelector(`[class^="_selected"]`);
 
     // Since i18n is used in a test, it returns the translation key instead of the actual text
     expect(
       getByText(
-        filterButton as HTMLElement,
+        selectionButton as HTMLElement,
         'presentation_page.sidemenu.selection.title',
       ),
     ).toBeTruthy();
@@ -83,7 +83,7 @@ describe('NavigationRail', () => {
   it('should render an SVG', () => {
     const { baseElement } = render(
       <NavigationRail
-        selected="filter"
+        selected="selection"
         onChange={() => {
           return;
         }}

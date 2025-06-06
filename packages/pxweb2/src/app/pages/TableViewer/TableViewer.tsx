@@ -36,7 +36,7 @@ export function TableViewer() {
   const [selectedTableId] = useState(tableId ?? 'tab638');
   const [errorMsg] = useState('');
   const [selectedNavigationView, setSelectedNavigationView] =
-    useState<NavigationItem>(isTablet ? 'none' : 'filter');
+    useState<NavigationItem>(isTablet ? 'none' : 'selection');
   const [hasFocus, setHasFocus] = useState<NavigationItem>('none');
   const [openedWithKeyboard, setOpenedWithKeyboard] = useState(false);
   const outerContainerRef = useRef<HTMLDivElement | null>(null);
@@ -45,7 +45,7 @@ export function TableViewer() {
    */
 
   const navigationBarRef = useRef<{
-    filter: HTMLButtonElement;
+    selection: HTMLButtonElement;
     view: HTMLButtonElement;
     edit: HTMLButtonElement;
     save: HTMLButtonElement;
@@ -67,11 +67,11 @@ export function TableViewer() {
     }
     let item = null;
 
-    if (selectedNavigationView === 'filter') {
-      item = navigationBarRef.current.filter;
+    if (selectedNavigationView === 'selection') {
+      item = navigationBarRef.current.selection;
       accessibility.addFocusOverride(
-        'filterButton',
-        navigationBarRef.current.filter,
+        'selectionButton',
+        navigationBarRef.current.selection,
         undefined,
         hideMenuRef.current,
       );

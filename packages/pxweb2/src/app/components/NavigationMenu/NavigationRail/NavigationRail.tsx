@@ -21,7 +21,7 @@ interface NavigationRailProps {
 
 export const NavigationRail = React.forwardRef<
   {
-    filter: HTMLButtonElement;
+    selection: HTMLButtonElement;
     view: HTMLButtonElement;
     edit: HTMLButtonElement;
     save: HTMLButtonElement;
@@ -36,7 +36,7 @@ export const NavigationRail = React.forwardRef<
   };
 
   React.useImperativeHandle(ref, () => ({
-    filter: refs.filter.current!,
+    selection: refs.selection.current!,
     view: refs.view.current!,
     edit: refs.edit.current!,
     save: refs.save.current!,
@@ -46,7 +46,7 @@ export const NavigationRail = React.forwardRef<
   const refs = {
     save: React.useRef<HTMLButtonElement>(null),
     help: React.useRef<HTMLButtonElement>(null),
-    filter: React.useRef<HTMLButtonElement>(null),
+    selection: React.useRef<HTMLButtonElement>(null),
     view: React.useRef<HTMLButtonElement>(null),
     edit: React.useRef<HTMLButtonElement>(null),
   };
@@ -60,16 +60,16 @@ export const NavigationRail = React.forwardRef<
           >
             <ul className={styles.navigationRailList}>
               <Item
-                ref={refs.filter}
+                ref={refs.selection}
                 parentName="navRail"
                 label={t('presentation_page.sidemenu.selection.title')}
-                selected={selected === 'filter'}
+                selected={selected === 'selection'}
                 icon={'Controls'}
                 onClick={(event) => {
                   onChange(
                     isKeyboardClick(event),
-                    selected === 'filter',
-                    'filter',
+                    selected === 'selection',
+                    'selection',
                   );
                 }}
               />
