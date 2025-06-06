@@ -45,6 +45,7 @@ export const TableCard = forwardRef<HTMLDivElement, TableCardProps>(
 
     const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
       if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
         handleClick();
       }
     };
