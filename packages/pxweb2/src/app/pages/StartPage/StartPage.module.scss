@@ -5,7 +5,7 @@
 .startPage {
   color: var(--px-color-text-default);
 
-  @media #{breakpoint.$large} , #{breakpoint.$xlarge} {
+  @media #{breakpoint.$large} , #{breakpoint.$xlarge} , #{breakpoint.$xxlarge} {
     border-top: 1px solid var(--color-border-subtle, #c3dcdc);
   }
 }
