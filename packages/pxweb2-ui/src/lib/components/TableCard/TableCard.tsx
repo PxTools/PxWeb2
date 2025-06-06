@@ -4,6 +4,7 @@ import cl from 'clsx';
 import styles from './TableCard.module.scss';
 import { Icon } from '../Icon/Icon';
 import { Tag } from '../Tag/Tag';
+import { Heading } from '../Typography/Heading/Heading';
 
 interface TableCardProps {
   ariaLabel?: string;
@@ -44,6 +45,7 @@ export const TableCard = forwardRef<HTMLDivElement, TableCardProps>(
 
     const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
       if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
         handleClick();
       }
     };
@@ -61,13 +63,16 @@ export const TableCard = forwardRef<HTMLDivElement, TableCardProps>(
         )}
         <div className={cl(styles.cardContent)}>
           <div className={cl(styles.titleWrapper)}>
-            <a
-              href={href}
-              className={cl(styles.title, styles['heading-small'])}
-              onClick={(e) => e.stopPropagation()}
-            >
-              {title}
-            </a>
+            <Heading level="3" size="small">
+              <a
+                className={styles.title}
+                href={href}
+                onClick={(e) => e.stopPropagation()}
+                tabIndex={0}
+              >
+                {title}
+              </a>
+            </Heading>
           </div>
           <div className={cl(styles.tableMeta)}>
             <div className={cl(styles.timeWrapper)}>

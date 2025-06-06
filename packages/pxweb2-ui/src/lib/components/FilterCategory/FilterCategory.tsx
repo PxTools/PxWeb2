@@ -3,6 +3,7 @@ import cl from 'clsx';
 
 import styles from './FilterCategory.module.scss';
 import { Icon } from '../Icon/Icon';
+import { Heading } from '../Typography/Heading/Heading';
 
 export interface FilterCategoryProps {
   header?: string;
@@ -33,12 +34,11 @@ export const FilterCategory: React.FC<FilterCategoryProps> = ({
         className={cl(styles.filterCategoryHeader)}
         aria-expanded={isOpen ? 'true' : 'false'}
         onClick={() => setIsOpen(!isOpen)}
+        tabIndex={0}
       >
-        <span
-          className={cl(styles.filterCategoryTitle, styles['heading-small'])}
-        >
+        <Heading size="small" level="3" className={styles.filterCategoryTitle}>
           {header}
-        </span>
+        </Heading>
         <div className={cl(styles.filterCategoryIconWrapper)}>
           <Icon
             className={cl({
@@ -53,6 +53,7 @@ export const FilterCategory: React.FC<FilterCategoryProps> = ({
           styles.filterCategoryContent,
           isOpen ? styles['open'] : styles['closed'],
         )}
+        inert={!isOpen}
         ref={contentRef}
         style={{ maxHeight }}
       >
