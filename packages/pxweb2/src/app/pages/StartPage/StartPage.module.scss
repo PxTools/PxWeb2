@@ -4,6 +4,10 @@
 
 .startPage {
   color: var(--px-color-text-default);
+
+  @media #{breakpoint.$large} , #{breakpoint.$xlarge} {
+    border-top: 1px solid var(--color-border-subtle, #c3dcdc);
+  }
 }
 
 .information {
