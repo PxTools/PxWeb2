@@ -4,12 +4,16 @@ import { ActionType } from '../../pages/StartPage/StartPageTypes';
 import styles from './FilterSidebar.module.scss';
 import { useTranslation } from 'react-i18next';
 import { Checkbox, FilterCategory, Heading, Icon } from '@pxweb2/pxweb2-ui';
-import { PathItem, getSubjectTree } from '../../util/startPageFilters';
+import {
+  PathItem,
+  findParent,
+  getSubjectTree,
+} from '../../util/startPageFilters';
 import { FilterContext } from '../../context/FilterContext';
 import { ReactNode, useContext, useState } from 'react';
 import { getAllTables } from '../../util/tableHandler';
 
-interface collapsibleProps {
+interface CollapsibleProps {
   subject: PathItem;
   index: number;
   count: number;
@@ -17,7 +21,7 @@ interface collapsibleProps {
   children: ReactNode;
 }
 
-const Collapsible: React.FC<collapsibleProps> = ({
+const Collapsible: React.FC<CollapsibleProps> = ({
   subject,
   index,
   count,
@@ -25,12 +29,15 @@ const Collapsible: React.FC<collapsibleProps> = ({
   children,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { dispatch } = useContext(FilterContext);
+  const { state, dispatch } = useContext(FilterContext);
 
   return (
     <>
       <div className={styles.collapsibleElement}>
-        <span onClick={() => setIsOpen(!isOpen)}>
+        <span
+          onClick={() => setIsOpen(!isOpen)}
+          className={styles.collapsibleChevron}
+        >
           {subject.children ? (
             <Icon iconName={isOpen ? 'ChevronUp' : 'ChevronDown'} />
           ) : (
@@ -44,40 +51,41 @@ const Collapsible: React.FC<collapsibleProps> = ({
             value={isActive}
             subtle={!isActive && count === 0}
             onChange={(value) => {
-              value // If a box is unchecked
-                ? // () => {
-                  // const parent = findParent(
-                  //   state.availableFilters.subjectTree,
-                  //   subject.id,
-                  // );
+              if (value) {
+                const parent = findParent(
+                  state.availableFilters.subjectTree,
+                  subject.id,
+                );
 
-                  // // Remove parent from activFilters, TODO: mark as indeterminate
-                  // state.activeFilters
-                  //   .filter(
-                  //     (f) => f.type === 'subject' && f.value === parent?.id,
-                  //   )
-                  //   .forEach((f) => {
-                  //     dispatch({
-                  //       type: ActionType.REMOVE_FILTER,
-                  //       payload: f.value,
-                  //     });
-                  //   });
-                  dispatch({
-                    type: ActionType.ADD_FILTER,
-                    payload: [
-                      {
-                        type: 'subject',
-                        value: subject.id,
-                        label: subject.label,
-                        index: index,
-                      },
-                    ],
-                  })
-                : // }
-                  dispatch({
-                    type: ActionType.REMOVE_FILTER,
-                    payload: subject.id,
+                // Remove parent from activeFilters
+                state.activeFilters
+                  .filter((f) => f.type === 'subject' && f.value === parent?.id)
+                  .forEach((f) => {
+                    dispatch({
+                      type: ActionType.REMOVE_FILTER,
+                      payload: f.value,
+                    });
                   });
+
+                // TODO: Mark parent as indeterminate in UI if needed
+
+                dispatch({
+                  type: ActionType.ADD_FILTER,
+                  payload: [
+                    {
+                      type: 'subject',
+                      value: subject.id,
+                      label: subject.label,
+                      index: index,
+                    },
+                  ],
+                });
+              } else {
+                dispatch({
+                  type: ActionType.REMOVE_FILTER,
+                  payload: subject.id,
+                });
+              }
             }}
           />
         </span>
