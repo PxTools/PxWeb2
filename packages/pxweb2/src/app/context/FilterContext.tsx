@@ -13,7 +13,7 @@ import {
 import { shouldTableBeIncluded } from '../util/tableHandler';
 
 // Want to ensure this is never changed
-const initialState: StartPageState = {
+const initialState: StartPageState = Object.freeze({
   availableTables: [],
   filteredTables: [],
   availableFilters: getFilters([]),
@@ -21,7 +21,7 @@ const initialState: StartPageState = {
   loading: false,
   error: '',
   originalSubjectTree: [],
-};
+});
 
 export const FilterContext = createContext<{
   state: StartPageState;

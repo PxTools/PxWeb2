@@ -15,7 +15,7 @@ import { ActionType } from './StartPageTypes';
 import { getSubjectTree, sortFilterChips } from '../../util/startPageFilters';
 import { useTopicIcons } from '../../util/hooks/useTopicIcons';
 import useApp from '../../context/useApp';
-import { FilterContext } from '../../context/FilterContext';
+import { FilterContext, FilterProvider } from '../../context/FilterContext';
 import { getAllTables } from '../../util/tableHandler';
 
 // TODO: Remove this function. We can not consider norwegian special cases in our code!
@@ -122,7 +122,7 @@ const StartPage = () => {
   }
 
   return (
-    <AccessibilityProvider>
+    <>
       <Header />
       <Information />
       <div className={styles.startPage}>
@@ -210,8 +210,18 @@ const StartPage = () => {
           )}
         </div>
       </div>
-    </AccessibilityProvider>
+    </>
   );
 };
 
-export default StartPage;
+function Render() {
+  return (
+    <AccessibilityProvider>
+      <FilterProvider>
+        <StartPage />
+      </FilterProvider>
+    </AccessibilityProvider>
+  );
+}
+
+export default Render;

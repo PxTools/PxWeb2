@@ -87,12 +87,6 @@ const Collapsible: React.FC<collapsibleProps> = ({
   );
 };
 
-// TODO
-// Create accordion
-// Checkbox  also opens accordion
-// State on each element? Common state? Use global state?
-// New component? Or do it here? Can always refactor later
-
 const RenderSubjects: React.FC<{
   subjects: PathItem[];
 }> = ({ subjects }) => {
