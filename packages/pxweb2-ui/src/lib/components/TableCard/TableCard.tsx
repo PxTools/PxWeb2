@@ -56,6 +56,8 @@ export const TableCard = forwardRef<HTMLDivElement, TableCardProps>(
         onClick={handleClick}
         onKeyDown={handleKeyDown}
         ref={ref}
+        tabIndex={0}
+        role="link"
       >
         {icon && (
           <div className={cl(styles.iconWrapper, styles[status])}>{icon}</div>

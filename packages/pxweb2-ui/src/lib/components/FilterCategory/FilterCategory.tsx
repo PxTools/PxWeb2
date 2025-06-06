@@ -34,6 +34,7 @@ export const FilterCategory: React.FC<FilterCategoryProps> = ({
         className={cl(styles.filterCategoryHeader)}
         aria-expanded={isOpen ? 'true' : 'false'}
         onClick={() => setIsOpen(!isOpen)}
+        tabIndex={0}
       >
         <Heading size="small" level="3" className={styles.filterCategoryTitle}>
           {header}
