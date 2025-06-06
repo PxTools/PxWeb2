@@ -210,7 +210,7 @@ const StartPage = () => {
     fetchTables();
   }, []);
 
-  function renderRemoveAllChips() {
+  const renderRemoveAllChips = () => {
     if (state.activeFilters.length >= 2) {
       return (
         <Chips.Removable
@@ -223,9 +223,9 @@ const StartPage = () => {
         </Chips.Removable>
       );
     }
-  }
+  };
 
-  function renderTableCard(table: Table, t: TFunction) {
+  const renderTableCard = (table: Table, t: TFunction) => {
     if (table) {
       const translationKey = `start_page.filter.frequency.${table.timeUnit?.toLowerCase()}`;
       const frequencyLabel = t(translationKey, {
@@ -260,9 +260,9 @@ const StartPage = () => {
         </div>
       );
     }
-  }
+  };
 
-  function renderTopicIcon(table: Table) {
+  const renderTopicIcon = (table: Table) => {
     const topicId = table.paths?.[0]?.[0]?.id;
     const size = isSmallScreen ? 'small' : 'medium';
 
@@ -270,9 +270,9 @@ const StartPage = () => {
       ? (topicIconComponents.find((icon) => icon.id === topicId)?.[size] ??
           null)
       : null;
-  }
+  };
 
-  function renderFilterOverlay() {
+  const renderFilterOverlay = () => {
     return (
       <AnimatePresence>
         {isSmallScreen && isFilterOverlayOpen && (
@@ -331,9 +331,9 @@ const StartPage = () => {
         )}
       </AnimatePresence>
     );
-  }
+  };
 
-  function renderTableCardList() {
+  const renderTableCardList = () => {
     return (
       <>
         {state.filteredTables.slice(0, visibleCount).map((table) => (
@@ -353,7 +353,38 @@ const StartPage = () => {
         )}
       </>
     );
-  }
+  };
+
+  const renderTableCount = () => {
+    const formattedCount = new Intl.NumberFormat(i18n.language).format(
+      state.filteredTables.length,
+    );
+    if (state.activeFilters.length) {
+      return (
+        <p>
+          <Trans
+            i18nKey="start_page.table.number_of_tables_found"
+            values={{ count: formattedCount }}
+            components={{
+              strong: <span className={cl(styles['label-medium'])} />,
+            }}
+          />
+        </p>
+      );
+    } else {
+      return (
+        <p>
+          <Trans
+            i18nKey="start_page.table.number_of_tables"
+            values={{ count: formattedCount }}
+            components={{
+              strong: <span className={cl(styles['label-medium'])} />,
+            }}
+          />
+        </p>
+      );
+    }
+  };
 
   return (
     <AccessibilityProvider>
@@ -424,6 +455,7 @@ const StartPage = () => {
                           value: filter.value,
                         })}
                         key={filter.value}
+                        truncate
                       >
                         {filter.label}
                       </Chips.Removable>
@@ -434,27 +466,7 @@ const StartPage = () => {
               <div
                 className={cl(styles['bodyshort-medium'], styles.countLabel)}
               >
-                {state.activeFilters.length ? (
-                  <p>
-                    <Trans
-                      i18nKey="start_page.table.number_of_tables_found"
-                      values={{ count: state.filteredTables.length }}
-                      components={{
-                        strong: <span className={cl(styles['label-medium'])} />,
-                      }}
-                    />
-                  </p>
-                ) : (
-                  <p>
-                    <Trans
-                      i18nKey="start_page.table.number_of_tables"
-                      values={{ count: state.filteredTables.length }}
-                      components={{
-                        strong: <span className={cl(styles['label-medium'])} />,
-                      }}
-                    />
-                  </p>
-                )}
+                {renderTableCount()}
               </div>
 
               {state.error && (
