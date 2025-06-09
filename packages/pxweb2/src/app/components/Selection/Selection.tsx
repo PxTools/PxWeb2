@@ -621,12 +621,7 @@ export function Selection({
       selection: selections,
     };
 
-    exportToFile(
-      selectedTabId,
-      i18n.language,
-      variablesSelection,
-      fileFormat,
-    );
+    exportToFile(selectedTabId, i18n.language, variablesSelection, fileFormat);
   }
 
   const drawerFilter = (
