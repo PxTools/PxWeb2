@@ -239,7 +239,9 @@ export const getResponseBody = async (response: Response): Promise<any> => {
                 if (isJSON) {
                     return await response.json();
                 } else {
-                    return await response.text();
+                    // NOTE! Manually changed this to handle binary data (Excel)
+                    //return await response.text();
+                    return await response.bytes();
                 }
             }
         } catch (error) {

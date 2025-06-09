@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 
 import {
   ApiError,
-  OutputFormatType,
   TableService,
   VariableSelection,
   VariablesSelection,
@@ -30,6 +29,7 @@ import { NavigationItem } from '../../components/NavigationMenu/NavigationItem/N
 import useAccessibility from '../../context/useAccessibility';
 import { getLabelText } from '../../util/utils';
 import { problemMessage } from '../../util/problemMessage';
+import { exportToFile } from '../../util/export/exportUtil';
 
 function addSelectedCodeListToVariable(
   currentVariable: SelectedVBValues | undefined,
@@ -621,38 +621,12 @@ export function Selection({
       selection: selections,
     };
 
-    let outputFormat: OutputFormatType;
-    switch (fileFormat) {
-      case 'excel':
-        outputFormat = OutputFormatType.XLSX;
-        break;
-      case 'csv':
-        outputFormat = OutputFormatType.CSV;
-        break;
-      default:
-        outputFormat = OutputFormatType.CSV;
-        break;
-    }
-
-    await TableService.getTableDataByPost(
+    exportToFile(
       selectedTabId,
       i18n.language,
-      outputFormat,
-      undefined,
       variablesSelection,
-    )
-      .then((response) => {
-        const blob = new Blob([response], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = `${selectedTabId}.csv`;
-        link.click();
-        URL.revokeObjectURL(link.href);
-      })
-      .catch((error: unknown) => {
-        const err = error as ApiError;
-        setErrorMsg(problemMessage(err, selectedTabId));
-      });
+      fileFormat,
+    );
   }
 
   const drawerFilter = (
