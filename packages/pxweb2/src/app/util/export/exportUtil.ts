@@ -14,14 +14,14 @@ export async function exportToFile(
 ): Promise<void> {
   let outputFormat: OutputFormatType;
   let outputFormatParams: Array<OutputFormatParamType> = [];
-  // let responseType: string;
+  //let responseType: string;
   let fileExtension: string;
 
   switch (fileFormat) {
     case 'excel':
       outputFormat = OutputFormatType.XLSX;
       outputFormatParams = [OutputFormatParamType.INCLUDE_TITLE];
-      // responseType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;';
+      //responseType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;';
       fileExtension = 'xlsx';
       break;
     case 'csv':
@@ -30,8 +30,28 @@ export async function exportToFile(
         OutputFormatParamType.SEPARATOR_SEMICOLON,
         OutputFormatParamType.INCLUDE_TITLE,
       ];
-      // responseType = 'text/csv;charset=utf-8;';
+      //responseType = 'text/csv;charset=utf-8;';
       fileExtension = 'csv';
+      break;
+    case 'px':
+      outputFormat = OutputFormatType.PX;
+      fileExtension = 'px';
+      break;
+    case 'jsonstat2':
+      outputFormat = OutputFormatType.JSON_STAT2;
+      //responseType = 'application/json; charset=UTF-8';
+      fileExtension = 'json';
+      break;
+    case 'html':
+      outputFormat = OutputFormatType.HTML;
+      outputFormatParams = [OutputFormatParamType.INCLUDE_TITLE];
+      fileExtension = 'html';
+      break;
+    //responseType = 'text/html;charset=utf-8;';
+    case 'parquet':
+      outputFormat = OutputFormatType.PARQUET;
+      //responseType = 'application/octet-stream';
+      fileExtension = 'parquet';
       break;
     default:
       outputFormat = OutputFormatType.CSV;
@@ -46,9 +66,13 @@ export async function exportToFile(
     variablesSelection,
   )
     .then((response) => {
-      console.log({ response });
-      //  const blob = new Blob([response], { type: responseType });
-      const blob = new Blob([response]);
+      // const blob = new Blob([response], { type: responseType });
+      let blob: Blob;
+      if (fileFormat === 'jsonstat2') {
+        blob = new Blob([JSON.stringify(response)]);
+      } else {
+        blob = new Blob([response]);
+      }
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
       link.download = `${tabId}.${fileExtension}`;

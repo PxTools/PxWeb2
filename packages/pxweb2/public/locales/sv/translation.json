@@ -164,7 +164,11 @@
         "file": {
           "title": "Spara som fil",
           "excel": "Excel (.xlsx)",
-          "csv": "Semikolonavgränsad med rubrik (.csv)"
+          "csv": "Semikolonavgränsad med rubrik (.csv)",
+          "px": "PC-Axis (.px)",
+          "jsonstat2": "JSON-stat2 (.json)",
+          "html": "HTML (.html)",
+          "parquet": "Parquet (.parquet)"
         },
         "imagefile": {
           "title": "Spara som diagram",

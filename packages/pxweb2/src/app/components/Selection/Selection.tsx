@@ -650,6 +650,18 @@ export function Selection({
         <Button variant="primary" onClick={() => saveToFile('csv')}>
           {t('presentation_page.sidemenu.save.file.csv')}
         </Button>
+        <Button variant="primary" onClick={() => saveToFile('px')}>
+          {t('presentation_page.sidemenu.save.file.px')}
+        </Button>
+        <Button variant="primary" onClick={() => saveToFile('jsonstat2')}>
+          {t('presentation_page.sidemenu.save.file.jsonstat2')}
+        </Button>
+        <Button variant="primary" onClick={() => saveToFile('html')}>
+          {t('presentation_page.sidemenu.save.file.html')}
+        </Button>
+        <Button variant="primary" onClick={() => saveToFile('parquet')}>
+          {t('presentation_page.sidemenu.save.file.parquet')}
+        </Button>
       </ContentBox>
       <ContentBox>This is inside a ContentBox</ContentBox>
     </>
