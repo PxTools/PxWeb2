@@ -21,7 +21,7 @@
 }
 
 .toggleIndent {
-  padding-left: 24px;
+  padding-left: 36px;
 }
 
 .hiddenChildren {
@@ -33,5 +33,6 @@
 }
 
 .collapsibleChevron {
+  min-width: 24px;
   margin-top: 10px;
 }
