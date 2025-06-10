@@ -59,6 +59,7 @@ const StartPage = () => {
   const topicIconComponents = useTopicIcons();
   const filterBackButtonRef = useRef<HTMLButtonElement>(null);
   const filterToggleRef = useRef<HTMLButtonElement>(null);
+  const hasOverlayBeenOpenedRef = useRef(false);
 
   const handleShowMore = () => {
     setVisibleCount((prev) => prev + 15);
@@ -206,14 +207,19 @@ const StartPage = () => {
   }, []);
 
   useEffect(() => {
-    if (isFilterOverlayOpen && filterBackButtonRef.current) {
-      filterBackButtonRef.current.focus();
+    if (isFilterOverlayOpen) {
+      hasOverlayBeenOpenedRef.current = true;
+      if (filterBackButtonRef.current) {
+        filterBackButtonRef.current.focus();
+      }
     }
   }, [isFilterOverlayOpen]);
 
   useEffect(() => {
-    if (!isFilterOverlayOpen && filterToggleRef.current) {
-      filterToggleRef.current.focus();
+    if (!isFilterOverlayOpen && hasOverlayBeenOpenedRef.current) {
+      if (filterToggleRef.current) {
+        filterToggleRef.current.focus();
+      }
     }
   }, [isFilterOverlayOpen]);
 
