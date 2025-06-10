@@ -3,7 +3,7 @@ import cl from 'clsx';
 import { ActionType } from '../../pages/StartPage/StartPageTypes';
 import styles from './FilterSidebar.module.scss';
 import { useTranslation } from 'react-i18next';
-import { Checkbox, FilterCategory, Icon } from '@pxweb2/pxweb2-ui';
+import { Checkbox, FilterCategory, Button } from '@pxweb2/pxweb2-ui';
 import { PathItem, findParent } from '../../util/startPageFilters';
 import { FilterContext } from '../../context/FilterContext';
 import { ReactNode, useContext, useState } from 'react';
@@ -29,59 +29,62 @@ const Collapsible: React.FC<CollapsibleProps> = ({
   return (
     <>
       <div className={styles.collapsibleElement}>
-        <span
-          onClick={() => setIsOpen(!isOpen)}
-          className={styles.collapsibleChevron}
-        >
-          {subject.children && subject.children.length > 0 && (
-            <Icon iconName={isOpen ? 'ChevronUp' : 'ChevronRight'} />
-          )}
-        </span>
-        <span onClick={() => setIsOpen(true)} className={styles.filterLabel}>
-          <Checkbox
-            id={subject.id + index}
-            text={`${subject.label} (${count})`}
-            value={isActive}
-            subtle={!isActive && count === 0}
-            onChange={(value) => {
-              if (value) {
-                const parent = findParent(
-                  state.availableFilters.subjectTree,
-                  subject.id,
-                );
+        {subject.children && subject.children.length > 0 ? (
+          <Button
+            variant="tertiary"
+            icon={isOpen ? 'ChevronUp' : 'ChevronRight'}
+            aria-expanded={isOpen}
+            aria-controls={`collapsible-children-${subject.id}-${index}`}
+            className={styles.collapsibleChevron}
+            onClick={() => setIsOpen(!isOpen)}
+          ></Button>
+        ) : (
+          <span className={styles.collapsibleChevron} />
+        )}
+        <Checkbox
+          id={subject.id + index}
+          text={`${subject.label} (${count})`}
+          value={isActive}
+          subtle={!isActive && count === 0}
+          onChange={(value) => {
+            setIsOpen(true);
+            if (value) {
+              const parent = findParent(
+                state.availableFilters.subjectTree,
+                subject.id,
+              );
 
-                // Remove parent from activeFilters
-                state.activeFilters
-                  .filter((f) => f.type === 'subject' && f.value === parent?.id)
-                  .forEach((f) => {
-                    dispatch({
-                      type: ActionType.REMOVE_FILTER,
-                      payload: f.value,
-                    });
+              // Remove parent from activeFilters
+              state.activeFilters
+                .filter((f) => f.type === 'subject' && f.value === parent?.id)
+                .forEach((f) => {
+                  dispatch({
+                    type: ActionType.REMOVE_FILTER,
+                    payload: f.value,
                   });
-
-                // TODO: Mark parent as indeterminate in UI if needed
-
-                dispatch({
-                  type: ActionType.ADD_FILTER,
-                  payload: [
-                    {
-                      type: 'subject',
-                      value: subject.id,
-                      label: subject.label,
-                      index: index,
-                    },
-                  ],
                 });
-              } else {
-                dispatch({
-                  type: ActionType.REMOVE_FILTER,
-                  payload: subject.id,
-                });
-              }
-            }}
-          />
-        </span>
+
+              // TODO: Mark parent as indeterminate in UI if needed
+
+              dispatch({
+                type: ActionType.ADD_FILTER,
+                payload: [
+                  {
+                    type: 'subject',
+                    value: subject.id,
+                    label: subject.label,
+                    index: index,
+                  },
+                ],
+              });
+            } else {
+              dispatch({
+                type: ActionType.REMOVE_FILTER,
+                payload: subject.id,
+              });
+            }
+          }}
+        />
       </div>
       <div className={!isOpen ? styles.hiddenChildren : ''}>{children}</div>
     </>
