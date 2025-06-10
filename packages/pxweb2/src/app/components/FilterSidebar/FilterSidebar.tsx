@@ -41,50 +41,52 @@ const Collapsible: React.FC<CollapsibleProps> = ({
         ) : (
           <span className={styles.collapsibleChevron} />
         )}
-        <Checkbox
-          id={subject.id + index}
-          text={`${subject.label} (${count})`}
-          value={isActive}
-          subtle={!isActive && count === 0}
-          onChange={(value) => {
-            setIsOpen(true);
-            if (value) {
-              const parent = findParent(
-                state.availableFilters.subjectTree,
-                subject.id,
-              );
+        <span className={styles.filterLabel}>
+          <Checkbox
+            id={subject.id + index}
+            text={`${subject.label} (${count})`}
+            value={isActive}
+            subtle={!isActive && count === 0}
+            onChange={(value) => {
+              setIsOpen(true);
+              if (value) {
+                const parent = findParent(
+                  state.availableFilters.subjectTree,
+                  subject.id,
+                );
 
-              // Remove parent from activeFilters
-              state.activeFilters
-                .filter((f) => f.type === 'subject' && f.value === parent?.id)
-                .forEach((f) => {
-                  dispatch({
-                    type: ActionType.REMOVE_FILTER,
-                    payload: f.value,
+                // Remove parent from activeFilters
+                state.activeFilters
+                  .filter((f) => f.type === 'subject' && f.value === parent?.id)
+                  .forEach((f) => {
+                    dispatch({
+                      type: ActionType.REMOVE_FILTER,
+                      payload: f.value,
+                    });
                   });
+
+                // TODO: Mark parent as indeterminate in UI if needed
+
+                dispatch({
+                  type: ActionType.ADD_FILTER,
+                  payload: [
+                    {
+                      type: 'subject',
+                      value: subject.id,
+                      label: subject.label,
+                      index: index,
+                    },
+                  ],
                 });
-
-              // TODO: Mark parent as indeterminate in UI if needed
-
-              dispatch({
-                type: ActionType.ADD_FILTER,
-                payload: [
-                  {
-                    type: 'subject',
-                    value: subject.id,
-                    label: subject.label,
-                    index: index,
-                  },
-                ],
-              });
-            } else {
-              dispatch({
-                type: ActionType.REMOVE_FILTER,
-                payload: subject.id,
-              });
-            }
-          }}
-        />
+              } else {
+                dispatch({
+                  type: ActionType.REMOVE_FILTER,
+                  payload: subject.id,
+                });
+              }
+            }}
+          />
+        </span>
       </div>
       <div className={!isOpen ? styles.hiddenChildren : ''}>{children}</div>
     </>
