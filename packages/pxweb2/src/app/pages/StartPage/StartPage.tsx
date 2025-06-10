@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from 'react';
+import { useEffect, useReducer, useState, useRef } from 'react';
 import cl from 'clsx';
 import styles from './StartPage.module.scss';
 import { useTranslation, Trans } from 'react-i18next';
@@ -57,6 +57,8 @@ const StartPage = () => {
   const { isMobile, isTablet } = useApp();
   const isSmallScreen = isTablet === true || isMobile === true;
   const topicIconComponents = useTopicIcons();
+  const filterBackButtonRef = useRef<HTMLButtonElement>(null);
+  const filterToggleRef = useRef<HTMLButtonElement>(null);
 
   const handleShowMore = () => {
     setVisibleCount((prev) => prev + 15);
@@ -203,6 +205,18 @@ const StartPage = () => {
     fetchTables();
   }, []);
 
+  useEffect(() => {
+    if (isFilterOverlayOpen && filterBackButtonRef.current) {
+      filterBackButtonRef.current.focus();
+    }
+  }, [isFilterOverlayOpen]);
+
+  useEffect(() => {
+    if (!isFilterOverlayOpen && filterToggleRef.current) {
+      filterToggleRef.current.focus();
+    }
+  }, [isFilterOverlayOpen]);
+
   const formatNumber = (value: number, locale = 'nb-NO') => {
     return new Intl.NumberFormat(locale).format(value);
   };
@@ -287,6 +301,7 @@ const StartPage = () => {
                 icon="ArrowLeft"
                 aria-label={t('start_page.filter.back')}
                 onClick={() => setIsFilterOverlayOpen(false)}
+                ref={filterBackButtonRef}
               />
               <Heading size="medium">{t('start_page.filter.header')}</Heading>
             </div>
@@ -415,6 +430,7 @@ const StartPage = () => {
                 icon="Controls"
                 className={styles.filterToggleButton}
                 onClick={() => setIsFilterOverlayOpen(true)}
+                ref={filterToggleRef}
               >
                 {t('start_page.filter.button')}
               </Button>
