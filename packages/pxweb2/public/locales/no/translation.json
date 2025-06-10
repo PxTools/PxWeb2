@@ -247,6 +247,10 @@
           "description": "Beskrivelsestekst...",
           "missing_heading": "Ingen kontaktinformasjon",
           "missing_text": "Tabellen har ikke kontaktinformasjon."
+        },
+        "notes": {
+          "important_about_table": "Viktig om tabellen",
+          "important_about_variable": "Viktig om "
         }
       },
       "related": {
