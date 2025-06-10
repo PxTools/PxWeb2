@@ -47,6 +47,10 @@ interface Resources {
       more_about_text: 'Fyll på more_about';
       search_placeholder: 'Search in PxWeb 2.0';
       filter: {
+        button: 'Filter';
+        back: 'Back';
+        show_results: 'Show {{value}} results';
+        close: 'Close filter';
         header: 'Filter';
         remove_all_filter: 'Remove all filters';
         remove_filter_aria: 'Delete {{value}}';
@@ -67,6 +71,7 @@ interface Resources {
         number_of_tables: '<number of> tables';
         number_of_tables_found: '<number of> tables found';
         updated_label: 'Updated';
+        show_more: 'Show more';
       };
     };
     presentation_page: {
