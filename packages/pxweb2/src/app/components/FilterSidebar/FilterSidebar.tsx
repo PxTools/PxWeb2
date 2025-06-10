@@ -3,7 +3,7 @@ import cl from 'clsx';
 import { ActionType } from '../../pages/StartPage/StartPageTypes';
 import styles from './FilterSidebar.module.scss';
 import { useTranslation } from 'react-i18next';
-import { Checkbox, FilterCategory, Heading, Icon } from '@pxweb2/pxweb2-ui';
+import { Checkbox, FilterCategory, Icon } from '@pxweb2/pxweb2-ui';
 import { PathItem, findParent } from '../../util/startPageFilters';
 import { FilterContext } from '../../context/FilterContext';
 import { ReactNode, useContext, useState } from 'react';
@@ -163,9 +163,6 @@ export const FilterSidebar: React.FC = () => {
 
   return (
     <div className={styles.sideBar}>
-      <Heading className={cl(styles.filterHeading)} size="medium" level="2">
-        {t('start_page.filter.header')}
-      </Heading>
       <div>
         <FilterCategory header={t('start_page.filter.subject')}>
           <ul className={styles.filterList}>

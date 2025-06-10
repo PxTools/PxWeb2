@@ -56,7 +56,11 @@
     "more_about_text": "more about text SV",
     "search_placeholder": "Sök i Statistikdatabasen",
     "filter": {
-      "header": "Filtrera",
+      "button": "Filter",
+      "back": "Tilbaka",
+      "show_results": "Visa {{value}} träffar",
+      "close": "Lukk filter",
+      "header": "Filter",
       "remove_all_filter": "Ta bort alla filter",
       "remove_filter_aria": "Slett {{value}}",
       "subject": "Ämnesområde",
@@ -75,7 +79,8 @@
     "table": {
       "number_of_tables": "<strong>{{count}}</strong> tabeller",
       "number_of_tables_found": "Träff på <strong>{{count}}</strong> tabeller",
-      "updated_label": "Senast uppdaterad"
+      "updated_label": "Senast uppdaterad",
+      "show_more": "Visa flere"
     }
   },
   "presentation_page": {

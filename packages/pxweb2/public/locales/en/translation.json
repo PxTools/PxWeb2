@@ -56,6 +56,10 @@
     "more_about_text": "More about Text EN",
     "search_placeholder": "Search in PxWeb 2.0",
     "filter": {
+      "button": "Filter",
+      "back": "Back",
+      "show_results": "Show {{value}} results",
+      "close": "Close filter",
       "header": "Filter",
       "remove_all_filter": "Remove all filters",
       "remove_filter_aria": "Delete {{value}}",
@@ -75,7 +79,8 @@
     "table": {
       "number_of_tables": "<strong>{{count}}</strong> tables",
       "number_of_tables_found": "<strong>{{count}}</strong> tables found",
-      "updated_label": "Updated"
+      "updated_label": "Updated",
+      "show_more": "Show more"
     }
   },
   "presentation_page": {
