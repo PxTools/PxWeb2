@@ -4,14 +4,9 @@ import { ActionType } from '../../pages/StartPage/StartPageTypes';
 import styles from './FilterSidebar.module.scss';
 import { useTranslation } from 'react-i18next';
 import { Checkbox, FilterCategory, Heading, Icon } from '@pxweb2/pxweb2-ui';
-import {
-  PathItem,
-  findParent,
-  getSubjectTree,
-} from '../../util/startPageFilters';
+import { PathItem, findParent } from '../../util/startPageFilters';
 import { FilterContext } from '../../context/FilterContext';
 import { ReactNode, useContext, useState } from 'react';
-import { getAllTables } from '../../util/tableHandler';
 
 interface CollapsibleProps {
   subject: PathItem;
@@ -163,7 +158,7 @@ const RenderTimeUnitFilters: React.FC = () => {
 };
 
 export const FilterSidebar: React.FC = () => {
-  const { state, dispatch } = useContext(FilterContext);
+  const { state } = useContext(FilterContext);
   const { t } = useTranslation();
 
   return (
@@ -189,23 +184,6 @@ export const FilterSidebar: React.FC = () => {
       <p>
         <a href="/en/table/tab638">Go to table viewer</a>
       </p>
-      <div>
-        <button
-          onClick={() => {
-            async function get() {
-              const tables = await getAllTables();
-              console.log('Fetching Data!');
-              dispatch({
-                type: ActionType.RESET_FILTERS,
-                payload: { tables: tables, subjects: getSubjectTree(tables) },
-              });
-            }
-            get();
-          }}
-        >
-          REset==???!
-        </button>
-      </div>
     </div>
   );
 };
