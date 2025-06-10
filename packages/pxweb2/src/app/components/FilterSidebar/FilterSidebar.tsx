@@ -37,7 +37,7 @@ const Collapsible: React.FC<CollapsibleProps> = ({
             <Icon iconName={isOpen ? 'ChevronUp' : 'ChevronRight'} />
           )}
         </span>
-        <span onClick={() => setIsOpen(true)}>
+        <span onClick={() => setIsOpen(true)} className={styles.filterLabel}>
           <Checkbox
             id={subject.id + index}
             text={`${subject.label} (${count})`}
