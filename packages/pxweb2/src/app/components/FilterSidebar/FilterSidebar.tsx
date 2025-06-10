@@ -96,8 +96,9 @@ const Collapsible: React.FC<CollapsibleProps> = ({
 };
 
 const RenderSubjects: React.FC<{
+  firstLevel: boolean;
   subjects: PathItem[];
-}> = ({ subjects }) => {
+}> = ({ firstLevel, subjects }) => {
   const { state } = useContext(FilterContext);
 
   return subjects.map((subject, index) => {
@@ -107,14 +108,16 @@ const RenderSubjects: React.FC<{
     const count = subject.count ?? 0;
 
     return (
-      <div key={subject.id} className={styles.subjectToggle}>
+      <div key={subject.id} className={cl(!firstLevel && styles.toggleIndent)}>
         <Collapsible
           subject={subject}
           index={index}
           count={count}
           isActive={isActive}
         >
-          {subject.children && <RenderSubjects subjects={subject.children} />}
+          {subject.children && (
+            <RenderSubjects firstLevel={false} subjects={subject.children} />
+          )}
         </Collapsible>
       </div>
     );
@@ -173,7 +176,10 @@ export const FilterSidebar: React.FC = () => {
       <div>
         <FilterCategory header={t('start_page.filter.subject')}>
           <ul className={styles.filterList}>
-            <RenderSubjects subjects={state.availableFilters.subjectTree} />
+            <RenderSubjects
+              firstLevel={true}
+              subjects={state.availableFilters.subjectTree}
+            />
           </ul>
         </FilterCategory>
         <FilterCategory header={t('start_page.filter.timeUnit')}>
