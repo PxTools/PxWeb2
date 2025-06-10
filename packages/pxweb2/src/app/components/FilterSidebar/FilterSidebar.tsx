@@ -34,16 +34,14 @@ const Collapsible: React.FC<CollapsibleProps> = ({
   return (
     <>
       <div className={styles.collapsibleElement}>
-        <span
-          onClick={() => setIsOpen(!isOpen)}
-          className={styles.collapsibleChevron}
-        >
-          {subject.children ? (
+        {subject.children && subject.children.length > 0 && (
+          <span
+            onClick={() => setIsOpen(!isOpen)}
+            className={styles.collapsibleChevron}
+          >
             <Icon iconName={isOpen ? 'ChevronUp' : 'ChevronDown'} />
-          ) : (
-            ''
-          )}
-        </span>
+          </span>
+        )}
         <span onClick={() => setIsOpen(true)}>
           <Checkbox
             id={subject.id + index}
