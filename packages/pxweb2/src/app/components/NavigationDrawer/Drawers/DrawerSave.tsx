@@ -6,6 +6,7 @@ import {
 } from 'packages/pxweb2-api-client/src';
 import { exportToFile } from '../../../util/export/exportUtil';
 import useVariables from '../../../context/useVariables';
+import useTableData from '../../../context/useTableData';
 
 export type DrawerSaveProps = {
   readonly tableId: string;
@@ -13,6 +14,8 @@ export type DrawerSaveProps = {
 export function DrawerSave({ tableId }: DrawerSaveProps) {
   const { t, i18n } = useTranslation();
   const variables = useVariables();
+  const heading = useTableData().data?.heading;
+  const stub = useTableData().data?.stub;
 
   async function saveToFile(fileFormat: string): Promise<void> {
     const selections: Array<VariableSelection> = [];
@@ -38,6 +41,20 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
       selection: selections,
     };
 
+    // Get stub and heading order from tabledata provider and add to variablesSelection
+    if (heading && stub) {
+      variablesSelection.placement = {
+        heading: heading.map((variable) => variable.id),
+        stub: stub ? stub.map((variable) => variable.id) : [],
+      };
+    } else {
+      variablesSelection.placement = {
+        heading: [],
+        stub: [],
+      };
+    }
+
+    // Export the file using the export utility
     exportToFile(tableId, i18n.language, variablesSelection, fileFormat);
   }
 
