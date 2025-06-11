@@ -57,6 +57,10 @@ interface Resources {
       more_about_text: 'More about Text EN';
       search_placeholder: 'Search in PxWeb 2.0';
       filter: {
+        button: 'Filter';
+        back: 'Back';
+        show_results: 'Show {{value}} results';
+        close: 'Close filter';
         header: 'Filter';
         remove_all_filter: 'Remove all filters';
         remove_filter_aria: 'Delete {{value}}';
@@ -77,6 +81,7 @@ interface Resources {
         number_of_tables: '<strong>{{count}}</strong> tables';
         number_of_tables_found: '<strong>{{count}}</strong> tables found';
         updated_label: 'Updated';
+        show_more: 'Show more';
       };
     };
     presentation_page: {
@@ -101,6 +106,7 @@ interface Resources {
               tag_selected: '{{selected}} of {{total}} selected';
               tag_mandatory: 'Mandatory';
               alert_no_mandatory_values: 'You must select something in the list for the table to be displayed';
+              show_more: 'Show more';
             };
             content: {
               select: {
@@ -244,6 +250,10 @@ interface Resources {
             description: 'Description text...';
             missing_heading: 'No contact information';
             missing_text: 'The table has no contact information.';
+          };
+          notes: {
+            important_about_table: 'Important about the table';
+            important_about_variable: 'Important about ';
           };
         };
         related: {

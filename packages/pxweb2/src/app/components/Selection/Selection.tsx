@@ -268,8 +268,10 @@ interface VariableWithDisplayType extends Variable {
   valueDisplayType: ValueDisplayType;
 }
 
+type NavigationView = 'selection' | 'view' | 'edit' | 'save' | 'help' | 'none';
+
 type SelectionProps = {
-  selectedNavigationView: string;
+  selectedNavigationView: NavigationView;
   selectedTabId: string;
   openedWithKeyboard: boolean;
   setSelectedNavigationView: (
@@ -597,7 +599,7 @@ export function Selection({
     variables.syncVariablesAndValues(selectedVBValues);
   }
 
-  const drawerFilter = (
+  const drawerSelection = (
     <VariableList
       pxTableMetadata={pxTableMetaToRender}
       languageDirection={i18n.dir()}
@@ -638,16 +640,16 @@ export function Selection({
     selectedNavigationView !== 'none' && (
       <NavigationDrawer
         ref={hideMenuRef}
-        heading={t('presentation_page.sidemenu.selection.title')}
+        heading={t(
+          `presentation_page.sidemenu.${selectedNavigationView}.title`,
+        )}
         onClose={(keyboard, view) =>
           setSelectedNavigationView(keyboard, true, view)
         }
-        view={
-          selectedNavigationView as 'filter' | 'view' | 'edit' | 'save' | 'help'
-        }
+        view={selectedNavigationView}
         openedWithKeyboard={openedWithKeyboard}
       >
-        {selectedNavigationView === 'filter' && drawerFilter}
+        {selectedNavigationView === 'selection' && drawerSelection}
         {selectedNavigationView === 'view' && drawerView}
         {selectedNavigationView === 'edit' && drawerEdit}
         {selectedNavigationView === 'save' && drawerSave}

@@ -1,6 +1,6 @@
 export type NavigationItem =
   | 'none'
-  | 'filter'
+  | 'selection'
   | 'view'
   | 'edit'
   | 'save'

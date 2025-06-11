@@ -24,9 +24,11 @@ export const Chips: ChipsComponent = ({
 }: ChipsProps) => {
   return (
     <ul {...rest} ref={ref} className={cl(styles.chips)}>
-      {React.Children.map(children, (chip) => {
-        return <li>{chip}</li>;
-      })}
+      {React.Children.toArray(children)
+        .filter(Boolean)
+        .map((chip) => (
+          <li key={(chip as React.ReactElement).key}>{chip}</li>
+        ))}
     </ul>
   );
 };

@@ -21,7 +21,7 @@ interface NavigationBarProps {
 
 export const NavigationBar = React.forwardRef<
   {
-    filter: HTMLButtonElement;
+    selection: HTMLButtonElement;
     view: HTMLButtonElement;
     edit: HTMLButtonElement;
     save: HTMLButtonElement;
@@ -31,7 +31,7 @@ export const NavigationBar = React.forwardRef<
 >(({ selected, onChange }, ref) => {
   const { t } = useTranslation();
   const refs = {
-    filter: React.useRef<HTMLButtonElement>(null),
+    selection: React.useRef<HTMLButtonElement>(null),
     view: React.useRef<HTMLButtonElement>(null),
     edit: React.useRef<HTMLButtonElement>(null),
     save: React.useRef<HTMLButtonElement>(null),
@@ -39,7 +39,7 @@ export const NavigationBar = React.forwardRef<
   };
 
   React.useImperativeHandle(ref, () => ({
-    filter: refs.filter.current!,
+    selection: refs.selection.current!,
     view: refs.view.current!,
     edit: refs.edit.current!,
     save: refs.save.current!,
@@ -55,16 +55,16 @@ export const NavigationBar = React.forwardRef<
           >
             <ul className={styles.navigationBarList}>
               <Item
-                ref={refs.filter}
+                ref={refs.selection}
                 parentName="navBar"
                 label={t('presentation_page.sidemenu.selection.title')}
-                selected={selected === 'filter'}
+                selected={selected === 'selection'}
                 icon={'Controls'}
                 onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
                   onChange(
                     event.screenX === 0 && event.screenY === 0,
-                    selected === 'filter',
-                    'filter',
+                    selected === 'selection',
+                    'selection',
                   );
                 }}
               />

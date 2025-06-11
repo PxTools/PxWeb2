@@ -94,7 +94,6 @@ export function Presentation({ selectedTabId, scrollRef }: propsType) {
       }
     };
   });
-
   useEffect(() => {
     if (isMobile) {
       tableData.pivotToMobile();
@@ -197,6 +196,7 @@ export function Presentation({ selectedTabId, scrollRef }: propsType) {
             staticTitle={pxTableMetadata?.label}
             pxtable={tableData.data}
           />
+
           {!variables.isMatrixSizeAllowed && !isMandatoryNotSelectedFirst && (
             <div
               role="alert"
@@ -246,6 +246,7 @@ export function Presentation({ selectedTabId, scrollRef }: propsType) {
               </Alert>
             </div>
           )}
+
           {!isMissingMandatoryVariables && (
             <div
               className={classes.gradientContainer}
