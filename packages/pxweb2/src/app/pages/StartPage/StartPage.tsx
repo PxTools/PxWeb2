@@ -53,16 +53,39 @@ const StartPage = () => {
   const { t, i18n } = useTranslation();
   const [state, dispatch] = useReducer(reducer, initialState);
   const [isFilterOverlayOpen, setIsFilterOverlayOpen] = useState(false);
-  const [visibleCount, setVisibleCount] = useState(15);
+  const paginationCount = 15;
+  const [visibleCount, setVisibleCount] = useState(paginationCount);
   const { isMobile, isTablet } = useApp();
   const isSmallScreen = isTablet === true || isMobile === true;
   const topicIconComponents = useTopicIcons();
   const filterBackButtonRef = useRef<HTMLButtonElement>(null);
   const filterToggleRef = useRef<HTMLButtonElement>(null);
   const hasOverlayBeenOpenedRef = useRef(false);
+  const [isPaginating, setIsPaginating] = useState(false);
+  const paginationButtonRef = useRef<HTMLButtonElement>(null);
+  const [paginationButtonWidth, setPaginationButtonWidth] = useState<number>();
+
+  const [lastVisibleCount, setLastVisibleCount] = useState(paginationCount);
 
   const handleShowMore = () => {
-    setVisibleCount((prev) => prev + 15);
+    if (isPaginating) {
+      return;
+    }
+    if (paginationButtonRef.current) {
+      setPaginationButtonWidth(paginationButtonRef.current.offsetWidth);
+    }
+    setIsPaginating(true);
+    const newCount = visibleCount + paginationCount;
+    setLastVisibleCount(newCount);
+    requestAnimationFrame(() => {
+      setVisibleCount(newCount);
+    });
+  };
+
+  const handleShowLess = () => {
+    setVisibleCount((prev) =>
+      Math.max(paginationCount, prev - paginationCount),
+    );
   };
 
   function handleResetFilter(tables: Table[]) {
@@ -70,10 +93,12 @@ const StartPage = () => {
       type: ActionType.RESET_FILTERS,
       payload: { tables: tables, subjects: getSubjectTree(tables) },
     });
+    setVisibleCount(paginationCount);
   }
 
   function handleAddFilter(filter: Filter[]) {
     dispatch({ type: ActionType.ADD_FILTER, payload: filter });
+    setVisibleCount(paginationCount);
   }
 
   async function handleRemoveFilter(filterId: string) {
@@ -81,6 +106,7 @@ const StartPage = () => {
       type: ActionType.REMOVE_FILTER,
       payload: filterId,
     });
+    setVisibleCount(paginationCount);
   }
 
   function handleSetError(error: string) {
@@ -223,6 +249,12 @@ const StartPage = () => {
     }
   }, [isFilterOverlayOpen]);
 
+  useEffect(() => {
+    if (visibleCount === lastVisibleCount && isPaginating) {
+      setIsPaginating(false);
+    }
+  }, [visibleCount, lastVisibleCount, isPaginating]);
+
   const formatNumber = (value: number, locale = 'nb-NO') => {
     return new Intl.NumberFormat(locale).format(value);
   };
@@ -361,20 +393,43 @@ const StartPage = () => {
           <div key={table.id}>{renderTableCard(table, t)}</div>
         ))}
 
-        {visibleCount < state.filteredTables.length && (
-          <div className={styles.loadMoreWrapper}>
-            <Button
-              variant="primary"
-              onClick={handleShowMore}
-              className={styles.loadMoreButton}
-            >
-              {t('start_page.table.show_more')}
-            </Button>
-          </div>
-        )}
+        <div className={styles.paginationWrapper}>
+          {visibleCount < state.filteredTables.length &&
+            renderPaginationButton(
+              'more',
+              handleShowMore,
+              t('start_page.table.show_more'),
+            )}
+
+          {visibleCount >= state.filteredTables.length &&
+            visibleCount > paginationCount &&
+            renderPaginationButton(
+              'less',
+              handleShowLess,
+              t('start_page.table.show_less'),
+            )}
+        </div>
       </>
     );
   };
+
+  const renderPaginationButton = (
+    type: 'more' | 'less',
+    onClick: () => void,
+    label: string,
+  ) => (
+    <Button
+      variant="primary"
+      onClick={onClick}
+      loading={isPaginating}
+      ref={paginationButtonRef}
+      style={
+        paginationButtonWidth ? { minWidth: paginationButtonWidth } : undefined
+      }
+    >
+      {label}
+    </Button>
+  );
 
   const renderTableCount = () => {
     const formattedCount = formatNumber(

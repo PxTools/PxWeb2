@@ -179,14 +179,10 @@
   padding-bottom: 1rem;
 }
 
-.loadMoreWrapper {
+.paginationWrapper {
   display: flex;
   justify-content: center;
   margin-top: 2rem;
-
-  .loadMoreButton {
-    min-width: 200px;
-  }
 }
 
 .loadingSpinner {

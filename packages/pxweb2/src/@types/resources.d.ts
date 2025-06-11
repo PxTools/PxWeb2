@@ -72,6 +72,9 @@ interface Resources {
         number_of_tables_found: '<number of> tables found';
         updated_label: 'Updated';
         show_more: 'Show more';
+        show_less: 'Show less';
+        loading: 'Loading...';
+        show_number_of_tables: 'Showing  <number of> of <number of> tables';
       };
     };
     presentation_page: {

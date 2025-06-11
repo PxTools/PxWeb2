@@ -80,7 +80,10 @@
       "number_of_tables": "<strong>{{count}}</strong> tabeller",
       "number_of_tables_found": "Träff på <strong>{{count}}</strong> tabeller",
       "updated_label": "Senast uppdaterad",
-      "show_more": "Visa flere"
+      "show_more": "Visa fler",
+      "show_less": "Visa färre",
+      "loading": "Laddar...",
+      "show_number_of_tables": "Visar  {count} av {count} tables"
     }
   },
   "presentation_page": {
