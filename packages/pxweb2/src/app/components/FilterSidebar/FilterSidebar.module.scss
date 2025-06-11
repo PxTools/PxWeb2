@@ -30,6 +30,9 @@
 
 .toggleIndent {
   padding-left: 36px;
+  &:last-of-type {
+    margin-bottom: 12px;
+  }
 }
 
 .hiddenChildren {
