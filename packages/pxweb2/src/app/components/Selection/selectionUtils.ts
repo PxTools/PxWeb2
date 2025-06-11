@@ -5,7 +5,7 @@ import {
   Variable,
 } from '@pxweb2/pxweb2-ui';
 
-export function setSelectedCodelist(
+export function updateSelectedCodelistForVariable(
   selectedItem: SelectOption | undefined,
   varId: string,
   prevSelectedValues: SelectedVBValues[],

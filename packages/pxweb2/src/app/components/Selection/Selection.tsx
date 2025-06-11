@@ -5,22 +5,25 @@ import { ApiError, TableService } from '@pxweb2/pxweb2-api-client';
 import { mapJsonStat2Response } from '../../../mappers/JsonStat2ResponseMapper';
 import { mapTableSelectionResponse } from '../../../mappers/TableSelectionResponseMapper';
 import {
-  PxTableMetadata,
-  SelectedVBValues,
-  VariableList,
-  Value,
-  SelectOption,
   ContentBox,
   PxTable,
+  PxTableMetadata,
+  SelectedVBValues,
+  SelectOption,
+  Value,
   ValueDisplayType,
   Variable,
+  VariableList,
 } from '@pxweb2/pxweb2-ui';
 import NavigationDrawer from '../../components/NavigationDrawer/NavigationDrawer';
 import useVariables from '../../context/useVariables';
 import { NavigationItem } from '../../components/NavigationMenu/NavigationItem/NavigationItemType';
 import useAccessibility from '../../context/useAccessibility';
 import { problemMessage } from '../../util/problemMessage';
-import { getSelectedCodelists, setSelectedCodelist } from './selectionUtils';
+import {
+  getSelectedCodelists,
+  updateSelectedCodelistForVariable,
+} from './selectionUtils';
 
 function addValueToVariable(
   selectedValuesArr: SelectedVBValues[],
@@ -341,7 +344,7 @@ export function Selection({
 
     const prevSelectedValues = structuredClone(selectedVBValues);
 
-    const newSelectedValues = setSelectedCodelist(
+    const newSelectedValues = updateSelectedCodelistForVariable(
       selectedItem,
       varId,
       prevSelectedValues,
