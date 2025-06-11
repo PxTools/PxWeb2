@@ -1,16 +1,11 @@
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
 
-import {
-  ApiError,
-  TableService,
-  VariableSelection,
-  VariablesSelection,
-} from '@pxweb2/pxweb2-api-client';
+import { ApiError, TableService } from '@pxweb2/pxweb2-api-client';
 import { mapJsonStat2Response } from '../../../mappers/JsonStat2ResponseMapper';
 import { mapTableSelectionResponse } from '../../../mappers/TableSelectionResponseMapper';
 import {
-  ContentBox,
+  //  ContentBox,
   PxTable,
   PxTableMetadata,
   SelectedVBValues,
@@ -19,18 +14,17 @@ import {
   ValueDisplayType,
   Variable,
   VariableList,
-  Button,
 } from '@pxweb2/pxweb2-ui';
 import NavigationDrawer from '../../components/NavigationDrawer/NavigationDrawer';
 import useVariables from '../../context/useVariables';
 import { NavigationItem } from '../../components/NavigationMenu/NavigationItem/NavigationItemType';
 import useAccessibility from '../../context/useAccessibility';
 import { problemMessage } from '../../util/problemMessage';
-import { exportToFile } from '../../util/export/exportUtil';
 import {
   getSelectedCodelists,
   updateSelectedCodelistForVariable,
 } from './selectionUtils';
+import DrawerSave from '../NavigationDrawer/Drawers/DrawerSave';
 
 function addValueToVariable(
   selectedValuesArr: SelectedVBValues[],
@@ -486,33 +480,6 @@ export function Selection({
     variables.syncVariablesAndValues(selectedVBValues);
   }
 
-  async function saveToFile(fileFormat: string): Promise<void> {
-    const selections: Array<VariableSelection> = [];
-
-    // Get selection from Selection provider
-    const ids = variables.getUniqueIds();
-    ids.forEach((id) => {
-      const selectedCodeList = variables.getSelectedCodelistById(id);
-      const selection: VariableSelection = {
-        variableCode: id,
-        valueCodes: variables.getSelectedValuesByIdSorted(id),
-      };
-
-      // Add selected codelist to selection if it exists
-      if (selectedCodeList) {
-        selection.codeList = selectedCodeList;
-      }
-
-      selections.push(selection);
-    });
-
-    const variablesSelection: VariablesSelection = {
-      selection: selections,
-    };
-
-    exportToFile(selectedTabId, i18n.language, variablesSelection, fileFormat);
-  }
-
   const drawerSelection = (
     <VariableList
       pxTableMetadata={pxTableMetaToRender}
@@ -530,31 +497,6 @@ export function Selection({
   );
   const drawerView = <>View content</>;
   const drawerEdit = <>Edit content</>;
-  const drawerSave = (
-    <ContentBox title={t('presentation_page.sidemenu.save.file.title')}>
-      <Button variant="secondary" onClick={() => saveToFile('excel')}>
-        {t('presentation_page.sidemenu.save.file.excel')}
-      </Button>
-      <Button variant="secondary" onClick={() => saveToFile('csv')}>
-        {t('presentation_page.sidemenu.save.file.csv')}
-      </Button>
-      <Button variant="secondary" onClick={() => saveToFile('relational-csv')}>
-        {t('presentation_page.sidemenu.save.file.relational-csv')}
-      </Button>
-      <Button variant="secondary" onClick={() => saveToFile('px')}>
-        {t('presentation_page.sidemenu.save.file.px')}
-      </Button>
-      <Button variant="secondary" onClick={() => saveToFile('jsonstat2')}>
-        {t('presentation_page.sidemenu.save.file.jsonstat2')}
-      </Button>
-      <Button variant="secondary" onClick={() => saveToFile('html')}>
-        {t('presentation_page.sidemenu.save.file.html')}
-      </Button>
-      <Button variant="secondary" onClick={() => saveToFile('parquet')}>
-        {t('presentation_page.sidemenu.save.file.parquet')}
-      </Button>
-    </ContentBox>
-  );
   const drawerHelp = <>Help content</>;
 
   return (
@@ -573,7 +515,9 @@ export function Selection({
         {selectedNavigationView === 'selection' && drawerSelection}
         {selectedNavigationView === 'view' && drawerView}
         {selectedNavigationView === 'edit' && drawerEdit}
-        {selectedNavigationView === 'save' && drawerSave}
+        {selectedNavigationView === 'save' && (
+          <DrawerSave tableId={selectedTabId} />
+        )}
         {selectedNavigationView === 'help' && drawerHelp}
       </NavigationDrawer>
     )
