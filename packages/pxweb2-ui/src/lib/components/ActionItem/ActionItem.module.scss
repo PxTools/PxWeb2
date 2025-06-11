@@ -2,7 +2,6 @@
 @use '../../../../style-dictionary/dist/css/variables.css' as var;
 @use '../../text-styles.scss';
 
-
 // .actionItem {
 //     display:flex;
 //   border: 1px solid var(--px-color-border-subtle);
@@ -32,7 +31,6 @@
 //     box-shadow: 0 0 0 3px var(--px-color-border-focus-boxshadow);
 //   }
 // }
-
 
 // .iconWrapper {
 //   min-width: 24px;
@@ -98,9 +96,7 @@
 
 //   background-color:  red;
 
-
 // }
-
 
 // .iconWrapper-medium,
 // .iconWrapper-large {
@@ -108,8 +104,6 @@
 //   justify-content: center;
 //   align-items: center;
 // }
-
-
 
 // ActionItem.module.scss
 
@@ -121,13 +115,11 @@
 
 .iconWrapper {
   display: flex;
-    justify-content: center;
-    align-items: center;
+  justify-content: center;
+  align-items: center;
 }
 
 .iconWrapper-medium {
-
-
 }
 
 .iconWrapper-large {
@@ -138,9 +130,7 @@
   .actionItem:hover & {
     background: var(--px-color-surface-action-subtle-hover);
   }
-
 }
-
 
 .labelBodyWrapper {
   display: flex;
@@ -152,26 +142,22 @@
 }
 
 .label-large {
-  margin-top:22px; // space between label and bodyShort
+  margin-top: 22px; // space between label and bodyShort
   //  min-width: 72px;
   //  height: 72px;
   /* your label styles */
 }
 
-
 .bodyShort {
   margin-top: 0.25rem; // space between label and bodyShort
 }
 
-
-
 .actionItem:hover {
-    border-radius: var(--px-border-radius-medium);
-    //outline: 2px solid var(--px-color-border-hover);
-    background: var(--px-color-surface-action-subtle-hover);
+  border-radius: var(--px-border-radius-medium);
+  //outline: 2px solid var(--px-color-border-hover);
+  background: var(--px-color-surface-action-subtle-hover);
   //   &:focus-within {
   //     outline: none;
   //     background: var(--px-color-surface-action-subtle-hover);
   // }
-
-  }
+}

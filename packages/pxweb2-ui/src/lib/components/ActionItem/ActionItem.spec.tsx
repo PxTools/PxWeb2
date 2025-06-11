@@ -18,8 +18,12 @@ vi.mock('@pxweb2/pxweb2-ui', async () => {
     Icon: ({ iconName, className }: any) => (
       <span data-testid="icon" data-icon={iconName} className={className} />
     ),
-    Label: ({ children, ...props }: any) => <label {...props}>{children}</label>,
-    BodyShort: ({ children, ...props }: any) => <span {...props}>{children}</span>,
+    Label: ({ children, ...props }: any) => (
+      <label {...props}>{children}</label>
+    ),
+    BodyShort: ({ children, ...props }: any) => (
+      <span {...props}>{children}</span>
+    ),
   };
 });
 
@@ -29,7 +33,9 @@ describe('ActionItem', () => {
     expect(screen.getByRole('button')).toBeInTheDocument();
     expect(screen.getByTestId('icon')).toHaveAttribute('data-icon', 'BarChart');
     expect(screen.getByText('actionItem.label')).toBeInTheDocument();
-    expect(screen.getByText('Here is a description of the action item.')).toBeInTheDocument();
+    expect(
+      screen.getByText('Here is a description of the action item.'),
+    ).toBeInTheDocument();
   });
 
   it('renders with custom ariaLabel and description', () => {
@@ -38,7 +44,7 @@ describe('ActionItem', () => {
         icon="PieChart"
         ariaLabel="Custom Label"
         description="Custom description"
-      />
+      />,
     );
     expect(screen.getByLabelText('Custom Label')).toBeInTheDocument();
     expect(screen.getByText('Custom Label')).toBeInTheDocument();

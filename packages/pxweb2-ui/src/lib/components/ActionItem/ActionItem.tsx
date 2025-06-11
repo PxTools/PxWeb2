@@ -8,7 +8,6 @@ import { useTranslation } from 'react-i18next';
 
 //import { Checkox} from '../CheckBox/CheckBox';
 
-
 interface ActionItemProps {
   ariaLabel?: string;
   icon: IconProps['iconName'];
@@ -25,7 +24,6 @@ export function ActionItem({
   //checked = false,
   size = 'medium',
   description = 'Here is a description of the action item.',
-
 }: Readonly<ActionItemProps>) {
   const { t } = useTranslation();
 
@@ -54,33 +52,30 @@ export function ActionItem({
   //   </div>
   // );
 
-
-return (
-
-<div
-  className={cl(styles.actionItem)}
-  role="button"
-  tabIndex={0}
-  aria-label={ariaLabel || t('actionItem.ariaLabel')}
-  onClick={onClick}
->
-  <div className={cl(styles[`iconWrapper-${size}`], styles.iconWrapper)}>
-    <Icon iconName={icon} className={styles.icon} />
-  </div>
-  <div className={styles.labelBodyWrapper}>
-    <Label security='medium' className={cl(styles[`label-${size}`], styles.label)} >
-      {ariaLabel || t('actionItem.label')}
-    </Label>
-    {size === 'medium' && (
-      <BodyShort className={styles.bodyShort}>
-        {description || t('actionItem.bodyShort')}
-      </BodyShort>
-    )}
-  </div>
-</div>
-
-);
-
-
+  return (
+    <div
+      className={cl(styles.actionItem)}
+      role="button"
+      tabIndex={0}
+      aria-label={ariaLabel || t('actionItem.ariaLabel')}
+      onClick={onClick}
+    >
+      <div className={cl(styles[`iconWrapper-${size}`], styles.iconWrapper)}>
+        <Icon iconName={icon} className={styles.icon} />
+      </div>
+      <div className={styles.labelBodyWrapper}>
+        <Label
+          security="medium"
+          className={cl(styles[`label-${size}`], styles.label)}
+        >
+          {ariaLabel || t('actionItem.label')}
+        </Label>
+        {size === 'medium' && (
+          <BodyShort className={styles.bodyShort}>
+            {description || t('actionItem.bodyShort')}
+          </BodyShort>
+        )}
+      </div>
+    </div>
+  );
 }
-
