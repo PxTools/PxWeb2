@@ -165,6 +165,7 @@
           "title": "Spara som fil",
           "excel": "Excel (.xlsx)",
           "csv": "Semikolonavgränsad med rubrik (.csv)",
+          "relational-csv": "Relationstabell (.csv)",
           "px": "PC-Axis (.px)",
           "jsonstat2": "JSON-stat2 (.json)",
           "html": "HTML (.html)",

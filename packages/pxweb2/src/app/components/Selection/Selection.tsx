@@ -644,29 +644,29 @@ export function Selection({
   const drawerView = <>View content</>;
   const drawerEdit = <>Edit content</>;
   const drawerSave = (
-    <>
-      <ContentBox title={t('presentation_page.sidemenu.save.file.title')}>
-        <Button variant="primary" onClick={() => saveToFile('excel')}>
-          {t('presentation_page.sidemenu.save.file.excel')}
-        </Button>
-        <Button variant="primary" onClick={() => saveToFile('csv')}>
-          {t('presentation_page.sidemenu.save.file.csv')}
-        </Button>
-        <Button variant="primary" onClick={() => saveToFile('px')}>
-          {t('presentation_page.sidemenu.save.file.px')}
-        </Button>
-        <Button variant="primary" onClick={() => saveToFile('jsonstat2')}>
-          {t('presentation_page.sidemenu.save.file.jsonstat2')}
-        </Button>
-        <Button variant="primary" onClick={() => saveToFile('html')}>
-          {t('presentation_page.sidemenu.save.file.html')}
-        </Button>
-        <Button variant="primary" onClick={() => saveToFile('parquet')}>
-          {t('presentation_page.sidemenu.save.file.parquet')}
-        </Button>
-      </ContentBox>
-      <ContentBox>This is inside a ContentBox</ContentBox>
-    </>
+    <ContentBox title={t('presentation_page.sidemenu.save.file.title')}>
+      <Button variant="secondary" onClick={() => saveToFile('excel')}>
+        {t('presentation_page.sidemenu.save.file.excel')}
+      </Button>
+      <Button variant="secondary" onClick={() => saveToFile('csv')}>
+        {t('presentation_page.sidemenu.save.file.csv')}
+      </Button>
+      <Button variant="secondary" onClick={() => saveToFile('relational-csv')}>
+        {t('presentation_page.sidemenu.save.file.relational-csv')}
+      </Button>
+      <Button variant="secondary" onClick={() => saveToFile('px')}>
+        {t('presentation_page.sidemenu.save.file.px')}
+      </Button>
+      <Button variant="secondary" onClick={() => saveToFile('jsonstat2')}>
+        {t('presentation_page.sidemenu.save.file.jsonstat2')}
+      </Button>
+      <Button variant="secondary" onClick={() => saveToFile('html')}>
+        {t('presentation_page.sidemenu.save.file.html')}
+      </Button>
+      <Button variant="secondary" onClick={() => saveToFile('parquet')}>
+        {t('presentation_page.sidemenu.save.file.parquet')}
+      </Button>
+    </ContentBox>
   );
   const drawerHelp = <>Help content</>;
 

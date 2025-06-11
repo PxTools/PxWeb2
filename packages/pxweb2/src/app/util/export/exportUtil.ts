@@ -33,6 +33,24 @@ export async function exportToFile(
       //responseType = 'text/csv;charset=utf-8;';
       fileExtension = 'csv';
       break;
+      case 'relational-csv':
+      outputFormat = OutputFormatType.CSV;
+      outputFormatParams = [
+        OutputFormatParamType.SEPARATOR_SEMICOLON
+      ];
+      //responseType = 'text/csv;charset=utf-8;';
+      fileExtension = 'csv';
+      // Place all variables in the heading
+      if (variablesSelection.placement?.heading === undefined) {
+        variablesSelection.placement = {
+          heading: [],
+          stub: [],
+        };
+      }
+      variablesSelection.selection.forEach((variable) => {
+        variablesSelection.placement?.stub?.push(variable.variableCode);
+      });
+      break;
     case 'px':
       outputFormat = OutputFormatType.PX;
       fileExtension = 'px';
@@ -57,6 +75,8 @@ export async function exportToFile(
       outputFormat = OutputFormatType.CSV;
       break;
   }
+
+  console.log({variablesSelection});
 
   await TableService.getTableDataByPost(
     tabId,

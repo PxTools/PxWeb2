@@ -165,6 +165,7 @@
           "title": "Save as file",
           "excel": "Excel (.xlsx)",
           "csv": "Semicolon-delimited with heading (.csv)",
+          "relational-csv": "Relational table (.csv)",
           "px": "PC-Axis (.px)",
           "jsonstat2": "JSON-stat2 (.json)",
           "html": "HTML (.html)",
