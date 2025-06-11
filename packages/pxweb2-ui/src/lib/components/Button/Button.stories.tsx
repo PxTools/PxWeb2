@@ -145,6 +145,35 @@ export const Variants: StoryFn<typeof Button> = () => {
         Button
       </Button>
       <br />
+      Primary without Spinner
+      <br />
+      <Button variant="primary">Button</Button>
+      <br />
+      Primary with Spinner
+      <br />
+      <Button variant="primary" loading>
+        Button
+      </Button>
+      <br />
+    </>
+  );
+};
+
+export const Loading: StoryFn<typeof Button> = () => {
+  return (
+    <>
+      Primary with loading
+      <br />
+      <Button variant="primary" loading>
+        Button
+      </Button>
+      <br />
+      Primary with loading and loading label
+      <br />
+      <Button variant="primary" loading loadingLabel="Laster">
+        Button
+      </Button>
+      <br />
     </>
   );
 };
