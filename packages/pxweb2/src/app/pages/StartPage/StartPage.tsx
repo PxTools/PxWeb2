@@ -14,6 +14,7 @@ import {
   Button,
   Heading,
   Ingress,
+  BodyShort,
 } from '@pxweb2/pxweb2-ui';
 import { type Table } from '@pxweb2/pxweb2-api-client';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
@@ -83,9 +84,7 @@ const StartPage = () => {
   };
 
   const handleShowLess = () => {
-    setVisibleCount((prev) =>
-      Math.max(paginationCount, prev - paginationCount),
-    );
+    setVisibleCount(paginationCount);
   };
 
   function handleResetFilter(tables: Table[]) {
@@ -389,6 +388,22 @@ const StartPage = () => {
   const renderTableCardList = () => {
     return (
       <>
+        {visibleCount < state.filteredTables.length && (
+          <BodyShort
+            size="medium"
+            className={cl(styles.tableCount, styles['sr-only'])}
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            <Trans
+              i18nKey="start_page.table.show_number_of_tables"
+              values={{
+                countShown: visibleCount,
+                countTotal: state.filteredTables.length,
+              }}
+            />
+          </BodyShort>
+        )}
         {state.filteredTables.slice(0, visibleCount).map((table) => (
           <div key={table.id}>{renderTableCard(table, t)}</div>
         ))}
@@ -409,6 +424,22 @@ const StartPage = () => {
               t('start_page.table.show_less'),
             )}
         </div>
+
+        {visibleCount < state.filteredTables.length && (
+          <BodyShort
+            size="medium"
+            className={styles.tableCount}
+            aria-hidden="true"
+          >
+            <Trans
+              i18nKey="start_page.table.show_number_of_tables"
+              values={{
+                countShown: visibleCount,
+                countTotal: state.filteredTables.length,
+              }}
+            />
+          </BodyShort>
+        )}
       </>
     );
   };

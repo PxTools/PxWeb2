@@ -74,7 +74,7 @@ interface Resources {
         show_more: 'Show more';
         show_less: 'Show less';
         loading: 'Loading...';
-        show_number_of_tables: 'Showing  <number of> of <number of> tables';
+        show_number_of_tables: 'Showing  <countShown> of <countTotal>';
       };
     };
     presentation_page: {

@@ -83,7 +83,7 @@
       "show_more": "Vis flere",
       "show_less": "Vis færre",
       "loading": "Laster...",
-      "show_number_of_tables": "Viser  {count} av {count} tables"
+      "show_number_of_tables": "Viser {{countShown}} av {{countTotal}}"
     }
   },
   "presentation_page": {
