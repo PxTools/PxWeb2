@@ -41,6 +41,20 @@
 .spinner {
   display: flex;
   align-items: center;
+
+  &.withLabel.spinner-xlarge {
+    gap: 16px;
+  }
+
+  &.withLabel.spinner-large,
+  &.withLabel.spinner-medium {
+    gap: 12px;
+  }
+
+  &.withLabel.spinner-small,
+  &.withLabel.spinner-xsmall {
+    gap: 8px;
+  }
 }
 
 .text-color-default {
@@ -49,21 +63,6 @@
 
 .text-color-inverted {
   color: var(--px-color-text-on-inverted);
-}
-.spinner-xlarge {
-  gap: 16px;
-}
-.spinner-large {
-  gap: 12px;
-}
-.spinner-medium {
-  gap: 12px;
-}
-.spinner-small {
-  gap: 8px;
-}
-.spinner-xsmall {
-  gap: 8px;
 }
 
 .loading {
@@ -90,6 +89,6 @@
   height: 32px;
 }
 .eclipse-xsmall {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
 }
