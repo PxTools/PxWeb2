@@ -15,10 +15,6 @@ import {
 } from '@pxweb2/pxweb2-ui';
 import TableInformation from '../TableInformation/TableInformation';
 import { AccessibilityContext } from '../../context/AccessibilityProvider';
-import {
-  TableDataContext,
-  TableDataContextType,
-} from '../../context/TableDataProvider';
 import { getMandatoryNotesCompressed } from '../../util/notes/notesUtil';
 import useTableData from '../../context/useTableData';
 import useVariables from '../../context/useVariables';
@@ -34,16 +30,18 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
     useState<boolean>(false);
   const [activeTab, setActiveTab] = useState('');
   const [tableInformationOpener, setTableInformationOpener] = useState('');
-  const { buildTableTitle } = useContext(
-    TableDataContext,
-  ) as TableDataContextType;
   const accessibility = useContext(AccessibilityContext);
+  const { pxTableMetadata, selectedVBValues } = useVariables();
+  const selectedMetadata = useTableData().data?.metadata;
+  const buildTableTitle = useTableData().buildTableTitle;
+
   const openInformationButtonRef = useRef<HTMLButtonElement>(null);
   const openInformationLinkRef = useRef<HTMLAnchorElement>(null);
   const openInformationAlertTableNotesRef = useRef<HTMLDivElement>(null);
   const openInformationAlertVarNotesRef = useRef<Array<HTMLDivElement | null>>(
     [],
   );
+  const totalMetadata = pxTableMetadata;
 
   const handleOpenTableInformation = (opener: string, selectedTab?: string) => {
     setTableInformationOpener(opener);
@@ -52,10 +50,6 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
     }
     setIsTableInformationOpen(true);
   };
-
-  const { pxTableMetadata, selectedVBValues } = useVariables();
-  const totalMetadata = pxTableMetadata;
-  const selectedMetadata = useTableData().data?.metadata;
   const noteInfo =
     selectedMetadata && totalMetadata
       ? getMandatoryNotesCompressed(
