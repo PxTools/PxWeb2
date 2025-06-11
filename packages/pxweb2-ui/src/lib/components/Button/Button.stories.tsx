@@ -8,6 +8,12 @@ const meta: Meta<typeof Button> = {
 export default meta;
 type Story = StoryObj<typeof Button>;
 
+const loadingButtonStyle = {
+  minWidth: '130px',
+  marginTop: '10px',
+  marginBottom: '10px',
+};
+
 function test() {
   alert('Button clicked');
 }
@@ -145,16 +151,6 @@ export const Variants: StoryFn<typeof Button> = () => {
         Button
       </Button>
       <br />
-      Primary without Spinner
-      <br />
-      <Button variant="primary">Button</Button>
-      <br />
-      Primary with Spinner
-      <br />
-      <Button variant="primary" loading>
-        Button
-      </Button>
-      <br />
     </>
   );
 };
@@ -164,13 +160,35 @@ export const Loading: StoryFn<typeof Button> = () => {
     <>
       Primary with loading
       <br />
-      <Button variant="primary" loading>
+      <Button variant="primary" loading style={loadingButtonStyle}>
         Button
       </Button>
       <br />
       Primary with loading and loading label
       <br />
-      <Button variant="primary" loading loadingLabel="Laster">
+      <Button
+        variant="primary"
+        loading
+        loadingLabel="Laster..."
+        style={loadingButtonStyle}
+      >
+        Button
+      </Button>
+      <br />
+      Secondary widt loading
+      <br />
+      <Button variant="secondary" loading style={loadingButtonStyle}>
+        Button
+      </Button>
+      <br />
+      Secondary with loading and loading label
+      <br />
+      <Button
+        variant="secondary"
+        loading
+        loadingLabel="Laster..."
+        style={loadingButtonStyle}
+      >
         Button
       </Button>
       <br />

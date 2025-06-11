@@ -53,7 +53,7 @@ export function Spinner({
       Height = '24px';
       Radius = '21.05';
       StrokeWidth = '7.5';
-      Labelsize = 'small';
+      Labelsize = 'medium';
       break;
     default:
       Width = '44px';

@@ -41,6 +41,7 @@
 .spinner {
   display: flex;
   align-items: center;
+  cursor: inherit;
 
   &.withLabel.spinner-xlarge {
     gap: 16px;
@@ -54,6 +55,10 @@
   &.withLabel.spinner-small,
   &.withLabel.spinner-xsmall {
     gap: 8px;
+  }
+
+  label {
+    cursor: inherit;
   }
 }
 

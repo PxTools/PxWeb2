@@ -49,6 +49,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             {
               [classes.iconOnlySmall]: !children && icon && size === 'small',
             },
+            {
+              [classes.loading]: loading,
+            },
           ) + cssClasses
         }
         {...rest}
@@ -56,7 +59,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {loading ? (
           <Spinner
             size="xsmall"
-            variant={variant === 'tertiary' ? 'default' : 'inverted'}
+            variant={variant === 'secondary' ? 'default' : 'inverted'}
             label={loadingLabel ?? undefined}
           />
         ) : (
