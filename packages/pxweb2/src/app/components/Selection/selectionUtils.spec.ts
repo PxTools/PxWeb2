@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import {
-  setSelectedCodelist,
+  updateSelectedCodelistForVariable,
   addSelectedCodeListToVariable,
   getSelectedCodelists,
 } from './selectionUtils';
@@ -39,7 +39,7 @@ describe('selectionUtils', () => {
 
   describe('setSelectedCodelist', () => {
     it('returns undefined if no selectedItem is provided', () => {
-      const result = setSelectedCodelist(
+      const result = updateSelectedCodelistForVariable(
         undefined,
         varId,
         prevSelectedValues,
@@ -49,7 +49,7 @@ describe('selectionUtils', () => {
     });
 
     it('returns undefined if selectedItem.value equals current selectedCodeList', () => {
-      const result = setSelectedCodelist(
+      const result = updateSelectedCodelistForVariable(
         selectOptionA,
         varId,
         prevSelectedValues,
@@ -60,7 +60,7 @@ describe('selectionUtils', () => {
 
     it('returns undefined if newSelectedCodeList is not found', () => {
       const invalidOption: SelectOption = { label: 'Invalid', value: 'Z' };
-      const result = setSelectedCodelist(
+      const result = updateSelectedCodelistForVariable(
         invalidOption,
         varId,
         prevSelectedValues,
@@ -70,7 +70,7 @@ describe('selectionUtils', () => {
     });
 
     it('returns new selected values when a new codelist is selected', () => {
-      const result = setSelectedCodelist(
+      const result = updateSelectedCodelistForVariable(
         selectOptionB,
         varId,
         prevSelectedValues,
@@ -91,7 +91,7 @@ describe('selectionUtils', () => {
         mandatory: false,
         values: [],
       };
-      const result = setSelectedCodelist(
+      const result = updateSelectedCodelistForVariable(
         selectOptionA,
         newVarId,
         prevSelectedValues,
