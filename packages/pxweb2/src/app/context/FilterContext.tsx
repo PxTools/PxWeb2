@@ -1,4 +1,10 @@
-import { ActionDispatch, createContext, ReactNode, useReducer } from 'react';
+import {
+  ActionDispatch,
+  createContext,
+  ReactNode,
+  useMemo,
+  useReducer,
+} from 'react';
 
 import {
   ActionType,
@@ -39,9 +45,12 @@ export const FilterProvider: React.FC<FilterProviderProps> = ({
   children,
 }: FilterProviderProps) => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const memoizedState = useMemo(() => {
+    return { state, dispatch };
+  }, [state]);
 
   return (
-    <FilterContext.Provider value={{ state, dispatch }}>
+    <FilterContext.Provider value={memoizedState}>
       {children}
     </FilterContext.Provider>
   );
