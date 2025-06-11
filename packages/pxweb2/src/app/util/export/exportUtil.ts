@@ -33,11 +33,9 @@ export async function exportToFile(
       //responseType = 'text/csv;charset=utf-8;';
       fileExtension = 'csv';
       break;
-      case 'relational-csv':
+    case 'relational-csv':
       outputFormat = OutputFormatType.CSV;
-      outputFormatParams = [
-        OutputFormatParamType.SEPARATOR_SEMICOLON
-      ];
+      outputFormatParams = [OutputFormatParamType.SEPARATOR_SEMICOLON];
       //responseType = 'text/csv;charset=utf-8;';
       fileExtension = 'csv';
       // Place all variables in the heading
@@ -76,7 +74,7 @@ export async function exportToFile(
       break;
   }
 
-  console.log({variablesSelection});
+  console.log({ variablesSelection });
 
   await TableService.getTableDataByPost(
     tabId,
