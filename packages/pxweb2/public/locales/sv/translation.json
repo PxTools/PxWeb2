@@ -62,7 +62,7 @@
       "close": "Lukk filter",
       "header": "Filter",
       "remove_all_filter": "Ta bort alla filter",
-      "remove_filter_aria": "Slett {{value}}",
+      "remove_filter_aria": "Ta bort filter, {{value}}",
       "subject": "Ämnesområde",
       "timeUnit": "Tidsperiod",
       "year": "År",

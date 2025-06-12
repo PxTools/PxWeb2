@@ -385,24 +385,29 @@ const StartPage = () => {
     );
   };
 
+  const showNumberOfTables = () => {
+    return (
+      <Trans
+        i18nKey="start_page.table.show_number_of_tables"
+        values={{
+          countShown: visibleCount,
+          countTotal: state.filteredTables.length,
+        }}
+      />
+    );
+  };
+
   const renderTableCardList = () => {
     return (
       <>
         {visibleCount < state.filteredTables.length && (
-          <BodyShort
-            size="medium"
-            className={cl(styles.tableCount, styles['sr-only'])}
+          <span
+            className={styles['sr-only']}
             aria-live="polite"
             aria-atomic="true"
           >
-            <Trans
-              i18nKey="start_page.table.show_number_of_tables"
-              values={{
-                countShown: visibleCount,
-                countTotal: state.filteredTables.length,
-              }}
-            />
-          </BodyShort>
+            {showNumberOfTables()}
+          </span>
         )}
         {state.filteredTables.slice(0, visibleCount).map((table) => (
           <div key={table.id}>{renderTableCard(table, t)}</div>
@@ -431,13 +436,7 @@ const StartPage = () => {
             className={styles.tableCount}
             aria-hidden="true"
           >
-            <Trans
-              i18nKey="start_page.table.show_number_of_tables"
-              values={{
-                countShown: visibleCount,
-                countTotal: state.filteredTables.length,
-              }}
-            />
+            {showNumberOfTables()}
           </BodyShort>
         )}
       </>
