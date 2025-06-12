@@ -4,9 +4,9 @@
 .sideBar {
   grid-area: sideBar;
   overflow-y: visible;
-  position: sticky;
+  // position: sticky;
   top: 0;
-  height: 100%;
+  height: auto;
 
   @media #{breakpoint.$xsmall}, #{breakpoint.$small} , #{breakpoint.$medium} {
     padding: 12px 28px;
