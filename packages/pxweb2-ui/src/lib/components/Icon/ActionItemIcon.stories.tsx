@@ -3,7 +3,6 @@ import { ActionItemIcon } from './ActionItemIcon';
 import * as ActionItemIcons from './ActionItemIcons';
 import React from 'react';
 
-
 const meta: Meta<typeof ActionItemIcon> = {
   component: ActionItemIcon,
   title: 'Components/ActionItemIcon',
@@ -27,7 +26,9 @@ export const Variants: StoryFn<typeof ActionItemIcon> = () => {
               gap: '10px',
             }}
           >
-            <ActionItemIcon largeIconName={actionItemIcon as keyof typeof ActionItemIcons} />
+            <ActionItemIcon
+              largeIconName={actionItemIcon as keyof typeof ActionItemIcons}
+            />
 
             {actionItemIcon}
           </div>

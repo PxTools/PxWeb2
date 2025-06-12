@@ -8,12 +8,12 @@
   gap: 0.5rem; // space between icon and label/body
   padding: fixed.$spacing-3 fixed.$spacing-5 fixed.$spacing-3 fixed.$spacing-2;
   &:hover {
-      border-radius: var(--px-border-radius-medium);
-      background: var(--px-color-surface-action-subtle-hover);
+    border-radius: var(--px-border-radius-medium);
+    background: var(--px-color-surface-action-subtle-hover);
   }
   &:active {
-      border-radius: var(--px-border-radius-medium);
-      background: var(--px-color-surface-action-subtle-active);
+    border-radius: var(--px-border-radius-medium);
+    background: var(--px-color-surface-action-subtle-active);
   }
   &:focus-visible {
     outline: 3px solid var(--px-color-border-focus-outline);

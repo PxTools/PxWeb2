@@ -1,6 +1,13 @@
 import cl from 'clsx';
 import styles from './ActionItem.module.scss';
-import { BodyShort, Icon, IconProps, ActionItemIcon, ActionItemIconProps, Label } from '@pxweb2/pxweb2-ui';
+import {
+  BodyShort,
+  Icon,
+  IconProps,
+  ActionItemIcon,
+  ActionItemIconProps,
+  Label,
+} from '@pxweb2/pxweb2-ui';
 import { useTranslation } from 'react-i18next';
 
 interface ActionItemProps {
@@ -32,26 +39,27 @@ export function ActionItem({
       onClick={onClick}
     >
       {size === 'medium' && (
-      <div className={cl(styles[`iconWrapper-${size}`], styles.iconWrapper)}>
-        <Icon iconName={iconName} className={styles.icon} />
-      </div>
+        <div className={cl(styles[`iconWrapper-${size}`], styles.iconWrapper)}>
+          <Icon iconName={iconName} className={styles.icon} />
+        </div>
       )}
       {size === 'large' && (
-      <div className={cl(styles[`iconWrapper-${size}`], styles.iconWrapper)}>
-        <ActionItemIcon largeIconName={largeIconName} className={styles.icon} />
-      </div>
+        <div className={cl(styles[`iconWrapper-${size}`], styles.iconWrapper)}>
+          <ActionItemIcon
+            largeIconName={largeIconName}
+            className={styles.icon}
+          />
+        </div>
       )}
       <div className={styles.labelBodyWrapper}>
         <Label
-          size = "medium"
+          size="medium"
           className={cl(styles[`label-${size}`], styles.label)}
         >
           {ariaLabel || t('actionItem.label')}
         </Label>
         {size === 'medium' && description && (
-          <BodyShort className={styles.bodyShort}>
-            {description}
-          </BodyShort>
+          <BodyShort className={styles.bodyShort}>{description}</BodyShort>
         )}
       </div>
     </div>

@@ -62,7 +62,9 @@ describe('ActionItem', () => {
     expect(screen.getByText('desc')).toBeInTheDocument();
 
     // large
-    render(<ActionItem largeIconName="Table" size="large" description="desc2" />);
+    render(
+      <ActionItem largeIconName="Table" size="large" description="desc2" />,
+    );
     expect(screen.queryByText('desc2')).not.toBeInTheDocument();
   });
 

@@ -7,7 +7,11 @@ export interface ActionItemIconProps {
   ariaLabel?: string;
 }
 
-const ActionItemIcon: React.FC<ActionItemIconProps> = ({ largeIconName, className, ariaLabel }) => {
+const ActionItemIcon: React.FC<ActionItemIconProps> = ({
+  largeIconName,
+  className,
+  ariaLabel,
+}) => {
   const actionItemIcon = ActionItemIcons[largeIconName];
 
   if (!actionItemIcon) {

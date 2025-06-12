@@ -23,7 +23,7 @@ export const LargeDefault: Story = {
   args: {
     largeIconName: 'Table',
     ariaLabel: 'Action with description',
-    size: 'large'
+    size: 'large',
   },
 };
 
@@ -32,7 +32,7 @@ export const MediumDefault: Story = {
     iconName: 'File',
     ariaLabel: 'Medium default',
     size: 'medium',
-    description: 'This is a description of the action item.'
+    description: 'This is a description of the action item.',
   },
 };
 
