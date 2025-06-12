@@ -226,6 +226,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * @param tableId - The id of the table to fetch data for.
    * @param i18n - The i18n object for handling langauages
    * @param variablesSelection - User selection of variables and their values.
+   * @param codelistChanged - If the codelist has changed.
    */
   const fetchWithoutValidAccData = React.useCallback(
     async (
@@ -233,9 +234,12 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       i18n: i18n,
       isMobile: boolean,
       variablesSelection: VariablesSelection,
+      codelistChanged: boolean,
     ) => {
-      // Clear current table while fetching new data
-      setData(undefined);
+      // Clear current table while fetching new data if codelist has changed
+      if (codelistChanged) {
+        setData(undefined);
+      }
 
       const pxTable: PxTable = await fetchFromApi(
         tableId,
@@ -910,6 +914,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
             i18n,
             isMobile,
             variablesSelection,
+            codelistChanged,
           );
         }
 
