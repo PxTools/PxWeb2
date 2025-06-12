@@ -1,5 +1,9 @@
+import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
-import { Button, ContentBox } from '@pxweb2/pxweb2-ui';
+import { useState } from 'react';
+
+import classes from './DrawerSave.module.scss';
+import { Button, ContentBox, Spinner } from '@pxweb2/pxweb2-ui';
 import {
   VariableSelection,
   VariablesSelection,
@@ -16,6 +20,7 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
   const variables = useVariables();
   const heading = useTableData().data?.heading;
   const stub = useTableData().data?.stub;
+  const [isLoading, setIsLoading] = useState(false);
 
   async function saveToFile(fileFormat: string): Promise<void> {
     const selections: Array<VariableSelection> = [];
@@ -54,31 +59,52 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
       };
     }
 
+    setIsLoading(true);
+
     // Export the file using the export utility
-    exportToFile(tableId, i18n.language, variablesSelection, fileFormat);
+    await exportToFile(tableId, i18n.language, variablesSelection, fileFormat)
+      .then(
+        () => {
+          // Notify user of successful export
+        },
+        (error) => {
+          // Handle error during export
+          console.error('Error exporting file:', error);
+        },
+      )
+      .finally(() => {
+        setIsLoading(false);
+      });
   }
 
   return (
-    <ContentBox title={t('presentation_page.sidemenu.save.file.title')}>
-      <Button variant="secondary" onClick={() => saveToFile('excel')}>
-        {t('presentation_page.sidemenu.save.file.excel')}
-      </Button>
-      <Button variant="secondary" onClick={() => saveToFile('csv')}>
-        {t('presentation_page.sidemenu.save.file.csv')}
-      </Button>
-      <Button variant="secondary" onClick={() => saveToFile('px')}>
-        {t('presentation_page.sidemenu.save.file.px')}
-      </Button>
-      <Button variant="secondary" onClick={() => saveToFile('jsonstat2')}>
-        {t('presentation_page.sidemenu.save.file.jsonstat2')}
-      </Button>
-      <Button variant="secondary" onClick={() => saveToFile('html')}>
-        {t('presentation_page.sidemenu.save.file.html')}
-      </Button>
-      <Button variant="secondary" onClick={() => saveToFile('parquet')}>
-        {t('presentation_page.sidemenu.save.file.parquet')}
-      </Button>
-    </ContentBox>
+    <div className={cl(classes.drawerSave)}>
+      <ContentBox title={t('presentation_page.sidemenu.save.file.title')}>
+        <Button variant="tertiary" onClick={() => saveToFile('excel')}>
+          {t('presentation_page.sidemenu.save.file.excel')}
+        </Button>
+        <Button variant="tertiary" onClick={() => saveToFile('csv')}>
+          {t('presentation_page.sidemenu.save.file.csv')}
+        </Button>
+        <Button variant="tertiary" onClick={() => saveToFile('px')}>
+          {t('presentation_page.sidemenu.save.file.px')}
+        </Button>
+        <Button variant="tertiary" onClick={() => saveToFile('jsonstat2')}>
+          {t('presentation_page.sidemenu.save.file.jsonstat2')}
+        </Button>
+        <Button variant="tertiary" onClick={() => saveToFile('html')}>
+          {t('presentation_page.sidemenu.save.file.html')}
+        </Button>
+        <Button variant="tertiary" onClick={() => saveToFile('parquet')}>
+          {t('presentation_page.sidemenu.save.file.parquet')}
+        </Button>
+        {isLoading && (
+          <div className={classes.loadingSpinner}>
+            <Spinner size="xlarge" />
+          </div>
+        )}
+      </ContentBox>
+    </div>
   );
 }
 export default DrawerSave;
