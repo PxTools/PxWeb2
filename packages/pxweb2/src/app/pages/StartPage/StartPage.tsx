@@ -223,6 +223,18 @@ const StartPage = () => {
     }
   }, [isFilterOverlayOpen]);
 
+  useEffect(() => {
+    if (isFilterOverlayOpen && isSmallScreen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isFilterOverlayOpen, isSmallScreen]);
+
   const formatNumber = (value: number, locale = 'nb-NO') => {
     return new Intl.NumberFormat(locale).format(value);
   };
