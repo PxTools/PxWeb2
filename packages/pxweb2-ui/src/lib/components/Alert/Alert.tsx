@@ -22,6 +22,7 @@ export interface AlertProps {
   readonly children?: string | React.ReactNode;
   readonly clickButtonAriaLabel?: string;
   readonly alertAriaLabel?: string;
+  readonly ariaLive?: 'off' | 'polite' | 'assertive';
   readonly ariaHasPopup?:
     | 'false'
     | 'true'
@@ -48,6 +49,7 @@ export function Alert({
   clickButtonAriaLabel,
   alertAriaLabel,
   ariaHasPopup = 'false',
+  ariaLive = 'off',
   role,
   ref,
   id,
@@ -218,14 +220,16 @@ export function Alert({
           </div>
         )}
         {clickable && (
-          <button
-            className={cl(classes['alert-arrow'])}
-            aria-label={clickButtonAriaLabel}
-            type="button"
-            tabIndex={-1}
-          >
-            <Icon iconName={iconRight} />
-          </button>
+          <div aria-live={ariaLive}>
+            <button
+              className={cl(classes['alert-arrow'])}
+              aria-label={clickButtonAriaLabel}
+              type="button"
+              tabIndex={-1}
+            >
+              <Icon iconName={iconRight} />
+            </button>
+          </div>
         )}
       </div>
     </div>

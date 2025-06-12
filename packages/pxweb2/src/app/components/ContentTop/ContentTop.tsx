@@ -246,13 +246,10 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
             variant="info"
             heading={noteMessage.heading}
             ariaHasPopup="dialog"
-            alertAriaLabel={t(
-              'presentation_page.main_content.about_table.notes.important_about_table',
-            )}
+            alertAriaLabel={noteMessage.heading}
+            ariaLive="polite"
             role="button"
-            clickButtonAriaLabel={t(
-              'presentation_page.main_content.about_table.notes.important_about_table',
-            )}
+            clickButtonAriaLabel={noteMessage.heading}
             clickable
             onClick={() => {
               handleOpenTableInformation(
