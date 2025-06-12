@@ -20,6 +20,17 @@ export interface AlertProps {
   readonly onClick?: () => void;
   readonly className?: string;
   readonly children?: string | React.ReactNode;
+  readonly clickButtonAriaLabel?: string;
+  readonly alertAriaLabel?: string;
+  readonly ariaHasPopup?:
+    | 'false'
+    | 'true'
+    | 'menu'
+    | 'listbox'
+    | 'tree'
+    | 'grid'
+    | 'dialog';
+  readonly role?: React.AriaRole;
   ref?: React.Ref<HTMLDivElement>;
   id?: string;
 }
@@ -34,6 +45,10 @@ export function Alert({
   onClick,
   className = '',
   children,
+  clickButtonAriaLabel,
+  alertAriaLabel,
+  ariaHasPopup = 'false',
+  role,
   ref,
   id,
 }: Readonly<AlertProps>) {
@@ -138,6 +153,7 @@ export function Alert({
   return (
     <div
       id={id}
+      aria-label={alertAriaLabel}
       tabIndex={clickable ? 0 : undefined}
       className={
         cl(classes[`alert-${size}`], classes[variant], {
@@ -147,6 +163,8 @@ export function Alert({
       onClick={clickable ? onClick : undefined}
       onKeyDown={clickable ? handleKeyDown : undefined}
       style={{ cursor: clickable ? 'pointer' : 'default' }}
+      aria-haspopup={ariaHasPopup}
+      role={role}
       ref={ref}
     >
       <div className={classes[`alert-section-left-${size}`]}>
@@ -200,10 +218,14 @@ export function Alert({
           </div>
         )}
         {clickable && (
-          <div className={cl(classes['alert-arrow-wrapper'])}>
-            {' '}
-            <Icon iconName={iconRight} className=""></Icon>
-          </div>
+          <button
+            className={cl(classes['alert-arrow'])}
+            aria-label={clickButtonAriaLabel}
+            type="button"
+            tabIndex={-1}
+          >
+            <Icon iconName={iconRight} />
+          </button>
         )}
       </div>
     </div>

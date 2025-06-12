@@ -245,7 +245,13 @@
         },
         "notes": {
           "important_about_table": "Viktigt om tabellen",
-          "important_about_variable": "Viktigt om "
+          "important_about_variable": "Viktigt om ",
+          "important_about_selection_heading_1": "Det finns ",
+          "important_about_selection_heading_2": " viktiga noter för vald filtrering ",
+          "important_about_selection_body": "Tryck på detta meddelande för att läsa noterna. ",
+          "important_about_selection_heading_one_note_1": "Det finns ",
+          "important_about_selection_heading_one_note_2": " viktig not för vald filtrering ",
+          "important_about_selection_body_one_note": "Tryck på detta meddelande för att läsa noten. "
         }
       },
       "related": {

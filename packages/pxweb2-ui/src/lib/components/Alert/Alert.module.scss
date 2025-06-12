@@ -212,6 +212,17 @@
   gap: 6px;
 }
 
+.alert-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background-color: transparent;
+  // color: var(--px-color-icon-secondary);
+}
+
 .alert-section-right-continue {
   display: flex;
   margin-left: auto;

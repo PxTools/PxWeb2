@@ -15,14 +15,24 @@ import {
 } from '@pxweb2/pxweb2-ui';
 import TableInformation from '../TableInformation/TableInformation';
 import { AccessibilityContext } from '../../context/AccessibilityProvider';
-import { getMandatoryNotesCompressed } from '../../util/notes/notesUtil';
+import {
+  getMandatoryNotesCompressed,
+  MandatoryCompressedUtilityNotesType,
+} from '../../util/notes/notesUtil';
 import useTableData from '../../context/useTableData';
 import useVariables from '../../context/useVariables';
+import { forEach } from 'lodash';
 
 export interface ContenetTopProps {
   readonly pxtable: PxTable;
   readonly staticTitle: string;
 }
+
+type NoteMessageType = {
+  heading: string;
+  message: string;
+  totalNumberOfNotes: number;
+};
 
 export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
   const { t } = useTranslation();
@@ -57,6 +67,207 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
           selectedVBValues,
         )
       : undefined;
+
+  let noteMessage;
+  if (noteInfo) {
+    noteMessage = createNoteMessage(noteInfo);
+  }
+
+  function createNoteMessage(
+    noteInfo: MandatoryCompressedUtilityNotesType,
+  ): NoteMessageType | null {
+    let totalNumberOfVariablesNotes = 0;
+    if (noteInfo.variableNotes.length > 0) {
+      forEach(noteInfo.variableNotes, (variableNote) => {
+        totalNumberOfVariablesNotes +=
+          variableNote.totalNumberOfNotesOnVariable;
+      });
+    }
+    console.log('totalNumberOfVariablesNotes', totalNumberOfVariablesNotes);
+
+    let totalNumberOfNotes =
+      noteInfo.numberOfTableNotes + totalNumberOfVariablesNotes;
+
+    if (totalNumberOfNotes === 0) {
+      return null;
+    }
+
+    if (noteInfo.variableNotes.length === 0) {
+      if (noteInfo.numberOfTableNotes > 0) {
+        return {
+          heading: t(
+            'presentation_page.main_content.about_table.notes.important_about_table',
+          ),
+          message: noteInfo.tableNotes,
+          totalNumberOfNotes: noteInfo.numberOfTableNotes,
+        };
+      }
+    }
+
+    //has variableNotes
+    if (noteInfo.numberOfTableNotes === 0) {
+      // no table notes
+      console.log('her??');
+      if (totalNumberOfVariablesNotes === 1) {
+        console.log('her da??');
+        // if (noteInfo.variableNotes.length === 1) {
+        //   // and one variable with notes
+        //   if (noteInfo.variableNotes[0].totalNumberOfNotesOnVariable === 1) {
+        // and only one note on the variable
+        return {
+          heading:
+            t(
+              'presentation_page.main_content.about_table.notes.important_about_selection_heading_one_note_1',
+            ) +
+            totalNumberOfNotes +
+            t(
+              'presentation_page.main_content.about_table.notes.important_about_selection_heading_one_note_2',
+            ),
+          message: noteInfo.variableNotes[0].compressednotes,
+          totalNumberOfNotes: 1,
+        };
+        // }
+      }
+    }
+
+    return {
+      heading:
+        t(
+          'presentation_page.main_content.about_table.notes.important_about_selection_heading_1',
+        ) +
+        totalNumberOfNotes +
+        t(
+          'presentation_page.main_content.about_table.notes.important_about_selection_heading_2',
+        ),
+      message: t(
+        'presentation_page.main_content.about_table.notes.important_about_selection_body',
+      ),
+      totalNumberOfNotes: totalNumberOfNotes,
+    };
+  }
+
+  // function createNoteMessageX(noteInfo: MandatoryCompressedUtilityNotesType) {
+  //   console.log(
+  //     'noteInfo.noteInfo.numberOfTableNotes',
+  //     noteInfo.numberOfTableNotes,
+  //   );
+  //   let numberOfVariablesWithNotes = noteInfo.variableNotes.length;
+
+  //   let totalNumberOfNotes = noteInfo.numberOfTableNotes;
+
+  //   forEach(noteInfo.variableNotes, (variableNote) => {
+  //     totalNumberOfNotes += variableNote.totalNumberOfNotesOnVariable;
+  //   });
+  //   let returnMessage: NoteMessage = {
+  //     heading: '',
+  //     message: '',
+  //     totalNumberOfNotes: 0,
+  //   };
+  //   console.log('totalNumberOfNotes=', totalNumberOfNotes);
+
+  //   if (noteInfo.numberOfTableNotes === 0) {
+  //     // no table notes
+  //     if (numberOfVariablesWithNotes === 0) {
+  //       // no variables with notes
+  //       return undefined;
+  //     } else if (numberOfVariablesWithNotes === 1) {
+  //       // no tableNotes and only one variable with notes
+  //       if (noteInfo.variableNotes[0].totalNumberOfNotesOnVariable == 1) {
+  //         // only one notes on one variable
+  //         // If there is only one note on the variable, we can just return the note text
+  //         returnMessage.heading =
+  //           t(
+  //             'presentation_page.main_content.about_table.notes.important_about_variable',
+  //           ) + noteInfo.variableNotes[0].variableName;
+  //         returnMessage.message = noteInfo.variableNotes[0].compressednotes;
+  //         return returnMessage;
+  //       } else {
+  //         // no table notes and more than one note on one variable
+  //         returnMessage.heading =
+  //           t(
+  //             'presentation_page.main_content.about_table.notes.important_about_selection_heading_1',
+  //           ) +
+  //           totalNumberOfNotes +
+  //           t(
+  //             'presentation_page.main_content.about_table.notes.important_about_selection_heading_2',
+  //           );
+  //         returnMessage.message = t(
+  //           'presentation_page.main_content.about_table.notes.important_about_selection_body',
+  //         );
+  //         returnMessage.message = t(
+  //           'presentation_page.main_content.about_table.notes.important_about_selection_body',
+  //         );
+  //       }
+  //     } else {
+  //       // no table notes and more than one variable with notes
+  //       returnMessage.heading =
+  //         t(
+  //           'presentation_page.main_content.about_table.notes.important_about_selection_heading_1',
+  //         ) +
+  //         totalNumberOfNotes +
+  //         t(
+  //           'presentation_page.main_content.about_table.notes.important_about_selection_heading_2',
+  //         );
+  //       returnMessage.message = t(
+  //         'presentation_page.main_content.about_table.notes.important_about_selection_body',
+  //       );
+  //       returnMessage.message = t(
+  //         'presentation_page.main_content.about_table.notes.important_about_selection_body',
+  //       );
+  //       return returnMessage;
+  //     }
+  //   } else if (noteInfo.numberOfTableNotes > 0) {
+  //     // only one table note
+  //     if (numberOfVariablesWithNotes === 0) {
+  //       // only one table note and no variables with notes
+  //       returnMessage.heading = t(
+  //         'presentation_page.main_content.about_table.notes.important_about_table',
+  //       );
+  //       returnMessage.message = noteInfo.tableNotes;
+  //       return returnMessage;
+  //     } else {
+  //       // only one table note and one or more variables with notes
+  //       returnMessage.heading =
+  //         t(
+  //           'presentation_page.main_content.about_table.notes.important_about_selection_heading_1',
+  //         ) +
+  //         totalNumberOfNotes +
+  //         t(
+  //           'presentation_page.main_content.about_table.notes.important_about_selection_heading_2',
+  //         );
+  //       returnMessage.message = t(
+  //         'presentation_page.main_content.about_table.notes.important_about_selection_body',
+  //       );
+  //       return returnMessage;
+  //     }
+  //   } else {
+  //     // more than 1 table note
+  //     if (numberOfVariablesWithNotes === 0) {
+  //       // more than one table note and no variables with notes
+  //       returnMessage.heading = returnMessage.heading = t(
+  //         'presentation_page.main_content.about_table.notes.important_about_table',
+  //       );
+  //       returnMessage.message = noteInfo.tableNotes;
+  //       returnMessage.totalNumberOfNotes = totalNumberOfNotes;
+  //       return returnMessage;
+  //     } else {
+  //       // more than one table note and one or more variables with notes
+  //       returnMessage.heading =
+  //         t(
+  //           'presentation_page.main_content.about_table.notes.important_about_selection_heading_1',
+  //         ) +
+  //         totalNumberOfNotes +
+  //         t(
+  //           'presentation_page.main_content.about_table.notes.important_about_selection_heading_2',
+  //         );
+  //       returnMessage.message = t(
+  //         'presentation_page.main_content.about_table.notes.important_about_selection_body',
+  //       );
+  //       returnMessage.totalNumberOfNotes = totalNumberOfNotes;
+  //       return returnMessage;
+  //     }
+  //   }
+  // }
 
   useEffect(() => {
     if (!isTableInformationOpen) {
@@ -150,11 +361,17 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
           </div>
         </div>
         <div className={cl(classes.alertgroup)}>
-          {noteInfo?.tableNotes && (
+          {noteMessage && (
             <Alert
               ref={openInformationAlertTableNotesRef}
               variant="info"
-              heading={t(
+              heading={noteMessage.heading}
+              ariaHasPopup="dialog"
+              alertAriaLabel={t(
+                'presentation_page.main_content.about_table.notes.important_about_table',
+              )}
+              role="button"
+              clickButtonAriaLabel={t(
                 'presentation_page.main_content.about_table.notes.important_about_table',
               )}
               clickable
@@ -165,10 +382,10 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
                 );
               }}
             >
-              {noteInfo.tableNotes}
+              {noteMessage.message}
             </Alert>
           )}
-          {noteInfo?.variableNotes?.map((note, idx) => (
+          {/* {noteInfo?.variableNotes?.map((note, idx) => (
             <Alert
               ref={(el) => {
                 openInformationAlertVarNotesRef.current[idx] = el;
@@ -190,7 +407,7 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
             >
               {note?.compressednotes}
             </Alert>
-          ))}
+          ))} */}
         </div>
       </div>
       {isTableInformationOpen && (
