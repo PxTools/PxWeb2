@@ -57,7 +57,7 @@
   }
 
   &.open {
-    max-height: 500px;
+    max-height: 100%;
     transition: max-height 0.2s ease-out;
   }
 }

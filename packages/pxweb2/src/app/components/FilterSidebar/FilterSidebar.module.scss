@@ -4,9 +4,8 @@
 .sideBar {
   grid-area: sideBar;
   overflow-y: visible;
-  position: sticky;
   top: 0;
-  height: 100%;
+  height: auto;
 
   @media #{breakpoint.$xsmall}, #{breakpoint.$small} , #{breakpoint.$medium} {
     padding: 12px 28px;
@@ -24,6 +23,26 @@
   list-style-type: none;
 }
 
-.subjectToggle:not(:first-of-type) {
-  padding-left: 24px;
+.filterLabel {
+  width: 100%;
+}
+
+.toggleIndent {
+  padding-left: 36px;
+  &:last-of-type {
+    margin-bottom: 12px;
+  }
+}
+
+.hiddenChildren {
+  display: none;
+}
+
+.collapsibleElement {
+  display: flex;
+}
+
+.collapsibleChevron {
+  min-width: 24px;
+  padding: 0;
 }
