@@ -168,7 +168,13 @@
         "title": "Spara",
         "file": {
           "title": "Spara som fil",
-          "excel": "Excel (xlsx)"
+          "excel": "Excel (.xlsx)",
+          "csv": "Semikolonavgränsad med rubrik (.csv)",
+          "relational-csv": "Relationstabell (.csv)",
+          "px": "PC-Axis (.px)",
+          "jsonstat2": "JSON-stat2 (.json)",
+          "html": "HTML (.html)",
+          "parquet": "Parquet (.parquet)"
         },
         "imagefile": {
           "title": "Spara som diagram",
