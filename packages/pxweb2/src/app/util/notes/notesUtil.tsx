@@ -153,14 +153,6 @@ function compressVariableNotes(
   }
 
   variableNoteEntry.compressednotes = tempString;
-  console.log(
-    'Number of variable notes: ' + variableNoteEntry.variableName,
-    variableNoteEntry.numberOfVariableNotes,
-  );
-  console.log(
-    'Number of value notes: ' + variableNoteEntry.variableName,
-    variableNoteEntry.numberOfValueNotes,
-  );
   return variableNoteEntry;
 }
 
@@ -193,10 +185,6 @@ export function getMandatoryNotesCompressed(
       );
     }
   }
-  console.log(
-    'Number of table notes: ',
-    tempTabletableNotes.numberOfTableNotes,
-  );
   return tempTabletableNotes;
 }
 
