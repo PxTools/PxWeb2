@@ -1,5 +1,6 @@
 export * from './../style-dictionary/dist/js/css-variables';
 export * from './../style-dictionary/dist/js/fixed-variables';
+export * from './lib/components/ActionItem/ActionItem';
 export * from './lib/components/Alert/Alert';
 export * from './lib/components/BottomSheet/BottomSheet';
 export * from './lib/components/Button/Button';
@@ -10,6 +11,7 @@ export * from './lib/components/Contact/Contact';
 export * from './lib/components/EmptyState/EmptyState';
 export * from './lib/components/FilterCategory/FilterCategory';
 export * from './lib/components/Icon/Icon';
+export * from './lib/components/Icon/ActionItemIcon';
 export * from './lib/components/Link/Link';
 export * from './lib/components/Notes/MandatoryNotes';
 export * from './lib/components/Notes/MandatoryTableNotes';

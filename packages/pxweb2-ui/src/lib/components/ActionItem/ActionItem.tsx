@@ -1,16 +1,12 @@
 import cl from 'clsx';
-
 import styles from './ActionItem.module.scss';
-//import { Icon, {IconProps} } from '../Icon/Icon';
-import { BodyShort, Icon, IconProps, Label } from '@pxweb2/pxweb2-ui';
+import { BodyShort, Icon, IconProps, ActionItemIcon, ActionItemIconProps, Label } from '@pxweb2/pxweb2-ui';
 import { useTranslation } from 'react-i18next';
-//import classes from './Alert.module.scss';
-
-//import { Checkox} from '../CheckBox/CheckBox';
 
 interface ActionItemProps {
   ariaLabel?: string;
-  icon: IconProps['iconName'];
+  iconName?: IconProps['iconName'];
+  largeIconName?: ActionItemIconProps['largeIconName'];
   onClick?: () => void;
   description?: string;
   checked?: boolean;
@@ -19,38 +15,13 @@ interface ActionItemProps {
 
 export function ActionItem({
   ariaLabel = '',
-  icon = 'BarChart',
+  iconName = 'BarChart',
+  largeIconName = 'Table',
   onClick,
-  //checked = false,
   size = 'medium',
-  description = 'Here is a description of the action item.',
+  description,
 }: Readonly<ActionItemProps>) {
   const { t } = useTranslation();
-
-  // return (
-  //   <div
-  //     className={cl(styles.actionItem)}
-  //     role="button"
-  //     tabIndex={0}
-  //     aria-label={ariaLabel || t('actionItem.ariaLabel')}
-  //   >
-  //     <div  className={cl(styles[`iconWrapper-${size}`],styles.iconWrapper) } >
-  //         <Icon iconName={icon} className={styles.icon} />
-  //     </div>
-  //     <div>
-  //        <div className={styles.labelBodyWrapper}>
-  //       <Label className={cl(styles[`label`])}>
-  //         {ariaLabel || t('actionItem.label')}
-  //       </Label>
-  //       {size === 'large' && (
-  //         <BodyShort className={styles.bodyShort}>
-  //           {description || t('actionItem.bodyShort')}
-  //         </BodyShort>
-  //       )}
-  //       </div>
-  //     </div>
-  //   </div>
-  // );
 
   return (
     <div
@@ -60,19 +31,26 @@ export function ActionItem({
       aria-label={ariaLabel || t('actionItem.ariaLabel')}
       onClick={onClick}
     >
+      {size === 'medium' && (
       <div className={cl(styles[`iconWrapper-${size}`], styles.iconWrapper)}>
-        <Icon iconName={icon} className={styles.icon} />
+        <Icon iconName={iconName} className={styles.icon} />
       </div>
+      )}
+      {size === 'large' && (
+      <div className={cl(styles[`iconWrapper-${size}`], styles.iconWrapper)}>
+        <ActionItemIcon largeIconName={largeIconName} className={styles.icon} />
+      </div>
+      )}
       <div className={styles.labelBodyWrapper}>
         <Label
-          security="medium"
+          size = "medium"
           className={cl(styles[`label-${size}`], styles.label)}
         >
           {ariaLabel || t('actionItem.label')}
         </Label>
-        {size === 'medium' && (
+        {size === 'medium' && description && (
           <BodyShort className={styles.bodyShort}>
-            {description || t('actionItem.bodyShort')}
+            {description}
           </BodyShort>
         )}
       </div>

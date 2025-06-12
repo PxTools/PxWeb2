@@ -8,8 +8,8 @@ const meta: Meta<typeof ActionItem> = {
   args: {
     ariaLabel: 'Click me',
     onClick: () => alert('Action clicked!'),
-    icon: 'BarChart', // new property example
-    size: 'large', // new property example
+    iconName: 'BarChart',
+    largeIconName: 'Table',
   },
 };
 
@@ -19,9 +19,26 @@ type Story = StoryObj<typeof ActionItem>;
 
 export const Default: Story = {};
 
-export const WithDescription: Story = {
+export const LargeDefault: Story = {
   args: {
-    icon: 'File',
+    largeIconName: 'Table',
+    ariaLabel: 'Action with description',
+    size: 'large'
+  },
+};
+
+export const MediumDefault: Story = {
+  args: {
+    iconName: 'File',
+    ariaLabel: 'Medium default',
+    size: 'medium',
+    description: 'This is a description of the action item.'
+  },
+};
+
+export const MediumWithDescription: Story = {
+  args: {
+    iconName: 'File',
     ariaLabel: 'Action with description',
     size: 'medium',
     description: 'This is a description of the action item.',
