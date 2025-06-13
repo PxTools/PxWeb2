@@ -1,7 +1,9 @@
+import React, { forwardRef } from 'react';
 import cl from 'clsx';
 
 import classes from './Button.module.scss';
 import { Icon, IconProps } from '../Icon/Icon';
+import { Spinner } from '../Spinner/Spinner';
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -11,9 +13,9 @@ export interface ButtonProps
   iconPosition?: 'left' | 'right';
   className?: string;
   children?: string;
+  loading?: boolean;
+  loadingLabel?: string;
 }
-
-import React, { forwardRef } from 'react';
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
@@ -24,6 +26,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       size = 'medium',
       children,
       className = '',
+      loading = false,
+      loadingLabel,
       ...rest
     },
     ref,
@@ -45,16 +49,25 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             {
               [classes.iconOnlySmall]: !children && icon && size === 'small',
             },
+            {
+              [classes.loading]: loading,
+            },
           ) + cssClasses
         }
         {...rest}
       >
-        {icon && iconPosition === 'left' && (
-          <Icon iconName={icon} className=""></Icon>
-        )}
-        {children}
-        {icon && iconPosition === 'right' && (
-          <Icon iconName={icon} className=""></Icon>
+        {loading ? (
+          <Spinner
+            size="xsmall"
+            variant={variant === 'secondary' ? 'default' : 'inverted'}
+            label={loadingLabel ?? undefined}
+          />
+        ) : (
+          <>
+            {icon && iconPosition === 'left' && <Icon iconName={icon} />}
+            {children}
+            {icon && iconPosition === 'right' && <Icon iconName={icon} />}
+          </>
         )}
       </button>
     );

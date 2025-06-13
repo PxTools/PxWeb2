@@ -49,11 +49,11 @@ export function Spinner({
       Labelsize = 'medium';
       break;
     case 'xsmall':
-      Width = '20px';
-      Height = '20px';
+      Width = '24px';
+      Height = '24px';
       Radius = '21.05';
       StrokeWidth = '7.5';
-      Labelsize = 'small';
+      Labelsize = 'medium';
       break;
     default:
       Width = '44px';
@@ -95,7 +95,11 @@ export function Spinner({
   );
 
   return (
-    <div className={cl(classes[`spinner`], classes[`spinner-${size}`])}>
+    <div
+      className={cl(classes[`spinner`], classes[`spinner-${size}`], {
+        [classes.withLabel]: label,
+      })}
+    >
       <div className={cl(classes[`eclipse-${size}`])}>{Eclipse}</div>
       <label
         className={cl(

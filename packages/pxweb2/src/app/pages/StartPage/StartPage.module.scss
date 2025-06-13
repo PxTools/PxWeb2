@@ -179,14 +179,29 @@
   padding-bottom: 1rem;
 }
 
-.loadMoreWrapper {
+.tableCardList {
+  display: grid;
+  gap: 16px;
+
+  @media #{breakpoint.$xsmall} , #{breakpoint.$small} {
+    gap: 12px;
+  }
+}
+
+.paginationWrapper {
   display: flex;
   justify-content: center;
-  margin-top: 2rem;
+  margin-top: 36px;
 
-  .loadMoreButton {
-    min-width: 200px;
+  @media #{breakpoint.$xsmall} , #{breakpoint.$small} {
+    margin-top: 2rem;
   }
+}
+
+.tableCount {
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0;
 }
 
 .loadingSpinner {
@@ -195,14 +210,6 @@
 
 .filterPillContainer {
   padding-bottom: 40px;
-}
-
-.tableListItem {
-  padding-bottom: 16px;
-
-  @media #{breakpoint.$xsmall} , #{breakpoint.$small} {
-    padding-bottom: 12px;
-  }
 }
 
 .countLabel {
