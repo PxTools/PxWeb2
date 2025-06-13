@@ -7,6 +7,7 @@ import { PxTable } from '../../shared-types/pxTable';
 import { calculateRowAndColumnMeta, columnRowMeta } from './columnRowMeta';
 import { getPxTableData } from './cubeHelper';
 import { Value } from '../../shared-types/value';
+import { DataCell } from '../../shared-types/pxTableData';
 import { VartypeEnum } from '../../shared-types/vartypeEnum';
 import { Variable } from '../../shared-types/variable';
 
@@ -25,6 +26,36 @@ const decimalFormats: Record<number, string> = {
   5: 'number.simple_number_with_five_decimals',
   6: 'number.simple_number',
 };
+
+export function getFormattedValue(
+  dataCell: DataCell | undefined,
+  numberOfDecimals: number,
+): string {
+  if (!dataCell) {
+    return '';
+  }
+
+  if (dataCell.formattedValue) {
+    return dataCell.formattedValue;
+  }
+
+  let formattedValue = '';
+
+  if (dataCell.formattedValue === undefined) {
+    formattedValue =
+      dataCell?.value === null || dataCell?.value === undefined
+        ? ''
+        : t(decimalFormats[numberOfDecimals] || 'number.simple_number', {
+            value: dataCell.value,
+          });
+
+    formattedValue += dataCell?.status ?? '';
+
+    dataCell.formattedValue = formattedValue;
+  }
+
+  return formattedValue;
+}
 
 /**
  * Represents the metadata for one dimension of a data cell.
@@ -676,12 +707,7 @@ function fillData(
 
     tableRow.push(
       <td key={getNewKey()} headers={headers}>
-        {dataValue?.value === null || dataValue?.value === undefined
-          ? ''
-          : t(decimalFormats[numberOfDecimals] || 'number.simple_number', {
-              value: dataValue.value,
-            })}
-        {dataValue?.status ?? ''}
+        {getFormattedValue(dataValue, numberOfDecimals)}
       </td>,
     );
   }

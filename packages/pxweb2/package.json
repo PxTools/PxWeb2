@@ -11,7 +11,7 @@
     "start": "vite",
     "build": "vite build",
     "test": "vitest run",
-    "testdev": "vitest",
+    "test-dev": "vitest",
     "coverage": "vitest run --coverage",
     "test:watch": "vitest",
     "test:html-validate": "npm run build && concurrently --kill-others-on-fail \"npx serve ./dist\" \"node test/html-validator.js\"",
