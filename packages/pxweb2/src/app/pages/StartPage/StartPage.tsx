@@ -119,7 +119,9 @@ const StartPage = () => {
       <Trans
         i18nKey="start_page.table.show_number_of_tables"
         values={{
-          countShown: formatNumber(visibleCount),
+          countShown: formatNumber(
+            Math.min(visibleCount, state.filteredTables.length),
+          ),
           countTotal: formatNumber(state.filteredTables.length),
         }}
       />
@@ -268,14 +270,17 @@ const StartPage = () => {
               t('start_page.table.show_less'),
             )}
         </div>
-
         {renderNumberofTables()}
       </div>
     );
   };
 
   const renderNumberofTables = () => {
-    if (visibleCount < state.filteredTables.length) {
+    const total = state.filteredTables.length;
+    const shouldShow =
+      visibleCount < total ||
+      (visibleCount >= total && visibleCount > paginationCount);
+    if (shouldShow) {
       return (
         <BodyShort
           size="medium"
