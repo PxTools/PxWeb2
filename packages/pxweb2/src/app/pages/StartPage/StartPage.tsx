@@ -111,17 +111,16 @@ const StartPage = () => {
     }
   }, [isPaginating]);
 
-  const formatNumber = (value: number, locale = 'nb-NO') => {
-    return new Intl.NumberFormat(locale).format(value);
-  };
+  const formatNumber = (value: number) =>
+    new Intl.NumberFormat(i18n.language).format(value);
 
   const showNumberOfTables = () => {
     return (
       <Trans
         i18nKey="start_page.table.show_number_of_tables"
         values={{
-          countShown: visibleCount,
-          countTotal: state.filteredTables.length,
+          countShown: formatNumber(visibleCount),
+          countTotal: formatNumber(state.filteredTables.length),
         }}
       />
     );
@@ -304,10 +303,7 @@ const StartPage = () => {
   };
 
   const renderTableCount = () => {
-    const formattedCount = formatNumber(
-      state.filteredTables.length,
-      i18n.language,
-    );
+    const formattedCount = formatNumber(state.filteredTables.length);
     if (state.activeFilters.length) {
       return (
         <p>
@@ -390,10 +386,7 @@ const StartPage = () => {
                 onClick={() => setIsFilterOverlayOpen(false)}
               >
                 {t('start_page.filter.show_results', {
-                  value: formatNumber(
-                    state.filteredTables.length,
-                    i18n.language,
-                  ),
+                  value: formatNumber(state.filteredTables.length),
                 })}
               </Button>
             </div>
