@@ -31,8 +31,67 @@ export interface ContenetTopProps {
 type NoteMessageType = {
   heading: string;
   message: string;
-  //  totalNumberOfNotes: number;
 };
+
+import type { TFunction } from 'i18next';
+
+export function createNoteMessage(
+  noteInfo: MandatoryCompressedUtilityNotesType,
+  t: TFunction,
+): NoteMessageType | null {
+  let totalNumberOfVariablesNotes = 0;
+  if (noteInfo.variableNotes.length > 0) {
+    forEach(noteInfo.variableNotes, (variableNote) => {
+      totalNumberOfVariablesNotes += variableNote.totalNumberOfNotesOnVariable;
+    });
+  }
+  const totalNumberOfNotes =
+    noteInfo.numberOfTableNotes + totalNumberOfVariablesNotes;
+
+  if (totalNumberOfNotes === 0) {
+    return null;
+  }
+
+  //only table notes
+  if (noteInfo.variableNotes.length === 0 && noteInfo.numberOfTableNotes > 0) {
+    return {
+      heading: t(
+        'presentation_page.main_content.about_table.footnotes.mandatory_heading',
+      ),
+      message: noteInfo.tableNotes,
+    };
+  }
+
+  // no tablenotes and only variable notes
+  if (noteInfo.numberOfTableNotes === 0 && totalNumberOfVariablesNotes === 1) {
+    return {
+      heading:
+        t(
+          'presentation_page.main_content.about_table.footnotes.important_about_selection_heading_one_note_1',
+        ) +
+        totalNumberOfNotes +
+        t(
+          'presentation_page.main_content.about_table.footnotes.important_about_selection_heading_one_note_2',
+        ),
+      message: noteInfo.variableNotes[0].compressednotes,
+    };
+  }
+
+  // other cases e.g. Combination of table notes and variabel/value notes ore multiple variable/value notes
+  return {
+    heading:
+      t(
+        'presentation_page.main_content.about_table.footnotes.important_about_selection_heading_1',
+      ) +
+      totalNumberOfNotes +
+      t(
+        'presentation_page.main_content.about_table.footnotes.important_about_selection_heading_2',
+      ),
+    message: t(
+      'presentation_page.main_content.about_table.footnotes.important_about_selection_body',
+    ),
+  };
+}
 
 export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
   const { t } = useTranslation();
@@ -67,71 +126,7 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
 
   let noteMessage;
   if (noteInfo) {
-    noteMessage = createNoteMessage(noteInfo);
-  }
-
-  function createNoteMessage(
-    noteInfo: MandatoryCompressedUtilityNotesType,
-  ): NoteMessageType | null {
-    let totalNumberOfVariablesNotes = 0;
-    if (noteInfo.variableNotes.length > 0) {
-      forEach(noteInfo.variableNotes, (variableNote) => {
-        totalNumberOfVariablesNotes +=
-          variableNote.totalNumberOfNotesOnVariable;
-      });
-    }
-    const totalNumberOfNotes =
-      noteInfo.numberOfTableNotes + totalNumberOfVariablesNotes;
-
-    if (totalNumberOfNotes === 0) {
-      return null;
-    }
-
-    //only table notes
-    if (
-      noteInfo.variableNotes.length === 0 &&
-      noteInfo.numberOfTableNotes > 0
-    ) {
-      return {
-        heading: t(
-          'presentation_page.main_content.about_table.footnotes.mandatory_heading',
-        ),
-        message: noteInfo.tableNotes,
-      };
-    }
-
-    // no tablenotes and only variable notes
-    if (
-      noteInfo.numberOfTableNotes === 0 &&
-      totalNumberOfVariablesNotes === 1
-    ) {
-      return {
-        heading:
-          t(
-            'presentation_page.main_content.about_table.footnotes.important_about_selection_heading_one_note_1',
-          ) +
-          totalNumberOfNotes +
-          t(
-            'presentation_page.main_content.about_table.footnotes.important_about_selection_heading_one_note_2',
-          ),
-        message: noteInfo.variableNotes[0].compressednotes,
-      };
-    }
-
-    // other cases e.g. Combination of table notes and variabel/value notes ore multiple variable/value notes
-    return {
-      heading:
-        t(
-          'presentation_page.main_content.about_table.footnotes.important_about_selection_heading_1',
-        ) +
-        totalNumberOfNotes +
-        t(
-          'presentation_page.main_content.about_table.footnotes.important_about_selection_heading_2',
-        ),
-      message: t(
-        'presentation_page.main_content.about_table.footnotes.important_about_selection_body',
-      ),
-    };
+    noteMessage = createNoteMessage(noteInfo, t);
   }
 
   useEffect(() => {
