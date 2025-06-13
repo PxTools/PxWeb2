@@ -21,7 +21,6 @@ import {
 } from '../../util/notes/notesUtil';
 import useTableData from '../../context/useTableData';
 import useVariables from '../../context/useVariables';
-import { forEach } from 'lodash';
 
 export interface ContenetTopProps {
   readonly pxtable: PxTable;
@@ -41,7 +40,7 @@ export function createNoteMessage(
 ): NoteMessageType | null {
   let totalNumberOfVariablesNotes = 0;
   if (noteInfo.variableNotes.length > 0) {
-    forEach(noteInfo.variableNotes, (variableNote) => {
+    noteInfo.variableNotes.forEach((variableNote) => {
       totalNumberOfVariablesNotes += variableNote.totalNumberOfNotesOnVariable;
     });
   }
