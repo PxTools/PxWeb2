@@ -221,7 +221,9 @@ const StartPage = () => {
             </div>
 
             <div className={styles.filterOverlayContent}>
-              <FilterSidebar />
+              <FilterSidebar
+                onFilterChange={() => setVisibleCount(paginationCount)}
+              />
             </div>
 
             <div className={styles.filterOverlayFooter}>
@@ -416,7 +418,9 @@ const StartPage = () => {
                 >
                   {t('start_page.filter.header')}
                 </Heading>
-                <FilterSidebar />
+                <FilterSidebar
+                  onFilterChange={() => setVisibleCount(paginationCount)}
+                />
               </div>
             )}
 
