@@ -1,4 +1,4 @@
-import React, { type ReactNode, useEffect, useState, useRef } from 'react';
+import React, { type ReactNode, useState, useRef } from 'react';
 import cl from 'clsx';
 
 import styles from './FilterCategory.module.scss';
@@ -17,16 +17,8 @@ export const FilterCategory: React.FC<FilterCategoryProps> = ({
   openByDefault = false,
 }) => {
   const [isOpen, setIsOpen] = useState(openByDefault);
-  const [maxHeight, setMaxHeight] = useState('');
 
   const contentRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (contentRef.current) {
-      const contentHeight = contentRef.current.scrollHeight;
-      setMaxHeight(isOpen ? `${contentHeight}px` : '');
-    }
-  }, [isOpen, children]);
 
   return (
     <div className={cl(styles.filterCategory)}>
@@ -55,7 +47,6 @@ export const FilterCategory: React.FC<FilterCategoryProps> = ({
         )}
         inert={!isOpen}
         ref={contentRef}
-        style={{ maxHeight }}
       >
         {children}
       </div>
