@@ -36,7 +36,7 @@ const StartPage = () => {
 
   const paginationCount = 15;
   const isSmallScreen = isTablet === true || isMobile === true;
-  const topicIconComponents = useTopicIcons(); 
+  const topicIconComponents = useTopicIcons();
 
   const [isFilterOverlayOpen, setIsFilterOverlayOpen] = useState(false);
   const [visibleCount, setVisibleCount] = useState(paginationCount);
@@ -48,7 +48,7 @@ const StartPage = () => {
   const filterToggleRef = useRef<HTMLButtonElement>(null);
   const hasOverlayBeenOpenedRef = useRef(false);
   const paginationButtonRef = useRef<HTMLButtonElement>(null);
-  const firstNewCardRef = useRef<HTMLDivElement>(null);  
+  const firstNewCardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     async function fetchTables() {
