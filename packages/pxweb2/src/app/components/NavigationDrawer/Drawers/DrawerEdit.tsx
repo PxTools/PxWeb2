@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
-import { ContentBox } from '@pxweb2/pxweb2-ui';
-import { Button } from '@pxweb2/pxweb2-ui';
+import { Button, ContentBox } from '@pxweb2/pxweb2-ui';
 import useTableData from '../../../context/useTableData';
 
 function PivotButton() {
