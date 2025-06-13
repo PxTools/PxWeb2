@@ -38,12 +38,14 @@ const StartPage = () => {
   const { isMobile, isTablet } = useApp();
   const isSmallScreen = isTablet === true || isMobile === true;
   const topicIconComponents = useTopicIcons();
+  const [isPaginating, setIsPaginating] = useState(false);
+  const [paginationButtonWidth, setPaginationButtonWidth] = useState<number>();
+
   const filterBackButtonRef = useRef<HTMLButtonElement>(null);
   const filterToggleRef = useRef<HTMLButtonElement>(null);
   const hasOverlayBeenOpenedRef = useRef(false);
-  const [isPaginating, setIsPaginating] = useState(false);
   const paginationButtonRef = useRef<HTMLButtonElement>(null);
-  const [paginationButtonWidth, setPaginationButtonWidth] = useState<number>();
+  const firstNewCardRef = useRef<HTMLDivElement>(null);
 
   const handleShowMore = () => {
     if (isPaginating) {
@@ -123,6 +125,12 @@ const StartPage = () => {
       setIsPaginating(false);
     }
   }, [visibleCount, lastVisibleCount, isPaginating]);
+
+  useEffect(() => {
+    if (!isPaginating && firstNewCardRef.current) {
+      firstNewCardRef.current.focus();
+    }
+  }, [isPaginating]);
 
   const formatNumber = (value: number, locale = 'nb-NO') => {
     return new Intl.NumberFormat(locale).format(value);
@@ -277,9 +285,21 @@ const StartPage = () => {
             {showNumberOfTables()}
           </span>
         )}
-        {state.filteredTables.slice(0, visibleCount).map((table) => (
-          <div key={table.id}>{renderTableCard(table, t)}</div>
-        ))}
+        {state.filteredTables.slice(0, visibleCount).map((table, index) => {
+          const isFirstNew =
+            index === visibleCount - paginationCount &&
+            visibleCount > paginationCount;
+
+          return (
+            <div
+              key={table.id}
+              ref={isFirstNew ? firstNewCardRef : undefined}
+              tabIndex={isFirstNew ? -1 : undefined}
+            >
+              {renderTableCard(table, t)}
+            </div>
+          );
+        })}
 
         <div className={styles.paginationWrapper}>
           {visibleCount < state.filteredTables.length &&
