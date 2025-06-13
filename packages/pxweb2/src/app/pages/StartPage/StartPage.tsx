@@ -1,10 +1,10 @@
 import { useEffect, useContext, useState, useRef } from 'react';
-import cl from 'clsx';
-import styles from './StartPage.module.scss';
 import { useTranslation, Trans } from 'react-i18next';
 import type { TFunction } from 'i18next';
 import { motion, AnimatePresence } from 'framer-motion';
+import cl from 'clsx';
 
+import styles from './StartPage.module.scss';
 import {
   Search,
   TableCard,
@@ -31,13 +31,16 @@ import { getAllTables } from '../../util/tableHandler';
 
 const StartPage = () => {
   const { t, i18n } = useTranslation();
-  const [isFilterOverlayOpen, setIsFilterOverlayOpen] = useState(false);
+  const { isMobile, isTablet } = useApp();
+  const { state, dispatch } = useContext(FilterContext);
+
   const paginationCount = 15;
+  const isSmallScreen = isTablet === true || isMobile === true;
+  const topicIconComponents = useTopicIcons(); 
+
+  const [isFilterOverlayOpen, setIsFilterOverlayOpen] = useState(false);
   const [visibleCount, setVisibleCount] = useState(paginationCount);
   const [lastVisibleCount, setLastVisibleCount] = useState(paginationCount);
-  const { isMobile, isTablet } = useApp();
-  const isSmallScreen = isTablet === true || isMobile === true;
-  const topicIconComponents = useTopicIcons();
   const [isPaginating, setIsPaginating] = useState(false);
   const [paginationButtonWidth, setPaginationButtonWidth] = useState<number>();
 
@@ -45,36 +48,13 @@ const StartPage = () => {
   const filterToggleRef = useRef<HTMLButtonElement>(null);
   const hasOverlayBeenOpenedRef = useRef(false);
   const paginationButtonRef = useRef<HTMLButtonElement>(null);
-  const firstNewCardRef = useRef<HTMLDivElement>(null);
-
-  const handleShowMore = () => {
-    if (isPaginating) {
-      return;
-    }
-    if (paginationButtonRef.current) {
-      setPaginationButtonWidth(paginationButtonRef.current.offsetWidth);
-    }
-    setIsPaginating(true);
-    const newCount = visibleCount + paginationCount;
-    setLastVisibleCount(newCount);
-    requestAnimationFrame(() => {
-      setVisibleCount(newCount);
-    });
-  };
-
-  const handleShowLess = () => {
-    setVisibleCount(paginationCount);
-  };
-
-  const { state, dispatch } = useContext(FilterContext);
+  const firstNewCardRef = useRef<HTMLDivElement>(null);  
 
   useEffect(() => {
     async function fetchTables() {
-      console.log('Now Loading!');
       dispatch({ type: ActionType.SET_LOADING, payload: true });
       try {
         const tables = await getAllTables();
-        console.log('Fetching Data!');
         dispatch({
           type: ActionType.RESET_FILTERS,
           payload: { tables: tables, subjects: getSubjectTree(tables) },
@@ -114,7 +94,6 @@ const StartPage = () => {
     } else {
       document.body.style.overflow = '';
     }
-
     return () => {
       document.body.style.overflow = '';
     };
@@ -135,6 +114,63 @@ const StartPage = () => {
   const formatNumber = (value: number, locale = 'nb-NO') => {
     return new Intl.NumberFormat(locale).format(value);
   };
+
+  const showNumberOfTables = () => {
+    return (
+      <Trans
+        i18nKey="start_page.table.show_number_of_tables"
+        values={{
+          countShown: visibleCount,
+          countTotal: state.filteredTables.length,
+        }}
+      />
+    );
+  };
+
+  const renderTopicIcon = (table: Table) => {
+    const topicId = table.paths?.[0]?.[0]?.id;
+    const size = isSmallScreen ? 'small' : 'medium';
+
+    return topicId
+      ? (topicIconComponents.find((icon) => icon.id === topicId)?.[size] ??
+          null)
+      : null;
+  };
+
+  const renderPaginationButton = (
+    type: 'more' | 'less',
+    onClick: () => void,
+    label: string,
+  ) => (
+    <Button
+      variant="primary"
+      onClick={onClick}
+      loading={isPaginating}
+      ref={paginationButtonRef}
+      style={
+        paginationButtonWidth ? { minWidth: paginationButtonWidth } : undefined
+      }
+    >
+      {label}
+    </Button>
+  );
+
+  const handleShowMore = () => {
+    if (isPaginating) {
+      return;
+    }
+    if (paginationButtonRef.current) {
+      setPaginationButtonWidth(paginationButtonRef.current.offsetWidth);
+    }
+    setIsPaginating(true);
+    const newCount = visibleCount + paginationCount;
+    setLastVisibleCount(newCount);
+    requestAnimationFrame(() => {
+      setVisibleCount(newCount);
+    });
+  };
+
+  const handleShowLess = () => setVisibleCount(paginationCount);
 
   const renderRemoveAllChips = () => {
     if (state.activeFilters.length >= 2) {
@@ -193,84 +229,6 @@ const StartPage = () => {
         </div>
       );
     }
-  };
-
-  const renderTopicIcon = (table: Table) => {
-    const topicId = table.paths?.[0]?.[0]?.id;
-    const size = isSmallScreen ? 'small' : 'medium';
-
-    return topicId
-      ? (topicIconComponents.find((icon) => icon.id === topicId)?.[size] ??
-          null)
-      : null;
-  };
-
-  const renderFilterOverlay = () => {
-    return (
-      <AnimatePresence>
-        {isSmallScreen && isFilterOverlayOpen && (
-          <motion.div
-            key="filterOverlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.25, ease: 'easeInOut' }}
-            className={styles.filterOverlay}
-          >
-            <div className={styles.filterOverlayHeader}>
-              <Button
-                variant="tertiary"
-                icon="ArrowLeft"
-                aria-label={t('start_page.filter.back')}
-                onClick={() => setIsFilterOverlayOpen(false)}
-                ref={filterBackButtonRef}
-              />
-              <Heading size="medium">{t('start_page.filter.header')}</Heading>
-            </div>
-
-            <div className={styles.filterOverlayContent}>
-              <FilterSidebar
-                onFilterChange={() => setVisibleCount(paginationCount)}
-              />
-            </div>
-
-            <div className={styles.filterOverlayFooter}>
-              {state.activeFilters.length >= 1 && (
-                <Button
-                  variant="secondary"
-                  className={styles.removeFilterButton}
-                  iconPosition="left"
-                  icon="XMark"
-                  onClick={() => {
-                    dispatch({
-                      type: ActionType.RESET_FILTERS,
-                      payload: {
-                        tables: state.availableTables,
-                        subjects: getSubjectTree(state.availableTables),
-                      },
-                    });
-                  }}
-                >
-                  {t('start_page.filter.remove_all_filter')}
-                </Button>
-              )}
-              <Button
-                variant="primary"
-                className={styles.showResultsButton}
-                onClick={() => setIsFilterOverlayOpen(false)}
-              >
-                {t('start_page.filter.show_results', {
-                  value: formatNumber(
-                    state.filteredTables.length,
-                    i18n.language,
-                  ),
-                })}
-              </Button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    );
   };
 
   const renderTableCardList = () => {
@@ -363,35 +321,73 @@ const StartPage = () => {
     }
   };
 
-  const showNumberOfTables = () => {
+  const renderFilterOverlay = () => {
     return (
-      <Trans
-        i18nKey="start_page.table.show_number_of_tables"
-        values={{
-          countShown: visibleCount,
-          countTotal: state.filteredTables.length,
-        }}
-      />
+      <AnimatePresence>
+        {isSmallScreen && isFilterOverlayOpen && (
+          <motion.div
+            key="filterOverlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25, ease: 'easeInOut' }}
+            className={styles.filterOverlay}
+          >
+            <div className={styles.filterOverlayHeader}>
+              <Button
+                variant="tertiary"
+                icon="ArrowLeft"
+                aria-label={t('start_page.filter.back')}
+                onClick={() => setIsFilterOverlayOpen(false)}
+                ref={filterBackButtonRef}
+              />
+              <Heading size="medium">{t('start_page.filter.header')}</Heading>
+            </div>
+
+            <div className={styles.filterOverlayContent}>
+              <FilterSidebar
+                onFilterChange={() => setVisibleCount(paginationCount)}
+              />
+            </div>
+
+            <div className={styles.filterOverlayFooter}>
+              {state.activeFilters.length >= 1 && (
+                <Button
+                  variant="secondary"
+                  className={styles.removeFilterButton}
+                  iconPosition="left"
+                  icon="XMark"
+                  onClick={() => {
+                    dispatch({
+                      type: ActionType.RESET_FILTERS,
+                      payload: {
+                        tables: state.availableTables,
+                        subjects: getSubjectTree(state.availableTables),
+                      },
+                    });
+                  }}
+                >
+                  {t('start_page.filter.remove_all_filter')}
+                </Button>
+              )}
+              <Button
+                variant="primary"
+                className={styles.showResultsButton}
+                onClick={() => setIsFilterOverlayOpen(false)}
+              >
+                {t('start_page.filter.show_results', {
+                  value: formatNumber(
+                    state.filteredTables.length,
+                    i18n.language,
+                  ),
+                })}
+              </Button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     );
   };
-
-  const renderPaginationButton = (
-    type: 'more' | 'less',
-    onClick: () => void,
-    label: string,
-  ) => (
-    <Button
-      variant="primary"
-      onClick={onClick}
-      loading={isPaginating}
-      ref={paginationButtonRef}
-      style={
-        paginationButtonWidth ? { minWidth: paginationButtonWidth } : undefined
-      }
-    >
-      {label}
-    </Button>
-  );
 
   return (
     <>

@@ -182,7 +182,11 @@
 .paginationWrapper {
   display: flex;
   justify-content: center;
-  margin-top: 2rem;
+  margin-top: 36px;
+
+  @media #{breakpoint.$xsmall} , #{breakpoint.$small} {
+    margin-top: 2rem;
+  }
 }
 
 .tableCount {
