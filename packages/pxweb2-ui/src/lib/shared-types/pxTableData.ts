@@ -49,4 +49,5 @@ export type DataCell = {
   value: number | null;
   status?: string;
   presentation?: 'number' | 'sign' | 'both';
+  formattedValue?: string;
 };

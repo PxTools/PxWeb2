@@ -99,8 +99,13 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
   const [activeTab, setActiveTab] = useState('');
   const [tableInformationOpener, setTableInformationOpener] = useState('');
   const accessibility = useContext(AccessibilityContext);
+  const { pxTableMetadata, selectedVBValues } = useVariables();
+  const selectedMetadata = useTableData().data?.metadata;
+  const buildTableTitle = useTableData().buildTableTitle;
+
   const openInformationButtonRef = useRef<HTMLButtonElement>(null);
   const openInformationLinkRef = useRef<HTMLAnchorElement>(null);
+  const totalMetadata = pxTableMetadata;
   const openInformationAlertNotesRef = useRef<HTMLDivElement>(null);
 
   const handleOpenTableInformation = (opener: string, selectedTab?: string) => {
@@ -110,10 +115,6 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
     }
     setIsTableInformationOpen(true);
   };
-
-  const { pxTableMetadata, selectedVBValues } = useVariables();
-  const totalMetadata = pxTableMetadata;
-  const selectedMetadata = useTableData().data?.metadata;
   const noteInfo =
     selectedMetadata && totalMetadata
       ? getMandatoryNotesCompressed(
@@ -150,6 +151,18 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
     });
   }, [isTableInformationOpen, tableInformationOpener, accessibility]);
 
+  const { firstTitlePart, lastTitlePart } = buildTableTitle(
+    pxtable.stub,
+    pxtable.heading,
+  );
+
+  // Example title: "Population by region, observations, year and sex"
+  const tableTitle = t('presentation_page.main_content.dynamic_table_title', {
+    table_content_type: pxtable.metadata.contents,
+    table_content_label_first_part: firstTitlePart,
+    table_content_label_last_part: lastTitlePart,
+  });
+
   return (
     <>
       <div className={cl(classes[`content-top`])}>
@@ -170,7 +183,7 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
           className={cl(classes[`heading-information`])}
         >
           <Heading level="1" size="large">
-            {pxtable.metadata.label}
+            {tableTitle}
           </Heading>
           <div className={cl(classes.information)}>
             <Button
