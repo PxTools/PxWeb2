@@ -219,7 +219,13 @@
           "mandatory_heading": "Viktigt om tabellen",
           "mandatory_variable_heading": "Viktigt om",
           "non_mandatory_heading": "Gäller hela tabellen",
-          "show_all_footnotes": "Visa alla fotnoter för tabellen"
+          "show_all_footnotes": "Visa alla fotnoter för tabellen",
+          "important_about_selection_heading_1": "Det finns ",
+          "important_about_selection_heading_2": " viktiga noter för vald filtrering ",
+          "important_about_selection_body": "Tryck på detta meddelande för att läsa noterna. ",
+          "important_about_selection_heading_one_note_1": "Det finns ",
+          "important_about_selection_heading_one_note_2": " viktig not för vald filtrering ",
+          "important_about_selection_body_one_note": "Tryck på detta meddelande för att läsa noten. "
         },
         "definitions": {
           "title": "Definitioner",
@@ -248,10 +254,6 @@
           "description": "Beskrivande text...",
           "missing_heading": "Ingen kontaktinformation",
           "missing_text": "Tabellen har ingen kontaktinformation."
-        },
-        "notes": {
-          "important_about_table": "Viktigt om tabellen",
-          "important_about_variable": "Viktigt om "
         }
       },
       "related": {

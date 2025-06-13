@@ -106,7 +106,6 @@ interface Resources {
               tag_selected: '{{selected}} of {{total}} selected';
               tag_mandatory: 'Mandatory';
               alert_no_mandatory_values: 'You must select something in the list for the table to be displayed';
-              show_more: 'Show more';
             };
             content: {
               select: {
@@ -222,6 +221,12 @@ interface Resources {
             mandatory_variable_heading: 'Important about';
             non_mandatory_heading: 'For the entire table';
             show_all_footnotes: 'Show all notes for table';
+            important_about_selection_heading_1: 'There are ';
+            important_about_selection_heading_2: ' important notes for your selection';
+            important_about_selection_body: 'Click on this message to read the notes.';
+            important_about_selection_heading_one_note_1: 'There is ';
+            important_about_selection_heading_one_note_2: ' important note for your selection';
+            important_about_selection_body_one_note: 'Click on this message to read the note.';
           };
           definitions: {
             title: 'Definitions';
@@ -250,10 +255,6 @@ interface Resources {
             description: 'Description text...';
             missing_heading: 'No contact information';
             missing_text: 'The table has no contact information.';
-          };
-          notes: {
-            important_about_table: 'Important about the table';
-            important_about_variable: 'Important about ';
           };
         };
         related: {

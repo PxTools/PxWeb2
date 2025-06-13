@@ -15,13 +15,81 @@ import {
 } from '@pxweb2/pxweb2-ui';
 import TableInformation from '../TableInformation/TableInformation';
 import { AccessibilityContext } from '../../context/AccessibilityProvider';
-import { getMandatoryNotesCompressed } from '../../util/notes/notesUtil';
+import {
+  getMandatoryNotesCompressed,
+  MandatoryCompressedUtilityNotesType,
+} from '../../util/notes/notesUtil';
 import useTableData from '../../context/useTableData';
 import useVariables from '../../context/useVariables';
 
 export interface ContenetTopProps {
   readonly pxtable: PxTable;
   readonly staticTitle: string;
+}
+
+type NoteMessageType = {
+  heading: string;
+  message: string;
+};
+
+import type { TFunction } from 'i18next';
+
+export function createNoteMessage(
+  noteInfo: MandatoryCompressedUtilityNotesType,
+  t: TFunction,
+): NoteMessageType | null {
+  let totalNumberOfVariablesNotes = 0;
+  if (noteInfo.variableNotes.length > 0) {
+    noteInfo.variableNotes.forEach((variableNote) => {
+      totalNumberOfVariablesNotes += variableNote.totalNumberOfNotesOnVariable;
+    });
+  }
+  const totalNumberOfNotes =
+    noteInfo.numberOfTableNotes + totalNumberOfVariablesNotes;
+
+  if (totalNumberOfNotes === 0) {
+    return null;
+  }
+
+  //only table notes
+  if (noteInfo.variableNotes.length === 0 && noteInfo.numberOfTableNotes > 0) {
+    return {
+      heading: t(
+        'presentation_page.main_content.about_table.footnotes.mandatory_heading',
+      ),
+      message: noteInfo.tableNotes,
+    };
+  }
+
+  // no tablenotes and only variable notes
+  if (noteInfo.numberOfTableNotes === 0 && totalNumberOfVariablesNotes === 1) {
+    return {
+      heading:
+        t(
+          'presentation_page.main_content.about_table.footnotes.important_about_selection_heading_one_note_1',
+        ) +
+        totalNumberOfNotes +
+        t(
+          'presentation_page.main_content.about_table.footnotes.important_about_selection_heading_one_note_2',
+        ),
+      message: noteInfo.variableNotes[0].compressednotes,
+    };
+  }
+
+  // other cases e.g. Combination of table notes and variabel/value notes ore multiple variable/value notes
+  return {
+    heading:
+      t(
+        'presentation_page.main_content.about_table.footnotes.important_about_selection_heading_1',
+      ) +
+      totalNumberOfNotes +
+      t(
+        'presentation_page.main_content.about_table.footnotes.important_about_selection_heading_2',
+      ),
+    message: t(
+      'presentation_page.main_content.about_table.footnotes.important_about_selection_body',
+    ),
+  };
 }
 
 export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
@@ -37,11 +105,8 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
 
   const openInformationButtonRef = useRef<HTMLButtonElement>(null);
   const openInformationLinkRef = useRef<HTMLAnchorElement>(null);
-  const openInformationAlertTableNotesRef = useRef<HTMLDivElement>(null);
-  const openInformationAlertVarNotesRef = useRef<Array<HTMLDivElement | null>>(
-    [],
-  );
   const totalMetadata = pxTableMetadata;
+  const openInformationAlertNotesRef = useRef<HTMLDivElement>(null);
 
   const handleOpenTableInformation = (opener: string, selectedTab?: string) => {
     setTableInformationOpener(opener);
@@ -59,10 +124,13 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
         )
       : undefined;
 
+  let noteMessage;
+  if (noteInfo) {
+    noteMessage = createNoteMessage(noteInfo, t);
+  }
+
   useEffect(() => {
     if (!isTableInformationOpen) {
-      const alertVarNotesRegex = /^table-information-alertVarNotes-(\d+)$/;
-      const execResult = alertVarNotesRegex.exec(tableInformationOpener ?? '');
       switch (tableInformationOpener) {
         case 'table-information-button':
           openInformationButtonRef.current?.focus();
@@ -71,14 +139,9 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
           openInformationLinkRef.current?.focus();
           break;
         case 'table-information-alertTableNotes':
-          openInformationAlertTableNotesRef.current?.focus();
+          openInformationAlertNotesRef.current?.focus();
           break;
         default: {
-          if (execResult) {
-            // Extract the index from the regex result
-            const idx = Number(execResult[1] ?? 0);
-            openInformationAlertVarNotesRef.current?.[idx]?.focus();
-          }
           break;
         }
       }
@@ -162,50 +225,30 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
             )}
           </div>
         </div>
-        <div className={cl(classes.alertgroup)}>
-          {noteInfo?.tableNotes && (
-            <Alert
-              ref={openInformationAlertTableNotesRef}
-              variant="info"
-              heading={t(
-                'presentation_page.main_content.about_table.notes.important_about_table',
-              )}
-              clickable
-              onClick={() => {
-                handleOpenTableInformation(
-                  'table-information-alertTableNotes',
-                  'tab-footnotes',
-                );
-              }}
-            >
-              {noteInfo.tableNotes}
-            </Alert>
-          )}
-          {noteInfo?.variableNotes?.map((note, idx) => (
-            <Alert
-              ref={(el) => {
-                openInformationAlertVarNotesRef.current[idx] = el;
-              }}
-              key={note?.variableName ?? idx}
-              variant="info"
-              clickable
-              onClick={() => {
-                handleOpenTableInformation(
-                  `table-information-alertVarNotes-${idx}`,
-                  'tab-footnotes',
-                );
-              }}
-              heading={
-                t(
-                  'presentation_page.main_content.about_table.notes.important_about_variable',
-                ) + note?.variableName
-              }
-            >
-              {note?.compressednotes}
-            </Alert>
-          ))}
-        </div>
       </div>
+      {noteMessage && (
+        <div className={cl(classes.alertgroup)}>
+          <Alert
+            ref={openInformationAlertNotesRef}
+            variant="info"
+            heading={noteMessage.heading}
+            ariaHasPopup="dialog"
+            alertAriaLabel={noteMessage.heading}
+            ariaLive="polite"
+            role="button"
+            clickButtonAriaLabel={noteMessage.heading}
+            clickable
+            onClick={() => {
+              handleOpenTableInformation(
+                'table-information-alertTableNotes',
+                'tab-footnotes',
+              );
+            }}
+          >
+            {noteMessage.message}
+          </Alert>
+        </div>
+      )}
       {isTableInformationOpen && (
         <TableInformation
           isOpen={isTableInformationOpen}

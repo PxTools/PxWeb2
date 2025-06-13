@@ -25,10 +25,7 @@
   &:hover {
     box-shadow: inset 0px 0px 0px 2px var(--px-color-border-info);
     h2 {
-      text-decoration: underline;
-      text-decoration-thickness: 7%;
-      text-underline-offset: 9%;
-      text-decoration-skip-ink: true;
+      @extend .heading-underline;
     }
   }
   &:hover .alert-arrow-wrapper {
@@ -49,10 +46,7 @@
   &:hover {
     box-shadow: inset 0px 0px 0px 2px var(--px-color-border-success);
     h2 {
-      text-decoration: underline;
-      text-decoration-thickness: 7%;
-      text-underline-offset: 9%;
-      text-decoration-skip-ink: true;
+      @extend .heading-underline;
     }
   }
   &:hover .alert-arrow-wrapper {
@@ -72,10 +66,7 @@
   &:hover {
     box-shadow: inset 0px 0px 0px 2px var(--px-color-border-warning);
     h2 {
-      text-decoration: underline;
-      text-decoration-thickness: 7%;
-      text-underline-offset: 9%;
-      text-decoration-skip-ink: true;
+      @extend .heading-underline;
     }
   }
   &:hover .alert-arrow-wrapper {
@@ -95,10 +86,7 @@
   &:hover {
     box-shadow: inset 0px 0px 0px 2px var(--px-color-border-error);
     h2 {
-      text-decoration: underline;
-      text-decoration-thickness: 7%;
-      text-underline-offset: 9%;
-      text-decoration-skip-ink: true;
+      @extend .heading-underline;
     }
   }
   &:hover .alert-arrow-wrapper {
@@ -210,6 +198,17 @@
   height: 32px;
   align-items: center;
   gap: 6px;
+}
+
+.alert-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
 }
 
 .alert-section-right-continue {
