@@ -5,10 +5,8 @@ import { ApiError, TableService } from '@pxweb2/pxweb2-api-client';
 import { mapJsonStat2Response } from '../../../mappers/JsonStat2ResponseMapper';
 import { mapTableSelectionResponse } from '../../../mappers/TableSelectionResponseMapper';
 import {
-  CodeList,
   PxTable,
   PxTableMetadata,
-  mapCodeListToSelectOption,
   SelectedVBValues,
   SelectOption,
   Value,
@@ -26,43 +24,11 @@ import {
 import useVariables from '../../context/useVariables';
 import { NavigationItem } from '../../components/NavigationMenu/NavigationItem/NavigationItemType';
 import useAccessibility from '../../context/useAccessibility';
-import { getLabelText } from '../../util/utils';
 import { problemMessage } from '../../util/problemMessage';
-
-function addSelectedCodeListToVariable(
-  currentVariable: SelectedVBValues | undefined,
-  selectedValuesArr: SelectedVBValues[],
-  varId: string,
-  selectedItem: SelectOption,
-): SelectedVBValues[] {
-  let newSelectedValues: SelectedVBValues[] = [];
-
-  if (currentVariable) {
-    newSelectedValues = selectedValuesArr.map((variable) => {
-      if (variable.id === varId) {
-        return {
-          ...variable,
-          selectedCodeList: selectedItem.value,
-          values: [], // Always reset values when changing codelist
-        };
-      }
-
-      return variable;
-    });
-  }
-  if (!currentVariable) {
-    newSelectedValues = [
-      ...selectedValuesArr,
-      {
-        id: varId,
-        selectedCodeList: selectedItem.value,
-        values: [],
-      },
-    ];
-  }
-
-  return newSelectedValues;
-}
+import {
+  getSelectedCodelists,
+  updateSelectedCodelistForVariable,
+} from './selectionUtils';
 
 function addValueToVariable(
   selectedValuesArr: SelectedVBValues[],
@@ -93,42 +59,6 @@ function addValueToNewVariable(
   return newSelectedValues;
 }
 
-// Get the selected codelist from the API
-export async function getCodeList(
-  id: string,
-  lang: string,
-  valueDisplayType: ValueDisplayType,
-): Promise<CodeList> {
-  let codelist: CodeList = {
-    id: id,
-    label: '',
-    values: [],
-    mandatory: false,
-  };
-
-  await TableService.getTableCodeListById(id, lang)
-    .then((response) => {
-      codelist.label = response.label;
-      codelist.mandatory = !response.elimination;
-      response.values.forEach((value) => {
-        codelist.values = [
-          ...codelist.values,
-          {
-            code: value.code,
-
-            // Set the label text based on the value display type
-            label: getLabelText(valueDisplayType, value.code, value.label),
-          },
-        ];
-      });
-    })
-    .catch((error) => {
-      throw new Error('Could not get codelist: ' + id + ' ' + error);
-    });
-
-  return codelist;
-}
-
 function removeValueOfVariable(
   selectedValuesArr: SelectedVBValues[],
   varId: string,
@@ -156,7 +86,7 @@ function removeValueOfVariable(
 
       return variable;
     })
-    .filter((value) => value !== null) as SelectedVBValues[];
+    .filter((value) => value !== null);
 
   return newSelectedValues;
 }
@@ -262,12 +192,12 @@ function removeAllValuesOfVariable(
 
       return variable;
     })
-    .filter((value) => value !== null) as SelectedVBValues[];
+    .filter((value) => value !== null);
 
   return newValues;
 }
 
-interface VariableWithDisplayType extends Variable {
+export interface VariableWithDisplayType extends Variable {
   valueDisplayType: ValueDisplayType;
 }
 
@@ -336,7 +266,7 @@ export function Selection({
       variables.setHasLoadedDefaultSelection(false);
       shouldGetDefaultSelection = true;
       setPrevTableId(selectedTabId);
-      setPrevLang(i18n.resolvedLanguage || '');
+      setPrevLang(i18n.resolvedLanguage ?? '');
     }
 
     if (isLoadingMetadata === false) {
@@ -408,117 +338,74 @@ export function Selection({
     selectedItem: SelectOption | undefined,
     varId: string,
   ) {
-    const prevSelectedValues = structuredClone(selectedVBValues);
-    const currentVariableMetadata = pxTableMetaToRender?.variables.find(
-      (variable) => variable.id === varId,
-    ) as VariableWithDisplayType;
-    const currentSelectedVariable = prevSelectedValues.find(
-      (variable) => variable.id === varId,
-    );
     const lang = i18n.resolvedLanguage;
 
     // No language, do nothing
     if (lang === undefined) {
       return;
     }
-    const currentCodeList = currentSelectedVariable?.selectedCodeList;
 
-    // No new selection made, do nothing
-    if (!selectedItem || selectedItem.value === currentCodeList) {
-      return;
-    }
+    const currentVariableMetadata = pxTableMetaToRender?.variables.find(
+      (variable) => variable.id === varId,
+    );
 
     if (pxTableMetaToRender === null || currentVariableMetadata === undefined) {
       return;
     }
 
-    const newSelectedCodeList = currentVariableMetadata?.codeLists?.find(
-      (codelist) => codelist.id === selectedItem.value,
-    );
+    const prevSelectedValues = structuredClone(selectedVBValues);
 
-    if (!newSelectedCodeList) {
-      return;
+    const newSelectedValues = updateSelectedCodelistForVariable(
+      selectedItem,
+      varId,
+      prevSelectedValues,
+      currentVariableMetadata,
+    );
+    if (!newSelectedValues) {
+      return; // No change in codelist selection
     }
 
-    const newMappedSelectedCodeList =
-      mapCodeListToSelectOption(newSelectedCodeList);
-    const newSelectedValues = addSelectedCodeListToVariable(
-      currentSelectedVariable,
+    // Collect selected codelists for all variables, including the newly selected one
+    const selectedCodeLists = getSelectedCodelists(
       prevSelectedValues,
+      selectedItem,
       varId,
-      newMappedSelectedCodeList,
     );
 
     setIsFadingVariableList(true);
 
-    //  Get the selected codelist
-    const newCodelist: CodeList = await getCodeList(
-      newMappedSelectedCodeList.value,
-      lang,
-      currentVariableMetadata.valueDisplayType,
+    // Get table metadata in the new codelist context
+    TableService.getMetadataById(
+      selectedTabId,
+      i18n.resolvedLanguage,
+      false,
+      selectedCodeLists,
     )
+      .then((Dataset) => {
+        const pxTable: PxTable = mapJsonStat2Response(Dataset, false);
+
+        setPxTableMetadata(pxTable.metadata);
+
+        if (pxTableMetaToRender !== null) {
+          setPxTableMetaToRender(null);
+        }
+
+        // UpdateAndSyncVBValues with the new selected values to trigger API data-call
+        updateAndSyncVBValues(newSelectedValues);
+
+        setErrorMsg('');
+      })
       .finally(() => {
         setIsFadingVariableList(false);
       })
       .catch((apiError: ApiError) => {
         setErrorMsg(problemMessage(apiError, selectedTabId));
-        return {
-          id: '',
-          label: '',
-          values: [],
-          mandatory: false,
-        };
+        setPxTableMetadata(null);
       })
       .catch((error) => {
-        console.error(
-          `Could not get values for code list: ${newMappedSelectedCodeList.value} ${error}`,
-        );
-        return {
-          id: '',
-          label: '',
-          values: [],
-          mandatory: false,
-        };
+        setErrorMsg(`Could not get table: ${selectedTabId} ${error.message}`);
+        setPxTableMetadata(null);
       });
-
-    // Update variable mandatory according to the new codelist
-    if (
-      newCodelist.mandatory != undefined &&
-      newCodelist.mandatory != currentVariableMetadata.mandatory
-    ) {
-      currentVariableMetadata.mandatory = newCodelist.mandatory;
-    }
-
-    if (newCodelist.values.length < 1) {
-      return;
-    }
-
-    const newPxTableMetaToRender: PxTableMetadata =
-      structuredClone(pxTableMetaToRender);
-    newPxTableMetaToRender.variables.forEach((variable) => {
-      if (!variable.codeLists) {
-        return;
-      }
-
-      variable.codeLists.forEach((codelist) => {
-        if (codelist.id !== newMappedSelectedCodeList.value) {
-          return;
-        }
-
-        for (let i = 0; i < newPxTableMetaToRender.variables.length - 1; i++) {
-          if (newPxTableMetaToRender.variables[i].id !== variable.id) {
-            continue;
-          }
-
-          newPxTableMetaToRender.variables[i].values = newCodelist.values;
-        }
-      });
-    });
-
-    // update the state
-    updateAndSyncVBValues(newSelectedValues);
-    setPxTableMetadata(newPxTableMetaToRender);
-    setPxTableMetaToRender(null);
   }
 
   const handleCheckboxChange = (varId: string, value: Value['code']) => {
