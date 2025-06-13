@@ -5,9 +5,7 @@ import { ApiError, TableService } from '@pxweb2/pxweb2-api-client';
 import { mapJsonStat2Response } from '../../../mappers/JsonStat2ResponseMapper';
 import { mapTableSelectionResponse } from '../../../mappers/TableSelectionResponseMapper';
 import {
-  Button,
   CodeList,
-  ContentBox,
   PxTable,
   PxTableMetadata,
   mapCodeListToSelectOption,
@@ -18,13 +16,18 @@ import {
   Variable,
   VariableList,
 } from '@pxweb2/pxweb2-ui';
-import NavigationDrawer from '../../components/NavigationDrawer/NavigationDrawer';
+import {
+  DrawerEdit,
+  DrawerHelp,
+  DrawerSave,
+  DrawerView,
+  NavigationDrawer,
+} from '../NavigationDrawer';
 import useVariables from '../../context/useVariables';
 import { NavigationItem } from '../../components/NavigationMenu/NavigationItem/NavigationItemType';
 import useAccessibility from '../../context/useAccessibility';
 import { getLabelText } from '../../util/utils';
 import { problemMessage } from '../../util/problemMessage';
-import useTableData from '../../context/useTableData';
 
 function addSelectedCodeListToVariable(
   currentVariable: SelectedVBValues | undefined,
@@ -298,7 +301,6 @@ export function Selection({
     pxTableMetadata,
     setPxTableMetadata,
   } = variables;
-  const pivotTableClockwise = useTableData().pivotCW;
   const [errorMsg, setErrorMsg] = useState('');
   const { i18n, t } = useTranslation();
   const [pxTableMetaToRender, setPxTableMetaToRender] =
@@ -614,27 +616,6 @@ export function Selection({
       removeModal={removeModal}
     />
   );
-  const drawerView = <>View content</>;
-  const drawerEdit = (
-    <ContentBox>
-      <Button
-        variant="primary"
-        onClick={() => pivotTableClockwise()}
-        icon="ArrowCirclepathClockwise"
-      >
-        {t('presentation_page.sidemenu.edit.customize.pivot.title')}
-      </Button>
-    </ContentBox>
-  );
-  const drawerSave = (
-    <>
-      <ContentBox title="Contentbox with title">
-        This is inside another with a title ContentBox
-      </ContentBox>
-      <ContentBox>This is inside a ContentBox</ContentBox>
-    </>
-  );
-  const drawerHelp = <>Help content</>;
 
   return (
     selectedNavigationView !== 'none' && (
@@ -650,10 +631,10 @@ export function Selection({
         openedWithKeyboard={openedWithKeyboard}
       >
         {selectedNavigationView === 'selection' && drawerSelection}
-        {selectedNavigationView === 'view' && drawerView}
-        {selectedNavigationView === 'edit' && drawerEdit}
-        {selectedNavigationView === 'save' && drawerSave}
-        {selectedNavigationView === 'help' && drawerHelp}
+        {selectedNavigationView === 'view' && <DrawerView />}
+        {selectedNavigationView === 'edit' && <DrawerEdit />}
+        {selectedNavigationView === 'save' && <DrawerSave />}
+        {selectedNavigationView === 'help' && <DrawerHelp />}
       </NavigationDrawer>
     )
   );

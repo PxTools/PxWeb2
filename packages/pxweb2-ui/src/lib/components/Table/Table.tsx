@@ -1,3 +1,4 @@
+import { memo, useMemo } from 'react';
 import { t } from 'i18next';
 import cl from 'clsx';
 
@@ -66,13 +67,20 @@ interface CreateRowMobileParams {
  */
 type DataCellCodes = DataCellMeta[];
 
-export function Table({ pxtable, isMobile, className = '' }: TableProps) {
+export const Table = memo(function Table({
+  pxtable,
+  isMobile,
+  className = '',
+}: TableProps) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
 
   const tableMeta: columnRowMeta = calculateRowAndColumnMeta(pxtable);
 
   const tableColumnSize: number = tableMeta.columns - tableMeta.columnOffset;
-  const headingDataCellCodes = new Array<DataCellCodes>(tableColumnSize); // Contains header variable and value codes for each column in the table
+  const headingDataCellCodes = useMemo(
+    () => new Array<DataCellCodes>(tableColumnSize),
+    [tableColumnSize],
+  ); // Contains header variable and value codes for each column in the table
 
   // Find the contents variable
   const contentsVariable = pxtable.metadata.variables.find(
@@ -125,18 +133,29 @@ export function Table({ pxtable, isMobile, className = '' }: TableProps) {
     >
       <thead>{createHeading(pxtable, tableMeta, headingDataCellCodes)}</thead>
       <tbody>
-        {createRows(
-          pxtable,
-          tableMeta,
-          headingDataCellCodes,
-          isMobile,
-          contentVarIndex,
-          contentsVariableDecimals,
+        {useMemo(
+          () =>
+            createRows(
+              pxtable,
+              tableMeta,
+              headingDataCellCodes,
+              isMobile,
+              contentVarIndex,
+              contentsVariableDecimals,
+            ),
+          [
+            pxtable,
+            tableMeta,
+            headingDataCellCodes,
+            isMobile,
+            contentVarIndex,
+            contentsVariableDecimals,
+          ],
         )}
       </tbody>
     </table>
   );
-}
+});
 
 /**
  * Creates the heading rows for the table.
