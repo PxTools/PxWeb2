@@ -179,6 +179,15 @@
   padding-bottom: 1rem;
 }
 
+.tableCardList {
+  display: grid;
+  gap: 16px;
+
+  @media #{breakpoint.$xsmall} , #{breakpoint.$small} {
+    gap: 12px;
+  }
+}
+
 .paginationWrapper {
   display: flex;
   justify-content: center;
@@ -201,14 +210,6 @@
 
 .filterPillContainer {
   padding-bottom: 40px;
-}
-
-.tableListItem {
-  padding-bottom: 16px;
-
-  @media #{breakpoint.$xsmall} , #{breakpoint.$small} {
-    padding-bottom: 12px;
-  }
 }
 
 .countLabel {

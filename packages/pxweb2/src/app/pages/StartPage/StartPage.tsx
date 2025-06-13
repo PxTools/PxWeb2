@@ -127,7 +127,7 @@ const StartPage = () => {
     );
   };
 
-  const renderTopicIcon = (table: Table) => {
+  const getTopicIcon = (table: Table) => {
     const topicId = table.paths?.[0]?.[0]?.id;
     const size = isSmallScreen ? 'small' : 'medium';
 
@@ -136,6 +136,23 @@ const StartPage = () => {
           null)
       : null;
   };
+
+  const handleShowMore = () => {
+    if (isPaginating) {
+      return;
+    }
+    if (paginationButtonRef.current) {
+      setPaginationButtonWidth(paginationButtonRef.current.offsetWidth);
+    }
+    setIsPaginating(true);
+    const newCount = visibleCount + paginationCount;
+    setLastVisibleCount(newCount);
+    requestAnimationFrame(() => {
+      setVisibleCount(newCount);
+    });
+  };
+
+  const handleShowLess = () => setVisibleCount(paginationCount);
 
   const renderPaginationButton = (
     type: 'more' | 'less',
@@ -154,23 +171,6 @@ const StartPage = () => {
       {label}
     </Button>
   );
-
-  const handleShowMore = () => {
-    if (isPaginating) {
-      return;
-    }
-    if (paginationButtonRef.current) {
-      setPaginationButtonWidth(paginationButtonRef.current.offsetWidth);
-    }
-    setIsPaginating(true);
-    const newCount = visibleCount + paginationCount;
-    setLastVisibleCount(newCount);
-    requestAnimationFrame(() => {
-      setVisibleCount(newCount);
-    });
-  };
-
-  const handleShowLess = () => setVisibleCount(paginationCount);
 
   const renderRemoveAllChips = () => {
     if (state.activeFilters.length >= 2) {
@@ -224,7 +224,7 @@ const StartPage = () => {
             period={`${table.firstPeriod?.slice(0, 4)}–${table.lastPeriod?.slice(0, 4)}`}
             frequency={frequencyLabel}
             tableId={`${table.id}`}
-            icon={renderTopicIcon(table)}
+            icon={getTopicIcon(table)}
           />
         </div>
       );
@@ -233,31 +233,25 @@ const StartPage = () => {
 
   const renderTableCardList = () => {
     return (
-      <>
-        {visibleCount < state.filteredTables.length && (
-          <span
-            className={styles['sr-only']}
-            aria-live="polite"
-            aria-atomic="true"
-          >
-            {showNumberOfTables()}
-          </span>
-        )}
-        {state.filteredTables.slice(0, visibleCount).map((table, index) => {
-          const isFirstNew =
-            index === visibleCount - paginationCount &&
-            visibleCount > paginationCount;
+      <div>
+        {renderNumberofTablesScreenReader()}
+        <div className={styles.tableCardList}>
+          {state.filteredTables.slice(0, visibleCount).map((table, index) => {
+            const isFirstNew =
+              index === visibleCount - paginationCount &&
+              visibleCount > paginationCount;
 
-          return (
-            <div
-              key={table.id}
-              ref={isFirstNew ? firstNewCardRef : undefined}
-              tabIndex={isFirstNew ? -1 : undefined}
-            >
-              {renderTableCard(table, t)}
-            </div>
-          );
-        })}
+            return (
+              <div
+                key={table.id}
+                ref={isFirstNew ? firstNewCardRef : undefined}
+                tabIndex={isFirstNew ? -1 : undefined}
+              >
+                {renderTableCard(table, t)}
+              </div>
+            );
+          })}
+        </div>
 
         <div className={styles.paginationWrapper}>
           {visibleCount < state.filteredTables.length &&
@@ -276,17 +270,37 @@ const StartPage = () => {
             )}
         </div>
 
-        {visibleCount < state.filteredTables.length && (
-          <BodyShort
-            size="medium"
-            className={styles.tableCount}
-            aria-hidden="true"
-          >
-            {showNumberOfTables()}
-          </BodyShort>
-        )}
-      </>
+        {renderNumberofTables()}
+      </div>
     );
+  };
+
+  const renderNumberofTables = () => {
+    if (visibleCount < state.filteredTables.length) {
+      return (
+        <BodyShort
+          size="medium"
+          className={styles.tableCount}
+          aria-hidden="true"
+        >
+          {showNumberOfTables()}
+        </BodyShort>
+      );
+    }
+  };
+
+  const renderNumberofTablesScreenReader = () => {
+    if (visibleCount < state.filteredTables.length) {
+      return (
+        <span
+          className={styles['sr-only']}
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          {showNumberOfTables()}
+        </span>
+      );
+    }
   };
 
   const renderTableCount = () => {
