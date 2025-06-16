@@ -427,6 +427,12 @@ export function VariableBoxContent({
     setScrollingDown(false);
   };
 
+  function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      event.preventDefault();
+    }
+  }
+
   return (
     <div className={cl(classes['variablebox-content'])}>
       <div
@@ -478,6 +484,7 @@ export function VariableBoxContent({
               classes['variablebox-content-full-values-list-scroll'],
             hasCodeLists && classes['no-border-radius-top'],
           )}
+          onKeyDown={handleKeyDown}
         >
           <div
             aria-label={t(
