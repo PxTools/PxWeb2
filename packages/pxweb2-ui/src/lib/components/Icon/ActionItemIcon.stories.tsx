@@ -29,7 +29,6 @@ export const Variants: StoryFn<typeof ActionItemIcon> = () => {
             <ActionItemIcon
               largeIconName={actionItemIcon as keyof typeof ActionItemIcons}
             />
-
             {actionItemIcon}
           </div>
         );
