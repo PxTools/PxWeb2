@@ -6,7 +6,7 @@
   display: flex;
   align-items: flex-start; // icon and label/body align at the top
   gap: 0.5rem; // space between icon and label/body
-  padding: fixed.$spacing-3 fixed.$spacing-5 fixed.$spacing-3 fixed.$spacing-2;
+  padding: fixed.$spacing-3 fixed.$spacing-4 fixed.$spacing-3 fixed.$spacing-2;
   &:hover {
     border-radius: var(--px-border-radius-medium);
     background: var(--px-color-surface-action-subtle-hover);
