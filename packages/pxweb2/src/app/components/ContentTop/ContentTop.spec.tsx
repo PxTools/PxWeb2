@@ -10,9 +10,12 @@ import {
 import ContentTop from './ContentTop';
 import { renderWithProviders } from '../../util/testing-utils';
 import { getMandatoryNotesCompressed } from '../../util/notes/notesUtil';
-//import { describe, it, expect } from 'vitest';
 
 import { Config } from '../../util/config/configType';
+import { describe, it, expect } from 'vitest';
+import React from 'react';
+import * as ContentTopModule from './ContentTop';
+import { useTranslation } from 'react-i18next';
 
 // Declare the global variable for this file
 declare global {
@@ -202,5 +205,109 @@ describe('Selection', () => {
     );
 
     expect(baseElement).toBeTruthy();
+  });
+});
+
+describe('ContentTop.createNoteMessage', () => {
+  // Import the function from the component file
+  const { createNoteMessage } = ContentTopModule;
+
+  // Mock translation function
+  // const t = (key: string) => key;
+
+  const baseNoteInfo = {
+    numberOfTableNotes: 0,
+    tableNotes: '',
+    variableNotes: [],
+  };
+  const { t } = useTranslation();
+  it('returns null if there are no notes', () => {
+    const noteInfo = { ...baseNoteInfo };
+    const result = createNoteMessage(noteInfo as any, t);
+    expect(result).toBeNull();
+  });
+
+  it('returns table notes only if variableNotes is empty and numberOfTableNotes > 0', () => {
+    const noteInfo = {
+      ...baseNoteInfo,
+      numberOfTableNotes: 2,
+      tableNotes: 'Table note text',
+      variableNotes: [],
+    };
+    const result = createNoteMessage(noteInfo as any, t);
+    expect(result).toEqual({
+      heading:
+        'presentation_page.main_content.about_table.footnotes.mandatory_heading',
+      message: 'Table note text',
+    });
+  });
+
+  it('returns variable note only if numberOfTableNotes is 0 and one variable note', () => {
+    const noteInfo = {
+      ...baseNoteInfo,
+      numberOfTableNotes: 0,
+      variableNotes: [
+        {
+          compressednotes: 'Variable note text',
+          totalNumberOfNotesOnVariable: 1,
+        },
+      ],
+    };
+    const result = createNoteMessage(noteInfo as any, t);
+    expect(result).toEqual({
+      heading:
+        'presentation_page.main_content.about_table.footnotes.important_about_selection_heading_one_note_1' +
+        1 +
+        'presentation_page.main_content.about_table.footnotes.important_about_selection_heading_one_note_2',
+      message: 'Variable note text',
+    });
+  });
+
+  it('returns combined heading/message for multiple notes', () => {
+    const noteInfo = {
+      ...baseNoteInfo,
+      numberOfTableNotes: 1,
+      variableNotes: [
+        {
+          compressednotes: 'Variable note text',
+          totalNumberOfNotesOnVariable: 2,
+        },
+      ],
+    };
+    const result = createNoteMessage(noteInfo as any, t);
+    expect(result).toEqual({
+      heading:
+        'presentation_page.main_content.about_table.footnotes.important_about_selection_heading_1' +
+        3 +
+        'presentation_page.main_content.about_table.footnotes.important_about_selection_heading_2',
+      message:
+        'presentation_page.main_content.about_table.footnotes.important_about_selection_body',
+    });
+  });
+
+  it('returns combined heading/message for multiple variable notes', () => {
+    const noteInfo = {
+      ...baseNoteInfo,
+      numberOfTableNotes: 0,
+      variableNotes: [
+        {
+          compressednotes: 'Variable note 1',
+          totalNumberOfNotesOnVariable: 1,
+        },
+        {
+          compressednotes: 'Variable note 2',
+          totalNumberOfNotesOnVariable: 2,
+        },
+      ],
+    };
+    const result = createNoteMessage(noteInfo as any, t);
+    expect(result).toEqual({
+      heading:
+        'presentation_page.main_content.about_table.footnotes.important_about_selection_heading_1' +
+        3 +
+        'presentation_page.main_content.about_table.footnotes.important_about_selection_heading_2',
+      message:
+        'presentation_page.main_content.about_table.footnotes.important_about_selection_body',
+    });
   });
 });
