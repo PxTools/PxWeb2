@@ -224,7 +224,13 @@
           "mandatory_heading": "Viktig om tabellen",
           "mandatory_variable_heading": "Viktig om",
           "non_mandatory_heading": "Gjelder hele tabellen",
-          "show_all_footnotes": "Vis alle noter for tabellen"
+          "show_all_footnotes": "Vis alle noter for tabellen",
+          "important_about_selection_heading_1": "Det er ",
+          "important_about_selection_heading_2": " viktige merknader for valgt filtrering ",
+          "important_about_selection_body": "Trykk på denne meldingen for å lese merknadene. ",
+          "important_about_selection_heading_one_note_1": "Det er ",
+          "important_about_selection_heading_one_note_2": " viktig merknad for valgt filtrering ",
+          "important_about_selection_body_one_note": "Trykk på denne meldingen for å lese merknaden. "
         },
         "definitions": {
           "title": "Definisjoner",
@@ -253,10 +259,6 @@
           "description": "Beskrivelsestekst...",
           "missing_heading": "Ingen kontaktinformasjon",
           "missing_text": "Tabellen har ikke kontaktinformasjon."
-        },
-        "notes": {
-          "important_about_table": "Viktig om tabellen",
-          "important_about_variable": "Viktig om "
         }
       },
       "related": {

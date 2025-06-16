@@ -16,10 +16,14 @@ export type NotesUtilityType = {
 
 export type MandatoryCompressedUtilityNotesType = {
   tableNotes: string;
+  numberOfTableNotes: number;
   variableNotes: MandatoryCompressedUtilityVariableNotesType[];
 };
 type MandatoryCompressedUtilityVariableNotesType = {
   variableName: string;
+  numberOfVariableNotes: number;
+  numberOfValueNotes: number;
+  totalNumberOfNotesOnVariable: number;
   compressednotes: string;
 };
 /**
@@ -126,18 +130,25 @@ function compressVariableNotes(
 ): MandatoryCompressedUtilityVariableNotesType {
   const variableNoteEntry: MandatoryCompressedUtilityVariableNotesType = {
     variableName: variableNotes.variableName,
+    numberOfVariableNotes: 0,
+    numberOfValueNotes: 0,
+    totalNumberOfNotesOnVariable: 0,
     compressednotes: '',
   };
 
   let tempString = '';
   if (variableNotes.notes.length > 0) {
+    variableNoteEntry.numberOfVariableNotes = variableNotes.notes.length;
     tempString += variableNotes.notes.join('');
+    variableNoteEntry.totalNumberOfNotesOnVariable = variableNotes.notes.length;
   }
 
   for (const valueNotes of variableNotes.valueNotes) {
     if (valueNotes.notes.length > 0) {
+      variableNoteEntry.numberOfValueNotes += valueNotes.notes.length;
       tempString += valueNotes.valueName + ': ';
       tempString += valueNotes.notes.join(' ') + ' ';
+      variableNoteEntry.totalNumberOfNotesOnVariable += valueNotes.notes.length;
     }
   }
 
@@ -158,11 +169,14 @@ export function getMandatoryNotesCompressed(
 
   const tempTabletableNotes: MandatoryCompressedUtilityNotesType = {
     tableNotes: '',
+    numberOfTableNotes: 0,
     variableNotes: [],
   };
 
   if (mandatoryNotes.notesCount > 0) {
     if (mandatoryNotes.tableLevelNotes.length > 0) {
+      tempTabletableNotes.numberOfTableNotes =
+        mandatoryNotes.tableLevelNotes.length;
       tempTabletableNotes.tableNotes = mandatoryNotes.tableLevelNotes.join(' ');
     }
     if (mandatoryNotes.variableNotes.length > 0) {
