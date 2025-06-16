@@ -57,6 +57,7 @@ export const TableCard = forwardRef<HTMLDivElement, TableCardProps>(
         onClick={handleClick}
         onKeyDown={handleKeyDown}
         ref={ref}
+        tabIndex={0}
       >
         {icon && (
           <div className={cl(styles.iconWrapper, styles[status])}>{icon}</div>
@@ -68,7 +69,7 @@ export const TableCard = forwardRef<HTMLDivElement, TableCardProps>(
                 className={styles.title}
                 href={href}
                 onClick={(e) => e.stopPropagation()}
-                tabIndex={0}
+                tabIndex={-1}
               >
                 {title}
               </a>

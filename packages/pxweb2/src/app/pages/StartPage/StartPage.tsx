@@ -168,6 +168,7 @@ const StartPage = () => {
       style={
         paginationButtonWidth ? { minWidth: paginationButtonWidth } : undefined
       }
+      tabIndex={0}
     >
       {label}
     </Button>
@@ -195,7 +196,7 @@ const StartPage = () => {
     }
   };
 
-  const renderTableCard = (table: Table, t: TFunction) => {
+  const renderTableCard = (table: Table, t: TFunction, isFirstNew: boolean) => {
     if (table) {
       const translationKey = `start_page.filter.frequency.${table.timeUnit?.toLowerCase()}`;
       const frequencyLabel = t(translationKey, {
@@ -226,6 +227,7 @@ const StartPage = () => {
             frequency={frequencyLabel}
             tableId={`${table.id}`}
             icon={getTopicIcon(table)}
+            ref={isFirstNew ? firstNewCardRef : undefined}
           />
         </div>
       );
@@ -243,17 +245,24 @@ const StartPage = () => {
               visibleCount > paginationCount;
 
             return (
-              <div
-                key={table.id}
-                ref={isFirstNew ? firstNewCardRef : undefined}
-                tabIndex={isFirstNew ? -1 : undefined}
-              >
-                {renderTableCard(table, t)}
+              <div key={table.id} tabIndex={isFirstNew ? -1 : undefined}>
+                {renderTableCard(table, t, isFirstNew)}
               </div>
             );
           })}
         </div>
+        {renderPagination()}
+      </div>
+    );
+  };
 
+  const renderPagination = () => {
+    const shouldShowPagination =
+      visibleCount < state.filteredTables.length ||
+      (visibleCount >= state.filteredTables.length &&
+        visibleCount > paginationCount);
+    if (shouldShowPagination) {
+      return (
         <div className={styles.paginationWrapper}>
           {visibleCount < state.filteredTables.length &&
             renderPaginationButton(
@@ -269,26 +278,14 @@ const StartPage = () => {
               handleShowLess,
               t('start_page.table.show_less'),
             )}
+          <BodyShort
+            size="medium"
+            className={styles.tableCount}
+            aria-hidden="true"
+          >
+            {showNumberOfTables()}
+          </BodyShort>
         </div>
-        {renderNumberofTables()}
-      </div>
-    );
-  };
-
-  const renderNumberofTables = () => {
-    const total = state.filteredTables.length;
-    const shouldShow =
-      visibleCount < total ||
-      (visibleCount >= total && visibleCount > paginationCount);
-    if (shouldShow) {
-      return (
-        <BodyShort
-          size="medium"
-          className={styles.tableCount}
-          aria-hidden="true"
-        >
-          {showNumberOfTables()}
-        </BodyShort>
       );
     }
   };
