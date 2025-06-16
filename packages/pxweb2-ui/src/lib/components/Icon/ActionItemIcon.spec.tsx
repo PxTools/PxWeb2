@@ -9,7 +9,9 @@ describe('ActionItemIcon', () => {
   });
   it('should return null if icon does not exist', () => {
     // @ts-expect-error: purposely passing invalid icon name
-    const { container } = render(<ActionItemIcon largeIconName="NonExistentIcon" />);
+    const { container } = render(
+      <ActionItemIcon largeIconName="NonExistentIcon" />,
+    );
     expect(container.firstChild).toBeNull();
   });
 });
