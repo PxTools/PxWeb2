@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import { ActionItemIcon } from './ActionItemIcon';
-import { describe, it, expect} from 'vitest';
+import { describe, it, expect } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 
 describe('ActionItemIcon', () => {
@@ -17,7 +17,7 @@ describe('ActionItemIcon', () => {
   it('should set the aria-label attribute when provided', () => {
     const ariaLabel = 'Test Icon';
     const { getByLabelText } = render(
-      <ActionItemIcon largeIconName="Table" ariaLabel={ariaLabel} />
+      <ActionItemIcon largeIconName="Table" ariaLabel={ariaLabel} />,
     );
     expect(getByLabelText(ariaLabel)).toBeInTheDocument();
   });
