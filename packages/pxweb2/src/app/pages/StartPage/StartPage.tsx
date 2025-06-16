@@ -49,6 +49,7 @@ const StartPage = () => {
   const hasOverlayBeenOpenedRef = useRef(false);
   const paginationButtonRef = useRef<HTMLButtonElement>(null);
   const firstNewCardRef = useRef<HTMLDivElement>(null);
+  const lastVisibleCardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     async function fetchTables() {
@@ -153,7 +154,14 @@ const StartPage = () => {
     });
   };
 
-  const handleShowLess = () => setVisibleCount(paginationCount);
+  const handleShowLess = () => {
+    setVisibleCount(paginationCount);
+    requestAnimationFrame(() => {
+      if (lastVisibleCardRef.current) {
+        lastVisibleCardRef.current.focus();
+      }
+    });
+  };
 
   const renderPaginationButton = (
     type: 'more' | 'less',
@@ -196,7 +204,12 @@ const StartPage = () => {
     }
   };
 
-  const renderTableCard = (table: Table, t: TFunction, isFirstNew: boolean) => {
+  const renderTableCard = (
+    table: Table,
+    t: TFunction,
+    isFirstNew: boolean,
+    isLastVisible: boolean,
+  ) => {
     if (table) {
       const translationKey = `start_page.filter.frequency.${table.timeUnit?.toLowerCase()}`;
       const frequencyLabel = t(translationKey, {
@@ -209,6 +222,13 @@ const StartPage = () => {
         config.language.showDefaultLanguageInPath ||
         language !== config.language.defaultLanguage;
       const langPrefix = showLangInPath ? `/${language}` : '';
+
+      let cardRef: React.RefObject<HTMLDivElement | null> | undefined;
+      if (isFirstNew) {
+        cardRef = firstNewCardRef;
+      } else if (isLastVisible) {
+        cardRef = lastVisibleCardRef;
+      }
 
       return (
         <div className={styles.tableListItem}>
@@ -227,7 +247,7 @@ const StartPage = () => {
             frequency={frequencyLabel}
             tableId={`${table.id}`}
             icon={getTopicIcon(table)}
-            ref={isFirstNew ? firstNewCardRef : undefined}
+            ref={cardRef}
           />
         </div>
       );
@@ -244,9 +264,12 @@ const StartPage = () => {
               index === visibleCount - paginationCount &&
               visibleCount > paginationCount;
 
+            const isLastVisible =
+              index === Math.min(visibleCount, state.filteredTables.length) - 1;
+
             return (
               <div key={table.id} tabIndex={isFirstNew ? -1 : undefined}>
-                {renderTableCard(table, t, isFirstNew)}
+                {renderTableCard(table, t, isFirstNew, isLastVisible)}
               </div>
             );
           })}
