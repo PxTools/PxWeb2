@@ -6,8 +6,9 @@
   "common": {
     "title": "PxWeb 2.0",
     "header": {
-      "title": "PxWeb 2.0 [Main]",
-      "logo": "PxWeb 2.0"
+      "title": "PxWeb 2.0 [Sprint 23]",
+      "logo": "PxWeb 2.0",
+      "arialabelheader": "Velg språk"
     },
     "not_found": {
       "page_not_found": {
