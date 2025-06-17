@@ -184,7 +184,7 @@ export const FilterSidebar: React.FC = () => {
         </FilterCategory>
       </div>
       <p>
-        <a href="/en/table/tab638">Go to table viewer</a>
+        <a href="/table/04938">Go to table viewer</a>
       </p>
     </div>
   );
