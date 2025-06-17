@@ -493,12 +493,6 @@ export function VariableBoxContent({
                 total: totalValues,
               },
             )}
-            aria-description={t(
-              'presentation_page.sidemenu.selection.variablebox.content.values_list.aria_description',
-              {
-                total: totalValues,
-              },
-            )} // Coming in WAI-ARIA 1.3
             className={cl(classes['variablebox-content-values-only-list'])}
             ref={valuesOnlyList}
           >
