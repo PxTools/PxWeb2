@@ -16,7 +16,7 @@ interface ActionItemProps {
   largeIconName?: ActionItemIconProps['largeIconName'];
   onClick?: () => void;
   description?: string;
-  checked?: boolean;
+  control?: boolean;
   size?: 'medium' | 'large';
 }
 
@@ -37,6 +37,11 @@ export function ActionItem({
       tabIndex={0}
       aria-label={ariaLabel || t('actionItem.ariaLabel')}
       onClick={onClick}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          onClick?.();
+        }
+      }}
     >
       {size === 'medium' && (
         <div className={cl(styles[`iconWrapper-${size}`], styles.iconWrapper)}>
