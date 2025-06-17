@@ -1,0 +1,40 @@
+apiVersion: nais.io/v1alpha1
+kind: Application
+metadata:
+  labels:
+    team: statbank-developers
+  name: pxweb2
+  namespace: statbank
+spec:
+  accessPolicy:
+    outbound:
+      external:
+        - host: data.qa.ssb.no
+          ports:
+            - port: 443
+      rules:
+        - application: prometheus-pushgateway
+          namespace: nais-system
+  image: '{{ image }}' # Injected from the GitHub Action
+  ingresses:
+  - https://pxweb2.intern.test.ssb.no
+  logformat: accesslog_with_referer_useragent
+  logtransform: http_loglevel
+  port: 8080
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 200m
+      memory: 256Mi
+  service:
+    port: 80
+    protocol: http
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 0
+    type: RollingUpdate
+  terminationGracePeriodSeconds: 60
+status: {}
