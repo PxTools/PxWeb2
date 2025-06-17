@@ -6,7 +6,7 @@ const meta: Meta<typeof ActionItem> = {
   title: 'Components/ActionItem',
   component: ActionItem,
   args: {
-    ariaLabel: 'Click me',
+    ariaLabel: 'Action item',
     onClick: () => alert('Action clicked!'),
     iconName: 'BarChart',
     largeIconName: 'Table',
@@ -32,7 +32,6 @@ export const MediumDefault: Story = {
     iconName: 'File',
     ariaLabel: 'Medium default',
     size: 'medium',
-    description: 'This is a description of the action item.',
   },
 };
 
