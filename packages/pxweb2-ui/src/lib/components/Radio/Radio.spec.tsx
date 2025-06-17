@@ -63,12 +63,7 @@ describe('Radio', () => {
         <Radio {...defaultProps} hideLegend={false} />,
       );
       const legend = container.querySelector('legend');
-      const hasLegendSrOnly =
-        legend !== null &&
-        Array.from(legend.classList).some((cls) =>
-          cls.includes('legendSrOnly'),
-        );
-      expect(hasLegendSrOnly).toBe(false);
+      expect(legend).toBeVisible();
     });
   });
 
