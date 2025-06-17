@@ -9,12 +9,17 @@
 
   // xsmall
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
-    gap: fixed.$spacing-7;
+    gap: fixed.$spacing-12;
   }
 
   // small
   @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
-    gap: fixed.$spacing-13;
+    gap: fixed.$spacing-12;
+  }
+
+  // medium
+  @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
+    gap: 60px;
   }
 }
 
@@ -45,4 +50,11 @@
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
     display: none;
   }
+}
+
+.alertgroup {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
 }

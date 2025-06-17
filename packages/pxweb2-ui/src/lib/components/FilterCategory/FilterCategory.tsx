@@ -1,8 +1,9 @@
-import React, { type ReactNode, useEffect, useState, useRef } from 'react';
+import React, { type ReactNode, useState, useRef } from 'react';
 import cl from 'clsx';
 
 import styles from './FilterCategory.module.scss';
 import { Icon } from '../Icon/Icon';
+import { Heading } from '../Typography/Heading/Heading';
 
 export interface FilterCategoryProps {
   header?: string;
@@ -16,16 +17,8 @@ export const FilterCategory: React.FC<FilterCategoryProps> = ({
   openByDefault = false,
 }) => {
   const [isOpen, setIsOpen] = useState(openByDefault);
-  const [maxHeight, setMaxHeight] = useState('');
 
   const contentRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (contentRef.current) {
-      const contentHeight = contentRef.current.scrollHeight;
-      setMaxHeight(isOpen ? `${contentHeight}px` : '');
-    }
-  }, [isOpen, children]);
 
   return (
     <div className={cl(styles.filterCategory)}>
@@ -33,12 +26,11 @@ export const FilterCategory: React.FC<FilterCategoryProps> = ({
         className={cl(styles.filterCategoryHeader)}
         aria-expanded={isOpen ? 'true' : 'false'}
         onClick={() => setIsOpen(!isOpen)}
+        tabIndex={0}
       >
-        <span
-          className={cl(styles.filterCategoryTitle, styles['heading-small'])}
-        >
+        <Heading size="small" level="3" className={styles.filterCategoryTitle}>
           {header}
-        </span>
+        </Heading>
         <div className={cl(styles.filterCategoryIconWrapper)}>
           <Icon
             className={cl({
@@ -53,8 +45,8 @@ export const FilterCategory: React.FC<FilterCategoryProps> = ({
           styles.filterCategoryContent,
           isOpen ? styles['open'] : styles['closed'],
         )}
+        inert={!isOpen}
         ref={contentRef}
-        style={{ maxHeight }}
       >
         {children}
       </div>

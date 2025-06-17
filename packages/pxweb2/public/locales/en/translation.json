@@ -51,12 +51,37 @@
     }
   },
   "start_page": {
-    "header": "Welcome to the app!",
-    "welcome_trans_test": "Welcome to the <1>app</1> for PxWeb 2.0!",
+    "header": "Welcome to PxWeb 2.0",
+    "ingress": "Looking for the perfect table? Use the search field and filters to dig into the numbers you need. Whether you're hunting for trends, facts, or just an oddly satisfying dataset, PxWeb 2.0 has your back.",
+    "more_about_label": "More about PxWeb 2.0",
+    "more_about_text": "More about Text EN",
+    "search_placeholder": "Search in PxWeb 2.0",
     "filter": {
+      "button": "Filter",
+      "back": "Back",
+      "show_results": "Show {{value}} results",
+      "close": "Close filter",
       "header": "Filter",
       "remove_all_filter": "Remove all filters",
-      "remove_filter_aria": "Delete {{value}}"
+      "remove_filter_aria": "Delete {{value}}",
+      "subject": "Topic",
+      "timeUnit": "Time period",
+      "year": "Year",
+      "variabel": "Variable",
+      "frequency": {
+        "annual": "Year",
+        "monthly": "Month",
+        "quarterly": "Quarter",
+        "term": "Term",
+        "weekly": "Week",
+        "other": "Other"
+      }
+    },
+    "table": {
+      "number_of_tables": "<strong>{{count}}</strong> tables",
+      "number_of_tables_found": "<strong>{{count}}</strong> tables found",
+      "updated_label": "Updated",
+      "show_more": "Show more"
     }
   },
   "presentation_page": {
@@ -194,7 +219,13 @@
           "mandatory_heading": "Important about the table",
           "mandatory_variable_heading": "Important about",
           "non_mandatory_heading": "For the entire table",
-          "show_all_footnotes": "Show all notes for table"
+          "show_all_footnotes": "Show all notes for table",
+          "important_about_selection_heading_1": "There are ",
+          "important_about_selection_heading_2": " important notes for your selection",
+          "important_about_selection_body": "Click on this message to read the notes.",
+          "important_about_selection_heading_one_note_1": "There is ",
+          "important_about_selection_heading_one_note_2": " important note for your selection",
+          "important_about_selection_body_one_note": "Click on this message to read the note."
         },
         "definitions": {
           "title": "Definitions",

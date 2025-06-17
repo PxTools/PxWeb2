@@ -11,11 +11,11 @@ import useApp from '../../context/useApp';
 export interface NavigationDrawerProps {
   children: React.ReactNode;
   heading: string;
-  view: 'filter' | 'view' | 'edit' | 'save' | 'help';
+  view: 'selection' | 'view' | 'edit' | 'save' | 'help';
   openedWithKeyboard: boolean;
   onClose: (
     keyboard: boolean,
-    str: 'filter' | 'view' | 'edit' | 'save' | 'help',
+    str: 'selection' | 'view' | 'edit' | 'save' | 'help',
   ) => void;
 }
 
@@ -99,7 +99,7 @@ export const NavigationDrawer = forwardRef<
             </Label>
           </div>
         </div>
-        <div className={styles.children}>{children}</div>
+        {children}
       </div>
     </>
   );
