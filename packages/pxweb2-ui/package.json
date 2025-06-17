@@ -9,6 +9,7 @@
     "build-style-dictionary": "node ./style-dictionary/build.mjs",
     "storybook": "storybook dev -p 6006",
     "test": "vitest run",
+    "test-dev": "vitest",
     "coverage": "vitest run --coverage",
     "test:watch": "vitest",
     "prettier": "prettier --config ../../.prettierrc --check ./src/** --write --ignore-path ../../.prettierignore"
@@ -16,10 +17,10 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@vitejs/plugin-react": "^4.4.1",
+    "@vitejs/plugin-react": "^4.5.0",
     "clsx": "^2.1.1",
-    "motion": "^12.12.1",
-    "react-i18next": "^15.5.1",
+    "motion": "^12.15.0",
+    "react-i18next": "^15.5.2",
     "vite-plugin-dts": "^4.5.4"
   },
   "devDependencies": {

@@ -51,12 +51,37 @@
     }
   },
   "start_page": {
-    "header": "Velkommen til appen!",
-    "welcome_trans_test": "Velkommen til <1>appen</1> for PxWeb 2.0!",
+    "header": "Velkommen til PxWeb 2.0",
+    "ingress": "Leter du etter den perfekte tabellen? Bruk søkefeltet og filtrene for å finne tallene du trenger. Enten du er på jakt etter trender, fakta eller bare et merkelig tilfredsstillende datasett, så har PxWeb 2.0 det du trenger.",
+    "more_about_label": "Mer om Statistikkbanken",
+    "more_about_text": "More about Text NO",
+    "search_placeholder": "Søk i Statistikkbanken",
     "filter": {
-      "header": "Filtrer",
+      "button": "Filter",
+      "back": "Tilbake",
+      "show_results": "Vis {{value}} treff",
+      "close": "Lukk filter",
+      "header": "Filter",
       "remove_all_filter": "Fjern alle filter",
-      "remove_filter_aria": "Slett {{value}}"
+      "remove_filter_aria": "Slett {{value}}",
+      "subject": "Emne",
+      "timeUnit": "Tidsperiode",
+      "year": "Årstall",
+      "variabel": "Variabel",
+      "frequency": {
+        "annual": "År",
+        "monthly": "Måned",
+        "quarterly": "Kvartal",
+        "term": "Termin",
+        "weekly": "Uke",
+        "other": "Annet"
+      }
+    },
+    "table": {
+      "number_of_tables": "<strong>{{count}}</strong> tabeller",
+      "number_of_tables_found": "Treff på <strong>{{count}}</strong> tabeller",
+      "updated_label": "Oppdatert",
+      "show_more": "Vis flere"
     }
   },
   "presentation_page": {
@@ -194,7 +219,13 @@
           "mandatory_heading": "Viktig om tabellen",
           "mandatory_variable_heading": "Viktig om",
           "non_mandatory_heading": "Gjelder hele tabellen",
-          "show_all_footnotes": "Vis alle noter for tabellen"
+          "show_all_footnotes": "Vis alle noter for tabellen",
+          "important_about_selection_heading_1": "Det er ",
+          "important_about_selection_heading_2": " viktige merknader for valgt filtrering ",
+          "important_about_selection_body": "Trykk på denne meldingen for å lese merknadene. ",
+          "important_about_selection_heading_one_note_1": "Det er ",
+          "important_about_selection_heading_one_note_2": " viktig merknad for valgt filtrering ",
+          "important_about_selection_body_one_note": "Trykk på denne meldingen for å lese merknaden. "
         },
         "definitions": {
           "title": "Definisjoner",

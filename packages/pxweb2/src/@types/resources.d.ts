@@ -11,16 +11,6 @@ interface Resources {
         logo: 'PxWeb 2.0';
         arialabelheader: 'Select language';
       };
-      not_found: {
-        page_not_found: {
-          title: 'Table not found';
-          description: 'The table you are looking for does not exist. Please check the URL or return to the homepage.';
-        };
-        unsupported_language: {
-          title: 'Unsupported language';
-          description: 'The selected language is not supported.';
-        };
-      };
       skip_to_main: 'Skip to main content';
       footer: {
         contact: {
@@ -52,12 +42,37 @@ interface Resources {
       };
     };
     start_page: {
-      header: 'Welcome to the app!';
-      welcome_trans_test: 'Welcome to the <1>app</1> for PxWeb 2.0!';
+      header: 'Welcome to PxWeb 2.0';
+      ingress: `Looking for the perfect table? Use the search field and filters to dig into the numbers you need. Whether you're hunting for trends, facts, or just an oddly satisfying dataset, PxWeb 2.0 has your back.`;
+      more_about_label: 'More about PxWeb 2.0';
+      more_about_text: 'Fyll på more_about';
+      search_placeholder: 'Search in PxWeb 2.0';
       filter: {
+        button: 'Filter';
+        back: 'Back';
+        show_results: 'Show {{value}} results';
+        close: 'Close filter';
         header: 'Filter';
         remove_all_filter: 'Remove all filters';
         remove_filter_aria: 'Delete {{value}}';
+        subject: 'Topic';
+        timeUnit: 'Time period';
+        year: 'Year';
+        variabel: 'Variable';
+        frequency: {
+          annual: 'Year';
+          monthly: 'Month';
+          quarterly: 'Quarter';
+          term: 'Term';
+          weekly: 'Week';
+          other: 'Other';
+        };
+      };
+      table: {
+        number_of_tables: '<number of> tables';
+        number_of_tables_found: '<number of> tables found';
+        updated_label: 'Updated';
+        show_more: 'Show more';
       };
     };
     presentation_page: {
@@ -82,6 +97,7 @@ interface Resources {
               tag_selected: '{{selected}} of {{total}} selected';
               tag_mandatory: 'Mandatory';
               alert_no_mandatory_values: 'You must select something in the list for the table to be displayed';
+              show_more: 'Show more';
             };
             content: {
               select: {
@@ -224,6 +240,10 @@ interface Resources {
             description: 'Description text...';
             missing_heading: 'No contact information';
             missing_text: 'The table has no contact information.';
+          };
+          notes: {
+            important_about_table: 'Important about the table';
+            important_about_variable: 'Important about ';
           };
         };
         related: {

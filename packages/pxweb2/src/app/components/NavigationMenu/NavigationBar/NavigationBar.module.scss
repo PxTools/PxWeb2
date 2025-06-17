@@ -15,12 +15,13 @@
   position: fixed;
   bottom: 0;
   z-index: 1;
+  border-top: 1px solid var(--px-color-border-subtle);
 
-  // xsmall and small
-  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
+  // xsmall, small and medium
+  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
     nav {
       display: flex;
-      width: 100%;
+      width: 688px;
     }
   }
 

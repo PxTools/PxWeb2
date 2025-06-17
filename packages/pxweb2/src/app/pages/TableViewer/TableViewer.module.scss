@@ -6,7 +6,7 @@
   flex-direction: row;
 
   // Tablet and mobile sizes
-  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
+  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
     flex-direction: column;
     overflow-y: auto;
     scrollbar-width: thin;
@@ -22,14 +22,14 @@
   // Calculate height of main container, minus the header
   height: calc(100vh - fixed.$spacing-22);
 
-  // xsmall and small
-  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
+  // xsmall, small and medium
+  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
     left: 0px;
     background: var(--px-color-surface-default);
     width: 100%;
 
     // Calculate height of main container, minus the header and navigation bar heights
-    height: calc(100vh - fixed.$spacing-22 - fixed.$spacing-20);
+    height: calc(100vh - fixed.$spacing-22 - 78px);
 
     &.skipToMainContentVisible {
       // Calculate height of main container, minus the header and navigation bar and SkipToMainContent heights
@@ -40,8 +40,8 @@
     }
   }
 
-  // medium, large and xlarge
-  @media ((min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-large-max-width)) or ((min-width: fixed.$breakpoints-xlarge-min-width)) {
+  // medium, large, xlarge and xxlarge
+  @media ((min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-xlarge-max-width)) or ((min-width: fixed.$breakpoints-xxlarge-min-width)) {
     width: calc(100% - 120px);
     justify-content: center;
     align-items: flex-start;
@@ -53,12 +53,7 @@
     border-end-end-radius: var(--px-border-radius-none);
     border-end-start-radius: var(--px-border-radius-none);
 
-    padding: fixed.$spacing-6 fixed.$spacing-6 0px fixed.$spacing-6;
-  }
-
-  // xlarge
-  @media (min-width: fixed.$breakpoints-xlarge-min-width) {
-    padding: fixed.$spacing-10 fixed.$spacing-6 0px fixed.$spacing-6;
+    padding: fixed.$spacing-8 fixed.$spacing-8 0px fixed.$spacing-8;
   }
 }
 
@@ -78,14 +73,19 @@
 
   // small
   @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
-    padding-top: fixed.$spacing-6;
+    padding-top: fixed.$spacing-8;
   }
 
-  // medium, large and xlarge
-  @media ((min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-large-max-width)) or ((min-width: fixed.$breakpoints-xlarge-min-width)) {
-    padding-bottom: fixed.$spacing-6;
+  // medium
+  @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
+    padding-top: fixed.$spacing-11;
+  }
+
+  // large, xlarge and xxlarge
+  @media ((min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-xlarge-max-width)) or ((min-width: fixed.$breakpoints-xxlarge-min-width)) {
+    padding-bottom: fixed.$spacing-8;
     overflow-y: auto;
     scrollbar-width: thin;
-    gap: fixed.$spacing-6;
+    gap: fixed.$spacing-8;
   }
 }
