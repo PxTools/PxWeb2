@@ -108,7 +108,11 @@ const StartPage = () => {
 
   useEffect(() => {
     if (!isPaginating && firstNewCardRef.current) {
-      firstNewCardRef.current.focus();
+      // Wait 250ms to give the screen reader time to read the aria-live update
+      const timeout = setTimeout(() => {
+        firstNewCardRef.current?.focus();
+      }, 250);
+      return () => clearTimeout(timeout);
     }
   }, [isPaginating]);
 
