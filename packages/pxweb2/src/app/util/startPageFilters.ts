@@ -122,21 +122,22 @@ export function sortFilterChips(filters: Filter[]): Filter[] {
     return a.index - b.index;
   });
 }
-
-export function findParent(
+export function findAncestors(
   subjectTree: PathItem[],
   childId: string,
-): PathItem | null {
+  path: PathItem[] = [],
+): PathItem[] {
   for (const node of subjectTree) {
-    if (node.children?.some((child) => child.id === childId)) {
-      return node;
+    const newPath = [...path, node];
+    if (node.id === childId) {
+      return path;
     }
     if (node.children) {
-      const found = findParent(node.children, childId);
-      if (found) {
-        return found;
+      const result = findAncestors(node.children, childId, newPath);
+      if (result.length > 0) {
+        return result;
       }
     }
   }
-  return null;
+  return [];
 }

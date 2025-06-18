@@ -4,7 +4,7 @@ import { ActionType } from '../../pages/StartPage/StartPageTypes';
 import styles from './FilterSidebar.module.scss';
 import { useTranslation } from 'react-i18next';
 import { Checkbox, FilterCategory, Button } from '@pxweb2/pxweb2-ui';
-import { PathItem, findParent } from '../../util/startPageFilters';
+import { PathItem, findAncestors } from '../../util/startPageFilters';
 import { FilterContext } from '../../context/FilterContext';
 import { ReactNode, useContext, useState } from 'react';
 
@@ -50,14 +50,18 @@ const Collapsible: React.FC<CollapsibleProps> = ({
             onChange={(value) => {
               setIsOpen(true);
               if (value) {
-                const parent = findParent(
+                const ancestors = findAncestors(
                   state.availableFilters.subjectTree,
                   subject.id,
                 );
 
                 // Remove parent from activeFilters
                 state.activeFilters
-                  .filter((f) => f.type === 'subject' && f.value === parent?.id)
+                  .filter(
+                    (f) =>
+                      f.type === 'subject' &&
+                      ancestors.some((parent) => f.value === parent.id),
+                  )
                   .forEach((f) => {
                     dispatch({
                       type: ActionType.REMOVE_FILTER,
