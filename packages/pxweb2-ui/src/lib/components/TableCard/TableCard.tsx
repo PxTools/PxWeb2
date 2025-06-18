@@ -33,7 +33,7 @@ export const TableCard = forwardRef<HTMLDivElement, TableCardProps>(
       tableId,
       title,
       updatedLabel,
-      tabIndex
+      tabIndex,
     },
     ref,
   ) => {
