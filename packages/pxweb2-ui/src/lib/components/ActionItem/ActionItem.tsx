@@ -8,7 +8,6 @@ import {
   ActionItemIconProps,
   Label,
 } from '@pxweb2/pxweb2-ui';
-import { useTranslation } from 'react-i18next';
 
 interface ActionItemProps {
   ariaLabel?: string;
@@ -28,14 +27,13 @@ export function ActionItem({
   size = 'medium',
   description,
 }: Readonly<ActionItemProps>) {
-  const { t } = useTranslation();
 
   return (
     <div
       className={cl(styles.actionItem)}
       role="button"
       tabIndex={0}
-      aria-label={ariaLabel || t('actionItem.ariaLabel')}
+      aria-label={ariaLabel}
       onClick={onClick}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -43,29 +41,27 @@ export function ActionItem({
         }
       }}
     >
-      {size === 'medium' && (
-        <div className={cl(styles[`iconWrapper-${size}`], styles.iconWrapper)}>
-          <Icon iconName={iconName} className={styles.icon} />
+      <div className={styles.actionItem}>
+        <div className={styles.iconLabelColumn}>
+          <div className={styles.iconLabelRow}>
+            <div className={cl(styles[`iconWrapper-${size}`], styles.iconWrapper)}>
+              {size === 'medium' ? (
+                <Icon iconName={iconName} className={styles.icon} />
+              ) : (
+                <ActionItemIcon largeIconName={largeIconName} className={styles.icon} />
+              )}
+            </div>
+            <Label
+              size="medium"
+              className={cl(styles[`label-${size}`], styles.label)}
+            >
+              {ariaLabel}
+            </Label>
+          </div>
+          {description && size === 'medium' && (
+            <BodyShort className={styles.bodyShort}>{description}</BodyShort>
+          )}
         </div>
-      )}
-      {size === 'large' && (
-        <div className={cl(styles[`iconWrapper-${size}`], styles.iconWrapper)}>
-          <ActionItemIcon
-            largeIconName={largeIconName}
-            className={styles.icon}
-          />
-        </div>
-      )}
-      <div className={styles.labelBodyWrapper}>
-        <Label
-          size="medium"
-          className={cl(styles[`label-${size}`], styles.label)}
-        >
-          {ariaLabel || t('actionItem.label')}
-        </Label>
-        {size === 'medium' && description && (
-          <BodyShort className={styles.bodyShort}>{description}</BodyShort>
-        )}
       </div>
     </div>
   );
