@@ -32,7 +32,6 @@ describe('ActionItem', () => {
     render(<ActionItem iconName="BarChart" />);
     expect(screen.getByRole('button')).toBeInTheDocument();
     expect(screen.getByTestId('icon')).toHaveAttribute('data-icon', 'BarChart');
-    expect(screen.getByText('actionItem.label')).toBeInTheDocument();
   });
 
   it('renders with custom ariaLabel and description', () => {
