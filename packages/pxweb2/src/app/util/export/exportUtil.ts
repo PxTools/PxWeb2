@@ -48,6 +48,7 @@ export async function exportToFile(
       break;
     default:
       outputFormat = OutputFormatType.CSV;
+      fileExtension = 'csv';
       break;
   }
 
