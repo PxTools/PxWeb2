@@ -122,18 +122,37 @@ export function sortFilterChips(filters: Filter[]): Filter[] {
     return a.index - b.index;
   });
 }
+
 export function findAncestors(
   subjectTree: PathItem[],
   childId: string,
-  path: PathItem[] = [],
-): PathItem[] {
+  path: string[] = [],
+): string[] {
   for (const node of subjectTree) {
-    const newPath = [...path, node];
+    const newPath = [...path, node.id];
     if (node.id === childId) {
       return path;
     }
     if (node.children) {
       const result = findAncestors(node.children, childId, newPath);
+      if (result.length > 0) {
+        return result;
+      }
+    }
+  }
+  return [];
+}
+
+export function findChildren(
+  subjectTree: PathItem[],
+  parentId: string,
+): string[] {
+  for (const node of subjectTree) {
+    if (node.id === parentId) {
+      return node.children?.map((child) => child.id) ?? [];
+    }
+    if (node.children) {
+      const result = findChildren(node.children, parentId);
       if (result.length > 0) {
         return result;
       }

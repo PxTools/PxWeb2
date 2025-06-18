@@ -4,7 +4,11 @@ import { ActionType } from '../../pages/StartPage/StartPageTypes';
 import styles from './FilterSidebar.module.scss';
 import { useTranslation } from 'react-i18next';
 import { Checkbox, FilterCategory, Button } from '@pxweb2/pxweb2-ui';
-import { PathItem, findAncestors } from '../../util/startPageFilters';
+import {
+  PathItem,
+  findAncestors,
+  findChildren,
+} from '../../util/startPageFilters';
 import { FilterContext } from '../../context/FilterContext';
 import { ReactNode, useContext, useState } from 'react';
 
@@ -50,9 +54,18 @@ const Collapsible: React.FC<CollapsibleProps> = ({
             onChange={(value) => {
               setIsOpen(true);
               if (value) {
-                const ancestors = findAncestors(
-                  state.availableFilters.subjectTree,
-                  subject.id,
+                let relatives: string[] = [];
+                relatives.push(
+                  ...findAncestors(
+                    state.availableFilters.subjectTree,
+                    subject.id,
+                  ),
+                );
+                relatives.push(
+                  ...findChildren(
+                    state.availableFilters.subjectTree,
+                    subject.id,
+                  ),
                 );
 
                 // Remove parent from activeFilters
@@ -60,7 +73,7 @@ const Collapsible: React.FC<CollapsibleProps> = ({
                   .filter(
                     (f) =>
                       f.type === 'subject' &&
-                      ancestors.some((parent) => f.value === parent.id),
+                      relatives.some((parent) => f.value === parent),
                   )
                   .forEach((f) => {
                     dispatch({
@@ -68,8 +81,6 @@ const Collapsible: React.FC<CollapsibleProps> = ({
                       payload: f.value,
                     });
                   });
-
-                // TODO: Mark parent as indeterminate in UI if needed
 
                 dispatch({
                   type: ActionType.ADD_FILTER,
