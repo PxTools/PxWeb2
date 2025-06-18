@@ -57,18 +57,17 @@ export async function exportToFile(
     outputFormat,
     outputFormatParams,
     variablesSelection,
-  )
-    .then((response) => {
-      let blob: Blob;
-      if (fileFormat === 'jsonstat2') {
-        blob = new Blob([JSON.stringify(response)]);
-      } else {
-        blob = new Blob([response]);
-      }
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = `${tabId}.${fileExtension}`;
-      link.click();
-      URL.revokeObjectURL(link.href);
-    });
+  ).then((response) => {
+    let blob: Blob;
+    if (fileFormat === 'jsonstat2') {
+      blob = new Blob([JSON.stringify(response)]);
+    } else {
+      blob = new Blob([response]);
+    }
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `${tabId}.${fileExtension}`;
+    link.click();
+    URL.revokeObjectURL(link.href);
+  });
 }
