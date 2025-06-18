@@ -220,15 +220,12 @@ export function Alert({
           </div>
         )}
         {clickable && (
-          <div aria-live={ariaLive}>
-            <button
-              className={cl(classes['alert-arrow'])}
-              aria-label={clickButtonAriaLabel}
-              type="button"
-              tabIndex={-1}
-            >
-              <Icon iconName={iconRight} />
-            </button>
+          <div
+            aria-live={ariaLive}
+            className={cl(classes['alert-arrow'])}
+            aria-label={clickButtonAriaLabel}
+          >
+            <Icon iconName={iconRight} />
           </div>
         )}
       </div>
