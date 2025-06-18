@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/react-vite';
 import { useState, useEffect } from 'react';
 
 import { Chips } from './Chips';
