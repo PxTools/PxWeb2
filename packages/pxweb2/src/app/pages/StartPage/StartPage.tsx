@@ -108,13 +108,13 @@ const StartPage = () => {
 
   useEffect(() => {
     if (!isPaginating && firstNewCardRef.current) {
-      // Wait 250ms to give the screen reader time to read the aria-live update
+      const delay = Math.min(1000, 200 + visibleCount * 10);
       const timeout = setTimeout(() => {
         firstNewCardRef.current?.focus();
-      }, 250);
+      }, delay);
       return () => clearTimeout(timeout);
     }
-  }, [isPaginating]);
+  }, [isPaginating, visibleCount]);
 
   const formatNumber = (value: number) =>
     new Intl.NumberFormat(i18n.language).format(value);
@@ -262,6 +262,7 @@ const StartPage = () => {
     return (
       <div>
         {renderNumberofTablesScreenReader()}
+        {renderTableCount()}        
         <div className={styles.tableCardList}>
           {state.filteredTables.slice(0, visibleCount).map((table, index) => {
             const isFirstNew =
@@ -318,46 +319,43 @@ const StartPage = () => {
   };
 
   const renderNumberofTablesScreenReader = () => {
-    if (visibleCount < state.filteredTables.length) {
-      return (
-        <span
-          className={styles['sr-only']}
-          aria-live="polite"
-          aria-atomic="true"
-        >
-          {showNumberOfTables()}
-        </span>
-      );
-    }
+    const formattedCount = formatNumber(state.filteredTables.length);
+    return (
+      <span className={styles['sr-only']} aria-live="polite" aria-atomic="true">
+        <Trans
+          i18nKey="start_page.table.show_number_of_tables_aria"
+          values={{
+            count: formattedCount,
+            countShown: formatNumber(
+              Math.min(visibleCount, state.filteredTables.length),
+            ),
+            countTotal: formatNumber(state.filteredTables.length),
+          }}
+        />
+      </span>
+    );
   };
 
   const renderTableCount = () => {
     const formattedCount = formatNumber(state.filteredTables.length);
-    if (state.activeFilters.length) {
-      return (
-        <p>
-          <Trans
-            i18nKey="start_page.table.number_of_tables_found"
-            values={{ count: formattedCount }}
-            components={{
-              strong: <span className={cl(styles['label-medium'])} />,
-            }}
-          />
-        </p>
-      );
-    } else {
-      return (
-        <p>
-          <Trans
-            i18nKey="start_page.table.number_of_tables"
-            values={{ count: formattedCount }}
-            components={{
-              strong: <span className={cl(styles['label-medium'])} />,
-            }}
-          />
-        </p>
-      );
-    }
+    return (
+      <div
+        aria-hidden="true"
+        className={cl(styles['bodyshort-medium'], styles.countLabel)}
+      >
+        <Trans
+          i18nKey={
+            state.activeFilters.length
+              ? 'start_page.table.number_of_tables_found'
+              : 'start_page.table.number_of_tables'
+          }
+          values={{ count: formattedCount }}
+          components={{
+            strong: <span className={cl(styles['label-medium'])} />,
+          }}
+        />
+      </div>
+    );
   };
 
   const renderFilterOverlay = () => {
@@ -504,12 +502,6 @@ const StartPage = () => {
                   </Chips>
                 </div>
               )}
-              <div
-                className={cl(styles['bodyshort-medium'], styles.countLabel)}
-              >
-                {renderTableCount()}
-              </div>
-
               {state.error && (
                 <div className={styles.error}>
                   <Alert

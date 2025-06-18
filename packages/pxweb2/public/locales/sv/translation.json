@@ -83,7 +83,8 @@
       "show_more": "Visa fler",
       "show_less": "Visa färre",
       "loading": "Laddar...",
-      "show_number_of_tables": "Visar {{countShown}} av {{countTotal}}"
+      "show_number_of_tables": "Visar {{countShown}} av {{countTotal}}",
+      "show_number_of_tables_aria": "Träff på {{count}}tabeller, visar {{countShown}} av {{countTotal}}"
     }
   },
   "presentation_page": {
