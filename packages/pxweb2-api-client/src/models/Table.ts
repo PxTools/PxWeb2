@@ -38,6 +38,10 @@ export type Table = (FolderContentItem & {
      */
     source?: string;
     /**
+     * The subject code of the table
+     */
+    subjectCode?: string;
+    /**
      * The time unit for the table
      */
     timeUnit?: TimeUnit;
