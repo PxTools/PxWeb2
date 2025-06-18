@@ -11,6 +11,7 @@ export function Spinner({
   size = 'medium',
   variant = 'default',
   label,
+  ...rest
 }: Readonly<SpinnerProps>) {
   let Eclipse = null;
   let Width = '';
@@ -86,6 +87,7 @@ export function Spinner({
       className={cl(classes[`spinner`], classes[`spinner-${size}`], {
         [classes.withLabel]: label,
       })}
+      {...rest}
     >
       <div className={cl(classes[`eclipse-${size}`])}>{Eclipse}</div>
       <label

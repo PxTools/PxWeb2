@@ -54,14 +54,23 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             },
           ) + cssClasses
         }
+        aria-disabled={loading || rest.disabled}
+        aria-busy={loading || rest.disabled}
+        aria-label={loading ? (loadingLabel ?? 'Loading…') : undefined}
         {...rest}
       >
         {loading ? (
-          <Spinner
-            size="xsmall"
-            variant={variant === 'secondary' ? 'default' : 'inverted'}
-            label={loadingLabel ?? undefined}
-          />
+          <>
+            <Spinner
+              size="xsmall"
+              variant={variant === 'secondary' ? 'default' : 'inverted'}
+              label={loadingLabel ?? undefined}
+              aria-hidden="true"
+            />
+            <span className={classes['sr-only']}>
+              {loadingLabel ?? 'Loading…'}
+            </span>
+          </>
         ) : (
           <>
             {icon && iconPosition === 'left' && <Icon iconName={icon} />}

@@ -169,7 +169,7 @@ export const Loading: StoryFn<typeof Button> = () => {
       <Button
         variant="primary"
         loading
-        loadingLabel="Laster..."
+        loadingLabel="Loading..."
         style={loadingButtonStyle}
       >
         Button
@@ -186,7 +186,7 @@ export const Loading: StoryFn<typeof Button> = () => {
       <Button
         variant="secondary"
         loading
-        loadingLabel="Laster..."
+        loadingLabel="Loading..."
         style={loadingButtonStyle}
       >
         Button
