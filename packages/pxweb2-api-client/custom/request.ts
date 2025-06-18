@@ -2,11 +2,17 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+/* @ts-ignore */
 import { ApiError } from './ApiError';
+/* @ts-ignore */
 import type { ApiRequestOptions } from './ApiRequestOptions';
+/* @ts-ignore */
 import type { ApiResult } from './ApiResult';
+/* @ts-ignore */
 import { CancelablePromise } from './CancelablePromise';
+/* @ts-ignore */
 import type { OnCancel } from './CancelablePromise';
+/* @ts-ignore */
 import type { OpenAPIConfig } from './OpenAPI';
 
 export const isDefined = <T>(value: T | null | undefined): value is Exclude<T, null | undefined> => {
