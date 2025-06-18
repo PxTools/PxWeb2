@@ -20,7 +20,6 @@ export interface AlertProps {
   readonly onClick?: () => void;
   readonly className?: string;
   readonly children?: string | React.ReactNode;
-  readonly clickButtonAriaLabel?: string;
   readonly alertAriaLabel?: string;
   readonly ariaLive?: 'off' | 'polite' | 'assertive';
   readonly ariaHasPopup?:
@@ -46,7 +45,6 @@ export function Alert({
   onClick,
   className = '',
   children,
-  clickButtonAriaLabel,
   alertAriaLabel,
   ariaHasPopup = 'false',
   ariaLive = 'off',
@@ -177,7 +175,7 @@ export function Alert({
       </div>
       <div className={cl(classes[`alert-section-middle-${size}`])}>
         {hasheading && (
-          <div className={cl(classes[`alert-heading`])}>
+          <div className={cl(classes[`alert-heading`])} aria-live={ariaLive}>
             <Heading size={headingSize} level={headingLevel}>
               {heading}
             </Heading>
@@ -220,11 +218,7 @@ export function Alert({
           </div>
         )}
         {clickable && (
-          <div
-            aria-live={ariaLive}
-            className={cl(classes['alert-arrow'])}
-            aria-label={clickButtonAriaLabel}
-          >
+          <div className={cl(classes['alert-arrow'])}>
             <Icon iconName={iconRight} />
           </div>
         )}
