@@ -22,11 +22,9 @@
     outline-offset: 3px;
     box-shadow: inset 0 0 0 3px var(--px-color-border-focus-boxshadow);
   }
-}
 
-.loading {
-  cursor: progress;
-  &:hover {
+  &.loading:hover {
+    cursor: progress;
     border-radius: var(--px-border-radius-full) !important;
   }
 }
@@ -62,7 +60,8 @@
   &:active {
     background: var(--px-color-surface-action-active);
   }
-  &:disabled {
+  &:disabled,
+  &.loading:active {
     background: var(--px-color-surface-action);
   }
 }
@@ -87,10 +86,8 @@
     background-color: inherit;
     color: var(--px-color-text-action);
   }
-  &.loading {
-    &:hover {
-      background: initial;
-    }
+  &.loading:hover {
+    background: initial;
   }
 }
 
