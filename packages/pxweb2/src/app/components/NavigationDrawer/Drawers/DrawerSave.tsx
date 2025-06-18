@@ -31,7 +31,7 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
     }
   }, [errorMsg]);
 
-  async function saveToFile(fileFormat: string): Promise<void> {
+  function getVariableSelection(): VariablesSelection {
     const selections: Array<VariableSelection> = [];
 
     // Get selection from Selection provider
@@ -68,6 +68,11 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
       };
     }
 
+    return variablesSelection;
+  }
+
+  async function saveToFile(fileFormat: string): Promise<void> {
+    const variablesSelection = getVariableSelection();
     setIsLoading(true);
 
     // Export the file using the export utility
