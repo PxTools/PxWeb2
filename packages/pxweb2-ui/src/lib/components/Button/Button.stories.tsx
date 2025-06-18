@@ -164,7 +164,7 @@ export const Loading: StoryFn<typeof Button> = () => {
         Button
       </Button>
       <br />
-      Primary with loading and loading label
+      Primary with loading and label
       <br />
       <Button
         variant="primary"
@@ -181,7 +181,7 @@ export const Loading: StoryFn<typeof Button> = () => {
         Button
       </Button>
       <br />
-      Secondary with loading and loading label
+      Secondary with loading and label
       <br />
       <Button
         variant="secondary"
