@@ -262,7 +262,7 @@ const StartPage = () => {
     return (
       <div>
         {renderNumberofTablesScreenReader()}
-        {renderTableCount()}        
+        {renderTableCount()}
         <div className={styles.tableCardList}>
           {state.filteredTables.slice(0, visibleCount).map((table, index) => {
             const isFirstNew =
