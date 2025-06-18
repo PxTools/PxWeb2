@@ -293,12 +293,12 @@ const StartPage = () => {
         {renderTableCount()}
         {justCollapsed ? (
           <motion.div
-          key={visibleCount}
-          initial={{ opacity: 0, y: 30, scale: 0.98 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.45, ease: 'easeOut' }}
-          className={styles.tableCardList}
-        >
+            key={visibleCount}
+            initial={{ opacity: 0, y: 30, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.45, ease: 'easeOut' }}
+            className={styles.tableCardList}
+          >
             {renderCards()}
           </motion.div>
         ) : (
