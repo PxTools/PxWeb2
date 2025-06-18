@@ -43,6 +43,7 @@ const StartPage = () => {
   const [lastVisibleCount, setLastVisibleCount] = useState(paginationCount);
   const [isPaginating, setIsPaginating] = useState(false);
   const [paginationButtonWidth, setPaginationButtonWidth] = useState<number>();
+  const [justCollapsed, setJustCollapsed] = useState(false);
 
   const filterBackButtonRef = useRef<HTMLButtonElement>(null);
   const filterToggleRef = useRef<HTMLButtonElement>(null);
@@ -116,6 +117,15 @@ const StartPage = () => {
     }
   }, [isPaginating, visibleCount]);
 
+  useEffect(() => {
+    if (justCollapsed) {
+      const timeout = setTimeout(() => {
+        setJustCollapsed(false);
+      }, 500);
+      return () => clearTimeout(timeout);
+    }
+  }, [justCollapsed]);
+
   const formatNumber = (value: number) =>
     new Intl.NumberFormat(i18n.language).format(value);
 
@@ -159,6 +169,7 @@ const StartPage = () => {
   };
 
   const handleShowLess = () => {
+    setJustCollapsed(true);
     setVisibleCount(paginationCount);
     requestAnimationFrame(() => {
       if (lastVisibleCardRef.current) {
@@ -258,27 +269,42 @@ const StartPage = () => {
     }
   };
 
+  const renderCards = () => {
+    return state.filteredTables.slice(0, visibleCount).map((table, index) => {
+      const isFirstNew =
+        index === visibleCount - paginationCount &&
+        visibleCount > paginationCount;
+
+      const isLastVisible =
+        index === Math.min(visibleCount, state.filteredTables.length) - 1;
+
+      return (
+        <div key={table.id} tabIndex={isFirstNew ? -1 : undefined}>
+          {renderTableCard(table, t, isFirstNew, isLastVisible)}
+        </div>
+      );
+    });
+  };
+
   const renderTableCardList = () => {
     return (
       <div>
         {renderNumberofTablesScreenReader()}
         {renderTableCount()}
-        <div className={styles.tableCardList}>
-          {state.filteredTables.slice(0, visibleCount).map((table, index) => {
-            const isFirstNew =
-              index === visibleCount - paginationCount &&
-              visibleCount > paginationCount;
+        {justCollapsed ? (
+          <motion.div
+          key={visibleCount}
+          initial={{ opacity: 0, y: 30, scale: 0.98 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.45, ease: 'easeOut' }}
+          className={styles.tableCardList}
+        >
+            {renderCards()}
+          </motion.div>
+        ) : (
+          <div className={styles.tableCardList}>{renderCards()}</div>
+        )}
 
-            const isLastVisible =
-              index === Math.min(visibleCount, state.filteredTables.length) - 1;
-
-            return (
-              <div key={table.id} tabIndex={isFirstNew ? -1 : undefined}>
-                {renderTableCard(table, t, isFirstNew, isLastVisible)}
-              </div>
-            );
-          })}
-        </div>
         {renderPagination()}
       </div>
     );
