@@ -1,16 +1,18 @@
 import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import classes from './DrawerSave.module.scss';
 import { Button, ContentBox, Spinner } from '@pxweb2/pxweb2-ui';
 import {
+  ApiError,
   VariableSelection,
   VariablesSelection,
 } from 'packages/pxweb2-api-client/src';
 import { exportToFile } from '../../../util/export/exportUtil';
 import useVariables from '../../../context/useVariables';
 import useTableData from '../../../context/useTableData';
+import { problemMessage } from '../../../util/problemMessage';
 
 export type DrawerSaveProps = {
   readonly tableId: string;
@@ -21,6 +23,13 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
   const heading = useTableData().data?.heading;
   const stub = useTableData().data?.stub;
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+
+  useEffect(() => {
+    if (errorMsg !== '') {
+      throw new Error(errorMsg);
+    }
+  }, [errorMsg]);
 
   async function saveToFile(fileFormat: string): Promise<void> {
     const selections: Array<VariableSelection> = [];
@@ -69,7 +78,8 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
         },
         (error) => {
           // Handle error during export
-          console.error('Error exporting file:', error);
+          const err = error as ApiError;
+          setErrorMsg(problemMessage(err, tableId));
         },
       )
       .finally(() => {

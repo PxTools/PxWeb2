@@ -1,5 +1,4 @@
 import {
-  ApiError,
   OutputFormatParamType,
   OutputFormatType,
   TableService,
@@ -71,10 +70,5 @@ export async function exportToFile(
       link.download = `${tabId}.${fileExtension}`;
       link.click();
       URL.revokeObjectURL(link.href);
-    })
-    .catch((error: unknown) => {
-      const err = error as ApiError;
-      console.error(err.message);
-      // setErrorMsg(problemMessage(err, selectedTabId));
     });
 }

@@ -170,7 +170,6 @@
           "title": "Lagre som fil",
           "excel": "Excel (.xlsx)",
           "csv": "Semikolonseparert med overskrift (.csv)",
-          "relational-csv": "Relasjonstabell (.csv)",
           "px": "PC-Axis (.px)",
           "jsonstat2": "JSON-stat2 (.json)",
           "html": "HTML (.html)",

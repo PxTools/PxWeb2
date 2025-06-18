@@ -5,7 +5,6 @@ import { ApiError, TableService } from '@pxweb2/pxweb2-api-client';
 import { mapJsonStat2Response } from '../../../mappers/JsonStat2ResponseMapper';
 import { mapTableSelectionResponse } from '../../../mappers/TableSelectionResponseMapper';
 import {
-  //  ContentBox,
   PxTable,
   PxTableMetadata,
   SelectedVBValues,

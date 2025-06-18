@@ -140,7 +140,6 @@
           "title": "حفظ كملف",
           "excel": "اكسل (xlsx)",
           "csv": "مفصولة بفاصلة منقوطة مع عنوان (.csv)",
-          "relational-csv": "جدول علائقي (.csv)",
           "px": "PC-Axis (.px)",
           "jsonstat2": "JSON-stat2 (.json)",
           "html": "HTML (.html)",
