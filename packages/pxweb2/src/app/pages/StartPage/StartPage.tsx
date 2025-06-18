@@ -213,6 +213,7 @@ const StartPage = () => {
     t: TFunction,
     isFirstNew: boolean,
     isLastVisible: boolean,
+    tabIndex?: number,
   ) => {
     if (table) {
       const translationKey = `start_page.filter.frequency.${table.timeUnit?.toLowerCase()}`;
@@ -235,56 +236,54 @@ const StartPage = () => {
       }
 
       return (
-        <div className={styles.tableListItem}>
-          <TableCard
-            title={`${table.label}`}
-            href={`${langPrefix}/table/${table.id}`}
-            updatedLabel={
-              table.updated ? t('start_page.table.updated_label') : undefined
-            }
-            lastUpdated={
-              table.updated
-                ? new Date(table.updated).toLocaleDateString(language)
-                : undefined
-            }
-            period={`${table.firstPeriod?.slice(0, 4)}–${table.lastPeriod?.slice(0, 4)}`}
-            frequency={frequencyLabel}
-            tableId={`${table.id}`}
-            icon={getTopicIcon(table)}
-            ref={cardRef}
-          />
-        </div>
+        <TableCard
+          title={`${table.label}`}
+          href={`${langPrefix}/table/${table.id}`}
+          updatedLabel={
+            table.updated ? t('start_page.table.updated_label') : undefined
+          }
+          lastUpdated={
+            table.updated
+              ? new Date(table.updated).toLocaleDateString(language)
+              : undefined
+          }
+          period={`${table.firstPeriod?.slice(0, 4)}–${table.lastPeriod?.slice(0, 4)}`}
+          frequency={frequencyLabel}
+          tableId={`${table.id}`}
+          icon={getTopicIcon(table)}
+          ref={cardRef}
+          tabIndex={tabIndex}
+        />
       );
     }
   };
 
+  const getVisibleTables = () => state.filteredTables.slice(0, visibleCount);
+
+  const isFirstNewIndex = (index: number) =>
+    visibleCount > paginationCount && index === visibleCount - paginationCount;
+
+  const isLastVisibleIndex = (index: number) =>
+    index === Math.min(visibleCount, state.filteredTables.length) - 1;
+
   const renderCards = () => {
-    return state.filteredTables.slice(0, visibleCount).map((table, index) => {
-      const isFirstNew =
-        index === visibleCount - paginationCount &&
-        visibleCount > paginationCount;
+    return getVisibleTables().map((table, index) => {
+      const isFirstNew = isFirstNewIndex(index);
+      const isLastVisible = isLastVisibleIndex(index);
+      const tabIndex = isFirstNew ? -1 : undefined;
 
-      const isLastVisible =
-        index === Math.min(visibleCount, state.filteredTables.length) - 1;
-
-      return (
-        <div key={table.id} tabIndex={isFirstNew ? -1 : undefined}>
-          {renderTableCard(table, t, isFirstNew, isLastVisible)}
-        </div>
-      );
+      return renderTableCard(table, t, isFirstNew, isLastVisible, tabIndex);
     });
   };
 
-  const renderTableCardList = () => {
-    return (
-      <div>
-        {renderNumberofTablesScreenReader()}
-        {renderTableCount()}
-        <div className={styles.tableCardList}>{renderCards()}</div>
-        {renderPagination()}
-      </div>
-    );
-  };
+  const renderTableCardList = () => (
+    <>
+      {renderNumberofTablesScreenReader()}
+      {renderTableCount()}
+      <div className={styles.tableCardList}>{renderCards()}</div>
+      {renderPagination()}
+    </>
+  );
 
   const renderPagination = () => {
     const shouldShowPagination =
