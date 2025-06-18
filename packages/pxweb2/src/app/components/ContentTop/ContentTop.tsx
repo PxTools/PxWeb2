@@ -223,7 +223,6 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
             alertAriaLabel={noteMessage.heading}
             ariaLive="polite"
             role="button"
-            clickButtonAriaLabel={noteMessage.heading}
             clickable
             onClick={() => {
               handleOpenTableInformation(
