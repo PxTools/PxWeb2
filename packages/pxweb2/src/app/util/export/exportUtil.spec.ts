@@ -1,6 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { exportToFile } from './exportUtil';
-import { OutputFormatType, OutputFormatParamType, TableService } from '@pxweb2/pxweb2-api-client';
+import {
+  OutputFormatType,
+  OutputFormatParamType,
+  TableService,
+} from '@pxweb2/pxweb2-api-client';
 
 vi.mock('@pxweb2/pxweb2-api-client', () => ({
   OutputFormatType: {
@@ -40,10 +44,18 @@ describe('exportToFile', () => {
         let _href = '';
         let _download = '';
         return {
-          get href() { return _href; },
-          set href(val: string) { _href = val; },
-          get download() { return _download; },
-          set download(val: string) { _download = val; },
+          get href() {
+            return _href;
+          },
+          set href(val: string) {
+            _href = val;
+          },
+          get download() {
+            return _download;
+          },
+          set download(val: string) {
+            _download = val;
+          },
           click: clickMock,
           style: {},
           setAttribute: vi.fn(),
@@ -70,14 +82,16 @@ describe('exportToFile', () => {
   });
 
   it('should export as excel', async () => {
-    (TableService.getTableDataByPost as any).mockResolvedValueOnce('excel-data');
+    (TableService.getTableDataByPost as any).mockResolvedValueOnce(
+      'excel-data',
+    );
     await exportToFile(tabId, lang, variablesSelection, 'excel');
     expect(TableService.getTableDataByPost).toHaveBeenCalledWith(
       tabId,
       lang,
       OutputFormatType.XLSX,
       [OutputFormatParamType.INCLUDE_TITLE],
-      variablesSelection
+      variablesSelection,
     );
     expect(clickMock).toHaveBeenCalled();
   });
@@ -89,8 +103,11 @@ describe('exportToFile', () => {
       tabId,
       lang,
       OutputFormatType.CSV,
-      [OutputFormatParamType.SEPARATOR_SEMICOLON, OutputFormatParamType.INCLUDE_TITLE],
-      variablesSelection
+      [
+        OutputFormatParamType.SEPARATOR_SEMICOLON,
+        OutputFormatParamType.INCLUDE_TITLE,
+      ],
+      variablesSelection,
     );
     expect(clickMock).toHaveBeenCalled();
   });
@@ -103,7 +120,7 @@ describe('exportToFile', () => {
       lang,
       OutputFormatType.PX,
       [],
-      variablesSelection
+      variablesSelection,
     );
     expect(clickMock).toHaveBeenCalled();
   });
@@ -117,7 +134,7 @@ describe('exportToFile', () => {
       lang,
       OutputFormatType.JSON_STAT2,
       [],
-      variablesSelection
+      variablesSelection,
     );
     expect(clickMock).toHaveBeenCalled();
   });
@@ -130,20 +147,22 @@ describe('exportToFile', () => {
       lang,
       OutputFormatType.HTML,
       [OutputFormatParamType.INCLUDE_TITLE],
-      variablesSelection
+      variablesSelection,
     );
     expect(clickMock).toHaveBeenCalled();
   });
 
   it('should export as parquet', async () => {
-    (TableService.getTableDataByPost as any).mockResolvedValueOnce('parquet-data');
+    (TableService.getTableDataByPost as any).mockResolvedValueOnce(
+      'parquet-data',
+    );
     await exportToFile(tabId, lang, variablesSelection, 'parquet');
     expect(TableService.getTableDataByPost).toHaveBeenCalledWith(
       tabId,
       lang,
       OutputFormatType.PARQUET,
       [],
-      variablesSelection
+      variablesSelection,
     );
     expect(clickMock).toHaveBeenCalled();
   });
@@ -156,7 +175,7 @@ describe('exportToFile', () => {
       lang,
       OutputFormatType.CSV,
       [],
-      variablesSelection
+      variablesSelection,
     );
     expect(clickMock).toHaveBeenCalled();
   });
