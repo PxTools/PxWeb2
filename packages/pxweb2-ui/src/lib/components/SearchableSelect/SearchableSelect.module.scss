@@ -1,0 +1,65 @@
+.wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.inputWrapper {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--px-color-border-default);
+  border-radius: var(--px-border-radius-medium);
+  padding: 0.5rem 0.75rem;
+  background-color: white;
+  cursor: text;
+
+  &:focus-within {
+    border-color: var(--px-color-border-focus-outline);
+    box-shadow: 0 0 0 2px var(--px-color-border-focus-boxshadow);
+  }
+}
+
+.input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  background: transparent;
+}
+
+.chevron {
+  margin-left: 0.5rem;
+  transition: transform 0.2s ease;
+
+  &.open {
+    transform: rotate(180deg);
+  }
+}
+
+.optionList {
+  position: absolute;
+  width: 100%;
+  max-height: 240px;
+  overflow-y: auto;
+  margin-top: 0.25rem;
+  padding: 0;
+  list-style: none;
+  background-color: white;
+  border: 1px solid var(--px-color-border-default);
+  border-radius: var(--px-border-radius-medium);
+  z-index: 10;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.option {
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--px-color-surface-hover);
+  }
+}
+
+.noMatch {
+  padding: 0.5rem 0.75rem;
+  color: var(--px-color-text-secondary);
+}
