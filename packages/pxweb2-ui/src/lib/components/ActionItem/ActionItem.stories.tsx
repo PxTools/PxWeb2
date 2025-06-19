@@ -1,6 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
 import { ActionItem } from './ActionItem';
-//import classes from './ActionItem.module.scss';
 
 const meta: Meta<typeof ActionItem> = {
   title: 'Components/ActionItem',
