@@ -27,7 +27,6 @@ export function ActionItem({
   size = 'medium',
   description,
 }: Readonly<ActionItemProps>) {
-
   return (
     <div
       className={cl(styles.actionItem)}
@@ -43,7 +42,9 @@ export function ActionItem({
     >
       {size === 'medium' && (
         <>
-          <div className={cl(styles[`iconWrapper-${size}`], styles.iconWrapper)}>
+          <div
+            className={cl(styles[`iconWrapper-${size}`], styles.iconWrapper)}
+          >
             <Icon iconName={iconName} className={styles.icon} />
           </div>
           <div className={styles.labelBodyWrapper}>
@@ -62,7 +63,9 @@ export function ActionItem({
 
       {size === 'large' && (
         <div className={cl(styles[`iconLabelWrapper-${size}`])}>
-          <div className={cl(styles[`iconWrapper-${size}`], styles.iconWrapper)}>
+          <div
+            className={cl(styles[`iconWrapper-${size}`], styles.iconWrapper)}
+          >
             <ActionItemIcon
               largeIconName={largeIconName}
               className={styles.icon}
