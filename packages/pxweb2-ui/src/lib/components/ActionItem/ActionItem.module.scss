@@ -4,8 +4,8 @@
 
 .actionItem {
   display: flex;
-  align-items: flex-start; // icon and label/body align at the top
-  gap: 0.5rem; // space between icon and label/body
+  align-items: flex-start;
+  gap: 0.75rem;
   padding: fixed.$spacing-3 fixed.$spacing-4 fixed.$spacing-3 fixed.$spacing-2;
   &:hover {
     border-radius: var(--px-border-radius-medium);
@@ -42,44 +42,17 @@
   }
 }
 
+.iconLabelWrapper-large {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.bodyShort {
+  margin-top: 0.5rem;
+}
+
 .icon {
   color: var(--px-color-icon-default);
 }
 
-.iconLabelWrapper {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem; // space between icon and label
-}
-
-.bodyShort {
-  display: flex;
-  flex-direction: row;
-  gap: 0.25rem;
-  color: var(--px-color-text-secondary);
-  font-size: var(--px-font-size-body-short);
-  margin-top: 0.5rem;
-  margin-left: 36px;
-  align-self: flex-start;
-}
-
-.labelBodyWrapper {
-  display: flex;
-  flex-direction: column;
-}
-
-.descriptionWrapper {
-  display: flex;
-  flex-direction: column;
-}
-
-.iconLabelColumn {
-  flex-direction: column;
-  align-items: center; // center icon+label row horizontally
-}
-
-.iconLabelRow {
-  display: flex;
-  align-items: center; // icon and label on same row, vertically centered
-  gap: 0.75rem;
-}
