@@ -4,7 +4,11 @@ import { ActionType } from '../../pages/StartPage/StartPageTypes';
 import styles from './FilterSidebar.module.scss';
 import { useTranslation } from 'react-i18next';
 import { Checkbox, FilterCategory, Button } from '@pxweb2/pxweb2-ui';
-import { PathItem, findParent } from '../../util/startPageFilters';
+import {
+  PathItem,
+  findAncestors,
+  findChildren,
+} from '../../util/startPageFilters';
 import { FilterContext } from '../../context/FilterContext';
 import { ReactNode, useContext, useState } from 'react';
 
@@ -50,22 +54,33 @@ const Collapsible: React.FC<CollapsibleProps> = ({
             onChange={(value) => {
               setIsOpen(true);
               if (value) {
-                const parent = findParent(
-                  state.availableFilters.subjectTree,
-                  subject.id,
+                let relatives: PathItem[] = [];
+                relatives.push(
+                  ...findAncestors(
+                    state.availableFilters.subjectTree,
+                    subject.id,
+                  ),
+                );
+                relatives.push(
+                  ...findChildren(
+                    state.availableFilters.subjectTree,
+                    subject.id,
+                  ),
                 );
 
-                // Remove parent from activeFilters
+                // Remove parents and children from activeFilters
                 state.activeFilters
-                  .filter((f) => f.type === 'subject' && f.value === parent?.id)
+                  .filter(
+                    (f) =>
+                      f.type === 'subject' &&
+                      relatives.some((relative) => f.value === relative.id),
+                  )
                   .forEach((f) => {
                     dispatch({
                       type: ActionType.REMOVE_FILTER,
                       payload: f.value,
                     });
                   });
-
-                // TODO: Mark parent as indeterminate in UI if needed
 
                 dispatch({
                   type: ActionType.ADD_FILTER,
