@@ -168,6 +168,11 @@ export function Alert({
       ref={ref}
     >
       <div className={classes[`alert-section-left-${size}`]}>
+        {!hasheading && (
+          <span className={classes['sr-only']}>
+            {t(`common.alert.${variant}`)}
+          </span>
+        )}
         <Icon
           iconName={variantIcon}
           className={classes[`alert-icon-${variant}`]}
@@ -175,7 +180,14 @@ export function Alert({
       </div>
       <div className={cl(classes[`alert-section-middle-${size}`])}>
         {hasheading && (
-          <div className={cl(classes[`alert-heading`])} aria-live={ariaLive}>
+          <div
+            className={cl(classes[`alert-heading`])}
+            aria-live={ariaLive}
+            aria-atomic="true"
+          >
+            <span className={classes['sr-only']}>
+              {t(`common.alert.${variant}`)}
+            </span>
             <Heading size={headingSize} level={headingLevel}>
               {heading}
             </Heading>

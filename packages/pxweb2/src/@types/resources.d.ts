@@ -39,6 +39,12 @@ interface Resources {
       generic_tags: {
         mandatory: 'Mandatory';
       };
+      alert: {
+        info: 'Information:';
+        success: 'Success:';
+        warning: 'Warning:';
+        error: 'Error:';
+      };
     };
     start_page: {
       header: 'Welcome to PxWeb 2.0';

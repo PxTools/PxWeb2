@@ -47,6 +47,12 @@
     },
     "generic_tags": {
       "mandatory": "إلزامي"
+    },
+    "alert": {
+      "info": "معلومة:",
+      "success": "نجاح:",
+      "warning": "تحذير:",
+      "error": "خطأ:"
     }
   },
   "start_page": {

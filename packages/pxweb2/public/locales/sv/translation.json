@@ -47,6 +47,12 @@
     },
     "generic_tags": {
       "mandatory": "Obligatorisk"
+    },
+    "alert": {
+      "info": "Information:",
+      "success": "Lyckad åtgärd:",
+      "warning": "Varning:",
+      "error": "Fel:"
     }
   },
   "start_page": {
