@@ -34,7 +34,7 @@ export function SearchableSelect({
   const [inputValue, setInputValue] = useState('');
   const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
   const inputRef = useRef<HTMLInputElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!isOpen && selectedOption) {
@@ -45,8 +45,8 @@ export function SearchableSelect({
   useEffect(() => {
     const onClickOutside = (e: MouseEvent) => {
       if (
-        containerRef.current &&
-        !containerRef.current.contains(e.target as Node)
+        contentRef.current &&
+        !contentRef.current.contains(e.target as Node)
       ) {
         setIsOpen(false);
         setHighlightedIndex(-1);
@@ -75,6 +75,11 @@ export function SearchableSelect({
     inputRef.current?.focus();
   };
 
+  const handleClickInput = () => {
+    console.log('klikk');
+    setIsOpen(true);
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (!isOpen && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) {
       setIsOpen(true);
@@ -82,10 +87,14 @@ export function SearchableSelect({
     }
 
     if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setIsOpen(true);
       setHighlightedIndex((prev) =>
         prev < filteredOptions.length - 1 ? prev + 1 : 0,
       );
     } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setIsOpen(true);
       setHighlightedIndex((prev) =>
         prev > 0 ? prev - 1 : filteredOptions.length - 1,
       );
@@ -104,7 +113,7 @@ export function SearchableSelect({
           handleSelect(exactMatch);
         }
       }
-    } else if (e.key === 'Escape') {
+    } else if (e.key === 'Escape' || e.key === 'Tab') {
       setIsOpen(false);
       setHighlightedIndex(-1);
     }
@@ -113,21 +122,21 @@ export function SearchableSelect({
   const showClearButton = !!selectedOption || inputValue.length > 0;
 
   return (
-    <div className={styles.wrapper} ref={containerRef}>
+    <div className={styles.searchableSelect}>
       {label && (
-        <Label htmlFor={id} size="medium">
+        <Label className={styles.label} htmlFor={id} size="medium">
           {label}
         </Label>
       )}
-      <div className={styles.inputWrapper}>
+      <div className={styles.contentWrapper} ref={contentRef}>
         <input
           id={id}
           ref={inputRef}
           type="text"
-          className={styles.input}
+          className={cl(styles.input, styles['bodyshort-medium'])}
           placeholder={placeholder}
           value={inputValue}
-          onFocus={() => setIsOpen(true)}
+          onClick={handleClickInput}
           onChange={(e) => {
             setInputValue(e.target.value);
             setIsOpen(true);
@@ -142,20 +151,22 @@ export function SearchableSelect({
           aria-expanded={isOpen}
           aria-controls="searchable-select-listbox"
         />
-        {showClearButton ? (
-          <Button
-            variant="tertiary"
-            icon="XMark"
-            size="small"
-            onClick={handleClear}
-            aria-label="Fjern valg"
-          />
-        ) : (
-          <Icon
-            iconName="ChevronDown"
-            className={cl(styles.chevron, { [styles.open]: isOpen })}
-          />
-        )}
+        <div className={styles.iconWrapper}>
+          {showClearButton ? (
+            <Button
+              variant="tertiary"
+              icon="XMark"
+              size="small"
+              onClick={handleClear}
+              aria-label="Fjern valg"
+            />
+          ) : (
+            <Icon
+              iconName="ChevronDown"
+              className={cl(styles.chevron, { [styles.open]: isOpen })}
+            />
+          )}
+        </div>
       </div>
       {isOpen && (
         <ul
@@ -170,13 +181,17 @@ export function SearchableSelect({
                 className={cl(
                   styles.option,
                   index === highlightedIndex && styles.highlighted,
+                  styles['bodyshort-medium'],
                 )}
                 role="option"
-                tabIndex={-1}
-                aria-selected={selectedOption?.value === option.value}
+                tabIndex={index === highlightedIndex ? 0 : -1}
+                aria-selected={inputValue === option.label}
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={() => handleSelect(option)}
               >
+                {inputValue === option.value && (
+                  <Icon iconName="Check" className={styles.checkIcon} />
+                )}
                 {option.label}
               </li>
             ))
