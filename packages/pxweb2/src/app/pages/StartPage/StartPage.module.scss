@@ -38,6 +38,11 @@
 
 .searchFilterResult {
   background-color: var(--px-color-surface-subtle);
+  padding-bottom: 100px;
+
+  @media #{breakpoint.$xsmall} , #{breakpoint.$small} {
+    padding-bottom: 88px;
+  }
 }
 
 .searchAreaWrapper {
@@ -176,17 +181,32 @@
 
 .listTables {
   grid-area: listTables;
-  padding-bottom: 1rem;
 }
 
-.loadMoreWrapper {
+.tableCardList {
+  display: grid;
+  gap: 16px;
+
+  @media #{breakpoint.$xsmall} , #{breakpoint.$small} {
+    gap: 12px;
+  }
+}
+
+.paginationWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 36px;
+
+  @media #{breakpoint.$xsmall} , #{breakpoint.$small} {
+    margin-top: 2rem;
+  }
+}
+
+.tableCount {
   display: flex;
   justify-content: center;
-  margin-top: 2rem;
-
-  .loadMoreButton {
-    min-width: 200px;
-  }
+  margin-top: 1rem;
 }
 
 .loadingSpinner {
@@ -195,14 +215,6 @@
 
 .filterPillContainer {
   padding-bottom: 40px;
-}
-
-.tableListItem {
-  padding-bottom: 16px;
-
-  @media #{breakpoint.$xsmall} , #{breakpoint.$small} {
-    padding-bottom: 12px;
-  }
 }
 
 .countLabel {

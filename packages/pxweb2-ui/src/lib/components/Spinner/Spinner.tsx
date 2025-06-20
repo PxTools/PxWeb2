@@ -11,9 +11,9 @@ export function Spinner({
   size = 'medium',
   variant = 'default',
   label,
-}: SpinnerProps) {
+  ...rest
+}: Readonly<SpinnerProps>) {
   let Eclipse = null;
-  let Labelsize: 'small' | 'medium' = 'medium';
   let Width = '';
   let Height = '';
   let Radius = '';
@@ -25,42 +25,30 @@ export function Spinner({
       Height = '88px';
       Radius = '22.5';
       StrokeWidth = '4.54';
-      Labelsize = 'medium';
       break;
     case 'large':
       Width = '64px';
       Height = '64px';
       Radius = '22.5';
       StrokeWidth = '5.47';
-      Labelsize = 'medium';
       break;
     case 'medium':
       Width = '44px';
       Height = '44px';
       Radius = '21.6';
       StrokeWidth = '5.68';
-      Labelsize = 'medium';
       break;
     case 'small':
       Width = '32px';
       Height = '32px';
       Radius = '21.5';
       StrokeWidth = '6.25';
-      Labelsize = 'medium';
       break;
     case 'xsmall':
-      Width = '20px';
-      Height = '20px';
+      Width = '24px';
+      Height = '24px';
       Radius = '21.05';
       StrokeWidth = '7.5';
-      Labelsize = 'small';
-      break;
-    default:
-      Width = '44px';
-      Height = '44px';
-      Radius = '21.6';
-      StrokeWidth = '5.68';
-      Labelsize = 'medium';
       break;
   }
 
@@ -95,11 +83,16 @@ export function Spinner({
   );
 
   return (
-    <div className={cl(classes[`spinner`], classes[`spinner-${size}`])}>
+    <div
+      className={cl(classes[`spinner`], classes[`spinner-${size}`], {
+        [classes.withLabel]: label,
+      })}
+      {...rest}
+    >
       <div className={cl(classes[`eclipse-${size}`])}>{Eclipse}</div>
       <label
         className={cl(
-          classes[`label-${Labelsize}`],
+          classes[`label-medium`],
           { [classes[`text-color-default`]]: variant === 'default' },
           { [classes[`text-color-inverted`]]: variant === 'inverted' },
         )}

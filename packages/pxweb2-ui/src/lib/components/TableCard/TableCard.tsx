@@ -17,6 +17,7 @@ interface TableCardProps {
   tableId?: string;
   title?: string;
   updatedLabel?: string;
+  tabIndex?: number;
 }
 
 export const TableCard = forwardRef<HTMLDivElement, TableCardProps>(
@@ -32,12 +33,12 @@ export const TableCard = forwardRef<HTMLDivElement, TableCardProps>(
       tableId,
       title,
       updatedLabel,
+      tabIndex,
     },
     ref,
   ) => {
     const handleClick = () => {
       const noTextSelected = !window.getSelection()?.toString();
-
       if (noTextSelected && href) {
         window.location.href = href;
       }
@@ -53,10 +54,12 @@ export const TableCard = forwardRef<HTMLDivElement, TableCardProps>(
     return (
       <div
         className={cl(styles.tableCard)}
+        role="link"
         aria-label={ariaLabel}
         onClick={handleClick}
         onKeyDown={handleKeyDown}
         ref={ref}
+        tabIndex={tabIndex ?? 0}
       >
         {icon && (
           <div className={cl(styles.iconWrapper, styles[status])}>{icon}</div>
@@ -64,14 +67,7 @@ export const TableCard = forwardRef<HTMLDivElement, TableCardProps>(
         <div className={cl(styles.cardContent)}>
           <div className={cl(styles.titleWrapper)}>
             <Heading level="3" size="small">
-              <a
-                className={styles.title}
-                href={href}
-                onClick={(e) => e.stopPropagation()}
-                tabIndex={0}
-              >
-                {title}
-              </a>
+              {title}
             </Heading>
           </div>
           <div className={cl(styles.tableMeta)}>
