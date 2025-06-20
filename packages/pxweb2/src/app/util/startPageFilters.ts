@@ -120,6 +120,7 @@ export function sortFilterChips(filters: Filter[]): Filter[] {
   });
 }
 
+// Find parents, and parents' parents all the way up
 export function findAncestors(
   subjectTree: PathItem[],
   childId: string,
@@ -128,7 +129,7 @@ export function findAncestors(
   for (const node of subjectTree) {
     const newPath = [...path, node];
     if (node.id === childId) {
-      // Return ancestors with children: [] to match test expectations
+      // Remove nested children from each subject
       return path.map((item) => ({ ...item, children: [] }));
     }
     if (node.children) {
