@@ -1,4 +1,4 @@
-import type { Meta, StoryFn } from '@storybook/react';
+import type { Meta, StoryFn } from '@storybook/react-vite';
 import { BodyShort } from './BodyShort';
 
 const meta: Meta<typeof BodyShort> = {

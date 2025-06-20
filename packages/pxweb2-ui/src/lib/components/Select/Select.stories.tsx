@@ -1,4 +1,4 @@
-import type { Meta, StoryFn } from '@storybook/react';
+import type { Meta, StoryFn } from '@storybook/react-vite';
 import { Select } from './Select';
 import { SelectOption } from './SelectOptionType';
 

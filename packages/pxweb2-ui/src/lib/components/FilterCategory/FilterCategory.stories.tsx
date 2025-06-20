@@ -1,4 +1,4 @@
-import type { Meta, StoryObj, StoryFn } from '@storybook/react';
+import type { Meta, StoryObj, StoryFn } from '@storybook/react-vite';
 
 import { FilterCategory } from './FilterCategory';
 import Checkbox from '../Checkbox/Checkbox';

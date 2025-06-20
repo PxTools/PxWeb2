@@ -1,4 +1,4 @@
-import type { Meta, StoryObj, StoryFn } from '@storybook/react';
+import type { Meta, StoryObj, StoryFn } from '@storybook/react-vite';
 import { BodyLong } from './BodyLong';
 
 const meta: Meta<typeof BodyLong> = {
