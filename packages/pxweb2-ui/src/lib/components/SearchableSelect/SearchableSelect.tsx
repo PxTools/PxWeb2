@@ -12,6 +12,7 @@ export type SelectOption = {
 };
 
 type SearchableSelectProps = {
+  id?: string;
   options: SelectOption[];
   placeholder?: string;
   label?: string;
@@ -21,6 +22,7 @@ type SearchableSelectProps = {
 };
 
 export function SearchableSelect({
+  id = 'searchable-select',
   options,
   placeholder,
   label,
@@ -30,88 +32,150 @@ export function SearchableSelect({
 }: Readonly<SearchableSelectProps>) {
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState('');
-  const [filteredOptions, setFilteredOptions] = useState(options);
+  const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
+  const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (inputValue === '') {
-      setFilteredOptions(options);
-    } else {
-      const lower = inputValue.toLowerCase();
-      setFilteredOptions(
-        options.filter((opt) => opt.label.toLowerCase().includes(lower)),
-      );
+    if (!isOpen && selectedOption) {
+      setInputValue(selectedOption.label);
     }
-  }, [inputValue, options]);
+  }, [isOpen, selectedOption]);
 
   useEffect(() => {
-    const handler = (e: MouseEvent) => {
+    const onClickOutside = (e: MouseEvent) => {
       if (
         containerRef.current &&
         !containerRef.current.contains(e.target as Node)
       ) {
         setIsOpen(false);
+        setHighlightedIndex(-1);
       }
     };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
+    document.addEventListener('mousedown', onClickOutside);
+    return () => document.removeEventListener('mousedown', onClickOutside);
   }, []);
+
+  const filteredOptions = inputValue
+    ? options.filter((opt) =>
+        opt.label.toLowerCase().includes(inputValue.toLowerCase()),
+      )
+    : options;
+
+  const handleSelect = (option: SelectOption) => {
+    onSelect(option);
+    setInputValue(option.label);
+    setIsOpen(false);
+    setHighlightedIndex(-1);
+  };
+
+  const handleClear = () => {
+    setInputValue('');
+    onSelect(undefined);
+    inputRef.current?.focus();
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!isOpen && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) {
+      setIsOpen(true);
+      return;
+    }
+
+    if (e.key === 'ArrowDown') {
+      setHighlightedIndex((prev) =>
+        prev < filteredOptions.length - 1 ? prev + 1 : 0,
+      );
+    } else if (e.key === 'ArrowUp') {
+      setHighlightedIndex((prev) =>
+        prev > 0 ? prev - 1 : filteredOptions.length - 1,
+      );
+    } else if (e.key === 'Enter') {
+      if (
+        isOpen &&
+        highlightedIndex >= 0 &&
+        highlightedIndex < filteredOptions.length
+      ) {
+        handleSelect(filteredOptions[highlightedIndex]);
+      } else {
+        const exactMatch = options.find(
+          (opt) => opt.label.toLowerCase() === inputValue.trim().toLowerCase(),
+        );
+        if (exactMatch) {
+          handleSelect(exactMatch);
+        }
+      }
+    } else if (e.key === 'Escape') {
+      setIsOpen(false);
+      setHighlightedIndex(-1);
+    }
+  };
+
+  const showClearButton = !!selectedOption || inputValue.length > 0;
 
   return (
     <div className={styles.wrapper} ref={containerRef}>
-      {label && <Label size="medium">{label}</Label>}
+      {label && (
+        <Label htmlFor={id} size="medium">
+          {label}
+        </Label>
+      )}
       <div className={styles.inputWrapper}>
         <input
+          id={id}
+          ref={inputRef}
           type="text"
           className={styles.input}
           placeholder={placeholder}
-          value={isOpen ? inputValue : (selectedOption?.label ?? '')}
-          onFocus={() => {
+          value={inputValue}
+          onFocus={() => setIsOpen(true)}
+          onChange={(e) => {
+            setInputValue(e.target.value);
             setIsOpen(true);
-            setInputValue('');
+            setHighlightedIndex(-1);
           }}
-          onChange={(e) => setInputValue(e.target.value)}
+          onKeyDown={handleKeyDown}
+          onBlur={() => {
+            setTimeout(() => setIsOpen(false), 100);
+          }}
           aria-label={ariaLabel}
           role="combobox"
           aria-expanded={isOpen}
           aria-controls="searchable-select-listbox"
-          aria-activedescendant={selectedOption?.value ?? ''}
         />
-        {selectedOption && !isOpen && (
+        {showClearButton ? (
           <Button
             variant="tertiary"
             icon="XMark"
             size="small"
-            onClick={() => onSelect(undefined)}
+            onClick={handleClear}
             aria-label="Fjern valg"
           />
+        ) : (
+          <Icon
+            iconName="ChevronDown"
+            className={cl(styles.chevron, { [styles.open]: isOpen })}
+          />
         )}
-        <Icon
-          iconName="ChevronDown"
-          className={cl(styles.chevron, { [styles.open]: isOpen })}
-        />
       </div>
       {isOpen && (
-        <ul className={styles.optionList}>
+        <ul
+          className={styles.optionList}
+          id="searchable-select-listbox"
+          role="listbox"
+        >
           {filteredOptions.length > 0 ? (
-            filteredOptions.map((option) => (
+            filteredOptions.map((option, index) => (
               <li
                 key={option.value}
-                className={styles.option}
+                className={cl(
+                  styles.option,
+                  index === highlightedIndex && styles.highlighted,
+                )}
                 role="option"
+                tabIndex={-1}
                 aria-selected={selectedOption?.value === option.value}
-                tabIndex={0}
-                onClick={() => {
-                  onSelect(option);
-                  setIsOpen(false);
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    onSelect(option);
-                    setIsOpen(false);
-                  }
-                }}
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => handleSelect(option)}
               >
                 {option.label}
               </li>

@@ -13,7 +13,7 @@ const generateYearOptions = (start: number, end: number): SelectOption[] =>
     return { label: year, value: year };
   });
 
-const options = generateYearOptions(1900, 2025);
+const options = generateYearOptions(1980, 2025);
 const placeholder = 'Chooose year';
 
 function selectedOptionChanged(selectedItem: SelectOption | undefined) {
@@ -25,9 +25,9 @@ function selectedOptionChanged(selectedItem: SelectOption | undefined) {
 export const Default = {
   args: {
     label: 'Year',
-    hideLabel: false,
     options: options,
     placeholder: placeholder,
+    onSelect: selectedOptionChanged,
   },
 };
 
