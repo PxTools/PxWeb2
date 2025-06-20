@@ -126,10 +126,10 @@ export function sortFilterChips(filters: Filter[]): Filter[] {
 export function findAncestors(
   subjectTree: PathItem[],
   childId: string,
-  path: string[] = [],
-): string[] {
+  path: PathItem[] = [],
+): PathItem[] {
   for (const node of subjectTree) {
-    const newPath = [...path, node.id];
+    const newPath = [...path, node];
     if (node.id === childId) {
       return path;
     }
@@ -143,20 +143,32 @@ export function findAncestors(
   return [];
 }
 
+// Recursively flatten all children of an array of PathItems
+const getChildren = (members: PathItem[]): PathItem[] => {
+  let children: PathItem[] = [];
+  return members
+    .map((m) => {
+      if (m.children?.length) {
+        children = [...children, ...m.children];
+      }
+      console.log(JSON.stringify(children));
+      return m;
+    })
+    .concat(children.length ? getChildren(children) : children);
+};
+
+// Find the PathItem(s) with the Id given, and get all the children of that element
 export function findChildren(
   subjectTree: PathItem[],
   parentId: string,
-): string[] {
+): PathItem[] {
+  let found: PathItem[] = [];
   for (const node of subjectTree) {
-    if (node.id === parentId) {
-      return node.children?.map((child) => child.id) ?? [];
-    }
-    if (node.children) {
-      const result = findChildren(node.children, parentId);
-      if (result.length > 0) {
-        return result;
-      }
+    if (node.id === parentId && node.children) {
+      found = found.concat(getChildren(node.children));
+    } else if (node.children) {
+      found = found.concat(findChildren(node.children, parentId));
     }
   }
-  return [];
+  return found;
 }

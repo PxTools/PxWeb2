@@ -54,7 +54,7 @@ const Collapsible: React.FC<CollapsibleProps> = ({
             onChange={(value) => {
               setIsOpen(true);
               if (value) {
-                let relatives: string[] = [];
+                let relatives: PathItem[] = [];
                 relatives.push(
                   ...findAncestors(
                     state.availableFilters.subjectTree,
@@ -68,12 +68,12 @@ const Collapsible: React.FC<CollapsibleProps> = ({
                   ),
                 );
 
-                // Remove parent from activeFilters
+                // Remove parents and children from activeFilters
                 state.activeFilters
                   .filter(
                     (f) =>
                       f.type === 'subject' &&
-                      relatives.some((parent) => f.value === parent),
+                      relatives.some((relative) => f.value === relative.id),
                   )
                   .forEach((f) => {
                     dispatch({
