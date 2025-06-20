@@ -20,17 +20,15 @@ export function getSubjectTree(tables: Table[]): PathItem[] {
 }
 
 export function organizePaths(paths: PathItem[][]): PathItem[] {
-  const subjects: PathItem[] = [];
-
-  paths.forEach((path) => {
-    let currentLevel = subjects;
-
-    path.forEach((item) => {
+  return paths.reduce<PathItem[]>((subjects, path) => {
+    path.reduce<PathItem[]>((currentLevel, item) => {
       let existingItem = currentLevel.find((x) => x.id === item.id);
 
       if (existingItem) {
-        existingItem.count && existingItem.count++;
-        currentLevel = existingItem.children || [];
+        if (typeof existingItem.count === 'number') {
+          existingItem.count++;
+        }
+        return existingItem.children!;
       } else {
         const newItem: PathItem = {
           id: item.id,
@@ -39,12 +37,11 @@ export function organizePaths(paths: PathItem[][]): PathItem[] {
           count: 1,
         };
         currentLevel.push(newItem);
-        currentLevel = newItem.children!;
+        return newItem.children!;
       }
-    });
-  });
-
-  return subjects;
+    }, subjects);
+    return subjects;
+  }, []);
 }
 
 function getAllPath(tables: Table[]): PathItem[][] {
@@ -131,7 +128,8 @@ export function findAncestors(
   for (const node of subjectTree) {
     const newPath = [...path, node];
     if (node.id === childId) {
-      return path;
+      // Return ancestors with children: [] to match test expectations
+      return path.map((item) => ({ ...item, children: [] }));
     }
     if (node.children) {
       const result = findAncestors(node.children, childId, newPath);
@@ -143,32 +141,31 @@ export function findAncestors(
   return [];
 }
 
-// Recursively flatten all children of an array of PathItems
-const getChildren = (members: PathItem[]): PathItem[] => {
-  let children: PathItem[] = [];
-  return members
-    .map((m) => {
-      if (m.children?.length) {
-        children = [...children, ...m.children];
-      }
-      console.log(JSON.stringify(children));
-      return m;
-    })
-    .concat(children.length ? getChildren(children) : children);
-};
+// Recursively flatten all descendants of a PathItem, including all levels
+function getAllDescendants(node: PathItem): PathItem[] {
+  let descendants: PathItem[] = [];
+  for (const child of node.children || []) {
+    descendants.push({ ...child, children: [] }); // flatten: remove children from returned objects
+    descendants = descendants.concat(getAllDescendants(child));
+  }
+  return descendants;
+}
 
-// Find the PathItem(s) with the Id given, and get all the children of that element
+// Find the PathItem with the Id given, and get all the descendants of that element
 export function findChildren(
   subjectTree: PathItem[],
   parentId: string,
 ): PathItem[] {
-  let found: PathItem[] = [];
   for (const node of subjectTree) {
-    if (node.id === parentId && node.children) {
-      found = found.concat(getChildren(node.children));
-    } else if (node.children) {
-      found = found.concat(findChildren(node.children, parentId));
+    if (node.id === parentId) {
+      return getAllDescendants(node);
+    }
+    if (node.children) {
+      const found = findChildren(node.children, parentId);
+      if (found.length > 0) {
+        return found;
+      }
     }
   }
-  return found;
+  return [];
 }

@@ -62,6 +62,41 @@ const exampleResultTree: PathItem[] = [
   },
 ];
 
+const akuExample: PathItem = {
+  id: 'aku',
+  label: 'Arbeidskraftundersøkelsen',
+  count: 1,
+  children: [],
+};
+
+const al06Example: PathItem = {
+  id: 'al06',
+  label: 'Sysselsetting',
+  count: 1,
+  children: [],
+};
+
+const al03Example: PathItem = {
+  id: 'al03',
+  label: 'Arbeidsledighet',
+  count: 1,
+  children: [],
+};
+
+const alExample: PathItem = {
+  id: 'al',
+  label: 'Arbeid og lønn',
+  count: 2,
+  children: [],
+};
+
+const inExample: PathItem = {
+  id: 'in',
+  count: 1,
+  label: 'Innvandring og innvandrere',
+  children: [],
+};
+
 describe('Test function organizePaths', () => {
   it('should organize paths into a hierarchical structure', () => {
     const paths: PathItem[][] = [
@@ -90,27 +125,49 @@ describe('Test function organizePaths', () => {
 describe('Find all direct ancestors of node', () => {
   it('should find the first parent of the node', () => {
     const parents = findAncestors(exampleResultTree, 'aku');
-    expect(parents).toContain('al03');
+    expect(parents).toContainEqual(al03Example);
   });
   it('should find the second parent of the node', () => {
     const parents = findAncestors(exampleResultTree, 'aku');
-    expect(parents).toContain('al');
+    expect(parents).toContainEqual(alExample);
   });
   it('should not find any other nodes', () => {
     const parents = findAncestors(exampleResultTree, 'aku');
-    expect(parents).not.toContain('in01');
-    expect(parents).not.toContain('aku');
+    expect(parents).not.toContainEqual(inExample);
+    expect(parents).not.toContainEqual(akuExample);
   });
 });
 
 describe('Find all children of node', () => {
   it('should find the immediate children of the node', () => {
     const children = findChildren(exampleResultTree, 'al');
-    expect(children).toContain('al03');
-    expect(children).toContain('al06');
+    expect(children).toContainEqual(al06Example);
+    expect(children).toContainEqual(al03Example);
   });
-  it('should find the second childr of the node', () => {
+  it('should find the second child of the node', () => {
     const children = findChildren(exampleResultTree, 'al');
-    expect(children).toContain('aku');
+    expect(children).toContainEqual(akuExample);
+  });
+});
+
+describe('Ensure the tree flattens correctly', () => {
+  const flattenedResult: PathItem[] = [
+    {
+      id: 'in01',
+      label: 'Arbeid og lønn',
+      count: 1,
+      children: [],
+    },
+    {
+      id: 'aku',
+      label: 'Arbeidskraftundersøkelsen',
+      children: [],
+      count: 1,
+    },
+  ];
+
+  it('should find the immediate children of the node', () => {
+    const children = findChildren(exampleResultTree, 'in');
+    expect(children).toEqual(flattenedResult);
   });
 });
