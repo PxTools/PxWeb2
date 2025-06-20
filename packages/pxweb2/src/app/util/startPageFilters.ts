@@ -20,15 +20,17 @@ export function getSubjectTree(tables: Table[]): PathItem[] {
 }
 
 export function organizePaths(paths: PathItem[][]): PathItem[] {
-  return paths.reduce<PathItem[]>((subjects, path) => {
-    path.reduce<PathItem[]>((currentLevel, item) => {
+  const subjects: PathItem[] = [];
+
+  paths.forEach((path) => {
+    let currentLevel = subjects;
+
+    path.forEach((item) => {
       let existingItem = currentLevel.find((x) => x.id === item.id);
 
       if (existingItem) {
-        if (typeof existingItem.count === 'number') {
-          existingItem.count++;
-        }
-        return existingItem.children!;
+        existingItem.count && existingItem.count++;
+        currentLevel = existingItem.children || [];
       } else {
         const newItem: PathItem = {
           id: item.id,
@@ -37,11 +39,12 @@ export function organizePaths(paths: PathItem[][]): PathItem[] {
           count: 1,
         };
         currentLevel.push(newItem);
-        return newItem.children!;
+        currentLevel = newItem.children!;
       }
-    }, subjects);
+    });
+  });
+
     return subjects;
-  }, []);
 }
 
 function getAllPath(tables: Table[]): PathItem[][] {
