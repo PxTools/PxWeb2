@@ -28,10 +28,8 @@ export function ActionItem({
   description,
 }: Readonly<ActionItemProps>) {
   return (
-    <div
+    <button
       className={cl(styles.actionItem)}
-      role="button"
-      tabIndex={0}
       aria-label={ariaLabel}
       onClick={onClick}
       onKeyDown={(e) => {
@@ -45,18 +43,16 @@ export function ActionItem({
           <div
             className={cl(styles[`iconWrapper-${size}`], styles.iconWrapper)}
           >
-            <Icon iconName={iconName} className={styles.icon} />
+            <Icon iconName={iconName} />
           </div>
-          <div className={styles.labelBodyWrapper}>
+          <div className={styles.labelDescriptionWrapper}>
             <Label
               size="medium"
-              className={cl(styles[`label-${size}`], styles.label)}
+              className={cl(styles.labelHover)}
             >
               {ariaLabel}
             </Label>
-            {description && (
-              <BodyShort className={styles.bodyShort}>{description}</BodyShort>
-            )}
+            {description && <BodyShort>{description}</BodyShort>}
           </div>
         </>
       )}
@@ -68,19 +64,18 @@ export function ActionItem({
           >
             <ActionItemIcon
               largeIconName={largeIconName}
-              className={styles.icon}
             />
           </div>
           <div className={styles.labelBodyWrapper}>
             <Label
               size="medium"
-              className={cl(styles[`label-${size}`], styles.label)}
+              className={cl(styles.labelHover)}
             >
               {ariaLabel}
             </Label>
           </div>
         </div>
       )}
-    </div>
+    </button>
   );
 }
