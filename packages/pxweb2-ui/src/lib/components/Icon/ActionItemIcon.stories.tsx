@@ -11,15 +11,19 @@ export default meta;
 
 export const Variants: StoryFn<typeof ActionItemIcon> = () => {
   const actionItemIcons = Object.keys(ActionItemIcons);
+  const [color, setColor] = React.useState('black');
 
   return (
     <>
+      <button onClick={() => setColor('black')}>Black</button>
+      <button onClick={() => setColor('red')}>Red</button>
+      <button onClick={() => setColor('blue')}>Blue</button>
       {actionItemIcons.map((actionItemIcon) => {
         return (
           <div
             key={actionItemIcon}
             style={{
-              color: 'black',
+              color: color,
               display: 'flex',
               alignItems: 'center',
               margin: '10px',
