@@ -205,7 +205,6 @@ export function Presentation({ selectedTabId, scrollRef }: propsType) {
               }}
             >
               <Alert
-                ariaLive="assertive"
                 variant="warning"
                 heading={t(
                   'presentation_page.main_content.table.warnings.to_many_values_selected.title',

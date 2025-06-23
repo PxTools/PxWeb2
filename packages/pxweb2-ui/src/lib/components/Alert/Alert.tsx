@@ -21,7 +21,6 @@ export interface AlertProps {
   readonly className?: string;
   readonly children?: string | React.ReactNode;
   readonly alertAriaLabel?: string;
-  readonly ariaLive?: 'off' | 'polite' | 'assertive';
   readonly ariaHasPopup?:
     | 'false'
     | 'true'
@@ -47,7 +46,6 @@ export function Alert({
   children,
   alertAriaLabel,
   ariaHasPopup = 'false',
-  ariaLive = 'off',
   role,
   ref,
   id,
@@ -71,22 +69,24 @@ export function Alert({
   const iconRight = 'ArrowRight';
   const iconClose = 'XMark';
   let variantIcon: IconProps['iconName'];
+  let variantAriaLive: 'polite' | 'assertive';
   switch (variant) {
     case 'info':
       variantIcon = 'InformationCircleFilled';
+      variantAriaLive = 'polite';
       break;
     case 'success':
       variantIcon = 'CheckMarkCircleFilled';
+      variantAriaLive = 'polite';
       break;
     case 'warning':
       variantIcon = 'ExclamationMarkFilled';
+      variantAriaLive = 'assertive';
       break;
     case 'error':
       variantIcon = 'XMarkCircleFilled';
+      variantAriaLive = 'assertive';
       break;
-
-    default:
-      variantIcon = 'XMarkCircleFilled';
   }
   let headingSize: 'small' | 'xsmall';
   const bodySize = 'medium';
@@ -182,7 +182,7 @@ export function Alert({
         {hasheading && (
           <div
             className={cl(classes[`alert-heading`])}
-            aria-live={ariaLive}
+            aria-live={variantAriaLive}
             aria-atomic="true"
           >
             <span className={classes['sr-only']}>
