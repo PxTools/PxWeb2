@@ -47,6 +47,12 @@
     },
     "generic_tags": {
       "mandatory": "Mandatory"
+    },
+    "alert": {
+      "info": "Information:",
+      "success": "Success:",
+      "warning": "Warning:",
+      "error": "Error:"
     }
   },
   "start_page": {

@@ -47,6 +47,12 @@
     },
     "generic_tags": {
       "mandatory": "Må velges"
+    },
+    "alert": {
+      "info": "Informasjon:",
+      "success": "Suksess:",
+      "warning": "Advarsel:",
+      "error": "Feil:"
     }
   },
   "start_page": {
