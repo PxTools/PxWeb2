@@ -49,6 +49,12 @@ interface Resources {
       generic_tags: {
         mandatory: 'Mandatory';
       };
+      alert: {
+        info: 'Information:';
+        success: 'Success:';
+        warning: 'Warning:';
+        error: 'Error:';
+      };
     };
     start_page: {
       header: 'Welcome to PxWeb 2.0';
@@ -122,7 +128,6 @@ interface Resources {
               };
               values_list: {
                 aria_label: 'List of {{total}} values.';
-                aria_description: "The variable's list of {{total}} total values. To enter the list, press the arrow down key. The Tab key exits the list.";
                 no_results_heading: 'No results for “{{search}}”';
                 no_results_bodyshort: 'Try a different keyword or spelling.';
               };
