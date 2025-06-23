@@ -12,7 +12,6 @@ export default meta;
 export const Variants: StoryFn<typeof Icon> = () => {
   const icons = Object.keys(Icons);
   const [color, setColor] = React.useState('black');
-
   return (
     <>
       <button onClick={() => setColor('black')}>Black</button>
