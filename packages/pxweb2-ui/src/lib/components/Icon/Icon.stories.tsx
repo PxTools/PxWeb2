@@ -1,4 +1,4 @@
-import type { Meta, StoryFn } from '@storybook/react';
+import type { Meta, StoryFn } from '@storybook/react-vite';
 import { Icon } from './Icon';
 import * as Icons from './Icons';
 import React from 'react';

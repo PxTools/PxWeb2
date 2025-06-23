@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react-vite';
 import { NoNotes } from './NoNotes';
 
 const meta: Meta<typeof NoNotes> = {
