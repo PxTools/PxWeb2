@@ -46,10 +46,7 @@ export function ActionItem({
             <Icon iconName={iconName} />
           </div>
           <div className={styles.labelDescriptionWrapper}>
-            <Label
-              size="medium"
-              className={cl(styles.labelHover)}
-            >
+            <Label size="medium" className={cl(styles.labelHover)}>
               {ariaLabel}
             </Label>
             {description && <BodyShort>{description}</BodyShort>}
@@ -62,15 +59,10 @@ export function ActionItem({
           <div
             className={cl(styles[`iconWrapper-${size}`], styles.iconWrapper)}
           >
-            <ActionItemIcon
-              largeIconName={largeIconName}
-            />
+            <ActionItemIcon largeIconName={largeIconName} />
           </div>
           <div className={styles.labelBodyWrapper}>
-            <Label
-              size="medium"
-              className={cl(styles.labelHover)}
-            >
+            <Label size="medium" className={cl(styles.labelHover)}>
               {ariaLabel}
             </Label>
           </div>
