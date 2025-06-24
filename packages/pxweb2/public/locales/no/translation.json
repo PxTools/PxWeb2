@@ -172,7 +172,7 @@
       "save": {
         "title": "Lagre",
         "file": {
-          "title": "Lagre som fil",
+          "title": "Last ned som fil",
           "excel": "Excel (.xlsx)",
           "csv": "Semikolonseparert med overskrift (.csv)",
           "px": "PC-Axis (.px)",

@@ -172,7 +172,7 @@
       "save": {
         "title": "Save",
         "file": {
-          "title": "Save as file",
+          "title": "Download as file",
           "excel": "Excel (.xlsx)",
           "csv": "Semicolon-delimited with heading (.csv)",
           "px": "PC-Axis (.px)",
