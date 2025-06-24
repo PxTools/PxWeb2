@@ -106,6 +106,7 @@ describe('exportToFile', () => {
       [
         OutputFormatParamType.SEPARATOR_SEMICOLON,
         OutputFormatParamType.INCLUDE_TITLE,
+        OutputFormatParamType.USE_TEXTS,        
       ],
       variablesSelection,
     );
