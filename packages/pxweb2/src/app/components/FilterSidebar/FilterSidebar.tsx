@@ -86,7 +86,7 @@ const Collapsible: React.FC<CollapsibleProps> = ({
                   if (isAncestorInFilter) {
                     dispatch({
                       type: ActionType.REMOVE_FILTER,
-                      payload: ancestor.id,
+                      payload: { value: ancestor.id, type: 'subject' },
                     });
                   }
                 }
@@ -97,22 +97,28 @@ const Collapsible: React.FC<CollapsibleProps> = ({
                 for (const d of descendants) {
                   dispatch({
                     type: ActionType.REMOVE_FILTER,
-                    payload: d.id,
+                    payload: { value: d.id, type: 'subject' },
                   });
                 }
 
                 // If no children are selected, we add the closest ancestor that has remaining selected children
                 for (let i = ancestors.length - 1; i >= 0; i--) {
                   const ancestor = ancestors[i];
-                  const remainingSelectedChildren = findChildren(
+                  const hasSelectedDescendants = findChildren(
                     subjectTree,
                     ancestor.id,
-                  ).filter((child) =>
-                    state.activeFilters.some(
-                      (f) => f.type === 'subject' && f.value === child.id,
-                    ),
+                  ).some(
+                    (descendant) =>
+                      descendant.id !== subjectId &&
+                      state.activeFilters.some(
+                        (f) =>
+                          f.type === 'subject' && f.value === descendant.id,
+                      ),
                   );
-                  if (remainingSelectedChildren.length > 0) {
+                  const isAncestorSelected = state.activeFilters.some(
+                    (f) => f.type === 'subject' && f.value === ancestor.id,
+                  );
+                  if (!hasSelectedDescendants && !isAncestorSelected) {
                     dispatch({
                       type: ActionType.ADD_FILTER,
                       payload: [
@@ -217,7 +223,7 @@ const RenderTimeUnitFilters: React.FC<{ onFilterChange?: () => void }> = ({
                 })
               : dispatch({
                   type: ActionType.REMOVE_FILTER,
-                  payload: key,
+                  payload: { value: key, type: 'timeUnit' },
                 });
             onFilterChange?.();
           }}
