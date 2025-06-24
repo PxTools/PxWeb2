@@ -95,36 +95,38 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
   return (
     <div className={cl(classes.drawerSave)}>
       <ContentBox title={t('presentation_page.sidemenu.save.file.title')}>
-        <ActionItem
-          ariaLabel={t('presentation_page.sidemenu.save.file.excel')}
-          onClick={() => saveToFile('excel')}
-          iconName="FileText"
-        />
-        <ActionItem
-          ariaLabel={t('presentation_page.sidemenu.save.file.csv')}
-          onClick={() => saveToFile('csv')}
-          iconName="FileText"
-        />
-        <ActionItem
-          ariaLabel={t('presentation_page.sidemenu.save.file.px')}
-          onClick={() => saveToFile('px')}
-          iconName="FileCode"
-        />
-        <ActionItem
-          ariaLabel={t('presentation_page.sidemenu.save.file.jsonstat2')}
-          onClick={() => saveToFile('jsonstat2')}
-          iconName="FileCode"
-        />
-        <ActionItem
-          ariaLabel={t('presentation_page.sidemenu.save.file.html')}
-          onClick={() => saveToFile('html')}
-          iconName="FileCode"
-        />
-        <ActionItem
-          ariaLabel={t('presentation_page.sidemenu.save.file.parquet')}
-          onClick={() => saveToFile('parquet')}
-          iconName="FileCode"
-        />
+        <div>
+          <ActionItem
+            ariaLabel={t('presentation_page.sidemenu.save.file.excel')}
+            onClick={() => saveToFile('excel')}
+            iconName="FileText"
+          />
+          <ActionItem
+            ariaLabel={t('presentation_page.sidemenu.save.file.csv')}
+            onClick={() => saveToFile('csv')}
+            iconName="FileText"
+          />
+          <ActionItem
+            ariaLabel={t('presentation_page.sidemenu.save.file.px')}
+            onClick={() => saveToFile('px')}
+            iconName="FileCode"
+          />
+          <ActionItem
+            ariaLabel={t('presentation_page.sidemenu.save.file.jsonstat2')}
+            onClick={() => saveToFile('jsonstat2')}
+            iconName="FileCode"
+          />
+          <ActionItem
+            ariaLabel={t('presentation_page.sidemenu.save.file.html')}
+            onClick={() => saveToFile('html')}
+            iconName="FileCode"
+          />
+          <ActionItem
+            ariaLabel={t('presentation_page.sidemenu.save.file.parquet')}
+            onClick={() => saveToFile('parquet')}
+            iconName="FileCode"
+          />
+        </div>
         {isLoading && (
           <div className={classes.loadingSpinner}>
             <Spinner size="xlarge" />
