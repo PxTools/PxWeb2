@@ -1,9 +1,9 @@
-import type { Meta, StoryFn } from '@storybook/react';
-import { SearchableSelect, type SelectOption } from './SearchableSelect';
+import type { Meta, StoryFn } from '@storybook/react-vite';
+import { SearchSelect, type SelectOption } from './SearchSelect';
 
-const meta: Meta<typeof SearchableSelect> = {
-  component: SearchableSelect,
-  title: 'Components/SearchableSelect',
+const meta: Meta<typeof SearchSelect> = {
+  component: SearchSelect,
+  title: 'Components/SearchSelect',
 };
 export default meta;
 
@@ -31,19 +31,19 @@ export const Default = {
   },
 };
 
-export const SelectedOption: StoryFn<typeof SearchableSelect> = () => {
+export const SelectedOption: StoryFn<typeof SearchSelect> = () => {
   return (
     <>
       <h1>Selected option</h1>
 
       <h2>Selected option = Option 2:</h2>
-      <SearchableSelect
+      <SearchSelect
         label="Year"
         options={options}
         placeholder={placeholder}
         selectedOption={options[1]}
         onSelect={selectedOptionChanged}
-      ></SearchableSelect>
+      ></SearchSelect>
     </>
   );
 };

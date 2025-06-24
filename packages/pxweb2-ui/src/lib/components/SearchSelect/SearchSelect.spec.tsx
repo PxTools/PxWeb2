@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 
-import { SearchableSelect, type SelectOption } from './SearchableSelect';
+import { SearchSelect, type SelectOption } from './SearchSelect';
 
 describe('SearchableSelect', () => {
   const mockOptions: SelectOption[] = [
@@ -12,7 +12,7 @@ describe('SearchableSelect', () => {
   const mockOnSelect = vi.fn();
   it('should render successfully', () => {
     const { baseElement } = render(
-      <SearchableSelect options={mockOptions} onSelect={mockOnSelect} />,
+      <SearchSelect options={mockOptions} onSelect={mockOnSelect} />,
     );
     expect(baseElement).toBeTruthy();
   });

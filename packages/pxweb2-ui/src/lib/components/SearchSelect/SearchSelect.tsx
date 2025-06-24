@@ -4,14 +4,14 @@ import cl from 'clsx';
 import { Icon } from '../Icon/Icon';
 import { Label } from '../Typography/Label/Label';
 import { Button } from '../Button/Button';
-import styles from './SearchableSelect.module.scss';
+import styles from './SearchSelect.module.scss';
 
 export type SelectOption = {
   label: string;
   value: string;
 };
 
-type SearchableSelectProps = {
+type SearchSelectProps = {
   id?: string;
   options: SelectOption[];
   placeholder?: string;
@@ -21,7 +21,7 @@ type SearchableSelectProps = {
   ariaLabel?: string;
 };
 
-export function SearchableSelect({
+export function SearchSelect({
   id = 'searchable-select',
   options,
   placeholder,
@@ -29,7 +29,7 @@ export function SearchableSelect({
   onSelect,
   selectedOption,
   ariaLabel,
-}: Readonly<SearchableSelectProps>) {
+}: Readonly<SearchSelectProps>) {
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
@@ -204,4 +204,4 @@ export function SearchableSelect({
   );
 }
 
-export default SearchableSelect;
+export default SearchSelect;
