@@ -68,7 +68,8 @@ export async function exportToFile(
     }
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = `${tabId}.${fileExtension}`;
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    link.download = `${tabId}_${timestamp}.${fileExtension}`;
     link.click();
     URL.revokeObjectURL(link.href);
   });
