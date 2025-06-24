@@ -1,10 +1,5 @@
-import { Dispatch } from 'react';
 import { Table } from '@pxweb2/pxweb2-api-client';
-import {
-  ActionType,
-  StartPageFilters,
-  Filter,
-} from '../pages/StartPage/StartPageTypes';
+import { StartPageFilters, Filter } from '../pages/StartPage/StartPageTypes';
 
 export interface PathItem {
   id: string;
@@ -18,98 +13,10 @@ type TableWithPaths = Table & {
   paths?: { id: string; label: string }[][];
 };
 
-type FilterAction = {
-  type: ActionType;
-  payload: any;
-};
-
 export function getSubjectTree(tables: Table[]): PathItem[] {
   const allPaths: PathItem[][] = getAllPath(tables);
   const organizedPaths: PathItem[] = organizePaths(allPaths);
   return updateSubjectTreeCounts(organizedPaths, tables);
-}
-
-export function handleSubjectToggle(
-  subject: PathItem,
-  checked: boolean,
-  subjectTree: PathItem[],
-  activeFilters: {
-    type: string;
-    value: string;
-    label: string;
-    index: number;
-  }[],
-  dispatch: Dispatch<FilterAction>,
-  index: number,
-) {
-  const subjectId = subject.id;
-  const subjectLabel = subject.label;
-
-  const ancestors = findAncestors(subjectTree, subjectId);
-  const children = findChildren(subjectTree, subjectId);
-
-  if (checked) {
-    // If subject has children, add the subject itself
-    dispatch({
-      type: ActionType.ADD_FILTER,
-      payload: [
-        {
-          type: 'subject',
-          value: subjectId,
-          label: subjectLabel,
-          index,
-        },
-      ],
-    });
-
-    // If the subject has children, we remove all ancestors from filter
-    for (const ancestor of ancestors) {
-      const isAncestorInFilter = activeFilters.some(
-        (f) => f.type === 'subject' && f.value === ancestor.id,
-      );
-      if (isAncestorInFilter) {
-        dispatch({
-          type: ActionType.REMOVE_FILTER,
-          payload: ancestor.id,
-        });
-      }
-    }
-  } else {
-    //Remove subject and all its descendants from filter
-    const descendants = [subject, ...children];
-
-    for (const d of descendants) {
-      dispatch({
-        type: ActionType.REMOVE_FILTER,
-        payload: d.id,
-      });
-    }
-
-    // If no children are selected, we add the closest ancestor that has remaining selected children
-    for (let i = ancestors.length - 1; i >= 0; i--) {
-      const ancestor = ancestors[i];
-      const remainingSelectedChildren = findChildren(
-        subjectTree,
-        ancestor.id,
-      ).filter((child) =>
-        activeFilters.some((f) => f.type === 'subject' && f.value === child.id),
-      );
-      if (remainingSelectedChildren.length > 0) {
-        dispatch({
-          type: ActionType.ADD_FILTER,
-          payload: [
-            {
-              type: 'subject',
-              value: ancestor.id,
-              label: ancestor.label,
-              index,
-            },
-          ],
-        });
-        break;
-      }
-    }
-  }
 }
 
 export function organizePaths(paths: PathItem[][]): PathItem[] {

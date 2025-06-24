@@ -6,8 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { Checkbox, FilterCategory, Button } from '@pxweb2/pxweb2-ui';
 import {
   PathItem,
+  findAncestors,
   findChildren,
-  handleSubjectToggle,
 } from '../../util/startPageFilters';
 import { FilterContext } from '../../context/FilterContext';
 import { ReactNode, useContext, useState } from 'react';
@@ -29,6 +29,9 @@ const Collapsible: React.FC<CollapsibleProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { state, dispatch } = useContext(FilterContext);
+  const subjectId = subject.id;
+  const subjectLabel = subject.label;
+  const subjectTree = state.availableFilters.subjectTree;
 
   return (
     <>
@@ -47,20 +50,79 @@ const Collapsible: React.FC<CollapsibleProps> = ({
         )}
         <span className={styles.filterLabel}>
           <Checkbox
-            id={subject.id + index}
-            text={`${subject.label} (${count})`}
+            id={subjectId + index}
+            text={`${subjectLabel} (${count})`}
             value={isActive}
             subtle={!isActive && count === 0}
-            onChange={(checked) => {
-              setIsOpen(true);
-              handleSubjectToggle(
-                subject,
-                checked,
-                state.availableFilters.subjectTree,
-                state.activeFilters,
-                dispatch,
-                index,
-              );
+            onChange={(value) => {
+              setIsOpen(true);              
+              const ancestors = findAncestors(subjectTree, subjectId);
+              const children = findChildren(subjectTree, subjectId);
+
+              if (value) {
+                // If subject has children, add the subject itself
+                dispatch({
+                  type: ActionType.ADD_FILTER,
+                  payload: [
+                    {
+                      type: 'subject',
+                      value: subjectId,
+                      label: subjectLabel,
+                      index,
+                    },
+                  ],
+                });
+
+                // If the subject has children, we remove all ancestors from filter
+                for (const ancestor of ancestors) {
+                  const isAncestorInFilter = state.activeFilters.some(
+                    (f) => f.type === 'subject' && f.value === ancestor.id,
+                  );
+                  if (isAncestorInFilter) {
+                    dispatch({
+                      type: ActionType.REMOVE_FILTER,
+                      payload: ancestor.id,
+                    });
+                  }
+                }
+              } else {
+                //Remove subject and all its descendants from filter
+                const descendants = [subject, ...children];
+
+                for (const d of descendants) {
+                  dispatch({
+                    type: ActionType.REMOVE_FILTER,
+                    payload: d.id,
+                  });
+                }
+
+                // If no children are selected, we add the closest ancestor that has remaining selected children
+                for (let i = ancestors.length - 1; i >= 0; i--) {
+                  const ancestor = ancestors[i];
+                  const remainingSelectedChildren = findChildren(
+                    subjectTree,
+                    ancestor.id,
+                  ).filter((child) =>
+                    state.activeFilters.some(
+                      (f) => f.type === 'subject' && f.value === child.id,
+                    ),
+                  );
+                  if (remainingSelectedChildren.length > 0) {
+                    dispatch({
+                      type: ActionType.ADD_FILTER,
+                      payload: [
+                        {
+                          type: 'subject',
+                          value: ancestor.id,
+                          label: ancestor.label,
+                          index,
+                        },
+                      ],
+                    });
+                    break;
+                  }
+                }
+              }
             }}
           />
         </span>
