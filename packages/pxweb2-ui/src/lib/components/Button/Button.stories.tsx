@@ -1,4 +1,4 @@
-import type { Meta, StoryObj, StoryFn } from '@storybook/react';
+import type { Meta, StoryObj, StoryFn } from '@storybook/react-vite';
 import { Button } from './Button';
 
 const meta: Meta<typeof Button> = {
@@ -7,6 +7,12 @@ const meta: Meta<typeof Button> = {
 };
 export default meta;
 type Story = StoryObj<typeof Button>;
+
+const loadingButtonStyle = {
+  minWidth: '130px',
+  marginTop: '10px',
+  marginBottom: '10px',
+};
 
 function test() {
   alert('Button clicked');
@@ -141,6 +147,47 @@ export const Variants: StoryFn<typeof Button> = () => {
         onClick={test}
         icon="Clock"
         iconPosition="right"
+      >
+        Button
+      </Button>
+      <br />
+    </>
+  );
+};
+
+export const Loading: StoryFn<typeof Button> = () => {
+  return (
+    <>
+      Primary with loading
+      <br />
+      <Button variant="primary" loading style={loadingButtonStyle}>
+        Button
+      </Button>
+      <br />
+      Primary with loading and label
+      <br />
+      <Button
+        variant="primary"
+        loading
+        loadingLabel="Loading..."
+        style={loadingButtonStyle}
+      >
+        Button
+      </Button>
+      <br />
+      Secondary widt loading
+      <br />
+      <Button variant="secondary" loading style={loadingButtonStyle}>
+        Button
+      </Button>
+      <br />
+      Secondary with loading and label
+      <br />
+      <Button
+        variant="secondary"
+        loading
+        loadingLabel="Loading..."
+        style={loadingButtonStyle}
       >
         Button
       </Button>

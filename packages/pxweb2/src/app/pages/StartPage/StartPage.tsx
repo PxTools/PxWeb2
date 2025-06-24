@@ -1,10 +1,10 @@
 import { useEffect, useContext, useState, useRef } from 'react';
-import cl from 'clsx';
-import styles from './StartPage.module.scss';
 import { useTranslation, Trans } from 'react-i18next';
 import type { TFunction } from 'i18next';
 import { motion, AnimatePresence } from 'framer-motion';
+import cl from 'clsx';
 
+import styles from './StartPage.module.scss';
 import {
   Search,
   TableCard,
@@ -14,6 +14,7 @@ import {
   Button,
   Heading,
   Ingress,
+  BodyShort,
 } from '@pxweb2/pxweb2-ui';
 import { type Table } from '@pxweb2/pxweb2-api-client';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
@@ -30,28 +31,31 @@ import { getAllTables } from '../../util/tableHandler';
 
 const StartPage = () => {
   const { t, i18n } = useTranslation();
-  const [isFilterOverlayOpen, setIsFilterOverlayOpen] = useState(false);
-  const [visibleCount, setVisibleCount] = useState(15);
   const { isMobile, isTablet } = useApp();
+  const { state, dispatch } = useContext(FilterContext);
+
+  const paginationCount = 15;
   const isSmallScreen = isTablet === true || isMobile === true;
   const topicIconComponents = useTopicIcons();
+
+  const [isFilterOverlayOpen, setIsFilterOverlayOpen] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(paginationCount);
+  const [lastVisibleCount, setLastVisibleCount] = useState(paginationCount);
+  const [isPaginating, setIsPaginating] = useState(false);
+  const [paginationButtonWidth, setPaginationButtonWidth] = useState<number>();
+
   const filterBackButtonRef = useRef<HTMLButtonElement>(null);
   const filterToggleRef = useRef<HTMLButtonElement>(null);
   const hasOverlayBeenOpenedRef = useRef(false);
-
-  const handleShowMore = () => {
-    setVisibleCount((prev) => prev + 15);
-  };
-
-  const { state, dispatch } = useContext(FilterContext);
+  const paginationButtonRef = useRef<HTMLButtonElement>(null);
+  const firstNewCardRef = useRef<HTMLDivElement>(null);
+  const lastVisibleCardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     async function fetchTables() {
-      console.log('Now Loading!');
       dispatch({ type: ActionType.SET_LOADING, payload: true });
       try {
         const tables = await getAllTables();
-        console.log('Fetching Data!');
         dispatch({
           type: ActionType.RESET_FILTERS,
           payload: { tables: tables, subjects: getSubjectTree(tables) },
@@ -91,15 +95,96 @@ const StartPage = () => {
     } else {
       document.body.style.overflow = '';
     }
-
     return () => {
       document.body.style.overflow = '';
     };
   }, [isFilterOverlayOpen, isSmallScreen]);
 
-  const formatNumber = (value: number, locale = 'nb-NO') => {
-    return new Intl.NumberFormat(locale).format(value);
+  useEffect(() => {
+    if (visibleCount === lastVisibleCount && isPaginating) {
+      setIsPaginating(false);
+    }
+  }, [visibleCount, lastVisibleCount, isPaginating]);
+
+  useEffect(() => {
+    if (!isPaginating && firstNewCardRef.current) {
+      const delay = Math.min(1000, 200 + visibleCount * 10);
+      const timeout = setTimeout(() => {
+        firstNewCardRef.current?.focus();
+      }, delay);
+      return () => clearTimeout(timeout);
+    }
+  }, [isPaginating, visibleCount]);
+
+  const formatNumber = (value: number) =>
+    new Intl.NumberFormat(i18n.language).format(value);
+
+  const showNumberOfTables = () => {
+    return (
+      <Trans
+        i18nKey="start_page.table.show_number_of_tables"
+        values={{
+          countShown: formatNumber(
+            Math.min(visibleCount, state.filteredTables.length),
+          ),
+          countTotal: formatNumber(state.filteredTables.length),
+        }}
+      />
+    );
   };
+
+  const getTopicIcon = (table: Table) => {
+    const topicId = table.paths?.[0]?.[0]?.id;
+    const size = isSmallScreen ? 'small' : 'medium';
+
+    return topicId
+      ? (topicIconComponents.find((icon) => icon.id === topicId)?.[size] ??
+          null)
+      : null;
+  };
+
+  const handleShowMore = () => {
+    if (isPaginating) {
+      return;
+    }
+    if (paginationButtonRef.current) {
+      setPaginationButtonWidth(paginationButtonRef.current.offsetWidth);
+    }
+    setIsPaginating(true);
+    const newCount = visibleCount + paginationCount;
+    setLastVisibleCount(newCount);
+    requestAnimationFrame(() => {
+      setVisibleCount(newCount);
+    });
+  };
+
+  const handleShowLess = () => {
+    setVisibleCount(paginationCount);
+    requestAnimationFrame(() => {
+      if (lastVisibleCardRef.current) {
+        lastVisibleCardRef.current.focus();
+      }
+    });
+  };
+
+  const renderPaginationButton = (
+    type: 'more' | 'less',
+    onClick: () => void,
+    label: string,
+  ) => (
+    <Button
+      variant="primary"
+      onClick={onClick}
+      loading={isPaginating}
+      ref={paginationButtonRef}
+      style={
+        paginationButtonWidth ? { minWidth: paginationButtonWidth } : undefined
+      }
+      tabIndex={0}
+    >
+      {label}
+    </Button>
+  );
 
   const renderRemoveAllChips = () => {
     if (state.activeFilters.length >= 2) {
@@ -114,6 +199,7 @@ const StartPage = () => {
                 subjects: getSubjectTree(state.availableTables),
               },
             });
+            setVisibleCount(paginationCount);
           }}
         >
           {t('start_page.filter.remove_all_filter')}
@@ -122,7 +208,13 @@ const StartPage = () => {
     }
   };
 
-  const renderTableCard = (table: Table, t: TFunction) => {
+  const renderTableCard = (
+    table: Table,
+    t: TFunction,
+    isFirstNew: boolean,
+    isLastVisible: boolean,
+    tabIndex?: number,
+  ) => {
     if (table) {
       const translationKey = `start_page.filter.frequency.${table.timeUnit?.toLowerCase()}`;
       const frequencyLabel = t(translationKey, {
@@ -136,37 +228,135 @@ const StartPage = () => {
         language !== config.language.defaultLanguage;
       const langPrefix = showLangInPath ? `/${language}` : '';
 
+      let cardRef: React.RefObject<HTMLDivElement | null> | undefined;
+      if (isFirstNew) {
+        cardRef = firstNewCardRef;
+      } else if (isLastVisible) {
+        cardRef = lastVisibleCardRef;
+      }
+
       return (
-        <div className={styles.tableListItem}>
-          <TableCard
-            title={`${table.label}`}
-            href={`${langPrefix}/table/${table.id}`}
-            updatedLabel={
-              table.updated ? t('start_page.table.updated_label') : undefined
-            }
-            lastUpdated={
-              table.updated
-                ? new Date(table.updated).toLocaleDateString(language)
-                : undefined
-            }
-            period={`${table.firstPeriod?.slice(0, 4)}–${table.lastPeriod?.slice(0, 4)}`}
-            frequency={frequencyLabel}
-            tableId={`${table.id}`}
-            icon={renderTopicIcon(table)}
-          />
+        <TableCard
+          title={`${table.label}`}
+          href={`${langPrefix}/table/${table.id}`}
+          updatedLabel={
+            table.updated ? t('start_page.table.updated_label') : undefined
+          }
+          lastUpdated={
+            table.updated
+              ? new Date(table.updated).toLocaleDateString(language)
+              : undefined
+          }
+          period={`${table.firstPeriod?.slice(0, 4)}–${table.lastPeriod?.slice(0, 4)}`}
+          frequency={frequencyLabel}
+          tableId={`${table.id}`}
+          icon={getTopicIcon(table)}
+          ref={cardRef}
+          tabIndex={tabIndex}
+        />
+      );
+    }
+  };
+
+  const getVisibleTables = () => state.filteredTables.slice(0, visibleCount);
+
+  const isFirstNewIndex = (index: number) =>
+    visibleCount > paginationCount && index === visibleCount - paginationCount;
+
+  const isLastVisibleIndex = (index: number) =>
+    index === Math.min(visibleCount, state.filteredTables.length) - 1;
+
+  const renderCards = () => {
+    return getVisibleTables().map((table, index) => {
+      const isFirstNew = isFirstNewIndex(index);
+      const isLastVisible = isLastVisibleIndex(index);
+      const tabIndex = isFirstNew ? -1 : undefined;
+
+      return renderTableCard(table, t, isFirstNew, isLastVisible, tabIndex);
+    });
+  };
+
+  const renderTableCardList = () => (
+    <>
+      {renderNumberofTablesScreenReader()}
+      {renderTableCount()}
+      <div className={styles.tableCardList}>{renderCards()}</div>
+      {renderPagination()}
+    </>
+  );
+
+  const renderPagination = () => {
+    const shouldShowPagination =
+      visibleCount < state.filteredTables.length ||
+      (visibleCount >= state.filteredTables.length &&
+        visibleCount > paginationCount);
+    if (shouldShowPagination) {
+      return (
+        <div className={styles.paginationWrapper}>
+          {visibleCount < state.filteredTables.length &&
+            renderPaginationButton(
+              'more',
+              handleShowMore,
+              t('start_page.table.show_more'),
+            )}
+
+          {visibleCount >= state.filteredTables.length &&
+            visibleCount > paginationCount &&
+            renderPaginationButton(
+              'less',
+              handleShowLess,
+              t('start_page.table.show_less'),
+            )}
+          <BodyShort
+            size="medium"
+            className={styles.tableCount}
+            aria-hidden="true"
+          >
+            {showNumberOfTables()}
+          </BodyShort>
         </div>
       );
     }
   };
 
-  const renderTopicIcon = (table: Table) => {
-    const topicId = table.paths?.[0]?.[0]?.id;
-    const size = isSmallScreen ? 'small' : 'medium';
+  const renderNumberofTablesScreenReader = () => {
+    const formattedCount = formatNumber(state.filteredTables.length);
+    return (
+      <span className={styles['sr-only']} aria-live="polite" aria-atomic="true">
+        <Trans
+          i18nKey="start_page.table.show_number_of_tables_aria"
+          values={{
+            count: formattedCount,
+            countShown: formatNumber(
+              Math.min(visibleCount, state.filteredTables.length),
+            ),
+            countTotal: formatNumber(state.filteredTables.length),
+          }}
+        />
+      </span>
+    );
+  };
 
-    return topicId
-      ? (topicIconComponents.find((icon) => icon.id === topicId)?.[size] ??
-          null)
-      : null;
+  const renderTableCount = () => {
+    const formattedCount = formatNumber(state.filteredTables.length);
+    return (
+      <div
+        aria-hidden="true"
+        className={cl(styles['bodyshort-medium'], styles.countLabel)}
+      >
+        <Trans
+          i18nKey={
+            state.activeFilters.length
+              ? 'start_page.table.number_of_tables_found'
+              : 'start_page.table.number_of_tables'
+          }
+          values={{ count: formattedCount }}
+          components={{
+            strong: <span className={cl(styles['label-medium'])} />,
+          }}
+        />
+      </div>
+    );
   };
 
   const renderFilterOverlay = () => {
@@ -193,7 +383,9 @@ const StartPage = () => {
             </div>
 
             <div className={styles.filterOverlayContent}>
-              <FilterSidebar />
+              <FilterSidebar
+                onFilterChange={() => setVisibleCount(paginationCount)}
+              />
             </div>
 
             <div className={styles.filterOverlayFooter}>
@@ -222,10 +414,7 @@ const StartPage = () => {
                 onClick={() => setIsFilterOverlayOpen(false)}
               >
                 {t('start_page.filter.show_results', {
-                  value: formatNumber(
-                    state.filteredTables.length,
-                    i18n.language,
-                  ),
+                  value: formatNumber(state.filteredTables.length),
                 })}
               </Button>
             </div>
@@ -233,60 +422,6 @@ const StartPage = () => {
         )}
       </AnimatePresence>
     );
-  };
-
-  const renderTableCardList = () => {
-    return (
-      <>
-        {state.filteredTables.slice(0, visibleCount).map((table) => (
-          <div key={table.id}>{renderTableCard(table, t)}</div>
-        ))}
-
-        {visibleCount < state.filteredTables.length && (
-          <div className={styles.loadMoreWrapper}>
-            <Button
-              variant="primary"
-              onClick={handleShowMore}
-              className={styles.loadMoreButton}
-            >
-              {t('start_page.table.show_more')}
-            </Button>
-          </div>
-        )}
-      </>
-    );
-  };
-
-  const renderTableCount = () => {
-    const formattedCount = formatNumber(
-      state.filteredTables.length,
-      i18n.language,
-    );
-    if (state.activeFilters.length) {
-      return (
-        <p>
-          <Trans
-            i18nKey="start_page.table.number_of_tables_found"
-            values={{ count: formattedCount }}
-            components={{
-              strong: <span className={cl(styles['label-medium'])} />,
-            }}
-          />
-        </p>
-      );
-    } else {
-      return (
-        <p>
-          <Trans
-            i18nKey="start_page.table.number_of_tables"
-            values={{ count: formattedCount }}
-            components={{
-              strong: <span className={cl(styles['label-medium'])} />,
-            }}
-          />
-        </p>
-      );
-    }
   };
 
   return (
@@ -334,7 +469,9 @@ const StartPage = () => {
                 >
                   {t('start_page.filter.header')}
                 </Heading>
-                <FilterSidebar />
+                <FilterSidebar
+                  onFilterChange={() => setVisibleCount(paginationCount)}
+                />
               </div>
             )}
 
@@ -352,6 +489,7 @@ const StartPage = () => {
                             type: ActionType.REMOVE_FILTER,
                             payload: filter.value,
                           });
+                          setVisibleCount(paginationCount);
                         }}
                         aria-label={t('start_page.filter.remove_filter_aria', {
                           value: filter.value,
@@ -365,12 +503,6 @@ const StartPage = () => {
                   </Chips>
                 </div>
               )}
-              <div
-                className={cl(styles['bodyshort-medium'], styles.countLabel)}
-              >
-                {renderTableCount()}
-              </div>
-
               {state.error && (
                 <div className={styles.error}>
                   <Alert

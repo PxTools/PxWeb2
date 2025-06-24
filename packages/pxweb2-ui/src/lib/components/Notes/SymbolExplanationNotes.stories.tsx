@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react-vite';
 import { SymbolExplanationNotes } from './SymbolExplanationNotes';
 import { dummyNotes } from './notesDummyData';
 

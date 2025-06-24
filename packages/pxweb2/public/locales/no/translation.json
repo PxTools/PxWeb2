@@ -47,6 +47,12 @@
     },
     "generic_tags": {
       "mandatory": "Må velges"
+    },
+    "alert": {
+      "info": "Informasjon:",
+      "success": "Suksess:",
+      "warning": "Advarsel:",
+      "error": "Feil:"
     }
   },
   "start_page": {
@@ -62,7 +68,7 @@
       "close": "Lukk filter",
       "header": "Filter",
       "remove_all_filter": "Fjern alle filter",
-      "remove_filter_aria": "Slett {{value}}",
+      "remove_filter_aria": "Fjern filter, {{value}}",
       "subject": "Emne",
       "timeUnit": "Tidsperiode",
       "year": "Årstall",
@@ -80,7 +86,11 @@
       "number_of_tables": "<strong>{{count}}</strong> tabeller",
       "number_of_tables_found": "Treff på <strong>{{count}}</strong> tabeller",
       "updated_label": "Oppdatert",
-      "show_more": "Vis flere"
+      "show_more": "Vis flere",
+      "show_less": "Vis færre",
+      "loading": "Laster...",
+      "show_number_of_tables": "Viser {{countShown}} av {{countTotal}}",
+      "show_number_of_tables_aria": "Treff på {{count}} tabeller, viser {{countShown}} av {{countTotal}}"
     }
   },
   "presentation_page": {
@@ -121,7 +131,6 @@
             },
             "values_list": {
               "aria_label": "Liste av {{total}} verdier.",
-              "aria_description": "Variabelens liste over {{total}} totale verdier. For å gå inn i listen, trykk på pil ned-tasten. Tab-tasten går ut av listen.",
               "no_results_heading": "Ingen treff på «{{search}}»",
               "no_results_bodyshort": "Prøv med et annet søkeord eller en annen stavemåte."
             }

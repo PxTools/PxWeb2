@@ -221,7 +221,6 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
             heading={noteMessage.heading}
             ariaHasPopup="dialog"
             alertAriaLabel={noteMessage.heading}
-            ariaLive="polite"
             role="button"
             clickable
             onClick={() => {
