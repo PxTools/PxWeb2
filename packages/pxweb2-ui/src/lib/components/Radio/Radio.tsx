@@ -36,6 +36,7 @@ export const Radio = forwardRef<HTMLInputElement, Readonly<RadioProps>>(
       <fieldset className={cl(classes.fieldset)}>
         <legend
           className={cl(classes.legend, classes['heading-xsmall'], {
+            [classes['inModal']]: variant === 'inModal',
             [classes.legendSrOnly]: hideLegend,
           })}
         >

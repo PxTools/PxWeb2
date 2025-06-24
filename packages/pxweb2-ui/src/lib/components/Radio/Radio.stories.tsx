@@ -116,7 +116,30 @@ export const InModalGroup: StoryFn<typeof Radio> = () => {
   );
 };
 
-export const WithVisibleLegend: StoryFn<typeof Radio> = () => {
+export const DefaultVisibleLegend: StoryFn<typeof Radio> = () => {
+  const testData = [
+    { label: 'First option', value: 'option1' },
+    { label: 'Second option', value: 'option2' },
+    {
+      label:
+        'Third option that has a long text to show what happens in the radio component whith this options and the others options when a text are stretched over several lines ',
+      value: 'option3',
+    },
+    { label: 'Fourth option', value: 'option4' },
+  ];
+  return (
+    <Radio
+      name="radio2"
+      options={testData}
+      onChange={undefined}
+      selectedOption="option1"
+      legend="Legend"
+      hideLegend={false}
+    ></Radio>
+  );
+};
+
+export const ModalVisibleLegend: StoryFn<typeof Radio> = () => {
   const testData = [
     { label: 'First option', value: 'option1' },
     { label: 'Second option', value: 'option2' },
