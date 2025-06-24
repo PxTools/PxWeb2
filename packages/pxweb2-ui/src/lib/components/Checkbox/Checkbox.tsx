@@ -117,6 +117,11 @@ export const MixedCheckbox: React.FC<MixedCheckboxProps> = ({
           }
         }
       }}
+      onKeyDown={(event) => {
+        if (event.key === ' ') {
+          event.preventDefault();
+        }
+      }}
       onClick={(event) => {
         event.preventDefault();
         if (value === 'false') {

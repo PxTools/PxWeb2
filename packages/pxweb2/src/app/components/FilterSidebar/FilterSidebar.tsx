@@ -18,6 +18,10 @@ interface CollapsibleProps {
   count: number;
   isActive: boolean;
   children: ReactNode;
+  onFilterChange?: () => void;
+}
+interface FilterSidebarProps {
+  onFilterChange?: () => void;
 }
 
 const Collapsible: React.FC<CollapsibleProps> = ({
@@ -26,6 +30,7 @@ const Collapsible: React.FC<CollapsibleProps> = ({
   count,
   isActive,
   children,
+  onFilterChange,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { state, dispatch } = useContext(FilterContext);
@@ -123,6 +128,7 @@ const Collapsible: React.FC<CollapsibleProps> = ({
                   }
                 }
               }
+              onFilterChange?.();
             }}
           />
         </span>
@@ -135,7 +141,8 @@ const Collapsible: React.FC<CollapsibleProps> = ({
 const RenderSubjects: React.FC<{
   firstLevel: boolean;
   subjects: PathItem[];
-}> = ({ firstLevel, subjects }) => {
+  onFilterChange?: () => void;
+}> = ({ firstLevel, subjects, onFilterChange }) => {
   const { state } = useContext(FilterContext);
 
   return subjects.map((subject, index) => {
@@ -162,9 +169,14 @@ const RenderSubjects: React.FC<{
           index={index}
           count={count}
           isActive={isChecked}
+          onFilterChange={onFilterChange}
         >
           {subject.children && (
-            <RenderSubjects firstLevel={false} subjects={subject.children} />
+            <RenderSubjects
+              firstLevel={false}
+              subjects={subject.children}
+              onFilterChange={onFilterChange}
+            />
           )}
         </Collapsible>
       </div>
@@ -172,7 +184,9 @@ const RenderSubjects: React.FC<{
   });
 };
 
-const RenderTimeUnitFilters: React.FC = () => {
+const RenderTimeUnitFilters: React.FC<{ onFilterChange?: () => void }> = ({
+  onFilterChange,
+}) => {
   const { state, dispatch } = useContext(FilterContext);
   const { t } = useTranslation();
 
@@ -205,6 +219,7 @@ const RenderTimeUnitFilters: React.FC = () => {
                   type: ActionType.REMOVE_FILTER,
                   payload: key,
                 });
+            onFilterChange?.();
           }}
         />
       </li>
@@ -212,7 +227,9 @@ const RenderTimeUnitFilters: React.FC = () => {
   });
 };
 
-export const FilterSidebar: React.FC = () => {
+export const FilterSidebar: React.FC<FilterSidebarProps> = ({
+  onFilterChange,
+}) => {
   const { state } = useContext(FilterContext);
   const { t } = useTranslation();
 
@@ -224,12 +241,13 @@ export const FilterSidebar: React.FC = () => {
             <RenderSubjects
               firstLevel={true}
               subjects={state.availableFilters.subjectTree}
+              onFilterChange={onFilterChange}
             />
           </ul>
         </FilterCategory>
         <FilterCategory header={t('start_page.filter.timeUnit')}>
           <ul className={styles.filterList}>
-            <RenderTimeUnitFilters />
+            <RenderTimeUnitFilters onFilterChange={onFilterChange} />
           </ul>
         </FilterCategory>
       </div>

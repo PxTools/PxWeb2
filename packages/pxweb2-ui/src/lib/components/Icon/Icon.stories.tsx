@@ -1,4 +1,4 @@
-import type { Meta, StoryFn } from '@storybook/react';
+import type { Meta, StoryFn } from '@storybook/react-vite';
 import { Icon } from './Icon';
 import * as Icons from './Icons';
 import React from 'react';
@@ -12,7 +12,6 @@ export default meta;
 export const Variants: StoryFn<typeof Icon> = () => {
   const icons = Object.keys(Icons);
   const [color, setColor] = React.useState('black');
-
   return (
     <>
       <button onClick={() => setColor('black')}>Black</button>
