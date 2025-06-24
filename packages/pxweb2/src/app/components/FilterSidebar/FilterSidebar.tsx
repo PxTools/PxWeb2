@@ -6,8 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { Checkbox, FilterCategory, Button } from '@pxweb2/pxweb2-ui';
 import {
   PathItem,
-  findAncestors,
   findChildren,
+  handleSubjectToggle,
 } from '../../util/startPageFilters';
 import { FilterContext } from '../../context/FilterContext';
 import { ReactNode, useContext, useState } from 'react';
@@ -51,54 +51,16 @@ const Collapsible: React.FC<CollapsibleProps> = ({
             text={`${subject.label} (${count})`}
             value={isActive}
             subtle={!isActive && count === 0}
-            onChange={(value) => {
+            onChange={(checked) => {
               setIsOpen(true);
-              if (value) {
-                let relatives: PathItem[] = [];
-                relatives.push(
-                  ...findAncestors(
-                    state.availableFilters.subjectTree,
-                    subject.id,
-                  ),
-                );
-                relatives.push(
-                  ...findChildren(
-                    state.availableFilters.subjectTree,
-                    subject.id,
-                  ),
-                );
-
-                // Remove parents and children from activeFilters
-                state.activeFilters
-                  .filter(
-                    (f) =>
-                      f.type === 'subject' &&
-                      relatives.some((relative) => f.value === relative.id),
-                  )
-                  .forEach((f) => {
-                    dispatch({
-                      type: ActionType.REMOVE_FILTER,
-                      payload: f.value,
-                    });
-                  });
-
-                dispatch({
-                  type: ActionType.ADD_FILTER,
-                  payload: [
-                    {
-                      type: 'subject',
-                      value: subject.id,
-                      label: subject.label,
-                      index: index,
-                    },
-                  ],
-                });
-              } else {
-                dispatch({
-                  type: ActionType.REMOVE_FILTER,
-                  payload: subject.id,
-                });
-              }
+              handleSubjectToggle(
+                subject,
+                checked,
+                state.availableFilters.subjectTree,
+                state.activeFilters,
+                dispatch,
+                index,
+              );
             }}
           />
         </span>
@@ -115,9 +77,20 @@ const RenderSubjects: React.FC<{
   const { state } = useContext(FilterContext);
 
   return subjects.map((subject, index) => {
-    const isActive = state.activeFilters.some(
-      (filter) => filter.type === 'subject' && filter.value === subject.id,
+    const descendants = findChildren(
+      state.availableFilters.subjectTree,
+      subject.id,
     );
+    const isChecked =
+      state.activeFilters.some(
+        (f) => f.type === 'subject' && f.value === subject.id,
+      ) ||
+      descendants.some((d) =>
+        state.activeFilters.some(
+          (f) => f.type === 'subject' && f.value === d.id,
+        ),
+      );
+
     const count = subject.count ?? 0;
 
     return (
@@ -126,7 +99,7 @@ const RenderSubjects: React.FC<{
           subject={subject}
           index={index}
           count={count}
-          isActive={isActive}
+          isActive={isChecked}
         >
           {subject.children && (
             <RenderSubjects firstLevel={false} subjects={subject.children} />
