@@ -55,7 +55,7 @@ const Collapsible: React.FC<CollapsibleProps> = ({
             value={isActive}
             subtle={!isActive && count === 0}
             onChange={(value) => {
-              setIsOpen(true);              
+              setIsOpen(true);
               const ancestors = findAncestors(subjectTree, subjectId);
               const children = findChildren(subjectTree, subjectId);
 
