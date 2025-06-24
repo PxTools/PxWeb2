@@ -487,7 +487,7 @@ const StartPage = () => {
                         onClick={() => {
                           dispatch({
                             type: ActionType.REMOVE_FILTER,
-                            payload: filter.value,
+                            payload: { value: filter.value, type: filter.type },
                           });
                           setVisibleCount(paginationCount);
                         }}

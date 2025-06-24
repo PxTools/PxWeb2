@@ -123,20 +123,53 @@ export function sortFilterChips(filters: Filter[]): Filter[] {
   });
 }
 
-export function findParent(
+// Find parents, and parents' parents all the way up
+export function findAncestors(
   subjectTree: PathItem[],
   childId: string,
-): PathItem | null {
+  path: PathItem[] = [],
+): PathItem[] {
   for (const node of subjectTree) {
-    if (node.children?.some((child) => child.id === childId)) {
-      return node;
+    const newPath = [...path, node];
+    if (node.id === childId) {
+      // Remove nested children from each subject
+      return path.map((item) => ({ ...item, children: [] }));
     }
     if (node.children) {
-      const found = findParent(node.children, childId);
-      if (found) {
+      const result = findAncestors(node.children, childId, newPath);
+      if (result.length > 0) {
+        return result;
+      }
+    }
+  }
+  return [];
+}
+
+// Recursively flatten all descendants of a PathItem, including all levels
+function getAllDescendants(node: PathItem): PathItem[] {
+  let descendants: PathItem[] = [];
+  for (const child of node.children || []) {
+    descendants.push({ ...child, children: [] }); // flatten: remove children from returned objects
+    descendants = descendants.concat(getAllDescendants(child));
+  }
+  return descendants;
+}
+
+// Find the PathItem with the Id given, and get all the descendants of that element
+export function findChildren(
+  subjectTree: PathItem[],
+  parentId: string,
+): PathItem[] {
+  for (const node of subjectTree) {
+    if (node.id === parentId) {
+      return getAllDescendants(node);
+    }
+    if (node.children) {
+      const found = findChildren(node.children, parentId);
+      if (found.length > 0) {
         return found;
       }
     }
   }
-  return null;
+  return [];
 }

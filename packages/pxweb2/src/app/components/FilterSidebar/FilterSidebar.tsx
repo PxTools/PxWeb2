@@ -4,7 +4,11 @@ import { ActionType } from '../../pages/StartPage/StartPageTypes';
 import styles from './FilterSidebar.module.scss';
 import { useTranslation } from 'react-i18next';
 import { Checkbox, FilterCategory, Button } from '@pxweb2/pxweb2-ui';
-import { PathItem, findParent } from '../../util/startPageFilters';
+import {
+  PathItem,
+  findAncestors,
+  findChildren,
+} from '../../util/startPageFilters';
 import { FilterContext } from '../../context/FilterContext';
 import { ReactNode, useContext, useState } from 'react';
 
@@ -30,6 +34,9 @@ const Collapsible: React.FC<CollapsibleProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { state, dispatch } = useContext(FilterContext);
+  const subjectId = subject.id;
+  const subjectLabel = subject.label;
+  const subjectTree = state.availableFilters.subjectTree;
 
   return (
     <>
@@ -48,46 +55,84 @@ const Collapsible: React.FC<CollapsibleProps> = ({
         )}
         <span className={styles.filterLabel}>
           <Checkbox
-            id={subject.id + index}
-            text={`${subject.label} (${count})`}
+            id={subjectId + index}
+            text={`${subjectLabel} (${count})`}
             value={isActive}
             subtle={!isActive && count === 0}
             onChange={(value) => {
               setIsOpen(true);
+              const ancestors = findAncestors(subjectTree, subjectId);
+              const children = findChildren(subjectTree, subjectId);
+
               if (value) {
-                const parent = findParent(
-                  state.availableFilters.subjectTree,
-                  subject.id,
-                );
-
-                // Remove parent from activeFilters
-                state.activeFilters
-                  .filter((f) => f.type === 'subject' && f.value === parent?.id)
-                  .forEach((f) => {
-                    dispatch({
-                      type: ActionType.REMOVE_FILTER,
-                      payload: f.value,
-                    });
-                  });
-
-                // TODO: Mark parent as indeterminate in UI if needed
-
+                // If subject has children, add the subject itself
                 dispatch({
                   type: ActionType.ADD_FILTER,
                   payload: [
                     {
                       type: 'subject',
-                      value: subject.id,
-                      label: subject.label,
-                      index: index,
+                      value: subjectId,
+                      label: subjectLabel,
+                      index,
                     },
                   ],
                 });
+
+                // If the subject has children, we remove all ancestors from filter
+                for (const ancestor of ancestors) {
+                  const isAncestorInFilter = state.activeFilters.some(
+                    (f) => f.type === 'subject' && f.value === ancestor.id,
+                  );
+                  if (isAncestorInFilter) {
+                    dispatch({
+                      type: ActionType.REMOVE_FILTER,
+                      payload: { value: ancestor.id, type: 'subject' },
+                    });
+                  }
+                }
               } else {
-                dispatch({
-                  type: ActionType.REMOVE_FILTER,
-                  payload: subject.id,
-                });
+                //Remove subject and all its descendants from filter
+                const descendants = [subject, ...children];
+
+                for (const d of descendants) {
+                  dispatch({
+                    type: ActionType.REMOVE_FILTER,
+                    payload: { value: d.id, type: 'subject' },
+                  });
+                }
+
+                // If no children are selected, we add the closest ancestor that has remaining selected children
+                for (let i = ancestors.length - 1; i >= 0; i--) {
+                  const ancestor = ancestors[i];
+                  const hasSelectedDescendants = findChildren(
+                    subjectTree,
+                    ancestor.id,
+                  ).some(
+                    (descendant) =>
+                      descendant.id !== subjectId &&
+                      state.activeFilters.some(
+                        (f) =>
+                          f.type === 'subject' && f.value === descendant.id,
+                      ),
+                  );
+                  const isAncestorSelected = state.activeFilters.some(
+                    (f) => f.type === 'subject' && f.value === ancestor.id,
+                  );
+                  if (!hasSelectedDescendants && !isAncestorSelected) {
+                    dispatch({
+                      type: ActionType.ADD_FILTER,
+                      payload: [
+                        {
+                          type: 'subject',
+                          value: ancestor.id,
+                          label: ancestor.label,
+                          index,
+                        },
+                      ],
+                    });
+                    break;
+                  }
+                }
               }
               onFilterChange?.();
             }}
@@ -107,9 +152,20 @@ const RenderSubjects: React.FC<{
   const { state } = useContext(FilterContext);
 
   return subjects.map((subject, index) => {
-    const isActive = state.activeFilters.some(
-      (filter) => filter.type === 'subject' && filter.value === subject.id,
+    const descendants = findChildren(
+      state.availableFilters.subjectTree,
+      subject.id,
     );
+    const isChecked =
+      state.activeFilters.some(
+        (f) => f.type === 'subject' && f.value === subject.id,
+      ) ||
+      descendants.some((d) =>
+        state.activeFilters.some(
+          (f) => f.type === 'subject' && f.value === d.id,
+        ),
+      );
+
     const count = subject.count ?? 0;
 
     return (
@@ -118,7 +174,7 @@ const RenderSubjects: React.FC<{
           subject={subject}
           index={index}
           count={count}
-          isActive={isActive}
+          isActive={isChecked}
           onFilterChange={onFilterChange}
         >
           {subject.children && (
@@ -167,7 +223,7 @@ const RenderTimeUnitFilters: React.FC<{ onFilterChange?: () => void }> = ({
                 })
               : dispatch({
                   type: ActionType.REMOVE_FILTER,
-                  payload: key,
+                  payload: { value: key, type: 'timeUnit' },
                 });
             onFilterChange?.();
           }}
