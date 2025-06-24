@@ -59,7 +59,7 @@ interface Resources {
         close: 'Close filter';
         header: 'Filter';
         remove_all_filter: 'Remove all filters';
-        remove_filter_aria: 'Delete {{value}}';
+        remove_filter_aria: 'Remove filter, {{value}}';
         subject: 'Topic';
         timeUnit: 'Time period';
         year: 'Year';
@@ -78,6 +78,10 @@ interface Resources {
         number_of_tables_found: '<number of> tables found';
         updated_label: 'Updated';
         show_more: 'Show more';
+        show_less: 'Show less';
+        loading: 'Loading...';
+        show_number_of_tables: 'Showing  <countShown> of <countTotal>';
+        show_number_of_tables_aria: '<number of> tables found, Showing  <countShown> of <countTotal>';
       };
     };
     presentation_page: {

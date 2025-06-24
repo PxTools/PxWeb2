@@ -110,3 +110,19 @@
 .iconOnlySmall {
   padding: 0.75rem 0.25rem;
 }
+
+.loading {
+  cursor: progress;
+
+  &.primary:active {
+    background: var(--px-color-surface-action);
+  }
+  &.primary:hover {
+    border-radius: var(--px-border-radius-full);
+  }
+
+  &.secondary:hover {
+    background-color: inherit;
+    border-radius: var(--px-border-radius-full);
+  }
+}
