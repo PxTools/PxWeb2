@@ -14,6 +14,9 @@ on:
     paths:
       - 'packages/pxweb2-ui/**'
 
+permissions:
+  contents: read
+
 jobs:
   chromatic:
     runs-on: ubuntu-latest
