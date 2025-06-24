@@ -26,7 +26,7 @@ export async function exportToFile(
       outputFormatParams = [
         OutputFormatParamType.SEPARATOR_SEMICOLON,
         OutputFormatParamType.INCLUDE_TITLE,
-        OutputFormatParamType.USE_TEXTS
+        OutputFormatParamType.USE_TEXTS,
       ];
       fileExtension = 'csv';
       break;
