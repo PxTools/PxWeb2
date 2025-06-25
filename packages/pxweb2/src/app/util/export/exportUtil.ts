@@ -4,6 +4,7 @@ import {
   TableService,
   VariablesSelection,
 } from '@pxweb2/pxweb2-api-client';
+import { get } from 'lodash';
 
 export async function exportToFile(
   tabId: string,
@@ -68,9 +69,22 @@ export async function exportToFile(
     }
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const timestamp = getTimestamp();
     link.download = `${tabId}_${timestamp}.${fileExtension}`;
     link.click();
     URL.revokeObjectURL(link.href);
   });
+}
+
+function getTimestamp(): string {
+  const now = new Date();
+  return `${now.getFullYear()}${(now.getMonth() + 1)
+    .toString()
+    .padStart(2, '0')}${now.getDate().toString().padStart(2, '0')}-${now
+    .getHours()
+    .toString()
+    .padStart(2, '0')}${now.getMinutes().toString().padStart(2, '0')}${now
+    .getSeconds()
+    .toString()
+    .padStart(2, '0')}`;
 }
