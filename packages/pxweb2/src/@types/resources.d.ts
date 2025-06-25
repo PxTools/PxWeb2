@@ -10,6 +10,16 @@ interface Resources {
         title: 'PxWeb 2.0 [Main]';
         logo: 'PxWeb 2.0';
       };
+      not_found: {
+        page_not_found: {
+          title: 'Page not found';
+          description: 'The page you are looking for does not exist. Please check the URL or return to the homepage.';
+        };
+        unsupported_language: {
+          title: 'Unsupported language';
+          description: 'The selected language is not supported.';
+        };
+      };
       skip_to_main: 'Skip to main content';
       footer: {
         contact: {
@@ -48,9 +58,9 @@ interface Resources {
     };
     start_page: {
       header: 'Welcome to PxWeb 2.0';
-      ingress: `Looking for the perfect table? Use the search field and filters to dig into the numbers you need. Whether you're hunting for trends, facts, or just an oddly satisfying dataset, PxWeb 2.0 has your back.`;
+      ingress: "Looking for the perfect table? Use the search field and filters to dig into the numbers you need. Whether you're hunting for trends, facts, or just an oddly satisfying dataset, PxWeb 2.0 has your back.";
       more_about_label: 'More about PxWeb 2.0';
-      more_about_text: 'Fyll på more_about';
+      more_about_text: 'More about Text EN';
       search_placeholder: 'Search in PxWeb 2.0';
       filter: {
         button: 'Filter';
@@ -74,8 +84,8 @@ interface Resources {
         };
       };
       table: {
-        number_of_tables: '<number of> tables';
-        number_of_tables_found: '<number of> tables found';
+        number_of_tables: '<strong>{{count}}</strong> tables';
+        number_of_tables_found: '<strong>{{count}}</strong> tables found';
         updated_label: 'Updated';
         show_more: 'Show more';
         show_less: 'Show less';
@@ -106,7 +116,6 @@ interface Resources {
               tag_selected: '{{selected}} of {{total}} selected';
               tag_mandatory: 'Mandatory';
               alert_no_mandatory_values: 'You must select something in the list for the table to be displayed';
-              show_more: 'Show more';
             };
             content: {
               select: {
@@ -169,7 +178,13 @@ interface Resources {
           title: 'Save';
           file: {
             title: 'Save as file';
-            excel: 'Excel (xlsx)';
+            excel: 'Excel (.xlsx)';
+            csv: 'Semicolon-delimited with heading (.csv)';
+            'relational-csv': 'Relational table (.csv)';
+            px: 'PC-Axis (.px)';
+            jsonstat2: 'JSON-stat2 (.json)';
+            html: 'HTML (.html)';
+            parquet: 'Parquet (.parquet)';
           };
           imagefile: {
             title: 'Save as graph';

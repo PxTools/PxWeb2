@@ -1,0 +1,14 @@
+.drawerSave {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.loadingSpinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0; // Remove margin so centering is exact
+  align-self: auto; // Remove align-self so absolute positioning works
+}

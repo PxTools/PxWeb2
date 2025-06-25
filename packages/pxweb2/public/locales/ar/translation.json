@@ -143,7 +143,12 @@
         "title": "يحفظ",
         "file": {
           "title": "حفظ كملف",
-          "excel": "اكسل (xlsx)"
+          "excel": "اكسل (xlsx)",
+          "csv": "مفصولة بفاصلة منقوطة مع عنوان (.csv)",
+          "px": "PC-Axis (.px)",
+          "jsonstat2": "JSON-stat2 (.json)",
+          "html": "HTML (.html)",
+          "parquet": "Parquet (.parquet)"
         },
         "imagefile": {
           "title": "حفظ كرسم بياني",
