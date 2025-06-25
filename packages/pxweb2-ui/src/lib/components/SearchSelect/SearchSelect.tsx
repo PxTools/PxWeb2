@@ -34,6 +34,8 @@ export function SearchSelect({
   const inputRef = useRef<HTMLInputElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
+  const searchSelectId = id ?? 'search-select';
+
   useEffect(() => {
     if (!isOpen && selectedOption) {
       setInputValue(selectedOption.label);
@@ -71,11 +73,6 @@ export function SearchSelect({
     setInputValue('');
     onSelect(undefined);
     inputRef.current?.focus();
-  };
-
-  const handleClickInput = () => {
-    console.log('klikk');
-    setIsOpen(true);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -118,7 +115,6 @@ export function SearchSelect({
   };
 
   const showClearButton = !!selectedOption || inputValue.length > 0;
-  const searchSelectId = id ?? 'search-select';
 
   return (
     <div className={styles.searchableSelect}>
@@ -134,24 +130,22 @@ export function SearchSelect({
       )}
       <div className={styles.contentWrapper} ref={contentRef}>
         <input
-          type="text"
           id={`${searchSelectId}-combobox`}
-          role="combobox"
           ref={inputRef}
+          type="text"
           autoComplete="off"
           className={cl(styles.input, styles['bodyshort-medium'])}
           placeholder={placeholder}
           value={inputValue}
-          onClick={handleClickInput}
+          onClick={() => setIsOpen(true)}
           onChange={(e) => {
             setInputValue(e.target.value);
             setIsOpen(true);
             setHighlightedIndex(-1);
           }}
           onKeyDown={handleKeyDown}
-          onBlur={() => {
-            setTimeout(() => setIsOpen(false), 100);
-          }}
+          onBlur={() => setTimeout(() => setIsOpen(false), 100)}
+          role="combobox"
           aria-autocomplete="list"
           aria-haspopup="listbox"
           aria-expanded={isOpen}
@@ -190,8 +184,8 @@ export function SearchSelect({
             filteredOptions.map((option, index) => (
               <li
                 key={option.value}
-                role="option"
                 id={`${searchSelectId}-option-${index}`}
+                role="option"
                 className={cl(
                   styles.option,
                   index === highlightedIndex && styles.highlighted,
@@ -199,7 +193,6 @@ export function SearchSelect({
                 )}
                 tabIndex={-1}
                 aria-selected={inputValue === option.label}
-                onClick={() => handleSelect(option)}
                 onMouseDown={(e) => {
                   e.preventDefault();
                   handleSelect(option);
