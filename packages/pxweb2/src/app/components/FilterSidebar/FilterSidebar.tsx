@@ -3,7 +3,7 @@ import cl from 'clsx';
 import { ActionType } from '../../pages/StartPage/StartPageTypes';
 import styles from './FilterSidebar.module.scss';
 import { useTranslation } from 'react-i18next';
-import { Checkbox, FilterCategory, Button } from '@pxweb2/pxweb2-ui';
+import { Checkbox, FilterCategory } from '@pxweb2/pxweb2-ui';
 import {
   PathItem,
   findAncestors,
@@ -32,77 +32,61 @@ const Collapsible: React.FC<CollapsibleProps> = ({
 
   return (
     <>
-      <div className={styles.collapsibleElement}>
-        {subject.children && subject.children.length > 0 ? (
-          <Button
-            variant="tertiary"
-            icon={isOpen ? 'ChevronUp' : 'ChevronRight'}
-            aria-expanded={isOpen}
-            aria-controls={`collapsible-children-${subject.id}-${index}`}
-            className={styles.collapsibleChevron}
-            onClick={() => setIsOpen(!isOpen)}
-          ></Button>
-        ) : (
-          <span className={styles.collapsibleChevron} />
-        )}
-        <span className={styles.filterLabel}>
-          <Checkbox
-            id={subject.id + index}
-            text={`${subject.label} (${count})`}
-            value={isActive}
-            subtle={!isActive && count === 0}
-            onChange={(value) => {
-              setIsOpen(true);
-              if (value) {
-                let relatives: PathItem[] = [];
-                relatives.push(
-                  ...findAncestors(
-                    state.availableFilters.subjectTree,
-                    subject.id,
-                  ),
-                );
-                relatives.push(
-                  ...findChildren(
-                    state.availableFilters.subjectTree,
-                    subject.id,
-                  ),
-                );
+      <span className={styles.filterLabel}>
+        <Checkbox
+          id={subject.id + index}
+          text={`${subject.label} (${count})`}
+          value={isActive}
+          subtle={!isActive && count === 0}
+          onChange={(value) => {
+            if (value) {
+              let relatives: PathItem[] = [];
+              relatives.push(
+                ...findAncestors(
+                  state.availableFilters.subjectTree,
+                  subject.id,
+                ),
+              );
+              relatives.push(
+                ...findChildren(state.availableFilters.subjectTree, subject.id),
+              );
 
-                // Remove parents and children from activeFilters
-                state.activeFilters
-                  .filter(
-                    (f) =>
-                      f.type === 'subject' &&
-                      relatives.some((relative) => f.value === relative.id),
-                  )
-                  .forEach((f) => {
-                    dispatch({
-                      type: ActionType.REMOVE_FILTER,
-                      payload: f.value,
-                    });
+              // Remove parents and children from activeFilters
+              state.activeFilters
+                .filter(
+                  (f) =>
+                    f.type === 'subject' &&
+                    relatives.some((relative) => f.value === relative.id),
+                )
+                .forEach((f) => {
+                  dispatch({
+                    type: ActionType.REMOVE_FILTER,
+                    payload: f.value,
                   });
+                });
 
-                dispatch({
-                  type: ActionType.ADD_FILTER,
-                  payload: [
-                    {
-                      type: 'subject',
-                      value: subject.id,
-                      label: subject.label,
-                      index: index,
-                    },
-                  ],
-                });
-              } else {
-                dispatch({
-                  type: ActionType.REMOVE_FILTER,
-                  payload: subject.id,
-                });
-              }
-            }}
-          />
-        </span>
-      </div>
+              dispatch({
+                type: ActionType.ADD_FILTER,
+                payload: [
+                  {
+                    type: 'subject',
+                    value: subject.id,
+                    label: subject.label,
+                    index: index,
+                  },
+                ],
+              });
+              subject.children?.length && setIsOpen(true);
+            } else {
+              dispatch({
+                type: ActionType.REMOVE_FILTER,
+                payload: subject.id,
+              });
+              setIsOpen(false);
+            }
+          }}
+        />
+      </span>
       {isOpen && children}
     </>
   );
@@ -114,27 +98,37 @@ const RenderSubjects: React.FC<{
 }> = ({ firstLevel, subjects }) => {
   const { state } = useContext(FilterContext);
 
-  return subjects.map((subject, index) => {
-    const isActive = state.activeFilters.some(
-      (filter) => filter.type === 'subject' && filter.value === subject.id,
-    );
-    const count = subject.count ?? 0;
+  return (
+    <ul className={styles.filterList}>
+      {subjects.map((subject, index) => {
+        const isActive = state.activeFilters.some(
+          (filter) => filter.type === 'subject' && filter.value === subject.id,
+        );
+        const count = subject.count ?? 0;
 
-    return (
-      <div key={subject.id} className={cl(!firstLevel && styles.toggleIndent)}>
-        <Collapsible
-          subject={subject}
-          index={index}
-          count={count}
-          isActive={isActive}
-        >
-          {subject.children && (
-            <RenderSubjects firstLevel={false} subjects={subject.children} />
-          )}
-        </Collapsible>
-      </div>
-    );
-  });
+        return (
+          <li
+            key={subject.id}
+            className={cl(!firstLevel && styles.toggleIndent)}
+          >
+            <Collapsible
+              subject={subject}
+              index={index}
+              count={count}
+              isActive={isActive}
+            >
+              {subject.children && (
+                <RenderSubjects
+                  firstLevel={false}
+                  subjects={subject.children}
+                />
+              )}
+            </Collapsible>
+          </li>
+        );
+      })}
+    </ul>
+  );
 };
 
 const RenderTimeUnitFilters: React.FC = () => {
@@ -185,12 +179,10 @@ export const FilterSidebar: React.FC = () => {
     <div className={styles.sideBar}>
       <div>
         <FilterCategory header={t('start_page.filter.subject')}>
-          <ul className={styles.filterList}>
-            <RenderSubjects
-              firstLevel={true}
-              subjects={state.availableFilters.subjectTree}
-            />
-          </ul>
+          <RenderSubjects
+            firstLevel={true}
+            subjects={state.availableFilters.subjectTree}
+          />
         </FilterCategory>
         <FilterCategory header={t('start_page.filter.timeUnit')}>
           <ul className={styles.filterList}>

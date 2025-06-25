@@ -44,7 +44,7 @@ export function organizePaths(paths: PathItem[][]): PathItem[] {
     });
   });
 
-    return subjects;
+  return subjects;
 }
 
 function getAllPath(tables: Table[]): PathItem[][] {
