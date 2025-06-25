@@ -1,4 +1,7 @@
 import { render } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
+import '@testing-library/jest-dom/vitest';
+import userEvent from '@testing-library/user-event';
 
 import { SearchSelect, type SelectOption } from './SearchSelect';
 
@@ -15,5 +18,16 @@ describe('SearchableSelect', () => {
       <SearchSelect options={mockOptions} onSelect={mockOnSelect} />,
     );
     expect(baseElement).toBeTruthy();
+  });
+
+  it('should show all options when input is clicked', async () => {
+    const user = userEvent.setup();
+    const { getByRole, findAllByRole } = render(
+      <SearchSelect options={mockOptions} onSelect={mockOnSelect} />,
+    );
+    const input = getByRole('combobox');
+    await user.click(input);
+    const options = await findAllByRole('option');
+    expect(options).toHaveLength(mockOptions.length);
   });
 });
