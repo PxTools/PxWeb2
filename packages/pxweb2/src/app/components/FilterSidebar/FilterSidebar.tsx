@@ -103,7 +103,7 @@ const Collapsible: React.FC<CollapsibleProps> = ({
           />
         </span>
       </div>
-      <div className={!isOpen ? styles.hiddenChildren : ''}>{children}</div>
+      {isOpen && children}
     </>
   );
 };
