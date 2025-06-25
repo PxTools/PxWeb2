@@ -4,7 +4,6 @@ import {
   TableService,
   VariablesSelection,
 } from '@pxweb2/pxweb2-api-client';
-import { get } from 'lodash';
 
 export async function exportToFile(
   tabId: string,
