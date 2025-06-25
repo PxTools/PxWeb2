@@ -18,7 +18,6 @@ type SearchSelectProps = {
   label?: string;
   onSelect: (option: SelectOption | undefined) => void;
   selectedOption?: SelectOption;
-  ariaLabel?: string;
 };
 
 export function SearchSelect({
@@ -28,7 +27,6 @@ export function SearchSelect({
   label,
   onSelect,
   selectedOption,
-  ariaLabel,
 }: Readonly<SearchSelectProps>) {
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState('');
@@ -120,19 +118,27 @@ export function SearchSelect({
   };
 
   const showClearButton = !!selectedOption || inputValue.length > 0;
+  const searchSelectId = id ?? 'search-select';
 
   return (
     <div className={styles.searchableSelect}>
       {label && (
-        <Label className={styles.label} htmlFor={id} size="medium">
+        <Label
+          className={styles.label}
+          id={`${searchSelectId}-label`}
+          htmlFor={`${searchSelectId}-combobox`}
+          size="medium"
+        >
           {label}
         </Label>
       )}
       <div className={styles.contentWrapper} ref={contentRef}>
         <input
-          id={id}
-          ref={inputRef}
           type="text"
+          id={`${searchSelectId}-combobox`}
+          role="combobox"
+          ref={inputRef}
+          autoComplete="off"
           className={cl(styles.input, styles['bodyshort-medium'])}
           placeholder={placeholder}
           value={inputValue}
@@ -146,10 +152,15 @@ export function SearchSelect({
           onBlur={() => {
             setTimeout(() => setIsOpen(false), 100);
           }}
-          aria-label={ariaLabel}
-          role="combobox"
+          aria-autocomplete="list"
+          aria-haspopup="listbox"
           aria-expanded={isOpen}
-          aria-controls="searchable-select-listbox"
+          aria-controls={`${searchSelectId}-listbox`}
+          aria-activedescendant={
+            highlightedIndex >= 0
+              ? `${searchSelectId}-option-${highlightedIndex}`
+              : undefined
+          }
         />
         <div className={styles.iconWrapper}>
           {showClearButton ? (
@@ -171,23 +182,28 @@ export function SearchSelect({
       {isOpen && (
         <ul
           className={styles.optionList}
-          id="searchable-select-listbox"
           role="listbox"
+          id={`${searchSelectId}-listbox`}
+          aria-labelledby={`${searchSelectId}-label`}
         >
           {filteredOptions.length > 0 ? (
             filteredOptions.map((option, index) => (
               <li
                 key={option.value}
+                role="option"
+                id={`${searchSelectId}-option-${index}`}
                 className={cl(
                   styles.option,
                   index === highlightedIndex && styles.highlighted,
                   styles['bodyshort-medium'],
                 )}
-                role="option"
-                tabIndex={index === highlightedIndex ? 0 : -1}
+                tabIndex={-1}
                 aria-selected={inputValue === option.label}
-                onMouseDown={(e) => e.preventDefault()}
                 onClick={() => handleSelect(option)}
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  handleSelect(option);
+                }}
               >
                 {inputValue === option.value && (
                   <Icon iconName="Check" className={styles.checkIcon} />
