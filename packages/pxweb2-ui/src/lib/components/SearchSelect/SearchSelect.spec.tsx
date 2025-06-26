@@ -30,4 +30,28 @@ describe('SearchableSelect', () => {
     const options = await findAllByRole('option');
     expect(options).toHaveLength(mockOptions.length);
   });
+
+  it('should set inputMode and pattern when inputMode="numeric"', () => {
+    const { getByRole } = render(
+      <SearchSelect
+        options={mockOptions}
+        onSelect={mockOnSelect}
+        inputMode="numeric"
+      />,
+    );
+    const input = getByRole('combobox');
+
+    expect(input).toHaveAttribute('inputmode', 'numeric');
+    expect(input).toHaveAttribute('pattern', '[0-9]*');
+  });
+
+  it('should not set inputMode or pattern by default', () => {
+    const { getByRole } = render(
+      <SearchSelect options={mockOptions} onSelect={mockOnSelect} />,
+    );
+    const input = getByRole('combobox');
+
+    expect(input).not.toHaveAttribute('inputmode');
+    expect(input).not.toHaveAttribute('pattern');
+  });
 });

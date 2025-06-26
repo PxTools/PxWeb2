@@ -18,6 +18,7 @@ type SearchSelectProps = {
   label?: string;
   onSelect: (option: SelectOption | undefined) => void;
   selectedOption?: SelectOption;
+  inputMode?: React.HTMLAttributes<HTMLInputElement>['inputMode'];
 };
 
 export function SearchSelect({
@@ -27,6 +28,7 @@ export function SearchSelect({
   label,
   onSelect,
   selectedOption,
+  inputMode,
 }: Readonly<SearchSelectProps>) {
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState('');
@@ -143,9 +145,12 @@ export function SearchSelect({
             setIsOpen(true);
             setHighlightedIndex(-1);
           }}
+          onFocus={() => setIsOpen(true)}
           onKeyDown={handleKeyDown}
           onBlur={() => setTimeout(() => setIsOpen(false), 100)}
           role="combobox"
+          inputMode={inputMode}
+          pattern={inputMode === 'numeric' ? '[0-9]*' : undefined}
           aria-autocomplete="list"
           aria-haspopup="listbox"
           aria-expanded={isOpen}

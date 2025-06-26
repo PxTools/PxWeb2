@@ -43,8 +43,9 @@ export const SelectedOption: StoryFn<typeof SearchSelect> = () => {
       label="Year"
       options={options}
       placeholder={placeholder}
-      selectedOption={options[1]}
+      //selectedOption={options[1]}
       onSelect={selectedOptionChanged}
+      inputMode="numeric"
     ></SearchSelect>
   );
 };
