@@ -121,7 +121,7 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
     setIsLoading(true);
 
     // Create saved query using the export utility
-    await createNewSavedQuery(tableId, i18n.language, variablesSelection, '')
+    await createNewSavedQuery(tableId, i18n.language, variablesSelection)
       .then(
         (id) => {
           // Create saved query URL

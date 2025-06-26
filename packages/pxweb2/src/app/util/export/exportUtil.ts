@@ -80,17 +80,14 @@ export async function createNewSavedQuery(
   tabId: string,
   lang: string,
   variablesSelection: VariablesSelection,
-  fileFormat: string,
+  fileFormat?: OutputFormatType,
 ): Promise<string> {
   const sq: SavedQuery = {
-    id: `${tabId}_${getTimestamp()}`,
+    id: '',
     tableId: tabId,
-    outputFormat: fileFormat as OutputFormatType,
-    selection: {
-      selection: [],
-      placement: undefined,
-    },
-    language: '',
+    outputFormat: fileFormat,
+    selection: variablesSelection,
+    language: lang,
   };
 
   // await SavedQueriesService.createSaveQuery(sq).then((response) => {
