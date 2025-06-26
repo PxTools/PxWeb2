@@ -34,7 +34,7 @@ describe('SearchableSelect', () => {
   it('should select highlighted option with Enter', async () => {
     const user = userEvent.setup();
     const { getByRole } = render(
-      <SearchSelect options={mockOptions} onSelect={mockOnSelect} />
+      <SearchSelect options={mockOptions} onSelect={mockOnSelect} />,
     );
     const input = getByRole('combobox');
     await user.click(input);
@@ -45,7 +45,7 @@ describe('SearchableSelect', () => {
   it('should close list on Escape key', async () => {
     const user = userEvent.setup();
     const { getByRole, queryByRole } = render(
-      <SearchSelect options={mockOptions} onSelect={mockOnSelect} />
+      <SearchSelect options={mockOptions} onSelect={mockOnSelect} />,
     );
     const input = getByRole('combobox');
     await user.click(input);
@@ -56,7 +56,7 @@ describe('SearchableSelect', () => {
   it('should show clear button when input has value', async () => {
     const user = userEvent.setup();
     const { getByRole, getByLabelText } = render(
-      <SearchSelect options={mockOptions} onSelect={mockOnSelect} />
+      <SearchSelect options={mockOptions} onSelect={mockOnSelect} />,
     );
     const input = getByRole('combobox');
     await user.type(input, 'Option');
@@ -80,7 +80,7 @@ describe('SearchableSelect', () => {
   it('should select exact match with Enter if typed manually', async () => {
     const user = userEvent.setup();
     const { getByRole } = render(
-      <SearchSelect options={mockOptions} onSelect={mockOnSelect} />
+      <SearchSelect options={mockOptions} onSelect={mockOnSelect} />,
     );
     const input = getByRole('combobox');
     await user.click(input);
@@ -131,11 +131,14 @@ describe('SearchableSelect', () => {
   it('should set aria-activedescendant on input when navigating', async () => {
     const user = userEvent.setup();
     const { getByRole } = render(
-      <SearchSelect options={mockOptions} onSelect={mockOnSelect} />
+      <SearchSelect options={mockOptions} onSelect={mockOnSelect} />,
     );
     const input = getByRole('combobox');
     await user.click(input);
     await user.keyboard('[ArrowDown]');
-    expect(input).toHaveAttribute('aria-activedescendant', 'searchable-select-option-0');
+    expect(input).toHaveAttribute(
+      'aria-activedescendant',
+      'searchable-select-option-0',
+    );
   });
 });
