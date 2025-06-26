@@ -1,6 +1,7 @@
 import {
   OutputFormatParamType,
   OutputFormatType,
+  SavedQueriesService,
   SavedQuery,
   TableService,
   VariablesSelection,
@@ -86,31 +87,19 @@ export async function createNewSavedQuery(
     id: '',
     tableId: tabId,
     outputFormat: fileFormat,
+    outputFormatParams: [],
     selection: variablesSelection,
     language: lang,
   };
 
-  // await SavedQueriesService.createSaveQuery(sq).then((response) => {
-
-  // });
   let id = '';
-  await createDummySavedQuery(sq)
-    .then((response) => {
-      if (response.id !== undefined) {
-        id = response.id;
-      }
-    })
-    .catch((error) => {
-      console.error('Error creating saved query:', error);
-    });
+  await SavedQueriesService.createSaveQuery(sq).then((response) => {
+    if (response.id !== undefined) {
+      id = response.id;
+    }
+  });
 
   return id;
-}
-
-async function createDummySavedQuery(sq: SavedQuery): Promise<SavedQuery> {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  sq.id = '666';
-  return sq;
 }
 
 function getTimestamp(): string {

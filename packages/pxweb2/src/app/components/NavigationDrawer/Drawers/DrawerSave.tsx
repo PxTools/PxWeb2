@@ -12,9 +12,10 @@ import {
 } from '@pxweb2/pxweb2-ui';
 import {
   ApiError,
+  OutputFormatType,
   VariableSelection,
   VariablesSelection,
-} from 'packages/pxweb2-api-client/src';
+} from '@pxweb2/pxweb2-api-client';
 import {
   createNewSavedQuery,
   exportToFile,
@@ -121,7 +122,12 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
     setIsLoading(true);
 
     // Create saved query using the export utility
-    await createNewSavedQuery(tableId, i18n.language, variablesSelection)
+    await createNewSavedQuery(
+      tableId,
+      i18n.language,
+      variablesSelection,
+      OutputFormatType.JSON_STAT2,
+    )
       .then(
         (id) => {
           // Create saved query URL
