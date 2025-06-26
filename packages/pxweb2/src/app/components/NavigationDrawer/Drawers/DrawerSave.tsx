@@ -24,7 +24,6 @@ import {
 import useVariables from '../../../context/useVariables';
 import useTableData from '../../../context/useTableData';
 import { problemMessage } from '../../../util/problemMessage';
-import { time } from 'console';
 
 export type DrawerSaveProps = {
   readonly tableId: string;
