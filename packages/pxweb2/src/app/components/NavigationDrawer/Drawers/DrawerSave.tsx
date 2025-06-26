@@ -3,13 +3,22 @@ import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 
 import classes from './DrawerSave.module.scss';
-import { ActionItem, ContentBox, Spinner } from '@pxweb2/pxweb2-ui';
+import {
+  ActionItem,
+  BodyShort,
+  Button,
+  ContentBox,
+  Spinner,
+} from '@pxweb2/pxweb2-ui';
 import {
   ApiError,
   VariableSelection,
   VariablesSelection,
 } from 'packages/pxweb2-api-client/src';
-import { exportToFile } from '../../../util/export/exportUtil';
+import {
+  createNewSavedQuery,
+  exportToFile,
+} from '../../../util/export/exportUtil';
 import useVariables from '../../../context/useVariables';
 import useTableData from '../../../context/useTableData';
 import { problemMessage } from '../../../util/problemMessage';
@@ -24,6 +33,7 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
   const stub = useTableData().data?.stub;
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [sqUrl, setSqUrl] = useState('');
 
   useEffect(() => {
     if (errorMsg !== '') {
@@ -71,6 +81,20 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
     return variablesSelection;
   }
 
+  /**
+   * Saves the current table data to a file in the specified format.
+   *
+   * @param {string} fileFormat - The format to save the file in (e.g., 'excel', 'csv', etc.).
+   * @returns {Promise<void>} - A promise that resolves when the file is saved.
+   * Throws an error if the export fails.
+   * @throws {ApiError} - If there is an error during the export process.
+   * This function uses the export utility to handle the file saving process.
+   * It retrieves the current variable selection,
+   * sets the loading state,
+   * and then calls the export function with the appropriate parameters.
+   * The function handles success and error cases,
+   * updating the loading state accordingly.
+   */
   async function saveToFile(fileFormat: string): Promise<void> {
     const variablesSelection = getVariableSelection();
     setIsLoading(true);
@@ -90,6 +114,45 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
       .finally(() => {
         setIsLoading(false);
       });
+  }
+
+  async function createSavedQuery(): Promise<void> {
+    const variablesSelection = getVariableSelection();
+    setIsLoading(true);
+
+    // Create saved query using the export utility
+    await createNewSavedQuery(tableId, i18n.language, variablesSelection, '')
+      .then(
+        (id) => {
+          // Create saved query URL
+          const savedQueryUrl = createSavedQueryURL(id);
+          setSqUrl(savedQueryUrl);
+        },
+        (error) => {
+          // Handle error during export
+          const err = error as ApiError;
+          setErrorMsg(problemMessage(err));
+        },
+      )
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }
+
+  /**
+   * Creates a URL for the saved query with the given ID.
+   * The URL will include the base URL, current path, and query parameters.
+   *
+   * @param {string} id - The ID of the saved query.
+   * @returns {string} - The complete URL for the saved query.
+   */
+  function createSavedQueryURL(id: string): string {
+    const baseUrl = window.location.origin;
+    const path = window.location.pathname;
+    const queryParams = new URLSearchParams({
+      sq: id,
+    });
+    return `${baseUrl}${path}?${queryParams.toString()}`;
   }
 
   return (
@@ -132,6 +195,12 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
             <Spinner size="xlarge" />
           </div>
         )}
+      </ContentBox>
+      <ContentBox title="Saved query">
+        <Button onClick={() => createSavedQuery()} variant="primary">
+          Create saved query
+        </Button>
+        <BodyShort>{sqUrl}</BodyShort>
       </ContentBox>
     </div>
   );
