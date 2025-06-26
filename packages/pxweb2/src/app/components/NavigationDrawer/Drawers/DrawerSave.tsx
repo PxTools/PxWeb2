@@ -9,6 +9,7 @@ import {
   Button,
   ContentBox,
   Spinner,
+  VartypeEnum,
 } from '@pxweb2/pxweb2-ui';
 import {
   ApiError,
@@ -23,10 +24,14 @@ import {
 import useVariables from '../../../context/useVariables';
 import useTableData from '../../../context/useTableData';
 import { problemMessage } from '../../../util/problemMessage';
+import { time } from 'console';
 
 export type DrawerSaveProps = {
   readonly tableId: string;
 };
+
+type TimeFilter = 'from' | 'top';
+
 export function DrawerSave({ tableId }: DrawerSaveProps) {
   const { t, i18n } = useTranslation();
   const variables = useVariables();
@@ -36,23 +41,44 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
   const [errorMsg, setErrorMsg] = useState('');
   const [sqUrl, setSqUrl] = useState('');
 
+  // If time filter is used when saving query, we need to know the id of the time variable
+  const timeVarId = useTableData().data?.metadata.variables.find(
+    (v) => v.type === VartypeEnum.TIME_VARIABLE,
+  )?.id;
+
+  console.log({ timeVarId });
+
   useEffect(() => {
     if (errorMsg !== '') {
       throw new Error(errorMsg);
     }
   }, [errorMsg]);
 
-  function getVariableSelection(): VariablesSelection {
+  function getVariableSelection(timeFilter?: TimeFilter): VariablesSelection {
     const selections: Array<VariableSelection> = [];
 
     // Get selection from Selection provider
     const ids = variables.getUniqueIds();
     ids.forEach((id) => {
-      const selectedCodeList = variables.getSelectedCodelistById(id);
+      let valCodes = variables.getSelectedValuesByIdSorted(id);
+
+      // If time filter is used, we need to check if the variable is the time variable
+      if (timeFilter && timeVarId && id === timeVarId) {
+        console.log('found the time variable', id);
+        if (timeFilter === 'from') {
+          if (valCodes.length > 0) {
+            const fromFilter = 'from(' + valCodes[0] + ')';
+            valCodes = [];
+            valCodes.push(fromFilter);
+          }
+        }
+      }
+
       const selection: VariableSelection = {
         variableCode: id,
-        valueCodes: variables.getSelectedValuesByIdSorted(id),
+        valueCodes: valCodes,
       };
+      const selectedCodeList = variables.getSelectedCodelistById(id);
 
       // Add selected codelist to selection if it exists
       if (selectedCodeList) {
@@ -117,8 +143,8 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
       });
   }
 
-  async function createSavedQuery(): Promise<void> {
-    const variablesSelection = getVariableSelection();
+  async function createSavedQuery(timeFilter?: TimeFilter): Promise<void> {
+    const variablesSelection = getVariableSelection(timeFilter);
     setIsLoading(true);
 
     // Create saved query using the export utility
@@ -204,7 +230,10 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
       </ContentBox>
       <ContentBox title="Saved query">
         <Button onClick={() => createSavedQuery()} variant="primary">
-          Create saved query
+          Create saved query (same selection)
+        </Button>
+        <Button onClick={() => createSavedQuery('from')} variant="primary">
+          Create saved query (from)
         </Button>
         <BodyShort>{sqUrl}</BodyShort>
       </ContentBox>

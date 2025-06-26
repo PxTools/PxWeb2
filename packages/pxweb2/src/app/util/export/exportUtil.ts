@@ -92,8 +92,11 @@ export async function createNewSavedQuery(
     language: lang,
   };
 
+  console.log({ sq });
+
   let id = '';
   await SavedQueriesService.createSaveQuery(sq).then((response) => {
+    //await createDummySavedQuery(sq).then((response) => {
     if (response.id !== undefined) {
       id = response.id;
     }
@@ -101,6 +104,12 @@ export async function createNewSavedQuery(
 
   return id;
 }
+
+// async function createDummySavedQuery(sq: SavedQuery): Promise<SavedQuery> {
+//   await new Promise((resolve) => setTimeout(resolve, 1000));
+//   sq.id = '666';
+//   return sq;
+// }
 
 function getTimestamp(): string {
   const now = new Date();
