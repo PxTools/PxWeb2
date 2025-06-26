@@ -31,6 +31,79 @@ describe('SearchableSelect', () => {
     expect(options).toHaveLength(mockOptions.length);
   });
 
+  it('should select highlighted option with Enter', async () => {
+    const user = userEvent.setup();
+    const { getByRole } = render(
+      <SearchSelect options={mockOptions} onSelect={mockOnSelect} />
+    );
+    const input = getByRole('combobox');
+    await user.click(input);
+    await user.keyboard('[ArrowDown][Enter]');
+    expect(mockOnSelect).toHaveBeenCalledWith(mockOptions[0]);
+  });
+
+  it('should close list on Escape key', async () => {
+    const user = userEvent.setup();
+    const { getByRole, queryByRole } = render(
+      <SearchSelect options={mockOptions} onSelect={mockOnSelect} />
+    );
+    const input = getByRole('combobox');
+    await user.click(input);
+    await user.keyboard('[Escape]');
+    expect(queryByRole('listbox')).not.toBeInTheDocument();
+  });
+
+  it('should show clear button when input has value', async () => {
+    const user = userEvent.setup();
+    const { getByRole, getByLabelText } = render(
+      <SearchSelect options={mockOptions} onSelect={mockOnSelect} />
+    );
+    const input = getByRole('combobox');
+    await user.type(input, 'Option');
+    expect(getByLabelText('Fjern valg')).toBeInTheDocument();
+  });
+
+  it('should clear selection when clear button is clicked', async () => {
+    const user = userEvent.setup();
+    const { getByLabelText } = render(
+      <SearchSelect
+        options={mockOptions}
+        onSelect={mockOnSelect}
+        selectedOption={mockOptions[1]}
+      />,
+    );
+    const clearBtn = getByLabelText('Fjern valg');
+    await user.click(clearBtn);
+    expect(mockOnSelect).toHaveBeenCalledWith(undefined);
+  });
+
+  it('should select exact match with Enter if typed manually', async () => {
+    const user = userEvent.setup();
+    const { getByRole } = render(
+      <SearchSelect options={mockOptions} onSelect={mockOnSelect} />
+    );
+    const input = getByRole('combobox');
+    await user.click(input);
+    await user.type(input, 'Option 2');
+    await user.keyboard('[Enter]');
+    expect(mockOnSelect).toHaveBeenCalledWith(mockOptions[1]);
+  });
+
+  it('should show noOptionsText when there are no matches', async () => {
+    const user = userEvent.setup();
+    const { getByRole, findByText } = render(
+      <SearchSelect
+        options={[{ label: 'Banana', value: 'b' }]}
+        onSelect={mockOnSelect}
+        noOptionsText="Fant ingen treff"
+      />,
+    );
+    const input = getByRole('combobox');
+    await user.click(input);
+    await user.type(input, 'xyz');
+    expect(await findByText('Fant ingen treff')).toBeInTheDocument();
+  });
+
   it('should set inputMode and pattern when inputMode="numeric"', () => {
     const { getByRole } = render(
       <SearchSelect
@@ -53,5 +126,16 @@ describe('SearchableSelect', () => {
 
     expect(input).not.toHaveAttribute('inputmode');
     expect(input).not.toHaveAttribute('pattern');
+  });
+
+  it('should set aria-activedescendant on input when navigating', async () => {
+    const user = userEvent.setup();
+    const { getByRole } = render(
+      <SearchSelect options={mockOptions} onSelect={mockOnSelect} />
+    );
+    const input = getByRole('combobox');
+    await user.click(input);
+    await user.keyboard('[ArrowDown]');
+    expect(input).toHaveAttribute('aria-activedescendant', 'searchable-select-option-0');
   });
 });

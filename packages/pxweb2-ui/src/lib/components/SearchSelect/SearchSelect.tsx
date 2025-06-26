@@ -18,6 +18,7 @@ type SearchSelectProps = {
   label?: string;
   onSelect: (option: SelectOption | undefined) => void;
   selectedOption?: SelectOption;
+  noOptionsText?: string;
   inputMode?: React.HTMLAttributes<HTMLInputElement>['inputMode'];
 };
 
@@ -28,6 +29,7 @@ export function SearchSelect({
   label,
   onSelect,
   selectedOption,
+  noOptionsText = 'No results',
   inputMode,
 }: Readonly<SearchSelectProps>) {
   const [isOpen, setIsOpen] = useState(false);
@@ -210,7 +212,7 @@ export function SearchSelect({
               </li>
             ))
           ) : (
-            <li className={styles.noMatch}>Ingen treff</li>
+            <li className={styles.noMatch}>{noOptionsText}</li>
           )}
         </ul>
       )}

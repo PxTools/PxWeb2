@@ -19,7 +19,6 @@ const generateYearOptions = (start: number, end: number): SelectOption[] =>
   });
 
 const options = generateYearOptions(1980, 2025);
-const placeholder = 'Chooose year';
 
 function selectedOptionChanged(selectedItem: SelectOption | undefined) {
   selectedItem
@@ -31,9 +30,10 @@ export const Default: Story = {
   render: (args) => <SearchSelect {...args} options={options} />,
   args: {
     label: 'Year',
+    id: 'search-select',
     options: options,
-    placeholder: placeholder,
     onSelect: selectedOptionChanged,
+    inputMode: 'numeric',
   },
 };
 
@@ -42,8 +42,7 @@ export const SelectedOption: StoryFn<typeof SearchSelect> = () => {
     <SearchSelect
       label="Year"
       options={options}
-      placeholder={placeholder}
-      //selectedOption={options[1]}
+      selectedOption={options[1]}
       onSelect={selectedOptionChanged}
       inputMode="numeric"
     ></SearchSelect>
