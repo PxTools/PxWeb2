@@ -184,6 +184,17 @@
           "html": "HTML (.html)",
           "parquet": "Parquet (.parquet)"
         },
+        "savequery": {
+          "title": "Lenke til oppdatert tabell",
+          "info": "Vi sparer på tabellen din og holder den oppdatert. Du velger selv hvordan nye tidsperioder skal legges til.",
+          "radioLegend": "Valg for nye tidsperioder",
+          "periodOptions": {
+            "selected": "Ikke legg til nye (tabellen vil kun vise tidsperiodene du har valgt nå)",
+            "from": "Legg til nye (nye tidsperioder vil komme i tillegg til de du har valgt nå)",
+            "top": "Legg til nye og fjern de eldste"
+          },
+          "createButton": "Kopier lenke"
+        },
         "imagefile": {
           "title": "Lagre som graf",
           "png": "Diagram (png)"

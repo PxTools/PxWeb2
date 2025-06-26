@@ -186,6 +186,17 @@ interface Resources {
             html: 'HTML (.html)';
             parquet: 'Parquet (.parquet)';
           };
+          savequery: {
+            title: 'Link to updated table';
+            info: 'Your table is saved and automatically kept up to date. You can decide how new time periods are included.';
+            radioLegend: 'Options for new time periods';
+            periodOptions: {
+              selected: "Don't add new time periods (the table will only show the time periods currently selected)";
+              from: 'Add new time periods (they will be added to the ones currently selected)';
+              top: 'Add new time periods and remove the oldest ones';
+            };
+            createButton: 'Copy link';
+          };
           imagefile: {
             title: 'Save as graph';
             png: 'Chart (png)';
