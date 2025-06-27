@@ -1,6 +1,8 @@
 import {
   OutputFormatParamType,
   OutputFormatType,
+  SavedQueriesService,
+  SavedQuery,
   TableService,
   VariablesSelection,
 } from '@pxweb2/pxweb2-api-client';
@@ -74,6 +76,40 @@ export async function exportToFile(
     URL.revokeObjectURL(link.href);
   });
 }
+
+export async function createNewSavedQuery(
+  tabId: string,
+  lang: string,
+  variablesSelection: VariablesSelection,
+  fileFormat?: OutputFormatType,
+): Promise<string> {
+  const sq: SavedQuery = {
+    id: '',
+    tableId: tabId,
+    outputFormat: fileFormat,
+    outputFormatParams: [],
+    selection: variablesSelection,
+    language: lang,
+  };
+
+  console.log({ sq });
+
+  let id = '';
+  await SavedQueriesService.createSaveQuery(sq).then((response) => {
+    //  await createDummySavedQuery(sq).then((response) => {
+    if (response.id !== undefined) {
+      id = response.id;
+    }
+  });
+
+  return id;
+}
+
+// async function createDummySavedQuery(sq: SavedQuery): Promise<SavedQuery> {
+//   await new Promise((resolve) => setTimeout(resolve, 1000));
+//   sq.id = '666';
+//   return sq;
+// }
 
 function getTimestamp(): string {
   const now = new Date();

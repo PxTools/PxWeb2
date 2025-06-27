@@ -3,13 +3,24 @@ import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 
 import classes from './DrawerSave.module.scss';
-import { ActionItem, ContentBox, Spinner } from '@pxweb2/pxweb2-ui';
+import {
+  ActionItem,
+  BodyShort,
+  Button,
+  ContentBox,
+  Spinner,
+  VartypeEnum,
+} from '@pxweb2/pxweb2-ui';
 import {
   ApiError,
+  OutputFormatType,
   VariableSelection,
   VariablesSelection,
-} from 'packages/pxweb2-api-client/src';
-import { exportToFile } from '../../../util/export/exportUtil';
+} from '@pxweb2/pxweb2-api-client';
+import {
+  createNewSavedQuery,
+  exportToFile,
+} from '../../../util/export/exportUtil';
 import useVariables from '../../../context/useVariables';
 import useTableData from '../../../context/useTableData';
 import { problemMessage } from '../../../util/problemMessage';
@@ -17,6 +28,9 @@ import { problemMessage } from '../../../util/problemMessage';
 export type DrawerSaveProps = {
   readonly tableId: string;
 };
+
+type TimeFilter = 'from' | 'top';
+
 export function DrawerSave({ tableId }: DrawerSaveProps) {
   const { t, i18n } = useTranslation();
   const variables = useVariables();
@@ -24,6 +38,12 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
   const stub = useTableData().data?.stub;
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [sqUrl, setSqUrl] = useState('');
+
+  // If time filter is used when saving query, we need to know the id of the time variable
+  const timeVarId = useTableData().data?.metadata.variables.find(
+    (v) => v.type === VartypeEnum.TIME_VARIABLE,
+  )?.id;
 
   useEffect(() => {
     if (errorMsg !== '') {
@@ -31,17 +51,44 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
     }
   }, [errorMsg]);
 
-  function getVariableSelection(): VariablesSelection {
+  /**
+   * Constructs a VariablesSelection object based on the current variable selections.
+   * If a time filter is provided, it modifies the selection for the time variable accordingly.
+   *
+   * @param {TimeFilter} [timeFilter] - Optional time filter to apply to the time variable selection.
+   * @returns {VariablesSelection} - An object containing the current variable selections and their placements.
+   */
+  function getVariableSelection(timeFilter?: TimeFilter): VariablesSelection {
     const selections: Array<VariableSelection> = [];
 
     // Get selection from Selection provider
     const ids = variables.getUniqueIds();
     ids.forEach((id) => {
-      const selectedCodeList = variables.getSelectedCodelistById(id);
+      let valCodes = variables.getSelectedValuesByIdSorted(id);
+
+      // If time filter is used, we need to check if the variable is the time variable
+      if (timeFilter && timeVarId && id === timeVarId) {
+        if (timeFilter === 'from') {
+          if (valCodes.length > 0) {
+            const fromFilter = 'from(' + valCodes[0] + ')';
+            valCodes = [];
+            valCodes.push(fromFilter);
+          }
+        }
+        if (timeFilter === 'top') {
+          if (valCodes.length > 0) {
+            const topFilter = 'top(' + valCodes.length.toString() + ')';
+            valCodes = [];
+            valCodes.push(topFilter);
+          }
+        }
+      }
+
       const selection: VariableSelection = {
         variableCode: id,
-        valueCodes: variables.getSelectedValuesByIdSorted(id),
+        valueCodes: valCodes,
       };
+      const selectedCodeList = variables.getSelectedCodelistById(id);
 
       // Add selected codelist to selection if it exists
       if (selectedCodeList) {
@@ -71,6 +118,20 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
     return variablesSelection;
   }
 
+  /**
+   * Saves the current table data to a file in the specified format.
+   *
+   * @param {string} fileFormat - The format to save the file in (e.g., 'excel', 'csv', etc.).
+   * @returns {Promise<void>} - A promise that resolves when the file is saved.
+   * Throws an error if the export fails.
+   * @throws {ApiError} - If there is an error during the export process.
+   * This function uses the export utility to handle the file saving process.
+   * It retrieves the current variable selection,
+   * sets the loading state,
+   * and then calls the export function with the appropriate parameters.
+   * The function handles success and error cases,
+   * updating the loading state accordingly.
+   */
   async function saveToFile(fileFormat: string): Promise<void> {
     const variablesSelection = getVariableSelection();
     setIsLoading(true);
@@ -90,6 +151,50 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
       .finally(() => {
         setIsLoading(false);
       });
+  }
+
+  async function createSavedQuery(timeFilter?: TimeFilter): Promise<void> {
+    const variablesSelection = getVariableSelection(timeFilter);
+    setIsLoading(true);
+
+    // Create saved query using the export utility
+    await createNewSavedQuery(
+      tableId,
+      i18n.language,
+      variablesSelection,
+      OutputFormatType.JSON_STAT2,
+    )
+      .then(
+        (id) => {
+          // Create saved query URL
+          const savedQueryUrl = createSavedQueryURL(id);
+          setSqUrl(savedQueryUrl);
+        },
+        (error) => {
+          // Handle error during export
+          const err = error as ApiError;
+          setErrorMsg(problemMessage(err));
+        },
+      )
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }
+
+  /**
+   * Creates a URL for the saved query with the given ID.
+   * The URL will include the base URL, current path, and query parameters.
+   *
+   * @param {string} id - The ID of the saved query.
+   * @returns {string} - The complete URL for the saved query.
+   */
+  function createSavedQueryURL(id: string): string {
+    const baseUrl = window.location.origin;
+    const path = window.location.pathname;
+    const queryParams = new URLSearchParams({
+      sq: id,
+    });
+    return `${baseUrl}${path}?${queryParams.toString()}`;
   }
 
   return (
@@ -132,6 +237,18 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
             <Spinner size="xlarge" />
           </div>
         )}
+      </ContentBox>
+      <ContentBox title="Saved query">
+        <Button onClick={() => createSavedQuery()} variant="primary">
+          Create saved query (same selection)
+        </Button>
+        <Button onClick={() => createSavedQuery('from')} variant="primary">
+          Create saved query (from)
+        </Button>
+        <Button onClick={() => createSavedQuery('top')} variant="primary">
+          Create saved query (top)
+        </Button>
+        <BodyShort>{sqUrl}</BodyShort>
       </ContentBox>
     </div>
   );
