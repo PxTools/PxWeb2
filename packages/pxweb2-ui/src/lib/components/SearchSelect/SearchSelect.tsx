@@ -212,7 +212,9 @@ export function SearchSelect({
               </li>
             ))
           ) : (
-            <li className={styles.noMatch}>{noOptionsText}</li>
+            <li className={cl(styles.noMatch, styles['bodyshort-medium'])}>
+              {noOptionsText}
+            </li>
           )}
         </ul>
       )}
