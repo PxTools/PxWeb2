@@ -195,7 +195,9 @@ interface Resources {
               from: 'Add new time periods (they will be added to the ones currently selected)';
               top: 'Add new time periods and remove the oldest ones';
             };
-            createButton: 'Copy link';
+            createButton: 'Create link';
+            copyButton: 'Copy link';
+            copiedButton: 'Link copied';
           };
           imagefile: {
             title: 'Save as graph';

@@ -193,7 +193,9 @@
             "from": "Lägg till nya (nya tidsperioder kommer byggas på de du valt nu)",
             "top": "Lägg till ny tidsperiod och ta bort den äldsta (tabellen visar samma antal tidsperioder som du valt nu)"
           },
-          "createButton": "Kopiera länk"
+          "createButton": "Skapa länk",
+          "copyButton": "Kopiera länk",
+          "copiedButton": "Länk kopierad"
         },
         "imagefile": {
           "title": "Spara som diagram",
