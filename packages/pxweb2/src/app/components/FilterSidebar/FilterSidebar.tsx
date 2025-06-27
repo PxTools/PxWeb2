@@ -119,6 +119,28 @@ const Collapsible: React.FC<CollapsibleProps> = ({
                   break;
                 }
               }
+
+              // Ensure first parent is actually added as a filter, and not just ephemerally selected
+              const parent: PathItem | undefined = ancestors.length
+                ? ancestors[ancestors.length - 1]
+                : undefined;
+              const isParentInFilter = state.activeFilters.some(
+                (f) => f.type === 'subject' && f.value === parent?.id,
+              );
+              if (parent && !isParentInFilter) {
+                dispatch({
+                  type: ActionType.ADD_FILTER,
+                  payload: [
+                    {
+                      type: 'subject',
+                      value: parent.id,
+                      label: parent.label,
+                      index,
+                    },
+                  ],
+                });
+              }
+
               setIsOpen(false);
             }
             onFilterChange?.();
