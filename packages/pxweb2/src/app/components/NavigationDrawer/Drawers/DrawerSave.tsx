@@ -45,14 +45,19 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
     (v) => v.type === VartypeEnum.TIME_VARIABLE,
   )?.id;
 
-  console.log({ timeVarId });
-
   useEffect(() => {
     if (errorMsg !== '') {
       throw new Error(errorMsg);
     }
   }, [errorMsg]);
 
+  /**
+   * Constructs a VariablesSelection object based on the current variable selections.
+   * If a time filter is provided, it modifies the selection for the time variable accordingly.
+   *
+   * @param {TimeFilter} [timeFilter] - Optional time filter to apply to the time variable selection.
+   * @returns {VariablesSelection} - An object containing the current variable selections and their placements.
+   */
   function getVariableSelection(timeFilter?: TimeFilter): VariablesSelection {
     const selections: Array<VariableSelection> = [];
 
