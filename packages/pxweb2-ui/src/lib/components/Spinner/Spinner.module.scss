@@ -27,7 +27,7 @@
   stroke: var(--px-color-border-subtle);
 }
 .path-stroke-background-inverted {
-  stroke: var(--px-color-border-subtle);
+  stroke: var(--px-color-border-moderate);
 }
 .path-stroke-circle-default {
   stroke: var(--px-color-border-action);
@@ -41,6 +41,25 @@
 .spinner {
   display: flex;
   align-items: center;
+  cursor: inherit;
+
+  &.withLabel.spinner-xlarge {
+    gap: 16px;
+  }
+
+  &.withLabel.spinner-large,
+  &.withLabel.spinner-medium {
+    gap: 12px;
+  }
+
+  &.withLabel.spinner-small,
+  &.withLabel.spinner-xsmall {
+    gap: 8px;
+  }
+
+  label {
+    cursor: inherit;
+  }
 }
 
 .text-color-default {
@@ -49,21 +68,6 @@
 
 .text-color-inverted {
   color: var(--px-color-text-on-inverted);
-}
-.spinner-xlarge {
-  gap: 16px;
-}
-.spinner-large {
-  gap: 12px;
-}
-.spinner-medium {
-  gap: 12px;
-}
-.spinner-small {
-  gap: 8px;
-}
-.spinner-xsmall {
-  gap: 8px;
 }
 
 .loading {
@@ -90,6 +94,6 @@
   height: 32px;
 }
 .eclipse-xsmall {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
 }

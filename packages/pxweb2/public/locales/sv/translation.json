@@ -47,6 +47,12 @@
     },
     "generic_tags": {
       "mandatory": "Obligatorisk"
+    },
+    "alert": {
+      "info": "Information:",
+      "success": "Lyckad åtgärd:",
+      "warning": "Varning:",
+      "error": "Fel:"
     }
   },
   "start_page": {
@@ -62,7 +68,7 @@
       "close": "Lukk filter",
       "header": "Filter",
       "remove_all_filter": "Ta bort alla filter",
-      "remove_filter_aria": "Slett {{value}}",
+      "remove_filter_aria": "Ta bort filter, {{value}}",
       "subject": "Ämnesområde",
       "timeUnit": "Tidsperiod",
       "year": "År",
@@ -80,7 +86,11 @@
       "number_of_tables": "<strong>{{count}}</strong> tabeller",
       "number_of_tables_found": "Träff på <strong>{{count}}</strong> tabeller",
       "updated_label": "Senast uppdaterad",
-      "show_more": "Visa flere"
+      "show_more": "Visa fler",
+      "show_less": "Visa färre",
+      "loading": "Laddar...",
+      "show_number_of_tables": "Visar {{countShown}} av {{countTotal}}",
+      "show_number_of_tables_aria": "Träff på {{count}}tabeller, visar {{countShown}} av {{countTotal}}"
     }
   },
   "presentation_page": {
@@ -121,7 +131,6 @@
             },
             "values_list": {
               "aria_label": "Lista över {{total}} värden.",
-              "aria_description": "Variabelns lista med {{total}} totala värden. För att komma in i listan, tryck på nedåtpilen. Tabbtangenten lämnar listan.",
               "no_results_heading": "Tyvärr hittades inte ”{{search}}”",
               "no_results_bodyshort": "Försök med en annan stavning eller ett annat ord."
             }
@@ -168,7 +177,12 @@
         "title": "Spara",
         "file": {
           "title": "Spara som fil",
-          "excel": "Excel (xlsx)"
+          "excel": "Excel (.xlsx)",
+          "csv": "Semikolonavgränsad med rubrik (.csv)",
+          "px": "PC-Axis (.px)",
+          "jsonstat2": "JSON-stat2 (.json)",
+          "html": "HTML (.html)",
+          "parquet": "Parquet (.parquet)"
         },
         "imagefile": {
           "title": "Spara som diagram",

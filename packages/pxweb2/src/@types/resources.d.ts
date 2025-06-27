@@ -49,6 +49,12 @@ interface Resources {
       generic_tags: {
         mandatory: 'Mandatory';
       };
+      alert: {
+        info: 'Information:';
+        success: 'Success:';
+        warning: 'Warning:';
+        error: 'Error:';
+      };
     };
     start_page: {
       header: 'Welcome to PxWeb 2.0';
@@ -63,7 +69,7 @@ interface Resources {
         close: 'Close filter';
         header: 'Filter';
         remove_all_filter: 'Remove all filters';
-        remove_filter_aria: 'Delete {{value}}';
+        remove_filter_aria: 'Remove filter, {{value}}';
         subject: 'Topic';
         timeUnit: 'Time period';
         year: 'Year';
@@ -82,6 +88,10 @@ interface Resources {
         number_of_tables_found: '<strong>{{count}}</strong> tables found';
         updated_label: 'Updated';
         show_more: 'Show more';
+        show_less: 'Show less';
+        loading: 'Loading...';
+        show_number_of_tables: 'Showing  <countShown> of <countTotal>';
+        show_number_of_tables_aria: '<number of> tables found, Showing  <countShown> of <countTotal>';
       };
     };
     presentation_page: {
@@ -122,7 +132,6 @@ interface Resources {
               };
               values_list: {
                 aria_label: 'List of {{total}} values.';
-                aria_description: "The variable's list of {{total}} total values. To enter the list, press the arrow down key. The Tab key exits the list.";
                 no_results_heading: 'No results for “{{search}}”';
                 no_results_bodyshort: 'Try a different keyword or spelling.';
               };
@@ -169,7 +178,13 @@ interface Resources {
           title: 'Save';
           file: {
             title: 'Save as file';
-            excel: 'Excel (xlsx)';
+            excel: 'Excel (.xlsx)';
+            csv: 'Semicolon-delimited with heading (.csv)';
+            'relational-csv': 'Relational table (.csv)';
+            px: 'PC-Axis (.px)';
+            jsonstat2: 'JSON-stat2 (.json)';
+            html: 'HTML (.html)';
+            parquet: 'Parquet (.parquet)';
           };
           imagefile: {
             title: 'Save as graph';

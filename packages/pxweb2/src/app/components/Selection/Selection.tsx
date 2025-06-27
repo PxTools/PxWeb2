@@ -520,7 +520,9 @@ export function Selection({
         {selectedNavigationView === 'selection' && drawerSelection}
         {selectedNavigationView === 'view' && <DrawerView />}
         {selectedNavigationView === 'edit' && <DrawerEdit />}
-        {selectedNavigationView === 'save' && <DrawerSave />}
+        {selectedNavigationView === 'save' && (
+          <DrawerSave tableId={selectedTabId} />
+        )}
         {selectedNavigationView === 'help' && <DrawerHelp />}
       </NavigationDrawer>
     )

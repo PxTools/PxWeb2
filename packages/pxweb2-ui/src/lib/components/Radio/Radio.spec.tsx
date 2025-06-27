@@ -3,6 +3,7 @@ import { describe, it, expect, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 
 import Radio, { SelectOption } from './Radio';
+import classes from './Radio.module.scss';
 
 describe('Radio', () => {
   const mockOptions: SelectOption[] = [
@@ -50,12 +51,7 @@ describe('Radio', () => {
         <Radio {...defaultProps} hideLegend={true} />,
       );
       const legend = container.querySelector('legend');
-      const hasLegendSrOnly =
-        legend !== null &&
-        Array.from(legend.classList).some((cls) =>
-          cls.includes('legendSrOnly'),
-        );
-      expect(hasLegendSrOnly).toBe(true);
+      expect(legend).toHaveClass(classes.legendSrOnly);
     });
 
     it('legend should be visible when hideLegend is false', () => {
@@ -63,12 +59,26 @@ describe('Radio', () => {
         <Radio {...defaultProps} hideLegend={false} />,
       );
       const legend = container.querySelector('legend');
-      const hasLegendSrOnly =
-        legend !== null &&
-        Array.from(legend.classList).some((cls) =>
-          cls.includes('legendSrOnly'),
-        );
-      expect(hasLegendSrOnly).toBe(false);
+      expect(legend).toBeVisible();
+    });
+
+    it('legend should have correct classes when hideLegend is false and variant is default', () => {
+      const { container } = render(
+        <Radio {...defaultProps} hideLegend={false} />,
+      );
+      const legend = container.querySelector('legend');
+      expect(legend).toHaveClass(classes.legend);
+      expect(legend).toHaveClass(classes['heading-xsmall']);
+    });
+
+    it('legend should have correct classes when hideLegend is false and variant is inModal', () => {
+      const { container } = render(
+        <Radio {...defaultProps} hideLegend={false} variant="inModal" />,
+      );
+      const legend = container.querySelector('legend');
+      expect(legend).toHaveClass(classes.legend);
+      expect(legend).toHaveClass(classes['heading-xsmall']);
+      expect(legend).toHaveClass(classes.inModal);
     });
   });
 
