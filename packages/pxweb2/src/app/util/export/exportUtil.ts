@@ -96,7 +96,7 @@ export async function createNewSavedQuery(
 
   let id = '';
   await SavedQueriesService.createSaveQuery(sq).then((response) => {
-    //await createDummySavedQuery(sq).then((response) => {
+    //  await createDummySavedQuery(sq).then((response) => {
     if (response.id !== undefined) {
       id = response.id;
     }

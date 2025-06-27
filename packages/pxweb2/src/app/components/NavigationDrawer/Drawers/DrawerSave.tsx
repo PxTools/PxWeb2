@@ -63,12 +63,18 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
 
       // If time filter is used, we need to check if the variable is the time variable
       if (timeFilter && timeVarId && id === timeVarId) {
-        console.log('found the time variable', id);
         if (timeFilter === 'from') {
           if (valCodes.length > 0) {
             const fromFilter = 'from(' + valCodes[0] + ')';
             valCodes = [];
             valCodes.push(fromFilter);
+          }
+        }
+        if (timeFilter === 'top') {
+          if (valCodes.length > 0) {
+            const topFilter = 'top(' + valCodes.length.toString() + ')';
+            valCodes = [];
+            valCodes.push(topFilter);
           }
         }
       }
@@ -233,6 +239,9 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
         </Button>
         <Button onClick={() => createSavedQuery('from')} variant="primary">
           Create saved query (from)
+        </Button>
+        <Button onClick={() => createSavedQuery('top')} variant="primary">
+          Create saved query (top)
         </Button>
         <BodyShort>{sqUrl}</BodyShort>
       </ContentBox>
