@@ -111,6 +111,7 @@ export function VariableBoxContent({
   }
 
   const searchRef = useRef<HTMLInputElement>(null);
+  const lastInteractionWasPointer = useRef(false);
 
   useEffect(() => {
     const newItems: { type: string; value?: Value }[] = [];
@@ -250,8 +251,12 @@ export function VariableBoxContent({
       return <div></div>;
     }
 
+    // Added check for interaction type to only scroll when focused by keyboard
     const handleOnFocus = () => {
-      virtuosoRef.current?.scrollToIndex({ index, align: 'center' });
+      if (!lastInteractionWasPointer.current) {
+        virtuosoRef.current?.scrollToIndex({ index, align: 'center' });
+      }
+      lastInteractionWasPointer.current = false;
     };
 
     if (item.type === 'search') {
@@ -260,7 +265,6 @@ export function VariableBoxContent({
           id={`${varId}-search` + uniqueId}
           tabIndex={-1}
           className={classes['focusableItem']}
-          onFocus={handleOnFocus}
         >
           <Search
             ref={searchRef}
@@ -298,7 +302,6 @@ export function VariableBoxContent({
           <div
             id={varId + uniqueId}
             tabIndex={-1}
-            onFocus={handleOnFocus}
             className={cl(classes['focusableItem'], {
               [classes['mixedCheckbox']]: true,
             })}
@@ -330,6 +333,9 @@ export function VariableBoxContent({
           <div
             id={value.code + uniqueId}
             tabIndex={-1}
+            onPointerDown={() => {
+              lastInteractionWasPointer.current = true;
+            }}
             onFocus={handleOnFocus}
             className={cl(classes['focusableItem'])}
           >
