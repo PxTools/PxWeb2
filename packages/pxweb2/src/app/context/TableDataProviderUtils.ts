@@ -9,7 +9,8 @@ const decimalFormats: Record<number, string> = {
   3: 'number.simple_number_with_three_decimals',
   4: 'number.simple_number_with_four_decimals',
   5: 'number.simple_number_with_five_decimals',
-  6: 'number.simple_number',
+  6: 'number.simple_number_with_six_decimals',
+  7: 'number.simple_number',
 };
 
 function isDataCell(obj: unknown): obj is DataCell {
@@ -68,7 +69,7 @@ async function addFormattingToDataCells(
   data: DataCell | PxData<DataCell>,
   contentVarIndex: number,
   contentsVariableDecimals?: Record<string, { decimals: number }>,
-  tableDecimals: number = 6,
+  tableDecimals: number = 7,
   path: string[] = [],
 ): Promise<DataCell | PxData<DataCell>> {
   // Handle null or undefined
@@ -159,13 +160,13 @@ export async function addFormattingToPxTable(
       .flatMap((variable) =>
         variable.values.map((value) => [
           value.code,
-          { decimals: value.contentInfo?.decimals ?? 6 },
+          { decimals: value.contentInfo?.decimals ?? 7 },
         ]),
       ),
   );
 
   // Default decimals from table metadata
-  const tableDecimals = pxTable.metadata.decimals ?? 6;
+  const tableDecimals = pxTable.metadata.decimals ?? 7;
 
   // Format the cube with decimal information
   const formattedCube = await addFormattingToDataCells(

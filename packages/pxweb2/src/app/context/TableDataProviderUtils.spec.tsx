@@ -22,6 +22,8 @@ vi.mock('../util/language/translateOutsideReact', () => ({
       return Promise.resolve(`${params.value.toFixed(4)}`);
     } else if (key === 'number.simple_number_with_five_decimals') {
       return Promise.resolve(`${params.value.toFixed(5)}`);
+    } else if (key === 'number.simple_number_with_six_decimals') {
+      return Promise.resolve(`${params.value.toFixed(6)}`);
     } else {
       return Promise.resolve(`${params.value}`);
     }
@@ -124,6 +126,7 @@ describe('TableDataProviderUtils', () => {
         { decimals: 3, expected: '123.457' },
         { decimals: 4, expected: '123.4568' },
         { decimals: 5, expected: '123.45679' },
+        { decimals: 6, expected: '123.456789' },
       ];
 
       for (const { decimals, expected } of testCases) {
