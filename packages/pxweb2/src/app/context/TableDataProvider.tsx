@@ -15,8 +15,10 @@ import {
   PxTableMetadata,
   getPxTableData,
   setPxTableData,
+  Variable,
 } from '@pxweb2/pxweb2-ui';
 import { mapJsonStat2Response } from '../../mappers/JsonStat2ResponseMapper';
+import { addFormattingToPxTable } from './TableDataProviderUtils';
 import { problemMessage } from '../util/problemMessage';
 
 // Define types for the context state and provider props
@@ -27,6 +29,10 @@ export interface TableDataContextType {
   pivotToMobile: () => void;
   pivotToDesktop: () => void;
   pivotCW: () => void;
+  buildTableTitle: (
+    stub: Variable[],
+    heading: Variable[],
+  ) => { firstTitlePart: string; lastTitlePart: string };
 }
 
 interface TableDataProviderProps {
@@ -45,6 +51,12 @@ const TableDataContext = createContext<TableDataContextType | undefined>({
   pivotToDesktop: () => {},
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   pivotCW: () => {},
+  buildTableTitle: () => {
+    return {
+      firstTitlePart: '',
+      lastTitlePart: '',
+    };
+  },
 });
 
 const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
@@ -974,6 +986,15 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
     const pxTable: PxTable = mapJsonStat2Response(pxTabData);
 
+    // Add formatting to the PxTable datacell values
+    const formattingResult = await addFormattingToPxTable(pxTable);
+
+    if (formattingResult === false) {
+      throw new Error(
+        'TableDataProvider.fetchFromApi: Failed to format PxTable datacell values',
+      );
+    }
+
     return pxTable;
   };
 
@@ -1008,6 +1029,50 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       }
     }
   }, [data, stubDesktop, headingDesktop]);
+
+  /**
+   * Builds a title for the table based on the stub and heading variables.
+   * The title is built by concatenating the labels of the variables in the stub first,
+   * followed by the labels of the variables in the heading.
+   *
+   * @param stub - Array of variables in the stub
+   * @param heading - Array of variables in the heading
+   * @returns An object with the first and last title parts as strings
+   */
+  const buildTableTitle = React.useCallback(
+    (
+      stub: Variable[],
+      heading: Variable[],
+    ): {
+      firstTitlePart: string;
+      lastTitlePart: string;
+    } => {
+      const titleParts: string[] = [];
+
+      // Add stub variables to title
+      stub.forEach((variable) => {
+        titleParts.push(variable.label);
+      });
+
+      // Add heading variables to title
+      heading.forEach((variable) => {
+        titleParts.push(variable.label);
+      });
+
+      const lastTitlePart = titleParts.pop();
+
+      if (!lastTitlePart) {
+        throw new Error(
+          'TableDataProvider.buildTableTitle: Missing last title part. This should not happen. Please report this as a bug.',
+        );
+      }
+
+      const firstTitlePart = titleParts.join(', ');
+
+      return { firstTitlePart, lastTitlePart };
+    },
+    [],
+  );
 
   /**
    * Pivots the table clockwise.
@@ -1097,6 +1162,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       pivotToMobile,
       pivotToDesktop,
       pivotCW,
+      buildTableTitle,
       isInitialized,
     }),
     [
@@ -1105,6 +1171,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       pivotToMobile,
       pivotToDesktop,
       pivotCW,
+      buildTableTitle,
       isInitialized,
     ],
   );

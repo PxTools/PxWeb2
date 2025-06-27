@@ -13,7 +13,7 @@ const supportedLanguages: string[] = config.language.supportedLanguages.map(
   (item) => item.shorthand,
 );
 
-i18n
+const initPromise = i18n
   .use(HttpApi)
   .use(initReactI18next)
   .use(LanguageDetector)
@@ -41,4 +41,5 @@ i18n
 
 i18n.services.formatter?.add('pxNumber', pxNumber);
 
+export { initPromise };
 export default i18n;

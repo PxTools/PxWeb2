@@ -1,4 +1,4 @@
-import { t } from 'i18next';
+import { memo, useMemo } from 'react';
 import cl from 'clsx';
 
 import classes from './Table.module.scss';
@@ -14,16 +14,6 @@ export interface TableProps {
   readonly isMobile: boolean;
   readonly className?: string;
 }
-
-const decimalFormats: Record<number, string> = {
-  0: 'number.simple_number_with_zero_decimal',
-  1: 'number.simple_number_with_one_decimal',
-  2: 'number.simple_number_with_two_decimals',
-  3: 'number.simple_number_with_three_decimals',
-  4: 'number.simple_number_with_four_decimals',
-  5: 'number.simple_number_with_five_decimals',
-  6: 'number.simple_number',
-};
 
 /**
  * Represents the metadata for one dimension of a data cell.
@@ -66,13 +56,20 @@ interface CreateRowMobileParams {
  */
 type DataCellCodes = DataCellMeta[];
 
-export function Table({ pxtable, isMobile, className = '' }: TableProps) {
+export const Table = memo(function Table({
+  pxtable,
+  isMobile,
+  className = '',
+}: TableProps) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
 
   const tableMeta: columnRowMeta = calculateRowAndColumnMeta(pxtable);
 
   const tableColumnSize: number = tableMeta.columns - tableMeta.columnOffset;
-  const headingDataCellCodes = new Array<DataCellCodes>(tableColumnSize); // Contains header variable and value codes for each column in the table
+  const headingDataCellCodes = useMemo(
+    () => new Array<DataCellCodes>(tableColumnSize),
+    [tableColumnSize],
+  ); // Contains header variable and value codes for each column in the table
 
   // Find the contents variable
   const contentsVariable = pxtable.metadata.variables.find(
@@ -125,18 +122,29 @@ export function Table({ pxtable, isMobile, className = '' }: TableProps) {
     >
       <thead>{createHeading(pxtable, tableMeta, headingDataCellCodes)}</thead>
       <tbody>
-        {createRows(
-          pxtable,
-          tableMeta,
-          headingDataCellCodes,
-          isMobile,
-          contentVarIndex,
-          contentsVariableDecimals,
+        {useMemo(
+          () =>
+            createRows(
+              pxtable,
+              tableMeta,
+              headingDataCellCodes,
+              isMobile,
+              contentVarIndex,
+              contentsVariableDecimals,
+            ),
+          [
+            pxtable,
+            tableMeta,
+            headingDataCellCodes,
+            isMobile,
+            contentVarIndex,
+            contentsVariableDecimals,
+          ],
         )}
       </tbody>
     </table>
   );
-}
+});
 
 /**
  * Creates the heading rows for the table.
@@ -295,8 +303,6 @@ export function createRows(
       stubDatacellCodes,
       headingDataCellCodes,
       tableRow,
-      contentVarIndex,
-      contentsVariableDecimals,
     );
     tableRows.push(
       <tr key={getNewKey()} className={cl(classes.firstColNoStub)}>
@@ -413,8 +419,6 @@ function createRowDesktop({
         stubDataCellCodes,
         headingDataCellCodes,
         tableRow,
-        contentVarIndex,
-        contentsVariableDecimals,
       );
       tableRows.push(<tr key={getNewKey()}>{tableRow}</tr>);
       tableRow = [];
@@ -557,8 +561,6 @@ function createRowMobile({
         stubDataCellCodes,
         headingDataCellCodes,
         tableRow,
-        contentVarIndex,
-        contentsVariableDecimals,
       );
       tableRows.push(
         <tr
@@ -621,8 +623,6 @@ function fillData(
   stubDataCellCodes: DataCellCodes,
   headingDataCellCodes: DataCellCodes[],
   tableRow: React.JSX.Element[],
-  contentVarIndex: number,
-  contentsVariableDecimals?: Record<string, { decimals: number }>,
 ): void {
   // Loop through cells that need to be added to the row
   const maxCols = tableMeta.columns - tableMeta.columnOffset;
@@ -647,22 +647,11 @@ function fillData(
     //   '1970',
     // ]);
 
-    // Get the number of decimals for the contents variable
-    const numberOfDecimals: number =
-      contentsVariableDecimals?.[dimensions[contentVarIndex]]?.decimals ??
-      table.metadata.decimals ??
-      6;
-
     const dataValue = getPxTableData(table.data.cube, dimensions);
 
     tableRow.push(
       <td key={getNewKey()} headers={headers}>
-        {dataValue?.value === null || dataValue?.value === undefined
-          ? ''
-          : t(decimalFormats[numberOfDecimals] || 'number.simple_number', {
-              value: dataValue.value,
-            })}
-        {dataValue?.status ?? ''}
+        {dataValue?.formattedValue}
       </td>,
     );
   }

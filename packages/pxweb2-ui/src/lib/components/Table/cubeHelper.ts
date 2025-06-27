@@ -99,6 +99,7 @@ function getNumber(): DataCell {
     value: number,
     status: '',
     presentation: 'number',
+    formattedValue: number.toString(),
   };
   return dataCell;
 }
