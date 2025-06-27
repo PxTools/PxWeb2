@@ -137,28 +137,24 @@ async function addFormattingToDataCells(
  */
 export async function addFormattingToPxTable(
   pxTable: PxTable,
-): Promise<PxTable> {
+): Promise<boolean> {
   if (pxTable === null || pxTable === undefined) {
-    return pxTable;
+    return false;
   }
 
-  const newPxTable: PxTable = structuredClone(pxTable);
-
   // Find the contents variable and its index
-  const contentsVariable = newPxTable.metadata.variables?.find(
+  const contentsVariable = pxTable.metadata.variables?.find(
     (variable) => variable.type === 'ContentsVariable',
   );
   let contentVarIndex: number = -1;
 
   if (contentsVariable) {
-    contentVarIndex = newPxTable.data.variableOrder.indexOf(
-      contentsVariable.id,
-    );
+    contentVarIndex = pxTable.data.variableOrder.indexOf(contentsVariable.id);
   }
 
   // Extract decimals information for content variables
   const contentsVariableDecimals = Object.fromEntries(
-    (newPxTable.metadata.variables || [])
+    (pxTable.metadata.variables || [])
       .filter((variable) => variable.type === 'ContentsVariable')
       .flatMap((variable) =>
         variable.values.map((value) => [
@@ -169,11 +165,11 @@ export async function addFormattingToPxTable(
   );
 
   // Default decimals from table metadata
-  const tableDecimals = newPxTable.metadata.decimals ?? 6;
+  const tableDecimals = pxTable.metadata.decimals ?? 6;
 
   // Format the cube with decimal information
   const formattedCube = await addFormattingToDataCells(
-    newPxTable.data.cube,
+    pxTable.data.cube,
     contentVarIndex,
     contentsVariableDecimals,
     tableDecimals,
@@ -181,8 +177,8 @@ export async function addFormattingToPxTable(
 
   // Only assign if the result is not undefined
   if (formattedCube !== undefined) {
-    newPxTable.data.cube = formattedCube as PxData<DataCell>;
+    pxTable.data.cube = formattedCube as PxData<DataCell>;
   }
 
-  return newPxTable;
+  return true;
 }

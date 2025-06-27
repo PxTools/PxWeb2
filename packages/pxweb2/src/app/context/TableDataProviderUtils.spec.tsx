@@ -204,25 +204,22 @@ describe('TableDataProviderUtils', () => {
   });
 
   describe('addFormattingToPxTable', () => {
-    it('should return null if input is null', async () => {
-      const result = await addFormattingToPxTable(null as unknown as PxTable);
-
-      expect(result).toBeNull();
-    });
-
-    it('should return undefined if input is undefined', async () => {
-      const result = await addFormattingToPxTable(
+    it('should return false if input is null or undefined', async () => {
+      const result1 = await addFormattingToPxTable(null as unknown as PxTable);
+      const result2 = await addFormattingToPxTable(
         undefined as unknown as PxTable,
       );
 
-      expect(result).toBeUndefined();
+      expect(result1).toBe(false);
+      expect(result2).toBe(false);
     });
 
     it('should format data cells in a table with default decimals', async () => {
       const pxTable = createBasePxTable();
       const result = await addFormattingToPxTable(pxTable);
 
-      expect(result.data.cube).toEqual({
+      expect(result).toBe(true);
+      expect(pxTable.data.cube).toEqual({
         cell1: { value: 123.456, formattedValue: '123.46' },
         cell2: { value: 789.012, formattedValue: '789.01' },
       });
@@ -250,7 +247,8 @@ describe('TableDataProviderUtils', () => {
 
       const result = await addFormattingToPxTable(pxTable);
 
-      expect(result.data.cube).toEqual({
+      expect(result).toBe(true);
+      expect(pxTable.data.cube).toEqual({
         level1_item1: {
           level2_item1: { value: 123.456, formattedValue: '123.5' },
           level2_item2: { value: 789.012, formattedValue: '789.0' },
@@ -306,7 +304,8 @@ describe('TableDataProviderUtils', () => {
 
       const result = await addFormattingToPxTable(pxTable);
 
-      expect(result.data.cube).toEqual({
+      expect(result).toBe(true);
+      expect(pxTable.data.cube).toEqual({
         val1: { value: 123.456, formattedValue: '123' },
         val2: { value: 789.012, formattedValue: '789.0' },
       });
@@ -333,7 +332,8 @@ describe('TableDataProviderUtils', () => {
 
       const result = await addFormattingToPxTable(pxTable);
 
-      expect(result.data.cube).toEqual({
+      expect(result).toBe(true);
+      expect(pxTable.data.cube).toEqual({
         group1: {
           subgroup: {
             cell1: { value: 123.456, formattedValue: '123.5' },
@@ -357,7 +357,8 @@ describe('TableDataProviderUtils', () => {
 
       const result = await addFormattingToPxTable(pxTable);
 
-      expect(result.data.cube).toEqual({
+      expect(result).toBe(true);
+      expect(pxTable.data.cube).toEqual({
         cell1: { value: null, formattedValue: '' },
         cell2: { value: 789.012, formattedValue: '789.01' },
       });

@@ -259,13 +259,11 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         variablesSelection,
       );
 
-      const pxTableWithFormatting = await addFormattingToPxTable(pxTable);
-
-      initializeStubAndHeading(pxTableWithFormatting, isMobile);
-      setData(pxTableWithFormatting);
+      initializeStubAndHeading(pxTable, isMobile);
+      setData(pxTable);
 
       // Store as accumulated data
-      setAccumulatedData(structuredClone(pxTableWithFormatting));
+      setAccumulatedData(structuredClone(pxTable));
     },
     [initializeStubAndHeading, setData, setAccumulatedData],
   );
@@ -731,11 +729,9 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         notLoadedVarSelection,
       );
 
-      const pxTableWithFormatting = await addFormattingToPxTable(pxTable);
-
       // Merge pxTable with accumulatedData
       mergeWithAccumulatedData(
-        pxTableWithFormatting,
+        pxTable,
         notLoadedVarSelection,
         variablesSelection,
       );
@@ -989,6 +985,15 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     const pxTabData = pxDataobj as Dataset;
 
     const pxTable: PxTable = mapJsonStat2Response(pxTabData);
+
+    // Add formatting to the PxTable datacell values
+    const formattingResult = await addFormattingToPxTable(pxTable);
+
+    if (formattingResult === false) {
+      throw new Error(
+        'TableDataProvider.fetchFromApi: Failed to format PxTable datacell values',
+      );
+    }
 
     return pxTable;
   };
