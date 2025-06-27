@@ -18,6 +18,7 @@ import {
   Variable,
 } from '@pxweb2/pxweb2-ui';
 import { mapJsonStat2Response } from '../../mappers/JsonStat2ResponseMapper';
+import { addFormattingToPxTable } from './TableDataProviderUtils';
 import { problemMessage } from '../util/problemMessage';
 
 // Define types for the context state and provider props
@@ -258,11 +259,13 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         variablesSelection,
       );
 
-      initializeStubAndHeading(pxTable, isMobile);
-      setData(pxTable);
+      const pxTableWithFormatting = await addFormattingToPxTable(pxTable);
+
+      initializeStubAndHeading(pxTableWithFormatting, isMobile);
+      setData(pxTableWithFormatting);
 
       // Store as accumulated data
-      setAccumulatedData(structuredClone(pxTable));
+      setAccumulatedData(structuredClone(pxTableWithFormatting));
     },
     [initializeStubAndHeading, setData, setAccumulatedData],
   );
@@ -728,9 +731,11 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         notLoadedVarSelection,
       );
 
+      const pxTableWithFormatting = await addFormattingToPxTable(pxTable);
+
       // Merge pxTable with accumulatedData
       mergeWithAccumulatedData(
-        pxTable,
+        pxTableWithFormatting,
         notLoadedVarSelection,
         variablesSelection,
       );

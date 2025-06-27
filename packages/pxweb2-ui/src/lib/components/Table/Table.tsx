@@ -1,5 +1,4 @@
 import { memo, useMemo } from 'react';
-import { t } from 'i18next';
 import cl from 'clsx';
 
 import classes from './Table.module.scss';
@@ -7,7 +6,6 @@ import { PxTable } from '../../shared-types/pxTable';
 import { calculateRowAndColumnMeta, columnRowMeta } from './columnRowMeta';
 import { getPxTableData } from './cubeHelper';
 import { Value } from '../../shared-types/value';
-import { DataCell } from '../../shared-types/pxTableData';
 import { VartypeEnum } from '../../shared-types/vartypeEnum';
 import { Variable } from '../../shared-types/variable';
 
@@ -15,46 +13,6 @@ export interface TableProps {
   readonly pxtable: PxTable;
   readonly isMobile: boolean;
   readonly className?: string;
-}
-
-const decimalFormats: Record<number, string> = {
-  0: 'number.simple_number_with_zero_decimal',
-  1: 'number.simple_number_with_one_decimal',
-  2: 'number.simple_number_with_two_decimals',
-  3: 'number.simple_number_with_three_decimals',
-  4: 'number.simple_number_with_four_decimals',
-  5: 'number.simple_number_with_five_decimals',
-  6: 'number.simple_number',
-};
-
-export function getFormattedValue(
-  dataCell: DataCell | undefined,
-  numberOfDecimals: number,
-): string {
-  if (!dataCell) {
-    return '';
-  }
-
-  if (dataCell.formattedValue) {
-    return dataCell.formattedValue;
-  }
-
-  let formattedValue = '';
-
-  if (dataCell.formattedValue === undefined) {
-    formattedValue =
-      dataCell?.value === null || dataCell?.value === undefined
-        ? ''
-        : t(decimalFormats[numberOfDecimals] || 'number.simple_number', {
-            value: dataCell.value,
-          });
-
-    formattedValue += dataCell?.status ?? '';
-
-    dataCell.formattedValue = formattedValue;
-  }
-
-  return formattedValue;
 }
 
 /**
@@ -345,8 +303,6 @@ export function createRows(
       stubDatacellCodes,
       headingDataCellCodes,
       tableRow,
-      contentVarIndex,
-      contentsVariableDecimals,
     );
     tableRows.push(
       <tr key={getNewKey()} className={cl(classes.firstColNoStub)}>
@@ -463,8 +419,6 @@ function createRowDesktop({
         stubDataCellCodes,
         headingDataCellCodes,
         tableRow,
-        contentVarIndex,
-        contentsVariableDecimals,
       );
       tableRows.push(<tr key={getNewKey()}>{tableRow}</tr>);
       tableRow = [];
@@ -607,8 +561,6 @@ function createRowMobile({
         stubDataCellCodes,
         headingDataCellCodes,
         tableRow,
-        contentVarIndex,
-        contentsVariableDecimals,
       );
       tableRows.push(
         <tr
@@ -671,8 +623,6 @@ function fillData(
   stubDataCellCodes: DataCellCodes,
   headingDataCellCodes: DataCellCodes[],
   tableRow: React.JSX.Element[],
-  contentVarIndex: number,
-  contentsVariableDecimals?: Record<string, { decimals: number }>,
 ): void {
   // Loop through cells that need to be added to the row
   const maxCols = tableMeta.columns - tableMeta.columnOffset;
@@ -697,17 +647,11 @@ function fillData(
     //   '1970',
     // ]);
 
-    // Get the number of decimals for the contents variable
-    const numberOfDecimals: number =
-      contentsVariableDecimals?.[dimensions[contentVarIndex]]?.decimals ??
-      table.metadata.decimals ??
-      6;
-
     const dataValue = getPxTableData(table.data.cube, dimensions);
 
     tableRow.push(
       <td key={getNewKey()} headers={headers}>
-        {getFormattedValue(dataValue, numberOfDecimals)}
+        {dataValue?.formattedValue}
       </td>,
     );
   }

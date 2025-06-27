@@ -4,10 +4,8 @@ import { screen } from '@testing-library/react';
 import { useLocation } from 'react-router';
 
 import { renderWithProviders } from '../../util/testing-utils';
-import { getConfig } from '../../util/config/getConfig';
 import { NotFound } from './NotFound';
 
-vi.mock('../../util/config/getConfig');
 vi.mock('react-router', () => ({
   useLocation: vi.fn(),
   Link: vi.fn(({ to, children, ...props }) => (
@@ -25,21 +23,12 @@ describe('NotFound should render correctly', () => {
     state: null,
     key: 'default',
   };
-  const mockConfig = {
-    language: {
-      supportedLanguages: [
-        { shorthand: 'en', languageName: 'English' },
-        { shorthand: 'no', languageName: 'Norwegian' },
-      ],
-    },
-  };
 
   beforeEach(() => {
     vi.clearAllMocks();
 
     // Default mocks
     (useLocation as Mock).mockReturnValue(mockLocation);
-    (getConfig as Mock).mockReturnValue(mockConfig);
   });
 
   it('with page_not_found type', () => {
