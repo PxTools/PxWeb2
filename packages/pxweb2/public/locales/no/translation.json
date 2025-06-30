@@ -197,7 +197,8 @@
           "copyButton": "Kopier lenke",
           "copiedButton": "Lenke kopiert",
           "createStatus": "Lagre spørringen generert med ID-en “{{query}}”. Klikk igjen for å kopiere lenken.",
-          "copyStatus": "Lagre spørringen “{{url}}” kopiert til utklippstavlen"
+          "copyStatus": "Lagre spørringen “{{url}}” kopiert til utklippstavlen",
+          "loadingStatus": "Genererer lagret spørring.."
         },
         "imagefile": {
           "title": "Lagre som graf",

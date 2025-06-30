@@ -197,7 +197,8 @@
           "copyButton": "Copy link",
           "copiedButton": "Link copied",
           "createStatus": "Save query generated with id “{{query}}”. Click again to copy the link.",
-          "copyStatus": "Save query “{{url}}” copied to clipboard"
+          "copyStatus": "Save query “{{url}}” copied to clipboard",
+          "loadingStatus": "Generating saved query.."
         },
         "imagefile": {
           "title": "Save as graph",
