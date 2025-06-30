@@ -189,7 +189,9 @@ const RenderTimeUnitFilters: React.FC<{ onFilterChange?: () => void }> = ({
 const RenderYearsFilters: React.FC<{
   onFilterChange?: () => void;
 }> = () => {
-  const { state } = useContext(FilterContext);
+  const { state, dispatch } = useContext(FilterContext);
+  const [fromYear, setFromYear] = useState<string | undefined>();
+  const [toYear, setToYear] = useState<string | undefined>();
 
   const rangeMin = state.lastUsedYearRange.min;
   const rangeMax = state.lastUsedYearRange.max;
@@ -205,9 +207,37 @@ const RenderYearsFilters: React.FC<{
     selectedItem: Option | undefined,
     selectVariant: 'from' | 'to',
   ) {
-    selectedItem
-      ? console.log('Legg til år: ' + selectedItem.label + selectVariant)
-      : console.log('Fjernet år ' + selectVariant);
+    const newFrom = selectVariant === 'from' ? selectedItem?.value : fromYear;
+    const newTo = selectVariant === 'to' ? selectedItem?.value : toYear;
+
+    if (selectVariant === 'from') setFromYear(selectedItem?.value);
+    if (selectVariant === 'to') setToYear(selectedItem?.value);
+
+    if (newFrom) {
+      const label = newTo ? `${newFrom} - ${newTo}` : newFrom;
+      const value = newTo ? `${newFrom}-${newTo}` : newFrom;
+
+      dispatch({
+        type: ActionType.ADD_FILTER,
+        payload: [
+          {
+            type: 'yearRange',
+            value,
+            label,
+            index: 0,
+          },
+        ],
+      });
+    } else if (!selectedItem && selectVariant === 'from') {
+      // Fjerner filter hvis fromYear fjernes
+      setFromYear(undefined);
+      setToYear(undefined);
+
+      const existing = state.activeFilters.find((f) => f.type === 'yearRange');
+      if (existing) {
+        dispatch({ type: ActionType.REMOVE_FILTER, payload: existing.value });
+      }
+    }
   }
 
   return (
@@ -216,6 +246,9 @@ const RenderYearsFilters: React.FC<{
         id="year-from"
         label="From year"
         options={options}
+        selectedOption={
+          fromYear ? { label: fromYear, value: fromYear } : undefined
+        }
         onSelect={(item) => selectedOptionChanged(item, 'from')}
         inputMode="numeric"
       ></SearchSelect>
@@ -223,6 +256,7 @@ const RenderYearsFilters: React.FC<{
         id="year-to"
         label="To year"
         options={options}
+        selectedOption={toYear ? { label: toYear, value: toYear } : undefined}
         onSelect={(item) => selectedOptionChanged(item, 'to')}
         inputMode="numeric"
       ></SearchSelect>
