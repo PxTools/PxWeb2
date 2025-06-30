@@ -195,7 +195,9 @@
           },
           "createButton": "Lag lenke",
           "copyButton": "Kopier lenke",
-          "copiedButton": "Lenke kopiert"
+          "copiedButton": "Lenke kopiert",
+          "createStatus": "Lagre spørringen generert med ID-en “{{query}}”. Klikk igjen for å kopiere lenken.",
+          "copyStatus": "Lagre spørringen “{{url}}” kopiert til utklippstavlen"
         },
         "imagefile": {
           "title": "Lagre som graf",

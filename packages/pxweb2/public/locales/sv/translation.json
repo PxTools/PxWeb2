@@ -195,7 +195,9 @@
           },
           "createButton": "Skapa länk",
           "copyButton": "Kopiera länk",
-          "copiedButton": "Länk kopierad"
+          "copiedButton": "Länk kopierad",
+          "createStatus": "Spara fråga genererad med id “{{query}}”. Klicka igen för att kopiera länken.",
+          "copyStatus": "Spara frågan “{{url}}” kopierad till urklipp"
         },
         "imagefile": {
           "title": "Spara som diagram",
