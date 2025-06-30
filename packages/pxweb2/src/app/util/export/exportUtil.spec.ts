@@ -3,6 +3,7 @@ import {
   applyTimeFilter,
   createSavedQueryURL,
   exportToFile,
+  getFileExtension,
   getTimestamp,
 } from './exportUtil';
 import {
@@ -262,5 +263,37 @@ describe('createSavedQueryURL', () => {
     expect(url).toBe(
       'https://example.com/myapp/page?sq=id+with+spaces+%26+symbols',
     );
+  });
+});
+
+describe('getFileExtension', () => {
+  it('should return "xlsx" for "excel"', () => {
+    expect(getFileExtension('excel')).toBe('xlsx');
+  });
+
+  it('should return "csv" for "csv"', () => {
+    expect(getFileExtension('csv')).toBe('csv');
+  });
+
+  it('should return "px" for "px"', () => {
+    expect(getFileExtension('px')).toBe('px');
+  });
+
+  it('should return "json" for "jsonstat2"', () => {
+    expect(getFileExtension('jsonstat2')).toBe('json');
+  });
+
+  it('should return "html" for "html"', () => {
+    expect(getFileExtension('html')).toBe('html');
+  });
+
+  it('should return "parquet" for "parquet"', () => {
+    expect(getFileExtension('parquet')).toBe('parquet');
+  });
+
+  it('should return "csv" for unknown file formats', () => {
+    expect(getFileExtension('unknown')).toBe('csv');
+    expect(getFileExtension('')).toBe('csv');
+    expect(getFileExtension(undefined as any)).toBe('csv');
   });
 });

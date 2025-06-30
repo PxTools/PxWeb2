@@ -9,6 +9,17 @@ import {
 
 export type TimeFilter = 'from' | 'top';
 
+/**
+ * Exports data to a file in the specified format.
+ * The function determines the output format and parameters based on the provided fileFormat.
+ * It then retrieves the table data using TableService and triggers a download of the file.
+ *
+ * @param {string} tabId - The ID of the tab containing the data to export.
+ * @param {string} lang - The language code for the export.
+ * @param {VariablesSelection} variablesSelection - The selection of variables to include in the export.
+ * @param {string} fileFormat - The desired file format for the export (e.g., 'excel', 'csv', 'px', 'jsonstat2', 'html', 'parquet').
+ * @returns {Promise<void>} - A promise that resolves when the export is complete.
+ */
 export async function exportToFile(
   tabId: string,
   lang: string,
@@ -17,13 +28,12 @@ export async function exportToFile(
 ): Promise<void> {
   let outputFormat: OutputFormatType;
   let outputFormatParams: Array<OutputFormatParamType> = [];
-  let fileExtension: string;
+  const fileExtension: string = getFileExtension(fileFormat);
 
   switch (fileFormat) {
     case 'excel':
       outputFormat = OutputFormatType.XLSX;
       outputFormatParams = [OutputFormatParamType.INCLUDE_TITLE];
-      fileExtension = 'xlsx';
       break;
     case 'csv':
       outputFormat = OutputFormatType.CSV;
@@ -32,28 +42,22 @@ export async function exportToFile(
         OutputFormatParamType.INCLUDE_TITLE,
         OutputFormatParamType.USE_TEXTS,
       ];
-      fileExtension = 'csv';
       break;
     case 'px':
       outputFormat = OutputFormatType.PX;
-      fileExtension = 'px';
       break;
     case 'jsonstat2':
       outputFormat = OutputFormatType.JSON_STAT2;
-      fileExtension = 'json';
       break;
     case 'html':
       outputFormat = OutputFormatType.HTML;
       outputFormatParams = [OutputFormatParamType.INCLUDE_TITLE];
-      fileExtension = 'html';
       break;
     case 'parquet':
       outputFormat = OutputFormatType.PARQUET;
-      fileExtension = 'parquet';
       break;
     default:
       outputFormat = OutputFormatType.CSV;
-      fileExtension = 'csv';
       break;
   }
 
@@ -79,6 +83,50 @@ export async function exportToFile(
   });
 }
 
+/**
+ * Returns the file extension based on the provided file format.
+ * This function maps the file format to its corresponding file extension.
+ *
+ * @param {string} fileFormat - The format of the file (e.g., 'excel', 'csv', 'px', 'jsonstat2', 'html', 'parquet').
+ * @returns {string} - The file extension corresponding to the given file format.
+ */
+export function getFileExtension(fileFormat: string): string {
+  switch (fileFormat) {
+    case 'excel':
+      return 'xlsx';
+    case 'csv':
+      return 'csv';
+    case 'px':
+      return 'px';
+    case 'jsonstat2':
+      return 'json';
+    case 'html':
+      return 'html';
+    case 'parquet':
+      return 'parquet';
+    default:
+      return 'csv'; // Default to CSV if no match found
+  }
+}
+
+/** * Creates a new saved query with the specified parameters.
+ * The function constructs a SavedQuery object and sends it to the SavedQueriesService to create a new saved query.
+ * It returns the ID of the newly created saved query.
+ * @param {string} tabId - The ID of the tab for which the saved query is created.
+ * @param {string} lang - The language code for the saved query.
+ * @param {VariablesSelection} variablesSelection - The selection of variables for the saved query.
+ * @param {OutputFormatType} [fileFormat] - Optional file format for the saved query.
+ * @returns {Promise<string>} - A promise that resolves to the ID of the newly created saved query.
+ * @throws {Error} - If the saved query creation fails.
+ * This function is used to create a new saved query in the application.
+ * It constructs a SavedQuery object with the provided parameters and sends it to the SavedQueriesService
+ * to create a new saved query. The function returns the ID of the newly created saved query.
+ * If the creation fails, it throws an error.
+ * The function is asynchronous and returns a Promise that resolves to the ID of the saved query.
+ * It uses the SavedQueriesService to handle the creation of the saved query.
+ * The SavedQuery object includes the table ID, output format, output format parameters, variable selection,
+ * and language. The output format parameters are optional and can be specified based on the requirements.
+ */
 export async function createNewSavedQuery(
   tabId: string,
   lang: string,

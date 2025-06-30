@@ -141,6 +141,20 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
       });
   }
 
+  /**
+   * Creates a saved query with the current variable selections and time filter.
+   * If a time filter is provided, it modifies the selection for the time variable accordingly.
+   *
+   * @param {TimeFilter} [timeFilter] - Optional time filter to apply to the time variable selection.
+   * @returns {Promise<void>} - A promise that resolves when the saved query is created.
+   * Throws an error if the creation fails.
+   */
+  // Note: The timeFilter parameter is optional and can be 'from', 'top', or undefined.
+  // If 'from' is used, it will apply the time filter to the first value code.
+  // If 'top' is used, it will apply the time filter to the number of value codes.
+  // If undefined, it will create a saved query with the current variable selections without any time filter.
+  // The function uses the export utility to create the saved query
+  // and handles success and error cases, updating the loading state accordingly.
   async function createSavedQuery(timeFilter?: TimeFilter): Promise<void> {
     const variablesSelection = getVariableSelection(timeFilter);
     setIsLoading(true);
