@@ -3,7 +3,6 @@ import {
   applyTimeFilter,
   createSavedQueryURL,
   exportToFile,
-  getFileExtension,
   getOutputFormatParams,
   getTimestamp,
 } from './exportUtil';
