@@ -65,9 +65,7 @@ export const SaveQueryLoadingButton: React.FC<SaveQueryButtonProps> = ({
       iconPosition="left"
       loading={true}
       aria-busy={true}
-      aria-label={t(
-        'presentation_page.sidemenu.save.savequery.loadingStatus',
-      )}
+      aria-label={t('presentation_page.sidemenu.save.savequery.loadingStatus')}
     ></Button>
   );
 };
