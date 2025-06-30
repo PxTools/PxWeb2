@@ -182,16 +182,14 @@ const RenderTimeUnitFilters: React.FC<{ onFilterChange?: () => void }> = ({
     );
   });
 };
-
-/* const RenderYearsFilters: React.FC<{
-  onFilterChange?: () => void;
-}> = ({ onFilterChange }) => { */
 const RenderYearsFilters: React.FC<{
   onFilterChange?: () => void;
 }> = () => {
   const { state, dispatch } = useContext(FilterContext);
-  const [fromYear, setFromYear] = useState<string | undefined>();
-  const [toYear, setToYear] = useState<string | undefined>();
+  const yearRangeFilter = state.activeFilters.find(
+    (f) => f.type === 'yearRange',
+  );
+  const [fromYear, toYear] = yearRangeFilter?.value.split('-') ?? [];
 
   const rangeMin = state.lastUsedYearRange.min;
   const rangeMax = state.lastUsedYearRange.max;
@@ -207,15 +205,12 @@ const RenderYearsFilters: React.FC<{
     selectedItem: Option | undefined,
     selectVariant: 'from' | 'to',
   ) {
-    const newFrom = selectVariant === 'from' ? selectedItem?.value : fromYear;
-    const newTo = selectVariant === 'to' ? selectedItem?.value : toYear;
+    const existingFrom = fromYear;
+    const existingTo = toYear;
 
-    if (selectVariant === 'from') {
-      setFromYear(selectedItem?.value);
-    }
-    if (selectVariant === 'to') {
-      setToYear(selectedItem?.value);
-    }
+    const newFrom =
+      selectVariant === 'from' ? selectedItem?.value : existingFrom;
+    const newTo = selectVariant === 'to' ? selectedItem?.value : existingTo;
 
     if (newFrom) {
       const label = newTo ? `${newFrom} - ${newTo}` : newFrom;
@@ -232,14 +227,15 @@ const RenderYearsFilters: React.FC<{
           },
         ],
       });
-    } else if (!selectedItem && selectVariant === 'from') {
-      // Fjerner filter hvis fromYear fjernes
-      setFromYear(undefined);
-      setToYear(undefined);
+    }
 
-      const existing = state.activeFilters.find((f) => f.type === 'yearRange');
-      if (existing) {
-        dispatch({ type: ActionType.REMOVE_FILTER, payload: existing.value });
+    if (!selectedItem && selectVariant === 'from') {
+      // Fjern hele år-filteret
+      if (yearRangeFilter) {
+        dispatch({
+          type: ActionType.REMOVE_FILTER,
+          payload: yearRangeFilter.value,
+        });
       }
     }
   }
