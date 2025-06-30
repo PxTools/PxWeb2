@@ -7,6 +7,8 @@ import {
   VariablesSelection,
 } from '@pxweb2/pxweb2-api-client';
 
+export type TimeFilter = 'from' | 'top';
+
 export async function exportToFile(
   tabId: string,
   lang: string,
@@ -92,17 +94,50 @@ export async function createNewSavedQuery(
     language: lang,
   };
 
-  console.log({ sq });
+  //console.log({ sq });
 
   let id = '';
   await SavedQueriesService.createSaveQuery(sq).then((response) => {
-    //  await createDummySavedQuery(sq).then((response) => {
+  //await createDummySavedQuery(sq).then((response) => {
     if (response.id !== undefined) {
       id = response.id;
     }
   });
 
   return id;
+}
+
+/**
+ * Applies a time filter to the given value codes.
+ * If the time filter is 'from', it keeps only the first value code.
+ * If the time filter is 'top', it replaces the value codes with a single 'top' filter
+ * based on the number of value codes.
+ * @param {string[]} valCodes - The value codes to apply the time filter to.
+ * @param {TimeFilter} timeFilter - The time filter to apply ('from' or 'top').
+ * @returns {string[]} - The modified value codes after applying the time filter.
+ */
+// Note: This function modifies the input array and returns it.
+// It is designed to be used in a way that the original array is replaced with the modified one.
+// If you want to keep the original array intact, you should create a copy of it before passing it to this function.
+export function applyTimeFilter(
+  valCodes: string[],
+  timeFilter: TimeFilter,
+): string[] {
+  if (timeFilter === 'from') {
+    if (valCodes.length > 0) {
+      const fromFilter = 'from(' + valCodes[0] + ')';
+      valCodes = [];
+      valCodes.push(fromFilter);
+    }
+  }
+  if (timeFilter === 'top') {
+    if (valCodes.length > 0) {
+      const topFilter = 'top(' + valCodes.length.toString() + ')';
+      valCodes = [];
+      valCodes.push(topFilter);
+    }
+  }
+  return valCodes;
 }
 
 // async function createDummySavedQuery(sq: SavedQuery): Promise<SavedQuery> {

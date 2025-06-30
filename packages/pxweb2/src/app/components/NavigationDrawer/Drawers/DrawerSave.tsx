@@ -18,8 +18,10 @@ import {
   VariablesSelection,
 } from '@pxweb2/pxweb2-api-client';
 import {
+  applyTimeFilter,
   createNewSavedQuery,
   exportToFile,
+  TimeFilter,
 } from '../../../util/export/exportUtil';
 import useVariables from '../../../context/useVariables';
 import useTableData from '../../../context/useTableData';
@@ -28,8 +30,6 @@ import { problemMessage } from '../../../util/problemMessage';
 export type DrawerSaveProps = {
   readonly tableId: string;
 };
-
-type TimeFilter = 'from' | 'top';
 
 export function DrawerSave({ tableId }: DrawerSaveProps) {
   const { t, i18n } = useTranslation();
@@ -68,20 +68,7 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
 
       // If time filter is used, we need to check if the variable is the time variable
       if (timeFilter && timeVarId && id === timeVarId) {
-        if (timeFilter === 'from') {
-          if (valCodes.length > 0) {
-            const fromFilter = 'from(' + valCodes[0] + ')';
-            valCodes = [];
-            valCodes.push(fromFilter);
-          }
-        }
-        if (timeFilter === 'top') {
-          if (valCodes.length > 0) {
-            const topFilter = 'top(' + valCodes.length.toString() + ')';
-            valCodes = [];
-            valCodes.push(topFilter);
-          }
-        }
+        valCodes = applyTimeFilter(valCodes, timeFilter);
       }
 
       const selection: VariableSelection = {
