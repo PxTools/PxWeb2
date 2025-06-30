@@ -118,6 +118,18 @@ export function SearchSelect({
     }
   };
 
+  const handleBlur = () => {
+    setTimeout(() => {
+      setIsOpen(false);
+      const exactMatch = options.find(
+        (opt) => opt.label.toLowerCase() === inputValue.trim().toLowerCase(),
+      );
+      if (!exactMatch) {
+        setInputValue('');
+      }
+    }, 100);
+  };
+
   const showClearButton = !!selectedOption || inputValue.length > 0;
 
   return (
@@ -149,7 +161,7 @@ export function SearchSelect({
           }}
           onFocus={() => setIsOpen(true)}
           onKeyDown={handleKeyDown}
-          onBlur={() => setTimeout(() => setIsOpen(false), 100)}
+          onBlur={handleBlur}
           role="combobox"
           inputMode={inputMode}
           pattern={inputMode === 'numeric' ? '[0-9]*' : undefined}
