@@ -109,7 +109,8 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
   /**
    * Saves the current table data to a file in the specified format.
    *
-   * @param {string} fileFormat - The format to save the file in (e.g., 'excel', 'csv', etc.).
+   * @param {OutputFormatType} outputFormat - The format in which to save the file.
+   * Supported formats include 'excel', 'csv', 'px', 'jsonstat2', 'html', and 'parquet'.
    * @returns {Promise<void>} - A promise that resolves when the file is saved.
    * Throws an error if the export fails.
    * @throws {ApiError} - If there is an error during the export process.
@@ -120,12 +121,12 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
    * The function handles success and error cases,
    * updating the loading state accordingly.
    */
-  async function saveToFile(fileFormat: string): Promise<void> {
+  async function saveToFile(outputFormat: OutputFormatType): Promise<void> {
     const variablesSelection = getVariableSelection();
     setIsLoading(true);
 
     // Export the file using the export utility
-    await exportToFile(tableId, i18n.language, variablesSelection, fileFormat)
+    await exportToFile(tableId, i18n.language, variablesSelection, outputFormat)
       .then(
         () => {
           // Notify user of successful export
@@ -189,32 +190,32 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
         <div>
           <ActionItem
             ariaLabel={t('presentation_page.sidemenu.save.file.excel')}
-            onClick={() => saveToFile('excel')}
+            onClick={() => saveToFile(OutputFormatType.XLSX)}
             iconName="FileText"
           />
           <ActionItem
             ariaLabel={t('presentation_page.sidemenu.save.file.csv')}
-            onClick={() => saveToFile('csv')}
+            onClick={() => saveToFile(OutputFormatType.CSV)}
             iconName="FileText"
           />
           <ActionItem
             ariaLabel={t('presentation_page.sidemenu.save.file.px')}
-            onClick={() => saveToFile('px')}
+            onClick={() => saveToFile(OutputFormatType.PX)}
             iconName="FileCode"
           />
           <ActionItem
             ariaLabel={t('presentation_page.sidemenu.save.file.jsonstat2')}
-            onClick={() => saveToFile('jsonstat2')}
+            onClick={() => saveToFile(OutputFormatType.JSON_STAT2)}
             iconName="FileCode"
           />
           <ActionItem
             ariaLabel={t('presentation_page.sidemenu.save.file.html')}
-            onClick={() => saveToFile('html')}
+            onClick={() => saveToFile(OutputFormatType.HTML)}
             iconName="FileCode"
           />
           <ActionItem
             ariaLabel={t('presentation_page.sidemenu.save.file.parquet')}
-            onClick={() => saveToFile('parquet')}
+            onClick={() => saveToFile(OutputFormatType.PARQUET)}
             iconName="FileCode"
           />
         </div>

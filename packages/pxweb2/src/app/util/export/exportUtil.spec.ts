@@ -4,6 +4,7 @@ import {
   createSavedQueryURL,
   exportToFile,
   getFileExtension,
+  getOutputFormatParams,
   getTimestamp,
 } from './exportUtil';
 import {
@@ -91,7 +92,7 @@ describe('exportToFile', () => {
     (TableService.getTableDataByPost as any).mockResolvedValueOnce(
       'excel-data',
     );
-    await exportToFile(tabId, lang, variablesSelection, 'excel');
+    await exportToFile(tabId, lang, variablesSelection, OutputFormatType.XLSX);
     expect(TableService.getTableDataByPost).toHaveBeenCalledWith(
       tabId,
       lang,
@@ -104,7 +105,7 @@ describe('exportToFile', () => {
 
   it('should export as csv', async () => {
     (TableService.getTableDataByPost as any).mockResolvedValueOnce('csv-data');
-    await exportToFile(tabId, lang, variablesSelection, 'csv');
+    await exportToFile(tabId, lang, variablesSelection, OutputFormatType.CSV);
     expect(TableService.getTableDataByPost).toHaveBeenCalledWith(
       tabId,
       lang,
@@ -121,7 +122,7 @@ describe('exportToFile', () => {
 
   it('should export as px', async () => {
     (TableService.getTableDataByPost as any).mockResolvedValueOnce('px-data');
-    await exportToFile(tabId, lang, variablesSelection, 'px');
+    await exportToFile(tabId, lang, variablesSelection, OutputFormatType.PX);
     expect(TableService.getTableDataByPost).toHaveBeenCalledWith(
       tabId,
       lang,
@@ -135,7 +136,12 @@ describe('exportToFile', () => {
   it('should export as jsonstat2', async () => {
     const jsonData = { foo: 'bar' };
     (TableService.getTableDataByPost as any).mockResolvedValueOnce(jsonData);
-    await exportToFile(tabId, lang, variablesSelection, 'jsonstat2');
+    await exportToFile(
+      tabId,
+      lang,
+      variablesSelection,
+      OutputFormatType.JSON_STAT2,
+    );
     expect(TableService.getTableDataByPost).toHaveBeenCalledWith(
       tabId,
       lang,
@@ -148,7 +154,7 @@ describe('exportToFile', () => {
 
   it('should export as html', async () => {
     (TableService.getTableDataByPost as any).mockResolvedValueOnce('html-data');
-    await exportToFile(tabId, lang, variablesSelection, 'html');
+    await exportToFile(tabId, lang, variablesSelection, OutputFormatType.HTML);
     expect(TableService.getTableDataByPost).toHaveBeenCalledWith(
       tabId,
       lang,
@@ -163,24 +169,16 @@ describe('exportToFile', () => {
     (TableService.getTableDataByPost as any).mockResolvedValueOnce(
       'parquet-data',
     );
-    await exportToFile(tabId, lang, variablesSelection, 'parquet');
+    await exportToFile(
+      tabId,
+      lang,
+      variablesSelection,
+      OutputFormatType.PARQUET,
+    );
     expect(TableService.getTableDataByPost).toHaveBeenCalledWith(
       tabId,
       lang,
       OutputFormatType.PARQUET,
-      [],
-      variablesSelection,
-    );
-    expect(clickMock).toHaveBeenCalled();
-  });
-
-  it('should use CSV as default for unknown fileFormat', async () => {
-    (TableService.getTableDataByPost as any).mockResolvedValueOnce('csv-data');
-    await exportToFile(tabId, lang, variablesSelection, 'unknown');
-    expect(TableService.getTableDataByPost).toHaveBeenCalledWith(
-      tabId,
-      lang,
-      OutputFormatType.CSV,
       [],
       variablesSelection,
     );
@@ -266,34 +264,40 @@ describe('createSavedQueryURL', () => {
   });
 });
 
-describe('getFileExtension', () => {
-  it('should return "xlsx" for "excel"', () => {
-    expect(getFileExtension('excel')).toBe('xlsx');
+describe('getOutputFormatParams', () => {
+  it('returns [INCLUDE_TITLE] for XLSX', () => {
+    expect(getOutputFormatParams(OutputFormatType.XLSX)).toEqual([
+      OutputFormatParamType.INCLUDE_TITLE,
+    ]);
   });
 
-  it('should return "csv" for "csv"', () => {
-    expect(getFileExtension('csv')).toBe('csv');
+  it('returns [SEPARATOR_SEMICOLON, INCLUDE_TITLE, USE_TEXTS] for CSV', () => {
+    expect(getOutputFormatParams(OutputFormatType.CSV)).toEqual([
+      OutputFormatParamType.SEPARATOR_SEMICOLON,
+      OutputFormatParamType.INCLUDE_TITLE,
+      OutputFormatParamType.USE_TEXTS,
+    ]);
   });
 
-  it('should return "px" for "px"', () => {
-    expect(getFileExtension('px')).toBe('px');
+  it('returns [] for PX', () => {
+    expect(getOutputFormatParams(OutputFormatType.PX)).toEqual([]);
   });
 
-  it('should return "json" for "jsonstat2"', () => {
-    expect(getFileExtension('jsonstat2')).toBe('json');
+  it('returns [] for JSON_STAT2', () => {
+    expect(getOutputFormatParams(OutputFormatType.JSON_STAT2)).toEqual([]);
   });
 
-  it('should return "html" for "html"', () => {
-    expect(getFileExtension('html')).toBe('html');
+  it('returns [INCLUDE_TITLE] for HTML', () => {
+    expect(getOutputFormatParams(OutputFormatType.HTML)).toEqual([
+      OutputFormatParamType.INCLUDE_TITLE,
+    ]);
   });
 
-  it('should return "parquet" for "parquet"', () => {
-    expect(getFileExtension('parquet')).toBe('parquet');
+  it('returns [] for PARQUET', () => {
+    expect(getOutputFormatParams(OutputFormatType.PARQUET)).toEqual([]);
   });
 
-  it('should return "csv" for unknown file formats', () => {
-    expect(getFileExtension('unknown')).toBe('csv');
-    expect(getFileExtension('')).toBe('csv');
-    expect(getFileExtension(undefined as any)).toBe('csv');
+  it('returns [] for unknown format', () => {
+    expect(getOutputFormatParams('UNKNOWN' as any)).toEqual([]);
   });
 });

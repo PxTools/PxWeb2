@@ -24,42 +24,11 @@ export async function exportToFile(
   tabId: string,
   lang: string,
   variablesSelection: VariablesSelection,
-  fileFormat: string,
+  outputFormat: OutputFormatType,
 ): Promise<void> {
-  let outputFormat: OutputFormatType;
-  let outputFormatParams: Array<OutputFormatParamType> = [];
-  const fileExtension: string = getFileExtension(fileFormat);
-
-  switch (fileFormat) {
-    case 'excel':
-      outputFormat = OutputFormatType.XLSX;
-      outputFormatParams = [OutputFormatParamType.INCLUDE_TITLE];
-      break;
-    case 'csv':
-      outputFormat = OutputFormatType.CSV;
-      outputFormatParams = [
-        OutputFormatParamType.SEPARATOR_SEMICOLON,
-        OutputFormatParamType.INCLUDE_TITLE,
-        OutputFormatParamType.USE_TEXTS,
-      ];
-      break;
-    case 'px':
-      outputFormat = OutputFormatType.PX;
-      break;
-    case 'jsonstat2':
-      outputFormat = OutputFormatType.JSON_STAT2;
-      break;
-    case 'html':
-      outputFormat = OutputFormatType.HTML;
-      outputFormatParams = [OutputFormatParamType.INCLUDE_TITLE];
-      break;
-    case 'parquet':
-      outputFormat = OutputFormatType.PARQUET;
-      break;
-    default:
-      outputFormat = OutputFormatType.CSV;
-      break;
-  }
+  const outputFormatParams: Array<OutputFormatParamType> =
+    getOutputFormatParams(outputFormat);
+  const fileExtension: string = getFileExtension(outputFormat);
 
   await TableService.getTableDataByPost(
     tabId,
@@ -69,7 +38,7 @@ export async function exportToFile(
     variablesSelection,
   ).then((response) => {
     let blob: Blob;
-    if (fileFormat === 'jsonstat2') {
+    if (outputFormat === OutputFormatType.JSON_STAT2) {
       blob = new Blob([JSON.stringify(response)]);
     } else {
       blob = new Blob([response]);
@@ -87,26 +56,64 @@ export async function exportToFile(
  * Returns the file extension based on the provided file format.
  * This function maps the file format to its corresponding file extension.
  *
- * @param {string} fileFormat - The format of the file (e.g., 'excel', 'csv', 'px', 'jsonstat2', 'html', 'parquet').
+ * @param {OutputFormatType} outputFormat - The file format for which to get the extension.
+ * Supported formats include XLSX, CSV, PX, JSON_STAT2, HTML, and PARQUET.
  * @returns {string} - The file extension corresponding to the given file format.
  */
-export function getFileExtension(fileFormat: string): string {
-  switch (fileFormat) {
-    case 'excel':
+export function getFileExtension(outputFormat: OutputFormatType): string {
+  switch (outputFormat) {
+    case OutputFormatType.XLSX:
       return 'xlsx';
-    case 'csv':
+    case OutputFormatType.CSV:
       return 'csv';
-    case 'px':
+    case OutputFormatType.PX:
       return 'px';
-    case 'jsonstat2':
+    case OutputFormatType.JSON_STAT2:
       return 'json';
-    case 'html':
+    case OutputFormatType.HTML:
       return 'html';
-    case 'parquet':
+    case OutputFormatType.PARQUET:
       return 'parquet';
     default:
       return 'csv'; // Default to CSV if no match found
   }
+}
+
+/**
+ * Returns the output format parameters based on the provided output format.
+ * This function determines which parameters are applicable for the specified output format.
+ *
+ * @param {OutputFormatType} outputFormat - The output format for which to get the parameters.
+ * Supported formats include XLSX, CSV, PX, JSON_STAT2, HTML, and PARQUET.
+ * @returns {Array<OutputFormatParamType>} - An array of output format parameters applicable to the given format.
+ */
+export function getOutputFormatParams(
+  outputFormat: OutputFormatType,
+): Array<OutputFormatParamType> {
+  let outputFormatParams: Array<OutputFormatParamType> = [];
+  switch (outputFormat) {
+    case OutputFormatType.XLSX:
+      outputFormatParams = [OutputFormatParamType.INCLUDE_TITLE];
+      break;
+    case OutputFormatType.CSV:
+      outputFormatParams = [
+        OutputFormatParamType.SEPARATOR_SEMICOLON,
+        OutputFormatParamType.INCLUDE_TITLE,
+        OutputFormatParamType.USE_TEXTS,
+      ];
+      break;
+    case OutputFormatType.PX:
+      break;
+    case OutputFormatType.JSON_STAT2:
+      break;
+    case OutputFormatType.HTML:
+      outputFormatParams = [OutputFormatParamType.INCLUDE_TITLE];
+      break;
+    case OutputFormatType.PARQUET:
+      break;
+    default:
+  }
+  return outputFormatParams;
 }
 
 /** * Creates a new saved query with the specified parameters.
@@ -141,8 +148,6 @@ export async function createNewSavedQuery(
     selection: variablesSelection,
     language: lang,
   };
-
-  //console.log({ sq });
 
   let id = '';
   await SavedQueriesService.createSaveQuery(sq).then((response) => {
