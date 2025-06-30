@@ -202,5 +202,4 @@ describe('applyTimeFilter', () => {
     const result = applyTimeFilter([], 'top');
     expect(result).toEqual([]);
   });
-
 });
