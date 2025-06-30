@@ -190,7 +190,7 @@ const RenderSubjects: React.FC<{
               isActive={isChecked}
               onFilterChange={onFilterChange}
             >
-              {subject.children && (
+              {!!subject.children?.length && (
                 <RenderSubjects
                   firstLevel={false}
                   subjects={subject.children}
