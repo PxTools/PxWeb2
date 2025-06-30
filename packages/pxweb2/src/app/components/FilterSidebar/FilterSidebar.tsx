@@ -210,8 +210,12 @@ const RenderYearsFilters: React.FC<{
     const newFrom = selectVariant === 'from' ? selectedItem?.value : fromYear;
     const newTo = selectVariant === 'to' ? selectedItem?.value : toYear;
 
-    if (selectVariant === 'from') setFromYear(selectedItem?.value);
-    if (selectVariant === 'to') setToYear(selectedItem?.value);
+    if (selectVariant === 'from') {
+      setFromYear(selectedItem?.value);
+    }
+    if (selectVariant === 'to') {
+      setToYear(selectedItem?.value);
+    }
 
     if (newFrom) {
       const label = newTo ? `${newFrom} - ${newTo}` : newFrom;
