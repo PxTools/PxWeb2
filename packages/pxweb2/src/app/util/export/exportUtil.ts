@@ -98,7 +98,7 @@ export async function createNewSavedQuery(
 
   let id = '';
   await SavedQueriesService.createSaveQuery(sq).then((response) => {
-    //await createDummySavedQuery(sq).then((response) => {
+    //  await createDummySavedQuery(sq).then((response) => {
     if (response.id !== undefined) {
       id = response.id;
     }
@@ -106,6 +106,12 @@ export async function createNewSavedQuery(
 
   return id;
 }
+
+// async function createDummySavedQuery(sq: SavedQuery): Promise<SavedQuery> {
+//   await new Promise((resolve) => setTimeout(resolve, 1000));
+//   sq.id = '666';
+//   return sq;
+// }
 
 /**
  * Applies a time filter to the given value codes.
@@ -140,13 +146,22 @@ export function applyTimeFilter(
   return valCodes;
 }
 
-// async function createDummySavedQuery(sq: SavedQuery): Promise<SavedQuery> {
-//   await new Promise((resolve) => setTimeout(resolve, 1000));
-//   sq.id = '666';
-//   return sq;
-// }
-
-function getTimestamp(): string {
+/**
+ * Generates a timestamp in the format YYYYMMDD-HHMMSS.
+ * @returns {string} - The current timestamp formatted as YYYYMMDD-HHMMSS.
+ */
+// This function is useful for naming files with a unique timestamp.
+// It ensures that the timestamp is always in a consistent format, making it easy to sort files
+// by their creation time.
+// Example output: "20231005-123456" for October 5, 2023, at 12:34:56.
+// Note: The month is zero-indexed in JavaScript, so we add 1 to the month value.
+// The day, hours, minutes, and seconds are padded with leading zeros to ensure they are
+// always two digits.
+// This function does not take any parameters and returns a string.
+// It can be used in various scenarios where a timestamp is needed, such as file naming,
+// logging, or tracking events.
+// Example usage: const timestamp = getTimestamp(); console.log(timestamp);
+export function getTimestamp(): string {
   const now = new Date();
   return `${now.getFullYear()}${(now.getMonth() + 1)
     .toString()
@@ -157,4 +172,20 @@ function getTimestamp(): string {
     .getSeconds()
     .toString()
     .padStart(2, '0')}`;
+}
+
+/**
+ * Creates a URL for the saved query with the given ID.
+ * The URL will include the base URL, current path, and query parameters.
+ *
+ * @param {string} id - The ID of the saved query.
+ * @returns {string} - The complete URL for the saved query.
+ */
+export function createSavedQueryURL(id: string): string {
+  const baseUrl = window.location.origin;
+  const path = window.location.pathname;
+  const queryParams = new URLSearchParams({
+    sq: id,
+  });
+  return `${baseUrl}${path}?${queryParams.toString()}`;
 }

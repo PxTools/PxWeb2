@@ -1,5 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { applyTimeFilter, exportToFile } from './exportUtil';
+import {
+  applyTimeFilter,
+  createSavedQueryURL,
+  exportToFile,
+  getTimestamp,
+} from './exportUtil';
 import {
   OutputFormatType,
   OutputFormatParamType,
@@ -201,5 +206,61 @@ describe('applyTimeFilter', () => {
   it('should return an empty array if input is empty and timeFilter is "top"', () => {
     const result = applyTimeFilter([], 'top');
     expect(result).toEqual([]);
+  });
+});
+
+describe('getTimestamp', () => {
+  it('should return a string in the format YYYYMMDD-HHMMSS', () => {
+    // Mock Date to a fixed value: 2023-10-05T12:34:56
+    const mockDate = new Date(2023, 9, 5, 12, 34, 56); // Month is 0-indexed
+    vi.useFakeTimers();
+    vi.setSystemTime(mockDate);
+
+    const timestamp = getTimestamp();
+    expect(timestamp).toBe('20231005-123456');
+
+    vi.useRealTimers();
+  });
+
+  it('should pad single digit months, days, hours, minutes, and seconds with zeros', () => {
+    // Mock Date to: 2023-01-02T03:04:05
+    const mockDate = new Date(2023, 0, 2, 3, 4, 5);
+    vi.useFakeTimers();
+    vi.setSystemTime(mockDate);
+
+    const timestamp = getTimestamp();
+    expect(timestamp).toBe('20230102-030405');
+
+    vi.useRealTimers();
+  });
+});
+
+describe('createSavedQueryURL', () => {
+  const originalLocation = window.location;
+
+  beforeEach(() => {
+    // @ts-ignore
+    delete window.location;
+    // @ts-ignore
+    window.location = {
+      origin: 'https://example.com',
+      pathname: '/myapp/page',
+    };
+  });
+
+  afterEach(() => {
+    (window as any).location = originalLocation;
+  });
+
+  it('should create a URL with the given saved query id', () => {
+    const url = createSavedQueryURL('12345');
+    expect(url).toBe('https://example.com/myapp/page?sq=12345');
+  });
+
+  it('should encode the id if it contains special characters', () => {
+    const url = createSavedQueryURL('id with spaces & symbols');
+    expect(url).toBe(
+      'https://example.com/myapp/page?sq=id+with+spaces+%26+symbols',
+    );
   });
 });

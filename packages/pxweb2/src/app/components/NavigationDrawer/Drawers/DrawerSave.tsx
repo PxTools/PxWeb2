@@ -20,6 +20,7 @@ import {
 import {
   applyTimeFilter,
   createNewSavedQuery,
+  createSavedQueryURL,
   exportToFile,
   TimeFilter,
 } from '../../../util/export/exportUtil';
@@ -166,22 +167,6 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
       .finally(() => {
         setIsLoading(false);
       });
-  }
-
-  /**
-   * Creates a URL for the saved query with the given ID.
-   * The URL will include the base URL, current path, and query parameters.
-   *
-   * @param {string} id - The ID of the saved query.
-   * @returns {string} - The complete URL for the saved query.
-   */
-  function createSavedQueryURL(id: string): string {
-    const baseUrl = window.location.origin;
-    const path = window.location.pathname;
-    const queryParams = new URLSearchParams({
-      sq: id,
-    });
-    return `${baseUrl}${path}?${queryParams.toString()}`;
   }
 
   return (
