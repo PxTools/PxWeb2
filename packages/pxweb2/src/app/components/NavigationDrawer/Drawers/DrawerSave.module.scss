@@ -12,3 +12,9 @@
   margin: 0; // Remove margin so centering is exact
   align-self: auto; // Remove align-self so absolute positioning works
 }
+
+.saveAsActionList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
