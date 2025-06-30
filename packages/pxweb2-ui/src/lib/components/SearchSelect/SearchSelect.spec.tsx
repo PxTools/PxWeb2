@@ -3,10 +3,10 @@ import { describe, it, expect, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import userEvent from '@testing-library/user-event';
 
-import { SearchSelect, type SelectOption } from './SearchSelect';
+import { SearchSelect, type Option } from './SearchSelect';
 
 describe('SearchableSelect', () => {
-  const mockOptions: SelectOption[] = [
+  const mockOptions: Option[] = [
     { label: 'Option 1', value: '1' },
     { label: 'Option 2', value: '2' },
     { label: 'Option 3', value: '3' },
