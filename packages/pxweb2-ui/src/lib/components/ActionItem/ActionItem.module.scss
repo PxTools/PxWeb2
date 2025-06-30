@@ -49,8 +49,11 @@
 .labelDescriptionWrapper {
   display: flex;
   flex-direction: column;
-  align-items: start;
+  align-items: flex-start; // ensures left alignment
   gap: 0.5rem;
+  text-align: start; // aligns text to the start
+  word-break: break-word; // allows long words to wrap
+  white-space: normal; // allows normal text wrapping
 }
 
 .iconLabelWrapper-large {
