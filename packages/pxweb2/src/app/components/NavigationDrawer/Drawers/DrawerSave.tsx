@@ -292,7 +292,9 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
       // Simulate API call to create a query
       const newId = generateRandomQueryId();
       setQueryId(newId);
-      setsaveQueryUrl(`https://thisismybeautifulpxsqurl.com/query?queryId=${newId}`);
+      setsaveQueryUrl(
+        `https://thisismybeautifulpxsqurl.com/query?queryId=${newId}`,
+      );
       setSaveQueryButtonState('copy');
     }, 2000);
   }
