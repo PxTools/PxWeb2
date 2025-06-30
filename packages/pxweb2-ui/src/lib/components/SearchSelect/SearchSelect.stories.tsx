@@ -1,5 +1,5 @@
 import type { Meta, StoryFn, StoryObj } from '@storybook/react-vite';
-import { SearchSelect, type SelectOption } from './SearchSelect';
+import { SearchSelect, type Option } from './SearchSelect';
 
 const meta: Meta<typeof SearchSelect> = {
   component: SearchSelect,
@@ -12,7 +12,7 @@ export default meta;
 
 type Story = StoryObj<typeof SearchSelect>;
 
-const generateYearOptions = (start: number, end: number): SelectOption[] =>
+const generateYearOptions = (start: number, end: number): Option[] =>
   Array.from({ length: end - start + 1 }, (_, i) => {
     const year = (start + i).toString();
     return { label: year, value: year };
@@ -20,7 +20,7 @@ const generateYearOptions = (start: number, end: number): SelectOption[] =>
 
 const options = generateYearOptions(1980, 2025);
 
-function selectedOptionChanged(selectedItem: SelectOption | undefined) {
+function selectedOptionChanged(selectedItem: Option | undefined) {
   selectedItem
     ? console.log('Selected option: ' + selectedItem.label)
     : console.log('No option selected');

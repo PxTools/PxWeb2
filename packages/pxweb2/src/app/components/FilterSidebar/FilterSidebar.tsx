@@ -3,7 +3,13 @@ import cl from 'clsx';
 import { ActionType } from '../../pages/StartPage/StartPageTypes';
 import styles from './FilterSidebar.module.scss';
 import { useTranslation } from 'react-i18next';
-import { Checkbox, FilterCategory, Button } from '@pxweb2/pxweb2-ui';
+import {
+  Checkbox,
+  FilterCategory,
+  Button,
+  SearchSelect,
+  type Option,
+} from '@pxweb2/pxweb2-ui';
 import { PathItem, findParent } from '../../util/startPageFilters';
 import { FilterContext } from '../../context/FilterContext';
 import { ReactNode, useContext, useState } from 'react';
@@ -177,6 +183,53 @@ const RenderTimeUnitFilters: React.FC<{ onFilterChange?: () => void }> = ({
   });
 };
 
+/* const RenderYearsFilters: React.FC<{
+  onFilterChange?: () => void;
+}> = ({ onFilterChange }) => { */
+const RenderYearsFilters: React.FC<{
+  onFilterChange?: () => void;
+}> = () => {
+  const { state } = useContext(FilterContext);
+
+  const rangeMin = state.lastUsedYearRange.min;
+  const rangeMax = state.lastUsedYearRange.max;
+  const generateYearOptions = (start: number, end: number): Option[] =>
+    Array.from({ length: end - start + 1 }, (_, i) => {
+      const year = (start + i).toString();
+      return { label: year, value: year };
+    });
+
+  const options = generateYearOptions(rangeMin, rangeMax);
+
+  function selectedOptionChanged(
+    selectedItem: Option | undefined,
+    selectVariant: 'from' | 'to',
+  ) {
+    selectedItem
+      ? console.log('Legg til år: ' + selectedItem.label + selectVariant)
+      : console.log('Fjernet år ' + selectVariant);
+  }
+
+  return (
+    <div className={cl(styles.filterItem, styles.yearRange)}>
+      <SearchSelect
+        id="year-from"
+        label="From year"
+        options={options}
+        onSelect={(item) => selectedOptionChanged(item, 'from')}
+        inputMode="numeric"
+      ></SearchSelect>
+      <SearchSelect
+        id="year-to"
+        label="To year"
+        options={options}
+        onSelect={(item) => selectedOptionChanged(item, 'to')}
+        inputMode="numeric"
+      ></SearchSelect>
+    </div>
+  );
+};
+
 export const FilterSidebar: React.FC<FilterSidebarProps> = ({
   onFilterChange,
 }) => {
@@ -185,7 +238,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
 
   return (
     <div className={styles.sideBar}>
-      <div>
+      <div className={styles.sideBarWrapper}>
         <FilterCategory header={t('start_page.filter.subject')}>
           <ul className={styles.filterList}>
             <RenderSubjects
@@ -198,6 +251,11 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
         <FilterCategory header={t('start_page.filter.timeUnit')}>
           <ul className={styles.filterList}>
             <RenderTimeUnitFilters onFilterChange={onFilterChange} />
+          </ul>
+        </FilterCategory>
+        <FilterCategory header={t('start_page.filter.year')}>
+          <ul className={styles.filterList}>
+            <RenderYearsFilters onFilterChange={onFilterChange} />
           </ul>
         </FilterCategory>
       </div>

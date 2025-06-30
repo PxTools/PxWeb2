@@ -6,18 +6,18 @@ import { Label } from '../Typography/Label/Label';
 import { Button } from '../Button/Button';
 import styles from './SearchSelect.module.scss';
 
-export type SelectOption = {
+export type Option = {
   label: string;
   value: string;
 };
 
 type SearchSelectProps = {
   id?: string;
-  options: SelectOption[];
+  options: Option[];
   placeholder?: string;
   label?: string;
-  onSelect: (option: SelectOption | undefined) => void;
-  selectedOption?: SelectOption;
+  onSelect: (option: Option | undefined) => void;
+  selectedOption?: Option;
   noOptionsText?: string;
   inputMode?: React.HTMLAttributes<HTMLInputElement>['inputMode'];
 };
@@ -66,7 +66,7 @@ export function SearchSelect({
       )
     : options;
 
-  const handleSelect = (option: SelectOption) => {
+  const handleSelect = (option: Option) => {
     onSelect(option);
     setInputValue(option.label);
     setIsOpen(false);

@@ -13,6 +13,11 @@ type TableWithPaths = Table & {
   paths?: { id: string; label: string }[][];
 };
 
+export interface YearRange {
+  min: number;
+  max: number;
+}
+
 export function getSubjectTree(tables: Table[]): PathItem[] {
   const allPaths: PathItem[][] = getAllPath(tables);
   const organizedPaths: PathItem[] = organizePaths(allPaths);
@@ -72,6 +77,7 @@ export function getFilters(tables: Table[]): StartPageFilters {
   let filters: StartPageFilters = {
     timeUnits: new Map<string, number>(),
     subjectTree: [],
+    yearRange: { min: 0, max: 9999 },
   };
 
   filters.timeUnits = getTimeUnits(tables);
@@ -139,4 +145,26 @@ export function findParent(
     }
   }
   return null;
+}
+
+export function getYearRanges(tables: Table[]): YearRange {
+  const yearsPeriod: number[] = [];
+  tables.forEach((table) => {
+    if (table.firstPeriod && table.lastPeriod) {
+      yearsPeriod.push(extractYear(table.firstPeriod));
+      yearsPeriod.push(extractYear(table.lastPeriod));
+    }
+  });
+  return {
+    min: Math.min(...yearsPeriod),
+    max: Math.max(...yearsPeriod),
+  };
+}
+
+export function extractYear(period: string | null | undefined): number {
+  if (!period) {
+    return NaN;
+  }
+  const match = period.match(/\d{4}/);
+  return match ? parseInt(match[0], 10) : NaN;
 }
