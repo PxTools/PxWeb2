@@ -276,7 +276,10 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
   ];
 
   function generateRandomQueryId(): string {
-    return Math.floor(100000 + Math.random() * 900000).toString();
+    const array = new Uint32Array(1);
+    window.crypto.getRandomValues(array);
+    // Ensure 6 digits, pad with zeros if needed
+    return (array[0] % 1000000).toString().padStart(6, '0');
   }
 
   function onCreateClick() {
@@ -289,7 +292,7 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
       // Simulate API call to create a query
       const newId = generateRandomQueryId();
       setQueryId(newId);
-      setsaveQueryUrl(`https://example.com/query?queryId=${newId}`);
+      setsaveQueryUrl(`https://thisismybeautifulpxsqurl.com/query?queryId=${newId}`);
       setSaveQueryButtonState('copy');
     }, 2000);
   }
