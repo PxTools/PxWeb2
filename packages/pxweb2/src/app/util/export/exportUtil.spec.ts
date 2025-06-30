@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { exportToFile } from './exportUtil';
+import { applyTimeFilter, exportToFile } from './exportUtil';
 import {
   OutputFormatType,
   OutputFormatParamType,
@@ -180,4 +180,27 @@ describe('exportToFile', () => {
     );
     expect(clickMock).toHaveBeenCalled();
   });
+});
+
+describe('applyTimeFilter', () => {
+  it('should wrap the first value with from() if timeFilter is "from"', () => {
+    const result = applyTimeFilter(['2020', '2021', '2022'], 'from');
+    expect(result).toEqual(['from(2020)']);
+  });
+
+  it('should return an empty array if input is empty and timeFilter is "from"', () => {
+    const result = applyTimeFilter([], 'from');
+    expect(result).toEqual([]);
+  });
+
+  it('should wrap the length with top() if timeFilter is "top"', () => {
+    const result = applyTimeFilter(['2020', '2021', '2022'], 'top');
+    expect(result).toEqual(['top(3)']);
+  });
+
+  it('should return an empty array if input is empty and timeFilter is "top"', () => {
+    const result = applyTimeFilter([], 'top');
+    expect(result).toEqual([]);
+  });
+
 });
