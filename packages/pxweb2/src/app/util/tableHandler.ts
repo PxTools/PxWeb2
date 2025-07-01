@@ -72,7 +72,8 @@ export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
     if (!Number.isFinite(firstYear) || !Number.isFinite(lastYear)) {
       return false;
     }
-    return from >= firstYear && to <= lastYear;
+
+    return firstYear <= to && lastYear >= from;
   };
 
   return testTimeUnitFilters() && testSubjectFilters() && testYearRangeFilter();
