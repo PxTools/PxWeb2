@@ -168,3 +168,35 @@ export function extractYear(period: string | null | undefined): number {
   const match = period.match(/\d{4}/);
   return match ? parseInt(match[0], 10) : NaN;
 }
+
+export function parseYearRange(filter?: { value: string; label: string }) {
+  let from: string | undefined;
+  let to: string | undefined;
+
+  if (!filter) return { from, to };
+
+  if (filter.value.includes('-')) {
+    [from, to] = filter.value.split('-');
+  } else if (filter.label.startsWith('From')) {
+    from = filter.value;
+  } else if (filter.label.startsWith('To')) {
+    to = filter.value;
+  } else {
+    from = filter.value;
+  }
+
+  return { from, to };
+}
+
+export function getYearRangeLabelValue(from?: string, to?: string) {
+  if (from && to && from !== to) {
+    return { label: `${from} - ${to}`, value: `${from}-${to}` };
+  } else if (from && to && from === to) {
+    return { label: from, value: from };
+  } else if (from) {
+    return { label: `From ${from}`, value: from };
+  } else if (to) {
+    return { label: `To ${to}`, value: to };
+  }
+  return { label: '', value: '' };
+}

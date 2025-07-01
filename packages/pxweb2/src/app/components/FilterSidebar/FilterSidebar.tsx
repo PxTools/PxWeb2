@@ -10,9 +10,14 @@ import {
   SearchSelect,
   type Option,
 } from '@pxweb2/pxweb2-ui';
-import { PathItem, findParent } from '../../util/startPageFilters';
+import {
+  PathItem,
+  findParent,
+  parseYearRange,
+  getYearRangeLabelValue,
+} from '../../util/startPageFilters';
 import { FilterContext } from '../../context/FilterContext';
-import { ReactNode, useContext, useState } from 'react';
+import { ReactNode, useContext, useEffect, useState } from 'react';
 
 interface CollapsibleProps {
   subject: PathItem;
@@ -186,10 +191,16 @@ const RenderYearsFilters: React.FC<{
   onFilterChange?: () => void;
 }> = () => {
   const { state, dispatch } = useContext(FilterContext);
+  const [resetKey, setResetKey] = useState(0);
+
+  useEffect(() => {
+    setResetKey(state.resetYearFilterInput);
+  }, [state.resetYearFilterInput]);
+
   const yearRangeFilter = state.activeFilters.find(
     (f) => f.type === 'yearRange',
   );
-  const [fromYear, toYear] = yearRangeFilter?.value.split('-') ?? [];
+  const { from: fromYear, to: toYear } = parseYearRange(yearRangeFilter);
 
   const rangeMin = state.lastUsedYearRange.min;
   const rangeMax = state.lastUsedYearRange.max;
@@ -205,16 +216,20 @@ const RenderYearsFilters: React.FC<{
     selectedItem: Option | undefined,
     selectVariant: 'from' | 'to',
   ) {
-    const existingFrom = fromYear;
-    const existingTo = toYear;
+    const yearRangeFilter = state.activeFilters.find(
+      (f) => f.type === 'yearRange',
+    );
 
-    const newFrom =
-      selectVariant === 'from' ? selectedItem?.value : existingFrom;
-    const newTo = selectVariant === 'to' ? selectedItem?.value : existingTo;
+    const { from: fromYear, to: toYear } = parseYearRange(yearRangeFilter);
 
-    if (newFrom) {
-      const label = newTo ? `${newFrom} - ${newTo}` : newFrom;
-      const value = newTo ? `${newFrom}-${newTo}` : newFrom;
+    const newFrom = selectVariant === 'from' ? selectedItem?.value : fromYear;
+    const newTo = selectVariant === 'to' ? selectedItem?.value : toYear;
+
+    const hasFrom = !!newFrom;
+    const hasTo = !!newTo;
+
+    if (hasFrom || hasTo) {
+      const { label, value } = getYearRangeLabelValue(newFrom, newTo);
 
       dispatch({
         type: ActionType.ADD_FILTER,
@@ -230,8 +245,28 @@ const RenderYearsFilters: React.FC<{
     }
 
     if (!selectedItem && selectVariant === 'from') {
-      // Fjern hele år-filteret
       if (yearRangeFilter) {
+        dispatch({
+          type: ActionType.REMOVE_FILTER,
+          payload: yearRangeFilter.value,
+        });
+      }
+    }
+
+    if (!selectedItem && selectVariant === 'to') {
+      if (fromYear) {
+        dispatch({
+          type: ActionType.ADD_FILTER,
+          payload: [
+            {
+              type: 'yearRange',
+              value: fromYear,
+              label: `From ${fromYear}`,
+              index: 0,
+            },
+          ],
+        });
+      } else if (yearRangeFilter) {
         dispatch({
           type: ActionType.REMOVE_FILTER,
           payload: yearRangeFilter.value,
@@ -243,6 +278,7 @@ const RenderYearsFilters: React.FC<{
   return (
     <div className={cl(styles.filterItem, styles.yearRange)}>
       <SearchSelect
+        key={`from-${resetKey}`}
         id="year-from"
         label="From year"
         options={options}
@@ -253,6 +289,7 @@ const RenderYearsFilters: React.FC<{
         inputMode="numeric"
       ></SearchSelect>
       <SearchSelect
+        key={`to-${resetKey}`}
         id="year-to"
         label="To year"
         options={options}
