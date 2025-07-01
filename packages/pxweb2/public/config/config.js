@@ -8,7 +8,7 @@ window.PxWeb2Config = {
     fallbackLanguage: 'no',
     showDefaultLanguageInPath: false,
   },
-  apiUrl: 'https://data.qa.ssb.no/api/pxwebapi/v2-beta',
+  apiUrl: 'https://data.ssb.no/api/pxwebapi/v2-beta',
   maxDataCells: 150000,
   specialCharacters: ['.', '..', ':', '-', '...', '*'],
 };
