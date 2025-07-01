@@ -210,7 +210,8 @@ const RenderYearsFilters: React.FC<{
       return { label: year, value: year };
     });
 
-  const options = generateYearOptions(rangeMin, rangeMax);
+  const fromYearOptions = generateYearOptions(rangeMin, rangeMax);
+  const toYearOptions = [...fromYearOptions].reverse();
 
   function selectedOptionChanged(
     selectedItem: Option | undefined,
@@ -281,21 +282,23 @@ const RenderYearsFilters: React.FC<{
         key={`from-${resetKey}`}
         id="year-from"
         label="From year"
-        options={options}
+        options={fromYearOptions}
         selectedOption={
           fromYear ? { label: fromYear, value: fromYear } : undefined
         }
         onSelect={(item) => selectedOptionChanged(item, 'from')}
         inputMode="numeric"
+        optionListStyle={{ maxHeight: '250px' }}
       ></SearchSelect>
       <SearchSelect
         key={`to-${resetKey}`}
         id="year-to"
         label="To year"
-        options={options}
+        options={toYearOptions}
         selectedOption={toYear ? { label: toYear, value: toYear } : undefined}
         onSelect={(item) => selectedOptionChanged(item, 'to')}
         inputMode="numeric"
+        optionListStyle={{ maxHeight: '250px' }}
       ></SearchSelect>
     </div>
   );

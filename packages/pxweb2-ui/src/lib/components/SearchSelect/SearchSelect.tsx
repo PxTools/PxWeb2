@@ -20,6 +20,7 @@ type SearchSelectProps = {
   selectedOption?: Option;
   noOptionsText?: string;
   inputMode?: React.HTMLAttributes<HTMLInputElement>['inputMode'];
+  optionListStyle?: React.CSSProperties;
 };
 
 export function SearchSelect({
@@ -31,6 +32,7 @@ export function SearchSelect({
   selectedOption,
   noOptionsText = 'No results',
   inputMode,
+  optionListStyle,
 }: Readonly<SearchSelectProps>) {
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState('');
@@ -208,6 +210,7 @@ export function SearchSelect({
           role="listbox"
           id={`${searchSelectId}-listbox`}
           aria-labelledby={`${searchSelectId}-label`}
+          style={optionListStyle}
         >
           {filteredOptions.length > 0 ? (
             filteredOptions.map((option, index) => (
