@@ -4,13 +4,10 @@ import { ActionType } from '../../pages/StartPage/StartPageTypes';
 import styles from './FilterSidebar.module.scss';
 import { useTranslation } from 'react-i18next';
 import { Checkbox, FilterCategory } from '@pxweb2/pxweb2-ui';
-import {
-  PathItem,
-  findAncestors,
-  findChildren,
-} from '../../util/startPageFilters';
+import { findAncestors, findChildren } from '../../util/startPageFilters';
+import { PathItem } from '../../pages/StartPage/StartPageTypes';
 import { FilterContext } from '../../context/FilterContext';
-import { ReactNode, useContext, useState } from 'react';
+import { ReactNode, useContext } from 'react';
 
 interface CollapsibleProps {
   subject: PathItem;
@@ -32,7 +29,6 @@ const Collapsible: React.FC<CollapsibleProps> = ({
   children,
   onFilterChange,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
   const { state, dispatch } = useContext(FilterContext);
   const subjectId = subject.id;
   const subjectLabel = subject.label;
@@ -59,6 +55,7 @@ const Collapsible: React.FC<CollapsibleProps> = ({
                     type: 'subject',
                     value: subjectId,
                     label: subjectLabel,
+                    uniqueId: subject.uniqueId,
                     index,
                   },
                 ],
@@ -76,7 +73,6 @@ const Collapsible: React.FC<CollapsibleProps> = ({
                   });
                 }
               }
-              setIsOpen(true);
             } else {
               //Remove subject and all its descendants from filter
               const descendants = [subject, ...children];
@@ -112,6 +108,7 @@ const Collapsible: React.FC<CollapsibleProps> = ({
                         type: 'subject',
                         value: ancestor.id,
                         label: ancestor.label,
+                        uniqueId: ancestor.uniqueId,
                         index,
                       },
                     ],
@@ -135,19 +132,18 @@ const Collapsible: React.FC<CollapsibleProps> = ({
                       type: 'subject',
                       value: parent.id,
                       label: parent.label,
+                      uniqueId: parent.uniqueId,
                       index,
                     },
                   ],
                 });
               }
-
-              setIsOpen(false);
             }
             onFilterChange?.();
           }}
         />
       </span>
-      {isOpen && children}
+      {isActive && children}
     </>
   );
 };
@@ -168,11 +164,11 @@ const RenderSubjects: React.FC<{
         );
         const isChecked =
           state.activeFilters.some(
-            (f) => f.type === 'subject' && f.value === subject.id,
+            (f) => f.type === 'subject' && f.uniqueId === subject.uniqueId,
           ) ||
           descendants.some((d) =>
             state.activeFilters.some(
-              (f) => f.type === 'subject' && f.value === d.id,
+              (f) => f.type === 'subject' && f.uniqueId === d.uniqueId,
             ),
           );
 

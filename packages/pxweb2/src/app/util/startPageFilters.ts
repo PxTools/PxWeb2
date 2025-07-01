@@ -1,12 +1,9 @@
 import { Table } from '@pxweb2/pxweb2-api-client';
-import { StartPageFilters, Filter } from '../pages/StartPage/StartPageTypes';
-
-export interface PathItem {
-  id: string;
-  label: string;
-  children?: PathItem[];
-  count?: number;
-}
+import {
+  StartPageFilters,
+  Filter,
+  PathItem,
+} from '../pages/StartPage/StartPageTypes';
 
 type TableWithPaths = Table & {
   id: string;
@@ -37,6 +34,7 @@ export function organizePaths(paths: PathItem[][]): PathItem[] {
           label: item.label,
           children: [],
           count: 1,
+          uniqueId: Math.random().toString(32).substring(2, 12),
         };
         currentLevel.push(newItem);
         currentLevel = newItem.children!;

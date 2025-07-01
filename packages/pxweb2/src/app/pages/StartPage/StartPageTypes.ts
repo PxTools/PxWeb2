@@ -1,5 +1,4 @@
 import { Table } from '@pxweb2/pxweb2-api-client';
-import { PathItem } from '../../util/startPageFilters';
 
 export enum ActionType {
   RESET_FILTERS = 'RESET_FILTERS',
@@ -15,6 +14,15 @@ export type Filter = {
   value: string;
   label: string;
   index: number;
+  uniqueId?: string;
+};
+
+export type PathItem = {
+  id: string;
+  label: string;
+  children?: PathItem[];
+  count?: number;
+  uniqueId?: string;
 };
 
 export type StartPageState = {
