@@ -43,7 +43,7 @@ describe('Selection', () => {
       <AccessibilityProvider>
         <Selection
           openedWithKeyboard={false}
-          selectedNavigationView=""
+          selectedNavigationView="none"
           selectedTabId="1"
           setSelectedNavigationView={() => {}}
         />

@@ -48,6 +48,12 @@
     },
     "generic_tags": {
       "mandatory": "Må velges"
+    },
+    "alert": {
+      "info": "Informasjon:",
+      "success": "Suksess:",
+      "warning": "Advarsel:",
+      "error": "Feil:"
     }
   },
   "start_page": {
@@ -63,7 +69,7 @@
       "close": "Lukk filter",
       "header": "Filter",
       "remove_all_filter": "Fjern alle filter",
-      "remove_filter_aria": "Slett {{value}}",
+      "remove_filter_aria": "Fjern filter, {{value}}",
       "subject": "Emne",
       "timeUnit": "Tidsperiode",
       "year": "Årstall",
@@ -81,7 +87,11 @@
       "number_of_tables": "<strong>{{count}}</strong> tabeller",
       "number_of_tables_found": "Treff på <strong>{{count}}</strong> tabeller",
       "updated_label": "Oppdatert",
-      "show_more": "Vis flere"
+      "show_more": "Vis flere",
+      "show_less": "Vis færre",
+      "loading": "Laster...",
+      "show_number_of_tables": "Viser {{countShown}} av {{countTotal}}",
+      "show_number_of_tables_aria": "Treff på {{count}} tabeller, viser {{countShown}} av {{countTotal}}"
     }
   },
   "presentation_page": {
@@ -122,7 +132,6 @@
             },
             "values_list": {
               "aria_label": "Liste av {{total}} verdier.",
-              "aria_description": "Variabelens liste over {{total}} totale verdier. For å gå inn i listen, trykk på pil ned-tasten. Tab-tasten går ut av listen.",
               "no_results_heading": "Ingen treff på «{{search}}»",
               "no_results_bodyshort": "Prøv med et annet søkeord eller en annen stavemåte."
             }
@@ -168,8 +177,13 @@
       "save": {
         "title": "Lagre",
         "file": {
-          "title": "Lagre som fil",
-          "excel": "Excel (xlsx)"
+          "title": "Last ned som fil",
+          "excel": "Excel (.xlsx)",
+          "csv": "Semikolonseparert med overskrift (.csv)",
+          "px": "PC-Axis (.px)",
+          "jsonstat2": "JSON-stat2 (.json)",
+          "html": "HTML (.html)",
+          "parquet": "Parquet (.parquet)"
         },
         "imagefile": {
           "title": "Lagre som graf",
@@ -192,6 +206,7 @@
       "arialabelbreadcrumb": "Brødsmulesti",
       "last_updated": "Sist oppdatert",
       "show_details": "Vis detaljer",
+      "dynamic_table_title": "{{table_content_type}} etter {{table_content_label_first_part}} og {{table_content_label_last_part}}",
       "table": {
         "warnings": {
           "missing_mandatory": {
@@ -282,6 +297,7 @@
     "simple_number_with_three_decimals": "{{value, pxNumber(minimumFractionDigits: 3; maximumFractionDigits: 3;)}}",
     "simple_number_with_four_decimals": "{{value, pxNumber(minimumFractionDigits: 4; maximumFractionDigits: 4;)}}",
     "simple_number_with_five_decimals": "{{value, pxNumber(minimumFractionDigits: 5; maximumFractionDigits: 5;)}}",
+    "simple_number_with_six_decimals": "{{value, pxNumber(minimumFractionDigits: 6; maximumFractionDigits: 6;)}}",
     "simple_number_with_default_formatter": "{{value, number(minimumFractionDigits: 5; maximumFractionDigits: 5; roundingMode: 'halfExpand')}}"
   }
 }

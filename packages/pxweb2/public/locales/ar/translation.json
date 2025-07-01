@@ -48,6 +48,12 @@
     },
     "generic_tags": {
       "mandatory": "إلزامي"
+    },
+    "alert": {
+      "info": "معلومة:",
+      "success": "نجاح:",
+      "warning": "تحذير:",
+      "error": "خطأ:"
     }
   },
   "start_page": {
@@ -92,7 +98,6 @@
             },
             "values_list": {
               "aria_label": "قائمة {{total}} قيم.",
-              "aria_description": "قائمة المتغير {{total}} القيم الإجمالية. ",
               "no_results_heading": "“{{search}}” لا توجد نتائج ل",
               "no_results_bodyshort": "جرّب كلمة رئيسية أو تهجئة مختلفة."
             }
@@ -139,7 +144,12 @@
         "title": "يحفظ",
         "file": {
           "title": "حفظ كملف",
-          "excel": "اكسل (xlsx)"
+          "excel": "اكسل (xlsx)",
+          "csv": "مفصولة بفاصلة منقوطة مع عنوان (.csv)",
+          "px": "PC-Axis (.px)",
+          "jsonstat2": "JSON-stat2 (.json)",
+          "html": "HTML (.html)",
+          "parquet": "Parquet (.parquet)"
         },
         "imagefile": {
           "title": "حفظ كرسم بياني",
@@ -162,6 +172,7 @@
       "arialabelbreadcrumb": "مسار التنقل",
       "last_updated": "آخر تحديث",
       "show_details": "إظهار التفاصيل",
+      "dynamic_table_title": "{{table_content_type}} بعد {{table_content_label_first_part}} و {{table_content_label_last_part}}",
       "table": {
         "warnings": {
           "missing_mandatory": {
@@ -238,6 +249,7 @@
     "simple_number_with_three_decimals": "{{value, pxNumber(minimumFractionDigits: 3; maximumFractionDigits: 3;)}}",
     "simple_number_with_four_decimals": "{{value, pxNumber(minimumFractionDigits: 4; maximumFractionDigits: 4;)}}",
     "simple_number_with_five_decimals": "{{value, pxNumber(minimumFractionDigits: 5; maximumFractionDigits: 5;)}}",
+    "simple_number_with_six_decimals": "{{value, pxNumber(minimumFractionDigits: 6; maximumFractionDigits: 6;)}}",
     "simple_number_with_default_formatter": "{{value, number(minimumFractionDigits: 5; maximumFractionDigits: 5; roundingMode: 'halfExpand')}}"
   }
 }

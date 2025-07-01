@@ -5,7 +5,6 @@ import { ApiError, TableService } from '@pxweb2/pxweb2-api-client';
 import { mapJsonStat2Response } from '../../../mappers/JsonStat2ResponseMapper';
 import { mapTableSelectionResponse } from '../../../mappers/TableSelectionResponseMapper';
 import {
-  ContentBox,
   PxTable,
   PxTableMetadata,
   SelectedVBValues,
@@ -15,7 +14,13 @@ import {
   Variable,
   VariableList,
 } from '@pxweb2/pxweb2-ui';
-import NavigationDrawer from '../../components/NavigationDrawer/NavigationDrawer';
+import {
+  DrawerEdit,
+  DrawerHelp,
+  DrawerSave,
+  DrawerView,
+  NavigationDrawer,
+} from '../NavigationDrawer';
 import useVariables from '../../context/useVariables';
 import { NavigationItem } from '../../components/NavigationMenu/NavigationItem/NavigationItemType';
 import useAccessibility from '../../context/useAccessibility';
@@ -198,7 +203,7 @@ export interface VariableWithDisplayType extends Variable {
 
 type NavigationView = 'selection' | 'view' | 'edit' | 'save' | 'help' | 'none';
 
-type propsType = {
+type SelectionProps = {
   selectedNavigationView: NavigationView;
   selectedTabId: string;
   openedWithKeyboard: boolean;
@@ -216,14 +221,18 @@ export function Selection({
   openedWithKeyboard,
   setSelectedNavigationView,
   hideMenuRef,
-}: propsType) {
-  const { selectedVBValues, setSelectedVBValues } = useVariables();
+}: SelectionProps) {
   const variables = useVariables();
+  const {
+    selectedVBValues,
+    setSelectedVBValues,
+    hasLoadedDefaultSelection,
+    isLoadingMetadata,
+    pxTableMetadata,
+    setPxTableMetadata,
+  } = variables;
   const [errorMsg, setErrorMsg] = useState('');
   const { i18n, t } = useTranslation();
-  const { hasLoadedDefaultSelection } = useVariables();
-  const { isLoadingMetadata } = useVariables();
-  const { pxTableMetadata, setPxTableMetadata } = useVariables();
   const [pxTableMetaToRender, setPxTableMetaToRender] =
     // Metadata to render in the UI
     useState<PxTableMetadata | null>(null);
@@ -494,17 +503,6 @@ export function Selection({
       removeModal={removeModal}
     />
   );
-  const drawerView = <>View content</>;
-  const drawerEdit = <>Edit content</>;
-  const drawerSave = (
-    <>
-      <ContentBox title="Contentbox with title">
-        This is inside another with a title ContentBox
-      </ContentBox>
-      <ContentBox>This is inside a ContentBox</ContentBox>
-    </>
-  );
-  const drawerHelp = <>Help content</>;
 
   return (
     selectedNavigationView !== 'none' && (
@@ -520,10 +518,12 @@ export function Selection({
         openedWithKeyboard={openedWithKeyboard}
       >
         {selectedNavigationView === 'selection' && drawerSelection}
-        {selectedNavigationView === 'view' && drawerView}
-        {selectedNavigationView === 'edit' && drawerEdit}
-        {selectedNavigationView === 'save' && drawerSave}
-        {selectedNavigationView === 'help' && drawerHelp}
+        {selectedNavigationView === 'view' && <DrawerView />}
+        {selectedNavigationView === 'edit' && <DrawerEdit />}
+        {selectedNavigationView === 'save' && (
+          <DrawerSave tableId={selectedTabId} />
+        )}
+        {selectedNavigationView === 'help' && <DrawerHelp />}
       </NavigationDrawer>
     )
   );

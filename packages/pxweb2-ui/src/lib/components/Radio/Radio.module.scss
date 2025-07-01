@@ -93,6 +93,19 @@
   white-space: nowrap;
 }
 
+.legend {
+  display: flex;
+  width: 312px;
+  flex-direction: column;
+  align-items: flex-start;
+  color: var(--px-color-text-default);
+  padding: 0px fixed.$spacing-2 fixed.$spacing-1;
+
+  &.inModal {
+    padding: 0px fixed.$spacing-7 fixed.$spacing-1;
+  }
+}
+
 .fieldset {
   border: none;
   padding: 0;
