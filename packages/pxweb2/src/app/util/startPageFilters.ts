@@ -173,7 +173,9 @@ export function parseYearRange(filter?: { value: string; label: string }) {
   let from: string | undefined;
   let to: string | undefined;
 
-  if (!filter) return { from, to };
+  if (!filter) {
+    return { from, to };
+  }
 
   if (filter.value.includes('-')) {
     [from, to] = filter.value.split('-');
