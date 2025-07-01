@@ -10,6 +10,16 @@ interface Resources {
         title: 'PxWeb 2.0 [Main]';
         logo: 'PxWeb 2.0';
       };
+      not_found: {
+        page_not_found: {
+          title: 'Page not found';
+          description: 'The page you are looking for does not exist. Please check the URL or return to the homepage.';
+        };
+        unsupported_language: {
+          title: 'Unsupported language';
+          description: 'The selected language is not supported.';
+        };
+      };
       skip_to_main: 'Skip to main content';
       footer: {
         contact: {
@@ -39,12 +49,18 @@ interface Resources {
       generic_tags: {
         mandatory: 'Mandatory';
       };
+      alert: {
+        info: 'Information:';
+        success: 'Success:';
+        warning: 'Warning:';
+        error: 'Error:';
+      };
     };
     start_page: {
       header: 'Welcome to PxWeb 2.0';
-      ingress: `Looking for the perfect table? Use the search field and filters to dig into the numbers you need. Whether you're hunting for trends, facts, or just an oddly satisfying dataset, PxWeb 2.0 has your back.`;
+      ingress: "Looking for the perfect table? Use the search field and filters to dig into the numbers you need. Whether you're hunting for trends, facts, or just an oddly satisfying dataset, PxWeb 2.0 has your back.";
       more_about_label: 'More about PxWeb 2.0';
-      more_about_text: 'Fyll på more_about';
+      more_about_text: 'More about Text EN';
       search_placeholder: 'Search in PxWeb 2.0';
       filter: {
         button: 'Filter';
@@ -53,7 +69,7 @@ interface Resources {
         close: 'Close filter';
         header: 'Filter';
         remove_all_filter: 'Remove all filters';
-        remove_filter_aria: 'Delete {{value}}';
+        remove_filter_aria: 'Remove filter, {{value}}';
         subject: 'Topic';
         timeUnit: 'Time period';
         year: 'Year';
@@ -68,10 +84,14 @@ interface Resources {
         };
       };
       table: {
-        number_of_tables: '<number of> tables';
-        number_of_tables_found: '<number of> tables found';
+        number_of_tables: '<strong>{{count}}</strong> tables';
+        number_of_tables_found: '<strong>{{count}}</strong> tables found';
         updated_label: 'Updated';
         show_more: 'Show more';
+        show_less: 'Show less';
+        loading: 'Loading...';
+        show_number_of_tables: 'Showing  <countShown> of <countTotal>';
+        show_number_of_tables_aria: '<number of> tables found, Showing  <countShown> of <countTotal>';
       };
     };
     presentation_page: {
@@ -96,7 +116,6 @@ interface Resources {
               tag_selected: '{{selected}} of {{total}} selected';
               tag_mandatory: 'Mandatory';
               alert_no_mandatory_values: 'You must select something in the list for the table to be displayed';
-              show_more: 'Show more';
             };
             content: {
               select: {
@@ -113,7 +132,6 @@ interface Resources {
               };
               values_list: {
                 aria_label: 'List of {{total}} values.';
-                aria_description: "The variable's list of {{total}} total values. To enter the list, press the arrow down key. The Tab key exits the list.";
                 no_results_heading: 'No results for “{{search}}”';
                 no_results_bodyshort: 'Try a different keyword or spelling.';
               };
@@ -160,7 +178,13 @@ interface Resources {
           title: 'Save';
           file: {
             title: 'Save as file';
-            excel: 'Excel (xlsx)';
+            excel: 'Excel (.xlsx)';
+            csv: 'Semicolon-delimited with heading (.csv)';
+            'relational-csv': 'Relational table (.csv)';
+            px: 'PC-Axis (.px)';
+            jsonstat2: 'JSON-stat2 (.json)';
+            html: 'HTML (.html)';
+            parquet: 'Parquet (.parquet)';
           };
           imagefile: {
             title: 'Save as graph';
@@ -183,6 +207,7 @@ interface Resources {
         arialabelbreadcrumb: 'Breadcrumb';
         last_updated: 'Last updated';
         show_details: 'Show details';
+        dynamic_table_title: '{{table_content_type}} by {{table_content_label_first_part}} and {{table_content_label_last_part}}';
         table: {
           warnings: {
             missing_mandatory: {
@@ -211,6 +236,12 @@ interface Resources {
             mandatory_variable_heading: 'Important about';
             non_mandatory_heading: 'For the entire table';
             show_all_footnotes: 'Show all notes for table';
+            important_about_selection_heading_1: 'There are ';
+            important_about_selection_heading_2: ' important notes for your selection';
+            important_about_selection_body: 'Click on this message to read the notes.';
+            important_about_selection_heading_one_note_1: 'There is ';
+            important_about_selection_heading_one_note_2: ' important note for your selection';
+            important_about_selection_body_one_note: 'Click on this message to read the note.';
           };
           definitions: {
             title: 'Definitions';
@@ -239,10 +270,6 @@ interface Resources {
             description: 'Description text...';
             missing_heading: 'No contact information';
             missing_text: 'The table has no contact information.';
-          };
-          notes: {
-            important_about_table: 'Important about the table';
-            important_about_variable: 'Important about ';
           };
         };
         related: {

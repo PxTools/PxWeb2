@@ -1,3 +1,6 @@
+import { describe, it, expect } from 'vitest';
+import { useTranslation } from 'react-i18next';
+
 import {
   Variable,
   VartypeEnum,
@@ -6,40 +9,10 @@ import {
   fakeData,
   SelectedVBValues,
 } from '@pxweb2/pxweb2-ui';
-
 import ContentTop from './ContentTop';
 import { renderWithProviders } from '../../util/testing-utils';
 import { getMandatoryNotesCompressed } from '../../util/notes/notesUtil';
-
-import { Config } from '../../util/config/configType';
-import { describe, it, expect } from 'vitest';
-import React from 'react';
 import * as ContentTopModule from './ContentTop';
-import { useTranslation } from 'react-i18next';
-
-// Declare the global variable for this file
-declare global {
-  interface Window {
-    PxWeb2Config: Config;
-  }
-}
-
-window.PxWeb2Config = {
-  language: {
-    supportedLanguages: [
-      { shorthand: 'en', languageName: 'English' },
-      { shorthand: 'no', languageName: 'Norsk' },
-      { shorthand: 'sv', languageName: 'Svenska' },
-      { shorthand: 'ar', languageName: 'العربية' },
-    ],
-    defaultLanguage: 'en',
-    fallbackLanguage: 'en',
-    showDefaultLanguageInPath: true,
-  },
-  apiUrl: '',
-  maxDataCells: 100000,
-  specialCharacters: ['.', '..', ':', '-', '...', '*'],
-};
 
 function getPxTable(): PxTable {
   const variables: Variable[] = [

@@ -11,6 +11,7 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    if: ${{ github.actor != 'dependabot[bot]' }}
     name: Deploy
     outputs:
       deployment-url: ${{ steps.deploy.outputs.deployment-url }}
@@ -40,7 +41,7 @@ jobs:
             :construction: Branch preview URL: ${{ steps.deploy.outputs.pages-deployment-alias-url }}
   test:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.draft == false
+    if: ${{ github.event.pull_request.draft == false && github.actor != 'dependabot[bot]' }}
     name: Test
     needs: deploy
     steps:
