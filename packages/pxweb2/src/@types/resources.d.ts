@@ -7,7 +7,7 @@ interface Resources {
     common: {
       title: 'PxWeb 2.0';
       header: {
-        title: 'PxWeb 2.0 [Sprint 23]';
+        title: 'PxWeb 2.0 [Sprint 24]';
         logo: 'PxWeb 2.0';
         arialabelheader: 'Select language';
       };
