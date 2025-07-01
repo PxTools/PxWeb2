@@ -175,21 +175,18 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
   const stub = useTableData().data?.stub;
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
-  const [sqUrl, setSqUrl] = useState('');
+  const [saveQueryUrl, setsaveQueryUrl] = useState('');
+  const [queryId, setQueryId] = useState<string | null>(null);
+  const [isCopied, setIsCopied] = useState(false);
+  const [selectedRadio, setSelectedRadio] =
+    useState<SaveQueryOptions>('selected');
+  const [saveQueryButtonState, setSaveQueryButtonState] =
+    useState<SaveQueryButtonState>('create');
 
   // If time filter is used when saving query, we need to know the id of the time variable
   const timeVarId = useTableData().data?.metadata.variables.find(
     (v) => v.type === VartypeEnum.TIME_VARIABLE,
   )?.id;
-  const [selectedRadio, setSelectedRadio] =
-    useState<SaveQueryOptions>('selected');
-  const [saveQueryButtonState, setSaveQueryButtonState] =
-    useState<SaveQueryButtonState>('create');
-  const [saveQueryUrl, setsaveQueryUrl] = useState(
-    'https://thisismybeautifulpxsqurl.com/query?',
-  );
-  const [queryId, setQueryId] = useState<string | null>(null);
-  const [isCopied, setIsCopied] = useState(false);
 
   const loadingBtnRef = useRef<HTMLButtonElement>(null);
   const copyBtnRef = useRef<HTMLButtonElement>(null);
@@ -318,7 +315,6 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
   // and handles success and error cases, updating the loading state accordingly.
   async function createSavedQuery(timeFilter?: TimeFilter): Promise<void> {
     const variablesSelection = getVariableSelection(timeFilter);
-    setIsLoading(true);
 
     // Create saved query using the export utility
     await createNewSavedQuery(
@@ -326,22 +322,21 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
       i18n.language,
       variablesSelection,
       OutputFormatType.JSON_STAT2,
-    )
-      .then(
-        (id) => {
-          // Create saved query URL
-          const savedQueryUrl = createSavedQueryURL(id);
-          setSqUrl(savedQueryUrl);
-        },
-        (error) => {
-          // Handle error during export
-          const err = error as ApiError;
-          setErrorMsg(problemMessage(err));
-        },
-      )
-      .finally(() => {
-        setIsLoading(false);
-      });
+    ).then(
+      (id) => {
+        // Create saved query URL
+        const savedQueryUrl = createSavedQueryURL(id);
+        setsaveQueryUrl(savedQueryUrl);
+        setQueryId(id);
+        setSaveQueryButtonState('copy');
+      },
+      (error) => {
+        // Handle error during export
+        const err = error as ApiError;
+        setErrorMsg(problemMessage(err));
+        setSaveQueryButtonState('create');
+      },
+    );
   }
 
   const radioOptions: RadioOption[] = [
@@ -361,28 +356,21 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
     },
   ];
 
-  function generateRandomQueryId(): string {
-    const array = new Uint32Array(1);
-    window.crypto.getRandomValues(array);
-    // Ensure 6 digits, pad with zeros if needed
-    return (array[0] % 1000000).toString().padStart(6, '0');
-  }
-
   function onCreateClick() {
     if (saveQueryButtonState !== 'create') {
       return;
     }
 
     setSaveQueryButtonState('loading');
-    setTimeout(() => {
-      // Simulate API call to create a query
-      const newId = generateRandomQueryId();
-      setQueryId(newId);
-      setsaveQueryUrl(
-        `https://thisismybeautifulpxsqurl.com/query?queryId=${newId}`,
-      );
-      setSaveQueryButtonState('copy');
-    }, 2000);
+    let timeFilter: TimeFilter = 'selected'; // Default to 'selected'
+
+    if (selectedRadio === 'from') {
+      timeFilter = 'from';
+    } else if (selectedRadio === 'top') {
+      timeFilter = 'top';
+    }
+
+    createSavedQuery(timeFilter);
   }
 
   function onCopyClick() {
