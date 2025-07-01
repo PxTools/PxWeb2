@@ -19,6 +19,7 @@ type SearchSelectProps = {
   onSelect: (option: Option | undefined) => void;
   selectedOption?: Option;
   noOptionsText?: string;
+  clearSelectionText?: string;
   inputMode?: React.HTMLAttributes<HTMLInputElement>['inputMode'];
 };
 
@@ -30,6 +31,7 @@ export function SearchSelect({
   onSelect,
   selectedOption,
   noOptionsText = 'No results',
+  clearSelectionText = 'Clear selection',
   inputMode,
 }: Readonly<SearchSelectProps>) {
   const [isOpen, setIsOpen] = useState(false);
@@ -154,7 +156,12 @@ export function SearchSelect({
           {label}
         </Label>
       )}
-      <div className={styles.contentWrapper} ref={contentRef}>
+      <div
+        className={styles.contentWrapper}
+        ref={contentRef}
+        onClick={() => setIsOpen(true)}
+        tabIndex={-1}
+      >
         <input
           id={`${searchSelectId}-combobox`}
           ref={inputRef}
@@ -163,7 +170,6 @@ export function SearchSelect({
           className={cl(styles.input, styles['bodyshort-medium'])}
           placeholder={placeholder}
           value={inputValue}
-          onClick={() => setIsOpen(true)}
           onChange={(e) => {
             setInputValue(e.target.value);
             setIsOpen(true);
@@ -192,7 +198,7 @@ export function SearchSelect({
               icon="XMark"
               size="small"
               onClick={handleClear}
-              aria-label="Fjern valg"
+              aria-label={clearSelectionText}
             />
           ) : (
             <Icon

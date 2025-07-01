@@ -60,7 +60,7 @@ describe('SearchableSelect', () => {
     );
     const input = getByRole('combobox');
     await user.type(input, 'Option');
-    expect(getByLabelText('Fjern valg')).toBeInTheDocument();
+    expect(getByLabelText('Clear selection')).toBeInTheDocument();
   });
 
   it('should clear selection when clear button is clicked', async () => {
@@ -72,9 +72,20 @@ describe('SearchableSelect', () => {
         selectedOption={mockOptions[1]}
       />,
     );
-    const clearBtn = getByLabelText('Fjern valg');
+    const clearBtn = getByLabelText('Clear selection');
     await user.click(clearBtn);
     expect(mockOnSelect).toHaveBeenCalledWith(undefined);
+  });
+
+  it('should clear input on blur when value has no match', async () => {
+    const user = userEvent.setup();
+    const { getByRole } = render(
+      <SearchSelect options={mockOptions} onSelect={mockOnSelect} />,
+    );
+    const input = getByRole('combobox');
+    await user.type(input, 'invalid');
+    await user.tab(); // blur input
+    expect((input as HTMLInputElement).value).toBe('');
   });
 
   it('should select exact match with Enter if typed manually', async () => {
@@ -95,13 +106,13 @@ describe('SearchableSelect', () => {
       <SearchSelect
         options={[{ label: 'Banana', value: 'b' }]}
         onSelect={mockOnSelect}
-        noOptionsText="Fant ingen treff"
+        noOptionsText="No results"
       />,
     );
     const input = getByRole('combobox');
     await user.click(input);
     await user.type(input, 'xyz');
-    expect(await findByText('Fant ingen treff')).toBeInTheDocument();
+    expect(await findByText('No results')).toBeInTheDocument();
   });
 
   it('should set inputMode and pattern when inputMode="numeric"', () => {
