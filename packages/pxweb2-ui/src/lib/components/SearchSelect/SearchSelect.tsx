@@ -80,42 +80,64 @@ export function SearchSelect({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (!isOpen && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) {
-      setIsOpen(true);
-      return;
-    }
+    const lowerInput = inputValue.trim().toLowerCase();
+    const exactMatch = options.find(
+      (opt) => opt.label.toLowerCase() === lowerInput,
+    );
 
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      setIsOpen(true);
-      setHighlightedIndex((prev) =>
-        prev < filteredOptions.length - 1 ? prev + 1 : 0,
-      );
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      setIsOpen(true);
-      setHighlightedIndex((prev) =>
-        prev > 0 ? prev - 1 : filteredOptions.length - 1,
-      );
-    } else if (e.key === 'Enter') {
-      if (
-        isOpen &&
-        highlightedIndex >= 0 &&
-        highlightedIndex < filteredOptions.length
-      ) {
-        handleSelect(filteredOptions[highlightedIndex]);
-      } else {
-        const exactMatch = options.find(
-          (opt) => opt.label.toLowerCase() === inputValue.trim().toLowerCase(),
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        setIsOpen(true);
+        setHighlightedIndex((prev) =>
+          prev < filteredOptions.length - 1 ? prev + 1 : 0,
         );
-        if (exactMatch) {
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        setIsOpen(true);
+        setHighlightedIndex((prev) =>
+          prev > 0 ? prev - 1 : filteredOptions.length - 1,
+        );
+        break;
+      case 'Enter':
+        if (
+          isOpen &&
+          highlightedIndex >= 0 &&
+          highlightedIndex < filteredOptions.length
+        ) {
+          handleSelect(filteredOptions[highlightedIndex]);
+        } else if (exactMatch) {
           handleSelect(exactMatch);
         }
-      }
-    } else if (e.key === 'Escape' || e.key === 'Tab') {
-      setIsOpen(false);
-      setHighlightedIndex(-1);
+        break;
+      case 'Tab':
+        confirmSelection();
+        break;
+      case 'Escape':
+        setIsOpen(false);
+        setHighlightedIndex(-1);
+        break;
+      default:
+        if (!isOpen && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) {
+          setIsOpen(true);
+        }
+        break;
     }
+  };
+
+  const confirmSelection = () => {
+    const trimmed = inputValue.trim().toLowerCase();
+    const match = options.find((opt) => opt.label.toLowerCase() === trimmed);
+
+    if (match) {
+      handleSelect(match);
+    } else {
+      setInputValue('');
+    }
+
+    setIsOpen(false);
+    setHighlightedIndex(-1);
   };
 
   const showClearButton = !!selectedOption || inputValue.length > 0;
@@ -149,7 +171,7 @@ export function SearchSelect({
           }}
           onFocus={() => setIsOpen(true)}
           onKeyDown={handleKeyDown}
-          onBlur={() => setTimeout(() => setIsOpen(false), 100)}
+          onBlur={() => setTimeout(confirmSelection, 100)}
           role="combobox"
           inputMode={inputMode}
           pattern={inputMode === 'numeric' ? '[0-9]*' : undefined}
