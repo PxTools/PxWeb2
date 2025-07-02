@@ -43,6 +43,9 @@
   align-self: center;
   display: grid;
   place-content: center;
+  pointer-events: none;
+  position: absolute;
+  right: 12px;
 
   .chevron {
     transition: transform 0.2s ease;

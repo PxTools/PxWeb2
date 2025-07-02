@@ -156,12 +156,7 @@ export function SearchSelect({
           {label}
         </Label>
       )}
-      <div
-        className={styles.contentWrapper}
-        ref={contentRef}
-        onClick={() => setIsOpen(true)}
-        tabIndex={-1}
-      >
+      <div className={styles.contentWrapper} ref={contentRef}>
         <input
           id={`${searchSelectId}-combobox`}
           ref={inputRef}
@@ -170,6 +165,7 @@ export function SearchSelect({
           className={cl(styles.input, styles['bodyshort-medium'])}
           placeholder={placeholder}
           value={inputValue}
+          onClick={() => setIsOpen(true)}
           onChange={(e) => {
             setInputValue(e.target.value);
             setIsOpen(true);
