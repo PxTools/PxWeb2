@@ -1,11 +1,10 @@
 import cl from 'clsx';
 
-import { ActionType } from '../../pages/StartPage/StartPageTypes';
+import { ActionType, PathItem } from '../../pages/StartPage/StartPageTypes';
 import styles from './FilterSidebar.module.scss';
 import { useTranslation } from 'react-i18next';
 import { Checkbox, FilterCategory } from '@pxweb2/pxweb2-ui';
 import { findAncestors, findChildren } from '../../util/startPageFilters';
-import { PathItem } from '../../pages/StartPage/StartPageTypes';
 import { FilterContext } from '../../context/FilterContext';
 import { ReactNode, useContext } from 'react';
 
@@ -43,7 +42,7 @@ const Collapsible: React.FC<CollapsibleProps> = ({
           value={isActive}
           subtle={!isActive && count === 0}
           onChange={(value) => {
-            const ancestors = findAncestors(subjectTree, subjectId);
+            const ancestors = findAncestors(subjectTree, subject.uniqueId!);
             const children = findChildren(subjectTree, subjectId);
 
             if (value) {
@@ -85,37 +84,40 @@ const Collapsible: React.FC<CollapsibleProps> = ({
               }
 
               // If no children are selected, we add the closest ancestor that has remaining selected children
-              for (let i = ancestors.length - 1; i >= 0; i--) {
-                const ancestor = ancestors[i];
-                const hasSelectedDescendants = findChildren(
-                  subjectTree,
-                  ancestor.id,
-                ).some(
-                  (descendant) =>
-                    descendant.id !== subjectId &&
-                    state.activeFilters.some(
-                      (f) => f.type === 'subject' && f.value === descendant.id,
-                    ),
-                );
-                const isAncestorSelected = state.activeFilters.some(
-                  (f) => f.type === 'subject' && f.value === ancestor.id,
-                );
-                if (!hasSelectedDescendants && !isAncestorSelected) {
-                  dispatch({
-                    type: ActionType.ADD_FILTER,
-                    payload: [
-                      {
-                        type: 'subject',
-                        value: ancestor.id,
-                        label: ancestor.label,
-                        uniqueId: ancestor.uniqueId,
-                        index,
-                      },
-                    ],
-                  });
-                  break;
-                }
-              }
+              // for (let i = ancestors.length - 1; i >= 0; i--) {
+              //   console.log(
+              //     'We are adding closest ancestor, why is this happening!',
+              //   );
+              //   const ancestor = ancestors[i];
+              //   const hasSelectedDescendants = findChildren(
+              //     subjectTree,
+              //     ancestor.id,
+              //   ).some(
+              //     (descendant) =>
+              //       descendant.id !== subjectId &&
+              //       state.activeFilters.some(
+              //         (f) => f.type === 'subject' && f.value === descendant.id,
+              //       ),
+              //   );
+              //   const isAncestorSelected = state.activeFilters.some(
+              //     (f) => f.type === 'subject' && f.value === ancestor.id,
+              //   );
+              //   if (!hasSelectedDescendants && !isAncestorSelected) {
+              //     dispatch({
+              //       type: ActionType.ADD_FILTER,
+              //       payload: [
+              //         {
+              //           type: 'subject',
+              //           value: ancestor.id,
+              //           label: ancestor.label,
+              //           uniqueId: ancestor.uniqueId,
+              //           index,
+              //         },
+              //       ],
+              //     });
+              //     break;
+              //   }
+              // }
 
               // Ensure first parent is actually added as a filter, and not just ephemerally selected
               const parent: PathItem | undefined = ancestors.length

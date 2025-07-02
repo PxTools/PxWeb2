@@ -128,17 +128,17 @@ export function sortAndDeduplicateFilterChips(filters: Filter[]): Filter[] {
 // Find parents, and parents' parents all the way up
 export function findAncestors(
   subjectTree: PathItem[],
-  childId: string,
+  childUniqueId: string,
   path: PathItem[] = [],
 ): PathItem[] {
   for (const node of subjectTree) {
     const newPath = [...path, node];
-    if (node.id === childId) {
+    if (node.uniqueId === childUniqueId) {
       // Remove nested children from each subject
       return path.map((item) => ({ ...item, children: [] }));
     }
     if (node.children) {
-      const result = findAncestors(node.children, childId, newPath);
+      const result = findAncestors(node.children, childUniqueId, newPath);
       if (result.length > 0) {
         return result;
       }

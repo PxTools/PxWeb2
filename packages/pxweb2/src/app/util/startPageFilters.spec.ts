@@ -11,16 +11,19 @@ const exampleResultTree: PathItem[] = [
     id: 'al',
     label: 'Arbeid og lønn',
     count: 2,
+    uniqueId: 'al1',
     children: [
       {
         id: 'al03',
         label: 'Arbeidsledighet',
         count: 1,
+        uniqueId: 'al031',
         children: [
           {
             id: 'aku',
             label: 'Arbeidskraftundersøkelsen',
             count: 1,
+            uniqueId: 'aku1',
             children: [],
           },
         ],
@@ -29,6 +32,7 @@ const exampleResultTree: PathItem[] = [
         id: 'al06',
         label: 'Sysselsetting',
         count: 1,
+        uniqueId: 'al061',
         children: [
           {
             id: 'aku',
@@ -44,16 +48,19 @@ const exampleResultTree: PathItem[] = [
     id: 'in',
     count: 1,
     label: 'Innvandring og innvandrere',
+    uniqueId: 'in1',
     children: [
       {
         id: 'in01',
         label: 'Arbeid og lønn',
         count: 1,
+        uniqueId: 'in011',
         children: [
           {
             id: 'aku',
             label: 'Arbeidskraftundersøkelsen',
             children: [],
+            uniqueId: 'aku2',
             count: 1,
           },
         ],
@@ -66,6 +73,7 @@ const akuExample: PathItem = {
   id: 'aku',
   label: 'Arbeidskraftundersøkelsen',
   count: 1,
+  uniqueId: 'aku1',
   children: [],
 };
 
@@ -73,6 +81,7 @@ const al06Example: PathItem = {
   id: 'al06',
   label: 'Sysselsetting',
   count: 1,
+  uniqueId: 'al061',
   children: [],
 };
 
@@ -80,6 +89,7 @@ const al03Example: PathItem = {
   id: 'al03',
   label: 'Arbeidsledighet',
   count: 1,
+  uniqueId: 'al031',
   children: [],
 };
 
@@ -87,6 +97,7 @@ const alExample: PathItem = {
   id: 'al',
   label: 'Arbeid og lønn',
   count: 2,
+  uniqueId: 'al1',
   children: [],
 };
 
@@ -94,6 +105,7 @@ const inExample: PathItem = {
   id: 'in',
   count: 1,
   label: 'Innvandring og innvandrere',
+  uniqueId: 'in1',
   children: [],
 };
 
@@ -126,15 +138,15 @@ const inExample: PathItem = {
 
 describe('Find all direct ancestors of node', () => {
   it('should find the first parent of the node', () => {
-    const parents = findAncestors(exampleResultTree, 'aku');
+    const parents = findAncestors(exampleResultTree, 'aku1');
     expect(parents).toContainEqual(al03Example);
   });
   it('should find the second parent of the node', () => {
-    const parents = findAncestors(exampleResultTree, 'aku');
+    const parents = findAncestors(exampleResultTree, 'aku1');
     expect(parents).toContainEqual(alExample);
   });
   it('should not find any other nodes', () => {
-    const parents = findAncestors(exampleResultTree, 'aku');
+    const parents = findAncestors(exampleResultTree, 'aku1');
     expect(parents).not.toContainEqual(inExample);
     expect(parents).not.toContainEqual(akuExample);
   });
