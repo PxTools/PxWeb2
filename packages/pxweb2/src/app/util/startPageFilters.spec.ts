@@ -1,6 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { findAncestors, findChildren } from '../util/startPageFilters';
-import { type PathItem } from '../pages/StartPage/StartPageTypes';
+import {
+  findAncestors,
+  findChildren,
+  sortAndDeduplicateFilterChips,
+} from '../util/startPageFilters';
+import { Filter, type PathItem } from '../pages/StartPage/StartPageTypes';
 
 const exampleResultTree: PathItem[] = [
   {
@@ -167,5 +171,52 @@ describe('Ensure the tree flattens correctly', () => {
   it('should find the immediate children of the node', () => {
     const children = findChildren(exampleResultTree, 'in');
     expect(children).toEqual(flattenedResult);
+  });
+});
+
+describe('Correctly sort and deduplicate filters', () => {
+  const rawFilters: Filter[] = [
+    {
+      type: 'subject',
+      value: 'in01',
+      label: 'Arbeid og lønn',
+      uniqueId: '2vij38ql69',
+      index: 2,
+    },
+    {
+      type: 'subject',
+      value: 'aku',
+      label: 'Arbeidskraftundersøkelsen',
+      uniqueId: 'nem1ho60cb',
+      index: 1,
+    },
+    {
+      type: 'subject',
+      value: 'aku',
+      label: 'Arbeidskraftundersøkelsen',
+      uniqueId: 'fd9rg6iebf',
+      index: 0,
+    },
+  ];
+  const sortedDedupedFilters: Filter[] = [
+    {
+      type: 'subject',
+      value: 'aku',
+      label: 'Arbeidskraftundersøkelsen',
+      uniqueId: 'fd9rg6iebf',
+      index: 0,
+    },
+    {
+      type: 'subject',
+      value: 'in01',
+      label: 'Arbeid og lønn',
+      uniqueId: '2vij38ql69',
+      index: 2,
+    },
+  ];
+
+  it('Should sort and dedupe filter correctly', () => {
+    const performedSort = sortAndDeduplicateFilterChips(rawFilters);
+    expect(performedSort).toEqual(sortedDedupedFilters);
   });
 });
