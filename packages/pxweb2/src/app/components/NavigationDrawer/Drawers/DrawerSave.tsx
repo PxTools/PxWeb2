@@ -27,7 +27,6 @@ import {
   exportToFile,
   TimeFilter,
 } from '../../../util/export/exportUtil';
-import { translateOutsideReact } from '../../../util/language/translateOutsideReact';
 
 interface FileFormat {
   value: string;
@@ -35,57 +34,6 @@ interface FileFormat {
   outputFormat: OutputFormatType;
   iconName: IconProps['iconName'];
 }
-
-const fileFormats: FileFormat[] = [
-  {
-    value: 'excel',
-    label: await translateOutsideReact(
-      'presentation_page.sidemenu.save.file.excel',
-    ),
-    outputFormat: OutputFormatType.XLSX,
-    iconName: 'FileText',
-  },
-  {
-    value: 'csv',
-    label: await translateOutsideReact(
-      'presentation_page.sidemenu.save.file.csv',
-    ),
-    outputFormat: OutputFormatType.CSV,
-    iconName: 'FileText',
-  },
-  {
-    value: 'px',
-    label: await translateOutsideReact(
-      'presentation_page.sidemenu.save.file.px',
-    ),
-    outputFormat: OutputFormatType.PX,
-    iconName: 'FileCode',
-  },
-  {
-    value: 'jsonstat2',
-    label: await translateOutsideReact(
-      'presentation_page.sidemenu.save.file.jsonstat2',
-    ),
-    outputFormat: OutputFormatType.JSON_STAT2,
-    iconName: 'FileCode',
-  },
-  {
-    value: 'html',
-    label: await translateOutsideReact(
-      'presentation_page.sidemenu.save.file.html',
-    ),
-    outputFormat: OutputFormatType.HTML,
-    iconName: 'FileCode',
-  },
-  {
-    value: 'parquet',
-    label: await translateOutsideReact(
-      'presentation_page.sidemenu.save.file.parquet',
-    ),
-    outputFormat: OutputFormatType.PARQUET,
-    iconName: 'FileCode',
-  },
-];
 
 export type DrawerSaveProps = {
   readonly tableId: string;
@@ -99,6 +47,46 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [sqUrl, setSqUrl] = useState('');
+
+  // Define the file formats available for export
+  const fileFormats: FileFormat[] = [
+    {
+      value: 'excel',
+      label: t('presentation_page.sidemenu.save.file.excel'),
+      outputFormat: OutputFormatType.XLSX,
+      iconName: 'FileText',
+    },
+    {
+      value: 'csv',
+      label: t('presentation_page.sidemenu.save.file.csv'),
+      outputFormat: OutputFormatType.CSV,
+      iconName: 'FileText',
+    },
+    {
+      value: 'px',
+      label: t('presentation_page.sidemenu.save.file.px'),
+      outputFormat: OutputFormatType.PX,
+      iconName: 'FileCode',
+    },
+    {
+      value: 'jsonstat2',
+      label: t('presentation_page.sidemenu.save.file.jsonstat2'),
+      outputFormat: OutputFormatType.JSON_STAT2,
+      iconName: 'FileCode',
+    },
+    {
+      value: 'html',
+      label: t('presentation_page.sidemenu.save.file.html'),
+      outputFormat: OutputFormatType.HTML,
+      iconName: 'FileCode',
+    },
+    {
+      value: 'parquet',
+      label: t('presentation_page.sidemenu.save.file.parquet'),
+      outputFormat: OutputFormatType.PARQUET,
+      iconName: 'FileCode',
+    },
+  ];
 
   // If time filter is used when saving query, we need to know the id of the time variable
   const timeVarId = useTableData().data?.metadata.variables.find(
