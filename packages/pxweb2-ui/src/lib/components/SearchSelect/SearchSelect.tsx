@@ -43,10 +43,10 @@ export function SearchSelect({
   const searchSelectId = id ?? 'search-select';
 
   useEffect(() => {
-    if (!isOpen && selectedOption) {
+    if (selectedOption) {
       setInputValue(selectedOption.label);
     }
-  }, [isOpen, selectedOption]);
+  }, [selectedOption]);
 
   useEffect(() => {
     const onClickOutside = (e: MouseEvent) => {
@@ -193,8 +193,12 @@ export function SearchSelect({
               variant="tertiary"
               icon="XMark"
               size="small"
+              onMouseDown={(e) => e.preventDefault()}
               onClick={handleClear}
               aria-label={clearSelectionText}
+              className={styles.clearSelection}
+              type="button"
+              tabIndex={0}
             />
           ) : (
             <Icon
