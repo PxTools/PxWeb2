@@ -159,8 +159,12 @@ export function getYearRanges(tables: Table[]): YearRange {
     const tableMin = Math.min(startFrom, endFrom);
     const tableMax = Math.max(startTo, endTo);
 
-    if (Number.isFinite(tableMin)) minYear = Math.min(minYear, tableMin);
-    if (Number.isFinite(tableMax)) maxYear = Math.max(maxYear, tableMax);
+    if (Number.isFinite(tableMin)) {
+      minYear = Math.min(minYear, tableMin);
+    }
+    if (Number.isFinite(tableMax)) {
+      maxYear = Math.max(maxYear, tableMax);
+    }
   }
 
   return {
