@@ -167,6 +167,7 @@ export function SearchSelect({
           className={cl(styles.input, styles['bodyshort-medium'])}
           placeholder={placeholder}
           value={inputValue}
+          onClick={() => setIsOpen(true)}
           onChange={(e) => {
             setInputValue(e.target.value);
             setIsOpen(true);
