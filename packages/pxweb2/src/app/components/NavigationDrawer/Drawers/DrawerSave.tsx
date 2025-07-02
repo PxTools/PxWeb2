@@ -30,7 +30,6 @@ import {
 
 interface FileFormat {
   value: string;
-  label: string;
   outputFormat: OutputFormatType;
   iconName: IconProps['iconName'];
 }
@@ -48,50 +47,43 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
   const [errorMsg, setErrorMsg] = useState('');
   const [sqUrl, setSqUrl] = useState('');
 
-  // Define the file formats available for export
+  // If time filter is used when saving query, we need to know the id of the time variable
+  const timeVarId = useTableData().data?.metadata.variables.find(
+    (v) => v.type === VartypeEnum.TIME_VARIABLE,
+  )?.id;
+
   const fileFormats: FileFormat[] = [
     {
       value: 'excel',
-      label: t('presentation_page.sidemenu.save.file.excel'),
       outputFormat: OutputFormatType.XLSX,
       iconName: 'FileText',
     },
     {
       value: 'csv',
-      label: t('presentation_page.sidemenu.save.file.csv'),
       outputFormat: OutputFormatType.CSV,
       iconName: 'FileText',
     },
     {
       value: 'px',
-      label: t('presentation_page.sidemenu.save.file.px'),
       outputFormat: OutputFormatType.PX,
       iconName: 'FileCode',
     },
     {
       value: 'jsonstat2',
-      label: t('presentation_page.sidemenu.save.file.jsonstat2'),
       outputFormat: OutputFormatType.JSON_STAT2,
       iconName: 'FileCode',
     },
     {
       value: 'html',
-      label: t('presentation_page.sidemenu.save.file.html'),
       outputFormat: OutputFormatType.HTML,
       iconName: 'FileCode',
     },
     {
       value: 'parquet',
-      label: t('presentation_page.sidemenu.save.file.parquet'),
       outputFormat: OutputFormatType.PARQUET,
       iconName: 'FileCode',
     },
   ];
-
-  // If time filter is used when saving query, we need to know the id of the time variable
-  const timeVarId = useTableData().data?.metadata.variables.find(
-    (v) => v.type === VartypeEnum.TIME_VARIABLE,
-  )?.id;
 
   useEffect(() => {
     if (errorMsg !== '') {
@@ -244,7 +236,9 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
           {fileFormats.map((format) => (
             <li key={`saveToFile${format.value}`}>
               <ActionItem
-                ariaLabel={format.label}
+                ariaLabel={t(
+                  `presentation_page.sidemenu.save.file.${format.value}`, // Not sure how to fix this i18next type error
+                )}
                 onClick={() => saveToFile(format.outputFormat)}
                 iconName={format.iconName}
               />
