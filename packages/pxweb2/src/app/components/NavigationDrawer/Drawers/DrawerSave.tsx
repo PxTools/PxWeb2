@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 
 import classes from './DrawerSave.module.scss';
-import { ActionItem, ContentBox, Spinner } from '@pxweb2/pxweb2-ui';
+import { ActionItem, ContentBox, IconProps, Spinner } from '@pxweb2/pxweb2-ui';
 import {
   ApiError,
   VariableSelection,
@@ -13,6 +13,12 @@ import { exportToFile } from '../../../util/export/exportUtil';
 import useVariables from '../../../context/useVariables';
 import useTableData from '../../../context/useTableData';
 import { problemMessage } from '../../../util/problemMessage';
+
+interface FileFormat {
+  value: string;
+  label: string;
+  iconName: IconProps['iconName'];
+}
 
 export type DrawerSaveProps = {
   readonly tableId: string;
@@ -24,6 +30,39 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
   const stub = useTableData().data?.stub;
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+
+  const fileFormats: FileFormat[] = [
+    {
+      value: 'excel',
+      label: t('presentation_page.sidemenu.save.file.excel'),
+      iconName: 'FileText',
+    },
+    {
+      value: 'csv',
+      label: t('presentation_page.sidemenu.save.file.csv'),
+      iconName: 'FileText',
+    },
+    {
+      value: 'px',
+      label: t('presentation_page.sidemenu.save.file.px'),
+      iconName: 'FileCode',
+    },
+    {
+      value: 'jsonstat2',
+      label: t('presentation_page.sidemenu.save.file.jsonstat2'),
+      iconName: 'FileCode',
+    },
+    {
+      value: 'html',
+      label: t('presentation_page.sidemenu.save.file.html'),
+      iconName: 'FileCode',
+    },
+    {
+      value: 'parquet',
+      label: t('presentation_page.sidemenu.save.file.parquet'),
+      iconName: 'FileCode',
+    },
+  ];
 
   useEffect(() => {
     if (errorMsg !== '') {
@@ -103,48 +142,15 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
           role="list"
           aria-labelledby="drawer-save-to-file"
         >
-          <li>
-            <ActionItem
-              ariaLabel={t('presentation_page.sidemenu.save.file.excel')}
-              onClick={() => saveToFile('excel')}
-              iconName="FileText"
-            />
-          </li>
-          <li>
-            <ActionItem
-              ariaLabel={t('presentation_page.sidemenu.save.file.csv')}
-              onClick={() => saveToFile('csv')}
-              iconName="FileText"
-            />
-          </li>
-          <li>
-            <ActionItem
-              ariaLabel={t('presentation_page.sidemenu.save.file.px')}
-              onClick={() => saveToFile('px')}
-              iconName="FileCode"
-            />
-          </li>
-          <li>
-            <ActionItem
-              ariaLabel={t('presentation_page.sidemenu.save.file.jsonstat2')}
-              onClick={() => saveToFile('jsonstat2')}
-              iconName="FileCode"
-            />
-          </li>
-          <li>
-            <ActionItem
-              ariaLabel={t('presentation_page.sidemenu.save.file.html')}
-              onClick={() => saveToFile('html')}
-              iconName="FileCode"
-            />
-          </li>
-          <li>
-            <ActionItem
-              ariaLabel={t('presentation_page.sidemenu.save.file.parquet')}
-              onClick={() => saveToFile('parquet')}
-              iconName="FileCode"
-            />
-          </li>
+          {fileFormats.map((format) => (
+            <li key={`saveToFile${format.value}`}>
+              <ActionItem
+                ariaLabel={format.label}
+                onClick={() => saveToFile(format.value)}
+                iconName={format.iconName}
+              />
+            </li>
+          ))}
         </ul>
         {isLoading && (
           <div className={classes.loadingSpinner}>
