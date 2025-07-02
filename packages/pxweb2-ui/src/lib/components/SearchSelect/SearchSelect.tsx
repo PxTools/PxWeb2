@@ -19,6 +19,7 @@ type SearchSelectProps = {
   onSelect: (option: Option | undefined) => void;
   selectedOption?: Option;
   noOptionsText?: string;
+  clearSelectionText?: string;
   inputMode?: React.HTMLAttributes<HTMLInputElement>['inputMode'];
   optionListStyle?: React.CSSProperties;
 };
@@ -31,6 +32,7 @@ export function SearchSelect({
   onSelect,
   selectedOption,
   noOptionsText = 'No results',
+  clearSelectionText = 'Clear selection',
   inputMode,
   optionListStyle,
 }: Readonly<SearchSelectProps>) {
@@ -194,7 +196,7 @@ export function SearchSelect({
               icon="XMark"
               size="small"
               onClick={handleClear}
-              aria-label="Fjern valg"
+              aria-label={clearSelectionText}
             />
           ) : (
             <Icon

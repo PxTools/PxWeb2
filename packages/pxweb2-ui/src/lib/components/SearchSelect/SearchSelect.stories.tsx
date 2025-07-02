@@ -34,6 +34,7 @@ export const Default: Story = {
     options: options,
     onSelect: selectedOptionChanged,
     inputMode: 'numeric',
+    clearSelectionText: 'Clear selection',
   },
 };
 
@@ -45,6 +46,7 @@ export const SelectedOption: StoryFn<typeof SearchSelect> = () => {
       selectedOption={options[1]}
       onSelect={selectedOptionChanged}
       inputMode="numeric"
+      clearSelectionText="Clear selection"
     ></SearchSelect>
   );
 };
