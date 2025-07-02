@@ -203,7 +203,9 @@ export function parseYearRange(
   fromLabelText?: string,
   toLabelText?: string,
 ): { from?: string; to?: string } {
-  if (!filter) return {};
+  if (!filter) {
+    return {};
+  }
 
   if (filter.value.includes('-')) {
     const [from, to] = filter.value.split('-');
