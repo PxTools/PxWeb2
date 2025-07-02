@@ -1,23 +1,13 @@
+import { ReactNode, useContext, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import cl from 'clsx';
 
 import { ActionType } from '../../pages/StartPage/StartPageTypes';
 import styles from './FilterSidebar.module.scss';
-import { useTranslation } from 'react-i18next';
-import {
-  Checkbox,
-  FilterCategory,
-  Button,
-  SearchSelect,
-  type Option,
-} from '@pxweb2/pxweb2-ui';
-import {
-  PathItem,
-  findParent,
-  parseYearRange,
-  getYearRangeLabelValue,
-} from '../../util/startPageFilters';
+import { Checkbox, FilterCategory, Button } from '@pxweb2/pxweb2-ui';
+import { PathItem, findParent } from '../../util/startPageFilters';
 import { FilterContext } from '../../context/FilterContext';
-import { ReactNode, useContext, useEffect, useState } from 'react';
+import { YearRangeFilter } from './YearRangeFilter';
 
 interface CollapsibleProps {
   subject: PathItem;
@@ -186,141 +176,6 @@ const RenderTimeUnitFilters: React.FC<{ onFilterChange?: () => void }> = ({
   });
 };
 
-const RenderYearsFilters: React.FC<{
-  onFilterChange?: () => void;
-}> = () => {
-  const { state, dispatch } = useContext(FilterContext);
-  const { t } = useTranslation();
-  const [resetKey, setResetKey] = useState(0);
-  const fromLabel = t('start_page.filter.year.from_label');
-  const toLabel = t('start_page.filter.year.to_label');
-
-  useEffect(() => {
-    setResetKey(state.resetYearFilterInput);
-  }, [state.resetYearFilterInput]);
-
-  const yearRangeFilter = state.activeFilters.find(
-    (f) => f.type === 'yearRange',
-  );
-  const { from: fromYear, to: toYear } = parseYearRange(
-    yearRangeFilter,
-    fromLabel,
-    toLabel,
-  );
-
-  const rangeMin = state.lastUsedYearRange.min;
-  const rangeMax = state.lastUsedYearRange.max;
-  const generateYearOptions = (start: number, end: number): Option[] =>
-    Array.from({ length: end - start + 1 }, (_, i) => {
-      const year = (start + i).toString();
-      return { label: year, value: year };
-    });
-
-  const fromYearOptions = generateYearOptions(rangeMin, rangeMax);
-  const toYearOptions = [...fromYearOptions].reverse();
-
-  function selectedOptionChanged(
-    selectedItem: Option | undefined,
-    selectVariant: 'from' | 'to',
-  ) {
-    const yearRangeFilter = state.activeFilters.find(
-      (f) => f.type === 'yearRange',
-    );
-
-    const { from: fromYear, to: toYear } = parseYearRange(
-      yearRangeFilter,
-      fromLabel,
-      toLabel,
-    );
-
-    const newFrom = selectVariant === 'from' ? selectedItem?.value : fromYear;
-    const newTo = selectVariant === 'to' ? selectedItem?.value : toYear;
-
-    const hasFrom = !!newFrom;
-    const hasTo = !!newTo;
-
-    if (hasFrom || hasTo) {
-      const { label, value } = getYearRangeLabelValue(
-        newFrom,
-        newTo,
-        t('start_page.filter.year.from_label'),
-        t('start_page.filter.year.to_label'),
-      );
-
-      dispatch({
-        type: ActionType.ADD_FILTER,
-        payload: [
-          {
-            type: 'yearRange',
-            value,
-            label,
-            index: 0,
-          },
-        ],
-      });
-    }
-
-    if (!selectedItem && selectVariant === 'from') {
-      if (yearRangeFilter) {
-        dispatch({
-          type: ActionType.REMOVE_FILTER,
-          payload: yearRangeFilter.value,
-        });
-      }
-    }
-
-    if (!selectedItem && selectVariant === 'to') {
-      if (fromYear) {
-        dispatch({
-          type: ActionType.ADD_FILTER,
-          payload: [
-            {
-              type: 'yearRange',
-              value: fromYear,
-              label: t('start_page.filter.year.from_year', {
-                year: fromYear ?? '',
-              }),
-              index: 0,
-            },
-          ],
-        });
-      } else if (yearRangeFilter) {
-        dispatch({
-          type: ActionType.REMOVE_FILTER,
-          payload: yearRangeFilter.value,
-        });
-      }
-    }
-  }
-
-  return (
-    <div className={cl(styles.filterItem, styles.yearRange)}>
-      <SearchSelect
-        key={`from-${resetKey}`}
-        id="year-from"
-        label={t('start_page.filter.year.from_year')}
-        options={fromYearOptions}
-        selectedOption={
-          fromYear ? { label: fromYear, value: fromYear } : undefined
-        }
-        onSelect={(item) => selectedOptionChanged(item, 'from')}
-        inputMode="numeric"
-        optionListStyle={{ maxHeight: '250px' }}
-      ></SearchSelect>
-      <SearchSelect
-        key={`to-${resetKey}`}
-        id="year-to"
-        label={t('start_page.filter.year.to_year')}
-        options={toYearOptions}
-        selectedOption={toYear ? { label: toYear, value: toYear } : undefined}
-        onSelect={(item) => selectedOptionChanged(item, 'to')}
-        inputMode="numeric"
-        optionListStyle={{ maxHeight: '250px' }}
-      ></SearchSelect>
-    </div>
-  );
-};
-
 export const FilterSidebar: React.FC<FilterSidebarProps> = ({
   onFilterChange,
 }) => {
@@ -346,7 +201,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
         </FilterCategory>
         <FilterCategory header={t('start_page.filter.year.title')}>
           <ul className={styles.filterList}>
-            <RenderYearsFilters onFilterChange={onFilterChange} />
+            <YearRangeFilter />
           </ul>
         </FilterCategory>
       </div>

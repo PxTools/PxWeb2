@@ -1,0 +1,180 @@
+import React, { useEffect, useState, useContext } from 'react';
+import { useTranslation } from 'react-i18next';
+import cl from 'clsx';
+
+import styles from './FilterSidebar.module.scss';
+import { SearchSelect, type Option } from '@pxweb2/pxweb2-ui';
+import { FilterContext } from '../../context/FilterContext';
+import { ActionType } from '../../pages/StartPage/StartPageTypes';
+
+function generateYearOptions(start: number, end: number): Option[] {
+  return Array.from({ length: end - start + 1 }, (_, i) => {
+    const year = (start + i).toString();
+    return { label: year, value: year };
+  });
+}
+
+function buildYearOption(value?: string): Option | undefined {
+  return value ? { label: value, value } : undefined;
+}
+
+function useYearLabels(t: ReturnType<typeof useTranslation>['t']) {
+  const fromLabel = t('start_page.filter.year.from_label');
+  const toLabel = t('start_page.filter.year.to_label');
+  const fromYearLabel = (year: string) =>
+    t('start_page.filter.year.from_year', { year });
+  const toYearLabel = (year: string) =>
+    t('start_page.filter.year.to_year', { year });
+
+  return { fromLabel, toLabel, fromYearLabel, toYearLabel };
+}
+
+function parseYearRange(
+  filter?: { value: string; label: string },
+  fromLabelText?: string,
+  toLabelText?: string,
+): { from?: string; to?: string } {
+  if (!filter) {
+    return {};
+  }
+
+  if (filter.value.includes('-')) {
+    const [from, to] = filter.value.split('-');
+    return { from, to };
+  }
+
+  const expectedFromLabel = `${fromLabelText ?? ''} ${filter.value}`;
+  const expectedToLabel = `${toLabelText ?? ''} ${filter.value}`;
+
+  if (filter.label === expectedFromLabel) {
+    return { from: filter.value };
+  }
+
+  if (filter.label === expectedToLabel) {
+    return { to: filter.value };
+  }
+
+  return { from: filter.value };
+}
+
+function getYearRangeLabelValue(
+  from?: string,
+  to?: string,
+  fromLabel?: string,
+  toLabel?: string,
+) {
+  if (from && to && from !== to) {
+    return { label: `${from} - ${to}`, value: `${from}-${to}` };
+  } else if (from && to && from === to) {
+    return { label: from, value: from };
+  } else if (from) {
+    const label = `${fromLabel} ${from}`;
+    return { label, value: from };
+  } else if (to) {
+    const label = `${toLabel} ${to}`;
+    return { label, value: to };
+  }
+
+  return { label: '', value: '' };
+}
+
+export const YearRangeFilter: React.FC = () => {
+  const { state, dispatch } = useContext(FilterContext);
+  const { t } = useTranslation();
+  const { fromLabel, toLabel, fromYearLabel, toYearLabel } = useYearLabels(t);
+
+  const [resetKey, setResetKey] = useState(0);
+  useEffect(() => {
+    setResetKey(state.resetYearFilterInput);
+  }, [state.resetYearFilterInput]);
+
+  const yearRangeFilter = state.activeFilters.find(
+    (f) => f.type === 'yearRange',
+  );
+  const { from: fromYear, to: toYear } = parseYearRange(
+    yearRangeFilter,
+    fromLabel,
+    toLabel,
+  );
+
+  const rangeMin = state.lastUsedYearRange.min;
+  const rangeMax = state.lastUsedYearRange.max;
+  const fromOptions = generateYearOptions(rangeMin, rangeMax);
+  const toOptions = [...fromOptions].reverse();
+
+  function handleSelect(item: Option | undefined, type: 'from' | 'to') {
+    const { from: prevFrom, to: prevTo } = parseYearRange(
+      yearRangeFilter,
+      fromLabel,
+      toLabel,
+    );
+    const newFrom = type === 'from' ? item?.value : prevFrom;
+    const newTo = type === 'to' ? item?.value : prevTo;
+
+    if (newFrom || newTo) {
+      const { label, value } = getYearRangeLabelValue(
+        newFrom,
+        newTo,
+        fromLabel,
+        toLabel,
+      );
+      dispatch({
+        type: ActionType.ADD_FILTER,
+        payload: [{ type: 'yearRange', value, label, index: 0 }],
+      });
+    }
+
+    if (!item) {
+      if (type === 'from') {
+        dispatch({
+          type: ActionType.REMOVE_FILTER,
+          payload: yearRangeFilter?.value ?? '',
+        });
+      } else if (type === 'to') {
+        if (prevFrom) {
+          dispatch({
+            type: ActionType.ADD_FILTER,
+            payload: [
+              {
+                type: 'yearRange',
+                value: prevFrom,
+                label: fromYearLabel(prevFrom),
+                index: 0,
+              },
+            ],
+          });
+        } else if (yearRangeFilter) {
+          dispatch({
+            type: ActionType.REMOVE_FILTER,
+            payload: yearRangeFilter.value,
+          });
+        }
+      }
+    }
+  }
+
+  return (
+    <div className={cl(styles.filterItem, styles.yearRange)}>
+      <SearchSelect
+        key={`from-${resetKey}`}
+        id="year-from"
+        label={fromYearLabel(fromYear ?? '')}
+        options={fromOptions}
+        selectedOption={buildYearOption(fromYear)}
+        onSelect={(item) => handleSelect(item, 'from')}
+        inputMode="numeric"
+        optionListStyle={{ maxHeight: '250px' }}
+      />
+      <SearchSelect
+        key={`to-${resetKey}`}
+        id="year-to"
+        label={toYearLabel(toYear ?? '')}
+        options={toOptions}
+        selectedOption={buildYearOption(toYear)}
+        onSelect={(item) => handleSelect(item, 'to')}
+        inputMode="numeric"
+        optionListStyle={{ maxHeight: '250px' }}
+      />
+    </div>
+  );
+};
