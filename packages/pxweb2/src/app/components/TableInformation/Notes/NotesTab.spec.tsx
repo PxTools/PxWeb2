@@ -14,12 +14,6 @@ vi.mock('../../../context/useVariables', () => ({
   }),
 }));
 
-vi.mock('../../../util/config/getConfig', () => ({
-  getConfig: () => ({
-    specialCharacters: ['.', '..', ':', '-', '...', '*'],
-  }),
-}));
-
 // This import must be placed AFTER the mock to ensure it uses the mocked context
 import { NotesTab } from './NotesTab';
 
