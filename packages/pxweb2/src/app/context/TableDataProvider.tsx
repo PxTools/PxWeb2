@@ -198,7 +198,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   );
 
   useEffect(() => {
-    if (variables.loadSavedQueryId.length > 0) {
+    if (variables.loadSavedQueryId?.length > 0) {
       fetchSavedQuery(variables.loadSavedQueryId);
     }
   }, [fetchSavedQuery, variables.loadSavedQueryId]);
