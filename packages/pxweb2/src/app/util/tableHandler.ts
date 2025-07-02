@@ -58,7 +58,9 @@ export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
 
   const testYearRangeFilter = () => {
     const yearRangeFilter = filters.find((f) => f.type === 'yearRange');
-    if (!yearRangeFilter) return true;
+    if (!yearRangeFilter) {
+      return true;
+    }
 
     const [fromStr, toStr] = yearRangeFilter.value.split('-');
     const from = parseInt(fromStr, 10);
