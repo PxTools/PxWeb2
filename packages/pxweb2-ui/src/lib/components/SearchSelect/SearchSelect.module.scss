@@ -54,6 +54,10 @@
       transform: rotate(180deg);
     }
   }
+
+  .clearSelection {
+    pointer-events: auto;
+  }
 }
 
 .optionList {
