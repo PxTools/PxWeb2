@@ -47,6 +47,8 @@ export function SearchSelect({
   useEffect(() => {
     if (selectedOption) {
       setInputValue(selectedOption.label);
+    } else {
+      setInputValue('');
     }
   }, [selectedOption]);
 

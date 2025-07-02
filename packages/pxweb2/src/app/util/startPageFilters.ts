@@ -148,17 +148,42 @@ export function findParent(
 }
 
 export function getYearRanges(tables: Table[]): YearRange {
-  const yearsPeriod: number[] = [];
-  tables.forEach((table) => {
-    if (table.firstPeriod && table.lastPeriod) {
-      yearsPeriod.push(extractYear(table.firstPeriod));
-      yearsPeriod.push(extractYear(table.lastPeriod));
-    }
-  });
+  let minYear = Infinity;
+  let maxYear = -Infinity;
+
+  for (const table of tables) {
+    const [startFrom, startTo] = getYearRangeFromPeriod(
+      table.firstPeriod ?? '',
+    );
+    const [endFrom, endTo] = getYearRangeFromPeriod(table.lastPeriod ?? '');
+    const tableMin = Math.min(startFrom, endFrom);
+    const tableMax = Math.max(startTo, endTo);
+
+    if (Number.isFinite(tableMin)) minYear = Math.min(minYear, tableMin);
+    if (Number.isFinite(tableMax)) maxYear = Math.max(maxYear, tableMax);
+  }
+
   return {
-    min: Math.min(...yearsPeriod),
-    max: Math.max(...yearsPeriod),
+    min: Number.isFinite(minYear) ? minYear : 1900,
+    max: Number.isFinite(maxYear) ? maxYear : new Date().getFullYear(),
   };
+}
+
+export function getYearRangeFromPeriod(period: string): [number, number] {
+  const rangeRegex = /^(\d{4})-(\d{4})$/;
+  const singleYearRegex = /^(\d{4})/;
+
+  const rangeMatch = rangeRegex.exec(period);
+  if (rangeMatch) {
+    return [parseInt(rangeMatch[1], 10), parseInt(rangeMatch[2], 10)];
+  }
+
+  const yearMatch = singleYearRegex.exec(period);
+  if (yearMatch) {
+    const year = parseInt(yearMatch[1], 10);
+    return [year, year];
+  }
+  return [NaN, NaN];
 }
 
 export function extractYear(period: string | null | undefined): number {

@@ -1,7 +1,7 @@
 import { type Table, TableService, OpenAPI } from '@pxweb2/pxweb2-api-client';
 import { getConfig } from './config/getConfig';
 import type { Filter } from '../pages/StartPage/StartPageTypes';
-import { extractYear } from './startPageFilters';
+import { getYearRangeFromPeriod } from './startPageFilters';
 
 export async function getAllTables() {
   const config = getConfig();
@@ -56,24 +56,32 @@ export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
     }
   };
 
-  const yearRangeFilter = filters.find((f) => f.type === 'yearRange');
   const testYearRangeFilter = () => {
-    if (!yearRangeFilter) {
-      return true;
-    }
+    const yearRangeFilter = filters.find((f) => f.type === 'yearRange');
+    if (!yearRangeFilter) return true;
 
     const [fromStr, toStr] = yearRangeFilter.value.split('-');
     const from = parseInt(fromStr, 10);
     const to = toStr ? parseInt(toStr, 10) : from;
 
-    const firstYear = extractYear(table.firstPeriod);
-    const lastYear = extractYear(table.lastPeriod);
+    const [firstStart, firstEnd] = getYearRangeFromPeriod(
+      table.firstPeriod ?? '',
+    );
+    const [lastStart, lastEnd] = getYearRangeFromPeriod(table.lastPeriod ?? '');
 
-    if (!Number.isFinite(firstYear) || !Number.isFinite(lastYear)) {
+    if (
+      !Number.isFinite(firstStart) ||
+      !Number.isFinite(firstEnd) ||
+      !Number.isFinite(lastStart) ||
+      !Number.isFinite(lastEnd)
+    ) {
       return false;
     }
 
-    return firstYear <= to && lastYear >= from;
+    const overlaps = (rangeStart: number, rangeEnd: number) =>
+      rangeStart <= to && rangeEnd >= from;
+
+    return overlaps(firstStart, firstEnd) || overlaps(lastStart, lastEnd);
   };
 
   return testTimeUnitFilters() && testSubjectFilters() && testYearRangeFilter();
