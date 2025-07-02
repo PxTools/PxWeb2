@@ -198,36 +198,49 @@ export function extractYear(period: string | null | undefined): number {
   return match ? parseInt(match[0], 10) : NaN;
 }
 
-export function parseYearRange(filter?: { value: string; label: string }) {
-  let from: string | undefined;
-  let to: string | undefined;
+export function parseYearRange(
+  filter?: { value: string; label: string },
+  fromLabelText?: string,
+  toLabelText?: string,
+): { from?: string; to?: string } {
+  if (!filter) return {};
 
-  if (!filter) {
+  if (filter.value.includes('-')) {
+    const [from, to] = filter.value.split('-');
     return { from, to };
   }
 
-  if (filter.value.includes('-')) {
-    [from, to] = filter.value.split('-');
-  } else if (filter.label.startsWith('From')) {
-    from = filter.value;
-  } else if (filter.label.startsWith('To')) {
-    to = filter.value;
-  } else {
-    from = filter.value;
+  const expectedFromLabel = `${fromLabelText ?? ''} ${filter.value}`;
+  const expectedToLabel = `${toLabelText ?? ''} ${filter.value}`;
+
+  if (filter.label === expectedFromLabel) {
+    return { from: filter.value };
   }
 
-  return { from, to };
+  if (filter.label === expectedToLabel) {
+    return { to: filter.value };
+  }
+
+  return { from: filter.value };
 }
 
-export function getYearRangeLabelValue(from?: string, to?: string) {
+export function getYearRangeLabelValue(
+  from?: string,
+  to?: string,
+  fromLabel?: string,
+  toLabel?: string,
+) {
   if (from && to && from !== to) {
     return { label: `${from} - ${to}`, value: `${from}-${to}` };
   } else if (from && to && from === to) {
     return { label: from, value: from };
   } else if (from) {
-    return { label: `From ${from}`, value: from };
+    const label = `${fromLabel} ${from}`;
+    return { label, value: from };
   } else if (to) {
-    return { label: `To ${to}`, value: to };
+    const label = `${toLabel} ${to}`;
+    return { label, value: to };
   }
+
   return { label: '', value: '' };
 }

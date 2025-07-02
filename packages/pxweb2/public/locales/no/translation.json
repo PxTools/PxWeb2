@@ -71,7 +71,13 @@
       "remove_filter_aria": "Fjern filter, {{value}}",
       "subject": "Emne",
       "timeUnit": "Tidsperiode",
-      "year": "Årstall",
+      "year": {
+        "title": "Årstall",
+        "from_label": "Fra",
+        "to_label": "Til",
+        "from_year": "Fra år",
+        "to_year": "Til år"
+      },
       "variabel": "Variabel",
       "frequency": {
         "annual": "År",

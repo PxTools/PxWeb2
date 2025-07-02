@@ -81,8 +81,6 @@ const Collapsible: React.FC<CollapsibleProps> = ({
                     });
                   });
 
-                // TODO: Mark parent as indeterminate in UI if needed
-
                 dispatch({
                   type: ActionType.ADD_FILTER,
                   payload: [
@@ -187,11 +185,15 @@ const RenderTimeUnitFilters: React.FC<{ onFilterChange?: () => void }> = ({
     );
   });
 };
+
 const RenderYearsFilters: React.FC<{
   onFilterChange?: () => void;
 }> = () => {
   const { state, dispatch } = useContext(FilterContext);
+  const { t } = useTranslation();
   const [resetKey, setResetKey] = useState(0);
+  const fromLabel = t('start_page.filter.year.from_label');
+  const toLabel = t('start_page.filter.year.to_label');
 
   useEffect(() => {
     setResetKey(state.resetYearFilterInput);
@@ -200,7 +202,11 @@ const RenderYearsFilters: React.FC<{
   const yearRangeFilter = state.activeFilters.find(
     (f) => f.type === 'yearRange',
   );
-  const { from: fromYear, to: toYear } = parseYearRange(yearRangeFilter);
+  const { from: fromYear, to: toYear } = parseYearRange(
+    yearRangeFilter,
+    fromLabel,
+    toLabel,
+  );
 
   const rangeMin = state.lastUsedYearRange.min;
   const rangeMax = state.lastUsedYearRange.max;
@@ -221,7 +227,11 @@ const RenderYearsFilters: React.FC<{
       (f) => f.type === 'yearRange',
     );
 
-    const { from: fromYear, to: toYear } = parseYearRange(yearRangeFilter);
+    const { from: fromYear, to: toYear } = parseYearRange(
+      yearRangeFilter,
+      fromLabel,
+      toLabel,
+    );
 
     const newFrom = selectVariant === 'from' ? selectedItem?.value : fromYear;
     const newTo = selectVariant === 'to' ? selectedItem?.value : toYear;
@@ -230,7 +240,12 @@ const RenderYearsFilters: React.FC<{
     const hasTo = !!newTo;
 
     if (hasFrom || hasTo) {
-      const { label, value } = getYearRangeLabelValue(newFrom, newTo);
+      const { label, value } = getYearRangeLabelValue(
+        newFrom,
+        newTo,
+        t('start_page.filter.year.from_label'),
+        t('start_page.filter.year.to_label'),
+      );
 
       dispatch({
         type: ActionType.ADD_FILTER,
@@ -262,7 +277,9 @@ const RenderYearsFilters: React.FC<{
             {
               type: 'yearRange',
               value: fromYear,
-              label: `From ${fromYear}`,
+              label: t('start_page.filter.year.from_year', {
+                year: fromYear ?? '',
+              }),
               index: 0,
             },
           ],
@@ -281,7 +298,7 @@ const RenderYearsFilters: React.FC<{
       <SearchSelect
         key={`from-${resetKey}`}
         id="year-from"
-        label="From year"
+        label={t('start_page.filter.year.from_year')}
         options={fromYearOptions}
         selectedOption={
           fromYear ? { label: fromYear, value: fromYear } : undefined
@@ -293,7 +310,7 @@ const RenderYearsFilters: React.FC<{
       <SearchSelect
         key={`to-${resetKey}`}
         id="year-to"
-        label="To year"
+        label={t('start_page.filter.year.to_year')}
         options={toYearOptions}
         selectedOption={toYear ? { label: toYear, value: toYear } : undefined}
         onSelect={(item) => selectedOptionChanged(item, 'to')}
@@ -327,7 +344,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
             <RenderTimeUnitFilters onFilterChange={onFilterChange} />
           </ul>
         </FilterCategory>
-        <FilterCategory header={t('start_page.filter.year')}>
+        <FilterCategory header={t('start_page.filter.year.title')}>
           <ul className={styles.filterList}>
             <RenderYearsFilters onFilterChange={onFilterChange} />
           </ul>
