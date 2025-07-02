@@ -243,6 +243,17 @@ export function Selection({
   const [prevLang, setPrevLang] = useState('');
   const { addModal, removeModal } = useAccessibility();
 
+  // Check for 'sq' query parameter and get its value
+  let savedQueryId: string | undefined = undefined;
+  if (typeof window !== 'undefined') {
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('sq')) {
+      savedQueryId = params.get('sq') ?? undefined;
+    }
+  }
+
+  //console.log({ savedQueryId });
+
   useEffect(() => {
     if (errorMsg) {
       console.error('ERROR: Selection:', errorMsg);
@@ -304,28 +315,36 @@ export function Selection({
       });
 
     if (shouldGetDefaultSelection) {
-      TableService.getDefaultSelection(selectedTabId, i18n.resolvedLanguage)
-        .then((selectionResponse) => {
-          const defaultSelection = mapTableSelectionResponse(
-            selectionResponse,
-          ).filter(
-            (variable) =>
-              variable.values.length > 0 ||
-              variable.selectedCodeList !== undefined,
-          );
-          setSelectedVBValues(defaultSelection);
-          variables.syncVariablesAndValues(defaultSelection);
-          variables.setIsLoadingMetadata(false);
-          variables.setHasLoadedDefaultSelection(true);
-        })
-        .catch((apiError: ApiError) => {
-          setErrorMsg(problemMessage(apiError, selectedTabId));
-        })
-        .catch((error) => {
-          setErrorMsg(
-            `Error getting default selection: ${selectedTabId} ${error.message}`,
-          );
-        });
+      if (savedQueryId) {
+        // 1. trigger tabledataprovider to call the saved query
+        variables.setLoadSavedQueryId(savedQueryId);
+        // 2. make tabledataprovider set selected values in variablesprovider
+        // 3. Sync so selected values are marked as selected in variable boxes
+        // variables.syncVariablesAndValues(savedQuerySelection);
+      } else {
+        TableService.getDefaultSelection(selectedTabId, i18n.resolvedLanguage)
+          .then((selectionResponse) => {
+            const defaultSelection = mapTableSelectionResponse(
+              selectionResponse,
+            ).filter(
+              (variable) =>
+                variable.values.length > 0 ||
+                variable.selectedCodeList !== undefined,
+            );
+            setSelectedVBValues(defaultSelection);
+            variables.syncVariablesAndValues(defaultSelection);
+            variables.setIsLoadingMetadata(false);
+            variables.setHasLoadedDefaultSelection(true);
+          })
+          .catch((apiError: ApiError) => {
+            setErrorMsg(problemMessage(apiError, selectedTabId));
+          })
+          .catch((error) => {
+            setErrorMsg(
+              `Error getting default selection: ${selectedTabId} ${error.message}`,
+            );
+          });
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTabId, i18n.resolvedLanguage]);

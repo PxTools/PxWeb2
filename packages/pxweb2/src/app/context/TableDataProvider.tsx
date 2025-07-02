@@ -6,6 +6,7 @@ import {
   ApiError,
   Dataset,
   OutputFormatType,
+  SavedQueriesService,
   TableService,
   VariableSelection,
   VariablesSelection,
@@ -16,6 +17,7 @@ import {
   getPxTableData,
   setPxTableData,
   Variable,
+  SelectedVBValues,
 } from '@pxweb2/pxweb2-ui';
 import { mapJsonStat2Response } from '../../mappers/JsonStat2ResponseMapper';
 import { addFormattingToPxTable } from './TableDataProviderUtils';
@@ -91,6 +93,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
   const [errorMsg, setErrorMsg] = useState('');
   const variables = useVariables();
+  const { selectedVBValues, setSelectedVBValues } = variables;
 
   useEffect(() => {
     if (errorMsg !== '') {
@@ -148,6 +151,57 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     initializeCodelists,
     variables.hasLoadedDefaultSelection,
   ]);
+
+  const fetchSavedQuery = React.useCallback(
+    async (loadSavedQueryId: string) => {
+      console.log({ loadSavedQueryId });
+
+      // TODO: ? call await SavedQueriesService.getSaveQuery(loadSavedQueryId);
+      //to get the saved query metadata and codelists. Use this for setting selected values in variables provider.
+
+      const res = await SavedQueriesService.runSaveQuery(loadSavedQueryId);
+      // Map response to json-stat2 Dataset
+      const pxDataobj: unknown = res;
+      const pxTabData = pxDataobj as Dataset;
+
+      const pxTable: PxTable = mapJsonStat2Response(pxTabData);
+      // Add formatting to the PxTable datacell values
+      await addFormattingToPxTable(pxTable);
+
+      console.log({ pxTable });
+
+      // Set selection in variables provider
+      let sqValues: SelectedVBValues[] = [];
+
+      pxTable.metadata.variables.forEach((variable) => {
+        console.log({ variable });
+        sqValues.push({
+          id: variable.id,
+          values: variable.values.map((v) => v.code),
+          selectedCodeList: variableCodelists[variable.id],
+        });
+      });
+
+      console.log({ sqValues });
+      setSelectedVBValues(selectedVBValues);
+      variables.syncVariablesAndValues(sqValues);
+      variables.setIsLoadingMetadata(false);
+      variables.setHasLoadedDefaultSelection(true);
+      setData(pxTable);
+
+      // Store as accumulated data
+      setAccumulatedData(structuredClone(pxTable));
+
+      //TODO update selection i variables provider
+    },
+    [],
+  );
+
+  useEffect(() => {
+    if (variables.loadSavedQueryId.length > 0) {
+      fetchSavedQuery(variables.loadSavedQueryId);
+    }
+  }, [fetchSavedQuery, variables.loadSavedQueryId]);
 
   /**
    * Remember order of variables in stub and heading when table setup is changed.

@@ -17,6 +17,8 @@ export type VariablesContextType = {
   toString: () => string;
   hasLoadedDefaultSelection: boolean;
   setHasLoadedDefaultSelection: React.Dispatch<React.SetStateAction<boolean>>;
+  setLoadSavedQueryId: React.Dispatch<React.SetStateAction<string>>;
+  loadSavedQueryId: string;
   setSelectedVBValues: React.Dispatch<React.SetStateAction<SelectedVBValues[]>>;
   selectedVBValues: SelectedVBValues[];
   isMatrixSizeAllowed: boolean;
@@ -47,6 +49,8 @@ export const VariablesContext = createContext<VariablesContextType>({
 
   hasLoadedDefaultSelection: false,
   setHasLoadedDefaultSelection: () => false,
+  setLoadSavedQueryId: () => '',
+  loadSavedQueryId: '',
   setSelectedVBValues: () => [],
   selectedVBValues: [],
   setIsLoadingMetadata: () => false,
@@ -72,7 +76,9 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isLoadingMetadata, setIsLoadingMetadata] = useState<boolean>(false);
   const [hasLoadedDefaultSelection, setHasLoadedDefaultSelection] =
     useState(false);
-  const [selectedVBValues, setSelectedVBValues] = useState<SelectedVBValues[]>(
+    const [loadSavedQueryId, setLoadSavedQueryId] =
+    useState('');
+    const [selectedVBValues, setSelectedVBValues] = useState<SelectedVBValues[]>(
     [],
   );
   const [selectedMatrixSize, setSelectedMatrixSize] = useState<number>(1);
@@ -256,6 +262,8 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
       toString,
       hasLoadedDefaultSelection,
       setHasLoadedDefaultSelection,
+      setLoadSavedQueryId,
+      loadSavedQueryId,
       setSelectedVBValues,
       selectedVBValues,
       isMatrixSizeAllowed,
@@ -277,6 +285,8 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
       toString,
       hasLoadedDefaultSelection,
       setHasLoadedDefaultSelection,
+      setLoadSavedQueryId,
+      loadSavedQueryId,
       setSelectedVBValues,
       selectedVBValues,
       isMatrixSizeAllowed,
