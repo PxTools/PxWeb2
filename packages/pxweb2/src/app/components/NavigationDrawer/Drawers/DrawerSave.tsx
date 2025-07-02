@@ -239,7 +239,6 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
       >
         <ul
           className={classes.saveAsActionList}
-          role="list"
           aria-labelledby="drawer-save-to-file"
         >
           {fileFormats.map((format) => (
