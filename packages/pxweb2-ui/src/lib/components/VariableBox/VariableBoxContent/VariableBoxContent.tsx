@@ -271,8 +271,8 @@ export function VariableBoxContent({
             value={search}
             onChange={(value: string) => {
               // Escape special characters in search value
-              const escapedValue = value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-              setSearch(escapedValue);
+              //const escapedValue = value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+              setSearch(value);
               if (value === '') {
                 setScrollingDown(false);
               }
@@ -349,7 +349,7 @@ export function VariableBoxContent({
                   ?.values.includes(value.code) === true
               }
               text={value.label.charAt(0).toUpperCase() + value.label.slice(1)}
-              searchTerm={search}
+              searchTerm={search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}
               onChange={() => onChangeCheckbox(varId, value.code)}
             />
           </div>
