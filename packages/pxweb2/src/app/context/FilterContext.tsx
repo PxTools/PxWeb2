@@ -98,11 +98,15 @@ function reducer(
       };
     }
     case ActionType.REMOVE_FILTER: {
-      const removedValue = action.payload.value;
       const removedType = action.payload.type;
-      const currentFilters = state.activeFilters.filter(
-        (filter) => filter.value !== removedValue,
-      );
+      const currentFilters =
+        removedType == 'subject' && action.payload.uniqueId
+          ? state.activeFilters.filter(
+              (filter) => filter.uniqueId !== action.payload.uniqueId,
+            )
+          : state.activeFilters.filter(
+              (filter) => filter.value !== action.payload.value,
+            );
       if (currentFilters.length === 0) {
         return {
           ...state,
