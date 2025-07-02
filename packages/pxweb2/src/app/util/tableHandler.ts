@@ -58,9 +58,7 @@ export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
 
   const testYearRangeFilter = () => {
     const yearRangeFilter = filters.find((f) => f.type === 'yearRange');
-    if (!yearRangeFilter) {
-      return true;
-    }
+    if (!yearRangeFilter) return true;
 
     const [fromStr, toStr] = yearRangeFilter.value.split('-');
     const from = parseInt(fromStr, 10);
@@ -70,20 +68,17 @@ export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
       table.firstPeriod ?? '',
     );
     const [lastStart, lastEnd] = getYearRangeFromPeriod(table.lastPeriod ?? '');
+    const tableStart = Math.min(firstStart, lastStart);
+    const tableEnd = Math.max(firstEnd, lastEnd);
 
-    if (
-      !Number.isFinite(firstStart) ||
-      !Number.isFinite(firstEnd) ||
-      !Number.isFinite(lastStart) ||
-      !Number.isFinite(lastEnd)
-    ) {
+    if (!Number.isFinite(tableStart) || !Number.isFinite(tableEnd)) {
       return false;
     }
 
     const overlaps = (rangeStart: number, rangeEnd: number) =>
       rangeStart <= to && rangeEnd >= from;
 
-    return overlaps(firstStart, firstEnd) || overlaps(lastStart, lastEnd);
+    return overlaps(tableStart, tableEnd);
   };
 
   return testTimeUnitFilters() && testSubjectFilters() && testYearRangeFilter();
