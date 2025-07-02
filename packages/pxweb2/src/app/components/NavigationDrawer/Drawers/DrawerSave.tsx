@@ -8,6 +8,7 @@ import {
   Button,
   ContentBox,
   IconProps,
+  Spinner,
   VartypeEnum,
 } from '@pxweb2/pxweb2-ui';
 import {
@@ -277,6 +278,12 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
         </Button>
         <BodyShort>{sqUrl}</BodyShort>
       </ContentBox>
+
+      {isLoading && (
+        <div className={classes.loadingSpinner}>
+          <Spinner size="xlarge" />
+        </div>
+      )}
     </>
   );
 }
