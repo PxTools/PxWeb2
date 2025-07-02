@@ -170,12 +170,14 @@ describe('Ensure the tree flattens correctly', () => {
       id: 'in01',
       label: 'Arbeid og lønn',
       count: 1,
+      uniqueId: 'in011',
       children: [],
     },
     {
       id: 'aku',
       label: 'Arbeidskraftundersøkelsen',
       children: [],
+      uniqueId: 'aku2',
       count: 1,
     },
   ];
