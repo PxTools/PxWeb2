@@ -76,9 +76,8 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isLoadingMetadata, setIsLoadingMetadata] = useState<boolean>(false);
   const [hasLoadedDefaultSelection, setHasLoadedDefaultSelection] =
     useState(false);
-    const [loadSavedQueryId, setLoadSavedQueryId] =
-    useState('');
-    const [selectedVBValues, setSelectedVBValues] = useState<SelectedVBValues[]>(
+  const [loadSavedQueryId, setLoadSavedQueryId] = useState('');
+  const [selectedVBValues, setSelectedVBValues] = useState<SelectedVBValues[]>(
     [],
   );
   const [selectedMatrixSize, setSelectedMatrixSize] = useState<number>(1);
