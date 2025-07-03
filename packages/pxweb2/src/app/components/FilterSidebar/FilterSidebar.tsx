@@ -4,7 +4,7 @@ import { ActionType, PathItem } from '../../pages/StartPage/StartPageTypes';
 import styles from './FilterSidebar.module.scss';
 import { useTranslation } from 'react-i18next';
 import { Checkbox, FilterCategory } from '@pxweb2/pxweb2-ui';
-import { findAncestors, findChildren } from '../../util/startPageFilters';
+import { findAncestors, getAllDescendants } from '../../util/startPageFilters';
 import { FilterContext } from '../../context/FilterContext';
 import { ReactNode, useContext } from 'react';
 
@@ -43,7 +43,7 @@ const Collapsible: React.FC<CollapsibleProps> = ({
           subtle={!isActive && count === 0}
           onChange={(value) => {
             const ancestors = findAncestors(subjectTree, subject.uniqueId!);
-            const children = findChildren(subjectTree, subjectId);
+            const children = getAllDescendants(subject);
 
             if (value) {
               // If subject has children, add the subject itself
@@ -128,10 +128,9 @@ const RenderSubjects: React.FC<{
   return (
     <ul className={styles.filterList}>
       {subjects.map((subject, index) => {
-        const descendants = findChildren(
-          state.availableFilters.subjectTree,
-          subject.id,
-        );
+        const descendants = getAllDescendants(subject);
+        const count = subject.count ?? 0;
+
         const isChecked =
           state.activeFilters.some(
             (f) => f.type === 'subject' && f.uniqueId === subject.uniqueId,
@@ -141,8 +140,6 @@ const RenderSubjects: React.FC<{
               (f) => f.type === 'subject' && f.uniqueId === d.uniqueId,
             ),
           );
-
-        const count = subject.count ?? 0;
 
         return (
           <li

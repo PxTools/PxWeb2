@@ -148,7 +148,7 @@ export function findAncestors(
 }
 
 // Recursively flatten all descendants of a PathItem, including all levels
-function getAllDescendants(node: PathItem): PathItem[] {
+export function getAllDescendants(node: PathItem): PathItem[] {
   let descendants: PathItem[] = [];
   for (const child of node.children || []) {
     descendants.push({ ...child, children: [] }); // flatten: remove children from returned objects
