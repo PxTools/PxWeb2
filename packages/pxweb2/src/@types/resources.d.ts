@@ -72,7 +72,14 @@ interface Resources {
         remove_filter_aria: 'Remove filter, {{value}}';
         subject: 'Topic';
         timeUnit: 'Time period';
-        year: 'Year';
+        year: {
+          title: 'Year';
+          from_label: 'From';
+          to_label: 'To';
+          from_year: 'From year';
+          to_year: 'To year';
+          clear_selection: 'Clear selection';
+        };
         variabel: 'Variable';
         frequency: {
           annual: 'Year';

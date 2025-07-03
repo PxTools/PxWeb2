@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { Checkbox, FilterCategory } from '@pxweb2/pxweb2-ui';
 import { findAncestors, getAllDescendants } from '../../util/startPageFilters';
 import { FilterContext } from '../../context/FilterContext';
+import { YearRangeFilter } from './YearRangeFilter';
 import { ReactNode, useContext } from 'react';
 
 interface CollapsibleProps {
@@ -219,13 +220,16 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
 
   return (
     <div className={styles.sideBar}>
-      <div>
+      <div className={styles.sideBarWrapper}>
         <FilterCategory header={t('start_page.filter.subject')}>
           <RenderSubjects
             firstLevel={true}
             subjects={state.availableFilters.subjectTree}
             onFilterChange={onFilterChange}
           />
+        </FilterCategory>
+        <FilterCategory header={t('start_page.filter.year.title')}>
+          <YearRangeFilter />
         </FilterCategory>
         <FilterCategory header={t('start_page.filter.timeUnit')}>
           <ul className={styles.filterList}>
