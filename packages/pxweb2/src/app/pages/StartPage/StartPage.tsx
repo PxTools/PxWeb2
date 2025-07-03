@@ -191,6 +191,7 @@ const StartPage = () => {
       return (
         <Chips.Removable
           filled
+          onMouseDown={(e) => e.preventDefault()}
           onClick={() => {
             dispatch({
               type: ActionType.RESET_FILTERS,
@@ -484,6 +485,7 @@ const StartPage = () => {
                     {renderRemoveAllChips()}
                     {sortFilterChips(state.activeFilters).map((filter) => (
                       <Chips.Removable
+                        onMouseDown={(e) => e.preventDefault()}
                         onClick={() => {
                           dispatch({
                             type: ActionType.REMOVE_FILTER,
