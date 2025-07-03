@@ -99,8 +99,14 @@ export const YearRangeFilter: React.FC = () => {
 
   const rangeMin = state.lastUsedYearRange.min;
   const rangeMax = state.lastUsedYearRange.max;
-  const fromOptions = generateYearOptions(rangeMin, rangeMax);
-  const toOptions = [...fromOptions].reverse();
+  const fromOptions = generateYearOptions(
+    rangeMin,
+    toYear ? parseInt(toYear, 10) : rangeMax,
+  );
+  const toOptions = generateYearOptions(
+    fromYear ? parseInt(fromYear, 10) : rangeMin,
+    rangeMax,
+  ).reverse();
   const clearSelectionText = t('start_page.filter.year.clear_selection');
 
   function handleSelect(item: Option | undefined, type: 'from' | 'to') {
