@@ -194,13 +194,13 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
             />
           </ul>
         </FilterCategory>
+        <FilterCategory header={t('start_page.filter.year.title')}>
+          <YearRangeFilter />
+        </FilterCategory>
         <FilterCategory header={t('start_page.filter.timeUnit')}>
           <ul className={styles.filterList}>
             <RenderTimeUnitFilters onFilterChange={onFilterChange} />
           </ul>
-        </FilterCategory>
-        <FilterCategory header={t('start_page.filter.year.title')}>
-          <YearRangeFilter />
         </FilterCategory>
       </div>
       <p>
