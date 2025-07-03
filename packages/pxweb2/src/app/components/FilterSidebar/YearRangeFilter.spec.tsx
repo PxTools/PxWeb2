@@ -37,8 +37,17 @@ describe('YearRangeFilter', () => {
     error: '',
   };
 
+  const sampleTables = [
+    { firstPeriod: '2000', lastPeriod: '2005' },
+    { firstPeriod: '2001', lastPeriod: '2004' },
+  ] as any;
+
   const renderWithContext = (customState = {}) => {
-    const state = { ...baseState, ...customState };
+    const state = {
+      ...baseState,
+      filteredTables: sampleTables,
+      ...customState,
+    };
 
     return render(
       <FilterContext.Provider value={{ state, dispatch: mockDispatch }}>
