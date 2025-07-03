@@ -27,7 +27,6 @@ export function organizePaths(paths: PathItem[][]): PathItem[] {
       let existingItem = currentLevel.find((x) => x.id === item.id);
       idPath.push(item.id);
       const fullId = idPath.join('__');
-      console.log('fullId: ' + fullId);
 
       if (existingItem) {
         existingItem.count && existingItem.count++;
@@ -86,7 +85,6 @@ export function updateSubjectTreeCounts(
   originalTree: PathItem[],
   filteredTables: Table[],
 ): PathItem[] {
-  console.log('Updating subject tree counts chief!');
   const subjectToTableMap = new Map<string, Set<string>>();
 
   (filteredTables as TableWithPaths[]).forEach((table) => {
