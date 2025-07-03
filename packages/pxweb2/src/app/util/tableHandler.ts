@@ -77,10 +77,22 @@ export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
       return false;
     }
 
-    const overlaps = (rangeStart: number, rangeEnd: number) =>
-      rangeStart <= to && rangeEnd >= from;
+    const hasFrom = fromStr !== undefined && fromStr !== '' && !isNaN(from);
+    const hasTo = !!toStr;
 
-    return overlaps(tableStart, tableEnd);
+    if (hasFrom && hasTo) {
+      return tableStart <= from && tableEnd >= to;
+    }
+
+    if (hasFrom) {
+      return from >= tableStart && from <= tableEnd;
+    }
+
+    if (hasTo) {
+      return to >= tableStart && to <= tableEnd;
+    }
+
+    return true;
   };
 
   return testTimeUnitFilters() && testSubjectFilters() && testYearRangeFilter();
