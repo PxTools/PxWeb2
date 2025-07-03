@@ -53,17 +53,26 @@ export function SearchSelect({
   }, [selectedOption]);
 
   useEffect(() => {
-    const onClickOutside = (e: MouseEvent) => {
-      if (
-        contentRef.current &&
-        !contentRef.current.contains(e.target as Node)
-      ) {
-        setIsOpen(false);
-        setHighlightedIndex(-1);
+    const onMouseDown = (e: MouseEvent) => {
+      if (!contentRef.current) {
+        return;
+      }
+      const target = e.target as HTMLElement;
+      const clickedInside = contentRef.current.contains(target);
+      if (!clickedInside) {
+        const isScrollbarClick =
+          target.classList.contains(styles.optionList) ||
+          target.closest(`.${styles.optionList}`);
+
+        if (!isScrollbarClick) {
+          setIsOpen(false);
+          setHighlightedIndex(-1);
+        }
       }
     };
-    document.addEventListener('mousedown', onClickOutside);
-    return () => document.removeEventListener('mousedown', onClickOutside);
+
+    document.addEventListener('mousedown', onMouseDown);
+    return () => document.removeEventListener('mousedown', onMouseDown);
   }, []);
 
   const filteredOptions = inputValue
