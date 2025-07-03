@@ -3,6 +3,7 @@ import {
   findAncestors,
   findChildren,
   sortAndDeduplicateFilterChips,
+  organizePaths,
 } from '../util/startPageFilters';
 import { Filter, type PathItem } from '../pages/StartPage/StartPageTypes';
 
@@ -11,19 +12,19 @@ const exampleResultTree: PathItem[] = [
     id: 'al',
     label: 'Arbeid og lønn',
     count: 2,
-    uniqueId: 'al1',
+    uniqueId: 'al',
     children: [
       {
         id: 'al03',
         label: 'Arbeidsledighet',
         count: 1,
-        uniqueId: 'al031',
+        uniqueId: 'al__al03',
         children: [
           {
             id: 'aku',
             label: 'Arbeidskraftundersøkelsen',
             count: 1,
-            uniqueId: 'aku1',
+            uniqueId: 'al__al03__aku',
             children: [],
           },
         ],
@@ -32,12 +33,13 @@ const exampleResultTree: PathItem[] = [
         id: 'al06',
         label: 'Sysselsetting',
         count: 1,
-        uniqueId: 'al061',
+        uniqueId: 'al__al06',
         children: [
           {
             id: 'aku',
             label: 'Arbeidskraftundersøkelsen',
             count: 1,
+            uniqueId: 'al__al06__aku',
             children: [],
           },
         ],
@@ -48,19 +50,19 @@ const exampleResultTree: PathItem[] = [
     id: 'in',
     count: 1,
     label: 'Innvandring og innvandrere',
-    uniqueId: 'in1',
+    uniqueId: 'in',
     children: [
       {
         id: 'in01',
         label: 'Arbeid og lønn',
         count: 1,
-        uniqueId: 'in011',
+        uniqueId: 'in__in01',
         children: [
           {
             id: 'aku',
             label: 'Arbeidskraftundersøkelsen',
             children: [],
-            uniqueId: 'aku2',
+            uniqueId: 'in__in01__aku',
             count: 1,
           },
         ],
@@ -111,30 +113,30 @@ const inExample: PathItem = {
 
 // This stops working when I add uniqueID fields - they are randomly generated and are different every time. Maybe mock math.random??
 
-// describe('Test function organizePaths', () => {
-//   it('should organize paths into a hierarchical structure', () => {
-//     const paths: PathItem[][] = [
-//       [
-//         { id: 'al', label: 'Arbeid og lønn' },
-//         { id: 'al03', label: 'Arbeidsledighet' },
-//         { id: 'aku', label: 'Arbeidskraftundersøkelsen' },
-//       ],
-//       [
-//         { id: 'al', label: 'Arbeid og lønn' },
-//         { id: 'al06', label: 'Sysselsetting' },
-//         { id: 'aku', label: 'Arbeidskraftundersøkelsen' },
-//       ],
-//       [
-//         { id: 'in', label: 'Innvandring og innvandrere' },
-//         { id: 'in01', label: 'Arbeid og lønn' },
-//         { id: 'aku', label: 'Arbeidskraftundersøkelsen' },
-//       ],
-//     ];
+describe('Test function organizePaths', () => {
+  it('should organize paths into a hierarchical structure', () => {
+    const paths: PathItem[][] = [
+      [
+        { id: 'al', label: 'Arbeid og lønn' },
+        { id: 'al03', label: 'Arbeidsledighet' },
+        { id: 'aku', label: 'Arbeidskraftundersøkelsen' },
+      ],
+      [
+        { id: 'al', label: 'Arbeid og lønn' },
+        { id: 'al06', label: 'Sysselsetting' },
+        { id: 'aku', label: 'Arbeidskraftundersøkelsen' },
+      ],
+      [
+        { id: 'in', label: 'Innvandring og innvandrere' },
+        { id: 'in01', label: 'Arbeid og lønn' },
+        { id: 'aku', label: 'Arbeidskraftundersøkelsen' },
+      ],
+    ];
 
-//     const result = organizePaths(paths);
-//     expect(result).toEqual(exampleResultTree);
-//   });
-// });
+    const result = organizePaths(paths);
+    expect(result).toEqual(exampleResultTree);
+  });
+});
 
 describe('Find all direct ancestors of node', () => {
   it('should find the first parent of the node', () => {
