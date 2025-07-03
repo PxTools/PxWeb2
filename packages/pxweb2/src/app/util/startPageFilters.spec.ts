@@ -1,5 +1,117 @@
 import { describe, it, expect } from 'vitest';
-import { organizePaths, type PathItem } from '../util/startPageFilters';
+import {
+  findAncestors,
+  findChildren,
+  sortAndDeduplicateFilterChips,
+  organizePaths,
+} from '../util/startPageFilters';
+import { Filter, type PathItem } from '../pages/StartPage/StartPageTypes';
+
+const exampleResultTree: PathItem[] = [
+  {
+    id: 'al',
+    label: 'Arbeid og lønn',
+    count: 2,
+    uniqueId: 'al',
+    children: [
+      {
+        id: 'al03',
+        label: 'Arbeidsledighet',
+        count: 1,
+        uniqueId: 'al__al03',
+        children: [
+          {
+            id: 'aku',
+            label: 'Arbeidskraftundersøkelsen',
+            count: 1,
+            uniqueId: 'al__al03__aku',
+            children: [],
+          },
+        ],
+      },
+      {
+        id: 'al06',
+        label: 'Sysselsetting',
+        count: 1,
+        uniqueId: 'al__al06',
+        children: [
+          {
+            id: 'aku',
+            label: 'Arbeidskraftundersøkelsen',
+            count: 1,
+            uniqueId: 'al__al06__aku',
+            children: [],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'in',
+    count: 1,
+    label: 'Innvandring og innvandrere',
+    uniqueId: 'in',
+    children: [
+      {
+        id: 'in01',
+        label: 'Arbeid og lønn',
+        count: 1,
+        uniqueId: 'in__in01',
+        children: [
+          {
+            id: 'aku',
+            label: 'Arbeidskraftundersøkelsen',
+            children: [],
+            uniqueId: 'in__in01__aku',
+            count: 1,
+          },
+        ],
+      },
+    ],
+  },
+];
+
+const akuExample: PathItem = {
+  id: 'aku',
+  label: 'Arbeidskraftundersøkelsen',
+  count: 1,
+  uniqueId: 'al__al06__aku',
+  children: [],
+};
+
+const al06Example: PathItem = {
+  id: 'al06',
+  label: 'Sysselsetting',
+  count: 1,
+  uniqueId: 'al__al06',
+  children: [],
+};
+
+const al03Example: PathItem = {
+  id: 'al03',
+  label: 'Arbeidsledighet',
+  count: 1,
+  uniqueId: 'al__al03',
+  children: [],
+};
+
+const alExample: PathItem = {
+  id: 'al',
+  label: 'Arbeid og lønn',
+  count: 2,
+  uniqueId: 'al',
+  children: [],
+};
+
+const inExample: PathItem = {
+  id: 'in',
+  count: 1,
+  label: 'Innvandring og innvandrere',
+  uniqueId: 'in',
+  children: [],
+};
+
+// This stops working when I add uniqueID fields - they are randomly generated and are different every time. Maybe mock math.random??
 
 describe('Test function organizePaths', () => {
   it('should organize paths into a hierarchical structure', () => {
@@ -21,63 +133,106 @@ describe('Test function organizePaths', () => {
       ],
     ];
 
-    const expectedResult: PathItem[] = [
-      {
-        id: 'al',
-        label: 'Arbeid og lønn',
-        count: 2,
-        children: [
-          {
-            id: 'al03',
-            label: 'Arbeidsledighet',
-            count: 1,
-            children: [
-              {
-                id: 'aku',
-                label: 'Arbeidskraftundersøkelsen',
-                count: 1,
-                children: [],
-              },
-            ],
-          },
-          {
-            id: 'al06',
-            label: 'Sysselsetting',
-            count: 1,
-            children: [
-              {
-                id: 'aku',
-                label: 'Arbeidskraftundersøkelsen',
-                count: 1,
-                children: [],
-              },
-            ],
-          },
-        ],
-      },
-      {
-        id: 'in',
-        count: 1,
-        label: 'Innvandring og innvandrere',
-        children: [
-          {
-            id: 'in01',
-            label: 'Arbeid og lønn',
-            count: 1,
-            children: [
-              {
-                id: 'aku',
-                label: 'Arbeidskraftundersøkelsen',
-                children: [],
-                count: 1,
-              },
-            ],
-          },
-        ],
-      },
-    ];
-
     const result = organizePaths(paths);
-    expect(result).toEqual(expectedResult);
+    expect(result).toEqual(exampleResultTree);
+  });
+});
+
+describe('Find all direct ancestors of node', () => {
+  it('should find the first parent of the node', () => {
+    const parents = findAncestors(exampleResultTree, 'al__al03__aku');
+    expect(parents).toContainEqual(al03Example);
+  });
+  it('should find the second parent of the node', () => {
+    const parents = findAncestors(exampleResultTree, 'al__al03__aku');
+    expect(parents).toContainEqual(alExample);
+  });
+  it('should not find any other nodes', () => {
+    const parents = findAncestors(exampleResultTree, 'al__al03__aku');
+    expect(parents).not.toContainEqual(inExample);
+    expect(parents).not.toContainEqual(akuExample);
+  });
+});
+
+describe('Find all children of node', () => {
+  it('should find the immediate children of the node', () => {
+    const children = findChildren(exampleResultTree, 'al');
+    expect(children).toContainEqual(al06Example);
+    expect(children).toContainEqual(al03Example);
+  });
+  it('should find the second child of the node', () => {
+    const children = findChildren(exampleResultTree, 'al');
+    expect(children).toContainEqual(akuExample);
+  });
+});
+
+describe('Ensure the tree flattens correctly', () => {
+  const flattenedResult: PathItem[] = [
+    {
+      id: 'in01',
+      label: 'Arbeid og lønn',
+      count: 1,
+      uniqueId: 'in__in01',
+      children: [],
+    },
+    {
+      id: 'aku',
+      label: 'Arbeidskraftundersøkelsen',
+      children: [],
+      uniqueId: 'in__in01__aku',
+      count: 1,
+    },
+  ];
+
+  it('should find the immediate children of the node', () => {
+    const children = findChildren(exampleResultTree, 'in');
+    expect(children).toEqual(flattenedResult);
+  });
+});
+
+describe('Correctly sort and deduplicate filters', () => {
+  const rawFilters: Filter[] = [
+    {
+      type: 'subject',
+      value: 'in01',
+      label: 'Arbeid og lønn',
+      uniqueId: '2vij38ql69',
+      index: 2,
+    },
+    {
+      type: 'subject',
+      value: 'aku',
+      label: 'Arbeidskraftundersøkelsen',
+      uniqueId: 'nem1ho60cb',
+      index: 1,
+    },
+    {
+      type: 'subject',
+      value: 'aku',
+      label: 'Arbeidskraftundersøkelsen',
+      uniqueId: 'fd9rg6iebf',
+      index: 0,
+    },
+  ];
+  const sortedDedupedFilters: Filter[] = [
+    {
+      type: 'subject',
+      value: 'aku',
+      label: 'Arbeidskraftundersøkelsen',
+      uniqueId: 'fd9rg6iebf',
+      index: 0,
+    },
+    {
+      type: 'subject',
+      value: 'in01',
+      label: 'Arbeid og lønn',
+      uniqueId: '2vij38ql69',
+      index: 2,
+    },
+  ];
+
+  it('Should sort and dedupe filter correctly', () => {
+    const performedSort = sortAndDeduplicateFilterChips(rawFilters);
+    expect(performedSort).toEqual(sortedDedupedFilters);
   });
 });

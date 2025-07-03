@@ -66,7 +66,7 @@ function reducer(
         ...initialState,
         availableTables: action.payload.tables,
         filteredTables: action.payload.tables,
-        originalSubjectTree: action.payload.subjects, // Save full subject structure once per page load
+        originalSubjectTree: action.payload.subjects,
         availableFilters: {
           subjectTree: action.payload.subjects,
           timeUnits: getTimeUnits(action.payload.tables),
@@ -98,9 +98,15 @@ function reducer(
       };
     }
     case ActionType.REMOVE_FILTER: {
-      const currentFilters = state.activeFilters.filter(
-        (filter) => filter.value !== action.payload,
-      );
+      const removedType = action.payload.type;
+      const currentFilters =
+        removedType == 'subject' && action.payload.uniqueId
+          ? state.activeFilters.filter(
+              (filter) => filter.uniqueId !== action.payload.uniqueId,
+            )
+          : state.activeFilters.filter(
+              (filter) => filter.value !== action.payload.value,
+            );
       if (currentFilters.length === 0) {
         return {
           ...state,
@@ -118,17 +124,13 @@ function reducer(
       const filteredTables = state.availableTables.filter((table) =>
         shouldTableBeIncluded(table, currentFilters),
       );
-      //TODO: Add type to handleRemoveFilter instead
-      const removedFilter = state.activeFilters.find(
-        (filter) => filter.value === action.payload,
-      );
       return {
         ...state,
         activeFilters: currentFilters,
         filteredTables,
         availableFilters: {
           subjectTree:
-            removedFilter?.type !== 'subject'
+            removedType !== 'subject'
               ? updateSubjectTreeCounts(
                   state.originalSubjectTree,
                   filteredTables,
