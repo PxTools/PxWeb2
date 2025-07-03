@@ -101,6 +101,7 @@ export const YearRangeFilter: React.FC = () => {
   const rangeMax = state.lastUsedYearRange.max;
   const fromOptions = generateYearOptions(rangeMin, rangeMax);
   const toOptions = [...fromOptions].reverse();
+  const clearSelectionText = t('start_page.filter.year.clear_selection');
 
   function handleSelect(item: Option | undefined, type: 'from' | 'to') {
     const { from: prevFrom, to: prevTo } = parseYearRange(
@@ -164,6 +165,7 @@ export const YearRangeFilter: React.FC = () => {
         onSelect={(item) => handleSelect(item, 'from')}
         inputMode="numeric"
         optionListStyle={{ maxHeight: '250px' }}
+        clearSelectionText={clearSelectionText}
       />
       <SearchSelect
         key={`to-${resetKey}`}
@@ -174,6 +176,7 @@ export const YearRangeFilter: React.FC = () => {
         onSelect={(item) => handleSelect(item, 'to')}
         inputMode="numeric"
         optionListStyle={{ maxHeight: '250px' }}
+        clearSelectionText={clearSelectionText}
       />
     </div>
   );

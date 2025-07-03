@@ -78,6 +78,7 @@ interface Resources {
           to_label: 'To';
           from_year: 'From year';
           to_year: 'To year';
+          clear_selection: 'Clear selection';
         };
         variabel: 'Variable';
         frequency: {

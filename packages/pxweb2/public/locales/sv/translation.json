@@ -76,7 +76,8 @@
         "from_label": "Från",
         "to_label": "Till",
         "from_year": "Från år",
-        "to_year": "Till år"
+        "to_year": "Till år",
+        "clear_selection": "Töm val"
       },
       "variabel": "Variabel",
       "frequency": {

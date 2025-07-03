@@ -200,9 +200,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
           </ul>
         </FilterCategory>
         <FilterCategory header={t('start_page.filter.year.title')}>
-          <ul className={styles.filterList}>
-            <YearRangeFilter />
-          </ul>
+          <YearRangeFilter />
         </FilterCategory>
       </div>
       <p>
