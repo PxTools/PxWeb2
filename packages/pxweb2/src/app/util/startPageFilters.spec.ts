@@ -75,7 +75,7 @@ const akuExample: PathItem = {
   id: 'aku',
   label: 'Arbeidskraftundersøkelsen',
   count: 1,
-  uniqueId: 'aku1',
+  uniqueId: 'al__al06__aku',
   children: [],
 };
 
@@ -83,7 +83,7 @@ const al06Example: PathItem = {
   id: 'al06',
   label: 'Sysselsetting',
   count: 1,
-  uniqueId: 'al061',
+  uniqueId: 'al__al06',
   children: [],
 };
 
@@ -91,7 +91,7 @@ const al03Example: PathItem = {
   id: 'al03',
   label: 'Arbeidsledighet',
   count: 1,
-  uniqueId: 'al031',
+  uniqueId: 'al__al03',
   children: [],
 };
 
@@ -99,7 +99,7 @@ const alExample: PathItem = {
   id: 'al',
   label: 'Arbeid og lønn',
   count: 2,
-  uniqueId: 'al1',
+  uniqueId: 'al',
   children: [],
 };
 
@@ -107,7 +107,7 @@ const inExample: PathItem = {
   id: 'in',
   count: 1,
   label: 'Innvandring og innvandrere',
-  uniqueId: 'in1',
+  uniqueId: 'in',
   children: [],
 };
 
@@ -140,15 +140,15 @@ describe('Test function organizePaths', () => {
 
 describe('Find all direct ancestors of node', () => {
   it('should find the first parent of the node', () => {
-    const parents = findAncestors(exampleResultTree, 'aku1');
+    const parents = findAncestors(exampleResultTree, 'al__al03__aku');
     expect(parents).toContainEqual(al03Example);
   });
   it('should find the second parent of the node', () => {
-    const parents = findAncestors(exampleResultTree, 'aku1');
+    const parents = findAncestors(exampleResultTree, 'al__al03__aku');
     expect(parents).toContainEqual(alExample);
   });
   it('should not find any other nodes', () => {
-    const parents = findAncestors(exampleResultTree, 'aku1');
+    const parents = findAncestors(exampleResultTree, 'al__al03__aku');
     expect(parents).not.toContainEqual(inExample);
     expect(parents).not.toContainEqual(akuExample);
   });
@@ -172,14 +172,14 @@ describe('Ensure the tree flattens correctly', () => {
       id: 'in01',
       label: 'Arbeid og lønn',
       count: 1,
-      uniqueId: 'in011',
+      uniqueId: 'in__in01',
       children: [],
     },
     {
       id: 'aku',
       label: 'Arbeidskraftundersøkelsen',
       children: [],
-      uniqueId: 'aku2',
+      uniqueId: 'in__in01__aku',
       count: 1,
     },
   ];
