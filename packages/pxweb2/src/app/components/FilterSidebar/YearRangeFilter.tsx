@@ -91,16 +91,13 @@ function getYearRangeForMatchingTables(
     if (!Number.isFinite(first) || !Number.isFinite(last)) {
       return false;
     }
-
     if (from !== undefined && to === undefined) {
       return from >= first && from <= last;
     }
-
     if (to !== undefined && from === undefined) {
       return to >= first && to <= last;
     }
-
-    return true; // fallback
+    return true;
   });
 
   const years = matching.flatMap((table) => {
