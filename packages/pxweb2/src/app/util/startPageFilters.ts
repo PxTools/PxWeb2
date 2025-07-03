@@ -3,17 +3,13 @@ import {
   StartPageFilters,
   Filter,
   PathItem,
+  YearRange,
 } from '../pages/StartPage/StartPageTypes';
 
 type TableWithPaths = Table & {
   id: string;
   paths?: { id: string; label: string }[][];
 };
-
-export interface YearRange {
-  min: number;
-  max: number;
-}
 
 export function getSubjectTree(tables: Table[]): PathItem[] {
   const allPaths: PathItem[][] = getAllPath(tables);

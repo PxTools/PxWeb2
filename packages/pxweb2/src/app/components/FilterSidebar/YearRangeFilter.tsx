@@ -170,7 +170,7 @@ export const YearRangeFilter: React.FC = () => {
     } else if (yearRangeFilter) {
       dispatch({
         type: ActionType.REMOVE_FILTER,
-        payload: yearRangeFilter.value,
+        payload: { value: yearRangeFilter.value, type: 'yearRange' },
       });
     }
   }
