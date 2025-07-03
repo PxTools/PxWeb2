@@ -140,6 +140,9 @@ export function SearchSelect({
       handleSelect(match);
     } else {
       setInputValue('');
+      if (selectedOption) {
+        onSelect(undefined);
+      }
     }
 
     setIsOpen(false);
