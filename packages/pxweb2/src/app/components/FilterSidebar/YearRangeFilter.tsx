@@ -154,6 +154,7 @@ export const YearRangeFilter: React.FC = () => {
       fromLabel,
       toLabel,
     );
+
     const newFrom = type === 'from' ? item?.value : prevFrom;
     const newTo = type === 'to' ? item?.value : prevTo;
 
@@ -168,34 +169,11 @@ export const YearRangeFilter: React.FC = () => {
         type: ActionType.ADD_FILTER,
         payload: [{ type: 'yearRange', value, label, index: 0 }],
       });
-    }
-
-    if (!item) {
-      if (type === 'from') {
-        dispatch({
-          type: ActionType.REMOVE_FILTER,
-          payload: yearRangeFilter?.value ?? '',
-        });
-      } else if (type === 'to') {
-        if (prevFrom) {
-          dispatch({
-            type: ActionType.ADD_FILTER,
-            payload: [
-              {
-                type: 'yearRange',
-                value: prevFrom,
-                label: fromYearLabel(prevFrom),
-                index: 0,
-              },
-            ],
-          });
-        } else if (yearRangeFilter) {
-          dispatch({
-            type: ActionType.REMOVE_FILTER,
-            payload: yearRangeFilter.value,
-          });
-        }
-      }
+    } else if (yearRangeFilter) {
+      dispatch({
+        type: ActionType.REMOVE_FILTER,
+        payload: yearRangeFilter.value,
+      });
     }
   }
 
