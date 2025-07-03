@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import cl from 'clsx';
 
+import { type Table } from '@pxweb2/pxweb2-api-client';
 import styles from './FilterSidebar.module.scss';
 import { SearchSelect, type Option } from '@pxweb2/pxweb2-ui';
 import { FilterContext } from '../../context/FilterContext';
@@ -78,6 +79,41 @@ function getYearRangeLabelValue(
   return { label: '', value: '' };
 }
 
+function getYearRangeForMatchingTables(
+  tables: Table[],
+  from?: number,
+  to?: number,
+) {
+  const matching = tables.filter((table) => {
+    const first = parseInt(table.firstPeriod ?? '', 10);
+    const last = parseInt(table.lastPeriod ?? '', 10);
+
+    if (!Number.isFinite(first) || !Number.isFinite(last)) {
+      return false;
+    }
+
+    if (from !== undefined && to === undefined) {
+      return from >= first && from <= last;
+    }
+
+    if (to !== undefined && from === undefined) {
+      return to >= first && to <= last;
+    }
+
+    return true; // fallback
+  });
+
+  const years = matching.flatMap((table) => {
+    const first = parseInt(table.firstPeriod ?? '', 10);
+    const last = parseInt(table.lastPeriod ?? '', 10);
+    return Number.isFinite(first) && Number.isFinite(last) ? [first, last] : [];
+  });
+
+  const min = Math.min(...years);
+  const max = Math.max(...years);
+  return { min, max };
+}
+
 export const YearRangeFilter: React.FC = () => {
   const { state, dispatch } = useContext(FilterContext);
   const { t } = useTranslation();
@@ -97,16 +133,22 @@ export const YearRangeFilter: React.FC = () => {
     toLabel,
   );
 
-  const rangeMin = state.lastUsedYearRange.min;
-  const rangeMax = state.lastUsedYearRange.max;
-  const fromOptions = generateYearOptions(
-    rangeMin,
-    toYear ? parseInt(toYear, 10) : rangeMax,
+  const { min: dynamicMin, max: dynamicMax } = getYearRangeForMatchingTables(
+    state.filteredTables,
+    fromYear ? parseInt(fromYear, 10) : undefined,
+    toYear ? parseInt(toYear, 10) : undefined,
   );
+
+  const fromOptions = generateYearOptions(
+    dynamicMin,
+    toYear ? parseInt(toYear, 10) : dynamicMax,
+  );
+
   const toOptions = generateYearOptions(
-    fromYear ? parseInt(fromYear, 10) : rangeMin,
-    rangeMax,
+    fromYear ? parseInt(fromYear, 10) : dynamicMin,
+    dynamicMax,
   ).reverse();
+
   const clearSelectionText = t('start_page.filter.year.clear_selection');
 
   function handleSelect(item: Option | undefined, type: 'from' | 'to') {
