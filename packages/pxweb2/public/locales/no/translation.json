@@ -72,7 +72,7 @@
       "subject": "Emne",
       "timeUnit": "Tidsperiode",
       "year": {
-        "title": "Årstall",
+        "title": "År",
         "from_label": "Fra",
         "to_label": "Til",
         "from_year": "Fra år",

@@ -64,7 +64,7 @@ function getYearRangeLabelValue(
   toLabel?: string,
 ) {
   if (from && to && from !== to) {
-    return { label: `${from} - ${to}`, value: `${from}-${to}` };
+    return { label: `${from}–${to}`, value: `${from}-${to}` };
   } else if (from && to && from === to) {
     return { label: from, value: from };
   } else if (from) {
