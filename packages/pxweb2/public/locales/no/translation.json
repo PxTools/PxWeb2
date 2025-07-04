@@ -189,11 +189,11 @@
           "info": "Vi sparer på tabellen din og holder den oppdatert. Du velger selv hvordan nye tidsperioder skal legges til.",
           "radioLegend": "Valg for nye tidsperioder",
           "periodOptions": {
-            "selected": "Ikke legg til nye (tabellen vil kun vise tidsperiodene du har valgt nå)",
-            "from": "Legg til nye (nye tidsperioder vil komme i tillegg til de du har valgt nå)",
-            "top": "Legg til nye og fjern de eldste"
+            "selected": "Ikke legg til nye (tabellen vil kun vise de du har valgt nå)",
+            "from": "Legg til nye (de nye vil komme i tillegg til de du har valgt nå)",
+            "top": "Legg til nye, men behold samme antall (når en ny tidsperiode legges til, fjernes den eldste)"
           },
-          "createButton": "Lag lenke",
+          "createButton": "Få lenke",
           "copyButton": "Kopier lenke",
           "copiedButton": "Lenke kopiert",
           "createStatus": "Lagre spørringen generert med ID-en “{{query}}”. Klikk igjen for å kopiere lenken.",
