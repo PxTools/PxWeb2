@@ -1,12 +1,13 @@
 import cl from 'clsx';
 import styles from './ActionItem.module.scss';
 import {
+  ActionItemIcon,
+  ActionItemIconProps,
   BodyShort,
   Icon,
   IconProps,
-  ActionItemIcon,
-  ActionItemIconProps,
   Label,
+  Spinner,
 } from '@pxweb2/pxweb2-ui';
 
 interface ActionItemProps {
@@ -17,6 +18,7 @@ interface ActionItemProps {
   description?: string;
   control?: boolean;
   size?: 'medium' | 'large';
+  isLoading?: boolean;
 }
 
 export function ActionItem({
@@ -26,6 +28,7 @@ export function ActionItem({
   onClick,
   size = 'medium',
   description,
+  isLoading = false,
 }: Readonly<ActionItemProps>) {
   return (
     <button
@@ -40,11 +43,15 @@ export function ActionItem({
     >
       {size === 'medium' && (
         <>
-          <div
-            className={cl(styles[`iconWrapper-${size}`], styles.iconWrapper)}
-          >
-            <Icon iconName={iconName} />
-          </div>
+          {isLoading ? (
+            <Spinner size="xsmall" />
+          ) : (
+            <div
+              className={cl(styles[`iconWrapper-${size}`], styles.iconWrapper)}
+            >
+              <Icon iconName={iconName} />
+            </div>
+          )}
           <div className={styles.labelDescriptionWrapper}>
             <Label size="medium" className={cl(styles.labelHover)}>
               {ariaLabel}

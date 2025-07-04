@@ -8,7 +8,6 @@ import {
   Button,
   ContentBox,
   IconProps,
-  Spinner,
   VartypeEnum,
 } from '@pxweb2/pxweb2-ui';
 import {
@@ -43,7 +42,10 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
   const variables = useVariables();
   const heading = useTableData().data?.heading;
   const stub = useTableData().data?.stub;
-  const [isLoading, setIsLoading] = useState(false);
+  const [, setIsLoading] = useState(false);
+  const [loadingFormat, setLoadingFormat] = useState<OutputFormatType | null>(
+    null,
+  );
   const [errorMsg, setErrorMsg] = useState('');
   const [sqUrl, setSqUrl] = useState('');
 
@@ -162,7 +164,7 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
    */
   async function saveToFile(outputFormat: OutputFormatType): Promise<void> {
     const variablesSelection = getVariableSelection();
-    setIsLoading(true);
+    setLoadingFormat(outputFormat);
 
     // Export the file using the export utility
     await exportToFile(tableId, i18n.language, variablesSelection, outputFormat)
@@ -177,7 +179,7 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
         },
       )
       .finally(() => {
-        setIsLoading(false);
+        setLoadingFormat(null);
       });
   }
 
@@ -241,6 +243,7 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
                 )}
                 onClick={() => saveToFile(format.outputFormat)}
                 iconName={format.iconName}
+                isLoading={loadingFormat === format.outputFormat}
               />
             </li>
           ))}
@@ -259,12 +262,6 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
         </Button>
         <BodyShort>{sqUrl}</BodyShort>
       </ContentBox>
-
-      {isLoading && (
-        <div className={classes.loadingSpinner}>
-          <Spinner size="xlarge" />
-        </div>
-      )}
     </>
   );
 }
