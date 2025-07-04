@@ -42,7 +42,7 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
   const variables = useVariables();
   const heading = useTableData().data?.heading;
   const stub = useTableData().data?.stub;
-  const [, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [loadingFormat, setLoadingFormat] = useState<OutputFormatType | null>(
     null,
   );
