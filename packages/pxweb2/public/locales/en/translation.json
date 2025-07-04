@@ -177,6 +177,7 @@
         "title": "Save",
         "file": {
           "title": "Download as file",
+          "loading_announcement": "File is still being processed. Please wait.",
           "excel": "Excel (.xlsx)",
           "csv": "Semicolon-delimited with heading (.csv)",
           "px": "PC-Axis (.px)",

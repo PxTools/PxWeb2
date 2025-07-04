@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 import classes from './DrawerSave.module.scss';
 import {
@@ -47,6 +47,8 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
   );
   const [errorMsg, setErrorMsg] = useState('');
   const [sqUrl, setSqUrl] = useState('');
+  const [showLoadingAnnouncement, setShowLoadingAnnouncement] = useState(false);
+  const loadingTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // If time filter is used when saving query, we need to know the id of the time variable
   const timeVarId = useTableData().data?.metadata.variables.find(
@@ -91,6 +93,32 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
       throw new Error(errorMsg);
     }
   }, [errorMsg]);
+
+  // Handle loading announcement timer
+  useEffect(() => {
+    if (loadingFormat) {
+      // Start a 5-second timer when loading begins
+      loadingTimerRef.current = setTimeout(() => {
+        setShowLoadingAnnouncement(true);
+      }, 5000);
+    } else {
+      // Clear the timer and reset announcement when loading stops
+      if (loadingTimerRef.current) {
+        clearTimeout(loadingTimerRef.current);
+
+        loadingTimerRef.current = null;
+      }
+
+      setShowLoadingAnnouncement(false);
+    }
+
+    // Cleanup timer on unmount
+    return () => {
+      if (loadingTimerRef.current) {
+        clearTimeout(loadingTimerRef.current);
+      }
+    };
+  }, [loadingFormat]);
 
   /**
    * Constructs a VariablesSelection object based on the current variable selections.
@@ -225,6 +253,12 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
         titleDivId="drawer-save-to-file"
         title={t('presentation_page.sidemenu.save.file.title')}
       >
+        {/* Screen reader announcement for long loading times */}
+        <div aria-live="polite" aria-atomic="true" className={classes.srOnly}>
+          {showLoadingAnnouncement &&
+            loadingFormat &&
+            t('presentation_page.sidemenu.save.file.loading_announcement')}
+        </div>
         <ul
           className={classes.saveAsActionList}
           aria-labelledby="drawer-save-to-file"
