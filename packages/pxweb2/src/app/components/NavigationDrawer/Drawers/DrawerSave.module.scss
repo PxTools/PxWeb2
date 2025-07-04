@@ -1,7 +1,10 @@
+@use '$ui/src/lib/text-styles.scss';
+
 .drawerSave {
   display: flex;
   flex-direction: column;
   width: 100%;
+  gap: 12px;
 }
 
 .loadingSpinner {
@@ -11,4 +14,31 @@
   transform: translate(-50%, -50%);
   margin: 0; // Remove margin so centering is exact
   align-self: auto; // Remove align-self so absolute positioning works
+}
+
+.informationCardWrapper {
+  display: flex;
+  padding: 0px 8px 20px 8px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  align-self: stretch;
+}
+
+.buttonWrapper {
+  display: flex;
+  padding: 8px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  align-self: stretch;
+  width: 100%;
+}
+
+.buttonWrapper > button {
+  width: 100%;
+}
+
+.copyText {
+  overflow-wrap: anywhere;
 }

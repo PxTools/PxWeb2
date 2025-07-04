@@ -7,7 +7,7 @@ import {
   VariablesSelection,
 } from '@pxweb2/pxweb2-api-client';
 
-export type TimeFilter = 'from' | 'top';
+export type TimeFilter = 'from' | 'top' | 'selected';
 
 /**
  * Exports data to a file in the specified format.

@@ -3,7 +3,7 @@ import React, { forwardRef } from 'react';
 
 import classes from './Radio.module.scss';
 
-export type SelectOption = {
+export type RadioOption = {
   label: string;
   value: string;
 };
@@ -12,7 +12,7 @@ export interface RadioProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   variant?: 'default' | 'inModal';
   name: string;
-  options: SelectOption[];
+  options: RadioOption[];
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   selectedOption?: string;
   legend: string;
