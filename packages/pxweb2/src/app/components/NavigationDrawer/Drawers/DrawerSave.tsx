@@ -42,7 +42,6 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
   const variables = useVariables();
   const heading = useTableData().data?.heading;
   const stub = useTableData().data?.stub;
-  const [isLoading, setIsLoading] = useState(false);
   const [loadingFormat, setLoadingFormat] = useState<OutputFormatType | null>(
     null,
   );
@@ -199,7 +198,6 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
   // and handles success and error cases, updating the loading state accordingly.
   async function createSavedQuery(timeFilter?: TimeFilter): Promise<void> {
     const variablesSelection = getVariableSelection(timeFilter);
-    setIsLoading(true);
 
     // Create saved query using the export utility
     await createNewSavedQuery(
@@ -207,22 +205,18 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
       i18n.language,
       variablesSelection,
       OutputFormatType.JSON_STAT2,
-    )
-      .then(
-        (id) => {
-          // Create saved query URL
-          const savedQueryUrl = createSavedQueryURL(id);
-          setSqUrl(savedQueryUrl);
-        },
-        (error) => {
-          // Handle error during export
-          const err = error as ApiError;
-          setErrorMsg(problemMessage(err));
-        },
-      )
-      .finally(() => {
-        setIsLoading(false);
-      });
+    ).then(
+      (id) => {
+        // Create saved query URL
+        const savedQueryUrl = createSavedQueryURL(id);
+        setSqUrl(savedQueryUrl);
+      },
+      (error) => {
+        // Handle error during export
+        const err = error as ApiError;
+        setErrorMsg(problemMessage(err));
+      },
+    );
   }
 
   return (
