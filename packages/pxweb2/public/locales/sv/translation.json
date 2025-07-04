@@ -196,9 +196,9 @@
           "createButton": "Skapa länk",
           "copyButton": "Kopiera länk",
           "copiedButton": "Länk kopierad",
-          "createStatus": "Spara fråga genererad med id “{{query}}”. Klicka igen för att kopiera länken.",
-          "copyStatus": "Spara frågan “{{url}}” kopierad till urklipp",
-          "loadingStatus": "Genererar sparad fråga.."
+          "createStatus": "Länk skapad. Tryck igen för att kopera länken",
+          "copyStatus": "Länk “{{url}}” kopierad till utklipp",
+          "loadingStatus": "Länk skapas"
         },
         "imagefile": {
           "title": "Spara som diagram",
