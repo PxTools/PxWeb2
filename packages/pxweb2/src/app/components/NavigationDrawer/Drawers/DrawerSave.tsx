@@ -90,7 +90,7 @@ export const SaveQueryCopyButton: React.FC<SaveQueryButtonProps> = ({
         ref={buttonRef}
         variant="primary"
         size="medium"
-        icon={'Link'}
+        icon={'Copy'}
         onClick={onClick}
       >
         {t('presentation_page.sidemenu.save.savequery.copyButton')}
@@ -115,7 +115,7 @@ export const SaveQueryCopiedButton: React.FC<SaveQueryButtonProps> = ({
         variant="primary"
         size="medium"
         iconPosition="left"
-        icon={'CheckMark'}
+        icon={'Check'}
         onClick={onClick}
         aria-label={t('presentation_page.sidemenu.save.savequery.copyButton')}
       >
