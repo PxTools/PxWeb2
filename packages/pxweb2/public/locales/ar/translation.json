@@ -187,6 +187,7 @@
       "arialabelbreadcrumb": "مسار التنقل",
       "last_updated": "آخر تحديث",
       "show_details": "إظهار التفاصيل",
+      "dynamic_table_title": "{{table_content_type}} بعد {{table_content_label_first_part}} و {{table_content_label_last_part}}",
       "table": {
         "warnings": {
           "missing_mandatory": {
@@ -263,6 +264,7 @@
     "simple_number_with_three_decimals": "{{value, pxNumber(minimumFractionDigits: 3; maximumFractionDigits: 3;)}}",
     "simple_number_with_four_decimals": "{{value, pxNumber(minimumFractionDigits: 4; maximumFractionDigits: 4;)}}",
     "simple_number_with_five_decimals": "{{value, pxNumber(minimumFractionDigits: 5; maximumFractionDigits: 5;)}}",
+    "simple_number_with_six_decimals": "{{value, pxNumber(minimumFractionDigits: 6; maximumFractionDigits: 6;)}}",
     "simple_number_with_default_formatter": "{{value, number(minimumFractionDigits: 5; maximumFractionDigits: 5; roundingMode: 'halfExpand')}}"
   }
 }

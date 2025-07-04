@@ -221,6 +221,7 @@
       "arialabelbreadcrumb": "Brødsmulesti",
       "last_updated": "Sist oppdatert",
       "show_details": "Vis detaljer",
+      "dynamic_table_title": "{{table_content_type}} etter {{table_content_label_first_part}} og {{table_content_label_last_part}}",
       "table": {
         "warnings": {
           "missing_mandatory": {
@@ -311,6 +312,7 @@
     "simple_number_with_three_decimals": "{{value, pxNumber(minimumFractionDigits: 3; maximumFractionDigits: 3;)}}",
     "simple_number_with_four_decimals": "{{value, pxNumber(minimumFractionDigits: 4; maximumFractionDigits: 4;)}}",
     "simple_number_with_five_decimals": "{{value, pxNumber(minimumFractionDigits: 5; maximumFractionDigits: 5;)}}",
+    "simple_number_with_six_decimals": "{{value, pxNumber(minimumFractionDigits: 6; maximumFractionDigits: 6;)}}",
     "simple_number_with_default_formatter": "{{value, number(minimumFractionDigits: 5; maximumFractionDigits: 5; roundingMode: 'halfExpand')}}"
   }
 }
