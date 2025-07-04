@@ -20,6 +20,10 @@ import {
   SelectedVBValues,
 } from '@pxweb2/pxweb2-ui';
 import { mapJsonStat2Response } from '../../mappers/JsonStat2ResponseMapper';
+import {
+  mapSavedQueryCodelistResponse,
+  SavedQueryCodeListType,
+} from '../../mappers/SavedQueryCodeListResponseMapper';
 import { addFormattingToPxTable } from './TableDataProviderUtils';
 import { problemMessage } from '../util/problemMessage';
 
@@ -93,7 +97,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
   const [errorMsg, setErrorMsg] = useState('');
   const variables = useVariables();
-  const { selectedVBValues, setSelectedVBValues } = variables;
+  const { setSelectedVBValues } = variables;
 
   useEffect(() => {
     if (errorMsg !== '') {
@@ -156,8 +160,13 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     async (loadSavedQueryId: string) => {
       console.log({ loadSavedQueryId });
 
-      // TODO: ? call await SavedQueriesService.getSaveQuery(loadSavedQueryId);
-      //to get the saved query metadata and codelists. Use this for setting selected values in variables provider.
+      // Call SavedQueriesService.getSaveQuery to get the saved query metadata and codelists. Use this for setting selected values in variables provider.
+      const result = await SavedQueriesService.getSaveQuery(loadSavedQueryId);
+
+      const selectedCodeLists: SavedQueryCodeListType[] =
+        mapSavedQueryCodelistResponse(result);
+
+      console.log('list=', selectedCodeLists);
 
       const res = await SavedQueriesService.runSaveQuery(loadSavedQueryId);
       // Map response to json-stat2 Dataset
@@ -165,6 +174,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       const pxTabData = pxDataobj as Dataset;
 
       const pxTable: PxTable = mapJsonStat2Response(pxTabData);
+      console.log('pxTable=', pxTable);
       // Add formatting to the PxTable datacell values
       await addFormattingToPxTable(pxTable);
 
@@ -175,15 +185,18 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
       pxTable.metadata.variables.forEach((variable) => {
         console.log({ variable });
+        const selectedCodeListObj = selectedCodeLists.find(
+          (cl) => cl.variableCode === variable.id,
+        );
         sqValues.push({
           id: variable.id,
           values: variable.values.map((v) => v.code),
-          selectedCodeList: variableCodelists[variable.id],
+          selectedCodeList: selectedCodeListObj?.selectedCodeList,
         });
       });
 
       console.log({ sqValues });
-      setSelectedVBValues(selectedVBValues);
+      setSelectedVBValues(sqValues);
       variables.syncVariablesAndValues(sqValues);
       variables.setIsLoadingMetadata(false);
       variables.setHasLoadedDefaultSelection(true);
@@ -197,9 +210,27 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     [],
   );
 
+  // const fetchSavedQueryDefinition = React.useCallback(
+  //   async (loadSavedQueryId: string) => {
+  //     console.log({ loadSavedQueryId });
+
+  //     // TODO: ? call await SavedQueriesService.getSaveQuery(loadSavedQueryId);
+  //     //to get the saved query metadata and codelists. Use this for setting selected values in variables provider.
+
+  //     const res = await SavedQueriesService.getSaveQuery(loadSavedQueryId);
+
+  //     const selectedCodeLists: SavedQueryCodeListType[] =
+  //       mapSavedQueryCodelistResponse(res);
+
+  //     console.log('list=', selectedCodeLists);
+  //   },
+  //   [],
+  // );
+
   useEffect(() => {
     if (variables.loadSavedQueryId?.length > 0) {
       fetchSavedQuery(variables.loadSavedQueryId);
+      //fetchSavedQueryDefinition(variables.loadSavedQueryId);
     }
   }, [fetchSavedQuery, variables.loadSavedQueryId]);
 
@@ -306,7 +337,9 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       if (codelistChanged) {
         setData(undefined);
       }
-
+      console.log('fetchWithoutValidAccData');
+      //   if (variables.loadSavedQueryId.length > 0) {
+      console.log('fetchWithoutValidAccData IF NOT savedquery');
       const pxTable: PxTable = await fetchFromApi(
         tableId,
         i18n,
@@ -318,6 +351,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
       // Store as accumulated data
       setAccumulatedData(structuredClone(pxTable));
+      // }
     },
     [initializeStubAndHeading, setData, setAccumulatedData],
   );
@@ -782,7 +816,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         i18n,
         notLoadedVarSelection,
       );
-
+      console.log('fetchWithValidAccData');
       // Merge pxTable with accumulatedData
       mergeWithAccumulatedData(
         pxTable,
@@ -934,6 +968,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   const fetchTableData = React.useCallback(
     async (tableId: string, i18n: i18n, isMobile: boolean) => {
       try {
+        console.log('fetchTableData');
         const selections: Array<VariableSelection> = [];
 
         // Get selection from Selection provider
@@ -968,6 +1003,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         );
 
         if (validAccData) {
+          console.log('fetchTableData ---fetchWithoutValidAccData');
           await fetchWithValidAccData(
             tableId,
             i18n,
@@ -975,6 +1011,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
             variablesSelection,
           );
         } else {
+          console.log('fetchTableData ---fetchWithoutValidAccData');
           await fetchWithoutValidAccData(
             tableId,
             i18n,
@@ -1102,6 +1139,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       lastTitlePart: string;
     } => {
       const titleParts: string[] = [];
+      console.log('TableDataProvider.buildTableTitle', stub, heading);
 
       // Add stub variables to title
       stub.forEach((variable) => {

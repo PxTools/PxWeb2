@@ -115,7 +115,12 @@ export function Presentation({ selectedTabId, scrollRef }: propsType) {
         ),
       );
 
-    if (initialRun && !hasSelectedValues) {
+    if (
+      initialRun &&
+      !hasSelectedValues
+      // && variables.loadSavedQueryId.length > 0
+    ) {
+      console.log('fetchTableDataIfAllowed initialRun');
       fetchTableDataIfAllowed();
       setIsMissingMandatoryVariables(false);
     } else {
@@ -126,6 +131,7 @@ export function Presentation({ selectedTabId, scrollRef }: propsType) {
         !initialRun
       ) {
         setIsFadingTable(true);
+        console.log('fetchTableDataIfAllowed Not INITIAL RUN');
         fetchTableDataIfAllowed();
         setIsMissingMandatoryVariables(false);
       }
