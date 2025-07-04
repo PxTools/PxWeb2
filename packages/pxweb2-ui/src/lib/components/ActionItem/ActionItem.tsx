@@ -11,7 +11,8 @@ import {
   Spinner,
 } from '@pxweb2/pxweb2-ui';
 
-interface ActionItemProps {
+interface ActionItemProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   ariaLabel?: string;
   iconName?: IconProps['iconName'];
   largeIconName?: ActionItemIconProps['largeIconName'];
@@ -30,17 +31,21 @@ export function ActionItem({
   size = 'medium',
   description,
   isLoading = false,
+  ...rest
 }: Readonly<ActionItemProps>) {
   return (
     <button
       className={cl(styles.actionItem)}
-      aria-label={ariaLabel}
       onClick={onClick}
+      aria-label={ariaLabel}
+      aria-disabled={isLoading || rest.disabled}
+      aria-busy={isLoading || rest.disabled}
+      {...rest}
     >
       {size === 'medium' && (
         <>
           {isLoading ? (
-            <Spinner size="xsmall" />
+            <Spinner size="xsmall" aria-hidden="true" />
           ) : (
             <div
               className={cl(styles[`iconWrapper-${size}`], styles.iconWrapper)}
