@@ -30,6 +30,11 @@ export async function exportToFile(
     getOutputFormatParams(outputFormat);
   const fileExtension: string = getFileExtension(outputFormat);
 
+  // // Add 20 second blocking wait for testing aria-live functionality
+  console.log('Before 10 second wait in exportToFile');
+  await new Promise((resolve) => setTimeout(resolve, 10000));
+  console.log('After 10 second wait in exportToFile');
+
   await TableService.getTableDataByPost(
     tabId,
     lang,
