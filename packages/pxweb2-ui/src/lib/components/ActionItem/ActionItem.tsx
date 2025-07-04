@@ -1,4 +1,5 @@
 import cl from 'clsx';
+
 import styles from './ActionItem.module.scss';
 import {
   ActionItemIcon,
@@ -35,11 +36,6 @@ export function ActionItem({
       className={cl(styles.actionItem)}
       aria-label={ariaLabel}
       onClick={onClick}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          onClick?.();
-        }
-      }}
     >
       {size === 'medium' && (
         <>
