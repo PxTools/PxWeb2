@@ -42,3 +42,12 @@ export const MediumWithDescription: Story = {
     description: 'This is a description of the action item.',
   },
 };
+
+export const MediumWithLoading: Story = {
+  args: {
+    iconName: 'File',
+    ariaLabel: 'Action with loading spinner',
+    size: 'medium',
+    isLoading: true,
+  },
+};

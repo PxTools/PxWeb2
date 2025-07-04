@@ -1,6 +1,5 @@
-import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 import classes from './DrawerSave.module.scss';
 import {
@@ -8,7 +7,7 @@ import {
   BodyShort,
   Button,
   ContentBox,
-  Spinner,
+  IconProps,
   VartypeEnum,
 } from '@pxweb2/pxweb2-ui';
 import {
@@ -17,6 +16,9 @@ import {
   VariableSelection,
   VariablesSelection,
 } from '@pxweb2/pxweb2-api-client';
+import useVariables from '../../../context/useVariables';
+import useTableData from '../../../context/useTableData';
+import { problemMessage } from '../../../util/problemMessage';
 import {
   applyTimeFilter,
   createNewSavedQuery,
@@ -24,9 +26,12 @@ import {
   exportToFile,
   TimeFilter,
 } from '../../../util/export/exportUtil';
-import useVariables from '../../../context/useVariables';
-import useTableData from '../../../context/useTableData';
-import { problemMessage } from '../../../util/problemMessage';
+
+interface FileFormat {
+  value: string;
+  outputFormat: OutputFormatType;
+  iconName: IconProps['iconName'];
+}
 
 export type DrawerSaveProps = {
   readonly tableId: string;
@@ -37,20 +42,83 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
   const variables = useVariables();
   const heading = useTableData().data?.heading;
   const stub = useTableData().data?.stub;
-  const [isLoading, setIsLoading] = useState(false);
+  const [loadingFormat, setLoadingFormat] = useState<OutputFormatType | null>(
+    null,
+  );
   const [errorMsg, setErrorMsg] = useState('');
   const [sqUrl, setSqUrl] = useState('');
+  const [showLoadingAnnouncement, setShowLoadingAnnouncement] = useState(false);
+  const loadingTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // If time filter is used when saving query, we need to know the id of the time variable
   const timeVarId = useTableData().data?.metadata.variables.find(
     (v) => v.type === VartypeEnum.TIME_VARIABLE,
   )?.id;
 
+  const fileFormats: FileFormat[] = [
+    {
+      value: 'excel',
+      outputFormat: OutputFormatType.XLSX,
+      iconName: 'FileText',
+    },
+    {
+      value: 'csv',
+      outputFormat: OutputFormatType.CSV,
+      iconName: 'FileText',
+    },
+    {
+      value: 'px',
+      outputFormat: OutputFormatType.PX,
+      iconName: 'FileCode',
+    },
+    {
+      value: 'jsonstat2',
+      outputFormat: OutputFormatType.JSON_STAT2,
+      iconName: 'FileCode',
+    },
+    {
+      value: 'html',
+      outputFormat: OutputFormatType.HTML,
+      iconName: 'FileCode',
+    },
+    {
+      value: 'parquet',
+      outputFormat: OutputFormatType.PARQUET,
+      iconName: 'FileCode',
+    },
+  ];
+
   useEffect(() => {
     if (errorMsg !== '') {
       throw new Error(errorMsg);
     }
   }, [errorMsg]);
+
+  // Handle loading announcement timer
+  useEffect(() => {
+    if (loadingFormat) {
+      // Start a 5-second timer when loading begins
+      loadingTimerRef.current = setTimeout(() => {
+        setShowLoadingAnnouncement(true);
+      }, 5000);
+    } else {
+      // Clear the timer and reset announcement when loading stops
+      if (loadingTimerRef.current) {
+        clearTimeout(loadingTimerRef.current);
+
+        loadingTimerRef.current = null;
+      }
+
+      setShowLoadingAnnouncement(false);
+    }
+
+    // Cleanup timer on unmount
+    return () => {
+      if (loadingTimerRef.current) {
+        clearTimeout(loadingTimerRef.current);
+      }
+    };
+  }, [loadingFormat]);
 
   /**
    * Constructs a VariablesSelection object based on the current variable selections.
@@ -123,7 +191,7 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
    */
   async function saveToFile(outputFormat: OutputFormatType): Promise<void> {
     const variablesSelection = getVariableSelection();
-    setIsLoading(true);
+    setLoadingFormat(outputFormat);
 
     // Export the file using the export utility
     await exportToFile(tableId, i18n.language, variablesSelection, outputFormat)
@@ -138,7 +206,7 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
         },
       )
       .finally(() => {
-        setIsLoading(false);
+        setLoadingFormat(null);
       });
   }
 
@@ -158,7 +226,6 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
   // and handles success and error cases, updating the loading state accordingly.
   async function createSavedQuery(timeFilter?: TimeFilter): Promise<void> {
     const variablesSelection = getVariableSelection(timeFilter);
-    setIsLoading(true);
 
     // Create saved query using the export utility
     await createNewSavedQuery(
@@ -166,65 +233,51 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
       i18n.language,
       variablesSelection,
       OutputFormatType.JSON_STAT2,
-    )
-      .then(
-        (id) => {
-          // Create saved query URL
-          const savedQueryUrl = createSavedQueryURL(id);
-          setSqUrl(savedQueryUrl);
-        },
-        (error) => {
-          // Handle error during export
-          const err = error as ApiError;
-          setErrorMsg(problemMessage(err));
-        },
-      )
-      .finally(() => {
-        setIsLoading(false);
-      });
+    ).then(
+      (id) => {
+        // Create saved query URL
+        const savedQueryUrl = createSavedQueryURL(id);
+        setSqUrl(savedQueryUrl);
+      },
+      (error) => {
+        // Handle error during export
+        const err = error as ApiError;
+        setErrorMsg(problemMessage(err));
+      },
+    );
   }
 
   return (
-    <div className={cl(classes.drawerSave)}>
-      <ContentBox title={t('presentation_page.sidemenu.save.file.title')}>
-        <div>
-          <ActionItem
-            ariaLabel={t('presentation_page.sidemenu.save.file.excel')}
-            onClick={() => saveToFile(OutputFormatType.XLSX)}
-            iconName="FileText"
-          />
-          <ActionItem
-            ariaLabel={t('presentation_page.sidemenu.save.file.csv')}
-            onClick={() => saveToFile(OutputFormatType.CSV)}
-            iconName="FileText"
-          />
-          <ActionItem
-            ariaLabel={t('presentation_page.sidemenu.save.file.px')}
-            onClick={() => saveToFile(OutputFormatType.PX)}
-            iconName="FileCode"
-          />
-          <ActionItem
-            ariaLabel={t('presentation_page.sidemenu.save.file.jsonstat2')}
-            onClick={() => saveToFile(OutputFormatType.JSON_STAT2)}
-            iconName="FileCode"
-          />
-          <ActionItem
-            ariaLabel={t('presentation_page.sidemenu.save.file.html')}
-            onClick={() => saveToFile(OutputFormatType.HTML)}
-            iconName="FileCode"
-          />
-          <ActionItem
-            ariaLabel={t('presentation_page.sidemenu.save.file.parquet')}
-            onClick={() => saveToFile(OutputFormatType.PARQUET)}
-            iconName="FileCode"
-          />
+    <>
+      <ContentBox
+        titleDivId="drawer-save-to-file"
+        title={t('presentation_page.sidemenu.save.file.title')}
+      >
+        {/* Screen reader announcement for long loading times */}
+        <div aria-live="polite" aria-atomic="true" className={classes.srOnly}>
+          {showLoadingAnnouncement &&
+            loadingFormat &&
+            t('presentation_page.sidemenu.save.file.loading_announcement')}
         </div>
-        {isLoading && (
-          <div className={classes.loadingSpinner}>
-            <Spinner size="xlarge" />
-          </div>
-        )}
+        <ul
+          className={classes.saveAsActionList}
+          aria-labelledby="drawer-save-to-file"
+        >
+          {fileFormats.map((format) => (
+            <li key={`saveToFile${format.value}`}>
+              <ActionItem
+                ariaLabel={t(
+                  `presentation_page.sidemenu.save.file.${format.value}`, // Not sure how to fix this i18next type error
+                )}
+                onClick={() => saveToFile(format.outputFormat)}
+                iconName={format.iconName}
+                isLoading={loadingFormat === format.outputFormat}
+              />
+            </li>
+          ))}
+        </ul>
       </ContentBox>
+
       <ContentBox title="Saved query">
         <Button onClick={() => createSavedQuery()} variant="primary">
           Create saved query (same selection)
@@ -237,7 +290,7 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
         </Button>
         <BodyShort>{sqUrl}</BodyShort>
       </ContentBox>
-    </div>
+    </>
   );
 }
 export default DrawerSave;

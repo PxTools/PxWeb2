@@ -6,15 +6,16 @@ import Heading from '../Typography/Heading/Heading';
 
 interface ContentBoxProps {
   readonly title?: string;
+  readonly titleDivId?: string;
   readonly children: ReactNode;
 }
 
-export function ContentBox({ title, children }: ContentBoxProps) {
+export function ContentBox({ title, titleDivId, children }: ContentBoxProps) {
   return (
     <div className={cl(styles.contentBox)}>
       {title && (
         <div className={cl(styles.title)}>
-          <Heading level={'3'} size={'small'}>
+          <Heading level={'3'} size={'small'} id={titleDivId}>
             {title}
           </Heading>
         </div>
