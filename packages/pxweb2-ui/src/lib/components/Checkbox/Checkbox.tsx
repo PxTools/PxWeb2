@@ -73,11 +73,13 @@ export const Checkbox: React.FC<CheckboxProps> = ({
     </div>
   );
 };
+
+export type MixedValue = 'mixed' | 'false' | 'true';
 interface MixedCheckboxProps {
   id: string;
   text: string;
-  value: 'mixed' | 'false' | 'true';
-  onChange: (str: string) => void;
+  value: MixedValue;
+  onChange: (str: MixedValue) => void;
   ariaControls: string[];
   tabIndex?: number;
   strong?: boolean;
