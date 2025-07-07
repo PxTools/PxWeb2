@@ -22,8 +22,13 @@ import { TableDataProvider } from '../../context/TableDataProvider';
 import ErrorBoundary from '../../components/ErrorBoundry/ErrorBoundry';
 
 export function TableViewer() {
-  const { isMobile, isTablet, skipToMainFocused, setSkipToMainFocused } =
-    useApp();
+  const {
+    isMobile,
+    isTablet,
+    isLargeDesktop,
+    skipToMainFocused,
+    setSkipToMainFocused,
+  } = useApp();
   const config = getConfig();
   const accessibility = useAccessibility();
 
@@ -36,7 +41,7 @@ export function TableViewer() {
   const [selectedTableId] = useState(tableId ?? 'tab638');
   const [errorMsg] = useState('');
   const [selectedNavigationView, setSelectedNavigationView] =
-    useState<NavigationItem>(isTablet ? 'none' : 'selection');
+    useState<NavigationItem>(isLargeDesktop ? 'selection' : 'none');
   const [hasFocus, setHasFocus] = useState<NavigationItem>('none');
   const [openedWithKeyboard, setOpenedWithKeyboard] = useState(false);
   const outerContainerRef = useRef<HTMLDivElement | null>(null);
