@@ -134,12 +134,11 @@ export const MixedCheckbox: React.FC<MixedCheckboxProps> = ({
     >
       <span
         className={cl(styles.checkmark, {
-          [styles.checked]: value === 'mixed' || value === 'true',
+          [styles.checked]: value === 'true',
           [styles.checkmarkWithoutMargin]: noMargin,
         })}
       >
         {value === 'true' && <Icon iconName="CheckMark"></Icon>}
-        {value === 'mixed' && <Icon iconName="IndeterminateCheckMark"></Icon>}
       </span>
       <div
         className={cl(styles.label, { [styles.strong]: strong })}

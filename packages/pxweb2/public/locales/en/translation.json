@@ -125,10 +125,7 @@
                 "confirm_button": "Save"
               }
             },
-            "mixed_checkbox": {
-              "select_all": "Select all",
-              "deselect_all": "Deselect all"
-            },
+            "mixed_checkbox": "Select all",
             "values_list": {
               "aria_label": "List of {{total}} values.",
               "no_results_heading": "No results for “{{search}}”",

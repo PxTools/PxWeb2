@@ -67,16 +67,6 @@ export function VariableBoxContent({
   removeModal,
 }: VariableBoxContentProps) {
   const { t } = useTranslation();
-  const checkboxSelectAllText = t(
-    'presentation_page.sidemenu.selection.variablebox.content.mixed_checkbox.select_all',
-  );
-  const checkboxDeselectAllText = t(
-    'presentation_page.sidemenu.selection.variablebox.content.mixed_checkbox.deselect_all',
-  );
-
-  const [mixedCheckboxText, setMixedCheckboxText] = useState<string>(
-    checkboxSelectAllText,
-  );
   const [search, setSearch] = useState<string>('');
   const [allValuesSelected, setAllValuesSelected] = useState<
     'mixed' | 'true' | 'false'
@@ -174,7 +164,6 @@ export function VariableBoxContent({
       // If there are searched values and searched and chosen values do not match
       (searchedValues.length > 0 && searcedResult === 'none')
     ) {
-      setMixedCheckboxText(checkboxSelectAllText);
       setAllValuesSelected('false');
     } else if (
       // If some values are chosen and no values are searched for
@@ -184,7 +173,6 @@ export function VariableBoxContent({
       // If some values are chosen and some values are searched for and they do match
       (searchedValues.length > 0 && searcedResult === 'mixed')
     ) {
-      setMixedCheckboxText(checkboxSelectAllText);
       setAllValuesSelected('mixed');
     } else if (
       // If all values are chosen and no values are searched for
@@ -192,17 +180,9 @@ export function VariableBoxContent({
       // If all values chosen and matching searched values
       (searchedValues.length > 0 && searcedResult === 'all')
     ) {
-      setMixedCheckboxText(checkboxDeselectAllText);
       setAllValuesSelected('true');
     }
-  }, [
-    totalChosenValues,
-    totalValues,
-    checkboxSelectAllText,
-    checkboxDeselectAllText,
-    searchedValues,
-    selectedValuesForVar,
-  ]);
+  }, [totalChosenValues, totalValues, searchedValues, selectedValuesForVar]);
 
   const mappedAndSortedCodeLists: SelectOption[] =
     mapAndSortCodeLists(codeLists);
@@ -308,7 +288,9 @@ export function VariableBoxContent({
           >
             <MixedCheckbox
               id={varId + uniqueId + 'mixedCheckbox'}
-              text={mixedCheckboxText}
+              text={t(
+                'presentation_page.sidemenu.selection.variablebox.content.mixed_checkbox',
+              )}
               value={allValuesSelected}
               onChange={() =>
                 onChangeMixedCheckbox(varId, allValuesSelected, searchedValues)
