@@ -26,8 +26,10 @@ export const Chips: ChipsComponent = ({
     <ul {...rest} ref={ref} className={cl(styles.chips)}>
       {React.Children.toArray(children)
         .filter(Boolean)
-        .map((chip) => (
-          <li key={(chip as React.ReactElement).key}>{chip}</li>
+        .map((chip, index) => (
+          <li key={React.isValidElement(chip) && chip.key ? chip.key : index}>
+            {chip}
+          </li>
         ))}
     </ul>
   );
