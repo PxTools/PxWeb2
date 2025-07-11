@@ -3,23 +3,19 @@ import {
   SelectedVBValues,
   SelectOption,
   Variable,
+  PxTableMetadata,
 } from '@pxweb2/pxweb2-ui';
 
 export function updateSelectedCodelistForVariable(
-  selectedItem: SelectOption | undefined,
+  selectedItem: SelectOption,
   varId: string,
   prevSelectedValues: SelectedVBValues[],
   currentVariableMetadata: Variable,
+  newTableMetadata: PxTableMetadata,
 ): SelectedVBValues[] | undefined {
   const currentSelectedVariable = prevSelectedValues.find(
     (variable) => variable.id === varId,
   );
-  const currentCodeList = currentSelectedVariable?.selectedCodeList;
-
-  // No new selection made, do nothing
-  if (!selectedItem || selectedItem.value === currentCodeList) {
-    return;
-  }
 
   const newSelectedCodeList = currentVariableMetadata?.codeLists?.find(
     (codelist) => codelist.id === selectedItem.value,
@@ -39,7 +35,37 @@ export function updateSelectedCodelistForVariable(
     newMappedSelectedCodeList,
   );
 
-  return newSelectedValues;
+  return applyMandatoryDefaultsForVariable(
+    newSelectedValues,
+    newTableMetadata,
+    varId,
+  );
+}
+
+function applyMandatoryDefaultsForVariable(
+  selectedValues: SelectedVBValues[],
+  metadata: PxTableMetadata,
+  varId: string,
+): SelectedVBValues[] {
+  const newVariableMetadata = metadata.variables.find(
+    (variable) => variable.id === varId,
+  );
+
+  // If the variable is not mandatory or has no metadata, return unchanged
+  if (!newVariableMetadata?.mandatory) {
+    return selectedValues;
+  }
+
+  // Apply mandatory default only to the specific variable
+  return selectedValues.map((selectedVariable) => {
+    if (selectedVariable.id === varId && selectedVariable.values.length === 0) {
+      return {
+        ...selectedVariable,
+        values: [newVariableMetadata.values[0].code],
+      };
+    }
+    return selectedVariable;
+  });
 }
 
 export function addSelectedCodeListToVariable(
