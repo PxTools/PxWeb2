@@ -28,7 +28,7 @@ export const Variant = {
   },
 };
 
-export const withlink: StoryFn<typeof Alert> = () => {
+export const WithLink: StoryFn<typeof Alert> = () => {
   return (
     <>
       <br />
@@ -43,7 +43,7 @@ export const withlink: StoryFn<typeof Alert> = () => {
   );
 };
 
-export const withtextandlink: StoryFn<typeof Alert> = () => {
+export const WithTextAndLink: StoryFn<typeof Alert> = () => {
   return (
     <>
       <br />
@@ -59,7 +59,7 @@ export const withtextandlink: StoryFn<typeof Alert> = () => {
   );
 };
 
-export const withOLList: StoryFn<typeof Alert> = () => {
+export const WithOLList: StoryFn<typeof Alert> = () => {
   return (
     <Alert variant="info" heading="Heading alert" clickable closeButton>
       <List listType="ol" heading="Heading list">
@@ -75,7 +75,7 @@ export const withOLList: StoryFn<typeof Alert> = () => {
     </Alert>
   );
 };
-export const withULList: StoryFn<typeof Alert> = () => {
+export const WithULList: StoryFn<typeof Alert> = () => {
   return (
     <Alert variant="info" heading="Heading alert from notes" closeButton>
       <List listType="ul">
@@ -103,7 +103,7 @@ export const withULList: StoryFn<typeof Alert> = () => {
   );
 };
 
-export const withULListClickable: StoryFn<typeof Alert> = () => {
+export const WithULListClickable: StoryFn<typeof Alert> = () => {
   return (
     <Alert
       variant="info"
@@ -136,7 +136,7 @@ export const withULListClickable: StoryFn<typeof Alert> = () => {
   );
 };
 
-export const withListgroupClickable: StoryFn<typeof Alert> = () => {
+export const WithListgroupClickable: StoryFn<typeof Alert> = () => {
   return (
     <Alert variant="info" heading="Heading Alert" closeButton clickable>
       <List heading="Land" subHeading="Subheading" listType="ul" listGroup>
@@ -177,7 +177,7 @@ export const withListgroupClickable: StoryFn<typeof Alert> = () => {
   );
 };
 
-export const test: StoryFn<typeof Alert> = () => {
+export const Test: StoryFn<typeof Alert> = () => {
   return (
     <Alert variant="info" heading="Heading Alert" closeButton clickable>
       <List listType="ul">

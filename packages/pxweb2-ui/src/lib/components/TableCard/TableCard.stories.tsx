@@ -32,7 +32,7 @@ export const Default: Story = {
   },
 };
 
-export const withoutIcon: StoryFn<typeof TableCard> = () => {
+export const WithoutIcon: StoryFn<typeof TableCard> = () => {
   return (
     <TableCard
       href="/"
@@ -46,7 +46,7 @@ export const withoutIcon: StoryFn<typeof TableCard> = () => {
   );
 };
 
-export const withoutTableNumber: StoryFn<typeof TableCard> = () => {
+export const WithoutTableNumber: StoryFn<typeof TableCard> = () => {
   return (
     <TableCard
       href="/"

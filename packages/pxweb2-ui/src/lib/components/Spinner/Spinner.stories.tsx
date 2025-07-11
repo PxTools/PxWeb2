@@ -20,7 +20,7 @@ export const Options = {
   },
 };
 
-export const size: StoryFn<typeof Spinner> = () => {
+export const Size: StoryFn<typeof Spinner> = () => {
   return (
     <>
       <div>
@@ -47,7 +47,7 @@ export const size: StoryFn<typeof Spinner> = () => {
   );
 };
 
-export const variants: StoryFn<typeof Spinner> = () => {
+export const Variants: StoryFn<typeof Spinner> = () => {
   return (
     <>
       <div>
@@ -61,7 +61,7 @@ export const variants: StoryFn<typeof Spinner> = () => {
     </>
   );
 };
-export const label: StoryFn<typeof Spinner> = () => {
+export const Label: StoryFn<typeof Spinner> = () => {
   return (
     <>
       <div>
