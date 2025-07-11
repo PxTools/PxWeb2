@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 
 import BottomSheet from './BottomSheet';
 import classes from './BottomSheet.module.scss';
-import { mockHTMLDialogElement } from '../../util/test-utils';
+import { mockHTMLDialogElement, withFastTimers } from '../../util/test-utils';
 
 describe('BottomSheet', () => {
   beforeEach(() => {
@@ -22,48 +22,50 @@ describe('BottomSheet', () => {
     expect(screen.getByText('Test Content')).toBeInTheDocument();
   });
 
-  it('calls onClose when the close button is clicked', async () => {
-    const onCloseMock = vi.fn();
-    render(
-      <div id="test">
-        <BottomSheet heading="Test Heading" isOpen={true} onClose={onCloseMock}>
-          <p>Test Content</p>
-        </BottomSheet>
-      </div>,
-    );
+  it('calls onClose when the close button is clicked', () => {
+    withFastTimers(() => {
+      const onCloseMock = vi.fn();
+      render(
+        <div id="test">
+          <BottomSheet
+            heading="Test Heading"
+            isOpen={true}
+            onClose={onCloseMock}
+          >
+            <p>Test Content</p>
+          </BottomSheet>
+        </div>,
+      );
 
-    const closeButton = screen.getByRole('button', { name: 'Close' });
-    fireEvent.click(closeButton);
+      const closeButton = screen.getByRole('button', { name: 'Close' });
+      fireEvent.click(closeButton);
 
-    await waitFor(
-      () => {
-        expect(onCloseMock).toHaveBeenCalledTimes(1);
-      },
-      { timeout: 300 },
-    );
+      expect(onCloseMock).toHaveBeenCalledTimes(1);
+    });
   });
 
-  it('closes the BottomSheet when clicking on the backdrop', async () => {
-    const onCloseMock = vi.fn();
-    render(
-      <div data-testid="test">
-        <BottomSheet heading="Test Heading" isOpen={true} onClose={onCloseMock}>
-          <p>Test Content</p>
-        </BottomSheet>
-      </div>,
-    );
+  it('closes the BottomSheet when clicking on the backdrop', () => {
+    withFastTimers(() => {
+      const onCloseMock = vi.fn();
+      render(
+        <div data-testid="test">
+          <BottomSheet
+            heading="Test Heading"
+            isOpen={true}
+            onClose={onCloseMock}
+          >
+            <p>Test Content</p>
+          </BottomSheet>
+        </div>,
+      );
 
-    const dialog = document.querySelector('dialog') as HTMLElement;
+      const dialog = document.querySelector('dialog') as HTMLElement;
 
-    // Simulate a click on the backdrop
-    fireEvent.click(dialog);
+      // Simulate a click on the backdrop
+      fireEvent.click(dialog);
 
-    await waitFor(
-      () => {
-        expect(onCloseMock).toHaveBeenCalledTimes(1);
-      },
-      { timeout: 300 },
-    );
+      expect(onCloseMock).toHaveBeenCalledTimes(1);
+    });
   });
 
   it('does not close the BottomSheet when clicking inside the content', () => {
@@ -80,23 +82,20 @@ describe('BottomSheet', () => {
     expect(onCloseMock).not.toHaveBeenCalled();
   });
 
-  it('closes the BottomSheet when the Escape key is pressed', async () => {
-    const onCloseMock = vi.fn();
-    render(
-      <BottomSheet heading="Test Heading" isOpen={true} onClose={onCloseMock}>
-        <p>Test Content</p>
-      </BottomSheet>,
-    );
+  it('closes the BottomSheet when the Escape key is pressed', () => {
+    withFastTimers(() => {
+      const onCloseMock = vi.fn();
+      render(
+        <BottomSheet heading="Test Heading" isOpen={true} onClose={onCloseMock}>
+          <p>Test Content</p>
+        </BottomSheet>,
+      );
 
-    const dialog = document.querySelector('dialog') as HTMLElement;
-    fireEvent.keyDown(dialog, { key: 'Escape' });
+      const dialog = document.querySelector('dialog') as HTMLElement;
+      fireEvent.keyDown(dialog, { key: 'Escape' });
 
-    await waitFor(
-      () => {
-        expect(onCloseMock).toHaveBeenCalledTimes(1);
-      },
-      { timeout: 300 },
-    );
+      expect(onCloseMock).toHaveBeenCalledTimes(1);
+    });
   });
 
   it('applies custom className when provided', () => {
