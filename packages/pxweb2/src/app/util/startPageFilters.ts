@@ -73,10 +73,12 @@ export function getFilters(tables: Table[]): StartPageFilters {
   let filters: StartPageFilters = {
     timeUnits: new Map<string, number>(),
     subjectTree: [],
+    variables: new Map<string, number>(),
   };
 
   filters.timeUnits = getTimeUnits(tables);
   filters.subjectTree = getSubjectTree(tables);
+  filters.variables = getVariables(tables);
 
   return filters;
 }
@@ -177,4 +179,18 @@ export function findChildren(
     }
   }
   return [];
+}
+
+export function getVariables(allTables: Table[]) {
+  const variables = new Map<string, number>();
+  allTables.forEach((table) => {
+    table.variableNames.forEach((name: string) => {
+      const count = variables.get(name);
+      variables.set(name, count ? count + 1 : 1);
+    });
+  });
+  // Sort the returned map by number of available variables. TODO: Consider moving this into separate function.
+  return new Map<string, number>(
+    [...variables.entries()].sort((a, b) => b[1] - a[1]),
+  );
 }

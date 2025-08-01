@@ -3,10 +3,10 @@ import cl from 'clsx';
 import { ActionType, PathItem } from '../../pages/StartPage/StartPageTypes';
 import styles from './FilterSidebar.module.scss';
 import { useTranslation } from 'react-i18next';
-import { Checkbox, FilterCategory } from '@pxweb2/pxweb2-ui';
+import { Checkbox, FilterCategory, Search } from '@pxweb2/pxweb2-ui';
 import { findAncestors, getAllDescendants } from '../../util/startPageFilters';
 import { FilterContext } from '../../context/FilterContext';
-import { ReactNode, useContext } from 'react';
+import { ReactNode, useContext, useState } from 'react';
 
 interface CollapsibleProps {
   subject: PathItem;
@@ -211,11 +211,137 @@ const RenderTimeUnitFilters: React.FC<{ onFilterChange?: () => void }> = ({
   });
 };
 
+const RenderVariablesPagination: React.FC = () => {
+  const { state, dispatch } = useContext(FilterContext);
+  const [showCount, setShowCount] = useState(10);
+  const [variableSearch, setVariableSearch] = useState('');
+
+  return (
+    <>
+      <div className={styles.variablesSearchBox}>
+        <Search
+          searchPlaceHolder="Søk etter variabel"
+          variant="default"
+          onChange={(value) => setVariableSearch(value)}
+        />
+      </div>
+      {Array.from(state.availableFilters.variables)
+        .filter((value) => {
+          return value[0].includes(variableSearch);
+        })
+        .slice(0, showCount)
+        .map((item, index) => {
+          const isActive = state.activeFilters.some(
+            (filter) => filter.type === 'variable' && filter.value === item[0],
+          );
+          return (
+            <div key={item[0]}>
+              <Checkbox
+                id={index.toString()}
+                text={`${item[0]} (${item[1]})`}
+                value={isActive}
+                onChange={(value) => {
+                  value
+                    ? dispatch({
+                        type: ActionType.ADD_FILTER,
+                        payload: [
+                          {
+                            type: 'variable',
+                            value: item[0],
+                            label: item[0],
+                            index,
+                          },
+                        ],
+                      })
+                    : dispatch({
+                        type: ActionType.REMOVE_FILTER,
+                        payload: { value: item[0], type: 'variable' },
+                      });
+                  console.log('test thing here I guess');
+                }}
+              />
+            </div>
+          );
+        })}
+      {state.availableFilters.variables.size > showCount && (
+        <button
+          onClick={() => {
+            setShowCount(showCount + 10);
+          }}
+        >
+          Show More
+        </button>
+      )}
+    </>
+  );
+};
+const RenderVariablesScrolling: React.FC = () => {
+  const { state, dispatch } = useContext(FilterContext);
+  const [variableSearch, setVariableSearch] = useState('');
+
+  return (
+    <>
+      <div className={styles.variablesSearchBox}>
+        <Search
+          searchPlaceHolder="Søk etter variabel"
+          variant="default"
+          onChange={(value) => setVariableSearch(value)}
+        />
+      </div>
+      <ul className={styles.scrollableVariableFilter}>
+        {Array.from(state.availableFilters.variables)
+          .filter((value) => {
+            return value[0].includes(variableSearch);
+          })
+          .map((item, index) => {
+            const isActive = state.activeFilters.some(
+              (filter) =>
+                filter.type === 'variable' && filter.value === item[0],
+            );
+            return (
+              <li key={item[0]}>
+                <Checkbox
+                  id={index.toString()}
+                  text={`${item[0]} (${item[1]})`}
+                  value={isActive}
+                  onChange={(value) => {
+                    value
+                      ? dispatch({
+                          type: ActionType.ADD_FILTER,
+                          payload: [
+                            {
+                              type: 'variable',
+                              value: item[0],
+                              label: item[0],
+                              index,
+                            },
+                          ],
+                        })
+                      : dispatch({
+                          type: ActionType.REMOVE_FILTER,
+                          payload: { value: item[0], type: 'variable' },
+                        });
+                    console.log('test thing here I guess');
+                  }}
+                />
+              </li>
+            );
+          })}
+      </ul>
+    </>
+  );
+};
+
 export const FilterSidebar: React.FC<FilterSidebarProps> = ({
   onFilterChange,
 }) => {
   const { state } = useContext(FilterContext);
   const { t } = useTranslation();
+
+  // TODO:
+  //  - Translations!
+  //  - Search/filter for variables - how to show just the top one??
+  //  - First alternative also. List all, but in a max-heigth box with internal scroll.
 
   return (
     <div className={styles.sideBar}>
@@ -231,6 +357,12 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
           <ul className={styles.filterList}>
             <RenderTimeUnitFilters onFilterChange={onFilterChange} />
           </ul>
+        </FilterCategory>
+        <FilterCategory header="VARIABLES PAG">
+          <RenderVariablesPagination />
+        </FilterCategory>
+        <FilterCategory header="VARIABLES SCR">
+          <RenderVariablesScrolling />
         </FilterCategory>
       </div>
       <p>
