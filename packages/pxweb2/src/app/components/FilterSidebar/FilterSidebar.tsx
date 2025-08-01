@@ -3,7 +3,7 @@ import cl from 'clsx';
 import { ActionType, PathItem } from '../../pages/StartPage/StartPageTypes';
 import styles from './FilterSidebar.module.scss';
 import { useTranslation } from 'react-i18next';
-import { Checkbox, FilterCategory, Search } from '@pxweb2/pxweb2-ui';
+import { Checkbox, FilterCategory, Search, Button } from '@pxweb2/pxweb2-ui';
 import { findAncestors, getAllDescendants } from '../../util/startPageFilters';
 import { FilterContext } from '../../context/FilterContext';
 import { ReactNode, useContext, useState } from 'react';
@@ -212,8 +212,10 @@ const RenderTimeUnitFilters: React.FC<{ onFilterChange?: () => void }> = ({
 };
 
 const RenderVariablesPagination: React.FC = () => {
+  const defaultFilterCount = 12;
+
   const { state, dispatch } = useContext(FilterContext);
-  const [showCount, setShowCount] = useState(10);
+  const [showCount, setShowCount] = useState(defaultFilterCount);
   const [variableSearch, setVariableSearch] = useState('');
 
   return (
@@ -257,24 +259,26 @@ const RenderVariablesPagination: React.FC = () => {
                         type: ActionType.REMOVE_FILTER,
                         payload: { value: item[0], type: 'variable' },
                       });
-                  console.log('test thing here I guess');
                 }}
               />
             </div>
           );
         })}
       {state.availableFilters.variables.size > showCount && (
-        <button
+        <Button
+          variant="secondary"
+          size="small"
           onClick={() => {
-            setShowCount(showCount + 10);
+            setShowCount(showCount + defaultFilterCount);
           }}
         >
           Show More
-        </button>
+        </Button>
       )}
     </>
   );
 };
+
 const RenderVariablesScrolling: React.FC = () => {
   const { state, dispatch } = useContext(FilterContext);
   const [variableSearch, setVariableSearch] = useState('');
@@ -321,7 +325,6 @@ const RenderVariablesScrolling: React.FC = () => {
                           type: ActionType.REMOVE_FILTER,
                           payload: { value: item[0], type: 'variable' },
                         });
-                    console.log('test thing here I guess');
                   }}
                 />
               </li>
@@ -353,10 +356,10 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
             <RenderTimeUnitFilters onFilterChange={onFilterChange} />
           </ul>
         </FilterCategory>
-        <FilterCategory header="VARIABLES PAG">
+        <FilterCategory header="Variables Pagination">
           <RenderVariablesPagination />
         </FilterCategory>
-        <FilterCategory header="VARIABLES SCR">
+        <FilterCategory header="Variables Scroll">
           <RenderVariablesScrolling />
         </FilterCategory>
       </div>
