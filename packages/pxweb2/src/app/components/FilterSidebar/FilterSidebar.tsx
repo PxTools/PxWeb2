@@ -338,11 +338,6 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
   const { state } = useContext(FilterContext);
   const { t } = useTranslation();
 
-  // TODO:
-  //  - Translations!
-  //  - Search/filter for variables - how to show just the top one??
-  //  - First alternative also. List all, but in a max-heigth box with internal scroll.
-
   return (
     <div className={styles.sideBar}>
       <div>
