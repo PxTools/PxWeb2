@@ -179,7 +179,7 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
   const [queryId, setQueryId] = useState<string | null>(null);
   const [isCopied, setIsCopied] = useState(false);
   const [selectedRadio, setSelectedRadio] =
-    useState<SaveQueryOptions>('selected');
+    useState<SaveQueryOptions>('top');
   const [saveQueryButtonState, setSaveQueryButtonState] =
     useState<SaveQueryButtonState>('create');
 
