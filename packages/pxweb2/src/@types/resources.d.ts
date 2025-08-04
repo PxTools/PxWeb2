@@ -199,7 +199,7 @@ interface Resources {
             copyButton: 'Copy link';
             copiedButton: 'Link copied';
             createStatus: 'Save query generated with id “{{query}}”.';
-            copyStatus: 'Save query “{{url}}” copied to clipboard.';
+            copyStatus: 'Save query copied to clipboard.';
             loadingStatus: 'Generating saved query..';
           };
           imagefile: {

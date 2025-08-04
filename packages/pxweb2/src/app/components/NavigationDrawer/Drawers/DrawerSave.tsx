@@ -131,16 +131,13 @@ export const SaveQueryCopiedButton: React.FC<SaveQueryButtonProps> = ({
 const SqScreenReaderStatus: React.FC<{
   queryId: string | null;
   isCopied: boolean;
-  saveQueryUrl: string;
-}> = ({ queryId, isCopied, saveQueryUrl }) => {
+}> = ({ queryId, isCopied }) => {
   const { t } = useTranslation();
   let createMessage = '';
   let copyMessage = '';
 
   if (isCopied) {
-    copyMessage = t('presentation_page.sidemenu.save.savequery.copyStatus', {
-      url: saveQueryUrl,
-    });
+    copyMessage = t('presentation_page.sidemenu.save.savequery.copyStatus');
   }
 
   if (queryId) {
@@ -478,11 +475,7 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
               saveQueryUrl={saveQueryUrl}
             />
           )}
-          <SqScreenReaderStatus
-            queryId={queryId}
-            isCopied={isCopied}
-            saveQueryUrl={saveQueryUrl}
-          />
+          <SqScreenReaderStatus queryId={queryId} isCopied={isCopied} />
         </div>
       </ContentBox>
     </div>

@@ -197,7 +197,7 @@
           "copyButton": "Copy link",
           "copiedButton": "Link copied",
           "createStatus": "Link generated. Click again to copy the link",
-          "copyStatus": "Link “{{url}}” copied to clipboard",
+          "copyStatus": "Link copied to clipboard",
           "loadingStatus": "Generating link"
         },
         "imagefile": {

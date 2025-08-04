@@ -197,7 +197,7 @@
           "copyButton": "Kopiera länk",
           "copiedButton": "Länk kopierad",
           "createStatus": "Länk skapad. Tryck igen för att kopera länken",
-          "copyStatus": "Länk “{{url}}” kopierad till utklipp",
+          "copyStatus": "Länk kopierad till utklipp",
           "loadingStatus": "Länk skapas"
         },
         "imagefile": {

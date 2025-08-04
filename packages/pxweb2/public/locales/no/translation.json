@@ -197,7 +197,7 @@
           "copyButton": "Kopier lenke",
           "copiedButton": "Lenke kopiert",
           "createStatus": "Lenke laget. Trykk igjen for å kopiere lenken",
-          "copyStatus": "Lenke “{{url}}” kopiert til utklippstavle",
+          "copyStatus": "Lenke kopiert til utklippstavle",
           "loadingStatus": "Lager lenke"
         },
         "imagefile": {
