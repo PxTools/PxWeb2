@@ -6,6 +6,8 @@ import {
   useReducer,
 } from 'react';
 
+import { Filter } from '../pages/StartPage/StartPageTypes';
+
 import {
   ActionType,
   ReducerActionTypes,
@@ -97,6 +99,36 @@ function reducer(
         },
       };
     }
+
+    case ActionType.ADD_SEARCH_FILTER: {
+      if (action.payload == '') {
+        return {
+          ...state,
+          activeFilters: state.activeFilters.filter((filter) => {
+            return filter.type != 'search';
+          }),
+        };
+      }
+
+      const existingSearch = state.activeFilters.findIndex(
+        (filter) => filter.type == 'search',
+      );
+      console.log(existingSearch);
+      const newSearch: Filter = {
+        type: 'search',
+        label: `Search: ${action.payload}`,
+        value: action.payload,
+        index: 1,
+      };
+
+      const newFilters =
+        existingSearch >= 0
+          ? state.activeFilters.with(existingSearch, newSearch)
+          : [...state.activeFilters, newSearch];
+
+      return { ...state, activeFilters: newFilters };
+    }
+
     case ActionType.REMOVE_FILTER: {
       const removedType = action.payload.type;
       const currentFilters =

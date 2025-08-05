@@ -31,6 +31,7 @@ import useApp from '../../context/useApp';
 import { getConfig } from '../../util/config/getConfig';
 import { FilterContext, FilterProvider } from '../../context/FilterContext';
 import { getAllTables } from '../../util/tableHandler';
+import { debounce } from 'lodash';
 
 const StartPage = () => {
   const { t, i18n } = useTranslation();
@@ -288,6 +289,16 @@ const StartPage = () => {
     </>
   );
 
+  // Debounce the dispatch for search filter, so it waits a few moments for typing to finish
+  const debouncedDispatch = useRef(
+    debounce((value: string) => {
+      dispatch({
+        type: ActionType.ADD_SEARCH_FILTER,
+        payload: value,
+      });
+    }, 500),
+  ).current;
+
   const renderPagination = () => {
     const shouldShowPagination =
       visibleCount < state.filteredTables.length ||
@@ -446,6 +457,9 @@ const StartPage = () => {
                 <Search
                   searchPlaceHolder={t('start_page.search_placeholder')}
                   variant="default"
+                  onChange={(value: string) => {
+                    debouncedDispatch(value);
+                  }}
                 />
               </div>
 

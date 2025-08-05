@@ -54,5 +54,19 @@ export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
       });
     }
   };
-  return testTimeUnitFilters() && testSubjectFilters();
+
+  const searchFilter = filters.find((f) => {
+    return f.type === 'search';
+  });
+
+  const testSearchFilter = function () {
+    if (!searchFilter) {
+      return true;
+    } else {
+      const text = ''.concat(table.description ?? '', ' ', table.label ?? '');
+      return text.toLowerCase().includes(searchFilter.value.toLowerCase());
+    }
+  };
+
+  return testTimeUnitFilters() && testSubjectFilters() && testSearchFilter();
 }
