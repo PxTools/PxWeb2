@@ -8,7 +8,7 @@ describe('Breadcrumbs', () => {
       <Breadcrumbs>
         <a href="/home">Home</a>
         <a href="/about">About</a>
-      </Breadcrumbs>
+      </Breadcrumbs>,
     );
     expect(screen.getByText('Home')).toBeInTheDocument();
     expect(screen.getByText('About')).toBeInTheDocument();
@@ -18,7 +18,7 @@ describe('Breadcrumbs', () => {
     const { container } = render(
       <Breadcrumbs>
         <a href="/home">Home</a>
-      </Breadcrumbs>
+      </Breadcrumbs>,
     );
     expect(container.firstChild).toHaveClass('breadcrumbs');
   });
@@ -27,7 +27,7 @@ describe('Breadcrumbs', () => {
     const { container } = render(
       <Breadcrumbs style="compact">
         <a href="/home">Home</a>
-      </Breadcrumbs>
+      </Breadcrumbs>,
     );
     // The compact style class should be present
     expect(container.firstChild).toHaveClass('compact');
@@ -38,10 +38,11 @@ describe('Breadcrumbs', () => {
       <Breadcrumbs>
         <a href="/home">Home</a>
         <a href="/about">About</a>
-      </Breadcrumbs>
+      </Breadcrumbs>,
     );
     // There should be at least one ChevronRight icon
-    expect(screen.getAllByTestId('icon-ChevronRight').length).toBeGreaterThan(0);
+    expect(screen.getAllByTestId('icon-ChevronRight').length).toBeGreaterThan(
+      0,
+    );
   });
-
 });

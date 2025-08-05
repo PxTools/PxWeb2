@@ -11,7 +11,6 @@ const meta: Meta<BreadcrumbsProps> = {
 
 export default meta;
 
-
 // export const Options = {
 //   args: {
 //     size: 'medium',
@@ -24,7 +23,6 @@ export default meta;
 //     },
 //   },
 // };
-
 
 // export const FixedTabs: StoryFn<typeof Tabs> = () => {
 //   const [activeTab, setActiveTab] = useState('px-tab1');
@@ -40,7 +38,6 @@ export default meta;
 //     </TabsProvider>
 //   );
 // };
-
 
 export const Default: StoryObj<typeof Breadcrumbs> = () => {
   return (
@@ -58,7 +55,6 @@ export const Default: StoryObj<typeof Breadcrumbs> = () => {
   );
 };
 
-
 export const Compact: StoryObj<typeof Breadcrumbs> = () => {
   return (
     <Breadcrumbs style="compact">
@@ -74,7 +70,6 @@ export const Compact: StoryObj<typeof Breadcrumbs> = () => {
     </Breadcrumbs>
   );
 };
-
 
 // export const SingleItem: StoryObj<BreadcrumbsProps> = {
 //   args: {
