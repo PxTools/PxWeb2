@@ -102,18 +102,22 @@ function reducer(
 
     case ActionType.ADD_SEARCH_FILTER: {
       if (action.payload == '') {
+        const newFilters = state.activeFilters.filter((filter) => {
+          return filter.type != 'search';
+        });
         return {
           ...state,
-          activeFilters: state.activeFilters.filter((filter) => {
-            return filter.type != 'search';
-          }),
+          activeFilters: newFilters,
+          filteredTables: state.availableTables.filter((table) =>
+            shouldTableBeIncluded(table, newFilters),
+          ),
         };
       }
 
       const existingSearch = state.activeFilters.findIndex(
         (filter) => filter.type == 'search',
       );
-      console.log(existingSearch);
+
       const newSearch: Filter = {
         type: 'search',
         label: `Search: ${action.payload}`,
@@ -126,7 +130,13 @@ function reducer(
           ? state.activeFilters.with(existingSearch, newSearch)
           : [...state.activeFilters, newSearch];
 
-      return { ...state, activeFilters: newFilters };
+      return {
+        ...state,
+        activeFilters: newFilters,
+        filteredTables: state.availableTables.filter((table) =>
+          shouldTableBeIncluded(table, newFilters),
+        ),
+      };
     }
 
     case ActionType.REMOVE_FILTER: {

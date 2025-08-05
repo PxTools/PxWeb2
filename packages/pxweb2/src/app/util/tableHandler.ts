@@ -63,7 +63,13 @@ export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
     if (!searchFilter) {
       return true;
     } else {
-      const text = ''.concat(table.description ?? '', ' ', table.label ?? '');
+      const text = ''.concat(
+        table.description ?? '',
+        ' ',
+        table.label ?? '',
+        ' ',
+        table.id,
+      );
       return text.toLowerCase().includes(searchFilter.value.toLowerCase());
     }
   };
