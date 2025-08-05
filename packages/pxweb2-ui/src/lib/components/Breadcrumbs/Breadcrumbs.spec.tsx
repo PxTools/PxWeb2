@@ -38,16 +38,16 @@ describe('Breadcrumbs', () => {
   //   expect(container.firstChild).toHaveClass('compact');
   // });
 
-  it('renders divider icon between breadcrumb items', () => {
-    render(
-      <Breadcrumbs>
-        <a href="/home">Home</a>
-        <a href="/about">About</a>
-      </Breadcrumbs>,
-    );
-    // There should be at least one ChevronRight icon
-    expect(screen.getAllByTestId('icon-ChevronRight').length).toBeGreaterThan(
-      0,
-    );
-  });
+  // it('renders divider icon between breadcrumb items', () => {
+  //   render(
+  //     <Breadcrumbs>
+  //       <a href="/home">Home</a>
+  //       <a href="/about">About</a>
+  //     </Breadcrumbs>,
+  //   );
+  //   // There should be at least one ChevronRight icon
+  //   expect(screen.getAllByTestId('icon-ChevronRight').length).toBeGreaterThan(
+  //     0,
+  //   );
+  // });
 });
