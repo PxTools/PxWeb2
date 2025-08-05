@@ -2,10 +2,6 @@ import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import Breadcrumbs from './Breadcrumbs';
 
-
-
-
-
 describe('Breadcrumbs', () => {
   // it('renders children as breadcrumb items', () => {
   //   render(
