@@ -271,7 +271,6 @@ export function VariableBoxContent({
             value={search}
             onChange={(value: string) => {
               // Escape special characters in search value
-              //const escapedValue = value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
               setSearch(value);
               if (value === '') {
                 setScrollingDown(false);
