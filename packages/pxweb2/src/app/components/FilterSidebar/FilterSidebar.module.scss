@@ -43,3 +43,17 @@
   min-width: 24px;
   padding: 0;
 }
+
+.scrollableVariableFilter {
+  list-style: none;
+  padding: 0;
+
+  max-height: 528px;
+  overflow-y: scroll;
+  scrollbar-width: 3px;
+  // background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgb(255, 255, 255));
+}
+
+.variablesSearchBox {
+  padding: 3px;
+}

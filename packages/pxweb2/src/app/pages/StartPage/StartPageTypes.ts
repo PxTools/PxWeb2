@@ -10,7 +10,7 @@ export enum ActionType {
 }
 
 export type Filter = {
-  type: 'timeUnit' | 'subject';
+  type: 'timeUnit' | 'subject' | 'variable';
   value: string;
   label: string;
   index: number;
@@ -28,10 +28,7 @@ export type PathItem = {
 export type StartPageState = {
   availableTables: Table[];
   filteredTables: Table[];
-  availableFilters: {
-    subjectTree: PathItem[];
-    timeUnits: Map<string, number>;
-  };
+  availableFilters: StartPageFilters;
   activeFilters: Filter[];
   loading: boolean;
   error: string;
@@ -79,4 +76,5 @@ type SetLoadingAction = {
 export type StartPageFilters = {
   timeUnits: Map<string, number>;
   subjectTree: PathItem[];
+  variables: Map<string, number>;
 };

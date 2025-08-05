@@ -14,6 +14,7 @@ import {
 import {
   getFilters,
   getTimeUnits,
+  getVariables,
   updateSubjectTreeCounts,
 } from '../util/startPageFilters';
 import { shouldTableBeIncluded } from '../util/tableHandler';
@@ -70,6 +71,7 @@ function reducer(
         availableFilters: {
           subjectTree: action.payload.subjects,
           timeUnits: getTimeUnits(action.payload.tables),
+          variables: getVariables(action.payload.tables),
         },
       };
     case ActionType.ADD_FILTER: {
@@ -94,6 +96,10 @@ function reducer(
             addType !== 'timeUnit'
               ? getTimeUnits(filteredTables)
               : state.availableFilters.timeUnits,
+          variables:
+            addType !== 'variable'
+              ? getVariables(filteredTables)
+              : state.availableFilters.variables,
         },
       };
     }
@@ -118,6 +124,7 @@ function reducer(
               state.availableTables,
             ),
             timeUnits: getTimeUnits(state.availableTables),
+            variables: state.availableFilters.variables,
           },
         };
       }
@@ -137,6 +144,7 @@ function reducer(
                 )
               : state.availableFilters.subjectTree,
           timeUnits: getTimeUnits(filteredTables),
+          variables: state.availableFilters.variables,
         },
       };
     }
