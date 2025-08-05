@@ -1,0 +1,22 @@
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.breadcrumbItem {
+  display: flex;
+  align-items: center;
+  color: var(--color-text);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:not(:last-child) {
+    margin-right: var(--spacing-xs);
+  }
+}
