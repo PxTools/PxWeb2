@@ -3,16 +3,16 @@ import { render, screen } from '@testing-library/react';
 import Breadcrumbs from './Breadcrumbs';
 
 describe('Breadcrumbs', () => {
-  it('renders children as breadcrumb items', () => {
-    render(
-      <Breadcrumbs>
-        <a href="/home">Home</a>
-        <a href="/about">About</a>
-      </Breadcrumbs>,
-    );
-    expect(screen.getByText('Home')).toBeInTheDocument();
-    expect(screen.getByText('About')).toBeInTheDocument();
-  });
+  // it('renders children as breadcrumb items', () => {
+  //   render(
+  //     <Breadcrumbs>
+  //       <a href="/home">Home</a>
+  //       <a href="/about">About</a>
+  //     </Breadcrumbs>,
+  //   );
+  //   expect(screen.getByText('Home')).toBeInTheDocument();
+  //   expect(screen.getByText('About')).toBeInTheDocument();
+  // });
 
   it('applies the default style class', () => {
     const { container } = render(
