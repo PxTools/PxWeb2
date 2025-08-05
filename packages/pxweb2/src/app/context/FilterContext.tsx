@@ -96,7 +96,10 @@ function reducer(
             addType !== 'timeUnit'
               ? getTimeUnits(filteredTables)
               : state.availableFilters.timeUnits,
-          variables: state.availableFilters.variables, // TODO: Make a filter to update this count!
+          variables:
+            addType !== 'variable'
+              ? getVariables(filteredTables)
+              : state.availableFilters.variables,
         },
       };
     }
