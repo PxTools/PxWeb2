@@ -9,7 +9,7 @@ interface BreadcrumbsProps
   style?: 'default' | 'compact';
   dividerIcon?: IconProps['iconName'];
   target?: '_blank' | '_self' | '_parent' | '_top';
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 export const Breadcrumbs = forwardRef<HTMLAnchorElement, BreadcrumbsProps>(
