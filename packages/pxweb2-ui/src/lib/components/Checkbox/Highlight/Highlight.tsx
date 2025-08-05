@@ -17,7 +17,8 @@ export const Highlight: FC<HighlightProps> = ({ text, searchTerm }) => {
   return (
     <span>
       {parts.map((part, index) => {
-        const isHighlighted = part.toLowerCase() === searchTerm.replace('\\', '').toLowerCase();
+        const isHighlighted =
+          part.toLowerCase() === searchTerm.replace('\\', '').toLowerCase();
         const keyPrefix = isHighlighted ? 'highlight' : 'text';
         const key = `${keyPrefix}-${index}-${part.substring(0, 10)}`;
 
