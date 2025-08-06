@@ -41,7 +41,7 @@ export default meta;
 
 export const Default: StoryObj<typeof Breadcrumbs> = () => {
   return (
-    <Breadcrumbs style="default">
+    <Breadcrumbs variant="default">
       <Link inline={true} href="/">
         Home
       </Link>
@@ -57,7 +57,7 @@ export const Default: StoryObj<typeof Breadcrumbs> = () => {
 
 export const Compact: StoryObj<typeof Breadcrumbs> = () => {
   return (
-    <Breadcrumbs style="compact">
+    <Breadcrumbs variant="compact">
       <Link inline={true} href="/">
         Home
       </Link>
