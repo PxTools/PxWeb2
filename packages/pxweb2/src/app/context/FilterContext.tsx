@@ -91,7 +91,7 @@ function reducer(
       const addType = action.payload[0]?.type;
       return {
         ...state,
-        sortCounter: nextSortIndex, 
+        sortCounter: nextSortIndex,
         activeFilters: sortedFilters,
         filteredTables,
         availableFilters: {
