@@ -101,22 +101,7 @@ function reducer(
     }
 
     case ActionType.ADD_SEARCH_FILTER: {
-      if (action.payload == '') {
-        const newFilters = state.activeFilters.filter((filter) => {
-          return filter.type != 'search';
-        });
-        return {
-          ...state,
-          activeFilters: newFilters,
-          filteredTables: state.availableTables.filter((table) =>
-            shouldTableBeIncluded(table, newFilters),
-          ),
-        };
-      }
-
-      const existingSearch = state.activeFilters.findIndex(
-        (filter) => filter.type == 'search',
-      );
+      let newFilters: Filter[];
 
       const newSearch: Filter = {
         type: 'search',
@@ -125,17 +110,39 @@ function reducer(
         index: 1,
       };
 
-      const newFilters =
-        existingSearch >= 0
-          ? state.activeFilters.with(existingSearch, newSearch)
-          : [...state.activeFilters, newSearch];
+      const existingSearch = state.activeFilters.findIndex(
+        (filter) => filter.type == 'search',
+      );
+
+      // We remove the search filter if the string is empty (field cleared)
+      // Otherwise, update if it already exists, or if not add it.
+      // Ensures we only ever have one filter of type search
+      if (action.payload == '') {
+        newFilters = state.activeFilters.filter((filter) => {
+          return filter.type != 'search';
+        });
+      } else {
+        newFilters =
+          existingSearch >= 0
+            ? state.activeFilters.with(existingSearch, newSearch)
+            : [...state.activeFilters, newSearch];
+      }
+
+      const newTables = state.availableTables.filter((table) =>
+        shouldTableBeIncluded(table, newFilters),
+      );
 
       return {
         ...state,
         activeFilters: newFilters,
-        filteredTables: state.availableTables.filter((table) =>
-          shouldTableBeIncluded(table, newFilters),
-        ),
+        filteredTables: newTables,
+        availableFilters: {
+          subjectTree: updateSubjectTreeCounts(
+            state.originalSubjectTree,
+            newTables,
+          ),
+          timeUnits: getTimeUnits(newTables),
+        },
       };
     }
 
