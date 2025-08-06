@@ -19,7 +19,9 @@ import {
   updateSubjectTreeCounts,
 } from '../util/startPageFilters';
 import { shouldTableBeIncluded } from '../util/tableHandler';
+import useTranslation from 'i18next';
 
+const t = useTranslation.t;
 // Want to ensure this is never changed
 const initialState: StartPageState = Object.freeze({
   availableTables: [],
@@ -105,7 +107,7 @@ function reducer(
 
       const newSearch: Filter = {
         type: 'search',
-        label: `Search: ${action.payload}`,
+        label: `${t('presentation_page.sidemenu.selection.variablebox.search.label')}: ${action.payload}`,
         value: action.payload,
         index: 1,
       };
