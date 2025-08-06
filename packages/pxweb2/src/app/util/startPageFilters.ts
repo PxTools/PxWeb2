@@ -114,14 +114,15 @@ export function updateSubjectTreeCounts(
 
 export function sortAndDeduplicateFilterChips(filters: Filter[]): Filter[] {
   const typeOrder = ['subject', 'timeUnit'];
-  const sorted = filters.toSorted((a, b) => {
+  const sorted = filters.slice().sort((a, b) => {
     const typeComparison =
       typeOrder.indexOf(a.type) - typeOrder.indexOf(b.type);
     if (typeComparison !== 0) {
       return typeComparison;
     }
-    return a.index - b.index;
+    return (a.sortIndex ?? 0) - (b.sortIndex ?? 0);
   });
+
   return sorted.filter(
     (obj1, i, original) =>
       original.findIndex((obj2) => obj2.value === obj1.value) === i,

@@ -14,6 +14,7 @@ export type Filter = {
   value: string;
   label: string;
   index: number;
+  sortIndex?: number;
   uniqueId?: string;
 };
 
@@ -36,6 +37,7 @@ export type StartPageState = {
   loading: boolean;
   error: string;
   originalSubjectTree: PathItem[];
+  sortCounter: number;
 };
 
 export type ReducerActionTypes =
