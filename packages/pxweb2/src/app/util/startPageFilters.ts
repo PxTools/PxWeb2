@@ -112,9 +112,10 @@ export function updateSubjectTreeCounts(
   return originalTree.map(updateNode);
 }
 
-export function sortAndDeduplicateFilterChips(filters: Filter[]): Filter[] {
+export function sortFiltersByTypeAndIndex(filters: Filter[]): Filter[] {
   const typeOrder = ['subject', 'timeUnit'];
-  const sorted = filters.slice().sort((a, b) => {
+
+  return filters.slice().sort((a, b) => {
     const typeComparison =
       typeOrder.indexOf(a.type) - typeOrder.indexOf(b.type);
     if (typeComparison !== 0) {
@@ -122,11 +123,22 @@ export function sortAndDeduplicateFilterChips(filters: Filter[]): Filter[] {
     }
     return (a.sortIndex ?? 0) - (b.sortIndex ?? 0);
   });
+}
 
-  return sorted.filter(
-    (obj1, i, original) =>
-      original.findIndex((obj2) => obj2.value === obj1.value) === i,
-  );
+export function deduplicateFiltersByValue(filters: Filter[]): Filter[] {
+  const seen = new Set<string>();
+  return filters.filter((filter) => {
+    if (seen.has(filter.value)) {
+      return false;
+    }
+    seen.add(filter.value);
+    return true;
+  });
+}
+
+export function sortAndDeduplicateFilterChips(filters: Filter[]): Filter[] {
+  const sorted = sortFiltersByTypeAndIndex(filters);
+  return deduplicateFiltersByValue(sorted);
 }
 
 // Find parents, and parents' parents all the way up

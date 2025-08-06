@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   findAncestors,
   findChildren,
+  sortFiltersByTypeAndIndex,
   sortAndDeduplicateFilterChips,
   organizePaths,
 } from '../util/startPageFilters';
@@ -198,6 +199,7 @@ describe('Correctly sort and deduplicate filters', () => {
       label: 'Arbeid og lønn',
       uniqueId: '2vij38ql69',
       index: 2,
+      sortIndex: 2,
     },
     {
       type: 'subject',
@@ -205,6 +207,7 @@ describe('Correctly sort and deduplicate filters', () => {
       label: 'Arbeidskraftundersøkelsen',
       uniqueId: 'nem1ho60cb',
       index: 1,
+      sortIndex: 1,
     },
     {
       type: 'subject',
@@ -212,15 +215,26 @@ describe('Correctly sort and deduplicate filters', () => {
       label: 'Arbeidskraftundersøkelsen',
       uniqueId: 'fd9rg6iebf',
       index: 0,
+      sortIndex: 0,
     },
   ];
-  const sortedDedupedFilters: Filter[] = [
+
+  const sortedFilters: Filter[] = [
     {
       type: 'subject',
       value: 'aku',
       label: 'Arbeidskraftundersøkelsen',
       uniqueId: 'fd9rg6iebf',
       index: 0,
+      sortIndex: 0,
+    },
+    {
+      type: 'subject',
+      value: 'aku',
+      label: 'Arbeidskraftundersøkelsen',
+      uniqueId: 'nem1ho60cb',
+      index: 1,
+      sortIndex: 1,
     },
     {
       type: 'subject',
@@ -228,11 +242,36 @@ describe('Correctly sort and deduplicate filters', () => {
       label: 'Arbeid og lønn',
       uniqueId: '2vij38ql69',
       index: 2,
+      sortIndex: 2,
     },
   ];
 
+  const dedupedFilters: Filter[] = [
+    {
+      type: 'subject',
+      value: 'aku',
+      label: 'Arbeidskraftundersøkelsen',
+      uniqueId: 'fd9rg6iebf',
+      index: 0,
+      sortIndex: 0,
+    },
+    {
+      type: 'subject',
+      value: 'in01',
+      label: 'Arbeid og lønn',
+      uniqueId: '2vij38ql69',
+      index: 2,
+      sortIndex: 2,
+    },
+  ];
+
+  it('Should sort filter correctly', () => {
+    const performedSort = sortFiltersByTypeAndIndex(rawFilters);
+    expect(performedSort).toEqual(sortedFilters);
+  });
+
   it('Should sort and dedupe filter correctly', () => {
-    const performedSort = sortAndDeduplicateFilterChips(rawFilters);
-    expect(performedSort).toEqual(sortedDedupedFilters);
+    const performedDeduped = sortAndDeduplicateFilterChips(rawFilters);
+    expect(performedDeduped).toEqual(dedupedFilters);
   });
 });
