@@ -1,14 +1,18 @@
 import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 import classes from './DrawerSave.module.scss';
 import {
   ActionItem,
-  BodyShort,
-  Button,
   ContentBox,
   Spinner,
+  InformationCard,
+  Radio,
+  RadioOption,
+  Button,
+  BodyLong,
+  BodyShort,
   VartypeEnum,
 } from '@pxweb2/pxweb2-ui';
 import {
@@ -28,6 +32,135 @@ import useVariables from '../../../context/useVariables';
 import useTableData from '../../../context/useTableData';
 import { problemMessage } from '../../../util/problemMessage';
 
+type SaveQueryOptions = 'selected' | 'from' | 'top';
+type SaveQueryButtonState = 'create' | 'loading' | 'copy' | 'copied';
+
+type SaveQueryButtonProps = {
+  buttonRef?: React.RefObject<HTMLButtonElement | null>;
+  text?: string;
+  onClick?: () => void;
+  saveQueryUrl?: string;
+};
+
+export const SaveQueryCreateButton: React.FC<SaveQueryButtonProps> = ({
+  buttonRef,
+  onClick,
+}) => {
+  const { t } = useTranslation();
+  return (
+    <Button
+      ref={buttonRef}
+      variant="primary"
+      size="medium"
+      iconPosition="left"
+      icon={'Link'}
+      onClick={onClick}
+    >
+      {t('presentation_page.sidemenu.save.savequery.createButton')}
+    </Button>
+  );
+};
+
+export const SaveQueryLoadingButton: React.FC<SaveQueryButtonProps> = ({
+  buttonRef,
+}) => {
+  const { t } = useTranslation();
+  return (
+    <Button
+      ref={buttonRef}
+      variant="primary"
+      size="medium"
+      iconPosition="left"
+      loading={true}
+      aria-busy={true}
+      aria-label={t('presentation_page.sidemenu.save.savequery.loadingStatus')}
+    ></Button>
+  );
+};
+
+export const SaveQueryCopyButton: React.FC<SaveQueryButtonProps> = ({
+  buttonRef,
+  onClick,
+  saveQueryUrl,
+}) => {
+  const { t } = useTranslation();
+  return (
+    <>
+      <Button
+        ref={buttonRef}
+        variant="primary"
+        size="medium"
+        icon={'Copy'}
+        onClick={onClick}
+      >
+        {t('presentation_page.sidemenu.save.savequery.copyButton')}
+      </Button>
+      <BodyShort size="small" className={classes.copyText}>
+        {saveQueryUrl}
+      </BodyShort>
+    </>
+  );
+};
+
+export const SaveQueryCopiedButton: React.FC<SaveQueryButtonProps> = ({
+  buttonRef,
+  onClick,
+  saveQueryUrl,
+}) => {
+  const { t } = useTranslation();
+  return (
+    <>
+      <Button
+        ref={buttonRef}
+        variant="primary"
+        size="medium"
+        iconPosition="left"
+        icon={'Check'}
+        onClick={onClick}
+        aria-label={t('presentation_page.sidemenu.save.savequery.copyButton')}
+      >
+        {t('presentation_page.sidemenu.save.savequery.copiedButton')}
+      </Button>
+      <BodyShort size="small" className={classes.copyText}>
+        {saveQueryUrl}
+      </BodyShort>
+    </>
+  );
+};
+
+const SqScreenReaderStatus: React.FC<{
+  queryId: string | null;
+  isCopied: boolean;
+}> = ({ queryId, isCopied }) => {
+  const { t } = useTranslation();
+  let createMessage = '';
+  let copyMessage = '';
+
+  if (isCopied) {
+    copyMessage = t('presentation_page.sidemenu.save.savequery.copyStatus');
+  }
+
+  if (queryId) {
+    createMessage = t(
+      'presentation_page.sidemenu.save.savequery.createStatus',
+      {
+        query: queryId,
+      },
+    );
+  }
+
+  return (
+    <>
+      <span aria-live="polite" className={classes['sr-only']}>
+        {createMessage}
+      </span>
+      <span aria-live="polite" className={classes['sr-only']}>
+        {copyMessage}
+      </span>
+    </>
+  );
+};
+
 export type DrawerSaveProps = {
   readonly tableId: string;
 };
@@ -39,12 +172,32 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
   const stub = useTableData().data?.stub;
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
-  const [sqUrl, setSqUrl] = useState('');
+  const [saveQueryUrl, setsaveQueryUrl] = useState('');
+  const [queryId, setQueryId] = useState<string | null>(null);
+  const [isCopied, setIsCopied] = useState(false);
+  const [selectedRadio, setSelectedRadio] = useState<SaveQueryOptions>('top');
+  const [saveQueryButtonState, setSaveQueryButtonState] =
+    useState<SaveQueryButtonState>('create');
 
   // If time filter is used when saving query, we need to know the id of the time variable
   const timeVarId = useTableData().data?.metadata.variables.find(
     (v) => v.type === VartypeEnum.TIME_VARIABLE,
   )?.id;
+
+  const loadingBtnRef = useRef<HTMLButtonElement>(null);
+  const copyBtnRef = useRef<HTMLButtonElement>(null);
+  const copiedBtnRef = useRef<HTMLButtonElement>(null);
+
+  // Focus management effect
+  useEffect(() => {
+    if (saveQueryButtonState === 'loading') {
+      loadingBtnRef.current?.focus();
+    } else if (saveQueryButtonState === 'copy') {
+      copyBtnRef.current?.focus();
+    } else if (saveQueryButtonState === 'copied') {
+      copiedBtnRef.current?.focus();
+    }
+  }, [saveQueryButtonState]);
 
   useEffect(() => {
     if (errorMsg !== '') {
@@ -158,7 +311,6 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
   // and handles success and error cases, updating the loading state accordingly.
   async function createSavedQuery(timeFilter?: TimeFilter): Promise<void> {
     const variablesSelection = getVariableSelection(timeFilter);
-    setIsLoading(true);
 
     // Create saved query using the export utility
     await createNewSavedQuery(
@@ -166,22 +318,81 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
       i18n.language,
       variablesSelection,
       OutputFormatType.JSON_STAT2,
-    )
-      .then(
-        (id) => {
-          // Create saved query URL
-          const savedQueryUrl = createSavedQueryURL(id);
-          setSqUrl(savedQueryUrl);
-        },
-        (error) => {
-          // Handle error during export
-          const err = error as ApiError;
-          setErrorMsg(problemMessage(err));
-        },
-      )
-      .finally(() => {
-        setIsLoading(false);
-      });
+    ).then(
+      (id) => {
+        // Create saved query URL
+        const savedQueryUrl = createSavedQueryURL(id);
+        setsaveQueryUrl(savedQueryUrl);
+        setQueryId(id);
+        setSaveQueryButtonState('copy');
+      },
+      (error) => {
+        // Handle error during export
+        const err = error as ApiError;
+        setErrorMsg(problemMessage(err));
+        setSaveQueryButtonState('create');
+      },
+    );
+  }
+
+  const radioOptions: RadioOption[] = [
+    {
+      value: 'selected',
+      label: t(
+        'presentation_page.sidemenu.save.savequery.periodOptions.selected',
+      ),
+    },
+    {
+      value: 'from',
+      label: t('presentation_page.sidemenu.save.savequery.periodOptions.from'),
+    },
+    {
+      value: 'top',
+      label: t('presentation_page.sidemenu.save.savequery.periodOptions.top'),
+    },
+  ];
+
+  function onCreateClick() {
+    if (saveQueryButtonState !== 'create') {
+      return;
+    }
+
+    setSaveQueryButtonState('loading');
+    let timeFilter: TimeFilter = 'selected'; // Default to 'selected'
+
+    if (selectedRadio === 'from') {
+      timeFilter = 'from';
+    } else if (selectedRadio === 'top') {
+      timeFilter = 'top';
+    }
+
+    createSavedQuery(timeFilter);
+  }
+
+  function onCopyClick() {
+    if (saveQueryButtonState === 'copy') {
+      setSaveQueryButtonState('copied');
+    }
+    // Copy saveQueryUrl to clipboard
+    if (saveQueryUrl) {
+      navigator.clipboard
+        .writeText(saveQueryUrl)
+        .then(() => {
+          // Success: show copied status
+          setIsCopied(true);
+          setTimeout(() => {
+            setIsCopied(false);
+          }, 200);
+        })
+        .catch(() => {
+          setErrorMsg('Could not copy url to clipboard.');
+        });
+    }
+  }
+
+  function handleRadioChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setSelectedRadio(event.target.value as SaveQueryOptions);
+    setSaveQueryButtonState('create');
   }
 
   return (
@@ -225,17 +436,47 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
           </div>
         )}
       </ContentBox>
-      <ContentBox title="Saved query">
-        <Button onClick={() => createSavedQuery()} variant="primary">
-          Create saved query (same selection)
-        </Button>
-        <Button onClick={() => createSavedQuery('from')} variant="primary">
-          Create saved query (from)
-        </Button>
-        <Button onClick={() => createSavedQuery('top')} variant="primary">
-          Create saved query (top)
-        </Button>
-        <BodyShort>{sqUrl}</BodyShort>
+      <ContentBox title={t('presentation_page.sidemenu.save.savequery.title')}>
+        <div className={classes.informationCardWrapper}>
+          <InformationCard icon="InformationCircle">
+            <BodyLong size="medium">
+              {t('presentation_page.sidemenu.save.savequery.info')}
+            </BodyLong>
+          </InformationCard>
+        </div>
+        <div className={classes.radioGroup}>
+          <Radio
+            legend={t('presentation_page.sidemenu.save.savequery.radioLegend')}
+            hideLegend={false}
+            options={radioOptions}
+            selectedOption={selectedRadio}
+            onChange={handleRadioChange}
+            name="option"
+          />
+        </div>
+        <div className={classes.buttonWrapper}>
+          {saveQueryButtonState === 'create' && (
+            <SaveQueryCreateButton onClick={onCreateClick} />
+          )}
+          {saveQueryButtonState === 'loading' && (
+            <SaveQueryLoadingButton buttonRef={loadingBtnRef} />
+          )}
+          {saveQueryButtonState === 'copy' && (
+            <SaveQueryCopyButton
+              buttonRef={copyBtnRef}
+              onClick={onCopyClick}
+              saveQueryUrl={saveQueryUrl}
+            />
+          )}
+          {saveQueryButtonState === 'copied' && (
+            <SaveQueryCopiedButton
+              buttonRef={copiedBtnRef}
+              onClick={onCopyClick}
+              saveQueryUrl={saveQueryUrl}
+            />
+          )}
+          <SqScreenReaderStatus queryId={queryId} isCopied={isCopied} />
+        </div>
       </ContentBox>
     </div>
   );
