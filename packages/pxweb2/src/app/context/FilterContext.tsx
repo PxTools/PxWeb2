@@ -15,6 +15,7 @@ import {
   getFilters,
   getTimeUnits,
   updateSubjectTreeCounts,
+  flattenSubjectTreeToList,
 } from '../util/startPageFilters';
 import { shouldTableBeIncluded } from '../util/tableHandler';
 
@@ -27,6 +28,7 @@ const initialState: StartPageState = Object.freeze({
   loading: false,
   error: '',
   originalSubjectTree: [],
+  subjectOrderList: [],
 });
 
 export const FilterContext = createContext<{
@@ -61,17 +63,21 @@ function reducer(
   action: ReducerActionTypes,
 ): StartPageState {
   switch (action.type) {
-    case ActionType.RESET_FILTERS:
+    case ActionType.RESET_FILTERS: {
+      const subjectOrder = flattenSubjectTreeToList(action.payload.subjects);
+
       return {
         ...initialState,
         availableTables: action.payload.tables,
         filteredTables: action.payload.tables,
         originalSubjectTree: action.payload.subjects,
+        subjectOrderList: subjectOrder,
         availableFilters: {
           subjectTree: action.payload.subjects,
           timeUnits: getTimeUnits(action.payload.tables),
         },
       };
+    }
     case ActionType.ADD_FILTER: {
       const newFilters = [...state.activeFilters, ...action.payload];
       const filteredTables = state.availableTables.filter((table) =>

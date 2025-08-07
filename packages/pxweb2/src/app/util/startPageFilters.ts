@@ -148,10 +148,8 @@ export function deduplicateFiltersByValue(filters: Filter[]): Filter[] {
 
 export function sortAndDeduplicateFilterChips(
   filters: Filter[],
-  subjectTree: PathItem[],
+  subjectOrder: string[],
 ): Filter[] {
-  const subjectOrder = flattenSubjectTreeToList(subjectTree);
-  console.log(subjectOrder);
   const sorted = sortFiltersByTypeAndSubjectOrder(filters, subjectOrder);
   return deduplicateFiltersByValue(sorted);
 }

@@ -487,7 +487,7 @@ const StartPage = () => {
                     {renderRemoveAllChips()}
                     {sortAndDeduplicateFilterChips(
                       state.activeFilters,
-                      state.availableFilters.subjectTree,
+                      state.subjectOrderList,
                     ).map((filter) => (
                       <Chips.Removable
                         onClick={() => {
