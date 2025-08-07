@@ -1,0 +1,89 @@
+import { useLocation, useMatch } from 'react-router';
+import { useTranslation } from 'react-i18next';
+
+import { getConfig } from '../config/getConfig';
+
+// Utility to remove trailing slash except for root "/"
+function removeTrailingSlash(path: string) {
+  return path.length > 1 ? path.replace(/\/$/, '') : path;
+}
+
+// Title and link tags will automatically be hoisted in the <head> section
+
+// Renders the dynamic title based on the current route
+// If the route matches "/:lang/table/:tableId", it uses tableId as title
+// Otherwise, it defaults to the title from the translation file
+export function DynamicTitle() {
+  const { t } = useTranslation();
+  // Try to match both with and without lang in path
+  const matchWithLang = useMatch('/:lang/table/:tableId');
+  const matchWithoutLang = useMatch('/table/:tableId');
+
+  const tableId =
+    matchWithLang?.params.tableId || matchWithoutLang?.params.tableId;
+
+  const title = tableId || t('common.title');
+
+  return (
+    <>
+      <title>{title}</title>
+    </>
+  );
+}
+
+// Renders the canonical link tag
+export function CanonicalUrl() {
+  const location = useLocation();
+  const cleanPath = removeTrailingSlash(location.pathname);
+  const canonicalUrl = `${window.location.origin}${cleanPath}`;
+  return <link rel="canonical" href={canonicalUrl} />;
+}
+
+// Renders hreflang alternate link tags
+export function HrefLang() {
+  const location = useLocation();
+  const config = getConfig();
+  const supportedLanguages = config.language.supportedLanguages;
+  const showDefaultLanguageInPath = config.language.showDefaultLanguageInPath;
+  const defaultLanguage = config.language.defaultLanguage;
+
+  interface SupportedLanguage {
+    shorthand: string;
+  }
+
+  function stripLangPrefix(pathname: string) {
+    // Match "/xx" where xx is a supported language code
+    const match = pathname.match(/^\/([a-z]{2})(\/|$)/i);
+    if (
+      match &&
+      supportedLanguages.some(
+        (lang: SupportedLanguage) => lang.shorthand === match[1],
+      )
+    ) {
+      return pathname.replace(/^\/[a-z]{2}/i, '') || '/';
+    }
+    return pathname;
+  }
+
+  return (
+    <>
+      {supportedLanguages.map((lang: SupportedLanguage) => {
+        const cleanPath = removeTrailingSlash(
+          stripLangPrefix(location.pathname),
+        );
+        const langUrl =
+          !showDefaultLanguageInPath && lang.shorthand === defaultLanguage
+            ? `${window.location.origin}${cleanPath}`
+            : `${window.location.origin}/${lang.shorthand}${cleanPath}`;
+        return (
+          <link
+            key={lang.shorthand}
+            rel="alternate"
+            hrefLang={lang.shorthand}
+            href={langUrl}
+          />
+        );
+      })}
+    </>
+  );
+}
