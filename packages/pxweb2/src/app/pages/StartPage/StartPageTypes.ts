@@ -36,7 +36,7 @@ export type StartPageState = {
   availableFilters: {
     subjectTree: PathItem[];
     timeUnits: Map<string, number>;
-    yearRange: { min: number; max: number };
+    yearRange: YearRange;
   };
   activeFilters: Filter[];
   loading: boolean;
