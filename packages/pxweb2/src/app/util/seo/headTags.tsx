@@ -24,11 +24,8 @@ export function DynamicTitle() {
 
   const title = tableId || t('common.title');
 
-  return (
-    <>
-      <title>{title}</title>
-    </>
-  );
+  document.title = title;
+  return null;
 }
 
 // Renders the canonical link tag
