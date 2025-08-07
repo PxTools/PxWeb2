@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest';
 import {
   findAncestors,
   findChildren,
-  sortFiltersByTypeAndIndex,
-  sortAndDeduplicateFilterChips,
+  sortFiltersByTypeAndSubjectOrder,
+  deduplicateFiltersByValue,
   organizePaths,
 } from '../util/startPageFilters';
 import { Filter, type PathItem } from '../pages/StartPage/StartPageTypes';
@@ -197,26 +197,35 @@ describe('Correctly sort and deduplicate filters', () => {
       type: 'subject',
       value: 'in01',
       label: 'Arbeid og lønn',
-      uniqueId: '2vij38ql69',
-      index: 2,
-      sortIndex: 2,
-    },
-    {
-      type: 'subject',
-      value: 'aku',
-      label: 'Arbeidskraftundersøkelsen',
-      uniqueId: 'nem1ho60cb',
-      index: 1,
-      sortIndex: 1,
-    },
-    {
-      type: 'subject',
-      value: 'aku',
-      label: 'Arbeidskraftundersøkelsen',
-      uniqueId: 'fd9rg6iebf',
+      uniqueId: 'in__in01',
       index: 0,
-      sortIndex: 0,
     },
+    {
+      type: 'subject',
+      value: 'aku',
+      label: 'Arbeidskraftundersøkelsen',
+      uniqueId: 'al__al03__aku',
+      index: 0,
+    },
+    {
+      type: 'subject',
+      value: 'aku',
+      label: 'Arbeidskraftundersøkelsen',
+      uniqueId: 'al__al06__aku',
+      index: 0,
+    },
+  ];
+
+  const subjectOrder: string[] = [
+    'al',
+    'al__al03',
+    'al__al03__aku',
+    'al__al03__regledig',
+    'al__al06',
+    'al__al06__aku',
+    'in',
+    'in__in01',
+    'in__in01__aku',
   ];
 
   const sortedFilters: Filter[] = [
@@ -224,25 +233,22 @@ describe('Correctly sort and deduplicate filters', () => {
       type: 'subject',
       value: 'aku',
       label: 'Arbeidskraftundersøkelsen',
-      uniqueId: 'fd9rg6iebf',
+      uniqueId: 'al__al03__aku',
       index: 0,
-      sortIndex: 0,
     },
     {
       type: 'subject',
       value: 'aku',
       label: 'Arbeidskraftundersøkelsen',
-      uniqueId: 'nem1ho60cb',
-      index: 1,
-      sortIndex: 1,
+      uniqueId: 'al__al06__aku',
+      index: 0,
     },
     {
       type: 'subject',
       value: 'in01',
       label: 'Arbeid og lønn',
-      uniqueId: '2vij38ql69',
-      index: 2,
-      sortIndex: 2,
+      uniqueId: 'in__in01',
+      index: 0,
     },
   ];
 
@@ -251,27 +257,26 @@ describe('Correctly sort and deduplicate filters', () => {
       type: 'subject',
       value: 'aku',
       label: 'Arbeidskraftundersøkelsen',
-      uniqueId: 'fd9rg6iebf',
+      uniqueId: 'al__al03__aku',
       index: 0,
-      sortIndex: 0,
     },
     {
       type: 'subject',
       value: 'in01',
       label: 'Arbeid og lønn',
-      uniqueId: '2vij38ql69',
-      index: 2,
-      sortIndex: 2,
+      uniqueId: 'in__in01',
+      index: 0,
     },
   ];
 
-  it('Should sort filter correctly', () => {
-    const performedSort = sortFiltersByTypeAndIndex(rawFilters);
-    expect(performedSort).toEqual(sortedFilters);
-  });
-
   it('Should sort and dedupe filter correctly', () => {
-    const performedDeduped = sortAndDeduplicateFilterChips(rawFilters);
+    const performedSort = sortFiltersByTypeAndSubjectOrder(
+      rawFilters,
+      subjectOrder,
+    );
+    expect(performedSort).toEqual(sortedFilters);
+
+    const performedDeduped = deduplicateFiltersByValue(sortedFilters);
     expect(performedDeduped).toEqual(dedupedFilters);
   });
 });

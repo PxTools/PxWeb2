@@ -27,7 +27,6 @@ const initialState: StartPageState = Object.freeze({
   loading: false,
   error: '',
   originalSubjectTree: [],
-  sortCounter: 0,
 });
 
 export const FilterContext = createContext<{
@@ -74,25 +73,14 @@ function reducer(
         },
       };
     case ActionType.ADD_FILTER: {
-      let nextSortIndex = state.sortCounter;
-      const newFilters = action.payload.map((filter) => ({
-        ...filter,
-        sortIndex: nextSortIndex++,
-      }));
-      const allFilters = [...state.activeFilters, ...newFilters];
-      const sortedFilters = [...allFilters].sort((a, b) => {
-        const aSortIndex = a.sortIndex ?? 0;
-        const bSortIndex = b.sortIndex ?? 0;
-        return aSortIndex - bSortIndex;
-      });
+      const newFilters = [...state.activeFilters, ...action.payload];
       const filteredTables = state.availableTables.filter((table) =>
-        shouldTableBeIncluded(table, sortedFilters),
+        shouldTableBeIncluded(table, newFilters),
       );
       const addType = action.payload[0]?.type;
       return {
         ...state,
-        sortCounter: nextSortIndex,
-        activeFilters: sortedFilters,
+        activeFilters: newFilters,
         filteredTables,
         availableFilters: {
           subjectTree:

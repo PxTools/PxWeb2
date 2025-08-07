@@ -485,32 +485,30 @@ const StartPage = () => {
                 <div className={styles.filterPillContainer}>
                   <Chips>
                     {renderRemoveAllChips()}
-                    {sortAndDeduplicateFilterChips(state.activeFilters).map(
-                      (filter) => (
-                        <Chips.Removable
-                          onClick={() => {
-                            dispatch({
-                              type: ActionType.REMOVE_FILTER,
-                              payload: {
-                                value: filter.value,
-                                type: filter.type,
-                              },
-                            });
-                            setVisibleCount(paginationCount);
-                          }}
-                          aria-label={t(
-                            'start_page.filter.remove_filter_aria',
-                            {
+                    {sortAndDeduplicateFilterChips(
+                      state.activeFilters,
+                      state.availableFilters.subjectTree,
+                    ).map((filter) => (
+                      <Chips.Removable
+                        onClick={() => {
+                          dispatch({
+                            type: ActionType.REMOVE_FILTER,
+                            payload: {
                               value: filter.value,
+                              type: filter.type,
                             },
-                          )}
-                          key={filter.value}
-                          truncate
-                        >
-                          {filter.label}
-                        </Chips.Removable>
-                      ),
-                    )}
+                          });
+                          setVisibleCount(paginationCount);
+                        }}
+                        aria-label={t('start_page.filter.remove_filter_aria', {
+                          value: filter.value,
+                        })}
+                        key={filter.value}
+                        truncate
+                      >
+                        {filter.label}
+                      </Chips.Removable>
+                    ))}
                   </Chips>
                 </div>
               )}

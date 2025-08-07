@@ -112,7 +112,10 @@ export function updateSubjectTreeCounts(
   return originalTree.map(updateNode);
 }
 
-export function sortFiltersByTypeAndIndex(filters: Filter[]): Filter[] {
+export function sortFiltersByTypeAndSubjectOrder(
+  filters: Filter[],
+  subjectOrder: string[],
+): Filter[] {
   const typeOrder = ['subject', 'timeUnit'];
 
   return filters.slice().sort((a, b) => {
@@ -121,7 +124,14 @@ export function sortFiltersByTypeAndIndex(filters: Filter[]): Filter[] {
     if (typeComparison !== 0) {
       return typeComparison;
     }
-    return (a.sortIndex ?? 0) - (b.sortIndex ?? 0);
+
+    if (a.type === 'subject' && b.type === 'subject') {
+      const aIdx = subjectOrder.indexOf(a.uniqueId ?? '');
+      const bIdx = subjectOrder.indexOf(b.uniqueId ?? '');
+      return aIdx - bIdx;
+    }
+
+    return 0;
   });
 }
 
@@ -136,8 +146,13 @@ export function deduplicateFiltersByValue(filters: Filter[]): Filter[] {
   });
 }
 
-export function sortAndDeduplicateFilterChips(filters: Filter[]): Filter[] {
-  const sorted = sortFiltersByTypeAndIndex(filters);
+export function sortAndDeduplicateFilterChips(
+  filters: Filter[],
+  subjectTree: PathItem[],
+): Filter[] {
+  const subjectOrder = flattenSubjectTreeToList(subjectTree);
+  console.log(subjectOrder);
+  const sorted = sortFiltersByTypeAndSubjectOrder(filters, subjectOrder);
   return deduplicateFiltersByValue(sorted);
 }
 
@@ -190,4 +205,21 @@ export function findChildren(
     }
   }
   return [];
+}
+export function flattenSubjectTreeToList(subjectTree: PathItem[]): string[] {
+  const result: string[] = [];
+
+  function traverseTree(nodes: PathItem[]) {
+    for (const node of nodes) {
+      if (node.uniqueId) {
+        result.push(node.uniqueId);
+      }
+      if (node.children?.length) {
+        traverseTree(node.children);
+      }
+    }
+  }
+
+  traverseTree(subjectTree);
+  return result;
 }
