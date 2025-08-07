@@ -112,20 +112,46 @@ export function updateSubjectTreeCounts(
   return originalTree.map(updateNode);
 }
 
-export function sortAndDeduplicateFilterChips(filters: Filter[]): Filter[] {
+export function sortFiltersByTypeAndSubjectOrder(
+  filters: Filter[],
+  subjectOrder: string[],
+): Filter[] {
   const typeOrder = ['subject', 'timeUnit'];
-  const sorted = filters.toSorted((a, b) => {
+
+  return filters.slice().sort((a, b) => {
     const typeComparison =
       typeOrder.indexOf(a.type) - typeOrder.indexOf(b.type);
     if (typeComparison !== 0) {
       return typeComparison;
     }
-    return a.index - b.index;
+
+    if (a.type === 'subject' && b.type === 'subject') {
+      const aIdx = subjectOrder.indexOf(a.uniqueId ?? '');
+      const bIdx = subjectOrder.indexOf(b.uniqueId ?? '');
+      return aIdx - bIdx;
+    }
+
+    return 0;
   });
-  return sorted.filter(
-    (obj1, i, original) =>
-      original.findIndex((obj2) => obj2.value === obj1.value) === i,
-  );
+}
+
+export function deduplicateFiltersByValue(filters: Filter[]): Filter[] {
+  const seen = new Set<string>();
+  return filters.filter((filter) => {
+    if (seen.has(filter.value)) {
+      return false;
+    }
+    seen.add(filter.value);
+    return true;
+  });
+}
+
+export function sortAndDeduplicateFilterChips(
+  filters: Filter[],
+  subjectOrder: string[],
+): Filter[] {
+  const sorted = sortFiltersByTypeAndSubjectOrder(filters, subjectOrder);
+  return deduplicateFiltersByValue(sorted);
 }
 
 // Find parents, and parents' parents all the way up
@@ -177,4 +203,21 @@ export function findChildren(
     }
   }
   return [];
+}
+export function flattenSubjectTreeToList(subjectTree: PathItem[]): string[] {
+  const result: string[] = [];
+
+  function traverseTree(nodes: PathItem[]) {
+    for (const node of nodes) {
+      if (node.uniqueId) {
+        result.push(node.uniqueId);
+      }
+      if (node.children?.length) {
+        traverseTree(node.children);
+      }
+    }
+  }
+
+  traverseTree(subjectTree);
+  return result;
 }

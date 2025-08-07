@@ -36,6 +36,7 @@ export type StartPageState = {
   loading: boolean;
   error: string;
   originalSubjectTree: PathItem[];
+  subjectOrderList: string[];
 };
 
 export type ReducerActionTypes =
