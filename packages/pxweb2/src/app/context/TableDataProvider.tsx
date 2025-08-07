@@ -32,6 +32,7 @@ export interface TableDataContextType {
   isInitialized: boolean;
   data: PxTable | undefined;
   fetchTableData: (tableId: string, i18n: i18n, isMobile: boolean) => void;
+  fetchSavedQuery: (queryId: string, isMobile: boolean) => void;
   pivotToMobile: () => void;
   pivotToDesktop: () => void;
   pivotCW: () => void;
@@ -51,6 +52,9 @@ const TableDataContext = createContext<TableDataContextType | undefined>({
   data: undefined,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   fetchTableData: () => {},
+  fetchSavedQuery: () => {
+    ('');
+  },
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   pivotToMobile: () => {},
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -157,7 +161,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   ]);
 
   const fetchSavedQuery = React.useCallback(
-    async (loadSavedQueryId: string) => {
+    async (loadSavedQueryId: string, isMobile: boolean) => {
       console.log({ loadSavedQueryId });
 
       // Call SavedQueriesService.getSaveQuery to get the saved query metadata and codelists. Use this for setting selected values in variables provider.
@@ -165,8 +169,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
       const selectedCodeLists: SavedQueryCodeListType[] =
         mapSavedQueryCodelistResponse(result);
-
-      console.log('list=', selectedCodeLists);
 
       const res = await SavedQueriesService.runSaveQuery(loadSavedQueryId);
       // Map response to json-stat2 Dataset
@@ -200,6 +202,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       variables.syncVariablesAndValues(sqValues);
       variables.setIsLoadingMetadata(false);
       variables.setHasLoadedDefaultSelection(true);
+      initializeStubAndHeading(pxTable, isMobile);
       setData(pxTable);
 
       // Store as accumulated data
@@ -207,32 +210,8 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
       //TODO update selection i variables provider
     },
-    [],
+    [] /*, fetchSavedQueryDefinition */,
   );
-
-  // const fetchSavedQueryDefinition = React.useCallback(
-  //   async (loadSavedQueryId: string) => {
-  //     console.log({ loadSavedQueryId });
-
-  //     // TODO: ? call await SavedQueriesService.getSaveQuery(loadSavedQueryId);
-  //     //to get the saved query metadata and codelists. Use this for setting selected values in variables provider.
-
-  //     const res = await SavedQueriesService.getSaveQuery(loadSavedQueryId);
-
-  //     const selectedCodeLists: SavedQueryCodeListType[] =
-  //       mapSavedQueryCodelistResponse(res);
-
-  //     console.log('list=', selectedCodeLists);
-  //   },
-  //   [],
-  // );
-
-  useEffect(() => {
-    if (variables.loadSavedQueryId?.length > 0) {
-      fetchSavedQuery(variables.loadSavedQueryId);
-      //fetchSavedQueryDefinition(variables.loadSavedQueryId);
-    }
-  }, [fetchSavedQuery, variables.loadSavedQueryId]);
 
   /**
    * Remember order of variables in stub and heading when table setup is changed.
@@ -337,9 +316,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       if (codelistChanged) {
         setData(undefined);
       }
-      console.log('fetchWithoutValidAccData');
-      //   if (variables.loadSavedQueryId.length > 0) {
-      console.log('fetchWithoutValidAccData IF NOT savedquery');
       const pxTable: PxTable = await fetchFromApi(
         tableId,
         i18n,
@@ -784,7 +760,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
           } else {
             pivotForDesktop(pxTable);
           }
-
           setData(pxTable);
           return;
         }
@@ -1251,6 +1226,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     () => ({
       data,
       /* loading, error  */ fetchTableData,
+      fetchSavedQuery,
       pivotToMobile,
       pivotToDesktop,
       pivotCW,
@@ -1260,6 +1236,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     [
       data,
       fetchTableData,
+      fetchSavedQuery,
       pivotToMobile,
       pivotToDesktop,
       pivotCW,

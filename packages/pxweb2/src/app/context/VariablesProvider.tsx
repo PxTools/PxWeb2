@@ -17,8 +17,9 @@ export type VariablesContextType = {
   toString: () => string;
   hasLoadedDefaultSelection: boolean;
   setHasLoadedDefaultSelection: React.Dispatch<React.SetStateAction<boolean>>;
-  setLoadSavedQueryId: React.Dispatch<React.SetStateAction<string>>;
-  loadSavedQueryId: string;
+  //setLoadSavedQueryId: React.Dispatch<React.SetStateAction<string>>;
+  //loadSavedQueryId: string;
+  getSavedQueryId: () => string;
   setSelectedVBValues: React.Dispatch<React.SetStateAction<SelectedVBValues[]>>;
   selectedVBValues: SelectedVBValues[];
   isMatrixSizeAllowed: boolean;
@@ -49,8 +50,9 @@ export const VariablesContext = createContext<VariablesContextType>({
 
   hasLoadedDefaultSelection: false,
   setHasLoadedDefaultSelection: () => false,
-  setLoadSavedQueryId: () => '',
-  loadSavedQueryId: '',
+  //setLoadSavedQueryId: () => '',setSelectedVBValues
+  //loadSavedQueryId: '',
+  getSavedQueryId: () => '',
   setSelectedVBValues: () => [],
   selectedVBValues: [],
   setIsLoadingMetadata: () => false,
@@ -76,7 +78,7 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isLoadingMetadata, setIsLoadingMetadata] = useState<boolean>(false);
   const [hasLoadedDefaultSelection, setHasLoadedDefaultSelection] =
     useState(false);
-  const [loadSavedQueryId, setLoadSavedQueryId] = useState('');
+  //const [loadSavedQueryId, setLoadSavedQueryId] = useState('');
   const [selectedVBValues, setSelectedVBValues] = useState<SelectedVBValues[]>(
     [],
   );
@@ -247,6 +249,17 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
   const getSelectedMatrixSize = () => {
     return selectedMatrixSize;
   };
+
+  const getSavedQueryId = () => {
+    let savedQueryId: string = '';
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.has('sq')) {
+        savedQueryId = params.get('sq') ?? '';
+      }
+    }
+    return savedQueryId;
+  };
   const memoizedValues = useMemo(
     () => ({
       isInitialized,
@@ -257,12 +270,13 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
       getSelectedCodelistById,
       getUniqueIds,
       getSelectedMatrixSize,
+      getSavedQueryId,
       syncVariablesAndValues,
       toString,
       hasLoadedDefaultSelection,
       setHasLoadedDefaultSelection,
-      setLoadSavedQueryId,
-      loadSavedQueryId,
+      //setLoadSavedQueryId,
+      //loadSavedQueryId,
       setSelectedVBValues,
       selectedVBValues,
       isMatrixSizeAllowed,
@@ -280,12 +294,13 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
       getSelectedCodelistById,
       getUniqueIds,
       getSelectedMatrixSize,
+      getSavedQueryId,
       syncVariablesAndValues,
       toString,
       hasLoadedDefaultSelection,
       setHasLoadedDefaultSelection,
-      setLoadSavedQueryId,
-      loadSavedQueryId,
+      //setLoadSavedQueryId,
+      //loadSavedQueryId,
       setSelectedVBValues,
       selectedVBValues,
       isMatrixSizeAllowed,

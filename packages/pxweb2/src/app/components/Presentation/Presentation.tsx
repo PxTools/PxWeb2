@@ -121,7 +121,11 @@ export function Presentation({ selectedTabId, scrollRef }: propsType) {
       // && variables.loadSavedQueryId.length > 0
     ) {
       console.log('fetchTableDataIfAllowed initialRun');
-      fetchTableDataIfAllowed();
+      if (variables.getSavedQueryId()?.length > 0) {
+        tableData.fetchSavedQuery(variables.getSavedQueryId(), isMobile);
+      } else {
+        fetchTableDataIfAllowed();
+      }
       setIsMissingMandatoryVariables(false);
     } else {
       if (

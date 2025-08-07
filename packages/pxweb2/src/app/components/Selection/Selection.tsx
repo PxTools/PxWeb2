@@ -262,6 +262,10 @@ export function Selection({
   }, [errorMsg]);
 
   useEffect(() => {
+    console.log(
+      'variables.getSavedQueryId().length=',
+      variables.getSavedQueryId().length,
+    );
     let shouldGetDefaultSelection = !hasLoadedDefaultSelection;
 
     if (!selectedTabId) {
@@ -283,8 +287,28 @@ export function Selection({
     if (isLoadingMetadata === false) {
       variables.setIsLoadingMetadata(true);
     }
-
+    console.log('saveddqueryId 290', variables.getSavedQueryId());
     const metaDataDefaultSelection = true;
+    if (variables.getSavedQueryId().length > 0) {
+      console.log('saveddqueryId 291', variables.getSavedQueryId());
+      console.log(
+        '  variables.selectedVBValues',
+        variables.selectedVBValues[0],
+      );
+
+      console.log('HALLO');
+
+      variables.selectedVBValues
+        .filter((variable) => variable.selectedCodeList !== undefined)
+        .forEach((variable) => {
+          console.log(
+            'Variable ID:',
+            variable.id,
+            'Selected CodeList:',
+            variable.selectedCodeList,
+          );
+        });
+    }
 
     TableService.getMetadataById(
       selectedTabId,
@@ -313,41 +337,51 @@ export function Selection({
         setErrorMsg(`Could not get table: ${selectedTabId} ${error.message}`);
         setPxTableMetadata(null);
       });
-
-    if (shouldGetDefaultSelection) {
-      if (savedQueryId) {
-        // 1. trigger tabledataprovider to call the saved query
-        variables.setLoadSavedQueryId(savedQueryId);
-        // 2. make tabledataprovider set selected values in variablesprovider
-        // 3. Sync so selected values are marked as selected in variable boxes
-        // variables.syncVariablesAndValues(savedQuerySelection);
-      } else {
-        TableService.getDefaultSelection(selectedTabId, i18n.resolvedLanguage)
-          .then((selectionResponse) => {
-            const defaultSelection = mapTableSelectionResponse(
-              selectionResponse,
-            ).filter(
-              (variable) =>
-                variable.values.length > 0 ||
-                variable.selectedCodeList !== undefined,
-            );
-            setSelectedVBValues(defaultSelection);
-            variables.syncVariablesAndValues(defaultSelection);
-            variables.setIsLoadingMetadata(false);
-            variables.setHasLoadedDefaultSelection(true);
-          })
-          .catch((apiError: ApiError) => {
-            setErrorMsg(problemMessage(apiError, selectedTabId));
-          })
-          .catch((error) => {
-            setErrorMsg(
-              `Error getting default selection: ${selectedTabId} ${error.message}`,
-            );
-          });
-      }
+    console.log(
+      'Selection.tsx: shouldGetDefaultSelection:',
+      shouldGetDefaultSelection,
+    );
+    if (
+      shouldGetDefaultSelection &&
+      (savedQueryId?.length === 0 || savedQueryId === undefined)
+    ) {
+      //    if (savedQueryId) {
+      // 1. trigger tabledataprovider to call the saved query
+      // variables.setLoadSavedQueryId(savedQueryId);
+      // 2. make tabledataprovider set selected values in variablesprovider
+      // 3. Sync so selected values are marked as selected in variable boxes
+      // variables.syncVariablesAndValues(savedQuerySelection);
+      //  } else {
+      console.log(
+        ' i default selection !!!!!!!!!!!!!!!!!!!!!!!!!!!!!',
+        savedQueryId,
+      );
+      TableService.getDefaultSelection(selectedTabId, i18n.resolvedLanguage)
+        .then((selectionResponse) => {
+          const defaultSelection = mapTableSelectionResponse(
+            selectionResponse,
+          ).filter(
+            (variable) =>
+              variable.values.length > 0 ||
+              variable.selectedCodeList !== undefined,
+          );
+          setSelectedVBValues(defaultSelection);
+          variables.syncVariablesAndValues(defaultSelection);
+          variables.setIsLoadingMetadata(false);
+          variables.setHasLoadedDefaultSelection(true);
+        })
+        .catch((apiError: ApiError) => {
+          setErrorMsg(problemMessage(apiError, selectedTabId));
+        })
+        .catch((error) => {
+          setErrorMsg(
+            `Error getting default selection: ${selectedTabId} ${error.message}`,
+          );
+        });
+      //}
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedTabId, i18n.resolvedLanguage]);
+  }, [selectedTabId, i18n.resolvedLanguage, savedQueryId]);
 
   if (pxTableMetaToRender === null && pxTableMetadata !== null) {
     setPxTableMetaToRender(structuredClone(pxTableMetadata));
