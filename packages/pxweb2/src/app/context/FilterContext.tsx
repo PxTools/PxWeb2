@@ -6,6 +6,8 @@ import {
   useReducer,
 } from 'react';
 
+import { Filter } from '../pages/StartPage/StartPageTypes';
+
 import {
   ActionType,
   ReducerActionTypes,
@@ -17,7 +19,9 @@ import {
   updateSubjectTreeCounts,
 } from '../util/startPageFilters';
 import { shouldTableBeIncluded } from '../util/tableHandler';
+import useTranslation from 'i18next';
 
+const t = useTranslation.t;
 // Want to ensure this is never changed
 const initialState: StartPageState = Object.freeze({
   availableTables: [],
@@ -97,6 +101,53 @@ function reducer(
         },
       };
     }
+
+    case ActionType.ADD_SEARCH_FILTER: {
+      let newFilters: Filter[];
+
+      const newSearch: Filter = {
+        type: 'search',
+        label: `${t('presentation_page.sidemenu.selection.variablebox.search.label')}: ${action.payload}`,
+        value: action.payload,
+        index: 1,
+      };
+
+      const existingSearch = state.activeFilters.findIndex(
+        (filter) => filter.type == 'search',
+      );
+
+      // We remove the search filter if the string is empty (field cleared)
+      // Otherwise, update if it already exists, or if not add it.
+      // Ensures we only ever have one filter of type search
+      if (action.payload == '') {
+        newFilters = state.activeFilters.filter((filter) => {
+          return filter.type != 'search';
+        });
+      } else {
+        newFilters =
+          existingSearch >= 0
+            ? state.activeFilters.with(existingSearch, newSearch)
+            : [...state.activeFilters, newSearch];
+      }
+
+      const newTables = state.availableTables.filter((table) =>
+        shouldTableBeIncluded(table, newFilters),
+      );
+
+      return {
+        ...state,
+        activeFilters: newFilters,
+        filteredTables: newTables,
+        availableFilters: {
+          subjectTree: updateSubjectTreeCounts(
+            state.originalSubjectTree,
+            newTables,
+          ),
+          timeUnits: getTimeUnits(newTables),
+        },
+      };
+    }
+
     case ActionType.REMOVE_FILTER: {
       const removedType = action.payload.type;
       const currentFilters =

@@ -3,6 +3,7 @@ import { Table } from '@pxweb2/pxweb2-api-client';
 export enum ActionType {
   RESET_FILTERS = 'RESET_FILTERS',
   ADD_FILTER = 'ADD_FILTER',
+  ADD_SEARCH_FILTER = 'ADD_SEARCH_FILTER',
   REMOVE_FILTER = 'REMOVE_FILTER',
   UPDATE_TABLES = 'UPDATE_TABLES',
   SET_ERROR = 'SET_ERROR',
@@ -10,7 +11,7 @@ export enum ActionType {
 }
 
 export type Filter = {
-  type: 'timeUnit' | 'subject';
+  type: 'timeUnit' | 'subject' | 'search';
   value: string;
   label: string;
   index: number;
@@ -41,6 +42,7 @@ export type StartPageState = {
 export type ReducerActionTypes =
   | ResetFilterAction
   | AddFilterAction
+  | AddSearchFilterAction
   | RemoveFilterAction
   | UpdateTablesAction
   | SetErrorAction
@@ -59,6 +61,11 @@ type ResetFilterAction = {
 type AddFilterAction = {
   type: ActionType.ADD_FILTER;
   payload: Filter[];
+};
+
+type AddSearchFilterAction = {
+  type: ActionType.ADD_SEARCH_FILTER;
+  payload: string;
 };
 
 type UpdateTablesAction = {
