@@ -40,9 +40,6 @@ export function TableViewer() {
   const [hasFocus, setHasFocus] = useState<NavigationItem>('none');
   const [openedWithKeyboard, setOpenedWithKeyboard] = useState(false);
   const outerContainerRef = useRef<HTMLDivElement | null>(null);
-  /**
-   * Keep state if window screen size is mobile or desktop.
-   */
 
   const navigationBarRef = useRef<{
     selection: HTMLButtonElement;
