@@ -1,4 +1,20 @@
-import { vi } from 'vitest';
+import { vi, beforeEach } from 'vitest';
+
+// Disable CSS animations and transitions in tests for faster execution
+beforeEach(() => {
+  const style = document.createElement('style');
+  style.innerHTML = `
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0s !important;
+      animation-delay: 0s !important;
+      transition-duration: 0s !important;
+      transition-delay: 0s !important;
+    }
+  `;
+  document.head.appendChild(style);
+});
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
