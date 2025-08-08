@@ -130,7 +130,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * unless its dependencies (`codelistsInitialized` and `variables`) change.
    */
   const initializeCodelists = React.useCallback(() => {
-    if (!codelistsInitialized && variables.hasLoadedDefaultSelection) {
+    if (!codelistsInitialized && variables.hasLoadedInitialSelection) {
       const ids = variables.getUniqueIds();
       ids.forEach((id) => {
         const codelistId = variables.getSelectedCodelistById(id);
@@ -147,13 +147,13 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   }, [codelistsInitialized, variables]);
 
   useEffect(() => {
-    if (!codelistsInitialized && variables.hasLoadedDefaultSelection) {
+    if (!codelistsInitialized && variables.hasLoadedInitialSelection) {
       initializeCodelists();
     }
   }, [
     codelistsInitialized,
     initializeCodelists,
-    variables.hasLoadedDefaultSelection,
+    variables.hasLoadedInitialSelection,
   ]);
 
   const fetchSavedQuery = React.useCallback(

@@ -15,10 +15,8 @@ export type VariablesContextType = {
   getUniqueIds: () => string[];
   syncVariablesAndValues: (values: SelectedVBValues[]) => void;
   toString: () => string;
-  hasLoadedDefaultSelection: boolean;
-  setHasLoadedDefaultSelection: React.Dispatch<React.SetStateAction<boolean>>;
-  //setLoadSavedQueryId: React.Dispatch<React.SetStateAction<string>>;
-  //loadSavedQueryId: string;
+  hasLoadedInitialSelection: boolean;
+  setHasLoadedInitialSelection: React.Dispatch<React.SetStateAction<boolean>>;
   getSavedQueryId: () => string;
   setSelectedVBValues: React.Dispatch<React.SetStateAction<SelectedVBValues[]>>;
   selectedVBValues: SelectedVBValues[];
@@ -48,10 +46,8 @@ export const VariablesContext = createContext<VariablesContextType>({
   getUniqueIds: () => [],
   toString: () => '',
 
-  hasLoadedDefaultSelection: false,
-  setHasLoadedDefaultSelection: () => false,
-  //setLoadSavedQueryId: () => '',setSelectedVBValues
-  //loadSavedQueryId: '',
+  hasLoadedInitialSelection: false,
+  setHasLoadedInitialSelection: () => false,
   getSavedQueryId: () => '',
   setSelectedVBValues: () => [],
   selectedVBValues: [],
@@ -76,9 +72,8 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
     useState<PxTableMetadata | null>(null);
 
   const [isLoadingMetadata, setIsLoadingMetadata] = useState<boolean>(false);
-  const [hasLoadedDefaultSelection, setHasLoadedDefaultSelection] =
+  const [hasLoadedInitialSelection, setHasLoadedInitialSelection] =
     useState(false);
-  //const [loadSavedQueryId, setLoadSavedQueryId] = useState('');
   const [selectedVBValues, setSelectedVBValues] = useState<SelectedVBValues[]>(
     [],
   );
@@ -273,10 +268,8 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
       getSavedQueryId,
       syncVariablesAndValues,
       toString,
-      hasLoadedDefaultSelection,
-      setHasLoadedDefaultSelection,
-      //setLoadSavedQueryId,
-      //loadSavedQueryId,
+      hasLoadedInitialSelection,
+      setHasLoadedInitialSelection,
       setSelectedVBValues,
       selectedVBValues,
       isMatrixSizeAllowed,
@@ -297,10 +290,8 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
       getSavedQueryId,
       syncVariablesAndValues,
       toString,
-      hasLoadedDefaultSelection,
-      setHasLoadedDefaultSelection,
-      //setLoadSavedQueryId,
-      //loadSavedQueryId,
+      hasLoadedInitialSelection,
+      setHasLoadedInitialSelection,
       setSelectedVBValues,
       selectedVBValues,
       isMatrixSizeAllowed,

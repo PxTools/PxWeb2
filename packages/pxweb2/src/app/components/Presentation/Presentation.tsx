@@ -34,7 +34,7 @@ export function Presentation({ selectedTabId, scrollRef }: propsType) {
   const variables = useDebounce(useVariables(), 500);
   const {
     pxTableMetadata,
-    hasLoadedDefaultSelection,
+    hasLoadedInitialSelection,
     isLoadingMetadata,
     selectedVBValues,
   } = variables;
@@ -130,7 +130,7 @@ export function Presentation({ selectedTabId, scrollRef }: propsType) {
     } else {
       if (
         hasSelectedMandatoryVariables &&
-        hasLoadedDefaultSelection &&
+        hasLoadedInitialSelection &&
         !isLoadingMetadata &&
         !initialRun
       ) {
