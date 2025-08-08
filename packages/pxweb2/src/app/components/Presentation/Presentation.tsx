@@ -26,7 +26,7 @@ const MemoizedTable = React.memo(
     prevProps.isMobile === nextProps.isMobile,
 );
 export function Presentation({ selectedTabId, scrollRef }: propsType) {
-  const { isMobile } = useApp();
+  const { isMobile, getSavedQueryId } = useApp();
   const config = getConfig();
   const { i18n, t } = useTranslation();
   const tableData = useTableData();
@@ -34,7 +34,7 @@ export function Presentation({ selectedTabId, scrollRef }: propsType) {
   const variables = useDebounce(useVariables(), 500);
   const {
     pxTableMetadata,
-    hasLoadedDefaultSelection,
+    hasLoadedInitialSelection,
     isLoadingMetadata,
     selectedVBValues,
   } = variables;
@@ -115,17 +115,27 @@ export function Presentation({ selectedTabId, scrollRef }: propsType) {
         ),
       );
 
-    if (initialRun && !hasSelectedValues) {
-      fetchTableDataIfAllowed();
+    if (
+      initialRun &&
+      !hasSelectedValues
+      // && variables.loadSavedQueryId.length > 0
+    ) {
+      console.log('fetchTableDataIfAllowed initialRun');
+      if (getSavedQueryId()?.length > 0) {
+        tableData.fetchSavedQuery(getSavedQueryId(), isMobile);
+      } else {
+        fetchTableDataIfAllowed();
+      }
       setIsMissingMandatoryVariables(false);
     } else {
       if (
         hasSelectedMandatoryVariables &&
-        hasLoadedDefaultSelection &&
+        hasLoadedInitialSelection &&
         !isLoadingMetadata &&
         !initialRun
       ) {
         setIsFadingTable(true);
+        console.log('fetchTableDataIfAllowed Not INITIAL RUN');
         fetchTableDataIfAllowed();
         setIsMissingMandatoryVariables(false);
       }

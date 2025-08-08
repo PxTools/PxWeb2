@@ -1,9 +1,14 @@
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
 
-import { ApiError, TableService } from '@pxweb2/pxweb2-api-client';
+import {
+  ApiError,
+  TableService,
+  SavedQueriesService,
+} from '@pxweb2/pxweb2-api-client';
 import { mapJsonStat2Response } from '../../../mappers/JsonStat2ResponseMapper';
 import { mapTableSelectionResponse } from '../../../mappers/TableSelectionResponseMapper';
+
 import {
   PxTable,
   PxTableMetadata,
@@ -22,6 +27,7 @@ import {
   NavigationDrawer,
 } from '../NavigationDrawer';
 import useVariables from '../../context/useVariables';
+import useApp from '../../context/useApp';
 import { NavigationItem } from '../../components/NavigationMenu/NavigationItem/NavigationItemType';
 import useAccessibility from '../../context/useAccessibility';
 import { problemMessage } from '../../util/problemMessage';
@@ -223,10 +229,11 @@ export function Selection({
   hideMenuRef,
 }: SelectionProps) {
   const variables = useVariables();
+  const app = useApp();
   const {
     selectedVBValues,
     setSelectedVBValues,
-    hasLoadedDefaultSelection,
+    hasLoadedInitialSelection,
     isLoadingMetadata,
     pxTableMetadata,
     setPxTableMetadata,
@@ -243,6 +250,18 @@ export function Selection({
   const [prevLang, setPrevLang] = useState('');
   const { addModal, removeModal } = useAccessibility();
 
+  // Check for 'sq' query parameter and get its value
+  // let savedQueryId: string | undefined = undefined;
+  // if (typeof window !== 'undefined') {
+  //   const params = new URLSearchParams(window.location.search);
+  //   if (params.has('sq')) {
+  //     savedQueryId = params.get('sq') ?? undefined;
+  //   }
+  // }
+  let savedQueryId = app.getSavedQueryId();
+
+  //console.log({ savedQueryId });
+
   useEffect(() => {
     if (errorMsg) {
       console.error('ERROR: Selection:', errorMsg);
@@ -251,7 +270,11 @@ export function Selection({
   }, [errorMsg]);
 
   useEffect(() => {
-    let shouldGetDefaultSelection = !hasLoadedDefaultSelection;
+    console.log(
+      'variables.getSavedQueryId().length=',
+      app.getSavedQueryId().length,
+    );
+    let shouldGetInitialSelection = !hasLoadedInitialSelection;
 
     if (!selectedTabId) {
       return;
@@ -263,8 +286,8 @@ export function Selection({
       prevTableId !== selectedTabId ||
       prevLang !== i18n.resolvedLanguage
     ) {
-      variables.setHasLoadedDefaultSelection(false);
-      shouldGetDefaultSelection = true;
+      variables.setHasLoadedInitialSelection(false);
+      shouldGetInitialSelection = true;
       setPrevTableId(selectedTabId);
       setPrevLang(i18n.resolvedLanguage ?? '');
     }
@@ -272,13 +295,19 @@ export function Selection({
     if (isLoadingMetadata === false) {
       variables.setIsLoadingMetadata(true);
     }
-
-    const metaDataDefaultSelection = true;
+    console.log('saveddqueryId 290', app.getSavedQueryId());
+    let metaDataDefaultSelection;
+    if (savedQueryId) {
+      metaDataDefaultSelection = false;
+    } else {
+      metaDataDefaultSelection = true;
+    }
 
     TableService.getMetadataById(
       selectedTabId,
       i18n.resolvedLanguage,
       metaDataDefaultSelection,
+      savedQueryId,
     )
       .then((Dataset) => {
         const pxTable: PxTable = mapJsonStat2Response(Dataset, false);
@@ -290,7 +319,7 @@ export function Selection({
         setErrorMsg('');
       })
       .then(() => {
-        if (!shouldGetDefaultSelection) {
+        if (!shouldGetInitialSelection) {
           variables.setIsLoadingMetadata(false);
         }
       })
@@ -303,32 +332,72 @@ export function Selection({
         setPxTableMetadata(null);
       });
 
-    if (shouldGetDefaultSelection) {
-      TableService.getDefaultSelection(selectedTabId, i18n.resolvedLanguage)
-        .then((selectionResponse) => {
-          const defaultSelection = mapTableSelectionResponse(
-            selectionResponse,
-          ).filter(
-            (variable) =>
-              variable.values.length > 0 ||
-              variable.selectedCodeList !== undefined,
-          );
-          setSelectedVBValues(defaultSelection);
-          variables.syncVariablesAndValues(defaultSelection);
-          variables.setIsLoadingMetadata(false);
-          variables.setHasLoadedDefaultSelection(true);
-        })
-        .catch((apiError: ApiError) => {
-          setErrorMsg(problemMessage(apiError, selectedTabId));
-        })
-        .catch((error) => {
-          setErrorMsg(
-            `Error getting default selection: ${selectedTabId} ${error.message}`,
-          );
-        });
+    if (shouldGetInitialSelection) {
+      //   if (savedQueryId) {
+      //    if (savedQueryId) {
+      // 1. trigger tabledataprovider to call the saved query
+      // variables.setLoadSavedQueryId(savedQueryId);
+      // 2. make tabledataprovider set selected values in variablesprovider
+      // 3. Sync so selected values are marked as selected in variable boxes
+      // variables.syncVariablesAndValues(savedQuerySelection);
+
+      // } else {
+
+      if (savedQueryId) {
+        SavedQueriesService.getSavedQuerySelection(
+          savedQueryId,
+          i18n.resolvedLanguage,
+        )
+          .then((selectionResponse) => {
+            const defaultSelection = mapTableSelectionResponse(
+              selectionResponse,
+            ).filter(
+              (variable) =>
+                variable.values.length > 0 ||
+                variable.selectedCodeList !== undefined,
+            );
+            setSelectedVBValues(defaultSelection);
+            variables.syncVariablesAndValues(defaultSelection);
+            variables.setIsLoadingMetadata(false);
+            variables.setHasLoadedInitialSelection(true);
+          })
+          .catch((apiError: ApiError) => {
+            setErrorMsg(problemMessage(apiError, selectedTabId));
+          })
+          .catch((error) => {
+            setErrorMsg(
+              `Error getting default selection: ${selectedTabId} ${error.message}`,
+            );
+          });
+      } else {
+        TableService.getDefaultSelection(selectedTabId, i18n.resolvedLanguage)
+          .then((selectionResponse) => {
+            const defaultSelection = mapTableSelectionResponse(
+              selectionResponse,
+            ).filter(
+              (variable) =>
+                variable.values.length > 0 ||
+                variable.selectedCodeList !== undefined,
+            );
+            setSelectedVBValues(defaultSelection);
+            variables.syncVariablesAndValues(defaultSelection);
+            variables.setIsLoadingMetadata(false);
+            variables.setHasLoadedInitialSelection(true);
+          })
+          .catch((apiError: ApiError) => {
+            setErrorMsg(problemMessage(apiError, selectedTabId));
+          })
+          .catch((error) => {
+            setErrorMsg(
+              `Error getting default selection: ${selectedTabId} ${error.message}`,
+            );
+          });
+        //}
+      }
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedTabId, i18n.resolvedLanguage]);
+  }, [selectedTabId, i18n.resolvedLanguage, savedQueryId]);
 
   if (pxTableMetaToRender === null && pxTableMetadata !== null) {
     setPxTableMetaToRender(structuredClone(pxTableMetadata));
@@ -379,6 +448,7 @@ export function Selection({
       selectedTabId,
       i18n.resolvedLanguage,
       false,
+      '',
       selectedCodeLists,
     )
       .then((Dataset) => {
@@ -494,7 +564,7 @@ export function Selection({
       languageDirection={i18n.dir()}
       selectedVBValues={selectedVBValues}
       isLoadingMetadata={isLoadingMetadata}
-      hasLoadedDefaultSelection={hasLoadedDefaultSelection}
+      hasLoadedDefaultSelection={hasLoadedInitialSelection}
       isChangingCodeList={isFadingVariableList}
       handleCodeListChange={handleCodeListChange}
       handleCheckboxChange={handleCheckboxChange}

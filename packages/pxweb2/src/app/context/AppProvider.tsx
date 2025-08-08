@@ -7,6 +7,7 @@ import {
 
 // Define the type for the context
 export type AppContextType = {
+  getSavedQueryId: () => string;
   isInitialized: boolean;
   isTablet: boolean;
   isMobile: boolean;
@@ -16,6 +17,7 @@ export type AppContextType = {
 
 // Create the context with default values
 export const AppContext = createContext<AppContextType>({
+  getSavedQueryId: () => '',
   isInitialized: false,
   isTablet: false,
   isMobile: false,
@@ -58,8 +60,20 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
     };
   }, [mobileBreakpoint, tabletBreakpoint]);
 
+  const getSavedQueryId = () => {
+    let savedQueryId: string = '';
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.has('sq')) {
+        savedQueryId = params.get('sq') ?? '';
+      }
+    }
+    return savedQueryId;
+  };
+
   const cachedValues = useMemo(
     () => ({
+      getSavedQueryId,
       isInitialized,
       isTablet,
       isMobile,
@@ -67,6 +81,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
       setSkipToMainFocused,
     }),
     [
+      getSavedQueryId,
       isInitialized,
       isTablet,
       isMobile,

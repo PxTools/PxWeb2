@@ -6,6 +6,7 @@ import {
   ApiError,
   Dataset,
   OutputFormatType,
+  SavedQueriesService,
   TableService,
   VariableSelection,
   VariablesSelection,
@@ -18,6 +19,7 @@ import {
   Variable,
 } from '@pxweb2/pxweb2-ui';
 import { mapJsonStat2Response } from '../../mappers/JsonStat2ResponseMapper';
+
 import { addFormattingToPxTable } from './TableDataProviderUtils';
 import { problemMessage } from '../util/problemMessage';
 
@@ -26,6 +28,7 @@ export interface TableDataContextType {
   isInitialized: boolean;
   data: PxTable | undefined;
   fetchTableData: (tableId: string, i18n: i18n, isMobile: boolean) => void;
+  fetchSavedQuery: (queryId: string, isMobile: boolean) => void;
   pivotToMobile: () => void;
   pivotToDesktop: () => void;
   pivotCW: () => void;
@@ -45,6 +48,9 @@ const TableDataContext = createContext<TableDataContextType | undefined>({
   data: undefined,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   fetchTableData: () => {},
+  fetchSavedQuery: () => {
+    ('');
+  },
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   pivotToMobile: () => {},
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -91,6 +97,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
   const [errorMsg, setErrorMsg] = useState('');
   const variables = useVariables();
+  //const { setSelectedVBValues } = variables;
 
   useEffect(() => {
     if (errorMsg !== '') {
@@ -123,7 +130,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * unless its dependencies (`codelistsInitialized` and `variables`) change.
    */
   const initializeCodelists = React.useCallback(() => {
-    if (!codelistsInitialized && variables.hasLoadedDefaultSelection) {
+    if (!codelistsInitialized && variables.hasLoadedInitialSelection) {
       const ids = variables.getUniqueIds();
       ids.forEach((id) => {
         const codelistId = variables.getSelectedCodelistById(id);
@@ -140,14 +147,67 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   }, [codelistsInitialized, variables]);
 
   useEffect(() => {
-    if (!codelistsInitialized && variables.hasLoadedDefaultSelection) {
+    if (!codelistsInitialized && variables.hasLoadedInitialSelection) {
       initializeCodelists();
     }
   }, [
     codelistsInitialized,
     initializeCodelists,
-    variables.hasLoadedDefaultSelection,
+    variables.hasLoadedInitialSelection,
   ]);
+
+  const fetchSavedQuery = React.useCallback(
+    async (loadSavedQueryId: string, isMobile: boolean) => {
+      console.log({ loadSavedQueryId });
+
+      //Call SavedQueriesService.getSaveQuery to get the saved query metadata and codelists. Use this for setting selected values in variables provider.
+      // const result = await SavedQueriesService.getSaveQuery(loadSavedQueryId);
+
+      // const selectedCodeLists: SavedQueryCodeListType[] =
+      //   mapSavedQueryCodelistResponse(result);
+
+      const res = await SavedQueriesService.runSaveQuery(loadSavedQueryId);
+      // Map response to json-stat2 Dataset
+      const pxDataobj: unknown = res;
+      const pxTabData = pxDataobj as Dataset;
+
+      const pxTable: PxTable = mapJsonStat2Response(pxTabData);
+      console.log('pxTable=', pxTable);
+      // Add formatting to the PxTable datacell values
+      await addFormattingToPxTable(pxTable);
+
+      console.log({ pxTable });
+
+      // Set selection in variables provider
+      // let sqValues: SelectedVBValues[] = [];
+
+      // pxTable.metadata.variables.forEach((variable) => {
+      //   console.log({ variable });
+      //   const selectedCodeListObj = selectedCodeLists.find(
+      //     (cl) => cl.variableCode === variable.id,
+      //   );
+      //   sqValues.push({
+      //     id: variable.id,
+      //     values: variable.values.map((v) => v.code),
+      //     selectedCodeList: selectedCodeListObj?.selectedCodeList,
+      //   });
+      // });
+
+      // console.log({ sqValues });
+      // setSelectedVBValues(sqValues);
+      // variables.syncVariablesAndValues(sqValues);
+      // variables.setIsLoadingMetadata(false);
+      // variables.setHasLoadedDefaultSelection(true);
+      initializeStubAndHeading(pxTable, isMobile);
+      setData(pxTable);
+
+      // Store as accumulated data
+      setAccumulatedData(structuredClone(pxTable));
+
+      //TODO update selection i variables provider
+    },
+    [] /*, fetchSavedQueryDefinition */,
+  );
 
   /**
    * Remember order of variables in stub and heading when table setup is changed.
@@ -252,7 +312,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       if (codelistChanged) {
         setData(undefined);
       }
-
       const pxTable: PxTable = await fetchFromApi(
         tableId,
         i18n,
@@ -264,6 +323,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
       // Store as accumulated data
       setAccumulatedData(structuredClone(pxTable));
+      // }
     },
     [initializeStubAndHeading, setData, setAccumulatedData],
   );
@@ -696,7 +756,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
           } else {
             pivotForDesktop(pxTable);
           }
-
           setData(pxTable);
           return;
         }
@@ -728,7 +787,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         i18n,
         notLoadedVarSelection,
       );
-
+      console.log('fetchWithValidAccData');
       // Merge pxTable with accumulatedData
       mergeWithAccumulatedData(
         pxTable,
@@ -880,6 +939,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   const fetchTableData = React.useCallback(
     async (tableId: string, i18n: i18n, isMobile: boolean) => {
       try {
+        console.log('fetchTableData');
         const selections: Array<VariableSelection> = [];
 
         // Get selection from Selection provider
@@ -914,6 +974,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         );
 
         if (validAccData) {
+          console.log('fetchTableData ---fetchWithoutValidAccData');
           await fetchWithValidAccData(
             tableId,
             i18n,
@@ -921,6 +982,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
             variablesSelection,
           );
         } else {
+          console.log('fetchTableData ---fetchWithoutValidAccData');
           await fetchWithoutValidAccData(
             tableId,
             i18n,
@@ -1048,6 +1110,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       lastTitlePart: string;
     } => {
       const titleParts: string[] = [];
+      console.log('TableDataProvider.buildTableTitle', stub, heading);
 
       // Add stub variables to title
       stub.forEach((variable) => {
@@ -1159,6 +1222,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     () => ({
       data,
       /* loading, error  */ fetchTableData,
+      fetchSavedQuery,
       pivotToMobile,
       pivotToDesktop,
       pivotCW,
@@ -1168,6 +1232,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     [
       data,
       fetchTableData,
+      fetchSavedQuery,
       pivotToMobile,
       pivotToDesktop,
       pivotCW,
