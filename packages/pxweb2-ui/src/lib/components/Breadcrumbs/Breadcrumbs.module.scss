@@ -1,3 +1,13 @@
+.breadcrumbsContainer {
+  display: flex;
+  align-items: center;
+&.compact {
+ max-width: 400px;
+ overflow: hidden;
+}
+
+}
+
 .breadcrumbsWrapper {
   display: flex;
   align-items: center;
@@ -7,14 +17,34 @@
 
   &.default {
     padding: 0 20px;
+    flex-wrap: wrap;
+    //width: 100%;
+    overflow: wrap;
   }
 
   &.compact {
-    padding: 0 40px;
+    //padding: 0 40px;
+    flex-wrap: nowrap;
+    //overflow: hidden;
+    overflow-x: auto;       // Allow horizontal scroll if needed
+    text-overflow: ellipsis;
+    min-width: 0;      // Prevent flexbox from overflowing its container
+    &.showMore {
+      //flex-wrap: wrap;
+      display: none;    // Hide "Show more" button by default
+    }
   }
 
   .breadcrumbItemIcon {
     padding-left: 20px;
+
+  font-size: 1.5em;      // Makes font or SVG icons larger
+  width: 1.5em;          // For SVG or image icons
+  height: 1.5em;
+  color: var(--px-color-icon-default); // Optional: set icon color
+  display: flex;
+  align-items: center;
+
   }
 
   .breadcrumbItem {
@@ -25,7 +55,9 @@
     padding-left: 20px;
 
     &:last-child {
-      //background-color: pink;
+      background-color: pink;
+      text-decoration: none !important;
+
       //text-decoration-line: none;
       //text-decoration: dotted !important;
       //aria-current: "page";
@@ -38,6 +70,7 @@
 }
 
 .showMoreButton {
+   margin-left: 8px;
   &:hover {
     background-color: inherit !important;
   }

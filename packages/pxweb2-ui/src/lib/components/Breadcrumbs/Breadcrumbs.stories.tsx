@@ -59,13 +59,13 @@ export const Compact: StoryObj<typeof Breadcrumbs> = () => {
   return (
     <Breadcrumbs variant="compact">
       <Link inline={true} href="/">
-        Home
+        Home_Home_Home_Home_Home_Home_Home_Home Home Home
       </Link>
       <Link inline={true} href="/library">
-        Library
+        Library Library Library Library Library Library Library Library Library Library
       </Link>
       <Link inline={true} href="/library/data" aria-current="page">
-        Data
+        Data Data Data Data Data Data Data Data Data Data
       </Link>
     </Breadcrumbs>
   );
