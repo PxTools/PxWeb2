@@ -6,8 +6,9 @@
   "common": {
     "title": "PxWeb 2.0",
     "header": {
-      "title": "PxWeb 2.0 [Main]",
-      "logo": "PxWeb 2.0"
+      "title": "PxWeb 2.0 [Sprint 24 (SSB)]",
+      "logo": "PxWeb 2.0",
+      "arialabelheader": "Select language"
     },
     "not_found": {
       "page_not_found": {
@@ -293,7 +294,7 @@
     },
     "footer": {
       "description": "On this site you can follow as Statistics Sweden (SCB) and Statistics Norway (SSB) are building a new and more user-friendly interface for PxWeb.",
-      "descriptionLink": "Read more about the project on Github",
+      "descriptionLink": "Read more about the project",
       "contact": "Contact",
       "projectLeader": "Project leader",
       "scrumMaster": "Scrum master",
