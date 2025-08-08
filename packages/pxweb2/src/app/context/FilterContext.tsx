@@ -29,7 +29,6 @@ const initialState: StartPageState = Object.freeze({
   error: '',
   originalSubjectTree: [],
   lastUsedYearRange: null,
-  resetYearFilterInput: 0,
 });
 
 export const FilterContext = createContext<{
@@ -138,7 +137,6 @@ function reducer(
             yearRange: fullRange,
           },
           lastUsedYearRange: fullRange,
-          resetYearFilterInput: Date.now(),
         };
       }
       const filteredTables = state.availableTables.filter((table) =>

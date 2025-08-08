@@ -201,9 +201,13 @@ export function getYearRanges(tables: Table[]): YearRange {
     }
   }
 
+  if (!Number.isFinite(minYear) || !Number.isFinite(maxYear)) {
+    return { min: 1900, max: new Date().getFullYear() };
+  }
+
   return {
-    min: Number.isFinite(minYear) ? minYear : 1900,
-    max: Number.isFinite(maxYear) ? maxYear : new Date().getFullYear(),
+    min: minYear,
+    max: maxYear,
   };
 }
 

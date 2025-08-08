@@ -23,7 +23,6 @@ describe('YearRangeFilter', () => {
 
   const baseState: StartPageState = {
     activeFilters: [],
-    resetYearFilterInput: 0,
     lastUsedYearRange: { min: 2000, max: 2005 },
     originalSubjectTree: [],
     availableTables: [],

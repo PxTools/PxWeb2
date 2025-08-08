@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import cl from 'clsx';
 
@@ -114,11 +114,6 @@ export const YearRangeFilter: React.FC = () => {
   const { t } = useTranslation();
   const { fromLabel, toLabel, fromYearLabel, toYearLabel } = useYearLabels(t);
 
-  const [resetKey, setResetKey] = useState(0);
-  useEffect(() => {
-    setResetKey(state.resetYearFilterInput);
-  }, [state.resetYearFilterInput]);
-
   const yearRangeFilter = state.activeFilters.find(
     (f) => f.type === 'yearRange',
   );
@@ -178,7 +173,6 @@ export const YearRangeFilter: React.FC = () => {
   return (
     <div className={cl(styles.filterItem, styles.yearRange)}>
       <SearchSelect
-        key={`from-${resetKey}`}
         id="year-from"
         label={fromYearLabel(fromYear ?? '')}
         options={fromOptions}
@@ -189,7 +183,6 @@ export const YearRangeFilter: React.FC = () => {
         clearSelectionText={clearSelectionText}
       />
       <SearchSelect
-        key={`to-${resetKey}`}
         id="year-to"
         label={toYearLabel(toYear ?? '')}
         options={toOptions}

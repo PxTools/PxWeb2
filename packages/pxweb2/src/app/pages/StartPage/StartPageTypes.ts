@@ -43,7 +43,6 @@ export type StartPageState = {
   error: string;
   originalSubjectTree: PathItem[];
   lastUsedYearRange: YearRange | null;
-  resetYearFilterInput: number;
 };
 
 export type ReducerActionTypes =
