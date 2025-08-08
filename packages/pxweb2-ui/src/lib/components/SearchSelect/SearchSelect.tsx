@@ -21,6 +21,7 @@ type SearchSelectProps = {
   noOptionsText?: string;
   clearSelectionText?: string;
   inputMode?: React.HTMLAttributes<HTMLInputElement>['inputMode'];
+  optionListStyle?: React.CSSProperties;
 };
 
 export function SearchSelect({
@@ -33,6 +34,7 @@ export function SearchSelect({
   noOptionsText = 'No results',
   clearSelectionText = 'Clear selection',
   inputMode,
+  optionListStyle,
 }: Readonly<SearchSelectProps>) {
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState('');
@@ -45,21 +47,32 @@ export function SearchSelect({
   useEffect(() => {
     if (selectedOption) {
       setInputValue(selectedOption.label);
+    } else {
+      setInputValue('');
     }
   }, [selectedOption]);
 
   useEffect(() => {
-    const onClickOutside = (e: MouseEvent) => {
-      if (
-        contentRef.current &&
-        !contentRef.current.contains(e.target as Node)
-      ) {
-        setIsOpen(false);
-        setHighlightedIndex(-1);
+    const onMouseDown = (e: MouseEvent) => {
+      if (!contentRef.current) {
+        return;
+      }
+      const target = e.target as HTMLElement;
+      const clickedInside = contentRef.current.contains(target);
+      if (!clickedInside) {
+        const isScrollbarClick =
+          target.classList.contains(styles.optionList) ||
+          target.closest(`.${styles.optionList}`);
+
+        if (!isScrollbarClick) {
+          setIsOpen(false);
+          setHighlightedIndex(-1);
+        }
       }
     };
-    document.addEventListener('mousedown', onClickOutside);
-    return () => document.removeEventListener('mousedown', onClickOutside);
+
+    document.addEventListener('mousedown', onMouseDown);
+    return () => document.removeEventListener('mousedown', onMouseDown);
   }, []);
 
   const filteredOptions = inputValue
@@ -136,6 +149,9 @@ export function SearchSelect({
       handleSelect(match);
     } else {
       setInputValue('');
+      if (selectedOption) {
+        onSelect(undefined);
+      }
     }
 
     setIsOpen(false);
@@ -214,6 +230,7 @@ export function SearchSelect({
           role="listbox"
           id={`${searchSelectId}-listbox`}
           aria-labelledby={`${searchSelectId}-label`}
+          style={optionListStyle}
         >
           {filteredOptions.length > 0 ? (
             filteredOptions.map((option, index) => (

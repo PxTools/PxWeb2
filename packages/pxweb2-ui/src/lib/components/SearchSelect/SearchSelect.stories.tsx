@@ -35,6 +35,7 @@ export const Default: Story = {
     onSelect: selectedOptionChanged,
     inputMode: 'numeric',
     clearSelectionText: 'Clear selection',
+    optionListStyle: { maxHeight: '250px' },
   },
 };
 
