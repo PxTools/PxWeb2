@@ -42,7 +42,7 @@ export type StartPageState = {
   loading: boolean;
   error: string;
   originalSubjectTree: PathItem[];
-  lastUsedYearRange: { min: number; max: number };
+  lastUsedYearRange: YearRange | null;
   resetYearFilterInput: number;
 };
 

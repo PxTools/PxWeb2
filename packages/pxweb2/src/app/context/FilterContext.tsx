@@ -28,7 +28,7 @@ const initialState: StartPageState = Object.freeze({
   loading: false,
   error: '',
   originalSubjectTree: [],
-  lastUsedYearRange: { min: 1899, max: 2050 },
+  lastUsedYearRange: null,
   resetYearFilterInput: 0,
 });
 
