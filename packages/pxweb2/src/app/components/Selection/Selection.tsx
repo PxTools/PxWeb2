@@ -8,10 +8,6 @@ import {
 } from '@pxweb2/pxweb2-api-client';
 import { mapJsonStat2Response } from '../../../mappers/JsonStat2ResponseMapper';
 import { mapTableSelectionResponse } from '../../../mappers/TableSelectionResponseMapper';
-import {
-  mapSavedQueryCodelistResponse,
-  SavedQueryCodeListType,
-} from '../../../mappers/SavedQueryCodeListResponseMapper';
 
 import {
   PxTable,
@@ -298,138 +294,138 @@ export function Selection({
     }
     console.log('saveddqueryId 290', variables.getSavedQueryId());
     let metaDataDefaultSelection;
-    let selectedCodeLists;
     if (savedQueryId) {
-      SavedQueriesService.getSaveQuery(savedQueryId).then(
-        (SavedQueryResponse) => {
-          const tmpSelectedCodeLists: SavedQueryCodeListType[] =
-            mapSavedQueryCodelistResponse(SavedQueryResponse);
-          console.log('307 tmpSelectedCodeLists=', tmpSelectedCodeLists);
-          // Create a Record<string, string> mapping variableCode to selectedCodeList
-          const selectedCodeListsRecord: Record<string, string> = {};
-          tmpSelectedCodeLists.forEach(({ variableCode, selectedCodeList }) => {
-            if (variableCode && selectedCodeList) {
-              selectedCodeListsRecord[variableCode] = selectedCodeList;
-            }
-          });
-
-          metaDataDefaultSelection = false;
-
-          TableService.getMetadataById(
-            selectedTabId,
-            i18n.resolvedLanguage,
-            metaDataDefaultSelection,
-            selectedCodeListsRecord,
-          )
-            .then((Dataset) => {
-              const pxTable: PxTable = mapJsonStat2Response(Dataset, false);
-
-              setPxTableMetadata(pxTable.metadata);
-              if (pxTableMetaToRender !== null) {
-                setPxTableMetaToRender(null);
-              }
-              setErrorMsg('');
-
-              let sqValues: SelectedVBValues[] = [];
-              console.log('350 tmpSelectedCodeLists=', tmpSelectedCodeLists);
-              console.log(
-                '351  pxTableMetadata?.variables=',
-                pxTable.metadata?.variables,
-              );
-              tmpSelectedCodeLists.forEach(
-                ({ variableCode, values, selectedCodeList }) => {
-                  sqValues.push({
-                    id: variableCode,
-                    values,
-                    selectedCodeList: selectedCodeList,
-                  });
-                },
-              );
-              // pxTable.metadata?.variables.forEach((variable) => {
-              //   console.log({ variable });
-
-              //   const selectedCodeListObj = tmpSelectedCodeLists.find(
-              //     (cl) => cl.variableCode === variable.id,
-              //   );
-              //   sqValues.push({
-              //     id: variable.id,
-              //     values: [],
-              //     //values: variable.values.map((v) => v.code),
-              //     selectedCodeList: selectedCodeListObj?.selectedCodeList,
-              //   });
-              // });
-
-              console.log({ sqValues });
-              setSelectedVBValues(sqValues);
-              variables.syncVariablesAndValues(sqValues);
-              variables.setIsLoadingMetadata(false);
-              variables.setHasLoadedDefaultSelection(true);
-            })
-            .then(() => {
-              if (!shouldGetDefaultSelection) {
-                variables.setIsLoadingMetadata(false);
-              }
-            })
-            .catch((apiError: ApiError) => {
-              setErrorMsg(problemMessage(apiError, selectedTabId));
-              setPxTableMetadata(null);
-            })
-            .catch((error) => {
-              setErrorMsg(
-                `Could not get table: ${selectedTabId} ${error.message}`,
-              );
-              setPxTableMetadata(null);
-            });
-        },
-      );
-      console.log('311 selectedCodeLists', selectedCodeLists);
+      metaDataDefaultSelection = false;
     } else {
       metaDataDefaultSelection = true;
-      selectedCodeLists = undefined;
+    }
 
-      TableService.getMetadataById(
-        selectedTabId,
-        i18n.resolvedLanguage,
-        metaDataDefaultSelection,
-        selectedCodeLists,
-      )
-        .then((Dataset) => {
-          const pxTable: PxTable = mapJsonStat2Response(Dataset, false);
+    //       TableService.getMetadataById(
+    //         selectedTabId,
+    //         i18n.resolvedLanguage,
+    //         metaDataDefaultSelection,
+    //         savedQueryId,
+    //       )
+    //         .then((Dataset) => {
+    //           const pxTable: PxTable = mapJsonStat2Response(Dataset, false);
 
-          setPxTableMetadata(pxTable.metadata);
-          if (pxTableMetaToRender !== null) {
-            setPxTableMetaToRender(null);
-          }
-          setErrorMsg('');
-        })
-        .then(() => {
-          if (!shouldGetDefaultSelection) {
-            variables.setIsLoadingMetadata(false);
-          }
-        })
-        .catch((apiError: ApiError) => {
-          setErrorMsg(problemMessage(apiError, selectedTabId));
-          setPxTableMetadata(null);
-        })
-        .catch((error) => {
-          setErrorMsg(`Could not get table: ${selectedTabId} ${error.message}`);
-          setPxTableMetadata(null);
-        });
+    //           setPxTableMetadata(pxTable.metadata);
+    //           if (pxTableMetaToRender !== null) {
+    //             setPxTableMetaToRender(null);
+    //           }
+    //           setErrorMsg('');
 
-      if (shouldGetDefaultSelection) {
-        //   if (savedQueryId) {
-        //    if (savedQueryId) {
-        // 1. trigger tabledataprovider to call the saved query
-        // variables.setLoadSavedQueryId(savedQueryId);
-        // 2. make tabledataprovider set selected values in variablesprovider
-        // 3. Sync so selected values are marked as selected in variable boxes
-        // variables.syncVariablesAndValues(savedQuerySelection);
+    //           let sqValues: SelectedVBValues[] = [];
+    //           console.log('350 tmpSelectedCodeLists=', tmpSelectedCodeLists);
+    //           console.log(
+    //             '351  pxTableMetadata?.variables=',
+    //             pxTable.metadata?.variables,
+    //           );
+    //           tmpSelectedCodeLists.forEach(
+    //             ({ variableCode, values, selectedCodeList }) => {
+    //               sqValues.push({
+    //                 id: variableCode,
+    //                 values,
+    //                 selectedCodeList: selectedCodeList,
+    //               });
+    //             },
+    //           );
 
-        // } else {
-        console.log(
-          ' i default selection !!!!!!!!!!!!!!!!!!!!!!!!!!!!!',
+    //           console.log({ sqValues });
+    //           setSelectedVBValues(sqValues);
+    //           variables.syncVariablesAndValues(sqValues);
+    //           variables.setIsLoadingMetadata(false);
+    //           variables.setHasLoadedDefaultSelection(true);
+    //         })
+    //         .then(() => {
+    //           if (!shouldGetDefaultSelection) {
+    //             variables.setIsLoadingMetadata(false);
+    //           }
+    //         })
+    //         .catch((apiError: ApiError) => {
+    //           setErrorMsg(problemMessage(apiError, selectedTabId));
+    //           setPxTableMetadata(null);
+    //         })
+    //         .catch((error) => {
+    //           setErrorMsg(
+    //             `Could not get table: ${selectedTabId} ${error.message}`,
+    //           );
+    //           setPxTableMetadata(null);
+    //         });
+    //     },
+    //   );
+    //   console.log('311 selectedCodeLists', selectedCodeLists);
+    // } else {
+    // metaDataDefaultSelection = true;
+    //  selectedCodeLists = undefined;
+
+    TableService.getMetadataById(
+      selectedTabId,
+      i18n.resolvedLanguage,
+      metaDataDefaultSelection,
+      savedQueryId,
+    )
+      .then((Dataset) => {
+        const pxTable: PxTable = mapJsonStat2Response(Dataset, false);
+
+        setPxTableMetadata(pxTable.metadata);
+        if (pxTableMetaToRender !== null) {
+          setPxTableMetaToRender(null);
+        }
+        setErrorMsg('');
+      })
+      .then(() => {
+        if (!shouldGetDefaultSelection) {
+          variables.setIsLoadingMetadata(false);
+        }
+      })
+      .catch((apiError: ApiError) => {
+        setErrorMsg(problemMessage(apiError, selectedTabId));
+        setPxTableMetadata(null);
+      })
+      .catch((error) => {
+        setErrorMsg(`Could not get table: ${selectedTabId} ${error.message}`);
+        setPxTableMetadata(null);
+      });
+
+    if (shouldGetDefaultSelection) {
+      //   if (savedQueryId) {
+      //    if (savedQueryId) {
+      // 1. trigger tabledataprovider to call the saved query
+      // variables.setLoadSavedQueryId(savedQueryId);
+      // 2. make tabledataprovider set selected values in variablesprovider
+      // 3. Sync so selected values are marked as selected in variable boxes
+      // variables.syncVariablesAndValues(savedQuerySelection);
+
+      // } else {
+
+      if (savedQueryId) {
+        SavedQueriesService.getSavedQuerySelection(
           savedQueryId,
-        );
+          i18n.resolvedLanguage,
+        )
+          .then((selectionResponse) => {
+            const defaultSelection = mapTableSelectionResponse(
+              selectionResponse,
+            ).filter(
+              (variable) =>
+                variable.values.length > 0 ||
+                variable.selectedCodeList !== undefined,
+            );
+            setSelectedVBValues(defaultSelection);
+            variables.syncVariablesAndValues(defaultSelection);
+            variables.setIsLoadingMetadata(false);
+            variables.setHasLoadedDefaultSelection(true);
+          })
+          .catch((apiError: ApiError) => {
+            setErrorMsg(problemMessage(apiError, selectedTabId));
+          })
+          .catch((error) => {
+            setErrorMsg(
+              `Error getting default selection: ${selectedTabId} ${error.message}`,
+            );
+          });
+      } else {
         TableService.getDefaultSelection(selectedTabId, i18n.resolvedLanguage)
           .then((selectionResponse) => {
             const defaultSelection = mapTableSelectionResponse(
@@ -455,6 +451,7 @@ export function Selection({
         //}
       }
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTabId, i18n.resolvedLanguage, savedQueryId]);
 
