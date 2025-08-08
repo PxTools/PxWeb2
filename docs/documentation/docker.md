@@ -84,14 +84,8 @@ Follow instructions for one of the databases
 - Your API should now be running on
 
     - <http://localhost:8081/api/v2/>
-    - <http://localhost:8081/api/v2/navigation>
     - <http://localhost:8081/api/v2/tables>
 
-- Your PxWeb is also here, but since we have not made the navigation yet, you
-  need to obtain the tableId from the API or `Menu.xml` first
+- Your PxWeb should be running on this port
 
-    - `http://localhost:8080/table/<tableId>`
-
-    If you used the tinydatabase.zip this is a valid link
-
-    - <http://localhost:8080/table/TAB004>
+    - <http://localhost:8080/>
