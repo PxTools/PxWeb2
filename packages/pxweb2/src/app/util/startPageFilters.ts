@@ -1,12 +1,9 @@
 import { Table } from '@pxweb2/pxweb2-api-client';
-import { StartPageFilters, Filter } from '../pages/StartPage/StartPageTypes';
-
-export interface PathItem {
-  id: string;
-  label: string;
-  children?: PathItem[];
-  count?: number;
-}
+import {
+  StartPageFilters,
+  Filter,
+  PathItem,
+} from '../pages/StartPage/StartPageTypes';
 
 type TableWithPaths = Table & {
   id: string;
@@ -24,9 +21,12 @@ export function organizePaths(paths: PathItem[][]): PathItem[] {
 
   paths.forEach((path) => {
     let currentLevel = subjects;
+    let idPath: string[] = [];
 
     path.forEach((item) => {
       let existingItem = currentLevel.find((x) => x.id === item.id);
+      idPath.push(item.id);
+      const fullId = idPath.join('__');
 
       if (existingItem) {
         existingItem.count && existingItem.count++;
@@ -37,6 +37,7 @@ export function organizePaths(paths: PathItem[][]): PathItem[] {
           label: item.label,
           children: [],
           count: 1,
+          uniqueId: fullId,
         };
         currentLevel.push(newItem);
         currentLevel = newItem.children!;
@@ -111,9 +112,9 @@ export function updateSubjectTreeCounts(
   return originalTree.map(updateNode);
 }
 
-export function sortFilterChips(filters: Filter[]): Filter[] {
+export function sortAndDeduplicateFilterChips(filters: Filter[]): Filter[] {
   const typeOrder = ['subject', 'timeUnit'];
-  return filters.sort((a, b) => {
+  const sorted = filters.toSorted((a, b) => {
     const typeComparison =
       typeOrder.indexOf(a.type) - typeOrder.indexOf(b.type);
     if (typeComparison !== 0) {
@@ -121,22 +122,59 @@ export function sortFilterChips(filters: Filter[]): Filter[] {
     }
     return a.index - b.index;
   });
+  return sorted.filter(
+    (obj1, i, original) =>
+      original.findIndex((obj2) => obj2.value === obj1.value) === i,
+  );
 }
 
-export function findParent(
+// Find parents, and parents' parents all the way up
+export function findAncestors(
   subjectTree: PathItem[],
-  childId: string,
-): PathItem | null {
+  childUniqueId: string,
+  path: PathItem[] = [],
+): PathItem[] {
   for (const node of subjectTree) {
-    if (node.children?.some((child) => child.id === childId)) {
-      return node;
+    const newPath = [...path, node];
+    if (node.uniqueId === childUniqueId) {
+      // Remove nested children from each subject
+      return path.map((item) => ({ ...item, children: [] }));
     }
     if (node.children) {
-      const found = findParent(node.children, childId);
-      if (found) {
+      const result = findAncestors(node.children, childUniqueId, newPath);
+      if (result.length > 0) {
+        return result;
+      }
+    }
+  }
+  return [];
+}
+
+// Recursively flatten all descendants of a PathItem, including all levels
+export function getAllDescendants(node: PathItem): PathItem[] {
+  let descendants: PathItem[] = [];
+  for (const child of node.children || []) {
+    descendants.push({ ...child, children: [] }); // flatten: remove children from returned objects
+    descendants = descendants.concat(getAllDescendants(child));
+  }
+  return descendants;
+}
+
+// Find the PathItem with the Id given, and get all the descendants of that element
+export function findChildren(
+  subjectTree: PathItem[],
+  parentId: string,
+): PathItem[] {
+  for (const node of subjectTree) {
+    if (node.id === parentId) {
+      return getAllDescendants(node);
+    }
+    if (node.children) {
+      const found = findChildren(node.children, parentId);
+      if (found.length > 0) {
         return found;
       }
     }
   }
-  return null;
+  return [];
 }
