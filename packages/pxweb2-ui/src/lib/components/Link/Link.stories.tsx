@@ -11,7 +11,7 @@ export default meta;
 
 type Story = StoryObj<typeof Link>;
 
-export const variants: Story = {
+export const Variants: Story = {
   args: {
     href: '#',
     children: 'En godt skrevet lenketekst',
@@ -19,7 +19,7 @@ export const variants: Story = {
   },
 };
 
-export const inlineAndStandalone: StoryFn<typeof BodyLong> = () => {
+export const InlineAndStandalone: StoryFn<typeof BodyLong> = () => {
   return (
     <>
       <h1>Inline link in BodyLong</h1>

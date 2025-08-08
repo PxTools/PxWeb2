@@ -23,7 +23,7 @@ const meta: Meta<typeof ContentBox> = {
 export default meta;
 type Story = StoryObj<typeof ContentBox>;
 
-export const withTitle: Story = {
+export const WithTitle: Story = {
   name: 'With title',
   args: {
     title: 'Edit',
@@ -31,14 +31,14 @@ export const withTitle: Story = {
   },
 };
 
-export const withoutTitle: Story = {
+export const WithoutTitle: Story = {
   name: 'Without title',
   args: {
     children: <span>Children goes here</span>,
   },
 };
 
-export const withLongContent: Story = {
+export const WithLongContent: Story = {
   name: 'With long content',
   args: {
     title: 'Long Content Example',
