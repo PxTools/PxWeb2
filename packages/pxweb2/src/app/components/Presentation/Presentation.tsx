@@ -26,7 +26,7 @@ const MemoizedTable = React.memo(
     prevProps.isMobile === nextProps.isMobile,
 );
 export function Presentation({ selectedTabId, scrollRef }: propsType) {
-  const { isMobile } = useApp();
+  const { isMobile, getSavedQueryId } = useApp();
   const config = getConfig();
   const { i18n, t } = useTranslation();
   const tableData = useTableData();
@@ -121,8 +121,8 @@ export function Presentation({ selectedTabId, scrollRef }: propsType) {
       // && variables.loadSavedQueryId.length > 0
     ) {
       console.log('fetchTableDataIfAllowed initialRun');
-      if (variables.getSavedQueryId()?.length > 0) {
-        tableData.fetchSavedQuery(variables.getSavedQueryId(), isMobile);
+      if (getSavedQueryId()?.length > 0) {
+        tableData.fetchSavedQuery(getSavedQueryId(), isMobile);
       } else {
         fetchTableDataIfAllowed();
       }

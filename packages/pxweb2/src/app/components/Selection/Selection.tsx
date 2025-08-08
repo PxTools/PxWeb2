@@ -27,6 +27,7 @@ import {
   NavigationDrawer,
 } from '../NavigationDrawer';
 import useVariables from '../../context/useVariables';
+import useApp from '../../context/useApp';
 import { NavigationItem } from '../../components/NavigationMenu/NavigationItem/NavigationItemType';
 import useAccessibility from '../../context/useAccessibility';
 import { problemMessage } from '../../util/problemMessage';
@@ -228,6 +229,7 @@ export function Selection({
   hideMenuRef,
 }: SelectionProps) {
   const variables = useVariables();
+  const app = useApp();
   const {
     selectedVBValues,
     setSelectedVBValues,
@@ -249,13 +251,14 @@ export function Selection({
   const { addModal, removeModal } = useAccessibility();
 
   // Check for 'sq' query parameter and get its value
-  let savedQueryId: string | undefined = undefined;
-  if (typeof window !== 'undefined') {
-    const params = new URLSearchParams(window.location.search);
-    if (params.has('sq')) {
-      savedQueryId = params.get('sq') ?? undefined;
-    }
-  }
+  // let savedQueryId: string | undefined = undefined;
+  // if (typeof window !== 'undefined') {
+  //   const params = new URLSearchParams(window.location.search);
+  //   if (params.has('sq')) {
+  //     savedQueryId = params.get('sq') ?? undefined;
+  //   }
+  // }
+  let savedQueryId = app.getSavedQueryId();
 
   //console.log({ savedQueryId });
 
@@ -269,7 +272,7 @@ export function Selection({
   useEffect(() => {
     console.log(
       'variables.getSavedQueryId().length=',
-      variables.getSavedQueryId().length,
+      app.getSavedQueryId().length,
     );
     let shouldGetInitialSelection = !hasLoadedInitialSelection;
 
@@ -292,7 +295,7 @@ export function Selection({
     if (isLoadingMetadata === false) {
       variables.setIsLoadingMetadata(true);
     }
-    console.log('saveddqueryId 290', variables.getSavedQueryId());
+    console.log('saveddqueryId 290', app.getSavedQueryId());
     let metaDataDefaultSelection;
     if (savedQueryId) {
       metaDataDefaultSelection = false;
