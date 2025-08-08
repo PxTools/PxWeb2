@@ -17,13 +17,9 @@ import {
   getPxTableData,
   setPxTableData,
   Variable,
-  SelectedVBValues,
 } from '@pxweb2/pxweb2-ui';
 import { mapJsonStat2Response } from '../../mappers/JsonStat2ResponseMapper';
-import {
-  mapSavedQueryCodelistResponse,
-  SavedQueryCodeListType,
-} from '../../mappers/SavedQueryCodeListResponseMapper';
+
 import { addFormattingToPxTable } from './TableDataProviderUtils';
 import { problemMessage } from '../util/problemMessage';
 
@@ -101,7 +97,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
   const [errorMsg, setErrorMsg] = useState('');
   const variables = useVariables();
-  const { setSelectedVBValues } = variables;
+  //const { setSelectedVBValues } = variables;
 
   useEffect(() => {
     if (errorMsg !== '') {
@@ -164,11 +160,11 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     async (loadSavedQueryId: string, isMobile: boolean) => {
       console.log({ loadSavedQueryId });
 
-      // Call SavedQueriesService.getSaveQuery to get the saved query metadata and codelists. Use this for setting selected values in variables provider.
-      const result = await SavedQueriesService.getSaveQuery(loadSavedQueryId);
+      //Call SavedQueriesService.getSaveQuery to get the saved query metadata and codelists. Use this for setting selected values in variables provider.
+      // const result = await SavedQueriesService.getSaveQuery(loadSavedQueryId);
 
-      const selectedCodeLists: SavedQueryCodeListType[] =
-        mapSavedQueryCodelistResponse(result);
+      // const selectedCodeLists: SavedQueryCodeListType[] =
+      //   mapSavedQueryCodelistResponse(result);
 
       const res = await SavedQueriesService.runSaveQuery(loadSavedQueryId);
       // Map response to json-stat2 Dataset
@@ -183,25 +179,25 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       console.log({ pxTable });
 
       // Set selection in variables provider
-      let sqValues: SelectedVBValues[] = [];
+      // let sqValues: SelectedVBValues[] = [];
 
-      pxTable.metadata.variables.forEach((variable) => {
-        console.log({ variable });
-        const selectedCodeListObj = selectedCodeLists.find(
-          (cl) => cl.variableCode === variable.id,
-        );
-        sqValues.push({
-          id: variable.id,
-          values: variable.values.map((v) => v.code),
-          selectedCodeList: selectedCodeListObj?.selectedCodeList,
-        });
-      });
+      // pxTable.metadata.variables.forEach((variable) => {
+      //   console.log({ variable });
+      //   const selectedCodeListObj = selectedCodeLists.find(
+      //     (cl) => cl.variableCode === variable.id,
+      //   );
+      //   sqValues.push({
+      //     id: variable.id,
+      //     values: variable.values.map((v) => v.code),
+      //     selectedCodeList: selectedCodeListObj?.selectedCodeList,
+      //   });
+      // });
 
-      console.log({ sqValues });
-      setSelectedVBValues(sqValues);
-      variables.syncVariablesAndValues(sqValues);
-      variables.setIsLoadingMetadata(false);
-      variables.setHasLoadedDefaultSelection(true);
+      // console.log({ sqValues });
+      // setSelectedVBValues(sqValues);
+      // variables.syncVariablesAndValues(sqValues);
+      // variables.setIsLoadingMetadata(false);
+      // variables.setHasLoadedDefaultSelection(true);
       initializeStubAndHeading(pxTable, isMobile);
       setData(pxTable);
 
