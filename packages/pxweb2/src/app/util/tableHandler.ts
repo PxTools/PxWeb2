@@ -69,6 +69,8 @@ export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
         table.label ?? '',
         ' ',
         table.id,
+        ' ',
+        table.variableNames.join(' '),
       );
       return text.toLowerCase().includes(searchFilter.value.toLowerCase());
     }
