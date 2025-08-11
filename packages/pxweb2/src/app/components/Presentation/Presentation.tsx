@@ -117,7 +117,7 @@ export function Presentation({ selectedTabId, scrollRef }: propsType) {
 
     if (initialRun && !hasSelectedValues) {
       if (getSavedQueryId()?.length > 0) {
-        tableData.fetchSavedQuery(getSavedQueryId(), isMobile);
+        tableData.fetchSavedQuery(getSavedQueryId(), i18n, isMobile);
       } else {
         fetchTableDataIfAllowed();
       }

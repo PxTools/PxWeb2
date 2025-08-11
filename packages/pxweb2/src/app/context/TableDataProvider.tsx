@@ -28,7 +28,7 @@ export interface TableDataContextType {
   isInitialized: boolean;
   data: PxTable | undefined;
   fetchTableData: (tableId: string, i18n: i18n, isMobile: boolean) => void;
-  fetchSavedQuery: (queryId: string, isMobile: boolean) => void;
+  fetchSavedQuery: (queryId: string, i18n: i18n, isMobile: boolean) => void;
   pivotToMobile: () => void;
   pivotToDesktop: () => void;
   pivotCW: () => void;
@@ -254,8 +254,11 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * - Updates the context state with the new table data and stores a cloned copy as accumulated data.
    */
   const fetchSavedQuery = React.useCallback(
-    async (loadSavedQueryId: string, isMobile: boolean) => {
-      const res = await SavedQueriesService.runSaveQuery(loadSavedQueryId);
+    async (loadSavedQueryId: string, i18n: i18n, isMobile: boolean) => {
+      const res = await SavedQueriesService.runSaveQuery(
+        loadSavedQueryId,
+        i18n.language,
+      );
       // Map response to json-stat2 Dataset
       const pxDataobj: unknown = res;
       const pxTabData = pxDataobj as Dataset;
