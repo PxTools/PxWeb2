@@ -118,7 +118,6 @@ export function Presentation({ selectedTabId, scrollRef }: propsType) {
     if (
       initialRun &&
       !hasSelectedValues
-      // && variables.loadSavedQueryId.length > 0
     ) {
       if (getSavedQueryId()?.length > 0) {
         tableData.fetchSavedQuery(getSavedQueryId(), isMobile);
