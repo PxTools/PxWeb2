@@ -14,7 +14,7 @@ import { getConfig } from '../../util/config/getConfig';
 
 type propsType = {
   readonly selectedTabId: string;
-  scrollRef?: React.Ref<HTMLDivElement>;
+  readonly scrollRef?: React.Ref<HTMLDivElement>;
 };
 
 const MemoizedTable = React.memo(
@@ -120,7 +120,6 @@ export function Presentation({ selectedTabId, scrollRef }: propsType) {
       !hasSelectedValues
       // && variables.loadSavedQueryId.length > 0
     ) {
-      console.log('fetchTableDataIfAllowed initialRun');
       if (getSavedQueryId()?.length > 0) {
         tableData.fetchSavedQuery(getSavedQueryId(), isMobile);
       } else {
@@ -135,7 +134,6 @@ export function Presentation({ selectedTabId, scrollRef }: propsType) {
         !initialRun
       ) {
         setIsFadingTable(true);
-        console.log('fetchTableDataIfAllowed Not INITIAL RUN');
         fetchTableDataIfAllowed();
         setIsMissingMandatoryVariables(false);
       }

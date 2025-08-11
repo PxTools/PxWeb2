@@ -251,17 +251,7 @@ export function Selection({
   const [prevLang, setPrevLang] = useState('');
   const { addModal, removeModal } = useAccessibility();
 
-  // Check for 'sq' query parameter and get its value
-  // let savedQueryId: string | undefined = undefined;
-  // if (typeof window !== 'undefined') {
-  //   const params = new URLSearchParams(window.location.search);
-  //   if (params.has('sq')) {
-  //     savedQueryId = params.get('sq') ?? undefined;
-  //   }
-  // }
   let savedQueryId = app.getSavedQueryId();
-
-  //console.log({ savedQueryId });
 
   useEffect(() => {
     if (errorMsg) {
@@ -271,10 +261,6 @@ export function Selection({
   }, [errorMsg]);
 
   useEffect(() => {
-    console.log(
-      'variables.getSavedQueryId().length=',
-      app.getSavedQueryId().length,
-    );
     let shouldGetInitialSelection = !hasLoadedInitialSelection;
 
     if (!selectedTabId) {
@@ -296,7 +282,7 @@ export function Selection({
     if (isLoadingMetadata === false) {
       variables.setIsLoadingMetadata(true);
     }
-    console.log('saveddqueryId 290', app.getSavedQueryId());
+
     let metaDataDefaultSelection;
     if (savedQueryId) {
       metaDataDefaultSelection = false;
