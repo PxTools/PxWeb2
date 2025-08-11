@@ -5,8 +5,11 @@ import {
   sortFiltersByTypeAndSubjectOrder,
   deduplicateFiltersByValue,
   organizePaths,
+  getYearRanges,
+  getYearRangeFromPeriod,
 } from '../util/startPageFilters';
 import { Filter, type PathItem } from '../pages/StartPage/StartPageTypes';
+import { Table } from 'packages/pxweb2-api-client/src';
 
 const exampleResultTree: PathItem[] = [
   {
@@ -111,6 +114,35 @@ const inExample: PathItem = {
   uniqueId: 'in',
   children: [],
 };
+
+const tableExamles: Table[] = [
+  {
+    type: 'Table',
+    id: '1',
+    label:
+      'New registrations of passenger cars by region and by type of fuel. Month 2006M01-2025M07',
+    description: 'NULL',
+    updated: '2025-08-04T06:00:00Z',
+    firstPeriod: '2006M01',
+    lastPeriod: '2025M07',
+    variableNames: ['region', 'fuel', 'observations', 'month'],
+    source: 'Transport Analysis',
+    subjectCode: 'TK',
+  },
+  {
+    type: 'Table',
+    id: '2',
+    label:
+      'New registrations of passenger cars by region and by type of fuel. Month 2006M01-2025M07',
+    description: 'NULL',
+    updated: '2025-08-04T06:00:00Z',
+    firstPeriod: '1920M01',
+    lastPeriod: '2050M07',
+    variableNames: ['region', 'fuel', 'observations', 'month'],
+    source: 'Transport Analysis',
+    subjectCode: 'TK',
+  },
+];
 
 // This stops working when I add uniqueID fields - they are randomly generated and are different every time. Maybe mock math.random??
 
@@ -278,5 +310,29 @@ describe('Correctly sort and deduplicate filters', () => {
 
     const performedDeduped = deduplicateFiltersByValue(sortedFilters);
     expect(performedDeduped).toEqual(dedupedFilters);
+  });
+});
+
+describe('getYearRanges', () => {
+  it('returns correct min and max for multiple valid tables', () => {
+    expect(getYearRanges(tableExamles)).toEqual({ min: 1920, max: 2050 });
+  });
+
+  it('throws on empty input array', () => {
+    expect(getYearRanges([])).toEqual({ min: 1900, max: 2025 });
+  });
+});
+
+describe('getYearRangeFromPeriod', () => {
+  it('returns undefined if period is invalid', () => {
+    expect(getYearRangeFromPeriod('20M')).toEqual([NaN, NaN]);
+  });
+  it('returns correct range for valid period', () => {
+    expect(getYearRangeFromPeriod('2000-2005')).toEqual([2000, 2005]);
+    expect(getYearRangeFromPeriod('2020M12')).toEqual([2020, 2020]);
+    expect(getYearRangeFromPeriod('2010')).toEqual([2010, 2010]);
+  });
+  it('returns undefined if period is empty', () => {
+    expect(getYearRangeFromPeriod('')).toEqual([NaN, NaN]);
   });
 });

@@ -194,6 +194,7 @@ const StartPage = () => {
       return (
         <Chips.Removable
           filled
+          onMouseDown={(e) => e.preventDefault()}
           onClick={() => {
             dispatch({
               type: ActionType.RESET_FILTERS,
