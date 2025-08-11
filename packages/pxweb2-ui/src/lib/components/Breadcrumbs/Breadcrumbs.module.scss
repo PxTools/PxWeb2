@@ -1,11 +1,10 @@
 .breadcrumbsContainer {
   display: flex;
   align-items: center;
-&.compact {
- max-width: 400px;
- overflow: hidden;
-}
-
+  // &.compact {
+  //   max-width: 400px; // Set to
+  //   overflow: hidden;
+  // }
 }
 
 .breadcrumbsWrapper {
@@ -23,28 +22,31 @@
   }
 
   &.compact {
+
+    max-width: 400px; // Set to
+    overflow: hidden;
     //padding: 0 40px;
     flex-wrap: nowrap;
-    //overflow: hidden;
-    overflow-x: auto;       // Allow horizontal scroll if needed
     text-overflow: ellipsis;
-    min-width: 0;      // Prevent flexbox from overflowing its container
-    &.showMore {
-      //flex-wrap: wrap;
-      display: none;    // Hide "Show more" button by default
-    }
+    min-width: 0; // Prevent flexbox from overflowing its container
+
+    //overflow: hidden;
+    //overflow-x: auto;       // Allow horizontal scroll if needed
+    // &:show {
+    //   flex-wrap: wrap;
+    //   //  display: none; // Hide "Show more" button by default
+    // }
   }
 
   .breadcrumbItemIcon {
     padding-left: 20px;
 
-  font-size: 1.5em;      // Makes font or SVG icons larger
-  width: 1.5em;          // For SVG or image icons
-  height: 1.5em;
-  color: var(--px-color-icon-default); // Optional: set icon color
-  display: flex;
-  align-items: center;
-
+    font-size: 1.5em; // Makes font or SVG icons larger
+    width: 1.5em; // For SVG or image icons
+    height: 1.5em;
+    color: var(--px-color-icon-default); // Optional: set icon color
+    display: flex;
+    align-items: center;
   }
 
   .breadcrumbItem {
@@ -53,10 +55,12 @@
     color: var(--color-text);
     // text-decoration: none;
     padding-left: 20px;
+    flex-shrink: 0;      // Prevent shrinking
+    white-space: nowrap;
 
     &:last-child {
-      background-color: pink;
-      text-decoration: none !important;
+      //background-color: pink;
+      //text-decoration: none !important;
 
       //text-decoration-line: none;
       //text-decoration: dotted !important;
@@ -69,8 +73,29 @@
   }
 }
 
+.breadcrumbsContainercompact.showMore {
+  max-width: none;
+  flex-wrap: wrap ;
+  overflow-x: visible;
+
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.breadcrumbsWrapper.compact.showMore {
+  flex-wrap: wrap ;
+  overflow-x: visible;
+  align-items: center;
+}
+
+.breadcrumbsWrapper .breadcrumbItem:last-child a {
+  text-decoration: none !important;
+}
+
+
+
 .showMoreButton {
-   margin-left: 8px;
+  margin-left: 8px;
   &:hover {
     background-color: inherit !important;
   }

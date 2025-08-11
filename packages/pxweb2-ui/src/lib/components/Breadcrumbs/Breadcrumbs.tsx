@@ -15,12 +15,14 @@ export const Breadcrumbs = forwardRef<HTMLAnchorElement, BreadcrumbsProps>(
   function Breadcrumbs({ children, variant = 'default' }: BreadcrumbsProps) {
     const ulRef = useRef<HTMLUListElement>(null);
     const [isOverflowing, setIsOverflowing] = useState(false);
-    const [showMore, setShowMore] = useState(true); // <-- Add this state
+    const [showMore, setShowMore] = useState(false); // <-- Add this state
 
     useEffect(() => {
       const checkOverflow = () => {
         if (ulRef.current) {
-         setIsOverflowing(ulRef.current.scrollWidth > ulRef.current.clientWidth);
+          setIsOverflowing(
+            ulRef.current.scrollWidth > ulRef.current.clientWidth,
+          );
         }
       };
       checkOverflow();
@@ -34,6 +36,7 @@ export const Breadcrumbs = forwardRef<HTMLAnchorElement, BreadcrumbsProps>(
           className={cl(
             styles.breadcrumbsContainer,
             variant && styles[variant],
+            showMore && styles.showMore,
           )}
         >
           <ul
@@ -41,17 +44,17 @@ export const Breadcrumbs = forwardRef<HTMLAnchorElement, BreadcrumbsProps>(
             className={cl(
               styles.breadcrumbsWrapper,
               variant && styles[variant],
+              showMore && styles.showMore,
             )}
           >
             {React.Children.toArray(children).map((child, idx) => (
-
-  <li key={idx} className={cl(styles.breadcrumbItem)}>
-      {child}
-      <Icon
-        iconName="ChevronRight"
-        className={cl(styles.breadcrumbItemIcon)}
-      />
-    </li>
+              <li key={idx} className={cl(styles.breadcrumbItem)}>
+                {child}
+                <Icon
+                  iconName="ChevronRight"
+                  className={cl(styles.breadcrumbItemIcon)}
+                />
+              </li>
               // <React.Fragment key={idx}>
               //   <div
               //     className={cl(styles.breadcrumbItem)}
@@ -65,14 +68,14 @@ export const Breadcrumbs = forwardRef<HTMLAnchorElement, BreadcrumbsProps>(
               // </React.Fragment>
             ))}
           </ul>
-          {variant === 'compact' && isOverflowing && showMore && (
-            <Button
+          {variant === 'compact' && isOverflowing && (
+          <Button
               variant="tertiary"
               className={cl(styles.showMoreButton)}
-              onClick={() => setShowMore(false)}
-             >
-              Show more
-            </Button>
+              onClick={() => setShowMore((prev) => !prev)}
+            >
+              {showMore ? 'Show less' : 'Show more'}
+          </Button>
           )}
         </div>
       </>
