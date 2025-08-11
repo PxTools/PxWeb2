@@ -65,7 +65,7 @@ function reducer(
   action: ReducerActionTypes,
 ): StartPageState {
   switch (action.type) {
-    case ActionType.RESET_FILTERS:{
+    case ActionType.RESET_FILTERS: {
       const fullRange = getYearRanges(action.payload.tables);
       const subjectOrder = flattenSubjectTreeToList(action.payload.subjects);
       return {
