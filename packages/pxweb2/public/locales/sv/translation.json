@@ -71,7 +71,14 @@
       "remove_filter_aria": "Ta bort filter, {{value}}",
       "subject": "Ämnesområde",
       "timeUnit": "Tidsperiod",
-      "year": "År",
+      "year": {
+        "title": "År",
+        "from_label": "Från",
+        "to_label": "Till",
+        "from_year": "Från år",
+        "to_year": "Till år",
+        "clear_selection": "Rensa"
+      },
       "variabel": "Variabel",
       "frequency": {
         "annual": "År",
