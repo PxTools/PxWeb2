@@ -190,7 +190,7 @@ describe('StartPage', () => {
   it('prefixes href with language when showDefaultLanguageInPath=true', async () => {
     window.PxWeb2Config.language.showDefaultLanguageInPath = true;
     window.PxWeb2Config.language.defaultLanguage = 'en';
-  
+
     const { findByRole } = renderWithProviders(
       <AccessibilityProvider>
         <MemoryRouter>
@@ -198,12 +198,18 @@ describe('StartPage', () => {
         </MemoryRouter>
       </AccessibilityProvider>,
     );
-  
-    const heading = await findByRole('heading', { name: 'TableList(SEO)', hidden: true });
+
+    const heading = await findByRole('heading', {
+      name: 'TableList(SEO)',
+      hidden: true,
+    });
     const nav = heading.closest('nav') as HTMLElement;
     const links = await within(nav).findAllByRole('link', { hidden: true });
     links.forEach((a) => {
-      expect(a).toHaveAttribute('href', expect.stringMatching(/^\/en\/table\//));
+      expect(a).toHaveAttribute(
+        'href',
+        expect.stringMatching(/^\/en\/table\//),
+      );
     });
   });
 });
