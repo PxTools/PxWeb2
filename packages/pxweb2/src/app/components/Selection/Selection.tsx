@@ -334,23 +334,21 @@ export function Selection({
       });
 
     if (shouldGetInitialSelection) {
-      getInitialSelection(selectedTabId).then(
-        (selectionResponse) => {
-          if (selectionResponse) {
-            const initialSelection = mapTableSelectionResponse(
-              selectionResponse,
-            ).filter(
-              (variable) =>
-                variable.values.length > 0 ||
-                variable.selectedCodeList !== undefined,
-            );
-            setSelectedVBValues(initialSelection);
-            variables.syncVariablesAndValues(initialSelection);
-            variables.setIsLoadingMetadata(false);
-            variables.setHasLoadedInitialSelection(true);
-          }
-        },
-      );
+      getInitialSelection(selectedTabId).then((selectionResponse) => {
+        if (selectionResponse) {
+          const initialSelection = mapTableSelectionResponse(
+            selectionResponse,
+          ).filter(
+            (variable) =>
+              variable.values.length > 0 ||
+              variable.selectedCodeList !== undefined,
+          );
+          setSelectedVBValues(initialSelection);
+          variables.syncVariablesAndValues(initialSelection);
+          variables.setIsLoadingMetadata(false);
+          variables.setHasLoadedInitialSelection(true);
+        }
+      });
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -359,7 +357,6 @@ export function Selection({
   if (pxTableMetaToRender === null && pxTableMetadata !== null) {
     setPxTableMetaToRender(structuredClone(pxTableMetadata));
   }
-
 
   /**
    * Retrieves the initial selection for the current context, either from a saved query or by fetching the default selection.
@@ -389,7 +386,7 @@ export function Selection({
         );
       }
     } catch (apiError: unknown) {
-        setErrorMsg(problemMessage(apiError as ApiError, selectedTabId));
+      setErrorMsg(problemMessage(apiError as ApiError, selectedTabId));
     }
     return response;
   }
