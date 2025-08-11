@@ -1,3 +1,5 @@
+@use '$ui/src/lib/text-styles.scss';
+
 .saveAsActionList {
   list-style: none;
   padding: 0;
@@ -13,4 +15,31 @@
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   border: 0;
+}
+
+.informationCardWrapper {
+  display: flex;
+  padding: 0px 8px 20px 8px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  align-self: stretch;
+}
+
+.buttonWrapper {
+  display: flex;
+  padding: 8px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  align-self: stretch;
+  width: 100%;
+}
+
+.buttonWrapper > button {
+  width: 100%;
+}
+
+.copyText {
+  overflow-wrap: anywhere;
 }

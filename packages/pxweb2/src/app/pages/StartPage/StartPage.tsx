@@ -22,7 +22,10 @@ import { Header } from '../../components/Header/Header';
 import { Footer } from '../../components/Footer/Footer';
 import { FilterSidebar } from '../../components/FilterSidebar/FilterSidebar';
 import { ActionType } from './StartPageTypes';
-import { getSubjectTree, sortFilterChips } from '../../util/startPageFilters';
+import {
+  getSubjectTree,
+  sortAndDeduplicateFilterChips,
+} from '../../util/startPageFilters';
 import { useTopicIcons } from '../../util/hooks/useTopicIcons';
 import useApp from '../../context/useApp';
 import { getConfig } from '../../util/config/getConfig';
@@ -191,6 +194,7 @@ const StartPage = () => {
       return (
         <Chips.Removable
           filled
+          onMouseDown={(e) => e.preventDefault()}
           onClick={() => {
             dispatch({
               type: ActionType.RESET_FILTERS,
@@ -482,24 +486,33 @@ const StartPage = () => {
                 <div className={styles.filterPillContainer}>
                   <Chips>
                     {renderRemoveAllChips()}
-                    {sortFilterChips(state.activeFilters).map((filter) => (
-                      <Chips.Removable
-                        onClick={() => {
-                          dispatch({
-                            type: ActionType.REMOVE_FILTER,
-                            payload: filter.value,
-                          });
-                          setVisibleCount(paginationCount);
-                        }}
-                        aria-label={t('start_page.filter.remove_filter_aria', {
-                          value: filter.value,
-                        })}
-                        key={filter.value}
-                        truncate
-                      >
-                        {filter.label}
-                      </Chips.Removable>
-                    ))}
+                    {sortAndDeduplicateFilterChips(state.activeFilters).map(
+                      (filter) => (
+                        <Chips.Removable
+                          onMouseDown={(e) => e.preventDefault()}
+                          onClick={() => {
+                            dispatch({
+                              type: ActionType.REMOVE_FILTER,
+                              payload: {
+                                value: filter.value,
+                                type: filter.type,
+                              },
+                            });
+                            setVisibleCount(paginationCount);
+                          }}
+                          aria-label={t(
+                            'start_page.filter.remove_filter_aria',
+                            {
+                              value: filter.value,
+                            },
+                          )}
+                          key={filter.value}
+                          truncate
+                        >
+                          {filter.label}
+                        </Chips.Removable>
+                      ),
+                    )}
                   </Chips>
                 </div>
               )}

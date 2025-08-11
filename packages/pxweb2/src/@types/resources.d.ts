@@ -72,7 +72,14 @@ interface Resources {
         remove_filter_aria: 'Remove filter, {{value}}';
         subject: 'Topic';
         timeUnit: 'Time period';
-        year: 'Year';
+        year: {
+          title: 'Year';
+          from_label: 'From';
+          to_label: 'To';
+          from_year: 'From year';
+          to_year: 'To year';
+          clear_selection: 'Clear selection';
+        };
         variabel: 'Variable';
         frequency: {
           annual: 'Year';
@@ -185,6 +192,22 @@ interface Resources {
             jsonstat2: 'JSON-stat2 (.json)';
             html: 'HTML (.html)';
             parquet: 'Parquet (.parquet)';
+          };
+          savequery: {
+            title: 'Link to updated table';
+            info: 'Your table is saved and automatically kept up to date. You can decide how new time periods are included.';
+            radioLegend: 'Options for new time periods';
+            periodOptions: {
+              selected: "Don't add new time periods (the table will only show the time periods currently selected)";
+              from: 'Add new time periods (they will be added to the ones currently selected)';
+              top: 'Add new time periods and remove the oldest ones';
+            };
+            createButton: 'Create link';
+            copyButton: 'Copy link';
+            copiedButton: 'Link copied';
+            createStatus: 'Save query generated with id “{{query}}”.';
+            copyStatus: 'Save query copied to clipboard.';
+            loadingStatus: 'Generating saved query..';
           };
           imagefile: {
             title: 'Save as graph';

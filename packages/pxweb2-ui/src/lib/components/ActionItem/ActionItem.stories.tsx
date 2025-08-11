@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Meta, StoryObj } from '@storybook/react-vite';
 import { ActionItem } from './ActionItem';
 
 const meta: Meta<typeof ActionItem> = {
