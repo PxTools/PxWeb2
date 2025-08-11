@@ -5,6 +5,7 @@ import {
   ApiError,
   TableService,
   SavedQueriesService,
+  SelectionResponse,
 } from '@pxweb2/pxweb2-api-client';
 import { mapJsonStat2Response } from '../../../mappers/JsonStat2ResponseMapper';
 import { mapTableSelectionResponse } from '../../../mappers/TableSelectionResponseMapper';
@@ -333,67 +334,23 @@ export function Selection({
       });
 
     if (shouldGetInitialSelection) {
-      //   if (savedQueryId) {
-      //    if (savedQueryId) {
-      // 1. trigger tabledataprovider to call the saved query
-      // variables.setLoadSavedQueryId(savedQueryId);
-      // 2. make tabledataprovider set selected values in variablesprovider
-      // 3. Sync so selected values are marked as selected in variable boxes
-      // variables.syncVariablesAndValues(savedQuerySelection);
-
-      // } else {
-
-      if (savedQueryId) {
-        SavedQueriesService.getSavedQuerySelection(
-          savedQueryId,
-          i18n.resolvedLanguage,
-        )
-          .then((selectionResponse) => {
-            const defaultSelection = mapTableSelectionResponse(
+      getInitialSelection(selectedTabId).then(
+        (selectionResponse) => {
+          if (selectionResponse) {
+            const initialSelection = mapTableSelectionResponse(
               selectionResponse,
             ).filter(
               (variable) =>
                 variable.values.length > 0 ||
                 variable.selectedCodeList !== undefined,
             );
-            setSelectedVBValues(defaultSelection);
-            variables.syncVariablesAndValues(defaultSelection);
+            setSelectedVBValues(initialSelection);
+            variables.syncVariablesAndValues(initialSelection);
             variables.setIsLoadingMetadata(false);
             variables.setHasLoadedInitialSelection(true);
-          })
-          .catch((apiError: ApiError) => {
-            setErrorMsg(problemMessage(apiError, selectedTabId));
-          })
-          .catch((error) => {
-            setErrorMsg(
-              `Error getting default selection: ${selectedTabId} ${error.message}`,
-            );
-          });
-      } else {
-        TableService.getDefaultSelection(selectedTabId, i18n.resolvedLanguage)
-          .then((selectionResponse) => {
-            const defaultSelection = mapTableSelectionResponse(
-              selectionResponse,
-            ).filter(
-              (variable) =>
-                variable.values.length > 0 ||
-                variable.selectedCodeList !== undefined,
-            );
-            setSelectedVBValues(defaultSelection);
-            variables.syncVariablesAndValues(defaultSelection);
-            variables.setIsLoadingMetadata(false);
-            variables.setHasLoadedInitialSelection(true);
-          })
-          .catch((apiError: ApiError) => {
-            setErrorMsg(problemMessage(apiError, selectedTabId));
-          })
-          .catch((error) => {
-            setErrorMsg(
-              `Error getting default selection: ${selectedTabId} ${error.message}`,
-            );
-          });
-        //}
-      }
+          }
+        },
+      );
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -401,6 +358,40 @@ export function Selection({
 
   if (pxTableMetaToRender === null && pxTableMetadata !== null) {
     setPxTableMetaToRender(structuredClone(pxTableMetadata));
+  }
+
+
+  /**
+   * Retrieves the initial selection for the current context, either from a saved query or by fetching the default selection.
+   *
+   * If a saved query ID is present, it fetches the selection associated with that saved query.
+   * Otherwise, it retrieves the default selection for the specified table and language.
+   * In case of an error during the API call, it sets an error message using the provided error handler.
+   *
+   * @param selectedTabId - The ID of the currently selected tab for which to retrieve the selection.
+   * @returns A promise that resolves to a {@link SelectionResponse} object if successful, or `undefined` if an error occurs.
+   */
+  async function getInitialSelection(
+    selectedTabId: string,
+  ): Promise<SelectionResponse | undefined> {
+    let response: SelectionResponse | undefined = undefined;
+
+    try {
+      if (app.getSavedQueryId()?.length > 0) {
+        response = await SavedQueriesService.getSavedQuerySelection(
+          app.getSavedQueryId(),
+          i18n.resolvedLanguage,
+        );
+      } else {
+        response = await TableService.getDefaultSelection(
+          selectedTabId,
+          i18n.resolvedLanguage,
+        );
+      }
+    } catch (apiError: unknown) {
+        setErrorMsg(problemMessage(apiError as ApiError, selectedTabId));
+    }
+    return response;
   }
 
   async function handleCodeListChange(
