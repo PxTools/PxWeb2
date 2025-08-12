@@ -17,6 +17,7 @@ import {
   getFilters,
   getTimeUnits,
   updateSubjectTreeCounts,
+  getYearRanges,
 } from '../util/startPageFilters';
 import { shouldTableBeIncluded } from '../util/tableHandler';
 import { wrapWithLocalizedQuotemarks } from '../util/utils';
@@ -30,6 +31,7 @@ const initialState: StartPageState = Object.freeze({
   loading: false,
   error: '',
   originalSubjectTree: [],
+  lastUsedYearRange: null,
 });
 
 export const FilterContext = createContext<{
@@ -65,6 +67,7 @@ function reducer(
 ): StartPageState {
   switch (action.type) {
     case ActionType.RESET_FILTERS:
+      const fullRange = getYearRanges(action.payload.tables);
       return {
         ...initialState,
         availableTables: action.payload.tables,
@@ -73,14 +76,24 @@ function reducer(
         availableFilters: {
           subjectTree: action.payload.subjects,
           timeUnits: getTimeUnits(action.payload.tables),
+          yearRange: fullRange,
         },
+        lastUsedYearRange: fullRange,
       };
     case ActionType.ADD_FILTER: {
-      const newFilters = [...state.activeFilters, ...action.payload];
+      const incoming = action.payload;
+      const incomingTypes = new Set(incoming.map((f) => f.type));
+      const clearedFilters = state.activeFilters.filter((f) =>
+        incoming[0]?.type === 'yearRange' ? f.type !== 'yearRange' : true,
+      );
+      const newFilters = [...clearedFilters, ...incoming];
       const filteredTables = state.availableTables.filter((table) =>
         shouldTableBeIncluded(table, newFilters),
       );
       const addType = action.payload[0]?.type;
+      const updatedLastUsedYearRange = incomingTypes.has('yearRange')
+        ? state.lastUsedYearRange
+        : getYearRanges(filteredTables);
       return {
         ...state,
         activeFilters: newFilters,
@@ -97,7 +110,9 @@ function reducer(
             addType !== 'timeUnit'
               ? getTimeUnits(filteredTables)
               : state.availableFilters.timeUnits,
+          yearRange: getYearRanges(filteredTables),
         },
+        lastUsedYearRange: updatedLastUsedYearRange,
       };
     }
 
@@ -161,6 +176,7 @@ function reducer(
               (filter) => filter.value !== action.payload.value,
             );
       if (currentFilters.length === 0) {
+        const fullRange = getYearRanges(state.availableTables);
         return {
           ...state,
           activeFilters: [],
@@ -171,12 +187,21 @@ function reducer(
               state.availableTables,
             ),
             timeUnits: getTimeUnits(state.availableTables),
+            yearRange: fullRange,
           },
+          lastUsedYearRange: fullRange,
         };
       }
       const filteredTables = state.availableTables.filter((table) =>
         shouldTableBeIncluded(table, currentFilters),
       );
+      const yearRangeStillActive = currentFilters.some(
+        (f) => f.type === 'yearRange',
+      );
+      const updatedLastUsedYearRange = yearRangeStillActive
+        ? state.lastUsedYearRange
+        : getYearRanges(filteredTables);
+
       return {
         ...state,
         activeFilters: currentFilters,
@@ -190,7 +215,9 @@ function reducer(
                 )
               : state.availableFilters.subjectTree,
           timeUnits: getTimeUnits(filteredTables),
+          yearRange: getYearRanges(filteredTables),
         },
+        lastUsedYearRange: updatedLastUsedYearRange,
       };
     }
     case ActionType.SET_ERROR:
