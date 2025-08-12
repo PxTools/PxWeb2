@@ -63,16 +63,26 @@ export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
     if (!searchFilter) {
       return true;
     } else {
-      const text = ''.concat(
-        table.description ?? '',
-        ' ',
-        table.label ?? '',
-        ' ',
-        table.id,
-        ' ',
-        table.variableNames.join(' '),
-      );
-      return text.toLowerCase().includes(searchFilter.value.toLowerCase());
+      const text = ''
+        .concat(
+          table.description ?? '',
+          ' ',
+          table.label ?? '',
+          ' ',
+          table.id,
+          ' ',
+          table.variableNames.join(' '),
+        )
+        .toLowerCase()
+        .normalize();
+
+      return searchFilter.value
+        .toLowerCase()
+        .normalize()
+        .split(' ')
+        .every((word) => {
+          return text.includes(word);
+        });
     }
   };
 
