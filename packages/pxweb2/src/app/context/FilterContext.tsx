@@ -149,20 +149,45 @@ function reducer(
         ? state.lastUsedYearRange
         : getYearRanges(filteredTables);
 
+      const activeTypes = new Set(currentFilters.map((f) => f.type));
+      const isOnlyTypeActive = (type: 'timeUnit' | 'subject' | 'yearRange') =>
+        activeTypes.size === 1 && activeTypes.has(type);
+
+      let newSubjectTree = state.availableFilters.subjectTree;
+      if (removedType !== 'subject') {
+        const tablesForSubject = isOnlyTypeActive('subject')
+          ? state.availableTables
+          : filteredTables;
+        newSubjectTree = updateSubjectTreeCounts(
+          state.originalSubjectTree,
+          tablesForSubject,
+        );
+      }
+
+      let newTimeUnits = state.availableFilters.timeUnits;
+      if (removedType !== 'timeUnit') {
+        const tablesForTimeUnit = isOnlyTypeActive('timeUnit')
+          ? state.availableTables
+          : filteredTables;
+        newTimeUnits = getTimeUnits(tablesForTimeUnit);
+      }
+
+      let newYearRange = state.availableFilters.yearRange;
+      if (removedType !== 'yearRange') {
+        const tablesForYearRange = isOnlyTypeActive('yearRange')
+          ? state.availableTables
+          : filteredTables;
+        newYearRange = getYearRanges(tablesForYearRange);
+      }
+
       return {
         ...state,
         activeFilters: currentFilters,
         filteredTables,
         availableFilters: {
-          subjectTree:
-            removedType !== 'subject'
-              ? updateSubjectTreeCounts(
-                  state.originalSubjectTree,
-                  filteredTables,
-                )
-              : state.availableFilters.subjectTree,
-          timeUnits: getTimeUnits(filteredTables),
-          yearRange: getYearRanges(filteredTables),
+          subjectTree: newSubjectTree,
+          timeUnits: newTimeUnits,
+          yearRange: newYearRange,
         },
         lastUsedYearRange: updatedLastUsedYearRange,
       };
