@@ -1,21 +1,32 @@
 import React, { forwardRef, useRef, useEffect, useState } from 'react';
 import cl from 'clsx';
-
 import styles from './Breadcrumbs.module.scss';
-import { Icon } from '../Icon/Icon';
+import { BreadcrumbsIcon } from '../Icon/BreadcrumbsIcon';
 import Button from '../Button/Button';
+import Link from '../Link/Link';
 
 interface BreadcrumbsProps
   extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   variant?: 'default' | 'compact';
-  children?: React.ReactNode;
+  breadcrumbItems: BreadcrumbItem[];
+}
+
+export class BreadcrumbItem {
+  label: string;
+  href: string;
+
+  constructor(label: string, href: string) {
+    this.label = label;
+    this.href = href;
+  }
 }
 
 export const Breadcrumbs = forwardRef<HTMLAnchorElement, BreadcrumbsProps>(
-  function Breadcrumbs({ children, variant = 'default' }: BreadcrumbsProps) {
+  function Breadcrumbs({breadcrumbItems, variant = 'default' }: BreadcrumbsProps) {
     const ulRef = useRef<HTMLUListElement>(null);
     const [isOverflowing, setIsOverflowing] = useState(false);
-    const [showMore, setShowMore] = useState(false); // <-- Add this state
+    const [showMore, setShowMore] = useState(false);
+    const dots = '...';
 
     useEffect(() => {
       const checkOverflow = () => {
@@ -28,7 +39,7 @@ export const Breadcrumbs = forwardRef<HTMLAnchorElement, BreadcrumbsProps>(
       checkOverflow();
       window.addEventListener('resize', checkOverflow);
       return () => window.removeEventListener('resize', checkOverflow);
-    }, [children]);
+    }, []);
 
     return (
       <>
@@ -47,35 +58,29 @@ export const Breadcrumbs = forwardRef<HTMLAnchorElement, BreadcrumbsProps>(
               showMore && styles.showMore,
             )}
           >
-            {React.Children.toArray(children).map((child, idx) => (
-              <li key={idx} className={cl(styles.breadcrumbItem)}>
-                {child}
-                <Icon
-                  iconName="ChevronRight"
-                  className={cl(styles.breadcrumbItemIcon)}
-                />
-              </li>
-              // <React.Fragment key={idx}>
-              //   <div
-              //     className={cl(styles.breadcrumbItem)}
-              //   >
-              //     {child}
-              //     <Icon
-              //       iconName="ChevronRight"
-              //       className={cl(styles.breadcrumbItemIcon)}
-              //     />
-              //   </div>
-              // </React.Fragment>
-            ))}
+           {breadcrumbItems.map((item, idx) => (
+    <li key={idx} className={cl(styles.breadcrumbItem)}>
+      <Link size="medium" inline href={item.href}>
+        {item.label}
+      </Link>
+      <BreadcrumbsIcon
+        className={cl(styles.breadcrumbItemIcon)}
+      />
+    </li>
+  ))}
+
           </ul>
-          {variant === 'compact' && isOverflowing && (
-          <Button
+          {variant === 'compact' && isOverflowing && !showMore && (
+            <span className={styles.dots}>{dots}</span>
+          )}
+          {variant === 'compact' && isOverflowing && !showMore && (
+            <Button
               variant="tertiary"
               className={cl(styles.showMoreButton)}
-              onClick={() => setShowMore((prev) => !prev)}
+              onClick={() => setShowMore(true)}
             >
-              {showMore ? 'Show less' : 'Show more'}
-          </Button>
+              Show more
+            </Button>
           )}
         </div>
       </>

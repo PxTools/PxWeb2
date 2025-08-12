@@ -1,7 +1,5 @@
-import React from 'react';
 import { Meta, StoryObj } from '@storybook/react-vite';
-import { Breadcrumbs, BreadcrumbsProps } from './Breadcrumbs';
-import Link from '../Link/Link';
+import { BreadcrumbItem, Breadcrumbs, BreadcrumbsProps } from './Breadcrumbs';
 
 const meta: Meta<BreadcrumbsProps> = {
   title: 'Components/Breadcrumbs',
@@ -9,70 +7,41 @@ const meta: Meta<BreadcrumbsProps> = {
   tags: ['autodocs'],
 };
 
-
 export default meta;
 
-
-export const Default: StoryObj<typeof Breadcrumbs> =  {
+export const Default: StoryObj<typeof Breadcrumbs> = {
   render: () => (
-    <Breadcrumbs variant="default">
-      <Link inline={true} href="/">
-        Home
-      </Link>
-      <Link inline={true} href="/library">
-        Library
-      </Link>
-      <Link inline={true} href="/library/data" aria-current="page">
-        Data
-      </Link>
-    </Breadcrumbs>
+    <Breadcrumbs
+      variant="default"
+      breadcrumbItems={[
+        new BreadcrumbItem('Level 1', '/'),
+        new BreadcrumbItem('Level 2', '/level2'),
+        new BreadcrumbItem('Level 3', '/level2/level3'),
+      ]}
+    />
   ),
 };
 
 export const Compact: StoryObj<typeof Breadcrumbs> = {
   render: () => (
-    <Breadcrumbs variant="compact">
-      <Link inline={true} href="/">
-        Home
-      </Link>
-      <Link inline={true} href="/library">
-        Library Library
-      </Link>
-      <Link inline={true} href="/library/data" aria-current="page">
-        Data Data Data Data Data Data Data Data Data Data
-      </Link>
-    </Breadcrumbs>
+    <Breadcrumbs variant="compact"
+      breadcrumbItems={[
+        new BreadcrumbItem('Level 1 Level 1 Level 1 Level 1 Level 1 Level 1', '/'),
+        new BreadcrumbItem('Level 2', '/level2'),
+        new BreadcrumbItem('Level 3', '/level2/level3'),
+      ]}
+    />
   ),
 };
 
-
-export const CompactLess: StoryObj<typeof Breadcrumbs> =  {
+export const CompactWithLessText: StoryObj<typeof Breadcrumbs> = {
   render: () => (
-    <Breadcrumbs variant="compact">
-      <Link inline={true} href="/">
-        Home
-      </Link>
-      <Link inline={true} href="/library">
-        Library
-      </Link>
-      <Link inline={true} href="/library/data" aria-current="page">
-        Data
-      </Link>
-    </Breadcrumbs>
+    <Breadcrumbs variant="compact"
+      breadcrumbItems={[
+        new BreadcrumbItem('Level 1', '/'),
+        new BreadcrumbItem('Level 2', '/level2'),
+        new BreadcrumbItem('Level 3', '/level2/level3'),
+      ]}
+    />
   ),
 };
-
-
-
-// export const SingleItem: StoryObj<BreadcrumbsProps> = {
-//   args: {
-//     links: [{ label: 'Home', href: '/' }],
-//   },
-// };
-
-// export const CustomSeparator: StoryObj<BreadcrumbsProps> = {
-//   args: {
-//     links,
-//     separator: '>',
-//   },
-// };
