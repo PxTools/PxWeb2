@@ -19,9 +19,8 @@ import {
   updateSubjectTreeCounts,
 } from '../util/startPageFilters';
 import { shouldTableBeIncluded } from '../util/tableHandler';
-import useTranslation from 'i18next';
+import { wrapWithLocalizedQuotemarks } from '../util/utils';
 
-const t = useTranslation.t;
 // Want to ensure this is never changed
 const initialState: StartPageState = Object.freeze({
   availableTables: [],
@@ -107,8 +106,11 @@ function reducer(
 
       const newSearch: Filter = {
         type: 'search',
-        label: `${t('presentation_page.sidemenu.selection.variablebox.search.label')}: ${action.payload}`,
-        value: action.payload,
+        label: wrapWithLocalizedQuotemarks(
+          action.payload.text,
+          action.payload.language,
+        ),
+        value: action.payload.text,
         index: 1,
       };
 
@@ -119,7 +121,7 @@ function reducer(
       // We remove the search filter if the string is empty (field cleared)
       // Otherwise, update if it already exists, or if not add it.
       // Ensures we only ever have one filter of type search
-      if (action.payload == '') {
+      if (action.payload.text == '') {
         newFilters = state.activeFilters.filter((filter) => {
           return filter.type != 'search';
         });

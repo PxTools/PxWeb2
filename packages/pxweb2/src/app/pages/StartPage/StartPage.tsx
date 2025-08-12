@@ -3,6 +3,7 @@ import { useTranslation, Trans } from 'react-i18next';
 import type { TFunction } from 'i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import cl from 'clsx';
+import { debounce } from 'lodash';
 
 import styles from './StartPage.module.scss';
 import {
@@ -31,7 +32,6 @@ import useApp from '../../context/useApp';
 import { getConfig } from '../../util/config/getConfig';
 import { FilterContext, FilterProvider } from '../../context/FilterContext';
 import { getAllTables } from '../../util/tableHandler';
-import { debounce } from 'lodash';
 
 const StartPage = () => {
   const { t, i18n } = useTranslation();
@@ -294,7 +294,7 @@ const StartPage = () => {
     debounce((value: string) => {
       dispatch({
         type: ActionType.ADD_SEARCH_FILTER,
-        payload: value,
+        payload: { text: value, language: i18n.language },
       });
     }, 500),
   ).current;

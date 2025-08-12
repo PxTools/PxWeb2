@@ -65,7 +65,7 @@ type AddFilterAction = {
 
 type AddSearchFilterAction = {
   type: ActionType.ADD_SEARCH_FILTER;
-  payload: string;
+  payload: { text: string; language: string };
 };
 
 type UpdateTablesAction = {
