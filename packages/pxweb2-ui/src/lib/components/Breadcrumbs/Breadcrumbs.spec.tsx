@@ -1,53 +1,74 @@
-import { describe, it, expect } from 'vitest';
-import { render } from '@testing-library/react';
-import Breadcrumbs from './Breadcrumbs';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
+import React from 'react';
+import Breadcrumbs, { BreadcrumbItem } from './Breadcrumbs';
 
 describe('Breadcrumbs', () => {
-  it('should render successfully', () => {
-    const { baseElement } = render(<Breadcrumbs />);
-    expect(baseElement).toBeTruthy();
+  const items = [
+    new BreadcrumbItem('Home', '/'),
+    new BreadcrumbItem('Library', '/library'),
+    new BreadcrumbItem('Data', '/library/data'),
+  ];
+
+  beforeEach(() => {
+    // Reset window resize listeners between tests
+    window.dispatchEvent(new Event('resize'));
   });
 
-  // it('renders children as breadcrumb items', () => {
-  //   render(
-  //     <Breadcrumbs>
-  //       <a href="/home">Home</a>
-  //       <a href="/about">About</a>
-  //     </Breadcrumbs>,
-  //   );
-  //   expect(screen.getByText('Home')).toBeInTheDocument();
-  //   expect(screen.getByText('About')).toBeInTheDocument();
-  // });
+  it('renders all breadcrumb items', () => {
+    render(<Breadcrumbs breadcrumbItems={items} />);
+    items.forEach(item => {
+      expect(screen.getByText(item.label)).toBeInTheDocument();
+    });
+  });
 
-  // it('applies the default style class', () => {
-  //   const { container } = render(
-  //     <Breadcrumbs>
-  //       <a href="/home">Home</a>
-  //     </Breadcrumbs>,
-  //   );
-  //   expect(container.firstChild).toHaveClass('breadcrumbs');
-  // });
+  it('renders with default variant', () => {
+    render(<Breadcrumbs breadcrumbItems={items} />);
+    expect(screen.getByRole('list')).toBeInTheDocument();
+  });
 
-  // it('applies the compact style class when style="compact"', () => {
-  //   const { container } = render(
-  //     <Breadcrumbs style="compact">
-  //       <a href="/home">Home</a>
-  //     </Breadcrumbs>,
-  //   );
-  //   // The compact style class should be present
-  //   expect(container.firstChild).toHaveClass('compact');
-  // });
+  it('renders with compact variant', () => {
+    render(<Breadcrumbs breadcrumbItems={items} variant="compact" />);
+    expect(screen.getByRole('list')).toBeInTheDocument();
+  });
 
-  // it('renders divider icon between breadcrumb items', () => {
-  //   render(
-  //     <Breadcrumbs>
-  //       <a href="/home">Home</a>
-  //       <a href="/about">About</a>
-  //     </Breadcrumbs>,
-  //   );
-  //   // There should be at least one ChevronRight icon
-  //   expect(screen.getAllByTestId('icon-ChevronRight').length).toBeGreaterThan(
-  //     0,
-  //   );
-  // });
+  it('shows "Show more" button and dots when overflowing in compact mode', () => {
+    // Mock scrollWidth > clientWidth to simulate overflow
+    vi.spyOn(HTMLElement.prototype, 'scrollWidth', 'get').mockReturnValue(200);
+    vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockReturnValue(100);
+
+    render(<Breadcrumbs breadcrumbItems={items} variant="compact" />);
+    expect(screen.getByText('...')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /show more/i })).toBeInTheDocument();
+  });
+
+  it('shows all items after clicking "Show more"', () => {
+    vi.spyOn(HTMLElement.prototype, 'scrollWidth', 'get').mockReturnValue(200);
+    vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockReturnValue(100);
+
+    render(<Breadcrumbs breadcrumbItems={items} variant="compact" />);
+    fireEvent.click(screen.getByRole('button', { name: /show more/i }));
+    expect(screen.queryByText('...')).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /show more/i })).not.toBeInTheDocument();
+    items.forEach(item => {
+      expect(screen.getByText(item.label)).toBeInTheDocument();
+    });
+  });
+
+  it('does not show "Show more" button if not overflowing', () => {
+    vi.spyOn(HTMLElement.prototype, 'scrollWidth', 'get').mockReturnValue(100);
+    vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockReturnValue(200);
+
+    render(<Breadcrumbs breadcrumbItems={items} variant="compact" />);
+    expect(screen.queryByText('...')).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /show more/i })).not.toBeInTheDocument();
+  });
+
+  it('renders links with correct hrefs', () => {
+    render(<Breadcrumbs breadcrumbItems={items} />);
+    items.forEach(item => {
+      const link = screen.getByText(item.label).closest('a');
+      expect(link).toHaveAttribute('href', item.href);
+    });
+  });
 });
