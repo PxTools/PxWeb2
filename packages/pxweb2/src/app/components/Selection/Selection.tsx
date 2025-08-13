@@ -338,7 +338,7 @@ export function Selection({
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedTabId, i18n.resolvedLanguage, savedQueryId]);
+  }, [selectedTabId, i18n.resolvedLanguage]);
 
   if (pxTableMetaToRender === null && pxTableMetadata !== null) {
     setPxTableMetaToRender(structuredClone(pxTableMetadata));
