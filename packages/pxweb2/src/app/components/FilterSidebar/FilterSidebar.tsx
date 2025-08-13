@@ -1,12 +1,13 @@
 import cl from 'clsx';
 
-import { ActionType } from '../../pages/StartPage/StartPageTypes';
+import { ActionType, PathItem } from '../../pages/StartPage/StartPageTypes';
 import styles from './FilterSidebar.module.scss';
 import { useTranslation } from 'react-i18next';
-import { Checkbox, FilterCategory, Button } from '@pxweb2/pxweb2-ui';
-import { PathItem, findParent } from '../../util/startPageFilters';
+import { Checkbox, FilterCategory } from '@pxweb2/pxweb2-ui';
+import { findAncestors, getAllDescendants } from '../../util/startPageFilters';
 import { FilterContext } from '../../context/FilterContext';
-import { ReactNode, useContext, useState } from 'react';
+import { YearRangeFilter } from './YearRangeFilter';
+import { ReactNode, useContext } from 'react';
 
 interface CollapsibleProps {
   subject: PathItem;
@@ -28,73 +29,92 @@ const Collapsible: React.FC<CollapsibleProps> = ({
   children,
   onFilterChange,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
   const { state, dispatch } = useContext(FilterContext);
+  const subjectId = subject.id;
+  const subjectLabel = subject.label;
+  const subjectTree = state.availableFilters.subjectTree;
 
   return (
     <>
-      <div className={styles.collapsibleElement}>
-        {subject.children && subject.children.length > 0 ? (
-          <Button
-            variant="tertiary"
-            icon={isOpen ? 'ChevronUp' : 'ChevronRight'}
-            aria-expanded={isOpen}
-            aria-controls={`collapsible-children-${subject.id}-${index}`}
-            className={styles.collapsibleChevron}
-            onClick={() => setIsOpen(!isOpen)}
-          ></Button>
-        ) : (
-          <span className={styles.collapsibleChevron} />
-        )}
-        <span className={styles.filterLabel}>
-          <Checkbox
-            id={subject.id + index}
-            text={`${subject.label} (${count})`}
-            value={isActive}
-            subtle={!isActive && count === 0}
-            onChange={(value) => {
-              setIsOpen(true);
-              if (value) {
-                const parent = findParent(
-                  state.availableFilters.subjectTree,
-                  subject.id,
+      <span className={styles.filterLabel}>
+        <Checkbox
+          id={subjectId + index}
+          text={`${subjectLabel} (${count})`}
+          value={isActive}
+          subtle={!isActive && count === 0}
+          onChange={(value) => {
+            const ancestors = findAncestors(subjectTree, subject.uniqueId!);
+            const children = getAllDescendants(subject);
+
+            if (value) {
+              // If subject has children, add the subject itself
+              dispatch({
+                type: ActionType.ADD_FILTER,
+                payload: [
+                  {
+                    type: 'subject',
+                    value: subjectId,
+                    label: subjectLabel,
+                    uniqueId: subject.uniqueId,
+                    index,
+                  },
+                ],
+              });
+
+              // If the subject has children, we remove all ancestors from filter
+              for (const ancestor of ancestors) {
+                const isAncestorInFilter = state.activeFilters.some(
+                  (f) => f.type === 'subject' && f.value === ancestor.id,
                 );
-
-                // Remove parent from activeFilters
-                state.activeFilters
-                  .filter((f) => f.type === 'subject' && f.value === parent?.id)
-                  .forEach((f) => {
-                    dispatch({
-                      type: ActionType.REMOVE_FILTER,
-                      payload: f.value,
-                    });
+                if (isAncestorInFilter) {
+                  dispatch({
+                    type: ActionType.REMOVE_FILTER,
+                    payload: { value: ancestor.id, type: 'subject' },
                   });
+                }
+              }
+            } else {
+              //Remove subject and all its descendants from filter
+              const descendants = [subject, ...children];
 
-                // TODO: Mark parent as indeterminate in UI if needed
+              for (const d of descendants) {
+                dispatch({
+                  type: ActionType.REMOVE_FILTER,
+                  payload: {
+                    value: d.id,
+                    type: 'subject',
+                    uniqueId: d.uniqueId,
+                  },
+                });
+              }
 
+              // Ensure first parent is actually added as a filter, and not just ephemerally selected
+              const parent: PathItem | undefined = ancestors.length
+                ? ancestors[ancestors.length - 1]
+                : undefined;
+              const isParentInFilter = state.activeFilters.some(
+                (f) => f.type === 'subject' && f.value === parent?.id,
+              );
+              if (parent && !isParentInFilter) {
                 dispatch({
                   type: ActionType.ADD_FILTER,
                   payload: [
                     {
                       type: 'subject',
-                      value: subject.id,
-                      label: subject.label,
-                      index: index,
+                      value: parent.id,
+                      label: parent.label,
+                      uniqueId: parent.uniqueId,
+                      index,
                     },
                   ],
                 });
-              } else {
-                dispatch({
-                  type: ActionType.REMOVE_FILTER,
-                  payload: subject.id,
-                });
               }
-              onFilterChange?.();
-            }}
-          />
-        </span>
-      </div>
-      <div className={!isOpen ? styles.hiddenChildren : ''}>{children}</div>
+            }
+            onFilterChange?.();
+          }}
+        />
+      </span>
+      {isActive && children}
     </>
   );
 };
@@ -106,32 +126,47 @@ const RenderSubjects: React.FC<{
 }> = ({ firstLevel, subjects, onFilterChange }) => {
   const { state } = useContext(FilterContext);
 
-  return subjects.map((subject, index) => {
-    const isActive = state.activeFilters.some(
-      (filter) => filter.type === 'subject' && filter.value === subject.id,
-    );
-    const count = subject.count ?? 0;
+  return (
+    <ul className={styles.filterList}>
+      {subjects.map((subject, index) => {
+        const descendants = getAllDescendants(subject);
+        const count = subject.count ?? 0;
 
-    return (
-      <div key={subject.id} className={cl(!firstLevel && styles.toggleIndent)}>
-        <Collapsible
-          subject={subject}
-          index={index}
-          count={count}
-          isActive={isActive}
-          onFilterChange={onFilterChange}
-        >
-          {subject.children && (
-            <RenderSubjects
-              firstLevel={false}
-              subjects={subject.children}
+        const isChecked =
+          state.activeFilters.some(
+            (f) => f.type === 'subject' && f.uniqueId === subject.uniqueId,
+          ) ||
+          descendants.some((d) =>
+            state.activeFilters.some(
+              (f) => f.type === 'subject' && f.uniqueId === d.uniqueId,
+            ),
+          );
+
+        return (
+          <li
+            key={subject.id}
+            className={cl(!firstLevel && styles.toggleIndent)}
+          >
+            <Collapsible
+              subject={subject}
+              index={index}
+              count={count}
+              isActive={isChecked}
               onFilterChange={onFilterChange}
-            />
-          )}
-        </Collapsible>
-      </div>
-    );
-  });
+            >
+              {!!subject.children?.length && (
+                <RenderSubjects
+                  firstLevel={false}
+                  subjects={subject.children}
+                  onFilterChange={onFilterChange}
+                />
+              )}
+            </Collapsible>
+          </li>
+        );
+      })}
+    </ul>
+  );
 };
 
 const RenderTimeUnitFilters: React.FC<{ onFilterChange?: () => void }> = ({
@@ -167,7 +202,7 @@ const RenderTimeUnitFilters: React.FC<{ onFilterChange?: () => void }> = ({
                 })
               : dispatch({
                   type: ActionType.REMOVE_FILTER,
-                  payload: key,
+                  payload: { value: key, type: 'timeUnit' },
                 });
             onFilterChange?.();
           }}
@@ -185,15 +220,16 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
 
   return (
     <div className={styles.sideBar}>
-      <div>
+      <div className={styles.sideBarWrapper}>
         <FilterCategory header={t('start_page.filter.subject')}>
-          <ul className={styles.filterList}>
-            <RenderSubjects
-              firstLevel={true}
-              subjects={state.availableFilters.subjectTree}
-              onFilterChange={onFilterChange}
-            />
-          </ul>
+          <RenderSubjects
+            firstLevel={true}
+            subjects={state.availableFilters.subjectTree}
+            onFilterChange={onFilterChange}
+          />
+        </FilterCategory>
+        <FilterCategory header={t('start_page.filter.year.title')}>
+          <YearRangeFilter />
         </FilterCategory>
         <FilterCategory header={t('start_page.filter.timeUnit')}>
           <ul className={styles.filterList}>
