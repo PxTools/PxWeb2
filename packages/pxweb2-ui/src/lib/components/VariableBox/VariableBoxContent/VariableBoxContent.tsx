@@ -400,6 +400,7 @@ export function VariableBoxContent({
   const virtuosoRef = useRef<VirtuosoHandle>(null);
   const [lastScrollPosition, setLastScrollPosition] = useState(0);
   const [scrollingDown, setScrollingDown] = useState(false);
+  const [atTop, setAtTop] = useState(true);
 
   const handleVirtuosoScroll = () => {
     if (virtuosoRef.current) {
@@ -524,10 +525,12 @@ export function VariableBoxContent({
                 ref={virtuosoRef}
                 onScroll={handleVirtuosoScroll}
                 totalListHeightChanged={handleTotalListHeightChanged}
+                atTopThreshold={hasSevenOrMoreValues ? 88 : 0}
+                atTopStateChange={setAtTop}
                 components={{
                   ScrollSeekPlaceholder,
                   TopItemList:
-                    scrollingDown && search === ''
+                    scrollingDown && search === '' && !atTop
                       ? TopItemListEmptyFragment
                       : undefined,
                 }}
