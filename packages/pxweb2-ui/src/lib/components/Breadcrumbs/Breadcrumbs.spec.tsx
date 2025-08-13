@@ -1,11 +1,8 @@
 //import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { describe, it, expect} from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import Breadcrumbs, { BreadcrumbItem } from './Breadcrumbs';
 import '@testing-library/jest-dom/vitest';
-
-
-
 
 describe('Breadcrumbs', () => {
   const items = [
