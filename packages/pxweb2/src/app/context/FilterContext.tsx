@@ -153,8 +153,12 @@ function reducer(
       const isOnlyTypeActive = (type: 'timeUnit' | 'subject' | 'yearRange') =>
         activeTypes.size === 1 && activeTypes.has(type);
 
+      const hasNonSubjectActive = currentFilters.some(
+        (f) => f.type !== 'subject',
+      );
+
       let newSubjectTree = state.availableFilters.subjectTree;
-      if (removedType !== 'subject') {
+      if (removedType !== 'subject' || hasNonSubjectActive) {
         const tablesForSubject = isOnlyTypeActive('subject')
           ? state.availableTables
           : filteredTables;
