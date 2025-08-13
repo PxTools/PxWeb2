@@ -18,12 +18,10 @@ import {
   updateSubjectTreeCounts,
   flattenSubjectTreeToList,
   getYearRanges,
-  shouldRecalcFilter,
-  tablesForFilterCounts,
+  recomputeAvailableFilters,
 } from '../util/startPageFilters';
 import { shouldTableBeIncluded } from '../util/tableHandler';
 
-// Want to ensure this is never changed
 const initialState: StartPageState = Object.freeze({
   availableTables: [],
   filteredTables: [],
@@ -78,7 +76,10 @@ function reducer(
         originalSubjectTree: action.payload.subjects,
         subjectOrderList: subjectOrder,
         availableFilters: {
-          subjectTree: action.payload.subjects,
+          subjectTree: updateSubjectTreeCounts(
+            action.payload.subjects,
+            action.payload.tables,
+          ),
           timeUnits: getTimeUnits(action.payload.tables),
           yearRange: fullRange,
         },
@@ -95,55 +96,28 @@ function reducer(
       const filteredTables = state.availableTables.filter((table) =>
         shouldTableBeIncluded(table, newFilters),
       );
-      const addType: FilterType | undefined = action.payload[0]?.type;
+      const addType = action.payload[0]?.type as FilterType | undefined;
       const updatedLastUsedYearRange = incomingTypes.has('yearRange')
         ? state.lastUsedYearRange
         : getYearRanges(filteredTables);
 
-      let newSubjectTree = state.availableFilters.subjectTree;
-      if (shouldRecalcFilter(addType, 'subject', newFilters)) {
-        const tablesForSubject = tablesForFilterCounts(
-          'subject',
-          newFilters,
-          filteredTables,
-          state.availableTables,
-        );
-        newSubjectTree = updateSubjectTreeCounts(
-          state.originalSubjectTree,
-          tablesForSubject,
-        );
-      }
-
-      let newTimeUnits = state.availableFilters.timeUnits;
-      if (shouldRecalcFilter(addType, 'timeUnit', newFilters)) {
-        const tablesForTimeUnit = tablesForFilterCounts(
-          'timeUnit',
-          newFilters,
-          filteredTables,
-          state.availableTables,
-        );
-        newTimeUnits = getTimeUnits(tablesForTimeUnit);
-      }
-
-      let newYearRange = state.availableFilters.yearRange;
-      if (shouldRecalcFilter(addType, 'yearRange', newFilters)) {
-        const tablesForYearRange = tablesForFilterCounts(
-          'yearRange',
-          newFilters,
-          filteredTables,
-          state.availableTables,
-        );
-        newYearRange = getYearRanges(tablesForYearRange);
-      }
+      const recomputed = recomputeAvailableFilters(
+        addType,
+        newFilters,
+        filteredTables,
+        state.availableTables,
+        state.originalSubjectTree,
+      );
 
       return {
         ...state,
         activeFilters: newFilters,
         filteredTables,
         availableFilters: {
-          subjectTree: newSubjectTree,
-          timeUnits: newTimeUnits,
-          yearRange: newYearRange,
+          subjectTree:
+            recomputed.subjectTree ?? state.availableFilters.subjectTree,
+          timeUnits: recomputed.timeUnits ?? state.availableFilters.timeUnits,
+          yearRange: recomputed.yearRange ?? state.availableFilters.yearRange,
         },
         lastUsedYearRange: updatedLastUsedYearRange,
       };
@@ -190,50 +164,23 @@ function reducer(
         ? state.lastUsedYearRange
         : getYearRanges(filteredTables);
 
-      let newSubjectTree = state.availableFilters.subjectTree;
-      if (shouldRecalcFilter(removedType, 'subject', currentFilters)) {
-        const tablesForSubject = tablesForFilterCounts(
-          'subject',
-          currentFilters,
-          filteredTables,
-          state.availableTables,
-        );
-        newSubjectTree = updateSubjectTreeCounts(
-          state.originalSubjectTree,
-          tablesForSubject,
-        );
-      }
-
-      let newTimeUnits = state.availableFilters.timeUnits;
-      if (shouldRecalcFilter(removedType, 'timeUnit', currentFilters)) {
-        const tablesForTimeUnit = tablesForFilterCounts(
-          'timeUnit',
-          currentFilters,
-          filteredTables,
-          state.availableTables,
-        );
-        newTimeUnits = getTimeUnits(tablesForTimeUnit);
-      }
-
-      let newYearRange = state.availableFilters.yearRange;
-      if (shouldRecalcFilter(removedType, 'yearRange', currentFilters)) {
-        const tablesForYearRange = tablesForFilterCounts(
-          'yearRange',
-          currentFilters,
-          filteredTables,
-          state.availableTables,
-        );
-        newYearRange = getYearRanges(tablesForYearRange);
-      }
+      const recomputed = recomputeAvailableFilters(
+        removedType,
+        currentFilters,
+        filteredTables,
+        state.availableTables,
+        state.originalSubjectTree,
+      );
 
       return {
         ...state,
         activeFilters: currentFilters,
         filteredTables,
         availableFilters: {
-          subjectTree: newSubjectTree,
-          timeUnits: newTimeUnits,
-          yearRange: newYearRange,
+          subjectTree:
+            recomputed.subjectTree ?? state.availableFilters.subjectTree,
+          timeUnits: recomputed.timeUnits ?? state.availableFilters.timeUnits,
+          yearRange: recomputed.yearRange ?? state.availableFilters.yearRange,
         },
         lastUsedYearRange: updatedLastUsedYearRange,
       };

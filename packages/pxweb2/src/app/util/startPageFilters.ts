@@ -303,3 +303,42 @@ export function tablesForFilterCounts(
     ? availableTables
     : filteredTables;
 }
+
+export function recomputeAvailableFilters(
+  editType: FilterType | undefined,
+  currentFilters: Filter[],
+  filteredTables: Table[],
+  availableTables: Table[],
+  originalSubjectTree: PathItem[],
+) {
+  const subjectTables = tablesForFilterCounts(
+    'subject',
+    currentFilters,
+    filteredTables,
+    availableTables,
+  );
+  const timeUnitTables = tablesForFilterCounts(
+    'timeUnit',
+    currentFilters,
+    filteredTables,
+    availableTables,
+  );
+  const yearRangeTables = tablesForFilterCounts(
+    'yearRange',
+    currentFilters,
+    filteredTables,
+    availableTables,
+  );
+
+  return {
+    subjectTree: shouldRecalcFilter(editType, 'subject', currentFilters)
+      ? updateSubjectTreeCounts(originalSubjectTree, subjectTables)
+      : undefined,
+    timeUnits: shouldRecalcFilter(editType, 'timeUnit', currentFilters)
+      ? getTimeUnits(timeUnitTables)
+      : undefined,
+    yearRange: shouldRecalcFilter(editType, 'yearRange', currentFilters)
+      ? getYearRanges(yearRangeTables)
+      : undefined,
+  };
+}
