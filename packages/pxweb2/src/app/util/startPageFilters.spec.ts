@@ -2,7 +2,8 @@ import { describe, it, expect } from 'vitest';
 import {
   findAncestors,
   findChildren,
-  sortAndDeduplicateFilterChips,
+  sortFiltersByTypeAndSubjectOrder,
+  deduplicateFiltersByValue,
   organizePaths,
   getYearRanges,
   getYearRangeFromPeriod,
@@ -228,44 +229,87 @@ describe('Correctly sort and deduplicate filters', () => {
       type: 'subject',
       value: 'in01',
       label: 'Arbeid og lønn',
-      uniqueId: '2vij38ql69',
-      index: 2,
+      uniqueId: 'in__in01',
+      index: 0,
     },
     {
       type: 'subject',
       value: 'aku',
       label: 'Arbeidskraftundersøkelsen',
-      uniqueId: 'nem1ho60cb',
-      index: 1,
+      uniqueId: 'al__al03__aku',
+      index: 0,
     },
     {
       type: 'subject',
       value: 'aku',
       label: 'Arbeidskraftundersøkelsen',
-      uniqueId: 'fd9rg6iebf',
+      uniqueId: 'al__al06__aku',
       index: 0,
     },
   ];
-  const sortedDedupedFilters: Filter[] = [
+
+  const subjectOrder: string[] = [
+    'al',
+    'al__al03',
+    'al__al03__aku',
+    'al__al03__regledig',
+    'al__al06',
+    'al__al06__aku',
+    'in',
+    'in__in01',
+    'in__in01__aku',
+  ];
+
+  const sortedFilters: Filter[] = [
     {
       type: 'subject',
       value: 'aku',
       label: 'Arbeidskraftundersøkelsen',
-      uniqueId: 'fd9rg6iebf',
+      uniqueId: 'al__al03__aku',
+      index: 0,
+    },
+    {
+      type: 'subject',
+      value: 'aku',
+      label: 'Arbeidskraftundersøkelsen',
+      uniqueId: 'al__al06__aku',
       index: 0,
     },
     {
       type: 'subject',
       value: 'in01',
       label: 'Arbeid og lønn',
-      uniqueId: '2vij38ql69',
-      index: 2,
+      uniqueId: 'in__in01',
+      index: 0,
+    },
+  ];
+
+  const dedupedFilters: Filter[] = [
+    {
+      type: 'subject',
+      value: 'aku',
+      label: 'Arbeidskraftundersøkelsen',
+      uniqueId: 'al__al03__aku',
+      index: 0,
+    },
+    {
+      type: 'subject',
+      value: 'in01',
+      label: 'Arbeid og lønn',
+      uniqueId: 'in__in01',
+      index: 0,
     },
   ];
 
   it('Should sort and dedupe filter correctly', () => {
-    const performedSort = sortAndDeduplicateFilterChips(rawFilters);
-    expect(performedSort).toEqual(sortedDedupedFilters);
+    const performedSort = sortFiltersByTypeAndSubjectOrder(
+      rawFilters,
+      subjectOrder,
+    );
+    expect(performedSort).toEqual(sortedFilters);
+
+    const performedDeduped = deduplicateFiltersByValue(sortedFilters);
+    expect(performedDeduped).toEqual(dedupedFilters);
   });
 });
 
