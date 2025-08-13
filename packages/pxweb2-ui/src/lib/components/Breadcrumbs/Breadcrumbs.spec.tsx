@@ -4,9 +4,6 @@ import React from 'react';
 import Breadcrumbs, { BreadcrumbItem } from './Breadcrumbs';
 import '@testing-library/jest-dom/vitest';
 
-
-
-
 describe('Breadcrumbs', () => {
   const items = [
     new BreadcrumbItem('Home', '/'),
