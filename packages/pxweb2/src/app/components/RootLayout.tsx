@@ -1,14 +1,15 @@
 import { Outlet } from 'react-router';
 
-import { DynamicTitle, CanonicalUrl, HrefLang } from '../util/seo/headTags';
+import { Title, CanonicalUrl, HrefLang } from '../util/seo/headTags';
+import { TitleProvider } from '../context/TitleProvider';
 
 export default function RootLayout() {
   return (
-    <>
-      <DynamicTitle />
+    <TitleProvider>
+      <Title />
       <CanonicalUrl />
       <HrefLang />
       <Outlet />
-    </>
+    </TitleProvider>
   );
 }
