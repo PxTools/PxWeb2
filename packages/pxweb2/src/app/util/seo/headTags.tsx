@@ -1,7 +1,9 @@
 import { useLocation, useMatch } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import { useEffect } from 'react';
 
 import { getConfig } from '../config/getConfig';
+import useTitle from '../../context/useTitle';
 
 // Utility to remove trailing slash except for root "/"
 function removeTrailingSlash(path: string) {
@@ -11,10 +13,13 @@ function removeTrailingSlash(path: string) {
 // Title and link tags will automatically be hoisted in the <head> section
 
 // Renders the dynamic title based on the current route
-// If the route matches "/:lang/table/:tableId", it uses tableId as title
+// If the route matches "/:lang/table/:tableId" or /table/:tableId, it uses
+// title from the context, which is set in ContentTop.tsx
 // Otherwise, it defaults to the title from the translation file
-export function DynamicTitle() {
+export function Title() {
   const { t } = useTranslation();
+  const { title } = useTitle();
+
   // Try to match both with and without lang in path
   const matchWithLang = useMatch('/:lang/table/:tableId');
   const matchWithoutLang = useMatch('/table/:tableId');
@@ -22,9 +27,12 @@ export function DynamicTitle() {
   const tableId =
     matchWithLang?.params.tableId || matchWithoutLang?.params.tableId;
 
-  const title = tableId || t('common.title');
+  const newTitle = tableId && title ? title : t('common.title');
 
-  document.title = title;
+  useEffect(() => {
+    document.title = newTitle;
+  }, [newTitle]);
+
   return null;
 }
 
