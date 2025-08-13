@@ -17,7 +17,7 @@ describe('Breadcrumbs', () => {
 
   it('renders all breadcrumb items', () => {
     render(<Breadcrumbs breadcrumbItems={items} />);
-    items.forEach(item => {
+    items.forEach((item) => {
       expect(screen.getByText(item.label)).toBeInTheDocument();
     });
   });
@@ -39,7 +39,9 @@ describe('Breadcrumbs', () => {
 
     render(<Breadcrumbs breadcrumbItems={items} variant="compact" />);
     expect(screen.getByText('...')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /show more/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /show more/i }),
+    ).toBeInTheDocument();
   });
 
   it('shows all items after clicking "Show more"', () => {
@@ -49,8 +51,10 @@ describe('Breadcrumbs', () => {
     render(<Breadcrumbs breadcrumbItems={items} variant="compact" />);
     fireEvent.click(screen.getByRole('button', { name: /show more/i }));
     expect(screen.queryByText('...')).not.toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: /show more/i })).not.toBeInTheDocument();
-    items.forEach(item => {
+    expect(
+      screen.queryByRole('button', { name: /show more/i }),
+    ).not.toBeInTheDocument();
+    items.forEach((item) => {
       expect(screen.getByText(item.label)).toBeInTheDocument();
     });
   });
@@ -61,12 +65,14 @@ describe('Breadcrumbs', () => {
 
     render(<Breadcrumbs breadcrumbItems={items} variant="compact" />);
     expect(screen.queryByText('...')).not.toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: /show more/i })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: /show more/i }),
+    ).not.toBeInTheDocument();
   });
 
   it('renders links with correct hrefs', () => {
     render(<Breadcrumbs breadcrumbItems={items} />);
-    items.forEach(item => {
+    items.forEach((item) => {
       const link = screen.getByText(item.label).closest('a');
       expect(link).toHaveAttribute('href', item.href);
     });
