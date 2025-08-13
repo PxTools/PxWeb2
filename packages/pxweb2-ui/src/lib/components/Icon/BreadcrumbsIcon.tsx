@@ -4,11 +4,8 @@ export interface BreadcrumbsIconsProps {
   className?: string;
 }
 
-const BreadcrumbsIcon: React.FC<BreadcrumbsIconsProps> = ({
-  className,
-
-}) => {
-  const breadcrumbsIcon = BreadcrumbsIcons["ChevronRight"];
+const BreadcrumbsIcon: React.FC<BreadcrumbsIconsProps> = ({ className }) => {
+  const breadcrumbsIcon = BreadcrumbsIcons['ChevronRight'];
 
   if (!breadcrumbsIcon) {
     return null;

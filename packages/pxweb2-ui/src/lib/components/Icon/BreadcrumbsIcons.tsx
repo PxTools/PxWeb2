@@ -1,4 +1,4 @@
-  export const ChevronRight = (
+export const ChevronRight = (
   <path
     fillRule="evenodd"
     clipRule="evenodd"

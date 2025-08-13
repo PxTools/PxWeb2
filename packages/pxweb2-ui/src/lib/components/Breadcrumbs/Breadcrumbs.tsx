@@ -22,7 +22,10 @@ export class BreadcrumbItem {
 }
 
 export const Breadcrumbs = forwardRef<HTMLAnchorElement, BreadcrumbsProps>(
-  function Breadcrumbs({breadcrumbItems, variant = 'default' }: BreadcrumbsProps) {
+  function Breadcrumbs({
+    breadcrumbItems,
+    variant = 'default',
+  }: BreadcrumbsProps) {
     const ulRef = useRef<HTMLUListElement>(null);
     const [isOverflowing, setIsOverflowing] = useState(false);
     const [showMore, setShowMore] = useState(false);
@@ -58,17 +61,14 @@ export const Breadcrumbs = forwardRef<HTMLAnchorElement, BreadcrumbsProps>(
               showMore && styles.showMore,
             )}
           >
-           {breadcrumbItems.map((item, idx) => (
-    <li key={idx} className={cl(styles.breadcrumbItem)}>
-      <Link size="medium" inline href={item.href}>
-        {item.label}
-      </Link>
-      <BreadcrumbsIcon
-        className={cl(styles.breadcrumbItemIcon)}
-      />
-    </li>
-  ))}
-
+            {breadcrumbItems.map((item, idx) => (
+              <li key={idx} className={cl(styles.breadcrumbItem)}>
+                <Link size="medium" inline href={item.href}>
+                  {item.label}
+                </Link>
+                <BreadcrumbsIcon className={cl(styles.breadcrumbItemIcon)} />
+              </li>
+            ))}
           </ul>
           {variant === 'compact' && isOverflowing && !showMore && (
             <span className={styles.dots}>{dots}</span>
