@@ -1,7 +1,6 @@
 import { FC, Fragment } from 'react';
 
 import styles from './Highlight.module.scss';
-import { g } from 'vitest/dist/chunks/suite.d.FvehnV49';
 
 interface HighlightProps {
   text: string;
