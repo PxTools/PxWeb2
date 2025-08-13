@@ -428,6 +428,40 @@ const StartPage = () => {
     );
   };
 
+  const renderTableListSEO = () => {
+    return (
+      <nav
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          left: '-9999px',
+          width: '1px',
+          height: '1px',
+          overflow: 'hidden',
+        }}
+      >
+        <h2>TableList(SEO)</h2>
+        <ul>
+          {state.availableTables.map((table) => {
+            const config = getConfig();
+            const language = i18n.language;
+            const showLangInPath =
+              config.language.showDefaultLanguageInPath ||
+              language !== config.language.defaultLanguage;
+            const langPrefix = showLangInPath ? `/${language}` : '';
+            return (
+              <li key={table.id}>
+                <a href={`${langPrefix}/table/${table.id}`} tabIndex={-1}>
+                  {table.label}
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+    );
+  };
+
   return (
     <>
       <Header />
@@ -541,6 +575,7 @@ const StartPage = () => {
           </div>
         </div>
       </div>
+      {renderTableListSEO()}
       <Footer />
     </>
   );
