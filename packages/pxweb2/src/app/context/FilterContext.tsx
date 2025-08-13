@@ -8,6 +8,7 @@ import {
 
 import {
   ActionType,
+  FilterType,
   ReducerActionTypes,
   StartPageState,
 } from '../pages/StartPage/StartPageTypes';
@@ -17,6 +18,8 @@ import {
   updateSubjectTreeCounts,
   flattenSubjectTreeToList,
   getYearRanges,
+  shouldRecalcFilter,
+  tablesForFilterCounts,
 } from '../util/startPageFilters';
 import { shouldTableBeIncluded } from '../util/tableHandler';
 
@@ -92,41 +95,72 @@ function reducer(
       const filteredTables = state.availableTables.filter((table) =>
         shouldTableBeIncluded(table, newFilters),
       );
-      const addType = action.payload[0]?.type;
+      const addType: FilterType | undefined = action.payload[0]?.type;
       const updatedLastUsedYearRange = incomingTypes.has('yearRange')
         ? state.lastUsedYearRange
         : getYearRanges(filteredTables);
+
+      let newSubjectTree = state.availableFilters.subjectTree;
+      if (shouldRecalcFilter(addType, 'subject', newFilters)) {
+        const tablesForSubject = tablesForFilterCounts(
+          'subject',
+          newFilters,
+          filteredTables,
+          state.availableTables,
+        );
+        newSubjectTree = updateSubjectTreeCounts(
+          state.originalSubjectTree,
+          tablesForSubject,
+        );
+      }
+
+      let newTimeUnits = state.availableFilters.timeUnits;
+      if (shouldRecalcFilter(addType, 'timeUnit', newFilters)) {
+        const tablesForTimeUnit = tablesForFilterCounts(
+          'timeUnit',
+          newFilters,
+          filteredTables,
+          state.availableTables,
+        );
+        newTimeUnits = getTimeUnits(tablesForTimeUnit);
+      }
+
+      let newYearRange = state.availableFilters.yearRange;
+      if (shouldRecalcFilter(addType, 'yearRange', newFilters)) {
+        const tablesForYearRange = tablesForFilterCounts(
+          'yearRange',
+          newFilters,
+          filteredTables,
+          state.availableTables,
+        );
+        newYearRange = getYearRanges(tablesForYearRange);
+      }
+
       return {
         ...state,
         activeFilters: newFilters,
         filteredTables,
         availableFilters: {
-          subjectTree:
-            addType !== 'subject'
-              ? updateSubjectTreeCounts(
-                  state.originalSubjectTree,
-                  filteredTables,
-                )
-              : state.availableFilters.subjectTree,
-          timeUnits:
-            addType !== 'timeUnit'
-              ? getTimeUnits(filteredTables)
-              : state.availableFilters.timeUnits,
-          yearRange: getYearRanges(filteredTables),
+          subjectTree: newSubjectTree,
+          timeUnits: newTimeUnits,
+          yearRange: newYearRange,
         },
         lastUsedYearRange: updatedLastUsedYearRange,
       };
     }
+
     case ActionType.REMOVE_FILTER: {
-      const removedType = action.payload.type;
+      const removedType = action.payload.type as FilterType;
+
       const currentFilters =
-        removedType == 'subject' && action.payload.uniqueId
+        removedType === 'subject' && action.payload.uniqueId
           ? state.activeFilters.filter(
               (filter) => filter.uniqueId !== action.payload.uniqueId,
             )
           : state.activeFilters.filter(
               (filter) => filter.value !== action.payload.value,
             );
+
       if (currentFilters.length === 0) {
         const fullRange = getYearRanges(state.availableTables);
         return {
@@ -144,9 +178,11 @@ function reducer(
           lastUsedYearRange: fullRange,
         };
       }
+
       const filteredTables = state.availableTables.filter((table) =>
         shouldTableBeIncluded(table, currentFilters),
       );
+
       const yearRangeStillActive = currentFilters.some(
         (f) => f.type === 'yearRange',
       );
@@ -154,19 +190,14 @@ function reducer(
         ? state.lastUsedYearRange
         : getYearRanges(filteredTables);
 
-      const activeTypes = new Set(currentFilters.map((f) => f.type));
-      const isOnlyTypeActive = (type: 'timeUnit' | 'subject' | 'yearRange') =>
-        activeTypes.size === 1 && activeTypes.has(type);
-
-      const hasNonSubjectActive = currentFilters.some(
-        (f) => f.type !== 'subject',
-      );
-
       let newSubjectTree = state.availableFilters.subjectTree;
-      if (removedType !== 'subject' || hasNonSubjectActive) {
-        const tablesForSubject = isOnlyTypeActive('subject')
-          ? state.availableTables
-          : filteredTables;
+      if (shouldRecalcFilter(removedType, 'subject', currentFilters)) {
+        const tablesForSubject = tablesForFilterCounts(
+          'subject',
+          currentFilters,
+          filteredTables,
+          state.availableTables,
+        );
         newSubjectTree = updateSubjectTreeCounts(
           state.originalSubjectTree,
           tablesForSubject,
@@ -174,18 +205,24 @@ function reducer(
       }
 
       let newTimeUnits = state.availableFilters.timeUnits;
-      if (removedType !== 'timeUnit') {
-        const tablesForTimeUnit = isOnlyTypeActive('timeUnit')
-          ? state.availableTables
-          : filteredTables;
+      if (shouldRecalcFilter(removedType, 'timeUnit', currentFilters)) {
+        const tablesForTimeUnit = tablesForFilterCounts(
+          'timeUnit',
+          currentFilters,
+          filteredTables,
+          state.availableTables,
+        );
         newTimeUnits = getTimeUnits(tablesForTimeUnit);
       }
 
       let newYearRange = state.availableFilters.yearRange;
-      if (removedType !== 'yearRange') {
-        const tablesForYearRange = isOnlyTypeActive('yearRange')
-          ? state.availableTables
-          : filteredTables;
+      if (shouldRecalcFilter(removedType, 'yearRange', currentFilters)) {
+        const tablesForYearRange = tablesForFilterCounts(
+          'yearRange',
+          currentFilters,
+          filteredTables,
+          state.availableTables,
+        );
         newYearRange = getYearRanges(tablesForYearRange);
       }
 
@@ -201,16 +238,12 @@ function reducer(
         lastUsedYearRange: updatedLastUsedYearRange,
       };
     }
+
     case ActionType.SET_ERROR:
-      return {
-        ...state,
-        error: action.payload,
-      };
+      return { ...state, error: action.payload };
+
     case ActionType.SET_LOADING:
-      return {
-        ...state,
-        loading: action.payload,
-      };
+      return { ...state, loading: action.payload };
 
     default:
       return state;

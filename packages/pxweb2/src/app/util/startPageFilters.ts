@@ -2,6 +2,7 @@ import { Table } from '@pxweb2/pxweb2-api-client';
 import {
   StartPageFilters,
   Filter,
+  FilterType,
   PathItem,
   YearRange,
 } from '../pages/StartPage/StartPageTypes';
@@ -270,4 +271,35 @@ export function flattenSubjectTreeToList(subjectTree: PathItem[]): string[] {
 
   traverseTree(subjectTree);
   return result;
+}
+
+export function activeTypesSet(filters: Filter[]): Set<FilterType> {
+  return new Set(filters.map((f) => f.type));
+}
+
+export function isOnlyTypeActive(filters: Filter[], type: FilterType): boolean {
+  const types = activeTypesSet(filters);
+  return types.size === 1 && types.has(type);
+}
+
+export function shouldRecalcFilter(
+  editedType: FilterType | undefined,
+  targetFilter: FilterType,
+  currentFilters: Filter[],
+): boolean {
+  if (editedType !== targetFilter) {
+    return true;
+  }
+  return currentFilters.some((f) => f.type !== targetFilter);
+}
+
+export function tablesForFilterCounts(
+  targetFilter: FilterType,
+  currentFilters: Filter[],
+  filteredTables: Table[],
+  availableTables: Table[],
+): Table[] {
+  return isOnlyTypeActive(currentFilters, targetFilter)
+    ? availableTables
+    : filteredTables;
 }
