@@ -30,11 +30,11 @@ export function wrapWithLocalizedQuotemarks(
 ): string {
   switch (language) {
     case 'en':
-      return `"${text}"`;
+      return `“${text}”`;
     case 'no':
       return `«${text}»`;
     case 'sv':
-      return `'${text}'`;
+      return `”${text}”`;
     default:
       return `"${text}"`;
   }
