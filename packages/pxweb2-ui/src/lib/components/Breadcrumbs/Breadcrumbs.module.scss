@@ -28,26 +28,26 @@
     min-width: 0;
   }
 
-.breadcrumbItemLink {
-  a {
-    padding-top: 0px;
-    padding-bottom: 0px;
+  .breadcrumbItemLink {
+    a {
+      padding-top: 0px;
+      padding-bottom: 0px;
+    }
+    &.default {
+      padding-left: 4px;
+      padding-right: 4px;
+    }
+    &.compact {
+      padding-left: 2px;
+      padding-right: 2px;
+    }
   }
-  &.default {
-    padding-left: 4px;
-    padding-right: 4px;
-  }
-  &.compact {
-    padding-left: 2px;
-    padding-right: 2px;
-  }
-}
 
-.breadcrumbItemIcon {
-  color: var(--px-color-icon-default);
-  display: flex;
-  align-items: center;
-}
+  .breadcrumbItemIcon {
+    color: var(--px-color-icon-default);
+    display: flex;
+    align-items: center;
+  }
 
   .breadcrumbItem {
     display: flex;
@@ -64,14 +64,14 @@
 }
 
 .breadcrumbsWrapper .breadcrumbItem {
-  flex-shrink: 0;         // Prevents shrinking for all items
-  white-space: nowrap;    // Prevents wrapping for all items
+  flex-shrink: 0; // Prevents shrinking for all items
+  white-space: nowrap; // Prevents wrapping for all items
 }
 
 .breadcrumbsWrapper .breadcrumbItem:last-child {
-  min-width: 0;           // Allow flexbox to shrink below content size
-  white-space: normal;    // Allow wrapping for last item
-  flex-shrink: 1;         // Allow last item to shrink and wrap // styles for default state
+  min-width: 0; // Allow flexbox to shrink below content size
+  white-space: normal; // Allow wrapping for last item
+  flex-shrink: 1; // Allow last item to shrink and wrap // styles for default state
 }
 
 .breadcrumbsWrapper.compact .breadcrumbItem:last-child {
@@ -79,10 +79,10 @@
 }
 
 .breadcrumbsWrapper .breadcrumbItem:last-child a {
-   text-decoration: none ;
-   white-space: normal;
-   word-break: break-word;
-   overflow-wrap: anywhere;
+  text-decoration: none;
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .breadcrumbsContainercompact.showMore {

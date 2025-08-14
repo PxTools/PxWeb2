@@ -25,5 +25,4 @@ const BreadcrumbsIcon: React.FC<BreadcrumbsIconsProps> = ({ className }) => {
   );
 };
 
-
 export { BreadcrumbsIcon };
