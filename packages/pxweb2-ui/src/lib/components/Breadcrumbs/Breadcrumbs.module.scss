@@ -31,17 +31,17 @@
     flex-wrap: nowrap;
     text-overflow: ellipsis;
     min-width: 0;
-    .breadcrumbItem:last-child{
+    .breadcrumbItem:last-child {
       flex-shrink: 0;
-   }
-   &.showMore {
-    flex-wrap: wrap;
-    overflow-x: visible;
-    align-items: center;
-    .breadcrumbItem:last-child{
-      flex-shrink: 1;
     }
-   }
+    &.showMore {
+      flex-wrap: wrap;
+      overflow-x: visible;
+      align-items: center;
+      .breadcrumbItem:last-child {
+        flex-shrink: 1;
+      }
+    }
   }
 
   .breadcrumbItemLink {
@@ -68,12 +68,12 @@
   .breadcrumbItem {
     display: flex;
     align-items: center;
-    flex-shrink: 0; // Prevents shrinking for all items
-    white-space: nowrap; // Prevents wrapping for all items
+    flex-shrink: 0;
+    white-space: nowrap;
     &:last-child {
-      min-width: 0; // Allow flexbox to shrink below content size
-      white-space: normal; // Allow wrapping for last item
-      flex-shrink: 1; // Allow last item to shrink and wrap // styles for default state
+      min-width: 0;
+      white-space: normal;
+      flex-shrink: 1;
       a {
         text-decoration: none;
         white-space: normal;
