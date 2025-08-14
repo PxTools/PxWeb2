@@ -11,7 +11,7 @@ export enum ActionType {
 }
 
 export type Filter = {
-  type: 'timeUnit' | 'subject' | 'yearRange'| 'search';
+  type: 'timeUnit' | 'subject' | 'yearRange' | 'search';
   value: string;
   label: string;
   index: number;

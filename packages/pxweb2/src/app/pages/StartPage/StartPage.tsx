@@ -16,6 +16,7 @@ import {
   Heading,
   Ingress,
   BodyShort,
+  SearchHandle,
 } from '@pxweb2/pxweb2-ui';
 import { type Table } from '@pxweb2/pxweb2-api-client';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
@@ -54,6 +55,7 @@ const StartPage = () => {
   const paginationButtonRef = useRef<HTMLButtonElement>(null);
   const firstNewCardRef = useRef<HTMLDivElement>(null);
   const lastVisibleCardRef = useRef<HTMLDivElement>(null);
+  const searchFieldRef = useRef<SearchHandle>(null);
 
   useEffect(() => {
     async function fetchTables() {
@@ -204,6 +206,7 @@ const StartPage = () => {
                 subjects: getSubjectTree(state.availableTables),
               },
             });
+            searchFieldRef.current?.clearInputField();
             setVisibleCount(paginationCount);
           }}
         >
@@ -458,6 +461,7 @@ const StartPage = () => {
                 <Search
                   searchPlaceHolder={t('start_page.search_placeholder')}
                   variant="default"
+                  ref={searchFieldRef}
                   onChange={(value: string) => {
                     debouncedDispatch(value);
                   }}
@@ -513,6 +517,9 @@ const StartPage = () => {
                               },
                             });
                             setVisibleCount(paginationCount);
+                            if (filter.type == 'search') {
+                              searchFieldRef.current?.clearInputField();
+                            }
                           }}
                           aria-label={t(
                             'start_page.filter.remove_filter_aria',

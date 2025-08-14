@@ -1,4 +1,10 @@
-import { useState, useRef, useEffect, forwardRef } from 'react';
+import {
+  useState,
+  useRef,
+  useEffect,
+  forwardRef,
+  useImperativeHandle,
+} from 'react';
 import cl from 'clsx';
 
 import classes from './Search.module.scss';
@@ -18,7 +24,11 @@ export interface SearchProps {
   onChange?: (value: string) => void;
 }
 
-export const Search = forwardRef<HTMLInputElement, SearchProps>(
+export interface SearchHandle extends HTMLInputElement {
+  clearInputField: () => void;
+}
+
+export const Search = forwardRef<SearchHandle, SearchProps>(
   (
     {
       value = '',
@@ -35,7 +45,7 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
     ref,
   ) => {
     const [inputValue, setInputValue] = useState(value);
-    const inputRef = useRef<HTMLInputElement>(null);
+    const inputRef = useRef<SearchHandle>(null);
 
     useEffect(() => {
       setInputValue(value);
@@ -46,11 +56,15 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
       setInputValue('');
 
       if (ref?.hasOwnProperty('current')) {
-        (ref as React.MutableRefObject<HTMLInputElement>).current.focus();
+        (ref as React.RefObject<SearchHandle>).current.focus();
       } else if (inputRef.current !== null) {
         inputRef.current.focus();
       }
     };
+
+    function clearInputField() {
+      setInputValue('');
+    }
 
     const handleKeyDown = (
       e:
@@ -68,6 +82,15 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
         handleClear();
       }
     };
+
+    useImperativeHandle(
+      ref,
+      () => ({
+        ...(inputRef.current as HTMLInputElement),
+        clearInputField,
+      }),
+      [],
+    );
 
     return (
       <div className={cl(classes.search, classes[variant])}>

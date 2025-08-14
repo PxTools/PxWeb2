@@ -126,5 +126,10 @@ export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
     return true;
   };
 
-  return testTimeUnitFilters() && testSubjectFilters() && testYearRangeFilter() && testSearchFilter();
+  return (
+    testTimeUnitFilters() &&
+    testSubjectFilters() &&
+    testYearRangeFilter() &&
+    testSearchFilter()
+  );
 }
