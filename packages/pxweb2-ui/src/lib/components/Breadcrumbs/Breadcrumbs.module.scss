@@ -6,7 +6,13 @@
   display: flex;
   align-items: center;
   gap: fixed.$spacing-1;
-  //flex: 1 0 0;
+  &.showMore {
+    max-width: none;
+    flex-wrap: wrap;
+    overflow-x: visible;
+    align-items: center;
+    flex-wrap: wrap;
+  }
 }
 
 .breadcrumbsWrapper {
@@ -25,6 +31,17 @@
     flex-wrap: nowrap;
     text-overflow: ellipsis;
     min-width: 0;
+    .breadcrumbItem:last-child{
+      flex-shrink: 0;
+   }
+   &.showMore {
+    flex-wrap: wrap;
+    overflow-x: visible;
+    align-items: center;
+    .breadcrumbItem:last-child{
+      flex-shrink: 1;
+    }
+   }
   }
 
   .breadcrumbItemLink {
@@ -51,52 +68,23 @@
   .breadcrumbItem {
     display: flex;
     align-items: center;
+    flex-shrink: 0; // Prevents shrinking for all items
+    white-space: nowrap; // Prevents wrapping for all items
     &:last-child {
+      min-width: 0; // Allow flexbox to shrink below content size
+      white-space: normal; // Allow wrapping for last item
+      flex-shrink: 1; // Allow last item to shrink and wrap // styles for default state
+      a {
+        text-decoration: none;
+        white-space: normal;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+      }
       .breadcrumbItemIcon {
         display: none;
       }
     }
   }
-}
-
-.breadcrumbsWrapper .breadcrumbItem {
-  flex-shrink: 0; // Prevents shrinking for all items
-  white-space: nowrap; // Prevents wrapping for all items
-}
-
-.breadcrumbsWrapper .breadcrumbItem:last-child {
-  min-width: 0; // Allow flexbox to shrink below content size
-  white-space: normal; // Allow wrapping for last item
-  flex-shrink: 1; // Allow last item to shrink and wrap // styles for default state
-}
-
-.breadcrumbsWrapper.compact .breadcrumbItem:last-child {
-  flex-shrink: 0;
-}
-
-.breadcrumbsWrapper .breadcrumbItem:last-child a {
-  text-decoration: none;
-  white-space: normal;
-  word-break: break-word;
-  overflow-wrap: anywhere;
-}
-
-.breadcrumbsContainercompact.showMore {
-  max-width: none;
-  flex-wrap: wrap;
-  overflow-x: visible;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.breadcrumbsWrapper.compact.showMore {
-  flex-wrap: wrap;
-  overflow-x: visible;
-  align-items: center;
-}
-
-.breadcrumbsWrapper.compact.showMore .breadcrumbItem:last-child {
-  flex-shrink: 1;
 }
 
 .showMoreButton {
