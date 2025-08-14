@@ -63,10 +63,17 @@ export const Breadcrumbs = forwardRef<HTMLAnchorElement, BreadcrumbsProps>(
           >
             {breadcrumbItems.map((item, idx) => (
               <li key={idx} className={cl(styles.breadcrumbItem)}>
-                <Link size="medium" inline href={item.href}>
+                <div className=
+                {cl(styles.breadcrumbItemLink,
+                  variant && styles[variant],
+                )} >
+                  <Link size="medium" inline href={item.href} >
                   {item.label}
-                </Link>
-                <BreadcrumbsIcon className={cl(styles.breadcrumbItemIcon)} />
+                  </Link>
+                </div>
+                <div className={cl(styles.breadcrumbItemIconWrapper)}>
+                  <BreadcrumbsIcon className={cl(styles.breadcrumbItemIcon)} />
+                </div>
               </li>
             ))}
           </ul>
