@@ -79,7 +79,6 @@ function reducer(
           subjectTree: updateSubjectTreeCounts(
             action.payload.subjects,
             action.payload.tables,
-            { rollupDescendants: true },
           ),
           timeUnits: getTimeUnits(action.payload.tables),
           yearRange: fullRange,
@@ -145,7 +144,6 @@ function reducer(
             subjectTree: updateSubjectTreeCounts(
               state.originalSubjectTree,
               state.availableTables,
-              { rollupDescendants: true },
             ),
             timeUnits: getTimeUnits(state.availableTables),
             yearRange: fullRange,

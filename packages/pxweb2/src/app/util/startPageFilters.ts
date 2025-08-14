@@ -88,60 +88,39 @@ export function getFilters(tables: Table[]): StartPageFilters {
 export function updateSubjectTreeCounts(
   subjectTree: PathItem[],
   tables: TableWithPaths[],
-  options?: { rollupDescendants?: boolean },
 ): PathItem[] {
-  const rollup = options?.rollupDescendants ?? false;
+  const subjectToTableIds = buildSubjectToTableIdsMap(tables);
 
-  const counts = new Map<string, Set<string>>();
-  for (const table of tables) {
-    const ids = collectSubjectIds(table);
-    for (const id of ids) {
-      let s = counts.get(id);
-      if (!s) {
-        s = new Set<string>();
-        counts.set(id, s);
-      }
-      s.add(table.id);
-    }
-  }
+  const countTablesForSubjectNode = (
+    node: PathItem,
+  ): [PathItem, Set<string>] => {
+    const tableIdsForThisNode = new Set(subjectToTableIds.get(node.id) ?? []);
+    const tableIdsInChildren = new Set<string>();
+    const updatedChildren: PathItem[] = [];
 
-  const mapWithCounts = (nodes: PathItem[]): [PathItem[], Set<string>] => {
-    const out: PathItem[] = [];
-    const unionForSiblings = new Set<string>();
-
-    for (const node of nodes) {
-      const selfSet = new Set<string>(counts.get(node.id) ?? []);
-      let childrenCloned: PathItem[] | undefined;
-      let subtreeSet = new Set<string>(selfSet);
-
-      if (node.children?.length) {
-        const [cloned, childUnion] = mapWithCounts(node.children);
-        childrenCloned = cloned;
-        if (rollup) {
-          for (const tid of childUnion) {
-            subtreeSet.add(tid);
-          }
-        }
-      }
-
-      const count = rollup ? subtreeSet.size : selfSet.size;
-      out.push({
-        ...node,
-        count,
-        children: childrenCloned,
-      });
-
-      const toAccumulate = rollup ? subtreeSet : selfSet;
-      for (const tid of toAccumulate) {
-        unionForSiblings.add(tid);
+    for (const child of node.children ?? []) {
+      const [updatedChild, childTableIds] = countTablesForSubjectNode(child);
+      updatedChildren.push(updatedChild);
+      for (const id of childTableIds) {
+        tableIdsInChildren.add(id);
       }
     }
 
-    return [out, unionForSiblings];
+    const combinedTableIds = new Set([
+      ...tableIdsForThisNode,
+      ...tableIdsInChildren,
+    ]);
+
+    const updatedNode: PathItem = {
+      ...node,
+      count: combinedTableIds.size,
+      children: updatedChildren.length ? updatedChildren : undefined,
+    };
+
+    return [updatedNode, combinedTableIds];
   };
 
-  const [withCounts] = mapWithCounts(subjectTree);
-  return withCounts;
+  return subjectTree.map((node) => countTablesForSubjectNode(node)[0]);
 }
 
 export function sortFiltersByTypeAndSubjectOrder(
@@ -362,9 +341,7 @@ export function recomputeAvailableFilters(
 
   return {
     subjectTree: shouldRecalcFilter('subject')
-      ? updateSubjectTreeCounts(originalSubjectTree, subjectTables, {
-          rollupDescendants: true,
-        })
+      ? updateSubjectTreeCounts(originalSubjectTree, subjectTables)
       : undefined,
     timeUnits: shouldRecalcFilter('timeUnit')
       ? getTimeUnits(timeUnitTables)
@@ -375,21 +352,38 @@ export function recomputeAvailableFilters(
   };
 }
 
-function collectSubjectIds(table: TableWithPaths): string[] {
-  const seen = new Set<string>();
-  const paths = table.paths;
-  if (!paths) {
+function collectUniqueSubjectIdsFromTable(table: TableWithPaths): string[] {
+  const uniqueSubjectIds = new Set<string>();
+  if (!table.paths) {
     return [];
   }
-  for (const path of paths) {
+  for (const path of table.paths) {
     if (!path) {
       continue;
     }
-    for (const p of path) {
-      if (p?.id) {
-        seen.add(p.id);
+    for (const segment of path) {
+      if (segment?.id) {
+        uniqueSubjectIds.add(segment.id);
       }
     }
   }
-  return [...seen];
+  return [...uniqueSubjectIds];
+}
+
+function buildSubjectToTableIdsMap(
+  tables: TableWithPaths[],
+): Map<string, Set<string>> {
+  const map = new Map<string, Set<string>>();
+  for (const table of tables) {
+    const subjectIds = collectUniqueSubjectIdsFromTable(table);
+    for (const id of subjectIds) {
+      let tableIds = map.get(id);
+      if (!tableIds) {
+        tableIds = new Set<string>();
+        map.set(id, tableIds);
+      }
+      tableIds.add(table.id);
+    }
+  }
+  return map;
 }
