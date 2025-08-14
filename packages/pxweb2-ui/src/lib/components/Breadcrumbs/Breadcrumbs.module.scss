@@ -1,10 +1,12 @@
+@use '../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixed;
+@use '../../../../style-dictionary/dist/css/variables.css' as var;
+@use '../../text-styles.scss';
+
 .breadcrumbsContainer {
   display: flex;
   align-items: center;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  flex: 1 0 0;
+  gap: fixed.$spacing-1;
+  //flex: 1 0 0;
 }
 
 .breadcrumbsWrapper {
@@ -12,12 +14,9 @@
   align-items: center;
   list-style: none;
   padding: 0;
-  margin: 2;
   align-self: stretch;
-
   &.default {
     flex-wrap: wrap;
-    overflow: wrap;
   }
 
   &.compact {
@@ -34,12 +33,12 @@
       padding-bottom: 0px;
     }
     &.default {
-      padding-left: 4px;
-      padding-right: 4px;
+      padding-left: fixed.$spacing-2;
+      padding-right: fixed.$spacing-2;
     }
     &.compact {
-      padding-left: 2px;
-      padding-right: 2px;
+      padding-left: fixed.$spacing-1;
+      padding-right: fixed.$spacing-1;
     }
   }
 
@@ -52,9 +51,6 @@
   .breadcrumbItem {
     display: flex;
     align-items: center;
-    color: var(--color-text);
-    flex-shrink: 0;
-    white-space: nowrap;
     &:last-child {
       .breadcrumbItemIcon {
         display: none;
