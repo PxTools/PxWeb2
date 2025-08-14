@@ -45,7 +45,6 @@ export const Breadcrumbs = forwardRef<HTMLAnchorElement, BreadcrumbsProps>(
     }, []);
 
     return (
-      <>
         <div
           className={cl(
             styles.breadcrumbsContainer,
@@ -61,8 +60,8 @@ export const Breadcrumbs = forwardRef<HTMLAnchorElement, BreadcrumbsProps>(
               showMore && styles.showMore,
             )}
           >
-            {breadcrumbItems.map((item, idx) => (
-              <li key={idx} className={cl(styles.breadcrumbItem)}>
+            {breadcrumbItems.map((item) => (
+              <li key={item.href} className={cl(styles.breadcrumbItem)}>
                 <div
                   className={cl(
                     styles.breadcrumbItemLink,
@@ -92,7 +91,6 @@ export const Breadcrumbs = forwardRef<HTMLAnchorElement, BreadcrumbsProps>(
             </Button>
           )}
         </div>
-      </>
     );
   },
 );
