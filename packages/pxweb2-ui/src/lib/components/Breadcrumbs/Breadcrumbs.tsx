@@ -45,52 +45,52 @@ export const Breadcrumbs = forwardRef<HTMLAnchorElement, BreadcrumbsProps>(
     }, []);
 
     return (
-        <div
+      <div
+        className={cl(
+          styles.breadcrumbsContainer,
+          variant && styles[variant],
+          showMore && styles.showMore,
+        )}
+      >
+        <ul
+          ref={ulRef}
           className={cl(
-            styles.breadcrumbsContainer,
+            styles.breadcrumbsWrapper,
             variant && styles[variant],
             showMore && styles.showMore,
           )}
         >
-          <ul
-            ref={ulRef}
-            className={cl(
-              styles.breadcrumbsWrapper,
-              variant && styles[variant],
-              showMore && styles.showMore,
-            )}
+          {breadcrumbItems.map((item) => (
+            <li key={item.href} className={cl(styles.breadcrumbItem)}>
+              <div
+                className={cl(
+                  styles.breadcrumbItemLink,
+                  variant && styles[variant],
+                )}
+              >
+                <Link size="medium" inline href={item.href}>
+                  {item.label}
+                </Link>
+              </div>
+              <div className={cl(styles.breadcrumbItemIconWrapper)}>
+                <BreadcrumbsIcon className={cl(styles.breadcrumbItemIcon)} />
+              </div>
+            </li>
+          ))}
+        </ul>
+        {variant === 'compact' && isOverflowing && !showMore && (
+          <span className={styles.dots}>{dots}</span>
+        )}
+        {variant === 'compact' && isOverflowing && !showMore && (
+          <Button
+            variant="tertiary"
+            className={cl(styles.showMoreButton)}
+            onClick={() => setShowMore(true)}
           >
-            {breadcrumbItems.map((item) => (
-              <li key={item.href} className={cl(styles.breadcrumbItem)}>
-                <div
-                  className={cl(
-                    styles.breadcrumbItemLink,
-                    variant && styles[variant],
-                  )}
-                >
-                  <Link size="medium" inline href={item.href}>
-                    {item.label}
-                  </Link>
-                </div>
-                <div className={cl(styles.breadcrumbItemIconWrapper)}>
-                  <BreadcrumbsIcon className={cl(styles.breadcrumbItemIcon)} />
-                </div>
-              </li>
-            ))}
-          </ul>
-          {variant === 'compact' && isOverflowing && !showMore && (
-            <span className={styles.dots}>{dots}</span>
-          )}
-          {variant === 'compact' && isOverflowing && !showMore && (
-            <Button
-              variant="tertiary"
-              className={cl(styles.showMoreButton)}
-              onClick={() => setShowMore(true)}
-            >
-              Show more
-            </Button>
-          )}
-        </div>
+            Show more
+          </Button>
+        )}
+      </div>
     );
   },
 );
