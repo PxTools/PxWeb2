@@ -132,10 +132,7 @@
                 "confirm_button": "Bekreft"
               }
             },
-            "mixed_checkbox": {
-              "select_all": "Velg alle",
-              "deselect_all": "Fjern alle"
-            },
+            "mixed_checkbox": "Velg alle",
             "values_list": {
               "aria_label": "Liste av {{total}} verdier.",
               "no_results_heading": "Ingen treff på «{{search}}»",
