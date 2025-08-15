@@ -6,7 +6,7 @@ import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 
 import classes from './VariableBoxContent.module.scss';
 import { Checkbox, MixedCheckbox } from '../../Checkbox/Checkbox';
-import Search from '../../Search/Search';
+import Search, { SearchHandle } from '../../Search/Search';
 import { Select } from '../../Select/Select';
 import { SelectOption } from '../../Select/SelectOptionType';
 import { VariableBoxProps, SelectedVBValues } from '../VariableBox';
@@ -110,7 +110,7 @@ export function VariableBoxContent({
     valuesToRender.reverse();
   }
 
-  const searchRef = useRef<HTMLInputElement>(null);
+  const searchRef = useRef<SearchHandle>(null);
   const lastInteractionWasPointer = useRef(false);
 
   useEffect(() => {

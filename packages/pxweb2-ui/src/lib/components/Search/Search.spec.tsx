@@ -1,10 +1,10 @@
-import { MutableRefObject } from 'react';
+import { RefObject } from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { render, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom/vitest';
 
-import Search from './Search';
+import Search, { SearchHandle } from './Search';
 import classes from './Search.module.scss';
 
 describe('Search component', () => {
@@ -183,7 +183,7 @@ describe('Search component', () => {
       const handleChange = vi.fn();
       const ref = {
         current: null,
-      } as MutableRefObject<HTMLInputElement | null>;
+      } as RefObject<SearchHandle | null>;
       const { getByRole } = render(
         <Search onChange={handleChange} value="test" ref={ref} />,
       );

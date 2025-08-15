@@ -4,6 +4,7 @@ import {
   useEffect,
   forwardRef,
   useImperativeHandle,
+  useCallback,
 } from 'react';
 import cl from 'clsx';
 
@@ -45,26 +46,30 @@ export const Search = forwardRef<SearchHandle, SearchProps>(
     ref,
   ) => {
     const [inputValue, setInputValue] = useState(value);
-    const inputRef = useRef<SearchHandle>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
+    const combinedRef = (ref || inputRef) as React.RefObject<SearchHandle>;
 
     useEffect(() => {
       setInputValue(value);
     }, [value]);
 
-    const handleClear = () => {
+    const clearInputField = useCallback(() => {
+      setInputValue('');
+      onChange && onChange('');
+    }, [onChange]);
+
+    const handleClear = useCallback(() => {
       onChange && onChange('');
       setInputValue('');
+      combinedRef.current?.focus();
+    }, [onChange, combinedRef]);
 
-      if (ref?.hasOwnProperty('current')) {
-        (ref as React.RefObject<SearchHandle>).current.focus();
-      } else if (inputRef.current !== null) {
-        inputRef.current.focus();
+    // Attach the clearInputField method to the ref
+    useEffect(() => {
+      if (combinedRef.current) {
+        combinedRef.current.clearInputField = clearInputField;
       }
-    };
-
-    function clearInputField() {
-      setInputValue('');
-    }
+    }, [combinedRef, clearInputField]);
 
     const handleKeyDown = (
       e:
@@ -83,14 +88,7 @@ export const Search = forwardRef<SearchHandle, SearchProps>(
       }
     };
 
-    useImperativeHandle(
-      ref,
-      () => ({
-        ...(inputRef.current as HTMLInputElement),
-        clearInputField,
-      }),
-      [],
-    );
+    useImperativeHandle(ref, () => combinedRef.current, [combinedRef]);
 
     return (
       <div className={cl(classes.search, classes[variant])}>
@@ -108,7 +106,7 @@ export const Search = forwardRef<SearchHandle, SearchProps>(
           ></Icon>
           <input
             type="text"
-            ref={ref || inputRef}
+            ref={combinedRef}
             className={cl(
               classes[`bodyshort-medium`],
               classes.input,
