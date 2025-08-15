@@ -60,23 +60,31 @@ export const Breadcrumbs = forwardRef<HTMLAnchorElement, BreadcrumbsProps>(
             showMore && styles.showMore,
           )}
         >
-          {breadcrumbItems.map((item) => (
-            <li key={item.href} className={cl(styles.breadcrumbItem)}>
-              <div
-                className={cl(
-                  styles.breadcrumbItemLink,
-                  variant && styles[variant],
-                )}
-              >
-                <Link size="medium" inline href={item.href}>
-                  {item.label}
-                </Link>
-              </div>
-              <div className={cl(styles.breadcrumbItemIconWrapper)}>
-                <BreadcrumbsIcon className={cl(styles.breadcrumbItemIcon)} />
-              </div>
-            </li>
-          ))}
+          {breadcrumbItems.map((item, idx) => {
+            const isLast = idx === breadcrumbItems.length - 1;
+            return (
+              <li key={item.href} className={cl(styles.breadcrumbItem)}>
+          <div
+            className={cl(
+              styles.breadcrumbItemLink,
+              variant && styles[variant],
+            )}
+          >
+            <Link
+              size="medium"
+              inline
+              href={item.href}
+              {...(isLast ? { 'aria-current': 'page' } : {})}
+            >
+              {item.label}
+            </Link>
+          </div>
+          <div className={cl(styles.breadcrumbItemIconWrapper)}>
+            <BreadcrumbsIcon className={cl(styles.breadcrumbItemIcon)} />
+          </div>
+              </li>
+            );
+          })}
         </ul>
         {variant === 'compact' && isOverflowing && !showMore && (
           <span className={styles.dots}>{dots}</span>
