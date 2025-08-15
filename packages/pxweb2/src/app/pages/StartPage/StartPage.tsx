@@ -46,6 +46,7 @@ const StartPage = () => {
   const [lastVisibleCount, setLastVisibleCount] = useState(paginationCount);
   const [isPaginating, setIsPaginating] = useState(false);
   const [paginationButtonWidth, setPaginationButtonWidth] = useState<number>();
+  const [isFadingTableList, setIsFadingTableList] = useState(false);
 
   const filterBackButtonRef = useRef<HTMLButtonElement>(null);
   const filterToggleRef = useRef<HTMLButtonElement>(null);
@@ -53,6 +54,9 @@ const StartPage = () => {
   const paginationButtonRef = useRef<HTMLButtonElement>(null);
   const firstNewCardRef = useRef<HTMLDivElement>(null);
   const lastVisibleCardRef = useRef<HTMLDivElement>(null);
+  const isInitialLoadComplete = useRef(false);
+  const prevLoading = useRef(state.loading);
+  const skipNextFadeAfterInitialLoad = useRef(false);
 
   useEffect(() => {
     async function fetchTables() {
@@ -118,6 +122,27 @@ const StartPage = () => {
       return () => clearTimeout(timeout);
     }
   }, [isPaginating, visibleCount]);
+
+  useEffect(() => {
+    if (prevLoading.current && !state.loading) {
+      isInitialLoadComplete.current = true;
+      skipNextFadeAfterInitialLoad.current = true;
+    }
+    prevLoading.current = state.loading;
+  }, [state.loading]);
+
+  useEffect(() => {
+    if (!isInitialLoadComplete.current || state.loading) {
+      return;
+    }
+    if (skipNextFadeAfterInitialLoad.current) {
+      skipNextFadeAfterInitialLoad.current = false;
+      return;
+    }
+    setIsFadingTableList(true);
+    const timeout = setTimeout(() => setIsFadingTableList(false), 400);
+    return () => clearTimeout(timeout);
+  }, [state.filteredTables.length, visibleCount, state.loading]);
 
   const formatNumber = (value: number) =>
     new Intl.NumberFormat(i18n.language).format(value);
@@ -284,7 +309,13 @@ const StartPage = () => {
     <>
       {renderNumberofTablesScreenReader()}
       {renderTableCount()}
-      <div className={styles.tableCardList}>{renderCards()}</div>
+      <div
+        className={cl(styles.tableCardList, {
+          [styles.fadeList]: isFadingTableList,
+        })}
+      >
+        {renderCards()}
+      </div>
       {renderPagination()}
     </>
   );
