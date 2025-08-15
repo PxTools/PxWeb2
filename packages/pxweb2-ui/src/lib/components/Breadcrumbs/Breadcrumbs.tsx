@@ -64,24 +64,24 @@ export const Breadcrumbs = forwardRef<HTMLAnchorElement, BreadcrumbsProps>(
             const isLast = idx === breadcrumbItems.length - 1;
             return (
               <li key={item.href} className={cl(styles.breadcrumbItem)}>
-          <div
-            className={cl(
-              styles.breadcrumbItemLink,
-              variant && styles[variant],
-            )}
-          >
-            <Link
-              size="medium"
-              inline
-              href={item.href}
-              {...(isLast ? { 'aria-current': 'page' } : {})}
-            >
-              {item.label}
-            </Link>
-          </div>
-          <div className={cl(styles.breadcrumbItemIconWrapper)}>
-            <BreadcrumbsIcon className={cl(styles.breadcrumbItemIcon)} />
-          </div>
+                <div
+                  className={cl(
+                    styles.breadcrumbItemLink,
+                    variant && styles[variant],
+                  )}
+                >
+                  <Link
+                    size="medium"
+                    inline
+                    href={item.href}
+                    {...(isLast ? { 'aria-current': 'page' } : {})}
+                  >
+                    {item.label}
+                  </Link>
+                </div>
+                <div className={cl(styles.breadcrumbItemIconWrapper)}>
+                  <BreadcrumbsIcon className={cl(styles.breadcrumbItemIcon)} />
+                </div>
               </li>
             );
           })}
