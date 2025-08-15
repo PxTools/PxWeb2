@@ -2,11 +2,13 @@ import { Table } from '@pxweb2/pxweb2-api-client';
 import {
   StartPageFilters,
   Filter,
+  FilterType,
   PathItem,
   YearRange,
 } from '../pages/StartPage/StartPageTypes';
+import { shouldTableBeIncluded } from '../util/tableHandler';
 
-type TableWithPaths = Table & {
+export type TableWithPaths = Table & {
   id: string;
   paths?: { id: string; label: string }[][];
 };
@@ -84,34 +86,41 @@ export function getFilters(tables: Table[]): StartPageFilters {
 }
 
 export function updateSubjectTreeCounts(
-  originalTree: PathItem[],
-  filteredTables: Table[],
+  subjectTree: PathItem[],
+  tables: TableWithPaths[],
 ): PathItem[] {
-  const subjectToTableMap = new Map<string, Set<string>>();
+  const subjectToTableIds = buildSubjectToTableIdsMap(tables);
 
-  (filteredTables as TableWithPaths[]).forEach((table) => {
-    table.paths?.forEach((path) => {
-      path.forEach((level) => {
-        if (level?.id) {
-          if (!subjectToTableMap.has(level.id)) {
-            subjectToTableMap.set(level.id, new Set());
-          }
-          subjectToTableMap.get(level.id)!.add(table.id);
-        }
-      });
-    });
-  });
+  const countTablesForSubjectNode = (
+    node: PathItem,
+  ): [PathItem, Set<string>] => {
+    const tableIdsForThisNode = new Set(subjectToTableIds.get(node.id) ?? []);
+    const tableIdsInChildren = new Set<string>();
+    const updatedChildren: PathItem[] = [];
 
-  function updateNode(node: PathItem): PathItem {
-    const count = subjectToTableMap.get(node.id)?.size ?? 0;
-    return {
+    for (const child of node.children ?? []) {
+      const [updatedChild, childTableIds] = countTablesForSubjectNode(child);
+      updatedChildren.push(updatedChild);
+      for (const id of childTableIds) {
+        tableIdsInChildren.add(id);
+      }
+    }
+
+    const combinedTableIds = new Set([
+      ...tableIdsForThisNode,
+      ...tableIdsInChildren,
+    ]);
+
+    const updatedNode: PathItem = {
       ...node,
-      count,
-      children: node.children?.map(updateNode) ?? [],
+      count: combinedTableIds.size,
+      children: updatedChildren.length ? updatedChildren : undefined,
     };
-  }
 
-  return originalTree.map(updateNode);
+    return [updatedNode, combinedTableIds];
+  };
+
+  return subjectTree.map((node) => countTablesForSubjectNode(node)[0]);
 }
 
 export function sortFiltersByTypeAndSubjectOrder(
@@ -270,4 +279,111 @@ export function flattenSubjectTreeToList(subjectTree: PathItem[]): string[] {
 
   traverseTree(subjectTree);
   return result;
+}
+
+export function shouldRecalcFilter(
+  editedType: FilterType | undefined,
+  targetFilter: FilterType,
+  currentFilters: Filter[],
+): boolean {
+  if (editedType !== targetFilter) {
+    return true;
+  }
+  return currentFilters.some((f) => f.type !== targetFilter);
+}
+
+export function tablesForFilterCounts(
+  targetFilter: FilterType,
+  currentFilters: Filter[],
+  availableTables: Table[],
+): Table[] {
+  const activeTypes = new Set(currentFilters.map((f) => f.type));
+  const onlyThisTypeActive =
+    activeTypes.size === 1 && activeTypes.has(targetFilter);
+
+  if (onlyThisTypeActive) {
+    return availableTables;
+  }
+  const minusThisFacet = filtersExcludingType(currentFilters, targetFilter);
+  return availableTables.filter((t) =>
+    shouldTableBeIncluded(t, minusThisFacet),
+  );
+}
+
+function filtersExcludingType(filters: Filter[], type: FilterType): Filter[] {
+  return filters.filter((f) => f.type !== type);
+}
+
+export function recomputeAvailableFilters(
+  editFilterType: FilterType | undefined,
+  currentFilters: Filter[],
+  availableTables: Table[],
+  originalSubjectTree: PathItem[],
+) {
+  const subjectTables = tablesForFilterCounts(
+    'subject',
+    currentFilters,
+    availableTables,
+  );
+  const timeUnitTables = tablesForFilterCounts(
+    'timeUnit',
+    currentFilters,
+    availableTables,
+  );
+  const yearRangeTables = tablesForFilterCounts(
+    'yearRange',
+    currentFilters,
+    availableTables,
+  );
+
+  const shouldRecalcFilter = (filter: FilterType) =>
+    editFilterType !== filter || currentFilters.some((f) => f.type !== filter);
+
+  return {
+    subjectTree: shouldRecalcFilter('subject')
+      ? updateSubjectTreeCounts(originalSubjectTree, subjectTables)
+      : undefined,
+    timeUnits: shouldRecalcFilter('timeUnit')
+      ? getTimeUnits(timeUnitTables)
+      : undefined,
+    yearRange: shouldRecalcFilter('yearRange')
+      ? getYearRanges(yearRangeTables)
+      : undefined,
+  };
+}
+
+function collectUniqueSubjectIdsFromTable(table: TableWithPaths): string[] {
+  const uniqueSubjectIds = new Set<string>();
+  if (!table.paths) {
+    return [];
+  }
+  for (const path of table.paths) {
+    if (!path) {
+      continue;
+    }
+    for (const segment of path) {
+      if (segment?.id) {
+        uniqueSubjectIds.add(segment.id);
+      }
+    }
+  }
+  return [...uniqueSubjectIds];
+}
+
+export function buildSubjectToTableIdsMap(
+  tables: TableWithPaths[],
+): Map<string, Set<string>> {
+  const map = new Map<string, Set<string>>();
+  for (const table of tables) {
+    const subjectIds = collectUniqueSubjectIdsFromTable(table);
+    for (const id of subjectIds) {
+      let tableIds = map.get(id);
+      if (!tableIds) {
+        tableIds = new Set<string>();
+        map.set(id, tableIds);
+      }
+      tableIds.add(table.id);
+    }
+  }
+  return map;
 }

@@ -8,6 +8,7 @@ import {
 
 import {
   ActionType,
+  FilterType,
   ReducerActionTypes,
   StartPageState,
 } from '../pages/StartPage/StartPageTypes';
@@ -17,10 +18,10 @@ import {
   updateSubjectTreeCounts,
   flattenSubjectTreeToList,
   getYearRanges,
+  recomputeAvailableFilters,
 } from '../util/startPageFilters';
 import { shouldTableBeIncluded } from '../util/tableHandler';
 
-// Want to ensure this is never changed
 const initialState: StartPageState = Object.freeze({
   availableTables: [],
   filteredTables: [],
@@ -75,7 +76,10 @@ function reducer(
         originalSubjectTree: action.payload.subjects,
         subjectOrderList: subjectOrder,
         availableFilters: {
-          subjectTree: action.payload.subjects,
+          subjectTree: updateSubjectTreeCounts(
+            action.payload.subjects,
+            action.payload.tables,
+          ),
           timeUnits: getTimeUnits(action.payload.tables),
           yearRange: fullRange,
         },
@@ -92,41 +96,44 @@ function reducer(
       const filteredTables = state.availableTables.filter((table) =>
         shouldTableBeIncluded(table, newFilters),
       );
-      const addType = action.payload[0]?.type;
+      const addType = action.payload[0]?.type as FilterType | undefined;
       const updatedLastUsedYearRange = incomingTypes.has('yearRange')
         ? state.lastUsedYearRange
         : getYearRanges(filteredTables);
+
+      const recomputed = recomputeAvailableFilters(
+        addType,
+        newFilters,
+        state.availableTables,
+        state.originalSubjectTree,
+      );
+
       return {
         ...state,
         activeFilters: newFilters,
         filteredTables,
         availableFilters: {
           subjectTree:
-            addType !== 'subject'
-              ? updateSubjectTreeCounts(
-                  state.originalSubjectTree,
-                  filteredTables,
-                )
-              : state.availableFilters.subjectTree,
-          timeUnits:
-            addType !== 'timeUnit'
-              ? getTimeUnits(filteredTables)
-              : state.availableFilters.timeUnits,
-          yearRange: getYearRanges(filteredTables),
+            recomputed.subjectTree ?? state.availableFilters.subjectTree,
+          timeUnits: recomputed.timeUnits ?? state.availableFilters.timeUnits,
+          yearRange: recomputed.yearRange ?? state.availableFilters.yearRange,
         },
         lastUsedYearRange: updatedLastUsedYearRange,
       };
     }
+
     case ActionType.REMOVE_FILTER: {
-      const removedType = action.payload.type;
+      const removedType = action.payload.type as FilterType;
+
       const currentFilters =
-        removedType == 'subject' && action.payload.uniqueId
+        removedType === 'subject' && action.payload.uniqueId
           ? state.activeFilters.filter(
               (filter) => filter.uniqueId !== action.payload.uniqueId,
             )
           : state.activeFilters.filter(
               (filter) => filter.value !== action.payload.value,
             );
+
       if (currentFilters.length === 0) {
         const fullRange = getYearRanges(state.availableTables);
         return {
@@ -144,9 +151,11 @@ function reducer(
           lastUsedYearRange: fullRange,
         };
       }
+
       const filteredTables = state.availableTables.filter((table) =>
         shouldTableBeIncluded(table, currentFilters),
       );
+
       const yearRangeStillActive = currentFilters.some(
         (f) => f.type === 'yearRange',
       );
@@ -154,34 +163,32 @@ function reducer(
         ? state.lastUsedYearRange
         : getYearRanges(filteredTables);
 
+      const recomputed = recomputeAvailableFilters(
+        removedType,
+        currentFilters,
+        state.availableTables,
+        state.originalSubjectTree,
+      );
+
       return {
         ...state,
         activeFilters: currentFilters,
         filteredTables,
         availableFilters: {
           subjectTree:
-            removedType !== 'subject'
-              ? updateSubjectTreeCounts(
-                  state.originalSubjectTree,
-                  filteredTables,
-                )
-              : state.availableFilters.subjectTree,
-          timeUnits: getTimeUnits(filteredTables),
-          yearRange: getYearRanges(filteredTables),
+            recomputed.subjectTree ?? state.availableFilters.subjectTree,
+          timeUnits: recomputed.timeUnits ?? state.availableFilters.timeUnits,
+          yearRange: recomputed.yearRange ?? state.availableFilters.yearRange,
         },
         lastUsedYearRange: updatedLastUsedYearRange,
       };
     }
+
     case ActionType.SET_ERROR:
-      return {
-        ...state,
-        error: action.payload,
-      };
+      return { ...state, error: action.payload };
+
     case ActionType.SET_LOADING:
-      return {
-        ...state,
-        loading: action.payload,
-      };
+      return { ...state, loading: action.payload };
 
     default:
       return state;
