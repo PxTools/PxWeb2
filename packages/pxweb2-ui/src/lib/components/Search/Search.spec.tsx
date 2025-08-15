@@ -1,10 +1,10 @@
-import { MutableRefObject } from 'react';
+import { createRef, RefObject } from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { render, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom/vitest';
 
-import Search from './Search';
+import Search, { SearchHandle } from './Search';
 import classes from './Search.module.scss';
 
 describe('Search component', () => {
@@ -183,7 +183,7 @@ describe('Search component', () => {
       const handleChange = vi.fn();
       const ref = {
         current: null,
-      } as MutableRefObject<HTMLInputElement | null>;
+      } as RefObject<SearchHandle | null>;
       const { getByRole } = render(
         <Search onChange={handleChange} value="test" ref={ref} />,
       );
@@ -206,6 +206,34 @@ describe('Search component', () => {
       rerender(<Search value="updated" />);
 
       expect(input.value).toBe('updated');
+    });
+  });
+
+  describe('imperative functions', () => {
+    it('exposes the "clearInputField" function', async () => {
+      const handleChange = vi.fn();
+      const ref = createRef<SearchHandle>();
+
+      const { getByRole } = render(
+        <Search value="test" ref={ref} onChange={handleChange} />,
+      );
+
+      // Wait for effects to complete
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      const input = getByRole('textbox') as HTMLInputElement;
+      expect(input.value).toBe('test');
+      expect(ref.current).not.toBeNull();
+      expect(typeof ref.current?.clearInputField).toBe('function');
+
+      // Call the method
+      ref.current?.clearInputField();
+
+      // Wait for state updates
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      expect(input.value).toBe('');
+      expect(handleChange).toHaveBeenCalledWith('');
     });
   });
 });

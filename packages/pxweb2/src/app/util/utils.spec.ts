@@ -1,4 +1,4 @@
-import { getLabelText } from './utils';
+import { getLabelText, wrapWithLocalizedQuotemarks } from './utils';
 
 describe('getLabelText', () => {
   it('should return the code when valueDisplayType is "code"', () => {
@@ -17,5 +17,11 @@ describe('getLabelText', () => {
     const result = getLabelText('code_value', '123', 'Label');
 
     expect(result).toBe('123 Label');
+  });
+
+  it('Should return correctly quoted text depending on language', () => {
+    const result = wrapWithLocalizedQuotemarks('søketekst', 'no');
+
+    expect(result).toBe('«søketekst»');
   });
 });

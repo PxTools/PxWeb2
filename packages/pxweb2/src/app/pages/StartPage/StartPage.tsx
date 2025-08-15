@@ -3,6 +3,7 @@ import { useTranslation, Trans } from 'react-i18next';
 import type { TFunction } from 'i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import cl from 'clsx';
+import { debounce } from 'lodash';
 
 import styles from './StartPage.module.scss';
 import {
@@ -15,6 +16,7 @@ import {
   Heading,
   Ingress,
   BodyShort,
+  SearchHandle,
 } from '@pxweb2/pxweb2-ui';
 import { type Table } from '@pxweb2/pxweb2-api-client';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
@@ -53,6 +55,7 @@ const StartPage = () => {
   const paginationButtonRef = useRef<HTMLButtonElement>(null);
   const firstNewCardRef = useRef<HTMLDivElement>(null);
   const lastVisibleCardRef = useRef<HTMLDivElement>(null);
+  const searchFieldRef = useRef<SearchHandle>(null);
 
   useEffect(() => {
     async function fetchTables() {
@@ -203,6 +206,7 @@ const StartPage = () => {
                 subjects: getSubjectTree(state.availableTables),
               },
             });
+            searchFieldRef.current?.clearInputField();
             setVisibleCount(paginationCount);
           }}
         >
@@ -288,6 +292,16 @@ const StartPage = () => {
       {renderPagination()}
     </>
   );
+
+  // Debounce the dispatch for search filter, so it waits a few moments for typing to finish
+  const debouncedDispatch = useRef(
+    debounce((value: string) => {
+      dispatch({
+        type: ActionType.ADD_SEARCH_FILTER,
+        payload: { text: value, language: i18n.language },
+      });
+    }, 500),
+  ).current;
 
   const renderPagination = () => {
     const shouldShowPagination =
@@ -481,6 +495,10 @@ const StartPage = () => {
                 <Search
                   searchPlaceHolder={t('start_page.search_placeholder')}
                   variant="default"
+                  ref={searchFieldRef}
+                  onChange={(value: string) => {
+                    debouncedDispatch(value);
+                  }}
                 />
               </div>
 
@@ -534,6 +552,9 @@ const StartPage = () => {
                             },
                           });
                           setVisibleCount(paginationCount);
+                          if (filter.type == 'search') {
+                            searchFieldRef.current?.clearInputField();
+                          }
                         }}
                         aria-label={t('start_page.filter.remove_filter_aria', {
                           value: filter.value,

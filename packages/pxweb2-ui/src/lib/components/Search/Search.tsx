@@ -1,4 +1,11 @@
-import { useState, useRef, useEffect, forwardRef } from 'react';
+import {
+  useState,
+  useRef,
+  useEffect,
+  forwardRef,
+  useImperativeHandle,
+  useCallback,
+} from 'react';
 import cl from 'clsx';
 
 import classes from './Search.module.scss';
@@ -18,7 +25,11 @@ export interface SearchProps {
   onChange?: (value: string) => void;
 }
 
-export const Search = forwardRef<HTMLInputElement, SearchProps>(
+export interface SearchHandle extends HTMLInputElement {
+  clearInputField: () => void;
+}
+
+export const Search = forwardRef<SearchHandle, SearchProps>(
   (
     {
       value = '',
@@ -36,21 +47,29 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
   ) => {
     const [inputValue, setInputValue] = useState(value);
     const inputRef = useRef<HTMLInputElement>(null);
+    const combinedRef = (ref || inputRef) as React.RefObject<SearchHandle>;
 
     useEffect(() => {
       setInputValue(value);
     }, [value]);
 
-    const handleClear = () => {
+    const clearInputField = useCallback(() => {
+      setInputValue('');
+      onChange && onChange('');
+    }, [onChange]);
+
+    const handleClear = useCallback(() => {
       onChange && onChange('');
       setInputValue('');
+      combinedRef.current?.focus();
+    }, [onChange, combinedRef]);
 
-      if (ref?.hasOwnProperty('current')) {
-        (ref as React.MutableRefObject<HTMLInputElement>).current.focus();
-      } else if (inputRef.current !== null) {
-        inputRef.current.focus();
+    // Attach the clearInputField method to the ref
+    useEffect(() => {
+      if (combinedRef.current) {
+        combinedRef.current.clearInputField = clearInputField;
       }
-    };
+    }, [combinedRef, clearInputField]);
 
     const handleKeyDown = (
       e:
@@ -69,6 +88,8 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
       }
     };
 
+    useImperativeHandle(ref, () => combinedRef.current, [combinedRef]);
+
     return (
       <div className={cl(classes.search, classes[variant])}>
         {showLabel && <Label size="medium">{labelText}</Label>}
@@ -85,7 +106,7 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
           ></Icon>
           <input
             type="text"
-            ref={ref || inputRef}
+            ref={combinedRef}
             className={cl(
               classes[`bodyshort-medium`],
               classes.input,

@@ -23,19 +23,19 @@
 }
 
 .wrapper.default {
-  border-radius: var(--px-border-radius-small);
-  outline: 2px solid var(--px-color-border-default);
+  border-radius: var(--px-border-radius-medium);
+  box-shadow: inset 0 0 0 2px var(--px-color-border-default);
   background: var(--px-color-surface-default);
 
   &:hover {
-    border-radius: var(--px-border-radius-small);
-    outline: 2px solid var(--px-color-border-hover);
+    border-radius: var(--px-border-radius-medium);
+    box-shadow: inset 0 0 0 2px var(--px-color-border-default);
     background: var(--px-color-surface-default);
   }
 
   &:active {
-    border-radius: var(--px-border-radius-small);
-    outline: 2px solid var(--px-color-border-action);
+    border-radius: var(--px-border-radius-medium);
+    box-shadow: inset 0 0 0 2px var(--px-color-border-default);
     background: var(--px-color-surface-default);
   }
 
@@ -47,7 +47,7 @@
 
   /* Apply outline when the INPUT has keyboard focus */
   &:has(input:focus-visible) {
-    border-radius: var(--px-border-radius-small);
+    border-radius: var(--px-border-radius-medium);
     outline: 3px solid var(--px-color-border-focus-outline);
     outline-offset: 5px;
     box-shadow: 0 0 0 3px var(--px-color-border-focus-boxshadow);

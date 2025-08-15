@@ -200,3 +200,42 @@ test('Time and subject filter 2 should disallow test data', () => {
     false,
   );
 });
+
+test('Search for a single existing word should include table', () => {
+  expect(
+    shouldTableBeIncluded(tableYear, [
+      {
+        index: 1,
+        type: 'search',
+        label: '"bruddjusterte"',
+        value: 'bruddjusterte',
+      },
+    ]),
+  ).toBe(true);
+});
+
+test('Search for multiple existing words should include table', () => {
+  expect(
+    shouldTableBeIncluded(tableYear, [
+      {
+        index: 1,
+        type: 'search',
+        label: '"bruddjusterte alder"',
+        value: 'bruddjusterte alder',
+      },
+    ]),
+  ).toBe(true);
+});
+
+test('Search for one word which exists and one which doesnt should NOT include table', () => {
+  expect(
+    shouldTableBeIncluded(tableYear, [
+      {
+        index: 1,
+        type: 'search',
+        label: '"bruddjusterte testord"',
+        value: 'bruddjusterte testord',
+      },
+    ]),
+  ).toBe(false);
+});
