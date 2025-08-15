@@ -132,10 +132,7 @@
                 "confirm_button": "Bekreft"
               }
             },
-            "mixed_checkbox": {
-              "select_all": "Velg alle",
-              "deselect_all": "Fjern alle"
-            },
+            "mixed_checkbox": "Velg alle",
             "values_list": {
               "aria_label": "Liste av {{total}} verdier.",
               "no_results_heading": "Ingen treff på «{{search}}»",
@@ -184,6 +181,7 @@
         "title": "Lagre",
         "file": {
           "title": "Last ned som fil",
+          "loading_announcement": "Filen behandles fortsatt. Vennligst vent.",
           "excel": "Excel (.xlsx)",
           "csv": "Semikolonseparert med overskrift (.csv)",
           "px": "PC-Axis (.px)",

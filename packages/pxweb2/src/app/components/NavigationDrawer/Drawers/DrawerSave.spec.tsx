@@ -1,7 +1,8 @@
+import { describe, it, expect } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 
-import DrawerSave from './DrawerSave';
+import { DrawerSave } from './DrawerSave';
 
 // Mock i18n
 vi.mock('react-i18next', () => ({

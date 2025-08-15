@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom/vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
+
 import { describe, it, expect, vi } from 'vitest';
 import { ActionItem } from './ActionItem';
 
@@ -18,6 +19,7 @@ vi.mock('@pxweb2/pxweb2-ui', async () => {
     Icon: ({ iconName, className }: any) => (
       <span data-testid="icon" data-icon={iconName} className={className} />
     ),
+    Spinner: () => <span data-testid="spinner" />,
     Label: ({ children, ...props }: any) => (
       <label {...props}>{children}</label>
     ),
@@ -55,21 +57,40 @@ describe('ActionItem', () => {
     expect(onClick).toHaveBeenCalled();
   });
 
-  it('shows description only for medium size', () => {
-    // medium (default)
-    render(<ActionItem iconName="BarChart" size="medium" description="desc" />);
-    expect(screen.getByText('desc')).toBeInTheDocument();
-
-    // large
-    render(
-      <ActionItem largeIconName="Table" size="large" description="desc2" />,
-    );
-    expect(screen.queryByText('desc2')).not.toBeInTheDocument();
-  });
-
   it('applies correct class names for size', () => {
     render(<ActionItem largeIconName="BarChart" size="medium" />);
     const iconWrapper = screen.getByTestId('icon').parentElement;
     expect(iconWrapper?.className).toMatch(/iconWrapper-medium/);
+  });
+
+  describe('medium size', () => {
+    it('shows description', () => {
+      // medium (default)
+      render(
+        <ActionItem iconName="BarChart" size="medium" description="desc" />,
+      );
+      expect(screen.getByText('desc')).toBeInTheDocument();
+    });
+
+    it('shows loading spinner when isLoading is true', () => {
+      render(<ActionItem iconName="BarChart" size="medium" isLoading={true} />);
+
+      expect(screen.getByTestId('spinner')).toBeInTheDocument();
+    });
+  });
+
+  describe('large size', () => {
+    it('does not show description', () => {
+      render(
+        <ActionItem largeIconName="Table" size="large" description="desc2" />,
+      );
+      expect(screen.queryByText('desc2')).not.toBeInTheDocument();
+    });
+
+    it('does not show loading spinner when isLoading is true', () => {
+      render(<ActionItem iconName="BarChart" size="large" isLoading={true} />);
+
+      expect(screen.queryByTestId('spinner')).not.toBeInTheDocument();
+    });
   });
 });
