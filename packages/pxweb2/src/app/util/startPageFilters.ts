@@ -8,7 +8,7 @@ import {
 } from '../pages/StartPage/StartPageTypes';
 import { shouldTableBeIncluded } from '../util/tableHandler';
 
-type TableWithPaths = Table & {
+export type TableWithPaths = Table & {
   id: string;
   paths?: { id: string; label: string }[][];
 };
@@ -370,7 +370,7 @@ function collectUniqueSubjectIdsFromTable(table: TableWithPaths): string[] {
   return [...uniqueSubjectIds];
 }
 
-function buildSubjectToTableIdsMap(
+export function buildSubjectToTableIdsMap(
   tables: TableWithPaths[],
 ): Map<string, Set<string>> {
   const map = new Map<string, Set<string>>();
