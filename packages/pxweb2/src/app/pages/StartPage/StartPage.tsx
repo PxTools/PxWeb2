@@ -428,6 +428,40 @@ const StartPage = () => {
     );
   };
 
+  const renderTableListSEO = () => {
+    return (
+      <nav
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          left: '-9999px',
+          width: '1px',
+          height: '1px',
+          overflow: 'hidden',
+        }}
+      >
+        <h2>TableList(SEO)</h2>
+        <ul>
+          {state.availableTables.map((table) => {
+            const config = getConfig();
+            const language = i18n.language;
+            const showLangInPath =
+              config.language.showDefaultLanguageInPath ||
+              language !== config.language.defaultLanguage;
+            const langPrefix = showLangInPath ? `/${language}` : '';
+            return (
+              <li key={table.id}>
+                <a href={`${langPrefix}/table/${table.id}`} tabIndex={-1}>
+                  {table.label}
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+    );
+  };
+
   return (
     <>
       <Header />
@@ -486,33 +520,30 @@ const StartPage = () => {
                 <div className={styles.filterPillContainer}>
                   <Chips>
                     {renderRemoveAllChips()}
-                    {sortAndDeduplicateFilterChips(state.activeFilters).map(
-                      (filter) => (
-                        <Chips.Removable
-                          onMouseDown={(e) => e.preventDefault()}
-                          onClick={() => {
-                            dispatch({
-                              type: ActionType.REMOVE_FILTER,
-                              payload: {
-                                value: filter.value,
-                                type: filter.type,
-                              },
-                            });
-                            setVisibleCount(paginationCount);
-                          }}
-                          aria-label={t(
-                            'start_page.filter.remove_filter_aria',
-                            {
+                    {sortAndDeduplicateFilterChips(
+                      state.activeFilters,
+                      state.subjectOrderList,
+                    ).map((filter) => (
+                      <Chips.Removable
+                        onClick={() => {
+                          dispatch({
+                            type: ActionType.REMOVE_FILTER,
+                            payload: {
                               value: filter.value,
+                              type: filter.type,
                             },
-                          )}
-                          key={filter.value}
-                          truncate
-                        >
-                          {filter.label}
-                        </Chips.Removable>
-                      ),
-                    )}
+                          });
+                          setVisibleCount(paginationCount);
+                        }}
+                        aria-label={t('start_page.filter.remove_filter_aria', {
+                          value: filter.value,
+                        })}
+                        key={filter.value}
+                        truncate
+                      >
+                        {filter.label}
+                      </Chips.Removable>
+                    ))}
                   </Chips>
                 </div>
               )}
@@ -544,6 +575,7 @@ const StartPage = () => {
           </div>
         </div>
       </div>
+      {renderTableListSEO()}
       <Footer />
     </>
   );

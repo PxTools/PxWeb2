@@ -132,10 +132,7 @@
                 "confirm_button": "Spara"
               }
             },
-            "mixed_checkbox": {
-              "select_all": "Välj alla",
-              "deselect_all": "Ta bort alla"
-            },
+            "mixed_checkbox": "Välj alla",
             "values_list": {
               "aria_label": "Lista över {{total}} värden.",
               "no_results_heading": "Tyvärr hittades inte ”{{search}}”",

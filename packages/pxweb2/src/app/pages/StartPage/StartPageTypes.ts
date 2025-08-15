@@ -42,6 +42,7 @@ export type StartPageState = {
   loading: boolean;
   error: string;
   originalSubjectTree: PathItem[];
+  subjectOrderList: string[];
   lastUsedYearRange: YearRange | null;
 };
 
