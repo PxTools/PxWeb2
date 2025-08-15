@@ -3,11 +3,13 @@ import React, { createContext, useState, useEffect, useMemo } from 'react';
 import {
   BreakpointsXsmallMaxWidth,
   BreakpointsMediumMaxWidth,
+  BreakpointsLargeMaxWidth,
 } from '@pxweb2/pxweb2-ui';
 
 // Define the type for the context
 export type AppContextType = {
   isInitialized: boolean;
+  isLargeDesktop: boolean;
   isTablet: boolean;
   isMobile: boolean;
   skipToMainFocused: boolean;
@@ -17,6 +19,7 @@ export type AppContextType = {
 // Create the context with default values
 export const AppContext = createContext<AppContextType>({
   isInitialized: false,
+  isLargeDesktop: false,
   isTablet: false,
   isMobile: false,
   skipToMainFocused: false,
@@ -35,8 +38,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
   /**
    * Keep state if window screen size is mobile, pad or desktop.
    */
+  const largeBreakpoint = Number(BreakpointsLargeMaxWidth.replace('px', ''));
   const tabletBreakpoint = Number(BreakpointsMediumMaxWidth.replace('px', ''));
   const mobileBreakpoint = Number(BreakpointsXsmallMaxWidth.replace('px', ''));
+  const [isLargeDesktop, setIsLargeDesktop] = useState(
+    window.innerWidth > largeBreakpoint,
+  );
   const [isTablet, setIsTablet] = useState(
     window.innerWidth <= tabletBreakpoint,
   );
@@ -47,6 +54,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
   // Use effect to set the isMobile and isTablet state
   useEffect(() => {
     const handleResize = () => {
+      setIsLargeDesktop(window.innerWidth > largeBreakpoint);
       setIsTablet(window.innerWidth <= tabletBreakpoint);
       setIsMobile(window.innerWidth <= mobileBreakpoint);
     };
@@ -56,11 +64,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, [mobileBreakpoint, tabletBreakpoint]);
+  }, [mobileBreakpoint, tabletBreakpoint, largeBreakpoint]);
 
   const cachedValues = useMemo(
     () => ({
       isInitialized,
+      isLargeDesktop,
       isTablet,
       isMobile,
       skipToMainFocused,
@@ -68,6 +77,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
     }),
     [
       isInitialized,
+      isLargeDesktop,
       isTablet,
       isMobile,
       skipToMainFocused,
