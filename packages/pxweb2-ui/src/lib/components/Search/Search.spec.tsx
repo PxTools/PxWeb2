@@ -1,5 +1,4 @@
-import { createRef } from 'react';
-import classes from './Search.module.scss';
+import { createRef, RefObject } from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { render, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
