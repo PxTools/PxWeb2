@@ -181,6 +181,7 @@
         "title": "Spara",
         "file": {
           "title": "Spara som fil",
+          "loading_announcement": "Filen bearbetas fortfarande. Vänligen vänta.",
           "excel": "Excel (.xlsx)",
           "csv": "Semikolonavgränsad med rubrik (.csv)",
           "px": "PC-Axis (.px)",

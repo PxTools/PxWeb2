@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, act } from '@testing-library/react';
+import { act } from '@testing-library/react';
 import { vi } from 'vitest';
 
 import {
@@ -8,11 +8,7 @@ import {
 } from '../../util/testing-utils';
 import Selection from './Selection';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
-import {
-  TableDataProvider,
-  TableDataContext,
-} from '../../context/TableDataProvider';
-import { VariablesProvider } from '../../context/VariablesProvider';
+import { TableDataContext } from '../../context/TableDataProvider';
 
 describe('Selection', () => {
   mockTableService();
@@ -32,13 +28,7 @@ describe('Selection', () => {
       .spyOn(console, 'error')
       .mockImplementation(() => {});
     expect(() => {
-      render(
-        <VariablesProvider>
-          <TableDataProvider>
-            <TestComponent />
-          </TableDataProvider>
-        </VariablesProvider>,
-      );
+      renderWithProviders(<TestComponent />);
     }).toThrow('Simulated error');
     consoleErrorSpy.mockRestore();
   });

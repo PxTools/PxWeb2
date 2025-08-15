@@ -181,6 +181,7 @@
         "title": "Lagre",
         "file": {
           "title": "Last ned som fil",
+          "loading_announcement": "Filen behandles fortsatt. Vennligst vent.",
           "excel": "Excel (.xlsx)",
           "csv": "Semikolonseparert med overskrift (.csv)",
           "px": "PC-Axis (.px)",
