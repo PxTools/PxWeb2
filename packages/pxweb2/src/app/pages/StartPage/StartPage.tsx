@@ -54,6 +54,9 @@ const StartPage = () => {
   const paginationButtonRef = useRef<HTMLButtonElement>(null);
   const firstNewCardRef = useRef<HTMLDivElement>(null);
   const lastVisibleCardRef = useRef<HTMLDivElement>(null);
+  const isInitialLoadComplete = useRef(false);
+  const prevLoading = useRef(state.loading);
+  const skipNextFadeAfterInitialLoad = useRef(false);
 
   useEffect(() => {
     async function fetchTables() {
@@ -121,10 +124,25 @@ const StartPage = () => {
   }, [isPaginating, visibleCount]);
 
   useEffect(() => {
+    if (prevLoading.current && !state.loading) {
+      isInitialLoadComplete.current = true;
+      skipNextFadeAfterInitialLoad.current = true;
+    }
+    prevLoading.current = state.loading;
+  }, [state.loading]);
+
+  useEffect(() => {
+    if (!isInitialLoadComplete.current || state.loading) {
+      return;
+    }
+    if (skipNextFadeAfterInitialLoad.current) {
+      skipNextFadeAfterInitialLoad.current = false;
+      return;
+    }
     setIsFadingTableList(true);
     const timeout = setTimeout(() => setIsFadingTableList(false), 400);
     return () => clearTimeout(timeout);
-  }, [state.filteredTables, visibleCount]);
+  }, [state.filteredTables.length, visibleCount, state.loading]);
 
   const formatNumber = (value: number) =>
     new Intl.NumberFormat(i18n.language).format(value);
