@@ -46,6 +46,7 @@ const StartPage = () => {
   const [lastVisibleCount, setLastVisibleCount] = useState(paginationCount);
   const [isPaginating, setIsPaginating] = useState(false);
   const [paginationButtonWidth, setPaginationButtonWidth] = useState<number>();
+  const [isFadingTableList, setIsFadingTableList] = useState(false);
 
   const filterBackButtonRef = useRef<HTMLButtonElement>(null);
   const filterToggleRef = useRef<HTMLButtonElement>(null);
@@ -118,6 +119,11 @@ const StartPage = () => {
       return () => clearTimeout(timeout);
     }
   }, [isPaginating, visibleCount]);
+
+  useEffect(() => {
+    setIsFadingTableList(true);
+    const timeout = setTimeout(() => setIsFadingTableList(false), 400);
+  }, [state.filteredTables, visibleCount]);
 
   const formatNumber = (value: number) =>
     new Intl.NumberFormat(i18n.language).format(value);
@@ -284,7 +290,13 @@ const StartPage = () => {
     <>
       {renderNumberofTablesScreenReader()}
       {renderTableCount()}
-      <div className={styles.tableCardList}>{renderCards()}</div>
+      <div
+        className={cl(styles.tableCardList, {
+          [styles.fadeList]: isFadingTableList,
+        })}
+      >
+        {renderCards()}
+      </div>
       {renderPagination()}
     </>
   );
