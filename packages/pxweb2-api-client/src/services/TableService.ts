@@ -91,6 +91,8 @@ export class TableService {
      * @param defaultSelection If metadata should be included as if default selection would have been applied.
      * This is a technical parameter that is used by PxWeb for initial loading of tables.
      *
+     * @param savedQuery Id for a saved query that should be be applied before metadata is returned.
+     *
      * @param codelist
      * @returns Dataset Success
      * @throws ApiError
@@ -99,6 +101,7 @@ export class TableService {
         id: string,
         lang?: string | null,
         defaultSelection: boolean = false,
+        savedQuery?: string | null,
         codelist?: Record<string, string>,
     ): CancelablePromise<Dataset> {
         return __request(OpenAPI, {
@@ -110,6 +113,7 @@ export class TableService {
             query: {
                 'lang': lang,
                 'defaultSelection': defaultSelection,
+                'savedQuery': savedQuery,
                 'codelist': codelist,
             },
             errors: {

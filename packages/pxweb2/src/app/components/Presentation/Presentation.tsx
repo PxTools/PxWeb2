@@ -14,7 +14,7 @@ import { getConfig } from '../../util/config/getConfig';
 
 type propsType = {
   readonly selectedTabId: string;
-  scrollRef?: React.Ref<HTMLDivElement>;
+  readonly scrollRef?: React.Ref<HTMLDivElement>;
 };
 
 const MemoizedTable = React.memo(
@@ -26,7 +26,7 @@ const MemoizedTable = React.memo(
     prevProps.isMobile === nextProps.isMobile,
 );
 export function Presentation({ selectedTabId, scrollRef }: propsType) {
-  const { isMobile } = useApp();
+  const { isMobile, getSavedQueryId } = useApp();
   const config = getConfig();
   const { i18n, t } = useTranslation();
   const tableData = useTableData();
@@ -34,7 +34,7 @@ export function Presentation({ selectedTabId, scrollRef }: propsType) {
   const variables = useDebounce(useVariables(), 500);
   const {
     pxTableMetadata,
-    hasLoadedDefaultSelection,
+    hasLoadedInitialSelection,
     isLoadingMetadata,
     selectedVBValues,
   } = variables;
@@ -116,12 +116,16 @@ export function Presentation({ selectedTabId, scrollRef }: propsType) {
       );
 
     if (initialRun && !hasSelectedValues) {
-      fetchTableDataIfAllowed();
+      if (getSavedQueryId()?.length > 0) {
+        tableData.fetchSavedQuery(getSavedQueryId(), i18n, isMobile);
+      } else {
+        fetchTableDataIfAllowed();
+      }
       setIsMissingMandatoryVariables(false);
     } else {
       if (
         hasSelectedMandatoryVariables &&
-        hasLoadedDefaultSelection &&
+        hasLoadedInitialSelection &&
         !isLoadingMetadata &&
         !initialRun
       ) {
