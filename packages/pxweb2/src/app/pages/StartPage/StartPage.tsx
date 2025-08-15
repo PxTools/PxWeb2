@@ -123,6 +123,7 @@ const StartPage = () => {
   useEffect(() => {
     setIsFadingTableList(true);
     const timeout = setTimeout(() => setIsFadingTableList(false), 400);
+    return () => clearTimeout(timeout);
   }, [state.filteredTables, visibleCount]);
 
   const formatNumber = (value: number) =>
