@@ -15,10 +15,7 @@ export type VariableListProps = {
   selectedVBValues: SelectedVBValues[];
 
   // TODO: Optimise here? Duplicate with props in VariableBox
-  handleCodeListChange: (
-    selectedItem: SelectOption | undefined,
-    varId: string,
-  ) => void;
+  handleCodeListChange: (selectedItem: SelectOption, varId: string) => void;
   handleCheckboxChange: (varId: string, value: string) => void;
   handleMixedCheckboxChange: (
     varId: string,

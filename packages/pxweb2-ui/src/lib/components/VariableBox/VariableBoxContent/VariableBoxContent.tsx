@@ -36,10 +36,7 @@ type VariableBoxContentProps = VariableBoxPropsToContent & {
   totalValues: number;
   totalChosenValues: number;
   languageDirection: 'ltr' | 'rtl';
-  onChangeCodeList: (
-    selectedItem: SelectOption | undefined,
-    varId: string,
-  ) => void;
+  onChangeCodeList: (selectedItem: SelectOption, varId: string) => void;
   onChangeCheckbox: (varId: string, value: string) => void;
   onChangeMixedCheckbox: (
     varId: string,
@@ -197,7 +194,7 @@ export function VariableBoxContent({
   const selectedCodeListOrUndefined = selectedCodeListMapped ?? undefined;
 
   const handleChangingCodeListInVariableBox = (
-    selectedItem: SelectOption | undefined,
+    selectedItem: SelectOption,
     varId: string,
     virtuosoRef: React.RefObject<VirtuosoHandle | null>,
   ) => {
@@ -455,6 +452,7 @@ export function VariableBoxContent({
               options={mappedAndSortedCodeLists}
               selectedOption={selectedCodeListOrUndefined}
               onChange={(selectedItem) =>
+                selectedItem &&
                 handleChangingCodeListInVariableBox(
                   selectedItem,
                   varId,
