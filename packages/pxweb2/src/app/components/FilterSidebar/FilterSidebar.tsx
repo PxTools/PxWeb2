@@ -7,7 +7,7 @@ import { Checkbox, FilterCategory, Search } from '@pxweb2/pxweb2-ui';
 import { findAncestors, getAllDescendants } from '../../util/startPageFilters';
 import { FilterContext } from '../../context/FilterContext';
 import { YearRangeFilter } from './YearRangeFilter';
-import { ReactNode, useContext, useState } from 'react';
+import { ReactNode, useContext, useEffect, useState } from 'react';
 
 interface CollapsibleProps {
   subject: PathItem;
@@ -216,6 +216,19 @@ const VariablesFilter: React.FC = () => {
   const { state, dispatch } = useContext(FilterContext);
   const [variableSearch, setVariableSearch] = useState('');
   const { t } = useTranslation();
+
+  useEffect(() => {
+    const firstCheckbox = document.querySelector(
+      `.${styles.scrollableVariableFilter} li`,
+    );
+    if (firstCheckbox) {
+      const height = firstCheckbox.getBoundingClientRect().height;
+      document.documentElement.style.setProperty(
+        '--checkbox-height',
+        `${height}px`,
+      );
+    }
+  }, []);
 
   return (
     <>
