@@ -17,7 +17,6 @@ export type VariablesContextType = {
   toString: () => string;
   hasLoadedInitialSelection: boolean;
   setHasLoadedInitialSelection: React.Dispatch<React.SetStateAction<boolean>>;
-  // getSavedQueryId: () => string;
   setSelectedVBValues: React.Dispatch<React.SetStateAction<SelectedVBValues[]>>;
   selectedVBValues: SelectedVBValues[];
   isMatrixSizeAllowed: boolean;
@@ -48,7 +47,6 @@ export const VariablesContext = createContext<VariablesContextType>({
 
   hasLoadedInitialSelection: false,
   setHasLoadedInitialSelection: () => false,
-  // getSavedQueryId: () => '',
   setSelectedVBValues: () => [],
   selectedVBValues: [],
   setIsLoadingMetadata: () => false,
@@ -56,7 +54,6 @@ export const VariablesContext = createContext<VariablesContextType>({
   isLoadingMetadata: false,
   pxTableMetadata: null,
   setPxTableMetadata: () => null,
-  // pxTableMetaToRender:null
 });
 
 // Provider component
@@ -245,16 +242,6 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
     return selectedMatrixSize;
   };
 
-  // const getSavedQueryId = () => {
-  //   let savedQueryId: string = '';
-  //   if (typeof window !== 'undefined') {
-  //     const params = new URLSearchParams(window.location.search);
-  //     if (params.has('sq')) {
-  //       savedQueryId = params.get('sq') ?? '';
-  //     }
-  //   }
-  //   return savedQueryId;
-  // };
   const memoizedValues = useMemo(
     () => ({
       isInitialized,
@@ -265,7 +252,6 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
       getSelectedCodelistById,
       getUniqueIds,
       getSelectedMatrixSize,
-      // getSavedQueryId,
       syncVariablesAndValues,
       toString,
       hasLoadedInitialSelection,
@@ -287,7 +273,6 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
       getSelectedCodelistById,
       getUniqueIds,
       getSelectedMatrixSize,
-      // getSavedQueryId,
       syncVariablesAndValues,
       toString,
       hasLoadedInitialSelection,

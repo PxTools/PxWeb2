@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import { StrictMode, Suspense } from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router';
 
@@ -18,11 +18,12 @@ if (location.href.includes('localhost')) {
 const router = createBrowserRouter(routerConfig);
 
 root.render(
-  // <StrictMode>
-  <AppProvider>
-    <Suspense fallback={<div>Loading...</div>}>
-      <RouterProvider router={router} />
-    </Suspense>
-  </AppProvider>,
-  // </StrictMode>,
+  <StrictMode>
+    <AppProvider>
+      <Suspense fallback={<div>Loading...</div>}>
+        <RouterProvider router={router} />
+      </Suspense>
+    </AppProvider>
+    ,
+  </StrictMode>,
 );
