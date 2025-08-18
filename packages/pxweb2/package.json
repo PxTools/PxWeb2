@@ -22,7 +22,7 @@
     "@pxweb2/pxweb2-ui": "*",
     "framer-motion": "^12.23.12",
     "lodash": "^4.17.21",
-    "react-router": "^7.8.0"
+    "react-router": "^7.8.1"
   },
   "devDependencies": {
     "@testing-library/react": "^16.3.0",
