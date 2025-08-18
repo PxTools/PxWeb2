@@ -103,7 +103,8 @@ export function Presentation({ selectedTabId, scrollRef }: propsType) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMobile]);
 
-  useEffect(() => {
+  //useEffect(() => {
+  const memoizedDataFetch = React.useCallback(() => {
     const hasSelectedValues = variables.getNumberOfSelectedValues() > 0;
     const hasSelectedMandatoryVariables = pxTableMetadata?.variables
       .filter((variable) => variable.mandatory)
@@ -119,6 +120,7 @@ export function Presentation({ selectedTabId, scrollRef }: propsType) {
       if (getSavedQueryId()?.length > 0) {
         tableData.fetchSavedQuery(getSavedQueryId(), i18n, isMobile);
       } else {
+        console.log('!!!!!122');
         fetchTableDataIfAllowed();
       }
       setIsMissingMandatoryVariables(false);
@@ -130,6 +132,7 @@ export function Presentation({ selectedTabId, scrollRef }: propsType) {
         !initialRun
       ) {
         setIsFadingTable(true);
+        console.log('!!!!!134');
         fetchTableDataIfAllowed();
         setIsMissingMandatoryVariables(false);
       }
@@ -140,8 +143,11 @@ export function Presentation({ selectedTabId, scrollRef }: propsType) {
         setInitialRun(false);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tableId, selectedVBValues, i18n.resolvedLanguage]);
+  }, [tableId, selectedVBValues]);
+
+  useEffect(() => {
+    memoizedDataFetch();
+  }, [memoizedDataFetch]);
 
   useEffect(() => {
     setIsFadingTable(true);
@@ -155,6 +161,7 @@ export function Presentation({ selectedTabId, scrollRef }: propsType) {
 
   function fetchTableDataIfAllowed() {
     if (variables.isMatrixSizeAllowed) {
+      console.log('!!!!!158');
       tableData.fetchTableData(tableId, i18n, isMobile);
     } else {
       // fade table and give warning

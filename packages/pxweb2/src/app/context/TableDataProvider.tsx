@@ -1,4 +1,4 @@
-import { i18n } from 'i18next';
+import i18next, { i18n } from 'i18next';
 import React, { createContext, useEffect, useState, ReactNode } from 'react';
 
 import useVariables from './useVariables';
@@ -294,6 +294,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       if (codelistChanged) {
         setData(undefined);
       }
+      console.log('!!!!!!297');
       const pxTable: PxTable = await fetchFromApi(
         tableId,
         i18n,
@@ -762,7 +763,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
           }
         }
       });
-
+      console.log('!!!!!!766');
       // Get the not already loaded data from the API
       let pxTable: PxTable = await fetchFromApi(
         tableId,
@@ -954,6 +955,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         );
 
         if (validAccData) {
+          console.log('!!!957');
           await fetchWithValidAccData(
             tableId,
             i18n,
@@ -961,6 +963,8 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
             variablesSelection,
           );
         } else {
+          console.log('!!!966');
+          // We do not have valid accumulated data in the data cube, so we need to fetch
           await fetchWithoutValidAccData(
             tableId,
             i18n,
@@ -1009,6 +1013,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     i18n: i18n,
     variablesSelection: VariablesSelection,
   ) => {
+    console.log('!!!variablesSelection', variablesSelection);
     const res = await TableService.getTableDataByPost(
       tableId,
       i18n.language,
