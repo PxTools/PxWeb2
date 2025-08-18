@@ -57,15 +57,13 @@ export function HrefLang() {
   }
 
   function stripLangPrefix(pathname: string) {
-    // Match "/xx" where xx is a supported language code
-    const match = pathname.match(/^\/([a-z]{2})(\/|$)/i);
-    if (
-      match &&
-      supportedLanguages.some(
-        (lang: SupportedLanguage) => lang.shorthand === match[1],
-      )
-    ) {
-      return pathname.replace(/^\/[a-z]{2}/i, '') || '/';
+    // Remove leading "/xx" where xx is a supported language code using RegExp
+    const langCodes = supportedLanguages
+      .map((lang: SupportedLanguage) => lang.shorthand)
+      .join('|');
+    const regex = new RegExp(`^/(${langCodes})(/|$)`, 'i');
+    if (regex.test(pathname)) {
+      return pathname.replace(regex, '/') || '/';
     }
     return pathname;
   }
