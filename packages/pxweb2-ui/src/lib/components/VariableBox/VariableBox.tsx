@@ -20,10 +20,7 @@ export type VariableBoxProps = VariableBoxPropsBase & {
   tableId: string;
   languageDirection: 'ltr' | 'rtl';
   initialIsOpen?: boolean;
-  onChangeCodeList: (
-    selectedItem: SelectOption | undefined,
-    varId: string,
-  ) => void;
+  onChangeCodeList: (selectedItem: SelectOption, varId: string) => void;
   onChangeCheckbox: (varId: string, value: string) => void;
   onChangeMixedCheckbox: (
     varId: string,

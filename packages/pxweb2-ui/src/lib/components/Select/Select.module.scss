@@ -26,20 +26,20 @@
   gap: fixed.$spacing-2;
   align-self: stretch;
 
-  border-radius: var(--px-border-radius-small);
-  outline: 2px solid var(--px-color-border-default);
+  border-radius: var(--px-border-radius-medium);
+  box-shadow: inset 0 0 0 2px var(--px-color-border-default);
   background: var(--px-color-surface-default);
 
   &:hover {
-    border-radius: var(--px-border-radius-small);
-    outline: 2px solid var(--px-color-border-hover);
+    border-radius: var(--px-border-radius-medium);
+    box-shadow: inset 0 0 0 2px var(--px-color-border-hover);
     background: var(--px-color-surface-default);
     cursor: pointer;
   }
 
   &:active {
-    border-radius: var(--px-border-radius-small);
-    outline: 2px solid var(--px-color-border-action);
+    border-radius: var(--px-border-radius-medium);
+    box-shadow: inset 0 0 0 2px var(--px-color-border-action);
     background: var(--px-color-surface-default);
   }
 
