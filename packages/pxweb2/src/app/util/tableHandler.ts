@@ -56,6 +56,37 @@ export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
     }
   };
 
+  const searchFilter = filters.find((f) => {
+    return f.type === 'search';
+  });
+
+  const testSearchFilter = function () {
+    if (!searchFilter) {
+      return true;
+    } else {
+      const text = ''
+        .concat(
+          table.description ?? '',
+          ' ',
+          table.label ?? '',
+          ' ',
+          table.id,
+          ' ',
+          table.variableNames.join(' '),
+        )
+        .toLowerCase()
+        .normalize();
+
+      return searchFilter.value
+        .toLowerCase()
+        .normalize()
+        .split(' ')
+        .every((word) => {
+          return text.includes(word);
+        });
+    }
+  };
+
   const testYearRangeFilter = () => {
     const yearRangeFilter = filters.find((f) => f.type === 'yearRange');
     if (!yearRangeFilter) {
@@ -113,6 +144,7 @@ export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
     testTimeUnitFilters() &&
     testSubjectFilters() &&
     testYearRangeFilter() &&
+    testSearchFilter() &&
     testVariableFilters()
   );
 }
