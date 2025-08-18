@@ -282,7 +282,7 @@ export function getVariables(allTables: Table[]) {
       variables.set(name, count ? count + 1 : 1);
     });
   });
-  // Sort the returned map by number of available variables. TODO: Consider moving this into separate function.
+  // Sort the returned map by number of available variables.
   return new Map<string, number>(
     [...variables.entries()].sort((a, b) => b[1] - a[1]),
   );
