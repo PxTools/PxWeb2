@@ -54,9 +54,6 @@ const StartPage = () => {
   const paginationButtonRef = useRef<HTMLButtonElement>(null);
   const firstNewCardRef = useRef<HTMLDivElement>(null);
   const lastVisibleCardRef = useRef<HTMLDivElement>(null);
-  const isInitialLoadComplete = useRef(false);
-  const prevLoading = useRef(state.loading);
-  const skipNextFadeAfterInitialLoad = useRef(false);
 
   useEffect(() => {
     async function fetchTables() {
@@ -123,27 +120,6 @@ const StartPage = () => {
     }
   }, [isPaginating, visibleCount]);
 
-  useEffect(() => {
-    if (prevLoading.current && !state.loading) {
-      isInitialLoadComplete.current = true;
-      skipNextFadeAfterInitialLoad.current = true;
-    }
-    prevLoading.current = state.loading;
-  }, [state.loading]);
-
-  useEffect(() => {
-    if (!isInitialLoadComplete.current || state.loading) {
-      return;
-    }
-    if (skipNextFadeAfterInitialLoad.current) {
-      skipNextFadeAfterInitialLoad.current = false;
-      return;
-    }
-    setIsFadingTableList(true);
-    const timeout = setTimeout(() => setIsFadingTableList(false), 400);
-    return () => clearTimeout(timeout);
-  }, [state.filteredTables.length, visibleCount, state.loading]);
-
   const formatNumber = (value: number) =>
     new Intl.NumberFormat(i18n.language).format(value);
 
@@ -193,6 +169,13 @@ const StartPage = () => {
         lastVisibleCardRef.current.focus();
       }
     });
+  };
+
+  const handleFilterChange = () => {
+    setVisibleCount(paginationCount);
+    setIsFadingTableList(true);
+    const fadeDuration = 500;
+    setTimeout(() => setIsFadingTableList(false), fadeDuration);
   };
 
   const renderPaginationButton = (
@@ -418,9 +401,7 @@ const StartPage = () => {
             </div>
 
             <div className={styles.filterOverlayContent}>
-              <FilterSidebar
-                onFilterChange={() => setVisibleCount(paginationCount)}
-              />
+              <FilterSidebar onFilterChange={handleFilterChange} />
             </div>
 
             <div className={styles.filterOverlayFooter}>
@@ -538,9 +519,7 @@ const StartPage = () => {
                 >
                   {t('start_page.filter.header')}
                 </Heading>
-                <FilterSidebar
-                  onFilterChange={() => setVisibleCount(paginationCount)}
-                />
+                <FilterSidebar onFilterChange={handleFilterChange} />
               </div>
             )}
 
