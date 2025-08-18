@@ -66,7 +66,7 @@ export const TableCard = forwardRef<HTMLDivElement, TableCardProps>(
         )}
         <div className={cl(styles.cardContent)}>
           <div className={cl(styles.titleWrapper)}>
-            <Heading level="3" size="small">
+            <Heading className={styles.title} level="3" size="small">
               {title}
             </Heading>
           </div>

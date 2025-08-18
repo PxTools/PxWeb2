@@ -1,6 +1,7 @@
 import { type Table, TableService, OpenAPI } from '@pxweb2/pxweb2-api-client';
 import { getConfig } from './config/getConfig';
 import type { Filter } from '../pages/StartPage/StartPageTypes';
+import { getYearRangeFromPeriod } from './startPageFilters';
 
 export async function getAllTables() {
   const config = getConfig();
@@ -55,6 +56,45 @@ export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
     }
   };
 
+  const testYearRangeFilter = () => {
+    const yearRangeFilter = filters.find((f) => f.type === 'yearRange');
+    if (!yearRangeFilter) {
+      return true;
+    }
+
+    const [fromStr, toStr] = yearRangeFilter.value.split('-');
+    const from = parseInt(fromStr, 10);
+    const to = toStr ? parseInt(toStr, 10) : from;
+
+    const [firstStart, firstEnd] = getYearRangeFromPeriod(
+      table.firstPeriod ?? '',
+    );
+    const [lastStart, lastEnd] = getYearRangeFromPeriod(table.lastPeriod ?? '');
+    const tableStart = Math.min(firstStart, lastStart);
+    const tableEnd = Math.max(firstEnd, lastEnd);
+
+    if (!Number.isFinite(tableStart) || !Number.isFinite(tableEnd)) {
+      return false;
+    }
+
+    const hasFrom = fromStr !== undefined && fromStr !== '' && !isNaN(from);
+    const hasTo = !!toStr;
+
+    if (hasFrom && hasTo) {
+      return tableStart <= from && tableEnd >= to;
+    }
+
+    if (hasFrom) {
+      return from >= tableStart && from <= tableEnd;
+    }
+
+    if (hasTo) {
+      return to >= tableStart && to <= tableEnd;
+    }
+
+    return true;
+  };
+
   const variableFilters = filters.filter((f) => {
     return f.type === 'variable';
   });
@@ -69,5 +109,10 @@ export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
       });
     }
   };
-  return testTimeUnitFilters() && testSubjectFilters() && testVariableFilters();
+  return (
+    testTimeUnitFilters() &&
+    testSubjectFilters() &&
+    testYearRangeFilter() &&
+    testVariableFilters()
+  );
 }

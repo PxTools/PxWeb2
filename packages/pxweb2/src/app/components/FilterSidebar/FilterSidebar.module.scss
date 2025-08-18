@@ -13,6 +13,11 @@
   }
 }
 
+.sideBarWrapper {
+  padding: 2px;
+  background-clip: padding-box;
+}
+
 .filterHeading {
   margin-bottom: 4px;
 }
@@ -42,6 +47,19 @@
 .collapsibleChevron {
   min-width: 24px;
   padding: 0;
+}
+
+.yearRange {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin: 4px 0 34px;
+  max-width: 408px;
+
+  & > * {
+    flex: 1;
+    min-width: 0;
+  }
 }
 
 .scrollableVariableFilter {

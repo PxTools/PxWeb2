@@ -10,7 +10,7 @@ export enum ActionType {
 }
 
 export type Filter = {
-  type: 'timeUnit' | 'subject' | 'variable';
+  type: 'timeUnit' | 'subject' | 'yearRange' | 'variable';
   value: string;
   label: string;
   index: number;
@@ -25,6 +25,11 @@ export type PathItem = {
   uniqueId?: string;
 };
 
+export type YearRange = {
+  min: number;
+  max: number;
+};
+
 export type StartPageState = {
   availableTables: Table[];
   filteredTables: Table[];
@@ -33,6 +38,8 @@ export type StartPageState = {
   loading: boolean;
   error: string;
   originalSubjectTree: PathItem[];
+  subjectOrderList: string[];
+  lastUsedYearRange: YearRange | null;
 };
 
 export type ReducerActionTypes =
@@ -77,4 +84,5 @@ export type StartPageFilters = {
   timeUnits: Map<string, number>;
   subjectTree: PathItem[];
   variables: Map<string, number>;
+  yearRange: YearRange;
 };

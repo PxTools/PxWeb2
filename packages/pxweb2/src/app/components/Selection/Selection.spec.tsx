@@ -1,17 +1,18 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { act } from '@testing-library/react';
 import { vi } from 'vitest';
 
-import { renderWithProviders } from '../../util/testing-utils';
+import {
+  renderWithProviders,
+  mockTableService,
+} from '../../util/testing-utils';
 import Selection from './Selection';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
-import {
-  TableDataProvider,
-  TableDataContext,
-} from '../../context/TableDataProvider';
-import { VariablesProvider } from '../../context/VariablesProvider';
+import { TableDataContext } from '../../context/TableDataProvider';
 
 describe('Selection', () => {
+  mockTableService();
+
   it('should throw an error when triggered', () => {
     const TestComponent = () => {
       const context = React.useContext(TableDataContext);
@@ -27,30 +28,27 @@ describe('Selection', () => {
       .spyOn(console, 'error')
       .mockImplementation(() => {});
     expect(() => {
-      render(
-        <VariablesProvider>
-          <TableDataProvider>
-            <TestComponent />
-          </TableDataProvider>
-        </VariablesProvider>,
-      );
+      renderWithProviders(<TestComponent />);
     }).toThrow('Simulated error');
     consoleErrorSpy.mockRestore();
   });
 
-  it('should render successfully', () => {
-    const { baseElement } = renderWithProviders(
-      <AccessibilityProvider>
-        <Selection
-          openedWithKeyboard={false}
-          selectedNavigationView="none"
-          selectedTabId="1"
-          setSelectedNavigationView={() => {}}
-        />
-      </AccessibilityProvider>,
-    );
+  it('should render successfully', async () => {
+    let result: ReturnType<typeof renderWithProviders> | undefined;
+    await act(async () => {
+      result = renderWithProviders(
+        <AccessibilityProvider>
+          <Selection
+            openedWithKeyboard={false}
+            selectedNavigationView="none"
+            selectedTabId="1"
+            setSelectedNavigationView={() => {}}
+          />
+        </AccessibilityProvider>,
+      );
+    });
 
-    expect(baseElement).toBeTruthy();
+    expect(result!.baseElement).toBeTruthy();
 
     expect(() => {
       throw new Error('Simulated error');

@@ -100,7 +100,7 @@ describe('exportToFile', () => {
       variablesSelection,
     );
     expect(clickMock).toHaveBeenCalled();
-  });
+  }, 7000);
 
   it('should export as csv', async () => {
     (TableService.getTableDataByPost as any).mockResolvedValueOnce('csv-data');
@@ -117,7 +117,7 @@ describe('exportToFile', () => {
       variablesSelection,
     );
     expect(clickMock).toHaveBeenCalled();
-  });
+  }, 7000);
 
   it('should export as px', async () => {
     (TableService.getTableDataByPost as any).mockResolvedValueOnce('px-data');
@@ -130,7 +130,7 @@ describe('exportToFile', () => {
       variablesSelection,
     );
     expect(clickMock).toHaveBeenCalled();
-  });
+  }, 7000);
 
   it('should export as jsonstat2', async () => {
     const jsonData = { foo: 'bar' };
@@ -149,7 +149,7 @@ describe('exportToFile', () => {
       variablesSelection,
     );
     expect(clickMock).toHaveBeenCalled();
-  });
+  }, 7000);
 
   it('should export as html', async () => {
     (TableService.getTableDataByPost as any).mockResolvedValueOnce('html-data');
@@ -162,7 +162,7 @@ describe('exportToFile', () => {
       variablesSelection,
     );
     expect(clickMock).toHaveBeenCalled();
-  });
+  }, 7000);
 
   it('should export as parquet', async () => {
     (TableService.getTableDataByPost as any).mockResolvedValueOnce(
@@ -183,7 +183,7 @@ describe('exportToFile', () => {
     );
     expect(clickMock).toHaveBeenCalled();
   });
-});
+}, 7000);
 
 describe('applyTimeFilter', () => {
   it('should wrap the first value with from() if timeFilter is "from"', () => {

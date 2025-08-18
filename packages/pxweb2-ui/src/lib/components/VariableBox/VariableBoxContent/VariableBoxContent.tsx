@@ -36,10 +36,7 @@ type VariableBoxContentProps = VariableBoxPropsToContent & {
   totalValues: number;
   totalChosenValues: number;
   languageDirection: 'ltr' | 'rtl';
-  onChangeCodeList: (
-    selectedItem: SelectOption | undefined,
-    varId: string,
-  ) => void;
+  onChangeCodeList: (selectedItem: SelectOption, varId: string) => void;
   onChangeCheckbox: (varId: string, value: string) => void;
   onChangeMixedCheckbox: (
     varId: string,
@@ -67,16 +64,6 @@ export function VariableBoxContent({
   removeModal,
 }: VariableBoxContentProps) {
   const { t } = useTranslation();
-  const checkboxSelectAllText = t(
-    'presentation_page.sidemenu.selection.variablebox.content.mixed_checkbox.select_all',
-  );
-  const checkboxDeselectAllText = t(
-    'presentation_page.sidemenu.selection.variablebox.content.mixed_checkbox.deselect_all',
-  );
-
-  const [mixedCheckboxText, setMixedCheckboxText] = useState<string>(
-    checkboxSelectAllText,
-  );
   const [search, setSearch] = useState<string>('');
   const [allValuesSelected, setAllValuesSelected] = useState<
     'mixed' | 'true' | 'false'
@@ -174,7 +161,6 @@ export function VariableBoxContent({
       // If there are searched values and searched and chosen values do not match
       (searchedValues.length > 0 && searcedResult === 'none')
     ) {
-      setMixedCheckboxText(checkboxSelectAllText);
       setAllValuesSelected('false');
     } else if (
       // If some values are chosen and no values are searched for
@@ -184,7 +170,6 @@ export function VariableBoxContent({
       // If some values are chosen and some values are searched for and they do match
       (searchedValues.length > 0 && searcedResult === 'mixed')
     ) {
-      setMixedCheckboxText(checkboxSelectAllText);
       setAllValuesSelected('mixed');
     } else if (
       // If all values are chosen and no values are searched for
@@ -192,17 +177,9 @@ export function VariableBoxContent({
       // If all values chosen and matching searched values
       (searchedValues.length > 0 && searcedResult === 'all')
     ) {
-      setMixedCheckboxText(checkboxDeselectAllText);
       setAllValuesSelected('true');
     }
-  }, [
-    totalChosenValues,
-    totalValues,
-    checkboxSelectAllText,
-    checkboxDeselectAllText,
-    searchedValues,
-    selectedValuesForVar,
-  ]);
+  }, [totalChosenValues, totalValues, searchedValues, selectedValuesForVar]);
 
   const mappedAndSortedCodeLists: SelectOption[] =
     mapAndSortCodeLists(codeLists);
@@ -217,7 +194,7 @@ export function VariableBoxContent({
   const selectedCodeListOrUndefined = selectedCodeListMapped ?? undefined;
 
   const handleChangingCodeListInVariableBox = (
-    selectedItem: SelectOption | undefined,
+    selectedItem: SelectOption,
     varId: string,
     virtuosoRef: React.RefObject<VirtuosoHandle | null>,
   ) => {
@@ -271,8 +248,7 @@ export function VariableBoxContent({
             value={search}
             onChange={(value: string) => {
               // Escape special characters in search value
-              const escapedValue = value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-              setSearch(escapedValue);
+              setSearch(value);
               if (value === '') {
                 setScrollingDown(false);
               }
@@ -308,7 +284,9 @@ export function VariableBoxContent({
           >
             <MixedCheckbox
               id={varId + uniqueId + 'mixedCheckbox'}
-              text={mixedCheckboxText}
+              text={t(
+                'presentation_page.sidemenu.selection.variablebox.content.mixed_checkbox',
+              )}
               value={allValuesSelected}
               onChange={() =>
                 onChangeMixedCheckbox(varId, allValuesSelected, searchedValues)
@@ -349,7 +327,7 @@ export function VariableBoxContent({
                   ?.values.includes(value.code) === true
               }
               text={value.label.charAt(0).toUpperCase() + value.label.slice(1)}
-              searchTerm={search}
+              searchTerm={search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}
               onChange={() => onChangeCheckbox(varId, value.code)}
             />
           </div>
@@ -400,6 +378,7 @@ export function VariableBoxContent({
   const virtuosoRef = useRef<VirtuosoHandle>(null);
   const [lastScrollPosition, setLastScrollPosition] = useState(0);
   const [scrollingDown, setScrollingDown] = useState(false);
+  const [atTop, setAtTop] = useState(true);
 
   const handleVirtuosoScroll = () => {
     if (virtuosoRef.current) {
@@ -473,6 +452,7 @@ export function VariableBoxContent({
               options={mappedAndSortedCodeLists}
               selectedOption={selectedCodeListOrUndefined}
               onChange={(selectedItem) =>
+                selectedItem &&
                 handleChangingCodeListInVariableBox(
                   selectedItem,
                   varId,
@@ -524,10 +504,12 @@ export function VariableBoxContent({
                 ref={virtuosoRef}
                 onScroll={handleVirtuosoScroll}
                 totalListHeightChanged={handleTotalListHeightChanged}
+                atTopThreshold={hasSevenOrMoreValues ? 88 : 0}
+                atTopStateChange={setAtTop}
                 components={{
                   ScrollSeekPlaceholder,
                   TopItemList:
-                    scrollingDown && search === ''
+                    scrollingDown && search === '' && !atTop
                       ? TopItemListEmptyFragment
                       : undefined,
                 }}

@@ -3,6 +3,7 @@ import {
   StartPageFilters,
   Filter,
   PathItem,
+  YearRange,
 } from '../pages/StartPage/StartPageTypes';
 
 type TableWithPaths = Table & {
@@ -73,6 +74,7 @@ export function getFilters(tables: Table[]): StartPageFilters {
   let filters: StartPageFilters = {
     timeUnits: new Map<string, number>(),
     subjectTree: [],
+    yearRange: { min: 0, max: 9999 },
     variables: new Map<string, number>(),
   };
 
@@ -114,20 +116,46 @@ export function updateSubjectTreeCounts(
   return originalTree.map(updateNode);
 }
 
-export function sortAndDeduplicateFilterChips(filters: Filter[]): Filter[] {
-  const typeOrder = ['subject', 'timeUnit'];
-  const sorted = filters.toSorted((a, b) => {
+export function sortFiltersByTypeAndSubjectOrder(
+  filters: Filter[],
+  subjectOrder: string[],
+): Filter[] {
+  const typeOrder = ['subject', 'yearRange', 'timeUnit'];
+
+  return filters.slice().sort((a, b) => {
     const typeComparison =
       typeOrder.indexOf(a.type) - typeOrder.indexOf(b.type);
     if (typeComparison !== 0) {
       return typeComparison;
     }
-    return a.index - b.index;
+
+    if (a.type === 'subject' && b.type === 'subject') {
+      const aIdx = subjectOrder.indexOf(a.uniqueId ?? '');
+      const bIdx = subjectOrder.indexOf(b.uniqueId ?? '');
+      return aIdx - bIdx;
+    }
+
+    return 0;
   });
-  return sorted.filter(
-    (obj1, i, original) =>
-      original.findIndex((obj2) => obj2.value === obj1.value) === i,
-  );
+}
+
+export function deduplicateFiltersByValue(filters: Filter[]): Filter[] {
+  const seen = new Set<string>();
+  return filters.filter((filter) => {
+    if (seen.has(filter.value)) {
+      return false;
+    }
+    seen.add(filter.value);
+    return true;
+  });
+}
+
+export function sortAndDeduplicateFilterChips(
+  filters: Filter[],
+  subjectOrder: string[],
+): Filter[] {
+  const sorted = sortFiltersByTypeAndSubjectOrder(filters, subjectOrder);
+  return deduplicateFiltersByValue(sorted);
 }
 
 // Find parents, and parents' parents all the way up
@@ -179,6 +207,71 @@ export function findChildren(
     }
   }
   return [];
+}
+
+export function getYearRanges(tables: Table[]): YearRange {
+  let minYear = Infinity;
+  let maxYear = -Infinity;
+
+  for (const table of tables) {
+    const [startFrom, startTo] = getYearRangeFromPeriod(
+      table.firstPeriod ?? '',
+    );
+    const [endFrom, endTo] = getYearRangeFromPeriod(table.lastPeriod ?? '');
+    const tableMin = Math.min(startFrom, endFrom);
+    const tableMax = Math.max(startTo, endTo);
+
+    if (Number.isFinite(tableMin)) {
+      minYear = Math.min(minYear, tableMin);
+    }
+    if (Number.isFinite(tableMax)) {
+      maxYear = Math.max(maxYear, tableMax);
+    }
+  }
+
+  if (!Number.isFinite(minYear) || !Number.isFinite(maxYear)) {
+    return { min: 1900, max: new Date().getFullYear() };
+  }
+
+  return {
+    min: minYear,
+    max: maxYear,
+  };
+}
+
+export function getYearRangeFromPeriod(period: string): [number, number] {
+  const rangeRegex = /^(\d{4})-(\d{4})$/;
+  const singleYearRegex = /^(\d{4})/;
+
+  const rangeMatch = rangeRegex.exec(period);
+  if (rangeMatch) {
+    return [parseInt(rangeMatch[1], 10), parseInt(rangeMatch[2], 10)];
+  }
+
+  const yearMatch = singleYearRegex.exec(period);
+  if (yearMatch) {
+    const year = parseInt(yearMatch[1], 10);
+    return [year, year];
+  }
+  return [NaN, NaN];
+}
+
+export function flattenSubjectTreeToList(subjectTree: PathItem[]): string[] {
+  const result: string[] = [];
+
+  function traverseTree(nodes: PathItem[]) {
+    for (const node of nodes) {
+      if (node.uniqueId) {
+        result.push(node.uniqueId);
+      }
+      if (node.children?.length) {
+        traverseTree(node.children);
+      }
+    }
+  }
+
+  traverseTree(subjectTree);
+  return result;
 }
 
 export function getVariables(allTables: Table[]) {
