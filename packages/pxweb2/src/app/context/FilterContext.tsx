@@ -172,6 +172,7 @@ function reducer(
           ),
           timeUnits: getTimeUnits(newTables),
           yearRange: getYearRanges(newTables),
+          variables: getVariables(newTables),
         },
       };
     }
