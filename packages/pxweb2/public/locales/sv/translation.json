@@ -226,7 +226,8 @@
       "arialabelbreadcrumb": "Brödsmulor",
       "last_updated": "Senast uppdaterad",
       "show_details": "Visa detaljer",
-      "dynamic_table_title": "{{table_content_type}} efter {{table_content_label_first_part}} och {{table_content_label_last_part}}",
+      "dynamic_table_title_full": "{{table_content_type}} efter {{table_content_label_first_part}} och {{table_content_label_last_part}}",
+      "dynamic_table_title_one_variable": "{{table_content_type}} efter {{table_content_label_first_part}}",
       "table": {
         "warnings": {
           "missing_mandatory": {

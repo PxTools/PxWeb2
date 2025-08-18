@@ -1045,26 +1045,27 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       heading: Variable[],
     ): {
       firstTitlePart: string;
-      lastTitlePart: string;
+      lastTitlePart: string | undefined;
     } => {
       const titleParts: string[] = [];
+      let lastTitlePart: string | undefined = undefined;
 
       // Add stub variables to title
       stub.forEach((variable) => {
-        titleParts.push(variable.label);
+        if (variable.id !== 'ContentsCode') {
+          titleParts.push(variable.label);
+        }
       });
 
       // Add heading variables to title
       heading.forEach((variable) => {
-        titleParts.push(variable.label);
+        if (variable.id !== 'ContentsCode') {
+          titleParts.push(variable.label);
+        }
       });
 
-      const lastTitlePart = titleParts.pop();
-
-      if (!lastTitlePart) {
-        throw new Error(
-          'TableDataProvider.buildTableTitle: Missing last title part. This should not happen. Please report this as a bug.',
-        );
+      if (titleParts.length > 1) {
+        lastTitlePart = titleParts.pop();
       }
 
       const firstTitlePart = titleParts.join(', ');

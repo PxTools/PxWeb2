@@ -226,7 +226,8 @@
       "arialabelbreadcrumb": "Brødsmulesti",
       "last_updated": "Sist oppdatert",
       "show_details": "Vis detaljer",
-      "dynamic_table_title": "{{table_content_type}} etter {{table_content_label_first_part}} og {{table_content_label_last_part}}",
+      "dynamic_table_title_full": "{{table_content_type}} etter {{table_content_label_first_part}} og {{table_content_label_last_part}}",
+      "dynamic_table_title_one_variable": "{{table_content_type}} etter {{table_content_label_first_part}}",
       "table": {
         "warnings": {
           "missing_mandatory": {

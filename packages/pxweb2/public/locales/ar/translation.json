@@ -185,7 +185,8 @@
       "arialabelbreadcrumb": "مسار التنقل",
       "last_updated": "آخر تحديث",
       "show_details": "إظهار التفاصيل",
-      "dynamic_table_title": "{{table_content_type}} بعد {{table_content_label_first_part}} و {{table_content_label_last_part}}",
+      "dynamic_table_title_full": "{{table_content_type}} بعد {{table_content_label_first_part}} و {{table_content_label_last_part}}",
+      "dynamic_table_title_one_variable": "{{table_content_type}} بعد {{table_content_label_first_part}}",
       "table": {
         "warnings": {
           "missing_mandatory": {

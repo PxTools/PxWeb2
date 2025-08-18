@@ -155,13 +155,25 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
     pxtable.stub,
     pxtable.heading,
   );
+  let tableTitle = '';
 
-  // Example title: "Population by region, observations, year and sex"
-  const tableTitle = t('presentation_page.main_content.dynamic_table_title', {
-    table_content_type: pxtable.metadata.contents,
-    table_content_label_first_part: firstTitlePart,
-    table_content_label_last_part: lastTitlePart,
-  });
+  if (lastTitlePart) {
+    // Example title: "Population by region, year and sex"
+    tableTitle = t('presentation_page.main_content.dynamic_table_title_full', {
+      table_content_type: pxtable.metadata.contents,
+      table_content_label_first_part: firstTitlePart,
+      table_content_label_last_part: lastTitlePart,
+    });
+  } else {
+    // Example title: "Population by region"
+    tableTitle = t(
+      'presentation_page.main_content.dynamic_table_title_one_variable',
+      {
+        table_content_type: pxtable.metadata.contents,
+        table_content_label_first_part: firstTitlePart,
+      },
+    );
+  }
 
   return (
     <>
