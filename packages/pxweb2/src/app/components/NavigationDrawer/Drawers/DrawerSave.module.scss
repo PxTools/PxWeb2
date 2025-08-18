@@ -1,14 +1,45 @@
-.drawerSave {
+@use '$ui/src/lib/text-styles.scss';
+
+.saveAsActionList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.informationCardWrapper {
   display: flex;
+  padding: 0px 8px 20px 8px;
   flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  align-self: stretch;
+}
+
+.buttonWrapper {
+  display: flex;
+  padding: 8px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  align-self: stretch;
   width: 100%;
 }
 
-.loadingSpinner {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  margin: 0; // Remove margin so centering is exact
-  align-self: auto; // Remove align-self so absolute positioning works
+.buttonWrapper > button {
+  width: 100%;
+}
+
+.copyText {
+  overflow-wrap: anywhere;
 }

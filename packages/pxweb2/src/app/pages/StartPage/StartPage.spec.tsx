@@ -5,59 +5,69 @@ import { renderWithProviders } from '../../util/testing-utils';
 import { Config } from '../../util/config/configType';
 import { vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
-import { waitFor } from '@testing-library/react';
+import { waitFor, within } from '@testing-library/react';
 
-// Mock the getFullTable function
-vi.mock('../../util/tableHandler', () => {
-  return {
-    getFullTable: Promise.resolve([
-      {
-        id: '13618',
-        label:
-          '13618: Personer, etter arbeidsstyrkestatus, kjønn og alder. Bruddjusterte tall 2009-2022',
-        description: '',
-        updated: '2023-04-11T06:00:00Z',
-        firstPeriod: '2009',
-        lastPeriod: '2022',
-        category: 'public',
-        variableNames: [
-          'arbeidsstyrkestatus',
-          'kjønn',
-          'alder',
-          'statistikkvariabel',
-          'år',
-        ],
-        source: 'Statistisk sentralbyrå',
-        timeUnit: 'Annual',
-        paths: [
-          [
-            {
-              id: 'al',
-              label: 'Arbeid og lønn',
-            },
-          ],
-        ],
-        links: [
+// Mock the getAllTables function
+vi.mock('../../util/tableHandler', () => ({
+  getAllTables: vi.fn().mockResolvedValue([
+    {
+      id: '13618',
+      label:
+        '13618: Personer, etter arbeidsstyrkestatus, kjønn og alder. Bruddjusterte tall 2009-2022',
+      description: '',
+      updated: '2023-04-11T06:00:00Z',
+      firstPeriod: '2009',
+      lastPeriod: '2022',
+      category: 'public',
+      variableNames: [
+        'arbeidsstyrkestatus',
+        'kjønn',
+        'alder',
+        'statistikkvariabel',
+        'år',
+      ],
+      source: 'Statistisk sentralbyrå',
+      timeUnit: 'Annual',
+      paths: [
+        [
           {
-            rel: 'self',
-            hreflang: 'no',
-            href: 'https://data.qa.ssb.no/api/pxwebapi/v2-beta/tables/13618?lang=no',
-          },
-          {
-            rel: 'metadata',
-            hreflang: 'no',
-            href: 'https://data.qa.ssb.no/api/pxwebapi/v2-beta/tables/13618/metadata?lang=no',
-          },
-          {
-            rel: 'data',
-            hreflang: 'no',
-            href: 'https://data.qa.ssb.no/api/pxwebapi/v2-beta/tables/13618/data?lang=no&outputFormat=json-stat2',
+            id: 'al',
+            label: 'Arbeid og lønn',
           },
         ],
-      },
-    ]),
-  };
-});
+      ],
+      links: [],
+    },
+    {
+      id: '13619',
+      label:
+        '13619: Personer, etter arbeidsstyrkestatus, kjønn og alder. Bruddjusterte tall 2009K1-2023K1',
+      description: '',
+      updated: '2023-04-11T06:00:00Z',
+      firstPeriod: '2009K1',
+      lastPeriod: '2023K1',
+      category: 'public',
+      variableNames: [
+        'arbeidsstyrkestatus',
+        'kjønn',
+        'alder',
+        'statistikkvariabel',
+        'år',
+      ],
+      source: 'Statistisk sentralbyrå',
+      timeUnit: 'Quarterly',
+      paths: [
+        [
+          {
+            id: 'al',
+            label: 'Arbeid og lønn',
+          },
+        ],
+      ],
+      links: [],
+    },
+  ]),
+}));
 
 vi.mock('../../util/hooks/useTopicIcons', () => {
   return {
@@ -154,6 +164,52 @@ describe('StartPage', () => {
       expect(
         getByText('start_page.table.number_of_tables'),
       ).toBeInTheDocument();
+    });
+  });
+
+  it('renders the hidden SEO table list with correct number of links', async () => {
+    const { findByRole } = renderWithProviders(
+      <AccessibilityProvider>
+        <MemoryRouter>
+          <StartPage />
+        </MemoryRouter>
+      </AccessibilityProvider>,
+    );
+
+    const heading = await findByRole('heading', {
+      name: 'TableList(SEO)',
+      hidden: true,
+    });
+    const nav = heading.closest('nav') as HTMLElement;
+    expect(nav).toHaveAttribute('aria-hidden', 'true');
+    const links = await within(nav).findAllByRole('link', { hidden: true });
+    expect(links).toHaveLength(2);
+    links.forEach((a) => expect(a).toHaveAttribute('tabindex', '-1'));
+  });
+
+  it('prefixes href with language when showDefaultLanguageInPath=true', async () => {
+    window.PxWeb2Config.language.showDefaultLanguageInPath = true;
+    window.PxWeb2Config.language.defaultLanguage = 'en';
+
+    const { findByRole } = renderWithProviders(
+      <AccessibilityProvider>
+        <MemoryRouter>
+          <StartPage />
+        </MemoryRouter>
+      </AccessibilityProvider>,
+    );
+
+    const heading = await findByRole('heading', {
+      name: 'TableList(SEO)',
+      hidden: true,
+    });
+    const nav = heading.closest('nav') as HTMLElement;
+    const links = await within(nav).findAllByRole('link', { hidden: true });
+    links.forEach((a) => {
+      expect(a).toHaveAttribute(
+        'href',
+        expect.stringMatching(/^\/en\/table\//),
+      );
     });
   });
 });

@@ -19,8 +19,8 @@ jobs:
     steps:
       - name: Get branch names
         id: branch-names
-        uses: tj-actions/branch-names@v8
-      - uses: actions/checkout@v4
+        uses: tj-actions/branch-names@v9
+      - uses: actions/checkout@v5
       - name: deploy
         id: deploy
         uses: cloudflare/wrangler-action@v3
@@ -45,7 +45,7 @@ jobs:
     name: Test
     needs: deploy
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Regression test against feature branch
         id: mabl-test-deployment
         uses: mablhq/github-run-tests-action@v1

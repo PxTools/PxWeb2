@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Meta, StoryObj } from '@storybook/react-vite';
 import { ActionItem } from './ActionItem';
 
 const meta: Meta<typeof ActionItem> = {
@@ -40,5 +40,14 @@ export const MediumWithDescription: Story = {
     ariaLabel: 'Action with description',
     size: 'medium',
     description: 'This is a description of the action item.',
+  },
+};
+
+export const MediumWithLoading: Story = {
+  args: {
+    iconName: 'File',
+    ariaLabel: 'Action with loading spinner',
+    size: 'medium',
+    isLoading: true,
   },
 };

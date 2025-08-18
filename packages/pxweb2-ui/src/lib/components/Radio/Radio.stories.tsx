@@ -18,7 +18,7 @@ export const Default: Story = {
   },
 };
 
-export const inModal: StoryFn<typeof Radio> = () => {
+export const InModal: StoryFn<typeof Radio> = () => {
   return (
     <Radio
       name="radio1"

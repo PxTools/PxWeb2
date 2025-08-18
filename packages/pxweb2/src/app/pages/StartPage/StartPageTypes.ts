@@ -1,5 +1,4 @@
 import { Table } from '@pxweb2/pxweb2-api-client';
-import { PathItem } from '../../util/startPageFilters';
 
 export enum ActionType {
   RESET_FILTERS = 'RESET_FILTERS',
@@ -11,10 +10,24 @@ export enum ActionType {
 }
 
 export type Filter = {
-  type: 'timeUnit' | 'subject';
+  type: 'timeUnit' | 'subject' | 'yearRange';
   value: string;
   label: string;
   index: number;
+  uniqueId?: string;
+};
+
+export type PathItem = {
+  id: string;
+  label: string;
+  children?: PathItem[];
+  count?: number;
+  uniqueId?: string;
+};
+
+export type YearRange = {
+  min: number;
+  max: number;
 };
 
 export type StartPageState = {
@@ -23,11 +36,14 @@ export type StartPageState = {
   availableFilters: {
     subjectTree: PathItem[];
     timeUnits: Map<string, number>;
+    yearRange: YearRange;
   };
   activeFilters: Filter[];
   loading: boolean;
   error: string;
   originalSubjectTree: PathItem[];
+  subjectOrderList: string[];
+  lastUsedYearRange: YearRange | null;
 };
 
 export type ReducerActionTypes =
@@ -40,7 +56,7 @@ export type ReducerActionTypes =
 
 type RemoveFilterAction = {
   type: ActionType.REMOVE_FILTER;
-  payload: string;
+  payload: { value: string; type: string; uniqueId?: string };
 };
 
 type ResetFilterAction = {
@@ -71,4 +87,5 @@ type SetLoadingAction = {
 export type StartPageFilters = {
   timeUnits: Map<string, number>;
   subjectTree: PathItem[];
+  yearRange: YearRange;
 };

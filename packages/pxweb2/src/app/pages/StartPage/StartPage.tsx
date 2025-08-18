@@ -22,7 +22,10 @@ import { Header } from '../../components/Header/Header';
 import { Footer } from '../../components/Footer/Footer';
 import { FilterSidebar } from '../../components/FilterSidebar/FilterSidebar';
 import { ActionType } from './StartPageTypes';
-import { getSubjectTree, sortFilterChips } from '../../util/startPageFilters';
+import {
+  getSubjectTree,
+  sortAndDeduplicateFilterChips,
+} from '../../util/startPageFilters';
 import { useTopicIcons } from '../../util/hooks/useTopicIcons';
 import useApp from '../../context/useApp';
 import { getConfig } from '../../util/config/getConfig';
@@ -191,6 +194,7 @@ const StartPage = () => {
       return (
         <Chips.Removable
           filled
+          onMouseDown={(e) => e.preventDefault()}
           onClick={() => {
             dispatch({
               type: ActionType.RESET_FILTERS,
@@ -424,6 +428,40 @@ const StartPage = () => {
     );
   };
 
+  const renderTableListSEO = () => {
+    return (
+      <nav
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          left: '-9999px',
+          width: '1px',
+          height: '1px',
+          overflow: 'hidden',
+        }}
+      >
+        <h2>TableList(SEO)</h2>
+        <ul>
+          {state.availableTables.map((table) => {
+            const config = getConfig();
+            const language = i18n.language;
+            const showLangInPath =
+              config.language.showDefaultLanguageInPath ||
+              language !== config.language.defaultLanguage;
+            const langPrefix = showLangInPath ? `/${language}` : '';
+            return (
+              <li key={table.id}>
+                <a href={`${langPrefix}/table/${table.id}`} tabIndex={-1}>
+                  {table.label}
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+    );
+  };
+
   return (
     <>
       <Header />
@@ -482,12 +520,18 @@ const StartPage = () => {
                 <div className={styles.filterPillContainer}>
                   <Chips>
                     {renderRemoveAllChips()}
-                    {sortFilterChips(state.activeFilters).map((filter) => (
+                    {sortAndDeduplicateFilterChips(
+                      state.activeFilters,
+                      state.subjectOrderList,
+                    ).map((filter) => (
                       <Chips.Removable
                         onClick={() => {
                           dispatch({
                             type: ActionType.REMOVE_FILTER,
-                            payload: filter.value,
+                            payload: {
+                              value: filter.value,
+                              type: filter.type,
+                            },
                           });
                           setVisibleCount(paginationCount);
                         }}
@@ -531,6 +575,7 @@ const StartPage = () => {
           </div>
         </div>
       </div>
+      {renderTableListSEO()}
       <Footer />
     </>
   );

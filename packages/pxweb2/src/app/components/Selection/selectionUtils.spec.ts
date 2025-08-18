@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
+
 import {
   updateSelectedCodelistForVariable,
   addSelectedCodeListToVariable,
@@ -9,6 +10,7 @@ import {
   SelectOption,
   Variable,
   VartypeEnum,
+  PxTableMetadata,
 } from '@pxweb2/pxweb2-ui';
 
 describe('selectionUtils', () => {
@@ -38,44 +40,68 @@ describe('selectionUtils', () => {
   });
 
   describe('setSelectedCodelist', () => {
-    it('returns undefined if no selectedItem is provided', () => {
-      const result = updateSelectedCodelistForVariable(
-        undefined,
-        varId,
-        prevSelectedValues,
-        variableMeta,
-      );
-      expect(result).toBeUndefined();
-    });
-
-    it('returns undefined if selectedItem.value equals current selectedCodeList', () => {
-      const result = updateSelectedCodelistForVariable(
-        selectOptionA,
-        varId,
-        prevSelectedValues,
-        variableMeta,
-      );
-      expect(result).toBeUndefined();
-    });
-
     it('returns undefined if newSelectedCodeList is not found', () => {
       const invalidOption: SelectOption = { label: 'Invalid', value: 'Z' };
+      const mockMetadata: PxTableMetadata = {
+        variables: [variableMeta],
+        id: 'test-table',
+        language: 'en',
+        label: 'Test Table',
+        description: 'Test description',
+        source: 'Test source',
+        updated: new Date('2024-01-01'),
+        infofile: 'test.info',
+        decimals: 2,
+        officialStatistics: false,
+        aggregationAllowed: false,
+        contents: 'Test contents',
+        descriptionDefault: false,
+        matrix: 'test-matrix',
+        subjectCode: 'test-subject',
+        subjectArea: 'test-area',
+        contacts: [],
+        notes: [],
+      };
       const result = updateSelectedCodelistForVariable(
         invalidOption,
         varId,
         prevSelectedValues,
         variableMeta,
+        mockMetadata,
       );
+
       expect(result).toBeUndefined();
     });
 
     it('returns new selected values when a new codelist is selected', () => {
+      const mockMetadata: PxTableMetadata = {
+        variables: [variableMeta],
+        id: 'test-table',
+        language: 'en',
+        label: 'Test Table',
+        description: 'Test description',
+        source: 'Test source',
+        updated: new Date('2024-01-01'),
+        infofile: 'test.info',
+        decimals: 2,
+        officialStatistics: false,
+        aggregationAllowed: false,
+        contents: 'Test contents',
+        descriptionDefault: false,
+        matrix: 'test-matrix',
+        subjectCode: 'test-subject',
+        subjectArea: 'test-area',
+        contacts: [],
+        notes: [],
+      };
       const result = updateSelectedCodelistForVariable(
         selectOptionB,
         varId,
         prevSelectedValues,
         variableMeta,
+        mockMetadata,
       );
+
       expect(result).toBeDefined();
       expect(result?.find((v) => v.id === varId)?.selectedCodeList).toBe('B');
       expect(result?.find((v) => v.id === varId)?.values).toEqual([]);
@@ -91,15 +117,183 @@ describe('selectionUtils', () => {
         mandatory: false,
         values: [],
       };
+      const mockMetadata: PxTableMetadata = {
+        variables: [newMeta],
+        id: 'test-table',
+        language: 'en',
+        label: 'Test Table',
+        description: 'Test description',
+        source: 'Test source',
+        updated: new Date('2024-01-01'),
+        infofile: 'test.info',
+        decimals: 2,
+        officialStatistics: false,
+        aggregationAllowed: false,
+        contents: 'Test contents',
+        descriptionDefault: false,
+        matrix: 'test-matrix',
+        subjectCode: 'test-subject',
+        subjectArea: 'test-area',
+        contacts: [],
+        notes: [],
+      };
       const result = updateSelectedCodelistForVariable(
         selectOptionA,
         newVarId,
         prevSelectedValues,
         newMeta,
+        mockMetadata,
       );
+
       expect(result?.find((v) => v.id === newVarId)?.selectedCodeList).toBe(
         'A',
       );
+    });
+
+    it('applies mandatory defaults', () => {
+      const mandatoryVariable: Variable = {
+        id: varId,
+        codeLists: [codeListB],
+        label: '',
+        type: VartypeEnum.CONTENTS_VARIABLE,
+        mandatory: true,
+        values: [
+          { code: 'default1', label: 'Default 1' },
+          { code: 'default2', label: 'Default 2' },
+        ],
+      };
+      const mockMetadata: PxTableMetadata = {
+        variables: [mandatoryVariable],
+        id: 'test-table',
+        language: 'en',
+        label: 'Test Table',
+        description: 'Test description',
+        source: 'Test source',
+        updated: new Date('2024-01-01'),
+        infofile: 'test.info',
+        decimals: 2,
+        officialStatistics: false,
+        aggregationAllowed: false,
+        contents: 'Test contents',
+        descriptionDefault: false,
+        matrix: 'test-matrix',
+        subjectCode: 'test-subject',
+        subjectArea: 'test-area',
+        contacts: [],
+        notes: [],
+      };
+      const result = updateSelectedCodelistForVariable(
+        selectOptionB,
+        varId,
+        prevSelectedValues,
+        mandatoryVariable,
+        mockMetadata,
+      );
+
+      expect(result?.find((v) => v.id === varId)?.values).toEqual(['default1']);
+    });
+
+    it('does not apply mandatory defaults when variable is not mandatory', () => {
+      const nonMandatoryVariable: Variable = {
+        id: varId,
+        codeLists: [codeListB],
+        label: '',
+        type: VartypeEnum.CONTENTS_VARIABLE,
+        mandatory: false,
+        values: [{ code: 'value1', label: 'Value 1' }],
+      };
+      const mockMetadata: PxTableMetadata = {
+        variables: [nonMandatoryVariable],
+        id: 'test-table',
+        language: 'en',
+        label: 'Test Table',
+        description: 'Test description',
+        source: 'Test source',
+        updated: new Date('2024-01-01'),
+        infofile: 'test.info',
+        decimals: 2,
+        officialStatistics: false,
+        aggregationAllowed: false,
+        contents: 'Test contents',
+        descriptionDefault: false,
+        matrix: 'test-matrix',
+        subjectCode: 'test-subject',
+        subjectArea: 'test-area',
+        contacts: [],
+        notes: [],
+      };
+      const result = updateSelectedCodelistForVariable(
+        selectOptionB,
+        varId,
+        prevSelectedValues,
+        nonMandatoryVariable,
+        mockMetadata,
+      );
+
+      expect(result?.find((v) => v.id === varId)?.values).toEqual([]);
+    });
+
+    it('does not apply mandatory defaults to other mandatory variables than the one with new codelist', () => {
+      const varId2 = 'var2';
+      const mandatoryVariable: Variable = {
+        id: varId,
+        codeLists: [codeListB],
+        label: '',
+        type: VartypeEnum.CONTENTS_VARIABLE,
+        mandatory: true,
+        values: [{ code: 'default1', label: 'Default 1' }],
+      };
+      const mandatoryVariable2: Variable = {
+        id: varId2,
+        codeLists: [codeListA],
+        label: '',
+        type: VartypeEnum.CONTENTS_VARIABLE,
+        mandatory: true,
+        values: [{ code: 'default2', label: 'Default 2' }],
+      };
+      const mockMetadata: PxTableMetadata = {
+        variables: [mandatoryVariable, mandatoryVariable2],
+        id: 'test-table',
+        language: 'en',
+        label: 'Test Table',
+        description: 'Test description',
+        source: 'Test source',
+        updated: new Date('2024-01-01'),
+        infofile: 'test.info',
+        decimals: 2,
+        officialStatistics: false,
+        aggregationAllowed: false,
+        contents: 'Test contents',
+        descriptionDefault: false,
+        matrix: 'test-matrix',
+        subjectCode: 'test-subject',
+        subjectArea: 'test-area',
+        contacts: [],
+        notes: [],
+      };
+      const prevValuesWithData = [
+        { id: varId, selectedCodeList: 'A', values: ['existing'] },
+        {
+          id: varId2,
+          selectedCodeList: 'C',
+          values: ['existing-value-1', 'existing-value-2'],
+        },
+      ];
+      const result = updateSelectedCodelistForVariable(
+        selectOptionB,
+        varId,
+        prevValuesWithData,
+        mandatoryVariable,
+        mockMetadata,
+      );
+
+      // The variable we're updating should get reset and receive the default,
+      // and the other mandatory variable should keep its existing values unchanged
+      expect(result?.find((v) => v.id === varId)?.values).toEqual(['default1']);
+      expect(result?.find((v) => v.id === varId2)?.values).toEqual([
+        'existing-value-1',
+        'existing-value-2',
+      ]);
     });
   });
 
