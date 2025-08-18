@@ -12,6 +12,8 @@ export type AppContextType = {
   isMobile: boolean;
   skipToMainFocused: boolean;
   setSkipToMainFocused: (focused: boolean) => void;
+  title: string;
+  setTitle: (title: string) => void;
 };
 
 // Create the context with default values
@@ -23,6 +25,10 @@ export const AppContext = createContext<AppContextType>({
   setSkipToMainFocused: () => {
     return;
   },
+  title: '',
+  setTitle: () => {
+    return;
+  },
 });
 
 // Provider component
@@ -31,6 +37,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [isInitialized] = useState(true);
   const [skipToMainFocused, setSkipToMainFocused] = useState(false);
+  const [title, setTitle] = useState<string>('');
 
   /**
    * Keep state if window screen size is mobile, pad or desktop.
@@ -65,6 +72,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
       isMobile,
       skipToMainFocused,
       setSkipToMainFocused,
+      title,
+      setTitle,
     }),
     [
       isInitialized,
@@ -72,6 +81,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
       isMobile,
       skipToMainFocused,
       setSkipToMainFocused,
+      title,
+      setTitle,
     ],
   );
 

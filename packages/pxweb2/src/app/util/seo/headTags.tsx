@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
 
 import { getConfig } from '../config/getConfig';
-import useTitle from '../../context/useTitle';
+import useApp from '../../context/useApp';
 
 // Utility to remove trailing slash except for root "/"
 function removeTrailingSlash(path: string) {
@@ -18,7 +18,7 @@ function removeTrailingSlash(path: string) {
 // Otherwise, it defaults to the title from the translation file
 export function Title() {
   const { t } = useTranslation();
-  const { title } = useTitle();
+  const { title } = useApp();
 
   // Try to match both with and without lang in path
   const matchWithLang = useMatch('/:lang/table/:tableId');

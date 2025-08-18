@@ -21,7 +21,7 @@ import {
 } from '../../util/notes/notesUtil';
 import useTableData from '../../context/useTableData';
 import useVariables from '../../context/useVariables';
-import useTitle from '../../context/useTitle';
+import useApp from '../../context/useApp';
 
 export interface ContenetTopProps {
   readonly pxtable: PxTable;
@@ -103,7 +103,7 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
   const { pxTableMetadata, selectedVBValues } = useVariables();
   const selectedMetadata = useTableData().data?.metadata;
   const buildTableTitle = useTableData().buildTableTitle;
-  const { setTitle } = useTitle();
+  const { setTitle } = useApp();
 
   const openInformationButtonRef = useRef<HTMLButtonElement>(null);
   const openInformationLinkRef = useRef<HTMLAnchorElement>(null);
