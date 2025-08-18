@@ -14,6 +14,7 @@ export default mergeConfig(
         dir: '../../node_modules/.vitest',
       },
       environment: 'jsdom',
+      testTimeout: 20000,
       include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
       setupFiles: './src/lib/util/setupTests',
 
