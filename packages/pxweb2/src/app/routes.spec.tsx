@@ -49,7 +49,7 @@ function renderWithProviders(router: any) {
   return render(
     <AppProvider>
       <RouterProvider router={router} />
-    </AppProvider>
+    </AppProvider>,
   );
 }
 
