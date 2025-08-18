@@ -11,6 +11,7 @@ import {
   FilterType,
   ReducerActionTypes,
   StartPageState,
+  Filter,
 } from '../pages/StartPage/StartPageTypes';
 import {
   getFilters,
@@ -21,6 +22,7 @@ import {
   recomputeAvailableFilters,
 } from '../util/startPageFilters';
 import { shouldTableBeIncluded } from '../util/tableHandler';
+import { wrapWithLocalizedQuotemarks } from '../util/utils';
 
 const initialState: StartPageState = Object.freeze({
   availableTables: [],
@@ -121,7 +123,55 @@ function reducer(
         lastUsedYearRange: updatedLastUsedYearRange,
       };
     }
+    case ActionType.ADD_SEARCH_FILTER: {
+      let newFilters: Filter[];
 
+      const newSearch: Filter = {
+        type: 'search',
+        label: wrapWithLocalizedQuotemarks(
+          action.payload.text,
+          action.payload.language,
+        ),
+        value: action.payload.text,
+        index: 1,
+      };
+
+      const existingSearch = state.activeFilters.findIndex(
+        (filter) => filter.type == 'search',
+      );
+
+      // We remove the search filter if the string is empty (field cleared)
+      // Otherwise, update if it already exists, or if not add it.
+      // Ensures we only ever have one filter of type search
+      if (action.payload.text == '') {
+        newFilters = state.activeFilters.filter((filter) => {
+          return filter.type != 'search';
+        });
+      } else {
+        newFilters =
+          existingSearch >= 0
+            ? state.activeFilters.with(existingSearch, newSearch)
+            : [...state.activeFilters, newSearch];
+      }
+
+      const newTables = state.availableTables.filter((table) =>
+        shouldTableBeIncluded(table, newFilters),
+      );
+
+      return {
+        ...state,
+        activeFilters: newFilters,
+        filteredTables: newTables,
+        availableFilters: {
+          subjectTree: updateSubjectTreeCounts(
+            state.originalSubjectTree,
+            newTables,
+          ),
+          timeUnits: getTimeUnits(newTables),
+          yearRange: getYearRanges(newTables),
+        },
+      };
+    }
     case ActionType.REMOVE_FILTER: {
       const removedType = action.payload.type as FilterType;
 

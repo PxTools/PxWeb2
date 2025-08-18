@@ -91,10 +91,7 @@
                 "confirm_button": "يحفظ"
               }
             },
-            "mixed_checkbox": {
-              "select_all": "حدد الكل",
-              "deselect_all": "قم بإلغاء تحديد الكل"
-            },
+            "mixed_checkbox": "حدد الكل",
             "values_list": {
               "aria_label": "قائمة {{total}} قيم.",
               "no_results_heading": "“{{search}}” لا توجد نتائج ل",
@@ -143,6 +140,7 @@
         "title": "يحفظ",
         "file": {
           "title": "حفظ كملف",
+          "loading_announcement": "الملف لا يزال قيد المعالجة. يرجى الانتظار.",
           "excel": "اكسل (xlsx)",
           "csv": "مفصولة بفاصلة منقوطة مع عنوان (.csv)",
           "px": "PC-Axis (.px)",
