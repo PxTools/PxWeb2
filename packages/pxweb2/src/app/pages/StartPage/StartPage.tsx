@@ -159,13 +159,13 @@ const StartPage = () => {
     setLastVisibleCount(newCount);
     requestAnimationFrame(() => {
       setVisibleCount(newCount);
-      triggerFade()
+      triggerFade();
     });
   };
 
   const handleShowLess = () => {
     setVisibleCount(paginationCount);
-    triggerFade()
+    triggerFade();
     requestAnimationFrame(() => {
       if (lastVisibleCardRef.current) {
         lastVisibleCardRef.current.focus();
@@ -180,7 +180,7 @@ const StartPage = () => {
 
   const handleFilterChange = () => {
     setVisibleCount(paginationCount);
-    triggerFade()
+    triggerFade();
   };
 
   const renderPaginationButton = (
