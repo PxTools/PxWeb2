@@ -159,11 +159,13 @@ const StartPage = () => {
     setLastVisibleCount(newCount);
     requestAnimationFrame(() => {
       setVisibleCount(newCount);
+      triggerFade()
     });
   };
 
   const handleShowLess = () => {
     setVisibleCount(paginationCount);
+    triggerFade()
     requestAnimationFrame(() => {
       if (lastVisibleCardRef.current) {
         lastVisibleCardRef.current.focus();
@@ -171,11 +173,14 @@ const StartPage = () => {
     });
   };
 
+  const triggerFade = () => {
+    setIsFadingTableList(true);
+    setTimeout(() => setIsFadingTableList(false), 500); // eller 400ms hvis du bruker kortere CSS
+  };
+
   const handleFilterChange = () => {
     setVisibleCount(paginationCount);
-    setIsFadingTableList(true);
-    const fadeDuration = 500;
-    setTimeout(() => setIsFadingTableList(false), fadeDuration);
+    triggerFade()
   };
 
   const renderPaginationButton = (
@@ -211,7 +216,7 @@ const StartPage = () => {
                 subjects: getSubjectTree(state.availableTables),
               },
             });
-            setVisibleCount(paginationCount);
+            handleFilterChange();
           }}
         >
           {t('start_page.filter.remove_all_filter')}
@@ -543,7 +548,7 @@ const StartPage = () => {
                               type: filter.type,
                             },
                           });
-                          setVisibleCount(paginationCount);
+                          handleFilterChange();
                         }}
                         aria-label={t('start_page.filter.remove_filter_aria', {
                           value: filter.value,
