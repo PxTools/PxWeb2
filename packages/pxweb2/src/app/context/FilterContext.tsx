@@ -6,12 +6,11 @@ import {
   useReducer,
 } from 'react';
 
-import { Filter } from '../pages/StartPage/StartPageTypes';
-
 import {
   ActionType,
   ReducerActionTypes,
   StartPageState,
+  Filter,
 } from '../pages/StartPage/StartPageTypes';
 import {
   getFilters,
