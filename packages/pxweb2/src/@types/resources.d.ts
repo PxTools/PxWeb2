@@ -133,10 +133,7 @@ interface Resources {
                   confirm_button: 'Save';
                 };
               };
-              mixed_checkbox: {
-                select_all: 'Select all';
-                deselect_all: 'Deselect all';
-              };
+              mixed_checkbox: 'Select all';
               values_list: {
                 aria_label: 'List of {{total}} values.';
                 no_results_heading: 'No results for “{{search}}”';
@@ -159,7 +156,8 @@ interface Resources {
           customize: {
             title: 'Customize';
             pivot: {
-              title: 'Pivot';
+              title: 'Rotate table';
+              'aria-label': 'Table rotated after {{first_variables}} and {{last_variable}}';
             };
             rearrange: {
               title: 'Rearrange table';

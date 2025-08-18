@@ -484,7 +484,7 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
           {fileFormats.map((format) => (
             <li key={`saveToFile${format.value}`}>
               <ActionItem
-                ariaLabel={t(
+                label={t(
                   `presentation_page.sidemenu.save.file.${format.value}`, // Not sure how to fix this i18next type error
                 )}
                 onClick={() => saveToFile(format.outputFormat)}

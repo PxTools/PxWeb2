@@ -155,7 +155,8 @@
         "customize": {
           "title": "Anpassa",
           "pivot": {
-            "title": "Pivotera"
+            "title": "Rotera tabellen",
+            "aria-label": "Tabell roterat efter {{first_variables}} och {{last_variable}}"
           },
           "rearrange": {
             "title": "Anpassa tabell",

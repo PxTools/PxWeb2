@@ -155,7 +155,8 @@
         "customize": {
           "title": "Customize",
           "pivot": {
-            "title": "Pivot"
+            "title": "Rotate table",
+            "aria-label": "Table rotated after {{first_variables}} and {{last_variable}}"
           },
           "rearrange": {
             "title": "Rearrange table",

@@ -36,17 +36,25 @@ describe('ActionItem', () => {
     expect(screen.getByTestId('icon')).toHaveAttribute('data-icon', 'BarChart');
   });
 
-  it('renders with custom ariaLabel and description', () => {
+  it('renders with custom label, ariaLabel and description', () => {
     render(
       <ActionItem
         iconName="PieChart"
-        ariaLabel="Custom Label"
+        label="Custom Label"
+        ariaLabel="Custom Aria Label"
         description="Custom description"
       />,
     );
-    expect(screen.getByLabelText('Custom Label')).toBeInTheDocument();
+    expect(screen.getByLabelText('Custom Aria Label')).toBeInTheDocument();
     expect(screen.getByText('Custom Label')).toBeInTheDocument();
     expect(screen.getByText('Custom description')).toBeInTheDocument();
+    expect(screen.getByTestId('icon')).toHaveAttribute('data-icon', 'PieChart');
+  });
+
+  it('uses label when no ariaLabel is provided', () => {
+    render(<ActionItem iconName="PieChart" label="Custom Label" />);
+    expect(screen.getByLabelText('Custom Label')).toBeInTheDocument();
+    expect(screen.getByText('Custom Label')).toBeInTheDocument();
     expect(screen.getByTestId('icon')).toHaveAttribute('data-icon', 'PieChart');
   });
 

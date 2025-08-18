@@ -114,7 +114,8 @@
         "customize": {
           "title": "تخصيص",
           "pivot": {
-            "title": "المحور"
+            "title": "المحور",
+            "aria-label": "جدول مدور بعد {{first_variables}} و {{last_variable}}"
           },
           "rearrange": {
             "title": "إعادة ترتيب الجدول",

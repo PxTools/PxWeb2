@@ -4,11 +4,12 @@ import '@testing-library/jest-dom/vitest';
 
 import { DrawerEdit } from './DrawerEdit';
 
-interface MockButtonProps {
-  children: React.ReactNode;
+interface MockActionItemProps {
+  label?: string;
   onClick?: () => void;
-  variant?: string;
-  icon?: string;
+  iconName?: string;
+  ariaLabel?: string;
+  [key: string]: unknown;
 }
 
 const mockPivotCW = vi.fn();
@@ -23,6 +24,14 @@ vi.mock('react-i18next', () => ({
 vi.mock('../../../context/useTableData', () => ({
   default: () => ({
     pivotCW: mockPivotCW,
+    data: {
+      stub: [{ name: 'variable1' }],
+      heading: [{ name: 'variable2' }],
+    },
+    buildTableTitle: () => ({
+      firstTitlePart: 'First Part',
+      lastTitlePart: 'Last Part',
+    }),
   }),
 }));
 
@@ -30,14 +39,21 @@ vi.mock('@pxweb2/pxweb2-ui', () => ({
   ContentBox: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="content-box">{children}</div>
   ),
-  Button: ({ children, onClick, variant, icon }: MockButtonProps) => (
+  ActionItem: ({
+    label,
+    onClick,
+    iconName,
+    ariaLabel,
+    ...props
+  }: MockActionItemProps) => (
     <button
-      data-testid="button"
-      data-variant={variant}
-      data-icon={icon}
+      data-testid="action-item"
+      data-icon={iconName}
+      aria-label={ariaLabel}
       onClick={onClick}
+      {...props}
     >
-      {children}
+      {label}
     </button>
   ),
 }));
@@ -47,7 +63,7 @@ describe('DrawerEdit', () => {
     render(<DrawerEdit />);
 
     expect(screen.getByTestId('content-box')).toBeInTheDocument();
-    expect(screen.getByTestId('button')).toBeInTheDocument();
+    expect(screen.getByTestId('action-item')).toBeInTheDocument();
     expect(
       screen.getByText('presentation_page.sidemenu.edit.customize.pivot.title'),
     ).toBeInTheDocument();
@@ -60,7 +76,7 @@ describe('DrawerEdit', () => {
   it('calls pivotCW on button click', () => {
     render(<DrawerEdit />);
 
-    const button = screen.getByTestId('button');
+    const button = screen.getByTestId('action-item');
     button.click();
 
     expect(mockPivotCW).toHaveBeenCalledTimes(1);
