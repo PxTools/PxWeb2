@@ -13,4 +13,11 @@ window.PxWeb2Config = {
   apiUrl: 'https://data.qa.ssb.no/api/pxwebapi/v2-beta',
   maxDataCells: 150000,
   specialCharacters: ['.', '..', ':', '-', '...', '*'],
+  variableFilterExclusionList: [
+    'statistikkvariabel',
+    'år',
+    'kvartal',
+    'måned',
+    'uke',
+  ],
 };

@@ -5,6 +5,7 @@ import {
   PathItem,
   YearRange,
 } from '../pages/StartPage/StartPageTypes';
+import { getConfig } from './config/getConfig';
 
 type TableWithPaths = Table & {
   id: string;
@@ -275,6 +276,9 @@ export function flattenSubjectTreeToList(subjectTree: PathItem[]): string[] {
 }
 
 export function getVariables(allTables: Table[]) {
+  const config = getConfig();
+  const exclusionList = config.variableFilterExclusionList ?? [''];
+
   const variables = new Map<string, number>();
   allTables.forEach((table) => {
     table.variableNames.forEach((name: string) => {
@@ -282,8 +286,13 @@ export function getVariables(allTables: Table[]) {
       variables.set(name, count ? count + 1 : 1);
     });
   });
-  // Sort the returned map by number of available variables.
   return new Map<string, number>(
-    [...variables.entries()].sort((a, b) => b[1] - a[1]),
+    [...variables.entries()]
+      // Sort the returned map by number of available variables.
+      .sort((a, b) => b[1] - a[1])
+      .filter((entry) => {
+        // Returns true if the variable is _not_ in the exclusion list
+        return !exclusionList.includes(entry[0]);
+      }),
   );
 }
