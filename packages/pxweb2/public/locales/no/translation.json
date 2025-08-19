@@ -183,12 +183,14 @@
         "file": {
           "title": "Last ned som fil",
           "loading_announcement": "Filen behandles fortsatt. Vennligst vent.",
-          "excel": "Excel (.xlsx)",
-          "csv": "Semikolonseparert med overskrift (.csv)",
-          "px": "PC-Axis (.px)",
-          "jsonstat2": "JSON-stat2 (.json)",
-          "html": "HTML (.html)",
-          "parquet": "Parquet (.parquet)"
+          "formats": {
+            "excel": "Excel (.xlsx)",
+            "csv": "Semikolonseparert med overskrift (.csv)",
+            "px": "PC-Axis (.px)",
+            "jsonstat2": "JSON-stat2 (.json)",
+            "html": "HTML (.html)",
+            "parquet": "Parquet (.parquet)"
+          }
         },
         "savequery": {
           "title": "Lenke til oppdatert tabell",

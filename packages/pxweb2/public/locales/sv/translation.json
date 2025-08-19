@@ -183,12 +183,14 @@
         "file": {
           "title": "Spara som fil",
           "loading_announcement": "Filen bearbetas fortfarande. Vänligen vänta.",
-          "excel": "Excel (.xlsx)",
-          "csv": "Semikolonavgränsad med rubrik (.csv)",
-          "px": "PC-Axis (.px)",
-          "jsonstat2": "JSON-stat2 (.json)",
-          "html": "HTML (.html)",
-          "parquet": "Parquet (.parquet)"
+          "formats": {
+            "excel": "Excel (.xlsx)",
+            "csv": "Semikolonavgränsad med rubrik (.csv)",
+            "px": "PC-Axis (.px)",
+            "jsonstat2": "JSON-stat2 (.json)",
+            "html": "HTML (.html)",
+            "parquet": "Parquet (.parquet)"
+          }
         },
         "savequery": {
           "title": "Länk till uppdaterad tabell",
