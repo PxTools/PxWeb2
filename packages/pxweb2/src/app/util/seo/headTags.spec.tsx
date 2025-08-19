@@ -22,6 +22,7 @@ const mockLocations = {
   tableWithLang: { pathname: '/en/table/123', search: '', hash: '' },
   tableLangNo: { pathname: '/no/table/123', search: '', hash: '' },
   tableNoLangSlash: { pathname: '/table/123/', search: '', hash: '' },
+  startPageWithTrailingSlash: { pathname: '/en/', search: '', hash: '' },
 };
 const mockMatch = {
   withTableId: { params: { tableId: '123' } },
@@ -214,5 +215,24 @@ describe('HrefLang', () => {
       'href',
       `https://mytesturlpxweb.io/no/table/123`,
     );
+  });
+  it('should handle startpage with trailing slash correctly', () => {
+    vi.spyOn(configModule, 'getConfig').mockReturnValue(
+      mockConfigs.defaultLangInPath,
+    );
+    (useLocation as Mock).mockReturnValue(
+      mockLocations.startPageWithTrailingSlash,
+    );
+    render(<HrefLang />);
+    const linkEn = document.querySelector(
+      `link[rel="alternate"][hreflang="en"]`,
+    );
+    expect(linkEn).not.toBeNull();
+    expect(linkEn).toHaveAttribute('href', `https://mytesturlpxweb.io/en`);
+    const linkNo = document.querySelector(
+      `link[rel="alternate"][hreflang="no"]`,
+    );
+    expect(linkNo).not.toBeNull();
+    expect(linkNo).toHaveAttribute('href', `https://mytesturlpxweb.io/no`);
   });
 });

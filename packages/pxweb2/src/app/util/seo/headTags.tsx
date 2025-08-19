@@ -5,13 +5,12 @@ import { useEffect } from 'react';
 import { getConfig } from '../config/getConfig';
 import useApp from '../../context/useApp';
 
-// Utility to remove trailing slash except for root "/"
+// Utility to remove trailing slash
 function removeTrailingSlash(path: string) {
-  return path.length > 1 ? path.replace(/\/$/, '') : path;
+  return path.length > 0 ? path.replace(/\/$/, '') : path;
 }
 
 // Title and link tags will automatically be hoisted in the <head> section
-
 // Renders the dynamic title based on the current route
 // If the route matches "/:lang/table/:tableId" or /table/:tableId, it uses
 // title from the context, which is set in ContentTop.tsx
