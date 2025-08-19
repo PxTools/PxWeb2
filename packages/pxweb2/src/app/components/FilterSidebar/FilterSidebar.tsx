@@ -221,6 +221,7 @@ const VariablesFilter: React.FC = () => {
     const firstCheckbox = document.querySelector(
       `.${styles.scrollableVariableFilter} li`,
     );
+    console.log('GLNRBN LOGGIN IN: ' + firstCheckbox);
     if (firstCheckbox) {
       const height = firstCheckbox.getBoundingClientRect().height;
       document.documentElement.style.setProperty(
