@@ -10,8 +10,15 @@ export enum ActionType {
   SET_LOADING = 'SET_LOADING',
 }
 
+export type FilterType =
+  | 'timeUnit'
+  | 'subject'
+  | 'yearRange'
+  | 'search'
+  | 'variable';
+
 export type Filter = {
-  type: 'timeUnit' | 'subject' | 'yearRange' | 'search' | 'variable';
+  type: FilterType;
   value: string;
   label: string;
   index: number;
