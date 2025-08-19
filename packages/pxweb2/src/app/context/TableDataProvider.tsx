@@ -32,7 +32,7 @@ export interface TableDataContextType {
   buildTableTitle: (
     stub: Variable[],
     heading: Variable[],
-  ) => { firstTitlePart: string; lastTitlePart: string };
+  ) => { firstTitlePart: string; lastTitlePart: string | undefined };
 }
 
 interface TableDataProviderProps {
@@ -1049,6 +1049,12 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     } => {
       const titleParts: string[] = [];
       let lastTitlePart: string | undefined = undefined;
+
+      if (stub.length < 1 && heading.length < 1) {
+        throw new Error(
+          'TableDataProvider.buildTableTitle: Both stub and heading are empty',
+        );
+      }
 
       // Add stub variables to title
       stub.forEach((variable) => {
