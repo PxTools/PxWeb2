@@ -121,10 +121,7 @@ function reducer(
             recomputed.subjectTree ?? state.availableFilters.subjectTree,
           timeUnits: recomputed.timeUnits ?? state.availableFilters.timeUnits,
           yearRange: recomputed.yearRange ?? state.availableFilters.yearRange,
-          variables:
-            addType !== 'variable'
-              ? getVariables(filteredTables)
-              : state.availableFilters.variables,
+          variables: recomputed.variables ?? state.availableFilters.variables,
         },
         lastUsedYearRange: updatedLastUsedYearRange,
       };
@@ -237,7 +234,7 @@ function reducer(
             recomputed.subjectTree ?? state.availableFilters.subjectTree,
           timeUnits: recomputed.timeUnits ?? state.availableFilters.timeUnits,
           yearRange: recomputed.yearRange ?? state.availableFilters.yearRange,
-          variables: state.availableFilters.variables,
+          variables: recomputed.variables ?? state.availableFilters.variables,
         },
         lastUsedYearRange: updatedLastUsedYearRange,
       };

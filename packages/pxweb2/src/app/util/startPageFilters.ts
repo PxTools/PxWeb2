@@ -338,6 +338,11 @@ export function recomputeAvailableFilters(
     currentFilters,
     availableTables,
   );
+  const variableTables = tablesForFilterCounts(
+    'variable',
+    currentFilters,
+    availableTables,
+  );
 
   const shouldRecalcFilter = (filter: FilterType) =>
     editFilterType !== filter || currentFilters.some((f) => f.type !== filter);
@@ -351,6 +356,9 @@ export function recomputeAvailableFilters(
       : undefined,
     yearRange: shouldRecalcFilter('yearRange')
       ? getYearRanges(yearRangeTables)
+      : undefined,
+    variables: shouldRecalcFilter('variable')
+      ? getVariables(variableTables)
       : undefined,
   };
 }
