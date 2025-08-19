@@ -193,7 +193,7 @@
         },
         "savequery": {
           "title": "Lenke til oppdatert tabell",
-          "info": "Vi sparer på tabellen din og holder den oppdatert. Du velger selv hvordan nye tidsperioder skal legges til.",
+          "info": "Du får en unik lenke til tabellen din, som vi holder oppdatert for deg. Hvordan nye tidsperioder legges til, velger du selv.",
           "radioLegend": "Valg for nye tidsperioder",
           "periodOptions": {
             "selected": "Ikke legg til nye (tabellen vil kun vise de du har valgt nå)",
