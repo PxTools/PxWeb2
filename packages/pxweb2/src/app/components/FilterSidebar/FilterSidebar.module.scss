@@ -65,13 +65,15 @@
 .scrollableVariableFilter {
   list-style: none;
   padding: 0;
-
-  max-height: 528px;
   overflow-y: scroll;
+  overflow-x: hidden;
   scrollbar-width: 3px;
-  // background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgb(255, 255, 255));
+  z-index: 10;
+
+  // Set container height to show 11.5 items. They are 44px tall.
+  height: calc((44px * 11.5));
 }
 
 .variablesSearchBox {
-  padding: 3px;
+  padding: 8px 3px 0px 8px;
 }
