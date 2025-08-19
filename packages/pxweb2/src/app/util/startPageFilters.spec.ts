@@ -7,9 +7,11 @@ import {
   organizePaths,
   getYearRanges,
   getYearRangeFromPeriod,
+  getVariables,
 } from '../util/startPageFilters';
 import { Filter, type PathItem } from '../pages/StartPage/StartPageTypes';
 import { Table } from 'packages/pxweb2-api-client/src';
+import { Config } from './config/configType';
 
 const exampleResultTree: PathItem[] = [
   {
@@ -115,7 +117,7 @@ const inExample: PathItem = {
   children: [],
 };
 
-const tableExamles: Table[] = [
+const tableExamples: Table[] = [
   {
     type: 'Table',
     id: '1',
@@ -223,7 +225,34 @@ describe('Ensure the tree flattens correctly', () => {
   });
 });
 
-describe('Correctly sort and deduplicate filters', () => {
+describe('Correctly sort, filter and deduplicate filters', () => {
+  vi.mock('./config/getConfig', () => {
+    return {
+      getConfig: vi.fn().mockReturnValue({
+        language: {
+          supportedLanguages: [
+            { shorthand: 'en', languageName: 'English' },
+            { shorthand: 'no', languageName: 'Norsk' },
+            { shorthand: 'sv', languageName: 'Svenska' },
+            { shorthand: 'ar', languageName: 'العربية' },
+          ],
+          defaultLanguage: 'en',
+          fallbackLanguage: 'en',
+        },
+        apiUrl: 'https://api.scb.se/OV0104/v2beta/api/v2',
+        maxDataCells: 100000,
+        specialCharacters: ['.', '..', ':', '-', '...', '*'],
+        variableFilterExclusionList: [
+          'statisticalvariable',
+          'year',
+          'quarter',
+          'month',
+          'week',
+        ],
+      } as Config),
+    };
+  });
+
   const rawFilters: Filter[] = [
     {
       type: 'subject',
@@ -311,11 +340,18 @@ describe('Correctly sort and deduplicate filters', () => {
     const performedDeduped = deduplicateFiltersByValue(sortedFilters);
     expect(performedDeduped).toEqual(dedupedFilters);
   });
+
+  it('Should not include filters which are in the variable exclusion list', () => {
+    const variableList = getVariables(tableExamples);
+
+    expect(variableList.has('observations')).toBe(true);
+    expect(variableList.has('month')).toBe(false);
+  });
 });
 
 describe('getYearRanges', () => {
   it('returns correct min and max for multiple valid tables', () => {
-    expect(getYearRanges(tableExamles)).toEqual({ min: 1920, max: 2050 });
+    expect(getYearRanges(tableExamples)).toEqual({ min: 1920, max: 2050 });
   });
 
   it('throws on empty input array', () => {
