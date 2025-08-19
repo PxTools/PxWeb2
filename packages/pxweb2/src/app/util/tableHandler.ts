@@ -135,7 +135,7 @@ export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
     } else {
       return variableFilters.some((filter) => {
         return table.variableNames.some((varName) => {
-          return varName === filter.value; // TODO fix this it doesnt work boo
+          return varName === filter.value;
         });
       });
     }
