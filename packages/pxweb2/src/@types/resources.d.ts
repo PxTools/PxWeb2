@@ -186,12 +186,14 @@ interface Resources {
           file: {
             title: 'Download as file';
             loading_announcement: 'File is still being processed. Please wait.';
-            excel: 'Excel (.xlsx)';
-            csv: 'Semicolon-delimited with heading (.csv)';
-            px: 'PC-Axis (.px)';
-            jsonstat2: 'JSON-stat2 (.json)';
-            html: 'HTML (.html)';
-            parquet: 'Parquet (.parquet)';
+            formats: {
+              excel: 'Excel (.xlsx)';
+              csv: 'Semicolon-delimited with heading (.csv)';
+              px: 'PC-Axis (.px)';
+              jsonstat2: 'JSON-stat2 (.json)';
+              html: 'HTML (.html)';
+              parquet: 'Parquet (.parquet)';
+            };
           };
           savequery: {
             title: 'Link to updated table';
