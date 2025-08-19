@@ -1058,6 +1058,8 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
       /**
        * Issue: Title without ContentsCode variables sometimes does not update when pivoting
+       *  - When only one variable is used in the title
+       *  - When the ContentsCode is the one move to the stub
        *
        * Possible solution: Have different logic for the code that will be used in the PivotButton's aria-label
        * Ask: Bjarte, Vivianne and Maren?
