@@ -161,12 +161,13 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * @param isMobile - If the device is mobile or not.
    */
   const initializeStubAndHeading = React.useCallback(
-    (pxTable: PxTable, isMobile: boolean) => {
+    (pxTable: PxTable, isMobile: boolean, lang: string) => {
       if (
         accumulatedData === undefined ||
-        accumulatedData.metadata.id !== pxTable.metadata.id
+        accumulatedData.metadata.id !== pxTable.metadata.id ||
+        accumulatedData.metadata.language.toLowerCase() !== lang.toLowerCase()
       ) {
-        // First time we get data OR we have a new table.
+        // First time we get data OR we have a new table OR language is changed.
 
         // -> Set stub and heading order for desktop according to the order in pxTable
         const stubOrderDesktop: string[] = pxTable.stub.map(
@@ -203,7 +204,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
           pivotTable(pxTable, stubOrderDesktop, headingOrderDesktop);
         }
       } else {
-        // Language has changed.
+        // New variables added
 
         if (isMobile) {
           pivotTable(pxTable, stubMobile, headingMobile);
@@ -243,6 +244,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * Fetches and processes a saved query by its ID, then updates the table data context.
    *
    * @param loadSavedQueryId - The unique identifier of the saved query to load.
+   * @param i18n - The i18n object for handling languages.
    * @param isMobile - Indicates if the current device is mobile, affecting table initialization.
    * @returns A promise that resolves when the table data has been fetched, processed, and set.
    *
@@ -267,13 +269,13 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       // Add formatting to the PxTable datacell values
       await addFormattingToPxTable(pxTable);
 
-      initializeStubAndHeading(pxTable, isMobile);
+      initializeStubAndHeading(pxTable, isMobile, i18n.language);
       setData(pxTable);
 
       // Store as accumulated data
       setAccumulatedData(structuredClone(pxTable));
     },
-    [initializeStubAndHeading] /*, fetchSavedQueryDefinition */,
+    [initializeStubAndHeading],
   );
 
   /*
@@ -294,20 +296,28 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       if (codelistChanged) {
         setData(undefined);
       }
+
+      if (
+        accumulatedData?.metadata.language.toLowerCase() !==
+        i18n.language.toLowerCase()
+      ) {
+        variablesSelection = { selection: [] }; // If language is changed we shall fetch data with the default selection.
+      }
+
       const pxTable: PxTable = await fetchFromApi(
         tableId,
         i18n,
         variablesSelection,
       );
 
-      initializeStubAndHeading(pxTable, isMobile);
+      initializeStubAndHeading(pxTable, isMobile, i18n.language);
       setData(pxTable);
 
       // Store as accumulated data
       setAccumulatedData(structuredClone(pxTable));
       // }
     },
-    [initializeStubAndHeading, setData, setAccumulatedData],
+    [accumulatedData?.metadata.language, initializeStubAndHeading],
   );
 
   /**
