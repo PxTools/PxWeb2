@@ -1,0 +1,4 @@
+/*
+  X-Frame-Options: SAMEORIGIN
+  Content-Security-Policy: script-src 'self';
+  
