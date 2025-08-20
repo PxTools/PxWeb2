@@ -33,11 +33,13 @@ import useApp from '../../context/useApp';
 import { getConfig } from '../../util/config/getConfig';
 import { FilterContext, FilterProvider } from '../../context/FilterContext';
 import { getAllTables } from '../../util/tableHandler';
+import useFilterUrlSync from '../../util/hooks/useFilterUrlSync';
 
 const StartPage = () => {
   const { t, i18n } = useTranslation();
   const { isMobile, isTablet } = useApp();
   const { state, dispatch } = useContext(FilterContext);
+  useFilterUrlSync(state, dispatch, t);
 
   const paginationCount = 15;
   const isSmallScreen = isTablet === true || isMobile === true;
@@ -56,6 +58,35 @@ const StartPage = () => {
   const firstNewCardRef = useRef<HTMLDivElement>(null);
   const lastVisibleCardRef = useRef<HTMLDivElement>(null);
   const searchFieldRef = useRef<SearchHandle>(null);
+  const hasFetchedRef = useRef(false);
+
+  useEffect(() => {
+    if (hasFetchedRef.current) {return;}     // ⛑ hindre dobbel henting
+    hasFetchedRef.current = true;
+  
+    let cancelled = false;
+    (async () => {
+      dispatch({ type: ActionType.SET_LOADING, payload: true });
+      try {
+        const tables = await getAllTables();
+        if (cancelled) {return;}
+        dispatch({
+          type: ActionType.RESET_FILTERS,
+          payload: { tables, subjects: getSubjectTree(tables) },
+        });
+      } catch (error) {
+        if (!cancelled) {
+          dispatch({ type: ActionType.SET_ERROR, payload: (error as Error).message });
+        }
+      } finally {
+        if (!cancelled) {
+          dispatch({ type: ActionType.SET_LOADING, payload: false });
+        }
+      }
+    })();
+  
+    return () => { cancelled = true; };
+  }, []);
 
   useEffect(() => {
     async function fetchTables() {
