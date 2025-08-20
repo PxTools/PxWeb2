@@ -212,10 +212,11 @@ export default function useFilterUrlSync(
   dispatch: (a: any) => void,
   t: TFunction,
 ) {
-  // Har vi allerede anvendt URL-query (den aktuelle strengen)?
   const hydratedRef = useRef(false);
   const lastAppliedQueryRef = useRef<string | null>(null);
 
+  // Update the browser URL whenever activeFilters change.
+  // Guard against overwriting incoming query parameters before hydration.
   useEffect(() => {
     const current = window.location.search.replace(/^\?/, '');
     const built = buildParamsFromFilters(state.activeFilters).toString();
@@ -226,11 +227,13 @@ export default function useFilterUrlSync(
     }
 
     if (built !== current) {
-      const url = `${window.location.pathname}${built ? `?${built}` : ''}`;
+      const url = window.location.pathname + (built ? `?${built}` : '');
       window.history.replaceState(null, '', url);
     }
   }, [state.activeFilters]);
 
+  // Initialize filters from the current URL query once tables and subjectTree are available.
+  // Do not re-run on every activeFilters change.
   useEffect(() => {
     const dataReady =
       state.availableTables.length > 0 &&
@@ -282,6 +285,7 @@ export default function useFilterUrlSync(
     }
 
     hydratedRef.current = true;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     state.availableTables,
     state.availableFilters.subjectTree,
@@ -289,6 +293,8 @@ export default function useFilterUrlSync(
     dispatch,
   ]);
 
+  // Handle back/forward navigation
+  // Sync filters from URL whenever the user navigates with back/forward buttons.
   useEffect(() => {
     const onPopState = () => {
       const params = new URLSearchParams(window.location.search);
