@@ -7,6 +7,24 @@ import type {
   PathItem,
 } from '../../pages/StartPage/StartPageTypes';
 
+function flattenSubjectTree(tree: PathItem[]) {
+  const result: PathItem[] = [];
+  const stack = [...tree];
+  while (stack.length) {
+    const n = stack.pop()!;
+    result.push(n);
+    if (n.children?.length) {
+      stack.push(...n.children);
+    }
+  }
+  return result;
+}
+
+function findByUniqueIdOrId(tree: PathItem[], v: string) {
+  const all = flattenSubjectTree(tree);
+  return all.find((n) => n.uniqueId === v) ?? all.find((n) => n.id === v);
+}
+
 function buildParamsFromFilters(filters: Filter[]): URLSearchParams {
   const params = new URLSearchParams();
   const timeUnits: string[] = [];
@@ -42,10 +60,16 @@ function buildParamsFromFilters(filters: Filter[]): URLSearchParams {
     params.set('q', q);
   }
   if (timeUnits.length) {
-    params.set('timeUnit', timeUnits.join(','));
+    params.set(
+      'timeUnit',
+      [...new Set(timeUnits)].sort((a, b) => a.localeCompare(b)).join(','),
+    );
   }
   if (subjects.length) {
-    params.set('subject', subjects.join(','));
+    params.set(
+      'subject',
+      [...new Set(subjects)].sort((a, b) => a.localeCompare(b)).join(','),
+    );
   }
   if (fromYear != null) {
     params.set('from', String(fromYear));
@@ -74,46 +98,27 @@ function parseParamsToFilters(
   if (tus) {
     tus
       .split(',')
+      .map((s) => s.trim())
       .filter(Boolean)
       .forEach((raw, i) => {
-        const incoming = raw.trim();
-
-        // hvis vi har en “fasit”-liste, finn case-korrekt verdi som finnes i data
         const normalized =
           availableTimeUnits?.find(
-            (u) => u.toLowerCase() === incoming.toLowerCase(),
-          ) ?? incoming;
-
+            (u) => u.toLowerCase() === raw.toLowerCase(),
+          ) ?? raw;
         const translationKey = `start_page.filter.frequency.${normalized.toLowerCase()}`;
         const label = t(translationKey, { defaultValue: normalized });
         filters.push({ type: 'timeUnit', value: normalized, label, index: i });
       });
   }
 
-  // subject (tillat uniqueId *også* id som fallback)
   const subs = params.get('subject');
   if (subs) {
-    // flate ut subjectTree for raskt oppslag
-    const all: PathItem[] = [];
-    const stack = [...subjectTree];
-    while (stack.length) {
-      const n = stack.pop()!;
-      all.push(n);
-      if (n.children?.length) {
-        stack.push(...n.children);
-      }
-    }
-
     subs
       .split(',')
+      .map((s) => s.trim())
       .filter(Boolean)
-      .forEach((val, i) => {
-        const v = val.trim();
-        let node = all.find((n) => n.uniqueId === v);
-        if (!node) {
-          node = all.find((n) => n.id === v);
-        } // fallback til id
-
+      .forEach((v, i) => {
+        const node = findByUniqueIdOrId(subjectTree, v);
         if (node) {
           filters.push({
             type: 'subject',
@@ -126,7 +131,6 @@ function parseParamsToFilters(
       });
   }
 
-  // from/to (årsintervall)
   const from = params.get('from');
   const to = params.get('to');
   if (from || to) {
@@ -145,22 +149,16 @@ export default function useFilterUrlSync(
   dispatch: (a: any) => void,
   t: TFunction,
 ) {
+  // Har vi allerede anvendt URL-query (den aktuelle strengen)?
   const hydratedRef = useRef(false);
-  const prevTablesRef = useRef(state.availableTables);
-  const prevActiveLenRef = useRef(state.activeFilters.length);
+  const lastAppliedQueryRef = useRef<string | null>(null);
 
-  // SPEIL -> URL (med ekstra guard)
   useEffect(() => {
     const current = window.location.search.replace(/^\?/, '');
     const built = buildParamsFromFilters(state.activeFilters).toString();
-    const tablesChanged = prevTablesRef.current !== state.availableTables;
     const hasIncoming = current.length > 0;
 
-    // Ikke blank query på vei inn eller rett etter data-reload
-    if (
-      (!hydratedRef.current && hasIncoming) ||
-      (hasIncoming && state.activeFilters.length === 0 && tablesChanged)
-    ) {
+    if (!hydratedRef.current && hasIncoming) {
       return;
     }
 
@@ -168,13 +166,13 @@ export default function useFilterUrlSync(
       const url = `${window.location.pathname}${built ? `?${built}` : ''}`;
       window.history.replaceState(null, '', url);
     }
-  }, [state.activeFilters, state.availableTables]);
+  }, [state.activeFilters]);
 
-  // HYDRER <- URL (kjør når data er klare, og når URL ≠ state)
   useEffect(() => {
     const dataReady =
       state.availableTables.length > 0 &&
       state.availableFilters.subjectTree.length > 0;
+
     if (!dataReady) {
       return;
     }
@@ -182,13 +180,62 @@ export default function useFilterUrlSync(
     const current = window.location.search.replace(/^\?/, '');
     const built = buildParamsFromFilters(state.activeFilters).toString();
 
-    if (current && current !== built) {
+    if (!current) {
+      hydratedRef.current = true;
+      return;
+    }
+    if (current === built) {
+      hydratedRef.current = true;
+      return;
+    }
+
+    if (lastAppliedQueryRef.current === current) {
+      return;
+    }
+
+    const validTimeUnits = Array.from(
+      new Set(
+        state.availableTables.map((t) => t.timeUnit ?? '').filter(Boolean),
+      ),
+    );
+    const params = new URLSearchParams(current);
+    const filters = parseParamsToFilters(
+      params,
+      state.availableFilters.subjectTree,
+      t,
+      validTimeUnits,
+    );
+
+    lastAppliedQueryRef.current = current;
+    dispatch({
+      type: ActionType.RESET_FILTERS,
+      payload: {
+        tables: state.availableTables,
+        subjects: state.originalSubjectTree,
+      },
+    });
+    if (filters.length) {
+      dispatch({ type: ActionType.ADD_FILTER, payload: filters });
+    }
+
+    hydratedRef.current = true;
+  }, [
+    state.availableTables,
+    state.availableFilters.subjectTree,
+    state.originalSubjectTree,
+    dispatch,
+  ]);
+
+  useEffect(() => {
+    const onPopState = () => {
+      const params = new URLSearchParams(window.location.search);
+      const current = params.toString();
+
       const validTimeUnits = Array.from(
         new Set(
           state.availableTables.map((t) => t.timeUnit ?? '').filter(Boolean),
         ),
       );
-      const params = new URLSearchParams(current);
       const filters = parseParamsToFilters(
         params,
         state.availableFilters.subjectTree,
@@ -196,7 +243,6 @@ export default function useFilterUrlSync(
         validTimeUnits,
       );
 
-      // Start rent, så legg på URL-filtrene
       dispatch({
         type: ActionType.RESET_FILTERS,
         payload: {
@@ -207,23 +253,18 @@ export default function useFilterUrlSync(
       if (filters.length) {
         dispatch({ type: ActionType.ADD_FILTER, payload: filters });
       }
+
+      lastAppliedQueryRef.current = current;
       hydratedRef.current = true;
-    } else if (!hydratedRef.current) {
-      // Ingen query -> markér som hydrert slik at speil kan ta over
-      hydratedRef.current = true;
-    }
+    };
+
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
   }, [
     state.availableTables,
-    state.availableFilters.subjectTree,
     state.originalSubjectTree,
-    state.activeFilters,
-    t,
+    state.availableFilters.subjectTree,
     dispatch,
+    t,
   ]);
-
-  // hold refs oppdatert
-  useEffect(() => {
-    prevTablesRef.current = state.availableTables;
-    prevActiveLenRef.current = state.activeFilters.length;
-  }, [state.availableTables, state.activeFilters.length]);
 }
