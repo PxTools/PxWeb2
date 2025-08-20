@@ -8,6 +8,7 @@ import { findAncestors, getAllDescendants } from '../../util/startPageFilters';
 import { FilterContext } from '../../context/FilterContext';
 import { YearRangeFilter } from './YearRangeFilter';
 import { ReactNode, useContext, useState } from 'react';
+import _ from 'lodash';
 
 interface CollapsibleProps {
   subject: PathItem;
@@ -240,7 +241,7 @@ const VariablesFilter: React.FC = () => {
               <li key={item[0]}>
                 <Checkbox
                   id={index.toString()}
-                  text={`${item[0]} (${item[1]})`}
+                  text={`${_.upperFirst(item[0])} (${item[1]})`}
                   value={isActive}
                   onChange={(value) => {
                     value
