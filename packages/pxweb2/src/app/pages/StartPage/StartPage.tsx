@@ -44,6 +44,10 @@ const StartPage = () => {
   const paginationCount = 15;
   const isSmallScreen = isTablet === true || isMobile === true;
   const topicIconComponents = useTopicIcons();
+  const hasQueryParameters =
+    typeof window !== 'undefined' && window.location.search.length > 1;
+  const ready =
+    !state.loading && (!hasQueryParameters || state.activeFilters.length > 0);
 
   const [isFilterOverlayOpen, setIsFilterOverlayOpen] = useState(false);
   const [visibleCount, setVisibleCount] = useState(paginationCount);
@@ -66,45 +70,13 @@ const StartPage = () => {
     }
     hasFetchedRef.current = true;
 
-    let cancelled = false;
     (async () => {
       dispatch({ type: ActionType.SET_LOADING, payload: true });
       try {
         const tables = await getAllTables();
-        if (cancelled) {
-          return;
-        }
         dispatch({
           type: ActionType.RESET_FILTERS,
           payload: { tables, subjects: getSubjectTree(tables) },
-        });
-      } catch (error) {
-        if (!cancelled) {
-          dispatch({
-            type: ActionType.SET_ERROR,
-            payload: (error as Error).message,
-          });
-        }
-      } finally {
-        if (!cancelled) {
-          dispatch({ type: ActionType.SET_LOADING, payload: false });
-        }
-      }
-    })();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  useEffect(() => {
-    async function fetchTables() {
-      dispatch({ type: ActionType.SET_LOADING, payload: true });
-      try {
-        const tables = await getAllTables();
-        dispatch({
-          type: ActionType.RESET_FILTERS,
-          payload: { tables: tables, subjects: getSubjectTree(tables) },
         });
       } catch (error) {
         dispatch({
@@ -114,8 +86,7 @@ const StartPage = () => {
       } finally {
         dispatch({ type: ActionType.SET_LOADING, payload: false });
       }
-    }
-    fetchTables();
+    })();
   }, [dispatch]);
 
   useEffect(() => {
@@ -625,7 +596,7 @@ const StartPage = () => {
                   </Alert>
                 </div>
               )}
-              {state.loading ? (
+              {!ready ? (
                 <div className={styles.loadingSpinner}>
                   <Spinner size="xlarge" />
                 </div>
