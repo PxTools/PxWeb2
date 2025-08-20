@@ -133,7 +133,7 @@ export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
     if (variableFilters.length == 0) {
       return true;
     } else {
-      return variableFilters.some((filter) => {
+      return variableFilters.every((filter) => {
         return table.variableNames.some((varName) => {
           return varName === filter.value;
         });
