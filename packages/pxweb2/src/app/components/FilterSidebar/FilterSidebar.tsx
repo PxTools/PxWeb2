@@ -251,7 +251,7 @@ const VariablesFilter: React.FC = () => {
                             {
                               type: 'variable',
                               value: item[0],
-                              label: item[0],
+                              label: _.upperFirst(item[0]),
                               index,
                             },
                           ],
