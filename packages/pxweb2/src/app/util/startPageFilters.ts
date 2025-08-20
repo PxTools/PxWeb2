@@ -130,7 +130,7 @@ export function sortFiltersByTypeAndSubjectOrder(
   filters: Filter[],
   subjectOrder: string[],
 ): Filter[] {
-  const typeOrder = ['subject', 'yearRange', 'timeUnit'];
+  const typeOrder = ['search', 'subject', 'yearRange', 'timeUnit', 'variable'];
 
   return filters.slice().sort((a, b) => {
     const typeComparison =
@@ -143,6 +143,10 @@ export function sortFiltersByTypeAndSubjectOrder(
       const aIdx = subjectOrder.indexOf(a.uniqueId ?? '');
       const bIdx = subjectOrder.indexOf(b.uniqueId ?? '');
       return aIdx - bIdx;
+    }
+
+    if (a.type === 'variable' && b.type === 'variable') {
+      return a.index - b.index;
     }
 
     return 0;
