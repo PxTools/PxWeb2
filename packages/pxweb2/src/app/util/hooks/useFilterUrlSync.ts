@@ -7,6 +7,14 @@ import type {
   PathItem,
 } from '../../pages/StartPage/StartPageTypes';
 
+type FilterQuery = {
+  searchText?: string;
+  timeUnits: Set<string>;
+  subjects: Set<string>;
+  fromYear?: number;
+  toYear?: number;
+};
+
 function flattenSubjectTree(tree: PathItem[]) {
   const result: PathItem[] = [];
   const stack = [...tree];
@@ -25,60 +33,88 @@ function findByUniqueIdOrId(tree: PathItem[], v: string) {
   return all.find((n) => n.uniqueId === v) ?? all.find((n) => n.id === v);
 }
 
-function buildParamsFromFilters(filters: Filter[]): URLSearchParams {
+const createEmptyFilterQuery = (): FilterQuery => ({
+  timeUnits: new Set<string>(),
+  subjects: new Set<string>(),
+});
+
+const lexicalSort = (a: string, b: string) => a.localeCompare(b);
+
+function parseYearRange(range: unknown): {
+  fromYear?: number;
+  toYear?: number;
+} {
+  if (typeof range !== 'string') {
+    return {};
+  }
+  const [minS, maxS] = range.split('-');
+  const min = parseInt(minS, 10);
+  const max = parseInt(maxS, 10);
+
+  return {
+    fromYear: Number.isFinite(min) ? min : undefined,
+    toYear: Number.isFinite(max) ? max : undefined,
+  };
+}
+
+function mergeFilterIntoQuery(query: FilterQuery, f: Filter): FilterQuery {
+  switch (f.type) {
+    case 'search':
+      query.searchText = String(f.value ?? '');
+      break;
+    case 'timeUnit':
+      query.timeUnits.add(String(f.value));
+      break;
+    case 'subject':
+      if (f.uniqueId) {
+        query.subjects.add(String(f.uniqueId));
+      }
+      break;
+    case 'yearRange': {
+      const { fromYear, toYear } = parseYearRange(f.value);
+      if (fromYear != null) {
+        query.fromYear = fromYear;
+      }
+      if (toYear != null) {
+        query.toYear = toYear;
+      }
+      break;
+    }
+  }
+  return query;
+}
+
+function toSearchParams(query: FilterQuery): URLSearchParams {
   const params = new URLSearchParams();
-  const timeUnits: string[] = [];
-  const subjects: string[] = [];
-  let fromYear: number | undefined;
-  let toYear: number | undefined;
-  let q: string | undefined;
 
-  for (const f of filters) {
-    if (f.type === 'search') {
-      q = String(f.value ?? '');
-    }
-    if (f.type === 'timeUnit') {
-      timeUnits.push(String(f.value));
-    }
-    if (f.type === 'subject' && f.uniqueId) {
-      subjects.push(String(f.uniqueId));
-    }
-    if (f.type === 'yearRange') {
-      const [minS, maxS] = String(f.value ?? '').split('-');
-      const min = parseInt(minS, 10);
-      const max = parseInt(maxS, 10);
-      if (Number.isFinite(min)) {
-        fromYear = min;
-      }
-      if (Number.isFinite(max)) {
-        toYear = max;
-      }
-    }
+  if (query.searchText) {
+    params.set('q', query.searchText);
   }
 
-  if (q) {
-    params.set('q', q);
+  if (query.timeUnits.size) {
+    params.set('timeUnit', [...query.timeUnits].sort(lexicalSort).join(','));
   }
-  if (timeUnits.length) {
-    params.set(
-      'timeUnit',
-      [...new Set(timeUnits)].sort((a, b) => a.localeCompare(b)).join(','),
-    );
+
+  if (query.subjects.size) {
+    params.set('subject', [...query.subjects].sort(lexicalSort).join(','));
   }
-  if (subjects.length) {
-    params.set(
-      'subject',
-      [...new Set(subjects)].sort((a, b) => a.localeCompare(b)).join(','),
-    );
+
+  if (query.fromYear != null) {
+    params.set('from', String(query.fromYear));
   }
-  if (fromYear != null) {
-    params.set('from', String(fromYear));
-  }
-  if (toYear != null) {
-    params.set('to', String(toYear));
+  if (query.toYear != null) {
+    params.set('to', String(query.toYear));
   }
 
   return params;
+}
+
+function buildParamsFromFilters(filters: Filter[]): URLSearchParams {
+  const query = filters.reduce<FilterQuery>(
+    mergeFilterIntoQuery,
+    createEmptyFilterQuery(),
+  );
+  return toSearchParams(query);
 }
 
 function parseParamsToFilters(
@@ -89,56 +125,83 @@ function parseParamsToFilters(
 ): Filter[] {
   const filters: Filter[] = [];
 
-  const q = params.get('q');
-  if (q && q.trim() !== '') {
-    filters.push({ type: 'search', value: q, label: q, index: 1 });
+  const searchParam = params.get('q');
+  if (searchParam && searchParam.trim() !== '') {
+    filters.push({
+      type: 'search',
+      value: searchParam,
+      label: searchParam,
+      index: 1,
+    });
   }
 
-  const tus = params.get('timeUnit');
-  if (tus) {
-    tus
+  const timeUnitParam = params.get('timeUnit');
+  if (timeUnitParam) {
+    timeUnitParam
       .split(',')
-      .map((s) => s.trim())
+      .map((unit) => unit.trim())
       .filter(Boolean)
-      .forEach((raw, i) => {
-        const normalized =
+      .forEach((rawUnit, index) => {
+        const normalizedUnit =
           availableTimeUnits?.find(
-            (u) => u.toLowerCase() === raw.toLowerCase(),
-          ) ?? raw;
-        const translationKey = `start_page.filter.frequency.${normalized.toLowerCase()}`;
-        const label = t(translationKey, { defaultValue: normalized });
-        filters.push({ type: 'timeUnit', value: normalized, label, index: i });
+            (u) => u.toLowerCase() === rawUnit.toLowerCase(),
+          ) ?? rawUnit;
+
+        const translationKey = `start_page.filter.frequency.${normalizedUnit.toLowerCase()}`;
+        const label = t(translationKey, { defaultValue: normalizedUnit });
+
+        filters.push({
+          type: 'timeUnit',
+          value: normalizedUnit,
+          label,
+          index,
+        });
       });
   }
 
-  const subs = params.get('subject');
-  if (subs) {
-    subs
+  const subjectParam = params.get('subject');
+  if (subjectParam) {
+    subjectParam
       .split(',')
-      .map((s) => s.trim())
+      .map((idOrUid) => idOrUid.trim())
       .filter(Boolean)
-      .forEach((v, i) => {
-        const node = findByUniqueIdOrId(subjectTree, v);
+      .forEach((subjectKey, index) => {
+        const node = findByUniqueIdOrId(subjectTree, subjectKey);
         if (node) {
           filters.push({
             type: 'subject',
             value: node.id,
             label: node.label,
             uniqueId: node.uniqueId,
-            index: i,
+            index,
           });
         }
       });
   }
 
-  const from = params.get('from');
-  const to = params.get('to');
-  if (from || to) {
-    const f = from ? parseInt(from, 10) : undefined;
-    const tY = to ? parseInt(to, 10) : undefined;
-    const value = `${f ?? ''}-${tY ?? ''}`;
-    const label = f && tY ? `${f} - ${tY}` : f ? `From ${f}` : `To ${tY}`;
-    filters.push({ type: 'yearRange', value, label, index: 0 });
+  const fromParam = params.get('from');
+  const toParam = params.get('to');
+
+  if (fromParam || toParam) {
+    const fromYear = fromParam ? parseInt(fromParam, 10) : undefined;
+    const toYear = toParam ? parseInt(toParam, 10) : undefined;
+    const value = `${fromYear ?? ''}-${toYear ?? ''}`;
+    let label = '';
+
+    if (fromYear != null && toYear != null) {
+      label = `${fromYear} - ${toYear}`;
+    } else if (fromYear != null) {
+      label = `From ${fromYear}`;
+    } else if (toYear != null) {
+      label = `To ${toYear}`;
+    }
+
+    filters.push({
+      type: 'yearRange',
+      value,
+      label,
+      index: 0,
+    });
   }
 
   return filters;
