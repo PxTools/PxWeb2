@@ -321,5 +321,8 @@
     "simple_number_with_five_decimals": "{{value, pxNumber(minimumFractionDigits: 5; maximumFractionDigits: 5;)}}",
     "simple_number_with_six_decimals": "{{value, pxNumber(minimumFractionDigits: 6; maximumFractionDigits: 6;)}}",
     "simple_number_with_default_formatter": "{{value, number(minimumFractionDigits: 5; maximumFractionDigits: 5; roundingMode: 'halfExpand')}}"
+  },
+  "opengraph": {
+    "site_name": "My website site name"
   }
 }
