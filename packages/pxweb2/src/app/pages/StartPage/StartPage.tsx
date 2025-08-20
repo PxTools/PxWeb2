@@ -61,22 +61,29 @@ const StartPage = () => {
   const hasFetchedRef = useRef(false);
 
   useEffect(() => {
-    if (hasFetchedRef.current) {return;}     // ⛑ hindre dobbel henting
+    if (hasFetchedRef.current) {
+      return;
+    }
     hasFetchedRef.current = true;
-  
+
     let cancelled = false;
     (async () => {
       dispatch({ type: ActionType.SET_LOADING, payload: true });
       try {
         const tables = await getAllTables();
-        if (cancelled) {return;}
+        if (cancelled) {
+          return;
+        }
         dispatch({
           type: ActionType.RESET_FILTERS,
           payload: { tables, subjects: getSubjectTree(tables) },
         });
       } catch (error) {
         if (!cancelled) {
-          dispatch({ type: ActionType.SET_ERROR, payload: (error as Error).message });
+          dispatch({
+            type: ActionType.SET_ERROR,
+            payload: (error as Error).message,
+          });
         }
       } finally {
         if (!cancelled) {
@@ -84,8 +91,10 @@ const StartPage = () => {
         }
       }
     })();
-  
-    return () => { cancelled = true; };
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   useEffect(() => {
