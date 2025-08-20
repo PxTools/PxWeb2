@@ -3,5 +3,5 @@
   X-Frame-Options: SAMEORIGIN
   Strict-Transport-Security: max-age=31536000; includeSubDomains
   Permissions-Policy: document-domain=()
-  Content-Security-Policy: default-src 'self';
+  Content-Security-Policy: script-src 'self';
   
