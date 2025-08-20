@@ -4,11 +4,7 @@ import { useEffect } from 'react';
 
 import { getConfig } from '../config/getConfig';
 import useApp from '../../context/useApp';
-
-// Utility to remove trailing slash
-function removeTrailingSlash(path: string) {
-  return path.length > 0 ? path.replace(/\/$/, '') : path;
-}
+import { getCanonicalUrl, removeTrailingSlash } from '../urlUtil';
 
 // Title and link tags will automatically be hoisted in the <head> section
 // Renders the dynamic title based on the current route
@@ -38,8 +34,7 @@ export function Title() {
 // Renders the canonical link tag
 export function CanonicalUrl() {
   const location = useLocation();
-  const cleanPath = removeTrailingSlash(location.pathname);
-  const canonicalUrl = `${window.location.origin}${cleanPath}`;
+  const canonicalUrl = getCanonicalUrl(location.pathname);
   return <link rel="canonical" href={canonicalUrl} />;
 }
 
