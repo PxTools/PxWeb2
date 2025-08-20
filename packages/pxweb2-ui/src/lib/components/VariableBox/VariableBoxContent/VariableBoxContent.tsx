@@ -326,7 +326,8 @@ export function VariableBoxContent({
                   .find((variables) => variables.id === varId)
                   ?.values.includes(value.code) === true
               }
-              text={value.label.charAt(0).toUpperCase() + value.label.slice(1)}
+              //text={value.label.charAt(0).toUpperCase() + value.label.slice(1)}
+              text={value.label}
               searchTerm={search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}
               onChange={() => onChangeCheckbox(varId, value.code)}
             />
