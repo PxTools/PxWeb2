@@ -1,8 +1,8 @@
 import React, { forwardRef, useRef, useEffect, useState } from 'react';
 import cl from 'clsx';
 import styles from './Breadcrumbs.module.scss';
+//import linkStyles from './Link.module.scss';
 import { BreadcrumbsIcon } from '../Icon/BreadcrumbsIcon';
-import Button from '../Button/Button';
 import Link from '../Link/Link';
 
 interface BreadcrumbsProps
@@ -45,7 +45,8 @@ export const Breadcrumbs = forwardRef<HTMLAnchorElement, BreadcrumbsProps>(
     }, []);
 
     return (
-      <div
+      <nav
+        aria-label="Breadcrumbs"
         className={cl(
           styles.breadcrumbsContainer,
           variant && styles[variant],
@@ -63,14 +64,13 @@ export const Breadcrumbs = forwardRef<HTMLAnchorElement, BreadcrumbsProps>(
           {breadcrumbItems.map((item, idx) => {
             const isLast = idx === breadcrumbItems.length - 1;
             return (
-              <li key={item.href} className={cl(styles.breadcrumbItem)}>
-                <div
-                  className={cl(
+              <li key={item.href}  className={cl(styles.breadcrumbItem, variant && styles[variant],)}>
+                  <Link
+                    className={cl(
                     styles.breadcrumbItemLink,
                     variant && styles[variant],
+                    styles['bodyshort-medium'],
                   )}
-                >
-                  <Link
                     size="medium"
                     inline
                     href={item.href}
@@ -78,10 +78,7 @@ export const Breadcrumbs = forwardRef<HTMLAnchorElement, BreadcrumbsProps>(
                   >
                     {item.label}
                   </Link>
-                </div>
-                <div className={cl(styles.breadcrumbItemIconWrapper)}>
-                  <BreadcrumbsIcon className={cl(styles.breadcrumbItemIcon)} />
-                </div>
+                  <BreadcrumbsIcon className={cl(styles.breadcrumbItemIcon, variant && styles[variant],)} />
               </li>
             );
           })}
@@ -90,15 +87,24 @@ export const Breadcrumbs = forwardRef<HTMLAnchorElement, BreadcrumbsProps>(
           <span className={styles.dots}>{dots}</span>
         )}
         {variant === 'compact' && isOverflowing && !showMore && (
-          <Button
-            variant="tertiary"
-            className={cl(styles.showMoreButton)}
+            <span
+                                            className={cl(
+                    styles['bodyshort-medium'],
+                  )}
+            role="button"
+            tabIndex={0}
             onClick={() => setShowMore(true)}
-          >
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                setShowMore(true);
+              }
+            }}
+            aria-label="Show more breadcrumbs"
+            >
             Show more
-          </Button>
+            </span>
         )}
-      </div>
+      </nav>
     );
   },
 );

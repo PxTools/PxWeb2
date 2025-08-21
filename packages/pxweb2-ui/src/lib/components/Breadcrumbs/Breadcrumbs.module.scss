@@ -3,9 +3,9 @@
 @use '../../text-styles.scss';
 
 .breadcrumbsContainer {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: fixed.$spacing-1;
+
   &.showMore {
     max-width: none;
     flex-wrap: wrap;
@@ -15,28 +15,29 @@
 }
 
 .breadcrumbsWrapper {
-  display: flex;
   align-items: center;
   list-style: none;
-  padding: 0;
   align-self: stretch;
-  &.default {
-    flex-wrap: wrap;
-  }
+  width: 100%;
 
   &.compact {
+    display: flex;
     max-width: 400px;
-    overflow: hidden;
+    height: 2.5rem;
+    overflow-x: hidden;
     flex-wrap: nowrap;
     text-overflow: ellipsis;
     min-width: 0;
+
     .breadcrumbItem:last-child {
       flex-shrink: 0;
     }
+
     &.showMore {
       flex-wrap: wrap;
       overflow-x: visible;
       align-items: center;
+
       .breadcrumbItem:last-child {
         flex-shrink: 1;
       }
@@ -44,41 +45,62 @@
   }
 
   .breadcrumbItemLink {
+    color: var(--px-color-text-action);
+    &:focus-visible {
+      outline: 3px solid var(--px-color-border-focus-outline);
+      outline-offset: 5px;
+      box-shadow: 0 0 0 3px var(--px-color-border-focus-boxshadow);
+    }
     a {
       padding-top: 0px;
       padding-bottom: 0px;
     }
-    &.default {
-      padding-left: fixed.$spacing-2;
-      padding-right: fixed.$spacing-2;
-    }
-    &.compact {
-      padding-left: fixed.$spacing-1;
-      padding-right: fixed.$spacing-1;
-    }
   }
 
   .breadcrumbItemIcon {
-    color: var(--px-color-icon-default);
-    display: flex;
+    display: inline-flex;
     align-items: center;
+    vertical-align: middle;
+
+    &.default {
+      margin-bottom: 4px;
+      margin-right: fixed.$spacing-2;
+      margin-left: fixed.$spacing-2;
+    }
+
+    &.compact {
+      margin-bottom: 2px;
+      margin-right: fixed.$spacing-1;
+      margin-left: fixed.$spacing-1;
+    }
   }
 
   .breadcrumbItem {
-    display: flex;
-    align-items: center;
+    display: inline-flex;
+    align-items: flex-end;
     flex-shrink: 0;
-    white-space: nowrap;
+    white-space: break-spaces;
+    word-break: break-word;
+    overflow-wrap: break-word;
+
+    &.default {
+      min-width: 0;
+      flex-shrink: 1;
+      display: inline;
+    }
+
     &:last-child {
       min-width: 0;
       white-space: normal;
       flex-shrink: 1;
+
       a {
         text-decoration: none;
         white-space: normal;
         word-break: break-word;
         overflow-wrap: anywhere;
       }
+
       .breadcrumbItemIcon {
         display: none;
       }
@@ -86,12 +108,14 @@
   }
 }
 
-.showMoreButton {
-  align-self: flex-end;
-  &:hover {
-    background-color: inherit !important;
-  }
-  &:active {
-    color: var(--px-color-text-on-action-subtle) !important;
-  }
+.showMoreText {
+  display: inline-flex;
+  background-color: inherit;
+  font-family: PxWeb-font, sans-serif;
+  font-weight: 400;
+  color: var(--px-color-text-action);
+}
+
+.dots {
+  padding-right: fixed.$spacing-2;
 }
