@@ -98,7 +98,7 @@ export const CompactVersion: StoryObj<typeof Breadcrumbs> = {
 export const CompactVersionLongTexts: StoryObj<typeof Breadcrumbs> = {
   render: () => (
     <Breadcrumbs
-      variant="default"
+      variant="compact"
       breadcrumbItems={[
         new BreadcrumbItem('Statistical database', '/'),
         new BreadcrumbItem('Housing, construction and building', '/level2'),
