@@ -60,20 +60,10 @@ const StartPage = () => {
   const searchFieldRef = useRef<SearchHandle>(null);
   const hasFetchedRef = useRef(false);
 
-  const urlHasKnownParams = () => {
-    if (typeof window === 'undefined') {
-      return false;
-    }
-    const knownParams = ['q', 'timeUnit', 'subject', 'from', 'to'];
-    const searchParams = new URLSearchParams(window.location.search);
-    return [...searchParams.keys()].some((key) => knownParams.includes(key));
-  };
-  const hasQueryParameters = urlHasKnownParams();
-  const hasValidFilters = state.activeFilters.length > 0;
-  const ready =
-    !state.loading &&
-    hasFetchedRef.current &&
-    (!hasQueryParameters || hasValidFilters);
+  const hasHydratedFilters = state.activeFilters !== undefined;
+  const isReadyToRender =
+    !state.loading && state.availableTables.length > 0 && hasHydratedFilters;
+  console.log('isReadyToRender: ' + isReadyToRender);
 
   useEffect(() => {
     if (hasFetchedRef.current) {
@@ -608,7 +598,7 @@ const StartPage = () => {
                   </Alert>
                 </div>
               )}
-              {!ready ? (
+              {!isReadyToRender ? (
                 <div className={styles.loadingSpinner}>
                   <Spinner size="xlarge" />
                 </div>
