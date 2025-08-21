@@ -5,7 +5,11 @@ import { useTranslation } from 'react-i18next';
 
 type FooterLink = { text: string; url: string };
 type FooterColumn = { header: string; links: FooterLink[] };
-type FooterConfig = { image?: string; columns: FooterColumn[] };
+type FooterConfig = {
+  image?: string;
+  description?: string;
+  columns: FooterColumn[];
+};
 
 export const Footer: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -68,12 +72,19 @@ export const Footer: React.FC = () => {
         </div>
       </div>
       {config.image && (
-        <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '0.5rem' }}>
           <img
             src={config.image}
             alt=""
             style={{ maxWidth: '200px', height: 'auto' }}
           />
+        </div>
+      )}
+      {config.description && (
+        <div
+          style={{ textAlign: 'center', marginBottom: '1rem', color: '#666' }}
+        >
+          {config.description}
         </div>
       )}
       <div style={{ display: 'flex', gap: '2rem' }}>

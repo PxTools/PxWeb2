@@ -1,5 +1,6 @@
 {
   "image": "/images/ssb-logo.svg",
+  "description": "This is the official footer for our site. Contact us for more information.",
   "columns": [
     {
       "header": "Legal",
