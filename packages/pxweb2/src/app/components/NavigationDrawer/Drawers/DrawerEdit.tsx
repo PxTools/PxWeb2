@@ -1,7 +1,9 @@
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { ActionItem, ContentBox, Variable } from '@pxweb2/pxweb2-ui';
 import useTableData from '../../../context/useTableData';
+import classes from './DrawerEdit.module.scss';
 
 interface PivotButtonProps {
   readonly stub: Variable[];
@@ -12,31 +14,55 @@ function PivotButton({ stub, heading }: PivotButtonProps) {
   const { t } = useTranslation();
   const pivotTableClockwise = useTableData().pivotCW;
   const buildTableTitle = useTableData().buildTableTitle;
-  const { firstTitlePart, lastTitlePart } = buildTableTitle(stub, heading);
-  const dynamicAriaLabel = t(
-    'presentation_page.sidemenu.edit.customize.pivot.aria-label',
-    {
-      first_variables: firstTitlePart,
-      last_variable: lastTitlePart,
-    },
-  );
 
-  /*
-    TODO:
-    Fix Screen reader label
-      - Are there any tables with only 1 variable? technically could happen
-  */
+  // Live region text for screen readers after activation
+  const [statusMessage, setStatusMessage] = useState('');
+  const [announceOnNextChange, setAnnounceOnNextChange] = useState(false);
+
+  const handleClick = () => {
+    setAnnounceOnNextChange(true);
+    pivotTableClockwise();
+  };
+
+  // When stub/heading update after pivot, compute and announce the new screen reader message
+  useEffect(() => {
+    if (!announceOnNextChange) {
+      return;
+    }
+
+    const { firstTitlePart, lastTitlePart } = buildTableTitle(stub, heading);
+    const message = t(
+      'presentation_page.sidemenu.edit.customize.pivot.aria-label',
+      {
+        first_variables: firstTitlePart,
+        last_variable: lastTitlePart,
+      },
+    );
+
+    // Clear first to ensure assistive tech re-announces even if message repeats
+    setStatusMessage('');
+    const timer = setTimeout(() => setStatusMessage(message), 0); // Force state update on different ticks
+    setAnnounceOnNextChange(false);
+
+    return () => clearTimeout(timer);
+  }, [stub, heading, announceOnNextChange, buildTableTitle, t]);
 
   return (
-    <ActionItem
-      label={t('presentation_page.sidemenu.edit.customize.pivot.title')}
-      ariaLabel={dynamicAriaLabel}
-      aria-live="polite"
-      aria-atomic="true"
-      aria-relevant="text"
-      onClick={() => pivotTableClockwise()}
-      iconName="ArrowCirclepathClockwise"
-    />
+    <>
+      <ActionItem
+        label={t('presentation_page.sidemenu.edit.customize.pivot.title')}
+        onClick={handleClick}
+        iconName="ArrowCirclepathClockwise"
+      />
+      <span
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        className={classes.srOnly}
+      >
+        {statusMessage}
+      </span>
+    </>
   );
 }
 
