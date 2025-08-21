@@ -8,12 +8,16 @@ type FooterLinksColumns = FooterLink[][];
 
 export const Footer: React.FC = () => {
   const { t, i18n } = useTranslation();
- const [columns, setColumns] = useState<FooterLinksColumns>([]);
+  const [columns, setColumns] = useState<FooterLinksColumns>([]);
 
   useEffect(() => {
     const lang = i18n.language || 'en';
     fetch(`/footer-links/footer-links.${lang}.json`)
-      .then(res => res.ok ? res.json() : fetch(`/footer-links/footer-links.en.json`).then(r => r.json()))
+      .then((res) =>
+        res.ok
+          ? res.json()
+          : fetch(`/footer-links/footer-links.en.json`).then((r) => r.json()),
+      )
       .then(setColumns)
       .catch(() => setColumns([]));
   }, [i18n.language]);
@@ -65,7 +69,7 @@ export const Footer: React.FC = () => {
       <div style={{ display: 'flex', gap: '2rem' }}>
         {columns.map((col, colIdx) => (
           <ul key={colIdx} style={{ listStyle: 'none', padding: 0 }}>
-            {col.map(link => (
+            {col.map((link) => (
               <li key={link.url}>
                 <a href={link.url}>{link.text}</a>
               </li>
