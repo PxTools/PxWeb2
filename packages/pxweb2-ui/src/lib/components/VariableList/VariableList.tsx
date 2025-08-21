@@ -40,7 +40,7 @@ export function VariableList({
   handleMixedCheckboxChange,
   addModal,
   removeModal,
-}: VariableListProps) {
+}: Readonly<VariableListProps>) {
   return (
     <div
       className={cl(styles.variableList, {
