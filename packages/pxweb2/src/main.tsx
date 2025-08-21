@@ -24,5 +24,6 @@ root.render(
         <RouterProvider router={router} />
       </Suspense>
     </AppProvider>
+    ,
   </StrictMode>,
 );

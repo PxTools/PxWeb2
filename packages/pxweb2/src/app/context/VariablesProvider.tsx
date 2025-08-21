@@ -15,8 +15,8 @@ export type VariablesContextType = {
   getUniqueIds: () => string[];
   syncVariablesAndValues: (values: SelectedVBValues[]) => void;
   toString: () => string;
-  hasLoadedDefaultSelection: boolean;
-  setHasLoadedDefaultSelection: React.Dispatch<React.SetStateAction<boolean>>;
+  hasLoadedInitialSelection: boolean;
+  setHasLoadedInitialSelection: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedVBValues: React.Dispatch<React.SetStateAction<SelectedVBValues[]>>;
   selectedVBValues: SelectedVBValues[];
   isMatrixSizeAllowed: boolean;
@@ -45,8 +45,8 @@ export const VariablesContext = createContext<VariablesContextType>({
   getUniqueIds: () => [],
   toString: () => '',
 
-  hasLoadedDefaultSelection: false,
-  setHasLoadedDefaultSelection: () => false,
+  hasLoadedInitialSelection: false,
+  setHasLoadedInitialSelection: () => false,
   setSelectedVBValues: () => [],
   selectedVBValues: [],
   setIsLoadingMetadata: () => false,
@@ -54,7 +54,6 @@ export const VariablesContext = createContext<VariablesContextType>({
   isLoadingMetadata: false,
   pxTableMetadata: null,
   setPxTableMetadata: () => null,
-  // pxTableMetaToRender:null
 });
 
 // Provider component
@@ -70,7 +69,7 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
     useState<PxTableMetadata | null>(null);
 
   const [isLoadingMetadata, setIsLoadingMetadata] = useState<boolean>(false);
-  const [hasLoadedDefaultSelection, setHasLoadedDefaultSelection] =
+  const [hasLoadedInitialSelection, setHasLoadedInitialSelection] =
     useState(false);
   const [selectedVBValues, setSelectedVBValues] = useState<SelectedVBValues[]>(
     [],
@@ -242,6 +241,7 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
   const getSelectedMatrixSize = () => {
     return selectedMatrixSize;
   };
+
   const memoizedValues = useMemo(
     () => ({
       isInitialized,
@@ -254,8 +254,8 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
       getSelectedMatrixSize,
       syncVariablesAndValues,
       toString,
-      hasLoadedDefaultSelection,
-      setHasLoadedDefaultSelection,
+      hasLoadedInitialSelection,
+      setHasLoadedInitialSelection,
       setSelectedVBValues,
       selectedVBValues,
       isMatrixSizeAllowed,
@@ -275,8 +275,8 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
       getSelectedMatrixSize,
       syncVariablesAndValues,
       toString,
-      hasLoadedDefaultSelection,
-      setHasLoadedDefaultSelection,
+      hasLoadedInitialSelection,
+      setHasLoadedInitialSelection,
       setSelectedVBValues,
       selectedVBValues,
       isMatrixSizeAllowed,
