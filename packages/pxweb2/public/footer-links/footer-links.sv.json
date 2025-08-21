@@ -3,23 +3,32 @@
   "description": "Detta är den officiella sidfoten för vår webbplats. Kontakta oss för mer information.",
   "columns": [
     {
-      "header": "Juridik",
+      "header": "Hitta statistik",
       "links": [
-        { "text": "Integritetspolicy", "url": "/integritetspolicy" },
-        { "text": "Användarvillkor", "url": "/villkor" }
+        { "text": "Statistikdatabasen", "url": "https://www.statistikdatabasen.scb.se/pxweb/sv/ssd/" },
+        { "text": "Snabba fakta", "url": "https://www.scb.se/hitta-statistik/sverige-i-siffror/" },
+        { "text": "Temaområden", "url": "https://www.scb.se/hitta-statistik/temaomraden/" }
       ]
     },
     {
-      "header": "Kontakt",
+      "header": "Våra tjänster",
       "links": [
-        { "text": "Kontakta oss", "url": "/kontakt" }
+        { "text": "Öppna data", "url": "https://www.scb.se/vara-tjanster/oppna-data/" },
+        { "text": "Geodata", "url": "https://www.scb.se/vara-tjanster/oppna-data/oppna-geodata/" }
       ]
     },
     {
-      "header": "Information",
+      "header": "Lämna uppgifter",
       "links": [
-        { "text": "Hjälp", "url": "/hjälp" },
-        { "text": "Om", "url": "/om" }
+        { "text": "Privatpersoner", "url": "https://www.scb.se/lamna-uppgifter/privatpersoner/" },
+        { "text": "Offentlig sektor", "url": "https://www.scb.se/lamna-uppgifter/offentlig-sektor/" }
+      ]
+    },
+    {
+      "header": "Om SCB",
+      "links": [
+        { "text": "Kontakta oss", "url": "https://www.scb.se/om-scb/kontakta-oss/" },
+        { "text": "Jobba hos oss", "url": "https://www.scb.se/om-scb/jobba-hos-oss/" }
       ]
     }
   ]

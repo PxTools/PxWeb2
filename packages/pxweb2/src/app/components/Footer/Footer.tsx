@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from './Footer.module.scss';
 import { useTranslation } from 'react-i18next';
+import { BodyShort, Heading, Link } from '@pxweb2/pxweb2-ui';
 
 type FooterLink = { text: string; url: string };
 type FooterColumn = { header: string; links: FooterLink[] };
@@ -37,21 +38,19 @@ export const Footer: React.FC = () => {
           />
         </div>
       )}
-      {config.description && (
-        <div
-          style={{ textAlign: 'center', marginBottom: '1rem', color: '#666' }}
-        >
-          {config.description}
-        </div>
-      )}
-      <div style={{ display: 'flex', gap: '2rem' }}>
+      {config.description && <BodyShort>{config.description}</BodyShort>}
+      <div style={{ display: 'flex', gap: '2rem', paddingTop: '2rem' }}>
         {config.columns.map((col, colIdx) => (
           <div key={colIdx}>
-            <h4>{col.header}</h4>
+            <Heading size="small" level="4">
+              {col.header}
+            </Heading>
             <ul style={{ listStyle: 'none', padding: 0 }}>
               {col.links.map((link) => (
                 <li key={link.url}>
-                  <a href={link.url}>{link.text}</a>
+                  <Link href={link.url} size="small">
+                    {link.text}
+                  </Link>
                 </li>
               ))}
             </ul>

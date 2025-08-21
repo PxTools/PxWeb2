@@ -3,23 +3,22 @@
   "description": "This is the official footer for our site. Contact us for more information.",
   "columns": [
     {
-      "header": "Legal",
+      "header": "Finding statistics",
       "links": [
-        { "text": "Privacy Policy", "url": "/privacy" },
-        { "text": "Terms of Service", "url": "/terms" }
+        { "text": "Statistical database", "url": "https://www.statistikdatabasen.scb.se/pxweb/en/ssd/" }
       ]
     },
     {
-      "header": "Contact",
+      "header": "Services",
       "links": [
-        { "text": "Contact Us", "url": "/contact" }
+        { "text": "Open data", "url": "https://www.scb.se/en/services/open-data-api/" }
       ]
     },
     {
-      "header": "Info",
+      "header": "About us",
       "links": [
-        { "text": "Help", "url": "/help" },
-        { "text": "About", "url": "/about" }
+        { "text": "News and press", "url": "https://www.scb.se/en/About-us/news-and-press/" },
+        { "text": "Contact us", "url": "https://www.scb.se/en/About-us/contact-us2/" }
       ]
     }
   ]
