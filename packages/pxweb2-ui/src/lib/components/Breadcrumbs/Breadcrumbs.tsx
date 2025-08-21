@@ -64,21 +64,32 @@ export const Breadcrumbs = forwardRef<HTMLAnchorElement, BreadcrumbsProps>(
           {breadcrumbItems.map((item, idx) => {
             const isLast = idx === breadcrumbItems.length - 1;
             return (
-              <li key={item.href}  className={cl(styles.breadcrumbItem, variant && styles[variant],)}>
-                  <Link
-                    className={cl(
+              <li
+                key={item.href}
+                className={cl(
+                  styles.breadcrumbItem,
+                  variant && styles[variant],
+                )}
+              >
+                <Link
+                  className={cl(
                     styles.breadcrumbItemLink,
                     variant && styles[variant],
                     styles['bodyshort-medium'],
                   )}
-                    size="medium"
-                    inline
-                    href={item.href}
-                    {...(isLast ? { 'aria-current': 'page' } : {})}
-                  >
-                    {item.label}
-                  </Link>
-                  <BreadcrumbsIcon className={cl(styles.breadcrumbItemIcon, variant && styles[variant],)} />
+                  size="medium"
+                  inline
+                  href={item.href}
+                  {...(isLast ? { 'aria-current': 'page' } : {})}
+                >
+                  {item.label}
+                </Link>
+                <BreadcrumbsIcon
+                  className={cl(
+                    styles.breadcrumbItemIcon,
+                    variant && styles[variant],
+                  )}
+                />
               </li>
             );
           })}
@@ -87,10 +98,8 @@ export const Breadcrumbs = forwardRef<HTMLAnchorElement, BreadcrumbsProps>(
           <span className={styles.dots}>{dots}</span>
         )}
         {variant === 'compact' && isOverflowing && !showMore && (
-            <span
-                                            className={cl(
-                    styles['bodyshort-medium'],
-                  )}
+          <span
+            className={cl(styles['bodyshort-medium'])}
             role="button"
             tabIndex={0}
             onClick={() => setShowMore(true)}
@@ -100,9 +109,9 @@ export const Breadcrumbs = forwardRef<HTMLAnchorElement, BreadcrumbsProps>(
               }
             }}
             aria-label="Show more breadcrumbs"
-            >
+          >
             Show more
-            </span>
+          </span>
         )}
       </nav>
     );

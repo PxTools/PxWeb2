@@ -42,7 +42,10 @@ export const DeaultVersion: StoryObj<typeof Breadcrumbs> = {
       breadcrumbItems={[
         new BreadcrumbItem('Statistical database', '/'),
         new BreadcrumbItem('Living conditions', '/level2'),
-        new BreadcrumbItem('Children and their Families bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla', '/level2/level3'),
+        new BreadcrumbItem(
+          'Children and their Families bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla',
+          '/level2/level3',
+        ),
         new BreadcrumbItem('Families', '/level2/level3/level4'),
         new BreadcrumbItem(
           'Families with children and young persons aged 0-21 living at home by region, age of children, type of family and number of children. Year 2023 - 2024',
