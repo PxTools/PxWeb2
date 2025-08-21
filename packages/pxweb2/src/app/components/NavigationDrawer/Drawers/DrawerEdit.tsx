@@ -57,14 +57,9 @@ function PivotButton({ stub, heading }: PivotButtonProps) {
         onClick={handleClick}
         iconName="ArrowCirclepathClockwise"
       />
-      <span
-        role="status"
-        aria-live="polite"
-        aria-atomic="true"
-        className={classes.srOnly}
-      >
+      <output aria-live="polite" aria-atomic="true" className={classes.srOnly}>
         {statusMessage}
-      </span>
+      </output>
     </>
   );
 }
