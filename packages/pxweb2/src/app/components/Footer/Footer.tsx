@@ -1,10 +1,25 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './Footer.module.scss';
 import { BodyLong, Heading, Link } from '@pxweb2/pxweb2-ui';
 import { useTranslation } from 'react-i18next';
 
+type FooterLink = { text: string; url: string };
+
 export const Footer: React.FC = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const [links, setLinks] = useState<FooterLink[]>([]);
+
+  useEffect(() => {
+    const lang = i18n.language || 'en';
+    fetch(`/footer-links/footer-links.${lang}.json`)
+      .then((res) =>
+        res.ok
+          ? res.json()
+          : fetch(`/footer-links/footer-links.en.json`).then((r) => r.json()),
+      )
+      .then(setLinks)
+      .catch(() => setLinks([]));
+  }, [i18n.language]);
 
   return (
     <footer className={styles.footer}>
@@ -50,6 +65,13 @@ export const Footer: React.FC = () => {
           <BodyLong>{t('presentation_page.footer.copyright')}</BodyLong>
         </div>
       </div>
+      <ul>
+        {links.map((link) => (
+          <li key={link.url}>
+            <a href={link.url}>{link.text}</a>
+          </li>
+        ))}
+      </ul>
     </footer>
   );
 };
