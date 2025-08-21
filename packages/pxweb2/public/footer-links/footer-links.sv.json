@@ -1,13 +1,22 @@
 [
-  [
-    { "text": "Integritetspolicy", "url": "/integritetspolicy" },
-    { "text": "Användarvillkor", "url": "/villkor" }
-  ],
-  [
-    { "text": "Kontakt", "url": "/kontakt" }
-  ],
-  [
-    { "text": "hjälp", "url": "/hjälp" },
-    { "text": "Om", "url": "/om" }
-  ]
+  {
+    "header": "Juridik",
+    "links": [
+      { "text": "Integritetspolicy", "url": "/integritetspolicy" },
+      { "text": "Användarvillkor", "url": "/villkor" }
+    ]
+  },
+  {
+    "header": "Kontakt",
+    "links": [
+      { "text": "Kontakta oss", "url": "/kontakt" }
+    ]
+  },
+  {
+    "header": "Information",
+    "links": [
+      { "text": "Hjälp", "url": "/hjälp" },
+      { "text": "Om", "url": "/om" }
+    ]
+  }
 ]

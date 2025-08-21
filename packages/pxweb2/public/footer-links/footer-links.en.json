@@ -1,9 +1,22 @@
 [
-  [
-    { "text": "Privacy Policy", "url": "/privacy" },
-    { "text": "Terms of Service", "url": "/terms" }
-  ],
-  [
-    { "text": "About", "url": "/about" }
-  ]
+  {
+    "header": "Legal",
+    "links": [
+      { "text": "Privacy Policy", "url": "/privacy" },
+      { "text": "Terms of Service", "url": "/terms" }
+    ]
+  },
+  {
+    "header": "Contact",
+    "links": [
+      { "text": "Contact Us", "url": "/contact" }
+    ]
+  },
+  {
+    "header": "Info",
+    "links": [
+      { "text": "Help", "url": "/help" },
+      { "text": "About", "url": "/about" }
+    ]
+  }
 ]

@@ -4,11 +4,11 @@ import { BodyLong, Heading, Link } from '@pxweb2/pxweb2-ui';
 import { useTranslation } from 'react-i18next';
 
 type FooterLink = { text: string; url: string };
-type FooterLinksColumns = FooterLink[][];
+type FooterColumn = { header: string; links: FooterLink[] };
 
 export const Footer: React.FC = () => {
   const { t, i18n } = useTranslation();
-  const [columns, setColumns] = useState<FooterLinksColumns>([]);
+  const [columns, setColumns] = useState<FooterColumn[]>([]);
 
   useEffect(() => {
     const lang = i18n.language || 'en';
@@ -68,13 +68,16 @@ export const Footer: React.FC = () => {
       </div>
       <div style={{ display: 'flex', gap: '2rem' }}>
         {columns.map((col, colIdx) => (
-          <ul key={colIdx} style={{ listStyle: 'none', padding: 0 }}>
-            {col.map((link) => (
-              <li key={link.url}>
-                <a href={link.url}>{link.text}</a>
-              </li>
-            ))}
-          </ul>
+          <div key={colIdx}>
+            <h4>{col.header}</h4>
+            <ul style={{ listStyle: 'none', padding: 0 }}>
+              {col.links.map((link) => (
+                <li key={link.url}>
+                  <a href={link.url}>{link.text}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
         ))}
       </div>
     </footer>
