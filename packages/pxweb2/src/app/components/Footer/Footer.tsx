@@ -5,10 +5,11 @@ import { useTranslation } from 'react-i18next';
 
 type FooterLink = { text: string; url: string };
 type FooterColumn = { header: string; links: FooterLink[] };
+type FooterConfig = { image?: string; columns: FooterColumn[] };
 
 export const Footer: React.FC = () => {
   const { t, i18n } = useTranslation();
-  const [columns, setColumns] = useState<FooterColumn[]>([]);
+  const [config, setConfig] = useState<FooterConfig>({ columns: [] });
 
   useEffect(() => {
     const lang = i18n.language || 'en';
@@ -18,8 +19,8 @@ export const Footer: React.FC = () => {
           ? res.json()
           : fetch(`/footer-links/footer-links.en.json`).then((r) => r.json()),
       )
-      .then(setColumns)
-      .catch(() => setColumns([]));
+      .then(setConfig)
+      .catch(() => setConfig({ columns: [] }));
   }, [i18n.language]);
 
   return (
@@ -66,8 +67,17 @@ export const Footer: React.FC = () => {
           <BodyLong>{t('presentation_page.footer.copyright')}</BodyLong>
         </div>
       </div>
+      {config.image && (
+        <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
+          <img
+            src={config.image}
+            alt=""
+            style={{ maxWidth: '200px', height: 'auto' }}
+          />
+        </div>
+      )}
       <div style={{ display: 'flex', gap: '2rem' }}>
-        {columns.map((col, colIdx) => (
+        {config.columns.map((col, colIdx) => (
           <div key={colIdx}>
             <h4>{col.header}</h4>
             <ul style={{ listStyle: 'none', padding: 0 }}>

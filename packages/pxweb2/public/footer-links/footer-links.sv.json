@@ -1,22 +1,25 @@
-[
-  {
-    "header": "Juridik",
-    "links": [
-      { "text": "Integritetspolicy", "url": "/integritetspolicy" },
-      { "text": "Användarvillkor", "url": "/villkor" }
-    ]
-  },
-  {
-    "header": "Kontakt",
-    "links": [
-      { "text": "Kontakta oss", "url": "/kontakt" }
-    ]
-  },
-  {
-    "header": "Information",
-    "links": [
-      { "text": "Hjälp", "url": "/hjälp" },
-      { "text": "Om", "url": "/om" }
-    ]
-  }
-]
+{
+  "image": "/images/scb-logo.svg",
+  "columns": [
+    {
+      "header": "Juridik",
+      "links": [
+        { "text": "Integritetspolicy", "url": "/integritetspolicy" },
+        { "text": "Användarvillkor", "url": "/villkor" }
+      ]
+    },
+    {
+      "header": "Kontakt",
+      "links": [
+        { "text": "Kontakta oss", "url": "/kontakt" }
+      ]
+    },
+    {
+      "header": "Information",
+      "links": [
+        { "text": "Hjälp", "url": "/hjälp" },
+        { "text": "Om", "url": "/om" }
+      ]
+    }
+  ]
+}
