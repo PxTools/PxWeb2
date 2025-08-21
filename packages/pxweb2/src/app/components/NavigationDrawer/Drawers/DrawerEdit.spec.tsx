@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom/vitest';
 
 import { DrawerEdit } from './DrawerEdit';
@@ -73,11 +74,12 @@ describe('DrawerEdit', () => {
     expect(DrawerEdit.displayName).toBe('DrawerEdit');
   });
 
-  it('calls pivotCW on button click', () => {
+  it('calls pivotCW on button click', async () => {
     render(<DrawerEdit />);
 
     const button = screen.getByTestId('action-item');
-    button.click();
+    const user = userEvent.setup();
+    await user.click(button);
 
     expect(mockPivotCW).toHaveBeenCalledTimes(1);
     expect(mockPivotCW).toHaveBeenCalledWith();
