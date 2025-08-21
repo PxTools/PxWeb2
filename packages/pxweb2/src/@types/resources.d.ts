@@ -157,7 +157,8 @@ interface Resources {
             title: 'Customize';
             pivot: {
               title: 'Rotate table';
-              'aria-label': 'Table rotated after {{first_variables}} and {{last_variable}}';
+              aria_label: 'Rotate table clockwise';
+              screen_reader_announcement: 'Table rotated after {{first_variables}} and {{last_variable}}';
             };
             rearrange: {
               title: 'Rearrange table';
@@ -195,7 +196,7 @@ interface Resources {
           };
           savequery: {
             title: 'Link to updated table';
-            info: 'Your table is saved and automatically kept up to date. You can decide how new time periods are included.';
+            info: 'You get a unique link to your table, that we keep updated for you. How new time periods are added is up to you.';
             radioLegend: 'Options for new time periods';
             periodOptions: {
               selected: "Don't add new ones (the table will only show the ones you've selected now)";
