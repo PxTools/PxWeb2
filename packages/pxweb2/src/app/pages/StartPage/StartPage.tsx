@@ -44,6 +44,19 @@ const StartPage = () => {
   const paginationCount = 15;
   const isSmallScreen = isTablet === true || isMobile === true;
   const topicIconComponents = useTopicIcons();
+  const hasUrlParams =
+    typeof window !== 'undefined' &&
+    new URLSearchParams(window.location.search).toString().length > 0;
+  const isHydratingFromUrl =
+    hasUrlParams &&
+    state.availableTables.length > 0 &&
+    state.activeFilters.length === 0;
+  const hasHydratedFilters = state.activeFilters !== undefined;
+  const isReadyToRender =
+    !state.loading &&
+    state.availableTables.length > 0 &&
+    hasHydratedFilters &&
+    !isHydratingFromUrl;
 
   const [isFilterOverlayOpen, setIsFilterOverlayOpen] = useState(false);
   const [visibleCount, setVisibleCount] = useState(paginationCount);
@@ -59,11 +72,6 @@ const StartPage = () => {
   const lastVisibleCardRef = useRef<HTMLDivElement>(null);
   const searchFieldRef = useRef<SearchHandle>(null);
   const hasFetchedRef = useRef(false);
-
-  const hasHydratedFilters = state.activeFilters !== undefined;
-  const isReadyToRender =
-    !state.loading && state.availableTables.length > 0 && hasHydratedFilters;
-  console.log('isReadyToRender: ' + isReadyToRender);
 
   useEffect(() => {
     if (hasFetchedRef.current) {
