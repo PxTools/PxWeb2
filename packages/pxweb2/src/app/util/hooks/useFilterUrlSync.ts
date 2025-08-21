@@ -15,6 +15,9 @@ type FilterQuery = {
   toYear?: number;
 };
 
+/**
+ * Flattens a hierarchical subject tree into a flat list of all nodes.
+ */
 function flattenSubjectTree(tree: PathItem[]) {
   const result: PathItem[] = [];
   const stack = [...tree];
@@ -28,6 +31,9 @@ function flattenSubjectTree(tree: PathItem[]) {
   return result;
 }
 
+/**
+ * Finds a subject node in the tree using uniqueId first, falling back to id if no uniqueId match is found.
+ */
 function findByUniqueIdOrId(tree: PathItem[], v: string) {
   const all = flattenSubjectTree(tree);
   return all.find((n) => n.uniqueId === v) ?? all.find((n) => n.id === v);
@@ -38,7 +44,8 @@ const createEmptyFilterQuery = (): FilterQuery => ({
   subjects: new Set<string>(),
 });
 
-const lexicalSort = (a: string, b: string) => a.localeCompare(b);
+// Ensure consistent query param order for stable URL comparisons
+const alphabeticalSort = (a: string, b: string) => a.localeCompare(b);
 
 function parseYearRange(range: unknown): {
   fromYear?: number;
@@ -92,11 +99,14 @@ function toSearchParams(query: FilterQuery): URLSearchParams {
   }
 
   if (query.timeUnits.size) {
-    params.set('timeUnit', [...query.timeUnits].sort(lexicalSort).join(','));
+    params.set(
+      'timeUnit',
+      [...query.timeUnits].sort(alphabeticalSort).join(','),
+    );
   }
 
   if (query.subjects.size) {
-    params.set('subject', [...query.subjects].sort(lexicalSort).join(','));
+    params.set('subject', [...query.subjects].sort(alphabeticalSort).join(','));
   }
 
   if (query.fromYear != null) {
@@ -109,6 +119,11 @@ function toSearchParams(query: FilterQuery): URLSearchParams {
   return params;
 }
 
+/**
+ * Builds a canonical URLSearchParams object from a list of filters.
+ * Values like `timeUnit` and `subject` are deduplicated and sorted alphabetically
+ * to ensure the resulting query string is stable and predictable for comparisons.
+ */
 function buildParamsFromFilters(filters: Filter[]): URLSearchParams {
   const query = filters.reduce<FilterQuery>(
     mergeFilterIntoQuery,
@@ -117,6 +132,9 @@ function buildParamsFromFilters(filters: Filter[]): URLSearchParams {
   return toSearchParams(query);
 }
 
+/**
+ * Parses the current URLSearchParams into a list of Filter objects.
+ */
 function parseParamsToFilters(
   params: URLSearchParams,
   subjectTree: PathItem[],
@@ -207,6 +225,13 @@ function parseParamsToFilters(
   return filters;
 }
 
+/**
+ * Keeps URL query parameters and internal filter state in sync:
+ *
+ * - Reads query parameters on initial load and applies filters
+ * - Updates URL when filters change
+ * - Re-applies filters on browser navigation (back/forward)
+ */
 export default function useFilterUrlSync(
   state: StartPageState,
   dispatch: (a: any) => void,

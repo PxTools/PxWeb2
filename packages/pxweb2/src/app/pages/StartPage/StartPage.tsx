@@ -44,10 +44,6 @@ const StartPage = () => {
   const paginationCount = 15;
   const isSmallScreen = isTablet === true || isMobile === true;
   const topicIconComponents = useTopicIcons();
-  const hasQueryParameters =
-    typeof window !== 'undefined' && window.location.search.length > 1;
-  const ready =
-    !state.loading && (!hasQueryParameters || state.activeFilters.length > 0);
 
   const [isFilterOverlayOpen, setIsFilterOverlayOpen] = useState(false);
   const [visibleCount, setVisibleCount] = useState(paginationCount);
@@ -63,6 +59,21 @@ const StartPage = () => {
   const lastVisibleCardRef = useRef<HTMLDivElement>(null);
   const searchFieldRef = useRef<SearchHandle>(null);
   const hasFetchedRef = useRef(false);
+
+  const urlHasKnownParams = () => {
+    if (typeof window === 'undefined') {
+      return false;
+    }
+    const knownParams = ['q', 'timeUnit', 'subject', 'from', 'to'];
+    const searchParams = new URLSearchParams(window.location.search);
+    return [...searchParams.keys()].some((key) => knownParams.includes(key));
+  };
+  const hasQueryParameters = urlHasKnownParams();
+  const hasValidFilters = state.activeFilters.length > 0;
+  const ready =
+    !state.loading &&
+    hasFetchedRef.current &&
+    (!hasQueryParameters || hasValidFilters);
 
   useEffect(() => {
     if (hasFetchedRef.current) {
@@ -256,6 +267,7 @@ const StartPage = () => {
 
       return (
         <TableCard
+          key={table.id}
           title={`${table.label}`}
           href={`${langPrefix}/table/${table.id}`}
           updatedLabel={
