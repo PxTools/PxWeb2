@@ -1,4 +1,13 @@
 [
-  { "text": "Integritetspolicy", "url": "/integritet" },
-  { "text": "Kontakt", "url": "/kontakt" }
+  [
+    { "text": "Integritetspolicy", "url": "/integritetspolicy" },
+    { "text": "Användarvillkor", "url": "/villkor" }
+  ],
+  [
+    { "text": "Kontakt", "url": "/kontakt" }
+  ],
+  [
+    { "text": "hjälp", "url": "/hjälp" },
+    { "text": "Om", "url": "/om" }
+  ]
 ]

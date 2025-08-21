@@ -4,21 +4,18 @@ import { BodyLong, Heading, Link } from '@pxweb2/pxweb2-ui';
 import { useTranslation } from 'react-i18next';
 
 type FooterLink = { text: string; url: string };
+type FooterLinksColumns = FooterLink[][];
 
 export const Footer: React.FC = () => {
   const { t, i18n } = useTranslation();
-  const [links, setLinks] = useState<FooterLink[]>([]);
+ const [columns, setColumns] = useState<FooterLinksColumns>([]);
 
   useEffect(() => {
     const lang = i18n.language || 'en';
     fetch(`/footer-links/footer-links.${lang}.json`)
-      .then((res) =>
-        res.ok
-          ? res.json()
-          : fetch(`/footer-links/footer-links.en.json`).then((r) => r.json()),
-      )
-      .then(setLinks)
-      .catch(() => setLinks([]));
+      .then(res => res.ok ? res.json() : fetch(`/footer-links/footer-links.en.json`).then(r => r.json()))
+      .then(setColumns)
+      .catch(() => setColumns([]));
   }, [i18n.language]);
 
   return (
@@ -65,13 +62,17 @@ export const Footer: React.FC = () => {
           <BodyLong>{t('presentation_page.footer.copyright')}</BodyLong>
         </div>
       </div>
-      <ul>
-        {links.map((link) => (
-          <li key={link.url}>
-            <a href={link.url}>{link.text}</a>
-          </li>
+      <div style={{ display: 'flex', gap: '2rem' }}>
+        {columns.map((col, colIdx) => (
+          <ul key={colIdx} style={{ listStyle: 'none', padding: 0 }}>
+            {col.map(link => (
+              <li key={link.url}>
+                <a href={link.url}>{link.text}</a>
+              </li>
+            ))}
+          </ul>
         ))}
-      </ul>
+      </div>
     </footer>
   );
 };
