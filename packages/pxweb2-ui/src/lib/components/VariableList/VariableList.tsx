@@ -12,6 +12,7 @@ export type VariableListProps = {
   languageDirection: 'ltr' | 'rtl';
   hasLoadedDefaultSelection: boolean;
   isChangingCodeList: boolean;
+  isTablet?: boolean;
   selectedVBValues: SelectedVBValues[];
 
   // TODO: Optimise here? Duplicate with props in VariableBox
@@ -32,6 +33,7 @@ export function VariableList({
   languageDirection,
   hasLoadedDefaultSelection,
   isChangingCodeList = false,
+  isTablet = false,
   selectedVBValues,
   handleCodeListChange,
   handleCheckboxChange,
@@ -55,7 +57,7 @@ export function VariableList({
               <VariableBox
                 id={variable.id}
                 key={variable.id + pxTableMetadata.id}
-                initialIsOpen={index === 0}
+                initialIsOpen={!isTablet && index === 0}
                 tableId={pxTableMetadata.id}
                 label={variable.label}
                 languageDirection={languageDirection}

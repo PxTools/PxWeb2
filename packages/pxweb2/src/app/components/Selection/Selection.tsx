@@ -22,6 +22,7 @@ import {
   NavigationDrawer,
 } from '../NavigationDrawer';
 import useVariables from '../../context/useVariables';
+import useApp from '../../context/useApp';
 import { NavigationItem } from '../../components/NavigationMenu/NavigationItem/NavigationItemType';
 import useAccessibility from '../../context/useAccessibility';
 import { problemMessage } from '../../util/problemMessage';
@@ -223,6 +224,7 @@ export function Selection({
   hideMenuRef,
 }: SelectionProps) {
   const variables = useVariables();
+  const { isTablet } = useApp();
   const {
     selectedVBValues,
     setSelectedVBValues,
@@ -508,6 +510,7 @@ export function Selection({
       isLoadingMetadata={isLoadingMetadata}
       hasLoadedDefaultSelection={hasLoadedDefaultSelection}
       isChangingCodeList={isFadingVariableList}
+      isTablet={isTablet}
       handleCodeListChange={handleCodeListChange}
       handleCheckboxChange={handleCheckboxChange}
       handleMixedCheckboxChange={handleMixedCheckboxChange}
