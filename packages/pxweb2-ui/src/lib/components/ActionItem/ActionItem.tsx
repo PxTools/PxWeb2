@@ -13,6 +13,7 @@ import {
 
 interface ActionItemProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  label?: string;
   ariaLabel?: string;
   iconName?: IconProps['iconName'];
   largeIconName?: ActionItemIconProps['largeIconName'];
@@ -24,7 +25,8 @@ interface ActionItemProps
 }
 
 export function ActionItem({
-  ariaLabel = '',
+  label = '',
+  ariaLabel = label,
   iconName = 'BarChart',
   largeIconName = 'Table',
   onClick,
@@ -55,7 +57,7 @@ export function ActionItem({
           )}
           <div className={styles.labelDescriptionWrapper}>
             <Label size="medium" className={cl(styles.labelHover)}>
-              {ariaLabel}
+              {label}
             </Label>
             {description && <BodyShort>{description}</BodyShort>}
           </div>
@@ -71,7 +73,7 @@ export function ActionItem({
           </div>
           <div className={styles.labelBodyWrapper}>
             <Label size="medium" className={cl(styles.labelHover)}>
-              {ariaLabel}
+              {label}
             </Label>
           </div>
         </div>

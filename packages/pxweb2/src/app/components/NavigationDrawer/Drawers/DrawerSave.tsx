@@ -47,6 +47,39 @@ type SaveQueryButtonProps = {
   saveQueryUrl?: string;
 };
 
+export const fileFormats: FileFormat[] = [
+  {
+    value: 'excel',
+    outputFormat: OutputFormatType.XLSX,
+    iconName: 'FileText',
+  },
+  {
+    value: 'csv',
+    outputFormat: OutputFormatType.CSV,
+    iconName: 'FileText',
+  },
+  {
+    value: 'px',
+    outputFormat: OutputFormatType.PX,
+    iconName: 'FileCode',
+  },
+  {
+    value: 'jsonstat2',
+    outputFormat: OutputFormatType.JSON_STAT2,
+    iconName: 'FileCode',
+  },
+  {
+    value: 'html',
+    outputFormat: OutputFormatType.HTML,
+    iconName: 'FileCode',
+  },
+  {
+    value: 'parquet',
+    outputFormat: OutputFormatType.PARQUET,
+    iconName: 'FileCode',
+  },
+];
+
 export const SaveQueryCreateButton: React.FC<SaveQueryButtonProps> = ({
   buttonRef,
   onClick,
@@ -193,39 +226,6 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
   const timeVarId = useTableData().data?.metadata.variables.find(
     (v) => v.type === VartypeEnum.TIME_VARIABLE,
   )?.id;
-
-  const fileFormats: FileFormat[] = [
-    {
-      value: 'excel',
-      outputFormat: OutputFormatType.XLSX,
-      iconName: 'FileText',
-    },
-    {
-      value: 'csv',
-      outputFormat: OutputFormatType.CSV,
-      iconName: 'FileText',
-    },
-    {
-      value: 'px',
-      outputFormat: OutputFormatType.PX,
-      iconName: 'FileCode',
-    },
-    {
-      value: 'jsonstat2',
-      outputFormat: OutputFormatType.JSON_STAT2,
-      iconName: 'FileCode',
-    },
-    {
-      value: 'html',
-      outputFormat: OutputFormatType.HTML,
-      iconName: 'FileCode',
-    },
-    {
-      value: 'parquet',
-      outputFormat: OutputFormatType.PARQUET,
-      iconName: 'FileCode',
-    },
-  ];
 
   const loadingBtnRef = useRef<HTMLButtonElement>(null);
   const copyBtnRef = useRef<HTMLButtonElement>(null);
@@ -484,7 +484,7 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
           {fileFormats.map((format) => (
             <li key={`saveToFile${format.value}`}>
               <ActionItem
-                ariaLabel={t(
+                label={t(
                   `presentation_page.sidemenu.save.file.formats.${format.value}`, // Not sure how to fix this i18next type error
                 )}
                 onClick={() => saveToFile(format.outputFormat)}
