@@ -411,7 +411,7 @@ const StartPage = () => {
                 <Button
                   variant="secondary"
                   className={styles.removeFilterButton}
-                  iconPosition="left"
+                  iconPosition="start"
                   icon="XMark"
                   onClick={() => {
                     dispatch({
@@ -504,7 +504,7 @@ const StartPage = () => {
 
               <Button
                 variant="secondary"
-                iconPosition="left"
+                iconPosition="start"
                 icon="Controls"
                 className={styles.filterToggleButton}
                 onClick={() => setIsFilterOverlayOpen(true)}
