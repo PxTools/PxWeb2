@@ -21,7 +21,7 @@
   &.compact {
     display: flex;
     max-width: 400px;
-    //height: 2.5rem;
+    height: 2.5rem;
     overflow-x: hidden;
     flex-wrap: nowrap;
     text-overflow: ellipsis;
@@ -78,9 +78,9 @@
     min-width: 0;
     flex-shrink: 1;
     display: inline;
-     &.compact {
-         flex-shrink: 0;
-     }
+    &.compact {
+      flex-shrink: 0;
+    }
 
     &:last-child {
       min-width: 0;
