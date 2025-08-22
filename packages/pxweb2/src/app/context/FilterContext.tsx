@@ -177,7 +177,7 @@ function reducer(
       };
     }
     case ActionType.REMOVE_FILTER: {
-      const removedType = action.payload.type as FilterType;
+      const removedType = action.payload.type;
 
       const currentFilters =
         removedType === 'subject' && action.payload.uniqueId
