@@ -213,7 +213,7 @@ type SelectionProps = {
     close: boolean,
     view: NavigationItem,
   ) => void;
-  hideMenuRef?: React.RefObject<HTMLDivElement | null>;
+  hideMenuRef?: React.RefObject<HTMLButtonElement | null>;
 };
 
 export function Selection({
