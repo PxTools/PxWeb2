@@ -48,6 +48,7 @@ const StartPage = () => {
   const [lastVisibleCount, setLastVisibleCount] = useState(paginationCount);
   const [isPaginating, setIsPaginating] = useState(false);
   const [paginationButtonWidth, setPaginationButtonWidth] = useState<number>();
+  const [isFadingTableList, setIsFadingTableList] = useState(false);
 
   const filterBackButtonRef = useRef<HTMLButtonElement>(null);
   const filterToggleRef = useRef<HTMLButtonElement>(null);
@@ -161,16 +162,28 @@ const StartPage = () => {
     setLastVisibleCount(newCount);
     requestAnimationFrame(() => {
       setVisibleCount(newCount);
+      triggerFade();
     });
   };
 
   const handleShowLess = () => {
     setVisibleCount(paginationCount);
+    triggerFade();
     requestAnimationFrame(() => {
       if (lastVisibleCardRef.current) {
         lastVisibleCardRef.current.focus();
       }
     });
+  };
+
+  const triggerFade = () => {
+    setIsFadingTableList(true);
+    setTimeout(() => setIsFadingTableList(false), 500); // eller 400ms hvis du bruker kortere CSS
+  };
+
+  const handleFilterChange = () => {
+    setVisibleCount(paginationCount);
+    triggerFade();
   };
 
   const renderPaginationButton = (
@@ -207,7 +220,7 @@ const StartPage = () => {
               },
             });
             searchFieldRef.current?.clearInputField();
-            setVisibleCount(paginationCount);
+            handleFilterChange();
           }}
         >
           {t('start_page.filter.remove_all_filter')}
@@ -288,7 +301,13 @@ const StartPage = () => {
     <>
       {renderNumberofTablesScreenReader()}
       {renderTableCount()}
-      <div className={styles.tableCardList}>{renderCards()}</div>
+      <div
+        className={cl(styles.tableCardList, {
+          [styles.fadeList]: isFadingTableList,
+        })}
+      >
+        {renderCards()}
+      </div>
       {renderPagination()}
     </>
   );
@@ -401,9 +420,7 @@ const StartPage = () => {
             </div>
 
             <div className={styles.filterOverlayContent}>
-              <FilterSidebar
-                onFilterChange={() => setVisibleCount(paginationCount)}
-              />
+              <FilterSidebar onFilterChange={handleFilterChange} />
             </div>
 
             <div className={styles.filterOverlayFooter}>
@@ -525,9 +542,7 @@ const StartPage = () => {
                 >
                   {t('start_page.filter.header')}
                 </Heading>
-                <FilterSidebar
-                  onFilterChange={() => setVisibleCount(paginationCount)}
-                />
+                <FilterSidebar onFilterChange={handleFilterChange} />
               </div>
             )}
 
@@ -551,7 +566,7 @@ const StartPage = () => {
                               type: filter.type,
                             },
                           });
-                          setVisibleCount(paginationCount);
+                          handleFilterChange();
                           if (filter.type == 'search') {
                             searchFieldRef.current?.clearInputField();
                           }
