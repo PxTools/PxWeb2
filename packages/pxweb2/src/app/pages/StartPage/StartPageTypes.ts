@@ -61,7 +61,7 @@ export type ReducerActionTypes =
 
 type RemoveFilterAction = {
   type: ActionType.REMOVE_FILTER;
-  payload: { value: string; type: string; uniqueId?: string };
+  payload: { value: string; type: FilterType; uniqueId?: string };
 };
 
 type ResetFilterAction = {

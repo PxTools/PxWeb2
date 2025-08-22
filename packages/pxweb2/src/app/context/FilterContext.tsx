@@ -201,7 +201,7 @@ function reducer(
             ),
             timeUnits: getTimeUnits(state.availableTables),
             yearRange: fullRange,
-            variables: state.availableFilters.variables,
+            variables: getVariables(state.availableTables),
           },
           lastUsedYearRange: fullRange,
         };
