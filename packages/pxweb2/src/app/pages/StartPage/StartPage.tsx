@@ -33,6 +33,7 @@ import useApp from '../../context/useApp';
 import { getConfig } from '../../util/config/getConfig';
 import { FilterContext, FilterProvider } from '../../context/FilterContext';
 import { getAllTables } from '../../util/tableHandler';
+import { tableListIsReadyToRender } from '../../util/startPageRender';
 import useFilterUrlSync from '../../util/hooks/useFilterUrlSync';
 
 const StartPage = () => {
@@ -48,22 +49,6 @@ const StartPage = () => {
     typeof window !== 'undefined' &&
     new URLSearchParams(window.location.search).toString().length > 0;
 
-  // Indicates whether filters have been applied either by user interaction, via URL parameters, or there are no filters to apply at all.
-  // Prevents unnecessary loading state once filters are in sync.
-  const hasHydratedFilters = state.activeFilters.length > 0 || !hasUrlParams;
-
-  // Determines if we're currently waiting for filters to be applied from the URL.
-  // This is used to delay rendering until the URL-driven filter state is ready.
-  const isHydratingFromUrl =
-    hasUrlParams && state.availableTables.length > 0 && !hasHydratedFilters;
-
-  // Ensures that data is loaded, filters are applied , and we’re not in the middle of URL-based filter hydration.
-  const isReadyToRender =
-    !state.loading &&
-    state.availableTables.length > 0 &&
-    hasHydratedFilters &&
-    !isHydratingFromUrl;
-
   const [isFilterOverlayOpen, setIsFilterOverlayOpen] = useState(false);
   const [visibleCount, setVisibleCount] = useState(paginationCount);
   const [lastVisibleCount, setLastVisibleCount] = useState(paginationCount);
@@ -78,6 +63,13 @@ const StartPage = () => {
   const lastVisibleCardRef = useRef<HTMLDivElement>(null);
   const searchFieldRef = useRef<SearchHandle>(null);
   const hasFetchedRef = useRef(false);
+  const hasEverHydratedRef = useRef(false);
+
+  const isReadyToRender = tableListIsReadyToRender(
+    state,
+    hasUrlParams,
+    hasEverHydratedRef.current,
+  );
 
   useEffect(() => {
     if (hasFetchedRef.current) {
@@ -103,6 +95,12 @@ const StartPage = () => {
       }
     })();
   }, [dispatch]);
+
+  useEffect(() => {
+    if (state.activeFilters.length > 0) {
+      hasEverHydratedRef.current = true;
+    }
+  }, [state.activeFilters.length]);
 
   useEffect(() => {
     if (isFilterOverlayOpen) {
