@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from '@storybook/react-vite';
-import { BreadcrumbItem, Breadcrumbs, BreadcrumbsProps } from './Breadcrumbs';
+import { BreadcrumbItem, Breadcrumbs } from './Breadcrumbs';
 
-const meta: Meta<BreadcrumbsProps> = {
+const meta: Meta<typeof Breadcrumbs> = {
   title: 'Components/Breadcrumbs',
   component: Breadcrumbs,
   tags: ['autodocs'],

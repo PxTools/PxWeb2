@@ -1,4 +1,3 @@
-//import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { describe, it, expect } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import Breadcrumbs, { BreadcrumbItem } from './Breadcrumbs';
@@ -12,7 +11,6 @@ describe('Breadcrumbs', () => {
   ];
 
   beforeEach(() => {
-    // Reset window resize listeners between tests
     window.dispatchEvent(new Event('resize'));
   });
 
@@ -34,7 +32,6 @@ describe('Breadcrumbs', () => {
   });
 
   it('shows "Show more" button and dots when overflowing in compact mode', () => {
-    // Mock scrollWidth > clientWidth to simulate overflow
     vi.spyOn(HTMLElement.prototype, 'scrollWidth', 'get').mockReturnValue(200);
     vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockReturnValue(100);
 

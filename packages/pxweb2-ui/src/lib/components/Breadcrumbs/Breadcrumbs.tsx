@@ -1,7 +1,6 @@
 import React, { forwardRef, useRef, useEffect, useState } from 'react';
 import cl from 'clsx';
 import styles from './Breadcrumbs.module.scss';
-//import linkStyles from './Link.module.scss';
 import { BreadcrumbsIcon } from '../Icon/BreadcrumbsIcon';
 import Link from '../Link/Link';
 
