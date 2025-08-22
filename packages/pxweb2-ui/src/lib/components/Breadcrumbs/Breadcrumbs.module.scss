@@ -5,7 +5,6 @@
 .breadcrumbsContainer {
   display: inline-flex;
   align-items: center;
-
   &.showMore {
     max-width: none;
     flex-wrap: wrap;
@@ -19,25 +18,19 @@
   list-style: none;
   align-self: stretch;
   width: 100%;
-
   &.compact {
     display: flex;
     max-width: 400px;
-    height: 2.5rem;
+    //height: 2.5rem;
     overflow-x: hidden;
     flex-wrap: nowrap;
     text-overflow: ellipsis;
     min-width: 0;
-
     .breadcrumbItem:last-child {
       flex-shrink: 0;
     }
-
     &.showMore {
       flex-wrap: wrap;
-      overflow-x: visible;
-      align-items: center;
-
       .breadcrumbItem:last-child {
         flex-shrink: 1;
       }
@@ -82,25 +75,23 @@
     white-space: break-spaces;
     word-break: break-word;
     overflow-wrap: break-word;
-
-    &.default {
-      min-width: 0;
-      flex-shrink: 1;
-      display: inline;
-    }
+    min-width: 0;
+    flex-shrink: 1;
+    display: inline;
+     &.compact {
+         flex-shrink: 0;
+     }
 
     &:last-child {
       min-width: 0;
       white-space: normal;
       flex-shrink: 1;
-
       a {
         text-decoration: none;
         white-space: normal;
         word-break: break-word;
         overflow-wrap: anywhere;
       }
-
       .breadcrumbItemIcon {
         display: none;
       }
