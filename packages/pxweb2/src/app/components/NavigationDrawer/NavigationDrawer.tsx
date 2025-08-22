@@ -20,7 +20,7 @@ export interface NavigationDrawerProps {
 }
 
 export const NavigationDrawer = forwardRef<
-  HTMLDivElement,
+  HTMLButtonElement,
   NavigationDrawerProps
 >(({ children, heading, view, openedWithKeyboard, onClose }, ref) => {
   const { t } = useTranslation();
@@ -44,13 +44,7 @@ export const NavigationDrawer = forwardRef<
     'ChevronRight',
   );
 
-  // function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
-  //   if (event.key === 'Enter' || event.key === ' ') {
-  //     event.preventDefault(); // Prevent scrolling with space
 
-  //     onClose(true, view);
-  //   }
-  // }
   React.useEffect(() => {
     if (
       document.activeElement !== document.body &&
