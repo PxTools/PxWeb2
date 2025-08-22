@@ -47,17 +47,14 @@ const StartPage = () => {
   const hasUrlParams =
     typeof window !== 'undefined' &&
     new URLSearchParams(window.location.search).toString().length > 0;
-  const isHydratingFromUrl =
-    hasUrlParams &&
-    state.availableTables.length > 0 &&
-    state.activeFilters.length === 0;
   const hasHydratedFilters = state.activeFilters !== undefined;
+  const isHydratingFromUrl =
+    hasUrlParams && state.availableTables.length > 0 && !hasHydratedFilters;
   const isReadyToRender =
     !state.loading &&
     state.availableTables.length > 0 &&
     hasHydratedFilters &&
     !isHydratingFromUrl;
-
   const [isFilterOverlayOpen, setIsFilterOverlayOpen] = useState(false);
   const [visibleCount, setVisibleCount] = useState(paginationCount);
   const [lastVisibleCount, setLastVisibleCount] = useState(paginationCount);
