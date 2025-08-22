@@ -155,7 +155,9 @@
         "customize": {
           "title": "Tilpass",
           "pivot": {
-            "title": "Pivot"
+            "title": "Roter tabellen",
+            "aria_label": "Roter tabellen mot høyre",
+            "screen_reader_announcement": "Tabell rotert etter {{first_variables}} og {{last_variable}}"
           },
           "rearrange": {
             "title": "Omorganiser tabell",
