@@ -1,4 +1,5 @@
 import { FC, Fragment } from 'react';
+import deburr from 'lodash/deburr';
 
 import styles from './Highlight.module.scss';
 
@@ -18,7 +19,8 @@ export const Highlight: FC<HighlightProps> = ({ text, searchTerm }) => {
     <span>
       {parts.map((part, index) => {
         const isHighlighted =
-          part.toLowerCase() === searchTerm.replaceAll('\\', '').toLowerCase();
+          deburr(part).toLowerCase() ===
+          deburr(searchTerm).replaceAll('\\', '').toLowerCase();
 
         const keyPrefix = isHighlighted ? 'highlight' : 'text';
         const key = `${keyPrefix}-${index}-${part.substring(0, 10)}`;

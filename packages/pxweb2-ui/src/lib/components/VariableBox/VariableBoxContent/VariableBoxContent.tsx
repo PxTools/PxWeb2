@@ -3,6 +3,7 @@ import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { useDebounce } from '@uidotdev/usehooks';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
+import deburr from 'lodash/deburr';
 
 import classes from './VariableBoxContent.module.scss';
 import { Checkbox, MixedCheckbox } from '../../Checkbox/Checkbox';
@@ -79,10 +80,33 @@ export function VariableBoxContent({
   const hasTwoOrMoreValues = values && values.length > 1;
   const hasSelectAndSearch = hasCodeLists && hasSevenOrMoreValues;
   const valuesToRender = structuredClone(values);
+
+  console.log('debouncedSearch', debouncedSearch);
+  console.log('value.label', values);
+  const normalizeString = (str: string) =>
+    str
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase();
+  const bokstav = 'äöå-ÄÖÅ-æøå-ÆØÅ';
+  const normNokstav = normalizeString(bokstav);
+  console.log('bokstav', bokstav);
+  console.log('normNokstav', normNokstav);
+  console.log(deburr(bokstav));
+  //const normdeb = normalizeString(debouncedSearch);
+  console.log(
+    'normalizeString(debouncedSearch)',
+    normalizeString(debouncedSearch),
+  );
+  console.log('normalizeString(deburr)', deburr(debouncedSearch));
   const searchedValues: Value[] = values.filter(
     (value) =>
-      value.label.toLowerCase().indexOf(debouncedSearch.toLowerCase()) > -1,
+      // console.log('normalizeString(value.label)', normalizeString(value.label)),
+      deburr(value.label)
+        .toLowerCase()
+        .indexOf(deburr(debouncedSearch).toLowerCase()) > -1,
   );
+  console.log('searchedValues', searchedValues);
   const selectedValuesForVar = useMemo(() => {
     return (
       selectedValues
@@ -100,6 +124,8 @@ export function VariableBoxContent({
   const searchRef = useRef<SearchHandle>(null);
   const lastInteractionWasPointer = useRef(false);
 
+  console.log('search', search);
+  console.log('searchRef', searchRef.current);
   useEffect(() => {
     const newItems: { type: string; value?: Value }[] = [];
 
@@ -118,7 +144,9 @@ export function VariableBoxContent({
     valuesToRender
       .filter(
         (value) =>
-          value.label.toLowerCase().indexOf(debouncedSearch.toLowerCase()) > -1,
+          deburr(value.label)
+            .toLowerCase()
+            .indexOf(deburr(debouncedSearch).toLowerCase()) > -1,
       )
       .forEach((value) => {
         newItems.push({ type: 'value', value });
@@ -134,12 +162,14 @@ export function VariableBoxContent({
     searchedValues: string | Value[],
     chosenValues: string | string[],
   ): 'mixed' | 'none' | 'all' {
+    console.log('searchedValues', searchedValues);
+    console.log('chosenValues', chosenValues);
     const compareArrays = Array.isArray(searchedValues)
       ? searchedValues
           .map((searchedValue) => searchedValue.code)
           .filter((value: string) => chosenValues.includes(value))
       : [];
-
+    console.log('compareArrays', compareArrays);
     if (compareArrays.length === 0) {
       return 'none';
     } else if (compareArrays.length === searchedValues.length) {
@@ -150,6 +180,8 @@ export function VariableBoxContent({
   }
 
   useEffect(() => {
+    console.log('181 selectedValuesForVar', selectedValuesForVar);
+    console.log('182 searchedValues', searchedValues);
     const searcedResult = compareSearchedAndChosenValues(
       searchedValues,
       selectedValuesForVar,
@@ -161,15 +193,24 @@ export function VariableBoxContent({
       // If there are searched values and searched and chosen values do not match
       (searchedValues.length > 0 && searcedResult === 'none')
     ) {
+      console.log('setAllValuesSelected false');
       setAllValuesSelected('false');
     } else if (
       // If some values are chosen and no values are searched for
+
       (totalChosenValues > 0 &&
         totalChosenValues < totalValues &&
         searchedValues.length === 0) ||
       // If some values are chosen and some values are searched for and they do match
       (searchedValues.length > 0 && searcedResult === 'mixed')
     ) {
+      console.log('setAllValuesSelected mixed');
+
+      console.log('totalChosenValues', totalChosenValues);
+      console.log('totalValues', totalValues);
+      console.log('searchedValues.length', searchedValues.length);
+      console.log('searcedResult', searcedResult);
+
       setAllValuesSelected('mixed');
     } else if (
       // If all values are chosen and no values are searched for
@@ -177,6 +218,7 @@ export function VariableBoxContent({
       // If all values chosen and matching searched values
       (searchedValues.length > 0 && searcedResult === 'all')
     ) {
+      console.log('setAllValuesSelected true');
       setAllValuesSelected('true');
     }
   }, [totalChosenValues, totalValues, searchedValues, selectedValuesForVar]);
@@ -237,6 +279,7 @@ export function VariableBoxContent({
     };
 
     if (item.type === 'search') {
+      console.log('item.type === search', item.type);
       return (
         <div
           id={`${varId}-search` + uniqueId}
@@ -327,7 +370,7 @@ export function VariableBoxContent({
                   ?.values.includes(value.code) === true
               }
               text={value.label.charAt(0).toUpperCase() + value.label.slice(1)}
-              searchTerm={search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}
+              searchTerm={deburr(search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))}
               onChange={() => onChangeCheckbox(varId, value.code)}
             />
           </div>
