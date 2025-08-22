@@ -69,6 +69,7 @@ export const Breadcrumbs = forwardRef<HTMLAnchorElement, BreadcrumbsProps>(
                 className={cl(
                   styles.breadcrumbItem,
                   variant && styles[variant],
+                  showMore && styles.showMore,
                 )}
               >
                 <Link
@@ -76,6 +77,8 @@ export const Breadcrumbs = forwardRef<HTMLAnchorElement, BreadcrumbsProps>(
                     styles.breadcrumbItemLink,
                     variant && styles[variant],
                     styles['bodyshort-medium'],
+                                showMore && styles.showMore,
+
                   )}
                   size="medium"
                   inline
