@@ -44,7 +44,6 @@ export const NavigationDrawer = forwardRef<
     'ChevronRight',
   );
 
-
   React.useEffect(() => {
     if (
       document.activeElement !== document.body &&
