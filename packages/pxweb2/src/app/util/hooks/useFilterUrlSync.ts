@@ -47,24 +47,48 @@ const createEmptyFilterQuery = (): FilterQuery => ({
 // Ensure consistent query param order for stable URL comparisons
 const alphabeticalSort = (a: string, b: string) => a.localeCompare(b);
 
-function parseYearRange(range: unknown): {
-  fromYear?: number;
-  toYear?: number;
-} {
-  if (typeof range !== 'string') {
-    return {};
-  }
-  const [minS, maxS] = range.split('-');
-  const min = parseInt(minS, 10);
-  const max = parseInt(maxS, 10);
+function applyYearRangeToQuery(
+  query: FilterQuery,
+  filter: Filter,
+  t: TFunction,
+): void {
+  const lowerLabel = filter.label.toLowerCase();
+  const fromText = t('start_page.filter.year.from_label').toLowerCase();
+  const toText = t('start_page.filter.year.to_label').toLowerCase();
 
-  return {
-    fromYear: Number.isFinite(min) ? min : undefined,
-    toYear: Number.isFinite(max) ? max : undefined,
-  };
+  if (filter.value.includes('-')) {
+    const [fromStr, toStr] = filter.value.split('-').map((s) => s.trim());
+    const from = Number(fromStr);
+    const to = Number(toStr);
+    if (Number.isFinite(from)) {
+      query.fromYear = from;
+    }
+    if (Number.isFinite(to)) {
+      query.toYear = to;
+    }
+  } else {
+    const year = Number(filter.value.trim());
+    if (!Number.isFinite(year)) {
+      return;
+    }
+
+    if (lowerLabel.startsWith(fromText)) {
+      query.fromYear = year;
+      delete query.toYear;
+    } else if (lowerLabel.startsWith(toText)) {
+      query.toYear = year;
+      delete query.fromYear;
+    } else {
+      query.fromYear = year;
+    }
+  }
 }
 
-function mergeFilterIntoQuery(query: FilterQuery, f: Filter): FilterQuery {
+function mergeFilterIntoQuery(
+  query: FilterQuery,
+  f: Filter,
+  t: TFunction,
+): FilterQuery {
   switch (f.type) {
     case 'search':
       query.searchText = String(f.value ?? '');
@@ -78,13 +102,7 @@ function mergeFilterIntoQuery(query: FilterQuery, f: Filter): FilterQuery {
       }
       break;
     case 'yearRange': {
-      const { fromYear, toYear } = parseYearRange(f.value);
-      if (fromYear != null) {
-        query.fromYear = fromYear;
-      }
-      if (toYear != null) {
-        query.toYear = toYear;
-      }
+      applyYearRangeToQuery(query, f, t);
       break;
     }
   }
@@ -124,9 +142,12 @@ function toSearchParams(query: FilterQuery): URLSearchParams {
  * Values like `timeUnit` and `subject` are deduplicated and sorted alphabetically
  * to ensure the resulting query string is stable and predictable for comparisons.
  */
-function buildParamsFromFilters(filters: Filter[]): URLSearchParams {
+function buildParamsFromFilters(
+  filters: Filter[],
+  t: TFunction,
+): URLSearchParams {
   const query = filters.reduce<FilterQuery>(
-    mergeFilterIntoQuery,
+    (currentQuery, filter) => mergeFilterIntoQuery(currentQuery, filter, t),
     createEmptyFilterQuery(),
   );
   return toSearchParams(query);
@@ -244,7 +265,7 @@ export default function useFilterUrlSync(
   // Guard against overwriting incoming query parameters before hydration.
   useEffect(() => {
     const current = window.location.search.replace(/^\?/, '');
-    const built = buildParamsFromFilters(state.activeFilters).toString();
+    const built = buildParamsFromFilters(state.activeFilters, t).toString();
     const hasIncoming = current.length > 0;
 
     if (!hydratedRef.current && hasIncoming) {
@@ -269,7 +290,7 @@ export default function useFilterUrlSync(
     }
 
     const current = window.location.search.replace(/^\?/, '');
-    const built = buildParamsFromFilters(state.activeFilters).toString();
+    const built = buildParamsFromFilters(state.activeFilters, t).toString();
 
     if (!current) {
       hydratedRef.current = true;
