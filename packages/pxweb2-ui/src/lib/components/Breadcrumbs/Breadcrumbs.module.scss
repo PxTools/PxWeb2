@@ -68,10 +68,10 @@
       outline-offset: 5px;
       box-shadow: 0 0 0 3px var(--px-color-border-focus-boxshadow);
     }
-        a {
-          padding-top: 0px;
-          padding-bottom: 0px;
-        }
+    a {
+      padding-top: 0px;
+      padding-bottom: 0px;
+    }
   }
 
   .breadcrumbItemIcon {
@@ -96,7 +96,7 @@
 .compactActions {
   display: inline-flex;
   align-items: center;
-  white-space:nowrap ;
+  white-space: nowrap;
 }
 
 .showMoreText {

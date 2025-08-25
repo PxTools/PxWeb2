@@ -97,21 +97,21 @@ export const Breadcrumbs = forwardRef<HTMLAnchorElement, BreadcrumbsProps>(
         </ul>
         {variant === 'compact' && isOverflowing && !showMore && (
           <span className={styles.compactActions}>
-          <span className={styles.dots}>{dots}</span>
-          <span
-            className={cl(styles.showMoreText)}
-            role="button"
-            tabIndex={0}
-            onClick={() => setShowMore(true)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                setShowMore(true);
-              }
-            }}
-            aria-label="Show more breadcrumbs"
-          >
-            Show more
-          </span>
+            <span className={styles.dots}>{dots}</span>
+            <span
+              className={cl(styles.showMoreText)}
+              role="button"
+              tabIndex={0}
+              onClick={() => setShowMore(true)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  setShowMore(true);
+                }
+              }}
+              aria-label="Show more breadcrumbs"
+            >
+              Show more
+            </span>
           </span>
         )}
       </nav>
