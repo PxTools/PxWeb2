@@ -80,6 +80,7 @@
         "clear_selection": "Rensa"
       },
       "variabel": "Variabel",
+      "variabel_search": "Sök efter variabel",
       "frequency": {
         "annual": "År",
         "monthly": "Månad",

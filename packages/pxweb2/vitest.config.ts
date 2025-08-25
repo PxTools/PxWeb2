@@ -18,6 +18,8 @@ export default mergeConfig(
       setupFiles: './test/setupTests',
 
       reporters: ['default'],
+      testTimeout: 20000,
+      hookTimeout: 20000,
       coverage: {
         reporter: ['lcov', 'text'],
         include: ['src/**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],

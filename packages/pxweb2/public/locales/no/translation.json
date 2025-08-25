@@ -80,6 +80,7 @@
         "clear_selection": "Fjern valg"
       },
       "variabel": "Variabel",
+      "variabel_search": "Søk etter variabel",
       "frequency": {
         "annual": "År",
         "monthly": "Måned",

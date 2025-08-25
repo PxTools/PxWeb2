@@ -81,6 +81,7 @@ interface Resources {
           clear_selection: 'Clear selection';
         };
         variabel: 'Variable';
+        variabel_search: 'Search for variable';
         frequency: {
           annual: 'Year';
           monthly: 'Month';

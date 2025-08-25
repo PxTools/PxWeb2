@@ -10,7 +10,12 @@ export enum ActionType {
   SET_LOADING = 'SET_LOADING',
 }
 
-export type FilterType = 'timeUnit' | 'subject' | 'yearRange' | 'search';
+export type FilterType =
+  | 'timeUnit'
+  | 'subject'
+  | 'yearRange'
+  | 'search'
+  | 'variable';
 
 export type Filter = {
   type: FilterType;
@@ -36,11 +41,7 @@ export type YearRange = {
 export type StartPageState = {
   availableTables: Table[];
   filteredTables: Table[];
-  availableFilters: {
-    subjectTree: PathItem[];
-    timeUnits: Map<string, number>;
-    yearRange: YearRange;
-  };
+  availableFilters: StartPageFilters;
   activeFilters: Filter[];
   loading: boolean;
   error: string;
@@ -60,7 +61,7 @@ export type ReducerActionTypes =
 
 type RemoveFilterAction = {
   type: ActionType.REMOVE_FILTER;
-  payload: { value: string; type: string; uniqueId?: string };
+  payload: { value: string; type: FilterType; uniqueId?: string };
 };
 
 type ResetFilterAction = {
@@ -96,5 +97,6 @@ type SetLoadingAction = {
 export type StartPageFilters = {
   timeUnits: Map<string, number>;
   subjectTree: PathItem[];
+  variables: Map<string, number>;
   yearRange: YearRange;
 };
