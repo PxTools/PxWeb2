@@ -3,14 +3,14 @@ import { getConfig } from './config/getConfig';
 import type { Filter } from '../pages/StartPage/StartPageTypes';
 import { getYearRangeFromPeriod } from './startPageFilters';
 
-export async function getAllTables() {
+export async function getAllTables(language?: string) {
   const config = getConfig();
   const baseUrl = config.apiUrl;
   OpenAPI.BASE = baseUrl;
 
   try {
     const response = await TableService.listAllTables(
-      config.language.defaultLanguage,
+      language || config.language.defaultLanguage,
       undefined,
       undefined,
       true,
