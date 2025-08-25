@@ -101,7 +101,7 @@ export const MixedCheckbox: React.FC<MixedCheckboxProps> = ({
     <div
       id={id}
       role="checkbox"
-      aria-checked={value}
+      aria-checked={value === 'true'}
       aria-labelledby={id + '-label'}
       aria-controls={ariaControls.join(' ')}
       className={cl(styles.checkboxWrapper, {
