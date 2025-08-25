@@ -41,7 +41,7 @@ const tableExamles = [
     variableNames: ['region', 'fuel', 'observations', 'month'],
     source: 'Transport Analysis',
     subjectCode: 'TK',
-    timeUnit: 'Monthly'
+    timeUnit: 'Monthly',
   },
   {
     id: '2',
@@ -54,7 +54,7 @@ const tableExamles = [
     variableNames: ['region', 'fuel', 'observations', 'month'],
     source: 'Transport Analysis',
     subjectCode: 'TK',
-    timeUnit: 'Monthly'
+    timeUnit: 'Monthly',
   },
 ] as Table[];
 
@@ -90,7 +90,6 @@ function currentUrl() {
   return `${window.location.pathname}${window.location.search}${window.location.hash}`;
 }
 
-
 beforeEach(() => {
   setUrl('');
   vi.restoreAllMocks();
@@ -100,10 +99,7 @@ afterEach(() => {
   cleanup();
 });
 
-
 describe('useFilterUrlSync', () => {
-
-
   it('does not dispatch when URL has no params', async () => {
     setUrl('');
     const dispatch = vi.fn();
@@ -138,6 +134,4 @@ describe('useFilterUrlSync', () => {
     expect(lastCallArgs?.[2]).toMatch(/^\S*\/start\?timeUnit=Monthly$/);
     expect(currentUrl()).toMatch(/\/start\?timeUnit=Monthly$/);
   });
-
-  
 });
