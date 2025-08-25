@@ -4,6 +4,7 @@ import '@testing-library/jest-dom/vitest';
 import { createMemoryRouter, RouterProvider } from 'react-router';
 
 import * as configModule from './util/config/getConfig';
+import { AppProvider } from './context/AppProvider';
 
 // Define ThrowingComponent at the top level
 const ThrowingComponent = () => {
@@ -36,6 +37,21 @@ vi.mock('./pages/NotFound/NotFound', () => ({
 vi.mock('./pages/TopicIcons/TopicIcons', () => ({
   default: () => <div data-testid="topic-icons">Topic Icons</div>,
 }));
+
+vi.mock('./context/useApp', () => ({
+  default: () => ({
+    title: '',
+  }),
+}));
+
+// Function to wrap RouterProvider with AppProvider
+function renderWithProviders(router: any) {
+  return render(
+    <AppProvider>
+      <RouterProvider router={router} />
+    </AppProvider>,
+  );
+}
 
 describe('Router configuration', () => {
   const mockConfig = {
@@ -77,7 +93,7 @@ describe('Router configuration', () => {
         initialEntries: ['/'],
       });
 
-      render(<RouterProvider router={testRouter} />);
+      renderWithProviders(testRouter);
       expect(screen.getByTestId('start-page')).toBeInTheDocument();
     });
 
@@ -86,7 +102,7 @@ describe('Router configuration', () => {
         initialEntries: ['/table/12345'],
       });
 
-      render(<RouterProvider router={testRouter} />);
+      renderWithProviders(testRouter);
       expect(screen.getByTestId('table-viewer')).toBeInTheDocument();
     });
 
@@ -95,7 +111,7 @@ describe('Router configuration', () => {
         initialEntries: ['/en/'],
       });
 
-      render(<RouterProvider router={testRouter} />);
+      renderWithProviders(testRouter);
       expect(
         screen.getByTestId('not-found-page_not_found'),
       ).toBeInTheDocument();
@@ -106,7 +122,7 @@ describe('Router configuration', () => {
         initialEntries: ['/non-existent'],
       });
 
-      render(<RouterProvider router={testRouter} />);
+      renderWithProviders(testRouter);
       expect(
         screen.getByTestId('not-found-unsupported_language'),
       ).toBeInTheDocument();
@@ -117,7 +133,7 @@ describe('Router configuration', () => {
         initialEntries: ['/topicIcons'],
       });
 
-      render(<RouterProvider router={testRouter} />);
+      renderWithProviders(testRouter);
       expect(screen.getByTestId('topic-icons')).toBeInTheDocument();
     });
 
@@ -126,7 +142,7 @@ describe('Router configuration', () => {
         initialEntries: ['/no/'],
       });
 
-      render(<RouterProvider router={testRouter} />);
+      renderWithProviders(testRouter);
       expect(screen.getByTestId('start-page')).toBeInTheDocument();
     });
 
@@ -135,7 +151,7 @@ describe('Router configuration', () => {
         initialEntries: ['/no/table/12345'],
       });
 
-      render(<RouterProvider router={testRouter} />);
+      renderWithProviders(testRouter);
       expect(screen.getByTestId('table-viewer')).toBeInTheDocument();
     });
   });
@@ -160,7 +176,7 @@ describe('Router configuration', () => {
         initialEntries: ['/'],
       });
 
-      render(<RouterProvider router={testRouter} />);
+      renderWithProviders(testRouter);
 
       // When showDefaultLanguageInPath=true:
       // root path should redirect to /{defaultLanguage}/ and show StartPage
@@ -172,7 +188,7 @@ describe('Router configuration', () => {
         initialEntries: ['/en/'],
       });
 
-      render(<RouterProvider router={testRouter} />);
+      renderWithProviders(testRouter);
       expect(screen.getByTestId('start-page')).toBeInTheDocument();
     });
 
@@ -181,7 +197,7 @@ describe('Router configuration', () => {
         initialEntries: ['/en/table/12345'],
       });
 
-      render(<RouterProvider router={testRouter} />);
+      renderWithProviders(testRouter);
       expect(screen.getByTestId('table-viewer')).toBeInTheDocument();
     });
 
@@ -190,7 +206,7 @@ describe('Router configuration', () => {
         initialEntries: ['/no/'],
       });
 
-      render(<RouterProvider router={testRouter} />);
+      renderWithProviders(testRouter);
       expect(screen.getByTestId('start-page')).toBeInTheDocument();
     });
 
@@ -199,7 +215,7 @@ describe('Router configuration', () => {
         initialEntries: ['/no/table/12345'],
       });
 
-      render(<RouterProvider router={testRouter} />);
+      renderWithProviders(testRouter);
       expect(screen.getByTestId('table-viewer')).toBeInTheDocument();
     });
 
@@ -208,7 +224,7 @@ describe('Router configuration', () => {
         initialEntries: ['/en/non-existent'],
       });
 
-      render(<RouterProvider router={testRouter} />);
+      renderWithProviders(testRouter);
       expect(
         screen.getByTestId('not-found-page_not_found'),
       ).toBeInTheDocument();
@@ -219,7 +235,7 @@ describe('Router configuration', () => {
         initialEntries: ['/pl/table/12345'],
       });
 
-      render(<RouterProvider router={testRouter} />);
+      renderWithProviders(testRouter);
       expect(
         screen.getByTestId('not-found-unsupported_language'),
       ).toBeInTheDocument();
@@ -246,7 +262,7 @@ describe('Router configuration', () => {
       initialEntries: ['/'],
     });
 
-    render(<RouterProvider router={testRouter} />);
+    renderWithProviders(testRouter);
     expect(screen.getByTestId('error-page')).toBeInTheDocument();
 
     // Restore console.error
@@ -270,7 +286,7 @@ describe('Router configuration', () => {
       initialEntries: ['/'],
     });
 
-    render(<RouterProvider router={testRouter} />);
+    renderWithProviders(testRouter);
 
     // Wait for any lazy loaded components to render
     expect(await screen.findByTestId('start-page')).toBeInTheDocument();
