@@ -13,6 +13,7 @@ import {
   Link,
   PxTable,
 } from '@pxweb2/pxweb2-ui';
+import Breadcrumbs from '@pxweb2/pxweb2-ui';
 import TableInformation from '../TableInformation/TableInformation';
 import { AccessibilityContext } from '../../context/AccessibilityProvider';
 import {
