@@ -156,6 +156,9 @@ export function sortFiltersByTypeAndSubjectOrder(
 export function deduplicateFiltersByValue(filters: Filter[]): Filter[] {
   const seen = new Set<string>();
   return filters.filter((filter) => {
+    if (filter.type == 'search') {
+      return true;
+    }
     if (seen.has(filter.value)) {
       return false;
     }
