@@ -61,14 +61,16 @@
 }
 
 .wrapper.inVariableBox {
-  border-radius: var(--px-border-radius-medium) var(--px-border-radius-medium) 0 0;
+  border-radius: var(--px-border-radius-medium) var(--px-border-radius-medium) 0
+    0;
   background: var(--px-color-surface-subtle);
   z-index: 1;
   outline-offset: -2px;
   border-bottom: 2px solid var(--px-color-border-moderate);
 
   &:hover {
-    border-radius: var(--px-border-radius-medium) var(--px-border-radius-medium) 0 0;
+    border-radius: var(--px-border-radius-medium) var(--px-border-radius-medium)
+      0 0;
     outline: 2px solid var(--px-color-border-action);
   }
 
