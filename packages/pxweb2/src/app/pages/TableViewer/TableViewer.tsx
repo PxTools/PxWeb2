@@ -54,7 +54,7 @@ export function TableViewer() {
     help: HTMLButtonElement;
   }>(null);
 
-  const hideMenuRef = useRef<HTMLDivElement>(null);
+  const hideMenuRef = useRef<HTMLButtonElement>(null);
   const skipToMainRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
