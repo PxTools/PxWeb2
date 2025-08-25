@@ -1,15 +1,19 @@
 import cl from 'clsx';
+
 import styles from './ActionItem.module.scss';
 import {
+  ActionItemIcon,
+  ActionItemIconProps,
   BodyShort,
   Icon,
   IconProps,
-  ActionItemIcon,
-  ActionItemIconProps,
   Label,
+  Spinner,
 } from '@pxweb2/pxweb2-ui';
 
-interface ActionItemProps {
+interface ActionItemProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  label?: string;
   ariaLabel?: string;
   iconName?: IconProps['iconName'];
   largeIconName?: ActionItemIconProps['largeIconName'];
@@ -17,37 +21,43 @@ interface ActionItemProps {
   description?: string;
   control?: boolean;
   size?: 'medium' | 'large';
+  isLoading?: boolean;
 }
 
 export function ActionItem({
-  ariaLabel = '',
+  label = '',
+  ariaLabel = label,
   iconName = 'BarChart',
   largeIconName = 'Table',
   onClick,
   size = 'medium',
   description,
+  isLoading = false,
+  ...rest
 }: Readonly<ActionItemProps>) {
   return (
     <button
       className={cl(styles.actionItem)}
-      aria-label={ariaLabel}
       onClick={onClick}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          onClick?.();
-        }
-      }}
+      aria-label={ariaLabel}
+      aria-disabled={isLoading || rest.disabled}
+      aria-busy={isLoading || rest.disabled}
+      {...rest}
     >
       {size === 'medium' && (
         <>
-          <div
-            className={cl(styles[`iconWrapper-${size}`], styles.iconWrapper)}
-          >
-            <Icon iconName={iconName} />
-          </div>
+          {isLoading ? (
+            <Spinner size="xsmall" aria-hidden="true" />
+          ) : (
+            <div
+              className={cl(styles[`iconWrapper-${size}`], styles.iconWrapper)}
+            >
+              <Icon iconName={iconName} />
+            </div>
+          )}
           <div className={styles.labelDescriptionWrapper}>
             <Label size="medium" className={cl(styles.labelHover)}>
-              {ariaLabel}
+              {label}
             </Label>
             {description && <BodyShort>{description}</BodyShort>}
           </div>
@@ -63,7 +73,7 @@ export function ActionItem({
           </div>
           <div className={styles.labelBodyWrapper}>
             <Label size="medium" className={cl(styles.labelHover)}>
-              {ariaLabel}
+              {label}
             </Label>
           </div>
         </div>
