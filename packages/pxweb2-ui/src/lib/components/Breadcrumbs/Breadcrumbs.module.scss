@@ -3,7 +3,7 @@
 @use '../../text-styles.scss';
 
 .breadcrumbsContainer {
-  display: inline-flex;
+  display : inline-flex;
   align-items: center;
   &.showMore {
     max-width: none;
@@ -19,13 +19,14 @@
   align-self: stretch;
   width: 100%;
   &.compact {
-    display: flex;
+    display : flex;
     max-width: 400px;
     overflow-x: hidden;
     flex-wrap: nowrap;
     text-overflow: ellipsis;
     min-width: 0;
     &.showMore {
+      display : ruby;
       flex-wrap: wrap;
     }
   }
@@ -39,7 +40,7 @@
     &.default {
       min-width: 0;
       flex-shrink: 1;
-      display: inline;
+      display : inline;
     }
     &.compact:not(.showMore) {
       flex-shrink: 0;
@@ -53,7 +54,7 @@
         text-decoration: none;
       }
       .breadcrumbItemIcon {
-        display: none;
+        display : none;
       }
     }
   }
