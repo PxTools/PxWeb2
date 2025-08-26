@@ -24,13 +24,12 @@ export async function getAllTables(language?: string) {
     );
 
     return response.tables;
-
-    // Antipattern: a try/catch inside a catch is not recommended, but as a fallback in
-    // case the selected language is not supported, it is needed in this case.
-    // This ensures it is only retried once before failing completely. If fallback works, user should not experience any errors.
   } catch (err: unknown) {
     const error = err as ApiError;
 
+    // Antipattern: a try/catch inside a catch is not recommended, but as a fallback
+    // in case the selected language is not supported, it is needed here.
+    // This ensures it is only retried once before failing completely. If fallback works, user should not be inconvenienced.
     if (error.body.title && error.body.title == 'Unsupported language') {
       try {
         const response = await TableService.listAllTables(
