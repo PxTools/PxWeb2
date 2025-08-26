@@ -7,6 +7,10 @@ import styles from './FilterSidebar.module.scss';
 import { SearchSelect, type Option } from '@pxweb2/pxweb2-ui';
 import { FilterContext } from '../../context/FilterContext';
 import { ActionType } from '../../pages/StartPage/StartPageTypes';
+import {
+  getYearLabels,
+  getYearRangeLabelValue,
+} from '../../util/startPageFilters';
 
 function generateYearOptions(start: number, end: number): Option[] {
   return Array.from({ length: end - start + 1 }, (_, i) => {
@@ -20,8 +24,7 @@ function buildYearOption(value?: string): Option | undefined {
 }
 
 function useYearLabels(t: ReturnType<typeof useTranslation>['t']) {
-  const fromLabel = t('start_page.filter.year.from_label');
-  const toLabel = t('start_page.filter.year.to_label');
+  const { fromLabel, toLabel } = getYearLabels(t);
   const fromYearLabel = (year: string) =>
     t('start_page.filter.year.from_year', { year });
   const toYearLabel = (year: string) =>
@@ -56,25 +59,6 @@ function parseYearRange(
   }
 
   return { from: filter.value };
-}
-
-function getYearRangeLabelValue(
-  from?: string,
-  to?: string,
-  fromLabel?: string,
-  toLabel?: string,
-) {
-  if (from && to) {
-    return { label: `${from}–${to}`, value: `${from}-${to}` };
-  } else if (from) {
-    const label = `${fromLabel} ${from}`;
-    return { label, value: from };
-  } else if (to) {
-    const label = `${toLabel} ${to}`;
-    return { label, value: to };
-  }
-
-  return { label: '', value: '' };
 }
 
 function getYearRangeForMatchingTables(

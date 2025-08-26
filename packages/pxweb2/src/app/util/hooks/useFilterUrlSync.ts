@@ -6,6 +6,7 @@ import type {
   Filter,
   PathItem,
 } from '../../pages/StartPage/StartPageTypes';
+import { getYearLabels, getYearRangeLabelValue } from '../startPageFilters';
 
 type FilterQuery = {
   searchText?: string;
@@ -222,18 +223,15 @@ function parseParamsToFilters(
   const toParam = params.get('to');
 
   if (fromParam || toParam) {
-    const fromYear = fromParam ? parseInt(fromParam, 10) : undefined;
-    const toYear = toParam ? parseInt(toParam, 10) : undefined;
-    const value = `${fromYear ?? ''}-${toYear ?? ''}`;
-    let label = '';
-
-    if (fromYear != null && toYear != null) {
-      label = `${fromYear}–${toYear}`;
-    } else if (fromYear != null) {
-      label = `From ${fromYear}`;
-    } else if (toYear != null) {
-      label = `To ${toYear}`;
-    }
+    const fromYear = fromParam ?? undefined;
+    const toYear = toParam ?? undefined;
+    const { fromLabel, toLabel } = getYearLabels(t);
+    const { label, value } = getYearRangeLabelValue(
+      fromYear,
+      toYear,
+      fromLabel,
+      toLabel,
+    );
 
     filters.push({
       type: 'yearRange',
