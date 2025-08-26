@@ -16,6 +16,7 @@ export const LanguageSwitcher = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [currentLang, setCurrentLang] = useState(i18n.language);
+  const [isTabbed, setIsTabbed] = useState(false);
 
   // Force update the selects value(selected language) when location changes
   useEffect(() => {
@@ -43,7 +44,11 @@ export const LanguageSwitcher = () => {
   return (
     config.language.supportedLanguages.length > 1 && (
       <div
-        className={cl(classes.languageSwitcher, classes[`textcolor-default`])}
+        className={cl(
+          classes.languageSwitcher,
+          classes[`textcolor-default`],
+          isTabbed && classes['focusMarkings'],
+        )}
       >
         <Icon
           iconName="Globe"
@@ -53,9 +58,19 @@ export const LanguageSwitcher = () => {
 
         <select
           id="language-switcher"
+          onKeyUp={(event) => {
+            if (event.key === 'Tab' && !isTabbed) {
+              setIsTabbed(true);
+            }
+          }}
+          onBlur={() => {
+            if (isTabbed) {
+              setIsTabbed(false);
+            }
+          }}
           onChange={(event) => handleLanguageChange(event)}
           value={currentLang}
-          className={classes.languageSwitcherSelect}
+          className={cl(classes.languageSwitcherSelect)}
           aria-label={
             isMobile ? t('common.header.language_selector') : undefined
           }
