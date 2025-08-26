@@ -19,6 +19,15 @@ const renderWithProviders = (ui: React.ReactNode) => {
 function mockTableService() {
   vi.mock('@pxweb2/pxweb2-api-client', () => {
     return {
+      // Provide enums/constants used at module-evaluation time by components like DrawerSave
+      OutputFormatType: {
+        XLSX: 'XLSX',
+        CSV: 'CSV',
+        PX: 'PX',
+        JSON_STAT2: 'JSON_STAT2',
+        HTML: 'HTML',
+        PARQUET: 'PARQUET',
+      },
       TableService: {
         getTableCodeListById: vi.fn().mockResolvedValue({
           id: 'vs_RegionLän07',

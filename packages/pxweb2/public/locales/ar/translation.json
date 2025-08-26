@@ -114,7 +114,9 @@
         "customize": {
           "title": "تخصيص",
           "pivot": {
-            "title": "المحور"
+            "title": "تدوير الجدول",
+            "aria_label": "تدوير الجدول في اتجاه عقارب الساعة",
+            "screen_reader_announcement": "جدول مدور بعد {{first_variables}} و {{last_variable}}"
           },
           "rearrange": {
             "title": "إعادة ترتيب الجدول",
