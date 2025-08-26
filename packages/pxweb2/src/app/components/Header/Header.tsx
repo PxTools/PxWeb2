@@ -8,10 +8,10 @@ import { getConfig } from '../../util/config/getConfig';
 import { getLanguagePath } from '../../util/language/getLanguagePath';
 
 interface HeaderProps {
-  stroke: boolean;
+  stroke?: boolean;
 }
 
-export const Header = ({ stroke }: HeaderProps) => {
+export const Header = ({ stroke = false }: HeaderProps) => {
   const { t, i18n } = useTranslation();
   const config = getConfig();
 
