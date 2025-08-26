@@ -1,4 +1,5 @@
 import { Table } from '@pxweb2/pxweb2-api-client';
+import { useTranslation } from 'react-i18next';
 import {
   StartPageFilters,
   Filter,
@@ -386,4 +387,30 @@ export function buildSubjectToTableIdsMap(
     }
   }
   return map;
+}
+
+export function getYearLabels(t: ReturnType<typeof useTranslation>['t']) {
+  const fromLabel = t('start_page.filter.year.from_label');
+  const toLabel = t('start_page.filter.year.to_label');
+
+  return { fromLabel, toLabel };
+}
+
+export function getYearRangeLabelValue(
+  from?: string,
+  to?: string,
+  fromLabel?: string,
+  toLabel?: string,
+) {
+  if (from && to) {
+    return { label: `${from}–${to}`, value: `${from}-${to}` };
+  } else if (from) {
+    const label = `${fromLabel} ${from}`;
+    return { label, value: from };
+  } else if (to) {
+    const label = `${toLabel} ${to}`;
+    return { label, value: to };
+  }
+
+  return { label: '', value: '' };
 }
