@@ -7,6 +7,8 @@ import {
   Alert,
   BodyLong,
   BodyShort,
+  Breadcrumbs,
+  BreadcrumbItem,
   Button,
   Heading,
   Icon,
@@ -169,10 +171,23 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
     setTitle(staticTitle);
   }, [staticTitle, setTitle]);
 
+  const breadcrumbItems: BreadcrumbItem[] = [
+    {
+      label: 'PxWeb 2.0',
+      href: '#',
+    },
+    {
+      label: staticTitle,
+      href:  '',
+    },
+  ];
+
   return (
     <>
+    <Breadcrumbs variant='compact' breadcrumbItems={breadcrumbItems} />
       <div className={cl(classes[`content-top`])}>
-        <nav
+
+        {/* <nav
           className={cl(classes.breadcrumbs)}
           aria-label={t('presentation_page.main_content.arialabelbreadcrumb')}
         >
@@ -183,7 +198,7 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
             <Icon iconName="ChevronRight"></Icon>
             <BodyLong>{staticTitle}</BodyLong>
           </div>
-        </nav>
+        </nav> */}
         <div
           id="px-main-content"
           className={cl(classes[`heading-information`])}
