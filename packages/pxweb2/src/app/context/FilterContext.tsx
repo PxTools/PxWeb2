@@ -16,6 +16,7 @@ import {
 import {
   getFilters,
   getTimeUnits,
+  getVariables,
   updateSubjectTreeCounts,
   flattenSubjectTreeToList,
   getYearRanges,
@@ -84,6 +85,7 @@ function reducer(
           ),
           timeUnits: getTimeUnits(action.payload.tables),
           yearRange: fullRange,
+          variables: getVariables(action.payload.tables),
         },
         lastUsedYearRange: fullRange,
       };
@@ -119,6 +121,7 @@ function reducer(
             recomputed.subjectTree ?? state.availableFilters.subjectTree,
           timeUnits: recomputed.timeUnits ?? state.availableFilters.timeUnits,
           yearRange: recomputed.yearRange ?? state.availableFilters.yearRange,
+          variables: getVariables(filteredTables),
         },
         lastUsedYearRange: updatedLastUsedYearRange,
       };
@@ -169,11 +172,12 @@ function reducer(
           ),
           timeUnits: getTimeUnits(newTables),
           yearRange: getYearRanges(newTables),
+          variables: getVariables(newTables),
         },
       };
     }
     case ActionType.REMOVE_FILTER: {
-      const removedType = action.payload.type as FilterType;
+      const removedType = action.payload.type;
 
       const currentFilters =
         removedType === 'subject' && action.payload.uniqueId
@@ -197,6 +201,7 @@ function reducer(
             ),
             timeUnits: getTimeUnits(state.availableTables),
             yearRange: fullRange,
+            variables: getVariables(state.availableTables),
           },
           lastUsedYearRange: fullRange,
         };
@@ -229,6 +234,7 @@ function reducer(
             recomputed.subjectTree ?? state.availableFilters.subjectTree,
           timeUnits: recomputed.timeUnits ?? state.availableFilters.timeUnits,
           yearRange: recomputed.yearRange ?? state.availableFilters.yearRange,
+          variables: getVariables(filteredTables),
         },
         lastUsedYearRange: updatedLastUsedYearRange,
       };

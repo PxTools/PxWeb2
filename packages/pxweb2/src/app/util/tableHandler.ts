@@ -126,10 +126,25 @@ export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
     return true;
   };
 
+  const variableFilters = filters.filter((f) => {
+    return f.type === 'variable';
+  });
+  const testVariableFilters = function () {
+    if (variableFilters.length == 0) {
+      return true;
+    } else {
+      return variableFilters.every((filter) => {
+        return table.variableNames.some((varName) => {
+          return varName === filter.value;
+        });
+      });
+    }
+  };
   return (
     testTimeUnitFilters() &&
     testSubjectFilters() &&
     testYearRangeFilter() &&
-    testSearchFilter()
+    testSearchFilter() &&
+    testVariableFilters()
   );
 }

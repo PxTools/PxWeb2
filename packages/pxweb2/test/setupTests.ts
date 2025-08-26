@@ -18,6 +18,13 @@ vi.mock('../src/app/util/config/getConfig', () => ({
     apiUrl: '',
     maxDataCells: 100000,
     specialCharacters: ['.', '..', ':', '-', '...', '*'],
+    variableFilterExclusionList: [
+      'statisticalvariable',
+      'year',
+      'quarter',
+      'month',
+      'week',
+    ],
   }),
 }));
 

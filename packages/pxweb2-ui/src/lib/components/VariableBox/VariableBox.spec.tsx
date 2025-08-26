@@ -11,6 +11,7 @@ describe('VariableBox', () => {
         tableId={'test-tableid-1'}
         label={'test-1'}
         mandatory={false}
+        languageDirection="ltr"
         values={[{ code: 'test-1', label: 'test-1' }]}
         codeLists={[]}
         onChangeCodeList={() => {
