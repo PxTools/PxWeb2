@@ -228,7 +228,7 @@ function parseParamsToFilters(
     let label = '';
 
     if (fromYear != null && toYear != null) {
-      label = `${fromYear} - ${toYear}`;
+      label = `${fromYear}–${toYear}`;
     } else if (fromYear != null) {
       label = `From ${fromYear}`;
     } else if (toYear != null) {
