@@ -18,6 +18,8 @@
   list-style: none;
   align-self: stretch;
   width: 100%;
+  padding-top: 6px;
+  padding-bottom: 6px;
   &.compact {
     display: flex;
     max-width: 400px;
@@ -26,6 +28,7 @@
     text-overflow: ellipsis;
     min-width: 0;
     &.showMore {
+      display: ruby;
       flex-wrap: wrap;
     }
   }
@@ -90,12 +93,23 @@
   }
 }
 
-.showMoreText {
+.compactActions {
   display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.showMoreText {
+  cursor: pointer;
   background-color: inherit;
   font-family: PxWeb-font, sans-serif;
-  font-weight: 400;
+  font-weight: 500;
   color: var(--px-color-text-action);
+  &:focus-visible {
+    outline: 3px solid var(--px-color-border-focus-outline);
+    outline-offset: 5px;
+    box-shadow: 0 0 0 3px var(--px-color-border-focus-boxshadow);
+  }
 }
 
 .dots {
