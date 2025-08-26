@@ -5,13 +5,11 @@ import { useState, useContext, useEffect, useRef } from 'react';
 import classes from './ContentTop.module.scss';
 import {
   Alert,
-  BodyLong,
   BodyShort,
   Breadcrumbs,
   BreadcrumbItem,
   Button,
   Heading,
-  Icon,
   Link,
   PxTable,
 } from '@pxweb2/pxweb2-ui';
@@ -178,15 +176,14 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
     },
     {
       label: staticTitle,
-      href:  '',
+      href: '',
     },
   ];
 
   return (
     <>
-    <Breadcrumbs variant='compact' breadcrumbItems={breadcrumbItems} />
+      <Breadcrumbs variant="compact" breadcrumbItems={breadcrumbItems} />
       <div className={cl(classes[`content-top`])}>
-
         {/* <nav
           className={cl(classes.breadcrumbs)}
           aria-label={t('presentation_page.main_content.arialabelbreadcrumb')}
