@@ -1,6 +1,7 @@
 import { type Table, TableService, OpenAPI } from '@pxweb2/pxweb2-api-client';
 import { getConfig } from './config/getConfig';
 import type { Filter } from '../pages/StartPage/StartPageTypes';
+import { getYearRangeFromPeriod } from './startPageFilters';
 
 export async function getAllTables() {
   const config = getConfig();
@@ -54,5 +55,81 @@ export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
       });
     }
   };
-  return testTimeUnitFilters() && testSubjectFilters();
+
+  const searchFilter = filters.find((f) => {
+    return f.type === 'search';
+  });
+
+  const testSearchFilter = function () {
+    if (!searchFilter) {
+      return true;
+    } else {
+      const text = ''
+        .concat(
+          table.description ?? '',
+          ' ',
+          table.label ?? '',
+          ' ',
+          table.id,
+          ' ',
+          table.variableNames.join(' '),
+        )
+        .toLowerCase()
+        .normalize();
+
+      return searchFilter.value
+        .toLowerCase()
+        .normalize()
+        .split(' ')
+        .every((word) => {
+          return text.includes(word);
+        });
+    }
+  };
+
+  const testYearRangeFilter = () => {
+    const yearRangeFilter = filters.find((f) => f.type === 'yearRange');
+    if (!yearRangeFilter) {
+      return true;
+    }
+
+    const [fromStr, toStr] = yearRangeFilter.value.split('-');
+    const from = parseInt(fromStr, 10);
+    const to = toStr ? parseInt(toStr, 10) : from;
+
+    const [firstStart, firstEnd] = getYearRangeFromPeriod(
+      table.firstPeriod ?? '',
+    );
+    const [lastStart, lastEnd] = getYearRangeFromPeriod(table.lastPeriod ?? '');
+    const tableStart = Math.min(firstStart, lastStart);
+    const tableEnd = Math.max(firstEnd, lastEnd);
+
+    if (!Number.isFinite(tableStart) || !Number.isFinite(tableEnd)) {
+      return false;
+    }
+
+    const hasFrom = fromStr !== undefined && fromStr !== '' && !isNaN(from);
+    const hasTo = !!toStr;
+
+    if (hasFrom && hasTo) {
+      return tableStart <= from && tableEnd >= to;
+    }
+
+    if (hasFrom) {
+      return from >= tableStart && from <= tableEnd;
+    }
+
+    if (hasTo) {
+      return to >= tableStart && to <= tableEnd;
+    }
+
+    return true;
+  };
+
+  return (
+    testTimeUnitFilters() &&
+    testSubjectFilters() &&
+    testYearRangeFilter() &&
+    testSearchFilter()
+  );
 }

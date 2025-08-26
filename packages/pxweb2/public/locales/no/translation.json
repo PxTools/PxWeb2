@@ -71,7 +71,14 @@
       "remove_filter_aria": "Fjern filter, {{value}}",
       "subject": "Emne",
       "timeUnit": "Tidsperiode",
-      "year": "Årstall",
+      "year": {
+        "title": "År",
+        "from_label": "Fra",
+        "to_label": "Til",
+        "from_year": "Fra år",
+        "to_year": "Til år",
+        "clear_selection": "Fjern valg"
+      },
       "variabel": "Variabel",
       "frequency": {
         "annual": "År",
@@ -125,10 +132,7 @@
                 "confirm_button": "Bekreft"
               }
             },
-            "mixed_checkbox": {
-              "select_all": "Velg alle",
-              "deselect_all": "Fjern alle"
-            },
+            "mixed_checkbox": "Velg alle",
             "values_list": {
               "aria_label": "Liste av {{total}} verdier.",
               "no_results_heading": "Ingen treff på «{{search}}»",
@@ -151,7 +155,9 @@
         "customize": {
           "title": "Tilpass",
           "pivot": {
-            "title": "Pivot"
+            "title": "Roter tabellen",
+            "aria_label": "Roter tabellen mot høyre",
+            "screen_reader_announcement": "Tabell rotert etter {{first_variables}} og {{last_variable}}"
           },
           "rearrange": {
             "title": "Omorganiser tabell",
@@ -177,16 +183,19 @@
         "title": "Lagre",
         "file": {
           "title": "Last ned som fil",
-          "excel": "Excel (.xlsx)",
-          "csv": "Semikolonseparert med overskrift (.csv)",
-          "px": "PC-Axis (.px)",
-          "jsonstat2": "JSON-stat2 (.json)",
-          "html": "HTML (.html)",
-          "parquet": "Parquet (.parquet)"
+          "loading_announcement": "Filen behandles fortsatt. Vennligst vent.",
+          "formats": {
+            "excel": "Excel (.xlsx)",
+            "csv": "Semikolonseparert med overskrift (.csv)",
+            "px": "PC-Axis (.px)",
+            "jsonstat2": "JSON-stat2 (.json)",
+            "html": "HTML (.html)",
+            "parquet": "Parquet (.parquet)"
+          }
         },
         "savequery": {
           "title": "Lenke til oppdatert tabell",
-          "info": "Vi sparer på tabellen din og holder den oppdatert. Du velger selv hvordan nye tidsperioder skal legges til.",
+          "info": "Du får en unik lenke til tabellen din, som vi holder oppdatert for deg. Hvordan nye tidsperioder legges til, velger du selv.",
           "radioLegend": "Valg for nye tidsperioder",
           "periodOptions": {
             "selected": "Ikke legg til nye (tabellen vil kun vise de du har valgt nå)",

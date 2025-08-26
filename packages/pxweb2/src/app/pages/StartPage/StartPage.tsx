@@ -3,6 +3,7 @@ import { useTranslation, Trans } from 'react-i18next';
 import type { TFunction } from 'i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import cl from 'clsx';
+import { debounce } from 'lodash';
 
 import styles from './StartPage.module.scss';
 import {
@@ -15,6 +16,7 @@ import {
   Heading,
   Ingress,
   BodyShort,
+  SearchHandle,
 } from '@pxweb2/pxweb2-ui';
 import { type Table } from '@pxweb2/pxweb2-api-client';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
@@ -46,6 +48,7 @@ const StartPage = () => {
   const [lastVisibleCount, setLastVisibleCount] = useState(paginationCount);
   const [isPaginating, setIsPaginating] = useState(false);
   const [paginationButtonWidth, setPaginationButtonWidth] = useState<number>();
+  const [isFadingTableList, setIsFadingTableList] = useState(false);
 
   const filterBackButtonRef = useRef<HTMLButtonElement>(null);
   const filterToggleRef = useRef<HTMLButtonElement>(null);
@@ -53,6 +56,7 @@ const StartPage = () => {
   const paginationButtonRef = useRef<HTMLButtonElement>(null);
   const firstNewCardRef = useRef<HTMLDivElement>(null);
   const lastVisibleCardRef = useRef<HTMLDivElement>(null);
+  const searchFieldRef = useRef<SearchHandle>(null);
 
   useEffect(() => {
     async function fetchTables() {
@@ -158,16 +162,28 @@ const StartPage = () => {
     setLastVisibleCount(newCount);
     requestAnimationFrame(() => {
       setVisibleCount(newCount);
+      triggerFade();
     });
   };
 
   const handleShowLess = () => {
     setVisibleCount(paginationCount);
+    triggerFade();
     requestAnimationFrame(() => {
       if (lastVisibleCardRef.current) {
         lastVisibleCardRef.current.focus();
       }
     });
+  };
+
+  const triggerFade = () => {
+    setIsFadingTableList(true);
+    setTimeout(() => setIsFadingTableList(false), 500); // eller 400ms hvis du bruker kortere CSS
+  };
+
+  const handleFilterChange = () => {
+    setVisibleCount(paginationCount);
+    triggerFade();
   };
 
   const renderPaginationButton = (
@@ -194,6 +210,7 @@ const StartPage = () => {
       return (
         <Chips.Removable
           filled
+          onMouseDown={(e) => e.preventDefault()}
           onClick={() => {
             dispatch({
               type: ActionType.RESET_FILTERS,
@@ -202,7 +219,8 @@ const StartPage = () => {
                 subjects: getSubjectTree(state.availableTables),
               },
             });
-            setVisibleCount(paginationCount);
+            searchFieldRef.current?.clearInputField();
+            handleFilterChange();
           }}
         >
           {t('start_page.filter.remove_all_filter')}
@@ -283,10 +301,26 @@ const StartPage = () => {
     <>
       {renderNumberofTablesScreenReader()}
       {renderTableCount()}
-      <div className={styles.tableCardList}>{renderCards()}</div>
+      <div
+        className={cl(styles.tableCardList, {
+          [styles.fadeList]: isFadingTableList,
+        })}
+      >
+        {renderCards()}
+      </div>
       {renderPagination()}
     </>
   );
+
+  // Debounce the dispatch for search filter, so it waits a few moments for typing to finish
+  const debouncedDispatch = useRef(
+    debounce((value: string) => {
+      dispatch({
+        type: ActionType.ADD_SEARCH_FILTER,
+        payload: { text: value, language: i18n.language },
+      });
+    }, 500),
+  ).current;
 
   const renderPagination = () => {
     const shouldShowPagination =
@@ -386,9 +420,7 @@ const StartPage = () => {
             </div>
 
             <div className={styles.filterOverlayContent}>
-              <FilterSidebar
-                onFilterChange={() => setVisibleCount(paginationCount)}
-              />
+              <FilterSidebar onFilterChange={handleFilterChange} />
             </div>
 
             <div className={styles.filterOverlayFooter}>
@@ -427,6 +459,40 @@ const StartPage = () => {
     );
   };
 
+  const renderTableListSEO = () => {
+    return (
+      <nav
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          left: '-9999px',
+          width: '1px',
+          height: '1px',
+          overflow: 'hidden',
+        }}
+      >
+        <h2>TableList(SEO)</h2>
+        <ul>
+          {state.availableTables.map((table) => {
+            const config = getConfig();
+            const language = i18n.language;
+            const showLangInPath =
+              config.language.showDefaultLanguageInPath ||
+              language !== config.language.defaultLanguage;
+            const langPrefix = showLangInPath ? `/${language}` : '';
+            return (
+              <li key={table.id}>
+                <a href={`${langPrefix}/table/${table.id}`} tabIndex={-1}>
+                  {table.label}
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+    );
+  };
+
   return (
     <>
       <Header />
@@ -446,6 +512,10 @@ const StartPage = () => {
                 <Search
                   searchPlaceHolder={t('start_page.search_placeholder')}
                   variant="default"
+                  ref={searchFieldRef}
+                  onChange={(value: string) => {
+                    debouncedDispatch(value);
+                  }}
                 />
               </div>
 
@@ -472,9 +542,7 @@ const StartPage = () => {
                 >
                   {t('start_page.filter.header')}
                 </Heading>
-                <FilterSidebar
-                  onFilterChange={() => setVisibleCount(paginationCount)}
-                />
+                <FilterSidebar onFilterChange={handleFilterChange} />
               </div>
             )}
 
@@ -485,32 +553,33 @@ const StartPage = () => {
                 <div className={styles.filterPillContainer}>
                   <Chips>
                     {renderRemoveAllChips()}
-                    {sortAndDeduplicateFilterChips(state.activeFilters).map(
-                      (filter) => (
-                        <Chips.Removable
-                          onClick={() => {
-                            dispatch({
-                              type: ActionType.REMOVE_FILTER,
-                              payload: {
-                                value: filter.value,
-                                type: filter.type,
-                              },
-                            });
-                            setVisibleCount(paginationCount);
-                          }}
-                          aria-label={t(
-                            'start_page.filter.remove_filter_aria',
-                            {
+                    {sortAndDeduplicateFilterChips(
+                      state.activeFilters,
+                      state.subjectOrderList,
+                    ).map((filter) => (
+                      <Chips.Removable
+                        onClick={() => {
+                          dispatch({
+                            type: ActionType.REMOVE_FILTER,
+                            payload: {
                               value: filter.value,
+                              type: filter.type,
                             },
-                          )}
-                          key={filter.value}
-                          truncate
-                        >
-                          {filter.label}
-                        </Chips.Removable>
-                      ),
-                    )}
+                          });
+                          handleFilterChange();
+                          if (filter.type == 'search') {
+                            searchFieldRef.current?.clearInputField();
+                          }
+                        }}
+                        aria-label={t('start_page.filter.remove_filter_aria', {
+                          value: filter.value,
+                        })}
+                        key={filter.value}
+                        truncate
+                      >
+                        {filter.label}
+                      </Chips.Removable>
+                    ))}
                   </Chips>
                 </div>
               )}
@@ -542,6 +611,7 @@ const StartPage = () => {
           </div>
         </div>
       </div>
+      {renderTableListSEO()}
       <Footer />
     </>
   );

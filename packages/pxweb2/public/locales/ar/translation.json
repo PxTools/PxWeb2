@@ -91,10 +91,7 @@
                 "confirm_button": "يحفظ"
               }
             },
-            "mixed_checkbox": {
-              "select_all": "حدد الكل",
-              "deselect_all": "قم بإلغاء تحديد الكل"
-            },
+            "mixed_checkbox": "حدد الكل",
             "values_list": {
               "aria_label": "قائمة {{total}} قيم.",
               "no_results_heading": "“{{search}}” لا توجد نتائج ل",
@@ -117,7 +114,9 @@
         "customize": {
           "title": "تخصيص",
           "pivot": {
-            "title": "المحور"
+            "title": "تدوير الجدول",
+            "aria_label": "تدوير الجدول في اتجاه عقارب الساعة",
+            "screen_reader_announcement": "جدول مدور بعد {{first_variables}} و {{last_variable}}"
           },
           "rearrange": {
             "title": "إعادة ترتيب الجدول",
@@ -143,16 +142,19 @@
         "title": "يحفظ",
         "file": {
           "title": "حفظ كملف",
-          "excel": "اكسل (xlsx)",
-          "csv": "مفصولة بفاصلة منقوطة مع عنوان (.csv)",
-          "px": "PC-Axis (.px)",
-          "jsonstat2": "JSON-stat2 (.json)",
-          "html": "HTML (.html)",
-          "parquet": "Parquet (.parquet)"
+          "loading_announcement": "الملف لا يزال قيد المعالجة. يرجى الانتظار.",
+          "formats": {
+            "excel": "اكسل (xlsx)",
+            "csv": "مفصولة بفاصلة منقوطة مع عنوان (.csv)",
+            "px": "PC-Axis (.px)",
+            "jsonstat2": "JSON-stat2 (.json)",
+            "html": "HTML (.html)",
+            "parquet": "Parquet (.parquet)"
+          }
         },
         "savequery": {
           "title": "رابط إلى الجدول المحدث",
-          "info": "سيتم حفظ جدولك وتحديثه تلقائيًا. يمكنك تحديد كيفية إضافة الفترات الزمنية الجديدة.",
+          "info": "ستحصل على رابط فريد لجدولك، وسنُحدّثه لك باستمرار. إضافة الفترات الزمنية الجديدة أمرٌ متروك لك.",
           "radioLegend": "خيارات لفترات زمنية جديدة",
           "periodOptions": {
             "selected": "لا تقم بإضافة فترات زمنية جديدة (سيعرض الجدول فقط الفترات الزمنية المحددة حاليًا)",

@@ -72,7 +72,14 @@ interface Resources {
         remove_filter_aria: 'Remove filter, {{value}}';
         subject: 'Topic';
         timeUnit: 'Time period';
-        year: 'Year';
+        year: {
+          title: 'Year';
+          from_label: 'From';
+          to_label: 'To';
+          from_year: 'From year';
+          to_year: 'To year';
+          clear_selection: 'Clear selection';
+        };
         variabel: 'Variable';
         frequency: {
           annual: 'Year';
@@ -90,8 +97,8 @@ interface Resources {
         show_more: 'Show more';
         show_less: 'Show less';
         loading: 'Loading...';
-        show_number_of_tables: 'Showing  <countShown> of <countTotal>';
-        show_number_of_tables_aria: '<number of> tables found, Showing  <countShown> of <countTotal>';
+        show_number_of_tables: 'Showing {{countShown}} of {{countTotal}}';
+        show_number_of_tables_aria: '{{count}} tables found, showing {{countShown}} of {{countTotal}}';
       };
     };
     presentation_page: {
@@ -126,10 +133,7 @@ interface Resources {
                   confirm_button: 'Save';
                 };
               };
-              mixed_checkbox: {
-                select_all: 'Select all';
-                deselect_all: 'Deselect all';
-              };
+              mixed_checkbox: 'Select all';
               values_list: {
                 aria_label: 'List of {{total}} values.';
                 no_results_heading: 'No results for “{{search}}”';
@@ -152,7 +156,9 @@ interface Resources {
           customize: {
             title: 'Customize';
             pivot: {
-              title: 'Pivot';
+              title: 'Rotate table';
+              aria_label: 'Rotate table clockwise';
+              screen_reader_announcement: 'Table rotated after {{first_variables}} and {{last_variable}}';
             };
             rearrange: {
               title: 'Rearrange table';
@@ -177,30 +183,32 @@ interface Resources {
         save: {
           title: 'Save';
           file: {
-            title: 'Save as file';
-            excel: 'Excel (.xlsx)';
-            csv: 'Semicolon-delimited with heading (.csv)';
-            'relational-csv': 'Relational table (.csv)';
-            px: 'PC-Axis (.px)';
-            jsonstat2: 'JSON-stat2 (.json)';
-            html: 'HTML (.html)';
-            parquet: 'Parquet (.parquet)';
+            title: 'Download as file';
+            loading_announcement: 'File is still being processed. Please wait.';
+            formats: {
+              excel: 'Excel (.xlsx)';
+              csv: 'Semicolon-delimited with heading (.csv)';
+              px: 'PC-Axis (.px)';
+              jsonstat2: 'JSON-stat2 (.json)';
+              html: 'HTML (.html)';
+              parquet: 'Parquet (.parquet)';
+            };
           };
           savequery: {
             title: 'Link to updated table';
-            info: 'Your table is saved and automatically kept up to date. You can decide how new time periods are included.';
+            info: 'You get a unique link to your table, that we keep updated for you. How new time periods are added is up to you.';
             radioLegend: 'Options for new time periods';
             periodOptions: {
-              selected: "Don't add new time periods (the table will only show the time periods currently selected)";
-              from: 'Add new time periods (they will be added to the ones currently selected)';
-              top: 'Add new time periods and remove the oldest ones';
+              selected: "Don't add new ones (the table will only show the ones you've selected now)";
+              from: "Add new ones (they will be added to the ones you've selected now)";
+              top: 'Add new ones, but keep the same number (when a new time period is added, the oldest one is removed)';
             };
-            createButton: 'Create link';
+            createButton: 'Get link';
             copyButton: 'Copy link';
             copiedButton: 'Link copied';
-            createStatus: 'Save query generated with id “{{query}}”.';
-            copyStatus: 'Save query copied to clipboard.';
-            loadingStatus: 'Generating saved query..';
+            createStatus: 'Link generated. Click again to copy the link';
+            copyStatus: 'Link copied to clipboard';
+            loadingStatus: 'Generating link';
           };
           imagefile: {
             title: 'Save as graph';
@@ -314,6 +322,7 @@ interface Resources {
       simple_number_with_three_decimals: '{{value, pxNumber(minimumFractionDigits: 3; maximumFractionDigits: 3;)}}';
       simple_number_with_four_decimals: '{{value, pxNumber(minimumFractionDigits: 4; maximumFractionDigits: 4;)}}';
       simple_number_with_five_decimals: '{{value, pxNumber(minimumFractionDigits: 5; maximumFractionDigits: 5;)}}';
+      simple_number_with_six_decimals: '{{value, pxNumber(minimumFractionDigits: 6; maximumFractionDigits: 6;)}}';
       simple_number_with_default_formatter: "{{value, number(minimumFractionDigits: 5; maximumFractionDigits: 5; roundingMode: 'halfExpand')}}";
     };
   };

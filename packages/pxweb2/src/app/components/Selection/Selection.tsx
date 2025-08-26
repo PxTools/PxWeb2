@@ -231,6 +231,7 @@ export function Selection({
 }: SelectionProps) {
   const variables = useVariables();
   const app = useApp();
+  const { isTablet } = useApp();
   const {
     selectedVBValues,
     setSelectedVBValues,
@@ -378,7 +379,7 @@ export function Selection({
   }
 
   async function handleCodeListChange(
-    selectedItem: SelectOption | undefined,
+    selectedItem: SelectOption,
     varId: string,
   ) {
     const lang = i18n.resolvedLanguage;
@@ -398,13 +399,11 @@ export function Selection({
 
     const prevSelectedValues = structuredClone(selectedVBValues);
 
-    const newSelectedValues = updateSelectedCodelistForVariable(
-      selectedItem,
-      varId,
-      prevSelectedValues,
-      currentVariableMetadata,
-    );
-    if (!newSelectedValues) {
+    const isNewCodelist =
+      prevSelectedValues?.find((variable) => variable.id === varId)
+        ?.selectedCodeList !== selectedItem?.value;
+
+    if (!isNewCodelist) {
       return; // No change in codelist selection
     }
 
@@ -432,6 +431,20 @@ export function Selection({
 
         if (pxTableMetaToRender !== null) {
           setPxTableMetaToRender(null);
+        }
+
+        const newSelectedValues = updateSelectedCodelistForVariable(
+          selectedItem,
+          varId,
+          prevSelectedValues,
+          currentVariableMetadata,
+          pxTable.metadata,
+        );
+
+        if (!newSelectedValues) {
+          throw new Error(
+            `Could not update selected codelist for variable: ${varId}`,
+          );
         }
 
         // UpdateAndSyncVBValues with the new selected values to trigger API data-call
@@ -540,6 +553,7 @@ export function Selection({
       isLoadingMetadata={isLoadingMetadata}
       hasLoadedDefaultSelection={hasLoadedInitialSelection}
       isChangingCodeList={isFadingVariableList}
+      isTablet={isTablet}
       handleCodeListChange={handleCodeListChange}
       handleCheckboxChange={handleCheckboxChange}
       handleMixedCheckboxChange={handleMixedCheckboxChange}
