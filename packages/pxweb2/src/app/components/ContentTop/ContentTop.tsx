@@ -104,6 +104,8 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
   const selectedMetadata = useTableData().data?.metadata;
   const buildTableTitle = useTableData().buildTableTitle;
   const { setTitle } = useApp();
+  const { isMobile } = useApp();
+
 
   const openInformationButtonRef = useRef<HTMLButtonElement>(null);
   const openInformationLinkRef = useRef<HTMLAnchorElement>(null);
@@ -180,9 +182,11 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
     },
   ];
 
+  const breadcrumbsVariant = isMobile ? 'compact' : 'default';
+
   return (
     <>
-      <Breadcrumbs variant="compact" breadcrumbItems={breadcrumbItems} />
+      <Breadcrumbs variant={breadcrumbsVariant} breadcrumbItems={breadcrumbItems} />
       <div className={cl(classes[`content-top`])}>
         {/* <nav
           className={cl(classes.breadcrumbs)}
