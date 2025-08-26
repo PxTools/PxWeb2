@@ -1,4 +1,9 @@
-import { type Table, TableService, OpenAPI } from '@pxweb2/pxweb2-api-client';
+import {
+  type Table,
+  TableService,
+  OpenAPI,
+  ApiError,
+} from '@pxweb2/pxweb2-api-client';
 import { getConfig } from './config/getConfig';
 import type { Filter } from '../pages/StartPage/StartPageTypes';
 import { getYearRangeFromPeriod } from './startPageFilters';
@@ -19,8 +24,32 @@ export async function getAllTables(language?: string) {
     );
 
     return response.tables;
-  } catch (error) {
-    console.error('Failed to fetch tables:', error);
+
+    // Antipattern: a try/catch inside a catch is not recommended, but as a fallback in
+    // case the selected language is not supported, it is needed in this case.
+    // This ensures it is only retried once before failing completely. If fallback works, user should not experience any errors.
+  } catch (err: unknown) {
+    const error = err as ApiError;
+
+    if (error.body.title && error.body.title == 'Unsupported language') {
+      try {
+        const response = await TableService.listAllTables(
+          config.language.fallbackLanguage,
+          undefined,
+          undefined,
+          true,
+          1,
+          10000,
+        );
+
+        return response.tables;
+      } catch (err: unknown) {
+        const error = err as ApiError;
+        throw error;
+      }
+    }
+
+    console.error('Failed to fetch tables:' + JSON.stringify(error, null, 2));
     throw error;
   }
 }
