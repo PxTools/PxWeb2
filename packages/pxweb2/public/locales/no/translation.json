@@ -6,8 +6,9 @@
   "common": {
     "title": "PxWeb 2.0",
     "header": {
-      "title": "PxWeb 2.0 [Main]",
-      "logo": "PxWeb 2.0"
+      "logo": "PxWeb 2.0",
+      "logo_alt": "Til forsiden",
+      "language_selector": "Språk"
     },
     "not_found": {
       "page_not_found": {
@@ -101,11 +102,6 @@
     }
   },
   "presentation_page": {
-    "header": {
-      "searchbutton": "Søk",
-      "languagebutton": "språk",
-      "statistics": "Statistikkbanken"
-    },
     "sidemenu": {
       "arialabeltoolsidemenu": "Verktøymeny for tabell",
       "hide": "Skjul",

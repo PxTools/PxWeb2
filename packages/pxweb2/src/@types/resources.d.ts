@@ -7,8 +7,9 @@ interface Resources {
     common: {
       title: 'PxWeb 2.0';
       header: {
-        title: 'PxWeb 2.0 [Main]';
         logo: 'PxWeb 2.0';
+        logo_alt: 'To the front page';
+        language_selector: 'Language';
       };
       not_found: {
         page_not_found: {
@@ -102,11 +103,6 @@ interface Resources {
       };
     };
     presentation_page: {
-      header: {
-        searchbutton: 'Search';
-        languagebutton: 'languages';
-        statistics: 'Statistikkbanken';
-      };
       sidemenu: {
         arialabeltoolsidemenu: 'Tool menu for table';
         hide: 'Hide';

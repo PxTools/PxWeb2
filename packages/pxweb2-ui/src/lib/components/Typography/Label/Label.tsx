@@ -10,6 +10,7 @@ export interface LabelProps
   visuallyHidden?: boolean;
   children?: React.ReactNode;
   className?: string;
+  forID?: string;
 }
 
 export function Label({
@@ -18,6 +19,7 @@ export function Label({
   visuallyHidden = false,
   children,
   className = '',
+  forID = '',
   ...rest
 }: LabelProps) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
@@ -32,6 +34,7 @@ export function Label({
           cl({ [classes['visually-hidden']]: visuallyHidden }),
         ) + cssClasses
       }
+      {...(forID.length > 0 ? { htmlFor: forID } : {})}
       {...rest}
     >
       {children}
