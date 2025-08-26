@@ -43,7 +43,13 @@ export const NavigationDrawer = forwardRef<
     'ChevronLeft',
     'ChevronRight',
   );
+  function handleKeyDown(event: React.KeyboardEvent<HTMLButtonElement>) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault(); // Prevent scrolling with space
 
+      onClose(true, view);
+    }
+  }
   React.useEffect(() => {
     if (
       document.activeElement !== document.body &&
@@ -81,6 +87,7 @@ export const NavigationDrawer = forwardRef<
             ref={ref}
             type="button"
             onClick={() => onClose(false, view)}
+            onKeyDown={handleKeyDown}
             className={cl(styles.hideMenu, styles.clickable)}
           >
             <span className={styles.hideIconWrapper}>
