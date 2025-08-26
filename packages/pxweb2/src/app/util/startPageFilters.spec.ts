@@ -10,6 +10,7 @@ import {
   updateSubjectTreeCounts,
   buildSubjectToTableIdsMap,
   type TableWithPaths,
+  getVariables,
 } from '../util/startPageFilters';
 import { Filter, type PathItem } from '../pages/StartPage/StartPageTypes';
 import { Table } from '@pxweb2/pxweb2-api-client';
@@ -118,7 +119,7 @@ const inExample: PathItem = {
   children: [],
 };
 
-const tableExamles = [
+const tableExamples = [
   {
     id: '1',
     label:
@@ -224,7 +225,7 @@ describe('Ensure the tree flattens correctly', () => {
   });
 });
 
-describe('Correctly sort and deduplicate filters', () => {
+describe('Correctly sort, filter and deduplicate filters', () => {
   const rawFilters: Filter[] = [
     {
       type: 'subject',
@@ -312,11 +313,18 @@ describe('Correctly sort and deduplicate filters', () => {
     const performedDeduped = deduplicateFiltersByValue(sortedFilters);
     expect(performedDeduped).toEqual(dedupedFilters);
   });
+
+  it('Should not include filters which are in the variable exclusion list', () => {
+    const variableList = getVariables(tableExamples);
+
+    expect(variableList.has('observations')).toBe(true);
+    expect(variableList.has('month')).toBe(false);
+  });
 });
 
 describe('getYearRanges', () => {
   it('returns correct min and max for multiple valid tables', () => {
-    expect(getYearRanges(tableExamles)).toEqual({
+    expect(getYearRanges(tableExamples)).toEqual({
       min: 1920,
       max: 2050,
     });
