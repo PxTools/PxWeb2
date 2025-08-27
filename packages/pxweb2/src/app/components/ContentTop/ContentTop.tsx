@@ -12,6 +12,7 @@ import {
   Heading,
   Link,
   PxTable,
+  PathElement,
 } from '@pxweb2/pxweb2-ui';
 import TableInformation from '../TableInformation/TableInformation';
 import { AccessibilityContext } from '../../context/AccessibilityProvider';
@@ -26,6 +27,7 @@ import useApp from '../../context/useApp';
 export interface ContenetTopProps {
   readonly pxtable: PxTable;
   readonly staticTitle: string;
+  readonly pathElements: PathElement[];
 }
 
 type NoteMessageType = {
@@ -93,7 +95,11 @@ export function createNoteMessage(
   };
 }
 
-export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
+export function ContentTop({
+  pxtable,
+  staticTitle,
+  pathElements,
+}: ContenetTopProps) {
   const { t } = useTranslation();
   const [isTableInformationOpen, setIsTableInformationOpen] =
     useState<boolean>(false);
@@ -104,6 +110,7 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
   const selectedMetadata = useTableData().data?.metadata;
   const buildTableTitle = useTableData().buildTableTitle;
   const { setTitle } = useApp();
+  //const { setPathElements } = useApp();
   const { isMobile } = useApp();
 
   const openInformationButtonRef = useRef<HTMLButtonElement>(null);
@@ -170,38 +177,30 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
     setTitle(staticTitle);
   }, [staticTitle, setTitle]);
 
-  const breadcrumbItems: BreadcrumbItem[] = [
-    {
-      label: 'PxWeb 2.0',
-      href: '#',
-    },
-    {
-      label: staticTitle,
-      href: '',
-    },
-  ];
+  const breadcrumbItems: BreadcrumbItem[] = [];
+
+  if (pathElements && pathElements.length > 0) {
+    breadcrumbItems.push(
+      ...pathElements.map((path) => ({
+        label: path.label,
+        href: path.id,
+      })),
+    );
+  }
+  breadcrumbItems.push({
+    label: tableTitle,
+    href: '',
+  });
 
   const breadcrumbsVariant = isMobile ? 'compact' : 'default';
 
   return (
     <>
-      <Breadcrumbs
-        variant={breadcrumbsVariant}
-        breadcrumbItems={breadcrumbItems}
-      />
       <div className={cl(classes[`content-top`])}>
-        {/* <nav
-          className={cl(classes.breadcrumbs)}
-          aria-label={t('presentation_page.main_content.arialabelbreadcrumb')}
-        >
-          <div className={cl(classes[`breadcrumbs-wrapper`])}>
-            <Link href="#" inline>
-              <BodyLong>PxWeb 2.0</BodyLong>
-            </Link>
-            <Icon iconName="ChevronRight"></Icon>
-            <BodyLong>{staticTitle}</BodyLong>
-          </div>
-        </nav> */}
+        <Breadcrumbs
+          variant={breadcrumbsVariant}
+          breadcrumbItems={breadcrumbItems}
+        />
         <div
           id="px-main-content"
           className={cl(classes[`heading-information`])}

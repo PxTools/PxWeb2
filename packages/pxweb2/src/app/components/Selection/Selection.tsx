@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { ApiError, TableService } from '@pxweb2/pxweb2-api-client';
 import {
   mapJsonStat2Response,
-  mapJsonStat2ResponsePaths,
+  mapJsonStat2ResponsePathElements,
 } from '../../../mappers/JsonStat2ResponseMapper';
 import { mapTableSelectionResponse } from '../../../mappers/TableSelectionResponseMapper';
 import {
@@ -292,7 +292,7 @@ export function Selection({
       .then(([Dataset, TableData]) => {
         const pxTable: PxTable = mapJsonStat2Response(Dataset, false);
 
-        pxTable.metadata.paths = mapJsonStat2ResponsePaths(
+        pxTable.metadata.pathElements = mapJsonStat2ResponsePathElements(
           TableData.paths ? TableData.paths.flat() : undefined,
         );
 
