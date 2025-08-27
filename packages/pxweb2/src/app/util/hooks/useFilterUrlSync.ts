@@ -1,12 +1,16 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 import type { TFunction } from 'i18next';
 import { ActionType } from '../../pages/StartPage/StartPageTypes';
 import type {
   StartPageState,
   Filter,
-  PathItem,
 } from '../../pages/StartPage/StartPageTypes';
 import { getYearLabels, getYearRangeLabelValue } from '../startPageFilters';
+import {
+  buildSubjectIndex,
+  findSubject,
+  type SubjectIndex,
+} from '../subjectTreeUtil';
 
 type FilterQuery = {
   searchText?: string;
@@ -16,30 +20,6 @@ type FilterQuery = {
   fromYear?: number;
   toYear?: number;
 };
-
-/**
- * Flattens a hierarchical subject tree into a flat list of all nodes.
- */
-function flattenSubjectTree(tree: PathItem[]) {
-  const result: PathItem[] = [];
-  const stack = [...tree];
-  while (stack.length) {
-    const n = stack.pop()!;
-    result.push(n);
-    if (n.children?.length) {
-      stack.push(...n.children);
-    }
-  }
-  return result;
-}
-
-/**
- * Finds a subject node in the tree using uniqueId first, falling back to id if no uniqueId match is found.
- */
-function findByUniqueIdOrId(tree: PathItem[], v: string) {
-  const all = flattenSubjectTree(tree);
-  return all.find((n) => n.uniqueId === v) ?? all.find((n) => n.id === v);
-}
 
 const createEmptyFilterQuery = (): FilterQuery => ({
   timeUnits: [],
@@ -174,7 +154,7 @@ function buildParamsFromFilters(
  */
 function parseParamsToFilters(
   params: URLSearchParams,
-  subjectTree: PathItem[],
+  subjectIndex: SubjectIndex,
   t: TFunction,
   availableTimeUnits?: string[],
 ): Filter[] {
@@ -219,16 +199,16 @@ function parseParamsToFilters(
     let addedAnySubject = false;
     subjectParam
       .split(',')
-      .map((idOrUid) => idOrUid.trim())
+      .map((s) => s.trim())
       .filter(Boolean)
-      .forEach((subjectKey, index) => {
-        const node = findByUniqueIdOrId(subjectTree, subjectKey);
+      .forEach((key, index) => {
+        const node = findSubject(subjectIndex, key);
         if (node) {
           filters.push({
             type: 'subject',
             value: node.id,
-            label: node.label,
             uniqueId: node.uniqueId,
+            label: node.label,
             index,
           });
           addedAnySubject = true;
@@ -298,6 +278,16 @@ export default function useFilterUrlSync(
   const hydratedRef = useRef(false);
   const lastAppliedQueryRef = useRef<string | null>(null);
 
+  const subjectIndex = useMemo(
+    () => buildSubjectIndex(state.availableFilters.subjectTree ?? []),
+    [state.availableFilters.subjectTree],
+  );
+
+  const availableTimeUnits = useMemo(
+    () => Array.from(state.availableFilters.timeUnits?.keys() ?? []),
+    [state.availableFilters.timeUnits],
+  );
+
   // Update the browser URL whenever activeFilters change.
   // Guard against overwriting incoming query parameters before hydration.
   useEffect(() => {
@@ -342,17 +332,12 @@ export default function useFilterUrlSync(
       return;
     }
 
-    const validTimeUnits = Array.from(
-      new Set(
-        state.availableTables.map((t) => t.timeUnit ?? '').filter(Boolean),
-      ),
-    );
     const params = new URLSearchParams(current);
     const filters = parseParamsToFilters(
       params,
-      state.availableFilters.subjectTree,
+      subjectIndex,
       t,
-      validTimeUnits,
+      availableTimeUnits,
     );
 
     lastAppliedQueryRef.current = current;
@@ -369,30 +354,19 @@ export default function useFilterUrlSync(
 
     hydratedRef.current = true;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    state.availableTables,
-    state.availableFilters.subjectTree,
-    state.originalSubjectTree,
-    dispatch,
-  ]);
+  }, [subjectIndex, t, availableTimeUnits, dispatch]);
 
   // Handle back/forward navigation
   // Sync filters from URL whenever the user navigates with back/forward buttons.
   useEffect(() => {
-    const onPopState = () => {
-      const params = new URLSearchParams(window.location.search);
-      const current = params.toString();
+    function onPopState() {
+      const paramsBefore = new URLSearchParams(window.location.search);
 
-      const validTimeUnits = Array.from(
-        new Set(
-          state.availableTables.map((t) => t.timeUnit ?? '').filter(Boolean),
-        ),
-      );
       const filters = parseParamsToFilters(
-        params,
-        state.availableFilters.subjectTree,
+        paramsBefore,
+        subjectIndex,
         t,
-        validTimeUnits,
+        availableTimeUnits,
       );
 
       dispatch({
@@ -406,17 +380,19 @@ export default function useFilterUrlSync(
         dispatch({ type: ActionType.ADD_FILTER, payload: filters });
       }
 
-      lastAppliedQueryRef.current = current;
+      const paramsAfter = new URLSearchParams(window.location.search);
+      lastAppliedQueryRef.current = paramsAfter.toString();
       hydratedRef.current = true;
-    };
+    }
 
     window.addEventListener('popstate', onPopState);
     return () => window.removeEventListener('popstate', onPopState);
   }, [
-    state.availableTables,
-    state.originalSubjectTree,
-    state.availableFilters.subjectTree,
     dispatch,
     t,
+    subjectIndex,
+    availableTimeUnits,
+    state.availableTables,
+    state.originalSubjectTree,
   ]);
 }
