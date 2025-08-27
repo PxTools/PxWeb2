@@ -198,7 +198,23 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
           pivotTable(pxTable, stubOrderDesktop, headingOrderDesktop);
         }
       } else {
-        // Language has changed.
+        // The number of variables has changed.
+
+        // Variable has been removed
+        // Remove all variables in stubMobile, headingMobile, stubDesktop and headingDesktop that does not exist in table variables
+        const variableIds = pxTable.metadata.variables.map(
+          (variable) => variable.id,
+        );
+        if (variableIds.length < stubDesktop.length + headingDesktop.length) {
+          setStubDesktop(stubDesktop.filter((id) => variableIds.includes(id)));
+          setHeadingDesktop(
+            headingDesktop.filter((id) => variableIds.includes(id)),
+          );
+          setStubMobile(stubMobile.filter((id) => variableIds.includes(id)));
+          setHeadingMobile(
+            headingMobile.filter((id) => variableIds.includes(id)),
+          );
+        }
 
         if (isMobile) {
           pivotTable(pxTable, stubMobile, headingMobile);
@@ -206,6 +222,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
           pivotTable(pxTable, stubDesktop, headingDesktop);
         }
 
+        // Variable has been added
         // Find all new variables and add them to the stub - Desktop
         const remainingVariables = pxTable.metadata.variables.filter(
           (variable) =>
