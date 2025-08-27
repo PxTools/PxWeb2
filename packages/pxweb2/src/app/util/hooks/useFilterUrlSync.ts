@@ -12,6 +12,7 @@ type FilterQuery = {
   searchText?: string;
   timeUnits: Set<string>;
   subjects: Set<string>;
+  variables: Set<string>;
   fromYear?: number;
   toYear?: number;
 };
@@ -43,6 +44,7 @@ function findByUniqueIdOrId(tree: PathItem[], v: string) {
 const createEmptyFilterQuery = (): FilterQuery => ({
   timeUnits: new Set<string>(),
   subjects: new Set<string>(),
+  variables: new Set<string>(),
 });
 
 // Ensure consistent query param order for stable URL comparisons
@@ -106,6 +108,9 @@ function mergeFilterIntoQuery(
       applyYearRangeToQuery(query, f, t);
       break;
     }
+    case 'variable':
+      query.variables.add(String(f.value));
+      break;
   }
   return query;
 }
@@ -133,6 +138,13 @@ function toSearchParams(query: FilterQuery): URLSearchParams {
   }
   if (query.toYear != null) {
     params.set('to', String(query.toYear));
+  }
+
+  if (query.variables.size) {
+    params.set(
+      'variable',
+      [...query.variables].sort(alphabeticalSort).join(','),
+    );
   }
 
   return params;
@@ -239,6 +251,23 @@ function parseParamsToFilters(
       label,
       index: 0,
     });
+  }
+
+  const variableParam = params.get('variable');
+  if (variableParam) {
+    variableParam
+      .split(',')
+      .map((v) => v.trim())
+      .filter(Boolean)
+      .forEach((v, index) => {
+        const label = v.charAt(0).toUpperCase() + v.slice(1);
+        filters.push({
+          type: 'variable',
+          value: v,
+          label,
+          index,
+        });
+      });
   }
 
   return filters;
