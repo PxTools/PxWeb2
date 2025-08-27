@@ -48,18 +48,6 @@ function applyYearRangeToQuery(
     if (Number.isFinite(to)) {
       query.toYear = to;
     }
-
-    // Hvis begge finnes men i feil rekkefølge, bytt om
-    if (
-      Number.isFinite(from) &&
-      Number.isFinite(to) &&
-      (query.fromYear as number) > (query.toYear as number)
-    ) {
-      const tmp = query.fromYear!;
-      query.fromYear = query.toYear!;
-      query.toYear = tmp;
-    }
-    return;
   }
 
   const year = Number(value);
