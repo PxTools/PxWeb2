@@ -2,7 +2,10 @@ import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
 
 import { ApiError, TableService } from '@pxweb2/pxweb2-api-client';
-import { mapJsonStat2Response, mapJsonStat2ResponsePaths } from '../../../mappers/JsonStat2ResponseMapper';
+import {
+  mapJsonStat2Response,
+  mapJsonStat2ResponsePaths,
+} from '../../../mappers/JsonStat2ResponseMapper';
 import { mapTableSelectionResponse } from '../../../mappers/TableSelectionResponseMapper';
 import {
   PxTable,
@@ -280,28 +283,24 @@ export function Selection({
     // Make parallel calls to getMetadataById and getTableById
     Promise.all([
       TableService.getMetadataById(
-      selectedTabId,
-      i18n.resolvedLanguage,
-      metaDataDefaultSelection,
+        selectedTabId,
+        i18n.resolvedLanguage,
+        metaDataDefaultSelection,
       ),
-      TableService.getTableById(
-      selectedTabId,
-      i18n.resolvedLanguage,
-      ),
+      TableService.getTableById(selectedTabId, i18n.resolvedLanguage),
     ])
       .then(([Dataset, TableData]) => {
-      const pxTable: PxTable = mapJsonStat2Response(Dataset, false);
+        const pxTable: PxTable = mapJsonStat2Response(Dataset, false);
 
-      pxTable.metadata.paths = mapJsonStat2ResponsePaths(
-        TableData.paths ? TableData.paths.flat() : undefined
-      );
+        pxTable.metadata.paths = mapJsonStat2ResponsePaths(
+          TableData.paths ? TableData.paths.flat() : undefined,
+        );
 
-      setPxTableMetadata(pxTable.metadata);
-      if (pxTableMetaToRender !== null) {
-        setPxTableMetaToRender(null);
-      }
-      setErrorMsg('');
-
+        setPxTableMetadata(pxTable.metadata);
+        if (pxTableMetaToRender !== null) {
+          setPxTableMetaToRender(null);
+        }
+        setErrorMsg('');
       })
       .then(() => {
         if (!shouldGetDefaultSelection) {

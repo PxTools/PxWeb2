@@ -107,7 +107,9 @@ export function mapJsonStat2Response(
  * @param paths - The path object from the JSON-stat 2.0 response.
  * @returns An array of Path objects.
  */
-export function mapJsonStat2ResponsePaths(paths: apiPath[] | undefined): Path[] {
+export function mapJsonStat2ResponsePaths(
+  paths: apiPath[] | undefined,
+): Path[] {
   if (paths) {
     return paths.map((path: apiPath) => {
       return {
