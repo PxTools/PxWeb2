@@ -5,12 +5,13 @@ import type {
   StartPageState,
   Filter,
 } from '../../pages/StartPage/StartPageTypes';
-import { getYearLabels, getYearRangeLabelValue } from '../startPageFilters';
 import {
+  getYearLabels,
+  getYearRangeLabelValue,
   buildSubjectIndex,
   findSubject,
   type SubjectIndex,
-} from '../subjectTreeUtil';
+} from '../startPageFilters';
 
 type FilterQuery = {
   searchText?: string;
