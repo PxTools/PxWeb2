@@ -80,7 +80,6 @@ export function mapJsonStat2Response(
     pathElements: undefined,
   };
 
-
   // Create the data object
   let data: PxTableData = {
     cube: {},
