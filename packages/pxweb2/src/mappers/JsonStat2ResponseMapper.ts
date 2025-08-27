@@ -22,7 +22,7 @@ import {
   ContentInfo,
   Note,
   DataCell,
-  Path,
+  PathElement,
 } from '@pxweb2/pxweb2-ui';
 import { getLabelText } from '../app/util/utils';
 
@@ -77,7 +77,9 @@ export function mapJsonStat2Response(
     variables: mapVariables(response),
     contacts: mapContacts(response.extension?.contact),
     notes: mapNotes(response.note, response.extension?.noteMandatory),
+    pathElements: undefined,
   };
+
 
   // Create the data object
   let data: PxTableData = {
@@ -107,14 +109,14 @@ export function mapJsonStat2Response(
  * @param paths - The path object from the JSON-stat 2.0 response.
  * @returns An array of Path objects.
  */
-export function mapJsonStat2ResponsePaths(
-  paths: apiPath[] | undefined,
-): Path[] {
-  if (paths) {
-    return paths.map((path: apiPath) => {
+export function mapJsonStat2ResponsePathElements(
+  pathElements: apiPath[] | undefined,
+): PathElement[] {
+  if (pathElements) {
+    return pathElements.map((pathElement: apiPath) => {
       return {
-        id: path.id,
-        label: path.label,
+        id: pathElement.id,
+        label: pathElement.label,
       };
     });
   } else {

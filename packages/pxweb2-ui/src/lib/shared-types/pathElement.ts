@@ -1,4 +1,4 @@
-export type Path = {
+export type PathElement = {
   /**
    * Path id
    */

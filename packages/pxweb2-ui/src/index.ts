@@ -50,7 +50,7 @@ export * from './lib/shared-types/codelistType';
 export * from './lib/shared-types/contact';
 export * from './lib/shared-types/contentInfo';
 export * from './lib/shared-types/note';
-export * from './lib/shared-types/path';
+export * from './lib/shared-types/pathElement';
 export * from './lib/shared-types/pxTable';
 export * from './lib/shared-types/pxTableData';
 export * from './lib/shared-types/pxTableMetadata';

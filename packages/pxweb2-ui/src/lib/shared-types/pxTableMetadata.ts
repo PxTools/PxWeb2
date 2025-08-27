@@ -1,4 +1,4 @@
-import { Path } from '../..';
+import { PathElement } from './pathElement';
 import { Contact } from './contact';
 import { Note } from './note';
 import { Variable } from './variable';
@@ -102,5 +102,5 @@ export type PxTableMetadata = {
   /**
    * The paths that are part of the table.
    */
-  paths: Path[];
+  pathElements?: PathElement[];
 };
