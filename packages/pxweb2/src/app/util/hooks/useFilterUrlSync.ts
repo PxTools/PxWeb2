@@ -10,9 +10,9 @@ import { getYearLabels, getYearRangeLabelValue } from '../startPageFilters';
 
 type FilterQuery = {
   searchText?: string;
-  timeUnits: Set<string>;
-  subjects: Set<string>;
-  variables: Set<string>;
+  timeUnits: string[];
+  subjects: string[];
+  variables: string[];
   fromYear?: number;
   toYear?: number;
 };
@@ -42,13 +42,10 @@ function findByUniqueIdOrId(tree: PathItem[], v: string) {
 }
 
 const createEmptyFilterQuery = (): FilterQuery => ({
-  timeUnits: new Set<string>(),
-  subjects: new Set<string>(),
-  variables: new Set<string>(),
+  timeUnits: [],
+  subjects: [],
+  variables: [],
 });
-
-// Ensure consistent query param order for stable URL comparisons
-const alphabeticalSort = (a: string, b: string) => a.localeCompare(b);
 
 function applyYearRangeToQuery(
   query: FilterQuery,
@@ -87,6 +84,16 @@ function applyYearRangeToQuery(
   }
 }
 
+function appendUnique(arr: string[], value: string) {
+  if (!arr.includes(value)) {
+    arr.push(value);
+  }
+}
+
+/**
+ * Convert each active Filter object from state into entries in the query model.
+ * This step ensures that filters can later be written to URL parameters.
+ */
 function mergeFilterIntoQuery(
   query: FilterQuery,
   f: Filter,
@@ -97,11 +104,11 @@ function mergeFilterIntoQuery(
       query.searchText = String(f.value ?? '');
       break;
     case 'timeUnit':
-      query.timeUnits.add(String(f.value));
+      appendUnique(query.timeUnits, String(f.value));
       break;
     case 'subject':
       if (f.uniqueId) {
-        query.subjects.add(String(f.uniqueId));
+        appendUnique(query.subjects, String(f.uniqueId));
       }
       break;
     case 'yearRange': {
@@ -109,12 +116,16 @@ function mergeFilterIntoQuery(
       break;
     }
     case 'variable':
-      query.variables.add(String(f.value));
+      appendUnique(query.variables, String(f.value));
       break;
   }
   return query;
 }
 
+/**
+ * Translate the internal FilterQuery into URLSearchParams.
+ * Order is preserved to match the order in which filters were added.
+ */
 function toSearchParams(query: FilterQuery): URLSearchParams {
   const params = new URLSearchParams();
 
@@ -122,15 +133,12 @@ function toSearchParams(query: FilterQuery): URLSearchParams {
     params.set('q', query.searchText);
   }
 
-  if (query.timeUnits.size) {
-    params.set(
-      'timeUnit',
-      [...query.timeUnits].sort(alphabeticalSort).join(','),
-    );
+  if (query.timeUnits.length) {
+    params.set('timeUnit', query.timeUnits.join(','));
   }
 
-  if (query.subjects.size) {
-    params.set('subject', [...query.subjects].sort(alphabeticalSort).join(','));
+  if (query.subjects.length) {
+    params.set('subject', query.subjects.join(','));
   }
 
   if (query.fromYear != null) {
@@ -140,11 +148,8 @@ function toSearchParams(query: FilterQuery): URLSearchParams {
     params.set('to', String(query.toYear));
   }
 
-  if (query.variables.size) {
-    params.set(
-      'variable',
-      [...query.variables].sort(alphabeticalSort).join(','),
-    );
+  if (query.variables.length) {
+    params.set('variable', query.variables.join(','));
   }
 
   return params;
@@ -152,8 +157,6 @@ function toSearchParams(query: FilterQuery): URLSearchParams {
 
 /**
  * Builds a canonical URLSearchParams object from a list of filters.
- * Values like `timeUnit` and `subject` are deduplicated and sorted alphabetically
- * to ensure the resulting query string is stable and predictable for comparisons.
  */
 function buildParamsFromFilters(
   filters: Filter[],
@@ -167,7 +170,7 @@ function buildParamsFromFilters(
 }
 
 /**
- * Parses the current URLSearchParams into a list of Filter objects.
+ * Parse URL parameters back into Filter[] so they can hydrate state on first load.
  */
 function parseParamsToFilters(
   params: URLSearchParams,
