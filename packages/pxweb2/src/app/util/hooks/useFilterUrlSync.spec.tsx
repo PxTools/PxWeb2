@@ -58,13 +58,22 @@ const tableExamles = [
   },
 ] as Table[];
 
+const subjectTree = [
+  { id: 'al', label: 'Arbeid', uniqueId: 'al', children: [
+    { id: 'al03', label: 'Del', uniqueId: 'al__al03', children: [
+      { id: 'aku', label: 'AKU', uniqueId: 'al__al03__aku', children: [] }
+    ] }
+  ] }
+];
+
 const baseState = (): StartPageState => ({
   availableTables: tableExamles,
   filteredTables: tableExamles,
   availableFilters: {
-    subjectTree: [],
+    subjectTree: subjectTree,
     timeUnits: new Map<string, number>(),
     yearRange: { min: 0, max: 9999 },
+    variables: new Map<string, number>(),
   },
   activeFilters: [],
   loading: false,
@@ -133,5 +142,92 @@ describe('useFilterUrlSync', () => {
     const lastCallArgs = replaceSpy.mock.calls.at(-1);
     expect(lastCallArgs?.[2]).toMatch(/^\S*\/start\?timeUnit=Monthly$/);
     expect(currentUrl()).toMatch(/\/start\?timeUnit=Monthly$/);
+  });
+  it('writes variables to URL in insertion order', async () => {
+    const dispatch = vi.fn();
+    const state = baseState();
+    state.activeFilters = [
+      { type: 'variable', value: 'age', label: 'Age', index: 0 },
+      { type: 'variable', value: 'sex', label: 'Sex', index: 1 },
+    ];
+
+    await act(async () => {
+      render(<Harness state={state} dispatch={dispatch} />);
+    });
+
+    expect(window.location.search).toBe(`?variable=${encodeURIComponent('age,sex')}`);
+  });
+});
+
+
+
+describe('year range in URL', () => {
+  vi.mock('../startPageFilters', async (orig) => {
+    const mod: any = await orig();
+    return {
+      ...mod,
+      getYearLabels: () => ({ fromLabel: 'From', toLabel: 'To' }),
+    };
+  });
+  
+  beforeEach(() => {
+    window.history.replaceState({}, '', '/');
+  });
+
+  it('skriver full range "1990-2000" som ?from=1990&to=2000', async () => {
+    const dispatch = vi.fn();
+    const state = baseState();
+    state.activeFilters = [
+      { type: 'yearRange', value: '1990-2000', label: '1990 - 2000', index: 0 },
+    ];
+
+    await act(async () => {
+      render(<Harness state={state} dispatch={dispatch} />);
+    });
+
+    expect(window.location.search).toBe('?from=1990&to=2000');
+  });
+
+  it('skriver kun "From 1749" som ?from=1749 (ingen to)', async () => {
+    const dispatch = vi.fn();
+    const state = baseState();
+    state.activeFilters = [
+      { type: 'yearRange', value: '1749', label: 'From 1749', index: 0 },
+    ];
+
+    await act(async () => {
+      render(<Harness state={state} dispatch={dispatch} />);
+    });
+
+    expect(window.location.search).toBe('?from=1749');
+  });
+
+  it('skriver kun "To 2001" som ?to=2001 (overstyrer ev. from)', async () => {
+    const dispatch = vi.fn();
+    const state = baseState();
+    state.activeFilters = [
+      { type: 'timeUnit', value: 'Annual', label: 'Annual', index: 0 },
+      { type: 'yearRange', value: '2001', label: 'To 2001', index: 1 },
+    ];
+
+    await act(async () => {
+      render(<Harness state={state} dispatch={dispatch} />);
+    });
+
+    expect(window.location.search).toBe('?timeUnit=Annual&to=2001');
+  });
+
+  it('delvis ugyldig range "abc-2020" gir kun ?to=2020', async () => {
+    const dispatch = vi.fn();
+    const state = baseState();
+    state.activeFilters = [
+      { type: 'yearRange', value: 'abc-2020', label: 'abc - 2020', index: 0 },
+    ];
+
+    await act(async () => {
+      render(<Harness state={state} dispatch={dispatch} />);
+    });
+
+    expect(window.location.search).toBe('?to=2020');
   });
 });
