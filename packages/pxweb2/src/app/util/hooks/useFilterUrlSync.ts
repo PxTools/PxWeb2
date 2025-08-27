@@ -216,6 +216,7 @@ function parseParamsToFilters(
 
   const subjectParam = params.get('subject');
   if (subjectParam) {
+    let addedAnySubject = false;
     subjectParam
       .split(',')
       .map((idOrUid) => idOrUid.trim())
@@ -230,6 +231,12 @@ function parseParamsToFilters(
             uniqueId: node.uniqueId,
             index,
           });
+          addedAnySubject = true;
+        }
+        if (!addedAnySubject) {
+          const url = new URL(window.location.href);
+          url.searchParams.delete('subject');
+          window.history.replaceState({}, '', url);
         }
       });
   }
