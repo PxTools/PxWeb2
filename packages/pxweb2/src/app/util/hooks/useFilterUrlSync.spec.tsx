@@ -59,11 +59,21 @@ const tableExamles = [
 ] as Table[];
 
 const subjectTree = [
-  { id: 'al', label: 'Arbeid', uniqueId: 'al', children: [
-    { id: 'al03', label: 'Del', uniqueId: 'al__al03', children: [
-      { id: 'aku', label: 'AKU', uniqueId: 'al__al03__aku', children: [] }
-    ] }
-  ] }
+  {
+    id: 'al',
+    label: 'Arbeid',
+    uniqueId: 'al',
+    children: [
+      {
+        id: 'al03',
+        label: 'Del',
+        uniqueId: 'al__al03',
+        children: [
+          { id: 'aku', label: 'AKU', uniqueId: 'al__al03__aku', children: [] },
+        ],
+      },
+    ],
+  },
 ];
 
 const baseState = (): StartPageState => ({
@@ -155,11 +165,11 @@ describe('useFilterUrlSync', () => {
       render(<Harness state={state} dispatch={dispatch} />);
     });
 
-    expect(window.location.search).toBe(`?variable=${encodeURIComponent('age,sex')}`);
+    expect(window.location.search).toBe(
+      `?variable=${encodeURIComponent('age,sex')}`,
+    );
   });
 });
-
-
 
 describe('year range in URL', () => {
   vi.mock('../startPageFilters', async (orig) => {
@@ -169,7 +179,7 @@ describe('year range in URL', () => {
       getYearLabels: () => ({ fromLabel: 'From', toLabel: 'To' }),
     };
   });
-  
+
   beforeEach(() => {
     window.history.replaceState({}, '', '/');
   });
