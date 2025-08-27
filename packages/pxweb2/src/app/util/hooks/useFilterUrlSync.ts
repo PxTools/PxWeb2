@@ -32,33 +32,51 @@ function applyYearRangeToQuery(
   filter: Filter,
   t: TFunction,
 ): void {
-  const { fromLabel, toLabel } = getYearLabels(t);
+  const value = String(filter.value ?? '').trim();
+  if (!value) {
+    return;
+  }
 
-  if (filter.value.includes('-')) {
-    const [fromStr, toStr] = filter.value.split('-').map((s) => s.trim());
+  if (value.includes('-')) {
+    const [fromStr, toStr] = value.split('-', 2).map((s) => s.trim());
     const from = Number(fromStr);
     const to = Number(toStr);
+
     if (Number.isFinite(from)) {
       query.fromYear = from;
     }
     if (Number.isFinite(to)) {
       query.toYear = to;
     }
-  } else {
-    const year = Number(filter.value.trim());
-    if (!Number.isFinite(year)) {
-      return;
-    }
 
-    if (filter.label.startsWith(fromLabel)) {
-      query.fromYear = year;
-      delete query.toYear;
-    } else if (filter.label.startsWith(toLabel)) {
-      query.toYear = year;
-      delete query.fromYear;
-    } else {
-      query.fromYear = year;
+    // Hvis begge finnes men i feil rekkefølge, bytt om
+    if (
+      Number.isFinite(from) &&
+      Number.isFinite(to) &&
+      (query.fromYear as number) > (query.toYear as number)
+    ) {
+      const tmp = query.fromYear!;
+      query.fromYear = query.toYear!;
+      query.toYear = tmp;
     }
+    return;
+  }
+
+  const year = Number(value);
+  if (!Number.isFinite(year)) {
+    return;
+  }
+
+  const { fromLabel, toLabel } = getYearLabels(t);
+  const label = String(filter.label ?? '');
+  if (label.startsWith(fromLabel)) {
+    query.fromYear = year;
+    delete query.toYear;
+  } else if (label.startsWith(toLabel)) {
+    query.toYear = year;
+    delete query.fromYear;
+  } else {
+    query.fromYear = year;
   }
 }
 
