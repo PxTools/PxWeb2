@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import cl from 'clsx';
+import ReactMarkdown from 'react-markdown';
 
 import classes from './Notes.module.scss';
 import List from '../List/List';
@@ -35,7 +36,9 @@ export function MandatoryTableNotes({ notes }: MandatoryTableNotesProps) {
       ) : (
         <List listType="ul">
           {notes.map((note) => (
-            <ListItem key={getMandatoryTableNoteKey()}>{note}</ListItem>
+            <ListItem key={getMandatoryTableNoteKey()}>
+              <ReactMarkdown>{note}</ReactMarkdown>
+            </ListItem>
           ))}
         </List>
       )}

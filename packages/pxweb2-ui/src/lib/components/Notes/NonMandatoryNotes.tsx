@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import ReactMarkdown from 'react-markdown';
 
 import List from '../List/List';
 import ListItem from '../List/ListItem';
@@ -26,7 +27,9 @@ export function NonMandatoryNotes({ notes }: NonMandatoryNotesProps) {
       {notes && notes.tableLevelNotes.length > 0 && (
         <List heading={heading} listType="ul">
           {notes.tableLevelNotes.map((note) => (
-            <ListItem key={getNonMandatoryNoteKey()}>{note}</ListItem>
+            <ListItem key={getNonMandatoryNoteKey()}>
+              <ReactMarkdown>{note}</ReactMarkdown>
+            </ListItem>
           ))}
         </List>
       )}
