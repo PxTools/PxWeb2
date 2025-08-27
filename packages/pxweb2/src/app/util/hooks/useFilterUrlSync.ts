@@ -32,9 +32,7 @@ function applyYearRangeToQuery(
   filter: Filter,
   t: TFunction,
 ): void {
-  const lowerLabel = filter.label.toLowerCase();
-  const fromText = t('start_page.filter.year.from_label').toLowerCase();
-  const toText = t('start_page.filter.year.to_label').toLowerCase();
+  const { fromLabel, toLabel } = getYearLabels(t);
 
   if (filter.value.includes('-')) {
     const [fromStr, toStr] = filter.value.split('-').map((s) => s.trim());
@@ -52,10 +50,10 @@ function applyYearRangeToQuery(
       return;
     }
 
-    if (lowerLabel.startsWith(fromText)) {
+    if (filter.label.startsWith(fromLabel)) {
       query.fromYear = year;
       delete query.toYear;
-    } else if (lowerLabel.startsWith(toText)) {
+    } else if (filter.label.startsWith(toLabel)) {
       query.toYear = year;
       delete query.fromYear;
     } else {
