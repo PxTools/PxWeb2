@@ -80,6 +80,7 @@ export function VariableBoxContent({
   const hasTwoOrMoreValues = values && values.length > 1;
   const hasSelectAndSearch = hasCodeLists && hasSevenOrMoreValues;
   const valuesToRender = structuredClone(values);
+  const codeListLabelId = 'codelist-label-' + uniqueId;
 
   const searchedValues: Value[] = values.filter(
     (value) =>
@@ -259,6 +260,11 @@ export function VariableBoxContent({
                 setScrollingDown(false);
               }
             }}
+            aria-labelledby={
+              hasCodeLists
+                ? `title-${varId} ${codeListLabelId}`
+                : `title-${varId}`
+            }
             variant="inVariableBox"
             showLabel={false}
             searchPlaceHolder={t(
@@ -457,6 +463,7 @@ export function VariableBoxContent({
               removeModal={removeModal}
               options={mappedAndSortedCodeLists}
               selectedOption={selectedCodeListOrUndefined}
+              codeListLabelId={codeListLabelId}
               onChange={(selectedItem) =>
                 selectedItem &&
                 handleChangingCodeListInVariableBox(
