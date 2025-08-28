@@ -8,6 +8,7 @@ import {
 
 // Define the type for the context
 export type AppContextType = {
+  getSavedQueryId: () => string;
   isInitialized: boolean;
   isLargeDesktop: boolean;
   isTablet: boolean;
@@ -20,6 +21,7 @@ export type AppContextType = {
 
 // Create the context with default values
 export const AppContext = createContext<AppContextType>({
+  getSavedQueryId: () => '',
   isInitialized: false,
   isLargeDesktop: false,
   isTablet: false,
@@ -73,8 +75,20 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
     };
   }, [mobileBreakpoint, tabletBreakpoint, largeBreakpoint]);
 
+  const getSavedQueryId = React.useCallback(() => {
+    let savedQueryId: string = '';
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.has('sq')) {
+        savedQueryId = params.get('sq') ?? '';
+      }
+    }
+    return savedQueryId;
+  }, []);
+
   const cachedValues = useMemo(
     () => ({
+      getSavedQueryId,
       isInitialized,
       isLargeDesktop,
       isTablet,
@@ -85,6 +99,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
       setTitle,
     }),
     [
+      getSavedQueryId,
       isInitialized,
       isLargeDesktop,
       isTablet,

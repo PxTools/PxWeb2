@@ -6,6 +6,7 @@ import {
   ApiError,
   Dataset,
   OutputFormatType,
+  SavedQueriesService,
   TableService,
   VariableSelection,
   VariablesSelection,
@@ -18,6 +19,7 @@ import {
   Variable,
 } from '@pxweb2/pxweb2-ui';
 import { mapJsonStat2Response } from '../../mappers/JsonStat2ResponseMapper';
+
 import { addFormattingToPxTable } from './TableDataProviderUtils';
 import { problemMessage } from '../util/problemMessage';
 
@@ -26,6 +28,7 @@ export interface TableDataContextType {
   isInitialized: boolean;
   data: PxTable | undefined;
   fetchTableData: (tableId: string, i18n: i18n, isMobile: boolean) => void;
+  fetchSavedQuery: (queryId: string, i18n: i18n, isMobile: boolean) => void;
   pivotToMobile: () => void;
   pivotToDesktop: () => void;
   pivotCW: () => void;
@@ -49,6 +52,8 @@ const TableDataContext = createContext<TableDataContextType | undefined>({
   data: undefined,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   fetchTableData: () => {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  fetchSavedQuery: () => {},
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   pivotToMobile: () => {},
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -131,7 +136,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * unless its dependencies (`codelistsInitialized` and `variables`) change.
    */
   const initializeCodelists = React.useCallback(() => {
-    if (!codelistsInitialized && variables.hasLoadedDefaultSelection) {
+    if (!codelistsInitialized && variables.hasLoadedInitialSelection) {
       const ids = variables.getUniqueIds();
       ids.forEach((id) => {
         const codelistId = variables.getSelectedCodelistById(id);
@@ -148,13 +153,13 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   }, [codelistsInitialized, variables]);
 
   useEffect(() => {
-    if (!codelistsInitialized && variables.hasLoadedDefaultSelection) {
+    if (!codelistsInitialized && variables.hasLoadedInitialSelection) {
       initializeCodelists();
     }
   }, [
     codelistsInitialized,
     initializeCodelists,
-    variables.hasLoadedDefaultSelection,
+    variables.hasLoadedInitialSelection,
   ]);
 
   /**
@@ -164,12 +169,13 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * @param isMobile - If the device is mobile or not.
    */
   const initializeStubAndHeading = React.useCallback(
-    (pxTable: PxTable, isMobile: boolean) => {
+    (pxTable: PxTable, isMobile: boolean, lang: string) => {
       if (
         accumulatedData === undefined ||
-        accumulatedData.metadata.id !== pxTable.metadata.id
+        accumulatedData.metadata.id !== pxTable.metadata.id ||
+        accumulatedData.metadata.language.toLowerCase() !== lang.toLowerCase()
       ) {
-        // First time we get data OR we have a new table.
+        // First time we get data OR we have a new table OR language is changed.
 
         // -> Set stub and heading order for desktop according to the order in pxTable
         const stubOrderDesktop: string[] = pxTable.stub.map(
@@ -259,6 +265,44 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     [accumulatedData, stubDesktop, headingDesktop, stubMobile, headingMobile],
   );
 
+  /**
+   * Fetches and processes a saved query by its ID, then updates the table data context.
+   *
+   * @param loadSavedQueryId - The unique identifier of the saved query to load.
+   * @param i18n - The i18n object for handling languages.
+   * @param isMobile - Indicates if the current device is mobile, affecting table initialization.
+   * @returns A promise that resolves when the table data has been fetched, processed, and set.
+   *
+   * This function:
+   * - Calls the SavedQueriesService to run the saved query.
+   * - Maps the response to a JSON-stat2 Dataset and then to a PxTable.
+   * - Applies formatting to the PxTable's data cell values.
+   * - Initializes table stubs and headings based on device type.
+   * - Updates the context state with the new table data and stores a cloned copy as accumulated data.
+   */
+  const fetchSavedQuery = React.useCallback(
+    async (loadSavedQueryId: string, i18n: i18n, isMobile: boolean) => {
+      const res = await SavedQueriesService.runSaveQuery(
+        loadSavedQueryId,
+        i18n.language,
+      );
+      // Map response to json-stat2 Dataset
+      const pxDataobj: unknown = res;
+      const pxTabData = pxDataobj as Dataset;
+
+      const pxTable: PxTable = mapJsonStat2Response(pxTabData);
+      // Add formatting to the PxTable datacell values
+      await addFormattingToPxTable(pxTable);
+
+      initializeStubAndHeading(pxTable, isMobile, i18n.language);
+      setData(pxTable);
+
+      // Store as accumulated data
+      setAccumulatedData(structuredClone(pxTable));
+    },
+    [initializeStubAndHeading],
+  );
+
   /*
    * @param tableId - The id of the table to fetch data for.
    * @param i18n - The i18n object for handling langauages
@@ -278,19 +322,27 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         setData(undefined);
       }
 
+      if (
+        accumulatedData?.metadata.language.toLowerCase() !==
+        i18n.language.toLowerCase()
+      ) {
+        variablesSelection = { selection: [] }; // If language is changed we shall fetch data with the default selection.
+      }
+
       const pxTable: PxTable = await fetchFromApi(
         tableId,
         i18n,
         variablesSelection,
       );
 
-      initializeStubAndHeading(pxTable, isMobile);
+      initializeStubAndHeading(pxTable, isMobile, i18n.language);
       setData(pxTable);
 
       // Store as accumulated data
       setAccumulatedData(structuredClone(pxTable));
+      // }
     },
-    [initializeStubAndHeading, setData, setAccumulatedData],
+    [accumulatedData?.metadata.language, initializeStubAndHeading],
   );
 
   /**
@@ -721,7 +773,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
           } else {
             pivotForDesktop(pxTable);
           }
-
           setData(pxTable);
           return;
         }
@@ -746,14 +797,12 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
           }
         }
       });
-
       // Get the not already loaded data from the API
       let pxTable: PxTable = await fetchFromApi(
         tableId,
         i18n,
         notLoadedVarSelection,
       );
-
       // Merge pxTable with accumulatedData
       mergeWithAccumulatedData(
         pxTable,
@@ -946,6 +995,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
             variablesSelection,
           );
         } else {
+          // We do not have valid accumulated data in the data cube, so we need to fetch
           await fetchWithoutValidAccData(
             tableId,
             i18n,
@@ -1184,6 +1234,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     () => ({
       data,
       /* loading, error  */ fetchTableData,
+      fetchSavedQuery,
       pivotToMobile,
       pivotToDesktop,
       pivotCW,
@@ -1198,6 +1249,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     [
       data,
       fetchTableData,
+      fetchSavedQuery,
       pivotToMobile,
       pivotToDesktop,
       pivotCW,

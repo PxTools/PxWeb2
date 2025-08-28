@@ -61,18 +61,20 @@
 }
 
 .wrapper.inVariableBox {
-  border-radius: var(--px-border-radius-medium);
+  border-radius: var(--px-border-radius-medium) var(--px-border-radius-medium) 0
+    0;
   background: var(--px-color-surface-subtle);
   z-index: 1;
   outline-offset: -2px;
+  border-bottom: 2px solid var(--px-color-border-moderate);
 
   &:hover {
-    border-radius: var(--px-border-radius-medium);
+    border-radius: var(--px-border-radius-medium) var(--px-border-radius-medium)
+      0 0;
     outline: 2px solid var(--px-color-border-action);
   }
 
   &:active {
-    border-radius: var(--px-border-radius-medium);
     outline: 2px solid var(--px-color-border-action);
     background: var(--px-color-surface-default);
   }
@@ -97,13 +99,7 @@
   }
 
   &.variableboxSearchAndSelectBorderOverride {
-    border-radius: 0 0 var(--px-border-radius-medium)
-      var(--px-border-radius-medium);
-
-    &:hover,
-    &:has(input:focus-visible) {
-      border-radius: var(--px-border-radius-medium);
-    }
+    border-radius: 0 0 0 0;
   }
 }
 
