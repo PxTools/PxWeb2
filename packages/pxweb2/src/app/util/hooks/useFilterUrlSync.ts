@@ -5,13 +5,12 @@ import type {
   StartPageState,
   Filter,
 } from '../../pages/StartPage/StartPageTypes';
+import { getYearLabels, getYearRangeLabelValue } from '../startPageFilters';
 import {
-  getYearLabels,
-  getYearRangeLabelValue,
-  buildSubjectIndex,
-  findSubject,
-  type SubjectIndex,
-} from '../startPageFilters';
+  buildPathIndex,
+  findPathByKey,
+  type PathIndex,
+} from '../../util/pathUtil';
 
 type FilterQuery = {
   searchText?: string;
@@ -159,7 +158,7 @@ function buildParamsFromFilters(
  */
 function parseParamsToFilters(
   params: URLSearchParams,
-  subjectIndex: SubjectIndex,
+  subjectIndex: PathIndex,
   t: TFunction,
   availableTimeUnits?: string[],
 ): Filter[] {
@@ -207,7 +206,7 @@ function parseParamsToFilters(
       .map((s) => s.trim())
       .filter(Boolean)
       .forEach((key, index) => {
-        const node = findSubject(subjectIndex, key);
+        const node = findPathByKey(subjectIndex, key);
         if (node) {
           filters.push({
             type: 'subject',
@@ -284,7 +283,7 @@ export default function useFilterUrlSync(
   const lastAppliedQueryRef = useRef<string | null>(null);
 
   const subjectIndex = useMemo(
-    () => buildSubjectIndex(state.availableFilters.subjectTree ?? []),
+    () => buildPathIndex(state.availableFilters.subjectTree ?? []),
     [state.availableFilters.subjectTree],
   );
 

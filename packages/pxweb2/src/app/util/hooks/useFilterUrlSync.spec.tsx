@@ -34,7 +34,14 @@ vi.mock('../startPageFilters', async (orig) => {
   return {
     ...mod,
     getYearLabels: () => ({ fromLabel: 'From', toLabel: 'To' }),
-    findSubject: (_index: any, key: string) => {
+  };
+});
+
+vi.mock('../pathUtil', async (orig) => {
+  const mod: any = await orig();
+  return {
+    ...mod,
+    findPathByKey: (_index: any, key: string) => {
       const map: Record<
         string,
         { id: string; uniqueId: string; label: string }
@@ -44,7 +51,7 @@ vi.mock('../startPageFilters', async (orig) => {
       };
       return map[key] ?? null;
     },
-    buildSubjectIndex: () => ({}),
+    buildPathIndex: () => ({}),
   };
 });
 
