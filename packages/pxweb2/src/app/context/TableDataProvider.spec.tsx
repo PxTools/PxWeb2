@@ -37,7 +37,7 @@ describe('TableDataProvider', () => {
             pivotToMobile: vi.fn(),
             pivotToDesktop: vi.fn(),
             pivotCW: vi.fn(),
-            buildTableTitle: vi.fn(), 
+            buildTableTitle: vi.fn(),
           }}
         >
           <TestComponent />
