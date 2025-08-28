@@ -29,7 +29,7 @@ export const Header = ({ stroke = false }: HeaderProps) => {
         >
           <img
             className={cl(styles.logo)}
-            src="/images/main_logo/logo.svg"
+            src="/images/logo.svg"
             alt={t('common.header.logo_alt')}
           />
         </LinkRouter>

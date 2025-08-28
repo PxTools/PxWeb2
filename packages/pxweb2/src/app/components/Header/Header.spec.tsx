@@ -24,16 +24,6 @@ vi.mock('react-router', () => ({
   ),
 }));
 
-// Mock CSS module to stable class names so we can assert classes
-// vi.mock('./Header.module.scss', () => ({
-//   default: {
-//     header: 'header',
-//     stroke: 'stroke',
-//     logoContainer: 'logoContainer',
-//     logo: 'logo',
-//   },
-// }));
-
 // Stub LanguageSwitcher so Header can render without extra dependencies
 vi.mock('../LanguageSwitcher/LanguageSwitcher', () => ({
   LanguageSwitcher: () => <div data-testid="language-switcher" />,
