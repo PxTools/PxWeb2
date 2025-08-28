@@ -5,6 +5,7 @@ import '@testing-library/jest-dom/vitest';
 
 import { LanguageSwitcher } from './LanguageSwitcher';
 import * as getConfigModule from '../../util/config/getConfig';
+import classes from './LanguageSwitcher.module.scss';
 
 // Local, controllable mocks for router, ui components and app context
 let currentPathname = '/en/tables';
@@ -113,5 +114,40 @@ describe('LanguageSwitcher', () => {
     expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
 
     cfgSpy.mockRestore();
+  });
+
+  it('adds focus markings only when tabbing and removes them on blur (isTabbed handling)', async () => {
+    render(<LanguageSwitcher />);
+
+    const select = screen.getByLabelText(
+      'common.header.language_selector',
+    ) as HTMLSelectElement;
+
+    // wrapper is the immediate parent div that gets the conditional class
+    const wrapper = select.parentElement as HTMLElement;
+
+    // Initially no focus markings
+    expect(wrapper).not.toHaveClass(classes['focusMarkings']);
+
+    // Simulate keyboard navigation with Tab
+    fireEvent.keyUp(select, { key: 'Tab' });
+
+    expect(wrapper).toHaveClass(classes['focusMarkings']);
+
+    // Blur should remove focus markings (simulating mouse interaction end)
+    fireEvent.blur(select);
+
+    expect(wrapper).not.toHaveClass(classes['focusMarkings']);
+
+    // Refocusing (as browsers do after selecting an option with mouse)
+    // should NOT re-add focus markings
+    fireEvent.focus(select);
+
+    expect(wrapper).not.toHaveClass(classes['focusMarkings']);
+
+    // Changing value via mouse should not add focus markings either
+    fireEvent.change(select, { target: { value: 'no' } });
+
+    expect(wrapper).not.toHaveClass(classes['focusMarkings']);
   });
 });
