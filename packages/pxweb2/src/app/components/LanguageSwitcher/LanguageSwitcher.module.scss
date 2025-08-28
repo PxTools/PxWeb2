@@ -44,6 +44,9 @@
   font-size: inherit;
 
   cursor: pointer;
+
+  // Hack to fix select height in Safari
+  -webkit-appearance: none;
 }
 
 .languageSwitcherIcon {
