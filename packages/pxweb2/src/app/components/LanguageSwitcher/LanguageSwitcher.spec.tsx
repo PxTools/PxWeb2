@@ -30,7 +30,6 @@ vi.mock('@pxweb2/pxweb2-ui', () => ({
 }));
 
 vi.mock('../../context/useApp', () => ({
-  __esModule: true,
   default: () => ({ isMobile }),
 }));
 
@@ -77,7 +76,6 @@ describe('LanguageSwitcher', () => {
 
     fireEvent.change(select, { target: { value: 'sv' } });
 
-    // showDefaultLanguageInPath=true, fallbackLanguage='en' -> /sv/tables
     expect(navigateMock).toHaveBeenCalledWith('/sv/tables');
   });
 
