@@ -75,7 +75,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
     };
   }, [mobileBreakpoint, tabletBreakpoint, largeBreakpoint]);
 
-  const getSavedQueryId = () => {
+  const getSavedQueryId = React.useCallback(() => {
     let savedQueryId: string = '';
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
@@ -84,7 +84,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
       }
     }
     return savedQueryId;
-  };
+  }, []);
 
   const cachedValues = useMemo(
     () => ({
