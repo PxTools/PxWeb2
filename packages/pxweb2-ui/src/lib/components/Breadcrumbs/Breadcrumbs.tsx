@@ -3,6 +3,7 @@ import cl from 'clsx';
 import styles from './Breadcrumbs.module.scss';
 import { BreadcrumbsIcon } from '../Icon/BreadcrumbsIcon';
 import Link from '../Link/Link';
+import { useTranslation } from 'react-i18next';
 
 interface BreadcrumbsProps
   extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
@@ -29,6 +30,7 @@ export const Breadcrumbs = forwardRef<HTMLAnchorElement, BreadcrumbsProps>(
     const [isOverflowing, setIsOverflowing] = useState(false);
     const [showMore, setShowMore] = useState(false);
     const dots = '...';
+    const { t } = useTranslation();
 
     useEffect(() => {
       const checkOverflow = () => {
@@ -45,7 +47,7 @@ export const Breadcrumbs = forwardRef<HTMLAnchorElement, BreadcrumbsProps>(
 
     return (
       <nav
-        aria-label="Breadcrumbs"
+        aria-label={t('presentation_page.main_content.arialabelbreadcrumb',)}
         className={cl(
           styles.breadcrumbsContainer,
           variant && styles[variant],
@@ -101,7 +103,7 @@ export const Breadcrumbs = forwardRef<HTMLAnchorElement, BreadcrumbsProps>(
             <input
               type="button"
               className={cl(styles.showMoreText)}
-              value="Show more"
+              value={t('presentation_page.main_content.show_more_breadcrumbs')}
               onClick={() => setShowMore(true)}
               aria-label="Show more breadcrumbs"
             />

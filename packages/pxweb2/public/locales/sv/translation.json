@@ -230,6 +230,7 @@
       "arialabelbreadcrumb": "Brödsmulor",
       "last_updated": "Senast uppdaterad",
       "show_details": "Visa detaljer",
+      "show_more_breadcrumbs": "Visa mer",
       "dynamic_table_title": "{{table_content_type}} efter {{table_content_label_first_part}} och {{table_content_label_last_part}}",
       "table": {
         "warnings": {
