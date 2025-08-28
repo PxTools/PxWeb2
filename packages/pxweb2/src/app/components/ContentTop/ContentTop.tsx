@@ -110,7 +110,6 @@ export function ContentTop({
   const selectedMetadata = useTableData().data?.metadata;
   const buildTableTitle = useTableData().buildTableTitle;
   const { setTitle } = useApp();
-  //const { setPathElements } = useApp();
   const { isMobile } = useApp();
 
   const openInformationButtonRef = useRef<HTMLButtonElement>(null);
