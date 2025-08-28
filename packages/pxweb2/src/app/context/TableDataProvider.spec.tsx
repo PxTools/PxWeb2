@@ -1,5 +1,5 @@
-import React from 'react';
-import { render } from '@testing-library/react';
+import React, { useContext, useEffect } from 'react';
+import { render, act, waitFor } from '@testing-library/react';
 import { TableDataProvider, TableDataContext } from './TableDataProvider';
 import { VariablesProvider } from './VariablesProvider';
 import { vi } from 'vitest';
@@ -38,6 +38,10 @@ describe('TableDataProvider', () => {
             pivotToDesktop: vi.fn(),
             pivotCW: vi.fn(),
             buildTableTitle: vi.fn(),
+            stubDesktop: [],
+            headingDesktop: [],
+            stubMobile: [],
+            headingMobile: [],
           }}
         >
           <TestComponent />
@@ -84,5 +88,56 @@ describe('TableDataProvider', () => {
     }).toThrow('Simulated error');
 
     consoleErrorSpy.mockRestore();
+  });
+});
+
+// Mock PxTable and Variable types
+const makePxTable = (variableIds: string[]) => ({
+  metadata: {
+    id: 'test-table',
+    variables: variableIds.map((id) => ({ id, values: [{ code: 'v1' }] })),
+  },
+  stub: variableIds.map((id) => ({ id, values: [{ code: 'v1' }] })),
+  heading: [],
+});
+
+describe('TableDataProvider', () => {
+  it('updates stubDesktop, headingDesktop, stubMobile, and headingMobile when a variable is removed', async () => {
+    let contextValue: any = null;
+
+    // Test component to access context and trigger initializeStubAndHeading
+    const TestComponent = ({ pxTable, isMobile }: any) => {
+      const context = useContext(TableDataContext);
+      contextValue = context;
+      useEffect(() => {
+        // @ts-ignore: access internal function for test
+        context?.initializeStubAndHeading?.(pxTable, isMobile);
+      }, [pxTable, isMobile]);
+      return null;
+    };
+
+    // Render with initial variables
+    const initialPxTable = makePxTable(['var1', 'var2', 'var3']);
+    render(
+      <VariablesProvider>
+        <TableDataProvider>
+          <TestComponent pxTable={initialPxTable} isMobile={false} />
+        </TableDataProvider>
+      </VariablesProvider>,
+    );
+
+    // Simulate removing 'var2'
+    const updatedPxTable = makePxTable(['var1', 'var3']);
+    await act(async () => {
+      contextValue?.initializeStubAndHeading?.(updatedPxTable, false);
+    });
+
+    // Wait for the state to update
+    await waitFor(() => {
+      expect(contextValue.stubDesktop).toEqual(['var1', 'var3']);
+      expect(contextValue.headingDesktop).toEqual([]); // as per makePxTable
+      expect(contextValue.stubMobile).toEqual(['var1', 'var3']);
+      expect(contextValue.headingMobile).toEqual([]);
+    });
   });
 });
