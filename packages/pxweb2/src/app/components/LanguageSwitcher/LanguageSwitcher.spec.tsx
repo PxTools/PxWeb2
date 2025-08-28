@@ -1,124 +1,119 @@
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { vi, describe, it, expect, beforeEach, Mock } from 'vitest';
-import { useTranslation } from 'react-i18next';
-import { useLocation } from 'react-router';
+import React from 'react';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { render, screen, within, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 
 import { LanguageSwitcher } from './LanguageSwitcher';
-import { getConfig } from '../../util/config/getConfig';
-import { getLanguagePath } from '../../util/language/getLanguagePath';
+import * as getConfigModule from '../../util/config/getConfig';
 
-// Mock dependencies
-vi.mock('../../util/config/getConfig');
-vi.mock('../../util/language/getLanguagePath');
-vi.mock('react-i18next', () => ({
-  useTranslation: vi.fn(),
-}));
+// Local, controllable mocks for router, ui components and app context
+let currentPathname = '/en/tables';
+const navigateMock = vi.fn();
+let isMobile = false;
+
 vi.mock('react-router', () => ({
-  useLocation: vi.fn(),
-  Link: vi.fn(({ to, children, ...props }) => (
-    <a href={to.pathname} {...props}>
-      {children}
-    </a>
-  )),
+  useNavigate: () => navigateMock,
+  useLocation: () => ({ pathname: currentPathname }),
+}));
+
+vi.mock('@pxweb2/pxweb2-ui', () => ({
+  Icon: ({ className }: { className?: string }) => (
+    <i className={className} aria-hidden="true" />
+  ),
+  Label: ({
+    children,
+    forID,
+  }: {
+    children: React.ReactNode;
+    forID?: string;
+  }) => <label htmlFor={forID}>{children}</label>,
+}));
+
+vi.mock('../../context/useApp', () => ({
+  __esModule: true,
+  default: () => ({ isMobile }),
 }));
 
 describe('LanguageSwitcher', () => {
-  // Mock implementations
-  const mockChangeLanguage = vi.fn();
-  const mockLocation = { pathname: '/test/path' };
-  const mockConfig = {
-    language: {
-      supportedLanguages: [
-        { languageName: 'English', shorthand: 'en' },
-        { languageName: 'Norwegian', shorthand: 'no' },
-        { languageName: 'Swedish', shorthand: 'sv' },
-      ],
-      fallbackLanguage: 'en',
-      showDefaultLanguageInPath: true,
-    },
-  };
-
   beforeEach(() => {
-    vi.resetAllMocks();
-
-    // Default mocks
-    (getConfig as Mock).mockReturnValue(mockConfig);
-    (useLocation as Mock).mockReturnValue(mockLocation);
-    (getLanguagePath as Mock).mockImplementation((path, lang) => ({
-      pathname: lang === 'en' ? path : `/${lang}${path}`,
-    }));
-    (useTranslation as Mock).mockReturnValue({
-      i18n: {
-        language: 'en',
-        changeLanguage: mockChangeLanguage,
-      },
-    });
+    navigateMock.mockClear();
+    currentPathname = '/en/tables';
+    isMobile = false;
   });
 
-  it('renders language buttons for all supported languages except current language', () => {
+  it('renders select with options and desktop label', () => {
     render(<LanguageSwitcher />);
 
-    // Check that all supported languages are rendered except the current one
-    expect(screen.queryByText('English')).not.toBeInTheDocument();
-    expect(screen.getByText('Norwegian')).toBeInTheDocument();
-    expect(screen.getByText('Swedish')).toBeInTheDocument();
-  });
+    // Desktop label should render and connect to the select
+    const select = screen.getByLabelText('common.header.language_selector');
 
-  it('generates correct paths for language links', () => {
-    render(<LanguageSwitcher />);
+    expect(select).toBeInTheDocument();
 
-    const norwegianLink = screen.getByText('Norwegian').closest('a');
-    const swedishLink = screen.getByText('Swedish').closest('a');
+    const options = within(select).getAllByRole('option');
 
-    // Check that the getLanguagePath function was called with the correct arguments
-    expect(getLanguagePath).toHaveBeenCalledWith(
-      '/test/path',
+    // From setupTests.getConfig mock: en, no, sv, ar
+    expect(options).toHaveLength(4);
+    expect(options.map((o) => (o as HTMLOptionElement).value)).toEqual([
+      'en',
       'no',
-      mockConfig.language.supportedLanguages,
-      mockConfig.language.fallbackLanguage,
-      mockConfig.language.showDefaultLanguageInPath,
-    );
-    expect(getLanguagePath).toHaveBeenCalledWith(
-      '/test/path',
       'sv',
-      mockConfig.language.supportedLanguages,
-      mockConfig.language.fallbackLanguage,
-      mockConfig.language.showDefaultLanguageInPath,
-    );
+      'ar',
+    ]);
+    expect(options.map((o) => o.textContent)).toEqual([
+      'English',
+      'Norsk',
+      'Svenska',
+      'العربية',
+    ]);
 
-    // Check that the getLanguagePath function was called twice (once for each language except the current one)
-    expect(getLanguagePath).toHaveBeenCalledTimes(2);
-
-    // We're using a simple mock that just prefixes the path with language code
-    expect(norwegianLink).toHaveAttribute('href', '/no/test/path');
-    expect(swedishLink).toHaveAttribute('href', '/sv/test/path');
+    // Initial value should reflect i18n mocked language ('en')
+    expect((select as HTMLSelectElement).value).toBe('en');
   });
 
-  it('triggers language change when a button is clicked', async () => {
+  it('navigates to the selected language path on change', () => {
     render(<LanguageSwitcher />);
-    const user = userEvent.setup();
-    const norwegianButton = screen.getByText('Norwegian');
 
-    await user.click(norwegianButton);
+    const select = screen.getByLabelText('common.header.language_selector');
 
-    expect(mockChangeLanguage).toHaveBeenCalledWith('no');
+    fireEvent.change(select, { target: { value: 'sv' } });
+
+    // showDefaultLanguageInPath=true, fallbackLanguage='en' -> /sv/tables
+    expect(navigateMock).toHaveBeenCalledWith('/sv/tables');
   });
 
-  it('shows different language options when current language changes', () => {
-    (useTranslation as Mock).mockReturnValue({
-      i18n: {
-        language: 'no',
-        changeLanguage: mockChangeLanguage,
+  it('on mobile: uses aria-label on select and hides the text label', () => {
+    isMobile = true;
+
+    render(<LanguageSwitcher />);
+
+    // Still accessible via aria-label
+    expect(
+      screen.getByLabelText('common.header.language_selector'),
+    ).toBeInTheDocument();
+
+    // No visible label element with that text
+    expect(
+      screen.queryByText('common.header.language_selector'),
+    ).not.toBeInTheDocument();
+  });
+
+  it('renders nothing when only one language is supported', () => {
+    const cfgSpy = vi.spyOn(getConfigModule, 'getConfig').mockReturnValue({
+      language: {
+        supportedLanguages: [{ shorthand: 'en', languageName: 'English' }],
+        defaultLanguage: 'en',
+        fallbackLanguage: 'en',
+        showDefaultLanguageInPath: true,
       },
-    });
+      apiUrl: '',
+      maxDataCells: 100000,
+      specialCharacters: ['.', '..', ':', '-', '...', '*'],
+    } as ReturnType<typeof getConfigModule.getConfig>);
 
     render(<LanguageSwitcher />);
 
-    // Don't show the current language
-    expect(screen.queryByText('Norwegian')).not.toBeInTheDocument();
-    expect(screen.getByText('English')).toBeInTheDocument();
-    expect(screen.getByText('Swedish')).toBeInTheDocument();
+    expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
+
+    cfgSpy.mockRestore();
   });
 });

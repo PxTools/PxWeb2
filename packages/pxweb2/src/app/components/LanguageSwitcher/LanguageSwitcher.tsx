@@ -58,6 +58,11 @@ export const LanguageSwitcher = () => {
 
         <select
           id="language-switcher"
+          value={currentLang}
+          className={cl(classes.languageSwitcherSelect)}
+          aria-label={
+            isMobile ? t('common.header.language_selector') : undefined
+          }
           onKeyUp={(event) => {
             if (event.key === 'Tab' && !isTabbed) {
               setIsTabbed(true);
@@ -69,11 +74,6 @@ export const LanguageSwitcher = () => {
             }
           }}
           onChange={(event) => handleLanguageChange(event)}
-          value={currentLang}
-          className={cl(classes.languageSwitcherSelect)}
-          aria-label={
-            isMobile ? t('common.header.language_selector') : undefined
-          }
         >
           {config.language.supportedLanguages.map((language) => (
             <option

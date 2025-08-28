@@ -31,6 +31,9 @@ vi.mock('react-i18next', () => ({
       dir: () => 'ltr',
     },
   }),
+  useRouteError: vi.fn(),
+  useLocation: vi.fn(),
+  useNavigate: vi.fn(() => vi.fn()),
   initReactI18next: {
     type: '3rdParty',
     // eslint-disable-next-line @typescript-eslint/no-empty-function

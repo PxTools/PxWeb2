@@ -8,6 +8,7 @@ import { NotFound } from './NotFound';
 
 vi.mock('react-router', () => ({
   useLocation: vi.fn(),
+  useNavigate: vi.fn(() => vi.fn()),
   Link: vi.fn(({ to, children, ...props }) => (
     <a href={to.pathname} {...props}>
       {children}
