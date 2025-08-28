@@ -23,8 +23,6 @@ let mandatoryTableNotes: string[] = [
   'This is a mandatory note for the table.',
   'This is another mandatory note for the table.',
   'This is a third mandatory note for the table.',
-  'This is a note containing md links [Click here for more table info](https://www.ssb.no)',
-  'This is a note containing md links <https://www.ssb.no/>',
 ];
 mandatoryTableNotes.forEach((note) => {
   dummyNotes.mandatoryNotes.tableLevelNotes.push(note);
@@ -36,8 +34,6 @@ let mandatoryVariableNotes1: variableNotes = {
     'This is a mandatory note for Variable 1.',
     'This is another mandatory note for Variable 1.',
     'This is a third mandatory note for Variable 1.',
-    'This is a note containing md links [Click here for more info about variable 1](https://www.scb.no) for Variable 1',
-    'This is a note containing md links <https://scb.se/> for Variable 1',
   ],
   variableCode: 'var1',
   valueNotes: [
