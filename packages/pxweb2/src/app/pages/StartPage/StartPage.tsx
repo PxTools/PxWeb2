@@ -478,7 +478,7 @@ const StartPage = () => {
 
   return (
     <>
-      <Header />
+      <Header stroke={true} />
       <div className={styles.startPage}>
         <div className={styles.container}>
           <div className={styles.information}>
