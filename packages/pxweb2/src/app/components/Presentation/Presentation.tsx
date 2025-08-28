@@ -103,7 +103,6 @@ export function Presentation({ selectedTabId, scrollRef }: propsType) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMobile]);
 
-  //useEffect(() => {
   const memoizedDataFetch = React.useCallback(() => {
     const hasSelectedValues = variables.getNumberOfSelectedValues() > 0;
     const hasSelectedMandatoryVariables = pxTableMetadata?.variables
