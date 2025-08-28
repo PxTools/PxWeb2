@@ -1,101 +1,20 @@
 import { vi } from 'vitest';
 import { getAllTables, shouldTableBeIncluded } from './tableHandler';
-import { Config } from './config/configType';
 import { type Filter } from '../pages/StartPage/StartPageTypes';
-import { Table } from 'packages/pxweb2-api-client/src';
-
-vi.mock('./config/getConfig', () => {
-  return {
-    getConfig: vi.fn().mockReturnValue({
-      language: {
-        supportedLanguages: [
-          { shorthand: 'en', languageName: 'English' },
-          { shorthand: 'no', languageName: 'Norsk' },
-          { shorthand: 'sv', languageName: 'Svenska' },
-          { shorthand: 'ar', languageName: 'العربية' },
-        ],
-        defaultLanguage: 'en',
-        fallbackLanguage: 'en',
-      },
-      apiUrl: 'https://api.scb.se/OV0104/v2beta/api/v2',
-      maxDataCells: 100000,
-      specialCharacters: ['.', '..', ':', '-', '...', '*'],
-    } as Config),
-  };
-});
+import {
+  Table,
+  TablesResponse,
+  TimeUnit,
+  FolderContentItemTypeEnum,
+} from '@pxweb2/pxweb2-api-client';
 
 // Mock TableService.listAllTables
-vi.mock('@pxweb2/pxweb2-api-client', () => {
+vi.mock(import('@pxweb2/pxweb2-api-client'), async (importOriginal) => {
+  const actual = await importOriginal();
   return {
+    ...actual,
     TableService: {
-      listAllTables: vi.fn().mockResolvedValue({
-        language: 'sv',
-        tables: [
-          {
-            type: 'Table',
-            id: 'TAB4707',
-            label:
-              'Antal pågående anställningar efter anställningstid, kön och sektor. Månad 2020M01-2025M01',
-            description: '',
-            updated: '2025-03-31T06:00:00Z',
-            firstPeriod: '2020M01',
-            lastPeriod: '2025M01',
-            category: 'public',
-            variableNames: ['sektor', 'kön', 'tabellinnehåll', 'månad'],
-            source: 'SCB',
-            timeUnit: 'Monthly',
-            paths: [
-              [
-                { id: 'AM', label: 'Arbetsmarknad' },
-                { id: 'AM0211', label: 'Anställningar' },
-                { id: 'AM0211A', label: 'Anställningar' },
-              ],
-            ],
-            links: [
-              {
-                rel: 'self',
-                hreflang: 'sv',
-                href: 'https://api.scb.se/OV0104/v2beta/api/v2/tables/TAB4707?lang=sv',
-              },
-              {
-                rel: 'metadata',
-                hreflang: 'sv',
-                href: 'https://api.scb.se/OV0104/v2beta/api/v2/tables/TAB4707/metadata?lang=sv',
-              },
-              {
-                rel: 'data',
-                hreflang: 'sv',
-                href: 'https://api.scb.se/OV0104/v2beta/api/v2/tables/TAB4707/data?lang=sv&outputFormat=px',
-              },
-            ],
-          },
-        ],
-        page: {
-          pageNumber: 1,
-          pageSize: 1,
-          totalElements: 5114,
-          totalPages: 5114,
-          links: [
-            {
-              rel: 'next',
-              hreflang: 'sv',
-              href: 'https://api.scb.se/OV0104/v2beta/api/v2/tables/?lang=sv&pagesize=1&pageNumber=2',
-            },
-            {
-              rel: 'last',
-              hreflang: 'sv',
-              href: 'https://api.scb.se/OV0104/v2beta/api/v2/tables/?lang=sv&pagesize=1&pageNumber=5114',
-            },
-          ],
-        },
-        links: [
-          {
-            rel: 'self',
-            hreflang: 'sv',
-            href: 'https://api.scb.se/OV0104/v2beta/api/v2/tables/?lang=sv&pagesize=1&pageNumber=1',
-          },
-        ],
-      }),
+      listAllTables: vi.fn(),
     },
     OpenAPI: vi.fn(),
   };
@@ -103,12 +22,113 @@ vi.mock('@pxweb2/pxweb2-api-client', () => {
 
 // Test getFullTable
 
-describe('getFullTable', () => {
+describe('getAllTables', () => {
+  const mockSuccessResponse: TablesResponse = {
+    language: 'en',
+    tables: [
+      {
+        type: FolderContentItemTypeEnum.TABLE,
+        id: 'TAB4707',
+        label: 'Test table',
+        description: '',
+        updated: '2025-03-31T06:00:00Z',
+        firstPeriod: '2020M01',
+        lastPeriod: '2025M01',
+        variableNames: ['var1', 'var2'],
+        source: 'Test',
+        paths: [[{ id: 'TEST', label: 'Test' }]],
+        links: [],
+        category: Table.category.PUBLIC,
+        timeUnit: TimeUnit.ANNUAL,
+      } as Table,
+    ],
+    page: {
+      pageNumber: 1,
+      pageSize: 1,
+      totalElements: 1,
+      totalPages: 1,
+      links: [],
+    },
+    links: [],
+  };
+
+  beforeEach(() => {
+    vi.resetAllMocks();
+  });
+
   it('should fetch and return tables from TableService', async () => {
-    const tables = await getAllTables();
+    const { TableService } = await import('@pxweb2/pxweb2-api-client');
+    vi.mocked(TableService.listAllTables).mockResolvedValueOnce(
+      mockSuccessResponse,
+    );
+
+    const tables = await getAllTables('en');
     expect(Array.isArray(tables)).toBe(true);
-    expect(tables.length).toBeGreaterThan(0);
+    expect(tables.length).toBe(1);
     expect(tables[0].id).toBe('TAB4707');
+  });
+
+  it('should retry with fallback language when receiving unsupported language error', async () => {
+    const { TableService } = await import('@pxweb2/pxweb2-api-client');
+    const listAllTablesSpy = vi.mocked(TableService.listAllTables);
+
+    // First call throws unsupported language error
+    listAllTablesSpy.mockRejectedValueOnce({
+      body: { title: 'Unsupported language' },
+    });
+
+    // Second call with fallback language succeeds
+    listAllTablesSpy.mockResolvedValueOnce(mockSuccessResponse);
+
+    const tables = await getAllTables('unsupported-lang');
+
+    // Verify both calls were made
+    expect(listAllTablesSpy).toHaveBeenCalledTimes(2);
+
+    // Verify first call was with the original language
+    expect(listAllTablesSpy).toHaveBeenNthCalledWith(
+      1,
+      'unsupported-lang',
+      undefined,
+      undefined,
+      true,
+      1,
+      10000,
+    );
+
+    // Verify second call was with the fallback language
+    expect(listAllTablesSpy).toHaveBeenNthCalledWith(
+      2,
+      'en',
+      undefined,
+      undefined,
+      true,
+      1,
+      10000,
+    );
+
+    // Verify we got the tables from the fallback call
+    expect(tables).toEqual(mockSuccessResponse.tables);
+  });
+
+  it('should throw error when both original and fallback language calls fail', async () => {
+    const { TableService } = await import('@pxweb2/pxweb2-api-client');
+    const listAllTablesSpy = vi.mocked(TableService.listAllTables);
+
+    // First call throws unsupported language error
+    listAllTablesSpy.mockRejectedValueOnce({
+      body: { title: 'Unsupported language' },
+    });
+
+    // Second call also fails
+    const fallbackError = new Error('Fallback language failed');
+    listAllTablesSpy.mockRejectedValueOnce(fallbackError);
+
+    // Verify the error is thrown
+    await expect(getAllTables('unsupported-lang')).rejects.toThrow();
+
+    // Verify both calls were made
+    expect(listAllTablesSpy).toHaveBeenCalledTimes(2);
   });
 });
 
@@ -137,6 +157,7 @@ const testFilterSubjectTimeDisallow: Filter[] = [
 ];
 
 const tableYear: Table = {
+  type: FolderContentItemTypeEnum.TABLE,
   id: '13618',
   label:
     '13618: Personer, etter arbeidsstyrkestatus, kjønn og alder. Bruddjusterte tall 2009-2022',
@@ -144,7 +165,7 @@ const tableYear: Table = {
   updated: '2023-04-11T06:00:00Z',
   firstPeriod: '2009',
   lastPeriod: '2022',
-  category: 'public',
+  category: Table.category.PUBLIC,
   variableNames: [
     'arbeidsstyrkestatus',
     'kjønn',
@@ -153,7 +174,7 @@ const tableYear: Table = {
     'år',
   ],
   source: 'Statistisk sentralbyrå',
-  timeUnit: 'Annual',
+  timeUnit: TimeUnit.ANNUAL,
   paths: [
     [
       {
