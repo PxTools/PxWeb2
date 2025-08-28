@@ -42,7 +42,7 @@ describe('Header', () => {
     ) as HTMLImageElement;
 
     expect(logo).toBeInTheDocument();
-    expect(logo).toHaveAttribute('src', '/images/main_logo/logo.svg');
+    expect(logo).toHaveAttribute('src', '/images/logo.svg');
   });
 
   it('links the logo to the language-specific root path', () => {
