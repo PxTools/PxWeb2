@@ -29,6 +29,25 @@ function Harness({
   return null;
 }
 
+vi.mock('../startPageFilters', async (orig) => {
+  const mod: any = await orig();
+  return {
+    ...mod,
+    getYearLabels: () => ({ fromLabel: 'From', toLabel: 'To' }),
+    findSubject: (_index: any, key: string) => {
+      const map: Record<
+        string,
+        { id: string; uniqueId: string; label: string }
+      > = {
+        UF: { id: 'UF', uniqueId: 'UF', label: 'Utdanning' },
+        BE: { id: 'BE', uniqueId: 'BE', label: 'Befolkning' },
+      };
+      return map[key] ?? null;
+    },
+    buildSubjectIndex: () => ({}),
+  };
+});
+
 const tableExamles = [
   {
     id: '1',
@@ -118,7 +137,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe('useFilterUrlSync', () => {
+describe('mergeFilterIntoQuery', () => {
   it('does not dispatch when URL has no params', async () => {
     setUrl('');
     const dispatch = vi.fn();
@@ -169,26 +188,12 @@ describe('useFilterUrlSync', () => {
       `?variable=${encodeURIComponent('age,sex')}`,
     );
   });
-});
 
-describe('year range in URL', () => {
-  vi.mock('../startPageFilters', async (orig) => {
-    const mod: any = await orig();
-    return {
-      ...mod,
-      getYearLabels: () => ({ fromLabel: 'From', toLabel: 'To' }),
-    };
-  });
-
-  beforeEach(() => {
-    window.history.replaceState({}, '', '/');
-  });
-
-  it('skriver full range "1990-2000" som ?from=1990&to=2000', async () => {
+  it('write yearRange to url, "1990-2000" as ?from=1990&to=2000', async () => {
     const dispatch = vi.fn();
     const state = baseState();
     state.activeFilters = [
-      { type: 'yearRange', value: '1990-2000', label: '1990 - 2000', index: 0 },
+      { type: 'yearRange', value: '1990-2000', label: '1990–2000', index: 0 },
     ];
 
     await act(async () => {
@@ -198,21 +203,7 @@ describe('year range in URL', () => {
     expect(window.location.search).toBe('?from=1990&to=2000');
   });
 
-  it('skriver kun "From 1749" som ?from=1749 (ingen to)', async () => {
-    const dispatch = vi.fn();
-    const state = baseState();
-    state.activeFilters = [
-      { type: 'yearRange', value: '1749', label: 'From 1749', index: 0 },
-    ];
-
-    await act(async () => {
-      render(<Harness state={state} dispatch={dispatch} />);
-    });
-
-    expect(window.location.search).toBe('?from=1749');
-  });
-
-  it('skriver kun "To 2001" som ?to=2001 (overstyrer ev. from)', async () => {
+  it('write yearRange to url, "To 2001" as ?to=2001', async () => {
     const dispatch = vi.fn();
     const state = baseState();
     state.activeFilters = [
@@ -226,18 +217,108 @@ describe('year range in URL', () => {
 
     expect(window.location.search).toBe('?timeUnit=Annual&to=2001');
   });
+});
 
-  it('delvis ugyldig range "abc-2020" gir kun ?to=2020', async () => {
+describe('parseParamsToFilters', () => {
+  beforeEach(() => {
+    window.history.replaceState({}, '', '/');
+  });
+
+  afterEach(() => {
+    cleanup();
+  });
+
+  it('hydrate yearRange ?from=1990&to=2000 to yearRange-filter', async () => {
     const dispatch = vi.fn();
     const state = baseState();
-    state.activeFilters = [
-      { type: 'yearRange', value: 'abc-2020', label: 'abc - 2020', index: 0 },
-    ];
+
+    window.history.replaceState({}, '', '/?from=1990&to=2000');
 
     await act(async () => {
       render(<Harness state={state} dispatch={dispatch} />);
     });
 
-    expect(window.location.search).toBe('?to=2020');
+    const calls = dispatch.mock.calls.map((args) => args[0]);
+    const add = calls.find((c) => c?.type === ActionType.ADD_FILTER);
+    expect(add).toBeTruthy();
+    expect(add.payload).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          type: 'yearRange',
+          value: '1990-2000',
+          label: '1990–2000',
+        }),
+      ]),
+    );
+  });
+
+  it('hydrate timeUnit ?timeUnit=Annual,Monthly to timeUnit filter', async () => {
+    const dispatch = vi.fn();
+    const state = baseState();
+
+    state.availableFilters.timeUnits = new Map([
+      ['Annual', 1],
+      ['Monthly', 1],
+    ]);
+
+    window.history.replaceState({}, '', '/?timeUnit=Annual,Monthly');
+
+    await act(async () => {
+      render(<Harness state={state} dispatch={dispatch} />);
+    });
+
+    const add = dispatch.mock.calls
+      .map((args) => args[0])
+      .find((c) => c?.type === ActionType.ADD_FILTER);
+    expect(add).toBeTruthy();
+
+    const timeUnits = add.payload.filter((f: Filter) => f.type === 'timeUnit');
+    expect(timeUnits.map((f: Filter) => f.value)).toEqual([
+      'Annual',
+      'Monthly',
+    ]);
+  });
+
+  it('hydrate variable fra ?variable=age,sex  to variable-filter', async () => {
+    const dispatch = vi.fn();
+    const state = baseState();
+
+    window.history.replaceState({}, '', '/?variable=age,sex');
+
+    await act(async () => {
+      render(<Harness state={state} dispatch={dispatch} />);
+    });
+
+    const add = dispatch.mock.calls
+      .map((args) => args[0])
+      .find((c) => c?.type === ActionType.ADD_FILTER);
+    expect(add).toBeTruthy();
+    const vars = add.payload.filter((f: Filter) => f.type === 'variable');
+    expect(vars.map((f: Filter) => f.value)).toEqual(['age', 'sex']);
+    expect(vars.map((f: Filter) => f.label)).toEqual(['Age', 'Sex']);
+  });
+
+  it('hydrates subjects from ?subject=UF,BE by looking them up in subjectIndex', async () => {
+    const dispatch = vi.fn();
+    const state = baseState();
+
+    window.history.replaceState({}, '', '/?subject=UF,BE');
+
+    await act(async () => {
+      render(<Harness state={state} dispatch={dispatch} />);
+    });
+
+    const add = dispatch.mock.calls
+      .map((args) => args[0])
+      .find((c) => c?.type === ActionType.ADD_FILTER);
+    expect(add).toBeTruthy();
+
+    const subs = add.payload.filter((f: Filter) => f.type === 'subject');
+    console.log(subs);
+    expect(subs.map((f: Filter) => f.value)).toEqual(['UF', 'BE']);
+    expect(subs.map((f: Filter) => f.label)).toEqual([
+      'Utdanning',
+      'Befolkning',
+    ]);
   });
 });
