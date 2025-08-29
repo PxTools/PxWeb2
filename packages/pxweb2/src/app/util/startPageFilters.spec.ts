@@ -12,7 +12,7 @@ import {
   type TableWithPaths,
   getVariables,
   sortTimeUnit,
-  sortSubjectTreeAlpha,
+  sortSubjectTree,
 } from '../util/startPageFilters';
 import { Filter, type PathItem } from '../pages/StartPage/StartPageTypes';
 import { Table } from '@pxweb2/pxweb2-api-client';
@@ -542,7 +542,7 @@ describe('sortSubjectTreeAlpha', () => {
       { id: '1', label: 'Business' },
     ];
 
-    const sorted = sortSubjectTreeAlpha(subjects);
+    const sorted = sortSubjectTree(subjects);
 
     expect(sorted.map((n) => n.label)).toEqual([
       'Agriculture',
@@ -579,7 +579,7 @@ describe('sortSubjectTreeAlpha', () => {
       },
     ];
 
-    const sorted = sortSubjectTreeAlpha(subjects);
+    const sorted = sortSubjectTree(subjects);
 
     // Toplevel
     expect(sorted.map((n) => n.label)).toEqual(['Alpha', 'Bravo']);
