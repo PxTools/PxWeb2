@@ -420,3 +420,18 @@ export function getVariables(allTables: Table[]) {
       }),
   );
 }
+
+export function sortTimeUnit(allTimeUnits: Set<string>): string[] {
+  const timeUnitOrder = ['Annual', 'Quarterly', 'Monthly', 'Weekly', 'Other'];
+
+  return Array.from(allTimeUnits).sort((a, b) => {
+    const indexA = timeUnitOrder.indexOf(a);
+    const indexB = timeUnitOrder.indexOf(b);
+
+    // Values not in predefined order go to the end
+    return (
+      (indexA === -1 ? timeUnitOrder.length : indexA) -
+      (indexB === -1 ? timeUnitOrder.length : indexB)
+    );
+  });
+}
