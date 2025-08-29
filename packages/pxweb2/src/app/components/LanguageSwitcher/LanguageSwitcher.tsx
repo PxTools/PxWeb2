@@ -87,7 +87,11 @@ export const LanguageSwitcher = () => {
         </select>
 
         {!isMobile && (
-          <Label size="medium" forID="language-switcher">
+          <Label
+            size="medium"
+            forID="language-switcher"
+            className={classes.textColorOverride}
+          >
             {t('common.header.language_selector')}
           </Label>
         )}
