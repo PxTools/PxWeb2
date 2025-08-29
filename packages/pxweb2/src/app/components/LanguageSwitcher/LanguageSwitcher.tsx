@@ -61,6 +61,12 @@ export const LanguageSwitcher = () => {
           />
         </div>
 
+        {!isMobile && (
+          <Label size="medium" forID="language-switcher" textcolor="inherit">
+            {t('common.header.language_selector')}
+          </Label>
+        )}
+
         <select
           id="language-switcher"
           value={currentLang}
@@ -90,16 +96,6 @@ export const LanguageSwitcher = () => {
             </option>
           ))}
         </select>
-
-        {!isMobile && (
-          <Label
-            size="medium"
-            forID="language-switcher"
-            className={classes.textColorOverride}
-          >
-            {t('common.header.language_selector')}
-          </Label>
-        )}
       </div>
     )
   );

@@ -6,7 +6,7 @@ export interface LabelProps
   extends React.LabelHTMLAttributes<HTMLLabelElement | HTMLLegendElement>,
     React.HTMLAttributes<HTMLLabelElement | HTMLLegendElement> {
   size?: 'medium' | 'small';
-  textcolor?: 'default' | 'subtle';
+  textcolor?: 'default' | 'subtle' | 'inherit';
   visuallyHidden?: boolean;
   children?: React.ReactNode;
   className?: string;
