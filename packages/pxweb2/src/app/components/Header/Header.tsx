@@ -11,8 +11,21 @@ interface HeaderProps {
   stroke?: boolean;
 }
 
+function MainLogo() {
+  const { t } = useTranslation();
+  const srcPath = '/images/logo.png';
+
+  return (
+    <img
+      className={cl(styles.logo)}
+      src={srcPath}
+      alt={t('common.header.logo_alt')}
+    />
+  );
+}
+
 export const Header = ({ stroke = false }: HeaderProps) => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const config = getConfig();
 
   return (
@@ -27,11 +40,7 @@ export const Header = ({ stroke = false }: HeaderProps) => {
             config.language.showDefaultLanguageInPath,
           )}
         >
-          <img
-            className={cl(styles.logo)}
-            src="/images/logo.svg"
-            alt={t('common.header.logo_alt')}
-          />
+          <MainLogo />
         </LinkRouter>
       </div>
 

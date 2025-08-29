@@ -42,6 +42,7 @@
   max-height: fixed.$spacing-11;
 
   @media (breakpoints.$xsmall) {
+    max-height: fixed.$spacing-10;
     max-width: fixed.$spacing-55;
   }
 }
