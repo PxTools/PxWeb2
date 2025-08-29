@@ -63,7 +63,7 @@ const StartPage = () => {
     async function fetchTables() {
       dispatch({ type: ActionType.SET_LOADING, payload: true });
       try {
-        const tables = await getAllTables();
+        const tables = await getAllTables(i18n.language);
         dispatch({
           type: ActionType.RESET_FILTERS,
           payload: {
@@ -81,7 +81,7 @@ const StartPage = () => {
       }
     }
     fetchTables();
-  }, [dispatch]);
+  }, [dispatch, i18n.language]);
 
   useEffect(() => {
     if (isFilterOverlayOpen) {

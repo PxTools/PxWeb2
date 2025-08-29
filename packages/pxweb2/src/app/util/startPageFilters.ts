@@ -8,6 +8,7 @@ import {
 } from '../pages/StartPage/StartPageTypes';
 import { shouldTableBeIncluded } from '../util/tableHandler';
 import { getConfig } from './config/getConfig';
+import i18n from '../../i18n/config';
 
 export type TableWithPaths = Table & {
   id: string;
@@ -401,7 +402,9 @@ export function buildSubjectToTableIdsMap(
 
 export function getVariables(allTables: Table[]) {
   const config = getConfig();
-  const exclusionList = config.variableFilterExclusionList ?? [''];
+  const exclusionList: string[] = config.variableFilterExclusionList[
+    i18n.language
+  ] ?? [''];
 
   const variables = new Map<string, number>();
   allTables.forEach((table) => {
