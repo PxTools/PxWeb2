@@ -1,0 +1,36 @@
+import React from 'react';
+import ReactMarkdown from 'react-markdown';
+
+import Link from '../Link/Link';
+
+interface Props {
+  mdText: string;
+}
+
+type LinkProps = { href?: string; children?: React.ReactNode };
+type ParagraphProps = { children?: React.ReactNode };
+
+const LinkRenderer = ({ href = '', children }: LinkProps) => (
+  <Link href={href} target="_blank" rel="noopener noreferrer" inline>
+    {children}
+  </Link>
+);
+
+const ParagraphRenderer = ({ children }: ParagraphProps) => <>{children}</>;
+
+const MarkdownRenderer: React.FC<Props> = ({ mdText }) => {
+  return (
+    <ReactMarkdown
+      components={{
+        a: LinkRenderer,
+        p: ParagraphRenderer,
+      }}
+      // allowedElements={['a', 'p']}
+      skipHtml={false} // This disables raw HTML rendering
+    >
+      {mdText}
+    </ReactMarkdown>
+  );
+};
+
+export default MarkdownRenderer;
