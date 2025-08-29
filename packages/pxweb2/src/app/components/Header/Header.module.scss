@@ -38,6 +38,7 @@
 }
 
 .logo {
+  display: block; // Fix for line-height problem with images and centering
   max-height: fixed.$spacing-11;
 
   @media (breakpoints.$xsmall) {
