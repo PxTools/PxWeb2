@@ -13,6 +13,10 @@
   color: var(--px-color-text-subtle);
 }
 
+.textcolor-inherit {
+  color: inherit;
+}
+
 .visually-hidden {
   border: 0 !important;
   clip: rect(0, 0, 0, 0) !important;

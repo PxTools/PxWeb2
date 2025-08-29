@@ -1,0 +1,70 @@
+@use '$ui/style-dictionary/dist/scss/fixed-variables.scss' as fixed;
+@use '$ui/src/lib/breakpoints.scss' as breakpoints;
+@use '$ui/src/lib/text-styles.scss';
+
+.languageSwitcher {
+  display: flex;
+  position: relative;
+  height: fixed.$spacing-12;
+  padding: fixed.$spacing-3 fixed.$spacing-5;
+  justify-content: center;
+  align-items: center;
+  gap: fixed.$spacing-2;
+
+  color: var(--px-color-text-action);
+  border: none;
+  border-radius: var(--px-border-radius-full);
+
+  &:hover {
+    color: var(--px-color-text-on-action-subtle);
+    background: var(--px-color-surface-action-subtle-hover);
+    border-radius: var(--px-border-radius-medium);
+  }
+
+  @media (breakpoints.$xsmall) {
+    padding: fixed.$spacing-3;
+  }
+}
+
+.focusMarkings {
+  outline: 3px solid var(--px-color-border-focus-outline);
+  outline-offset: 3px;
+  box-shadow: inset 0 0 0 3px var(--px-color-border-focus-boxshadow);
+}
+
+.languageSwitcherSelect {
+  opacity: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+
+  color: inherit;
+  font-size: inherit;
+
+  cursor: pointer;
+
+  // Hack to fix select height in Safari
+  -webkit-appearance: none;
+}
+
+.languageSwitcherIconContainer {
+  display: flex;
+  width: 20px;
+  height: 24px;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 4px;
+
+  @media (breakpoints.$xsmall) {
+    width: 24px;
+  }
+}
+
+.languageSwitcherIcon {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: fixed.$spacing-1;
+}
