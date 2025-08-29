@@ -27,7 +27,6 @@ import { ActionType } from './StartPageTypes';
 import {
   getSubjectTree,
   sortAndDeduplicateFilterChips,
-  sortSubjectTreeAlpha,
 } from '../../util/startPageFilters';
 import { useTopicIcons } from '../../util/hooks/useTopicIcons';
 import useApp from '../../context/useApp';
@@ -68,7 +67,7 @@ const StartPage = () => {
           type: ActionType.RESET_FILTERS,
           payload: {
             tables: tables,
-            subjects: sortSubjectTreeAlpha(getSubjectTree(tables)),
+            subjects: getSubjectTree(tables),
           },
         });
       } catch (error) {

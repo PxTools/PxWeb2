@@ -18,7 +18,8 @@ export type TableWithPaths = Table & {
 export function getSubjectTree(tables: Table[]): PathItem[] {
   const allPaths: PathItem[][] = getAllPath(tables);
   const organizedPaths: PathItem[] = organizePaths(allPaths);
-  return updateSubjectTreeCounts(organizedPaths, tables);
+  const sortedAndOranizedPaths = sortSubjectTreeAlpha(organizedPaths);
+  return updateSubjectTreeCounts(sortedAndOranizedPaths, tables);
 }
 
 export function organizePaths(paths: PathItem[][]): PathItem[] {
