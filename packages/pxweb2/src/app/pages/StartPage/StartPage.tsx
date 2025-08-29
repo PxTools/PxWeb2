@@ -73,31 +73,33 @@ const StartPage = () => {
   );
 
   useEffect(() => {
-    if (hasFetchedRef.current) {
-      return;
+  if (hasFetchedRef.current) {
+    return;
+  }
+  hasFetchedRef.current = true;
+
+  async function fetchTables() {
+    dispatch({ type: ActionType.SET_LOADING, payload: true });
+    try {
+      const tables = await getAllTables(i18n.language);
+      dispatch({
+        type: ActionType.RESET_FILTERS,
+        payload: { tables: tables, subjects: getSubjectTree(tables) },
+      });
+    } catch (error) {
+      dispatch({
+        type: ActionType.SET_ERROR,
+        payload: (error as Error).message,
+      });
+    } finally {
+      dispatch({ type: ActionType.SET_LOADING, payload: false });
     }
-    hasFetchedRef.current = true;
+  }
+  fetchTables();
+}, [dispatch, i18n.language]);
 
-    (async () => {
-      dispatch({ type: ActionType.SET_LOADING, payload: true });
-      try {
-        const tables = await getAllTables();
-        dispatch({
-          type: ActionType.RESET_FILTERS,
-          payload: { tables, subjects: getSubjectTree(tables) },
-        });
-      } catch (error) {
-        dispatch({
-          type: ActionType.SET_ERROR,
-          payload: (error as Error).message,
-        });
-      } finally {
-        dispatch({ type: ActionType.SET_LOADING, payload: false });
-      }
-    })();
-  }, [dispatch]);
 
-  useEffect(() => {
+useEffect(() => {
     if (state.activeFilters.length > 0) {
       hasEverHydratedRef.current = true;
     }

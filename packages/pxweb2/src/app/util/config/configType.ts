@@ -8,5 +8,5 @@ export type Config = {
   apiUrl: string;
   maxDataCells: number;
   specialCharacters: string[];
-  variableFilterExclusionList: string[];
+  variableFilterExclusionList: { [propName: string]: string[] };
 };
