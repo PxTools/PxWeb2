@@ -52,6 +52,19 @@
   -webkit-appearance: none;
 }
 
+.languageSwitcherIconContainer {
+  display: flex;
+  width: 20px;
+  height: 24px;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 4px;
+
+  @media (breakpoints.$xsmall) {
+    width: 24px;
+  }
+}
+
 .languageSwitcherIcon {
   display: flex;
   justify-content: flex-end;

@@ -50,11 +50,16 @@ export const LanguageSwitcher = () => {
           isTabbed && classes['focusMarkings'],
         )}
       >
-        <Icon
-          iconName="Globe"
-          className={cl(classes.languageSwitcherIcon, classes[`label-medium`])}
-          ariaHidden
-        />
+        <div className={cl(classes.languageSwitcherIconContainer)}>
+          <Icon
+            iconName="Globe"
+            className={cl(
+              classes.languageSwitcherIcon,
+              classes[`label-medium`],
+            )}
+            ariaHidden
+          />
+        </div>
 
         <select
           id="language-switcher"
