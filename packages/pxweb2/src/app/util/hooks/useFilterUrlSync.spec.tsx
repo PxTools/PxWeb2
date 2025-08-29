@@ -321,7 +321,6 @@ describe('parseParamsToFilters', () => {
     expect(add).toBeTruthy();
 
     const subs = add.payload.filter((f: Filter) => f.type === 'subject');
-    console.log(subs);
     expect(subs.map((f: Filter) => f.value)).toEqual(['UF', 'BE']);
     expect(subs.map((f: Filter) => f.label)).toEqual([
       'Utdanning',

@@ -79,7 +79,6 @@ describe('pathUtil', () => {
 
     it('indexes nodes by id (case-insensitive) and uniqueId', () => {
       const index: PathIndex = buildPathIndex(tree as unknown as PathItem[]);
-      console.log(index);
       expect(findPathByKey(index, 'AL')?.id).toBe('al');
       expect(findPathByKey(index, 'al__al03__AKU')?.id).toBe('aku');
       expect(findPathByKey(index, 'be')?.label).toBe('Befolkning');
