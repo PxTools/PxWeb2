@@ -73,33 +73,32 @@ const StartPage = () => {
   );
 
   useEffect(() => {
-  if (hasFetchedRef.current) {
-    return;
-  }
-  hasFetchedRef.current = true;
-
-  async function fetchTables() {
-    dispatch({ type: ActionType.SET_LOADING, payload: true });
-    try {
-      const tables = await getAllTables(i18n.language);
-      dispatch({
-        type: ActionType.RESET_FILTERS,
-        payload: { tables: tables, subjects: getSubjectTree(tables) },
-      });
-    } catch (error) {
-      dispatch({
-        type: ActionType.SET_ERROR,
-        payload: (error as Error).message,
-      });
-    } finally {
-      dispatch({ type: ActionType.SET_LOADING, payload: false });
+    if (hasFetchedRef.current) {
+      return;
     }
-  }
-  fetchTables();
-}, [dispatch, i18n.language]);
+    hasFetchedRef.current = true;
 
+    async function fetchTables() {
+      dispatch({ type: ActionType.SET_LOADING, payload: true });
+      try {
+        const tables = await getAllTables(i18n.language);
+        dispatch({
+          type: ActionType.RESET_FILTERS,
+          payload: { tables: tables, subjects: getSubjectTree(tables) },
+        });
+      } catch (error) {
+        dispatch({
+          type: ActionType.SET_ERROR,
+          payload: (error as Error).message,
+        });
+      } finally {
+        dispatch({ type: ActionType.SET_LOADING, payload: false });
+      }
+    }
+    fetchTables();
+  }, [dispatch, i18n.language]);
 
-useEffect(() => {
+  useEffect(() => {
     if (state.activeFilters.length > 0) {
       hasEverHydratedRef.current = true;
     }
