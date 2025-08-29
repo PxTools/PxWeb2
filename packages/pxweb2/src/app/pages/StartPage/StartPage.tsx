@@ -27,6 +27,7 @@ import { ActionType } from './StartPageTypes';
 import {
   getSubjectTree,
   sortAndDeduplicateFilterChips,
+  sortSubjectTreeAlpha,
 } from '../../util/startPageFilters';
 import { useTopicIcons } from '../../util/hooks/useTopicIcons';
 import useApp from '../../context/useApp';
@@ -65,7 +66,10 @@ const StartPage = () => {
         const tables = await getAllTables();
         dispatch({
           type: ActionType.RESET_FILTERS,
-          payload: { tables: tables, subjects: getSubjectTree(tables) },
+          payload: {
+            tables: tables,
+            subjects: sortSubjectTreeAlpha(getSubjectTree(tables)),
+          },
         });
       } catch (error) {
         dispatch({

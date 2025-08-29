@@ -435,3 +435,17 @@ export function sortTimeUnit(allTimeUnits: Set<string>): string[] {
     );
   });
 }
+
+// Sort subjects alphabetically at every depth.
+export function sortSubjectTreeAlpha(subjects: PathItem[]): PathItem[] {
+  const sortRec = (nodes: PathItem[]): PathItem[] =>
+    nodes
+      .slice()
+      .sort((a, b) => (a.label < b.label ? -1 : a.label > b.label ? 1 : 0))
+      .map((node) => ({
+        ...node,
+        children: node.children ? sortRec(node.children) : undefined,
+      }));
+
+  return sortRec(subjects);
+}
