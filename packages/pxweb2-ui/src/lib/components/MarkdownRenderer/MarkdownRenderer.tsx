@@ -25,7 +25,7 @@ const MarkdownRenderer: React.FC<Props> = ({ mdText }) => {
         a: LinkRenderer,
         p: ParagraphRenderer,
       }}
-      allowedElements={['a', 'p']}
+      // allowedElements={['a', 'p']}
       skipHtml={false} // This disables raw HTML rendering
     >
       {mdText}
