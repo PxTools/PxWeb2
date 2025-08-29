@@ -7,22 +7,26 @@ interface Props {
   mdText: string;
 }
 
+type LinkProps = { href?: string; children?: React.ReactNode };
+type ParagraphProps = { children?: React.ReactNode };
+
+const LinkRenderer = ({ href = '', children }: LinkProps) => (
+  <Link href={href} target="_blank" rel="noopener noreferrer" inline>
+    {children}
+  </Link>
+);
+
+const ParagraphRenderer = ({ children }: ParagraphProps) => <>{children}</>;
+
 const MarkdownRenderer: React.FC<Props> = ({ mdText }) => {
   return (
     <ReactMarkdown
       components={{
-        a: ({ href, children }) => (
-          <Link
-            href={href ?? ''}
-            target="_blank"
-            rel="noopener noreferrer"
-            inline
-          >
-            {children}
-          </Link>
-        ),
+        a: LinkRenderer,
+        p: ParagraphRenderer,
       }}
-      disallowedElements={['audio', 'video', 'img']} // Disallow audio, video and images in markdown
+      allowedElements={['a', 'p']}
+      skipHtml={false} // This disables raw HTML rendering
     >
       {mdText}
     </ReactMarkdown>

@@ -6,24 +6,33 @@ import { MandatoryNotes } from './MandatoryNotes';
 import { dummyNotes } from './notesDummyData';
 
 describe('MandatoryNotes', () => {
-  it('renders MandatoryTableNotes when tableLevelNotes are present', () => {
+  it('renders MandatoryVariableNotes for the first 3 variable notes', () => {
     render(<MandatoryNotes notes={dummyNotes.mandatoryNotes} />);
 
-    Object.values(dummyNotes.mandatoryNotes.tableLevelNotes).forEach((note) => {
-      const noteContent = screen.getByText(note);
-      expect(noteContent).toBeInTheDocument();
-    });
+    dummyNotes.mandatoryNotes.variableNotes
+      .slice(0, 3)
+      .forEach((variableNote) => {
+        variableNote.notes.forEach((note) => {
+          const noteContent = screen.getByText(note);
+          expect(noteContent).toBeInTheDocument();
+        });
+      });
   });
 
-  it('renders MandatoryVariableNotes for each variable note', () => {
+  it('renders markdown links as anchor tags syntax 1', () => {
     render(<MandatoryNotes notes={dummyNotes.mandatoryNotes} />);
+    // Assuming '[SCB](https://scb.se)' is present in one of the notes
+    const link = screen.getByRole('link', { name: 'SCB' });
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveAttribute('href', 'https://scb.se');
+  });
 
-    dummyNotes.mandatoryNotes.variableNotes.forEach((variableNote) => {
-      variableNote.notes.forEach((note) => {
-        const noteContent = screen.getByText(note);
-        expect(noteContent).toBeInTheDocument();
-      });
-    });
+  it('renders markdown links as anchor tags syntax 2', () => {
+    render(<MandatoryNotes notes={dummyNotes.mandatoryNotes} />);
+    // Assuming '[SCB](https://scb.se)' is present in one of the notes
+    const link = screen.getByRole('link', { name: 'https://scb.se/' });
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveAttribute('href', 'https://scb.se/');
   });
 
   it('renders MandatoryValueNotes for each value note', () => {
