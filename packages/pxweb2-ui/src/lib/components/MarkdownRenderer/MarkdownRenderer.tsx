@@ -8,7 +8,7 @@ interface Props {
 }
 
 type LinkProps = { href?: string; children?: React.ReactNode };
-type ParagraphProps = { children?: React.ReactNode };
+type UnwantedMdRenderProps = { children?: React.ReactNode };
 
 const LinkRenderer = ({ href = '', children }: LinkProps) => (
   <Link href={href} target="_blank" rel="noopener noreferrer" inline>
@@ -16,16 +16,23 @@ const LinkRenderer = ({ href = '', children }: LinkProps) => (
   </Link>
 );
 
-const ParagraphRenderer = ({ children }: ParagraphProps) => <>{children}</>;
+const UnwantedMdRender = ({ children }: UnwantedMdRenderProps) => (
+  <>{children}</>
+);
 
 const MarkdownRenderer: React.FC<Props> = ({ mdText }) => {
   return (
     <ReactMarkdown
       components={{
         a: LinkRenderer,
-        p: ParagraphRenderer,
+        p: UnwantedMdRender,
+        ul: UnwantedMdRender,
+        ol: UnwantedMdRender,
+        li: UnwantedMdRender,
+        em: UnwantedMdRender,
+        strong: UnwantedMdRender,
       }}
-      // allowedElements={['a', 'p']}
+      //allowedElements={['a', 'p']}
       skipHtml={false} // This disables raw HTML rendering
     >
       {mdText}
