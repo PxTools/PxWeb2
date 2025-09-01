@@ -16,7 +16,10 @@ export const LanguageSwitcher = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [currentLang, setCurrentLang] = useState(i18n.language);
+
+  // Select keyboard navigation state
   const [isTabbed, setIsTabbed] = useState(false);
+  const [selectOpen, setSelectOpen] = useState(false);
 
   // Force update the selects value(selected language) when location changes
   useEffect(() => {
@@ -40,6 +43,24 @@ export const LanguageSwitcher = () => {
     // Change the language in i18n
     i18n.changeLanguage(event.target.value);
   };
+
+  function handleKeyUp(event: React.KeyboardEvent<HTMLSelectElement>) {
+    // Handle keyboard navigation for focusmarking
+    if (event.key === 'Tab' && !isTabbed) {
+      setIsTabbed(true);
+    }
+
+    // Open the select dropdown on Enter key when tabbed to it
+    if (event.key === 'Enter' && isTabbed && !selectOpen) {
+      if ('showPicker' in HTMLSelectElement.prototype) {
+        event.currentTarget.showPicker(); // open the select
+      } else {
+        console.warn(
+          'LanguageSwitcher: showPicker not supported in this browser',
+        );
+      }
+    }
+  }
 
   return (
     config.language.supportedLanguages.length > 1 && (
@@ -75,13 +96,12 @@ export const LanguageSwitcher = () => {
             isMobile ? t('common.header.language_selector') : undefined
           }
           onKeyUp={(event) => {
-            if (event.key === 'Tab' && !isTabbed) {
-              setIsTabbed(true);
-            }
+            handleKeyUp(event);
           }}
           onBlur={() => {
             if (isTabbed) {
               setIsTabbed(false);
+              setSelectOpen(false);
             }
           }}
           onChange={(event) => handleLanguageChange(event)}
