@@ -18,9 +18,8 @@
   list-style: none;
   align-self: stretch;
   width: 100%;
-  padding-top: 6px;
-  padding-bottom: 6px;
   padding-left: 0px;
+  margin: 0px;
   &.compact {
     display: flex;
     max-width: 400px;
