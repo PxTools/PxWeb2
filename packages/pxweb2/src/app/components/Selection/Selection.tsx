@@ -7,7 +7,10 @@ import {
   SavedQueriesService,
   SelectionResponse,
 } from '@pxweb2/pxweb2-api-client';
-import { mapJsonStat2Response } from '../../../mappers/JsonStat2ResponseMapper';
+import {
+  mapJsonStat2Response,
+  mapJsonStat2ResponsePathElements,
+} from '../../../mappers/JsonStat2ResponseMapper';
 import { mapTableSelectionResponse } from '../../../mappers/TableSelectionResponseMapper';
 
 import {
