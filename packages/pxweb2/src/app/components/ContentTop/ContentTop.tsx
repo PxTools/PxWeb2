@@ -110,7 +110,7 @@ export function ContentTop({
   const selectedMetadata = useTableData().data?.metadata;
   const buildTableTitle = useTableData().buildTableTitle;
   const { setTitle } = useApp();
-  const { isMobile } = useApp();
+  const { isTablet } = useApp();
 
   const openInformationButtonRef = useRef<HTMLButtonElement>(null);
   const openInformationLinkRef = useRef<HTMLAnchorElement>(null);
@@ -191,7 +191,7 @@ export function ContentTop({
     href: '',
   });
 
-  const breadcrumbsVariant = isMobile ? 'compact' : 'default';
+  const breadcrumbsVariant = isTablet ? 'compact' : 'default';
 
   return (
     <>
