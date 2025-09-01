@@ -148,9 +148,6 @@
       width: fit-content;
     }
   }
-  tr th::first-letter {
-    text-transform: capitalize;
-  }
   tr.firstdim th {
     border-top: 1px solid var(--px-color-border-default);
     font-family: PxWeb-font, sans-serif;

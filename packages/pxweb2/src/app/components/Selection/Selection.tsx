@@ -1,12 +1,15 @@
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
 
-import { ApiError, TableService } from '@pxweb2/pxweb2-api-client';
 import {
-  mapJsonStat2Response,
-  mapJsonStat2ResponsePathElements,
-} from '../../../mappers/JsonStat2ResponseMapper';
+  ApiError,
+  TableService,
+  SavedQueriesService,
+  SelectionResponse,
+} from '@pxweb2/pxweb2-api-client';
+import { mapJsonStat2Response } from '../../../mappers/JsonStat2ResponseMapper';
 import { mapTableSelectionResponse } from '../../../mappers/TableSelectionResponseMapper';
+
 import {
   PxTable,
   PxTableMetadata,
@@ -216,7 +219,7 @@ type SelectionProps = {
     close: boolean,
     view: NavigationItem,
   ) => void;
-  hideMenuRef?: React.RefObject<HTMLDivElement | null>;
+  hideMenuRef?: React.RefObject<HTMLButtonElement | null>;
 };
 
 export function Selection({
@@ -227,11 +230,12 @@ export function Selection({
   hideMenuRef,
 }: SelectionProps) {
   const variables = useVariables();
+  const app = useApp();
   const { isTablet } = useApp();
   const {
     selectedVBValues,
     setSelectedVBValues,
-    hasLoadedDefaultSelection,
+    hasLoadedInitialSelection,
     isLoadingMetadata,
     pxTableMetadata,
     setPxTableMetadata,
@@ -248,6 +252,8 @@ export function Selection({
   const [prevLang, setPrevLang] = useState('');
   const { addModal, removeModal } = useAccessibility();
 
+  let savedQueryId = app.getSavedQueryId();
+
   useEffect(() => {
     if (errorMsg) {
       console.error('ERROR: Selection:', errorMsg);
@@ -256,7 +262,7 @@ export function Selection({
   }, [errorMsg]);
 
   useEffect(() => {
-    let shouldGetDefaultSelection = !hasLoadedDefaultSelection;
+    let shouldGetInitialSelection = !hasLoadedInitialSelection;
 
     if (!selectedTabId) {
       return;
@@ -268,8 +274,8 @@ export function Selection({
       prevTableId !== selectedTabId ||
       prevLang !== i18n.resolvedLanguage
     ) {
-      variables.setHasLoadedDefaultSelection(false);
-      shouldGetDefaultSelection = true;
+      variables.setHasLoadedInitialSelection(false);
+      shouldGetInitialSelection = true;
       setPrevTableId(selectedTabId);
       setPrevLang(i18n.resolvedLanguage ?? '');
     }
@@ -278,7 +284,12 @@ export function Selection({
       variables.setIsLoadingMetadata(true);
     }
 
-    const metaDataDefaultSelection = true;
+    let metaDataDefaultSelection;
+    if (savedQueryId) {
+      metaDataDefaultSelection = false;
+    } else {
+      metaDataDefaultSelection = true;
+    }
 
     // Make parallel calls to getMetadataById and getTableById
     Promise.all([
@@ -286,6 +297,7 @@ export function Selection({
         selectedTabId,
         i18n.resolvedLanguage,
         metaDataDefaultSelection,
+      savedQueryId,
       ),
       TableService.getTableById(selectedTabId, i18n.resolvedLanguage),
     ])
@@ -303,7 +315,7 @@ export function Selection({
         setErrorMsg('');
       })
       .then(() => {
-        if (!shouldGetDefaultSelection) {
+        if (!shouldGetInitialSelection) {
           variables.setIsLoadingMetadata(false);
         }
       })
@@ -316,35 +328,62 @@ export function Selection({
         setPxTableMetadata(null);
       });
 
-    if (shouldGetDefaultSelection) {
-      TableService.getDefaultSelection(selectedTabId, i18n.resolvedLanguage)
-        .then((selectionResponse) => {
-          const defaultSelection = mapTableSelectionResponse(
+    if (shouldGetInitialSelection) {
+      getInitialSelection(selectedTabId).then((selectionResponse) => {
+        if (selectionResponse) {
+          const initialSelection = mapTableSelectionResponse(
             selectionResponse,
           ).filter(
             (variable) =>
               variable.values.length > 0 ||
               variable.selectedCodeList !== undefined,
           );
-          setSelectedVBValues(defaultSelection);
-          variables.syncVariablesAndValues(defaultSelection);
+          setSelectedVBValues(initialSelection);
+          variables.syncVariablesAndValues(initialSelection);
           variables.setIsLoadingMetadata(false);
-          variables.setHasLoadedDefaultSelection(true);
-        })
-        .catch((apiError: ApiError) => {
-          setErrorMsg(problemMessage(apiError, selectedTabId));
-        })
-        .catch((error) => {
-          setErrorMsg(
-            `Error getting default selection: ${selectedTabId} ${error.message}`,
-          );
-        });
+          variables.setHasLoadedInitialSelection(true);
+        }
+      });
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTabId, i18n.resolvedLanguage]);
 
   if (pxTableMetaToRender === null && pxTableMetadata !== null) {
     setPxTableMetaToRender(structuredClone(pxTableMetadata));
+  }
+
+  /**
+   * Retrieves the initial selection for the current context, either from a saved query or by fetching the default selection.
+   *
+   * If a saved query ID is present, it fetches the selection associated with that saved query.
+   * Otherwise, it retrieves the default selection for the specified table and language.
+   * In case of an error during the API call, it sets an error message using the provided error handler.
+   *
+   * @param selectedTabId - The ID of the currently selected tab for which to retrieve the selection.
+   * @returns A promise that resolves to a {@link SelectionResponse} object if successful, or `undefined` if an error occurs.
+   */
+  async function getInitialSelection(
+    selectedTabId: string,
+  ): Promise<SelectionResponse | undefined> {
+    let response: SelectionResponse | undefined = undefined;
+
+    try {
+      if (app.getSavedQueryId()?.length > 0) {
+        response = await SavedQueriesService.getSavedQuerySelection(
+          app.getSavedQueryId(),
+          i18n.resolvedLanguage,
+        );
+      } else {
+        response = await TableService.getDefaultSelection(
+          selectedTabId,
+          i18n.resolvedLanguage,
+        );
+      }
+    } catch (apiError: unknown) {
+      setErrorMsg(problemMessage(apiError as ApiError, selectedTabId));
+    }
+    return response;
   }
 
   async function handleCodeListChange(
@@ -390,6 +429,7 @@ export function Selection({
       selectedTabId,
       i18n.resolvedLanguage,
       false,
+      '',
       selectedCodeLists,
     )
       .then((Dataset) => {
@@ -519,7 +559,7 @@ export function Selection({
       languageDirection={i18n.dir()}
       selectedVBValues={selectedVBValues}
       isLoadingMetadata={isLoadingMetadata}
-      hasLoadedDefaultSelection={hasLoadedDefaultSelection}
+      hasLoadedDefaultSelection={hasLoadedInitialSelection}
       isChangingCodeList={isFadingVariableList}
       isTablet={isTablet}
       handleCodeListChange={handleCodeListChange}

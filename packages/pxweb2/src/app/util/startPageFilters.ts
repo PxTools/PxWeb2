@@ -1,4 +1,5 @@
 import { Table } from '@pxweb2/pxweb2-api-client';
+import { useTranslation } from 'react-i18next';
 import {
   StartPageFilters,
   Filter,
@@ -7,6 +8,8 @@ import {
   YearRange,
 } from '../pages/StartPage/StartPageTypes';
 import { shouldTableBeIncluded } from '../util/tableHandler';
+import { getConfig } from './config/getConfig';
+import i18n from '../../i18n/config';
 
 export type TableWithPaths = Table & {
   id: string;
@@ -77,10 +80,12 @@ export function getFilters(tables: Table[]): StartPageFilters {
     timeUnits: new Map<string, number>(),
     subjectTree: [],
     yearRange: { min: 0, max: 9999 },
+    variables: new Map<string, number>(),
   };
 
   filters.timeUnits = getTimeUnits(tables);
   filters.subjectTree = getSubjectTree(tables);
+  filters.variables = getVariables(tables);
 
   return filters;
 }
@@ -127,7 +132,7 @@ export function sortFiltersByTypeAndSubjectOrder(
   filters: Filter[],
   subjectOrder: string[],
 ): Filter[] {
-  const typeOrder = ['subject', 'yearRange', 'timeUnit'];
+  const typeOrder = ['search', 'subject', 'yearRange', 'timeUnit', 'variable'];
 
   return filters.slice().sort((a, b) => {
     const typeComparison =
@@ -142,6 +147,10 @@ export function sortFiltersByTypeAndSubjectOrder(
       return aIdx - bIdx;
     }
 
+    if (a.type === 'variable' && b.type === 'variable') {
+      return a.index - b.index;
+    }
+
     return 0;
   });
 }
@@ -149,6 +158,9 @@ export function sortFiltersByTypeAndSubjectOrder(
 export function deduplicateFiltersByValue(filters: Filter[]): Filter[] {
   const seen = new Set<string>();
   return filters.filter((filter) => {
+    if (filter.type == 'search') {
+      return true;
+    }
     if (seen.has(filter.value)) {
       return false;
     }
@@ -335,6 +347,7 @@ export function recomputeAvailableFilters(
     currentFilters,
     availableTables,
   );
+  // We do not calculate variables, they are always updated - even when adding variable filters!
 
   const shouldRecalcFilter = (filter: FilterType) =>
     editFilterType !== filter || currentFilters.some((f) => f.type !== filter);
@@ -386,4 +399,54 @@ export function buildSubjectToTableIdsMap(
     }
   }
   return map;
+}
+
+export function getVariables(allTables: Table[]) {
+  const config = getConfig();
+  const exclusionList: string[] = config.variableFilterExclusionList[
+    i18n.language
+  ] ?? [''];
+
+  const variables = new Map<string, number>();
+  allTables.forEach((table) => {
+    table.variableNames.forEach((name: string) => {
+      const count = variables.get(name);
+      variables.set(name, count ? count + 1 : 1);
+    });
+  });
+  return new Map<string, number>(
+    [...variables.entries()]
+      // Sort the returned map by number of available variables.
+      .sort((a, b) => b[1] - a[1])
+      .filter((entry) => {
+        // Returns true if the variable is _not_ in the exclusion list
+        return !exclusionList.includes(entry[0]);
+      }),
+  );
+}
+
+export function getYearLabels(t: ReturnType<typeof useTranslation>['t']) {
+  const fromLabel = t('start_page.filter.year.from_label');
+  const toLabel = t('start_page.filter.year.to_label');
+
+  return { fromLabel, toLabel };
+}
+
+export function getYearRangeLabelValue(
+  from?: string,
+  to?: string,
+  fromLabel?: string,
+  toLabel?: string,
+) {
+  if (from && to) {
+    return { label: `${from}–${to}`, value: `${from}-${to}` };
+  } else if (from) {
+    const label = `${fromLabel} ${from}`;
+    return { label, value: from };
+  } else if (to) {
+    const label = `${toLabel} ${to}`;
+    return { label, value: to };
+  }
+
+  return { label: '', value: '' };
 }

@@ -1,16 +1,21 @@
-import { type Table, TableService, OpenAPI } from '@pxweb2/pxweb2-api-client';
+import {
+  type Table,
+  TableService,
+  OpenAPI,
+  ApiError,
+} from '@pxweb2/pxweb2-api-client';
 import { getConfig } from './config/getConfig';
 import type { Filter } from '../pages/StartPage/StartPageTypes';
 import { getYearRangeFromPeriod } from './startPageFilters';
 
-export async function getAllTables() {
+export async function getAllTables(language?: string) {
   const config = getConfig();
   const baseUrl = config.apiUrl;
   OpenAPI.BASE = baseUrl;
 
   try {
     const response = await TableService.listAllTables(
-      config.language.defaultLanguage,
+      language || config.language.defaultLanguage,
       undefined,
       undefined,
       true,
@@ -19,8 +24,31 @@ export async function getAllTables() {
     );
 
     return response.tables;
-  } catch (error) {
-    console.error('Failed to fetch tables:', error);
+  } catch (err: unknown) {
+    const error = err as ApiError;
+
+    // Antipattern: a try/catch inside a catch is not recommended, but as a fallback
+    // in case the selected language is not supported, it is needed here.
+    // This ensures it is only retried once before failing completely. If fallback works, user should not be inconvenienced.
+    if (error.body.title && error.body.title == 'Unsupported language') {
+      try {
+        const response = await TableService.listAllTables(
+          config.language.fallbackLanguage,
+          undefined,
+          undefined,
+          true,
+          1,
+          10000,
+        );
+
+        return response.tables;
+      } catch (err: unknown) {
+        const error = err as ApiError;
+        throw error;
+      }
+    }
+
+    console.error('Failed to fetch tables:' + JSON.stringify(error, null, 2));
     throw error;
   }
 }
@@ -126,10 +154,25 @@ export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
     return true;
   };
 
+  const variableFilters = filters.filter((f) => {
+    return f.type === 'variable';
+  });
+  const testVariableFilters = function () {
+    if (variableFilters.length == 0) {
+      return true;
+    } else {
+      return variableFilters.every((filter) => {
+        return table.variableNames.some((varName) => {
+          return varName === filter.value;
+        });
+      });
+    }
+  };
   return (
     testTimeUnitFilters() &&
     testSubjectFilters() &&
     testYearRangeFilter() &&
-    testSearchFilter()
+    testSearchFilter() &&
+    testVariableFilters()
   );
 }
