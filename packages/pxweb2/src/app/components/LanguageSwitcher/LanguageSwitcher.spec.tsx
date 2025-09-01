@@ -11,6 +11,8 @@ import classes from './LanguageSwitcher.module.scss';
 let currentPathname = '/en/tables';
 const navigateMock = vi.fn();
 let isMobile = false;
+let mockI18nLanguage = 'en';
+const changeLanguageMock = vi.fn();
 
 vi.mock('react-router', () => ({
   useNavigate: () => navigateMock,
@@ -18,8 +20,18 @@ vi.mock('react-router', () => ({
 }));
 
 vi.mock('@pxweb2/pxweb2-ui', () => ({
-  Icon: ({ className }: { className?: string }) => (
-    <i className={className} aria-hidden="true" />
+  Icon: ({
+    className,
+    iconName,
+  }: {
+    className?: string;
+    iconName?: string;
+  }) => (
+    <i
+      className={className}
+      data-testid={`icon-${iconName}`}
+      aria-hidden="true"
+    />
   ),
   Label: ({
     children,
@@ -34,11 +46,25 @@ vi.mock('../../context/useApp', () => ({
   default: () => ({ isMobile }),
 }));
 
+// Override the global i18n mock for this test file to add controllable behavior
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key: string) => key,
+    i18n: {
+      changeLanguage: changeLanguageMock,
+      language: mockI18nLanguage,
+      dir: () => 'ltr',
+    },
+  }),
+}));
+
 describe('LanguageSwitcher', () => {
   beforeEach(() => {
     navigateMock.mockClear();
+    changeLanguageMock.mockClear();
     currentPathname = '/en/tables';
     isMobile = false;
+    mockI18nLanguage = 'en';
   });
 
   it('renders select with options and desktop label', () => {
@@ -78,6 +104,16 @@ describe('LanguageSwitcher', () => {
     fireEvent.change(select, { target: { value: 'sv' } });
 
     expect(navigateMock).toHaveBeenCalledWith('/sv/tables');
+  });
+
+  it('calls i18n.changeLanguage when language is changed', () => {
+    render(<LanguageSwitcher />);
+
+    const select = screen.getByLabelText('common.header.language_selector');
+
+    fireEvent.change(select, { target: { value: 'no' } });
+
+    expect(changeLanguageMock).toHaveBeenCalledWith('no');
   });
 
   it('on mobile: uses aria-label on select and hides the text label', () => {
@@ -149,5 +185,75 @@ describe('LanguageSwitcher', () => {
     fireEvent.change(select, { target: { value: 'no' } });
 
     expect(wrapper).not.toHaveClass(classes['focusMarkings']);
+  });
+
+  it('renders Globe icon', () => {
+    render(<LanguageSwitcher />);
+
+    expect(screen.getByTestId('icon-Globe')).toBeInTheDocument();
+  });
+
+  it('handles Enter key to open select when tabbed', () => {
+    const mockShowPicker = vi.fn();
+
+    // Mock HTMLSelectElement.prototype to have showPicker
+    HTMLSelectElement.prototype.showPicker = mockShowPicker;
+
+    render(<LanguageSwitcher />);
+
+    const select = screen.getByLabelText(
+      'common.header.language_selector',
+    ) as HTMLSelectElement;
+
+    // First tab to set isTabbed state then press Enter
+    fireEvent.keyUp(select, { key: 'Tab' });
+    fireEvent.keyUp(select, { key: 'Enter' });
+
+    expect(mockShowPicker).toHaveBeenCalled();
+  });
+
+  it('logs warning when showPicker is not supported', () => {
+    const consoleSpy = vi
+      .spyOn(console, 'warn')
+      .mockImplementation(() => undefined);
+
+    // Mock HTMLSelectElement.prototype to not have showPicker
+    const originalShowPicker = HTMLSelectElement.prototype.showPicker;
+    delete (HTMLSelectElement.prototype as Partial<HTMLSelectElement>)
+      .showPicker;
+
+    render(<LanguageSwitcher />);
+
+    const select = screen.getByLabelText('common.header.language_selector');
+
+    // First tab to set isTabbed state then press Enter
+    fireEvent.keyUp(select, { key: 'Tab' });
+    fireEvent.keyUp(select, { key: 'Enter' });
+
+    expect(consoleSpy).toHaveBeenCalledWith(
+      'LanguageSwitcher: showPicker not supported in this browser',
+    );
+
+    // Restore original method
+    if (originalShowPicker) {
+      HTMLSelectElement.prototype.showPicker = originalShowPicker;
+    }
+    consoleSpy.mockRestore();
+  });
+
+  it('updates currentLang when i18n.language changes', () => {
+    const { rerender } = render(<LanguageSwitcher />);
+    const select = screen.getByLabelText(
+      'common.header.language_selector',
+    ) as HTMLSelectElement;
+
+    expect(select.value).toBe('en');
+
+    // Change mock language
+    mockI18nLanguage = 'sv';
+
+    rerender(<LanguageSwitcher />);
+
+    expect(select.value).toBe('sv');
   });
 });
