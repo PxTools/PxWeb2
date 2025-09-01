@@ -297,7 +297,7 @@ export function Selection({
         selectedTabId,
         i18n.resolvedLanguage,
         metaDataDefaultSelection,
-      savedQueryId,
+        savedQueryId,
       ),
       TableService.getTableById(selectedTabId, i18n.resolvedLanguage),
     ])
