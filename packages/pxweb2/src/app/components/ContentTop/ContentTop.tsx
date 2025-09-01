@@ -187,7 +187,7 @@ export function ContentTop({
     );
   }
   breadcrumbItems.push({
-    label: tableTitle,
+    label: staticTitle,
     href: '',
   });
 
