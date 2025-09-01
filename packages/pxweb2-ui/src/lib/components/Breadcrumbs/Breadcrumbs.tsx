@@ -88,6 +88,7 @@ export const Breadcrumbs = forwardRef<HTMLAnchorElement, BreadcrumbsProps>(
                   {item.label}
                 </Link>
                 <BreadcrumbsIcon
+                  aria-hidden="true"
                   className={cl(
                     styles.breadcrumbItemIcon,
                     variant && styles[variant],
