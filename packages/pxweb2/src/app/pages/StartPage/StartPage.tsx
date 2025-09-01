@@ -33,15 +33,21 @@ import useApp from '../../context/useApp';
 import { getConfig } from '../../util/config/getConfig';
 import { FilterContext, FilterProvider } from '../../context/FilterContext';
 import { getAllTables } from '../../util/tableHandler';
+import { tableListIsReadyToRender } from '../../util/startPageRender';
+import useFilterUrlSync from '../../util/hooks/useFilterUrlSync';
 
 const StartPage = () => {
   const { t, i18n } = useTranslation();
   const { isMobile, isTablet } = useApp();
   const { state, dispatch } = useContext(FilterContext);
+  useFilterUrlSync(state, dispatch, t);
 
   const paginationCount = 15;
   const isSmallScreen = isTablet === true || isMobile === true;
   const topicIconComponents = useTopicIcons();
+  const hasUrlParams =
+    typeof window !== 'undefined' &&
+    new URLSearchParams(window.location.search).toString().length > 0;
 
   const [isFilterOverlayOpen, setIsFilterOverlayOpen] = useState(false);
   const [visibleCount, setVisibleCount] = useState(paginationCount);
@@ -57,8 +63,21 @@ const StartPage = () => {
   const firstNewCardRef = useRef<HTMLDivElement>(null);
   const lastVisibleCardRef = useRef<HTMLDivElement>(null);
   const searchFieldRef = useRef<SearchHandle>(null);
+  const hasFetchedRef = useRef(false);
+  const hasEverHydratedRef = useRef(false);
+
+  const isReadyToRender = tableListIsReadyToRender(
+    state,
+    hasUrlParams,
+    hasEverHydratedRef.current,
+  );
 
   useEffect(() => {
+    if (hasFetchedRef.current) {
+      return;
+    }
+    hasFetchedRef.current = true;
+
     async function fetchTables() {
       dispatch({ type: ActionType.SET_LOADING, payload: true });
       try {
@@ -78,6 +97,12 @@ const StartPage = () => {
     }
     fetchTables();
   }, [dispatch, i18n.language]);
+
+  useEffect(() => {
+    if (state.activeFilters.length > 0) {
+      hasEverHydratedRef.current = true;
+    }
+  }, [state.activeFilters.length]);
 
   useEffect(() => {
     if (isFilterOverlayOpen) {
@@ -258,6 +283,7 @@ const StartPage = () => {
 
       return (
         <TableCard
+          key={table.id}
           title={`${table.label}`}
           href={`${langPrefix}/table/${table.id}`}
           updatedLabel={
@@ -600,7 +626,7 @@ const StartPage = () => {
                   </Alert>
                 </div>
               )}
-              {state.loading ? (
+              {!isReadyToRender ? (
                 <div className={styles.loadingSpinner}>
                   <Spinner size="xlarge" />
                 </div>
