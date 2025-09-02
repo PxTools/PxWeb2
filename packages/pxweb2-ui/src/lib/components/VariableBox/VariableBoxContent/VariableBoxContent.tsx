@@ -3,10 +3,11 @@ import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { useDebounce } from '@uidotdev/usehooks';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
+import deburr from 'lodash/deburr';
 
 import classes from './VariableBoxContent.module.scss';
 import { Checkbox, MixedCheckbox } from '../../Checkbox/Checkbox';
-import Search from '../../Search/Search';
+import Search, { SearchHandle } from '../../Search/Search';
 import { Select } from '../../Select/Select';
 import { SelectOption } from '../../Select/SelectOptionType';
 import { VariableBoxProps, SelectedVBValues } from '../VariableBox';
@@ -79,9 +80,12 @@ export function VariableBoxContent({
   const hasTwoOrMoreValues = values && values.length > 1;
   const hasSelectAndSearch = hasCodeLists && hasSevenOrMoreValues;
   const valuesToRender = structuredClone(values);
+
   const searchedValues: Value[] = values.filter(
     (value) =>
-      value.label.toLowerCase().indexOf(debouncedSearch.toLowerCase()) > -1,
+      deburr(value.label)
+        .toLowerCase()
+        .indexOf(deburr(debouncedSearch).toLowerCase()) > -1,
   );
   const selectedValuesForVar = useMemo(() => {
     return (
@@ -97,7 +101,7 @@ export function VariableBoxContent({
     valuesToRender.reverse();
   }
 
-  const searchRef = useRef<HTMLInputElement>(null);
+  const searchRef = useRef<SearchHandle>(null);
   const lastInteractionWasPointer = useRef(false);
 
   useEffect(() => {
@@ -118,7 +122,9 @@ export function VariableBoxContent({
     valuesToRender
       .filter(
         (value) =>
-          value.label.toLowerCase().indexOf(debouncedSearch.toLowerCase()) > -1,
+          deburr(value.label)
+            .toLowerCase()
+            .indexOf(deburr(debouncedSearch).toLowerCase()) > -1,
       )
       .forEach((value) => {
         newItems.push({ type: 'value', value });
@@ -139,7 +145,6 @@ export function VariableBoxContent({
           .map((searchedValue) => searchedValue.code)
           .filter((value: string) => chosenValues.includes(value))
       : [];
-
     if (compareArrays.length === 0) {
       return 'none';
     } else if (compareArrays.length === searchedValues.length) {
@@ -164,6 +169,7 @@ export function VariableBoxContent({
       setAllValuesSelected('false');
     } else if (
       // If some values are chosen and no values are searched for
+
       (totalChosenValues > 0 &&
         totalChosenValues < totalValues &&
         searchedValues.length === 0) ||
@@ -326,7 +332,7 @@ export function VariableBoxContent({
                   .find((variables) => variables.id === varId)
                   ?.values.includes(value.code) === true
               }
-              text={value.label.charAt(0).toUpperCase() + value.label.slice(1)}
+              text={value.label}
               searchTerm={search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}
               onChange={() => onChangeCheckbox(varId, value.code)}
             />

@@ -81,6 +81,7 @@
         "clear_selection": "Fjern valg"
       },
       "variabel": "Variabel",
+      "variabel_search": "Søk etter variabel",
       "frequency": {
         "annual": "År",
         "monthly": "Måned",
@@ -156,7 +157,9 @@
         "customize": {
           "title": "Tilpass",
           "pivot": {
-            "title": "Pivot"
+            "title": "Roter tabellen",
+            "aria_label": "Roter tabellen mot høyre",
+            "screen_reader_announcement": "Tabell rotert etter {{first_variables}} og {{last_variable}}"
           },
           "rearrange": {
             "title": "Omorganiser tabell",
@@ -183,16 +186,18 @@
         "file": {
           "title": "Last ned som fil",
           "loading_announcement": "Filen behandles fortsatt. Vennligst vent.",
-          "excel": "Excel (.xlsx)",
-          "csv": "Semikolonseparert med overskrift (.csv)",
-          "px": "PC-Axis (.px)",
-          "jsonstat2": "JSON-stat2 (.json)",
-          "html": "HTML (.html)",
-          "parquet": "Parquet (.parquet)"
+          "formats": {
+            "excel": "Excel (.xlsx)",
+            "csv": "Semikolonseparert med overskrift (.csv)",
+            "px": "PC-Axis (.px)",
+            "jsonstat2": "JSON-stat2 (.json)",
+            "html": "HTML (.html)",
+            "parquet": "Parquet (.parquet)"
+          }
         },
         "savequery": {
           "title": "Lenke til oppdatert tabell",
-          "info": "Vi sparer på tabellen din og holder den oppdatert. Du velger selv hvordan nye tidsperioder skal legges til.",
+          "info": "Du får en unik lenke til tabellen din, som vi holder oppdatert for deg. Hvordan nye tidsperioder legges til, velger du selv.",
           "radioLegend": "Valg for nye tidsperioder",
           "periodOptions": {
             "selected": "Ikke legg til nye (tabellen vil kun vise de du har valgt nå)",

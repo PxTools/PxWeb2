@@ -3,6 +3,7 @@ import { useTranslation, Trans } from 'react-i18next';
 import type { TFunction } from 'i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import cl from 'clsx';
+import { debounce } from 'lodash';
 
 import styles from './StartPage.module.scss';
 import {
@@ -15,6 +16,7 @@ import {
   Heading,
   Ingress,
   BodyShort,
+  SearchHandle,
 } from '@pxweb2/pxweb2-ui';
 import { type Table } from '@pxweb2/pxweb2-api-client';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
@@ -31,21 +33,28 @@ import useApp from '../../context/useApp';
 import { getConfig } from '../../util/config/getConfig';
 import { FilterContext, FilterProvider } from '../../context/FilterContext';
 import { getAllTables } from '../../util/tableHandler';
+import { tableListIsReadyToRender } from '../../util/startPageRender';
+import useFilterUrlSync from '../../util/hooks/useFilterUrlSync';
 
 const StartPage = () => {
   const { t, i18n } = useTranslation();
   const { isMobile, isTablet } = useApp();
   const { state, dispatch } = useContext(FilterContext);
+  useFilterUrlSync(state, dispatch, t);
 
   const paginationCount = 15;
   const isSmallScreen = isTablet === true || isMobile === true;
   const topicIconComponents = useTopicIcons();
+  const hasUrlParams =
+    typeof window !== 'undefined' &&
+    new URLSearchParams(window.location.search).toString().length > 0;
 
   const [isFilterOverlayOpen, setIsFilterOverlayOpen] = useState(false);
   const [visibleCount, setVisibleCount] = useState(paginationCount);
   const [lastVisibleCount, setLastVisibleCount] = useState(paginationCount);
   const [isPaginating, setIsPaginating] = useState(false);
   const [paginationButtonWidth, setPaginationButtonWidth] = useState<number>();
+  const [isFadingTableList, setIsFadingTableList] = useState(false);
 
   const filterBackButtonRef = useRef<HTMLButtonElement>(null);
   const filterToggleRef = useRef<HTMLButtonElement>(null);
@@ -53,12 +62,26 @@ const StartPage = () => {
   const paginationButtonRef = useRef<HTMLButtonElement>(null);
   const firstNewCardRef = useRef<HTMLDivElement>(null);
   const lastVisibleCardRef = useRef<HTMLDivElement>(null);
+  const searchFieldRef = useRef<SearchHandle>(null);
+  const hasFetchedRef = useRef(false);
+  const hasEverHydratedRef = useRef(false);
+
+  const isReadyToRender = tableListIsReadyToRender(
+    state,
+    hasUrlParams,
+    hasEverHydratedRef.current,
+  );
 
   useEffect(() => {
+    if (hasFetchedRef.current) {
+      return;
+    }
+    hasFetchedRef.current = true;
+
     async function fetchTables() {
       dispatch({ type: ActionType.SET_LOADING, payload: true });
       try {
-        const tables = await getAllTables();
+        const tables = await getAllTables(i18n.language);
         dispatch({
           type: ActionType.RESET_FILTERS,
           payload: { tables: tables, subjects: getSubjectTree(tables) },
@@ -73,7 +96,13 @@ const StartPage = () => {
       }
     }
     fetchTables();
-  }, [dispatch]);
+  }, [dispatch, i18n.language]);
+
+  useEffect(() => {
+    if (state.activeFilters.length > 0) {
+      hasEverHydratedRef.current = true;
+    }
+  }, [state.activeFilters.length]);
 
   useEffect(() => {
     if (isFilterOverlayOpen) {
@@ -158,16 +187,28 @@ const StartPage = () => {
     setLastVisibleCount(newCount);
     requestAnimationFrame(() => {
       setVisibleCount(newCount);
+      triggerFade();
     });
   };
 
   const handleShowLess = () => {
     setVisibleCount(paginationCount);
+    triggerFade();
     requestAnimationFrame(() => {
       if (lastVisibleCardRef.current) {
         lastVisibleCardRef.current.focus();
       }
     });
+  };
+
+  const triggerFade = () => {
+    setIsFadingTableList(true);
+    setTimeout(() => setIsFadingTableList(false), 500); // eller 400ms hvis du bruker kortere CSS
+  };
+
+  const handleFilterChange = () => {
+    setVisibleCount(paginationCount);
+    triggerFade();
   };
 
   const renderPaginationButton = (
@@ -203,7 +244,8 @@ const StartPage = () => {
                 subjects: getSubjectTree(state.availableTables),
               },
             });
-            setVisibleCount(paginationCount);
+            searchFieldRef.current?.clearInputField();
+            handleFilterChange();
           }}
         >
           {t('start_page.filter.remove_all_filter')}
@@ -241,6 +283,7 @@ const StartPage = () => {
 
       return (
         <TableCard
+          key={table.id}
           title={`${table.label}`}
           href={`${langPrefix}/table/${table.id}`}
           updatedLabel={
@@ -284,10 +327,26 @@ const StartPage = () => {
     <>
       {renderNumberofTablesScreenReader()}
       {renderTableCount()}
-      <div className={styles.tableCardList}>{renderCards()}</div>
+      <div
+        className={cl(styles.tableCardList, {
+          [styles.fadeList]: isFadingTableList,
+        })}
+      >
+        {renderCards()}
+      </div>
       {renderPagination()}
     </>
   );
+
+  // Debounce the dispatch for search filter, so it waits a few moments for typing to finish
+  const debouncedDispatch = useRef(
+    debounce((value: string) => {
+      dispatch({
+        type: ActionType.ADD_SEARCH_FILTER,
+        payload: { text: value, language: i18n.language },
+      });
+    }, 500),
+  ).current;
 
   const renderPagination = () => {
     const shouldShowPagination =
@@ -387,9 +446,7 @@ const StartPage = () => {
             </div>
 
             <div className={styles.filterOverlayContent}>
-              <FilterSidebar
-                onFilterChange={() => setVisibleCount(paginationCount)}
-              />
+              <FilterSidebar onFilterChange={handleFilterChange} />
             </div>
 
             <div className={styles.filterOverlayFooter}>
@@ -481,6 +538,10 @@ const StartPage = () => {
                 <Search
                   searchPlaceHolder={t('start_page.search_placeholder')}
                   variant="default"
+                  ref={searchFieldRef}
+                  onChange={(value: string) => {
+                    debouncedDispatch(value);
+                  }}
                 />
               </div>
 
@@ -507,9 +568,7 @@ const StartPage = () => {
                 >
                   {t('start_page.filter.header')}
                 </Heading>
-                <FilterSidebar
-                  onFilterChange={() => setVisibleCount(paginationCount)}
-                />
+                <FilterSidebar onFilterChange={handleFilterChange} />
               </div>
             )}
 
@@ -533,7 +592,10 @@ const StartPage = () => {
                               type: filter.type,
                             },
                           });
-                          setVisibleCount(paginationCount);
+                          handleFilterChange();
+                          if (filter.type == 'search') {
+                            searchFieldRef.current?.clearInputField();
+                          }
                         }}
                         aria-label={t('start_page.filter.remove_filter_aria', {
                           value: filter.value,
@@ -564,7 +626,7 @@ const StartPage = () => {
                   </Alert>
                 </div>
               )}
-              {state.loading ? (
+              {!isReadyToRender ? (
                 <div className={styles.loadingSpinner}>
                   <Spinner size="xlarge" />
                 </div>

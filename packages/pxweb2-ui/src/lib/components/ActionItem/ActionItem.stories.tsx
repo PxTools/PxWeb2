@@ -5,7 +5,8 @@ const meta: Meta<typeof ActionItem> = {
   title: 'Components/ActionItem',
   component: ActionItem,
   args: {
-    ariaLabel: 'Action item',
+    label: 'Action Item',
+    ariaLabel: 'Action Aria Label',
     onClick: () => alert('Action clicked!'),
     iconName: 'BarChart',
     largeIconName: 'Table',
@@ -21,7 +22,7 @@ export const Default: Story = {};
 export const LargeDefault: Story = {
   args: {
     largeIconName: 'Table',
-    ariaLabel: 'Action with description',
+    label: 'Action with description',
     size: 'large',
   },
 };
@@ -29,7 +30,7 @@ export const LargeDefault: Story = {
 export const MediumDefault: Story = {
   args: {
     iconName: 'File',
-    ariaLabel: 'Medium default',
+    label: 'Medium default',
     size: 'medium',
   },
 };
@@ -37,7 +38,7 @@ export const MediumDefault: Story = {
 export const MediumWithDescription: Story = {
   args: {
     iconName: 'File',
-    ariaLabel: 'Action with description',
+    label: 'Action with description',
     size: 'medium',
     description: 'This is a description of the action item.',
   },
@@ -46,7 +47,7 @@ export const MediumWithDescription: Story = {
 export const MediumWithLoading: Story = {
   args: {
     iconName: 'File',
-    ariaLabel: 'Action with loading spinner',
+    label: 'Action with loading spinner',
     size: 'medium',
     isLoading: true,
   },

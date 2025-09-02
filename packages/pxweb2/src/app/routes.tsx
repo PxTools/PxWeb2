@@ -6,6 +6,7 @@ import ErrorPage from './components/ErrorPage/ErrorPage';
 import TopicIcons from './pages/TopicIcons/TopicIcons';
 import { getConfig } from './util/config/getConfig';
 import { NotFound } from './pages/NotFound/NotFound';
+import RootLayout from './components/RootLayout';
 
 const config = getConfig();
 const showDefaultLanguageInPath = config.language.showDefaultLanguageInPath;
@@ -76,6 +77,7 @@ const routingWithoutDefaultLanguageInURL = [
 export const routerConfig = [
   {
     path: '/',
+    element: <RootLayout />,
     errorElement: <ErrorPage />,
     children: [
       ...(showDefaultLanguageInPath
