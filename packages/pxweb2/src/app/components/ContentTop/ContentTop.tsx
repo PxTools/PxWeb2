@@ -2,6 +2,7 @@ import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { useState, useContext, useEffect, useRef } from 'react';
 
+
 import classes from './ContentTop.module.scss';
 import {
   Alert,
@@ -36,6 +37,8 @@ type NoteMessageType = {
 };
 
 import type { TFunction } from 'i18next';
+import { getPathWithUniqueIds } from '../../util/pathUtil';
+import { getConfig } from '../../util/config/getConfig';
 
 export function createNoteMessage(
   noteInfo: MandatoryCompressedUtilityNotesType,
@@ -100,7 +103,7 @@ export function ContentTop({
   staticTitle,
   pathElements,
 }: ContenetTopProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [isTableInformationOpen, setIsTableInformationOpen] =
     useState<boolean>(false);
   const [activeTab, setActiveTab] = useState('');
@@ -176,20 +179,43 @@ export function ContentTop({
     setTitle(staticTitle);
   }, [staticTitle, setTitle]);
 
-  const breadcrumbItems: BreadcrumbItem[] = [];
+  function getBreadcrumbItems(
+    pathElements: PathElement[],
+    staticTitle: string,
+    i18n: any,
+  ): BreadcrumbItem[] {
+    const breadcrumbItems: BreadcrumbItem[] = [];
+    const pathWithUniqueIds = getPathWithUniqueIds(pathElements);
+    const config = getConfig();
+    const language = i18n.language;
+    const showLangInPath =
+      config.language.showDefaultLanguageInPath ||
+      language !== config.language.defaultLanguage;
+    const langPrefix = showLangInPath ? `/${language}` : '';
 
-  if (pathElements && pathElements.length > 0) {
-    breadcrumbItems.push(
-      ...pathElements.map((path) => ({
-        label: path.label,
-        href: path.id,
-      })),
-    );
+    breadcrumbItems.push({
+      label: t('common.title'),
+      href: langPrefix,
+    });
+
+    if (pathElements && pathElements.length > 0) {
+      breadcrumbItems.push(
+        ...pathWithUniqueIds.map((path) => ({
+          label: path.label,
+          href: `${langPrefix}?subject=${path.uniqueId}`,
+        })),
+      );
+    }
+
+    breadcrumbItems.push({
+      label: staticTitle,
+      href: '',
+    });
+
+    return breadcrumbItems;
   }
-  breadcrumbItems.push({
-    label: staticTitle,
-    href: '',
-  });
+
+  const breadcrumbItems = getBreadcrumbItems(pathElements, staticTitle, i18n);
 
   const breadcrumbsVariant = isTablet ? 'compact' : 'default';
 
