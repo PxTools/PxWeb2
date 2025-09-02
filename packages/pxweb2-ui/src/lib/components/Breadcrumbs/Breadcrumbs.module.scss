@@ -22,7 +22,7 @@
   margin: 0px;
   &.compact {
     display: flex;
-    max-width: 400px;
+    max-width: fixed.$breakpoints-medium-min-width;
     overflow-x: hidden;
     flex-wrap: nowrap;
     text-overflow: ellipsis;
