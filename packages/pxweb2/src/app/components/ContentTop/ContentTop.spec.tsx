@@ -174,7 +174,7 @@ describe('get values note for alder_2', () => {
 describe('Selection', () => {
   it('should render successfully', () => {
     const { baseElement } = renderWithProviders(
-      <ContentTop pxtable={pxTable} staticTitle="Tittel" />,
+      <ContentTop pxtable={pxTable} staticTitle="Tittel" pathElements={[]} />,
     );
 
     expect(baseElement).toBeTruthy();
