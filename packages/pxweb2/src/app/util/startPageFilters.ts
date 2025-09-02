@@ -1,12 +1,17 @@
 import { Table } from '@pxweb2/pxweb2-api-client';
+import { useTranslation } from 'react-i18next';
 import {
   StartPageFilters,
   Filter,
+  FilterType,
   PathItem,
   YearRange,
 } from '../pages/StartPage/StartPageTypes';
+import { shouldTableBeIncluded } from '../util/tableHandler';
+import { getConfig } from './config/getConfig';
+import i18n from '../../i18n/config';
 
-type TableWithPaths = Table & {
+export type TableWithPaths = Table & {
   id: string;
   paths?: { id: string; label: string }[][];
 };
@@ -75,50 +80,59 @@ export function getFilters(tables: Table[]): StartPageFilters {
     timeUnits: new Map<string, number>(),
     subjectTree: [],
     yearRange: { min: 0, max: 9999 },
+    variables: new Map<string, number>(),
   };
 
   filters.timeUnits = getTimeUnits(tables);
   filters.subjectTree = getSubjectTree(tables);
+  filters.variables = getVariables(tables);
 
   return filters;
 }
 
 export function updateSubjectTreeCounts(
-  originalTree: PathItem[],
-  filteredTables: Table[],
+  subjectTree: PathItem[],
+  tables: TableWithPaths[],
 ): PathItem[] {
-  const subjectToTableMap = new Map<string, Set<string>>();
+  const subjectToTableIds = buildSubjectToTableIdsMap(tables);
 
-  (filteredTables as TableWithPaths[]).forEach((table) => {
-    table.paths?.forEach((path) => {
-      path.forEach((level) => {
-        if (level?.id) {
-          if (!subjectToTableMap.has(level.id)) {
-            subjectToTableMap.set(level.id, new Set());
-          }
-          subjectToTableMap.get(level.id)!.add(table.id);
-        }
-      });
-    });
-  });
+  const countTablesForSubjectNode = (
+    node: PathItem,
+  ): [PathItem, Set<string>] => {
+    const tableIdsForThisNode = new Set(subjectToTableIds.get(node.id) ?? []);
+    const tableIdsInChildren = new Set<string>();
+    const updatedChildren: PathItem[] = [];
 
-  function updateNode(node: PathItem): PathItem {
-    const count = subjectToTableMap.get(node.id)?.size ?? 0;
-    return {
+    for (const child of node.children ?? []) {
+      const [updatedChild, childTableIds] = countTablesForSubjectNode(child);
+      updatedChildren.push(updatedChild);
+      for (const id of childTableIds) {
+        tableIdsInChildren.add(id);
+      }
+    }
+
+    const combinedTableIds = new Set([
+      ...tableIdsForThisNode,
+      ...tableIdsInChildren,
+    ]);
+
+    const updatedNode: PathItem = {
       ...node,
-      count,
-      children: node.children?.map(updateNode) ?? [],
+      count: combinedTableIds.size,
+      children: updatedChildren.length ? updatedChildren : undefined,
     };
-  }
 
-  return originalTree.map(updateNode);
+    return [updatedNode, combinedTableIds];
+  };
+
+  return subjectTree.map((node) => countTablesForSubjectNode(node)[0]);
 }
 
 export function sortFiltersByTypeAndSubjectOrder(
   filters: Filter[],
   subjectOrder: string[],
 ): Filter[] {
-  const typeOrder = ['subject', 'yearRange', 'timeUnit'];
+  const typeOrder = ['search', 'subject', 'yearRange', 'timeUnit', 'variable'];
 
   return filters.slice().sort((a, b) => {
     const typeComparison =
@@ -133,6 +147,10 @@ export function sortFiltersByTypeAndSubjectOrder(
       return aIdx - bIdx;
     }
 
+    if (a.type === 'variable' && b.type === 'variable') {
+      return a.index - b.index;
+    }
+
     return 0;
   });
 }
@@ -140,6 +158,9 @@ export function sortFiltersByTypeAndSubjectOrder(
 export function deduplicateFiltersByValue(filters: Filter[]): Filter[] {
   const seen = new Set<string>();
   return filters.filter((filter) => {
+    if (filter.type == 'search') {
+      return true;
+    }
     if (seen.has(filter.value)) {
       return false;
     }
@@ -270,4 +291,162 @@ export function flattenSubjectTreeToList(subjectTree: PathItem[]): string[] {
 
   traverseTree(subjectTree);
   return result;
+}
+
+export function shouldRecalcFilter(
+  editedType: FilterType | undefined,
+  targetFilter: FilterType,
+  currentFilters: Filter[],
+): boolean {
+  if (editedType !== targetFilter) {
+    return true;
+  }
+  return currentFilters.some((f) => f.type !== targetFilter);
+}
+
+export function tablesForFilterCounts(
+  targetFilter: FilterType,
+  currentFilters: Filter[],
+  availableTables: Table[],
+): Table[] {
+  const activeTypes = new Set(currentFilters.map((f) => f.type));
+  const onlyThisTypeActive =
+    activeTypes.size === 1 && activeTypes.has(targetFilter);
+
+  if (onlyThisTypeActive) {
+    return availableTables;
+  }
+  const minusThisFacet = filtersExcludingType(currentFilters, targetFilter);
+  return availableTables.filter((t) =>
+    shouldTableBeIncluded(t, minusThisFacet),
+  );
+}
+
+function filtersExcludingType(filters: Filter[], type: FilterType): Filter[] {
+  return filters.filter((f) => f.type !== type);
+}
+
+export function recomputeAvailableFilters(
+  editFilterType: FilterType | undefined,
+  currentFilters: Filter[],
+  availableTables: Table[],
+  originalSubjectTree: PathItem[],
+) {
+  const subjectTables = tablesForFilterCounts(
+    'subject',
+    currentFilters,
+    availableTables,
+  );
+  const timeUnitTables = tablesForFilterCounts(
+    'timeUnit',
+    currentFilters,
+    availableTables,
+  );
+  const yearRangeTables = tablesForFilterCounts(
+    'yearRange',
+    currentFilters,
+    availableTables,
+  );
+  // We do not calculate variables, they are always updated - even when adding variable filters!
+
+  const shouldRecalcFilter = (filter: FilterType) =>
+    editFilterType !== filter || currentFilters.some((f) => f.type !== filter);
+
+  return {
+    subjectTree: shouldRecalcFilter('subject')
+      ? updateSubjectTreeCounts(originalSubjectTree, subjectTables)
+      : undefined,
+    timeUnits: shouldRecalcFilter('timeUnit')
+      ? getTimeUnits(timeUnitTables)
+      : undefined,
+    yearRange: shouldRecalcFilter('yearRange')
+      ? getYearRanges(yearRangeTables)
+      : undefined,
+  };
+}
+
+function collectUniqueSubjectIdsFromTable(table: TableWithPaths): string[] {
+  const uniqueSubjectIds = new Set<string>();
+  if (!table.paths) {
+    return [];
+  }
+  for (const path of table.paths) {
+    if (!path) {
+      continue;
+    }
+    for (const segment of path) {
+      if (segment?.id) {
+        uniqueSubjectIds.add(segment.id);
+      }
+    }
+  }
+  return [...uniqueSubjectIds];
+}
+
+export function buildSubjectToTableIdsMap(
+  tables: TableWithPaths[],
+): Map<string, Set<string>> {
+  const map = new Map<string, Set<string>>();
+  for (const table of tables) {
+    const subjectIds = collectUniqueSubjectIdsFromTable(table);
+    for (const id of subjectIds) {
+      let tableIds = map.get(id);
+      if (!tableIds) {
+        tableIds = new Set<string>();
+        map.set(id, tableIds);
+      }
+      tableIds.add(table.id);
+    }
+  }
+  return map;
+}
+
+export function getVariables(allTables: Table[]) {
+  const config = getConfig();
+  const exclusionList: string[] = config.variableFilterExclusionList[
+    i18n.language
+  ] ?? [''];
+
+  const variables = new Map<string, number>();
+  allTables.forEach((table) => {
+    table.variableNames.forEach((name: string) => {
+      const count = variables.get(name);
+      variables.set(name, count ? count + 1 : 1);
+    });
+  });
+  return new Map<string, number>(
+    [...variables.entries()]
+      // Sort the returned map by number of available variables.
+      .sort((a, b) => b[1] - a[1])
+      .filter((entry) => {
+        // Returns true if the variable is _not_ in the exclusion list
+        return !exclusionList.includes(entry[0]);
+      }),
+  );
+}
+
+export function getYearLabels(t: ReturnType<typeof useTranslation>['t']) {
+  const fromLabel = t('start_page.filter.year.from_label');
+  const toLabel = t('start_page.filter.year.to_label');
+
+  return { fromLabel, toLabel };
+}
+
+export function getYearRangeLabelValue(
+  from?: string,
+  to?: string,
+  fromLabel?: string,
+  toLabel?: string,
+) {
+  if (from && to) {
+    return { label: `${from}–${to}`, value: `${from}-${to}` };
+  } else if (from) {
+    const label = `${fromLabel} ${from}`;
+    return { label, value: from };
+  } else if (to) {
+    const label = `${toLabel} ${to}`;
+    return { label, value: to };
+  }
+
+  return { label: '', value: '' };
 }

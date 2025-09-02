@@ -82,6 +82,7 @@ interface Resources {
           clear_selection: 'Clear selection';
         };
         variabel: 'Variable';
+        variabel_search: 'Search for variable';
         frequency: {
           annual: 'Year';
           monthly: 'Month';
@@ -134,10 +135,7 @@ interface Resources {
                   confirm_button: 'Save';
                 };
               };
-              mixed_checkbox: {
-                select_all: 'Select all';
-                deselect_all: 'Deselect all';
-              };
+              mixed_checkbox: 'Select all';
               values_list: {
                 aria_label: 'List of {{total}} values.';
                 no_results_heading: 'No results for “{{search}}”';
@@ -160,7 +158,9 @@ interface Resources {
           customize: {
             title: 'Customize';
             pivot: {
-              title: 'Pivot';
+              title: 'Rotate table';
+              aria_label: 'Rotate table clockwise';
+              screen_reader_announcement: 'Table rotated after {{first_variables}} and {{last_variable}}';
             };
             rearrange: {
               title: 'Rearrange table';
@@ -187,16 +187,18 @@ interface Resources {
           file: {
             title: 'Download as file';
             loading_announcement: 'File is still being processed. Please wait.';
-            excel: 'Excel (.xlsx)';
-            csv: 'Semicolon-delimited with heading (.csv)';
-            px: 'PC-Axis (.px)';
-            jsonstat2: 'JSON-stat2 (.json)';
-            html: 'HTML (.html)';
-            parquet: 'Parquet (.parquet)';
+            formats: {
+              excel: 'Excel (.xlsx)';
+              csv: 'Semicolon-delimited with heading (.csv)';
+              px: 'PC-Axis (.px)';
+              jsonstat2: 'JSON-stat2 (.json)';
+              html: 'HTML (.html)';
+              parquet: 'Parquet (.parquet)';
+            };
           };
           savequery: {
             title: 'Link to updated table';
-            info: 'Your table is saved and automatically kept up to date. You can decide how new time periods are included.';
+            info: 'You get a unique link to your table, that we keep updated for you. How new time periods are added is up to you.';
             radioLegend: 'Options for new time periods';
             periodOptions: {
               selected: "Don't add new ones (the table will only show the ones you've selected now)";

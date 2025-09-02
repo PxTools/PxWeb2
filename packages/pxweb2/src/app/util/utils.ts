@@ -23,3 +23,19 @@ export function getLabelText(
   // default to combining code and label
   return `${code} ${label}`;
 }
+
+export function wrapWithLocalizedQuotemarks(
+  text: string,
+  language: string,
+): string {
+  switch (language) {
+    case 'en':
+      return `“${text}”`;
+    case 'no':
+      return `«${text}»`;
+    case 'sv':
+      return `”${text}”`;
+    default:
+      return `"${text}"`;
+  }
+}

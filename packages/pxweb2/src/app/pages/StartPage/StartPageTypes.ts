@@ -3,14 +3,22 @@ import { Table } from '@pxweb2/pxweb2-api-client';
 export enum ActionType {
   RESET_FILTERS = 'RESET_FILTERS',
   ADD_FILTER = 'ADD_FILTER',
+  ADD_SEARCH_FILTER = 'ADD_SEARCH_FILTER',
   REMOVE_FILTER = 'REMOVE_FILTER',
   UPDATE_TABLES = 'UPDATE_TABLES',
   SET_ERROR = 'SET_ERROR',
   SET_LOADING = 'SET_LOADING',
 }
 
+export type FilterType =
+  | 'timeUnit'
+  | 'subject'
+  | 'yearRange'
+  | 'search'
+  | 'variable';
+
 export type Filter = {
-  type: 'timeUnit' | 'subject' | 'yearRange';
+  type: FilterType;
   value: string;
   label: string;
   index: number;
@@ -33,11 +41,7 @@ export type YearRange = {
 export type StartPageState = {
   availableTables: Table[];
   filteredTables: Table[];
-  availableFilters: {
-    subjectTree: PathItem[];
-    timeUnits: Map<string, number>;
-    yearRange: YearRange;
-  };
+  availableFilters: StartPageFilters;
   activeFilters: Filter[];
   loading: boolean;
   error: string;
@@ -49,6 +53,7 @@ export type StartPageState = {
 export type ReducerActionTypes =
   | ResetFilterAction
   | AddFilterAction
+  | AddSearchFilterAction
   | RemoveFilterAction
   | UpdateTablesAction
   | SetErrorAction
@@ -56,7 +61,7 @@ export type ReducerActionTypes =
 
 type RemoveFilterAction = {
   type: ActionType.REMOVE_FILTER;
-  payload: { value: string; type: string; uniqueId?: string };
+  payload: { value: string; type: FilterType; uniqueId?: string };
 };
 
 type ResetFilterAction = {
@@ -67,6 +72,11 @@ type ResetFilterAction = {
 type AddFilterAction = {
   type: ActionType.ADD_FILTER;
   payload: Filter[];
+};
+
+type AddSearchFilterAction = {
+  type: ActionType.ADD_SEARCH_FILTER;
+  payload: { text: string; language: string };
 };
 
 type UpdateTablesAction = {
@@ -87,5 +97,6 @@ type SetLoadingAction = {
 export type StartPageFilters = {
   timeUnits: Map<string, number>;
   subjectTree: PathItem[];
+  variables: Map<string, number>;
   yearRange: YearRange;
 };
