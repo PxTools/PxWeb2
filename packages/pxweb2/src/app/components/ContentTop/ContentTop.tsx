@@ -193,7 +193,7 @@ export function ContentTop({
     const langPrefix = showLangInPath ? `/${language}` : '';
 
     breadcrumbItems.push({
-      label: t('common.title'),
+      label: t('presentation_page.main_content.breadCrumbRootTitle'),
       href: langPrefix,
     });
 
