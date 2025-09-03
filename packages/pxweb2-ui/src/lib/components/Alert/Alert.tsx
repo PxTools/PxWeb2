@@ -57,7 +57,7 @@ export function Alert({
   const [isVisible, setIsVisible] = useState(true);
   const HandleClose = () => {
     setIsVisible(false);
-    onDismissed && onDismissed();
+    onDismissed?.();
   };
   if (!isVisible) {
     return null;
