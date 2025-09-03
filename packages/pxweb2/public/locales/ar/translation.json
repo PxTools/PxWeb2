@@ -187,6 +187,7 @@
     },
     "main_content": {
       "arialabelbreadcrumb": "مسار التنقل",
+      "breadCrumbRootTitle": "الصفحة الرئيسية",
       "last_updated": "آخر تحديث",
       "show_details": "إظهار التفاصيل",
       "show_more_breadcrumbs": "إظهار المزيد",

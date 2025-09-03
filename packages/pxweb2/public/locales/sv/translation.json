@@ -229,6 +229,7 @@
     },
     "main_content": {
       "arialabelbreadcrumb": "Brödsmulor",
+      "breadCrumbRootTitle": "Hem",
       "last_updated": "Senast uppdaterad",
       "show_details": "Visa detaljer",
       "show_more_breadcrumbs": "Visa mer",

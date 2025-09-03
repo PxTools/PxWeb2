@@ -230,6 +230,7 @@ interface Resources {
       };
       main_content: {
         arialabelbreadcrumb: 'Breadcrumb';
+        breadCrumbRootTitle: 'Home';
         last_updated: 'Last updated';
         show_details: 'Show details';
         show_more_breadcrumbs: 'Show more';
