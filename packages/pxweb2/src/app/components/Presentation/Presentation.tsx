@@ -202,6 +202,7 @@ export function Presentation({ selectedTabId, scrollRef }: propsType) {
           <ContentTop
             staticTitle={pxTableMetadata?.label}
             pxtable={tableData.data}
+            pathElements={pxTableMetadata?.pathElements ?? []}
           />
 
           {!variables.isMatrixSizeAllowed && !isMandatoryNotSelectedFirst && (

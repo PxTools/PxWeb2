@@ -5,13 +5,14 @@ import { useState, useContext, useEffect, useRef } from 'react';
 import classes from './ContentTop.module.scss';
 import {
   Alert,
-  BodyLong,
   BodyShort,
+  Breadcrumbs,
+  BreadcrumbItem,
   Button,
   Heading,
-  Icon,
   Link,
   PxTable,
+  PathElement,
 } from '@pxweb2/pxweb2-ui';
 import TableInformation from '../TableInformation/TableInformation';
 import { AccessibilityContext } from '../../context/AccessibilityProvider';
@@ -26,6 +27,7 @@ import useApp from '../../context/useApp';
 export interface ContenetTopProps {
   readonly pxtable: PxTable;
   readonly staticTitle: string;
+  readonly pathElements: PathElement[];
 }
 
 type NoteMessageType = {
@@ -34,6 +36,8 @@ type NoteMessageType = {
 };
 
 import type { TFunction } from 'i18next';
+import { getPathWithUniqueIds } from '../../util/pathUtil';
+import { getConfig } from '../../util/config/getConfig';
 
 export function createNoteMessage(
   noteInfo: MandatoryCompressedUtilityNotesType,
@@ -93,8 +97,12 @@ export function createNoteMessage(
   };
 }
 
-export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
-  const { t } = useTranslation();
+export function ContentTop({
+  pxtable,
+  staticTitle,
+  pathElements,
+}: ContenetTopProps) {
+  const { t, i18n } = useTranslation();
   const [isTableInformationOpen, setIsTableInformationOpen] =
     useState<boolean>(false);
   const [activeTab, setActiveTab] = useState('');
@@ -104,6 +112,7 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
   const selectedMetadata = useTableData().data?.metadata;
   const buildTableTitle = useTableData().buildTableTitle;
   const { setTitle } = useApp();
+  const { isTablet } = useApp();
 
   const openInformationButtonRef = useRef<HTMLButtonElement>(null);
   const openInformationLinkRef = useRef<HTMLAnchorElement>(null);
@@ -169,21 +178,53 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
     setTitle(staticTitle);
   }, [staticTitle, setTitle]);
 
+  function getBreadcrumbItems(
+    pathElements: PathElement[],
+    staticTitle: string,
+    i18n: any,
+  ): BreadcrumbItem[] {
+    const breadcrumbItems: BreadcrumbItem[] = [];
+    const pathWithUniqueIds = getPathWithUniqueIds(pathElements);
+    const config = getConfig();
+    const language = i18n.language;
+    const showLangInPath =
+      config.language.showDefaultLanguageInPath ||
+      language !== config.language.defaultLanguage;
+    const langPrefix = showLangInPath ? `/${language}` : '';
+
+    breadcrumbItems.push({
+      label: t('presentation_page.main_content.breadCrumbRootTitle'),
+      href: langPrefix,
+    });
+
+    if (pathElements && pathElements.length > 0) {
+      breadcrumbItems.push(
+        ...pathWithUniqueIds.map((path) => ({
+          label: path.label,
+          href: `${langPrefix}?subject=${path.uniqueId}`,
+        })),
+      );
+    }
+
+    breadcrumbItems.push({
+      label: staticTitle,
+      href: '',
+    });
+
+    return breadcrumbItems;
+  }
+
+  const breadcrumbItems = getBreadcrumbItems(pathElements, staticTitle, i18n);
+
+  const breadcrumbsVariant = isTablet ? 'compact' : 'default';
+
   return (
     <>
       <div className={cl(classes[`content-top`])}>
-        <nav
-          className={cl(classes.breadcrumbs)}
-          aria-label={t('presentation_page.main_content.arialabelbreadcrumb')}
-        >
-          <div className={cl(classes[`breadcrumbs-wrapper`])}>
-            <Link href="#" inline>
-              <BodyLong>PxWeb 2.0</BodyLong>
-            </Link>
-            <Icon iconName="ChevronRight"></Icon>
-            <BodyLong>{staticTitle}</BodyLong>
-          </div>
-        </nav>
+        <Breadcrumbs
+          variant={breadcrumbsVariant}
+          breadcrumbItems={breadcrumbItems}
+        />
         <div
           id="px-main-content"
           className={cl(classes[`heading-information`])}

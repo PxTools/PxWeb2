@@ -1,6 +1,7 @@
 import {
   Dataset,
   Contact as apiContact,
+  PathElement as apiPath,
   jsonstat_note,
   jsonstat_noteMandatory,
   extension_dimension,
@@ -21,6 +22,7 @@ import {
   ContentInfo,
   Note,
   DataCell,
+  PathElement,
 } from '@pxweb2/pxweb2-ui';
 import { getLabelText } from '../app/util/utils';
 
@@ -75,6 +77,7 @@ export function mapJsonStat2Response(
     variables: mapVariables(response),
     contacts: mapContacts(response.extension?.contact),
     notes: mapNotes(response.note, response.extension?.noteMandatory),
+    pathElements: undefined,
   };
 
   // Create the data object
@@ -97,6 +100,27 @@ export function mapJsonStat2Response(
   };
 
   return pxTable;
+}
+
+/**
+ * Maps the path information from a JSON-stat 2.0 response to an array of Path objects.
+ *
+ * @param paths - The path object from the JSON-stat 2.0 response.
+ * @returns An array of Path objects.
+ */
+export function mapJsonStat2ResponsePathElements(
+  pathElements: apiPath[] | undefined,
+): PathElement[] {
+  if (pathElements) {
+    return pathElements.map((pathElement: apiPath) => {
+      return {
+        id: pathElement.id,
+        label: pathElement.label,
+      };
+    });
+  } else {
+    return [];
+  }
 }
 
 /**
