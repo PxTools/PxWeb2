@@ -45,4 +45,23 @@ describe('MandatoryNotes', () => {
       });
     });
   });
+
+  it('translates two spaces + newline into <br> tags for one of the the table-level note ', () => {
+    render(<MandatoryNotes notes={dummyNotes.mandatoryNotes} />);
+
+    // Find the rendered element by a portion of its text.
+    const renderedElement = screen.getByText(/md testlinje1/i);
+    expect(renderedElement).toBeInTheDocument();
+
+    const renderedHtml = renderedElement.innerHTML;
+
+    // Check that the rendered HTML ms testline 1.
+    const firstLineMatches =
+      renderedHtml.match(/md testlinje1\s*<br\s*\/?>/g) || [];
+    expect(firstLineMatches.length).toBe(1);
+
+    // Check that the rendered HTML contains 2 <br> tags.
+    const brMatches = renderedHtml.match(/<br\s*\/?>/g) || [];
+    expect(brMatches.length).toBe(2);
+  });
 });
