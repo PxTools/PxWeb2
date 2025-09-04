@@ -345,6 +345,7 @@ const StartPage = () => {
         type: ActionType.ADD_SEARCH_FILTER,
         payload: { text: value, language: i18n.language },
       });
+      handleFilterChange();
     }, 500),
   ).current;
 
