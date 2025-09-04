@@ -76,7 +76,7 @@ const StartPage = () => {
   // Run once when initially loading the page, then again if language changes
   // We want to try fetching tables in the selected language if possible
   useEffect(() => {
-    if (hasFetchedRef.current || previousLanguage.current == i18n.language) {
+    if (hasFetchedRef.current && previousLanguage.current == i18n.language) {
       return;
     }
     hasFetchedRef.current = true;
@@ -241,7 +241,6 @@ const StartPage = () => {
           filled
           onMouseDown={(e) => e.preventDefault()}
           onClick={() => {
-            console.error('DARN HECKIT THIS SHOULDNT HAPPN');
             dispatch({
               type: ActionType.RESET_FILTERS,
               payload: {
@@ -462,7 +461,6 @@ const StartPage = () => {
                   iconPosition="left"
                   icon="XMark"
                   onClick={() => {
-                    console.error('DARN HECKIT THIS SHOULDNT HAPPN');
                     dispatch({
                       type: ActionType.RESET_FILTERS,
                       payload: {
