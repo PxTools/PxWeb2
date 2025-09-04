@@ -213,7 +213,9 @@ const RenderTimeUnitFilters: React.FC<{ onFilterChange?: () => void }> = ({
   });
 };
 
-const VariablesFilter: React.FC = () => {
+const VariablesFilter: React.FC<{ onFilterChange?: () => void }> = ({
+  onFilterChange,
+}) => {
   const { state, dispatch } = useContext(FilterContext);
   const [variableSearch, setVariableSearch] = useState('');
   const { t } = useTranslation();
@@ -260,6 +262,7 @@ const VariablesFilter: React.FC = () => {
                           type: ActionType.REMOVE_FILTER,
                           payload: { value: item[0], type: 'variable' },
                         });
+                    onFilterChange?.();
                   }}
                 />
               </li>
@@ -287,7 +290,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
           />
         </FilterCategory>
         <FilterCategory header={t('start_page.filter.year.title')}>
-          <YearRangeFilter />
+          <YearRangeFilter onFilterChange={onFilterChange} />
         </FilterCategory>
         <FilterCategory header={t('start_page.filter.timeUnit')}>
           <ul className={styles.filterList}>
@@ -295,7 +298,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
           </ul>
         </FilterCategory>
         <FilterCategory header={t('start_page.filter.variabel')}>
-          <VariablesFilter />
+          <VariablesFilter onFilterChange={onFilterChange} />
         </FilterCategory>
       </div>
     </div>

@@ -93,7 +93,9 @@ function getYearRangeForMatchingTables(
   return { min, max };
 }
 
-export const YearRangeFilter: React.FC = () => {
+export const YearRangeFilter: React.FC<{ onFilterChange?: () => void }> = ({
+  onFilterChange,
+}) => {
   const { state, dispatch } = useContext(FilterContext);
   const { t } = useTranslation();
   const { fromLabel, toLabel, fromYearLabel, toYearLabel } = useYearLabels(t);
@@ -146,11 +148,13 @@ export const YearRangeFilter: React.FC = () => {
         type: ActionType.ADD_FILTER,
         payload: [{ type: 'yearRange', value, label, index: 0 }],
       });
+      onFilterChange?.();
     } else if (yearRangeFilter) {
       dispatch({
         type: ActionType.REMOVE_FILTER,
         payload: { value: yearRangeFilter.value, type: 'yearRange' },
       });
+      onFilterChange?.();
     }
   }
 
