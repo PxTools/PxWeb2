@@ -67,7 +67,6 @@ export function VariableNotes({
                     key={getVariableNoteKey(variableNotes.variableCode)}
                   >
                     <MarkdownRenderer mdText={note} />
-                    {/* <ReactMarkdown>{note}</ReactMarkdown> */}
                   </ListItem>
                 ))}
               </List>

@@ -26,7 +26,6 @@ let mandatoryTableNotes: string[] = [
   '[SCB](https://scb.se)',
   '<https://scb.se/>',
   'md testlinje1  \nmd testlinje2  \nmd testlinje3',
-  'line x',
 ];
 mandatoryTableNotes.forEach((note) => {
   dummyNotes.mandatoryNotes.tableLevelNotes.push(note);

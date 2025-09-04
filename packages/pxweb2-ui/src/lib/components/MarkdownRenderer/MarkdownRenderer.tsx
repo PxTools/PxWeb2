@@ -32,8 +32,7 @@ const MarkdownRenderer: React.FC<Props> = ({ mdText }) => {
         em: UnwantedMdRender,
         strong: UnwantedMdRender,
       }}
-      //allowedElements={['a', 'p']}
-      skipHtml={false} // This disables raw HTML rendering
+      skipHtml={false} // Enable raw HTML rendering
     >
       {mdText}
     </ReactMarkdown>
