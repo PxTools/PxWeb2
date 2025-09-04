@@ -137,24 +137,26 @@ export const YearRangeFilter: React.FC<{ onFilterChange?: () => void }> = ({
     const newFrom = type === 'from' ? item?.value : prevFrom;
     const newTo = type === 'to' ? item?.value : prevTo;
 
-    if (newFrom || newTo) {
-      const { label, value } = getYearRangeLabelValue(
-        newFrom,
-        newTo,
-        fromLabel,
-        toLabel,
-      );
-      dispatch({
-        type: ActionType.ADD_FILTER,
-        payload: [{ type: 'yearRange', value, label, index: 0 }],
-      });
-      onFilterChange?.();
-    } else if (yearRangeFilter) {
-      dispatch({
-        type: ActionType.REMOVE_FILTER,
-        payload: { value: yearRangeFilter.value, type: 'yearRange' },
-      });
-      onFilterChange?.();
+    if (newFrom !== prevFrom || newTo !== prevTo) {
+      if (newFrom || newTo) {
+        const { label, value } = getYearRangeLabelValue(
+          newFrom,
+          newTo,
+          fromLabel,
+          toLabel,
+        );
+        dispatch({
+          type: ActionType.ADD_FILTER,
+          payload: [{ type: 'yearRange', value, label, index: 0 }],
+        });
+        onFilterChange?.();
+      } else if (yearRangeFilter) {
+        dispatch({
+          type: ActionType.REMOVE_FILTER,
+          payload: { value: yearRangeFilter.value, type: 'yearRange' },
+        });
+        onFilterChange?.();
+      }
     }
   }
 

@@ -203,7 +203,7 @@ const StartPage = () => {
 
   const triggerFade = () => {
     setIsFadingTableList(true);
-    setTimeout(() => setIsFadingTableList(false), 500); // eller 400ms hvis du bruker kortere CSS
+    setTimeout(() => setIsFadingTableList(false), 500);
   };
 
   const handleFilterChange = () => {
