@@ -88,7 +88,7 @@ const StartPage = () => {
           type: ActionType.RESET_FILTERS,
           payload: {
             tables: sortedTables,
-            subjects: getSubjectTree(tables),
+            subjects: getSubjectTree(sortedTables),
           },
         });
       } catch (error) {
