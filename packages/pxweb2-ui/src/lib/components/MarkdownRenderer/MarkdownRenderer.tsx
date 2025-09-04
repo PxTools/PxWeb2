@@ -3,9 +3,9 @@ import ReactMarkdown from 'react-markdown';
 
 import Link from '../Link/Link';
 
-interface Props {
+type MdProps = {
   mdText: string;
-}
+};
 
 type LinkProps = { href?: string; children?: React.ReactNode };
 type UnwantedMdRenderProps = { children?: React.ReactNode };
@@ -20,7 +20,7 @@ const UnwantedMdRender = ({ children }: UnwantedMdRenderProps) => (
   <>{children}</>
 );
 
-const MarkdownRenderer: React.FC<Props> = ({ mdText }) => {
+const MarkdownRenderer: React.FC<MdProps> = ({ mdText }) => {
   return (
     <ReactMarkdown
       components={{

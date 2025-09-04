@@ -29,7 +29,7 @@ describe('MandatoryNotes', () => {
 
   it('renders markdown links as anchor tags syntax 2', () => {
     render(<MandatoryNotes notes={dummyNotes.mandatoryNotes} />);
-    // Assuming '[SCB](https://scb.se)' is present in one of the notes
+    // Assuming '<https://scb.se/>' is present in one of the notes
     const link = screen.getByRole('link', { name: 'https://scb.se/' });
     expect(link).toBeInTheDocument();
     expect(link).toHaveAttribute('href', 'https://scb.se/');
