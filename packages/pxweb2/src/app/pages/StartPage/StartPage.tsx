@@ -84,7 +84,10 @@ const StartPage = () => {
         const tables = await getAllTables(i18n.language);
         dispatch({
           type: ActionType.RESET_FILTERS,
-          payload: { tables: tables, subjects: getSubjectTree(tables) },
+          payload: {
+            tables: tables,
+            subjects: getSubjectTree(tables),
+          },
         });
       } catch (error) {
         dispatch({

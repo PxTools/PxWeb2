@@ -4,7 +4,11 @@ import { ActionType, PathItem } from '../../pages/StartPage/StartPageTypes';
 import styles from './FilterSidebar.module.scss';
 import { useTranslation } from 'react-i18next';
 import { Checkbox, FilterCategory, Search } from '@pxweb2/pxweb2-ui';
-import { findAncestors, getAllDescendants } from '../../util/startPageFilters';
+import {
+  findAncestors,
+  getAllDescendants,
+  sortTimeUnit,
+} from '../../util/startPageFilters';
 import { FilterContext } from '../../context/FilterContext';
 import { YearRangeFilter } from './YearRangeFilter';
 import { ReactNode, useContext, useState } from 'react';
@@ -179,8 +183,9 @@ const RenderTimeUnitFilters: React.FC<{ onFilterChange?: () => void }> = ({
   const allTimeUnits = new Set(
     state.availableTables.map((table) => table.timeUnit ?? ''),
   );
+  const sortedTimeUnits = sortTimeUnit(allTimeUnits);
 
-  return Array.from(allTimeUnits).map((key, i) => {
+  return Array.from(sortedTimeUnits).map((key, i) => {
     const count = state.availableFilters.timeUnits.get(key) ?? 0;
     const isActive = state.activeFilters.some(
       (filter) => filter.type === 'timeUnit' && filter.value === key,
