@@ -87,4 +87,3 @@ describe('TableDataProvider', () => {
     consoleErrorSpy.mockRestore();
   });
 });
-
