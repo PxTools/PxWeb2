@@ -205,7 +205,7 @@ export function TableViewer() {
       >
         {isSmallScreen ? (
           <>
-            <Header />
+            <Header stroke={true} />
             <NavigationBar
               ref={navigationBarRef}
               onChange={changeSelectedNavView}

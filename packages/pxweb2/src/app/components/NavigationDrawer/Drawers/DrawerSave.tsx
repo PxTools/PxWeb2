@@ -90,7 +90,7 @@ export const SaveQueryCreateButton: React.FC<SaveQueryButtonProps> = ({
       ref={buttonRef}
       variant="primary"
       size="medium"
-      iconPosition="left"
+      iconPosition="start"
       icon={'Link'}
       onClick={onClick}
     >
@@ -108,7 +108,7 @@ export const SaveQueryLoadingButton: React.FC<SaveQueryButtonProps> = ({
       ref={buttonRef}
       variant="primary"
       size="medium"
-      iconPosition="left"
+      iconPosition="start"
       loading={true}
       aria-busy={true}
       aria-label={t('presentation_page.sidemenu.save.savequery.loadingStatus')}
@@ -129,6 +129,7 @@ export const SaveQueryCopyButton: React.FC<SaveQueryButtonProps> = ({
         variant="primary"
         size="medium"
         icon={'Copy'}
+        iconPosition="start"
         onClick={onClick}
       >
         {t('presentation_page.sidemenu.save.savequery.copyButton')}
@@ -152,7 +153,7 @@ export const SaveQueryCopiedButton: React.FC<SaveQueryButtonProps> = ({
         ref={buttonRef}
         variant="primary"
         size="medium"
-        iconPosition="left"
+        iconPosition="start"
         icon={'Check'}
         onClick={onClick}
         aria-label={t('presentation_page.sidemenu.save.savequery.copyButton')}
