@@ -210,7 +210,7 @@ const StartPage = () => {
 
   const triggerFade = () => {
     setIsFadingTableList(true);
-    setTimeout(() => setIsFadingTableList(false), 500); // eller 400ms hvis du bruker kortere CSS
+    setTimeout(() => setIsFadingTableList(false), 500);
   };
 
   const handleFilterChange = () => {
@@ -352,6 +352,7 @@ const StartPage = () => {
         type: ActionType.ADD_SEARCH_FILTER,
         payload: { text: value, language: i18n.language },
       });
+      handleFilterChange();
     }, 500),
   ).current;
 
