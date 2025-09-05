@@ -492,3 +492,11 @@ export function sortSubjectTree(subjects: PathItem[]): PathItem[] {
 
   return sortRec(subjects);
 }
+
+export function sortTablesByUpdated(tables: Table[]): Table[] {
+  return tables.slice().sort((a, b) => {
+    const dateA = new Date(a.updated ?? 0).getTime();
+    const dateB = new Date(b.updated ?? 0).getTime();
+    return dateB - dateA;
+  });
+}
