@@ -173,7 +173,7 @@ const StartPage = () => {
   };
 
   const getTopicIcon = (table: Table) => {
-    const topicId = table.paths?.[0]?.[0]?.id;
+    const topicId = table.subjectCode;
     const size = isSmallScreen ? 'small' : 'medium';
 
     return topicId
