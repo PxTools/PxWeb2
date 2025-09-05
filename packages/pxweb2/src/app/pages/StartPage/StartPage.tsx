@@ -291,7 +291,7 @@ const StartPage = () => {
       return (
         <TableCard
           key={table.id}
-          title={`${table.label}`}
+          title={`${table.label} - ${table.subjectCode}`}
           href={`${langPrefix}/table/${table.id}`}
           updatedLabel={
             table.updated ? t('start_page.table.updated_label') : undefined
