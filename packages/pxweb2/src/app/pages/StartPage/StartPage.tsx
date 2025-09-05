@@ -546,6 +546,8 @@ const StartPage = () => {
                   searchPlaceHolder={t('start_page.search_placeholder')}
                   variant="default"
                   ref={searchFieldRef}
+                  showLabel
+                  labelText={t('start_page.search_label')}
                   onChange={(value: string) => {
                     debouncedDispatch(value);
                   }}
