@@ -29,7 +29,7 @@ describe('TopicIcons', () => {
 
   it('renders file names correctly', () => {
     render(<TopicIcons />);
-    expect(screen.getByText('LabourMarketAndEarnings.svg')).toBeInTheDocument();
-    expect(screen.getByText('Elections.svg')).toBeInTheDocument();
+    expect(screen.getByText('LabourMarketAndEarnings.svg (al)')).toBeInTheDocument();
+    expect(screen.getByText('Elections.svg (va)')).toBeInTheDocument();
   });
 });
