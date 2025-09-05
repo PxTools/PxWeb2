@@ -65,6 +65,7 @@ const StartPage = () => {
   const searchFieldRef = useRef<SearchHandle>(null);
   const hasFetchedRef = useRef(false);
   const hasEverHydratedRef = useRef(false);
+  const previousLanguage = useRef('');
 
   const isReadyToRender = tableListIsReadyToRender(
     state,
@@ -72,11 +73,14 @@ const StartPage = () => {
     hasEverHydratedRef.current,
   );
 
+  // Run once when initially loading the page, then again if language changes
+  // We want to try fetching tables in the selected language if possible
   useEffect(() => {
-    if (hasFetchedRef.current) {
+    if (hasFetchedRef.current && previousLanguage.current == i18n.language) {
       return;
     }
     hasFetchedRef.current = true;
+    previousLanguage.current = i18n.language;
 
     async function fetchTables() {
       dispatch({ type: ActionType.SET_LOADING, payload: true });
