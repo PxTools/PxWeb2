@@ -1,6 +1,7 @@
 import List from '../List/List';
 import ListItem from '../List/ListItem';
 import { variableNotes } from './noteCollection';
+import MarkdownRenderer from '../MarkdownRenderer/MarkdownRenderer';
 
 export type VariableNotesProps = {
   readonly variableNotes: variableNotes;
@@ -50,7 +51,7 @@ export function VariableNotes({
           key={getVariableNoteKey(variableNotes.variableCode)}
           isVariableNote={variableNotes.valueNotes.length > 0}
         >
-          {note}
+          <MarkdownRenderer mdText={note} />
         </ListItem>
       ))}
       {variableNotes.valueNotes && variableNotes.valueNotes.length > 0 && (
@@ -65,7 +66,7 @@ export function VariableNotes({
                   <ListItem
                     key={getVariableNoteKey(variableNotes.variableCode)}
                   >
-                    {note}
+                    <MarkdownRenderer mdText={note} />
                   </ListItem>
                 ))}
               </List>

@@ -18,7 +18,7 @@ describe('MandatoryTableNotes', () => {
       <MandatoryTableNotes notes={dummyNotes.mandatoryNotes.tableLevelNotes} />,
     );
 
-    dummyNotes.mandatoryNotes.tableLevelNotes.forEach((note) => {
+    dummyNotes.mandatoryNotes.tableLevelNotes.slice(0, 3).forEach((note) => {
       expect(screen.getByText(note)).toBeInTheDocument();
     });
   });

@@ -23,6 +23,9 @@ let mandatoryTableNotes: string[] = [
   'This is a mandatory note for the table.',
   'This is another mandatory note for the table.',
   'This is a third mandatory note for the table.',
+  '[SCB](https://scb.se)',
+  '<https://scb.se/>',
+  'md testlinje1  \nmd testlinje2  \nmd testlinje3',
 ];
 mandatoryTableNotes.forEach((note) => {
   dummyNotes.mandatoryNotes.tableLevelNotes.push(note);
