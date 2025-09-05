@@ -36,10 +36,6 @@ export interface TableDataContextType {
     stub: Variable[],
     heading: Variable[],
   ) => { firstTitlePart: string; lastTitlePart: string };
-  stubDesktop: string[];
-  headingDesktop: string[];
-  stubMobile: string[];
-  headingMobile: string[];
 }
 
 interface TableDataProviderProps {
@@ -66,10 +62,6 @@ const TableDataContext = createContext<TableDataContextType | undefined>({
       lastTitlePart: '',
     };
   },
-  stubDesktop: [],
-  headingDesktop: [],
-  stubMobile: [],
-  headingMobile: [],
 });
 
 const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
@@ -1240,11 +1232,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       pivotCW,
       buildTableTitle,
       isInitialized,
-      stubDesktop,
-      headingDesktop,
-      stubMobile,
-      headingMobile,
-      initializeStubAndHeading,
     }),
     [
       data,
@@ -1255,11 +1242,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       pivotCW,
       buildTableTitle,
       isInitialized,
-      stubDesktop,
-      headingDesktop,
-      stubMobile,
-      headingMobile,
-      initializeStubAndHeading,
     ],
   );
 
