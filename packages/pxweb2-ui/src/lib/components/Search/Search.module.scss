@@ -29,7 +29,7 @@
 
   &:hover {
     border-radius: var(--px-border-radius-medium);
-    box-shadow: inset 0 0 0 2px var(--px-color-border-default);
+    box-shadow: inset 0 0 0 2px var(--px-color-border-hover);
     background: var(--px-color-surface-default);
   }
 
@@ -47,10 +47,9 @@
 
   /* Apply outline when the INPUT has keyboard focus */
   &:has(input:focus-visible) {
-    border-radius: var(--px-border-radius-medium);
     outline: 3px solid var(--px-color-border-focus-outline);
-    outline-offset: 5px;
-    box-shadow: 0 0 0 3px var(--px-color-border-focus-boxshadow);
+    outline-offset: 3px;
+    box-shadow: inset 0 0 0 3px var(--px-color-border-focus-boxshadow);
   }
 
   /* No outline when the button has focus */
@@ -61,18 +60,20 @@
 }
 
 .wrapper.inVariableBox {
-  border-radius: var(--px-border-radius-medium);
+  border-radius: var(--px-border-radius-medium) var(--px-border-radius-medium) 0
+    0;
   background: var(--px-color-surface-subtle);
   z-index: 1;
   outline-offset: -2px;
+  border-bottom: 2px solid var(--px-color-border-moderate);
 
   &:hover {
-    border-radius: var(--px-border-radius-medium);
+    border-radius: var(--px-border-radius-medium) var(--px-border-radius-medium)
+      0 0;
     outline: 2px solid var(--px-color-border-action);
   }
 
   &:active {
-    border-radius: var(--px-border-radius-medium);
     outline: 2px solid var(--px-color-border-action);
     background: var(--px-color-surface-default);
   }
@@ -97,13 +98,7 @@
   }
 
   &.variableboxSearchAndSelectBorderOverride {
-    border-radius: 0 0 var(--px-border-radius-medium)
-      var(--px-border-radius-medium);
-
-    &:hover,
-    &:has(input:focus-visible) {
-      border-radius: var(--px-border-radius-medium);
-    }
+    border-radius: 0 0 0 0;
   }
 }
 

@@ -1,4 +1,5 @@
 import { Table } from '@pxweb2/pxweb2-api-client';
+import { useTranslation } from 'react-i18next';
 import {
   StartPageFilters,
   Filter,
@@ -8,6 +9,7 @@ import {
 } from '../pages/StartPage/StartPageTypes';
 import { shouldTableBeIncluded } from '../util/tableHandler';
 import { getConfig } from './config/getConfig';
+import i18n from '../../i18n/config';
 
 export type TableWithPaths = Table & {
   id: string;
@@ -17,7 +19,8 @@ export type TableWithPaths = Table & {
 export function getSubjectTree(tables: Table[]): PathItem[] {
   const allPaths: PathItem[][] = getAllPath(tables);
   const organizedPaths: PathItem[] = organizePaths(allPaths);
-  return updateSubjectTreeCounts(organizedPaths, tables);
+  const sortedAndOranizedPaths = sortSubjectTree(organizedPaths);
+  return updateSubjectTreeCounts(sortedAndOranizedPaths, tables);
 }
 
 export function organizePaths(paths: PathItem[][]): PathItem[] {
@@ -401,7 +404,9 @@ export function buildSubjectToTableIdsMap(
 
 export function getVariables(allTables: Table[]) {
   const config = getConfig();
-  const exclusionList = config.variableFilterExclusionList ?? [''];
+  const exclusionList: string[] = config.variableFilterExclusionList[
+    i18n.language
+  ] ?? [''];
 
   const variables = new Map<string, number>();
   allTables.forEach((table) => {
@@ -419,4 +424,71 @@ export function getVariables(allTables: Table[]) {
         return !exclusionList.includes(entry[0]);
       }),
   );
+}
+
+export function getYearLabels(t: ReturnType<typeof useTranslation>['t']) {
+  const fromLabel = t('start_page.filter.year.from_label');
+  const toLabel = t('start_page.filter.year.to_label');
+
+  return { fromLabel, toLabel };
+}
+
+export function getYearRangeLabelValue(
+  from?: string,
+  to?: string,
+  fromLabel?: string,
+  toLabel?: string,
+) {
+  if (from && to) {
+    return { label: `${from}–${to}`, value: `${from}-${to}` };
+  } else if (from) {
+    const label = `${fromLabel} ${from}`;
+    return { label, value: from };
+  } else if (to) {
+    const label = `${toLabel} ${to}`;
+    return { label, value: to };
+  }
+
+  return { label: '', value: '' };
+}
+
+export function sortTimeUnit(allTimeUnits: Set<string>): string[] {
+  const timeUnitOrder = ['Annual', 'Quarterly', 'Monthly', 'Weekly', 'Other'];
+
+  return Array.from(allTimeUnits).sort((a, b) => {
+    const indexA = timeUnitOrder.indexOf(a);
+    const indexB = timeUnitOrder.indexOf(b);
+
+    // Values not in predefined order go to the end
+    return (
+      (indexA === -1 ? timeUnitOrder.length : indexA) -
+      (indexB === -1 ? timeUnitOrder.length : indexB)
+    );
+  });
+}
+
+function compareByLabelAsc(a: PathItem, b: PathItem): number {
+  const la = a.label;
+  const lb = b.label;
+  if (la < lb) {
+    return -1;
+  }
+  if (la > lb) {
+    return 1;
+  }
+  return 0;
+}
+
+// Sort subjects alphabetically at every depth.
+export function sortSubjectTree(subjects: PathItem[]): PathItem[] {
+  const sortRec = (nodes: PathItem[]): PathItem[] =>
+    nodes
+      .slice()
+      .sort(compareByLabelAsc)
+      .map((node) => ({
+        ...node,
+        children: node.children ? sortRec(node.children) : undefined,
+      }));
+
+  return sortRec(subjects);
 }
