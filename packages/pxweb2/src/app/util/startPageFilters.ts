@@ -495,8 +495,24 @@ export function sortSubjectTree(subjects: PathItem[]): PathItem[] {
 
 export function sortTablesByUpdated(tables: Table[]): Table[] {
   return tables.slice().sort((a, b) => {
-    const dateA = new Date(a.updated ?? 0).getTime();
-    const dateB = new Date(b.updated ?? 0).getTime();
+    const dateA = Date.parse(a.updated ?? '');
+    const dateB = Date.parse(b.updated ?? '');
+    const isValidA = !isNaN(dateA);
+    const isValidB = !isNaN(dateB);
+
+    // Both invalid/missing -> keep original order
+    if (!isValidA && !isValidB) {
+      return 0;
+    }
+    // Only A invalid -> B comes first
+    if (!isValidA) {
+      return 1;
+    }
+    // Only B invalid -> A comes first
+    if (!isValidB) {
+      return -1;
+    }
+    // Both valid -> newer first
     return dateB - dateA;
   });
 }
