@@ -7,8 +7,9 @@ interface Resources {
     common: {
       title: 'PxWeb 2.0';
       header: {
-        title: 'PxWeb 2.0 [Main]';
         logo: 'PxWeb 2.0';
+        logo_alt: 'To the front page';
+        language_selector: 'Language';
       };
       not_found: {
         page_not_found: {
@@ -61,7 +62,8 @@ interface Resources {
       ingress: "Looking for the perfect table? Use the search field and filters to dig into the numbers you need. Whether you're hunting for trends, facts, or just an oddly satisfying dataset, PxWeb 2.0 has your back.";
       more_about_label: 'More about PxWeb 2.0';
       more_about_text: 'More about Text EN';
-      search_placeholder: 'Search in PxWeb 2.0';
+      search_label: 'Search in PxWeb 2.0';
+      search_placeholder: 'Search for table names or variables';
       filter: {
         button: 'Filter';
         back: 'Back';
@@ -103,11 +105,6 @@ interface Resources {
       };
     };
     presentation_page: {
-      header: {
-        searchbutton: 'Search';
-        languagebutton: 'languages';
-        statistics: 'Statistikkbanken';
-      };
       sidemenu: {
         arialabeltoolsidemenu: 'Tool menu for table';
         hide: 'Hide';

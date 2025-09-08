@@ -8,6 +8,7 @@ import { renderWithProviders } from '../../util/testing-utils';
 vi.mock('react-router', () => ({
   useRouteError: vi.fn(),
   useLocation: vi.fn(),
+  useNavigate: vi.fn(() => vi.fn()),
   Link: vi.fn(({ to, children, ...props }) => (
     <a href={to.pathname} {...props}>
       {children}

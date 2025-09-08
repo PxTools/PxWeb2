@@ -4,7 +4,11 @@ import { ActionType, PathItem } from '../../pages/StartPage/StartPageTypes';
 import styles from './FilterSidebar.module.scss';
 import { useTranslation } from 'react-i18next';
 import { Checkbox, FilterCategory, Search } from '@pxweb2/pxweb2-ui';
-import { findAncestors, getAllDescendants } from '../../util/startPageFilters';
+import {
+  findAncestors,
+  getAllDescendants,
+  sortTimeUnit,
+} from '../../util/startPageFilters';
 import { FilterContext } from '../../context/FilterContext';
 import { YearRangeFilter } from './YearRangeFilter';
 import { ReactNode, useContext, useState } from 'react';
@@ -179,8 +183,9 @@ const RenderTimeUnitFilters: React.FC<{ onFilterChange?: () => void }> = ({
   const allTimeUnits = new Set(
     state.availableTables.map((table) => table.timeUnit ?? ''),
   );
+  const sortedTimeUnits = sortTimeUnit(allTimeUnits);
 
-  return Array.from(allTimeUnits).map((key, i) => {
+  return Array.from(sortedTimeUnits).map((key, i) => {
     const count = state.availableFilters.timeUnits.get(key) ?? 0;
     const isActive = state.activeFilters.some(
       (filter) => filter.type === 'timeUnit' && filter.value === key,
@@ -213,7 +218,9 @@ const RenderTimeUnitFilters: React.FC<{ onFilterChange?: () => void }> = ({
   });
 };
 
-const VariablesFilter: React.FC = () => {
+const VariablesFilter: React.FC<{ onFilterChange?: () => void }> = ({
+  onFilterChange,
+}) => {
   const { state, dispatch } = useContext(FilterContext);
   const [variableSearch, setVariableSearch] = useState('');
   const { t } = useTranslation();
@@ -260,6 +267,7 @@ const VariablesFilter: React.FC = () => {
                           type: ActionType.REMOVE_FILTER,
                           payload: { value: item[0], type: 'variable' },
                         });
+                    onFilterChange?.();
                   }}
                 />
               </li>
@@ -287,7 +295,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
           />
         </FilterCategory>
         <FilterCategory header={t('start_page.filter.year.title')}>
-          <YearRangeFilter />
+          <YearRangeFilter onFilterChange={onFilterChange} />
         </FilterCategory>
         <FilterCategory header={t('start_page.filter.timeUnit')}>
           <ul className={styles.filterList}>
@@ -295,7 +303,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
           </ul>
         </FilterCategory>
         <FilterCategory header={t('start_page.filter.variabel')}>
-          <VariablesFilter />
+          <VariablesFilter onFilterChange={onFilterChange} />
         </FilterCategory>
       </div>
     </div>

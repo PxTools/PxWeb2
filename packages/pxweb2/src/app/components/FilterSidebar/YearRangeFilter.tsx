@@ -93,7 +93,9 @@ function getYearRangeForMatchingTables(
   return { min, max };
 }
 
-export const YearRangeFilter: React.FC = () => {
+export const YearRangeFilter: React.FC<{ onFilterChange?: () => void }> = ({
+  onFilterChange,
+}) => {
   const { state, dispatch } = useContext(FilterContext);
   const { t } = useTranslation();
   const { fromLabel, toLabel, fromYearLabel, toYearLabel } = useYearLabels(t);
@@ -135,22 +137,26 @@ export const YearRangeFilter: React.FC = () => {
     const newFrom = type === 'from' ? item?.value : prevFrom;
     const newTo = type === 'to' ? item?.value : prevTo;
 
-    if (newFrom || newTo) {
-      const { label, value } = getYearRangeLabelValue(
-        newFrom,
-        newTo,
-        fromLabel,
-        toLabel,
-      );
-      dispatch({
-        type: ActionType.ADD_FILTER,
-        payload: [{ type: 'yearRange', value, label, index: 0 }],
-      });
-    } else if (yearRangeFilter) {
-      dispatch({
-        type: ActionType.REMOVE_FILTER,
-        payload: { value: yearRangeFilter.value, type: 'yearRange' },
-      });
+    if (newFrom !== prevFrom || newTo !== prevTo) {
+      if (newFrom || newTo) {
+        const { label, value } = getYearRangeLabelValue(
+          newFrom,
+          newTo,
+          fromLabel,
+          toLabel,
+        );
+        dispatch({
+          type: ActionType.ADD_FILTER,
+          payload: [{ type: 'yearRange', value, label, index: 0 }],
+        });
+        onFilterChange?.();
+      } else if (yearRangeFilter) {
+        dispatch({
+          type: ActionType.REMOVE_FILTER,
+          payload: { value: yearRangeFilter.value, type: 'yearRange' },
+        });
+        onFilterChange?.();
+      }
     }
   }
 

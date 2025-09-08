@@ -65,6 +65,7 @@ const StartPage = () => {
   const searchFieldRef = useRef<SearchHandle>(null);
   const hasFetchedRef = useRef(false);
   const hasEverHydratedRef = useRef(false);
+  const previousLanguage = useRef('');
 
   const isReadyToRender = tableListIsReadyToRender(
     state,
@@ -72,11 +73,14 @@ const StartPage = () => {
     hasEverHydratedRef.current,
   );
 
+  // Run once when initially loading the page, then again if language changes
+  // We want to try fetching tables in the selected language if possible
   useEffect(() => {
-    if (hasFetchedRef.current) {
+    if (hasFetchedRef.current && previousLanguage.current == i18n.language) {
       return;
     }
     hasFetchedRef.current = true;
+    previousLanguage.current = i18n.language;
 
     async function fetchTables() {
       dispatch({ type: ActionType.SET_LOADING, payload: true });
@@ -84,7 +88,10 @@ const StartPage = () => {
         const tables = await getAllTables(i18n.language);
         dispatch({
           type: ActionType.RESET_FILTERS,
-          payload: { tables: tables, subjects: getSubjectTree(tables) },
+          payload: {
+            tables: tables,
+            subjects: getSubjectTree(tables),
+          },
         });
       } catch (error) {
         dispatch({
@@ -203,7 +210,7 @@ const StartPage = () => {
 
   const triggerFade = () => {
     setIsFadingTableList(true);
-    setTimeout(() => setIsFadingTableList(false), 500); // eller 400ms hvis du bruker kortere CSS
+    setTimeout(() => setIsFadingTableList(false), 500);
   };
 
   const handleFilterChange = () => {
@@ -345,6 +352,7 @@ const StartPage = () => {
         type: ActionType.ADD_SEARCH_FILTER,
         payload: { text: value, language: i18n.language },
       });
+      handleFilterChange();
     }, 500),
   ).current;
 
@@ -454,7 +462,7 @@ const StartPage = () => {
                 <Button
                   variant="secondary"
                   className={styles.removeFilterButton}
-                  iconPosition="left"
+                  iconPosition="start"
                   icon="XMark"
                   onClick={() => {
                     dispatch({
@@ -521,7 +529,7 @@ const StartPage = () => {
 
   return (
     <>
-      <Header />
+      <Header stroke={true} />
       <div className={styles.startPage}>
         <div className={styles.container}>
           <div className={styles.information}>
@@ -539,6 +547,8 @@ const StartPage = () => {
                   searchPlaceHolder={t('start_page.search_placeholder')}
                   variant="default"
                   ref={searchFieldRef}
+                  showLabel
+                  labelText={t('start_page.search_label')}
                   onChange={(value: string) => {
                     debouncedDispatch(value);
                   }}
@@ -547,7 +557,7 @@ const StartPage = () => {
 
               <Button
                 variant="secondary"
-                iconPosition="left"
+                iconPosition="start"
                 icon="Controls"
                 className={styles.filterToggleButton}
                 onClick={() => setIsFilterOverlayOpen(true)}
