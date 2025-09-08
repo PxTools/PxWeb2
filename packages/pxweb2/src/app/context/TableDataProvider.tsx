@@ -20,7 +20,7 @@ import {
 } from '@pxweb2/pxweb2-ui';
 import { mapJsonStat2Response } from '../../mappers/JsonStat2ResponseMapper';
 
-import { addFormattingToPxTable } from './TableDataProviderUtils';
+import { addFormattingToPxTable, filterStubAndHeadingArrays } from './TableDataProviderUtils';
 import { problemMessage } from '../util/problemMessage';
 
 // Define types for the context state and provider props
@@ -212,14 +212,17 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
           (variable) => variable.id,
         );
         if (variableIds.length < stubDesktop.length + headingDesktop.length) {
-          setStubDesktop(stubDesktop.filter((id) => variableIds.includes(id)));
-          setHeadingDesktop(
-            headingDesktop.filter((id) => variableIds.includes(id)),
+          const filtered = filterStubAndHeadingArrays(
+            variableIds,
+            stubDesktop,
+            headingDesktop,
+            stubMobile,
+            headingMobile,
           );
-          setStubMobile(stubMobile.filter((id) => variableIds.includes(id)));
-          setHeadingMobile(
-            headingMobile.filter((id) => variableIds.includes(id)),
-          );
+          setStubDesktop(filtered.stubDesktop);
+          setHeadingDesktop(filtered.headingDesktop);
+          setStubMobile(filtered.stubMobile);
+          setHeadingMobile(filtered.headingMobile);
         }
 
         if (isMobile) {
