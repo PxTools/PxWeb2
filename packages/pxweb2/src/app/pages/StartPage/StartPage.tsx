@@ -44,6 +44,10 @@ const StartPage = () => {
 
   const paginationCount = 15;
   const isSmallScreen = isTablet === true || isMobile === true;
+  const isTouchDevice =
+  typeof window !== 'undefined' &&
+  window.matchMedia?.('(pointer: coarse)').matches;
+  const disableStickyHeader = isSmallScreen && !isTouchDevice;
   const topicIconComponents = useTopicIcons();
   const hasUrlParams =
     typeof window !== 'undefined' &&
@@ -440,7 +444,9 @@ const StartPage = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25, ease: 'easeInOut' }}
-            className={styles.filterOverlay}
+            className={cl(styles.filterOverlay, {
+              [styles.overlayNotSticky]: disableStickyHeader,
+            })}
           >
             <div className={styles.filterOverlayHeader}>
               <Button

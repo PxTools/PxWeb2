@@ -179,6 +179,15 @@
   }
 }
 
+.overlayNotSticky {
+  overflow-y: auto;
+
+  .filterOverlayContent {
+    overflow-y: visible;
+    flex: initial;
+  }
+}
+
 .listTables {
   grid-area: listTables;
 }
