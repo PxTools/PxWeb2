@@ -307,9 +307,15 @@ export function Selection({
       .then(([Dataset, TableData]) => {
         const pxTable: PxTable = mapJsonStat2Response(Dataset, false);
 
-        pxTable.metadata.pathElements = mapJsonStat2ResponsePathElements(
+        const allPathElements = mapJsonStat2ResponsePathElements(
           TableData.paths ? TableData.paths.flat() : undefined,
         );
+
+        const matchingPath = allPathElements.find(
+          (el) => el.id === TableData.subjectCode
+        );
+
+        pxTable.metadata.pathElements = matchingPath ? [matchingPath] : undefined;
 
         setPxTableMetadata(pxTable.metadata);
         if (pxTableMetaToRender !== null) {
