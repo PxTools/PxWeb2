@@ -45,8 +45,8 @@ const StartPage = () => {
   const paginationCount = 15;
   const isSmallScreen = isTablet === true || isMobile === true;
   const isTouchDevice =
-  typeof window !== 'undefined' &&
-  window.matchMedia?.('(pointer: coarse)').matches;
+    typeof window !== 'undefined' &&
+    window.matchMedia?.('(pointer: coarse)').matches;
   const disableStickyHeader = isSmallScreen && !isTouchDevice;
   const topicIconComponents = useTopicIcons();
   const hasUrlParams =
