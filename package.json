@@ -24,7 +24,7 @@
     "react-dom": "^19.1.1",
     "react-i18next": "^15.7.3",
     "react-virtuoso": "^4.14.0",
-    "sass": "^1.91.0",
+    "sass": "^1.92.1",
     "vite": "^7.1.4"
   },
   "devDependencies": {
