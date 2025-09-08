@@ -1,7 +1,6 @@
 import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { useState, useContext, useEffect, useRef } from 'react';
-
 import classes from './ContentTop.module.scss';
 import {
   Alert,
