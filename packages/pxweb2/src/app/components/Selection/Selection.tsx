@@ -312,10 +312,12 @@ export function Selection({
         );
 
         const matchingPath = allPathElements.find(
-          (el) => el.id === TableData.subjectCode
+          (el) => el.id === TableData.subjectCode,
         );
 
-        pxTable.metadata.pathElements = matchingPath ? [matchingPath] : undefined;
+        pxTable.metadata.pathElements = matchingPath
+          ? [matchingPath]
+          : undefined;
 
         setPxTableMetadata(pxTable.metadata);
         if (pxTableMetaToRender !== null) {
