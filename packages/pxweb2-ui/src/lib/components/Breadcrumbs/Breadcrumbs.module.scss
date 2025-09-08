@@ -62,9 +62,15 @@
   }
 
   .breadcrumbItemLink {
-    padding-top: 4px;
-    padding-bottom: 4px;
     color: var(--px-color-text-action);
+    &.default {
+      padding-top: 4px;
+      padding-bottom: 4px;
+    }
+    &.compact {
+      padding-top: 2px;
+      padding-bottom: 2px;
+    }
     &:hover {
       text-decoration: none;
       background-color: var(--px-color-surface-action-subtle-hover);
