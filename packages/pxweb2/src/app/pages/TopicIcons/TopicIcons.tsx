@@ -16,9 +16,7 @@ export const TopicIcons: React.FC = () => {
         {icons.map(({ id, fileName, medium }) => (
           <div key={id} className={styles.iconItem}>
             <div className={styles.iconWrapper}>{medium}</div>
-            <Label className={styles.iconLabel}>
-              {fileName} ({id})
-            </Label>
+            <Label className={styles.iconLabel}>{fileName}</Label>
           </div>
         ))}
       </div>
