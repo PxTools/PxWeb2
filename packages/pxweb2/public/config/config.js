@@ -9,7 +9,7 @@ window.PxWeb2Config = {
     fallbackLanguage: 'en',
     showDefaultLanguageInPath: true,
     },
-  apiUrl: 'https://data.ssb.no/api/pxwebapi/v2-beta',
+  apiUrl: 'https://api.scb.se/OV0104/v2beta',
   maxDataCells: 150000,
   specialCharacters: ['.', '..', ':', '-', '...', '*'],
   variableFilterExclusionList: {
