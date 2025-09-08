@@ -20,7 +20,10 @@ import {
 } from '@pxweb2/pxweb2-ui';
 import { mapJsonStat2Response } from '../../mappers/JsonStat2ResponseMapper';
 
-import { addFormattingToPxTable, filterStubAndHeadingArrays } from './TableDataProviderUtils';
+import {
+  addFormattingToPxTable,
+  filterStubAndHeadingArrays,
+} from './TableDataProviderUtils';
 import { problemMessage } from '../util/problemMessage';
 
 // Define types for the context state and provider props
