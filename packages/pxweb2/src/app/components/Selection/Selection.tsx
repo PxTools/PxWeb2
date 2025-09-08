@@ -39,6 +39,7 @@ import {
   getSelectedCodelists,
   updateSelectedCodelistForVariable,
 } from './selectionUtils';
+import { table } from 'console';
 
 function addValueToVariable(
   selectedValuesArr: SelectedVBValues[],
@@ -307,16 +308,16 @@ export function Selection({
       .then(([Dataset, TableData]) => {
         const pxTable: PxTable = mapJsonStat2Response(Dataset, false);
 
-        const allPathElements = mapJsonStat2ResponsePathElements(
-          TableData.paths ? TableData.paths.flat() : undefined,
+      const firstMatchingPathArray = TableData.paths?.find(
+        (pathArr: any[]) => pathArr[0]?.id === TableData.subjectCode,
+      );
+
+      const pathElements = mapJsonStat2ResponsePathElements(
+          firstMatchingPathArray ? firstMatchingPathArray.flat() : undefined,
         );
 
-        const matchingPath = allPathElements.find(
-          (el) => el.id === TableData.subjectCode,
-        );
-
-        pxTable.metadata.pathElements = matchingPath
-          ? [matchingPath]
+        pxTable.metadata.pathElements = pathElements.length > 0
+          ? pathElements
           : undefined;
 
         setPxTableMetadata(pxTable.metadata);
