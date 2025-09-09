@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
-const ICON_MAP_URL = '/icons/topicIconMap.json';
-const ICON_BASE_PATH = '/icons/topic';
+const ICON_MAP_URL = './icons/topicIconMap.json';
+const ICON_BASE_PATH = './icons/topic';
 
 export type TopicIconComponents = {
   id: string;

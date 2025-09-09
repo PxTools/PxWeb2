@@ -279,7 +279,7 @@ const StartPage = () => {
       const showLangInPath =
         config.language.showDefaultLanguageInPath ||
         language !== config.language.defaultLanguage;
-      const langPrefix = showLangInPath ? `/${language}` : '';
+      const langPrefix = showLangInPath ? `${language}` : '';
 
       let cardRef: React.RefObject<HTMLDivElement | null> | undefined;
       if (isFirstNew) {
@@ -292,7 +292,7 @@ const StartPage = () => {
         <TableCard
           key={table.id}
           title={`${table.label}`}
-          href={`${langPrefix}/table/${table.id}`}
+          href={`${config.baseApplicationPath}${langPrefix}/table/${table.id}`}
           updatedLabel={
             table.updated ? t('start_page.table.updated_label') : undefined
           }

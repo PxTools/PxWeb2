@@ -19,6 +19,7 @@ const initPromise = i18n
   .use(LanguageDetector)
   .init({
     backend: {
+      loadPath: `${config.baseApplicationPath}locales/{{lng}}/translation.json`,
       requestOptions: {
         // Do not cache the response from the server. This is needed because site administrators
         // may want to change the translations without having to wait for the cache to expire.
