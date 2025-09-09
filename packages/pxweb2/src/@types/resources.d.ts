@@ -227,8 +227,10 @@ interface Resources {
       };
       main_content: {
         arialabelbreadcrumb: 'Breadcrumb';
+        breadCrumbRootTitle: 'Home';
         last_updated: 'Last updated';
         show_details: 'Show details';
+        show_more_breadcrumbs: 'Show more';
         dynamic_table_title: '{{table_content_type}} by {{table_content_label_first_part}} and {{table_content_label_last_part}}';
         table: {
           warnings: {

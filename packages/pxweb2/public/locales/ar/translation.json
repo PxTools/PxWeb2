@@ -183,8 +183,10 @@
     },
     "main_content": {
       "arialabelbreadcrumb": "مسار التنقل",
+      "breadCrumbRootTitle": "الصفحة الرئيسية",
       "last_updated": "آخر تحديث",
       "show_details": "إظهار التفاصيل",
+      "show_more_breadcrumbs": "إظهار المزيد",
       "dynamic_table_title": "{{table_content_type}} بعد {{table_content_label_first_part}} و {{table_content_label_last_part}}",
       "table": {
         "warnings": {
