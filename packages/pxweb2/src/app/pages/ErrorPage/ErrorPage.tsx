@@ -2,7 +2,7 @@ import { useRouteError } from 'react-router';
 import React from 'react';
 
 import { Alert } from '@pxweb2/pxweb2-ui';
-import { Header } from '../Header/Header';
+import { Header } from '../../components/Header/Header';
 
 // ErrorPage component to display error messages
 type RouteError = {
@@ -19,7 +19,7 @@ export const ErrorPage: React.FC = () => {
 
   return (
     <>
-      <Header></Header>
+      <Header />
       <Alert variant="error" size="small">
         {error?.status} {error?.statusText} {error?.message} {error?.data}
       </Alert>

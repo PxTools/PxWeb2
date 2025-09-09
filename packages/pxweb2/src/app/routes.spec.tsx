@@ -24,14 +24,12 @@ vi.mock('./pages/StartPage/StartPage', () => ({
   default: () => <div data-testid="start-page">Start Page</div>,
 }));
 
-vi.mock('./components/ErrorPage/ErrorPage', () => ({
+vi.mock('./pages/ErrorPage/ErrorPage', () => ({
   default: () => <div data-testid="error-page">Error Page</div>,
 }));
 
-vi.mock('./pages/NotFound/NotFound', () => ({
-  NotFound: ({ type }: { type: string }) => (
-    <div data-testid={`not-found-${type}`}>Not Found {type}</div>
-  ),
+vi.mock('./pages/NotFoundPage/NotFoundPage', () => ({
+  default: () => <div data-testid="not-found-page">Not Found Page</div>,
 }));
 
 vi.mock('./pages/TopicIcons/TopicIcons', () => ({
@@ -67,6 +65,10 @@ describe('Router configuration', () => {
     apiUrl: 'test',
     maxDataCells: 150000,
     specialCharacters: ['.', '..', ':', '-', '...', '*'],
+    variableFilterExclusionList: {
+      no: ['excludedVariable1', 'excludedVariable2'],
+      en: ['excludedVariable1', 'excludedVariable2'],
+    },
   };
 
   beforeEach(() => {
@@ -112,9 +114,7 @@ describe('Router configuration', () => {
       });
 
       renderWithProviders(testRouter);
-      expect(
-        screen.getByTestId('not-found-page_not_found'),
-      ).toBeInTheDocument();
+      expect(screen.getByTestId('not-found-page')).toBeInTheDocument();
     });
 
     it('should render NotFound for non-existent paths and unsupported languages', () => {
@@ -123,9 +123,7 @@ describe('Router configuration', () => {
       });
 
       renderWithProviders(testRouter);
-      expect(
-        screen.getByTestId('not-found-unsupported_language'),
-      ).toBeInTheDocument();
+      expect(screen.getByTestId('not-found-page')).toBeInTheDocument();
     });
 
     it('should render TopicIcons for /topicIcons path', () => {
@@ -225,20 +223,16 @@ describe('Router configuration', () => {
       });
 
       renderWithProviders(testRouter);
-      expect(
-        screen.getByTestId('not-found-page_not_found'),
-      ).toBeInTheDocument();
+      expect(screen.getByTestId('not-found-page')).toBeInTheDocument();
     });
 
-    it('should render NotFound when unsupported language is used', () => {
+    it('should render NotFoundPage when unsupported language is used', () => {
       const testRouter = createMemoryRouter(routerConfig, {
         initialEntries: ['/pl/table/12345'],
       });
 
       renderWithProviders(testRouter);
-      expect(
-        screen.getByTestId('not-found-unsupported_language'),
-      ).toBeInTheDocument();
+      expect(screen.getByTestId('not-found-page')).toBeInTheDocument();
     });
   });
 

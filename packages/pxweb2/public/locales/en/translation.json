@@ -10,14 +10,9 @@
       "logo": "PxWeb 2.0"
     },
     "not_found": {
-      "page_not_found": {
-        "title": "Page not found",
-        "description": "The page you are looking for does not exist. Please check the URL or return to the homepage."
-      },
-      "unsupported_language": {
-        "title": "Unsupported language",
-        "description": "The selected language is not supported."
-      }
+      "title": "Page not found",
+      "description": "The page you are looking for does not exist. Please check the URL or return to the homepage.",
+      "action_text": "Go back to the previous page"
     },
     "skip_to_main": "Skip to main content",
     "footer": {

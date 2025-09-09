@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router';
 
 import { Title, CanonicalUrl, HrefLang } from '../util/seo/headTags';
+import ErrorBoundary from './ErrorBoundry/ErrorBoundry';
 
 export default function RootLayout() {
   return (
@@ -8,7 +9,9 @@ export default function RootLayout() {
       <Title />
       <CanonicalUrl />
       <HrefLang />
-      <Outlet />
+      <ErrorBoundary>
+        <Outlet />
+      </ErrorBoundary>
     </>
   );
 }

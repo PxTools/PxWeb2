@@ -1,17 +1,18 @@
 import { Navigate } from 'react-router';
 
-import TableViewer from './pages/TableViewer/TableViewer';
+import RootLayout from './components/RootLayout';
+import ErrorPage from './pages/ErrorPage/ErrorPage';
+import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 import StartPage from './pages/StartPage/StartPage';
-import ErrorPage from './components/ErrorPage/ErrorPage';
+import TableViewer from './pages/TableViewer/TableViewer';
 import TopicIcons from './pages/TopicIcons/TopicIcons';
 import { getConfig } from './util/config/getConfig';
-import { NotFound } from './pages/NotFound/NotFound';
-import RootLayout from './components/RootLayout';
 
 const config = getConfig();
 const showDefaultLanguageInPath = config.language.showDefaultLanguageInPath;
 
 const supportedLangRoutes = config.language.supportedLanguages.map((lang) => {
+  // If the default language should not be shown in the path
   if (
     !showDefaultLanguageInPath &&
     lang.shorthand === config.language.defaultLanguage
@@ -22,16 +23,17 @@ const supportedLangRoutes = config.language.supportedLanguages.map((lang) => {
       children: [
         {
           index: true,
-          element: <NotFound type="page_not_found" />,
+          element: <NotFoundPage />,
         },
         {
           path: '*',
-          element: <NotFound type="page_not_found" />,
+          element: <NotFoundPage />,
         },
       ],
     };
   }
 
+  // If the default language should be shown in the path
   return {
     path: `/${lang.shorthand}/`,
     children: [
@@ -47,7 +49,7 @@ const supportedLangRoutes = config.language.supportedLanguages.map((lang) => {
       },
       {
         path: '*',
-        element: <NotFound type="page_not_found" />,
+        element: <NotFoundPage />,
       },
     ],
   };
@@ -89,7 +91,7 @@ export const routerConfig = [
       },
       {
         path: '*',
-        element: <NotFound type="unsupported_language" />,
+        element: <NotFoundPage />,
       },
     ],
   },
