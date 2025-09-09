@@ -6,8 +6,9 @@
   "common": {
     "title": "PxWeb 2.0",
     "header": {
-      "title": "PxWeb 2.0 [Main]",
-      "logo": "PxWeb 2.0"
+      "logo": "PxWeb 2.0",
+      "logo_alt": "Till startsidan",
+      "language_selector": "Språk/Language"
     },
     "not_found": {
       "title": "Sidan hittades inte",
@@ -55,7 +56,8 @@
     "ingress": "Letar du efter den perfekta tabellen? Använd sökfältet och filtren för att hitta de data du behöver. Oavsett om du letar efter trender, fakta eller bara något intressant samband, så har PxWeb 2.0 det du behöver.",
     "more_about_label": "Mer om Statistikdatabasen",
     "more_about_text": "more about text SV",
-    "search_placeholder": "Sök i Statistikdatabasen",
+    "search_label": "Sök i Statistikdatabasen",
+    "search_placeholder": "Sök efter tabellrubrik eller variabel",
     "filter": {
       "button": "Filter",
       "back": "Tilbaka",
@@ -97,11 +99,6 @@
     }
   },
   "presentation_page": {
-    "header": {
-      "searchbutton": "Sök",
-      "languagebutton": "språk",
-      "statistics": "Statistikdatabasen"
-    },
     "sidemenu": {
       "arialabeltoolsidemenu": "Verktygsmeny för tabell",
       "hide": "Dölj",

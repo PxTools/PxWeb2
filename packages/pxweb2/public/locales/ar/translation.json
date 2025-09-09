@@ -6,8 +6,9 @@
   "common": {
     "title": "مرحبًا بك في PxWeb 2.0",
     "header": {
-      "title": "PxWeb 2.0 [Main]",
-      "logo": "بيكس ويب 2.0"
+      "logo": "بيكس ويب 2.0",
+      "logo_alt": "إلى الصفحة الرئيسية",
+      "language_selector": "اللغة/Language"
     },
     "not_found": {
       "title": "لم يتم العثور على الصفحة",
@@ -55,11 +56,6 @@
     "welcome_trans_test": "مرحبا بكم في <1>برنامج</1> لبكسي ويب 2.0!"
   },
   "presentation_page": {
-    "header": {
-      "searchbutton": "يبحث",
-      "languagebutton": "اللغات",
-      "statistics": "بنك الإحصائيات"
-    },
     "sidemenu": {
       "arialabeltoolsidemenu": "قائمة الأدوات للجدول",
       "hide": "يخفي",

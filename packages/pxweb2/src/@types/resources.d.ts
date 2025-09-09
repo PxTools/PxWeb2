@@ -36,8 +36,9 @@ interface Resources {
         mandatory: 'Mandatory';
       };
       header: {
+        language_selector: 'Språk/Language';
         logo: 'PxWeb 2.0';
-        title: 'PxWeb 2.0 [Main]';
+        logo_alt: 'To the front page';
       };
       not_found: {
         action_text: 'Go back to the previous page';
@@ -74,11 +75,6 @@ interface Resources {
         descriptionLink: 'Read more about the project on Github';
         projectLeader: 'Project leader';
         scrumMaster: 'Scrum master';
-      };
-      header: {
-        languagebutton: 'languages';
-        searchbutton: 'Search';
-        statistics: 'Statistikkbanken';
       };
       main_content: {
         about_table: {
@@ -309,7 +305,8 @@ interface Resources {
       ingress: "Looking for the perfect table? Use the search field and filters to dig into the numbers you need. Whether you're hunting for trends, facts, or just an oddly satisfying dataset, PxWeb 2.0 has your back.";
       more_about_label: 'More about PxWeb 2.0';
       more_about_text: 'More about Text EN';
-      search_placeholder: 'Search in PxWeb 2.0';
+      search_label: 'Search in PxWeb 2.0';
+      search_placeholder: 'Search for table names or variables';
       table: {
         loading: 'Loading...';
         number_of_tables: '<strong>{{count}}</strong> tables';
