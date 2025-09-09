@@ -10,7 +10,6 @@
   "scripts": {
     "start": "vite",
     "build": "vite build",
-    "build-artifact": "vite build",
     "test": "vitest run",
     "test-dev": "vitest",
     "coverage": "vitest run --coverage",

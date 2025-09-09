@@ -26,14 +26,8 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - run: npm run build-artifact
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: 'pxweb-${{ env.TAG_NAME }}'
-          path: 'packages/pxweb2/dist/'
-          if-no-files-found: 'error'
-          overwrite: 'false'
-          include-hidden-files: 'false'
+      - name: Create zip file
+        run: zip -r pxweb-${{ env.TAG_NAME }}.zip ./packages/pxweb2/dist
       - name: Upload release asset
         env:
           GH_TOKEN: ${{ github.token }}
