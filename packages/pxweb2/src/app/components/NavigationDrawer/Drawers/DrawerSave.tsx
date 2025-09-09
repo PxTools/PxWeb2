@@ -495,7 +495,7 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
             </li>
           ))}
         </ul>
-        <Alert variant="info">
+        <Alert variant="info" className={classes.alert + ' ' + classes.file}>
           {t('common.status_messages.drawer_save_file')}
         </Alert>
       </ContentBox>
@@ -542,7 +542,7 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
         </div>
       </ContentBox>
       <ContentBox title={t('presentation_page.sidemenu.save.api.query')}>
-        <Alert variant="info">
+        <Alert variant="info" className={classes.alert}>
           {t('common.status_messages.drawer_save_api')}
         </Alert>
       </ContentBox>

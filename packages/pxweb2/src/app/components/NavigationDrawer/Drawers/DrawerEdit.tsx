@@ -71,7 +71,9 @@ export function DrawerEdit() {
   return (
     <ContentBox title={t('presentation_page.sidemenu.edit.customize.title')}>
       {data && <PivotButton stub={data.stub} heading={data.heading} />}
-      <Alert variant="info">{t('common.status_messages.drawer_edit')}</Alert>
+      <Alert variant="info" className={classes.alert}>
+        {t('common.status_messages.drawer_edit')}
+      </Alert>
     </ContentBox>
   );
 }
