@@ -50,8 +50,8 @@ describe('useTopicIcons hook', () => {
         React.ImgHTMLAttributes<HTMLImageElement>
       >;
 
-      expect(mediumElement.props.src).toBe('/icons/topic/icon1.svg');
-      expect(smallElement.props.src).toBe('/icons/topic/small/icon1.svg');
+      expect(mediumElement.props.src).toBe('./icons/topic/icon1.svg');
+      expect(smallElement.props.src).toBe('./icons/topic/small/icon1.svg');
     } else {
       throw new Error('medium or small is not a valid React element');
     }
