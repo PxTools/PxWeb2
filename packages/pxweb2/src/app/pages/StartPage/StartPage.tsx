@@ -27,6 +27,7 @@ import { ActionType } from './StartPageTypes';
 import {
   getSubjectTree,
   sortAndDeduplicateFilterChips,
+  sortTablesByUpdated,
 } from '../../util/startPageFilters';
 import { useTopicIcons } from '../../util/hooks/useTopicIcons';
 import useApp from '../../context/useApp';
@@ -86,11 +87,12 @@ const StartPage = () => {
       dispatch({ type: ActionType.SET_LOADING, payload: true });
       try {
         const tables = await getAllTables(i18n.language);
+        const sortedTables = sortTablesByUpdated(tables);
         dispatch({
           type: ActionType.RESET_FILTERS,
           payload: {
-            tables: tables,
-            subjects: getSubjectTree(tables),
+            tables: sortedTables,
+            subjects: getSubjectTree(sortedTables),
           },
         });
       } catch (error) {
