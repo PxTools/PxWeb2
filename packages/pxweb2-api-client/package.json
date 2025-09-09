@@ -7,6 +7,7 @@
   "devDependencies": {},
   "scripts": {
     "build": "vite build",
+    "build-artifact": "vite build",
     "test": "echo 'No tests for @pxweb2/pxweb2-api-client'",
     "coverage": "echo 'No coverage for @pxweb2/pxweb2-api-client'",
     "prettier": "echo 'No prettier for @pxweb2/pxweb2-api-client'"
