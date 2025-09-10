@@ -80,6 +80,7 @@ interface Resources {
         show_results: 'Show {{value}} results';
         close: 'Close filter';
         header: 'Filter';
+        list_filters_aria: 'Selected filters';
         remove_all_filter: 'Remove all filters';
         remove_filter_aria: 'Remove filter, {{value}}';
         subject: 'Topic';

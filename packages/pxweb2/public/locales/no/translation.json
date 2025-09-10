@@ -79,6 +79,7 @@
       "show_results": "Vis {{value}} treff",
       "close": "Lukk filter",
       "header": "Filter",
+      "list_filters_aria": "Valgte filter",
       "remove_all_filter": "Fjern alle filter",
       "remove_filter_aria": "Fjern filter, {{value}}",
       "subject": "Emne",

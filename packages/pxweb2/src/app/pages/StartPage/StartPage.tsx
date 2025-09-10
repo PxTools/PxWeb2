@@ -593,7 +593,9 @@ const StartPage = () => {
                 </Heading>
                 {state.activeFilters.length >= 1 && (
                   <div className={styles.filterPillContainer}>
-                    <Chips>
+                    <Chips
+                      aria-label={t('start_page.filter.list_filters_aria')}
+                    >
                       {renderRemoveAllChips()}
                       {sortAndDeduplicateFilterChips(
                         state.activeFilters,
@@ -616,7 +618,7 @@ const StartPage = () => {
                           aria-label={t(
                             'start_page.filter.remove_filter_aria',
                             {
-                              value: filter.value,
+                              value: filter.label,
                             },
                           )}
                           key={filter.value}

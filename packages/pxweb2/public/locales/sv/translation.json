@@ -79,6 +79,7 @@
       "show_results": "Visa {{value}} träffar",
       "close": "Lukk filter",
       "header": "Filter",
+      "list_filters_aria": "Valda filter",
       "remove_all_filter": "Ta bort alla filter",
       "remove_filter_aria": "Ta bort filter, {{value}}",
       "subject": "Ämnesområde",
