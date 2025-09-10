@@ -587,6 +587,9 @@ const StartPage = () => {
             {renderFilterOverlay()}
 
             <div className={styles.listTables}>
+              <Heading level="2" className={styles['sr-only']}>
+                {t('start_page.result_hidden_header')}
+              </Heading>
               {state.activeFilters.length >= 1 && (
                 <div className={styles.filterPillContainer}>
                   <Chips>
