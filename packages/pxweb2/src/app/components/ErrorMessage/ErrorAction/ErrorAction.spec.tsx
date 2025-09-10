@@ -4,6 +4,7 @@ import '@testing-library/jest-dom/vitest';
 import { ErrorAction } from './ErrorAction';
 
 vi.mock('react-router', () => ({
+  useNavigate: () => vi.fn(),
   Link: vi.fn(({ to, children, ...props }) => (
     <a href={to.pathname} {...props}>
       {children}
@@ -16,6 +17,7 @@ describe('ErrorAction', () => {
     const { getByText } = render(
       <ErrorAction action="button" actionText="Retry" />,
     );
+
     expect(getByText('Retry')).toBeInTheDocument();
   });
 
@@ -23,6 +25,7 @@ describe('ErrorAction', () => {
     const { getByText } = render(
       <ErrorAction action="link" actionText="Go to homepage" />,
     );
+
     expect(getByText('Go to homepage')).toBeInTheDocument();
   });
 });

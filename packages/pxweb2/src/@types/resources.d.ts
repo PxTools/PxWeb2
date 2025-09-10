@@ -7,6 +7,18 @@ interface Resources {
         success: 'Success:';
         warning: 'Warning:';
       };
+      errors: {
+        generic: {
+          action_text: 'Refresh';
+          description: 'A technical error occurred on our side. Please try refreshing the page or come back in a few minutes.';
+          title: 'Sorry, something went wrong';
+        };
+        not_found: {
+          action_text: 'Go back to the previous page';
+          description: 'The page you are looking for does not exist. Please check the URL or return to the homepage.';
+          title: 'Page not found';
+        };
+      };
       footer: {
         about: {
           description: 'Description text...';
@@ -39,11 +51,6 @@ interface Resources {
         language_selector: 'Språk/Language';
         logo: 'PxWeb 2.0';
         logo_alt: 'To the front page';
-      };
-      not_found: {
-        action_text: 'Go back to the previous page';
-        description: 'The page you are looking for does not exist. Please check the URL or return to the homepage.';
-        title: 'Page not found';
       };
       skip_to_main: 'Skip to main content';
       title: 'PxWeb 2.0';

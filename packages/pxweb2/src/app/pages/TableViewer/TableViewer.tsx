@@ -2,10 +2,11 @@ import { useEffect, useState, useRef } from 'react';
 import { useParams, useLocation } from 'react-router';
 import cl from 'clsx';
 
+import useLocalizeDocumentAttributes from '../../../i18n/useLocalizeDocumentAttributes';
 import styles from './TableViewer.module.scss';
 import { Selection } from '../../components/Selection/Selection';
 import { Presentation } from '../../components/Presentation/Presentation';
-import useLocalizeDocumentAttributes from '../../../i18n/useLocalizeDocumentAttributes';
+import ErrorBoundary from '../../components/ErrorBoundry/ErrorBoundry';
 import { Header } from '../../components/Header/Header';
 import { NavigationItem } from '../../components/NavigationMenu/NavigationItem/NavigationItemType';
 import NavigationRail from '../../components/NavigationMenu/NavigationRail/NavigationRail';
@@ -19,7 +20,7 @@ import useApp from '../../context/useApp';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import { VariablesProvider } from '../../context/VariablesProvider';
 import { TableDataProvider } from '../../context/TableDataProvider';
-import ErrorBoundary from '../../components/ErrorBoundry/ErrorBoundry';
+import ErrorPageTableViewer from '../ErrorPageTableViewer/ErrorPageTableViewer';
 
 export function TableViewer() {
   const {
@@ -250,7 +251,7 @@ export function TableViewer() {
 function Render() {
   return (
     <AccessibilityProvider>
-      <ErrorBoundary>
+      <ErrorBoundary fallback={<ErrorPageTableViewer />}>
         <VariablesProvider>
           <TableDataProvider>
             <TableViewer />

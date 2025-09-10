@@ -2,6 +2,7 @@ import { Navigate } from 'react-router';
 
 import RootLayout from './components/RootLayout';
 import ErrorPage from './pages/ErrorPage/ErrorPage';
+import ErrorPageTableViewer from './pages/ErrorPageTableViewer/ErrorPageTableViewer';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 import StartPage from './pages/StartPage/StartPage';
 import TableViewer from './pages/TableViewer/TableViewer';
@@ -45,7 +46,7 @@ const supportedLangRoutes = config.language.supportedLanguages.map((lang) => {
       {
         path: 'table/:tableId',
         element: <TableViewer />,
-        errorElement: <ErrorPage />,
+        errorElement: <ErrorPageTableViewer />,
       },
       {
         path: '*',
@@ -71,7 +72,7 @@ const routingWithoutDefaultLanguageInURL = [
   {
     path: 'table/:tableId',
     element: <TableViewer />,
-    errorElement: <ErrorPage />,
+    errorElement: <ErrorPageTableViewer />,
   },
   ...supportedLangRoutes,
 ];

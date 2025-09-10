@@ -3,12 +3,11 @@ import cl from 'clsx';
 
 import { Header } from '../../components/Header/Header';
 import styles from './NotFoundPage.module.scss';
-import { ErrorMessage } from '@pxweb2/pxweb2-ui';
+import { ErrorMessage } from '../../components/ErrorMessage';
 
 export default function NotFoundPage() {
   const { t } = useTranslation();
-
-  const title = t('common.not_found.title');
+  const title = t('common.errors.not_found.title');
 
   return (
     <>
@@ -20,12 +19,11 @@ export default function NotFoundPage() {
           <ErrorMessage
             action="link"
             align="start"
-            size="large"
-            backgroundShape="circle"
-            statusCode={404} // Always 404 for NotFoundPage
+            illustration="NotFound"
+            backgroundShape="wavy"
             title={title}
-            description={t('common.not_found.description')}
-            actionText={t('common.not_found.action_text')}
+            description={t('common.errors.not_found.description')}
+            actionText={t('common.errors.not_found.action_text')}
           />
         </main>
       </div>

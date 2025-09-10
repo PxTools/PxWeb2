@@ -10,10 +10,17 @@
       "logo_alt": "Till startsidan",
       "language_selector": "Språk/Language"
     },
-    "not_found": {
-      "title": "Sidan hittades inte",
-      "description": "Sidan du letar efter finns inte. Kontrollera URL:en eller återgå till startsidan.",
-      "action_text": "Gå tillbaks till föregående sida"
+    "errors": {
+      "not_found": {
+        "title": "Sidan hittades inte",
+        "description": "Sidan du letar efter finns inte. Kontrollera URL:en eller återgå till startsidan.",
+        "action_text": "Gå tillbaks till föregående sida"
+      },
+      "generic": {
+        "title": "Tyvärr har något blivit fel ",
+        "description": "Det har uppstått ett tekniskt fel hos oss. Testa att ladda om sidan eller försök igen om några minuter.",
+        "action_text": "Ladda om  sidan"
+      }
     },
     "skip_to_main": "Gå direkt till huvudinnehållet",
     "footer": {

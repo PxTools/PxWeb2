@@ -1,0 +1,44 @@
+@use '$ui/src/lib/breakpoints.scss' as breakpoints;
+
+.errorMessage {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 28px;
+  width: 100%;
+
+  @media (breakpoints.$xxlarge) {
+    width: 848px;
+  }
+
+  @media (breakpoints.$xlarge) {
+    width: 728px;
+  }
+
+  @media (breakpoints.$medium) or (breakpoints.$large) {
+    width: 688px;
+  }
+}
+
+.textAndAction {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 40px;
+  align-self: stretch;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  align-self: stretch;
+}
+
+.align-center {
+  align-items: center;
+}
+.align-start {
+  align-items: flex-start;
+}
