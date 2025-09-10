@@ -1,6 +1,9 @@
-import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { Meta, StoryObj, StoryFn } from '@storybook/react-vite';
 
 import { ShowMore } from './ShowMore';
+import { Heading } from '../Typography/Heading/Heading';
+import { BodyLong } from '../Typography/BodyLong/BodyLong';
+import { Link } from '../Link/Link';
 
 const meta: Meta<typeof ShowMore> = {
   component: ShowMore,
@@ -11,11 +14,43 @@ export default meta;
 type Story = StoryObj<typeof ShowMore>;
 
 const text =
-  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.';
+  'Metadata oppdateres hver dag klokken 05:00 og 11:30. Dette gjør alle tabeller midlertidig utilgjengelige i opptil fem minutter. Publiserte tall som skal revideres vises som « . » eller « 0 » i tidsrommet klokken 05:00–8:00.';
+
+const exampleContent = (
+  <div>
+    <Heading size="xsmall">Oppdatering av metadata</Heading>
+    <BodyLong>{text}</BodyLong>
+    <br />
+    <Heading size="xsmall">Relevante lenker</Heading>
+    <Link href="#" icon="FileText" iconPosition="left" size="medium">
+      Endringer i tabeller
+    </Link>
+    <br />
+    <Link href="#" icon="FileText" iconPosition="left" size="medium">
+      Tabeller som bruker ny regioninndeling også for årene før 2024
+    </Link>
+    <br />
+    <Link href="#" icon="InformationCircle" iconPosition="left" size="medium">
+      Kom i gang med Statistikkbanken
+    </Link>
+    <br />
+    <Link href="#" icon="FileCode" iconPosition="left" size="medium">
+      Kom i gang med API
+    </Link>
+  </div>
+);
 
 export const Default: Story = {
   args: {
-    header: 'Show More',
-    children: text,
+    header: 'More about something',
+    children: 'Some content',
   },
+};
+
+export const WithContent: StoryFn<typeof ShowMore> = () => {
+  return (
+    <ShowMore header="Mer om Statistikkbanken">
+      {exampleContent}
+    </ShowMore>
+  );
 };
