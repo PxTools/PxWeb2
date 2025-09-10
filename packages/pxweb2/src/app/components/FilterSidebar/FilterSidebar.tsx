@@ -285,27 +285,29 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
   const { t } = useTranslation();
 
   return (
-    <div className={styles.sideBar}>
-      <div className={styles.sideBarWrapper}>
-        <FilterCategory header={t('start_page.filter.subject')}>
-          <RenderSubjects
-            firstLevel={true}
-            subjects={state.availableFilters.subjectTree}
-            onFilterChange={onFilterChange}
-          />
-        </FilterCategory>
-        <FilterCategory header={t('start_page.filter.year.title')}>
-          <YearRangeFilter onFilterChange={onFilterChange} />
-        </FilterCategory>
-        <FilterCategory header={t('start_page.filter.timeUnit')}>
-          <ul className={styles.filterList}>
-            <RenderTimeUnitFilters onFilterChange={onFilterChange} />
-          </ul>
-        </FilterCategory>
-        <FilterCategory header={t('start_page.filter.variabel')}>
-          <VariablesFilter onFilterChange={onFilterChange} />
-        </FilterCategory>
+    <nav aria-label="Filter">
+      <div className={styles.sideBar}>
+        <div className={styles.sideBarWrapper}>
+          <FilterCategory header={t('start_page.filter.subject')}>
+            <RenderSubjects
+              firstLevel={true}
+              subjects={state.availableFilters.subjectTree}
+              onFilterChange={onFilterChange}
+            />
+          </FilterCategory>
+          <FilterCategory header={t('start_page.filter.year.title')}>
+            <YearRangeFilter onFilterChange={onFilterChange} />
+          </FilterCategory>
+          <FilterCategory header={t('start_page.filter.timeUnit')}>
+            <ul className={styles.filterList}>
+              <RenderTimeUnitFilters onFilterChange={onFilterChange} />
+            </ul>
+          </FilterCategory>
+          <FilterCategory header={t('start_page.filter.variabel')}>
+            <VariablesFilter onFilterChange={onFilterChange} />
+          </FilterCategory>
+        </div>
       </div>
-    </div>
+    </nav>
   );
 };

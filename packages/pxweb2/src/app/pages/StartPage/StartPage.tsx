@@ -545,7 +545,7 @@ const StartPage = () => {
           <div className={cl(styles.searchFilterResult)}>
             <div className={styles.container}>
               <div className={styles.searchAreaWrapper}>
-                <div className={cl(styles.search)}>
+                <div className={cl(styles.search)} role="search">
                   <Search
                     searchPlaceHolder={t('start_page.search_placeholder')}
                     variant="default"
