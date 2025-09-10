@@ -183,3 +183,22 @@ export async function addFormattingToPxTable(
 
   return true;
 }
+
+/**
+ * Filters stub and heading arrays to only include variable IDs present in variableIds.
+ * Returns new arrays for stubDesktop, headingDesktop, stubMobile, headingMobile.
+ */
+export function filterStubAndHeadingArrays(
+  variableIds: string[],
+  stubDesktop: string[],
+  headingDesktop: string[],
+  stubMobile: string[],
+  headingMobile: string[],
+) {
+  return {
+    stubDesktop: stubDesktop.filter((id) => variableIds.includes(id)),
+    headingDesktop: headingDesktop.filter((id) => variableIds.includes(id)),
+    stubMobile: stubMobile.filter((id) => variableIds.includes(id)),
+    headingMobile: headingMobile.filter((id) => variableIds.includes(id)),
+  };
+}

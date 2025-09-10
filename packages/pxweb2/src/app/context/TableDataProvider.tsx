@@ -20,7 +20,10 @@ import {
 } from '@pxweb2/pxweb2-ui';
 import { mapJsonStat2Response } from '../../mappers/JsonStat2ResponseMapper';
 
-import { addFormattingToPxTable } from './TableDataProviderUtils';
+import {
+  addFormattingToPxTable,
+  filterStubAndHeadingArrays,
+} from './TableDataProviderUtils';
 import { problemMessage } from '../util/problemMessage';
 
 // Define types for the context state and provider props
@@ -204,7 +207,26 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
           pivotTable(pxTable, stubOrderDesktop, headingOrderDesktop);
         }
       } else {
-        // New variables added
+        // The number of variables has changed.
+
+        // Variable has been removed
+        // Remove all variables in stubMobile, headingMobile, stubDesktop and headingDesktop that does not exist in table variables
+        const variableIds = pxTable.metadata.variables.map(
+          (variable) => variable.id,
+        );
+        if (variableIds.length < stubDesktop.length + headingDesktop.length) {
+          const filtered = filterStubAndHeadingArrays(
+            variableIds,
+            stubDesktop,
+            headingDesktop,
+            stubMobile,
+            headingMobile,
+          );
+          setStubDesktop(filtered.stubDesktop);
+          setHeadingDesktop(filtered.headingDesktop);
+          setStubMobile(filtered.stubMobile);
+          setHeadingMobile(filtered.headingMobile);
+        }
 
         if (isMobile) {
           pivotTable(pxTable, stubMobile, headingMobile);
@@ -212,6 +234,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
           pivotTable(pxTable, stubDesktop, headingDesktop);
         }
 
+        // Variable has been added
         // Find all new variables and add them to the stub - Desktop
         const remainingVariables = pxTable.metadata.variables.filter(
           (variable) =>
