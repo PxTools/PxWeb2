@@ -48,9 +48,5 @@ export const Default: Story = {
 };
 
 export const WithContent: StoryFn<typeof ShowMore> = () => {
-  return (
-    <ShowMore header="Mer om Statistikkbanken">
-      {exampleContent}
-    </ShowMore>
-  );
+  return <ShowMore header="Mer om Statistikkbanken">{exampleContent}</ShowMore>;
 };
