@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { ActionItem, ContentBox, Variable } from '@pxweb2/pxweb2-ui';
+import { ActionItem, ContentBox, Variable, Alert } from '@pxweb2/pxweb2-ui';
 import useTableData from '../../../context/useTableData';
 import classes from './DrawerEdit.module.scss';
 
@@ -71,6 +71,9 @@ export function DrawerEdit() {
   return (
     <ContentBox title={t('presentation_page.sidemenu.edit.customize.title')}>
       {data && <PivotButton stub={data.stub} heading={data.heading} />}
+      <Alert variant="info" className={classes.alert}>
+        {t('common.status_messages.drawer_edit')}
+      </Alert>
     </ContentBox>
   );
 }
