@@ -1,17 +1,16 @@
 import React, { type ReactNode, useState, useRef } from 'react';
 import cl from 'clsx';
 
-import styles from './ShowMore.module.scss';
+import styles from './DetailsSection.module.scss';
 import { Icon } from '../Icon/Icon';
-import { Label } from '../Typography/Label/Label';
 
-export interface ShowMoreProps {
+export interface DetailsSectionProps {
   header: string;
   children?: ReactNode;
   openByDefault?: boolean;
 }
 
-export const ShowMore: React.FC<ShowMoreProps> = ({
+export const DetailsSection: React.FC<DetailsSectionProps> = ({
   header,
   children,
   openByDefault = false,
@@ -21,26 +20,27 @@ export const ShowMore: React.FC<ShowMoreProps> = ({
   const contentRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className={cl(styles.showMore)}>
+    <div className={cl(styles.detailsSection)}>
       <button
-        className={cl(styles.header)}
-        aria-expanded={isOpen ? 'true' : 'false'}
+        className={cl(styles.detailsButton)}
+        aria-expanded={isOpen}
         onClick={() => setIsOpen(!isOpen)}
         tabIndex={0}
       >
-        <Label size="medium">{header}</Label>
-        <div className={cl(styles.iconWrapper)}>
-          <Icon
-            className={cl({
-              [styles[`open`]]: isOpen,
-            })}
-            iconName="ChevronDown"
-          />
-        </div>
+        <span className={cl(styles[`label-medium`], styles['title'])}>
+          {header}
+        </span>
+        <Icon
+          ariaHidden
+          className={cl(styles.expandIcon, {
+            [styles[`open`]]: isOpen,
+          })}
+          iconName="ChevronDown"
+        />
       </button>
       <div
         className={cl(
-          styles.content,
+          styles.detailsContent,
           isOpen ? styles['open'] : styles['closed'],
         )}
         inert={!isOpen}
@@ -52,4 +52,4 @@ export const ShowMore: React.FC<ShowMoreProps> = ({
   );
 };
 
-export default ShowMore;
+export default DetailsSection;

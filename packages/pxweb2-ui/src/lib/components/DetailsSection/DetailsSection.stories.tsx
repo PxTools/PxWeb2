@@ -1,17 +1,17 @@
 import type { Meta, StoryObj, StoryFn } from '@storybook/react-vite';
 
-import { ShowMore } from './ShowMore';
+import { DetailsSection } from './DetailsSection';
 import { Heading } from '../Typography/Heading/Heading';
 import { BodyLong } from '../Typography/BodyLong/BodyLong';
 import { Link } from '../Link/Link';
 
-const meta: Meta<typeof ShowMore> = {
-  component: ShowMore,
-  title: 'Components/ShowMore',
+const meta: Meta<typeof DetailsSection> = {
+  component: DetailsSection,
+  title: 'Components/DetailsSection',
 };
 export default meta;
 
-type Story = StoryObj<typeof ShowMore>;
+type Story = StoryObj<typeof DetailsSection>;
 
 const text =
   'Metadata oppdateres hver dag klokken 05:00 og 11:30. Dette gjør alle tabeller midlertidig utilgjengelige i opptil fem minutter. Publiserte tall som skal revideres vises som « . » eller « 0 » i tidsrommet klokken 05:00–8:00.';
@@ -47,6 +47,10 @@ export const Default: Story = {
   },
 };
 
-export const WithContent: StoryFn<typeof ShowMore> = () => {
-  return <ShowMore header="Mer om Statistikkbanken">{exampleContent}</ShowMore>;
+export const WithContent: StoryFn<typeof DetailsSection> = () => {
+  return (
+    <DetailsSection header="Mer om Statistikkbanken">
+      {exampleContent}
+    </DetailsSection>
+  );
 };

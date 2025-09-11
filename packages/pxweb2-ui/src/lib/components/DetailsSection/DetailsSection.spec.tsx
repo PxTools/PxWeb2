@@ -2,41 +2,41 @@ import { render, fireEvent } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 
-import ShowMore from './ShowMore';
-import classes from './ShowMore.module.scss';
+import DetailsSection from './DetailsSection';
+import classes from './DetailsSection.module.scss';
 
-const content = 'ShowMore content';
+const content = 'DetailsSection content';
 
-describe('ShowMore', () => {
+describe('DetailsSection', () => {
   it('should render successfully', () => {
     const { baseElement } = render(
-      <ShowMore header="ShowMore header">{content}</ShowMore>,
+      <DetailsSection header="DetailsSection header">{content}</DetailsSection>,
     );
     expect(baseElement).toBeTruthy();
   });
 
   it('should not display content when openByDefault is false', () => {
     const { getByText } = render(
-      <ShowMore header="ShowMore header">{content}</ShowMore>,
+      <DetailsSection header="DetailsSection header">{content}</DetailsSection>,
     );
-    const contentElement = getByText('ShowMore content');
+    const contentElement = getByText('DetailsSection content');
     expect(contentElement).toHaveClass(classes.closed);
   });
 
   it('should display content when openByDefault is true', () => {
     const { getByText } = render(
-      <ShowMore header="ShowMore header" openByDefault>
+      <DetailsSection header="DetailsSection header" openByDefault>
         {content}
-      </ShowMore>,
+      </DetailsSection>,
     );
-    expect(getByText('ShowMore content')).toBeVisible();
+    expect(getByText('DetailsSection content')).toBeVisible();
   });
 
   it('should change aria-expanded attribute when header is clicked', () => {
     const { getByRole } = render(
-      <ShowMore header="ShowMore header">{content}</ShowMore>,
+      <DetailsSection header="DetailsSection header">{content}</DetailsSection>,
     );
-    const header = getByRole('button', { name: /ShowMore header/i });
+    const header = getByRole('button', { name: /DetailsSection header/i });
     expect(header).toHaveAttribute('aria-expanded', 'false');
     fireEvent.click(header);
     expect(header).toHaveAttribute('aria-expanded', 'true');

@@ -2,16 +2,28 @@
 @use '../../../../style-dictionary/dist/css/variables.css' as var;
 @use '../../text-styles.scss';
 
-.showMore {
-  .header {
+.detailsSection {
+  .detailsButton {
     background-color: transparent;
     border: none;
-    color: var(--px-color-text-default);
     cursor: pointer;
     display: flex;
     gap: 4px;
     text-align: start;
     padding: 4px 0 2px;
+
+    .title {
+      color: var(--px-color-text-action);
+    }
+
+    .expandIcon {
+      color: var(--px-color-icon-action);
+      padding-bottom: 2px;
+
+      &.open {
+        transform: rotate(180deg);
+      }
+    }
 
     &:hover {
       background: var(--px-color-surface-action-subtle-hover);
@@ -25,18 +37,7 @@
     }
   }
 
-  .iconWrapper {
-    align-self: center;
-    display: grid;
-    place-content: center;
-    padding-bottom: 2px;
-
-    .open {
-      transform: rotate(180deg);
-    }
-  }
-
-  .content {
+  .detailsContent {
     &.closed {
       overflow: hidden;
       max-height: 0;
