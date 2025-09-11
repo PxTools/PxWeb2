@@ -36,8 +36,8 @@ export const Footer: React.FC = () => {
           {config.image && <img src={config.image} alt="" />}
         </div>
         <div className={cl(styles.footerLinks)}>
-          {config.columns.map((col, colIdx) => (
-            <div className={cl(styles.footerLinkGroup)} key={colIdx}>
+          {config.columns.map((col) => (
+            <div className={cl(styles.footerLinkGroup)} key={col.header}>
               <Heading size="small" level="2">
                 {col.header}
               </Heading>
