@@ -35,22 +35,22 @@ export const Footer: React.FC = () => {
         <div className={cl(styles.logoContainer)}>
           {config.image && <img src={config.image} alt="" />}
         </div>
-      </div>
-      <div className={cl(styles.footerLinks)}>
-        {config.columns.map((col, colIdx) => (
-          <div className={cl(styles.footerLinkGroup)} key={colIdx}>
-            <Heading size="small" level="4">
-              {col.header}
-            </Heading>
-            <div className={cl(styles.footerLinkList)}>
-              {col.links.map((link) => (
-                <Link href={link.url} size="small" key={link.url}>
-                  {link.text}
-                </Link>
-              ))}
+        <div className={cl(styles.footerLinks)}>
+          {config.columns.map((col, colIdx) => (
+            <div className={cl(styles.footerLinkGroup)} key={colIdx}>
+              <Heading size="small" level="2">
+                {col.header}
+              </Heading>
+              <div className={cl(styles.footerLinkList)}>
+                {col.links.map((link) => (
+                  <Link href={link.url} size="small" key={link.url}>
+                    {link.text}
+                  </Link>
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
       {/* {config.image && (
