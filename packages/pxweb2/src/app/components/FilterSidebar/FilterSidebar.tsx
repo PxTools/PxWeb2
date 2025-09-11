@@ -231,24 +231,21 @@ const VariablesFilter: React.FC<{ onFilterChange?: () => void }> = ({
         <Search
           searchPlaceHolder={t('start_page.filter.variabel_search')}
           variant="default"
-          onChange={(value) => setVariableSearch(value)}
+          onChange={(value) => setVariableSearch(value.toLowerCase())}
         />
       </div>
       <ul className={styles.scrollableVariableFilter}>
         {Array.from(state.availableFilters.variables)
-          .filter((value) => {
-            return value[0].includes(variableSearch);
-          })
-          .map((item, index) => {
+          .filter(([key]) => key.toLowerCase().includes(variableSearch))
+          .map(([key, count], index) => {
             const isActive = state.activeFilters.some(
-              (filter) =>
-                filter.type === 'variable' && filter.value === item[0],
+              (filter) => filter.type === 'variable' && filter.value === key,
             );
             return (
-              <li key={item[0]}>
+              <li key={key}>
                 <Checkbox
                   id={index.toString()}
-                  text={`${_.upperFirst(item[0])} (${item[1]})`}
+                  text={`${_.upperFirst(key)} (${count})`}
                   value={isActive}
                   onChange={(value) => {
                     value
@@ -257,15 +254,15 @@ const VariablesFilter: React.FC<{ onFilterChange?: () => void }> = ({
                           payload: [
                             {
                               type: 'variable',
-                              value: item[0],
-                              label: _.upperFirst(item[0]),
+                              value: key,
+                              label: _.upperFirst(key),
                               index,
                             },
                           ],
                         })
                       : dispatch({
                           type: ActionType.REMOVE_FILTER,
-                          payload: { value: item[0], type: 'variable' },
+                          payload: { value: key, type: 'variable' },
                         });
                     onFilterChange?.();
                   }}
