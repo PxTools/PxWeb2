@@ -11,7 +11,7 @@ import {
 } from '../../util/startPageFilters';
 import { FilterContext } from '../../context/FilterContext';
 import { YearRangeFilter } from './YearRangeFilter';
-import { ReactNode, useContext, useState } from 'react';
+import { ReactNode, useContext, useState, useMemo } from 'react';
 import _ from 'lodash';
 
 interface CollapsibleProps {
@@ -225,51 +225,58 @@ const VariablesFilter: React.FC<{ onFilterChange?: () => void }> = ({
   const [variableSearch, setVariableSearch] = useState('');
   const { t } = useTranslation();
 
+  // Compute the filtered list of variables only when either the available variables
+  // or the search query changes. The search query is normalized (trimmed + lowercased)
+  const filtered = useMemo(() => {
+    const query = variableSearch.trim().toLowerCase();
+    return Array.from(state.availableFilters.variables).filter(([key]) =>
+      key.toLowerCase().includes(query),
+    );
+  }, [state.availableFilters.variables, variableSearch]);
+
   return (
     <>
       <div className={styles.variablesSearchBox}>
         <Search
           searchPlaceHolder={t('start_page.filter.variabel_search')}
           variant="default"
-          onChange={(value) => setVariableSearch(value.toLowerCase())}
+          onChange={(value) => setVariableSearch(value)}
         />
       </div>
       <ul className={styles.scrollableVariableFilter}>
-        {Array.from(state.availableFilters.variables)
-          .filter(([key]) => key.toLowerCase().includes(variableSearch))
-          .map(([key, count], index) => {
-            const isActive = state.activeFilters.some(
-              (filter) => filter.type === 'variable' && filter.value === key,
-            );
-            return (
-              <li key={key}>
-                <Checkbox
-                  id={index.toString()}
-                  text={`${_.upperFirst(key)} (${count})`}
-                  value={isActive}
-                  onChange={(value) => {
-                    value
-                      ? dispatch({
-                          type: ActionType.ADD_FILTER,
-                          payload: [
-                            {
-                              type: 'variable',
-                              value: key,
-                              label: _.upperFirst(key),
-                              index,
-                            },
-                          ],
-                        })
-                      : dispatch({
-                          type: ActionType.REMOVE_FILTER,
-                          payload: { value: key, type: 'variable' },
-                        });
-                    onFilterChange?.();
-                  }}
-                />
-              </li>
-            );
-          })}
+        {filtered.map(([key, count], index) => {
+          const isActive = state.activeFilters.some(
+            (filter) => filter.type === 'variable' && filter.value === key,
+          );
+          return (
+            <li key={key}>
+              <Checkbox
+                id={`var-${key}`}
+                text={`${_.upperFirst(key)} (${count})`}
+                value={isActive}
+                onChange={(value) => {
+                  value
+                    ? dispatch({
+                        type: ActionType.ADD_FILTER,
+                        payload: [
+                          {
+                            type: 'variable',
+                            value: key,
+                            label: _.upperFirst(key),
+                            index,
+                          },
+                        ],
+                      })
+                    : dispatch({
+                        type: ActionType.REMOVE_FILTER,
+                        payload: { value: key, type: 'variable' },
+                      });
+                  onFilterChange?.();
+                }}
+              />
+            </li>
+          );
+        })}
       </ul>
     </>
   );
