@@ -43,7 +43,8 @@ export const DetailsSection: React.FC<DetailsSectionProps> = ({
           styles.detailsContent,
           isOpen ? styles['open'] : styles['closed'],
         )}
-        inert={!isOpen}
+        inert={!isOpen || undefined}
+        aria-hidden={!isOpen}
         ref={contentRef}
       >
         {children}
