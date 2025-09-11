@@ -78,6 +78,16 @@
     align-self: stretch;
   }
 
+  .copyrightAndButton {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    align-content: flex-end;
+    row-gap: 24px;
+    align-self: stretch;
+    flex-wrap: wrap;
+  }
+
   // .description {
   //   max-width: 912px;
   // }

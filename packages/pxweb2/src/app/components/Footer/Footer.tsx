@@ -2,7 +2,7 @@ import cl from 'clsx';
 import React, { useEffect, useState } from 'react';
 
 import styles from './Footer.module.scss';
-import { Heading, Link } from '@pxweb2/pxweb2-ui';
+import { BodyShort, Button, Heading, Link } from '@pxweb2/pxweb2-ui';
 import { useTranslation } from 'react-i18next';
 
 type FooterLink = { text: string; url: string };
@@ -51,6 +51,17 @@ export const Footer: React.FC = () => {
             </div>
           ))}
         </div>
+      </div>
+      <div className={cl(styles.copyrightAndButton)}>
+        <BodyShort size="medium">© CopyRight PxTools</BodyShort>
+        <Button
+          icon="ArrowUp"
+          variant="secondary"
+          size="medium"
+          onClick={() => alert('Button clicked!')}
+        >
+          To the top
+        </Button>
       </div>
 
       {/* {config.image && (
