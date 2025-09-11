@@ -1,14 +1,62 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './Footer.module.scss';
-import { BodyLong, Heading, Link } from '@pxweb2/pxweb2-ui';
+import { Heading, Link } from '@pxweb2/pxweb2-ui';
 import { useTranslation } from 'react-i18next';
 
+type FooterLink = { text: string; url: string };
+type FooterColumn = { header: string; links: FooterLink[] };
+type FooterConfig = {
+  image?: string;
+  description?: string;
+  columns: FooterColumn[];
+};
+
 export const Footer: React.FC = () => {
-  const { t } = useTranslation();
+  const { i18n } = useTranslation();
+  const [config, setConfig] = useState<FooterConfig>({ columns: [] });
+
+  useEffect(() => {
+    const lang = i18n.language || 'en';
+    fetch(`/locales/${lang}/content.json`)
+      .then((res) =>
+        res.ok
+          ? res.json()
+          : fetch(`/locales/en/content.json`).then((r) => r.json()),
+      )
+      .then(setConfig)
+      .catch(() => setConfig({ columns: [] }));
+  }, [i18n.language]);
 
   return (
     <footer className={styles.footer}>
-      <div className={styles.logos}>
+      {config.image && (
+        <div style={{ textAlign: 'center', marginBottom: '0.5rem' }}>
+          <img
+            src={config.image}
+            alt=""
+            style={{ maxWidth: '200px', height: 'auto' }}
+          />
+        </div>
+      )}
+      <div style={{ display: 'flex', gap: '2rem', paddingTop: '2rem' }}>
+        {config.columns.map((col, colIdx) => (
+          <div key={colIdx}>
+            <Heading size="small" level="4">
+              {col.header}
+            </Heading>
+            <ul style={{ listStyle: 'none', padding: 0 }}>
+              {col.links.map((link) => (
+                <li key={link.url}>
+                  <Link href={link.url} size="small">
+                    {link.text}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+      {/* <div className={styles.logos}>
         <img alt="SCB logo" src="./images/scb-logo.svg" />{' '}
         <img alt="SSB logo" src="./images/ssb-logo.svg" />
       </div>
@@ -49,7 +97,7 @@ export const Footer: React.FC = () => {
         <div className={styles.copyright}>
           <BodyLong>{t('presentation_page.footer.copyright')}</BodyLong>
         </div>
-      </div>
+      </div> */}
     </footer>
   );
 };
