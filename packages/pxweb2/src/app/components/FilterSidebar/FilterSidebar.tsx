@@ -118,8 +118,8 @@ const Collapsible: React.FC<CollapsibleProps> = ({
             onFilterChange?.();
           }}
         />
+        {isActive && children}
       </span>
-      {isActive && children}
     </>
   );
 };
@@ -132,7 +132,7 @@ const RenderSubjects: React.FC<{
   const { state } = useContext(FilterContext);
 
   return (
-    <ul className={styles.filterList}>
+    <>
       {subjects.map((subject, index) => {
         const descendants = getAllDescendants(subject);
         const count = subject.count ?? 0;
@@ -170,7 +170,7 @@ const RenderSubjects: React.FC<{
           </li>
         );
       })}
-    </ul>
+    </>
   );
 };
 
@@ -289,11 +289,13 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
       <div className={styles.sideBar}>
         <div className={styles.sideBarWrapper}>
           <FilterCategory header={t('start_page.filter.subject')}>
-            <RenderSubjects
-              firstLevel={true}
-              subjects={state.availableFilters.subjectTree}
-              onFilterChange={onFilterChange}
-            />
+            <ul className={styles.filterList}>
+              <RenderSubjects
+                firstLevel={true}
+                subjects={state.availableFilters.subjectTree}
+                onFilterChange={onFilterChange}
+              />
+            </ul>
           </FilterCategory>
           <FilterCategory header={t('start_page.filter.year.title')}>
             <YearRangeFilter onFilterChange={onFilterChange} />
