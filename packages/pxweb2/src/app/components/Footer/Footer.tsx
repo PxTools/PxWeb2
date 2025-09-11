@@ -17,11 +17,11 @@ export const Footer: React.FC = () => {
 
   useEffect(() => {
     const lang = i18n.language || 'en';
-    fetch(`/locales/${lang}/content.json`)
+    fetch(`/locale-content/content.${lang}.json`)
       .then((res) =>
         res.ok
           ? res.json()
-          : fetch(`/locales/en/content.json`).then((r) => r.json()),
+          : fetch(`/locale-content/content.en.json`).then((r) => r.json()),
       )
       .then((data) => setConfig(data.footer || { columns: [] }))
       .catch(() => setConfig({ columns: [] }));
