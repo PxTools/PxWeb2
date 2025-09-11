@@ -23,7 +23,7 @@ export const Footer: React.FC = () => {
           ? res.json()
           : fetch(`/locales/en/content.json`).then((r) => r.json()),
       )
-      .then(setConfig)
+      .then((data) => setConfig(data.footer || { columns: [] }))
       .catch(() => setConfig({ columns: [] }));
   }, [i18n.language]);
 

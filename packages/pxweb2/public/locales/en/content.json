@@ -1,24 +1,27 @@
+
 {
+    "footer": {
         "image": "./images/ssb-logo.svg",
         "columns": [
             {
-            "header": "Finding statistics",
-            "links": [
-                { "text": "Statistical database", "url": "https://www.statistikdatabasen.scb.se/pxweb/en/ssd/" }
-            ]
+                "header": "Finding statistics",
+                "links": [
+                    { "text": "Statistical database", "url": "https://www.statistikdatabasen.scb.se/pxweb/en/ssd/" }
+                ]
             },
             {
-            "header": "Services",
-            "links": [
-                { "text": "Open data", "url": "https://www.scb.se/en/services/open-data-api/" }
-            ]
+                "header": "Services",
+                "links": [
+                    { "text": "Open data", "url": "https://www.scb.se/en/services/open-data-api/" }
+                ]
             },
             {
-            "header": "About us",
-            "links": [
-                { "text": "News and press", "url": "https://www.scb.se/en/About-us/news-and-press/" },
-                { "text": "Contact us", "url": "https://www.scb.se/en/About-us/contact-us2/" }
-            ]
+                "header": "About us",
+                "links": [
+                    { "text": "News and press", "url": "https://www.scb.se/en/About-us/news-and-press/" },
+                    { "text": "Contact us", "url": "https://www.scb.se/en/About-us/contact-us2/" }
+                ]
             }
         ]
+    }
 }
