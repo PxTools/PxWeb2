@@ -18,6 +18,7 @@ export interface AlertProps {
   readonly heading?: string;
   readonly headingLevel?: '1' | '2' | '3' | '4' | '5' | '6';
   readonly onClick?: () => void;
+  readonly onDismissed?: () => void;
   readonly className?: string;
   readonly children?: string | React.ReactNode;
   readonly alertAriaLabel?: string;
@@ -42,6 +43,7 @@ export function Alert({
   heading = '',
   headingLevel = '2',
   onClick,
+  onDismissed,
   className = '',
   children,
   alertAriaLabel,
@@ -55,6 +57,7 @@ export function Alert({
   const [isVisible, setIsVisible] = useState(true);
   const HandleClose = () => {
     setIsVisible(false);
+    onDismissed?.();
   };
   if (!isVisible) {
     return null;
