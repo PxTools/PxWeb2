@@ -35,35 +35,78 @@
     border-radius: var(--px-border-radius-xlarge);
   }
 
-  .description {
-    max-width: 912px;
-  }
-
-  .logos {
+  .logoAndLinks {
     display: flex;
-    align-items: center;
-    gap: fixed.$spacing-8;
-    margin-bottom: fixed.$spacing-8;
+    align-items: flex-start;
+    align-content: flex-start;
+    gap: 64px 32px;
+    align-self: stretch;
+    flex-wrap: wrap;
   }
 
-  .contact {
-    margin-top: fixed.$spacing-6;
+  .logoContainer {
+    display: flex;
+    max-width: 232px;
+    max-height: 72px;
+    padding-right: 80px;
+    align-items: flex-start;
+    gap: 4px;
   }
 
-  .contactCopyrightWrapper {
-    display: block;
-    justify-content: space-between;
-    align-items: center;
-
-    @media (min-width: fixed.$breakpoints-large-min-width) {
-      display: flex;
-    }
+  .footerLinks {
+    display: flex;
+    align-items: flex-start;
+    align-content: flex-start;
+    gap: 40px 32px;
+    flex: 1 0 0;
+    flex-wrap: wrap;
   }
 
-  .copyright {
-    margin-top: fixed.$spacing-4;
-    @media (min-width: fixed.$breakpoints-large-min-width) {
-      margin-top: fixed.$spacing-8;
-    }
+  .footerLinkGroup {
+    display: flex;
+    width: 240px;
+    min-width: 200px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
   }
+
+  .footerLinkList {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    align-self: stretch;
+  }
+
+  // .description {
+  //   max-width: 912px;
+  // }
+
+  // .logos {
+  //   display: flex;
+  //   align-items: center;
+  //   gap: fixed.$spacing-8;
+  //   margin-bottom: fixed.$spacing-8;
+  // }
+
+  // .contact {
+  //   margin-top: fixed.$spacing-6;
+  // }
+
+  // .contactCopyrightWrapper {
+  //   display: block;
+  //   justify-content: space-between;
+  //   align-items: center;
+
+  //   @media (min-width: fixed.$breakpoints-large-min-width) {
+  //     display: flex;
+  //   }
+  // }
+
+  // .copyright {
+  //   margin-top: fixed.$spacing-4;
+  //   @media (min-width: fixed.$breakpoints-large-min-width) {
+  //     margin-top: fixed.$spacing-8;
+  //   }
+  // }
 }

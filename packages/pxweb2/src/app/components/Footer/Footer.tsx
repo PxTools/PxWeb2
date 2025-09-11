@@ -1,4 +1,6 @@
+import cl from 'clsx';
 import React, { useEffect, useState } from 'react';
+
 import styles from './Footer.module.scss';
 import { Heading, Link } from '@pxweb2/pxweb2-ui';
 import { useTranslation } from 'react-i18next';
@@ -29,7 +31,29 @@ export const Footer: React.FC = () => {
 
   return (
     <footer className={styles.footer}>
-      {config.image && (
+      <div className={cl(styles.logoAndLinks)}>
+        <div className={cl(styles.logoContainer)}>
+          {config.image && <img src={config.image} alt="" />}
+        </div>
+      </div>
+      <div className={cl(styles.footerLinks)}>
+        {config.columns.map((col, colIdx) => (
+          <div className={cl(styles.footerLinkGroup)} key={colIdx}>
+            <Heading size="small" level="4">
+              {col.header}
+            </Heading>
+            <div className={cl(styles.footerLinkList)}>
+              {col.links.map((link) => (
+                <Link href={link.url} size="small" key={link.url}>
+                  {link.text}
+                </Link>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* {config.image && (
         <div style={{ textAlign: 'center', marginBottom: '0.5rem' }}>
           <img
             src={config.image}
@@ -55,7 +79,8 @@ export const Footer: React.FC = () => {
             </ul>
           </div>
         ))}
-      </div>
+      </div> */}
+
       {/* <div className={styles.logos}>
         <img alt="SCB logo" src="./images/scb-logo.svg" />{' '}
         <img alt="SSB logo" src="./images/ssb-logo.svg" />
