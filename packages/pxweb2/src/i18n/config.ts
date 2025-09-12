@@ -13,6 +13,9 @@ const supportedLanguages: string[] = config.language.supportedLanguages.map(
   (item) => item.shorthand,
 );
 
+const lookingForLanguagePos = (config.baseApplicationPath.match(/[\\/]/g) || [])
+  .length;
+
 const initPromise = i18n
   .use(HttpApi)
   .use(initReactI18next)
@@ -36,6 +39,7 @@ const initPromise = i18n
     },
     detection: {
       order: ['path'],
+      lookupFromPathIndex: lookingForLanguagePos,
       caches: [], // Do not cache the language in local storage or cookies.
     },
   });
