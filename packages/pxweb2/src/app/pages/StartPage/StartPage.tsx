@@ -565,6 +565,8 @@ const StartPage = () => {
                   className={styles.filterToggleButton}
                   onClick={() => setIsFilterOverlayOpen(true)}
                   ref={filterToggleRef}
+                  aria-expanded={isFilterOverlayOpen}
+                  aria-live="polite"
                 >
                   {t('start_page.filter.button')}
                 </Button>
