@@ -9,25 +9,26 @@ type FooterProps = {
   containerRef?: React.RefObject<HTMLDivElement | null>;
 };
 
-export const Footer: React.FC<FooterProps> = ({ containerRef }) => {
-  function scrollToTop(ref?: React.RefObject<HTMLDivElement | null>) {
-    if (ref?.current) {
-      const container = ref.current;
-      const start = container.scrollTop;
-      const duration = 200; // ms, decrease for even faster scroll
-      const startTime = performance.now();
+export function scrollToTop(ref?: React.RefObject<HTMLDivElement | null>) {
+  if (ref?.current) {
+    const container = ref.current;
+    const start = container.scrollTop;
+    const duration = 200; // ms, decrease for even faster scroll
+    const startTime = performance.now();
 
-      function animateScroll(time: number) {
-        const elapsed = time - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        container.scrollTop = start * (1 - progress);
-        if (progress < 1) {
-          requestAnimationFrame(animateScroll);
-        }
+    function animateScroll(time: number) {
+      const elapsed = time - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      container.scrollTop = start * (1 - progress);
+      if (progress < 1) {
+        requestAnimationFrame(animateScroll);
       }
-      requestAnimationFrame(animateScroll);
     }
+    requestAnimationFrame(animateScroll);
   }
+}
+
+export const Footer: React.FC<FooterProps> = ({ containerRef }) => {
   type FooterLink = { text: string; url: string };
   type FooterColumn = { header: string; links: FooterLink[] };
   type FooterConfig = {
