@@ -57,7 +57,7 @@ export const Footer: React.FC<FooterProps> = ({ containerRef }) => {
     <footer className={styles.footer} ref={scrollContainerRef}>
       <div className={cl(styles.logoAndLinks)}>
         <div className={cl(styles.logoContainer)}>
-          {config.image && <img src={config.image} alt="" />}
+          {config.image && <img src={config.image} alt="Logo" />}
         </div>
         <div className={cl(styles.footerLinks)}>
           {config.columns.map((col) => (
