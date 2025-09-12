@@ -1,21 +1,26 @@
 import cl from 'clsx';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 import styles from './Footer.module.scss';
 import { BodyShort, Button, Heading, Link } from '@pxweb2/pxweb2-ui';
 import { useTranslation } from 'react-i18next';
 
-type FooterLink = { text: string; url: string };
-type FooterColumn = { header: string; links: FooterLink[] };
-type FooterConfig = {
-  image?: string;
-  description?: string;
-  columns: FooterColumn[];
+type FooterProps = {
+  containerRef?: React.RefObject<HTMLDivElement | null>;
 };
 
-export const Footer: React.FC = () => {
+export const Footer: React.FC<FooterProps> = ({ containerRef }) => {
+  type FooterLink = { text: string; url: string };
+  type FooterColumn = { header: string; links: FooterLink[] };
+  type FooterConfig = {
+    image?: string;
+    description?: string;
+    columns: FooterColumn[];
+  };
   const { i18n } = useTranslation();
   const [config, setConfig] = useState<FooterConfig>({ columns: [] });
+  // Ref for the main scrollable container
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const lang = i18n.language || 'en';
@@ -30,7 +35,7 @@ export const Footer: React.FC = () => {
   }, [i18n.language]);
 
   return (
-    <footer className={styles.footer}>
+    <footer className={styles.footer} ref={scrollContainerRef}>
       <div className={cl(styles.logoAndLinks)}>
         <div className={cl(styles.logoContainer)}>
           {config.image && <img src={config.image} alt="" />}
@@ -58,7 +63,11 @@ export const Footer: React.FC = () => {
           icon="ArrowUp"
           variant="secondary"
           size="medium"
-          onClick={() => alert('Button clicked!')}
+          onClick={() => {
+            if (containerRef?.current) {
+              containerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+          }}
         >
           To the top
         </Button>
