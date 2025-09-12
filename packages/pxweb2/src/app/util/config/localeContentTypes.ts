@@ -6,27 +6,27 @@ export type DetailLink = {
   icon?: IconProps['iconName'];
 };
 
-export type LinksSectionData = {
+export type LinksSection = {
   header?: string;
   links?: DetailLink[];
 };
 
-export type DetailBlock = {
+export type DetailsContent = {
   header?: string;
   text?: string;
-  linkSection?: LinksSectionData;
+  linksSection?: LinksSection;
 };
 
-export type ShowDetailsSection = {
+export type ShowDetails = {
   enabled?: boolean;
   detailHeader?: string;
-  detailContent?: DetailBlock[];
+  detailContent?: DetailsContent[];
 };
 
-export type StartpageDetailsSection = {
-  showDetails?: ShowDetailsSection;
+export type Startpage = {
+  showDetails?: ShowDetails;
 };
 
 export type LocaleContent = {
-  startPage?: StartpageDetailsSection;
+  startPage?: Startpage;
 };

@@ -15,7 +15,7 @@
         {
           "header": "Oppdatering av metadata",
           "text": "Metadata oppdateres hver dag klokken 05:00 og 11:30. Dette gjør alle tabeller midlertidig utilgjengelige i opptil fem minutter. Publiserte tall som skal revideres vises som « . » eller « 0 » i tidsrommet klokken 05:00–8:00.",
-          "linkSection": {
+          "linksSection": {
             "header": "Relevante lenker",
             "links": [
               {
@@ -39,7 +39,7 @@
         {
           "header": "Teste Avsnitt to",
           "text": "En liten blokk til med informasjon",
-          "linkSection": {
+          "linksSection": {
             "links": [
               {
                 "text": "Navnestatistikken",

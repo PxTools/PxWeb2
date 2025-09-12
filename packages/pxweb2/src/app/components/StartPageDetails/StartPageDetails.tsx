@@ -52,7 +52,6 @@ export default function StartPageDetails() {
 
   useEffect(() => {
     let alive = true;
-
     (async () => {
       const lang = i18n.language || 'en';
       const data = await fetchStartpage(lang);
@@ -66,23 +65,23 @@ export default function StartPageDetails() {
     };
   }, [i18n.language]);
 
-  const detailsSection = content?.startPage?.showDetails;
-  if (!detailsSection || detailsSection.enabled === false) {
+  const showDetails = content?.startPage?.showDetails;
+  if (!showDetails || showDetails.enabled === false) {
     return null;
   }
 
-  const detailContents = detailsSection.detailContent ?? [];
+  const detailContents = showDetails.detailContent ?? [];
   if (!detailContents.length) {
     return null;
   }
 
   return (
-    <DetailsSection header={detailsSection.detailHeader ?? 'More information'}>
-      <div className={styles.detailsSections}>
+    <DetailsSection header={showDetails.detailHeader ?? 'More information'}>
+      <div className={styles.detailsSection}>
         {detailContents.map((detailContent, index) => {
           return (
             <section
-              className={styles.section}
+              className={styles.detailContent}
               key={detailContent.header ?? index}
             >
               {detailContent.header && (
@@ -97,14 +96,16 @@ export default function StartPageDetails() {
                 </BodyLong>
               )}
 
-              {detailContent.linkSection && (
+              {detailContent.linksSection && (
                 <div className={styles.linksSection}>
-                  {detailContent.linkSection.header && (
+                  {detailContent.linksSection.header && (
                     <Heading size="xsmall" className={styles.linkHeading}>
-                      {detailContent.linkSection.header}
+                      {detailContent.linksSection.header}
                     </Heading>
                   )}
-                  <LinksList items={detailContent.linkSection?.links} />
+                  {detailContent.linksSection?.links?.length && (
+                    <LinksList items={detailContent.linksSection?.links} />
+                  )}
                 </div>
               )}
             </section>
