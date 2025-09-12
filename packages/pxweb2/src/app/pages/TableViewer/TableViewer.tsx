@@ -239,7 +239,7 @@ export function TableViewer() {
               scrollRef={outerContainerRef}
               selectedTabId={selectedTableId}
             ></Presentation>
-            <Footer />
+            <Footer containerRef={outerContainerRef} />
           </div>
         </div>
       </div>
