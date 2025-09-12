@@ -13,8 +13,8 @@ const supportedLanguages: string[] = config.language.supportedLanguages.map(
   (item) => item.shorthand,
 );
 
-const lookingForLanguagePos = (config.baseApplicationPath.match(/[\\/]/g) || [])
-  .length;
+const lookingForLanguagePos =
+  (config.baseApplicationPath.match(/[\\/]/g) || []).length - 1;
 
 const initPromise = i18n
   .use(HttpApi)
