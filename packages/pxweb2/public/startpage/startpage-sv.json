@@ -1,44 +1,24 @@
 {
   "breadCrumb": {
     "enabled": true,
-    "text": "Start",
+    "text": "Forsidan",
     "href": "#"
   },
   "detailsSection": {
     "enabled": true,
-    "detailHeader": "Mer om Statistikkbanken",
+    "detailHeader": "Mer om Statistikbanken",
     "detailContent": [
       {
-        "header": "Oppdatering av metadata",
-        "text": "Metadata oppdateres hver dag klokken 05:00 og 11:30. Dette gjør alle tabeller midlertidig utilgjengelige i opptil fem minutter. Publiserte tall som skal revideres vises som « . » eller « 0 » i tidsrommet klokken 05:00–8:00.",
-        "links": [
-          {
-            "text": "Endringer i tabeller",
-            "url": "#",
-            "icon": "FileText"
-          },
-          {
-            "text": "Kom i gang med Statistikkbanken",
-            "url": "#",
-            "icon": "InformationCircle"
-          },
-          {
-            "text": "Kom i gang med Api",
-            "url": "#",
-            "icon": "FileCode"
-          }
-        ]
-      },
-      {
-        "header": "Oppdatering av metadata",
-        "text": "En liten blokk til med informasjon",
-        "links": [
-          {
-            "text": "Navnestatistikken",
-            "url": "#",
-            "icon": "FileText"
-          }
-        ]
+        "text": "Uppdatering av Statistikdatabasen sker måndag-fredag kl. 8.00.",
+        "linksSection": {
+          "links": [
+            {
+              "text": "Kom igång med Statistikdatabasen",
+              "url": "#",
+              "icon": "FileText"
+            }
+          ]
+        }
       }
     ]
   }

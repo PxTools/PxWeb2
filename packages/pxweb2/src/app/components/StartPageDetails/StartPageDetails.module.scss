@@ -1,0 +1,22 @@
+.detailsSections {
+  display: grid;
+  gap: 1rem;
+}
+
+.section {
+  display: grid;
+  gap: 12px; /* luft mellom header, tekst og lenker */
+}
+
+.linksSection {
+  display: grid;
+  gap: 8px;
+}
+
+.linksList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 6px;
+}
