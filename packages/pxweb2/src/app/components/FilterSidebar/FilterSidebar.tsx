@@ -160,11 +160,13 @@ const RenderSubjects: React.FC<{
               onFilterChange={onFilterChange}
             >
               {!!subject.children?.length && (
-                <RenderSubjects
-                  firstLevel={false}
-                  subjects={subject.children}
-                  onFilterChange={onFilterChange}
-                />
+                <ul className={styles.filterList}>
+                  <RenderSubjects
+                    firstLevel={false}
+                    subjects={subject.children}
+                    onFilterChange={onFilterChange}
+                  />
+                </ul>
               )}
             </Collapsible>
           </li>
