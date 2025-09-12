@@ -1,0 +1,45 @@
+{
+  "startPage": {
+    "breadCrumb": {
+      "enabled": true,
+      "text": "Forsiden",
+      "href": "#"
+    },
+    "showDetails": {
+      "enabled": true,
+      "detailHeader": "Mer om Statistikkbanken",
+      "detailContent": [
+        {
+          "text": "Statbank Norway contains detailed tables with time series. You can create your own selections and save these in different file formats. We also offer an API for StatBank."
+        },
+        {
+          "text": "Our release time for all statistics is 08:00 CET."
+        },
+        {
+          "text": "At 05:00 and 11:30 Statbank Norway’s metadata are updated, and  the tables can be temporarily unavailable for up to five minutes. Published figures which are being revised are shown as ‘ 0 ’ or ‘ . ’ between 05:00 and 08:00."
+        },
+        {
+          "linksSection": {
+            "links": [
+              {
+                "text": "How to use Statbank Norway",
+                "url": "#",
+                "icon": "FileText"
+              },
+              {
+                "text": "Changes to tables in Statbank Norway",
+                "url": "#",
+                "icon": "InformationCircle"
+              },
+              {
+                "text": "Public APIs",
+                "url": "#",
+                "icon": "FileCode"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,50 +1,21 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Heading,
-  BodyLong,
-  Link,
-  DetailsSection,
-  type IconProps,
-} from '@pxweb2/pxweb2-ui';
+import { Heading, BodyLong, Link, DetailsSection } from '@pxweb2/pxweb2-ui';
+import type {
+  LocaleContent,
+  DetailLink,
+} from '../../util/config/localeContentTypes';
 import styles from './StartPageDetails.module.scss';
 
-type DetailLink = {
-  text: string;
-  url: string;
-  icon?: IconProps['iconName'];
-};
-
-type LinksSectionData = {
-  header?: string;
-  links?: DetailLink[];
-};
-
-type DetailBlock = {
-  header?: string;
-  text?: string;
-  linkSection?: LinksSectionData;
-};
-
-type StartpageDetailsSection = {
-  enabled?: boolean;
-  detailHeader?: string;
-  detailContent?: DetailBlock[];
-};
-
-type StartpageContent = {
-  detailsSection?: StartpageDetailsSection;
-};
-
-async function fetchStartpage(lang: string): Promise<StartpageContent | null> {
+async function fetchStartpage(lang: string): Promise<LocaleContent | null> {
   try {
-    const res = await fetch(`/startpage/startpage-${lang}.json`, {
+    const res = await fetch(`/locale-content/content.${lang}.json`, {
       cache: 'no-store',
     });
     if (!res.ok) {
       return null;
     }
-    return (await res.json()) as StartpageContent;
+    return (await res.json()) as LocaleContent;
   } catch {
     return null;
   }
@@ -77,7 +48,7 @@ function LinksList({ items }: { items?: DetailLink[] }) {
 
 export default function StartPageDetails() {
   const { i18n } = useTranslation();
-  const [content, setContent] = useState<StartpageContent | null>(null);
+  const [content, setContent] = useState<LocaleContent | null>(null);
 
   useEffect(() => {
     let alive = true;
@@ -95,7 +66,7 @@ export default function StartPageDetails() {
     };
   }, [i18n.language]);
 
-  const detailsSection = content?.detailsSection;
+  const detailsSection = content?.startPage?.showDetails;
   if (!detailsSection || detailsSection.enabled === false) {
     return null;
   }
