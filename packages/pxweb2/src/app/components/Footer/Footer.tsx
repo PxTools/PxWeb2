@@ -10,6 +10,24 @@ type FooterProps = {
 };
 
 export const Footer: React.FC<FooterProps> = ({ containerRef }) => {
+  function scrollToTop(ref?: React.RefObject<HTMLDivElement | null>) {
+    if (ref?.current) {
+      const container = ref.current;
+      const start = container.scrollTop;
+      const duration = 200; // ms, decrease for even faster scroll
+      const startTime = performance.now();
+
+      function animateScroll(time: number) {
+        const elapsed = time - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        container.scrollTop = start * (1 - progress);
+        if (progress < 1) {
+          requestAnimationFrame(animateScroll);
+        }
+      }
+      requestAnimationFrame(animateScroll);
+    }
+  }
   type FooterLink = { text: string; url: string };
   type FooterColumn = { header: string; links: FooterLink[] };
   type FooterConfig = {
@@ -63,11 +81,7 @@ export const Footer: React.FC<FooterProps> = ({ containerRef }) => {
           icon="ArrowUp"
           variant="secondary"
           size="medium"
-          onClick={() => {
-            if (containerRef?.current) {
-              containerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-          }}
+          onClick={() => scrollToTop(containerRef)}
         >
           To the top
         </Button>
