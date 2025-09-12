@@ -81,17 +81,19 @@ export default function StartPageDetails() {
 
   useEffect(() => {
     let alive = true;
-  
+
     (async () => {
       const lang = i18n.language || 'en';
       const data = await fetchStartpage(lang);
-      if (alive) {setContent(data);}
+      if (alive) {
+        setContent(data);
+      }
     })();
-  
+
     return () => {
       alive = false;
     };
-  }, [i18n.language]);  
+  }, [i18n.language]);
 
   const detailsSection = content?.detailsSection;
   if (!detailsSection || detailsSection.enabled === false) {
@@ -119,9 +121,11 @@ export default function StartPageDetails() {
               )}
 
               {detailContent.text && (
-                <BodyLong className={styles.text}>{detailContent.text}</BodyLong>
+                <BodyLong className={styles.text}>
+                  {detailContent.text}
+                </BodyLong>
               )}
-              
+
               {detailContent.linkSection && (
                 <div className={styles.linksSection}>
                   {detailContent.linkSection.header && (
