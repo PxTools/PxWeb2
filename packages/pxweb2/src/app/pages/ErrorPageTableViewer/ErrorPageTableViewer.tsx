@@ -1,11 +1,8 @@
-import { useRouteError } from 'react-router';
+import { isRouteErrorResponse, useRouteError } from 'react-router';
 import React from 'react';
-import { useTranslation } from 'react-i18next';
-import cl from 'clsx';
 
-import styles from './ErrorPageTableViewer.module.scss';
-import { Header } from '../../components/Header/Header';
-import { ErrorMessage } from '../../components/ErrorMessage';
+import { NotFound } from '../../components/Errors/NotFound/NotFound';
+import { GenericErrorTableViewer } from '../../components/Errors/GenericTableViewer/GenericErrorTableViewer';
 
 type RouteError = {
   statusText?: string;
@@ -13,36 +10,20 @@ type RouteError = {
   status?: number;
   data?: string;
 };
-
-// This component is used to display error messages when a route error occurs
-// on the TableViewer page. It will therefore always have a route error
+//
 export const ErrorPageTableViewer: React.FC = () => {
   const error = useRouteError() as RouteError;
-  const { t } = useTranslation();
-  const title = t('common.errors.generic.title');
 
-  if (error.status === 404) {
-    return <div>404 - Not found</div>;
+  // If expanding the error handling in the future, read this:
+  // https://reactrouter.com/how-to/error-boundary
+  if (isRouteErrorResponse(error)) {
+    if (error.status === 404) {
+      return <NotFound />;
+    }
   }
 
-  return (
-    <>
-      <Header />
-      <div className={cl(styles.fullScreenContainer)}>
-        <main className={cl(styles.mainContent)}>
-          <ErrorMessage
-            action="button"
-            align="center"
-            illustration="GenericError"
-            backgroundShape="wavy"
-            title={title}
-            description={t('common.errors.generic.description')}
-            actionText={t('common.errors.generic.action_text')}
-          />
-        </main>
-      </div>
-    </>
-  );
+  // Handle all errors not specifically handled above
+  return <GenericErrorTableViewer />;
 };
 
 export default ErrorPageTableViewer;

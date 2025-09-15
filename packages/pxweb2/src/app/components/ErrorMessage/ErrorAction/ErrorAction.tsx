@@ -1,5 +1,5 @@
 import cl from 'clsx';
-import { Link as LinkRouter, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 
 import classes from './ErrorAction.module.scss';
 import { ErrorMessageProps } from '../ErrorMessage';
@@ -19,15 +19,13 @@ export function ErrorAction({ action, actionText }: ErrorActionProps) {
           {actionText}
         </Button>
       ) : (
-        // TODO: Fix this! Needs proper path in "to"
-        <LinkRouter to="/" className={cl(classes.link)}>
+        <button
+          onClick={() => navigate(-1)}
+          className={cl(classes.link)}
+          type="button"
+        >
           {actionText}
-        </LinkRouter>
-        // TODO: If using our Link component from the design system:
-        // we do not need the CSS for this component
-        // <Link href="/" inline>
-        //   {actionText}
-        // </Link>
+        </button>
       )}
     </>
   );

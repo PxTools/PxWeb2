@@ -1,8 +1,8 @@
-import { useRouteError } from 'react-router';
+import { isRouteErrorResponse, useRouteError } from 'react-router';
 import React from 'react';
 
-import { Alert } from '@pxweb2/pxweb2-ui';
-import { Header } from '../../components/Header/Header';
+import { GenericError } from '../../components/Errors/GenericError/GenericError';
+import { NotFound } from '../../components/Errors/NotFound/NotFound';
 
 // ErrorPage component to display error messages
 type RouteError = {
@@ -12,19 +12,19 @@ type RouteError = {
   data?: string;
 };
 
-// This component is used to display error messages when a route error occurs
-// It will therefore always have a route error
 export const ErrorPage: React.FC = () => {
   const error = useRouteError() as RouteError;
 
-  return (
-    <>
-      <Header />
-      <Alert variant="error" size="small">
-        {error?.status} {error?.statusText} {error?.message} {error?.data}
-      </Alert>
-    </>
-  );
+  // If expanding the error handling in the future, read this:
+  // https://reactrouter.com/how-to/error-boundary
+  if (isRouteErrorResponse(error)) {
+    if (error.status === 404) {
+      return <NotFound />;
+    }
+  }
+
+  // Handle all errors not specifically handled above
+  return <GenericError />;
 };
 
 export default ErrorPage;
