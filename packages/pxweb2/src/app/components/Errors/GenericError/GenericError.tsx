@@ -10,7 +10,7 @@ export function GenericError() {
   return (
     <>
       <Header />
-      {/* TODO: Add correct layout for start page generic error */}
+      {/* Expand ErrorLayout for start page generic error here */}
       <ErrorLayout isStartPageGenericError={true}>
         <ErrorMessage
           action="button"

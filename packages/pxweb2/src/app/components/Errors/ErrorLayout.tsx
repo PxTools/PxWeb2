@@ -15,11 +15,13 @@ export function ErrorLayout({
   children,
 }: ErrorLayoutProps) {
   if (isStartPageGenericError) {
-    <>
-      <div className={cl(styles.fullScreenContainer)}>
-        <main className={cl(styles.mainContent)}>{children}</main>
-      </div>
-    </>;
+    return (
+      <>
+        <div className={cl(styles.fullScreenContainer)}>
+          <main className={cl(styles.mainContent)}>{children}</main>
+        </div>
+      </>
+    );
   }
 
   return (
