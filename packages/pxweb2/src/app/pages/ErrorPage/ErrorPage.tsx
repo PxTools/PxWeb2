@@ -3,6 +3,7 @@ import React from 'react';
 
 import { GenericError } from '../../components/Errors/GenericError/GenericError';
 import { NotFound } from '../../components/Errors/NotFound/NotFound';
+import useLocalizeDocumentAttributes from '../../../i18n/useLocalizeDocumentAttributes';
 
 // ErrorPage component to display error messages for general app routes
 type RouteError = {
@@ -26,5 +27,12 @@ export const ErrorPage: React.FC = () => {
   // Handle all errors not specifically handled above
   return <GenericError />;
 };
+
+// Wrapper to use the ErrorPage component with language localization
+export function ErrorPageWithLocalization() {
+  useLocalizeDocumentAttributes();
+
+  return <ErrorPage />;
+}
 
 export default ErrorPage;

@@ -1,7 +1,7 @@
 import { Navigate } from 'react-router';
 
 import RootLayout from './components/RootLayout';
-import ErrorPage from './pages/ErrorPage/ErrorPage';
+import { ErrorPageWithLocalization } from './pages/ErrorPage/ErrorPage';
 import StartPage from './pages/StartPage/StartPage';
 import TableViewer from './pages/TableViewer/TableViewer';
 import TopicIcons from './pages/TopicIcons/TopicIcons';
@@ -18,24 +18,7 @@ const supportedLangRoutes = config.language.supportedLanguages.map((lang) => {
     !showDefaultLanguageInPath &&
     lang.shorthand === config.language.defaultLanguage
   ) {
-    return {
-      // Show "page not found" when default language is in URL but shouldn't be
-      // path: `/${lang.shorthand}/`,
-      // children: [
-      //   {
-      //     index: true,
-      //     //element: <NotFoundPage />,
-      //     element: <div />, // Should never render, since loader throws 404 instantly
-      //     loader: () => {
-      //       throw new Response('Not Found', { status: 404 });
-      //     },
-      //   },
-      // {
-      //   path: '*',
-      //   element: <NotFoundPage />,
-      // },
-      // ],
-    };
+    return {};
   }
 
   // If the default language should be shown in the path
@@ -45,17 +28,11 @@ const supportedLangRoutes = config.language.supportedLanguages.map((lang) => {
       {
         index: true,
         element: <StartPage />,
-        //errorElement: <ErrorPage />,
       },
       {
         path: 'table/:tableId',
         element: <TableViewer />,
-        // errorElement: <ErrorPageTableViewer />,
       },
-      // {
-      //   path: '*',
-      //   element: <NotFoundPage />,
-      // },
     ],
   };
 });
@@ -71,12 +48,10 @@ const routingWithoutDefaultLanguageInURL = [
   {
     index: true,
     element: <StartPage />,
-    //errorElement: <ErrorPage />,
   },
   {
     path: 'table/:tableId',
     element: <TableViewer />,
-    // errorElement: <ErrorPageTableViewer />,
   },
   ...supportedLangRoutes,
 ];
@@ -85,7 +60,7 @@ export const routerConfig = [
   {
     path: '/',
     element: <RootLayout />,
-    errorElement: <ErrorPage />,
+    errorElement: <ErrorPageWithLocalization />,
     children: [
       ...(showDefaultLanguageInPath
         ? routingWithDefaultLanguageInURL
@@ -94,10 +69,6 @@ export const routerConfig = [
         path: 'topicIcons',
         element: <TopicIcons />,
       },
-      // {
-      //   path: '*',
-      //   element: <NotFoundPage />,
-      // },
     ],
   },
 ];
