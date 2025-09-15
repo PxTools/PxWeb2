@@ -43,11 +43,11 @@ export const Footer: React.FC<FooterProps> = ({ containerRef }) => {
 
   useEffect(() => {
     const lang = i18n.language || 'en';
-    fetch(`/locale-content/content.${lang}.json`)
+    fetch(`/content/${lang}/content.json`)
       .then((res) =>
         res.ok
           ? res.json()
-          : fetch(`/locale-content/content.en.json`).then((r) => r.json()),
+          : fetch(`/content/en/content.json`).then((r) => r.json()),
       )
       .then((data) => setConfig(data.footer || { columns: [] }))
       .catch(() => setConfig({ columns: [] }));
