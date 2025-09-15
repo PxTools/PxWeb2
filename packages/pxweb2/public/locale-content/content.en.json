@@ -5,7 +5,7 @@
       "text": "Forsiden",
       "href": "#"
     },
-    "showDetails": {
+    "detailsSection": {
       "enabled": true,
       "detailHeader": "Mer om Statistikkbanken",
       "detailContent": [
@@ -20,6 +20,7 @@
         },
         {
           "linksSection": {
+            "header": "Relevant links",
             "links": [
               {
                 "text": "How to use Statbank Norway",

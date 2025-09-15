@@ -5,7 +5,7 @@
       "text": "Forsidan",
       "href": "#"
     },
-    "showDetails": {
+    "detailsSection": {
       "enabled": true,
       "detailHeader": "Mer om Statistikbanken",
       "detailContent": [

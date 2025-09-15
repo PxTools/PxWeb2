@@ -65,18 +65,18 @@ export default function StartPageDetails() {
     };
   }, [i18n.language]);
 
-  const showDetails = content?.startPage?.showDetails;
-  if (!showDetails || showDetails.enabled === false) {
+  const detailsSection = content?.startPage?.detailsSection;
+  if (!detailsSection || detailsSection.enabled === false) {
     return null;
   }
 
-  const detailContents = showDetails.detailContent ?? [];
+  const detailContents = detailsSection.detailContent ?? [];
   if (!detailContents.length) {
     return null;
   }
 
   return (
-    <DetailsSection header={showDetails.detailHeader ?? 'More information'}>
+    <DetailsSection header={detailsSection.detailHeader ?? 'More information'}>
       <div className={styles.detailsSection}>
         {detailContents.map((detailContent, index) => {
           return (

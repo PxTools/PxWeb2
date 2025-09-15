@@ -17,14 +17,14 @@ export type DetailsContent = {
   linksSection?: LinksSection;
 };
 
-export type ShowDetails = {
+export type DetailsSection = {
   enabled?: boolean;
   detailHeader?: string;
   detailContent?: DetailsContent[];
 };
 
 export type Startpage = {
-  showDetails?: ShowDetails;
+  detailsSection?: DetailsSection;
 };
 
 export type LocaleContent = {
