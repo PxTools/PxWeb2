@@ -20,7 +20,7 @@
             {
                 "header": "Lämna uppgifter",
                 "links": [
-                    { "text": "Privatpersoner", "url": "https://www.scb.se/lamna-uppgifter/privatpersoner/" },
+                    { "text": "Privatpersoner", "url": "https://www.scb.se/lamna-uppgifter/privatpersoner/", "external": true },
                     { "text": "Offentlig sektor", "url": "https://www.scb.se/lamna-uppgifter/offentlig-sektor/" }
                 ]
             },
@@ -28,7 +28,7 @@
                 "header": "Om SCB",
                 "links": [
                     { "text": "Kontakta oss", "url": "https://www.scb.se/om-scb/kontakta-oss/" },
-                    { "text": "Jobba hos oss", "url": "https://www.scb.se/om-scb/jobba-hos-oss/" }
+                    { "text": "Jobba hos oss", "url": "https://www.scb.se/om-scb/jobba-hos-oss/", "external": true }
                 ]
             }
         ]

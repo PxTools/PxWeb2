@@ -29,7 +29,12 @@ export function scrollToTop(ref?: React.RefObject<HTMLDivElement | null>) {
 }
 
 export const Footer: React.FC<FooterProps> = ({ containerRef }) => {
-  type FooterLink = { text: string; url: string };
+  type FooterLink = {
+    text: string;
+    url: string;
+    external?: boolean;
+    exteranal?: boolean;
+  };
   type FooterColumn = { header: string; links: FooterLink[] };
   type FooterConfig = {
     image?: string;
@@ -66,11 +71,27 @@ export const Footer: React.FC<FooterProps> = ({ containerRef }) => {
                 {col.header}
               </Heading>
               <div className={cl(styles.footerLinkList)}>
-                {col.links.map((link) => (
-                  <Link href={link.url} size="small" key={link.url}>
-                    {link.text}
-                  </Link>
-                ))}
+                {col.links.map((link) => {
+                  const showIcon = link.external === true;
+                  const iconProps = showIcon
+                    ? {
+                        icon: 'ExternalLink' as const,
+                        iconPosition: 'right' as const,
+                        target: '_blank' as const,
+                      }
+                    : {};
+                  return (
+                    <Link
+                      inline={false}
+                      href={link.url}
+                      size="small"
+                      key={link.url}
+                      {...iconProps}
+                    >
+                      {link.text}
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           ))}

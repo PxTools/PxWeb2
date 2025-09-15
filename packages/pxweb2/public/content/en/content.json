@@ -5,7 +5,7 @@
             {
                 "header": "Finding statistics",
                 "links": [
-                    { "text": "Statistical database", "url": "https://www.statistikdatabasen.scb.se/pxweb/en/ssd/" }
+                    { "text": "Statistical database", "url": "https://www.statistikdatabasen.scb.se/pxweb/en/ssd/", "external": true}
                 ]
             },
             {
