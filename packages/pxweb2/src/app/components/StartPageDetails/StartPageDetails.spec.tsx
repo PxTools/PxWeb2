@@ -1,8 +1,9 @@
 import '@testing-library/jest-dom/vitest';
-import { render, screen, waitFor } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import StartPageDetails from './StartPageDetails';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import type { Mock } from 'vitest';
+import StartPageDetails from './StartPageDetails';
 
 let mockLanguage = 'no';
 vi.mock('react-i18next', () => ({
@@ -51,19 +52,12 @@ const contentNo = {
   },
 };
 
-function mockFetchJson(json: any, ok = true) {
-  (global.fetch as unknown as vi.Mock).mockResolvedValue({
+function mockFetchJson(json: unknown, ok = true) {
+  (global.fetch as unknown as Mock).mockResolvedValue({
     ok,
     json: async () => json,
-  } as Response);
+  } as unknown as Response);
 }
-
-global.fetch = vi.fn(() =>
-  Promise.resolve({
-    ok: true,
-    json: () => Promise.resolve({ contentNo }),
-  }),
-) as any;
 
 describe('StartPageDetails (renders from locale file)', () => {
   it('fetches the correct locale file and renders header, text, and links (after opening)', async () => {
@@ -82,8 +76,8 @@ describe('StartPageDetails (renders from locale file)', () => {
     const toggle = await screen.findByRole('button', {
       name: 'Mer om Statistikkbanken',
     });
-
     expect(toggle).toHaveAttribute('aria-expanded', 'false');
+
     await userEvent.click(toggle);
     await waitFor(() =>
       expect(toggle).toHaveAttribute('aria-expanded', 'true'),
@@ -94,6 +88,13 @@ describe('StartPageDetails (renders from locale file)', () => {
     ).toBeInTheDocument();
     expect(screen.getByText('Oppdatering av metadata')).toBeInTheDocument();
     expect(screen.getByText('Relevante lenker')).toBeInTheDocument();
+
+    const links = within(document.body).getAllByRole('link');
+    expect(links.map((a) => a.textContent)).toEqual([
+      'Endringer i tabeller',
+      'Kom i gang med Statistikkbanken',
+      'Kom i gang med Api',
+    ]);
   });
 
   it('does not render anything when enabled=false', async () => {
@@ -105,7 +106,6 @@ describe('StartPageDetails (renders from locale file)', () => {
     render(<StartPageDetails />);
 
     await waitFor(() => expect(global.fetch).toHaveBeenCalled());
-    // Det finnes ingen knapp med header-navnet
     expect(
       screen.queryByRole('button', { name: 'Mer om Statistikkbanken' }),
     ).not.toBeInTheDocument();
@@ -125,7 +125,7 @@ describe('StartPageDetails (renders from locale file)', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('toggles aria-expanded attribute on click (open/close)', async () => {
+  it('toggles aria-expanded on click (open/close)', async () => {
     mockLanguage = 'no';
     mockFetchJson(contentNo);
 
