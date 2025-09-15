@@ -177,7 +177,7 @@ function mockTableService() {
             },
           ],
         }),
-             getMetadataById: vi.fn().mockResolvedValue({
+        getMetadataById: vi.fn().mockResolvedValue({
           version: '2.0',
           class: 'dataset',
           href: 'https://api.scb.se/OV0104/v2beta/api/v2/tables/TAB638/metadata?lang=en',
