@@ -4,6 +4,7 @@ import styles from './Breadcrumbs.module.scss';
 import { BreadcrumbsIcon } from '../Icon/BreadcrumbsIcon';
 import Link from '../Link/Link';
 import { useTranslation } from 'react-i18next';
+import i18next from 'i18next';
 
 interface BreadcrumbsProps
   extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
@@ -92,6 +93,7 @@ export const Breadcrumbs = forwardRef<HTMLAnchorElement, BreadcrumbsProps>(
                   className={cl(
                     styles.breadcrumbItemIcon,
                     variant && styles[variant],
+                    (i18next.dir() === 'rtl' ? styles.rtl : styles.ltr),
                   )}
                 />
               </li>

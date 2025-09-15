@@ -91,6 +91,13 @@
     align-items: center;
     vertical-align: middle;
 
+    &.ltr  {
+      transform: none;
+    }
+    &.rtl  {
+      transform: rotate(180deg);
+    }
+
     &.default {
       margin-bottom: 4px;
       margin-right: fixed.$spacing-2;
