@@ -104,6 +104,7 @@
       }
     },
     "table": {
+      "card_description": "{{title}}. År: {{yearFrom}}-{{yearTo}}. Tidsperiod {{frequency}}. uppdaterad {{updatedDate}}. Tabellnummer {{tableNumber}}.",
       "number_of_tables": "<strong>{{count}}</strong> tabeller",
       "number_of_tables_found": "Träff på <strong>{{count}}</strong> tabeller",
       "updated_label": "Senast uppdaterad",

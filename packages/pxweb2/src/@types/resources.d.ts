@@ -105,6 +105,7 @@ interface Resources {
         };
       };
       table: {
+        card_description: '{{title}}. Most recently updated on {{updatedDate}} Published from {{yearFrom}} to {{yearTo}}. Updated {{frequency}}. Table number is {{tableNumber}}.';
         number_of_tables: '<strong>{{count}}</strong> tables';
         number_of_tables_found: '<strong>{{count}}</strong> tables found';
         updated_label: 'Updated';

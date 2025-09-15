@@ -309,6 +309,16 @@ const StartPage = () => {
           icon={getTopicIcon(table)}
           ref={cardRef}
           tabIndex={tabIndex}
+          ariaLabel={t('start_page.table.card_description', {
+            title: table.label,
+            updatedDate: table.updated
+              ? new Date(table.updated).toLocaleDateString(language)
+              : undefined,
+            yearFrom: table.firstPeriod?.slice(0, 4),
+            yearTo: table.lastPeriod?.slice(0, 4),
+            frequency: frequencyLabel,
+            tableNumber: table.id,
+          })}
         />
       );
     }
