@@ -1,6 +1,6 @@
 import { createRef, RefObject } from 'react';
 import { describe, it, expect, vi } from 'vitest';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom/vitest';
 
@@ -218,21 +218,23 @@ describe('Search component', () => {
         <Search value="test" ref={ref} onChange={handleChange} />,
       );
 
-      // Wait for effects to complete
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      // Wait for the ref & effect to attach the imperative method
+      await waitFor(() => {
+        expect(ref.current).not.toBeNull();
+        expect(typeof ref.current?.clearInputField).toBe('function');
+      });
 
       const input = getByRole('textbox') as HTMLInputElement;
       expect(input.value).toBe('test');
-      expect(ref.current).not.toBeNull();
-      expect(typeof ref.current?.clearInputField).toBe('function');
 
-      // Call the method
-      ref.current?.clearInputField();
+      // Invoke imperative method inside act to avoid warnings
+      await act(async () => {
+        ref.current!.clearInputField();
+      });
 
-      // Wait for state updates
-      await new Promise((resolve) => setTimeout(resolve, 100));
-
-      expect(input.value).toBe('');
+      await waitFor(() => {
+        expect(input.value).toBe('');
+      });
       expect(handleChange).toHaveBeenCalledWith('');
     });
   });

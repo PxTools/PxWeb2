@@ -27,6 +27,7 @@ import { ActionType } from './StartPageTypes';
 import {
   getSubjectTree,
   sortAndDeduplicateFilterChips,
+  sortTablesByUpdated,
 } from '../../util/startPageFilters';
 import { useTopicIcons } from '../../util/hooks/useTopicIcons';
 import useApp from '../../context/useApp';
@@ -86,11 +87,12 @@ const StartPage = () => {
       dispatch({ type: ActionType.SET_LOADING, payload: true });
       try {
         const tables = await getAllTables(i18n.language);
+        const sortedTables = sortTablesByUpdated(tables);
         dispatch({
           type: ActionType.RESET_FILTERS,
           payload: {
-            tables: tables,
-            subjects: getSubjectTree(tables),
+            tables: sortedTables,
+            subjects: getSubjectTree(sortedTables),
           },
         });
       } catch (error) {
@@ -173,7 +175,7 @@ const StartPage = () => {
   };
 
   const getTopicIcon = (table: Table) => {
-    const topicId = table.paths?.[0]?.[0]?.id;
+    const topicId = table.subjectCode;
     const size = isSmallScreen ? 'small' : 'medium';
 
     return topicId
@@ -279,7 +281,7 @@ const StartPage = () => {
       const showLangInPath =
         config.language.showDefaultLanguageInPath ||
         language !== config.language.defaultLanguage;
-      const langPrefix = showLangInPath ? `/${language}` : '';
+      const langPrefix = showLangInPath ? `${language}` : '';
 
       let cardRef: React.RefObject<HTMLDivElement | null> | undefined;
       if (isFirstNew) {
@@ -292,7 +294,7 @@ const StartPage = () => {
         <TableCard
           key={table.id}
           title={`${table.label}`}
-          href={`${langPrefix}/table/${table.id}`}
+          href={`${config.baseApplicationPath}${langPrefix}/table/${table.id}`}
           updatedLabel={
             table.updated ? t('start_page.table.updated_label') : undefined
           }

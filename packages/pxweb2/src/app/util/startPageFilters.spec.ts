@@ -507,10 +507,9 @@ describe('sortTimeUnit (Set version)', () => {
     ]);
   });
 
-  it('placese unknown units at the end', () => {
+  it('places unknown units at the end', () => {
     const input = new Set(['Monthly', 'Daily', 'Annual', 'BiWeekly', 'Weekly']);
     const sorted = sortTimeUnit(input);
-    console.log(sorted);
 
     expect(sorted).toEqual([
       'Annual',

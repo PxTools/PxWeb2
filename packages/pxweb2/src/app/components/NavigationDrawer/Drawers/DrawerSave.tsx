@@ -13,6 +13,7 @@ import {
   Radio,
   RadioOption,
   VartypeEnum,
+  Alert,
 } from '@pxweb2/pxweb2-ui';
 import {
   ApiError,
@@ -495,6 +496,9 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
             </li>
           ))}
         </ul>
+        <Alert variant="info" className={classes.alert + ' ' + classes.file}>
+          {t('common.status_messages.drawer_save_file')}
+        </Alert>
       </ContentBox>
       <ContentBox title={t('presentation_page.sidemenu.save.savequery.title')}>
         <div className={classes.informationCardWrapper}>
@@ -537,6 +541,11 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
           )}
           <SqScreenReaderStatus queryId={queryId} isCopied={isCopied} />
         </div>
+      </ContentBox>
+      <ContentBox title={t('presentation_page.sidemenu.save.api.query')}>
+        <Alert variant="info" className={classes.alert}>
+          {t('common.status_messages.drawer_save_api')}
+        </Alert>
       </ContentBox>
     </>
   );

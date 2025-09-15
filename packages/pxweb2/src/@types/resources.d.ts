@@ -56,6 +56,15 @@ interface Resources {
         warning: 'Warning:';
         error: 'Error:';
       };
+      status_messages: {
+        welcome: "Welcome to the new PxWeb 2.0! We're still improving to help you find and use the numbers you need 📊✨";
+        drawer_view: 'Graph display is under construction.';
+        drawer_save_file: 'More file formats are in the works.';
+        drawer_save_api: 'API query feature is under construction.';
+        drawer_edit: 'More tools for editing the table are under construction.';
+        drawer_help: 'No content will be added here. The help button must link directly to its own help pages.';
+        tab_definitions: 'The content of this tab is under construction.';
+      };
     };
     start_page: {
       header: 'Welcome to PxWeb 2.0';
@@ -219,6 +228,7 @@ interface Resources {
           api: {
             title: 'API';
             description: 'Description text...';
+            query: 'API query';
           };
         };
         help: {
