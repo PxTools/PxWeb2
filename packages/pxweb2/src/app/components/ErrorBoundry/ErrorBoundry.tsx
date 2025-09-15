@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { Alert } from '@pxweb2/pxweb2-ui';
 import { ErrorInfo } from 'react';
+
+import { Alert } from '@pxweb2/pxweb2-ui';
 import { Header } from '../Header/Header';
 
 interface ErrorBoundaryProps {

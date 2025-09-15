@@ -4,7 +4,7 @@ import React from 'react';
 import { GenericError } from '../../components/Errors/GenericError/GenericError';
 import { NotFound } from '../../components/Errors/NotFound/NotFound';
 
-// ErrorPage component to display error messages
+// ErrorPage component to display error messages for general app routes
 type RouteError = {
   statusText?: string;
   message?: string;

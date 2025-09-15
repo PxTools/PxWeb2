@@ -2,8 +2,6 @@ import { Navigate } from 'react-router';
 
 import RootLayout from './components/RootLayout';
 import ErrorPage from './pages/ErrorPage/ErrorPage';
-import ErrorPageTableViewer from './pages/ErrorPageTableViewer/ErrorPageTableViewer';
-import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 import StartPage from './pages/StartPage/StartPage';
 import TableViewer from './pages/TableViewer/TableViewer';
 import TopicIcons from './pages/TopicIcons/TopicIcons';
@@ -13,24 +11,30 @@ const config = getConfig();
 const showDefaultLanguageInPath = config.language.showDefaultLanguageInPath;
 
 const supportedLangRoutes = config.language.supportedLanguages.map((lang) => {
-  // If the default language should not be shown in the path
+  // the normal error handling will show "page not found",
+  //  when the default language is in the URL but shouldn't be,
+  //  or when an unsupported language is in the URL
   if (
     !showDefaultLanguageInPath &&
     lang.shorthand === config.language.defaultLanguage
   ) {
     return {
       // Show "page not found" when default language is in URL but shouldn't be
-      path: `/${lang.shorthand}/`,
-      children: [
-        {
-          index: true,
-          element: <NotFoundPage />,
-        },
-        {
-          path: '*',
-          element: <NotFoundPage />,
-        },
-      ],
+      // path: `/${lang.shorthand}/`,
+      // children: [
+      //   {
+      //     index: true,
+      //     //element: <NotFoundPage />,
+      //     element: <div />, // Should never render, since loader throws 404 instantly
+      //     loader: () => {
+      //       throw new Response('Not Found', { status: 404 });
+      //     },
+      //   },
+      // {
+      //   path: '*',
+      //   element: <NotFoundPage />,
+      // },
+      // ],
     };
   }
 
@@ -41,17 +45,17 @@ const supportedLangRoutes = config.language.supportedLanguages.map((lang) => {
       {
         index: true,
         element: <StartPage />,
-        errorElement: <ErrorPage />,
+        //errorElement: <ErrorPage />,
       },
       {
         path: 'table/:tableId',
         element: <TableViewer />,
-        errorElement: <ErrorPageTableViewer />,
+        // errorElement: <ErrorPageTableViewer />,
       },
-      {
-        path: '*',
-        element: <NotFoundPage />,
-      },
+      // {
+      //   path: '*',
+      //   element: <NotFoundPage />,
+      // },
     ],
   };
 });
@@ -67,12 +71,12 @@ const routingWithoutDefaultLanguageInURL = [
   {
     index: true,
     element: <StartPage />,
-    errorElement: <ErrorPage />,
+    //errorElement: <ErrorPage />,
   },
   {
     path: 'table/:tableId',
     element: <TableViewer />,
-    errorElement: <ErrorPageTableViewer />,
+    // errorElement: <ErrorPageTableViewer />,
   },
   ...supportedLangRoutes,
 ];
@@ -90,10 +94,10 @@ export const routerConfig = [
         path: 'topicIcons',
         element: <TopicIcons />,
       },
-      {
-        path: '*',
-        element: <NotFoundPage />,
-      },
+      // {
+      //   path: '*',
+      //   element: <NotFoundPage />,
+      // },
     ],
   },
 ];

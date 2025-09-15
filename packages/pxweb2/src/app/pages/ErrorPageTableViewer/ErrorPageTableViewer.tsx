@@ -1,16 +1,17 @@
 import { isRouteErrorResponse, useRouteError } from 'react-router';
 import React from 'react';
 
-import { NotFound } from '../../components/Errors/NotFound/NotFound';
 import { GenericErrorTableViewer } from '../../components/Errors/GenericTableViewer/GenericErrorTableViewer';
+import { NotFound } from '../../components/Errors/NotFound/NotFound';
 
+// ErrorPage component to display error messages for table viewer routes
 type RouteError = {
   statusText?: string;
   message?: string;
   status?: number;
   data?: string;
 };
-//
+
 export const ErrorPageTableViewer: React.FC = () => {
   const error = useRouteError() as RouteError;
 
