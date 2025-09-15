@@ -32,7 +32,7 @@ export function Presentation({
   scrollRef,
   isExpanded,
   setIsExpanded,
-}: propsType) {
+}: Readonly<propsType>) {
   const { isMobile, getSavedQueryId } = useApp();
   const config = getConfig();
   const { i18n, t } = useTranslation();

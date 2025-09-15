@@ -100,7 +100,7 @@ export function ContentTop({
   staticTitle,
   isExpanded,
   setIsExpanded,
-}: ContenetTopProps) {
+}: Readonly<ContenetTopProps>) {
   const { t } = useTranslation();
   const [isTableInformationOpen, setIsTableInformationOpen] =
     useState<boolean>(false);
