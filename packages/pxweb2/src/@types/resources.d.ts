@@ -65,6 +65,11 @@ interface Resources {
         drawer_help: 'No content will be added here. The help button must link directly to its own help pages.';
         tab_definitions: 'The content of this tab is under construction.';
       };
+      breadcrumbs: {
+        arialabelbreadcrumb: 'Breadcrumb';
+        breadCrumbRootTitle: 'Home';
+        show_more_breadcrumbs: 'Show more';
+      };
     };
     start_page: {
       header: 'Welcome to PxWeb 2.0';
@@ -236,11 +241,8 @@ interface Resources {
         };
       };
       main_content: {
-        arialabelbreadcrumb: 'Breadcrumb';
-        breadCrumbRootTitle: 'Home';
         last_updated: 'Last updated';
         show_details: 'Show details';
-        show_more_breadcrumbs: 'Show more';
         dynamic_table_title: '{{table_content_type}} by {{table_content_label_first_part}} and {{table_content_label_last_part}}';
         table: {
           warnings: {

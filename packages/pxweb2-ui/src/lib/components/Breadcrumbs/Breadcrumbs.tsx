@@ -47,7 +47,7 @@ export const Breadcrumbs = forwardRef<HTMLAnchorElement, BreadcrumbsProps>(
 
     return (
       <nav
-        aria-label={t('presentation_page.main_content.arialabelbreadcrumb')}
+        aria-label={t('common.breadcrumbs.arialabelbreadcrumb')}
         className={cl(
           styles.breadcrumbsContainer,
           variant && styles[variant],
@@ -104,7 +104,7 @@ export const Breadcrumbs = forwardRef<HTMLAnchorElement, BreadcrumbsProps>(
             <input
               type="button"
               className={cl(styles.showMoreText)}
-              value={t('presentation_page.main_content.show_more_breadcrumbs')}
+              value={t('common.breadcrumbs.show_more_breadcrumbs')}
               onClick={() => setShowMore(true)}
               aria-label="Show more breadcrumbs"
             />

@@ -63,6 +63,11 @@
       "drawer_edit": "Fler verktyg för att redigera tabellen är under arbete.",
       "drawer_help": "Hjälp-knappen måste länkas till egna hjälpsidor.",
       "tab_definitions": "Innehållet i denna fliken är under arbete."
+    },
+    "breadcrumbs": {
+        "arialabelbreadcrumb": "Brödsmulor",
+        "breadCrumbRootTitle": "Hem",
+        "show_more_breadcrumbs": "Visa mer"
     }
   },
   "start_page": {
@@ -235,11 +240,8 @@
       }
     },
     "main_content": {
-      "arialabelbreadcrumb": "Brödsmulor",
-      "breadCrumbRootTitle": "Hem",
       "last_updated": "Senast uppdaterad",
       "show_details": "Visa detaljer",
-      "show_more_breadcrumbs": "Visa mer",
       "dynamic_table_title": "{{table_content_type}} efter {{table_content_label_first_part}} och {{table_content_label_last_part}}",
       "table": {
         "warnings": {
