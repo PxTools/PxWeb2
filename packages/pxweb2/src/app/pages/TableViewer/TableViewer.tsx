@@ -2,7 +2,6 @@ import { useEffect, useState, useRef } from 'react';
 import { useParams, useLocation } from 'react-router';
 import cl from 'clsx';
 
-import useLocalizeDocumentAttributes from '../../../i18n/useLocalizeDocumentAttributes';
 import styles from './TableViewer.module.scss';
 import { Selection } from '../../components/Selection/Selection';
 import { Presentation } from '../../components/Presentation/Presentation';
@@ -190,7 +189,6 @@ export function TableViewer() {
       setSelectedNavigationView(newSelectedNavView);
     }
   };
-  useLocalizeDocumentAttributes();
 
   const isSmallScreen = isTablet === true || isMobile === true;
 
