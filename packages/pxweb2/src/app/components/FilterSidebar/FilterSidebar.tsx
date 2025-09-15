@@ -40,87 +40,85 @@ const Collapsible: React.FC<CollapsibleProps> = ({
   const subjectTree = state.availableFilters.subjectTree;
 
   return (
-    <>
-      <span className={styles.filterLabel}>
-        <Checkbox
-          id={subjectId + index}
-          text={`${subjectLabel} (${count})`}
-          value={isActive}
-          subtle={!isActive && count === 0}
-          onChange={(value) => {
-            const ancestors = findAncestors(subjectTree, subject.uniqueId!);
-            const children = getAllDescendants(subject);
+    <span className={styles.filterLabel}>
+      <Checkbox
+        id={subjectId + index}
+        text={`${subjectLabel} (${count})`}
+        value={isActive}
+        subtle={!isActive && count === 0}
+        onChange={(value) => {
+          const ancestors = findAncestors(subjectTree, subject.uniqueId!);
+          const children = getAllDescendants(subject);
 
-            if (value) {
-              // If subject has children, add the subject itself
+          if (value) {
+            // If subject has children, add the subject itself
+            dispatch({
+              type: ActionType.ADD_FILTER,
+              payload: [
+                {
+                  type: 'subject',
+                  value: subjectId,
+                  label: subjectLabel,
+                  uniqueId: subject.uniqueId,
+                  index,
+                },
+              ],
+            });
+
+            // If the subject has children, we remove all ancestors from filter
+            for (const ancestor of ancestors) {
+              const isAncestorInFilter = state.activeFilters.some(
+                (f) => f.type === 'subject' && f.value === ancestor.id,
+              );
+              if (isAncestorInFilter) {
+                dispatch({
+                  type: ActionType.REMOVE_FILTER,
+                  payload: { value: ancestor.id, type: 'subject' },
+                });
+              }
+            }
+          } else {
+            //Remove subject and all its descendants from filter
+            const descendants = [subject, ...children];
+
+            for (const d of descendants) {
+              dispatch({
+                type: ActionType.REMOVE_FILTER,
+                payload: {
+                  value: d.id,
+                  type: 'subject',
+                  uniqueId: d.uniqueId,
+                },
+              });
+            }
+
+            // Ensure first parent is actually added as a filter, and not just ephemerally selected
+            const parent: PathItem | undefined = ancestors.length
+              ? ancestors[ancestors.length - 1]
+              : undefined;
+            const isParentInFilter = state.activeFilters.some(
+              (f) => f.type === 'subject' && f.value === parent?.id,
+            );
+            if (parent && !isParentInFilter) {
               dispatch({
                 type: ActionType.ADD_FILTER,
                 payload: [
                   {
                     type: 'subject',
-                    value: subjectId,
-                    label: subjectLabel,
-                    uniqueId: subject.uniqueId,
+                    value: parent.id,
+                    label: parent.label,
+                    uniqueId: parent.uniqueId,
                     index,
                   },
                 ],
               });
-
-              // If the subject has children, we remove all ancestors from filter
-              for (const ancestor of ancestors) {
-                const isAncestorInFilter = state.activeFilters.some(
-                  (f) => f.type === 'subject' && f.value === ancestor.id,
-                );
-                if (isAncestorInFilter) {
-                  dispatch({
-                    type: ActionType.REMOVE_FILTER,
-                    payload: { value: ancestor.id, type: 'subject' },
-                  });
-                }
-              }
-            } else {
-              //Remove subject and all its descendants from filter
-              const descendants = [subject, ...children];
-
-              for (const d of descendants) {
-                dispatch({
-                  type: ActionType.REMOVE_FILTER,
-                  payload: {
-                    value: d.id,
-                    type: 'subject',
-                    uniqueId: d.uniqueId,
-                  },
-                });
-              }
-
-              // Ensure first parent is actually added as a filter, and not just ephemerally selected
-              const parent: PathItem | undefined = ancestors.length
-                ? ancestors[ancestors.length - 1]
-                : undefined;
-              const isParentInFilter = state.activeFilters.some(
-                (f) => f.type === 'subject' && f.value === parent?.id,
-              );
-              if (parent && !isParentInFilter) {
-                dispatch({
-                  type: ActionType.ADD_FILTER,
-                  payload: [
-                    {
-                      type: 'subject',
-                      value: parent.id,
-                      label: parent.label,
-                      uniqueId: parent.uniqueId,
-                      index,
-                    },
-                  ],
-                });
-              }
             }
-            onFilterChange?.();
-          }}
-        />
-        {isActive && children}
-      </span>
-    </>
+          }
+          onFilterChange?.();
+        }}
+      />
+      {isActive && children}
+    </span>
   );
 };
 
