@@ -26,6 +26,8 @@ import useApp from '../../context/useApp';
 export interface ContenetTopProps {
   readonly pxtable: PxTable;
   readonly staticTitle: string;
+  isExpanded: boolean;
+  setIsExpanded: (expanded: boolean) => void;
 }
 
 type NoteMessageType = {
@@ -93,7 +95,12 @@ export function createNoteMessage(
   };
 }
 
-export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
+export function ContentTop({
+  pxtable,
+  staticTitle,
+  isExpanded,
+  setIsExpanded,
+}: ContenetTopProps) {
   const { t } = useTranslation();
   const [isTableInformationOpen, setIsTableInformationOpen] =
     useState<boolean>(false);
@@ -103,7 +110,7 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
   const { pxTableMetadata, selectedVBValues } = useVariables();
   const selectedMetadata = useTableData().data?.metadata;
   const buildTableTitle = useTableData().buildTableTitle;
-  const { setTitle } = useApp();
+  const { setTitle, isXXLargeDesktop } = useApp();
 
   const openInformationButtonRef = useRef<HTMLButtonElement>(null);
   const openInformationLinkRef = useRef<HTMLAnchorElement>(null);
@@ -184,6 +191,20 @@ export function ContentTop({ pxtable, staticTitle }: ContenetTopProps) {
             <BodyLong>{staticTitle}</BodyLong>
           </div>
         </nav>
+        {isXXLargeDesktop && (
+          <Button
+            size="medium"
+            icon={isExpanded ? 'ShrinkHorizontal' : 'ExpandHorizontal'}
+            variant="tertiary"
+            className={cl(classes[`resize`])}
+            title={
+              isExpanded
+                ? t('presentation_page.main_content.shrink_view')
+                : t('presentation_page.main_content.expand_view')
+            }
+            onClick={() => setIsExpanded(!isExpanded)}
+          ></Button>
+        )}
         <div
           id="px-main-content"
           className={cl(classes[`heading-information`])}
