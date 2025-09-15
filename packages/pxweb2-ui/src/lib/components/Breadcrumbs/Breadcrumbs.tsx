@@ -93,7 +93,7 @@ export const Breadcrumbs = forwardRef<HTMLAnchorElement, BreadcrumbsProps>(
                   className={cl(
                     styles.breadcrumbItemIcon,
                     variant && styles[variant],
-                    (i18next.dir() === 'rtl' ? styles.rtl : styles.ltr),
+                    i18next.dir() === 'rtl' ? styles.rtl : styles.ltr,
                   )}
                 />
               </li>

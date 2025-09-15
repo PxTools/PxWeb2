@@ -91,10 +91,10 @@
     align-items: center;
     vertical-align: middle;
 
-    &.ltr  {
+    &.ltr {
       transform: none;
     }
-    &.rtl  {
+    &.rtl {
       transform: rotate(180deg);
     }
 
