@@ -22,6 +22,7 @@
     },
     "skip_to_main": "Gå direkt till huvudinnehållet",
     "footer": {
+      "language_header": "Språk",
       "contact": {
         "title": "Kontakt",
         "description": "Beskrivande text..."

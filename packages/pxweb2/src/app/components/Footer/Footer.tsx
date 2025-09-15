@@ -1,9 +1,10 @@
 import cl from 'clsx';
 import React, { useEffect, useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import styles from './Footer.module.scss';
+import { getConfig } from '../../util/config/getConfig';
 import { BodyShort, Button, Heading, Link } from '@pxweb2/pxweb2-ui';
-import { useTranslation } from 'react-i18next';
 
 type FooterProps = {
   containerRef?: React.RefObject<HTMLDivElement | null>;
@@ -33,8 +34,8 @@ export const Footer: React.FC<FooterProps> = ({ containerRef }) => {
     text: string;
     url: string;
     external?: boolean;
-    exteranal?: boolean;
   };
+  const config = getConfig();
   type FooterColumn = { header: string; links: FooterLink[] };
   type FooterConfig = {
     image?: string;
@@ -42,7 +43,10 @@ export const Footer: React.FC<FooterProps> = ({ containerRef }) => {
     columns: FooterColumn[];
   };
   const { i18n } = useTranslation();
-  const [config, setConfig] = useState<FooterConfig>({ columns: [] });
+  const { t } = useTranslation();
+  const [footerConfig, setFooterConfig] = useState<FooterConfig>({
+    columns: [],
+  });
   // Ref for the main scrollable container
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
 
@@ -54,18 +58,18 @@ export const Footer: React.FC<FooterProps> = ({ containerRef }) => {
           ? res.json()
           : fetch(`/content/en/content.json`).then((r) => r.json()),
       )
-      .then((data) => setConfig(data.footer || { columns: [] }))
-      .catch(() => setConfig({ columns: [] }));
+      .then((data) => setFooterConfig(data.footer || { columns: [] }))
+      .catch(() => setFooterConfig({ columns: [] }));
   }, [i18n.language]);
 
   return (
     <footer className={styles.footer} ref={scrollContainerRef}>
       <div className={cl(styles.logoAndLinks)}>
         <div className={cl(styles.logoContainer)}>
-          {config.image && <img src={config.image} alt="Logo" />}
+          {footerConfig.image && <img src={footerConfig.image} alt="Logo" />}
         </div>
         <div className={cl(styles.footerLinks)}>
-          {config.columns.map((col) => (
+          {footerConfig.columns.map((col) => (
             <div className={cl(styles.footerLinkGroup)} key={col.header}>
               <Heading size="small" level="2">
                 {col.header}
@@ -95,6 +99,37 @@ export const Footer: React.FC<FooterProps> = ({ containerRef }) => {
               </div>
             </div>
           ))}
+          <div className={cl(styles.footerLinkGroup)}>
+            <Heading size="small" level="2">
+              {t('common.footer.language_header')}
+            </Heading>
+            <div className={cl(styles.footerLinkList)}>
+              {Array.isArray(config?.language?.supportedLanguages) &&
+                config.language.supportedLanguages.map(
+                  (lang: { shorthand: string; languageName: string }) => (
+                    <Link
+                      inline={false}
+                      href="#"
+                      size="small"
+                      key={lang.shorthand}
+                      aria-current={
+                        i18n.language?.startsWith(lang.shorthand)
+                          ? 'true'
+                          : undefined
+                      }
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (!i18n.language?.startsWith(lang.shorthand)) {
+                          i18n.changeLanguage(lang.shorthand);
+                        }
+                      }}
+                    >
+                      {lang.languageName || lang.shorthand.toUpperCase()}
+                    </Link>
+                  ),
+                )}
+            </div>
+          </div>
         </div>
       </div>
       <div className={cl(styles.copyrightAndButton)}>

@@ -22,6 +22,7 @@
     },
     "skip_to_main": "Skip to main content",
     "footer": {
+      "language_header": "Language",
       "contact": {
         "title": "Contact",
         "description": "Description text..."
