@@ -207,7 +207,10 @@ export function ContentTop({
 
     breadcrumbItems.push({
       label: staticTitle,
-      href: window.location.pathname + window.location.search + window.location.hash,
+      href:
+        window.location.pathname +
+        window.location.search +
+        window.location.hash,
     });
 
     return breadcrumbItems;
