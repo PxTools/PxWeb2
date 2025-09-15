@@ -19,7 +19,7 @@ import useApp from '../../context/useApp';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import { VariablesProvider } from '../../context/VariablesProvider';
 import { TableDataProvider } from '../../context/TableDataProvider';
-import ErrorPageTableViewer from '../ErrorPageTableViewer/ErrorPageTableViewer';
+import { ErrorPageTableViewer } from '../ErrorPage/ErrorPage';
 
 export function TableViewer() {
   const {
