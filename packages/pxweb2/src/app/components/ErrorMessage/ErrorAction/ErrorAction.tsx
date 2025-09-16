@@ -2,7 +2,7 @@ import cl from 'clsx';
 import { useNavigate } from 'react-router';
 
 import classes from './ErrorAction.module.scss';
-import { ErrorMessageProps } from '../ErrorMessage';
+import { ErrorMessageProps } from '../types';
 import { Button } from '@pxweb2/pxweb2-ui';
 
 interface ErrorActionProps extends Pick<ErrorMessageProps, 'action'> {

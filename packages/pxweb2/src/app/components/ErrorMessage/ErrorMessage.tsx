@@ -2,22 +2,9 @@ import cl from 'clsx';
 
 import classes from './ErrorMessage.module.scss';
 import { ErrorAction } from './ErrorAction/ErrorAction';
-import {
-  ErrorIllustration,
-  BackgroundShapeType,
-  IllustrationNameType,
-} from './ErrorIllustration/ErrorIllustration';
+import { ErrorIllustration } from './ErrorIllustration/ErrorIllustration';
 import { Heading, Ingress } from '@pxweb2/pxweb2-ui';
-
-export interface ErrorMessageProps {
-  readonly action: 'button' | 'link';
-  readonly align: 'start' | 'center';
-  readonly illustration: IllustrationNameType;
-  readonly backgroundShape?: BackgroundShapeType;
-  readonly title: string;
-  readonly description: string;
-  readonly actionText: string;
-}
+import { ErrorMessageProps } from './types';
 
 export function ErrorMessage({
   action,
