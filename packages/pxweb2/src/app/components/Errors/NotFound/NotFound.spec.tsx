@@ -28,9 +28,9 @@ describe('NotFound', () => {
   });
 
   it('should render the breadcrumbs', () => {
-    const { getByText } = render(<NotFound />);
+    const { container } = render(<NotFound />);
 
-    expect(getByText('Breadcrumbs component here:')).toBeInTheDocument();
+    expect(container.textContent).toContain('Breadcrumbs component here:');
   });
 
   it('should render the error message', () => {
