@@ -38,6 +38,7 @@ describe('ErrorPage', () => {
     (useRouteError as Mock).mockReturnValue(mockError);
     (useLocation as Mock).mockReturnValue(mockLocation);
   });
+
   it('renders without crashing', () => {
     const { baseElement } = renderWithProviders(<ErrorPage />);
 

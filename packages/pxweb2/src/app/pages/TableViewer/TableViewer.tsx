@@ -5,7 +5,7 @@ import cl from 'clsx';
 import styles from './TableViewer.module.scss';
 import { Selection } from '../../components/Selection/Selection';
 import { Presentation } from '../../components/Presentation/Presentation';
-import ErrorBoundary from '../../components/ErrorBoundry/ErrorBoundry';
+import ErrorBoundary from '../../components/ErrorBoundary/ErrorBoundary';
 import { Header } from '../../components/Header/Header';
 import { NavigationItem } from '../../components/NavigationMenu/NavigationItem/NavigationItemType';
 import NavigationRail from '../../components/NavigationMenu/NavigationRail/NavigationRail';

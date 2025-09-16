@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import { vi } from 'vitest';
 
-import ErrorBoundary from './ErrorBoundry';
+import ErrorBoundary from './ErrorBoundary';
 
 // Mock the Header component
 vi.mock('../Header/Header', () => ({
