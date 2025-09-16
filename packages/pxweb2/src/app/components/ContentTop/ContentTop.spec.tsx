@@ -125,7 +125,6 @@ vi.mock('react-router', () => ({
   useLocation: () => ({ pathname: currentPathname }),
 }));
 
-
 const selectedVBValues: SelectedVBValues[] = [
   {
     id: 'Region',
