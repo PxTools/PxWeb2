@@ -38,6 +38,10 @@
       },
       "required": ["supportedLanguages", "defaultLanguage", "fallbackLanguage"]
     },
+    "baseApplicationPath": {
+      "type": "string",
+      "description": "The base path where the application is served. Should end with a slash (/). Example: '/' or '/myapp/'"
+    },
     "apiUrl": {
       "type": "string",
       "description": "The base url for the pxweb api"
@@ -47,5 +51,5 @@
       "description": "The maximum number of cells allowed to be shown in a table"
     }
   },
-  "required": ["language", "apiUrl", "maxDataCells"]
+  "required": ["language", "baseApplicationPath", "apiUrl", "maxDataCells"]
 }

@@ -53,6 +53,15 @@ interface Resources {
         logo_alt: 'To the front page';
       };
       skip_to_main: 'Skip to main content';
+      status_messages: {
+        drawer_edit: 'More tools for editing the table are under construction.';
+        drawer_help: 'No content will be added here. The help button must be set up to link directly to your own help pages.';
+        drawer_save_api: 'Feature for API query is under construction.';
+        drawer_save_file: 'More file formats are in the works.';
+        drawer_view: 'Graph display is under construction.';
+        tab_definitions: 'The content of this tab is under construction.';
+        welcome: "Welcome to the new PxWeb 2.0! We're still improving to help you find and use the numbers you need 📊✨";
+      };
       title: 'PxWeb 2.0';
     };
     date: {
@@ -195,6 +204,7 @@ interface Resources {
         save: {
           api: {
             description: 'Description text...';
+            query: 'API query';
             title: 'API';
           };
           file: {

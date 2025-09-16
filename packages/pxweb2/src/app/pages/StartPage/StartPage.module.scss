@@ -4,10 +4,6 @@
 
 .startPage {
   color: var(--px-color-text-default);
-
-  @media #{breakpoint.$large} , #{breakpoint.$xlarge} , #{breakpoint.$xxlarge} {
-    border-top: 1px solid var(--color-border-subtle, #c3dcdc);
-  }
 }
 
 .information {
@@ -112,6 +108,7 @@
 
     .filterToggleButton {
       display: inline-flex;
+      align-self: flex-end;
     }
   }
 }
@@ -175,6 +172,17 @@
 
     .showResultsButton {
       width: 100%;
+    }
+  }
+
+  /* WCAG 1.4.10 (Reflow): When desktop users zoom to ~400%, disable the sticky header to prevent loss of content.
+   Limited to desktop via (hover:hover) and (pointer:fine), so mobiles aren’t affected. */
+  @media (max-width: 360px) and (hover: hover) and (pointer: fine) {
+    overflow-y: auto;
+
+    .filterOverlayContent {
+      overflow-y: visible;
+      flex: initial;
     }
   }
 }

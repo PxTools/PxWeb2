@@ -4,6 +4,7 @@ import List from '../List/List';
 import ListItem from '../List/ListItem';
 import { noteCollection } from './noteCollection';
 import { VariableNotes } from './VariableNotes';
+import MarkdownRenderer from '../MarkdownRenderer/MarkdownRenderer';
 
 export type NonMandatoryNotesProps = {
   readonly notes: noteCollection;
@@ -26,7 +27,9 @@ export function NonMandatoryNotes({ notes }: NonMandatoryNotesProps) {
       {notes && notes.tableLevelNotes.length > 0 && (
         <List heading={heading} listType="ul">
           {notes.tableLevelNotes.map((note) => (
-            <ListItem key={getNonMandatoryNoteKey()}>{note}</ListItem>
+            <ListItem key={getNonMandatoryNoteKey()}>
+              <MarkdownRenderer mdText={note} />
+            </ListItem>
           ))}
         </List>
       )}

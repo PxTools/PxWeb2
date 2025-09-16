@@ -56,6 +56,15 @@
       "success": "Suksess:",
       "warning": "Advarsel:",
       "error": "Feil:"
+    },
+    "status_messages": {
+      "welcome": "Velkommen til nye PxWeb 2.0! Vi jobber fortsatt med å gjøre det enklere for deg å finne og bruke tallene du trenger 📊✨",
+      "drawer_view": "Visning for graf er under arbeid.",
+      "drawer_save_file": "Flere filformat er under arbeid.",
+      "drawer_save_api": "Funksjon for API-spørring er under arbeid.",
+      "drawer_edit": "Flere verktøy for å redigere tabellen er under arbeid.",
+      "drawer_help": "Det vil ikke komme noe innhold her. Knappen for hjelp må kobles direkte til egne hjelpesider.",
+      "tab_definitions": "Innholdet til denne fanen er under arbeid."
     }
   },
   "start_page": {
@@ -219,7 +228,8 @@
         },
         "api": {
           "title": "API",
-          "description": "Beskrivelsestekst..."
+          "description": "Beskrivelsestekst...",
+          "query": "API-spørring"
         }
       },
       "help": {

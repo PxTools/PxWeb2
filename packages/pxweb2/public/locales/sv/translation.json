@@ -56,6 +56,15 @@
       "success": "Lyckad åtgärd:",
       "warning": "Varning:",
       "error": "Fel:"
+    },
+    "status_messages": {
+      "welcome": "Välkommen till nya PxWeb! Vi fortsätter att jobba med att göra det enklare för dig att hitta och använda siffrorna du behöver 📊✨",
+      "drawer_view": "Visning av diagram är under arbete.",
+      "drawer_save_file": "Fler filformat är under arbete.",
+      "drawer_save_api": "Funktionen för API-uttag är under arbete.",
+      "drawer_edit": "Fler verktyg för att redigera tabellen är under arbete.",
+      "drawer_help": "Hjälp-knappen måste länkas till egna hjälpsidor.",
+      "tab_definitions": "Innehållet i denna fliken är under arbete."
     }
   },
   "start_page": {
@@ -219,7 +228,8 @@
         },
         "api": {
           "title": "API",
-          "description": "Beskrivande text..."
+          "description": "Beskrivande text...",
+          "query": "API-uttag"
         }
       },
       "help": {
