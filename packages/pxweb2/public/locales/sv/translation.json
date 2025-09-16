@@ -240,6 +240,8 @@
       }
     },
     "main_content": {
+      "expand_view": "Utöka visning",
+      "shrink_view": "Minimera visning",
       "last_updated": "Senast uppdaterad",
       "show_details": "Visa detaljer",
       "dynamic_table_title": "{{table_content_type}} efter {{table_content_label_first_part}} och {{table_content_label_last_part}}",

@@ -241,6 +241,8 @@ interface Resources {
         };
       };
       main_content: {
+        expand_view: 'Expand view';
+        shrink_view: 'Shrink view';
         last_updated: 'Last updated';
         show_details: 'Show details';
         dynamic_table_title: '{{table_content_type}} by {{table_content_label_first_part}} and {{table_content_label_last_part}}';

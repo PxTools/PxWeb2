@@ -26,6 +26,7 @@
 .breadcrumbs {
   display: flex;
   align-items: flex-start;
+  margin-right: 60px;
 }
 .breadcrumbs-wrapper {
   display: flex;
@@ -57,4 +58,10 @@
   flex-direction: column;
   gap: 20px;
   width: 100%;
+}
+
+.resize {
+  position: absolute;
+  right: 28px;
+  top: 28px;
 }

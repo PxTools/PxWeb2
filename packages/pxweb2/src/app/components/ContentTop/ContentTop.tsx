@@ -27,6 +27,8 @@ import { useLocation } from 'react-router';
 export interface ContenetTopProps {
   readonly pxtable: PxTable;
   readonly staticTitle: string;
+  isExpanded: boolean;
+  setIsExpanded: (expanded: boolean) => void;
   readonly pathElements: PathElement[];
 }
 
@@ -100,8 +102,10 @@ export function createNoteMessage(
 export function ContentTop({
   pxtable,
   staticTitle,
+  isExpanded,
+  setIsExpanded,
   pathElements,
-}: ContenetTopProps) {
+}: Readonly<ContenetTopProps>) {
   const { t, i18n } = useTranslation();
   const [isTableInformationOpen, setIsTableInformationOpen] =
     useState<boolean>(false);
@@ -111,8 +115,7 @@ export function ContentTop({
   const { pxTableMetadata, selectedVBValues } = useVariables();
   const selectedMetadata = useTableData().data?.metadata;
   const buildTableTitle = useTableData().buildTableTitle;
-  const { setTitle } = useApp();
-  const { isTablet } = useApp();
+  const { setTitle, isXXLargeDesktop, isTablet } = useApp();
 
   const openInformationButtonRef = useRef<HTMLButtonElement>(null);
   const openInformationLinkRef = useRef<HTMLAnchorElement>(null);
@@ -226,6 +229,20 @@ export function ContentTop({
           variant={breadcrumbsVariant}
           breadcrumbItems={breadcrumbItems}
         />
+        {isXXLargeDesktop && (
+          <Button
+            size="medium"
+            icon={isExpanded ? 'ShrinkHorizontal' : 'ExpandHorizontal'}
+            variant="tertiary"
+            className={cl(classes[`resize`])}
+            title={
+              isExpanded
+                ? t('presentation_page.main_content.shrink_view')
+                : t('presentation_page.main_content.expand_view')
+            }
+            onClick={() => setIsExpanded(!isExpanded)}
+          ></Button>
+        )}
         <div
           id="px-main-content"
           className={cl(classes[`heading-information`])}

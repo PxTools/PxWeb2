@@ -15,6 +15,8 @@ import { getConfig } from '../../util/config/getConfig';
 type propsType = {
   readonly selectedTabId: string;
   readonly scrollRef?: React.Ref<HTMLDivElement>;
+  isExpanded: boolean;
+  setIsExpanded: (expanded: boolean) => void;
 };
 
 const MemoizedTable = React.memo(
@@ -25,7 +27,12 @@ const MemoizedTable = React.memo(
     isEqual(prevProps.pxtable, nextProps.pxtable) &&
     prevProps.isMobile === nextProps.isMobile,
 );
-export function Presentation({ selectedTabId, scrollRef }: propsType) {
+export function Presentation({
+  selectedTabId,
+  scrollRef,
+  isExpanded,
+  setIsExpanded,
+}: Readonly<propsType>) {
   const { isMobile, getSavedQueryId } = useApp();
   const config = getConfig();
   const { i18n, t } = useTranslation();
@@ -203,6 +210,8 @@ export function Presentation({ selectedTabId, scrollRef }: propsType) {
             staticTitle={pxTableMetadata?.label}
             pxtable={tableData.data}
             pathElements={pxTableMetadata?.pathElements ?? []}
+            isExpanded={isExpanded}
+            setIsExpanded={setIsExpanded}
           />
 
           {!variables.isMatrixSizeAllowed && !isMandatoryNotSelectedFirst && (
