@@ -10,9 +10,12 @@
       "detailHeader": "Mer om Statistikbanken",
       "detailContent": [
         {
-          "text": "Uppdatering av Statistikdatabasen sker måndag-fredag kl. 8.00.",
-          "linksSection": {
-            "links": [
+          "textBlock": {
+            "header": "Uppdatering",
+            "text": "Uppdatering av Statistikdatabasen sker måndag-fredag kl. 8.00."
+          },
+          "links": {
+            "items": [
               {
                 "text": "Kom igång med Statistikdatabasen",
                 "url": "#",

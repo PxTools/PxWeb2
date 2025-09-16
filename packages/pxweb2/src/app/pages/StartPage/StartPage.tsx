@@ -540,7 +540,7 @@ const StartPage = () => {
               {t('start_page.header')}
             </Heading>
             <Ingress>{t('start_page.ingress')}</Ingress>
-            <div className={styles.detailsSection}>
+            <div className={styles.showDetailsSection}>
               <StartpageDetails />
             </div>
           </div>

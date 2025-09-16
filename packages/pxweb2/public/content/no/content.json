@@ -10,14 +10,19 @@
       "detailHeader": "Mer om Statistikkbanken",
       "detailContent": [
         {
-          "text": "I Statistikkbanken kan du lage detaljerte tabeller med tidsserier. Det finnes også et API mot Statistikkbanken."
+          "textBlock": {
+            "header": "Oppdatering av metadata",
+            "text": "Metadata oppdateres hver dag klokken 05:00 og 11:30. Dette gjør alle tabeller midlertidig utilgjengelige i opptil fem minutter. Publiserte tall som skal revideres vises som « . » eller « 0 » i tidsrommet klokken 05:00–8:00."
+          }
         },
         {
-          "header": "Oppdatering av metadata",
-          "text": "Metadata oppdateres hver dag klokken 05:00 og 11:30. Dette gjør alle tabeller midlertidig utilgjengelige i opptil fem minutter. Publiserte tall som skal revideres vises som « . » eller « 0 » i tidsrommet klokken 05:00–8:00.",
-          "linksSection": {
+          "textBlock": {
+            "header": "Avsnitt 2",
+            "text": "Bla bla bla"
+          },
+          "links": {
             "header": "Relevante lenker",
-            "links": [
+            "items": [
               {
                 "text": "Endringer i tabeller",
                 "url": "#",
@@ -37,16 +42,9 @@
           }
         },
         {
-          "header": "Teste Avsnitt to",
-          "text": "En liten blokk til med informasjon",
-          "linksSection": {
-            "links": [
-              {
-                "text": "Navnestatistikken",
-                "url": "#",
-                "icon": "FileText"
-              }
-            ]
+          "textBlock": {
+            "header": "Teste Avsnitt to",
+            "text": "En liten blokk til med informasjon"
           }
         }
       ]

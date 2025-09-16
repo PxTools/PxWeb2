@@ -6,15 +6,19 @@ export type DetailLink = {
   icon?: IconProps['iconName'];
 };
 
-export type LinksSection = {
+export type Links = {
   header?: string;
-  links?: DetailLink[];
+  items?: DetailLink[];
+};
+
+export type TextBlock = {
+  header?: string;
+  text?: string;
 };
 
 export type DetailsContent = {
-  header?: string;
-  text?: string;
-  linksSection?: LinksSection;
+  textBlock?: TextBlock;
+  links: Links;
 };
 
 export type DetailsSection = {

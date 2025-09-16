@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Heading, BodyLong, Link, DetailsSection } from '@pxweb2/pxweb2-ui';
+import { BodyLong, Link, DetailsSection } from '@pxweb2/pxweb2-ui';
 import type {
   LocaleContent,
   DetailLink,
 } from '../../util/config/localeContentTypes';
+import cl from 'clsx';
 import styles from './StartPageDetails.module.scss';
 
-async function fetchStartpage(lang: string): Promise<LocaleContent | null> {
+async function fetchLocaleContent(lang: string): Promise<LocaleContent | null> {
   try {
-    const res = await fetch(`/locale-content/content.${lang}.json`, {
+    const res = await fetch(`/content/${lang}/content.json`, {
       cache: 'no-store',
     });
     if (!res.ok) {
@@ -54,7 +55,7 @@ export default function StartPageDetails() {
     let alive = true;
     (async () => {
       const lang = i18n.language || 'en';
-      const data = await fetchStartpage(lang);
+      const data = await fetchLocaleContent(lang);
       if (alive) {
         setContent(data);
       }
@@ -78,33 +79,34 @@ export default function StartPageDetails() {
   return (
     <DetailsSection header={detailsSection.detailHeader ?? 'More information'}>
       <div className={styles.detailsSection}>
-        {detailContents.map((detailContent, index) => {
+        {detailContents.map((detailContent) => {
           return (
-            <section
-              className={styles.detailContent}
-              key={detailContent.header ?? index}
-            >
-              {detailContent.header && (
-                <Heading size="xsmall" className={styles.heading}>
-                  {detailContent.header}
-                </Heading>
-              )}
-
-              {detailContent.text && (
-                <BodyLong className={styles.text}>
-                  {detailContent.text}
-                </BodyLong>
-              )}
-
-              {detailContent.linksSection && (
-                <div className={styles.linksSection}>
-                  {detailContent.linksSection.header && (
-                    <Heading size="xsmall" className={styles.linkHeading}>
-                      {detailContent.linksSection.header}
-                    </Heading>
+            <section className={styles.content}>
+              {detailContent.textBlock && (
+                <div className={styles.textBlock}>
+                  {detailContent.textBlock.header && (
+                    <span
+                      className={cl(styles.heading, styles['heading-xsmall'])}
+                    >
+                      {detailContent.textBlock.header}
+                    </span>
                   )}
-                  {detailContent.linksSection?.links?.length && (
-                    <LinksList items={detailContent.linksSection?.links} />
+
+                  {detailContent.textBlock.text && (
+                    <BodyLong>{detailContent.textBlock.text}</BodyLong>
+                  )}
+                </div>
+              )}
+
+              {detailContent.links && (
+                <div className={styles.linksSection}>
+                  {detailContent.links.header && (
+                    <span className={styles['heading-xsmall']}>
+                      {detailContent.links.header}
+                    </span>
+                  )}
+                  {detailContent.links?.items?.length && (
+                    <LinksList items={detailContent.links?.items} />
                   )}
                 </div>
               )}
