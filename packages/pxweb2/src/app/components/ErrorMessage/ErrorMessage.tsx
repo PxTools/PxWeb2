@@ -10,13 +10,13 @@ import {
 import { Heading, Ingress } from '@pxweb2/pxweb2-ui';
 
 export interface ErrorMessageProps {
-  action: 'button' | 'link';
-  align: 'start' | 'center';
-  illustration: IllustrationNameType;
-  backgroundShape?: BackgroundShapeType;
-  title: string;
-  description: string;
-  actionText: string;
+  readonly action: 'button' | 'link';
+  readonly align: 'start' | 'center';
+  readonly illustration: IllustrationNameType;
+  readonly backgroundShape?: BackgroundShapeType;
+  readonly title: string;
+  readonly description: string;
+  readonly actionText: string;
 }
 
 export function ErrorMessage({

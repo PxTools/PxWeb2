@@ -6,7 +6,7 @@ import { ErrorMessageProps } from '../ErrorMessage';
 import { Button } from '@pxweb2/pxweb2-ui';
 
 interface ErrorActionProps extends Pick<ErrorMessageProps, 'action'> {
-  actionText: string;
+  readonly actionText: string;
 }
 
 export function ErrorAction({ action, actionText }: ErrorActionProps) {

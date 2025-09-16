@@ -4,8 +4,8 @@ import styles from './ErrorLayout.module.scss';
 import { Header } from '../Header/Header';
 
 interface ErrorLayoutProps {
-  isStartPageGenericError?: boolean;
-  children: React.ReactNode;
+  readonly isStartPageGenericError?: boolean;
+  readonly children: React.ReactNode;
 }
 
 // Layout component for error pages, includes header and styles
@@ -16,11 +16,9 @@ export function ErrorLayout({
 }: ErrorLayoutProps) {
   if (isStartPageGenericError) {
     return (
-      <>
-        <div className={cl(styles.fullScreenContainer)}>
-          <main className={cl(styles.mainContent)}>{children}</main>
-        </div>
-      </>
+      <div className={cl(styles.fullScreenContainer)}>
+        <main className={cl(styles.mainContent)}>{children}</main>
+      </div>
     );
   }
 

@@ -8,8 +8,8 @@ export type BackgroundShapeType = keyof typeof Backgrounds;
 export type IllustrationNameType = keyof typeof Illustrations;
 
 interface ErrorIllustrationProps {
-  backgroundShape: BackgroundShapeType;
-  illustrationName: IllustrationNameType;
+  readonly backgroundShape: BackgroundShapeType;
+  readonly illustrationName: IllustrationNameType;
 }
 
 export function ErrorIllustration({
