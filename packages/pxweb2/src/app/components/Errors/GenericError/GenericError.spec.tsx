@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 
 import { GenericError, GenericErrorTableViewer } from './GenericError';
+import { renderWithProviders } from '../../../util/testing-utils';
 
 // Mock the internal components
 vi.mock('../ErrorLayout', () => ({
@@ -13,43 +13,62 @@ vi.mock('../ErrorLayout', () => ({
 vi.mock('../../ErrorMessage', () => ({
   ErrorMessage: () => <div data-testid="error-message">ErrorMessage</div>,
 }));
+vi.mock('../../Header/Header', () => ({
+  Header: () => <div data-testid="header">Header</div>,
+}));
 
-describe('GenericErrorTableViewer', () => {
-  it('should render successfully', () => {
-    const { container } = render(<GenericError />);
+describe('GenericError', () => {
+  describe('default variant', () => {
+    it('should render successfully', () => {
+      const { container } = renderWithProviders(<GenericError />);
 
-    expect(container.firstChild).toBeTruthy();
+      expect(container.firstChild).toBeTruthy();
+    });
+
+    it('should render the error layout', () => {
+      const { getByTestId } = renderWithProviders(<GenericError />);
+
+      expect(getByTestId('error-layout')).toBeInTheDocument();
+    });
+
+    it('should render the header', () => {
+      const { getByTestId } = renderWithProviders(<GenericError />);
+
+      expect(getByTestId('header')).toBeInTheDocument();
+    });
+
+    it('should render the error message', () => {
+      const { getByTestId } = renderWithProviders(<GenericError />);
+
+      expect(getByTestId('error-message')).toBeInTheDocument();
+    });
   });
 
-  it('should render the error layout', () => {
-    const { getByTestId } = render(<GenericError />);
+  describe('tableViewer variant', () => {
+    it('should render successfully', () => {
+      const { container } = renderWithProviders(<GenericErrorTableViewer />);
 
-    expect(getByTestId('error-layout')).toBeInTheDocument();
-  });
+      expect(container.firstChild).toBeTruthy();
+    });
 
-  it('should render the error message', () => {
-    const { getByTestId } = render(<GenericError />);
+    it('should render the error layout', () => {
+      const { getByTestId } = renderWithProviders(<GenericErrorTableViewer />);
 
-    expect(getByTestId('error-message')).toBeInTheDocument();
-  });
-});
+      expect(getByTestId('error-layout')).toBeInTheDocument();
+    });
 
-describe('GenericErrorTableViewer', () => {
-  it('should render successfully', () => {
-    const { container } = render(<GenericErrorTableViewer />);
+    it('should not render the header', () => {
+      const { queryByTestId } = renderWithProviders(
+        <GenericErrorTableViewer />,
+      );
 
-    expect(container.firstChild).toBeTruthy();
-  });
+      expect(queryByTestId('header')).not.toBeInTheDocument();
+    });
 
-  it('should render the error layout', () => {
-    const { getByTestId } = render(<GenericErrorTableViewer />);
+    it('should render the error message', () => {
+      const { getByTestId } = renderWithProviders(<GenericErrorTableViewer />);
 
-    expect(getByTestId('error-layout')).toBeInTheDocument();
-  });
-
-  it('should render the error message', () => {
-    const { getByTestId } = render(<GenericErrorTableViewer />);
-
-    expect(getByTestId('error-message')).toBeInTheDocument();
+      expect(getByTestId('error-message')).toBeInTheDocument();
+    });
   });
 });
