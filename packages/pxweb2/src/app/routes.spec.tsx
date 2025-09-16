@@ -1,7 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
-import { createMemoryRouter, RouterProvider } from 'react-router';
+import {
+  createMemoryRouter,
+  RouterProvider,
+  type RouteObject,
+} from 'react-router';
 
 import * as configModule from './util/config/getConfig';
 import { AppProvider } from './context/AppProvider';
@@ -42,7 +46,7 @@ vi.mock('./context/useApp', () => ({
 }));
 
 // Function to wrap RouterProvider with AppProvider
-function renderWithProviders(router: any) {
+function renderWithProviders(router: ReturnType<typeof createMemoryRouter>) {
   return render(
     <AppProvider>
       <RouterProvider router={router} />
@@ -76,7 +80,7 @@ describe('Router configuration', () => {
   });
 
   describe('when showDefaultLanguageInPath is false', () => {
-    let routerConfig: any[];
+    let routerConfig: RouteObject[];
 
     beforeEach(async () => {
       mockConfig.language.showDefaultLanguageInPath = false;
@@ -137,7 +141,7 @@ describe('Router configuration', () => {
   });
 
   describe('when showDefaultLanguageInPath is true', () => {
-    let routerConfig: any[];
+    let routerConfig: RouteObject[];
 
     beforeEach(async () => {
       mockConfig.language.showDefaultLanguageInPath = true;
