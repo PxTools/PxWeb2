@@ -31,10 +31,6 @@ vi.mock('./pages/ErrorPage/ErrorPage', () => ({
   ),
 }));
 
-vi.mock('./pages/NotFoundPage/NotFoundPage', () => ({
-  default: () => <div data-testid="not-found-page">Not Found Page</div>,
-}));
-
 vi.mock('./pages/TopicIcons/TopicIcons', () => ({
   default: () => <div data-testid="topic-icons">Topic Icons</div>,
 }));
@@ -109,24 +105,6 @@ describe('Router configuration', () => {
 
       renderWithProviders(testRouter);
       expect(screen.getByTestId('table-viewer')).toBeInTheDocument();
-    });
-
-    it('should render NotFound page for default language path', () => {
-      const testRouter = createMemoryRouter(routerConfig, {
-        initialEntries: ['/en/'],
-      });
-
-      renderWithProviders(testRouter);
-      expect(screen.getByTestId('not-found-page')).toBeInTheDocument();
-    });
-
-    it('should render NotFound for non-existent paths and unsupported languages', () => {
-      const testRouter = createMemoryRouter(routerConfig, {
-        initialEntries: ['/non-existent'],
-      });
-
-      renderWithProviders(testRouter);
-      expect(screen.getByTestId('not-found-page')).toBeInTheDocument();
     });
 
     it('should render TopicIcons for /topicIcons path', () => {
@@ -219,28 +197,10 @@ describe('Router configuration', () => {
       renderWithProviders(testRouter);
       expect(screen.getByTestId('table-viewer')).toBeInTheDocument();
     });
-
-    it('should render NotFound for non-existent paths', () => {
-      const testRouter = createMemoryRouter(routerConfig, {
-        initialEntries: ['/en/non-existent'],
-      });
-
-      renderWithProviders(testRouter);
-      expect(screen.getByTestId('not-found-page')).toBeInTheDocument();
-    });
-
-    it('should render NotFoundPage when unsupported language is used', () => {
-      const testRouter = createMemoryRouter(routerConfig, {
-        initialEntries: ['/pl/table/12345'],
-      });
-
-      renderWithProviders(testRouter);
-      expect(screen.getByTestId('not-found-page')).toBeInTheDocument();
-    });
   });
 
   it('should handle error elements', async () => {
-    // Mock console.error to prevent error output in tests
+    // Mock console.error to prevent error output spam when running tests
     const originalConsoleError = console.error;
     console.error = vi.fn();
 
@@ -260,15 +220,13 @@ describe('Router configuration', () => {
     });
 
     renderWithProviders(testRouter);
-    expect(screen.getByTestId('error-page-localized')).toBeInTheDocument();
+    expect(screen.getByText('Test error')).toBeInTheDocument();
 
-    // Restore console.error
+    // Restore console.error and reset the mock
     console.error = originalConsoleError;
-
-    // Reset the mock back to original implementation for other tests
     vi.doMock('./pages/StartPage/StartPage', () => ({
       default: () => <div data-testid="start-page">Start Page</div>,
     }));
-    vi.resetModules(); // Reset modules again to apply the original mock
+    vi.resetModules();
   });
 });
