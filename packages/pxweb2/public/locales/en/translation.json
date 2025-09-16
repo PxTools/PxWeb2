@@ -23,22 +23,8 @@
     "skip_to_main": "Skip to main content",
     "footer": {
       "language_header": "Language",
-      "contact": {
-        "title": "Contact",
-        "description": "Description text..."
-      },
-      "about": {
-        "title": "About",
-        "description": "Description text..."
-      },
-      "accessibility": {
-        "title": "Accessibility",
-        "description": "Description text..."
-      },
-      "version": {
-        "title": "Version",
-        "description": "Description text..."
-      }
+      "copyright": "© Copyright PxTools",
+      "top_button_text": "To the top"
     },
     "generic_buttons": {
       "ok": "OK",

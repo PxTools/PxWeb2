@@ -133,87 +133,16 @@ export const Footer: React.FC<FooterProps> = ({ containerRef }) => {
         </div>
       </div>
       <div className={cl(styles.copyrightAndButton)}>
-        <BodyShort size="medium">© CopyRight PxTools</BodyShort>
+        <BodyShort size="medium">{t('common.footer.copyright')}</BodyShort>
         <Button
           icon="ArrowUp"
           variant="secondary"
           size="medium"
           onClick={() => scrollToTop(containerRef)}
         >
-          To the top
+          {t('common.footer.top_button_text')}
         </Button>
       </div>
-
-      {/* {config.image && (
-        <div style={{ textAlign: 'center', marginBottom: '0.5rem' }}>
-          <img
-            src={config.image}
-            alt=""
-            style={{ maxWidth: '200px', height: 'auto' }}
-          />
-        </div>
-      )}
-      <div style={{ display: 'flex', gap: '2rem', paddingTop: '2rem' }}>
-        {config.columns.map((col, colIdx) => (
-          <div key={colIdx}>
-            <Heading size="small" level="4">
-              {col.header}
-            </Heading>
-            <ul style={{ listStyle: 'none', padding: 0 }}>
-              {col.links.map((link) => (
-                <li key={link.url}>
-                  <Link href={link.url} size="small">
-                    {link.text}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div> */}
-
-      {/* <div className={styles.logos}>
-        <img alt="SCB logo" src="./images/scb-logo.svg" />{' '}
-        <img alt="SSB logo" src="./images/ssb-logo.svg" />
-      </div>
-      <div className={styles.description}>
-        <BodyLong>
-          {t('presentation_page.footer.description')}{' '}
-          <Link
-            inline={true}
-            target="_blank"
-            href="https://github.com/PxTools/PxWeb2"
-          >
-            {t('presentation_page.footer.descriptionLink')}
-          </Link>
-          .
-        </BodyLong>
-      </div>
-      <div className={styles.contact}>
-        <Heading size="xsmall" level="2">
-          {t('presentation_page.footer.contact')}
-        </Heading>
-
-        <BodyLong>
-          {t('presentation_page.footer.projectLeader')}: Kristin Glomsås,{' '}
-          <Link inline={true} href="mailto:krg@ssb.no">
-            krg@ssb.no
-          </Link>
-        </BodyLong>
-        <div className={styles.contactCopyrightWrapper}>
-          <div>
-            <BodyLong>
-              {t('presentation_page.footer.scrumMaster')}: Åsa Arrhén,{' '}
-              <Link inline={true} href="mailto:asa.arrhen@scb.se">
-                asa.arrhen@scb.se
-              </Link>
-            </BodyLong>
-          </div>
-        </div>
-        <div className={styles.copyright}>
-          <BodyLong>{t('presentation_page.footer.copyright')}</BodyLong>
-        </div>
-      </div> */}
     </footer>
   );
 };

@@ -23,22 +23,8 @@
     "skip_to_main": "Gå direkt till huvudinnehållet",
     "footer": {
       "language_header": "Språk",
-      "contact": {
-        "title": "Kontakt",
-        "description": "Beskrivande text..."
-      },
-      "about": {
-        "title": "Om",
-        "description": "Beskrivande text..."
-      },
-      "accessibility": {
-        "title": "Tillgänglighet",
-        "description": "Beskrivande text..."
-      },
-      "version": {
-        "title": "Version",
-        "description": "Beskrivande text..."
-      }
+      "copyright": "© Copyright PxTools",
+      "top_button_text": "Till toppen"
     },
     "generic_buttons": {
       "ok": "OK",

@@ -22,22 +22,9 @@
     },
     "skip_to_main": "Hopp til hovedinnhold",
     "footer": {
-      "contact": {
-        "title": "Kontakt",
-        "description": "Beskrivelsestekst..."
-      },
-      "about": {
-        "title": "Om",
-        "description": "Beskrivelsestekst..."
-      },
-      "accessibility": {
-        "title": "Tilgjengelighet",
-        "description": "Beskrivelsestekst..."
-      },
-      "version": {
-        "title": "Versjon",
-        "description": "Beskrivelsestekst..."
-      }
+      "language_header": "Språk",
+      "copyright": "© Copyright PxTools",
+      "top_button_text": "Til toppen"
     },
     "generic_buttons": {
       "ok": "OK",
