@@ -71,10 +71,9 @@ describe('StartPageDetails (renders from locale file)', () => {
     render(<StartPageDetails />);
 
     await waitFor(() =>
-      expect(global.fetch).toHaveBeenCalledWith(
-        '/locale-content/content.no.json',
-        { cache: 'no-store' },
-      ),
+      expect(global.fetch).toHaveBeenCalledWith('/content/no/content.json', {
+        cache: 'no-store',
+      }),
     );
 
     const toggle = await screen.findByRole('button', {
