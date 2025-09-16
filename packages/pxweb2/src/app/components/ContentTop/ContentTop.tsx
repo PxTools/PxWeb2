@@ -22,6 +22,7 @@ import {
 import useTableData from '../../context/useTableData';
 import useVariables from '../../context/useVariables';
 import useApp from '../../context/useApp';
+import { useLocation } from 'react-router';
 
 export interface ContenetTopProps {
   readonly pxtable: PxTable;
@@ -117,6 +118,7 @@ export function ContentTop({
   const openInformationLinkRef = useRef<HTMLAnchorElement>(null);
   const totalMetadata = pxTableMetadata;
   const openInformationAlertNotesRef = useRef<HTMLDivElement>(null);
+  const location = useLocation();
 
   const handleOpenTableInformation = (opener: string, selectedTab?: string) => {
     setTableInformationOpener(opener);
@@ -208,21 +210,9 @@ export function ContentTop({
     breadcrumbItems.push({
       label: staticTitle,
       href:
-        // navigate to current page without reloading react-router
- // Change the URL to the selected language path
-    // navigate(
-    //   getLanguagePath(
-    //     location.pathname,
-    //     event.target.value,
-    //     config.language.supportedLanguages,
-    //     config.language.fallbackLanguage,
-    //     config.language.showDefaultLanguageInPath,
-    //   ),
-    // );
-
-        window.location.pathname +
-        window.location.search +
-        window.location.hash,
+        location.pathname +
+        location.search +
+        location.hash,
     });
 
     return breadcrumbItems;
