@@ -200,9 +200,10 @@ describe('Router configuration', () => {
   });
 
   it('should handle error elements', async () => {
-    // Mock console.error to prevent error output spam when running tests
-    const originalConsoleError = console.error;
-    console.error = vi.fn();
+    // Suppress console output during error testing - automatically restored after test
+    vi.spyOn(console, 'error').mockImplementation(vi.fn());
+    vi.spyOn(console, 'warn').mockImplementation(vi.fn());
+    vi.spyOn(console, 'log').mockImplementation(vi.fn());
 
     // Set up the mock config
     mockConfig.language.showDefaultLanguageInPath = false;
@@ -212,21 +213,22 @@ describe('Router configuration', () => {
     }));
     vi.resetModules(); // Reset modules to apply the new mock
 
-    // Import router with the throwing component mock
-    const { routerConfig: errorRouterConfig } = await import('./routes');
+    try {
+      // Import router with the throwing component mock
+      const { routerConfig: errorRouterConfig } = await import('./routes');
 
-    const testRouter = createMemoryRouter(errorRouterConfig, {
-      initialEntries: ['/'],
-    });
+      const testRouter = createMemoryRouter(errorRouterConfig, {
+        initialEntries: ['/'],
+      });
 
-    renderWithProviders(testRouter);
-    expect(screen.getByText('Test error')).toBeInTheDocument();
-
-    // Restore console.error and reset the mock
-    console.error = originalConsoleError;
-    vi.doMock('./pages/StartPage/StartPage', () => ({
-      default: () => <div data-testid="start-page">Start Page</div>,
-    }));
-    vi.resetModules();
+      renderWithProviders(testRouter);
+      expect(screen.getByText('Test error')).toBeInTheDocument();
+    } finally {
+      // Reset the component mock
+      vi.doMock('./pages/StartPage/StartPage', () => ({
+        default: () => <div data-testid="start-page">Start Page</div>,
+      }));
+      vi.resetModules();
+    }
   });
 });
