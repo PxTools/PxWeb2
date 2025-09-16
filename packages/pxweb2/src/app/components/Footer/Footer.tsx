@@ -137,7 +137,11 @@ export const Footer: React.FC<FooterProps> = ({ containerRef }) => {
             </div>
           </div>
           <div className={cl(styles.copyrightAndButton)}>
-            <BodyShort size="medium">{t('common.footer.copyright')}</BodyShort>
+            <div className={cl(styles.copyrightWrapper)}>
+              <BodyShort size="medium">
+                {t('common.footer.copyright')}
+              </BodyShort>
+            </div>
             <Button
               icon="ArrowUp"
               variant="secondary"
