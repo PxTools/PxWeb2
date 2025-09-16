@@ -170,9 +170,13 @@ export function createHeading(
   // If we have any variables in the stub create a empty cell at top left corner of the table
   if (table.stub.length > 0) {
     headerRow.push(
-      <th rowSpan={table.heading.length} key={getNewKey()}>
+      <td
+        rowSpan={table.heading.length}
+        className={classes.emptyTableData}
+        key={getNewKey()}
+      >
         {emptyText}
-      </th>,
+      </td>,
     );
   }
   // Otherwise calculate columnspan start value
