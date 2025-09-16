@@ -187,7 +187,8 @@ describe('Selection', () => {
         staticTitle=""
         isExpanded={false}
         setIsExpanded={setIsExpanded}
-        pathElements={[]} />,
+        pathElements={[]}
+      />,
     );
 
     expect(baseElement).toBeTruthy();
