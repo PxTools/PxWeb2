@@ -65,8 +65,8 @@
       "tab_definitions": "The content of this tab is under construction."
     },
     "breadcrumbs": {
-        "arialabelbreadcrumb": "Breadcrumb",
-        "breadCrumbRootTitle": "Home",
+        "aria_label_breadcrumb": "Breadcrumb",
+        "breadrumbRootTitle": "Home",
         "show_more_breadcrumbs": "Show more"
     }
   },

@@ -65,8 +65,8 @@
       "tab_definitions": "محتوى هذه علامة التبويب قيد الإنشاء."
     },
     "breadcrumbs": {
-        "arialabelbreadcrumb": "خبز",
-        "breadCrumbRootTitle": "الصفحة الرئيسية",
+        "aria_label_breadcrumb": "خبز",
+        "breadcrumb_root_title": "الصفحة الرئيسية",
         "show_more_breadcrumbs": "عرض المزيد"
     }
   },

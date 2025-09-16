@@ -66,8 +66,8 @@ interface Resources {
         tab_definitions: 'The content of this tab is under construction.';
       };
       breadcrumbs: {
-        arialabelbreadcrumb: 'Breadcrumb';
-        breadCrumbRootTitle: 'Home';
+        aria_label_breadcrumb: 'Breadcrumb';
+        breadcrumb_root_title: 'Home';
         show_more_breadcrumbs: 'Show more';
       };
     };

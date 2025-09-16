@@ -65,8 +65,8 @@
       "tab_definitions": "Innholdet til denne fanen er under arbeid."
     },
     "breadcrumbs": {
-      "arialabelbreadcrumb": "Brødsmulesti",
-      "breadCrumbRootTitle": "Hjem",
+      "aria_label_breadcrumb": "Brødsmulesti",
+      "breadcrumb_root_title": "Hjem",
       "show_more_breadcrumbs": "Vis mer"
     }
   },

@@ -48,7 +48,7 @@ export const Breadcrumbs = forwardRef<HTMLAnchorElement, BreadcrumbsProps>(
 
     return (
       <nav
-        aria-label={t('common.breadcrumbs.arialabelbreadcrumb')}
+        aria-label={t('common.breadcrumbs.aria_label_breadcrumb')}
         className={cl(
           styles.breadcrumbsContainer,
           variant && styles[variant],

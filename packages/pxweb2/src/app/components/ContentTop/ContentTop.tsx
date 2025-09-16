@@ -192,7 +192,7 @@ export function ContentTop({
     const langPrefix = showLangInPath ? `/${language}` : '';
 
     breadcrumbItems.push({
-      label: t('common.breadcrumbs.breadCrumbRootTitle'),
+      label: t('common.breadcrumbs.breadcrumb_root_title'),
       href: langPrefix,
     });
 
@@ -208,6 +208,18 @@ export function ContentTop({
     breadcrumbItems.push({
       label: staticTitle,
       href:
+        // navigate to current page without reloading react-router
+ // Change the URL to the selected language path
+    // navigate(
+    //   getLanguagePath(
+    //     location.pathname,
+    //     event.target.value,
+    //     config.language.supportedLanguages,
+    //     config.language.fallbackLanguage,
+    //     config.language.showDefaultLanguageInPath,
+    //   ),
+    // );
+
         window.location.pathname +
         window.location.search +
         window.location.hash,
