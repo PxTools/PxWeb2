@@ -35,17 +35,15 @@
   align-self: stretch;
   gap: fixed.$spacing-1;
   background: var(--px-color-surface-default);
-  padding: 40px;
+  padding: fixed.$spacing-10;
 
   // xsmall - medium
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
-    gap: 4px;
     border-radius: var(--px-border-radius-large);
     background: var(--px-color-surface-default);
   }
   // large - xxlarge
   @media (min-width: fixed.$breakpoints-large-min-width) {
-    gap: 4px;
     border-radius: var(--px-border-radius-xlarge);
   }
 }
