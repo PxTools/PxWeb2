@@ -63,85 +63,91 @@ export const Footer: React.FC<FooterProps> = ({ containerRef }) => {
   }, [i18n.language]);
 
   return (
-    <footer className={styles.footer} ref={scrollContainerRef}>
-      <div className={cl(styles.logoAndLinks)}>
-        <div className={cl(styles.logoContainer)}>
-          {footerConfig.image && <img src={footerConfig.image} alt="Logo" />}
-        </div>
-        <div className={cl(styles.footerLinks)}>
-          {footerConfig.columns.map((col) => (
-            <div className={cl(styles.footerLinkGroup)} key={col.header}>
-              <Heading size="small" level="2">
-                {col.header}
-              </Heading>
-              <div className={cl(styles.footerLinkList)}>
-                {col.links.map((link) => {
-                  const showIcon = link.external === true;
-                  const iconProps = showIcon
-                    ? {
-                        icon: 'ExternalLink' as const,
-                        iconPosition: 'right' as const,
-                        target: '_blank' as const,
-                      }
-                    : {};
-                  return (
-                    <Link
-                      inline={false}
-                      href={link.url}
-                      size="small"
-                      key={link.url}
-                      {...iconProps}
-                    >
-                      {link.text}
-                    </Link>
-                  );
-                })}
+    <footer className={styles.footerContainer} ref={scrollContainerRef}>
+      <div className={cl(styles.footer)}>
+        <div className={cl(styles.footerContent)}>
+          <div className={cl(styles.logoAndLinks)}>
+            <div className={cl(styles.logoContainer)}>
+              {footerConfig.image && (
+                <img src={footerConfig.image} alt="Logo" />
+              )}
+            </div>
+            <div className={cl(styles.footerLinks)}>
+              {footerConfig.columns.map((col) => (
+                <div className={cl(styles.footerLinkGroup)} key={col.header}>
+                  <Heading size="small" level="2">
+                    {col.header}
+                  </Heading>
+                  <div className={cl(styles.footerLinkList)}>
+                    {col.links.map((link) => {
+                      const showIcon = link.external === true;
+                      const iconProps = showIcon
+                        ? {
+                            icon: 'ExternalLink' as const,
+                            iconPosition: 'right' as const,
+                            target: '_blank' as const,
+                          }
+                        : {};
+                      return (
+                        <Link
+                          inline={false}
+                          href={link.url}
+                          size="small"
+                          key={link.url}
+                          {...iconProps}
+                        >
+                          {link.text}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+              <div className={cl(styles.footerLinkGroup)}>
+                <Heading size="small" level="2">
+                  {t('common.footer.language_header')}
+                </Heading>
+                <div className={cl(styles.footerLinkList)}>
+                  {Array.isArray(config?.language?.supportedLanguages) &&
+                    config.language.supportedLanguages.map(
+                      (lang: { shorthand: string; languageName: string }) => (
+                        <Link
+                          inline={false}
+                          href="#"
+                          size="small"
+                          key={lang.shorthand}
+                          aria-current={
+                            i18n.language?.startsWith(lang.shorthand)
+                              ? 'true'
+                              : undefined
+                          }
+                          onClick={(e) => {
+                            e.preventDefault();
+                            if (!i18n.language?.startsWith(lang.shorthand)) {
+                              i18n.changeLanguage(lang.shorthand);
+                            }
+                          }}
+                        >
+                          {lang.languageName || lang.shorthand.toUpperCase()}
+                        </Link>
+                      ),
+                    )}
+                </div>
               </div>
             </div>
-          ))}
-          <div className={cl(styles.footerLinkGroup)}>
-            <Heading size="small" level="2">
-              {t('common.footer.language_header')}
-            </Heading>
-            <div className={cl(styles.footerLinkList)}>
-              {Array.isArray(config?.language?.supportedLanguages) &&
-                config.language.supportedLanguages.map(
-                  (lang: { shorthand: string; languageName: string }) => (
-                    <Link
-                      inline={false}
-                      href="#"
-                      size="small"
-                      key={lang.shorthand}
-                      aria-current={
-                        i18n.language?.startsWith(lang.shorthand)
-                          ? 'true'
-                          : undefined
-                      }
-                      onClick={(e) => {
-                        e.preventDefault();
-                        if (!i18n.language?.startsWith(lang.shorthand)) {
-                          i18n.changeLanguage(lang.shorthand);
-                        }
-                      }}
-                    >
-                      {lang.languageName || lang.shorthand.toUpperCase()}
-                    </Link>
-                  ),
-                )}
-            </div>
+          </div>
+          <div className={cl(styles.copyrightAndButton)}>
+            <BodyShort size="medium">{t('common.footer.copyright')}</BodyShort>
+            <Button
+              icon="ArrowUp"
+              variant="secondary"
+              size="medium"
+              onClick={() => scrollToTop(containerRef)}
+            >
+              {t('common.footer.top_button_text')}
+            </Button>
           </div>
         </div>
-      </div>
-      <div className={cl(styles.copyrightAndButton)}>
-        <BodyShort size="medium">{t('common.footer.copyright')}</BodyShort>
-        <Button
-          icon="ArrowUp"
-          variant="secondary"
-          size="medium"
-          onClick={() => scrollToTop(containerRef)}
-        >
-          {t('common.footer.top_button_text')}
-        </Button>
       </div>
     </footer>
   );
