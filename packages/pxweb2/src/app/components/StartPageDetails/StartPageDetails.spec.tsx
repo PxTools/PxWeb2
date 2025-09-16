@@ -29,14 +29,18 @@ const contentNo = {
       detailHeader: 'Mer om Statistikkbanken',
       detailContent: [
         {
-          text: 'I Statistikkbanken kan du lage detaljerte tabeller med tidsserier. Det finnes også et API mot Statistikkbanken.',
+          textBlock: {
+            text: 'I Statistikkbanken kan du lage detaljerte tabeller med tidsserier. Det finnes også et API mot Statistikkbanken.',
+          },
         },
         {
-          header: 'Oppdatering av metadata',
-          text: 'Metadata oppdateres hver dag klokken 05:00 og 11:30. Dette gjør alle tabeller midlertidig utilgjengelige i opptil fem minutter.',
-          linksSection: {
+          textBlock: {
+            header: 'Oppdatering av metadata',
+            text: 'Metadata oppdateres hver dag klokken 05:00 og 11:30. Dette gjør alle tabeller midlertidig utilgjengelige i opptil fem minutter.',
+          },
+          links: {
             header: 'Relevante lenker',
-            links: [
+            items: [
               { text: 'Endringer i tabeller', url: '#', icon: 'FileText' },
               {
                 text: 'Kom i gang med Statistikkbanken',
