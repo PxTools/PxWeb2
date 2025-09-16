@@ -5,6 +5,11 @@
 .breadcrumbsContainer {
   display: inline-flex;
   align-items: center;
+
+  @media ( (min-width: fixed.$breakpoints-xxlarge-min-width)) {
+    margin-right: 60px;
+  }
+
   &.showMore {
     max-width: none;
     flex-wrap: wrap;
