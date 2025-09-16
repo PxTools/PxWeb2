@@ -114,11 +114,17 @@ function getPxTable(): PxTable {
 
   return table;
 }
-
 const pxTable = getPxTable();
 
 const totalMetadata = pxTable.metadata;
 const selectedMetadata = pxTable.metadata;
+
+let currentPathname = '/en/tables';
+
+vi.mock('react-router', () => ({
+  useLocation: () => ({ pathname: currentPathname }),
+}));
+
 
 const selectedVBValues: SelectedVBValues[] = [
   {
