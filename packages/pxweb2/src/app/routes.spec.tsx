@@ -62,6 +62,7 @@ describe('Router configuration', () => {
       showDefaultLanguageInPath: false,
     },
     apiUrl: 'test',
+    baseApplicationPath: '/',
     maxDataCells: 150000,
     specialCharacters: ['.', '..', ':', '-', '...', '*'],
     variableFilterExclusionList: {
