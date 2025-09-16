@@ -5,7 +5,7 @@ import '@testing-library/jest-dom/vitest';
 import { ErrorLayout } from './ErrorLayout';
 
 // Mock the internal components
-vi.mock('../../Header/Header', () => ({
+vi.mock('../Header/Header', () => ({
   Header: () => <div data-testid="header">Header</div>,
 }));
 
