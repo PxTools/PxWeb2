@@ -6,7 +6,7 @@
   display: inline-flex;
   align-items: center;
 
-  @media ( (min-width: fixed.$breakpoints-xxlarge-min-width)) {
+  @media ((min-width: fixed.$breakpoints-xxlarge-min-width)) {
     margin-right: 60px;
   }
 
