@@ -97,6 +97,7 @@
               }
             },
             "mixed_checkbox": "حدد الكل",
+            "mixed_checkbox_search": "حدد جميع النتائج",
             "values_list": {
               "aria_label": "قائمة {{total}} قيم.",
               "no_results_heading": "“{{search}}” لا توجد نتائج ل",

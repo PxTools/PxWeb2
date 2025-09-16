@@ -140,6 +140,7 @@
               }
             },
             "mixed_checkbox": "Velg alle",
+            "mixed_checkbox_search": "Velg alle søketreff",
             "values_list": {
               "aria_label": "Liste av {{total}} verdier.",
               "no_results_heading": "Ingen treff på «{{search}}»",
