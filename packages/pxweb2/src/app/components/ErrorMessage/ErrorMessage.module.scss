@@ -8,15 +8,19 @@
   width: 100%;
 
   @media (breakpoints.$xxlarge) {
-    width: 848px;
+    max-width: 848px;
   }
 
   @media (breakpoints.$xlarge) {
-    width: 728px;
+    max-width: 728px;
   }
 
   @media (breakpoints.$medium) or (breakpoints.$large) {
-    width: 688px;
+    max-width: 688px;
+  }
+
+  @media (breakpoints.$small) {
+    max-width: 508px;
   }
 }
 
