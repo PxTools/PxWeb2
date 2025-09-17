@@ -26,22 +26,19 @@ const renderLinksList = (items?: DetailLink[]) => {
   if (!items?.length) {
     return null;
   }
-
   return (
     <ul className={styles.linksList}>
-      {items.map((link) => {
-        return (
-          <li key={`${link.url}-${link.text}`} className={styles.linkItem}>
-            <Link
-              href={link.url}
-              size="medium"
-              {...(link.icon ? { icon: link.icon, iconPosition: 'left' } : {})}
-            >
-              {link.text}
-            </Link>
-          </li>
-        );
-      })}
+      {items.map((link) => (
+        <li key={`${link.url}-${link.text}`} className={styles.linkItem}>
+          <Link
+            href={link.url}
+            size="medium"
+            {...(link.icon ? { icon: link.icon, iconPosition: 'left' } : {})}
+          >
+            {link.text}
+          </Link>
+        </li>
+      ))}
     </ul>
   );
 };
@@ -78,9 +75,9 @@ export default function StartPageDetails() {
   return (
     <DetailsSection header={detailsSection.detailHeader ?? 'More information'}>
       <div className={styles.detailsSection}>
-        {detailContents.map((detailContent) => {
+        {detailContents.map((detailContent, index) => {
           return (
-            <section className={styles.content}>
+            <section className={styles.content} key={index}>
               {detailContent.textBlock && (
                 <div className={styles.textBlock}>
                   {detailContent.textBlock.header && (
@@ -104,8 +101,7 @@ export default function StartPageDetails() {
                       {detailContent.links.header}
                     </span>
                   )}
-                  {detailContent.links?.items?.length &&
-                    renderLinksList(detailContent.links.items)}
+                  {renderLinksList(detailContent.links.items)}
                 </div>
               )}
             </section>
