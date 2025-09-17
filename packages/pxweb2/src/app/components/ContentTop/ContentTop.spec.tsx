@@ -116,11 +116,16 @@ function getPxTable(): PxTable {
 
   return table;
 }
-
 const pxTable = getPxTable();
 
 const totalMetadata = pxTable.metadata;
 const selectedMetadata = pxTable.metadata;
+
+let currentPathname = '/en/tables';
+
+vi.mock('react-router', () => ({
+  useLocation: () => ({ pathname: currentPathname }),
+}));
 
 const selectedVBValues: SelectedVBValues[] = [
   {
@@ -182,6 +187,7 @@ describe('Selection', () => {
         staticTitle=""
         isExpanded={false}
         setIsExpanded={setIsExpanded}
+        pathElements={[]}
       />,
     );
 
@@ -318,6 +324,7 @@ describe('Expand/Shrink button', () => {
         staticTitle="My title"
         isExpanded={false}
         setIsExpanded={setIsExpanded}
+        pathElements={[]}
       />,
     );
     const button = screen.getByRole('button', { name: /expand/i });
@@ -335,6 +342,7 @@ describe('Expand/Shrink button', () => {
         staticTitle="My title"
         isExpanded={true}
         setIsExpanded={setIsExpanded}
+        pathElements={[]}
       />,
     );
     const button = screen.getByRole('button', { name: /shrink/i });
@@ -352,6 +360,7 @@ describe('Expand/Shrink button', () => {
         staticTitle="My title"
         isExpanded={false}
         setIsExpanded={setIsExpanded}
+        pathElements={[]}
       />,
     );
     const button = screen.getByRole('button', { name: /expand/i });
@@ -371,6 +380,7 @@ describe('Expand button not visible on smaller screens', () => {
         staticTitle="My title"
         isExpanded={false}
         setIsExpanded={setIsExpanded}
+        pathElements={[]}
       />,
     );
 

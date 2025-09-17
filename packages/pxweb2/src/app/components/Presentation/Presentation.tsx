@@ -209,6 +209,7 @@ export function Presentation({
           <ContentTop
             staticTitle={pxTableMetadata?.label}
             pxtable={tableData.data}
+            pathElements={pxTableMetadata?.pathElements ?? []}
             isExpanded={isExpanded}
             setIsExpanded={setIsExpanded}
           />

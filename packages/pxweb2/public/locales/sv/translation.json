@@ -63,6 +63,11 @@
       "drawer_edit": "Fler verktyg för att redigera tabellen är under arbete.",
       "drawer_help": "Hjälp-knappen måste länkas till egna hjälpsidor.",
       "tab_definitions": "Innehållet i denna fliken är under arbete."
+    },
+    "breadcrumbs": {
+        "aria_label_breadcrumb": "Brödsmulor",
+        "breadcrumb_root_title": "Hem",
+        "show_more_breadcrumbs": "Visa mer"
     }
   },
   "start_page": {
@@ -235,7 +240,6 @@
       }
     },
     "main_content": {
-      "arialabelbreadcrumb": "Brödsmulor",
       "expand_view": "Utöka visning",
       "shrink_view": "Minimera visning",
       "last_updated": "Senast uppdaterad",

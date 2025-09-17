@@ -63,6 +63,11 @@
       "drawer_edit": "Flere verktøy for å redigere tabellen er under arbeid.",
       "drawer_help": "Det vil ikke komme noe innhold her. Knappen for hjelp må kobles direkte til egne hjelpesider.",
       "tab_definitions": "Innholdet til denne fanen er under arbeid."
+    },
+    "breadcrumbs": {
+      "aria_label_breadcrumb": "Brødsmulesti",
+      "breadcrumb_root_title": "Hjem",
+      "show_more_breadcrumbs": "Vis mer"
     }
   },
   "start_page": {
@@ -235,7 +240,6 @@
       }
     },
     "main_content": {
-      "arialabelbreadcrumb": "Brødsmulesti",
       "expand_view": "Utvid visning",
       "shrink_view": "Minimer visning",
       "last_updated": "Sist oppdatert",
