@@ -6,10 +6,7 @@ import { Footer, scrollToTop } from './Footer';
 
 const mockConfig = {
   footer: {
-    image: {
-      src: './images/logo.svg',
-      alt: 'Logo',
-    },
+    image: './images/logo.svg',
     columns: [
       {
         header: 'Finding statistics',
@@ -90,10 +87,18 @@ describe('Footer component', () => {
       }),
     ) as unknown as typeof fetch;
 
-    render(<Footer />);
+    const { container } = render(<Footer />);
 
-    const img = await screen.findByRole('img');
-    expect(img).toHaveAttribute('src', mockConfig.footer.image.src);
+    // Decorative image has empty alt so it is intentionally hidden from accessibility tree.
+    // Wait for async fetch + state update to render the image.
+    const img = await vi.waitFor(() => {
+      const el = container.querySelector('img[alt=""]');
+      if (!el) {
+        throw new Error('not yet');
+      }
+      return el;
+    });
+    expect(img).toHaveAttribute('src', mockConfig.footer.image);
 
     // Check for column headers
     mockConfig.footer.columns.forEach((col) => {

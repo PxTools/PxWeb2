@@ -36,10 +36,9 @@ export const Footer: React.FC<FooterProps> = ({ containerRef }) => {
     external?: boolean;
   };
   const config = getConfig();
-  type FooterImage = { src: string; alt?: string };
   type FooterColumn = { header: string; links: FooterLink[] };
   type FooterConfig = {
-    image?: FooterImage;
+    image?: string;
     description?: string;
     columns: FooterColumn[];
   };
@@ -71,8 +70,8 @@ export const Footer: React.FC<FooterProps> = ({ containerRef }) => {
             <div className={cl(styles.logoContainer)}>
               {footerConfig.image && (
                 <img
-                  src={footerConfig.image.src}
-                  alt={footerConfig.image.alt}
+                  src={footerConfig.image}
+                  alt="" /* decorative image: empty alt hides from a11y tree */
                 />
               )}
             </div>
