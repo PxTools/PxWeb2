@@ -1,6 +1,9 @@
 {
     "footer": {
-        "image": "./images/logo.svg",
+        "image": {
+            "src": "./images/logo.svg", 
+            "alt": "PxWeb Logo"
+        },
         "columns": [
             {
                 "header": "PxWeb 2.0",

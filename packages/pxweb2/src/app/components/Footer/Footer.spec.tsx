@@ -6,7 +6,10 @@ import { Footer, scrollToTop } from './Footer';
 
 const mockConfig = {
   footer: {
-    image: './images/logo.svg',
+    image: {
+      src: './images/logo.svg',
+      alt: 'Logo',
+    },
     columns: [
       {
         header: 'Finding statistics',
@@ -90,7 +93,7 @@ describe('Footer component', () => {
     render(<Footer />);
 
     const img = await screen.findByRole('img');
-    expect(img).toHaveAttribute('src', mockConfig.footer.image);
+    expect(img).toHaveAttribute('src', mockConfig.footer.image.src);
 
     // Check for column headers
     mockConfig.footer.columns.forEach((col) => {
