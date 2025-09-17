@@ -14,16 +14,17 @@
   "IncomeAndConsumption.svg",
   "LabourMarketAndEarnings.svg",
   "LivingConditions.svg",
-  "Miscellaneous.svg",
   "NationalAccountsAndBusinessCycles.svg",
   "NatureAndTheEnvironment.svg",
   "Population.svg",
   "PricesAndPriceIndices.svg",
+  "PublicFinances.svg",
   "PublicSector.svg",
   "SocialConditionsWelfareAndCrime.svg",
+  "SocialServices.svg",
   "Svalbard.svg",
   "TechnologyAndInnovation.svg",
-  "TradeAndService.svg",
-  "TransportAndCommunications.svg",
-  "TransportAndTourism.svg"
+  "Test.svg",
+  "TransportAndTourism.svg",
+  "TradeAndService.svg"
 ]
