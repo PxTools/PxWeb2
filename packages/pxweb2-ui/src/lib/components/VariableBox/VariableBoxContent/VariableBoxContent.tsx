@@ -116,7 +116,10 @@ export function VariableBoxContent({
       newItems.push({ type: 'search' });
     }
 
-    if (hasTwoOrMoreValues) {
+    if (
+      hasTwoOrMoreValues &&
+      (searchedValues.length === 0 || searchedValues.length > 1)
+    ) {
       newItems.push({ type: 'mixedCheckbox' });
     }
 
