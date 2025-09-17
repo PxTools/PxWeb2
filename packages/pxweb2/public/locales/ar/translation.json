@@ -63,6 +63,11 @@
       "drawer_edit": "يتم إنشاء المزيد من الأدوات لتحرير الجدول.",
       "drawer_help": "لن يُضاف أي محتوى هنا. يجب أن يرتبط زر المساعدة مباشرةً بصفحات المساعدة الخاصة به.",
       "tab_definitions": "محتوى هذه علامة التبويب قيد الإنشاء."
+    },
+    "breadcrumbs": {
+        "aria_label_breadcrumb": "خبز",
+        "breadcrumb_root_title": "الصفحة الرئيسية",
+        "show_more_breadcrumbs": "عرض المزيد"
     }
   },
   "start_page": {
@@ -192,7 +197,8 @@
       }
     },
     "main_content": {
-      "arialabelbreadcrumb": "مسار التنقل",
+      "expand_view": "توسيع العرض",
+      "shrink_view": "عرض الانكماش",
       "last_updated": "آخر تحديث",
       "show_details": "إظهار التفاصيل",
       "dynamic_table_title": "{{table_content_type}} بعد {{table_content_label_first_part}} و {{table_content_label_last_part}}",
