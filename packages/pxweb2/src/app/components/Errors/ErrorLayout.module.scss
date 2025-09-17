@@ -2,7 +2,7 @@
 @use '$ui/src/lib/breakpoints.scss' as breakpoints;
 
 .fullScreenContainer {
-  display: flex;
+  display: block;
   padding: fixed.$spacing-8 0 fixed.$spacing-18 0;
   flex-direction: column;
   align-self: stretch;
@@ -14,14 +14,40 @@
   }
 }
 
+.container {
+  margin-left: auto;
+  margin-right: auto;
+
+  @media #{breakpoints.$xsmall} {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+
+  @media #{breakpoints.$small} {
+    max-width: 508px;
+  }
+
+  @media #{breakpoints.$medium} {
+    max-width: 688px;
+  }
+
+  @media #{breakpoints.$large} {
+    max-width: 928px;
+  }
+
+  @media #{breakpoints.$xlarge} {
+    max-width: 1108px;
+  }
+
+  @media #{breakpoints.$xxlarge} {
+    max-width: 1288px;
+  }
+}
+
 .mainContent {
   display: flex;
   flex-direction: column;
   gap: fixed.$spacing-15;
-
-  max-width: 1108px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .alignStart {

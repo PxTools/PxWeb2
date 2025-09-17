@@ -20,14 +20,16 @@ export function ErrorLayout({
     return (
       <>
         <div className={cl(styles.fullScreenContainer)}>
-          <main
-            className={cl(
-              styles.mainContent,
-              align === 'center' ? styles.alignCenter : styles.alignStart,
-            )}
-          >
-            {children}
-          </main>
+          <div className={cl(styles.container)}>
+            <main
+              className={cl(
+                styles.mainContent,
+                align === 'center' ? styles.alignCenter : styles.alignStart,
+              )}
+            >
+              {children}
+            </main>
+          </div>
         </div>
         <div>Footer Component goes here</div>
       </>
@@ -38,14 +40,16 @@ export function ErrorLayout({
     <>
       <Header stroke={true} />
       <div className={cl(styles.fullScreenContainer)}>
-        <main
-          className={cl(
-            styles.mainContent,
-            align === 'center' ? styles.alignCenter : styles.alignStart,
-          )}
-        >
-          {children}
-        </main>
+        <div className={cl(styles.container)}>
+          <main
+            className={cl(
+              styles.mainContent,
+              align === 'center' ? styles.alignCenter : styles.alignStart,
+            )}
+          >
+            {children}
+          </main>
+        </div>
       </div>
       <div>Footer Component goes here</div>
     </>
