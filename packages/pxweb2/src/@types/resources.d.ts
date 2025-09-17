@@ -143,12 +143,14 @@ interface Resources {
         };
         arialabelbreadcrumb: 'Breadcrumb';
         dynamic_table_title: '{{table_content_type}} by {{table_content_label_first_part}} and {{table_content_label_last_part}}';
+        expand_view: 'Expand view';
         last_updated: 'Last updated';
         related: {
           description: 'Description text...';
           title: 'Related';
         };
         show_details: 'Show details';
+        shrink_view: 'Shrink view';
         table: {
           warnings: {
             missing_mandatory: {

@@ -100,4 +100,8 @@
     scrollbar-width: thin;
     gap: fixed.$spacing-8;
   }
+
+  &.expanded {
+    max-width: 100%;
+  }
 }
