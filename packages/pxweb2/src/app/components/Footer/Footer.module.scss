@@ -117,9 +117,18 @@
   justify-content: space-between;
   align-items: flex-end;
   align-content: flex-end;
-  row-gap: fixed.$spacing-7;
   align-self: stretch;
   flex-wrap: wrap;
+
+  // xsmall - medium
+  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
+    row-gap: fixed.$spacing-8;
+  }
+
+  // large - xxlarge
+  @media (min-width: fixed.$breakpoints-large-min-width) {
+    row-gap: fixed.$spacing-14;
+  }
 }
 
 .copyrightWrapper {

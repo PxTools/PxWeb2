@@ -93,7 +93,6 @@ export const Footer: React.FC<FooterProps> = ({ containerRef }) => {
                         : {};
                       return (
                         <Link
-                          inline={false}
                           href={link.url}
                           size="small"
                           key={link.url}
