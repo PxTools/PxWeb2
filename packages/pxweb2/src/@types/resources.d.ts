@@ -7,6 +7,11 @@ interface Resources {
         success: 'Success:';
         warning: 'Warning:';
       };
+      breadcrumbs: {
+        aria_label_breadcrumb: 'Breadcrumb';
+        breadcrumb_root_title: 'Home';
+        show_more_breadcrumbs: 'Show more';
+      };
       errors: {
         generic: {
           action_text: 'Refresh';
@@ -141,7 +146,6 @@ interface Resources {
           };
           title: 'Information';
         };
-        arialabelbreadcrumb: 'Breadcrumb';
         dynamic_table_title: '{{table_content_type}} by {{table_content_label_first_part}} and {{table_content_label_last_part}}';
         expand_view: 'Expand view';
         last_updated: 'Last updated';
