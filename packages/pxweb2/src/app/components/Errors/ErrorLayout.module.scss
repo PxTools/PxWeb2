@@ -18,6 +18,10 @@
   display: flex;
   flex-direction: column;
   gap: fixed.$spacing-15;
+
+  max-width: 1108px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .alignStart {
