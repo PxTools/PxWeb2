@@ -22,7 +22,7 @@ async function fetchLocaleContent(lang: string): Promise<LocaleContent | null> {
   }
 }
 
-function LinksList({ items }: { items?: DetailLink[] }) {
+const renderLinksList = (items?: DetailLink[]) => {
   if (!items?.length) {
     return null;
   }
@@ -34,9 +34,8 @@ function LinksList({ items }: { items?: DetailLink[] }) {
           <li key={`${link.url}-${link.text}`} className={styles.linkItem}>
             <Link
               href={link.url}
-              icon={link.icon}
-              iconPosition="left"
               size="medium"
+              {...(link.icon ? { icon: link.icon, iconPosition: 'left' } : {})}
             >
               {link.text}
             </Link>
@@ -45,7 +44,7 @@ function LinksList({ items }: { items?: DetailLink[] }) {
       })}
     </ul>
   );
-}
+};
 
 export default function StartPageDetails() {
   const { i18n } = useTranslation();
@@ -105,9 +104,8 @@ export default function StartPageDetails() {
                       {detailContent.links.header}
                     </span>
                   )}
-                  {detailContent.links?.items?.length && (
-                    <LinksList items={detailContent.links?.items} />
-                  )}
+                  {detailContent.links?.items?.length &&
+                    renderLinksList(detailContent.links.items)}
                 </div>
               )}
             </section>
