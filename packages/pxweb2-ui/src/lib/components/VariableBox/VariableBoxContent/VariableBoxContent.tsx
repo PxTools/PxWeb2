@@ -329,6 +329,9 @@ export function VariableBoxContent({
       const value = item.value;
       return (
         <>
+          {searchedValues.length === 1 && search !== '' && (
+            <div className={classes['spacer']}></div>
+          )}
           <div
             id={value.code + uniqueId}
             tabIndex={-1}
