@@ -17,6 +17,8 @@ import {
   Ingress,
   BodyShort,
   SearchHandle,
+  Breadcrumbs,
+  type BreadcrumbItem,
 } from '@pxweb2/pxweb2-ui';
 import { type Table } from '@pxweb2/pxweb2-api-client';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
@@ -530,11 +532,25 @@ const StartPage = () => {
     );
   };
 
+  const renderBreadCrumb = () => {
+    const frontPage: BreadcrumbItem = {
+      label: 'Forsiden',
+      href: 'https://www.ssb.no/',
+    };  
+    return (
+      <Breadcrumbs
+          variant='default'
+          breadcrumbItems={[frontPage, { label: t('start_page.header'), href: '/' }]}
+        />
+    );
+  };
+
   return (
     <>
       <Header stroke={true} />
       <div className={styles.startPage}>
         <div className={styles.container}>
+        {renderBreadCrumb()}
           <div className={styles.information}>
             <Heading size="large" level="1" className={styles.title}>
               {t('start_page.header')}
