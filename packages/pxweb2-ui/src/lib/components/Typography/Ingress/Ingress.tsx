@@ -17,17 +17,22 @@ export function Ingress({
   textcolor = 'default',
   weight = 'regular',
   children,
+  className = '',
   ...rest
 }: IngressProps) {
+  const cssClasses = className.length > 0 ? ' ' + className : '';
+
   return (
     <p
-      className={cl(
-        classes.ingress,
-        classes[`align-${align}`],
-        spacing ? classes.spacing : '',
-        cl({ [classes[`text-color-${textcolor}`]]: textcolor }),
-        cl({ [classes[`weight-${weight}`]]: weight }),
-      )}
+      className={
+        cl(
+          classes.ingress,
+          classes[`align-${align}`],
+          spacing ? classes.spacing : '',
+          cl({ [classes[`text-color-${textcolor}`]]: textcolor }),
+          cl({ [classes[`weight-${weight}`]]: weight }),
+        ) + cssClasses
+      }
       {...rest}
     >
       {children}

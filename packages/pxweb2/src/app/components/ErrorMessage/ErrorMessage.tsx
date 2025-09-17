@@ -42,7 +42,11 @@ export function ErrorMessage({
           <Heading level="1" align={align} size="large">
             {title}
           </Heading>
-          <Ingress>{description}</Ingress>
+          <Ingress
+            className={cl({ [classes.alignCenter]: align === 'center' })}
+          >
+            {description}
+          </Ingress>
         </div>
 
         <Ingress>
