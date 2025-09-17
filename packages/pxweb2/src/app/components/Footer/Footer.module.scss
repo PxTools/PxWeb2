@@ -14,17 +14,17 @@
 
   // xsmall
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
-    padding: fixed.$spacing-4;
+    padding: fixed.$spacing-4 fixed.$spacing-4 fixed.$spacing-12 fixed.$spacing-4;
   }
 
   // small
   @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
-    padding: fixed.$spacing-8;
+    padding: fixed.$spacing-8 fixed.$spacing-8 fixed.$spacing-12 fixed.$spacing-8;
   }
 
   // medium
   @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
-    padding: fixed.$spacing-11;
+    padding: fixed.$spacing-11 fixed.$spacing-11 fixed.$spacing-12 fixed.$spacing-11;
   }
 }
 
