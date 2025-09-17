@@ -145,6 +145,7 @@
               }
             },
             "mixed_checkbox": "Select all",
+            "mixed_checkbox_search": "Select all results",
             "values_list": {
               "aria_label": "List of {{total}} values.",
               "no_results_heading": "No results for “{{search}}”",
