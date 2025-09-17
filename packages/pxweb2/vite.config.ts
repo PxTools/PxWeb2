@@ -28,13 +28,6 @@ export default defineConfig({
     port: 4200,
     host: 'localhost',
   },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        api: 'modern-compiler',
-      },
-    },
-  },
   preview: {
     port: 4300,
     host: 'localhost',

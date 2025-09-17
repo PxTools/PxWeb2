@@ -29,6 +29,27 @@ function mockTableService() {
         PARQUET: 'PARQUET',
       },
       TableService: {
+        getTableById: vi.fn().mockResolvedValue({
+          id: 'TAB638',
+          label:
+            'Population by region, marital status, age, sex, observations and year',
+          language: 'en',
+          languages: ['sv', 'en'],
+          elimination: false,
+          type: 'Table',
+          links: [
+            {
+              rel: 'self',
+              hreflang: 'en',
+              href: 'https://api.scb.se/OV0104/v2beta/api/v2/tables/TAB638?lang=en',
+            },
+            {
+              rel: 'alternate',
+              hreflang: 'sv',
+              href: 'https://api.scb.se/OV0104/v2beta/api/v2/tables/TAB638?lang=sv',
+            },
+          ],
+        }),
         getTableCodeListById: vi.fn().mockResolvedValue({
           id: 'vs_RegionLän07',
           label: 'County',

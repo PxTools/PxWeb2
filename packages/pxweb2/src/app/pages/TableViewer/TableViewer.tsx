@@ -25,7 +25,7 @@ export function TableViewer() {
   const {
     isMobile,
     isTablet,
-    isLargeDesktop,
+    isXLargeDesktop,
     skipToMainFocused,
     setSkipToMainFocused,
   } = useApp();
@@ -41,10 +41,11 @@ export function TableViewer() {
   const [selectedTableId] = useState(tableId ?? 'tab638');
   const [errorMsg] = useState('');
   const [selectedNavigationView, setSelectedNavigationView] =
-    useState<NavigationItem>(isLargeDesktop ? 'selection' : 'none');
+    useState<NavigationItem>(isXLargeDesktop ? 'selection' : 'none');
   const [hasFocus, setHasFocus] = useState<NavigationItem>('none');
   const [openedWithKeyboard, setOpenedWithKeyboard] = useState(false);
   const outerContainerRef = useRef<HTMLDivElement | null>(null);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const navigationBarRef = useRef<{
     selection: HTMLButtonElement;
@@ -233,11 +234,15 @@ export function TableViewer() {
           />
           <div
             ref={!isSmallScreen ? outerContainerRef : undefined}
-            className={styles.contentAndFooterContainer}
+            className={cl(styles.contentAndFooterContainer, {
+              [styles.expanded]: isExpanded,
+            })}
           >
             <Presentation
               scrollRef={outerContainerRef}
               selectedTabId={selectedTableId}
+              isExpanded={isExpanded}
+              setIsExpanded={setIsExpanded}
             ></Presentation>
             <Footer />
           </div>

@@ -7,7 +7,10 @@ import {
   SavedQueriesService,
   SelectionResponse,
 } from '@pxweb2/pxweb2-api-client';
-import { mapJsonStat2Response } from '../../../mappers/JsonStat2ResponseMapper';
+import {
+  mapJsonStat2Response,
+  mapJsonStat2ResponsePathElements,
+} from '../../../mappers/JsonStat2ResponseMapper';
 import { mapTableSelectionResponse } from '../../../mappers/TableSelectionResponseMapper';
 
 import {
@@ -291,14 +294,29 @@ export function Selection({
       metaDataDefaultSelection = true;
     }
 
-    TableService.getMetadataById(
-      selectedTabId,
-      i18n.resolvedLanguage,
-      metaDataDefaultSelection,
-      savedQueryId,
-    )
-      .then((Dataset) => {
+    // Make parallel calls to getMetadataById and getTableById
+    Promise.all([
+      TableService.getMetadataById(
+        selectedTabId,
+        i18n.resolvedLanguage,
+        metaDataDefaultSelection,
+        savedQueryId,
+      ),
+      TableService.getTableById(selectedTabId, i18n.resolvedLanguage),
+    ])
+      .then(([Dataset, TableData]) => {
         const pxTable: PxTable = mapJsonStat2Response(Dataset, false);
+
+        const firstMatchingPathArray = TableData.paths?.find(
+          (pathArr: any[]) => pathArr[0]?.id === TableData.subjectCode,
+        );
+
+        const pathElements = mapJsonStat2ResponsePathElements(
+          firstMatchingPathArray ? firstMatchingPathArray.flat() : undefined,
+        );
+
+        pxTable.metadata.pathElements =
+          pathElements.length > 0 ? pathElements : undefined;
 
         setPxTableMetadata(pxTable.metadata);
         if (pxTableMetaToRender !== null) {

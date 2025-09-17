@@ -34,9 +34,11 @@ describe('TableDataProvider', () => {
             isInitialized: true,
             data: undefined,
             fetchTableData: mockFetchTableData,
+            fetchSavedQuery: vi.fn(),
             pivotToMobile: vi.fn(),
             pivotToDesktop: vi.fn(),
             pivotCW: vi.fn(),
+            buildTableTitle: vi.fn(),
           }}
         >
           <TestComponent />

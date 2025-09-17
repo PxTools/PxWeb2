@@ -11,7 +11,7 @@ import {
 } from '../../util/startPageFilters';
 import { FilterContext } from '../../context/FilterContext';
 import { YearRangeFilter } from './YearRangeFilter';
-import { ReactNode, useContext, useMemo, useState } from 'react';
+import { ReactNode, useContext, useState, useMemo } from 'react';
 import { upperFirst, debounce } from 'lodash';
 
 interface CollapsibleProps {
@@ -225,13 +225,14 @@ const VariablesFilter: React.FC<{ onFilterChange?: () => void }> = ({
   const [variableSearch, setVariableSearch] = useState('');
   const { t } = useTranslation();
 
-  const filteredVariables = useMemo(
-    () =>
-      Array.from(state.availableFilters.variables).filter((value) => {
-        return value[0].includes(variableSearch);
-      }),
-    [variableSearch, state.availableFilters.variables],
-  );
+  // Compute the filtered list of variables only when either the available variables
+  // or the search query changes. The search query is normalized (trimmed + lowercased)
+  const filtered = useMemo(() => {
+    const query = variableSearch.trim().toLowerCase();
+    return Array.from(state.availableFilters.variables).filter(([key]) =>
+      key.toLowerCase().includes(query),
+    );
+  }, [state.availableFilters.variables, variableSearch]);
 
   return (
     <>
@@ -248,20 +249,20 @@ const VariablesFilter: React.FC<{ onFilterChange?: () => void }> = ({
         aria-atomic="true"
       >
         {t('start_page.filter.variable_count', {
-          countShown: filteredVariables.length,
+          countShown: filtered.length,
           countTotal: state.availableFilters.variables.size,
         })}
       </label>
       <ul className={styles.scrollableVariableFilter}>
-        {filteredVariables.map((item, index) => {
+        {filtered.map(([key, count], index) => {
           const isActive = state.activeFilters.some(
-            (filter) => filter.type === 'variable' && filter.value === item[0],
+            (filter) => filter.type === 'variable' && filter.value === key,
           );
           return (
-            <li key={item[0]}>
+            <li key={key}>
               <Checkbox
-                id={index.toString()}
-                text={`${upperFirst(item[0])} (${item[1]})`}
+                id={`var-${key}`}
+                text={`${upperFirst(key)} (${count})`}
                 value={isActive}
                 onChange={(value) => {
                   value
@@ -270,15 +271,15 @@ const VariablesFilter: React.FC<{ onFilterChange?: () => void }> = ({
                         payload: [
                           {
                             type: 'variable',
-                            value: item[0],
-                            label: upperFirst(item[0]),
+                            value: key,
+                            label: upperFirst(key),
                             index,
                           },
                         ],
                       })
                     : dispatch({
                         type: ActionType.REMOVE_FILTER,
-                        payload: { value: item[0], type: 'variable' },
+                        payload: { value: key, type: 'variable' },
                       });
                   onFilterChange?.();
                 }}
