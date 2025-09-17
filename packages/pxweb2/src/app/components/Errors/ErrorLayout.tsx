@@ -24,7 +24,7 @@ export function ErrorLayout({
 
   return (
     <>
-      <Header />
+      <Header stroke={true} />
       <div className={cl(styles.fullScreenContainer)}>
         <main className={cl(styles.mainContent)}>{children}</main>
       </div>

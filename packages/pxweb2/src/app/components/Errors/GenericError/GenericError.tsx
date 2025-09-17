@@ -9,7 +9,7 @@ export function GenericError() {
 
   return (
     <>
-      <Header />
+      <Header stroke={true} />
       {/* Expand ErrorLayout for start page generic error here */}
       <ErrorLayout isStartPageGenericError={true}>
         <ErrorMessage
