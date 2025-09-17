@@ -63,7 +63,7 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 64px;
+    gap: fixed.$spacing-16;
     align-self: stretch;
   }
 
@@ -72,7 +72,7 @@
     display: flex;
     align-items: flex-start;
     align-content: flex-start;
-    gap: 64px 32px;
+    gap: fixed.$spacing-16 fixed.$spacing-8;
     align-self: stretch;
     flex-wrap: wrap;
   }
@@ -82,16 +82,16 @@
   display: flex;
   max-width: 232px;
   max-height: 72px;
-  padding-right: 80px;
+  padding-right: fixed.$spacing-20;
   align-items: flex-start;
-  gap: 4px;
+  gap: fixed.$spacing-1;
 }
 
 .footerLinks {
   display: flex;
   align-items: flex-start;
   align-content: flex-start;
-  gap: 40px 32px;
+  gap: fixed.$spacing-10 fixed.$spacing-8;
   flex: 1 0 0;
   flex-wrap: wrap;
 }
@@ -102,7 +102,7 @@
   min-width: 200px;
   flex-direction: column;
   align-items: flex-start;
-  gap: 12px;
+  gap: fixed.$spacing-3;
 }
 
 .footerLinkList {
@@ -117,7 +117,7 @@
   justify-content: space-between;
   align-items: flex-end;
   align-content: flex-end;
-  row-gap: 28px;
+  row-gap: fixed.$spacing-7;
   align-self: stretch;
   flex-wrap: wrap;
 }
@@ -126,5 +126,5 @@
   display: flex;
   min-width: 260px;
   align-items: flex-end;
-  gap: 4px;
+  gap: fixed.$spacing-1;
 }
