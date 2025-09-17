@@ -536,12 +536,15 @@ const StartPage = () => {
     const frontPage: BreadcrumbItem = {
       label: 'Forsiden',
       href: 'https://www.ssb.no/',
-    };  
+    };
     return (
       <Breadcrumbs
-          variant='default'
-          breadcrumbItems={[frontPage, { label: t('start_page.header'), href: '/' }]}
-        />
+        variant="default"
+        breadcrumbItems={[
+          frontPage,
+          { label: t('start_page.header'), href: '/' },
+        ]}
+      />
     );
   };
 
@@ -550,7 +553,7 @@ const StartPage = () => {
       <Header stroke={true} />
       <div className={styles.startPage}>
         <div className={styles.container}>
-        {renderBreadCrumb()}
+          {renderBreadCrumb()}
           <div className={styles.information}>
             <Heading size="large" level="1" className={styles.title}>
               {t('start_page.header')}
