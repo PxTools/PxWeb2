@@ -16,14 +16,29 @@ export function ErrorMessage({
   actionText,
 }: ErrorMessageProps) {
   return (
-    <div className={cl(classes.errorMessage, classes[`align-${align}`])}>
+    <div
+      className={cl(
+        classes.errorMessage,
+        align === 'center' ? classes.alignCenter : classes.alignStart,
+      )}
+    >
       <ErrorIllustration
         backgroundShape={backgroundShape}
         illustrationName={illustration}
       />
 
-      <div className={cl(classes.textAndAction, classes[`align-${align}`])}>
-        <div className={cl(classes.text, classes[`align-${align}`])}>
+      <div
+        className={cl(
+          classes.textAndAction,
+          align === 'center' ? classes.alignCenter : classes.alignStart,
+        )}
+      >
+        <div
+          className={cl(
+            classes.text,
+            align === 'center' ? classes.alignCenter : classes.alignStart,
+          )}
+        >
           <Heading level="1" align={align} size="large">
             {title}
           </Heading>
@@ -31,7 +46,7 @@ export function ErrorMessage({
         </div>
 
         <Ingress>
-          <ErrorAction action={action} actionText={actionText} />
+          <ErrorAction action={action} actionText={actionText} align={align} />
         </Ingress>
       </div>
     </div>

@@ -5,7 +5,6 @@
   display: flex;
   padding: fixed.$spacing-8 0 fixed.$spacing-18 0;
   flex-direction: column;
-  align-items: center;
   align-self: stretch;
   background: var(--px-color-surface-default);
 
@@ -17,8 +16,14 @@
 
 .mainContent {
   display: flex;
-  max-width: 1108px;
   flex-direction: column;
-  align-items: flex-start;
   gap: fixed.$spacing-15;
+}
+
+.alignStart {
+  align-items: start;
+}
+
+.alignCenter {
+  align-items: center;
 }

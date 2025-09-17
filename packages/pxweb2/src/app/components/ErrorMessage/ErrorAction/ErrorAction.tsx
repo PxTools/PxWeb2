@@ -5,11 +5,10 @@ import classes from './ErrorAction.module.scss';
 import { ErrorMessageProps } from '../types';
 import { Button } from '@pxweb2/pxweb2-ui';
 
-interface ErrorActionProps extends Pick<ErrorMessageProps, 'action'> {
-  readonly actionText: string;
-}
+interface ErrorActionProps
+  extends Pick<ErrorMessageProps, 'action' | 'actionText' | 'align'> {}
 
-export function ErrorAction({ action, actionText }: ErrorActionProps) {
+export function ErrorAction({ action, actionText, align }: ErrorActionProps) {
   const navigate = useNavigate();
 
   return (
@@ -21,7 +20,10 @@ export function ErrorAction({ action, actionText }: ErrorActionProps) {
       ) : (
         <button
           onClick={() => navigate(-1)}
-          className={cl(classes.link)}
+          className={cl(
+            classes.link,
+            align === 'center' ? classes.alignCenter : classes.alignStart,
+          )}
           type="button"
         >
           {actionText}

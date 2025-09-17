@@ -37,3 +37,13 @@
     background-color: var(--px-color-surface-action-subtle-active);
   }
 }
+
+.alignCenter {
+  align-items: center;
+  text-align: center;
+}
+
+.alignStart {
+  align-items: flex-start;
+  text-align: start;
+}

@@ -8,7 +8,7 @@ export function NotFound() {
   const title = t('common.errors.not_found.title');
 
   return (
-    <ErrorLayout>
+    <ErrorLayout align="start">
       <div>Breadcrumbs component here: {title}</div>
 
       <ErrorMessage

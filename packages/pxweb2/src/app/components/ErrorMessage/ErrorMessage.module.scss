@@ -40,9 +40,11 @@
   align-self: stretch;
 }
 
-.align-center {
+.alignCenter {
   align-items: center;
+  text-align: center;
 }
-.align-start {
+.alignStart {
   align-items: flex-start;
+  text-align: start;
 }
