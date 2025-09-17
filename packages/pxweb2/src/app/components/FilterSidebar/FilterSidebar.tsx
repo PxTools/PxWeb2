@@ -11,8 +11,8 @@ import {
 } from '../../util/startPageFilters';
 import { FilterContext } from '../../context/FilterContext';
 import { YearRangeFilter } from './YearRangeFilter';
-import { ReactNode, useContext, useState } from 'react';
-import _ from 'lodash';
+import { ReactNode, useContext, useMemo, useState } from 'react';
+import { upperFirst, debounce } from 'lodash';
 
 interface CollapsibleProps {
   subject: PathItem;
@@ -225,54 +225,67 @@ const VariablesFilter: React.FC<{ onFilterChange?: () => void }> = ({
   const [variableSearch, setVariableSearch] = useState('');
   const { t } = useTranslation();
 
+  const filteredVariables = useMemo(
+    () =>
+      Array.from(state.availableFilters.variables).filter((value) => {
+        return value[0].includes(variableSearch);
+      }),
+    [variableSearch, state.availableFilters.variables],
+  );
+
   return (
     <>
       <div className={styles.variablesSearchBox}>
         <Search
           searchPlaceHolder={t('start_page.filter.variabel_search')}
           variant="default"
-          onChange={(value) => setVariableSearch(value)}
+          onChange={debounce((value) => setVariableSearch(value), 500)}
         />
       </div>
+      <label
+        className={styles['sr-only']}
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        {t('start_page.filter.variable_count', {
+          countShown: filteredVariables.length,
+          countTotal: state.availableFilters.variables.size,
+        })}
+      </label>
       <ul className={styles.scrollableVariableFilter}>
-        {Array.from(state.availableFilters.variables)
-          .filter((value) => {
-            return value[0].includes(variableSearch);
-          })
-          .map((item, index) => {
-            const isActive = state.activeFilters.some(
-              (filter) =>
-                filter.type === 'variable' && filter.value === item[0],
-            );
-            return (
-              <li key={item[0]}>
-                <Checkbox
-                  id={index.toString()}
-                  text={`${_.upperFirst(item[0])} (${item[1]})`}
-                  value={isActive}
-                  onChange={(value) => {
-                    value
-                      ? dispatch({
-                          type: ActionType.ADD_FILTER,
-                          payload: [
-                            {
-                              type: 'variable',
-                              value: item[0],
-                              label: _.upperFirst(item[0]),
-                              index,
-                            },
-                          ],
-                        })
-                      : dispatch({
-                          type: ActionType.REMOVE_FILTER,
-                          payload: { value: item[0], type: 'variable' },
-                        });
-                    onFilterChange?.();
-                  }}
-                />
-              </li>
-            );
-          })}
+        {filteredVariables.map((item, index) => {
+          const isActive = state.activeFilters.some(
+            (filter) => filter.type === 'variable' && filter.value === item[0],
+          );
+          return (
+            <li key={item[0]}>
+              <Checkbox
+                id={index.toString()}
+                text={`${upperFirst(item[0])} (${item[1]})`}
+                value={isActive}
+                onChange={(value) => {
+                  value
+                    ? dispatch({
+                        type: ActionType.ADD_FILTER,
+                        payload: [
+                          {
+                            type: 'variable',
+                            value: item[0],
+                            label: upperFirst(item[0]),
+                            index,
+                          },
+                        ],
+                      })
+                    : dispatch({
+                        type: ActionType.REMOVE_FILTER,
+                        payload: { value: item[0], type: 'variable' },
+                      });
+                  onFilterChange?.();
+                }}
+              />
+            </li>
+          );
+        })}
       </ul>
     </>
   );

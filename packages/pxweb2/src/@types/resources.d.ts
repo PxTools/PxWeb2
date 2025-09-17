@@ -95,6 +95,7 @@ interface Resources {
         };
         variabel: 'Variable';
         variabel_search: 'Search for variable';
+        variable_count: 'Showing {{countShown}} of {{countTotal}} variables';
         frequency: {
           annual: 'Year';
           monthly: 'Month';

@@ -94,6 +94,7 @@
       },
       "variabel": "Variabel",
       "variabel_search": "Søk etter variabel",
+      "variable_count": "Viser {{countShown}} av {{countTotal}} variabler",
       "frequency": {
         "annual": "År",
         "monthly": "Måned",
