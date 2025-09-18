@@ -15,8 +15,16 @@
     margin-bottom: 1rem;
   }
 
+  .showDetailsSection {
+    padding-top: 36px;
+  }
+
   @media #{breakpoint.$xsmall} , #{breakpoint.$small} {
     padding: 62px 0 48px 0;
+
+    .showDetailsSection {
+      padding-top: 32px;
+    }
   }
 
   @media #{breakpoint.$medium} {
@@ -30,10 +38,6 @@
   @media #{breakpoint.$xlarge} {
     max-width: 728px;
   }
-}
-
-.showDetailsSection {
-  padding-top: 2rem;
 }
 
 .searchFilterResult {
