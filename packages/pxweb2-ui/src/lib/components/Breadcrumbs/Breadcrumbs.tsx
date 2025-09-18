@@ -1,10 +1,11 @@
-import React, { forwardRef, useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import cl from 'clsx';
+import { useTranslation } from 'react-i18next';
+import i18next from 'i18next';
+
 import styles from './Breadcrumbs.module.scss';
 import { BreadcrumbsIcon } from '../Icon/BreadcrumbsIcon';
 import Link from '../Link/Link';
-import { useTranslation } from 'react-i18next';
-import i18next from 'i18next';
 
 interface BreadcrumbsProps
   extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
@@ -22,98 +23,100 @@ export class BreadcrumbItem {
   }
 }
 
-export const Breadcrumbs = forwardRef<HTMLAnchorElement, BreadcrumbsProps>(
-  function Breadcrumbs({
-    breadcrumbItems,
-    variant = 'default',
-  }: BreadcrumbsProps) {
-    const ulRef = useRef<HTMLUListElement>(null);
-    const [isOverflowing, setIsOverflowing] = useState(false);
-    const [showMore, setShowMore] = useState(false);
-    const dots = '...';
-    const { t } = useTranslation();
+export function Breadcrumbs({
+  breadcrumbItems,
+  variant = 'default',
+}: BreadcrumbsProps) {
+  const ulRef = useRef<HTMLUListElement>(null);
+  const [isOverflowing, setIsOverflowing] = useState(false);
+  const [showMore, setShowMore] = useState(false);
+  const dots = '...';
+  const { t } = useTranslation();
 
-    useEffect(() => {
-      const checkOverflow = () => {
-        if (ulRef.current) {
-          setIsOverflowing(
-            ulRef.current.scrollWidth > ulRef.current.clientWidth,
-          );
-        }
-      };
-      checkOverflow();
-      window.addEventListener('resize', checkOverflow);
-      return () => window.removeEventListener('resize', checkOverflow);
-    }, []);
+  useEffect(() => {
+    const checkOverflow = () => {
+      if (ulRef.current) {
+        setIsOverflowing(ulRef.current.scrollWidth > ulRef.current.clientWidth);
+      }
+    };
 
-    return (
-      <nav
-        aria-label={t('common.breadcrumbs.aria_label_breadcrumb')}
+    checkOverflow();
+    window.addEventListener('resize', checkOverflow);
+
+    return () => window.removeEventListener('resize', checkOverflow);
+  }, []);
+
+  return (
+    <nav
+      aria-label={t('common.breadcrumbs.aria_label_breadcrumb')}
+      className={cl(
+        styles.breadcrumbsContainer,
+        variant && styles[variant],
+        showMore && styles.showMore,
+      )}
+    >
+      <ul
+        ref={ulRef}
         className={cl(
-          styles.breadcrumbsContainer,
+          styles.breadcrumbsWrapper,
           variant && styles[variant],
           showMore && styles.showMore,
         )}
       >
-        <ul
-          ref={ulRef}
-          className={cl(
-            styles.breadcrumbsWrapper,
-            variant && styles[variant],
-            showMore && styles.showMore,
-          )}
-        >
-          {breadcrumbItems.map((item, idx) => {
-            const isLast = idx === breadcrumbItems.length - 1;
-            return (
-              <li
-                key={item.href}
+        {breadcrumbItems.map((item, idx) => {
+          const isLast = idx === breadcrumbItems.length - 1;
+
+          return (
+            <li
+              key={item.href}
+              className={cl(
+                styles.breadcrumbItem,
+                variant && styles[variant],
+                showMore && styles.showMore,
+              )}
+            >
+              <Link
                 className={cl(
-                  styles.breadcrumbItem,
+                  styles.breadcrumbItemLink,
                   variant && styles[variant],
+                  styles['bodyshort-medium'],
                   showMore && styles.showMore,
                 )}
+                size="medium"
+                inline
+                href={item.href}
+                {...(isLast ? { 'aria-current': 'page' } : {})}
               >
-                <Link
-                  className={cl(
-                    styles.breadcrumbItemLink,
-                    variant && styles[variant],
-                    styles['bodyshort-medium'],
-                    showMore && styles.showMore,
-                  )}
-                  size="medium"
-                  inline
-                  href={item.href}
-                  {...(isLast ? { 'aria-current': 'page' } : {})}
-                >
-                  {item.label}
-                </Link>
-                <BreadcrumbsIcon
-                  aria-hidden="true"
-                  className={cl(
-                    styles.breadcrumbItemIcon,
-                    variant && styles[variant],
-                    i18next.dir() === 'rtl' ? styles.rtl : styles.ltr,
-                  )}
-                />
-              </li>
-            );
-          })}
-        </ul>
-        {variant === 'compact' && isOverflowing && !showMore && (
-          <span className={styles.compactActions}>
-            <span className={styles.dots}>{dots}</span>
-            <input
-              type="button"
-              className={cl(styles.showMoreText)}
-              value={t('common.breadcrumbs.show_more_breadcrumbs')}
-              onClick={() => setShowMore(true)}
-              aria-label="Show more breadcrumbs"
-            />
-          </span>
-        )}
-      </nav>
-    );
-  },
-);
+                {item.label}
+              </Link>
+
+              <BreadcrumbsIcon
+                aria-hidden="true"
+                className={cl(
+                  styles.breadcrumbItemIcon,
+                  variant && styles[variant],
+                  i18next.dir() === 'rtl' ? styles.rtl : styles.ltr,
+                )}
+              />
+            </li>
+          );
+        })}
+      </ul>
+
+      {variant === 'compact' && isOverflowing && !showMore && (
+        <span className={styles.compactActions}>
+          <span className={styles.dots}>{dots}</span>
+          <input
+            type="button"
+            className={cl(styles.showMoreText)}
+            value={t('common.breadcrumbs.show_more_breadcrumbs')}
+            onClick={() => setShowMore(true)}
+            aria-label="Show more breadcrumbs"
+          />
+        </span>
+      )}
+    </nav>
+  );
+}
+
 export default Breadcrumbs;
