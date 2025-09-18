@@ -84,8 +84,8 @@
 .logoContainer {
   // xsmall - medium
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
-      width: 232px;
-      max-height: 72px;
+    width: 232px;
+    max-height: 72px;
   }
 
   // large - xxlarge
