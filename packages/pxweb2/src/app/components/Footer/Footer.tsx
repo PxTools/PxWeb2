@@ -72,6 +72,7 @@ export const Footer: React.FC<FooterProps> = ({ containerRef }) => {
                 <img
                   src={footerConfig.image}
                   alt="" /* decorative image: empty alt hides from a11y tree */
+                  // className={cl(styles.logo)}
                 />
               )}
             </div>
