@@ -12,7 +12,7 @@ export const TopicIcons: React.FC = () => {
         if (!Array.isArray(data)) {
           throw new Error('topicIcons.json must be an array of strings');
         }
-        const svgFiles = (data as string[]).filter(
+        const svgFiles = data.filter(
           (f): f is string => typeof f === 'string' && /\.svg$/i.test(f),
         );
         setFiles(svgFiles);
@@ -20,7 +20,7 @@ export const TopicIcons: React.FC = () => {
       .catch((e) => console.error(`Kunne ikke laste ikonliste: ${e.message}`));
   }, []);
 
-  if (files === null || !files.length) {
+  if (!files?.length) {
     return (
       <div className={styles.topicIcons}>
         <Heading level="1" size="large">
