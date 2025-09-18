@@ -8,8 +8,8 @@ import i18next from 'i18next';
 
 interface BreadcrumbsProps
   extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
-  variant?: 'default' | 'compact';
-  breadcrumbItems: BreadcrumbItem[];
+  readonly variant?: 'default' | 'compact';
+  readonly breadcrumbItems: BreadcrumbItem[];
 }
 
 export class BreadcrumbItem {
