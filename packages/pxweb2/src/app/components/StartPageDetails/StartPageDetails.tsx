@@ -1,26 +1,9 @@
-import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BodyLong, Link, DetailsSection } from '@pxweb2/pxweb2-ui';
-import type {
-  LocaleContent,
-  DetailLink,
-} from '../../util/config/localeContentTypes';
+import type { DetailLink } from '../../util/config/localeContentTypes';
+import { useLocaleContent } from '../../util/content/useLocaleContent';
 import cl from 'clsx';
 import styles from './StartPageDetails.module.scss';
-
-async function fetchLocaleContent(lang: string): Promise<LocaleContent | null> {
-  try {
-    const res = await fetch(`/content/${lang}/content.json`, {
-      cache: 'no-store',
-    });
-    if (!res.ok) {
-      return null;
-    }
-    return (await res.json()) as LocaleContent;
-  } catch {
-    return null;
-  }
-}
 
 const renderLinksList = (items?: DetailLink[]) => {
   if (!items?.length) {
@@ -47,22 +30,7 @@ const renderLinksList = (items?: DetailLink[]) => {
 
 export default function StartPageDetails() {
   const { i18n } = useTranslation();
-  const [content, setContent] = useState<LocaleContent | null>(null);
-
-  useEffect(() => {
-    let alive = true;
-    (async () => {
-      const lang = i18n.language || 'en';
-      const data = await fetchLocaleContent(lang);
-      if (alive) {
-        setContent(data);
-      }
-    })();
-
-    return () => {
-      alive = false;
-    };
-  }, [i18n.language]);
+  const content = useLocaleContent(i18n.language || 'en');
 
   const detailsSection = content?.startPage?.detailsSection;
   if (!detailsSection || detailsSection.enabled === false) {
