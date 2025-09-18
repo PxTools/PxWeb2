@@ -95,7 +95,7 @@ export const Footer: React.FC<FooterProps> = ({ containerRef }) => {
                       return (
                         <Link
                           href={link.url}
-                          size="small"
+                          size="medium"
                           key={link.url}
                           {...iconProps}
                         >
@@ -115,9 +115,8 @@ export const Footer: React.FC<FooterProps> = ({ containerRef }) => {
                     config.language.supportedLanguages.map(
                       (lang: { shorthand: string; languageName: string }) => (
                         <Link
-                          inline={false}
                           href="#"
-                          size="small"
+                          size="medium"
                           key={lang.shorthand}
                           aria-current={
                             i18n.language?.startsWith(lang.shorthand)

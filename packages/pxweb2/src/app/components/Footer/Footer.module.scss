@@ -90,22 +90,33 @@
   gap: fixed.$spacing-1;
 }
 
-// .logo {
-//   display: flex;
-//   width: 72px;
-//   height: 72px;
-//   justify-content: center;
-//   align-items: center;
-//   aspect-ratio: 1/1;
-// }
+.logo {
+  // display: flex;
+  // width: 232px;
+  // height: 36px;
+  // justify-content: center;
+  // align-items: center;
+  // aspect-ratio: 1/1;
+  // max-width: 232px;
+  // max-height: 72px;
+}
 
 .footerLinks {
   display: flex;
   align-items: flex-start;
   align-content: flex-start;
-  gap: fixed.$spacing-10 fixed.$spacing-8;
   flex: 1 0 0;
   flex-wrap: wrap;
+
+  // xsmall - medium
+  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
+    gap: fixed.$spacing-8 fixed.$spacing-8;
+  }
+
+  // large - xxlarge
+  @media (min-width: fixed.$breakpoints-large-min-width) {
+    gap: fixed.$spacing-14 fixed.$spacing-8;
+  }
 }
 
 .footerLinkGroup {
@@ -131,16 +142,7 @@
   align-content: flex-end;
   align-self: stretch;
   flex-wrap: wrap;
-
-  // xsmall - medium
-  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
-    row-gap: fixed.$spacing-8;
-  }
-
-  // large - xxlarge
-  @media (min-width: fixed.$breakpoints-large-min-width) {
-    row-gap: fixed.$spacing-14;
-  }
+  row-gap: fixed.$spacing-7;
 }
 
 .copyrightWrapper {
