@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { fetchLocaleContent } from './localeContent';
+import { fetchLocaleContent } from '../content/localeContent';
 import type { LocaleContent } from '../config/localeContentTypes';
 
 export function useLocaleContent(lang: string) {

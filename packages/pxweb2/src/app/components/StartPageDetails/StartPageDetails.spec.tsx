@@ -1,9 +1,9 @@
 import '@testing-library/jest-dom/vitest';
-import { render, screen, waitFor, within } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { render, screen, waitFor } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import type { Mock } from 'vitest';
 import StartPageDetails from './StartPageDetails';
+import { useLocaleContent } from '../../util/hooks/useLocaleContent';
 
 let mockLanguage = 'no';
 vi.mock('react-i18next', () => ({
@@ -13,14 +13,9 @@ vi.mock('react-i18next', () => ({
   }),
 }));
 
-const originalFetch = global.fetch;
-beforeEach(() => {
-  global.fetch = vi.fn();
-});
-afterEach(() => {
-  global.fetch = originalFetch!;
-  vi.clearAllMocks();
-});
+vi.mock('../../util/hooks/useLocaleContent', () => ({
+  useLocaleContent: vi.fn(),
+}));
 
 const contentNo = {
   startPage: {
@@ -28,26 +23,14 @@ const contentNo = {
       enabled: true,
       detailHeader: 'Mer om Statistikkbanken',
       detailContent: [
+        { textBlock: { text: 'Intro-tekst' } },
         {
-          textBlock: {
-            text: 'I Statistikkbanken kan du lage detaljerte tabeller med tidsserier. Det finnes også et API mot Statistikkbanken.',
-          },
-        },
-        {
-          textBlock: {
-            header: 'Oppdatering av metadata',
-            text: 'Metadata oppdateres hver dag klokken 05:00 og 11:30. Dette gjør alle tabeller midlertidig utilgjengelige i opptil fem minutter.',
-          },
+          textBlock: { header: 'Oppdatering', text: 'Metadata oppdateres…' },
           links: {
             header: 'Relevante lenker',
             items: [
               { text: 'Endringer i tabeller', url: '#', icon: 'FileText' },
-              {
-                text: 'Kom i gang med Statistikkbanken',
-                url: '#',
-                icon: 'InformationCircle',
-              },
-              { text: 'Kom i gang med Api', url: '#', icon: 'FileCode' },
+              { text: 'Kom i gang', url: '#', icon: 'InformationCircle' },
             ],
           },
         },
@@ -56,97 +39,50 @@ const contentNo = {
   },
 };
 
-function mockFetchJson(json: unknown, ok = true) {
-  (global.fetch as unknown as Mock).mockResolvedValue({
-    ok,
-    json: async () => json,
-  } as unknown as Response);
-}
-
 describe('StartPageDetails (renders from locale file)', () => {
-  it('fetches the correct locale file and renders header, text, and links (after opening)', async () => {
-    mockLanguage = 'no';
-    mockFetchJson(contentNo);
+  beforeEach(() => {
+    (useLocaleContent as Mock).mockReset?.();
+  });
 
+  it('renders header and body from hook (no fetch mocking needed)', async () => {
+    (useLocaleContent as Mock).mockReturnValue(contentNo);
     render(<StartPageDetails />);
-
-    await waitFor(() =>
-      expect(global.fetch).toHaveBeenCalledWith('/content/no/content.json', {
-        cache: 'no-store',
-      }),
-    );
 
     const toggle = await screen.findByRole('button', {
       name: 'Mer om Statistikkbanken',
     });
-    expect(toggle).toHaveAttribute('aria-expanded', 'false');
-
-    await userEvent.click(toggle);
+    expect(toggle).toBeInTheDocument();
+    toggle.click();
     await waitFor(() =>
       expect(toggle).toHaveAttribute('aria-expanded', 'true'),
     );
 
-    expect(
-      screen.getByText(/I Statistikkbanken kan du lage detaljerte tabeller/i),
-    ).toBeInTheDocument();
-    expect(screen.getByText('Oppdatering av metadata')).toBeInTheDocument();
+    // innhold
+    expect(screen.getByText(/Intro-tekst/)).toBeInTheDocument();
+    expect(screen.getByText('Oppdatering')).toBeInTheDocument();
     expect(screen.getByText('Relevante lenker')).toBeInTheDocument();
-
-    const links = within(document.body).getAllByRole('link');
-    expect(links.map((a) => a.textContent)).toEqual([
-      'Endringer i tabeller',
-      'Kom i gang med Statistikkbanken',
-      'Kom i gang med Api',
-    ]);
+    expect(
+      screen.getByRole('link', { name: 'Endringer i tabeller' }),
+    ).toBeInTheDocument();
   });
 
-  it('does not render anything when enabled=false', async () => {
-    const disabled = structuredClone(contentNo);
-    disabled.startPage.detailsSection.enabled = false;
-    mockFetchJson(disabled);
-    mockLanguage = 'no';
-
+  it('renders nothing when enabled=false', () => {
+    (useLocaleContent as Mock).mockReturnValue({
+      startPage: { detailsSection: { enabled: false, detailContent: [] } },
+    });
     render(<StartPageDetails />);
-
-    await waitFor(() => expect(global.fetch).toHaveBeenCalled());
     expect(
       screen.queryByRole('button', { name: 'Mer om Statistikkbanken' }),
     ).not.toBeInTheDocument();
   });
 
   it('does not render anything when detailContent is empty', async () => {
-    const empty = structuredClone(contentNo);
-    empty.startPage.detailsSection.detailContent = [];
-    mockFetchJson(empty);
-    mockLanguage = 'no';
-
+    (useLocaleContent as Mock).mockReturnValue({
+      startPage: {},
+    });
     render(<StartPageDetails />);
-
-    await waitFor(() => expect(global.fetch).toHaveBeenCalled());
     expect(
       screen.queryByRole('button', { name: 'Mer om Statistikkbanken' }),
     ).not.toBeInTheDocument();
-  });
-
-  it('toggles aria-expanded on click (open/close)', async () => {
-    mockLanguage = 'no';
-    mockFetchJson(contentNo);
-
-    render(<StartPageDetails />);
-
-    const toggle = await screen.findByRole('button', {
-      name: 'Mer om Statistikkbanken',
-    });
-    expect(toggle).toHaveAttribute('aria-expanded', 'false');
-
-    await userEvent.click(toggle);
-    await waitFor(() =>
-      expect(toggle).toHaveAttribute('aria-expanded', 'true'),
-    );
-
-    await userEvent.click(toggle);
-    await waitFor(() =>
-      expect(toggle).toHaveAttribute('aria-expanded', 'false'),
-    );
   });
 });

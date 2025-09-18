@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { BodyLong, Link, DetailsSection } from '@pxweb2/pxweb2-ui';
 import type { DetailLink } from '../../util/config/localeContentTypes';
-import { useLocaleContent } from '../../util/content/useLocaleContent';
+import { useLocaleContent } from '../../util/hooks/useLocaleContent';
 import cl from 'clsx';
 import styles from './StartPageDetails.module.scss';
 

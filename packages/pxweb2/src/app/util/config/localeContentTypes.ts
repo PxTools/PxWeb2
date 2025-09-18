@@ -19,7 +19,7 @@ export type TextBlock = {
 
 export type DetailsContent = {
   textBlock?: TextBlock;
-  links: Links;
+  links?: Links;
 };
 
 export type DetailsSection = {
