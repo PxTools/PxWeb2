@@ -272,6 +272,11 @@ interface Resources {
           title: 'Display';
         };
       };
+      breadcrumbs: {
+        aria_label_breadcrumb: 'Breadcrumb';
+        breadcrumb_root_title: 'Home';
+        show_more_breadcrumbs: 'Show more';
+      };
     };
     start_page: {
       filter: {
@@ -443,7 +448,6 @@ interface Resources {
         };
       };
       main_content: {
-        arialabelbreadcrumb: 'Breadcrumb';
         expand_view: 'Expand view';
         shrink_view: 'Shrink view';
         last_updated: 'Last updated';
