@@ -11,37 +11,25 @@
       "detailContent": [
         {
           "textBlock": {
-            "text": "Statbank Norway contains detailed tables with time series. You can create your own selections and save these in different file formats. We also offer an API for StatBank."
-          }
-        },
-        {
-          "textBlock": {
-            "text": "Our release time for all statistics is 08:00 CET"
-          }
-        },
-        {
-          "textBlock": {
-            "text": "At 05:00 and 11:30 Statbank Norway’s metadata are updated, and  the tables can be temporarily unavailable for up to five minutes. Published figures which are being revised are shown as ‘ 0 ’ or ‘ . ’ between 05:00 and 08:00."
+            "header": "When to use this section",
+            "text": "This is an optional section that can be used for content that may be useful for some users, but is not essential for everyone. Key information that all users need to see should always appear in the lead paragraph."
           }
         },
         {
           "links": {
-            "header": "Relevant links",
+            "header": "Useful resources",
             "items": [
               {
-                "text": "How to use Statbank Norway",
-                "url": "#",
-                "icon": "FileText"
+                "text": "Example link 1",
+                "url": "#"
               },
               {
-                "text": "Changes to tables in Statbank Norway",
-                "url": "#",
-                "icon": "InformationCircle"
+                "text": "Example link 2",
+                "url": "#"
               },
               {
-                "text": "Public APIs",
-                "url": "#",
-                "icon": "FileCode"
+                "text": "Example link 3",
+                "url": "#"
               }
             ]
           }

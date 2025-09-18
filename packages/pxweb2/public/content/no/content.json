@@ -12,39 +12,34 @@
         {
           "textBlock": {
             "header": "Oppdatering av metadata",
-            "text": "Metadata oppdateres hver dag klokken 05:00 og 11:30. Dette gjør alle tabeller midlertidig utilgjengelige i opptil fem minutter. Publiserte tall som skal revideres vises som « . » eller « 0 » i tidsrommet klokken 05:00–8:00."
+            "text": "Vi oppdaterer metadata hver dag klokken 05:00 og 11:30. Dette gjør alle tabeller midlertidig utilgjengelige i opptil fem minutter. Publiserte tall som skal revideres vises som « . » eller « 0 » mellom klokken 05:00–8:00."
           }
         },
         {
-          "textBlock": {
-            "header": "Avsnitt 2",
-            "text": "Bla bla bla"
-          },
           "links": {
-            "header": "Relevante lenker",
+            "header": "Nyttige ressurser",
             "items": [
               {
-                "text": "Endringer i tabeller",
-                "url": "#",
-                "icon": "FileText"
-              },
-              {
                 "text": "Kom i gang med Statistikkbanken",
-                "url": "#",
-                "icon": "InformationCircle"
+                "url": "#"
               },
               {
                 "text": "Kom i gang med Api",
-                "url": "#",
-                "icon": "FileCode"
+                "url": "#"
+              },
+              {
+                "text": "Endringer i tabeller",
+                "url": "#"
+              },
+              {
+                "text": "Tabeller som bruker ny regioninndeling også for årene før 2024",
+                "url": "#"
+              },
+              {
+                "text": "Kontakt Statistikkbanken",
+                "url": "#"
               }
             ]
-          }
-        },
-        {
-          "textBlock": {
-            "header": "Teste Avsnitt to",
-            "text": "En liten blokk til med informasjon"
           }
         }
       ]

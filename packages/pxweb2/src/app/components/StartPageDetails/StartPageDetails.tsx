@@ -97,7 +97,12 @@ export default function StartPageDetails() {
               {detailContent.links && (
                 <div className={styles.linksSection}>
                   {detailContent.links.header && (
-                    <span className={styles['heading-xsmall']}>
+                    <span
+                      className={cl(
+                        styles.linksHeading,
+                        styles['heading-xsmall'],
+                      )}
+                    >
                       {detailContent.links.header}
                     </span>
                   )}

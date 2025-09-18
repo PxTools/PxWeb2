@@ -7,19 +7,22 @@
     },
     "detailsSection": {
       "enabled": true,
-      "detailHeader": "Mer om Statistikbanken",
+      "detailHeader": "Mer om Statistikdatabasen",
       "detailContent": [
         {
           "textBlock": {
-            "header": "Uppdatering",
-            "text": "Uppdatering av Statistikdatabasen sker måndag-fredag kl. 8.00."
+            "text": "Uppdatering av Statistikdatabasen sker måndag till fredag klockan 8:00."
           },
           "links": {
+            "header": "Relevanta länkar",
             "items": [
               {
                 "text": "Kom igång med Statistikdatabasen",
-                "url": "#",
-                "icon": "FileText"
+                "url": "#"
+              },
+              {
+                "text": "Kontakt Statistikservice",
+                "url": "#"
               }
             ]
           }
