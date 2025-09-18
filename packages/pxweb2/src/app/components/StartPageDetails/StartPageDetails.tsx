@@ -33,7 +33,9 @@ const renderLinksList = (items?: DetailLink[]) => {
           <Link
             href={link.url}
             size="medium"
-            {...(link.icon ? { icon: link.icon, iconPosition: 'left' } : {})}
+            {...(link.icon
+              ? { icon: link.icon, iconPosition: link.iconPosition ?? 'left' }
+              : {})}
           >
             {link.text}
           </Link>

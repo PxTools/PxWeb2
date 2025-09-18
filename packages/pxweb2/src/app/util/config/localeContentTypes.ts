@@ -4,6 +4,7 @@ export type DetailLink = {
   text: string;
   url: string;
   icon?: IconProps['iconName'];
+  iconPosition?: 'left' | 'right';
 };
 
 export type Links = {
