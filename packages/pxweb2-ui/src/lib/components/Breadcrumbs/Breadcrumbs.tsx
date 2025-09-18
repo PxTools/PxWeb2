@@ -9,8 +9,8 @@ import Link from '../Link/Link';
 
 interface BreadcrumbsProps
   extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
-  variant?: 'default' | 'compact';
-  breadcrumbItems: BreadcrumbItem[];
+  readonly variant?: 'default' | 'compact';
+  readonly breadcrumbItems: BreadcrumbItem[];
 }
 
 export class BreadcrumbItem {
