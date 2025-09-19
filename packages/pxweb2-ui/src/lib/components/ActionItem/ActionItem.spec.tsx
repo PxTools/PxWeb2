@@ -4,30 +4,32 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { ActionItem } from './ActionItem';
 
-// Mock i18next
-vi.mock('react-i18next', () => ({
-  useTranslation: () => ({
-    t: (key: string) => key,
-  }),
+// Mock UI components
+vi.mock('@pxweb2/pxweb2-ui', () => ({
+  Icon: ({ iconName, className }: { iconName: string; className?: string }) => (
+    <span data-testid="icon" data-icon={iconName} className={className} />
+  ),
+  ActionItemIcon: ({ largeIconName }: { largeIconName: string }) => (
+    <span data-testid="action-item-icon" data-large-icon={largeIconName} />
+  ),
+  Spinner: () => <span data-testid="spinner" />,
+  Label: ({
+    children,
+    ...props
+  }: {
+    children: React.ReactNode;
+  } & React.LabelHTMLAttributes<HTMLLabelElement>) => (
+    <label {...props}>{children}</label>
+  ),
+  BodyShort: ({
+    children,
+    ...props
+  }: {
+    children: React.ReactNode;
+  } & React.HTMLAttributes<HTMLSpanElement>) => (
+    <span {...props}>{children}</span>
+  ),
 }));
-
-// Mock Icon component if needed
-vi.mock('@pxweb2/pxweb2-ui', async () => {
-  const mod = await vi.importActual<any>('@pxweb2/pxweb2-ui');
-  return {
-    ...mod,
-    Icon: ({ iconName, className }: any) => (
-      <span data-testid="icon" data-icon={iconName} className={className} />
-    ),
-    Spinner: () => <span data-testid="spinner" />,
-    Label: ({ children, ...props }: any) => (
-      <label {...props}>{children}</label>
-    ),
-    BodyShort: ({ children, ...props }: any) => (
-      <span {...props}>{children}</span>
-    ),
-  };
-});
 
 describe('ActionItem', () => {
   it('renders with default props', () => {

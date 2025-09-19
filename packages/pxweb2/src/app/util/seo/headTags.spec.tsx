@@ -39,9 +39,11 @@ const mockConfigs = {
       fallbackLanguage: 'en',
       showDefaultLanguageInPath: false,
     },
+    baseApplicationPath: '/',
     apiUrl: 'test',
     maxDataCells: 150000,
     specialCharacters: ['.', '..', ':', '-', '...', '*'],
+    variableFilterExclusionList: {},
   },
   defaultLangInPath: {
     language: {
@@ -53,23 +55,32 @@ const mockConfigs = {
       fallbackLanguage: 'en',
       showDefaultLanguageInPath: true,
     },
+    baseApplicationPath: '/',
     apiUrl: 'test',
     maxDataCells: 150000,
     specialCharacters: ['.', '..', ':', '-', '...', '*'],
+    variableFilterExclusionList: {},
   },
 };
 
 // --- Helpers ---
 const originalLocation = window.location;
+function mockWindowOrigin(origin: string) {
+  Object.defineProperty(window, 'location', {
+    configurable: true,
+    value: { ...originalLocation, origin } as Location,
+  });
+}
+
 beforeEach(() => {
-  delete (window as any).location;
-  (window as any).location = {
-    ...originalLocation,
-    origin: 'https://mytesturlpxweb.io',
-  };
+  mockWindowOrigin('https://mytesturlpxweb.io');
 });
+
 afterEach(() => {
-  (window as any).location = originalLocation;
+  Object.defineProperty(window, 'location', {
+    configurable: true,
+    value: originalLocation,
+  });
 });
 
 // --- Tests ---

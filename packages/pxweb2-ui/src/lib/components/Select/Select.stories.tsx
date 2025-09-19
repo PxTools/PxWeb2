@@ -65,8 +65,8 @@ export const Variant: StoryFn<typeof Select> = () => {
         options={options}
         placeholder={placeholder}
         onChange={selectedOptionChanged}
-        addModal={() => {}}
-        removeModal={() => {}}
+        addModal={addModal}
+        removeModal={closeModal}
       ></Select>
 
       <h2>inVariableBox:</h2>
@@ -76,8 +76,8 @@ export const Variant: StoryFn<typeof Select> = () => {
         options={options}
         placeholder={placeholder}
         onChange={selectedOptionChanged}
-        addModal={() => {}}
-        removeModal={() => {}}
+        addModal={addModal}
+        removeModal={closeModal}
       ></Select>
     </>
   );
@@ -94,8 +94,8 @@ export const ShowLabel: StoryFn<typeof Select> = () => {
         options={options}
         placeholder={placeholder}
         onChange={selectedOptionChanged}
-        addModal={() => {}}
-        removeModal={() => {}}
+        addModal={addModal}
+        removeModal={closeModal}
       ></Select>
 
       <h2>Without label:</h2>
@@ -105,8 +105,8 @@ export const ShowLabel: StoryFn<typeof Select> = () => {
         options={options}
         placeholder={placeholder}
         onChange={selectedOptionChanged}
-        addModal={() => {}}
-        removeModal={() => {}}
+        addModal={addModal}
+        removeModal={closeModal}
       ></Select>
     </>
   );
@@ -124,8 +124,8 @@ export const SelectedOption: StoryFn<typeof Select> = () => {
         placeholder={placeholder}
         selectedOption={options[1]}
         onChange={selectedOptionChanged}
-        addModal={() => {}}
-        removeModal={() => {}}
+        addModal={addModal}
+        removeModal={closeModal}
       ></Select>
 
       <h2>No selected option:</h2>
@@ -135,8 +135,8 @@ export const SelectedOption: StoryFn<typeof Select> = () => {
         options={options}
         placeholder={placeholder}
         onChange={selectedOptionChanged}
-        addModal={() => {}}
-        removeModal={() => {}}
+        addModal={addModal}
+        removeModal={closeModal}
       ></Select>
     </>
   );

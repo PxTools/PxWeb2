@@ -60,7 +60,7 @@ describe('useTopicIcons hook', () => {
   it('handles fetch errors gracefully', async () => {
     (fetch as Mock).mockRejectedValueOnce(new Error('Network error'));
 
-    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(vi.fn());
 
     const { result } = renderHook(() => useTopicIcons());
 

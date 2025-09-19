@@ -9,6 +9,7 @@ import {
   ActionType,
   type StartPageState,
   type Filter,
+  type ReducerActionTypes,
 } from '../../pages/StartPage/StartPageTypes';
 import { Table } from '@pxweb2/pxweb2-api-client';
 
@@ -18,7 +19,7 @@ function Harness({
   t,
 }: {
   state: StartPageState;
-  dispatch: React.Dispatch<any>;
+  dispatch: React.Dispatch<ReducerActionTypes>;
   t?: TFunction;
 }) {
   useFilterUrlSync(
@@ -30,7 +31,7 @@ function Harness({
 }
 
 vi.mock('../startPageFilters', async (orig) => {
-  const mod: any = await orig();
+  const mod = (await orig()) as Record<string, unknown>;
   return {
     ...mod,
     getYearLabels: () => ({ fromLabel: 'From', toLabel: 'To' }),
@@ -38,10 +39,10 @@ vi.mock('../startPageFilters', async (orig) => {
 });
 
 vi.mock('../pathUtil', async (orig) => {
-  const mod: any = await orig();
+  const mod = (await orig()) as Record<string, unknown>;
   return {
     ...mod,
-    findPathByKey: (_index: any, key: string) => {
+    findPathByKey: (_index: Record<string, unknown>, key: string) => {
       const map: Record<
         string,
         { id: string; uniqueId: string; label: string }
