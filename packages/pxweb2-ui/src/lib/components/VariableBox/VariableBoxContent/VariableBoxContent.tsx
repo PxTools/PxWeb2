@@ -48,6 +48,11 @@ type VariableBoxContentProps = VariableBoxPropsToContent & {
   removeModal: (name: string) => void;
 };
 
+type VirtualListItem = {
+  type: string;
+  value?: Value;
+};
+
 export function VariableBoxContent({
   varId,
   label,
@@ -71,7 +76,7 @@ export function VariableBoxContent({
   >('mixed');
 
   const debouncedSearch = useDebounce(search, 300);
-  const [items, setItems] = useState<{ type: string; value?: Value }[]>([]);
+  const [items, setItems] = useState<VirtualListItem[]>([]);
   const [uniqueId] = useState(() => crypto.randomUUID());
   const valuesOnlyList = useRef<HTMLDivElement>(null);
   const hasCodeLists = codeLists && codeLists.length > 0;
@@ -106,7 +111,7 @@ export function VariableBoxContent({
   const lastInteractionWasPointer = useRef(false);
 
   useEffect(() => {
-    const newItems: { type: string; value?: Value }[] = [];
+    const newItems: VirtualListItem[] = [];
 
     if (!valuesToRender || valuesToRender.length === 0) {
       return;
@@ -225,7 +230,7 @@ export function VariableBoxContent({
   };
 
   // Modify the itemRenderer to assign IDs and tabIndex
-  const itemRenderer = (items: any, index: number) => {
+  const itemRenderer = (items: VirtualListItem[], index: number) => {
     const item = items[index];
 
     // There is a race condition with virtuoso where item can be undefined

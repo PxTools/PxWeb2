@@ -1,3 +1,4 @@
+import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
@@ -109,11 +110,15 @@ describe('VariableBoxContent', () => {
   }); */
 });
 
-function renderVirtuosoItems(totalCount: number, itemContent: any) {
+function renderVirtuosoItems(
+  totalCount: number,
+  itemContent: (index: number) => React.ReactNode,
+) {
   return Array.from({ length: totalCount }).map((_, i) => {
     const content = itemContent(i);
-    const key = content?.props?.id || i;
-    return <div key={key}>{content}</div>;
+
+    // Use index as key for test mock - simpler and sufficient for testing purposes
+    return <div key={i}>{content}</div>;
   });
 }
 
@@ -121,7 +126,13 @@ describe('With Virtuoso mock', () => {
   beforeAll(() => {
     vi.mock('react-virtuoso', () => {
       return {
-        Virtuoso: ({ totalCount, itemContent }: any) => (
+        Virtuoso: ({
+          totalCount,
+          itemContent,
+        }: {
+          totalCount: number;
+          itemContent: (index: number) => React.ReactNode;
+        }) => (
           <div data-testid="mock-virtuoso">
             {renderVirtuosoItems(totalCount, itemContent)}
           </div>
