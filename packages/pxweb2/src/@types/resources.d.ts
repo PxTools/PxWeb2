@@ -76,6 +76,7 @@ interface Resources {
       ingress: "Looking for the perfect table? Use the search field and filters to dig into the numbers you need. Whether you're hunting for trends, facts, or just an oddly satisfying dataset, PxWeb 2.0 has your back.";
       more_about_label: 'More about PxWeb 2.0';
       more_about_text: 'More about Text EN';
+      result_hidden_header: 'Result';
       search_label: 'Search in PxWeb 2.0';
       search_placeholder: 'Search for table names or variables';
       filter: {
@@ -84,6 +85,7 @@ interface Resources {
         show_results: 'Show {{value}} results';
         close: 'Close filter';
         header: 'Filter';
+        list_filters_aria: 'Selected filters';
         remove_all_filter: 'Remove all filters';
         remove_filter_aria: 'Remove filter, {{value}}';
         subject: 'Topic';
@@ -98,6 +100,7 @@ interface Resources {
         };
         variabel: 'Variable';
         variabel_search: 'Search for variable';
+        variable_count: 'Showing {{countShown}} of {{countTotal}} variables';
         frequency: {
           annual: 'Year';
           monthly: 'Month';
@@ -108,6 +111,7 @@ interface Resources {
         };
       };
       table: {
+        card_description: '{{title}}. Most recently updated on {{updatedDate}} Published from {{yearFrom}} to {{yearTo}}. Updated {{frequency}}. Table number is {{tableNumber}}.';
         number_of_tables: '<strong>{{count}}</strong> tables';
         number_of_tables_found: '<strong>{{count}}</strong> tables found';
         updated_label: 'Updated';
