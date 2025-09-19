@@ -82,18 +82,8 @@
 }
 
 .logoContainer {
-  // xsmall - medium
-  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
-    width: 232px;
-    max-height: 72px;
-  }
-
-  // large - xxlarge
-  @media (min-width: fixed.$breakpoints-large-min-width) {
-    width: 232px;
-    height: 72px;
-  }
-
+  width: 232px;
+  height: 72px;
   display: flex;
   align-items: center; /* keep vertical centering */
   justify-content: flex-start; /* align image to the left */
