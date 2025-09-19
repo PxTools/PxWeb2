@@ -1,0 +1,40 @@
+{
+  "startPage": {
+    "breadCrumb": {
+      "enabled": true,
+      "text": "Forsiden",
+      "href": "#"
+    },
+    "detailsSection": {
+      "enabled": true,
+      "detailHeader": "More about PxWeb",
+      "detailContent": [
+        {
+          "textBlock": {
+            "header": "When to use this section",
+            "text": "This is an optional section that can be used for content that may be useful for some users, but is not essential for everyone. Key information that all users need to see should always appear in the lead paragraph."
+          }
+        },
+        {
+          "links": {
+            "header": "Useful resources",
+            "items": [
+              {
+                "text": "Example link 1",
+                "url": "#"
+              },
+              {
+                "text": "Example link 2",
+                "url": "#"
+              },
+              {
+                "text": "Example link 3",
+                "url": "#"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
