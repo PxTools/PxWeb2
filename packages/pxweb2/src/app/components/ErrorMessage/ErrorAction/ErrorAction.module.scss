@@ -1,0 +1,49 @@
+.link {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 0px;
+  padding: 0px;
+  border: none;
+  cursor: pointer;
+
+  color: var(--px-color-text-action);
+  background-color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  font-style: normal;
+  font-weight: inherit;
+  line-height: inherit;
+  text-decoration-line: underline;
+  text-decoration-style: solid;
+  text-decoration-skip-ink: none;
+  text-decoration-thickness: auto;
+  text-underline-offset: auto;
+  text-underline-position: from-font;
+
+  &:hover {
+    text-decoration: none;
+    background-color: var(--px-color-surface-action-subtle-hover);
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--px-color-border-focus-outline);
+    outline-offset: 5px;
+    box-shadow: 0 0 0 3px var(--px-color-border-focus-boxshadow);
+  }
+
+  &:active {
+    text-decoration-line: none;
+    color: var(--px-color-text-on-action-subtle);
+    background-color: var(--px-color-surface-action-subtle-active);
+  }
+}
+
+.alignCenter {
+  align-items: center;
+  text-align: center;
+}
+
+.alignStart {
+  align-items: flex-start;
+  text-align: start;
+}

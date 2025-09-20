@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { Alert } from '@pxweb2/pxweb2-ui';
 import { ErrorInfo } from 'react';
+
+import { Alert } from '@pxweb2/pxweb2-ui';
 import { Header } from '../Header/Header';
 
 interface ErrorBoundaryProps {
@@ -29,6 +30,12 @@ class ErrorBoundary extends React.Component<
 
   render() {
     if (this.state.hasError) {
+      // If a fallback UI is provided, render that
+      if (this.props.fallback) {
+        return this.props.fallback;
+      }
+
+      // Default fallback UI
       return (
         <>
           <Header></Header>
@@ -38,6 +45,8 @@ class ErrorBoundary extends React.Component<
         </>
       );
     }
+
+    // When there's no error, render children
     return this.props.children;
   }
 }
