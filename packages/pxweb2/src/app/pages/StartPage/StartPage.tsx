@@ -88,6 +88,9 @@ const StartPage = () => {
   const startPageContent: Startpage | undefined = localeContent?.startPage;
   const detailsSectionContent: DetailsSection | undefined =
     startPageContent?.detailsSection;
+  const breadCrumbContent: BreadCrumb | undefined =
+    startPageContent?.breadCrumb;
+  const showBreadCrumb = isRenderableBreadCrumb(breadCrumbContent);
 
   // Run once when initially loading the page, then again if language changes
   // We want to try fetching tables in the selected language if possible
@@ -544,15 +547,14 @@ const StartPage = () => {
     );
   };
 
+  function isRenderableBreadCrumb(
+    bc: BreadCrumb | undefined,
+  ): bc is BreadCrumb {
+    return !!bc && bc.enabled === true && !!bc.text && !!bc.href;
+  }
+
   const renderBreadCrumb = () => {
-    const breadCrumbContent: BreadCrumb | undefined =
-      startPageContent?.breadCrumb;
-    if (
-      !breadCrumbContent ||
-      !breadCrumbContent?.enabled ||
-      !breadCrumbContent.text ||
-      !breadCrumbContent.href
-    ) {
+    if (!isRenderableBreadCrumb(breadCrumbContent)) {
       return null;
     }
 
@@ -563,6 +565,7 @@ const StartPage = () => {
 
     return (
       <Breadcrumbs
+        className={styles.breadcrumbStartpage}
         variant="default"
         breadcrumbItems={[
           frontPage,
@@ -577,8 +580,12 @@ const StartPage = () => {
       <Header stroke={true} />
       <div className={styles.startPage}>
         <div className={styles.container}>
-          <div className={styles.contentTop}>
-            {renderBreadCrumb()}
+          <div
+            className={cl(styles.contentTop, {
+              [styles.hasBreadcrumb]: showBreadCrumb,
+            })}
+          >
+            {showBreadCrumb && renderBreadCrumb()}
             <div className={styles.information}>
               <Heading size="large" level="1" className={styles.title}>
                 {t('start_page.header')}
