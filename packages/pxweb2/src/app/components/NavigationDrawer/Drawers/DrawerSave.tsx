@@ -112,7 +112,9 @@ export const SaveQueryLoadingButton: React.FC<SaveQueryButtonProps> = ({
       iconPosition="start"
       loading={true}
       aria-busy={true}
-      aria-label={t('presentation_page.side_menu.save.savequery.loading_status')}
+      aria-label={t(
+        'presentation_page.side_menu.save.savequery.loading_status',
+      )}
     ></Button>
   );
 };
@@ -416,7 +418,9 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
     },
     {
       value: 'from',
-      label: t('presentation_page.side_menu.save.savequery.period_options.from'),
+      label: t(
+        'presentation_page.side_menu.save.savequery.period_options.from',
+      ),
     },
     {
       value: 'top',
@@ -510,7 +514,9 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
         </div>
         <div className={classes.radioGroup}>
           <Radio
-            legend={t('presentation_page.side_menu.save.savequery.radio_legend')}
+            legend={t(
+              'presentation_page.side_menu.save.savequery.radio_legend',
+            )}
             hideLegend={false}
             options={radioOptions}
             selectedOption={selectedRadio}
