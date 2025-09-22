@@ -268,13 +268,13 @@ export function VariableBoxContent({
             variant="inVariableBox"
             showLabel={false}
             searchPlaceHolder={t(
-              'presentation_page.sidemenu.selection.variablebox.search.placeholder',
+              'presentation_page.side_menu.selection.variablebox.search.placeholder',
             )}
             ariaLabelIconText={t(
-              'presentation_page.sidemenu.selection.variablebox.search.arialabelicontext',
+              'presentation_page.side_menu.selection.variablebox.search.arialabelicontext',
             )}
             arialLabelClearButtonText={t(
-              'presentation_page.sidemenu.selection.variablebox.search.ariallabelclearbuttontext',
+              'presentation_page.side_menu.selection.variablebox.search.ariallabelclearbuttontext',
             )}
             variableBoxTopBorderOverride={hasSelectAndSearch}
           />
@@ -297,7 +297,7 @@ export function VariableBoxContent({
             <MixedCheckbox
               id={varId + uniqueId + 'mixedCheckbox'}
               text={t(
-                'presentation_page.sidemenu.selection.variablebox.content.mixed_checkbox',
+                'presentation_page.side_menu.selection.variablebox.content.mixed_checkbox',
               )}
               value={allValuesSelected}
               onChange={() =>
@@ -364,13 +364,13 @@ export function VariableBoxContent({
             )}
           >
             {t(
-              'presentation_page.sidemenu.selection.variablebox.content.values_list.no_results_heading',
+              'presentation_page.side_menu.selection.variablebox.content.values_list.no_results_heading',
               { search: search },
             )}
           </Heading>
           <BodyShort size="medium" textcolor="default" align="center">
             {t(
-              'presentation_page.sidemenu.selection.variablebox.content.values_list.no_results_bodyshort',
+              'presentation_page.side_menu.selection.variablebox.content.values_list.no_results_bodyshort',
             )}
           </BodyShort>
         </div>
@@ -446,18 +446,18 @@ export function VariableBoxContent({
             <Select
               variant="inVariableBox"
               label={t(
-                'presentation_page.sidemenu.selection.variablebox.content.select.label',
+                'presentation_page.side_menu.selection.variablebox.content.select.label',
               )}
               languageDirection={languageDirection}
               modalHeading={label}
               modalCancelLabel={t(
-                'presentation_page.sidemenu.selection.variablebox.content.select.modal.cancel_button',
+                'presentation_page.side_menu.selection.variablebox.content.select.modal.cancel_button',
               )}
               modalConfirmLabel={t(
-                'presentation_page.sidemenu.selection.variablebox.content.select.modal.confirm_button',
+                'presentation_page.side_menu.selection.variablebox.content.select.modal.confirm_button',
               )}
               placeholder={t(
-                'presentation_page.sidemenu.selection.variablebox.content.select.placeholder',
+                'presentation_page.side_menu.selection.variablebox.content.select.placeholder',
               )}
               addModal={addModal}
               removeModal={removeModal}
@@ -487,7 +487,7 @@ export function VariableBoxContent({
         >
           <div
             aria-label={t(
-              'presentation_page.sidemenu.selection.variablebox.content.values_list.aria_label',
+              'presentation_page.side_menu.selection.variablebox.content.values_list.aria_label',
               {
                 total: totalValues,
               },

@@ -86,7 +86,7 @@
       "remove_all_filter": "Ta bort alla filter",
       "remove_filter_aria": "Ta bort filter, {{value}}",
       "subject": "Ämnesområde",
-      "timeUnit": "Tidsperiod",
+      "time_unit": "Tidsperiod",
       "year": {
         "title": "År",
         "from_label": "Från",
@@ -118,7 +118,7 @@
     }
   },
   "presentation_page": {
-    "sidemenu": {
+    "side_menu": {
       "arialabeltoolsidemenu": "Verktygsmeny för tabell",
       "hide": "Dölj",
       "selection": {

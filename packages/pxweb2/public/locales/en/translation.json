@@ -86,7 +86,7 @@
       "remove_all_filter": "Remove all filters",
       "remove_filter_aria": "Remove filter, {{value}}",
       "subject": "Topic",
-      "timeUnit": "Time period",
+      "time_unit": "Time period",
       "year": {
         "title": "Year",
         "from_label": "From",
@@ -118,8 +118,8 @@
     }
   },
   "presentation_page": {
-    "sidemenu": {
-      "arialabeltoolsidemenu": "Tool menu for table",
+    "side_menu": {
+      "aria_label_toolsidemenu": "Tool menu for table",
       "hide": "Hide",
       "selection": {
         "title": "Filter",

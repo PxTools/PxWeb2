@@ -75,7 +75,7 @@
     "welcome_trans_test": "مرحبا بكم في <1>برنامج</1> لبكسي ويب 2.0!"
   },
   "presentation_page": {
-    "sidemenu": {
+    "side_menu": {
       "arialabeltoolsidemenu": "قائمة الأدوات للجدول",
       "hide": "يخفي",
       "selection": {

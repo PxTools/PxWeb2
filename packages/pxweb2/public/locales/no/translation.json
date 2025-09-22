@@ -86,7 +86,7 @@
       "remove_all_filter": "Fjern alle filter",
       "remove_filter_aria": "Fjern filter, {{value}}",
       "subject": "Emne",
-      "timeUnit": "Tidsperiode",
+      "time_unit": "Tidsperiode",
       "year": {
         "title": "År",
         "from_label": "Fra",
@@ -118,7 +118,7 @@
     }
   },
   "presentation_page": {
-    "sidemenu": {
+    "side_menu": {
       "arialabeltoolsidemenu": "Verktøymeny for tabell",
       "hide": "Skjul",
       "selection": {

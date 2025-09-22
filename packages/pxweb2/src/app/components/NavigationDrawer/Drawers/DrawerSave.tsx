@@ -95,7 +95,7 @@ export const SaveQueryCreateButton: React.FC<SaveQueryButtonProps> = ({
       icon={'Link'}
       onClick={onClick}
     >
-      {t('presentation_page.sidemenu.save.savequery.createButton')}
+      {t('presentation_page.side_menu.save.savequery.createButton')}
     </Button>
   );
 };
@@ -112,7 +112,7 @@ export const SaveQueryLoadingButton: React.FC<SaveQueryButtonProps> = ({
       iconPosition="start"
       loading={true}
       aria-busy={true}
-      aria-label={t('presentation_page.sidemenu.save.savequery.loadingStatus')}
+      aria-label={t('presentation_page.side_menu.save.savequery.loadingStatus')}
     ></Button>
   );
 };
@@ -133,7 +133,7 @@ export const SaveQueryCopyButton: React.FC<SaveQueryButtonProps> = ({
         iconPosition="start"
         onClick={onClick}
       >
-        {t('presentation_page.sidemenu.save.savequery.copyButton')}
+        {t('presentation_page.side_menu.save.savequery.copyButton')}
       </Button>
       <BodyShort size="small" className={classes.copyText}>
         {saveQueryUrl}
@@ -157,9 +157,9 @@ export const SaveQueryCopiedButton: React.FC<SaveQueryButtonProps> = ({
         iconPosition="start"
         icon={'Check'}
         onClick={onClick}
-        aria-label={t('presentation_page.sidemenu.save.savequery.copyButton')}
+        aria-label={t('presentation_page.side_menu.save.savequery.copyButton')}
       >
-        {t('presentation_page.sidemenu.save.savequery.copiedButton')}
+        {t('presentation_page.side_menu.save.savequery.copiedButton')}
       </Button>
       <BodyShort size="small" className={classes.copyText}>
         {saveQueryUrl}
@@ -177,12 +177,12 @@ const SqScreenReaderStatus: React.FC<{
   let copyMessage = '';
 
   if (isCopied) {
-    copyMessage = t('presentation_page.sidemenu.save.savequery.copyStatus');
+    copyMessage = t('presentation_page.side_menu.save.savequery.copyStatus');
   }
 
   if (queryId) {
     createMessage = t(
-      'presentation_page.sidemenu.save.savequery.createStatus',
+      'presentation_page.side_menu.save.savequery.createStatus',
       {
         query: queryId,
       },
@@ -411,16 +411,16 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
     {
       value: 'selected',
       label: t(
-        'presentation_page.sidemenu.save.savequery.periodOptions.selected',
+        'presentation_page.side_menu.save.savequery.periodOptions.selected',
       ),
     },
     {
       value: 'from',
-      label: t('presentation_page.sidemenu.save.savequery.periodOptions.from'),
+      label: t('presentation_page.side_menu.save.savequery.periodOptions.from'),
     },
     {
       value: 'top',
-      label: t('presentation_page.sidemenu.save.savequery.periodOptions.top'),
+      label: t('presentation_page.side_menu.save.savequery.periodOptions.top'),
     },
   ];
 
@@ -471,13 +471,13 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
     <>
       <ContentBox
         titleDivId="drawer-save-to-file"
-        title={t('presentation_page.sidemenu.save.file.title')}
+        title={t('presentation_page.side_menu.save.file.title')}
       >
         {/* Screen reader announcement for long loading times */}
         <div aria-live="polite" aria-atomic="true" className={classes.srOnly}>
           {showLoadingAnnouncement &&
             loadingFormat &&
-            t('presentation_page.sidemenu.save.file.loading_announcement')}
+            t('presentation_page.side_menu.save.file.loading_announcement')}
         </div>
         <ul
           className={classes.saveAsActionList}
@@ -487,7 +487,7 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
             <li key={`saveToFile${format.value}`}>
               <ActionItem
                 label={t(
-                  `presentation_page.sidemenu.save.file.formats.${format.value}`, // Not sure how to fix this i18next type error
+                  `presentation_page.side_menu.save.file.formats.${format.value}`, // Not sure how to fix this i18next type error
                 )}
                 onClick={() => saveToFile(format.outputFormat)}
                 iconName={format.iconName}
@@ -500,17 +500,17 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
           {t('common.status_messages.drawer_save_file')}
         </Alert>
       </ContentBox>
-      <ContentBox title={t('presentation_page.sidemenu.save.savequery.title')}>
+      <ContentBox title={t('presentation_page.side_menu.save.savequery.title')}>
         <div className={classes.informationCardWrapper}>
           <InformationCard icon="InformationCircle">
             <BodyLong size="medium">
-              {t('presentation_page.sidemenu.save.savequery.info')}
+              {t('presentation_page.side_menu.save.savequery.info')}
             </BodyLong>
           </InformationCard>
         </div>
         <div className={classes.radioGroup}>
           <Radio
-            legend={t('presentation_page.sidemenu.save.savequery.radioLegend')}
+            legend={t('presentation_page.side_menu.save.savequery.radioLegend')}
             hideLegend={false}
             options={radioOptions}
             selectedOption={selectedRadio}
@@ -542,7 +542,7 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
           <SqScreenReaderStatus queryId={queryId} isCopied={isCopied} />
         </div>
       </ContentBox>
-      <ContentBox title={t('presentation_page.sidemenu.save.api.query')}>
+      <ContentBox title={t('presentation_page.side_menu.save.api.query')}>
         <Alert variant="info" className={classes.alert}>
           {t('common.status_messages.drawer_save_api')}
         </Alert>
