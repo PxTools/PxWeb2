@@ -12,8 +12,8 @@
     },
     "errors": {
       "not_found": {
-        "title": "Side ikke funnet",
-        "description": "Siden du leter etter eksisterer ikke. Vennligst sjekk URL-en eller gå tilbake til startsiden.",
+        "title": "Vi finner ikke siden",
+        "description": "Siden du leter etter kan ha blitt flyttet eller slettet. Det kan også være en feil i nettadressen.",
         "action_text": "Gå tilbake til forrige side"
       },
       "generic": {
