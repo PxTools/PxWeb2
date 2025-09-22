@@ -29,7 +29,7 @@
     "concurrently": "^9.2.1",
     "html-validate": "^10.0.0",
     "husky": "^9.1.7",
-    "jsdom": "^26.1.0",
+    "jsdom": "^27.0.0",
     "playwright": "^1.55.0",
     "vitest": "^3.2.4"
   }
