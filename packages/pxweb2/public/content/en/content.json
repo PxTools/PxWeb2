@@ -38,7 +38,6 @@
     }
   },
   "footer": {
-    "image": "./images/logo.svg",
     "columns": [
       {
         "header": "PxWeb 2.0",

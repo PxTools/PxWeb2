@@ -41,8 +41,6 @@ export type FooterLink = {
 export type FooterColumn = { header: string; links: FooterLink[] };
 
 export type Footer = {
-  image?: string;
-  description?: string;
   columns: FooterColumn[];
 };
 

@@ -81,25 +81,6 @@
   }
 }
 
-.logoContainer {
-  width: 232px;
-  height: 72px;
-  display: flex;
-  align-items: center; /* keep vertical centering */
-  justify-content: flex-start; /* align image to the left */
-  overflow: hidden;
-}
-
-.logoContainer img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain; /* ensures entire logo visible while filling one dimension */
-  object-position: left top; /* left-align the image content inside its box */
-  /* If you prefer always covering area (may crop), swap for object-fit: cover */
-}
-
-// Removed obsolete .logo styles (was commented out)
-
 .footerLinks {
   display: flex;
   align-items: flex-start;

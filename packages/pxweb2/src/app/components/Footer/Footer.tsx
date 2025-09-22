@@ -44,14 +44,6 @@ export const Footer: React.FC<FooterProps> = ({ containerRef }) => {
       <div className={cl(styles.footer)}>
         <div className={cl(styles.footerContent)}>
           <div className={cl(styles.logoAndLinks)}>
-            <div className={cl(styles.logoContainer)}>
-              {footerContent?.image && (
-                <img
-                  src={footerContent.image}
-                  alt="" /* decorative image: empty alt hides from a11y tree */
-                />
-              )}
-            </div>
             <div className={cl(styles.footerLinks)}>
               {footerContent?.columns.map((col) => (
                 <div className={cl(styles.footerLinkGroup)} key={col.header}>
