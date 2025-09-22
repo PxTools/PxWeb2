@@ -38,7 +38,9 @@ vi.mock('react-i18next', () => ({
       if (key === 'presentation_page.side_menu.save.file.formats.parquet') {
         return 'Parquet';
       }
-      if (key === 'presentation_page.side_menu.save.file.loading_announcement') {
+      if (
+        key === 'presentation_page.side_menu.save.file.loading_announcement'
+      ) {
         return 'Export is taking longer than usual';
       }
       if (key === 'presentation_page.side_menu.save.savequery.title') {
