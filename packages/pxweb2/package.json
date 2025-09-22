@@ -20,7 +20,7 @@
   "dependencies": {
     "@emotion/is-prop-valid": "^1.4.0",
     "@pxweb2/pxweb2-ui": "*",
-    "framer-motion": "^12.23.12",
+    "framer-motion": "^12.23.18",
     "lodash": "^4.17.21",
     "react-router": "^7.9.1"
   },
