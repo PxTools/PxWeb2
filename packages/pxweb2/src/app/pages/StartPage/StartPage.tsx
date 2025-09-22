@@ -36,6 +36,7 @@ import { FilterContext, FilterProvider } from '../../context/FilterContext';
 import { getAllTables } from '../../util/tableHandler';
 import { tableListIsReadyToRender } from '../../util/startPageRender';
 import useFilterUrlSync from '../../util/hooks/useFilterUrlSync';
+import StartpageDetails from '../../components/StartPageDetails/StartPageDetails';
 
 const StartPage = () => {
   const { t, i18n } = useTranslation();
@@ -539,6 +540,9 @@ const StartPage = () => {
               {t('start_page.header')}
             </Heading>
             <Ingress>{t('start_page.ingress')}</Ingress>
+            <div className={styles.showDetailsSection}>
+              <StartpageDetails />
+            </div>
           </div>
         </div>
         <div className={cl(styles.searchFilterResult)}>
