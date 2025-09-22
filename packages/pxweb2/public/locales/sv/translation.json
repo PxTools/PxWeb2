@@ -119,7 +119,7 @@
   },
   "presentation_page": {
     "side_menu": {
-      "arialabeltoolsidemenu": "Verktygsmeny för tabell",
+      "aria_label_tool_side_menu": "Verktygsmeny för tabell",
       "hide": "Dölj",
       "selection": {
         "title": "Filtrera",
@@ -127,8 +127,8 @@
           "search": {
             "placeholder": "Sök i listan",
             "label": "Sök",
-            "arialabelicontext": "Sök ikon",
-            "ariallabelclearbuttontext": "Ikon för att ta bort text i sökfältet"
+            "aria_label_icon_text": "Sök ikon",
+            "aria_label_clear_button_text": "Ikon för att ta bort text i sökfältet"
           },
           "header": {
             "tag_selected": "{{selected}} av {{total}} valda",

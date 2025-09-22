@@ -76,7 +76,7 @@
   },
   "presentation_page": {
     "side_menu": {
-      "arialabeltoolsidemenu": "قائمة الأدوات للجدول",
+      "aria_label_tool_side_menu": "قائمة الأدوات للجدول",
       "hide": "يخفي",
       "selection": {
         "title": "فلتر",
@@ -84,8 +84,8 @@
           "search": {
             "placeholder": "البحث في القائمة",
             "label": "يبحث",
-            "arialabelicontext": "أيقونة البحث",
-            "ariallabelclearbuttontext": "مسح أيقونة البحث"
+            "aria_label_icon_text": "أيقونة البحث",
+            "aria_label_clear_button_text": "مسح أيقونة البحث"
           },
           "header": {
             "tag_selected": "{{selected}} ل {{total}} مختارة",

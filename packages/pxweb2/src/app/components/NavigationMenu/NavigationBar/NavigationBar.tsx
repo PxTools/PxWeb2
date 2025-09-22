@@ -51,7 +51,7 @@ export const NavigationBar = React.forwardRef<
       <LazyMotion features={loadFeatures}>
         <MotionConfig reducedMotion="user">
           <nav
-            aria-label={t('presentation_page.side_menu.arialabeltoolsidemenu')}
+            aria-label={t('presentation_page.side_menu.aria_label_tool_side_menu')}
           >
             <ul className={styles.navigationBarList}>
               <Item

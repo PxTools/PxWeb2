@@ -271,10 +271,10 @@ export function VariableBoxContent({
               'presentation_page.side_menu.selection.variablebox.search.placeholder',
             )}
             ariaLabelIconText={t(
-              'presentation_page.side_menu.selection.variablebox.search.arialabelicontext',
+              'presentation_page.side_menu.selection.variablebox.search.aria_label_icon_text',
             )}
             arialLabelClearButtonText={t(
-              'presentation_page.side_menu.selection.variablebox.search.ariallabelclearbuttontext',
+              'presentation_page.side_menu.selection.variablebox.search.aria_label_clear_button_text',
             )}
             variableBoxTopBorderOverride={hasSelectAndSearch}
           />

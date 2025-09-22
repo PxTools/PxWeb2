@@ -119,7 +119,7 @@
   },
   "presentation_page": {
     "side_menu": {
-      "aria_label_toolsidemenu": "Tool menu for table",
+      "aria_label_tool_side_menu": "Tool menu for table",
       "hide": "Hide",
       "selection": {
         "title": "Filter",
@@ -127,8 +127,8 @@
           "search": {
             "placeholder": "Search in list",
             "label": "Search",
-            "arialabelicontext": "Search icon",
-            "ariallabelclearbuttontext": "Clear search icon"
+            "aria_label_icon_text": "Search icon",
+            "aria_label_clear_button_text": "Clear search icon"
           },
           "header": {
             "tag_selected": "{{selected}} of {{total}} selected",

@@ -119,7 +119,7 @@
   },
   "presentation_page": {
     "side_menu": {
-      "arialabeltoolsidemenu": "Verktøymeny for tabell",
+      "aria_label_tool_side_menu": "Verktøymeny for tabell",
       "hide": "Skjul",
       "selection": {
         "title": "Filtrer",
@@ -127,8 +127,8 @@
           "search": {
             "placeholder": "Søk i listen",
             "label": "Søk",
-            "arialabelicontext": "Søkeikon",
-            "ariallabelclearbuttontext": "Ikon for å fjerne tekst i søkefeltet"
+            "aria_label_icon_text": "Søkeikon",
+            "aria_label_clear_button_text": "Ikon for å fjerne tekst i søkefeltet"
           },
           "header": {
             "tag_selected": "{{selected}} av {{total}} valgt",
