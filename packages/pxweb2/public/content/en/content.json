@@ -2,7 +2,7 @@
   "startPage": {
     "breadCrumb": {
       "enabled": true,
-      "text": "Forsiden",
+      "text": "Home",
       "href": "#"
     },
     "detailsSection": {

@@ -28,7 +28,14 @@ export type DetailsSection = {
   detailContent?: DetailsContent[];
 };
 
+export type BreadCrumb = {
+  enabled: boolean;
+  text: string;
+  href: string;
+};
+
 export type Startpage = {
+  breadCrumb?: BreadCrumb;
   detailsSection?: DetailsSection;
 };
 

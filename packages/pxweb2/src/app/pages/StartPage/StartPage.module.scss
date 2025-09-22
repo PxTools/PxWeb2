@@ -6,8 +6,14 @@
   color: var(--px-color-text-default);
 }
 
+.contentTop {
+  padding: 32px 0px 72px 0px;
+  display: grid;
+  gap: 60px;
+}
+
 .information {
-  padding: 84px 0px 72px 0px;
+  //padding: 84px 0px 72px 0px;
   background-color: var(--px-color-surface-default);
   max-width: 848px;
 
@@ -20,7 +26,8 @@
   }
 
   @media #{breakpoint.$xsmall} , #{breakpoint.$small} {
-    padding: 62px 0 48px 0;
+    //padding: 62px 0 48px 0;
+    padding: 40px 0 48px 0;
 
     .showDetailsSection {
       padding-top: 32px;
