@@ -1,0 +1,27 @@
+@use '$ui/src/lib/text-styles.scss';
+
+.detailsSection {
+  display: grid;
+  gap: 1.75rem;
+
+  .content {
+    display: grid;
+    gap: 1.75rem;
+
+    .heading {
+      padding-bottom: 4px;
+    }
+  }
+}
+
+.linksSection {
+  .linksHeading {
+    padding-bottom: 10px;
+  }
+
+  .linksList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+}
