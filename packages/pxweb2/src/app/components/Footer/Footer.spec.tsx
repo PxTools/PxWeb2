@@ -1,12 +1,17 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { Footer, scrollToTop } from './Footer';
+import { useLocaleContent } from '../../util/hooks/useLocaleContent';
+import type { Mock } from 'vitest';
 
-const mockConfig = {
+vi.mock('../../util/hooks/useLocaleContent', () => ({
+  useLocaleContent: vi.fn(),
+}));
+
+const footerContent = {
   footer: {
-    image: './images/logo.svg',
     columns: [
       {
         header: 'Finding statistics',
@@ -43,65 +48,16 @@ const mockConfig = {
   },
 };
 
-// Mock fetch to return mockConfig.footer
-global.fetch = vi.fn(() =>
-  Promise.resolve({
-    ok: true,
-    json: () => Promise.resolve({ footer: mockConfig.footer }),
-  }),
-) as any;
-
-describe('Footer config', () => {
-  it('should have a footer section', () => {
-    expect(mockConfig).toHaveProperty('footer');
+describe('Footer config (mocked via hook)', () => {
+  beforeEach(() => {
+    (useLocaleContent as Mock).mockReset?.();
   });
 
-  it('should have image and columns in footer', () => {
-    expect(mockConfig.footer).toHaveProperty('image');
-    expect(mockConfig.footer).toHaveProperty('columns');
-    expect(Array.isArray(mockConfig.footer.columns)).toBe(true);
-  });
+  it('renders footer columns and links from mocked hook', async () => {
+    (useLocaleContent as Mock).mockReturnValue(footerContent);
+    render(<Footer />);
 
-  it('should have correct column headers and links', () => {
-    const headers = mockConfig.footer.columns.map((col) => col.header);
-    expect(headers).toContain('Finding statistics');
-    expect(headers).toContain('Services');
-    expect(headers).toContain('About us');
-
-    const links = mockConfig.footer.columns.flatMap((col) =>
-      col.links.map((l) => l.text),
-    );
-    expect(links).toContain('Statistical database');
-    expect(links).toContain('Open data');
-    expect(links).toContain('News and press');
-    expect(links).toContain('Contact us');
-  });
-});
-
-describe('Footer component', () => {
-  it('renders the footer config contents', async () => {
-    global.fetch = vi.fn(() =>
-      Promise.resolve({
-        ok: true,
-        json: () => Promise.resolve({ footer: mockConfig.footer }),
-      }),
-    ) as unknown as typeof fetch;
-
-    const { container } = render(<Footer />);
-
-    // Decorative image has empty alt so it is intentionally hidden from accessibility tree.
-    // Wait for async fetch + state update to render the image.
-    const img = await vi.waitFor(() => {
-      const el = container.querySelector('img[alt=""]');
-      if (!el) {
-        throw new Error('not yet');
-      }
-      return el;
-    });
-    expect(img).toHaveAttribute('src', mockConfig.footer.image);
-
-    // Check for column headers
-    mockConfig.footer.columns.forEach((col) => {
+    footerContent.footer.columns.forEach((col) => {
       expect(screen.getByText(col.header)).toBeInTheDocument();
       col.links.forEach((link) => {
         expect(screen.getByText(link.text)).toBeInTheDocument();
