@@ -10,8 +10,8 @@ import useApp from '../../../context/useApp';
 
 function getBreadcrumbItems(
   language: string,
-  locationPath: string = '',
   t: TFunction,
+  locationPath: string = '',
 ): BreadcrumbItem[] {
   const config = getConfig();
   const breadcrumbItems: BreadcrumbItem[] = [];
@@ -39,7 +39,7 @@ export function NotFound() {
   const locationPath = useLocation().pathname;
   const language = i18n.language;
 
-  const breadcrumbItems = getBreadcrumbItems(language, locationPath, t);
+  const breadcrumbItems = getBreadcrumbItems(language, t, locationPath);
   const breadcrumbsVariant = isTablet ? 'compact' : 'default';
 
   return (
