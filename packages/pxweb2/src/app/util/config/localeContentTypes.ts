@@ -32,6 +32,21 @@ export type Startpage = {
   detailsSection?: DetailsSection;
 };
 
+export type FooterLink = {
+  text: string;
+  url: string;
+  external?: boolean;
+};
+
+export type FooterColumn = { header: string; links: FooterLink[] };
+
+export type Footer = {
+  image?: string;
+  description?: string;
+  columns: FooterColumn[];
+};
+
 export type LocaleContent = {
   startPage?: Startpage;
+  footer?: Footer;
 };

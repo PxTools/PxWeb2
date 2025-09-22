@@ -1,10 +1,11 @@
 import cl from 'clsx';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import styles from './Footer.module.scss';
 import { getConfig } from '../../util/config/getConfig';
 import { BodyShort, Button, Heading, Link } from '@pxweb2/pxweb2-ui';
+import { useLocaleContent } from '../../util/hooks/useLocaleContent';
 
 type FooterProps = {
   containerRef?: React.RefObject<HTMLDivElement | null>;
@@ -30,37 +31,13 @@ export function scrollToTop(ref?: React.RefObject<HTMLDivElement | null>) {
 }
 
 export const Footer: React.FC<FooterProps> = ({ containerRef }) => {
-  type FooterLink = {
-    text: string;
-    url: string;
-    external?: boolean;
-  };
-  const config = getConfig();
-  type FooterColumn = { header: string; links: FooterLink[] };
-  type FooterConfig = {
-    image?: string;
-    description?: string;
-    columns: FooterColumn[];
-  };
   const { i18n } = useTranslation();
   const { t } = useTranslation();
-  const [footerConfig, setFooterConfig] = useState<FooterConfig>({
-    columns: [],
-  });
+  const config = getConfig();
+  const content = useLocaleContent(i18n.language || 'en');
+  const footerContent = content?.footer;
   // Ref for the main scrollable container
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    const lang = i18n.language || 'en';
-    fetch(`/content/${lang}/content.json`)
-      .then((res) =>
-        res.ok
-          ? res.json()
-          : fetch(`/content/en/content.json`).then((r) => r.json()),
-      )
-      .then((data) => setFooterConfig(data.footer || { columns: [] }))
-      .catch(() => setFooterConfig({ columns: [] }));
-  }, [i18n.language]);
 
   return (
     <footer className={styles.footerContainer} ref={scrollContainerRef}>
@@ -68,15 +45,15 @@ export const Footer: React.FC<FooterProps> = ({ containerRef }) => {
         <div className={cl(styles.footerContent)}>
           <div className={cl(styles.logoAndLinks)}>
             <div className={cl(styles.logoContainer)}>
-              {footerConfig.image && (
+              {footerContent?.image && (
                 <img
-                  src={footerConfig.image}
+                  src={footerContent.image}
                   alt="" /* decorative image: empty alt hides from a11y tree */
                 />
               )}
             </div>
             <div className={cl(styles.footerLinks)}>
-              {footerConfig.columns.map((col) => (
+              {footerContent?.columns.map((col) => (
                 <div className={cl(styles.footerLinkGroup)} key={col.header}>
                   <Heading size="small" level="2">
                     {col.header}
