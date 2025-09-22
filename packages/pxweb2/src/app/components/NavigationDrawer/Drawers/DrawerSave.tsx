@@ -95,7 +95,7 @@ export const SaveQueryCreateButton: React.FC<SaveQueryButtonProps> = ({
       icon={'Link'}
       onClick={onClick}
     >
-      {t('presentation_page.side_menu.save.savequery.createButton')}
+      {t('presentation_page.side_menu.save.savequery.create_button')}
     </Button>
   );
 };
@@ -112,7 +112,7 @@ export const SaveQueryLoadingButton: React.FC<SaveQueryButtonProps> = ({
       iconPosition="start"
       loading={true}
       aria-busy={true}
-      aria-label={t('presentation_page.side_menu.save.savequery.loadingStatus')}
+      aria-label={t('presentation_page.side_menu.save.savequery.loading_status')}
     ></Button>
   );
 };
@@ -133,7 +133,7 @@ export const SaveQueryCopyButton: React.FC<SaveQueryButtonProps> = ({
         iconPosition="start"
         onClick={onClick}
       >
-        {t('presentation_page.side_menu.save.savequery.copyButton')}
+        {t('presentation_page.side_menu.save.savequery.copy_button')}
       </Button>
       <BodyShort size="small" className={classes.copyText}>
         {saveQueryUrl}
@@ -157,9 +157,9 @@ export const SaveQueryCopiedButton: React.FC<SaveQueryButtonProps> = ({
         iconPosition="start"
         icon={'Check'}
         onClick={onClick}
-        aria-label={t('presentation_page.side_menu.save.savequery.copyButton')}
+        aria-label={t('presentation_page.side_menu.save.savequery.copy_button')}
       >
-        {t('presentation_page.side_menu.save.savequery.copiedButton')}
+        {t('presentation_page.side_menu.save.savequery.copied_button')}
       </Button>
       <BodyShort size="small" className={classes.copyText}>
         {saveQueryUrl}
@@ -177,12 +177,12 @@ const SqScreenReaderStatus: React.FC<{
   let copyMessage = '';
 
   if (isCopied) {
-    copyMessage = t('presentation_page.side_menu.save.savequery.copyStatus');
+    copyMessage = t('presentation_page.side_menu.save.savequery.copy_status');
   }
 
   if (queryId) {
     createMessage = t(
-      'presentation_page.side_menu.save.savequery.createStatus',
+      'presentation_page.side_menu.save.savequery.create_status',
       {
         query: queryId,
       },
@@ -411,16 +411,16 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
     {
       value: 'selected',
       label: t(
-        'presentation_page.side_menu.save.savequery.periodOptions.selected',
+        'presentation_page.side_menu.save.savequery.period_options.selected',
       ),
     },
     {
       value: 'from',
-      label: t('presentation_page.side_menu.save.savequery.periodOptions.from'),
+      label: t('presentation_page.side_menu.save.savequery.period_options.from'),
     },
     {
       value: 'top',
-      label: t('presentation_page.side_menu.save.savequery.periodOptions.top'),
+      label: t('presentation_page.side_menu.save.savequery.period_options.top'),
     },
   ];
 
@@ -510,7 +510,7 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
         </div>
         <div className={classes.radioGroup}>
           <Radio
-            legend={t('presentation_page.side_menu.save.savequery.radioLegend')}
+            legend={t('presentation_page.side_menu.save.savequery.radio_legend')}
             hideLegend={false}
             options={radioOptions}
             selectedOption={selectedRadio}

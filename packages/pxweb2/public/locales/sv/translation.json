@@ -208,18 +208,18 @@
         "savequery": {
           "title": "Länk till uppdaterad tabell",
           "info": "Du får en unik länk till din tabell, som vi håller uppdaterad åt dig. Hur nya tidsperioder läggs till väljer du själv.",
-          "radioLegend": "Val av nya tidsperioder",
-          "periodOptions": {
+          "radio_legend": "Val av nya tidsperioder",
+          "period_options": {
             "selected": "Lägg inte till nya (tabellen visar samma tidsperioder som du valt nu)",
             "from": "Lägg till nya (nya tidsperioder läggs till de du har valt nu)",
             "top": "Lägg till nya men behåll samma antal (när en ny tidsperiod läggs till tas den äldsta bort)"
           },
-          "createButton": "Skapa länk",
-          "copyButton": "Kopiera länk",
-          "copiedButton": "Länk kopierad",
-          "createStatus": "Länk skapad. Tryck igen för att kopera länken",
-          "copyStatus": "Länk kopierad till utklipp",
-          "loadingStatus": "Länk skapas"
+          "create_button": "Skapa länk",
+          "copy_button": "Kopiera länk",
+          "copied_button": "Länk kopierad",
+          "create_status": "Länk skapad. Tryck igen för att kopera länken",
+          "copy_status": "Länk kopierad till utklipp",
+          "loading_status": "Länk skapas"
         },
         "imagefile": {
           "title": "Spara som diagram",

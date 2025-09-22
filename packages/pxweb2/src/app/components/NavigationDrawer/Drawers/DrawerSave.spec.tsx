@@ -49,38 +49,38 @@ vi.mock('react-i18next', () => ({
       if (key === 'presentation_page.side_menu.save.savequery.info') {
         return 'Save your query for later use.';
       }
-      if (key === 'presentation_page.side_menu.save.savequery.radioLegend') {
+      if (key === 'presentation_page.side_menu.save.savequery.radio_legend') {
         return 'Period options';
       }
       if (
         key ===
-        'presentation_page.side_menu.save.savequery.periodOptions.selected'
+        'presentation_page.side_menu.save.savequery.period_options.selected'
       ) {
         return 'Selected';
       }
       if (
-        key === 'presentation_page.side_menu.save.savequery.periodOptions.from'
+        key === 'presentation_page.side_menu.save.savequery.period_options.from'
       ) {
         return 'From';
       }
       if (
-        key === 'presentation_page.side_menu.save.savequery.periodOptions.top'
+        key === 'presentation_page.side_menu.save.savequery.period_options.top'
       ) {
         return 'Top';
       }
-      if (key === 'presentation_page.side_menu.save.savequery.createButton') {
+      if (key === 'presentation_page.side_menu.save.savequery.create_button') {
         return 'Create';
       }
-      if (key === 'presentation_page.side_menu.save.savequery.copyButton') {
+      if (key === 'presentation_page.side_menu.save.savequery.copy_button') {
         return 'Copy';
       }
-      if (key === 'presentation_page.side_menu.save.savequery.copiedButton') {
+      if (key === 'presentation_page.side_menu.save.savequery.copied_button') {
         return 'Copied';
       }
-      if (key === 'presentation_page.side_menu.save.savequery.copyStatus') {
+      if (key === 'presentation_page.side_menu.save.savequery.copy_status') {
         return `Copied: ${opts?.url}`;
       }
-      if (key === 'presentation_page.side_menu.save.savequery.createStatus') {
+      if (key === 'presentation_page.side_menu.save.savequery.create_status') {
         return `Created: ${opts?.query}`;
       }
       return key;
