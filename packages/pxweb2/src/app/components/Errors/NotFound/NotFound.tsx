@@ -14,23 +14,24 @@ function getBreadcrumbItems(
   locationPath: string = '',
 ): BreadcrumbItem[] {
   const config = getConfig();
-  const breadcrumbItems: BreadcrumbItem[] = [];
   const showLangInPath =
     config.language.showDefaultLanguageInPath ||
     language !== config.language.defaultLanguage;
   const langPrefix = showLangInPath ? `/${language}` : '';
 
-  // Add root/home and current page to breadcrumbs
-  breadcrumbItems.push({
-    label: t('common.breadcrumbs.breadcrumb_root_title'),
-    href: langPrefix,
-  });
-  breadcrumbItems.push({
-    label: t('common.errors.not_found.title'),
-    href: `${locationPath}`,
-  });
+  return [
+    // Root
+    {
+      label: t('common.breadcrumbs.breadcrumb_root_title'),
+      href: langPrefix,
+    },
 
-  return breadcrumbItems;
+    // Current page
+    {
+      label: t('common.errors.not_found.title'),
+      href: `${locationPath}`,
+    },
+  ];
 }
 
 export function NotFound() {
