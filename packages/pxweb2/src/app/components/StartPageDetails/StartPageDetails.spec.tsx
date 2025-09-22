@@ -34,7 +34,6 @@ const detailsSectionNo = {
 };
 
 describe('StartPageDetails (renders from props)', () => {
-
   it('renders header and body from props', async () => {
     render(<StartPageDetails detailsSection={detailsSectionNo} />);
 
@@ -68,7 +67,11 @@ describe('StartPageDetails (renders from props)', () => {
   });
 
   it('does not render anything when detailContent is empty', async () => {
-    render(<StartPageDetails detailsSection={{ enabled: true, detailContent: [] }} />);
+    render(
+      <StartPageDetails
+        detailsSection={{ enabled: true, detailContent: [] }}
+      />,
+    );
     expect(
       screen.queryByRole('button', { name: 'Mer om Statistikkbanken' }),
     ).not.toBeInTheDocument();
