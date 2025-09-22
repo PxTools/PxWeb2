@@ -20,7 +20,7 @@ interface Resources {
         };
         not_found: {
           action_text: 'Go back to the previous page';
-          description: 'The page you are looking for does not exist. Please check the URL or return to the homepage.';
+          description: "The page you're looking for may have been moved or deleted, or there might be an error in the URL.";
           title: 'Page not found';
         };
       };
