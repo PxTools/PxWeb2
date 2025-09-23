@@ -550,7 +550,7 @@ const StartPage = () => {
   function isRenderableBreadCrumb(
     bc: BreadCrumb | undefined,
   ): bc is BreadCrumb {
-    return !!bc && bc.enabled === true && !!bc.text && !!bc.href;
+    return !!bc && bc.enabled === true && !!bc.items?.length;
   }
 
   const renderBreadCrumb = () => {
@@ -558,19 +558,13 @@ const StartPage = () => {
       return null;
     }
 
-    const frontPage: BreadcrumbItem = {
-      label: breadCrumbContent.text,
-      href: breadCrumbContent.href,
-    };
+    const breadCrumbItems: BreadcrumbItem[] = breadCrumbContent.items ?? [];
 
     return (
       <Breadcrumbs
         className={styles.breadcrumbStartpage}
         variant="default"
-        breadcrumbItems={[
-          frontPage,
-          { label: t('start_page.header'), href: '/' },
-        ]}
+        breadcrumbItems={breadCrumbItems}
       />
     );
   };

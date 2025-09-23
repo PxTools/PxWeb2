@@ -1,4 +1,4 @@
-import type { IconProps } from '@pxweb2/pxweb2-ui';
+import type { IconProps, BreadcrumbItem } from '@pxweb2/pxweb2-ui';
 
 export type DetailLink = {
   text: string;
@@ -30,8 +30,7 @@ export type DetailsSection = {
 
 export type BreadCrumb = {
   enabled: boolean;
-  text: string;
-  href: string;
+  items?: BreadcrumbItem[];
 };
 
 export type Startpage = {

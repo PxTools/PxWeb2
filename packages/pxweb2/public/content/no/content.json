@@ -2,8 +2,16 @@
   "startPage": {
     "breadCrumb": {
       "enabled": true,
-      "text": "Forsiden",
-      "href": "#"
+      "items": [
+        {
+          "label": "Forsiden",
+          "href": "#"
+        },
+        {
+          "label": "Statistikkbanken",
+          "href": "/"
+        }
+      ]
     },
     "detailsSection": {
       "enabled": true,
@@ -24,7 +32,7 @@
                 "url": "#"
               },
               {
-                "text": "Kom i gang med Api",
+                "text": "Kom i gang med API",
                 "url": "#"
               },
               {
