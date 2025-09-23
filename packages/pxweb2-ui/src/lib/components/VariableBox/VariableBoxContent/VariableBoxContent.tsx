@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useDebounce } from '@uidotdev/usehooks';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 import deburr from 'lodash/deburr';
+import { v4 as uuidv4 } from 'uuid';
 
 import classes from './VariableBoxContent.module.scss';
 import { Checkbox, MixedCheckbox } from '../../Checkbox/Checkbox';
@@ -77,7 +78,7 @@ export function VariableBoxContent({
 
   const debouncedSearch = useDebounce(search, 300);
   const [items, setItems] = useState<VirtualListItem[]>([]);
-  const [uniqueId] = useState(() => crypto.randomUUID());
+  const [uniqueId] = useState(() => uuidv4());
   const valuesOnlyList = useRef<HTMLDivElement>(null);
   const hasCodeLists = codeLists && codeLists.length > 0;
   const hasSevenOrMoreValues = values && values.length > 6;
