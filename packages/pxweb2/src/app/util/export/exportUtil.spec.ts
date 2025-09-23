@@ -10,6 +10,7 @@ import {
   OutputFormatType,
   OutputFormatParamType,
   TableService,
+  VariablesSelection,
 } from '@pxweb2/pxweb2-api-client';
 
 vi.mock('@pxweb2/pxweb2-api-client', () => ({
@@ -33,7 +34,7 @@ vi.mock('@pxweb2/pxweb2-api-client', () => ({
 describe('exportToFile', () => {
   const tabId = 'testTable';
   const lang = 'en';
-  const variablesSelection = { selection: [] } as any;
+  const variablesSelection: VariablesSelection = { selection: [] };
 
   let clickMock: ReturnType<typeof vi.fn>;
   let createElementOrig: typeof document.createElement;
@@ -49,7 +50,7 @@ describe('exportToFile', () => {
       if (tagName === 'a') {
         let _href = '';
         let _download = '';
-        return {
+        const mockAnchor: Partial<HTMLAnchorElement> = {
           get href() {
             return _href;
           },
@@ -63,13 +64,14 @@ describe('exportToFile', () => {
             _download = val;
           },
           click: clickMock,
-          style: {},
+          style: {} as CSSStyleDeclaration,
           setAttribute: vi.fn(),
           remove: vi.fn(),
-        } as any;
+        };
+        return mockAnchor as HTMLAnchorElement;
       }
       return createElementOrig.call(document, tagName);
-    }) as any;
+    }) as typeof document.createElement;
 
     // Mock URL.createObjectURL
     createObjectURLOrig = URL.createObjectURL;
@@ -88,7 +90,7 @@ describe('exportToFile', () => {
   });
 
   it('should export as excel', async () => {
-    (TableService.getTableDataByPost as any).mockResolvedValueOnce(
+    vi.mocked(TableService.getTableDataByPost).mockResolvedValueOnce(
       'excel-data',
     );
     await exportToFile(tabId, lang, variablesSelection, OutputFormatType.XLSX);
@@ -103,7 +105,9 @@ describe('exportToFile', () => {
   }, 7000);
 
   it('should export as csv', async () => {
-    (TableService.getTableDataByPost as any).mockResolvedValueOnce('csv-data');
+    vi.mocked(TableService.getTableDataByPost).mockResolvedValueOnce(
+      'csv-data',
+    );
     await exportToFile(tabId, lang, variablesSelection, OutputFormatType.CSV);
     expect(TableService.getTableDataByPost).toHaveBeenCalledWith(
       tabId,
@@ -120,7 +124,7 @@ describe('exportToFile', () => {
   }, 7000);
 
   it('should export as px', async () => {
-    (TableService.getTableDataByPost as any).mockResolvedValueOnce('px-data');
+    vi.mocked(TableService.getTableDataByPost).mockResolvedValueOnce('px-data');
     await exportToFile(tabId, lang, variablesSelection, OutputFormatType.PX);
     expect(TableService.getTableDataByPost).toHaveBeenCalledWith(
       tabId,
@@ -134,7 +138,9 @@ describe('exportToFile', () => {
 
   it('should export as jsonstat2', async () => {
     const jsonData = { foo: 'bar' };
-    (TableService.getTableDataByPost as any).mockResolvedValueOnce(jsonData);
+    vi.mocked(TableService.getTableDataByPost).mockResolvedValueOnce(
+      JSON.stringify(jsonData),
+    );
     await exportToFile(
       tabId,
       lang,
@@ -152,7 +158,9 @@ describe('exportToFile', () => {
   }, 7000);
 
   it('should export as html', async () => {
-    (TableService.getTableDataByPost as any).mockResolvedValueOnce('html-data');
+    vi.mocked(TableService.getTableDataByPost).mockResolvedValueOnce(
+      'html-data',
+    );
     await exportToFile(tabId, lang, variablesSelection, OutputFormatType.HTML);
     expect(TableService.getTableDataByPost).toHaveBeenCalledWith(
       tabId,
@@ -165,7 +173,7 @@ describe('exportToFile', () => {
   }, 7000);
 
   it('should export as parquet', async () => {
-    (TableService.getTableDataByPost as any).mockResolvedValueOnce(
+    vi.mocked(TableService.getTableDataByPost).mockResolvedValueOnce(
       'parquet-data',
     );
     await exportToFile(
@@ -247,7 +255,10 @@ describe('createSavedQueryURL', () => {
   });
 
   afterEach(() => {
-    (window as any).location = originalLocation;
+    Object.defineProperty(window, 'location', {
+      value: originalLocation,
+      writable: true,
+    });
   });
 
   it('should create a URL with the given saved query id', () => {
@@ -297,6 +308,6 @@ describe('getOutputFormatParams', () => {
   });
 
   it('returns [] for unknown format', () => {
-    expect(getOutputFormatParams('UNKNOWN' as any)).toEqual([]);
+    expect(getOutputFormatParams('UNKNOWN' as OutputFormatType)).toEqual([]);
   });
 });

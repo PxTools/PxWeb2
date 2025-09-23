@@ -63,6 +63,11 @@
       "drawer_edit": "More tools for editing the table are under construction.",
       "drawer_help": "No content will be added here. The help button must be set up to link directly to your own help pages.",
       "tab_definitions": "The content of this tab is under construction."
+    },
+    "breadcrumbs": {
+        "aria_label_breadcrumb": "Breadcrumb",
+        "breadcrumb_root_title": "Home",
+        "show_more_breadcrumbs": "Show more"
     }
   },
   "start_page": {
@@ -235,7 +240,8 @@
       }
     },
     "main_content": {
-      "arialabelbreadcrumb": "Breadcrumb",
+      "expand_view": "Expand view",
+      "shrink_view": "Shrink view",
       "last_updated": "Last updated",
       "show_details": "Show details",
       "dynamic_table_title": "{{table_content_type}} by {{table_content_label_first_part}} and {{table_content_label_last_part}}",
