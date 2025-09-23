@@ -15,6 +15,7 @@ vi.mock('../src/app/util/config/getConfig', () => ({
       fallbackLanguage: 'en',
       showDefaultLanguageInPath: true,
     },
+    baseApplicationPath: '/',
     apiUrl: '',
     maxDataCells: 100000,
     specialCharacters: ['.', '..', ':', '-', '...', '*'],
