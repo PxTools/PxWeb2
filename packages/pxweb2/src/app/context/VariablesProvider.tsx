@@ -136,7 +136,7 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
   const getSelectedCodelistById = (variableId: string) => {
     const selectedCodelist = selectedVBValues?.find(
       (item) => item.id === variableId,
-    )?.selectedCodeList;
+    )?.selectedCodelist;
 
     return selectedCodelist;
   };

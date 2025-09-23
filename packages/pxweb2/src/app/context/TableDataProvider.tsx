@@ -7,7 +7,7 @@ import {
   Dataset,
   OutputFormatType,
   SavedQueriesService,
-  TableService,
+  TablesService,
   VariableSelection,
   VariablesSelection,
 } from '@pxweb2/pxweb2-api-client';
@@ -957,15 +957,15 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         // Get selection from Selection provider
         const ids = variables.getUniqueIds();
         ids.forEach((id) => {
-          const selectedCodeList = variables.getSelectedCodelistById(id);
+          const selectedCodelist = variables.getSelectedCodelistById(id);
           const selection: VariableSelection = {
             variableCode: id,
             valueCodes: variables.getSelectedValuesByIdSorted(id),
           };
 
           // Add selected codelist to selection if it exists
-          if (selectedCodeList) {
-            selection.codeList = selectedCodeList;
+          if (selectedCodelist) {
+            selection.codeList = selectedCodelist;
           }
 
           selections.push(selection);
@@ -1042,7 +1042,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     i18n: i18n,
     variablesSelection: VariablesSelection,
   ) => {
-    const res = await TableService.getTableDataByPost(
+    const res = await TablesService.getTableDataByPost(
       tableId,
       i18n.language,
       OutputFormatType.JSON_STAT2,

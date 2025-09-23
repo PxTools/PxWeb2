@@ -1,6 +1,6 @@
 import { Value } from './value';
 
-export type CodeList = {
+export type Codelist = {
   /**
    * The identiyer for the codelist
    */

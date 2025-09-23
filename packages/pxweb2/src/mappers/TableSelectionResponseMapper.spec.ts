@@ -14,7 +14,7 @@ describe('TableSelectionResponseMapper', () => {
           },
           {
             variableCode: 'testVarCode2',
-            codeList: 'testCodeList',
+            codeList: 'testCodelist',
             valueCodes: ['testValueCode2'],
           },
         ],
@@ -26,12 +26,12 @@ describe('TableSelectionResponseMapper', () => {
       expect(result).toEqual([
         {
           id: 'testVarCode',
-          selectedCodeList: undefined,
+          selectedCodelist: undefined,
           values: ['testValueCode'],
         },
         {
           id: 'testVarCode2',
-          selectedCodeList: 'testCodeList',
+          selectedCodelist: 'testCodelist',
           values: ['testValueCode2'],
         },
       ]);

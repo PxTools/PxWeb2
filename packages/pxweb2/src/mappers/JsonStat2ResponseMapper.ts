@@ -5,7 +5,7 @@ import {
   jsonstat_note,
   jsonstat_noteMandatory,
   extension_dimension,
-  CodeListInformation,
+  CodelistInformation,
 } from '@pxweb2/pxweb2-api-client';
 import {
   Dimensions,
@@ -17,7 +17,7 @@ import {
   VartypeEnum,
   PxTableData,
   PxTableMetadata,
-  CodeList,
+  Codelist,
   Contact,
   ContentInfo,
   Note,
@@ -457,14 +457,14 @@ function getMandatoryVariable(
 }
 
 /**
- * Maps the code lists of a dimension from a JSON-stat 2.0 response to an array of CodeList objects.
+ * Maps the code lists of a dimension from a JSON-stat 2.0 response to an array of Codelist objects.
  *
  * @param dimensionExtension - The dimension extension object from the JSON-stat 2.0 response.
- * @returns An array of CodeList objects.
+ * @returns An array of Codelist objects.
  */
-function getCodelists(dimensionExtension: extension_dimension): CodeList[] {
+function getCodelists(dimensionExtension: extension_dimension): Codelist[] {
   if (dimensionExtension?.codeLists) {
-    return dimensionExtension.codeLists.map((codeList: CodeListInformation) => {
+    return dimensionExtension.codeLists.map((codeList: CodelistInformation) => {
       return {
         id: codeList.id,
         label: codeList.label,

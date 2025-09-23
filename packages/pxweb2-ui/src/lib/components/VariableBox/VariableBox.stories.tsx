@@ -4,7 +4,7 @@ import { VariableBox, VariableBoxProps, SelectedVBValues } from './VariableBox';
 import { SelectOption } from '../Select/SelectOptionType';
 import { Value } from '../../shared-types/value';
 import { VartypeEnum } from '../../shared-types/vartypeEnum';
-import { CodeList } from '../../shared-types/codelist';
+import { Codelist } from '../../shared-types/codelist';
 
 const meta = {
   title: 'Components/VariableBox',
@@ -41,7 +41,7 @@ const mockValues = [
   { code: '05', label: 'Oppland' },
 ];
 
-const mockCodeLists: CodeList[] = [
+const mockCodeLists: Codelist[] = [
   { id: 'list1', label: 'Main regions', values: mockValues },
   { id: 'list2', label: 'Counties', values: [] },
 ];
@@ -49,7 +49,7 @@ const mockCodeLists: CodeList[] = [
 const mockSelectedValues: SelectedVBValues[] = [
   {
     id: 'region',
-    selectedCodeList: 'list1',
+    selectedCodelist: 'list1',
     values: ['01', '03'],
   },
 ];
@@ -65,7 +65,7 @@ const commonProps = {
   values: mockValues,
   codeLists: mockCodeLists,
   onChangeCodeList: (selectedItem: SelectOption | undefined, varId: string) => {
-    console.log('CodeList changed:', selectedItem, 'for variable:', varId);
+    console.log('Codelist changed:', selectedItem, 'for variable:', varId);
   },
   onChangeCheckbox: (varId: string, value: string) => {
     console.log('Checkbox changed for variable:', varId, 'value:', value);
@@ -120,7 +120,7 @@ export const MandatoryWithError: Story = {
     selectedValues: [
       {
         id: 'region',
-        selectedCodeList: undefined,
+        selectedCodelist: undefined,
         values: [],
       },
     ],
@@ -133,7 +133,7 @@ export const AllValuesSelected: Story = {
     selectedValues: [
       {
         id: 'region',
-        selectedCodeList: 'list1',
+        selectedCodelist: 'list1',
         values: mockValues.map((v) => v.code),
       },
     ],
@@ -146,7 +146,7 @@ export const NoValuesSelected: Story = {
     selectedValues: [
       {
         id: 'region',
-        selectedCodeList: 'list1',
+        selectedCodelist: 'list1',
         values: [],
       },
     ],
@@ -173,7 +173,7 @@ export const ManyValues: Story = {
     selectedValues: [
       {
         id: 'region',
-        selectedCodeList: 'list1',
+        selectedCodelist: 'list1',
         values: ['0001', '0010', '0025'],
       },
     ],

@@ -1,5 +1,5 @@
 import {
-  AbstractCodeListVariable,
+  AbstractCodelistVariable,
   TableMetadataResponse,
   VariableTypeEnum,
 } from '@pxweb2/pxweb2-api-client';
@@ -19,10 +19,10 @@ export function mapTableMetadataResponse(
           label: variable.label,
           type: mapVariableTypeEnum(variable.type),
           mandatory:
-            (variable as AbstractCodeListVariable).elimination != null
-              ? !(variable as AbstractCodeListVariable).elimination
+            (variable as AbstractCodelistVariable).elimination != null
+              ? !(variable as AbstractCodelistVariable).elimination
               : true,
-          values: (variable as AbstractCodeListVariable).values.map((value) => {
+          values: (variable as AbstractCodelistVariable).values.map((value) => {
             return {
               label: value.label,
               code: value.code,
@@ -34,7 +34,7 @@ export function mapTableMetadataResponse(
               }),
             };
           }),
-          codeLists: (variable as AbstractCodeListVariable).codeLists?.map(
+          codeLists: (variable as AbstractCodelistVariable).codeLists?.map(
             (codeList) => {
               return {
                 id: codeList.id,

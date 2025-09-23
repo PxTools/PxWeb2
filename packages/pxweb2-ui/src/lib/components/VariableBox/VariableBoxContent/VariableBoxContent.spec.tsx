@@ -174,7 +174,7 @@ describe('With Virtuoso mock', () => {
         codeLists={[
           {
             id: 'cl-1',
-            label: 'CodeList 1',
+            label: 'Codelist 1',
             values: [{ code: 'test-1', label: 'test-1' }],
           },
         ]}

@@ -1,4 +1,4 @@
-import { CodeList } from '../shared-types/codelist';
+import { Codelist } from '../shared-types/codelist';
 import { SelectOption } from '../components/Select/SelectOptionType';
 import { IconProps } from '../components/Icon/Icon';
 
@@ -8,7 +8,7 @@ export const getCSSVariable = (variable: string): string => {
   return cssVar;
 };
 
-export const mapCodeListToSelectOption = (codeList: CodeList): SelectOption => {
+export const mapCodeListToSelectOption = (codeList: Codelist): SelectOption => {
   return {
     label: codeList.label,
     value: codeList.id,
@@ -17,7 +17,7 @@ export const mapCodeListToSelectOption = (codeList: CodeList): SelectOption => {
 
 // return array of SelectOption objects
 export const mapCodeListsToSelectOptions = (
-  codeList: CodeList[],
+  codeList: Codelist[],
 ): SelectOption[] => {
   return codeList.map((code) => ({
     label: code.label,

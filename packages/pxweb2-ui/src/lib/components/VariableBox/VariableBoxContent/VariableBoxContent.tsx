@@ -200,11 +200,11 @@ export function VariableBoxContent({
   // needs the selected, mapped code list for the current variable
   const currentVarSelectedCodeListId = selectedValues.find(
     (variable) => variable.id === varId,
-  )?.selectedCodeList;
-  const selectedCodeListMapped = mappedAndSortedCodeLists.find(
+  )?.selectedCodelist;
+  const selectedCodelistMapped = mappedAndSortedCodeLists.find(
     (codeList) => codeList.value === currentVarSelectedCodeListId,
   );
-  const selectedCodeListOrUndefined = selectedCodeListMapped ?? undefined;
+  const selectedCodelistOrUndefined = selectedCodelistMapped ?? undefined;
 
   const handleChangingCodeListInVariableBox = (
     selectedItem: SelectOption,
@@ -468,7 +468,7 @@ export function VariableBoxContent({
               addModal={addModal}
               removeModal={removeModal}
               options={mappedAndSortedCodeLists}
-              selectedOption={selectedCodeListOrUndefined}
+              selectedOption={selectedCodelistOrUndefined}
               codeListLabelId={codeListLabelId}
               onChange={(selectedItem) =>
                 selectedItem &&

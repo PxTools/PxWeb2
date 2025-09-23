@@ -1,5 +1,5 @@
 import { SelectOption } from '../Select/SelectOptionType';
-import { CodeList } from '../../shared-types/codelist';
+import { Codelist } from '../../shared-types/codelist';
 import { mapCodeListsToSelectOptions } from '../../util/util';
 
 export const sortSelectOptionsGroupingsLast = (
@@ -19,7 +19,7 @@ export const sortSelectOptionsGroupingsLast = (
 };
 
 export const mapAndSortCodeLists = (
-  codeLists: CodeList[] | undefined,
+  codeLists: Codelist[] | undefined,
 ): SelectOption[] => {
   if (!codeLists || codeLists.length === 0) {
     return [];
