@@ -39,6 +39,10 @@ vi.mock('./pages/TopicIcons/TopicIcons', () => ({
   default: () => <div data-testid="topic-icons">Topic Icons</div>,
 }));
 
+vi.mock('./components/Errors/GenericError/GenericError', () => ({
+  GenericError: () => <div data-testid="generic-error">Generic Error</div>,
+}));
+
 vi.mock('./context/useApp', () => ({
   default: () => ({
     title: '',
@@ -204,7 +208,7 @@ describe('Router configuration', () => {
     });
   });
 
-  it('should handle error elements', async () => {
+  it('should handle component errors with ErrorBoundary', async () => {
     // Suppress console output during error testing - automatically restored after test
     vi.spyOn(console, 'error').mockImplementation(vi.fn());
     vi.spyOn(console, 'warn').mockImplementation(vi.fn());
@@ -227,7 +231,7 @@ describe('Router configuration', () => {
       });
 
       renderWithProviders(testRouter);
-      expect(screen.getByText('Test error')).toBeInTheDocument();
+      expect(screen.getByTestId('generic-error')).toBeInTheDocument();
     } finally {
       // Reset the component mock
       vi.doMock('./pages/StartPage/StartPage', () => ({
