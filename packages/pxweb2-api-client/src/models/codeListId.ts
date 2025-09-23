@@ -3,6 +3,6 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * Identifier for a code list
+ * Identifier for a codeList
  */
-export type codeListId = string;
+export type CodelistId = string;
