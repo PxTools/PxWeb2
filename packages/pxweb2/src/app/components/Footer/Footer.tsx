@@ -33,7 +33,9 @@ export function scrollToTop(ref?: React.RefObject<HTMLDivElement | null>) {
 export const Footer: React.FC<FooterProps> = ({ containerRef }) => {
   const { i18n, t } = useTranslation();
   const config = getConfig();
-  const content = useLocaleContent(i18n.language || config.language.defaultLanguage);
+  const content = useLocaleContent(
+    i18n.language || config.language.defaultLanguage,
+  );
   const footerContent = content?.footer;
   // Ref for the main scrollable container
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
