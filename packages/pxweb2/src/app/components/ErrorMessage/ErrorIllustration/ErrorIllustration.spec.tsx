@@ -21,7 +21,6 @@ describe('ErrorIllustration', () => {
         illustrationName="NotFound"
       />,
     );
-
     const svgElements = getAllByRole('presentation');
 
     expect(svgElements).toHaveLength(2);
@@ -35,7 +34,6 @@ describe('ErrorIllustration', () => {
         illustrationName="GenericError"
       />,
     );
-
     const svgElements = getAllByRole('presentation');
 
     expect(svgElements).toHaveLength(2);
@@ -46,7 +44,6 @@ describe('ErrorIllustration', () => {
       backgroundShape: 'circle',
       illustrationName: 'InvalidIllustration',
     };
-
     const { container } = render(
       <ErrorIllustration
         {...(invalidProps as Parameters<typeof ErrorIllustration>[0])}
@@ -64,7 +61,6 @@ describe('ErrorIllustration', () => {
       backgroundShape: 'invalidShape',
       illustrationName: 'NotFound',
     };
-
     const { container } = render(
       <ErrorIllustration
         {...(invalidProps as Parameters<typeof ErrorIllustration>[0])}

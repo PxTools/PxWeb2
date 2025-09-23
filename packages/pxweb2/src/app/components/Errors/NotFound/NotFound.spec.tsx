@@ -4,7 +4,7 @@ import '@testing-library/jest-dom/vitest';
 import { renderWithProviders } from '../../../util/testing-utils';
 import { NotFound } from './NotFound';
 
-// Mock react-router
+// Mock the external dependencies
 vi.mock('react-router', () => ({
   useLocation: () => ({
     pathname: '/test-path',
@@ -12,7 +12,6 @@ vi.mock('react-router', () => ({
 }));
 
 // Mock the internal components
-
 vi.mock('../ErrorLayout', () => ({
   ErrorLayout: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="error-layout">{children}</div>
@@ -63,28 +62,24 @@ describe('NotFound', () => {
   describe('Breadcrumbs', () => {
     it('should render the breadcrumbs component', () => {
       const { getByTestId } = renderWithProviders(<NotFound />);
-
       const breadcrumbs = getByTestId('breadcrumbs');
+
       expect(breadcrumbs).toBeInTheDocument();
     });
 
     it('should render breadcrumbs with correct items', () => {
       const { getByTestId } = renderWithProviders(<NotFound />);
-
       const breadcrumbs = getByTestId('breadcrumbs');
+
       expect(breadcrumbs).toHaveAttribute('data-items-count', '2');
-
-      // Should have root/home breadcrumb
-      expect(getByTestId('breadcrumb-item-0')).toBeInTheDocument();
-
-      // Should have current page breadcrumb
-      expect(getByTestId('breadcrumb-item-1')).toBeInTheDocument();
+      expect(getByTestId('breadcrumb-item-0')).toBeInTheDocument(); // Should have root/home breadcrumb
+      expect(getByTestId('breadcrumb-item-1')).toBeInTheDocument(); // Should have current page breadcrumb
     });
 
     it('should use correct breadcrumbs variant based on screen size', () => {
       const { getByTestId } = renderWithProviders(<NotFound />);
-
       const breadcrumbs = getByTestId('breadcrumbs');
+
       expect(breadcrumbs).toHaveAttribute('data-variant');
     });
   });

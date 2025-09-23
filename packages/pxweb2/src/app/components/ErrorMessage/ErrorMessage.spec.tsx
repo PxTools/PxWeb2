@@ -132,11 +132,9 @@ describe('ErrorMessage', () => {
     render(<ErrorMessage {...defaultProps} align="center" />);
 
     const heading = screen.getByTestId('heading');
-
-    expect(heading).toHaveAttribute('data-align', 'center');
-
     const errorAction = screen.getByTestId('error-action');
 
+    expect(heading).toHaveAttribute('data-align', 'center');
     expect(errorAction).toHaveAttribute('data-align', 'center');
   });
 
@@ -144,11 +142,9 @@ describe('ErrorMessage', () => {
     render(<ErrorMessage {...defaultProps} align="start" />);
 
     const heading = screen.getByTestId('heading');
-
-    expect(heading).toHaveAttribute('data-align', 'start');
-
     const errorAction = screen.getByTestId('error-action');
 
+    expect(heading).toHaveAttribute('data-align', 'start');
     expect(errorAction).toHaveAttribute('data-align', 'start');
   });
 
