@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { ErrorInfo } from 'react';
 
-import { Alert } from '@pxweb2/pxweb2-ui';
-import { Header } from '../Header/Header';
+import { GenericError } from '../Errors/GenericError/GenericError';
 
 interface ErrorBoundaryProps {
   children: React.ReactNode;
@@ -36,14 +35,7 @@ class ErrorBoundary extends React.Component<
       }
 
       // Default fallback UI
-      return (
-        <>
-          <Header></Header>
-          <Alert variant="error" size="small">
-            {this.state.error?.message}
-          </Alert>
-        </>
-      );
+      return <GenericError />;
     }
 
     // When there's no error, render children
