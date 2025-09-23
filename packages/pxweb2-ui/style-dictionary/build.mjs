@@ -25,6 +25,7 @@ const configs = [
           {
             destination: 'variables.css',
             format: 'css/variables',
+            options: { outputReferences: true },
           },
         ],
       },
@@ -36,6 +37,7 @@ const configs = [
           {
             destination: 'variables.css',
             format: 'css/variables',
+            options: { outputReferences: true },
           },
         ],
       },

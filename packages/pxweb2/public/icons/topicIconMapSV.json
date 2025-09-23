@@ -12,10 +12,13 @@
   "AM": "LabourMarketAndEarnings.svg",
   "LE": "LivingConditions.svg",
   "NR": "NationalAccountsAndBusinessCycles.svg",
-  "OV": "Miscellaneous.svg",
+  "OV": "Test.svg",
   "BE": "Population.svg",
   "PR": "IncomeAndConsumption.svg",
-  "OE": "TradeAndService.svg",
+  "OE": "PublicFinances.svg",
   "HA": "ExternalEconomy.svg",
-  "TK": "TransportAndCommunications.svg"
+  "TK": "TransportAndTourism.svg",
+  "HS": "Health.svg",
+  "KU": "CultureAndRecreation.svg",
+  "SO": "SocialServices.svg"
 }

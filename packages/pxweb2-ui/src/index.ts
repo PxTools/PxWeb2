@@ -9,6 +9,7 @@ export * from './lib/components/Checkbox/Checkbox';
 export * from './lib/components/Chips/Chips';
 export * from './lib/components/Contact/Contact';
 export * from './lib/components/ContentBox/ContentBox';
+export * from './lib/components/DetailsSection/DetailsSection';
 export * from './lib/components/EmptyState/EmptyState';
 export * from './lib/components/FilterCategory/FilterCategory';
 export * from './lib/components/Icon/Icon';

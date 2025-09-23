@@ -1,0 +1,33 @@
+{
+  "startPage": {
+    "breadCrumb": {
+      "enabled": true,
+      "text": "Forsidan",
+      "href": "#"
+    },
+    "detailsSection": {
+      "enabled": true,
+      "detailHeader": "Mer om Statistikdatabasen",
+      "detailContent": [
+        {
+          "textBlock": {
+            "text": "Uppdatering av Statistikdatabasen sker måndag till fredag klockan 8:00."
+          },
+          "links": {
+            "header": "Relevanta länkar",
+            "items": [
+              {
+                "text": "Kom igång med Statistikdatabasen",
+                "url": "#"
+              },
+              {
+                "text": "Kontakt Statistikservice",
+                "url": "#"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

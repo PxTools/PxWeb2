@@ -1,11 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
-import {
-  createMemoryRouter,
-  RouterProvider,
-  type RouteObject,
-} from 'react-router';
+import { createMemoryRouter, RouteObject, RouterProvider } from 'react-router';
 
 import * as configModule from './util/config/getConfig';
 import { AppProvider } from './context/AppProvider';
@@ -73,10 +69,7 @@ describe('Router configuration', () => {
     baseApplicationPath: '/',
     maxDataCells: 150000,
     specialCharacters: ['.', '..', ':', '-', '...', '*'],
-    variableFilterExclusionList: {
-      no: ['excludedVariable1', 'excludedVariable2'],
-      en: ['excludedVariable1', 'excludedVariable2'],
-    },
+    variableFilterExclusionList: {},
   };
 
   beforeEach(() => {
