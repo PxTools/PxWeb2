@@ -52,3 +52,21 @@ export const MediumWithLoading: Story = {
     isLoading: true,
   },
 };
+
+export const MediumWithDisabled: Story = {
+  args: {
+    iconName: 'File',
+    label: 'Medium disabled',
+    size: 'medium',
+    disabled: true,
+  },
+};
+
+export const LargeDisabled: Story = {
+  args: {
+    iconName: 'File',
+    label: 'Large disabled',
+    size: 'large',
+    disabled: true,
+  },
+};
