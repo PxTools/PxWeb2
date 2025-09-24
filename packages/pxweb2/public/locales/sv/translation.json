@@ -145,6 +145,7 @@
               }
             },
             "mixed_checkbox": "Välj alla",
+            "mixed_checkbox_search": "Välj alla sökträffar",
             "values_list": {
               "aria_label": "Lista över {{total}} värden.",
               "no_results_heading": "Tyvärr hittades inte ”{{search}}”",
