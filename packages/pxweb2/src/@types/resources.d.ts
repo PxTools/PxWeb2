@@ -95,6 +95,7 @@ interface Resources {
           from_year: 'From year';
           to_year: 'To year';
           clear_selection: 'Clear selection';
+          no_option: 'No results';
         };
         variabel: 'Variable';
         variabel_search: 'Search for variable';

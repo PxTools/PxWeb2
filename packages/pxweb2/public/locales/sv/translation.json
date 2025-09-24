@@ -93,7 +93,8 @@
         "to_label": "Till",
         "from_year": "Från år",
         "to_year": "Till år",
-        "clear_selection": "Rensa"
+        "clear_selection": "Rensa",
+        "no_option": "Ingen sökträff"
       },
       "variabel": "Variabel",
       "variabel_search": "Sök efter variabel",
