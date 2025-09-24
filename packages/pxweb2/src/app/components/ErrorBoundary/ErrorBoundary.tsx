@@ -1,11 +1,10 @@
-import * as React from 'react';
-import { Alert } from '@pxweb2/pxweb2-ui';
-import { ErrorInfo } from 'react';
-import { Header } from '../Header/Header';
+import { Component, ErrorInfo, ReactNode } from 'react';
+
+import { GenericError } from '../Errors/GenericError/GenericError';
 
 interface ErrorBoundaryProps {
-  children: React.ReactNode;
-  fallback?: React.ReactNode;
+  children: ReactNode;
+  fallback?: ReactNode;
 }
 
 interface ErrorBoundaryState {
@@ -13,10 +12,7 @@ interface ErrorBoundaryState {
   error: Error | null;
 }
 
-class ErrorBoundary extends React.Component<
-  ErrorBoundaryProps,
-  ErrorBoundaryState
-> {
+class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   state: ErrorBoundaryState = { hasError: false, error: null };
 
   static getDerivedStateFromError(error: Error): ErrorBoundaryState {
@@ -29,15 +25,16 @@ class ErrorBoundary extends React.Component<
 
   render() {
     if (this.state.hasError) {
-      return (
-        <>
-          <Header></Header>
-          <Alert variant="error" size="small">
-            {this.state.error?.message}
-          </Alert>
-        </>
-      );
+      // If a fallback UI is provided, render that
+      if (this.props.fallback) {
+        return this.props.fallback;
+      }
+
+      // Default error UI
+      return <GenericError />;
     }
+
+    // When there's no error, render children
     return this.props.children;
   }
 }

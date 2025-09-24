@@ -5,6 +5,10 @@ import { render, screen, fireEvent, within } from '@testing-library/react';
 import { YearRangeFilter } from './YearRangeFilter';
 import { FilterContext } from '../../context/FilterContext';
 import type { StartPageState } from '../../pages/StartPage/StartPageTypes';
+import {
+  type Table,
+  FolderContentItemTypeEnum,
+} from '@pxweb2/pxweb2-api-client';
 
 vi.mock('react-i18next', async () => {
   const actual =
@@ -12,7 +16,7 @@ vi.mock('react-i18next', async () => {
   return {
     ...actual,
     useTranslation: () => ({
-      t: (key: string, opts?: any) =>
+      t: (key: string, opts?: { year?: string | number }) =>
         opts?.year ? `${key} ${opts.year}` : key,
     }),
   };
@@ -25,21 +29,41 @@ describe('YearRangeFilter', () => {
     activeFilters: [],
     lastUsedYearRange: { min: 2000, max: 2005 },
     originalSubjectTree: [],
+    subjectOrderList: [],
     availableTables: [],
     filteredTables: [],
     availableFilters: {
       subjectTree: [],
       timeUnits: new Map(),
+      variables: new Map(),
       yearRange: { min: 2000, max: 2005 },
     },
     loading: false,
     error: '',
   };
 
-  const sampleTables = [
-    { firstPeriod: '2000', lastPeriod: '2005' },
-    { firstPeriod: '2001', lastPeriod: '2004' },
-  ] as any;
+  const sampleTables: Table[] = [
+    {
+      type: FolderContentItemTypeEnum.TABLE,
+      id: 'table1',
+      label: 'Test Table 1',
+      firstPeriod: '2000',
+      lastPeriod: '2005',
+      updated: null,
+      variableNames: [],
+      links: null,
+    },
+    {
+      type: FolderContentItemTypeEnum.TABLE,
+      id: 'table2',
+      label: 'Test Table 2',
+      firstPeriod: '2001',
+      lastPeriod: '2004',
+      updated: null,
+      variableNames: [],
+      links: null,
+    },
+  ];
 
   const renderWithContext = (customState = {}) => {
     const state = {

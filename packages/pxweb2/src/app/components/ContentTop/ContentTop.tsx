@@ -37,7 +37,7 @@ type NoteMessageType = {
   message: string;
 };
 
-import type { TFunction } from 'i18next';
+import type { TFunction, i18n } from 'i18next';
 import { getPathWithUniqueIds } from '../../util/pathUtil';
 import { getConfig } from '../../util/config/getConfig';
 
@@ -185,7 +185,7 @@ export function ContentTop({
   function getBreadcrumbItems(
     pathElements: PathElement[],
     staticTitle: string,
-    i18n: any,
+    i18n: i18n,
   ): BreadcrumbItem[] {
     const breadcrumbItems: BreadcrumbItem[] = [];
     const pathWithUniqueIds = getPathWithUniqueIds(pathElements);

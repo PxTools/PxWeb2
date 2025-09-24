@@ -26,7 +26,7 @@ describe('Selection', () => {
 
     const consoleErrorSpy = vi
       .spyOn(console, 'error')
-      .mockImplementation(() => {});
+      .mockImplementation(vi.fn());
     expect(() => {
       renderWithProviders(<TestComponent />);
     }).toThrow('Simulated error');
@@ -42,7 +42,7 @@ describe('Selection', () => {
             openedWithKeyboard={false}
             selectedNavigationView="none"
             selectedTabId="1"
-            setSelectedNavigationView={() => {}}
+            setSelectedNavigationView={vi.fn()}
           />
         </AccessibilityProvider>,
       );
