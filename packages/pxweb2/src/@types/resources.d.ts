@@ -256,6 +256,7 @@ interface Resources {
           variablebox: {
             content: {
               mixed_checkbox: 'Select all';
+              mixed_checkbox_search: 'Select all results';
               select: {
                 label: 'Select grouping';
                 modal: {
