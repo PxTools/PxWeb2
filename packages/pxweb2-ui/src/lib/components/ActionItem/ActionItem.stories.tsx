@@ -25,10 +25,19 @@ export const Variants: StoryFn<typeof ActionItem> = () => {
       Medium
       <br />
       <br />
-      <ActionItem label="Medium Action" size="medium" onClick={() => alert('Clicked medium action!')} />
+      <ActionItem
+        label="Medium Action"
+        size="medium"
+        onClick={() => alert('Clicked medium action!')}
+      />
       <br />
       <br />
-      <ActionItem label="Medium Action with Description" size="medium" description="This is a description." onClick={() => alert('Clicked medium action with description!')} />
+      <ActionItem
+        label="Medium Action with Description"
+        size="medium"
+        description="This is a description."
+        onClick={() => alert('Clicked medium action with description!')}
+      />
       <br />
       <br />
       <ActionItem label="Medium Action" size="medium" disabled />
@@ -37,10 +46,19 @@ export const Variants: StoryFn<typeof ActionItem> = () => {
       Large
       <br />
       <br />
-      <ActionItem label="Large Action" size="large" onClick={() => alert('Clicked large action!')} />
+      <ActionItem
+        label="Large Action"
+        size="large"
+        onClick={() => alert('Clicked large action!')}
+      />
       <br />
       <br />
-      <ActionItem label="Large Action disabled" disabled  size="large" onClick={() => alert('Clicked large action!')} />
+      <ActionItem
+        label="Large Action"
+        disabled
+        size="large"
+        onClick={() => alert('Clicked large action!')}
+      />
     </>
   );
 };
