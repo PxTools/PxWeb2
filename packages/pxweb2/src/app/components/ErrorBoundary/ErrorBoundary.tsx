@@ -34,7 +34,7 @@ class ErrorBoundary extends React.Component<
         return this.props.fallback;
       }
 
-      // Default fallback UI
+      // Default error UI
       return <GenericError />;
     }
 
