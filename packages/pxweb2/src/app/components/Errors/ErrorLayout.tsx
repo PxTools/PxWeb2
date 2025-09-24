@@ -3,6 +3,29 @@ import cl from 'clsx';
 import styles from './ErrorLayout.module.scss';
 import { Header } from '../Header/Header';
 
+interface ErrorContentProps
+  extends Pick<ErrorLayoutProps, 'align' | 'children'> {}
+
+function ErrorContent({ align = 'center', children }: ErrorContentProps) {
+  return (
+    <>
+      <div className={cl(styles.fullScreenContainer)}>
+        <div className={cl(styles.container)}>
+          <main
+            className={cl(
+              styles.mainContent,
+              align === 'center' ? styles.alignCenter : styles.alignStart,
+            )}
+          >
+            {children}
+          </main>
+        </div>
+      </div>
+      <div>Footer Component goes here</div>
+    </>
+  );
+}
+
 interface ErrorLayoutProps {
   readonly isStartPageGenericError?: boolean;
   readonly align?: 'center' | 'start';
@@ -17,41 +40,13 @@ export function ErrorLayout({
   children,
 }: ErrorLayoutProps) {
   if (isStartPageGenericError) {
-    return (
-      <>
-        <div className={cl(styles.fullScreenContainer)}>
-          <div className={cl(styles.container)}>
-            <main
-              className={cl(
-                styles.mainContent,
-                align === 'center' ? styles.alignCenter : styles.alignStart,
-              )}
-            >
-              {children}
-            </main>
-          </div>
-        </div>
-        <div>Footer Component goes here</div>
-      </>
-    );
+    return <ErrorContent align={align}>{children}</ErrorContent>;
   }
 
   return (
     <>
       <Header stroke={true} />
-      <div className={cl(styles.fullScreenContainer)}>
-        <div className={cl(styles.container)}>
-          <main
-            className={cl(
-              styles.mainContent,
-              align === 'center' ? styles.alignCenter : styles.alignStart,
-            )}
-          >
-            {children}
-          </main>
-        </div>
-      </div>
-      <div>Footer Component goes here</div>
+      <ErrorContent align={align}>{children}</ErrorContent>
     </>
   );
 }
