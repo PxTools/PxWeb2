@@ -75,6 +75,19 @@ const StartPage = () => {
     hasEverHydratedRef.current,
   );
 
+  //For testing on discontinued from api
+  const enableFakeDiscontinued = true;
+
+  function withFakeDiscontinued(tables: Table[]): Table[] {
+    if (!enableFakeDiscontinued) {
+      return tables;
+    }
+    return tables.map((t, i) => ({
+      ...t,
+      discontinued: i % 3 === 2,
+    }));
+  }
+
   // Run once when initially loading the page, then again if language changes
   // We want to try fetching tables in the selected language if possible
   useEffect(() => {
@@ -88,7 +101,9 @@ const StartPage = () => {
       dispatch({ type: ActionType.SET_LOADING, payload: true });
       try {
         const tables = await getAllTables(i18n.language);
-        const sortedTables = sortTablesByUpdated(tables);
+        //const sortedTables = sortTablesByUpdated(tables);
+        const devTables = withFakeDiscontinued(tables);
+        const sortedTables = sortTablesByUpdated(devTables);
         dispatch({
           type: ActionType.RESET_FILTERS,
           payload: {
@@ -283,6 +298,7 @@ const StartPage = () => {
         config.language.showDefaultLanguageInPath ||
         language !== config.language.defaultLanguage;
       const langPrefix = showLangInPath ? `${language}` : '';
+      const discontinued = table.discontinued;
 
       let cardRef: React.RefObject<HTMLDivElement | null> | undefined;
       if (isFirstNew) {
@@ -310,6 +326,7 @@ const StartPage = () => {
           icon={getTopicIcon(table)}
           ref={cardRef}
           tabIndex={tabIndex}
+          status={discontinued ? 'closed' : 'active'}
         />
       );
     }

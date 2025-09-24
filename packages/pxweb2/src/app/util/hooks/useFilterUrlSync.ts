@@ -20,6 +20,7 @@ type FilterQuery = {
   variables: string[];
   fromYear?: number;
   toYear?: number;
+  status?: string;
 };
 
 const createEmptyFilterQuery = (): FilterQuery => ({

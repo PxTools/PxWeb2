@@ -282,6 +282,85 @@ const VariablesFilter: React.FC<{ onFilterChange?: () => void }> = ({
   );
 };
 
+const RenderStatusFilters: React.FC<{ onFilterChange?: () => void }> = ({
+  onFilterChange,
+}) => {
+  const { state, dispatch } = useContext(FilterContext);
+  const { t } = useTranslation();
+
+  const activeCount = state.availableFilters.status.get('active') ?? 0;
+  const discontinuedCount =
+    state.availableFilters.status.get('discontinued') ?? 0;
+
+  const activeChecked = state.activeFilters.some(
+    (filter) => filter.type === 'status' && filter.value === 'active',
+  );
+  const discontinuedChecked = state.activeFilters.some(
+    (filter) => filter.type === 'status' && filter.value === 'discontinued',
+  );
+  const labelActive = t('start_page.filter.status.updating');
+  const labelDiscontinued = t('start_page.filter.status.not_updating');
+
+  return (
+    <ul className={styles.filterList}>
+      <li className={styles.filterItem}>
+        <Checkbox
+          id="status-active"
+          text={`${labelActive} (${activeCount})`}
+          value={activeChecked}
+          subtle={!activeChecked && activeCount === 0}
+          onChange={(value) => {
+            value
+              ? dispatch({
+                  type: ActionType.ADD_FILTER,
+                  payload: [
+                    {
+                      type: 'status',
+                      value: 'active',
+                      label: labelActive,
+                      index: 0,
+                    },
+                  ],
+                })
+              : dispatch({
+                  type: ActionType.REMOVE_FILTER,
+                  payload: { type: 'status', value: 'active' },
+                });
+            onFilterChange?.();
+          }}
+        />
+      </li>
+      <li className={styles.filterItem}>
+        <Checkbox
+          id="status-discontinued"
+          text={`${labelDiscontinued} (${discontinuedCount})`}
+          value={discontinuedChecked}
+          subtle={!discontinuedChecked && discontinuedCount === 0}
+          onChange={(value) => {
+            value
+              ? dispatch({
+                  type: ActionType.ADD_FILTER,
+                  payload: [
+                    {
+                      type: 'status',
+                      value: 'discontinued',
+                      label: labelDiscontinued,
+                      index: 1,
+                    },
+                  ],
+                })
+              : dispatch({
+                  type: ActionType.REMOVE_FILTER,
+                  payload: { type: 'status', value: 'discontinued' },
+                });
+            onFilterChange?.();
+          }}
+        />
+      </li>
+    </ul>
+  );
+};
+
 export const FilterSidebar: React.FC<FilterSidebarProps> = ({
   onFilterChange,
 }) => {
@@ -308,6 +387,9 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
         </FilterCategory>
         <FilterCategory header={t('start_page.filter.variabel')}>
           <VariablesFilter onFilterChange={onFilterChange} />
+        </FilterCategory>
+        <FilterCategory header={t('start_page.filter.status.title')}>
+          <RenderStatusFilters onFilterChange={onFilterChange} />
         </FilterCategory>
       </div>
     </div>

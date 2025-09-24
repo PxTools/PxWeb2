@@ -106,6 +106,11 @@ interface Resources {
           weekly: 'Week';
           other: 'Other';
         };
+        status: {
+          title: 'Status';
+          updating: 'Updated';
+          not_updating: 'No longer updated';
+        };
       };
       table: {
         number_of_tables: '<strong>{{count}}</strong> tables';
