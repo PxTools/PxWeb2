@@ -17,6 +17,8 @@ import {
   Ingress,
   BodyShort,
   SearchHandle,
+  Breadcrumbs,
+  type BreadcrumbItem,
 } from '@pxweb2/pxweb2-ui';
 import { type Table } from '@pxweb2/pxweb2-api-client';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
@@ -37,6 +39,13 @@ import { getAllTables } from '../../util/tableHandler';
 import { tableListIsReadyToRender } from '../../util/startPageRender';
 import useFilterUrlSync from '../../util/hooks/useFilterUrlSync';
 import StartpageDetails from '../../components/StartPageDetails/StartPageDetails';
+import { useLocaleContent } from '../../util/hooks/useLocaleContent';
+import type {
+  LocaleContent,
+  Startpage,
+  BreadCrumb,
+  DetailsSection,
+} from '../../util/config/localeContentTypes';
 
 const StartPage = () => {
   const { t, i18n } = useTranslation();
@@ -74,6 +83,14 @@ const StartPage = () => {
     hasUrlParams,
     hasEverHydratedRef.current,
   );
+
+  const localeContent: LocaleContent | null = useLocaleContent(i18n.language);
+  const startPageContent: Startpage | undefined = localeContent?.startPage;
+  const detailsSectionContent: DetailsSection | undefined =
+    startPageContent?.detailsSection;
+  const breadCrumbContent: BreadCrumb | undefined =
+    startPageContent?.breadCrumb;
+  const showBreadCrumb = isRenderableBreadCrumb(breadCrumbContent);
 
   // Run once when initially loading the page, then again if language changes
   // We want to try fetching tables in the selected language if possible
@@ -530,18 +547,49 @@ const StartPage = () => {
     );
   };
 
+  function isRenderableBreadCrumb(
+    bc: BreadCrumb | undefined,
+  ): bc is BreadCrumb {
+    return !!bc && bc.enabled === true && !!bc.items?.length;
+  }
+
+  const renderBreadCrumb = () => {
+    if (!isRenderableBreadCrumb(breadCrumbContent)) {
+      return null;
+    }
+
+    const breadCrumbItems: BreadcrumbItem[] = breadCrumbContent.items ?? [];
+
+    return (
+      <Breadcrumbs
+        className={styles.breadcrumbStartpage}
+        variant="default"
+        breadcrumbItems={breadCrumbItems}
+      />
+    );
+  };
+
   return (
     <>
       <Header stroke={true} />
       <div className={styles.startPage}>
         <div className={styles.container}>
-          <div className={styles.information}>
-            <Heading size="large" level="1" className={styles.title}>
-              {t('start_page.header')}
-            </Heading>
-            <Ingress>{t('start_page.ingress')}</Ingress>
-            <div className={styles.showDetailsSection}>
-              <StartpageDetails />
+          <div
+            className={cl(styles.contentTop, {
+              [styles.hasBreadcrumb]: showBreadCrumb,
+            })}
+          >
+            {showBreadCrumb && renderBreadCrumb()}
+            <div className={styles.information}>
+              <Heading size="large" level="1" className={styles.title}>
+                {t('start_page.header')}
+              </Heading>
+              <Ingress>{t('start_page.ingress')}</Ingress>
+              <div className={styles.showDetailsSection}>
+                {detailsSectionContent && (
+                  <StartpageDetails detailsSection={detailsSectionContent} />
+                )}
+              </div>
             </div>
           </div>
         </div>

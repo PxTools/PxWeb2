@@ -95,7 +95,8 @@
         "to_label": "Til",
         "from_year": "Fra år",
         "to_year": "Til år",
-        "clear_selection": "Fjern valg"
+        "clear_selection": "Fjern valg",
+        "no_option": "Ingen søketreff"
       },
       "variabel": "Variabel",
       "variabel_search": "Søk etter variabel",

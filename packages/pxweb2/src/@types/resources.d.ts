@@ -320,6 +320,7 @@ interface Resources {
           clear_selection: 'Clear selection';
           from_label: 'From';
           from_year: 'From year';
+          no_option: 'No results';
           title: 'Year';
           to_label: 'To';
           to_year: 'To year';
