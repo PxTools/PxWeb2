@@ -9,7 +9,6 @@ import {
   BreadcrumbItem,
   Button,
   Heading,
-  Link,
   PxTable,
   PathElement,
 } from '@pxweb2/pxweb2-ui';
@@ -269,22 +268,9 @@ export function ContentTop({
               <BodyShort size="medium">
                 <span className={classes.lastUpdatedLabel}>
                   {t('presentation_page.main_content.last_updated')}:{' '}
-                  <Link
-                    ref={openInformationLinkRef}
-                    href="#"
-                    inline
-                    aria-haspopup="dialog"
-                    onClick={() => {
-                      handleOpenTableInformation(
-                        'table-information-link',
-                        'tab-details',
-                      );
-                    }}
-                  >
-                    {t('date.simple_date_with_time', {
-                      value: new Date(pxtable.metadata.updated),
-                    })}
-                  </Link>{' '}
+                  {t('date.simple_date_with_time', {
+                    value: new Date(pxtable.metadata.updated),
+                  })}
                 </span>
               </BodyShort>
             )}
