@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
 import { ErrorLayout } from '../ErrorLayout';
-import { ErrorMessage } from '../../ErrorMessage';
+import { ErrorMessage } from '../../ErrorMessage/ErrorMessage';
 import { Header } from '../../Header/Header';
 
 export function GenericError() {

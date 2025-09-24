@@ -17,7 +17,7 @@ vi.mock('../ErrorLayout', () => ({
     <div data-testid="error-layout">{children}</div>
   ),
 }));
-vi.mock('../../ErrorMessage', () => ({
+vi.mock('../../ErrorMessage/ErrorMessage', () => ({
   ErrorMessage: () => <div data-testid="error-message">ErrorMessage</div>,
 }));
 vi.mock('@pxweb2/pxweb2-ui', () => ({

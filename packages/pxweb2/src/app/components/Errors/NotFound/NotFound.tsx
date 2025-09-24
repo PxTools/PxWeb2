@@ -4,7 +4,7 @@ import { TFunction } from 'i18next';
 
 import { Breadcrumbs, BreadcrumbItem } from '@pxweb2/pxweb2-ui';
 import { ErrorLayout } from '../ErrorLayout';
-import { ErrorMessage } from '../../ErrorMessage';
+import { ErrorMessage } from '../../ErrorMessage/ErrorMessage';
 import { getConfig } from '../../../util/config/getConfig';
 import useApp from '../../../context/useApp';
 
