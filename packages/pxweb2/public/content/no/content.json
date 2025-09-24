@@ -1,7 +1,7 @@
 {
   "startPage": {
     "breadCrumb": {
-      "enabled": true,
+      "enabled": false,
       "items": [
         {
           "label": "Forsiden",
