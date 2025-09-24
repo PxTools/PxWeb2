@@ -10,14 +10,16 @@
       "logo_alt": "To the front page",
       "language_selector": "Språk/Language"
     },
-    "not_found": {
-      "page_not_found": {
+    "errors": {
+      "not_found": {
         "title": "Page not found",
-        "description": "The page you are looking for does not exist. Please check the URL or return to the homepage."
+        "description": "The page you're looking for may have been moved or deleted, or there might be an error in the URL.",
+        "action_text": "Go back to the previous page"
       },
-      "unsupported_language": {
-        "title": "Unsupported language",
-        "description": "The selected language is not supported."
+      "generic": {
+        "title": "Sorry, something went wrong",
+        "description": "A technical error occurred on our side. Please try refreshing the page or come back in a few minutes.",
+        "action_text": "Refresh"
       }
     },
     "skip_to_main": "Skip to main content",
@@ -65,9 +67,9 @@
       "tab_definitions": "The content of this tab is under construction."
     },
     "breadcrumbs": {
-        "aria_label_breadcrumb": "Breadcrumb",
-        "breadcrumb_root_title": "Home",
-        "show_more_breadcrumbs": "Show more"
+      "aria_label_breadcrumb": "Breadcrumb",
+      "breadcrumb_root_title": "Home",
+      "show_more_breadcrumbs": "Show more"
     }
   },
   "start_page": {

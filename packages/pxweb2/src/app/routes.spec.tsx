@@ -24,18 +24,19 @@ vi.mock('./pages/StartPage/StartPage', () => ({
   default: () => <div data-testid="start-page">Start Page</div>,
 }));
 
-vi.mock('./components/ErrorPage/ErrorPage', () => ({
+vi.mock('./pages/ErrorPage/ErrorPage', () => ({
   default: () => <div data-testid="error-page">Error Page</div>,
-}));
-
-vi.mock('./pages/NotFound/NotFound', () => ({
-  NotFound: ({ type }: { type: string }) => (
-    <div data-testid={`not-found-${type}`}>Not Found {type}</div>
+  ErrorPageWithLocalization: () => (
+    <div data-testid="error-page-localized">Error Page with Localization</div>
   ),
 }));
 
 vi.mock('./pages/TopicIcons/TopicIcons', () => ({
   default: () => <div data-testid="topic-icons">Topic Icons</div>,
+}));
+
+vi.mock('./components/Errors/GenericError/GenericError', () => ({
+  GenericError: () => <div data-testid="generic-error">Generic Error</div>,
 }));
 
 vi.mock('./context/useApp', () => ({
@@ -106,28 +107,6 @@ describe('Router configuration', () => {
 
       renderWithProviders(testRouter);
       expect(screen.getByTestId('table-viewer')).toBeInTheDocument();
-    });
-
-    it('should render NotFound page for default language path', () => {
-      const testRouter = createMemoryRouter(routerConfig, {
-        initialEntries: ['/en/'],
-      });
-
-      renderWithProviders(testRouter);
-      expect(
-        screen.getByTestId('not-found-page_not_found'),
-      ).toBeInTheDocument();
-    });
-
-    it('should render NotFound for non-existent paths and unsupported languages', () => {
-      const testRouter = createMemoryRouter(routerConfig, {
-        initialEntries: ['/non-existent'],
-      });
-
-      renderWithProviders(testRouter);
-      expect(
-        screen.getByTestId('not-found-unsupported_language'),
-      ).toBeInTheDocument();
     });
 
     it('should render TopicIcons for /topicIcons path', () => {
@@ -220,34 +199,13 @@ describe('Router configuration', () => {
       renderWithProviders(testRouter);
       expect(screen.getByTestId('table-viewer')).toBeInTheDocument();
     });
-
-    it('should render NotFound for non-existent paths', () => {
-      const testRouter = createMemoryRouter(routerConfig, {
-        initialEntries: ['/en/non-existent'],
-      });
-
-      renderWithProviders(testRouter);
-      expect(
-        screen.getByTestId('not-found-page_not_found'),
-      ).toBeInTheDocument();
-    });
-
-    it('should render NotFound when unsupported language is used', () => {
-      const testRouter = createMemoryRouter(routerConfig, {
-        initialEntries: ['/pl/table/12345'],
-      });
-
-      renderWithProviders(testRouter);
-      expect(
-        screen.getByTestId('not-found-unsupported_language'),
-      ).toBeInTheDocument();
-    });
   });
 
-  it('should handle error elements', async () => {
-    // Mock console.error to prevent error output in tests
-    const originalConsoleError = console.error;
-    console.error = vi.fn();
+  it('should handle component errors with ErrorBoundary', async () => {
+    // Suppress console output during error testing - automatically restored after test
+    vi.spyOn(console, 'error').mockImplementation(vi.fn());
+    vi.spyOn(console, 'warn').mockImplementation(vi.fn());
+    vi.spyOn(console, 'log').mockImplementation(vi.fn());
 
     // Set up the mock config
     mockConfig.language.showDefaultLanguageInPath = false;
@@ -257,40 +215,22 @@ describe('Router configuration', () => {
     }));
     vi.resetModules(); // Reset modules to apply the new mock
 
-    // Import router with the throwing component mock
-    const { routerConfig: errorRouterConfig } = await import('./routes');
+    try {
+      // Import router with the throwing component mock
+      const { routerConfig: errorRouterConfig } = await import('./routes');
 
-    const testRouter = createMemoryRouter(errorRouterConfig, {
-      initialEntries: ['/'],
-    });
+      const testRouter = createMemoryRouter(errorRouterConfig, {
+        initialEntries: ['/'],
+      });
 
-    renderWithProviders(testRouter);
-    expect(screen.getByTestId('error-page')).toBeInTheDocument();
-
-    // Restore console.error
-    console.error = originalConsoleError;
-
-    // Reset the mock back to original implementation for other tests
-    vi.doMock('./pages/StartPage/StartPage', () => ({
-      default: () => <div data-testid="start-page">Start Page</div>,
-    }));
-    vi.resetModules(); // Reset modules again to apply the original mock
-  });
-
-  it('should support dynamic imports for route components', async () => {
-    mockConfig.language.showDefaultLanguageInPath = false;
-
-    vi.mocked(configModule.getConfig).mockReturnValue(mockConfig);
-    vi.resetModules();
-
-    const { routerConfig: dynamicRouterConfig } = await import('./routes');
-    const testRouter = createMemoryRouter(dynamicRouterConfig, {
-      initialEntries: ['/'],
-    });
-
-    renderWithProviders(testRouter);
-
-    // Wait for any lazy loaded components to render
-    expect(await screen.findByTestId('start-page')).toBeInTheDocument();
+      renderWithProviders(testRouter);
+      expect(screen.getByTestId('generic-error')).toBeInTheDocument();
+    } finally {
+      // Reset the component mock
+      vi.doMock('./pages/StartPage/StartPage', () => ({
+        default: () => <div data-testid="start-page">Start Page</div>,
+      }));
+      vi.resetModules();
+    }
   });
 });

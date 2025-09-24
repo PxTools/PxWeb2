@@ -10,14 +10,16 @@
       "logo_alt": "Til forsiden",
       "language_selector": "Språk/Language"
     },
-    "not_found": {
-      "page_not_found": {
-        "title": "Side ikke funnet",
-        "description": "Siden du leter etter eksisterer ikke. Vennligst sjekk URL-en eller gå tilbake til startsiden."
+    "errors": {
+      "not_found": {
+        "title": "Vi finner ikke siden",
+        "description": "Siden du leter etter kan ha blitt flyttet eller slettet. Det kan også være en feil i nettadressen.",
+        "action_text": "Gå tilbake til forrige side"
       },
-      "unsupported_language": {
-        "title": "Ikke støttet språk",
-        "description": "Det valgte språket støttes ikke."
+      "generic": {
+        "title": "Beklager, noe gikk galt",
+        "description": "Det oppstod en teknisk feil hos oss. Prøv å laste siden på nytt eller kom tilbake om noen minutter.",
+        "action_text": "Last siden på nytt"
       }
     },
     "skip_to_main": "Hopp til hovedinnhold",
