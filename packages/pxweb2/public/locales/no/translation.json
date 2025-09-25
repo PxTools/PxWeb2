@@ -10,34 +10,23 @@
       "logo_alt": "Til forsiden",
       "language_selector": "Språk/Language"
     },
-    "not_found": {
-      "page_not_found": {
-        "title": "Side ikke funnet",
-        "description": "Siden du leter etter eksisterer ikke. Vennligst sjekk URL-en eller gå tilbake til startsiden."
+    "errors": {
+      "not_found": {
+        "title": "Vi finner ikke siden",
+        "description": "Siden du leter etter kan ha blitt flyttet eller slettet. Det kan også være en feil i nettadressen.",
+        "action_text": "Gå tilbake til forrige side"
       },
-      "unsupported_language": {
-        "title": "Ikke støttet språk",
-        "description": "Det valgte språket støttes ikke."
+      "generic": {
+        "title": "Beklager, noe gikk galt",
+        "description": "Det oppstod en teknisk feil hos oss. Prøv å laste siden på nytt eller kom tilbake om noen minutter.",
+        "action_text": "Last siden på nytt"
       }
     },
     "skip_to_main": "Hopp til hovedinnhold",
     "footer": {
-      "contact": {
-        "title": "Kontakt",
-        "description": "Beskrivelsestekst..."
-      },
-      "about": {
-        "title": "Om",
-        "description": "Beskrivelsestekst..."
-      },
-      "accessibility": {
-        "title": "Tilgjengelighet",
-        "description": "Beskrivelsestekst..."
-      },
-      "version": {
-        "title": "Versjon",
-        "description": "Beskrivelsestekst..."
-      }
+      "language_header": "Språk",
+      "copyright": "© Opphavsrett PxTools",
+      "top_button_text": "Til toppen"
     },
     "generic_buttons": {
       "ok": "OK",
@@ -93,7 +82,8 @@
         "to_label": "Til",
         "from_year": "Fra år",
         "to_year": "Til år",
-        "clear_selection": "Fjern valg"
+        "clear_selection": "Fjern valg",
+        "no_option": "Ingen søketreff"
       },
       "variabel": "Variabel",
       "variabel_search": "Søk etter variabel",
@@ -150,6 +140,7 @@
               }
             },
             "mixed_checkbox": "Velg alle",
+            "mixed_checkbox_search": "Velg alle søketreff",
             "values_list": {
               "aria_label": "Liste av {{total}} verdier.",
               "no_results_heading": "Ingen treff på «{{search}}»",

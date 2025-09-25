@@ -12,23 +12,22 @@ interface Resources {
         breadcrumb_root_title: 'Home';
         show_more_breadcrumbs: 'Show more';
       };
+      errors: {
+        generic: {
+          action_text: 'Refresh';
+          description: 'A technical error occurred on our side. Please try refreshing the page or come back in a few minutes.';
+          title: 'Sorry, something went wrong';
+        };
+        not_found: {
+          action_text: 'Go back to the previous page';
+          description: "The page you're looking for may have been moved or deleted, or there might be an error in the URL.";
+          title: 'Page not found';
+        };
+      };
       footer: {
-        about: {
-          description: 'Description text...';
-          title: 'About';
-        };
-        accessibility: {
-          description: 'Description text...';
-          title: 'Accessibility';
-        };
-        contact: {
-          description: 'Description text...';
-          title: 'Contact';
-        };
-        version: {
-          description: 'Description text...';
-          title: 'Version';
-        };
+        copyright: '© Copyright PxTools';
+        language_header: 'Language';
+        top_button_text: 'To the top';
       };
       generic_buttons: {
         cancel: 'Cancel';
@@ -44,16 +43,6 @@ interface Resources {
         language_selector: 'Språk/Language';
         logo: 'PxWeb 2.0';
         logo_alt: 'To the front page';
-      };
-      not_found: {
-        page_not_found: {
-          description: 'The page you are looking for does not exist. Please check the URL or return to the homepage.';
-          title: 'Page not found';
-        };
-        unsupported_language: {
-          description: 'The selected language is not supported.';
-          title: 'Unsupported language';
-        };
       };
       skip_to_main: 'Skip to main content';
       status_messages: {
@@ -254,6 +243,7 @@ interface Resources {
           variablebox: {
             content: {
               mixed_checkbox: 'Select all';
+              mixed_checkbox_search: 'Select all results';
               select: {
                 label: 'Select grouping';
                 modal: {
@@ -322,6 +312,7 @@ interface Resources {
           clear_selection: 'Clear selection';
           from_label: 'From';
           from_year: 'From year';
+          no_option: 'No results';
           title: 'Year';
           to_label: 'To';
           to_year: 'To year';
