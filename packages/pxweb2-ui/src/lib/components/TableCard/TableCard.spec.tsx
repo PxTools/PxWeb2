@@ -60,6 +60,18 @@ describe('TableCard', () => {
     window.location = originalLocation;
   });
 
+  it('should execute href function on click', () => {
+    const subLink = () => {
+      return;
+    };
+
+    const { getByRole } = render(<TableCard href={subLink} title="Test" />);
+
+    getByRole('link').click();
+
+    expect(subLink).toHaveBeenCalled;
+  });
+
   it.each(['Enter', ' '])('should navigate on key "%s"', (key) => {
     const originalLocation = window.location;
 

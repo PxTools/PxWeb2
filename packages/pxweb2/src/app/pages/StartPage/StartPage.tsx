@@ -1,5 +1,6 @@
 import { useEffect, useContext, useState, useRef } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
+import { useNavigate } from 'react-router';
 import type { TFunction } from 'i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import cl from 'clsx';
@@ -77,6 +78,8 @@ const StartPage = () => {
   const hasFetchedRef = useRef(false);
   const hasEverHydratedRef = useRef(false);
   const previousLanguage = useRef('');
+
+  const navigate = useNavigate();
 
   const isReadyToRender = tableListIsReadyToRender(
     state,
@@ -312,7 +315,11 @@ const StartPage = () => {
         <TableCard
           key={table.id}
           title={`${table.label}`}
-          href={`${config.baseApplicationPath}${langPrefix}/table/${table.id}`}
+          href={() =>
+            navigate(
+              `${config.baseApplicationPath}${langPrefix}/table/${table.id}`,
+            )
+          }
           updatedLabel={
             table.updated ? t('start_page.table.updated_label') : undefined
           }
