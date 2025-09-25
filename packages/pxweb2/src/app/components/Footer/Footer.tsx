@@ -87,6 +87,7 @@ export const Footer: React.FC<FooterProps> = ({ containerRef }) => {
                           href="#"
                           size="medium"
                           key={lang.shorthand}
+                          lang={lang.shorthand}
                           aria-current={
                             i18n.language?.startsWith(lang.shorthand)
                               ? 'true'
@@ -113,14 +114,16 @@ export const Footer: React.FC<FooterProps> = ({ containerRef }) => {
                 {t('common.footer.copyright')}
               </BodyShort>
             </div>
-            <Button
-              icon="ArrowUp"
-              variant="secondary"
-              size="medium"
-              onClick={() => scrollToTop(containerRef)}
-            >
-              {t('common.footer.top_button_text')}
-            </Button>
+            {containerRef && (
+              <Button
+                icon="ArrowUp"
+                variant="secondary"
+                size="medium"
+                onClick={() => scrollToTop(containerRef)}
+              >
+                {t('common.footer.top_button_text')}
+              </Button>
+            )}
           </div>
         </div>
       </div>
