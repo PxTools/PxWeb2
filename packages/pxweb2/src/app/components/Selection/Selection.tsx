@@ -6,6 +6,7 @@ import {
   TableService,
   SavedQueriesService,
   SelectionResponse,
+  PathElement,
 } from '@pxweb2/pxweb2-api-client';
 import {
   mapJsonStat2Response,
@@ -308,7 +309,7 @@ export function Selection({
         const pxTable: PxTable = mapJsonStat2Response(Dataset, false);
 
         const firstMatchingPathArray = TableData.paths?.find(
-          (pathArr: any[]) => pathArr[0]?.id === TableData.subjectCode,
+          (pathArr: PathElement[]) => pathArr[0]?.id === TableData.subjectCode,
         );
 
         const pathElements = mapJsonStat2ResponsePathElements(

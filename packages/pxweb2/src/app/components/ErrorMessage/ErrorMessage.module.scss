@@ -1,0 +1,51 @@
+@use '$ui/style-dictionary/dist/scss/fixed-variables.scss' as fixed;
+@use '$ui/src/lib/breakpoints.scss' as breakpoints;
+
+.errorMessage {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: fixed.$spacing-7;
+  width: 100%;
+
+  @media (breakpoints.$xxlarge) {
+    max-width: 848px;
+  }
+
+  @media (breakpoints.$xlarge) {
+    max-width: 728px;
+  }
+
+  @media (breakpoints.$medium) or (breakpoints.$large) {
+    max-width: 688px;
+  }
+
+  @media (breakpoints.$small) {
+    max-width: 508px;
+  }
+}
+
+.textAndAction {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: fixed.$spacing-10;
+  align-self: stretch;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: fixed.$spacing-4;
+  align-self: stretch;
+}
+
+.alignCenter {
+  align-items: center;
+  text-align: center;
+}
+.alignStart {
+  align-items: flex-start;
+  text-align: start;
+}
