@@ -8,6 +8,9 @@ import { ErrorLayout } from './ErrorLayout';
 vi.mock('../Header/Header', () => ({
   Header: () => <div data-testid="header">Header</div>,
 }));
+vi.mock('../Footer/Footer', () => ({
+  Footer: () => <div data-testid="footer">Footer</div>,
+}));
 
 describe('ErrorLayout', () => {
   it('should render successfully', () => {
@@ -30,6 +33,16 @@ describe('ErrorLayout', () => {
     expect(getByTestId('header')).toBeInTheDocument();
   });
 
+  it('should render the footer', () => {
+    const { getByTestId } = render(
+      <ErrorLayout>
+        <div>Error Content</div>
+      </ErrorLayout>,
+    );
+
+    expect(getByTestId('footer')).toBeInTheDocument();
+  });
+
   it('should render the children content', () => {
     const { getByText } = render(
       <ErrorLayout>
@@ -38,5 +51,15 @@ describe('ErrorLayout', () => {
     );
 
     expect(getByText('Error Content')).toBeInTheDocument();
+  });
+
+  it('should not render the header for start page generic error', () => {
+    const { queryByTestId } = render(
+      <ErrorLayout isStartPageGenericError={true}>
+        <div>Error Content</div>
+      </ErrorLayout>,
+    );
+
+    expect(queryByTestId('header')).not.toBeInTheDocument();
   });
 });
