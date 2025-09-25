@@ -282,15 +282,18 @@ const VariablesFilter: React.FC<{ onFilterChange?: () => void }> = ({
   );
 };
 
-const RenderStatusFilters: React.FC<{ onFilterChange?: () => void }> = ({
+const StatusFilter: React.FC<{ onFilterChange?: () => void }> = ({
   onFilterChange,
 }) => {
   const { state, dispatch } = useContext(FilterContext);
   const { t } = useTranslation();
 
-  const activeCount = state.availableFilters.status.get('active') ?? 0;
-  const discontinuedCount =
-    state.availableFilters.status.get('discontinued') ?? 0;
+  type StatusKey = 'active' | 'discontinued';
+
+  const getStatusCount = (key: StatusKey) =>
+    state.availableFilters.status.get(key) ?? 0;
+  const activeCount = getStatusCount('active');
+  const discontinuedCount = getStatusCount('discontinued');
 
   const activeChecked = state.activeFilters.some(
     (filter) => filter.type === 'status' && filter.value === 'active',
@@ -396,7 +399,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
         </FilterCategory>
         {shouldShowStatusFilter && (
           <FilterCategory header={t('start_page.filter.status.title')}>
-            <RenderStatusFilters onFilterChange={onFilterChange} />
+            <StatusFilter onFilterChange={onFilterChange} />
           </FilterCategory>
         )}
       </div>
