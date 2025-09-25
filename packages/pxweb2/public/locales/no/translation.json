@@ -60,6 +60,7 @@
     "ingress": "Leter du etter den perfekte tabellen? Bruk søkefeltet og filtrene for å finne tallene du trenger. Enten du er på jakt etter trender, fakta eller bare et merkelig tilfredsstillende datasett, så har PxWeb 2.0 det du trenger.",
     "more_about_label": "Mer om Statistikkbanken",
     "more_about_text": "More about Text NO",
+    "result_hidden_header": "Resultat",
     "search_label": "Søk i Statistikkbanken",
     "search_placeholder": "Søk etter tabellnavn eller variabler",
     "filter": {
@@ -68,6 +69,7 @@
       "show_results": "Vis {{value}} treff",
       "close": "Lukk filter",
       "header": "Filter",
+      "list_filters_aria": "Valgte filter",
       "remove_all_filter": "Fjern alle filter",
       "remove_filter_aria": "Fjern filter, {{value}}",
       "subject": "Emne",
@@ -83,6 +85,7 @@
       },
       "variabel": "Variabel",
       "variabel_search": "Søk etter variabel",
+      "variable_count": "Viser {{countShown}} av {{countTotal}} variabler",
       "frequency": {
         "annual": "År",
         "monthly": "Måned",
@@ -93,6 +96,7 @@
       }
     },
     "table": {
+      "card_description": "{{title}}. År: {{yearFrom}}-{{yearTo}}. Tidsperiode {{frequency}}. Oppdatert {{updatedDate}}. Tabellnummer {{tableNumber}}.",
       "number_of_tables": "<strong>{{count}}</strong> tabeller",
       "number_of_tables_found": "Treff på <strong>{{count}}</strong> tabeller",
       "updated_label": "Oppdatert",
