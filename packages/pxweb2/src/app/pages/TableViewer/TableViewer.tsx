@@ -32,9 +32,7 @@ export function TableViewer() {
   const config = getConfig();
   const accessibility = useAccessibility();
 
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const baseUrl = searchParams.get('apiUrl') ?? config.apiUrl;
+  const baseUrl = config.apiUrl;
   OpenAPI.BASE = baseUrl;
 
   const { tableId } = useParams<{ tableId: string }>();
