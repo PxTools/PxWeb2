@@ -308,10 +308,10 @@ export function VariableBoxContent({
               text={
                 search === ''
                   ? t(
-                      'presentation_page.sidemenu.selection.variablebox.content.mixed_checkbox',
+                      'presentation_page.side_menu.selection.variablebox.content.mixed_checkbox',
                     )
                   : t(
-                      'presentation_page.sidemenu.selection.variablebox.content.mixed_checkbox_search',
+                      'presentation_page.side_menu.selection.variablebox.content.mixed_checkbox_search',
                     )
               }
               value={allValuesSelected}
