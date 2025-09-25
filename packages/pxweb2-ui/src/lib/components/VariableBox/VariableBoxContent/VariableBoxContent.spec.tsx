@@ -1,4 +1,5 @@
-import { render, screen } from '@testing-library/react';
+import React from 'react';
+import { render, screen, getAllByRole } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 
@@ -38,12 +39,11 @@ describe('VariableBoxContent', () => {
     expect(baseElement).toBeTruthy();
   });
 
-  /*
-  TODO: Fix this test
   it('should render values in order when the type is not time variable', () => {
     const { baseElement } = render(
       <VariableBoxContent
         label="test-1"
+        languageDirection="ltr"
         type={VartypeEnum.REGULAR_VARIABLE}
         values={[
           { code: 'test-1', label: 'test-1' },
@@ -58,27 +58,32 @@ describe('VariableBoxContent', () => {
         onChangeMixedCheckbox={() => {
           return;
         }}
+        addModal={() => {
+          return;
+        }}
+        removeModal={() => {
+          return;
+        }}
         varId="test-1"
         selectedValues={[]}
         totalValues={2}
         totalChosenValues={0}
-      />
+      />,
     );
 
     const renderedCheckboxes = getAllByRole(baseElement, 'checkbox');
 
     // Adds the select all checkbox when more than 1 value is present,
     // therefore check [1] and [2] instead of [0] and [1]
-    expect(renderedCheckboxes[1].textContent).toBe('Test-1');
-    expect(renderedCheckboxes[2].textContent).toBe('Test-2');
-  }); */
+    expect(renderedCheckboxes[1]).toHaveTextContent('test-1');
+    expect(renderedCheckboxes[2]).toHaveTextContent('test-2');
+  });
 
-  /*
-  TODO: Fix this test
   it('should render values in reverse order when the type is time variable', () => {
     const { baseElement } = render(
       <VariableBoxContent
         label="test-1"
+        languageDirection="ltr"
         type={VartypeEnum.TIME_VARIABLE}
         values={[
           { code: 'test-1', label: 'test-1' },
@@ -93,27 +98,37 @@ describe('VariableBoxContent', () => {
         onChangeMixedCheckbox={() => {
           return;
         }}
+        addModal={() => {
+          return;
+        }}
+        removeModal={() => {
+          return;
+        }}
         varId="test-1"
         selectedValues={[]}
         totalValues={2}
         totalChosenValues={0}
-      />
+      />,
     );
 
     const renderedCheckboxes = getAllByRole(baseElement, 'checkbox');
 
     // Adds the select all checkbox when more than 1 value is present,
     // therefore check [1] and [2] instead of [0] and [1]
-    expect(renderedCheckboxes[1].textContent).toBe('Test-2');
-    expect(renderedCheckboxes[2].textContent).toBe('Test-1');
-  }); */
+    expect(renderedCheckboxes[1]).toHaveTextContent('test-2');
+    expect(renderedCheckboxes[2]).toHaveTextContent('test-1');
+  });
 });
 
-function renderVirtuosoItems(totalCount: number, itemContent: any) {
+function renderVirtuosoItems(
+  totalCount: number,
+  itemContent: (index: number) => React.ReactNode,
+) {
   return Array.from({ length: totalCount }).map((_, i) => {
     const content = itemContent(i);
-    const key = content?.props?.id || i;
-    return <div key={key}>{content}</div>;
+
+    // Use index as key for test mock - simpler and sufficient for testing purposes
+    return <div key={i}>{content}</div>;
   });
 }
 
@@ -121,7 +136,13 @@ describe('With Virtuoso mock', () => {
   beforeAll(() => {
     vi.mock('react-virtuoso', () => {
       return {
-        Virtuoso: ({ totalCount, itemContent }: any) => (
+        Virtuoso: ({
+          totalCount,
+          itemContent,
+        }: {
+          totalCount: number;
+          itemContent: (index: number) => React.ReactNode;
+        }) => (
           <div data-testid="mock-virtuoso">
             {renderVirtuosoItems(totalCount, itemContent)}
           </div>

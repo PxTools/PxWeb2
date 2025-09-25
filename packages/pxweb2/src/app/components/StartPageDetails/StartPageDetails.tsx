@@ -1,9 +1,14 @@
-import { useTranslation } from 'react-i18next';
 import { BodyLong, Link, DetailsSection } from '@pxweb2/pxweb2-ui';
-import type { DetailLink } from '../../util/config/localeContentTypes';
-import { useLocaleContent } from '../../util/hooks/useLocaleContent';
+import type {
+  DetailLink,
+  Startpage as StartpageLocaleContent,
+} from '../../util/config/localeContentTypes';
 import cl from 'clsx';
 import styles from './StartPageDetails.module.scss';
+
+type StartPageDetailsProps = Readonly<{
+  detailsSection?: StartpageLocaleContent['detailsSection'];
+}>;
 
 const renderLinksList = (items?: DetailLink[]) => {
   if (!items?.length) {
@@ -28,11 +33,9 @@ const renderLinksList = (items?: DetailLink[]) => {
   );
 };
 
-export default function StartPageDetails() {
-  const { i18n } = useTranslation();
-  const content = useLocaleContent(i18n.language || 'en');
-
-  const detailsSection = content?.startPage?.detailsSection;
+export default function StartPageDetails({
+  detailsSection,
+}: StartPageDetailsProps) {
   if (!detailsSection || detailsSection.enabled === false) {
     return null;
   }

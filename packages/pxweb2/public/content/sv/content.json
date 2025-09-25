@@ -1,9 +1,17 @@
 {
   "startPage": {
     "breadCrumb": {
-      "enabled": true,
-      "text": "Forsidan",
-      "href": "#"
+      "enabled": false,
+      "items": [
+        {
+          "label": "Forsidan",
+          "href": "#"
+        },
+        {
+          "label": "Statistikdatabasen",
+          "href": "/"
+        }
+      ]
     },
     "detailsSection": {
       "enabled": true,

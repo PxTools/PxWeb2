@@ -1,9 +1,17 @@
 {
   "startPage": {
     "breadCrumb": {
-      "enabled": true,
-      "text": "Forsiden",
-      "href": "#"
+      "enabled": false,
+      "items": [
+        {
+          "label": "Home",
+          "href": "#"
+        },
+        {
+          "label": "PxWeb",
+          "href": "/"
+        }
+      ]
     },
     "detailsSection": {
       "enabled": true,
