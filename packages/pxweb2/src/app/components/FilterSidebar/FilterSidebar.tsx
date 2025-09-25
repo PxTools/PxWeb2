@@ -367,6 +367,12 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
   const { state } = useContext(FilterContext);
   const { t } = useTranslation();
 
+  // Show "Status" only if the original (unfiltered) dataset has any discontinued tables.
+  const shouldShowStatusFilter = useMemo(
+    () => state.availableTables.some((t) => t.discontinued === true),
+    [state.availableTables],
+  );
+
   return (
     <div className={styles.sideBar}>
       <div className={styles.sideBarWrapper}>
@@ -388,9 +394,11 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
         <FilterCategory header={t('start_page.filter.variabel')}>
           <VariablesFilter onFilterChange={onFilterChange} />
         </FilterCategory>
-        <FilterCategory header={t('start_page.filter.status.title')}>
-          <RenderStatusFilters onFilterChange={onFilterChange} />
-        </FilterCategory>
+        {shouldShowStatusFilter && (
+          <FilterCategory header={t('start_page.filter.status.title')}>
+            <RenderStatusFilters onFilterChange={onFilterChange} />
+          </FilterCategory>
+        )}
       </div>
     </div>
   );
