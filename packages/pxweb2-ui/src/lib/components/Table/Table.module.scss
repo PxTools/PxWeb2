@@ -5,7 +5,7 @@
   // Using a placeholder means the styles are reused, not duplicated
   background: #ccc3;
 }
-@for $i from 1 to 11 {
+@for $i from 1 to 1000 {
   // Total number (or more) columns in the table
   table:has(tr > *:nth-child(#{$i}):hover) tr > *:nth-child(#{$i}) {
     @extend %column-styles;
@@ -35,6 +35,10 @@
       }
     }
   }
+
+// tbody > tr:hover {
+//     background: var(--px-color-surface-subtle);
+//   }
 
   //   /* Row hover: keep subtle */
   //   tbody tr:hover > td,
@@ -86,9 +90,7 @@
   //   padding: 1em;
   //   border: 1px solid;
   // }
-  tbody > tr:hover {
-    background: var(--row);
-  }
+
 
   th {
     width: 40px;
