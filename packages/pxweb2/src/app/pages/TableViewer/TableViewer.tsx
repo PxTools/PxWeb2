@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { useParams, useLocation } from 'react-router';
+import { useParams } from 'react-router';
 import cl from 'clsx';
 
 import styles from './TableViewer.module.scss';
