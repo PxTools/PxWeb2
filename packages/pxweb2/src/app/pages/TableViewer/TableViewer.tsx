@@ -243,7 +243,7 @@ export function TableViewer() {
               isExpanded={isExpanded}
               setIsExpanded={setIsExpanded}
             ></Presentation>
-            <Footer />
+            <Footer containerRef={outerContainerRef} />
           </div>
         </div>
       </div>

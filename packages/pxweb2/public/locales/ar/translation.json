@@ -24,22 +24,9 @@
     },
     "skip_to_main": "انتقل إلى المحتوى الرئيسي",
     "footer": {
-      "contact": {
-        "title": "اتصال",
-        "description": "نص الوصف..."
-      },
-      "about": {
-        "title": "عن",
-        "description": "نص الوصف..."
-      },
-      "accessibility": {
-        "title": "إمكانية الوصول",
-        "description": "نص الوصف..."
-      },
-      "version": {
-        "title": "إصدار",
-        "description": "نص الوصف..."
-      }
+      "language_header": "اللغة",
+      "copyright": "© حقوق الطبع والنشر PxTools",
+      "top_button_text": "إلى الأعلى"
     },
     "generic_buttons": {
       "ok": "نعم",

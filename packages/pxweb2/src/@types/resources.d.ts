@@ -25,22 +25,9 @@ interface Resources {
         };
       };
       footer: {
-        about: {
-          description: 'Description text...';
-          title: 'About';
-        };
-        accessibility: {
-          description: 'Description text...';
-          title: 'Accessibility';
-        };
-        contact: {
-          description: 'Description text...';
-          title: 'Contact';
-        };
-        version: {
-          description: 'Description text...';
-          title: 'Version';
-        };
+        copyright: '© Copyright PxTools';
+        language_header: 'Language';
+        top_button_text: 'To the top';
       };
       generic_buttons: {
         cancel: 'Cancel';
