@@ -116,7 +116,7 @@ export const Table = memo(function Table({
     headingDataCellCodes[i] = dataCellCodes;
   }
 
-// Column hover (delegated)
+  // Column hover (delegated)
   useEffect(() => {
     const tableEl = tableRef.current;
     if (!tableEl) {
@@ -125,8 +125,10 @@ export const Table = memo(function Table({
 
     // Build index: column -> cells
     const colMap: Record<string, HTMLElement[]> = {};
-    const allCells = tableEl.querySelectorAll<HTMLElement>('td[data-col],th[data-col]');
-    allCells.forEach(cell => {
+    const allCells = tableEl.querySelectorAll<HTMLElement>(
+      'td[data-col],th[data-col]',
+    );
+    allCells.forEach((cell) => {
       const col = cell.dataset.col;
       if (!col) {
         return;
@@ -147,17 +149,17 @@ export const Table = memo(function Table({
       }
       // clear previous
       if (currentCol && colMap[currentCol]) {
-        colMap[currentCol].forEach(c => c.classList.remove(classes.colHover));
+        colMap[currentCol].forEach((c) => c.classList.remove(classes.colHover));
       }
       currentCol = col;
       if (colMap[col]) {
-        colMap[col].forEach(c => c.classList.add(classes.colHover));
+        colMap[col].forEach((c) => c.classList.add(classes.colHover));
       }
     };
 
     const clear = () => {
       if (currentCol && colMap[currentCol]) {
-        colMap[currentCol].forEach(c => c.classList.remove(classes.colHover));
+        colMap[currentCol].forEach((c) => c.classList.remove(classes.colHover));
       }
       currentCol = null;
     };
@@ -169,7 +171,6 @@ export const Table = memo(function Table({
       tableEl.removeEventListener('mouseleave', clear);
     };
   }, [pxtable]); // re-index if table changes
-
 
   return (
     <table
