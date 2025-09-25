@@ -4,6 +4,7 @@ import { ActionType } from '../../pages/StartPage/StartPageTypes';
 import type {
   StartPageState,
   Filter,
+  ReducerActionTypes,
 } from '../../pages/StartPage/StartPageTypes';
 import { getYearLabels, getYearRangeLabelValue } from '../startPageFilters';
 import {
@@ -276,7 +277,7 @@ function parseParamsToFilters(
  */
 export default function useFilterUrlSync(
   state: StartPageState,
-  dispatch: (a: any) => void,
+  dispatch: (action: ReducerActionTypes) => void,
   t: TFunction,
 ) {
   const hydratedRef = useRef(false);

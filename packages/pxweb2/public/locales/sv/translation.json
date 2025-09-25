@@ -10,34 +10,23 @@
       "logo_alt": "Till startsidan",
       "language_selector": "Språk/Language"
     },
-    "not_found": {
-      "page_not_found": {
-        "title": "Sidan hittades inte",
-        "description": "Sidan du letar efter finns inte. Kontrollera URL:en eller återgå till startsidan."
+    "errors": {
+      "not_found": {
+        "title": "Sidan kunde inte hittas",
+        "description": "Sidan du har gått till kan ha blivit flyttad eller tagits bort. Det kan också vara länken som är fel.",
+        "action_text": "Gå tillbaks till föregående sida"
       },
-      "unsupported_language": {
-        "title": "Ogiltigt språk",
-        "description": "Det valda språket stöds inte."
+      "generic": {
+        "title": "Tyvärr har något blivit fel ",
+        "description": "Det har uppstått ett tekniskt fel hos oss. Testa att ladda om sidan eller försök igen om några minuter.",
+        "action_text": "Ladda om  sidan"
       }
     },
     "skip_to_main": "Gå direkt till huvudinnehållet",
     "footer": {
-      "contact": {
-        "title": "Kontakt",
-        "description": "Beskrivande text..."
-      },
-      "about": {
-        "title": "Om",
-        "description": "Beskrivande text..."
-      },
-      "accessibility": {
-        "title": "Tillgänglighet",
-        "description": "Beskrivande text..."
-      },
-      "version": {
-        "title": "Version",
-        "description": "Beskrivande text..."
-      }
+      "language_header": "Språk",
+      "copyright": "© Upphovsrätt PxTools",
+      "top_button_text": "Till toppen"
     },
     "generic_buttons": {
       "ok": "OK",
@@ -65,9 +54,9 @@
       "tab_definitions": "Innehållet i denna fliken är under arbete."
     },
     "breadcrumbs": {
-        "aria_label_breadcrumb": "Brödsmulor",
-        "breadcrumb_root_title": "Hem",
-        "show_more_breadcrumbs": "Visa mer"
+      "aria_label_breadcrumb": "Brödsmulor",
+      "breadcrumb_root_title": "Hem",
+      "show_more_breadcrumbs": "Visa mer"
     }
   },
   "start_page": {
@@ -95,7 +84,8 @@
         "to_label": "Till",
         "from_year": "Från år",
         "to_year": "Till år",
-        "clear_selection": "Rensa"
+        "clear_selection": "Rensa",
+        "no_option": "Ingen sökträff"
       },
       "variabel": "Variabel",
       "variabel_search": "Sök efter variabel",
@@ -149,6 +139,7 @@
               }
             },
             "mixed_checkbox": "Välj alla",
+            "mixed_checkbox_search": "Välj alla sökträffar",
             "values_list": {
               "aria_label": "Lista över {{total}} värden.",
               "no_results_heading": "Tyvärr hittades inte ”{{search}}”",

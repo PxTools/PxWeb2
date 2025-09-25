@@ -1,5 +1,6 @@
 import { useEffect, useContext, useState, useRef } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
+import { useNavigate } from 'react-router';
 import type { TFunction } from 'i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import cl from 'clsx';
@@ -17,6 +18,8 @@ import {
   Ingress,
   BodyShort,
   SearchHandle,
+  Breadcrumbs,
+  type BreadcrumbItem,
 } from '@pxweb2/pxweb2-ui';
 import { type Table } from '@pxweb2/pxweb2-api-client';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
@@ -36,6 +39,14 @@ import { FilterContext, FilterProvider } from '../../context/FilterContext';
 import { getAllTables } from '../../util/tableHandler';
 import { tableListIsReadyToRender } from '../../util/startPageRender';
 import useFilterUrlSync from '../../util/hooks/useFilterUrlSync';
+import StartpageDetails from '../../components/StartPageDetails/StartPageDetails';
+import { useLocaleContent } from '../../util/hooks/useLocaleContent';
+import type {
+  LocaleContent,
+  Startpage,
+  BreadCrumb,
+  DetailsSection,
+} from '../../util/config/localeContentTypes';
 
 const StartPage = () => {
   const { t, i18n } = useTranslation();
@@ -68,11 +79,21 @@ const StartPage = () => {
   const hasEverHydratedRef = useRef(false);
   const previousLanguage = useRef('');
 
+  const navigate = useNavigate();
+
   const isReadyToRender = tableListIsReadyToRender(
     state,
     hasUrlParams,
     hasEverHydratedRef.current,
   );
+
+  const localeContent: LocaleContent | null = useLocaleContent(i18n.language);
+  const startPageContent: Startpage | undefined = localeContent?.startPage;
+  const detailsSectionContent: DetailsSection | undefined =
+    startPageContent?.detailsSection;
+  const breadCrumbContent: BreadCrumb | undefined =
+    startPageContent?.breadCrumb;
+  const showBreadCrumb = isRenderableBreadCrumb(breadCrumbContent);
 
   // Run once when initially loading the page, then again if language changes
   // We want to try fetching tables in the selected language if possible
@@ -294,7 +315,11 @@ const StartPage = () => {
         <TableCard
           key={table.id}
           title={`${table.label}`}
-          href={`${config.baseApplicationPath}${langPrefix}/table/${table.id}`}
+          href={() =>
+            navigate(
+              `${config.baseApplicationPath}${langPrefix}/table/${table.id}`,
+            )
+          }
           updatedLabel={
             table.updated ? t('start_page.table.updated_label') : undefined
           }
@@ -539,17 +564,51 @@ const StartPage = () => {
     );
   };
 
+  function isRenderableBreadCrumb(
+    bc: BreadCrumb | undefined,
+  ): bc is BreadCrumb {
+    return !!bc && bc.enabled === true && !!bc.items?.length;
+  }
+
+  const renderBreadCrumb = () => {
+    if (!isRenderableBreadCrumb(breadCrumbContent)) {
+      return null;
+    }
+
+    const breadCrumbItems: BreadcrumbItem[] = breadCrumbContent.items ?? [];
+
+    return (
+      <Breadcrumbs
+        className={styles.breadcrumbStartpage}
+        variant="default"
+        breadcrumbItems={breadCrumbItems}
+      />
+    );
+  };
+
   return (
     <>
       <Header stroke={true} />
       <main>
         <div className={styles.startPage}>
           <div className={styles.container}>
-            <div className={styles.information}>
-              <Heading size="large" level="1" className={styles.title}>
-                {t('start_page.header')}
-              </Heading>
-              <Ingress>{t('start_page.ingress')}</Ingress>
+            <div
+              className={cl(styles.contentTop, {
+                [styles.hasBreadcrumb]: showBreadCrumb,
+              })}
+            >
+              {showBreadCrumb && renderBreadCrumb()}
+              <div className={styles.information}>
+                <Heading size="large" level="1" className={styles.title}>
+                  {t('start_page.header')}
+                </Heading>
+                <Ingress>{t('start_page.ingress')}</Ingress>
+                <div className={styles.showDetailsSection}>
+                  {detailsSectionContent && (
+                    <StartpageDetails detailsSection={detailsSectionContent} />
+                  )}
+                </div>
+              </div>
             </div>
           </div>
           <div className={cl(styles.searchFilterResult)}>
