@@ -27,7 +27,7 @@
   },
   "color": {
     "base": {
-      "white": {
+      "base-00": {
         "value": "#FFFFFF"
       },
       "transparent": {
@@ -263,7 +263,7 @@
     },
     "background": {
       "default": {
-        "value": "{color.base.white}"
+        "value": "{color.base.base-00}"
       },
       "subtle": {
         "value": "{color.brand.50}"
@@ -271,7 +271,7 @@
     },
     "surface": {
       "default": {
-        "value": "{color.base.white}"
+        "value": "{color.base.base-00}"
       },
       "subtle": {
         "value": "{color.brand.50}"
@@ -345,7 +345,7 @@
         "value": "{color.brand.400}"
       },
       "on-inverted": {
-        "value": "{color.base.white}"
+        "value": "{color.base.base-00}"
       },
       "divider": {
         "value": "{color.brand.400}"
@@ -392,13 +392,13 @@
         "value": "{color.brand.600}"
       },
       "on-inverted": {
-        "value": "{color.base.white}"
+        "value": "{color.base.base-00}"
       },
       "action": {
         "value": "{color.brand.800}"
       },
       "on-action": {
-        "value": "{color.base.white}"
+        "value": "{color.base.base-00}"
       },
       "on-action-subtle": {
         "value": "{color.brand.900}"
@@ -409,13 +409,13 @@
         "value": "{color.brand.900}"
       },
       "on-inverted": {
-        "value": "{color.base.white}"
+        "value": "{color.base.base-00}"
       },
       "action": {
         "value": "{color.brand.800}"
       },
       "on-action": {
-        "value": "{color.base.white}"
+        "value": "{color.base.base-00}"
       },
       "on-action-subtle": {
         "value": "{color.brand.900}"
