@@ -1,4 +1,4 @@
-import { memo, useMemo } from 'react';
+import { memo, useMemo, useRef, useEffect } from 'react';
 import cl from 'clsx';
 
 import classes from './Table.module.scss';
@@ -62,6 +62,7 @@ export const Table = memo(function Table({
   className = '',
 }: TableProps) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
+  const tableRef = useRef<HTMLTableElement>(null); // <-- add ref
 
   const tableMeta: columnRowMeta = calculateRowAndColumnMeta(pxtable);
 
@@ -115,8 +116,64 @@ export const Table = memo(function Table({
     headingDataCellCodes[i] = dataCellCodes;
   }
 
+// Column hover (delegated)
+  useEffect(() => {
+    const tableEl = tableRef.current;
+    if (!tableEl) {
+      return;
+    }
+
+    // Build index: column -> cells
+    const colMap: Record<string, HTMLElement[]> = {};
+    const allCells = tableEl.querySelectorAll<HTMLElement>('td[data-col],th[data-col]');
+    allCells.forEach(cell => {
+      const col = cell.dataset.col;
+      if (!col) {
+        return;
+      }
+      (colMap[col] ||= []).push(cell);
+    });
+
+    let currentCol: string | null = null;
+
+    const handleOver = (e: MouseEvent) => {
+      const target = (e.target as HTMLElement).closest('td,th');
+      if (!target || !tableEl.contains(target)) {
+        return;
+      }
+      const col = target.getAttribute('data-col');
+      if (!col || col === currentCol) {
+        return;
+      }
+      // clear previous
+      if (currentCol && colMap[currentCol]) {
+        colMap[currentCol].forEach(c => c.classList.remove(classes.colHover));
+      }
+      currentCol = col;
+      if (colMap[col]) {
+        colMap[col].forEach(c => c.classList.add(classes.colHover));
+      }
+    };
+
+    const clear = () => {
+      if (currentCol && colMap[currentCol]) {
+        colMap[currentCol].forEach(c => c.classList.remove(classes.colHover));
+      }
+      currentCol = null;
+    };
+
+    tableEl.addEventListener('mouseover', handleOver);
+    tableEl.addEventListener('mouseleave', clear);
+    return () => {
+      tableEl.removeEventListener('mouseover', handleOver);
+      tableEl.removeEventListener('mouseleave', clear);
+    };
+  }, [pxtable]); // re-index if table changes
+
+
   return (
     <table
+      ref={tableRef} // <-- attach ref
       className={cl(classes.table, classes[`bodyshort-medium`]) + cssClasses}
       aria-label={pxtable.metadata.label}
     >
@@ -213,6 +270,7 @@ export function createHeading(
             scope="col"
             colSpan={columnSpan}
             key={getNewKey()}
+            data-col={columnSpan === 1 ? String(columnIndex) : undefined}
             aria-label={
               variable.type === VartypeEnum.TIME_VARIABLE
                 ? `${variable.label} ${variable.values[i].label}`
@@ -654,7 +712,7 @@ function fillData(
     const dataValue = getPxTableData(table.data.cube, dimensions);
 
     tableRow.push(
-      <td key={getNewKey()} headers={headers}>
+      <td key={getNewKey()} headers={headers} data-col={i}>
         {dataValue?.formattedValue}
       </td>,
     );
