@@ -1,4 +1,4 @@
-import { memo, useMemo, useRef, useEffect } from 'react';
+import { memo, useMemo, useRef } from 'react';
 import cl from 'clsx';
 
 import classes from './Table.module.scss';
@@ -172,59 +172,57 @@ export const Table = memo(function Table({
   //   };
   // }, [pxtable]); // re-index if table changes
 
+  // // ...existing imports...
+  // useEffect(() => {
+  //   const tableEl = tableRef.current;
+  //   if (!tableEl) {
+  //     return;
+  //   }
 
-// // ...existing imports...
-// useEffect(() => {
-//   const tableEl = tableRef.current;
-//   if (!tableEl) {
-//     return;
-//   }
+  //   let currentCol: string | null = null;
 
-//   let currentCol: string | null = null;
+  //   const clearCol = () => {
+  //     if (!currentCol) {
+  //       return;
+  //     }
+  //     tableEl
+  //       .querySelectorAll<HTMLElement>('.' + classes.colHover)
+  //       .forEach(c => c.classList.remove(classes.colHover));
+  //     currentCol = null;
+  //   };
 
-//   const clearCol = () => {
-//     if (!currentCol) {
-//       return;
-//     }
-//     tableEl
-//       .querySelectorAll<HTMLElement>('.' + classes.colHover)
-//       .forEach(c => c.classList.remove(classes.colHover));
-//     currentCol = null;
-//   };
+  //   const handleOver = (e: MouseEvent) => {
+  //     const target = (e.target as HTMLElement).closest('td,th');
+  //     if (!target || !tableEl.contains(target)) {
+  //       return;
+  //     }
+  //     const col = target.getAttribute('data-col');
+  //     if (!col || col === currentCol) {
+  //       return;
+  //     }
 
-//   const handleOver = (e: MouseEvent) => {
-//     const target = (e.target as HTMLElement).closest('td,th');
-//     if (!target || !tableEl.contains(target)) {
-//       return;
-//     }
-//     const col = target.getAttribute('data-col');
-//     if (!col || col === currentCol) {
-//       return;
-//     }
+  //     // clear previous
+  //     clearCol();
 
-//     // clear previous
-//     clearCol();
+  //     // highlight all current cells for this column (including newly added)
+  //     tableEl
+  //       .querySelectorAll<HTMLElement>(`[data-col="${col}"]`)
+  //       .forEach(c => c.classList.add(classes.colHover));
 
-//     // highlight all current cells for this column (including newly added)
-//     tableEl
-//       .querySelectorAll<HTMLElement>(`[data-col="${col}"]`)
-//       .forEach(c => c.classList.add(classes.colHover));
+  //     currentCol = col;
+  //   };
 
-//     currentCol = col;
-//   };
+  //   const handleLeave = () => clearCol();
 
-//   const handleLeave = () => clearCol();
+  //   tableEl.addEventListener('mouseover', handleOver);
+  //   tableEl.addEventListener('mouseleave', handleLeave);
+  //   return () => {
+  //     tableEl.removeEventListener('mouseover', handleOver);
+  //     tableEl.removeEventListener('mouseleave', handleLeave);
+  //   };
+  // }, [pxtable]);
 
-//   tableEl.addEventListener('mouseover', handleOver);
-//   tableEl.addEventListener('mouseleave', handleLeave);
-//   return () => {
-//     tableEl.removeEventListener('mouseover', handleOver);
-//     tableEl.removeEventListener('mouseleave', handleLeave);
-//   };
-// }, [pxtable]);
-
-
-//  useEffect(() => {
+  //  useEffect(() => {
   //   const tableEl = tableRef.current;
   //   if (!tableEl) return;
 
@@ -260,7 +258,6 @@ export const Table = memo(function Table({
   //     tableEl.removeEventListener('mouseleave', clearCol);
   //   };
   // }, [pxtable]); // if you mutate pxtable in place, remove dependency
-
 
   // // ...inside the Table component...
   // useEffect(() => {
@@ -307,83 +304,83 @@ export const Table = memo(function Table({
   //   // Intentionally no deps so it keeps working if rows mutate in place
   // }, []);
 
-// ...inside Table component, replace the current column hover useEffect...
-// useEffect(() => {
-//   const tableEl = tableRef.current;
-//   if (!tableEl) {
-//     return;
-//   }
+  // ...inside Table component, replace the current column hover useEffect...
+  // useEffect(() => {
+  //   const tableEl = tableRef.current;
+  //   if (!tableEl) {
+  //     return;
+  //   }
 
-//   let highlighted: HTMLElement[] = [];
+  //   let highlighted: HTMLElement[] = [];
 
-//   const clearCol = () => {
-//     if (highlighted.length) {
-//       highlighted.forEach(c => c.classList.remove(classes.colHover));
-//       highlighted = [];
-//     }
-//   };
+  //   const clearCol = () => {
+  //     if (highlighted.length) {
+  //       highlighted.forEach(c => c.classList.remove(classes.colHover));
+  //       highlighted = [];
+  //     }
+  //   };
 
-//   const highlightByDataCol = (col: string) => {
-//     clearCol();
-//     highlighted = Array.from(
-//       tableEl.querySelectorAll<HTMLElement>(`td[data-col="${col}"],th[data-col="${col}"]`)
-//     );
-//     highlighted.forEach(c => c.classList.add(classes.colHover));
-//   };
+  //   const highlightByDataCol = (col: string) => {
+  //     clearCol();
+  //     highlighted = Array.from(
+  //       tableEl.querySelectorAll<HTMLElement>(`td[data-col="${col}"],th[data-col="${col}"]`)
+  //     );
+  //     highlighted.forEach(c => c.classList.add(classes.colHover));
+  //   };
 
-//   const highlightByCellIndex = (cellIndex: number) => {
-//     clearCol();
-//     // For each row, pick the cell at cellIndex (th or td)
-//     const rows = tableEl.querySelectorAll('tr');
-//     rows.forEach(row => {
-//       const cells = row.querySelectorAll<HTMLElement>('th,td');
-//       const cell = cells[cellIndex];
-//       if (cell) {
-//         cell.classList.add(classes.colHover);
-//         highlighted.push(cell);
-//       }
-//     });
-//   };
+  //   const highlightByCellIndex = (cellIndex: number) => {
+  //     clearCol();
+  //     // For each row, pick the cell at cellIndex (th or td)
+  //     const rows = tableEl.querySelectorAll('tr');
+  //     rows.forEach(row => {
+  //       const cells = row.querySelectorAll<HTMLElement>('th,td');
+  //       const cell = cells[cellIndex];
+  //       if (cell) {
+  //         cell.classList.add(classes.colHover);
+  //         highlighted.push(cell);
+  //       }
+  //     });
+  //   };
 
-//   const handleOver = (e: MouseEvent) => {
-//     const cell = (e.target as HTMLElement).closest('td,th') as HTMLTableCellElement | null;
-//     if (!cell || !tableEl.contains(cell)) {
-//       return;
-//     }
+  //   const handleOver = (e: MouseEvent) => {
+  //     const cell = (e.target as HTMLElement).closest('td,th') as HTMLTableCellElement | null;
+  //     if (!cell || !tableEl.contains(cell)) {
+  //       return;
+  //     }
 
-//     const dataCol = cell.getAttribute('data-col');
-//     if (dataCol) {
-//       // Normal path (new + any updated cells)
-//       // Skip if already highlighted
-//       if (highlighted.length && highlighted[0].getAttribute('data-col') === dataCol) {
-//         return;
-//       }
-//       highlightByDataCol(dataCol);
-//       return;
-//     }
+  //     const dataCol = cell.getAttribute('data-col');
+  //     if (dataCol) {
+  //       // Normal path (new + any updated cells)
+  //       // Skip if already highlighted
+  //       if (highlighted.length && highlighted[0].getAttribute('data-col') === dataCol) {
+  //         return;
+  //       }
+  //       highlightByDataCol(dataCol);
+  //       return;
+  //     }
 
-//     // Fallback: old cells without data-col
-//     const idx = cell.cellIndex;
-//     if (idx >= 0) {
-//       // If already highlighted via same index, skip
-//       if (
-//         highlighted.length &&
-//         (highlighted[0] as HTMLTableCellElement).cellIndex === idx &&
-//         !highlighted[0].getAttribute('data-col')
-//       ) {
-//         return;
-//       }
-//       highlightByCellIndex(idx);
-//     }
-//   };
+  //     // Fallback: old cells without data-col
+  //     const idx = cell.cellIndex;
+  //     if (idx >= 0) {
+  //       // If already highlighted via same index, skip
+  //       if (
+  //         highlighted.length &&
+  //         (highlighted[0] as HTMLTableCellElement).cellIndex === idx &&
+  //         !highlighted[0].getAttribute('data-col')
+  //       ) {
+  //         return;
+  //       }
+  //       highlightByCellIndex(idx);
+  //     }
+  //   };
 
-//   tableEl.addEventListener('mouseover', handleOver);
-//   tableEl.addEventListener('mouseleave', clearCol);
-//   return () => {
-//     tableEl.removeEventListener('mouseover', handleOver);
-//     tableEl.removeEventListener('mouseleave', clearCol);
-//   };
-// }, []); // emp
+  //   tableEl.addEventListener('mouseover', handleOver);
+  //   tableEl.addEventListener('mouseleave', clearCol);
+  //   return () => {
+  //     tableEl.removeEventListener('mouseover', handleOver);
+  //     tableEl.removeEventListener('mouseleave', clearCol);
+  //   };
+  // }, []); // emp
 
   return (
     <table

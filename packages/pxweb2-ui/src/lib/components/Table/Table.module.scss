@@ -1,13 +1,15 @@
 @use '../../text-styles.scss';
 @use '../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixed;
 
-%column-styles { // Using a placeholder means the styles are reused, not duplicated
-    background: #ccc3;
+%column-styles {
+  // Using a placeholder means the styles are reused, not duplicated
+  background: #ccc3;
 }
-@for $i from 1 to 11 { // Total number (or more) columns in the table
-    table:has(tr > *:nth-child(#{$i}):hover) tr > *:nth-child(#{$i}) {
-        @extend %column-styles;
-    }
+@for $i from 1 to 11 {
+  // Total number (or more) columns in the table
+  table:has(tr > *:nth-child(#{$i}):hover) tr > *:nth-child(#{$i}) {
+    @extend %column-styles;
+  }
 }
 
 .table {
@@ -34,63 +36,59 @@
     }
   }
 
+  //   /* Row hover: keep subtle */
+  //   tbody tr:hover > td,
+  //   tbody tr:hover > th {
+  //     background: var(--px-color-surface-subtle);
+  //   }
 
-//   /* Row hover: keep subtle */
-//   tbody tr:hover > td,
-//   tbody tr:hover > th {
-//     background: var(--px-color-surface-subtle);
-//   }
+  //   /* Column highlight: stronger color & higher specificity (after row hover) */
+  //   tbody td.colHover,
+  //   thead th.colHover,
+  //   tbody th.colHover {
+  //     background: var(--px-color-surface-action-subtle);
+  //   }
 
-//   /* Column highlight: stronger color & higher specificity (after row hover) */
-//   tbody td.colHover,
-//   thead th.colHover,
-//   tbody th.colHover {
-//     background: var(--px-color-surface-action-subtle);
-//   }
+  //   /* If you still want row hover NOT to override column on same row: */
+  //   tbody tr:hover > td.colHover,
+  //   tbody tr:hover > th.colHover {
+  //     background: var(--px-color-surface-action-subtle);
+  //   }
 
-//   /* If you still want row hover NOT to override column on same row: */
-//   tbody tr:hover > td.colHover,
-//   tbody tr:hover > th.colHover {
-//     background: var(--px-color-surface-action-subtle);
-//   }
+  // // /* Row hover (only affects cells not in an active highlighted column) */
+  // //   tbody tr:hover > td:not(.colHover),
+  // //   tbody tr:hover > th:not(.colHover) {
+  // //     background: var(--px-color-surface-subtle);
+  // //   }
 
+  //   /* Column highlight (distinct color) */
+  //   td.colHover,
+  //   th.colHover {
+  //     background: var(--px-color-surface-subtle) !important;
+  //   }
 
-// // /* Row hover (only affects cells not in an active highlighted column) */
-// //   tbody tr:hover > td:not(.colHover),
-// //   tbody tr:hover > th:not(.colHover) {
-// //     background: var(--px-color-surface-subtle);
-// //   }
+  //   // /* Optional: while a column is highlighted, disable row hover overriding */
+  //   // &.tableColHovering tbody tr:hover > td.colHover,
+  //   // &.tableColHovering tbody tr:hover > th.colHover {
+  //   //   background: var(--px-color-surface-subtle) !important;
+  //   // }
 
-//   /* Column highlight (distinct color) */
-//   td.colHover,
-//   th.colHover {
-//     background: var(--px-color-surface-subtle) !important;
-//   }
-
-//   // /* Optional: while a column is highlighted, disable row hover overriding */
-//   // &.tableColHovering tbody tr:hover > td.colHover,
-//   // &.tableColHovering tbody tr:hover > th.colHover {
-//   //   background: var(--px-color-surface-subtle) !important;
-//   // }
-
-
-/* GENERIC DEMO STYLES */
-// table {
-//   --col: #00f4;
-//   --row: #0002;
-//   border-collapse: collapse;
-// }
-// thead tr {
-//   background: #0883;
-// }
-// table tr > * {
-//   padding: 1em;
-//   border: 1px solid;
-// }
-tbody > tr:hover {
-  background: var(--row);
-}
-
+  /* GENERIC DEMO STYLES */
+  // table {
+  //   --col: #00f4;
+  //   --row: #0002;
+  //   border-collapse: collapse;
+  // }
+  // thead tr {
+  //   background: #0883;
+  // }
+  // table tr > * {
+  //   padding: 1em;
+  //   border: 1px solid;
+  // }
+  tbody > tr:hover {
+    background: var(--row);
+  }
 
   th {
     width: 40px;
