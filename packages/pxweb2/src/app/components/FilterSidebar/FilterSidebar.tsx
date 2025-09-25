@@ -12,7 +12,7 @@ import {
 import { FilterContext } from '../../context/FilterContext';
 import { YearRangeFilter } from './YearRangeFilter';
 import { ReactNode, useContext, useState, useMemo } from 'react';
-import _ from 'lodash';
+import { upperFirst, debounce } from 'lodash';
 
 interface CollapsibleProps {
   subject: PathItem;
@@ -40,87 +40,85 @@ const Collapsible: React.FC<CollapsibleProps> = ({
   const subjectTree = state.availableFilters.subjectTree;
 
   return (
-    <>
-      <span className={styles.filterLabel}>
-        <Checkbox
-          id={subjectId + index}
-          text={`${subjectLabel} (${count})`}
-          value={isActive}
-          subtle={!isActive && count === 0}
-          onChange={(value) => {
-            const ancestors = findAncestors(subjectTree, subject.uniqueId!);
-            const children = getAllDescendants(subject);
+    <span className={styles.filterLabel}>
+      <Checkbox
+        id={subjectId + index}
+        text={`${subjectLabel} (${count})`}
+        value={isActive}
+        subtle={!isActive && count === 0}
+        onChange={(value) => {
+          const ancestors = findAncestors(subjectTree, subject.uniqueId!);
+          const children = getAllDescendants(subject);
 
-            if (value) {
-              // If subject has children, add the subject itself
+          if (value) {
+            // If subject has children, add the subject itself
+            dispatch({
+              type: ActionType.ADD_FILTER,
+              payload: [
+                {
+                  type: 'subject',
+                  value: subjectId,
+                  label: subjectLabel,
+                  uniqueId: subject.uniqueId,
+                  index,
+                },
+              ],
+            });
+
+            // If the subject has children, we remove all ancestors from filter
+            for (const ancestor of ancestors) {
+              const isAncestorInFilter = state.activeFilters.some(
+                (f) => f.type === 'subject' && f.value === ancestor.id,
+              );
+              if (isAncestorInFilter) {
+                dispatch({
+                  type: ActionType.REMOVE_FILTER,
+                  payload: { value: ancestor.id, type: 'subject' },
+                });
+              }
+            }
+          } else {
+            //Remove subject and all its descendants from filter
+            const descendants = [subject, ...children];
+
+            for (const d of descendants) {
+              dispatch({
+                type: ActionType.REMOVE_FILTER,
+                payload: {
+                  value: d.id,
+                  type: 'subject',
+                  uniqueId: d.uniqueId,
+                },
+              });
+            }
+
+            // Ensure first parent is actually added as a filter, and not just ephemerally selected
+            const parent: PathItem | undefined = ancestors.length
+              ? ancestors[ancestors.length - 1]
+              : undefined;
+            const isParentInFilter = state.activeFilters.some(
+              (f) => f.type === 'subject' && f.value === parent?.id,
+            );
+            if (parent && !isParentInFilter) {
               dispatch({
                 type: ActionType.ADD_FILTER,
                 payload: [
                   {
                     type: 'subject',
-                    value: subjectId,
-                    label: subjectLabel,
-                    uniqueId: subject.uniqueId,
+                    value: parent.id,
+                    label: parent.label,
+                    uniqueId: parent.uniqueId,
                     index,
                   },
                 ],
               });
-
-              // If the subject has children, we remove all ancestors from filter
-              for (const ancestor of ancestors) {
-                const isAncestorInFilter = state.activeFilters.some(
-                  (f) => f.type === 'subject' && f.value === ancestor.id,
-                );
-                if (isAncestorInFilter) {
-                  dispatch({
-                    type: ActionType.REMOVE_FILTER,
-                    payload: { value: ancestor.id, type: 'subject' },
-                  });
-                }
-              }
-            } else {
-              //Remove subject and all its descendants from filter
-              const descendants = [subject, ...children];
-
-              for (const d of descendants) {
-                dispatch({
-                  type: ActionType.REMOVE_FILTER,
-                  payload: {
-                    value: d.id,
-                    type: 'subject',
-                    uniqueId: d.uniqueId,
-                  },
-                });
-              }
-
-              // Ensure first parent is actually added as a filter, and not just ephemerally selected
-              const parent: PathItem | undefined = ancestors.length
-                ? ancestors[ancestors.length - 1]
-                : undefined;
-              const isParentInFilter = state.activeFilters.some(
-                (f) => f.type === 'subject' && f.value === parent?.id,
-              );
-              if (parent && !isParentInFilter) {
-                dispatch({
-                  type: ActionType.ADD_FILTER,
-                  payload: [
-                    {
-                      type: 'subject',
-                      value: parent.id,
-                      label: parent.label,
-                      uniqueId: parent.uniqueId,
-                      index,
-                    },
-                  ],
-                });
-              }
             }
-            onFilterChange?.();
-          }}
-        />
-      </span>
+          }
+          onFilterChange?.();
+        }}
+      />
       {isActive && children}
-    </>
+    </span>
   );
 };
 
@@ -132,7 +130,7 @@ const RenderSubjects: React.FC<{
   const { state } = useContext(FilterContext);
 
   return (
-    <ul className={styles.filterList}>
+    <>
       {subjects.map((subject, index) => {
         const descendants = getAllDescendants(subject);
         const count = subject.count ?? 0;
@@ -160,17 +158,19 @@ const RenderSubjects: React.FC<{
               onFilterChange={onFilterChange}
             >
               {!!subject.children?.length && (
-                <RenderSubjects
-                  firstLevel={false}
-                  subjects={subject.children}
-                  onFilterChange={onFilterChange}
-                />
+                <ul className={styles.filterList}>
+                  <RenderSubjects
+                    firstLevel={false}
+                    subjects={subject.children}
+                    onFilterChange={onFilterChange}
+                  />
+                </ul>
               )}
             </Collapsible>
           </li>
         );
       })}
-    </ul>
+    </>
   );
 };
 
@@ -240,9 +240,19 @@ const VariablesFilter: React.FC<{ onFilterChange?: () => void }> = ({
         <Search
           searchPlaceHolder={t('start_page.filter.variabel_search')}
           variant="default"
-          onChange={(value) => setVariableSearch(value)}
+          onChange={debounce((value) => setVariableSearch(value), 500)}
         />
       </div>
+      <label
+        className={styles['sr-only']}
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        {t('start_page.filter.variable_count', {
+          countShown: filtered.length,
+          countTotal: state.availableFilters.variables.size,
+        })}
+      </label>
       <ul className={styles.scrollableVariableFilter}>
         {filtered.map(([key, count], index) => {
           const isActive = state.activeFilters.some(
@@ -252,7 +262,7 @@ const VariablesFilter: React.FC<{ onFilterChange?: () => void }> = ({
             <li key={key}>
               <Checkbox
                 id={`var-${key}`}
-                text={`${_.upperFirst(key)} (${count})`}
+                text={`${upperFirst(key)} (${count})`}
                 value={isActive}
                 onChange={(value) => {
                   value
@@ -262,7 +272,7 @@ const VariablesFilter: React.FC<{ onFilterChange?: () => void }> = ({
                           {
                             type: 'variable',
                             value: key,
-                            label: _.upperFirst(key),
+                            label: upperFirst(key),
                             index,
                           },
                         ],
@@ -377,32 +387,36 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
   );
 
   return (
-    <div className={styles.sideBar}>
-      <div className={styles.sideBarWrapper}>
-        <FilterCategory header={t('start_page.filter.subject')}>
-          <RenderSubjects
-            firstLevel={true}
-            subjects={state.availableFilters.subjectTree}
-            onFilterChange={onFilterChange}
-          />
-        </FilterCategory>
-        <FilterCategory header={t('start_page.filter.year.title')}>
-          <YearRangeFilter onFilterChange={onFilterChange} />
-        </FilterCategory>
-        <FilterCategory header={t('start_page.filter.timeUnit')}>
-          <ul className={styles.filterList}>
-            <RenderTimeUnitFilters onFilterChange={onFilterChange} />
-          </ul>
-        </FilterCategory>
-        <FilterCategory header={t('start_page.filter.variabel')}>
-          <VariablesFilter onFilterChange={onFilterChange} />
-        </FilterCategory>
-        {shouldShowStatusFilter && (
-          <FilterCategory header={t('start_page.filter.status.title')}>
-            <StatusFilter onFilterChange={onFilterChange} />
+    <nav aria-label="Filter">
+      <div className={styles.sideBar}>
+        <div className={styles.sideBarWrapper}>
+          <FilterCategory header={t('start_page.filter.subject')}>
+            <ul className={styles.filterList}>
+              <RenderSubjects
+                firstLevel={true}
+                subjects={state.availableFilters.subjectTree}
+                onFilterChange={onFilterChange}
+              />
+            </ul>
           </FilterCategory>
-        )}
+          <FilterCategory header={t('start_page.filter.year.title')}>
+            <YearRangeFilter onFilterChange={onFilterChange} />
+          </FilterCategory>
+          <FilterCategory header={t('start_page.filter.timeUnit')}>
+            <ul className={styles.filterList}>
+              <RenderTimeUnitFilters onFilterChange={onFilterChange} />
+            </ul>
+          </FilterCategory>
+          <FilterCategory header={t('start_page.filter.variabel')}>
+            <VariablesFilter onFilterChange={onFilterChange} />
+          </FilterCategory>
+          {shouldShowStatusFilter && (
+            <FilterCategory header={t('start_page.filter.status.title')}>
+              <StatusFilter onFilterChange={onFilterChange} />
+            </FilterCategory>
+          )}
+        </div>
       </div>
-    </div>
+    </nav>
   );
 };
