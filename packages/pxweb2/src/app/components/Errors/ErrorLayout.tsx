@@ -22,7 +22,7 @@ function ErrorContent({ align = 'center', children }: ErrorContentProps) {
           </main>
         </div>
       </div>
-      <Footer />
+      <Footer stroke={true} />
     </>
   );
 }

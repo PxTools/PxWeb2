@@ -9,6 +9,7 @@ import { useLocaleContent } from '../../util/hooks/useLocaleContent';
 
 type FooterProps = {
   containerRef?: React.RefObject<HTMLDivElement | null>;
+  stroke?: boolean;
 };
 
 export function scrollToTop(ref?: React.RefObject<HTMLDivElement | null>) {
@@ -30,7 +31,10 @@ export function scrollToTop(ref?: React.RefObject<HTMLDivElement | null>) {
   }
 }
 
-export const Footer: React.FC<FooterProps> = ({ containerRef }) => {
+export const Footer: React.FC<FooterProps> = ({
+  containerRef,
+  stroke = false,
+}) => {
   const { i18n, t } = useTranslation();
   const config = getConfig();
   const content = useLocaleContent(
@@ -41,7 +45,10 @@ export const Footer: React.FC<FooterProps> = ({ containerRef }) => {
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
 
   return (
-    <footer className={styles.footerContainer} ref={scrollContainerRef}>
+    <footer
+      className={cl(styles.footerContainer, stroke && styles.stroke)}
+      ref={scrollContainerRef}
+    >
       <div className={cl(styles.footer)}>
         <div className={cl(styles.footerContent)}>
           <div className={cl(styles.logoAndLinks)}>
