@@ -36,7 +36,7 @@ export function TableViewer() {
   OpenAPI.BASE = baseUrl;
 
   const { tableId } = useParams<{ tableId: string }>();
-  const [selectedTableId] = useState(tableId ?? 'tab638');
+  const [selectedTableId] = useState(tableId);
   const [errorMsg] = useState('');
   const [selectedNavigationView, setSelectedNavigationView] =
     useState<NavigationItem>(isXLargeDesktop ? 'selection' : 'none');
