@@ -86,7 +86,8 @@ export const Footer: React.FC<FooterProps> = ({ containerRef }) => {
                   {Array.isArray(config?.language?.supportedLanguages) &&
                     config.language.supportedLanguages.map(
                       (lang: { shorthand: string; languageName: string }) => {
-                        const languageHref = getLanguagePath(
+                        const basePath = config.baseApplicationPath.replace(/\/$/, '');
+                        const languageHref = basePath + getLanguagePath(
                           location.pathname,
                           lang.shorthand,
                           config.language.supportedLanguages,
