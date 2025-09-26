@@ -110,8 +110,7 @@ export const Footer: React.FC<FooterProps> = ({ containerRef }) => {
                               // Allow default navigation (no preventDefault) so URL updates
                             }}
                           >
-                            {lang.languageName ||
-                              lang.shorthand.toUpperCase()}
+                            {lang.languageName || lang.shorthand.toUpperCase()}
                           </Link>
                         );
                       },
