@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next';
 
 import styles from './Footer.module.scss';
 import { getConfig } from '../../util/config/getConfig';
+import { getLanguagePath } from '../../util/language/getLanguagePath';
+import { useLocation } from 'react-router';
 import { BodyShort, Button, Heading, Link } from '@pxweb2/pxweb2-ui';
 import { useLocaleContent } from '../../util/hooks/useLocaleContent';
 
@@ -39,6 +41,7 @@ export const Footer: React.FC<FooterProps> = ({ containerRef }) => {
   const footerContent = content?.footer;
   // Ref for the main scrollable container
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+  const location = useLocation();
 
   return (
     <footer className={styles.footerContainer} ref={scrollContainerRef}>
@@ -82,27 +85,36 @@ export const Footer: React.FC<FooterProps> = ({ containerRef }) => {
                 <div className={cl(styles.footerLinkList)}>
                   {Array.isArray(config?.language?.supportedLanguages) &&
                     config.language.supportedLanguages.map(
-                      (lang: { shorthand: string; languageName: string }) => (
-                        <Link
-                          href="#"
-                          size="medium"
-                          key={lang.shorthand}
-                          lang={lang.shorthand}
-                          aria-current={
-                            i18n.language?.startsWith(lang.shorthand)
-                              ? 'true'
-                              : undefined
-                          }
-                          onClick={(e) => {
-                            e.preventDefault();
-                            if (!i18n.language?.startsWith(lang.shorthand)) {
-                              i18n.changeLanguage(lang.shorthand);
-                            }
-                          }}
-                        >
-                          {lang.languageName || lang.shorthand.toUpperCase()}
-                        </Link>
-                      ),
+                      (lang: { shorthand: string; languageName: string }) => {
+                        const languageHref = getLanguagePath(
+                          location.pathname,
+                          lang.shorthand,
+                          config.language.supportedLanguages,
+                          config.language.fallbackLanguage,
+                          config.language.showDefaultLanguageInPath,
+                        );
+                        const isCurrent = i18n.language?.startsWith(
+                          lang.shorthand,
+                        );
+                        return (
+                          <Link
+                            href={languageHref}
+                            size="medium"
+                            key={lang.shorthand}
+                            lang={lang.shorthand}
+                            aria-current={isCurrent ? 'true' : undefined}
+                            onClick={() => {
+                              if (!isCurrent) {
+                                i18n.changeLanguage(lang.shorthand);
+                              }
+                              // Allow default navigation (no preventDefault) so URL updates
+                            }}
+                          >
+                            {lang.languageName ||
+                              lang.shorthand.toUpperCase()}
+                          </Link>
+                        );
+                      },
                     )}
                 </div>
               </div>
