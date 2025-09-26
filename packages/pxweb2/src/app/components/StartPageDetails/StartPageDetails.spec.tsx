@@ -1,15 +1,9 @@
 import '@testing-library/jest-dom/vitest';
 import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
-import StartPageDetails from './StartPageDetails';
 
-let mockLanguage = 'no';
-vi.mock('react-i18next', () => ({
-  useTranslation: () => ({
-    i18n: { language: mockLanguage },
-    t: (key: string) => key,
-  }),
-}));
+import StartPageDetails from './StartPageDetails';
 
 vi.mock('../../util/hooks/useLocaleContent', () => ({
   useLocaleContent: vi.fn(),
@@ -35,13 +29,15 @@ const detailsSectionNo = {
 
 describe('StartPageDetails (renders from props)', () => {
   it('renders header and body from props', async () => {
+    const user = userEvent.setup();
     render(<StartPageDetails detailsSection={detailsSectionNo} />);
 
     const toggle = await screen.findByRole('button', {
       name: 'Mer om Statistikkbanken',
     });
     expect(toggle).toBeInTheDocument();
-    toggle.click();
+
+    await user.click(toggle);
     await waitFor(() =>
       expect(toggle).toHaveAttribute('aria-expanded', 'true'),
     );
