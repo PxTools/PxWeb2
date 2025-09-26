@@ -1,19 +1,13 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import { vi } from 'vitest';
 
-import ErrorBoundary from './ErrorBoundry';
+import ErrorBoundary from './ErrorBoundary';
 
-// Mock the Header component
-vi.mock('../Header/Header', () => ({
-  Header: () => <div role="banner">Mock Header</div>,
-}));
-
-// Mock the Alert component
-vi.mock('@pxweb2/pxweb2-ui', () => ({
-  Alert: ({ children }: { children: React.ReactNode }) => (
-    <div role="alert">{children}</div>
+// Mock the GenericError component
+vi.mock('../Errors/GenericError/GenericError', () => ({
+  GenericError: () => (
+    <div data-testid="generic-error">Generic Error Component</div>
   ),
 }));
 
@@ -47,34 +41,41 @@ describe('ErrorBoundary', () => {
       </ErrorBoundary>,
     );
 
-    // Assert that the child component is rendered
     expect(screen.getByText('Child Component')).toBeInTheDocument();
   });
 
-  it('handles a mocked error correctly', () => {
-    // Mock a function that throws an error
-    const mockThrowError = vi.fn(() => {
-      throw new Error('Mocked error');
-    });
-
-    // Use the mock function in a component
+  it('renders GenericError when an error occurs', () => {
     const ErrorComponent = () => {
-      mockThrowError();
-      return null;
+      throw new Error('Test error');
     };
 
-    // Render the ErrorBoundary with the ErrorComponent
     render(
       <ErrorBoundary>
         <ErrorComponent />
       </ErrorBoundary>,
     );
 
-    // Assert that the fallback UI is rendered
-    expect(screen.getByRole('banner')).toBeInTheDocument(); // Header
-    expect(screen.getByRole('alert')).toHaveTextContent('Mocked error'); // Alert with error message
+    expect(screen.getByTestId('generic-error')).toBeInTheDocument();
+    expect(screen.getByText('Generic Error Component')).toBeInTheDocument();
+  });
 
-    // Assert that the mock function was called
-    expect(mockThrowError).toHaveBeenCalled();
+  it('renders custom fallback when provided and error occurs', () => {
+    const ErrorComponent = () => {
+      throw new Error('Test error');
+    };
+    const customFallback = (
+      <div data-testid="custom-fallback">Custom Error UI</div>
+    );
+
+    render(
+      <ErrorBoundary fallback={customFallback}>
+        <ErrorComponent />
+      </ErrorBoundary>,
+    );
+
+    // Assert that the custom fallback is rendered instead of GenericError
+    expect(screen.getByTestId('custom-fallback')).toBeInTheDocument();
+    expect(screen.getByText('Custom Error UI')).toBeInTheDocument();
+    expect(screen.queryByTestId('generic-error')).not.toBeInTheDocument();
   });
 });

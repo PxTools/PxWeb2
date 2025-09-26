@@ -1,5 +1,6 @@
 import { useEffect, useContext, useState, useRef } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
+import { useNavigate } from 'react-router';
 import type { TFunction } from 'i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import cl from 'clsx';
@@ -17,6 +18,8 @@ import {
   Ingress,
   BodyShort,
   SearchHandle,
+  Breadcrumbs,
+  type BreadcrumbItem,
 } from '@pxweb2/pxweb2-ui';
 import { type Table } from '@pxweb2/pxweb2-api-client';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
@@ -37,6 +40,13 @@ import { getAllTables } from '../../util/tableHandler';
 import { tableListIsReadyToRender } from '../../util/startPageRender';
 import useFilterUrlSync from '../../util/hooks/useFilterUrlSync';
 import StartpageDetails from '../../components/StartPageDetails/StartPageDetails';
+import { useLocaleContent } from '../../util/hooks/useLocaleContent';
+import type {
+  LocaleContent,
+  Startpage,
+  BreadCrumb,
+  DetailsSection,
+} from '../../util/config/localeContentTypes';
 
 const StartPage = () => {
   const { t, i18n } = useTranslation();
@@ -69,11 +79,21 @@ const StartPage = () => {
   const hasEverHydratedRef = useRef(false);
   const previousLanguage = useRef('');
 
+  const navigate = useNavigate();
+
   const isReadyToRender = tableListIsReadyToRender(
     state,
     hasUrlParams,
     hasEverHydratedRef.current,
   );
+
+  const localeContent: LocaleContent | null = useLocaleContent(i18n.language);
+  const startPageContent: Startpage | undefined = localeContent?.startPage;
+  const detailsSectionContent: DetailsSection | undefined =
+    startPageContent?.detailsSection;
+  const breadCrumbContent: BreadCrumb | undefined =
+    startPageContent?.breadCrumb;
+  const showBreadCrumb = isRenderableBreadCrumb(breadCrumbContent);
 
   // Run once when initially loading the page, then again if language changes
   // We want to try fetching tables in the selected language if possible
@@ -295,7 +315,11 @@ const StartPage = () => {
         <TableCard
           key={table.id}
           title={`${table.label}`}
-          href={`${config.baseApplicationPath}${langPrefix}/table/${table.id}`}
+          href={() =>
+            navigate(
+              `${config.baseApplicationPath}${langPrefix}/table/${table.id}`,
+            )
+          }
           updatedLabel={
             table.updated ? t('start_page.table.updated_label') : undefined
           }
@@ -310,6 +334,16 @@ const StartPage = () => {
           icon={getTopicIcon(table)}
           ref={cardRef}
           tabIndex={tabIndex}
+          ariaLabel={t('start_page.table.card_description', {
+            title: table.label,
+            updatedDate: table.updated
+              ? new Date(table.updated).toLocaleDateString(language)
+              : undefined,
+            yearFrom: table.firstPeriod?.slice(0, 4),
+            yearTo: table.lastPeriod?.slice(0, 4),
+            frequency: frequencyLabel,
+            tableNumber: table.id,
+          })}
         />
       );
     }
@@ -530,130 +564,173 @@ const StartPage = () => {
     );
   };
 
+  function isRenderableBreadCrumb(
+    bc: BreadCrumb | undefined,
+  ): bc is BreadCrumb {
+    return !!bc && bc.enabled === true && !!bc.items?.length;
+  }
+
+  const renderBreadCrumb = () => {
+    if (!isRenderableBreadCrumb(breadCrumbContent)) {
+      return null;
+    }
+
+    const breadCrumbItems: BreadcrumbItem[] = breadCrumbContent.items ?? [];
+
+    return (
+      <Breadcrumbs
+        className={styles.breadcrumbStartpage}
+        variant="default"
+        breadcrumbItems={breadCrumbItems}
+      />
+    );
+  };
+
   return (
     <>
       <Header stroke={true} />
-      <div className={styles.startPage}>
-        <div className={styles.container}>
-          <div className={styles.information}>
-            <Heading size="large" level="1" className={styles.title}>
-              {t('start_page.header')}
-            </Heading>
-            <Ingress>{t('start_page.ingress')}</Ingress>
-            <div className={styles.showDetailsSection}>
-              <StartpageDetails />
-            </div>
-          </div>
-        </div>
-        <div className={cl(styles.searchFilterResult)}>
+      <main>
+        <div className={styles.startPage}>
           <div className={styles.container}>
-            <div className={styles.searchAreaWrapper}>
-              <div className={cl(styles.search)}>
-                <Search
-                  searchPlaceHolder={t('start_page.search_placeholder')}
-                  variant="default"
-                  ref={searchFieldRef}
-                  showLabel
-                  labelText={t('start_page.search_label')}
-                  onChange={(value: string) => {
-                    debouncedDispatch(value);
-                  }}
-                />
+            <div
+              className={cl(styles.contentTop, {
+                [styles.hasBreadcrumb]: showBreadCrumb,
+              })}
+            >
+              {showBreadCrumb && renderBreadCrumb()}
+              <div className={styles.information}>
+                <Heading size="large" level="1" className={styles.title}>
+                  {t('start_page.header')}
+                </Heading>
+                <Ingress>{t('start_page.ingress')}</Ingress>
+                <div className={styles.showDetailsSection}>
+                  {detailsSectionContent && (
+                    <StartpageDetails detailsSection={detailsSectionContent} />
+                  )}
+                </div>
               </div>
-
-              <Button
-                variant="secondary"
-                iconPosition="start"
-                icon="Controls"
-                className={styles.filterToggleButton}
-                onClick={() => setIsFilterOverlayOpen(true)}
-                ref={filterToggleRef}
-              >
-                {t('start_page.filter.button')}
-              </Button>
             </div>
           </div>
-
-          <div className={cl(styles.filterAndListWrapper, styles.container)}>
-            {!isSmallScreen && (
-              <div>
-                <Heading
-                  className={cl(styles.filterHeading)}
-                  size="medium"
-                  level="2"
-                >
-                  {t('start_page.filter.header')}
-                </Heading>
-                <FilterSidebar onFilterChange={handleFilterChange} />
-              </div>
-            )}
-
-            {renderFilterOverlay()}
-
-            <div className={styles.listTables}>
-              {state.activeFilters.length >= 1 && (
-                <div className={styles.filterPillContainer}>
-                  <Chips>
-                    {renderRemoveAllChips()}
-                    {sortAndDeduplicateFilterChips(
-                      state.activeFilters,
-                      state.subjectOrderList,
-                    ).map((filter) => (
-                      <Chips.Removable
-                        onClick={() => {
-                          dispatch({
-                            type: ActionType.REMOVE_FILTER,
-                            payload: {
-                              value: filter.value,
-                              type: filter.type,
-                            },
-                          });
-                          handleFilterChange();
-                          if (filter.type == 'search') {
-                            searchFieldRef.current?.clearInputField();
-                          }
-                        }}
-                        aria-label={t('start_page.filter.remove_filter_aria', {
-                          value: filter.value,
-                        })}
-                        key={filter.value}
-                        truncate
-                      >
-                        {filter.label}
-                      </Chips.Removable>
-                    ))}
-                  </Chips>
-                </div>
-              )}
-              {state.error && (
-                <div className={styles.error}>
-                  <Alert
-                    heading="Feil i lasting av tabeller"
-                    onClick={() => {
-                      location.reload();
+          <div className={cl(styles.searchFilterResult)}>
+            <div className={styles.container}>
+              <div className={styles.searchAreaWrapper}>
+                <div className={cl(styles.search)} role="search">
+                  <Search
+                    searchPlaceHolder={t('start_page.search_placeholder')}
+                    variant="default"
+                    ref={searchFieldRef}
+                    showLabel
+                    labelText={t('start_page.search_label')}
+                    onChange={(value: string) => {
+                      debouncedDispatch(value);
                     }}
-                    variant="error"
-                    clickable
+                  />
+                </div>
+
+                <Button
+                  variant="secondary"
+                  iconPosition="start"
+                  icon="Controls"
+                  className={styles.filterToggleButton}
+                  onClick={() => setIsFilterOverlayOpen(true)}
+                  ref={filterToggleRef}
+                  aria-expanded={isFilterOverlayOpen}
+                  aria-live="polite"
+                >
+                  {t('start_page.filter.button')}
+                </Button>
+              </div>
+            </div>
+
+            <div className={cl(styles.filterAndListWrapper, styles.container)}>
+              {!isSmallScreen && (
+                <div>
+                  <Heading
+                    className={cl(styles.filterHeading)}
+                    size="medium"
+                    level="2"
                   >
-                    Statistikkbanken kunne ikke vise listen over tabeller. Last
-                    inn siden på nytt eller klikk her for å forsøke igjen.{' '}
-                    <br />
-                    Feilmelding: {state.error}
-                  </Alert>
+                    {t('start_page.filter.header')}
+                  </Heading>
+                  <FilterSidebar onFilterChange={handleFilterChange} />
                 </div>
               )}
-              {!isReadyToRender ? (
-                <div className={styles.loadingSpinner}>
-                  <Spinner size="xlarge" />
-                </div>
-              ) : (
-                renderTableCardList()
-              )}
+
+              {renderFilterOverlay()}
+
+              <div className={styles.listTables}>
+                <Heading level="2" className={styles['sr-only']}>
+                  {t('start_page.result_hidden_header')}
+                </Heading>
+                {state.activeFilters.length >= 1 && (
+                  <div className={styles.filterPillContainer}>
+                    <Chips
+                      aria-label={t('start_page.filter.list_filters_aria')}
+                    >
+                      {renderRemoveAllChips()}
+                      {sortAndDeduplicateFilterChips(
+                        state.activeFilters,
+                        state.subjectOrderList,
+                      ).map((filter) => (
+                        <Chips.Removable
+                          onClick={() => {
+                            dispatch({
+                              type: ActionType.REMOVE_FILTER,
+                              payload: {
+                                value: filter.value,
+                                type: filter.type,
+                              },
+                            });
+                            handleFilterChange();
+                            if (filter.type == 'search') {
+                              searchFieldRef.current?.clearInputField();
+                            }
+                          }}
+                          aria-label={t(
+                            'start_page.filter.remove_filter_aria',
+                            {
+                              value: filter.label,
+                            },
+                          )}
+                          key={filter.value}
+                          truncate
+                        >
+                          {filter.label}
+                        </Chips.Removable>
+                      ))}
+                    </Chips>
+                  </div>
+                )}
+                {state.error && (
+                  <div className={styles.error}>
+                    <Alert
+                      heading="Feil i lasting av tabeller"
+                      onClick={() => {
+                        location.reload();
+                      }}
+                      variant="error"
+                      clickable
+                    >
+                      Statistikkbanken kunne ikke vise listen over tabeller.
+                      Last inn siden på nytt eller klikk her for å forsøke
+                      igjen. <br />
+                      Feilmelding: {state.error}
+                    </Alert>
+                  </div>
+                )}
+                {!isReadyToRender ? (
+                  <div className={styles.loadingSpinner}>
+                    <Spinner size="xlarge" />
+                  </div>
+                ) : (
+                  renderTableCardList()
+                )}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      {renderTableListSEO()}
+        {renderTableListSEO()}
+      </main>
       <Footer />
     </>
   );

@@ -122,7 +122,10 @@ export function VariableBoxContent({
       newItems.push({ type: 'search' });
     }
 
-    if (hasTwoOrMoreValues) {
+    if (
+      hasTwoOrMoreValues &&
+      (searchedValues.length === 0 || searchedValues.length > 1)
+    ) {
       newItems.push({ type: 'mixedCheckbox' });
     }
 
@@ -286,7 +289,7 @@ export function VariableBoxContent({
           />
         </div>
       );
-    } else if (item.type === 'mixedCheckbox' && searchedValues.length > 0) {
+    } else if (item.type === 'mixedCheckbox' && searchedValues.length > 1) {
       return (
         <>
           <div
@@ -302,9 +305,15 @@ export function VariableBoxContent({
           >
             <MixedCheckbox
               id={varId + uniqueId + 'mixedCheckbox'}
-              text={t(
-                'presentation_page.sidemenu.selection.variablebox.content.mixed_checkbox',
-              )}
+              text={
+                search === ''
+                  ? t(
+                      'presentation_page.sidemenu.selection.variablebox.content.mixed_checkbox',
+                    )
+                  : t(
+                      'presentation_page.sidemenu.selection.variablebox.content.mixed_checkbox_search',
+                    )
+              }
               value={allValuesSelected}
               onChange={() =>
                 onChangeMixedCheckbox(varId, allValuesSelected, searchedValues)
@@ -326,6 +335,9 @@ export function VariableBoxContent({
       const value = item.value;
       return (
         <>
+          {searchedValues.length === 1 && search !== '' && (
+            <div className={classes['spacer']}></div>
+          )}
           <div
             id={value.code + uniqueId}
             tabIndex={-1}

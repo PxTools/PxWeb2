@@ -1,13 +1,15 @@
+import { vi, Mock } from 'vitest';
 import { MemoryRouter } from 'react-router';
-import type { Table } from '@pxweb2/pxweb2-api-client';
-import StartPage from './StartPage';
-import { AccessibilityProvider } from '../../context/AccessibilityProvider';
-import { renderWithProviders } from '../../util/testing-utils';
-import { Config } from '../../util/config/configType';
-import { vi } from 'vitest';
-import '@testing-library/jest-dom/vitest';
 import { waitFor, within } from '@testing-library/react';
+import '@testing-library/jest-dom/vitest';
+
+import StartPage from './StartPage';
+import type { Table } from '@pxweb2/pxweb2-api-client';
+import { AccessibilityProvider } from '../../context/AccessibilityProvider';
+import { Config } from '../../util/config/configType';
+import { useLocaleContent } from '../../util/hooks/useLocaleContent';
 import { sortTablesByUpdated } from '../../util/startPageFilters';
+import { renderWithProviders } from '../../util/testing-utils';
 
 // Mock the getAllTables function
 vi.mock('../../util/tableHandler', () => ({
@@ -99,6 +101,12 @@ vi.mock('react-i18next', async () => {
   };
 });
 
+vi.mock('../../util/hooks/useLocaleContent', () => ({
+  useLocaleContent: vi.fn(),
+}));
+
+const mockUseLocaleContent = useLocaleContent as Mock;
+
 // Declare the global variable for this file
 declare global {
   interface Window {
@@ -119,8 +127,12 @@ window.PxWeb2Config = {
     showDefaultLanguageInPath: true,
   },
   apiUrl: 'https://api.scb.se/OV0104/v2beta/api/v2',
+  baseApplicationPath: '/',
   maxDataCells: 100000,
   specialCharacters: ['.', '..', ':', '-', '...', '*'],
+  variableFilterExclusionList: {
+    en: ['ContentsCode', 'Tid'],
+  },
 };
 
 describe('StartPage', () => {
@@ -282,5 +294,83 @@ describe('sortTablesByUpdated (date-only, newest first)', () => {
 
     const out = sortTablesByUpdated([a, b, c]);
     expect(out.map((t) => t.id)).toEqual(['a', 'b', 'c']);
+  });
+});
+
+describe('StartPage locale content: breadcrumbs', () => {
+  beforeEach(() => {
+    mockUseLocaleContent.mockReset();
+  });
+  it('Breadcrumb rendering on StartPage', async () => {
+    mockUseLocaleContent.mockReturnValue({
+      startPage: {
+        breadCrumb: {
+          enabled: true,
+          items: [
+            { label: 'Forsiden', href: '#' },
+            { label: 'Statistikkbanken', href: '/' },
+          ],
+        },
+      },
+    });
+
+    const { findByRole } = renderWithProviders(
+      <AccessibilityProvider>
+        <MemoryRouter>
+          <StartPage />
+        </MemoryRouter>
+      </AccessibilityProvider>,
+    );
+
+    expect(await findByRole('link', { name: 'Forsiden' })).toBeInTheDocument();
+    expect(
+      await findByRole('link', { name: 'Statistikkbanken' }),
+    ).toBeInTheDocument();
+  });
+
+  it('does not render breadcrumbs when enabled is false', async () => {
+    mockUseLocaleContent.mockReturnValue({
+      startPage: {
+        breadCrumb: {
+          enabled: false,
+          items: [
+            { label: 'Forsiden', href: '#' },
+            { label: 'Statistikkbanken', href: '/' },
+          ],
+        },
+      },
+    });
+
+    const { queryByRole } = renderWithProviders(
+      <AccessibilityProvider>
+        <MemoryRouter>
+          <StartPage />
+        </MemoryRouter>
+      </AccessibilityProvider>,
+    );
+
+    // Wait for component to stabilize after async state updates
+    await waitFor(() => {
+      expect(queryByRole('link', { name: 'Forsiden' })).not.toBeInTheDocument();
+    });
+  });
+
+  it('does not render breadcrumbs when breadCrumb is missing', async () => {
+    mockUseLocaleContent.mockReturnValue({
+      startPage: {},
+    });
+
+    const { queryByRole } = renderWithProviders(
+      <AccessibilityProvider>
+        <MemoryRouter>
+          <StartPage />
+        </MemoryRouter>
+      </AccessibilityProvider>,
+    );
+
+    // Wait for component to stabilize after async state updates
+    await waitFor(() => {
+      expect(queryByRole('link', { name: 'Forsiden' })).not.toBeInTheDocument();
+    });
   });
 });

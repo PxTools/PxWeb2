@@ -1,5 +1,36 @@
 @use '$ui/style-dictionary/dist/scss/fixed-variables.scss' as fixed;
 
+.footerContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-self: stretch;
+
+  // xsmall - medium
+  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
+    background: var(--px-color-surface-moderate);
+  }
+
+  // xsmall
+  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
+    padding: fixed.$spacing-4 fixed.$spacing-4 fixed.$spacing-24
+      fixed.$spacing-4;
+  }
+
+  // small
+  @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
+    padding: fixed.$spacing-8 fixed.$spacing-8 fixed.$spacing-24
+      fixed.$spacing-8;
+  }
+
+  // medium
+  @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
+    padding: fixed.$spacing-11 fixed.$spacing-11 fixed.$spacing-24
+      fixed.$spacing-11;
+  }
+}
+
 .footer {
   display: flex;
   flex-direction: column;
@@ -7,63 +38,96 @@
   align-self: stretch;
   gap: fixed.$spacing-1;
   background: var(--px-color-surface-default);
+  padding: fixed.$spacing-10;
 
-  // xsmall
-  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
-    padding: fixed.$spacing-4;
-    border-radius: var(--px-border-radius-none);
-    padding-bottom: fixed.$spacing-4;
+  // xsmall - medium
+  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
+    border-radius: var(--px-border-radius-large);
+    background: var(--px-color-surface-default);
   }
-
-  // small
-  @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
-    padding: fixed.$spacing-6;
-    border-radius: var(--px-border-radius-none);
-    padding-bottom: fixed.$spacing-6;
-  }
-
-  // medium
-  @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
-    padding: fixed.$spacing-10;
+  // large - xxlarge
+  @media (min-width: fixed.$breakpoints-large-min-width) {
     border-radius: var(--px-border-radius-xlarge);
   }
+}
 
-  // large and xlarge
-  @media ((min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width)) or ((min-width: fixed.$breakpoints-xlarge-min-width)) {
-    max-width: 1320px;
-    padding: fixed.$spacing-10 fixed.$spacing-12;
-    border-radius: var(--px-border-radius-xlarge);
-  }
+.footerContent {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 60px;
+  align-self: stretch;
+  border-radius: var(--px-border-radius-none);
+}
 
-  .description {
-    max-width: 912px;
-  }
-
-  .logos {
+.logoAndLinks {
+  // xsmall - medium
+  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
     display: flex;
-    align-items: center;
-    gap: fixed.$spacing-8;
-    margin-bottom: fixed.$spacing-8;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: fixed.$spacing-16;
+    align-self: stretch;
   }
 
-  .contact {
-    margin-top: fixed.$spacing-6;
+  // large - xxlarge
+  @media (min-width: fixed.$breakpoints-large-min-width) {
+    display: flex;
+    align-items: flex-start;
+    align-content: flex-start;
+    gap: fixed.$spacing-16 fixed.$spacing-8;
+    align-self: stretch;
+    flex-wrap: wrap;
+  }
+}
+
+.footerLinks {
+  display: flex;
+  align-items: flex-start;
+  align-content: flex-start;
+  flex: 1 0 0;
+  flex-wrap: wrap;
+
+  // xsmall - medium
+  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
+    gap: fixed.$spacing-8 fixed.$spacing-8;
   }
 
-  .contactCopyrightWrapper {
-    display: block;
-    justify-content: space-between;
-    align-items: center;
-
-    @media (min-width: fixed.$breakpoints-large-min-width) {
-      display: flex;
-    }
+  // large - xxlarge
+  @media (min-width: fixed.$breakpoints-large-min-width) {
+    gap: fixed.$spacing-14 fixed.$spacing-8;
   }
+}
 
-  .copyright {
-    margin-top: fixed.$spacing-4;
-    @media (min-width: fixed.$breakpoints-large-min-width) {
-      margin-top: fixed.$spacing-8;
-    }
-  }
+.footerLinkGroup {
+  display: flex;
+  width: 240px;
+  min-width: 200px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: fixed.$spacing-3;
+}
+
+.footerLinkList {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: stretch;
+}
+
+.copyrightAndButton {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  align-content: flex-end;
+  align-self: stretch;
+  flex-wrap: wrap;
+  row-gap: fixed.$spacing-7;
+}
+
+.copyrightWrapper {
+  display: flex;
+  min-width: 260px;
+  align-items: flex-end;
+  gap: fixed.$spacing-1;
 }
