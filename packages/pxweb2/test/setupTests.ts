@@ -1,6 +1,21 @@
 import React from 'react';
 import { vi } from 'vitest';
 
+// Types for motion props to avoid using 'any'
+interface MotionProps extends React.HTMLAttributes<HTMLElement> {
+  whileHover?: unknown;
+  whileTap?: unknown;
+  variants?: unknown;
+  initial?: unknown;
+  animate?: unknown;
+  exit?: unknown;
+  transition?: unknown;
+  layout?: unknown;
+  layoutId?: string;
+  children?: React.ReactNode;
+  className?: string;
+}
+
 // Global mock for getConfig
 vi.mock('../src/app/util/config/getConfig', () => ({
   getConfig: () => ({
@@ -29,8 +44,7 @@ vi.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string) => key,
     i18n: {
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      changeLanguage: () => new Promise(() => {}),
+      changeLanguage: () => new Promise(vi.fn()),
       language: 'en',
       dir: () => 'ltr',
     },
@@ -40,19 +54,17 @@ vi.mock('react-i18next', () => ({
   useNavigate: vi.fn(() => vi.fn()),
   initReactI18next: {
     type: '3rdParty',
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    init: () => {},
+    init: vi.fn(),
   },
 }));
 
 // Mock motion/react components to avoid DOM access issues in tests
-/* eslint-disable @typescript-eslint/no-explicit-any */
 vi.mock('motion/react', () => ({
   LazyMotion: ({ children }: { children: React.ReactNode }) => children,
   MotionConfig: ({ children }: { children: React.ReactNode }) => children,
   LayoutGroup: ({ children }: { children: React.ReactNode }) => children,
   m: {
-    div: ({ children, className, ...props }: any) => {
+    div: ({ children, className, ...props }: MotionProps) => {
       // Filter out motion-specific props to avoid React warnings
       const {
         whileHover,
@@ -77,7 +89,7 @@ vi.mock('motion/react', () => ({
         layoutId;
       return React.createElement('div', { className, ...restProps }, children);
     },
-    button: ({ children, className, ...props }: any) => {
+    button: ({ children, className, ...props }: MotionProps) => {
       // Filter out motion-specific props to avoid React warnings
       const {
         whileHover,
@@ -106,7 +118,7 @@ vi.mock('motion/react', () => ({
         children,
       );
     },
-    span: ({ children, className, ...props }: any) => {
+    span: ({ children, className, ...props }: MotionProps) => {
       // Filter out motion-specific props to avoid React warnings
       const {
         whileHover,
@@ -133,7 +145,7 @@ vi.mock('motion/react', () => ({
     },
   },
   motion: {
-    div: ({ children, className, ...props }: any) => {
+    div: ({ children, className, ...props }: MotionProps) => {
       // Filter out motion-specific props to avoid React warnings
       const {
         whileHover,
@@ -158,7 +170,7 @@ vi.mock('motion/react', () => ({
         layoutId;
       return React.createElement('div', { className, ...restProps }, children);
     },
-    button: ({ children, className, ...props }: any) => {
+    button: ({ children, className, ...props }: MotionProps) => {
       // Filter out motion-specific props to avoid React warnings
       const {
         whileHover,
@@ -187,7 +199,7 @@ vi.mock('motion/react', () => ({
         children,
       );
     },
-    span: ({ children, className, ...props }: any) => {
+    span: ({ children, className, ...props }: MotionProps) => {
       // Filter out motion-specific props to avoid React warnings
       const {
         whileHover,
