@@ -29,9 +29,10 @@ export type SelectProps = {
   codeListLabelId?: string;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function openOptions(options: SelectOption[]) {
-  const optionsStr = options.map((option) => option.label).join('\n');
-  console.log(optionsStr);
+  // NOSONAR: Keep for future use
+  // const optionsStr = options.map((option) => option.label).join('\n');
 }
 
 export function Select({

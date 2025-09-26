@@ -17,19 +17,9 @@ export function ErrorIllustration({
   illustrationName,
 }: ErrorIllustrationProps) {
   const illustration = Illustrations[illustrationName];
-
-  if (!illustration) {
-    console.log(
-      `ErrorIllustration: Illustration ${illustrationName} not found`,
-    );
-    return null;
-  }
-
   const backgroundElement = Backgrounds[backgroundShape];
-  if (!backgroundElement) {
-    console.log(
-      `ErrorIllustration: Background shape "${backgroundShape}" for illustration ${illustrationName} not found`,
-    );
+
+  if (!illustration || !backgroundElement) {
     return null;
   }
 

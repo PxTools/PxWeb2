@@ -586,7 +586,7 @@ export function Selection({
       <NavigationDrawer
         ref={hideMenuRef}
         heading={t(
-          `presentation_page.sidemenu.${selectedNavigationView}.title`,
+          `presentation_page.side_menu.${selectedNavigationView}.title`,
         )}
         onClose={(keyboard, view) =>
           setSelectedNavigationView(keyboard, true, view)

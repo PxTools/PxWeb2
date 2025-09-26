@@ -17,68 +17,70 @@ vi.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string, opts?: Record<string, unknown>) => {
       // Save to file
-      if (key === 'presentation_page.sidemenu.save.file.title') {
+      if (key === 'presentation_page.side_menu.save.file.title') {
         return 'Save to file';
       }
-      if (key === 'presentation_page.sidemenu.save.file.formats.excel') {
+      if (key === 'presentation_page.side_menu.save.file.formats.excel') {
         return 'Excel';
       }
-      if (key === 'presentation_page.sidemenu.save.file.formats.csv') {
+      if (key === 'presentation_page.side_menu.save.file.formats.csv') {
         return 'CSV';
       }
-      if (key === 'presentation_page.sidemenu.save.file.formats.px') {
+      if (key === 'presentation_page.side_menu.save.file.formats.px') {
         return 'PX';
       }
-      if (key === 'presentation_page.sidemenu.save.file.formats.jsonstat2') {
+      if (key === 'presentation_page.side_menu.save.file.formats.jsonstat2') {
         return 'JSON-stat 2';
       }
-      if (key === 'presentation_page.sidemenu.save.file.formats.html') {
+      if (key === 'presentation_page.side_menu.save.file.formats.html') {
         return 'HTML';
       }
-      if (key === 'presentation_page.sidemenu.save.file.formats.parquet') {
+      if (key === 'presentation_page.side_menu.save.file.formats.parquet') {
         return 'Parquet';
       }
-      if (key === 'presentation_page.sidemenu.save.file.loading_announcement') {
+      if (
+        key === 'presentation_page.side_menu.save.file.loading_announcement'
+      ) {
         return 'Export is taking longer than usual';
       }
-      if (key === 'presentation_page.sidemenu.save.savequery.title') {
+      if (key === 'presentation_page.side_menu.save.savequery.title') {
         return 'Save Query';
       }
-      if (key === 'presentation_page.sidemenu.save.savequery.info') {
+      if (key === 'presentation_page.side_menu.save.savequery.info') {
         return 'Save your query for later use.';
       }
-      if (key === 'presentation_page.sidemenu.save.savequery.radioLegend') {
+      if (key === 'presentation_page.side_menu.save.savequery.radio_legend') {
         return 'Period options';
       }
       if (
         key ===
-        'presentation_page.sidemenu.save.savequery.periodOptions.selected'
+        'presentation_page.side_menu.save.savequery.period_options.selected'
       ) {
         return 'Selected';
       }
       if (
-        key === 'presentation_page.sidemenu.save.savequery.periodOptions.from'
+        key === 'presentation_page.side_menu.save.savequery.period_options.from'
       ) {
         return 'From';
       }
       if (
-        key === 'presentation_page.sidemenu.save.savequery.periodOptions.top'
+        key === 'presentation_page.side_menu.save.savequery.period_options.top'
       ) {
         return 'Top';
       }
-      if (key === 'presentation_page.sidemenu.save.savequery.createButton') {
+      if (key === 'presentation_page.side_menu.save.savequery.create_button') {
         return 'Create';
       }
-      if (key === 'presentation_page.sidemenu.save.savequery.copyButton') {
+      if (key === 'presentation_page.side_menu.save.savequery.copy_button') {
         return 'Copy';
       }
-      if (key === 'presentation_page.sidemenu.save.savequery.copiedButton') {
+      if (key === 'presentation_page.side_menu.save.savequery.copied_button') {
         return 'Copied';
       }
-      if (key === 'presentation_page.sidemenu.save.savequery.copyStatus') {
+      if (key === 'presentation_page.side_menu.save.savequery.copy_status') {
         return `Copied: ${opts?.url}`;
       }
-      if (key === 'presentation_page.sidemenu.save.savequery.createStatus') {
+      if (key === 'presentation_page.side_menu.save.savequery.create_status') {
         return `Created: ${opts?.query}`;
       }
       return key;

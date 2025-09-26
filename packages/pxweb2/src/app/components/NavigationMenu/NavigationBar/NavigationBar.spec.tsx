@@ -29,7 +29,7 @@ describe('NavigationBar', () => {
     const navbar = baseElement;
 
     expect(
-      getByText(navbar, 'presentation_page.sidemenu.selection.title'),
+      getByText(navbar, 'presentation_page.side_menu.selection.title'),
     ).toBeTruthy();
   });
 
@@ -44,19 +44,19 @@ describe('NavigationBar', () => {
     );
     const navbar = baseElement;
     expect(
-      getByText(navbar, 'presentation_page.sidemenu.selection.title'),
+      getByText(navbar, 'presentation_page.side_menu.selection.title'),
     ).toBeTruthy();
     expect(
-      getByText(navbar, 'presentation_page.sidemenu.view.title'),
+      getByText(navbar, 'presentation_page.side_menu.view.title'),
     ).toBeTruthy();
     expect(
-      getByText(navbar, 'presentation_page.sidemenu.edit.title'),
+      getByText(navbar, 'presentation_page.side_menu.edit.title'),
     ).toBeTruthy();
     expect(
-      getByText(navbar, 'presentation_page.sidemenu.save.title'),
+      getByText(navbar, 'presentation_page.side_menu.save.title'),
     ).toBeTruthy();
     expect(
-      getByText(navbar, 'presentation_page.sidemenu.help.title'),
+      getByText(navbar, 'presentation_page.side_menu.help.title'),
     ).toBeTruthy();
   });
 
@@ -79,7 +79,7 @@ describe('NavigationBar', () => {
     expect(
       getByText(
         selectionButton as HTMLElement,
-        'presentation_page.sidemenu.selection.title',
+        'presentation_page.side_menu.selection.title',
       ),
     ).toBeTruthy();
   });

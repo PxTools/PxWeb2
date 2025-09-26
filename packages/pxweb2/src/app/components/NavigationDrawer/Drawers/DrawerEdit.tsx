@@ -32,7 +32,7 @@ function PivotButton({ stub, heading }: PivotButtonProps) {
 
     const { firstTitlePart, lastTitlePart } = buildTableTitle(stub, heading);
     const message = t(
-      'presentation_page.sidemenu.edit.customize.pivot.screen_reader_announcement',
+      'presentation_page.side_menu.edit.customize.pivot.screen_reader_announcement',
       {
         first_variables: firstTitlePart,
         last_variable: lastTitlePart,
@@ -50,9 +50,9 @@ function PivotButton({ stub, heading }: PivotButtonProps) {
   return (
     <>
       <ActionItem
-        label={t('presentation_page.sidemenu.edit.customize.pivot.title')}
+        label={t('presentation_page.side_menu.edit.customize.pivot.title')}
         ariaLabel={t(
-          'presentation_page.sidemenu.edit.customize.pivot.aria_label',
+          'presentation_page.side_menu.edit.customize.pivot.aria_label',
         )}
         onClick={handleClick}
         iconName="ArrowCirclepathClockwise"
@@ -69,7 +69,7 @@ export function DrawerEdit() {
   const { t } = useTranslation();
 
   return (
-    <ContentBox title={t('presentation_page.sidemenu.edit.customize.title')}>
+    <ContentBox title={t('presentation_page.side_menu.edit.customize.title')}>
       {data && <PivotButton stub={data.stub} heading={data.heading} />}
       <Alert variant="info" className={classes.alert}>
         {t('common.status_messages.drawer_edit')}

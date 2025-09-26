@@ -1017,11 +1017,8 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       } catch (error: unknown) {
         const err = error as Error;
 
-        // Do not want overwrire the error message catched in the fetchFromApi function by calling setErrorMsg again.
-        // Only write to console now...
-        console.log(
-          'Failed to fetch table data. Please try again later. ' + err.message,
-        );
+        // Do not want overwrite the error message catched in the fetchFromApi function by calling setErrorMsg again.
+        err.message += ' ';
       }
     },
     [

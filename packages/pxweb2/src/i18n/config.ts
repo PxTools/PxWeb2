@@ -28,7 +28,8 @@ const initPromise = i18n
     defaultNS,
     // Explicitly tell i18next our supported locales.
     supportedLngs: supportedLanguages,
-    debug: true,
+    // Disable i18next debug logging to prevent noisy console output.
+    debug: false,
     interpolation: {
       escapeValue: false,
     },

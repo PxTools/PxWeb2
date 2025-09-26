@@ -27,7 +27,7 @@ describe('NavigationRail', () => {
     );
 
     expect(
-      getByText(baseElement, 'presentation_page.sidemenu.selection.title'),
+      getByText(baseElement, 'presentation_page.side_menu.selection.title'),
     ).toBeTruthy();
   });
 
@@ -42,19 +42,19 @@ describe('NavigationRail', () => {
     );
 
     expect(
-      getByText(baseElement, 'presentation_page.sidemenu.selection.title'),
+      getByText(baseElement, 'presentation_page.side_menu.selection.title'),
     ).toBeTruthy();
     expect(
-      getByText(baseElement, 'presentation_page.sidemenu.view.title'),
+      getByText(baseElement, 'presentation_page.side_menu.view.title'),
     ).toBeTruthy();
     expect(
-      getByText(baseElement, 'presentation_page.sidemenu.edit.title'),
+      getByText(baseElement, 'presentation_page.side_menu.edit.title'),
     ).toBeTruthy();
     expect(
-      getByText(baseElement, 'presentation_page.sidemenu.save.title'),
+      getByText(baseElement, 'presentation_page.side_menu.save.title'),
     ).toBeTruthy();
     expect(
-      getByText(baseElement, 'presentation_page.sidemenu.help.title'),
+      getByText(baseElement, 'presentation_page.side_menu.help.title'),
     ).toBeTruthy();
   });
 
@@ -75,7 +75,7 @@ describe('NavigationRail', () => {
     expect(
       getByText(
         selectionButton as HTMLElement,
-        'presentation_page.sidemenu.selection.title',
+        'presentation_page.side_menu.selection.title',
       ),
     ).toBeTruthy();
   });
