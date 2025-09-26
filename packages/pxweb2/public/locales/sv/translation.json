@@ -97,6 +97,11 @@
         "term": "Termin",
         "weekly": "Vecka",
         "other": "Annan"
+      },
+      "status": {
+        "title": "Status",
+        "updating": "Uppdateras",
+        "not_updating": "Uppdateras inte längre"
       }
     },
     "table": {
