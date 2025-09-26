@@ -2,10 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CodeListType } from './CodeListType';
+import type { CodelistType } from './CodelistType';
 import type { Link } from './Link';
 import type { ValueMap } from './ValueMap';
-export type CodeListResponse = {
+export type CodelistResponse = {
     /**
      * The identiyer for the codelist
      */
@@ -30,7 +30,7 @@ export type CodeListResponse = {
      * The value code that should be used for elimination. If not set the variable will be eliminated by summing up all values.
      */
     eliminationValueCode?: string;
-    type: CodeListType;
+    type: CodelistType;
     values: Array<ValueMap>;
     links: Array<Link>;
 };

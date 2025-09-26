@@ -300,11 +300,11 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
         variableCode: id,
         valueCodes: valCodes,
       };
-      const selectedCodeList = variables.getSelectedCodelistById(id);
+      const selectedCodelist = variables.getSelectedCodelistById(id);
 
       // Add selected codelist to selection if it exists
-      if (selectedCodeList) {
-        selection.codeList = selectedCodeList;
+      if (selectedCodelist) {
+        selection.codeList = selectedCodelist;
       }
 
       selections.push(selection);

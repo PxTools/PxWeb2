@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { CodeList } from '../../shared-types/codelist';
+import { Codelist } from '../../shared-types/codelist';
 import { SelectOption } from '../Select/SelectOptionType';
 import { sortSelectOptionsGroupingsLast, mapAndSortCodeLists } from './utils';
 
@@ -77,7 +77,7 @@ describe('mapAndSortCodeLists', () => {
   });
 
   it('should map codeLists to select options without sorting if no sorting is needed', () => {
-    const codeLists: CodeList[] = [
+    const codeLists: Codelist[] = [
       { id: 'test_1', label: 'Test 1' },
       { id: 'test_2', label: 'Test 2' },
     ];
@@ -91,7 +91,7 @@ describe('mapAndSortCodeLists', () => {
   });
 
   it('should map and sort codeLists if sorting is needed', () => {
-    const codeLists: CodeList[] = [
+    const codeLists: Codelist[] = [
       { id: 'agg_test', label: 'AGG Test' },
       { id: 'vs_test', label: 'VS Test' },
     ];

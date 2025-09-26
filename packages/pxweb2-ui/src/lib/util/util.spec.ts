@@ -5,7 +5,7 @@ import {
   mapCodeListToSelectOption,
   mapCodeListsToSelectOptions,
 } from './util';
-import { CodeList } from '../shared-types/codelist';
+import { Codelist } from '../shared-types/codelist';
 import { SelectOption } from '../components/Select/SelectOptionType';
 
 describe('getCSSVariable', () => {
@@ -24,8 +24,8 @@ describe('getCSSVariable', () => {
 });
 
 describe('mapCodeListToSelectOption', () => {
-  it('should map a CodeList to a SelectOption', () => {
-    const codeList: CodeList = { id: '1', label: 'Option 1' };
+  it('should map a Codelist to a SelectOption', () => {
+    const codeList: Codelist = { id: '1', label: 'Option 1' };
     const result: SelectOption = mapCodeListToSelectOption(codeList);
 
     expect(result).toEqual({ label: 'Option 1', value: '1' });
@@ -34,7 +34,7 @@ describe('mapCodeListToSelectOption', () => {
 
 describe('mapCodeListsToSelectOptions', () => {
   it('should map an array of CodeLists to an array of SelectOptions', () => {
-    const codeLists: CodeList[] = [
+    const codeLists: Codelist[] = [
       { id: '1', label: 'Option 1' },
       { id: '2', label: 'Option 2' },
     ];

@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 
 import {
   ApiError,
-  TableService,
+  TablesService,
   SavedQueriesService,
   SelectionResponse,
   PathElement,
@@ -64,7 +64,7 @@ function addValueToNewVariable(
 ) {
   const newSelectedValues = [
     ...selectedValuesArr,
-    { id: varId, selectedCodeList: undefined, values: [value] },
+    { id: varId, selectedCodelist: undefined, values: [value] },
   ];
 
   return newSelectedValues;
@@ -83,13 +83,13 @@ function removeValueOfVariable(
         if (
           hasMultipleValuesSelected ||
           (!hasMultipleValuesSelected &&
-            variable.selectedCodeList !== undefined)
+            variable.selectedCodelist !== undefined)
         ) {
           variable.values = variable.values.filter((val) => val !== value);
         }
         if (
           !hasMultipleValuesSelected &&
-          variable.selectedCodeList === undefined
+          variable.selectedCodelist === undefined
         ) {
           return null;
         }
@@ -132,7 +132,7 @@ function addMultipleValuesToVariable(
       ...selectedValuesArr,
       {
         id: varId,
-        selectedCodeList: undefined,
+        selectedCodelist: undefined,
         values: valuesToAdd
           .filter((v) => searchedValues.includes(v))
           .map((value) => value.code),
@@ -171,7 +171,7 @@ function removeMultipleValuesToVariable(
       ...selectedValuesArr,
       {
         id: varId,
-        selectedCodeList: undefined,
+        selectedCodelist: undefined,
         values: valuesToAdd
           .filter((v) => searchedValues.includes(v))
           .map((value) => value.code),
@@ -189,14 +189,14 @@ function removeAllValuesOfVariable(
   const newValues: SelectedVBValues[] = selectedValuesArr
     .map((variable) => {
       if (variable.id === varId) {
-        if (variable.selectedCodeList !== undefined) {
+        if (variable.selectedCodelist !== undefined) {
           return {
             id: varId,
-            selectedCodeList: variable.selectedCodeList,
+            selectedCodelist: variable.selectedCodelist,
             values: [],
           };
         }
-        if (variable.selectedCodeList === undefined) {
+        if (variable.selectedCodelist === undefined) {
           return null;
         }
       }
@@ -297,13 +297,13 @@ export function Selection({
 
     // Make parallel calls to getMetadataById and getTableById
     Promise.all([
-      TableService.getMetadataById(
+      TablesService.getMetadataById(
         selectedTabId,
         i18n.resolvedLanguage,
         metaDataDefaultSelection,
         savedQueryId,
       ),
-      TableService.getTableById(selectedTabId, i18n.resolvedLanguage),
+      TablesService.getTableById(selectedTabId, i18n.resolvedLanguage),
     ])
       .then(([Dataset, TableData]) => {
         const pxTable: PxTable = mapJsonStat2Response(Dataset, false);
@@ -347,7 +347,7 @@ export function Selection({
           ).filter(
             (variable) =>
               variable.values.length > 0 ||
-              variable.selectedCodeList !== undefined,
+              variable.selectedCodelist !== undefined,
           );
           setSelectedVBValues(initialSelection);
           variables.syncVariablesAndValues(initialSelection);
@@ -386,7 +386,7 @@ export function Selection({
           i18n.resolvedLanguage,
         );
       } else {
-        response = await TableService.getDefaultSelection(
+        response = await TablesService.getDefaultSelection(
           selectedTabId,
           i18n.resolvedLanguage,
         );
@@ -397,7 +397,7 @@ export function Selection({
     return response;
   }
 
-  async function handleCodeListChange(
+  async function handleCodelistChange(
     selectedItem: SelectOption,
     varId: string,
   ) {
@@ -420,14 +420,14 @@ export function Selection({
 
     const isNewCodelist =
       prevSelectedValues?.find((variable) => variable.id === varId)
-        ?.selectedCodeList !== selectedItem?.value;
+        ?.selectedCodelist !== selectedItem?.value;
 
     if (!isNewCodelist) {
       return; // No change in codelist selection
     }
 
     // Collect selected codelists for all variables, including the newly selected one
-    const selectedCodeLists = getSelectedCodelists(
+    const selectedCodelists = getSelectedCodelists(
       prevSelectedValues,
       selectedItem,
       varId,
@@ -436,12 +436,12 @@ export function Selection({
     setIsFadingVariableList(true);
 
     // Get table metadata in the new codelist context
-    TableService.getMetadataById(
+    TablesService.getMetadataById(
       selectedTabId,
       i18n.resolvedLanguage,
       false,
       '',
-      selectedCodeLists,
+      selectedCodelists,
     )
       .then((Dataset) => {
         const pxTable: PxTable = mapJsonStat2Response(Dataset, false);
@@ -573,7 +573,7 @@ export function Selection({
       hasLoadedDefaultSelection={hasLoadedInitialSelection}
       isChangingCodeList={isFadingVariableList}
       isTablet={isTablet}
-      handleCodeListChange={handleCodeListChange}
+      handleCodeListChange={handleCodelistChange}
       handleCheckboxChange={handleCheckboxChange}
       handleMixedCheckboxChange={handleMixedCheckboxChange}
       addModal={addModal}

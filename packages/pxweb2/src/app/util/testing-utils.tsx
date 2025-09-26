@@ -28,7 +28,7 @@ function mockTableService() {
         HTML: 'HTML',
         PARQUET: 'PARQUET',
       },
-      TableService: {
+      TablesService: {
         getTableById: vi.fn().mockResolvedValue({
           id: 'TAB638',
           label:
@@ -50,7 +50,7 @@ function mockTableService() {
             },
           ],
         }),
-        getTableCodeListById: vi.fn().mockResolvedValue({
+        getTableCodelistById: vi.fn().mockResolvedValue({
           id: 'vs_RegionLän07',
           label: 'County',
           language: 'en',

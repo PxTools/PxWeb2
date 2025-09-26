@@ -2,8 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CodeListInformation } from './CodeListInformation';
+import type { CodelistInformation } from './CodelistInformation';
 /**
  * Available codelists for this dimension
  */
-export type CodeLists = Array<CodeListInformation>;
+export type Codelists = Array<CodelistInformation>;

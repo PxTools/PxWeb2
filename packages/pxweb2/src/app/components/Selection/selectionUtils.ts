@@ -17,22 +17,22 @@ export function updateSelectedCodelistForVariable(
     (variable) => variable.id === varId,
   );
 
-  const newSelectedCodeList = currentVariableMetadata?.codeLists?.find(
+  const newSelectedCodelist = currentVariableMetadata?.codeLists?.find(
     (codelist) => codelist.id === selectedItem.value,
   );
 
-  if (!newSelectedCodeList) {
+  if (!newSelectedCodelist) {
     return;
   }
 
-  const newMappedSelectedCodeList =
-    mapCodeListToSelectOption(newSelectedCodeList);
+  const newMappedSelectedCodelist =
+    mapCodeListToSelectOption(newSelectedCodelist);
 
-  const newSelectedValues = addSelectedCodeListToVariable(
+  const newSelectedValues = addSelectedCodelistToVariable(
     currentSelectedVariable,
     prevSelectedValues,
     varId,
-    newMappedSelectedCodeList,
+    newMappedSelectedCodelist,
   );
 
   return applyMandatoryDefaultsForVariable(
@@ -68,7 +68,7 @@ function applyMandatoryDefaultsForVariable(
   });
 }
 
-export function addSelectedCodeListToVariable(
+export function addSelectedCodelistToVariable(
   currentVariable: SelectedVBValues | undefined,
   selectedValuesArr: SelectedVBValues[],
   varId: string,
@@ -81,7 +81,7 @@ export function addSelectedCodeListToVariable(
       if (variable.id === varId) {
         return {
           ...variable,
-          selectedCodeList: selectedItem.value,
+          selectedCodelist: selectedItem.value,
           values: [], // Always reset values when changing codelist
         };
       }
@@ -94,7 +94,7 @@ export function addSelectedCodeListToVariable(
       ...selectedValuesArr,
       {
         id: varId,
-        selectedCodeList: selectedItem.value,
+        selectedCodelist: selectedItem.value,
         values: [],
       },
     ];
@@ -110,20 +110,20 @@ export function getSelectedCodelists(
 ): Record<string, string> {
   // Get table metadata in the new codelist context
   // Collect selected codelists for all variables, including the newly selected one
-  const selectedCodeLists: Record<string, string> = {};
+  const selectedCodelists: Record<string, string> = {};
 
   // Add existing selected codelists
   prevSelectedValues.forEach((variable) => {
-    if (variable.selectedCodeList) {
-      selectedCodeLists[variable.id] = variable.selectedCodeList;
+    if (variable.selectedCodelist) {
+      selectedCodelists[variable.id] = variable.selectedCodelist;
     }
   });
 
   // Add/overwrite with the newly selected codelist for this variable
-  // selectedCodeLists[varId] = newMappedSelectedCodeList.value;
+  // selectedCodelists[varId] = newMappedSelectedCodelist.value;
   if (selectedItem) {
-    selectedCodeLists[varId] = selectedItem.value;
+    selectedCodelists[varId] = selectedItem.value;
   }
 
-  return selectedCodeLists;
+  return selectedCodelists;
 }

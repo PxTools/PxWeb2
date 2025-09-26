@@ -134,12 +134,12 @@ const selectedVBValues: SelectedVBValues[] = [
   {
     id: 'Region',
     values: ['R_1', 'R_2'],
-    selectedCodeList: '',
+    selectedCodelist: '',
   },
-  { id: 'Alder', values: ['1', '2'], selectedCodeList: '' },
-  { id: 'Civilstatus', values: ['CS_1', 'CS_2'], selectedCodeList: '' },
-  { id: 'Kon', values: ['G_1'], selectedCodeList: '' },
-  { id: 'TIME', values: ['1968', '1969'], selectedCodeList: '' },
+  { id: 'Alder', values: ['1', '2'], selectedCodelist: '' },
+  { id: 'Civilstatus', values: ['CS_1', 'CS_2'], selectedCodelist: '' },
+  { id: 'Kon', values: ['G_1'], selectedCodelist: '' },
+  { id: 'TIME', values: ['1968', '1969'], selectedCodelist: '' },
 ];
 
 const noteInfo =
