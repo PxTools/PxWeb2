@@ -1,7 +1,8 @@
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { render, screen, fireEvent, within } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import { vi } from 'vitest';
+import userEvent from '@testing-library/user-event';
 
 import { FilterSidebar } from './FilterSidebar';
 import { FilterContext } from '../../context/FilterContext';
@@ -56,7 +57,7 @@ vi.mock('@pxweb2/pxweb2-ui', () => ({
     </label>
   ),
   Search: () => <div data-testid="search-stub" />,
-  SearchSelect: (props: any) => (
+  SearchSelect: (props: { label: string; value: string }) => (
     <div
       data-testid="searchselect-stub"
       aria-label={props?.label ?? 'SearchSelect'}
@@ -121,7 +122,7 @@ const renderWithFilterContext = (state: TestState, dispatch = vi.fn()) => {
 };
 
 describe('FilterSidebar - Status filter', () => {
-  it('viser IKKE "Status"-seksjonen når ingen tabeller er discontinued', () => {
+  it('does NOT render the "Status" section when no tables are discontinued', () => {
     const state = makeBaseState({
       availableTables: [
         { id: 'a', discontinued: false },
@@ -145,7 +146,7 @@ describe('FilterSidebar - Status filter', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('viser "Status"-seksjonen når minst én tabell er discontinued', () => {
+  it('renders the "Status" section when at least one table is discontinued', () => {
     const state = makeBaseState({
       availableTables: [
         { id: 'a', discontinued: false },
@@ -175,34 +176,74 @@ describe('FilterSidebar - Status filter', () => {
     ).toBeInTheDocument();
   });
 
-  /* it('kryss av "not_updating" -> dispatcher ADD_FILTER og avkrysse -> REMOVE_FILTER', () => {
+  it('avkrysser "not_updating" når aktiv -> dispatcher REMOVE_FILTER', async () => {
     const state = makeBaseState({
-      availableTables: [{ id: 'b', discontinued: true }],
-      activeFilters: [],
+      availableTables: [{ id: 'B', discontinued: true }],
+      activeFilters: [
+        {
+          type: 'status',
+          value: 'discontinued',
+          label: 'start_page.filter.status.not_updating',
+          index: 1,
+        },
+      ],
       availableFilters: {
         subjectTree: [],
         timeUnits: new Map(),
         variables: new Map(),
-        status: new Map<StatusKey, number>([
+        status: new Map([
           ['active', 0],
           ['discontinued', 3],
         ]),
       },
     });
+
     const dispatch = vi.fn();
+    const user = userEvent.setup();
 
     renderWithFilterContext(state, dispatch);
 
-    const discontinuedLabel = screen.getByText(
-      'start_page.filter.status.not_updating (3)',
-    );
-    // Finn label-kontaineren og så checkboxen
-    const discontinuedBox = within(
-      discontinuedLabel.closest('label')!,
-    ).getByRole('checkbox');
+    const box = screen.getByRole('checkbox', {
+      name: /start_page\.filter\.status\.not_updating(?:\s*\(\s*3\s*\))?/i,
+    });
 
-    // På
-    fireEvent.click(discontinuedBox);
+    // Ett klikk når den er aktiv -> REMOVE
+    await user.click(box);
+
+    expect(dispatch).toHaveBeenCalledWith({
+      type: ActionType.REMOVE_FILTER,
+      payload: { type: 'status', value: 'discontinued' },
+    });
+  });
+
+  // Når "not_updating" er inaktiv -> ett klikk skal ADD_FILTER
+  it('unchecks "not_updating" when active -> dispatches REMOVE_FILTER', async () => {
+    const state = makeBaseState({
+      availableTables: [{ id: 'B', discontinued: true }],
+      activeFilters: [],
+      availableFilters: {
+        subjectTree: [],
+        timeUnits: new Map(),
+        variables: new Map(),
+        status: new Map([
+          ['active', 0],
+          ['discontinued', 3],
+        ]),
+      },
+    });
+
+    const dispatch = vi.fn();
+    const user = userEvent.setup();
+
+    renderWithFilterContext(state, dispatch);
+
+    const box = screen.getByRole('checkbox', {
+      name: /start_page\.filter\.status\.not_updating(?:\s*\(\s*3\s*\))?/i,
+    });
+
+    // Ett klikk når den er inaktiv -> ADD
+    await user.click(box);
+
     expect(dispatch).toHaveBeenCalledWith({
       type: ActionType.ADD_FILTER,
       payload: [
@@ -214,16 +255,9 @@ describe('FilterSidebar - Status filter', () => {
         },
       ],
     });
+  });
 
-    // Av
-    fireEvent.click(discontinuedBox);
-    expect(dispatch).toHaveBeenCalledWith({
-      type: ActionType.REMOVE_FILTER,
-      payload: { type: 'status', value: 'discontinued' },
-    });
-  }); */
-
-  it('kryss av "updating" -> dispatcher ADD_FILTER', () => {
+  it('checks "not_updating" when inactive -> dispatches ADD_FILTER', () => {
     const state = makeBaseState({
       availableTables: [{ id: 'x', discontinued: true }],
       availableFilters: {
@@ -263,10 +297,8 @@ describe('FilterSidebar - Status filter', () => {
   });
 });
 
-describe('FilterSidebar – TimeUnit filter', () => {
-  it('renderer tilgjengelige timeUnits, viser count og toggler ADD/REMOVE', () => {
-    // I komponenten hentes "allTimeUnits" fra availableTables og sorteres via sortTimeUnit
-    // og count hentes fra state.availableFilters.timeUnits. (FilterSidebar.tsx)
+describe('FilterSidebar - TimeUnit filter', () => {
+  it('renders available timeUnits, shows count and toggles ADD/REMOVE', () => {
     const state = makeBaseState({
       availableTables: [
         { id: 't1', timeUnit: 'Annual' },
@@ -290,12 +322,10 @@ describe('FilterSidebar – TimeUnit filter', () => {
 
     renderWithFilterContext(state, dispatch);
 
-    // Header for seksjonen
     expect(
       screen.getByRole('heading', { name: 'start_page.filter.timeUnit' }),
     ).toBeInTheDocument();
 
-    // Etiketter inkl. count (label oversettes med nøkkel "start_page.filter.frequency.<lowercase>")
     const annual = screen.getByText('start_page.filter.frequency.annual (2)');
     const monthly = screen.getByText('start_page.filter.frequency.monthly (1)');
 
