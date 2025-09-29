@@ -13,7 +13,7 @@ interface HeaderProps {
 
 function MainLogo() {
   const { t } = useTranslation();
-  const srcPath = './images/logo.svg';
+  const srcPath = './images/pxweb-dark.svg';
 
   return (
     <img
