@@ -37,6 +37,7 @@ import { getAllTables } from '../../util/tableHandler';
 import { tableListIsReadyToRender } from '../../util/startPageRender';
 import useFilterUrlSync from '../../util/hooks/useFilterUrlSync';
 import StartpageDetails from '../../components/StartPageDetails/StartPageDetails';
+import WipStatusMessage from '../../components/Banners/WipStatusMessage';
 
 const StartPage = () => {
   const { t, i18n } = useTranslation();
@@ -532,6 +533,7 @@ const StartPage = () => {
 
   return (
     <>
+      <WipStatusMessage />
       <Header stroke={true} />
       <div className={styles.startPage}>
         <div className={styles.container}>
