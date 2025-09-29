@@ -19,9 +19,9 @@
     &:hover {
       background: var(--px-color-surface-subtle) !important;
 
-      th {
-        background: var(--px-color-surface-subtle) !important;
-      }
+      // th {
+      //   background: var(--px-color-surface-subtle) !important;
+      // }
     }
   }
 
@@ -259,17 +259,30 @@
   background-color: #eee;
 }
 
-// column highlight on hover
+// // column highlight on hover
+// @mixin column-hover($max) {
+//   @for $i from 1 through $max {
+//     .table:has(td:nth-child(#{$i}):hover),
+//     .table:has(th:nth-child(#{$i}):hover) {
+//       tbody td:nth-child(#{$i}),
+//       thead th:nth-child(#{$i}) {
+//         background: var(--px-color-surface-subtle) !important;
+//       }
+//     }
+//   }
+// }
+
 @mixin column-hover($max) {
   @for $i from 1 through $max {
+    /* Detect hover on either a body cell or a header cell in column $i */
     .table:has(td:nth-child(#{$i}):hover),
     .table:has(th:nth-child(#{$i}):hover) {
-      tbody td:nth-child(#{$i}),
-      thead th:nth-child(#{$i}) {
+      tbody td:nth-child(#{$i}) {
         background: var(--px-color-surface-subtle) !important;
       }
     }
   }
 }
+
 
 @include column-hover(40);
