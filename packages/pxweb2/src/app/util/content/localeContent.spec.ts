@@ -18,7 +18,12 @@ beforeEach(async () => {
   const mod = await import('./localeContent');
   fetchLocaleContent = mod.fetchLocaleContent;
 
-  (globalThis as any).fetch = vi.fn() as FetchMock;
+  // Type-safe way to mock global fetch
+  Object.defineProperty(globalThis, 'fetch', {
+    value: vi.fn() as FetchMock,
+    writable: true,
+    configurable: true,
+  });
 });
 
 afterEach(() => {
@@ -54,6 +59,7 @@ describe('fetchLocaleContent', () => {
 
     const no2 = await fetchLocaleContent('no');
     const en2 = await fetchLocaleContent('en');
+
     expect(no2).toEqual({ title: 'Startside NO' });
     expect(en2).toEqual({ title: 'Homepage EN' });
     expect(globalThis.fetch).toHaveBeenCalledTimes(2);
