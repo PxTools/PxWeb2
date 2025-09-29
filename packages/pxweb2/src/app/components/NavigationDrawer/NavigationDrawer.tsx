@@ -25,7 +25,7 @@ export const NavigationDrawer = forwardRef<
 >(({ children, heading, view, openedWithKeyboard, onClose }, ref) => {
   const { t } = useTranslation();
   const { addModal, removeModal } = useAccessibility();
-  const { skipToMainFocused } = useApp();
+  const { skipToMainFocused, isBannerDismissed } = useApp();
 
   React.useEffect(() => {
     addModal('NavigationDrawer', () => {
@@ -75,6 +75,7 @@ export const NavigationDrawer = forwardRef<
       <div
         className={cl(styles.navigationDrawer, styles.fadein, {
           [styles.skipToMainContentVisible]: skipToMainFocused,
+          [styles.bannerVisible]: isBannerDismissed === false,
         })}
         role="region"
         aria-label={heading}

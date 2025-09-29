@@ -82,6 +82,18 @@
       // Calculate position of NavigationDrawer below the header and SkipToMainContent
       top: calc(fixed.$spacing-22 + var(--skip-to-main-content-height));
     }
+
+    &.bannerVisible {
+      top: calc(fixed.$spacing-22 + var(--banner-height));
+    }
+
+    &.skipToMainContentVisible.bannerVisible {
+      // Calculate position of NavigationDrawer below the header, SkipToMainContent and banner
+      top: calc(
+        fixed.$spacing-22 + var(--skip-to-main-content-height) +
+          var(--banner-height)
+      );
+    }
   }
 
   // xlarge and xxlarge
