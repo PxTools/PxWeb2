@@ -9,6 +9,7 @@ import { useLocaleContent } from '../../util/hooks/useLocaleContent';
 
 type FooterProps = {
   containerRef?: React.RefObject<HTMLDivElement | null>;
+  variant?: 'startpage' | 'tableview';
 };
 
 export function scrollToTop(ref?: React.RefObject<HTMLDivElement | null>) {
@@ -30,7 +31,10 @@ export function scrollToTop(ref?: React.RefObject<HTMLDivElement | null>) {
   }
 }
 
-export const Footer: React.FC<FooterProps> = ({ containerRef }) => {
+export const Footer: React.FC<FooterProps> = ({
+  containerRef,
+  variant = 'tableview',
+}) => {
   const { i18n, t } = useTranslation();
   const config = getConfig();
   const content = useLocaleContent(
@@ -41,8 +45,11 @@ export const Footer: React.FC<FooterProps> = ({ containerRef }) => {
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
 
   return (
-    <footer className={styles.footerContainer} ref={scrollContainerRef}>
-      <div className={cl(styles.footer)}>
+    <footer
+      className={cl(styles.footerContainer, styles[`variant--${variant}`])}
+      ref={scrollContainerRef}
+    >
+      <div className={styles.footer}>
         <div className={cl(styles.footerContent)}>
           <div className={cl(styles.logoAndLinks)}>
             <div className={cl(styles.footerLinks)}>

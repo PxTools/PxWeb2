@@ -29,6 +29,19 @@
     padding: fixed.$spacing-11 fixed.$spacing-11 fixed.$spacing-24
       fixed.$spacing-11;
   }
+
+  &.variant--startpage {
+    background: var(--px-color-surface-moderate);
+    // Large
+    @media (min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width) {
+      padding: fixed.$spacing-10;
+    }
+
+    // XLarge
+    @media (min-width: fixed.$breakpoints-xlarge-min-width) and (max-width: fixed.$breakpoints-xlarge-max-width) {
+      padding: fixed.$spacing-11;
+    }
+  }
 }
 
 .footer {

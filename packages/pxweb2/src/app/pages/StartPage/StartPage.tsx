@@ -731,7 +731,7 @@ const StartPage = () => {
         </div>
         {renderTableListSEO()}
       </main>
-      <Footer />
+      <Footer variant="startpage" />
     </>
   );
 };
