@@ -20,6 +20,7 @@ import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import { VariablesProvider } from '../../context/VariablesProvider';
 import { TableDataProvider } from '../../context/TableDataProvider';
 import ErrorBoundary from '../../components/ErrorBoundry/ErrorBoundry';
+import WipStatusMessage from '../../components/Banners/WipStatusMessage';
 
 export function TableViewer() {
   const {
@@ -28,6 +29,7 @@ export function TableViewer() {
     isXLargeDesktop,
     skipToMainFocused,
     setSkipToMainFocused,
+    isBannerDismissed,
   } = useApp();
   const config = getConfig();
   const accessibility = useAccessibility();
@@ -45,6 +47,7 @@ export function TableViewer() {
   const [hasFocus, setHasFocus] = useState<NavigationItem>('none');
   const [openedWithKeyboard, setOpenedWithKeyboard] = useState(false);
   const outerContainerRef = useRef<HTMLDivElement | null>(null);
+  const mainContainerRef = useRef<HTMLDivElement | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
 
   const navigationBarRef = useRef<{
@@ -194,10 +197,43 @@ export function TableViewer() {
 
   const isSmallScreen = isTablet === true || isMobile === true;
 
+  const bannerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!bannerRef.current) {
+      //remove inline style for banner height and remove style attribute if empty
+      mainContainerRef.current?.style.removeProperty('--banner-height');
+      if (
+        mainContainerRef.current &&
+        mainContainerRef.current.getAttribute('style') === ''
+      ) {
+        mainContainerRef.current.removeAttribute('style');
+      }
+      return;
+    }
+    const setBannerHeight = () => {
+      const height = bannerRef.current?.offsetHeight || 0;
+      mainContainerRef.current?.style.setProperty(
+        '--banner-height',
+        `${height}px`,
+      );
+    };
+    if (isBannerDismissed === false) {
+      setBannerHeight();
+    }
+    window.addEventListener('resize', setBannerHeight);
+    return () => window.removeEventListener('resize', setBannerHeight);
+  }, [isBannerDismissed]);
+
   return (
     <>
       <SkipToMain ref={skipToMainRef} />
-      {!isSmallScreen && <Header />}
+      {!isSmallScreen && (
+        <>
+          <WipStatusMessage ref={bannerRef} />
+          <Header />
+        </>
+      )}
       {/* tabindex={-1} to fix firefox focusing this div*/}
       <div
         ref={isSmallScreen ? outerContainerRef : undefined}
@@ -206,6 +242,7 @@ export function TableViewer() {
       >
         {isSmallScreen ? (
           <>
+            <WipStatusMessage ref={bannerRef} />
             <Header stroke={true} />
             <NavigationBar
               ref={navigationBarRef}
@@ -221,8 +258,10 @@ export function TableViewer() {
           />
         )}{' '}
         <div
+          ref={mainContainerRef}
           className={cl(styles.mainContainer, {
             [styles.skipToMainContentVisible]: skipToMainFocused,
+            [styles.bannerVisible]: isBannerDismissed === false,
           })}
         >
           <Selection
