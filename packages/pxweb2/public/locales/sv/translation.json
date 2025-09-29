@@ -16,6 +16,11 @@
         "title": "Tyvärr har något blivit fel ",
         "description": "Det har uppstått ett tekniskt fel hos oss. Testa att ladda om sidan eller försök igen om några minuter.",
         "action_text": "Ladda om  sidan"
+      },
+      "no_tables_loaded": {
+        "title": "Kunde inte ladda tabellerna",
+        "description": "Det har uppstått ett tekniskt fel hos oss. Testa att ladda om sidan eller försök igen om några minuter.",
+        "action_text": "Ladda om sidan"
       }
     },
     "skip_to_main": "Gå direkt till huvudinnehållet",
