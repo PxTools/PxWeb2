@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+
 import { Heading, Label } from '@pxweb2/pxweb2-ui';
 import styles from './TopicIcons.module.scss';
 
@@ -17,7 +18,7 @@ export const TopicIcons: React.FC = () => {
         );
         setFiles(svgFiles);
       })
-      .catch((e) => console.error(`Kunne ikke laste ikonliste: ${e.message}`));
+      .catch((e) => console.error(`Could not load icon list: ${e.message}`));
   }, []);
 
   if (!files?.length) {

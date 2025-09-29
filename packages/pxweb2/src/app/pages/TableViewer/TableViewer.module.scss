@@ -10,7 +10,6 @@
   @media (breakpoints.$xsmall) or (breakpoints.$small) or (breakpoints.$medium) {
     flex-direction: column;
     overflow-y: auto;
-    scrollbar-width: thin;
   }
 }
 
@@ -131,7 +130,6 @@
   @media (breakpoints.$large) or (breakpoints.$xlarge) or (breakpoints.$xxlarge) {
     padding-bottom: fixed.$spacing-8;
     overflow-y: auto;
-    scrollbar-width: thin;
     gap: fixed.$spacing-8;
   }
 

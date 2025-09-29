@@ -49,16 +49,21 @@ interface TableDataProviderProps {
 const TableDataContext = createContext<TableDataContextType | undefined>({
   isInitialized: false,
   data: undefined,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  fetchTableData: () => {},
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  fetchSavedQuery: () => {},
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  pivotToMobile: () => {},
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  pivotToDesktop: () => {},
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  pivotCW: () => {},
+  fetchTableData: () => {
+    // No-op: useTableData hook prevents this from being called
+  },
+  fetchSavedQuery: () => {
+    // No-op: useTableData hook prevents this from being called
+  },
+  pivotToMobile: () => {
+    // No-op: useTableData hook prevents this from being called
+  },
+  pivotToDesktop: () => {
+    // No-op: useTableData hook prevents this from being called
+  },
+  pivotCW: () => {
+    // No-op: useTableData hook prevents this from being called
+  },
   buildTableTitle: () => {
     return {
       firstTitlePart: '',

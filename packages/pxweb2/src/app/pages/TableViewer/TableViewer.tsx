@@ -5,7 +5,7 @@ import cl from 'clsx';
 import styles from './TableViewer.module.scss';
 import { Selection } from '../../components/Selection/Selection';
 import { Presentation } from '../../components/Presentation/Presentation';
-import useLocalizeDocumentAttributes from '../../../i18n/useLocalizeDocumentAttributes';
+import ErrorBoundary from '../../components/ErrorBoundary/ErrorBoundary';
 import { Header } from '../../components/Header/Header';
 import { NavigationItem } from '../../components/NavigationMenu/NavigationItem/NavigationItemType';
 import NavigationRail from '../../components/NavigationMenu/NavigationRail/NavigationRail';
@@ -19,7 +19,7 @@ import useApp from '../../context/useApp';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import { VariablesProvider } from '../../context/VariablesProvider';
 import { TableDataProvider } from '../../context/TableDataProvider';
-import ErrorBoundary from '../../components/ErrorBoundry/ErrorBoundry';
+import { ErrorPageTableViewer } from '../ErrorPage/ErrorPage';
 import WipStatusMessage from '../../components/Banners/WipStatusMessage';
 
 export function TableViewer() {
@@ -193,7 +193,6 @@ export function TableViewer() {
       setSelectedNavigationView(newSelectedNavView);
     }
   };
-  useLocalizeDocumentAttributes();
 
   const isSmallScreen = isTablet === true || isMobile === true;
 
@@ -283,7 +282,7 @@ export function TableViewer() {
               isExpanded={isExpanded}
               setIsExpanded={setIsExpanded}
             ></Presentation>
-            <Footer />
+            <Footer containerRef={outerContainerRef} />
           </div>
         </div>
       </div>
@@ -294,7 +293,7 @@ export function TableViewer() {
 function Render() {
   return (
     <AccessibilityProvider>
-      <ErrorBoundary>
+      <ErrorBoundary fallback={<ErrorPageTableViewer />}>
         <VariablesProvider>
           <TableDataProvider>
             <TableViewer />

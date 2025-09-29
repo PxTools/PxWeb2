@@ -13,7 +13,10 @@ import {
 } from '@pxweb2/pxweb2-ui';
 import ContentTop from './ContentTop';
 import { renderWithProviders } from '../../util/testing-utils';
-import { getMandatoryNotesCompressed } from '../../util/notes/notesUtil';
+import {
+  getMandatoryNotesCompressed,
+  MandatoryCompressedUtilityNotesType,
+} from '../../util/notes/notesUtil';
 import * as ContentTopModule from './ContentTop';
 
 function getPxTable(): PxTable {
@@ -202,7 +205,7 @@ describe('ContentTop.createNoteMessage', () => {
   // Mock translation function
   // const t = (key: string) => key;
 
-  const baseNoteInfo = {
+  const baseNoteInfo: MandatoryCompressedUtilityNotesType = {
     numberOfTableNotes: 0,
     tableNotes: '',
     variableNotes: [],
@@ -210,18 +213,18 @@ describe('ContentTop.createNoteMessage', () => {
   const { t } = useTranslation();
   it('returns null if there are no notes', () => {
     const noteInfo = { ...baseNoteInfo };
-    const result = createNoteMessage(noteInfo as any, t);
+    const result = createNoteMessage(noteInfo, t);
     expect(result).toBeNull();
   });
 
   it('returns table notes only if variableNotes is empty and numberOfTableNotes > 0', () => {
-    const noteInfo = {
+    const noteInfo: MandatoryCompressedUtilityNotesType = {
       ...baseNoteInfo,
       numberOfTableNotes: 2,
       tableNotes: 'Table note text',
       variableNotes: [],
     };
-    const result = createNoteMessage(noteInfo as any, t);
+    const result = createNoteMessage(noteInfo, t);
     expect(result).toEqual({
       heading:
         'presentation_page.main_content.about_table.footnotes.mandatory_heading',
@@ -230,17 +233,20 @@ describe('ContentTop.createNoteMessage', () => {
   });
 
   it('returns variable note only if numberOfTableNotes is 0 and one variable note', () => {
-    const noteInfo = {
+    const noteInfo: MandatoryCompressedUtilityNotesType = {
       ...baseNoteInfo,
       numberOfTableNotes: 0,
       variableNotes: [
         {
+          variableName: 'TestVariable',
+          numberOfVariableNotes: 1,
+          numberOfValueNotes: 0,
           compressednotes: 'Variable note text',
           totalNumberOfNotesOnVariable: 1,
         },
       ],
     };
-    const result = createNoteMessage(noteInfo as any, t);
+    const result = createNoteMessage(noteInfo, t);
     expect(result).toEqual({
       heading:
         'presentation_page.main_content.about_table.footnotes.important_about_selection_heading_one_note_1' +
@@ -251,17 +257,20 @@ describe('ContentTop.createNoteMessage', () => {
   });
 
   it('returns combined heading/message for multiple notes', () => {
-    const noteInfo = {
+    const noteInfo: MandatoryCompressedUtilityNotesType = {
       ...baseNoteInfo,
       numberOfTableNotes: 1,
       variableNotes: [
         {
+          variableName: 'TestVariable',
+          numberOfVariableNotes: 1,
+          numberOfValueNotes: 1,
           compressednotes: 'Variable note text',
           totalNumberOfNotesOnVariable: 2,
         },
       ],
     };
-    const result = createNoteMessage(noteInfo as any, t);
+    const result = createNoteMessage(noteInfo, t);
     expect(result).toEqual({
       heading:
         'presentation_page.main_content.about_table.footnotes.important_about_selection_heading_1' +
@@ -273,21 +282,27 @@ describe('ContentTop.createNoteMessage', () => {
   });
 
   it('returns combined heading/message for multiple variable notes', () => {
-    const noteInfo = {
+    const noteInfo: MandatoryCompressedUtilityNotesType = {
       ...baseNoteInfo,
       numberOfTableNotes: 0,
       variableNotes: [
         {
+          variableName: 'TestVariable1',
+          numberOfVariableNotes: 1,
+          numberOfValueNotes: 0,
           compressednotes: 'Variable note 1',
           totalNumberOfNotesOnVariable: 1,
         },
         {
+          variableName: 'TestVariable2',
+          numberOfVariableNotes: 1,
+          numberOfValueNotes: 1,
           compressednotes: 'Variable note 2',
           totalNumberOfNotesOnVariable: 2,
         },
       ],
     };
-    const result = createNoteMessage(noteInfo as any, t);
+    const result = createNoteMessage(noteInfo, t);
     expect(result).toEqual({
       heading:
         'presentation_page.main_content.about_table.footnotes.important_about_selection_heading_1' +
@@ -306,8 +321,9 @@ let mockIsXXLargeDesktop = true;
 vi.mock('../../context/useApp', () => ({
   default: () => ({
     isXXLargeDesktop: mockIsXXLargeDesktop,
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    setTitle: () => {},
+    setTitle: () => {
+      vi.fn();
+    },
   }),
 }));
 

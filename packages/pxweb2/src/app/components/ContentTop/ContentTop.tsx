@@ -9,7 +9,6 @@ import {
   BreadcrumbItem,
   Button,
   Heading,
-  Link,
   PxTable,
   PathElement,
 } from '@pxweb2/pxweb2-ui';
@@ -37,7 +36,7 @@ type NoteMessageType = {
   message: string;
 };
 
-import type { TFunction } from 'i18next';
+import type { TFunction, i18n } from 'i18next';
 import { getPathWithUniqueIds } from '../../util/pathUtil';
 import { getConfig } from '../../util/config/getConfig';
 
@@ -185,7 +184,7 @@ export function ContentTop({
   function getBreadcrumbItems(
     pathElements: PathElement[],
     staticTitle: string,
-    i18n: any,
+    i18n: i18n,
   ): BreadcrumbItem[] {
     const breadcrumbItems: BreadcrumbItem[] = [];
     const pathWithUniqueIds = getPathWithUniqueIds(pathElements);
@@ -269,22 +268,9 @@ export function ContentTop({
               <BodyShort size="medium">
                 <span className={classes.lastUpdatedLabel}>
                   {t('presentation_page.main_content.last_updated')}:{' '}
-                  <Link
-                    ref={openInformationLinkRef}
-                    href="#"
-                    inline
-                    aria-haspopup="dialog"
-                    onClick={() => {
-                      handleOpenTableInformation(
-                        'table-information-link',
-                        'tab-details',
-                      );
-                    }}
-                  >
-                    {t('date.simple_date_with_time', {
-                      value: new Date(pxtable.metadata.updated),
-                    })}
-                  </Link>{' '}
+                  {t('date.simple_date_with_time', {
+                    value: new Date(pxtable.metadata.updated),
+                  })}
                 </span>
               </BodyShort>
             )}
