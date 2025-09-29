@@ -19,6 +19,8 @@ export type AppContextType = {
   setSkipToMainFocused: (focused: boolean) => void;
   title: string;
   setTitle: (title: string) => void;
+  isBannerDismissed: boolean;
+  setIsBannerDismissed: (dismissed: boolean) => void;
 };
 
 // Create the context with default values
@@ -37,6 +39,10 @@ export const AppContext = createContext<AppContextType>({
   setTitle: () => {
     return;
   },
+  isBannerDismissed: false,
+  setIsBannerDismissed: () => {
+    return;
+  },
 });
 
 // Provider component
@@ -46,6 +52,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isInitialized] = useState(true);
   const [skipToMainFocused, setSkipToMainFocused] = useState(false);
   const [title, setTitle] = useState<string>('');
+  const [isBannerDismissed, setIsBannerDismissed] = useState(false);
 
   /**
    * Keep state if window screen size is mobile, pad or desktop.
@@ -83,6 +90,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
     };
   }, [mobileBreakpoint, tabletBreakpoint, largeBreakpoint, xLargeBreakpoint]);
 
+  useEffect(() => {
+    const dismissed =
+      typeof window !== 'undefined'
+        ? window.sessionStorage.getItem('pxweb2.wip_status_message_dismissed')
+        : null;
+    setIsBannerDismissed(dismissed === 'true');
+  }, []);
+
   const getSavedQueryId = React.useCallback(() => {
     let savedQueryId: string = '';
     if (typeof window !== 'undefined') {
@@ -106,6 +121,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
       setSkipToMainFocused,
       title,
       setTitle,
+      isBannerDismissed,
+      setIsBannerDismissed,
     }),
     [
       getSavedQueryId,
@@ -118,6 +135,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
       setSkipToMainFocused,
       title,
       setTitle,
+      isBannerDismissed,
+      setIsBannerDismissed,
     ],
   );
 
