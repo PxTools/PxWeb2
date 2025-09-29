@@ -1,11 +1,11 @@
 import cl from 'clsx';
 import React, { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router';
 
 import styles from './Footer.module.scss';
 import { getConfig } from '../../util/config/getConfig';
 import { getLanguagePath } from '../../util/language/getLanguagePath';
-import { useLocation } from 'react-router';
 import { BodyShort, Button, Heading, Link } from '@pxweb2/pxweb2-ui';
 import { useLocaleContent } from '../../util/hooks/useLocaleContent';
 
