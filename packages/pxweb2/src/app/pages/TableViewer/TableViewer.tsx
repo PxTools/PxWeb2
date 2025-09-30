@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { useParams, useLocation } from 'react-router';
+import { useParams } from 'react-router';
 import cl from 'clsx';
 
 import styles from './TableViewer.module.scss';
@@ -32,13 +32,11 @@ export function TableViewer() {
   const config = getConfig();
   const accessibility = useAccessibility();
 
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const baseUrl = searchParams.get('apiUrl') ?? config.apiUrl;
+  const baseUrl = config.apiUrl;
   OpenAPI.BASE = baseUrl;
 
   const { tableId } = useParams<{ tableId: string }>();
-  const [selectedTableId] = useState(tableId ?? 'tab638');
+  const [selectedTableId] = useState(tableId ?? '');
   const [errorMsg] = useState('');
   const [selectedNavigationView, setSelectedNavigationView] =
     useState<NavigationItem>(isXLargeDesktop ? 'selection' : 'none');

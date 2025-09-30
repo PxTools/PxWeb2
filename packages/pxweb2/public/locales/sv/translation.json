@@ -1,8 +1,4 @@
 {
-  "meta": {
-    "languageName": "Svenska",
-    "shorthand": "sv"
-  },
   "common": {
     "title": "PxWeb 2.0",
     "header": {
@@ -77,7 +73,7 @@
       "remove_all_filter": "Ta bort alla filter",
       "remove_filter_aria": "Ta bort filter, {{value}}",
       "subject": "Ämnesområde",
-      "timeUnit": "Tidsperiod",
+      "time_unit": "Tidsperiod",
       "year": {
         "title": "År",
         "from_label": "Från",
@@ -117,8 +113,8 @@
     }
   },
   "presentation_page": {
-    "sidemenu": {
-      "arialabeltoolsidemenu": "Verktygsmeny för tabell",
+    "side_menu": {
+      "aria_label_tool_side_menu": "Verktygsmeny för tabell",
       "hide": "Dölj",
       "selection": {
         "title": "Filtrera",
@@ -126,8 +122,8 @@
           "search": {
             "placeholder": "Sök i listan",
             "label": "Sök",
-            "arialabelicontext": "Sök ikon",
-            "ariallabelclearbuttontext": "Ikon för att ta bort text i sökfältet"
+            "aria_label_icon_text": "Sök ikon",
+            "aria_label_clear_button_text": "Ikon för att ta bort text i sökfältet"
           },
           "header": {
             "tag_selected": "{{selected}} av {{total}} valda",
@@ -208,18 +204,18 @@
         "savequery": {
           "title": "Länk till uppdaterad tabell",
           "info": "Du får en unik länk till din tabell, som vi håller uppdaterad åt dig. Hur nya tidsperioder läggs till väljer du själv.",
-          "radioLegend": "Val av nya tidsperioder",
-          "periodOptions": {
+          "radio_legend": "Val av nya tidsperioder",
+          "period_options": {
             "selected": "Lägg inte till nya (tabellen visar samma tidsperioder som du valt nu)",
             "from": "Lägg till nya (nya tidsperioder läggs till de du har valt nu)",
             "top": "Lägg till nya men behåll samma antal (när en ny tidsperiod läggs till tas den äldsta bort)"
           },
-          "createButton": "Skapa länk",
-          "copyButton": "Kopiera länk",
-          "copiedButton": "Länk kopierad",
-          "createStatus": "Länk skapad. Tryck igen för att kopera länken",
-          "copyStatus": "Länk kopierad till utklipp",
-          "loadingStatus": "Länk skapas"
+          "create_button": "Skapa länk",
+          "copy_button": "Kopiera länk",
+          "copied_button": "Länk kopierad",
+          "create_status": "Länk skapad. Tryck igen för att kopera länken",
+          "copy_status": "Länk kopierad till utklipp",
+          "loading_status": "Länk skapas"
         },
         "imagefile": {
           "title": "Spara som diagram",

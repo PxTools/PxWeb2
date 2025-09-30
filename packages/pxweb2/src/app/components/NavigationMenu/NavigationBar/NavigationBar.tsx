@@ -51,13 +51,15 @@ export const NavigationBar = React.forwardRef<
       <LazyMotion features={loadFeatures}>
         <MotionConfig reducedMotion="user">
           <nav
-            aria-label={t('presentation_page.sidemenu.arialabeltoolsidemenu')}
+            aria-label={t(
+              'presentation_page.side_menu.aria_label_tool_side_menu',
+            )}
           >
             <ul className={styles.navigationBarList}>
               <Item
                 ref={refs.selection}
                 parentName="navBar"
-                label={t('presentation_page.sidemenu.selection.title')}
+                label={t('presentation_page.side_menu.selection.title')}
                 selected={selected === 'selection'}
                 icon={'Controls'}
                 onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
@@ -71,7 +73,7 @@ export const NavigationBar = React.forwardRef<
               <Item
                 ref={refs.view}
                 parentName="navBar"
-                label={t('presentation_page.sidemenu.view.title')}
+                label={t('presentation_page.side_menu.view.title')}
                 selected={selected === 'view'}
                 icon={'BarChart'}
                 onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
@@ -85,7 +87,7 @@ export const NavigationBar = React.forwardRef<
               <Item
                 ref={refs.edit}
                 parentName="navBar"
-                label={t('presentation_page.sidemenu.edit.title')}
+                label={t('presentation_page.side_menu.edit.title')}
                 selected={selected === 'edit'}
                 icon={'ArrowsUpDown'}
                 onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
@@ -99,7 +101,7 @@ export const NavigationBar = React.forwardRef<
               <Item
                 ref={refs.save}
                 parentName="navBar"
-                label={t('presentation_page.sidemenu.save.title')}
+                label={t('presentation_page.side_menu.save.title')}
                 selected={selected === 'save'}
                 icon={'Download'}
                 onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
@@ -113,7 +115,7 @@ export const NavigationBar = React.forwardRef<
               <Item
                 ref={refs.help}
                 parentName="navBar"
-                label={t('presentation_page.sidemenu.help.title')}
+                label={t('presentation_page.side_menu.help.title')}
                 selected={selected === 'help'}
                 icon={'QuestionMarkCircle'}
                 onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
