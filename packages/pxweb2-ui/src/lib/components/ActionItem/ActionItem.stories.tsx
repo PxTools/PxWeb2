@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/react-vite';
+import { Meta, StoryObj, StoryFn } from '@storybook/react-vite';
 import { ActionItem } from './ActionItem';
 
 const meta: Meta<typeof ActionItem> = {
@@ -19,36 +19,46 @@ type Story = StoryObj<typeof ActionItem>;
 
 export const Default: Story = {};
 
-export const LargeDefault: Story = {
-  args: {
-    largeIconName: 'Table',
-    label: 'Action with description',
-    size: 'large',
-  },
-};
-
-export const MediumDefault: Story = {
-  args: {
-    iconName: 'File',
-    label: 'Medium default',
-    size: 'medium',
-  },
-};
-
-export const MediumWithDescription: Story = {
-  args: {
-    iconName: 'File',
-    label: 'Action with description',
-    size: 'medium',
-    description: 'This is a description of the action item.',
-  },
-};
-
-export const MediumWithLoading: Story = {
-  args: {
-    iconName: 'File',
-    label: 'Action with loading spinner',
-    size: 'medium',
-    isLoading: true,
-  },
+export const Variants: StoryFn<typeof ActionItem> = () => {
+  return (
+    <>
+      Medium
+      <br />
+      <br />
+      <ActionItem
+        label="Medium Action"
+        size="medium"
+        onClick={() => alert('Clicked medium action!')}
+      />
+      <br />
+      <br />
+      <ActionItem
+        label="Medium Action with Description"
+        size="medium"
+        description="This is a description."
+        onClick={() => alert('Clicked medium action with description!')}
+      />
+      <br />
+      <br />
+      <ActionItem label="Medium Action" size="medium" disabled />
+      <br />
+      <br />
+      Large
+      <br />
+      <br />
+      <ActionItem
+        label="Large Action"
+        size="large"
+        onClick={() => alert('Clicked large action!')}
+      />
+      <br />
+      <br />
+      <ActionItem
+        label="Large Action"
+        disabled
+        size="large"
+        onClick={() => alert('Clicked large action!')}
+      />
+    </>
+  );
 };
