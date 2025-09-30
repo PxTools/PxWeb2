@@ -1,8 +1,4 @@
 {
-  "meta": {
-    "languageName": "English",
-    "shorthand": "en"
-  },
   "common": {
     "title": "PxWeb 2.0",
     "header": {
@@ -10,34 +6,23 @@
       "logo_alt": "To the front page",
       "language_selector": "Språk/Language"
     },
-    "not_found": {
-      "page_not_found": {
+    "errors": {
+      "not_found": {
         "title": "Page not found",
-        "description": "The page you are looking for does not exist. Please check the URL or return to the homepage."
+        "description": "The page you're looking for may have been moved or deleted, or there might be an error in the URL.",
+        "action_text": "Go back to the previous page"
       },
-      "unsupported_language": {
-        "title": "Unsupported language",
-        "description": "The selected language is not supported."
+      "generic": {
+        "title": "Sorry, something went wrong",
+        "description": "A technical error occurred on our side. Please try refreshing the page or come back in a few minutes.",
+        "action_text": "Refresh"
       }
     },
     "skip_to_main": "Skip to main content",
     "footer": {
-      "contact": {
-        "title": "Contact",
-        "description": "Description text..."
-      },
-      "about": {
-        "title": "About",
-        "description": "Description text..."
-      },
-      "accessibility": {
-        "title": "Accessibility",
-        "description": "Description text..."
-      },
-      "version": {
-        "title": "Version",
-        "description": "Description text..."
-      }
+      "language_header": "Language",
+      "copyright": "© Copyright PxTools",
+      "top_button_text": "To the top"
     },
     "generic_buttons": {
       "ok": "OK",
@@ -65,9 +50,9 @@
       "tab_definitions": "The content of this tab is under construction."
     },
     "breadcrumbs": {
-        "aria_label_breadcrumb": "Breadcrumb",
-        "breadcrumb_root_title": "Home",
-        "show_more_breadcrumbs": "Show more"
+      "aria_label_breadcrumb": "Breadcrumb",
+      "breadcrumb_root_title": "Home",
+      "show_more_breadcrumbs": "Show more"
     }
   },
   "start_page": {
@@ -75,6 +60,7 @@
     "ingress": "Looking for the perfect table? Use the search field and filters to dig into the numbers you need. Whether you're hunting for trends, facts, or just an oddly satisfying dataset, PxWeb 2.0 has your back.",
     "more_about_label": "More about PxWeb 2.0",
     "more_about_text": "More about Text EN",
+    "result_hidden_header": "Result",
     "search_label": "Search in PxWeb 2.0",
     "search_placeholder": "Search for table names or variables",
     "filter": {
@@ -83,20 +69,23 @@
       "show_results": "Show {{value}} results",
       "close": "Close filter",
       "header": "Filter",
+      "list_filters_aria": "Selected filters",
       "remove_all_filter": "Remove all filters",
       "remove_filter_aria": "Remove filter, {{value}}",
       "subject": "Topic",
-      "timeUnit": "Time period",
+      "time_unit": "Time period",
       "year": {
         "title": "Year",
         "from_label": "From",
         "to_label": "To",
         "from_year": "From year",
         "to_year": "To year",
-        "clear_selection": "Clear selection"
+        "clear_selection": "Clear selection",
+        "no_option": "No results"
       },
       "variabel": "Variable",
       "variabel_search": "Search for variable",
+      "variable_count": "Showing {{countShown}} of {{countTotal}} variables",
       "frequency": {
         "annual": "Year",
         "monthly": "Month",
@@ -107,6 +96,7 @@
       }
     },
     "table": {
+      "card_description": "{{title}}. Year: {{yearFrom}}-{{yearTo}}. Time period {{frequency}}. Updated {{updatedDate}}. Table number {{tableNumber}}.",
       "number_of_tables": "<strong>{{count}}</strong> tables",
       "number_of_tables_found": "<strong>{{count}}</strong> tables found",
       "updated_label": "Updated",
@@ -118,8 +108,8 @@
     }
   },
   "presentation_page": {
-    "sidemenu": {
-      "arialabeltoolsidemenu": "Tool menu for table",
+    "side_menu": {
+      "aria_label_tool_side_menu": "Tool menu for table",
       "hide": "Hide",
       "selection": {
         "title": "Filter",
@@ -127,8 +117,8 @@
           "search": {
             "placeholder": "Search in list",
             "label": "Search",
-            "arialabelicontext": "Search icon",
-            "ariallabelclearbuttontext": "Clear search icon"
+            "aria_label_icon_text": "Search icon",
+            "aria_label_clear_button_text": "Clear search icon"
           },
           "header": {
             "tag_selected": "{{selected}} of {{total}} selected",
@@ -145,6 +135,7 @@
               }
             },
             "mixed_checkbox": "Select all",
+            "mixed_checkbox_search": "Select all results",
             "values_list": {
               "aria_label": "List of {{total}} values.",
               "no_results_heading": "No results for “{{search}}”",
@@ -208,18 +199,18 @@
         "savequery": {
           "title": "Link to updated table",
           "info": "You get a unique link to your table, that we keep updated for you. How new time periods are added is up to you.",
-          "radioLegend": "Options for new time periods",
-          "periodOptions": {
+          "radio_legend": "Options for new time periods",
+          "period_options": {
             "selected": "Don't add new ones (the table will only show the ones you've selected now)",
             "from": "Add new ones (they will be added to the ones you've selected now)",
             "top": "Add new ones, but keep the same number (when a new time period is added, the oldest one is removed)"
           },
-          "createButton": "Get link",
-          "copyButton": "Copy link",
-          "copiedButton": "Link copied",
-          "createStatus": "Link generated. Click again to copy the link",
-          "copyStatus": "Link copied to clipboard",
-          "loadingStatus": "Generating link"
+          "create_button": "Get link",
+          "copy_button": "Copy link",
+          "copied_button": "Link copied",
+          "create_status": "Link generated. Click again to copy the link",
+          "copy_status": "Link copied to clipboard",
+          "loading_status": "Generating link"
         },
         "imagefile": {
           "title": "Save as graph",

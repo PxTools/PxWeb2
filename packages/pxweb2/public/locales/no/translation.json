@@ -1,8 +1,4 @@
 {
-  "meta": {
-    "languageName": "Norsk",
-    "shorthand": "no"
-  },
   "common": {
     "title": "PxWeb 2.0",
     "header": {
@@ -10,34 +6,23 @@
       "logo_alt": "Til forsiden",
       "language_selector": "Språk/Language"
     },
-    "not_found": {
-      "page_not_found": {
-        "title": "Side ikke funnet",
-        "description": "Siden du leter etter eksisterer ikke. Vennligst sjekk URL-en eller gå tilbake til startsiden."
+    "errors": {
+      "not_found": {
+        "title": "Vi finner ikke siden",
+        "description": "Siden du leter etter kan ha blitt flyttet eller slettet. Det kan også være en feil i nettadressen.",
+        "action_text": "Gå tilbake til forrige side"
       },
-      "unsupported_language": {
-        "title": "Ikke støttet språk",
-        "description": "Det valgte språket støttes ikke."
+      "generic": {
+        "title": "Beklager, noe gikk galt",
+        "description": "Det oppstod en teknisk feil hos oss. Prøv å laste siden på nytt eller kom tilbake om noen minutter.",
+        "action_text": "Last siden på nytt"
       }
     },
     "skip_to_main": "Hopp til hovedinnhold",
     "footer": {
-      "contact": {
-        "title": "Kontakt",
-        "description": "Beskrivelsestekst..."
-      },
-      "about": {
-        "title": "Om",
-        "description": "Beskrivelsestekst..."
-      },
-      "accessibility": {
-        "title": "Tilgjengelighet",
-        "description": "Beskrivelsestekst..."
-      },
-      "version": {
-        "title": "Versjon",
-        "description": "Beskrivelsestekst..."
-      }
+      "language_header": "Språk",
+      "copyright": "© Opphavsrett PxTools",
+      "top_button_text": "Til toppen"
     },
     "generic_buttons": {
       "ok": "OK",
@@ -75,6 +60,7 @@
     "ingress": "Leter du etter den perfekte tabellen? Bruk søkefeltet og filtrene for å finne tallene du trenger. Enten du er på jakt etter trender, fakta eller bare et merkelig tilfredsstillende datasett, så har PxWeb 2.0 det du trenger.",
     "more_about_label": "Mer om Statistikkbanken",
     "more_about_text": "More about Text NO",
+    "result_hidden_header": "Resultat",
     "search_label": "Søk i Statistikkbanken",
     "search_placeholder": "Søk etter tabellnavn eller variabler",
     "filter": {
@@ -83,20 +69,23 @@
       "show_results": "Vis {{value}} treff",
       "close": "Lukk filter",
       "header": "Filter",
+      "list_filters_aria": "Valgte filter",
       "remove_all_filter": "Fjern alle filter",
       "remove_filter_aria": "Fjern filter, {{value}}",
       "subject": "Emne",
-      "timeUnit": "Tidsperiode",
+      "time_unit": "Tidsperiode",
       "year": {
         "title": "År",
         "from_label": "Fra",
         "to_label": "Til",
         "from_year": "Fra år",
         "to_year": "Til år",
-        "clear_selection": "Fjern valg"
+        "clear_selection": "Fjern valg",
+        "no_option": "Ingen søketreff"
       },
       "variabel": "Variabel",
       "variabel_search": "Søk etter variabel",
+      "variable_count": "Viser {{countShown}} av {{countTotal}} variabler",
       "frequency": {
         "annual": "År",
         "monthly": "Måned",
@@ -107,6 +96,7 @@
       }
     },
     "table": {
+      "card_description": "{{title}}. År: {{yearFrom}}-{{yearTo}}. Tidsperiode {{frequency}}. Oppdatert {{updatedDate}}. Tabellnummer {{tableNumber}}.",
       "number_of_tables": "<strong>{{count}}</strong> tabeller",
       "number_of_tables_found": "Treff på <strong>{{count}}</strong> tabeller",
       "updated_label": "Oppdatert",
@@ -118,8 +108,8 @@
     }
   },
   "presentation_page": {
-    "sidemenu": {
-      "arialabeltoolsidemenu": "Verktøymeny for tabell",
+    "side_menu": {
+      "aria_label_tool_side_menu": "Verktøymeny for tabell",
       "hide": "Skjul",
       "selection": {
         "title": "Filtrer",
@@ -127,8 +117,8 @@
           "search": {
             "placeholder": "Søk i listen",
             "label": "Søk",
-            "arialabelicontext": "Søkeikon",
-            "ariallabelclearbuttontext": "Ikon for å fjerne tekst i søkefeltet"
+            "aria_label_icon_text": "Søkeikon",
+            "aria_label_clear_button_text": "Ikon for å fjerne tekst i søkefeltet"
           },
           "header": {
             "tag_selected": "{{selected}} av {{total}} valgt",
@@ -145,6 +135,7 @@
               }
             },
             "mixed_checkbox": "Velg alle",
+            "mixed_checkbox_search": "Velg alle søketreff",
             "values_list": {
               "aria_label": "Liste av {{total}} verdier.",
               "no_results_heading": "Ingen treff på «{{search}}»",
@@ -208,18 +199,18 @@
         "savequery": {
           "title": "Lenke til oppdatert tabell",
           "info": "Du får en unik lenke til tabellen din, som vi holder oppdatert for deg. Hvordan nye tidsperioder legges til, velger du selv.",
-          "radioLegend": "Valg for nye tidsperioder",
-          "periodOptions": {
+          "radio_legend": "Valg for nye tidsperioder",
+          "period_options": {
             "selected": "Ikke legg til nye (tabellen vil kun vise de du har valgt nå)",
             "from": "Legg til nye (de nye vil komme i tillegg til de du har valgt nå)",
             "top": "Legg til nye, men behold samme antall (når en ny tidsperiode legges til, fjernes den eldste)"
           },
-          "createButton": "Få lenke",
-          "copyButton": "Kopier lenke",
-          "copiedButton": "Lenke kopiert",
-          "createStatus": "Lenke laget. Trykk igjen for å kopiere lenken",
-          "copyStatus": "Lenke kopiert til utklippstavle",
-          "loadingStatus": "Lager lenke"
+          "create_button": "Få lenke",
+          "copy_button": "Kopier lenke",
+          "copied_button": "Lenke kopiert",
+          "create_status": "Lenke laget. Trykk igjen for å kopiere lenken",
+          "copy_status": "Lenke kopiert til utklippstavle",
+          "loading_status": "Lager lenke"
         },
         "imagefile": {
           "title": "Lagre som graf",

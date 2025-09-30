@@ -126,6 +126,7 @@ export const YearRangeFilter: React.FC<{ onFilterChange?: () => void }> = ({
   ).reverse();
 
   const clearSelectionText = t('start_page.filter.year.clear_selection');
+  const noOptionsText = t('start_page.filter.year.no_option');
 
   function handleSelect(item: Option | undefined, type: 'from' | 'to') {
     const { from: prevFrom, to: prevTo } = parseYearRange(
@@ -167,6 +168,7 @@ export const YearRangeFilter: React.FC<{ onFilterChange?: () => void }> = ({
         label={fromYearLabel(fromYear ?? '')}
         options={fromOptions}
         selectedOption={buildYearOption(fromYear)}
+        noOptionsText={noOptionsText}
         onSelect={(item) => handleSelect(item, 'from')}
         inputMode="numeric"
         optionListStyle={{ maxHeight: '250px' }}
@@ -177,6 +179,7 @@ export const YearRangeFilter: React.FC<{ onFilterChange?: () => void }> = ({
         label={toYearLabel(toYear ?? '')}
         options={toOptions}
         selectedOption={buildYearOption(toYear)}
+        noOptionsText={noOptionsText}
         onSelect={(item) => handleSelect(item, 'to')}
         inputMode="numeric"
         optionListStyle={{ maxHeight: '250px' }}

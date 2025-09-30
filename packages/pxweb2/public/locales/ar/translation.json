@@ -1,8 +1,4 @@
 {
-  "meta": {
-    "languageName": "إنجليزي",
-    "shorthand": "ar"
-  },
   "common": {
     "title": "مرحبًا بك في PxWeb 2.0",
     "header": {
@@ -10,34 +6,23 @@
       "logo_alt": "إلى الصفحة الرئيسية",
       "language_selector": "اللغة/Language"
     },
-    "not_found": {
-      "page_not_found": {
+    "errors": {
+      "not_found": {
         "title": "لم يتم العثور على الصفحة",
-        "description": "الصفحة التي تبحث عنها غير موجودة. يرجى التحقق من عنوان URL أو العودة إلى الصفحة الرئيسية."
+        "description": "ربما تم نقل الصفحة التي تبحث عنها أو حذفها، أو قد يكون هناك خطأ في عنوان URL.",
+        "action_text": "العودة إلى الصفحة السابقة"
       },
-      "unsupported_language": {
-        "title": "لغة غير مدعومة",
-        "description": "اللغة المحددة غير مدعومة."
+      "generic": {
+        "title": "عذرًا، حدث خطأ ما",
+        "description": "حدث خطأ تقني من جانبنا. يرجى محاولة تحديث الصفحة أو العودة بعد بضع دقائق.",
+        "action_text": "أعد تحميل الصفحة."
       }
     },
     "skip_to_main": "انتقل إلى المحتوى الرئيسي",
     "footer": {
-      "contact": {
-        "title": "اتصال",
-        "description": "نص الوصف..."
-      },
-      "about": {
-        "title": "عن",
-        "description": "نص الوصف..."
-      },
-      "accessibility": {
-        "title": "إمكانية الوصول",
-        "description": "نص الوصف..."
-      },
-      "version": {
-        "title": "إصدار",
-        "description": "نص الوصف..."
-      }
+      "language_header": "اللغة",
+      "copyright": "© حقوق الطبع والنشر PxTools",
+      "top_button_text": "إلى الأعلى"
     },
     "generic_buttons": {
       "ok": "نعم",
@@ -65,9 +50,9 @@
       "tab_definitions": "محتوى هذه علامة التبويب قيد الإنشاء."
     },
     "breadcrumbs": {
-        "aria_label_breadcrumb": "خبز",
-        "breadcrumb_root_title": "الصفحة الرئيسية",
-        "show_more_breadcrumbs": "عرض المزيد"
+      "aria_label_breadcrumb": "خبز",
+      "breadcrumb_root_title": "الصفحة الرئيسية",
+      "show_more_breadcrumbs": "عرض المزيد"
     }
   },
   "start_page": {
@@ -75,8 +60,8 @@
     "welcome_trans_test": "مرحبا بكم في <1>برنامج</1> لبكسي ويب 2.0!"
   },
   "presentation_page": {
-    "sidemenu": {
-      "arialabeltoolsidemenu": "قائمة الأدوات للجدول",
+    "side_menu": {
+      "aria_label_tool_side_menu": "قائمة الأدوات للجدول",
       "hide": "يخفي",
       "selection": {
         "title": "فلتر",
@@ -84,8 +69,8 @@
           "search": {
             "placeholder": "البحث في القائمة",
             "label": "يبحث",
-            "arialabelicontext": "أيقونة البحث",
-            "ariallabelclearbuttontext": "مسح أيقونة البحث"
+            "aria_label_icon_text": "أيقونة البحث",
+            "aria_label_clear_button_text": "مسح أيقونة البحث"
           },
           "header": {
             "tag_selected": "{{selected}} ل {{total}} مختارة",
@@ -102,6 +87,7 @@
               }
             },
             "mixed_checkbox": "حدد الكل",
+            "mixed_checkbox_search": "حدد جميع النتائج",
             "values_list": {
               "aria_label": "قائمة {{total}} قيم.",
               "no_results_heading": "“{{search}}” لا توجد نتائج ل",
@@ -165,18 +151,18 @@
         "savequery": {
           "title": "رابط إلى الجدول المحدث",
           "info": "ستحصل على رابط فريد لجدولك، وسنُحدّثه لك باستمرار. إضافة الفترات الزمنية الجديدة أمرٌ متروك لك.",
-          "radioLegend": "خيارات لفترات زمنية جديدة",
-          "periodOptions": {
+          "radio_legend": "خيارات لفترات زمنية جديدة",
+          "period_options": {
             "selected": "لا تقم بإضافة فترات زمنية جديدة (سيعرض الجدول فقط الفترات الزمنية المحددة حاليًا)",
             "from": "إضافة فترات زمنية جديدة (سيتم إضافتها إلى الفترات المحددة حاليًا)",
             "top": "إضافة فترات زمنية جديدة وإزالة الفترات الأقدم"
           },
-          "createButton": "إنشاء رابط",
-          "copyButton": "نسخ الوصلة",
-          "copiedButton": "تم نسخ الرابط",
-          "createStatus": "احفظ الاستعلام المُولّد بالمعرّف “{{query}}”. انقر مجددًا لنسخ الرابط.",
-          "copyStatus": "حفظ الاستعلام المنسوخ إلى الحافظة",
-          "loadingStatus": "جاري إنشاء استعلام محفوظ."
+          "create_button": "إنشاء رابط",
+          "copy_button": "نسخ الوصلة",
+          "copied_button": "تم نسخ الرابط",
+          "create_status": "احفظ الاستعلام المُولّد بالمعرّف “{{query}}”. انقر مجددًا لنسخ الرابط.",
+          "copy_status": "حفظ الاستعلام المنسوخ إلى الحافظة",
+          "loading_status": "جاري إنشاء استعلام محفوظ."
         },
         "imagefile": {
           "title": "حفظ كرسم بياني",

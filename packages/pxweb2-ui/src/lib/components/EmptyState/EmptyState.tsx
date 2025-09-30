@@ -32,8 +32,6 @@ export function EmptyState({
   }, []);
 
   if (!Illustrations[svgName]) {
-    console.log(`EmptyState: Illustration ${svgName} not found`);
-
     return null;
   }
 

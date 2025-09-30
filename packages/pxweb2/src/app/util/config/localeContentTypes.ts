@@ -1,4 +1,4 @@
-import type { IconProps } from '@pxweb2/pxweb2-ui';
+import type { IconProps, BreadcrumbItem } from '@pxweb2/pxweb2-ui';
 
 export type DetailLink = {
   text: string;
@@ -28,10 +28,29 @@ export type DetailsSection = {
   detailContent?: DetailsContent[];
 };
 
+export type BreadCrumb = {
+  enabled: boolean;
+  items?: BreadcrumbItem[];
+};
+
 export type Startpage = {
+  breadCrumb?: BreadCrumb;
   detailsSection?: DetailsSection;
+};
+
+export type FooterLink = {
+  text: string;
+  url: string;
+  external?: boolean;
+};
+
+export type FooterColumn = { header: string; links: FooterLink[] };
+
+export type Footer = {
+  columns: FooterColumn[];
 };
 
 export type LocaleContent = {
   startPage?: Startpage;
+  footer?: Footer;
 };

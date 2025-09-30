@@ -3,13 +3,13 @@ import Presentation from './Presentation';
 
 describe('Presentation', () => {
   // Setup console mocks before all tests
-  let consoleErrorSpy: any;
-  let consoleLogSpy: any;
+  let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
+  let consoleLogSpy: ReturnType<typeof vi.spyOn>;
 
   beforeAll(() => {
     // Suppress React error logging and component console.log
-    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-    consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(vi.fn());
+    consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(vi.fn());
   });
 
   afterAll(() => {
@@ -20,7 +20,11 @@ describe('Presentation', () => {
 
   it('should render successfully', () => {
     const { baseElement } = renderWithProviders(
-      <Presentation selectedTabId="1" />,
+      <Presentation
+        selectedTabId="1"
+        isExpanded={false}
+        setIsExpanded={vi.fn()}
+      />,
     );
 
     expect(baseElement).toBeTruthy();

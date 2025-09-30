@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useDebounce } from '@uidotdev/usehooks';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 import deburr from 'lodash/deburr';
+import { v4 as uuidv4 } from 'uuid';
 
 import classes from './VariableBoxContent.module.scss';
 import { Checkbox, MixedCheckbox } from '../../Checkbox/Checkbox';
@@ -48,6 +49,11 @@ type VariableBoxContentProps = VariableBoxPropsToContent & {
   removeModal: (name: string) => void;
 };
 
+type VirtualListItem = {
+  type: string;
+  value?: Value;
+};
+
 export function VariableBoxContent({
   varId,
   label,
@@ -71,8 +77,8 @@ export function VariableBoxContent({
   >('mixed');
 
   const debouncedSearch = useDebounce(search, 300);
-  const [items, setItems] = useState<{ type: string; value?: Value }[]>([]);
-  const [uniqueId] = useState(() => crypto.randomUUID());
+  const [items, setItems] = useState<VirtualListItem[]>([]);
+  const [uniqueId] = useState(() => uuidv4());
   const valuesOnlyList = useRef<HTMLDivElement>(null);
   const hasCodeLists = codeLists && codeLists.length > 0;
   const hasSevenOrMoreValues = values && values.length > 6;
@@ -106,7 +112,7 @@ export function VariableBoxContent({
   const lastInteractionWasPointer = useRef(false);
 
   useEffect(() => {
-    const newItems: { type: string; value?: Value }[] = [];
+    const newItems: VirtualListItem[] = [];
 
     if (!valuesToRender || valuesToRender.length === 0) {
       return;
@@ -116,7 +122,10 @@ export function VariableBoxContent({
       newItems.push({ type: 'search' });
     }
 
-    if (hasTwoOrMoreValues) {
+    if (
+      hasTwoOrMoreValues &&
+      (searchedValues.length === 0 || searchedValues.length > 1)
+    ) {
       newItems.push({ type: 'mixedCheckbox' });
     }
 
@@ -225,7 +234,7 @@ export function VariableBoxContent({
   };
 
   // Modify the itemRenderer to assign IDs and tabIndex
-  const itemRenderer = (items: any, index: number) => {
+  const itemRenderer = (items: VirtualListItem[], index: number) => {
     const item = items[index];
 
     // There is a race condition with virtuoso where item can be undefined
@@ -268,19 +277,19 @@ export function VariableBoxContent({
             variant="inVariableBox"
             showLabel={false}
             searchPlaceHolder={t(
-              'presentation_page.sidemenu.selection.variablebox.search.placeholder',
+              'presentation_page.side_menu.selection.variablebox.search.placeholder',
             )}
             ariaLabelIconText={t(
-              'presentation_page.sidemenu.selection.variablebox.search.arialabelicontext',
+              'presentation_page.side_menu.selection.variablebox.search.aria_label_icon_text',
             )}
             arialLabelClearButtonText={t(
-              'presentation_page.sidemenu.selection.variablebox.search.ariallabelclearbuttontext',
+              'presentation_page.side_menu.selection.variablebox.search.aria_label_clear_button_text',
             )}
             variableBoxTopBorderOverride={hasSelectAndSearch}
           />
         </div>
       );
-    } else if (item.type === 'mixedCheckbox' && searchedValues.length > 0) {
+    } else if (item.type === 'mixedCheckbox' && searchedValues.length > 1) {
       return (
         <>
           <div
@@ -296,9 +305,15 @@ export function VariableBoxContent({
           >
             <MixedCheckbox
               id={varId + uniqueId + 'mixedCheckbox'}
-              text={t(
-                'presentation_page.sidemenu.selection.variablebox.content.mixed_checkbox',
-              )}
+              text={
+                search === ''
+                  ? t(
+                      'presentation_page.side_menu.selection.variablebox.content.mixed_checkbox',
+                    )
+                  : t(
+                      'presentation_page.side_menu.selection.variablebox.content.mixed_checkbox_search',
+                    )
+              }
               value={allValuesSelected}
               onChange={() =>
                 onChangeMixedCheckbox(varId, allValuesSelected, searchedValues)
@@ -320,6 +335,9 @@ export function VariableBoxContent({
       const value = item.value;
       return (
         <>
+          {searchedValues.length === 1 && search !== '' && (
+            <div className={classes['spacer']}></div>
+          )}
           <div
             id={value.code + uniqueId}
             tabIndex={-1}
@@ -364,13 +382,13 @@ export function VariableBoxContent({
             )}
           >
             {t(
-              'presentation_page.sidemenu.selection.variablebox.content.values_list.no_results_heading',
+              'presentation_page.side_menu.selection.variablebox.content.values_list.no_results_heading',
               { search: search },
             )}
           </Heading>
           <BodyShort size="medium" textcolor="default" align="center">
             {t(
-              'presentation_page.sidemenu.selection.variablebox.content.values_list.no_results_bodyshort',
+              'presentation_page.side_menu.selection.variablebox.content.values_list.no_results_bodyshort',
             )}
           </BodyShort>
         </div>
@@ -446,18 +464,18 @@ export function VariableBoxContent({
             <Select
               variant="inVariableBox"
               label={t(
-                'presentation_page.sidemenu.selection.variablebox.content.select.label',
+                'presentation_page.side_menu.selection.variablebox.content.select.label',
               )}
               languageDirection={languageDirection}
               modalHeading={label}
               modalCancelLabel={t(
-                'presentation_page.sidemenu.selection.variablebox.content.select.modal.cancel_button',
+                'presentation_page.side_menu.selection.variablebox.content.select.modal.cancel_button',
               )}
               modalConfirmLabel={t(
-                'presentation_page.sidemenu.selection.variablebox.content.select.modal.confirm_button',
+                'presentation_page.side_menu.selection.variablebox.content.select.modal.confirm_button',
               )}
               placeholder={t(
-                'presentation_page.sidemenu.selection.variablebox.content.select.placeholder',
+                'presentation_page.side_menu.selection.variablebox.content.select.placeholder',
               )}
               addModal={addModal}
               removeModal={removeModal}
@@ -487,7 +505,7 @@ export function VariableBoxContent({
         >
           <div
             aria-label={t(
-              'presentation_page.sidemenu.selection.variablebox.content.values_list.aria_label',
+              'presentation_page.side_menu.selection.variablebox.content.values_list.aria_label',
               {
                 total: totalValues,
               },
