@@ -10,6 +10,7 @@ import { useLocaleContent } from '../../util/hooks/useLocaleContent';
 type FooterProps = {
   containerRef?: React.RefObject<HTMLDivElement | null>;
   variant?: 'startpage' | 'tableview';
+  enableWindowScroll?: boolean;
 };
 
 export function scrollToTop(ref?: React.RefObject<HTMLDivElement | null>) {
@@ -34,6 +35,7 @@ export function scrollToTop(ref?: React.RefObject<HTMLDivElement | null>) {
 export const Footer: React.FC<FooterProps> = ({
   containerRef,
   variant = 'tableview',
+  enableWindowScroll = false,
 }) => {
   const { i18n, t } = useTranslation();
   const config = getConfig();
@@ -43,6 +45,16 @@ export const Footer: React.FC<FooterProps> = ({
   const footerContent = content?.footer;
   // Ref for the main scrollable container
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+
+  const canShowTopButton = !!containerRef || enableWindowScroll;
+
+  const handleScrollTop = () => {
+    if (containerRef?.current) {
+      scrollToTop(containerRef);
+    } else if (enableWindowScroll) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
   return (
     <footer
@@ -121,12 +133,12 @@ export const Footer: React.FC<FooterProps> = ({
                 {t('common.footer.copyright')}
               </BodyShort>
             </div>
-            {containerRef && (
+            {canShowTopButton && (
               <Button
                 icon="ArrowUp"
                 variant="secondary"
                 size="medium"
-                onClick={() => scrollToTop(containerRef)}
+                onClick={handleScrollTop}
               >
                 {t('common.footer.top_button_text')}
               </Button>

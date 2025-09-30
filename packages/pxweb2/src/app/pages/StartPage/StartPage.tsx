@@ -731,7 +731,11 @@ const StartPage = () => {
         </div>
         {renderTableListSEO()}
       </main>
-      <Footer variant="startpage" />
+      <div className={cl(styles.footerContent)}>
+        <div className={cl(styles.container)}>
+          <Footer variant="startpage" enableWindowScroll />
+        </div>
+      </div>
     </>
   );
 };

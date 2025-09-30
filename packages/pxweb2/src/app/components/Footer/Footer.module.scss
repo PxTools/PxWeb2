@@ -31,15 +31,17 @@
   }
 
   &.variant--startpage {
-    background: var(--px-color-surface-moderate);
-    // Large
-    @media (min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width) {
-      padding: fixed.$spacing-10;
+    padding: fixed.$spacing-11 0;
+    background-color: var(--px-color-surface-moderate);
+
+    // xsmall - small
+    @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
+      padding: fixed.$spacing-8 0;
     }
 
-    // XLarge
-    @media (min-width: fixed.$breakpoints-xlarge-min-width) and (max-width: fixed.$breakpoints-xlarge-max-width) {
-      padding: fixed.$spacing-11;
+    // xsmall
+    @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
+      padding: fixed.$spacing-4 0;
     }
   }
 }
