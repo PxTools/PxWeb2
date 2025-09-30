@@ -36,7 +36,6 @@ export function TableViewer() {
 
   const { tableId } = useParams<{ tableId: string }>();
   const [selectedTableId] = useState(tableId ?? '');
-  const [errorMsg] = useState('');
   const [selectedNavigationView, setSelectedNavigationView] =
     useState<NavigationItem>(isXLargeDesktop ? 'selection' : 'none');
   const [hasFocus, setHasFocus] = useState<NavigationItem>('none');
@@ -143,12 +142,6 @@ export function TableViewer() {
     };
   }, [setSkipToMainFocused]);
 
-  useEffect(() => {
-    if (errorMsg !== '') {
-      console.error('ERROR: App.tsx:', errorMsg);
-    }
-  }, [errorMsg]);
-
   const changeSelectedNavView = (
     keyboard: boolean,
     close: boolean,
@@ -251,7 +244,6 @@ export function TableViewer() {
 function Render() {
   return (
     <AccessibilityProvider>
-      {/* <ErrorBoundary fallback={<ErrorPageTableViewer />}> */}
       <ErrorBoundary>
         <VariablesProvider>
           <TableDataProvider>
