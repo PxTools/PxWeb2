@@ -91,7 +91,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [mobileBreakpoint, tabletBreakpoint, largeBreakpoint, xLargeBreakpoint]);
 
   useEffect(() => {
-    if (typeof globalThis.window === 'undefined') {
+    if (globalThis.window === undefined) {
       setIsBannerDismissed(false);
       return;
     }
