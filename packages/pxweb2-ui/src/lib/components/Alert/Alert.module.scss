@@ -123,6 +123,8 @@
   flex-direction: column;
   padding-top: 2px;
   row-gap: fixvar.$spacing-2;
+  // Allow this flex item to shrink so long words wrap instead of overflowing
+  min-width: 0; // critical for flex children with siblings
 }
 .alert-section-middle-medium:has(ol) {
   row-gap: fixvar.$spacing-4;
@@ -136,6 +138,7 @@
   flex-direction: column;
   padding-top: 2px;
   row-gap: fixvar.$spacing-1;
+  min-width: 0;
 }
 
 .alert-heading {
@@ -150,11 +153,18 @@
   display: flex;
   align-self: stretch;
   padding-top: 2px;
+  // Ensure extremely long tokens (e.g. long URLs, hashes, single-word strings) wrap
+  overflow-wrap: anywhere; // modern spec-compliant property
+  word-break: break-word; // legacy fallback for older browsers
+  hyphens: auto; // optional hyphenation when supported
 }
 
 .alert-body-medium {
   display: flex;
   align-self: stretch;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  hyphens: auto;
 }
 
 .truncate-text-small {
