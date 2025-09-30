@@ -19,12 +19,11 @@ import {
   Variable,
 } from '@pxweb2/pxweb2-ui';
 import { mapJsonStat2Response } from '../../mappers/JsonStat2ResponseMapper';
-
 import {
   addFormattingToPxTable,
   filterStubAndHeadingArrays,
 } from './TableDataProviderUtils';
-import { problemMessage } from '../util/problemMessage';
+import { problemMessage, ApiProblemError } from '../util/problemMessage';
 
 // Define types for the context state and provider props
 export interface TableDataContextType {
@@ -103,6 +102,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   >({});
 
   const [errorMsg, setErrorMsg] = useState('');
+  const [apiError, setApiError] = useState<ApiProblemError | null>(null);
   const variables = useVariables();
 
   useEffect(() => {
@@ -110,6 +110,13 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       throw new Error(errorMsg);
     }
   }, [errorMsg]);
+
+  useEffect(() => {
+    if (apiError) {
+      console.log('ApiError set in TableDataProvider:', apiError);
+      throw apiError;
+    }
+  }, [apiError]);
 
   /**
    * Initializes the codelists for the application context.
@@ -332,18 +339,15 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         variablesSelection = { selection: [] }; // If language is changed we shall fetch data with the default selection.
       }
 
-      const pxTable: PxTable = await fetchFromApi(
-        tableId,
-        i18n,
-        variablesSelection,
-      );
+      const pxTable = await fetchFromApi(tableId, i18n, variablesSelection);
 
-      initializeStubAndHeading(pxTable, isMobile, i18n.language);
-      setData(pxTable);
+      // Only continue if we got a valid response (fetchFromApi sets error state for failures)
+      if (pxTable) {
+        initializeStubAndHeading(pxTable, isMobile, i18n.language);
 
-      // Store as accumulated data
-      setAccumulatedData(structuredClone(pxTable));
-      // }
+        setData(pxTable);
+        setAccumulatedData(structuredClone(pxTable));
+      }
     },
     [accumulatedData?.metadata.language, initializeStubAndHeading],
   );
@@ -801,11 +805,13 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         }
       });
       // Get the not already loaded data from the API
-      let pxTable: PxTable = await fetchFromApi(
-        tableId,
-        i18n,
-        notLoadedVarSelection,
-      );
+      let pxTable = await fetchFromApi(tableId, i18n, notLoadedVarSelection);
+
+      // Only continue if we got a valid response, error handled in fetchFromApi
+      if (!pxTable) {
+        return;
+      }
+
       // Merge pxTable with accumulatedData
       mergeWithAccumulatedData(
         pxTable,
@@ -1046,7 +1052,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     tableId: string,
     i18n: i18n,
     variablesSelection: VariablesSelection,
-  ) => {
+  ): Promise<PxTable | null> => {
     const res = await TableService.getTableDataByPost(
       tableId,
       i18n.language,
@@ -1055,8 +1061,25 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       variablesSelection,
     ).catch((error: unknown) => {
       const err = error as ApiError;
+      console.log('API error occurred:', err);
+
+      // For 404 errors, set ApiProblemError to be thrown by useEffect and return null to indicate failure
+      if (err.status === 404) {
+        setApiError(new ApiProblemError(err, tableId));
+
+        return null;
+      }
+
+      // For other errors, set error message and return null to indicate failure
       setErrorMsg(problemMessage(err, tableId));
+
+      return null;
     });
+
+    // If the API call failed, return early
+    if (!res) {
+      return null;
+    }
 
     // Map response to json-stat2 Dataset
     const pxDataobj: unknown = res;

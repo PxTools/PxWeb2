@@ -10,7 +10,9 @@ export function GenericError() {
   return (
     <>
       <Header stroke={true} />
-      {/* Expand ErrorLayout for start page generic error here */}
+
+      {/* TODO: See if this is still needed or if 1 error page is enough. StartPage no tables error is handled elsewhere! */}
+
       <ErrorLayout isStartPageGenericError={true}>
         <ErrorMessage
           action="button"
