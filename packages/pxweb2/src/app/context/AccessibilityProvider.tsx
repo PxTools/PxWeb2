@@ -56,13 +56,14 @@ export const AccessibilityProvider = ({
 
   // Debug logging in development
   useEffect(() => {
-    if (
-      location.href.includes('localhost') &&
-      process.env.NODE_ENV !== 'test'
-    ) {
-      console.log('PxWeb2 - a11y - Modals (Stack):', modals);
-      console.log('PxWeb2 - a11y - Focus overrides:', focusOverrides);
-    }
+    // NOSONAR: Keep optional debug logging for local troubleshooting during release stabilization
+    // if (
+    //   location.href.includes('localhost') &&
+    //   process.env.NODE_ENV !== 'test'
+    // ) {
+    //   console.log('PxWeb2 - a11y - Modals (Stack):', modals);
+    //   console.log('PxWeb2 - a11y - Focus overrides:', focusOverrides);
+    // }
   }, [modals, focusOverrides]);
 
   const closeModal = useCallback(() => {
@@ -167,14 +168,16 @@ export const AccessibilityProvider = ({
         const target = event.target as HTMLElement;
 
         if (!event.shiftKey) {
-          if (location.href.includes('localhost')) {
-            console.log('PxWeb2 - a11y - Tab pressed');
-          }
+          // NOSONAR: Keep optional debug logging for local troubleshooting during release stabilization
+          // if (location.href.includes('localhost')) {
+          //   console.log('PxWeb2 - a11y - Tab pressed');
+          // }
           focusNext(target, event);
         } else {
-          if (location.href.includes('localhost')) {
-            console.log('PxWeb2 - a11y - Shift + Tab pressed');
-          }
+          // NOSONAR: Keep optional debug logging for local troubleshooting during release stabilization
+          // if (location.href.includes('localhost')) {
+          //   console.log('PxWeb2 - a11y - Shift + Tab pressed');
+          // }
           focusPrevious(target, event);
         }
       }

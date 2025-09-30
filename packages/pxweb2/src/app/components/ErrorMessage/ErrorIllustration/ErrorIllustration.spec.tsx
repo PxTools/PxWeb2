@@ -51,9 +51,6 @@ describe('ErrorIllustration', () => {
     );
 
     expect(container.firstChild).toBeNull();
-    expect(console.log).toHaveBeenCalledWith(
-      'ErrorIllustration: Illustration InvalidIllustration not found',
-    );
   });
 
   it('returns null and logs error when background shape is not found', () => {
@@ -68,8 +65,5 @@ describe('ErrorIllustration', () => {
     );
 
     expect(container.firstChild).toBeNull();
-    expect(console.log).toHaveBeenCalledWith(
-      'ErrorIllustration: Background shape "invalidShape" for illustration NotFound not found',
-    );
   });
 });

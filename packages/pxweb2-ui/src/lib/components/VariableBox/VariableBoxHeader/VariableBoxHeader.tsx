@@ -71,7 +71,7 @@ export function VariableBoxHeader({
           <div id={tagsId} className={cl(classes['header-tags'])}>
             <Tag variant="neutral">
               {t(
-                'presentation_page.sidemenu.selection.variablebox.header.tag_selected',
+                'presentation_page.side_menu.selection.variablebox.header.tag_selected',
                 {
                   selected: t('number.simple_number_with_zero_decimal', {
                     value: totalChosenValues,
@@ -85,7 +85,7 @@ export function VariableBoxHeader({
             {mandatory && (
               <Tag variant="info">
                 {t(
-                  'presentation_page.sidemenu.selection.variablebox.header.tag_mandatory',
+                  'presentation_page.side_menu.selection.variablebox.header.tag_mandatory',
                 )}
               </Tag>
             )}
@@ -115,7 +115,7 @@ export function VariableBoxHeader({
         <div className={cl(classes['header-alert'])} role="alert">
           <Alert variant="error" size="small" id={alertId}>
             {t(
-              'presentation_page.sidemenu.selection.variablebox.header.alert_no_mandatory_values',
+              'presentation_page.side_menu.selection.variablebox.header.alert_no_mandatory_values',
             )}
           </Alert>
         </div>

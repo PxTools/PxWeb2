@@ -60,10 +60,6 @@ interface Resources {
       simple_date: '{{value, datetime}}';
       simple_date_with_time: "{{value, datetime(year: 'numeric'; month: 'numeric'; day: 'numeric'; hour: 'numeric'; minute: 'numeric')}}";
     };
-    meta: {
-      languageName: 'English';
-      shorthand: 'en';
-    };
     number: {
       simple_number: '{{value, pxNumber}}';
       simple_number_with_default_formatter: "{{value, number(minimumFractionDigits: 5; maximumFractionDigits: 5; roundingMode: 'halfExpand')}}";
@@ -159,8 +155,8 @@ interface Resources {
           };
         };
       };
-      sidemenu: {
-        arialabeltoolsidemenu: 'Tool menu for table';
+      side_menu: {
+        aria_label_tool_side_menu: 'Tool menu for table';
         edit: {
           calculate: {
             sum: {
@@ -221,19 +217,19 @@ interface Resources {
             title: 'Save as link';
           };
           savequery: {
-            copiedButton: 'Link copied';
-            copyButton: 'Copy link';
-            copyStatus: 'Link copied to clipboard';
-            createButton: 'Get link';
-            createStatus: 'Link generated. Click again to copy the link';
+            copied_button: 'Link copied';
+            copy_button: 'Copy link';
+            copy_status: 'Link copied to clipboard';
+            create_button: 'Get link';
+            create_status: 'Link generated. Click again to copy the link';
             info: 'You get a unique link to your table, that we keep updated for you. How new time periods are added is up to you.';
-            loadingStatus: 'Generating link';
-            periodOptions: {
+            loading_status: 'Generating link';
+            period_options: {
               from: "Add new ones (they will be added to the ones you've selected now)";
               selected: "Don't add new ones (the table will only show the ones you've selected now)";
               top: 'Add new ones, but keep the same number (when a new time period is added, the oldest one is removed)';
             };
-            radioLegend: 'Options for new time periods';
+            radio_legend: 'Options for new time periods';
             title: 'Link to updated table';
           };
           title: 'Save';
@@ -264,8 +260,8 @@ interface Resources {
               tag_selected: '{{selected}} of {{total}} selected';
             };
             search: {
-              arialabelicontext: 'Search icon';
-              ariallabelclearbuttontext: 'Clear search icon';
+              aria_label_clear_button_text: 'Clear search icon';
+              aria_label_icon_text: 'Search icon';
               label: 'Search';
               placeholder: 'Search in list';
             };
@@ -301,7 +297,7 @@ interface Resources {
         remove_filter_aria: 'Remove filter, {{value}}';
         show_results: 'Show {{value}} results';
         subject: 'Topic';
-        timeUnit: 'Time period';
+        time_unit: 'Time period';
         variabel: 'Variable';
         variabel_search: 'Search for variable';
         variable_count: 'Showing {{countShown}} of {{countTotal}} variables';
