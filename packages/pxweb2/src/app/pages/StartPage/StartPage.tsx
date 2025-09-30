@@ -20,6 +20,7 @@ import {
   SearchHandle,
   Breadcrumbs,
   type BreadcrumbItem,
+  DetailsSection,
 } from '@pxweb2/pxweb2-ui';
 import { type Table } from '@pxweb2/pxweb2-api-client';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
@@ -43,9 +44,8 @@ import StartpageDetails from '../../components/StartPageDetails/StartPageDetails
 import { useLocaleContent } from '../../util/hooks/useLocaleContent';
 import type {
   LocaleContent,
-  Startpage,
-  BreadCrumb,
-  DetailsSection,
+  BreadCrumb as BreadCrumbType,
+  DetailsSection as DetailsSectionType,
 } from '../../util/config/localeContentTypes';
 
 const StartPage = () => {
@@ -88,11 +88,12 @@ const StartPage = () => {
   );
 
   const localeContent: LocaleContent | null = useLocaleContent(i18n.language);
-  const startPageContent: Startpage | undefined = localeContent?.startPage;
-  const detailsSectionContent: DetailsSection | undefined =
-    startPageContent?.detailsSection;
-  const breadCrumbContent: BreadCrumb | undefined =
-    startPageContent?.breadCrumb;
+  const detailsSectionContent: DetailsSectionType | undefined =
+    localeContent?.startPage?.detailsSection;
+  const breadCrumbContent: BreadCrumbType | undefined =
+    localeContent?.startPage?.breadCrumb;
+  const noResultSearchHelpContent =
+    localeContent?.startPage?.noResultSearchHelp;
   const showBreadCrumb = isRenderableBreadCrumb(breadCrumbContent);
 
   // Run once when initially loading the page, then again if language changes
@@ -363,18 +364,68 @@ const StartPage = () => {
     });
   };
 
+  const searchHelpList = (searchHelpItems: string[]) => {
+    return (
+      <ul className={styles.searchHelpList}>
+        {searchHelpItems.map((text, index) => (
+          <li
+            key={`help-text-${index}`}
+            className={cl(styles['bodylong-medium'])}
+          >
+            {text}
+          </li>
+        ))}
+      </ul>
+    );
+  };
+
+  const renderNoResult = () => {
+    const searchHelpItems = noResultSearchHelpContent?.helpText ?? [];
+    return (
+      <section aria-live="polite" className={styles.noResults}>
+        <Heading
+          spacing
+          level="2"
+          size="medium"
+          className={styles.noResultsTitle}
+        >
+          {t('start_page.no_result_header')}
+        </Heading>
+
+        <BodyShort spacing className={styles.noResultsText}>
+          {t('start_page.no_result_description')}
+        </BodyShort>
+
+        {noResultSearchHelpContent?.enabled && searchHelpItems && (
+          <div className={styles.noResultsDetails}>
+            <DetailsSection header={t('start_page.no_result_search_help')}>
+              {searchHelpList(searchHelpItems)}
+            </DetailsSection>
+          </div>
+        )}
+      </section>
+    );
+  };
+
   const renderTableCardList = () => (
     <>
       {renderNumberofTablesScreenReader()}
       {renderTableCount()}
-      <div
-        className={cl(styles.tableCardList, {
-          [styles.fadeList]: isFadingTableList,
-        })}
-      >
-        {renderCards()}
-      </div>
-      {renderPagination()}
+
+      {state.filteredTables.length === 0 ? (
+        renderNoResult()
+      ) : (
+        <>
+          <div
+            className={cl(styles.tableCardList, {
+              [styles.fadeList]: isFadingTableList,
+            })}
+          >
+            {renderCards()}
+          </div>
+          {renderPagination()}
+        </>
+      )}
     </>
   );
 
@@ -561,8 +612,8 @@ const StartPage = () => {
   };
 
   function isRenderableBreadCrumb(
-    bc: BreadCrumb | undefined,
-  ): bc is BreadCrumb {
+    bc: BreadCrumbType | undefined,
+  ): bc is BreadCrumbType {
     return !!bc && bc.enabled === true && !!bc.items?.length;
   }
 

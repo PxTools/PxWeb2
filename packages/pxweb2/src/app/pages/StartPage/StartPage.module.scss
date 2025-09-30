@@ -216,6 +216,15 @@
   grid-area: listTables;
 }
 
+.noResults {
+  padding-top: 1rem;
+
+  .searchHelpList {
+    margin: 0;
+    padding-inline-start: 1.25rem;
+  }
+}
+
 .tableCardList {
   display: grid;
   gap: 16px;
