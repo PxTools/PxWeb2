@@ -321,11 +321,7 @@ const StartPage = () => {
         <TableCard
           key={table.id}
           title={`${table.label}`}
-          href={() =>
-            navigate(
-              `${config.baseApplicationPath}${langPrefix}/table/${table.id}`,
-            )
-          }
+          href={() => navigate(`/${langPrefix}/table/${table.id}`)}
           updatedLabel={
             table.updated ? t('start_page.table.updated_label') : undefined
           }

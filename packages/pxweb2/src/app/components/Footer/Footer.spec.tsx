@@ -6,6 +6,14 @@ import '@testing-library/jest-dom/vitest';
 import { Footer, scrollToTop } from './Footer';
 import { useLocaleContent } from '../../util/hooks/useLocaleContent';
 
+let currentPathname = '/en/tables';
+const navigateMock = vi.fn();
+
+vi.mock('react-router', () => ({
+  useNavigate: () => navigateMock,
+  useLocation: () => ({ pathname: currentPathname }),
+}));
+
 vi.mock('../../util/hooks/useLocaleContent', () => ({
   useLocaleContent: vi.fn(),
 }));

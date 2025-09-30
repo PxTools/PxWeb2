@@ -1,8 +1,4 @@
 {
-  "meta": {
-    "languageName": "إنجليزي",
-    "shorthand": "ar"
-  },
   "common": {
     "title": "مرحبًا بك في PxWeb 2.0",
     "header": {
@@ -69,8 +65,8 @@
     "welcome_trans_test": "مرحبا بكم في <1>برنامج</1> لبكسي ويب 2.0!"
   },
   "presentation_page": {
-    "sidemenu": {
-      "arialabeltoolsidemenu": "قائمة الأدوات للجدول",
+    "side_menu": {
+      "aria_label_tool_side_menu": "قائمة الأدوات للجدول",
       "hide": "يخفي",
       "selection": {
         "title": "فلتر",
@@ -78,8 +74,8 @@
           "search": {
             "placeholder": "البحث في القائمة",
             "label": "يبحث",
-            "arialabelicontext": "أيقونة البحث",
-            "ariallabelclearbuttontext": "مسح أيقونة البحث"
+            "aria_label_icon_text": "أيقونة البحث",
+            "aria_label_clear_button_text": "مسح أيقونة البحث"
           },
           "header": {
             "tag_selected": "{{selected}} ل {{total}} مختارة",
@@ -160,18 +156,18 @@
         "savequery": {
           "title": "رابط إلى الجدول المحدث",
           "info": "ستحصل على رابط فريد لجدولك، وسنُحدّثه لك باستمرار. إضافة الفترات الزمنية الجديدة أمرٌ متروك لك.",
-          "radioLegend": "خيارات لفترات زمنية جديدة",
-          "periodOptions": {
+          "radio_legend": "خيارات لفترات زمنية جديدة",
+          "period_options": {
             "selected": "لا تقم بإضافة فترات زمنية جديدة (سيعرض الجدول فقط الفترات الزمنية المحددة حاليًا)",
             "from": "إضافة فترات زمنية جديدة (سيتم إضافتها إلى الفترات المحددة حاليًا)",
             "top": "إضافة فترات زمنية جديدة وإزالة الفترات الأقدم"
           },
-          "createButton": "إنشاء رابط",
-          "copyButton": "نسخ الوصلة",
-          "copiedButton": "تم نسخ الرابط",
-          "createStatus": "احفظ الاستعلام المُولّد بالمعرّف “{{query}}”. انقر مجددًا لنسخ الرابط.",
-          "copyStatus": "حفظ الاستعلام المنسوخ إلى الحافظة",
-          "loadingStatus": "جاري إنشاء استعلام محفوظ."
+          "create_button": "إنشاء رابط",
+          "copy_button": "نسخ الوصلة",
+          "copied_button": "تم نسخ الرابط",
+          "create_status": "احفظ الاستعلام المُولّد بالمعرّف “{{query}}”. انقر مجددًا لنسخ الرابط.",
+          "copy_status": "حفظ الاستعلام المنسوخ إلى الحافظة",
+          "loading_status": "جاري إنشاء استعلام محفوظ."
         },
         "imagefile": {
           "title": "حفظ كرسم بياني",
