@@ -91,12 +91,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [mobileBreakpoint, tabletBreakpoint, largeBreakpoint, xLargeBreakpoint]);
 
   useEffect(() => {
-    if (typeof window === 'undefined') {
+    if (typeof globalThis.window === 'undefined') {
       setIsBannerDismissed(false);
       return;
     }
 
-    const dismissed = window.sessionStorage.getItem(
+    const dismissed = globalThis.sessionStorage.getItem(
       'pxweb2.wip_status_message_dismissed',
     );
     setIsBannerDismissed(dismissed === 'true');
