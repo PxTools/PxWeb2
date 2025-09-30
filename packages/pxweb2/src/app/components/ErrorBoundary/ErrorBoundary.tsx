@@ -30,7 +30,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     // Example: "404\n          TableId: TAB60065 \n          Not Found\n           - https://..."
     const statusMatch = error.message.match(/^(\d{3})/);
     if (statusMatch) {
-      const status = parseInt(statusMatch[1], 10);
+      const status = Number.parseInt(statusMatch[1], 10);
 
       return status;
     }
@@ -38,7 +38,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     // 3. Check for status patterns within the message
     const statusInMessage = error.message.match(/(\d{3})/);
     if (statusInMessage) {
-      const status = parseInt(statusInMessage[1], 10);
+      const status = Number.parseInt(statusInMessage[1], 10);
 
       // Validate it's a real HTTP status code
       if (status >= 100 && status < 600) {
