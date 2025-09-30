@@ -323,7 +323,7 @@ describe('FilterSidebar - TimeUnit filter', () => {
     renderWithFilterContext(state, dispatch);
 
     expect(
-      screen.getByRole('heading', { name: 'start_page.filter.timeUnit' }),
+      screen.getByRole('heading', { name: 'start_page.filter.time_unit' }),
     ).toBeInTheDocument();
 
     const annual = screen.getByText('start_page.filter.frequency.annual (2)');
