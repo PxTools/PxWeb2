@@ -117,19 +117,13 @@ const StartPage = () => {
           },
         });
       } catch (error) {
-        console.log('Error on StartPage: ', error as Error);
-
-        // TODO: Check for status code and throw if not 404?
-        // If 404, we show a message on StartPage by setting an error state.
+        // Only set error state for 404 errors (no tables found)
         if ((error as Error).message.includes('404')) {
-          console.log('Inside 404 error on StartPage');
           dispatch({
             type: ActionType.SET_ERROR,
             payload: (error as Error).message,
           });
         } else {
-          console.log('Inside generic error on StartPage');
-
           // For any other errors, we re-throw to be caught by the ErrorBoundary in RootLayout
           throw new Error((error as Error).message);
         }
