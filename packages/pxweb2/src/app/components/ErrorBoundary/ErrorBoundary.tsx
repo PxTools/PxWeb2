@@ -1,4 +1,4 @@
-import { Component, ErrorInfo, ReactNode } from 'react';
+import { Component, ReactNode } from 'react';
 
 import { GenericError } from '../Errors/GenericError/GenericError';
 import { NotFound } from '../Errors/NotFound/NotFound';
@@ -17,85 +17,88 @@ interface ErrorBoundaryState {
 class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   state: ErrorBoundaryState = { hasError: false, error: null };
 
+  /**
+   * Enhanced error status detection that handles multiple error formats
+   */
+  private getErrorStatus(error: Error): number | null {
+    // 1. Check if it's already an ApiProblemError (preferred format)
+    if (error instanceof ApiProblemError) {
+      return error.status;
+    }
+
+    // 2. Parse HTTP status code from error message beginning (problemMessage format)
+    // Example: "404\n          TableId: TAB60065 \n          Not Found\n           - https://..."
+    const statusMatch = error.message.match(/^(\d{3})/);
+    if (statusMatch) {
+      const status = parseInt(statusMatch[1], 10);
+
+      return status;
+    }
+
+    // 3. Check for status patterns within the message
+    const statusInMessage = error.message.match(/(\d{3})/);
+    if (statusInMessage) {
+      const status = parseInt(statusInMessage[1], 10);
+
+      // Validate it's a real HTTP status code
+      if (status >= 100 && status < 600) {
+        return status;
+      }
+    }
+
+    // 4. Check for common error keywords
+    if (
+      error.message.includes('404') ||
+      error.message.toLowerCase().includes('not found') ||
+      error.message.toLowerCase().includes('table not found')
+    ) {
+      return 404;
+    }
+
+    if (
+      error.message.toLowerCase().includes('server error') ||
+      error.message.includes('500')
+    ) {
+      return 500;
+    }
+
+    return null;
+  }
+
   static getDerivedStateFromError(error: Error): ErrorBoundaryState {
-    console.log('ErrorBoundary getDerivedStateFromError called with:', {
-      error,
-      errorName: error.name,
-      errorConstructor: error.constructor.name,
-      isApiProblemError: error instanceof ApiProblemError,
-    });
     return { hasError: true, error };
   }
 
-  componentDidCatch(error: Error, info: ErrorInfo) {
-    if (error instanceof ApiProblemError) {
-      console.log(`API Error (${error.status}):`, error.message, info);
-
-      if (error.hasStatus(404)) {
-        console.log('404 Not Found error caught by error boundary:', {
-          tableId: error.selectedTabId,
-          originalError: error.originalError,
-        });
-      }
-    } else {
-      console.log('Generic error caught by error boundary:', error, info);
-    }
-  }
+  // NOSONAR: Add optional logging here if needed
+  // componentDidCatch(error: Error, info: ErrorInfo) {
+  //
+  // }
 
   render() {
-    console.log('ErrorBoundary render called with state:', this.state);
-
     if (this.state.hasError) {
-      console.log('ErrorBoundary: hasError is true, rendering error UI');
-
       // If a fallback UI is provided, render that
       if (this.props.fallback) {
-        console.log('ErrorBoundary: Using provided fallback');
         return this.props.fallback;
       }
 
-      // Check if this is a 404 error from API
-      console.log('ErrorBoundary render - Error details:', {
-        error: this.state.error,
-        errorName: this.state.error?.name,
-        errorConstructor: this.state.error?.constructor?.name,
-        isApiProblemError: this.state.error instanceof ApiProblemError,
-        status:
-          this.state.error instanceof ApiProblemError
-            ? this.state.error.status
-            : 'N/A',
-      });
+      // If no error object is available, render a generic error
+      if (!this.state.error) {
+        return <GenericError />;
+      }
 
-      // Check for 404 errors more explicitly
-      const isApiProblemError = this.state.error instanceof ApiProblemError;
-      const errorName = this.state.error?.name;
-      const errorStatus =
-        isApiProblemError && this.state.error
-          ? (this.state.error as ApiProblemError).status
-          : null;
-      const hasStatus404 =
-        isApiProblemError && this.state.error
-          ? (this.state.error as ApiProblemError).hasStatus(404)
-          : false;
+      // Use enhanced error detection
+      const detectedStatus = this.getErrorStatus(this.state.error);
 
-      console.log('ErrorBoundary: 404 check details:', {
-        isApiProblemError,
-        errorName,
-        errorStatus,
-        hasStatus404,
-        willRenderNotFound: isApiProblemError && hasStatus404,
-      });
-
-      if (isApiProblemError && hasStatus404) {
-        console.log('ErrorBoundary: Rendering NotFound component for 404');
+      // Check for 404 errors using enhanced detection
+      if (detectedStatus === 404) {
         return <NotFound />;
       }
 
-      // Alternative check in case instanceof fails but name matches
-      if (errorName === 'ApiProblemError' && errorStatus === 404) {
-        console.log(
-          'ErrorBoundary: Rendering NotFound via fallback name check',
-        );
+      // Check for ApiProblemError
+      if (
+        this.state.error instanceof ApiProblemError &&
+        this.state.error.hasStatus(404)
+      ) {
         return <NotFound />;
       }
 

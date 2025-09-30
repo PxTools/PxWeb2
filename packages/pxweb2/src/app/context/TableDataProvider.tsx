@@ -113,7 +113,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
   useEffect(() => {
     if (apiError) {
-      console.log('ApiError set in TableDataProvider:', apiError);
       throw apiError;
     }
   }, [apiError]);
@@ -1058,7 +1057,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       variablesSelection,
     ).catch((error: unknown) => {
       const err = error as ApiError;
-      console.log('API error occurred:', err);
 
       // For 404 errors, set ApiProblemError to be thrown by useEffect and return null to indicate failure
       if (err.status === 404) {
