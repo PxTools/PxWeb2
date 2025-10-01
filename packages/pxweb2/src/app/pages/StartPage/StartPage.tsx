@@ -17,6 +17,7 @@ import {
   Heading,
   Ingress,
   BodyShort,
+  BodyLong,
   SearchHandle,
   Breadcrumbs,
   type BreadcrumbItem,
@@ -377,18 +378,13 @@ const StartPage = () => {
 
     return (
       <section className={styles.noResults}>
-        <Heading
-          spacing
-          level="2"
-          size="medium"
-          className={styles.noResultsTitle}
-        >
+        <Heading level="2" size="medium" className={styles.noResultsTitle}>
           {t('start_page.no_result_header')}
         </Heading>
 
-        <BodyShort className={styles.noResultsText}>
+        <BodyLong className={styles.noResultsText}>
           {t('start_page.no_result_description')}
-        </BodyShort>
+        </BodyLong>
 
         {hasSearchHelp && (
           <div className={styles.noResultsDetails}>

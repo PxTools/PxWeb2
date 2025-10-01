@@ -238,9 +238,30 @@
 
 .noResults {
   padding-top: 1rem;
+  width: 100%;
+
+  .noResultsTitle {
+    margin-bottom: 8px;
+  }
 
   .noResultsDetails {
     padding-top: 20px;
+  }
+
+  @media #{breakpoint.$medium} {
+    max-width: 508px;
+  }
+
+  @media #{breakpoint.$large} {
+    max-width: 480px;
+  }
+
+  @media #{breakpoint.$xlarge} {
+    max-width: 538px;
+  }
+
+  @media #{breakpoint.$xxlarge} {
+    max-width: 550px;
   }
 }
 
