@@ -6,7 +6,6 @@ import { ApiProblemError } from '../../util/ApiProblemError';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
-  fallback?: ReactNode;
 }
 
 interface ErrorBoundaryState {
