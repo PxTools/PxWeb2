@@ -638,23 +638,21 @@ const StartPage = () => {
       <Header stroke={true} />
       <main className={styles.startPage}>
         <div className={cl(styles.startPageHeader)}>
-          <div className={cl(styles.container)}>
-            <div
-              className={cl(styles.contentTop, {
-                [styles.hasBreadcrumb]: showBreadCrumb,
-              })}
-            >
-              {showBreadCrumb && renderBreadCrumb()}
-              <div className={styles.information}>
-                <Heading size="large" level="1" className={styles.title}>
-                  {t('start_page.header')}
-                </Heading>
-                <Ingress>{t('start_page.ingress')}</Ingress>
-                <div className={styles.showDetailsSection}>
-                  {detailsSectionContent && (
-                    <StartpageDetails detailsSection={detailsSectionContent} />
-                  )}
-                </div>
+          <div
+            className={cl(styles.contentTop, styles.container, {
+              [styles.hasBreadcrumb]: showBreadCrumb,
+            })}
+          >
+            {showBreadCrumb && renderBreadCrumb()}
+            <div className={styles.information}>
+              <Heading size="large" level="1" className={styles.title}>
+                {t('start_page.header')}
+              </Heading>
+              <Ingress>{t('start_page.ingress')}</Ingress>
+              <div className={styles.showDetailsSection}>
+                {detailsSectionContent && (
+                  <StartpageDetails detailsSection={detailsSectionContent} />
+                )}
               </div>
             </div>
           </div>

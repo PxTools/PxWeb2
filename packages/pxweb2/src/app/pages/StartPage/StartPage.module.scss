@@ -20,21 +20,6 @@
 .contentTop {
   padding: 84px 0px 72px;
   background-color: var(--px-color-surface-default);
-  max-width: 848px;
-
-  .information {
-    .title {
-      margin-bottom: 1rem;
-    }
-
-    .showDetailsSection {
-      padding-top: 36px;
-
-      @media #{breakpoint.$xsmall} , #{breakpoint.$small} {
-        padding-top: 32px;
-      }
-    }
-  }
 
   @media #{breakpoint.$xsmall} , #{breakpoint.$small} {
     padding: 62px 0 48px;
@@ -42,14 +27,6 @@
 
   @media #{breakpoint.$medium} {
     padding: 76px 0 72px;
-  }
-
-  @media #{breakpoint.$large} {
-    max-width: 688px;
-  }
-
-  @media #{breakpoint.$xlarge} {
-    max-width: 728px;
   }
 
   &.hasBreadcrumb {
@@ -64,6 +41,34 @@
     @media #{breakpoint.$xsmall} , #{breakpoint.$small} {
       padding: 32px 0px 48px;
       gap: 38px;
+    }
+  }
+}
+
+.information {
+  width: 100%;
+
+  @media #{breakpoint.$large} {
+    max-width: 688px;
+  }
+
+  @media #{breakpoint.$xlarge} {
+    max-width: 728px;
+  }
+
+  @media #{breakpoint.$xxlarge} {
+    max-width: 848px;
+  }
+
+  .title {
+    margin-bottom: 1rem;
+  }
+
+  .showDetailsSection {
+    padding-top: 36px;
+
+    @media #{breakpoint.$xsmall} , #{breakpoint.$small} {
+      padding-top: 32px;
     }
   }
 }
