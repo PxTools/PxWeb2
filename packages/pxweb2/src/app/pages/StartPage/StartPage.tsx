@@ -21,6 +21,8 @@ import {
   Breadcrumbs,
   type BreadcrumbItem,
   DetailsSection,
+  List,
+  ListItem,
 } from '@pxweb2/pxweb2-ui';
 import { type Table } from '@pxweb2/pxweb2-api-client';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
@@ -366,16 +368,11 @@ const StartPage = () => {
 
   const searchHelpList = (searchHelpItems: string[]) => {
     return (
-      <ul className={styles.searchHelpList}>
+      <List listType="ul">
         {searchHelpItems.map((text, index) => (
-          <li
-            key={`help-text-${index}`}
-            className={cl(styles['bodylong-medium'])}
-          >
-            {text}
-          </li>
+          <ListItem key={`help-text-${index}`}>{text}</ListItem>
         ))}
-      </ul>
+      </List>
     );
   };
 
@@ -392,7 +389,7 @@ const StartPage = () => {
           {t('start_page.no_result_header')}
         </Heading>
 
-        <BodyShort spacing className={styles.noResultsText}>
+        <BodyShort className={styles.noResultsText}>
           {t('start_page.no_result_description')}
         </BodyShort>
 
