@@ -366,20 +366,17 @@ const StartPage = () => {
     });
   };
 
-  const searchHelpList = (searchHelpItems: string[]) => {
-    return (
-      <List listType="ul">
-        {searchHelpItems.map((text, index) => (
-          <ListItem key={`help-text-${index}`}>{text}</ListItem>
-        ))}
-      </List>
-    );
-  };
-
   const renderNoResult = () => {
-    const searchHelpItems = noResultSearchHelpContent?.helpText ?? [];
+    const helpTexts = noResultSearchHelpContent?.helpText;
+    const searchHelpItems = Array.isArray(helpTexts)
+      ? helpTexts.map((s) => String(s).trim()).filter(Boolean)
+      : [];
+
+    const hasSearchHelp =
+      Boolean(noResultSearchHelpContent?.enabled) && searchHelpItems.length > 0;
+
     return (
-      <section aria-live="polite" className={styles.noResults}>
+      <section className={styles.noResults}>
         <Heading
           spacing
           level="2"
@@ -393,10 +390,14 @@ const StartPage = () => {
           {t('start_page.no_result_description')}
         </BodyShort>
 
-        {noResultSearchHelpContent?.enabled && searchHelpItems && (
+        {hasSearchHelp && (
           <div className={styles.noResultsDetails}>
             <DetailsSection header={t('start_page.no_result_search_help')}>
-              {searchHelpList(searchHelpItems)}
+              <List listType="ul">
+                {searchHelpItems.map((text, index) => (
+                  <ListItem key={`${text}-${index}`}>{text}</ListItem>
+                ))}
+              </List>
             </DetailsSection>
           </div>
         )}
