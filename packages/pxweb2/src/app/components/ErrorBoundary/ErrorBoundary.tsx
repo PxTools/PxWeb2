@@ -1,4 +1,4 @@
-import { Component, ErrorInfo, ReactNode } from 'react';
+import { Component, ReactNode } from 'react';
 
 import { GenericError } from '../Errors/GenericError/GenericError';
 
@@ -19,9 +19,10 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     return { hasError: true, error };
   }
 
-  componentDidCatch(error: Error, info: ErrorInfo) {
-    console.log(error, info);
-  }
+  // NOSONAR: Keep optional debug logging for local troubleshooting during release stabilization
+  // componentDidCatch(error: Error, info: ErrorInfo) {
+  //   console.log(error, info);
+  // }
 
   render() {
     if (this.state.hasError) {

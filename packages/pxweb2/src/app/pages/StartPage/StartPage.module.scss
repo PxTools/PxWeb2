@@ -59,10 +59,14 @@
 
 .searchFilterResult {
   background-color: var(--px-color-surface-subtle);
-  padding-bottom: 100px;
+  padding-bottom: 84px;
+
+  @media #{breakpoint.$medium} {
+    padding-bottom: 76px;
+  }
 
   @media #{breakpoint.$xsmall} , #{breakpoint.$small} {
-    padding-bottom: 88px;
+    padding-bottom: 62px;
   }
 }
 
@@ -290,6 +294,10 @@
   @media #{breakpoint.$xxlarge} {
     max-width: 1288px;
   }
+}
+
+.footerContent {
+  background-color: var(--px-color-surface-moderate);
 }
 
 .errorContainer {
