@@ -76,11 +76,6 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 
   render() {
     if (this.state.hasError) {
-      // If a fallback UI is provided, render that
-      if (this.props.fallback) {
-        return this.props.fallback;
-      }
-
       // If no error object is available, render a generic error
       if (!this.state.error) {
         return <GenericError />;

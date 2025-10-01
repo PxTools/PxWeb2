@@ -86,26 +86,6 @@ describe('ErrorBoundary', () => {
     expect(screen.getByText('Generic Error Component')).toBeInTheDocument();
   });
 
-  it('renders custom fallback when provided and error occurs', () => {
-    const ErrorComponent = () => {
-      throw new Error('Test error');
-    };
-    const customFallback = (
-      <div data-testid="custom-fallback">Custom Error UI</div>
-    );
-
-    render(
-      <ErrorBoundary fallback={customFallback}>
-        <ErrorComponent />
-      </ErrorBoundary>,
-    );
-
-    // Assert that the custom fallback is rendered instead of GenericError
-    expect(screen.getByTestId('custom-fallback')).toBeInTheDocument();
-    expect(screen.getByText('Custom Error UI')).toBeInTheDocument();
-    expect(screen.queryByTestId('generic-error')).not.toBeInTheDocument();
-  });
-
   it('renders NotFound component when ApiProblemError with 404 status occurs', () => {
     const mockApiError = {
       status: 404,
