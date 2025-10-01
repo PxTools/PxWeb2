@@ -2,6 +2,7 @@ import cl from 'clsx';
 
 import styles from './ErrorLayout.module.scss';
 import { Header } from '../Header/Header';
+import { Footer } from '../Footer/Footer';
 
 interface ErrorContentProps
   extends Pick<ErrorLayoutProps, 'align' | 'children'> {}
@@ -21,7 +22,7 @@ function ErrorContent({ align = 'center', children }: ErrorContentProps) {
           </main>
         </div>
       </div>
-      <div>Footer Component goes here</div>
+      <Footer />
     </>
   );
 }
