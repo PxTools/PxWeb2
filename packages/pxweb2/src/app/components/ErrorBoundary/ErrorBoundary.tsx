@@ -88,14 +88,6 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
         return <NotFound />;
       }
 
-      // Check for ApiProblemError
-      if (
-        this.state.error instanceof ApiProblemError &&
-        this.state.error.hasStatus(404)
-      ) {
-        return <NotFound />;
-      }
-
       // Default error UI for all other errors
       return <GenericError />;
     }
