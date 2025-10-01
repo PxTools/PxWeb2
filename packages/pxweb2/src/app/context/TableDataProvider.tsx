@@ -1086,7 +1086,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     const formattingResult = await addFormattingToPxTable(pxTable);
 
     if (formattingResult === false) {
-      throw new Error(
+      setErrorMsg(
         'TableDataProvider.fetchFromApi: Failed to format PxTable datacell values',
       );
     }
@@ -1158,9 +1158,11 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       const lastTitlePart = titleParts.pop();
 
       if (!lastTitlePart) {
-        throw new Error(
+        setErrorMsg(
           'TableDataProvider.buildTableTitle: Missing last title part. This should not happen. Please report this as a bug.',
         );
+
+        return { firstTitlePart: '', lastTitlePart: '' };
       }
 
       const firstTitlePart = titleParts.join(', ');
