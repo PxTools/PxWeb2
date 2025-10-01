@@ -31,6 +31,7 @@ export function ErrorMessage({
       />
 
       <div
+        role="alert"
         className={cl(
           classes.textAndAction,
           align === 'center' ? classes.alignCenter : classes.alignStart,
