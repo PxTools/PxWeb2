@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
+import { MemoryRouter } from 'react-router';
 
 import { ErrorLayout } from './ErrorLayout';
 
@@ -10,8 +11,11 @@ vi.mock('../Header/Header', () => ({
 }));
 
 describe('ErrorLayout', () => {
+  const renderWithRouter = (ui: React.ReactElement) =>
+    render(<MemoryRouter>{ui}</MemoryRouter>);
+
   it('should render successfully', () => {
-    const { container } = render(
+    const { container } = renderWithRouter(
       <ErrorLayout>
         <div>Error Content</div>
       </ErrorLayout>,
@@ -21,7 +25,7 @@ describe('ErrorLayout', () => {
   });
 
   it('should render the header', () => {
-    const { getByTestId } = render(
+    const { getByTestId } = renderWithRouter(
       <ErrorLayout>
         <div>Error Content</div>
       </ErrorLayout>,
@@ -31,7 +35,7 @@ describe('ErrorLayout', () => {
   });
 
   it('should render the children content', () => {
-    const { getByText } = render(
+    const { getByText } = renderWithRouter(
       <ErrorLayout>
         <div>Error Content</div>
       </ErrorLayout>,
