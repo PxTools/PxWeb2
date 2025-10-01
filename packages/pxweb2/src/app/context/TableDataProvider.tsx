@@ -1049,6 +1049,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     i18n: i18n,
     variablesSelection: VariablesSelection,
   ): Promise<PxTable | null> => {
+    let result: PxTable | null = null;
     const res = await TableService.getTableDataByPost(
       tableId,
       i18n.language,
@@ -1058,40 +1059,38 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     ).catch((error: unknown) => {
       const err = error as ApiError;
 
-      // For 404 errors, set ApiProblemError to be thrown by useEffect and return null to indicate failure
+      // For 404 errors, set ApiProblemError to be thrown by useEffect
       if (err.status === 404) {
         setApiError(new ApiProblemError(err, tableId));
-
-        return null;
+      } else {
+        // For other errors, set error message
+        setErrorMsg(problemMessage(err, tableId));
       }
-
-      // For other errors, set error message and return null to indicate failure
-      setErrorMsg(problemMessage(err, tableId));
 
       return null;
     });
 
-    // If the API call failed, return early
-    if (!res) {
-      return null;
+    // If the API call succeeded, process the response
+    if (res) {
+      // Map response to json-stat2 Dataset
+      const pxDataobj: unknown = res;
+      const pxTabData = pxDataobj as Dataset;
+
+      const pxTable: PxTable = mapJsonStat2Response(pxTabData);
+
+      // Add formatting to the PxTable datacell values
+      const formattingResult = await addFormattingToPxTable(pxTable);
+
+      if (formattingResult === false) {
+        setErrorMsg(
+          'TableDataProvider.fetchFromApi: Failed to format PxTable datacell values',
+        );
+      } else {
+        result = pxTable;
+      }
     }
 
-    // Map response to json-stat2 Dataset
-    const pxDataobj: unknown = res;
-    const pxTabData = pxDataobj as Dataset;
-
-    const pxTable: PxTable = mapJsonStat2Response(pxTabData);
-
-    // Add formatting to the PxTable datacell values
-    const formattingResult = await addFormattingToPxTable(pxTable);
-
-    if (formattingResult === false) {
-      setErrorMsg(
-        'TableDataProvider.fetchFromApi: Failed to format PxTable datacell values',
-      );
-    }
-
-    return pxTable;
+    return result;
   };
 
   /**
