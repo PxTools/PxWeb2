@@ -657,38 +657,36 @@ const StartPage = () => {
             </div>
           </div>
         </div>
-        <div className={cl(styles.searchFilterResult)}>
-          <div className={styles.container}>
-            <div className={styles.searchAreaWrapper}>
-              <div className={cl(styles.search)} role="search">
-                <Search
-                  searchPlaceHolder={t('start_page.search_placeholder')}
-                  variant="default"
-                  ref={searchFieldRef}
-                  showLabel
-                  labelText={t('start_page.search_label')}
-                  onChange={(value: string) => {
-                    debouncedDispatch(value);
-                  }}
-                />
-              </div>
-
-              <Button
-                variant="secondary"
-                iconPosition="start"
-                icon="Controls"
-                className={styles.filterToggleButton}
-                onClick={() => setIsFilterOverlayOpen(true)}
-                ref={filterToggleRef}
-                aria-expanded={isFilterOverlayOpen}
-                aria-live="polite"
-              >
-                {t('start_page.filter.button')}
-              </Button>
+        <div className={cl(styles.searchFilterResult, styles.container)}>
+          <div className={styles.searchAreaWrapper}>
+            <div className={cl(styles.search)} role="search">
+              <Search
+                searchPlaceHolder={t('start_page.search_placeholder')}
+                variant="default"
+                ref={searchFieldRef}
+                showLabel
+                labelText={t('start_page.search_label')}
+                onChange={(value: string) => {
+                  debouncedDispatch(value);
+                }}
+              />
             </div>
+
+            <Button
+              variant="secondary"
+              iconPosition="start"
+              icon="Controls"
+              className={styles.filterToggleButton}
+              onClick={() => setIsFilterOverlayOpen(true)}
+              ref={filterToggleRef}
+              aria-expanded={isFilterOverlayOpen}
+              aria-live="polite"
+            >
+              {t('start_page.filter.button')}
+            </Button>
           </div>
 
-          <div className={cl(styles.filterAndListWrapper, styles.container)}>
+          <div className={cl(styles.filterAndListWrapper)}>
             {!isSmallScreen && (
               <div>
                 <Heading
