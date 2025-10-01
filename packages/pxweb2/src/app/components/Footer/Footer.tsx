@@ -11,6 +11,8 @@ import { useLocaleContent } from '../../util/hooks/useLocaleContent';
 
 type FooterProps = {
   containerRef?: React.RefObject<HTMLDivElement | null>;
+  variant?: 'startpage' | 'tableview';
+  enableWindowScroll?: boolean;
 };
 
 export function scrollToTop(ref?: React.RefObject<HTMLDivElement | null>) {
@@ -32,7 +34,11 @@ export function scrollToTop(ref?: React.RefObject<HTMLDivElement | null>) {
   }
 }
 
-export const Footer: React.FC<FooterProps> = ({ containerRef }) => {
+export const Footer: React.FC<FooterProps> = ({
+  containerRef,
+  variant = 'tableview',
+  enableWindowScroll = false,
+}) => {
   const { i18n, t } = useTranslation();
   const config = getConfig();
   const content = useLocaleContent(
@@ -43,9 +49,22 @@ export const Footer: React.FC<FooterProps> = ({ containerRef }) => {
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
   const location = useLocation();
 
+  const canShowTopButton = !!containerRef || enableWindowScroll;
+
+  const handleScrollTop = () => {
+    if (containerRef?.current) {
+      scrollToTop(containerRef);
+    } else if (enableWindowScroll) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   return (
-    <footer className={styles.footerContainer} ref={scrollContainerRef}>
-      <div className={cl(styles.footer)}>
+    <footer
+      className={cl(styles.footerContainer, styles[`variant--${variant}`])}
+      ref={scrollContainerRef}
+    >
+      <div className={styles.footer}>
         <div className={cl(styles.footerContent)}>
           <div className={cl(styles.logoAndLinks)}>
             <div className={cl(styles.footerLinks)}>
@@ -131,12 +150,12 @@ export const Footer: React.FC<FooterProps> = ({ containerRef }) => {
                 {t('common.footer.copyright')}
               </BodyShort>
             </div>
-            {containerRef && (
+            {canShowTopButton && (
               <Button
                 icon="ArrowUp"
                 variant="secondary"
                 size="medium"
-                onClick={() => scrollToTop(containerRef)}
+                onClick={handleScrollTop}
               >
                 {t('common.footer.top_button_text')}
               </Button>
