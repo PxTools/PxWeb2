@@ -634,11 +634,11 @@ const StartPage = () => {
   };
 
   return (
-    <>
+    <div className={styles.startPageLayout}>
       <Header stroke={true} />
-      <main>
-        <div className={styles.startPage}>
-          <div className={styles.container}>
+      <main className={styles.startPage}>
+        <div className={cl(styles.startPageHeader)}>
+          <div className={cl(styles.container)}>
             <div
               className={cl(styles.contentTop, {
                 [styles.hasBreadcrumb]: showBreadCrumb,
@@ -658,121 +658,116 @@ const StartPage = () => {
               </div>
             </div>
           </div>
-          <div className={cl(styles.searchFilterResult)}>
-            <div className={styles.container}>
-              <div className={styles.searchAreaWrapper}>
-                <div className={cl(styles.search)} role="search">
-                  <Search
-                    searchPlaceHolder={t('start_page.search_placeholder')}
-                    variant="default"
-                    ref={searchFieldRef}
-                    showLabel
-                    labelText={t('start_page.search_label')}
-                    onChange={(value: string) => {
-                      debouncedDispatch(value);
-                    }}
-                  />
-                </div>
-
-                <Button
-                  variant="secondary"
-                  iconPosition="start"
-                  icon="Controls"
-                  className={styles.filterToggleButton}
-                  onClick={() => setIsFilterOverlayOpen(true)}
-                  ref={filterToggleRef}
-                  aria-expanded={isFilterOverlayOpen}
-                  aria-live="polite"
-                >
-                  {t('start_page.filter.button')}
-                </Button>
+        </div>
+        <div className={cl(styles.searchFilterResult)}>
+          <div className={styles.container}>
+            <div className={styles.searchAreaWrapper}>
+              <div className={cl(styles.search)} role="search">
+                <Search
+                  searchPlaceHolder={t('start_page.search_placeholder')}
+                  variant="default"
+                  ref={searchFieldRef}
+                  showLabel
+                  labelText={t('start_page.search_label')}
+                  onChange={(value: string) => {
+                    debouncedDispatch(value);
+                  }}
+                />
               </div>
-            </div>
 
-            <div className={cl(styles.filterAndListWrapper, styles.container)}>
-              {!isSmallScreen && (
-                <div>
-                  <Heading
-                    className={cl(styles.filterHeading)}
-                    size="medium"
-                    level="2"
-                  >
-                    {t('start_page.filter.header')}
-                  </Heading>
-                  <FilterSidebar onFilterChange={handleFilterChange} />
+              <Button
+                variant="secondary"
+                iconPosition="start"
+                icon="Controls"
+                className={styles.filterToggleButton}
+                onClick={() => setIsFilterOverlayOpen(true)}
+                ref={filterToggleRef}
+                aria-expanded={isFilterOverlayOpen}
+                aria-live="polite"
+              >
+                {t('start_page.filter.button')}
+              </Button>
+            </div>
+          </div>
+
+          <div className={cl(styles.filterAndListWrapper, styles.container)}>
+            {!isSmallScreen && (
+              <div>
+                <Heading
+                  className={cl(styles.filterHeading)}
+                  size="medium"
+                  level="2"
+                >
+                  {t('start_page.filter.header')}
+                </Heading>
+                <FilterSidebar onFilterChange={handleFilterChange} />
+              </div>
+            )}
+
+            {renderFilterOverlay()}
+
+            <div className={styles.listTables}>
+              <Heading level="2" className={styles['sr-only']}>
+                {t('start_page.result_hidden_header')}
+              </Heading>
+              {state.activeFilters.length >= 1 && (
+                <div className={styles.filterPillContainer}>
+                  <Chips aria-label={t('start_page.filter.list_filters_aria')}>
+                    {renderRemoveAllChips()}
+                    {sortAndDeduplicateFilterChips(
+                      state.activeFilters,
+                      state.subjectOrderList,
+                    ).map((filter) => (
+                      <Chips.Removable
+                        onClick={() => {
+                          dispatch({
+                            type: ActionType.REMOVE_FILTER,
+                            payload: {
+                              value: filter.value,
+                              type: filter.type,
+                            },
+                          });
+                          handleFilterChange();
+                          if (filter.type == 'search') {
+                            searchFieldRef.current?.clearInputField();
+                          }
+                        }}
+                        aria-label={t('start_page.filter.remove_filter_aria', {
+                          value: filter.label,
+                        })}
+                        key={filter.value}
+                        truncate
+                      >
+                        {filter.label}
+                      </Chips.Removable>
+                    ))}
+                  </Chips>
                 </div>
               )}
-
-              {renderFilterOverlay()}
-
-              <div className={styles.listTables}>
-                <Heading level="2" className={styles['sr-only']}>
-                  {t('start_page.result_hidden_header')}
-                </Heading>
-                {state.activeFilters.length >= 1 && (
-                  <div className={styles.filterPillContainer}>
-                    <Chips
-                      aria-label={t('start_page.filter.list_filters_aria')}
-                    >
-                      {renderRemoveAllChips()}
-                      {sortAndDeduplicateFilterChips(
-                        state.activeFilters,
-                        state.subjectOrderList,
-                      ).map((filter) => (
-                        <Chips.Removable
-                          onClick={() => {
-                            dispatch({
-                              type: ActionType.REMOVE_FILTER,
-                              payload: {
-                                value: filter.value,
-                                type: filter.type,
-                              },
-                            });
-                            handleFilterChange();
-                            if (filter.type == 'search') {
-                              searchFieldRef.current?.clearInputField();
-                            }
-                          }}
-                          aria-label={t(
-                            'start_page.filter.remove_filter_aria',
-                            {
-                              value: filter.label,
-                            },
-                          )}
-                          key={filter.value}
-                          truncate
-                        >
-                          {filter.label}
-                        </Chips.Removable>
-                      ))}
-                    </Chips>
-                  </div>
-                )}
-                {state.error && (
-                  <div className={styles.error}>
-                    <Alert
-                      heading="Feil i lasting av tabeller"
-                      onClick={() => {
-                        location.reload();
-                      }}
-                      variant="error"
-                      clickable
-                    >
-                      Statistikkbanken kunne ikke vise listen over tabeller.
-                      Last inn siden på nytt eller klikk her for å forsøke
-                      igjen. <br />
-                      Feilmelding: {state.error}
-                    </Alert>
-                  </div>
-                )}
-                {!isReadyToRender ? (
-                  <div className={styles.loadingSpinner}>
-                    <Spinner size="xlarge" />
-                  </div>
-                ) : (
-                  renderTableCardList()
-                )}
-              </div>
+              {state.error && (
+                <div className={styles.error}>
+                  <Alert
+                    heading="Feil i lasting av tabeller"
+                    onClick={() => {
+                      location.reload();
+                    }}
+                    variant="error"
+                    clickable
+                  >
+                    Statistikkbanken kunne ikke vise listen over tabeller. Last
+                    inn siden på nytt eller klikk her for å forsøke igjen.{' '}
+                    <br />
+                    Feilmelding: {state.error}
+                  </Alert>
+                </div>
+              )}
+              {!isReadyToRender ? (
+                <div className={styles.loadingSpinner}>
+                  <Spinner size="xlarge" />
+                </div>
+              ) : (
+                renderTableCardList()
+              )}
             </div>
           </div>
         </div>
@@ -783,7 +778,7 @@ const StartPage = () => {
           <Footer variant="startpage" enableWindowScroll />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
