@@ -142,9 +142,9 @@ describe('Footer', () => {
 
     it('scrolls window to top when enableWindowScroll is true', () => {
       (useLocaleContent as Mock).mockReturnValue(footerContent);
-      const scrollSpy = vi
-        .spyOn(window, 'scrollTo')
-        .mockImplementation(() => {});
+      const scrollSpy = vi.spyOn(window, 'scrollTo').mockImplementation(() => {
+        vi.fn();
+      });
       render(<Footer variant="startpage" enableWindowScroll />);
 
       const btn = screen.getByRole('button', {
