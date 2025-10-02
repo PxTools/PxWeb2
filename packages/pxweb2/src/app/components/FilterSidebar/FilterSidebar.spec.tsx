@@ -4,21 +4,18 @@ import '@testing-library/jest-dom/vitest';
 import { vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
 
+import {
+  Table,
+  TimeUnit,
+  FolderContentItemTypeEnum,
+} from '@pxweb2/pxweb2-api-client';
 import { FilterSidebar } from './FilterSidebar';
 import { FilterContext } from '../../context/FilterContext';
-import { ActionType } from '../../pages/StartPage/StartPageTypes';
-
-vi.mock('react-i18next', async () => {
-  const actual =
-    await vi.importActual<typeof import('react-i18next')>('react-i18next');
-  return {
-    ...actual,
-    useTranslation: () => ({
-      t: (key: string, opts?: { year?: string | number }) =>
-        opts?.year ? `${key} ${opts.year}` : key,
-    }),
-  };
-});
+import {
+  ActionType,
+  StartPageState,
+  ReducerActionTypes,
+} from '../../pages/StartPage/StartPageTypes';
 
 vi.mock('@pxweb2/pxweb2-ui', () => ({
   FilterCategory: ({
@@ -65,56 +62,48 @@ vi.mock('@pxweb2/pxweb2-ui', () => ({
   ),
 }));
 
-type StatusKey = 'active' | 'discontinued';
+// Helper function to create mock tables
+const createMockTable = (id: string, overrides?: Partial<Table>): Table => ({
+  type: FolderContentItemTypeEnum.TABLE,
+  id,
+  label: `Table ${id}`,
+  updated: null,
+  firstPeriod: null,
+  lastPeriod: null,
+  variableNames: [],
+  links: null,
+  ...overrides,
+});
 
-type TestState = {
-  availableTables: Array<{
-    id: string;
-    timeUnit?: string;
-    discontinued?: boolean;
-  }>;
-  activeFilters: Array<{
-    type: string;
-    value: string;
-    label?: string;
-    index?: number;
-    uniqueId?: string;
-  }>;
-  availableFilters: {
-    subjectTree: [];
-    timeUnits: Map<string, number>;
-    variables: Map<string, number>;
-    status: Map<StatusKey, number>;
-  };
-  filteredTables?: [];
-  subjectOrderList?: [];
-  error?: string | null;
-  loading?: boolean;
-};
-
-const makeBaseState = (overrides: Partial<TestState> = {}): TestState => ({
+const makeBaseState = (
+  overrides: Partial<StartPageState> = {},
+): StartPageState => ({
   availableTables: [],
   activeFilters: [],
   availableFilters: {
     subjectTree: [],
     timeUnits: new Map<string, number>(),
     variables: new Map<string, number>(),
-    status: new Map<StatusKey, number>(),
+    status: new Map<'active' | 'discontinued', number>(),
+    yearRange: { min: 0, max: 0 },
   },
   filteredTables: [],
   subjectOrderList: [],
-  error: null,
+  error: '',
   loading: false,
+  originalSubjectTree: [],
+  lastUsedYearRange: null,
   ...overrides,
 });
 
-const renderWithFilterContext = (state: TestState, dispatch = vi.fn()) => {
+const renderWithFilterContext = (
+  state: StartPageState,
+  dispatch: (action: ReducerActionTypes) => void = vi.fn(),
+) => {
   return {
     dispatch,
     ...render(
-      <FilterContext.Provider
-        value={{ state: state as any, dispatch: dispatch as any }}
-      >
+      <FilterContext.Provider value={{ state, dispatch }}>
         <FilterSidebar onFilterChange={vi.fn()} />
       </FilterContext.Provider>,
     ),
@@ -125,17 +114,18 @@ describe('FilterSidebar - Status filter', () => {
   it('does NOT render the "Status" section when no tables are discontinued', () => {
     const state = makeBaseState({
       availableTables: [
-        { id: 'a', discontinued: false },
-        { id: 'b', discontinued: undefined },
+        createMockTable('a', { discontinued: false }),
+        createMockTable('b', { discontinued: undefined }),
       ],
       availableFilters: {
         subjectTree: [],
         timeUnits: new Map(),
         variables: new Map(),
-        status: new Map<StatusKey, number>([
+        status: new Map<'active' | 'discontinued', number>([
           ['active', 2],
           ['discontinued', 0],
         ]),
+        yearRange: { min: 0, max: 0 },
       },
     });
 
@@ -149,17 +139,18 @@ describe('FilterSidebar - Status filter', () => {
   it('renders the "Status" section when at least one table is discontinued', () => {
     const state = makeBaseState({
       availableTables: [
-        { id: 'a', discontinued: false },
-        { id: 'b', discontinued: true },
+        createMockTable('a', { discontinued: false }),
+        createMockTable('b', { discontinued: true }),
       ],
       availableFilters: {
         subjectTree: [],
         timeUnits: new Map(),
         variables: new Map(),
-        status: new Map<StatusKey, number>([
+        status: new Map<'active' | 'discontinued', number>([
           ['active', 5],
           ['discontinued', 1],
         ]),
+        yearRange: { min: 0, max: 0 },
       },
     });
 
@@ -178,7 +169,7 @@ describe('FilterSidebar - Status filter', () => {
 
   it('avkrysser "not_updating" når aktiv -> dispatcher REMOVE_FILTER', async () => {
     const state = makeBaseState({
-      availableTables: [{ id: 'B', discontinued: true }],
+      availableTables: [createMockTable('B', { discontinued: true })],
       activeFilters: [
         {
           type: 'status',
@@ -195,6 +186,7 @@ describe('FilterSidebar - Status filter', () => {
           ['active', 0],
           ['discontinued', 3],
         ]),
+        yearRange: { min: 0, max: 0 },
       },
     });
 
@@ -219,7 +211,7 @@ describe('FilterSidebar - Status filter', () => {
   // Når "not_updating" er inaktiv -> ett klikk skal ADD_FILTER
   it('unchecks "not_updating" when active -> dispatches REMOVE_FILTER', async () => {
     const state = makeBaseState({
-      availableTables: [{ id: 'B', discontinued: true }],
+      availableTables: [createMockTable('B', { discontinued: true })],
       activeFilters: [],
       availableFilters: {
         subjectTree: [],
@@ -229,6 +221,7 @@ describe('FilterSidebar - Status filter', () => {
           ['active', 0],
           ['discontinued', 3],
         ]),
+        yearRange: { min: 0, max: 0 },
       },
     });
 
@@ -259,15 +252,16 @@ describe('FilterSidebar - Status filter', () => {
 
   it('checks "not_updating" when inactive -> dispatches ADD_FILTER', () => {
     const state = makeBaseState({
-      availableTables: [{ id: 'x', discontinued: true }],
+      availableTables: [createMockTable('x', { discontinued: true })],
       availableFilters: {
         subjectTree: [],
         timeUnits: new Map(),
         variables: new Map(),
-        status: new Map<StatusKey, number>([
+        status: new Map<'active' | 'discontinued', number>([
           ['active', 10],
           ['discontinued', 0],
         ]),
+        yearRange: { min: 0, max: 0 },
       },
     });
     const dispatch = vi.fn();
@@ -301,9 +295,9 @@ describe('FilterSidebar - TimeUnit filter', () => {
   it('renders available timeUnits, shows count and toggles ADD/REMOVE', () => {
     const state = makeBaseState({
       availableTables: [
-        { id: 't1', timeUnit: 'Annual' },
-        { id: 't2', timeUnit: 'Monthly' },
-        { id: 't3', timeUnit: 'Annual' },
+        createMockTable('t1', { timeUnit: TimeUnit.ANNUAL }),
+        createMockTable('t2', { timeUnit: TimeUnit.MONTHLY }),
+        createMockTable('t3', { timeUnit: TimeUnit.ANNUAL }),
       ],
       activeFilters: [
         { type: 'timeUnit', value: 'Annual', label: 'Annual', index: 0 },
@@ -316,6 +310,7 @@ describe('FilterSidebar - TimeUnit filter', () => {
           ['Annual', 2],
           ['Monthly', 1],
         ]),
+        yearRange: { min: 0, max: 0 },
       },
     });
     const dispatch = vi.fn();
