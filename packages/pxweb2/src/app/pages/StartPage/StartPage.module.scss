@@ -2,28 +2,24 @@
 @use '$ui/src/lib/text-styles.scss';
 @use '$ui/src/lib/breakpoints.scss' as breakpoint;
 
+.startPageLayout {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
 .startPage {
+  background-color: var(--px-color-surface-subtle);
   color: var(--px-color-text-default);
+  flex: 1;
+}
+.startPageHeader {
+  background: var(--px-color-surface-default);
 }
 
 .contentTop {
   padding: 84px 0px 72px;
   background-color: var(--px-color-surface-default);
-  max-width: 848px;
-
-  .information {
-    .title {
-      margin-bottom: 1rem;
-    }
-
-    .showDetailsSection {
-      padding-top: 36px;
-
-      @media #{breakpoint.$xsmall} , #{breakpoint.$small} {
-        padding-top: 32px;
-      }
-    }
-  }
 
   @media #{breakpoint.$xsmall} , #{breakpoint.$small} {
     padding: 62px 0 48px;
@@ -31,14 +27,6 @@
 
   @media #{breakpoint.$medium} {
     padding: 76px 0 72px;
-  }
-
-  @media #{breakpoint.$large} {
-    max-width: 688px;
-  }
-
-  @media #{breakpoint.$xlarge} {
-    max-width: 728px;
   }
 
   &.hasBreadcrumb {
@@ -53,6 +41,34 @@
     @media #{breakpoint.$xsmall} , #{breakpoint.$small} {
       padding: 32px 0px 48px;
       gap: 38px;
+    }
+  }
+}
+
+.information {
+  width: 100%;
+
+  @media #{breakpoint.$large} {
+    max-width: 688px;
+  }
+
+  @media #{breakpoint.$xlarge} {
+    max-width: 728px;
+  }
+
+  @media #{breakpoint.$xxlarge} {
+    max-width: 848px;
+  }
+
+  .title {
+    margin-bottom: 1rem;
+  }
+
+  .showDetailsSection {
+    padding-top: 36px;
+
+    @media #{breakpoint.$xsmall} , #{breakpoint.$small} {
+      padding-top: 32px;
     }
   }
 }
@@ -218,6 +234,35 @@
 
 .listTables {
   grid-area: listTables;
+}
+
+.noResults {
+  padding-top: 1rem;
+  width: 100%;
+
+  .noResultsTitle {
+    margin-bottom: 8px;
+  }
+
+  .noResultsDetails {
+    padding-top: 20px;
+  }
+
+  @media #{breakpoint.$medium} {
+    max-width: 508px;
+  }
+
+  @media #{breakpoint.$large} {
+    max-width: 480px;
+  }
+
+  @media #{breakpoint.$xlarge} {
+    max-width: 538px;
+  }
+
+  @media #{breakpoint.$xxlarge} {
+    max-width: 550px;
+  }
 }
 
 .tableCardList {
