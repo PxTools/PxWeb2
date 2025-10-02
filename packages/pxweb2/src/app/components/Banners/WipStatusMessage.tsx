@@ -1,29 +1,28 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Alert } from '@pxweb2/pxweb2-ui';
 import classes from './WipStatusMessage.module.scss';
+import useApp from '../../context/useApp';
 
 const SESSION_STORAGE_KEY = 'pxweb2.wip_status_message_dismissed';
 
-export default function WipStatusMessage() {
-  const { t } = useTranslation();
-  const [isDismissed, setIsDismissed] = useState(false);
+type WipStatusMessageProps = {
+  ref?: React.Ref<HTMLDivElement>;
+};
 
-  useEffect(() => {
-    const dismissed =
-      typeof window !== 'undefined'
-        ? window.sessionStorage.getItem(SESSION_STORAGE_KEY)
-        : null;
-    setIsDismissed(dismissed === 'true');
-  }, []);
+export default function WipStatusMessage({
+  ref,
+}: Readonly<WipStatusMessageProps>) {
+  const { t } = useTranslation();
+  const { isBannerDismissed, setIsBannerDismissed } = useApp();
 
   const handleDismiss = useCallback(() => {
     sessionStorage.setItem(SESSION_STORAGE_KEY, 'true');
-    setIsDismissed(true);
-  }, []);
+    setIsBannerDismissed(true);
+  }, [setIsBannerDismissed]);
 
-  if (isDismissed) {
+  if (isBannerDismissed) {
     return null;
   }
 
@@ -33,6 +32,7 @@ export default function WipStatusMessage() {
       closeButton={true}
       className={classes.welcomeAlert}
       onDismissed={handleDismiss}
+      ref={ref}
     >
       {t('common.status_messages.welcome')}
     </Alert>

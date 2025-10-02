@@ -40,6 +40,7 @@ import { getAllTables } from '../../util/tableHandler';
 import { tableListIsReadyToRender } from '../../util/startPageRender';
 import useFilterUrlSync from '../../util/hooks/useFilterUrlSync';
 import StartpageDetails from '../../components/StartPageDetails/StartPageDetails';
+import WipStatusMessage from '../../components/Banners/WipStatusMessage';
 import { useLocaleContent } from '../../util/hooks/useLocaleContent';
 import type {
   LocaleContent,
@@ -586,6 +587,7 @@ const StartPage = () => {
 
   return (
     <>
+      <WipStatusMessage />
       <Header stroke={true} />
       <main>
         <div className={styles.startPage}>

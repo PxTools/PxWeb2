@@ -1,13 +1,19 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 
+import { renderWithProviders } from '../../util/testing-utils';
 import WipStatusMessage from './WipStatusMessage';
 
-// Mock useTranslation
-vi.mock('react-i18next', () => ({
-  useTranslation: () => ({
-    t: (key: string) => key,
+let isBannerDismissed = false;
+const setIsBannerDismissed = vi.fn(() => {
+  isBannerDismissed = true;
+});
+
+vi.mock('../../context/useApp', () => ({
+  default: () => ({
+    isBannerDismissed,
+    setIsBannerDismissed,
   }),
 }));
 
@@ -23,7 +29,7 @@ vi.mock('@pxweb2/pxweb2-ui', () => ({
     onDismissed: () => void;
     closeButton?: boolean;
   }) => (
-    <div data-testid="alert" {...props}>
+    <div data-testid="banner-alert" {...props}>
       {children}
       {closeButton && (
         <button data-testid="close-btn" onClick={onDismissed}>
@@ -32,33 +38,39 @@ vi.mock('@pxweb2/pxweb2-ui', () => ({
       )}
     </div>
   ),
+  BreakpointsXsmallMaxWidth: '575px',
+  BreakpointsMediumMaxWidth: '767px',
+  BreakpointsLargeMaxWidth: '991px',
+  BreakpointsXlargeMaxWidth: '1199px',
 }));
 
-// Clear sessionStorage before each test
 beforeEach(() => {
   sessionStorage.clear();
+  isBannerDismissed = false;
+  setIsBannerDismissed.mockClear();
 });
 
 describe('WipStatusMessage', () => {
   it('renders the alert when not dismissed', () => {
-    render(<WipStatusMessage />);
-    expect(screen.getByTestId('alert')).toBeInTheDocument();
+    renderWithProviders(<WipStatusMessage />);
+    expect(screen.getByTestId('banner-alert')).toBeInTheDocument();
     expect(
       screen.getByText('common.status_messages.welcome'),
     ).toBeInTheDocument();
   });
 
-  it('does not render the alert if dismissed in sessionStorage', () => {
-    sessionStorage.setItem('pxweb2.wip_status_message_dismissed', 'true');
-    render(<WipStatusMessage />);
-    expect(screen.queryByTestId('alert')).not.toBeInTheDocument();
+  it('does not render the alert if dismissed', () => {
+    isBannerDismissed = true;
+    renderWithProviders(<WipStatusMessage />);
+    expect(screen.queryByTestId('banner-alert')).not.toBeInTheDocument();
   });
 
-  it('dismisses the alert and sets sessionStorage when close button is clicked', () => {
-    render(<WipStatusMessage />);
+  it('calls setIsBannerDismissed and sets sessionStorage when close button is clicked', () => {
+    renderWithProviders(<WipStatusMessage />);
     const closeBtn = screen.getByTestId('close-btn');
     fireEvent.click(closeBtn);
-    expect(screen.queryByTestId('alert')).not.toBeInTheDocument();
+
+    expect(setIsBannerDismissed).toHaveBeenCalledWith(true);
     expect(sessionStorage.getItem('pxweb2.wip_status_message_dismissed')).toBe(
       'true',
     );
