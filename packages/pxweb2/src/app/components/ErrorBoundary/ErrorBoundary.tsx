@@ -75,17 +75,15 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 
   render() {
     if (this.state.hasError) {
-      // If no error object is available, render a generic error
-      if (!this.state.error) {
-        return <GenericError />;
-      }
+      // If error object is available, use it for enhanced detection
+      if (this.state.error) {
+        // Use enhanced error detection
+        const detectedStatus = this.getErrorStatus(this.state.error);
 
-      // Use enhanced error detection
-      const detectedStatus = this.getErrorStatus(this.state.error);
-
-      // Check for 404 errors using enhanced detection
-      if (detectedStatus === 404) {
-        return <NotFound />;
+        // Check for 404 errors using enhanced detection
+        if (detectedStatus === 404) {
+          return <NotFound />;
+        }
       }
 
       // Default error UI for all other errors
