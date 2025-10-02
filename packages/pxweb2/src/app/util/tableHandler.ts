@@ -168,11 +168,30 @@ export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
       });
     }
   };
+  const statusFilters = filters.filter((f) => {
+    return f.type === 'status';
+  });
+  const testStatusFilters = function () {
+    if (statusFilters.length === 0) {
+      return true;
+    }
+    return statusFilters.some((filter) => {
+      if (filter.value === 'active') {
+        return table.discontinued !== true;
+      }
+      if (filter.value === 'discontinued') {
+        return table.discontinued === true;
+      }
+      return false;
+    });
+  };
+
   return (
     testTimeUnitFilters() &&
     testSubjectFilters() &&
     testYearRangeFilter() &&
     testSearchFilter() &&
-    testVariableFilters()
+    testVariableFilters() &&
+    testStatusFilters()
   );
 }
