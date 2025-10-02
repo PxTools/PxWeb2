@@ -18,8 +18,6 @@
 
   display: flex;
   background: var(--px-color-surface-subtle);
-  // Not from figma - added min-height (565px is navigationRail + padding-top) to prevent bottom cut off
-  min-height: 565px;
 
   // Calculate height of main container, minus the header
   height: calc(100vh - fixed.$spacing-20);
