@@ -81,7 +81,10 @@ export const TableCard = forwardRef<HTMLDivElement, TableCardProps>(
               )}
               {frequency && (
                 <div className={cl(styles.frequency)}>
-                  <Tag size="small" variant="subtle">
+                  <Tag
+                    size="small"
+                    variant={status === 'closed' ? 'error-subtle' : 'subtle'}
+                  >
                     {frequency}
                   </Tag>
                 </div>

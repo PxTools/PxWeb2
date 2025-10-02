@@ -303,6 +303,7 @@ const StartPage = () => {
         config.language.showDefaultLanguageInPath ||
         language !== config.language.defaultLanguage;
       const langPrefix = showLangInPath ? `${language}` : '';
+      const discontinued = table.discontinued;
 
       let cardRef: React.RefObject<HTMLDivElement | null> | undefined;
       if (isFirstNew) {
@@ -340,6 +341,7 @@ const StartPage = () => {
             frequency: frequencyLabel,
             tableNumber: table.id,
           })}
+          status={discontinued ? 'closed' : 'active'}
         />
       );
     }
@@ -727,7 +729,11 @@ const StartPage = () => {
         </div>
         {renderTableListSEO()}
       </main>
-      <Footer />
+      <div className={cl(styles.footerContent)}>
+        <div className={cl(styles.container)}>
+          <Footer variant="startpage" enableWindowScroll />
+        </div>
+      </div>
     </>
   );
 };
