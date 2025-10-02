@@ -10,18 +10,48 @@
 
   @media (breakpoints.$xxlarge) {
     max-width: 848px;
+
+    .small {
+      max-width: 550px;
+    }
   }
 
   @media (breakpoints.$xlarge) {
     max-width: 728px;
+
+    .small {
+      max-width: 538px;
+    }
   }
 
-  @media (breakpoints.$medium) or (breakpoints.$large) {
+  @media (breakpoints.$large) {
     max-width: 688px;
+
+    .small {
+      max-width: 480px;
+    }
+  }
+
+  @media (breakpoints.$medium) {
+    max-width: 688px;
+
+    .small {
+      max-width: 508px;
+    }
   }
 
   @media (breakpoints.$small) {
     max-width: 508px;
+
+    .small {
+      max-width: 100%;
+    }
+  }
+
+  @media (breakpoints.$small) {
+    .small {
+      max-width: 100%;
+    }
   }
 }
 

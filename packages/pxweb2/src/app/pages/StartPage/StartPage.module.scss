@@ -296,6 +296,24 @@
   }
 }
 
+.errorContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex: 1 0 0;
+
+  @media #{breakpoint.$small}, #{breakpoint.$medium} {
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  @media #{breakpoint.$xsmall} {
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+}
+
 .footerContent {
   background-color: var(--px-color-surface-moderate);
 }
