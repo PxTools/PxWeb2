@@ -17,9 +17,9 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@vitejs/plugin-react": "^5.0.3",
+    "@vitejs/plugin-react": "^5.0.4",
     "clsx": "^2.1.1",
-    "motion": "^12.23.18",
+    "motion": "^12.23.22",
     "vite-plugin-dts": "^4.5.4"
   },
   "devDependencies": {
