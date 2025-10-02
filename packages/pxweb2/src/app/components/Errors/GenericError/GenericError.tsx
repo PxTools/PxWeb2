@@ -10,7 +10,7 @@ export function GenericError() {
   return (
     <>
       <Header stroke={true} />
-      <ErrorLayout isStartPageGenericError={true}>
+      <ErrorLayout withoutHeader={true}>
         <ErrorMessage
           action="button"
           align="center"

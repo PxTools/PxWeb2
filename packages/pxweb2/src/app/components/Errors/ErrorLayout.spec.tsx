@@ -53,9 +53,9 @@ describe('ErrorLayout', () => {
     expect(getByTestId('footer')).toBeInTheDocument();
   });
 
-  it('should not render the header when isStartPageGenericError is true', () => {
+  it('should not render the header when withoutHeader is true', () => {
     const { queryByTestId } = render(
-      <ErrorLayout isStartPageGenericError={true}>
+      <ErrorLayout withoutHeader={true}>
         <div>Error Content</div>
       </ErrorLayout>,
     );
