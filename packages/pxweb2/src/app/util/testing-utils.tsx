@@ -168,12 +168,12 @@ function mockTableService() {
             {
               rel: 'self',
               hreflang: 'en',
-              href: 'https://api.scb.se/OV0104/v2beta/api/v2/codeLists/vs_RegionLän07?lang=en',
+              href: 'https://api.scb.se/OV0104/v2beta/api/v2/codelists/vs_RegionLän07?lang=en',
             },
             {
               rel: 'alternate',
               hreflang: 'sv',
-              href: 'https://api.scb.se/OV0104/v2beta/api/v2/codeLists/vs_RegionLän07?lang=sv',
+              href: 'https://api.scb.se/OV0104/v2beta/api/v2/codelists/vs_RegionLän07?lang=sv',
             },
           ],
         }),
@@ -926,7 +926,7 @@ function mockTableService() {
                   },
                 },
                 show: 'code_value',
-                codeLists: [
+                codelists: [
                   {
                     id: 'agg_RegionA-region_2',
                     label: 'A-regions',
@@ -935,7 +935,7 @@ function mockTableService() {
                       {
                         rel: 'metadata',
                         hreflang: 'en',
-                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codeLists/agg_RegionA-region_2?lang=en',
+                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codelists/agg_RegionA-region_2?lang=en',
                       },
                     ],
                   },
@@ -947,7 +947,7 @@ function mockTableService() {
                       {
                         rel: 'metadata',
                         hreflang: 'en',
-                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codeLists/agg_RegionKommungrupp2005-_1?lang=en',
+                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codelists/agg_RegionKommungrupp2005-_1?lang=en',
                       },
                     ],
                   },
@@ -959,7 +959,7 @@ function mockTableService() {
                       {
                         rel: 'metadata',
                         hreflang: 'en',
-                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codeLists/agg_RegionKommungrupp2011-?lang=en',
+                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codelists/agg_RegionKommungrupp2011-?lang=en',
                       },
                     ],
                   },
@@ -971,7 +971,7 @@ function mockTableService() {
                       {
                         rel: 'metadata',
                         hreflang: 'en',
-                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codeLists/agg_RegionKommungrupp2017-?lang=en',
+                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codelists/agg_RegionKommungrupp2017-?lang=en',
                       },
                     ],
                   },
@@ -983,7 +983,7 @@ function mockTableService() {
                       {
                         rel: 'metadata',
                         hreflang: 'en',
-                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codeLists/agg_RegionKommungrupp2023-?lang=en',
+                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codelists/agg_RegionKommungrupp2023-?lang=en',
                       },
                     ],
                   },
@@ -995,7 +995,7 @@ function mockTableService() {
                       {
                         rel: 'metadata',
                         hreflang: 'en',
-                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codeLists/agg_RegionLA1998?lang=en',
+                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codelists/agg_RegionLA1998?lang=en',
                       },
                     ],
                   },
@@ -1007,7 +1007,7 @@ function mockTableService() {
                       {
                         rel: 'metadata',
                         hreflang: 'en',
-                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codeLists/agg_RegionLA2003_1?lang=en',
+                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codelists/agg_RegionLA2003_1?lang=en',
                       },
                     ],
                   },
@@ -1019,7 +1019,7 @@ function mockTableService() {
                       {
                         rel: 'metadata',
                         hreflang: 'en',
-                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codeLists/agg_RegionLA2008?lang=en',
+                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codelists/agg_RegionLA2008?lang=en',
                       },
                     ],
                   },
@@ -1031,7 +1031,7 @@ function mockTableService() {
                       {
                         rel: 'metadata',
                         hreflang: 'en',
-                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codeLists/agg_RegionLA2013?lang=en',
+                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codelists/agg_RegionLA2013?lang=en',
                       },
                     ],
                   },
@@ -1043,7 +1043,7 @@ function mockTableService() {
                       {
                         rel: 'metadata',
                         hreflang: 'en',
-                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codeLists/agg_RegionLA2018?lang=en',
+                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codelists/agg_RegionLA2018?lang=en',
                       },
                     ],
                   },
@@ -1055,7 +1055,7 @@ function mockTableService() {
                       {
                         rel: 'metadata',
                         hreflang: 'en',
-                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codeLists/agg_RegionStoromr-04_2?lang=en',
+                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codelists/agg_RegionStoromr-04_2?lang=en',
                       },
                     ],
                   },
@@ -1067,7 +1067,7 @@ function mockTableService() {
                       {
                         rel: 'metadata',
                         hreflang: 'en',
-                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codeLists/agg_RegionStoromr05-_1?lang=en',
+                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codelists/agg_RegionStoromr05-_1?lang=en',
                       },
                     ],
                   },
@@ -1079,7 +1079,7 @@ function mockTableService() {
                       {
                         rel: 'metadata',
                         hreflang: 'en',
-                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codeLists/agg_RegionNUTS1_2008?lang=en',
+                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codelists/agg_RegionNUTS1_2008?lang=en',
                       },
                     ],
                   },
@@ -1091,7 +1091,7 @@ function mockTableService() {
                       {
                         rel: 'metadata',
                         hreflang: 'en',
-                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codeLists/agg_RegionNUTS2_2008?lang=en',
+                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codelists/agg_RegionNUTS2_2008?lang=en',
                       },
                     ],
                   },
@@ -1103,7 +1103,7 @@ function mockTableService() {
                       {
                         rel: 'metadata',
                         hreflang: 'en',
-                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codeLists/agg_RegionNUTS3_2008?lang=en',
+                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codelists/agg_RegionNUTS3_2008?lang=en',
                       },
                     ],
                   },
@@ -1115,7 +1115,7 @@ function mockTableService() {
                       {
                         rel: 'metadata',
                         hreflang: 'en',
-                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codeLists/vs_RegionKommun07?lang=en',
+                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codelists/vs_RegionKommun07?lang=en',
                       },
                     ],
                   },
@@ -1127,7 +1127,7 @@ function mockTableService() {
                       {
                         rel: 'metadata',
                         hreflang: 'en',
-                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codeLists/vs_RegionLän07?lang=en',
+                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codelists/vs_RegionLän07?lang=en',
                       },
                     ],
                   },
@@ -1139,7 +1139,7 @@ function mockTableService() {
                       {
                         rel: 'metadata',
                         hreflang: 'en',
-                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codeLists/vs_RegionRiket99?lang=en',
+                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codelists/vs_RegionRiket99?lang=en',
                       },
                     ],
                   },
@@ -1165,7 +1165,7 @@ function mockTableService() {
               extension: {
                 elimination: true,
                 show: 'value',
-                codeLists: [],
+                codelists: [],
               },
             },
             Alder: {
@@ -1383,7 +1383,7 @@ function mockTableService() {
               extension: {
                 elimination: true,
                 show: 'value',
-                codeLists: [
+                codelists: [
                   {
                     id: 'agg_Ålder10årJ',
                     label: '´10-year intervals',
@@ -1392,7 +1392,7 @@ function mockTableService() {
                       {
                         rel: 'metadata',
                         hreflang: 'en',
-                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codeLists/agg_Ålder10årJ?lang=en',
+                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codelists/agg_Ålder10årJ?lang=en',
                       },
                     ],
                   },
@@ -1404,7 +1404,7 @@ function mockTableService() {
                       {
                         rel: 'metadata',
                         hreflang: 'en',
-                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codeLists/agg_Ålder5år?lang=en',
+                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codelists/agg_Ålder5år?lang=en',
                       },
                     ],
                   },
@@ -1416,7 +1416,7 @@ function mockTableService() {
                       {
                         rel: 'metadata',
                         hreflang: 'en',
-                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codeLists/vs_Ålder1årA?lang=en',
+                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codelists/vs_Ålder1årA?lang=en',
                       },
                     ],
                   },
@@ -1428,7 +1428,7 @@ function mockTableService() {
                       {
                         rel: 'metadata',
                         hreflang: 'en',
-                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codeLists/vs_ÅlderTotA?lang=en',
+                        href: 'https://api.scb.se/OV0104/v2beta/api/v2/codelists/vs_ÅlderTotA?lang=en',
                       },
                     ],
                   },
@@ -1459,7 +1459,7 @@ function mockTableService() {
               extension: {
                 elimination: true,
                 show: 'value',
-                codeLists: [],
+                codelists: [],
               },
               link: {
                 describedby: [
@@ -1505,7 +1505,7 @@ function mockTableService() {
                   BE0101N2: '',
                 },
                 show: 'value',
-                codeLists: [],
+                codelists: [],
                 measuringType: {
                   BE0101N1: 'Stock',
                   BE0101N2: 'Flow',
@@ -1645,7 +1645,7 @@ function mockTableService() {
               extension: {
                 elimination: false,
                 show: 'code',
-                codeLists: [],
+                codelists: [],
               },
             },
           },
@@ -1701,7 +1701,7 @@ function mockTableService() {
             },
             {
               variableCode: 'Region',
-              codeList: 'vs_RegionKommun07',
+              codelist: 'vs_RegionKommun07',
               valueCodes: [
                 '0114',
                 '0115',
@@ -2005,7 +2005,7 @@ function mockTableService() {
             },
             {
               variableCode: 'Alder',
-              codeList: 'vs_Ålder1årA',
+              codelist: 'vs_Ålder1årA',
               valueCodes: [],
             },
           ],

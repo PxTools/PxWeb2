@@ -155,7 +155,7 @@ describe('With Virtuoso mock', () => {
     vi.resetModules();
   });
 
-  it('should set aria-labelledby to include codeListLabelId when codeLists are present', () => {
+  it('should set aria-labelledby to include codelistLabelId when codelists are present', () => {
     render(
       <VariableBoxContent
         label="test"
@@ -171,7 +171,7 @@ describe('With Virtuoso mock', () => {
           { code: 'test-7', label: 'test-7' },
           { code: 'test-8', label: 'test-8' },
         ]}
-        codeLists={[
+        codelists={[
           {
             id: 'cl-1',
             label: 'Codelist 1',
@@ -209,7 +209,7 @@ describe('With Virtuoso mock', () => {
     expect(ariaLabelledBy).toMatch(/^title-test-1 codelist-label-/);
   });
 
-  it('should set aria-labelledby to only title-varId when codeLists are not present', () => {
+  it('should set aria-labelledby to only title-varId when codelists are not present', () => {
     render(
       <VariableBoxContent
         label="test-2"
@@ -224,7 +224,7 @@ describe('With Virtuoso mock', () => {
           { code: 'test-6', label: 'test-6' },
           { code: 'test-7', label: 'test-7' },
         ]}
-        codeLists={[]}
+        codelists={[]}
         onChangeCodeList={() => {
           return;
         }}

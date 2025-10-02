@@ -19,16 +19,16 @@ export const sortSelectOptionsGroupingsLast = (
 };
 
 export const mapAndSortCodeLists = (
-  codeLists: Codelist[] | undefined,
+  codelists: Codelist[] | undefined,
 ): SelectOption[] => {
-  if (!codeLists || codeLists.length === 0) {
+  if (!codelists || codelists.length === 0) {
     return [];
   }
 
   const needsSorting =
-    codeLists.some((codeList) => codeList.id.toLowerCase().startsWith('vs_')) &&
-    codeLists.some((codeList) => codeList.id.toLowerCase().startsWith('agg_'));
-  const mappedCodeLists = mapCodeListsToSelectOptions(codeLists);
+    codelists.some((codelist) => codelist.id.toLowerCase().startsWith('vs_')) &&
+    codelists.some((codelist) => codelist.id.toLowerCase().startsWith('agg_'));
+  const mappedCodeLists = mapCodeListsToSelectOptions(codelists);
 
   if (needsSorting) {
     return sortSelectOptionsGroupingsLast(mappedCodeLists);

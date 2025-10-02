@@ -9,6 +9,6 @@ export type Variable = {
   type: VartypeEnum;
   mandatory: boolean;
   values: Value[];
-  codeLists?: Codelist[];
+  codelists?: Codelist[];
   notes?: Note[];
 };

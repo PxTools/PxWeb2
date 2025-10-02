@@ -64,20 +64,20 @@ describe('sortSelectOptionsGroupingsFirst', () => {
 });
 
 describe('mapAndSortCodeLists', () => {
-  it('should return an empty array if codeLists is undefined', () => {
+  it('should return an empty array if codelists is undefined', () => {
     const result = mapAndSortCodeLists(undefined);
 
     expect(result).toEqual([]);
   });
 
-  it('should return an empty array if codeLists is empty', () => {
+  it('should return an empty array if codelists is empty', () => {
     const result = mapAndSortCodeLists([]);
 
     expect(result).toEqual([]);
   });
 
-  it('should map codeLists to select options without sorting if no sorting is needed', () => {
-    const codeLists: Codelist[] = [
+  it('should map codelists to select options without sorting if no sorting is needed', () => {
+    const codelists: Codelist[] = [
       { id: 'test_1', label: 'Test 1' },
       { id: 'test_2', label: 'Test 2' },
     ];
@@ -85,13 +85,13 @@ describe('mapAndSortCodeLists', () => {
       { value: 'test_1', label: 'Test 1' },
       { value: 'test_2', label: 'Test 2' },
     ];
-    const result = mapAndSortCodeLists(codeLists);
+    const result = mapAndSortCodeLists(codelists);
 
     expect(result).toEqual(expected);
   });
 
-  it('should map and sort codeLists if sorting is needed', () => {
-    const codeLists: Codelist[] = [
+  it('should map and sort codelists if sorting is needed', () => {
+    const codelists: Codelist[] = [
       { id: 'agg_test', label: 'AGG Test' },
       { id: 'vs_test', label: 'VS Test' },
     ];
@@ -99,7 +99,7 @@ describe('mapAndSortCodeLists', () => {
       { value: 'vs_test', label: 'VS Test' },
       { value: 'agg_test', label: 'AGG Test' },
     ];
-    const result = mapAndSortCodeLists(codeLists);
+    const result = mapAndSortCodeLists(codelists);
 
     expect(result).toEqual(expected);
   });

@@ -41,7 +41,7 @@ export function VariableBox({
   mandatory = false,
   type,
   values,
-  codeLists,
+  codelists,
   selectedValues,
   onChangeCodeList,
   onChangeCheckbox,
@@ -99,7 +99,7 @@ export function VariableBox({
           label={capitalizedVariableName}
           languageDirection={languageDirection}
           values={values}
-          codeLists={codeLists}
+          codelists={codelists}
           selectedValues={selectedValues}
           totalValues={totalValues}
           totalChosenValues={totalChosenValues}

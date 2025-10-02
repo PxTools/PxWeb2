@@ -9,7 +9,7 @@ export type CodelistsResponse = {
      * The language code for the language used in this response
      */
     language: string;
-    codeLists?: Array<CodelistMetadata>;
+    codelists?: Array<CodelistMetadata>;
     links?: Array<Link>;
 };
 

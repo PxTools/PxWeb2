@@ -17,7 +17,7 @@ export function updateSelectedCodelistForVariable(
     (variable) => variable.id === varId,
   );
 
-  const newSelectedCodelist = currentVariableMetadata?.codeLists?.find(
+  const newSelectedCodelist = currentVariableMetadata?.codelists?.find(
     (codelist) => codelist.id === selectedItem.value,
   );
 

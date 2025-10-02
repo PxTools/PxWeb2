@@ -8,7 +8,7 @@ export function mapTableSelectionResponse(
     (variable) => {
       return {
         id: variable.variableCode,
-        selectedCodelist: variable.codeList ? variable.codeList : undefined,
+        selectedCodelist: variable.codelist ? variable.codelist : undefined,
         values: variable.valueCodes ? variable.valueCodes : [],
       };
     },

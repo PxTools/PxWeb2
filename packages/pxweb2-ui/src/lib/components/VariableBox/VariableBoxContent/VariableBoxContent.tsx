@@ -60,7 +60,7 @@ export function VariableBoxContent({
   languageDirection,
   type,
   values,
-  codeLists,
+  codelists,
   selectedValues,
   totalValues,
   totalChosenValues,
@@ -80,13 +80,13 @@ export function VariableBoxContent({
   const [items, setItems] = useState<VirtualListItem[]>([]);
   const [uniqueId] = useState(() => uuidv4());
   const valuesOnlyList = useRef<HTMLDivElement>(null);
-  const hasCodeLists = codeLists && codeLists.length > 0;
+  const hasCodeLists = codelists && codelists.length > 0;
   const hasSevenOrMoreValues = values && values.length > 6;
   const [initiallyHadSevenOrMoreValues] = useState(hasSevenOrMoreValues);
   const hasTwoOrMoreValues = values && values.length > 1;
   const hasSelectAndSearch = hasCodeLists && hasSevenOrMoreValues;
   const valuesToRender = structuredClone(values);
-  const codeListLabelId = 'codelist-label-' + uniqueId;
+  const codelistLabelId = 'codelist-label-' + uniqueId;
 
   const searchedValues: Value[] = values.filter(
     (value) =>
@@ -198,14 +198,14 @@ export function VariableBoxContent({
   }, [totalChosenValues, totalValues, searchedValues, selectedValuesForVar]);
 
   const mappedAndSortedCodeLists: SelectOption[] =
-    mapAndSortCodeLists(codeLists);
+    mapAndSortCodeLists(codelists);
 
   // needs the selected, mapped code list for the current variable
   const currentVarSelectedCodeListId = selectedValues.find(
     (variable) => variable.id === varId,
   )?.selectedCodelist;
   const selectedCodelistMapped = mappedAndSortedCodeLists.find(
-    (codeList) => codeList.value === currentVarSelectedCodeListId,
+    (codelist) => codelist.value === currentVarSelectedCodeListId,
   );
   const selectedCodelistOrUndefined = selectedCodelistMapped ?? undefined;
 
@@ -271,7 +271,7 @@ export function VariableBoxContent({
             }}
             aria-labelledby={
               hasCodeLists
-                ? `title-${varId} ${codeListLabelId}`
+                ? `title-${varId} ${codelistLabelId}`
                 : `title-${varId}`
             }
             variant="inVariableBox"
@@ -481,7 +481,7 @@ export function VariableBoxContent({
               removeModal={removeModal}
               options={mappedAndSortedCodeLists}
               selectedOption={selectedCodelistOrUndefined}
-              codeListLabelId={codeListLabelId}
+              codelistLabelId={codelistLabelId}
               onChange={(selectedItem) =>
                 selectedItem &&
                 handleChangingCodeListInVariableBox(

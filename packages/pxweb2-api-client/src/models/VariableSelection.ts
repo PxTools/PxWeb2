@@ -10,7 +10,7 @@ export type VariableSelection = {
     /**
      * The identifier of the codelist that should be applied
      */
-    codeList?: string | null;
+    codelist?: string | null;
     /**
      * An array of string that specifies wich values sould be selected. Either as value codes or value expressions
      */

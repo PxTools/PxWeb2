@@ -63,7 +63,7 @@ const commonProps = {
   languageDirection: 'ltr' as const,
   type: VartypeEnum.CONTENTS_VARIABLE,
   values: mockValues,
-  codeLists: mockCodeLists,
+  codelists: mockCodeLists,
   onChangeCodeList: (selectedItem: SelectOption | undefined, varId: string) => {
     console.log('Codelist changed:', selectedItem, 'for variable:', varId);
   },

@@ -15,15 +15,15 @@ import {
 
 describe('selectionUtils', () => {
   const varId = 'var1';
-  const codeListA = { id: 'A', label: 'List A', values: [] };
-  const codeListB = { id: 'B', label: 'List B', values: [] };
+  const codelistA = { id: 'A', label: 'List A', values: [] };
+  const codelistB = { id: 'B', label: 'List B', values: [] };
 
   const selectOptionA: SelectOption = { label: 'List A', value: 'A' };
   const selectOptionB: SelectOption = { label: 'List B', value: 'B' };
 
   const variableMeta: Variable = {
     id: varId,
-    codeLists: [codeListA, codeListB],
+    codelists: [codelistA, codelistB],
     label: '',
     type: VartypeEnum.CONTENTS_VARIABLE,
     mandatory: false,
@@ -111,7 +111,7 @@ describe('selectionUtils', () => {
       const newVarId = 'var3';
       const newMeta: Variable = {
         id: newVarId,
-        codeLists: [codeListA],
+        codelists: [codelistA],
         label: '',
         type: VartypeEnum.CONTENTS_VARIABLE,
         mandatory: false,
@@ -153,7 +153,7 @@ describe('selectionUtils', () => {
     it('applies mandatory defaults', () => {
       const mandatoryVariable: Variable = {
         id: varId,
-        codeLists: [codeListB],
+        codelists: [codelistB],
         label: '',
         type: VartypeEnum.CONTENTS_VARIABLE,
         mandatory: true,
@@ -196,7 +196,7 @@ describe('selectionUtils', () => {
     it('does not apply mandatory defaults when variable is not mandatory', () => {
       const nonMandatoryVariable: Variable = {
         id: varId,
-        codeLists: [codeListB],
+        codelists: [codelistB],
         label: '',
         type: VartypeEnum.CONTENTS_VARIABLE,
         mandatory: false,
@@ -237,7 +237,7 @@ describe('selectionUtils', () => {
       const varId2 = 'var2';
       const mandatoryVariable: Variable = {
         id: varId,
-        codeLists: [codeListB],
+        codelists: [codelistB],
         label: '',
         type: VartypeEnum.CONTENTS_VARIABLE,
         mandatory: true,
@@ -245,7 +245,7 @@ describe('selectionUtils', () => {
       };
       const mandatoryVariable2: Variable = {
         id: varId2,
-        codeLists: [codeListA],
+        codelists: [codelistA],
         label: '',
         type: VartypeEnum.CONTENTS_VARIABLE,
         mandatory: true,

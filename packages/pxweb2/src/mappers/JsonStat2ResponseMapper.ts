@@ -277,7 +277,7 @@ function mapDimension(id: string, dimension: any, role: any): Variable | null {
       type: variableType,
       mandatory: getMandatoryVariable(dimension.extension),
       values: mapVariableValues(dimension, isContentVariable),
-      codeLists: getCodelists(dimension.extension),
+      codelists: getCodelists(dimension.extension),
       notes: mapNotes(dimension.note, dimension.extension?.noteMandatory),
       valueDisplayType: getValueDisplayType(dimension.extension),
     };
@@ -463,11 +463,11 @@ function getMandatoryVariable(
  * @returns An array of Codelist objects.
  */
 function getCodelists(dimensionExtension: extension_dimension): Codelist[] {
-  if (dimensionExtension?.codeLists) {
-    return dimensionExtension.codeLists.map((codeList: CodelistInformation) => {
+  if (dimensionExtension?.codelists) {
+    return dimensionExtension.codelists.map((codelist: CodelistInformation) => {
       return {
-        id: codeList.id,
-        label: codeList.label,
+        id: codelist.id,
+        label: codelist.label,
       };
     });
   }

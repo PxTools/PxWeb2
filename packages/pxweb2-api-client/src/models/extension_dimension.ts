@@ -33,7 +33,7 @@ export type extension_dimension = {
      * Information about how variables are presented
      */
     show?: string;
-    codeLists?: Codelists;
+    codelists?: Codelists;
     /**
      * Indicates if data is stock, flow or average.
      */

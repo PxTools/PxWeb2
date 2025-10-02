@@ -304,7 +304,7 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
 
       // Add selected codelist to selection if it exists
       if (selectedCodelist) {
-        selection.codeList = selectedCodelist;
+        selection.codelist = selectedCodelist;
       }
 
       selections.push(selection);

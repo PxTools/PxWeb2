@@ -71,7 +71,7 @@ describe('JsonStat2ResponseMapper', () => {
                 },
               },
 
-              codeLists: [
+              codelists: [
                 {
                   id: 'cd1',
                   label: 'Codelist 1',
@@ -116,7 +116,7 @@ describe('JsonStat2ResponseMapper', () => {
                 CONTENT2: '1 January each year',
               },
               show: 'value',
-              codeLists: [],
+              codelists: [],
             },
           },
         },
@@ -190,9 +190,9 @@ describe('JsonStat2ResponseMapper', () => {
       expect(pxTable.metadata.variables.length).equals(3);
       expect(pxTable.metadata.variables[0].values.length).equals(2);
       expect(pxTable.metadata.variables[0].mandatory).equals(true);
-      expect(pxTable.metadata.variables[0].codeLists?.length).equals(0);
+      expect(pxTable.metadata.variables[0].codelists?.length).equals(0);
       expect(pxTable.metadata.variables[1].mandatory).equals(false);
-      expect(pxTable.metadata.variables[1].codeLists?.length).equals(2);
+      expect(pxTable.metadata.variables[1].codelists?.length).equals(2);
       expect(pxTable.metadata.contacts?.length).equals(2);
       expect(pxTable.metadata.notes?.length).equals(3);
       expect(pxTable.metadata.notes[0].mandatory).equals(true);
@@ -345,7 +345,7 @@ describe('JsonStat2ResponseMapper', () => {
               { code: '2021', label: '2021' },
               { code: '2022', label: '2022' },
             ],
-            codeLists: [],
+            codelists: [],
             notes: [],
           },
           {
@@ -357,7 +357,7 @@ describe('JsonStat2ResponseMapper', () => {
               { code: 'US', label: 'United States' },
               { code: 'UK', label: 'United Kingdom' },
             ],
-            codeLists: [],
+            codelists: [],
             notes: [],
           },
         ],
@@ -424,7 +424,7 @@ describe('JsonStat2ResponseMapper', () => {
               { code: '2021', label: '2021' },
               { code: '2022', label: '2022' },
             ],
-            codeLists: [],
+            codelists: [],
             notes: [],
           },
           {
@@ -436,7 +436,7 @@ describe('JsonStat2ResponseMapper', () => {
               { code: 'US', label: 'United States' },
               { code: 'UK', label: 'United Kingdom' },
             ],
-            codeLists: [],
+            codelists: [],
             notes: [],
           },
         ],
@@ -502,7 +502,7 @@ describe('JsonStat2ResponseMapper', () => {
             type: VartypeEnum.REGULAR_VARIABLE,
             mandatory: true,
             values: [{ code: '2021', label: '2021' }],
-            codeLists: [],
+            codelists: [],
             notes: [],
           },
         ],
