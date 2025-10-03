@@ -5,7 +5,6 @@ import { NotFound } from '../Errors/NotFound/NotFound';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
-  fallback?: ReactNode;
 }
 
 interface ErrorBoundaryState {
