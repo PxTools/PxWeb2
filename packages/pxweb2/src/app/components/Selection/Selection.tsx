@@ -33,7 +33,6 @@ import {
 } from '../NavigationDrawer';
 import useVariables from '../../context/useVariables';
 import useApp from '../../context/useApp';
-import { useAsyncError } from '../../util/hooks/useAsyncError';
 import { NavigationItem } from '../../components/NavigationMenu/NavigationItem/NavigationItemType';
 import useAccessibility from '../../context/useAccessibility';
 import { problemMessage } from '../../util/problemMessage';
@@ -245,8 +244,7 @@ export function Selection({
     pxTableMetadata,
     setPxTableMetadata,
   } = variables;
-  const throwAsyncError = useAsyncError();
-
+  const [errorMsg, setErrorMsg] = useState('');
   const { i18n, t } = useTranslation();
   const [pxTableMetaToRender, setPxTableMetaToRender] =
     // Metadata to render in the UI
@@ -259,6 +257,12 @@ export function Selection({
   const { addModal, removeModal } = useAccessibility();
 
   let savedQueryId = app.getSavedQueryId();
+
+  useEffect(() => {
+    if (errorMsg) {
+      throw new Error(errorMsg);
+    }
+  }, [errorMsg]);
 
   useEffect(() => {
     let shouldGetInitialSelection = !hasLoadedInitialSelection;
@@ -318,6 +322,7 @@ export function Selection({
         if (pxTableMetaToRender !== null) {
           setPxTableMetaToRender(null);
         }
+        setErrorMsg('');
       })
       .then(() => {
         if (!shouldGetInitialSelection) {
@@ -325,13 +330,11 @@ export function Selection({
         }
       })
       .catch((apiError: ApiError) => {
-        throwAsyncError(new Error(problemMessage(apiError, selectedTabId)));
+        setErrorMsg(problemMessage(apiError, selectedTabId));
         setPxTableMetadata(null);
       })
       .catch((error) => {
-        throwAsyncError(
-          new Error(`Could not get table: ${selectedTabId} ${error.message}`),
-        );
+        setErrorMsg(`Could not get table: ${selectedTabId} ${error.message}`);
         setPxTableMetadata(null);
       });
 
@@ -388,9 +391,7 @@ export function Selection({
         );
       }
     } catch (apiError: unknown) {
-      throwAsyncError(
-        new Error(problemMessage(apiError as ApiError, selectedTabId)),
-      );
+      setErrorMsg(problemMessage(apiError as ApiError, selectedTabId));
     }
     return response;
   }
@@ -466,18 +467,18 @@ export function Selection({
 
         // UpdateAndSyncVBValues with the new selected values to trigger API data-call
         updateAndSyncVBValues(newSelectedValues);
+
+        setErrorMsg('');
       })
       .finally(() => {
         setIsFadingVariableList(false);
       })
       .catch((apiError: ApiError) => {
-        throwAsyncError(new Error(problemMessage(apiError, selectedTabId)));
+        setErrorMsg(problemMessage(apiError, selectedTabId));
         setPxTableMetadata(null);
       })
       .catch((error) => {
-        throwAsyncError(
-          new Error(`Could not get table: ${selectedTabId} ${error.message}`),
-        );
+        setErrorMsg(`Could not get table: ${selectedTabId} ${error.message}`);
         setPxTableMetadata(null);
       });
   }

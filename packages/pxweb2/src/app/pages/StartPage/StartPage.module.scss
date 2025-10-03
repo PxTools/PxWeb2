@@ -296,6 +296,10 @@
   }
 }
 
+.footerContent {
+  background-color: var(--px-color-surface-moderate);
+}
+
 .errorContainer {
   display: flex;
   flex-direction: column;
@@ -312,8 +316,4 @@
     padding-top: 16px;
     padding-bottom: 16px;
   }
-}
-
-.footerContent {
-  background-color: var(--px-color-surface-moderate);
 }
