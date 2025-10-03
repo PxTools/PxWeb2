@@ -1,7 +1,10 @@
 import { isRouteErrorResponse, useRouteError } from 'react-router';
 import React from 'react';
 
-import { GenericError } from '../../components/Errors/GenericError/GenericError';
+import {
+  GenericError,
+  GenericErrorTableViewer,
+} from '../../components/Errors/GenericError/GenericError';
 import { NotFound } from '../../components/Errors/NotFound/NotFound';
 import useLocalizeDocumentAttributes from '../../../i18n/useLocalizeDocumentAttributes';
 
@@ -12,7 +15,13 @@ type RouteError = {
   data?: string;
 };
 
-export const ErrorPage: React.FC = () => {
+type ErrorPageProps = {
+  variant?: 'default' | 'tableViewer';
+};
+
+export const ErrorPage: React.FC<ErrorPageProps> = ({
+  variant = 'default',
+}) => {
   const error = useRouteError() as RouteError;
 
   // If expanding the error handling in the future, read this:
@@ -24,7 +33,11 @@ export const ErrorPage: React.FC = () => {
   }
 
   // Handle all errors not specifically handled above
-  return <GenericError />;
+  return variant === 'tableViewer' ? (
+    <GenericErrorTableViewer />
+  ) : (
+    <GenericError />
+  );
 };
 
 // Wrapper for router-level errors
@@ -32,6 +45,11 @@ export function ErrorPageWithLocalization() {
   useLocalizeDocumentAttributes();
 
   return <ErrorPage />;
+}
+
+// For TableViewer component errors
+export function ErrorPageTableViewer() {
+  return <ErrorPage variant="tableViewer" />;
 }
 
 export default ErrorPage;

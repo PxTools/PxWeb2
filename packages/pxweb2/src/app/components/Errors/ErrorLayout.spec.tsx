@@ -8,9 +8,6 @@ import { ErrorLayout } from './ErrorLayout';
 vi.mock('../Header/Header', () => ({
   Header: () => <div data-testid="header">Header</div>,
 }));
-vi.mock('../Footer/Footer', () => ({
-  Footer: () => <div data-testid="footer">Footer</div>,
-}));
 
 describe('ErrorLayout', () => {
   it('should render successfully', () => {
@@ -41,25 +38,5 @@ describe('ErrorLayout', () => {
     );
 
     expect(getByText('Error Content')).toBeInTheDocument();
-  });
-
-  it('should render the footer', () => {
-    const { getByTestId } = render(
-      <ErrorLayout>
-        <div>Error Content</div>
-      </ErrorLayout>,
-    );
-
-    expect(getByTestId('footer')).toBeInTheDocument();
-  });
-
-  it('should not render the header when withoutHeader is true', () => {
-    const { queryByTestId } = render(
-      <ErrorLayout withoutHeader={true}>
-        <div>Error Content</div>
-      </ErrorLayout>,
-    );
-
-    expect(queryByTestId('header')).not.toBeInTheDocument();
   });
 });

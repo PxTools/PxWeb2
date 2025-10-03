@@ -9,10 +9,8 @@ import { ErrorMessageProps } from './types';
 export function ErrorMessage({
   action,
   align,
-  size,
   illustration = 'GenericError',
   backgroundShape = 'circle',
-  headingLevel = '1',
   title,
   description,
   actionText,
@@ -22,7 +20,6 @@ export function ErrorMessage({
       className={cl(
         classes.errorMessage,
         align === 'center' ? classes.alignCenter : classes.alignStart,
-        size === 'small' ? classes.small : undefined,
       )}
     >
       <ErrorIllustration
@@ -42,7 +39,7 @@ export function ErrorMessage({
             align === 'center' ? classes.alignCenter : classes.alignStart,
           )}
         >
-          <Heading level={headingLevel} align={align} size="large">
+          <Heading level="1" align={align} size="large">
             {title}
           </Heading>
           <Ingress

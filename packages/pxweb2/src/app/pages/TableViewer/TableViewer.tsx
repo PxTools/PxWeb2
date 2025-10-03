@@ -5,6 +5,7 @@ import cl from 'clsx';
 import styles from './TableViewer.module.scss';
 import { Selection } from '../../components/Selection/Selection';
 import { Presentation } from '../../components/Presentation/Presentation';
+import ErrorBoundary from '../../components/ErrorBoundary/ErrorBoundary';
 import { Header } from '../../components/Header/Header';
 import { NavigationItem } from '../../components/NavigationMenu/NavigationItem/NavigationItemType';
 import NavigationRail from '../../components/NavigationMenu/NavigationRail/NavigationRail';
@@ -18,6 +19,7 @@ import useApp from '../../context/useApp';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import { VariablesProvider } from '../../context/VariablesProvider';
 import { TableDataProvider } from '../../context/TableDataProvider';
+import { ErrorPageTableViewer } from '../ErrorPage/ErrorPage';
 
 export function TableViewer() {
   const {
@@ -35,6 +37,7 @@ export function TableViewer() {
 
   const { tableId } = useParams<{ tableId: string }>();
   const [selectedTableId] = useState(tableId ?? '');
+  const [errorMsg] = useState('');
   const [selectedNavigationView, setSelectedNavigationView] =
     useState<NavigationItem>(isXLargeDesktop ? 'selection' : 'none');
   const [hasFocus, setHasFocus] = useState<NavigationItem>('none');
@@ -141,6 +144,12 @@ export function TableViewer() {
     };
   }, [setSkipToMainFocused]);
 
+  useEffect(() => {
+    if (errorMsg !== '') {
+      console.error('ERROR: App.tsx:', errorMsg);
+    }
+  }, [errorMsg]);
+
   const changeSelectedNavView = (
     keyboard: boolean,
     close: boolean,
@@ -243,11 +252,13 @@ export function TableViewer() {
 function Render() {
   return (
     <AccessibilityProvider>
-      <VariablesProvider>
-        <TableDataProvider>
-          <TableViewer />
-        </TableDataProvider>
-      </VariablesProvider>
+      <ErrorBoundary fallback={<ErrorPageTableViewer />}>
+        <VariablesProvider>
+          <TableDataProvider>
+            <TableViewer />
+          </TableDataProvider>
+        </VariablesProvider>
+      </ErrorBoundary>
     </AccessibilityProvider>
   );
 }
