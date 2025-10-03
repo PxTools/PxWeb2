@@ -5,10 +5,7 @@ import { render, screen, fireEvent, within } from '@testing-library/react';
 import { YearRangeFilter } from './YearRangeFilter';
 import { FilterContext } from '../../context/FilterContext';
 import type { StartPageState } from '../../pages/StartPage/StartPageTypes';
-import {
-  type Table,
-  FolderContentItemTypeEnum,
-} from '@pxweb2/pxweb2-api-client';
+import { type Table } from '@pxweb2/pxweb2-api-client';
 
 vi.mock('react-i18next', async () => {
   const actual =
@@ -45,7 +42,6 @@ describe('YearRangeFilter', () => {
 
   const sampleTables: Table[] = [
     {
-      type: FolderContentItemTypeEnum.TABLE,
       id: 'table1',
       label: 'Test Table 1',
       firstPeriod: '2000',
@@ -55,7 +51,6 @@ describe('YearRangeFilter', () => {
       links: null,
     },
     {
-      type: FolderContentItemTypeEnum.TABLE,
       id: 'table2',
       label: 'Test Table 2',
       firstPeriod: '2001',

@@ -13,7 +13,7 @@ describe('VariableBox', () => {
         mandatory={false}
         languageDirection="ltr"
         values={[{ code: 'test-1', label: 'test-1' }]}
-        codeLists={[]}
+        codelists={[]}
         onChangeCodeList={() => {
           return;
         }}

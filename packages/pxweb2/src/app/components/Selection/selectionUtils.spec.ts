@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 
 import {
   updateSelectedCodelistForVariable,
-  addSelectedCodeListToVariable,
+  addSelectedCodelistToVariable,
   getSelectedCodelists,
 } from './selectionUtils';
 import {
@@ -15,15 +15,15 @@ import {
 
 describe('selectionUtils', () => {
   const varId = 'var1';
-  const codeListA = { id: 'A', label: 'List A', values: [] };
-  const codeListB = { id: 'B', label: 'List B', values: [] };
+  const codelistA = { id: 'A', label: 'List A', values: [] };
+  const codelistB = { id: 'B', label: 'List B', values: [] };
 
   const selectOptionA: SelectOption = { label: 'List A', value: 'A' };
   const selectOptionB: SelectOption = { label: 'List B', value: 'B' };
 
   const variableMeta: Variable = {
     id: varId,
-    codeLists: [codeListA, codeListB],
+    codelists: [codelistA, codelistB],
     label: '',
     type: VartypeEnum.CONTENTS_VARIABLE,
     mandatory: false,
@@ -34,13 +34,13 @@ describe('selectionUtils', () => {
 
   beforeEach(() => {
     prevSelectedValues = [
-      { id: varId, selectedCodeList: 'A', values: ['x'] },
-      { id: 'var2', selectedCodeList: 'C', values: ['y'] },
+      { id: varId, selectedCodelist: 'A', values: ['x'] },
+      { id: 'var2', selectedCodelist: 'C', values: ['y'] },
     ];
   });
 
   describe('setSelectedCodelist', () => {
-    it('returns undefined if newSelectedCodeList is not found', () => {
+    it('returns undefined if newSelectedCodelist is not found', () => {
       const invalidOption: SelectOption = { label: 'Invalid', value: 'Z' };
       const mockMetadata: PxTableMetadata = {
         variables: [variableMeta],
@@ -103,7 +103,7 @@ describe('selectionUtils', () => {
       );
 
       expect(result).toBeDefined();
-      expect(result?.find((v) => v.id === varId)?.selectedCodeList).toBe('B');
+      expect(result?.find((v) => v.id === varId)?.selectedCodelist).toBe('B');
       expect(result?.find((v) => v.id === varId)?.values).toEqual([]);
     });
 
@@ -111,7 +111,7 @@ describe('selectionUtils', () => {
       const newVarId = 'var3';
       const newMeta: Variable = {
         id: newVarId,
-        codeLists: [codeListA],
+        codelists: [codelistA],
         label: '',
         type: VartypeEnum.CONTENTS_VARIABLE,
         mandatory: false,
@@ -145,7 +145,7 @@ describe('selectionUtils', () => {
         mockMetadata,
       );
 
-      expect(result?.find((v) => v.id === newVarId)?.selectedCodeList).toBe(
+      expect(result?.find((v) => v.id === newVarId)?.selectedCodelist).toBe(
         'A',
       );
     });
@@ -153,7 +153,7 @@ describe('selectionUtils', () => {
     it('applies mandatory defaults', () => {
       const mandatoryVariable: Variable = {
         id: varId,
-        codeLists: [codeListB],
+        codelists: [codelistB],
         label: '',
         type: VartypeEnum.CONTENTS_VARIABLE,
         mandatory: true,
@@ -196,7 +196,7 @@ describe('selectionUtils', () => {
     it('does not apply mandatory defaults when variable is not mandatory', () => {
       const nonMandatoryVariable: Variable = {
         id: varId,
-        codeLists: [codeListB],
+        codelists: [codelistB],
         label: '',
         type: VartypeEnum.CONTENTS_VARIABLE,
         mandatory: false,
@@ -237,7 +237,7 @@ describe('selectionUtils', () => {
       const varId2 = 'var2';
       const mandatoryVariable: Variable = {
         id: varId,
-        codeLists: [codeListB],
+        codelists: [codelistB],
         label: '',
         type: VartypeEnum.CONTENTS_VARIABLE,
         mandatory: true,
@@ -245,7 +245,7 @@ describe('selectionUtils', () => {
       };
       const mandatoryVariable2: Variable = {
         id: varId2,
-        codeLists: [codeListA],
+        codelists: [codelistA],
         label: '',
         type: VartypeEnum.CONTENTS_VARIABLE,
         mandatory: true,
@@ -272,10 +272,10 @@ describe('selectionUtils', () => {
         notes: [],
       };
       const prevValuesWithData = [
-        { id: varId, selectedCodeList: 'A', values: ['existing'] },
+        { id: varId, selectedCodelist: 'A', values: ['existing'] },
         {
           id: varId2,
-          selectedCodeList: 'C',
+          selectedCodelist: 'C',
           values: ['existing-value-1', 'existing-value-2'],
         },
       ];
@@ -297,27 +297,27 @@ describe('selectionUtils', () => {
     });
   });
 
-  describe('addSelectedCodeListToVariable', () => {
-    it('updates existing variable with new selectedCodeList and resets values', () => {
+  describe('addSelectedCodelistToVariable', () => {
+    it('updates existing variable with new selectedCodelist and resets values', () => {
       const currentVariable = prevSelectedValues[0];
-      const result = addSelectedCodeListToVariable(
+      const result = addSelectedCodelistToVariable(
         currentVariable,
         prevSelectedValues,
         varId,
         selectOptionB,
       );
-      expect(result.find((v) => v.id === varId)?.selectedCodeList).toBe('B');
+      expect(result.find((v) => v.id === varId)?.selectedCodelist).toBe('B');
       expect(result.find((v) => v.id === varId)?.values).toEqual([]);
     });
 
     it('adds a new variable if currentVariable is undefined', () => {
-      const result = addSelectedCodeListToVariable(
+      const result = addSelectedCodelistToVariable(
         undefined,
         prevSelectedValues,
         'var3',
         selectOptionA,
       );
-      expect(result.find((v) => v.id === 'var3')?.selectedCodeList).toBe('A');
+      expect(result.find((v) => v.id === 'var3')?.selectedCodelist).toBe('A');
       expect(result.find((v) => v.id === 'var3')?.values).toEqual([]);
     });
   });

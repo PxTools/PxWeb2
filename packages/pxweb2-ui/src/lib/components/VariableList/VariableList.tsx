@@ -64,7 +64,7 @@ export function VariableList({
                 mandatory={variable.mandatory}
                 type={variable.type}
                 values={variable.values}
-                codeLists={variable.codeLists}
+                codelists={variable.codelists}
                 selectedValues={selectedVBValues}
                 onChangeCodeList={handleCodeListChange}
                 onChangeMixedCheckbox={handleMixedCheckboxChange}
