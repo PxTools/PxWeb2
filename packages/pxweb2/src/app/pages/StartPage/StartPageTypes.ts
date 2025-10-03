@@ -11,11 +11,12 @@ export enum ActionType {
 }
 
 export type FilterType =
-  | 'timeUnit'
   | 'subject'
+  | 'timeUnit'
+  | 'variable'
   | 'yearRange'
   | 'search'
-  | 'variable';
+  | 'status';
 
 export type Filter = {
   type: FilterType;
@@ -99,4 +100,5 @@ export type StartPageFilters = {
   subjectTree: PathItem[];
   variables: Map<string, number>;
   yearRange: YearRange;
+  status: Map<'active' | 'discontinued', number>;
 };

@@ -34,6 +34,7 @@ describe('YearRangeFilter', () => {
       timeUnits: new Map(),
       variables: new Map(),
       yearRange: { min: 2000, max: 2005 },
+      status: new Map(),
     },
     loading: false,
     error: '',

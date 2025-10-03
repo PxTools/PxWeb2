@@ -1,8 +1,4 @@
 {
-  "meta": {
-    "languageName": "English",
-    "shorthand": "en"
-  },
   "common": {
     "title": "PxWeb 2.0",
     "header": {
@@ -18,6 +14,11 @@
       },
       "generic": {
         "title": "Sorry, something went wrong",
+        "description": "A technical error occurred on our side. Please try refreshing the page or come back in a few minutes.",
+        "action_text": "Refresh"
+      },
+      "no_tables_loaded": {
+        "title": "Couldn't load the tables",
         "description": "A technical error occurred on our side. Please try refreshing the page or come back in a few minutes.",
         "action_text": "Refresh"
       }
@@ -77,7 +78,7 @@
       "remove_all_filter": "Remove all filters",
       "remove_filter_aria": "Remove filter, {{value}}",
       "subject": "Topic",
-      "timeUnit": "Time period",
+      "time_unit": "Time period",
       "year": {
         "title": "Year",
         "from_label": "From",
@@ -97,6 +98,11 @@
         "term": "Term",
         "weekly": "Week",
         "other": "Other"
+      },
+      "status": {
+        "title": "Status",
+        "updating": "Updated",
+        "not_updating": "No longer updated"
       }
     },
     "table": {
@@ -112,8 +118,8 @@
     }
   },
   "presentation_page": {
-    "sidemenu": {
-      "arialabeltoolsidemenu": "Tool menu for table",
+    "side_menu": {
+      "aria_label_tool_side_menu": "Tool menu for table",
       "hide": "Hide",
       "selection": {
         "title": "Filter",
@@ -121,8 +127,8 @@
           "search": {
             "placeholder": "Search in list",
             "label": "Search",
-            "arialabelicontext": "Search icon",
-            "ariallabelclearbuttontext": "Clear search icon"
+            "aria_label_icon_text": "Search icon",
+            "aria_label_clear_button_text": "Clear search icon"
           },
           "header": {
             "tag_selected": "{{selected}} of {{total}} selected",
@@ -203,18 +209,18 @@
         "savequery": {
           "title": "Link to updated table",
           "info": "You get a unique link to your table, that we keep updated for you. How new time periods are added is up to you.",
-          "radioLegend": "Options for new time periods",
-          "periodOptions": {
+          "radio_legend": "Options for new time periods",
+          "period_options": {
             "selected": "Don't add new ones (the table will only show the ones you've selected now)",
             "from": "Add new ones (they will be added to the ones you've selected now)",
             "top": "Add new ones, but keep the same number (when a new time period is added, the oldest one is removed)"
           },
-          "createButton": "Get link",
-          "copyButton": "Copy link",
-          "copiedButton": "Link copied",
-          "createStatus": "Link generated. Click again to copy the link",
-          "copyStatus": "Link copied to clipboard",
-          "loadingStatus": "Generating link"
+          "create_button": "Get link",
+          "copy_button": "Copy link",
+          "copied_button": "Link copied",
+          "create_status": "Link generated. Click again to copy the link",
+          "copy_status": "Link copied to clipboard",
+          "loading_status": "Generating link"
         },
         "imagefile": {
           "title": "Save as graph",

@@ -69,7 +69,9 @@ describe('DrawerEdit', () => {
     expect(screen.getByTestId('content-box')).toBeInTheDocument();
     expect(screen.getByTestId('action-item')).toBeInTheDocument();
     expect(
-      screen.getByText('presentation_page.sidemenu.edit.customize.pivot.title'),
+      screen.getByText(
+        'presentation_page.side_menu.edit.customize.pivot.title',
+      ),
     ).toBeInTheDocument();
   });
 

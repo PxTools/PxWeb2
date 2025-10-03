@@ -6,6 +6,14 @@ import '@testing-library/jest-dom/vitest';
 import { Footer, scrollToTop } from './Footer';
 import { useLocaleContent } from '../../util/hooks/useLocaleContent';
 
+let currentPathname = '/en/tables';
+const navigateMock = vi.fn();
+
+vi.mock('react-router', () => ({
+  useNavigate: () => navigateMock,
+  useLocation: () => ({ pathname: currentPathname }),
+}));
+
 vi.mock('../../util/hooks/useLocaleContent', () => ({
   useLocaleContent: vi.fn(),
 }));
@@ -65,6 +73,20 @@ describe('Footer', () => {
         });
       });
     });
+
+    it('applies variant--startpage on the <footer> when variant="startpage"', () => {
+      (useLocaleContent as Mock).mockReturnValue(footerContent);
+      render(<Footer variant="startpage" />);
+      const footer = screen.getByRole('contentinfo');
+      expect(footer.className).toMatch(/variant--startpage/);
+    });
+
+    it('uses variant--tableview by default', () => {
+      (useLocaleContent as Mock).mockReturnValue(footerContent);
+      render(<Footer />);
+      const footer = screen.getByRole('contentinfo');
+      expect(footer.className).toMatch(/variant--tableview/);
+    });
   });
 
   describe('scrollToTop', () => {
@@ -87,6 +109,51 @@ describe('Footer', () => {
 
       expect(container.scrollTop).toBe(0);
       vi.useRealTimers();
+    });
+
+    it('shows Top button when containerRef is provided', () => {
+      (useLocaleContent as Mock).mockReturnValue(footerContent);
+      const ref = {
+        current: document.createElement('div'),
+      } as React.RefObject<HTMLDivElement>;
+      render(<Footer containerRef={ref} />);
+      expect(
+        screen.getByRole('button', { name: /common.footer.top_button_text/i }),
+      ).toBeInTheDocument();
+    });
+
+    it('shows Top button when enableWindowScroll is true (no containerRef)', () => {
+      (useLocaleContent as Mock).mockReturnValue(footerContent);
+      render(<Footer variant="startpage" enableWindowScroll />);
+      expect(
+        screen.getByRole('button', { name: /common.footer.top_button_text/i }),
+      ).toBeInTheDocument();
+    });
+
+    it('hides Top button when neither containerRef nor enableWindowScroll', () => {
+      (useLocaleContent as Mock).mockReturnValue(footerContent);
+      render(<Footer variant="startpage" />);
+      expect(
+        screen.queryByRole('button', {
+          name: /common.footer.top_button_text/i,
+        }),
+      ).not.toBeInTheDocument();
+    });
+
+    it('scrolls window to top when enableWindowScroll is true', () => {
+      (useLocaleContent as Mock).mockReturnValue(footerContent);
+      const scrollSpy = vi.spyOn(window, 'scrollTo').mockImplementation(() => {
+        vi.fn();
+      });
+      render(<Footer variant="startpage" enableWindowScroll />);
+
+      const btn = screen.getByRole('button', {
+        name: /common.footer.top_button_text/i,
+      });
+      btn.click();
+
+      expect(scrollSpy).toHaveBeenCalledWith({ top: 0, behavior: 'smooth' });
+      scrollSpy.mockRestore();
     });
   });
 });

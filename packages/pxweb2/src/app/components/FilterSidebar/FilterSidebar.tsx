@@ -292,11 +292,99 @@ const VariablesFilter: React.FC<{ onFilterChange?: () => void }> = ({
   );
 };
 
+const StatusFilter: React.FC<{ onFilterChange?: () => void }> = ({
+  onFilterChange,
+}) => {
+  const { state, dispatch } = useContext(FilterContext);
+  const { t } = useTranslation();
+
+  type StatusKey = 'active' | 'discontinued';
+
+  const getStatusCount = (key: StatusKey) =>
+    state.availableFilters.status.get(key) ?? 0;
+  const activeCount = getStatusCount('active');
+  const discontinuedCount = getStatusCount('discontinued');
+
+  const activeChecked = state.activeFilters.some(
+    (filter) => filter.type === 'status' && filter.value === 'active',
+  );
+  const discontinuedChecked = state.activeFilters.some(
+    (filter) => filter.type === 'status' && filter.value === 'discontinued',
+  );
+  const labelActive = t('start_page.filter.status.updating');
+  const labelDiscontinued = t('start_page.filter.status.not_updating');
+
+  return (
+    <ul className={styles.filterList}>
+      <li className={styles.filterItem}>
+        <Checkbox
+          id="status-active"
+          text={`${labelActive} (${activeCount})`}
+          value={activeChecked}
+          subtle={!activeChecked && activeCount === 0}
+          onChange={(value) => {
+            value
+              ? dispatch({
+                  type: ActionType.ADD_FILTER,
+                  payload: [
+                    {
+                      type: 'status',
+                      value: 'active',
+                      label: labelActive,
+                      index: 0,
+                    },
+                  ],
+                })
+              : dispatch({
+                  type: ActionType.REMOVE_FILTER,
+                  payload: { type: 'status', value: 'active' },
+                });
+            onFilterChange?.();
+          }}
+        />
+      </li>
+      <li className={styles.filterItem}>
+        <Checkbox
+          id="status-discontinued"
+          text={`${labelDiscontinued} (${discontinuedCount})`}
+          value={discontinuedChecked}
+          subtle={!discontinuedChecked && discontinuedCount === 0}
+          onChange={(value) => {
+            value
+              ? dispatch({
+                  type: ActionType.ADD_FILTER,
+                  payload: [
+                    {
+                      type: 'status',
+                      value: 'discontinued',
+                      label: labelDiscontinued,
+                      index: 1,
+                    },
+                  ],
+                })
+              : dispatch({
+                  type: ActionType.REMOVE_FILTER,
+                  payload: { type: 'status', value: 'discontinued' },
+                });
+            onFilterChange?.();
+          }}
+        />
+      </li>
+    </ul>
+  );
+};
+
 export const FilterSidebar: React.FC<FilterSidebarProps> = ({
   onFilterChange,
 }) => {
   const { state } = useContext(FilterContext);
   const { t } = useTranslation();
+
+  // Show "Status" only if the original (unfiltered) dataset has any discontinued tables.
+  const shouldShowStatusFilter = useMemo(
+    () => state.availableTables.some((t) => t.discontinued === true),
+    [state.availableTables],
+  );
 
   return (
     <nav aria-label="Filter">
@@ -314,7 +402,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
           <FilterCategory header={t('start_page.filter.year.title')}>
             <YearRangeFilter onFilterChange={onFilterChange} />
           </FilterCategory>
-          <FilterCategory header={t('start_page.filter.timeUnit')}>
+          <FilterCategory header={t('start_page.filter.time_unit')}>
             <ul className={styles.filterList}>
               <RenderTimeUnitFilters onFilterChange={onFilterChange} />
             </ul>
@@ -322,6 +410,11 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
           <FilterCategory header={t('start_page.filter.variabel')}>
             <VariablesFilter onFilterChange={onFilterChange} />
           </FilterCategory>
+          {shouldShowStatusFilter && (
+            <FilterCategory header={t('start_page.filter.status.title')}>
+              <StatusFilter onFilterChange={onFilterChange} />
+            </FilterCategory>
+          )}
         </div>
       </div>
     </nav>
