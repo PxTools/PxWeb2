@@ -1,6 +1,7 @@
 import { Component, ReactNode } from 'react';
 
 import { GenericError } from '../Errors/GenericError/GenericError';
+import { NotFound } from '../Errors/NotFound/NotFound';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -19,19 +20,25 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     return { hasError: true, error };
   }
 
-  // NOSONAR: Keep optional debug logging for local troubleshooting during release stabilization
+  // NOSONAR: Add error logging here later if wanted
   // componentDidCatch(error: Error, info: ErrorInfo) {
   //   console.log(error, info);
   // }
 
   render() {
     if (this.state.hasError) {
-      // If a fallback UI is provided, render that
-      if (this.props.fallback) {
-        return this.props.fallback;
+      // Parse status code from error message if possible
+      const statusInMessage = this.state.error?.message.match(/(\d{3})/);
+      if (statusInMessage) {
+        const status = Number.parseInt(statusInMessage[1], 10);
+
+        // Check for 404 code in error message
+        if (status === 404) {
+          return <NotFound />;
+        }
       }
 
-      // Default error UI
+      // Default error component for all other errors
       return <GenericError />;
     }
 
