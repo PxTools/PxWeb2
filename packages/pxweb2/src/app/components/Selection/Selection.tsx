@@ -260,7 +260,7 @@ export function Selection({
 
   useEffect(() => {
     if (errorMsg) {
-      throw Error(errorMsg);
+      throw new Error(errorMsg);
     }
   }, [errorMsg]);
 
