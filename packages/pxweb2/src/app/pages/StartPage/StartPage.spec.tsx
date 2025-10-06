@@ -1,6 +1,6 @@
 import { vi, Mock } from 'vitest';
 import { MemoryRouter } from 'react-router';
-import { waitFor, within, screen } from '@testing-library/react';
+import { waitFor, within } from '@testing-library/react';
 import { FilterContext } from '../../context/FilterContext';
 import '@testing-library/jest-dom/vitest';
 
