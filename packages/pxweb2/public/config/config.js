@@ -6,7 +6,7 @@ window.PxWeb2Config = {
     ],
     defaultLanguage: 'no',
     fallbackLanguage: 'no',
-    showDefaultLanguageInPath: false,
+    showDefaultLanguageInPath: true,
   },
   baseApplicationPath: '/',
   apiUrl: 'https://data.ssb.no/api/pxwebapi/v2',
