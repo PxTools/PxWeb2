@@ -98,6 +98,11 @@
         "term": "Termin",
         "weekly": "Uke",
         "other": "Annet"
+      },
+      "status": {
+        "title": "Status",
+        "updating": "Oppdateres",
+        "not_updating": "Oppdateres ikke lenger"
       }
     },
     "table": {

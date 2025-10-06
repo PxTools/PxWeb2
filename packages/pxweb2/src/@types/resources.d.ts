@@ -301,6 +301,11 @@ interface Resources {
         remove_all_filter: 'Remove all filters';
         remove_filter_aria: 'Remove filter, {{value}}';
         show_results: 'Show {{value}} results';
+        status: {
+          not_updating: 'No longer updated';
+          title: 'Status';
+          updating: 'Updated';
+        };
         subject: 'Topic';
         time_unit: 'Time period';
         variabel: 'Variable';

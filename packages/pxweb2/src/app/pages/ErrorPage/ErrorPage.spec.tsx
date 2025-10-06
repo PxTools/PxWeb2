@@ -2,7 +2,7 @@ import { vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { useRouteError, isRouteErrorResponse } from 'react-router';
 
-import { ErrorPage, ErrorPageTableViewer } from './ErrorPage';
+import { ErrorPage } from './ErrorPage';
 import { renderWithProviders } from '../../util/testing-utils';
 
 vi.mock('react-router', () => ({
@@ -17,11 +17,6 @@ vi.mock('../../components/Errors/NotFound/NotFound', () => ({
 vi.mock('../../components/Errors/GenericError/GenericError', () => ({
   GenericError: () => (
     <div data-testid="generic-error">Generic Error Component</div>
-  ),
-  GenericErrorTableViewer: () => (
-    <div data-testid="generic-error-table-viewer">
-      Generic Error Table Viewer Component
-    </div>
   ),
 }));
 vi.mock('../../../i18n/useLocalizeDocumentAttributes', () => ({
@@ -74,16 +69,5 @@ describe('ErrorPage', () => {
     const { getByTestId } = renderWithProviders(<ErrorPage />);
 
     expect(getByTestId('generic-error')).toBeInTheDocument();
-  });
-
-  it('displays the generic error table viewer component for table viewer errors', () => {
-    mockUseRouteError.mockReturnValue({
-      status: 500,
-      isTableViewer: true,
-    });
-
-    const { getByTestId } = renderWithProviders(<ErrorPageTableViewer />);
-
-    expect(getByTestId('generic-error-table-viewer')).toBeInTheDocument();
   });
 });

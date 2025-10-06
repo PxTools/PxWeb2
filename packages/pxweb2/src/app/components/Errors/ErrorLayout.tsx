@@ -28,7 +28,7 @@ function ErrorContent({ align = 'center', children }: ErrorContentProps) {
 }
 
 interface ErrorLayoutProps {
-  readonly isStartPageGenericError?: boolean;
+  readonly withoutHeader?: boolean;
   readonly align?: 'center' | 'start';
   readonly children: React.ReactNode;
 }
@@ -36,11 +36,11 @@ interface ErrorLayoutProps {
 // Layout component for error pages, includes header and styles
 // Used as wrapper around error content, not as an error route element itself
 export function ErrorLayout({
-  isStartPageGenericError = false,
+  withoutHeader = false,
   align = 'center',
   children,
 }: ErrorLayoutProps) {
-  if (isStartPageGenericError) {
+  if (withoutHeader) {
     return <ErrorContent align={align}>{children}</ErrorContent>;
   }
 

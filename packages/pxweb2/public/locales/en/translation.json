@@ -98,6 +98,11 @@
         "term": "Term",
         "weekly": "Week",
         "other": "Other"
+      },
+      "status": {
+        "title": "Status",
+        "updating": "Updated",
+        "not_updating": "No longer updated"
       }
     },
     "table": {
