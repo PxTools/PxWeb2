@@ -401,6 +401,34 @@ describe('StartPage renderNoResult', () => {
     vi.spyOn(startPageRender, 'tableListIsReadyToRender').mockReturnValue(true);
   });
 
+  it('does not show no result header or text when one or more tables are present', async () => {
+    mockUseLocaleContent.mockReturnValue({
+      startPage: {
+        noResultSearchHelp: {
+          enabled: true,
+          helpText: ['Tips 1', 'Tips 2'],
+        },
+      },
+    });
+
+    const { queryByText } = renderWithProviders(
+      <AccessibilityProvider>
+        <MemoryRouter>
+          <StartPage />
+        </MemoryRouter>
+      </AccessibilityProvider>,
+    );
+
+    await waitFor(() => {
+      expect(
+        queryByText('start_page.no_result_header'),
+      ).not.toBeInTheDocument();
+      expect(
+        queryByText('start_page.no_result_description'),
+      ).not.toBeInTheDocument();
+    });
+  });
+
   it('shows help texts when noResultSearchHelp is enabled and helpText is provided', async () => {
     mockUseLocaleContent.mockReturnValue({
       startPage: {
