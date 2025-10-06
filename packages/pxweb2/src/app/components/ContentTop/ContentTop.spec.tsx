@@ -1,5 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { useTranslation } from 'react-i18next';
+import { screen, fireEvent } from '@testing-library/react';
+import '@testing-library/jest-dom/vitest';
 
 import {
   Variable,
@@ -11,7 +13,10 @@ import {
 } from '@pxweb2/pxweb2-ui';
 import ContentTop from './ContentTop';
 import { renderWithProviders } from '../../util/testing-utils';
-import { getMandatoryNotesCompressed } from '../../util/notes/notesUtil';
+import {
+  getMandatoryNotesCompressed,
+  MandatoryCompressedUtilityNotesType,
+} from '../../util/notes/notesUtil';
 import * as ContentTopModule from './ContentTop';
 
 function getPxTable(): PxTable {
@@ -114,11 +119,16 @@ function getPxTable(): PxTable {
 
   return table;
 }
-
 const pxTable = getPxTable();
 
 const totalMetadata = pxTable.metadata;
 const selectedMetadata = pxTable.metadata;
+
+let currentPathname = '/en/tables';
+
+vi.mock('react-router', () => ({
+  useLocation: () => ({ pathname: currentPathname }),
+}));
 
 const selectedVBValues: SelectedVBValues[] = [
   {
@@ -173,8 +183,15 @@ describe('get values note for alder_2', () => {
 
 describe('Selection', () => {
   it('should render successfully', () => {
+    const setIsExpanded = vi.fn();
     const { baseElement } = renderWithProviders(
-      <ContentTop pxtable={pxTable} staticTitle="Tittel" />,
+      <ContentTop
+        pxtable={pxTable}
+        staticTitle=""
+        isExpanded={false}
+        setIsExpanded={setIsExpanded}
+        pathElements={[]}
+      />,
     );
 
     expect(baseElement).toBeTruthy();
@@ -188,7 +205,7 @@ describe('ContentTop.createNoteMessage', () => {
   // Mock translation function
   // const t = (key: string) => key;
 
-  const baseNoteInfo = {
+  const baseNoteInfo: MandatoryCompressedUtilityNotesType = {
     numberOfTableNotes: 0,
     tableNotes: '',
     variableNotes: [],
@@ -196,18 +213,18 @@ describe('ContentTop.createNoteMessage', () => {
   const { t } = useTranslation();
   it('returns null if there are no notes', () => {
     const noteInfo = { ...baseNoteInfo };
-    const result = createNoteMessage(noteInfo as any, t);
+    const result = createNoteMessage(noteInfo, t);
     expect(result).toBeNull();
   });
 
   it('returns table notes only if variableNotes is empty and numberOfTableNotes > 0', () => {
-    const noteInfo = {
+    const noteInfo: MandatoryCompressedUtilityNotesType = {
       ...baseNoteInfo,
       numberOfTableNotes: 2,
       tableNotes: 'Table note text',
       variableNotes: [],
     };
-    const result = createNoteMessage(noteInfo as any, t);
+    const result = createNoteMessage(noteInfo, t);
     expect(result).toEqual({
       heading:
         'presentation_page.main_content.about_table.footnotes.mandatory_heading',
@@ -216,17 +233,20 @@ describe('ContentTop.createNoteMessage', () => {
   });
 
   it('returns variable note only if numberOfTableNotes is 0 and one variable note', () => {
-    const noteInfo = {
+    const noteInfo: MandatoryCompressedUtilityNotesType = {
       ...baseNoteInfo,
       numberOfTableNotes: 0,
       variableNotes: [
         {
+          variableName: 'TestVariable',
+          numberOfVariableNotes: 1,
+          numberOfValueNotes: 0,
           compressednotes: 'Variable note text',
           totalNumberOfNotesOnVariable: 1,
         },
       ],
     };
-    const result = createNoteMessage(noteInfo as any, t);
+    const result = createNoteMessage(noteInfo, t);
     expect(result).toEqual({
       heading:
         'presentation_page.main_content.about_table.footnotes.important_about_selection_heading_one_note_1' +
@@ -237,17 +257,20 @@ describe('ContentTop.createNoteMessage', () => {
   });
 
   it('returns combined heading/message for multiple notes', () => {
-    const noteInfo = {
+    const noteInfo: MandatoryCompressedUtilityNotesType = {
       ...baseNoteInfo,
       numberOfTableNotes: 1,
       variableNotes: [
         {
+          variableName: 'TestVariable',
+          numberOfVariableNotes: 1,
+          numberOfValueNotes: 1,
           compressednotes: 'Variable note text',
           totalNumberOfNotesOnVariable: 2,
         },
       ],
     };
-    const result = createNoteMessage(noteInfo as any, t);
+    const result = createNoteMessage(noteInfo, t);
     expect(result).toEqual({
       heading:
         'presentation_page.main_content.about_table.footnotes.important_about_selection_heading_1' +
@@ -259,21 +282,27 @@ describe('ContentTop.createNoteMessage', () => {
   });
 
   it('returns combined heading/message for multiple variable notes', () => {
-    const noteInfo = {
+    const noteInfo: MandatoryCompressedUtilityNotesType = {
       ...baseNoteInfo,
       numberOfTableNotes: 0,
       variableNotes: [
         {
+          variableName: 'TestVariable1',
+          numberOfVariableNotes: 1,
+          numberOfValueNotes: 0,
           compressednotes: 'Variable note 1',
           totalNumberOfNotesOnVariable: 1,
         },
         {
+          variableName: 'TestVariable2',
+          numberOfVariableNotes: 1,
+          numberOfValueNotes: 1,
           compressednotes: 'Variable note 2',
           totalNumberOfNotesOnVariable: 2,
         },
       ],
     };
-    const result = createNoteMessage(noteInfo as any, t);
+    const result = createNoteMessage(noteInfo, t);
     expect(result).toEqual({
       heading:
         'presentation_page.main_content.about_table.footnotes.important_about_selection_heading_1' +
@@ -282,5 +311,96 @@ describe('ContentTop.createNoteMessage', () => {
       message:
         'presentation_page.main_content.about_table.footnotes.important_about_selection_body',
     });
+  });
+});
+
+// Control variable for isXXLargeDesktop mock
+let mockIsXXLargeDesktop = true;
+
+// Mock useApp globally for these tests
+vi.mock('../../context/useApp', () => ({
+  default: () => ({
+    isXXLargeDesktop: mockIsXXLargeDesktop,
+    setTitle: () => {
+      vi.fn();
+    },
+  }),
+}));
+
+describe('Expand/Shrink button', () => {
+  beforeEach(() => {
+    mockIsXXLargeDesktop = true;
+  });
+
+  it('shows ExpandHorizontal icon and expand title when not expanded', () => {
+    const setIsExpanded = vi.fn();
+    renderWithProviders(
+      <ContentTop
+        pxtable={pxTable}
+        staticTitle="My title"
+        isExpanded={false}
+        setIsExpanded={setIsExpanded}
+        pathElements={[]}
+      />,
+    );
+    const button = screen.getByRole('button', { name: /expand/i });
+    expect(button).toBeInTheDocument();
+    const svgExpand = button.querySelector('svg path[d^="M5.06964"]');
+    expect(svgExpand).toBeInTheDocument();
+    expect(button.title.toLowerCase()).toContain('expand');
+  });
+
+  it('shows ShrinkHorizontal icon and shrink title when expanded', () => {
+    const setIsExpanded = vi.fn();
+    renderWithProviders(
+      <ContentTop
+        pxtable={pxTable}
+        staticTitle="My title"
+        isExpanded={true}
+        setIsExpanded={setIsExpanded}
+        pathElements={[]}
+      />,
+    );
+    const button = screen.getByRole('button', { name: /shrink/i });
+    expect(button).toBeInTheDocument();
+    const svgShrink = button.querySelector('svg path[d^="M17.8636"]');
+    expect(svgShrink).toBeInTheDocument();
+    expect(button.title.toLowerCase()).toContain('shrink');
+  });
+
+  it('calls setIsExpanded with correct value on click', () => {
+    const setIsExpanded = vi.fn();
+    renderWithProviders(
+      <ContentTop
+        pxtable={pxTable}
+        staticTitle="My title"
+        isExpanded={false}
+        setIsExpanded={setIsExpanded}
+        pathElements={[]}
+      />,
+    );
+    const button = screen.getByRole('button', { name: /expand/i });
+    fireEvent.click(button);
+    expect(setIsExpanded).toHaveBeenCalledWith(true);
+  });
+});
+
+describe('Expand button not visible on smaller screens', () => {
+  it('does not render the expand button when isXXLargeDesktop is false', () => {
+    mockIsXXLargeDesktop = false;
+
+    const setIsExpanded = vi.fn();
+    renderWithProviders(
+      <ContentTop
+        pxtable={pxTable}
+        staticTitle="My title"
+        isExpanded={false}
+        setIsExpanded={setIsExpanded}
+        pathElements={[]}
+      />,
+    );
+
+    const button = screen.queryByRole('button', { name: /expand/i });
+    expect(button).not.toBeInTheDocument();
   });
 });

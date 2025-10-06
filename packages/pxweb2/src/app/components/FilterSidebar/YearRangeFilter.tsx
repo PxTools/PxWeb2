@@ -93,7 +93,9 @@ function getYearRangeForMatchingTables(
   return { min, max };
 }
 
-export const YearRangeFilter: React.FC = () => {
+export const YearRangeFilter: React.FC<{ onFilterChange?: () => void }> = ({
+  onFilterChange,
+}) => {
   const { state, dispatch } = useContext(FilterContext);
   const { t } = useTranslation();
   const { fromLabel, toLabel, fromYearLabel, toYearLabel } = useYearLabels(t);
@@ -124,6 +126,7 @@ export const YearRangeFilter: React.FC = () => {
   ).reverse();
 
   const clearSelectionText = t('start_page.filter.year.clear_selection');
+  const noOptionsText = t('start_page.filter.year.no_option');
 
   function handleSelect(item: Option | undefined, type: 'from' | 'to') {
     const { from: prevFrom, to: prevTo } = parseYearRange(
@@ -135,22 +138,26 @@ export const YearRangeFilter: React.FC = () => {
     const newFrom = type === 'from' ? item?.value : prevFrom;
     const newTo = type === 'to' ? item?.value : prevTo;
 
-    if (newFrom || newTo) {
-      const { label, value } = getYearRangeLabelValue(
-        newFrom,
-        newTo,
-        fromLabel,
-        toLabel,
-      );
-      dispatch({
-        type: ActionType.ADD_FILTER,
-        payload: [{ type: 'yearRange', value, label, index: 0 }],
-      });
-    } else if (yearRangeFilter) {
-      dispatch({
-        type: ActionType.REMOVE_FILTER,
-        payload: { value: yearRangeFilter.value, type: 'yearRange' },
-      });
+    if (newFrom !== prevFrom || newTo !== prevTo) {
+      if (newFrom || newTo) {
+        const { label, value } = getYearRangeLabelValue(
+          newFrom,
+          newTo,
+          fromLabel,
+          toLabel,
+        );
+        dispatch({
+          type: ActionType.ADD_FILTER,
+          payload: [{ type: 'yearRange', value, label, index: 0 }],
+        });
+        onFilterChange?.();
+      } else if (yearRangeFilter) {
+        dispatch({
+          type: ActionType.REMOVE_FILTER,
+          payload: { value: yearRangeFilter.value, type: 'yearRange' },
+        });
+        onFilterChange?.();
+      }
     }
   }
 
@@ -161,6 +168,7 @@ export const YearRangeFilter: React.FC = () => {
         label={fromYearLabel(fromYear ?? '')}
         options={fromOptions}
         selectedOption={buildYearOption(fromYear)}
+        noOptionsText={noOptionsText}
         onSelect={(item) => handleSelect(item, 'from')}
         inputMode="numeric"
         optionListStyle={{ maxHeight: '250px' }}
@@ -171,6 +179,7 @@ export const YearRangeFilter: React.FC = () => {
         label={toYearLabel(toYear ?? '')}
         options={toOptions}
         selectedOption={buildYearOption(toYear)}
+        noOptionsText={noOptionsText}
         onSelect={(item) => handleSelect(item, 'to')}
         inputMode="numeric"
         optionListStyle={{ maxHeight: '250px' }}

@@ -13,28 +13,29 @@ const supportedLanguages: string[] = config.language.supportedLanguages.map(
   (item) => item.shorthand,
 );
 
+const lookingForLanguagePos =
+  (config.baseApplicationPath.match(/[\\/]/g) || []).length - 1;
+
 const initPromise = i18n
   .use(HttpApi)
   .use(initReactI18next)
   .use(LanguageDetector)
   .init({
     backend: {
-      requestOptions: {
-        // Do not cache the response from the server. This is needed because site administrators
-        // may want to change the translations without having to wait for the cache to expire.
-        cache: 'no-store',
-      },
+      loadPath: `${config.baseApplicationPath}locales/{{lng}}/translation.json`,
     },
     fallbackLng: config.language.fallbackLanguage,
     defaultNS,
     // Explicitly tell i18next our supported locales.
     supportedLngs: supportedLanguages,
-    debug: true,
+    // Disable i18next debug logging to prevent noisy console output.
+    debug: false,
     interpolation: {
       escapeValue: false,
     },
     detection: {
       order: ['path'],
+      lookupFromPathIndex: lookingForLanguagePos,
       caches: [], // Do not cache the language in local storage or cookies.
     },
   });

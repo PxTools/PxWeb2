@@ -56,13 +56,15 @@ export const NavigationRail = React.forwardRef<
       <LazyMotion features={loadFeatures}>
         <MotionConfig reducedMotion="user">
           <nav
-            aria-label={t('presentation_page.sidemenu.arialabeltoolsidemenu')}
+            aria-label={t(
+              'presentation_page.side_menu.aria_label_tool_side_menu',
+            )}
           >
             <ul className={styles.navigationRailList}>
               <Item
                 ref={refs.selection}
                 parentName="navRail"
-                label={t('presentation_page.sidemenu.selection.title')}
+                label={t('presentation_page.side_menu.selection.title')}
                 selected={selected === 'selection'}
                 icon={'Controls'}
                 onClick={(event) => {
@@ -76,7 +78,7 @@ export const NavigationRail = React.forwardRef<
               <Item
                 ref={refs.view}
                 parentName="navRail"
-                label={t('presentation_page.sidemenu.view.title')}
+                label={t('presentation_page.side_menu.view.title')}
                 selected={selected === 'view'}
                 icon={'BarChart'}
                 onClick={(event) => {
@@ -86,7 +88,7 @@ export const NavigationRail = React.forwardRef<
               <Item
                 ref={refs.edit}
                 parentName="navRail"
-                label={t('presentation_page.sidemenu.edit.title')}
+                label={t('presentation_page.side_menu.edit.title')}
                 selected={selected === 'edit'}
                 icon={'ArrowsUpDown'}
                 onClick={(event) => {
@@ -96,7 +98,7 @@ export const NavigationRail = React.forwardRef<
               <Item
                 ref={refs.save}
                 parentName="navRail"
-                label={t('presentation_page.sidemenu.save.title')}
+                label={t('presentation_page.side_menu.save.title')}
                 selected={selected === 'save'}
                 icon={'Download'}
                 onClick={(event) => {
@@ -106,7 +108,7 @@ export const NavigationRail = React.forwardRef<
               <Item
                 ref={refs.help}
                 parentName="navRail"
-                label={t('presentation_page.sidemenu.help.title')}
+                label={t('presentation_page.side_menu.help.title')}
                 selected={selected === 'help'}
                 icon={'QuestionMarkCircle'}
                 onClick={(event) => {

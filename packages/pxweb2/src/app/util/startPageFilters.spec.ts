@@ -11,6 +11,8 @@ import {
   buildSubjectToTableIdsMap,
   type TableWithPaths,
   getVariables,
+  sortTimeUnit,
+  sortSubjectTree,
 } from '../util/startPageFilters';
 import { Filter, type PathItem } from '../pages/StartPage/StartPageTypes';
 import { Table } from '@pxweb2/pxweb2-api-client';
@@ -483,5 +485,110 @@ describe('buildSubjectToTableIdsMap', () => {
   it('returns empty map for tables with no paths', () => {
     const map = buildSubjectToTableIdsMap([{ id: 't1' }] as TableWithPaths[]);
     expect(map.size).toBe(0);
+  });
+});
+
+describe('sortTimeUnit (Set version)', () => {
+  it('sorts known units in predefined order', () => {
+    const input = new Set([
+      'Monthly',
+      'Annual',
+      'Other',
+      'Weekly',
+      'Quarterly',
+    ]);
+    const sorted = sortTimeUnit(input);
+    expect(sorted).toEqual([
+      'Annual',
+      'Quarterly',
+      'Monthly',
+      'Weekly',
+      'Other',
+    ]);
+  });
+
+  it('places unknown units at the end', () => {
+    const input = new Set(['Monthly', 'Daily', 'Annual', 'BiWeekly', 'Weekly']);
+    const sorted = sortTimeUnit(input);
+
+    expect(sorted).toEqual([
+      'Annual',
+      'Monthly',
+      'Weekly',
+      'Daily',
+      'BiWeekly',
+    ]);
+  });
+
+  it('handles empty input', () => {
+    const input = new Set<string>();
+    const sorted = sortTimeUnit(input);
+    expect(sorted).toEqual([]);
+  });
+
+  it('handles subset of known values', () => {
+    const input = new Set(['Weekly', 'Annual']);
+    const sorted = sortTimeUnit(input);
+    expect(sorted).toEqual(['Annual', 'Weekly']);
+  });
+});
+
+describe('sortSubjectTreeAlpha', () => {
+  it('sorts siblings at top level alphabetically', () => {
+    const subjects = [
+      { id: '2', label: 'Transport' },
+      { id: '3', label: 'Agriculture' },
+      { id: '1', label: 'Business' },
+    ];
+
+    const sorted = sortSubjectTree(subjects);
+
+    expect(sorted.map((n) => n.label)).toEqual([
+      'Agriculture',
+      'Business',
+      'Transport',
+    ]);
+  });
+
+  it('sorts children recursively at each depth', () => {
+    const subjects = [
+      {
+        id: 'A',
+        label: 'Alpha',
+        children: [
+          { id: 'A2', label: 'Zebra' },
+          { id: 'A1', label: 'Beta' },
+          {
+            id: 'A3',
+            label: 'Delta',
+            children: [
+              { id: 'A3b', label: 'Gamma' },
+              { id: 'A3a', label: 'Alpha' },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'B',
+        label: 'Bravo',
+        children: [
+          { id: 'B2', label: 'Lima' },
+          { id: 'B1', label: 'Echo' },
+        ],
+      },
+    ];
+
+    const sorted = sortSubjectTree(subjects);
+
+    // Toplevel
+    expect(sorted.map((n) => n.label)).toEqual(['Alpha', 'Bravo']);
+
+    // Level 2 - Alpha-branch
+    const alphaKids = sorted[0].children!;
+    expect(alphaKids.map((n) => n.label)).toEqual(['Beta', 'Delta', 'Zebra']);
+
+    // Lecel 3 - Alpha → Delta-branch
+    const deltaKids = alphaKids.find((n) => n.label === 'Delta')!.children!;
+    expect(deltaKids.map((n) => n.label)).toEqual(['Alpha', 'Gamma']);
   });
 });

@@ -26,11 +26,13 @@ export type SelectProps = {
   className?: string;
   addModal: (name: string, closeFunction: () => void) => void;
   removeModal: (name: string) => void;
+  codeListLabelId?: string;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function openOptions(options: SelectOption[]) {
-  const optionsStr = options.map((option) => option.label).join('\n');
-  console.log(optionsStr);
+  // NOSONAR: Keep for future use
+  // const optionsStr = options.map((option) => option.label).join('\n');
 }
 
 export function Select({
@@ -49,6 +51,7 @@ export function Select({
   className = '',
   addModal,
   removeModal,
+  codeListLabelId,
 }: Readonly<SelectProps>) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
 
@@ -81,6 +84,7 @@ export function Select({
           className={cssClasses}
           addModal={addModal}
           removeModal={removeModal}
+          codeListLabelId={codeListLabelId}
         />
       )}
     </>
@@ -160,6 +164,7 @@ type VariableBoxSelectProps = Pick<
   | 'onChange'
   | 'tabIndex'
   | 'className'
+  | 'codeListLabelId'
 > & {
   languageDirection: 'ltr' | 'rtl';
   addModal: (id: string, onClose: () => void) => void;
@@ -180,6 +185,7 @@ function VariableBoxSelect({
   className = '',
   addModal,
   removeModal,
+  codeListLabelId,
 }: VariableBoxSelectProps) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
 
@@ -295,6 +301,7 @@ function VariableBoxSelect({
           </Label>
           <BodyShort
             size="medium"
+            id={codeListLabelId}
             className={cl(
               classes.optionLayoutVariablebox,
               classes.optionTypography,

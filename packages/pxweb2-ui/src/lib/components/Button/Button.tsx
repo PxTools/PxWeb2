@@ -10,7 +10,7 @@ export interface ButtonProps
   size?: 'small' | 'medium';
   variant: 'primary' | 'secondary' | 'tertiary';
   icon?: IconProps['iconName'];
-  iconPosition?: 'left' | 'right';
+  iconPosition?: 'start' | 'end';
   className?: string;
   children?: string;
   loading?: boolean;
@@ -21,7 +21,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
       icon,
-      iconPosition = 'left',
+      iconPosition = 'start',
       variant,
       size = 'medium',
       children,
@@ -73,9 +73,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           </>
         ) : (
           <>
-            {icon && iconPosition === 'left' && <Icon iconName={icon} />}
+            {icon && iconPosition === 'start' && <Icon iconName={icon} />}
             {children}
-            {icon && iconPosition === 'right' && <Icon iconName={icon} />}
+            {icon && iconPosition === 'end' && <Icon iconName={icon} />}
           </>
         )}
       </button>

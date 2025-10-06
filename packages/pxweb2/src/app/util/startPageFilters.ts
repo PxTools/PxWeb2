@@ -19,7 +19,8 @@ export type TableWithPaths = Table & {
 export function getSubjectTree(tables: Table[]): PathItem[] {
   const allPaths: PathItem[][] = getAllPath(tables);
   const organizedPaths: PathItem[] = organizePaths(allPaths);
-  return updateSubjectTreeCounts(organizedPaths, tables);
+  const sortedAndOranizedPaths = sortSubjectTree(organizedPaths);
+  return updateSubjectTreeCounts(sortedAndOranizedPaths, tables);
 }
 
 export function organizePaths(paths: PathItem[][]): PathItem[] {
@@ -81,6 +82,7 @@ export function getFilters(tables: Table[]): StartPageFilters {
     subjectTree: [],
     yearRange: { min: 0, max: 9999 },
     variables: new Map<string, number>(),
+    status: new Map<'active' | 'discontinued', number>(),
   };
 
   filters.timeUnits = getTimeUnits(tables);
@@ -347,6 +349,11 @@ export function recomputeAvailableFilters(
     currentFilters,
     availableTables,
   );
+  const statusTables = tablesForFilterCounts(
+    'status',
+    currentFilters,
+    availableTables,
+  );
   // We do not calculate variables, they are always updated - even when adding variable filters!
 
   const shouldRecalcFilter = (filter: FilterType) =>
@@ -362,6 +369,7 @@ export function recomputeAvailableFilters(
     yearRange: shouldRecalcFilter('yearRange')
       ? getYearRanges(yearRangeTables)
       : undefined,
+    status: shouldRecalcFilter('status') ? getStatus(statusTables) : undefined,
   };
 }
 
@@ -449,4 +457,80 @@ export function getYearRangeLabelValue(
   }
 
   return { label: '', value: '' };
+}
+
+export function sortTimeUnit(allTimeUnits: Set<string>): string[] {
+  const timeUnitOrder = ['Annual', 'Quarterly', 'Monthly', 'Weekly', 'Other'];
+
+  return Array.from(allTimeUnits).sort((a, b) => {
+    const indexA = timeUnitOrder.indexOf(a);
+    const indexB = timeUnitOrder.indexOf(b);
+
+    // Values not in predefined order go to the end
+    return (
+      (indexA === -1 ? timeUnitOrder.length : indexA) -
+      (indexB === -1 ? timeUnitOrder.length : indexB)
+    );
+  });
+}
+
+function compareByLabelAsc(a: PathItem, b: PathItem): number {
+  const la = a.label;
+  const lb = b.label;
+  if (la < lb) {
+    return -1;
+  }
+  if (la > lb) {
+    return 1;
+  }
+  return 0;
+}
+
+// Sort subjects alphabetically at every depth.
+export function sortSubjectTree(subjects: PathItem[]): PathItem[] {
+  const sortRec = (nodes: PathItem[]): PathItem[] =>
+    nodes
+      .slice()
+      .sort(compareByLabelAsc)
+      .map((node) => ({
+        ...node,
+        children: node.children ? sortRec(node.children) : undefined,
+      }));
+
+  return sortRec(subjects);
+}
+
+export function sortTablesByUpdated(tables: Table[]): Table[] {
+  return tables.slice().sort((a, b) => {
+    const dateA = Date.parse(a.updated ?? '');
+    const dateB = Date.parse(b.updated ?? '');
+    const isValidA = !isNaN(dateA);
+    const isValidB = !isNaN(dateB);
+
+    // Both invalid/missing -> keep original order
+    if (!isValidA && !isValidB) {
+      return 0;
+    }
+    // Only A invalid -> B comes first
+    if (!isValidA) {
+      return 1;
+    }
+    // Only B invalid -> A comes first
+    if (!isValidB) {
+      return -1;
+    }
+    // Both valid -> newer first
+    return dateB - dateA;
+  });
+}
+
+export function getStatus(
+  tables: Table[],
+): Map<'active' | 'discontinued', number> {
+  const discontinued = tables.filter((t) => t.discontinued === true).length;
+  const active = tables.length - discontinued;
+  return new Map([
+    ['active', active],
+    ['discontinued', discontinued],
+  ]);
 }

@@ -5,9 +5,15 @@ export interface IconProps {
   iconName: keyof typeof Icons;
   className?: string;
   ariaLabel?: string;
+  ariaHidden?: boolean;
 }
 
-const Icon: React.FC<IconProps> = ({ iconName, className, ariaLabel }) => {
+const Icon: React.FC<IconProps> = ({
+  iconName,
+  className,
+  ariaLabel,
+  ariaHidden,
+}) => {
   const icon = Icons[iconName];
 
   if (!icon) {
@@ -21,6 +27,7 @@ const Icon: React.FC<IconProps> = ({ iconName, className, ariaLabel }) => {
       className={className + ' ' + styles['icon']}
       fill="currentColor"
       {...(ariaLabel ? { 'aria-label': ariaLabel } : {})}
+      {...(ariaHidden ? { 'aria-hidden': ariaHidden } : {})}
     >
       {icon}
     </svg>

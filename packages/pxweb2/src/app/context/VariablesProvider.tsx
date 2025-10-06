@@ -31,16 +31,18 @@ export type VariablesContextType = {
 // Create the context with default values
 export const VariablesContext = createContext<VariablesContextType>({
   isInitialized: false,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  addSelectedValues: () => {},
+  addSelectedValues: () => {
+    // No-op: useVariables hook prevents this from being called
+  },
 
   getSelectedValuesById: () => [],
   getSelectedValuesByIdSorted: () => [],
   getSelectedCodelistById: () => undefined,
 
   getNumberOfSelectedValues: () => 0,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  syncVariablesAndValues: () => {},
+  syncVariablesAndValues: () => {
+    // No-op: useVariables hook prevents this from being called
+  },
   getSelectedMatrixSize: () => 1,
   getUniqueIds: () => [],
   toString: () => '',

@@ -1,11 +1,15 @@
+import { vi, Mock } from 'vitest';
 import { MemoryRouter } from 'react-router';
-import StartPage from './StartPage';
-import { AccessibilityProvider } from '../../context/AccessibilityProvider';
-import { renderWithProviders } from '../../util/testing-utils';
-import { Config } from '../../util/config/configType';
-import { vi } from 'vitest';
-import '@testing-library/jest-dom/vitest';
 import { waitFor, within } from '@testing-library/react';
+import '@testing-library/jest-dom/vitest';
+
+import StartPage from './StartPage';
+import type { Table } from '@pxweb2/pxweb2-api-client';
+import { AccessibilityProvider } from '../../context/AccessibilityProvider';
+import { Config } from '../../util/config/configType';
+import { useLocaleContent } from '../../util/hooks/useLocaleContent';
+import { sortTablesByUpdated } from '../../util/startPageFilters';
+import { renderWithProviders } from '../../util/testing-utils';
 
 // Mock the getAllTables function
 vi.mock('../../util/tableHandler', () => ({
@@ -97,6 +101,12 @@ vi.mock('react-i18next', async () => {
   };
 });
 
+vi.mock('../../util/hooks/useLocaleContent', () => ({
+  useLocaleContent: vi.fn(),
+}));
+
+const mockUseLocaleContent = useLocaleContent as Mock;
+
 // Declare the global variable for this file
 declare global {
   interface Window {
@@ -117,8 +127,12 @@ window.PxWeb2Config = {
     showDefaultLanguageInPath: true,
   },
   apiUrl: 'https://api.scb.se/OV0104/v2beta/api/v2',
+  baseApplicationPath: '/',
   maxDataCells: 100000,
   specialCharacters: ['.', '..', ':', '-', '...', '*'],
+  variableFilterExclusionList: {
+    en: ['ContentsCode', 'Tid'],
+  },
 };
 
 describe('StartPage', () => {
@@ -210,6 +224,153 @@ describe('StartPage', () => {
         'href',
         expect.stringMatching(/^\/en\/table\//),
       );
+    });
+  });
+});
+
+describe('sortTablesByUpdated (date-only, newest first)', () => {
+  const createTable = (overrides: Partial<Table> = {}): Table =>
+    ({
+      id: Math.random().toString(36).slice(2),
+      label: overrides.label ?? 'Some table',
+      updated: overrides.updated,
+      firstPeriod: overrides.firstPeriod ?? '2000',
+      lastPeriod: overrides.lastPeriod ?? '2001',
+      timeUnit: overrides.timeUnit ?? 'Annual',
+      variableNames: overrides.variableNames ?? [],
+      source: overrides.source ?? 'SSB',
+      paths: overrides.paths ?? [],
+      ...overrides,
+    }) as unknown as Table;
+
+  it('sorterer på updated DESC (nyest først)', () => {
+    const a = createTable({ id: 'a', updated: '2023-01-01T00:00:00Z' });
+    const b = createTable({ id: 'b', updated: '2025-07-15T12:34:56Z' }); // nyest
+    const c = createTable({ id: 'c', updated: '2024-12-31T23:59:59Z' });
+
+    const out = sortTablesByUpdated([a, b, c]);
+    expect(out.map((t) => t.id)).toEqual(['b', 'c', 'a']);
+  });
+
+  it('plasserer manglende/ugyldig dato nederst', () => {
+    const newest = createTable({
+      id: 'newest',
+      updated: '2025-08-05T06:00:00Z',
+    });
+    const invalid = createTable({
+      id: 'invalid',
+      updated: 'not-a-date' as unknown as string,
+    });
+    const missing = createTable({ id: 'missing', updated: undefined });
+
+    const out = sortTablesByUpdated([invalid, newest, missing]);
+    expect(out.map((t) => t.id)).toEqual(['newest', 'invalid', 'missing']);
+  });
+
+  it('muterer ikke original-arrayet', () => {
+    const a = createTable({ id: 'a', updated: '2024-01-01T00:00:00Z' });
+    const b = createTable({ id: 'b', updated: '2025-01-01T00:00:00Z' });
+    const input = [a, b];
+    const snapshot = [...input];
+
+    const out = sortTablesByUpdated(input);
+
+    expect(input).toEqual(snapshot);
+    expect(out).not.toBe(input);
+  });
+
+  it('håndterer ISO-dato uten klokkeslett', () => {
+    const d1 = createTable({ id: 'd1', updated: '2024-05-01' });
+    const d2 = createTable({ id: 'd2', updated: '2025-03-10' });
+
+    const out = sortTablesByUpdated([d1, d2]);
+    expect(out.map((t) => t.id)).toEqual(['d2', 'd1']);
+  });
+
+  it('bevarer opprinnelig rekkefølge når updated er lik', () => {
+    const a = createTable({ id: 'a', updated: '2025-01-01T00:00:00Z' });
+    const b = createTable({ id: 'b', updated: '2025-01-01T00:00:00Z' });
+    const c = createTable({ id: 'c', updated: '2025-01-01T00:00:00Z' });
+
+    const out = sortTablesByUpdated([a, b, c]);
+    expect(out.map((t) => t.id)).toEqual(['a', 'b', 'c']);
+  });
+});
+
+describe('StartPage locale content: breadcrumbs', () => {
+  beforeEach(() => {
+    mockUseLocaleContent.mockReset();
+  });
+  it('Breadcrumb rendering on StartPage', async () => {
+    mockUseLocaleContent.mockReturnValue({
+      startPage: {
+        breadCrumb: {
+          enabled: true,
+          items: [
+            { label: 'Forsiden', href: '#' },
+            { label: 'Statistikkbanken', href: '/' },
+          ],
+        },
+      },
+    });
+
+    const { findByRole } = renderWithProviders(
+      <AccessibilityProvider>
+        <MemoryRouter>
+          <StartPage />
+        </MemoryRouter>
+      </AccessibilityProvider>,
+    );
+
+    expect(await findByRole('link', { name: 'Forsiden' })).toBeInTheDocument();
+    expect(
+      await findByRole('link', { name: 'Statistikkbanken' }),
+    ).toBeInTheDocument();
+  });
+
+  it('does not render breadcrumbs when enabled is false', async () => {
+    mockUseLocaleContent.mockReturnValue({
+      startPage: {
+        breadCrumb: {
+          enabled: false,
+          items: [
+            { label: 'Forsiden', href: '#' },
+            { label: 'Statistikkbanken', href: '/' },
+          ],
+        },
+      },
+    });
+
+    const { queryByRole } = renderWithProviders(
+      <AccessibilityProvider>
+        <MemoryRouter>
+          <StartPage />
+        </MemoryRouter>
+      </AccessibilityProvider>,
+    );
+
+    // Wait for component to stabilize after async state updates
+    await waitFor(() => {
+      expect(queryByRole('link', { name: 'Forsiden' })).not.toBeInTheDocument();
+    });
+  });
+
+  it('does not render breadcrumbs when breadCrumb is missing', async () => {
+    mockUseLocaleContent.mockReturnValue({
+      startPage: {},
+    });
+
+    const { queryByRole } = renderWithProviders(
+      <AccessibilityProvider>
+        <MemoryRouter>
+          <StartPage />
+        </MemoryRouter>
+      </AccessibilityProvider>,
+    );
+
+    // Wait for component to stabilize after async state updates
+    await waitFor(() => {
+      expect(queryByRole('link', { name: 'Forsiden' })).not.toBeInTheDocument();
     });
   });
 });

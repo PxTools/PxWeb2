@@ -1,0 +1,35 @@
+# This workflow runs upon creation of a release in this project.
+# This workflow will build the project for production, create a downloadable artifact and uploads this to the tagged release.
+
+name: Create artifact and add to release
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    env:
+      TAG_NAME: ${{ github.event.release.tag_name }}
+
+    steps:
+      - uses: actions/checkout@v5
+      - name: Use Node.js LTS
+        uses: actions/setup-node@v5
+        with:
+          node-version: 'lts/*'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run build-artifact
+      - name: Create zip file
+        run: pushd packages/pxweb2/dist && zip -r $OLDPWD/pxweb-${{ env.TAG_NAME }}.zip ./
+      - name: Upload release asset
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload ${{ env.TAG_NAME }} pxweb-${{ env.TAG_NAME }}.zip
