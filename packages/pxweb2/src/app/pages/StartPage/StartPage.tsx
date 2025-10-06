@@ -308,7 +308,7 @@ const StartPage = () => {
       const showLangInPath =
         config.language.showDefaultLanguageInPath ||
         language !== config.language.defaultLanguage;
-      const langPrefix = showLangInPath ? `${language}` : '';
+      const langPrefix = showLangInPath ? `${language}/` : '';
       const discontinued = table.discontinued;
 
       let cardRef: React.RefObject<HTMLDivElement | null> | undefined;
@@ -322,7 +322,7 @@ const StartPage = () => {
         <TableCard
           key={table.id}
           title={`${table.label}`}
-          href={() => navigate(`/${langPrefix}/table/${table.id}`)}
+          href={() => navigate(`/${langPrefix}table/${table.id}`)}
           updatedLabel={
             table.updated ? t('start_page.table.updated_label') : undefined
           }
