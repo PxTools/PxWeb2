@@ -16,6 +16,11 @@
         "title": "Sorry, something went wrong",
         "description": "A technical error occurred on our side. Please try refreshing the page or come back in a few minutes.",
         "action_text": "Refresh"
+      },
+      "no_tables_loaded": {
+        "title": "Couldn't load the tables",
+        "description": "A technical error occurred on our side. Please try refreshing the page or come back in a few minutes.",
+        "action_text": "Refresh"
       }
     },
     "skip_to_main": "Skip to main content",

@@ -16,6 +16,11 @@
         "title": "Beklager, noe gikk galt",
         "description": "Det oppstod en teknisk feil hos oss. Prøv å laste siden på nytt eller kom tilbake om noen minutter.",
         "action_text": "Last siden på nytt"
+      },
+      "no_tables_loaded": {
+        "title": "Kunne ikke laste inn tabellene",
+        "description": "Det oppstod en teknisk feil hos oss. Prøv å laste siden på nytt eller kom tilbake om noen minutter.",
+        "action_text": "Last siden på nytt"
       }
     },
     "skip_to_main": "Hopp til hovedinnhold",

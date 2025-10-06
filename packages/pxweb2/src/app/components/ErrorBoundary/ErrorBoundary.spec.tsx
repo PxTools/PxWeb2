@@ -4,11 +4,15 @@ import { vi } from 'vitest';
 
 import ErrorBoundary from './ErrorBoundary';
 
-// Mock the GenericError component
+// Mock the error components
 vi.mock('../Errors/GenericError/GenericError', () => ({
   GenericError: () => (
     <div data-testid="generic-error">Generic Error Component</div>
   ),
+}));
+
+vi.mock('../Errors/NotFound/NotFound', () => ({
+  NotFound: () => <div data-testid="not-found">Not Found Component</div>,
 }));
 
 describe('ErrorBoundary', () => {
@@ -44,7 +48,26 @@ describe('ErrorBoundary', () => {
     expect(screen.getByText('Child Component')).toBeInTheDocument();
   });
 
-  it('renders GenericError when an error occurs', () => {
+  it('renders NotFound when a 404 error occurs', () => {
+    const ErrorComponent = () => {
+      throw new Error('404 Not Found');
+    };
+
+    render(
+      <ErrorBoundary>
+        <ErrorComponent />
+      </ErrorBoundary>,
+    );
+
+    expect(screen.getByTestId('not-found')).toBeInTheDocument();
+    expect(screen.getByText('Not Found Component')).toBeInTheDocument();
+    expect(screen.queryByTestId('generic-error')).not.toBeInTheDocument();
+    expect(
+      screen.queryByText('Generic Error Component'),
+    ).not.toBeInTheDocument();
+  });
+
+  it('renders GenericError when a non-404 error occurs', () => {
     const ErrorComponent = () => {
       throw new Error('Test error');
     };
@@ -57,25 +80,7 @@ describe('ErrorBoundary', () => {
 
     expect(screen.getByTestId('generic-error')).toBeInTheDocument();
     expect(screen.getByText('Generic Error Component')).toBeInTheDocument();
-  });
-
-  it('renders custom fallback when provided and error occurs', () => {
-    const ErrorComponent = () => {
-      throw new Error('Test error');
-    };
-    const customFallback = (
-      <div data-testid="custom-fallback">Custom Error UI</div>
-    );
-
-    render(
-      <ErrorBoundary fallback={customFallback}>
-        <ErrorComponent />
-      </ErrorBoundary>,
-    );
-
-    // Assert that the custom fallback is rendered instead of GenericError
-    expect(screen.getByTestId('custom-fallback')).toBeInTheDocument();
-    expect(screen.getByText('Custom Error UI')).toBeInTheDocument();
-    expect(screen.queryByTestId('generic-error')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('not-found')).not.toBeInTheDocument();
+    expect(screen.queryByText('Not Found Component')).not.toBeInTheDocument();
   });
 });

@@ -18,6 +18,11 @@ interface Resources {
           description: 'A technical error occurred on our side. Please try refreshing the page or come back in a few minutes.';
           title: 'Sorry, something went wrong';
         };
+        no_tables_loaded: {
+          action_text: 'Refresh';
+          description: 'A technical error occurred on our side. Please try refreshing the page or come back in a few minutes.';
+          title: "Couldn't load the tables";
+        };
         not_found: {
           action_text: 'Go back to the previous page';
           description: "The page you're looking for may have been moved or deleted, or there might be an error in the URL.";

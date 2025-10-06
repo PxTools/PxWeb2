@@ -29,6 +29,7 @@ import { type Table } from '@pxweb2/pxweb2-api-client';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import { Header } from '../../components/Header/Header';
 import { Footer } from '../../components/Footer/Footer';
+import { ErrorMessage } from '../../components/ErrorMessage/ErrorMessage';
 import { FilterSidebar } from '../../components/FilterSidebar/FilterSidebar';
 import { ActionType } from './StartPageTypes';
 import {
@@ -121,10 +122,16 @@ const StartPage = () => {
           },
         });
       } catch (error) {
-        dispatch({
-          type: ActionType.SET_ERROR,
-          payload: (error as Error).message,
-        });
+        // Only set error state for 404 errors (no tables found)
+        if ((error as Error).message.includes('404')) {
+          dispatch({
+            type: ActionType.SET_ERROR,
+            payload: (error as Error).message,
+          });
+        } else {
+          // For any other errors, we re-throw to be caught by the ErrorBoundary in RootLayout
+          throw new Error((error as Error).message);
+        }
       } finally {
         dispatch({ type: ActionType.SET_LOADING, payload: false });
       }
@@ -329,7 +336,10 @@ const StartPage = () => {
               ? new Date(table.updated).toLocaleDateString(language)
               : undefined
           }
-          period={`${table.firstPeriod?.slice(0, 4)}–${table.lastPeriod?.slice(0, 4)}`}
+          period={`${table.firstPeriod?.slice(0, 4)}–${table.lastPeriod?.slice(
+            0,
+            4,
+          )}`}
           frequency={frequencyLabel}
           tableId={`${table.id}`}
           icon={getTopicIcon(table)}
@@ -737,28 +747,28 @@ const StartPage = () => {
                 </div>
               )}
               {state.error && (
-                <div className={styles.error}>
-                  <Alert
-                    heading="Feil i lasting av tabeller"
-                    onClick={() => {
-                      location.reload();
-                    }}
-                    variant="error"
-                    clickable
-                  >
-                    Statistikkbanken kunne ikke vise listen over tabeller. Last
-                    inn siden på nytt eller klikk her for å forsøke igjen.{' '}
-                    <br />
-                    Feilmelding: {state.error}
-                  </Alert>
+                <div className={styles.errorContainer}>
+                  <ErrorMessage
+                    action="button"
+                    align="center"
+                    size="small"
+                    illustration="GenericError"
+                    backgroundShape="wavy"
+                    headingLevel="2"
+                    title={t('common.errors.no_tables_loaded.title')}
+                    description={t(
+                      'common.errors.no_tables_loaded.description',
+                    )}
+                    actionText={t('common.errors.no_tables_loaded.action_text')}
+                  />
                 </div>
               )}
-              {!isReadyToRender ? (
+              {!state.error && !isReadyToRender ? (
                 <div className={styles.loadingSpinner}>
                   <Spinner size="xlarge" />
                 </div>
               ) : (
-                renderTableCardList()
+                !state.error && renderTableCardList()
               )}
             </div>
           </div>

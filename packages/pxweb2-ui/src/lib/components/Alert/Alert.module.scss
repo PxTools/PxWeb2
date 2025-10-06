@@ -150,11 +150,17 @@
   display: flex;
   align-self: stretch;
   padding-top: 2px;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  hyphens: auto;
 }
 
 .alert-body-medium {
   display: flex;
   align-self: stretch;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  hyphens: auto;
 }
 
 .truncate-text-small {
