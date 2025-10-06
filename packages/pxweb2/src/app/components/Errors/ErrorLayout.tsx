@@ -22,7 +22,11 @@ function ErrorContent({ align = 'center', children }: ErrorContentProps) {
           </main>
         </div>
       </div>
-      <Footer />
+      <div className={cl(styles.footerContent)}>
+        <div className={cl(styles.footerContainer)}>
+          <Footer variant="startpage" />
+        </div>
+      </div>
     </>
   );
 }
