@@ -23,14 +23,6 @@
   }
 }
 
-.breadcrumbs {
-  display: flex;
-  align-items: flex-start;
-}
-.breadcrumbs-wrapper {
-  display: flex;
-  align-items: center;
-}
 .heading-information {
   display: flex;
   max-width: 912px;
@@ -57,4 +49,10 @@
   flex-direction: column;
   gap: 20px;
   width: 100%;
+}
+
+.resize {
+  position: absolute;
+  right: 28px;
+  top: 28px;
 }

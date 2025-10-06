@@ -8,14 +8,14 @@ const themeInjectorPlugin = (): Plugin => ({
   transformIndexHtml(html) {
     // Remove the theme CSS link from the original HTML
     html = html.replace(
-      '<link rel="stylesheet" href="/theme/variables.css" />',
+      '<link rel="stylesheet" href="./theme/variables.css" />',
       '',
     );
 
     // Inject it at the end of head to ensure it loads last
     return html.replace(
       '</head>',
-      '<link rel="stylesheet" href="/theme/variables.css" /></head>',
+      '<link rel="stylesheet" href="./theme/variables.css" /></head>',
     );
   },
 });
@@ -23,17 +23,10 @@ const themeInjectorPlugin = (): Plugin => ({
 export default defineConfig({
   root: __dirname,
   cacheDir: '../../node_modules/.vite/apps/pxweb2',
-  base: '/',
+  base: './',
   server: {
     port: 4200,
     host: 'localhost',
-  },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        api: 'modern-compiler',
-      },
-    },
   },
   preview: {
     port: 4300,

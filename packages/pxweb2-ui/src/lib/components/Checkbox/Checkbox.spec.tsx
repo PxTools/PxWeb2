@@ -102,7 +102,7 @@ describe('Checkboxes', () => {
           id="test-mixed"
           text="Select All"
           value="false"
-          onChange={() => {}}
+          onChange={vi.fn()}
           ariaControls={['item1', 'item2']}
         />,
       );
@@ -230,7 +230,7 @@ describe('Checkboxes', () => {
           id="test-mixed"
           text="Select All"
           value="false"
-          onChange={() => {}}
+          onChange={vi.fn()}
           ariaControls={['item1', 'item2']}
         />,
       );
@@ -248,7 +248,7 @@ describe('Checkboxes', () => {
           id="test-mixed"
           text="Select All"
           value="false"
-          onChange={() => {}}
+          onChange={vi.fn()}
           ariaControls={['item1', 'item2']}
           inVariableBox={true}
         />,
@@ -266,7 +266,7 @@ describe('Checkboxes', () => {
           id="test-mixed"
           text="Select All"
           value="false"
-          onChange={() => {}}
+          onChange={vi.fn()}
           ariaControls={['item1', 'item2']}
           tabIndex={2}
         />,
@@ -281,7 +281,7 @@ describe('Checkboxes', () => {
           id="test-mixed"
           text="Select All"
           value="false"
-          onChange={() => {}}
+          onChange={vi.fn()}
           ariaControls={['item1', 'item2']}
           strong={true}
         />,
@@ -299,7 +299,7 @@ describe('Checkboxes', () => {
           id="test-mixed"
           text="Select All"
           value="false"
-          onChange={() => {}}
+          onChange={vi.fn()}
           ariaControls={['item1', 'item2']}
           noMargin={true}
         />,
@@ -317,7 +317,7 @@ describe('Checkboxes', () => {
           id="test-mixed"
           text="Select All"
           value="true"
-          onChange={() => {}}
+          onChange={vi.fn()}
           ariaControls={['item1', 'item2']}
         />,
       );
@@ -335,7 +335,7 @@ describe('Checkboxes', () => {
           id="test-mixed"
           text="Select All"
           value="false"
-          onChange={() => {}}
+          onChange={vi.fn()}
           ariaControls={['item1', 'item2']}
         />,
       );
@@ -353,7 +353,7 @@ describe('Checkboxes', () => {
           id="test-mixed"
           text="Select All"
           value="mixed"
-          onChange={() => {}}
+          onChange={vi.fn()}
           ariaControls={['item1', 'item2']}
         />,
       );

@@ -43,3 +43,11 @@
 .copyText {
   overflow-wrap: anywhere;
 }
+
+.alert {
+  margin: 8px;
+
+  &.file {
+    margin-top: 0;
+  }
+}

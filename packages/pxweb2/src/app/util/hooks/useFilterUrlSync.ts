@@ -4,6 +4,7 @@ import { ActionType } from '../../pages/StartPage/StartPageTypes';
 import type {
   StartPageState,
   Filter,
+  ReducerActionTypes,
 } from '../../pages/StartPage/StartPageTypes';
 import { getYearLabels, getYearRangeLabelValue } from '../startPageFilters';
 import {
@@ -19,12 +20,14 @@ type FilterQuery = {
   variables: string[];
   fromYear?: number;
   toYear?: number;
+  status: string[];
 };
 
 const createEmptyFilterQuery = (): FilterQuery => ({
   timeUnits: [],
   subjects: [],
   variables: [],
+  status: [],
 });
 
 function applyYearRangeToQuery(
@@ -102,6 +105,9 @@ function mergeFilterIntoQuery(
     case 'variable':
       appendUnique(query.variables, String(f.value));
       break;
+    case 'status':
+      appendUnique(query.status, String(f.value));
+      break;
   }
   return query;
 }
@@ -134,6 +140,10 @@ function toSearchParams(query: FilterQuery): URLSearchParams {
 
   if (query.variables.length) {
     params.set('variable', query.variables.join(','));
+  }
+
+  if (query.status.length) {
+    params.set('status', query.status.join(','));
   }
 
   return params;
@@ -264,6 +274,32 @@ function parseParamsToFilters(
       });
   }
 
+  const statusParam = params.get('status');
+  if (statusParam) {
+    statusParam
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .forEach((rawStatus, index) => {
+        const normalizedStatus =
+          rawStatus.toLowerCase() === 'discontinued'
+            ? 'discontinued'
+            : 'active';
+
+        const label =
+          normalizedStatus === 'active'
+            ? t('start_page.filter.status.updating')
+            : t('start_page.filter.status.not_updating');
+
+        filters.push({
+          type: 'status',
+          value: normalizedStatus,
+          label,
+          index,
+        });
+      });
+  }
+
   return filters;
 }
 
@@ -276,7 +312,7 @@ function parseParamsToFilters(
  */
 export default function useFilterUrlSync(
   state: StartPageState,
-  dispatch: (a: any) => void,
+  dispatch: (action: ReducerActionTypes) => void,
   t: TFunction,
 ) {
   const hydratedRef = useRef(false);

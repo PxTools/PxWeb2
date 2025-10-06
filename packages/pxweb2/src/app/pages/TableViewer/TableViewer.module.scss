@@ -1,4 +1,5 @@
 @use '$ui/style-dictionary/dist/scss/fixed-variables.scss' as fixed;
+@use '$ui/src/lib/breakpoints.scss' as breakpoints;
 
 // Not from Figma
 .navigationAndContentContainer {
@@ -6,42 +7,55 @@
   flex-direction: row;
 
   // Tablet and mobile sizes
-  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
+  @media (breakpoints.$xsmall) or (breakpoints.$small) or (breakpoints.$medium) {
     flex-direction: column;
     overflow-y: auto;
-    scrollbar-width: thin;
   }
 }
 
 .mainContainer {
-  --skip-to-main-content-height: 49px;
+  --skip-to-main-content-height: 48px;
 
   display: flex;
   background: var(--px-color-surface-subtle);
 
   // Calculate height of main container, minus the header
-  height: calc(100vh - fixed.$spacing-22);
+  height: calc(100vh - fixed.$spacing-20);
 
-  // xsmall, small and medium
-  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
-    left: 0px;
+  // xsmall, small and medium general settings
+  @media (breakpoints.$xsmall) or (breakpoints.$small) or (breakpoints.$medium) {
     background: var(--px-color-surface-default);
     width: 100%;
+  }
 
+  // height calculations
+  @media (breakpoints.$xsmall) or (breakpoints.$small) {
     // Calculate height of main container, minus the header and navigation bar heights
-    height: calc(100vh - fixed.$spacing-22 - 78px);
+    height: calc(100vh - fixed.$spacing-19 - 78px);
 
     &.skipToMainContentVisible {
       // Calculate height of main container, minus the header and navigation bar and SkipToMainContent heights
       height: calc(
-        100vh - fixed.$spacing-22 -
+        100vh - fixed.$spacing-19 -
+          fixed.$spacing-20 - var(--skip-to-main-content-height)
+      );
+    }
+  }
+  @media (breakpoints.$medium) {
+    // Calculate height of main container, minus the header and navigation bar heights
+    height: calc(100vh - fixed.$spacing-20 - 78px);
+
+    &.skipToMainContentVisible {
+      // Calculate height of main container, minus the header and navigation bar and SkipToMainContent heights
+      height: calc(
+        100vh - fixed.$spacing-20 -
           fixed.$spacing-20 - var(--skip-to-main-content-height)
       );
     }
   }
 
-  // medium, large, xlarge and xxlarge
-  @media ((min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-xlarge-max-width)) or ((min-width: fixed.$breakpoints-xxlarge-min-width)) {
+  // large, xlarge and xxlarge
+  @media (breakpoints.$large) or (breakpoints.$xlarge) or (breakpoints.$xxlarge) {
     width: calc(100% - 120px);
     justify-content: center;
     align-items: flex-start;
@@ -66,26 +80,26 @@
   max-width: 1320px;
   height: 100%;
 
-  // xsmall
-  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-xsmall-max-width) {
+  @media (breakpoints.$xsmall) {
     padding-top: fixed.$spacing-4;
   }
 
-  // small
-  @media (min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
+  @media (breakpoints.$small) {
     padding-top: fixed.$spacing-8;
   }
 
-  // medium
-  @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
+  @media (breakpoints.$medium) {
     padding-top: fixed.$spacing-11;
   }
 
   // large, xlarge and xxlarge
-  @media ((min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-xlarge-max-width)) or ((min-width: fixed.$breakpoints-xxlarge-min-width)) {
+  @media (breakpoints.$large) or (breakpoints.$xlarge) or (breakpoints.$xxlarge) {
     padding-bottom: fixed.$spacing-8;
     overflow-y: auto;
-    scrollbar-width: thin;
     gap: fixed.$spacing-8;
+  }
+
+  &.expanded {
+    max-width: 100%;
   }
 }

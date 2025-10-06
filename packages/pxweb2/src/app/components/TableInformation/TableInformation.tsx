@@ -15,6 +15,7 @@ import {
   Tabs,
   Tab,
   TabPanel,
+  Alert,
 } from '@pxweb2/pxweb2-ui';
 import { NotesTab } from './Notes/NotesTab';
 
@@ -107,7 +108,9 @@ export function TableInformation({
             <NotesTab pxTableMetadata={tableData.data?.metadata} />
           </TabPanel>
           <TabPanel id="pnl-definitions" controlledBy="tab-definitions">
-            Definitions
+            <Alert variant="info">
+              {t('common.status_messages.tab_definitions')}
+            </Alert>
           </TabPanel>
           <TabPanel id="pnl-details" controlledBy="tab-details">
             {tableData.data?.metadata && (

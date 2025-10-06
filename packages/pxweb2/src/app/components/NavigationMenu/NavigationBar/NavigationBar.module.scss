@@ -14,7 +14,7 @@
   // fix the navigation bar to the bottom of the screen
   position: fixed;
   bottom: 0;
-  z-index: 1;
+  z-index: 2; // 2 to fix gradient issue with table
   border-top: 1px solid var(--px-color-border-subtle);
 
   // xsmall, small and medium

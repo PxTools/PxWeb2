@@ -21,6 +21,7 @@ import {
   flattenSubjectTreeToList,
   getYearRanges,
   recomputeAvailableFilters,
+  getStatus,
 } from '../util/startPageFilters';
 import { shouldTableBeIncluded } from '../util/tableHandler';
 import { wrapWithLocalizedQuotemarks } from '../util/utils';
@@ -86,6 +87,7 @@ function reducer(
           timeUnits: getTimeUnits(action.payload.tables),
           yearRange: fullRange,
           variables: getVariables(action.payload.tables),
+          status: getStatus(action.payload.tables),
         },
         lastUsedYearRange: fullRange,
       };
@@ -122,6 +124,7 @@ function reducer(
           timeUnits: recomputed.timeUnits ?? state.availableFilters.timeUnits,
           yearRange: recomputed.yearRange ?? state.availableFilters.yearRange,
           variables: getVariables(filteredTables),
+          status: recomputed.status ?? state.availableFilters.status,
         },
         lastUsedYearRange: updatedLastUsedYearRange,
       };
@@ -173,6 +176,7 @@ function reducer(
           timeUnits: getTimeUnits(newTables),
           yearRange: getYearRanges(newTables),
           variables: getVariables(newTables),
+          status: getStatus(newTables),
         },
       };
     }
@@ -202,6 +206,7 @@ function reducer(
             timeUnits: getTimeUnits(state.availableTables),
             yearRange: fullRange,
             variables: getVariables(state.availableTables),
+            status: getStatus(state.availableTables),
           },
           lastUsedYearRange: fullRange,
         };
@@ -235,6 +240,7 @@ function reducer(
           timeUnits: recomputed.timeUnits ?? state.availableFilters.timeUnits,
           yearRange: recomputed.yearRange ?? state.availableFilters.yearRange,
           variables: getVariables(filteredTables),
+          status: recomputed.status ?? state.availableFilters.status,
         },
         lastUsedYearRange: updatedLastUsedYearRange,
       };

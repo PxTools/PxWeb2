@@ -50,8 +50,8 @@ describe('useTopicIcons hook', () => {
         React.ImgHTMLAttributes<HTMLImageElement>
       >;
 
-      expect(mediumElement.props.src).toBe('/icons/topic/icon1.svg');
-      expect(smallElement.props.src).toBe('/icons/topic/small/icon1.svg');
+      expect(mediumElement.props.src).toBe('./icons/topic/icon1.svg');
+      expect(smallElement.props.src).toBe('./icons/topic/small/icon1.svg');
     } else {
       throw new Error('medium or small is not a valid React element');
     }
@@ -60,7 +60,7 @@ describe('useTopicIcons hook', () => {
   it('handles fetch errors gracefully', async () => {
     (fetch as Mock).mockRejectedValueOnce(new Error('Network error'));
 
-    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(vi.fn());
 
     const { result } = renderHook(() => useTopicIcons());
 

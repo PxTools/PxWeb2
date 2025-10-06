@@ -3,6 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import {
   getFormattedValue,
   addFormattingToPxTable,
+  filterStubAndHeadingArrays,
 } from './TableDataProviderUtils';
 import { DataCell, PxTable, PxData, VartypeEnum } from '@pxweb2/pxweb2-ui';
 
@@ -365,6 +366,71 @@ describe('TableDataProviderUtils', () => {
         cell1: { value: null, formattedValue: '' },
         cell2: { value: 789.012, formattedValue: '789.01' },
       });
+    });
+  });
+
+  describe('filterStubAndHeadingArrays', () => {
+    it('filters stub and heading arrays to only include variable IDs present in variableIds', () => {
+      const variableIds = ['a', 'c', 'e'];
+      const stubDesktop = ['a', 'b', 'c'];
+      const headingDesktop = ['d', 'e', 'f'];
+      const stubMobile = ['a', 'e', 'g'];
+      const headingMobile = ['c', 'h', 'i'];
+
+      const result = filterStubAndHeadingArrays(
+        variableIds,
+        stubDesktop,
+        headingDesktop,
+        stubMobile,
+        headingMobile,
+      );
+
+      expect(result.stubDesktop).toEqual(['a', 'c']);
+      expect(result.headingDesktop).toEqual(['e']);
+      expect(result.stubMobile).toEqual(['a', 'e']);
+      expect(result.headingMobile).toEqual(['c']);
+    });
+
+    it('returns empty arrays if no variableIds match', () => {
+      const variableIds = ['x', 'y', 'z'];
+      const stubDesktop = ['a', 'b'];
+      const headingDesktop = ['c', 'd'];
+      const stubMobile = ['e', 'f'];
+      const headingMobile = ['g', 'h'];
+
+      const result = filterStubAndHeadingArrays(
+        variableIds,
+        stubDesktop,
+        headingDesktop,
+        stubMobile,
+        headingMobile,
+      );
+
+      expect(result.stubDesktop).toEqual([]);
+      expect(result.headingDesktop).toEqual([]);
+      expect(result.stubMobile).toEqual([]);
+      expect(result.headingMobile).toEqual([]);
+    });
+
+    it('returns original arrays if all variableIds match', () => {
+      const variableIds = ['a', 'b', 'c'];
+      const stubDesktop = ['a', 'b', 'c'];
+      const headingDesktop = ['a', 'b', 'c'];
+      const stubMobile = ['a', 'b', 'c'];
+      const headingMobile = ['a', 'b', 'c'];
+
+      const result = filterStubAndHeadingArrays(
+        variableIds,
+        stubDesktop,
+        headingDesktop,
+        stubMobile,
+        headingMobile,
+      );
+
+      expect(result.stubDesktop).toEqual(['a', 'b', 'c']);
+      expect(result.headingDesktop).toEqual(['a', 'b', 'c']);
+      expect(result.stubMobile).toEqual(['a', 'b', 'c']);
+      expect(result.headingMobile).toEqual(['a', 'b', 'c']);
     });
   });
 });

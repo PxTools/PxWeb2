@@ -4,27 +4,33 @@
 
 .startPage {
   color: var(--px-color-text-default);
-
-  @media #{breakpoint.$large} , #{breakpoint.$xlarge} , #{breakpoint.$xxlarge} {
-    border-top: 1px solid var(--color-border-subtle, #c3dcdc);
-  }
 }
 
-.information {
-  padding: 84px 0px 72px 0px;
+.contentTop {
+  padding: 84px 0px 72px;
   background-color: var(--px-color-surface-default);
   max-width: 848px;
 
-  .title {
-    margin-bottom: 1rem;
+  .information {
+    .title {
+      margin-bottom: 1rem;
+    }
+
+    .showDetailsSection {
+      padding-top: 36px;
+
+      @media #{breakpoint.$xsmall} , #{breakpoint.$small} {
+        padding-top: 32px;
+      }
+    }
   }
 
   @media #{breakpoint.$xsmall} , #{breakpoint.$small} {
-    padding: 62px 0 48px 0;
+    padding: 62px 0 48px;
   }
 
   @media #{breakpoint.$medium} {
-    padding: 76px 0 72px 0;
+    padding: 76px 0 72px;
   }
 
   @media #{breakpoint.$large} {
@@ -34,14 +40,33 @@
   @media #{breakpoint.$xlarge} {
     max-width: 728px;
   }
+
+  &.hasBreadcrumb {
+    display: grid;
+    padding: 32px 0px 72px 0px;
+    gap: 60px;
+
+    @media #{breakpoint.$medium} {
+      gap: 52px;
+    }
+
+    @media #{breakpoint.$xsmall} , #{breakpoint.$small} {
+      padding: 32px 0px 48px;
+      gap: 38px;
+    }
+  }
 }
 
 .searchFilterResult {
   background-color: var(--px-color-surface-subtle);
-  padding-bottom: 100px;
+  padding-bottom: 84px;
+
+  @media #{breakpoint.$medium} {
+    padding-bottom: 76px;
+  }
 
   @media #{breakpoint.$xsmall} , #{breakpoint.$small} {
-    padding-bottom: 88px;
+    padding-bottom: 62px;
   }
 }
 
@@ -112,6 +137,7 @@
 
     .filterToggleButton {
       display: inline-flex;
+      align-self: flex-end;
     }
   }
 }
@@ -175,6 +201,17 @@
 
     .showResultsButton {
       width: 100%;
+    }
+  }
+
+  /* WCAG 1.4.10 (Reflow): When desktop users zoom to ~400%, disable the sticky header to prevent loss of content.
+   Limited to desktop via (hover:hover) and (pointer:fine), so mobiles aren’t affected. */
+  @media (max-width: 360px) and (hover: hover) and (pointer: fine) {
+    overflow-y: auto;
+
+    .filterOverlayContent {
+      overflow-y: visible;
+      flex: initial;
     }
   }
 }
@@ -256,5 +293,27 @@
 
   @media #{breakpoint.$xxlarge} {
     max-width: 1288px;
+  }
+}
+
+.footerContent {
+  background-color: var(--px-color-surface-moderate);
+}
+
+.errorContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex: 1 0 0;
+
+  @media #{breakpoint.$small}, #{breakpoint.$medium} {
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  @media #{breakpoint.$xsmall} {
+    padding-top: 16px;
+    padding-bottom: 16px;
   }
 }

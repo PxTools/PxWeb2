@@ -20,7 +20,10 @@ import {
 } from '@pxweb2/pxweb2-ui';
 import { mapJsonStat2Response } from '../../mappers/JsonStat2ResponseMapper';
 
-import { addFormattingToPxTable } from './TableDataProviderUtils';
+import {
+  addFormattingToPxTable,
+  filterStubAndHeadingArrays,
+} from './TableDataProviderUtils';
 import { problemMessage } from '../util/problemMessage';
 
 // Define types for the context state and provider props
@@ -46,16 +49,21 @@ interface TableDataProviderProps {
 const TableDataContext = createContext<TableDataContextType | undefined>({
   isInitialized: false,
   data: undefined,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  fetchTableData: () => {},
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  fetchSavedQuery: () => {},
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  pivotToMobile: () => {},
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  pivotToDesktop: () => {},
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  pivotCW: () => {},
+  fetchTableData: () => {
+    // No-op: useTableData hook prevents this from being called
+  },
+  fetchSavedQuery: () => {
+    // No-op: useTableData hook prevents this from being called
+  },
+  pivotToMobile: () => {
+    // No-op: useTableData hook prevents this from being called
+  },
+  pivotToDesktop: () => {
+    // No-op: useTableData hook prevents this from being called
+  },
+  pivotCW: () => {
+    // No-op: useTableData hook prevents this from being called
+  },
   buildTableTitle: () => {
     return {
       firstTitlePart: '',
@@ -204,7 +212,26 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
           pivotTable(pxTable, stubOrderDesktop, headingOrderDesktop);
         }
       } else {
-        // New variables added
+        // The number of variables has changed.
+
+        // Variable has been removed
+        // Remove all variables in stubMobile, headingMobile, stubDesktop and headingDesktop that does not exist in table variables
+        const variableIds = pxTable.metadata.variables.map(
+          (variable) => variable.id,
+        );
+        if (variableIds.length < stubDesktop.length + headingDesktop.length) {
+          const filtered = filterStubAndHeadingArrays(
+            variableIds,
+            stubDesktop,
+            headingDesktop,
+            stubMobile,
+            headingMobile,
+          );
+          setStubDesktop(filtered.stubDesktop);
+          setHeadingDesktop(filtered.headingDesktop);
+          setStubMobile(filtered.stubMobile);
+          setHeadingMobile(filtered.headingMobile);
+        }
 
         if (isMobile) {
           pivotTable(pxTable, stubMobile, headingMobile);
@@ -212,6 +239,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
           pivotTable(pxTable, stubDesktop, headingDesktop);
         }
 
+        // Variable has been added
         // Find all new variables and add them to the stub - Desktop
         const remainingVariables = pxTable.metadata.variables.filter(
           (variable) =>
@@ -989,11 +1017,8 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       } catch (error: unknown) {
         const err = error as Error;
 
-        // Do not want overwrire the error message catched in the fetchFromApi function by calling setErrorMsg again.
-        // Only write to console now...
-        console.log(
-          'Failed to fetch table data. Please try again later. ' + err.message,
-        );
+        // Do not want overwrite the error message catched in the fetchFromApi function by calling setErrorMsg again.
+        err.message += ' ';
       }
     },
     [

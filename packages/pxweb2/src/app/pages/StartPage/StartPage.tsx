@@ -1,5 +1,6 @@
 import { useEffect, useContext, useState, useRef } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
+import { useNavigate } from 'react-router';
 import type { TFunction } from 'i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import cl from 'clsx';
@@ -10,23 +11,26 @@ import {
   Search,
   TableCard,
   Spinner,
-  Alert,
   Chips,
   Button,
   Heading,
   Ingress,
   BodyShort,
   SearchHandle,
+  Breadcrumbs,
+  type BreadcrumbItem,
 } from '@pxweb2/pxweb2-ui';
 import { type Table } from '@pxweb2/pxweb2-api-client';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import { Header } from '../../components/Header/Header';
 import { Footer } from '../../components/Footer/Footer';
+import { ErrorMessage } from '../../components/ErrorMessage/ErrorMessage';
 import { FilterSidebar } from '../../components/FilterSidebar/FilterSidebar';
 import { ActionType } from './StartPageTypes';
 import {
   getSubjectTree,
   sortAndDeduplicateFilterChips,
+  sortTablesByUpdated,
 } from '../../util/startPageFilters';
 import { useTopicIcons } from '../../util/hooks/useTopicIcons';
 import useApp from '../../context/useApp';
@@ -35,6 +39,14 @@ import { FilterContext, FilterProvider } from '../../context/FilterContext';
 import { getAllTables } from '../../util/tableHandler';
 import { tableListIsReadyToRender } from '../../util/startPageRender';
 import useFilterUrlSync from '../../util/hooks/useFilterUrlSync';
+import StartpageDetails from '../../components/StartPageDetails/StartPageDetails';
+import { useLocaleContent } from '../../util/hooks/useLocaleContent';
+import type {
+  LocaleContent,
+  Startpage,
+  BreadCrumb,
+  DetailsSection,
+} from '../../util/config/localeContentTypes';
 
 const StartPage = () => {
   const { t, i18n } = useTranslation();
@@ -65,6 +77,9 @@ const StartPage = () => {
   const searchFieldRef = useRef<SearchHandle>(null);
   const hasFetchedRef = useRef(false);
   const hasEverHydratedRef = useRef(false);
+  const previousLanguage = useRef('');
+
+  const navigate = useNavigate();
 
   const isReadyToRender = tableListIsReadyToRender(
     state,
@@ -72,25 +87,46 @@ const StartPage = () => {
     hasEverHydratedRef.current,
   );
 
+  const localeContent: LocaleContent | null = useLocaleContent(i18n.language);
+  const startPageContent: Startpage | undefined = localeContent?.startPage;
+  const detailsSectionContent: DetailsSection | undefined =
+    startPageContent?.detailsSection;
+  const breadCrumbContent: BreadCrumb | undefined =
+    startPageContent?.breadCrumb;
+  const showBreadCrumb = isRenderableBreadCrumb(breadCrumbContent);
+
+  // Run once when initially loading the page, then again if language changes
+  // We want to try fetching tables in the selected language if possible
   useEffect(() => {
-    if (hasFetchedRef.current) {
+    if (hasFetchedRef.current && previousLanguage.current == i18n.language) {
       return;
     }
     hasFetchedRef.current = true;
+    previousLanguage.current = i18n.language;
 
     async function fetchTables() {
       dispatch({ type: ActionType.SET_LOADING, payload: true });
       try {
         const tables = await getAllTables(i18n.language);
+        const sortedTables = sortTablesByUpdated(tables);
         dispatch({
           type: ActionType.RESET_FILTERS,
-          payload: { tables: tables, subjects: getSubjectTree(tables) },
+          payload: {
+            tables: sortedTables,
+            subjects: getSubjectTree(sortedTables),
+          },
         });
       } catch (error) {
-        dispatch({
-          type: ActionType.SET_ERROR,
-          payload: (error as Error).message,
-        });
+        // Only set error state for 404 errors (no tables found)
+        if ((error as Error).message.includes('404')) {
+          dispatch({
+            type: ActionType.SET_ERROR,
+            payload: (error as Error).message,
+          });
+        } else {
+          // For any other errors, we re-throw to be caught by the ErrorBoundary in RootLayout
+          throw new Error((error as Error).message);
+        }
       } finally {
         dispatch({ type: ActionType.SET_LOADING, payload: false });
       }
@@ -166,7 +202,7 @@ const StartPage = () => {
   };
 
   const getTopicIcon = (table: Table) => {
-    const topicId = table.paths?.[0]?.[0]?.id;
+    const topicId = table.subjectCode;
     const size = isSmallScreen ? 'small' : 'medium';
 
     return topicId
@@ -203,7 +239,7 @@ const StartPage = () => {
 
   const triggerFade = () => {
     setIsFadingTableList(true);
-    setTimeout(() => setIsFadingTableList(false), 500); // eller 400ms hvis du bruker kortere CSS
+    setTimeout(() => setIsFadingTableList(false), 500);
   };
 
   const handleFilterChange = () => {
@@ -272,7 +308,8 @@ const StartPage = () => {
       const showLangInPath =
         config.language.showDefaultLanguageInPath ||
         language !== config.language.defaultLanguage;
-      const langPrefix = showLangInPath ? `/${language}` : '';
+      const langPrefix = showLangInPath ? `${language}` : '';
+      const discontinued = table.discontinued;
 
       let cardRef: React.RefObject<HTMLDivElement | null> | undefined;
       if (isFirstNew) {
@@ -285,7 +322,7 @@ const StartPage = () => {
         <TableCard
           key={table.id}
           title={`${table.label}`}
-          href={`${langPrefix}/table/${table.id}`}
+          href={() => navigate(`/${langPrefix}/table/${table.id}`)}
           updatedLabel={
             table.updated ? t('start_page.table.updated_label') : undefined
           }
@@ -300,6 +337,17 @@ const StartPage = () => {
           icon={getTopicIcon(table)}
           ref={cardRef}
           tabIndex={tabIndex}
+          ariaLabel={t('start_page.table.card_description', {
+            title: table.label,
+            updatedDate: table.updated
+              ? new Date(table.updated).toLocaleDateString(language)
+              : undefined,
+            yearFrom: table.firstPeriod?.slice(0, 4),
+            yearTo: table.lastPeriod?.slice(0, 4),
+            frequency: frequencyLabel,
+            tableNumber: table.id,
+          })}
+          status={discontinued ? 'closed' : 'active'}
         />
       );
     }
@@ -345,6 +393,7 @@ const StartPage = () => {
         type: ActionType.ADD_SEARCH_FILTER,
         payload: { text: value, language: i18n.language },
       });
+      handleFilterChange();
     }, 500),
   ).current;
 
@@ -454,7 +503,7 @@ const StartPage = () => {
                 <Button
                   variant="secondary"
                   className={styles.removeFilterButton}
-                  iconPosition="left"
+                  iconPosition="start"
                   icon="XMark"
                   onClick={() => {
                     dispatch({
@@ -519,126 +568,180 @@ const StartPage = () => {
     );
   };
 
+  function isRenderableBreadCrumb(
+    bc: BreadCrumb | undefined,
+  ): bc is BreadCrumb {
+    return !!bc && bc.enabled === true && !!bc.items?.length;
+  }
+
+  const renderBreadCrumb = () => {
+    if (!isRenderableBreadCrumb(breadCrumbContent)) {
+      return null;
+    }
+
+    const breadCrumbItems: BreadcrumbItem[] = breadCrumbContent.items ?? [];
+
+    return (
+      <Breadcrumbs
+        className={styles.breadcrumbStartpage}
+        variant="default"
+        breadcrumbItems={breadCrumbItems}
+      />
+    );
+  };
+
   return (
     <>
-      <Header />
-      <div className={styles.startPage}>
-        <div className={styles.container}>
-          <div className={styles.information}>
-            <Heading size="large" level="1" className={styles.title}>
-              {t('start_page.header')}
-            </Heading>
-            <Ingress>{t('start_page.ingress')}</Ingress>
+      <Header stroke={true} />
+      <main>
+        <div className={styles.startPage}>
+          <div className={styles.container}>
+            <div
+              className={cl(styles.contentTop, {
+                [styles.hasBreadcrumb]: showBreadCrumb,
+              })}
+            >
+              {showBreadCrumb && renderBreadCrumb()}
+              <div className={styles.information}>
+                <Heading size="large" level="1" className={styles.title}>
+                  {t('start_page.header')}
+                </Heading>
+                <Ingress>{t('start_page.ingress')}</Ingress>
+                <div className={styles.showDetailsSection}>
+                  {detailsSectionContent && (
+                    <StartpageDetails detailsSection={detailsSectionContent} />
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className={cl(styles.searchFilterResult)}>
+            <div className={styles.container}>
+              <div className={styles.searchAreaWrapper}>
+                <div className={cl(styles.search)} role="search">
+                  <Search
+                    searchPlaceHolder={t('start_page.search_placeholder')}
+                    variant="default"
+                    ref={searchFieldRef}
+                    showLabel
+                    labelText={t('start_page.search_label')}
+                    onChange={(value: string) => {
+                      debouncedDispatch(value);
+                    }}
+                  />
+                </div>
+
+                <Button
+                  variant="secondary"
+                  iconPosition="start"
+                  icon="Controls"
+                  className={styles.filterToggleButton}
+                  onClick={() => setIsFilterOverlayOpen(true)}
+                  ref={filterToggleRef}
+                  aria-expanded={isFilterOverlayOpen}
+                  aria-live="polite"
+                >
+                  {t('start_page.filter.button')}
+                </Button>
+              </div>
+            </div>
+
+            <div className={cl(styles.filterAndListWrapper, styles.container)}>
+              {!isSmallScreen && (
+                <div>
+                  <Heading
+                    className={cl(styles.filterHeading)}
+                    size="medium"
+                    level="2"
+                  >
+                    {t('start_page.filter.header')}
+                  </Heading>
+                  <FilterSidebar onFilterChange={handleFilterChange} />
+                </div>
+              )}
+
+              {renderFilterOverlay()}
+
+              <div className={styles.listTables}>
+                <Heading level="2" className={styles['sr-only']}>
+                  {t('start_page.result_hidden_header')}
+                </Heading>
+                {state.activeFilters.length >= 1 && (
+                  <div className={styles.filterPillContainer}>
+                    <Chips
+                      aria-label={t('start_page.filter.list_filters_aria')}
+                    >
+                      {renderRemoveAllChips()}
+                      {sortAndDeduplicateFilterChips(
+                        state.activeFilters,
+                        state.subjectOrderList,
+                      ).map((filter) => (
+                        <Chips.Removable
+                          onClick={() => {
+                            dispatch({
+                              type: ActionType.REMOVE_FILTER,
+                              payload: {
+                                value: filter.value,
+                                type: filter.type,
+                              },
+                            });
+                            handleFilterChange();
+                            if (filter.type == 'search') {
+                              searchFieldRef.current?.clearInputField();
+                            }
+                          }}
+                          aria-label={t(
+                            'start_page.filter.remove_filter_aria',
+                            {
+                              value: filter.label,
+                            },
+                          )}
+                          key={filter.value}
+                          truncate
+                        >
+                          {filter.label}
+                        </Chips.Removable>
+                      ))}
+                    </Chips>
+                  </div>
+                )}
+                {state.error && (
+                  <div className={styles.errorContainer}>
+                    <ErrorMessage
+                      action="button"
+                      align="center"
+                      size="small"
+                      illustration="GenericError"
+                      backgroundShape="wavy"
+                      headingLevel="2"
+                      title={t('common.errors.no_tables_loaded.title')}
+                      description={t(
+                        'common.errors.no_tables_loaded.description',
+                      )}
+                      actionText={t(
+                        'common.errors.no_tables_loaded.action_text',
+                      )}
+                    />
+                  </div>
+                )}
+                {!state.error && !isReadyToRender ? (
+                  <div className={styles.loadingSpinner}>
+                    <Spinner size="xlarge" />
+                  </div>
+                ) : (
+                  !state.error && renderTableCardList()
+                )}
+              </div>
+            </div>
           </div>
         </div>
-        <div className={cl(styles.searchFilterResult)}>
-          <div className={styles.container}>
-            <div className={styles.searchAreaWrapper}>
-              <div className={cl(styles.search)}>
-                <Search
-                  searchPlaceHolder={t('start_page.search_placeholder')}
-                  variant="default"
-                  ref={searchFieldRef}
-                  onChange={(value: string) => {
-                    debouncedDispatch(value);
-                  }}
-                />
-              </div>
-
-              <Button
-                variant="secondary"
-                iconPosition="left"
-                icon="Controls"
-                className={styles.filterToggleButton}
-                onClick={() => setIsFilterOverlayOpen(true)}
-                ref={filterToggleRef}
-              >
-                {t('start_page.filter.button')}
-              </Button>
-            </div>
-          </div>
-
-          <div className={cl(styles.filterAndListWrapper, styles.container)}>
-            {!isSmallScreen && (
-              <div>
-                <Heading
-                  className={cl(styles.filterHeading)}
-                  size="medium"
-                  level="2"
-                >
-                  {t('start_page.filter.header')}
-                </Heading>
-                <FilterSidebar onFilterChange={handleFilterChange} />
-              </div>
-            )}
-
-            {renderFilterOverlay()}
-
-            <div className={styles.listTables}>
-              {state.activeFilters.length >= 1 && (
-                <div className={styles.filterPillContainer}>
-                  <Chips>
-                    {renderRemoveAllChips()}
-                    {sortAndDeduplicateFilterChips(
-                      state.activeFilters,
-                      state.subjectOrderList,
-                    ).map((filter) => (
-                      <Chips.Removable
-                        onClick={() => {
-                          dispatch({
-                            type: ActionType.REMOVE_FILTER,
-                            payload: {
-                              value: filter.value,
-                              type: filter.type,
-                            },
-                          });
-                          handleFilterChange();
-                          if (filter.type == 'search') {
-                            searchFieldRef.current?.clearInputField();
-                          }
-                        }}
-                        aria-label={t('start_page.filter.remove_filter_aria', {
-                          value: filter.value,
-                        })}
-                        key={filter.value}
-                        truncate
-                      >
-                        {filter.label}
-                      </Chips.Removable>
-                    ))}
-                  </Chips>
-                </div>
-              )}
-              {state.error && (
-                <div className={styles.error}>
-                  <Alert
-                    heading="Feil i lasting av tabeller"
-                    onClick={() => {
-                      location.reload();
-                    }}
-                    variant="error"
-                    clickable
-                  >
-                    Statistikkbanken kunne ikke vise listen over tabeller. Last
-                    inn siden på nytt eller klikk her for å forsøke igjen.{' '}
-                    <br />
-                    Feilmelding: {state.error}
-                  </Alert>
-                </div>
-              )}
-              {!isReadyToRender ? (
-                <div className={styles.loadingSpinner}>
-                  <Spinner size="xlarge" />
-                </div>
-              ) : (
-                renderTableCardList()
-              )}
-            </div>
-          </div>
+        {renderTableListSEO()}
+      </main>
+      <div className={cl(styles.footerContent)}>
+        <div className={cl(styles.container)}>
+          <Footer variant="startpage" enableWindowScroll />
         </div>
       </div>
-      {renderTableListSEO()}
-      <Footer />
     </>
   );
 };

@@ -30,7 +30,7 @@ export async function getAllTables(language?: string) {
     // Antipattern: a try/catch inside a catch is not recommended, but as a fallback
     // in case the selected language is not supported, it is needed here.
     // This ensures it is only retried once before failing completely. If fallback works, user should not be inconvenienced.
-    if (error.body.title && error.body.title == 'Unsupported language') {
+    if (error?.body?.title && error?.body?.title == 'Unsupported language') {
       try {
         const response = await TableService.listAllTables(
           config.language.fallbackLanguage,
@@ -46,6 +46,10 @@ export async function getAllTables(language?: string) {
         const error = err as ApiError;
         throw error;
       }
+    }
+
+    if (error?.status === 404) {
+      throw new Error('No tables found (404)');
     }
 
     console.error('Failed to fetch tables:' + JSON.stringify(error, null, 2));
@@ -168,11 +172,30 @@ export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
       });
     }
   };
+  const statusFilters = filters.filter((f) => {
+    return f.type === 'status';
+  });
+  const testStatusFilters = function () {
+    if (statusFilters.length === 0) {
+      return true;
+    }
+    return statusFilters.some((filter) => {
+      if (filter.value === 'active') {
+        return table.discontinued !== true;
+      }
+      if (filter.value === 'discontinued') {
+        return table.discontinued === true;
+      }
+      return false;
+    });
+  };
+
   return (
     testTimeUnitFilters() &&
     testSubjectFilters() &&
     testYearRangeFilter() &&
     testSearchFilter() &&
-    testVariableFilters()
+    testVariableFilters() &&
+    testStatusFilters()
   );
 }

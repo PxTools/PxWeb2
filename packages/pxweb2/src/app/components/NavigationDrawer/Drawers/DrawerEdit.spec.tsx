@@ -57,6 +57,9 @@ vi.mock('@pxweb2/pxweb2-ui', () => ({
       {label}
     </button>
   ),
+  Alert: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="alert">{children}</div>
+  ),
 }));
 
 describe('DrawerEdit', () => {
@@ -66,7 +69,9 @@ describe('DrawerEdit', () => {
     expect(screen.getByTestId('content-box')).toBeInTheDocument();
     expect(screen.getByTestId('action-item')).toBeInTheDocument();
     expect(
-      screen.getByText('presentation_page.sidemenu.edit.customize.pivot.title'),
+      screen.getByText(
+        'presentation_page.side_menu.edit.customize.pivot.title',
+      ),
     ).toBeInTheDocument();
   });
 
