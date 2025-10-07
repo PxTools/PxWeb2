@@ -21,7 +21,7 @@ export const Content: React.FC<ContentProps> = ({
       <div>
         <div className={styles.content}>{children}</div>
       </div>
-      <Footer />
+      <Footer variant="tableview" />
     </div>
   );
 };
