@@ -50,6 +50,40 @@
   gap: fixed.$spacing-15;
 }
 
+.footerContent {
+  background-color: var(--px-color-surface-moderate);
+}
+
+.footerContainer {
+  margin-left: auto;
+  margin-right: auto;
+
+  @media #{breakpoints.$xsmall} {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+
+  @media #{breakpoints.$small} {
+    max-width: 508px;
+  }
+
+  @media #{breakpoints.$medium} {
+    max-width: 688px;
+  }
+
+  @media #{breakpoints.$large} {
+    max-width: 928px;
+  }
+
+  @media #{breakpoints.$xlarge} {
+    max-width: 1108px;
+  }
+
+  @media #{breakpoints.$xxlarge} {
+    max-width: 1288px;
+  }
+}
+
 .alignStart {
   align-items: start;
 }

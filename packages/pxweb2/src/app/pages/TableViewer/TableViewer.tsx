@@ -232,7 +232,7 @@ export function TableViewer() {
               isExpanded={isExpanded}
               setIsExpanded={setIsExpanded}
             ></Presentation>
-            <Footer containerRef={outerContainerRef} />
+            <Footer containerRef={outerContainerRef} variant="tableview" />
           </div>
         </div>
       </div>
