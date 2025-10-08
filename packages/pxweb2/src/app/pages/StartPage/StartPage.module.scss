@@ -313,28 +313,7 @@
   }
 
   @media #{breakpoint.$xsmall} {
-    width: 100%;
     padding-top: 16px;
     padding-bottom: 16px;
-  }
-
-  @media #{breakpoint.$small} {
-    width: 100%;
-  }
-
-  @media #{breakpoint.$medium} {
-    width: 508px;
-  }
-
-  @media #{breakpoint.$large} {
-    width: 480px;
-  }
-
-  @media #{breakpoint.$xlarge} {
-    width: 538px;
-  }
-
-  @media #{breakpoint.$xxlarge} {
-    width: 550px;
   }
 }
