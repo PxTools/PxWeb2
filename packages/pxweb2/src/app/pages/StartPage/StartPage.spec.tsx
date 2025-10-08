@@ -1,14 +1,15 @@
-import { MemoryRouter } from 'react-router';
-import type { Table } from '@pxweb2/pxweb2-api-client';
-import StartPage from './StartPage';
-import { AccessibilityProvider } from '../../context/AccessibilityProvider';
-import { renderWithProviders } from '../../util/testing-utils';
-import { Config } from '../../util/config/configType';
 import { vi, Mock } from 'vitest';
-import '@testing-library/jest-dom/vitest';
+import { MemoryRouter } from 'react-router';
 import { waitFor, within } from '@testing-library/react';
-import { sortTablesByUpdated } from '../../util/startPageFilters';
+import '@testing-library/jest-dom/vitest';
+
+import StartPage from './StartPage';
+import type { Table } from '@pxweb2/pxweb2-api-client';
+import { AccessibilityProvider } from '../../context/AccessibilityProvider';
+import { Config } from '../../util/config/configType';
 import { useLocaleContent } from '../../util/hooks/useLocaleContent';
+import { sortTablesByUpdated } from '../../util/startPageFilters';
+import { renderWithProviders } from '../../util/testing-utils';
 
 // Mock the getAllTables function
 vi.mock('../../util/tableHandler', () => ({
@@ -126,8 +127,12 @@ window.PxWeb2Config = {
     showDefaultLanguageInPath: true,
   },
   apiUrl: 'https://api.scb.se/OV0104/v2beta/api/v2',
+  baseApplicationPath: '/',
   maxDataCells: 100000,
   specialCharacters: ['.', '..', ':', '-', '...', '*'],
+  variableFilterExclusionList: {
+    en: ['ContentsCode', 'Tid'],
+  },
 };
 
 describe('StartPage', () => {
@@ -344,7 +349,10 @@ describe('StartPage locale content: breadcrumbs', () => {
       </AccessibilityProvider>,
     );
 
-    expect(queryByRole('link', { name: 'Forsiden' })).not.toBeInTheDocument();
+    // Wait for component to stabilize after async state updates
+    await waitFor(() => {
+      expect(queryByRole('link', { name: 'Forsiden' })).not.toBeInTheDocument();
+    });
   });
 
   it('does not render breadcrumbs when breadCrumb is missing', async () => {
@@ -360,6 +368,9 @@ describe('StartPage locale content: breadcrumbs', () => {
       </AccessibilityProvider>,
     );
 
-    expect(queryByRole('link', { name: 'Forsiden' })).not.toBeInTheDocument();
+    // Wait for component to stabilize after async state updates
+    await waitFor(() => {
+      expect(queryByRole('link', { name: 'Forsiden' })).not.toBeInTheDocument();
+    });
   });
 });

@@ -44,5 +44,20 @@
         }
       ]
     }
+  },
+  "footer": {
+    "columns": [
+      {
+        "header": "PxWeb 2.0",
+        "links": [
+          {
+            "text": "About PxWeb 2.0 (GitHub)",
+            "url": "https://www.pxtools.net/PxWeb2/",
+            "external": true
+          },
+          { "text": "Contact", "url": "mailto:px@scb.se" }
+        ]
+      }
+    ]
   }
 }

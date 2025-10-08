@@ -193,25 +193,29 @@ export function ContentTop({
     const showLangInPath =
       config.language.showDefaultLanguageInPath ||
       language !== config.language.defaultLanguage;
-    const langPrefix = showLangInPath ? `/${language}` : '';
+    const langPrefix = showLangInPath ? `${language}` : '';
+    const basePath = config.baseApplicationPath || '';
 
     breadcrumbItems.push({
       label: t('common.breadcrumbs.breadcrumb_root_title'),
-      href: langPrefix,
+      href: basePath + langPrefix,
     });
 
     if (pathElements && pathElements.length > 0) {
       breadcrumbItems.push(
         ...pathWithUniqueIds.map((path) => ({
           label: path.label,
-          href: `${langPrefix}?subject=${path.uniqueId}`,
+          href: `${basePath}${langPrefix}?subject=${path.uniqueId}`,
         })),
       );
     }
 
     breadcrumbItems.push({
       label: staticTitle,
-      href: location.pathname + location.search + location.hash,
+      href:
+        basePath + location.pathname.startsWith('/')
+          ? location.pathname.substring(1)
+          : location.pathname + location.search + location.hash,
     });
 
     return breadcrumbItems;

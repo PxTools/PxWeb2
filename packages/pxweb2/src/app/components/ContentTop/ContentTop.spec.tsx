@@ -321,8 +321,9 @@ let mockIsXXLargeDesktop = true;
 vi.mock('../../context/useApp', () => ({
   default: () => ({
     isXXLargeDesktop: mockIsXXLargeDesktop,
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    setTitle: () => {},
+    setTitle: () => {
+      vi.fn();
+    },
   }),
 }));
 

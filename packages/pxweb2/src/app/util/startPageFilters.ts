@@ -82,6 +82,7 @@ export function getFilters(tables: Table[]): StartPageFilters {
     subjectTree: [],
     yearRange: { min: 0, max: 9999 },
     variables: new Map<string, number>(),
+    status: new Map<'active' | 'discontinued', number>(),
   };
 
   filters.timeUnits = getTimeUnits(tables);
@@ -348,6 +349,11 @@ export function recomputeAvailableFilters(
     currentFilters,
     availableTables,
   );
+  const statusTables = tablesForFilterCounts(
+    'status',
+    currentFilters,
+    availableTables,
+  );
   // We do not calculate variables, they are always updated - even when adding variable filters!
 
   const shouldRecalcFilter = (filter: FilterType) =>
@@ -363,6 +369,7 @@ export function recomputeAvailableFilters(
     yearRange: shouldRecalcFilter('yearRange')
       ? getYearRanges(yearRangeTables)
       : undefined,
+    status: shouldRecalcFilter('status') ? getStatus(statusTables) : undefined,
   };
 }
 
@@ -515,4 +522,15 @@ export function sortTablesByUpdated(tables: Table[]): Table[] {
     // Both valid -> newer first
     return dateB - dateA;
   });
+}
+
+export function getStatus(
+  tables: Table[],
+): Map<'active' | 'discontinued', number> {
+  const discontinued = tables.filter((t) => t.discontinued === true).length;
+  const active = tables.length - discontinued;
+  return new Map([
+    ['active', active],
+    ['discontinued', discontinued],
+  ]);
 }

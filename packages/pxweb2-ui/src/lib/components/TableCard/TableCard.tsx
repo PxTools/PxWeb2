@@ -9,7 +9,7 @@ import { Heading } from '../Typography/Heading/Heading';
 interface TableCardProps {
   ariaLabel?: string;
   frequency?: string;
-  href?: string;
+  href?: string | (() => void);
   icon?: ReactNode;
   lastUpdated?: string;
   period?: string;
@@ -39,8 +39,10 @@ export const TableCard = forwardRef<HTMLDivElement, TableCardProps>(
   ) => {
     const handleClick = () => {
       const noTextSelected = !window.getSelection()?.toString();
-      if (noTextSelected && href) {
+      if (noTextSelected && href && typeof href === 'string') {
         window.location.href = href;
+      } else if (noTextSelected && typeof href === 'function') {
+        href();
       }
     };
 
@@ -79,7 +81,10 @@ export const TableCard = forwardRef<HTMLDivElement, TableCardProps>(
               )}
               {frequency && (
                 <div className={cl(styles.frequency)}>
-                  <Tag size="small" variant="subtle">
+                  <Tag
+                    size="small"
+                    variant={status === 'closed' ? 'error-subtle' : 'subtle'}
+                  >
                     {frequency}
                   </Tag>
                 </div>

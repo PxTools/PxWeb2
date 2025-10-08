@@ -40,10 +40,19 @@ describe('TopicIcons', () => {
   });
 
   it('shows "No icons found" if fetch fails', async () => {
+    const consoleErrorSpy = vi
+      .spyOn(console, 'error')
+      .mockImplementation(vi.fn());
+
     (fetch as Mock).mockRejectedValueOnce(new Error('boom'));
     render(<TopicIcons />);
 
     const msg = await screen.findByText(/No icons found/i);
     expect(msg).toBeInTheDocument();
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      'Could not load icon list: boom',
+    );
+
+    consoleErrorSpy.mockRestore();
   });
 });

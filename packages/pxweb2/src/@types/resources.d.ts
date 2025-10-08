@@ -18,6 +18,11 @@ interface Resources {
           description: 'A technical error occurred on our side. Please try refreshing the page or come back in a few minutes.';
           title: 'Sorry, something went wrong';
         };
+        no_tables_loaded: {
+          action_text: 'Refresh';
+          description: 'A technical error occurred on our side. Please try refreshing the page or come back in a few minutes.';
+          title: "Couldn't load the tables";
+        };
         not_found: {
           action_text: 'Go back to the previous page';
           description: "The page you're looking for may have been moved or deleted, or there might be an error in the URL.";
@@ -25,22 +30,9 @@ interface Resources {
         };
       };
       footer: {
-        about: {
-          description: 'Description text...';
-          title: 'About';
-        };
-        accessibility: {
-          description: 'Description text...';
-          title: 'Accessibility';
-        };
-        contact: {
-          description: 'Description text...';
-          title: 'Contact';
-        };
-        version: {
-          description: 'Description text...';
-          title: 'Version';
-        };
+        copyright: '© Copyright PxTools';
+        language_header: 'Language';
+        top_button_text: 'To the top';
       };
       generic_buttons: {
         cancel: 'Cancel';
@@ -72,10 +64,6 @@ interface Resources {
     date: {
       simple_date: '{{value, datetime}}';
       simple_date_with_time: "{{value, datetime(year: 'numeric'; month: 'numeric'; day: 'numeric'; hour: 'numeric'; minute: 'numeric')}}";
-    };
-    meta: {
-      languageName: 'English';
-      shorthand: 'en';
     };
     number: {
       simple_number: '{{value, pxNumber}}';
@@ -172,8 +160,8 @@ interface Resources {
           };
         };
       };
-      sidemenu: {
-        arialabeltoolsidemenu: 'Tool menu for table';
+      side_menu: {
+        aria_label_tool_side_menu: 'Tool menu for table';
         edit: {
           calculate: {
             sum: {
@@ -234,19 +222,19 @@ interface Resources {
             title: 'Save as link';
           };
           savequery: {
-            copiedButton: 'Link copied';
-            copyButton: 'Copy link';
-            copyStatus: 'Link copied to clipboard';
-            createButton: 'Get link';
-            createStatus: 'Link generated. Click again to copy the link';
+            copied_button: 'Link copied';
+            copy_button: 'Copy link';
+            copy_status: 'Link copied to clipboard';
+            create_button: 'Get link';
+            create_status: 'Link generated. Click again to copy the link';
             info: 'You get a unique link to your table, that we keep updated for you. How new time periods are added is up to you.';
-            loadingStatus: 'Generating link';
-            periodOptions: {
+            loading_status: 'Generating link';
+            period_options: {
               from: "Add new ones (they will be added to the ones you've selected now)";
               selected: "Don't add new ones (the table will only show the ones you've selected now)";
               top: 'Add new ones, but keep the same number (when a new time period is added, the oldest one is removed)';
             };
-            radioLegend: 'Options for new time periods';
+            radio_legend: 'Options for new time periods';
             title: 'Link to updated table';
           };
           title: 'Save';
@@ -277,8 +265,8 @@ interface Resources {
               tag_selected: '{{selected}} of {{total}} selected';
             };
             search: {
-              arialabelicontext: 'Search icon';
-              ariallabelclearbuttontext: 'Clear search icon';
+              aria_label_clear_button_text: 'Clear search icon';
+              aria_label_icon_text: 'Search icon';
               label: 'Search';
               placeholder: 'Search in list';
             };
@@ -309,13 +297,20 @@ interface Resources {
           weekly: 'Week';
         };
         header: 'Filter';
+        list_filters_aria: 'Selected filters';
         remove_all_filter: 'Remove all filters';
         remove_filter_aria: 'Remove filter, {{value}}';
         show_results: 'Show {{value}} results';
+        status: {
+          not_updating: 'No longer updated';
+          title: 'Status';
+          updating: 'Updated';
+        };
         subject: 'Topic';
-        timeUnit: 'Time period';
+        time_unit: 'Time period';
         variabel: 'Variable';
         variabel_search: 'Search for variable';
+        variable_count: 'Showing {{countShown}} of {{countTotal}} variables';
         year: {
           clear_selection: 'Clear selection';
           from_label: 'From';
@@ -330,9 +325,11 @@ interface Resources {
       ingress: "Looking for the perfect table? Use the search field and filters to dig into the numbers you need. Whether you're hunting for trends, facts, or just an oddly satisfying dataset, PxWeb 2.0 has your back.";
       more_about_label: 'More about PxWeb 2.0';
       more_about_text: 'More about Text EN';
+      result_hidden_header: 'Result';
       search_label: 'Search in PxWeb 2.0';
       search_placeholder: 'Search for table names or variables';
       table: {
+        card_description: '{{title}}. Year: {{yearFrom}}-{{yearTo}}. Time period {{frequency}}. Updated {{updatedDate}}. Table number {{tableNumber}}.';
         loading: 'Loading...';
         number_of_tables: '<strong>{{count}}</strong> tables';
         number_of_tables_found: '<strong>{{count}}</strong> tables found';

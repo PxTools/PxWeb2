@@ -7,7 +7,6 @@ export const validateConfig = () => {
   const validate = ajv.compile(schema);
   const config = getConfig();
   const valid = validate(config);
-  console.log('PxWeb2 - Config', config);
   if (!valid) {
     console.error('PxWeb2 - Invalid config', validate.errors);
   }

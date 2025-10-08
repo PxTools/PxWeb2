@@ -10,8 +10,7 @@ export function GenericError() {
   return (
     <>
       <Header stroke={true} />
-      {/* Expand ErrorLayout for start page generic error here */}
-      <ErrorLayout isStartPageGenericError={true}>
+      <ErrorLayout withoutHeader={true}>
         <ErrorMessage
           action="button"
           align="center"
@@ -23,23 +22,5 @@ export function GenericError() {
         />
       </ErrorLayout>
     </>
-  );
-}
-
-export function GenericErrorTableViewer() {
-  const { t } = useTranslation();
-
-  return (
-    <ErrorLayout>
-      <ErrorMessage
-        action="button"
-        align="center"
-        illustration="GenericError"
-        backgroundShape="wavy"
-        title={t('common.errors.generic.title')}
-        description={t('common.errors.generic.description')}
-        actionText={t('common.errors.generic.action_text')}
-      />
-    </ErrorLayout>
   );
 }

@@ -260,8 +260,7 @@ export function Selection({
 
   useEffect(() => {
     if (errorMsg) {
-      console.error('ERROR: Selection:', errorMsg);
-      throw Error(errorMsg);
+      throw new Error(errorMsg);
     }
   }, [errorMsg]);
 
@@ -586,7 +585,7 @@ export function Selection({
       <NavigationDrawer
         ref={hideMenuRef}
         heading={t(
-          `presentation_page.sidemenu.${selectedNavigationView}.title`,
+          `presentation_page.side_menu.${selectedNavigationView}.title`,
         )}
         onClose={(keyboard, view) =>
           setSelectedNavigationView(keyboard, true, view)
