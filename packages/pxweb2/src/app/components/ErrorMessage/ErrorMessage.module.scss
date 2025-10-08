@@ -69,6 +69,18 @@
   }
 }
 
+.text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: fixed.$spacing-4;
+  align-self: stretch;
+
+  &.small {
+    gap: fixed.$spacing-2;
+  }
+}
+
 .alignCenter {
   align-items: center;
   text-align: center;

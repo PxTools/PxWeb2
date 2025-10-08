@@ -45,6 +45,7 @@ export function ErrorMessage({
           className={cl(
             classes.text,
             align === 'center' ? classes.alignCenter : classes.alignStart,
+            size === 'small' ? classes.small : undefined,
           )}
         >
           <Heading level={headingLevel} align={align} size={headingSize}>
