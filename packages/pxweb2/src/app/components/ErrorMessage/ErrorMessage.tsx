@@ -3,7 +3,7 @@ import cl from 'clsx';
 import classes from './ErrorMessage.module.scss';
 import { ErrorAction } from './ErrorAction/ErrorAction';
 import { ErrorIllustration } from './ErrorIllustration/ErrorIllustration';
-import { Heading, Ingress } from '@pxweb2/pxweb2-ui';
+import { Heading, Ingress, BodyLong } from '@pxweb2/pxweb2-ui';
 import { ErrorMessageProps } from './types';
 
 export function ErrorMessage({
@@ -16,6 +16,8 @@ export function ErrorMessage({
   title,
   description,
   actionText,
+  headingSize = 'large',
+  illustrationSize = 'medium',
 }: ErrorMessageProps) {
   return (
     <div
@@ -28,6 +30,7 @@ export function ErrorMessage({
       <ErrorIllustration
         backgroundShape={backgroundShape}
         illustrationName={illustration}
+        size={illustrationSize}
       />
 
       <div
@@ -35,6 +38,7 @@ export function ErrorMessage({
         className={cl(
           classes.textAndAction,
           align === 'center' ? classes.alignCenter : classes.alignStart,
+          size === 'small' ? classes.small : undefined,
         )}
       >
         <div
@@ -43,14 +47,22 @@ export function ErrorMessage({
             align === 'center' ? classes.alignCenter : classes.alignStart,
           )}
         >
-          <Heading level={headingLevel} align={align} size="large">
+          <Heading level={headingLevel} align={align} size={headingSize}>
             {title}
           </Heading>
-          <Ingress
-            className={cl({ [classes.alignCenter]: align === 'center' })}
-          >
-            {description}
-          </Ingress>
+          {size === 'small' ? (
+            <BodyLong
+              className={cl({ [classes.alignCenter]: align === 'center' })}
+            >
+              {description}
+            </BodyLong>
+          ) : (
+            <Ingress
+              className={cl({ [classes.alignCenter]: align === 'center' })}
+            >
+              {description}
+            </Ingress>
+          )}
         </div>
 
         <Ingress>

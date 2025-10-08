@@ -81,7 +81,7 @@ describe('ErrorIllustration size handling', () => {
     expect(svgs[1]).toHaveAttribute('width', '90'); // medium illustration
   });
 
-   it('uses small variant when available (GenericError)', () => {
+  it('uses small variant when available (GenericError)', () => {
     render(
       <ErrorIllustration
         backgroundShape="circle"
