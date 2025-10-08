@@ -47,7 +47,7 @@
     font-weight: 700;
   }
   thead tr:first-child th {
-  border-top-right-radius:var(--px-border-radius-medium);
+    border-top-right-radius: var(--px-border-radius-medium);
   }
   thead tr:last-child th {
     text-align: end;
@@ -309,12 +309,12 @@
 @media screen and (min-width: fixed.$breakpoints-small-min-width) {
   @mixin column-hover($max) {
     @for $i from 1 through $max {
-    .table:has(td:not(.stub):nth-child(#{$i}):hover),
-    .table:has(th:not(.stub):nth-child(#{$i - 1}):hover) {
-      tbody td:nth-child(#{$i}) {
-        background: var(--px-color-surface-subtle) !important;
-  }
-}
+      .table:has(td:not(.stub):nth-child(#{$i}):hover),
+      .table:has(th:not(.stub):nth-child(#{$i - 1}):hover) {
+        tbody td:nth-child(#{$i}) {
+          background: var(--px-color-surface-subtle) !important;
+        }
+      }
     }
   }
   @include column-hover(50);
