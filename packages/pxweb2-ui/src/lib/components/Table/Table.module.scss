@@ -6,7 +6,6 @@
   border-spacing: 0; /* Optional: Makes sure there is no spacing between the cells */
   width: 100%;
 
-
   // min-width: 100%;
   // width: max-content; /* Allow horizontal growth so wrapper can scroll */
 
@@ -16,13 +15,10 @@
   color: var(--px-color-text-default);
   border-left: none;
 
-
-
   //overflow: visible; // IMPORTANT for sticky children
 
-
-    //overflow: visible; // IMPORTANT for sticky children
-    // overflow-x: auto; // Moved to .tableScrollWrapper to enable horizontal scroll without breaking sticky headers
+  //overflow: visible; // IMPORTANT for sticky children
+  // overflow-x: auto; // Moved to .tableScrollWrapper to enable horizontal scroll without breaking sticky headers
   //overflow-x: auto;
 
   @media screen and (max-width: fixed.$breakpoints-xsmall-max-width) {
@@ -36,9 +32,9 @@
   }
 
   th {
-// position: sticky;
-//     top: 0;
-// z-index: 30;
+    // position: sticky;
+    //     top: 0;
+    // z-index: 30;
 
     width: 40px;
     padding-left: 16px;
@@ -60,7 +56,7 @@
     }
   }
 
-  thead{
+  thead {
     position: sticky;
     top: 0;
     z-index: 1;
@@ -323,7 +319,7 @@
     left: 0;
     //z-index: 1;
     // top: 0;
-     z-index: 0;
+    z-index: 0;
     border-right: 1px solid var(--px-color-border-default);
     border-left: 1px solid var(--px-color-border-default);
     border-top-left-radius: var(--px-border-radius-medium);
@@ -348,8 +344,6 @@
   }
   @include column-hover(50);
 }
-
-
 
 // .tableScrollWrapper {
 //   /* The container that scrolls vertically (and horizontally if needed) */
