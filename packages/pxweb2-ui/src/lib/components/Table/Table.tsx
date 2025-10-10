@@ -116,33 +116,35 @@ export const Table = memo(function Table({
   }
 
   return (
-    <table
-      className={cl(classes.table, classes[`bodyshort-medium`]) + cssClasses}
-      aria-label={pxtable.metadata.label}
-    >
-      <thead>{createHeading(pxtable, tableMeta, headingDataCellCodes)}</thead>
-      <tbody>
-        {useMemo(
-          () =>
-            createRows(
+    <div className={classes.tableScrollWrapper}>
+      <table
+        className={cl(classes.table, classes[`bodyshort-medium`]) + cssClasses}
+        aria-label={pxtable.metadata.label}
+      >
+        <thead>{createHeading(pxtable, tableMeta, headingDataCellCodes)}</thead>
+        <tbody>
+          {useMemo(
+            () =>
+              createRows(
+                pxtable,
+                tableMeta,
+                headingDataCellCodes,
+                isMobile,
+                contentVarIndex,
+                contentsVariableDecimals,
+              ),
+            [
               pxtable,
               tableMeta,
               headingDataCellCodes,
               isMobile,
               contentVarIndex,
               contentsVariableDecimals,
-            ),
-          [
-            pxtable,
-            tableMeta,
-            headingDataCellCodes,
-            isMobile,
-            contentVarIndex,
-            contentsVariableDecimals,
-          ],
-        )}
-      </tbody>
-    </table>
+            ],
+          )}
+        </tbody>
+      </table>
+    </div>
   );
 });
 
