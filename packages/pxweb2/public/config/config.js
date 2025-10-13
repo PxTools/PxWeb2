@@ -10,7 +10,7 @@ window.PxWeb2Config = {
     showDefaultLanguageInPath: true,
   },
   baseApplicationPath: '/',
-  apiUrl: 'https://api.scb.se/OV0104/v2beta/api/v3',
+  apiUrl: 'https://api.scb.se/OV0104/v2beta/api/v2',
   maxDataCells: 150000,
   specialCharacters: ['.', '..', ':', '-', '...', '*'],
   variableFilterExclusionList: {
