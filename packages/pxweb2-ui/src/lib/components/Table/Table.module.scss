@@ -7,19 +7,12 @@
   width: 100%;
 
   // min-width: 100%;
-  // width: max-content; /* Allow horizontal growth so wrapper can scroll */
+  width: max-content; /* Allow horizontal growth so wrapper can scroll */
 
   border-radius: var(--px-border-radius-medium);
   border: 1px solid var(--px-color-border-default);
-  //overflow: hidden; /* Ensures content stays within rounded borders */
-  color: var(--px-color-text-default);
+  background: var(--px-color-surface-default);  color: var(--px-color-text-default);
   border-left: none;
-
-  //overflow: visible; // IMPORTANT for sticky children
-
-  //overflow: visible; // IMPORTANT for sticky children
-  // overflow-x: auto; // Moved to .tableScrollWrapper to enable horizontal scroll without breaking sticky headers
-  //overflow-x: auto;
 
   @media screen and (max-width: fixed.$breakpoints-xsmall-max-width) {
     line-height: fixed.$spacing-6;
@@ -317,9 +310,7 @@
   .emptyTableData {
     position: sticky;
     left: 0;
-    //z-index: 1;
-    // top: 0;
-    z-index: 0;
+    z-index: 1;
     border-right: 1px solid var(--px-color-border-default);
     border-left: 1px solid var(--px-color-border-default);
     border-top-left-radius: var(--px-border-radius-medium);
@@ -342,64 +333,5 @@
       }
     }
   }
-  @include column-hover(50);
+  @include column-hover(40);
 }
-
-// .tableScrollWrapper {
-//   /* The container that scrolls vertically (and horizontally if needed) */
-//   max-height: 70vh;              // adjust desired visible height
-//   overflow-y: auto;
-//   overflow-x: auto;
-//   position: relative;
-//   /* Optional chrome */
-//   border: 1px solid var(--px-color-border-default);
-//   border-radius: var(--px-border-radius-medium);
-//   background: var(--px-color-surface-default);
-// }
-
-// /* Ensure table itself does NOT clip sticky children */
-// .table {
-//   overflow: visible;
-// }
-
-// /* All header cells sticky at top */
-// .table thead th {
-//   position: sticky;
-//   top: 0;
-//   z-index: 30;
-//   background: var(--px-color-surface-moderate);
-// }
-
-// /* Top‑left (empty) corner cell: needs both left & top */
-// .table .emptyTableData {
-//   position: sticky;
-//   top: 0;
-//   left: 0;
-//   z-index: 40;
-//   background: var(--px-color-surface-moderate);
-// }
-
-// /* Stub column cells in THEAD also need top so they don’t slide under */
-// .table thead th.stub,
-// .table thead th[class*='stub-'] {
-//   position: sticky;
-//   top: 0;
-//   left: 0;
-//   z-index: 35;
-//   background: var(--px-color-surface-moderate);
-// }
-
-// /* Body stub column cells (already left:0) also get higher z-index */
-// .table tbody th.stub,
-// .table tbody th[class*='stub-'] {
-//   position: sticky;
-//   left: 0;
-//   z-index: 25;
-//   background: var(--px-color-surface-default);
-//   background-clip: padding-box;
-// }
-
-// /* Optional shadow under header */
-// .table thead th {
-//   box-shadow: 0 2px 3px -1px rgba(0,0,0,0.15);
-// }

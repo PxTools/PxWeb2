@@ -7,31 +7,16 @@
   background: var(--px-color-surface-default);
   align-self: stretch;
   position: relative;
+  //overflow-y: auto;
 
   container-type: inline-size;
   container-name: contentCont;
-  //overflow-x: none; // allow horizontal if table wider
-
-  //max-height: 70vh;          // adjust
-  // overflow-y: auto;          // vertical scroll HERE
-  //overflow-x: hidden;          // allow horizontal if table wider
-  /* Optional styling */
-  // border: 1px solid var(--px-color-border-default);
-  // border-radius: var(--px-border-radius-medium);
-  // background: var(--px-color-surface-default);
 
   @container contentCont (width > 1px) {
     .tableContainer {
       width: 100cqw;
-      //  overflow-x: auto;          // horizontal scroll HERE
-      //  overflow-y: unset;
-
-      // overflow-x: auto;
-      // overflow-y: auto;
-      // max-height: none;
-      // border: none;
-      // border-radius: 0;
-      // background: transparent;
+      //overflow-x: auto  ;
+      position: relative;    /* safe stacking context */
     }
   }
 
