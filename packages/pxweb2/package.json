@@ -6,7 +6,6 @@
   "author": "",
   "license": "MIT",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "start": "vite",
     "build": "vite build",

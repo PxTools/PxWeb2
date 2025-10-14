@@ -2,6 +2,7 @@
   "name": "@pxweb2/source",
   "version": "0.0.0",
   "license": "MIT",
+  "type": "module",
   "scripts": {
     "prepare": "husky",
     "lint": "eslint --fix",
