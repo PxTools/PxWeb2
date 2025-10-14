@@ -15,8 +15,11 @@
   @container contentCont (width > 1px) {
     .tableContainer {
       width: 100cqw;
-      //overflow-x: auto  ;
-      position: relative;    /* safe stacking context */
+
+      //Here
+      overflow-x: auto;
+
+      position: relative;
     }
   }
 
