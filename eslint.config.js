@@ -69,4 +69,5 @@ export default defineConfig([
     },
   },
   ...storybook.configs['flat/recommended'],
+  //reactHooksPlugin.configs.flat.recommended,
 ]);
