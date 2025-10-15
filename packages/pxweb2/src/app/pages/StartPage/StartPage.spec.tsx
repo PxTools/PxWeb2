@@ -1,6 +1,7 @@
 import { vi, Mock } from 'vitest';
 import { MemoryRouter } from 'react-router';
 import { waitFor, within } from '@testing-library/react';
+import { FilterContext } from '../../context/FilterContext';
 import '@testing-library/jest-dom/vitest';
 
 import StartPage from './StartPage';
@@ -10,7 +11,8 @@ import { Config } from '../../util/config/configType';
 import { useLocaleContent } from '../../util/hooks/useLocaleContent';
 import { sortTablesByUpdated } from '../../util/startPageFilters';
 import { renderWithProviders } from '../../util/testing-utils';
-
+import * as startPageRender from '../../util/startPageRender';
+import type { StartPageState } from '../../pages/StartPage/StartPageTypes';
 // Mock the getAllTables function
 vi.mock('../../util/tableHandler', () => ({
   getAllTables: vi.fn().mockResolvedValue([
@@ -106,6 +108,24 @@ vi.mock('../../util/hooks/useLocaleContent', () => ({
 }));
 
 const mockUseLocaleContent = useLocaleContent as Mock;
+
+const baseState: StartPageState = {
+  filteredTables: [],
+  availableTables: [],
+  activeFilters: [],
+  subjectOrderList: [],
+  error: '',
+  loading: false,
+  availableFilters: {
+    subjectTree: [],
+    timeUnits: new Map<string, number>(),
+    variables: new Map<string, number>(),
+    status: new Map<'active' | 'discontinued', number>(),
+    yearRange: { min: 0, max: 0 },
+  },
+  originalSubjectTree: [],
+  lastUsedYearRange: null,
+};
 
 // Declare the global variable for this file
 declare global {
@@ -372,5 +392,91 @@ describe('StartPage locale content: breadcrumbs', () => {
     await waitFor(() => {
       expect(queryByRole('link', { name: 'Forsiden' })).not.toBeInTheDocument();
     });
+  });
+});
+
+describe('StartPage renderNoResult', () => {
+  beforeEach(() => {
+    mockUseLocaleContent.mockReset();
+    vi.spyOn(startPageRender, 'tableListIsReadyToRender').mockReturnValue(true);
+  });
+
+  it('does not show no result header or text when one or more tables are present', async () => {
+    mockUseLocaleContent.mockReturnValue({
+      startPage: {
+        noResultSearchHelp: {
+          enabled: true,
+          helpText: ['Tips 1', 'Tips 2'],
+        },
+      },
+    });
+
+    const { queryByText } = renderWithProviders(
+      <AccessibilityProvider>
+        <MemoryRouter>
+          <StartPage />
+        </MemoryRouter>
+      </AccessibilityProvider>,
+    );
+
+    await waitFor(() => {
+      expect(
+        queryByText('start_page.no_result_header'),
+      ).not.toBeInTheDocument();
+      expect(
+        queryByText('start_page.no_result_description'),
+      ).not.toBeInTheDocument();
+    });
+  });
+
+  it('shows help texts when noResultSearchHelp is enabled and helpText is provided', async () => {
+    mockUseLocaleContent.mockReturnValue({
+      startPage: {
+        noResultSearchHelp: {
+          enabled: true,
+          helpText: ['Tips 1', 'Tips 2'],
+        },
+      },
+    });
+    const mockState: StartPageState = {
+      ...baseState,
+      filteredTables: [],
+    };
+    const mockDispatch = vi.fn();
+
+    const { queryByText } = renderWithProviders(
+      <AccessibilityProvider>
+        <MemoryRouter>
+          <FilterContext.Provider
+            value={{ state: mockState, dispatch: mockDispatch }}
+          >
+            <StartPage />
+          </FilterContext.Provider>
+        </MemoryRouter>
+      </AccessibilityProvider>,
+    );
+
+    expect(queryByText('Tips 1')).toBeInTheDocument();
+    expect(queryByText('Tips 2')).toBeInTheDocument();
+  });
+
+  it('does not show help texts when noResultSearchHelp is disabled or helpText is empty', async () => {
+    mockUseLocaleContent.mockReturnValue({
+      startPage: {
+        noResultSearchHelp: {
+          enabled: false,
+          helpText: [''],
+        },
+      },
+    });
+    const { queryByText } = renderWithProviders(
+      <AccessibilityProvider>
+        <MemoryRouter>
+          <StartPage />
+        </MemoryRouter>
+      </AccessibilityProvider>,
+    );
+    expect(queryByText('Tips 1')).not.toBeInTheDocument();
+    expect(queryByText('Tips 2')).not.toBeInTheDocument();
   });
 });
