@@ -10,7 +10,6 @@
 .contentWrapper {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-self: stretch;
   flex: 1;
 
@@ -21,6 +20,15 @@
     padding: fixed.$spacing-8 fixed.$spacing-4 fixed.$spacing-12
       fixed.$spacing-4;
   }
+}
+
+.alignVertical {
+  display: flex;
+  justify-content: center;
+}
+
+.alignHorizontal {
+  display: block;
 }
 
 .container {

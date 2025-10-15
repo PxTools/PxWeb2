@@ -10,7 +10,12 @@ interface ErrorContentProps
 function ErrorContent({ align = 'center', children }: ErrorContentProps) {
   return (
     <>
-      <div className={cl(styles.contentWrapper)}>
+      <div
+        className={cl(
+          styles.contentWrapper,
+          align === 'center' ? styles.alignVertical : styles.alignHorizontal,
+        )}
+      >
         <div className={cl(styles.container)}>
           <main
             className={cl(
