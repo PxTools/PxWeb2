@@ -325,6 +325,9 @@ interface Resources {
       ingress: "Looking for the perfect table? Use the search field and filters to dig into the numbers you need. Whether you're hunting for trends, facts, or just an oddly satisfying dataset, PxWeb 2.0 has your back.";
       more_about_label: 'More about PxWeb 2.0';
       more_about_text: 'More about Text EN';
+      no_result_description: 'Try a different keyword or adjust your filters.';
+      no_result_header: "We couldn't find any tables";
+      no_result_search_help: 'Search help';
       result_hidden_header: 'Result';
       search_label: 'Search in PxWeb 2.0';
       search_placeholder: 'Search for table names or variables';
