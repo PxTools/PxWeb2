@@ -96,7 +96,10 @@
   @media (breakpoints.$large) or (breakpoints.$xlarge) or (breakpoints.$xxlarge) {
     padding-bottom: fixed.$spacing-8;
     overflow-y: auto;
-    //overflow-x: hidden;
+
+    //Here
+    overflow-x: auto;
+
     gap: fixed.$spacing-8;
   }
 
