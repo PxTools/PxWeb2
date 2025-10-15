@@ -67,7 +67,7 @@ describe('ErrorLayout', () => {
       );
       const mainContent = container.querySelector('main');
 
-      expect(containerElement).toHaveClass(classes.alignVertical);
+      expect(containerElement).toHaveClass(classes.layoutAlignCenter);
       expect(mainContent).toHaveClass(classes.alignCenter);
     });
 
@@ -83,7 +83,7 @@ describe('ErrorLayout', () => {
       );
       const mainContent = container.querySelector('main');
 
-      expect(containerElement).toHaveClass(classes.alignHorizontal);
+      expect(containerElement).toHaveClass(classes.layoutAlignStart);
       expect(mainContent).toHaveClass(classes.alignStart);
     });
   });

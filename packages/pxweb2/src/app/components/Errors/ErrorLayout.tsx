@@ -13,7 +13,9 @@ function ErrorContent({ align = 'center', children }: ErrorContentProps) {
       <div
         className={cl(
           styles.contentWrapper,
-          align === 'center' ? styles.alignVertical : styles.alignHorizontal,
+          align === 'center'
+            ? styles.layoutAlignCenter
+            : styles.layoutAlignStart,
         )}
       >
         <div className={cl(styles.container)}>
