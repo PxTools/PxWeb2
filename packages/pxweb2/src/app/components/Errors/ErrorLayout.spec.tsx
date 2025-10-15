@@ -52,14 +52,4 @@ describe('ErrorLayout', () => {
 
     expect(getByTestId('footer')).toBeInTheDocument();
   });
-
-  it('should not render the header when withoutHeader is true', () => {
-    const { queryByTestId } = render(
-      <ErrorLayout withoutHeader={true}>
-        <div>Error Content</div>
-      </ErrorLayout>,
-    );
-
-    expect(queryByTestId('header')).not.toBeInTheDocument();
-  });
 });

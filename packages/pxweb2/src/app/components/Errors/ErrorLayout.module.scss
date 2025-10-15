@@ -2,10 +2,19 @@
 @use '$ui/src/lib/breakpoints.scss' as breakpoints;
 
 .fullScreenContainer {
-  display: block;
-  padding: fixed.$spacing-8 0 fixed.$spacing-18 0;
+  display: flex;
   flex-direction: column;
+  min-height: 100dvh;
+}
+
+.contentWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   align-self: stretch;
+  flex: 1;
+
+  padding: fixed.$spacing-8 0 fixed.$spacing-18 0;
   background: var(--px-color-surface-default);
 
   @media (breakpoints.$xsmall) or (breakpoints.$small) {

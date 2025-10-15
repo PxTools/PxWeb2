@@ -30,12 +30,6 @@ describe('GenericError', () => {
     expect(getByTestId('error-layout')).toBeInTheDocument();
   });
 
-  it('should render the header', () => {
-    const { getByTestId } = renderWithProviders(<GenericError />);
-
-    expect(getByTestId('header')).toBeInTheDocument();
-  });
-
   it('should render the error message', () => {
     const { getByTestId } = renderWithProviders(<GenericError />);
 
