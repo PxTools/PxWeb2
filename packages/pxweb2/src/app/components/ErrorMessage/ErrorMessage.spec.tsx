@@ -246,7 +246,7 @@ describe('ErrorMessage size + headingSize + illustrationSize', () => {
   });
 
   it('passes custom headingSize to Heading', () => {
-    render(<ErrorMessage {...baseProps} headingSize="medium" />);
+    render(<ErrorMessage {...baseProps} size="small" />);
     expect(screen.getByTestId('heading')).toHaveAttribute(
       'data-size',
       'medium',
@@ -262,7 +262,7 @@ describe('ErrorMessage size + headingSize + illustrationSize', () => {
   });
 
   it('passes custom illustrationSize to ErrorIllustration', () => {
-    render(<ErrorMessage {...baseProps} illustrationSize="small" />);
+    render(<ErrorMessage {...baseProps} size="small" />);
     expect(screen.getByTestId('error-illustration')).toHaveAttribute(
       'data-illustration-size',
       'small',

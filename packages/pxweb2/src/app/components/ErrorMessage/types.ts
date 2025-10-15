@@ -13,6 +13,4 @@ export interface ErrorMessageProps {
   readonly title: string;
   readonly description: string;
   readonly actionText: string;
-  readonly headingSize?: 'medium' | 'large';
-  readonly illustrationSize?: 'small' | 'medium';
 }

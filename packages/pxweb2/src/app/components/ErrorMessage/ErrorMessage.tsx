@@ -16,9 +16,10 @@ export function ErrorMessage({
   title,
   description,
   actionText,
-  headingSize = 'large',
-  illustrationSize = 'medium',
 }: ErrorMessageProps) {
+  const headingSize = size === 'small' ? 'medium' : 'large';
+  const illustrationSize = size === 'small' ? 'small' : 'medium';
+
   return (
     <div
       className={cl(

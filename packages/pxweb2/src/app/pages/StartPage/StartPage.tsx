@@ -711,9 +711,7 @@ const StartPage = () => {
                       action="button"
                       align="center"
                       size="small"
-                      headingSize="medium"
                       illustration="GenericError"
-                      illustrationSize="small"
                       backgroundShape="wavy"
                       headingLevel="2"
                       title={t('common.errors.no_tables_loaded.title')}
