@@ -50,7 +50,9 @@ function MagicPivotButton({ stub, heading }: PivotButtonProps) {
   return (
     <>
       <ActionItem
-        label={t('presentation_page.side_menu.edit.customize.magic_pivot.title')}
+        label={t(
+          'presentation_page.side_menu.edit.customize.magic_pivot.title',
+        )}
         ariaLabel={t(
           'presentation_page.side_menu.edit.customize.magic_pivot.aria_label',
         )}
