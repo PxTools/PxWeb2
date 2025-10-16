@@ -10,6 +10,60 @@ interface PivotButtonProps {
   readonly heading: Variable[];
 }
 
+function MagicPivotButton({ stub, heading }: PivotButtonProps) {
+  const { t } = useTranslation();
+  const pivotTableByMagic = useTableData().pivotByMagic;
+  const buildTableTitle = useTableData().buildTableTitle;
+
+  // Live region text for screen readers after activation
+  const [statusMessage, setStatusMessage] = useState('');
+  const [announceOnNextChange, setAnnounceOnNextChange] = useState(false);
+
+  const handleClick = () => {
+    setAnnounceOnNextChange(true);
+    pivotTableByMagic();
+  };
+
+  // When stub/heading update after pivot, compute and announce the new screen reader message
+  useEffect(() => {
+    if (!announceOnNextChange) {
+      return;
+    }
+
+    const { firstTitlePart, lastTitlePart } = buildTableTitle(stub, heading);
+    const message = t(
+      'presentation_page.side_menu.edit.customize.pivot.screen_reader_announcement',
+      {
+        first_variables: firstTitlePart,
+        last_variable: lastTitlePart,
+      },
+    );
+
+    // Clear first to ensure assistive tech re-announces even if message repeats
+    setStatusMessage('');
+    const timer = setTimeout(() => setStatusMessage(message), 0); // Force state update on different ticks
+    setAnnounceOnNextChange(false);
+
+    return () => clearTimeout(timer);
+  }, [stub, heading, announceOnNextChange, buildTableTitle, t]);
+
+  return (
+    <>
+      <ActionItem
+        label={t('presentation_page.side_menu.edit.customize.magic_pivot.title')}
+        ariaLabel={t(
+          'presentation_page.side_menu.edit.customize.magic_pivot.aria_label',
+        )}
+        onClick={handleClick}
+        iconName="Sparkles"
+      />
+      <output aria-live="polite" aria-atomic="true" className={classes.srOnly}>
+        {statusMessage}
+      </output>
+    </>
+  );
+}
+
 function PivotButton({ stub, heading }: PivotButtonProps) {
   const { t } = useTranslation();
   const pivotTableClockwise = useTableData().pivotCW;
@@ -70,6 +124,7 @@ export function DrawerEdit() {
 
   return (
     <ContentBox title={t('presentation_page.side_menu.edit.customize.title')}>
+      {data && <MagicPivotButton stub={data.stub} heading={data.heading} />}
       {data && <PivotButton stub={data.stub} heading={data.heading} />}
       <Alert variant="info" className={classes.alert}>
         {t('common.status_messages.drawer_edit')}

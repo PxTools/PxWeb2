@@ -23,6 +23,7 @@ import { mapJsonStat2Response } from '../../mappers/JsonStat2ResponseMapper';
 import {
   addFormattingToPxTable,
   filterStubAndHeadingArrays,
+  pivotTableByMagic,
 } from './TableDataProviderUtils';
 import { problemMessage } from '../util/problemMessage';
 
@@ -35,6 +36,7 @@ export interface TableDataContextType {
   pivotToMobile: () => void;
   pivotToDesktop: () => void;
   pivotCW: () => void;
+  pivotByMagic: () => void;
   buildTableTitle: (
     stub: Variable[],
     heading: Variable[],
@@ -62,6 +64,9 @@ const TableDataContext = createContext<TableDataContextType | undefined>({
     // No-op: useTableData hook prevents this from being called
   },
   pivotCW: () => {
+    // No-op: useTableData hook prevents this from being called
+  },
+  pivotByMagic: () => {
     // No-op: useTableData hook prevents this from being called
   },
   buildTableTitle: () => {
@@ -1206,6 +1211,66 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   ]);
 
   /**
+   * Pivots the table by magic.
+   */
+  const pivotByMagic = React.useCallback((): void => {
+    if (data?.heading === undefined) {
+      return;
+    }
+
+    const tmpTable = structuredClone(data);
+    if (tmpTable === undefined) {
+      return;
+    }
+
+    let stub: string[] = [];
+    let heading: string[] = [];
+
+    // if (isMobileMode) {
+    //   stub = structuredClone(stubMobile);
+    //   heading = structuredClone(headingMobile);
+    // } else {
+    //   stub = structuredClone(stubDesktop);
+    //   heading = structuredClone(headingDesktop);
+    // }
+
+    // if (stub.length === 0 && heading.length === 0) {
+    //   return;
+    // }
+
+    pivotTableByMagic(tmpTable.metadata.variables, stub, heading);
+
+    console.log('Magic pivot to stub:', stub, ' heading:', heading);
+
+    // if (stub.length > 0 && heading.length > 0) {
+    //   stub.push(heading.pop() as string);
+    //   heading.unshift(stub.shift() as string);
+    // } else if (stub.length === 0) {
+    //   heading.unshift(heading.pop() as string);
+    // } else if (heading.length === 0) {
+    //   stub.unshift(stub.pop() as string);
+    // }
+
+    pivotTable(tmpTable, stub, heading);
+    setData(tmpTable);
+
+    if (isMobileMode) {
+      setStubMobile(stub);
+      setHeadingMobile(heading);
+    } else {
+      setStubDesktop(stub);
+      setHeadingDesktop(heading);
+    }
+  }, [
+    data,
+    isMobileMode,
+    stubDesktop,
+    stubMobile,
+    headingDesktop,
+    headingMobile,
+  ]);
+
+  /**
    * Pivots the table according to the stub- and heading order.
    */
   function pivotTable(pxTable: PxTable, stub: string[], heading: string[]) {
@@ -1238,6 +1303,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       pivotToMobile,
       pivotToDesktop,
       pivotCW,
+      pivotByMagic,
       buildTableTitle,
       isInitialized,
     }),
@@ -1248,6 +1314,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       pivotToMobile,
       pivotToDesktop,
       pivotCW,
+      pivotByMagic,
       buildTableTitle,
       isInitialized,
     ],

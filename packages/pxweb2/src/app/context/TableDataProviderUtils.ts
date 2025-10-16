@@ -1,4 +1,4 @@
-import { DataCell, PxTable, PxData } from '@pxweb2/pxweb2-ui';
+import { DataCell, PxTable, PxData, Variable } from '@pxweb2/pxweb2-ui';
 
 import { translateOutsideReactWithParams } from '../util/language/translateOutsideReact';
 
@@ -201,4 +201,46 @@ export function filterStubAndHeadingArrays(
     stubMobile: stubMobile.filter((id) => variableIds.includes(id)),
     headingMobile: headingMobile.filter((id) => variableIds.includes(id)),
   };
+}
+
+export function pivotTableByMagic(
+  variables: Variable[],
+  stub: string[],
+  heading: string[],
+) {
+  // If less than 2 variables, no pivoting possible
+  if (variables.length < 2) {
+    // Leave arrays as-is (expected to be empty) when no pivoting is possible
+    return;
+  }
+
+  // Ensure we start from empty arrays (caller should pass empty arrays)
+  stub.length = 0;
+  heading.length = 0;
+
+  // Separate variables into single-value and multi-value buckets
+  const singleValueVarIds = variables
+    .filter((v) => v.values.length === 1)
+    .map((v) => v.id);
+  const multiValueVarIds = variables
+    .filter((v) => v.values.length > 1)
+    .map((v) => v.id);
+
+  // Magic rule (initial heuristic):
+  //  - Put multi-value variables in the stub (row axes)
+  //  - Put single-value variables in the heading (column axes)
+  stub.push(...multiValueVarIds);
+  heading.push(...singleValueVarIds);
+
+  // Guarantee both stub and heading have at least one variable if possible
+  if (stub.length === 0 && heading.length > 1) {
+    // Move first heading var to stub
+    stub.push(heading.shift() as string);
+  } else if (heading.length === 0 && stub.length > 1) {
+    // Move last stub var to heading
+    heading.push(stub.pop() as string);
+  }
+
+  // Debug output (can be removed later)
+  // console.log('pivotTableByMagic result => stub:', stub, 'heading:', heading);
 }
