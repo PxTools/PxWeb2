@@ -19,7 +19,7 @@ function isDataCell(obj: unknown): obj is DataCell {
     typeof obj === 'object' &&
     'value' in obj &&
     !('cube' in obj) &&
-    typeof (obj as DataCell).value !== 'undefined'
+    (obj as DataCell).value !== undefined
   );
 }
 
@@ -208,39 +208,40 @@ export function pivotTableByMagic(
   stub: string[],
   heading: string[],
 ) {
-  // If less than 2 variables, no pivoting possible
-  if (variables.length < 2) {
-    // Leave arrays as-is (expected to be empty) when no pivoting is possible
-    return;
-  }
-
   // Ensure we start from empty arrays (caller should pass empty arrays)
   stub.length = 0;
   heading.length = 0;
 
   // Separate variables into single-value and multi-value buckets
-  const singleValueVarIds = variables
-    .filter((v) => v.values.length === 1)
-    .map((v) => v.id);
-  const multiValueVarIds = variables
-    .filter((v) => v.values.length > 1)
-    .map((v) => v.id);
+  let singleValueVars = variables.filter((v) => v.values.length === 1);
+  let multiValueVars = variables.filter((v) => v.values.length > 1);
 
-  // Magic rule (initial heuristic):
-  //  - Put multi-value variables in the stub (row axes)
-  //  - Put single-value variables in the heading (column axes)
-  stub.push(...multiValueVarIds);
-  heading.push(...singleValueVarIds);
-
-  // Guarantee both stub and heading have at least one variable if possible
-  if (stub.length === 0 && heading.length > 1) {
-    // Move first heading var to stub
-    stub.push(heading.shift() as string);
-  } else if (heading.length === 0 && stub.length > 1) {
-    // Move last stub var to heading
-    heading.push(stub.pop() as string);
+  // If there is a single-value ContentsVariable, ensure it's placed in the heading
+  const contentsSingleVar = singleValueVars.find(
+    (v) => v.type === 'ContentsVariable',
+  );
+  if (contentsSingleVar) {
+    addToArrayIfNotExists(heading, contentsSingleVar.id);
+  }
+  // If there is a single-value TimeVariable, ensure it's placed in the heading
+  const timeSingleVar = singleValueVars.find((v) => v.type === 'TimeVariable');
+  if (timeSingleVar) {
+    addToArrayIfNotExists(heading, timeSingleVar.id);
   }
 
-  // Debug output (can be removed later)
-  // console.log('pivotTableByMagic result => stub:', stub, 'heading:', heading);
+  // Add all single-value variables to the heading array
+  for (const v of singleValueVars) {
+    addToArrayIfNotExists(heading, v.id);
+  }
+
+  // Add all multi-value variables to the stub array
+  for (const v of multiValueVars) {
+    addToArrayIfNotExists(stub, v.id);
+  }
+}
+
+function addToArrayIfNotExists<T>(array: T[], item: T) {
+  if (!array.includes(item)) {
+    array.push(item);
+  }
 }
