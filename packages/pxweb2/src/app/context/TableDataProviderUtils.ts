@@ -288,10 +288,7 @@ export function pivotTableByMagic(
 
     // Add all other variables excluding those already added
     for (const v of remaining) {
-      if (
-        v.id === remainingContentsVar?.id ||
-        v.id === remainingTimeVar?.id
-      ) {
+      if (v.id === remainingContentsVar?.id || v.id === remainingTimeVar?.id) {
         continue;
       }
       addToArrayIfNotExists(stub, v.id);
