@@ -234,9 +234,46 @@ export function pivotTableByMagic(
     addToArrayIfNotExists(heading, v.id);
   }
 
-  // Add all multi-value variables to the stub array
-  for (const v of multiValueVars) {
-    addToArrayIfNotExists(stub, v.id);
+  multiValueVars = multiValueVars.sort(
+    (a, b) => b.values.length - a.values.length,
+  );
+
+  if (multiValueVars.length > 0) {
+    // Place the variable with the most values first in the stub
+    const firstVar = multiValueVars[0];
+    addToArrayIfNotExists(stub, firstVar.id);
+  }
+
+  let multiVarCount = 1;
+
+  if (multiValueVars.length > 2) {
+    if (
+      multiValueVars[1].values.length * multiValueVars[2].values.length <
+      12
+    ) {
+      // Place the variables with the 2nd and 3rd most values in the heading if the product of their values are below 12.
+      // The one with 3rd most values first then the one with 2nd most values
+      addToArrayIfNotExists(heading, multiValueVars[2].id);
+      addToArrayIfNotExists(heading, multiValueVars[1].id);
+      multiVarCount = 3;
+    } else {
+      // Place the variable with the 2nd most values in the heading
+      addToArrayIfNotExists(heading, multiValueVars[1].id);
+      multiVarCount = 2;
+    }
+  } else if (multiValueVars.length > 1) {
+    // Place the variable with the 2nd most values in the heading
+    addToArrayIfNotExists(heading, multiValueVars[1].id);
+    multiVarCount = 2;
+  }
+
+  if (multiVarCount < multiValueVars.length) {
+    // Add all remaining multi-value variables to the stub array
+
+    // TODO: Fix order: Content - time - rest
+    for (let i = multiVarCount; i < multiValueVars.length; i++) {
+      addToArrayIfNotExists(stub, multiValueVars[i].id);
+    }
   }
 }
 
