@@ -8,9 +8,8 @@
     "build-style-dictionary": "node ./style-dictionary/build.mjs",
     "storybook": "storybook dev -p 6006",
     "test": "vitest run",
-    "test-dev": "vitest",
-    "coverage": "vitest run --coverage",
     "test:watch": "vitest",
+    "coverage": "vitest run --coverage",
     "prettier": "prettier --config ../../.prettierrc --check ./src/** --write --ignore-path ../../.prettierignore"
   },
   "author": "",
