@@ -779,7 +779,7 @@ const StartPage = () => {
       </main>
       <div className={cl(styles.footerContent)}>
         <div className={cl(styles.container)}>
-          <Footer variant="startpage" enableWindowScroll />
+          <Footer enableWindowScroll />
         </div>
       </div>
     </div>
