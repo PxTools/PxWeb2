@@ -269,10 +269,32 @@ export function pivotTableByMagic(
 
   if (multiVarCount < multiValueVars.length) {
     // Add all remaining multi-value variables to the stub array
+    // Desired order for remaining variables: ContentsVariable first, then TimeVariable, then the rest
+    const remaining = multiValueVars.slice(multiVarCount);
 
-    // TODO: Fix order: Content - time - rest
-    for (let i = multiVarCount; i < multiValueVars.length; i++) {
-      addToArrayIfNotExists(stub, multiValueVars[i].id);
+    // Find and add remaining ContentsVariable (only first if multiple)
+    const remainingContentsVar = remaining.find(
+      (v) => v.type === 'ContentsVariable',
+    );
+    if (remainingContentsVar) {
+      addToArrayIfNotExists(stub, remainingContentsVar.id);
+    }
+
+    // Find and add remaining TimeVariable (only first if multiple)
+    const remainingTimeVar = remaining.find((v) => v.type === 'TimeVariable');
+    if (remainingTimeVar) {
+      addToArrayIfNotExists(stub, remainingTimeVar.id);
+    }
+
+    // Add all other variables excluding those already added
+    for (const v of remaining) {
+      if (
+        v.id === remainingContentsVar?.id ||
+        v.id === remainingTimeVar?.id
+      ) {
+        continue;
+      }
+      addToArrayIfNotExists(stub, v.id);
     }
   }
 }
