@@ -227,6 +227,24 @@ export function pivotTableByMagic(
 
   singleValueVars = sortVariablesByType(singleValueVars);
 
+  magicPivotMultiValueVariables(multiValueVars, stub, heading);
+
+  const headingColumns = calculateHeadingColumns(variables, heading);
+
+  magicPivotSingleValueVariables(
+    singleValueVars,
+    headingColumns,
+    stub,
+    heading,
+  );
+}
+
+// Handles placement of multi-value variables into stub and heading arrays in the magic pivot
+function magicPivotMultiValueVariables(
+  multiValueVars: Variable[],
+  stub: string[],
+  heading: string[],
+) {
   if (multiValueVars.length > 0) {
     // Sort multi-value variables by number of values descending
     multiValueVars = multiValueVars.sort(
@@ -269,19 +287,25 @@ export function pivotTableByMagic(
 
     // Place the variable with the most values last in the stub
     addToArrayIfNotExists(stub, multiValueVars[0].id);
+  }
+}
 
-    const headingColumns = calculateHeadingColumns(variables, heading);
-
-    // Depending on the number of heading columns, place single-value variables
-    // either at the start of the stub or at the start of the heading
-    if (headingColumns > 24) {
-      for (let i = singleValueVars.length - 1; i >= 0; i--) {
-        addFirstInArrayIfNotExists(stub, singleValueVars[i].id);
-      }
-    } else {
-      for (let i = singleValueVars.length - 1; i >= 0; i--) {
-        addFirstInArrayIfNotExists(heading, singleValueVars[i].id);
-      }
+// Handles placement of single-value variables into stub and heading arrays in the magic pivot
+function magicPivotSingleValueVariables(
+  singleValueVars: Variable[],
+  headingColumns: number,
+  stub: string[],
+  heading: string[],
+) {
+  // Depending on the number of heading columns, place single-value variables
+  // either at the start of the stub or at the start of the heading
+  if (headingColumns > 24) {
+    for (let i = singleValueVars.length - 1; i >= 0; i--) {
+      addFirstInArrayIfNotExists(stub, singleValueVars[i].id);
+    }
+  } else {
+    for (let i = singleValueVars.length - 1; i >= 0; i--) {
+      addFirstInArrayIfNotExists(heading, singleValueVars[i].id);
     }
   }
 }
