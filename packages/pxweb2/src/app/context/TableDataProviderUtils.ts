@@ -7,7 +7,6 @@ import {
 } from '@pxweb2/pxweb2-ui';
 
 import { translateOutsideReactWithParams } from '../util/language/translateOutsideReact';
-import { forEach } from 'lodash';
 
 const decimalFormats: Record<number, string> = {
   0: 'number.simple_number_with_zero_decimal',
