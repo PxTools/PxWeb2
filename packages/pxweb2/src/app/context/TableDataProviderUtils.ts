@@ -225,8 +225,6 @@ export function pivotTableByMagic(
   let singleValueVars = vars.filter((v) => v.values.length === 1);
   let multiValueVars = vars.filter((v) => v.values.length > 1);
 
-  let headingColumns = 0;
-
   singleValueVars = sortVariablesByType(singleValueVars);
 
   if (multiValueVars.length > 0) {
@@ -238,7 +236,6 @@ export function pivotTableByMagic(
     if (multiValueVars.length == 2) {
       // Place the variable with the 2nd most values in the heading
       addToArrayIfNotExists(heading, multiValueVars[1].id);
-      headingColumns = multiValueVars[1].values.length;
     }
 
     let multiValueVarsRemaining: Variable[] = [];
@@ -252,13 +249,10 @@ export function pivotTableByMagic(
         // The one with 3rd most values first then the one with 2nd most values
         addToArrayIfNotExists(heading, multiValueVars[2].id);
         addToArrayIfNotExists(heading, multiValueVars[1].id);
-        headingColumns =
-          multiValueVars[1].values.length * multiValueVars[2].values.length;
         multiValueVarsRemaining = multiValueVars.slice(3);
       } else {
         // Place the variable with the 2nd most values in the heading
         addToArrayIfNotExists(heading, multiValueVars[1].id);
-        headingColumns = multiValueVars[1].values.length;
         multiValueVarsRemaining = multiValueVars.slice(2);
       }
     }
@@ -276,6 +270,10 @@ export function pivotTableByMagic(
     // Place the variable with the most values last in the stub
     addToArrayIfNotExists(stub, multiValueVars[0].id);
 
+    const headingColumns = calculateHeadingColumns(variables, heading);
+
+    // Depending on the number of heading columns, place single-value variables
+    // either at the start of the stub or at the start of the heading
     if (headingColumns > 24) {
       for (let i = singleValueVars.length - 1; i >= 0; i--) {
         addFirstInArrayIfNotExists(stub, singleValueVars[i].id);
@@ -288,12 +286,36 @@ export function pivotTableByMagic(
   }
 }
 
+/** Calculates the total number of columns in the heading based on the variables and their values.
+ *
+ * @param variables - The array of Variable objects.
+ * @param heading - The array of variable IDs representing the heading.
+ * @returns The total number of columns in the heading.
+ */
+function calculateHeadingColumns(
+  variables: Variable[],
+  heading: string[],
+): number {
+  let headingColumns = 1;
+
+  for (const id of heading) {
+    const variable = variables.find((v) => v.id === id);
+    if (variable) {
+      headingColumns *= variable.values.length;
+    }
+  }
+
+  return headingColumns;
+}
+
+/** Adds an item to the end of an array if it doesn't already exist. */
 function addToArrayIfNotExists<T>(array: T[], item: T) {
   if (!array.includes(item)) {
     array.push(item);
   }
 }
 
+/** Adds an item to the start of an array if it doesn't already exist. */
 function addFirstInArrayIfNotExists<T>(array: T[], item: T) {
   if (!array.includes(item)) {
     array.unshift(item);
