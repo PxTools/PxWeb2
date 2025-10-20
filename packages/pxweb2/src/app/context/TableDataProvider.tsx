@@ -1226,21 +1226,19 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     let stub: string[] = [];
     let heading: string[] = [];
 
-    // if (isMobileMode) {
-    //   stub = structuredClone(stubMobile);
-    //   heading = structuredClone(headingMobile);
-    // } else {
-    //   stub = structuredClone(stubDesktop);
-    //   heading = structuredClone(headingDesktop);
-    // }
+    if (isMobileMode) {
+      // Magic pivot not allowed for mobile mode
+      return;
+    } else {
+      stub = structuredClone(stubDesktop);
+      heading = structuredClone(headingDesktop);
+    }
 
-    // if (stub.length === 0 && heading.length === 0) {
-    //   return;
-    // }
+    if (stub.length === 0 && heading.length === 0) {
+      return;
+    }
 
     pivotTableByMagic(tmpTable.metadata.variables, stub, heading);
-
-    console.log('Magic pivot to stub:', stub, ' heading:', heading);
 
     // if (stub.length > 0 && heading.length > 0) {
     //   stub.push(heading.pop() as string);
@@ -1254,21 +1252,11 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     pivotTable(tmpTable, stub, heading);
     setData(tmpTable);
 
-    if (isMobileMode) {
-      setStubMobile(stub);
-      setHeadingMobile(heading);
-    } else {
+    if (!isMobileMode) {
       setStubDesktop(stub);
       setHeadingDesktop(heading);
     }
-  }, [
-    data,
-    isMobileMode,
-    stubDesktop,
-    stubMobile,
-    headingDesktop,
-    headingMobile,
-  ]);
+  }, [data, isMobileMode, stubDesktop, headingDesktop]);
 
   /**
    * Pivots the table according to the stub- and heading order.
