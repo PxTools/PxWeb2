@@ -1,6 +1,13 @@
-import { DataCell, PxTable, PxData, Variable } from '@pxweb2/pxweb2-ui';
+import {
+  DataCell,
+  PxTable,
+  PxData,
+  Variable,
+  VartypeEnum,
+} from '@pxweb2/pxweb2-ui';
 
 import { translateOutsideReactWithParams } from '../util/language/translateOutsideReact';
+import { forEach } from 'lodash';
 
 const decimalFormats: Record<number, string> = {
   0: 'number.simple_number_with_zero_decimal',
@@ -212,86 +219,72 @@ export function pivotTableByMagic(
   stub.length = 0;
   heading.length = 0;
 
+  // Make a copy of variables to avoid mutating the original array
+  let vars = structuredClone(variables);
+
   // Separate variables into single-value and multi-value buckets
-  let singleValueVars = variables.filter((v) => v.values.length === 1);
-  let multiValueVars = variables.filter((v) => v.values.length > 1);
+  let singleValueVars = vars.filter((v) => v.values.length === 1);
+  let multiValueVars = vars.filter((v) => v.values.length > 1);
 
-  // If there is a single-value ContentsVariable, ensure it's placed in the heading
-  const contentsSingleVar = singleValueVars.find(
-    (v) => v.type === 'ContentsVariable',
-  );
-  if (contentsSingleVar) {
-    addToArrayIfNotExists(heading, contentsSingleVar.id);
-  }
-  // If there is a single-value TimeVariable, ensure it's placed in the heading
-  const timeSingleVar = singleValueVars.find((v) => v.type === 'TimeVariable');
-  if (timeSingleVar) {
-    addToArrayIfNotExists(heading, timeSingleVar.id);
-  }
+  let headingColumns = 0;
 
-  // Add all single-value variables to the heading array
-  for (const v of singleValueVars) {
-    addToArrayIfNotExists(heading, v.id);
-  }
-
-  multiValueVars = multiValueVars.sort(
-    (a, b) => b.values.length - a.values.length,
-  );
+  singleValueVars = sortVariablesByType(singleValueVars);
 
   if (multiValueVars.length > 0) {
-    // Place the variable with the most values first in the stub
-    const firstVar = multiValueVars[0];
-    addToArrayIfNotExists(stub, firstVar.id);
-  }
+    // Sort multi-value variables by number of values descending
+    multiValueVars = multiValueVars.sort(
+      (a, b) => b.values.length - a.values.length,
+    );
 
-  let multiVarCount = 1;
-
-  if (multiValueVars.length > 2) {
-    if (
-      multiValueVars[1].values.length * multiValueVars[2].values.length <
-      12
-    ) {
-      // Place the variables with the 2nd and 3rd most values in the heading if the product of their values are below 12.
-      // The one with 3rd most values first then the one with 2nd most values
-      addToArrayIfNotExists(heading, multiValueVars[2].id);
-      addToArrayIfNotExists(heading, multiValueVars[1].id);
-      multiVarCount = 3;
-    } else {
+    if (multiValueVars.length == 2) {
       // Place the variable with the 2nd most values in the heading
       addToArrayIfNotExists(heading, multiValueVars[1].id);
-      multiVarCount = 2;
-    }
-  } else if (multiValueVars.length > 1) {
-    // Place the variable with the 2nd most values in the heading
-    addToArrayIfNotExists(heading, multiValueVars[1].id);
-    multiVarCount = 2;
-  }
-
-  if (multiVarCount < multiValueVars.length) {
-    // Add all remaining multi-value variables to the stub array
-    // Desired order for remaining variables: ContentsVariable first, then TimeVariable, then the rest
-    const remaining = multiValueVars.slice(multiVarCount);
-
-    // Find and add remaining ContentsVariable (only first if multiple)
-    const remainingContentsVar = remaining.find(
-      (v) => v.type === 'ContentsVariable',
-    );
-    if (remainingContentsVar) {
-      addToArrayIfNotExists(stub, remainingContentsVar.id);
+      headingColumns = multiValueVars[1].values.length;
     }
 
-    // Find and add remaining TimeVariable (only first if multiple)
-    const remainingTimeVar = remaining.find((v) => v.type === 'TimeVariable');
-    if (remainingTimeVar) {
-      addToArrayIfNotExists(stub, remainingTimeVar.id);
-    }
+    let multiValueVarsRemaining: Variable[] = [];
 
-    // Add all other variables excluding those already added
-    for (const v of remaining) {
-      if (v.id === remainingContentsVar?.id || v.id === remainingTimeVar?.id) {
-        continue;
+    if (multiValueVars.length > 2) {
+      if (
+        multiValueVars[1].values.length * multiValueVars[2].values.length <
+        12
+      ) {
+        // Place the variables with the 2nd and 3rd most values in the heading if the product of their values are below 12.
+        // The one with 3rd most values first then the one with 2nd most values
+        addToArrayIfNotExists(heading, multiValueVars[2].id);
+        addToArrayIfNotExists(heading, multiValueVars[1].id);
+        headingColumns =
+          multiValueVars[1].values.length * multiValueVars[2].values.length;
+        multiValueVarsRemaining = multiValueVars.slice(3);
+      } else {
+        // Place the variable with the 2nd most values in the heading
+        addToArrayIfNotExists(heading, multiValueVars[1].id);
+        headingColumns = multiValueVars[1].values.length;
+        multiValueVarsRemaining = multiValueVars.slice(2);
       }
-      addToArrayIfNotExists(stub, v.id);
+    }
+
+    if (multiValueVarsRemaining.length > 0) {
+      multiValueVarsRemaining = sortVariablesByType(multiValueVarsRemaining);
+
+      // Add all remaining multi-value variables to the stub array
+      // Desired order for remaining variables: ContentsVariable first, then TimeVariable, then the rest
+      for (const v of multiValueVarsRemaining) {
+        addToArrayIfNotExists(stub, v.id);
+      }
+    }
+
+    // Place the variable with the most values last in the stub
+    addToArrayIfNotExists(stub, multiValueVars[0].id);
+
+    if (headingColumns > 24) {
+      for (let i = singleValueVars.length - 1; i >= 0; i--) {
+        addFirstInArrayIfNotExists(stub, singleValueVars[i].id);
+      }
+    } else {
+      for (let i = singleValueVars.length - 1; i >= 0; i--) {
+        addFirstInArrayIfNotExists(heading, singleValueVars[i].id);
+      }
     }
   }
 }
@@ -300,4 +293,40 @@ function addToArrayIfNotExists<T>(array: T[], item: T) {
   if (!array.includes(item)) {
     array.push(item);
   }
+}
+
+function addFirstInArrayIfNotExists<T>(array: T[], item: T) {
+  if (!array.includes(item)) {
+    array.unshift(item);
+  }
+}
+
+/**
+ * Sorts an array of Variable objects by their type with the following precedence:
+ * 1. ContentsVariable
+ * 2. TimeVariable
+ * 3. All other variable types in their original relative order.
+ *
+ * A new array is returned; the input array is not mutated.
+ *
+ * @param variables The array of Variable objects to sort.
+ * @returns A new array with the variables sorted by type precedence.
+ */
+export function sortVariablesByType<T extends { type: VartypeEnum }>(
+  variables: T[],
+): T[] {
+  // Create a copy to avoid mutating the original array
+  const copied = structuredClone(variables);
+
+  const precedence: Record<VartypeEnum, number> = {
+    [VartypeEnum.CONTENTS_VARIABLE]: 0,
+    [VartypeEnum.TIME_VARIABLE]: 1,
+    // Any specific ordering among the remaining variable types is not defined.
+    // They will share the same precedence value (2) preserving their relative order via stable sort behavior.
+    [VartypeEnum.GEOGRAPHICAL_VARIABLE]: 2,
+    [VartypeEnum.REGULAR_VARIABLE]: 2,
+  };
+
+  // Use stable sort: JavaScript's Array.prototype.sort is stable in modern runtimes (Node >= 12, modern browsers).
+  return copied.sort((a, b) => precedence[a.type] - precedence[b.type]);
 }

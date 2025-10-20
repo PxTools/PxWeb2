@@ -1240,15 +1240,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
     pivotTableByMagic(tmpTable.metadata.variables, stub, heading);
 
-    // if (stub.length > 0 && heading.length > 0) {
-    //   stub.push(heading.pop() as string);
-    //   heading.unshift(stub.shift() as string);
-    // } else if (stub.length === 0) {
-    //   heading.unshift(heading.pop() as string);
-    // } else if (heading.length === 0) {
-    //   stub.unshift(stub.pop() as string);
-    // }
-
     pivotTable(tmpTable, stub, heading);
     setData(tmpTable);
 
