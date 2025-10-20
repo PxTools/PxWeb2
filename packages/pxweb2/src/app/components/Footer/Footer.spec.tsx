@@ -74,18 +74,18 @@ describe('Footer', () => {
       });
     });
 
-    it('applies variant--startpage on the <footer> when variant="startpage"', () => {
+    it('applies variant--tableview on the <footer> when variant="tableview"', () => {
       (useLocaleContent as Mock).mockReturnValue(footerContent);
-      render(<Footer variant="startpage" />);
+      render(<Footer variant="tableview" />);
       const footer = screen.getByRole('contentinfo');
-      expect(footer.className).toMatch(/variant--startpage/);
+      expect(footer.className).toMatch(/variant--tableview/);
     });
 
-    it('uses variant--tableview by default', () => {
+    it('uses variant--generic by default', () => {
       (useLocaleContent as Mock).mockReturnValue(footerContent);
       render(<Footer />);
       const footer = screen.getByRole('contentinfo');
-      expect(footer.className).toMatch(/variant--tableview/);
+      expect(footer.className).toMatch(/variant--generic/);
     });
   });
 
@@ -124,7 +124,7 @@ describe('Footer', () => {
 
     it('shows Top button when enableWindowScroll is true (no containerRef)', () => {
       (useLocaleContent as Mock).mockReturnValue(footerContent);
-      render(<Footer variant="startpage" enableWindowScroll />);
+      render(<Footer enableWindowScroll />);
       expect(
         screen.getByRole('button', { name: /common.footer.top_button_text/i }),
       ).toBeInTheDocument();
@@ -132,7 +132,7 @@ describe('Footer', () => {
 
     it('hides Top button when neither containerRef nor enableWindowScroll', () => {
       (useLocaleContent as Mock).mockReturnValue(footerContent);
-      render(<Footer variant="startpage" />);
+      render(<Footer />);
       expect(
         screen.queryByRole('button', {
           name: /common.footer.top_button_text/i,
@@ -145,7 +145,7 @@ describe('Footer', () => {
       const scrollSpy = vi.spyOn(window, 'scrollTo').mockImplementation(() => {
         vi.fn();
       });
-      render(<Footer variant="startpage" enableWindowScroll />);
+      render(<Footer enableWindowScroll />);
 
       const btn = screen.getByRole('button', {
         name: /common.footer.top_button_text/i,
