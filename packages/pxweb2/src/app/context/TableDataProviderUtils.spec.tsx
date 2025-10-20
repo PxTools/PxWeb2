@@ -4,8 +4,15 @@ import {
   getFormattedValue,
   addFormattingToPxTable,
   filterStubAndHeadingArrays,
+  pivotTableByMagic,
 } from './TableDataProviderUtils';
-import { DataCell, PxTable, PxData, VartypeEnum } from '@pxweb2/pxweb2-ui';
+import {
+  DataCell,
+  PxTable,
+  PxData,
+  VartypeEnum,
+  Variable,
+} from '@pxweb2/pxweb2-ui';
 
 // Mock dependencies
 vi.mock('../util/language/translateOutsideReact', () => ({
@@ -434,3 +441,151 @@ describe('TableDataProviderUtils', () => {
     });
   });
 });
+
+describe('pivotTableByMagic', () => {
+  // Helper defined in outer scope below tests if needed, but placing here triggers lint rule; moved outside describe.
+
+  it('places single multi-value variable in stub', () => {
+    const variables = [createVariable('A', VartypeEnum.REGULAR_VARIABLE, 5)];
+    const stub: string[] = [];
+    const heading: string[] = [];
+
+    pivotTableByMagic(variables, stub, heading);
+
+    expect(stub).toEqual(['A']);
+    expect(heading).toEqual([]);
+  });
+
+  it('places second of two multi-value variables in heading and first in stub', () => {
+    const variables = [
+      createVariable('A', VartypeEnum.REGULAR_VARIABLE, 10),
+      createVariable('B', VartypeEnum.TIME_VARIABLE, 3),
+    ];
+    const stub: string[] = [];
+    const heading: string[] = [];
+
+    pivotTableByMagic(variables, stub, heading);
+
+    // A has more values -> last in stub, B (2nd most) in heading
+    expect(stub).toEqual(['A']);
+    expect(heading).toEqual(['B']);
+  });
+
+  it('when 3 multi-value vars and product of 2nd and 3rd < 12 both go to heading (implementation order)', () => {
+    const variables = [
+      createVariable('A', VartypeEnum.REGULAR_VARIABLE, 15), // most
+      createVariable('B', VartypeEnum.TIME_VARIABLE, 2), // 2nd
+      createVariable('C', VartypeEnum.REGULAR_VARIABLE, 3), // 3rd -> product 2*3 = 6 < 12
+    ];
+    const stub: string[] = [];
+    const heading: string[] = [];
+
+    pivotTableByMagic(variables, stub, heading);
+
+    // Implementation adds 2nd then 3rd
+    expect(heading).toEqual(['B', 'C']);
+    expect(stub).toEqual(['A']); // Most values always last in stub
+  });
+
+  it('when >2 multi-value vars and product >=12 only 2nd goes to heading; rest sorted into stub before most', () => {
+    const variables = [
+      createVariable('A', VartypeEnum.REGULAR_VARIABLE, 20), // most
+      createVariable('B', VartypeEnum.REGULAR_VARIABLE, 4), // 2nd
+      createVariable('C', VartypeEnum.TIME_VARIABLE, 3), // 3rd -> product 4*3 = 12 >= 12
+      createVariable('D', VartypeEnum.CONTENTS_VARIABLE, 2), // remaining (sorted first)
+      createVariable('E', VartypeEnum.GEOGRAPHICAL_VARIABLE, 2), // remaining
+    ];
+    const stub: string[] = [];
+    const heading: string[] = [];
+
+    pivotTableByMagic(variables, stub, heading);
+
+    // Remaining multi-value variables (C,D,E) sorted by type precedence: D (Contents), C (Time), E (Other)
+    // They are added first, then A (most values) last
+    expect(heading).toEqual(['B']);
+    expect(stub).toEqual(['D', 'C', 'E', 'A']);
+  });
+
+  it('single-value variables injected at start of stub if headingColumns > 24', () => {
+    // Scenario: one heading variable with >24 values so headingColumns > 24
+    const big1 = createVariable('X', VartypeEnum.REGULAR_VARIABLE, 50);
+    const big2 = createVariable('Y', VartypeEnum.REGULAR_VARIABLE, 30); // goes to heading
+    const big3 = createVariable('Z', VartypeEnum.REGULAR_VARIABLE, 10); // remaining -> stub (before most)
+    const singleTime = createVariable('S1', VartypeEnum.TIME_VARIABLE, 1);
+    const singleContents = createVariable(
+      'S2',
+      VartypeEnum.CONTENTS_VARIABLE,
+      1,
+    );
+
+    const variables = [big1, big2, big3, singleTime, singleContents];
+    const stub: string[] = [];
+    const heading: string[] = [];
+
+    pivotTableByMagic(variables, stub, heading);
+
+    expect(heading).toEqual(['Y']);
+    expect(stub).toEqual(['S2', 'S1', 'Z', 'X']);
+  });
+
+  it('single-value variables injected at start of heading if headingColumns <= 24', () => {
+    const multi1 = createVariable('A', VartypeEnum.REGULAR_VARIABLE, 10);
+    const multi2 = createVariable('B', VartypeEnum.REGULAR_VARIABLE, 3); // 2nd goes to heading
+    const single1 = createVariable('S1', VartypeEnum.CONTENTS_VARIABLE, 1);
+    const single2 = createVariable('S2', VartypeEnum.TIME_VARIABLE, 1);
+    const variables = [multi1, multi2, single1, single2];
+    const stub: string[] = [];
+    const heading: string[] = [];
+
+    pivotTableByMagic(variables, stub, heading);
+
+    // headingColumns = values in B (3) initially; <=24 so single-value vars added to heading start
+    // singleValueVars sorted: Contents (S1) then Time (S2); loop adds S2 then S1 via unshift -> final order S1,S2,B
+    expect(heading).toEqual(['S1', 'S2', 'B']);
+    expect(stub).toEqual(['A']);
+  });
+
+  it('handles all single-value variables (no multi-value)', () => {
+    const variables = [
+      createVariable('A', VartypeEnum.REGULAR_VARIABLE, 1),
+      createVariable('B', VartypeEnum.TIME_VARIABLE, 1),
+      createVariable('C', VartypeEnum.CONTENTS_VARIABLE, 1),
+    ];
+    const stub: string[] = [];
+    const heading: string[] = [];
+
+    pivotTableByMagic(variables, stub, heading);
+
+    // No headingColumns beyond 1 so <=24 => single-value vars added to heading in precedence order
+    expect(heading).toEqual(['C', 'B', 'A']);
+    expect(stub).toEqual([]);
+  });
+
+  it('handles empty variables array gracefully', () => {
+    const stub: string[] = [];
+    const heading: string[] = [];
+
+    pivotTableByMagic([], stub, heading);
+
+    expect(stub).toEqual([]);
+    expect(heading).toEqual([]);
+  });
+});
+
+// Move helper to outer scope to satisfy lint rule
+function createVariable(
+  id: string,
+  type: VartypeEnum,
+  valueCount: number,
+): Variable {
+  return {
+    id,
+    type,
+    label: id,
+    mandatory: false,
+    values: Array.from({ length: valueCount }, (_, i) => ({
+      code: `${id}_${i}`,
+      label: `${id}_${i}`,
+    })),
+  };
+}
