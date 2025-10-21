@@ -74,7 +74,7 @@ describe('DrawerEdit', () => {
     render(<DrawerEdit />);
 
     expect(screen.getByTestId('content-box')).toBeInTheDocument();
-    // Two action buttons: magic pivot & clockwise pivot
+    // Two action buttons: magic pivot & clockwise pivot (unified PivotButton)
     const buttons = screen.getAllByTestId('action-item');
     expect(buttons).toHaveLength(2);
     // Check labels via translation keys

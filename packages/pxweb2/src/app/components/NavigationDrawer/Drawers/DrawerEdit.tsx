@@ -4,16 +4,18 @@ import { useTranslation } from 'react-i18next';
 import { ActionItem, ContentBox, Variable, Alert } from '@pxweb2/pxweb2-ui';
 import useTableData from '../../../context/useTableData';
 import classes from './DrawerEdit.module.scss';
+import { PivotType } from './PivotType';
 
 interface PivotButtonProps {
   readonly stub: Variable[];
   readonly heading: Variable[];
+  readonly pivotType: PivotType;
 }
 
-function MagicPivotButton({ stub, heading }: PivotButtonProps) {
+function PivotButton({ stub, heading, pivotType }: PivotButtonProps) {
   const { t } = useTranslation();
-  const pivotTableByMagic = useTableData().pivotByMagic;
-  const buildTableTitle = useTableData().buildTableTitle;
+  const tableData = useTableData();
+  const { pivotCW, pivotByMagic, buildTableTitle } = tableData;
 
   // Live region text for screen readers after activation
   const [statusMessage, setStatusMessage] = useState('');
@@ -21,7 +23,11 @@ function MagicPivotButton({ stub, heading }: PivotButtonProps) {
 
   const handleClick = () => {
     setAnnounceOnNextChange(true);
-    pivotTableByMagic();
+    if (pivotType === PivotType.Magic) {
+      pivotByMagic();
+    } else {
+      pivotCW();
+    }
   };
 
   // When stub/heading update after pivot, compute and announce the new screen reader message
@@ -47,71 +53,24 @@ function MagicPivotButton({ stub, heading }: PivotButtonProps) {
     return () => clearTimeout(timer);
   }, [stub, heading, announceOnNextChange, buildTableTitle, t]);
 
-  return (
-    <>
-      <ActionItem
-        label={t(
-          'presentation_page.side_menu.edit.customize.magic_pivot.title',
-        )}
-        ariaLabel={t(
-          'presentation_page.side_menu.edit.customize.magic_pivot.aria_label',
-        )}
-        onClick={handleClick}
-        iconName="Sparkles"
-      />
-      <output aria-live="polite" aria-atomic="true" className={classes.srOnly}>
-        {statusMessage}
-      </output>
-    </>
-  );
-}
-
-function PivotButton({ stub, heading }: PivotButtonProps) {
-  const { t } = useTranslation();
-  const pivotTableClockwise = useTableData().pivotCW;
-  const buildTableTitle = useTableData().buildTableTitle;
-
-  // Live region text for screen readers after activation
-  const [statusMessage, setStatusMessage] = useState('');
-  const [announceOnNextChange, setAnnounceOnNextChange] = useState(false);
-
-  const handleClick = () => {
-    setAnnounceOnNextChange(true);
-    pivotTableClockwise();
-  };
-
-  // When stub/heading update after pivot, compute and announce the new screen reader message
-  useEffect(() => {
-    if (!announceOnNextChange) {
-      return;
-    }
-
-    const { firstTitlePart, lastTitlePart } = buildTableTitle(stub, heading);
-    const message = t(
-      'presentation_page.side_menu.edit.customize.pivot.screen_reader_announcement',
-      {
-        first_variables: firstTitlePart,
-        last_variable: lastTitlePart,
-      },
-    );
-
-    // Clear first to ensure assistive tech re-announces even if message repeats
-    setStatusMessage('');
-    const timer = setTimeout(() => setStatusMessage(message), 0); // Force state update on different ticks
-    setAnnounceOnNextChange(false);
-
-    return () => clearTimeout(timer);
-  }, [stub, heading, announceOnNextChange, buildTableTitle, t]);
+  const labelKey =
+    pivotType === PivotType.Magic
+      ? 'presentation_page.side_menu.edit.customize.magic_pivot.title'
+      : 'presentation_page.side_menu.edit.customize.pivot.title';
+  const ariaLabelKey =
+    pivotType === PivotType.Magic
+      ? 'presentation_page.side_menu.edit.customize.magic_pivot.aria_label'
+      : 'presentation_page.side_menu.edit.customize.pivot.aria_label';
+  const iconName =
+    pivotType === PivotType.Magic ? 'Sparkles' : 'ArrowCirclepathClockwise';
 
   return (
     <>
       <ActionItem
-        label={t('presentation_page.side_menu.edit.customize.pivot.title')}
-        ariaLabel={t(
-          'presentation_page.side_menu.edit.customize.pivot.aria_label',
-        )}
+        label={t(labelKey)}
+        ariaLabel={t(ariaLabelKey)}
         onClick={handleClick}
-        iconName="ArrowCirclepathClockwise"
+        iconName={iconName}
       />
       <output aria-live="polite" aria-atomic="true" className={classes.srOnly}>
         {statusMessage}
@@ -126,8 +85,20 @@ export function DrawerEdit() {
 
   return (
     <ContentBox title={t('presentation_page.side_menu.edit.customize.title')}>
-      {data && <MagicPivotButton stub={data.stub} heading={data.heading} />}
-      {data && <PivotButton stub={data.stub} heading={data.heading} />}
+      {data && (
+        <PivotButton
+          stub={data.stub}
+          heading={data.heading}
+          pivotType={PivotType.Magic}
+        />
+      )}
+      {data && (
+        <PivotButton
+          stub={data.stub}
+          heading={data.heading}
+          pivotType={PivotType.Clockwise}
+        />
+      )}
       <Alert variant="info" className={classes.alert}>
         {t('common.status_messages.drawer_edit')}
       </Alert>
