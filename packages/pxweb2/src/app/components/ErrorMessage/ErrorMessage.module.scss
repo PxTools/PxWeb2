@@ -8,10 +8,14 @@
   gap: fixed.$spacing-7;
   width: 100%;
 
+  &.small {
+    gap: fixed.$spacing-5;
+  }
+
   @media (breakpoints.$xxlarge) {
     max-width: 848px;
 
-    .small {
+    &.small {
       max-width: 550px;
     }
   }
@@ -19,7 +23,7 @@
   @media (breakpoints.$xlarge) {
     max-width: 728px;
 
-    .small {
+    &.small {
       max-width: 538px;
     }
   }
@@ -27,7 +31,7 @@
   @media (breakpoints.$large) {
     max-width: 688px;
 
-    .small {
+    &.small {
       max-width: 480px;
     }
   }
@@ -35,7 +39,7 @@
   @media (breakpoints.$medium) {
     max-width: 688px;
 
-    .small {
+    &.small {
       max-width: 508px;
     }
   }
@@ -43,15 +47,13 @@
   @media (breakpoints.$small) {
     max-width: 508px;
 
-    .small {
+    &.small {
       max-width: 100%;
     }
   }
 
-  @media (breakpoints.$small) {
-    .small {
-      max-width: 100%;
-    }
+  @media (breakpoints.$xsmall) {
+    max-width: 100%;
   }
 }
 
@@ -61,6 +63,10 @@
   align-items: flex-start;
   gap: fixed.$spacing-10;
   align-self: stretch;
+
+  &.small {
+    gap: fixed.$spacing-8;
+  }
 }
 
 .text {
@@ -69,6 +75,10 @@
   align-items: flex-start;
   gap: fixed.$spacing-4;
   align-self: stretch;
+
+  &.small {
+    gap: fixed.$spacing-2;
+  }
 }
 
 .alignCenter {

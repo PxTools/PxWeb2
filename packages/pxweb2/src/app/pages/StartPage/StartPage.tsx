@@ -16,9 +16,13 @@ import {
   Heading,
   Ingress,
   BodyShort,
+  BodyLong,
   SearchHandle,
   Breadcrumbs,
   type BreadcrumbItem,
+  DetailsSection,
+  List,
+  ListItem,
 } from '@pxweb2/pxweb2-ui';
 import { type Table } from '@pxweb2/pxweb2-api-client';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
@@ -43,9 +47,8 @@ import StartpageDetails from '../../components/StartPageDetails/StartPageDetails
 import { useLocaleContent } from '../../util/hooks/useLocaleContent';
 import type {
   LocaleContent,
-  Startpage,
-  BreadCrumb,
-  DetailsSection,
+  BreadCrumb as BreadCrumbType,
+  DetailsSection as DetailsSectionType,
 } from '../../util/config/localeContentTypes';
 
 const StartPage = () => {
@@ -88,11 +91,12 @@ const StartPage = () => {
   );
 
   const localeContent: LocaleContent | null = useLocaleContent(i18n.language);
-  const startPageContent: Startpage | undefined = localeContent?.startPage;
-  const detailsSectionContent: DetailsSection | undefined =
-    startPageContent?.detailsSection;
-  const breadCrumbContent: BreadCrumb | undefined =
-    startPageContent?.breadCrumb;
+  const detailsSectionContent: DetailsSectionType | undefined =
+    localeContent?.startPage?.detailsSection;
+  const breadCrumbContent: BreadCrumbType | undefined =
+    localeContent?.startPage?.breadCrumb;
+  const noResultSearchHelpContent =
+    localeContent?.startPage?.noResultSearchHelp;
   const showBreadCrumb = isRenderableBreadCrumb(breadCrumbContent);
 
   // Run once when initially loading the page, then again if language changes
@@ -308,7 +312,7 @@ const StartPage = () => {
       const showLangInPath =
         config.language.showDefaultLanguageInPath ||
         language !== config.language.defaultLanguage;
-      const langPrefix = showLangInPath ? `${language}` : '';
+      const langPrefix = showLangInPath ? `/${language}` : '';
       const discontinued = table.discontinued;
 
       let cardRef: React.RefObject<HTMLDivElement | null> | undefined;
@@ -322,7 +326,7 @@ const StartPage = () => {
         <TableCard
           key={table.id}
           title={`${table.label}`}
-          href={() => navigate(`/${langPrefix}/table/${table.id}`)}
+          href={() => navigate(`${langPrefix}/table/${table.id}`)}
           updatedLabel={
             table.updated ? t('start_page.table.updated_label') : undefined
           }
@@ -331,7 +335,10 @@ const StartPage = () => {
               ? new Date(table.updated).toLocaleDateString(language)
               : undefined
           }
-          period={`${table.firstPeriod?.slice(0, 4)}–${table.lastPeriod?.slice(0, 4)}`}
+          period={`${table.firstPeriod?.slice(0, 4)}–${table.lastPeriod?.slice(
+            0,
+            4,
+          )}`}
           frequency={frequencyLabel}
           tableId={`${table.id}`}
           icon={getTopicIcon(table)}
@@ -371,18 +378,59 @@ const StartPage = () => {
     });
   };
 
+  const renderNoResult = () => {
+    const helpTexts = noResultSearchHelpContent?.helpText;
+    const searchHelpItems = Array.isArray(helpTexts)
+      ? helpTexts.map((s) => String(s).trim()).filter(Boolean)
+      : [];
+
+    const hasSearchHelp =
+      Boolean(noResultSearchHelpContent?.enabled) && searchHelpItems.length > 0;
+
+    return (
+      <section className={styles.noResults}>
+        <Heading level="2" size="medium" className={styles.noResultsTitle}>
+          {t('start_page.no_result_header')}
+        </Heading>
+
+        <BodyLong className={styles.noResultsText}>
+          {t('start_page.no_result_description')}
+        </BodyLong>
+
+        {hasSearchHelp && (
+          <div className={styles.noResultsDetails}>
+            <DetailsSection header={t('start_page.no_result_search_help')}>
+              <List listType="ul">
+                {searchHelpItems.map((text, index) => (
+                  <ListItem key={`${text}-${index}`}>{text}</ListItem>
+                ))}
+              </List>
+            </DetailsSection>
+          </div>
+        )}
+      </section>
+    );
+  };
+
   const renderTableCardList = () => (
     <>
       {renderNumberofTablesScreenReader()}
       {renderTableCount()}
-      <div
-        className={cl(styles.tableCardList, {
-          [styles.fadeList]: isFadingTableList,
-        })}
-      >
-        {renderCards()}
-      </div>
-      {renderPagination()}
+
+      {state.filteredTables.length === 0 ? (
+        renderNoResult()
+      ) : (
+        <>
+          <div
+            className={cl(styles.tableCardList, {
+              [styles.fadeList]: isFadingTableList,
+            })}
+          >
+            {renderCards()}
+          </div>
+          {renderPagination()}
+        </>
+      )}
     </>
   );
 
@@ -569,8 +617,8 @@ const StartPage = () => {
   };
 
   function isRenderableBreadCrumb(
-    bc: BreadCrumb | undefined,
-  ): bc is BreadCrumb {
+    bc: BreadCrumbType | undefined,
+  ): bc is BreadCrumbType {
     return !!bc && bc.enabled === true && !!bc.items?.length;
   }
 
@@ -591,147 +639,136 @@ const StartPage = () => {
   };
 
   return (
-    <>
+    <div className={styles.startPageLayout}>
       <Header stroke={true} />
-      <main>
-        <div className={styles.startPage}>
-          <div className={styles.container}>
-            <div
-              className={cl(styles.contentTop, {
-                [styles.hasBreadcrumb]: showBreadCrumb,
-              })}
-            >
-              {showBreadCrumb && renderBreadCrumb()}
-              <div className={styles.information}>
-                <Heading size="large" level="1" className={styles.title}>
-                  {t('start_page.header')}
-                </Heading>
-                <Ingress>{t('start_page.ingress')}</Ingress>
-                <div className={styles.showDetailsSection}>
-                  {detailsSectionContent && (
-                    <StartpageDetails detailsSection={detailsSectionContent} />
-                  )}
-                </div>
+      <main className={styles.startPage}>
+        <div className={cl(styles.startPageHeader)}>
+          <div
+            className={cl(styles.contentTop, styles.container, {
+              [styles.hasBreadcrumb]: showBreadCrumb,
+            })}
+          >
+            {showBreadCrumb && renderBreadCrumb()}
+            <div className={styles.information}>
+              <Heading size="large" level="1" className={styles.title}>
+                {t('start_page.header')}
+              </Heading>
+              <Ingress>{t('start_page.ingress')}</Ingress>
+              <div className={styles.showDetailsSection}>
+                {detailsSectionContent && (
+                  <StartpageDetails detailsSection={detailsSectionContent} />
+                )}
               </div>
             </div>
           </div>
-          <div className={cl(styles.searchFilterResult)}>
-            <div className={styles.container}>
-              <div className={styles.searchAreaWrapper}>
-                <div className={cl(styles.search)} role="search">
-                  <Search
-                    searchPlaceHolder={t('start_page.search_placeholder')}
-                    variant="default"
-                    ref={searchFieldRef}
-                    showLabel
-                    labelText={t('start_page.search_label')}
-                    onChange={(value: string) => {
-                      debouncedDispatch(value);
-                    }}
-                  />
-                </div>
-
-                <Button
-                  variant="secondary"
-                  iconPosition="start"
-                  icon="Controls"
-                  className={styles.filterToggleButton}
-                  onClick={() => setIsFilterOverlayOpen(true)}
-                  ref={filterToggleRef}
-                  aria-expanded={isFilterOverlayOpen}
-                  aria-live="polite"
-                >
-                  {t('start_page.filter.button')}
-                </Button>
-              </div>
+        </div>
+        <div className={cl(styles.searchFilterResult, styles.container)}>
+          <div className={styles.searchAreaWrapper}>
+            <div className={cl(styles.search)} role="search">
+              <Search
+                searchPlaceHolder={t('start_page.search_placeholder')}
+                variant="default"
+                ref={searchFieldRef}
+                showLabel
+                labelText={t('start_page.search_label')}
+                onChange={(value: string) => {
+                  debouncedDispatch(value);
+                }}
+              />
             </div>
 
-            <div className={cl(styles.filterAndListWrapper, styles.container)}>
-              {!isSmallScreen && (
-                <div>
-                  <Heading
-                    className={cl(styles.filterHeading)}
-                    size="medium"
-                    level="2"
-                  >
-                    {t('start_page.filter.header')}
-                  </Heading>
-                  <FilterSidebar onFilterChange={handleFilterChange} />
+            <Button
+              variant="secondary"
+              iconPosition="start"
+              icon="Controls"
+              className={styles.filterToggleButton}
+              onClick={() => setIsFilterOverlayOpen(true)}
+              ref={filterToggleRef}
+              aria-expanded={isFilterOverlayOpen}
+              aria-live="polite"
+            >
+              {t('start_page.filter.button')}
+            </Button>
+          </div>
+
+          <div className={cl(styles.filterAndListWrapper)}>
+            {!isSmallScreen && (
+              <div>
+                <Heading
+                  className={cl(styles.filterHeading)}
+                  size="medium"
+                  level="2"
+                >
+                  {t('start_page.filter.header')}
+                </Heading>
+                <FilterSidebar onFilterChange={handleFilterChange} />
+              </div>
+            )}
+
+            {renderFilterOverlay()}
+
+            <div className={styles.listTables}>
+              <Heading level="2" className={styles['sr-only']}>
+                {t('start_page.result_hidden_header')}
+              </Heading>
+              {state.activeFilters.length >= 1 && (
+                <div className={styles.filterPillContainer}>
+                  <Chips aria-label={t('start_page.filter.list_filters_aria')}>
+                    {renderRemoveAllChips()}
+                    {sortAndDeduplicateFilterChips(
+                      state.activeFilters,
+                      state.subjectOrderList,
+                    ).map((filter) => (
+                      <Chips.Removable
+                        onClick={() => {
+                          dispatch({
+                            type: ActionType.REMOVE_FILTER,
+                            payload: {
+                              value: filter.value,
+                              type: filter.type,
+                            },
+                          });
+                          handleFilterChange();
+                          if (filter.type == 'search') {
+                            searchFieldRef.current?.clearInputField();
+                          }
+                        }}
+                        aria-label={t('start_page.filter.remove_filter_aria', {
+                          value: filter.label,
+                        })}
+                        key={filter.value}
+                        truncate
+                      >
+                        {filter.label}
+                      </Chips.Removable>
+                    ))}
+                  </Chips>
                 </div>
               )}
-
-              {renderFilterOverlay()}
-
-              <div className={styles.listTables}>
-                <Heading level="2" className={styles['sr-only']}>
-                  {t('start_page.result_hidden_header')}
-                </Heading>
-                {state.activeFilters.length >= 1 && (
-                  <div className={styles.filterPillContainer}>
-                    <Chips
-                      aria-label={t('start_page.filter.list_filters_aria')}
-                    >
-                      {renderRemoveAllChips()}
-                      {sortAndDeduplicateFilterChips(
-                        state.activeFilters,
-                        state.subjectOrderList,
-                      ).map((filter) => (
-                        <Chips.Removable
-                          onClick={() => {
-                            dispatch({
-                              type: ActionType.REMOVE_FILTER,
-                              payload: {
-                                value: filter.value,
-                                type: filter.type,
-                              },
-                            });
-                            handleFilterChange();
-                            if (filter.type == 'search') {
-                              searchFieldRef.current?.clearInputField();
-                            }
-                          }}
-                          aria-label={t(
-                            'start_page.filter.remove_filter_aria',
-                            {
-                              value: filter.label,
-                            },
-                          )}
-                          key={filter.value}
-                          truncate
-                        >
-                          {filter.label}
-                        </Chips.Removable>
-                      ))}
-                    </Chips>
-                  </div>
-                )}
-                {state.error && (
-                  <div className={styles.errorContainer}>
-                    <ErrorMessage
-                      action="button"
-                      align="center"
-                      size="small"
-                      illustration="GenericError"
-                      backgroundShape="wavy"
-                      headingLevel="2"
-                      title={t('common.errors.no_tables_loaded.title')}
-                      description={t(
-                        'common.errors.no_tables_loaded.description',
-                      )}
-                      actionText={t(
-                        'common.errors.no_tables_loaded.action_text',
-                      )}
-                    />
-                  </div>
-                )}
-                {!state.error && !isReadyToRender ? (
-                  <div className={styles.loadingSpinner}>
-                    <Spinner size="xlarge" />
-                  </div>
-                ) : (
-                  !state.error && renderTableCardList()
-                )}
-              </div>
+              {state.error && (
+                <div className={styles.errorContainer}>
+                  <ErrorMessage
+                    action="button"
+                    align="center"
+                    size="small"
+                    illustration="GenericError"
+                    backgroundShape="wavy"
+                    headingLevel="2"
+                    title={t('common.errors.no_tables_loaded.title')}
+                    description={t(
+                      'common.errors.no_tables_loaded.description',
+                    )}
+                    actionText={t('common.errors.no_tables_loaded.action_text')}
+                  />
+                </div>
+              )}
+              {!state.error && !isReadyToRender ? (
+                <div className={styles.loadingSpinner}>
+                  <Spinner size="xlarge" />
+                </div>
+              ) : (
+                !state.error && renderTableCardList()
+              )}
             </div>
           </div>
         </div>
@@ -739,10 +776,10 @@ const StartPage = () => {
       </main>
       <div className={cl(styles.footerContent)}>
         <div className={cl(styles.container)}>
-          <Footer variant="startpage" enableWindowScroll />
+          <Footer enableWindowScroll />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

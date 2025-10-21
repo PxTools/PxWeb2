@@ -11,7 +11,7 @@ import { useLocaleContent } from '../../util/hooks/useLocaleContent';
 
 type FooterProps = {
   containerRef?: React.RefObject<HTMLDivElement | null>;
-  variant?: 'startpage' | 'tableview';
+  variant?: 'generic' | 'tableview';
   enableWindowScroll?: boolean;
 };
 
@@ -36,7 +36,7 @@ export function scrollToTop(ref?: React.RefObject<HTMLDivElement | null>) {
 
 export const Footer: React.FC<FooterProps> = ({
   containerRef,
-  variant = 'tableview',
+  variant = 'generic',
   enableWindowScroll = false,
 }) => {
   const { i18n, t } = useTranslation();
@@ -115,7 +115,7 @@ export const Footer: React.FC<FooterProps> = ({
                             location.pathname,
                             lang.shorthand,
                             config.language.supportedLanguages,
-                            config.language.fallbackLanguage,
+                            config.language.defaultLanguage,
                             config.language.showDefaultLanguageInPath,
                           );
                         const isCurrent = i18n.language?.startsWith(

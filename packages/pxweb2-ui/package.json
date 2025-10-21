@@ -2,16 +2,14 @@
   "name": "@pxweb2/pxweb2-ui",
   "version": "0.0.1",
   "main": "./src/index.ts",
-  "type": "module",
   "scripts": {
     "start": "npm run storybook",
     "build": "npm run build-style-dictionary && storybook build && mv ./storybook-static ../pxweb2/dist/storybook",
     "build-style-dictionary": "node ./style-dictionary/build.mjs",
     "storybook": "storybook dev -p 6006",
     "test": "vitest run",
-    "test-dev": "vitest",
-    "coverage": "vitest run --coverage",
     "test:watch": "vitest",
+    "coverage": "vitest run --coverage",
     "prettier": "prettier --config ../../.prettierrc --check ./src/** --write --ignore-path ../../.prettierignore"
   },
   "author": "",
@@ -19,17 +17,16 @@
   "dependencies": {
     "@vitejs/plugin-react": "^5.0.4",
     "clsx": "^2.1.1",
-    "motion": "^12.23.22",
+    "motion": "^12.23.24",
     "vite-plugin-dts": "^4.5.4"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^4.1.1",
-    "storybook": "^9.1.10",
-    "@storybook/addon-onboarding": "^9.1.10",
-    "@storybook/addon-a11y": "^9.1.10",
-    "@storybook/react-vite": "^9.1.10",
-    "@storybook/addon-docs": "^9.1.10",
-    "eslint-plugin-storybook": "9.1.10",
+    "storybook": "^9.1.13",
+    "@storybook/addon-a11y": "^9.1.13",
+    "@storybook/react-vite": "^9.1.13",
+    "@storybook/addon-docs": "^9.1.13",
+    "eslint-plugin-storybook": "9.1.13",
     "@testing-library/react": "^16.3.0",
     "prop-types": "^15.8.1",
     "vitest": "^3.2.4"
