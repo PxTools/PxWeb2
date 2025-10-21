@@ -247,20 +247,20 @@
   gap: var(--spacing-2);
 }
 
-.alert-icon-info {
+.alert-icon-info svg {
   color: var(--px-color-icon-info);
   flex-shrink: 0;
 }
 
-.alert-icon-success {
+.alert-icon-success svg {
   color: var(--px-color-icon-success);
 }
 
-.alert-icon-warning {
+.alert-icon-warning svg {
   color: var(--px-color-icon-warning);
 }
 
-.alert-icon-error {
+.alert-icon-error svg {
   color: var(--px-color-icon-error);
 }
 
