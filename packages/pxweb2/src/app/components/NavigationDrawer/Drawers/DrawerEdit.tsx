@@ -23,7 +23,7 @@ function PivotButton({ stub, heading, pivotType }: PivotButtonProps) {
 
   const handleClick = () => {
     setAnnounceOnNextChange(true);
-    if (pivotType === PivotType.Magic) {
+    if (pivotType === PivotType.Auto) {
       pivotByMagic();
     } else {
       pivotCW();
@@ -54,15 +54,15 @@ function PivotButton({ stub, heading, pivotType }: PivotButtonProps) {
   }, [stub, heading, announceOnNextChange, buildTableTitle, t]);
 
   const labelKey =
-    pivotType === PivotType.Magic
+    pivotType === PivotType.Auto
       ? 'presentation_page.side_menu.edit.customize.auto_pivot.title'
       : 'presentation_page.side_menu.edit.customize.pivot.title';
   const ariaLabelKey =
-    pivotType === PivotType.Magic
+    pivotType === PivotType.Auto
       ? 'presentation_page.side_menu.edit.customize.auto_pivot.aria_label'
       : 'presentation_page.side_menu.edit.customize.pivot.aria_label';
   const iconName =
-    pivotType === PivotType.Magic ? 'Sparkles' : 'ArrowCirclepathClockwise';
+    pivotType === PivotType.Auto ? 'Sparkles' : 'ArrowCirclepathClockwise';
 
   return (
     <>
@@ -89,7 +89,7 @@ export function DrawerEdit() {
         <PivotButton
           stub={data.stub}
           heading={data.heading}
-          pivotType={PivotType.Magic}
+          pivotType={PivotType.Auto}
         />
       )}
       {data && (
