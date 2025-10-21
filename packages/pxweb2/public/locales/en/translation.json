@@ -169,7 +169,7 @@
       "edit": {
         "title": "Edit",
         "customize": {
-          "title": "Customize",
+          "title": "Customise",
           "pivot": {
             "title": "Rotate table",
             "aria_label": "Rotate table clockwise",
@@ -246,7 +246,7 @@
     "main_content": {
       "expand_view": "Expand view",
       "shrink_view": "Shrink view",
-      "last_updated": "Last updated",
+      "last_updated": "Updated",
       "show_details": "Show details",
       "dynamic_table_title": "{{table_content_type}} by {{table_content_label_first_part}} and {{table_content_label_last_part}}",
       "table": {
@@ -299,7 +299,7 @@
           "link": "Link",
           "copyright": "Copyright",
           "matrix": "Matrix",
-          "last_updated": "Last updated",
+          "last_updated": "Updated",
           "next_update": "Next update",
           "source": "Source",
           "official_statistics": "Official statistics",
