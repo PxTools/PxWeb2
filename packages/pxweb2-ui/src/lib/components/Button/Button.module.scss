@@ -103,6 +103,30 @@
   }
 }
 
+// Icon styles, depending on button variant
+// Done like this for CSS specificity
+.icon-primary svg {
+  color: var(--px-color-icon-on-action);
+}
+.icon-secondary svg {
+  color: var(--px-color-icon-action);
+}
+.icon-secondary:hover svg {
+  color: var(--px-color-icon-on-action-subtle);
+}
+.icon-secondary:active svg {
+  color: var(--px-color-icon-on-action);
+}
+.icon-tertiary svg {
+  color: var(--px-color-icon-action);
+}
+.icon-tertiary:hover svg {
+  color: var(--px-color-icon-on-action-subtle);
+}
+.icon-tertiary:active svg {
+  color: var(--px-color-icon-on-action);
+}
+
 .iconOnlyMedium {
   padding: 0.75rem;
 }
