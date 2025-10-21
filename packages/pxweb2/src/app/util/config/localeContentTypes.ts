@@ -5,6 +5,7 @@ export type DetailLink = {
   url: string;
   icon?: IconProps['iconName'];
   iconPosition?: 'left' | 'right';
+  external?: boolean;
 };
 
 export type Links = {
