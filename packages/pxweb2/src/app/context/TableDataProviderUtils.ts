@@ -209,7 +209,7 @@ export function filterStubAndHeadingArrays(
   };
 }
 
-export function pivotTableByMagic(
+export function autoPivotTable(
   variables: Variable[],
   stub: string[],
   heading: string[],
@@ -227,20 +227,15 @@ export function pivotTableByMagic(
 
   singleValueVars = sortVariablesByType(singleValueVars);
 
-  magicPivotMultiValueVariables(multiValueVars, stub, heading);
+  autoPivotMultiValueVariables(multiValueVars, stub, heading);
 
   const headingColumns = calculateHeadingColumns(variables, heading);
 
-  magicPivotSingleValueVariables(
-    singleValueVars,
-    headingColumns,
-    stub,
-    heading,
-  );
+  autoPivotSingleValueVariables(singleValueVars, headingColumns, stub, heading);
 }
 
-// Handles placement of multi-value variables into stub and heading arrays in the magic pivot
-function magicPivotMultiValueVariables(
+// Handles placement of multi-value variables into stub and heading arrays in the auto pivot
+function autoPivotMultiValueVariables(
   multiValueVars: Variable[],
   stub: string[],
   heading: string[],
@@ -290,8 +285,8 @@ function magicPivotMultiValueVariables(
   }
 }
 
-// Handles placement of single-value variables into stub and heading arrays in the magic pivot
-function magicPivotSingleValueVariables(
+// Handles placement of single-value variables into stub and heading arrays in the auto pivot
+function autoPivotSingleValueVariables(
   singleValueVars: Variable[],
   headingColumns: number,
   stub: string[],

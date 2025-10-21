@@ -23,7 +23,7 @@ import { mapJsonStat2Response } from '../../mappers/JsonStat2ResponseMapper';
 import {
   addFormattingToPxTable,
   filterStubAndHeadingArrays,
-  pivotTableByMagic,
+  autoPivotTable,
 } from './TableDataProviderUtils';
 import { problemMessage } from '../util/problemMessage';
 
@@ -1238,7 +1238,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       return;
     }
 
-    pivotTableByMagic(tmpTable.metadata.variables, stub, heading);
+    autoPivotTable(tmpTable.metadata.variables, stub, heading);
 
     pivotTable(tmpTable, stub, heading);
     setData(tmpTable);

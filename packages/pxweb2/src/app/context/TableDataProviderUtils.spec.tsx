@@ -4,7 +4,7 @@ import {
   getFormattedValue,
   addFormattingToPxTable,
   filterStubAndHeadingArrays,
-  pivotTableByMagic,
+  autoPivotTable,
 } from './TableDataProviderUtils';
 import {
   DataCell,
@@ -442,15 +442,13 @@ describe('TableDataProviderUtils', () => {
   });
 });
 
-describe('pivotTableByMagic', () => {
-  // Helper defined in outer scope below tests if needed, but placing here triggers lint rule; moved outside describe.
-
+describe('autoPivotTable', () => {
   it('places single multi-value variable in stub', () => {
     const variables = [createVariable('A', VartypeEnum.REGULAR_VARIABLE, 5)];
     const stub: string[] = [];
     const heading: string[] = [];
 
-    pivotTableByMagic(variables, stub, heading);
+    autoPivotTable(variables, stub, heading);
 
     expect(stub).toEqual(['A']);
     expect(heading).toEqual([]);
@@ -464,7 +462,7 @@ describe('pivotTableByMagic', () => {
     const stub: string[] = [];
     const heading: string[] = [];
 
-    pivotTableByMagic(variables, stub, heading);
+    autoPivotTable(variables, stub, heading);
 
     // A has more values -> last in stub, B (2nd most) in heading
     expect(stub).toEqual(['A']);
@@ -480,7 +478,7 @@ describe('pivotTableByMagic', () => {
     const stub: string[] = [];
     const heading: string[] = [];
 
-    pivotTableByMagic(variables, stub, heading);
+    autoPivotTable(variables, stub, heading);
 
     // Implementation adds 2nd then 3rd
     expect(heading).toEqual(['B', 'C']);
@@ -498,7 +496,7 @@ describe('pivotTableByMagic', () => {
     const stub: string[] = [];
     const heading: string[] = [];
 
-    pivotTableByMagic(variables, stub, heading);
+    autoPivotTable(variables, stub, heading);
 
     // Remaining multi-value variables (C,D,E) sorted by type precedence: D (Contents), C (Time), E (Other)
     // They are added first, then A (most values) last
@@ -522,7 +520,7 @@ describe('pivotTableByMagic', () => {
     const stub: string[] = [];
     const heading: string[] = [];
 
-    pivotTableByMagic(variables, stub, heading);
+    autoPivotTable(variables, stub, heading);
 
     expect(heading).toEqual(['Y']);
     expect(stub).toEqual(['S2', 'S1', 'Z', 'X']);
@@ -537,7 +535,7 @@ describe('pivotTableByMagic', () => {
     const stub: string[] = [];
     const heading: string[] = [];
 
-    pivotTableByMagic(variables, stub, heading);
+    autoPivotTable(variables, stub, heading);
 
     // headingColumns = values in B (3) initially; <=24 so single-value vars added to heading start
     // singleValueVars sorted: Contents (S1) then Time (S2); loop adds S2 then S1 via unshift -> final order S1,S2,B
@@ -554,7 +552,7 @@ describe('pivotTableByMagic', () => {
     const stub: string[] = [];
     const heading: string[] = [];
 
-    pivotTableByMagic(variables, stub, heading);
+    autoPivotTable(variables, stub, heading);
 
     // No headingColumns beyond 1 so <=24 => single-value vars added to heading in precedence order
     expect(heading).toEqual(['C', 'B', 'A']);
@@ -565,7 +563,7 @@ describe('pivotTableByMagic', () => {
     const stub: string[] = [];
     const heading: string[] = [];
 
-    pivotTableByMagic([], stub, heading);
+    autoPivotTable([], stub, heading);
 
     expect(stub).toEqual([]);
     expect(heading).toEqual([]);
