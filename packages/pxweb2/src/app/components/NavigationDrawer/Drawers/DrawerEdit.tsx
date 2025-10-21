@@ -55,11 +55,11 @@ function PivotButton({ stub, heading, pivotType }: PivotButtonProps) {
 
   const labelKey =
     pivotType === PivotType.Magic
-      ? 'presentation_page.side_menu.edit.customize.magic_pivot.title'
+      ? 'presentation_page.side_menu.edit.customize.auto_pivot.title'
       : 'presentation_page.side_menu.edit.customize.pivot.title';
   const ariaLabelKey =
     pivotType === PivotType.Magic
-      ? 'presentation_page.side_menu.edit.customize.magic_pivot.aria_label'
+      ? 'presentation_page.side_menu.edit.customize.auto_pivot.aria_label'
       : 'presentation_page.side_menu.edit.customize.pivot.aria_label';
   const iconName =
     pivotType === PivotType.Magic ? 'Sparkles' : 'ArrowCirclepathClockwise';

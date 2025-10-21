@@ -170,6 +170,11 @@
         "title": "Rediger",
         "customize": {
           "title": "Tilpass",
+          "auto_pivot": {
+            "title": "Auto roter tabellen",
+            "aria_label": "Auto roter tabellen",
+            "screen_reader_announcement": "Tabell rotert etter {{first_variables}} og {{last_variable}}"
+          },
           "pivot": {
             "title": "Roter tabellen",
             "aria_label": "Roter tabellen mot høyre",

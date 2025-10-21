@@ -170,6 +170,11 @@
         "title": "Ändra",
         "customize": {
           "title": "Anpassa",
+          "auto_pivot": {
+            "title": "Auto rotera tabellen",
+            "aria_label": "Auto rotera tabellen",
+            "screen_reader_announcement": "Tabell roterat efter {{first_variables}} och {{last_variable}}"
+          },
           "pivot": {
             "title": "Rotera tabellen",
             "aria_label": "Rotera tabellen medsols",
