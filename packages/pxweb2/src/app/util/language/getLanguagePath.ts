@@ -5,7 +5,7 @@ import { Config as LanguageConfig } from '../../util/config/configType';
  * @param pathname Current pathname from location
  * @param targetLanguage The language to switch to
  * @param supportedLanguages List of supported languages
- * @param fallbackLanguage The fallback language code
+ * @param defaultLanguage The fallback language code
  * @param showDefaultLanguageInPath Whether to show the default language in the path
  * @returns The correct path for the target language
  */
@@ -13,7 +13,7 @@ export const getLanguagePath = (
   pathname: string,
   targetLanguage: string,
   supportedLanguages: LanguageConfig['language']['supportedLanguages'],
-  fallbackLanguage: string,
+  defaultLanguage: string,
   showDefaultLanguageInPath: boolean,
 ): string => {
   const [firstURLElement, ...pathParts] = pathname.slice(1).split('/');
@@ -25,7 +25,7 @@ export const getLanguagePath = (
     ? pathParts.join('/')
     : [firstURLElement, ...pathParts].join('/');
 
-  if (!showDefaultLanguageInPath && targetLanguage === fallbackLanguage) {
+  if (!showDefaultLanguageInPath && targetLanguage === defaultLanguage) {
     return `/${actualPath}`;
   }
 

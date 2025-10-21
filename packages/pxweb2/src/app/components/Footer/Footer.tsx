@@ -115,7 +115,7 @@ export const Footer: React.FC<FooterProps> = ({
                             location.pathname,
                             lang.shorthand,
                             config.language.supportedLanguages,
-                            config.language.fallbackLanguage,
+                            config.language.defaultLanguage,
                             config.language.showDefaultLanguageInPath,
                           );
                         const isCurrent = i18n.language?.startsWith(
