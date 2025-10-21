@@ -80,7 +80,7 @@ describe('DrawerEdit', () => {
     // Check labels via translation keys
     expect(
       screen.getByText(
-        'presentation_page.side_menu.edit.customize.magic_pivot.title',
+        'presentation_page.side_menu.edit.customize.auto_pivot.title',
       ),
     ).toBeInTheDocument();
     expect(
@@ -109,7 +109,7 @@ describe('DrawerEdit', () => {
     render(<DrawerEdit />);
     const user = userEvent.setup();
     const magicButton = screen.getByText(
-      'presentation_page.side_menu.edit.customize.magic_pivot.title',
+      'presentation_page.side_menu.edit.customize.auto_pivot.title',
     );
     await user.click(magicButton);
     expect(mockPivotByMagic).toHaveBeenCalledTimes(1);
