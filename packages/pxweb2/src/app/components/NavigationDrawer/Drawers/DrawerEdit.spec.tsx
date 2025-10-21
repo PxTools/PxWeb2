@@ -14,7 +14,7 @@ interface MockActionItemProps {
 }
 
 const mockPivotCW = vi.fn();
-const mockPivotByMagic = vi.fn();
+const mockPivotAuto = vi.fn();
 
 // Mock dependencies
 vi.mock('react-i18next', () => ({
@@ -26,7 +26,7 @@ vi.mock('react-i18next', () => ({
 vi.mock('../../../context/useTableData', () => ({
   default: () => ({
     pivotCW: mockPivotCW,
-    pivotByMagic: mockPivotByMagic,
+    pivotAuto: mockPivotAuto,
     data: {
       // Minimal shape; DrawerEdit only passes these through
       stub: [{ name: 'variable1' }],
@@ -102,17 +102,17 @@ describe('DrawerEdit', () => {
     );
     await user.click(clockwiseButton);
     expect(mockPivotCW).toHaveBeenCalledTimes(1);
-    expect(mockPivotByMagic).not.toHaveBeenCalled();
+    expect(mockPivotAuto).not.toHaveBeenCalled();
   });
 
-  it('calls pivotByMagic on its button click', async () => {
+  it('calls pivotAuto on its button click', async () => {
     render(<DrawerEdit />);
     const user = userEvent.setup();
     const magicButton = screen.getByText(
       'presentation_page.side_menu.edit.customize.auto_pivot.title',
     );
     await user.click(magicButton);
-    expect(mockPivotByMagic).toHaveBeenCalledTimes(1);
+    expect(mockPivotAuto).toHaveBeenCalledTimes(1);
     expect(mockPivotCW).not.toHaveBeenCalled();
   });
 });

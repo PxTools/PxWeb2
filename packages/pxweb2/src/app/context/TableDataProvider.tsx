@@ -36,7 +36,7 @@ export interface TableDataContextType {
   pivotToMobile: () => void;
   pivotToDesktop: () => void;
   pivotCW: () => void;
-  pivotByMagic: () => void;
+  pivotAuto: () => void;
   buildTableTitle: (
     stub: Variable[],
     heading: Variable[],
@@ -66,7 +66,7 @@ const TableDataContext = createContext<TableDataContextType | undefined>({
   pivotCW: () => {
     // No-op: useTableData hook prevents this from being called
   },
-  pivotByMagic: () => {
+  pivotAuto: () => {
     // No-op: useTableData hook prevents this from being called
   },
   buildTableTitle: () => {
@@ -1211,9 +1211,9 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   ]);
 
   /**
-   * Pivots the table by magic.
+   * Auto pivots the table.
    */
-  const pivotByMagic = React.useCallback((): void => {
+  const pivotAuto = React.useCallback((): void => {
     if (data?.heading === undefined) {
       return;
     }
@@ -1227,7 +1227,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     let heading: string[] = [];
 
     if (isMobileMode) {
-      // Magic pivot not allowed for mobile mode
+      // Auto pivot not allowed for mobile mode
       return;
     } else {
       stub = structuredClone(stubDesktop);
@@ -1282,7 +1282,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       pivotToMobile,
       pivotToDesktop,
       pivotCW,
-      pivotByMagic,
+      pivotAuto,
       buildTableTitle,
       isInitialized,
     }),
@@ -1293,7 +1293,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       pivotToMobile,
       pivotToDesktop,
       pivotCW,
-      pivotByMagic,
+      pivotAuto,
       buildTableTitle,
       isInitialized,
     ],

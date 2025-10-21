@@ -15,7 +15,7 @@ interface PivotButtonProps {
 function PivotButton({ stub, heading, pivotType }: PivotButtonProps) {
   const { t } = useTranslation();
   const tableData = useTableData();
-  const { pivotCW, pivotByMagic, buildTableTitle } = tableData;
+  const { pivotCW, pivotAuto, buildTableTitle } = tableData;
 
   // Live region text for screen readers after activation
   const [statusMessage, setStatusMessage] = useState('');
@@ -24,7 +24,7 @@ function PivotButton({ stub, heading, pivotType }: PivotButtonProps) {
   const handleClick = () => {
     setAnnounceOnNextChange(true);
     if (pivotType === PivotType.Auto) {
-      pivotByMagic();
+      pivotAuto();
     } else {
       pivotCW();
     }
