@@ -74,7 +74,7 @@ describe('DrawerEdit', () => {
     render(<DrawerEdit />);
 
     expect(screen.getByTestId('content-box')).toBeInTheDocument();
-    // Two action buttons: magic pivot & clockwise pivot (unified PivotButton)
+    // Two action buttons: auto pivot & clockwise pivot (unified PivotButton)
     const buttons = screen.getAllByTestId('action-item');
     expect(buttons).toHaveLength(2);
     // Check labels via translation keys
@@ -108,10 +108,10 @@ describe('DrawerEdit', () => {
   it('calls pivotAuto on its button click', async () => {
     render(<DrawerEdit />);
     const user = userEvent.setup();
-    const magicButton = screen.getByText(
+    const autoButton = screen.getByText(
       'presentation_page.side_menu.edit.customize.auto_pivot.title',
     );
-    await user.click(magicButton);
+    await user.click(autoButton);
     expect(mockPivotAuto).toHaveBeenCalledTimes(1);
     expect(mockPivotCW).not.toHaveBeenCalled();
   });
