@@ -106,6 +106,7 @@ export const Search = forwardRef<SearchHandle, SearchProps>(
           ></Icon>
           <input
             type="text"
+            {...(labelText ? { 'aria-label': labelText } : {})}
             ref={combinedRef}
             className={cl(
               classes[`bodyshort-medium`],
