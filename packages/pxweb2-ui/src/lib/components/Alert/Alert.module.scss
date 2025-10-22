@@ -247,21 +247,21 @@
   gap: var(--spacing-2);
 }
 
-.alert-icon-info svg {
-  color: var(--px-color-icon-info);
+.alert-icon-info {
+  --px-icon-color: var(--px-color-icon-info);
   flex-shrink: 0;
 }
 
-.alert-icon-success svg {
-  color: var(--px-color-icon-success);
+.alert-icon-success {
+  --px-icon-color: var(--px-color-icon-success);
 }
 
-.alert-icon-warning svg {
-  color: var(--px-color-icon-warning);
+.alert-icon-warning {
+  --px-icon-color: var(--px-color-icon-warning);
 }
 
-.alert-icon-error svg {
-  color: var(--px-color-icon-error);
+.alert-icon-error {
+  --px-icon-color: var(--px-color-icon-error);
 }
 
 .sr-only {

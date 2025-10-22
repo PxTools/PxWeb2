@@ -58,10 +58,10 @@
 
 .checked {
   background-color: var(--px-color-surface-action);
+}
 
-  svg {
-    color: var(--px-color-surface-default);
-  }
+.iconChecked {
+  --px-icon-color: var(--px-color-surface-default);
 }
 
 .subtle {

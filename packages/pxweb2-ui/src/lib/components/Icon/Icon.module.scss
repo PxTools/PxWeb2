@@ -3,5 +3,6 @@
   height: 1.5rem;
   flex-shrink: 0;
 
-  color: var(--px-color-icon-default);
+  /* Allow consumers to override icon color via CSS variable without specificity fights */
+  color: var(--px-icon-color, var(--px-color-icon-default));
 }

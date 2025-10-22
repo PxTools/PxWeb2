@@ -42,7 +42,6 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             classes.button,
             classes[size],
             classes[`label-${size}`],
-            classes[`icon-${variant}`],
             classes[variant],
             {
               [classes.iconOnlyMedium]: !children && icon && size === 'medium',
@@ -77,14 +76,22 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             {icon && iconPosition === 'start' && (
               <Icon
                 iconName={icon}
-                className={cl(classes.icon, classes[`icon-${size}`])}
+                className={cl(
+                  classes.icon,
+                  classes[`icon-${size}`],
+                  classes[`icon-color`],
+                )}
               />
             )}
             {children}
             {icon && iconPosition === 'end' && (
               <Icon
                 iconName={icon}
-                className={cl(classes.icon, classes[`icon-${size}`])}
+                className={cl(
+                  classes.icon,
+                  classes[`icon-${size}`],
+                  classes[`icon-color`],
+                )}
               />
             )}
           </>

@@ -146,7 +146,7 @@ function DefaultSelect({
         >
           {selectedOption ? selectedOption.label : placeholder}
         </BodyShort>
-        <Icon iconName="ChevronDown" className=""></Icon>
+        <Icon iconName="ChevronDown" className={cl(classes.iconColor)}></Icon>
       </div>
     </div>
   );
@@ -310,7 +310,7 @@ function VariableBoxSelect({
             {selectedItem ? selectedItem.label : placeholder}
           </BodyShort>
         </div>
-        <Icon iconName={chevronIcon} className=""></Icon>
+        <Icon iconName={chevronIcon} className={cl(classes.iconColor)}></Icon>
       </div>
       <div className={cl(classes.divider)}></div>
       {isModalOpen && (

@@ -73,7 +73,8 @@ describe('ChipToggle', () => {
         Checkmark Chip
       </Chips.Toggle>,
     );
-    const svgElement = document.querySelector('.check-icon');
+    const button = screen.getByRole('button');
+    const svgElement = button.querySelector('svg');
     expect(svgElement).toBeInTheDocument();
   });
 
@@ -83,7 +84,8 @@ describe('ChipToggle', () => {
         No Checkmark Chip
       </Chips.Toggle>,
     );
-    const svgElement = document.querySelector('.check-icon');
+    const button = screen.getByRole('button');
+    const svgElement = button.querySelector('svg');
     expect(svgElement).not.toBeInTheDocument();
   });
 
@@ -131,7 +133,8 @@ describe('ChipRemovable', () => {
 
   it('should render XMark icon', () => {
     render(<Chips.Removable>XMark Chip</Chips.Removable>);
-    const svgElement = document.querySelector('.xmark-icon');
+    const button = screen.getByRole('button');
+    const svgElement = button.querySelector('svg');
     expect(svgElement).toBeInTheDocument();
   });
 

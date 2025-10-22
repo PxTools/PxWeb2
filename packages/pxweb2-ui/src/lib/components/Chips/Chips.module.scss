@@ -31,6 +31,7 @@
 .removable {
   height: 44px;
   padding-right: 12px;
+  --px-chips-removable-icon-color: var(--px-color-icon-action);
 
   &:hover {
     background: var(--px-color-surface-action-subtle-hover);
@@ -39,10 +40,14 @@
   &.filled {
     background: var(--px-color-surface-action);
     color: var(--px-color-text-on-inverted);
+    --px-chips-removable-icon-color: var(--px-color-icon-on-inverted);
     border: none;
 
     &:hover {
       background: var(--px-color-surface-action-hover);
+    }
+    &:focus {
+      --px-chips-removable-icon-color: var(--px-color-icon-on-action);
     }
   }
 }
@@ -90,9 +95,11 @@
   }
 }
 
-.xmark-icon,
+.xmark-icon {
+  --px-icon-color: var(--px-chips-removable-icon-color);
+}
 .check-icon {
-  color: var(--px-color-icon-action);
+  --px-icon-color: var(--px-color-icon-action);
 }
 
 .truncate {
