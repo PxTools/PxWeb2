@@ -332,7 +332,9 @@ const StartPage = () => {
           }
           lastUpdated={
             table.updated
-              ? new Date(table.updated).toLocaleDateString(language)
+              ? t('date.simple_date', {
+                  value: new Date(table.updated),
+                })
               : undefined
           }
           period={`${table.firstPeriod?.slice(0, 4)}–${table.lastPeriod?.slice(
@@ -347,7 +349,9 @@ const StartPage = () => {
           ariaLabel={t('start_page.table.card_description', {
             title: table.label,
             updatedDate: table.updated
-              ? new Date(table.updated).toLocaleDateString(language)
+              ? t('date.simple_date', {
+                  value: new Date(table.updated),
+                })
               : undefined,
             yearFrom: table.firstPeriod?.slice(0, 4),
             yearTo: table.lastPeriod?.slice(0, 4),
