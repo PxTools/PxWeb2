@@ -174,7 +174,7 @@
             "title": "Förbättra tabellen",
             "aria_label": "Förbättra tabellen",
             "description": "Uppdatera tabellen automatiskt för bättre översikt",
-            "screen_reader_announcement": "Tabell förbättrad och organiserad efter {{table_heading}}"
+            "screen_reader_announcement": "Tabell förbättrad och organiserad efter {{first_variables}} och {{last_variable}}"
           },
           "pivot": {
             "title": "Rotera tabellen",

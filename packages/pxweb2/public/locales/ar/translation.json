@@ -118,7 +118,7 @@
             "title": "تحسين تخطيط الجدول",
             "aria_label": "تحسين تخطيط الجدول",
             "description": "ينظم الصفوف والأعمدة تلقائيًا لتخطيط جدول أوضح",
-            "screen_reader_announcement": "تم تحسين تخطيط الجدول وتنظيمه بعد {{table_heading}}"
+            "screen_reader_announcement": "تم تحسين تخطيط الجدول وتنظيمه بعد {{first_variables}} و {{last_variable}}"
           },
           "pivot": {
             "title": "تدوير الجدول",
