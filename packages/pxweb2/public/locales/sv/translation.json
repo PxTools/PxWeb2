@@ -46,7 +46,7 @@
       "error": "Fel:"
     },
     "status_messages": {
-      "welcome": "Välkommen till nya PxWeb! Vi fortsätter att jobba med att göra det enklare för dig att hitta och använda siffrorna du behöver 📊✨",
+      "welcome": "Välkommen till nya PxWeb 2 - v2.0.0! Vi fortsätter att jobba med att göra det enklare för dig att hitta och använda siffrorna du behöver 📊✨",
       "drawer_view": "Visning av diagram är under arbete.",
       "drawer_save_file": "Fler filformat är under arbete.",
       "drawer_save_api": "Funktionen för API-uttag är under arbete.",
@@ -320,7 +320,7 @@
     },
     "footer": {
       "description": "På den här sidan kan du följa när Statistikmyndigheten SCB och Statistisk centralbyrå (SSB) tar fram ett nytt gränssnitt för PxWeb.",
-      "descriptionLink": "Läs mer om projektet på Github",
+      "descriptionLink": "Läs mer om projektet",
       "contact": "Kontakt",
       "projectLeader": "Projektledare",
       "scrumMaster": "Scrummaster",
