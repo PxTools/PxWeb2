@@ -21,6 +21,8 @@ const detailsSectionNo = {
         items: [
           { text: 'Endringer i tabeller', url: '#' },
           { text: 'Kom i gang', url: '#' },
+          { text: 'Target type blank', url: '#', openInNewTab: true },
+          { text: 'Target type self', url: '#', openInNewTab: false },
         ],
       },
     },
@@ -49,6 +51,21 @@ describe('StartPageDetails (renders from props)', () => {
     expect(
       screen.getByRole('link', { name: 'Endringer i tabeller' }),
     ).toBeInTheDocument();
+
+    const linkWithoutOpenInNewTab = screen.getByRole('link', {
+      name: 'Kom i gang',
+    });
+    expect(linkWithoutOpenInNewTab).toHaveAttribute('target', '_self');
+
+    const linkWithTargetBlank = screen.getByRole('link', {
+      name: 'Target type blank',
+    });
+    expect(linkWithTargetBlank).toHaveAttribute('target', '_blank');
+
+    const linkWithTargetSelf = screen.getByRole('link', {
+      name: 'Target type self',
+    });
+    expect(linkWithTargetSelf).toHaveAttribute('target', '_self');
   });
 
   it('renders nothing when enabled=false', () => {
