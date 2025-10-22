@@ -5,6 +5,7 @@ import { ActionItem, ContentBox, Variable, Alert } from '@pxweb2/pxweb2-ui';
 import useTableData from '../../../context/useTableData';
 import classes from './DrawerEdit.module.scss';
 import { PivotType } from './PivotType';
+import useApp from '../../../context/useApp';
 
 interface PivotButtonProps {
   readonly stub: Variable[];
@@ -94,12 +95,13 @@ function PivotButton({ stub, heading, pivotType }: PivotButtonProps) {
 }
 
 export function DrawerEdit() {
+  const { isMobile } = useApp();
   const data = useTableData().data;
   const { t } = useTranslation();
 
   return (
     <ContentBox title={t('presentation_page.side_menu.edit.customize.title')}>
-      {data && (
+      {data && !isMobile && (
         <PivotButton
           stub={data.stub}
           heading={data.heading}
