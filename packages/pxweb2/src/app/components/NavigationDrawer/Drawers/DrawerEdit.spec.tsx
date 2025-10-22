@@ -65,6 +65,10 @@ vi.mock('@pxweb2/pxweb2-ui', () => ({
   ),
 }));
 
+vi.mock('../../../context/useApp', () => ({
+  default: () => ({ isMobile: false }),
+}));
+
 afterEach(() => {
   vi.clearAllMocks();
 });
