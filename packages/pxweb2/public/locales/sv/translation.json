@@ -171,13 +171,15 @@
         "customize": {
           "title": "Anpassa",
           "auto_pivot": {
-            "title": "Auto rotera tabellen",
-            "aria_label": "Auto rotera tabellen",
-            "screen_reader_announcement": "Tabell roterat efter {{first_variables}} och {{last_variable}}"
+            "title": "Förbättra tabellen",
+            "aria_label": "Förbättra tabellen",
+            "description": "Uppdatera tabellen automatiskt för bättre översikt",
+            "screen_reader_announcement": "Tabell förbättrad och organiserad efter {{table_heading}}"
           },
           "pivot": {
             "title": "Rotera tabellen",
             "aria_label": "Rotera tabellen medsols",
+            "description": "",
             "screen_reader_announcement": "Tabell roterat efter {{first_variables}} och {{last_variable}}"
           },
           "rearrange": {

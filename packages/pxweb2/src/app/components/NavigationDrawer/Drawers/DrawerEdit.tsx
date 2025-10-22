@@ -61,6 +61,10 @@ function PivotButton({ stub, heading, pivotType }: PivotButtonProps) {
     pivotType === PivotType.Auto
       ? 'presentation_page.side_menu.edit.customize.auto_pivot.aria_label'
       : 'presentation_page.side_menu.edit.customize.pivot.aria_label';
+  const descriptionKey =
+    pivotType === PivotType.Auto
+      ? 'presentation_page.side_menu.edit.customize.auto_pivot.description'
+      : 'presentation_page.side_menu.edit.customize.pivot.description';
   const iconName =
     pivotType === PivotType.Auto ? 'Sparkles' : 'ArrowCirclepathClockwise';
 
@@ -69,6 +73,7 @@ function PivotButton({ stub, heading, pivotType }: PivotButtonProps) {
       <ActionItem
         label={t(labelKey)}
         ariaLabel={t(ariaLabelKey)}
+        description={t(descriptionKey)}
         onClick={handleClick}
         iconName={iconName}
       />
