@@ -35,7 +35,6 @@ function PivotButton({ stub, heading, pivotType }: PivotButtonProps) {
       ? 'presentation_page.side_menu.edit.customize.auto_pivot.screen_reader_announcement'
       : 'presentation_page.side_menu.edit.customize.pivot.screen_reader_announcement';
 
-
   // When stub/heading update after pivot, compute and announce the new screen reader message
   useEffect(() => {
     if (!announceOnNextChange) {
@@ -43,14 +42,10 @@ function PivotButton({ stub, heading, pivotType }: PivotButtonProps) {
     }
 
     const { firstTitlePart, lastTitlePart } = buildTableTitle(stub, heading);
-      const message = t(
-        screenReaderAnnouncementKey,
-        '',
-        {
-          first_variables: firstTitlePart,
-          last_variable: lastTitlePart,
-        }
-      );
+    const message = t(screenReaderAnnouncementKey, '', {
+      first_variables: firstTitlePart,
+      last_variable: lastTitlePart,
+    });
 
     // Clear first to ensure assistive tech re-announces even if message repeats
     setStatusMessage('');
@@ -58,7 +53,14 @@ function PivotButton({ stub, heading, pivotType }: PivotButtonProps) {
     setAnnounceOnNextChange(false);
 
     return () => clearTimeout(timer);
-  }, [stub, heading, announceOnNextChange, buildTableTitle, t, screenReaderAnnouncementKey]);
+  }, [
+    stub,
+    heading,
+    announceOnNextChange,
+    buildTableTitle,
+    t,
+    screenReaderAnnouncementKey,
+  ]);
 
   const labelKey =
     pivotType === PivotType.Auto
