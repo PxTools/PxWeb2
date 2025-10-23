@@ -7,6 +7,7 @@
   background: var(--px-color-surface-default);
   align-self: stretch;
   position: relative;
+  overflow-x: auto;
 
   container-type: inline-size;
   container-name: contentCont;
@@ -14,7 +15,14 @@
   @container contentCont (width > 1px) {
     .tableContainer {
       width: 100cqw;
-      overflow-x: auto;
+      //height: 100cqh;
+      //position: sticky ;
+      //Here
+      //overflow-x: auto;
+      // overflow-x: visible;
+      //overflow-y: auto;
+
+      position: relative;
     }
   }
 
@@ -39,7 +47,7 @@
     border-radius: var(--px-border-radius-none);
   }
 
-  // large and xlarge
+  //  large and xlarge
   @media ((min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-xlarge-max-width)) or ((min-width: fixed.$breakpoints-xxlarge-min-width)) {
     padding: fixed.$spacing-10 fixed.$spacing-10;
     gap: fixed.$spacing-10;
@@ -51,48 +59,49 @@
   transition: 'opacity 0.3s ease-in-out';
 }
 
-.gradientContainer {
-  position: relative;
-  overflow-x: auto;
-  max-width: 100%; /* Set this to limit table width to screen */
-}
-.gradientContainer::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  height: 100%;
-  width: 30px; /* Adjust this value to your liking */
-  pointer-events: none; /* So the gradient won't block scroll */
-  background: linear-gradient(
-    to right,
-    rgba(255, 255, 255, 0) 20%,
-    rgba(255, 255, 255, 1) 100%
-  );
-  background-repeat: no-repeat;
-  z-index: 1;
-}
-.gradientContainer.hidegradientRight::after {
-  opacity: 0; /* Hide gradient when fully scrolled */
-}
+// .gradientContainer {
+//   position: relative;
+//   //overflow-x: auto;
+//   //overflow-y: visible;
+//   max-width: 100%; /* Set this to limit table width to screen */
+// }
+// .gradientContainer::after {
+//   content: '';
+//   position: absolute;
+//   top: 0;
+//   right: 0;
+//   height: 100%;
+//   width: 30px; /* Adjust this value to your liking */
+//   pointer-events: none; /* So the gradient won't block scroll */
+//   background: linear-gradient(
+//     to right,
+//     rgba(255, 255, 255, 0) 20%,
+//     rgba(255, 255, 255, 1) 100%
+//   );
+//   background-repeat: no-repeat;
+//   z-index: 1;
+// }
+// .gradientContainer.hidegradientRight::after {
+//   opacity: 0; /* Hide gradient when fully scrolled */
+// }
 
-.gradientContainer::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 30px; /* Adjust this value to your liking */
-  pointer-events: none; /* So the gradient won't block scroll */
-  background: linear-gradient(
-    to left,
-    rgba(255, 255, 255, 0) 20%,
-    rgba(255, 255, 255, 1) 100%
-  );
-  background-repeat: no-repeat;
-  z-index: 1;
-}
+// .gradientContainer::before {
+//   content: '';
+//   position: absolute;
+//   top: 0;
+//   left: 0;
+//   height: 100%;
+//   width: 30px; /* Adjust this value to your liking */
+//   pointer-events: none; /* So the gradient won't block scroll */
+//   background: linear-gradient(
+//     to left,
+//     rgba(255, 255, 255, 0) 20%,
+//     rgba(255, 255, 255, 1) 100%
+//   );
+//   background-repeat: no-repeat;
+//   z-index: 1;
+// }
 
-.gradientContainer.hidegradientLeft::before {
-  opacity: 0; /* Hide when not scrolled  */
-}
+// .gradientContainer.hidegradientLeft::before {
+//   opacity: 0; /* Hide when not scrolled  */
+// }
