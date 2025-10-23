@@ -1,7 +1,6 @@
 @use '../../text-styles.scss';
 @use '../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixed;
 
-
 // try with opacity
 
 .table {
@@ -16,13 +15,12 @@
   border-bottom: 1px solid var(--px-color-border-default);
   border-radius: var(--px-border-radius-medium);
   // overflow: hidden; /* Ensures content stays within rounded borders */
-   //overflow-x: visible;
+  //overflow-x: visible;
   background: var(--px-color-surface-default);
   color: var(--px-color-text-default);
   border-left: none;
   //border-top-left-radius: var(--px-border-radius-medium);
   //border-top-right-radius: var(--px-border-radius-medium);
-
 
   @media screen and (max-width: fixed.$breakpoints-xsmall-max-width) {
     line-height: fixed.$spacing-6;
@@ -70,11 +68,8 @@
     // top: 0;
     // z-index: 1;
 
-
     font-family: PxWeb-font, sans-serif;
     font-weight: 700;
-
-
   }
   thead tr:first-child th {
     border-top-right-radius: var(--px-border-radius-medium);
@@ -82,7 +77,7 @@
   thead tr:last-child th {
     text-align: end;
     border-bottom-width: 2px;
-  @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       border-bottom: 2px solid var(--px-color-border-default);
     }
     @media screen and (max-width: fixed.$breakpoints-xsmall-max-width) {
@@ -106,31 +101,25 @@
     }
   }
 
- tbody{
-//  overflow-x: auto;
+  tbody {
+    //  overflow-x: auto;
 
-//    position: sticky;
-//     top: 0;
-z-index: 1;
- }
+    //    position: sticky;
+    //     top: 0;
+    z-index: 1;
+  }
 
   tbody tr:first-child td {
-
     border-top: none;
   }
 
-
   tbody tr:last-child td {
     border-bottom: none;
-
   }
 
- tbody tr:last-child td:last-child {
-
+  tbody tr:last-child td:last-child {
     border-bottom-right-radius: var(--px-border-radius-medium);
   }
-
-
 
   tbody tr:last-child th {
     border-bottom: none;
@@ -278,7 +267,6 @@ z-index: 1;
   thead tr:first-of-type th,
   thead tr:first-of-type td {
     border-top: none;
-
   }
   tbody tr:first-of-type th,
   tbody tr:first-of-type td {
@@ -298,8 +286,8 @@ z-index: 1;
   .mobileEmptyRowCell > td {
     background: var(--px-color-surface-moderate);
     //border-left: none;
-     border-bottom: none;
-     border-top: none;
+    border-bottom: none;
+    border-top: none;
     //border-right: none;
   }
 
@@ -367,7 +355,6 @@ z-index: 1;
     border-top-left-radius: var(--px-border-radius-medium);
     border-bottom: 2px solid var(--px-color-border-default);
     background: var(--px-color-surface-moderate);
-
   }
 }
 
@@ -386,6 +373,5 @@ z-index: 1;
       }
     }
   }
- @include column-hover(40);
-
+  @include column-hover(40);
 }
