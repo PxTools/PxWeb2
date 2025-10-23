@@ -173,7 +173,7 @@
           "auto_pivot": {
             "title": "Improve table layout",
             "aria_label": "Improve table layout",
-            "description": "Automatically organises rows and columns for a clearer table layout",
+            "description": "Organises rows and columns automatically for a clearer table layout",
             "screen_reader_announcement": "Table layout improved and organised after {{first_variables}} and {{last_variable}}"
           },
           "pivot": {
