@@ -68,6 +68,15 @@ export const WithLabel: Story = {
   },
 };
 
+export const WithHiddenLabel: Story = {
+  args: {
+    variant: 'default',
+    searchPlaceHolder: 'Search...',
+    showLabel: false,
+    labelText: 'Hidden search label',
+  },
+};
+
 export const InVariableBox: Story = {
   args: {
     variant: 'inVariableBox',
