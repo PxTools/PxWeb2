@@ -101,20 +101,22 @@ export function DrawerEdit() {
 
   return (
     <ContentBox title={t('presentation_page.side_menu.edit.customize.title')}>
-      {data && !isMobile && (
-        <PivotButton
-          stub={data.stub}
-          heading={data.heading}
-          pivotType={PivotType.Auto}
-        />
-      )}
-      {data && (
-        <PivotButton
-          stub={data.stub}
-          heading={data.heading}
-          pivotType={PivotType.Clockwise}
-        />
-      )}
+      <div className={classes.operationList}>
+        {data && !isMobile && (
+          <PivotButton
+            stub={data.stub}
+            heading={data.heading}
+            pivotType={PivotType.Auto}
+          />
+        )}
+        {data && (
+          <PivotButton
+            stub={data.stub}
+            heading={data.heading}
+            pivotType={PivotType.Clockwise}
+          />
+        )}
+      </div>
       <Alert variant="info" className={classes.alert}>
         {t('common.status_messages.drawer_edit')}
       </Alert>
