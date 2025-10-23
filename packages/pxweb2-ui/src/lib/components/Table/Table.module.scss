@@ -1,6 +1,9 @@
 @use '../../text-styles.scss';
 @use '../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixed;
 
+
+// try with opacity
+
 .table {
   border-collapse: separate; /* Ensure border-radius works */
   border-spacing: 0; /* Optional: Makes sure there is no spacing between the cells */
@@ -9,11 +12,17 @@
   // min-width: 100%;
   width: max-content; /* Allow horizontal growth so wrapper can scroll */
 
+  border-top: 1px solid var(--px-color-border-default);
+  border-bottom: 1px solid var(--px-color-border-default);
   border-radius: var(--px-border-radius-medium);
-  border: 1px solid var(--px-color-border-default);
+  // overflow: hidden; /* Ensures content stays within rounded borders */
+   //overflow-x: visible;
   background: var(--px-color-surface-default);
   color: var(--px-color-text-default);
   border-left: none;
+  //border-top-left-radius: var(--px-border-radius-medium);
+  //border-top-right-radius: var(--px-border-radius-medium);
+
 
   @media screen and (max-width: fixed.$breakpoints-xsmall-max-width) {
     line-height: fixed.$spacing-6;
@@ -39,7 +48,7 @@
     border-top: 1px solid var(--px-color-border-default);
     border-right: 1px solid var(--px-color-border-default);
     &:last-child {
-      border-right: none;
+      //border-right: none;
     }
 
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
@@ -53,15 +62,19 @@
   thead {
     position: sticky;
     top: 0;
-    z-index: 1;
+
+    //z-index: 1;
   }
   thead th {
     // position: sticky;
     // top: 0;
     // z-index: 1;
 
+
     font-family: PxWeb-font, sans-serif;
     font-weight: 700;
+
+
   }
   thead tr:first-child th {
     border-top-right-radius: var(--px-border-radius-medium);
@@ -69,21 +82,56 @@
   thead tr:last-child th {
     text-align: end;
     border-bottom-width: 2px;
+  @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+      border-bottom: 2px solid var(--px-color-border-default);
+    }
+    @media screen and (max-width: fixed.$breakpoints-xsmall-max-width) {
+      padding-top: 16px;
+      padding-right: 16px;
+    }
   }
+
   th.stub {
     text-align: left;
     min-width: 200px;
   }
 
   tr:first-child th:first-child {
+    border-top: none;
     //border-left: none;
     @media screen and (max-width: fixed.$breakpoints-xsmall-max-width) {
       border-top: none;
+      border-top-left-radius: var(--px-border-radius-medium);
+      border-top-right-radius: var(--px-border-radius-medium);
     }
   }
+
+ tbody{
+//  overflow-x: auto;
+
+//    position: sticky;
+//     top: 0;
+z-index: 1;
+ }
+
+  tbody tr:first-child td {
+
+    border-top: none;
+  }
+
+
   tbody tr:last-child td {
     border-bottom: none;
+
   }
+
+ tbody tr:last-child td:last-child {
+
+    border-bottom-right-radius: var(--px-border-radius-medium);
+  }
+
+
+
   tbody tr:last-child th {
     border-bottom: none;
     border-bottom-left-radius: var(--px-border-radius-medium);
@@ -91,7 +139,7 @@
 
   th.stub-0 {
     border-right: 1px solid var(--px-color-border-default);
-    position: sticky;
+    //position: sticky;
     left: 0;
     //z-index: 20;
     border-left: 1px solid var(--px-color-border-default);
@@ -102,7 +150,7 @@
   }
   th.stub-1 {
     border-right: 1px solid var(--px-color-border-default);
-    position: sticky;
+    //position: sticky;
     left: 0;
     border-left: 1px solid var(--px-color-border-default);
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
@@ -111,7 +159,7 @@
   }
   th.stub-2 {
     border-right: 1px solid var(--px-color-border-default);
-    position: sticky;
+    //position: sticky;
     left: 0;
     border-left: 1px solid var(--px-color-border-default);
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
@@ -120,7 +168,7 @@
   }
   th.stub-3 {
     border-right: 1px solid var(--px-color-border-default);
-    position: sticky;
+    //position: sticky;
     left: 0;
     border-left: 1px solid var(--px-color-border-default);
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
@@ -129,7 +177,7 @@
   }
   th.stub-4 {
     border-right: 1px solid var(--px-color-border-default);
-    position: sticky;
+    //position: sticky;
     left: 0;
     border-left: 1px solid var(--px-color-border-default);
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
@@ -138,7 +186,7 @@
   }
   th.stub-5 {
     border-right: 1px solid var(--px-color-border-default);
-    position: sticky;
+    //position: sticky;
     left: 0;
     border-left: 1px solid var(--px-color-border-default);
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
@@ -147,7 +195,7 @@
   }
   th.stub-6 {
     border-right: 1px solid var(--px-color-border-default);
-    position: sticky;
+    //position: sticky;
     left: 0;
     border-left: 1px solid var(--px-color-border-default);
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
@@ -156,7 +204,7 @@
   }
   th.stub-7 {
     border-right: 1px solid var(--px-color-border-default);
-    position: sticky;
+    //position: sticky;
     left: 0;
     border-left: 1px solid var(--px-color-border-default);
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
@@ -165,7 +213,7 @@
   }
   th.stub-8 {
     border-right: 1px solid var(--px-color-border-default);
-    position: sticky;
+    //position: sticky;
     left: 0;
     border-left: 1px solid var(--px-color-border-default);
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
@@ -174,7 +222,7 @@
   }
   th.stub-9 {
     border-right: 1px solid var(--px-color-border-default);
-    position: sticky;
+    //position: sticky;
     left: 0;
     border-left: 1px solid var(--px-color-border-default);
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
@@ -183,7 +231,7 @@
   }
   th.stub-10 {
     border-right: 1px solid var(--px-color-border-default);
-    position: sticky;
+    //position: sticky;
     left: 0;
     border-left: 1px solid var(--px-color-border-default);
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
@@ -197,7 +245,7 @@
     border-top: 1px solid var(--px-color-border-default);
     border-right: 1px solid var(--px-color-border-default);
     &:last-child {
-      border-right: none;
+      //border-right: none;
     }
 
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
@@ -208,7 +256,7 @@
     }
   }
   tr.firstdim th {
-    border-top: 1px solid var(--px-color-border-default);
+    //border-top: 1px solid var(--px-color-border-default);
     font-family: PxWeb-font, sans-serif;
     font-weight: 700;
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
@@ -230,11 +278,12 @@
   thead tr:first-of-type th,
   thead tr:first-of-type td {
     border-top: none;
+
   }
   tbody tr:first-of-type th,
   tbody tr:first-of-type td {
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
-      border-top: 2px solid var(--px-color-border-default);
+      //border-top: 2px solid var(--px-color-border-default);
     }
   }
   tr.firstColNoStub > td:first-child {
@@ -248,16 +297,17 @@
   .mobileEmptyRowCell > th,
   .mobileEmptyRowCell > td {
     background: var(--px-color-surface-moderate);
-    border-left: none;
-    border-bottom: none;
-    border-top: none;
+    //border-left: none;
+     border-bottom: none;
+     border-top: none;
+    //border-right: none;
   }
 
   .mobileRowHeadLastStub > th {
     padding-bottom: 4px;
     padding-top: 4px;
     background: none;
-    border-left: none;
+    //border-left: none;
     border-right: none;
     border-bottom: none;
     border-top: none;
@@ -268,8 +318,8 @@
     padding-bottom: 4px;
     padding-top: 4px;
     background: none;
-    border-left: none;
-    border-right: none;
+    //border-left: none;
+    //border-right: none;
     border-bottom: none;
     border-top: none;
     vertical-align: top;
@@ -282,8 +332,8 @@
     padding-bottom: 4px;
     padding-right: 16px;
     background: none;
-    border-left: none;
-    border-right: none;
+    //border-left: none;
+    //border-right: none;
     border-bottom: none;
     border-top: none;
     font-family: PxWeb-font, sans-serif;
@@ -298,6 +348,7 @@
   .mobileRowHeadlastValueOfLastStub > td {
     padding-bottom: 28px;
   }
+
   .mobileRowHeadfirstValueOfLastStub2Dim > th,
   .mobileRowHeadfirstValueOfLastStub2Dim > td {
     padding-top: 28px;
@@ -307,15 +358,16 @@
   .mobileRowHeadFirstValueOfSecondLastStub > td {
     padding-top: 28px;
   }
-
   .emptyTableData {
-    position: sticky;
+    //position: sticky;
     left: 0;
     z-index: 1;
     border-right: 1px solid var(--px-color-border-default);
     border-left: 1px solid var(--px-color-border-default);
     border-top-left-radius: var(--px-border-radius-medium);
+    border-bottom: 2px solid var(--px-color-border-default);
     background: var(--px-color-surface-moderate);
+
   }
 }
 
@@ -334,5 +386,6 @@
       }
     }
   }
-  @include column-hover(40);
+ @include column-hover(40);
+
 }

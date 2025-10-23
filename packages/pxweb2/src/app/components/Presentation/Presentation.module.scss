@@ -7,7 +7,7 @@
   background: var(--px-color-surface-default);
   align-self: stretch;
   position: relative;
-  //overflow-y: auto;
+  overflow-x: auto;
 
   container-type: inline-size;
   container-name: contentCont;
@@ -16,10 +16,11 @@
     .tableContainer {
       width: 100cqw;
       //height: 100cqh;
-
+      //position: sticky ;
       //Here
       //overflow-x: auto;
-      //overflow-y: auto;
+      // overflow-x: visible;
+       //overflow-y: auto;
 
       position: relative;
     }
@@ -46,7 +47,7 @@
     border-radius: var(--px-border-radius-none);
   }
 
-  // large and xlarge
+  //  large and xlarge
   @media ((min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-xlarge-max-width)) or ((min-width: fixed.$breakpoints-xxlarge-min-width)) {
     padding: fixed.$spacing-10 fixed.$spacing-10;
     gap: fixed.$spacing-10;
@@ -60,7 +61,8 @@
 
 // .gradientContainer {
 //   position: relative;
-//   overflow-x: auto;
+//   //overflow-x: auto;
+//   //overflow-y: visible;
 //   max-width: 100%; /* Set this to limit table width to screen */
 // }
 // .gradientContainer::after {
