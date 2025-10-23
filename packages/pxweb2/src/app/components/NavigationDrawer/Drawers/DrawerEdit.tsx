@@ -15,7 +15,13 @@ interface PivotButtonProps {
   readonly setLoadingPivotType: (type: PivotType | null) => void;
 }
 
-function PivotButton({ stub, heading, pivotType, loadingPivotType, setLoadingPivotType }: PivotButtonProps) {
+function PivotButton({
+  stub,
+  heading,
+  pivotType,
+  loadingPivotType,
+  setLoadingPivotType,
+}: PivotButtonProps) {
   const { t } = useTranslation();
   const tableData = useTableData();
   const { pivotCW, pivotAuto, buildTableTitle, isLoading } = tableData;
@@ -109,7 +115,9 @@ export function DrawerEdit() {
   const { isMobile } = useApp();
   const data = useTableData().data;
   const { t } = useTranslation();
-  const [loadingPivotType, setLoadingPivotType] = useState<PivotType | null>(null);
+  const [loadingPivotType, setLoadingPivotType] = useState<PivotType | null>(
+    null,
+  );
 
   return (
     <ContentBox title={t('presentation_page.side_menu.edit.customize.title')}>
