@@ -1253,11 +1253,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   /**
    * Pivots the table according to the stub- and heading order.
    */
-  function pivotTable(
-    pxTable: PxTable,
-    stub: string[],
-    heading: string[],
-  ) {
+  function pivotTable(pxTable: PxTable, stub: string[], heading: string[]) {
     // - pivot pxTable according to stub- and heading order
     pxTable.stub = [];
     stub.forEach((id) => {
