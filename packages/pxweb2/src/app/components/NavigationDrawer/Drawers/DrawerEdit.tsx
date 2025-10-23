@@ -16,18 +16,18 @@ interface PivotButtonProps {
 function PivotButton({ stub, heading, pivotType }: PivotButtonProps) {
   const { t } = useTranslation();
   const tableData = useTableData();
-  const { pivotCW, pivotAuto, buildTableTitle } = tableData;
+  const { pivotCW, pivotAuto, buildTableTitle, isLoading } = tableData;
 
   // Live region text for screen readers after activation
   const [statusMessage, setStatusMessage] = useState('');
   const [announceOnNextChange, setAnnounceOnNextChange] = useState(false);
 
-  const handleClick = () => {
+  const handleClick = async () => {
     setAnnounceOnNextChange(true);
     if (pivotType === PivotType.Auto) {
-      pivotAuto();
+      await Promise.resolve(pivotAuto());
     } else {
-      pivotCW();
+      await Promise.resolve(pivotCW());
     }
   };
 
@@ -86,6 +86,7 @@ function PivotButton({ stub, heading, pivotType }: PivotButtonProps) {
         description={t(descriptionKey)}
         onClick={handleClick}
         iconName={iconName}
+        isLoading={isLoading}
       />
       <output aria-live="polite" aria-atomic="true" className={classes.srOnly}>
         {statusMessage}

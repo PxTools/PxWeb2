@@ -31,6 +31,8 @@ import { problemMessage } from '../util/problemMessage';
 export interface TableDataContextType {
   isInitialized: boolean;
   data: PxTable | undefined;
+  isLoading: boolean;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   fetchTableData: (tableId: string, i18n: i18n, isMobile: boolean) => void;
   fetchSavedQuery: (queryId: string, i18n: i18n, isMobile: boolean) => void;
   pivotToMobile: () => void;
@@ -51,34 +53,20 @@ interface TableDataProviderProps {
 const TableDataContext = createContext<TableDataContextType | undefined>({
   isInitialized: false,
   data: undefined,
-  fetchTableData: () => {
-    // No-op: useTableData hook prevents this from being called
-  },
-  fetchSavedQuery: () => {
-    // No-op: useTableData hook prevents this from being called
-  },
-  pivotToMobile: () => {
-    // No-op: useTableData hook prevents this from being called
-  },
-  pivotToDesktop: () => {
-    // No-op: useTableData hook prevents this from being called
-  },
-  pivotCW: () => {
-    // No-op: useTableData hook prevents this from being called
-  },
-  pivotAuto: () => {
-    // No-op: useTableData hook prevents this from being called
-  },
-  buildTableTitle: () => {
-    return {
-      firstTitlePart: '',
-      lastTitlePart: '',
-    };
-  },
+  isLoading: false,
+  setIsLoading: () => {},
+  fetchTableData: () => {},
+  fetchSavedQuery: () => {},
+  pivotToMobile: () => {},
+  pivotToDesktop: () => {},
+  pivotCW: () => {},
+  pivotAuto: () => {},
+  buildTableTitle: () => ({ firstTitlePart: '', lastTitlePart: '' }),
 });
 
 const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   const [isInitialized] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   // Data (metadata) that reflects variables and values selected by user right now. Used as data source for the table
   const [data, setData] = useState<PxTable | undefined>(undefined);
   // Accumulated data (and metadata) from all API calls made by user. Stored in the data cube.
@@ -1161,46 +1149,42 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     if (data?.heading === undefined) {
       return;
     }
-
-    const tmpTable = structuredClone(data);
-    if (tmpTable === undefined) {
-      return;
-    }
-
-    let stub: string[];
-    let heading: string[];
-
-    if (isMobileMode) {
-      stub = structuredClone(stubMobile);
-      heading = structuredClone(headingMobile);
-    } else {
-      stub = structuredClone(stubDesktop);
-      heading = structuredClone(headingDesktop);
-    }
-
-    if (stub.length === 0 && heading.length === 0) {
-      return;
-    }
-
-    if (stub.length > 0 && heading.length > 0) {
-      stub.push(heading.pop() as string);
-      heading.unshift(stub.shift() as string);
-    } else if (stub.length === 0) {
-      heading.unshift(heading.pop() as string);
-    } else if (heading.length === 0) {
-      stub.unshift(stub.pop() as string);
-    }
-
-    pivotTable(tmpTable, stub, heading);
-    setData(tmpTable);
-
-    if (isMobileMode) {
-      setStubMobile(stub);
-      setHeadingMobile(heading);
-    } else {
-      setStubDesktop(stub);
-      setHeadingDesktop(heading);
-    }
+    setIsLoading(true);
+    setTimeout(() => {
+      const tmpTable = structuredClone(data);
+      if (tmpTable === undefined) {
+        return;
+      }
+      let stub: string[];
+      let heading: string[];
+      if (isMobileMode) {
+        stub = structuredClone(stubMobile);
+        heading = structuredClone(headingMobile);
+      } else {
+        stub = structuredClone(stubDesktop);
+        heading = structuredClone(headingDesktop);
+      }
+      if (stub.length === 0 && heading.length === 0) {
+        return;
+      }
+      if (stub.length > 0 && heading.length > 0) {
+        stub.push(heading.pop() as string);
+        heading.unshift(stub.shift() as string);
+      } else if (stub.length === 0) {
+        heading.unshift(heading.pop() as string);
+      } else if (heading.length === 0) {
+        stub.unshift(stub.pop() as string);
+      }
+      pivotTable(tmpTable, stub, heading);
+      setData(tmpTable);
+      if (isMobileMode) {
+        setStubMobile(stub);
+        setHeadingMobile(heading);
+      } else {
+        setStubDesktop(stub);
+        setHeadingDesktop(heading);
+      }
+    }, 0);
   }, [
     data,
     isMobileMode,
@@ -1217,42 +1201,49 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     if (data?.heading === undefined) {
       return;
     }
-
-    const tmpTable = structuredClone(data);
-    if (tmpTable === undefined) {
-      return;
-    }
-
-    let stub: string[] = [];
-    let heading: string[] = [];
-
-    if (isMobileMode) {
-      // Auto pivot not allowed for mobile mode
-      return;
-    } else {
-      stub = structuredClone(stubDesktop);
-      heading = structuredClone(headingDesktop);
-    }
-
-    if (stub.length === 0 && heading.length === 0) {
-      return;
-    }
-
-    autoPivotTable(tmpTable.metadata.variables, stub, heading);
-
-    pivotTable(tmpTable, stub, heading);
-    setData(tmpTable);
-
-    if (!isMobileMode) {
-      setStubDesktop(stub);
-      setHeadingDesktop(heading);
-    }
+    setIsLoading(true);
+    setTimeout(async () => {
+      const tmpTable = structuredClone(data);
+      if (tmpTable === undefined) {
+        return;
+      }
+      let stub: string[] = [];
+      let heading: string[] = [];
+      if (isMobileMode) {
+        // Auto pivot not allowed for mobile mode
+        return;
+      } else {
+        stub = structuredClone(stubDesktop);
+        heading = structuredClone(headingDesktop);
+      }
+      if (stub.length === 0 && heading.length === 0) {
+        return;
+      }
+      autoPivotTable(tmpTable.metadata.variables, stub, heading);
+      await pivotTable(tmpTable, stub, heading);
+      setData(tmpTable);
+      if (!isMobileMode) {
+        setStubDesktop(stub);
+        setHeadingDesktop(heading);
+      }
+    }, 0);
   }, [data, isMobileMode, stubDesktop, headingDesktop]);
+
+  // Set isLoading to false after data changes (table rendered)
+  useEffect(() => {
+    if (isLoading) {
+      setIsLoading(false);
+    }
+  }, [data, isLoading]);
 
   /**
    * Pivots the table according to the stub- and heading order.
    */
-  function pivotTable(pxTable: PxTable, stub: string[], heading: string[]) {
+  async function pivotTable(
+    pxTable: PxTable,
+    stub: string[],
+    heading: string[],
+  ) {
     // - pivot pxTable according to stub- and heading order
     pxTable.stub = [];
     stub.forEach((id) => {
@@ -1277,7 +1268,9 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   const memoData = React.useMemo(
     () => ({
       data,
-      /* loading, error  */ fetchTableData,
+      isLoading,
+      setIsLoading,
+      fetchTableData,
       fetchSavedQuery,
       pivotToMobile,
       pivotToDesktop,
@@ -1288,6 +1281,8 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     }),
     [
       data,
+      isLoading,
+      setIsLoading,
       fetchTableData,
       fetchSavedQuery,
       pivotToMobile,
