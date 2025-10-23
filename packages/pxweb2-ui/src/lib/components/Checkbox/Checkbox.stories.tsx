@@ -185,7 +185,7 @@ export const WithSubtle: StoryFn<typeof Checkbox> = () => {
       />
       <Checkbox
         id="var3"
-        text="Subtle checkbox 1 (disabled)"
+        text="Subtle checkbox 1"
         onChange={(val) => {
           setSelectedVar3(val);
         }}
@@ -194,7 +194,7 @@ export const WithSubtle: StoryFn<typeof Checkbox> = () => {
       />
       <Checkbox
         id="var4"
-        text="Subtle checkbox 2 (disabled)"
+        text="Subtle checkbox 2"
         onChange={(val) => {
           setSelectedVar3(val);
         }}
