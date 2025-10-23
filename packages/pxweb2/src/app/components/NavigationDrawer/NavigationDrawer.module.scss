@@ -1,6 +1,8 @@
 @use '$ui/style-dictionary/dist/scss/fixed-variables.scss' as fixed;
 
 .navigationDrawer {
+  --px-navigation-drawer-full-height: 100dvh;
+
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -26,7 +28,7 @@
 
   // xsmall, small and medium
   @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
-    height: 100vh;
+    height: var(--px-navigation-drawer-full-height);
     // Handle rtl languages
     border-start-start-radius: var(--px-border-radius-none);
     border-start-end-radius: var(--px-border-radius-xlarge);
@@ -40,7 +42,7 @@
   }
 
   @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
-    height: calc(100vh - 80px);
+    height: calc(var(--px-navigation-drawer-full-height) - 80px);
     // Handle rtl languages
     border-start-start-radius: var(--px-border-radius-none);
     border-start-end-radius: var(--px-border-radius-xlarge);
@@ -59,7 +61,7 @@
     padding: fixed.$spacing-8;
 
     // Calculate height of main container, minus the header height
-    height: calc(100vh - fixed.$spacing-22);
+    height: calc(var(--px-navigation-drawer-full-height) - fixed.$spacing-22);
 
     // Handle rtl languages
     border-start-start-radius: var(--px-border-radius-xlarge);
