@@ -59,9 +59,9 @@
 
   thead {
     position: sticky;
-    top: 0;
-
-    //z-index: 1;
+    //top: 0;
+ top: -40px;
+    z-index: 0;
   }
   thead th {
     // position: sticky;
@@ -106,7 +106,7 @@
 
     //    position: sticky;
     //     top: 0;
-    z-index: 1;
+    //z-index: 1;
   }
 
   tbody tr:first-child td {
@@ -128,9 +128,9 @@
 
   th.stub-0 {
     border-right: 1px solid var(--px-color-border-default);
-    //position: sticky;
-    left: 0;
-    //z-index: 20;
+    position: sticky;
+    left: -40px;
+    z-index: 10;
     border-left: 1px solid var(--px-color-border-default);
 
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
@@ -139,8 +139,9 @@
   }
   th.stub-1 {
     border-right: 1px solid var(--px-color-border-default);
-    //position: sticky;
-    left: 0;
+    position: sticky;
+    left: -40px;
+    z-index: 10;
     border-left: 1px solid var(--px-color-border-default);
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       padding-left: 28px;
@@ -148,8 +149,9 @@
   }
   th.stub-2 {
     border-right: 1px solid var(--px-color-border-default);
-    //position: sticky;
-    left: 0;
+    position: sticky;
+    left: -40px;
+    z-index: 10;
     border-left: 1px solid var(--px-color-border-default);
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       padding-left: 44px;
@@ -157,8 +159,9 @@
   }
   th.stub-3 {
     border-right: 1px solid var(--px-color-border-default);
-    //position: sticky;
-    left: 0;
+    position: sticky;
+    left: -40px;
+    z-index: 10;
     border-left: 1px solid var(--px-color-border-default);
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       padding-left: 60px;
@@ -166,8 +169,9 @@
   }
   th.stub-4 {
     border-right: 1px solid var(--px-color-border-default);
-    //position: sticky;
-    left: 0;
+    position: sticky;
+    left: -40px;
+    z-index: 10;
     border-left: 1px solid var(--px-color-border-default);
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       padding-left: 76px;
@@ -175,8 +179,9 @@
   }
   th.stub-5 {
     border-right: 1px solid var(--px-color-border-default);
-    //position: sticky;
-    left: 0;
+    position: sticky;
+    left: -40px;
+    z-index: 10;
     border-left: 1px solid var(--px-color-border-default);
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       padding-left: 92px;
@@ -184,8 +189,9 @@
   }
   th.stub-6 {
     border-right: 1px solid var(--px-color-border-default);
-    //position: sticky;
-    left: 0;
+    position: sticky;
+    left: -40px;
+    z-index: 10;
     border-left: 1px solid var(--px-color-border-default);
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       padding-left: 108px;
@@ -193,8 +199,9 @@
   }
   th.stub-7 {
     border-right: 1px solid var(--px-color-border-default);
-    //position: sticky;
-    left: 0;
+    position: sticky;
+    left: -40px;
+    z-index: 10;
     border-left: 1px solid var(--px-color-border-default);
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       padding-left: 124px;
@@ -202,8 +209,9 @@
   }
   th.stub-8 {
     border-right: 1px solid var(--px-color-border-default);
-    //position: sticky;
-    left: 0;
+    position: sticky;
+    left: -40px;
+    z-index: 10;
     border-left: 1px solid var(--px-color-border-default);
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       padding-left: 140px;
@@ -211,8 +219,9 @@
   }
   th.stub-9 {
     border-right: 1px solid var(--px-color-border-default);
-    //position: sticky;
-    left: 0;
+    position: sticky;
+    left: -40px;
+    z-index: 10;
     border-left: 1px solid var(--px-color-border-default);
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       padding-left: 156px;
@@ -220,8 +229,9 @@
   }
   th.stub-10 {
     border-right: 1px solid var(--px-color-border-default);
-    //position: sticky;
-    left: 0;
+    position: sticky;
+    left: -40px;
+    z-index: 10;
     border-left: 1px solid var(--px-color-border-default);
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       padding-left: 172px;
@@ -347,9 +357,9 @@
     padding-top: 28px;
   }
   .emptyTableData {
-    //position: sticky;
-    left: 0;
-    z-index: 1;
+    position: sticky;
+    left: -40px;
+    z-index: 100;
     border-right: 1px solid var(--px-color-border-default);
     border-left: 1px solid var(--px-color-border-default);
     border-top-left-radius: var(--px-border-radius-medium);
