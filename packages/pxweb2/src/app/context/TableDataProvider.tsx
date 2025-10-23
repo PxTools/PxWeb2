@@ -54,13 +54,27 @@ const TableDataContext = createContext<TableDataContextType | undefined>({
   isInitialized: false,
   data: undefined,
   isLoading: false,
-  setIsLoading: () => {},
-  fetchTableData: () => {},
-  fetchSavedQuery: () => {},
-  pivotToMobile: () => {},
-  pivotToDesktop: () => {},
-  pivotCW: () => {},
-  pivotAuto: () => {},
+  setIsLoading: () => {
+    // No-op: useTableData hook prevents this from being called
+  },
+  fetchTableData: () => {
+    // No-op: useTableData hook prevents this from being called
+  },
+  fetchSavedQuery: () => {
+    // No-op: useTableData hook prevents this from being called
+  },
+  pivotToMobile: () => {
+    // No-op: useTableData hook prevents this from being called
+  },
+  pivotToDesktop: () => {
+    // No-op: useTableData hook prevents this from being called
+  },
+  pivotCW: () => {
+    // No-op: useTableData hook prevents this from being called
+  },
+  pivotAuto: () => {
+    // No-op: useTableData hook prevents this from being called
+  },
   buildTableTitle: () => ({ firstTitlePart: '', lastTitlePart: '' }),
 });
 
@@ -1220,7 +1234,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         return;
       }
       autoPivotTable(tmpTable.metadata.variables, stub, heading);
-      await pivotTable(tmpTable, stub, heading);
+      pivotTable(tmpTable, stub, heading);
       setData(tmpTable);
       if (!isMobileMode) {
         setStubDesktop(stub);
@@ -1239,7 +1253,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   /**
    * Pivots the table according to the stub- and heading order.
    */
-  async function pivotTable(
+  function pivotTable(
     pxTable: PxTable,
     stub: string[],
     heading: string[],
