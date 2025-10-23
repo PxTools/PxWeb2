@@ -13,10 +13,9 @@ const config = {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
 
   addons: [
-    getAbsolutePath('@storybook/addon-onboarding'),
     getAbsolutePath('@chromatic-com/storybook'),
-    getAbsolutePath("@storybook/addon-a11y"),
-    getAbsolutePath("@storybook/addon-docs")
+    getAbsolutePath('@storybook/addon-a11y'),
+    getAbsolutePath('@storybook/addon-docs'),
   ],
 
   framework: {
@@ -30,9 +29,9 @@ const config = {
   },
 
   staticDirs: [
-    {from: './../src/lib/fonts/', to: 'fonts'}, // Load static font files into storybook/chromatic
-    {from: './../../pxweb2/public/locales/', to: 'locales'}, // Load static i18n locale files from the web app into storybook/chromatic
-  ]
+    { from: './../src/lib/fonts/', to: 'fonts' }, // Load static font files into storybook/chromatic
+    { from: './../../pxweb2/public/locales/', to: 'locales' }, // Load static i18n locale files from the web app into storybook/chromatic
+  ],
 };
 
 export default config;

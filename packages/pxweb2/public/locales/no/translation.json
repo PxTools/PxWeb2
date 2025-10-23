@@ -51,7 +51,7 @@
       "drawer_save_file": "Flere filformat er under arbeid.",
       "drawer_save_api": "Funksjon for API-spørring er under arbeid.",
       "drawer_edit": "Flere verktøy for å redigere tabellen er under arbeid.",
-      "drawer_help": "Det vil ikke komme noe innhold her. Knappen for hjelp må kobles direkte til egne hjelpesider.",
+      "drawer_help": "Området for hjelp er under arbeid. Her vi det bli mulig å legge til lenker som kobles direkte til egne hjelpesider.",
       "tab_definitions": "Innholdet til denne fanen er under arbeid."
     },
     "breadcrumbs": {
@@ -65,6 +65,9 @@
     "ingress": "Leter du etter den perfekte tabellen? Bruk søkefeltet og filtrene for å finne tallene du trenger. Enten du er på jakt etter trender, fakta eller bare et merkelig tilfredsstillende datasett, så har PxWeb 2.0 det du trenger.",
     "more_about_label": "Mer om Statistikkbanken",
     "more_about_text": "More about Text NO",
+    "no_result_header": "Vi fant ingen tabeller",
+    "no_result_description": "Prøv med et annet søkeord eller juster valgt filtrering.",
+    "no_result_search_help": "Søkehjelp",
     "result_hidden_header": "Resultat",
     "search_label": "Søk i Statistikkbanken",
     "search_placeholder": "Søk etter tabellnavn eller variabler",

@@ -35,7 +35,7 @@ export const LanguageSwitcher = () => {
         location.pathname,
         event.target.value,
         config.language.supportedLanguages,
-        config.language.fallbackLanguage,
+        config.language.defaultLanguage,
         config.language.showDefaultLanguageInPath,
       ),
     );

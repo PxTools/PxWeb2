@@ -28,6 +28,11 @@ export type DetailsSection = {
   detailContent?: DetailsContent[];
 };
 
+export type NoResultSearchHelp = {
+  enabled?: boolean;
+  helpText?: string[];
+};
+
 export type BreadCrumb = {
   enabled: boolean;
   items?: BreadcrumbItem[];
@@ -36,6 +41,7 @@ export type BreadCrumb = {
 export type Startpage = {
   breadCrumb?: BreadCrumb;
   detailsSection?: DetailsSection;
+  noResultSearchHelp?: NoResultSearchHelp;
 };
 
 export type FooterLink = {

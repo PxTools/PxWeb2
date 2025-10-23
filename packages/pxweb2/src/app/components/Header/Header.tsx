@@ -36,7 +36,7 @@ export const Header = ({ stroke = false }: HeaderProps) => {
             '/',
             i18n.language,
             config.language.supportedLanguages,
-            config.language.fallbackLanguage,
+            config.language.defaultLanguage,
             config.language.showDefaultLanguageInPath,
           )}
         >

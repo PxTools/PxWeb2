@@ -3,6 +3,7 @@ import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 
 import { ErrorLayout } from './ErrorLayout';
+import classes from './ErrorLayout.module.scss';
 
 // Mock the internal components
 vi.mock('../Header/Header', () => ({
@@ -53,13 +54,37 @@ describe('ErrorLayout', () => {
     expect(getByTestId('footer')).toBeInTheDocument();
   });
 
-  it('should not render the header when withoutHeader is true', () => {
-    const { queryByTestId } = render(
-      <ErrorLayout withoutHeader={true}>
-        <div>Error Content</div>
-      </ErrorLayout>,
-    );
+  describe('alignment', () => {
+    it('should center align content by default', () => {
+      const { container } = render(
+        <ErrorLayout>
+          <div>Error Content</div>
+        </ErrorLayout>,
+      );
 
-    expect(queryByTestId('header')).not.toBeInTheDocument();
+      const containerElement = container.querySelector(
+        `.${classes.contentWrapper}`,
+      );
+      const mainContent = container.querySelector('main');
+
+      expect(containerElement).toHaveClass(classes.layoutAlignCenter);
+      expect(mainContent).toHaveClass(classes.alignCenter);
+    });
+
+    it('should start align content when align prop is set to start', () => {
+      const { container } = render(
+        <ErrorLayout align="start">
+          <div>Error Content</div>
+        </ErrorLayout>,
+      );
+
+      const containerElement = container.querySelector(
+        `.${classes.contentWrapper}`,
+      );
+      const mainContent = container.querySelector('main');
+
+      expect(containerElement).toHaveClass(classes.layoutAlignStart);
+      expect(mainContent).toHaveClass(classes.alignStart);
+    });
   });
 });
