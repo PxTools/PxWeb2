@@ -1192,7 +1192,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       }
       pivotTable(tmpTable, stub, heading);
       // Reassemble table data
-      tmpTable.data = data.data; 
+      tmpTable.data = data.data;
       setData(tmpTable);
       if (isMobileMode) {
         setStubMobile(stub);
@@ -1240,7 +1240,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       autoPivotTable(tmpTable.metadata.variables, stub, heading);
       pivotTable(tmpTable, stub, heading);
       // Reassemble table data
-      tmpTable.data = data.data; 
+      tmpTable.data = data.data;
       setData(tmpTable);
       if (!isMobileMode) {
         setStubDesktop(stub);
