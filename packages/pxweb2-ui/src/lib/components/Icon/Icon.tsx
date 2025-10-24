@@ -1,7 +1,7 @@
 import styles from './Icon.module.scss';
 import * as Icons from './Icons';
 
-export interface IconProps {
+export interface IconProps extends React.SVGAttributes<SVGSVGElement> {
   iconName: keyof typeof Icons;
   className?: string;
   ariaLabel?: string;
@@ -10,11 +10,13 @@ export interface IconProps {
 
 const Icon: React.FC<IconProps> = ({
   iconName,
-  className,
+  className = '',
   ariaLabel,
   ariaHidden,
+  ...rest
 }) => {
   const icon = Icons[iconName];
+  const cssClasses = className.length > 0 ? ' ' + className : '';
 
   if (!icon) {
     return null;
@@ -24,10 +26,11 @@ const Icon: React.FC<IconProps> = ({
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
-      className={className + ' ' + styles['icon']}
+      className={styles['icon'] + cssClasses}
       fill="currentColor"
       {...(ariaLabel ? { 'aria-label': ariaLabel } : {})}
       {...(ariaHidden ? { 'aria-hidden': ariaHidden } : {})}
+      {...rest}
     >
       {icon}
     </svg>

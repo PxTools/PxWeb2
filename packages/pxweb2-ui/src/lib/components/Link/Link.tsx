@@ -43,11 +43,11 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(function Link(
       {...rest}
     >
       {icon && iconPosition === 'left' && (
-        <Icon iconName={icon} className=""></Icon>
+        <Icon iconName={icon} className={cl(classes.icon)}></Icon>
       )}
       {children}
       {icon && iconPosition === 'right' && (
-        <Icon iconName={icon} className=""></Icon>
+        <Icon iconName={icon} className={cl(classes.icon)}></Icon>
       )}
     </a>
   );

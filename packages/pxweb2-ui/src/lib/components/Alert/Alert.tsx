@@ -170,7 +170,7 @@ export function Alert({
       role={role}
       ref={ref}
     >
-      <div className={classes[`alert-section-left-${size}`]}>
+      <div className={cl(classes[`alert-section-left-${size}`])}>
         {!hasheading && (
           <span className={classes['sr-only']}>
             {t(`common.alert.${variant}`)}
