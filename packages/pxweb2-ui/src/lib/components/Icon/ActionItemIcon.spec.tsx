@@ -10,7 +10,9 @@ describe('ActionItemIcon', () => {
   });
   it('should return null if icon does not exist', () => {
     const { container } = render(
-      <ActionItemIcon largeIconName="NonExistentIcon" />,
+      // Cast to any to bypass TypeScript checks, for testing purposes
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      <ActionItemIcon largeIconName={'NonExistentIcon' as any} />,
     );
     expect(container.firstChild).toBeNull();
   });

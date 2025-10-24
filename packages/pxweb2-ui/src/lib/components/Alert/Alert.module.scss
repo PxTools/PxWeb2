@@ -248,20 +248,20 @@
 }
 
 .alert-icon-info {
-  color: var(--px-color-icon-info);
+  --px-icon-color: var(--px-color-icon-info);
   flex-shrink: 0;
 }
 
 .alert-icon-success {
-  color: var(--px-color-icon-success);
+  --px-icon-color: var(--px-color-icon-success);
 }
 
 .alert-icon-warning {
-  color: var(--px-color-icon-warning);
+  --px-icon-color: var(--px-color-icon-warning);
 }
 
 .alert-icon-error {
-  color: var(--px-color-icon-error);
+  --px-icon-color: var(--px-color-icon-error);
 }
 
 .sr-only {
