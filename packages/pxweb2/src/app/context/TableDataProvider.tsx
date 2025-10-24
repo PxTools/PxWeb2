@@ -1165,7 +1165,8 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     }
     setIsLoading(true);
     setTimeout(() => {
-      const tmpTable = structuredClone(data);
+      // Only copy metadata and structure, not data
+      const tmpTable = copyPxTableWithoutData(data);
       if (tmpTable === undefined) {
         return;
       }
@@ -1190,6 +1191,8 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         stub.unshift(stub.pop() as string);
       }
       pivotTable(tmpTable, stub, heading);
+      // Reassemble table data
+      tmpTable.data = data.data; 
       setData(tmpTable);
       if (isMobileMode) {
         setStubMobile(stub);
@@ -1217,7 +1220,8 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     }
     setIsLoading(true);
     setTimeout(async () => {
-      const tmpTable = structuredClone(data);
+      // Only copy metadata and structure, not data
+      const tmpTable = copyPxTableWithoutData(data);
       if (tmpTable === undefined) {
         return;
       }
@@ -1235,6 +1239,8 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       }
       autoPivotTable(tmpTable.metadata.variables, stub, heading);
       pivotTable(tmpTable, stub, heading);
+      // Reassemble table data
+      tmpTable.data = data.data; 
       setData(tmpTable);
       if (!isMobileMode) {
         setStubDesktop(stub);
@@ -1273,6 +1279,20 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         pxTable.heading.push(variable);
       }
     });
+  }
+
+  function copyPxTableWithoutData(pxTable: PxTable): PxTable {
+    const tmpTable: PxTable = {
+      metadata: structuredClone(pxTable.metadata),
+      data: {
+        cube: {},
+        variableOrder: [],
+        isLoaded: false,
+      },
+      heading: [],
+      stub: [],
+    };
+    return tmpTable;
   }
 
   const memoData = React.useMemo(
