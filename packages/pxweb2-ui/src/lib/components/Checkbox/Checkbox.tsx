@@ -63,7 +63,12 @@ export const Checkbox: React.FC<CheckboxProps> = ({
           [styles.checkmarkWithoutMargin]: noMargin,
         })}
       >
-        {value && <Icon iconName="CheckMark"></Icon>}
+        {value && (
+          <Icon
+            iconName="CheckMark"
+            className={cl({ [styles.iconChecked]: value })}
+          ></Icon>
+        )}
       </span>
       <div className={styles.label} id={id + '-label'}>
         <span className={cl({ [styles.strong]: strong })}>
@@ -140,7 +145,12 @@ export const MixedCheckbox: React.FC<MixedCheckboxProps> = ({
           [styles.checkmarkWithoutMargin]: noMargin,
         })}
       >
-        {value === 'true' && <Icon iconName="CheckMark"></Icon>}
+        {value === 'true' && (
+          <Icon
+            iconName="CheckMark"
+            className={cl({ [styles.iconChecked]: value === 'true' })}
+          ></Icon>
+        )}
       </span>
       <div
         className={cl(styles.label, { [styles.strong]: strong })}

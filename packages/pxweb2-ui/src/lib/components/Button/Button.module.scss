@@ -52,6 +52,8 @@
   color: var(--px-color-text-on-action);
   border-radius: var(--px-border-radius-full);
   background: var(--px-color-surface-action);
+  --px-button-icon-color: var(--px-color-icon-on-action);
+
   &:active {
     background: var(--px-color-surface-action-active);
   }
@@ -65,15 +67,18 @@
   background-color: inherit;
 
   color: var(--px-color-text-action);
+  --px-button-icon-color: var(--px-color-icon-action);
   border-radius: var(--px-border-radius-full);
   box-shadow: 0 0 0 1.5px var(--px-color-border-action) inset;
 
   &:hover {
     color: var(--px-color-text-on-action-subtle);
+    --px-button-icon-color: var(--px-color-icon-on-action-subtle);
     background: var(--px-color-surface-action-subtle-hover);
   }
   &:active {
     color: var(--px-color-text-on-action);
+    --px-button-icon-color: var(--px-color-icon-on-action);
     background: var(--px-color-surface-action-active);
   }
   &:disabled {
@@ -86,21 +91,28 @@
   // Override browser defaults styles
   background-color: inherit;
   color: var(--px-color-text-action);
+  --px-button-icon-color: var(--px-color-icon-action);
   border: none;
   border-radius: var(--px-border-radius-full);
 
   &:hover {
     color: var(--px-color-text-on-action-subtle);
+    --px-button-icon-color: var(--px-color-icon-on-action-subtle);
     background: var(--px-color-surface-action-subtle-hover);
   }
   &:active {
     color: var(--px-color-text-on-action);
+    --px-button-icon-color: var(--px-color-icon-on-action);
     background: var(--px-color-surface-action-active);
   }
   &:disabled {
     background-color: inherit;
     color: var(--px-color-text-action);
   }
+}
+
+.icon-color {
+  --px-icon-color: var(--px-button-icon-color);
 }
 
 .iconOnlyMedium {

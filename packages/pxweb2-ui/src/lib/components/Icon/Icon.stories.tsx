@@ -21,13 +21,16 @@ export const Variants: StoryFn<typeof Icon> = () => {
         return (
           <div
             key={icon}
-            style={{
-              color: color,
-              display: 'flex',
-              alignItems: 'center',
-              margin: '10px',
-              gap: '10px',
-            }}
+            style={
+              {
+                color: color,
+                '--px-icon-color': color,
+                display: 'flex',
+                alignItems: 'center',
+                margin: '10px',
+                gap: '10px',
+              } as React.CSSProperties
+            }
           >
             <Icon iconName={icon as keyof typeof Icons} />
 

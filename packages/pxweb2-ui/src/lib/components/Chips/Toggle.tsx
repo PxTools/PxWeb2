@@ -36,7 +36,7 @@ export const ChipToggle = ({
       aria-pressed={selected}
     >
       {selected && checkmark && (
-        <Icon className={cl(styles.icon, ['check-icon'])} iconName="Check" />
+        <Icon className={cl(styles['check-icon'])} iconName="Check" />
       )}
       <span className={cl(styles.text, styles['label-medium'])}>
         {children}
