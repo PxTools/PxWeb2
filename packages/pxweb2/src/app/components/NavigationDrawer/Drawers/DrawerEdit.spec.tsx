@@ -13,8 +13,8 @@ interface MockActionItemProps {
   [key: string]: unknown;
 }
 
-const mockPivotCW = vi.fn();
-const mockPivotAuto = vi.fn();
+import { PivotType } from '../../../context/PivotType';
+const mockPivot = vi.fn();
 
 // Mock dependencies
 vi.mock('react-i18next', () => ({
@@ -25,8 +25,7 @@ vi.mock('react-i18next', () => ({
 
 vi.mock('../../../context/useTableData', () => ({
   default: () => ({
-    pivotCW: mockPivotCW,
-    pivotAuto: mockPivotAuto,
+    pivot: mockPivot,
     data: {
       // Minimal shape; DrawerEdit only passes these through
       stub: [{ name: 'variable1' }],
@@ -98,25 +97,25 @@ describe('DrawerEdit', () => {
     expect(DrawerEdit.displayName).toBe('DrawerEdit');
   });
 
-  it('calls pivotCW (clockwise pivot) on its button click', async () => {
+  it('calls pivot with PivotType.Clockwise on its button click', async () => {
     render(<DrawerEdit />);
     const user = userEvent.setup();
     const clockwiseButton = screen.getByText(
       'presentation_page.side_menu.edit.customize.pivot.title',
     );
     await user.click(clockwiseButton);
-    expect(mockPivotCW).toHaveBeenCalledTimes(1);
-    expect(mockPivotAuto).not.toHaveBeenCalled();
+    expect(mockPivot).toHaveBeenCalledWith(PivotType.Clockwise);
+    expect(mockPivot).toHaveBeenCalledTimes(1);
   });
 
-  it('calls pivotAuto on its button click', async () => {
+  it('calls pivot with PivotType.Auto on its button click', async () => {
     render(<DrawerEdit />);
     const user = userEvent.setup();
     const autoButton = screen.getByText(
       'presentation_page.side_menu.edit.customize.auto_pivot.title',
     );
     await user.click(autoButton);
-    expect(mockPivotAuto).toHaveBeenCalledTimes(1);
-    expect(mockPivotCW).not.toHaveBeenCalled();
+    expect(mockPivot).toHaveBeenCalledWith(PivotType.Auto);
+    expect(mockPivot).toHaveBeenCalledTimes(1);
   });
 });

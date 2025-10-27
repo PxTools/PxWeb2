@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ActionItem, ContentBox, Variable, Alert } from '@pxweb2/pxweb2-ui';
 import useTableData from '../../../context/useTableData';
 import classes from './DrawerEdit.module.scss';
-import { PivotType } from './PivotType';
+import { PivotType } from '../../../context/PivotType';
 import useApp from '../../../context/useApp';
 
 interface PivotButtonProps {
@@ -24,7 +24,7 @@ function PivotButton({
 }: PivotButtonProps) {
   const { t } = useTranslation();
   const tableData = useTableData();
-  const { pivotCW, pivotAuto, buildTableTitle, isLoading } = tableData;
+  const { pivot, buildTableTitle, isLoading } = tableData;
 
   // Live region text for screen readers after activation
   const [statusMessage, setStatusMessage] = useState('');
@@ -33,11 +33,7 @@ function PivotButton({
   const handleClick = async () => {
     setAnnounceOnNextChange(true);
     setLoadingPivotType(pivotType);
-    if (pivotType === PivotType.Auto) {
-      await Promise.resolve(pivotAuto());
-    } else {
-      await Promise.resolve(pivotCW());
-    }
+    await Promise.resolve(pivot(pivotType));
   };
 
   const screenReaderAnnouncementKey =

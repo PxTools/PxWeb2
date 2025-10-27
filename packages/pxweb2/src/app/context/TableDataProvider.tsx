@@ -24,8 +24,10 @@ import {
   addFormattingToPxTable,
   filterStubAndHeadingArrays,
   autoPivotTable,
+  pivotTableCW,
 } from './TableDataProviderUtils';
 import { problemMessage } from '../util/problemMessage';
+import { PivotType } from './PivotType';
 
 // Define types for the context state and provider props
 export interface TableDataContextType {
@@ -37,8 +39,7 @@ export interface TableDataContextType {
   fetchSavedQuery: (queryId: string, i18n: i18n, isMobile: boolean) => void;
   pivotToMobile: () => void;
   pivotToDesktop: () => void;
-  pivotCW: () => void;
-  pivotAuto: () => void;
+  pivot: (type: PivotType) => void;
   buildTableTitle: (
     stub: Variable[],
     heading: Variable[],
@@ -69,10 +70,7 @@ const TableDataContext = createContext<TableDataContextType | undefined>({
   pivotToDesktop: () => {
     // No-op: useTableData hook prevents this from being called
   },
-  pivotCW: () => {
-    // No-op: useTableData hook prevents this from being called
-  },
-  pivotAuto: () => {
+  pivot: () => {
     // No-op: useTableData hook prevents this from being called
   },
   buildTableTitle: () => ({ firstTitlePart: '', lastTitlePart: '' }),
@@ -1157,97 +1155,72 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   );
 
   /**
-   * Pivots the table clockwise.
-   */
-  const pivotCW = React.useCallback((): void => {
-    if (data?.heading === undefined) {
-      return;
-    }
-    setIsLoading(true);
-    setTimeout(() => {
-      // Only copy metadata and structure, not data
-      const tmpTable = copyPxTableWithoutData(data);
-      if (tmpTable === undefined) {
+   * Pivots the table based on the specified pivot type.
+   *
+   * @param type - The type of pivot to apply (Auto or Custom).
+   *
+   * This function adjusts the table structure by modifying the stub and heading order
+   * according to the specified pivot type. It handles both mobile and desktop layouts,
+   * ensuring that the table is appropriately formatted for the current device mode.
+   */ 
+  const pivot = React.useCallback(
+    (type: PivotType): void => {
+      // Autopivot not allowed for mobile mode
+      if (isMobileMode && type === PivotType.Auto) {
         return;
       }
-      let stub: string[];
-      let heading: string[];
-      if (isMobileMode) {
-        stub = structuredClone(stubMobile);
-        heading = structuredClone(headingMobile);
-      } else {
-        stub = structuredClone(stubDesktop);
-        heading = structuredClone(headingDesktop);
-      }
-      if (stub.length === 0 && heading.length === 0) {
+      if (data?.heading === undefined || data?.stub === undefined) {
         return;
       }
-      if (stub.length > 0 && heading.length > 0) {
-        stub.push(heading.pop() as string);
-        heading.unshift(stub.shift() as string);
-      } else if (stub.length === 0) {
-        heading.unshift(heading.pop() as string);
-      } else if (heading.length === 0) {
-        stub.unshift(stub.pop() as string);
-      }
-      pivotTable(tmpTable, stub, heading);
-      // Reassemble table data
-      tmpTable.data = data.data;
-      setData(tmpTable);
-      if (isMobileMode) {
-        setStubMobile(stub);
-        setHeadingMobile(heading);
-      } else {
-        setStubDesktop(stub);
-        setHeadingDesktop(heading);
-      }
-    }, 0);
-  }, [
-    data,
-    isMobileMode,
-    stubDesktop,
-    stubMobile,
-    headingDesktop,
-    headingMobile,
-  ]);
 
-  /**
-   * Auto pivots the table.
-   */
-  const pivotAuto = React.useCallback((): void => {
-    if (data?.heading === undefined) {
-      return;
-    }
-    setIsLoading(true);
-    setTimeout(async () => {
-      // Only copy metadata and structure, not data
-      const tmpTable = copyPxTableWithoutData(data);
-      if (tmpTable === undefined) {
-        return;
-      }
-      let stub: string[] = [];
-      let heading: string[] = [];
-      if (isMobileMode) {
-        // Auto pivot not allowed for mobile mode
-        return;
-      } else {
-        stub = structuredClone(stubDesktop);
-        heading = structuredClone(headingDesktop);
-      }
-      if (stub.length === 0 && heading.length === 0) {
-        return;
-      }
-      autoPivotTable(tmpTable.metadata.variables, stub, heading);
-      pivotTable(tmpTable, stub, heading);
-      // Reassemble table data
-      tmpTable.data = data.data;
-      setData(tmpTable);
-      if (!isMobileMode) {
-        setStubDesktop(stub);
-        setHeadingDesktop(heading);
-      }
-    }, 0);
-  }, [data, isMobileMode, stubDesktop, headingDesktop]);
+      setIsLoading(true);
+      setTimeout(async () => {
+        const tmpTable = copyPxTableWithoutData(data);
+        let stub: string[] = [];
+        let heading: string[] = [];
+
+        if (isMobileMode) {
+          stub = structuredClone(stubMobile);
+          heading = structuredClone(headingMobile);
+        } else {
+          stub = structuredClone(stubDesktop);
+          heading = structuredClone(headingDesktop);
+        }
+        if (stub.length === 0 && heading.length === 0) {
+          return;
+        }
+        
+        if (type === PivotType.Auto) {
+          autoPivotTable(tmpTable.metadata.variables, stub, heading);
+        } else {
+          pivotTableCW(stub, heading);
+        }
+
+        pivotTable(tmpTable, stub, heading);
+
+        // Reassemble table data
+        tmpTable.data = data.data;
+        
+        setData(tmpTable);
+        
+        if (isMobileMode) {
+          setStubMobile(stub);
+          setHeadingMobile(heading);
+        } else {
+          setStubDesktop(stub);
+          setHeadingDesktop(heading);
+        }
+      }, 0);
+    },
+    [
+      data,
+      isMobileMode,
+      stubMobile,
+      headingMobile,
+      stubDesktop,
+      headingDesktop,
+    ],
+  );
 
   // Set isLoading to false after data changes (table rendered)
   useEffect(() => {
@@ -1281,6 +1254,9 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     });
   }
 
+  /**
+   * Creates a copy of the PxTable without the data.
+   */
   function copyPxTableWithoutData(pxTable: PxTable): PxTable {
     const tmpTable: PxTable = {
       metadata: structuredClone(pxTable.metadata),
@@ -1304,8 +1280,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       fetchSavedQuery,
       pivotToMobile,
       pivotToDesktop,
-      pivotCW,
-      pivotAuto,
+      pivot,
       buildTableTitle,
       isInitialized,
     }),
@@ -1317,8 +1292,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       fetchSavedQuery,
       pivotToMobile,
       pivotToDesktop,
-      pivotCW,
-      pivotAuto,
+      pivot,
       buildTableTitle,
       isInitialized,
     ],

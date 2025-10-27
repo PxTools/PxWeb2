@@ -1,3 +1,20 @@
+/**
+ * Performs a clockwise pivot on the stub and heading arrays.
+ * Mutates the arrays in place.
+ *
+ * @param stub - Array of variable IDs in the stub
+ * @param heading - Array of variable IDs in the heading
+ */
+export function pivotTableCW(stub: string[], heading: string[]) {
+  if (stub.length > 0 && heading.length > 0) {
+    stub.push(heading.pop() as string);
+    heading.unshift(stub.shift() as string);
+  } else if (stub.length === 0) {
+    heading.unshift(heading.pop() as string);
+  } else if (heading.length === 0) {
+    stub.unshift(stub.pop() as string);
+  }
+}
 import {
   DataCell,
   PxTable,
