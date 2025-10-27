@@ -46,7 +46,7 @@
       "error": "Feil:"
     },
     "status_messages": {
-      "welcome": "Velkommen til nye PxWeb 2.0! Vi jobber fortsatt med å gjøre det enklere for deg å finne og bruke tallene du trenger 📊✨",
+      "welcome": "Velkommen til nye PxWeb 2 - v2.0.0! Vi jobber fortsatt med å gjøre det enklere for deg å finne og bruke tallene du trenger 📊✨",
       "drawer_view": "Visning for graf er under arbeid.",
       "drawer_save_file": "Flere filformat er under arbeid.",
       "drawer_save_api": "Funksjon for API-spørring er under arbeid.",
