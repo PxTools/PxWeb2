@@ -1162,7 +1162,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * This function adjusts the table structure by modifying the stub and heading order
    * according to the specified pivot type. It handles both mobile and desktop layouts,
    * ensuring that the table is appropriately formatted for the current device mode.
-   */ 
+   */
   const pivot = React.useCallback(
     (type: PivotType): void => {
       // Autopivot not allowed for mobile mode
@@ -1189,7 +1189,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         if (stub.length === 0 && heading.length === 0) {
           return;
         }
-        
+
         if (type === PivotType.Auto) {
           autoPivotTable(tmpTable.metadata.variables, stub, heading);
         } else {
@@ -1200,9 +1200,9 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
         // Reassemble table data
         tmpTable.data = data.data;
-        
+
         setData(tmpTable);
-        
+
         if (isMobileMode) {
           setStubMobile(stub);
           setHeadingMobile(heading);
