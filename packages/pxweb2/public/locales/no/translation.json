@@ -253,7 +253,7 @@
     "main_content": {
       "expand_view": "Utvid visning",
       "shrink_view": "Minimer visning",
-      "last_updated": "Sist oppdatert",
+      "last_updated": "Oppdatert",
       "show_details": "Vis detaljer",
       "dynamic_table_title": "{{table_content_type}} etter {{table_content_label_first_part}} og {{table_content_label_last_part}}",
       "table": {
@@ -306,7 +306,7 @@
           "link": "Lenke",
           "copyright": "Opphavsrett",
           "matrix": "Matrise",
-          "last_updated": "Sist oppdatert",
+          "last_updated": "Oppdatert",
           "next_update": "Neste oppdatering",
           "source": "Kilde",
           "official_statistics": "Offisiell statistikk",
