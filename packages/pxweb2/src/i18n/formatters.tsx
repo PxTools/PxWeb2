@@ -42,6 +42,8 @@ export function NumberFormatter(
  * @param value - number to format
  * @param lng - language
  * @param options - number format options
+ *   - thousandSeparator?: string - optional override for grouping separator
+ *   - decimalSeparator?: string  - optional override for decimal separator
  * @returns formatted number
  *
  * This custom formatter is to be used in translation files, in the same way as the built-in
@@ -51,15 +53,54 @@ export function NumberFormatter(
 export function pxNumber(
   value: number,
   lng: string | undefined,
-  options?: Intl.NumberFormatOptions,
+  options?: Intl.NumberFormatOptions & {
+    thousandSeparator?: string;
+    decimalSeparator?: string;
+  },
 ): string {
-  if (!options) {
-    return new Intl.NumberFormat(lng, {
-      roundingMode: customRoundingMode,
-    }).format(value);
+  const { thousandSeparator, decimalSeparator, ...intlOptions } = options ?? {};
+
+  (intlOptions as Intl.NumberFormatOptions).roundingMode = customRoundingMode;
+
+  const nf = new Intl.NumberFormat(lng, intlOptions);
+  if (thousandSeparator === undefined && decimalSeparator === undefined) {
+    return nf.format(value);
   }
 
-  options.roundingMode = customRoundingMode;
+  const group = normalizeSeparator(thousandSeparator);
+  const dec = normalizeSeparator(decimalSeparator);
 
-  return new Intl.NumberFormat(lng, options).format(value);
+  if (group === undefined && dec === undefined) {
+    return nf.format(value);
+  }
+
+  // Format to parts to override separators
+  const parts = nf.formatToParts(value);
+
+  let formattedOutput = '';
+  for (const p of parts) {
+    if (p.type === 'group' && group !== undefined) {
+      formattedOutput += group;
+    } else if (p.type === 'decimal' && dec !== undefined) {
+      formattedOutput += dec;
+    } else {
+      formattedOutput += p.value;
+    }
+  }
+  return formattedOutput;
+}
+
+function normalizeSeparator(raw?: string): string | undefined {
+  if (raw == null) {
+    return undefined;
+  }
+  const key = raw.trim().toLowerCase();
+  if (key === 'nbsp') {
+    return '\u00A0';
+  }
+  if (key === 'nnbsp') {
+    return '\u202F';
+  }
+
+  return raw;
 }
