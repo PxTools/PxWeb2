@@ -1,4 +1,3 @@
-
 export type Config = {
   language: {
     supportedLanguages: { shorthand: string; languageName: string }[];
