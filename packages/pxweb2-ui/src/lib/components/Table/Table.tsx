@@ -118,50 +118,56 @@ export const Table = memo(function Table({
   const tableRef = useRef<HTMLTableElement>(null);
 
   useEffect(() => {
-  const tableEl = tableRef.current;
-  if (!tableEl) {return;}
-
-  let currentCol: string | null = null;
-
-  function clear() {
-    tableEl!.querySelectorAll('.' + classes.colHover).forEach(cell =>
-      cell.classList.remove(classes.colHover)
-    );
-    currentCol = null;
-  }
-
-  function handleOver(e: MouseEvent) {
-    // Only highlight if hovering a data cell (td[data-col]) or a leaf header cell (th[data-col] in last header row)
-    const td = (e.target as HTMLElement).closest('td[data-col]');
-    const th = (e.target as HTMLElement).closest('thead tr:last-child th[data-col]');
-    // If hovering stub or emptyTableData, clear highlight
-    if (
-      (e.target as HTMLElement).closest('.stub') ||
-      (e.target as HTMLElement).closest('.emptyTableData') ||
-      (!td && !th)
-    ) {
-      clear();
+    const tableEl = tableRef.current;
+    if (!tableEl) {
       return;
     }
-    // Determine column
-    const cell = td || th;
-    const col = cell?.getAttribute('data-col');
-    if (!col || col === currentCol) {return;}
-    clear();
-    // Highlight only data cells in the same column
-    tableEl!.querySelectorAll(`td[data-col="${col}"]`).forEach(cell =>
-      cell.classList.add(classes.colHover)
-    );
-    currentCol = col;
-  }
 
-  tableEl.addEventListener('mouseover', handleOver);
-  tableEl.addEventListener('mouseleave', clear);
-  return () => {
-    tableEl.removeEventListener('mouseover', handleOver);
-    tableEl.removeEventListener('mouseleave', clear);
-  };
-}, []);
+    let currentCol: string | null = null;
+
+    function clear() {
+      tableEl!
+        .querySelectorAll('.' + classes.colHover)
+        .forEach((cell) => cell.classList.remove(classes.colHover));
+      currentCol = null;
+    }
+
+    function handleOver(e: MouseEvent) {
+      // Only highlight if hovering a data cell (td[data-col]) or a leaf header cell (th[data-col] in last header row)
+      const td = (e.target as HTMLElement).closest('td[data-col]');
+      const th = (e.target as HTMLElement).closest(
+        'thead tr:last-child th[data-col]',
+      );
+      // If hovering stub or emptyTableData, clear highlight
+      if (
+        (e.target as HTMLElement).closest('.stub') ||
+        (e.target as HTMLElement).closest('.emptyTableData') ||
+        (!td && !th)
+      ) {
+        clear();
+        return;
+      }
+      // Determine column
+      const cell = td || th;
+      const col = cell?.getAttribute('data-col');
+      if (!col || col === currentCol) {
+        return;
+      }
+      clear();
+      // Highlight only data cells in the same column
+      tableEl!
+        .querySelectorAll(`td[data-col="${col}"]`)
+        .forEach((cell) => cell.classList.add(classes.colHover));
+      currentCol = col;
+    }
+
+    tableEl.addEventListener('mouseover', handleOver);
+    tableEl.addEventListener('mouseleave', clear);
+    return () => {
+      tableEl.removeEventListener('mouseover', handleOver);
+      tableEl.removeEventListener('mouseleave', clear);
+    };
+  }, []);
 
   return (
     <table
