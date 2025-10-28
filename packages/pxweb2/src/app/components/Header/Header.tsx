@@ -27,21 +27,28 @@ function MainLogo() {
 export const Header = ({ stroke = false }: HeaderProps) => {
   const { i18n } = useTranslation();
   const config = getConfig();
+  const lang = i18n.language;
+  const homePageUrl = config.homePage?.[lang]?.trim() || '';
+  const defaultPath = getLanguagePath(
+    '/',
+    lang,
+    config.language.supportedLanguages,
+    config.language.defaultLanguage,
+    config.language.showDefaultLanguageInPath,
+  );
 
   return (
     <header className={cl(styles.header, { [styles.stroke]: stroke })}>
       <div className={styles.logoContainer}>
-        <LinkRouter
-          to={getLanguagePath(
-            '/',
-            i18n.language,
-            config.language.supportedLanguages,
-            config.language.defaultLanguage,
-            config.language.showDefaultLanguageInPath,
-          )}
-        >
-          <MainLogo />
-        </LinkRouter>
+        {homePageUrl ? (
+          <a href={homePageUrl}>
+            <MainLogo />
+          </a>
+        ) : (
+          <LinkRouter to={defaultPath}>
+            <MainLogo />
+          </LinkRouter>
+        )}
       </div>
 
       <LanguageSwitcher />
