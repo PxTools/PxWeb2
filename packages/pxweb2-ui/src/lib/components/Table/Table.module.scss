@@ -8,9 +8,8 @@
 
   border-radius: var(--px-border-radius-medium);
   border: 1px solid var(--px-color-border-default);
-  //overflow: hidden; /* Ensures content stays within rounded borders */
+  overflow: hidden; /* Ensures content stays within rounded borders */
   color: var(--px-color-text-default);
-  border-left: none;
 
   @media screen and (max-width: fixed.$breakpoints-xsmall-max-width) {
     line-height: fixed.$spacing-6;
@@ -30,10 +29,7 @@
 
     background: var(--px-color-surface-moderate);
     border-top: 1px solid var(--px-color-border-default);
-    border-right: 1px solid var(--px-color-border-default);
-    &:last-child {
-      border-right: none;
-    }
+    border-left: 1px solid var(--px-color-border-default);
 
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       padding: 8px 12px;
@@ -46,9 +42,6 @@
     font-family: PxWeb-font, sans-serif;
     font-weight: 700;
   }
-  thead tr:first-child th {
-    border-top-right-radius: var(--px-border-radius-medium);
-  }
   thead tr:last-child th {
     text-align: end;
     border-bottom-width: 2px;
@@ -59,7 +52,7 @@
   }
 
   tr:first-child th:first-child {
-    //border-left: none;
+    border-left: none;
     @media screen and (max-width: fixed.$breakpoints-xsmall-max-width) {
       border-top: none;
     }
@@ -69,106 +62,71 @@
   }
   tbody tr:last-child th {
     border-bottom: none;
-    border-bottom-left-radius: var(--px-border-radius-medium);
   }
 
   th.stub-0 {
-    border-right: 1px solid var(--px-color-border-default);
-    position: sticky;
-    left: 0;
-    //z-index: 20;
-    border-left: 1px solid var(--px-color-border-default);
-
+    border-left: none;
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       padding-left: 12px;
     }
   }
   th.stub-1 {
-    border-right: 1px solid var(--px-color-border-default);
-    position: sticky;
-    left: 0;
-    border-left: 1px solid var(--px-color-border-default);
+    border-left: none;
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       padding-left: 28px;
     }
   }
   th.stub-2 {
-    border-right: 1px solid var(--px-color-border-default);
-    position: sticky;
-    left: 0;
-    border-left: 1px solid var(--px-color-border-default);
+    border-left: none;
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       padding-left: 44px;
     }
   }
   th.stub-3 {
-    border-right: 1px solid var(--px-color-border-default);
-    position: sticky;
-    left: 0;
-    border-left: 1px solid var(--px-color-border-default);
+    border-left: none;
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       padding-left: 60px;
     }
   }
   th.stub-4 {
-    border-right: 1px solid var(--px-color-border-default);
-    position: sticky;
-    left: 0;
-    border-left: 1px solid var(--px-color-border-default);
+    border-left: none;
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       padding-left: 76px;
     }
   }
   th.stub-5 {
-    border-right: 1px solid var(--px-color-border-default);
-    position: sticky;
-    left: 0;
-    border-left: 1px solid var(--px-color-border-default);
+    border-left: none;
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       padding-left: 92px;
     }
   }
   th.stub-6 {
-    border-right: 1px solid var(--px-color-border-default);
-    position: sticky;
-    left: 0;
-    border-left: 1px solid var(--px-color-border-default);
+    border-left: none;
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       padding-left: 108px;
     }
   }
   th.stub-7 {
-    border-right: 1px solid var(--px-color-border-default);
-    position: sticky;
-    left: 0;
-    border-left: 1px solid var(--px-color-border-default);
+    border-left: none;
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       padding-left: 124px;
     }
   }
   th.stub-8 {
-    border-right: 1px solid var(--px-color-border-default);
-    position: sticky;
-    left: 0;
-    border-left: 1px solid var(--px-color-border-default);
+    border-left: none;
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       padding-left: 140px;
     }
   }
   th.stub-9 {
-    border-right: 1px solid var(--px-color-border-default);
-    position: sticky;
-    left: 0;
-    border-left: 1px solid var(--px-color-border-default);
+    border-left: none;
+
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       padding-left: 156px;
     }
   }
   th.stub-10 {
-    border-right: 1px solid var(--px-color-border-default);
-    position: sticky;
-    left: 0;
-    border-left: 1px solid var(--px-color-border-default);
+    border-left: none;
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       padding-left: 172px;
     }
@@ -178,11 +136,7 @@
     width: 40px;
     text-align: right;
     border-top: 1px solid var(--px-color-border-default);
-    border-right: 1px solid var(--px-color-border-default);
-    &:last-child {
-      border-right: none;
-    }
-
+    border-left: 1px solid var(--px-color-border-default);
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       padding: 8px 12px;
     }
@@ -292,30 +246,10 @@
   }
 
   .emptyTableData {
-    position: sticky;
-    left: 0;
-    //z-index: 20;
-    border-right: 1px solid var(--px-color-border-default);
-    border-left: 1px solid var(--px-color-border-default);
-    border-top-left-radius: var(--px-border-radius-medium);
     background: var(--px-color-surface-moderate);
+    border: none;
   }
 }
-
-.hover {
-  background-color: #eee;
-}
-
-@media screen and (min-width: fixed.$breakpoints-small-min-width) {
-  @mixin column-hover($max) {
-    @for $i from 1 through $max {
-      .table:has(td:not(.stub):nth-child(#{$i}):hover),
-      .table:has(th:not(.stub):nth-child(#{$i - 1}):hover) {
-        tbody td:nth-child(#{$i}) {
-          background: var(--px-color-surface-subtle) !important;
-        }
-      }
-    }
-  }
-  @include column-hover(50);
+.table td.colHover {
+  background: var(--px-color-surface-subtle) !important;
 }

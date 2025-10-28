@@ -1,4 +1,4 @@
-import { memo, useMemo } from 'react';
+import { memo, useMemo, useRef, useEffect } from 'react';
 import cl from 'clsx';
 
 import classes from './Table.module.scss';
@@ -115,9 +115,45 @@ export const Table = memo(function Table({
     headingDataCellCodes[i] = dataCellCodes;
   }
 
+
+const tableRef = useRef<HTMLTableElement>(null);
+
+useEffect(() => {
+  const table = tableRef.current;
+  if (!table) {return;}
+
+  let currentCol: string | null = null;
+
+  function clear() {
+    table!.querySelectorAll('.' + classes.colHover).forEach(cell =>
+      cell.classList.remove(classes.colHover)
+    );
+    currentCol = null;
+  }
+
+  function handleOver(e: MouseEvent) {
+    const cell = (e.target as HTMLElement).closest('[data-col]');
+    if (!cell || !table!.contains(cell)) {return;}
+    const col = cell.getAttribute('data-col');
+    if (!col || col === currentCol) {return;}
+    clear();
+    table!.querySelectorAll(`[data-col="${col}"]`).forEach(cell =>
+      cell.classList.add(classes.colHover)
+    );
+    currentCol = col;
+  }
+
+  table.addEventListener('mouseover', handleOver);
+  table.addEventListener('mouseleave', clear);
+  return () => {
+    table.removeEventListener('mouseover', handleOver);
+    table.removeEventListener('mouseleave', clear);
+  };
+}, []);
+
   return (
-    <div className={classes.tableScrollWrapper}>
-      <table
+    <table
+        ref={tableRef}
         className={cl(classes.table, classes[`bodyshort-medium`]) + cssClasses}
         aria-label={pxtable.metadata.label}
       >
@@ -144,7 +180,6 @@ export const Table = memo(function Table({
           )}
         </tbody>
       </table>
-    </div>
   );
 });
 
@@ -226,6 +261,12 @@ export function createHeading(
                 idxRepetitionCurrentHeadingLevel === 1 &&
                 table.stub.length === 0,
             })}
+            // Only add data-col for leaf header row
+      data-col={
+      idxHeadingLevel === table.heading.length - 1
+        ? String(columnIndex  + tableMeta.columnOffset)
+        : undefined
+    }
           >
             {variable.values[i].label}
           </th>,
@@ -610,7 +651,14 @@ function fillEmpty(
 
   // Loop through all data columns in the table
   for (let i = 0; i < maxCols; i++) {
-    tableRow.push(<td key={getNewKey()}>{emptyText}</td>);
+    tableRow.push(
+      <td
+        key={getNewKey()}
+        data-col={String(i + tableMeta.columnOffset)}
+      >
+        {emptyText}
+      </td>,
+    );
   }
 }
 
@@ -634,7 +682,6 @@ function fillData(
   const maxCols = tableMeta.columns - tableMeta.columnOffset;
 
   // Loop through all data columns in the table
-
   for (let i = 0; i < maxCols; i++) {
     // Merge the metadata structure for the dimensions of the stub and header cells
     const dataCellCodes = stubDataCellCodes.concat(headingDataCellCodes[i]);
@@ -656,7 +703,7 @@ function fillData(
     const dataValue = getPxTableData(table.data.cube, dimensions);
 
     tableRow.push(
-      <td key={getNewKey()} headers={headers}>
+      <td key={getNewKey()} headers={headers} data-col={String(i + tableMeta.columnOffset)}>
         {dataValue?.formattedValue}
       </td>,
     );
