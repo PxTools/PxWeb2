@@ -35,19 +35,14 @@ export const Header = ({ stroke = false }: HeaderProps) => {
     config.language.defaultLanguage,
     config.language.showDefaultLanguageInPath,
   );
+  const logoUrl = homePageUrl || defaultPath;
 
   return (
     <header className={cl(styles.header, { [styles.stroke]: stroke })}>
       <div className={styles.logoContainer}>
-        {homePageUrl ? (
-          <a href={homePageUrl}>
-            <MainLogo />
-          </a>
-        ) : (
-          <a href={defaultPath}>
-            <MainLogo />
-          </a>
-        )}
+        <a href={logoUrl}>
+          <MainLogo />
+        </a>
       </div>
 
       <LanguageSwitcher />
