@@ -6,13 +6,7 @@ import {
   filterStubAndHeadingArrays,
   autoPivotTable,
 } from './TableDataProviderUtils';
-import {
-  DataCell,
-  PxTable,
-  PxData,
-  VartypeEnum,
-  Variable,
-} from '@pxweb2/pxweb2-ui';
+import { DataCell, PxTable, VartypeEnum, Variable } from '@pxweb2/pxweb2-ui';
 
 // Mock dependencies
 vi.mock('../util/language/translateOutsideReact', () => ({
@@ -66,7 +60,7 @@ describe('TableDataProviderUtils', () => {
         subjectArea: 'Test Subject Area',
         subjectCode: 'Test Subject Code',
         notes: [],
-        ...(overrides.metadata || {}),
+        ...((overrides.metadata as object) || {}),
       },
       data: {
         variableOrder: [],
@@ -75,7 +69,7 @@ describe('TableDataProviderUtils', () => {
           cell1: { value: 123.456 },
           cell2: { value: 789.012 },
         },
-        ...(overrides.data || {}),
+        ...((overrides.data as object) || {}),
       },
       stub: [],
       heading: [],
@@ -110,7 +104,10 @@ describe('TableDataProviderUtils', () => {
     });
 
     it('should return empty string for undefined dataCell', async () => {
-      const result = await getFormattedValue(undefined, 2);
+      const result = await getFormattedValue(
+        undefined as unknown as DataCell,
+        2,
+      );
 
       expect(result).toBe('');
     });
@@ -240,6 +237,22 @@ describe('TableDataProviderUtils', () => {
       const pxTable = createBasePxTable({
         metadata: {
           decimals: 1,
+          variables: [],
+          id: 'testTable',
+          language: 'en',
+          label: 'Test Table',
+          updated: new Date(2023, 0, 1),
+          source: 'Test Source',
+          infofile: 'Test Infofile',
+          officialStatistics: false,
+          aggregationAllowed: true,
+          matrix: 'Test Matrix',
+          contents: 'Test Contents',
+          contacts: [],
+          descriptionDefault: false,
+          subjectArea: 'Test Subject Area',
+          subjectCode: 'Test Subject Code',
+          notes: [],
         },
         data: {
           variableOrder: ['dim1', 'dim2'],
@@ -273,6 +286,7 @@ describe('TableDataProviderUtils', () => {
     it('should format data cells with content variable specific decimals', async () => {
       const pxTable = createBasePxTable({
         metadata: {
+          decimals: 2,
           variables: [
             {
               id: 'contents',
@@ -301,11 +315,29 @@ describe('TableDataProviderUtils', () => {
                   },
                 },
               ],
+              codeLists: [],
+              notes: [],
             },
           ],
+          id: 'testTable',
+          language: 'en',
+          label: 'Test Table',
+          updated: new Date(2023, 0, 1),
+          source: 'Test Source',
+          infofile: 'Test Infofile',
+          officialStatistics: false,
+          aggregationAllowed: true,
+          matrix: 'Test Matrix',
+          contents: 'Test Contents',
+          contacts: [],
+          descriptionDefault: false,
+          subjectArea: 'Test Subject Area',
+          subjectCode: 'Test Subject Code',
+          notes: [],
         },
         data: {
           variableOrder: ['contents'],
+          isLoaded: true,
           cube: {
             val1: { value: 123.456 },
             val2: { value: 789.012 },
@@ -326,8 +358,26 @@ describe('TableDataProviderUtils', () => {
       const pxTable = createBasePxTable({
         metadata: {
           decimals: 1,
+          variables: [],
+          id: 'testTable',
+          language: 'en',
+          label: 'Test Table',
+          updated: new Date(2023, 0, 1),
+          source: 'Test Source',
+          infofile: 'Test Infofile',
+          officialStatistics: false,
+          aggregationAllowed: true,
+          matrix: 'Test Matrix',
+          contents: 'Test Contents',
+          contacts: [],
+          descriptionDefault: false,
+          subjectArea: 'Test Subject Area',
+          subjectCode: 'Test Subject Code',
+          notes: [],
         },
         data: {
+          variableOrder: [],
+          isLoaded: true,
           cube: {
             group1: {
               subgroup: {
@@ -337,7 +387,7 @@ describe('TableDataProviderUtils', () => {
             group2: {
               cell2: { value: 789.012 },
             },
-          } as unknown as PxData<DataCell>,
+          },
         },
       });
 
@@ -359,6 +409,8 @@ describe('TableDataProviderUtils', () => {
     it('should handle cells with null values', async () => {
       const pxTable = createBasePxTable({
         data: {
+          variableOrder: [],
+          isLoaded: true,
           cube: {
             cell1: { value: null },
             cell2: { value: 789.012 },
