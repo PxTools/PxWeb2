@@ -45,9 +45,9 @@ export const Header = ({ stroke = false }: HeaderProps) => {
             <MainLogo />
           </a>
         ) : (
-          <LinkRouter to={defaultPath}>
+          <a href={defaultPath}>
             <MainLogo />
-          </LinkRouter>
+          </a>
         )}
       </div>
 
