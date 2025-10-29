@@ -125,12 +125,13 @@ export const Table = memo(function Table({
 
     let currentCol: string | null = null;
 
-    function clear() {
-      table!
-        .querySelectorAll('.' + classes.colHover)
-        .forEach((cell) => cell.classList.remove(classes.colHover));
+   function clear() {
+      for (const cell of Array.from(table!.querySelectorAll('.' + classes.colHover))) {
+        cell.classList.remove(classes.colHover);
+      }
       currentCol = null;
     }
+
 
     function handleOver(e: MouseEvent) {
       // Only highlight if hovering a data cell (td[data-col]) or a leaf header cell (th[data-col] in last header row)
@@ -149,15 +150,15 @@ export const Table = memo(function Table({
       }
       // Determine column
       const cell = td || th;
-      const col = cell?.getAttribute('data-col');
+      const col = (cell as HTMLElement).dataset.col;
       if (!col || col === currentCol) {
         return;
       }
       clear();
       // Highlight only data cells in the same column
-      table!
-        .querySelectorAll(`td[data-col="${col}"]`)
-        .forEach((cell) => cell.classList.add(classes.colHover));
+       for (const cell of Array.from(table!.querySelectorAll(`td[data-col="${col}"]`))) {
+        cell.classList.add(classes.colHover);
+      }
       currentCol = col;
     }
 
