@@ -118,15 +118,15 @@ export const Table = memo(function Table({
   const tableRef = useRef<HTMLTableElement>(null);
 
   useEffect(() => {
-    const tableEl = tableRef.current;
-    if (!tableEl) {
+    const table = tableRef.current;
+    if (!table) {
       return;
     }
 
     let currentCol: string | null = null;
 
     function clear() {
-      tableEl!
+      table!
         .querySelectorAll('.' + classes.colHover)
         .forEach((cell) => cell.classList.remove(classes.colHover));
       currentCol = null;
@@ -155,17 +155,17 @@ export const Table = memo(function Table({
       }
       clear();
       // Highlight only data cells in the same column
-      tableEl!
+      table!
         .querySelectorAll(`td[data-col="${col}"]`)
         .forEach((cell) => cell.classList.add(classes.colHover));
       currentCol = col;
     }
 
-    tableEl.addEventListener('mouseover', handleOver);
-    tableEl.addEventListener('mouseleave', clear);
+    table.addEventListener('mouseover', handleOver);
+    table.addEventListener('mouseleave', clear);
     return () => {
-      tableEl.removeEventListener('mouseover', handleOver);
-      tableEl.removeEventListener('mouseleave', clear);
+      table.removeEventListener('mouseover', handleOver);
+      table.removeEventListener('mouseleave', clear);
     };
   }, []);
 
