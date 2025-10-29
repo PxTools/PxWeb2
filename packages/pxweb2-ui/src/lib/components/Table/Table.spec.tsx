@@ -45,21 +45,24 @@ describe('Table', () => {
     expect(found).toBe(false);
   });
 
+  it('highlights column on header hover', () => {
+    const { container } = render(<Table pxtable={pxTable} isMobile={false} />);
+    console.log(container.innerHTML); // Debug: check for data-col and stub classes
 
-it('highlights column on header hover', () => {
-  const { container } = render(<Table pxtable={pxTable} isMobile={false} />);
-  console.log(container.innerHTML); // Debug: check for data-col and stub classes
+    // Find a leaf header cell
+    const leafHeader = container.querySelector(
+      'thead tr:last-child th[data-col]',
+    );
+    expect(leafHeader).toBeTruthy();
 
-  // Find a leaf header cell
-  const leafHeader = container.querySelector('thead tr:last-child th[data-col]');
-  expect(leafHeader).toBeTruthy();
+    // Simulate mouseover
+    fireEvent.mouseOver(leafHeader!);
 
-  // Simulate mouseover
-  fireEvent.mouseOver(leafHeader!);
-
-  // Find highlighted data cells
-  const col = leafHeader!.getAttribute('data-col');
-  const highlightedCells = container.querySelectorAll(`td[data-col="${col}"][class*="colHover"]`);
-  expect(highlightedCells.length).toBeGreaterThan(0);
-});
+    // Find highlighted data cells
+    const col = leafHeader!.getAttribute('data-col');
+    const highlightedCells = container.querySelectorAll(
+      `td[data-col="${col}"][class*="colHover"]`,
+    );
+    expect(highlightedCells.length).toBeGreaterThan(0);
+  });
 });
