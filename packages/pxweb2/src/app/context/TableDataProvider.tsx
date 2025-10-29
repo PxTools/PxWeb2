@@ -17,6 +17,7 @@ import {
   getPxTableData,
   setPxTableData,
   Variable,
+  VartypeEnum,
 } from '@pxweb2/pxweb2-ui';
 import { mapJsonStat2Response } from '../../mappers/JsonStat2ResponseMapper';
 
@@ -38,7 +39,11 @@ export interface TableDataContextType {
   buildTableTitle: (
     stub: Variable[],
     heading: Variable[],
-  ) => { firstTitlePart: string; lastTitlePart: string };
+  ) => {
+    contentsTextInTitle: string;
+    firstTitlePart: string;
+    lastTitlePart: string;
+  };
 }
 
 interface TableDataProviderProps {
@@ -66,6 +71,7 @@ const TableDataContext = createContext<TableDataContextType | undefined>({
   },
   buildTableTitle: () => {
     return {
+      contentsTextInTitle: '',
       firstTitlePart: '',
       lastTitlePart: '',
     };
@@ -1119,10 +1125,37 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       stub: Variable[],
       heading: Variable[],
     ): {
+      contentsTextInTitle: string;
       firstTitlePart: string;
       lastTitlePart: string;
     } => {
+      let contentsTextInTitle = '';
+      const contentsForAll = variables.pxTableMetadata?.contents;
+      console.log('contentsForAll', contentsForAll);
+      const contentsVar = variables.pxTableMetadata?.variables.find(
+        (variable) => variable.type === VartypeEnum.CONTENTS_VARIABLE,
+      );
+      console.log('contentsVar', contentsVar);
+
+      let selectedContentsValues: string[] = [];
+      if (contentsVar) {
+        selectedContentsValues = variables.getSelectedValuesByIdSorted(
+          contentsVar.id,
+        );
+      }
+
       const titleParts: string[] = [];
+
+      if (contentsVar && contentsForAll && selectedContentsValues.length > 1) {
+        contentsTextInTitle = contentsForAll;
+      } else if (contentsVar) {
+        const constValue = contentsVar.values.find(
+          (value) => value.code === selectedContentsValues[0],
+        );
+        if (constValue) {
+          contentsTextInTitle = constValue.label;
+        }
+      }
 
       // Add stub variables to title
       stub.forEach((variable) => {
@@ -1143,10 +1176,9 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       }
 
       const firstTitlePart = titleParts.join(', ');
-
-      return { firstTitlePart, lastTitlePart };
+      return { contentsTextInTitle, firstTitlePart, lastTitlePart };
     },
-    [],
+    [variables],
   );
 
   /**
