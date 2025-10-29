@@ -1,6 +1,5 @@
 import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
-import { Link as LinkRouter } from 'react-router';
 
 import styles from './Header.module.scss';
 import { LanguageSwitcher } from '../LanguageSwitcher/LanguageSwitcher';
