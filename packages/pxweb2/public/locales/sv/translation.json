@@ -171,10 +171,10 @@
         "customize": {
           "title": "Anpassa",
           "auto_pivot": {
-            "title": "Förbättra tabellen",
-            "aria_label": "Förbättra tabellen",
-            "description": "Uppdatera tabellen automatiskt för bättre översikt",
-            "screen_reader_announcement": "Tabell förbättrad och organiserad efter {{first_variables}} och {{last_variable}}"
+            "title": "Ordna tabellen",
+            "aria_label": "Ordna tabellen",
+            "description": "Visa tabellen med automatiskt ordnade rader och kolumner",
+            "screen_reader_announcement": "Tabell ordnad efter {{first_variables}} och {{last_variable}}"
           },
           "pivot": {
             "title": "Rotera tabellen",

@@ -464,12 +464,12 @@ describe('autoPivotTable', () => {
 
     autoPivotTable(variables, stub, heading);
 
-    // A has more values -> last in stub, B (2nd most) in heading
+    // A has more values -> first in stub, B (2nd most) in heading
     expect(stub).toEqual(['A']);
     expect(heading).toEqual(['B']);
   });
 
-  it('when 3 multi-value vars and product of 2nd and 3rd < 12 both go to heading (implementation order)', () => {
+  it('when 3 multi-value vars and product of 2nd and 3rd < 21 both go to heading (implementation order)', () => {
     const variables = [
       createVariable('A', VartypeEnum.REGULAR_VARIABLE, 15), // most
       createVariable('B', VartypeEnum.TIME_VARIABLE, 2), // 2nd
@@ -482,14 +482,14 @@ describe('autoPivotTable', () => {
 
     // Implementation adds 2nd then 3rd
     expect(heading).toEqual(['B', 'C']);
-    expect(stub).toEqual(['A']); // Most values always last in stub
+    expect(stub).toEqual(['A']); // Most values always first in stub
   });
 
-  it('when >2 multi-value vars and product >=12 only 2nd goes to heading; rest sorted into stub before most', () => {
+  it('when >2 multi-value vars and product >=21 only 2nd goes to heading; rest sorted into stub after most', () => {
     const variables = [
       createVariable('A', VartypeEnum.REGULAR_VARIABLE, 20), // most
-      createVariable('B', VartypeEnum.REGULAR_VARIABLE, 4), // 2nd
-      createVariable('C', VartypeEnum.TIME_VARIABLE, 3), // 3rd -> product 4*3 = 12 >= 12
+      createVariable('B', VartypeEnum.REGULAR_VARIABLE, 7), // 2nd
+      createVariable('C', VartypeEnum.TIME_VARIABLE, 3), // 3rd -> product 7*3 = 21 >= 21
       createVariable('D', VartypeEnum.CONTENTS_VARIABLE, 2), // remaining (sorted first)
       createVariable('E', VartypeEnum.GEOGRAPHICAL_VARIABLE, 2), // remaining
     ];
@@ -499,9 +499,9 @@ describe('autoPivotTable', () => {
     autoPivotTable(variables, stub, heading);
 
     // Remaining multi-value variables (C,D,E) sorted by type precedence: D (Contents), C (Time), E (Other)
-    // They are added first, then A (most values) last
+    // They are added after A (most values) first
     expect(heading).toEqual(['B']);
-    expect(stub).toEqual(['D', 'C', 'E', 'A']);
+    expect(stub).toEqual(['A', 'D', 'C', 'E']);
   });
 
   it('single-value variables injected at start of stub if headingColumns > 24', () => {
@@ -523,7 +523,7 @@ describe('autoPivotTable', () => {
     autoPivotTable(variables, stub, heading);
 
     expect(heading).toEqual(['Y']);
-    expect(stub).toEqual(['S2', 'S1', 'Z', 'X']);
+    expect(stub).toEqual(['S2', 'S1', 'X', 'Z']);
   });
 
   it('single-value variables injected at start of heading if headingColumns <= 24', () => {

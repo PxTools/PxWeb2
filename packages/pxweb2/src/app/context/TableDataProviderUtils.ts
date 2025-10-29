@@ -263,6 +263,9 @@ function autoPivotMultiValueVariables(
       (a, b) => b.values.length - a.values.length,
     );
 
+    // Place the variable with the most values first in the stub
+    addToArrayIfNotExists(stub, multiValueVars[0].id);
+
     if (multiValueVars.length == 2) {
       // Place the variable with the 2nd most values in the heading
       addToArrayIfNotExists(heading, multiValueVars[1].id);
@@ -273,7 +276,7 @@ function autoPivotMultiValueVariables(
     if (multiValueVars.length > 2) {
       if (
         multiValueVars[1].values.length * multiValueVars[2].values.length <
-        12
+        21
       ) {
         // Place the variables with the 2nd and 3rd most values in the heading if the product of their values are below 12.
         // The one with 3rd most values first then the one with 2nd most values
@@ -296,9 +299,6 @@ function autoPivotMultiValueVariables(
         addToArrayIfNotExists(stub, v.id);
       }
     }
-
-    // Place the variable with the most values last in the stub
-    addToArrayIfNotExists(stub, multiValueVars[0].id);
   }
 }
 
