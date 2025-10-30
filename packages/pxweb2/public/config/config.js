@@ -50,7 +50,7 @@ window.PxWeb2Config = {
   },
   homePage: {
     no: '', // Set to your Norwegian homepage URL
-    sv: 'https://www.scb.se/', // Set to your Swedish homepage URL
+    sv: '', // Set to your Swedish homepage URL
     en: '', // Set to your English homepage URL
   },
 };
