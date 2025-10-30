@@ -46,6 +46,18 @@
       "type": "string",
       "description": "The base url for the pxweb api"
     },
+    "homePage": {
+      "type": "object",
+      "description": "Homepage URLs for the logo link, mapped by language code. Keys should be language codes (e.g., 'en', 'sv', 'no').",
+      "propertyNames": {
+        "type": "string",
+        "description": "Language code (e.g., 'en', 'sv', 'no')."
+      },
+      "additionalProperties": {
+        "type": "string",
+        "description": "Homepage URL for the given language code."
+      }
+    },
     "maxDataCells": {
       "type": "number",
       "description": "The maximum number of cells allowed to be shown in a table"

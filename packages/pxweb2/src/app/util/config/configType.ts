@@ -10,4 +10,7 @@ export type Config = {
   maxDataCells: number;
   specialCharacters: string[];
   variableFilterExclusionList: { [propName: string]: string[] };
+  homePage?: {
+    [lang: string]: string;
+  };
 };
