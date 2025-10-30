@@ -276,9 +276,9 @@ function autoPivotMultiValueVariables(
     if (multiValueVars.length > 2) {
       if (
         multiValueVars[1].values.length * multiValueVars[2].values.length <
-        21
+        17
       ) {
-        // Place the variables with the 2nd and 3rd most values in the heading if the product of their values are below 12.
+        // Place the variables with the 2nd and 3rd most values in the heading if the product of their values are below 17.
         // The one with 3rd most values first then the one with 2nd most values
         addToArrayIfNotExists(heading, multiValueVars[2].id);
         addToArrayIfNotExists(heading, multiValueVars[1].id);

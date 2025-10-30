@@ -521,11 +521,11 @@ describe('autoPivotTable', () => {
     expect(heading).toEqual(['B']);
   });
 
-  it('when 3 multi-value vars and product of 2nd and 3rd < 21 both go to heading (implementation order)', () => {
+  it('when 3 multi-value vars and product of 2nd and 3rd < 17 both go to heading (implementation order)', () => {
     const variables = [
       createVariable('A', VartypeEnum.REGULAR_VARIABLE, 15), // most
       createVariable('B', VartypeEnum.TIME_VARIABLE, 2), // 2nd
-      createVariable('C', VartypeEnum.REGULAR_VARIABLE, 3), // 3rd -> product 2*3 = 6 < 12
+      createVariable('C', VartypeEnum.REGULAR_VARIABLE, 3), // 3rd -> product 2*3 = 6 < 17
     ];
     const stub: string[] = [];
     const heading: string[] = [];
@@ -537,11 +537,11 @@ describe('autoPivotTable', () => {
     expect(stub).toEqual(['A']); // Most values always first in stub
   });
 
-  it('when >2 multi-value vars and product >=21 only 2nd goes to heading; rest sorted into stub after most', () => {
+  it('when >2 multi-value vars and product >=17 only 2nd goes to heading; rest sorted into stub after most', () => {
     const variables = [
       createVariable('A', VartypeEnum.REGULAR_VARIABLE, 20), // most
       createVariable('B', VartypeEnum.REGULAR_VARIABLE, 7), // 2nd
-      createVariable('C', VartypeEnum.TIME_VARIABLE, 3), // 3rd -> product 7*3 = 21 >= 21
+      createVariable('C', VartypeEnum.TIME_VARIABLE, 3), // 3rd -> product 7*3 = 21 >= 17
       createVariable('D', VartypeEnum.CONTENTS_VARIABLE, 2), // remaining (sorted first)
       createVariable('E', VartypeEnum.GEOGRAPHICAL_VARIABLE, 2), // remaining
     ];
