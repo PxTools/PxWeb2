@@ -1,4 +1,4 @@
-FROM node:22.20.0-slim AS build
+FROM node:25.1.0-slim AS build
 WORKDIR /app
 COPY . ./
 RUN npm ci && npm run build
