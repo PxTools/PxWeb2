@@ -1,6 +1,7 @@
 import { Plugin, defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
+import pkg from './package.json';
 
 // Custom plugin to handle theme CSS injection
 const themeInjectorPlugin = (): Plugin => ({
@@ -8,15 +9,17 @@ const themeInjectorPlugin = (): Plugin => ({
   transformIndexHtml(html) {
     // Remove the theme CSS link from the original HTML
     html = html.replace(
-      '<link rel="stylesheet" href="./theme/variables.css" />',
+      '<link rel="stylesheet" href="./theme/variables.css?v=__BUILD_VERSION__" />',
       '',
     );
 
     // Inject it at the end of head to ensure it loads last
-    return html.replace(
+    html = html.replace(
       '</head>',
-      '<link rel="stylesheet" href="./theme/variables.css" /></head>',
+      '<link rel="stylesheet" href="./theme/variables.css?v=__BUILD_VERSION__" /></head>',
     );
+    return html.replace(/__BUILD_VERSION__/g, pkg.version);
+
   },
 });
 
@@ -44,5 +47,8 @@ export default defineConfig({
     alias: {
       $ui: path.resolve('../pxweb2-ui/'),
     },
+  },
+  define: {
+    '__BUILD_VERSION__': JSON.stringify(pkg.version),
   },
 });
