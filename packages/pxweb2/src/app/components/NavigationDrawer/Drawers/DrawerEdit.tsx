@@ -7,25 +7,12 @@ import classes from './DrawerEdit.module.scss';
 import { PivotType } from '../../../context/PivotType';
 import useApp from '../../../context/useApp';
 
-// function doLongrunningOperation() {
-//   // Simulate CPU-intensive work for about 2 seconds
-//   const start = Date.now();
-//   while (Date.now() - start < 2000) {
-//     // Perform some calculations to keep CPU busy
-//     Math.sqrt(Math.random() * 10000);
-//   }
-
-//   return Promise.resolve();
-// }
-
 interface PivotButtonProps {
   readonly stub: Variable[];
   readonly heading: Variable[];
   readonly pivotType: PivotType;
   readonly loadingPivotType: PivotType | null;
   readonly setLoadingPivotType: (type: PivotType | null) => void;
-  // readonly isButtonLoading: boolean;
-  // readonly setIsButtonLoading: (loading: boolean) => void;
 }
 
 function PivotButton({
@@ -34,8 +21,6 @@ function PivotButton({
   pivotType,
   loadingPivotType,
   setLoadingPivotType,
-  // isButtonLoading,
-  // setIsButtonLoading,
 }: PivotButtonProps) {
   const { t } = useTranslation();
   const tableData = useTableData();
@@ -44,18 +29,6 @@ function PivotButton({
   // Live region text for screen readers after activation
   const [statusMessage, setStatusMessage] = useState('');
   const [announceOnNextChange, setAnnounceOnNextChange] = useState(false);
-
-  // const handleClick2 = async () => {
-  //   setIsButtonLoading(true);
-  //   await new Promise((resolve) => setTimeout(resolve, 1000)); // Allow spinner to render
-  //   console.log({ isButtonLoading });
-  //   try {
-  //     await doLongrunningOperation();
-  //   } finally {
-  //     setIsButtonLoading(false);
-  //     console.log('Long-running operation completed');
-  //   }
-  // };
 
   const handleClick = async () => {
     setAnnounceOnNextChange(true);
@@ -130,8 +103,6 @@ function PivotButton({
         description={t(descriptionKey)}
         onClick={handleClick}
         iconName={iconName}
-        // isLoading={isButtonLoading}
-        // isLoading={loadingPivotType === pivotType && isLoading}
         isLoading={loadingPivotType === pivotType}
       />
       <output aria-live="polite" aria-atomic="true" className={classes.srOnly}>
@@ -148,7 +119,6 @@ export function DrawerEdit() {
   const [loadingPivotType, setLoadingPivotType] = useState<PivotType | null>(
     null,
   );
-  // const [isButtonLoading, setIsButtonLoading] = useState(false);
 
   return (
     <ContentBox title={t('presentation_page.side_menu.edit.customize.title')}>
