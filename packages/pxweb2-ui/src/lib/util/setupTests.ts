@@ -22,7 +22,11 @@ vi.mock('react-i18next', () => ({
       // Basic interpolation for the few tests that might depend on values
       if (options) {
         return Object.keys(options).reduce(
-          (acc, k) => acc.replace(new RegExp(`{{\\s*${k}\\s*}}`, 'g'), String(options[k])),
+          (acc, k) =>
+            acc.replace(
+              new RegExp(`{{\\s*${k}\\s*}}`, 'g'),
+              String(options[k]),
+            ),
           key,
         );
       }
@@ -37,7 +41,10 @@ vi.mock('react-i18next', () => ({
       let rendered = i18nKey;
       if (values) {
         Object.keys(values).forEach((k) => {
-          rendered = rendered.replace(new RegExp(`{{\\s*${k}\\s*}}`, 'g'), String(values[k]));
+          rendered = rendered.replace(
+            new RegExp(`{{\\s*${k}\\s*}}`, 'g'),
+            String(values[k]),
+          );
         });
       }
       return rendered;
