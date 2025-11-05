@@ -1,7 +1,6 @@
 import { Plugin, defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
-import pkg from './package.json';
 
 // Custom plugin to handle theme CSS injection
 const themeInjectorPlugin = (): Plugin => ({
@@ -49,7 +48,10 @@ export default defineConfig({
     },
   },
   define: {
-    __BUILD_VERSION__: JSON.stringify(pkg.version),
-    __BUILD_DATE__: JSON.stringify(new Date().toISOString())
+    // Used for cache busting of configuration files.
+    // Since we don't update pkg.version on release yet, we use build date instead.
+    //   import pkg from './package.json';
+    //   __BUILD_VERSION__: JSON.stringify(pkg.version),
+    __BUILD_DATE__: JSON.stringify(new Date().toISOString()),
   },
 });
