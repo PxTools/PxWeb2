@@ -9,16 +9,16 @@ const themeInjectorPlugin = (): Plugin => ({
   transformIndexHtml(html) {
     // Remove the theme CSS link from the original HTML
     html = html.replace(
-      '<link rel="stylesheet" href="./theme/variables.css?v=__BUILD_VERSION__" />',
+      '<link rel="stylesheet" href="./theme/variables.css?v=__BUILD_DATE__" />',
       '',
     );
 
     // Inject it at the end of head to ensure it loads last
     html = html.replace(
       '</head>',
-      '<link rel="stylesheet" href="./theme/variables.css?v=__BUILD_VERSION__" /></head>',
+      '<link rel="stylesheet" href="./theme/variables.css?v=__BUILD_DATE__" /></head>',
     );
-    return html.replace(/__BUILD_VERSION__/g, pkg.version);
+    return html.replace(/__BUILD_DATE__/g, new Date().toISOString());
 
   },
 });
@@ -49,6 +49,7 @@ export default defineConfig({
     },
   },
   define: {
-    '__BUILD_VERSION__': JSON.stringify(pkg.version),
+    __BUILD_VERSION__: JSON.stringify(pkg.version),
+    __BUILD_DATE__: JSON.stringify(new Date().toISOString())
   },
 });

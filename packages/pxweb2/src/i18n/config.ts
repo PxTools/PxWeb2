@@ -28,7 +28,7 @@ const initPromise = i18n
   .use(languageDetector)
   .init({
     backend: {
-      loadPath: `${config.baseApplicationPath}locales/{{lng}}/translation.json?v=${__BUILD_VERSION__}`,
+      loadPath: `${config.baseApplicationPath}locales/{{lng}}/translation.json?v=${__BUILD_DATE__}`,
     },
     fallbackLng: config.language.fallbackLanguage,
     defaultNS,
