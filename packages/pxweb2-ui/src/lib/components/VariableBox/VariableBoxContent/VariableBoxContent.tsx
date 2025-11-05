@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useMemo } from 'react';
 import cl from 'clsx';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, Trans } from 'react-i18next';
 import { useDebounce } from '@uidotdev/usehooks';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 import deburr from 'lodash/deburr';
@@ -110,6 +110,27 @@ export function VariableBoxContent({
 
   const searchRef = useRef<SearchHandle>(null);
   const lastInteractionWasPointer = useRef(false);
+
+  // Screen reader announcement count – updates on every raw search change or values mutation (not just debounced result)
+  const [searchResultsCount, setSearchResultsCount] = useState(() => values.length);
+
+  // Recalculate count whenever user types (raw search) or underlying values array changes
+  useEffect(() => {
+    const norm = deburr(search).toLowerCase();
+    const nextCount = values.filter((v) =>
+      deburr(v.label).toLowerCase().includes(norm),
+    ).length;
+    setSearchResultsCount(nextCount);
+  }, [search, values]);
+
+  const renderNumberofTablesScreenReader = () => (
+    <span className={classes['sr-only']} aria-live="polite" aria-atomic="true">
+      <Trans
+        i18nKey="presentation_page.side_menu.selection.variablebox.content.values_list.showing_number_of_values"
+        values={{ searchResultsCount: searchResultsCount }}
+      />
+    </span>
+  );
 
   useEffect(() => {
     const newItems: VirtualListItem[] = [];
@@ -265,6 +286,12 @@ export function VariableBoxContent({
             onChange={(value: string) => {
               // Escape special characters in search value
               setSearch(value);
+              // Immediate count update for live region on each keystroke
+              const norm = deburr(value).toLowerCase();
+              const nextCount = values.filter((v) =>
+                deburr(v.label).toLowerCase().includes(norm),
+              ).length;
+              setSearchResultsCount(nextCount);
               if (value === '') {
                 setScrollingDown(false);
               }
@@ -513,7 +540,7 @@ export function VariableBoxContent({
             className={cl(classes['variablebox-content-values-only-list'])}
             ref={valuesOnlyList}
           >
-            {' '}
+            {renderNumberofTablesScreenReader()}
             {items.length > 0 && (
               <Virtuoso
                 computeItemKey={(key) => `item-${key}`}
