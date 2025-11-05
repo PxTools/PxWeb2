@@ -11,12 +11,12 @@ const themeInjectorPlugin = (): Plugin => ({
       '<link rel="stylesheet" href="./theme/variables.css?v=__BUILD_DATE__" />',
       '',
     );
-
     // Inject it at the end of head to ensure it loads last
     html = html.replace(
       '</head>',
       '<link rel="stylesheet" href="./theme/variables.css?v=__BUILD_DATE__" /></head>',
     );
+    // Replace cache busting build date placeholder
     return html.replace(/__BUILD_DATE__/g, new Date().toISOString());
 
   },
