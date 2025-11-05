@@ -18,11 +18,32 @@ beforeEach(() => {
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
-    t: (key: string) => key,
+    t: (key: string, options?: Record<string, unknown>) => {
+      // Basic interpolation for the few tests that might depend on values
+      if (options) {
+        return Object.keys(options).reduce(
+          (acc, k) => acc.replace(new RegExp(`{{\\s*${k}\\s*}}`, 'g'), String(options[k])),
+          key,
+        );
+      }
+      return key;
+    },
     i18n: {
       changeLanguage: () => new Promise(vi.fn()),
     },
   }),
+  Trans: ({ i18nKey, values, children }: any) => {
+    if (i18nKey) {
+      let rendered = i18nKey;
+      if (values) {
+        Object.keys(values).forEach((k) => {
+          rendered = rendered.replace(new RegExp(`{{\\s*${k}\\s*}}`, 'g'), String(values[k]));
+        });
+      }
+      return rendered;
+    }
+    return children ?? null;
+  },
   initReactI18next: {
     type: '3rdParty',
     init: vi.fn(),
