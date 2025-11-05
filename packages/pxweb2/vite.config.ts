@@ -18,7 +18,6 @@ const themeInjectorPlugin = (): Plugin => ({
     );
     // Replace cache busting build date placeholder
     return html.replace(/__BUILD_DATE__/g, new Date().toISOString());
-
   },
 });
 
