@@ -112,7 +112,9 @@ export function VariableBoxContent({
   const lastInteractionWasPointer = useRef(false);
 
   // Screen reader announcement count – updates on every raw search change or values mutation (not just debounced result)
-  const [searchResultsCount, setSearchResultsCount] = useState(() => values.length);
+  const [searchResultsCount, setSearchResultsCount] = useState(
+    () => values.length,
+  );
 
   // Recalculate count whenever user types (raw search) or underlying values array changes
   useEffect(() => {
