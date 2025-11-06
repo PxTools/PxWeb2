@@ -56,7 +56,8 @@
     },
     "breadcrumbs": {
       "aria_label_breadcrumb": "Breadcrumb",
-      "breadcrumb_root_title": "Home",
+      "breadcrumb_root_title": "Start page",
+      "breadcrumb_home_title": "Home sweet home",
       "show_more_breadcrumbs": "Show more"
     }
   },

@@ -12,6 +12,7 @@ window.PxWeb2Config = {
   baseApplicationPath: '/',
   apiUrl: 'https://api.scb.se/OV0104/v2beta/api/v2',
   maxDataCells: 150000,
+  showBreadCrumbOnStartPage: true,
   specialCharacters: ['.', '..', ':', '-', '...', '*'],
   variableFilterExclusionList: {
     no: [
@@ -50,7 +51,7 @@ window.PxWeb2Config = {
   },
   homePage: {
     no: '', // Set to your Norwegian homepage URL
-    sv: '', // Set to your Swedish homepage URL
-    en: '', // Set to your English homepage URL
+    sv: 'http://www.scb.se/en/', // Set to your Swedish homepage URL
+    en: 'http://www.scb.se', // Set to your English homepage URL
   },
 };

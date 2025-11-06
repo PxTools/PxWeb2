@@ -61,6 +61,10 @@
     "maxDataCells": {
       "type": "number",
       "description": "The maximum number of cells allowed to be shown in a table"
+    },
+    "showBreadCrumbOnStartPage": {
+      "type": "boolean",
+      "description": "Set to true to show breadcrumb on start page"
     }
   },
   "required": ["language", "baseApplicationPath", "apiUrl", "maxDataCells"]
