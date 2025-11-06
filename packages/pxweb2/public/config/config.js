@@ -3,14 +3,13 @@ window.PxWeb2Config = {
     supportedLanguages: [
       { shorthand: 'en', languageName: 'English' },
       { shorthand: 'sv', languageName: 'Svenska' },
-      { shorthand: 'no', languageName: 'Norsk' },
     ],
-    defaultLanguage: 'en',
-    fallbackLanguage: 'en',
+    defaultLanguage: 'sv',
+    fallbackLanguage: 'sv',
     showDefaultLanguageInPath: true,
   },
   baseApplicationPath: '/',
-  apiUrl: 'https://api.scb.se/OV0104/v2beta/api/v2',
+  apiUrl: 'https://statistikdatabasen.scb.se/api/v2',
   maxDataCells: 150000,
   specialCharacters: ['.', '..', ':', '-', '...', '*'],
   variableFilterExclusionList: {

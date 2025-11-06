@@ -6,4 +6,4 @@
   Permissions-Policy: accelerometer=(), autoplay=(), camera=(), encrypted-media=(), fullscreen=(self), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), usb=()
   X-XSS-Protection: 1; mode=block
   Cache-Control: no-cache, must-revalidate Pragma: no-cache Expires: 0
-  Content-Security-Policy: default-src 'self'; connect-src 'self' https://api.scb.se https://data.ssb.no https://data.qa.ssb.no; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net ajax.googleapis.com;
+  Content-Security-Policy: default-src 'self'; connect-src 'self' https://statistikdatabasen.scb.se https://data.ssb.no https://data.qa.ssb.no; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net ajax.googleapis.com;

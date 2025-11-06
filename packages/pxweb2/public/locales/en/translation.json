@@ -46,7 +46,7 @@
       "error": "Error:"
     },
     "status_messages": {
-      "welcome": "Welcome to the new PxWeb 2.0! We're still improving to help you find and use the numbers you need 📊✨",
+      "welcome": "Welcome to the new PxWeb 2 - v2.0.0.! We're still improving to help you find and use the numbers you need 📊✨",
       "drawer_view": "Graph display is under construction.",
       "drawer_save_file": "More file formats are in the works.",
       "drawer_save_api": "Feature for API query is under construction.",
@@ -320,7 +320,7 @@
     },
     "footer": {
       "description": "On this site you can follow as Statistics Sweden (SCB) and Statistics Norway (SSB) are building a new and more user-friendly interface for PxWeb.",
-      "descriptionLink": "Read more about the project on Github",
+      "descriptionLink": "Read more about the project on GitHub",
       "contact": "Contact",
       "projectLeader": "Project leader",
       "scrumMaster": "Scrum master",
