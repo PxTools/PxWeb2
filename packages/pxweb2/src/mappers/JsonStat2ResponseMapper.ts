@@ -74,7 +74,7 @@ export function mapJsonStat2Response(
       : undefined,
     subjectCode: response.extension?.px?.['subject-code'] ?? '',
     subjectArea: response.extension?.px?.['subject-area'] ?? '',
-    variables: mapVariables(response),
+    variables: mapVariables(response, mapData),
     contacts: mapContacts(response.extension?.contact),
     notes: mapNotes(response.note, response.extension?.noteMandatory),
     pathElements: undefined,
@@ -172,7 +172,7 @@ function CreateHeading(
  * @param jsonData - The JSONStat2 dataset containing the dimensions.
  * @returns An array of Variable objects.
  */
-function mapVariables(jsonData: Dataset): Variable[] {
+function mapVariables(jsonData: Dataset, mapData: boolean): Variable[] {
   const variables: Variable[] = [];
 
   for (const dimensionKey in jsonData.dimension) {
@@ -186,6 +186,11 @@ function mapVariables(jsonData: Dataset): Variable[] {
         variables.push(variable);
       }
     }
+  }
+
+  //Change order for variables for metadata response only
+  if (!mapData) {
+    return orderVariablesByType(variables);
   }
 
   return variables;
@@ -585,4 +590,25 @@ export function createCube(
       );
     });
   }
+}
+
+// Sort variables by type with a priority map.
+// Priority: ContentsVariable (0), TimeVariable (1). Others keep original order (stable sort).
+export function orderVariablesByType(
+  variables: readonly Variable[] | null | undefined,
+): Variable[] {
+  const vars = variables ?? [];
+  if (vars.length <= 1) {
+    return vars as Variable[];
+  }
+
+  const priority: Record<string, number> = {
+    [VartypeEnum.CONTENTS_VARIABLE]: 0,
+    [VartypeEnum.TIME_VARIABLE]: 1,
+  };
+
+  return [...vars].sort(
+    (a, b) =>
+      (priority[a.type as string] ?? 2) - (priority[b.type as string] ?? 2),
+  );
 }
