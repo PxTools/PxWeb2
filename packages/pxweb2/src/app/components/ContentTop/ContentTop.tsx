@@ -183,8 +183,8 @@ export function ContentTop({
     location.pathname,
     t,
     i18n.language,
-    pathElements,
     staticTitle,
+    pathElements,
   );
 
   const breadcrumbsVariant = isTablet ? 'compact' : 'default';

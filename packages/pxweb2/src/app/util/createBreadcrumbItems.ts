@@ -9,13 +9,11 @@ export function createBreadcrumbItems(
   currentLocation: string,
   t: TFunction,
   language: string,
-  pathElements: PathElement[],
   currentPageLabel: string,
+  pathElements?: PathElement[],
 ): BreadcrumbItem[] {
   const config = getConfig();
   const basePath = config.baseApplicationPath;
-  console.log('basePath in createBreadcrumbItems', basePath);
-  const pathWithUniqueIds = getPathWithUniqueIds(pathElements);
   const breadcrumbItems: BreadcrumbItem[] = [];
   const eksternalHomePage = config.homePage
     ? config.homePage[language as keyof typeof config.homePage]
@@ -41,6 +39,7 @@ export function createBreadcrumbItems(
 
   // second part of breadcrumb if present
   if (pathElements && pathElements.length > 0) {
+    const pathWithUniqueIds = getPathWithUniqueIds(pathElements);
     const languageHref =
       basePath.replace(/\/$/, '') +
       getLanguagePath(

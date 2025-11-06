@@ -15,7 +15,6 @@ export function NotFound() {
     location.pathname,
     t,
     i18n.language,
-    [],
     notFoundLabel,
   );
   const breadcrumbsVariant = isTablet ? 'compact' : 'default';

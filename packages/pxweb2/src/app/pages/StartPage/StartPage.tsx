@@ -47,7 +47,6 @@ import StartpageDetails from '../../components/StartPageDetails/StartPageDetails
 import { useLocaleContent } from '../../util/hooks/useLocaleContent';
 import type {
   LocaleContent,
-  BreadCrumb as BreadCrumbType,
   DetailsSection as DetailsSectionType,
 } from '../../util/config/localeContentTypes';
 import { createBreadcrumbItems } from '../../util/createBreadcrumbItems';
@@ -192,7 +191,6 @@ const StartPage = () => {
     location.pathname,
     t,
     i18n.language,
-    [],
     '',
   );
 
