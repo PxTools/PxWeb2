@@ -130,7 +130,6 @@
           "search": {
             "placeholder": "Search in list",
             "label": "Search",
-            "aria_label_icon_text": "Search icon",
             "aria_label_clear_button_text": "Clear search icon"
           },
           "header": {
