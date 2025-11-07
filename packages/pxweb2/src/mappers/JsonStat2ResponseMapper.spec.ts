@@ -3,6 +3,7 @@ import {
   mapJsonStat2Response,
   createDataAndStatus,
   createCube,
+  orderVariablesByType,
 } from '../mappers/JsonStat2ResponseMapper';
 
 import {
@@ -11,159 +12,178 @@ import {
   PxTableMetadata,
   VartypeEnum,
   DataCell,
+  Variable,
 } from '@pxweb2/pxweb2-ui';
 
 describe('JsonStat2ResponseMapper', () => {
   describe('mapJsonStat2Response', () => {
-    it('should map a Dataset with dummy data to a PxTable', () => {
-      // Arrange
-      const dataset: Dataset = {
-        // Dummy data
-        label: 'Table label',
-        source: 'Statistics Sweden',
-        updated: '2025-02-21T07:00:00Z',
-        dimension: {
-          time: {
-            label: 'Time',
-            category: {
-              index: {
-                '2021': 0,
-                '2022': 1,
-              },
-              label: {
-                '2021': '2021',
-                '2022': '2022',
-              },
+    const dataset: Dataset = {
+      // Dummy data
+      label: 'Table label',
+      source: 'Statistics Sweden',
+      updated: '2025-02-21T07:00:00Z',
+      dimension: {
+        time: {
+          label: 'Time',
+          category: {
+            index: {
+              '2021': 0,
+              '2022': 1,
             },
-            extension: { elimination: false },
+            label: {
+              '2021': '2021',
+              '2022': '2022',
+            },
           },
-          country: {
-            label: 'Country',
-            note: ['Variable note 1', 'Variable note 2'],
-            category: {
-              index: {
-                US: 0,
-                UK: 1,
-              },
-              label: {
-                US: 'United States',
-                UK: 'United Kingdom',
-              },
-              note: {
-                US: [
-                  'This note is NOT mandatory. Value note for US',
-                  'This note is mandatory! Value note for US',
-                ],
-                UK: ['This note is mandatory! Value note for UK'],
-              },
+          extension: { elimination: false },
+        },
+        country: {
+          label: 'Country',
+          note: ['Variable note 1', 'Variable note 2'],
+          category: {
+            index: {
+              US: 0,
+              UK: 1,
             },
-            extension: {
-              elimination: true,
-              noteMandatory: {
+            label: {
+              US: 'United States',
+              UK: 'United Kingdom',
+            },
+            note: {
+              US: [
+                'This note is NOT mandatory. Value note for US',
+                'This note is mandatory! Value note for US',
+              ],
+              UK: ['This note is mandatory! Value note for UK'],
+            },
+          },
+          extension: {
+            elimination: true,
+            noteMandatory: {
+              '0': true,
+            },
+            categoryNoteMandatory: {
+              US: {
+                '1': true,
+              },
+              UK: {
                 '0': true,
               },
-              categoryNoteMandatory: {
-                US: {
-                  '1': true,
-                },
-                UK: {
-                  '0': true,
-                },
-              },
+            },
 
-              codeLists: [
-                {
-                  id: 'cd1',
-                  label: 'Codelist 1',
-                  type: CodeListType.AGGREGATION,
-                  links: [],
-                },
-                {
-                  id: 'cd2',
-                  label: 'Codelist 2',
-                  type: CodeListType.VALUESET,
-                  links: [],
-                },
-              ],
-            },
-          },
-          ContentsCode: {
-            label: 'observations',
-            category: {
-              index: {
-                CONTENT1: 0,
-                CONTENT2: 1,
+            codeLists: [
+              {
+                id: 'cd1',
+                label: 'Codelist 1',
+                type: CodeListType.AGGREGATION,
+                links: [],
               },
-              label: {
-                CONTENT1: 'Population',
-                CONTENT2: 'Population growth',
+              {
+                id: 'cd2',
+                label: 'Codelist 2',
+                type: CodeListType.VALUESET,
+                links: [],
               },
-              unit: {
-                CONTENT1: {
-                  base: 'number of persons',
-                  decimals: 0,
-                },
-                CONTENT2: {
-                  base: 'number of persons',
-                  decimals: 1,
-                },
-              },
-            },
-            extension: {
-              elimination: false,
-              refperiod: {
-                CONTENT1: '31 December each year',
-                CONTENT2: '1 January each year',
-              },
-              show: 'value',
-              codeLists: [],
-            },
+            ],
           },
         },
-        value: [100, 200, 300, 400, 500, 600, 700, 800],
-        version: Dataset.version._2_0,
-        class: ClassType.DATASET,
-        role: {
-          time: ['Time'],
-          metric: ['ContentsCode'],
-        },
-        id: ['Time', 'Country', 'ContentsCode'],
-        size: [2, 2, 2],
-        note: ['Note 1', 'Note 2', 'Note 3'],
-        extension: {
-          noteMandatory: {
-            '0': true,
-            '1': true,
-          },
-          px: {
-            infofile: 'TEST01',
-            tableid: 'TAB001',
-            decimals: 0,
-            'official-statistics': true,
-            aggregallowed: true,
-            language: 'en',
-            contents: 'Population',
-            descriptiondefault: false,
-            matrix: 'TEST001',
-            'subject-code': 'POP',
-            'subject-area': 'Population',
-          },
-          contact: [
-            {
-              name: ' Contact 1',
-              phone: '111-1111 11 11',
-              mail: 'information@company.com',
-              raw: ' Contact 1, Company# 111-1111 11 11#information@company.com',
+        ContentsCode: {
+          label: 'observations',
+          category: {
+            index: {
+              CONTENT1: 0,
+              CONTENT2: 1,
             },
-            {
-              name: ' Contact 2',
-              phone: '222-2222 22 22',
-              mail: 'information2@company.com',
-              raw: ' Contact 2, Company# 222-2222 22 22#information2@company.com',
+            label: {
+              CONTENT1: 'Population',
+              CONTENT2: 'Population growth',
             },
-          ],
+            unit: {
+              CONTENT1: {
+                base: 'number of persons',
+                decimals: 0,
+              },
+              CONTENT2: {
+                base: 'number of persons',
+                decimals: 1,
+              },
+            },
+          },
+          extension: {
+            elimination: false,
+            refperiod: {
+              CONTENT1: '31 December each year',
+              CONTENT2: '1 January each year',
+            },
+            show: 'value',
+            codeLists: [],
+          },
         },
-      };
+      },
+      value: [100, 200, 300, 400, 500, 600, 700, 800],
+      version: Dataset.version._2_0,
+      class: ClassType.DATASET,
+      role: {
+        time: ['Time'],
+        metric: ['ContentsCode'],
+      },
+      id: ['Time', 'Country', 'ContentsCode'],
+      size: [2, 2, 2],
+      note: ['Note 1', 'Note 2', 'Note 3'],
+      extension: {
+        noteMandatory: {
+          '0': true,
+          '1': true,
+        },
+        px: {
+          infofile: 'TEST01',
+          tableid: 'TAB001',
+          decimals: 0,
+          'official-statistics': true,
+          aggregallowed: true,
+          language: 'en',
+          contents: 'Population',
+          descriptiondefault: false,
+          matrix: 'TEST001',
+          'subject-code': 'POP',
+          'subject-area': 'Population',
+        },
+        contact: [
+          {
+            name: ' Contact 1',
+            phone: '111-1111 11 11',
+            mail: 'information@company.com',
+            raw: ' Contact 1, Company# 111-1111 11 11#information@company.com',
+          },
+          {
+            name: ' Contact 2',
+            phone: '222-2222 22 22',
+            mail: 'information2@company.com',
+            raw: ' Contact 2, Company# 222-2222 22 22#information2@company.com',
+          },
+        ],
+      },
+    };
+
+    it('should reorder varibles if mapData is false', () => {
+      const pxTable = mapJsonStat2Response(dataset, false);
+
+      const idsInOrder = pxTable.metadata.variables.map((v) => v.id);
+      // Original insertion order in dataset.dimension is: ['time', 'country', 'ContentsCode']
+      // With sorting (mapData=false), Contents should be first, then time and country last.
+      expect(idsInOrder).toEqual(['ContentsCode', 'time', 'country']);
+    });
+
+    it('should keep original order when mapData is true (default)', () => {
+      const pxTable = mapJsonStat2Response(dataset);
+
+      const idsInOrder = pxTable.metadata.variables.map((v) => v.id);
+      // Should match the insertion order of dataset.dimension
+      expect(idsInOrder).toEqual(['time', 'country', 'ContentsCode']);
+    });
+
+    it('should map a Dataset with dummy data to a PxTable', () => {
+      // Arrange
 
       // Act
       const pxTable = mapJsonStat2Response(dataset);
@@ -526,6 +546,102 @@ describe('JsonStat2ResponseMapper', () => {
       expect(data.cube).toEqual({
         '2021': { value: 100, status: 'A', presentation: undefined },
       });
+    });
+  });
+  describe('orderVariablesByType', () => {
+    const makeVar = (
+      id: string,
+      label: string,
+      type: Variable['type'],
+    ): Variable => ({
+      id,
+      label,
+      mandatory: false,
+      values: [{ code: `${id}-v1`, label: `${label}-v1` }],
+      codeLists: [],
+      type,
+    });
+
+    it('puts Contents first, then Time, then keeps original order for others', () => {
+      const input: readonly Variable[] = [
+        makeVar('r1', 'R1', VartypeEnum.REGULAR_VARIABLE),
+        makeVar('g1', 'G1', VartypeEnum.GEOGRAPHICAL_VARIABLE),
+        makeVar('c1', 'C1', VartypeEnum.CONTENTS_VARIABLE),
+        makeVar('t1', 'T1', VartypeEnum.TIME_VARIABLE),
+        makeVar('r2', 'R2', VartypeEnum.REGULAR_VARIABLE),
+        makeVar('g2', 'G2', VartypeEnum.GEOGRAPHICAL_VARIABLE),
+      ];
+
+      const result = orderVariablesByType(input);
+      expect(result.map((v) => v.label)).toEqual([
+        'C1',
+        'T1',
+        'R1',
+        'G1',
+        'R2',
+        'G2',
+      ]);
+    });
+
+    it('If no Contents, first Time, then keeps original order for others', () => {
+      const input: readonly Variable[] = [
+        makeVar('r1', 'R1', VartypeEnum.REGULAR_VARIABLE),
+        makeVar('g1', 'G1', VartypeEnum.GEOGRAPHICAL_VARIABLE),
+        makeVar('t1', 'T1', VartypeEnum.TIME_VARIABLE),
+        makeVar('r2', 'R2', VartypeEnum.REGULAR_VARIABLE),
+        makeVar('g2', 'G2', VartypeEnum.GEOGRAPHICAL_VARIABLE),
+      ];
+
+      const result = orderVariablesByType(input);
+      expect(result.map((v) => v.label)).toEqual([
+        'T1',
+        'R1',
+        'G1',
+        'R2',
+        'G2',
+      ]);
+    });
+
+    it('is stable within the same (non-prioritized) group', () => {
+      const input: readonly Variable[] = [
+        makeVar('r1', 'R1', VartypeEnum.REGULAR_VARIABLE),
+        makeVar('g1', 'G1', VartypeEnum.GEOGRAPHICAL_VARIABLE),
+        makeVar('g2', 'G2', VartypeEnum.GEOGRAPHICAL_VARIABLE),
+        makeVar('r2', 'R2', VartypeEnum.REGULAR_VARIABLE),
+      ];
+
+      const result = orderVariablesByType(input);
+      // “Others” must keep original order among themselves
+      expect(result.map((v) => v.label)).toEqual(['R1', 'G1', 'G2', 'R2']);
+    });
+
+    it('does not mutate the input array', () => {
+      const input: Variable[] = [
+        makeVar('c1', 'C1', VartypeEnum.CONTENTS_VARIABLE),
+        makeVar('r1', 'R1', VartypeEnum.REGULAR_VARIABLE),
+        makeVar('t1', 'T1', VartypeEnum.TIME_VARIABLE),
+      ];
+      const snapshot = input.map((v) => v.id);
+
+      const result = orderVariablesByType(input);
+      expect(result.map((v) => v.id)).toEqual(['c1', 't1', 'r1']);
+
+      // original input must remain unchanged
+      expect(input.map((v) => v.id)).toEqual(snapshot);
+    });
+
+    it('returns empty array for null/undefined', () => {
+      expect(orderVariablesByType(null)).toEqual([]);
+      expect(orderVariablesByType(undefined)).toEqual([]);
+    });
+
+    it('returns the same single-item array instance (no copy on length <= 1)', () => {
+      const single: readonly Variable[] = [
+        makeVar('r1', 'R1', VartypeEnum.REGULAR_VARIABLE),
+      ];
+      const result = orderVariablesByType(single);
+      // The function returns the same reference for length <= 1
+      expect(result).toBe(single);
     });
   });
 });
