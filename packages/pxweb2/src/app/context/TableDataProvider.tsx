@@ -33,8 +33,6 @@ import { PivotType } from './PivotType';
 export interface TableDataContextType {
   isInitialized: boolean;
   data: PxTable | undefined;
-  // isLoading: boolean;
-  // setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   fetchTableData: (tableId: string, i18n: i18n, isMobile: boolean) => void;
   fetchSavedQuery: (queryId: string, i18n: i18n, isMobile: boolean) => void;
   pivotToMobile: () => void;
@@ -54,10 +52,6 @@ interface TableDataProviderProps {
 const TableDataContext = createContext<TableDataContextType | undefined>({
   isInitialized: false,
   data: undefined,
-  // isLoading: false,
-  // setIsLoading: () => {
-  //   // No-op: useTableData hook prevents this from being called
-  // },
   fetchTableData: () => {
     // No-op: useTableData hook prevents this from being called
   },
@@ -78,7 +72,6 @@ const TableDataContext = createContext<TableDataContextType | undefined>({
 
 const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   const [isInitialized] = useState(true);
-  // const [isLoading, setIsLoading] = useState(false);
   // Data (metadata) that reflects variables and values selected by user right now. Used as data source for the table
   const [data, setData] = useState<PxTable | undefined>(undefined);
   // Accumulated data (and metadata) from all API calls made by user. Stored in the data cube.
@@ -1173,7 +1166,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         return;
       }
 
-      // setIsLoading(true);
       setTimeout(async () => {
         const tmpTable = copyPxTableWithoutData(data);
         let stub: string[] = [];
@@ -1222,13 +1214,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     ],
   );
 
-  // // Set isLoading to false after data changes (table rendered)
-  // useEffect(() => {
-  //   if (isLoading) {
-  //     setIsLoading(false);
-  //   }
-  // }, [data, isLoading]);
-
   /**
    * Pivots the table according to the stub- and heading order.
    */
@@ -1274,8 +1259,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   const memoData = React.useMemo(
     () => ({
       data,
-      // isLoading,
-      // setIsLoading,
       fetchTableData,
       fetchSavedQuery,
       pivotToMobile,
@@ -1286,8 +1269,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     }),
     [
       data,
-      // isLoading,
-      // setIsLoading,
       fetchTableData,
       fetchSavedQuery,
       pivotToMobile,

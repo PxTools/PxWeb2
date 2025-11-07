@@ -88,13 +88,6 @@ function PivotButton({
   const iconName =
     pivotType === PivotType.Auto ? 'Sparkles' : 'ArrowCirclepathClockwise';
 
-  // // Hide spinner when global isLoading becomes false
-  // useEffect(() => {
-  //   if (!isLoading) {
-  //     setLoadingPivotType(null);
-  //   }
-  // }, [isLoading, setLoadingPivotType]);
-
   return (
     <>
       <ActionItem
@@ -113,9 +106,9 @@ function PivotButton({
 }
 
 export function DrawerEdit() {
+  const { t } = useTranslation();
   const { isMobile } = useApp();
   const data = useTableData().data;
-  const { t } = useTranslation();
   const [loadingPivotType, setLoadingPivotType] = useState<PivotType | null>(
     null,
   );
