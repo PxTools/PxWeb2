@@ -1166,43 +1166,41 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         return;
       }
 
-      setTimeout(async () => {
-        const tmpTable = copyPxTableWithoutData(data);
-        let stub: string[] = [];
-        let heading: string[] = [];
+      const tmpTable = copyPxTableWithoutData(data);
+      let stub: string[] = [];
+      let heading: string[] = [];
 
-        if (isMobileMode) {
-          stub = structuredClone(stubMobile);
-          heading = structuredClone(headingMobile);
-        } else {
-          stub = structuredClone(stubDesktop);
-          heading = structuredClone(headingDesktop);
-        }
-        if (stub.length === 0 && heading.length === 0) {
-          return;
-        }
+      if (isMobileMode) {
+        stub = structuredClone(stubMobile);
+        heading = structuredClone(headingMobile);
+      } else {
+        stub = structuredClone(stubDesktop);
+        heading = structuredClone(headingDesktop);
+      }
+      if (stub.length === 0 && heading.length === 0) {
+        return;
+      }
 
-        if (type === PivotType.Auto) {
-          autoPivotTable(tmpTable.metadata.variables, stub, heading);
-        } else {
-          pivotTableCW(stub, heading);
-        }
+      if (type === PivotType.Auto) {
+        autoPivotTable(tmpTable.metadata.variables, stub, heading);
+      } else {
+        pivotTableCW(stub, heading);
+      }
 
-        pivotTable(tmpTable, stub, heading);
+      pivotTable(tmpTable, stub, heading);
 
-        // Reassemble table data
-        tmpTable.data = data.data;
+      // Reassemble table data
+      tmpTable.data = data.data;
 
-        setData(tmpTable);
+      setData(tmpTable);
 
-        if (isMobileMode) {
-          setStubMobile(stub);
-          setHeadingMobile(heading);
-        } else {
-          setStubDesktop(stub);
-          setHeadingDesktop(heading);
-        }
-      }, 0);
+      if (isMobileMode) {
+        setStubMobile(stub);
+        setHeadingMobile(heading);
+      } else {
+        setStubDesktop(stub);
+        setHeadingDesktop(heading);
+      }
     },
     [
       data,
