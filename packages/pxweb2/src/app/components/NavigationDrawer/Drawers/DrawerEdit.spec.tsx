@@ -96,7 +96,6 @@ describe('DrawerEdit', () => {
   it('has correct display name', () => {
     expect(DrawerEdit.displayName).toBe('DrawerEdit');
   });
-   
 
   it('calls pivot with PivotType.Clockwise on its button click', async () => {
     render(<DrawerEdit />);
@@ -130,4 +129,3 @@ describe('DrawerEdit', () => {
     );
   });
 });
-
