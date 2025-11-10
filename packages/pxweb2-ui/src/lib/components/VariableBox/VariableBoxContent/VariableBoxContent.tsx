@@ -125,11 +125,13 @@ export function VariableBoxContent({
     setSearchResultsCount(nextCount);
   }, [search, values]);
 
+  const debouncedSearchResultsCount = useDebounce(searchResultsCount, 600);
+
   const renderNumberofTablesScreenReader = () => (
     <span className={classes['sr-only']} aria-live="polite" aria-atomic="true">
       <Trans
         i18nKey="presentation_page.side_menu.selection.variablebox.content.values_list.showing_number_of_values"
-        values={{ searchResultsCount: searchResultsCount }}
+        values={{ searchResultsCount: debouncedSearchResultsCount }}
       />
     </span>
   );

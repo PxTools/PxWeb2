@@ -17,7 +17,7 @@ export default mergeConfig(
       testTimeout: 20000,
       hookTimeout: 20000,
       include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-  // Use a *.spec.ts setup so Sonar treats it as test code and Vitest can resolve it without custom extension
+
   setupFiles: './src/lib/util/setupTests.ts',
 
       reporters: ['default'],
