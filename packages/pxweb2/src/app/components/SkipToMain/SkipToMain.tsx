@@ -5,6 +5,7 @@ import { useLocation, useSearchParams } from 'react-router';
 
 import classes from './SkipToMain.module.scss';
 import { Link } from '@pxweb2/pxweb2-ui';
+import { getConfig } from '../../util/config/getConfig';
 
 export const SkipToMain = React.forwardRef<
   HTMLDivElement,
@@ -12,12 +13,13 @@ export const SkipToMain = React.forwardRef<
 >((props, ref) => {
   const { t } = useTranslation();
 
+  const basePath = getConfig().baseApplicationPath;
   const location = useLocation().pathname;
   const [searchParams] = useSearchParams();
   // build a single, URL-encoded query string from the search params
   const paramsString = searchParams.toString(); // URLSearchParams handles encoding
   const params = paramsString ? `?${paramsString}` : '';
-  const path = location + params + '#px-main-content';
+  const path = basePath.slice(0, -1) + location + params + '#px-main-content';
   return (
     <div
       ref={ref}

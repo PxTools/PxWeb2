@@ -12,11 +12,13 @@
   gap: fixed.$spacing-2;
 
   color: var(--px-color-text-action);
+  --px-language-icon-color: var(--px-color-icon-action);
   border: none;
   border-radius: var(--px-border-radius-full);
 
   &:hover {
     color: var(--px-color-text-on-action-subtle);
+    --px-language-icon-color: var(--px-color-icon-on-action-subtle);
     background: var(--px-color-surface-action-subtle-hover);
     border-radius: var(--px-border-radius-medium);
   }
@@ -67,4 +69,5 @@
   justify-content: flex-end;
   align-items: center;
   gap: fixed.$spacing-1;
+  --px-icon-color: var(--px-language-icon-color);
 }
