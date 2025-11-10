@@ -11,6 +11,7 @@ interface MockActionItemProps {
   onClick?: () => void;
   iconName?: string;
   ariaLabel?: string;
+  isLoading?: boolean;
   [key: string]: unknown;
 }
 
@@ -47,6 +48,8 @@ vi.mock('@pxweb2/pxweb2-ui', () => ({
     onClick,
     iconName,
     ariaLabel,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    isLoading,
     ...props
   }: MockActionItemProps) => (
     <button
