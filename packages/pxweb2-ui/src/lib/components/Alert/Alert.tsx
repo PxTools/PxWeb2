@@ -71,11 +71,7 @@ export function Alert({
     }
   };
   const hasheading = Boolean(heading);
-    const iconArrow = getIconDirection(
-    i18next.dir(),
-    'ArrowRight',
-    'ArrowLeft',
-  );
+  const iconArrow = getIconDirection(i18next.dir(), 'ArrowRight', 'ArrowLeft');
   const iconClose = 'XMark';
   let variantIcon: IconProps['iconName'];
   let variantAriaLive: 'polite' | 'assertive';
