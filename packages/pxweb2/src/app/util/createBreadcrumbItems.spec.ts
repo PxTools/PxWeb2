@@ -22,7 +22,7 @@ beforeEach(() => {
     baseApplicationPath: '/app/',
     homePage: { en: 'https://external.home/en' },
     language: {
-      supportedLanguages: ['en', 'nb'],
+      supportedLanguages: ['en', 'no'],
       defaultLanguage: 'en',
       showDefaultLanguageInPath: true,
     },
@@ -83,7 +83,7 @@ describe('createBreadcrumbItems', () => {
       baseApplicationPath: '/app/',
       // no homePage
       language: {
-        supportedLanguages: ['en', 'nb'],
+        supportedLanguages: ['en', 'no'],
         defaultLanguage: 'en',
         showDefaultLanguageInPath: true,
       },
@@ -120,7 +120,7 @@ describe('createBreadcrumbItems', () => {
     });
 
     // No current page item since currentPageLabel was empty
-    expect(items.length).toBe(3);
+    expect(items.length).toBe(4);
   });
 
   it('handles undefined/null pathElements (no intermediate breadcrumb items)', () => {

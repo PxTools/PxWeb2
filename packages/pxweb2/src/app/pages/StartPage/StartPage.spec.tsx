@@ -12,7 +12,7 @@ import { useLocaleContent } from '../../util/hooks/useLocaleContent';
 import { sortTablesByUpdated } from '../../util/startPageFilters';
 import { renderWithProviders } from '../../util/testing-utils';
 import * as startPageRender from '../../util/startPageRender';
-import { getConfig } from '../../util/config/getConfig';
+import * as configModule from '../../util/config/getConfig';
 
 // Mock the getAllTables function
 vi.mock('../../util/tableHandler', () => ({
@@ -126,7 +126,7 @@ const baseState: StartPageState = {
   originalSubjectTree: [],
   lastUsedYearRange: null,
 };
-const config = getConfig();
+const config = configModule.getConfig();
 
 describe('StartPage', () => {
   it('should render successfully', async () => {
@@ -290,24 +290,12 @@ describe('StartPage', () => {
     });
   });
 
-  describe('locale content: breadcrumbs', () => {
+  describe('show breadcrumbs on startpage if set in config breadcrumbs', () => {
     beforeEach(() => {
       mockUseLocaleContent.mockReset();
     });
 
-    it('Breadcrumb rendering', async () => {
-      mockUseLocaleContent.mockReturnValue({
-        startPage: {
-          breadCrumb: {
-            enabled: true,
-            items: [
-              { label: 'Forsiden', href: '#' },
-              { label: 'Statistikkbanken', href: '/' },
-            ],
-          },
-        },
-      });
-
+    it('Breadcrumb rendering with home page url when showBreadCrumbOnStartPage set to true and homepage set ', async () => {
       const { findByRole } = renderWithProviders(
         <AccessibilityProvider>
           <MemoryRouter>
@@ -317,24 +305,34 @@ describe('StartPage', () => {
       );
 
       expect(
-        await findByRole('link', { name: 'Forsiden' }),
+        await findByRole('link', {
+          name: 'common.breadcrumbs.breadcrumb_home_title',
+        }),
       ).toBeInTheDocument();
       expect(
-        await findByRole('link', { name: 'Statistikkbanken' }),
+        await findByRole('link', {
+          name: 'common.breadcrumbs.breadcrumb_root_title',
+        }),
       ).toBeInTheDocument();
     });
 
-    it('does not render breadcrumbs when enabled is false', async () => {
-      mockUseLocaleContent.mockReturnValue({
-        startPage: {
-          breadCrumb: {
-            enabled: false,
-            items: [
-              { label: 'Forsiden', href: '#' },
-              { label: 'Statistikkbanken', href: '/' },
-            ],
-          },
+    it('Do not render breadcrumbs on startpage when showBreadCrumbOnStartPage set to false,', async () => {
+      vi.spyOn(configModule, 'getConfig').mockReturnValue({
+        language: {
+          supportedLanguages: [
+            { shorthand: 'en', languageName: 'English' },
+            { shorthand: 'no', languageName: 'Norwegian' },
+          ],
+          defaultLanguage: 'en',
+          fallbackLanguage: 'en',
+          showDefaultLanguageInPath: false,
         },
+        baseApplicationPath: '/',
+        apiUrl: 'test',
+        maxDataCells: 150000,
+        showBreadCrumbOnStartPage: false,
+        specialCharacters: ['.', '..', ':', '-', '...', '*'],
+        variableFilterExclusionList: {},
       });
 
       const { queryByRole } = renderWithProviders(
@@ -348,28 +346,9 @@ describe('StartPage', () => {
       // Wait for component to stabilize after async state updates
       await waitFor(() => {
         expect(
-          queryByRole('link', { name: 'Forsiden' }),
-        ).not.toBeInTheDocument();
-      });
-    });
-
-    it('does not render breadcrumbs when breadCrumb is missing', async () => {
-      mockUseLocaleContent.mockReturnValue({
-        startPage: {},
-      });
-
-      const { queryByRole } = renderWithProviders(
-        <AccessibilityProvider>
-          <MemoryRouter>
-            <StartPage />
-          </MemoryRouter>
-        </AccessibilityProvider>,
-      );
-
-      // Wait for component to stabilize after async state updates
-      await waitFor(() => {
-        expect(
-          queryByRole('link', { name: 'Forsiden' }),
+          queryByRole('link', {
+            name: 'common.breadcrumbs.breadcrumb_root_title',
+          }),
         ).not.toBeInTheDocument();
       });
     });

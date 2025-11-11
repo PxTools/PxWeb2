@@ -33,9 +33,15 @@ vi.mock('../src/app/util/config/getConfig', () => ({
     baseApplicationPath: '/',
     apiUrl: '',
     maxDataCells: 100000,
+    showBreadCrumbOnStartPage: true,
     specialCharacters: ['.', '..', ':', '-', '...', '*'],
     variableFilterExclusionList: {
       en: ['statisticalvariable', 'year', 'quarter', 'month', 'week'],
+    },
+    homePage: {
+      no: '', // Set to your Norwegian homepage URL
+      sv: 'http://www.scb.se', // Set to your Swedish homepage URL
+      en: 'http://www.scb.se/en/', // Set to your English homepage URL
     },
   }),
 }));
