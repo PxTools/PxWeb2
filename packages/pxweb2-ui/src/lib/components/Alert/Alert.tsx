@@ -9,6 +9,8 @@ import { Icon, IconProps } from '../Icon/Icon';
 import Button from '../Button/Button';
 import BodyShort from '../Typography/BodyShort/BodyShort';
 import List, { ListProps } from '../List/List';
+import { getIconDirection } from '../../util/util';
+import i18next from 'i18next';
 
 export interface AlertProps {
   readonly size?: 'small' | 'medium';
@@ -69,7 +71,11 @@ export function Alert({
     }
   };
   const hasheading = Boolean(heading);
-  const iconRight = 'ArrowRight';
+    const iconArrow = getIconDirection(
+    i18next.dir(),
+    'ArrowRight',
+    'ArrowLeft',
+  );
   const iconClose = 'XMark';
   let variantIcon: IconProps['iconName'];
   let variantAriaLive: 'polite' | 'assertive';
@@ -234,7 +240,7 @@ export function Alert({
         )}
         {clickable && (
           <div className={cl(classes['alert-arrow'])}>
-            <Icon iconName={iconRight} />
+            <Icon iconName={iconArrow} />
           </div>
         )}
       </div>
