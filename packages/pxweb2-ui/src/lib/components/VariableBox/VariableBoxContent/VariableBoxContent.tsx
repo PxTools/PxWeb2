@@ -130,8 +130,12 @@ export function VariableBoxContent({
     if (searchResultsCount < 1) {
       return null;
     }
-     return (
-      <span className={classes['sr-only']} aria-live="polite" aria-atomic="true">
+    return (
+      <span
+        className={classes['sr-only']}
+        aria-live="polite"
+        aria-atomic="true"
+      >
         <Trans
           i18nKey={
             debouncedSearchResultsCount === 1
