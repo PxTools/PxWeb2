@@ -46,18 +46,21 @@
 }
 
 .label-description-wrapper {
-  display: flex;
   flex-direction: column;
-  align-items: flex-start; // ensures left alignment
-  gap: 0.5rem;
   text-align: start; // aligns text to the start
   word-break: break-word; // allows long words to wrap
   white-space: normal; // allows normal text wrapping
 }
 
-.icon-label-wrapper-large {
+.icon-label-wrapper-medium {
   display: flex;
   align-items: center;
+  gap: 0.5rem;
+}
+
+.icon-label-wrapper-large {
+  display: flex;
+  align-self: center;
   gap: 0.75rem;
 }
 

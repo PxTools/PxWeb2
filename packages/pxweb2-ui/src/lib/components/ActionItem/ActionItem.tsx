@@ -11,6 +11,32 @@ import {
   Spinner,
 } from '@pxweb2/pxweb2-ui';
 
+function IconWrapper({
+  size,
+  isLoading,
+  iconName,
+  largeIconName,
+}: {
+  size: 'medium' | 'large';
+  isLoading: boolean;
+  iconName: IconProps['iconName'];
+  largeIconName: ActionItemIconProps['largeIconName'];
+}) {
+  if (isLoading && size === 'medium') {
+    return <Spinner size="xsmall" aria-hidden="true" />;
+  }
+
+  return (
+    <div className={cl(styles[`icon-wrapper-${size}`], styles['icon-wrapper'])}>
+      {size === 'medium' ? (
+        <Icon iconName={iconName} />
+      ) : (
+        <ActionItemIcon largeIconName={largeIconName} />
+      )}
+    </div>
+  );
+}
+
 interface ActionItemProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   label?: string;
@@ -43,46 +69,25 @@ export function ActionItem({
       aria-busy={isLoading || rest.disabled}
       {...rest}
     >
-      {size === 'medium' && (
-        <>
-          {isLoading ? (
-            <Spinner size="xsmall" aria-hidden="true" />
-          ) : (
-            <div
-              className={cl(
-                styles[`icon-wrapper-${size}`],
-                styles['icon-wrapper'],
-              )}
-            >
-              <Icon iconName={iconName} />
-            </div>
-          )}
-          <div className={styles['label-description-wrapper']}>
-            <Label size="medium" className={cl(styles['label-hover'])}>
-              {label}
-            </Label>
-            {description && <BodyShort>{description}</BodyShort>}
-          </div>
-        </>
-      )}
-
-      {size === 'large' && (
-        <div className={cl(styles[`icon-label-wrapper-${size}`])}>
-          <div
-            className={cl(
-              styles[`icon-wrapper-${size}`],
-              styles['icon-wrapper'],
-            )}
-          >
-            <ActionItemIcon largeIconName={largeIconName} />
-          </div>
-          <div className={styles['label-body-wrapper']}>
-            <Label size="medium" className={cl(styles['label-hover'])}>
-              {label}
-            </Label>
-          </div>
-        </div>
-      )}
+      <IconWrapper
+        size={size}
+        isLoading={isLoading}
+        iconName={iconName}
+        largeIconName={largeIconName}
+      />
+      <div
+        className={cl(
+          styles['label-description-wrapper'],
+          styles[`icon-label-wrapper-${size}`],
+        )}
+      >
+        <Label size="medium" className={cl(styles['label-hover'])}>
+          {label}
+        </Label>
+        {size === 'medium' && description && (
+          <BodyShort>{description}</BodyShort>
+        )}
+      </div>
     </button>
   );
 }
