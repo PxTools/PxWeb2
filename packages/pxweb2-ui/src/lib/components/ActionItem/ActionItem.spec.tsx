@@ -91,6 +91,19 @@ describe('ActionItem', () => {
 
       expect(screen.getByTestId('spinner')).toBeInTheDocument();
     });
+
+    it('shows toggle state when toggleState is provided', () => {
+      render(
+        <ActionItem
+          iconName="Table"
+          size="medium"
+          toggleState={true}
+          label="Toggle Test"
+        />,
+      );
+
+      expect(screen.getByText('true')).toBeInTheDocument();
+    });
   });
 
   describe('large size', () => {
@@ -106,6 +119,19 @@ describe('ActionItem', () => {
       render(<ActionItem iconName="BarChart" size="large" isLoading={true} />);
 
       expect(screen.queryByTestId('spinner')).not.toBeInTheDocument();
+    });
+
+    it('shows toggle state when toggleState is provided', () => {
+      render(
+        <ActionItem
+          largeIconName="Table"
+          size="large"
+          toggleState={false}
+          label="Toggle Test Large"
+        />,
+      );
+
+      expect(screen.getByText('false')).toBeInTheDocument();
     });
   });
 });
