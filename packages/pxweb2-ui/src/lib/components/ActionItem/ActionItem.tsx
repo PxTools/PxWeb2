@@ -17,10 +17,10 @@ function IconWrapper({
   iconName,
   largeIconName,
 }: {
-  size: 'medium' | 'large';
-  isLoading: boolean;
-  iconName: IconProps['iconName'];
-  largeIconName: ActionItemIconProps['largeIconName'];
+  readonly size: 'medium' | 'large';
+  readonly isLoading: boolean;
+  readonly iconName: IconProps['iconName'];
+  readonly largeIconName: ActionItemIconProps['largeIconName'];
 }) {
   if (isLoading && size === 'medium') {
     return <Spinner size="xsmall" aria-hidden="true" />;
