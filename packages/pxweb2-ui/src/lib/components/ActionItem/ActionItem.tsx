@@ -47,6 +47,7 @@ interface ActionItemProps
   description?: string;
   size?: 'medium' | 'large';
   isLoading?: boolean;
+  toggleState?: boolean;
 }
 
 export function ActionItem({
@@ -58,6 +59,7 @@ export function ActionItem({
   size = 'medium',
   description,
   isLoading = false,
+  toggleState,
   ...rest
 }: Readonly<ActionItemProps>) {
   return (
@@ -88,6 +90,11 @@ export function ActionItem({
           <BodyShort>{description}</BodyShort>
         )}
       </div>
+      {toggleState !== undefined && (
+        <div className={cl(styles['toggle-wrapper'])}>
+          {toggleState.toString()}
+        </div>
+      )}
     </button>
   );
 }

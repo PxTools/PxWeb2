@@ -46,6 +46,7 @@
 }
 
 .label-description-wrapper {
+  flex: 1 0 0;
   flex-direction: column;
   text-align: start; // aligns text to the start
   word-break: break-word; // allows long words to wrap
@@ -71,4 +72,10 @@
   &:hover {
     cursor: pointer;
   }
+}
+
+.toggle-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  align-self: center;
 }
