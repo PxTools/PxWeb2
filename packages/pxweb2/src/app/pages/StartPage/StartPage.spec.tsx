@@ -13,6 +13,8 @@ import { sortTablesByUpdated } from '../../util/startPageFilters';
 import { renderWithProviders } from '../../util/testing-utils';
 import * as startPageRender from '../../util/startPageRender';
 import * as configModule from '../../util/config/getConfig';
+import { getConfig } from '../../util/config/getConfig';
+import { mockedConfig } from '../../../../test/setupTests';
 
 // Mock the getAllTables function
 vi.mock('../../util/tableHandler', () => ({
@@ -296,6 +298,16 @@ describe('StartPage', () => {
     });
 
     it('Breadcrumb rendering with home page url when showBreadCrumbOnStartPage set to true and homepage set ', async () => {
+      (getConfig as Mock).mockImplementation(() => ({
+        ...mockedConfig,
+        showBreadCrumbOnStartPage: true,
+        homePage: {
+          no: '', // Set to your Norwegian homepage URL
+          sv: 'http://www.scb.se', // Set to your Swedish homepage URL
+          en: 'http://www.scb.se/en/', // Set to your English homepage URL
+        },
+      }));
+
       const { findByRole } = renderWithProviders(
         <AccessibilityProvider>
           <MemoryRouter>
@@ -317,23 +329,10 @@ describe('StartPage', () => {
     });
 
     it('Do not render breadcrumbs on startpage when showBreadCrumbOnStartPage set to false,', async () => {
-      vi.spyOn(configModule, 'getConfig').mockReturnValue({
-        language: {
-          supportedLanguages: [
-            { shorthand: 'en', languageName: 'English' },
-            { shorthand: 'no', languageName: 'Norwegian' },
-          ],
-          defaultLanguage: 'en',
-          fallbackLanguage: 'en',
-          showDefaultLanguageInPath: false,
-        },
-        baseApplicationPath: '/',
-        apiUrl: 'test',
-        maxDataCells: 150000,
+      (getConfig as Mock).mockImplementation(() => ({
+        ...mockedConfig,
         showBreadCrumbOnStartPage: false,
-        specialCharacters: ['.', '..', ':', '-', '...', '*'],
-        variableFilterExclusionList: {},
-      });
+      }));
 
       const { queryByRole } = renderWithProviders(
         <AccessibilityProvider>
