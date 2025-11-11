@@ -125,7 +125,7 @@ export function VariableBoxContent({
     setSearchResultsCount(nextCount);
   }, [search, values]);
 
-  const debouncedSearchResultsCount = useDebounce(searchResultsCount, 600);
+  const debouncedSearchResultsCount = useDebounce(searchResultsCount, 700);
 
   const renderNumberofTablesScreenReader = () => (
     <span className={classes['sr-only']} aria-live="polite" aria-atomic="true">
