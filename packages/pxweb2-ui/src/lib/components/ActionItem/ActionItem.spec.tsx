@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom/vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-
 import { describe, it, expect, vi } from 'vitest';
+
 import { ActionItem } from './ActionItem';
 
 // Mock UI components
@@ -34,6 +34,7 @@ vi.mock('@pxweb2/pxweb2-ui', () => ({
 describe('ActionItem', () => {
   it('renders with default props', () => {
     render(<ActionItem iconName="BarChart" />);
+
     expect(screen.getByRole('button')).toBeInTheDocument();
     expect(screen.getByTestId('icon')).toHaveAttribute('data-icon', 'BarChart');
   });
@@ -47,6 +48,7 @@ describe('ActionItem', () => {
         description="Custom description"
       />,
     );
+
     expect(screen.getByLabelText('Custom Aria Label')).toBeInTheDocument();
     expect(screen.getByText('Custom Label')).toBeInTheDocument();
     expect(screen.getByText('Custom description')).toBeInTheDocument();
@@ -55,6 +57,7 @@ describe('ActionItem', () => {
 
   it('uses label when no ariaLabel is provided', () => {
     render(<ActionItem iconName="PieChart" label="Custom Label" />);
+
     expect(screen.getByLabelText('Custom Label')).toBeInTheDocument();
     expect(screen.getByText('Custom Label')).toBeInTheDocument();
     expect(screen.getByTestId('icon')).toHaveAttribute('data-icon', 'PieChart');
@@ -64,21 +67,22 @@ describe('ActionItem', () => {
     const onClick = vi.fn();
     render(<ActionItem iconName="BarChart" onClick={onClick} />);
     fireEvent.click(screen.getByRole('button'));
+
     expect(onClick).toHaveBeenCalled();
   });
 
   it('applies correct class names for size', () => {
     render(<ActionItem largeIconName="BarChart" size="medium" />);
     const iconWrapper = screen.getByTestId('icon').parentElement;
-    expect(iconWrapper?.className).toMatch(/iconWrapper-medium/);
+
+    expect(iconWrapper?.className).toMatch(/icon-wrapper-medium/);
   });
 
   describe('medium size', () => {
     it('shows description', () => {
       // medium (default)
-      render(
-        <ActionItem iconName="BarChart" size="medium" description="desc" />,
-      );
+      render(<ActionItem iconName="BarChart" description="desc" />);
+
       expect(screen.getByText('desc')).toBeInTheDocument();
     });
 
@@ -94,6 +98,7 @@ describe('ActionItem', () => {
       render(
         <ActionItem largeIconName="Table" size="large" description="desc2" />,
       );
+
       expect(screen.queryByText('desc2')).not.toBeInTheDocument();
     });
 

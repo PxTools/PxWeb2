@@ -19,7 +19,6 @@ interface ActionItemProps
   largeIconName?: ActionItemIconProps['largeIconName'];
   onClick?: () => void;
   description?: string;
-  control?: boolean;
   size?: 'medium' | 'large';
   isLoading?: boolean;
 }
@@ -37,7 +36,7 @@ export function ActionItem({
 }: Readonly<ActionItemProps>) {
   return (
     <button
-      className={cl(styles.actionItem)}
+      className={cl(styles['action-item'])}
       onClick={onClick}
       aria-label={ariaLabel}
       aria-disabled={isLoading || rest.disabled}
@@ -50,13 +49,16 @@ export function ActionItem({
             <Spinner size="xsmall" aria-hidden="true" />
           ) : (
             <div
-              className={cl(styles[`iconWrapper-${size}`], styles.iconWrapper)}
+              className={cl(
+                styles[`icon-wrapper-${size}`],
+                styles['icon-wrapper'],
+              )}
             >
               <Icon iconName={iconName} />
             </div>
           )}
-          <div className={styles.labelDescriptionWrapper}>
-            <Label size="medium" className={cl(styles.labelHover)}>
+          <div className={styles['label-description-wrapper']}>
+            <Label size="medium" className={cl(styles['label-hover'])}>
               {label}
             </Label>
             {description && <BodyShort>{description}</BodyShort>}
@@ -65,14 +67,17 @@ export function ActionItem({
       )}
 
       {size === 'large' && (
-        <div className={cl(styles[`iconLabelWrapper-${size}`])}>
+        <div className={cl(styles[`icon-label-wrapper-${size}`])}>
           <div
-            className={cl(styles[`iconWrapper-${size}`], styles.iconWrapper)}
+            className={cl(
+              styles[`icon-wrapper-${size}`],
+              styles['icon-wrapper'],
+            )}
           >
             <ActionItemIcon largeIconName={largeIconName} />
           </div>
-          <div className={styles.labelBodyWrapper}>
-            <Label size="medium" className={cl(styles.labelHover)}>
+          <div className={styles['label-body-wrapper']}>
+            <Label size="medium" className={cl(styles['label-hover'])}>
               {label}
             </Label>
           </div>

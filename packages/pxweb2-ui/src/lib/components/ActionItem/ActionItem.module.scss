@@ -1,7 +1,7 @@
 @use '../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixed;
 @use '../../text-styles.scss';
 
-.actionItem {
+.action-item {
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
@@ -26,26 +26,26 @@
   }
 }
 
-.iconWrapper {
+.icon-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.iconWrapper-large {
+.icon-wrapper-large {
   min-width: 68px;
   height: 68px;
   background: var(--px-color-surface-subtle);
   border-radius: var(--px-border-radius-medium);
-  .actionItem:hover & {
+  .action-item:hover & {
     background: var(--px-color-surface-action-subtle-hover);
   }
-  .actionItem:active & {
+  .action-item:active & {
     background: var(--px-color-surface-action-subtle-active);
   }
 }
 
-.labelDescriptionWrapper {
+.label-description-wrapper {
   display: flex;
   flex-direction: column;
   align-items: flex-start; // ensures left alignment
@@ -55,17 +55,17 @@
   white-space: normal; // allows normal text wrapping
 }
 
-.iconLabelWrapper-large {
+.icon-label-wrapper-large {
   display: flex;
   align-items: center;
   gap: 0.75rem;
 }
 
-.bodyShort {
+.body-short {
   margin-top: 0.5rem;
 }
 
-.labelHover {
+.label-hover {
   &:hover {
     cursor: pointer;
   }
