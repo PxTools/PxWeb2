@@ -258,6 +258,7 @@ interface Resources {
                 no_results_bodyshort: 'Try a different keyword or spelling.';
                 no_results_heading: 'No results for “{{search}}”';
                 showing_number_of_values: ' {{searchResultsCount}} values';
+                showing_number_of_one_value: ' {{searchResultsCount}} value';
               };
             };
             header: {

@@ -97,7 +97,8 @@
               "aria_label": "قائمة {{total}} قيم.",
               "no_results_heading": "“{{search}}” لا توجد نتائج ل",
               "no_results_bodyshort": "جرّب كلمة رئيسية أو تهجئة مختلفة.",
-              "showing_number_of_values": " {{searchResultsCount}} قيم"
+              "showing_number_of_values": " {{searchResultsCount}} قيم",
+              "showing_number_of_one_value": " {{searchResultsCount}} قيمة"
             }
           }
         }

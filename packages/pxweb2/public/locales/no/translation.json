@@ -153,7 +153,8 @@
               "aria_label": "Liste av {{total}} verdier.",
               "no_results_heading": "Ingen treff på «{{search}}»",
               "no_results_bodyshort": "Prøv med et annet søkeord eller en annen stavemåte.",
-              "showing_number_of_values": " «{{searchResultsCount}}» verdier"
+              "showing_number_of_values": " {{searchResultsCount}} verdier",
+              "showing_number_of_one_value": " {{searchResultsCount}} verdi"
             }
           }
         }
