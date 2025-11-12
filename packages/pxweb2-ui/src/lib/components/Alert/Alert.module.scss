@@ -28,7 +28,7 @@
     }
   }
   &:hover .alert-arrow-wrapper {
-    padding-left: 8px;
+    padding-inline-start: 8px;
     transition: 100ms;
   }
   &:focus-visible {
@@ -49,7 +49,7 @@
     }
   }
   &:hover .alert-arrow-wrapper {
-    padding-left: 8px;
+    padding-inline-start: 8px;
     transition: 100ms;
   }
   &:focus-visible {
@@ -69,7 +69,6 @@
     }
   }
   &:hover .alert-arrow-wrapper {
-    // padding-left: 8px;
     padding-inline-start: 8px;
     transition: 100ms;
   }
@@ -90,7 +89,7 @@
     }
   }
   &:hover .alert-arrow-wrapper {
-    padding-left: 8px;
+    padding-inline-start: 8px;
     transition: 100ms;
   }
   &:focus-visible {
