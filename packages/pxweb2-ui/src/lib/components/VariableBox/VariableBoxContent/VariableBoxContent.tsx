@@ -128,20 +128,20 @@ export function VariableBoxContent({
   const debouncedSearchResultsCount = useDebounce(searchResultsCount, 700);
   const renderNumberofTablesScreenReader = () => {
     if (searchResultsCount < 1) {
-      return(
-      <span
-        className={classes['sr-only']}
-        aria-live="polite"
-        aria-atomic="true"
-      >
-        <Trans
-          i18nKey={
-          'presentation_page.side_menu.selection.variablebox.content.values_list.no_results_heading'
-        }
-           values= {{search: search}}
-        />
-      </span>
-    );;
+      return (
+        <span
+          className={classes['sr-only']}
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          <Trans
+            i18nKey={
+              'presentation_page.side_menu.selection.variablebox.content.values_list.no_results_heading'
+            }
+            values={{ search: search }}
+          />
+        </span>
+      );
     }
     return (
       <span
@@ -423,7 +423,7 @@ export function VariableBoxContent({
         </>
       );
     } else if (searchedValues.length === 0 && search !== '') {
-      return(
+      return (
         <div
           className={cl(classes['variablebox-content-values-list-no-results'])}
         >
