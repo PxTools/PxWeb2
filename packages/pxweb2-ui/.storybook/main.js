@@ -1,4 +1,8 @@
-import { join, dirname } from 'path';
+// This file has been automatically migrated to valid ESM format by Storybook.
+import { join, dirname } from "node:path";
+import { createRequire } from "node:module";
+
+const require = createRequire(import.meta.url);
 
 /**
  * This function is used to resolve the absolute path of a package.
