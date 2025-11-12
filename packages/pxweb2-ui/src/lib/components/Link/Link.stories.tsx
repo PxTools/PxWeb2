@@ -39,13 +39,13 @@ export const InlineAndStandalone: StoryFn<typeof BodyLong> = () => {
         saw a wolf, no even a little fox.
       </BodyLong>
 
-      <h2>medium icon right:</h2>
+      <h2>medium icon end:</h2>
       <BodyLong>
         This is a story about Little Red Ridinghood. One day she went into the
         wood to visit her grandmother. The day after too, She visited her every
         day, every week, every month, every year. She never saw a wolf, no even
         a little fox. Go to{' '}
-        <Link href="#" inline icon="FileText" iconPosition="right">
+        <Link href="#" inline icon="FileText" iconPosition="end">
           Statistikkbanken
         </Link>{' '}
         to read more This is a story about Little Red Ridinghood. One day she
@@ -76,13 +76,13 @@ export const InlineAndStandalone: StoryFn<typeof BodyLong> = () => {
         Statistikkbanken
       </Link>
 
-      <h2>medium icon left:</h2>
-      <Link href="#" icon="FileText" iconPosition="left" size="medium">
+      <h2>medium icon start:</h2>
+      <Link href="#" icon="FileText" iconPosition="start" size="medium">
         Statistikkbanken
       </Link>
 
-      <h2>medium icon right:</h2>
-      <Link href="#" icon="FileText" iconPosition="right" size="medium">
+      <h2>medium icon end:</h2>
+      <Link href="#" icon="FileText" iconPosition="end" size="medium">
         Statistikkbanken
       </Link>
 
@@ -91,13 +91,13 @@ export const InlineAndStandalone: StoryFn<typeof BodyLong> = () => {
         Statistikkbanken
       </Link>
 
-      <h2>small icon left:</h2>
-      <Link href="#" icon="FileText" iconPosition="left" size="small">
+      <h2>small icon start:</h2>
+      <Link href="#" icon="FileText" iconPosition="start" size="small">
         Statistikkbanken{' '}
       </Link>
 
-      <h2>small icon right:</h2>
-      <Link href="#" icon="FileText" iconPosition="right" size="small">
+      <h2>small icon end:</h2>
+      <Link href="#" icon="FileText" iconPosition="end" size="small">
         Statistikkbanken
       </Link>
       <br />
