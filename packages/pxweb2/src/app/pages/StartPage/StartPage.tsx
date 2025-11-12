@@ -1,11 +1,10 @@
 import { useEffect, useContext, useState, useRef } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
-import { useNavigate } from 'react-router';
+import { useNavigate, useLocation } from 'react-router';
 import type { TFunction } from 'i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import cl from 'clsx';
 import { debounce } from 'lodash';
-import { useLocation } from 'react-router';
 
 import styles from './StartPage.module.scss';
 import {
