@@ -25,17 +25,12 @@ export function createBreadcrumbItems(
       label: t('common.breadcrumbs.breadcrumb_home_title'),
       href: eksternalHomePage,
     });
-
-    breadcrumbItems.push({
-      label: t('common.breadcrumbs.breadcrumb_root_title'),
-      href: basePath + language,
-    });
-  } else {
-    breadcrumbItems.push({
-      label: t('common.breadcrumbs.breadcrumb_root_title'),
-      href: basePath + language,
-    });
   }
+
+  breadcrumbItems.push({
+    label: t('common.breadcrumbs.breadcrumb_root_title'),
+    href: basePath + language,
+  });
 
   // second part of breadcrumb if present
   if (pathElements && pathElements.length > 0) {
