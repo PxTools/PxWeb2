@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router';
 
 import { Breadcrumbs } from '@pxweb2/pxweb2-ui';
 import { ErrorLayout } from '../ErrorLayout';
@@ -11,6 +12,7 @@ export function NotFound() {
   const { isTablet } = useApp();
   const notFoundLabel = t('common.errors.not_found.title');
 
+  const location = useLocation();
   const breadcrumbItems = createBreadcrumbItems(
     location.pathname,
     t,

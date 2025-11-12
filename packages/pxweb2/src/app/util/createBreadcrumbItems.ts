@@ -3,7 +3,6 @@ import type { TFunction } from 'i18next';
 
 import { getConfig } from './config/getConfig';
 import { getPathWithUniqueIds } from '../util/pathUtil';
-import { getLanguagePath } from './language/getLanguagePath';
 
 export function createBreadcrumbItems(
   currentLocation: string,
@@ -19,35 +18,28 @@ export function createBreadcrumbItems(
     ? config.homePage[language as keyof typeof config.homePage]
     : undefined;
 
-  // first part of breadcrumb. Creates path to home page if defined and  path to root
+  console.log('eksternalHomePage', eksternalHomePage);
+  console.log('config.homePage', config.homePage);
+  // first part of breadcrumb. Creates path to home page if defined
   if (eksternalHomePage) {
     breadcrumbItems.push({
       label: t('common.breadcrumbs.breadcrumb_home_title'),
       href: eksternalHomePage,
     });
   }
-
+  //Path to root (startpage)
   breadcrumbItems.push({
     label: t('common.breadcrumbs.breadcrumb_root_title'),
     href: basePath + language,
   });
 
-  // second part of breadcrumb if present
+  // middle parts of breadcrumb ,path to subjects
   if (pathElements && pathElements.length > 0) {
     const pathWithUniqueIds = getPathWithUniqueIds(pathElements);
-    const languageHref =
-      basePath.replace(/\/$/, '') +
-      getLanguagePath(
-        currentLocation,
-        language,
-        config.language.supportedLanguages,
-        config.language.defaultLanguage,
-        config.language.showDefaultLanguageInPath,
-      );
     breadcrumbItems.push(
       ...pathWithUniqueIds.map((path) => ({
         label: path.label,
-        href: `${languageHref}?subject=${path.uniqueId}`,
+        href: `${basePath}${language}?subject=${path.uniqueId}`,
       })),
     );
   }
@@ -56,10 +48,7 @@ export function createBreadcrumbItems(
   if (currentPageLabel.length > 0) {
     breadcrumbItems.push({
       label: currentPageLabel,
-      href:
-        basePath + location.pathname.startsWith('/')
-          ? location.pathname.substring(1)
-          : location.pathname + location.search + location.hash,
+      href: basePath + currentLocation.substring(1),
     });
   }
   return breadcrumbItems;
