@@ -2,6 +2,7 @@
   "name": "@pxweb2/pxweb2-ui",
   "version": "0.0.1",
   "main": "./src/index.ts",
+  "type": "module",
   "scripts": {
     "start": "npm run storybook",
     "build": "npm run build-style-dictionary && storybook build && mv ./storybook-static ../pxweb2/dist/storybook",
