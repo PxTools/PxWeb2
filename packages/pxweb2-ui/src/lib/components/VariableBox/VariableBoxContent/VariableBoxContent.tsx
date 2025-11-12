@@ -415,6 +415,7 @@ export function VariableBoxContent({
         <div
           className={cl(classes['variablebox-content-values-list-no-results'])}
           aria-live="polite"
+          aria-atomic="true"
         >
           <Heading
             size="xsmall"
