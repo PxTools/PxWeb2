@@ -78,7 +78,6 @@ export const LanguageSwitcher = () => {
               classes.languageSwitcherIcon,
               classes[`label-medium`],
             )}
-            ariaHidden
           />
         </div>
 
