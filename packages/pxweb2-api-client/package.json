@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "main": "./src/index.ts",
   "private": "true",
+  "type": "module",
   "devDependencies": {},
   "scripts": {
     "build": "vite build",
