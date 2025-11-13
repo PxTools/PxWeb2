@@ -64,7 +64,11 @@ export function ActionItem({
 }: Readonly<ActionItemProps>) {
   return (
     <button
-      className={cl(styles['action-item'])}
+      className={cl(
+        styles['action-item'],
+        toggleState !== undefined && styles['toggleable'],
+      )}
+      role={toggleState !== undefined ? 'switch' : undefined}
       onClick={onClick}
       aria-label={ariaLabel}
       aria-disabled={isLoading || rest.disabled}

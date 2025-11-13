@@ -9,20 +9,34 @@
   border: none;
   width: 100%;
   background: var(--px-color-background-default);
+
   &:hover {
     border-radius: var(--px-border-radius-medium);
     background: var(--px-color-surface-action-subtle-hover);
     cursor: pointer;
   }
+
   &:active {
     border-radius: var(--px-border-radius-medium);
     background: var(--px-color-surface-action-subtle-active);
   }
-  &:focus-visible {
+
+  &:focus-visible:not(.toggleable) {
     outline: 3px solid var(--px-color-border-focus-outline);
     outline-offset: 3px;
     box-shadow: inset 0 0 0 3px var(--px-color-border-focus-boxshadow);
     border-radius: var(--px-border-radius-medium);
+  }
+
+  // Outline styles for toggleable action items
+  &.toggleable:focus-visible {
+    outline: none;
+    &.toggle-wrapper {
+      outline: 3px solid var(--px-color-border-focus-outline);
+      outline-offset: 3px;
+      box-shadow: inset 0 0 0 3px var(--px-color-border-focus-boxshadow);
+      border-radius: var(--px-border-radius-medium);
+    }
   }
 }
 
@@ -37,9 +51,11 @@
   height: 68px;
   background: var(--px-color-surface-subtle);
   border-radius: var(--px-border-radius-medium);
+
   .action-item:hover & {
     background: var(--px-color-surface-action-subtle-hover);
   }
+
   .action-item:active & {
     background: var(--px-color-surface-action-subtle-active);
   }
