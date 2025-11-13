@@ -49,6 +49,7 @@ interface ActionItemProps
   isLoading?: boolean;
   toggleState?: boolean;
 }
+// TODO: Check keyboard accessibility and focus for toggle state
 
 export function ActionItem({
   label = '',
@@ -62,17 +63,20 @@ export function ActionItem({
   toggleState,
   ...rest
 }: Readonly<ActionItemProps>) {
+  const hasToggleState = toggleState === true || toggleState === false;
+
   return (
     <button
       className={cl(
         styles['action-item'],
         toggleState !== undefined && styles['toggleable'],
       )}
-      role={toggleState !== undefined ? 'switch' : undefined}
+      role={hasToggleState ? 'switch' : undefined}
       onClick={onClick}
       aria-label={ariaLabel}
       aria-disabled={isLoading || rest.disabled}
       aria-busy={isLoading || rest.disabled}
+      aria-checked={toggleState}
       {...rest}
     >
       <IconWrapper
