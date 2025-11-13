@@ -5,14 +5,12 @@ export interface IconProps extends React.SVGAttributes<SVGSVGElement> {
   iconName: keyof typeof Icons;
   className?: string;
   ariaLabel?: string;
-  ariaHidden?: boolean;
 }
 
 const Icon: React.FC<IconProps> = ({
   iconName,
   className = '',
   ariaLabel,
-  ariaHidden,
   ...rest
 }) => {
   const icon = Icons[iconName];
@@ -28,8 +26,7 @@ const Icon: React.FC<IconProps> = ({
       viewBox="0 0 24 24"
       className={styles['icon'] + cssClasses}
       fill="currentColor"
-      {...(ariaLabel ? { 'aria-label': ariaLabel } : {})}
-      {...(ariaHidden ? { 'aria-hidden': ariaHidden } : {})}
+      {...(ariaLabel ? { 'aria-label': ariaLabel } : { 'aria-hidden': true })}
       {...rest}
     >
       {icon}

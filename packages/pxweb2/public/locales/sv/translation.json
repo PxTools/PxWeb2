@@ -130,7 +130,6 @@
           "search": {
             "placeholder": "Sök i listan",
             "label": "Sök",
-            "aria_label_icon_text": "Sök ikon",
             "aria_label_clear_button_text": "Ikon för att ta bort text i sökfältet"
           },
           "header": {
