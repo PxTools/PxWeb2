@@ -79,7 +79,7 @@ export const Footer: React.FC<FooterProps> = ({
                       const iconProps = showIcon
                         ? {
                             icon: 'ExternalLink' as const,
-                            iconPosition: 'right' as const,
+                            iconPosition: 'end' as const,
                             target: '_blank' as const,
                           }
                         : {};

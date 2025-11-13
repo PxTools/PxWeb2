@@ -17,6 +17,7 @@ const BreadcrumbsIcon: React.FC<BreadcrumbsIconsProps> = ({ className }) => {
       width="20"
       height="20"
       viewBox="0 0 20 20"
+      aria-hidden="true"
       className={className}
       fill="currentColor"
     >
