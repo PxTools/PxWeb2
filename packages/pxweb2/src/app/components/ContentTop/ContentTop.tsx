@@ -21,7 +21,10 @@ import useTableData from '../../context/useTableData';
 import useVariables from '../../context/useVariables';
 import useApp from '../../context/useApp';
 import { useLocation } from 'react-router';
-import { createBreadcrumbItems } from '../../util/createBreadcrumbItems';
+import {
+  createBreadcrumbItems,
+  BreadcrumbItemsParm,
+} from '../../util/createBreadcrumbItems';
 
 export interface ContenetTopProps {
   readonly pxtable: PxTable;
@@ -179,13 +182,15 @@ export function ContentTop({
   }, [staticTitle, setTitle]);
 
   const location = useLocation();
-  const breadcrumbItems = createBreadcrumbItems(
-    location.pathname,
-    t,
-    i18n.language,
-    staticTitle,
-    pathElements,
-  );
+
+  const breadcrumbItemsOptions: BreadcrumbItemsParm = {
+    currentPage: { label: staticTitle, href: location.pathname },
+    language: i18n.language,
+    t: t,
+    pathElements: pathElements,
+  };
+
+  const breadcrumbItems = createBreadcrumbItems(breadcrumbItemsOptions);
 
   const breadcrumbsVariant = isTablet ? 'compact' : 'default';
 

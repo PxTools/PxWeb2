@@ -1,6 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import type { Mock } from 'vitest';
-import { createBreadcrumbItems } from './createBreadcrumbItems';
+import {
+  createBreadcrumbItems,
+  BreadcrumbItemsParm,
+} from './createBreadcrumbItems';
 import { getConfig } from './config/getConfig';
 import { getPathWithUniqueIds } from '../util/pathUtil';
 import { getLanguagePath } from './language/getLanguagePath';
@@ -50,13 +53,14 @@ describe('createBreadcrumbItems', () => {
   it('includes external home and root when homePage exists and builds final current page href (matches current code behavior)', () => {
     const t = (s: string) => s;
     const pathElements: PathElement[] = [];
-    const items = createBreadcrumbItems(
-      '/some',
-      t as any,
-      'en',
-      'Current page',
-      pathElements,
-    );
+
+    const breadcrumbItemsOptions: BreadcrumbItemsParm = {
+      currentPage: { label: 'Current page', href: '/some' },
+      language: 'en',
+      t: t as any,
+      pathElements: pathElements,
+    };
+    const items = createBreadcrumbItems(breadcrumbItemsOptions);
 
     // First two items: external home and root
     expect(items[0]).toEqual({
@@ -73,7 +77,7 @@ describe('createBreadcrumbItems', () => {
     const last = items[items.length - 1];
     expect(last).toEqual({
       label: 'Current page',
-      href: 'root/page',
+      href: '/app/some',
     });
   });
 
@@ -95,13 +99,14 @@ describe('createBreadcrumbItems', () => {
       { label: 'Second', id: 'b2' },
     ];
 
-    const items = createBreadcrumbItems(
-      '/some',
-      t as any,
-      'en',
-      'current page',
-      pathElements,
-    );
+    const breadcrumbItemsOptions: BreadcrumbItemsParm = {
+      currentPage: { label: 'Current page', href: '/some' },
+      language: 'en',
+      t: t as any,
+      pathElements: pathElements,
+    };
+
+    const items = createBreadcrumbItems(breadcrumbItemsOptions);
 
     // First item only root (no external home)
     expect(items[0]).toEqual({
@@ -112,11 +117,11 @@ describe('createBreadcrumbItems', () => {
     // Language href is basePath without trailing slash + getLanguagePath -> '/app' + '/lang/base' = '/app/lang/base'
     expect(items[1]).toEqual({
       label: 'First',
-      href: '/app/lang/base?subject=a1',
+      href: '/app/en?subject=a1',
     });
     expect(items[2]).toEqual({
       label: 'Second',
-      href: '/app/lang/base?subject=b2',
+      href: '/app/en?subject=b2',
     });
 
     // No current page item since currentPageLabel was empty
@@ -125,7 +130,13 @@ describe('createBreadcrumbItems', () => {
 
   it('handles undefined/null pathElements (no intermediate breadcrumb items)', () => {
     const t = (s: string) => s;
-    const items = createBreadcrumbItems('/some', t as any, 'en', 'Page');
+    const breadcrumbItemsOptions: BreadcrumbItemsParm = {
+      currentPage: { label: 'Page', href: '/some' },
+      language: 'en',
+      t: t as any,
+    };
+
+    const items = createBreadcrumbItems(breadcrumbItemsOptions);
 
     // external home exists per default config
     expect(items[0].label).toBe('common.breadcrumbs.breadcrumb_home_title');

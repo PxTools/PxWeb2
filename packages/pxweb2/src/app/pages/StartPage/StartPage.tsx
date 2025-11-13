@@ -1,6 +1,6 @@
 import { useEffect, useContext, useState, useRef } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
-import { useNavigate, useLocation } from 'react-router';
+import { useNavigate } from 'react-router';
 import type { TFunction } from 'i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import cl from 'clsx';
@@ -48,7 +48,10 @@ import type {
   LocaleContent,
   DetailsSection as DetailsSectionType,
 } from '../../util/config/localeContentTypes';
-import { createBreadcrumbItems } from '../../util/createBreadcrumbItems';
+import {
+  createBreadcrumbItems,
+  BreadcrumbItemsParm,
+} from '../../util/createBreadcrumbItems';
 
 const StartPage = () => {
   const { t, i18n } = useTranslation();
@@ -95,7 +98,6 @@ const StartPage = () => {
   const noResultSearchHelpContent =
     localeContent?.startPage?.noResultSearchHelp;
   const showBreadCrumb = getConfig().showBreadCrumbOnStartPage;
-  const location = useLocation();
 
   // Run once when initially loading the page, then again if language changes
   // We want to try fetching tables in the selected language if possible
@@ -186,12 +188,13 @@ const StartPage = () => {
     }
   }, [isPaginating, visibleCount]);
 
-  const breadcrumbItems = createBreadcrumbItems(
-    location.pathname,
-    t,
-    i18n.language,
-    '',
-  );
+  const breadcrumbItemsOptions: BreadcrumbItemsParm = {
+    currentPage: { label: '', href: '' },
+    language: i18n.language,
+    t: t,
+  };
+
+  const breadcrumbItems = createBreadcrumbItems(breadcrumbItemsOptions);
 
   const formatNumber = (value: number) =>
     new Intl.NumberFormat(i18n.language).format(value);

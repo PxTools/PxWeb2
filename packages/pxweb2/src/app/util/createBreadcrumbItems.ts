@@ -4,22 +4,27 @@ import type { TFunction } from 'i18next';
 import { getConfig } from './config/getConfig';
 import { getPathWithUniqueIds } from '../util/pathUtil';
 
+export type BreadcrumbItemsParm = {
+  currentPage?: { label: string; href: string };
+  t: TFunction;
+  language: string;
+  pathElements?: PathElement[];
+};
 export function createBreadcrumbItems(
-  currentLocation: string,
-  t: TFunction,
-  language: string,
-  currentPageLabel: string,
-  pathElements?: PathElement[],
+  breadCrumbsParm: BreadcrumbItemsParm,
 ): BreadcrumbItem[] {
+  const t = breadCrumbsParm.t;
+  const language = breadCrumbsParm.language;
+  const pathElements = breadCrumbsParm.pathElements;
+  const currentPageLabel = breadCrumbsParm.currentPage?.label || undefined;
+  const currentLocation = breadCrumbsParm.currentPage?.href || undefined;
+
   const config = getConfig();
   const basePath = config.baseApplicationPath;
   const breadcrumbItems: BreadcrumbItem[] = [];
   const eksternalHomePage = config.homePage
     ? config.homePage[language as keyof typeof config.homePage]
     : undefined;
-
-  console.log('eksternalHomePage', eksternalHomePage);
-  console.log('config.homePage', config.homePage);
   // first part of breadcrumb. Creates path to home page if defined
   if (eksternalHomePage) {
     breadcrumbItems.push({
@@ -29,7 +34,7 @@ export function createBreadcrumbItems(
   }
   //Path to root (startpage)
   breadcrumbItems.push({
-    label: t('common.breadcrumbs.breadcrumb_root_title'),
+    label: breadCrumbsParm.t('common.breadcrumbs.breadcrumb_root_title'),
     href: basePath + language,
   });
 
@@ -45,7 +50,7 @@ export function createBreadcrumbItems(
   }
 
   // last part of breadcrumb ,current page
-  if (currentPageLabel.length > 0) {
+  if (currentPageLabel && currentLocation) {
     breadcrumbItems.push({
       label: currentPageLabel,
       href: basePath + currentLocation.substring(1),

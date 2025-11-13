@@ -5,7 +5,10 @@ import { Breadcrumbs } from '@pxweb2/pxweb2-ui';
 import { ErrorLayout } from '../ErrorLayout';
 import { ErrorMessage } from '../../ErrorMessage/ErrorMessage';
 import useApp from '../../../context/useApp';
-import { createBreadcrumbItems } from '../../../util/createBreadcrumbItems';
+import {
+  createBreadcrumbItems,
+  BreadcrumbItemsParm,
+} from '../../../util/createBreadcrumbItems';
 
 export function NotFound() {
   const { t, i18n } = useTranslation();
@@ -13,12 +16,14 @@ export function NotFound() {
   const notFoundLabel = t('common.errors.not_found.title');
 
   const location = useLocation();
-  const breadcrumbItems = createBreadcrumbItems(
-    location.pathname,
-    t,
-    i18n.language,
-    notFoundLabel,
-  );
+
+  const breadcrumbItemsOptions: BreadcrumbItemsParm = {
+    currentPage: { label: notFoundLabel, href: location.pathname },
+    language: i18n.language,
+    t: t,
+  };
+
+  const breadcrumbItems = createBreadcrumbItems(breadcrumbItemsOptions);
   const breadcrumbsVariant = isTablet ? 'compact' : 'default';
 
   return (
