@@ -231,7 +231,7 @@ export function autoPivotTable(
   stub: string[],
   heading: string[],
 ) {
-  // Ensure we start from empty arrays (caller should pass empty arrays)
+  // Ensure we start from empty arrays
   stub.length = 0;
   heading.length = 0;
 
@@ -239,8 +239,8 @@ export function autoPivotTable(
   let vars = structuredClone(variables);
 
   // Separate variables into single-value and multi-value buckets
-  let singleValueVars = vars.filter((v) => v.values.length === 1);
-  let multiValueVars = vars.filter((v) => v.values.length > 1);
+  let singleValueVars = vars.filter((variable) => variable.values.length === 1);
+  let multiValueVars = vars.filter((variable) => variable.values.length > 1);
 
   singleValueVars = sortVariablesByType(singleValueVars);
 
@@ -295,8 +295,8 @@ function autoPivotMultiValueVariables(
 
       // Add all remaining multi-value variables to the stub array
       // Desired order for remaining variables: ContentsVariable first, then TimeVariable, then the rest
-      for (const v of multiValueVarsRemaining) {
-        addToArrayIfNotExists(stub, v.id);
+      for (const variable of multiValueVarsRemaining) {
+        addToArrayIfNotExists(stub, variable.id);
       }
     }
   }
