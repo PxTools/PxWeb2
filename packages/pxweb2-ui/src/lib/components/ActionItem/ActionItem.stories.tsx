@@ -1,4 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react-vite';
+import { useArgs } from 'storybook/preview-api';
+
 import { ActionItem } from './ActionItem';
 
 const meta: Meta<typeof ActionItem> = {
@@ -61,20 +63,36 @@ export const MediumWithLoading: Story = {
   },
 };
 
-export const MediumToggleable: Story = {
+export const MediumToggleable = {
   args: {
-    iconName: 'Table',
     label: 'Toggleable Action',
     size: 'medium',
     toggleState: true,
   },
-};
+  render: function Render(args) {
+    const [{ toggleState }, updateArgs] = useArgs();
 
-export const LargeToggleable: Story = {
+    function handleClick() {
+      updateArgs({ toggleState: !toggleState });
+    }
+
+    return <ActionItem {...args} onClick={handleClick} />;
+  },
+} satisfies Story;
+
+export const LargeToggleable = {
   args: {
-    largeIconName: 'Table',
     label: 'Toggleable Action',
     size: 'large',
     toggleState: false,
   },
-};
+  render: function Render(args) {
+    const [{ toggleState }, updateArgs] = useArgs();
+
+    function handleClick() {
+      updateArgs({ toggleState: !toggleState });
+    }
+
+    return <ActionItem {...args} onClick={handleClick} />;
+  },
+} satisfies Story;
