@@ -189,7 +189,6 @@ const StartPage = () => {
   }, [isPaginating, visibleCount]);
 
   const breadcrumbItemsOptions: BreadcrumbItemsParm = {
-    currentPage: { label: '', href: '' },
     language: i18n.language,
     t: t,
   };
