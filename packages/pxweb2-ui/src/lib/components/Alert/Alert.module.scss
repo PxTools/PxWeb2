@@ -190,7 +190,7 @@
 .alert-section-right-close-medium {
   display: flex;
   align-self: flex-start;
-  margin-left: auto;
+  margin-inline-start: auto;
   height: 32px;
   align-items: center;
   gap: 6px;
@@ -199,7 +199,7 @@
 .alert-section-right-close-small {
   display: flex;
   align-self: flex-start;
-  margin-left: auto;
+  margin-inline-start: auto;
   height: 32px;
   align-items: center;
   gap: 6px;
@@ -218,7 +218,7 @@
 
 .alert-section-right-continue {
   display: flex;
-  margin-left: auto;
+  margin-inline-start: auto;
   width: 44px;
   align-self: center;
   align-items: center;
@@ -229,7 +229,7 @@
   justify-content: center;
   flex-shrink: 0;
   align-self: center;
-  margin-left: auto;
+  margin-inline-start: auto;
 }
 
 .alert-xmark {
@@ -237,7 +237,7 @@
   justify-content: flex-end;
   align-items: flex-start;
   align-self: stretch;
-  margin-left: auto;
+  margin-inline-start: auto;
 }
 
 .alert-xmark-wrapper {
