@@ -289,6 +289,7 @@ export function ContentTop({
             heading={noteMessage.heading}
             ariaHasPopup="dialog"
             alertAriaLabel={noteMessage.heading}
+            languageDirection={i18n.dir()}
             role="button"
             clickable
             onClick={() => {
