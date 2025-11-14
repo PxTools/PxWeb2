@@ -56,7 +56,8 @@
     },
     "breadcrumbs": {
       "aria_label_breadcrumb": "Brødsmulesti",
-      "breadcrumb_root_title": "Hjem",
+      "breadcrumb_home_title": "Hjem",
+      "breadcrumb_root_title": "Nye statistikkbanken",
       "show_more_breadcrumbs": "Vis mer"
     }
   },
