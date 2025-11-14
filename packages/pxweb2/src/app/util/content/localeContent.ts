@@ -23,9 +23,12 @@ export async function fetchLocaleContent(
   // 3) Start fetch and memoize the in-flight promise
   const fetchPromise = (async () => {
     try {
-      const res = await fetch(`./content/${key}/content.json`, {
-        cache: 'no-store',
-      });
+      const res = await fetch(
+        `./content/${key}/content.json?v=${__BUILD_DATE__}`,
+        {
+          cache: 'no-store',
+        },
+      );
       if (!res.ok) {
         return null;
       }
