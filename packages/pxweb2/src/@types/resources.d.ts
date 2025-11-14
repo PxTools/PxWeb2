@@ -52,7 +52,7 @@ interface Resources {
       skip_to_main: 'Skip to main content';
       status_messages: {
         drawer_edit: 'More tools for editing the table are under construction.';
-        drawer_help: 'No content will be added here. The help button must be set up to link directly to your own help pages.';
+        drawer_help: 'The help section is under construction. It will be possible to set up links that point directly to your own help pages.';
         drawer_save_api: 'Feature for API query is under construction.';
         drawer_save_file: 'More file formats are in the works.';
         drawer_view: 'Graph display is under construction.';
@@ -171,12 +171,19 @@ interface Resources {
             title: 'Calculate';
           };
           customize: {
+            auto_pivot: {
+              aria_label: 'Auto rotate table';
+              description: 'Automatically organises rows and columns for a clearer table layout';
+              screen_reader_announcement: 'Table layout improved and organised after {{table_heading}}';
+              title: 'Auto rotate table';
+            };
             change_order: {
               description: 'Description text...';
               title: 'Change order';
             };
             pivot: {
               aria_label: 'Rotate table clockwise';
+              description: '';
               screen_reader_announcement: 'Table rotated after {{first_variables}} and {{last_variable}}';
               title: 'Rotate table';
             };

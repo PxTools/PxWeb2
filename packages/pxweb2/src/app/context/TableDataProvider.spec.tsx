@@ -37,7 +37,7 @@ describe('TableDataProvider', () => {
             fetchSavedQuery: vi.fn(),
             pivotToMobile: vi.fn(),
             pivotToDesktop: vi.fn(),
-            pivotCW: vi.fn(),
+            pivot: vi.fn(),
             buildTableTitle: vi.fn(),
           }}
         >

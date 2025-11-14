@@ -169,9 +169,16 @@
         "title": "Ändra",
         "customize": {
           "title": "Anpassa",
+          "auto_pivot": {
+            "title": "Ordna tabellen",
+            "aria_label": "Ordna tabellen",
+            "description": "Visa tabellen med automatiskt ordnade rader och kolumner",
+            "screen_reader_announcement": "Tabell ordnad efter {{first_variables}} och {{last_variable}}"
+          },
           "pivot": {
             "title": "Rotera tabellen",
             "aria_label": "Rotera tabellen medsols",
+            "description": "",
             "screen_reader_announcement": "Tabell roterat efter {{first_variables}} och {{last_variable}}"
           },
           "rearrange": {
