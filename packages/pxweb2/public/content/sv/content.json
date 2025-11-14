@@ -1,18 +1,5 @@
 {
   "startPage": {
-    "breadCrumb": {
-      "enabled": false,
-      "items": [
-        {
-          "label": "Forsidan",
-          "href": "#"
-        },
-        {
-          "label": "Statistikdatabasen",
-          "href": "/"
-        }
-      ]
-    },
     "detailsSection": {
       "enabled": true,
       "detailHeader": "Mer om Statistikdatabasen",

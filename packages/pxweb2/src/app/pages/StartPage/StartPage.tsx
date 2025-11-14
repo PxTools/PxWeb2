@@ -19,7 +19,6 @@ import {
   BodyLong,
   SearchHandle,
   Breadcrumbs,
-  type BreadcrumbItem,
   DetailsSection,
   List,
   ListItem,
@@ -47,9 +46,12 @@ import StartpageDetails from '../../components/StartPageDetails/StartPageDetails
 import { useLocaleContent } from '../../util/hooks/useLocaleContent';
 import type {
   LocaleContent,
-  BreadCrumb as BreadCrumbType,
   DetailsSection as DetailsSectionType,
 } from '../../util/config/localeContentTypes';
+import {
+  createBreadcrumbItems,
+  BreadcrumbItemsParm,
+} from '../../util/createBreadcrumbItems';
 
 const StartPage = () => {
   const { t, i18n } = useTranslation();
@@ -93,11 +95,9 @@ const StartPage = () => {
   const localeContent: LocaleContent | null = useLocaleContent(i18n.language);
   const detailsSectionContent: DetailsSectionType | undefined =
     localeContent?.startPage?.detailsSection;
-  const breadCrumbContent: BreadCrumbType | undefined =
-    localeContent?.startPage?.breadCrumb;
   const noResultSearchHelpContent =
     localeContent?.startPage?.noResultSearchHelp;
-  const showBreadCrumb = isRenderableBreadCrumb(breadCrumbContent);
+  const showBreadCrumb = getConfig().showBreadCrumbOnStartPage;
 
   // Run once when initially loading the page, then again if language changes
   // We want to try fetching tables in the selected language if possible
@@ -187,6 +187,13 @@ const StartPage = () => {
       return () => clearTimeout(timeout);
     }
   }, [isPaginating, visibleCount]);
+
+  const breadcrumbItemsOptions: BreadcrumbItemsParm = {
+    language: i18n.language,
+    t: t,
+  };
+
+  const breadcrumbItems = createBreadcrumbItems(breadcrumbItemsOptions);
 
   const formatNumber = (value: number) =>
     new Intl.NumberFormat(i18n.language).format(value);
@@ -620,26 +627,16 @@ const StartPage = () => {
     );
   };
 
-  function isRenderableBreadCrumb(
-    bc: BreadCrumbType | undefined,
-  ): bc is BreadCrumbType {
-    return !!bc && bc.enabled === true && !!bc.items?.length;
-  }
-
   const renderBreadCrumb = () => {
-    if (!isRenderableBreadCrumb(breadCrumbContent)) {
-      return null;
+    if (showBreadCrumb) {
+      return (
+        <Breadcrumbs
+          className={styles.breadcrumbStartpage}
+          variant="default"
+          breadcrumbItems={breadcrumbItems}
+        />
+      );
     }
-
-    const breadCrumbItems: BreadcrumbItem[] = breadCrumbContent.items ?? [];
-
-    return (
-      <Breadcrumbs
-        className={styles.breadcrumbStartpage}
-        variant="default"
-        breadcrumbItems={breadCrumbItems}
-      />
-    );
   };
 
   return (

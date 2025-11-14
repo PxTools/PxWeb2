@@ -1,18 +1,5 @@
 {
   "startPage": {
-    "breadCrumb": {
-      "enabled": false,
-      "items": [
-        {
-          "label": "Home",
-          "href": "#"
-        },
-        {
-          "label": "PxWeb",
-          "href": "/"
-        }
-      ]
-    },
     "detailsSection": {
       "enabled": true,
       "detailHeader": "More about PxWeb",
