@@ -1,6 +1,5 @@
-import { render } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
-
 import Table from './Table';
 import { pxTable } from './testData';
 
@@ -44,5 +43,26 @@ describe('Table', () => {
       }
     });
     expect(found).toBe(false);
+  });
+
+  it('highlights column on header hover', () => {
+    const { container } = render(<Table pxtable={pxTable} isMobile={false} />);
+    console.log(container.innerHTML); // Debug: check for data-col and stub classes
+
+    // Find a leaf header cell
+    const leafHeader = container.querySelector(
+      'thead tr:last-child th[data-col]',
+    );
+    expect(leafHeader).toBeTruthy();
+
+    // Simulate mouseover
+    fireEvent.mouseOver(leafHeader!);
+
+    // Find highlighted data cells
+    const col = leafHeader!.getAttribute('data-col');
+    const highlightedCells = container.querySelectorAll(
+      `td[data-col="${col}"][class*="colHover"]`,
+    );
+    expect(highlightedCells.length).toBeGreaterThan(0);
   });
 });
