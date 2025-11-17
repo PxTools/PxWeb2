@@ -6,7 +6,7 @@ import {
 } from 'react-router-dom';
 import cl from 'clsx';
 import classes from '$ui/src/lib/components/Link/Link.module.scss';
-import { Icon, IconProps } from '@pxweb2/pxweb2-ui';
+import { Icon, IconProps, Link as UiLink } from '@pxweb2/pxweb2-ui';
 
 interface NavlinkProps extends Omit<RouterNavLinkProps, 'to'> {
   to: string;
@@ -54,7 +54,7 @@ export const Navlink = forwardRef<HTMLAnchorElement, NavlinkProps>(
           ? style({ isActive: false, isPending: false })
           : style;
       return (
-        <a
+        <UiLink
           href={to}
           ref={ref}
           className={commonClassName}
@@ -68,7 +68,7 @@ export const Navlink = forwardRef<HTMLAnchorElement, NavlinkProps>(
           {icon && iconPosition === 'end' && (
             <Icon iconName={icon} className={cl(classes.icon)} />
           )}
-        </a>
+        </UiLink>
       );
     }
 
