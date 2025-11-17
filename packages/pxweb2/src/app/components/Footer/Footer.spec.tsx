@@ -2,10 +2,10 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import '@testing-library/jest-dom/vitest';
+import { MemoryRouter } from 'react-router';
 
 import { Footer, scrollToTop } from './Footer';
 import { useLocaleContent } from '../../util/hooks/useLocaleContent';
-import { MemoryRouter } from 'react-router';
 
 let currentPathname = '/en/tables';
 
