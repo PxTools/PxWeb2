@@ -31,54 +31,33 @@ export function Navlink({
   ref,
   ...rest
 }: NavlinkProps & { ref?: React.Ref<HTMLAnchorElement> }) {
-    const inRouter = useInRouterContext();
+  const inRouter = useInRouterContext();
 
-    const commonClassName = cl(
-      classes.link,
-      {
-        [classes.no_underline]: noUnderline,
-        [classes.inline]: inline,
-        [classes[`bodyshort-${size}`]]: size,
-        [classes[`padding-${size}`]]: size,
-      },
-      className,
-    );
+  const commonClassName = cl(
+    classes.link,
+    {
+      [classes.no_underline]: noUnderline,
+      [classes.inline]: inline,
+      [classes[`bodyshort-${size}`]]: size,
+      [classes[`padding-${size}`]]: size,
+    },
+    className,
+  );
 
-    if (!inRouter) {
-      // Fallback to regular anchor if no router context (e.g., isolated component tests)
-      const { style, ...anchorRest } = rest as Record<string, unknown>;
-      const anchorStyle =
-        typeof style === 'function'
-          ? style({ isActive: false, isPending: false })
-          : style;
-      return (
-        <UiLink
-          href={to}
-          ref={ref}
-          className={commonClassName}
-          style={anchorStyle}
-          {...anchorRest}
-        >
-          {icon && iconPosition === 'start' && (
-            <Icon iconName={icon} className={cl(classes.icon)} />
-          )}
-          {children}
-          {icon && iconPosition === 'end' && (
-            <Icon iconName={icon} className={cl(classes.icon)} />
-          )}
-        </UiLink>
-      );
-    }
-
-
+  if (!inRouter) {
+    // Fallback to regular anchor if no router context (e.g., isolated component tests)
+    const { style, ...anchorRest } = rest as Record<string, unknown>;
+    const anchorStyle =
+      typeof style === 'function'
+        ? style({ isActive: false, isPending: false })
+        : style;
     return (
-      <RouterNavLink
-        to={to}
-        className={({ isActive }) =>
-          cl(commonClassName, { [classes.active]: isActive })
-        }
+      <UiLink
+        href={to}
         ref={ref}
-        {...rest}
+        className={commonClassName}
+        style={anchorStyle}
+        {...anchorRest}
       >
         {icon && iconPosition === 'start' && (
           <Icon iconName={icon} className={cl(classes.icon)} />
@@ -87,8 +66,28 @@ export function Navlink({
         {icon && iconPosition === 'end' && (
           <Icon iconName={icon} className={cl(classes.icon)} />
         )}
-      </RouterNavLink>
+      </UiLink>
     );
+  }
+
+  return (
+    <RouterNavLink
+      to={to}
+      className={({ isActive }) =>
+        cl(commonClassName, { [classes.active]: isActive })
+      }
+      ref={ref}
+      {...rest}
+    >
+      {icon && iconPosition === 'start' && (
+        <Icon iconName={icon} className={cl(classes.icon)} />
+      )}
+      {children}
+      {icon && iconPosition === 'end' && (
+        <Icon iconName={icon} className={cl(classes.icon)} />
+      )}
+    </RouterNavLink>
+  );
 }
 
 export default Navlink;
