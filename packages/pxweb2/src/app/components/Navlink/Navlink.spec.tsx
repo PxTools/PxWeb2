@@ -8,8 +8,12 @@ import Navlink from './Navlink';
 
 // Mock pxweb2-ui Link and Icon for fallback
 vi.mock('@pxweb2/pxweb2-ui', () => ({
-  Icon: (props: Record<string, unknown>) => <span data-testid="icon" {...props} />,
-  Link: (props: Record<string, unknown>) => <a data-testid="ui-link" {...props} />,
+  Icon: (props: Record<string, unknown>) => (
+    <span data-testid="icon" {...props} />
+  ),
+  Link: (props: Record<string, unknown>) => (
+    <a data-testid="ui-link" {...props} />
+  ),
 }));
 
 describe('Navlink', () => {
@@ -17,7 +21,7 @@ describe('Navlink', () => {
     render(
       <MemoryRouter>
         <Navlink to="/test">Test Link</Navlink>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     const link = screen.getByRole('link', { name: 'Test Link' });
     expect(link).toBeInTheDocument();
@@ -37,7 +41,7 @@ describe('Navlink', () => {
         <Navlink to="/class" size="medium" className="custom-class">
           Class Link
         </Navlink>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     const link = screen.getByRole('link', { name: 'Class Link' });
     expect(link.className).toMatch(/custom-class/);
@@ -51,7 +55,7 @@ describe('Navlink', () => {
         <Navlink to="/ref" ref={ref}>
           Ref Link
         </Navlink>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     expect(ref.current).toBeInstanceOf(HTMLAnchorElement);
     expect(ref.current?.getAttribute('href')).toBe('/ref');
@@ -63,7 +67,7 @@ describe('Navlink', () => {
         <Navlink to="/icon" icon="ExternalLink" iconPosition="start">
           Icon Link
         </Navlink>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     expect(screen.getByTestId('icon')).toBeInTheDocument();
   });
