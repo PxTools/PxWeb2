@@ -2,6 +2,7 @@ import React, { forwardRef } from 'react';
 import {
   NavLink as RouterNavLink,
   NavLinkProps as RouterNavLinkProps,
+  useInRouterContext,
 } from 'react-router-dom';
 import cl from 'clsx';
 import classes from '$ui/src/lib/components/Link/Link.module.scss';
@@ -32,21 +33,50 @@ export const Navlink = forwardRef<HTMLAnchorElement, NavlinkProps>(
     },
     ref,
   ) {
+    const inRouter = useInRouterContext();
+
+    const commonClassName = cl(
+      classes.link,
+      {
+        [classes.no_underline]: noUnderline,
+        [classes.inline]: inline,
+        [classes[`bodyshort-${size}`]]: size,
+        [classes[`padding-${size}`]]: size,
+      },
+      className,
+    );
+
+    if (!inRouter) {
+      // Fallback to regular anchor if no router context (e.g., isolated component tests)
+      const { style, ...anchorRest } = rest as Record<string, unknown>;
+      const anchorStyle =
+        typeof style === 'function'
+          ? style({ isActive: false, isPending: false })
+          : style;
+      return (
+        <a
+          href={to}
+          ref={ref}
+          className={commonClassName}
+          style={anchorStyle}
+          {...anchorRest}
+        >
+          {icon && iconPosition === 'start' && (
+            <Icon iconName={icon} className={cl(classes.icon)} />
+          )}
+          {children}
+          {icon && iconPosition === 'end' && (
+            <Icon iconName={icon} className={cl(classes.icon)} />
+          )}
+        </a>
+      );
+    }
+
     return (
       <RouterNavLink
         to={to}
         className={({ isActive }) =>
-          cl(
-            classes.link,
-            {
-              [classes.no_underline]: noUnderline,
-              [classes.inline]: inline,
-              [classes[`bodyshort-${size}`]]: size,
-              [classes[`padding-${size}`]]: size,
-              [classes.active]: isActive,
-            },
-            className,
-          )
+          cl(commonClassName, { [classes.active]: isActive })
         }
         ref={ref}
         {...rest}
