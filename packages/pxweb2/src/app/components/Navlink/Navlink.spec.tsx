@@ -12,7 +12,9 @@ vi.mock('@pxweb2/pxweb2-ui', () => ({
     <span data-testid="icon" {...props} />
   ),
   Link: (props: Record<string, unknown>) => (
-    <a data-testid="ui-link" {...props} />
+    <a data-testid="ui-link" {...props}>
+      test
+    </a>
   ),
 }));
 
