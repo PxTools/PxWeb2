@@ -5,7 +5,7 @@ import '@testing-library/jest-dom/vitest';
 
 import { Footer, scrollToTop } from './Footer';
 import { useLocaleContent } from '../../util/hooks/useLocaleContent';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 let currentPathname = '/en/tables';
 
