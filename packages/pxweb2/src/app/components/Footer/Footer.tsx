@@ -8,6 +8,7 @@ import { getConfig } from '../../util/config/getConfig';
 import { getLanguagePath } from '../../util/language/getLanguagePath';
 import { BodyShort, Button, Heading, Link } from '@pxweb2/pxweb2-ui';
 import { useLocaleContent } from '../../util/hooks/useLocaleContent';
+import Navlink from '../Navlink/Navlink';
 
 type FooterProps = {
   containerRef?: React.RefObject<HTMLDivElement | null>;
@@ -122,8 +123,8 @@ export const Footer: React.FC<FooterProps> = ({
                           lang.shorthand,
                         );
                         return (
-                          <Link
-                            href={languageHref}
+                          <Navlink
+                            to={languageHref}
                             size="medium"
                             key={lang.shorthand}
                             lang={lang.shorthand}
@@ -136,7 +137,7 @@ export const Footer: React.FC<FooterProps> = ({
                             }}
                           >
                             {lang.languageName || lang.shorthand.toUpperCase()}
-                          </Link>
+                          </Navlink>
                         );
                       },
                     )}
