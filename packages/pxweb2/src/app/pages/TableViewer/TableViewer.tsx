@@ -30,9 +30,6 @@ export function TableViewer() {
   const config = getConfig();
   const accessibility = useAccessibility();
 
-  const baseUrl = config.apiUrl;
-  OpenAPI.BASE = baseUrl;
-
   const { tableId } = useParams<{ tableId: string }>();
   const [selectedTableId] = useState(tableId ?? '');
   const [selectedNavigationView, setSelectedNavigationView] =
@@ -52,6 +49,13 @@ export function TableViewer() {
 
   const hideMenuRef = useRef<HTMLButtonElement>(null);
   const skipToMainRef = useRef<HTMLDivElement>(null);
+
+  // Set base URL for API client
+  const baseUrl = config.apiUrl;
+
+  useEffect(() => {
+    OpenAPI.BASE = baseUrl;
+  }, [baseUrl]);
 
   useEffect(() => {
     if (hasFocus !== 'none' && navigationBarRef.current) {
