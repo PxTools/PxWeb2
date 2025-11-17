@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+import React from 'react';
 import {
   NavLink as RouterNavLink,
   NavLinkProps as RouterNavLinkProps,
@@ -19,21 +19,18 @@ interface NavlinkProps extends Omit<RouterNavLinkProps, 'to'> {
   noUnderline?: boolean;
 }
 
-export const Navlink = forwardRef<HTMLAnchorElement, NavlinkProps>(
-  function Navlink(
-    {
-      children,
-      to,
-      size,
-      icon,
-      iconPosition,
-      inline = false,
-      noUnderline = false,
-      className,
-      ...rest
-    },
-    ref,
-  ) {
+export function Navlink({
+  children,
+  to,
+  size,
+  icon,
+  iconPosition,
+  inline = false,
+  noUnderline = false,
+  className,
+  ref,
+  ...rest
+}: NavlinkProps & { ref?: React.Ref<HTMLAnchorElement> }) {
     const inRouter = useInRouterContext();
 
     const commonClassName = cl(
@@ -73,6 +70,7 @@ export const Navlink = forwardRef<HTMLAnchorElement, NavlinkProps>(
       );
     }
 
+
     return (
       <RouterNavLink
         to={to}
@@ -91,7 +89,6 @@ export const Navlink = forwardRef<HTMLAnchorElement, NavlinkProps>(
         )}
       </RouterNavLink>
     );
-  },
-);
+}
 
 export default Navlink;
