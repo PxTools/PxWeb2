@@ -1,8 +1,7 @@
 import cl from 'clsx';
 import React, { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLocation } from 'react-router-dom';
-// Navlink imported once for language links
+import { useLocation } from 'react-router';
 
 import styles from './Footer.module.scss';
 import { getConfig } from '../../util/config/getConfig';
