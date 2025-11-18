@@ -49,7 +49,6 @@ interface ActionItemProps
   isLoading?: boolean;
   toggleState?: boolean;
 }
-// TODO: Check keyboard accessibility and focus for toggle state
 
 export function ActionItem({
   label = '',
@@ -69,7 +68,7 @@ export function ActionItem({
     <button
       className={cl(
         styles['action-item'],
-        toggleState !== undefined && styles['toggleable'],
+        hasToggleState && styles['toggleable'],
       )}
       role={hasToggleState ? 'switch' : undefined}
       onClick={onClick}
