@@ -153,8 +153,8 @@
               "aria_label": "Lista över {{total}} värden.",
               "no_results_heading": "Tyvärr hittades inte ”{{search}}”",
               "no_results_bodyshort": "Försök med en annan stavning eller ett annat ord.",
-              "showing_number_of_values": " {{searchResultsCount}} värden",
-              "showing_number_of_one_value": " {{searchResultsCount}} värde"
+              "showing_number_of_values": " {{searchResultsCount}} träffar",
+              "showing_number_of_one_value": " {{searchResultsCount}} träff"
             }
           }
         }
