@@ -8,6 +8,17 @@ import { getConfig } from '../../util/config/getConfig';
 import { getLanguagePath } from '../../util/language/getLanguagePath';
 import { BodyShort, Button, Heading, Link } from '@pxweb2/pxweb2-ui';
 import { useLocaleContent } from '../../util/hooks/useLocaleContent';
+import Navlink from '../Navlink/Navlink';
+
+function useSafeLocation(): { pathname: string } {
+  try {
+    // Attempt router location
+    return useLocation() as { pathname: string };
+  } catch {
+    // Fallback to global location when outside Router
+    return { pathname: globalThis.location?.pathname || '/' };
+  }
+}
 
 type FooterProps = {
   containerRef?: React.RefObject<HTMLDivElement | null>;
@@ -47,7 +58,7 @@ export const Footer: React.FC<FooterProps> = ({
   const footerContent = content?.footer;
   // Ref for the main scrollable container
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
-  const location = useLocation();
+  const location = useSafeLocation();
 
   const canShowTopButton = !!containerRef || enableWindowScroll;
 
@@ -122,8 +133,8 @@ export const Footer: React.FC<FooterProps> = ({
                           lang.shorthand,
                         );
                         return (
-                          <Link
-                            href={languageHref}
+                          <Navlink
+                            to={languageHref}
                             size="medium"
                             key={lang.shorthand}
                             lang={lang.shorthand}
@@ -132,11 +143,10 @@ export const Footer: React.FC<FooterProps> = ({
                               if (!isCurrent) {
                                 i18n.changeLanguage(lang.shorthand);
                               }
-                              // Allow default navigation (no preventDefault) so URL updates
                             }}
                           >
                             {lang.languageName || lang.shorthand.toUpperCase()}
-                          </Link>
+                          </Navlink>
                         );
                       },
                     )}
