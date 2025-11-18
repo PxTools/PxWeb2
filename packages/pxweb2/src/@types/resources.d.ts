@@ -257,8 +257,8 @@ interface Resources {
                 aria_label: 'List of {{total}} values.';
                 no_results_bodyshort: 'Try a different keyword or spelling.';
                 no_results_heading: 'No results for “{{search}}”';
-                showing_number_of_values: ' {{searchResultsCount}} values';
-                showing_number_of_one_value: ' {{searchResultsCount}} value';
+                showing_number_of_values: ' {{searchResultsCount}} results';
+                showing_number_of_one_value: ' {{searchResultsCount}} result';
               };
             };
             header: {
