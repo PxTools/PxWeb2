@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "private": true,
+  "type": "module",
   "author": "",
   "license": "MIT",
   "main": "index.js",

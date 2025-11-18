@@ -1,4 +1,27 @@
-import { DataCell, PxTable, PxData } from '@pxweb2/pxweb2-ui';
+/**
+ * Performs a clockwise pivot on the stub and heading arrays.
+ * Mutates the arrays in place.
+ *
+ * @param stub - Array of variable IDs in the stub
+ * @param heading - Array of variable IDs in the heading
+ */
+export function pivotTableCW(stub: string[], heading: string[]) {
+  if (stub.length > 0 && heading.length > 0) {
+    stub.push(heading.pop() as string);
+    heading.unshift(stub.shift() as string);
+  } else if (stub.length === 0) {
+    heading.unshift(heading.pop() as string);
+  } else if (heading.length === 0) {
+    stub.unshift(stub.pop() as string);
+  }
+}
+import {
+  DataCell,
+  PxTable,
+  PxData,
+  Variable,
+  VartypeEnum,
+} from '@pxweb2/pxweb2-ui';
 
 import { translateOutsideReactWithParams } from '../util/language/translateOutsideReact';
 
@@ -19,7 +42,7 @@ function isDataCell(obj: unknown): obj is DataCell {
     typeof obj === 'object' &&
     'value' in obj &&
     !('cube' in obj) &&
-    typeof (obj as DataCell).value !== 'undefined'
+    (obj as DataCell).value !== undefined
   );
 }
 
@@ -201,4 +224,166 @@ export function filterStubAndHeadingArrays(
     stubMobile: stubMobile.filter((id) => variableIds.includes(id)),
     headingMobile: headingMobile.filter((id) => variableIds.includes(id)),
   };
+}
+
+export function autoPivotTable(
+  variables: Variable[],
+  stub: string[],
+  heading: string[],
+) {
+  // Ensure we start from empty arrays
+  stub.length = 0;
+  heading.length = 0;
+
+  // Make a copy of variables to avoid mutating the original array
+  let vars = structuredClone(variables);
+
+  // Separate variables into single-value and multi-value buckets
+  let singleValueVars = vars.filter((variable) => variable.values.length === 1);
+  let multiValueVars = vars.filter((variable) => variable.values.length > 1);
+
+  singleValueVars = sortVariablesByType(singleValueVars);
+
+  autoPivotMultiValueVariables(multiValueVars, stub, heading);
+
+  const headingColumns = calculateHeadingColumns(variables, heading);
+
+  autoPivotSingleValueVariables(singleValueVars, headingColumns, stub, heading);
+}
+
+// Handles placement of multi-value variables into stub and heading arrays in the auto pivot
+function autoPivotMultiValueVariables(
+  multiValueVars: Variable[],
+  stub: string[],
+  heading: string[],
+) {
+  if (multiValueVars.length > 0) {
+    // Sort multi-value variables by number of values descending
+    multiValueVars = multiValueVars.sort(
+      (a, b) => b.values.length - a.values.length,
+    );
+
+    // Place the variable with the most values first in the stub
+    addToArrayIfNotExists(stub, multiValueVars[0].id);
+
+    if (multiValueVars.length == 2) {
+      // Place the variable with the 2nd most values in the heading
+      addToArrayIfNotExists(heading, multiValueVars[1].id);
+    }
+
+    let multiValueVarsRemaining: Variable[] = [];
+
+    if (multiValueVars.length > 2) {
+      if (
+        multiValueVars[1].values.length * multiValueVars[2].values.length <
+        13
+      ) {
+        // Place the variables with the 2nd and 3rd most values in the heading if the product of their values are below 13.
+        // The one with 3rd most values first then the one with 2nd most values
+        addToArrayIfNotExists(heading, multiValueVars[2].id);
+        addToArrayIfNotExists(heading, multiValueVars[1].id);
+        multiValueVarsRemaining = multiValueVars.slice(3);
+      } else {
+        // Place the variable with the 2nd most values in the heading
+        addToArrayIfNotExists(heading, multiValueVars[1].id);
+        multiValueVarsRemaining = multiValueVars.slice(2);
+      }
+    }
+
+    if (multiValueVarsRemaining.length > 0) {
+      multiValueVarsRemaining = sortVariablesByType(multiValueVarsRemaining);
+
+      // Add all remaining multi-value variables to the stub array
+      // Desired order for remaining variables: ContentsVariable first, then TimeVariable, then the rest
+      for (const variable of multiValueVarsRemaining) {
+        addToArrayIfNotExists(stub, variable.id);
+      }
+    }
+  }
+}
+
+// Handles placement of single-value variables into stub and heading arrays in the auto pivot
+function autoPivotSingleValueVariables(
+  singleValueVars: Variable[],
+  headingColumns: number,
+  stub: string[],
+  heading: string[],
+) {
+  // Depending on the number of heading columns, place single-value variables
+  // either at the start of the stub or at the start of the heading
+  if (headingColumns > 24) {
+    for (let i = singleValueVars.length - 1; i >= 0; i--) {
+      addFirstInArrayIfNotExists(stub, singleValueVars[i].id);
+    }
+  } else {
+    for (let i = singleValueVars.length - 1; i >= 0; i--) {
+      addFirstInArrayIfNotExists(heading, singleValueVars[i].id);
+    }
+  }
+}
+
+/** Calculates the total number of columns in the heading based on the variables and their values.
+ *
+ * @param variables - The array of Variable objects.
+ * @param heading - The array of variable IDs representing the heading.
+ * @returns The total number of columns in the heading.
+ */
+function calculateHeadingColumns(
+  variables: Variable[],
+  heading: string[],
+): number {
+  let headingColumns = 1;
+
+  for (const id of heading) {
+    const variable = variables.find((v) => v.id === id);
+    if (variable) {
+      headingColumns *= variable.values.length;
+    }
+  }
+
+  return headingColumns;
+}
+
+/** Adds an item to the end of an array if it doesn't already exist. */
+function addToArrayIfNotExists<T>(array: T[], item: T) {
+  if (!array.includes(item)) {
+    array.push(item);
+  }
+}
+
+/** Adds an item to the start of an array if it doesn't already exist. */
+function addFirstInArrayIfNotExists<T>(array: T[], item: T) {
+  if (!array.includes(item)) {
+    array.unshift(item);
+  }
+}
+
+/**
+ * Sorts an array of Variable objects by their type with the following precedence:
+ * 1. ContentsVariable
+ * 2. TimeVariable
+ * 3. All other variable types in their original relative order.
+ *
+ * A new array is returned; the input array is not mutated.
+ *
+ * @param variables The array of Variable objects to sort.
+ * @returns A new array with the variables sorted by type precedence.
+ */
+export function sortVariablesByType<T extends { type: VartypeEnum }>(
+  variables: T[],
+): T[] {
+  // Create a copy to avoid mutating the original array
+  const copied = structuredClone(variables);
+
+  const precedence: Record<VartypeEnum, number> = {
+    [VartypeEnum.CONTENTS_VARIABLE]: 0,
+    [VartypeEnum.TIME_VARIABLE]: 1,
+    // Any specific ordering among the remaining variable types is not defined.
+    // They will share the same precedence value (2) preserving their relative order via stable sort behavior.
+    [VartypeEnum.GEOGRAPHICAL_VARIABLE]: 2,
+    [VartypeEnum.REGULAR_VARIABLE]: 2,
+  };
+
+  // Use stable sort: JavaScript's Array.prototype.sort is stable in modern runtimes (Node >= 12, modern browsers).
+  return copied.sort((a, b) => precedence[a.type] - precedence[b.type]);
 }

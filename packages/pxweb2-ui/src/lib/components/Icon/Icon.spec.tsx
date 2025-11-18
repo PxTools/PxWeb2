@@ -45,13 +45,14 @@ describe('Icon', () => {
     expect(svg).toHaveAttribute('fill', 'currentColor');
   });
 
-  it('should apply aria-label when provided', () => {
+  it('should apply aria-label when provided and not aria-hidden', () => {
     const { container } = render(
       <Icon iconName="MagnifyingGlass" ariaLabel="Search icon" />,
     );
     const svg = container.querySelector('svg');
 
     expect(svg).toHaveAttribute('aria-label', 'Search icon');
+    expect(svg).not.toHaveAttribute('aria-hidden');
   });
 
   it('should not have aria-label when not provided', () => {
@@ -59,20 +60,14 @@ describe('Icon', () => {
     const svg = container.querySelector('svg');
 
     expect(svg).not.toHaveAttribute('aria-label');
-  });
-
-  it('should apply aria-hidden when true', () => {
-    const { container } = render(<Icon iconName="Pencil" ariaHidden={true} />);
-    const svg = container.querySelector('svg');
-
     expect(svg).toHaveAttribute('aria-hidden', 'true');
   });
 
-  it('should not have aria-hidden when not provided', () => {
-    const { container } = render(<Icon iconName="Clock" />);
+  it('should apply aria-hidden as default', () => {
+    const { container } = render(<Icon iconName="Pencil" />);
     const svg = container.querySelector('svg');
 
-    expect(svg).not.toHaveAttribute('aria-hidden');
+    expect(svg).toHaveAttribute('aria-hidden', 'true');
   });
 
   it('should return null for non-existent icon', () => {
@@ -98,15 +93,5 @@ describe('Icon', () => {
     const svg = container.querySelector('svg');
 
     expect(svg).toBeInTheDocument();
-  });
-
-  it('should render with both aria-label and aria-hidden', () => {
-    const { container } = render(
-      <Icon iconName="Bell" ariaLabel="Notification" ariaHidden={true} />,
-    );
-    const svg = container.querySelector('svg');
-
-    expect(svg).toHaveAttribute('aria-label', 'Notification');
-    expect(svg).toHaveAttribute('aria-hidden', 'true');
   });
 });

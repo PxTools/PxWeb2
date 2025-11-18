@@ -9,6 +9,7 @@ import { Icon, IconProps } from '../Icon/Icon';
 import Button from '../Button/Button';
 import BodyShort from '../Typography/BodyShort/BodyShort';
 import List, { ListProps } from '../List/List';
+import { getIconDirection } from '../../util/util';
 
 export interface AlertProps {
   readonly size?: 'small' | 'medium';
@@ -19,6 +20,7 @@ export interface AlertProps {
   readonly headingLevel?: '1' | '2' | '3' | '4' | '5' | '6';
   readonly onClick?: () => void;
   readonly onDismissed?: () => void;
+  readonly languageDirection?: 'ltr' | 'rtl';
   readonly className?: string;
   readonly children?: string | React.ReactNode;
   readonly alertAriaLabel?: string;
@@ -44,6 +46,7 @@ export function Alert({
   headingLevel = '2',
   onClick,
   onDismissed,
+  languageDirection = 'ltr',
   className = '',
   children,
   alertAriaLabel,
@@ -69,7 +72,11 @@ export function Alert({
     }
   };
   const hasheading = Boolean(heading);
-  const iconRight = 'ArrowRight';
+  const iconArrow = getIconDirection(
+    languageDirection,
+    'ArrowRight',
+    'ArrowLeft',
+  );
   const iconClose = 'XMark';
   let variantIcon: IconProps['iconName'];
   let variantAriaLive: 'polite' | 'assertive';
@@ -234,7 +241,7 @@ export function Alert({
         )}
         {clickable && (
           <div className={cl(classes['alert-arrow'])}>
-            <Icon iconName={iconRight} />
+            <Icon iconName={iconArrow} />
           </div>
         )}
       </div>

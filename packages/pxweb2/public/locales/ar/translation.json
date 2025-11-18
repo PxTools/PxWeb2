@@ -74,7 +74,6 @@
           "search": {
             "placeholder": "البحث في القائمة",
             "label": "يبحث",
-            "aria_label_icon_text": "أيقونة البحث",
             "aria_label_clear_button_text": "مسح أيقونة البحث"
           },
           "header": {
@@ -114,9 +113,16 @@
         "title": "يحرر",
         "customize": {
           "title": "تخصيص",
+          "auto_pivot": {
+            "title": "تحسين تخطيط الجدول",
+            "aria_label": "تحسين تخطيط الجدول",
+            "description": "ينظم الصفوف والأعمدة تلقائيًا لتخطيط جدول أوضح",
+            "screen_reader_announcement": "تم تحسين تخطيط الجدول وتنظيمه بعد {{first_variables}} و {{last_variable}}"
+          },
           "pivot": {
             "title": "تدوير الجدول",
             "aria_label": "تدوير الجدول في اتجاه عقارب الساعة",
+            "description": "",
             "screen_reader_announcement": "جدول مدور بعد {{first_variables}} و {{last_variable}}"
           },
           "rearrange": {

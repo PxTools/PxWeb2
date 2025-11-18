@@ -31,7 +31,6 @@ export const DetailsSection: React.FC<DetailsSectionProps> = ({
           {header}
         </span>
         <Icon
-          ariaHidden
           className={cl(styles.expandIcon, {
             [styles[`open`]]: isOpen,
           })}
