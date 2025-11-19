@@ -1,13 +1,11 @@
-import Ajv from 'ajv';
-import * as schema from './config/config.schema.json';
 import { getConfig } from './config/getConfig';
+import { Config as configValidator } from 'virtual:schema-validator';
 
 export const validateConfig = () => {
-  const ajv = new Ajv();
-  const validate = ajv.compile(schema);
   const config = getConfig();
-  const valid = validate(config);
-  if (!valid) {
-    console.error('PxWeb2 - Invalid config', validate.errors);
+
+  let valid = configValidator;
+  if (!valid(config)) {
+    console.error('PxWeb2 - Invalid config', valid.errors);
   }
 };
