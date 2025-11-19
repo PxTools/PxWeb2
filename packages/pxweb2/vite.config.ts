@@ -1,6 +1,7 @@
 import { Plugin, defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
+import { virtualModulePlugin } from './vite-plugin-virtual-module';
 
 // Custom plugin to handle theme CSS injection
 const themeInjectorPlugin = (): Plugin => ({
@@ -32,7 +33,7 @@ export default defineConfig({
     port: 4300,
     host: 'localhost',
   },
-  plugins: [react(), themeInjectorPlugin()],
+  plugins: [react(), themeInjectorPlugin(), virtualModulePlugin()],
   build: {
     outDir: './dist/',
     reportCompressedSize: true,
