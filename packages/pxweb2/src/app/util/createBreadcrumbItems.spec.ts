@@ -1,5 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import type { Mock } from 'vitest';
+import type { TFunction } from 'i18next';
+
 import {
   createBreadcrumbItems,
   BreadcrumbItemsParm,
@@ -57,7 +59,7 @@ describe('createBreadcrumbItems', () => {
     const breadcrumbItemsOptions: BreadcrumbItemsParm = {
       currentPage: { label: 'Current page', href: '/some' },
       language: 'en',
-      t: t as any,
+      t: t as TFunction,
       pathElements: pathElements,
     };
     const items = createBreadcrumbItems(breadcrumbItemsOptions);
@@ -102,7 +104,7 @@ describe('createBreadcrumbItems', () => {
     const breadcrumbItemsOptions: BreadcrumbItemsParm = {
       currentPage: { label: 'Current page', href: '/some' },
       language: 'en',
-      t: t as any,
+      t: t as TFunction,
       pathElements: pathElements,
     };
 
@@ -133,7 +135,7 @@ describe('createBreadcrumbItems', () => {
     const breadcrumbItemsOptions: BreadcrumbItemsParm = {
       currentPage: { label: 'Page', href: '/some' },
       language: 'en',
-      t: t as any,
+      t: t as TFunction,
     };
 
     const items = createBreadcrumbItems(breadcrumbItemsOptions);
