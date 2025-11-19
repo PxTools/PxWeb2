@@ -1,3 +1,3 @@
 declare module 'virtual:schema-validator' {
-  export const Config: function;
+  export const Config;
 }
