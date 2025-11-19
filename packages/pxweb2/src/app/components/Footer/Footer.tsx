@@ -116,19 +116,13 @@ export const Footer: React.FC<FooterProps> = ({
                   {Array.isArray(config?.language?.supportedLanguages) &&
                     config.language.supportedLanguages.map(
                       (lang: { shorthand: string; languageName: string }) => {
-                        const basePath = config.baseApplicationPath.replace(
-                          /\/$/,
-                          '',
+                        const languageHref = getLanguagePath(
+                          location.pathname,
+                          lang.shorthand,
+                          config.language.supportedLanguages,
+                          config.language.defaultLanguage,
+                          config.language.showDefaultLanguageInPath,
                         );
-                        const languageHref =
-                          basePath +
-                          getLanguagePath(
-                            location.pathname,
-                            lang.shorthand,
-                            config.language.supportedLanguages,
-                            config.language.defaultLanguage,
-                            config.language.showDefaultLanguageInPath,
-                          );
                         const isCurrent = i18n.language?.startsWith(
                           lang.shorthand,
                         );
