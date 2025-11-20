@@ -142,25 +142,24 @@ export function VariableBoxContent({
           />
         </span>
       );
+    } else if (search !== '') {
+      return (
+        <span
+          className={classes['sr-only']}
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          <Trans
+            i18nKey={
+              debouncedSearchResultsCount === 1
+                ? 'presentation_page.side_menu.selection.variablebox.content.values_list.showing_number_of_one_value'
+                : 'presentation_page.side_menu.selection.variablebox.content.values_list.showing_number_of_values'
+            }
+            values={{ searchResultsCount: debouncedSearchResultsCount }}
+          />
+        </span>
+      );
     }
-    else if ( search !== ''){
-    return (
-      <span
-        className={classes['sr-only']}
-        aria-live="polite"
-        aria-atomic="true"
-      >
-        <Trans
-          i18nKey={
-            debouncedSearchResultsCount === 1
-              ? 'presentation_page.side_menu.selection.variablebox.content.values_list.showing_number_of_one_value'
-              : 'presentation_page.side_menu.selection.variablebox.content.values_list.showing_number_of_values'
-          }
-          values={{ searchResultsCount: debouncedSearchResultsCount }}
-        />
-      </span>
-    );
-  }
   };
 
   useEffect(() => {
