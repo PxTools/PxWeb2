@@ -143,6 +143,7 @@ export function VariableBoxContent({
         </span>
       );
     }
+    else if ( search !== ''){
     return (
       <span
         className={classes['sr-only']}
@@ -159,6 +160,7 @@ export function VariableBoxContent({
         />
       </span>
     );
+  }
   };
 
   useEffect(() => {
