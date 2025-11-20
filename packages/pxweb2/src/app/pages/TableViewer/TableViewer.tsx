@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useLayoutEffect } from 'react';
 import { useParams } from 'react-router';
 import cl from 'clsx';
 
@@ -53,7 +53,7 @@ export function TableViewer() {
   // Set base URL for API client
   const baseUrl = config.apiUrl;
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     OpenAPI.BASE = baseUrl;
   }, [baseUrl]);
 
