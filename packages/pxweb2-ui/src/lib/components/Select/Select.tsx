@@ -151,8 +151,6 @@ function DefaultSelect({
     </div>
   );
 
-
-
   // return (
   //   <div className={cl(classes.select) + cssClasses}>
   //     <div
@@ -203,11 +201,6 @@ function DefaultSelect({
   //     </div>
   //   </div>
   // );
-
-
-
-
-
 }
 
 type VariableBoxSelectProps = Pick<
