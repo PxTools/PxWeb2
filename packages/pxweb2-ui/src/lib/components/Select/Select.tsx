@@ -150,6 +150,64 @@ function DefaultSelect({
       </div>
     </div>
   );
+
+
+
+  // return (
+  //   <div className={cl(classes.select) + cssClasses}>
+  //     <div
+  //       className={cl(classes.labelWrapper, {
+  //         [classes.visuallyHidden]: hideLabel,
+  //       })}
+  //     >
+  //       <Label size="medium" textcolor="default">
+  //         {label}
+  //       </Label>
+  //     </div>
+  //     <div className={cl(classes.contentStyle)} style={{ position: 'relative' }}>
+  //       <BodyShort
+  //         size="medium"
+  //         className={cl(classes.optionLayout, classes.optionTypography)}
+  //       >
+  //         {selectedOption ? selectedOption.label : placeholder}
+  //       </BodyShort>
+  //       <Icon iconName="ChevronDown" className={cl(classes.iconColor)}></Icon>
+  //       <select
+  //         aria-label={label}
+  //         value={selectedOption?.value ?? ''}
+  //         onChange={(e) => {
+  //       const opt = options.find(o => o.value === e.target.value);
+  //       onChange(opt);
+  //         }}
+  //         tabIndex={tabIndex}
+  //         style={{
+  //       position: 'absolute',
+  //       inset: 0,
+  //       width: '100%',
+  //       height: '100%',
+  //       opacity: 0,
+  //       cursor: 'pointer',
+  //         }}
+  //       >
+  //         {!selectedOption && placeholder && (
+  //       <option value="" disabled>
+  //         {placeholder}
+  //       </option>
+  //         )}
+  //         {options.map(o => (
+  //       <option key={o.value} value={o.value}>
+  //         {o.label}
+  //       </option>
+  //         ))}
+  //       </select>
+  //     </div>
+  //   </div>
+  // );
+
+
+
+
+
 }
 
 type VariableBoxSelectProps = Pick<
