@@ -11,6 +11,32 @@ import {
   Spinner,
 } from '@pxweb2/pxweb2-ui';
 
+function IconWrapper({
+  size,
+  isLoading,
+  iconName,
+  largeIconName,
+}: {
+  readonly size: 'medium' | 'large';
+  readonly isLoading: boolean;
+  readonly iconName: IconProps['iconName'];
+  readonly largeIconName: ActionItemIconProps['largeIconName'];
+}) {
+  if (isLoading && size === 'medium') {
+    return <Spinner size="xsmall" aria-hidden="true" />;
+  }
+
+  return (
+    <div className={cl(styles[`icon-wrapper-${size}`], styles['icon-wrapper'])}>
+      {size === 'medium' ? (
+        <Icon iconName={iconName} />
+      ) : (
+        <ActionItemIcon largeIconName={largeIconName} />
+      )}
+    </div>
+  );
+}
+
 interface ActionItemProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   label?: string;
@@ -19,9 +45,9 @@ interface ActionItemProps
   largeIconName?: ActionItemIconProps['largeIconName'];
   onClick?: () => void;
   description?: string;
-  control?: boolean;
   size?: 'medium' | 'large';
   isLoading?: boolean;
+  toggleState?: boolean;
 }
 
 export function ActionItem({
@@ -33,49 +59,47 @@ export function ActionItem({
   size = 'medium',
   description,
   isLoading = false,
+  toggleState,
   ...rest
 }: Readonly<ActionItemProps>) {
+  const hasToggleState = toggleState === true || toggleState === false;
+
   return (
     <button
-      className={cl(styles.actionItem)}
+      className={cl(
+        styles['action-item'],
+        hasToggleState && styles['toggleable'],
+      )}
+      role={hasToggleState ? 'switch' : undefined}
       onClick={onClick}
       aria-label={ariaLabel}
       aria-disabled={isLoading || rest.disabled}
       aria-busy={isLoading || rest.disabled}
+      aria-checked={toggleState}
       {...rest}
     >
-      {size === 'medium' && (
-        <>
-          {isLoading ? (
-            <Spinner size="xsmall" aria-hidden="true" />
-          ) : (
-            <div
-              className={cl(styles[`iconWrapper-${size}`], styles.iconWrapper)}
-            >
-              <Icon iconName={iconName} />
-            </div>
-          )}
-          <div className={styles.labelDescriptionWrapper}>
-            <Label size="medium" className={cl(styles.labelHover)}>
-              {label}
-            </Label>
-            {description && <BodyShort>{description}</BodyShort>}
-          </div>
-        </>
-      )}
-
-      {size === 'large' && (
-        <div className={cl(styles[`iconLabelWrapper-${size}`])}>
-          <div
-            className={cl(styles[`iconWrapper-${size}`], styles.iconWrapper)}
-          >
-            <ActionItemIcon largeIconName={largeIconName} />
-          </div>
-          <div className={styles.labelBodyWrapper}>
-            <Label size="medium" className={cl(styles.labelHover)}>
-              {label}
-            </Label>
-          </div>
+      <IconWrapper
+        size={size}
+        isLoading={isLoading}
+        iconName={iconName}
+        largeIconName={largeIconName}
+      />
+      <div
+        className={cl(
+          styles['label-description-wrapper'],
+          styles[`icon-label-wrapper-${size}`],
+        )}
+      >
+        <Label size="medium" className={cl(styles['label-hover'])}>
+          {label}
+        </Label>
+        {size === 'medium' && description && (
+          <BodyShort>{description}</BodyShort>
+        )}
+      </div>
+      {toggleState !== undefined && (
+        <div className={cl(styles['toggle-wrapper'])}>
+          {toggleState.toString()}
         </div>
       )}
     </button>
