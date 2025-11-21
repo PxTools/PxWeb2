@@ -1,4 +1,4 @@
-name: Deploy to Cloudflare, test with Mabl
+name: Build and deploy to Cloudflare, test with Mabl
 
 on:
   pull_request:
@@ -6,13 +6,46 @@ on:
 
 permissions:
   contents: read
+  deployments: write
   pull-requests: write
 
 jobs:
-  deploy:
+  build:
+    name: Node CI Tests
+
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [22.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run build
+      - run: npm run coverage
+
+      - name: SonarQube Scan
+        if: ${{ github.actor != 'dependabot[bot]' }}
+        uses: SonarSource/sonarqube-scan-action@v6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
     if: ${{ github.actor != 'dependabot[bot]' }}
-    name: Deploy
+    name: Deploy to Cloudflare Pages
     outputs:
       deployment-url: ${{ steps.deploy.outputs.deployment-url }}
       alias-url: ${{ steps.deploy.outputs.pages-deployment-alias-url }}
@@ -20,14 +53,13 @@ jobs:
       - name: Get branch names
         id: branch-names
         uses: tj-actions/branch-names@v9
-      - uses: actions/checkout@v5
-      - name: deploy
+      - name: Deploy
         id: deploy
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          preCommands: npm install && npm run build
+          #preCommands: npm install && npm run build
           command: |
             pages deploy packages/pxweb2/dist --project-name=pxweb2 --branch=${{ steps.branch-names.outputs.current_branch }}
       - name: Add deployment info to PR description
@@ -39,6 +71,7 @@ jobs:
             ## Branch Deployment to Cloudflare Pages
             :articulated_lorry: Preview URL: ${{ steps.deploy.outputs.deployment-url }}
             :construction: Branch preview URL: ${{ steps.deploy.outputs.pages-deployment-alias-url }}
+
   test:
     runs-on: ubuntu-latest
     if: ${{ github.event.pull_request.draft == false && github.actor != 'dependabot[bot]' }}
