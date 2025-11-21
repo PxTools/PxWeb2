@@ -17,7 +17,8 @@ export default mergeConfig(
       testTimeout: 20000,
       hookTimeout: 20000,
       include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-      setupFiles: './src/lib/util/setupTests',
+
+  setupFiles: './src/lib/util/setupTests.ts',
 
       reporters: ['default'],
       coverage: {

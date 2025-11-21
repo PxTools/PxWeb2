@@ -16,15 +16,17 @@ beforeEach(() => {
   document.head.appendChild(style);
 });
 
+// Minimal react-i18next mock
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string) => key,
-    i18n: {
-      changeLanguage: () => new Promise(vi.fn()),
-    },
+    i18n: { changeLanguage: () => Promise.resolve() },
   }),
-  initReactI18next: {
-    type: '3rdParty',
-    init: vi.fn(),
+  Trans: ({ i18nKey, children }: { i18nKey?: string; children?: any }) => {
+    if (i18nKey) {
+      return i18nKey;
+    }
+    return children ?? null;
   },
+  initReactI18next: { type: '3rdParty', init: vi.fn() },
 }));
