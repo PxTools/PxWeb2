@@ -126,7 +126,7 @@ function DefaultSelect({
           {label}
         </Label>
       </div>
-      <div className={cl(classes.contentStyle)} >
+      <div className={cl(classes.contentStyle)}>
         <BodyShort
           size="medium"
           className={cl(classes.optionLayout, classes.optionTypography)}
@@ -134,24 +134,25 @@ function DefaultSelect({
           {selectedOption ? selectedOption.label : placeholder}
         </BodyShort>
         <Icon iconName="ChevronDown" className={cl(classes.iconColor)}></Icon>
-        <select className={cl(classes.selectNative)}
+        <select
+          className={cl(classes.selectNative)}
           aria-label={label}
           value={selectedOption?.value ?? ''}
           onChange={(e) => {
-        const opt = options.find(o => o.value === e.target.value);
-        onChange(opt);
+            const opt = options.find((o) => o.value === e.target.value);
+            onChange(opt);
           }}
           tabIndex={tabIndex}
         >
           {!selectedOption && placeholder && (
-        <option value="" disabled>
-          {placeholder}
-        </option>
+            <option value="" disabled>
+              {placeholder}
+            </option>
           )}
-          {options.map(o => (
-        <option key={o.value} value={o.value}>
-          {o.label}
-        </option>
+          {options.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
           ))}
         </select>
       </div>
