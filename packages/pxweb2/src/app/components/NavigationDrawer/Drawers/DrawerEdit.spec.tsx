@@ -1,19 +1,21 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { describe, it, expect, vi, afterEach } from 'vitest';
+import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
+import userEvent from '@testing-library/user-event';
 
 import { DrawerEdit } from './DrawerEdit';
+import { PivotType } from '../../../context/PivotType';
 
 interface MockActionItemProps {
   label?: string;
   onClick?: () => void;
   iconName?: string;
   ariaLabel?: string;
+  isLoading?: boolean;
   [key: string]: unknown;
 }
 
-const mockPivotCW = vi.fn();
+const mockPivot = vi.fn();
 
 // Mock dependencies
 vi.mock('react-i18next', () => ({
@@ -24,8 +26,9 @@ vi.mock('react-i18next', () => ({
 
 vi.mock('../../../context/useTableData', () => ({
   default: () => ({
-    pivotCW: mockPivotCW,
+    pivot: mockPivot,
     data: {
+      // Minimal shape; DrawerEdit only passes these through
       stub: [{ name: 'variable1' }],
       heading: [{ name: 'variable2' }],
     },
@@ -45,6 +48,8 @@ vi.mock('@pxweb2/pxweb2-ui', () => ({
     onClick,
     iconName,
     ariaLabel,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    isLoading,
     ...props
   }: MockActionItemProps) => (
     <button
@@ -62,12 +67,28 @@ vi.mock('@pxweb2/pxweb2-ui', () => ({
   ),
 }));
 
+vi.mock('../../../context/useApp', () => ({
+  default: () => ({ isMobile: false }),
+}));
+
+afterEach(() => {
+  vi.clearAllMocks();
+});
+
 describe('DrawerEdit', () => {
   it('renders successfully', () => {
     render(<DrawerEdit />);
 
     expect(screen.getByTestId('content-box')).toBeInTheDocument();
-    expect(screen.getByTestId('action-item')).toBeInTheDocument();
+    // Two action buttons: auto pivot & clockwise pivot (unified PivotButton)
+    const buttons = screen.getAllByTestId('action-item');
+    expect(buttons).toHaveLength(2);
+    // Check labels via translation keys
+    expect(
+      screen.getByText(
+        'presentation_page.side_menu.edit.customize.auto_pivot.title',
+      ),
+    ).toBeInTheDocument();
     expect(
       screen.getByText(
         'presentation_page.side_menu.edit.customize.pivot.title',
@@ -79,14 +100,35 @@ describe('DrawerEdit', () => {
     expect(DrawerEdit.displayName).toBe('DrawerEdit');
   });
 
-  it('calls pivotCW on button click', async () => {
+  it('calls pivot with PivotType.Clockwise on its button click', async () => {
     render(<DrawerEdit />);
-
-    const button = screen.getByTestId('action-item');
     const user = userEvent.setup();
-    await user.click(button);
+    const clockwiseButton = screen.getByText(
+      'presentation_page.side_menu.edit.customize.pivot.title',
+    );
+    await user.click(clockwiseButton);
+    await waitFor(
+      () => {
+        expect(mockPivot).toHaveBeenCalledWith(PivotType.Clockwise);
+        expect(mockPivot).toHaveBeenCalledTimes(1);
+      },
+      { timeout: 2000 },
+    );
+  });
 
-    expect(mockPivotCW).toHaveBeenCalledTimes(1);
-    expect(mockPivotCW).toHaveBeenCalledWith();
+  it('calls pivot with PivotType.Auto on its button click', async () => {
+    render(<DrawerEdit />);
+    const user = userEvent.setup();
+    const autoButton = screen.getByText(
+      'presentation_page.side_menu.edit.customize.auto_pivot.title',
+    );
+    await user.click(autoButton);
+    await waitFor(
+      () => {
+        expect(mockPivot).toHaveBeenCalledWith(PivotType.Auto);
+        expect(mockPivot).toHaveBeenCalledTimes(1);
+      },
+      { timeout: 2000 },
+    );
   });
 });

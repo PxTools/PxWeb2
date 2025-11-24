@@ -23,8 +23,11 @@ import { mapJsonStat2Response } from '../../mappers/JsonStat2ResponseMapper';
 import {
   addFormattingToPxTable,
   filterStubAndHeadingArrays,
+  autoPivotTable,
+  pivotTableCW,
 } from './TableDataProviderUtils';
 import { problemMessage } from '../util/problemMessage';
+import { PivotType } from './PivotType';
 
 // Define types for the context state and provider props
 export interface TableDataContextType {
@@ -34,7 +37,7 @@ export interface TableDataContextType {
   fetchSavedQuery: (queryId: string, i18n: i18n, isMobile: boolean) => void;
   pivotToMobile: () => void;
   pivotToDesktop: () => void;
-  pivotCW: () => void;
+  pivot: (type: PivotType) => void;
   buildTableTitle: (
     stub: Variable[],
     heading: Variable[],
@@ -61,15 +64,10 @@ const TableDataContext = createContext<TableDataContextType | undefined>({
   pivotToDesktop: () => {
     // No-op: useTableData hook prevents this from being called
   },
-  pivotCW: () => {
+  pivot: () => {
     // No-op: useTableData hook prevents this from being called
   },
-  buildTableTitle: () => {
-    return {
-      firstTitlePart: '',
-      lastTitlePart: '',
-    };
-  },
+  buildTableTitle: () => ({ firstTitlePart: '', lastTitlePart: '' }),
 });
 
 const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
@@ -1150,60 +1148,69 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   );
 
   /**
-   * Pivots the table clockwise.
+   * Pivots the table based on the specified pivot type.
+   *
+   * @param type - The type of pivot to apply (Auto or Custom).
+   *
+   * This function adjusts the table structure by modifying the stub and heading order
+   * according to the specified pivot type. It handles both mobile and desktop layouts,
+   * ensuring that the table is appropriately formatted for the current device mode.
    */
-  const pivotCW = React.useCallback((): void => {
-    if (data?.heading === undefined) {
-      return;
-    }
+  const pivot = React.useCallback(
+    (type: PivotType): void => {
+      // Autopivot not allowed for mobile mode
+      if (isMobileMode && type === PivotType.Auto) {
+        return;
+      }
+      if (data?.heading === undefined || data?.stub === undefined) {
+        return;
+      }
 
-    const tmpTable = structuredClone(data);
-    if (tmpTable === undefined) {
-      return;
-    }
+      const tmpTable = copyPxTableWithoutData(data);
+      let stub: string[] = [];
+      let heading: string[] = [];
 
-    let stub: string[];
-    let heading: string[];
+      if (isMobileMode) {
+        stub = structuredClone(stubMobile);
+        heading = structuredClone(headingMobile);
+      } else {
+        stub = structuredClone(stubDesktop);
+        heading = structuredClone(headingDesktop);
+      }
+      if (stub.length === 0 && heading.length === 0) {
+        return;
+      }
 
-    if (isMobileMode) {
-      stub = structuredClone(stubMobile);
-      heading = structuredClone(headingMobile);
-    } else {
-      stub = structuredClone(stubDesktop);
-      heading = structuredClone(headingDesktop);
-    }
+      if (type === PivotType.Auto) {
+        autoPivotTable(tmpTable.metadata.variables, stub, heading);
+      } else {
+        pivotTableCW(stub, heading);
+      }
 
-    if (stub.length === 0 && heading.length === 0) {
-      return;
-    }
+      pivotTable(tmpTable, stub, heading);
 
-    if (stub.length > 0 && heading.length > 0) {
-      stub.push(heading.pop() as string);
-      heading.unshift(stub.shift() as string);
-    } else if (stub.length === 0) {
-      heading.unshift(heading.pop() as string);
-    } else if (heading.length === 0) {
-      stub.unshift(stub.pop() as string);
-    }
+      // Reassemble table data
+      tmpTable.data = data.data;
 
-    pivotTable(tmpTable, stub, heading);
-    setData(tmpTable);
+      setData(tmpTable);
 
-    if (isMobileMode) {
-      setStubMobile(stub);
-      setHeadingMobile(heading);
-    } else {
-      setStubDesktop(stub);
-      setHeadingDesktop(heading);
-    }
-  }, [
-    data,
-    isMobileMode,
-    stubDesktop,
-    stubMobile,
-    headingDesktop,
-    headingMobile,
-  ]);
+      if (isMobileMode) {
+        setStubMobile(stub);
+        setHeadingMobile(heading);
+      } else {
+        setStubDesktop(stub);
+        setHeadingDesktop(heading);
+      }
+    },
+    [
+      data,
+      isMobileMode,
+      stubMobile,
+      headingMobile,
+      stubDesktop,
+      headingDesktop,
+    ],
+  );
 
   /**
    * Pivots the table according to the stub- and heading order.
@@ -1230,14 +1237,31 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     });
   }
 
+  /**
+   * Creates a copy of the PxTable without the data.
+   */
+  function copyPxTableWithoutData(pxTable: PxTable): PxTable {
+    const tmpTable: PxTable = {
+      metadata: structuredClone(pxTable.metadata),
+      data: {
+        cube: {},
+        variableOrder: [],
+        isLoaded: false,
+      },
+      heading: [],
+      stub: [],
+    };
+    return tmpTable;
+  }
+
   const memoData = React.useMemo(
     () => ({
       data,
-      /* loading, error  */ fetchTableData,
+      fetchTableData,
       fetchSavedQuery,
       pivotToMobile,
       pivotToDesktop,
-      pivotCW,
+      pivot,
       buildTableTitle,
       isInitialized,
     }),
@@ -1247,7 +1271,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       fetchSavedQuery,
       pivotToMobile,
       pivotToDesktop,
-      pivotCW,
+      pivot,
       buildTableTitle,
       isInitialized,
     ],

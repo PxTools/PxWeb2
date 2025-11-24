@@ -507,7 +507,6 @@ export function VariableBoxContent({
                 total: totalValues,
               },
             )}
-            className={cl(classes['variablebox-content-values-only-list'])}
             ref={valuesOnlyList}
           >
             {' '}

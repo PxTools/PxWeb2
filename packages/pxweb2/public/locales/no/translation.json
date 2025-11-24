@@ -56,7 +56,8 @@
     },
     "breadcrumbs": {
       "aria_label_breadcrumb": "Brødsmulesti",
-      "breadcrumb_root_title": "Hjem",
+      "breadcrumb_home_title": "Hjem",
+      "breadcrumb_root_title": "Nye statistikkbanken",
       "show_more_breadcrumbs": "Vis mer"
     }
   },
@@ -169,9 +170,16 @@
         "title": "Rediger",
         "customize": {
           "title": "Tilpass",
+          "auto_pivot": {
+            "title": "Rydd opp i tabellen",
+            "aria_label": "Rydd opp i tabellen",
+            "description": "Gjør tabellen mer oversiktlig ved å automatisk organisere rader og kolonner",
+            "screen_reader_announcement": "Tabell ryddet opp og organisert etter {{first_variables}} og {{last_variable}}"
+          },
           "pivot": {
             "title": "Roter tabellen",
             "aria_label": "Roter tabellen mot høyre",
+            "description": "",
             "screen_reader_announcement": "Tabell rotert etter {{first_variables}} og {{last_variable}}"
           },
           "rearrange": {
