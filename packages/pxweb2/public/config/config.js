@@ -4,6 +4,7 @@ window.PxWeb2Config = {
       { shorthand: 'en', languageName: 'English' },
       { shorthand: 'sv', languageName: 'Svenska' },
       { shorthand: 'no', languageName: 'Norsk' },
+      { shorthand: 'jp', languageName: '日本語' },
     ],
     defaultLanguage: 'en',
     fallbackLanguage: 'en',
@@ -53,5 +54,6 @@ window.PxWeb2Config = {
     no: '', // Set to your Norwegian homepage URL
     sv: '', // Set to your Swedish homepage URL
     en: '', // Set to your English homepage URL
+    jp: '', // Set to your Japanese homepage URL
   },
 };

@@ -1,0 +1,61 @@
+{
+  "startPage": {
+    "detailsSection": {
+      "enabled": true,
+      "detailHeader": "PxWeb について詳しく",
+      "detailContent": [
+        {
+          "textBlock": {
+            "header": "このセクションを使う場面",
+            "text": "このセクションは、一部の利用者にとって有用だが、すべての利用者にとって必須ではない情報を掲載するための任意の領域です。すべての利用者が確認すべき重要な情報は、必ずリード文（導入文）に記載してください。"
+          }
+        },
+        {
+          "links": {
+            "header": "便利なリンク",
+            "items": [
+              {
+                "text": "サンプルリンク 1",
+                "url": "#"
+              },
+              {
+                "text": "サンプルリンク 2",
+                "url": "#"
+              },
+              {
+                "text": "サンプルリンク 3",
+                "url": "#"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "noResultSearchHelp": {
+      "enabled": true,
+      "helpText": [
+        "検索では、表名、変数名、または表番号を指定できます。",
+        "現時点では、市区町村名や郡名など、表の中身の値で検索することはできません。",
+        "必要な数値を見つけやすくするため、検索機能の改善に継続的に取り組んでいます。"
+      ]
+    }
+  },
+  "footer": {
+    "columns": [
+      {
+        "header": "PxWeb 2.0",
+        "links": [
+          {
+            "text": "PxWeb 2.0 について（GitHub）",
+            "url": "https://www.pxtools.net/PxWeb2/",
+            "external": true
+          },
+          {
+            "text": "お問い合わせ",
+            "url": "mailto:px@scb.se"
+          }
+        ]
+      }
+    ]
+  }
+}

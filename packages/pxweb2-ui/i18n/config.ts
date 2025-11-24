@@ -7,7 +7,7 @@ i18n
   .use(LanguageDetector) // detect user language
   .init({
     fallbackLng: 'en',
-  supportedLngs: ['en', 'no', 'se', 'ar'],
+  supportedLngs: ['en', 'no', 'se', 'ar', 'jp'],
   // Disable i18next debug logging to keep console clean.
   debug: false,
     interpolation: {

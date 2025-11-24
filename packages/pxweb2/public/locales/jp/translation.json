@@ -1,0 +1,352 @@
+{
+  "common": {
+    "title": "PxWeb 2.0",
+    "header": {
+      "logo": "PxWeb 2.0",
+      "logo_alt": "トップページへ",
+      "language_selector": "言語 / Language"
+    },
+    "errors": {
+      "not_found": {
+        "title": "ページが見つかりません",
+        "description": "お探しのページは移動または削除された可能性があります。URLに誤りがある場合もあります。",
+        "action_text": "前のページに戻る"
+      },
+      "generic": {
+        "title": "申し訳ありません、問題が発生しました",
+        "description": "技術的なエラーが発生しました。ページを再読み込みするか、数分後に再度お試しください。",
+        "action_text": "ページを再読み込み"
+      },
+      "no_tables_loaded": {
+        "title": "表を読み込めませんでした",
+        "description": "技術的なエラーが発生しました。ページを再読み込みするか、数分後に再度お試しください。",
+        "action_text": "ページを再読み込み"
+      }
+    },
+    "skip_to_main": "メインコンテンツへ移動",
+    "footer": {
+      "language_header": "言語",
+      "copyright": "© 著作権 PxTools",
+      "top_button_text": "トップへ戻る"
+    },
+    "generic_buttons": {
+      "ok": "OK",
+      "cancel": "キャンセル",
+      "save": "保存",
+      "search": "検索",
+      "close": "閉じる"
+    },
+    "generic_tags": {
+      "mandatory": "必須"
+    },
+    "alert": {
+      "info": "情報:",
+      "success": "成功:",
+      "warning": "警告:",
+      "error": "エラー:"
+    },
+    "status_messages": {
+      "welcome": "PxWeb 2.0 へようこそ。必要なデータをより利用しやすくするため、継続的に改善を行っています。📊✨",
+      "drawer_view": "グラフ表示は現在開発中です。",
+      "drawer_save_file": "複数のファイル形式でのダウンロード機能は現在開発中です。",
+      "drawer_save_api": "API クエリ機能は現在開発中です。",
+      "drawer_edit": "表編集ツールは現在開発中です。",
+      "drawer_help": "ヘルプ領域は現在準備中です。独自のヘルプページへのリンクを追加できるようになります。",
+      "tab_definitions": "このタブの内容は現在準備中です。"
+    },
+    "breadcrumbs": {
+      "aria_label_breadcrumb": "パンくずナビゲーション",
+      "breadcrumb_home_title": "ホーム",
+      "breadcrumb_root_title": "新しい統計データベース",
+      "show_more_breadcrumbs": "もっと表示"
+    }
+  },
+  "start_page": {
+    "header": "PxWeb 2.0 へようこそ",
+    "ingress": "理想の表をお探しですか？検索フィールドとフィルターを使えば、必要な数値を簡単に見つけられます。トレンドの把握、事実の確認、あるいは興味深いデータセットの探索など、PxWeb 2.0 がサポートします。",
+    "more_about_label": "PxWeb 2.0 について",
+    "more_about_text": "この統計データベースの詳細について",
+    "no_result_header": "表が見つかりませんでした",
+    "no_result_description": "別の検索語を使うか、フィルター設定を調整してください。",
+    "no_result_search_help": "検索ヘルプ",
+    "result_hidden_header": "結果",
+    "search_label": "統計データベースを検索",
+    "search_placeholder": "表名または変数を検索",
+    "filter": {
+      "button": "フィルター",
+      "back": "戻る",
+      "show_results": "{{value}} 件を表示",
+      "close": "フィルターを閉じる",
+      "header": "フィルター",
+      "list_filters_aria": "選択されたフィルター",
+      "remove_all_filter": "すべてのフィルターを解除",
+      "remove_filter_aria": "フィルター解除: {{value}}",
+      "subject": "テーマ",
+      "time_unit": "期間",
+      "year": {
+        "title": "年",
+        "from_label": "開始",
+        "to_label": "終了",
+        "from_year": "開始年",
+        "to_year": "終了年",
+        "clear_selection": "選択解除",
+        "no_option": "該当なし"
+      },
+      "variabel": "変数",
+      "variabel_search": "変数を検索",
+      "variable_count": "{{countShown}} / {{countTotal}} 個の変数を表示",
+      "frequency": {
+        "annual": "年",
+        "monthly": "月",
+        "quarterly": "四半期",
+        "term": "ターム",
+        "weekly": "週",
+        "other": "その他"
+      },
+      "status": {
+        "title": "ステータス",
+        "updating": "更新中",
+        "not_updating": "更新終了"
+      }
+    },
+    "table": {
+      "card_description": "{{title}}。 年: {{yearFrom}}〜{{yearTo}}、頻度: {{frequency}}、更新日: {{updatedDate}}、表番号: {{tableNumber}}。",
+      "number_of_tables": "<strong>{{count}}</strong> 件の表",
+      "number_of_tables_found": "<strong>{{count}}</strong> 件の表が見つかりました",
+      "updated_label": "更新日",
+      "show_more": "もっと表示",
+      "show_less": "表示を減らす",
+      "loading": "読み込み中...",
+      "show_number_of_tables": "{{countShown}} / {{countTotal}} を表示",
+      "show_number_of_tables_aria": "{{count}} 件中、{{countShown}} / {{countTotal}} を表示"
+    }
+  },
+  "presentation_page": {
+    "side_menu": {
+      "aria_label_tool_side_menu": "表のツールメニュー",
+      "hide": "隠す",
+      "selection": {
+        "title": "フィルター",
+        "variablebox": {
+          "search": {
+            "placeholder": "一覧を検索",
+            "label": "検索",
+            "aria_label_clear_button_text": "検索文字列を消去するアイコン"
+          },
+          "header": {
+            "tag_selected": "{{selected}} / {{total}} 選択済み",
+            "tag_mandatory": "必須",
+            "alert_no_mandatory_values": "表を表示するには、リストから少なくとも 1 つ選択する必要があります"
+          },
+          "content": {
+            "select": {
+              "label": "区分を選択",
+              "placeholder": "未選択",
+              "modal": {
+                "cancel_button": "キャンセル",
+                "confirm_button": "確定"
+              }
+            },
+            "mixed_checkbox": "すべて選択",
+            "mixed_checkbox_search": "検索結果をすべて選択",
+            "values_list": {
+              "aria_label": "{{total}} 件の値のリスト",
+              "no_results_heading": "「{{search}}」に一致するものはありません",
+              "no_results_bodyshort": "別の検索語または別の表記でお試しください。"
+            }
+          }
+        }
+      },
+      "view": {
+        "title": "表示",
+        "table": {
+          "title": "表"
+        },
+        "graph": {
+          "title": "グラフ"
+        }
+      },
+      "edit": {
+        "title": "編集",
+        "customize": {
+          "title": "カスタマイズ",
+          "auto_pivot": {
+            "title": "表を整理",
+            "aria_label": "表を整理",
+            "description": "行と列を自動配置して表を見やすくします",
+            "screen_reader_announcement": "{{first_variables}} と {{last_variable}} に基づいて表を整理しました"
+          },
+          "pivot": {
+            "title": "表を回転",
+            "aria_label": "表を右回転",
+            "description": "",
+            "screen_reader_announcement": "{{first_variables}} と {{last_variable}} に基づいて表を回転しました"
+          },
+          "rearrange": {
+            "title": "表を再構成",
+            "description": "説明テキスト..."
+          },
+          "change_order": {
+            "title": "順序を変更",
+            "description": "説明テキスト..."
+          }
+        },
+        "calculate": {
+          "title": "計算",
+          "sum": {
+            "title": "合計",
+            "description": "説明テキスト..."
+          }
+        },
+        "hide_display": {
+          "title": "表示/非表示"
+        }
+      },
+      "save": {
+        "title": "保存",
+        "file": {
+          "title": "ファイルとしてダウンロード",
+          "loading_announcement": "ファイルを処理中です。お待ちください。",
+          "formats": {
+            "excel": "Excel (.xlsx)",
+            "csv": "セミコロン区切り・ヘッダー付き (.csv)",
+            "px": "PC-Axis (.px)",
+            "jsonstat2": "JSON-stat2 (.json)",
+            "html": "HTML (.html)",
+            "parquet": "Parquet (.parquet)"
+          }
+        },
+        "savequery": {
+          "title": "更新される表へのリンク",
+          "info": "この表専用のリンクが作成され、自動的に更新されます。新しい期間の扱いは選択できます。",
+          "radio_legend": "新しい期間の扱い",
+          "period_options": {
+            "selected": "新しい期間を追加しない（現在選択している期間のみ表示）",
+            "from": "新しい期間を追加する（現在選択している期間に追加）",
+            "top": "新しい期間を追加しつつ件数を一定に維持する（新しい期間を追加する際に最も古い期間を削除）"
+          },
+          "create_button": "リンクを作成",
+          "copy_button": "リンクをコピー",
+          "copied_button": "コピー完了",
+          "create_status": "リンクを作成しました。再度押すとコピーします。",
+          "copy_status": "クリップボードにコピーしました",
+          "loading_status": "リンク作成中"
+        },
+        "imagefile": {
+          "title": "グラフとして保存",
+          "png": "図（png）"
+        },
+        "link": {
+          "title": "リンクとして保存",
+          "description": "説明テキスト..."
+        },
+        "api": {
+          "title": "API",
+          "description": "説明テキスト...",
+          "query": "API クエリ"
+        }
+      },
+      "help": {
+        "title": "ヘルプ"
+      }
+    },
+    "main_content": {
+      "expand_view": "表示を拡大",
+      "shrink_view": "表示を縮小",
+      "last_updated": "更新日",
+      "show_details": "詳細を表示",
+      "dynamic_table_title": "{{table_content_type}}、{{table_content_label_first_part}}・{{table_content_label_last_part}} 別",
+      "table": {
+        "warnings": {
+          "missing_mandatory": {
+            "title": "表を表示できません",
+            "description": "フィルターで選択が必要です"
+          },
+          "to_many_values_selected": {
+            "title": "表が大きすぎて更新できません",
+            "description1": "現在のフィルター設定では ",
+            "description2": " セルとなり、上限の ",
+            "description3": " セルを超えています。選択を減らすと、制限内になった時点で表が自動的に更新されます。",
+            "selectedCells": "{{selectedCells}}",
+            "maxCells": "{{maxCells}}"
+          }
+        }
+      },
+      "about_table": {
+        "title": "情報",
+        "footnotes": {
+          "title": "注記",
+          "missing_heading": "注記なし",
+          "missing_text_table": "この表には注記がありません。",
+          "missing_text_selection": "選択中のフィルターに対する注記はありません。",
+          "symbol_explanation_heading": "記号説明",
+          "mandatory_heading": "表に関する重要事項",
+          "mandatory_variable_heading": "重要事項",
+          "non_mandatory_heading": "表全体に適用",
+          "show_all_footnotes": "表のすべての注記を表示",
+          "important_about_selection_heading_1": "選択したフィルターには重要な注記が ",
+          "important_about_selection_heading_2": " 件あります",
+          "important_about_selection_body": "このメッセージを押すと注記を表示します。",
+          "important_about_selection_heading_one_note_1": "選択したフィルターには重要な注記が ",
+          "important_about_selection_heading_one_note_2": " 件あります",
+          "important_about_selection_body_one_note": "このメッセージを押すと注記を表示します。"
+        },
+        "definitions": {
+          "title": "定義",
+          "description": "この表は {{statistics}} の一部です"
+        },
+        "details": {
+          "title": "詳細",
+          "description": "説明テキスト...",
+          "boolean_true": "はい",
+          "boolean_false": "いいえ",
+          "base_time": "基準期間",
+          "update_frequency": "更新頻度",
+          "survey": "調査",
+          "link": "リンク",
+          "copyright": "著作権",
+          "matrix": "行列",
+          "last_updated": "更新日",
+          "next_update": "次回更新",
+          "source": "出典",
+          "official_statistics": "公的統計",
+          "unit": "単位",
+          "reference_time": "基準時点"
+        },
+        "contact": {
+          "title": "問い合わせ",
+          "description": "説明テキスト...",
+          "missing_heading": "連絡先なし",
+          "missing_text": "この表には連絡先情報がありません。"
+        }
+      },
+      "related": {
+        "title": "関連",
+        "description": "説明テキスト..."
+      }
+    },
+    "footer": {
+      "description": "このページでは、SCB（スウェーデン統計局）と SSB（ノルウェー統計局）による、新しい使いやすい PxWeb インターフェース構築の進捗をご覧いただけます。",
+      "descriptionLink": "GitHub のプロジェクトを見る",
+      "contact": "問い合わせ",
+      "projectLeader": "プロジェクトリーダー",
+      "scrumMaster": "スクラムマスター",
+      "copyright": "© 2024 Statistiska centralbyrån / Statistisk sentralbyrå"
+    }
+  },
+  "date": {
+    "simple_date": "{{value, datetime(day: '2-digit'; month: '2-digit'; year: 'numeric')}}",
+    "simple_date_with_time": "{{value, datetime(year: 'numeric'; month: '2-digit'; day: '2-digit'; hour: 'numeric'; minute: 'numeric')}}"
+  },
+  "number": {
+    "simple_number": "{{value, pxNumber}}",
+    "simple_number_with_zero_decimal": "{{value, pxNumber(minimumFractionDigits: 0; maximumFractionDigits: 0;)}}",
+    "simple_number_with_one_decimal": "{{value, pxNumber(minimumFractionDigits: 1; maximumFractionDigits: 1;)}}",
+    "simple_number_with_two_decimals": "{{value, pxNumber(minimumFractionDigits: 2; maximumFractionDigits: 2;)}}",
+    "simple_number_with_three_decimals": "{{value, pxNumber(minimumFractionDigits: 3; maximumFractionDigits: 3;)}}",
+    "simple_number_with_four_decimals": "{{value, pxNumber(minimumFractionDigits: 4; maximumFractionDigits: 4;)}}",
+    "simple_number_with_five_decimals": "{{value, pxNumber(minimumFractionDigits: 5; maximumFractionDigits: 5;)}}",
+    "simple_number_with_six_decimals": "{{value, pxNumber(minimumFractionDigits: 6; maximumFractionDigits: 6;)}}",
+    "simple_number_with_default_formatter": "{{value, number(minimumFractionDigits: 5; maximumFractionDigits: 5; roundingMode: 'halfExpand')}}"
+  }
+}
