@@ -12,9 +12,7 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
 );
 
-if (location.href.includes('localhost')) {
-  validateConfig();
-}
+validateConfig();
 
 const config = getConfig();
 const router = createBrowserRouter(routerConfig, {
