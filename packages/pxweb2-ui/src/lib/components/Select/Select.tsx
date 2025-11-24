@@ -144,11 +144,6 @@ function DefaultSelect({
           }}
           tabIndex={tabIndex}
         >
-          {!selectedOption && placeholder && (
-            <option value="" disabled>
-              {placeholder}
-            </option>
-          )}
           {options.map((o) => (
             <option key={o.value} value={o.value}>
               {o.label}
