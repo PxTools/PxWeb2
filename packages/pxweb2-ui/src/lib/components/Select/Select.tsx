@@ -126,20 +126,7 @@ function DefaultSelect({
           {label}
         </Label>
       </div>
-      <div
-        className={cl(classes.contentStyle)}
-        tabIndex={tabIndex}
-        onClick={() => {
-          openOptions(options); // TODO: Get option
-          onChange(options[0]); // TODO: Use selected option
-        }}
-        onKeyUp={(event) => {
-          if (event.key === ' ' || event.key === 'Enter') {
-            openOptions(options); // TODO: Get option
-            onChange(options[0]); // TODO: Use selected option
-          }
-        }}
-      >
+      <div className={cl(classes.contentStyle)} >
         <BodyShort
           size="medium"
           className={cl(classes.optionLayout, classes.optionTypography)}
@@ -147,60 +134,29 @@ function DefaultSelect({
           {selectedOption ? selectedOption.label : placeholder}
         </BodyShort>
         <Icon iconName="ChevronDown" className={cl(classes.iconColor)}></Icon>
+        <select className={cl(classes.selectNative)}
+          aria-label={label}
+          value={selectedOption?.value ?? ''}
+          onChange={(e) => {
+        const opt = options.find(o => o.value === e.target.value);
+        onChange(opt);
+          }}
+          tabIndex={tabIndex}
+        >
+          {!selectedOption && placeholder && (
+        <option value="" disabled>
+          {placeholder}
+        </option>
+          )}
+          {options.map(o => (
+        <option key={o.value} value={o.value}>
+          {o.label}
+        </option>
+          ))}
+        </select>
       </div>
     </div>
   );
-
-  // return (
-  //   <div className={cl(classes.select) + cssClasses}>
-  //     <div
-  //       className={cl(classes.labelWrapper, {
-  //         [classes.visuallyHidden]: hideLabel,
-  //       })}
-  //     >
-  //       <Label size="medium" textcolor="default">
-  //         {label}
-  //       </Label>
-  //     </div>
-  //     <div className={cl(classes.contentStyle)} style={{ position: 'relative' }}>
-  //       <BodyShort
-  //         size="medium"
-  //         className={cl(classes.optionLayout, classes.optionTypography)}
-  //       >
-  //         {selectedOption ? selectedOption.label : placeholder}
-  //       </BodyShort>
-  //       <Icon iconName="ChevronDown" className={cl(classes.iconColor)}></Icon>
-  //       <select
-  //         aria-label={label}
-  //         value={selectedOption?.value ?? ''}
-  //         onChange={(e) => {
-  //       const opt = options.find(o => o.value === e.target.value);
-  //       onChange(opt);
-  //         }}
-  //         tabIndex={tabIndex}
-  //         style={{
-  //       position: 'absolute',
-  //       inset: 0,
-  //       width: '100%',
-  //       height: '100%',
-  //       opacity: 0,
-  //       cursor: 'pointer',
-  //         }}
-  //       >
-  //         {!selectedOption && placeholder && (
-  //       <option value="" disabled>
-  //         {placeholder}
-  //       </option>
-  //         )}
-  //         {options.map(o => (
-  //       <option key={o.value} value={o.value}>
-  //         {o.label}
-  //       </option>
-  //         ))}
-  //       </select>
-  //     </div>
-  //   </div>
-  // );
 }
 
 type VariableBoxSelectProps = Pick<
