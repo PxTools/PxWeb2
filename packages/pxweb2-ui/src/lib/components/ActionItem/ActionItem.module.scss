@@ -24,6 +24,11 @@
     box-shadow: inset 0 0 0 3px var(--px-color-border-focus-boxshadow);
     border-radius: var(--px-border-radius-medium);
   }
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+    background: var(--px-color-background-default);
+  }
 }
 
 .iconWrapper {
@@ -69,4 +74,13 @@
   &:hover {
     cursor: pointer;
   }
+}
+
+.actionItem:disabled .labelHover {
+  cursor: not-allowed;
+}
+
+.actionItem:disabled .iconWrapper-large {
+  opacity: 0.4;
+  background: var(--px-color-background-default);
 }
