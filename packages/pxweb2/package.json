@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "@testing-library/react": "^16.3.0",
+    "ajv": "^8.17.1",
     "concurrently": "^9.2.1",
     "html-validate": "^10.3.0",
     "husky": "^9.1.7",
