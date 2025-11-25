@@ -335,8 +335,8 @@
     }
   },
   "date": {
-    "simple_date": "{{value, datetime(day: '2-digit'; month: '2-digit'; year: 'numeric')}}",
-    "simple_date_with_time": "{{value, datetime(year: 'numeric'; month: '2-digit'; day: '2-digit'; hour: 'numeric'; minute: 'numeric')}}"
+    "simple_date": "{{value, datetime(year: 'numeric'; month: '2-digit'; day: '2-digit')}}",
+    "simple_date_with_time": "{{value, datetime(year: 'numeric'; month: '2-digit'; day: '2-digit'; hour: '2-digit'; minute: '2-digit')}}"
   },
   "number": {
     "simple_number": "{{value, pxNumber}}",
