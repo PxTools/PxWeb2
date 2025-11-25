@@ -8,15 +8,16 @@ const themeInjectorPlugin = (): Plugin => ({
   transformIndexHtml(html) {
     // Remove the theme CSS link from the original HTML
     html = html.replace(
-      '<link rel="stylesheet" href="./theme/variables.css" />',
+      '<link rel="stylesheet" href="./theme/variables.css?v=__BUILD_DATE__" />',
       '',
     );
-
     // Inject it at the end of head to ensure it loads last
-    return html.replace(
+    html = html.replace(
       '</head>',
-      '<link rel="stylesheet" href="./theme/variables.css" /></head>',
+      '<link rel="stylesheet" href="./theme/variables.css?v=__BUILD_DATE__" /></head>',
     );
+    // Replace cache busting build date placeholder
+    return html.replace(/__BUILD_DATE__/g, new Date().toISOString());
   },
 });
 
@@ -44,5 +45,12 @@ export default defineConfig({
     alias: {
       $ui: path.resolve('../pxweb2-ui/'),
     },
+  },
+  define: {
+    // Used for cache busting of configuration files.
+    // Since we don't update pkg.version on release yet, we use build date instead.
+    //   import pkg from './package.json';
+    //   __BUILD_VERSION__: JSON.stringify(pkg.version),
+    __BUILD_DATE__: JSON.stringify(new Date().toISOString()),
   },
 });
