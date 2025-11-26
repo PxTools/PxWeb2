@@ -39,7 +39,7 @@ import { useTopicIcons } from '../../util/hooks/useTopicIcons';
 import useApp from '../../context/useApp';
 import { getConfig } from '../../util/config/getConfig';
 import { FilterContext, FilterProvider } from '../../context/FilterContext';
-import { getAllTables } from '../../util/tableHandler';
+import { getAllTables, queryTablesByKeyword } from '../../util/tableHandler';
 import { tableListIsReadyToRender } from '../../util/startPageRender';
 import useFilterUrlSync from '../../util/hooks/useFilterUrlSync';
 import StartpageDetails from '../../components/StartPageDetails/StartPageDetails';
@@ -447,7 +447,10 @@ const StartPage = () => {
 
   // Debounce the dispatch for search filter, so it waits a few moments for typing to finish
   const debouncedDispatch = useRef(
-    debounce((value: string) => {
+    debounce(async (value: string) => {
+      const searchedTables = await queryTablesByKeyword(value, 'en');
+      console.log(JSON.stringify(searchedTables, null, 2));
+
       dispatch({
         type: ActionType.ADD_SEARCH_FILTER,
         payload: { text: value, language: i18n.language },
