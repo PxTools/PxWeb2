@@ -448,7 +448,7 @@ const StartPage = () => {
   // Debounce the dispatch for search filter, so it waits a few moments for typing to finish
   const debouncedDispatch = useRef(
     debounce(async (value: string) => {
-      const searchedTables = await queryTablesByKeyword(value, 'en');
+      const searchedTables = await queryTablesByKeyword(value, i18n.language);
       console.log(JSON.stringify(searchedTables, null, 2));
 
       dispatch({
