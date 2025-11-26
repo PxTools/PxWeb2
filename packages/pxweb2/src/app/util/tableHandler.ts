@@ -145,10 +145,10 @@ export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
   });
 
   const testQueryFilter = function () {
-    if (!queryFilter) {
-      return true;
-    } else {
+    if (queryFilter) {
       return queryFilter.value.includes(table.id);
+    } else {
+      return true;
     }
   };
 
