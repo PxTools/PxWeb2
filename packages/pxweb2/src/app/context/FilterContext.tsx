@@ -194,10 +194,10 @@ function reducer(
         (filter) => filter.type == 'query',
       );
 
-      // We remove the query filter if the array is empty (field cleared)
+      // We remove the query filter if the query is empty (field cleared)
       // Otherwise, update if it already exists, or if not add it.
       // Ensures we only ever have one filter of type query
-      if (action.payload.tableIds.length === 0) {
+      if (action.payload.query == '') {
         newFilters = state.activeFilters.filter((filter) => {
           return filter.type != 'query';
         });

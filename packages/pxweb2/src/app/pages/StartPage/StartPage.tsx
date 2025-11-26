@@ -732,7 +732,7 @@ const StartPage = () => {
                             },
                           });
                           handleFilterChange();
-                          if (filter.type == 'search') {
+                          if (filter.type == 'query') {
                             searchFieldRef.current?.clearInputField();
                           }
                         }}
