@@ -449,14 +449,13 @@ const StartPage = () => {
   const debouncedDispatch = useRef(
     debounce(async (value: string) => {
       const searchedTables = await queryTablesByKeyword(value, i18n.language);
-      console.log(JSON.stringify(searchedTables, null, 2));
-
+      const tableIds: string[] = searchedTables.map((table: Table) => table.id);
       dispatch({
-        type: ActionType.ADD_SEARCH_FILTER,
-        payload: { text: value, language: i18n.language },
+        type: ActionType.ADD_QUERY_FILTER,
+        payload: { query: value, tableIds: tableIds },
       });
       handleFilterChange();
-    }, 500),
+    }, 1000),
   ).current;
 
   const renderPagination = () => {

@@ -140,6 +140,18 @@ export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
     }
   };
 
+  const queryFilter = filters.find((f) => {
+    return f.type === 'query';
+  });
+
+  const testQueryFilter = function () {
+    if (!queryFilter) {
+      return true;
+    } else {
+      return queryFilter.value.includes(table.id);
+    }
+  };
+
   const testYearRangeFilter = () => {
     const yearRangeFilter = filters.find((f) => f.type === 'yearRange');
     if (!yearRangeFilter) {
@@ -212,6 +224,7 @@ export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
   };
 
   return (
+    testQueryFilter() &&
     testTimeUnitFilters() &&
     testSubjectFilters() &&
     testYearRangeFilter() &&

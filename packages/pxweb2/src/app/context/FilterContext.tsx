@@ -180,6 +180,54 @@ function reducer(
         },
       };
     }
+    case ActionType.ADD_QUERY_FILTER: {
+      let newFilters: Filter[];
+
+      const newQuery: Filter = {
+        type: 'query',
+        label: action.payload.query,
+        value: action.payload.tableIds.join(','),
+        index: 1,
+      };
+
+      const existingQuery = state.activeFilters.findIndex(
+        (filter) => filter.type == 'query',
+      );
+
+      // We remove the query filter if the array is empty (field cleared)
+      // Otherwise, update if it already exists, or if not add it.
+      // Ensures we only ever have one filter of type query
+      if (action.payload.tableIds.length === 0) {
+        newFilters = state.activeFilters.filter((filter) => {
+          return filter.type != 'query';
+        });
+      } else {
+        newFilters =
+          existingQuery >= 0
+            ? state.activeFilters.with(existingQuery, newQuery)
+            : [...state.activeFilters, newQuery];
+      }
+
+      const newTables = state.availableTables.filter((table) =>
+        shouldTableBeIncluded(table, newFilters),
+      );
+
+      return {
+        ...state,
+        activeFilters: newFilters,
+        filteredTables: newTables,
+        availableFilters: {
+          subjectTree: updateSubjectTreeCounts(
+            state.originalSubjectTree,
+            newTables,
+          ),
+          timeUnits: getTimeUnits(newTables),
+          yearRange: getYearRanges(newTables),
+          variables: getVariables(newTables),
+          status: getStatus(newTables),
+        },
+      };
+    }
     case ActionType.REMOVE_FILTER: {
       const removedType = action.payload.type;
 
