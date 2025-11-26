@@ -146,7 +146,11 @@ export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
 
   const testQueryFilter = function () {
     if (queryFilter) {
-      return queryFilter.value.includes(table.id);
+      const ids =
+        typeof queryFilter.value === 'string'
+          ? queryFilter.value.split(',').map((id) => id.trim())
+          : [];
+      return ids.includes(table.id);
     } else {
       return true;
     }
