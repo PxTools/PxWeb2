@@ -99,7 +99,7 @@ const StartPage = () => {
     localeContent?.startPage?.noResultSearchHelp;
   const showBreadCrumb = getConfig().showBreadCrumbOnStartPage;
 
-    // Clear search field when language changes
+  // Clear search field when language changes
   useEffect(() => {
     const handleLanguageChanged = () => {
       searchFieldRef.current?.clearInputField();
