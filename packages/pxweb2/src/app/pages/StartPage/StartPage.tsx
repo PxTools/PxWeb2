@@ -80,16 +80,6 @@ const StartPage = () => {
   const firstNewCardRef = useRef<HTMLDivElement>(null);
   const lastVisibleCardRef = useRef<HTMLDivElement>(null);
   const searchFieldRef = useRef<SearchHandle>(null);
-  // Clear search field when language changes
-  useEffect(() => {
-    const handleLanguageChanged = () => {
-      searchFieldRef.current?.clearInputField();
-    };
-    i18n.on('languageChanged', handleLanguageChanged);
-    return () => {
-      i18n.off('languageChanged', handleLanguageChanged);
-    };
-  }, [i18n]);
   const hasFetchedRef = useRef(false);
   const hasEverHydratedRef = useRef(false);
   const previousLanguage = useRef('');
@@ -108,6 +98,17 @@ const StartPage = () => {
   const noResultSearchHelpContent =
     localeContent?.startPage?.noResultSearchHelp;
   const showBreadCrumb = getConfig().showBreadCrumbOnStartPage;
+
+    // Clear search field when language changes
+  useEffect(() => {
+    const handleLanguageChanged = () => {
+      searchFieldRef.current?.clearInputField();
+    };
+    i18n.on('languageChanged', handleLanguageChanged);
+    return () => {
+      i18n.off('languageChanged', handleLanguageChanged);
+    };
+  }, [i18n]);
 
   // Run once when initially loading the page, then again if language changes
   // We want to try fetching tables in the selected language if possible
