@@ -7,6 +7,7 @@ import { validateConfig } from './app/util/validate';
 import { AppProvider } from './app/context/AppProvider';
 import { routerConfig } from './app/routes';
 import { getConfig } from './app/util/config/getConfig';
+import { OpenAPI } from '@pxweb2/pxweb2-api-client';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
@@ -17,6 +18,8 @@ if (location.href.includes('localhost')) {
 }
 
 const config = getConfig();
+OpenAPI.BASE = config.apiUrl;
+
 const router = createBrowserRouter(routerConfig, {
   basename: config.baseApplicationPath,
 });

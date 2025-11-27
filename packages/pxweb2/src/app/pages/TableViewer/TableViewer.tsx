@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useLayoutEffect } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router';
 import cl from 'clsx';
 
@@ -11,8 +11,6 @@ import NavigationRail from '../../components/NavigationMenu/NavigationRail/Navig
 import NavigationBar from '../../components/NavigationMenu/NavigationBar/NavigationBar';
 import { SkipToMain } from '../../components/SkipToMain/SkipToMain';
 import { Footer } from '../../components/Footer/Footer';
-import { getConfig } from '../../util/config/getConfig';
-import { OpenAPI } from '@pxweb2/pxweb2-api-client';
 import useAccessibility from '../../context/useAccessibility';
 import useApp from '../../context/useApp';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
@@ -27,7 +25,6 @@ export function TableViewer() {
     skipToMainFocused,
     setSkipToMainFocused,
   } = useApp();
-  const config = getConfig();
   const accessibility = useAccessibility();
 
   const { tableId } = useParams<{ tableId: string }>();
@@ -49,13 +46,6 @@ export function TableViewer() {
 
   const hideMenuRef = useRef<HTMLButtonElement>(null);
   const skipToMainRef = useRef<HTMLDivElement>(null);
-
-  // Set base URL for API client
-  const baseUrl = config.apiUrl;
-
-  useLayoutEffect(() => {
-    OpenAPI.BASE = baseUrl;
-  }, [baseUrl]);
 
   useEffect(() => {
     if (hasFocus !== 'none' && navigationBarRef.current) {
