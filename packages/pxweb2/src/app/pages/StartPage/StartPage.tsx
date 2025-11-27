@@ -101,7 +101,7 @@ const StartPage = () => {
 
   // Clear search field when language changes
   useEffect(() => {
-      searchFieldRef.current?.clearInputField();
+    searchFieldRef.current?.clearInputField();
   }, [i18n.language]);
 
   // Run once when initially loading the page, then again if language changes
