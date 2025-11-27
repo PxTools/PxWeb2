@@ -101,14 +101,8 @@ const StartPage = () => {
 
   // Clear search field when language changes
   useEffect(() => {
-    const handleLanguageChanged = () => {
       searchFieldRef.current?.clearInputField();
-    };
-    i18n.on('languageChanged', handleLanguageChanged);
-    return () => {
-      i18n.off('languageChanged', handleLanguageChanged);
-    };
-  }, [i18n]);
+  }, [i18n.language]);
 
   // Run once when initially loading the page, then again if language changes
   // We want to try fetching tables in the selected language if possible
