@@ -6,19 +6,8 @@ import {
   TablesResponse,
   TimeUnit,
   FolderContentItemTypeEnum,
+  TableService,
 } from '@pxweb2/pxweb2-api-client';
-
-// Mock TableService.listAllTables
-vi.mock(import('@pxweb2/pxweb2-api-client'), async (importOriginal) => {
-  const actual = await importOriginal();
-  return {
-    ...actual,
-    TableService: {
-      listAllTables: vi.fn(),
-    },
-    OpenAPI: vi.fn(),
-  };
-});
 
 // Test getFullTable
 
@@ -53,24 +42,23 @@ describe('getAllTables', () => {
   };
 
   beforeEach(() => {
-    vi.resetAllMocks();
+    vi.restoreAllMocks();
   });
 
   it('should fetch and return tables from TableService', async () => {
-    const { TableService } = await import('@pxweb2/pxweb2-api-client');
-    vi.mocked(TableService.listAllTables).mockResolvedValueOnce(
-      mockSuccessResponse,
-    );
+    const listAllTablesSpy = vi
+      .spyOn(TableService, 'listAllTables')
+      .mockResolvedValueOnce(mockSuccessResponse);
 
     const tables = await getAllTables('en');
+    expect(listAllTablesSpy).toHaveBeenCalledTimes(1);
     expect(Array.isArray(tables)).toBe(true);
     expect(tables.length).toBe(1);
     expect(tables[0].id).toBe('TAB4707');
   });
 
   it('should retry with fallback language when receiving unsupported language error', async () => {
-    const { TableService } = await import('@pxweb2/pxweb2-api-client');
-    const listAllTablesSpy = vi.mocked(TableService.listAllTables);
+    const listAllTablesSpy = vi.spyOn(TableService, 'listAllTables');
 
     // First call throws unsupported language error
     listAllTablesSpy.mockRejectedValueOnce({
@@ -112,10 +100,7 @@ describe('getAllTables', () => {
   });
 
   it('should throw error when both original and fallback language calls fail', async () => {
-    const { TableService } = await import('@pxweb2/pxweb2-api-client');
-    const listAllTablesSpy = vi.mocked(TableService.listAllTables);
-
-    // First call throws unsupported language error
+    const listAllTablesSpy = vi.spyOn(TableService, 'listAllTables');
     listAllTablesSpy.mockRejectedValueOnce({
       body: { title: 'Unsupported language' },
     });
