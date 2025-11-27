@@ -80,6 +80,16 @@ const StartPage = () => {
   const firstNewCardRef = useRef<HTMLDivElement>(null);
   const lastVisibleCardRef = useRef<HTMLDivElement>(null);
   const searchFieldRef = useRef<SearchHandle>(null);
+  // Clear search field when language changes
+  useEffect(() => {
+    const handleLanguageChanged = () => {
+      searchFieldRef.current?.clearInputField();
+    };
+    i18n.on('languageChanged', handleLanguageChanged);
+    return () => {
+      i18n.off('languageChanged', handleLanguageChanged);
+    };
+  }, [i18n]);
   const hasFetchedRef = useRef(false);
   const hasEverHydratedRef = useRef(false);
   const previousLanguage = useRef('');
