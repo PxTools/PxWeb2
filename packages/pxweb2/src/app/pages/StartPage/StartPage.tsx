@@ -463,7 +463,7 @@ const StartPage = () => {
         payload: { query: value, tableIds: tableIds },
       });
       handleFilterChange();
-    }, 1000),
+    }, 700),
   ).current;
 
   const renderPagination = () => {
