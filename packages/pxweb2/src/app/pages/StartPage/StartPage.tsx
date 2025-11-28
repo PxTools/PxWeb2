@@ -39,7 +39,7 @@ import { useTopicIcons } from '../../util/hooks/useTopicIcons';
 import useApp from '../../context/useApp';
 import { getConfig } from '../../util/config/getConfig';
 import { FilterContext, FilterProvider } from '../../context/FilterContext';
-import { getAllTables } from '../../util/tableHandler';
+import { getAllTables, queryTablesByKeyword } from '../../util/tableHandler';
 import { tableListIsReadyToRender } from '../../util/startPageRender';
 import useFilterUrlSync from '../../util/hooks/useFilterUrlSync';
 import StartpageDetails from '../../components/StartPageDetails/StartPageDetails';
@@ -98,6 +98,11 @@ const StartPage = () => {
   const noResultSearchHelpContent =
     localeContent?.startPage?.noResultSearchHelp;
   const showBreadCrumb = getConfig().showBreadCrumbOnStartPage;
+
+  // Clear search field when language changes
+  useEffect(() => {
+    searchFieldRef.current?.clearInputField();
+  }, [i18n.language]);
 
   // Run once when initially loading the page, then again if language changes
   // We want to try fetching tables in the selected language if possible
@@ -447,14 +452,25 @@ const StartPage = () => {
 
   // Debounce the dispatch for search filter, so it waits a few moments for typing to finish
   const debouncedDispatch = useRef(
-    debounce((value: string) => {
+    debounce(async (value: string) => {
+      let tableIds: string[] = [];
+      if (value.length > 0) {
+        const searchedTables = await queryTablesByKeyword(value, i18n.language);
+        tableIds = searchedTables.map((table: Table) => table.id);
+      }
       dispatch({
-        type: ActionType.ADD_SEARCH_FILTER,
-        payload: { text: value, language: i18n.language },
+        type: ActionType.ADD_QUERY_FILTER,
+        payload: { query: value, tableIds: tableIds },
       });
-      handleFilterChange();
-    }, 500),
+      setVisibleCount(paginationCount);
+      setIsFadingTableList(false);
+    }, 700),
   ).current;
+
+  const updateQueryFilter = (value: string) => {
+    setIsFadingTableList(true);
+    debouncedDispatch(value);
+  };
 
   const renderPagination = () => {
     const shouldShowPagination =
@@ -673,7 +689,7 @@ const StartPage = () => {
                 showLabel
                 labelText={t('start_page.search_label')}
                 onChange={(value: string) => {
-                  debouncedDispatch(value);
+                  updateQueryFilter(value);
                 }}
               />
             </div>
@@ -730,7 +746,7 @@ const StartPage = () => {
                             },
                           });
                           handleFilterChange();
-                          if (filter.type == 'search') {
+                          if (filter.type == 'query') {
                             searchFieldRef.current?.clearInputField();
                           }
                         }}
