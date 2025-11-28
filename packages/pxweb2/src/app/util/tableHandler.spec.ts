@@ -10,7 +10,6 @@ import {
 } from '@pxweb2/pxweb2-api-client';
 
 // Test getFullTable
-
 describe('getAllTables', () => {
   const mockSuccessResponse: TablesResponse = {
     language: 'en',
