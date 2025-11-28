@@ -462,9 +462,15 @@ const StartPage = () => {
         type: ActionType.ADD_QUERY_FILTER,
         payload: { query: value, tableIds: tableIds },
       });
-      handleFilterChange();
+      setVisibleCount(paginationCount);
+      setIsFadingTableList(false);
     }, 700),
   ).current;
+
+  const updateQueryFilter = (value: string) => {
+    setIsFadingTableList(true);
+    debouncedDispatch(value);
+  };
 
   const renderPagination = () => {
     const shouldShowPagination =
@@ -683,7 +689,7 @@ const StartPage = () => {
                 showLabel
                 labelText={t('start_page.search_label')}
                 onChange={(value: string) => {
-                  debouncedDispatch(value);
+                  updateQueryFilter(value);
                 }}
               />
             </div>
