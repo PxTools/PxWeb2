@@ -81,7 +81,9 @@ describe('Select', () => {
         />,
       );
 
-      expect(screen.getByText(mockOptions[0].label)).toBeDefined();
+      expect(
+        screen.getByText(mockOptions[0].label, { selector: 'p' }),
+      ).toBeInTheDocument();
     });
   });
 

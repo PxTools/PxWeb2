@@ -29,6 +29,7 @@
   align-items: center;
   gap: fixed.$spacing-2;
   align-self: stretch;
+  position: relative;
 
   border-radius: var(--px-border-radius-medium);
   box-shadow: inset 0 0 0 2px var(--px-color-border-default);
@@ -52,6 +53,16 @@
     outline-offset: 3px;
     box-shadow: inset 0 0 0 3px var(--px-color-border-focus-boxshadow);
   }
+}
+
+.selectNative {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
 }
 
 .optionLayout {
