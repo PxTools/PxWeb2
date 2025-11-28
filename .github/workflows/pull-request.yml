@@ -37,11 +37,18 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
 
-    if: ${{ github.actor != 'dependabot[bot]' && github.event_name == 'pull_request' }}
+    if: ${{ github.actor != 'dependabot[bot]' }}
     steps:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22.x
+          cache: 'npm'
+
+      - run: npm ci && npm run build && npm run coverage
 
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v6
