@@ -1,6 +1,8 @@
-name: Deploy to Cloudflare, test with Mabl
+name: Build and Deploy
 
 on:
+  push:
+    branches: ['main']
   pull_request:
     branches: ['main']
 
@@ -9,27 +11,117 @@ permissions:
   pull-requests: write
 
 jobs:
-  deploy:
+  build:
+    name: Build with Node.js
     runs-on: ubuntu-latest
-    if: ${{ github.actor != 'dependabot[bot]' }}
-    name: Deploy
+    strategy:
+      matrix:
+        node-version: [22.x, 24.x]
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - run: npm ci
+      - run: npm run build
+      - run: npm run coverage
+
+  sonarqube:
+    name: SonarQube Analysis
+    needs: build
+    runs-on: ubuntu-latest
+
+    if: ${{ github.actor != 'dependabot[bot]' && github.event_name == 'pull_request' }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v6
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  docker:
+    name: Docker Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push Docker image
+        id: build-and-push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: false
+
+  deploy:
+    name: Deploy to Cloudflare Pages
+    needs: build
+    runs-on: ubuntu-latest
+
+    if: ${{ github.actor != 'dependabot[bot]' && github.event_name == 'pull_request' }}
     outputs:
       deployment-url: ${{ steps.deploy.outputs.deployment-url }}
       alias-url: ${{ steps.deploy.outputs.pages-deployment-alias-url }}
     steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22.x
+          cache: 'npm'
+
+      - run: npm ci && npm run build-artifact
+
       - name: Get branch names
         id: branch-names
         uses: tj-actions/branch-names@v9
-      - uses: actions/checkout@v5
-      - name: deploy
+
+      - name: Deploy
         id: deploy
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          preCommands: npm install && npm run build
           command: |
-            pages deploy packages/pxweb2/dist --project-name=pxweb2 --branch=${{ steps.branch-names.outputs.current_branch }}
+            pages deploy --branch=${{ steps.branch-names.outputs.current_branch }}
+
+      - name: Prepare alternative deployment with different configuration
+        run: |
+          mkdir dist
+          cp -r packages/pxweb2/dist dist/statbank2
+          mv dist/statbank2/_headers dist/
+          mv dist/statbank2/index.html dist/
+          echo "/ /statbank2/ 301" > dist/_redirects
+          curl -s -o dist/statbank2/config/config.js https://www.ssb.no/statbank2/config/config.js
+          sed -i 's|<base href="/"|<base href="/statbank2/"|' dist/index.html
+
+      - name: Alternative Deploy
+        id: alt-deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: |
+            pages deploy dist --branch=alternative-${{ steps.branch-names.outputs.current_branch }}
+
       - name: Add deployment info to PR description
         uses: jupier/powerful-pr-comment@v0.0.5
         with:
@@ -39,13 +131,18 @@ jobs:
             ## Branch Deployment to Cloudflare Pages
             :articulated_lorry: Preview URL: ${{ steps.deploy.outputs.deployment-url }}
             :construction: Branch preview URL: ${{ steps.deploy.outputs.pages-deployment-alias-url }}
+            :truck: Alternative Preview URL: ${{ steps.alt-deploy.outputs.deployment-url }}
+            :construction_worker: Alternative Branch preview URL: ${{ steps.alt-deploy.outputs.pages-deployment-alias-url }}
+
   test:
-    runs-on: ubuntu-latest
-    if: ${{ github.event.pull_request.draft == false && github.actor != 'dependabot[bot]' }}
-    name: Test
+    name: Run Mabl tests
     needs: deploy
+    runs-on: ubuntu-latest
+
+    if: ${{ github.event.pull_request.draft == false && github.actor != 'dependabot[bot]' }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
+
       - name: Regression test against feature branch
         id: mabl-test-deployment
         uses: mablhq/github-run-tests-action@v1
