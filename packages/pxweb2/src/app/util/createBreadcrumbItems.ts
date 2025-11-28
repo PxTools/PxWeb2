@@ -22,6 +22,12 @@ export function createBreadcrumbItems(
   const config = getConfig();
   const basePath = config.baseApplicationPath;
   const breadcrumbItems: BreadcrumbItem[] = [];
+  const languageInPath =
+    !config.language.showDefaultLanguageInPath &&
+    language === config.language.defaultLanguage
+      ? ''
+      : language;
+
   const eksternalHomePage = config.homePage
     ? config.homePage[language as keyof typeof config.homePage]
     : undefined;
@@ -35,7 +41,7 @@ export function createBreadcrumbItems(
   //Path to root (startpage)
   breadcrumbItems.push({
     label: breadCrumbsParm.t('common.breadcrumbs.breadcrumb_root_title'),
-    href: basePath + language,
+    href: basePath + languageInPath,
   });
 
   // middle parts of breadcrumb ,path to subjects
@@ -44,7 +50,7 @@ export function createBreadcrumbItems(
     breadcrumbItems.push(
       ...pathWithUniqueIds.map((path) => ({
         label: path.label,
-        href: `${basePath}${language}?subject=${path.uniqueId}`,
+        href: `${basePath}${languageInPath}?subject=${path.uniqueId}`,
       })),
     );
   }
