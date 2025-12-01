@@ -7,8 +7,8 @@ import Button from '../Button/Button';
 type HighlightOptions = 'json';
 
 interface CopyButtonProps {
-  copyContent: string;
-  translations: { copyButtonLabel: string; copiedButtonLabel: string };
+  readonly copyContent: string;
+  readonly translations: { copyButtonLabel: string; copiedButtonLabel: string };
 }
 
 function CopyButton({ copyContent, translations }: CopyButtonProps) {
@@ -48,9 +48,9 @@ function CopyButton({ copyContent, translations }: CopyButtonProps) {
 }
 
 interface CodeSnippetHeaderProps {
-  title: string;
-  copyContent: string;
-  translations: {
+  readonly title: string;
+  readonly copyContent: string;
+  readonly translations: {
     copyButtonLabel: string;
     copiedButtonLabel: string;
   };
@@ -70,8 +70,8 @@ function CodeSnippetHeader({
 }
 
 interface CodeSnippetBodyProps {
-  children: string;
-  highlight?: HighlightOptions;
+  readonly children: string;
+  readonly highlight?: HighlightOptions;
 }
 
 function CodeSnippetBody({ children, highlight }: CodeSnippetBodyProps) {
@@ -101,10 +101,10 @@ function CodeSnippetBody({ children, highlight }: CodeSnippetBodyProps) {
 }
 
 interface CodeSnippetProps {
-  title: string;
-  children: string;
-  highlight?: HighlightOptions;
-  translations: {
+  readonly title: string;
+  readonly children: string;
+  readonly highlight?: HighlightOptions;
+  readonly translations: {
     copyButtonLabel: string;
     copiedButtonLabel: string;
   };
