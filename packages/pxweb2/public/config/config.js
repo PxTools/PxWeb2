@@ -7,7 +7,7 @@ window.PxWeb2Config = {
     ],
     defaultLanguage: 'no',
     fallbackLanguage: 'en',
-    showDefaultLanguageInPath: false,
+    showDefaultLanguageInPath: true,
   },
   baseApplicationPath: '/',
   //apiUrl: 'https://api.scb.se/OV0104/v2beta/api/v2',
