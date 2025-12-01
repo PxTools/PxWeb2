@@ -32,7 +32,7 @@ export function MandatoryTableNotes({ notes }: MandatoryTableNotesProps) {
       className={cl(classes[`mandatory-box`])}
     >
       {notes.length === 1 ? (
-        <span>{notes[0]}</span>
+        <span><MarkdownRenderer mdText={notes[0]} /></span>
       ) : (
         <List listType="ul">
           {notes.map((note) => (
