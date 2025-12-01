@@ -19,7 +19,6 @@ export const CheckCircleIcon = ({
       {checked && (
         <Icon
           iconName="CheckCircle"
-          aria-hidden="true"
           className={styles.iconChecked}
         ></Icon>
       )}
