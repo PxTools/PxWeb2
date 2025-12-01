@@ -17,10 +17,7 @@ export const CheckCircleIcon = ({
       })}
     >
       {checked && (
-        <Icon
-          iconName="CheckCircle"
-          className={styles.iconChecked}
-        ></Icon>
+        <Icon iconName="CheckCircle" className={styles.iconChecked}></Icon>
       )}
     </span>
   );
