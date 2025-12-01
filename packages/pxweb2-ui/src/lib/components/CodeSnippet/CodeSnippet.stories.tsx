@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { CodeSnippet } from './CodeSnippet';
 
+const NoHighlightExampleChildren = `https://api.example.com/data?region=0301&year=2025`;
 const jsonExample = `{
   "query": [
     {
@@ -34,8 +35,8 @@ const meta = {
   title: 'Components/CodeSnippet',
   component: CodeSnippet,
   args: {
-    title: 'Example JSON Snippet',
-    children: jsonExample,
+    title: 'No Highlight Example',
+    children: NoHighlightExampleChildren,
     translations: {
       copyButtonLabel: 'Copy code',
       copiedButtonLabel: 'Code copied',
@@ -45,9 +46,18 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const ShortCodeExample: Story = {};
+export const NoHighlightExample: Story = {};
+export const ShortCodeExample: Story = {
+  args: {
+    title: 'Example JSON Snippet',
+    children: jsonExample,
+    highlight: 'json',
+  },
+};
 export const LongCodeExample: Story = {
   args: {
+    title: 'Example JSON Snippet',
     children: jsonExampleLong,
+    highlight: 'json',
   },
 };

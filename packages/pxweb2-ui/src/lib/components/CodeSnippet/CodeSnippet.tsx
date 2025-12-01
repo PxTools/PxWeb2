@@ -4,7 +4,7 @@ import { useState, useRef } from 'react';
 import styles from './CodeSnippet.module.scss';
 import Button from '../Button/Button';
 
-type HighlightOptions = 'json';
+type HighlightOptions = 'none' | 'json';
 
 interface CopyButtonProps {
   readonly copyContent: string;
@@ -71,7 +71,7 @@ function CodeSnippetHeader({
 
 interface CodeSnippetBodyProps {
   readonly children: string;
-  readonly highlight?: HighlightOptions;
+  readonly highlight: HighlightOptions;
 }
 
 function CodeSnippetBody({ children, highlight }: CodeSnippetBodyProps) {
@@ -120,7 +120,7 @@ interface CodeSnippetProps {
 export function CodeSnippet({
   title,
   children,
-  highlight,
+  highlight = 'none',
   translations,
 }: CodeSnippetProps) {
   return (
