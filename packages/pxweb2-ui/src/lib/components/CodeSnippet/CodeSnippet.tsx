@@ -120,6 +120,7 @@ interface CodeSnippetProps {
 export function CodeSnippet({
   title,
   children,
+  highlight,
   translations,
 }: CodeSnippetProps) {
   return (
@@ -129,7 +130,7 @@ export function CodeSnippet({
         copyContent={children}
         translations={translations}
       />
-      <CodeSnippetBody>{children}</CodeSnippetBody>
+      <CodeSnippetBody highlight={highlight}>{children}</CodeSnippetBody>
     </div>
   );
 }
