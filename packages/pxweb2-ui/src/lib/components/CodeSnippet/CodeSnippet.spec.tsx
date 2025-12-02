@@ -1,6 +1,15 @@
 import { render } from '@testing-library/react';
+import { vi } from 'vitest';
 
 import { CodeSnippet } from './CodeSnippet';
+
+// Mock ResizeObserver which is not available in jsdom
+class ResizeObserverMock {
+  observe = vi.fn();
+  unobserve = vi.fn();
+  disconnect = vi.fn();
+}
+global.ResizeObserver = ResizeObserverMock;
 
 const jsonCode = `{
   "name": "pxweb2-ui",
