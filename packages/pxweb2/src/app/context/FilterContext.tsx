@@ -25,9 +25,11 @@ import {
 } from '../util/startPageFilters';
 import { shouldTableBeIncluded } from '../util/tableHandler';
 import { wrapWithLocalizedQuotemarks } from '../util/utils';
+import { Table } from 'packages/pxweb2-api-client/src';
 
 const initialState: StartPageState = Object.freeze({
   availableTables: [],
+  availableTablesWhenQueryApplied: [],
   filteredTables: [],
   availableFilters: getFilters([]),
   activeFilters: [],
@@ -65,6 +67,14 @@ export const FilterProvider: React.FC<FilterProviderProps> = ({
   );
 };
 
+function getAvailableTables(state: StartPageState): Table[] {
+  if (state.availableTablesWhenQueryApplied?.length > 0) {
+    return state.availableTablesWhenQueryApplied;
+  } else {
+    return state.availableTables;
+  }
+}
+
 function reducer(
   state: StartPageState,
   action: ReducerActionTypes,
@@ -76,6 +86,7 @@ function reducer(
       return {
         ...initialState,
         availableTables: action.payload.tables,
+        availableTablesWhenQueryApplied: [],
         filteredTables: action.payload.tables,
         originalSubjectTree: action.payload.subjects,
         subjectOrderList: subjectOrder,
@@ -99,7 +110,10 @@ function reducer(
         incoming[0]?.type === 'yearRange' ? f.type !== 'yearRange' : true,
       );
       const newFilters = [...clearedFilters, ...incoming];
-      const filteredTables = state.availableTables.filter((table) =>
+      // const filteredTables = state.availableTables.filter((table) =>
+      //   shouldTableBeIncluded(table, newFilters),
+      // );
+      const filteredTables = getAvailableTables(state).filter((table) =>
         shouldTableBeIncluded(table, newFilters),
       );
       const addType = action.payload[0]?.type as FilterType | undefined;
@@ -107,10 +121,16 @@ function reducer(
         ? state.lastUsedYearRange
         : getYearRanges(filteredTables);
 
+      // const recomputed = recomputeAvailableFilters(
+      //   addType,
+      //   newFilters,
+      //   state.availableTables,
+      //   state.originalSubjectTree,
+      // );
       const recomputed = recomputeAvailableFilters(
         addType,
         newFilters,
-        state.availableTables,
+        getAvailableTables(state),
         state.originalSubjectTree,
       );
 
@@ -208,12 +228,20 @@ function reducer(
             : [...state.activeFilters, newQuery];
       }
 
-      const newTables = state.availableTables.filter((table) =>
+      const queryTables = state.availableTables.filter((table) =>
+        action.payload.tableIds.includes(table.id),
+      );
+
+      // const newTables = state.availableTables.filter((table) =>
+      //   shouldTableBeIncluded(table, newFilters),
+      // );
+      const newTables = queryTables.filter((table) =>
         shouldTableBeIncluded(table, newFilters),
       );
 
       return {
         ...state,
+        availableTablesWhenQueryApplied: queryTables,
         activeFilters: newFilters,
         filteredTables: newTables,
         availableFilters: {
@@ -260,9 +288,21 @@ function reducer(
         };
       }
 
-      const filteredTables = state.availableTables.filter((table) =>
-        shouldTableBeIncluded(table, currentFilters),
-      );
+      // const filteredTables = state.availableTables.filter((table) =>
+      //   shouldTableBeIncluded(table, currentFilters),
+      // );
+
+      let filteredTables: Table[] = [];
+      if (removedType === 'query') {
+        state.availableTablesWhenQueryApplied = [];
+        filteredTables = state.availableTables.filter((table) =>
+          shouldTableBeIncluded(table, currentFilters),
+        );
+      } else {
+        filteredTables = getAvailableTables(state).filter((table) =>
+          shouldTableBeIncluded(table, currentFilters),
+        );
+      }
 
       const yearRangeStillActive = currentFilters.some(
         (f) => f.type === 'yearRange',
@@ -271,10 +311,16 @@ function reducer(
         ? state.lastUsedYearRange
         : getYearRanges(filteredTables);
 
+      // const recomputed = recomputeAvailableFilters(
+      //   removedType,
+      //   currentFilters,
+      //   state.availableTables,
+      //   state.originalSubjectTree,
+      // );
       const recomputed = recomputeAvailableFilters(
         removedType,
         currentFilters,
-        state.availableTables,
+        getAvailableTables(state),
         state.originalSubjectTree,
       );
 

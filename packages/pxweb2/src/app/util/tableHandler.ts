@@ -140,21 +140,21 @@ export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
     }
   };
 
-  const queryFilter = filters.find((f) => {
-    return f.type === 'query';
-  });
+  // const queryFilter = filters.find((f) => {
+  //   return f.type === 'query';
+  // });
 
-  const testQueryFilter = function () {
-    if (queryFilter) {
-      const ids =
-        typeof queryFilter.value === 'string'
-          ? queryFilter.value.split(',').map((id) => id.trim())
-          : [];
-      return ids.includes(table.id);
-    } else {
-      return true;
-    }
-  };
+  // const testQueryFilter = function () {
+  //   if (queryFilter) {
+  //     const ids =
+  //       typeof queryFilter.value === 'string'
+  //         ? queryFilter.value.split(',').map((id) => id.trim())
+  //         : [];
+  //     return ids.includes(table.id);
+  //   } else {
+  //     return true;
+  //   }
+  // };
 
   const testYearRangeFilter = () => {
     const yearRangeFilter = filters.find((f) => f.type === 'yearRange');
@@ -228,7 +228,7 @@ export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
   };
 
   return (
-    testQueryFilter() &&
+    //testQueryFilter() &&
     testTimeUnitFilters() &&
     testSubjectFilters() &&
     testYearRangeFilter() &&

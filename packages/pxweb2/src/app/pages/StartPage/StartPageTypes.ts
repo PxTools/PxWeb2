@@ -43,6 +43,7 @@ export type YearRange = {
 
 export type StartPageState = {
   availableTables: Table[];
+  availableTablesWhenQueryApplied: Table[];
   filteredTables: Table[];
   availableFilters: StartPageFilters;
   activeFilters: Filter[];
