@@ -1,10 +1,11 @@
 import cl from 'clsx';
-import { useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 import styles from './CodeSnippet.module.scss';
 import Button from '../Button/Button';
+import { highlightCode } from './highlightCode';
 
-type HighlightOptions = 'none' | 'json';
+export type HighlightOptions = 'none' | 'json';
 
 interface CopyButtonProps {
   readonly copyContent: string;
@@ -75,25 +76,57 @@ interface CodeSnippetBodyProps {
 }
 
 function CodeSnippetBody({ children, highlight }: CodeSnippetBodyProps) {
-  const shouldHaveGradient = true; // TODO: Placeholder for future logic
-  let codeOutput = children;
+  const [hasOverflow, setHasOverflow] = useState(false);
+  const [isScrolledToBottom, setIsScrolledToBottom] = useState(false);
 
-  if (highlight === 'json') {
-    // Add JSON syntax highlighting logic here in the future
-    console.log('JSON highlighting not yet implemented for' + highlight);
+  const preRef = useRef<HTMLPreElement>(null);
+  const codeOutput = highlightCode(children, highlight);
+  const sanitizedCodeOutput = { __html: codeOutput };
+
+  useEffect(() => {
+    function checkOverflow() {
+      if (preRef.current) {
+        const hasVerticalOverflow =
+          preRef.current.scrollHeight > preRef.current.clientHeight;
+
+        setHasOverflow(hasVerticalOverflow);
+        setIsScrolledToBottom(false); // Reset scroll position state on content change
+      }
+    }
+
+    checkOverflow();
+
+    const resizeObserver = new ResizeObserver(checkOverflow);
+    if (preRef.current) {
+      resizeObserver.observe(preRef.current);
+    }
+
+    return () => resizeObserver.disconnect();
+  }, [children]);
+
+  function handleScroll() {
+    if (preRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = preRef.current;
+      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 5; // 5px tolerance
+
+      setIsScrolledToBottom(isAtBottom);
+    }
   }
+
+  const shouldHaveGradient = hasOverflow && !isScrolledToBottom;
 
   return (
     <div className={cl(styles['body'])}>
-      <pre className={cl(styles['content-wrapper'])}>
-        <code
-          className={cl(
-            styles['code'],
-            shouldHaveGradient && styles['linear-gradient-bottom'],
-          )}
-          tabIndex={0}
-        >
-          {codeOutput}
+      <pre
+        ref={preRef}
+        onScroll={handleScroll}
+        className={cl(
+          styles['content-wrapper'],
+          shouldHaveGradient && styles['linear-gradient-bottom'],
+        )}
+      >
+        <code className={cl(styles['code'])}>
+          <span dangerouslySetInnerHTML={sanitizedCodeOutput} />
         </code>
       </pre>
     </div>
@@ -111,6 +144,8 @@ interface CodeSnippetProps {
 }
 
 // TODO: Add syntax highlighting
+//       What are the best practices for code blocks with syntax highlighting in React?
+//       dangerouslySetInnerHTML or libraries?
 // TODO: Ask design about max height and scrolling behavior and gradient
 // TODO: Figure out accessibility considerations regarding focus and screen readers
 //  copy button aria-labels etc.
