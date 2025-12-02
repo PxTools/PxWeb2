@@ -1,0 +1,19 @@
+.iconWrapper {
+  display: flex;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+
+  border-radius: 24px;
+  border: 2px solid var(--px-color-surface-action);
+  background: var(--px-color-surface-default);
+
+  &.checked {
+    border: none;
+    background: var(--px-color-surface-action);
+  }
+}
+
+.iconChecked {
+  --px-icon-color: var(--px-color-surface-default);
+}
