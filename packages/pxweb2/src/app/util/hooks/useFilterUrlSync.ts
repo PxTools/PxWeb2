@@ -1,5 +1,6 @@
 import { useEffect, useRef, useMemo } from 'react';
 import type { TFunction } from 'i18next';
+
 import { ActionType } from '../../pages/StartPage/StartPageTypes';
 import type {
   StartPageState,
