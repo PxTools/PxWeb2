@@ -88,7 +88,7 @@ const StartPage = () => {
 
   // On initial load, seed search from URL query parameter once
   useEffect(() => {
-    if (typeof globalThis.window === 'undefined') {
+    if (globalThis.window === undefined) {
       return;
     }
     const params = new URLSearchParams(globalThis.window.location.search);
