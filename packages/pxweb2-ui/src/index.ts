@@ -7,6 +7,7 @@ export * from './lib/components/Breadcrumbs/Breadcrumbs';
 export * from './lib/components/Button/Button';
 export * from './lib/components/Checkbox/Checkbox';
 export * from './lib/components/CheckCircle/CheckCircleIcon';
+export * from './lib/components/CheckCircle/CheckCircleToggle';
 export * from './lib/components/Chips/Chips';
 export * from './lib/components/Contact/Contact';
 export * from './lib/components/ContentBox/ContentBox';
