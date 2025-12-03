@@ -110,9 +110,6 @@ function reducer(
         incoming[0]?.type === 'yearRange' ? f.type !== 'yearRange' : true,
       );
       const newFilters = [...clearedFilters, ...incoming];
-      // const filteredTables = state.availableTables.filter((table) =>
-      //   shouldTableBeIncluded(table, newFilters),
-      // );
       const filteredTables = getAvailableTables(state).filter((table) =>
         shouldTableBeIncluded(table, newFilters),
       );
@@ -121,12 +118,6 @@ function reducer(
         ? state.lastUsedYearRange
         : getYearRanges(filteredTables);
 
-      // const recomputed = recomputeAvailableFilters(
-      //   addType,
-      //   newFilters,
-      //   state.availableTables,
-      //   state.originalSubjectTree,
-      // );
       const recomputed = recomputeAvailableFilters(
         addType,
         newFilters,
@@ -296,10 +287,6 @@ function reducer(
         };
       }
 
-      // const filteredTables = state.availableTables.filter((table) =>
-      //   shouldTableBeIncluded(table, currentFilters),
-      // );
-
       let filteredTables: Table[] = [];
       if (removedType === 'query') {
         state.availableTablesWhenQueryApplied = [];
@@ -319,12 +306,6 @@ function reducer(
         ? state.lastUsedYearRange
         : getYearRanges(filteredTables);
 
-      // const recomputed = recomputeAvailableFilters(
-      //   removedType,
-      //   currentFilters,
-      //   state.availableTables,
-      //   state.originalSubjectTree,
-      // );
       const recomputed = recomputeAvailableFilters(
         removedType,
         currentFilters,

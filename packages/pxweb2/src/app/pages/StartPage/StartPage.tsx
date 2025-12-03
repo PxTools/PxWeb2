@@ -113,11 +113,6 @@ const StartPage = () => {
     localeContent?.startPage?.noResultSearchHelp;
   const showBreadCrumb = getConfig().showBreadCrumbOnStartPage;
 
-  // // Clear search field when language changes
-  // useEffect(() => {
-  //   searchFieldRef.current?.clearInputField();
-  // }, [i18n.language]);
-
   // Run once when initially loading the page, then again if language changes
   // We want to try fetching tables in the selected language if possible
   useEffect(() => {
