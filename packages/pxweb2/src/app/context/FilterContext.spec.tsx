@@ -10,7 +10,7 @@ import {
   ReducerActionTypes,
 } from '../pages/StartPage/StartPageTypes';
 import type { Table } from '@pxweb2/pxweb2-api-client';
-import { act } from 'react-dom/test-utils';
+import { act } from 'react';
 
 // Mock utilities used by the reducer to make behavior deterministic
 vi.mock('../util/startPageFilters', () => {
