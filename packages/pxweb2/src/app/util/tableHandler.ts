@@ -57,6 +57,27 @@ export async function getAllTables(language?: string) {
   }
 }
 
+export async function queryTablesByKeyword(query: string, language?: string) {
+  const config = getConfig();
+  const baseUrl = config.apiUrl;
+  OpenAPI.BASE = baseUrl;
+
+  try {
+    const response = await TableService.listAllTables(
+      language || config.language.defaultLanguage,
+      query,
+      undefined,
+      true,
+      1,
+      10000,
+    );
+    return response.tables;
+  } catch (err: unknown) {
+    const error = err as ApiError;
+    throw error;
+  }
+}
+
 export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
   const timeUnitFilters = filters.filter((f) => {
     return f.type === 'timeUnit';
