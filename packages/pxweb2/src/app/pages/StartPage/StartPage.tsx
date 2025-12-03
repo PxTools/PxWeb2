@@ -86,6 +86,20 @@ const StartPage = () => {
 
   const navigate = useNavigate();
 
+  // On initial load, seed search from URL query parameter once
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    const params = new URLSearchParams(window.location.search);
+    const queryText = params.get('query') || '';
+    if (queryText) {
+      updateQueryFilter(queryText);
+    }
+    // run only once on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const isReadyToRender = tableListIsReadyToRender(
     state,
     hasUrlParams,
@@ -99,10 +113,10 @@ const StartPage = () => {
     localeContent?.startPage?.noResultSearchHelp;
   const showBreadCrumb = getConfig().showBreadCrumbOnStartPage;
 
-  // Clear search field when language changes
-  useEffect(() => {
-    searchFieldRef.current?.clearInputField();
-  }, [i18n.language]);
+  // // Clear search field when language changes
+  // useEffect(() => {
+  //   searchFieldRef.current?.clearInputField();
+  // }, [i18n.language]);
 
   // Run once when initially loading the page, then again if language changes
   // We want to try fetching tables in the selected language if possible
@@ -687,6 +701,10 @@ const StartPage = () => {
                 ref={searchFieldRef}
                 showLabel
                 labelText={t('start_page.search_label')}
+                value={
+                  (state.activeFilters.find((f) => f.type === 'query')
+                    ?.label as string) ?? ''
+                }
                 onChange={(value: string) => {
                   updateQueryFilter(value);
                 }}
