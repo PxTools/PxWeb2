@@ -33,6 +33,9 @@
   align-items: flex-start;
   flex: 1 0 0;
   align-self: stretch;
+  > span {
+    color: var(--px-color-text-default);
+  }
 }
 
 .iconWrapper {
