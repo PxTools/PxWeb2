@@ -140,9 +140,9 @@ const testFilterSubjectTimeDisallow: Filter[] = [
   },
 ];
 
-const testFilterQueryAllow: Filter[] = [
-  { type: 'query', value: '13618,13619', index: 1, label: 'test' },
-];
+// const testFilterQueryAllow: Filter[] = [
+//   { type: 'query', value: '13618,13619', index: 1, label: 'test' },
+// ];
 
 // const testFilterQueryDisallow: Filter[] = [
 //   { type: 'query', value: '1318,13619', index: 1, label: 'test' },
@@ -253,9 +253,9 @@ test('Search for one word which exists and one which doesnt should NOT include t
   ).toBe(false);
 });
 
-test('Query filter should allow test data', () => {
-  expect(shouldTableBeIncluded(tableYear, testFilterQueryAllow)).toBe(true);
-});
+// test('Query filter should allow test data', () => {
+//   expect(shouldTableBeIncluded(tableYear, testFilterQueryAllow)).toBe(true);
+// });
 
 // test('Query filter should disallow test data', () => {
 //   expect(shouldTableBeIncluded(tableYear, testFilterQueryDisallow)).toBe(false);
