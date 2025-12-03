@@ -1,4 +1,5 @@
 import type { Meta, StoryFn, StoryObj } from '@storybook/react-vite';
+import { useState } from 'react';
 import { Radio } from './Radio';
 
 const meta: Meta<typeof Radio> = {
@@ -160,5 +161,30 @@ export const ModalVisibleLegend: StoryFn<typeof Radio> = () => {
       legend="Legend"
       hideLegend={false}
     ></Radio>
+  );
+};
+
+export const CheckCircle: StoryFn<typeof Radio> = () => {
+  type RadioOptions = 'option1' | 'option2' | 'option3';
+
+  const [selectedRadio, setSelectedRadio] = useState<RadioOptions>('option1');
+
+  function handleRadioChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setSelectedRadio(event.target.value as RadioOptions);
+  }
+
+  return (
+    <Radio
+      name="checkCircleRadio"
+      legend="Check Circle, choose an option"
+      visual="checkCircle"
+      options={[
+        { label: 'First option', value: 'option1' },
+        { label: 'Second option', value: 'option2' },
+        { label: 'Third option', value: 'option3' },
+      ]}
+      selectedOption={selectedRadio}
+      onChange={handleRadioChange}
+    />
   );
 };
