@@ -228,16 +228,24 @@ function reducer(
             : [...state.activeFilters, newQuery];
       }
 
-      const queryTables = state.availableTables.filter((table) =>
-        action.payload.tableIds.includes(table.id),
-      );
+      let newTables: Table[] = [];
+      let queryTables: Table[] = [];
 
-      // const newTables = state.availableTables.filter((table) =>
-      //   shouldTableBeIncluded(table, newFilters),
-      // );
-      const newTables = queryTables.filter((table) =>
-        shouldTableBeIncluded(table, newFilters),
-      );
+      if (action.payload.query == '') {
+        // No query => filter from all available tables
+        newTables = state.availableTables.filter((table) =>
+          shouldTableBeIncluded(table, newFilters),
+        );
+      } else {
+        // query present => filter from tables matching the query
+        queryTables = state.availableTables.filter((table) =>
+          action.payload.tableIds.includes(table.id),
+        );
+
+        newTables = queryTables.filter((table) =>
+          shouldTableBeIncluded(table, newFilters),
+        );
+      }
 
       return {
         ...state,

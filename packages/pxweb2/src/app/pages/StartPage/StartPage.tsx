@@ -456,15 +456,11 @@ const StartPage = () => {
       if (value.length > 0) {
         const searchedTables = await queryTablesByKeyword(value, i18n.language);
         tableIds = searchedTables.map((table: Table) => table.id);
-        dispatch({
-          type: ActionType.ADD_QUERY_FILTER,
-          payload: { query: value, tableIds: tableIds },
-        });
       }
-      // dispatch({
-      //   type: ActionType.ADD_QUERY_FILTER,
-      //   payload: { query: value, tableIds: tableIds },
-      // });
+      dispatch({
+        type: ActionType.ADD_QUERY_FILTER,
+        payload: { query: value, tableIds: tableIds },
+      });
       setVisibleCount(paginationCount);
       setIsFadingTableList(false);
     }, 700),
