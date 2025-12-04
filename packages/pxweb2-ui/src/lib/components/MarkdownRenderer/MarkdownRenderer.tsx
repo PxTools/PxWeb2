@@ -10,6 +10,13 @@ type MdProps = {
 type LinkProps = { href?: string; children?: React.ReactNode };
 type UnwantedMdRenderProps = { children?: React.ReactNode };
 
+
+function escapeDecimalLikeLabels(markdown: string): string {
+  // Lines like "4.1 some text" → "4\.1 some text"
+  return markdown.replace(/^(\d+)\.(?=\s)/gm, '$1\\.');
+}
+
+
 const LinkRenderer = ({ href = '', children }: LinkProps) => (
   <Link href={href} target="_blank" rel="noopener noreferrer" inline>
     {children}
@@ -21,20 +28,18 @@ const UnwantedMdRender = ({ children }: UnwantedMdRenderProps) => (
 );
 
 const MarkdownRenderer: React.FC<MdProps> = ({ mdText }) => {
+  const mdTextEscaped = escapeDecimalLikeLabels(mdText);
   return (
     <ReactMarkdown
       components={{
         a: LinkRenderer,
         p: UnwantedMdRender,
-        ul: UnwantedMdRender,
-        ol: UnwantedMdRender,
-        li: UnwantedMdRender,
         em: UnwantedMdRender,
         strong: UnwantedMdRender,
       }}
       skipHtml={false} // Enable raw HTML rendering
     >
-      {mdText}
+      {mdTextEscaped}
     </ReactMarkdown>
   );
 };
