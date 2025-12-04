@@ -7,13 +7,13 @@ window.PxWeb2Config = {
     ],
     defaultLanguage: 'no',
     fallbackLanguage: 'en',
-    showDefaultLanguageInPath: true,
+    showDefaultLanguageInPath:false ,
   },
   baseApplicationPath: '/',
   //apiUrl: 'https://api.scb.se/OV0104/v2beta/api/v2',
     apiUrl: 'https://data.ssb.no/api/pxwebapi/v2',
   maxDataCells: 150000,
-  showBreadCrumbOnStartPage: false,
+  showBreadCrumbOnStartPage: true,
   specialCharacters: ['.', '..', ':', '-', '...', '*'],
   variableFilterExclusionList: {
     no: [
