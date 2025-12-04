@@ -2,18 +2,17 @@ window.PxWeb2Config = {
   language: {
     supportedLanguages: [
       { shorthand: 'en', languageName: 'English' },
-      // { shorthand: 'sv', languageName: 'Svenska' },
+      { shorthand: 'sv', languageName: 'Svenska' },
       { shorthand: 'no', languageName: 'Norsk' },
     ],
-    defaultLanguage: 'no',
+    defaultLanguage: 'en',
     fallbackLanguage: 'en',
-    showDefaultLanguageInPath:false ,
+    showDefaultLanguageInPath: true,
   },
   baseApplicationPath: '/',
-  //apiUrl: 'https://api.scb.se/OV0104/v2beta/api/v2',
-    apiUrl: 'https://data.ssb.no/api/pxwebapi/v2',
+  apiUrl: 'https://api.scb.se/OV0104/v2beta/api/v2',
   maxDataCells: 150000,
-  showBreadCrumbOnStartPage: true,
+  showBreadCrumbOnStartPage: false,
   specialCharacters: ['.', '..', ':', '-', '...', '*'],
   variableFilterExclusionList: {
     no: [
