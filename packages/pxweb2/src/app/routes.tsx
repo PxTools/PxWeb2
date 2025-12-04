@@ -49,18 +49,6 @@ const supportedLangRoutes = config.language.supportedLanguages.map((lang) => {
   };
 });
 
-// const routingWithDefaultLanguageInURL = [
-//   {
-//     index: true,
-//     element: <Navigate to={`/${config.language.defaultLanguage}/`} replace />,
-//   },
-//   ...supportedLangRoutes,
-// ];
-// console.log(
-//   'routingWithDefaultLanguageInURL:',
-//   routingWithDefaultLanguageInURL,
-// );
-
 
 export const routerConfig = [
   {
