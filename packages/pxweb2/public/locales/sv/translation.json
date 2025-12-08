@@ -56,6 +56,7 @@
     },
     "breadcrumbs": {
       "aria_label_breadcrumb": "Brödsmulor",
+      "breadcrumb_home_title": "Hem",
       "breadcrumb_root_title": "Hem",
       "show_more_breadcrumbs": "Visa mer"
     }
@@ -130,7 +131,6 @@
           "search": {
             "placeholder": "Sök i listan",
             "label": "Sök",
-            "aria_label_icon_text": "Sök ikon",
             "aria_label_clear_button_text": "Ikon för att ta bort text i sökfältet"
           },
           "header": {
@@ -172,9 +172,16 @@
         "title": "Ändra",
         "customize": {
           "title": "Anpassa",
+          "auto_pivot": {
+            "title": "Ordna tabellen",
+            "aria_label": "Ordna tabellen",
+            "description": "Visa tabellen med automatiskt ordnade rader och kolumner",
+            "screen_reader_announcement": "Tabell ordnad efter {{first_variables}} och {{last_variable}}"
+          },
           "pivot": {
             "title": "Rotera tabellen",
             "aria_label": "Rotera tabellen medsols",
+            "description": "",
             "screen_reader_announcement": "Tabell roterat efter {{first_variables}} och {{last_variable}}"
           },
           "rearrange": {

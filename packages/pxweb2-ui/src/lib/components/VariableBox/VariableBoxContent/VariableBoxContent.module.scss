@@ -91,16 +91,6 @@
   animation: slideUp 0.2s;
 }
 
-.variablebox-content-values-only-list {
-  &:focus-visible {
-    border-radius: var(--border-radius-large);
-    border: 3px solid var(--color-border-focus-boxshadow, #162327); // TODO: Remove defaults when adding focus-visible
-    outline: 3px solid var(--color-border-focus-outline, #7e4ef9); // TODO: Remove defaults when adding focus-visible
-    outline-offset: 2px;
-    z-index: 0;
-  }
-}
-
 .variablebox-content-metadata-link {
   /* Layout */
   display: flex;

@@ -7,7 +7,7 @@ import { Icon, IconProps } from '../Icon/Icon';
 interface LinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   size?: 'small' | 'medium';
   icon?: IconProps['iconName'];
-  iconPosition?: 'left' | 'right';
+  iconPosition?: 'start' | 'end';
   target?: '_blank' | '_self' | '_parent' | '_top';
   children: React.ReactNode;
   href: string;
@@ -42,11 +42,11 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(function Link(
       ref={ref}
       {...rest}
     >
-      {icon && iconPosition === 'left' && (
+      {icon && iconPosition === 'start' && (
         <Icon iconName={icon} className={cl(classes.icon)}></Icon>
       )}
       {children}
-      {icon && iconPosition === 'right' && (
+      {icon && iconPosition === 'end' && (
         <Icon iconName={icon} className={cl(classes.icon)}></Icon>
       )}
     </a>

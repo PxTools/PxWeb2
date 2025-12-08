@@ -1,18 +1,5 @@
 {
   "startPage": {
-    "breadCrumb": {
-      "enabled": false,
-      "items": [
-        {
-          "label": "Forsiden",
-          "href": "#"
-        },
-        {
-          "label": "Statistikkbanken",
-          "href": "/"
-        }
-      ]
-    },
     "detailsSection": {
       "enabled": true,
       "detailHeader": "Mer om Statistikkbanken",

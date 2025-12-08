@@ -25,7 +25,7 @@ const ActionItemIcon: React.FC<ActionItemIconProps> = ({
       viewBox="0 0 44 44"
       className={styles['actionItemIcon'] + cssClasses}
       fill="currentColor"
-      {...(ariaLabel ? { 'aria-label': ariaLabel } : {})}
+      {...(ariaLabel ? { 'aria-label': ariaLabel } : { 'aria-hidden': true })}
     >
       {actionItemIcon}
     </svg>
