@@ -17,6 +17,10 @@ export type AppContextType = {
   isMobile: boolean;
   skipToMainFocused: boolean;
   setSkipToMainFocused: (focused: boolean) => void;
+  skipToFilterFocused: boolean;
+  setSkipToFilterFocused: (focused: boolean) => void;
+  skipToResultFocused: boolean;
+  setSkipToResultFocused: (focused: boolean) => void;
   title: string;
   setTitle: (title: string) => void;
 };
@@ -33,6 +37,14 @@ export const AppContext = createContext<AppContextType>({
   setSkipToMainFocused: () => {
     return;
   },
+  skipToFilterFocused: false,
+  setSkipToFilterFocused: () => {
+    return;
+  },
+  skipToResultFocused: false,
+  setSkipToResultFocused: () => {
+    return;
+  },
   title: '',
   setTitle: () => {
     return;
@@ -45,6 +57,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [isInitialized] = useState(true);
   const [skipToMainFocused, setSkipToMainFocused] = useState(false);
+  const [skipToFilterFocused,setSkipToFilterFocused] = useState(false);
+  const [skipToResultFocused,setSkipToResultFocused] = useState(false);
   const [title, setTitle] = useState<string>('');
 
   /**
@@ -104,6 +118,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
       isMobile,
       skipToMainFocused,
       setSkipToMainFocused,
+      skipToFilterFocused,
+      setSkipToFilterFocused,
+      skipToResultFocused,
+      setSkipToResultFocused,
       title,
       setTitle,
     }),
@@ -116,6 +134,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
       isMobile,
       skipToMainFocused,
       setSkipToMainFocused,
+      skipToFilterFocused,
+      setSkipToFilterFocused,
+      skipToResultFocused,
+      setSkipToResultFocused,
       title,
       setTitle,
     ],

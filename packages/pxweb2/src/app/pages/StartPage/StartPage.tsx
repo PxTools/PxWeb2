@@ -29,6 +29,7 @@ import { Header } from '../../components/Header/Header';
 import { Footer } from '../../components/Footer/Footer';
 import { ErrorMessage } from '../../components/ErrorMessage/ErrorMessage';
 import { FilterSidebar } from '../../components/FilterSidebar/FilterSidebar';
+import { SkipToContent } from '../../components/SkipToContent/SkipToContent';
 import { ActionType } from './StartPageTypes';
 import {
   getSubjectTree,
@@ -52,6 +53,8 @@ import {
   createBreadcrumbItems,
   BreadcrumbItemsParm,
 } from '../../util/createBreadcrumbItems';
+
+
 
 const StartPage = () => {
   const { t, i18n } = useTranslation();
@@ -98,7 +101,10 @@ const StartPage = () => {
   const noResultSearchHelpContent =
     localeContent?.startPage?.noResultSearchHelp;
   const showBreadCrumb = getConfig().showBreadCrumbOnStartPage;
-
+    const skipToContentRef = useRef<HTMLDivElement>(null);
+  // const {
+  //   setSkipToFilterFocused,
+  // } = useApp();
   // Run once when initially loading the page, then again if language changes
   // We want to try fetching tables in the selected language if possible
   useEffect(() => {
@@ -639,7 +645,31 @@ const StartPage = () => {
     }
   };
 
+   // Monitor focus on SkipToMain
+  // useEffect(() => {
+  //   console.log('Setting up SkipToContent focus listeners');
+  //   const skipElement = skipToContentRef.current;
+  //   if (!skipElement) {
+  //     return;
+  //   }
+
+  //   const handleFocus = () => setSkipToFilterFocused(true);
+  //   const handleBlur = () => setSkipToFilterFocused(false);
+
+  //   skipElement.addEventListener('focusin', handleFocus);
+  //   skipElement.addEventListener('focusout', handleBlur);
+
+  //   return () => {
+  //     skipElement.removeEventListener('focusin', handleFocus);
+  //     skipElement.removeEventListener('focusout', handleBlur);
+  //   };
+  // }, [setSkipToFilterFocused]);
+
+
   return (
+    <>
+      <SkipToContent ref={skipToContentRef} targetId='px-start-filter' label={t('start_page.skip_to.filter')} />
+       <SkipToContent ref={skipToContentRef} targetId='px-start-result' label={t('start_page.skip_to.result')} />
     <div className={styles.startPageLayout}>
       <Header stroke={true} />
       <main className={styles.startPage}>
@@ -693,6 +723,10 @@ const StartPage = () => {
           </div>
 
           <div className={cl(styles.filterAndListWrapper)}>
+                    <div
+          id="px-start-filter"
+          className={cl(styles[`heading-information`])}
+        >
             {!isSmallScreen && (
               <div>
                 <Heading
@@ -705,10 +739,10 @@ const StartPage = () => {
                 <FilterSidebar onFilterChange={handleFilterChange} />
               </div>
             )}
-
+</div>
             {renderFilterOverlay()}
 
-            <div className={styles.listTables}>
+            <div className={styles.listTables} id='px-start-result'>
               <Heading level="2" className={styles['sr-only']}>
                 {t('start_page.result_hidden_header')}
               </Heading>
@@ -781,6 +815,7 @@ const StartPage = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
