@@ -91,16 +91,6 @@
   animation: slideUp 0.2s;
 }
 
-.variablebox-content-values-only-list {
-  &:focus-visible {
-    border-radius: var(--border-radius-large);
-    border: 3px solid var(--color-border-focus-boxshadow, #162327); // TODO: Remove defaults when adding focus-visible
-    outline: 3px solid var(--color-border-focus-outline, #7e4ef9); // TODO: Remove defaults when adding focus-visible
-    outline-offset: 2px;
-    z-index: 0;
-  }
-}
-
 .variablebox-content-metadata-link {
   /* Layout */
   display: flex;
@@ -134,4 +124,15 @@
   align-items: center;
   gap: 8px;
   flex-shrink: 0;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
 }

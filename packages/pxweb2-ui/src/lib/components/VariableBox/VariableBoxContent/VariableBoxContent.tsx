@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useMemo } from 'react';
 import cl from 'clsx';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, Trans } from 'react-i18next';
 import { useDebounce } from '@uidotdev/usehooks';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 import deburr from 'lodash/deburr';
@@ -110,6 +110,57 @@ export function VariableBoxContent({
 
   const searchRef = useRef<SearchHandle>(null);
   const lastInteractionWasPointer = useRef(false);
+
+  // Screen reader announcement count – updates on every raw search change or values mutation (not just debounced result)
+  const [searchResultsCount, setSearchResultsCount] = useState(
+    () => values.length,
+  );
+
+  // Recalculate count whenever user types (raw search) or underlying values array changes
+  useEffect(() => {
+    const norm = deburr(search).toLowerCase();
+    const nextCount = values.filter((v) =>
+      deburr(v.label).toLowerCase().includes(norm),
+    ).length;
+    setSearchResultsCount(nextCount);
+  }, [search, values]);
+
+  const debouncedSearchResultsCount = useDebounce(searchResultsCount, 700);
+  const renderNumberofTablesScreenReader = () => {
+    if (searchResultsCount < 1) {
+      return (
+        <span
+          className={classes['sr-only']}
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          <Trans
+            i18nKey={
+              'presentation_page.side_menu.selection.variablebox.content.values_list.no_results_heading'
+            }
+            values={{ search: search }}
+          />
+        </span>
+      );
+    } else if (search !== '') {
+      return (
+        <span
+          className={classes['sr-only']}
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          <Trans
+            i18nKey={
+              debouncedSearchResultsCount === 1
+                ? 'presentation_page.side_menu.selection.variablebox.content.values_list.showing_number_of_one_value'
+                : 'presentation_page.side_menu.selection.variablebox.content.values_list.showing_number_of_values'
+            }
+            values={{ searchResultsCount: debouncedSearchResultsCount }}
+          />
+        </span>
+      );
+    }
+  };
 
   useEffect(() => {
     const newItems: VirtualListItem[] = [];
@@ -265,6 +316,12 @@ export function VariableBoxContent({
             onChange={(value: string) => {
               // Escape special characters in search value
               setSearch(value);
+              // Immediate count update for live region on each keystroke
+              const norm = deburr(value).toLowerCase();
+              const nextCount = values.filter((v) =>
+                deburr(v.label).toLowerCase().includes(norm),
+              ).length;
+              setSearchResultsCount(nextCount);
               if (value === '') {
                 setScrollingDown(false);
               }
@@ -278,9 +335,6 @@ export function VariableBoxContent({
             showLabel={false}
             searchPlaceHolder={t(
               'presentation_page.side_menu.selection.variablebox.search.placeholder',
-            )}
-            ariaLabelIconText={t(
-              'presentation_page.side_menu.selection.variablebox.search.aria_label_icon_text',
             )}
             arialLabelClearButtonText={t(
               'presentation_page.side_menu.selection.variablebox.search.aria_label_clear_button_text',
@@ -370,7 +424,6 @@ export function VariableBoxContent({
       return (
         <div
           className={cl(classes['variablebox-content-values-list-no-results'])}
-          aria-live="polite"
         >
           <Heading
             size="xsmall"
@@ -510,10 +563,9 @@ export function VariableBoxContent({
                 total: totalValues,
               },
             )}
-            className={cl(classes['variablebox-content-values-only-list'])}
             ref={valuesOnlyList}
           >
-            {' '}
+            {renderNumberofTablesScreenReader()}
             {items.length > 0 && (
               <Virtuoso
                 computeItemKey={(key) => `item-${key}`}

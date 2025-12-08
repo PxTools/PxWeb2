@@ -4,7 +4,13 @@ import HttpApi from 'i18next-http-backend';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
 import { pxNumber } from './formatters';
+import pxDetector from './pxDetector';
 import { getConfig } from '../app/util/config/getConfig';
+
+// Add custom language detector to handle default language from config,
+// so we can handle no language in path as default language.
+const languageDetector = new LanguageDetector();
+languageDetector.addDetector(pxDetector);
 
 export const defaultNS = 'translation';
 const config = getConfig();
@@ -19,10 +25,10 @@ const lookingForLanguagePos =
 const initPromise = i18n
   .use(HttpApi)
   .use(initReactI18next)
-  .use(LanguageDetector)
+  .use(languageDetector)
   .init({
     backend: {
-      loadPath: `${config.baseApplicationPath}locales/{{lng}}/translation.json`,
+      loadPath: `${config.baseApplicationPath}locales/{{lng}}/translation.json?v=${__BUILD_DATE__}`,
     },
     fallbackLng: config.language.fallbackLanguage,
     defaultNS,
@@ -34,7 +40,7 @@ const initPromise = i18n
       escapeValue: false,
     },
     detection: {
-      order: ['path'],
+      order: ['path', 'pxDetector'],
       lookupFromPathIndex: lookingForLanguagePos,
       caches: [], // Do not cache the language in local storage or cookies.
     },

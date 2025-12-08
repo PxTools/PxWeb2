@@ -3,34 +3,34 @@
   "version": "1.0.0",
   "description": "",
   "private": true,
+  "type": "module",
   "author": "",
   "license": "MIT",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "start": "vite",
     "build": "vite build",
     "test": "vitest run",
-    "test-dev": "vitest",
-    "coverage": "vitest run --coverage",
     "test:watch": "vitest",
+    "coverage": "vitest run --coverage",
     "test:html-validate": "npm run build && concurrently --kill-others-on-fail \"npx serve ./dist\" \"node test/html-validator.js\"",
     "prettier": "prettier --config ../../.prettierrc --check ./src/** --write --ignore-path ../../.prettierignore"
   },
   "dependencies": {
     "@emotion/is-prop-valid": "^1.4.0",
     "@pxweb2/pxweb2-ui": "*",
-    "framer-motion": "^12.23.22",
+    "framer-motion": "^12.23.24",
     "lodash": "^4.17.21",
-    "react-router": "^7.9.3"
+    "react-router": "^7.9.5"
   },
   "devDependencies": {
     "@testing-library/react": "^16.3.0",
+    "ajv": "^8.17.1",
     "concurrently": "^9.2.1",
-    "html-validate": "^10.0.0",
+    "html-validate": "^10.4.0",
     "husky": "^9.1.7",
-    "jsdom": "^27.0.0",
-    "playwright": "^1.55.1",
-    "vitest": "^3.2.4"
+    "jsdom": "^27.2.0",
+    "playwright": "^1.57.0",
+    "vitest": "^4.0.6"
   }
 }

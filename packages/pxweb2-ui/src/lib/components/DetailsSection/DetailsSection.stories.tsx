@@ -22,19 +22,19 @@ const exampleContent = (
     <BodyLong>{text}</BodyLong>
     <br />
     <Heading size="xsmall">Relevante lenker</Heading>
-    <Link href="#" icon="FileText" iconPosition="left" size="medium">
+    <Link href="#" icon="FileText" iconPosition="start" size="medium">
       Endringer i tabeller
     </Link>
     <br />
-    <Link href="#" icon="FileText" iconPosition="left" size="medium">
+    <Link href="#" icon="FileText" iconPosition="start" size="medium">
       Tabeller som bruker ny regioninndeling også for årene før 2024
     </Link>
     <br />
-    <Link href="#" icon="InformationCircle" iconPosition="left" size="medium">
+    <Link href="#" icon="InformationCircle" iconPosition="start" size="medium">
       Kom i gang med Statistikkbanken
     </Link>
     <br />
-    <Link href="#" icon="FileCode" iconPosition="left" size="medium">
+    <Link href="#" icon="FileCode" iconPosition="start" size="medium">
       Kom i gang med API
     </Link>
   </div>

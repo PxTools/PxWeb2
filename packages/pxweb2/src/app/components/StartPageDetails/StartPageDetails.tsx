@@ -21,8 +21,9 @@ const renderLinksList = (items?: DetailLink[]) => {
           <Link
             href={link.url}
             size="medium"
+            target={link.openInNewTab ? '_blank' : '_self'}
             {...(link.icon
-              ? { icon: link.icon, iconPosition: link.iconPosition ?? 'left' }
+              ? { icon: link.icon, iconPosition: link.iconPosition ?? 'start' }
               : {})}
           >
             {link.text}

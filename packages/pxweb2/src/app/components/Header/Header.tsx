@@ -1,6 +1,5 @@
 import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
-import { Link as LinkRouter } from 'react-router';
 
 import styles from './Header.module.scss';
 import { LanguageSwitcher } from '../LanguageSwitcher/LanguageSwitcher';
@@ -27,21 +26,23 @@ function MainLogo() {
 export const Header = ({ stroke = false }: HeaderProps) => {
   const { i18n } = useTranslation();
   const config = getConfig();
+  const lang = i18n.language;
+  const homePageUrl = config.homePage?.[lang]?.trim() || '';
+  const defaultPath = getLanguagePath(
+    '/',
+    lang,
+    config.language.supportedLanguages,
+    config.language.defaultLanguage,
+    config.language.showDefaultLanguageInPath,
+  );
+  const logoUrl = homePageUrl || defaultPath;
 
   return (
     <header className={cl(styles.header, { [styles.stroke]: stroke })}>
       <div className={styles.logoContainer}>
-        <LinkRouter
-          to={getLanguagePath(
-            '/',
-            i18n.language,
-            config.language.supportedLanguages,
-            config.language.fallbackLanguage,
-            config.language.showDefaultLanguageInPath,
-          )}
-        >
+        <a href={logoUrl}>
           <MainLogo />
-        </LinkRouter>
+        </a>
       </div>
 
       <LanguageSwitcher />

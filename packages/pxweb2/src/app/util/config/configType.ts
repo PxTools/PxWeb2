@@ -8,6 +8,10 @@ export type Config = {
   baseApplicationPath: string;
   apiUrl: string;
   maxDataCells: number;
+  showBreadCrumbOnStartPage: boolean;
   specialCharacters: string[];
   variableFilterExclusionList: { [propName: string]: string[] };
+  homePage?: {
+    [lang: string]: string;
+  };
 };

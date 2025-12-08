@@ -35,7 +35,7 @@ export const ChipRemovable = ({
       >
         {children}
       </span>
-      <Icon className={cl(styles.icon, ['xmark-icon'])} iconName="XMark" />
+      <Icon className={cl(styles['xmark-icon'])} iconName="XMark" />
     </button>
   );
 };

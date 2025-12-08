@@ -16,29 +16,33 @@ interface MotionProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
 }
 
-// Global mock for getConfig
-vi.mock('../src/app/util/config/getConfig', () => ({
-  getConfig: () => ({
-    language: {
-      supportedLanguages: [
-        { shorthand: 'en', languageName: 'English' },
-        { shorthand: 'no', languageName: 'Norsk' },
-        { shorthand: 'sv', languageName: 'Svenska' },
-        { shorthand: 'ar', languageName: 'العربية' },
-      ],
-      defaultLanguage: 'en',
-      fallbackLanguage: 'en',
-      showDefaultLanguageInPath: true,
-    },
-    baseApplicationPath: '/',
-    apiUrl: '',
-    maxDataCells: 100000,
-    specialCharacters: ['.', '..', ':', '-', '...', '*'],
-    variableFilterExclusionList: {
-      en: ['statisticalvariable', 'year', 'quarter', 'month', 'week'],
-    },
-  }),
-}));
+export const mockedConfig = {
+  language: {
+    supportedLanguages: [
+      { shorthand: 'en', languageName: 'English' },
+      { shorthand: 'no', languageName: 'Norsk' },
+      { shorthand: 'sv', languageName: 'Svenska' },
+      { shorthand: 'ar', languageName: 'العربية' },
+    ],
+    defaultLanguage: 'en',
+    fallbackLanguage: 'en',
+    showDefaultLanguageInPath: true,
+  },
+  baseApplicationPath: '/',
+  apiUrl: '',
+  maxDataCells: 100000,
+  showBreadCrumbOnStartPage: true,
+  specialCharacters: ['.', '..', ':', '-', '...', '*'],
+  variableFilterExclusionList: {
+    en: ['statisticalvariable', 'year', 'quarter', 'month', 'week'],
+  },
+};
+
+vi.mock('../src/app/util/config/getConfig', () => {
+  return {
+    getConfig: vi.fn(() => mockedConfig),
+  };
+});
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({

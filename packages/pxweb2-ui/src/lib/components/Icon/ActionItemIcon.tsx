@@ -9,10 +9,11 @@ export interface ActionItemIconProps {
 
 const ActionItemIcon: React.FC<ActionItemIconProps> = ({
   largeIconName,
-  className,
+  className = '',
   ariaLabel,
 }) => {
   const actionItemIcon = ActionItemIcons[largeIconName];
+  const cssClasses = className.length > 0 ? ' ' + className : '';
 
   if (!actionItemIcon) {
     return null;
@@ -22,9 +23,9 @@ const ActionItemIcon: React.FC<ActionItemIconProps> = ({
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 44 44"
-      className={className + ' ' + styles['actionItemIcon']}
+      className={styles['actionItemIcon'] + cssClasses}
       fill="currentColor"
-      {...(ariaLabel ? { 'aria-label': ariaLabel } : {})}
+      {...(ariaLabel ? { 'aria-label': ariaLabel } : { 'aria-hidden': true })}
     >
       {actionItemIcon}
     </svg>

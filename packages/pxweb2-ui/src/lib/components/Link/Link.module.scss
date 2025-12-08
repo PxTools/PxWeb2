@@ -4,6 +4,7 @@
 .link {
   text-decoration-line: underline;
   color: var(--px-color-text-action);
+  --px-link-icon-color: var(--px-color-icon-action);
   display: inline-flex;
   align-items: flex-start;
   gap: 4px;
@@ -25,6 +26,7 @@
   &:active {
     text-decoration-line: none;
     color: var(--px-color-text-on-action-subtle);
+    --px-link-icon-color: var(--px-color-icon-on-action-subtle);
     background-color: var(--px-color-surface-action-subtle-active);
   }
 }
@@ -35,6 +37,9 @@
   display: inline-flex;
   gap: 0px;
   padding: 0px;
+}
+.icon {
+  --px-icon-color: var(--px-link-icon-color);
 }
 
 .padding-small {

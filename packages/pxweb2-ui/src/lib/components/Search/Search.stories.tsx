@@ -22,10 +22,6 @@ const meta: Meta<typeof Search> = {
       control: 'boolean',
       description: 'Override for border radius when used in a variableBox',
     },
-    ariaLabelIconText: {
-      control: 'text',
-      description: 'Accessibility label for the search icon',
-    },
     arialLabelClearButtonText: {
       control: 'text',
       description: 'Accessibility label for the clear button',
@@ -65,6 +61,15 @@ export const WithLabel: Story = {
     searchPlaceHolder: 'Search...',
     showLabel: true,
     labelText: 'Search label',
+  },
+};
+
+export const WithHiddenLabel: Story = {
+  args: {
+    variant: 'default',
+    searchPlaceHolder: 'Search...',
+    showLabel: false,
+    labelText: 'Hidden search label',
   },
 };
 

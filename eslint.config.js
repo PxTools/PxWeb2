@@ -1,3 +1,4 @@
+import { defineConfig } from 'eslint/config';
 // For more info, see https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
 import storybook from 'eslint-plugin-storybook';
 import tseslint from '@typescript-eslint/eslint-plugin';
@@ -6,7 +7,7 @@ import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import unusedImportsPlugin from 'eslint-plugin-unused-imports';
 
-export default [
+export default defineConfig([
   {
     ignores: [
       '**/dist/**',
@@ -68,4 +69,5 @@ export default [
     },
   },
   ...storybook.configs['flat/recommended'],
-];
+  //reactHooksPlugin.configs.flat.recommended,
+]);

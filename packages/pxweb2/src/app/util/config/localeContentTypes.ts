@@ -4,7 +4,8 @@ export type DetailLink = {
   text: string;
   url: string;
   icon?: IconProps['iconName'];
-  iconPosition?: 'left' | 'right';
+  iconPosition?: 'start' | 'end';
+  openInNewTab?: boolean;
 };
 
 export type Links = {
@@ -28,6 +29,11 @@ export type DetailsSection = {
   detailContent?: DetailsContent[];
 };
 
+export type NoResultSearchHelp = {
+  enabled?: boolean;
+  helpText?: string[];
+};
+
 export type BreadCrumb = {
   enabled: boolean;
   items?: BreadcrumbItem[];
@@ -36,6 +42,7 @@ export type BreadCrumb = {
 export type Startpage = {
   breadCrumb?: BreadCrumb;
   detailsSection?: DetailsSection;
+  noResultSearchHelp?: NoResultSearchHelp;
 };
 
 export type FooterLink = {

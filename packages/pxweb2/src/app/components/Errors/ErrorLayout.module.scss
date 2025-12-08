@@ -2,16 +2,32 @@
 @use '$ui/src/lib/breakpoints.scss' as breakpoints;
 
 .fullScreenContainer {
-  display: block;
-  padding: fixed.$spacing-8 0 fixed.$spacing-18 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.contentWrapper {
+  display: flex;
   flex-direction: column;
   align-self: stretch;
+  flex: 1;
+
+  padding: fixed.$spacing-8 0 fixed.$spacing-18 0;
   background: var(--px-color-surface-default);
 
   @media (breakpoints.$xsmall) or (breakpoints.$small) {
     padding: fixed.$spacing-8 fixed.$spacing-4 fixed.$spacing-12
       fixed.$spacing-4;
   }
+}
+
+.layoutAlignCenter {
+  justify-content: center;
+}
+
+.layoutAlignStart {
+  display: block;
 }
 
 .container {
@@ -48,6 +64,40 @@
   display: flex;
   flex-direction: column;
   gap: fixed.$spacing-15;
+}
+
+.footerContent {
+  background-color: var(--px-color-surface-moderate);
+}
+
+.footerContainer {
+  margin-left: auto;
+  margin-right: auto;
+
+  @media #{breakpoints.$xsmall} {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+
+  @media #{breakpoints.$small} {
+    max-width: 508px;
+  }
+
+  @media #{breakpoints.$medium} {
+    max-width: 688px;
+  }
+
+  @media #{breakpoints.$large} {
+    max-width: 928px;
+  }
+
+  @media #{breakpoints.$xlarge} {
+    max-width: 1108px;
+  }
+
+  @media #{breakpoints.$xxlarge} {
+    max-width: 1288px;
+  }
 }
 
 .alignStart {

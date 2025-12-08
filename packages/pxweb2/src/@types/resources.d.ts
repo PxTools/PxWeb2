@@ -52,7 +52,7 @@ interface Resources {
       skip_to_main: 'Skip to main content';
       status_messages: {
         drawer_edit: 'More tools for editing the table are under construction.';
-        drawer_help: 'No content will be added here. The help button must be set up to link directly to your own help pages.';
+        drawer_help: 'The help section is under construction. It will be possible to set up links that point directly to your own help pages.';
         drawer_save_api: 'Feature for API query is under construction.';
         drawer_save_file: 'More file formats are in the works.';
         drawer_view: 'Graph display is under construction.';
@@ -171,12 +171,19 @@ interface Resources {
             title: 'Calculate';
           };
           customize: {
+            auto_pivot: {
+              aria_label: 'Auto rotate table';
+              description: 'Automatically organises rows and columns for a clearer table layout';
+              screen_reader_announcement: 'Table layout improved and organised after {{table_heading}}';
+              title: 'Auto rotate table';
+            };
             change_order: {
               description: 'Description text...';
               title: 'Change order';
             };
             pivot: {
               aria_label: 'Rotate table clockwise';
+              description: '';
               screen_reader_announcement: 'Table rotated after {{first_variables}} and {{last_variable}}';
               title: 'Rotate table';
             };
@@ -257,6 +264,8 @@ interface Resources {
                 aria_label: 'List of {{total}} values.';
                 no_results_bodyshort: 'Try a different keyword or spelling.';
                 no_results_heading: 'No results for “{{search}}”';
+                showing_number_of_values: ' {{searchResultsCount}} results';
+                showing_number_of_one_value: ' {{searchResultsCount}} result';
               };
             };
             header: {
@@ -325,6 +334,9 @@ interface Resources {
       ingress: "Looking for the perfect table? Use the search field and filters to dig into the numbers you need. Whether you're hunting for trends, facts, or just an oddly satisfying dataset, PxWeb 2.0 has your back.";
       more_about_label: 'More about PxWeb 2.0';
       more_about_text: 'More about Text EN';
+      no_result_description: 'Try a different keyword or adjust your filters.';
+      no_result_header: "We couldn't find any tables";
+      no_result_search_help: 'Search help';
       result_hidden_header: 'Result';
       search_label: 'Search in PxWeb 2.0';
       search_placeholder: 'Search for table names or variables';

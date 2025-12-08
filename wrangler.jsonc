@@ -1,0 +1,6 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "pxweb2",
+  "compatibility_date": "2025-11-27",
+  "pages_build_output_dir": "./packages/pxweb2/dist"
+}

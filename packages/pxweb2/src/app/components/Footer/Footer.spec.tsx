@@ -2,17 +2,12 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import '@testing-library/jest-dom/vitest';
+import { MemoryRouter } from 'react-router';
 
 import { Footer, scrollToTop } from './Footer';
 import { useLocaleContent } from '../../util/hooks/useLocaleContent';
 
 let currentPathname = '/en/tables';
-const navigateMock = vi.fn();
-
-vi.mock('react-router', () => ({
-  useNavigate: () => navigateMock,
-  useLocation: () => ({ pathname: currentPathname }),
-}));
 
 vi.mock('../../util/hooks/useLocaleContent', () => ({
   useLocaleContent: vi.fn(),
@@ -64,28 +59,40 @@ describe('Footer', () => {
 
     it('renders footer columns and links from mocked hook', async () => {
       (useLocaleContent as Mock).mockReturnValue(footerContent);
-      render(<Footer />);
+      render(
+        <MemoryRouter initialEntries={[currentPathname]}>
+          <Footer />
+        </MemoryRouter>,
+      );
 
-      footerContent.footer.columns.forEach((col) => {
+      for (const col of footerContent.footer.columns) {
         expect(screen.getByText(col.header)).toBeInTheDocument();
-        col.links.forEach((link) => {
+        for (const link of col.links) {
           expect(screen.getByText(link.text)).toBeInTheDocument();
-        });
-      });
+        }
+      }
     });
 
-    it('applies variant--startpage on the <footer> when variant="startpage"', () => {
+    it('applies variant--tableview on the <footer> when variant="tableview"', () => {
       (useLocaleContent as Mock).mockReturnValue(footerContent);
-      render(<Footer variant="startpage" />);
-      const footer = screen.getByRole('contentinfo');
-      expect(footer.className).toMatch(/variant--startpage/);
-    });
-
-    it('uses variant--tableview by default', () => {
-      (useLocaleContent as Mock).mockReturnValue(footerContent);
-      render(<Footer />);
+      render(
+        <MemoryRouter initialEntries={[currentPathname]}>
+          <Footer variant="tableview" />
+        </MemoryRouter>,
+      );
       const footer = screen.getByRole('contentinfo');
       expect(footer.className).toMatch(/variant--tableview/);
+    });
+
+    it('uses variant--generic by default', () => {
+      (useLocaleContent as Mock).mockReturnValue(footerContent);
+      render(
+        <MemoryRouter initialEntries={[currentPathname]}>
+          <Footer />
+        </MemoryRouter>,
+      );
+      const footer = screen.getByRole('contentinfo');
+      expect(footer.className).toMatch(/variant--generic/);
     });
   });
 
@@ -116,7 +123,11 @@ describe('Footer', () => {
       const ref = {
         current: document.createElement('div'),
       } as React.RefObject<HTMLDivElement>;
-      render(<Footer containerRef={ref} />);
+      render(
+        <MemoryRouter initialEntries={[currentPathname]}>
+          <Footer containerRef={ref} />
+        </MemoryRouter>,
+      );
       expect(
         screen.getByRole('button', { name: /common.footer.top_button_text/i }),
       ).toBeInTheDocument();
@@ -124,7 +135,11 @@ describe('Footer', () => {
 
     it('shows Top button when enableWindowScroll is true (no containerRef)', () => {
       (useLocaleContent as Mock).mockReturnValue(footerContent);
-      render(<Footer variant="startpage" enableWindowScroll />);
+      render(
+        <MemoryRouter initialEntries={[currentPathname]}>
+          <Footer enableWindowScroll />
+        </MemoryRouter>,
+      );
       expect(
         screen.getByRole('button', { name: /common.footer.top_button_text/i }),
       ).toBeInTheDocument();
@@ -132,7 +147,11 @@ describe('Footer', () => {
 
     it('hides Top button when neither containerRef nor enableWindowScroll', () => {
       (useLocaleContent as Mock).mockReturnValue(footerContent);
-      render(<Footer variant="startpage" />);
+      render(
+        <MemoryRouter initialEntries={[currentPathname]}>
+          <Footer />
+        </MemoryRouter>,
+      );
       expect(
         screen.queryByRole('button', {
           name: /common.footer.top_button_text/i,
@@ -145,7 +164,11 @@ describe('Footer', () => {
       const scrollSpy = vi.spyOn(window, 'scrollTo').mockImplementation(() => {
         vi.fn();
       });
-      render(<Footer variant="startpage" enableWindowScroll />);
+      render(
+        <MemoryRouter initialEntries={[currentPathname]}>
+          <Footer enableWindowScroll />
+        </MemoryRouter>,
+      );
 
       const btn = screen.getByRole('button', {
         name: /common.footer.top_button_text/i,

@@ -18,11 +18,6 @@ vi.mock('../../components/Errors/GenericError/GenericError', () => ({
   GenericError: () => (
     <div data-testid="generic-error">Generic Error Component</div>
   ),
-  GenericErrorTableViewer: () => (
-    <div data-testid="generic-error-table-viewer">
-      Generic Error Table Viewer Component
-    </div>
-  ),
 }));
 vi.mock('../../../i18n/useLocalizeDocumentAttributes', () => ({
   default: vi.fn(),

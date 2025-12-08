@@ -6,7 +6,6 @@ import {
   Alert,
   BodyShort,
   Breadcrumbs,
-  BreadcrumbItem,
   Button,
   Heading,
   PxTable,
@@ -22,6 +21,10 @@ import useTableData from '../../context/useTableData';
 import useVariables from '../../context/useVariables';
 import useApp from '../../context/useApp';
 import { useLocation } from 'react-router';
+import {
+  createBreadcrumbItems,
+  BreadcrumbItemsParm,
+} from '../../util/createBreadcrumbItems';
 
 export interface ContenetTopProps {
   readonly pxtable: PxTable;
@@ -36,9 +39,7 @@ type NoteMessageType = {
   message: string;
 };
 
-import type { TFunction, i18n } from 'i18next';
-import { getPathWithUniqueIds } from '../../util/pathUtil';
-import { getConfig } from '../../util/config/getConfig';
+import type { TFunction } from 'i18next';
 
 export function createNoteMessage(
   noteInfo: MandatoryCompressedUtilityNotesType,
@@ -120,7 +121,6 @@ export function ContentTop({
   const openInformationLinkRef = useRef<HTMLAnchorElement>(null);
   const totalMetadata = pxTableMetadata;
   const openInformationAlertNotesRef = useRef<HTMLDivElement>(null);
-  const location = useLocation();
 
   const handleOpenTableInformation = (opener: string, selectedTab?: string) => {
     setTableInformationOpener(opener);
@@ -181,43 +181,16 @@ export function ContentTop({
     setTitle(staticTitle);
   }, [staticTitle, setTitle]);
 
-  function getBreadcrumbItems(
-    pathElements: PathElement[],
-    staticTitle: string,
-    i18n: i18n,
-  ): BreadcrumbItem[] {
-    const breadcrumbItems: BreadcrumbItem[] = [];
-    const pathWithUniqueIds = getPathWithUniqueIds(pathElements);
-    const config = getConfig();
-    const language = i18n.language;
-    const showLangInPath =
-      config.language.showDefaultLanguageInPath ||
-      language !== config.language.defaultLanguage;
-    const langPrefix = showLangInPath ? `/${language}` : '';
+  const location = useLocation();
 
-    breadcrumbItems.push({
-      label: t('common.breadcrumbs.breadcrumb_root_title'),
-      href: langPrefix,
-    });
+  const breadcrumbItemsOptions: BreadcrumbItemsParm = {
+    currentPage: { label: staticTitle, href: location.pathname },
+    language: i18n.language,
+    t: t,
+    pathElements: pathElements,
+  };
 
-    if (pathElements && pathElements.length > 0) {
-      breadcrumbItems.push(
-        ...pathWithUniqueIds.map((path) => ({
-          label: path.label,
-          href: `${langPrefix}?subject=${path.uniqueId}`,
-        })),
-      );
-    }
-
-    breadcrumbItems.push({
-      label: staticTitle,
-      href: location.pathname + location.search + location.hash,
-    });
-
-    return breadcrumbItems;
-  }
-
-  const breadcrumbItems = getBreadcrumbItems(pathElements, staticTitle, i18n);
+  const breadcrumbItems = createBreadcrumbItems(breadcrumbItemsOptions);
 
   const breadcrumbsVariant = isTablet ? 'compact' : 'default';
 
@@ -285,6 +258,7 @@ export function ContentTop({
             heading={noteMessage.heading}
             ariaHasPopup="dialog"
             alertAriaLabel={noteMessage.heading}
+            languageDirection={i18n.dir()}
             role="button"
             clickable
             onClick={() => {

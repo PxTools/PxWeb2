@@ -18,9 +18,9 @@ jobs:
       TAG_NAME: ${{ github.event.release.tag_name }}
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Use Node.js LTS
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: 'lts/*'
           cache: 'npm'

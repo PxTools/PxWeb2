@@ -20,7 +20,6 @@ export interface SearchProps {
   searchPlaceHolder?: string;
   showLabel?: boolean;
   variableBoxTopBorderOverride?: boolean;
-  ariaLabelIconText?: string;
   arialLabelClearButtonText?: string;
   onChange?: (value: string) => void;
 }
@@ -37,7 +36,6 @@ export const Search = forwardRef<SearchHandle, SearchProps>(
       labelText,
       searchPlaceHolder,
       showLabel = false,
-      ariaLabelIconText = 'Search icon',
       arialLabelClearButtonText = 'Clear search button',
       variableBoxTopBorderOverride = false,
       onChange,
@@ -99,13 +97,10 @@ export const Search = forwardRef<SearchHandle, SearchProps>(
               variableBoxTopBorderOverride,
           })}
         >
-          <Icon
-            iconName="MagnifyingGlass"
-            className={classes.searchIcon}
-            ariaLabel={ariaLabelIconText}
-          ></Icon>
+          <Icon iconName="MagnifyingGlass"></Icon>
           <input
             type="text"
+            {...(labelText ? { 'aria-label': labelText } : {})}
             ref={combinedRef}
             className={cl(
               classes[`bodyshort-medium`],

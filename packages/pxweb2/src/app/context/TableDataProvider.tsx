@@ -19,11 +19,15 @@ import {
   Variable,
 } from '@pxweb2/pxweb2-ui';
 import { mapJsonStat2Response } from '../../mappers/JsonStat2ResponseMapper';
+
 import {
   addFormattingToPxTable,
   filterStubAndHeadingArrays,
+  autoPivotTable,
+  pivotTableCW,
 } from './TableDataProviderUtils';
-import { problemMessage, ApiProblemError } from '../util/problemMessage';
+import { problemMessage } from '../util/problemMessage';
+import { PivotType } from './PivotType';
 
 // Define types for the context state and provider props
 export interface TableDataContextType {
@@ -33,7 +37,7 @@ export interface TableDataContextType {
   fetchSavedQuery: (queryId: string, i18n: i18n, isMobile: boolean) => void;
   pivotToMobile: () => void;
   pivotToDesktop: () => void;
-  pivotCW: () => void;
+  pivot: (type: PivotType) => void;
   buildTableTitle: (
     stub: Variable[],
     heading: Variable[],
@@ -60,15 +64,10 @@ const TableDataContext = createContext<TableDataContextType | undefined>({
   pivotToDesktop: () => {
     // No-op: useTableData hook prevents this from being called
   },
-  pivotCW: () => {
+  pivot: () => {
     // No-op: useTableData hook prevents this from being called
   },
-  buildTableTitle: () => {
-    return {
-      firstTitlePart: '',
-      lastTitlePart: '',
-    };
-  },
+  buildTableTitle: () => ({ firstTitlePart: '', lastTitlePart: '' }),
 });
 
 const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
@@ -102,7 +101,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   >({});
 
   const [errorMsg, setErrorMsg] = useState('');
-  const [apiError, setApiError] = useState<ApiProblemError | null>(null);
   const variables = useVariables();
 
   useEffect(() => {
@@ -110,12 +108,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       throw new Error(errorMsg);
     }
   }, [errorMsg]);
-
-  useEffect(() => {
-    if (apiError) {
-      throw apiError;
-    }
-  }, [apiError]);
 
   /**
    * Initializes the codelists for the application context.
@@ -338,15 +330,18 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         variablesSelection = { selection: [] }; // If language is changed we shall fetch data with the default selection.
       }
 
-      const pxTable = await fetchFromApi(tableId, i18n, variablesSelection);
+      const pxTable: PxTable = await fetchFromApi(
+        tableId,
+        i18n,
+        variablesSelection,
+      );
 
-      // Only continue if we got a valid response (fetchFromApi sets error state for failures)
-      if (pxTable) {
-        initializeStubAndHeading(pxTable, isMobile, i18n.language);
+      initializeStubAndHeading(pxTable, isMobile, i18n.language);
+      setData(pxTable);
 
-        setData(pxTable);
-        setAccumulatedData(structuredClone(pxTable));
-      }
+      // Store as accumulated data
+      setAccumulatedData(structuredClone(pxTable));
+      // }
     },
     [accumulatedData?.metadata.language, initializeStubAndHeading],
   );
@@ -805,13 +800,11 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       });
 
       // Get the not already loaded data from the API
-      let pxTable = await fetchFromApi(tableId, i18n, notLoadedVarSelection);
-
-      // Only continue if we got a valid response, error handled in fetchFromApi
-      if (!pxTable) {
-        return;
-      }
-
+      let pxTable: PxTable = await fetchFromApi(
+        tableId,
+        i18n,
+        notLoadedVarSelection,
+      );
       // Merge pxTable with accumulatedData
       mergeWithAccumulatedData(
         pxTable,
@@ -1049,8 +1042,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     tableId: string,
     i18n: i18n,
     variablesSelection: VariablesSelection,
-  ): Promise<PxTable | null> => {
-    let result: PxTable | null = null;
+  ) => {
     const res = await TablesService.getTableDataByPost(
       tableId,
       i18n.language,
@@ -1059,39 +1051,25 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       variablesSelection,
     ).catch((error: unknown) => {
       const err = error as ApiError;
-
-      // For 404 errors, set ApiProblemError to be thrown by useEffect
-      if (err.status === 404) {
-        setApiError(new ApiProblemError(err, tableId));
-      } else {
-        // For other errors, set error message
-        setErrorMsg(problemMessage(err, tableId));
-      }
-
-      return null;
+      setErrorMsg(problemMessage(err, tableId));
     });
 
-    // If the API call succeeded, process the response
-    if (res) {
-      // Map response to json-stat2 Dataset
-      const pxDataobj: unknown = res;
-      const pxTabData = pxDataobj as Dataset;
+    // Map response to json-stat2 Dataset
+    const pxDataobj: unknown = res;
+    const pxTabData = pxDataobj as Dataset;
 
-      const pxTable: PxTable = mapJsonStat2Response(pxTabData);
+    const pxTable: PxTable = mapJsonStat2Response(pxTabData);
 
-      // Add formatting to the PxTable datacell values
-      const formattingResult = await addFormattingToPxTable(pxTable);
+    // Add formatting to the PxTable datacell values
+    const formattingResult = await addFormattingToPxTable(pxTable);
 
-      if (formattingResult === false) {
-        setErrorMsg(
-          'TableDataProvider.fetchFromApi: Failed to format PxTable datacell values',
-        );
-      } else {
-        result = pxTable;
-      }
+    if (formattingResult === false) {
+      throw new Error(
+        'TableDataProvider.fetchFromApi: Failed to format PxTable datacell values',
+      );
     }
 
-    return result;
+    return pxTable;
   };
 
   /**
@@ -1158,11 +1136,9 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       const lastTitlePart = titleParts.pop();
 
       if (!lastTitlePart) {
-        setErrorMsg(
+        throw new Error(
           'TableDataProvider.buildTableTitle: Missing last title part. This should not happen. Please report this as a bug.',
         );
-
-        return { firstTitlePart: '', lastTitlePart: '' };
       }
 
       const firstTitlePart = titleParts.join(', ');
@@ -1173,60 +1149,69 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   );
 
   /**
-   * Pivots the table clockwise.
+   * Pivots the table based on the specified pivot type.
+   *
+   * @param type - The type of pivot to apply (Auto or Custom).
+   *
+   * This function adjusts the table structure by modifying the stub and heading order
+   * according to the specified pivot type. It handles both mobile and desktop layouts,
+   * ensuring that the table is appropriately formatted for the current device mode.
    */
-  const pivotCW = React.useCallback((): void => {
-    if (data?.heading === undefined) {
-      return;
-    }
+  const pivot = React.useCallback(
+    (type: PivotType): void => {
+      // Autopivot not allowed for mobile mode
+      if (isMobileMode && type === PivotType.Auto) {
+        return;
+      }
+      if (data?.heading === undefined || data?.stub === undefined) {
+        return;
+      }
 
-    const tmpTable = structuredClone(data);
-    if (tmpTable === undefined) {
-      return;
-    }
+      const tmpTable = copyPxTableWithoutData(data);
+      let stub: string[] = [];
+      let heading: string[] = [];
 
-    let stub: string[];
-    let heading: string[];
+      if (isMobileMode) {
+        stub = structuredClone(stubMobile);
+        heading = structuredClone(headingMobile);
+      } else {
+        stub = structuredClone(stubDesktop);
+        heading = structuredClone(headingDesktop);
+      }
+      if (stub.length === 0 && heading.length === 0) {
+        return;
+      }
 
-    if (isMobileMode) {
-      stub = structuredClone(stubMobile);
-      heading = structuredClone(headingMobile);
-    } else {
-      stub = structuredClone(stubDesktop);
-      heading = structuredClone(headingDesktop);
-    }
+      if (type === PivotType.Auto) {
+        autoPivotTable(tmpTable.metadata.variables, stub, heading);
+      } else {
+        pivotTableCW(stub, heading);
+      }
 
-    if (stub.length === 0 && heading.length === 0) {
-      return;
-    }
+      pivotTable(tmpTable, stub, heading);
 
-    if (stub.length > 0 && heading.length > 0) {
-      stub.push(heading.pop() as string);
-      heading.unshift(stub.shift() as string);
-    } else if (stub.length === 0) {
-      heading.unshift(heading.pop() as string);
-    } else if (heading.length === 0) {
-      stub.unshift(stub.pop() as string);
-    }
+      // Reassemble table data
+      tmpTable.data = data.data;
 
-    pivotTable(tmpTable, stub, heading);
-    setData(tmpTable);
+      setData(tmpTable);
 
-    if (isMobileMode) {
-      setStubMobile(stub);
-      setHeadingMobile(heading);
-    } else {
-      setStubDesktop(stub);
-      setHeadingDesktop(heading);
-    }
-  }, [
-    data,
-    isMobileMode,
-    stubDesktop,
-    stubMobile,
-    headingDesktop,
-    headingMobile,
-  ]);
+      if (isMobileMode) {
+        setStubMobile(stub);
+        setHeadingMobile(heading);
+      } else {
+        setStubDesktop(stub);
+        setHeadingDesktop(heading);
+      }
+    },
+    [
+      data,
+      isMobileMode,
+      stubMobile,
+      headingMobile,
+      stubDesktop,
+      headingDesktop,
+    ],
+  );
 
   /**
    * Pivots the table according to the stub- and heading order.
@@ -1253,14 +1238,31 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     });
   }
 
+  /**
+   * Creates a copy of the PxTable without the data.
+   */
+  function copyPxTableWithoutData(pxTable: PxTable): PxTable {
+    const tmpTable: PxTable = {
+      metadata: structuredClone(pxTable.metadata),
+      data: {
+        cube: {},
+        variableOrder: [],
+        isLoaded: false,
+      },
+      heading: [],
+      stub: [],
+    };
+    return tmpTable;
+  }
+
   const memoData = React.useMemo(
     () => ({
       data,
-      /* loading, error  */ fetchTableData,
+      fetchTableData,
       fetchSavedQuery,
       pivotToMobile,
       pivotToDesktop,
-      pivotCW,
+      pivot,
       buildTableTitle,
       isInitialized,
     }),
@@ -1270,7 +1272,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       fetchSavedQuery,
       pivotToMobile,
       pivotToDesktop,
-      pivotCW,
+      pivot,
       buildTableTitle,
       isInitialized,
     ],
