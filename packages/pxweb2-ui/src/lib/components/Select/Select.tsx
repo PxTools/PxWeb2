@@ -103,7 +103,6 @@ type DefaultSelectProps = Pick<
   | 'className'
 >;
 
-
 // function DefaultSelect({
 //   hideLabel,
 //   label,
@@ -128,7 +127,6 @@ type DefaultSelectProps = Pick<
 //           {label}
 //         </Label>
 //       </div>
-
 
 //       <div
 //         className={cl(classes.contentStyle)}
@@ -156,9 +154,6 @@ type DefaultSelectProps = Pick<
 //   );
 // }
 
-
-
-
 function DefaultSelect({
   hideLabel,
   label,
@@ -172,7 +167,6 @@ function DefaultSelect({
   const cssClasses = className.length > 0 ? ' ' + className : '';
 
   return (
-
     <div className={cl(classes.select) + cssClasses}>
       <div
         className={cl(classes.labelWrapper, {
@@ -183,7 +177,6 @@ function DefaultSelect({
           {label}
         </Label>
       </div>
-
 
       <div
         className={cl(classes.contentStyle)}
@@ -199,20 +192,20 @@ function DefaultSelect({
           }
         }}
       >
-             <select
-            // {...omit(rest, ["error", "errorId", "size", "readOnly"])}
-            // {...inputProps}
-            // {...readOnlyEventHandlers}
-            //ref={ref}
-            aria-label={label}
+        <select
+          // {...omit(rest, ["error", "errorId", "size", "readOnly"])}
+          // {...inputProps}
+          // {...readOnlyEventHandlers}
+          //ref={ref}
+          aria-label={label}
           className={cl(classes.optionLayout, classes.optionTypography)}
-          >
-            {options.map((o) => (
-              <option key={String(o.value)} value={String(o.value)}>
-                {o.label}
-              </option>
-            ))}
-          </select>
+        >
+          {options.map((o) => (
+            <option key={String(o.value)} value={String(o.value)}>
+              {o.label}
+            </option>
+          ))}
+        </select>
         <BodyShort
           size="medium"
           className={cl(classes.optionLayout, classes.optionTypography)}
@@ -224,10 +217,6 @@ function DefaultSelect({
     </div>
   );
 }
-
-
-
-
 
 // // // ...existing code...
 // function DefaultSelect({
@@ -322,10 +311,6 @@ function DefaultSelect({
 //         </div>
 //       </div>
 
-
-
-
-
 //     // <div className={cl(classes.select) + cssClasses}>
 //     //   <div
 //     //     className={cl(classes.labelWrapper, {
@@ -404,8 +389,6 @@ function DefaultSelect({
 // }
 // // ...existing code...
 
-
-
 // // function DefaultSelect({
 // //   hideLabel,
 // //   label,
@@ -466,7 +449,6 @@ function DefaultSelect({
 //     //     </Label>
 //     //   </div>
 
-
 //     //   <div
 //     //     className={cl(classes.contentStyle)}
 //     //     tabIndex={tabIndex}
@@ -492,7 +474,6 @@ function DefaultSelect({
 //     // </div>
 // //  );
 // //}
-
 
 type VariableBoxSelectProps = Pick<
   SelectProps,
