@@ -1,11 +1,12 @@
 @use '../../text-styles.scss';
+@use '../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixed;
 
 .checkCircle {
   display: flex;
   width: 200px;
   padding: 10px 8px;
   align-items: flex-start;
-  gap: 12px;
+  gap: fixed.$spacing-3;
   border-radius: var(--px-border-radius-medium);
   background: var(--px-color-surface-default);
   border: none;
@@ -48,7 +49,7 @@
   align-items: center;
   justify-content: center;
 
-  border-radius: 24px;
+  border-radius: var(--px-border-radius-xlarge);
   border: 2px solid var(--px-color-surface-action);
   background: var(--px-color-surface-default);
 
