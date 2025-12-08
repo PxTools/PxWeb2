@@ -26,9 +26,9 @@ An overview of the current technical debt in the project:
 ### Long running tasks
 
 1. Updating the packages used in the project. This includes both Dependabot PRs and other outdated packages.
-   - For security reasons, we want to wait a week before updating packages.
+   - For security reasons, we want to wait atleast 9 days before updating packages.
    Use NPM '--before' or npm-check-updates '--cooldown' flags.
-   E.g: npm-check-updates --format group --deep --cooldown 7 -iu
+   E.g: npm-check-updates --format group --deep --cooldown 9 -iu
 2. Fix [SonarQube issues/codesmells](https://sonarcloud.io/project/overview?id=PxTools_PxWeb2)
 3. Fix warnings when running `npm run lint`
 
