@@ -31,6 +31,10 @@
 
   &.checkCircle {
     padding-left: fixed.$spacing-2;
+    &:hover,
+    &:active {
+      border-radius: var(--px-border-radius-medium);
+    }
   }
 }
 
