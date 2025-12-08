@@ -7,22 +7,17 @@ import classes from './SkipToContent.module.scss';
 import { Link } from '@pxweb2/pxweb2-ui';
 import { getConfig } from '../../util/config/getConfig';
 
-
-export type SkipToContentProps=
-   React.HTMLAttributes<HTMLDivElement> &{
-  
-   // Jump to
+export type SkipToContentProps = React.HTMLAttributes<HTMLDivElement> & {
+  // Jump to
   targetId?: string;
 
   // label for the link
-   label?:string
-
-}
-
+  label?: string;
+};
 
 export const SkipToContent = React.forwardRef<
   HTMLDivElement,
- SkipToContentProps
+  SkipToContentProps
 >((props, ref) => {
   const { targetId, label = 'Skip to content', ...rest } = props;
   //const { t } = useTranslation();
@@ -33,7 +28,11 @@ export const SkipToContent = React.forwardRef<
   // build a single, URL-encoded query string from the search params
   const paramsString = searchParams.toString(); // URLSearchParams handles encoding
   const params = paramsString ? `?${paramsString}` : '';
-  const path = basePath.slice(0, -1) + location + params + (targetId ? `#${targetId}` : '');
+  const path =
+    basePath.slice(0, -1) +
+    location +
+    params +
+    (targetId ? `#${targetId}` : '');
   console.log('SkipToContent path:', path);
   return (
     <div

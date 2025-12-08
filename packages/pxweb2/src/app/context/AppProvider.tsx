@@ -57,8 +57,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [isInitialized] = useState(true);
   const [skipToMainFocused, setSkipToMainFocused] = useState(false);
-  const [skipToFilterFocused,setSkipToFilterFocused] = useState(false);
-  const [skipToResultFocused,setSkipToResultFocused] = useState(false);
+  const [skipToFilterFocused, setSkipToFilterFocused] = useState(false);
+  const [skipToResultFocused, setSkipToResultFocused] = useState(false);
   const [title, setTitle] = useState<string>('');
 
   /**
