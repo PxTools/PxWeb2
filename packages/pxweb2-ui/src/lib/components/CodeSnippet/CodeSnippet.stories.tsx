@@ -72,12 +72,10 @@ export const WithMaxHeightAsProp: Story = {
 };
 export const WithMaxHeightFromContainer: Story = {
   render: (args) => (
-    <>
-      <div style={{ height: '320px' }}>
-        <CodeSnippet {...args} title="Scrollable JSON Snippet" highlight="json">
-          {jsonExampleLong}
-        </CodeSnippet>
-      </div>
-    </>
+    <div style={{ height: '320px' }}>
+      <CodeSnippet {...args} title="Scrollable JSON Snippet" highlight="json">
+        {jsonExampleLong}
+      </CodeSnippet>
+    </div>
   ),
 };
