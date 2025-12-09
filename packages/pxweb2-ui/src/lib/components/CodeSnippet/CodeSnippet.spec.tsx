@@ -126,4 +126,61 @@ describe('CodeSnippet', () => {
     );
     expect(screen.getByTestId('body-content')).toHaveTextContent(codeContent);
   });
+
+  it('should apply maxHeight style when maxHeight prop is provided', () => {
+    const { container } = render(
+      <CodeSnippet
+        title="With Max Height"
+        maxHeight="300px"
+        translations={defaultTranslations}
+      >
+        {'Some content'}
+      </CodeSnippet>,
+    );
+
+    const codeSnippetDiv = container.firstChild as HTMLElement;
+    expect(codeSnippetDiv).toHaveStyle({ maxHeight: '300px' });
+  });
+
+  it('should not apply maxHeight style when maxHeight prop is not provided', () => {
+    const { container } = render(
+      <CodeSnippet
+        title="Without Max Height"
+        translations={defaultTranslations}
+      >
+        {'Some content'}
+      </CodeSnippet>,
+    );
+
+    const codeSnippetDiv = container.firstChild as HTMLElement;
+    expect(codeSnippetDiv).not.toHaveStyle({ maxHeight: '300px' });
+    expect(codeSnippetDiv.style.maxHeight).toBe('');
+  });
+
+  it('should accept different maxHeight values', () => {
+    const { container, rerender } = render(
+      <CodeSnippet
+        title="Test"
+        maxHeight="50vh"
+        translations={defaultTranslations}
+      >
+        {'Content'}
+      </CodeSnippet>,
+    );
+
+    const codeSnippetDiv = container.firstChild as HTMLElement;
+    expect(codeSnippetDiv).toHaveStyle({ maxHeight: '50vh' });
+
+    rerender(
+      <CodeSnippet
+        title="Test"
+        maxHeight="20rem"
+        translations={defaultTranslations}
+      >
+        {'Content'}
+      </CodeSnippet>,
+    );
+
+    expect(codeSnippetDiv).toHaveStyle({ maxHeight: '20rem' });
+  });
 });
