@@ -1,7 +1,12 @@
 import { vi } from 'vitest';
 import { getAllTables, shouldTableBeIncluded } from './tableHandler';
 import { type Filter } from '../pages/StartPage/StartPageTypes';
-import { Table, TablesResponse, TimeUnit } from '@pxweb2/pxweb2-api-client';
+import {
+  Table,
+  TablesResponse,
+  TimeUnit,
+  TableCategory,
+} from '@pxweb2/pxweb2-api-client';
 
 // Mock TablesService.listAllTables
 vi.mock(import('@pxweb2/pxweb2-api-client'), async (importOriginal) => {
@@ -32,7 +37,7 @@ describe('getAllTables', () => {
         source: 'Test',
         paths: [[{ id: 'TEST', label: 'Test' }]],
         links: [],
-        category: Table.category.PUBLIC,
+        category: TableCategory.PUBLIC,
         timeUnit: TimeUnit.ANNUAL,
       } as Table,
     ],
@@ -158,7 +163,7 @@ const tableYear: Table = {
   updated: '2023-04-11T06:00:00Z',
   firstPeriod: '2009',
   lastPeriod: '2022',
-  category: Table.category.PUBLIC,
+  category: TableCategory.PUBLIC,
   variableNames: [
     'arbeidsstyrkestatus',
     'kjønn',
