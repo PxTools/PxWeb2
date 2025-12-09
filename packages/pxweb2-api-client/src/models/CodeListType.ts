@@ -5,7 +5,7 @@
 /**
  * Type of codelist
  */
-export enum CodeListType {
+export enum CodelistType {
     AGGREGATION = 'Aggregation',
     VALUESET = 'Valueset',
 }

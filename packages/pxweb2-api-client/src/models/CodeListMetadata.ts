@@ -2,9 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CodeListType } from './CodeListType';
+import type { CodelistType } from './CodelistType';
 import type { Link } from './Link';
-export type CodeListMetadata = {
+export type CodelistMetadata = {
     /**
      * The identiyer for the codelist
      */
@@ -13,7 +13,7 @@ export type CodeListMetadata = {
      * The textual name  for the codelist.
      */
     label: string;
-    type: CodeListType;
+    type: CodelistType;
     links: Array<Link>;
 };
 
