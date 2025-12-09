@@ -1,6 +1,5 @@
 import React from 'react';
 import cl from 'clsx';
-//import { useTranslation } from 'react-i18next';
 import { useLocation, useSearchParams } from 'react-router';
 
 import classes from './SkipToContent.module.scss';
