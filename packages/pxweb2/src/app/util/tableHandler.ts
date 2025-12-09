@@ -1,6 +1,6 @@
 import {
   type Table,
-  TableService,
+  TablesService,
   OpenAPI,
   ApiError,
 } from '@pxweb2/pxweb2-api-client';
@@ -14,7 +14,7 @@ export async function getAllTables(language?: string) {
   OpenAPI.BASE = baseUrl;
 
   try {
-    const response = await TableService.listAllTables(
+    const response = await TablesService.listAllTables(
       language || config.language.defaultLanguage,
       undefined,
       undefined,
@@ -32,7 +32,7 @@ export async function getAllTables(language?: string) {
     // This ensures it is only retried once before failing completely. If fallback works, user should not be inconvenienced.
     if (error?.body?.title && error?.body?.title == 'Unsupported language') {
       try {
-        const response = await TableService.listAllTables(
+        const response = await TablesService.listAllTables(
           config.language.fallbackLanguage,
           undefined,
           undefined,

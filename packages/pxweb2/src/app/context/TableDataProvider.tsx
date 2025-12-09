@@ -7,7 +7,7 @@ import {
   Dataset,
   OutputFormatType,
   SavedQueriesService,
-  TableService,
+  TablesService,
   VariableSelection,
   VariablesSelection,
 } from '@pxweb2/pxweb2-api-client';
@@ -1042,7 +1042,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     i18n: i18n,
     variablesSelection: VariablesSelection,
   ) => {
-    const res = await TableService.getTableDataByPost(
+    const res = await TablesService.getTableDataByPost(
       tableId,
       i18n.language,
       OutputFormatType.JSON_STAT2,

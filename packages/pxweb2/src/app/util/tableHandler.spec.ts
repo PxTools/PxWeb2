@@ -8,12 +8,12 @@ import {
   FolderContentItemTypeEnum,
 } from '@pxweb2/pxweb2-api-client';
 
-// Mock TableService.listAllTables
+// Mock TablesService.listAllTables
 vi.mock(import('@pxweb2/pxweb2-api-client'), async (importOriginal) => {
   const actual = await importOriginal();
   return {
     ...actual,
-    TableService: {
+    TablesService: {
       listAllTables: vi.fn(),
     },
     OpenAPI: vi.fn(),
@@ -56,9 +56,9 @@ describe('getAllTables', () => {
     vi.resetAllMocks();
   });
 
-  it('should fetch and return tables from TableService', async () => {
-    const { TableService } = await import('@pxweb2/pxweb2-api-client');
-    vi.mocked(TableService.listAllTables).mockResolvedValueOnce(
+  it('should fetch and return tables from TablesService', async () => {
+    const { TablesService } = await import('@pxweb2/pxweb2-api-client');
+    vi.mocked(TablesService.listAllTables).mockResolvedValueOnce(
       mockSuccessResponse,
     );
 
@@ -69,8 +69,8 @@ describe('getAllTables', () => {
   });
 
   it('should retry with fallback language when receiving unsupported language error', async () => {
-    const { TableService } = await import('@pxweb2/pxweb2-api-client');
-    const listAllTablesSpy = vi.mocked(TableService.listAllTables);
+    const { TablesService } = await import('@pxweb2/pxweb2-api-client');
+    const listAllTablesSpy = vi.mocked(TablesService.listAllTables);
 
     // First call throws unsupported language error
     listAllTablesSpy.mockRejectedValueOnce({
@@ -112,8 +112,8 @@ describe('getAllTables', () => {
   });
 
   it('should throw error when both original and fallback language calls fail', async () => {
-    const { TableService } = await import('@pxweb2/pxweb2-api-client');
-    const listAllTablesSpy = vi.mocked(TableService.listAllTables);
+    const { TablesService } = await import('@pxweb2/pxweb2-api-client');
+    const listAllTablesSpy = vi.mocked(TablesService.listAllTables);
 
     // First call throws unsupported language error
     listAllTablesSpy.mockRejectedValueOnce({

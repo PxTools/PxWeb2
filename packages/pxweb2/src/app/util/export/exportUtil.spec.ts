@@ -9,7 +9,7 @@ import {
 import {
   OutputFormatType,
   OutputFormatParamType,
-  TableService,
+  TablesService,
   VariablesSelection,
 } from '@pxweb2/pxweb2-api-client';
 
@@ -26,7 +26,7 @@ vi.mock('@pxweb2/pxweb2-api-client', () => ({
     INCLUDE_TITLE: 'INCLUDE_TITLE',
     SEPARATOR_SEMICOLON: 'SEPARATOR_SEMICOLON',
   },
-  TableService: {
+  TablesService: {
     getTableDataByPost: vi.fn(),
   },
 }));
@@ -90,11 +90,11 @@ describe('exportToFile', () => {
   });
 
   it('should export as excel', async () => {
-    vi.mocked(TableService.getTableDataByPost).mockResolvedValueOnce(
+    vi.mocked(TablesService.getTableDataByPost).mockResolvedValueOnce(
       'excel-data',
     );
     await exportToFile(tabId, lang, variablesSelection, OutputFormatType.XLSX);
-    expect(TableService.getTableDataByPost).toHaveBeenCalledWith(
+    expect(TablesService.getTableDataByPost).toHaveBeenCalledWith(
       tabId,
       lang,
       OutputFormatType.XLSX,
@@ -105,11 +105,11 @@ describe('exportToFile', () => {
   }, 7000);
 
   it('should export as csv', async () => {
-    vi.mocked(TableService.getTableDataByPost).mockResolvedValueOnce(
+    vi.mocked(TablesService.getTableDataByPost).mockResolvedValueOnce(
       'csv-data',
     );
     await exportToFile(tabId, lang, variablesSelection, OutputFormatType.CSV);
-    expect(TableService.getTableDataByPost).toHaveBeenCalledWith(
+    expect(TablesService.getTableDataByPost).toHaveBeenCalledWith(
       tabId,
       lang,
       OutputFormatType.CSV,
@@ -124,9 +124,9 @@ describe('exportToFile', () => {
   }, 7000);
 
   it('should export as px', async () => {
-    vi.mocked(TableService.getTableDataByPost).mockResolvedValueOnce('px-data');
+    vi.mocked(TablesService.getTableDataByPost).mockResolvedValueOnce('px-data');
     await exportToFile(tabId, lang, variablesSelection, OutputFormatType.PX);
-    expect(TableService.getTableDataByPost).toHaveBeenCalledWith(
+    expect(TablesService.getTableDataByPost).toHaveBeenCalledWith(
       tabId,
       lang,
       OutputFormatType.PX,
@@ -138,7 +138,7 @@ describe('exportToFile', () => {
 
   it('should export as jsonstat2', async () => {
     const jsonData = { foo: 'bar' };
-    vi.mocked(TableService.getTableDataByPost).mockResolvedValueOnce(
+    vi.mocked(TablesService.getTableDataByPost).mockResolvedValueOnce(
       JSON.stringify(jsonData),
     );
     await exportToFile(
@@ -147,7 +147,7 @@ describe('exportToFile', () => {
       variablesSelection,
       OutputFormatType.JSON_STAT2,
     );
-    expect(TableService.getTableDataByPost).toHaveBeenCalledWith(
+    expect(TablesService.getTableDataByPost).toHaveBeenCalledWith(
       tabId,
       lang,
       OutputFormatType.JSON_STAT2,
@@ -158,11 +158,11 @@ describe('exportToFile', () => {
   }, 7000);
 
   it('should export as html', async () => {
-    vi.mocked(TableService.getTableDataByPost).mockResolvedValueOnce(
+    vi.mocked(TablesService.getTableDataByPost).mockResolvedValueOnce(
       'html-data',
     );
     await exportToFile(tabId, lang, variablesSelection, OutputFormatType.HTML);
-    expect(TableService.getTableDataByPost).toHaveBeenCalledWith(
+    expect(TablesService.getTableDataByPost).toHaveBeenCalledWith(
       tabId,
       lang,
       OutputFormatType.HTML,
@@ -173,7 +173,7 @@ describe('exportToFile', () => {
   }, 7000);
 
   it('should export as parquet', async () => {
-    vi.mocked(TableService.getTableDataByPost).mockResolvedValueOnce(
+    vi.mocked(TablesService.getTableDataByPost).mockResolvedValueOnce(
       'parquet-data',
     );
     await exportToFile(
@@ -182,7 +182,7 @@ describe('exportToFile', () => {
       variablesSelection,
       OutputFormatType.PARQUET,
     );
-    expect(TableService.getTableDataByPost).toHaveBeenCalledWith(
+    expect(TablesService.getTableDataByPost).toHaveBeenCalledWith(
       tabId,
       lang,
       OutputFormatType.PARQUET,
