@@ -156,7 +156,9 @@
             "values_list": {
               "aria_label": "Liste av {{total}} verdier.",
               "no_results_heading": "Ingen treff på «{{search}}»",
-              "no_results_bodyshort": "Prøv med et annet søkeord eller en annen stavemåte."
+              "no_results_bodyshort": "Prøv med et annet søkeord eller en annen stavemåte.",
+              "showing_number_of_values": " {{searchResultsCount}} treff",
+              "showing_number_of_one_value": " {{searchResultsCount}} treff"
             }
           }
         }

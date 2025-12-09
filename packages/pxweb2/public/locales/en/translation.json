@@ -156,7 +156,9 @@
             "values_list": {
               "aria_label": "List of {{total}} values.",
               "no_results_heading": "No results for “{{search}}”",
-              "no_results_bodyshort": "Try a different keyword or spelling."
+              "no_results_bodyshort": "Try a different keyword or spelling.",
+              "showing_number_of_values": " {{searchResultsCount}} results",
+              "showing_number_of_one_value": " {{searchResultsCount}} result"
             }
           }
         }
