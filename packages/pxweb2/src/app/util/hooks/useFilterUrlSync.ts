@@ -362,7 +362,7 @@ export default function useFilterUrlSync(
       const url = window.location.pathname + (built ? `?${built}` : '');
       window.history.replaceState(null, '', url);
     }
-  }, [state.activeFilters]);
+  }, [state.activeFilters, t]);
 
   // Initialize filters from the current URL query once tables and subjectTree are available.
   // Do not re-run on every activeFilters change.
