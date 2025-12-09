@@ -18,7 +18,7 @@
   "dependencies": {
     "@vitejs/plugin-react": "^5.1.0",
     "clsx": "^2.1.1",
-    "highlight.js": "^11.11.1",
+    "hast-util-to-jsx-runtime": "^2.3.6",
     "motion": "^12.23.24",
     "vite-plugin-dts": "^4.5.4"
   },
@@ -30,6 +30,7 @@
     "@testing-library/react": "^16.3.0",
     "eslint-plugin-storybook": "10.0.6",
     "prop-types": "^15.8.1",
+    "shiki": "^3.19.0",
     "storybook": "^10.0.6",
     "vitest": "^4.0.6"
   }

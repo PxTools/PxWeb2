@@ -58,6 +58,10 @@
       "aria_label_breadcrumb": "خبز",
       "breadcrumb_root_title": "الصفحة الرئيسية",
       "show_more_breadcrumbs": "عرض المزيد"
+    },
+    "code_snippet": {
+      "copy_button_label": "نسخ رمز ل ",
+      "copied_button_label": "تم نسخ الرمز إلى لوحة الكتابة"
     }
   },
   "start_page": {

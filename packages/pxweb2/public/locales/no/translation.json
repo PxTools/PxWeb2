@@ -59,6 +59,10 @@
       "breadcrumb_home_title": "Hjem",
       "breadcrumb_root_title": "Nye statistikkbanken",
       "show_more_breadcrumbs": "Vis mer"
+    },
+    "code_snippet": {
+      "copy_button_label": "Kopier kode for ",
+      "copied_button_label": "Kode kopiert til utklippstavle"
     }
   },
   "start_page": {

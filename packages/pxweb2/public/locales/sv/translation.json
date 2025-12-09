@@ -59,6 +59,10 @@
       "breadcrumb_home_title": "Hem",
       "breadcrumb_root_title": "Hem",
       "show_more_breadcrumbs": "Visa mer"
+    },
+    "code_snippet": {
+      "copy_button_label": "Kopiera kod för ",
+      "copied_button_label": "Kod kopierad till urklipp"
     }
   },
   "start_page": {

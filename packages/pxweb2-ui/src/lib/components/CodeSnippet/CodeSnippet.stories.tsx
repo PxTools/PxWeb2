@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { t } from 'i18next';
 
 import { CodeSnippet } from './CodeSnippet';
 
@@ -38,8 +39,8 @@ const meta = {
     title: 'No Highlight Example',
     children: NoHighlightExampleChildren,
     translations: {
-      copyButtonLabel: 'Copy code',
-      copiedButtonLabel: 'Code copied',
+      copyButtonLabel: t('common.code_snippet.copy_button_label'),
+      copiedButtonLabel: t('common.code_snippet.copied_button_label'),
     },
   },
 } satisfies Meta<typeof CodeSnippet>;

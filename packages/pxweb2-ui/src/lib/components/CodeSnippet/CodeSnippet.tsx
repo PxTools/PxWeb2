@@ -1,20 +1,25 @@
 import cl from 'clsx';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useMemo, useCallback } from 'react';
+import { Fragment, jsx, jsxs } from 'react/jsx-runtime';
+import { toJsxRuntime } from 'hast-util-to-jsx-runtime';
 
 import styles from './CodeSnippet.module.scss';
 import Button from '../Button/Button';
-import { highlightCode } from './highlightCode';
+import { getHighlighter } from './highlighter';
 
-export type HighlightOptions = 'none' | 'json';
+export type HighlightOptions = 'text' | 'json';
 
 interface CopyButtonProps {
+  readonly title: string;
   readonly copyContent: string;
   readonly translations: { copyButtonLabel: string; copiedButtonLabel: string };
 }
 
-function CopyButton({ copyContent, translations }: CopyButtonProps) {
+function CopyButton({ copyContent, title, translations }: CopyButtonProps) {
   const [hasCopied, setHasCopied] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const copyText = translations.copyButtonLabel + title;
+  const copiedText = translations.copiedButtonLabel;
 
   function copyToClipboard() {
     navigator.clipboard.writeText(copyContent).then(() => {
@@ -34,11 +39,7 @@ function CopyButton({ copyContent, translations }: CopyButtonProps) {
 
   return (
     <Button
-      aria-label={
-        hasCopied
-          ? translations.copiedButtonLabel
-          : translations.copyButtonLabel
-      }
+      aria-label={hasCopied ? copiedText : copyText}
       className={hasCopied ? styles.hasCopied : undefined}
       onClick={copyToClipboard}
       size="medium"
@@ -65,7 +66,11 @@ function CodeSnippetHeader({
   return (
     <div className={cl(styles['header'])}>
       <div className={cl(styles['header-title'])}>{title}</div>
-      <CopyButton copyContent={copyContent} translations={translations} />
+      <CopyButton
+        title={title}
+        copyContent={copyContent}
+        translations={translations}
+      />
     </div>
   );
 }
@@ -74,14 +79,12 @@ interface CodeSnippetBodyProps {
   readonly children: string;
   readonly highlight: HighlightOptions;
 }
-
 function CodeSnippetBody({ children, highlight }: CodeSnippetBodyProps) {
   const [hasOverflow, setHasOverflow] = useState(false);
   const [isScrolledToBottom, setIsScrolledToBottom] = useState(false);
-
   const preRef = useRef<HTMLPreElement>(null);
-  const codeOutput = highlightCode(children, highlight);
-  const sanitizedCodeOutput = { __html: codeOutput };
+  const shouldHaveGradient = hasOverflow && !isScrolledToBottom;
+  const highlighter = getHighlighter();
 
   useEffect(() => {
     function checkOverflow() {
@@ -104,31 +107,69 @@ function CodeSnippetBody({ children, highlight }: CodeSnippetBodyProps) {
     return () => resizeObserver.disconnect();
   }, [children]);
 
-  function handleScroll() {
+  const handleScroll = useCallback(() => {
     if (preRef.current) {
       const { scrollTop, scrollHeight, clientHeight } = preRef.current;
       const isAtBottom = scrollTop + clientHeight >= scrollHeight - 5; // 5px tolerance
 
       setIsScrolledToBottom(isAtBottom);
     }
-  }
+  }, []);
 
-  const shouldHaveGradient = hasOverflow && !isScrolledToBottom;
+  // Generate HAST from code using Shiki highlighter - memoized to prevent re-creation on scroll state changes
+  const hast = useMemo(
+    () =>
+      highlighter.codeToHast(children, {
+        lang: highlight,
+        theme: 'github-light',
+      }),
+    [children, highlight, highlighter],
+  );
+
+  // Convert HAST to React elements with custom component overrides
+  // Memoized to prevent recreating the element tree when only scroll state changes
+  const reactElement = useMemo(
+    () =>
+      toJsxRuntime(hast, {
+        Fragment,
+        jsx,
+        jsxs,
+        components: {
+          pre: (props) => (
+            <pre
+              {...props}
+              ref={preRef}
+              onScroll={handleScroll}
+              className={cl(props.className, styles['content-wrapper'])}
+            />
+          ),
+          code: (props) => (
+            <code {...props} className={cl(props.className, styles['code'])} />
+          ),
+        },
+      }),
+    [hast, handleScroll],
+  );
+
+  // Update tabIndex on the pre element without recreating it
+  useEffect(() => {
+    if (preRef.current) {
+      if (hasOverflow) {
+        preRef.current.setAttribute('tabindex', '0');
+      } else {
+        preRef.current.removeAttribute('tabindex');
+      }
+    }
+  }, [hasOverflow]);
 
   return (
-    <div className={cl(styles['body'])}>
-      <pre
-        ref={preRef}
-        onScroll={handleScroll}
-        className={cl(
-          styles['content-wrapper'],
-          shouldHaveGradient && styles['linear-gradient-bottom'],
-        )}
-      >
-        <code className={cl(styles['code'])}>
-          <span dangerouslySetInnerHTML={sanitizedCodeOutput} />
-        </code>
-      </pre>
+    <div
+      className={cl(
+        styles['code-snippet-body'],
+        shouldHaveGradient && styles['linear-gradient-bottom'],
+      )}
+    >
+      {reactElement}
     </div>
   );
 }
@@ -143,19 +184,10 @@ interface CodeSnippetProps {
   };
 }
 
-// TODO: Add syntax highlighting
-//       What are the best practices for code blocks with syntax highlighting in React?
-//       dangerouslySetInnerHTML or libraries?
-// TODO: Ask design about max height and scrolling behavior and gradient
-// TODO: Figure out accessibility considerations regarding focus and screen readers
-//  copy button aria-labels etc.
-//    copy button should announce when code is copied
-//  code block accessibility
-
 export function CodeSnippet({
   title,
   children,
-  highlight = 'none',
+  highlight = 'text',
   translations,
 }: CodeSnippetProps) {
   return (

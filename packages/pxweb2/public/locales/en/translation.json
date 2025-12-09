@@ -59,6 +59,10 @@
       "breadcrumb_root_title": "Home",
       "breadcrumb_home_title": "Home",
       "show_more_breadcrumbs": "Show more"
+    },
+    "code_snippet": {
+      "copy_button_label": "Copy code for ",
+      "copied_button_label": "Code copied to clipboard"
     }
   },
   "start_page": {
