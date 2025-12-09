@@ -1,11 +1,42 @@
 import cl from 'clsx';
-import { useEffect, useState, useRef, useMemo, useCallback } from 'react';
+import {
+  useEffect,
+  useState,
+  useRef,
+  useMemo,
+  useCallback,
+  ComponentPropsWithoutRef,
+  Ref,
+} from 'react';
 import { Fragment, jsx, jsxs } from 'react/jsx-runtime';
-import { toJsxRuntime } from 'hast-util-to-jsx-runtime';
+import { toJsxRuntime, Components } from 'hast-util-to-jsx-runtime';
 
 import styles from './CodeSnippet.module.scss';
 import Button from '../Button/Button';
 import { getHighlighter } from './highlighter';
+
+// Custom components for use with hast-util-to-jsx-runtime
+function Pre({
+  className,
+  onScroll,
+  ref,
+  ...props
+}: ComponentPropsWithoutRef<'pre'> & {
+  onScroll?: () => void;
+  ref?: Ref<HTMLPreElement>;
+}) {
+  return (
+    <pre
+      {...props}
+      ref={ref}
+      onScroll={onScroll}
+      className={cl(className, styles['content-wrapper'])}
+    />
+  );
+}
+function Code({ className, ...props }: ComponentPropsWithoutRef<'code'>) {
+  return <code {...props} className={cl(className, styles['code'])} />;
+}
 
 export type HighlightOptions = 'text' | 'json';
 
@@ -126,6 +157,15 @@ function CodeSnippetBody({ children, highlight }: CodeSnippetBodyProps) {
     [children, highlight, highlighter],
   );
 
+  // Create components object with refs and handlers bound
+  const components: Components = useMemo(
+    () => ({
+      pre: (props) => <Pre {...props} ref={preRef} onScroll={handleScroll} />,
+      code: Code,
+    }),
+    [handleScroll],
+  );
+
   // Convert HAST to React elements with custom component overrides
   // Memoized to prevent recreating the element tree when only scroll state changes
   const reactElement = useMemo(
@@ -134,21 +174,9 @@ function CodeSnippetBody({ children, highlight }: CodeSnippetBodyProps) {
         Fragment,
         jsx,
         jsxs,
-        components: {
-          pre: (props) => (
-            <pre
-              {...props}
-              ref={preRef}
-              onScroll={handleScroll}
-              className={cl(props.className, styles['content-wrapper'])}
-            />
-          ),
-          code: (props) => (
-            <code {...props} className={cl(props.className, styles['code'])} />
-          ),
-        },
+        components,
       }),
-    [hast, handleScroll],
+    [hast, components],
   );
 
   // Update tabIndex on the pre element without recreating it
