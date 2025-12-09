@@ -19,12 +19,11 @@ export const SkipToContent = React.forwardRef<
   HTMLDivElement,
   SkipToContentProps
 >((props, ref) => {
-  const { targetId, label = 'Skip to content', ...rest } = props;
-  //const { t } = useTranslation();
-
+  const { targetId, label, ...rest } = props;
   const basePath = getConfig().baseApplicationPath;
   const location = useLocation().pathname;
   const [searchParams] = useSearchParams();
+
   // build a single, URL-encoded query string from the search params
   const paramsString = searchParams.toString(); // URLSearchParams handles encoding
   const params = paramsString ? `?${paramsString}` : '';
@@ -33,7 +32,6 @@ export const SkipToContent = React.forwardRef<
     location +
     params +
     (targetId ? `#${targetId}` : '');
-  console.log('SkipToContent path:', path);
   return (
     <div
       ref={ref}

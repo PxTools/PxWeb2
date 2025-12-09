@@ -99,12 +99,6 @@ const StartPage = () => {
   const noResultSearchHelpContent =
     localeContent?.startPage?.noResultSearchHelp;
   const showBreadCrumb = getConfig().showBreadCrumbOnStartPage;
-  const skipToContentRef = useRef<HTMLDivElement>(null);
-  // const {
-  //   setSkipToFilterFocused,
-  // } = useApp();
-  // Run once when initially loading the page, then again if language changes
-  // We want to try fetching tables in the selected language if possible
   useEffect(() => {
     if (hasFetchedRef.current && previousLanguage.current == i18n.language) {
       return;
@@ -643,38 +637,20 @@ const StartPage = () => {
     }
   };
 
-  // Monitor focus on SkipToMain
-  // useEffect(() => {
-  //   console.log('Setting up SkipToContent focus listeners');
-  //   const skipElement = skipToContentRef.current;
-  //   if (!skipElement) {
-  //     return;
-  //   }
 
-  //   const handleFocus = () => setSkipToFilterFocused(true);
-  //   const handleBlur = () => setSkipToFilterFocused(false);
-
-  //   skipElement.addEventListener('focusin', handleFocus);
-  //   skipElement.addEventListener('focusout', handleBlur);
-
-  //   return () => {
-  //     skipElement.removeEventListener('focusin', handleFocus);
-  //     skipElement.removeEventListener('focusout', handleBlur);
-  //   };
-  // }, [setSkipToFilterFocused]);
 
   return (
     <>
-      <SkipToContent
-        ref={skipToContentRef}
-        targetId="px-start-filter"
-        label={t('start_page.skip_to.filter')}
-      />
-      <SkipToContent
-        ref={skipToContentRef}
-        targetId="px-start-result"
-        label={t('start_page.skip_to.result')}
-      />
+      <nav>
+        <SkipToContent
+          targetId="px-start-filter"
+          label={t('start_page.skip_to.filter')}
+        />
+        <SkipToContent
+          targetId="px-start-result"
+          label={t('start_page.skip_to.result')}
+        />
+      </nav>
       <div className={styles.startPageLayout}>
         <Header stroke={true} />
         <main className={styles.startPage}>
@@ -727,24 +703,23 @@ const StartPage = () => {
               </Button>
             </div>
 
-            <div className={cl(styles.filterAndListWrapper)}>
-              <div
-                id="px-start-filter"
-                className={cl(styles[`heading-information`])}
-              >
-                {!isSmallScreen && (
-                  <div>
-                    <Heading
-                      className={cl(styles.filterHeading)}
-                      size="medium"
-                      level="2"
-                    >
-                      {t('start_page.filter.header')}
-                    </Heading>
-                    <FilterSidebar onFilterChange={handleFilterChange} />
-                  </div>
-                )}
-              </div>
+            <div
+              id="px-start-filter"
+              className={cl(styles.filterAndListWrapper)}
+            >
+              {!isSmallScreen && (
+                <div>
+                  <Heading
+                    className={cl(styles.filterHeading)}
+                    size="medium"
+                    level="2"
+                  >
+                    {t('start_page.filter.header')}
+                  </Heading>
+                  <FilterSidebar onFilterChange={handleFilterChange} />
+                </div>
+              )}
+              {/* </div> */}
               {renderFilterOverlay()}
 
               <div className={styles.listTables} id="px-start-result">
