@@ -1,35 +1,42 @@
 import '@testing-library/jest-dom/vitest';
-import { render, screen, fireEvent, act } from '@testing-library/react';
+import {
+  render,
+  screen,
+  fireEvent,
+  act,
+  waitFor,
+} from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import { CodeSnippetBody } from './CodeSnippetBody';
 
 vi.mock('../highlighter', () => ({
-  getHighlighter: () => ({
-    codeToHast: (code: string) => ({
-      type: 'root',
-      children: [
-        {
-          type: 'element',
-          tagName: 'pre',
-          properties: { className: 'shiki' },
-          children: [
-            {
-              type: 'element',
-              tagName: 'code',
-              properties: {},
-              children: [
-                {
-                  type: 'text',
-                  value: code,
-                },
-              ],
-            },
-          ],
-        },
-      ],
+  getHighlighter: () =>
+    Promise.resolve({
+      codeToHast: (code: string) => ({
+        type: 'root',
+        children: [
+          {
+            type: 'element',
+            tagName: 'pre',
+            properties: { className: 'shiki' },
+            children: [
+              {
+                type: 'element',
+                tagName: 'code',
+                properties: {},
+                children: [
+                  {
+                    type: 'text',
+                    value: code,
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      }),
     }),
-  }),
 }));
 
 // Mock ResizeObserver
@@ -51,25 +58,41 @@ describe('CodeSnippetBody', () => {
     vi.clearAllMocks();
   });
 
-  it('should render code content', () => {
+  it('should render code content', async () => {
     render(<CodeSnippetBody highlight="json">{jsonCode}</CodeSnippetBody>);
 
+    // Code is shown immediately as fallback while highlighter loads
+    expect(screen.getByText(jsonCode)).toBeInTheDocument();
+
+    // Wait for async highlighter to complete
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    // Code is still visible after highlighting
     expect(screen.getByText(jsonCode)).toBeInTheDocument();
   });
 
-  it('should render pre and code elements', () => {
+  it('should render pre and code elements', async () => {
     const { container } = render(
       <CodeSnippetBody highlight="json">{jsonCode}</CodeSnippetBody>,
     );
 
-    expect(container.querySelector('pre')).toBeInTheDocument();
-    expect(container.querySelector('code')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(container.querySelector('pre')).toBeInTheDocument();
+      expect(container.querySelector('code')).toBeInTheDocument();
+    });
   });
 
-  it('should apply gradient class when content overflows', () => {
+  it('should apply gradient class when content overflows', async () => {
     const { container } = render(
       <CodeSnippetBody highlight="json">{jsonCode}</CodeSnippetBody>,
     );
+
+    // Wait for async highlighter to load
+    await act(async () => {
+      await Promise.resolve();
+    });
 
     const preElement = container.querySelector('pre');
     if (preElement) {
@@ -85,10 +108,15 @@ describe('CodeSnippetBody', () => {
     expect(wrapper.className).toMatch(/linear-gradient-bottom/);
   });
 
-  it('should not have gradient class when no overflow', () => {
+  it('should not have gradient class when no overflow', async () => {
     const { container } = render(
       <CodeSnippetBody highlight="json">{jsonCode}</CodeSnippetBody>,
     );
+
+    // Wait for async highlighter to load
+    await act(async () => {
+      await Promise.resolve();
+    });
 
     const preElement = container.querySelector('pre');
     if (preElement) {
@@ -103,10 +131,15 @@ describe('CodeSnippetBody', () => {
     expect(wrapper.className).not.toMatch(/linear-gradient-bottom/);
   });
 
-  it('should remove gradient when scrolled to bottom', () => {
+  it('should remove gradient when scrolled to bottom', async () => {
     const { container } = render(
       <CodeSnippetBody highlight="json">{jsonCode}</CodeSnippetBody>,
     );
+
+    // Wait for async highlighter to load
+    await act(async () => {
+      await Promise.resolve();
+    });
 
     const preElement = container.querySelector('pre');
     if (preElement) {
@@ -131,6 +164,11 @@ describe('CodeSnippetBody', () => {
       <CodeSnippetBody highlight="json">{jsonCode}</CodeSnippetBody>,
     );
 
+    // Wait for async highlighter to load
+    await act(async () => {
+      await Promise.resolve();
+    });
+
     const preElement = container.querySelector('pre');
     if (preElement) {
       Object.defineProperty(preElement, 'scrollHeight', { value: 200 });
@@ -148,6 +186,11 @@ describe('CodeSnippetBody', () => {
       <CodeSnippetBody highlight="json">{jsonCode}</CodeSnippetBody>,
     );
 
+    // Wait for async highlighter to load
+    await act(async () => {
+      await Promise.resolve();
+    });
+
     const preElement = container.querySelector('pre');
     if (preElement) {
       Object.defineProperty(preElement, 'scrollHeight', { value: 100 });
@@ -160,9 +203,18 @@ describe('CodeSnippetBody', () => {
     expect(preElement).not.toHaveAttribute('tabindex');
   });
 
-  it('should work with text highlight option', () => {
+  it('should work with text highlight option', async () => {
     render(<CodeSnippetBody highlight="text">{'plain text'}</CodeSnippetBody>);
 
+    // Code is shown immediately as fallback while highlighter loads
+    expect(screen.getByText('plain text')).toBeInTheDocument();
+
+    // Wait for async highlighter to complete
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    // Code is still visible after highlighting
     expect(screen.getByText('plain text')).toBeInTheDocument();
   });
 });
