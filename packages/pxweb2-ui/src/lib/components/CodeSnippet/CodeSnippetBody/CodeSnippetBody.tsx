@@ -1,25 +1,26 @@
 import cl from 'clsx';
-import {
-  useEffect,
-  useState,
-  useRef,
-  useMemo,
-  ComponentPropsWithoutRef,
-} from 'react';
+import { useEffect, useState, useRef, ComponentPropsWithoutRef } from 'react';
 import { Fragment, jsx, jsxs } from 'react/jsx-runtime';
 import { toJsxRuntime, Components } from 'hast-util-to-jsx-runtime';
+import type { Root } from 'hast';
 
 import styles from './CodeSnippetBody.module.scss';
 import { HighlightOptions } from '../CodeSnippet';
 import { getHighlighter } from '../highlighter';
 
 // Custom components for use with hast-util-to-jsx-runtime
-function Pre({ className, ...props }: ComponentPropsWithoutRef<'pre'>) {
+function Pre({
+  className,
+  ...props
+}: Readonly<ComponentPropsWithoutRef<'pre'>>) {
   return (
     <pre {...props} className={cl(className, styles['content-wrapper'])} />
   );
 }
-function Code({ className, ...props }: ComponentPropsWithoutRef<'code'>) {
+function Code({
+  className,
+  ...props
+}: Readonly<ComponentPropsWithoutRef<'code'>>) {
   return <code {...props} className={cl(className, styles['code'])} />;
 }
 
@@ -35,28 +36,44 @@ interface CodeSnippetBodyProps {
 }
 export function CodeSnippetBody({ children, highlight }: CodeSnippetBodyProps) {
   const [showGradient, setShowGradient] = useState(false);
+  const [hast, setHast] = useState<Root | null>(null);
   const preRef = useRef<HTMLPreElement | null>(null);
-  const highlighter = getHighlighter();
 
-  const hast = useMemo(
-    () =>
-      highlighter.codeToHast(children, {
+  // Load highlighter and generate HAST asynchronously
+  useEffect(() => {
+    let cancelled = false;
+
+    getHighlighter().then((highlighter) => {
+      if (cancelled) {
+        return;
+      }
+
+      const result = highlighter.codeToHast(children, {
         lang: highlight,
         theme: 'github-light',
-      }),
-    [children, highlight, highlighter],
-  );
+      });
+
+      setHast(result);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [children, highlight]);
 
   // Convert HAST to React elements with custom component overrides
-  const reactElement = useMemo(
-    () =>
-      toJsxRuntime(hast, {
-        Fragment,
-        jsx,
-        jsxs,
-        components: hastComponents,
-      }),
-    [hast],
+  // Show raw code as fallback while highlighter is loading to avoid layout shift
+  const reactElement = hast ? (
+    toJsxRuntime(hast, {
+      Fragment,
+      jsx,
+      jsxs,
+      components: hastComponents,
+    })
+  ) : (
+    <Pre>
+      <Code>{children}</Code>
+    </Pre>
   );
 
   // Handle overflow detection, scroll behavior, and tabindex
@@ -91,7 +108,7 @@ export function CodeSnippetBody({ children, highlight }: CodeSnippetBodyProps) {
       preElement.removeEventListener('scroll', updateGradient);
       resizeObserver.disconnect();
     };
-  }, [reactElement]);
+  }, [hast]);
 
   return (
     <div
