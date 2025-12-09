@@ -1,12 +1,15 @@
-import { createHighlighterCore } from 'shiki/core';
+import { createHighlighterCore, HighlighterCore } from 'shiki/core';
 import { createJavaScriptRegexEngine } from 'shiki/engine/javascript';
 
-const highlighter = await createHighlighterCore({
-  themes: [import('@shikijs/themes/github-light')],
-  langs: [import('@shikijs/langs/json')],
-  engine: createJavaScriptRegexEngine(),
-});
+let highlighterPromise: Promise<HighlighterCore> | null = null;
 
-export function getHighlighter() {
-  return highlighter;
+export async function getHighlighter(): Promise<HighlighterCore> {
+  if (!highlighterPromise) {
+    highlighterPromise = createHighlighterCore({
+      themes: [import('@shikijs/themes/github-light')],
+      langs: [import('@shikijs/langs/json')],
+      engine: createJavaScriptRegexEngine(),
+    });
+  }
+  return highlighterPromise;
 }
