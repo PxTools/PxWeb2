@@ -4,13 +4,11 @@ import { createJavaScriptRegexEngine } from 'shiki/engine/javascript';
 let highlighterPromise: Promise<HighlighterCore> | null = null;
 
 export async function getHighlighter(): Promise<HighlighterCore> {
-  if (!highlighterPromise) {
-    highlighterPromise = createHighlighterCore({
-      themes: [import('@shikijs/themes/github-light')],
-      langs: [import('@shikijs/langs/json')],
-      engine: createJavaScriptRegexEngine(),
-    });
-  }
+  highlighterPromise = createHighlighterCore({
+    themes: [import('@shikijs/themes/github-light')],
+    langs: [import('@shikijs/langs/json')],
+    engine: createJavaScriptRegexEngine(),
+  });
 
   return highlighterPromise;
 }
