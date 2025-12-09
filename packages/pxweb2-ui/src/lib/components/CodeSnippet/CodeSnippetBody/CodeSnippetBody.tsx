@@ -61,21 +61,6 @@ export function CodeSnippetBody({ children, highlight }: CodeSnippetBodyProps) {
     };
   }, [children, highlight]);
 
-  // Convert HAST to React elements with custom component overrides
-  // Show raw code as fallback while highlighter is loading to avoid layout shift
-  const reactElement = hast ? (
-    toJsxRuntime(hast, {
-      Fragment,
-      jsx,
-      jsxs,
-      components: hastComponents,
-    })
-  ) : (
-    <Pre>
-      <Code>{children}</Code>
-    </Pre>
-  );
-
   // Handle overflow detection, scroll behavior, and tabindex
   useEffect(() => {
     if (!preRef.current) {
@@ -109,6 +94,21 @@ export function CodeSnippetBody({ children, highlight }: CodeSnippetBodyProps) {
       resizeObserver.disconnect();
     };
   }, [hast]);
+
+  // Convert HAST to React elements with custom component overrides
+  // Show raw code as fallback while highlighter is loading to avoid layout shift
+  const reactElement = hast ? (
+    toJsxRuntime(hast, {
+      Fragment,
+      jsx,
+      jsxs,
+      components: hastComponents,
+    })
+  ) : (
+    <Pre>
+      <Code>{children}</Code>
+    </Pre>
+  );
 
   return (
     <div
