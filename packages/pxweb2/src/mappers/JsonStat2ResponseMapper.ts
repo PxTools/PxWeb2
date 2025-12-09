@@ -5,7 +5,7 @@ import {
   jsonstat_note,
   jsonstat_noteMandatory,
   extension_dimension,
-  CodeListInformation,
+  CodelistInformation,
 } from '@pxweb2/pxweb2-api-client';
 import {
   Dimensions,
@@ -469,7 +469,7 @@ function getMandatoryVariable(
  */
 function getCodelists(dimensionExtension: extension_dimension): CodeList[] {
   if (dimensionExtension?.codeLists) {
-    return dimensionExtension.codeLists.map((codeList: CodeListInformation) => {
+    return dimensionExtension.codeLists.map((codeList: CodelistInformation) => {
       return {
         id: codeList.id,
         label: codeList.label,

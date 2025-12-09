@@ -1,4 +1,4 @@
-import { ClassType, CodeListType, Dataset } from '@pxweb2/pxweb2-api-client';
+import { ClassType, CodelistType, Dataset } from '@pxweb2/pxweb2-api-client';
 import {
   mapJsonStat2Response,
   createDataAndStatus,
@@ -75,13 +75,13 @@ describe('JsonStat2ResponseMapper', () => {
               {
                 id: 'cd1',
                 label: 'Codelist 1',
-                type: CodeListType.AGGREGATION,
+                type: CodelistType.AGGREGATION,
                 links: [],
               },
               {
                 id: 'cd2',
                 label: 'Codelist 2',
-                type: CodeListType.VALUESET,
+                type: CodelistType.VALUESET,
                 links: [],
               },
             ],
