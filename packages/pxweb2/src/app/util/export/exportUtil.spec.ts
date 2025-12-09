@@ -124,7 +124,9 @@ describe('exportToFile', () => {
   }, 7000);
 
   it('should export as px', async () => {
-    vi.mocked(TablesService.getTableDataByPost).mockResolvedValueOnce('px-data');
+    vi.mocked(TablesService.getTableDataByPost).mockResolvedValueOnce(
+      'px-data',
+    );
     await exportToFile(tabId, lang, variablesSelection, OutputFormatType.PX);
     expect(TablesService.getTableDataByPost).toHaveBeenCalledWith(
       tabId,
