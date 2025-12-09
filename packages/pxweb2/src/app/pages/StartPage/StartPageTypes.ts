@@ -1,5 +1,9 @@
 import { Table } from '@pxweb2/pxweb2-api-client';
 
+// Note: The ActionType ADD_SEARCH has been replaced by ADD_QUERY_FILTER.
+// In the same way the FilterType 'search' has been replaced by 'query'.
+// It is kept here for possible future use. One scenario could be that the API query fails,
+// then we can fall back to client-side search filtering.
 export enum ActionType {
   RESET_FILTERS = 'RESET_FILTERS',
   ADD_FILTER = 'ADD_FILTER',

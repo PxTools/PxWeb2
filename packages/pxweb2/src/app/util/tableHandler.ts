@@ -109,6 +109,10 @@ export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
     }
   };
 
+  // Note: The ActionType ADD_SEARCH has been replaced by ADD_QUERY_FILTER.
+  // In the same way the FilterType 'search' has been replaced by 'query'.
+  // It is kept here for possible future use. One scenario could be that the API query fails,
+  // then we can fall back to client-side search filtering.
   const searchFilter = filters.find((f) => {
     return f.type === 'search';
   });

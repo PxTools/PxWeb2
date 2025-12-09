@@ -140,6 +140,10 @@ function reducer(
         lastUsedYearRange: updatedLastUsedYearRange,
       };
     }
+    // Note: The ActionType ADD_SEARCH has been replaced by ADD_QUERY_FILTER.
+    // In the same way the FilterType 'search' has been replaced by 'query'.
+    // It is kept here for possible future use. One scenario could be that the API query fails,
+    // then we can fall back to client-side search filtering.
     case ActionType.ADD_SEARCH_FILTER: {
       let newFilters: Filter[];
 
