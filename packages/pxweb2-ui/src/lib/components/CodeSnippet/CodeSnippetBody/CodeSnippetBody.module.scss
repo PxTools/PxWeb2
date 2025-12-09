@@ -1,0 +1,41 @@
+.code-snippet-body {
+  display: flex;
+  padding: 1rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  align-self: stretch;
+
+  border-radius: 0 0 var(--px-border-radius-medium)
+    var(--px-border-radius-medium);
+  border: 1px solid var(--px-color-border-subtle);
+  background: var(--px-color-surface-default);
+}
+
+.content-wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.25rem;
+  align-self: stretch;
+  margin: 0;
+  max-height: 320px;
+  overflow-y: auto;
+
+  &:focus-visible {
+    outline: 2px solid var(--px-color-border-focus-outline);
+    outline-offset: -2px;
+  }
+}
+
+.code {
+  flex: 1 0 0;
+  color: var(--px-color-text-default);
+}
+
+.linear-gradient-bottom pre {
+  mask-image: linear-gradient(
+    to bottom,
+    #000000 calc(100% - 1rem),
+    transparent 100%
+  );
+}
