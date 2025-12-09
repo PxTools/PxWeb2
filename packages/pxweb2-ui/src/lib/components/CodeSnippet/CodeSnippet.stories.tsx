@@ -66,12 +66,9 @@ export const TwoCodeSnippets: Story = {
   render: (args) => (
     <>
       <CodeSnippet {...args} />
-      <CodeSnippet
-        {...args}
-        title="Second Code Snippet"
-        children={jsonExampleLong}
-        highlight="json"
-      />
+      <CodeSnippet {...args} title="Second Code Snippet" highlight="json">
+        {jsonExampleLong}
+      </CodeSnippet>
     </>
   ),
 };
