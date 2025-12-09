@@ -3,7 +3,7 @@ import { t } from 'i18next';
 
 import { CodeSnippet } from './CodeSnippet';
 
-const NoHighlightExampleChildren = `https://api.example.com/data?region=0301&year=2025`;
+const noHighlightExampleChildren = `https://api.example.com/data?region=0301&year=2025`;
 const jsonExample = `{
   "query": [
     {
@@ -37,7 +37,7 @@ const meta = {
   component: CodeSnippet,
   args: {
     title: 'No Highlight Example',
-    children: NoHighlightExampleChildren,
+    children: noHighlightExampleChildren,
     translations: {
       copyButtonLabel: t('common.code_snippet.copy_button_label'),
       copiedButtonLabel: t('common.code_snippet.copied_button_label'),
