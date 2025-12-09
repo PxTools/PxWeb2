@@ -11,5 +11,6 @@ export async function getHighlighter(): Promise<HighlighterCore> {
       engine: createJavaScriptRegexEngine(),
     });
   }
+
   return highlighterPromise;
 }
