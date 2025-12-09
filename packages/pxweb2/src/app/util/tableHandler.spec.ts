@@ -1,12 +1,7 @@
 import { vi } from 'vitest';
 import { getAllTables, shouldTableBeIncluded } from './tableHandler';
 import { type Filter } from '../pages/StartPage/StartPageTypes';
-import {
-  Table,
-  TablesResponse,
-  TimeUnit,
-  FolderContentItemTypeEnum,
-} from '@pxweb2/pxweb2-api-client';
+import { Table, TablesResponse, TimeUnit } from '@pxweb2/pxweb2-api-client';
 
 // Mock TablesService.listAllTables
 vi.mock(import('@pxweb2/pxweb2-api-client'), async (importOriginal) => {
@@ -27,7 +22,6 @@ describe('getAllTables', () => {
     language: 'en',
     tables: [
       {
-        type: FolderContentItemTypeEnum.TABLE,
         id: 'TAB4707',
         label: 'Test table',
         description: '',
@@ -157,7 +151,6 @@ const testFilterSubjectTimeDisallow: Filter[] = [
 ];
 
 const tableYear: Table = {
-  type: FolderContentItemTypeEnum.TABLE,
   id: '13618',
   label:
     '13618: Personer, etter arbeidsstyrkestatus, kjønn og alder. Bruddjusterte tall 2009-2022',
