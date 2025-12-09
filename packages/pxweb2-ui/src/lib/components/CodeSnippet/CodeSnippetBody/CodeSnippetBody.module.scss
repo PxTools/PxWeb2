@@ -5,6 +5,7 @@
   align-items: flex-start;
   gap: 0.5rem;
   align-self: stretch;
+  overflow: hidden;
 
   border-radius: 0 0 var(--px-border-radius-medium)
     var(--px-border-radius-medium);
@@ -18,7 +19,6 @@
   gap: 0.25rem;
   align-self: stretch;
   margin: 0;
-  max-height: 320px;
   overflow-y: auto;
 
   &:focus-visible {

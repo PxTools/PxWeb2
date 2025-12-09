@@ -62,13 +62,22 @@ export const LongCodeExample: Story = {
     highlight: 'json',
   },
 };
-export const TwoCodeSnippets: Story = {
+export const WithMaxHeightAsProp: Story = {
+  args: {
+    title: 'Scrollable JSON Snippet',
+    children: jsonExampleLong,
+    highlight: 'json',
+    maxHeight: '320px',
+  },
+};
+export const WithMaxHeightFromContainer: Story = {
   render: (args) => (
     <>
-      <CodeSnippet {...args} />
-      <CodeSnippet {...args} title="Second Code Snippet" highlight="json">
-        {jsonExampleLong}
-      </CodeSnippet>
+      <div style={{ height: '320px' }}>
+        <CodeSnippet {...args} title="Scrollable JSON Snippet" highlight="json">
+          {jsonExampleLong}
+        </CodeSnippet>
+      </div>
     </>
   ),
 };

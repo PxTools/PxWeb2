@@ -10,6 +10,7 @@ interface CodeSnippetProps {
   readonly title: string;
   readonly children: string;
   readonly highlight?: HighlightOptions;
+  readonly maxHeight?: string;
   readonly translations: {
     copyButtonLabel: string;
     copiedButtonLabel: string;
@@ -20,10 +21,14 @@ export function CodeSnippet({
   title,
   children,
   highlight = 'text',
+  maxHeight,
   translations,
 }: CodeSnippetProps) {
   return (
-    <div className={cl(styles['code-snippet'], styles['code-medium'])}>
+    <div
+      className={cl(styles['code-snippet'], styles['code-medium'])}
+      style={maxHeight ? { maxHeight } : undefined}
+    >
       <CodeSnippetHeader
         title={title}
         copyContent={children}
