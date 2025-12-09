@@ -12,13 +12,12 @@ export type SkipToContentProps = React.HTMLAttributes<HTMLDivElement> & {
 
   // label for the link
   label?: string;
+
+   containerRef?: React.Ref<HTMLDivElement>;
 };
 
-export const SkipToContent = React.forwardRef<
-  HTMLDivElement,
-  SkipToContentProps
->((props, ref) => {
-  const { targetId, label, ...rest } = props;
+export function SkipToContent(props: SkipToContentProps) {
+  const { targetId, label,containerRef, ...rest } = props;
   const basePath = getConfig().baseApplicationPath;
   const location = useLocation().pathname;
   const [searchParams] = useSearchParams();
@@ -33,7 +32,7 @@ export const SkipToContent = React.forwardRef<
     (targetId ? `#${targetId}` : '');
   return (
     <div
-      ref={ref}
+      ref={containerRef}
       className={cl(classes['skip-to-content'], classes['screen-reader-only'])}
       {...rest}
     >
@@ -42,6 +41,6 @@ export const SkipToContent = React.forwardRef<
       </Link>
     </div>
   );
-});
+};
 
 SkipToContent.displayName = 'SkipToContent';
