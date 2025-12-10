@@ -18,6 +18,7 @@ export function CopyButton({
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const copyText = translations.copyButtonLabel + title;
   const copiedText = translations.copiedButtonLabel;
+  const ariaLabel = hasCopied ? copiedText : copyText;
 
   function copyToClipboard() {
     navigator.clipboard.writeText(copyContent).then(() => {
@@ -36,13 +37,22 @@ export function CopyButton({
   }
 
   return (
-    <Button
-      aria-label={hasCopied ? copiedText : copyText}
-      className={hasCopied ? styles.hasCopied : undefined}
-      onClick={copyToClipboard}
-      size="medium"
-      variant="tertiary"
-      icon={hasCopied ? 'Check' : 'Copy'}
-    />
+    <>
+      <span
+        aria-live="assertive"
+        aria-atomic="true"
+        className={styles['sr-only']}
+      >
+        {ariaLabel}
+      </span>
+      <Button
+        aria-label={ariaLabel}
+        className={hasCopied ? styles.hasCopied : undefined}
+        onClick={copyToClipboard}
+        size="medium"
+        variant="tertiary"
+        icon={hasCopied ? 'Check' : 'Copy'}
+      />
+    </>
   );
 }
