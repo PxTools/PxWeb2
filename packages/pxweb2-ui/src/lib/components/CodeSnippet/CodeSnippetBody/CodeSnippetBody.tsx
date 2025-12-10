@@ -122,6 +122,7 @@ export function CodeSnippetBody({ children, highlight }: CodeSnippetBodyProps) {
         styles['code-snippet-body'],
         showGradient && styles['linear-gradient-bottom'],
       )}
+      dir="ltr" // Ensure LTR direction for code readability
     >
       {reactElement}
     </div>
