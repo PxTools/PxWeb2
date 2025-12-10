@@ -62,7 +62,9 @@
   },
   "start_page": {
     "header": "مرحبا بكم في التطبيق!",
-    "welcome_trans_test": "مرحبا بكم في <1>برنامج</1> لبكسي ويب 2.0!"
+    "welcome_trans_test": "مرحبا بكم في <1>برنامج</1> لبكسي ويب 2.0!",
+    "skip_to_filter": "تخطي إلى الفلتر",
+    "skip_to_result": "تخطي إلى النتيجة"
   },
   "presentation_page": {
     "side_menu": {
@@ -95,7 +97,9 @@
             "values_list": {
               "aria_label": "قائمة {{total}} قيم.",
               "no_results_heading": "“{{search}}” لا توجد نتائج ل",
-              "no_results_bodyshort": "جرّب كلمة رئيسية أو تهجئة مختلفة."
+              "no_results_bodyshort": "جرّب كلمة رئيسية أو تهجئة مختلفة.",
+              "showing_number_of_values": " {{searchResultsCount}} قيم",
+              "showing_number_of_one_value": " {{searchResultsCount}} قيمة"
             }
           }
         }

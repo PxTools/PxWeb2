@@ -18,7 +18,19 @@ const supportedLangRoutes = config.language.supportedLanguages.map((lang) => {
     !showDefaultLanguageInPath &&
     lang.shorthand === config.language.defaultLanguage
   ) {
-    return {};
+    return {
+      path: `/`,
+      children: [
+        {
+          index: true,
+          element: <StartPage />,
+        },
+        {
+          path: 'table/:tableId',
+          element: <TableViewer />,
+        },
+      ],
+    };
   }
 
   // If the default language should be shown in the path
@@ -37,24 +49,6 @@ const supportedLangRoutes = config.language.supportedLanguages.map((lang) => {
   };
 });
 
-const routingWithDefaultLanguageInURL = [
-  {
-    index: true,
-    element: <Navigate to={`/${config.language.defaultLanguage}/`} replace />,
-  },
-  ...supportedLangRoutes,
-];
-const routingWithoutDefaultLanguageInURL = [
-  {
-    index: true,
-    element: <StartPage />,
-  },
-  {
-    path: 'table/:tableId',
-    element: <TableViewer />,
-  },
-  ...supportedLangRoutes,
-];
 
 export const routerConfig = [
   {
@@ -63,8 +57,16 @@ export const routerConfig = [
     errorElement: <ErrorPageWithLocalization />,
     children: [
       ...(showDefaultLanguageInPath
-        ? routingWithDefaultLanguageInURL
-        : routingWithoutDefaultLanguageInURL),
+        ? [
+            {
+              index: true,
+              element: (
+                <Navigate to={`/${config.language.defaultLanguage}/`} replace />
+              ),
+            },
+          ]
+        : []),
+      ...supportedLangRoutes,
       {
         path: 'topicIcons',
         element: <TopicIcons />,
