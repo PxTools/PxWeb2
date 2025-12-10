@@ -146,4 +146,39 @@ describe('CopyButton', () => {
 
     vi.useRealTimers();
   });
+
+  describe('live region', () => {
+    it('should have a live region with assertive aria-live', () => {
+      render(<CopyButton {...defaultProps} />);
+
+      const liveRegion = screen.getByText('Copy JSON');
+
+      expect(liveRegion).toHaveAttribute('aria-live', 'assertive');
+      expect(liveRegion).toHaveAttribute('aria-atomic', 'true');
+    });
+
+    it('should update live region text when copied, and revert live region text after 3 seconds', async () => {
+      vi.useFakeTimers();
+
+      render(<CopyButton {...defaultProps} />);
+
+      const liveRegion = screen.getByText('Copy JSON');
+      const button = screen.getByRole('button');
+
+      await act(async () => {
+        fireEvent.click(button);
+        await Promise.resolve();
+      });
+
+      expect(liveRegion).toHaveTextContent('Copied!');
+
+      act(() => {
+        vi.advanceTimersByTime(3000);
+      });
+
+      expect(liveRegion).toHaveTextContent('Copy JSON');
+
+      vi.useRealTimers();
+    });
+  });
 });
