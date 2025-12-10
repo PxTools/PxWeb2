@@ -468,8 +468,8 @@ function getMandatoryVariable(
  * @returns An array of CodeList objects.
  */
 function getCodelists(dimensionExtension: extension_dimension): CodeList[] {
-  if (dimensionExtension?.codeLists) {
-    return dimensionExtension.codeLists.map((codeList: CodelistInformation) => {
+  if (dimensionExtension?.codelists) {
+    return dimensionExtension.codelists.map((codeList: CodelistInformation) => {
       return {
         id: codeList.id,
         label: codeList.label,

@@ -71,7 +71,7 @@ describe('JsonStat2ResponseMapper', () => {
               },
             },
 
-            codeLists: [
+            codelists: [
               {
                 id: 'cd1',
                 label: 'Codelist 1',
@@ -116,7 +116,7 @@ describe('JsonStat2ResponseMapper', () => {
               CONTENT2: '1 January each year',
             },
             show: 'value',
-            codeLists: [],
+            codelists: [],
           },
         },
       },
