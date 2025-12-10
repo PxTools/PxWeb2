@@ -24,7 +24,7 @@ export const InModal: StoryFn<typeof Radio> = () => {
     <Radio
       name="radio1"
       options={[{ label: 'Label', value: 'opt1' }]}
-      variant="inModal"
+      inModal={true}
       legend="Radio legend"
       onChange={undefined}
     ></Radio>
@@ -80,7 +80,7 @@ export const InModalGroup: StoryFn<typeof Radio> = () => {
         options={[{ label: 'First option', value: 'option1' }]}
         onChange={undefined}
         selectedOption="option1"
-        variant="inModal"
+        inModal={true}
         legend="Radio legend"
       ></Radio>
       <Radio
@@ -88,7 +88,7 @@ export const InModalGroup: StoryFn<typeof Radio> = () => {
         options={[{ label: 'Second option', value: 'option2' }]}
         onChange={undefined}
         selectedOption="option2"
-        variant="inModal"
+        inModal={true}
         legend="Radio legend"
       ></Radio>
       <Radio
@@ -102,7 +102,7 @@ export const InModalGroup: StoryFn<typeof Radio> = () => {
         ]}
         onChange={undefined}
         selectedOption="option3"
-        variant="inModal"
+        inModal={true}
         legend="Radio legend"
       ></Radio>
       <Radio
@@ -110,7 +110,7 @@ export const InModalGroup: StoryFn<typeof Radio> = () => {
         options={[{ label: 'Fourth option', value: 'option4' }]}
         onChange={undefined}
         selectedOption="option4"
-        variant="inModal"
+        inModal={true}
         legend="Radio legend"
       ></Radio>
     </>
@@ -157,7 +157,7 @@ export const ModalVisibleLegend: StoryFn<typeof Radio> = () => {
       options={testData}
       onChange={undefined}
       selectedOption="option1"
-      variant="inModal"
+      inModal={true}
       legend="Legend"
       hideLegend={false}
     ></Radio>
@@ -177,7 +177,7 @@ export const CheckCircle: StoryFn<typeof Radio> = () => {
     <Radio
       name="checkCircleRadio"
       legend="Check Circle, choose an option"
-      visual="checkCircle"
+      variant="checkCircle"
       options={[
         { label: 'First option', value: 'option1' },
         { label: 'Second option', value: 'option2' },

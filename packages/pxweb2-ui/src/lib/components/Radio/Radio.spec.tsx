@@ -37,10 +37,8 @@ describe('Radio', () => {
       expect(radioGroup).toBeDefined();
     });
 
-    it('should render with inModal variant', () => {
-      const { container } = render(
-        <Radio {...defaultProps} variant="inModal" />,
-      );
+    it('should render with inModal is true', () => {
+      const { container } = render(<Radio {...defaultProps} inModal={true} />);
 
       const radioGroup = container.querySelector('[class*="inModal"]');
       expect(radioGroup).toBeDefined();
@@ -71,9 +69,9 @@ describe('Radio', () => {
       expect(legend).toHaveClass(classes['heading-xsmall']);
     });
 
-    it('legend should have correct classes when hideLegend is false and variant is inModal', () => {
+    it('legend should have correct classes when hideLegend is false and inModal is true', () => {
       const { container } = render(
-        <Radio {...defaultProps} hideLegend={false} variant="inModal" />,
+        <Radio {...defaultProps} hideLegend={false} inModal={true} />,
       );
       const legend = container.querySelector('legend');
       expect(legend).toHaveClass(classes.legend);
@@ -215,10 +213,10 @@ describe('Radio', () => {
     });
   });
 
-  describe('visual prop', () => {
-    it('should render default visual without checkCircle classes', () => {
+  describe('variant prop', () => {
+    it('should render default variant without checkCircle classes', () => {
       const { container } = render(
-        <Radio {...defaultProps} visual="default" />,
+        <Radio {...defaultProps} variant="default" />,
       );
 
       // Container labels should not have the .checkCircle modifier
@@ -243,9 +241,9 @@ describe('Radio', () => {
       });
     });
 
-    it('should apply checkCircle classes when visual is checkCircle', () => {
+    it('should apply checkCircle classes when variant is checkCircle', () => {
       const { container } = render(
-        <Radio {...defaultProps} visual="checkCircle" />,
+        <Radio {...defaultProps} variant="checkCircle" />,
       );
 
       // Container labels should have the .checkCircle modifier
@@ -271,8 +269,8 @@ describe('Radio', () => {
       });
     });
 
-    it('should render the CheckCircleIcon for each option when visual is checkCircle', () => {
-      render(<Radio {...defaultProps} visual="checkCircle" />);
+    it('should render the CheckCircleIcon for each option when variant is checkCircle', () => {
+      render(<Radio {...defaultProps} variant="checkCircle" />);
       // We expect one icon per option
       const inputs = screen.getAllByRole('radio');
       inputs.forEach((input) => {
@@ -282,11 +280,11 @@ describe('Radio', () => {
       });
     });
 
-    it('should keep selected state working with checkCircle visual', () => {
+    it('should keep selected state working with checkCircle variant', () => {
       render(
         <Radio
           {...defaultProps}
-          visual="checkCircle"
+          variant="checkCircle"
           selectedOption={mockOptions[2].value}
         />,
       );
@@ -297,12 +295,12 @@ describe('Radio', () => {
       expect(selectedRadio.checked).toBe(true);
     });
 
-    it('should call onChange when clicking the label in checkCircle visual', () => {
+    it('should call onChange when clicking the label in checkCircle variant', () => {
       const mockOnChange = vi.fn();
       const { getByLabelText } = render(
         <Radio
           {...defaultProps}
-          visual="checkCircle"
+          variant="checkCircle"
           onChange={mockOnChange}
         />,
       );
