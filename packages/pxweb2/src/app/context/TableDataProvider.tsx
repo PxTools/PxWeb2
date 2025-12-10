@@ -781,19 +781,19 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
       // Get the right codelists for the variables
       variablesSelection.selection.forEach((varSel) => {
-        if (varSel.codeList) {
+        if (varSel.codelist) {
           const diffSelection = notLoadedVarSelection.selection.find(
             (sel) => sel.variableCode === varSel.variableCode,
           );
           if (diffSelection) {
-            diffSelection.codeList = varSel.codeList;
+            diffSelection.codelist = varSel.codelist;
           } else {
             // All variables that have codelists must be present in the API-call.
             // If not present, we need to add them to the notLoadedVarSelection.
             notLoadedVarSelection.selection.push({
               variableCode: varSel.variableCode,
               valueCodes: [],
-              codeList: varSel.codeList,
+              codelist: varSel.codelist,
             });
           }
         }
@@ -933,11 +933,11 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
       variablesSelection.selection.forEach((selection) => {
         const currentCodelist = variableCodelists[selection.variableCode];
-        if (currentCodelist !== selection.codeList) {
+        if (currentCodelist !== selection.codelist) {
           codelistChanged = true;
           setVariableCodelists((prevCodelists) => ({
             ...prevCodelists,
-            [selection.variableCode]: selection.codeList ?? '',
+            [selection.variableCode]: selection.codelist ?? '',
           }));
         }
       });
@@ -968,7 +968,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
           // Add selected codelist to selection if it exists
           if (selectedCodeList) {
-            selection.codeList = selectedCodeList;
+            selection.codelist = selectedCodeList;
           }
 
           selections.push(selection);
