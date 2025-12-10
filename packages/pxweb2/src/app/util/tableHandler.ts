@@ -1,17 +1,10 @@
-import {
-  type Table,
-  TableService,
-  OpenAPI,
-  ApiError,
-} from '@pxweb2/pxweb2-api-client';
+import { type Table, TableService, ApiError } from '@pxweb2/pxweb2-api-client';
 import { getConfig } from './config/getConfig';
 import type { Filter } from '../pages/StartPage/StartPageTypes';
 import { getYearRangeFromPeriod } from './startPageFilters';
 
 export async function getAllTables(language?: string) {
   const config = getConfig();
-  const baseUrl = config.apiUrl;
-  OpenAPI.BASE = baseUrl;
 
   try {
     const response = await TableService.listAllTables(
