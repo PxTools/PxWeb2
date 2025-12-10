@@ -5,6 +5,7 @@ import {
   ActionItemIcon,
   ActionItemIconProps,
   BodyShort,
+  CheckCircleIcon,
   Icon,
   IconProps,
   Label,
@@ -97,9 +98,9 @@ export function ActionItem({
           <BodyShort>{description}</BodyShort>
         )}
       </div>
-      {toggleState !== undefined && (
+      {hasToggleState && (
         <div className={cl(styles['toggle-wrapper'])}>
-          {toggleState.toString()}
+          <CheckCircleIcon checked={toggleState} />
         </div>
       )}
     </button>

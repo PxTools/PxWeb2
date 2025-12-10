@@ -12,6 +12,9 @@ vi.mock('@pxweb2/pxweb2-ui', () => ({
   ActionItemIcon: ({ largeIconName }: { largeIconName: string }) => (
     <span data-testid="action-item-icon" data-large-icon={largeIconName} />
   ),
+  CheckCircleIcon: ({ checked }: { checked: boolean }) => (
+    <span data-testid="check-circle-icon" data-checked={checked} />
+  ),
   Spinner: () => <span data-testid="spinner" />,
   Label: ({
     children,
@@ -102,7 +105,10 @@ describe('ActionItem', () => {
         />,
       );
 
-      expect(screen.getByText('true')).toBeInTheDocument();
+      expect(screen.getByTestId('check-circle-icon')).toHaveAttribute(
+        'data-checked',
+        'true',
+      );
     });
   });
 
@@ -131,7 +137,10 @@ describe('ActionItem', () => {
         />,
       );
 
-      expect(screen.getByText('false')).toBeInTheDocument();
+      expect(screen.getByTestId('check-circle-icon')).toHaveAttribute(
+        'data-checked',
+        'false',
+      );
     });
   });
 });
