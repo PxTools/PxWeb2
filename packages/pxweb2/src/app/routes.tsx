@@ -49,7 +49,6 @@ const supportedLangRoutes = config.language.supportedLanguages.map((lang) => {
   };
 });
 
-
 export const routerConfig = [
   {
     path: '/',

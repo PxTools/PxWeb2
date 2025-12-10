@@ -637,8 +637,6 @@ const StartPage = () => {
     }
   };
 
-
-
   return (
     <>
       <nav>

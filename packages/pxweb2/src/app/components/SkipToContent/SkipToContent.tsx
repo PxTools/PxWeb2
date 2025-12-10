@@ -13,11 +13,11 @@ export type SkipToContentProps = React.HTMLAttributes<HTMLDivElement> & {
   // label for the link
   label?: string;
 
-   containerRef?: React.Ref<HTMLDivElement>;
+  containerRef?: React.Ref<HTMLDivElement>;
 };
 
 export function SkipToContent(props: SkipToContentProps) {
-  const { targetId, label,containerRef, ...rest } = props;
+  const { targetId, label, containerRef, ...rest } = props;
   const basePath = getConfig().baseApplicationPath;
   const location = useLocation().pathname;
   const [searchParams] = useSearchParams();
@@ -41,6 +41,6 @@ export function SkipToContent(props: SkipToContentProps) {
       </Link>
     </div>
   );
-};
+}
 
 SkipToContent.displayName = 'SkipToContent';
