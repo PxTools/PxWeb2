@@ -31,11 +31,3 @@
   flex: 1 0 0;
   color: var(--px-color-text-default);
 }
-
-.linear-gradient-bottom pre {
-  mask-image: linear-gradient(
-    to bottom,
-    #000000 calc(100% - 1rem),
-    transparent 100%
-  );
-}

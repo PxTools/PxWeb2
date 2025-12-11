@@ -35,7 +35,6 @@ interface CodeSnippetBodyProps {
   readonly highlight: HighlightOptions;
 }
 export function CodeSnippetBody({ children, highlight }: CodeSnippetBodyProps) {
-  const [showGradient, setShowGradient] = useState(false);
   const [hast, setHast] = useState<Root | null>(null);
   const preRef = useRef<HTMLPreElement | null>(null);
 
@@ -61,19 +60,15 @@ export function CodeSnippetBody({ children, highlight }: CodeSnippetBodyProps) {
     };
   }, [children, highlight]);
 
-  // Handle overflow detection, scroll behavior, and tabindex
+  // Handle overflow detection and tabindex
   useEffect(() => {
     if (!preRef.current) {
       return;
     }
     const preElement = preRef.current;
 
-    function updateGradient() {
-      const { scrollTop, scrollHeight, clientHeight } = preElement;
-      const hasOverflow = scrollHeight > clientHeight;
-      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 5; // 5px tolerance
-
-      setShowGradient(hasOverflow && !isAtBottom);
+    function updateTabindex() {
+      const hasOverflow = preElement.scrollHeight > preElement.clientHeight;
 
       // Update tabindex based on overflow
       if (hasOverflow) {
@@ -83,14 +78,12 @@ export function CodeSnippetBody({ children, highlight }: CodeSnippetBodyProps) {
       }
     }
 
-    updateGradient();
-    preElement.addEventListener('scroll', updateGradient);
+    updateTabindex();
 
-    const resizeObserver = new ResizeObserver(updateGradient);
+    const resizeObserver = new ResizeObserver(updateTabindex);
     resizeObserver.observe(preElement);
 
     return () => {
-      preElement.removeEventListener('scroll', updateGradient);
       resizeObserver.disconnect();
     };
   }, [hast]);
@@ -118,10 +111,7 @@ export function CodeSnippetBody({ children, highlight }: CodeSnippetBodyProps) {
           preRef.current = preElement;
         }
       }}
-      className={cl(
-        styles['code-snippet-body'],
-        showGradient && styles['linear-gradient-bottom'],
-      )}
+      className={styles['code-snippet-body']}
       dir="ltr" // Ensure LTR direction for code readability
     >
       {reactElement}
