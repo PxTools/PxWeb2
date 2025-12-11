@@ -25,7 +25,7 @@ const UnwantedMdRender = ({ children }: UnwantedMdRenderProps) => (
   <>{children}</>
 );
 
-const MarkdownRenderer: React.FC<MdProps> = ({ mdText }) => {
+export const MarkdownRenderer: React.FC<MdProps> = ({ mdText }) => {
   const mdTextEscaped = escapeDecimalLikeLabels(mdText);
   return (
     <ReactMarkdown
@@ -40,5 +40,3 @@ const MarkdownRenderer: React.FC<MdProps> = ({ mdText }) => {
     </ReactMarkdown>
   );
 };
-
-export default MarkdownRenderer;
