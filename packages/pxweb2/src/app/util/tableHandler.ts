@@ -63,7 +63,7 @@ export async function queryTablesByKeyword(query: string, language?: string) {
   OpenAPI.BASE = baseUrl;
 
   try {
-    const response = await TableService.listAllTables(
+    const response = await TablesService.listAllTables(
       language || config.language.defaultLanguage,
       query,
       undefined,
