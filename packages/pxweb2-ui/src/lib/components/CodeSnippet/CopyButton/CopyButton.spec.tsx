@@ -149,21 +149,22 @@ describe('CopyButton', () => {
 
   describe('live region', () => {
     it('should have a live region with assertive aria-live', () => {
-      render(<CopyButton {...defaultProps} />);
+      const { container } = render(<CopyButton {...defaultProps} />);
+      const liveRegion = container.querySelector('[aria-live="assertive"]');
 
-      const liveRegion = screen.getByText('Copy JSON');
-
-      expect(liveRegion).toHaveAttribute('aria-live', 'assertive');
+      expect(liveRegion).toBeInTheDocument();
       expect(liveRegion).toHaveAttribute('aria-atomic', 'true');
+      expect(liveRegion).toHaveTextContent('');
     });
 
     it('should update live region text when copied, and revert live region text after 3 seconds', async () => {
       vi.useFakeTimers();
 
-      render(<CopyButton {...defaultProps} />);
-
-      const liveRegion = screen.getByText('Copy JSON');
+      const { container } = render(<CopyButton {...defaultProps} />);
+      const liveRegion = container.querySelector('[aria-live="assertive"]');
       const button = screen.getByRole('button');
+
+      expect(liveRegion).toHaveTextContent('');
 
       await act(async () => {
         fireEvent.click(button);
@@ -176,7 +177,7 @@ describe('CopyButton', () => {
         vi.advanceTimersByTime(3000);
       });
 
-      expect(liveRegion).toHaveTextContent('Copy JSON');
+      expect(liveRegion).toHaveTextContent('');
 
       vi.useRealTimers();
     });
