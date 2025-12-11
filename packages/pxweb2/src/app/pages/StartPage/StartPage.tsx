@@ -29,6 +29,7 @@ import { Header } from '../../components/Header/Header';
 import { Footer } from '../../components/Footer/Footer';
 import { ErrorMessage } from '../../components/ErrorMessage/ErrorMessage';
 import { FilterSidebar } from '../../components/FilterSidebar/FilterSidebar';
+import { SkipToContent } from '../../components/SkipToContent/SkipToContent';
 import { ActionType } from './StartPageTypes';
 import {
   getSubjectTree,
@@ -98,9 +99,6 @@ const StartPage = () => {
   const noResultSearchHelpContent =
     localeContent?.startPage?.noResultSearchHelp;
   const showBreadCrumb = getConfig().showBreadCrumbOnStartPage;
-
-  // Run once when initially loading the page, then again if language changes
-  // We want to try fetching tables in the selected language if possible
   useEffect(() => {
     if (hasFetchedRef.current && previousLanguage.current == i18n.language) {
       return;
@@ -640,147 +638,169 @@ const StartPage = () => {
   };
 
   return (
-    <div className={styles.startPageLayout}>
-      <Header stroke={true} />
-      <main className={styles.startPage}>
-        <div className={cl(styles.startPageHeader)}>
-          <div
-            className={cl(styles.contentTop, styles.container, {
-              [styles.hasBreadcrumb]: showBreadCrumb,
-            })}
-          >
-            {showBreadCrumb && renderBreadCrumb()}
-            <div className={styles.information}>
-              <Heading size="large" level="1" className={styles.title}>
-                {t('start_page.header')}
-              </Heading>
-              <Ingress>{t('start_page.ingress')}</Ingress>
-              <div className={styles.showDetailsSection}>
-                {detailsSectionContent && (
-                  <StartpageDetails detailsSection={detailsSectionContent} />
+    <>
+      <nav>
+        <SkipToContent
+          targetId="px-start-filter"
+          label={t('start_page.skip_to.filter')}
+        />
+        <SkipToContent
+          targetId="px-start-result"
+          label={t('start_page.skip_to.result')}
+        />
+      </nav>
+      <div className={styles.startPageLayout}>
+        <Header stroke={true} />
+        <main className={styles.startPage}>
+          <div className={cl(styles.startPageHeader)}>
+            <div
+              className={cl(styles.contentTop, styles.container, {
+                [styles.hasBreadcrumb]: showBreadCrumb,
+              })}
+            >
+              {showBreadCrumb && renderBreadCrumb()}
+              <div className={styles.information}>
+                <Heading size="large" level="1" className={styles.title}>
+                  {t('start_page.header')}
+                </Heading>
+                <Ingress>{t('start_page.ingress')}</Ingress>
+                <div className={styles.showDetailsSection}>
+                  {detailsSectionContent && (
+                    <StartpageDetails detailsSection={detailsSectionContent} />
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className={cl(styles.searchFilterResult, styles.container)}>
+            <div className={styles.searchAreaWrapper}>
+              <div className={cl(styles.search)} role="search">
+                <Search
+                  searchPlaceHolder={t('start_page.search_placeholder')}
+                  variant="default"
+                  ref={searchFieldRef}
+                  showLabel
+                  labelText={t('start_page.search_label')}
+                  onChange={(value: string) => {
+                    debouncedDispatch(value);
+                  }}
+                />
+              </div>
+
+              <Button
+                variant="secondary"
+                iconPosition="start"
+                icon="Controls"
+                className={styles.filterToggleButton}
+                onClick={() => setIsFilterOverlayOpen(true)}
+                ref={filterToggleRef}
+                aria-expanded={isFilterOverlayOpen}
+                aria-live="polite"
+              >
+                {t('start_page.filter.button')}
+              </Button>
+            </div>
+
+            <div
+              id="px-start-filter"
+              className={cl(styles.filterAndListWrapper)}
+            >
+              {!isSmallScreen && (
+                <div>
+                  <Heading
+                    className={cl(styles.filterHeading)}
+                    size="medium"
+                    level="2"
+                  >
+                    {t('start_page.filter.header')}
+                  </Heading>
+                  <FilterSidebar onFilterChange={handleFilterChange} />
+                </div>
+              )}
+              {/* </div> */}
+              {renderFilterOverlay()}
+
+              <div className={styles.listTables} id="px-start-result">
+                <Heading level="2" className={styles['sr-only']}>
+                  {t('start_page.result_hidden_header')}
+                </Heading>
+                {state.activeFilters.length >= 1 && (
+                  <div className={styles.filterPillContainer}>
+                    <Chips
+                      aria-label={t('start_page.filter.list_filters_aria')}
+                    >
+                      {renderRemoveAllChips()}
+                      {sortAndDeduplicateFilterChips(
+                        state.activeFilters,
+                        state.subjectOrderList,
+                      ).map((filter) => (
+                        <Chips.Removable
+                          onClick={() => {
+                            dispatch({
+                              type: ActionType.REMOVE_FILTER,
+                              payload: {
+                                value: filter.value,
+                                type: filter.type,
+                              },
+                            });
+                            handleFilterChange();
+                            if (filter.type == 'search') {
+                              searchFieldRef.current?.clearInputField();
+                            }
+                          }}
+                          aria-label={t(
+                            'start_page.filter.remove_filter_aria',
+                            {
+                              value: filter.label,
+                            },
+                          )}
+                          key={filter.value}
+                          truncate
+                        >
+                          {filter.label}
+                        </Chips.Removable>
+                      ))}
+                    </Chips>
+                  </div>
+                )}
+                {state.error && (
+                  <div className={styles.errorContainer}>
+                    <ErrorMessage
+                      action="button"
+                      align="center"
+                      size="small"
+                      illustration="GenericError"
+                      backgroundShape="wavy"
+                      headingLevel="2"
+                      title={t('common.errors.no_tables_loaded.title')}
+                      description={t(
+                        'common.errors.no_tables_loaded.description',
+                      )}
+                      actionText={t(
+                        'common.errors.no_tables_loaded.action_text',
+                      )}
+                    />
+                  </div>
+                )}
+                {!state.error && !isReadyToRender ? (
+                  <div className={styles.loadingSpinner}>
+                    <Spinner size="xlarge" />
+                  </div>
+                ) : (
+                  !state.error && renderTableCardList()
                 )}
               </div>
             </div>
           </div>
-        </div>
-        <div className={cl(styles.searchFilterResult, styles.container)}>
-          <div className={styles.searchAreaWrapper}>
-            <div className={cl(styles.search)} role="search">
-              <Search
-                searchPlaceHolder={t('start_page.search_placeholder')}
-                variant="default"
-                ref={searchFieldRef}
-                showLabel
-                labelText={t('start_page.search_label')}
-                onChange={(value: string) => {
-                  debouncedDispatch(value);
-                }}
-              />
-            </div>
-
-            <Button
-              variant="secondary"
-              iconPosition="start"
-              icon="Controls"
-              className={styles.filterToggleButton}
-              onClick={() => setIsFilterOverlayOpen(true)}
-              ref={filterToggleRef}
-              aria-expanded={isFilterOverlayOpen}
-              aria-live="polite"
-            >
-              {t('start_page.filter.button')}
-            </Button>
+          {renderTableListSEO()}
+        </main>
+        <div className={cl(styles.footerContent)}>
+          <div className={cl(styles.container)}>
+            <Footer enableWindowScroll />
           </div>
-
-          <div className={cl(styles.filterAndListWrapper)}>
-            {!isSmallScreen && (
-              <div>
-                <Heading
-                  className={cl(styles.filterHeading)}
-                  size="medium"
-                  level="2"
-                >
-                  {t('start_page.filter.header')}
-                </Heading>
-                <FilterSidebar onFilterChange={handleFilterChange} />
-              </div>
-            )}
-
-            {renderFilterOverlay()}
-
-            <div className={styles.listTables}>
-              <Heading level="2" className={styles['sr-only']}>
-                {t('start_page.result_hidden_header')}
-              </Heading>
-              {state.activeFilters.length >= 1 && (
-                <div className={styles.filterPillContainer}>
-                  <Chips aria-label={t('start_page.filter.list_filters_aria')}>
-                    {renderRemoveAllChips()}
-                    {sortAndDeduplicateFilterChips(
-                      state.activeFilters,
-                      state.subjectOrderList,
-                    ).map((filter) => (
-                      <Chips.Removable
-                        onClick={() => {
-                          dispatch({
-                            type: ActionType.REMOVE_FILTER,
-                            payload: {
-                              value: filter.value,
-                              type: filter.type,
-                            },
-                          });
-                          handleFilterChange();
-                          if (filter.type == 'search') {
-                            searchFieldRef.current?.clearInputField();
-                          }
-                        }}
-                        aria-label={t('start_page.filter.remove_filter_aria', {
-                          value: filter.label,
-                        })}
-                        key={filter.value}
-                        truncate
-                      >
-                        {filter.label}
-                      </Chips.Removable>
-                    ))}
-                  </Chips>
-                </div>
-              )}
-              {state.error && (
-                <div className={styles.errorContainer}>
-                  <ErrorMessage
-                    action="button"
-                    align="center"
-                    size="small"
-                    illustration="GenericError"
-                    backgroundShape="wavy"
-                    headingLevel="2"
-                    title={t('common.errors.no_tables_loaded.title')}
-                    description={t(
-                      'common.errors.no_tables_loaded.description',
-                    )}
-                    actionText={t('common.errors.no_tables_loaded.action_text')}
-                  />
-                </div>
-              )}
-              {!state.error && !isReadyToRender ? (
-                <div className={styles.loadingSpinner}>
-                  <Spinner size="xlarge" />
-                </div>
-              ) : (
-                !state.error && renderTableCardList()
-              )}
-            </div>
-          </div>
-        </div>
-        {renderTableListSEO()}
-      </main>
-      <div className={cl(styles.footerContent)}>
-        <div className={cl(styles.container)}>
-          <Footer enableWindowScroll />
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

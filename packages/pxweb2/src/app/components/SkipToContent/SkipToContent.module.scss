@@ -1,0 +1,43 @@
+.skip-to-content {
+  &:focus-within {
+    display: flex;
+    background-color: var(--px-color-surface-inverted);
+    width: 100%;
+    height: 48px;
+    justify-content: center;
+  }
+}
+
+.skip-to-content a {
+  justify-content: center;
+  background-color: var(--px-color-surface-inverted);
+  color: var(--px-color-text-on-inverted);
+  height: 44px;
+
+  &:focus-visible {
+    outline: 3px solid var(--px-color-border-focus-outline-on-inverted);
+    outline-offset: -6px;
+    padding: 0px 12px;
+    box-shadow: none;
+  }
+
+  &:hover,
+  &:active {
+    background-color: var(--px-color-surface-inverted);
+    color: var(--px-color-text-on-inverted);
+  }
+}
+
+.screen-reader-only {
+  &:not(:focus-within) {
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+    position: absolute;
+  }
+}
