@@ -1,4 +1,5 @@
 import { vi } from 'vitest';
+
 import { getAllTables, shouldTableBeIncluded } from './tableHandler';
 import { type Filter } from '../pages/StartPage/StartPageTypes';
 import {
@@ -6,22 +7,10 @@ import {
   TablesResponse,
   TimeUnit,
   TableCategory,
+  TablesService,
 } from '@pxweb2/pxweb2-api-client';
 
-// Mock TablesService.listAllTables
-vi.mock(import('@pxweb2/pxweb2-api-client'), async (importOriginal) => {
-  const actual = await importOriginal();
-  return {
-    ...actual,
-    TablesService: {
-      listAllTables: vi.fn(),
-    },
-    OpenAPI: vi.fn(),
-  };
-});
-
 // Test getFullTable
-
 describe('getAllTables', () => {
   const mockSuccessResponse: TablesResponse = {
     language: 'en',
@@ -52,24 +41,23 @@ describe('getAllTables', () => {
   };
 
   beforeEach(() => {
-    vi.resetAllMocks();
+    vi.restoreAllMocks();
   });
 
-  it('should fetch and return tables from TablesService', async () => {
-    const { TablesService } = await import('@pxweb2/pxweb2-api-client');
-    vi.mocked(TablesService.listAllTables).mockResolvedValueOnce(
-      mockSuccessResponse,
-    );
+  it('should fetch and return tables from TableService', async () => {
+    const listAllTablesSpy = vi
+      .spyOn(TablesService, 'listAllTables')
+      .mockResolvedValueOnce(mockSuccessResponse);
 
     const tables = await getAllTables('en');
+    expect(listAllTablesSpy).toHaveBeenCalledTimes(1);
     expect(Array.isArray(tables)).toBe(true);
     expect(tables.length).toBe(1);
     expect(tables[0].id).toBe('TAB4707');
   });
 
   it('should retry with fallback language when receiving unsupported language error', async () => {
-    const { TablesService } = await import('@pxweb2/pxweb2-api-client');
-    const listAllTablesSpy = vi.mocked(TablesService.listAllTables);
+    const listAllTablesSpy = vi.spyOn(TablesService, 'listAllTables');
 
     // First call throws unsupported language error
     listAllTablesSpy.mockRejectedValueOnce({
@@ -111,10 +99,7 @@ describe('getAllTables', () => {
   });
 
   it('should throw error when both original and fallback language calls fail', async () => {
-    const { TablesService } = await import('@pxweb2/pxweb2-api-client');
-    const listAllTablesSpy = vi.mocked(TablesService.listAllTables);
-
-    // First call throws unsupported language error
+    const listAllTablesSpy = vi.spyOn(TablesService, 'listAllTables');
     listAllTablesSpy.mockRejectedValueOnce({
       body: { title: 'Unsupported language' },
     });
