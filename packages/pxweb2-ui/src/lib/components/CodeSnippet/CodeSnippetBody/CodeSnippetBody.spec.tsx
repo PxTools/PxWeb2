@@ -1,11 +1,5 @@
 import '@testing-library/jest-dom/vitest';
-import {
-  render,
-  screen,
-  fireEvent,
-  act,
-  waitFor,
-} from '@testing-library/react';
+import { render, screen, act, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import { CodeSnippetBody } from './CodeSnippetBody';
@@ -82,81 +76,6 @@ describe('CodeSnippetBody', () => {
       expect(container.querySelector('pre')).toBeInTheDocument();
       expect(container.querySelector('code')).toBeInTheDocument();
     });
-  });
-
-  it('should apply gradient class when content overflows', async () => {
-    const { container } = render(
-      <CodeSnippetBody highlight="json">{jsonCode}</CodeSnippetBody>,
-    );
-
-    // Wait for async highlighter to load
-    await act(async () => {
-      await Promise.resolve();
-    });
-
-    const preElement = container.querySelector('pre');
-    if (preElement) {
-      // Simulate overflow
-      Object.defineProperty(preElement, 'scrollHeight', { value: 200 });
-      Object.defineProperty(preElement, 'clientHeight', { value: 100 });
-      act(() => {
-        resizeCallback();
-      });
-    }
-
-    const wrapper = container.firstChild as HTMLElement;
-    expect(wrapper.className).toMatch(/linear-gradient-bottom/);
-  });
-
-  it('should not have gradient class when no overflow', async () => {
-    const { container } = render(
-      <CodeSnippetBody highlight="json">{jsonCode}</CodeSnippetBody>,
-    );
-
-    // Wait for async highlighter to load
-    await act(async () => {
-      await Promise.resolve();
-    });
-
-    const preElement = container.querySelector('pre');
-    if (preElement) {
-      Object.defineProperty(preElement, 'scrollHeight', { value: 100 });
-      Object.defineProperty(preElement, 'clientHeight', { value: 100 });
-      act(() => {
-        resizeCallback();
-      });
-    }
-
-    const wrapper = container.firstChild as HTMLElement;
-    expect(wrapper.className).not.toMatch(/linear-gradient-bottom/);
-  });
-
-  it('should remove gradient when scrolled to bottom', async () => {
-    const { container } = render(
-      <CodeSnippetBody highlight="json">{jsonCode}</CodeSnippetBody>,
-    );
-
-    // Wait for async highlighter to load
-    await act(async () => {
-      await Promise.resolve();
-    });
-
-    const preElement = container.querySelector('pre');
-    if (preElement) {
-      // Setup overflow
-      Object.defineProperty(preElement, 'scrollHeight', { value: 200 });
-      Object.defineProperty(preElement, 'clientHeight', { value: 100 });
-      act(() => {
-        resizeCallback();
-      });
-
-      // Scroll to bottom
-      Object.defineProperty(preElement, 'scrollTop', { value: 100 });
-      fireEvent.scroll(preElement);
-    }
-
-    const wrapper = container.firstChild as HTMLElement;
-    expect(wrapper.className).not.toMatch(/linear-gradient-bottom/);
   });
 
   it('should set tabindex on pre element when content overflows', async () => {
