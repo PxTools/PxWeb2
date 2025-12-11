@@ -35,8 +35,8 @@
       "enabled": true,
       "helpText": [
         "Whole sentences usually give few or no results. Try a more general search with few words, and use the filter to narrow it down.",
-        "Use quotation marks to search for an exact phrase, for example “private sector”. This will show only tables that contain that exact combination of words.",
-        "Use title: to search only in the table name, for example title:stockholm.",
+        "Use quotation marks to search for an exact phrase, for example “*private sector*”. This will show only tables that contain that exact combination of words.",
+        "Use *title:* to search only in the table name, for example *title:stockholm*.",
         "You can add or remove items from this search help list to make it relevant for your specific database."
       ]
     }

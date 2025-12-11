@@ -48,6 +48,8 @@ export * from './lib/components/Typography/Ingress/Ingress';
 export * from './lib/components/Typography/Label/Label';
 export * from './lib/components/VariableBox/VariableBox';
 export * from './lib/components/VariableList/VariableList';
+export * from './lib/components/MarkdownRenderer/MarkdownRenderer';
+export { default as MarkdownRenderer } from './lib/components/MarkdownRenderer/MarkdownRenderer';
 export * from './lib/shared-types/codelist';
 export * from './lib/shared-types/codelistType';
 export * from './lib/shared-types/contact';

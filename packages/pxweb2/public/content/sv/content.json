@@ -28,8 +28,8 @@
       "enabled": true,
       "helpText": [
         "Sökning på hela meningar ger få eller inga resultat. Försök göra en mer generell sökning med ett fåtal ord och använd sen filtret för att begränsa sökresultatet.",
-        "Använd citattecken för att söka efter en exakt fras, till exempel ”privat sektor”. Detta visar bara träffar som innehåller exakt den ordkombinationen.",
-        "Använd title: för att bara söka i tabellnamnet, till exempel title:folkmängd."
+        "Använd citattecken för att söka efter en exakt fras, till exempel ”*privat sektor*”. Detta visar bara träffar som innehåller exakt den ordkombinationen.",
+        "Använd *title:* för att bara söka i tabellnamnet, till exempel *title:folkmängd*."
       ]
     }
   },

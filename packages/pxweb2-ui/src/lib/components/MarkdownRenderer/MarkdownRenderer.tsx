@@ -32,7 +32,6 @@ const MarkdownRenderer: React.FC<MdProps> = ({ mdText }) => {
       components={{
         a: LinkRenderer,
         p: UnwantedMdRender,
-        em: UnwantedMdRender,
         strong: UnwantedMdRender,
       }}
       skipHtml={false} // Enable raw HTML rendering
