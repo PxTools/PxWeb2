@@ -18,6 +18,7 @@ export function CopyButton({
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const copyText = translations.copyButtonLabel + title;
   const copiedText = translations.copiedButtonLabel;
+  const liveRegionText = hasCopied ? copiedText : '';
   const ariaLabel = hasCopied ? copiedText : copyText;
 
   function copyToClipboard() {
@@ -43,7 +44,7 @@ export function CopyButton({
         aria-atomic="true"
         className={styles['sr-only']}
       >
-        {ariaLabel}
+        {liveRegionText}
       </span>
       <Button
         aria-label={ariaLabel}
