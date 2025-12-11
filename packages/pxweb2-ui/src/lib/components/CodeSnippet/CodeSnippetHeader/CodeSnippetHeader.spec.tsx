@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom/vitest';
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
+import userEvent from '@testing-library/user-event';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import { CodeSnippetHeader } from './CodeSnippetHeader';
 
@@ -27,14 +28,25 @@ vi.mock('../CopyButton/CopyButton', () => ({
 }));
 
 describe('CodeSnippetHeader', () => {
+  const mockOnToggleWrap = vi.fn();
+
   const defaultProps = {
     title: 'Example Snippet',
     copyContent: '{\n  "key": "value"\n}',
     translations: {
       copyButtonLabel: 'Copy code',
       copiedButtonLabel: 'Code copied',
+      copyButtonTooltip: 'Copy to clipboard',
+      wrapCodeButtonLabel: 'Wrap code',
+      unwrapCodeButtonLabel: 'Unwrap code',
     },
+    wrapCode: false,
+    onToggleWrap: mockOnToggleWrap,
   };
+
+  beforeEach(() => {
+    mockOnToggleWrap.mockClear();
+  });
 
   it('should render the title', () => {
     render(<CodeSnippetHeader {...defaultProps} />);
@@ -60,6 +72,9 @@ describe('CodeSnippetHeader', () => {
     const customTranslations = {
       copyButtonLabel: 'Kopier kode',
       copiedButtonLabel: 'Kode kopiert',
+      copyButtonTooltip: 'Kopier til utklippstavle',
+      wrapCodeButtonLabel: 'Aktiver linjeskift',
+      unwrapCodeButtonLabel: 'Deaktiver linjeskift',
     };
 
     render(
@@ -70,5 +85,31 @@ describe('CodeSnippetHeader', () => {
 
     expect(copyButton).toHaveAttribute('data-copy-label', 'Kopier kode');
     expect(copyButton).toHaveAttribute('data-copied-label', 'Kode kopiert');
+  });
+
+  it('should render wrap toggle button', () => {
+    render(<CodeSnippetHeader {...defaultProps} />);
+
+    expect(
+      screen.getByRole('button', { name: 'Wrap code' }),
+    ).toBeInTheDocument();
+  });
+
+  it('should call onToggleWrap when wrap button is clicked', async () => {
+    const user = userEvent.setup();
+    render(<CodeSnippetHeader {...defaultProps} />);
+
+    const wrapButton = screen.getByRole('button', { name: 'Wrap code' });
+    await user.click(wrapButton);
+
+    expect(mockOnToggleWrap).toHaveBeenCalledTimes(1);
+  });
+
+  it('should show unwrap label when wrapCode is true', () => {
+    render(<CodeSnippetHeader {...defaultProps} wrapCode={true} />);
+
+    expect(
+      screen.getByRole('button', { name: 'Unwrap code' }),
+    ).toBeInTheDocument();
   });
 });

@@ -53,7 +53,11 @@ describe('CodeSnippetBody', () => {
   });
 
   it('should render code content', async () => {
-    render(<CodeSnippetBody highlight="json">{jsonCode}</CodeSnippetBody>);
+    render(
+      <CodeSnippetBody highlight="json" wrapCode={false}>
+        {jsonCode}
+      </CodeSnippetBody>,
+    );
 
     // Code is shown immediately as fallback while highlighter loads
     expect(screen.getByText(jsonCode)).toBeInTheDocument();
@@ -69,7 +73,9 @@ describe('CodeSnippetBody', () => {
 
   it('should render pre and code elements', async () => {
     const { container } = render(
-      <CodeSnippetBody highlight="json">{jsonCode}</CodeSnippetBody>,
+      <CodeSnippetBody highlight="json" wrapCode={false}>
+        {jsonCode}
+      </CodeSnippetBody>,
     );
 
     await waitFor(() => {
@@ -80,7 +86,9 @@ describe('CodeSnippetBody', () => {
 
   it('should set tabindex on pre element when content overflows', async () => {
     const { container } = render(
-      <CodeSnippetBody highlight="json">{jsonCode}</CodeSnippetBody>,
+      <CodeSnippetBody highlight="json" wrapCode={false}>
+        {jsonCode}
+      </CodeSnippetBody>,
     );
 
     // Wait for async highlighter to load
@@ -102,7 +110,9 @@ describe('CodeSnippetBody', () => {
 
   it('should not have tabindex when no overflow', async () => {
     const { container } = render(
-      <CodeSnippetBody highlight="json">{jsonCode}</CodeSnippetBody>,
+      <CodeSnippetBody highlight="json" wrapCode={false}>
+        {jsonCode}
+      </CodeSnippetBody>,
     );
 
     // Wait for async highlighter to load
@@ -123,7 +133,11 @@ describe('CodeSnippetBody', () => {
   });
 
   it('should work with text highlight option', async () => {
-    render(<CodeSnippetBody highlight="text">{'plain text'}</CodeSnippetBody>);
+    render(
+      <CodeSnippetBody highlight="text" wrapCode={false}>
+        {'plain text'}
+      </CodeSnippetBody>,
+    );
 
     // Code is shown immediately as fallback while highlighter loads
     expect(screen.getByText('plain text')).toBeInTheDocument();
@@ -135,5 +149,31 @@ describe('CodeSnippetBody', () => {
 
     // Code is still visible after highlighting
     expect(screen.getByText('plain text')).toBeInTheDocument();
+  });
+
+  it('should apply wrap-code class when wrapCode is true', async () => {
+    const { container } = render(
+      <CodeSnippetBody highlight="json" wrapCode={true}>
+        {jsonCode}
+      </CodeSnippetBody>,
+    );
+
+    await waitFor(() => {
+      const bodyDiv = container.firstChild as HTMLElement;
+      expect(bodyDiv.className).toContain('wrap-code');
+    });
+  });
+
+  it('should not apply wrap-code class when wrapCode is false', async () => {
+    const { container } = render(
+      <CodeSnippetBody highlight="json" wrapCode={false}>
+        {jsonCode}
+      </CodeSnippetBody>,
+    );
+
+    await waitFor(() => {
+      const bodyDiv = container.firstChild as HTMLElement;
+      expect(bodyDiv.className).not.toContain('wrap-code');
+    });
   });
 });

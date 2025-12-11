@@ -61,8 +61,11 @@
       "show_more_breadcrumbs": "Vis mer"
     },
     "code_snippet": {
+      "copy_button_tooltip": "Kopier kode",
       "copy_button_label": "Kopier kode for ",
-      "copied_button_label": "Kode kopiert til utklippstavle"
+      "copied_button_label": "Kode kopiert til utklippstavle",
+      "wrap_code_button_label": "Aktiver linjeskift",
+      "unwrap_code_button_label": "Deaktiver linjeskift"
     }
   },
   "start_page": {

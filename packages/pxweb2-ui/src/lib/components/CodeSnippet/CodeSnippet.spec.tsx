@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom/vitest';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 
 import { CodeSnippet } from './CodeSnippet';
@@ -9,10 +10,20 @@ vi.mock('./CodeSnippetHeader/CodeSnippetHeader', () => ({
     title,
     copyContent,
     translations,
+    wrapCode,
+    onToggleWrap,
   }: {
     title: string;
     copyContent: string;
-    translations: { copyButtonLabel: string; copiedButtonLabel: string };
+    translations: {
+      copyButtonLabel: string;
+      copiedButtonLabel: string;
+      copyButtonTooltip: string;
+      wrap_code_button_label: string;
+      unwrap_code_button_label: string;
+    };
+    wrapCode: boolean;
+    onToggleWrap: () => void;
   }) => (
     <div data-testid="code-snippet-header">
       <span data-testid="header-title">{title}</span>
@@ -23,6 +34,10 @@ vi.mock('./CodeSnippetHeader/CodeSnippetHeader', () => ({
       <span data-testid="header-copied-label">
         {translations.copiedButtonLabel}
       </span>
+      <span data-testid="header-wrap-code">{String(wrapCode)}</span>
+      <button data-testid="header-toggle-wrap" onClick={onToggleWrap}>
+        Toggle Wrap
+      </button>
     </div>
   ),
 }));
@@ -31,13 +46,16 @@ vi.mock('./CodeSnippetBody/CodeSnippetBody', () => ({
   CodeSnippetBody: ({
     children,
     highlight,
+    wrapCode,
   }: {
     children: string;
     highlight: string;
+    wrapCode: boolean;
   }) => (
     <div data-testid="code-snippet-body">
       <span data-testid="body-content">{children}</span>
       <span data-testid="body-highlight">{highlight}</span>
+      <span data-testid="body-wrap-code">{String(wrapCode)}</span>
     </div>
   ),
 }));
@@ -46,6 +64,9 @@ describe('CodeSnippet', () => {
   const defaultTranslations = {
     copyButtonLabel: 'Copy code',
     copiedButtonLabel: 'Code copied',
+    copyButtonTooltip: 'Copy to clipboard',
+    wrapCodeButtonLabel: 'Wrap code',
+    unwrapCodeButtonLabel: 'Unwrap code',
   };
 
   it('should render correctly', () => {
@@ -182,5 +203,35 @@ describe('CodeSnippet', () => {
     );
 
     expect(codeSnippetDiv).toHaveStyle({ maxHeight: '20rem' });
+  });
+
+  it('should pass wrapCode state to header and body', () => {
+    render(
+      <CodeSnippet title="Test" translations={defaultTranslations}>
+        {'Content'}
+      </CodeSnippet>,
+    );
+
+    // Initial state should be false
+    expect(screen.getByTestId('header-wrap-code')).toHaveTextContent('false');
+    expect(screen.getByTestId('body-wrap-code')).toHaveTextContent('false');
+  });
+
+  it('should toggle wrapCode state when onToggleWrap is called', async () => {
+    const user = userEvent.setup();
+    render(
+      <CodeSnippet title="Test" translations={defaultTranslations}>
+        {'Content'}
+      </CodeSnippet>,
+    );
+
+    // Initial state should be false
+    expect(screen.getByTestId('header-wrap-code')).toHaveTextContent('false');
+    expect(screen.getByTestId('body-wrap-code')).toHaveTextContent('false');
+
+    await user.click(screen.getByTestId('header-toggle-wrap'));
+
+    expect(screen.getByTestId('header-wrap-code')).toHaveTextContent('true');
+    expect(screen.getByTestId('body-wrap-code')).toHaveTextContent('true');
   });
 });

@@ -2,11 +2,12 @@ import { useState, useRef } from 'react';
 
 import styles from './CopyButton.module.scss';
 import Button from '../../Button/Button';
+import { CodeSnippetTranslations } from '../CodeSnippet';
 
 interface CopyButtonProps {
   readonly title: string;
   readonly copyContent: string;
-  readonly translations: { copyButtonLabel: string; copiedButtonLabel: string };
+  readonly translations: CodeSnippetTranslations;
 }
 
 export function CopyButton({
@@ -16,8 +17,10 @@ export function CopyButton({
 }: CopyButtonProps) {
   const [hasCopied, setHasCopied] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const copyText = translations.copyButtonLabel + title;
   const copiedText = translations.copiedButtonLabel;
+  const copyButtonTooltip = translations.copyButtonTooltip;
   const liveRegionText = hasCopied ? copiedText : '';
   const ariaLabel = hasCopied ? copiedText : copyText;
 
@@ -48,6 +51,7 @@ export function CopyButton({
       </span>
       <Button
         aria-label={ariaLabel}
+        title={copyButtonTooltip}
         className={hasCopied ? styles.hasCopied : undefined}
         onClick={copyToClipboard}
         size="medium"

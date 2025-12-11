@@ -60,8 +60,11 @@
       "show_more_breadcrumbs": "عرض المزيد"
     },
     "code_snippet": {
+      "copy_button_tooltip": "نسخ الشيفرة",
       "copy_button_label": "نسخ رمز ل ",
-      "copied_button_label": "تم نسخ الرمز إلى لوحة الكتابة"
+      "copied_button_label": "تم نسخ الرمز إلى لوحة الكتابة",
+      "wrap_code_button_label": "تمكين فواصل الأسطر",
+      "unwrap_code_button_label": "تعطيل فواصل الخطوط"
     }
   },
   "start_page": {

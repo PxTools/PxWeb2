@@ -31,3 +31,11 @@
   flex: 1 0 0;
   color: var(--px-color-text-default);
 }
+
+.wrap-code {
+  .code {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+}

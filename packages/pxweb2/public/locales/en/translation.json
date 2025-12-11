@@ -61,8 +61,11 @@
       "show_more_breadcrumbs": "Show more"
     },
     "code_snippet": {
+      "copy_button_tooltip": "Copy code",
       "copy_button_label": "Copy code for ",
-      "copied_button_label": "Code copied to clipboard"
+      "copied_button_label": "Code copied to clipboard",
+      "wrap_code_button_label": "Wrap code",
+      "unwrap_code_button_label": "Unwrap code"
     }
   },
   "start_page": {

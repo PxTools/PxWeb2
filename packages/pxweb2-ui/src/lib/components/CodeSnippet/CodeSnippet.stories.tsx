@@ -9,6 +9,7 @@ const jsonExample = `{
     {
       "code": "region"
     }
+  ],
 }`;
 const jsonExampleLong = `{
   "query": [
@@ -41,6 +42,9 @@ const meta = {
     translations: {
       copyButtonLabel: t('common.code_snippet.copy_button_label'),
       copiedButtonLabel: t('common.code_snippet.copied_button_label'),
+      copyButtonTooltip: t('common.code_snippet.copy_button_tooltip'),
+      wrapCodeButtonLabel: t('common.code_snippet.wrap_code_button_label'),
+      unwrapCodeButtonLabel: t('common.code_snippet.unwrap_code_button_label'),
     },
   },
 } satisfies Meta<typeof CodeSnippet>;

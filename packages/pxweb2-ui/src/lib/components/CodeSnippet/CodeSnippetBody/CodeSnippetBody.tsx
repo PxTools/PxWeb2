@@ -33,8 +33,13 @@ const hastComponents: Components = {
 interface CodeSnippetBodyProps {
   readonly children: string;
   readonly highlight: HighlightOptions;
+  readonly wrapCode: boolean;
 }
-export function CodeSnippetBody({ children, highlight }: CodeSnippetBodyProps) {
+export function CodeSnippetBody({
+  children,
+  highlight,
+  wrapCode,
+}: CodeSnippetBodyProps) {
   const [hast, setHast] = useState<Root | null>(null);
   const preRef = useRef<HTMLPreElement | null>(null);
 
@@ -111,7 +116,10 @@ export function CodeSnippetBody({ children, highlight }: CodeSnippetBodyProps) {
           preRef.current = preElement;
         }
       }}
-      className={styles['code-snippet-body']}
+      className={cl(
+        styles['code-snippet-body'],
+        wrapCode && styles['wrap-code'],
+      )}
       dir="ltr" // Ensure LTR direction for code readability
     >
       {reactElement}

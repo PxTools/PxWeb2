@@ -24,6 +24,7 @@ vi.mock('../../Button/Button', () => ({
   }) => (
     <button
       aria-label={ariaLabel}
+      title={ariaLabel}
       onClick={onClick}
       data-icon={icon}
       className={className}
@@ -38,6 +39,9 @@ describe('CopyButton', () => {
     translations: {
       copyButtonLabel: 'Copy ',
       copiedButtonLabel: 'Copied!',
+      copyButtonTooltip: 'Copy to clipboard',
+      wrapCodeButtonLabel: 'Wrap code',
+      unwrapCodeButtonLabel: 'Unwrap code',
     },
   };
 
