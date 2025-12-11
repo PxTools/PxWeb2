@@ -2,7 +2,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CodeListResponse } from '../models/CodeListResponse';
 import type { Dataset } from '../models/Dataset';
 import type { OutputFormatParamType } from '../models/OutputFormatParamType';
 import type { OutputFormatType } from '../models/OutputFormatType';
@@ -13,12 +12,12 @@ import type { VariablesSelection } from '../models/VariablesSelection';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
-export class TableService {
+export class TablesService {
     /**
      * Get all Tables.
      * @param lang The language if the default is not what you want.
      * @param query Selects only tables that that matches a criteria which is specified by the search parameter.
-     * @param pastDays Selects only tables that was updated from the time of execution going back number of days stated by the parameter pastDays. Valid values for past days are integers between 1 and ?
+     * @param pastDays Selects only tables that was updated from the time of execution going back number of days stated by the parameter pastDays. Valid values for past days are positive integers.
      * @param includeDiscontinued Decides if discontinued tables are included in response.
      * @param pageNumber Pagination: Decides which page number to return
      * @param pageSize Pagination: Decides how many tables per page
@@ -74,26 +73,22 @@ export class TableService {
         });
     }
     /**
-     * Get Metadata about Table by {id}.
+     * Get metadata about table by {id}.
      * **Used for listing detailed information about a specific table**
      * * List all variables and values and all other metadata needed to be able to fetch data
      *
-     * * Also links to where to:
-     * + Fetch
-     * - Where to get information about codelists
-     *
-     * * 2 output formats
-     * + Custom json
-     * - JSON-stat2
-     *
      * @param id Id
      * @param lang The language if the default is not what you want.
-     * @param defaultSelection If metadata should be included as if default selection would have been applied.
-     * This is a technical parameter that is used by PxWeb for initial loading of tables.
+     * @param defaultSelection This is a technical parameter that is used by PxWeb for initial loading of tables.
+     * If metadata should be included as if default selection would have been applied see /tables{id}/defaultselection endpoint.
      *
-     * @param savedQuery Id for a saved query that should be be applied before metadata is returned.
+     * @param savedQuery This is a technical parameter that is used by PxWeb for initial loading of tables.
+     * Id for a saved query that should be be applied before metadata is returned see /savedqueries.
      *
-     * @param codelist
+     * @param codelist This is a technical parameter that is used by PxWeb.
+     * The identifier of the codelist that should be applied to the metadata.
+     * If not specified no codelist will be applied.
+     *
      * @returns Dataset Success
      * @throws ApiError
      */
@@ -124,8 +119,10 @@ export class TableService {
         });
     }
     /**
-     * Get the default selection for Table by {id}.
-     * Get information about what is selected for the table by default when no selection is made i the /data endpoint.
+     * Get the default selection for table by {id}.
+     * This is a technical parameter that is used by PxWeb for initial loading of tables.
+     * Get information about the default selection for the /tables/{id}/data endpoint.
+     *
      * @param id Id
      * @param lang The language if the default is not what you want.
      * @returns SelectionResponse Success
@@ -152,42 +149,22 @@ export class TableService {
         });
     }
     /**
-     * Get Codelist by {id}.
-     * @param id Id
-     * @param lang The language if the default is not what you want.
-     * @returns CodeListResponse Success
-     * @throws ApiError
-     */
-    public static getTableCodeListById(
-        id: string,
-        lang?: string | null,
-    ): CancelablePromise<CodeListResponse> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/codelists/{id}',
-            path: {
-                'id': id,
-            },
-            query: {
-                'lang': lang,
-            },
-            errors: {
-                400: `Error response for 400`,
-                404: `Error response for 404`,
-                429: `Error response for 429`,
-            },
-        });
-    }
-    /**
-     * Get data from table by {id}.
+     * Get data for table by {id}.
+     * **Used for fetching data from a table**
+     * * Get data from a table by id.
+     * * The data can be filtered by variable codes and values.
+     * * The response can be formatted in different formats.
+     * * The placement of the variables can be customized with heading and stub variables.
+     * * If no selection is specified for filtering the data the default selection will be applied.
+     *
      * @param id Id
      * @param lang The language if the default is not what you want.
      * @param valuecodes
      * @param codelist
      * @param outputFormat
      * @param outputFormatParams
-     * @param heading Commaseparated list of variable codes that should be placed in the heading in the resulting data
-     * @param stub Commaseparated list of variable codes that should be placed in the stub in the resulting data
+     * @param heading Comma separated list of variable codes that should be placed in the heading in the resulting data
+     * @param stub Comma separated list of variable codes that should be placed in the stub in the resulting data
      * @returns string Success
      * @throws ApiError
      */
@@ -225,12 +202,12 @@ export class TableService {
         });
     }
     /**
-     * Get data from table by {id}.
+     * Get data for table by {id}.
      * @param id Id
      * @param lang The language if the default is not what you want.
      * @param outputFormat
      * @param outputFormatParams
-     * @param requestBody A selection
+     * @param requestBody A selection in JSON format for filtering the data. If no selection is specified the default selection will be applied.
      * @returns string Success
      * @throws ApiError
      */

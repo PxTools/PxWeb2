@@ -5,7 +5,7 @@ import {
   jsonstat_note,
   jsonstat_noteMandatory,
   extension_dimension,
-  CodeListInformation,
+  CodelistInformation,
 } from '@pxweb2/pxweb2-api-client';
 import {
   Dimensions,
@@ -17,7 +17,7 @@ import {
   VartypeEnum,
   PxTableData,
   PxTableMetadata,
-  CodeList,
+  Codelist,
   Contact,
   ContentInfo,
   Note,
@@ -282,7 +282,7 @@ function mapDimension(id: string, dimension: any, role: any): Variable | null {
       type: variableType,
       mandatory: getMandatoryVariable(dimension.extension),
       values: mapVariableValues(dimension, isContentVariable),
-      codeLists: getCodelists(dimension.extension),
+      codelists: getCodelists(dimension.extension),
       notes: mapNotes(dimension.note, dimension.extension?.noteMandatory),
       valueDisplayType: getValueDisplayType(dimension.extension),
     };
@@ -462,17 +462,17 @@ function getMandatoryVariable(
 }
 
 /**
- * Maps the code lists of a dimension from a JSON-stat 2.0 response to an array of CodeList objects.
+ * Maps the code lists of a dimension from a JSON-stat 2.0 response to an array of Codelist objects.
  *
  * @param dimensionExtension - The dimension extension object from the JSON-stat 2.0 response.
- * @returns An array of CodeList objects.
+ * @returns An array of Codelist objects.
  */
-function getCodelists(dimensionExtension: extension_dimension): CodeList[] {
-  if (dimensionExtension?.codeLists) {
-    return dimensionExtension.codeLists.map((codeList: CodeListInformation) => {
+function getCodelists(dimensionExtension: extension_dimension): Codelist[] {
+  if (dimensionExtension?.codelists) {
+    return dimensionExtension.codelists.map((codelist: CodelistInformation) => {
       return {
-        id: codeList.id,
-        label: codeList.label,
+        id: codelist.id,
+        label: codelist.label,
       };
     });
   }

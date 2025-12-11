@@ -7,7 +7,7 @@ import {
   Dataset,
   OutputFormatType,
   SavedQueriesService,
-  TableService,
+  TablesService,
   VariableSelection,
   VariablesSelection,
 } from '@pxweb2/pxweb2-api-client';
@@ -781,23 +781,24 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
       // Get the right codelists for the variables
       variablesSelection.selection.forEach((varSel) => {
-        if (varSel.codeList) {
+        if (varSel.codelist) {
           const diffSelection = notLoadedVarSelection.selection.find(
             (sel) => sel.variableCode === varSel.variableCode,
           );
           if (diffSelection) {
-            diffSelection.codeList = varSel.codeList;
+            diffSelection.codelist = varSel.codelist;
           } else {
             // All variables that have codelists must be present in the API-call.
             // If not present, we need to add them to the notLoadedVarSelection.
             notLoadedVarSelection.selection.push({
               variableCode: varSel.variableCode,
               valueCodes: [],
-              codeList: varSel.codeList,
+              codelist: varSel.codelist,
             });
           }
         }
       });
+
       // Get the not already loaded data from the API
       let pxTable: PxTable = await fetchFromApi(
         tableId,
@@ -900,8 +901,8 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         }
         // We need to check that the variable codelist has not been changed
         // else {
-        //   if (selection.codeList) {
-        //     if (variable.codeList !== selection.codeList) {
+        //   if (selection.codelist) {
+        //     if (variable.codelist !== selection.codelist) {
         //       return false;
         //     }
         //   }
@@ -933,11 +934,11 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
       variablesSelection.selection.forEach((selection) => {
         const currentCodelist = variableCodelists[selection.variableCode];
-        if (currentCodelist !== selection.codeList) {
+        if (currentCodelist !== selection.codelist) {
           codelistChanged = true;
           setVariableCodelists((prevCodelists) => ({
             ...prevCodelists,
-            [selection.variableCode]: selection.codeList ?? '',
+            [selection.variableCode]: selection.codelist ?? '',
           }));
         }
       });
@@ -960,15 +961,15 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         // Get selection from Selection provider
         const ids = variables.getUniqueIds();
         ids.forEach((id) => {
-          const selectedCodeList = variables.getSelectedCodelistById(id);
+          const selectedCodelist = variables.getSelectedCodelistById(id);
           const selection: VariableSelection = {
             variableCode: id,
             valueCodes: variables.getSelectedValuesByIdSorted(id),
           };
 
           // Add selected codelist to selection if it exists
-          if (selectedCodeList) {
-            selection.codeList = selectedCodeList;
+          if (selectedCodelist) {
+            selection.codelist = selectedCodelist;
           }
 
           selections.push(selection);
@@ -1042,7 +1043,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     i18n: i18n,
     variablesSelection: VariablesSelection,
   ) => {
-    const res = await TableService.getTableDataByPost(
+    const res = await TablesService.getTableDataByPost(
       tableId,
       i18n.language,
       OutputFormatType.JSON_STAT2,

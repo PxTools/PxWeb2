@@ -2,9 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { FolderContentItem } from './FolderContentItem';
 /**
- * Heading item
+ * Type of codelist
  */
-export type Heading = FolderContentItem;
-
+export enum CodelistType {
+    AGGREGATION = 'Aggregation',
+    VALUESET = 'Valueset',
+}
