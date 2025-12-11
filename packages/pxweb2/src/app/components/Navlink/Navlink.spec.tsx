@@ -8,9 +8,12 @@ import Navlink from './Navlink';
 
 // Mock pxweb2-ui Link and Icon for fallback
 vi.mock('@pxweb2/pxweb2-ui', () => ({
-  Icon: (props: Record<string, unknown>) => (
-    <span data-testid="icon" {...props} />
-  ),
+  Icon: (props: Record<string, unknown>) => {
+    const rest = Object.fromEntries(
+      Object.entries(props).filter(([key]) => key !== 'iconName'),
+    );
+    return <span data-testid="icon" {...rest} />;
+  },
   Link: (props: Record<string, unknown>) => (
     <a data-testid="ui-link" {...props}>
       test
