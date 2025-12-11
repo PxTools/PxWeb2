@@ -2,7 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CodelistInformation } from './CodelistInformation';
+import type { CodelistInformation } from './CodelistInformation1';
 /**
  * Available codelists for this dimension
  */
