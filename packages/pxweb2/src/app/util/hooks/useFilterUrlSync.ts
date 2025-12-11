@@ -1,5 +1,6 @@
 import { useEffect, useRef, useMemo } from 'react';
 import type { TFunction } from 'i18next';
+
 import { ActionType } from '../../pages/StartPage/StartPageTypes';
 import type {
   StartPageState,
@@ -15,6 +16,7 @@ import {
 
 type FilterQuery = {
   searchText?: string;
+  query?: string;
   timeUnits: string[];
   subjects: string[];
   variables: string[];
@@ -87,6 +89,9 @@ function mergeFilterIntoQuery(
   t: TFunction,
 ): FilterQuery {
   switch (f.type) {
+    case 'query':
+      query.query = String(f.label ?? '');
+      break;
     case 'search':
       query.searchText = String(f.value ?? '');
       break;
@@ -121,6 +126,10 @@ function toSearchParams(query: FilterQuery): URLSearchParams {
 
   if (query.searchText) {
     params.set('q', query.searchText);
+  }
+
+  if (query.query) {
+    params.set('query', query.query);
   }
 
   if (query.timeUnits.length) {
@@ -180,6 +189,16 @@ function parseParamsToFilters(
       type: 'search',
       value: searchParam,
       label: searchParam,
+      index: 1,
+    });
+  }
+
+  const queryParam = params.get('query');
+  if (queryParam && queryParam.trim() !== '') {
+    filters.push({
+      type: 'query',
+      value: queryParam,
+      label: queryParam,
       index: 1,
     });
   }
@@ -343,7 +362,7 @@ export default function useFilterUrlSync(
       const url = window.location.pathname + (built ? `?${built}` : '');
       window.history.replaceState(null, '', url);
     }
-  }, [state.activeFilters]);
+  }, [state.activeFilters, t]);
 
   // Initialize filters from the current URL query once tables and subjectTree are available.
   // Do not re-run on every activeFilters change.
