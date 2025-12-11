@@ -2,7 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CodelistType } from './CodelistType1';
+import type { CodelistType } from './CodelistType';
 import type { Link } from './Link';
 import type { ValueMap } from './ValueMap';
 export type CodelistResponse = {

@@ -2,20 +2,17 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CodelistType } from './CodelistType1';
+import type { CodelistType } from './CodelistType';
 import type { Link } from './Link';
-export type CodelistInformation = {
+export type CodelistMetadata = {
   /**
-   * The identity of the codelist
+   * The identiyer for the codelist
    */
   id: string;
   /**
-   * A textual name for the codelist
+   * The textual name  for the codelist.
    */
   label: string;
   type: CodelistType;
-  /**
-   * Links to associated information about the code list
-   */
   links: Array<Link>;
 };

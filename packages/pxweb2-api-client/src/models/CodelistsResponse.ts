@@ -2,7 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CodelistMetadata } from './CodelistMetadata1';
+import type { CodelistMetadata } from './CodelistMetadata';
 import type { Link } from './Link';
 export type CodelistsResponse = {
   /**

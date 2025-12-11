@@ -4,7 +4,7 @@
 /* eslint-disable */
 import type { Adjustment } from './Adjustment';
 import type { BasePeriod } from './BasePeriod';
-import type { Codelists } from './Codelists1';
+import type { Codelists } from './Codelists';
 import type { jsonstat_noteMandatory } from './jsonstat_noteMandatory';
 import type { MeasuringType } from './MeasuringType';
 import type { PriceType } from './PriceType';
