@@ -5,7 +5,7 @@ import classes from './Notes.module.scss';
 import List from '../List/List';
 import ListItem from '../List/ListItem';
 import Alert from '../Alert/Alert';
-import MarkdownRenderer from '../MarkdownRenderer/MarkdownRenderer';
+import { MarkdownRenderer } from '../MarkdownRenderer/MarkdownRenderer';
 
 export type MandatoryTableNotesProps = {
   readonly notes: string[];

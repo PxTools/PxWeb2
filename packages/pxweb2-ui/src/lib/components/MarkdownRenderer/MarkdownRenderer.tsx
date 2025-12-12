@@ -21,19 +21,25 @@ const LinkRenderer = ({ href = '', children }: LinkProps) => (
   </Link>
 );
 
+const ItalicRenderer = ({ children }: UnwantedMdRenderProps) => (
+  <span style={{ fontFamily: 'PxWeb-font', fontStyle: 'italic' }}>
+    {children}
+  </span>
+);
+
 const UnwantedMdRender = ({ children }: UnwantedMdRenderProps) => (
   <>{children}</>
 );
 
-const MarkdownRenderer: React.FC<MdProps> = ({ mdText }) => {
+export const MarkdownRenderer: React.FC<MdProps> = ({ mdText }) => {
   const mdTextEscaped = escapeDecimalLikeLabels(mdText);
   return (
     <ReactMarkdown
       components={{
         a: LinkRenderer,
         p: UnwantedMdRender,
-        em: UnwantedMdRender,
         strong: UnwantedMdRender,
+        em: ItalicRenderer,
       }}
       skipHtml={false} // Enable raw HTML rendering
     >
@@ -41,5 +47,3 @@ const MarkdownRenderer: React.FC<MdProps> = ({ mdText }) => {
     </ReactMarkdown>
   );
 };
-
-export default MarkdownRenderer;
