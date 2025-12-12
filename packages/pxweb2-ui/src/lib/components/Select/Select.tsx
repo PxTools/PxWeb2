@@ -107,10 +107,7 @@ function DefaultSelect({
   hideLabel,
   label,
   options,
-  // placeholder,
-  // selectedOption,
-  // onChange,
-  tabIndex,
+  placeholder,
   className = '',
 }: Readonly<DefaultSelectProps>) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
@@ -127,7 +124,7 @@ function DefaultSelect({
         </Label>
       </div>
 
-      <div className={cl(classes.selectWrapper)} tabIndex={tabIndex}>
+      <div className={cl(classes.selectWrapper)}>
         <select
           aria-label={label}
           className={cl(classes.optionLayout, classes.optionTypography)}
@@ -138,7 +135,9 @@ function DefaultSelect({
               value={String(o.value)}
               className={cl(classes.options)}
             >
-              {o.label}
+              <BodyShort size="medium">
+                {o ? o.label : placeholder}
+              </BodyShort>
             </option>
           ))}
         </select>
