@@ -112,7 +112,6 @@ function DefaultSelect({
   // onChange,
   tabIndex,
   className = '',
-
 }: Readonly<DefaultSelectProps>) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
 
