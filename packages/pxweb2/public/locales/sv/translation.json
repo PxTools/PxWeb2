@@ -59,6 +59,13 @@
       "breadcrumb_home_title": "Hem",
       "breadcrumb_root_title": "Hem",
       "show_more_breadcrumbs": "Visa mer"
+    },
+    "code_snippet": {
+      "copy_button_tooltip": "Kopiera kod",
+      "copy_button_label": "Kopiera kod för ",
+      "copied_button_label": "Kod kopierad till urklipp",
+      "wrap_code_button_label": "Aktivera linjeskift",
+      "unwrap_code_button_label": "Deaktivera linjeskift"
     }
   },
   "start_page": {
