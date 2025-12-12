@@ -43,7 +43,7 @@
       "enabled": true,
       "helpText": [
         "Hele setninger vil gi få eller ingen treff. Prøv å søke mer generelt med få ord, og bruk filteret for å avgrense.",
-        "Bruk anførselstegn for å søke etter en eksakt frase, for eksempel “*privat sektor*”. Dette gir kun treff på tabeller som inneholder akkurat den ordkombinasjonen.",
+        "Bruk anførselstegn for å søke etter en eksakt frase, for eksempel *“privat sektor”*. Dette gir kun treff på tabeller som inneholder akkurat den ordkombinasjonen.",
         "Bruk *title*: for å søke kun i tabellnavnet, for eksempel *title:oslo*.",
         "Legg til eller fjern punkter for å tilpasse søkehjelpslisten til din database."
       ]

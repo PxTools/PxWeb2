@@ -21,6 +21,12 @@ const LinkRenderer = ({ href = '', children }: LinkProps) => (
   </Link>
 );
 
+const ItalicRenderer = ({ children }: UnwantedMdRenderProps) => (
+  <span style={{ fontFamily: 'PxWeb-font', fontStyle: 'italic' }}>
+    {children}
+  </span>
+);
+
 const UnwantedMdRender = ({ children }: UnwantedMdRenderProps) => (
   <>{children}</>
 );
@@ -33,6 +39,7 @@ export const MarkdownRenderer: React.FC<MdProps> = ({ mdText }) => {
         a: LinkRenderer,
         p: UnwantedMdRender,
         strong: UnwantedMdRender,
+        em: ItalicRenderer,
       }}
       skipHtml={false} // Enable raw HTML rendering
     >
