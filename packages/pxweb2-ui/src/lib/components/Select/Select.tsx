@@ -108,9 +108,6 @@ function DefaultSelect({
   label,
   options,
   placeholder,
-  selectedOption,
-  onChange,
-  tabIndex,
   className = '',
 }: Readonly<DefaultSelectProps>) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
@@ -126,26 +123,22 @@ function DefaultSelect({
           {label}
         </Label>
       </div>
-      <div
-        className={cl(classes.contentStyle)}
-        tabIndex={tabIndex}
-        onClick={() => {
-          openOptions(options); // TODO: Get option
-          onChange(options[0]); // TODO: Use selected option
-        }}
-        onKeyUp={(event) => {
-          if (event.key === ' ' || event.key === 'Enter') {
-            openOptions(options); // TODO: Get option
-            onChange(options[0]); // TODO: Use selected option
-          }
-        }}
-      >
-        <BodyShort
-          size="medium"
+
+      <div className={cl(classes.selectWrapper)}>
+        <select
+          aria-label={label}
           className={cl(classes.optionLayout, classes.optionTypography)}
         >
-          {selectedOption ? selectedOption.label : placeholder}
-        </BodyShort>
+          {options.map((o) => (
+            <option
+              key={String(o.value)}
+              value={String(o.value)}
+              className={cl(classes.options)}
+            >
+              <BodyShort size="medium">{o ? o.label : placeholder}</BodyShort>
+            </option>
+          ))}
+        </select>
         <Icon iconName="ChevronDown" className={cl(classes.iconColor)}></Icon>
       </div>
     </div>
