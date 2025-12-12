@@ -135,9 +135,7 @@ function DefaultSelect({
               value={String(o.value)}
               className={cl(classes.options)}
             >
-              <BodyShort size="medium">
-                {o ? o.label : placeholder}
-              </BodyShort>
+              <BodyShort size="medium">{o ? o.label : placeholder}</BodyShort>
             </option>
           ))}
         </select>
