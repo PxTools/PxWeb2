@@ -14,12 +14,12 @@ export class SavedQueriesService {
     /**
      * Save a query for later use.
      * @param requestBody A saved query in JSON format without an Id.
-     * @returns SavedQuery Saved query created and returned with the id specified.
+     * @returns SavedQueryResponse Saved query created and returned with the id specified.
      * @throws ApiError
      */
     public static createSaveQuery(
-        requestBody?: SavedQueryResponse,
-    ): CancelablePromise<SavedQuery> {
+        requestBody?: SavedQuery,
+    ): CancelablePromise<SavedQueryResponse> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/savedqueries',
