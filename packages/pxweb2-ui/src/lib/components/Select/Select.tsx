@@ -103,66 +103,16 @@ type DefaultSelectProps = Pick<
   | 'className'
 >;
 
-// function DefaultSelect({
-//   hideLabel,
-//   label,
-//   options,
-//   placeholder,
-//   selectedOption,
-//   onChange,
-//   tabIndex,
-//   className = '',
-// }: Readonly<DefaultSelectProps>) {
-//   const cssClasses = className.length > 0 ? ' ' + className : '';
-
-//   return (
-
-//     <div className={cl(classes.select) + cssClasses}>
-//       <div
-//         className={cl(classes.labelWrapper, {
-//           [classes.visuallyHidden]: hideLabel,
-//         })}
-//       >
-//         <Label size="medium" textcolor="default">
-//           {label}
-//         </Label>
-//       </div>
-
-//       <div
-//         className={cl(classes.contentStyle)}
-//         tabIndex={tabIndex}
-//         onClick={() => {
-//           openOptions(options); // TODO: Get option
-//           onChange(options[0]); // TODO: Use selected option
-//         }}
-//         onKeyUp={(event) => {
-//           if (event.key === ' ' || event.key === 'Enter') {
-//             openOptions(options); // TODO: Get option
-//             onChange(options[0]); // TODO: Use selected option
-//           }
-//         }}
-//       >
-//         <BodyShort
-//           size="medium"
-//           className={cl(classes.optionLayout, classes.optionTypography)}
-//         >
-//           {selectedOption ? selectedOption.label : placeholder}
-//         </BodyShort>
-//         <Icon iconName="ChevronDown" className={cl(classes.iconColor)}></Icon>
-//       </div>
-//     </div>
-//   );
-// }
-
 function DefaultSelect({
   hideLabel,
   label,
   options,
-  placeholder,
-  selectedOption,
-  onChange,
+  // placeholder,
+  // selectedOption,
+  // onChange,
   tabIndex,
   className = '',
+
 }: Readonly<DefaultSelectProps>) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
 
@@ -178,302 +128,26 @@ function DefaultSelect({
         </Label>
       </div>
 
-      <div
-        className={cl(classes.contentStyle)}
-        tabIndex={tabIndex}
-        onClick={() => {
-          openOptions(options); // TODO: Get option
-          onChange(options[0]); // TODO: Use selected option
-        }}
-        onKeyUp={(event) => {
-          if (event.key === ' ' || event.key === 'Enter') {
-            openOptions(options); // TODO: Get option
-            onChange(options[0]); // TODO: Use selected option
-          }
-        }}
-      >
+      <div className={cl(classes.selectWrapper)} tabIndex={tabIndex}>
         <select
-          // {...omit(rest, ["error", "errorId", "size", "readOnly"])}
-          // {...inputProps}
-          // {...readOnlyEventHandlers}
-          //ref={ref}
           aria-label={label}
           className={cl(classes.optionLayout, classes.optionTypography)}
         >
           {options.map((o) => (
-            <option key={String(o.value)} value={String(o.value)}>
+            <option
+              key={String(o.value)}
+              value={String(o.value)}
+              className={cl(classes.options)}
+            >
               {o.label}
             </option>
           ))}
         </select>
-        <BodyShort
-          size="medium"
-          className={cl(classes.optionLayout, classes.optionTypography)}
-        >
-          {selectedOption ? selectedOption.label : placeholder}
-        </BodyShort>
         <Icon iconName="ChevronDown" className={cl(classes.iconColor)}></Icon>
       </div>
     </div>
   );
 }
-
-// // // ...existing code...
-// function DefaultSelect({
-//   hideLabel,
-//   label,
-//   options,
-//   placeholder,
-//   selectedOption,
-//   onChange,
-//   tabIndex,
-//   className = '',
-// }: Readonly<DefaultSelectProps>) {
-//   const cssClasses = className.length > 0 ? ' ' + className : '';
-
-// const size = 'medium'; // default size
-
-//   // Internal fallback when component is used uncontrolled
-//   const [internalSelected, setInternalSelected] = useState<SelectOption | undefined>(selectedOption);
-
-//   // Sync internal state if parent controls it
-//   useEffect(() => {
-//     setInternalSelected(selectedOption);
-//   }, [selectedOption]);
-
-//   const activeSelection = internalSelected;
-//   const displayedLabel = activeSelection
-//     ? options.find(o => String(o.value) === String(activeSelection.value))?.label ?? activeSelection.label
-//     : placeholder;
-
-//   return (
-//           <div
-//         // className={cl(
-//         //   className,
-//         //   "navds-form-field",
-//         //   `navds-form-field--${size}`,
-//         //   {
-//         //     "navds-form-field--disabled": !!inputProps.disabled,
-//         //     "navds-form-field--readonly": readOnly,
-//         //     "navds-select--error": hasError,
-//         //     "navds-select--readonly": readOnly,
-//         //   },
-//         // )}
-//       >
-//         <Label
-//           htmlFor={tabIndex ? undefined : undefined }
-//           size={size}
-//           className={cl("navds-form-field__label", {
-//             "navds-sr-only": hideLabel,
-//           })}
-//         >
-//           {label}
-//         </Label>
-//         {/* {!!label && (
-//           <BodyShort
-//             className={cl("navds-form-field__description", {
-//               "navds-sr-only": hideLabel,
-//             })}
-//             id={tabIndex ? undefined : undefined }
-//             size={size}
-//           >
-//             {label}
-//           </BodyShort>
-//         )} */}
-//         <div className={cl("navds-select__container")}
-//         // <div className={cl("classes.selectNative")}
-//         // style={style}
-//         >
-//           <select
-//             // {...omit(rest, ["error", "errorId", "size", "readOnly"])}
-//             // {...inputProps}
-//             // {...readOnlyEventHandlers}
-//             //ref={ref}
-//             aria-label={label}
-//             className={cl(
-//               "classes.selectNative",
-//               "navds-select__input",
-//               "navds-body-short",
-//               `navds-body-short--${size ?? "medium"}`,
-//             )}
-//           >
-//             {options.map((o) => (
-//               <option key={String(o.value)} value={String(o.value)}>
-//                 {o.label}
-//               </option>
-//             ))}
-//           </select>
-//            {/* <Icon
-//            iconName="ChevronDown"
-//              className={cl(classes.iconColor, classes.selectIcon)}
-//            aria-hidden="true"
-//          /> */}
-//         </div>
-//       </div>
-
-//     // <div className={cl(classes.select) + cssClasses}>
-//     //   <div
-//     //     className={cl(classes.labelWrapper, {
-//     //       [classes.visuallyHidden]: hideLabel,
-//     //     })}
-//     //   >
-//     //     <Label size="medium" textcolor="default">
-//     //       {label}
-//     //     </Label>
-//     //   </div>
-//     //   <div className={cl(classes.contentStyle)} tabIndex={tabIndex}>
-//     //     <BodyShort
-//     //       size="medium"
-//     //       className={cl(classes.optionLayout, classes.optionTypography)}
-//     //     >
-//     //       {displayedLabel}
-//     //     </BodyShort>
-//     //     <Icon iconName="ChevronDown" className={cl(classes.iconColor)}></Icon>
-//     //     <select
-//     //       className={cl(classes.selectNative)}
-//     //       aria-label={label}
-//     //       value={activeSelection ? String(activeSelection.value) : ''}
-//     //       onChange={(e) => {
-//     //         const opt = options.find(o => String(o.value) === e.target.value);
-//     //         setInternalSelected(opt);      // update internal
-//     //         onChange(opt);                 // notify parent
-//     //       }}
-//     //       tabIndex={tabIndex}
-//     //     >
-//     //       {placeholder && (
-//     //         <option value="" disabled hidden>
-//     //           {placeholder}
-//     //         </option>
-//     //       )}
-//     //       {options.map((o) => (
-//     //         <option key={String(o.value)} value={String(o.value)}>
-//     //           {o.label}
-//     //         </option>
-//     //       ))}
-//     //     </select>
-//     //   </div>
-
-//     //   <div className={cl(classes.selectWrapper)}>
-
-//     //     <select
-//     //       tabIndex={tabIndex}
-//     //       className={cl(classes.selectNative)}
-//     //       aria-label={label}
-//     //       value={activeSelection ? String(activeSelection.value) : ''}
-//     //       onChange={(e) => {
-//     //         const opt = options.find(o => String(o.value) === e.target.value);
-//     //         setInternalSelected(opt);      // update internal
-//     //         onChange(opt);                 // notify parent
-//     //       }}
-//     //     >
-//     //       {placeholder && (
-//     //         <option value="" disabled hidden>
-//     //           {placeholder}
-//     //         </option>
-//     //       )}
-//     //       {options.map((o) => (
-//     //         <option key={String(o.value)} value={String(o.value)}>
-//     //           {o.label}
-//     //         </option>
-//     //       ))}
-//     //     </select>
-//     //      <Icon
-//     //       iconName="ChevronDown"
-//     //         className={cl(classes.iconColor, classes.selectIcon)}
-//     //       aria-hidden="true"
-//     //     />
-//     //   </div>
-//     //     </div>
-
-//   );
-// }
-// // ...existing code...
-
-// // function DefaultSelect({
-// //   hideLabel,
-// //   label,
-// //   options,
-// //   placeholder,
-// //   selectedOption,
-// //   onChange,
-// //   tabIndex,
-// //   className = '',
-// // }: Readonly<DefaultSelectProps>) {
-// //   const cssClasses = className.length > 0 ? ' ' + className : '';
-
-// //   return (
-
-// // <p>
-// //     <label >Select pet:</label>
-// //     <select id="pet-select">
-// //       <button>
-// //         <selectedcontent></selectedcontent>
-// //       </button>
-
-// //       <option value="">Please select a pet</option>
-// //       <option value="cat">
-// //         <span className={cl(classes.icon)} aria-hidden="true">🐱</span
-// //         ><span class="option-label">Cat</span>
-// //       </option>
-// //       <option value="dog">
-// //         <span className={cl(classes.icon)} aria-hidden="true">🐶</span
-// //         ><span class="option-label">Dog</span>
-// //       </option>
-// //       <option value="hamster">
-// //         <span className={cl(classes.icon)} aria-hidden="true">🐹</span
-// //         ><span class="option-label">Hamster</span>
-// //       </option>
-// //       <option value="chicken">
-// //         <span className={cl(classes.icon)} aria-hidden="true">🐔</span
-// //         ><span class="option-label">Chicken</span>
-// //       </option>
-// //       <option value="fish">
-// //         <span className={cl(classes.icon)} aria-hidden="true">🐟</span
-// //         ><span class="option-label">Fish</span>
-// //       </option>
-// //       <option value="snake">
-// //         <span class="icon" aria-hidden="true">🐍</span
-// //         ><span class="option-label">Snake</span>
-// //       </option>
-// //     </select>
-// //   </p>
-
-// //     // <div className={cl(classes.select) + cssClasses}>
-// //     //   <div
-//     //     className={cl(classes.labelWrapper, {
-//     //       [classes.visuallyHidden]: hideLabel,
-//     //     })}
-//     //   >
-//     //     <Label size="medium" textcolor="default">
-//     //       {label}
-//     //     </Label>
-//     //   </div>
-
-//     //   <div
-//     //     className={cl(classes.contentStyle)}
-//     //     tabIndex={tabIndex}
-//     //     onClick={() => {
-//     //       openOptions(options); // TODO: Get option
-//     //       onChange(options[0]); // TODO: Use selected option
-//     //     }}
-//     //     onKeyUp={(event) => {
-//     //       if (event.key === ' ' || event.key === 'Enter') {
-//     //         openOptions(options); // TODO: Get option
-//     //         onChange(options[0]); // TODO: Use selected option
-//     //       }
-//     //     }}
-//     //   >
-//     //     <BodyShort
-//     //       size="medium"
-//     //       className={cl(classes.optionLayout, classes.optionTypography)}
-//     //     >
-//     //       {selectedOption ? selectedOption.label : placeholder}
-//     //     </BodyShort>
-//     //     <Icon iconName="ChevronDown" className={cl(classes.iconColor)}></Icon>
-//     //   </div>
-//     // </div>
-// //  );
-// //}
 
 type VariableBoxSelectProps = Pick<
   SelectProps,
