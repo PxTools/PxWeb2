@@ -1,4 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react-vite';
+import { useArgs } from 'storybook/preview-api';
+
 import { ActionItem } from './ActionItem';
 
 const meta: Meta<typeof ActionItem> = {
@@ -11,6 +13,14 @@ const meta: Meta<typeof ActionItem> = {
     iconName: 'BarChart',
     largeIconName: 'Table',
   },
+  decorators: [
+    (Story) => (
+      <div style={{ width: '400px' }}>
+        {/* 👇 Decorators in Storybook also accept a function. Replace <Story/> with Story() to enable it  */}
+        <Story />
+      </div>
+    ),
+  ],
 };
 
 export default meta;
@@ -52,3 +62,37 @@ export const MediumWithLoading: Story = {
     isLoading: true,
   },
 };
+
+export const MediumToggleable = {
+  args: {
+    label: 'Toggleable Action',
+    size: 'medium',
+    toggleState: true,
+  },
+  render: function Render(args) {
+    const [{ toggleState }, updateArgs] = useArgs();
+
+    function handleClick() {
+      updateArgs({ toggleState: !toggleState });
+    }
+
+    return <ActionItem {...args} onClick={handleClick} />;
+  },
+} satisfies Story;
+
+export const LargeToggleable = {
+  args: {
+    label: 'Toggleable Action',
+    size: 'large',
+    toggleState: false,
+  },
+  render: function Render(args) {
+    const [{ toggleState }, updateArgs] = useArgs();
+
+    function handleClick() {
+      updateArgs({ toggleState: !toggleState });
+    }
+
+    return <ActionItem {...args} onClick={handleClick} />;
+  },
+} satisfies Story;
