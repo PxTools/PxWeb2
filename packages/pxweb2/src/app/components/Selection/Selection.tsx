@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 
 import {
   ApiError,
-  TableService,
+  TablesService,
   SavedQueriesService,
   SelectionResponse,
   PathElement,
@@ -296,13 +296,13 @@ export function Selection({
 
     // Make parallel calls to getMetadataById and getTableById
     Promise.all([
-      TableService.getMetadataById(
+      TablesService.getMetadataById(
         selectedTabId,
         i18n.resolvedLanguage,
         metaDataDefaultSelection,
         savedQueryId,
       ),
-      TableService.getTableById(selectedTabId, i18n.resolvedLanguage),
+      TablesService.getTableById(selectedTabId, i18n.resolvedLanguage),
     ])
       .then(([Dataset, TableData]) => {
         const pxTable: PxTable = mapJsonStat2Response(Dataset, false);
@@ -385,7 +385,7 @@ export function Selection({
           i18n.resolvedLanguage,
         );
       } else {
-        response = await TableService.getDefaultSelection(
+        response = await TablesService.getDefaultSelection(
           selectedTabId,
           i18n.resolvedLanguage,
         );
@@ -435,7 +435,7 @@ export function Selection({
     setIsFadingVariableList(true);
 
     // Get table metadata in the new codelist context
-    TableService.getMetadataById(
+    TablesService.getMetadataById(
       selectedTabId,
       i18n.resolvedLanguage,
       false,

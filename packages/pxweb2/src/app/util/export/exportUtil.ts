@@ -3,7 +3,7 @@ import {
   OutputFormatType,
   SavedQueriesService,
   SavedQuery,
-  TableService,
+  TablesService,
   VariablesSelection,
 } from '@pxweb2/pxweb2-api-client';
 
@@ -12,7 +12,7 @@ export type TimeFilter = 'from' | 'top' | 'selected';
 /**
  * Exports data to a file in the specified format.
  * The function determines the output format and parameters based on the provided fileFormat.
- * It then retrieves the table data using TableService and triggers a download of the file.
+ * It then retrieves the table data using TablesService and triggers a download of the file.
  *
  * @param {string} tabId - The ID of the tab containing the data to export.
  * @param {string} lang - The language code for the export.
@@ -30,7 +30,7 @@ export async function exportToFile(
     getOutputFormatParams(outputFormat);
   const fileExtension: string = getFileExtension(outputFormat);
 
-  await TableService.getTableDataByPost(
+  await TablesService.getTableDataByPost(
     tabId,
     lang,
     outputFormat,

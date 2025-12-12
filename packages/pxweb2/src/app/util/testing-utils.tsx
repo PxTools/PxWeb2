@@ -28,7 +28,7 @@ function mockTableService() {
         HTML: 'HTML',
         PARQUET: 'PARQUET',
       },
-      TableService: {
+      TablesService: {
         getTableById: vi.fn().mockResolvedValue({
           id: 'TAB638',
           label:

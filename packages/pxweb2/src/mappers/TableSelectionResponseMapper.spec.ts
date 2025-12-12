@@ -14,7 +14,7 @@ describe('TableSelectionResponseMapper', () => {
           },
           {
             variableCode: 'testVarCode2',
-            codeList: 'testCodeList',
+            codelist: 'testCodeList',
             valueCodes: ['testValueCode2'],
           },
         ],
