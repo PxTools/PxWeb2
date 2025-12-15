@@ -84,9 +84,6 @@ describe('Select', () => {
 
     const nativeSelect = screen.getByRole('combobox', { name: /test select/i });
     expect(nativeSelect).toHaveDisplayValue('Option 1');
-
-    // Alternatively:
-    // expect(screen.getByRole('option', { name: 'Option 1' })).toBeSelected();
   });
 
   describe('VariableBoxSelect variant', () => {

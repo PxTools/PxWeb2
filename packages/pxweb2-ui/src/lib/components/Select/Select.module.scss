@@ -70,10 +70,15 @@
   --px-icon-color: var(--px-color-icon-action);
   position: absolute;
   font-size: 1.5rem;
-  right: fixed.$spacing-3;
   pointer-events: none;
   align-self: center;
   background: var(--px-color-surface-default);
+   &.ltr {
+      right: fixed.$spacing-3;
+    }
+    &.rtl {
+      right: fixed.$spacing-3;
+    }
 }
 
 // --------------------------------------------------------
