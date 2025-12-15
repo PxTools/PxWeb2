@@ -69,6 +69,7 @@ export function ActionItem({
     <button
       className={cl(
         styles['action-item'],
+        styles[`action-item-${size}`],
         hasToggleState && styles['toggleable'],
       )}
       role={hasToggleState ? 'switch' : undefined}

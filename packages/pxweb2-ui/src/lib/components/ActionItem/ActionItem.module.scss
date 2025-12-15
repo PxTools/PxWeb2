@@ -4,7 +4,6 @@
 .action-item {
   display: flex;
   align-items: flex-start;
-  gap: 0.75rem;
   padding: fixed.$spacing-3 fixed.$spacing-4 fixed.$spacing-3 fixed.$spacing-2;
   border: none;
   width: 100%;
@@ -39,6 +38,13 @@
       border-radius: var(--px-border-radius-full);
     }
   }
+}
+
+.action-item-medium {
+  gap: 0.5rem;
+}
+.action-item-large {
+  gap: 0.75rem;
 }
 
 .icon-wrapper {
@@ -94,12 +100,12 @@
 .toggle-wrapper {
   display: flex;
   justify-content: flex-end;
+}
 
-  &.toggle-wrapper-medium {
-    align-self: flex-start;
-  }
+.toggle-wrapper-medium {
+  align-self: flex-start;
+}
 
-  &.toggle-wrapper-large {
-    align-self: center;
-  }
+.toggle-wrapper-large {
+  align-self: center;
 }
