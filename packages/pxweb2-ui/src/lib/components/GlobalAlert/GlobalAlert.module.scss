@@ -1,9 +1,10 @@
 @use '../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixvar;
 @use '../../text-styles.scss';
+@use '$ui/src/lib/breakpoints.scss' as breakpoint;
 
 .alert-medium {
   display: flex;
-  padding: fixvar.$spacing-5 fixvar.$spacing-4;
+  padding: fixvar.$spacing-5 0px;
   align-items: flex-start;
   gap: fixvar.$spacing-3;
   // border-radius: var(--px-border-radius-large);
@@ -15,6 +16,46 @@
   gap: fixvar.$spacing-2;
   // border-radius: var(--px-border-radius-medium);
 }
+
+.container {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+
+  @media #{breakpoint.$xsmall} {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+
+  @media #{breakpoint.$small} {
+    max-width: 508px;
+  }
+
+  @media #{breakpoint.$medium} {
+    max-width: 688px;
+  }
+
+  @media #{breakpoint.$large} {
+    max-width: 928px;
+  }
+
+  @media #{breakpoint.$xlarge} {
+    max-width: 1108px;
+  }
+
+  @media #{breakpoint.$xxlarge} {
+    max-width: 1288px;
+  }
+}
+
+// .alert-container-medium {
+//   display: block;
+//   justify-content: center;
+//   max-width: 1288px;
+//   margin-left: auto;
+//   margin-right: auto;
+//   // border-radius: var(--px-border-radius-large);
+// }
 
 .info {
   background: var(--px-color-surface-info-moderate);

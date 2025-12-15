@@ -85,65 +85,71 @@ export function GlobalAlert({
   }
 
   return (
-    <div
-      id={id}
-      aria-label={alertAriaLabel}
-      className={cl(classes[`alert-${size}`], classes[variant]) + cssClasses}
-      role={isRoleAlert ? 'alert' : undefined}
-      ref={ref}
-    >
-      <div className={cl(classes[`alert-section-left-${size}`])}>
-        {!hasheading && (
-          <span className={classes['sr-only']}>
-            {t(`common.alert.${variant}`)}
-          </span>
-        )}
-        <Icon
-          iconName={variantIcon}
-          className={classes[`alert-icon-${variant}`]}
-        ></Icon>
-      </div>
-      <div className={cl(classes[`alert-section-middle-${size}`])}>
-        {hasheading && (
+    <div className={cl(classes[variant]) + cssClasses}>
+      <div className={cl(classes[`container`], classes[variant]) + cssClasses}>
+        <div
+          id={id}
+          aria-label={alertAriaLabel}
+          className={
+            cl(classes[`alert-${size}`], classes[variant]) + cssClasses
+          }
+          role={isRoleAlert ? 'alert' : undefined}
+          ref={ref}
+        >
+          <div className={cl(classes[`alert-section-left-${size}`])}>
+            {!hasheading && (
+              <span className={classes['sr-only']}>
+                {t(`common.alert.${variant}`)}
+              </span>
+            )}
+            <Icon
+              iconName={variantIcon}
+              className={classes[`alert-icon-${variant}`]}
+            ></Icon>
+          </div>
+          <div className={cl(classes[`alert-section-middle-${size}`])}>
+            {hasheading && (
+              <div
+                className={cl(classes[`alert-heading`])}
+                // aria-live={variantAriaLive}
+                aria-atomic="true"
+              >
+                <span className={classes['sr-only']}>
+                  {t(`common.alert.${variant}`)}
+                </span>
+                <Heading size={headingSize} level={headingLevel}>
+                  {heading}
+                </Heading>
+              </div>
+            )}
+            <div className={cl(classes[`alert-body-${size}`])}>
+              {size === 'small' ? (
+                <BodyShort size={bodySize}>{children}</BodyShort>
+              ) : (
+                <BodyLong as="div" size={bodySize}>
+                  {children}
+                </BodyLong>
+              )}
+            </div>
+          </div>
           <div
-            className={cl(classes[`alert-heading`])}
-            // aria-live={variantAriaLive}
-            aria-atomic="true"
+            className={cl(classes[`alert-section-right`], {
+              [classes[`alert-xmark`]]: closeButton,
+            })}
           >
-            <span className={classes['sr-only']}>
-              {t(`common.alert.${variant}`)}
-            </span>
-            <Heading size={headingSize} level={headingLevel}>
-              {heading}
-            </Heading>
+            {closeButton && (
+              <div className={cl(classes['alert-xmark-wrapper'])}>
+                <Button
+                  variant="tertiary"
+                  size="small"
+                  icon={iconClose}
+                  onClick={HandleClose}
+                  aria-label={t('common.generic_buttons.close')}
+                />
+              </div>
+            )}
           </div>
-        )}
-        <div className={cl(classes[`alert-body-${size}`])}>
-          {size === 'small' ? (
-            <BodyShort size={bodySize}>{children}</BodyShort>
-          ) : (
-            <BodyLong as="div" size={bodySize}>
-              {children}
-            </BodyLong>
-          )}
         </div>
-      </div>
-      <div
-        className={cl(classes[`alert-section-right`], {
-          [classes[`alert-xmark`]]: closeButton,
-        })}
-      >
-        {closeButton && (
-          <div className={cl(classes['alert-xmark-wrapper'])}>
-            <Button
-              variant="tertiary"
-              size="small"
-              icon={iconClose}
-              onClick={HandleClose}
-              aria-label={t('common.generic_buttons.close')}
-            />
-          </div>
-        )}
       </div>
     </div>
   );
