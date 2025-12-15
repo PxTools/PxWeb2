@@ -5,6 +5,7 @@ import { ErrorPageWithLocalization } from './pages/ErrorPage/ErrorPage';
 import StartPage from './pages/StartPage/StartPage';
 import TableViewer from './pages/TableViewer/TableViewer';
 import TopicIcons from './pages/TopicIcons/TopicIcons';
+import SavedQueryReroute from './pages/SavedQueryReroute/SavedQueryReroute';
 import { getConfig } from './util/config/getConfig';
 
 const config = getConfig();
@@ -69,6 +70,10 @@ export const routerConfig = [
       {
         path: 'topicIcons',
         element: <TopicIcons />,
+      },
+      {
+        path: 'sq/:sqId',
+        element: <SavedQueryReroute />,
       },
     ],
   },
