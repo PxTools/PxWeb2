@@ -1,4 +1,6 @@
 @use '../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixed;
+@use '../../text-styles.scss';
+
 
 // ----------------------------------------------------
 // --- CSS classes for the default Select component ---
@@ -61,12 +63,6 @@
   }
 }
 
-.optionTypography {
-  overflow: hidden;
-  color: var(--px-color-text-default);
-  text-overflow: ellipsis;
-}
-
 .visuallyHidden {
   display: none;
 }
@@ -78,6 +74,7 @@
   right: fixed.$spacing-3;
   pointer-events: none;
   align-self: center;
+  background: var(--px-color-surface-default);
 }
 
 // --------------------------------------------------------

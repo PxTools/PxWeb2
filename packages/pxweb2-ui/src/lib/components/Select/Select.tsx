@@ -62,7 +62,6 @@ export function Select({
           hideLabel={hideLabel}
           label={label}
           options={ops}
-          placeholder={placeholder}
           selectedOption={selectedOption}
           onChange={onChange}
           tabIndex={tabIndex}
@@ -96,7 +95,6 @@ type DefaultSelectProps = Pick<
   | 'hideLabel'
   | 'label'
   | 'options'
-  | 'placeholder'
   | 'selectedOption'
   | 'onChange'
   | 'tabIndex'
@@ -107,7 +105,6 @@ function DefaultSelect({
   hideLabel,
   label,
   options,
-  placeholder,
   className = '',
 }: Readonly<DefaultSelectProps>) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
@@ -127,15 +124,16 @@ function DefaultSelect({
       <div className={cl(classes.selectWrapper)}>
         <select
           aria-label={label}
-          className={cl(classes.optionLayout, classes.optionTypography)}
+          className={cl(classes.optionLayout, classes['bodyshort-medium'])}
         >
           {options.map((o) => (
             <option
               key={String(o.value)}
               value={String(o.value)}
-              className={cl(classes.options)}
+              className={cl(classes['bodyshort-medium'])
+              }
             >
-              <BodyShort size="medium">{o ? o.label : placeholder}</BodyShort>
+              {o.label}
             </option>
           ))}
         </select>
