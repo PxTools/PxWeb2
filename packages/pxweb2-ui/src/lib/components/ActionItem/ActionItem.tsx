@@ -64,6 +64,7 @@ export function ActionItem({
   ...rest
 }: Readonly<ActionItemProps>) {
   const hasToggleState = toggleState === true || toggleState === false;
+  const ariaLabelText = ariaLabel + (description ? `. ${description}` : '');
 
   return (
     <button
@@ -74,7 +75,7 @@ export function ActionItem({
       )}
       role={hasToggleState ? 'switch' : undefined}
       onClick={onClick}
-      aria-label={ariaLabel}
+      aria-label={ariaLabelText}
       aria-disabled={isLoading || rest.disabled}
       aria-busy={isLoading || rest.disabled}
       aria-checked={toggleState}
