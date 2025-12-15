@@ -68,26 +68,26 @@ describe('Select', () => {
       const option = await screen.findByText(mockOptions[0].label);
       expect(option).toBeInTheDocument();
     });
-   });
+  });
 
-   it('should display selected option when provided', () => {
-      render(
-        <Select
-          label="Test Select"
-          options={mockOptions}
-          selectedOption={mockOptions[0]}
-          onChange={mockOnChange}
-          addModal={mockAddModal}
-          removeModal={mockRemoveModal}
-        />,
-      );
+  it('should display selected option when provided', () => {
+    render(
+      <Select
+        label="Test Select"
+        options={mockOptions}
+        selectedOption={mockOptions[0]}
+        onChange={mockOnChange}
+        addModal={mockAddModal}
+        removeModal={mockRemoveModal}
+      />,
+    );
 
-      const nativeSelect = screen.getByRole('combobox', { name: /test select/i });
-      expect(nativeSelect).toHaveDisplayValue('Option 1');
+    const nativeSelect = screen.getByRole('combobox', { name: /test select/i });
+    expect(nativeSelect).toHaveDisplayValue('Option 1');
 
-      // Alternatively:
-      // expect(screen.getByRole('option', { name: 'Option 1' })).toBeSelected();
-    });
+    // Alternatively:
+    // expect(screen.getByRole('option', { name: 'Option 1' })).toBeSelected();
+  });
 
   describe('VariableBoxSelect variant', () => {
     const defaultProps = {

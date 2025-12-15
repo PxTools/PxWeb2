@@ -124,18 +124,18 @@ function DefaultSelect({
       <div className={cl(classes.selectWrapper)}>
         <select
           aria-label={label}
-          className={cl(classes.optionLayout, classes['bodyshort-medium'])
-
-          }
+          className={cl(classes.optionLayout, classes['bodyshort-medium'])}
         >
           {options.map((o) => (
             <option
               key={String(o.value)}
               value={String(o.value)}
               className={cl(classes['bodyshort-medium'])}
-               tabIndex={tabIndex}
-          // Use uncontrolled select with initial value from selectedOption
-          defaultValue={selectedOption ? String(selectedOption.value) : undefined}
+              tabIndex={tabIndex}
+              // Use uncontrolled select with initial value from selectedOption
+              defaultValue={
+                selectedOption ? String(selectedOption.value) : undefined
+              }
             >
               {o.label}
             </option>
