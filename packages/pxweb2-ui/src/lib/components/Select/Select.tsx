@@ -127,8 +127,8 @@ function DefaultSelect({
           aria-label={label}
           className={cl(classes.optionLayout, classes['bodyshort-medium'])}
           defaultValue={
-                selectedOption ? String(selectedOption.value) : undefined
-              }
+            selectedOption ? String(selectedOption.value) : undefined
+          }
         >
           {options.map((o) => (
             <option
@@ -145,7 +145,13 @@ function DefaultSelect({
             </option>
           ))}
         </select>
-        <Icon iconName="ChevronDown" className={cl(classes.iconColor, i18next.dir() === 'rtl' ? classes.rtl : classes.ltr,)}></Icon>
+        <Icon
+          iconName="ChevronDown"
+          className={cl(
+            classes.iconColor,
+            i18next.dir() === 'rtl' ? classes.rtl : classes.ltr,
+          )}
+        ></Icon>
       </div>
     </div>
   );
@@ -309,7 +315,13 @@ function VariableBoxSelect({
             {selectedItem ? selectedItem.label : placeholder}
           </BodyShort>
         </div>
-        <Icon iconName={chevronIcon} className={cl(classes.iconColor, i18next.dir() === 'rtl' ? classes.rtl : classes.ltr,)}></Icon>
+        <Icon
+          iconName={chevronIcon}
+          className={cl(
+            classes.iconColor,
+            i18next.dir() === 'rtl' ? classes.rtl : classes.ltr,
+          )}
+        ></Icon>
       </div>
       <div className={cl(classes.divider)}></div>
       {isModalOpen && (
