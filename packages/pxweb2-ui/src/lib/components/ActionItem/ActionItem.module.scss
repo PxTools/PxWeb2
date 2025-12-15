@@ -94,4 +94,12 @@
 .toggle-wrapper {
   display: flex;
   justify-content: flex-end;
+
+  &.toggle-wrapper-medium {
+    align-self: flex-start;
+  }
+
+  &.toggle-wrapper-large {
+    align-self: center;
+  }
 }

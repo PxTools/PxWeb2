@@ -99,7 +99,12 @@ export function ActionItem({
         )}
       </div>
       {hasToggleState && (
-        <div className={cl(styles['toggle-wrapper'])}>
+        <div
+          className={cl(
+            styles['toggle-wrapper'],
+            styles[`toggle-wrapper-${size}`],
+          )}
+        >
           <CheckCircleIcon checked={toggleState} />
         </div>
       )}
