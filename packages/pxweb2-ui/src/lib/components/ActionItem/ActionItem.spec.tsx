@@ -52,7 +52,9 @@ describe('ActionItem', () => {
       />,
     );
 
-    expect(screen.getByLabelText('Custom Aria Label')).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Custom Aria Label. Custom description'),
+    ).toBeInTheDocument();
     expect(screen.getByText('Custom Label')).toBeInTheDocument();
     expect(screen.getByText('Custom description')).toBeInTheDocument();
     expect(screen.getByTestId('icon')).toHaveAttribute('data-icon', 'PieChart');
