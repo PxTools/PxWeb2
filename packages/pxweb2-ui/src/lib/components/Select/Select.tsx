@@ -130,8 +130,7 @@ function DefaultSelect({
             <option
               key={String(o.value)}
               value={String(o.value)}
-              className={cl(classes['bodyshort-medium'])
-              }
+              className={cl(classes['bodyshort-medium'])}
             >
               {o.label}
             </option>
