@@ -31,11 +31,12 @@
   // Outline styles for toggleable action items
   &.toggleable:focus-visible {
     outline: none;
-    &.toggle-wrapper {
+
+    span {
       outline: 3px solid var(--px-color-border-focus-outline);
       outline-offset: 3px;
-      box-shadow: inset 0 0 0 3px var(--px-color-border-focus-boxshadow);
-      border-radius: var(--px-border-radius-medium);
+      border: solid 3px var(--px-color-border-focus-boxshadow);
+      border-radius: var(--px-border-radius-full);
     }
   }
 }
