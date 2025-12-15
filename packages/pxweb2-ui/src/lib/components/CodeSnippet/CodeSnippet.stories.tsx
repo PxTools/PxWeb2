@@ -85,3 +85,15 @@ export const WithMaxHeightFromContainer: Story = {
     </div>
   ),
 };
+export const WrapToggleExample: Story = {
+  args: {
+    title: 'Example Wrapped JSON Snippet',
+    children: jsonExampleLong,
+    highlight: 'json',
+  },
+  render: (args) => (
+    <div style={{ width: '320px' }}>
+      <CodeSnippet {...args}>{jsonExampleLong}</CodeSnippet>
+    </div>
+  ),
+};
