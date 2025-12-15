@@ -35,7 +35,7 @@ export function CodeSnippetHeader({
           onClick={onToggleWrap}
           size="medium"
           variant="tertiary"
-          icon={wrapCode ? 'ArrowsCirclePath' : 'ArrowsRightLeft'}
+          icon={'LineBreak'}
         />
         <CopyButton
           title={title}
