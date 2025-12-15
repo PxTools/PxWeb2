@@ -53,39 +53,41 @@ describe('Select', () => {
       expect(labelWrapper).toBeDefined();
     });
 
-    // it('should display placeholder when no option is selected', () => {
-    //   const placeholder = 'Select an option';
-    //   render(
-    //     <Select
-    //       label="Test Select"
-    //       placeholder={placeholder}
-    //       options={mockOptions}
-    //       onChange={mockOnChange}
-    //       addModal={mockAddModal}
-    //       removeModal={mockRemoveModal}
-    //     />,
-    //   );
+    it('should display selected option when provided', async () => {
+      render(
+        <Select
+          label="Test Select"
+          options={mockOptions}
+          selectedOption={mockOptions[0]}
+          onChange={mockOnChange}
+          addModal={mockAddModal}
+          removeModal={mockRemoveModal}
+        />,
+      );
 
-    //   expect(screen.getByText(placeholder)).toBeDefined();
-    // });
+      const option = await screen.findByText(mockOptions[0].label);
+      expect(option).toBeInTheDocument();
+    });
+   });
 
-    // it('should display selected option when provided', () => {
-    //   render(
-    //     <Select
-    //       label="Test Select"
-    //       options={mockOptions}
-    //       selectedOption={mockOptions[0]}
-    //       onChange={mockOnChange}
-    //       addModal={mockAddModal}
-    //       removeModal={mockRemoveModal}
-    //     />,
-    //   );
+   it('should display selected option when provided', () => {
+      render(
+        <Select
+          label="Test Select"
+          options={mockOptions}
+          selectedOption={mockOptions[0]}
+          onChange={mockOnChange}
+          addModal={mockAddModal}
+          removeModal={mockRemoveModal}
+        />,
+      );
 
-    //   expect(
-    //     screen.getByText(mockOptions[0].label, { selector: 'p' }),
-    //   ).toBeInTheDocument();
-    // });
-  });
+      const nativeSelect = screen.getByRole('combobox', { name: /test select/i });
+      expect(nativeSelect).toHaveDisplayValue('Option 1');
+
+      // Alternatively:
+      // expect(screen.getByRole('option', { name: 'Option 1' })).toBeSelected();
+    });
 
   describe('VariableBoxSelect variant', () => {
     const defaultProps = {

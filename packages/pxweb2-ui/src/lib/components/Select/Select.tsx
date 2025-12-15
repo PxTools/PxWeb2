@@ -63,7 +63,6 @@ export function Select({
           label={label}
           options={ops}
           selectedOption={selectedOption}
-          onChange={onChange}
           tabIndex={tabIndex}
           className={cssClasses}
         />
@@ -96,7 +95,6 @@ type DefaultSelectProps = Pick<
   | 'label'
   | 'options'
   | 'selectedOption'
-  | 'onChange'
   | 'tabIndex'
   | 'className'
 >;
@@ -105,6 +103,8 @@ function DefaultSelect({
   hideLabel,
   label,
   options,
+  selectedOption,
+  tabIndex = 0,
   className = '',
 }: Readonly<DefaultSelectProps>) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
@@ -124,13 +124,18 @@ function DefaultSelect({
       <div className={cl(classes.selectWrapper)}>
         <select
           aria-label={label}
-          className={cl(classes.optionLayout, classes['bodyshort-medium'])}
+          className={cl(classes.optionLayout, classes['bodyshort-medium'])
+
+          }
         >
           {options.map((o) => (
             <option
               key={String(o.value)}
               value={String(o.value)}
               className={cl(classes['bodyshort-medium'])}
+               tabIndex={tabIndex}
+          // Use uncontrolled select with initial value from selectedOption
+          defaultValue={selectedOption ? String(selectedOption.value) : undefined}
             >
               {o.label}
             </option>
