@@ -15,7 +15,7 @@ export function SymbolExplanationNotes({ notes }: SymbolExplanationNotesProps) {
   );
 
   return (
-    <InformationCard icon="Book" headingText={heading} headingLevel="1">
+    <InformationCard icon="Book" headingText={heading} headingLevel="3">
       <BodyLong
         as="div"
         className={cl(styles['symbolexplanationnotes'])}
