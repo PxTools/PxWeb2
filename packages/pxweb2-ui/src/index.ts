@@ -1,7 +1,6 @@
 export * from './../style-dictionary/dist/js/css-variables';
 export * from './../style-dictionary/dist/js/fixed-variables';
 export * from './lib/components/ActionItem/ActionItem';
-export * from './lib/components/Alert/Alert';
 export * from './lib/components/BottomSheet/BottomSheet';
 export * from './lib/components/Breadcrumbs/Breadcrumbs';
 export * from './lib/components/Button/Button';
