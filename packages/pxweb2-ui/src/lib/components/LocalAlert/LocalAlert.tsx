@@ -8,7 +8,6 @@ import Heading from '../Typography/Heading/Heading';
 import { Icon, IconProps } from '../Icon/Icon';
 import Button from '../Button/Button';
 import BodyShort from '../Typography/BodyShort/BodyShort';
-// import List, { ListProps } from '../List/List';
 import { getIconDirection } from '../../util/util';
 
 export interface LocalAlertProps {
