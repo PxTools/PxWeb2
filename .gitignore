@@ -52,3 +52,6 @@ vite.config.*.timestamp*
 
 # AI
 .qodo
+
+# Snyk Security Extension - AI Rules (auto-generated)
+.github/instructions/snyk_rules.instructions.md
