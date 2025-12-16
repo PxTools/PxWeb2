@@ -6,7 +6,7 @@ import type { Root } from 'hast';
 
 import styles from './CodeSnippetBody.module.scss';
 import { HighlightOptions } from '../CodeSnippet';
-import { getHighlighter } from '../highlighter';
+import { getHighlighter } from './highlighter';
 
 // Custom components for use with hast-util-to-jsx-runtime
 function Pre({
