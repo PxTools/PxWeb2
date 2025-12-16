@@ -13,18 +13,20 @@ import { CopyButton } from './CopyButton';
 vi.mock('../../Button/Button', () => ({
   default: ({
     'aria-label': ariaLabel,
+    title,
     onClick,
     icon,
     className,
   }: {
     'aria-label': string;
+    title: string;
     onClick: () => void;
     icon: string;
     className?: string;
   }) => (
     <button
       aria-label={ariaLabel}
-      title={ariaLabel}
+      title={title}
       onClick={onClick}
       data-icon={icon}
       className={className}
@@ -56,16 +58,17 @@ describe('CopyButton', () => {
   it('should render with copy label', () => {
     render(<CopyButton {...defaultProps} />);
 
-    const button = screen.getByRole('button');
+    const button = screen.getByRole('button', { name: 'Copy JSON' });
 
     expect(button).toHaveAttribute('aria-label', 'Copy JSON');
     expect(button).toHaveAttribute('data-icon', 'Copy');
+    expect(button).toHaveAttribute('title', 'Copy to clipboard');
   });
 
   it('should copy content to clipboard on click', async () => {
     render(<CopyButton {...defaultProps} />);
 
-    const button = screen.getByRole('button');
+    const button = screen.getByRole('button', { name: 'Copy JSON' });
     fireEvent.click(button);
 
     await waitFor(() => {
@@ -75,15 +78,20 @@ describe('CopyButton', () => {
     });
   });
 
-  it('should show copied state after clicking', async () => {
+  it('should show copied state after clicking (stable aria-label)', async () => {
     render(<CopyButton {...defaultProps} />);
 
-    const button = screen.getByRole('button');
+    const button = screen.getByRole('button', { name: 'Copy JSON' });
+    expect(button).toHaveAttribute('aria-label', 'Copy JSON');
+    expect(button).toHaveAttribute('data-icon', 'Copy');
+    expect(button.className).toBe('');
+
     fireEvent.click(button);
 
     await waitFor(() => {
-      expect(button).toHaveAttribute('aria-label', 'Copied!');
+      expect(button).toHaveAttribute('aria-label', 'Copy JSON');
       expect(button).toHaveAttribute('data-icon', 'Check');
+      expect(button.className).not.toBe('');
     });
   });
 
@@ -92,14 +100,16 @@ describe('CopyButton', () => {
 
     render(<CopyButton {...defaultProps} />);
 
-    const button = screen.getByRole('button');
+    const button = screen.getByRole('button', { name: 'Copy JSON' });
 
     await act(async () => {
       fireEvent.click(button);
       await Promise.resolve();
     });
 
-    expect(button).toHaveAttribute('aria-label', 'Copied!');
+    expect(button).toHaveAttribute('aria-label', 'Copy JSON');
+    expect(button).toHaveAttribute('data-icon', 'Check');
+    expect(button.className).not.toBe('');
 
     act(() => {
       vi.advanceTimersByTime(3000);
@@ -107,6 +117,7 @@ describe('CopyButton', () => {
 
     expect(button).toHaveAttribute('aria-label', 'Copy JSON');
     expect(button).toHaveAttribute('data-icon', 'Copy');
+    expect(button.className).toBe('');
 
     vi.useRealTimers();
   });
@@ -116,14 +127,15 @@ describe('CopyButton', () => {
 
     render(<CopyButton {...defaultProps} />);
 
-    const button = screen.getByRole('button');
+    const button = screen.getByRole('button', { name: 'Copy JSON' });
 
     await act(async () => {
       fireEvent.click(button);
       await Promise.resolve();
     });
 
-    expect(button).toHaveAttribute('aria-label', 'Copied!');
+    expect(button).toHaveAttribute('aria-label', 'Copy JSON');
+    expect(button).toHaveAttribute('data-icon', 'Check');
 
     act(() => {
       vi.advanceTimersByTime(2000);
@@ -139,7 +151,8 @@ describe('CopyButton', () => {
     });
 
     // Still copied because timer was reset
-    expect(button).toHaveAttribute('aria-label', 'Copied!');
+    expect(button).toHaveAttribute('aria-label', 'Copy JSON');
+    expect(button).toHaveAttribute('data-icon', 'Check');
 
     act(() => {
       vi.advanceTimersByTime(1000);
@@ -147,6 +160,7 @@ describe('CopyButton', () => {
 
     // Now reverted after full 3 seconds from last click
     expect(button).toHaveAttribute('aria-label', 'Copy JSON');
+    expect(button).toHaveAttribute('data-icon', 'Copy');
 
     vi.useRealTimers();
   });
@@ -166,7 +180,7 @@ describe('CopyButton', () => {
 
       const { container } = render(<CopyButton {...defaultProps} />);
       const liveRegion = container.querySelector('[aria-live="assertive"]');
-      const button = screen.getByRole('button');
+      const button = screen.getByRole('button', { name: 'Copy JSON' });
 
       expect(liveRegion).toHaveTextContent('');
 
