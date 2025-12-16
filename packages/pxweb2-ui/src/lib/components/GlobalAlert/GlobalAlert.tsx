@@ -55,19 +55,15 @@ export function GlobalAlert({
   switch (variant) {
     case 'info':
       variantIcon = 'InformationCircleFilled';
-      // variantAriaLive = 'polite';
       break;
     case 'success':
       variantIcon = 'CheckMarkCircleFilled';
-      // variantAriaLive = 'polite';
       break;
     case 'warning':
       variantIcon = 'ExclamationMarkFilled';
-      // variantAriaLive = 'assertive';
       break;
     case 'error':
       variantIcon = 'XMarkCircleFilled';
-      // variantAriaLive = 'assertive';
       break;
   }
   let headingSize: 'small' | 'xsmall';
