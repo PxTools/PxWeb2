@@ -51,7 +51,6 @@ export function GlobalAlert({
   const hasheading = Boolean(heading);
   const iconClose = 'XMark';
   let variantIcon: IconProps['iconName'];
-  // let variantAriaLive: 'polite' | 'assertive';
   switch (variant) {
     case 'info':
       variantIcon = 'InformationCircleFilled';
