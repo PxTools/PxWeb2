@@ -1,6 +1,6 @@
 @use '../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixvar;
 @use '../../text-styles.scss';
-@use '$ui/src/lib/breakpoints.scss' as breakpoint;
+@use '../../breakpoints.scss' as breakpoint;
 
 .alert-medium {
   display: flex;
