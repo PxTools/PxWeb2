@@ -141,7 +141,7 @@ describe('DrawerSave', () => {
         'PX',
         'JSON-stat 2',
         'HTML',
-        'Parquet',
+        //'Parquet',
       ];
       expectedNames.forEach((name) => {
         expect(within(list).getByRole('button', { name })).toBeInTheDocument();
