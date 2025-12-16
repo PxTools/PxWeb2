@@ -8,7 +8,7 @@ import Heading from '../Typography/Heading/Heading';
 import { Icon, IconProps } from '../Icon/Icon';
 import Button from '../Button/Button';
 import BodyShort from '../Typography/BodyShort/BodyShort';
-import List, { ListProps } from '../List/List';
+// import List, { ListProps } from '../List/List';
 import { getIconDirection } from '../../util/util';
 
 export interface LocalAlertProps {
@@ -113,51 +113,6 @@ export function LocalAlert({
   }
   if (clickable) {
     closeButton = false;
-  }
-
-  const childIsList = (node: React.ReactNode): boolean => {
-    if (React.isValidElement(node)) {
-      if (node.type === List) {
-        return true;
-      }
-    }
-    return false;
-  };
-
-  const extractTextFromChildren = (children: React.ReactNode): string => {
-    let textContent = '';
-
-    React.Children.forEach(children, (child) => {
-      if (React.isValidElement(child)) {
-        // If the child is a valid React element, check its children recursively
-        if (React.isValidElement(child) && child.type === List) {
-          textContent += ' ' + (child.props as ListProps)?.subHeading + ': ';
-        }
-        if (
-          typeof child.props === 'object' &&
-          child.props !== null &&
-          'children' in child.props
-        ) {
-          textContent += extractTextFromChildren(
-            child.props.children as React.ReactNode,
-          );
-        }
-      } else if (typeof child === 'string' || typeof child === 'number') {
-        // If the child is a string or number, add it to the text content
-        textContent += ' ' + child.toString();
-      }
-    });
-
-    return textContent;
-  };
-
-  if (childIsList(children) && clickable) {
-    let extractedText = '';
-    if (React.isValidElement(children) && children.type === List) {
-      const listProps = children.props as ListProps;
-      extractedText = extractTextFromChildren(listProps.children);
-    }
-    children = extractedText;
   }
 
   return (
