@@ -22,7 +22,6 @@ export function CopyButton({
   const copiedText = translations.copiedButtonLabel;
   const copyButtonTooltip = translations.copyButtonTooltip;
   const liveRegionText = hasCopied ? copiedText : '';
-  const ariaLabel = hasCopied ? copiedText : copyText;
 
   function copyToClipboard() {
     navigator.clipboard.writeText(copyContent).then(() => {
@@ -50,7 +49,7 @@ export function CopyButton({
         {liveRegionText}
       </span>
       <Button
-        aria-label={ariaLabel}
+        aria-label={copyText}
         title={copyButtonTooltip}
         className={hasCopied ? styles.hasCopied : undefined}
         onClick={copyToClipboard}
