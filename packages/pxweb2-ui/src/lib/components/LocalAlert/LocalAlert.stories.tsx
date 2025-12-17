@@ -14,7 +14,7 @@ const meta: Meta<typeof LocalAlert> = {
 };
 export default meta;
 
-export const VariantL = {
+export const Variant = {
   args: {
     variant: 'info',
     heading: 'Vi beklager',
