@@ -62,7 +62,7 @@ vi.mock('@pxweb2/pxweb2-ui', () => ({
       {label}
     </button>
   ),
-  Alert: ({ children }: { children: React.ReactNode }) => (
+  LocalAlert: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="alert">{children}</div>
   ),
 }));
