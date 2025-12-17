@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom/vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-
 import { describe, it, expect, vi } from 'vitest';
+
 import { ActionItem } from './ActionItem';
 
 // Mock UI components
@@ -11,6 +11,9 @@ vi.mock('@pxweb2/pxweb2-ui', () => ({
   ),
   ActionItemIcon: ({ largeIconName }: { largeIconName: string }) => (
     <span data-testid="action-item-icon" data-large-icon={largeIconName} />
+  ),
+  CheckCircleIcon: ({ checked }: { checked: boolean }) => (
+    <span data-testid="check-circle-icon" data-checked={checked} />
   ),
   Spinner: () => <span data-testid="spinner" />,
   Label: ({
@@ -34,6 +37,7 @@ vi.mock('@pxweb2/pxweb2-ui', () => ({
 describe('ActionItem', () => {
   it('renders with default props', () => {
     render(<ActionItem iconName="BarChart" />);
+
     expect(screen.getByRole('button')).toBeInTheDocument();
     expect(screen.getByTestId('icon')).toHaveAttribute('data-icon', 'BarChart');
   });
@@ -47,7 +51,10 @@ describe('ActionItem', () => {
         description="Custom description"
       />,
     );
-    expect(screen.getByLabelText('Custom Aria Label')).toBeInTheDocument();
+
+    expect(
+      screen.getByLabelText('Custom Aria Label. Custom description'),
+    ).toBeInTheDocument();
     expect(screen.getByText('Custom Label')).toBeInTheDocument();
     expect(screen.getByText('Custom description')).toBeInTheDocument();
     expect(screen.getByTestId('icon')).toHaveAttribute('data-icon', 'PieChart');
@@ -55,6 +62,7 @@ describe('ActionItem', () => {
 
   it('uses label when no ariaLabel is provided', () => {
     render(<ActionItem iconName="PieChart" label="Custom Label" />);
+
     expect(screen.getByLabelText('Custom Label')).toBeInTheDocument();
     expect(screen.getByText('Custom Label')).toBeInTheDocument();
     expect(screen.getByTestId('icon')).toHaveAttribute('data-icon', 'PieChart');
@@ -64,21 +72,22 @@ describe('ActionItem', () => {
     const onClick = vi.fn();
     render(<ActionItem iconName="BarChart" onClick={onClick} />);
     fireEvent.click(screen.getByRole('button'));
+
     expect(onClick).toHaveBeenCalled();
   });
 
   it('applies correct class names for size', () => {
     render(<ActionItem largeIconName="BarChart" size="medium" />);
     const iconWrapper = screen.getByTestId('icon').parentElement;
-    expect(iconWrapper?.className).toMatch(/iconWrapper-medium/);
+
+    expect(iconWrapper?.className).toMatch(/icon-wrapper-medium/);
   });
 
   describe('medium size', () => {
     it('shows description', () => {
       // medium (default)
-      render(
-        <ActionItem iconName="BarChart" size="medium" description="desc" />,
-      );
+      render(<ActionItem iconName="BarChart" description="desc" />);
+
       expect(screen.getByText('desc')).toBeInTheDocument();
     });
 
@@ -87,6 +96,22 @@ describe('ActionItem', () => {
 
       expect(screen.getByTestId('spinner')).toBeInTheDocument();
     });
+
+    it('shows toggle state when toggleState is provided', () => {
+      render(
+        <ActionItem
+          iconName="Table"
+          size="medium"
+          toggleState={true}
+          label="Toggle Test"
+        />,
+      );
+
+      expect(screen.getByTestId('check-circle-icon')).toHaveAttribute(
+        'data-checked',
+        'true',
+      );
+    });
   });
 
   describe('large size', () => {
@@ -94,6 +119,7 @@ describe('ActionItem', () => {
       render(
         <ActionItem largeIconName="Table" size="large" description="desc2" />,
       );
+
       expect(screen.queryByText('desc2')).not.toBeInTheDocument();
     });
 
@@ -101,6 +127,22 @@ describe('ActionItem', () => {
       render(<ActionItem iconName="BarChart" size="large" isLoading={true} />);
 
       expect(screen.queryByTestId('spinner')).not.toBeInTheDocument();
+    });
+
+    it('shows toggle state when toggleState is provided', () => {
+      render(
+        <ActionItem
+          largeIconName="Table"
+          size="large"
+          toggleState={false}
+          label="Toggle Test Large"
+        />,
+      );
+
+      expect(screen.getByTestId('check-circle-icon')).toHaveAttribute(
+        'data-checked',
+        'false',
+      );
     });
   });
 });

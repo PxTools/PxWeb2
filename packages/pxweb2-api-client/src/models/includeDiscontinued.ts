@@ -5,4 +5,4 @@
 /**
  * Decides if discontinued tables are included in response.
  */
-export type include_discontinued = boolean;
+export type includeDiscontinued = boolean;

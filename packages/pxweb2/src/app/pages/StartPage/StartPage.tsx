@@ -40,7 +40,7 @@ import { useTopicIcons } from '../../util/hooks/useTopicIcons';
 import useApp from '../../context/useApp';
 import { getConfig } from '../../util/config/getConfig';
 import { FilterContext, FilterProvider } from '../../context/FilterContext';
-import { getAllTables } from '../../util/tableHandler';
+import { getAllTables, queryTablesByKeyword } from '../../util/tableHandler';
 import { tableListIsReadyToRender } from '../../util/startPageRender';
 import useFilterUrlSync from '../../util/hooks/useFilterUrlSync';
 import StartpageDetails from '../../components/StartPageDetails/StartPageDetails';
@@ -87,6 +87,20 @@ const StartPage = () => {
 
   const navigate = useNavigate();
 
+  // On initial load, seed search from URL query parameter once
+  useEffect(() => {
+    if (globalThis.window === undefined) {
+      return;
+    }
+    const params = new URLSearchParams(globalThis.window.location.search);
+    const queryText = params.get('query') || '';
+    if (queryText) {
+      updateQueryFilter(queryText);
+    }
+    // run only once on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const isReadyToRender = tableListIsReadyToRender(
     state,
     hasUrlParams,
@@ -99,6 +113,9 @@ const StartPage = () => {
   const noResultSearchHelpContent =
     localeContent?.startPage?.noResultSearchHelp;
   const showBreadCrumb = getConfig().showBreadCrumbOnStartPage;
+
+  // Run once when initially loading the page, then again if language changes
+  // We want to try fetching tables in the selected language if possible
   useEffect(() => {
     if (hasFetchedRef.current && previousLanguage.current == i18n.language) {
       return;
@@ -425,7 +442,6 @@ const StartPage = () => {
     <>
       {renderNumberofTablesScreenReader()}
       {renderTableCount()}
-
       {state.filteredTables.length === 0 ? (
         renderNoResult()
       ) : (
@@ -445,14 +461,25 @@ const StartPage = () => {
 
   // Debounce the dispatch for search filter, so it waits a few moments for typing to finish
   const debouncedDispatch = useRef(
-    debounce((value: string) => {
+    debounce(async (value: string) => {
+      let tableIds: string[] = [];
+      if (value.length > 0) {
+        const searchedTables = await queryTablesByKeyword(value, i18n.language);
+        tableIds = searchedTables.map((table: Table) => table.id);
+      }
       dispatch({
-        type: ActionType.ADD_SEARCH_FILTER,
-        payload: { text: value, language: i18n.language },
+        type: ActionType.ADD_QUERY_FILTER,
+        payload: { query: value, tableIds: tableIds },
       });
-      handleFilterChange();
-    }, 500),
+      setVisibleCount(paginationCount);
+      setIsFadingTableList(false);
+    }, 700),
   ).current;
+
+  const updateQueryFilter = (value: string) => {
+    setIsFadingTableList(true);
+    debouncedDispatch(value);
+  };
 
   const renderPagination = () => {
     const shouldShowPagination =
@@ -681,8 +708,12 @@ const StartPage = () => {
                   ref={searchFieldRef}
                   showLabel
                   labelText={t('start_page.search_label')}
+                  value={
+                    (state.activeFilters.find((f) => f.type === 'query')
+                      ?.label as string) ?? ''
+                  }
                   onChange={(value: string) => {
-                    debouncedDispatch(value);
+                    updateQueryFilter(value);
                   }}
                 />
               </div>
@@ -717,7 +748,7 @@ const StartPage = () => {
                   <FilterSidebar onFilterChange={handleFilterChange} />
                 </div>
               )}
-              {/* </div> */}
+
               {renderFilterOverlay()}
 
               <div className={styles.listTables} id="px-start-result">
@@ -744,7 +775,7 @@ const StartPage = () => {
                               },
                             });
                             handleFilterChange();
-                            if (filter.type == 'search') {
+                            if (filter.type == 'query') {
                               searchFieldRef.current?.clearInputField();
                             }
                           }}
