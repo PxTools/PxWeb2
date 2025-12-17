@@ -11,8 +11,6 @@ import NavigationRail from '../../components/NavigationMenu/NavigationRail/Navig
 import NavigationBar from '../../components/NavigationMenu/NavigationBar/NavigationBar';
 import { SkipToMain } from '../../components/SkipToMain/SkipToMain';
 import { Footer } from '../../components/Footer/Footer';
-import { getConfig } from '../../util/config/getConfig';
-import { OpenAPI } from '@pxweb2/pxweb2-api-client';
 import useAccessibility from '../../context/useAccessibility';
 import useApp from '../../context/useApp';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
@@ -27,11 +25,7 @@ export function TableViewer() {
     skipToMainFocused,
     setSkipToMainFocused,
   } = useApp();
-  const config = getConfig();
   const accessibility = useAccessibility();
-
-  const baseUrl = config.apiUrl;
-  OpenAPI.BASE = baseUrl;
 
   const { tableId } = useParams<{ tableId: string }>();
   const [selectedTableId] = useState(tableId ?? '');
