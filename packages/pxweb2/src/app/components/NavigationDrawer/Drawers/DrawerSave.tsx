@@ -74,11 +74,11 @@ export const fileFormats: FileFormat[] = [
     outputFormat: OutputFormatType.HTML,
     iconName: 'FileCode',
   },
-  {
-    value: 'parquet',
-    outputFormat: OutputFormatType.PARQUET,
-    iconName: 'FileCode',
-  },
+  // { // Parquet export temporarily disabled, remember to enable in DrawerSave.spec.tsx as well
+  //   value: 'parquet',
+  //   outputFormat: OutputFormatType.PARQUET,
+  //   iconName: 'FileCode',
+  // },
 ];
 
 export const SaveQueryCreateButton: React.FC<SaveQueryButtonProps> = ({
