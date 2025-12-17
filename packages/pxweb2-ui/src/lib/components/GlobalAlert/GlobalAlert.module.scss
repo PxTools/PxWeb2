@@ -4,7 +4,7 @@
 
 .alert-medium {
   display: flex;
-  padding: fixvar.$spacing-5 0px;
+  padding: fixvar.$spacing-5 fixvar.$spacing-5;
   align-items: flex-start;
   gap: fixvar.$spacing-3;
 }
@@ -17,33 +17,33 @@
 
 .container {
   display: block;
-  margin-left: auto;
-  margin-right: auto;
+  // margin-left: auto;
+  // margin-right: auto;
 
-  @media #{breakpoint.$xsmall} {
-    margin-left: 1rem;
-    margin-right: 1rem;
-  }
+  // @media #{breakpoint.$xsmall} {
+  //   margin-left: 1rem;
+  //   margin-right: 1rem;
+  // }
 
-  @media #{breakpoint.$small} {
-    max-width: 508px;
-  }
+  // @media #{breakpoint.$small} {
+  //   max-width: 508px;
+  // }
 
-  @media #{breakpoint.$medium} {
-    max-width: 688px;
-  }
+  // @media #{breakpoint.$medium} {
+  //   max-width: 688px;
+  // }
 
-  @media #{breakpoint.$large} {
-    max-width: 928px;
-  }
+  // @media #{breakpoint.$large} {
+  //   max-width: 928px;
+  // }
 
-  @media #{breakpoint.$xlarge} {
-    max-width: 1108px;
-  }
+  // @media #{breakpoint.$xlarge} {
+  //   max-width: 1108px;
+  // }
 
-  @media #{breakpoint.$xxlarge} {
-    max-width: 1288px;
-  }
+  // @media #{breakpoint.$xxlarge} {
+  //   max-width: 1288px;
+  // }
 }
 
 .info {
