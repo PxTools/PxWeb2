@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import cl from 'clsx';
 
 import classes from './Notes.module.scss';
-import Alert from '../Alert/Alert';
+import LocalAlert from '../LocalAlert/LocalAlert';
 import { variableNotes } from './noteCollection';
 import { VariableNotes } from './VariableNotes';
 
@@ -24,13 +24,13 @@ export function MandatoryVariableNotes({
     variableNotes.variableName;
 
   return (
-    <Alert
+    <LocalAlert
       heading={heading}
       headingLevel="3"
       variant="info"
       className={cl(classes[`mandatory-box`])}
     >
       <VariableNotes variableNotes={variableNotes} showVariableName={false} />
-    </Alert>
+    </LocalAlert>
   );
 }
