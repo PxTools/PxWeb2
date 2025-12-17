@@ -6,8 +6,8 @@ import {
   Table,
   TablesResponse,
   TimeUnit,
-  FolderContentItemTypeEnum,
-  TableService,
+  TableCategory,
+  TablesService,
 } from '@pxweb2/pxweb2-api-client';
 
 // Test getFullTable
@@ -16,7 +16,6 @@ describe('getAllTables', () => {
     language: 'en',
     tables: [
       {
-        type: FolderContentItemTypeEnum.TABLE,
         id: 'TAB4707',
         label: 'Test table',
         description: '',
@@ -27,7 +26,7 @@ describe('getAllTables', () => {
         source: 'Test',
         paths: [[{ id: 'TEST', label: 'Test' }]],
         links: [],
-        category: Table.category.PUBLIC,
+        category: TableCategory.PUBLIC,
         timeUnit: TimeUnit.ANNUAL,
       } as Table,
     ],
@@ -47,7 +46,7 @@ describe('getAllTables', () => {
 
   it('should fetch and return tables from TableService', async () => {
     const listAllTablesSpy = vi
-      .spyOn(TableService, 'listAllTables')
+      .spyOn(TablesService, 'listAllTables')
       .mockResolvedValueOnce(mockSuccessResponse);
 
     const tables = await getAllTables('en');
@@ -58,7 +57,7 @@ describe('getAllTables', () => {
   });
 
   it('should retry with fallback language when receiving unsupported language error', async () => {
-    const listAllTablesSpy = vi.spyOn(TableService, 'listAllTables');
+    const listAllTablesSpy = vi.spyOn(TablesService, 'listAllTables');
 
     // First call throws unsupported language error
     listAllTablesSpy.mockRejectedValueOnce({
@@ -100,7 +99,7 @@ describe('getAllTables', () => {
   });
 
   it('should throw error when both original and fallback language calls fail', async () => {
-    const listAllTablesSpy = vi.spyOn(TableService, 'listAllTables');
+    const listAllTablesSpy = vi.spyOn(TablesService, 'listAllTables');
     listAllTablesSpy.mockRejectedValueOnce({
       body: { title: 'Unsupported language' },
     });
@@ -142,7 +141,6 @@ const testFilterSubjectTimeDisallow: Filter[] = [
 ];
 
 const tableYear: Table = {
-  type: FolderContentItemTypeEnum.TABLE,
   id: '13618',
   label:
     '13618: Personer, etter arbeidsstyrkestatus, kjønn og alder. Bruddjusterte tall 2009-2022',
@@ -150,7 +148,7 @@ const tableYear: Table = {
   updated: '2023-04-11T06:00:00Z',
   firstPeriod: '2009',
   lastPeriod: '2022',
-  category: Table.category.PUBLIC,
+  category: TableCategory.PUBLIC,
   variableNames: [
     'arbeidsstyrkestatus',
     'kjønn',
