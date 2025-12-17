@@ -20,6 +20,11 @@ export function CodeSnippetHeader({
   wrapCode,
   onToggleWrap,
 }: CodeSnippetHeaderProps) {
+  const copyButtonTranslations = {
+    copyButtonLabel: translations.copyButtonLabel,
+    copiedButtonLabel: translations.copiedButtonLabel,
+    copyButtonTooltip: translations.copyButtonTooltip,
+  };
   const wrapButtonText = wrapCode
     ? translations.unwrapCodeButtonLabel
     : translations.wrapCodeButtonLabel;
@@ -39,7 +44,7 @@ export function CodeSnippetHeader({
         <CopyButton
           title={title}
           copyContent={copyContent}
-          translations={translations}
+          translations={copyButtonTranslations}
         />
       </div>
     </div>
