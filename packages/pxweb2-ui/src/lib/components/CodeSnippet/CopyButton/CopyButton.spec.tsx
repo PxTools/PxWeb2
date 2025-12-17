@@ -42,8 +42,6 @@ describe('CopyButton', () => {
       copyButtonLabel: 'Copy ',
       copiedButtonLabel: 'Copied!',
       copyButtonTooltip: 'Copy to clipboard',
-      wrapCodeButtonLabel: 'Wrap code',
-      unwrapCodeButtonLabel: 'Unwrap code',
     },
   };
 
