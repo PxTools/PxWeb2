@@ -17,8 +17,6 @@
 
 .container {
   display: block;
-  // margin-left: auto;
-  // margin-right: auto;
 
   @media #{breakpoint.$xsmall} {
     padding: 0 fixvar.$spacing-4;
