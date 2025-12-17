@@ -12,7 +12,7 @@ const meta: Meta<typeof GlobalAlert> = {
 };
 export default meta;
 
-export const VariantL = {
+export const Variant = {
   args: {
     variant: 'info',
     heading: 'Welcome',
