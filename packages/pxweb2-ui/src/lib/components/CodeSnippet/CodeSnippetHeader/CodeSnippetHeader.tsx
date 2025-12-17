@@ -31,7 +31,6 @@ export function CodeSnippetHeader({
         <Button
           aria-label={wrapButtonText}
           title={wrapButtonText}
-          className={wrapCode ? styles['wrap-code'] : undefined}
           onClick={onToggleWrap}
           size="medium"
           variant="tertiary"
