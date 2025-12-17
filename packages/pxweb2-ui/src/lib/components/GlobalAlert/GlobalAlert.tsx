@@ -104,11 +104,7 @@ export function GlobalAlert({
           </div>
           <div className={cl(classes[`alert-section-middle-${size}`])}>
             {hasheading && (
-              <div
-                className={cl(classes[`alert-heading`])}
-                // aria-live={variantAriaLive}
-                aria-atomic="true"
-              >
+              <div className={cl(classes[`alert-heading`])} aria-atomic="true">
                 <span className={classes['sr-only']}>
                   {t(`common.alert.${variant}`)}
                 </span>
