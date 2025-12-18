@@ -1,0 +1,28 @@
+.header {
+  display: flex;
+  padding: 0 1rem;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+
+  border-radius: var(--px-border-radius-medium) var(--px-border-radius-medium) 0
+    0;
+  border-top: 1px solid var(--px-color-border-subtle);
+  border-right: 1px solid var(--px-color-border-subtle);
+  border-left: 1px solid var(--px-color-border-subtle);
+  background: var(--px-color-surface-subtle);
+}
+
+.header-title {
+  display: flex;
+  padding-top: 0.125rem;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--px-color-text-default);
+}
+
+.header-buttons {
+  display: flex;
+  align-self: flex-start;
+}

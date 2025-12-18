@@ -60,6 +60,13 @@
       "breadcrumb_root_title": "Home",
       "breadcrumb_home_title": "Home",
       "show_more_breadcrumbs": "Show more"
+    },
+    "code_snippet": {
+      "copy_button_tooltip": "Copy code",
+      "copy_button_label": "Copy code for ",
+      "copied_button_label": "Code copied to clipboard",
+      "wrap_code_button_label": "Wrap lines",
+      "unwrap_code_button_label": "Unwrap lines"
     }
   },
   "start_page": {
