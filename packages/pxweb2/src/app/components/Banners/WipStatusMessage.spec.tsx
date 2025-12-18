@@ -13,7 +13,7 @@ vi.mock('react-i18next', () => ({
 
 // Mock Alert component
 vi.mock('@pxweb2/pxweb2-ui', () => ({
-  Alert: ({
+  GlobalAlert: ({
     children,
     onDismissed,
     closeButton,

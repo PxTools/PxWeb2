@@ -1,11 +1,11 @@
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 
-import Alert, { AlertProps } from './Alert';
+import LocalAlert, { LocalAlertProps } from './LocalAlert';
 
 describe('Alert', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<Alert variant="info" />);
+    const { baseElement } = render(<LocalAlert variant="info" />);
     expect(baseElement).toBeTruthy();
   });
 });
@@ -19,8 +19,8 @@ it.each([
   (expectedAriaLive, variant) => {
     const headingText = `Test heading for ${variant}`;
     const { getByText } = render(
-      <Alert
-        variant={variant as AlertProps['variant']}
+      <LocalAlert
+        variant={variant as LocalAlertProps['variant']}
         heading={headingText}
       />,
     );

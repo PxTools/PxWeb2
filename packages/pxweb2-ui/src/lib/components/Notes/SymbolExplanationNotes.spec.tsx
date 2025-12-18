@@ -6,6 +6,17 @@ import { SymbolExplanationNotes } from './SymbolExplanationNotes';
 import { dummyNotes } from './notesDummyData';
 
 describe('SymbolExplanationNotes', () => {
+  it('renders InformationCard heading as level 3 (h3)', () => {
+    render(<SymbolExplanationNotes notes={{ A: 'Note' }} />);
+    const headingKey =
+      'presentation_page.main_content.about_table.footnotes.symbol_explanation_heading';
+    const heading = screen.getByRole('heading', {
+      level: 3,
+      name: headingKey,
+    });
+    expect(heading).toBeInTheDocument();
+  });
+
   it('renders a single note correctly when there is only one note', () => {
     const singleNote = { A: 'Single note content' };
     render(<SymbolExplanationNotes notes={singleNote} />);

@@ -4,7 +4,7 @@ import cl from 'clsx';
 import classes from './Notes.module.scss';
 import List from '../List/List';
 import ListItem from '../List/ListItem';
-import Alert from '../Alert/Alert';
+import LocalAlert from '../LocalAlert/LocalAlert';
 import MarkdownRenderer from '../MarkdownRenderer/MarkdownRenderer';
 
 export type MandatoryTableNotesProps = {
@@ -25,7 +25,7 @@ export function MandatoryTableNotes({ notes }: MandatoryTableNotesProps) {
   );
 
   return (
-    <Alert
+    <LocalAlert
       heading={heading}
       headingLevel="3"
       variant="info"
@@ -44,6 +44,6 @@ export function MandatoryTableNotes({ notes }: MandatoryTableNotesProps) {
           ))}
         </List>
       )}
-    </Alert>
+    </LocalAlert>
   );
 }

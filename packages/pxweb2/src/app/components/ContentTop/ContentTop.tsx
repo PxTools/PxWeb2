@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useState, useContext, useEffect, useRef } from 'react';
 import classes from './ContentTop.module.scss';
 import {
-  Alert,
+  LocalAlert,
   BodyShort,
   Breadcrumbs,
   Button,
@@ -252,7 +252,7 @@ export function ContentTop({
       </div>
       {noteMessage && (
         <div className={cl(classes.alertgroup)}>
-          <Alert
+          <LocalAlert
             ref={openInformationAlertNotesRef}
             variant="info"
             heading={noteMessage.heading}
@@ -269,7 +269,7 @@ export function ContentTop({
             }}
           >
             {noteMessage.message}
-          </Alert>
+          </LocalAlert>
         </div>
       )}
       {isTableInformationOpen && (
