@@ -5,6 +5,7 @@
 import type { OutputFormatParamType } from '../models/OutputFormatParamType';
 import type { OutputFormatType } from '../models/OutputFormatType';
 import type { SavedQuery } from '../models/SavedQuery';
+import type { SavedQueryResponse } from '../models/SavedQueryResponse';
 import type { SelectionResponse } from '../models/SelectionResponse';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -12,13 +13,13 @@ import { request as __request } from '../core/request';
 export class SavedQueriesService {
     /**
      * Save a query for later use.
-     * @param requestBody A saved query
-     * @returns SavedQuery Saved query created
+     * @param requestBody A saved query in JSON format without an Id.
+     * @returns SavedQueryResponse Saved query created and returned with the id specified.
      * @throws ApiError
      */
     public static createSaveQuery(
         requestBody?: SavedQuery,
-    ): CancelablePromise<SavedQuery> {
+    ): CancelablePromise<SavedQueryResponse> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/savedqueries',
@@ -32,13 +33,17 @@ export class SavedQueriesService {
     }
     /**
      * Retrieves the content of a saved query.
+     * **Used for retrieving a saved query**
+     * * Get the saved query by id.
+     * * The saved query contains the selection and other parameters that were used when the query was created.
+     *
      * @param id Id
-     * @returns SavedQuery Success
+     * @returns SavedQueryResponse Success
      * @throws ApiError
      */
     public static getSaveQuery(
         id: string,
-    ): CancelablePromise<SavedQuery> {
+    ): CancelablePromise<SavedQueryResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/savedqueries/{id}',
@@ -54,6 +59,10 @@ export class SavedQueriesService {
     }
     /**
      * Retrieves the data by running the saved query.
+     * **Used for retrieving data by running a saved query**
+     * * Get the data by running the saved query.
+     * * The saved query contains the selection and other parameters that were used when the query was created.
+     *
      * @param id Id
      * @param lang The language if the default is not what you want.
      * @param outputFormat
@@ -87,7 +96,7 @@ export class SavedQueriesService {
         });
     }
     /**
-     * Retrieves the selection that the saved query will result in.
+     * Retrieves the selection that the saved query will result in. Selection expressions will be transformed into actual value codes.
      * @param id Id
      * @param lang The language if the default is not what you want.
      * @returns SelectionResponse Success

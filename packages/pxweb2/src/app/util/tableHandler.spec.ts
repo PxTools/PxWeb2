@@ -1,33 +1,21 @@
 import { vi } from 'vitest';
+
 import { getAllTables, shouldTableBeIncluded } from './tableHandler';
 import { type Filter } from '../pages/StartPage/StartPageTypes';
 import {
   Table,
   TablesResponse,
   TimeUnit,
-  FolderContentItemTypeEnum,
+  TableCategory,
+  TablesService,
 } from '@pxweb2/pxweb2-api-client';
 
-// Mock TableService.listAllTables
-vi.mock(import('@pxweb2/pxweb2-api-client'), async (importOriginal) => {
-  const actual = await importOriginal();
-  return {
-    ...actual,
-    TableService: {
-      listAllTables: vi.fn(),
-    },
-    OpenAPI: vi.fn(),
-  };
-});
-
 // Test getFullTable
-
 describe('getAllTables', () => {
   const mockSuccessResponse: TablesResponse = {
     language: 'en',
     tables: [
       {
-        type: FolderContentItemTypeEnum.TABLE,
         id: 'TAB4707',
         label: 'Test table',
         description: '',
@@ -38,7 +26,7 @@ describe('getAllTables', () => {
         source: 'Test',
         paths: [[{ id: 'TEST', label: 'Test' }]],
         links: [],
-        category: Table.category.PUBLIC,
+        category: TableCategory.PUBLIC,
         timeUnit: TimeUnit.ANNUAL,
       } as Table,
     ],
@@ -53,24 +41,23 @@ describe('getAllTables', () => {
   };
 
   beforeEach(() => {
-    vi.resetAllMocks();
+    vi.restoreAllMocks();
   });
 
   it('should fetch and return tables from TableService', async () => {
-    const { TableService } = await import('@pxweb2/pxweb2-api-client');
-    vi.mocked(TableService.listAllTables).mockResolvedValueOnce(
-      mockSuccessResponse,
-    );
+    const listAllTablesSpy = vi
+      .spyOn(TablesService, 'listAllTables')
+      .mockResolvedValueOnce(mockSuccessResponse);
 
     const tables = await getAllTables('en');
+    expect(listAllTablesSpy).toHaveBeenCalledTimes(1);
     expect(Array.isArray(tables)).toBe(true);
     expect(tables.length).toBe(1);
     expect(tables[0].id).toBe('TAB4707');
   });
 
   it('should retry with fallback language when receiving unsupported language error', async () => {
-    const { TableService } = await import('@pxweb2/pxweb2-api-client');
-    const listAllTablesSpy = vi.mocked(TableService.listAllTables);
+    const listAllTablesSpy = vi.spyOn(TablesService, 'listAllTables');
 
     // First call throws unsupported language error
     listAllTablesSpy.mockRejectedValueOnce({
@@ -112,10 +99,7 @@ describe('getAllTables', () => {
   });
 
   it('should throw error when both original and fallback language calls fail', async () => {
-    const { TableService } = await import('@pxweb2/pxweb2-api-client');
-    const listAllTablesSpy = vi.mocked(TableService.listAllTables);
-
-    // First call throws unsupported language error
+    const listAllTablesSpy = vi.spyOn(TablesService, 'listAllTables');
     listAllTablesSpy.mockRejectedValueOnce({
       body: { title: 'Unsupported language' },
     });
@@ -157,7 +141,6 @@ const testFilterSubjectTimeDisallow: Filter[] = [
 ];
 
 const tableYear: Table = {
-  type: FolderContentItemTypeEnum.TABLE,
   id: '13618',
   label:
     '13618: Personer, etter arbeidsstyrkestatus, kjønn og alder. Bruddjusterte tall 2009-2022',
@@ -165,7 +148,7 @@ const tableYear: Table = {
   updated: '2023-04-11T06:00:00Z',
   firstPeriod: '2009',
   lastPeriod: '2022',
-  category: Table.category.PUBLIC,
+  category: TableCategory.PUBLIC,
   variableNames: [
     'arbeidsstyrkestatus',
     'kjønn',

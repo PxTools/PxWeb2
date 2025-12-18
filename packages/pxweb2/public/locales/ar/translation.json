@@ -69,7 +69,9 @@
   },
   "start_page": {
     "header": "مرحبا بكم في التطبيق!",
-    "welcome_trans_test": "مرحبا بكم في <1>برنامج</1> لبكسي ويب 2.0!"
+    "welcome_trans_test": "مرحبا بكم في <1>برنامج</1> لبكسي ويب 2.0!",
+    "skip_to_filter": "تخطي إلى الفلتر",
+    "skip_to_result": "تخطي إلى النتيجة"
   },
   "presentation_page": {
     "side_menu": {

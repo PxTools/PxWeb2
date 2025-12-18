@@ -1,9 +1,14 @@
 import { Table } from '@pxweb2/pxweb2-api-client';
 
+// Note: The ActionType ADD_SEARCH has been replaced by ADD_QUERY_FILTER.
+// In the same way the FilterType 'search' has been replaced by 'query'.
+// It is kept here for possible future use. One scenario could be that the API query fails,
+// then we can fall back to client-side search filtering.
 export enum ActionType {
   RESET_FILTERS = 'RESET_FILTERS',
   ADD_FILTER = 'ADD_FILTER',
   ADD_SEARCH_FILTER = 'ADD_SEARCH_FILTER',
+  ADD_QUERY_FILTER = 'ADD_QUERY_FILTER',
   REMOVE_FILTER = 'REMOVE_FILTER',
   UPDATE_TABLES = 'UPDATE_TABLES',
   SET_ERROR = 'SET_ERROR',
@@ -16,6 +21,7 @@ export type FilterType =
   | 'variable'
   | 'yearRange'
   | 'search'
+  | 'query'
   | 'status';
 
 export type Filter = {
@@ -41,6 +47,7 @@ export type YearRange = {
 
 export type StartPageState = {
   availableTables: Table[];
+  availableTablesWhenQueryApplied: Table[];
   filteredTables: Table[];
   availableFilters: StartPageFilters;
   activeFilters: Filter[];
@@ -55,6 +62,7 @@ export type ReducerActionTypes =
   | ResetFilterAction
   | AddFilterAction
   | AddSearchFilterAction
+  | AddQueryFilterAction
   | RemoveFilterAction
   | UpdateTablesAction
   | SetErrorAction
@@ -78,6 +86,11 @@ type AddFilterAction = {
 type AddSearchFilterAction = {
   type: ActionType.ADD_SEARCH_FILTER;
   payload: { text: string; language: string };
+};
+
+type AddQueryFilterAction = {
+  type: ActionType.ADD_QUERY_FILTER;
+  payload: { query: string; tableIds: string[] };
 };
 
 type UpdateTablesAction = {
