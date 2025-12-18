@@ -72,7 +72,7 @@
     "no_result_search_help": "Sökhjälp",
     "result_hidden_header": "Resultat",
     "search_label": "Sök i Statistikdatabasen",
-    "search_placeholder": "Sök efter tabellrubrik eller variabel",
+    "search_placeholder": "",
     "skip_to.filter": "Gå till filter",
     "skip_to.result": "Gå till resultat",
     "filter": {
