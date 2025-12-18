@@ -70,7 +70,7 @@ export const LanguageSwitcher = () => {
           classes[`textcolor-default`],
           isTabbed && classes['focusMarkings'],
         )}
-        aria-label="Velg språk"
+        aria-label={t('common.switch_language_landmark')}
       >
         <div className={cl(classes.languageSwitcherIconContainer)}>
           <Icon
