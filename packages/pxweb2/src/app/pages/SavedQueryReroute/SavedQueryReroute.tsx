@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import {
   OpenAPI,
   SavedQueriesService,
@@ -9,6 +9,7 @@ import { getConfig } from '../../util/config/getConfig';
 
 export default function SavedQueryReroute() {
   const { sqId } = useParams<{ sqId: string }>();
+  const navigate = useNavigate();
   const [status, setStatus] = useState<
     'idle' | 'loading' | 'error' | 'success'
   >('idle');
@@ -37,6 +38,25 @@ export default function SavedQueryReroute() {
       });
   }, [sqId]);
 
+  // Navigate to the table viewer when the saved query has loaded
+  useEffect(() => {
+    if (status !== 'success' || !data) {
+      return;
+    }
+    const config = getConfig();
+    const lang = data.language || data.savedQuery.language;
+    const defaultLang = config.language.defaultLanguage;
+    const showDefaultLanguageInPath = config.language.showDefaultLanguageInPath;
+
+    const path = showDefaultLanguageInPath
+      ? `/${lang}/table/${data.savedQuery.tableId}`
+      : lang === defaultLang
+        ? `/table/${data.savedQuery.tableId}`
+        : `/${lang}/table/${data.savedQuery.tableId}`;
+
+    navigate(path, { replace: true });
+  }, [status, data, navigate]);
+
   return (
     <div className="container">
       <h1>Saved Query</h1>
@@ -45,7 +65,7 @@ export default function SavedQueryReroute() {
       {status === 'error' && <p role="alert">{error}</p>}
       {status === 'success' && (
         <div>
-          <p>Loaded saved query: {data?.id}</p>
+          <p>Table id: {data?.savedQuery.tableId}</p>
         </div>
       )}
     </div>
