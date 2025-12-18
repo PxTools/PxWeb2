@@ -1,11 +1,17 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { OpenAPI, SavedQueriesService, type SavedQueryResponse } from '@pxweb2/pxweb2-api-client';
+import {
+  OpenAPI,
+  SavedQueriesService,
+  type SavedQueryResponse,
+} from '@pxweb2/pxweb2-api-client';
 import { getConfig } from '../../util/config/getConfig';
 
 export default function SavedQueryReroute() {
   const { sqId } = useParams<{ sqId: string }>();
-  const [status, setStatus] = useState<'idle' | 'loading' | 'error' | 'success'>('idle');
+  const [status, setStatus] = useState<
+    'idle' | 'loading' | 'error' | 'success'
+  >('idle');
   const [data, setData] = useState<SavedQueryResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
