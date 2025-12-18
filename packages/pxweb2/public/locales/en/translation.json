@@ -24,6 +24,7 @@
       }
     },
     "skip_to_main": "Skip to main content",
+    "switch_language_landmark": "Select language",
     "footer": {
       "language_header": "Language",
       "copyright": "© Copyright PxTools",
@@ -72,7 +73,7 @@
     "result_hidden_header": "Result",
     "search_label": "Search in PxWeb 2.0",
     "search_placeholder": "",
-    "skip_to.filter": "Skip to filter", 
+    "skip_to.filter": "Skip to filter",
     "skip_to.result": "Skip to result",
     "filter": {
       "button": "Filter",
