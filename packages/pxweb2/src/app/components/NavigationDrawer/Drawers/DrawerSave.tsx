@@ -13,7 +13,7 @@ import {
   Radio,
   RadioOption,
   VartypeEnum,
-  Alert,
+  LocalAlert,
 } from '@pxweb2/pxweb2-ui';
 import {
   ApiError,
@@ -74,11 +74,11 @@ export const fileFormats: FileFormat[] = [
     outputFormat: OutputFormatType.HTML,
     iconName: 'FileCode',
   },
-  {
-    value: 'parquet',
-    outputFormat: OutputFormatType.PARQUET,
-    iconName: 'FileCode',
-  },
+  // { // Parquet export temporarily disabled, remember to enable in DrawerSave.spec.tsx as well
+  //   value: 'parquet',
+  //   outputFormat: OutputFormatType.PARQUET,
+  //   iconName: 'FileCode',
+  // },
 ];
 
 export const SaveQueryCreateButton: React.FC<SaveQueryButtonProps> = ({
@@ -306,7 +306,7 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
 
       // Add selected codelist to selection if it exists
       if (selectedCodeList) {
-        selection.codeList = selectedCodeList;
+        selection.codelist = selectedCodeList;
       }
 
       selections.push(selection);
@@ -500,9 +500,12 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
             </li>
           ))}
         </ul>
-        <Alert variant="info" className={classes.alert + ' ' + classes.file}>
+        <LocalAlert
+          variant="info"
+          className={classes.alert + ' ' + classes.file}
+        >
           {t('common.status_messages.drawer_save_file')}
-        </Alert>
+        </LocalAlert>
       </ContentBox>
       <ContentBox title={t('presentation_page.side_menu.save.savequery.title')}>
         <div className={classes.informationCardWrapper}>
@@ -549,9 +552,9 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
         </div>
       </ContentBox>
       <ContentBox title={t('presentation_page.side_menu.save.api.query')}>
-        <Alert variant="info" className={classes.alert}>
+        <LocalAlert variant="info" className={classes.alert}>
           {t('common.status_messages.drawer_save_api')}
-        </Alert>
+        </LocalAlert>
       </ContentBox>
     </>
   );

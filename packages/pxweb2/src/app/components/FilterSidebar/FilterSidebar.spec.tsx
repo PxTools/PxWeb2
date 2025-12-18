@@ -4,11 +4,7 @@ import '@testing-library/jest-dom/vitest';
 import { vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
 
-import {
-  Table,
-  TimeUnit,
-  FolderContentItemTypeEnum,
-} from '@pxweb2/pxweb2-api-client';
+import { Table, TimeUnit } from '@pxweb2/pxweb2-api-client';
 import { FilterSidebar } from './FilterSidebar';
 import { FilterContext } from '../../context/FilterContext';
 import {
@@ -64,7 +60,6 @@ vi.mock('@pxweb2/pxweb2-ui', () => ({
 
 // Helper function to create mock tables
 const createMockTable = (id: string, overrides?: Partial<Table>): Table => ({
-  type: FolderContentItemTypeEnum.TABLE,
   id,
   label: `Table ${id}`,
   updated: null,
