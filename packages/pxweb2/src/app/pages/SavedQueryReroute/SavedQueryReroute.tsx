@@ -54,8 +54,9 @@ export default function SavedQueryReroute() {
         ? `/table/${data.savedQuery.tableId}`
         : `/${lang}/table/${data.savedQuery.tableId}`;
 
-    navigate(path, { replace: true });
-  }, [status, data, navigate]);
+    const search = sqId ? `?${new URLSearchParams({ sq: sqId }).toString()}` : '';
+    navigate(`${path}${search}`, { replace: true });
+  }, [status, data, navigate, sqId]);
 
   return (
     <div className="container">
