@@ -41,7 +41,7 @@ export function GlobalAlert({
   const cssClasses = className.length > 0 ? ' ' + className : '';
   const { t } = useTranslation();
   const [isVisible, setIsVisible] = useState(true);
-  const HandleClose = () => {
+  const handleClose = () => {
     setIsVisible(false);
     onDismissed?.();
   };
@@ -134,7 +134,7 @@ export function GlobalAlert({
                   variant="tertiary"
                   size="small"
                   icon={iconClose}
-                  onClick={HandleClose}
+                  onClick={handleClose}
                   aria-label={t('common.generic_buttons.close')}
                 />
               </div>
