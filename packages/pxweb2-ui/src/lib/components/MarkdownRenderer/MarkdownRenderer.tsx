@@ -47,3 +47,5 @@ export const MarkdownRenderer: React.FC<MdProps> = ({ mdText }) => {
     </ReactMarkdown>
   );
 };
+
+export default MarkdownRenderer;

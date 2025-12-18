@@ -4,7 +4,7 @@ import List from '../List/List';
 import ListItem from '../List/ListItem';
 import { noteCollection } from './noteCollection';
 import { VariableNotes } from './VariableNotes';
-import { MarkdownRenderer } from '../MarkdownRenderer/MarkdownRenderer';
+import MarkdownRenderer from '../MarkdownRenderer/MarkdownRenderer';
 
 export type NonMandatoryNotesProps = {
   readonly notes: noteCollection;

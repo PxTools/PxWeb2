@@ -1,7 +1,7 @@
 import List from '../List/List';
 import ListItem from '../List/ListItem';
 import { variableNotes } from './noteCollection';
-import { MarkdownRenderer } from '../MarkdownRenderer/MarkdownRenderer';
+import MarkdownRenderer from '../MarkdownRenderer/MarkdownRenderer';
 
 export type VariableNotesProps = {
   readonly variableNotes: variableNotes;
