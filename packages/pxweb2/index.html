@@ -71,7 +71,11 @@
       // Vite uses ES modules; DOMContentLoaded
       document.addEventListener('DOMContentLoaded', () => {
         const url = new URL(window.location.href);
-        url.pathname = url.pathname.replace('/statbank2/', '/statbank/');
+        //url.pathname = url.pathname.replace('/statbank2/', '/statbank/');
+        url.pathname = url.pathname.replace(
+          /^\/statbank2(?=\/|$)/,
+          '/statbank',
+        );
 
         const link = document.getElementById('myLink');
         if (link) {
