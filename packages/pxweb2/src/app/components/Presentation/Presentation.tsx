@@ -6,7 +6,7 @@ import isEqual from 'lodash/isEqual';
 import classes from './Presentation.module.scss';
 import useApp from '../../context/useApp';
 import { ContentTop } from '../ContentTop/ContentTop';
-import { Table, EmptyState, PxTable, Alert } from '@pxweb2/pxweb2-ui';
+import { Table, EmptyState, PxTable, LocalAlert } from '@pxweb2/pxweb2-ui';
 import useTableData from '../../context/useTableData';
 import useVariables from '../../context/useVariables';
 import { useDebounce } from '@uidotdev/usehooks';
@@ -221,7 +221,7 @@ export function Presentation({
                 width: '100%',
               }}
             >
-              <Alert
+              <LocalAlert
                 variant="warning"
                 heading={t(
                   'presentation_page.main_content.table.warnings.to_many_values_selected.title',
@@ -260,7 +260,7 @@ export function Presentation({
                 {t(
                   'presentation_page.main_content.table.warnings.to_many_values_selected.description3',
                 )}{' '}
-              </Alert>
+              </LocalAlert>
             </div>
           )}
 

@@ -24,6 +24,7 @@
       }
     },
     "skip_to_main": "Hopp til hovedinnhold",
+    "switch_language_landmark": "Velg språk",
     "footer": {
       "language_header": "Språk",
       "copyright": "© Opphavsrett PxTools",
@@ -71,7 +72,9 @@
     "no_result_search_help": "Søkehjelp",
     "result_hidden_header": "Resultat",
     "search_label": "Søk i Statistikkbanken",
-    "search_placeholder": "Søk etter tabellnavn eller variabler",
+    "search_placeholder": "",
+    "skip_to.filter": "Gå til filter",
+    "skip_to.result": "Gå til resultat",
     "filter": {
       "button": "Filter",
       "back": "Tilbake",
@@ -152,7 +155,9 @@
             "values_list": {
               "aria_label": "Liste av {{total}} verdier.",
               "no_results_heading": "Ingen treff på «{{search}}»",
-              "no_results_bodyshort": "Prøv med et annet søkeord eller en annen stavemåte."
+              "no_results_bodyshort": "Prøv med et annet søkeord eller en annen stavemåte.",
+              "showing_number_of_values": " {{searchResultsCount}} treff",
+              "showing_number_of_one_value": " {{searchResultsCount}} treff"
             }
           }
         }

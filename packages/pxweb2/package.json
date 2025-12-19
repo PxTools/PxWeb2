@@ -25,11 +25,12 @@
   },
   "devDependencies": {
     "@testing-library/react": "^16.3.0",
+    "ajv": "^8.17.1",
     "concurrently": "^9.2.1",
-    "html-validate": "^10.3.0",
+    "html-validate": "^10.4.0",
     "husky": "^9.1.7",
-    "jsdom": "^27.1.0",
-    "playwright": "^1.56.1",
+    "jsdom": "^27.2.0",
+    "playwright": "^1.57.0",
     "vitest": "^4.0.6"
   }
 }

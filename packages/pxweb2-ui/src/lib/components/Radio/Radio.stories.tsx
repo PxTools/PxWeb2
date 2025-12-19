@@ -1,4 +1,5 @@
 import type { Meta, StoryFn, StoryObj } from '@storybook/react-vite';
+import { useState } from 'react';
 import { Radio } from './Radio';
 
 const meta: Meta<typeof Radio> = {
@@ -23,7 +24,7 @@ export const InModal: StoryFn<typeof Radio> = () => {
     <Radio
       name="radio1"
       options={[{ label: 'Label', value: 'opt1' }]}
-      variant="inModal"
+      inModal={true}
       legend="Radio legend"
       onChange={undefined}
     ></Radio>
@@ -79,7 +80,7 @@ export const InModalGroup: StoryFn<typeof Radio> = () => {
         options={[{ label: 'First option', value: 'option1' }]}
         onChange={undefined}
         selectedOption="option1"
-        variant="inModal"
+        inModal={true}
         legend="Radio legend"
       ></Radio>
       <Radio
@@ -87,7 +88,7 @@ export const InModalGroup: StoryFn<typeof Radio> = () => {
         options={[{ label: 'Second option', value: 'option2' }]}
         onChange={undefined}
         selectedOption="option2"
-        variant="inModal"
+        inModal={true}
         legend="Radio legend"
       ></Radio>
       <Radio
@@ -101,7 +102,7 @@ export const InModalGroup: StoryFn<typeof Radio> = () => {
         ]}
         onChange={undefined}
         selectedOption="option3"
-        variant="inModal"
+        inModal={true}
         legend="Radio legend"
       ></Radio>
       <Radio
@@ -109,7 +110,7 @@ export const InModalGroup: StoryFn<typeof Radio> = () => {
         options={[{ label: 'Fourth option', value: 'option4' }]}
         onChange={undefined}
         selectedOption="option4"
-        variant="inModal"
+        inModal={true}
         legend="Radio legend"
       ></Radio>
     </>
@@ -156,9 +157,34 @@ export const ModalVisibleLegend: StoryFn<typeof Radio> = () => {
       options={testData}
       onChange={undefined}
       selectedOption="option1"
-      variant="inModal"
+      inModal={true}
       legend="Legend"
       hideLegend={false}
     ></Radio>
+  );
+};
+
+export const CheckCircle: StoryFn<typeof Radio> = () => {
+  type RadioOptions = 'option1' | 'option2' | 'option3';
+
+  const [selectedRadio, setSelectedRadio] = useState<RadioOptions>('option1');
+
+  function handleRadioChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setSelectedRadio(event.target.value as RadioOptions);
+  }
+
+  return (
+    <Radio
+      name="checkCircleRadio"
+      legend="Check Circle, choose an option"
+      variant="checkCircle"
+      options={[
+        { label: 'First option', value: 'option1' },
+        { label: 'Second option', value: 'option2' },
+        { label: 'Third option', value: 'option3' },
+      ]}
+      selectedOption={selectedRadio}
+      onChange={handleRadioChange}
+    />
   );
 };

@@ -1,7 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { ActionItem, ContentBox, Variable, Alert } from '@pxweb2/pxweb2-ui';
+import {
+  ActionItem,
+  ContentBox,
+  Variable,
+  LocalAlert,
+} from '@pxweb2/pxweb2-ui';
 import useTableData from '../../../context/useTableData';
 import classes from './DrawerEdit.module.scss';
 import { PivotType } from '../../../context/PivotType';
@@ -135,9 +140,9 @@ export function DrawerEdit() {
           />
         )}
       </div>
-      <Alert variant="info" className={classes.alert}>
+      <LocalAlert variant="info" className={classes.alert}>
         {t('common.status_messages.drawer_edit')}
-      </Alert>
+      </LocalAlert>
     </ContentBox>
   );
 }

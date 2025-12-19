@@ -14,11 +14,29 @@ body {
 }
 @font-face {
   font-family: 'PxWeb-font';
+  src: url('/fonts/PxWeb-font-400-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'PxWeb-font';
   src: url('/fonts/PxWeb-font-500.ttf') format('truetype');
   font-weight: 500;
 }
 @font-face {
   font-family: 'PxWeb-font';
+  src: url('/fonts/PxWeb-font-500-Italic.ttf') format('truetype');
+  font-weight: 500;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'PxWeb-font';
   src: url('/fonts/PxWeb-font-700.ttf') format('truetype');
   font-weight: 700;
+}
+@font-face {
+  font-family: 'PxWeb-font';
+  src: url('/fonts/PxWeb-font-700-Italic.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
 }

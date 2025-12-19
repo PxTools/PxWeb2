@@ -34,9 +34,10 @@
     "noResultSearchHelp": {
       "enabled": true,
       "helpText": [
-        "You can search by table name, variables, or table number",
-        "Currently, you cannot search for content in the tables, such as the name of a municipality or county",
-        "We're working to improve the search, so it will be easier to find the numbers you need"
+        "Whole sentences usually give few or no results. Try a more general search with few words, and use the filter to narrow it down.",
+        "Use quotation marks to search for an exact phrase, for example *“private sector”*. This will show only tables that contain that exact combination of words.",
+        "Use *title:* to search only in the table name, for example *title:stockholm*.",
+        "You can add or remove items from this search help list to make it relevant for your specific database."
       ]
     }
   },

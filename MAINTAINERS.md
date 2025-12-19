@@ -26,15 +26,16 @@ An overview of the current technical debt in the project:
 ### Long running tasks
 
 1. Updating the packages used in the project. This includes both Dependabot PRs and other outdated packages.
+   - For security reasons, we want to wait atleast 9 days before updating packages.
+   Use NPM '--before' or npm-check-updates '--cooldown' flags.
+   E.g: npm-check-updates --format group --deep --cooldown 9 -iu
 2. Fix [SonarQube issues/codesmells](https://sonarcloud.io/project/overview?id=PxTools_PxWeb2)
 3. Fix warnings when running `npm run lint`
-4. See if any configurationfiles need to be updated. For example: `tsconfig.base.json` currently (25.02.2025) has some older versions that should be updated.
 
 ### Onetime tasks
 
 1. The package we use to generate the api-client is no longer maintained, and needs to be updated. It recommends a fork that is activly maintained.
-2. We have to check why StoryBook upgrade says that we goes from v 0.0.0
-3. We should split up the Selection.tsx component a bit. That would make it easier to write unit tests for the code.
+2. We should split up the Selection.tsx component a bit. That would make it easier to write unit tests for the code.
 
 ## Git Branching Strategy
 

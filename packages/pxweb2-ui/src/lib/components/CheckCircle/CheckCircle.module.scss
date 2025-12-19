@@ -1,0 +1,63 @@
+@use '../../text-styles.scss';
+@use '../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixed;
+
+.checkCircle {
+  display: flex;
+  padding: 10px 8px;
+  align-items: flex-start;
+  gap: fixed.$spacing-3;
+  border-radius: var(--px-border-radius-medium);
+  background: var(--px-color-surface-default);
+  border: none;
+
+  &:hover {
+    background-color: var(--px-color-surface-action-subtle-hover);
+    cursor: pointer;
+  }
+  &:active {
+    background-color: var(--px-color-surface-action-subtle-active);
+  }
+  &:focus-visible {
+    outline: none;
+    .iconWrapper {
+      outline: 3px solid var(--px-color-border-focus-outline);
+      outline-offset: 3px;
+      box-shadow: inset 0 0 0 3px var(--px-color-border-focus-boxshadow);
+      border: 3px var(--px-color-border-focus-boxshadow);
+    }
+  }
+}
+
+.labelWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1 0 0;
+  align-self: stretch;
+  text-align: left;
+  > span {
+    color: var(--px-color-text-default);
+  }
+}
+
+.iconWrapper {
+  display: flex;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: var(--px-border-radius-xlarge);
+  border: 2px solid var(--px-color-surface-action);
+  background: var(--px-color-surface-default);
+
+  &.checked {
+    border: none;
+    background: var(--px-color-surface-action);
+  }
+}
+
+.iconChecked {
+  --px-icon-color: var(--px-color-surface-default);
+}

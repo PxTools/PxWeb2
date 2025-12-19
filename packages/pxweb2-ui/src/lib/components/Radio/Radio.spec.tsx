@@ -2,11 +2,11 @@ import { render, fireEvent, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 
-import Radio, { SelectOption } from './Radio';
+import Radio, { RadioOption } from './Radio';
 import classes from './Radio.module.scss';
 
 describe('Radio', () => {
-  const mockOptions: SelectOption[] = [
+  const mockOptions: RadioOption[] = [
     { label: 'Option 1', value: '1' },
     { label: 'Option 2', value: '2' },
     { label: 'Option 3', value: '3' },
@@ -37,10 +37,8 @@ describe('Radio', () => {
       expect(radioGroup).toBeDefined();
     });
 
-    it('should render with inModal variant', () => {
-      const { container } = render(
-        <Radio {...defaultProps} variant="inModal" />,
-      );
+    it('should render with inModal is true', () => {
+      const { container } = render(<Radio {...defaultProps} inModal={true} />);
 
       const radioGroup = container.querySelector('[class*="inModal"]');
       expect(radioGroup).toBeDefined();
@@ -71,9 +69,9 @@ describe('Radio', () => {
       expect(legend).toHaveClass(classes['heading-xsmall']);
     });
 
-    it('legend should have correct classes when hideLegend is false and variant is inModal', () => {
+    it('legend should have correct classes when hideLegend is false and inModal is true', () => {
       const { container } = render(
-        <Radio {...defaultProps} hideLegend={false} variant="inModal" />,
+        <Radio {...defaultProps} hideLegend={false} inModal={true} />,
       );
       const legend = container.querySelector('legend');
       expect(legend).toHaveClass(classes.legend);
@@ -212,6 +210,105 @@ describe('Radio', () => {
 
       expect(radio1.checked).toBe(false);
       expect(radio2.checked).toBe(true);
+    });
+  });
+
+  describe('variant prop', () => {
+    it('should render default variant without checkCircle classes', () => {
+      const { container } = render(
+        <Radio {...defaultProps} variant="default" />,
+      );
+
+      // Container labels should not have the .checkCircle modifier
+      const labels = container.querySelectorAll('label');
+      labels.forEach((label) => {
+        expect(label).toHaveClass(classes.container);
+        expect(label).not.toHaveClass(classes.checkCircle);
+      });
+
+      // Divider should not have the .checkCircle modifier
+      const dividers = container.querySelectorAll(`.${classes.divider}`);
+      dividers.forEach((div) => {
+        expect(div).toHaveClass(classes.divider);
+        expect(div).not.toHaveClass(classes.checkCircle);
+      });
+
+      // Inputs should not have the .checkCircle modifier
+      const inputs = screen.getAllByRole('radio');
+      inputs.forEach((input) => {
+        expect(input).toHaveAttribute('type', 'radio');
+        expect(input).not.toHaveClass(classes.checkCircle);
+      });
+    });
+
+    it('should apply checkCircle classes when variant is checkCircle', () => {
+      const { container } = render(
+        <Radio {...defaultProps} variant="checkCircle" />,
+      );
+
+      // Container labels should have the .checkCircle modifier
+      const labels = container.querySelectorAll('label');
+      labels.forEach((label) => {
+        expect(label).toHaveClass(classes.container);
+        expect(label).toHaveClass(classes.checkCircle);
+      });
+
+      // Divider should have the .checkCircle modifier
+      const dividers = container.querySelectorAll(`.${classes.divider}`);
+      expect(dividers.length).toBe(mockOptions.length);
+      dividers.forEach((div) => {
+        expect(div).toHaveClass(classes.divider);
+        expect(div).toHaveClass(classes.checkCircle);
+      });
+
+      // Inputs should have the .checkCircle modifier
+      const inputs = screen.getAllByRole('radio');
+      expect(inputs.length).toBe(mockOptions.length);
+      inputs.forEach((input) => {
+        expect(input).toHaveClass(classes.checkCircle);
+      });
+    });
+
+    it('should render the CheckCircleIcon for each option when variant is checkCircle', () => {
+      render(<Radio {...defaultProps} variant="checkCircle" />);
+      // We expect one icon per option
+      const inputs = screen.getAllByRole('radio');
+      inputs.forEach((input) => {
+        // Next sibling should be the icon wrapper span from CheckCircleIcon
+        const sibling = input.nextElementSibling;
+        expect(sibling).not.toBeNull();
+      });
+    });
+
+    it('should keep selected state working with checkCircle variant', () => {
+      render(
+        <Radio
+          {...defaultProps}
+          variant="checkCircle"
+          selectedOption={mockOptions[2].value}
+        />,
+      );
+
+      const selectedRadio = screen.getByLabelText(
+        mockOptions[2].label,
+      ) as HTMLInputElement;
+      expect(selectedRadio.checked).toBe(true);
+    });
+
+    it('should call onChange when clicking the label in checkCircle variant', () => {
+      const mockOnChange = vi.fn();
+      const { getByLabelText } = render(
+        <Radio
+          {...defaultProps}
+          variant="checkCircle"
+          onChange={mockOnChange}
+        />,
+      );
+
+      const radio = getByLabelText(mockOptions[0].label);
+      fireEvent.click(radio);
+
+      expect(mockOnChange).toHaveBeenCalled();
     });
   });
 });

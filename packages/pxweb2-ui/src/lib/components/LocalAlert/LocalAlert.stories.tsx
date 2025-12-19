@@ -1,13 +1,13 @@
 import type { Meta, StoryFn } from '@storybook/react-vite';
 
-import { Alert } from './Alert';
+import { LocalAlert } from './LocalAlert';
 import { Link } from '../Link/Link';
 import List from '../List/List';
 import ListItem from '../List/ListItem';
 
-const meta: Meta<typeof Alert> = {
-  component: Alert,
-  title: 'Components/Alert',
+const meta: Meta<typeof LocalAlert> = {
+  component: LocalAlert,
+  title: 'Components/LocalAlert',
   parameters: {
     layout: 'padded',
   },
@@ -28,40 +28,40 @@ export const Variant = {
   },
 };
 
-export const WithLink: StoryFn<typeof Alert> = () => {
+export const WithLink: StoryFn<typeof LocalAlert> = () => {
   return (
     <>
       <br />
       <div style={{ width: '480px' }}>
-        <Alert variant="info" closeButton>
+        <LocalAlert variant="info" closeButton>
           <Link href="https://www.ssb.no" inline>
             SSB
           </Link>
-        </Alert>
+        </LocalAlert>
       </div>
     </>
   );
 };
 
-export const WithTextAndLink: StoryFn<typeof Alert> = () => {
+export const WithTextAndLink: StoryFn<typeof LocalAlert> = () => {
   return (
     <>
       <br />
       <div style={{ width: '480px' }}>
-        <Alert variant="info" closeButton>
+        <LocalAlert variant="info" closeButton>
           Det finnes mer metadata om emnet. Dette kan du lese mer om her:{' '}
           <Link href="https://www.ssb.no" inline>
             SSB
           </Link>
-        </Alert>
+        </LocalAlert>
       </div>
     </>
   );
 };
 
-export const WithOLList: StoryFn<typeof Alert> = () => {
+export const WithOLList: StoryFn<typeof LocalAlert> = () => {
   return (
-    <Alert variant="info" heading="Heading alert" clickable closeButton>
+    <LocalAlert variant="info" heading="Heading alert" clickable closeButton>
       <List listType="ol" heading="Heading list">
         <ListItem>
           {' '}
@@ -72,12 +72,12 @@ export const WithOLList: StoryFn<typeof Alert> = () => {
         {/* <ListItem>note b</ListItem>
         <ListItem>note c</ListItem> */}
       </List>
-    </Alert>
+    </LocalAlert>
   );
 };
-export const WithULList: StoryFn<typeof Alert> = () => {
+export const WithULList: StoryFn<typeof LocalAlert> = () => {
   return (
-    <Alert variant="info" heading="Heading alert from notes" closeButton>
+    <LocalAlert variant="info" heading="Heading alert from notes" closeButton>
       <List listType="ul">
         <ListItem>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
@@ -99,13 +99,13 @@ export const WithULList: StoryFn<typeof Alert> = () => {
         </ListItem>
         <li>Note c</li>
       </List>
-    </Alert>
+    </LocalAlert>
   );
 };
 
-export const WithULListClickable: StoryFn<typeof Alert> = () => {
+export const WithULListClickable: StoryFn<typeof LocalAlert> = () => {
   return (
-    <Alert
+    <LocalAlert
       variant="info"
       heading="Heading Alert from notes"
       closeButton
@@ -132,13 +132,13 @@ export const WithULListClickable: StoryFn<typeof Alert> = () => {
         </ListItem>
         <li>Note c</li>
       </List>
-    </Alert>
+    </LocalAlert>
   );
 };
 
-export const WithListgroupClickable: StoryFn<typeof Alert> = () => {
+export const WithListgroupClickable: StoryFn<typeof LocalAlert> = () => {
   return (
-    <Alert variant="info" heading="Heading Alert" closeButton clickable>
+    <LocalAlert variant="info" heading="Heading Alert" closeButton clickable>
       <List heading="Land" subHeading="Subheading" listType="ul" listGroup>
         <ListItem isVariableNote>
           <Link href="wwww.ssb.no" inline>
@@ -173,13 +173,13 @@ export const WithListgroupClickable: StoryFn<typeof Alert> = () => {
           </List>
         </ListItem>
       </List>
-    </Alert>
+    </LocalAlert>
   );
 };
 
-export const Test: StoryFn<typeof Alert> = () => {
+export const Test: StoryFn<typeof LocalAlert> = () => {
   return (
-    <Alert variant="info" heading="Heading Alert" closeButton clickable>
+    <LocalAlert variant="info" heading="Heading Alert" closeButton clickable>
       <List listType="ul">
         <ListItem>
           <Link href="www.ssb.no">Gå til SSB</Link>
@@ -199,6 +199,6 @@ export const Test: StoryFn<typeof Alert> = () => {
           </List>
         </ListItem>
       </List>
-    </Alert>
+    </LocalAlert>
   );
 };
