@@ -72,9 +72,11 @@
       document.addEventListener('DOMContentLoaded', () => {
         const url = new URL(window.location.href);
         url.pathname = url.pathname.replace('/statbank2/', '/statbank/');
-        const out = document.getElementById('myLink');
-        // if (out) out.textContent = url.toString();
-        if (out) out.ATTRIBUTE_NODE.href = url.toString();
+
+        const link = document.getElementById('myLink');
+        if (link) {
+          link.href = url.toString();
+        }
       });
     </script>
   </head>
