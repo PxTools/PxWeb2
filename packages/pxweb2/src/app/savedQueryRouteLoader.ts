@@ -26,6 +26,7 @@ export async function savedQueryRouteLoader({ params }: LoaderFunctionArgs) {
     const defaultLang = config.language.defaultLanguage;
     const showDefaultLanguageInPath = config.language.showDefaultLanguageInPath;
 
+    // TODO: Use GetLanguagePath util function?
     const path = showDefaultLanguageInPath
       ? `/${lang}/table/${res.savedQuery.tableId}`
       : lang === defaultLang
