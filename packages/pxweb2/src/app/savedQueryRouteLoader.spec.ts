@@ -4,7 +4,11 @@ import type { LoaderFunctionArgs } from 'react-router';
 import { savedQueryRouteLoader } from './savedQueryRouteLoader';
 import { getConfig } from './util/config/getConfig';
 import i18n from '../i18n/config';
-import { OpenAPI, SavedQueriesService, type SavedQueryResponse } from '@pxweb2/pxweb2-api-client';
+import {
+  OpenAPI,
+  SavedQueriesService,
+  type SavedQueryResponse,
+} from '@pxweb2/pxweb2-api-client';
 import type { Config as AppConfig } from './util/config/configType';
 
 const makeArgs = (sqId?: string): LoaderFunctionArgs => ({
@@ -39,7 +43,9 @@ describe('savedQueryRouteLoader', () => {
       language: { defaultLanguage: 'en', showDefaultLanguageInPath: true },
     } as unknown as AppConfig);
 
-    await expect(savedQueryRouteLoader(makeArgs())).rejects.toMatchObject({ status: 400 });
+    await expect(savedQueryRouteLoader(makeArgs())).rejects.toMatchObject({
+      status: 400,
+    });
   });
 
   it('redirects to /{lang}/table when showDefaultLanguageInPath=true', async () => {
@@ -50,7 +56,11 @@ describe('savedQueryRouteLoader', () => {
     vi.mocked(SavedQueriesService.getSaveQuery).mockResolvedValue({
       language: 'en',
       id: '123',
-      savedQuery: { tableId: 'T1', language: 'en', selection: { selection: [] } },
+      savedQuery: {
+        tableId: 'T1',
+        language: 'en',
+        selection: { selection: [] },
+      },
       links: [],
     } as SavedQueryResponse);
     (i18n as unknown as { language: string }).language = 'sv';
@@ -71,7 +81,11 @@ describe('savedQueryRouteLoader', () => {
     vi.mocked(SavedQueriesService.getSaveQuery).mockResolvedValue({
       language: 'en',
       id: 'ABC',
-      savedQuery: { tableId: 'T2', language: 'en', selection: { selection: [] } },
+      savedQuery: {
+        tableId: 'T2',
+        language: 'en',
+        selection: { selection: [] },
+      },
       links: [],
     } as SavedQueryResponse);
     (i18n as unknown as { language: string }).language = 'en';
@@ -89,7 +103,11 @@ describe('savedQueryRouteLoader', () => {
     vi.mocked(SavedQueriesService.getSaveQuery).mockResolvedValue({
       language: 'sv',
       id: '999',
-      savedQuery: { tableId: 'T3', language: 'sv', selection: { selection: [] } },
+      savedQuery: {
+        tableId: 'T3',
+        language: 'sv',
+        selection: { selection: [] },
+      },
       links: [],
     } as SavedQueryResponse);
 
@@ -102,22 +120,22 @@ describe('savedQueryRouteLoader', () => {
       apiUrl: 'https://api.example',
       language: { defaultLanguage: 'en', showDefaultLanguageInPath: true },
     } as unknown as AppConfig);
-    vi.mocked(SavedQueriesService.getSaveQuery).mockRejectedValue({ status: 404 });
+    vi.mocked(SavedQueriesService.getSaveQuery).mockRejectedValue({
+      status: 404,
+    });
 
     await expect(
       savedQueryRouteLoader(makeArgs('missing')),
     ).rejects.toMatchObject({ status: 404 });
 
-    await savedQueryRouteLoader(makeArgs('missing')).catch(
-      (err: unknown) => {
-        expect(err).toBeInstanceOf(Response);
-        const response = err as Response;
-        expect(response.status).toBe(404);
-        return response.text().then((text: string) => {
-          expect(text).toContain('Saved query not found');
-        });
-      },
-    );
+    await savedQueryRouteLoader(makeArgs('missing')).catch((err: unknown) => {
+      expect(err).toBeInstanceOf(Response);
+      const response = err as Response;
+      expect(response.status).toBe(404);
+      return response.text().then((text: string) => {
+        expect(text).toContain('Saved query not found');
+      });
+    });
   });
 
   it('throws 500 with generic message for non-404 errors', async () => {
@@ -125,21 +143,21 @@ describe('savedQueryRouteLoader', () => {
       apiUrl: 'https://api.example',
       language: { defaultLanguage: 'en', showDefaultLanguageInPath: true },
     } as unknown as AppConfig);
-    vi.mocked(SavedQueriesService.getSaveQuery).mockRejectedValue(new Error('boom'));
-
-    await expect(
-      savedQueryRouteLoader(makeArgs('err')),
-    ).rejects.toMatchObject({ status: 500 });
-
-    await savedQueryRouteLoader(makeArgs('err')).catch(
-      (err: unknown) => {
-        expect(err).toBeInstanceOf(Response);
-        const response = err as Response;
-        expect(response.status).toBe(500);
-        return response.text().then((text: string) => {
-          expect(text).toContain('Failed to load saved query');
-        });
-      },
+    vi.mocked(SavedQueriesService.getSaveQuery).mockRejectedValue(
+      new Error('boom'),
     );
+
+    await expect(savedQueryRouteLoader(makeArgs('err'))).rejects.toMatchObject({
+      status: 500,
+    });
+
+    await savedQueryRouteLoader(makeArgs('err')).catch((err: unknown) => {
+      expect(err).toBeInstanceOf(Response);
+      const response = err as Response;
+      expect(response.status).toBe(500);
+      return response.text().then((text: string) => {
+        expect(text).toContain('Failed to load saved query');
+      });
+    });
   });
 });
