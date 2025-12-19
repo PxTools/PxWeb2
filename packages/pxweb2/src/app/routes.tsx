@@ -1,4 +1,4 @@
-import { Navigate } from 'react-router';
+import { Navigate, redirect, type LoaderFunctionArgs } from 'react-router';
 
 import RootLayout from './components/RootLayout';
 import { ErrorPageWithLocalization } from './pages/ErrorPage/ErrorPage';
@@ -7,6 +7,12 @@ import TableViewer from './pages/TableViewer/TableViewer';
 import TopicIcons from './pages/TopicIcons/TopicIcons';
 import SavedQueryReroute from './pages/SavedQueryReroute/SavedQueryReroute';
 import { getConfig } from './util/config/getConfig';
+import {
+  ApiError,
+  OpenAPI,
+  SavedQueriesService,
+  type SavedQueryResponse,
+} from '@pxweb2/pxweb2-api-client';
 
 const config = getConfig();
 const showDefaultLanguageInPath = config.language.showDefaultLanguageInPath;
@@ -73,8 +79,46 @@ export const routerConfig = [
       },
       {
         path: 'sq/:sqId',
-        element: <SavedQueryReroute />,
-        // TODO: Use loader instead?
+        // element: <SavedQueryReroute />,
+        loader: async ({ params }: LoaderFunctionArgs) => {
+          const { sqId } = params as { sqId?: string };
+          if (!sqId) {
+            throw new Response('Missing saved query id', { status: 400 });
+          }
+
+          // Ensure API base is set for server-side/data-router calls
+          OpenAPI.BASE = config.apiUrl;
+
+          try {
+            const res = (await SavedQueriesService.getSaveQuery(
+              sqId,
+            )) as SavedQueryResponse;
+
+            const lang = res.language || res.savedQuery.language;
+            const defaultLang = config.language.defaultLanguage;
+            const showDefaultLanguageInPath =
+              config.language.showDefaultLanguageInPath;
+
+            const path = showDefaultLanguageInPath
+              ? `/${lang}/table/${res.savedQuery.tableId}`
+              : lang === defaultLang
+                ? `/table/${res.savedQuery.tableId}`
+                : `/${lang}/table/${res.savedQuery.tableId}`;
+
+            const search = `?${new URLSearchParams({ sq: sqId }).toString()}`;
+
+            return redirect(`${path}${search}`);
+          } catch (e: unknown) {
+            // Map API errors to router errors to trigger ErrorPage
+            const err = e as Partial<ApiError> & { status?: number };
+            const status = err?.status ?? 500;
+            const message =
+              status === 404
+                ? 'Saved query not found'
+                : 'Failed to load saved query';
+            throw new Response(message, { status });
+          }
+        },
       },
     ],
   },
