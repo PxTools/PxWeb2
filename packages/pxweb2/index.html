@@ -67,8 +67,57 @@
     </style>
     <script src="./config/config.js?v=__BUILD_DATE__"></script>
 
-    <script type="module">
+    <script>
+      /**
+       * Fires update() on initial load and on every SPA navigation:
+       * - history.pushState / replaceState (programmatic navigation)
+       * - popstate (back/forward)
+       */
+      (function () {
+        function computeTransformedUrl() {
+          const url = new URL(window.location.href);
+          // Swap only the first path segment: /mypath1/... -> /mypath2/...
+          const parts = url.pathname.split('/'); // ["", "mypath1", "table", "mytable"]
+          if (parts[1] === 'statbank2') {
+            parts[1] = 'statbank';
+            url.pathname = parts.join('/');
+          }
+          return url.toString();
+        }
+
+        function update() {
+          const newUrl = computeTransformedUrl();
+
+          // Update your link and/or text if they exist (outside React root or accessible)
+          const link = document.getElementById('myLink');
+          if (link) link.href = newUrl;
+
+          // const out = document.getElementById('mytext');
+          // if (out) out.textContent = newUrl;
+        }
+
+        // Patch pushState / replaceState to emit a custom event
+        ['pushState', 'replaceState'].forEach((method) => {
+          const original = history[method];
+          history[method] = function () {
+            const ret = original.apply(this, arguments);
+            window.dispatchEvent(new Event('rr-nav')); // custom event for SPA navigation
+            return ret;
+          };
+        });
+
+        // Listen for both our custom event and browser back/forward
+        window.addEventListener('rr-nav', update);
+        window.addEventListener('popstate', update);
+
+        // Initial run after DOM is ready
+        document.addEventListener('DOMContentLoaded', update);
+      })();
+    </script>
+
+    <!-- <script type="module">
       // Vite uses ES modules; DOMContentLoaded
+
       document.addEventListener('DOMContentLoaded', () => {
         const url = new URL(window.location.href);
         //url.pathname = url.pathname.replace('/statbank2/', '/statbank/');
@@ -76,13 +125,16 @@
           /^\/statbank2(?=\/|$)/,
           '/statbank',
         );
-
+        const origin = window.location.origin;
+        const { pathname, search, hash } = window.location;
+        const absoluteUrl = origin + pathname + search + hash;
+        alert(absoluteUrl);
         const link = document.getElementById('myLink');
         if (link) {
-          link.href = url.toString();
+          link.href = absoluteUrl.toString();
         }
       });
-    </script>
+    </script> -->
   </head>
 
   <body>
