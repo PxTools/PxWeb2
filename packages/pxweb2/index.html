@@ -76,13 +76,15 @@
       (function () {
         function computeTransformedUrl() {
           const url = new URL(window.location.href);
+          const newUrl = url.pathname.replace('/statbank2/', '/statbank/');
           // Swap only the first path segment: /mypath1/... -> /mypath2/...
-          const parts = url.pathname.split('/'); // ["", "mypath1", "table", "mytable"]
-          if (parts[1] === 'statbank2') {
-            parts[1] = 'statbank';
-            url.pathname = parts.join('/');
-          }
-          return url.toString();
+          // const parts = url.pathname.split('/'); // ["", "mypath1", "table", "mytable"]
+          // if (parts[1] === 'statbank2') {
+          //   parts[1] = 'statbank';
+          //   url.pathname = parts.join('/');
+          // }
+          // return url.toString();
+          return newUrl.toString();
         }
 
         function update() {
