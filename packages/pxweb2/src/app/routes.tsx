@@ -12,6 +12,7 @@ import {
   SavedQueriesService,
   type SavedQueryResponse,
 } from '@pxweb2/pxweb2-api-client';
+import i18n from '../i18n/config';
 
 const config = getConfig();
 const showDefaultLanguageInPath = config.language.showDefaultLanguageInPath;
@@ -78,7 +79,7 @@ export const routerConfig = [
       },
       {
         path: 'sq/:sqId',
-        // element: <SavedQueryReroute />,
+        //element: <SavedQueryReroute />,
         loader: async ({ params }: LoaderFunctionArgs) => {
           const { sqId } = params as { sqId?: string };
           if (!sqId) {
@@ -106,6 +107,10 @@ export const routerConfig = [
 
             const search = `?${new URLSearchParams({ sq: sqId }).toString()}`;
 
+            // Ensure i18next language matches the target route language
+            if (lang && i18n.language !== lang) {
+              i18n.changeLanguage(lang);
+            }
             return redirect(`${path}${search}`);
           } catch (e: unknown) {
             // Map API errors to router errors to trigger ErrorPage
