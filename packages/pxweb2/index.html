@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -56,10 +56,50 @@
       crossorigin="anonymous"
       type="font/ttf"
     />
+    <style>
+      .oldLinkClass {
+        display: block;
+        background-color: #c3e6fe;
+        width: 100%;
+        font-family: 'PxWeb-font';
+        padding: 10px 0 10px 30px;
+      }
+    </style>
     <script src="./config/config.js?v=__BUILD_DATE__"></script>
+
+    <script type="module">
+      // Vite uses ES modules; DOMContentLoaded
+      document.addEventListener('DOMContentLoaded', () => {
+        const url = new URL(window.location.href);
+        url.pathname = url.pathname.replace('/statbank2/', '/statbank/');
+        const out = document.getElementById('myLink');
+        // if (out) out.textContent = url.toString();
+        if (out) out.ATTRIBUTE_NODE.href = url.toString();
+      });
+    </script>
   </head>
+
   <body>
+    <div id="mytext">
+      <a id="myLink" class="oldLinkClass" href=""
+        >Lenkte til samme tabell i gammel versjon av pxweb</a
+      >
+    </div>
     <div id="root"></div>
+
     <script type="module" src="src/main.tsx"></script>
+
+    <!-- <script>
+      // Read current URL object
+      const url = new URL(window.location.href);
+
+      // Modify only the path
+      url.pathname = url.pathname.replace('/statbank2/', '/statbank/');
+
+      // Output to the div
+      document.getElementById('mytext').textContent = document.getElementById(
+        'mytext',
+      ).textContent = url.toString();
+    </script> -->
   </body>
 </html>
