@@ -6,9 +6,11 @@ import StartPage from './pages/StartPage/StartPage';
 import TableViewer from './pages/TableViewer/TableViewer';
 import TopicIcons from './pages/TopicIcons/TopicIcons';
 import { getConfig } from './util/config/getConfig';
+import { normalizeBaseApplicationPath } from './util/pathUtil';
 
 const config = getConfig();
 const showDefaultLanguageInPath = config.language.showDefaultLanguageInPath;
+const basePath = normalizeBaseApplicationPath(config.baseApplicationPath);
 
 const supportedLangRoutes = config.language.supportedLanguages.map((lang) => {
   // the normal error handling will show "page not found",
@@ -19,7 +21,7 @@ const supportedLangRoutes = config.language.supportedLanguages.map((lang) => {
     lang.shorthand === config.language.defaultLanguage
   ) {
     return {
-      path: `/`,
+      path: basePath,
       children: [
         {
           index: true,
@@ -35,7 +37,7 @@ const supportedLangRoutes = config.language.supportedLanguages.map((lang) => {
 
   // If the default language should be shown in the path
   return {
-    path: `/${lang.shorthand}/`,
+    path: `${basePath}${lang.shorthand}/`,
     children: [
       {
         index: true,
@@ -51,7 +53,7 @@ const supportedLangRoutes = config.language.supportedLanguages.map((lang) => {
 
 export const routerConfig = [
   {
-    path: '/',
+    path: basePath,
     element: <RootLayout />,
     errorElement: <ErrorPageWithLocalization />,
     children: [
@@ -60,7 +62,10 @@ export const routerConfig = [
             {
               index: true,
               element: (
-                <Navigate to={`/${config.language.defaultLanguage}/`} replace />
+                <Navigate
+                  to={`${basePath}${config.language.defaultLanguage}/`}
+                  replace
+                />
               ),
             },
           ]

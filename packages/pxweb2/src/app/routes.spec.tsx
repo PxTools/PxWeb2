@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import { createMemoryRouter, RouteObject, RouterProvider } from 'react-router';
@@ -67,6 +67,7 @@ describe('Router configuration', () => {
     },
     apiUrl: 'test',
     baseApplicationPath: '/',
+    showBreadCrumbOnStartPage: false,
     maxDataCells: 150000,
     specialCharacters: ['.', '..', ':', '-', '...', '*'],
     variableFilterExclusionList: {},
@@ -199,6 +200,41 @@ describe('Router configuration', () => {
       renderWithProviders(testRouter);
       expect(screen.getByTestId('table-viewer')).toBeInTheDocument();
     });
+
+    describe("when baseApplicationPath is '/app/'", () => {
+      beforeEach(async () => {
+        mockConfig.language.showDefaultLanguageInPath = true;
+        mockConfig.baseApplicationPath = '/app/';
+
+        vi.mocked(configModule.getConfig).mockReturnValue(mockConfig);
+        vi.resetModules();
+
+        const routesModule = await import('./routes');
+        routerConfig = routesModule.routerConfig;
+      });
+
+      afterEach(() => {
+        mockConfig.baseApplicationPath = '/';
+      });
+
+      it('should render StartPage for /app/en/', () => {
+        const testRouter = createMemoryRouter(routerConfig, {
+          initialEntries: ['/app/en/'],
+        });
+
+        renderWithProviders(testRouter);
+        expect(screen.getByTestId('start-page')).toBeInTheDocument();
+      });
+
+      it('should render TableViewer for /app/no/table/:tableId', () => {
+        const testRouter = createMemoryRouter(routerConfig, {
+          initialEntries: ['/app/no/table/12345'],
+        });
+
+        renderWithProviders(testRouter);
+        expect(screen.getByTestId('table-viewer')).toBeInTheDocument();
+      });
+    });
   });
 
   it('should handle component errors with ErrorBoundary', async () => {
@@ -209,6 +245,7 @@ describe('Router configuration', () => {
 
     // Set up the mock config
     mockConfig.language.showDefaultLanguageInPath = false;
+    mockConfig.baseApplicationPath = '/';
     vi.mocked(configModule.getConfig).mockReturnValue(mockConfig);
     vi.doMock('./pages/StartPage/StartPage', () => ({
       default: ThrowingComponent,

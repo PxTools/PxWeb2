@@ -7,6 +7,59 @@ describe('getLanguagePath', () => {
     { languageName: 'Polish', shorthand: 'pl' },
   ];
   const defaultLanguage = 'en';
+  const baseApplicationPath = '/';
+
+  describe("when baseApplicationPath is '/app/'", () => {
+    const appBaseApplicationPath = '/app/';
+
+    it('should strip baseApplicationPath from pathname before switching language', () => {
+      const pathname = '/app/no/some/path';
+      const targetLanguage = 'en';
+
+      const result = getLanguagePath(
+        pathname,
+        targetLanguage,
+        supportedLanguages,
+        defaultLanguage,
+        false,
+        appBaseApplicationPath,
+      );
+
+      expect(result).toBe('/app/some/path');
+    });
+
+    it("should treat pathname equal to base prefix ('/app') as root", () => {
+      const pathname = '/app';
+      const targetLanguage = 'pl';
+
+      const result = getLanguagePath(
+        pathname,
+        targetLanguage,
+        supportedLanguages,
+        defaultLanguage,
+        false,
+        appBaseApplicationPath,
+      );
+
+      expect(result).toBe('/app/pl/');
+    });
+
+    it("should return '/app/' when pathname is base prefix and target is default with showDefaultLanguageInPath=false", () => {
+      const pathname = '/app';
+      const targetLanguage = 'en';
+
+      const result = getLanguagePath(
+        pathname,
+        targetLanguage,
+        supportedLanguages,
+        defaultLanguage,
+        false,
+        appBaseApplicationPath,
+      );
+
+      expect(result).toBe('/app/');
+    });
+  });
 
   describe('when showDefaultLanguageInPath is false', () => {
     it('should return the correct path when pathname starts with a language code and target is default', () => {
@@ -19,6 +72,7 @@ describe('getLanguagePath', () => {
         supportedLanguages,
         defaultLanguage,
         false,
+        baseApplicationPath,
       );
 
       expect(result).toBe('/some/path');
@@ -34,6 +88,7 @@ describe('getLanguagePath', () => {
         supportedLanguages,
         defaultLanguage,
         false,
+        baseApplicationPath,
       );
 
       expect(result).toBe('/no/some/path');
@@ -49,6 +104,7 @@ describe('getLanguagePath', () => {
         supportedLanguages,
         defaultLanguage,
         false,
+        baseApplicationPath,
       );
 
       expect(result).toBe('/some/path');
@@ -64,6 +120,7 @@ describe('getLanguagePath', () => {
         supportedLanguages,
         defaultLanguage,
         false,
+        baseApplicationPath,
       );
 
       expect(result).toBe('/no/some/path');
@@ -79,6 +136,7 @@ describe('getLanguagePath', () => {
         supportedLanguages,
         defaultLanguage,
         false,
+        baseApplicationPath,
       );
 
       expect(result).toBe('/no/');
@@ -94,9 +152,74 @@ describe('getLanguagePath', () => {
         supportedLanguages,
         defaultLanguage,
         false,
+        baseApplicationPath,
       );
 
       expect(result).toBe('/pl/');
+    });
+
+    it('should return root path when pathname is only a language code and target is default', () => {
+      const pathname = '/no';
+      const targetLanguage = 'en';
+
+      const result = getLanguagePath(
+        pathname,
+        targetLanguage,
+        supportedLanguages,
+        defaultLanguage,
+        false,
+        baseApplicationPath,
+      );
+
+      expect(result).toBe('/');
+    });
+
+    it('should preserve trailing slash in the path', () => {
+      const pathname = '/no/some/path/';
+      const targetLanguage = 'pl';
+
+      const result = getLanguagePath(
+        pathname,
+        targetLanguage,
+        supportedLanguages,
+        defaultLanguage,
+        false,
+        baseApplicationPath,
+      );
+
+      expect(result).toBe('/pl/some/path/');
+    });
+
+    it('should generate a path even if target language is not in supportedLanguages', () => {
+      const pathname = '/no/some/path';
+      const targetLanguage = 'xx';
+
+      const result = getLanguagePath(
+        pathname,
+        targetLanguage,
+        supportedLanguages,
+        defaultLanguage,
+        false,
+        baseApplicationPath,
+      );
+
+      expect(result).toBe('/xx/some/path');
+    });
+
+    it("should accept a pathname without leading '/'", () => {
+      const pathname = 'no/some/path';
+      const targetLanguage = 'pl';
+
+      const result = getLanguagePath(
+        pathname,
+        targetLanguage,
+        supportedLanguages,
+        defaultLanguage,
+        false,
+        baseApplicationPath,
+      );
+
+      expect(result).toBe('/pl/some/path');
     });
   });
 
@@ -111,6 +234,7 @@ describe('getLanguagePath', () => {
         supportedLanguages,
         defaultLanguage,
         true,
+        baseApplicationPath,
       );
 
       expect(result).toBe('/en/some/path');
@@ -126,6 +250,7 @@ describe('getLanguagePath', () => {
         supportedLanguages,
         defaultLanguage,
         true,
+        baseApplicationPath,
       );
 
       expect(result).toBe('/en/some/path');
@@ -141,6 +266,7 @@ describe('getLanguagePath', () => {
         supportedLanguages,
         defaultLanguage,
         true,
+        baseApplicationPath,
       );
 
       expect(result).toBe('/en/');
@@ -156,9 +282,26 @@ describe('getLanguagePath', () => {
         supportedLanguages,
         defaultLanguage,
         true,
+        baseApplicationPath,
       );
 
       expect(result).toBe('/no/some/path');
+    });
+
+    it('should handle path with only default language code correctly', () => {
+      const pathname = '/en';
+      const targetLanguage = 'en';
+
+      const result = getLanguagePath(
+        pathname,
+        targetLanguage,
+        supportedLanguages,
+        defaultLanguage,
+        true,
+        baseApplicationPath,
+      );
+
+      expect(result).toBe('/en/');
     });
   });
 });
