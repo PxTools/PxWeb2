@@ -74,6 +74,7 @@ export const routerConfig = [
       {
         path: 'sq/:sqId',
         element: <SavedQueryReroute />,
+        // TODO: Use loader instead?
       },
     ],
   },

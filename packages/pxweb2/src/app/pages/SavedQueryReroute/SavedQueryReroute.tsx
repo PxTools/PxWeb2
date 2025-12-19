@@ -49,6 +49,7 @@ export default function SavedQueryReroute() {
     const defaultLang = config.language.defaultLanguage;
     const showDefaultLanguageInPath = config.language.showDefaultLanguageInPath;
 
+    // TODO: Use getLanguagePath util function?
     const path = showDefaultLanguageInPath
       ? `/${lang}/table/${data.savedQuery.tableId}`
       : lang === defaultLang
