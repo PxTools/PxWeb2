@@ -8,6 +8,8 @@ import {
 import { getConfig } from './util/config/getConfig';
 import i18n from '../i18n/config';
 
+// Handles URL:s for saved queries containing only the saved query id and redirects to the proper table URL.
+// Example: https://www.yourpxweb.com/sq/123456 -> https://www.yourpxweb.com/{lang}/table/{tableId}?sq=123456
 export async function savedQueryRouteLoader({ params }: LoaderFunctionArgs) {
   const config = getConfig();
   const { sqId } = params as { sqId?: string };
