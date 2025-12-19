@@ -6,6 +6,7 @@ import StartPage from './pages/StartPage/StartPage';
 import TableViewer from './pages/TableViewer/TableViewer';
 import TopicIcons from './pages/TopicIcons/TopicIcons';
 import { getConfig } from './util/config/getConfig';
+import { savedQueryRouteLoader } from './savedQueryRouteLoader';
 
 const config = getConfig();
 const showDefaultLanguageInPath = config.language.showDefaultLanguageInPath;
@@ -69,6 +70,10 @@ export const routerConfig = [
       {
         path: 'topicIcons',
         element: <TopicIcons />,
+      },
+      {
+        path: 'sq/:sqId',
+        loader: savedQueryRouteLoader,
       },
     ],
   },
