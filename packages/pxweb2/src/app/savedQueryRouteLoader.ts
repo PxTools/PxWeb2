@@ -6,6 +6,7 @@ import {
   type SavedQueryResponse,
 } from '@pxweb2/pxweb2-api-client';
 import { getConfig } from './util/config/getConfig';
+import i18n from '../i18n/config';
 
 export async function savedQueryRouteLoader({ params }: LoaderFunctionArgs) {
   const config = getConfig();
@@ -32,6 +33,11 @@ export async function savedQueryRouteLoader({ params }: LoaderFunctionArgs) {
         : `/${lang}/table/${res.savedQuery.tableId}`;
 
     const search = `?${new URLSearchParams({ sq: sqId }).toString()}`;
+
+    // Ensure i18next language matches the target route language
+    if (lang && i18n.language !== lang) {
+      i18n.changeLanguage(lang);
+    }
 
     return redirect(`${path}${search}`);
   } catch (e: unknown) {
