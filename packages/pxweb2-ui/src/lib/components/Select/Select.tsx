@@ -9,6 +9,7 @@ import { Icon } from '../Icon/Icon';
 import Modal from '../Modal/Modal';
 import Radio from '../Radio/Radio';
 import { getIconDirection } from '../../util/util';
+import i18next from 'i18next';
 
 export type SelectProps = {
   variant?: 'default' | 'inVariableBox';
@@ -62,9 +63,7 @@ export function Select({
           hideLabel={hideLabel}
           label={label}
           options={ops}
-          placeholder={placeholder}
           selectedOption={selectedOption}
-          onChange={onChange}
           tabIndex={tabIndex}
           className={cssClasses}
         />
@@ -96,9 +95,7 @@ type DefaultSelectProps = Pick<
   | 'hideLabel'
   | 'label'
   | 'options'
-  | 'placeholder'
   | 'selectedOption'
-  | 'onChange'
   | 'tabIndex'
   | 'className'
 >;
@@ -107,10 +104,8 @@ function DefaultSelect({
   hideLabel,
   label,
   options,
-  placeholder,
   selectedOption,
-  onChange,
-  tabIndex,
+  tabIndex = 0,
   className = '',
 }: Readonly<DefaultSelectProps>) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
@@ -126,26 +121,30 @@ function DefaultSelect({
           {label}
         </Label>
       </div>
-      <div
-        className={cl(classes.contentStyle)}
-        tabIndex={tabIndex}
-        onClick={() => {
-          openOptions(options); // TODO: Get option
-          onChange(options[0]); // TODO: Use selected option
-        }}
-        onKeyUp={(event) => {
-          if (event.key === ' ' || event.key === 'Enter') {
-            openOptions(options); // TODO: Get option
-            onChange(options[0]); // TODO: Use selected option
+
+      <div className={cl(classes.selectWrapper)}>
+        <select
+          aria-label={label}
+          className={cl(classes.optionLayout, classes['bodyshort-medium'])}
+          defaultValue={
+            selectedOption ? String(selectedOption.value) : undefined
           }
-        }}
-      >
-        <BodyShort
-          size="medium"
-          className={cl(classes.optionLayout, classes.optionTypography)}
         >
-          {selectedOption ? selectedOption.label : placeholder}
-        </BodyShort>
+          {options.map((o) => (
+            <option
+              key={String(o.value)}
+              value={String(o.value)}
+              className={cl(classes['bodyshort-medium'])}
+              tabIndex={tabIndex}
+              // Use uncontrolled select with initial value from selectedOption
+              defaultValue={
+                selectedOption ? String(selectedOption.value) : undefined
+              }
+            >
+              {o.label}
+            </option>
+          ))}
+        </select>
         <Icon iconName="ChevronDown" className={cl(classes.iconColor)}></Icon>
       </div>
     </div>
@@ -310,7 +309,13 @@ function VariableBoxSelect({
             {selectedItem ? selectedItem.label : placeholder}
           </BodyShort>
         </div>
-        <Icon iconName={chevronIcon} className={cl(classes.iconColor)}></Icon>
+        <Icon
+          iconName={chevronIcon}
+          className={cl(
+            classes.iconColor,
+            i18next.dir() === 'rtl' ? classes.rtl : classes.ltr,
+          )}
+        ></Icon>
       </div>
       <div className={cl(classes.divider)}></div>
       {isModalOpen && (
