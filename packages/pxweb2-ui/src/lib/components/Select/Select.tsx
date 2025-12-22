@@ -145,12 +145,7 @@ function DefaultSelect({
             </option>
           ))}
         </select>
-        <Icon
-          iconName="ChevronDown"
-          className={cl(
-            classes.iconColor,
-          )}
-        ></Icon>
+        <Icon iconName="ChevronDown" className={cl(classes.iconColor)}></Icon>
       </div>
     </div>
   );
