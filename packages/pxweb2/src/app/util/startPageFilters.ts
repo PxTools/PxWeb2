@@ -45,6 +45,7 @@ export function organizePaths(paths: PathItem[][]): PathItem[] {
           children: [],
           count: 1,
           uniqueId: fullId,
+          sortCode: item.sortCode,
         };
         currentLevel.push(newItem);
         currentLevel = newItem.children!;
@@ -474,6 +475,63 @@ export function sortTimeUnit(allTimeUnits: Set<string>): string[] {
   });
 }
 
+/**
+ * Parses a non-negative integer sort code from a string.
+ * - Trims whitespace.
+ * - Accepts only digits (e.g., "0", "12", "0012").
+ * - Returns +Infinity for missing/invalid values so they sort last.
+ */
+function parseSortCode(sortCode: string | undefined): number {
+  const INVALID = Number.POSITIVE_INFINITY;
+  const s = (sortCode ?? '').trim();
+
+  if (!/^\d+$/.test(s)) {
+    return INVALID;
+  }
+
+  return Number(s);
+}
+
+/**
+ * Comparator for PathItem that sorts by numeric sortCode (ascending), then by label.
+ * - Parses sortCode via parseSortCode (digits-only, trimmed).
+ * - Missing/invalid sort codes are treated as +Infinity and therefore sort last.
+ * - If both sort codes are missing/invalid, falls back to label (ascending).
+ * - If numeric sort codes are equal, uses label (ascending) as a stable tie-breaker.
+ * - For Array.prototype.sort: negative => a before b, positive => b before a, 0 => equal.
+ * - Label comparison is delegated to compareByLabelAsc.
+ */
+function compareBySortCodeThenLabelAsc(a: PathItem, b: PathItem): number {
+  const sortA = parseSortCode(a.sortCode);
+  const sortB = parseSortCode(b.sortCode);
+
+  // Check validity of sort codes
+  const aValid = Number.isFinite(sortA);
+  const bValid = Number.isFinite(sortB);
+
+  // Both invalid/missing -> compare by label
+  if (!aValid && !bValid) {
+    return compareByLabelAsc(a, b);
+  }
+
+  // Only A invalid -> A after B
+  if (!aValid) {
+    return 1;
+  }
+
+  // Only B invalid -> B after A
+  if (!bValid) {
+    return -1;
+  }
+
+  // Both valid -> numeric first, label as tie-breaker
+  if (sortA === sortB) {
+    return compareByLabelAsc(a, b); // stable tie-breaker
+  }
+
+  return sortA - sortB;
+}
+
 function compareByLabelAsc(a: PathItem, b: PathItem): number {
   const la = a.label;
   const lb = b.label;
@@ -491,7 +549,7 @@ export function sortSubjectTree(subjects: PathItem[]): PathItem[] {
   const sortRec = (nodes: PathItem[]): PathItem[] =>
     nodes
       .slice()
-      .sort(compareByLabelAsc)
+      .sort(compareBySortCodeThenLabelAsc)
       .map((node) => ({
         ...node,
         children: node.children ? sortRec(node.children) : undefined,
