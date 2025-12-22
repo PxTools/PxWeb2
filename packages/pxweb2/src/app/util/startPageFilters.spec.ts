@@ -592,3 +592,49 @@ describe('sortSubjectTreeAlpha', () => {
     expect(deltaKids.map((n) => n.label)).toEqual(['Alpha', 'Gamma']);
   });
 });
+
+describe('compareBySortCodeThenLabelAsc (via sortSubjectTree)', () => {
+  it('sorts valid numeric sort codes ascending', () => {
+    const subjects = [
+      { id: 'b', label: 'B', sortCode: '010' },
+      { id: 'a', label: 'A', sortCode: '2' },
+      { id: 'c', label: 'C', sortCode: '001' }, // parsed as 1
+    ];
+
+    const sorted = sortSubjectTree(subjects);
+    expect(sorted.map((n) => n.label)).toEqual(['C', 'A', 'B']); // 1, 2, 10
+  });
+
+  it('places invalid/missing sort codes after valid ones and falls back to label', () => {
+    const subjects = [
+      { id: 'a', label: 'Alpha', sortCode: undefined }, // invalid
+      { id: 'b', label: 'Bravo', sortCode: '3' }, // valid
+      { id: 'c', label: 'Charlie', sortCode: 'notdigits' }, // invalid
+    ];
+
+    const sorted = sortSubjectTree(subjects);
+    expect(sorted.map((n) => n.label)).toEqual(['Bravo', 'Alpha', 'Charlie']);
+  });
+
+  it('uses label as tie-breaker when sort codes are equal', () => {
+    const subjects = [
+      { id: 'b', label: 'Bravo', sortCode: '5' },
+      { id: 'a', label: 'Alpha', sortCode: '5' },
+      { id: 'c', label: 'Charlie', sortCode: '5' },
+    ];
+
+    const sorted = sortSubjectTree(subjects);
+    expect(sorted.map((n) => n.label)).toEqual(['Alpha', 'Bravo', 'Charlie']);
+  });
+
+  it('trims whitespace and treats non-digit strings as invalid', () => {
+    const subjects = [
+      { id: 'a', label: 'A', sortCode: '  4 ' }, // valid after trim
+      { id: 'b', label: 'C', sortCode: '   ' }, // invalid after trim -> empty
+      { id: 'c', label: 'B', sortCode: '-1' }, // invalid (non-digit)
+    ];
+
+    const sorted = sortSubjectTree(subjects);
+    expect(sorted.map((n) => n.label)).toEqual(['A', 'B', 'C']); // 4, then invalids by label
+  });
+});
