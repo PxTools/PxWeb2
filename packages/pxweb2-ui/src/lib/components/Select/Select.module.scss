@@ -73,12 +73,7 @@
   pointer-events: none;
   align-self: center;
   background: var(--px-color-surface-default);
-  &.ltr {
-    right: fixed.$spacing-3;
-  }
-  &.rtl {
-    right: fixed.$spacing-3;
-  }
+  inset-inline-end: fixed.$spacing-3;
 }
 
 // --------------------------------------------------------

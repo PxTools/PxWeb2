@@ -149,7 +149,6 @@ function DefaultSelect({
           iconName="ChevronDown"
           className={cl(
             classes.iconColor,
-            i18next.dir() === 'rtl' ? classes.rtl : classes.ltr,
           )}
         ></Icon>
       </div>
