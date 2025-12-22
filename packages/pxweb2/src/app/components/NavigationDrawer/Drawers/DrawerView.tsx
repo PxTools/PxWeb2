@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
-import { ContentBox, Alert } from '@pxweb2/pxweb2-ui';
+import { ContentBox, LocalAlert } from '@pxweb2/pxweb2-ui';
 import classes from './DrawerView.module.scss';
 
 export function DrawerView() {
@@ -8,9 +8,9 @@ export function DrawerView() {
 
   return (
     <ContentBox>
-      <Alert variant="info" className={classes.alert}>
+      <LocalAlert variant="info" className={classes.alert}>
         {t('common.status_messages.drawer_view')}
-      </Alert>
+      </LocalAlert>
     </ContentBox>
   );
 }

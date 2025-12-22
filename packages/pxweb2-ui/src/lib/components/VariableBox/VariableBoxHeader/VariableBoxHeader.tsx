@@ -5,7 +5,7 @@ import classes from './VariableBoxHeader.module.scss';
 import { Icon } from '../../Icon/Icon';
 import Tag from '../../Tag/Tag';
 import { VariableBoxProps } from '../VariableBox';
-import Alert from '../../Alert/Alert';
+import LocalAlert from '../../LocalAlert/LocalAlert';
 import Heading from '../../Typography/Heading/Heading';
 
 type VariableBoxPropsToHeader = Pick<VariableBoxProps, 'label' | 'mandatory'>;
@@ -113,11 +113,11 @@ export function VariableBoxHeader({
 
       {isMissingMandatoryValues && (
         <div className={cl(classes['header-alert'])} role="alert">
-          <Alert variant="error" size="small" id={alertId}>
+          <LocalAlert variant="error" size="small" id={alertId}>
             {t(
               'presentation_page.side_menu.selection.variablebox.header.alert_no_mandatory_values',
             )}
-          </Alert>
+          </LocalAlert>
         </div>
       )}
     </div>

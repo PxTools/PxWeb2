@@ -24,6 +24,7 @@
       }
     },
     "skip_to_main": "Skip to main content",
+    "switch_language_landmark": "Select language",
     "footer": {
       "language_header": "Language",
       "copyright": "© Copyright PxTools",
@@ -46,7 +47,7 @@
       "error": "Error:"
     },
     "status_messages": {
-      "welcome": "Welcome to the new PxWeb 2.0! We're still improving to help you find and use the numbers you need 📊✨",
+      "welcome": "Welcome to the new PxWeb 2.0! We're still improving to help you find and use the figures you need 📊✨",
       "drawer_view": "Graph display is under construction.",
       "drawer_save_file": "More file formats are in the works.",
       "drawer_save_api": "Feature for API query is under construction.",
@@ -63,7 +64,7 @@
   },
   "start_page": {
     "header": "Welcome to PxWeb 2.0",
-    "ingress": "Looking for the perfect table? Use the search field and filters to dig into the numbers you need. Whether you're hunting for trends, facts, or just an oddly satisfying dataset, PxWeb 2.0 has your back.",
+    "ingress": "Looking for the perfect table? Use the search field and filters to dig into the figures you need. Whether you're hunting for trends, facts, or just an oddly satisfying dataset, PxWeb 2.0 has your back.",
     "more_about_label": "More about PxWeb 2.0",
     "more_about_text": "More about Text EN",
     "no_result_header": "We couldn't find any tables",
@@ -71,8 +72,8 @@
     "no_result_search_help": "Search help",
     "result_hidden_header": "Result",
     "search_label": "Search in PxWeb 2.0",
-    "search_placeholder": "Search for table names or variables",
-    "skip_to.filter": "Skip to filter", 
+    "search_placeholder": "",
+    "skip_to.filter": "Skip to filter",
     "skip_to.result": "Skip to result",
     "filter": {
       "button": "Filter",
