@@ -544,18 +544,30 @@ function compareByLabelAsc(a: PathItem, b: PathItem): number {
   return 0;
 }
 
-// Sort subjects alphabetically at every depth.
-export function sortSubjectTree(subjects: PathItem[]): PathItem[] {
-  const sortRec = (nodes: PathItem[]): PathItem[] =>
-    nodes
-      .slice()
-      .sort(compareBySortCodeThenLabelAsc)
-      .map((node) => ({
-        ...node,
-        children: node.children ? sortRec(node.children) : undefined,
-      }));
+function comparatorForDepth(depth: number) {
+  if (depth <= 3) {
+    return compareByLabelAsc;
+  }
 
-  return sortRec(subjects);
+  if (depth <= 5) {
+    return compareBySortCodeThenLabelAsc;
+  }
+
+  return undefined; // keep original order for deeper levels
+}
+
+export function sortSubjectTree(subjects: PathItem[]): PathItem[] {
+  const sortRec = (nodes: PathItem[], depth: number): PathItem[] => {
+    const cmp = comparatorForDepth(depth);
+    const sorted = cmp ? nodes.slice().sort(cmp) : nodes.slice();
+
+    return sorted.map((node) => ({
+      ...node,
+      children: node.children ? sortRec(node.children, depth + 1) : undefined,
+    }));
+  };
+
+  return sortRec(subjects, 1);
 }
 
 export function sortTablesByUpdated(tables: Table[]): Table[] {
