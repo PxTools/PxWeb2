@@ -2,11 +2,7 @@ import cl from 'clsx';
 import { m } from 'motion/react';
 import { forwardRef, MouseEvent } from 'react';
 
-import {
-  Icon,
-  IconProps,
-  Label,
-} from '@pxweb2/pxweb2-ui';
+import { Icon, IconProps, Label } from '@pxweb2/pxweb2-ui';
 import styles from './NavigationItem.module.scss';
 
 // Framer Motion spring animation configuration
@@ -29,7 +25,9 @@ export const Item = forwardRef<HTMLButtonElement, ItemProps>(
   ({ label, parentName, selected, icon, onClick }, ref) => {
     const btnId = 'px-' + parentName + '-' + label;
     const initialBaseBackgroundColor =
-      parentName === 'navBar' ? 'var(--px-color-surface-subtle)' : 'var(--px-color-surface-default)';
+      parentName === 'navBar'
+        ? 'var(--px-color-surface-subtle)'
+        : 'var(--px-color-surface-default)';
     const initialBackgroundColor = selected
       ? 'var(--px-color-surface-action-subtle-active)'
       : initialBaseBackgroundColor;
@@ -75,7 +73,6 @@ export const Item = forwardRef<HTMLButtonElement, ItemProps>(
         >
           <m.div
             className={cl(styles.icon)}
-
             // Framer Motion animations
             variants={buttonVariants}
           >

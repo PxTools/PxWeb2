@@ -31,7 +31,7 @@
 
   &.selected {
     > .icon {
-      background-color: var(--px-color-surface-action-subtle-active) ;
+      background-color: var(--px-color-surface-action-subtle-active);
       color: var(--px-color-icon-default);
     }
     > label {
@@ -41,7 +41,7 @@
 
   &:hover {
     > .icon {
-      background-color: var(--px-color-surface-action-subtle-hover) ;
+      background-color: var(--px-color-surface-action-subtle-hover);
       color: var(--px-color-icon-default);
     }
     > label {
@@ -50,7 +50,7 @@
   }
   &:active {
     > .icon {
-      background-color: var(--px-color-surface-action-subtle-active) ;
+      background-color: var(--px-color-surface-action-subtle-active);
       color: var(--px-color-icon-default);
     }
     > label {
