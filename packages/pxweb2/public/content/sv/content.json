@@ -43,9 +43,27 @@
             "url": "https://www.pxtools.net/PxWeb2/",
             "external": true
           },
-          { "text": "Kontakt", "url": "mailto:px@scb.se" }
+          {
+            "text": "Kontakt",
+            "url": "mailto:px@scb.se"
+          }
         ]
       }
     ]
+  },
+  "tableViewer": {
+    "helpSection": {
+      "description": "Hjälp och tips om hur du använder Statistikdatabasen hittar du på sidan:",
+      "links": [
+        {
+          "text": "Kom igång med Statistikdatabasen",
+          "url": "#"
+        }
+      ],
+      "informationCard": {
+        "enabled": true,
+        "text": "Har du frågor om siffrorna och innehållet i tabellen, se under knappen  ”Information”."
+      }
+    }
   }
 }
