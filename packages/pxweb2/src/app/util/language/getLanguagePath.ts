@@ -18,22 +18,6 @@ export const getLanguagePath = (
   showDefaultLanguageInPath: boolean,
   baseApplicationPath: LanguageConfig['baseApplicationPath'],
 ): string => {
-  /**
-   * TODO: Updates needed for this function:
-   * 1. Add handling of lookupFromPathIndex if needed
-   * 2. Consider edge cases (e.g., trailing slashes, query parameters)
-   * 3. Refactor parameters into a single config object?
-   *
-   * TODO: Updates needed in the entire application:
-   * 1. Ensure consistent usage of getLanguagePath across the application
-   * 2. Review and update documentation to reflect changes
-   *
-   * TODO: testing:
-   * 1. Test with IIS deployment scenarios
-   * 2. Test nginx deployment scenarios
-   * 3. Test in PR
-   */
-
   const normalizedBase = normalizeBaseApplicationPath(baseApplicationPath);
   const basePrefix = normalizedBase === '/' ? '' : normalizedBase.slice(0, -1);
   let pathnameWithoutBase = pathname;
