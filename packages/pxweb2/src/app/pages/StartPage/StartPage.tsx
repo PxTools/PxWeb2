@@ -22,6 +22,7 @@ import {
   DetailsSection,
   List,
   ListItem,
+  MarkdownRenderer,
 } from '@pxweb2/pxweb2-ui';
 import { type Table } from '@pxweb2/pxweb2-api-client';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
@@ -433,7 +434,9 @@ const StartPage = () => {
             <DetailsSection header={t('start_page.no_result_search_help')}>
               <List listType="ul">
                 {searchHelpItems.map((text, index) => (
-                  <ListItem key={`${text}-${index}`}>{text}</ListItem>
+                  <ListItem key={`${text}-${index}`}>
+                    <MarkdownRenderer mdText={text} />
+                  </ListItem>
                 ))}
               </List>
             </DetailsSection>
