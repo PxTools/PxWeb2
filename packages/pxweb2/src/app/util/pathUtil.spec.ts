@@ -3,6 +3,7 @@ import {
   getPathWithUniqueIds,
   buildPathIndex,
   findPathByKey,
+  normalizeBaseApplicationPath,
   type PathIndex,
 } from './pathUtil';
 import type { PathItem } from '../pages/StartPage/StartPageTypes';
@@ -97,6 +98,29 @@ describe('pathUtil', () => {
       const node = findPathByKey(index, 'aku');
       expect(node?.uniqueId).toBe('al__al03__aku');
       expect(node?.label).toBe('Arbeidskraftundersøkelsen');
+    });
+  });
+
+  describe('normalizeBaseApplicationPath', () => {
+    it('returns "/" for empty, whitespace, or "/"', () => {
+      expect(normalizeBaseApplicationPath('')).toBe('/');
+      expect(normalizeBaseApplicationPath('   ')).toBe('/');
+      expect(normalizeBaseApplicationPath('/')).toBe('/');
+      expect(normalizeBaseApplicationPath(' / ')).toBe('/');
+    });
+
+    it('adds missing leading slash', () => {
+      expect(normalizeBaseApplicationPath('pxweb2')).toBe('/pxweb2/');
+      expect(normalizeBaseApplicationPath('pxweb2/')).toBe('/pxweb2/');
+    });
+
+    it('adds missing trailing slash', () => {
+      expect(normalizeBaseApplicationPath('/pxweb2')).toBe('/pxweb2/');
+    });
+
+    it('preserves already normalized values (aside from trimming)', () => {
+      expect(normalizeBaseApplicationPath('/pxweb2/')).toBe('/pxweb2/');
+      expect(normalizeBaseApplicationPath('  /pxweb2/  ')).toBe('/pxweb2/');
     });
   });
 });
