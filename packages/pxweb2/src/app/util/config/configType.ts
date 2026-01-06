@@ -4,6 +4,7 @@ export type Config = {
     defaultLanguage: string;
     fallbackLanguage: string;
     showDefaultLanguageInPath: boolean;
+    languagePositionInPath: 'before' | 'after';
   };
   baseApplicationPath: string;
   apiUrl: string;

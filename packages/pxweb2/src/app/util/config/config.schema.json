@@ -35,6 +35,11 @@
         "showDefaultLanguageInPath": {
           "description": "If true, the default language will be shown in the website path. If false, the default language will not be shown in the path.",
           "type": "boolean"
+        },
+        "languagePositionInPath": {
+          "description": "Determines the position of the language code in the URL path. 'before' places it before other path segments, 'after' places it after.",
+          "type": "string",
+          "enum": ["before", "after"]
         }
       },
       "required": ["supportedLanguages", "defaultLanguage", "fallbackLanguage"]
