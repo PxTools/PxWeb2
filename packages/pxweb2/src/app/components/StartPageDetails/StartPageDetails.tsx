@@ -10,7 +10,7 @@ type StartPageDetailsProps = Readonly<{
   detailsSection?: StartpageLocaleContent['detailsSection'];
 }>;
 
-const renderLinksList = (items?: DetailLink[]) => {
+const renderLinksList = (items?: Readonly<DetailLink[]>) => {
   if (!items?.length) {
     return null;
   }
