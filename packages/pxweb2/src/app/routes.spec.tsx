@@ -5,6 +5,7 @@ import { createMemoryRouter, RouteObject, RouterProvider } from 'react-router';
 
 import * as configModule from './util/config/getConfig';
 import { AppProvider } from './context/AppProvider';
+import type { Config } from './util/config/configType';
 
 // Define ThrowingComponent at the top level
 const ThrowingComponent = () => {
@@ -55,7 +56,7 @@ function renderWithProviders(router: ReturnType<typeof createMemoryRouter>) {
 }
 
 describe('Router configuration', () => {
-  const mockConfig = {
+  const mockConfig: Config = {
     language: {
       supportedLanguages: [
         { shorthand: 'en', languageName: 'English' },
@@ -64,6 +65,7 @@ describe('Router configuration', () => {
       defaultLanguage: 'en',
       fallbackLanguage: 'en',
       showDefaultLanguageInPath: false,
+      languagePositionInPath: 'after',
     },
     apiUrl: 'test',
     baseApplicationPath: '/',
@@ -205,6 +207,7 @@ describe('Router configuration', () => {
       beforeEach(async () => {
         mockConfig.language.showDefaultLanguageInPath = true;
         mockConfig.baseApplicationPath = '/app/';
+        mockConfig.language.languagePositionInPath = 'after';
 
         vi.mocked(configModule.getConfig).mockReturnValue(mockConfig);
         vi.resetModules();
@@ -234,6 +237,54 @@ describe('Router configuration', () => {
         renderWithProviders(testRouter);
         expect(screen.getByTestId('table-viewer')).toBeInTheDocument();
       });
+    });
+  });
+
+  describe("when languagePositionInPath is 'before'", () => {
+    let routerConfig: RouteObject[];
+
+    beforeEach(async () => {
+      mockConfig.language.languagePositionInPath = 'before';
+      mockConfig.baseApplicationPath = '/app/';
+      mockConfig.language.showDefaultLanguageInPath = true;
+
+      vi.mocked(configModule.getConfig).mockReturnValue(mockConfig);
+      vi.resetModules();
+
+      const routesModule = await import('./routes');
+      routerConfig = routesModule.routerConfig;
+    });
+
+    afterEach(() => {
+      mockConfig.baseApplicationPath = '/';
+      mockConfig.language.languagePositionInPath = 'after';
+    });
+
+    it('should render StartPage for /no/app/', () => {
+      const testRouter = createMemoryRouter(routerConfig, {
+        initialEntries: ['/no/app/'],
+      });
+
+      renderWithProviders(testRouter);
+      expect(screen.getByTestId('start-page')).toBeInTheDocument();
+    });
+
+    it('should render TableViewer for /no/app/table/:tableId', () => {
+      const testRouter = createMemoryRouter(routerConfig, {
+        initialEntries: ['/no/app/table/12345'],
+      });
+
+      renderWithProviders(testRouter);
+      expect(screen.getByTestId('table-viewer')).toBeInTheDocument();
+    });
+
+    it('should redirect from /app/ to /en/app/ when showDefaultLanguageInPath=true', () => {
+      const testRouter = createMemoryRouter(routerConfig, {
+        initialEntries: ['/app/'],
+      });
+
+      renderWithProviders(testRouter);
+      expect(screen.getByTestId('start-page')).toBeInTheDocument();
     });
   });
 

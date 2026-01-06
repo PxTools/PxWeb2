@@ -340,6 +340,7 @@ const StartPage = () => {
         config.language.defaultLanguage,
         config.language.showDefaultLanguageInPath,
         config.baseApplicationPath,
+        config.language.languagePositionInPath,
       );
       const discontinued = table.discontinued;
 

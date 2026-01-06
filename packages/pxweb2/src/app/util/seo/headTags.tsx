@@ -4,6 +4,8 @@ import { useEffect } from 'react';
 
 import { getConfig } from '../config/getConfig';
 import useApp from '../../context/useApp';
+import { normalizeBaseApplicationPath } from '../pathUtil';
+import { getLanguagePath } from '../language/getLanguagePath';
 
 // Utility to remove trailing slash
 function removeTrailingSlash(path: string) {
@@ -19,9 +21,19 @@ export function Title() {
   const { t } = useTranslation();
   const { title } = useApp();
 
+  const config = getConfig();
+  const basePath = normalizeBaseApplicationPath(config.baseApplicationPath);
+  const basePrefix = basePath === '/' ? '' : basePath.slice(0, -1);
+  const languagePositionInPath =
+    config.language.languagePositionInPath ?? 'after';
+
   // Try to match both with and without lang in path
-  const matchWithLang = useMatch('/:lang/table/:tableId');
-  const matchWithoutLang = useMatch('/table/:tableId');
+  const matchWithLang = useMatch(
+    languagePositionInPath === 'before'
+      ? `/:lang${basePrefix}/table/:tableId`
+      : `${basePrefix}/:lang/table/:tableId`,
+  );
+  const matchWithoutLang = useMatch(`${basePrefix}/table/:tableId`);
 
   const tableId =
     matchWithLang?.params.tableId || matchWithoutLang?.params.tableId;
@@ -50,33 +62,28 @@ export function HrefLang() {
   const supportedLanguages = config.language.supportedLanguages;
   const showDefaultLanguageInPath = config.language.showDefaultLanguageInPath;
   const defaultLanguage = config.language.defaultLanguage;
+  const languagePositionInPath =
+    config.language.languagePositionInPath ?? 'after';
 
   interface SupportedLanguage {
     shorthand: string;
   }
 
-  function stripLangPrefix(pathname: string) {
-    // Remove leading "/xx" where xx is a supported language code using RegExp
-    const langCodes = supportedLanguages
-      .map((lang: SupportedLanguage) => lang.shorthand)
-      .join('|');
-    const regex = new RegExp(`^/(${langCodes})(/|$)`, 'i');
-    if (regex.test(pathname)) {
-      return pathname.replace(regex, '/') || '/';
-    }
-    return pathname;
-  }
-
   return (
     <>
       {supportedLanguages.map((lang: SupportedLanguage) => {
-        const cleanPath = removeTrailingSlash(
-          stripLangPrefix(location.pathname),
+        const targetPath = getLanguagePath(
+          location.pathname,
+          lang.shorthand,
+          supportedLanguages,
+          defaultLanguage,
+          showDefaultLanguageInPath,
+          config.baseApplicationPath,
+          languagePositionInPath,
         );
-        const langUrl =
-          !showDefaultLanguageInPath && lang.shorthand === defaultLanguage
-            ? `${window.location.origin}${cleanPath}`
-            : `${window.location.origin}/${lang.shorthand}${cleanPath}`;
+
+        const cleanPath = removeTrailingSlash(targetPath);
+        const langUrl = `${globalThis.location.origin}${cleanPath}`;
         return (
           <link
             key={lang.shorthand}

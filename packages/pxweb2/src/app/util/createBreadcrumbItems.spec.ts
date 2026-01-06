@@ -33,6 +33,7 @@ beforeEach(() => {
       ],
       defaultLanguage: 'en',
       showDefaultLanguageInPath: true,
+      languagePositionInPath: 'after',
     },
   });
 
@@ -92,6 +93,7 @@ describe('createBreadcrumbItems', () => {
       'en',
       true,
       '/app/',
+      'after',
     );
     expect(getLanguagePathMock).toHaveBeenCalledWith(
       '/some',
@@ -100,6 +102,7 @@ describe('createBreadcrumbItems', () => {
       'en',
       true,
       '/app/',
+      'after',
     );
   });
 
@@ -115,6 +118,7 @@ describe('createBreadcrumbItems', () => {
         ],
         defaultLanguage: 'en',
         showDefaultLanguageInPath: true,
+        languagePositionInPath: 'after',
       },
     });
 

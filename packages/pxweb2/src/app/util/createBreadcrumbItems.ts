@@ -31,6 +31,7 @@ export function createBreadcrumbItems(
       config.language.defaultLanguage,
       config.language.showDefaultLanguageInPath,
       config.baseApplicationPath,
+      config.language.languagePositionInPath,
     );
 
   const eksternalHomePage = config.homePage

@@ -1,6 +1,8 @@
 import React from 'react';
 import { vi } from 'vitest';
 
+import type { Config } from '../src/app/util/config/configType';
+
 // Types for motion props to avoid using 'any'
 interface MotionProps extends React.HTMLAttributes<HTMLElement> {
   whileHover?: unknown;
@@ -16,7 +18,7 @@ interface MotionProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
 }
 
-export const mockedConfig = {
+export const mockedConfig: Config = {
   language: {
     supportedLanguages: [
       { shorthand: 'en', languageName: 'English' },
@@ -27,6 +29,7 @@ export const mockedConfig = {
     defaultLanguage: 'en',
     fallbackLanguage: 'en',
     showDefaultLanguageInPath: true,
+    languagePositionInPath: 'after',
   },
   baseApplicationPath: '/',
   apiUrl: '',

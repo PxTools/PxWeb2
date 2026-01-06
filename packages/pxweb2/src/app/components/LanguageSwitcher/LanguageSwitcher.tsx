@@ -38,6 +38,7 @@ export const LanguageSwitcher = () => {
         config.language.defaultLanguage,
         config.language.showDefaultLanguageInPath,
         config.baseApplicationPath,
+        config.language.languagePositionInPath,
       ),
     );
 

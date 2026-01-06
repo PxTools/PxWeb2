@@ -7,6 +7,7 @@ import * as configModule from '../config/getConfig';
 import { CanonicalUrl, Title, HrefLang } from './headTags';
 import useApp from '../../context/useApp';
 import { renderWithProviders } from '../../util/testing-utils';
+import type { Config } from '../config/configType';
 
 // --- Mocks ---
 vi.mock('react-router', () => ({
@@ -28,7 +29,7 @@ const mockMatch = {
   withTableId: { params: { tableId: '123' } },
   noTableId: { params: { tableId: undefined } },
 };
-const mockConfigs = {
+const mockConfigs: Record<string, Config> = {
   default: {
     language: {
       supportedLanguages: [
@@ -38,6 +39,7 @@ const mockConfigs = {
       defaultLanguage: 'en',
       fallbackLanguage: 'en',
       showDefaultLanguageInPath: false,
+      languagePositionInPath: 'after',
     },
     baseApplicationPath: '/',
     apiUrl: 'test',
@@ -55,6 +57,7 @@ const mockConfigs = {
       defaultLanguage: 'en',
       fallbackLanguage: 'en',
       showDefaultLanguageInPath: true,
+      languagePositionInPath: 'after',
     },
     baseApplicationPath: '/',
     apiUrl: 'test',
