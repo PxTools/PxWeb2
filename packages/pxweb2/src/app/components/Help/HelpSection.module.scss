@@ -44,4 +44,9 @@
   align-items: flex-start;
   gap: fixed.$spacing-1;
   align-self: stretch;
+
+  // Ensure direct children fill full width
+  > * {
+    inline-size: 100%;
+  }
 }
