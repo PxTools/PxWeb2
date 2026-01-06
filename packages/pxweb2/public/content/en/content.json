@@ -61,7 +61,7 @@
   },
   "tableViewer": {
     "helpSection": {
-      "description": "This area can contain information about available help resources or guidance for using PxWeb:",
+      "description": "Help and guidance on how to use the PxWeb interface can be found on our help pages:",
       "links": [
         {
           "text": "Example link 1",
@@ -74,7 +74,7 @@
       ],
       "informationCard": {
         "enabled": true,
-        "text": "This card can be used to inform users that details about the figures and table content are available under the “Information” button."
+        "text": "For questions about the figures and table content, see the “Information” button."
       }
     }
   }
