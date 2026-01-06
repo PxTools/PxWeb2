@@ -60,6 +60,7 @@ interface Resources {
         tab_definitions: 'The content of this tab is under construction.';
         welcome: "Welcome to the new PxWeb 2.0! We're still improving to help you find and use the figures you need 📊✨";
       };
+      switch_language_landmark: 'Select language';
       title: 'PxWeb 2.0';
     };
     date: {
