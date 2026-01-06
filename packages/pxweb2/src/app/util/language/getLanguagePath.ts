@@ -1,15 +1,25 @@
 import { Config as LanguageConfig } from '../../util/config/configType';
 import { normalizeBaseApplicationPath } from '../pathUtil';
 
+// Build paths with correct slashes
 const buildPath = (prefix: string, actualPath: string) => {
-  if (actualPath === '') {
-    return prefix === '' ? '/' : `${prefix}/`;
-  }
-  return prefix === '' ? `/${actualPath}` : `${prefix}/${actualPath}`;
-};
+  const hasPrefix = prefix !== '';
+  const hasActualPath = actualPath !== '';
 
-const normalizePathname = (pathname: string) =>
-  pathname.startsWith('/') ? pathname : `/${pathname}`;
+  if (!hasActualPath && !hasPrefix) {
+    return '/';
+  }
+
+  if (!hasActualPath && hasPrefix) {
+    return `${prefix}/`;
+  }
+
+  if (!hasPrefix) {
+    return `/${actualPath}`;
+  }
+
+  return `${prefix}/${actualPath}`;
+};
 
 const stripBasePrefix = (
   pathname: string,
@@ -81,6 +91,8 @@ const getActualPathBefore = (
  * @param supportedLanguages List of supported languages
  * @param defaultLanguage The fallback language code
  * @param showDefaultLanguageInPath Whether to show the default language in the path
+ * @param baseApplicationPath The base application path
+ * @param languagePositionInPath Position of the language code in the path ('before' or 'after')
  * @returns The correct path for the target language
  */
 export const getLanguagePath = (
@@ -94,14 +106,11 @@ export const getLanguagePath = (
 ): string => {
   const normalizedBase = normalizeBaseApplicationPath(baseApplicationPath);
   const basePrefix = normalizedBase === '/' ? '' : normalizedBase.slice(0, -1);
-
   const includesLangSegment =
     showDefaultLanguageInPath || targetLanguage !== defaultLanguage;
-
   const baseSegments =
     normalizedBase === '/' ? [] : normalizedBase.slice(1, -1).split('/');
-
-  const normalizedPath = normalizePathname(pathname);
+  const normalizedPath = pathname.startsWith('/') ? pathname : `/${pathname}`;
 
   if (languagePositionInPath === 'before') {
     const actualPath = getActualPathBefore(
@@ -112,7 +121,9 @@ export const getLanguagePath = (
     const prefix = includesLangSegment
       ? `/${targetLanguage}${basePrefix}`
       : basePrefix;
-    return buildPath(prefix, actualPath);
+    const completePath = buildPath(prefix, actualPath);
+
+    return completePath;
   }
 
   // languagePositionInPath === 'after'
@@ -128,6 +139,7 @@ export const getLanguagePath = (
   const prefix = includesLangSegment
     ? `${basePrefix}/${targetLanguage}`
     : basePrefix;
+  const completePath = buildPath(prefix, actualPath);
 
-  return buildPath(prefix, actualPath);
+  return completePath;
 };
