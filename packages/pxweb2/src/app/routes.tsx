@@ -79,6 +79,8 @@ export const routerConfig = [
       {
         path: 'sq/:sqId',
         loader: savedQueryRouteLoader,
+        // Provide a minimal element to avoid React Router warning for leaf routes
+        element: <div>Redirecting…</div>,
       },
     ],
   },
