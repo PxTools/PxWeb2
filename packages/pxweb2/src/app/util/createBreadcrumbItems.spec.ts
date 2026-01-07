@@ -27,7 +27,10 @@ beforeEach(() => {
     baseApplicationPath: '/app/',
     homePage: { en: 'https://external.home/en' },
     language: {
-      supportedLanguages: ['en', 'no'],
+      supportedLanguages: [
+        { shorthand: 'en', languageName: 'English' },
+        { shorthand: 'no', languageName: 'Norwegian' },
+      ],
       defaultLanguage: 'en',
       showDefaultLanguageInPath: true,
     },
@@ -41,7 +44,9 @@ beforeEach(() => {
     })),
   );
 
-  getLanguagePathMock.mockReturnValue('/lang/base');
+  getLanguagePathMock.mockImplementation((pathname: string) =>
+    pathname === '/' ? '/lang/root' : `/lang${pathname}`,
+  );
 
   // Stub global location
   vi.stubGlobal('location', {
@@ -52,7 +57,7 @@ beforeEach(() => {
 });
 
 describe('createBreadcrumbItems', () => {
-  it('includes external home and root when homePage exists and builds final current page href (matches current code behavior)', () => {
+  it('includes external home and builds internal hrefs via getLanguagePath', () => {
     const t = (s: string) => s;
     const pathElements: PathElement[] = [];
 
@@ -71,16 +76,31 @@ describe('createBreadcrumbItems', () => {
     });
     expect(items[1]).toEqual({
       label: 'common.breadcrumbs.breadcrumb_root_title',
-      href: '/app/' + 'en',
+      href: '/lang/root',
     });
 
-    // Because of the expression in the source file, the final current page href ends up being
-    // location.pathname.substring(1) (see function implementation). With pathname '/root/page' that is 'root/page'
     const last = items[items.length - 1];
     expect(last).toEqual({
       label: 'Current page',
-      href: '/app/some',
+      href: '/lang/some',
     });
+
+    expect(getLanguagePathMock).toHaveBeenCalledWith(
+      '/',
+      'en',
+      expect.any(Array),
+      'en',
+      true,
+      '/app/',
+    );
+    expect(getLanguagePathMock).toHaveBeenCalledWith(
+      '/some',
+      'en',
+      expect.any(Array),
+      'en',
+      true,
+      '/app/',
+    );
   });
 
   it('only includes root when no external home page and includes path elements as subjects', () => {
@@ -89,7 +109,10 @@ describe('createBreadcrumbItems', () => {
       baseApplicationPath: '/app/',
       // no homePage
       language: {
-        supportedLanguages: ['en', 'no'],
+        supportedLanguages: [
+          { shorthand: 'en', languageName: 'English' },
+          { shorthand: 'no', languageName: 'Norwegian' },
+        ],
         defaultLanguage: 'en',
         showDefaultLanguageInPath: true,
       },
@@ -113,20 +136,22 @@ describe('createBreadcrumbItems', () => {
     // First item only root (no external home)
     expect(items[0]).toEqual({
       label: 'common.breadcrumbs.breadcrumb_root_title',
-      href: '/app/' + 'en',
+      href: '/lang/root',
     });
 
-    // Language href is basePath without trailing slash + getLanguagePath -> '/app' + '/lang/base' = '/app/lang/base'
     expect(items[1]).toEqual({
       label: 'First',
-      href: '/app/en?subject=a1',
+      href: '/lang/root?subject=a1',
     });
     expect(items[2]).toEqual({
       label: 'Second',
-      href: '/app/en?subject=b2',
+      href: '/lang/root?subject=b2',
     });
 
-    // No current page item since currentPageLabel was empty
+    expect(items[3]).toEqual({
+      label: 'Current page',
+      href: '/lang/some',
+    });
     expect(items.length).toBe(4);
   });
 
