@@ -24,6 +24,11 @@ export async function savedQueryRouteLoader({ params }: LoaderFunctionArgs) {
 
     const lang = res.savedQuery.language;
 
+    // Ensure i18next language matches the target route language
+    if (lang && i18n.language !== lang) {
+      await i18n.changeLanguage(lang);
+    }
+
     const path = getLanguagePath(
       `/table/${res.savedQuery.tableId}`,
       lang,
@@ -36,11 +41,6 @@ export async function savedQueryRouteLoader({ params }: LoaderFunctionArgs) {
     console.log({ path });
 
     const search = `?${new URLSearchParams({ sq: sqId }).toString()}`;
-
-    // Ensure i18next language matches the target route language
-    if (lang && i18n.language !== lang) {
-      i18n.changeLanguage(lang);
-    }
 
     return redirect(`${path}${search}`);
   } catch (e: unknown) {
