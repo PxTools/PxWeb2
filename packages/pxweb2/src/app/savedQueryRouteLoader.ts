@@ -7,6 +7,7 @@ import {
 } from '@pxweb2/pxweb2-api-client';
 import { getConfig } from './util/config/getConfig';
 import i18n from '../i18n/config';
+import { getLanguagePath } from './util/language/getLanguagePath';
 
 // Handles URL:s for saved queries containing only the saved query id and redirects to the proper table URL.
 // Example: https://www.yourpxweb.com/sq/123456 -> https://www.yourpxweb.com/{lang}/table/{tableId}?sq=123456
@@ -25,15 +26,15 @@ export async function savedQueryRouteLoader({ params }: LoaderFunctionArgs) {
     )) as SavedQueryResponse;
 
     const lang = res.language || res.savedQuery.language;
-    const defaultLang = config.language.defaultLanguage;
-    const showDefaultLanguageInPath = config.language.showDefaultLanguageInPath;
 
-    // TODO: Use GetLanguagePath util function?
-    const path = showDefaultLanguageInPath
-      ? `/${lang}/table/${res.savedQuery.tableId}`
-      : lang === defaultLang
-        ? `/table/${res.savedQuery.tableId}`
-        : `/${lang}/table/${res.savedQuery.tableId}`;
+    const path = getLanguagePath(
+      `/table/${res.savedQuery.tableId}`,
+      lang,
+      config.language.supportedLanguages,
+      config.language.defaultLanguage,
+      config.language.showDefaultLanguageInPath,
+      config.baseApplicationPath,
+    );
 
     const search = `?${new URLSearchParams({ sq: sqId }).toString()}`;
 
