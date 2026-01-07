@@ -63,7 +63,7 @@ const buildPath = (prefix: string, actualPath: string) => {
   return `${prefix}/${actualPath}`;
 };
 
-const getActualPath = (
+const getPathWithoutPrefixes = (
   pathname: string,
   baseSegments: string[],
   supportedLanguageShorthands: ReadonlySet<string>,
@@ -121,7 +121,7 @@ export const getLanguagePath = (
     supportedLanguages.map((lng) => lng.shorthand),
   );
 
-  const actualPath = getActualPath(
+  const pathWithoutPrefixes = getPathWithoutPrefixes(
     normalizedPath,
     baseSegments,
     supportedLanguageShorthands,
@@ -137,5 +137,5 @@ export const getLanguagePath = (
         : `${basePrefix}/${targetLanguage}`;
   }
 
-  return buildPath(prefix, actualPath);
+  return buildPath(prefix, pathWithoutPrefixes);
 };
