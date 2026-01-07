@@ -3,7 +3,6 @@ import {
   ApiError,
   OpenAPI,
   SavedQueriesService,
-  type SavedQueryResponse,
 } from '@pxweb2/pxweb2-api-client';
 import { getConfig } from './util/config/getConfig';
 import i18n from '../i18n/config';
@@ -21,9 +20,7 @@ export async function savedQueryRouteLoader({ params }: LoaderFunctionArgs) {
   OpenAPI.BASE = config.apiUrl;
 
   try {
-    const res = await SavedQueriesService.getSaveQuery(
-      sqId,
-    );
+    const res = await SavedQueriesService.getSaveQuery(sqId);
 
     const lang = res.savedQuery.language;
 
