@@ -35,25 +35,28 @@ export default function HelpSection({ helpSectionContent }: HelpSectionProps) {
   const hasInfoCard = Boolean(
     informationCard?.enabled && informationCard?.text,
   );
+  const hasDescriptionOrLinks = Boolean(description) || hasLinks;
 
-  if (!description && !hasLinks && !hasInfoCard) {
+  if (!hasDescriptionOrLinks && !hasInfoCard) {
     return null;
   }
 
   return (
     <div className={styles.helpSection}>
-      <div className={styles.descriptionLinksWrapper}>
-        {description && (
-          <div className={styles.descriptionWrapper}>
-            <BodyLong size="medium">{description}</BodyLong>
-          </div>
-        )}
-        {hasLinks && (
-          <div className={styles.linksWrapper}>
-            <LinkList items={links!} />
-          </div>
-        )}
-      </div>
+      {hasDescriptionOrLinks && (
+        <div className={styles.descriptionLinksWrapper}>
+          {description && (
+            <div className={styles.descriptionWrapper}>
+              <BodyLong size="medium">{description}</BodyLong>
+            </div>
+          )}
+          {hasLinks && (
+            <div className={styles.linksWrapper}>
+              <LinkList items={links!} />
+            </div>
+          )}
+        </div>
+      )}
       {hasInfoCard && (
         <div className={styles.informationCardWrapper}>
           <InformationCard icon="InformationCircle">
