@@ -40,7 +40,15 @@ describe('savedQueryRouteLoader', () => {
   it('throws 400 when sqId is missing', async () => {
     vi.mocked(getConfig).mockReturnValue({
       apiUrl: 'https://api.example',
-      language: { defaultLanguage: 'en', showDefaultLanguageInPath: true },
+      baseApplicationPath: '',
+      language: {
+        defaultLanguage: 'en',
+        showDefaultLanguageInPath: true,
+        supportedLanguages: [
+          { shorthand: 'en', languageName: 'English' },
+          { shorthand: 'sv', languageName: 'Swedish' },
+        ],
+      },
     } as unknown as AppConfig);
 
     await expect(savedQueryRouteLoader(makeArgs())).rejects.toMatchObject({
@@ -51,7 +59,15 @@ describe('savedQueryRouteLoader', () => {
   it('redirects to /{lang}/table when showDefaultLanguageInPath=true', async () => {
     vi.mocked(getConfig).mockReturnValue({
       apiUrl: 'https://api.example',
-      language: { defaultLanguage: 'en', showDefaultLanguageInPath: true },
+      baseApplicationPath: '',
+      language: {
+        defaultLanguage: 'en',
+        showDefaultLanguageInPath: true,
+        supportedLanguages: [
+          { shorthand: 'en', languageName: 'English' },
+          { shorthand: 'sv', languageName: 'Swedish' },
+        ],
+      },
     } as unknown as AppConfig);
     vi.mocked(SavedQueriesService.getSaveQuery).mockResolvedValue({
       language: 'en',
@@ -76,7 +92,15 @@ describe('savedQueryRouteLoader', () => {
   it('redirects to /table when lang is default and showDefaultLanguageInPath=false', async () => {
     vi.mocked(getConfig).mockReturnValue({
       apiUrl: 'https://api.example',
-      language: { defaultLanguage: 'en', showDefaultLanguageInPath: false },
+      baseApplicationPath: '',
+      language: {
+        defaultLanguage: 'en',
+        showDefaultLanguageInPath: false,
+        supportedLanguages: [
+          { shorthand: 'en', languageName: 'English' },
+          { shorthand: 'sv', languageName: 'Swedish' },
+        ],
+      },
     } as unknown as AppConfig);
     vi.mocked(SavedQueriesService.getSaveQuery).mockResolvedValue({
       language: 'en',
@@ -98,7 +122,15 @@ describe('savedQueryRouteLoader', () => {
   it('redirects to /{lang}/table when lang is non-default and showDefaultLanguageInPath=false', async () => {
     vi.mocked(getConfig).mockReturnValue({
       apiUrl: 'https://api.example',
-      language: { defaultLanguage: 'en', showDefaultLanguageInPath: false },
+      baseApplicationPath: '',
+      language: {
+        defaultLanguage: 'en',
+        showDefaultLanguageInPath: false,
+        supportedLanguages: [
+          { shorthand: 'en', languageName: 'English' },
+          { shorthand: 'sv', languageName: 'Swedish' },
+        ],
+      },
     } as unknown as AppConfig);
     vi.mocked(SavedQueriesService.getSaveQuery).mockResolvedValue({
       language: 'sv',
@@ -118,7 +150,15 @@ describe('savedQueryRouteLoader', () => {
   it('throws 404 with not found message when API returns 404', async () => {
     vi.mocked(getConfig).mockReturnValue({
       apiUrl: 'https://api.example',
-      language: { defaultLanguage: 'en', showDefaultLanguageInPath: true },
+      baseApplicationPath: '',
+      language: {
+        defaultLanguage: 'en',
+        showDefaultLanguageInPath: true,
+        supportedLanguages: [
+          { shorthand: 'en', languageName: 'English' },
+          { shorthand: 'sv', languageName: 'Swedish' },
+        ],
+      },
     } as unknown as AppConfig);
     vi.mocked(SavedQueriesService.getSaveQuery).mockRejectedValue({
       status: 404,
@@ -141,7 +181,15 @@ describe('savedQueryRouteLoader', () => {
   it('throws 500 with generic message for non-404 errors', async () => {
     vi.mocked(getConfig).mockReturnValue({
       apiUrl: 'https://api.example',
-      language: { defaultLanguage: 'en', showDefaultLanguageInPath: true },
+      baseApplicationPath: '',
+      language: {
+        defaultLanguage: 'en',
+        showDefaultLanguageInPath: true,
+        supportedLanguages: [
+          { shorthand: 'en', languageName: 'English' },
+          { shorthand: 'sv', languageName: 'Swedish' },
+        ],
+      },
     } as unknown as AppConfig);
     vi.mocked(SavedQueriesService.getSaveQuery).mockRejectedValue(
       new Error('boom'),
