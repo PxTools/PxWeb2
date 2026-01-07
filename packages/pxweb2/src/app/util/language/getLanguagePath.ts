@@ -1,6 +1,48 @@
 import { Config as LanguageConfig } from '../../util/config/configType';
 import { normalizeBaseApplicationPath } from '../pathUtil';
 
+const startsWithSegments = (segments: string[], prefix: string[]) =>
+  prefix.every((p, i) => segments[i] === p);
+
+// Removes the leading segments from the segments array
+// if they match the prefix
+const stripLeadingSegments = (segments: string[], prefix: string[]) => {
+  if (prefix.length === 0) {
+    return segments;
+  }
+
+  if (!startsWithSegments(segments, prefix)) {
+    return segments;
+  }
+
+  const rest = segments.slice(prefix.length);
+
+  if (rest.length === 0) {
+    return [''];
+  }
+
+  return rest;
+};
+
+// Removes the leading language segment from the segments array,
+// if it matches a supported language shorthand
+const stripLeadingLanguageSegment = (
+  segments: string[],
+  supportedLanguageShorthands: ReadonlySet<string>,
+) => {
+  if (!supportedLanguageShorthands.has(segments[0])) {
+    return segments;
+  }
+
+  const rest = segments.slice(1);
+
+  if (rest.length === 0) {
+    return [''];
+  }
+
+  return rest;
+};
+
 // Build paths with correct slashes
 const buildPath = (prefix: string, actualPath: string) => {
   const hasPrefix = prefix !== '';
@@ -21,67 +63,30 @@ const buildPath = (prefix: string, actualPath: string) => {
   return `${prefix}/${actualPath}`;
 };
 
-const stripBasePrefix = (
-  pathname: string,
-  normalizedBase: string,
-  basePrefix: string,
-) => {
-  if (normalizedBase === '/') {
-    return pathname;
-  }
-
-  if (pathname === basePrefix) {
-    return '/';
-  }
-
-  if (pathname.startsWith(normalizedBase)) {
-    return pathname.slice(normalizedBase.length - 1);
-  }
-
-  return pathname;
-};
-
-const getActualPathAfter = (
-  pathname: string,
-  supportedLanguages: LanguageConfig['language']['supportedLanguages'],
-) => {
-  const [firstURLElement, ...pathParts] = pathname.slice(1).split('/');
-  const isLanguagePath = supportedLanguages.some(
-    (lang) => lang.shorthand === firstURLElement,
-  );
-
-  return isLanguagePath
-    ? pathParts.join('/')
-    : [firstURLElement, ...pathParts].join('/');
-};
-
-const getActualPathBefore = (
+const getActualPath = (
   pathname: string,
   baseSegments: string[],
-  supportedLanguages: LanguageConfig['language']['supportedLanguages'],
+  supportedLanguageShorthands: ReadonlySet<string>,
+  languagePositionInPath: LanguageConfig['language']['languagePositionInPath'],
 ) => {
   // Split keeps trailing empty segment, preserving trailing slash semantics
-  const pathSegments = pathname.slice(1).split('/');
-  const firstSegment = pathSegments[0];
-  const hasLangPrefix = supportedLanguages.some(
-    (lang) => lang.shorthand === firstSegment,
-  );
+  let segments = pathname.slice(1).split('/');
 
-  const startsWith = (arr: string[], prefix: string[]) =>
-    prefix.every((p, i) => arr[i] === p);
+  if (languagePositionInPath === 'after') {
+    segments = stripLeadingSegments(segments, baseSegments);
+    segments = stripLeadingLanguageSegment(
+      segments,
+      supportedLanguageShorthands,
+    );
 
-  if (hasLangPrefix) {
-    const afterLang = pathSegments.slice(1);
-    const rest = startsWith(afterLang, baseSegments)
-      ? afterLang.slice(baseSegments.length)
-      : afterLang;
-    return rest.join('/');
+    return segments.join('/');
   }
 
-  const rest = startsWith(pathSegments, baseSegments)
-    ? pathSegments.slice(baseSegments.length)
-    : pathSegments;
-  return rest.join('/');
+  // languagePositionInPath === 'before'
+  segments = stripLeadingLanguageSegment(segments, supportedLanguageShorthands);
+  segments = stripLeadingSegments(segments, baseSegments);
+
+  return segments.join('/');
 };
 
 /**
@@ -108,38 +113,29 @@ export const getLanguagePath = (
   const basePrefix = normalizedBase === '/' ? '' : normalizedBase.slice(0, -1);
   const includesLangSegment =
     showDefaultLanguageInPath || targetLanguage !== defaultLanguage;
-  const baseSegments =
-    normalizedBase === '/' ? [] : normalizedBase.slice(1, -1).split('/');
+  const baseSegments = basePrefix === '' ? [] : basePrefix.slice(1).split('/');
   const normalizedPath = pathname.startsWith('/') ? pathname : `/${pathname}`;
 
-  if (languagePositionInPath === 'before') {
-    const actualPath = getActualPathBefore(
-      normalizedPath,
-      baseSegments,
-      supportedLanguages,
-    );
-    const prefix = includesLangSegment
-      ? `/${targetLanguage}${basePrefix}`
-      : basePrefix;
-    const completePath = buildPath(prefix, actualPath);
+  // Create a set for faster lookup
+  const supportedLanguageShorthands = new Set(
+    supportedLanguages.map((lng) => lng.shorthand),
+  );
 
-    return completePath;
+  const actualPath = getActualPath(
+    normalizedPath,
+    baseSegments,
+    supportedLanguageShorthands,
+    languagePositionInPath,
+  );
+
+  let prefix = basePrefix;
+
+  if (includesLangSegment) {
+    prefix =
+      languagePositionInPath === 'before'
+        ? `/${targetLanguage}${basePrefix}`
+        : `${basePrefix}/${targetLanguage}`;
   }
 
-  // languagePositionInPath === 'after'
-  const pathnameWithoutBase = stripBasePrefix(
-    normalizedPath,
-    normalizedBase,
-    basePrefix,
-  );
-  const actualPath = getActualPathAfter(
-    pathnameWithoutBase,
-    supportedLanguages,
-  );
-  const prefix = includesLangSegment
-    ? `${basePrefix}/${targetLanguage}`
-    : basePrefix;
-  const completePath = buildPath(prefix, actualPath);
-
-  return completePath;
+  return buildPath(prefix, actualPath);
 };
