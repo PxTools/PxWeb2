@@ -72,19 +72,19 @@ const getActualPath = (
   // Split keeps trailing empty segment, preserving trailing slash semantics
   let segments = pathname.slice(1).split('/');
 
-  if (langPositionInPath === 'after') {
-    segments = stripLeadingSegments(segments, baseSegments);
+  if (langPositionInPath === 'before') {
     segments = stripLeadingLanguageSegment(
       segments,
       supportedLanguageShorthands,
     );
+    segments = stripLeadingSegments(segments, baseSegments);
 
     return segments.join('/');
   }
 
-  // langPositionInPath === 'before'
-  segments = stripLeadingLanguageSegment(segments, supportedLanguageShorthands);
+  // langPositionInPath === 'after'
   segments = stripLeadingSegments(segments, baseSegments);
+  segments = stripLeadingLanguageSegment(segments, supportedLanguageShorthands);
 
   return segments.join('/');
 };
