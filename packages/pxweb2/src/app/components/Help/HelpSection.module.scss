@@ -1,0 +1,52 @@
+@use '$ui/style-dictionary/dist/scss/fixed-variables.scss' as fixed;
+
+.helpSection {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: fixed.$spacing-4;
+  align-self: stretch;
+}
+
+.descriptionLinksWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: fixed.$spacing-2;
+  align-self: stretch;
+}
+
+.descriptionWrapper {
+  display: flex;
+  padding: fixed.$spacing-2 fixed.$spacing-2 0 fixed.$spacing-2;
+  align-items: flex-start;
+  align-self: stretch;
+}
+
+.linksWrapper {
+  display: flex;
+  padding: 0 fixed.$spacing-2;
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: stretch;
+}
+
+.linksList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.informationCardWrapper {
+  display: flex;
+  padding: fixed.$spacing-2;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: fixed.$spacing-1;
+  align-self: stretch;
+
+  // Ensure direct children fill full width
+  > * {
+    inline-size: 100%;
+  }
+}
