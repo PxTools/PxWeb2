@@ -43,26 +43,39 @@ const stripLeadingLanguageSegment = (
   return rest;
 };
 
-// Build paths with correct slashes
-const buildPath = (prefix: string, actualPath: string) => {
-  const hasPrefix = prefix !== '';
-  const hasActualPath = actualPath !== '';
+/**
+ * Builds a path from the given prefix and actual path
+ * @param pathPrefix The path prefix (base path and optional language segment)
+ * @param remainingPath The actual path without prefixes
+ * @returns The combined path
+ */
+const buildPath = (pathPrefix: string, remainingPath: string) => {
+  const isPrefixEmpty = pathPrefix === '';
+  const isRemainingPathEmpty = remainingPath === '';
 
-  if (!hasActualPath && !hasPrefix) {
+  if (isRemainingPathEmpty && isPrefixEmpty) {
     return '/';
   }
 
-  if (!hasActualPath && hasPrefix) {
-    return `${prefix}/`;
+  if (isRemainingPathEmpty && !isPrefixEmpty) {
+    return `${pathPrefix}/`;
   }
 
-  if (!hasPrefix) {
-    return `/${actualPath}`;
+  if (isPrefixEmpty) {
+    return `/${remainingPath}`;
   }
 
-  return `${prefix}/${actualPath}`;
+  return `${pathPrefix}/${remainingPath}`;
 };
 
+/**
+ * Removes language and base path prefixes from the pathname
+ * @param pathname Current pathname from location
+ * @param baseSegments Segments of the base application path
+ * @param supportedLanguageShorthands Set of supported language shorthands
+ * @param langPositionInPath Position of the language code in the path ('before' or 'after')
+ * @returns The pathname without language and base path prefixes
+ */
 const getPathWithoutPrefixes = (
   pathname: string,
   baseSegments: string[],
