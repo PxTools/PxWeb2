@@ -1,6 +1,7 @@
 import { Config as LanguageConfig } from '../../util/config/configType';
 import { normalizeBaseApplicationPath } from '../pathUtil';
 
+// Checks if the segments array starts with the given prefix
 const startsWithSegments = (segments: string[], prefix: string[]) =>
   prefix.every((p, i) => segments[i] === p);
 
