@@ -33,6 +33,8 @@ export async function savedQueryRouteLoader({ params }: LoaderFunctionArgs) {
       config.baseApplicationPath,
     );
 
+    console.log({path});
+
     const search = `?${new URLSearchParams({ sq: sqId }).toString()}`;
 
     // Ensure i18next language matches the target route language
