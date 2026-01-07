@@ -67,12 +67,12 @@ const getActualPath = (
   pathname: string,
   baseSegments: string[],
   supportedLanguageShorthands: ReadonlySet<string>,
-  languagePositionInPath: LanguageConfig['language']['languagePositionInPath'],
+  langPositionInPath: LanguageConfig['language']['positionInPath'],
 ) => {
   // Split keeps trailing empty segment, preserving trailing slash semantics
   let segments = pathname.slice(1).split('/');
 
-  if (languagePositionInPath === 'after') {
+  if (langPositionInPath === 'after') {
     segments = stripLeadingSegments(segments, baseSegments);
     segments = stripLeadingLanguageSegment(
       segments,
@@ -82,7 +82,7 @@ const getActualPath = (
     return segments.join('/');
   }
 
-  // languagePositionInPath === 'before'
+  // langPositionInPath === 'before'
   segments = stripLeadingLanguageSegment(segments, supportedLanguageShorthands);
   segments = stripLeadingSegments(segments, baseSegments);
 
@@ -97,7 +97,7 @@ const getActualPath = (
  * @param defaultLanguage The fallback language code
  * @param showDefaultLanguageInPath Whether to show the default language in the path
  * @param baseApplicationPath The base application path
- * @param languagePositionInPath Position of the language code in the path ('before' or 'after')
+ * @param positionInPath Position of the language code in the path ('before' or 'after')
  * @returns The correct path for the target language
  */
 export const getLanguagePath = (
@@ -107,7 +107,7 @@ export const getLanguagePath = (
   defaultLanguage: string,
   showDefaultLanguageInPath: boolean,
   baseApplicationPath: LanguageConfig['baseApplicationPath'],
-  languagePositionInPath: LanguageConfig['language']['languagePositionInPath'] = 'after',
+  langPositionInPath: LanguageConfig['language']['positionInPath'] = 'after',
 ): string => {
   const normalizedBase = normalizeBaseApplicationPath(baseApplicationPath);
   const basePrefix = normalizedBase === '/' ? '' : normalizedBase.slice(0, -1);
@@ -125,14 +125,14 @@ export const getLanguagePath = (
     normalizedPath,
     baseSegments,
     supportedLanguageShorthands,
-    languagePositionInPath,
+    langPositionInPath,
   );
 
   let prefix = basePrefix;
 
   if (includesLangSegment) {
     prefix =
-      languagePositionInPath === 'before'
+      langPositionInPath === 'before'
         ? `/${targetLanguage}${basePrefix}`
         : `${basePrefix}/${targetLanguage}`;
   }

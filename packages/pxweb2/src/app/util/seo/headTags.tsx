@@ -24,12 +24,11 @@ export function Title() {
   const config = getConfig();
   const basePath = normalizeBaseApplicationPath(config.baseApplicationPath);
   const basePrefix = basePath === '/' ? '' : basePath.slice(0, -1);
-  const languagePositionInPath =
-    config.language.languagePositionInPath ?? 'after';
+  const langPositionInPath = config.language.positionInPath ?? 'after';
 
   // Try to match both with and without lang in path
   const matchWithLang = useMatch(
-    languagePositionInPath === 'before'
+    langPositionInPath === 'before'
       ? `/:lang${basePrefix}/table/:tableId`
       : `${basePrefix}/:lang/table/:tableId`,
   );
@@ -62,8 +61,7 @@ export function HrefLang() {
   const supportedLanguages = config.language.supportedLanguages;
   const showDefaultLanguageInPath = config.language.showDefaultLanguageInPath;
   const defaultLanguage = config.language.defaultLanguage;
-  const languagePositionInPath =
-    config.language.languagePositionInPath ?? 'after';
+  const langPositionInPath = config.language.positionInPath ?? 'after';
 
   interface SupportedLanguage {
     shorthand: string;
@@ -79,7 +77,7 @@ export function HrefLang() {
           defaultLanguage,
           showDefaultLanguageInPath,
           config.baseApplicationPath,
-          languagePositionInPath,
+          langPositionInPath,
         );
 
         const cleanPath = removeTrailingSlash(targetPath);

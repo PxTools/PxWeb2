@@ -35,7 +35,7 @@ export const Header = ({ stroke = false }: HeaderProps) => {
     config.language.defaultLanguage,
     config.language.showDefaultLanguageInPath,
     config.baseApplicationPath,
-    config.language.languagePositionInPath,
+    config.language.positionInPath,
   );
   const logoUrl = homePageUrl || defaultPath;
 

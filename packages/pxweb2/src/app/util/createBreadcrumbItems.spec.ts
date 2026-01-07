@@ -33,7 +33,7 @@ beforeEach(() => {
       ],
       defaultLanguage: 'en',
       showDefaultLanguageInPath: true,
-      languagePositionInPath: 'after',
+      positionInPath: 'after',
     },
   });
 
@@ -118,7 +118,7 @@ describe('createBreadcrumbItems', () => {
         ],
         defaultLanguage: 'en',
         showDefaultLanguageInPath: true,
-        languagePositionInPath: 'after',
+        positionInPath: 'after',
       },
     });
 

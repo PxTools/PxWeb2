@@ -123,7 +123,7 @@ export const Footer: React.FC<FooterProps> = ({
                           config.language.defaultLanguage,
                           config.language.showDefaultLanguageInPath,
                           config.baseApplicationPath,
-                          config.language.languagePositionInPath,
+                          config.language.positionInPath,
                         );
                         const isCurrent = i18n.language?.startsWith(
                           lang.shorthand,

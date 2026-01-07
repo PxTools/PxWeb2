@@ -324,7 +324,7 @@ describe('getLanguagePath', () => {
     });
   });
 
-  describe("when languagePositionInPath is 'before'", () => {
+  describe("when positionInPath is 'before'", () => {
     const languagePositionBefore = 'before' as const;
     const appBaseApplicationPath = '/app/';
 

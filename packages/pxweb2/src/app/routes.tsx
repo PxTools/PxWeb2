@@ -10,12 +10,11 @@ import { normalizeBaseApplicationPath } from './util/pathUtil';
 
 const config = getConfig();
 const showDefaultLanguageInPath = config.language.showDefaultLanguageInPath;
-const languagePositionInPath =
-  config.language.languagePositionInPath ?? 'after';
+const langPositionInPath = config.language.positionInPath ?? 'after';
 const basePath = normalizeBaseApplicationPath(config.baseApplicationPath);
 
 const getLanguageBasePath = (lang: string) => {
-  if (languagePositionInPath === 'before') {
+  if (langPositionInPath === 'before') {
     // basePath already ends with '/'
     return `/${lang}${basePath}`;
   }
@@ -64,7 +63,7 @@ const supportedLangRoutes = config.language.supportedLanguages.map((lang) => {
 const defaultLanguagePath = getLanguageBasePath(
   config.language.defaultLanguage,
 );
-const routerRootPath = languagePositionInPath === 'before' ? '/' : basePath;
+const routerRootPath = langPositionInPath === 'before' ? '/' : basePath;
 const topicIconsRoutePath =
   routerRootPath === '/' ? `${basePath}topicIcons` : 'topicIcons';
 
@@ -82,7 +81,7 @@ export const routerConfig = [
               element: <Navigate to={defaultLanguagePath} replace />,
             },
             // When language comes before basePath, also redirect from basePath (no language)
-            ...(languagePositionInPath === 'before'
+            ...(langPositionInPath === 'before'
               ? [
                   {
                     path: basePath,

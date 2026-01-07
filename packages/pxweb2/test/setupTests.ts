@@ -29,7 +29,7 @@ export const mockedConfig: Config = {
     defaultLanguage: 'en',
     fallbackLanguage: 'en',
     showDefaultLanguageInPath: true,
-    languagePositionInPath: 'after',
+    positionInPath: 'after',
   },
   baseApplicationPath: '/',
   apiUrl: '',

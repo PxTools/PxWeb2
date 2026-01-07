@@ -56,7 +56,7 @@ describe('Header', () => {
       cfg.language.fallbackLanguage,
       cfg.language.showDefaultLanguageInPath,
       cfg.baseApplicationPath,
-      cfg.language.languagePositionInPath,
+      cfg.language.positionInPath,
     );
 
     const link = screen.getByRole('link');

@@ -65,7 +65,7 @@ describe('Router configuration', () => {
       defaultLanguage: 'en',
       fallbackLanguage: 'en',
       showDefaultLanguageInPath: false,
-      languagePositionInPath: 'after',
+      positionInPath: 'after',
     },
     apiUrl: 'test',
     baseApplicationPath: '/',
@@ -207,7 +207,7 @@ describe('Router configuration', () => {
       beforeEach(async () => {
         mockConfig.language.showDefaultLanguageInPath = true;
         mockConfig.baseApplicationPath = '/app/';
-        mockConfig.language.languagePositionInPath = 'after';
+        mockConfig.language.positionInPath = 'after';
 
         vi.mocked(configModule.getConfig).mockReturnValue(mockConfig);
         vi.resetModules();
@@ -240,11 +240,11 @@ describe('Router configuration', () => {
     });
   });
 
-  describe("when languagePositionInPath is 'before'", () => {
+  describe("when positionInPath is 'before'", () => {
     let routerConfig: RouteObject[];
 
     beforeEach(async () => {
-      mockConfig.language.languagePositionInPath = 'before';
+      mockConfig.language.positionInPath = 'before';
       mockConfig.baseApplicationPath = '/app/';
       mockConfig.language.showDefaultLanguageInPath = true;
 
@@ -257,7 +257,7 @@ describe('Router configuration', () => {
 
     afterEach(() => {
       mockConfig.baseApplicationPath = '/';
-      mockConfig.language.languagePositionInPath = 'after';
+      mockConfig.language.positionInPath = 'after';
     });
 
     it('should render StartPage for /no/app/', () => {

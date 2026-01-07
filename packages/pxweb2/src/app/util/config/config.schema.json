@@ -36,7 +36,7 @@
           "description": "If true, the default language will be shown in the website path. If false, the default language will not be shown in the path.",
           "type": "boolean"
         },
-        "languagePositionInPath": {
+        "positionInPath": {
           "description": "Determines the position of the language code in the URL path. 'before' places it before the baseApplicationPath, 'after' places it after.",
           "type": "string",
           "enum": ["before", "after"]
