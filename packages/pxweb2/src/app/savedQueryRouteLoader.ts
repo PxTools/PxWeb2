@@ -21,11 +21,11 @@ export async function savedQueryRouteLoader({ params }: LoaderFunctionArgs) {
   OpenAPI.BASE = config.apiUrl;
 
   try {
-    const res = (await SavedQueriesService.getSaveQuery(
+    const res = await SavedQueriesService.getSaveQuery(
       sqId,
-    )) as SavedQueryResponse;
+    );
 
-    const lang = res.language || res.savedQuery.language;
+    const lang = res.savedQuery.language;
 
     const path = getLanguagePath(
       `/table/${res.savedQuery.tableId}`,
