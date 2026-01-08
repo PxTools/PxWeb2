@@ -27,7 +27,7 @@ export default function WipStatusMessage() {
     return null;
   }
 
-  const message = t('common.status_messages.welcome');
+  const message = t('common.status_messages.welcome', '');
 
   return (
     message && (
