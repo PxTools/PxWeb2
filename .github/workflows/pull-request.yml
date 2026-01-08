@@ -51,7 +51,7 @@ jobs:
       - run: npm ci && npm run build && npm run coverage
 
       - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v6
+        uses: SonarSource/sonarqube-scan-action@v7
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
@@ -116,6 +116,7 @@ jobs:
           cp -r packages/pxweb2/dist dist/statbank2
           mv dist/statbank2/_headers dist/
           mv dist/statbank2/index.html dist/
+          mv dist/statbank2/icons/topicIconMapNO.json dist/statbank2/icons/topicIconMap.json
           echo "/ /statbank2/ 301" > dist/_redirects
           curl -s -o dist/statbank2/config/config.js https://www.ssb.no/statbank2/config/config.js
           sed -i 's|<base href="/"|<base href="/statbank2/"|' dist/index.html

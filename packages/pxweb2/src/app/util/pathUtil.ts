@@ -63,3 +63,17 @@ export function findPathByKey(
   }
   return index.get(String(key).toLowerCase());
 }
+
+export function normalizeBaseApplicationPath(basePath: string): string {
+  const trimmed = basePath.trim();
+
+  if (trimmed === '' || trimmed === '/') {
+    return '/';
+  }
+
+  const withLeadingSlash = trimmed.startsWith('/') ? trimmed : `/${trimmed}`;
+
+  return withLeadingSlash.endsWith('/')
+    ? withLeadingSlash
+    : `${withLeadingSlash}/`;
+}

@@ -38,6 +38,7 @@ export type PathItem = {
   children?: PathItem[];
   count?: number;
   uniqueId?: string;
+  sortCode?: string;
 };
 
 export type YearRange = {

@@ -45,6 +45,7 @@ import { getAllTables, queryTablesByKeyword } from '../../util/tableHandler';
 import { tableListIsReadyToRender } from '../../util/startPageRender';
 import useFilterUrlSync from '../../util/hooks/useFilterUrlSync';
 import StartpageDetails from '../../components/StartPageDetails/StartPageDetails';
+import { getLanguagePath } from '../../util/language/getLanguagePath';
 import { useLocaleContent } from '../../util/hooks/useLocaleContent';
 import type {
   LocaleContent,
@@ -332,10 +333,14 @@ const StartPage = () => {
 
       const config = getConfig();
       const language = i18n.language;
-      const showLangInPath =
-        config.language.showDefaultLanguageInPath ||
-        language !== config.language.defaultLanguage;
-      const langPrefix = showLangInPath ? `/${language}` : '';
+      const tablePath = getLanguagePath(
+        `/table/${table.id}`,
+        language,
+        config.language.supportedLanguages,
+        config.language.defaultLanguage,
+        config.language.showDefaultLanguageInPath,
+        config.baseApplicationPath,
+      );
       const discontinued = table.discontinued;
 
       let cardRef: React.RefObject<HTMLDivElement | null> | undefined;
@@ -349,7 +354,7 @@ const StartPage = () => {
         <TableCard
           key={table.id}
           title={`${table.label}`}
-          href={() => navigate(`${langPrefix}/table/${table.id}`)}
+          href={() => navigate(tablePath)}
           updatedLabel={
             table.updated ? t('start_page.table.updated_label') : undefined
           }
