@@ -19,8 +19,12 @@ const supportedLanguages: string[] = config.language.supportedLanguages.map(
   (item) => item.shorthand,
 );
 
+const positionInPath = config.language.positionInPath ?? 'after';
+
 const lookingForLanguagePos =
-  (config.baseApplicationPath.match(/[\\/]/g) || []).length - 1;
+  positionInPath === 'before'
+    ? 0
+    : (config.baseApplicationPath.match(/[\\/]/g) || []).length - 1;
 
 const initPromise = i18n
   .use(HttpApi)
