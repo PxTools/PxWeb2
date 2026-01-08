@@ -27,14 +27,18 @@ export default function WipStatusMessage() {
     return null;
   }
 
+  const message = t('common.status_messages.welcome');
+
   return (
-    <GlobalAlert
-      variant="info"
-      closeButton={true}
-      className={classes.welcomeAlert}
-      onDismissed={handleDismiss}
-    >
-      {t('common.status_messages.welcome')}
-    </GlobalAlert>
+    message && (
+      <GlobalAlert
+        variant="info"
+        closeButton={true}
+        className={classes.welcomeAlert}
+        onDismissed={handleDismiss}
+      >
+        {message}
+      </GlobalAlert>
+    )
   );
 }
