@@ -65,7 +65,7 @@ const defaultLanguagePath = getLanguageBasePath(
 );
 const routerRootPath = langPositionInPath === 'before' ? '/' : basePath;
 const topicIconsRoutePath =
-  routerRootPath === '/' ? 'topicIcons' : `${basePath}topicIcons`;
+  routerRootPath === '/' ? `${basePath}topicIcons` : 'topicIcons';
 
 export const routerConfig = [
   {
