@@ -6,6 +6,7 @@ import StartPage from './pages/StartPage/StartPage';
 import TableViewer from './pages/TableViewer/TableViewer';
 import TopicIcons from './pages/TopicIcons/TopicIcons';
 import { getConfig } from './util/config/getConfig';
+import { savedQueryRouteLoader } from './savedQueryRouteLoader';
 import { normalizeBaseApplicationPath } from './util/pathUtil';
 
 const config = getConfig();
@@ -74,6 +75,13 @@ export const routerConfig = [
       {
         path: 'topicIcons',
         element: <TopicIcons />,
+      },
+      {
+        path: 'sq/:sqId',
+        loader: savedQueryRouteLoader,
+        // Provide a minimal element to avoid React Router warning for leaf routes
+        element: <div>Redirecting…</div>,
+        HydrateFallback: () => <div />,
       },
     ],
   },
