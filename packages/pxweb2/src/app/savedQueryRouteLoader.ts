@@ -38,8 +38,6 @@ export async function savedQueryRouteLoader({ params }: LoaderFunctionArgs) {
       config.baseApplicationPath,
     );
 
-    console.log({ path });
-
     const search = `?${new URLSearchParams({ sq: sqId }).toString()}`;
 
     return redirect(`${path}${search}`);

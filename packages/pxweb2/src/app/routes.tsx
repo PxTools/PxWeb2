@@ -81,6 +81,7 @@ export const routerConfig = [
         loader: savedQueryRouteLoader,
         // Provide a minimal element to avoid React Router warning for leaf routes
         element: <div>Redirecting…</div>,
+        HydrateFallback: () => <div />,
       },
     ],
   },
