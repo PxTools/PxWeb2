@@ -13,10 +13,12 @@ export const SkipToMain = React.forwardRef<
   const { t } = useTranslation();
   const location = useLocation().pathname;
   const [searchParams] = useSearchParams();
+
   // build a single, URL-encoded query string from the search params
   const paramsString = searchParams.toString(); // URLSearchParams handles encoding
   const params = paramsString ? `?${paramsString}` : '';
   const path = `${location}${params}#px-main-content`;
+
   return (
     <div
       ref={ref}

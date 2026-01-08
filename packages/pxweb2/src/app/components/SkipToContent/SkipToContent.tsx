@@ -25,6 +25,7 @@ export function SkipToContent(props: SkipToContentProps) {
   const params = paramsString ? `?${paramsString}` : '';
   const hash = targetId ? `#${targetId}` : '';
   const path = `${location}${params}${hash}`;
+
   return (
     <div
       ref={containerRef}
