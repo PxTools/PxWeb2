@@ -7,7 +7,7 @@ export const TopicIcons: React.FC = () => {
   const [files, setFiles] = useState<string[] | null>(null);
 
   useEffect(() => {
-    fetch('/icons/topicIcons.json')
+    fetch(`/icons/topicIcons.json?v=${__BUILD_DATE__}`)
       .then((res) => res.json())
       .then((data: string[]) => {
         if (!Array.isArray(data)) {
