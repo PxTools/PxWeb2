@@ -1,63 +1,101 @@
 import type { IconProps, BreadcrumbItem } from '@pxweb2/pxweb2-ui';
 
-export type DetailLink = {
+/** Base link shape shared across content areas */
+export type LinkBase = Readonly<{
   text: string;
   url: string;
-  icon?: IconProps['iconName'];
-  iconPosition?: 'start' | 'end';
-  openInNewTab?: boolean;
-};
+}>;
 
-export type Links = {
+/** Links shown in “details” sections, optionally with icon and new-tab behavior */
+export type DetailLink = LinkBase &
+  Readonly<{
+    icon?: IconProps['iconName'];
+    iconPosition?: 'start' | 'end';
+    openInNewTab?: boolean;
+  }>;
+
+/** Grouped links (with optional header) for detail content */
+export type Links = Readonly<{
   header?: string;
-  items?: DetailLink[];
-};
+  items?: ReadonlyArray<DetailLink>;
+}>;
 
-export type TextBlock = {
+/** Optional text block with header + body */
+export type TextBlock = Readonly<{
   header?: string;
   text?: string;
-};
+}>;
 
-export type DetailsContent = {
+/** One details item can contain a textBlock and links group */
+export type DetailsContent = Readonly<{
   textBlock?: TextBlock;
   links?: Links;
-};
+}>;
 
-export type DetailsSection = {
+/** Collapsible details section configuration */
+export type DetailsSection = Readonly<{
   enabled?: boolean;
   detailHeader?: string;
-  detailContent?: DetailsContent[];
-};
+  detailContent?: ReadonlyArray<DetailsContent>;
+}>;
 
-export type NoResultSearchHelp = {
+/** Help texts shown when search yields no results */
+export type NoResultSearchHelp = Readonly<{
   enabled?: boolean;
-  helpText?: string[];
-};
+  helpText?: ReadonlyArray<string>;
+}>;
 
-export type BreadCrumb = {
+/** Breadcrumb config */
+export type BreadCrumb = Readonly<{
   enabled: boolean;
-  items?: BreadcrumbItem[];
-};
+  items?: ReadonlyArray<BreadcrumbItem>;
+}>;
 
-export type Startpage = {
+/** Start page content */
+export type Startpage = Readonly<{
   breadCrumb?: BreadCrumb;
   detailsSection?: DetailsSection;
   noResultSearchHelp?: NoResultSearchHelp;
-};
+}>;
 
-export type FooterLink = {
-  text: string;
-  url: string;
-  external?: boolean;
-};
+/** Footer link with optional external flag */
+export type FooterLink = LinkBase &
+  Readonly<{
+    external?: boolean;
+  }>;
 
-export type FooterColumn = { header: string; links: FooterLink[] };
+/** Footer column with a header and links */
+export type FooterColumn = Readonly<{
+  header: string;
+  links: ReadonlyArray<FooterLink>;
+}>;
 
-export type Footer = {
-  columns: FooterColumn[];
-};
+/** Footer configuration */
+export type Footer = Readonly<{
+  columns: ReadonlyArray<FooterColumn>;
+}>;
 
-export type LocaleContent = {
+/** Root locale content */
+export type LocaleContent = Readonly<{
   startPage?: Startpage;
   footer?: Footer;
-};
+  tableViewer?: TableViewer;
+}>;
+
+/** Table viewer-specific content */
+export type TableViewer = Readonly<{
+  helpSection?: HelpSection;
+}>;
+
+/** Information card shown in Help section */
+export type InformationCard = Readonly<{
+  enabled: boolean;
+  text: string;
+}>;
+
+/** Help section for the table viewer */
+export type HelpSection = Readonly<{
+  description: string;
+  links?: ReadonlyArray<LinkBase>;
+  informationCard?: InformationCard;
+}>;
