@@ -53,23 +53,7 @@ describe('Select', () => {
       expect(labelWrapper).toBeDefined();
     });
 
-    it('should display placeholder when no option is selected', () => {
-      const placeholder = 'Select an option';
-      render(
-        <Select
-          label="Test Select"
-          placeholder={placeholder}
-          options={mockOptions}
-          onChange={mockOnChange}
-          addModal={mockAddModal}
-          removeModal={mockRemoveModal}
-        />,
-      );
-
-      expect(screen.getByText(placeholder)).toBeDefined();
-    });
-
-    it('should display selected option when provided', () => {
+    it('should display selected option when provided', async () => {
       render(
         <Select
           label="Test Select"
@@ -81,8 +65,25 @@ describe('Select', () => {
         />,
       );
 
-      expect(screen.getByText(mockOptions[0].label)).toBeDefined();
+      const option = await screen.findByText(mockOptions[0].label);
+      expect(option).toBeInTheDocument();
     });
+  });
+
+  it('should display selected option when provided', () => {
+    render(
+      <Select
+        label="Test Select"
+        options={mockOptions}
+        selectedOption={mockOptions[0]}
+        onChange={mockOnChange}
+        addModal={mockAddModal}
+        removeModal={mockRemoveModal}
+      />,
+    );
+
+    const nativeSelect = screen.getByRole('combobox', { name: /test select/i });
+    expect(nativeSelect).toHaveDisplayValue('Option 1');
   });
 
   describe('VariableBoxSelect variant', () => {

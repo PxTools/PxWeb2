@@ -1,8 +1,5 @@
 @use '../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixed;
-
-.iconColor {
-  --px-icon-color: var(--px-color-icon-action);
-}
+@use '../../text-styles.scss';
 
 // ----------------------------------------------------
 // --- CSS classes for the default Select component ---
@@ -22,13 +19,24 @@
   align-self: stretch;
 }
 
-.contentStyle {
+.selectWrapper {
   display: flex;
+  position: relative;
+  width: 100%;
+}
+
+.optionLayout {
+  appearance: none;
+  border: none;
+  width: 100%;
   height: 48px;
+
+  display: flex;
   padding: fixed.$spacing-2 fixed.$spacing-3;
   align-items: center;
   gap: fixed.$spacing-2;
   align-self: stretch;
+  position: relative;
 
   border-radius: var(--px-border-radius-medium);
   box-shadow: inset 0 0 0 2px var(--px-color-border-default);
@@ -54,22 +62,18 @@
   }
 }
 
-.optionLayout {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
-  line-clamp: 1;
-  flex: 1 0 0;
-}
-
-.optionTypography {
-  overflow: hidden;
-  color: var(--px-color-text-default);
-  text-overflow: ellipsis;
-}
-
 .visuallyHidden {
   display: none;
+}
+
+.iconColor {
+  --px-icon-color: var(--px-color-icon-action);
+  position: absolute;
+  font-size: 1.5rem;
+  pointer-events: none;
+  align-self: center;
+  background: var(--px-color-surface-default);
+  inset-inline-end: fixed.$spacing-3;
 }
 
 // --------------------------------------------------------
@@ -78,6 +82,7 @@
 
 .selectVariabelbox {
   display: flex;
+  position: relative;
   padding: fixed.$spacing-2 fixed.$spacing-3;
   align-items: center;
   height: 63px;
