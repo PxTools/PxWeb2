@@ -62,6 +62,7 @@ export function Select({
         <DefaultSelect
           hideLabel={hideLabel}
           label={label}
+          placeholder={placeholder}
           options={ops}
           selectedOption={selectedOption}
           tabIndex={tabIndex}
@@ -94,6 +95,7 @@ type DefaultSelectProps = Pick<
   SelectProps,
   | 'hideLabel'
   | 'label'
+  | 'placeholder'
   | 'options'
   | 'selectedOption'
   | 'tabIndex'
@@ -103,6 +105,7 @@ type DefaultSelectProps = Pick<
 function DefaultSelect({
   hideLabel,
   label,
+  placeholder,
   options,
   selectedOption,
   tabIndex = 0,
@@ -130,6 +133,17 @@ function DefaultSelect({
             selectedOption ? String(selectedOption.value) : undefined
           }
         >
+          {placeholder && (
+            <option
+              value=""
+              disabled
+              hidden
+              className={cl(classes['bodyshort-medium'])}
+              {...(selectedOption ? {} : { selected: true })}
+            >
+              {placeholder}
+            </option>
+          )}
           {options.map((o) => (
             <option
               key={String(o.value)}
