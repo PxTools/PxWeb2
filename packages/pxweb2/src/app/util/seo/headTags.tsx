@@ -33,10 +33,8 @@ export function Title() {
       : `${basePrefix}/:lang/table/:tableId`,
   );
   const matchWithoutLang = useMatch(`${basePrefix}/table/:tableId`);
-
   const tableId =
     matchWithLang?.params.tableId || matchWithoutLang?.params.tableId;
-
   const newTitle = tableId && title ? title : t('common.title');
 
   useEffect(() => {
@@ -51,6 +49,7 @@ export function CanonicalUrl() {
   const location = useLocation();
   const cleanPath = removeTrailingSlash(location.pathname);
   const canonicalUrl = `${window.location.origin}${cleanPath}`;
+
   return <link rel="canonical" href={canonicalUrl} />;
 }
 
@@ -79,9 +78,9 @@ export function HrefLang() {
           config.baseApplicationPath,
           langPositionInPath,
         );
-
         const cleanPath = removeTrailingSlash(targetPath);
         const langUrl = `${globalThis.location.origin}${cleanPath}`;
+
         return (
           <link
             key={lang.shorthand}
