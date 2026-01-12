@@ -12,7 +12,6 @@ const config = getConfig();
 const showDefaultLanguageInPath = config.language.showDefaultLanguageInPath;
 const langPositionInPath = config.language.positionInPath ?? 'after';
 const basePath = normalizeBaseApplicationPath(config.baseApplicationPath);
-
 const getLanguageBasePath = (lang: string) => {
   if (langPositionInPath === 'before') {
     // basePath already ends with '/'
@@ -20,6 +19,12 @@ const getLanguageBasePath = (lang: string) => {
   }
   return `${basePath}${lang}/`;
 };
+const defaultLanguagePath = getLanguageBasePath(
+  config.language.defaultLanguage,
+);
+const routerRootPath = langPositionInPath === 'before' ? '/' : basePath;
+const topicIconsRoutePath =
+  routerRootPath === '/' ? `${basePath}topicIcons` : 'topicIcons';
 
 const supportedLangRoutes = config.language.supportedLanguages.map((lang) => {
   // the normal error handling will show "page not found",
@@ -59,13 +64,6 @@ const supportedLangRoutes = config.language.supportedLanguages.map((lang) => {
     ],
   };
 });
-
-const defaultLanguagePath = getLanguageBasePath(
-  config.language.defaultLanguage,
-);
-const routerRootPath = langPositionInPath === 'before' ? '/' : basePath;
-const topicIconsRoutePath =
-  routerRootPath === '/' ? `${basePath}topicIcons` : 'topicIcons';
 
 export const routerConfig = [
   {
