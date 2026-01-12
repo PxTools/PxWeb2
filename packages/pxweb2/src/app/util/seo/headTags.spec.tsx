@@ -4,6 +4,7 @@ import { useLocation, useMatch } from 'react-router';
 import '@testing-library/jest-dom/vitest';
 
 import * as configModule from '../config/getConfig';
+import * as languagePathModule from '../language/getLanguagePath';
 import { CanonicalUrl, Title, HrefLang } from './headTags';
 import useApp from '../../context/useApp';
 import { renderWithProviders } from '../../util/testing-utils';
@@ -60,6 +61,42 @@ const mockConfigs: Record<string, Config> = {
       positionInPath: 'after',
     },
     baseApplicationPath: '/',
+    apiUrl: 'test',
+    maxDataCells: 150000,
+    showBreadCrumbOnStartPage: true,
+    specialCharacters: ['.', '..', ':', '-', '...', '*'],
+    variableFilterExclusionList: {},
+  },
+  positionBeforeWithBasePath: {
+    language: {
+      supportedLanguages: [
+        { shorthand: 'en', languageName: 'English' },
+        { shorthand: 'no', languageName: 'Norwegian' },
+      ],
+      defaultLanguage: 'en',
+      fallbackLanguage: 'en',
+      showDefaultLanguageInPath: false,
+      positionInPath: 'before',
+    },
+    baseApplicationPath: '/pxweb2/',
+    apiUrl: 'test',
+    maxDataCells: 150000,
+    showBreadCrumbOnStartPage: true,
+    specialCharacters: ['.', '..', ':', '-', '...', '*'],
+    variableFilterExclusionList: {},
+  },
+  positionAfterWithBasePath: {
+    language: {
+      supportedLanguages: [
+        { shorthand: 'en', languageName: 'English' },
+        { shorthand: 'no', languageName: 'Norwegian' },
+      ],
+      defaultLanguage: 'en',
+      fallbackLanguage: 'en',
+      showDefaultLanguageInPath: false,
+      positionInPath: 'after',
+    },
+    baseApplicationPath: '/pxweb2/',
     apiUrl: 'test',
     maxDataCells: 150000,
     showBreadCrumbOnStartPage: true,
@@ -130,6 +167,52 @@ describe('Title', () => {
     renderWithProviders(<Title />);
     expect(document.title).toBe('common.title');
   });
+
+  it('supports positionInPath="before" when matching table routes with a baseApplicationPath', () => {
+    vi.spyOn(configModule, 'getConfig').mockReturnValue(
+      mockConfigs.positionBeforeWithBasePath,
+    );
+    (useApp as Mock).mockReturnValue({
+      title: 'Table title for id 123',
+      setTitle: vi.fn(),
+    });
+
+    (useMatch as Mock).mockImplementation((pattern: string) => {
+      if (pattern === '/:lang/pxweb2/table/:tableId') {
+        return mockMatch.withTableId;
+      }
+      return null;
+    });
+
+    renderWithProviders(<Title />);
+
+    expect(document.title).toBe('Table title for id 123');
+    expect(useMatch).toHaveBeenCalledWith('/:lang/pxweb2/table/:tableId');
+    expect(useMatch).toHaveBeenCalledWith('/pxweb2/table/:tableId');
+  });
+
+  it('supports positionInPath="after" when matching table routes with a baseApplicationPath', () => {
+    vi.spyOn(configModule, 'getConfig').mockReturnValue(
+      mockConfigs.positionAfterWithBasePath,
+    );
+    (useApp as Mock).mockReturnValue({
+      title: 'Table title for id 123',
+      setTitle: vi.fn(),
+    });
+
+    (useMatch as Mock).mockImplementation((pattern: string) => {
+      if (pattern === '/pxweb2/:lang/table/:tableId') {
+        return mockMatch.withTableId;
+      }
+      return null;
+    });
+
+    renderWithProviders(<Title />);
+
+    expect(document.title).toBe('Table title for id 123');
+    expect(useMatch).toHaveBeenCalledWith('/pxweb2/:lang/table/:tableId');
+    expect(useMatch).toHaveBeenCalledWith('/pxweb2/table/:tableId');
+  });
 });
 
 describe('CanonicalUrl', () => {
@@ -164,6 +247,21 @@ describe('CanonicalUrl', () => {
       'href',
       'https://mytesturlpxweb.io/table/123',
     );
+  });
+
+  it('should handle empty pathname (covers removeTrailingSlash branch)', () => {
+    (useLocation as Mock).mockReturnValue({
+      pathname: '',
+      search: '',
+      hash: '',
+    });
+
+    render(<CanonicalUrl />);
+
+    const canonicalLink = document.querySelector('link[rel="canonical"]');
+
+    expect(canonicalLink).not.toBeNull();
+    expect(canonicalLink).toHaveAttribute('href', 'https://mytesturlpxweb.io');
   });
 });
 
@@ -250,5 +348,32 @@ describe('HrefLang', () => {
     );
     expect(linkNo).not.toBeNull();
     expect(linkNo).toHaveAttribute('href', `https://mytesturlpxweb.io/no`);
+  });
+
+  it('passes positionInPath="before" through to getLanguagePath', () => {
+    vi.spyOn(configModule, 'getConfig').mockReturnValue(
+      mockConfigs.positionBeforeWithBasePath,
+    );
+    (useLocation as Mock).mockReturnValue({
+      pathname: '/no/pxweb2/table/123',
+      search: '',
+      hash: '',
+    });
+
+    const languagePathSpy = vi
+      .spyOn(languagePathModule, 'getLanguagePath')
+      .mockImplementation((pathname, shorthand) => {
+        if (shorthand === 'en') {
+          return '/en/pxweb2/table/123';
+        }
+        return '/no/pxweb2/table/123';
+      });
+
+    render(<HrefLang />);
+
+    expect(languagePathSpy).toHaveBeenCalled();
+    for (const call of languagePathSpy.mock.calls) {
+      expect(call[6]).toBe('before');
+    }
   });
 });
