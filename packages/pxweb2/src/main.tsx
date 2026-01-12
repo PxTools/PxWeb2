@@ -6,7 +6,6 @@ import './i18n/config';
 import { validateConfig } from './app/util/validate';
 import { AppProvider } from './app/context/AppProvider';
 import { routerConfig } from './app/routes';
-import { getConfig } from './app/util/config/getConfig';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
@@ -14,10 +13,7 @@ const root = ReactDOM.createRoot(
 
 validateConfig();
 
-const config = getConfig();
-const router = createBrowserRouter(routerConfig, {
-  basename: config.baseApplicationPath,
-});
+const router = createBrowserRouter(routerConfig);
 
 root.render(
   <StrictMode>

@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Alert } from '@pxweb2/pxweb2-ui';
+import { GlobalAlert } from '@pxweb2/pxweb2-ui';
 import classes from './WipStatusMessage.module.scss';
 
 const SESSION_STORAGE_KEY = 'pxweb2.wip_status_message_dismissed';
@@ -27,14 +27,18 @@ export default function WipStatusMessage() {
     return null;
   }
 
+  const message = t('common.status_messages.welcome', '');
+
   return (
-    <Alert
-      variant="info"
-      closeButton={true}
-      className={classes.welcomeAlert}
-      onDismissed={handleDismiss}
-    >
-      {t('common.status_messages.welcome')}
-    </Alert>
+    message && (
+      <GlobalAlert
+        variant="info"
+        closeButton={true}
+        className={classes.welcomeAlert}
+        onDismissed={handleDismiss}
+      >
+        {message}
+      </GlobalAlert>
+    )
   );
 }

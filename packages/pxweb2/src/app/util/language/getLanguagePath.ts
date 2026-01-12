@@ -1,4 +1,5 @@
 import { Config as LanguageConfig } from '../../util/config/configType';
+import { normalizeBaseApplicationPath } from '../pathUtil';
 
 /**
  * Extracts the actual path without language prefix and generates the correct path for the target language
@@ -15,8 +16,29 @@ export const getLanguagePath = (
   supportedLanguages: LanguageConfig['language']['supportedLanguages'],
   defaultLanguage: string,
   showDefaultLanguageInPath: boolean,
+  baseApplicationPath: LanguageConfig['baseApplicationPath'],
 ): string => {
-  const [firstURLElement, ...pathParts] = pathname.slice(1).split('/');
+  const normalizedBase = normalizeBaseApplicationPath(baseApplicationPath);
+  const basePrefix = normalizedBase === '/' ? '' : normalizedBase.slice(0, -1);
+  let pathnameWithoutBase = pathname;
+
+  if (normalizedBase !== '/') {
+    if (pathnameWithoutBase === basePrefix) {
+      pathnameWithoutBase = '/';
+    } else if (pathnameWithoutBase.startsWith(normalizedBase)) {
+      pathnameWithoutBase = pathnameWithoutBase.slice(
+        normalizedBase.length - 1,
+      );
+    }
+  }
+
+  if (!pathnameWithoutBase.startsWith('/')) {
+    pathnameWithoutBase = `/${pathnameWithoutBase}`;
+  }
+
+  const [firstURLElement, ...pathParts] = pathnameWithoutBase
+    .slice(1)
+    .split('/');
   const isLanguagePath = supportedLanguages.some(
     (lang) => lang.shorthand === firstURLElement,
   );
@@ -25,9 +47,10 @@ export const getLanguagePath = (
     ? pathParts.join('/')
     : [firstURLElement, ...pathParts].join('/');
 
-  if (!showDefaultLanguageInPath && targetLanguage === defaultLanguage) {
-    return `/${actualPath}`;
-  }
+  const languagePath =
+    !showDefaultLanguageInPath && targetLanguage === defaultLanguage
+      ? `/${actualPath}`
+      : `/${targetLanguage}/${actualPath}`;
 
-  return `/${targetLanguage}/${actualPath}`;
+  return `${basePrefix}${languagePath}`;
 };
