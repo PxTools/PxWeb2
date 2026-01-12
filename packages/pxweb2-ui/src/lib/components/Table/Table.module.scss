@@ -30,7 +30,7 @@
     padding-left: 16px;
     font-weight: normal;
     text-align: center;
-    font-variant: tabular-nums;
+    font-variant-numeric: tabular-nums;
 
     background: var(--px-color-surface-moderate);
     border-top: 1px solid var(--px-color-border-default);
@@ -141,7 +141,7 @@
     text-align: right;
     border-top: 1px solid var(--px-color-border-default);
     border-left: 1px solid var(--px-color-border-default);
-    font-variant: tabular-nums;
+    font-variant-numeric: tabular-nums;
 
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       padding: 8px 12px;
