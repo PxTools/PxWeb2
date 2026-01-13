@@ -4,8 +4,7 @@ import cl from 'clsx';
 import { Icon } from '../Icon/Icon';
 import styles from './Chips.module.scss';
 
-export interface ChipRemovableProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ChipRemovableProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: string;
   filled?: boolean;
   truncate?: boolean;
