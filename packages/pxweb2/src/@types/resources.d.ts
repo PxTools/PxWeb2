@@ -13,6 +13,13 @@ interface Resources {
         breadcrumb_root_title: 'Home';
         show_more_breadcrumbs: 'Show more';
       };
+      code_snippet: {
+        copied_button_label: 'Code copied to clipboard';
+        copy_button_label: 'Copy code for ';
+        copy_button_tooltip: 'Copy code';
+        unwrap_code_button_label: 'Unwrap lines';
+        wrap_code_button_label: 'Wrap lines';
+      };
       errors: {
         generic: {
           action_text: 'Refresh';
@@ -60,6 +67,7 @@ interface Resources {
         tab_definitions: 'The content of this tab is under construction.';
         welcome: "Welcome to the new PxWeb 2.0! We're still improving to help you find and use the figures you need 📊✨";
       };
+      switch_language_landmark: 'Select language';
       title: 'PxWeb 2.0';
     };
     date: {
