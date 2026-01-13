@@ -4,11 +4,10 @@ import styles from './CopyButton.module.scss';
 import Button from '../../Button/Button';
 import { CodeSnippetTranslations } from '../CodeSnippet';
 
-interface CopyButtonTranslations
-  extends Omit<
-    CodeSnippetTranslations,
-    'wrapCodeButtonLabel' | 'unwrapCodeButtonLabel'
-  > {}
+interface CopyButtonTranslations extends Omit<
+  CodeSnippetTranslations,
+  'wrapCodeButtonLabel' | 'unwrapCodeButtonLabel'
+> {}
 
 interface CopyButtonProps {
   readonly title: string;

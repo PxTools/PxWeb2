@@ -7,8 +7,7 @@ import styles from './Breadcrumbs.module.scss';
 import { BreadcrumbsIcon } from '../Icon/BreadcrumbsIcon';
 import Link from '../Link/Link';
 
-interface BreadcrumbsProps
-  extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
+interface BreadcrumbsProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   readonly variant?: 'default' | 'compact';
   readonly breadcrumbItems: BreadcrumbItem[];
 }
