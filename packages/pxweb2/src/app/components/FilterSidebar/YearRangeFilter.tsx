@@ -69,10 +69,14 @@ function getYearRangeForMatchingTables(
   const matching = tables.filter((table) => {
     const first = parseInt(table.firstPeriod ?? '', 10);
 
-    let last = parseInt(table.lastPeriod ?? '', 10)
-      if (table.timeUnit && table.timeUnit.toLowerCase() === 'other' && table.lastPeriod?.slice(4,5) === "-") {
-            last = parseInt(table.lastPeriod?.slice(5,9) ?? '', 10);
-      }
+    let last = parseInt(table.lastPeriod ?? '', 10);
+    if (
+      table.timeUnit &&
+      table.timeUnit.toLowerCase() === 'other' &&
+      table.lastPeriod?.slice(4, 5) === '-'
+    ) {
+      last = parseInt(table.lastPeriod?.slice(5, 9) ?? '', 10);
+    }
 
     if (!Number.isFinite(first) || !Number.isFinite(last)) {
       return false;
@@ -88,10 +92,14 @@ function getYearRangeForMatchingTables(
 
   const years = matching.flatMap((table) => {
     const first = parseInt(table.firstPeriod ?? '', 10);
-    let last = parseInt(table.lastPeriod ?? '', 10)
-      if (table.timeUnit && table.timeUnit.toLowerCase() === 'other' && table.lastPeriod?.slice(4,5) === "-") {
-            last = parseInt(table.lastPeriod?.slice(5,9) ?? '', 10);
-      }
+    let last = parseInt(table.lastPeriod ?? '', 10);
+    if (
+      table.timeUnit &&
+      table.timeUnit.toLowerCase() === 'other' &&
+      table.lastPeriod?.slice(4, 5) === '-'
+    ) {
+      last = parseInt(table.lastPeriod?.slice(5, 9) ?? '', 10);
+    }
 
     return Number.isFinite(first) && Number.isFinite(last) ? [first, last] : [];
   });
