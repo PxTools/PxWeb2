@@ -38,8 +38,7 @@ function IconWrapper({
   );
 }
 
-interface ActionItemProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface ActionItemProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   label?: string;
   ariaLabel?: string;
   iconName?: IconProps['iconName'];
