@@ -333,7 +333,7 @@ describe('getYearRanges', () => {
   });
 
   it('throws on empty input array', () => {
-    expect(getYearRanges([])).toEqual({ min: 1900, max: 2025 });
+    expect(getYearRanges([])).toEqual({ min: 1900, max: 2026 });
   });
 });
 
