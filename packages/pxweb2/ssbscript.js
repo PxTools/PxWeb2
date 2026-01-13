@@ -76,7 +76,7 @@
     if (language === 'en') {
       before = document.createTextNode(
         "Welcome to the new Statbank! We're still fine-tuning things. " +
-          'If you miss anything, you can still ',
+          'If something is missing, you can still ',
       );
       mytext = 'access the old version';
     } else {
@@ -84,7 +84,7 @@
         'Velkommen til nye Statistikkbanken! Vi jobber med de siste detaljene. ' +
           'Skulle du savne noe, kan du fortsatt ',
       );
-      mytext = 'bruke den gamle statistikkbanken';
+      mytext = 'bruke den gamle versjonen';
     }
     const newUrl = computeTransformedUrl();
     const linkId = 'myLink';
