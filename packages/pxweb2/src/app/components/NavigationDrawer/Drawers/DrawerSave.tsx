@@ -32,6 +32,7 @@ import {
 } from '../../../util/export/exportUtil';
 import { ApiQuery } from '../../ApiQuery/ApiQuery';
 import { fileFormats } from '../../../constants/outputFormats';
+export { fileFormats } from '../../../constants/outputFormats';
 
 // File formats moved to shared constants in app/constants/outputFormats
 
