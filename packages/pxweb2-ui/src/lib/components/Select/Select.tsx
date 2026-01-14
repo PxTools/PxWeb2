@@ -30,12 +30,6 @@ export type SelectProps = {
   codeListLabelId?: string;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function openOptions(options: SelectOption[]) {
-  // NOSONAR: Keep for future use
-  // const optionsStr = options.map((option) => option.label).join('\n');
-}
-
 export function Select({
   variant = 'default',
   label,
@@ -67,6 +61,7 @@ export function Select({
           selectedOption={selectedOption}
           tabIndex={tabIndex}
           className={cssClasses}
+          onChange={onChange}
         />
       )}
       {variant === 'inVariableBox' && (
@@ -100,6 +95,7 @@ type DefaultSelectProps = Pick<
   | 'selectedOption'
   | 'tabIndex'
   | 'className'
+  | 'onChange'
 >;
 
 function DefaultSelect({
@@ -110,6 +106,7 @@ function DefaultSelect({
   selectedOption,
   tabIndex = 0,
   className = '',
+  onChange,
 }: Readonly<DefaultSelectProps>) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
 
@@ -129,6 +126,12 @@ function DefaultSelect({
         <select
           aria-label={label}
           className={cl(classes.optionLayout, classes['bodyshort-medium'])}
+          onChange={(e) => {
+            const next = options.find(
+              (o) => String(o.value) === e.target.value,
+            );
+            onChange?.(next);
+          }}
           defaultValue={
             selectedOption ? String(selectedOption.value) : undefined
           }
