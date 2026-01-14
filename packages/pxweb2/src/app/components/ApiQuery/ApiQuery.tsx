@@ -39,11 +39,19 @@ export const ApiQuery: React.FC<ApiQueryProps> = () => {
         </div>
       </div>
       <div className={cl(styles.selectWrapper)}>
-        <label htmlFor="outputFormat">{t('presentation_page.side_menu.save.file.title')}</label>
-        <select name="outputFormat" id="outputFormat" defaultValue={fileFormats[0]?.value}>
+        <label htmlFor="outputFormat">
+          {t('presentation_page.side_menu.save.file.title')}
+        </label>
+        <select
+          name="outputFormat"
+          id="outputFormat"
+          defaultValue={fileFormats[0]?.value}
+        >
           {fileFormats.map((format) => (
             <option key={format.value} value={format.value}>
-              {translate(`presentation_page.side_menu.save.file.formats.${format.value}`)}
+              {translate(
+                `presentation_page.side_menu.save.file.formats.${format.value}`,
+              )}
             </option>
           ))}
         </select>
