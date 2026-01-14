@@ -63,14 +63,11 @@ export const ApiQuery: React.FC<ApiQueryProps> = () => {
         </Chips>
       </div>
       <div className={cl(styles.codeSnippetWrapper)}>
-        <CodeSnippet title="GET URL" translations={codeSnippetTranslations}>
-          {`{
-            "query": [
-          {
-            "code": "region"
-          }
-        ],
-      }`}
+        <CodeSnippet
+          title={`${httpMethod} URL`}
+          translations={codeSnippetTranslations}
+        >
+          {`https://pxweb2.pages.dev/api/v0/en/ExampleDataset`}
         </CodeSnippet>
       </div>
     </div>
