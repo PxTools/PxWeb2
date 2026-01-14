@@ -553,10 +553,7 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
         </div>
       </ContentBox>
       <ContentBox title={t('presentation_page.side_menu.save.api.query')}>
-        <LocalAlert variant="info" className={classes.alert}>
-          {t('common.status_messages.drawer_save_api')}
-        </LocalAlert>
-        <ApiQuery></ApiQuery>
+        <ApiQuery />
       </ContentBox>
     </>
   );
