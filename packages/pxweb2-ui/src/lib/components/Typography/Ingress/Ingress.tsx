@@ -2,8 +2,7 @@ import cl from 'clsx';
 import classes from './Ingress.module.scss';
 import React from 'react';
 
-export interface IngressProps
-  extends React.HTMLAttributes<HTMLParagraphElement> {
+export interface IngressProps extends React.HTMLAttributes<HTMLParagraphElement> {
   children: React.ReactNode;
   spacing?: boolean;
   align?: 'start' | 'center' | 'end';

@@ -5,8 +5,7 @@ import classes from './Button.module.scss';
 import { Icon, IconProps } from '../Icon/Icon';
 import { Spinner } from '../Spinner/Spinner';
 
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: 'small' | 'medium';
   variant: 'primary' | 'secondary' | 'tertiary';
   icon?: IconProps['iconName'];
