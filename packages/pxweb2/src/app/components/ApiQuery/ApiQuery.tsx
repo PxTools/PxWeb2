@@ -4,13 +4,18 @@ import { useState } from 'react';
 
 import styles from './ApiQuery.module.scss';
 import { BodyLong, Link, Chips, CodeSnippet } from '@pxweb2/pxweb2-ui';
+import { getApiQueryInfo } from '../../util/apiQuery/apiQueryUtil';
 import { fileFormats } from '../../constants/outputFormats';
+import useVariables from '../../context/useVariables';
 
 export interface ApiQueryProps {}
 
 export const ApiQuery: React.FC<ApiQueryProps> = () => {
   const { t } = useTranslation();
   const [httpMethod, setHttpMethod] = useState<'GET' | 'POST'>('GET');
+  const { selectedVBValues } = useVariables();
+
+  const apiQueryInfo = getApiQueryInfo(selectedVBValues);
 
   const codeSnippetTranslations = {
     copyButtonLabel: t('common.code_snippet.copy_button_label'),
@@ -77,7 +82,7 @@ export const ApiQuery: React.FC<ApiQueryProps> = () => {
           title={`${httpMethod} URL`}
           translations={codeSnippetTranslations}
         >
-          {`https://pxweb2.pages.dev/api/v0/en/ExampleDataset`}
+          {httpMethod === 'GET' ? apiQueryInfo.getUrl : apiQueryInfo.postUrl}
         </CodeSnippet>
       </div>
       {httpMethod === 'POST' && (
@@ -87,13 +92,7 @@ export const ApiQuery: React.FC<ApiQueryProps> = () => {
             title={`POST BODY`}
             translations={codeSnippetTranslations}
           >
-            {`{
-  "query": [
-    {
-      "code": "region"
-    }
-  ]
-}`}
+            {apiQueryInfo.postBody}
           </CodeSnippet>
         </div>
       )}
