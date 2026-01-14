@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import styles from './ApiQuery.module.scss';
 import { BodyLong, Link, Chips, CodeSnippet } from '@pxweb2/pxweb2-ui';
+import { fileFormats } from '../../constants/outputFormats';
 
 export interface ApiQueryProps {}
 
@@ -18,6 +19,7 @@ export const ApiQuery: React.FC<ApiQueryProps> = () => {
     wrapCodeButtonLabel: t('common.code_snippet.wrap_code_button_label'),
     unwrapCodeButtonLabel: t('common.code_snippet.unwrap_code_button_label'),
   };
+  const translate = t as unknown as (key: string) => string;
 
   return (
     <div className={cl(styles.apiQuery)}>
@@ -37,11 +39,13 @@ export const ApiQuery: React.FC<ApiQueryProps> = () => {
         </div>
       </div>
       <div className={cl(styles.selectWrapper)}>
-        <select name="cars" id="cars">
-          <option value="volvo">Volvo</option>
-          <option value="saab">Saab</option>
-          <option value="mercedes">Mercedes</option>
-          <option value="audi">Audi</option>
+        <label htmlFor="outputFormat">{t('presentation_page.side_menu.save.file.title')}</label>
+        <select name="outputFormat" id="outputFormat" defaultValue={fileFormats[0]?.value}>
+          {fileFormats.map((format) => (
+            <option key={format.value} value={format.value}>
+              {translate(`presentation_page.side_menu.save.file.formats.${format.value}`)}
+            </option>
+          ))}
         </select>
       </div>
       <div className={cl(styles.chipsWrapper)}>

@@ -8,7 +8,6 @@ import {
   BodyLong,
   BodyShort,
   ContentBox,
-  IconProps,
   InformationCard,
   Radio,
   RadioOption,
@@ -32,12 +31,9 @@ import {
   TimeFilter,
 } from '../../../util/export/exportUtil';
 import { ApiQuery } from '../../ApiQuery/ApiQuery';
+import { fileFormats } from '../../../constants/outputFormats';
 
-interface FileFormat {
-  value: string;
-  outputFormat: OutputFormatType;
-  iconName: IconProps['iconName'];
-}
+// File formats moved to shared constants in app/constants/outputFormats
 
 type SaveQueryOptions = 'selected' | 'from' | 'top';
 type SaveQueryButtonState = 'create' | 'loading' | 'copy' | 'copied';
@@ -49,38 +45,7 @@ type SaveQueryButtonProps = {
   saveQueryUrl?: string;
 };
 
-export const fileFormats: FileFormat[] = [
-  {
-    value: 'excel',
-    outputFormat: OutputFormatType.XLSX,
-    iconName: 'FileText',
-  },
-  {
-    value: 'csv',
-    outputFormat: OutputFormatType.CSV,
-    iconName: 'FileText',
-  },
-  {
-    value: 'px',
-    outputFormat: OutputFormatType.PX,
-    iconName: 'FileCode',
-  },
-  {
-    value: 'jsonstat2',
-    outputFormat: OutputFormatType.JSON_STAT2,
-    iconName: 'FileCode',
-  },
-  {
-    value: 'html',
-    outputFormat: OutputFormatType.HTML,
-    iconName: 'FileCode',
-  },
-  // { // Parquet export temporarily disabled, remember to enable in DrawerSave.spec.tsx as well
-  //   value: 'parquet',
-  //   outputFormat: OutputFormatType.PARQUET,
-  //   iconName: 'FileCode',
-  // },
-];
+// Using shared fileFormats
 
 export const SaveQueryCreateButton: React.FC<SaveQueryButtonProps> = ({
   buttonRef,
