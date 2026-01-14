@@ -44,7 +44,9 @@ export const ApiQuery: React.FC<ApiQueryProps> = () => {
       </div>
       <div className={cl(styles.chipsWrapper)}>
         <Chips>
-          <Chips.Toggle selected checkmark={false}>GET</Chips.Toggle>
+          <Chips.Toggle selected checkmark={false}>
+            GET
+          </Chips.Toggle>
           <Chips.Toggle checkmark={false}>POST</Chips.Toggle>
         </Chips>
       </div>
