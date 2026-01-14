@@ -70,6 +70,22 @@ export const ApiQuery: React.FC<ApiQueryProps> = () => {
           {`https://pxweb2.pages.dev/api/v0/en/ExampleDataset`}
         </CodeSnippet>
       </div>
+      {httpMethod === 'POST' && (
+        <div className={cl(styles.codeSnippetWrapper)}>
+          <CodeSnippet
+            title={`POST BODY`}
+            translations={codeSnippetTranslations}
+          >
+            {`{
+  "query": [
+    {
+      "code": "region"
+    }
+  ]
+}`}
+          </CodeSnippet>
+        </div>
+      )}
     </div>
   );
 };
