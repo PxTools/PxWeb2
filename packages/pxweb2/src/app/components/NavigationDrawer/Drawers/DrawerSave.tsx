@@ -193,6 +193,8 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
   const [saveQueryButtonState, setSaveQueryButtonState] =
     useState<SaveQueryButtonState>('create');
 
+  const translate = t as unknown as (key: string) => string;
+
   // If time filter is used when saving query, we need to know the id of the time variable
   const timeVarId = useTableData().data?.metadata.variables.find(
     (v) => v.type === VartypeEnum.TIME_VARIABLE,
@@ -457,8 +459,8 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
           {fileFormats.map((format) => (
             <li key={`saveToFile${format.value}`}>
               <ActionItem
-                label={t(
-                  `presentation_page.side_menu.save.file.formats.${format.value}`, // Not sure how to fix this i18next type error
+                label={translate(
+                  `presentation_page.side_menu.save.file.formats.${format.value}`,
                 )}
                 onClick={() => saveToFile(format.outputFormat)}
                 iconName={format.iconName}
