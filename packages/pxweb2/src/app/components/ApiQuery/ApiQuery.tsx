@@ -39,9 +39,7 @@ export const ApiQuery: React.FC<ApiQueryProps> = () => {
         </div>
       </div>
       <div className={cl(styles.selectWrapper)}>
-        <label htmlFor="outputFormat">
-          {t('presentation_page.side_menu.save.file.title')}
-        </label>
+        <label htmlFor="outputFormat">Select format</label>
         <select
           name="outputFormat"
           id="outputFormat"
