@@ -31,6 +31,7 @@ import {
   exportToFile,
   TimeFilter,
 } from '../../../util/export/exportUtil';
+import { ApiQuery } from '../../ApiQuery/ApiQuery';
 
 interface FileFormat {
   value: string;
@@ -555,6 +556,7 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
         <LocalAlert variant="info" className={classes.alert}>
           {t('common.status_messages.drawer_save_api')}
         </LocalAlert>
+        <ApiQuery></ApiQuery>
       </ContentBox>
     </>
   );
