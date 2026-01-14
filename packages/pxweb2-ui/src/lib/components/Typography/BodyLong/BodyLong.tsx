@@ -1,8 +1,7 @@
 import cl from 'clsx';
 import classes from './BodyLong.module.scss';
 
-export interface BodyLongProps
-  extends React.HTMLAttributes<HTMLParagraphElement> {
+export interface BodyLongProps extends React.HTMLAttributes<HTMLParagraphElement> {
   readonly size?: 'medium' | 'small';
   readonly spacing?: boolean;
   readonly align?: 'start' | 'center' | 'end';

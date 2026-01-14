@@ -4,8 +4,10 @@ import cl from 'clsx';
 import styles from './CheckCircle.module.scss';
 import { CheckCircleIcon } from './CheckCircleIcon';
 
-export interface CheckCircleProps
-  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'onChange'> {
+export interface CheckCircleProps extends Omit<
+  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  'onChange'
+> {
   checked: boolean;
   label: string;
   onChange?: (nextChecked: boolean) => void;

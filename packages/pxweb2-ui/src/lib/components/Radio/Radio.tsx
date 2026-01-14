@@ -9,8 +9,7 @@ export type RadioOption = {
   value: string;
 };
 
-export interface RadioProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface RadioProps extends React.InputHTMLAttributes<HTMLInputElement> {
   variant?: 'default' | 'checkCircle';
   name: string;
   options: RadioOption[];
