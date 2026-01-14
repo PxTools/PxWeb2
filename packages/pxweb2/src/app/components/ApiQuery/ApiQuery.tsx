@@ -73,6 +73,7 @@ export const ApiQuery: React.FC<ApiQueryProps> = () => {
       {httpMethod === 'POST' && (
         <div className={cl(styles.codeSnippetWrapper)}>
           <CodeSnippet
+            highlight="json"
             title={`POST BODY`}
             translations={codeSnippetTranslations}
           >
