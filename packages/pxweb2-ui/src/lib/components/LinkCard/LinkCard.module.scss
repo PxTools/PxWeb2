@@ -71,7 +71,8 @@
 .content-wrapper {
   display: inline-flex;
   flex-direction: column;
-  background: var();
+  // background: var();
+  align-self: center;
 }
 
 .icon-wrapper {
@@ -88,13 +89,13 @@
 }
 
 .heading-wrapper {
-  padding-bottom: fixed.$spacing-1;
-  padding-top: 2px;
+  // padding-bottom: fixed.$spacing-1;
+  // padding-top: 2px;
   align-self: stretch;
 }
 
 .child-wrapper {
-  padding-top: 2px;
+  // padding-top: 2px;
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
