@@ -9,7 +9,6 @@ import { Icon } from '../Icon/Icon';
 import Modal from '../Modal/Modal';
 import Radio from '../Radio/Radio';
 import { getIconDirection } from '../../util/util';
-import i18next from 'i18next';
 
 export type SelectProps = {
   variant?: 'default' | 'inVariableBox';
@@ -330,7 +329,7 @@ function VariableBoxSelect({
           iconName={chevronIcon}
           className={cl(
             classes.iconColor,
-            i18next.dir() === 'rtl' ? classes.rtl : classes.ltr,
+            languageDirection === 'rtl' ? classes.rtl : classes.ltr,
           )}
         ></Icon>
       </div>
