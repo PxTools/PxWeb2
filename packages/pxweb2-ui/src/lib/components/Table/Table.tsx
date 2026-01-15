@@ -1,4 +1,4 @@
-import { memo, useMemo } from 'react';
+import { memo, useMemo, useRef, useEffect } from 'react';
 import cl from 'clsx';
 
 import classes from './Table.module.scss';
@@ -115,8 +115,67 @@ export const Table = memo(function Table({
     headingDataCellCodes[i] = dataCellCodes;
   }
 
+  const tableRef = useRef<HTMLTableElement>(null);
+
+  useEffect(() => {
+    const table = tableRef.current;
+    if (!table) {
+      return;
+    }
+
+    let currentCol: string | null = null;
+
+    function clear() {
+      for (const cell of Array.from(
+        table!.querySelectorAll('.' + classes.colHover),
+      )) {
+        cell.classList.remove(classes.colHover);
+      }
+      currentCol = null;
+    }
+
+    function handleOver(e: MouseEvent) {
+      // Only highlight if hovering a data cell (td[data-col]) or a leaf header cell (th[data-col] in last header row)
+      const td = (e.target as HTMLElement).closest('td[data-col]');
+      const th = (e.target as HTMLElement).closest(
+        'thead tr:last-child th[data-col]',
+      );
+      // If hovering stub or emptyTableData, clear highlight
+      if (
+        (e.target as HTMLElement).closest('.stub') ||
+        (e.target as HTMLElement).closest('.emptyTableData') ||
+        (!td && !th)
+      ) {
+        clear();
+        return;
+      }
+      // Determine column
+      const cell = td || th;
+      const col = (cell as HTMLElement).dataset.col;
+      if (!col || col === currentCol) {
+        return;
+      }
+      clear();
+      // Highlight only data cells in the same column
+      for (const cell of Array.from(
+        table!.querySelectorAll(`td[data-col="${col}"]`),
+      )) {
+        cell.classList.add(classes.colHover);
+      }
+      currentCol = col;
+    }
+
+    table.addEventListener('mouseover', handleOver);
+    table.addEventListener('mouseleave', clear);
+    return () => {
+      table.removeEventListener('mouseover', handleOver);
+      table.removeEventListener('mouseleave', clear);
+    };
+  }, []);
+
   return (
     <table
+      ref={tableRef}
       className={cl(classes.table, classes[`bodyshort-medium`]) + cssClasses}
       aria-label={pxtable.metadata.label}
     >
@@ -224,6 +283,12 @@ export function createHeading(
                 idxRepetitionCurrentHeadingLevel === 1 &&
                 table.stub.length === 0,
             })}
+            // Only add data-col for leaf header row
+            data-col={
+              idxHeadingLevel === table.heading.length - 1
+                ? String(columnIndex + tableMeta.columnOffset)
+                : undefined
+            }
           >
             {variable.values[i].label}
           </th>,
@@ -608,7 +673,11 @@ function fillEmpty(
 
   // Loop through all data columns in the table
   for (let i = 0; i < maxCols; i++) {
-    tableRow.push(<td key={getNewKey()}>{emptyText}</td>);
+    tableRow.push(
+      <td key={getNewKey()} data-col={String(i + tableMeta.columnOffset)}>
+        {emptyText}
+      </td>,
+    );
   }
 }
 
@@ -632,7 +701,6 @@ function fillData(
   const maxCols = tableMeta.columns - tableMeta.columnOffset;
 
   // Loop through all data columns in the table
-
   for (let i = 0; i < maxCols; i++) {
     // Merge the metadata structure for the dimensions of the stub and header cells
     const dataCellCodes = stubDataCellCodes.concat(headingDataCellCodes[i]);
@@ -654,7 +722,11 @@ function fillData(
     const dataValue = getPxTableData(table.data.cube, dimensions);
 
     tableRow.push(
-      <td key={getNewKey()} headers={headers}>
+      <td
+        key={getNewKey()}
+        headers={headers}
+        data-col={String(i + tableMeta.columnOffset)}
+      >
         {dataValue?.formattedValue}
       </td>,
     );

@@ -17,11 +17,7 @@
 
   tbody tr {
     &:hover {
-      background: var(--px-color-surface-subtle) !important;
-
-      th {
-        background: var(--px-color-surface-subtle) !important;
-      }
+      background: var(--px-color-surface-subtle);
     }
   }
 
@@ -124,6 +120,7 @@
   }
   th.stub-9 {
     border-left: none;
+
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       padding-left: 156px;
     }
@@ -140,7 +137,6 @@
     text-align: right;
     border-top: 1px solid var(--px-color-border-default);
     border-left: 1px solid var(--px-color-border-default);
-
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       padding: 8px 12px;
     }
@@ -253,4 +249,7 @@
     background: var(--px-color-surface-moderate);
     border: none;
   }
+}
+.table td.colHover {
+  background: var(--px-color-surface-subtle);
 }
