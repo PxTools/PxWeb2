@@ -7,6 +7,7 @@
   background: var(--px-color-surface-default);
   align-self: stretch;
   position: relative;
+  overflow: hidden;
 
   container-type: inline-size;
   container-name: contentCont;
