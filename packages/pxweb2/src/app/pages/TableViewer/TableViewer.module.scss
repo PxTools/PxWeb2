@@ -18,40 +18,12 @@
 
   display: flex;
   background: var(--px-color-surface-subtle);
-
-  // Calculate height of main container, minus the header
-  height: calc(100vh - fixed.$spacing-20);
+  height: 100%;
 
   // xsmall, small and medium general settings
   @media (breakpoints.$xsmall) or (breakpoints.$small) or (breakpoints.$medium) {
     background: var(--px-color-surface-default);
     width: 100%;
-  }
-
-  // height calculations
-  @media (breakpoints.$xsmall) or (breakpoints.$small) {
-    // Calculate height of main container, minus the header and navigation bar heights
-    height: calc(100vh - fixed.$spacing-19 - 78px);
-
-    &.skipToMainContentVisible {
-      // Calculate height of main container, minus the header and navigation bar and SkipToMainContent heights
-      height: calc(
-        100vh - fixed.$spacing-19 -
-          fixed.$spacing-20 - var(--skip-to-main-content-height)
-      );
-    }
-  }
-  @media (breakpoints.$medium) {
-    // Calculate height of main container, minus the header and navigation bar heights
-    height: calc(100vh - fixed.$spacing-20 - 78px);
-
-    &.skipToMainContentVisible {
-      // Calculate height of main container, minus the header and navigation bar and SkipToMainContent heights
-      height: calc(
-        100vh - fixed.$spacing-20 -
-          fixed.$spacing-20 - var(--skip-to-main-content-height)
-      );
-    }
   }
 
   // large, xlarge and xxlarge
