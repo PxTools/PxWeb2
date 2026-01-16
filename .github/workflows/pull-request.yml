@@ -121,9 +121,6 @@ jobs:
           curl -s -o dist/statbank2/config/config.js https://www.ssb.no/statbank2/config/config.js
           sed -i 's|<base href="/"|<base href="/statbank2/"|' dist/index.html
 
-          # Tmp change to use statbank2 config
-          sed -i 's|showDefaultLanguageInPath: false|showDefaultLanguageInPath: false,positionInPath: "before",|' dist/statbank2/config/config.js
-
       - name: Alternative Deploy
         id: alt-deploy
         uses: cloudflare/wrangler-action@v3
