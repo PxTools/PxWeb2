@@ -11,13 +11,20 @@ export type ApiQueryInfoType = {
   postBody: string;
 };
 
-export function getApiQueryInfo(): ApiQueryInfoType {
-  const apiQueryInfo: ApiQueryInfoType = {
+
+export function getApiQueryInfo(variablesSelection: VariablesSelection): ApiQueryInfoType {
+  // Example: use variablesSelection to build URLs and body
+  // This is a placeholder; adapt as needed for your real API
+  return {
     getUrl: 'https://api.pxweb2.test/getQueryExample',
     postUrl: 'https://api.pxweb2.test/postQueryExample',
-    postBody: '{"query":[{"code":"region"}],}',
+    postBody: JSON.stringify({ query: variablesSelection.selection }),
   };
-  return apiQueryInfo;
+}
+
+export function useApiQueryInfo(): ApiQueryInfoType {
+  const variablesSelection = useVariablesSelection();
+  return getApiQueryInfo(variablesSelection);
 }
 
 export function useVariablesSelection(): VariablesSelection {

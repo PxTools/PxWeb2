@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import styles from './ApiQuery.module.scss';
 import { BodyLong, Link, Chips, CodeSnippet, Select } from '@pxweb2/pxweb2-ui';
-import { getApiQueryInfo } from '../../util/apiQuery/apiQueryUtil';
+import { useApiQueryInfo } from '../../util/apiQuery/apiQueryUtil';
 import { fileFormats } from '../../constants/outputFormats';
 // import useVariables from '../../context/useVariables';
 
@@ -15,7 +15,9 @@ export const ApiQuery: React.FC<ApiQueryProps> = () => {
   const [httpMethod, setHttpMethod] = useState<'GET' | 'POST'>('GET');
   // const { selectedVBValues } = useVariables();
 
-  const apiQueryInfo = getApiQueryInfo();
+  const apiQueryInfo = useApiQueryInfo();
+
+  console.log({ apiQueryInfo });
 
   const codeSnippetTranslations = {
     copyButtonLabel: t('common.code_snippet.copy_button_label'),
