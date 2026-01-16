@@ -5,6 +5,7 @@ import {
   ReactNode,
   useCallback,
   useMemo,
+  useRef,
 } from 'react';
 
 type Modal = {
@@ -53,6 +54,7 @@ export const AccessibilityProvider = ({
 }: AccessibilityProviderProps) => {
   const [modals, setModals] = useState<Modal[]>([]);
   const [focusOverrides, setFocusOverrides] = useState<FocusOverride[]>([]);
+  const pendingCloseRef = useRef<(() => void) | null>(null); // ADD
 
   // Debug logging in development
   useEffect(() => {
@@ -71,9 +73,16 @@ export const AccessibilityProvider = ({
       if (prev.length === 0) {
         return prev;
       }
-      prev[prev.length - 1].closeFunction();
+      const last = prev[prev.length - 1];
+      pendingCloseRef.current = last.closeFunction; // capture, don't call here
       return prev.slice(0, -1);
     });
+
+    // Call the consumer close function after the state update
+    setTimeout(() => {
+      pendingCloseRef.current?.();
+      pendingCloseRef.current = null;
+    }, 0);
   }, []);
 
   const removeFocusOverride = useCallback((name: string) => {

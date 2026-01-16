@@ -25,7 +25,10 @@ import {
   MarkdownRenderer,
 } from '@pxweb2/pxweb2-ui';
 import { type Table } from '@pxweb2/pxweb2-api-client';
-import { AccessibilityProvider } from '../../context/AccessibilityProvider';
+import {
+  AccessibilityProvider,
+  AccessibilityContext,
+} from '../../context/AccessibilityProvider';
 import { Header } from '../../components/Header/Header';
 import { Footer } from '../../components/Footer/Footer';
 import { ErrorMessage } from '../../components/ErrorMessage/ErrorMessage';
@@ -62,6 +65,8 @@ const StartPage = () => {
   const { state, dispatch } = useContext(FilterContext);
   useFilterUrlSync(state, dispatch, t);
 
+  const accessibilityContext = useContext(AccessibilityContext);
+
   const paginationCount = 15;
   const isSmallScreen = isTablet === true || isMobile === true;
   const topicIconComponents = useTopicIcons();
@@ -86,6 +91,7 @@ const StartPage = () => {
   const hasFetchedRef = useRef(false);
   const hasEverHydratedRef = useRef(false);
   const previousLanguage = useRef('');
+  const filterOverlayRef = useRef<HTMLDivElement>(null);
 
   const navigate = useNavigate();
 
@@ -188,6 +194,58 @@ const StartPage = () => {
       document.body.style.overflow = '';
     };
   }, [isFilterOverlayOpen, isSmallScreen]);
+
+  useEffect(() => {
+    if (isSmallScreen && isFilterOverlayOpen) {
+      accessibilityContext?.addModal('filterOverlay', () =>
+        setIsFilterOverlayOpen(false),
+      );
+    } else {
+      accessibilityContext?.removeModal('filterOverlay');
+    }
+    return () => accessibilityContext?.removeModal('filterOverlay');
+  }, [accessibilityContext, isSmallScreen, isFilterOverlayOpen]);
+
+  useEffect(() => {
+    if (
+      !accessibilityContext ||
+      !isFilterOverlayOpen ||
+      !filterOverlayRef.current
+    ) {
+      return;
+    }
+
+    const container = filterOverlayRef.current;
+    const focusable = Array.from(
+      container.querySelectorAll<HTMLElement>(
+        'a[href], area[href], input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      ),
+    ).filter((el) => el.offsetParent !== null);
+
+    const first = focusable[0] || filterBackButtonRef.current || null;
+    const last =
+      focusable[focusable.length - 1] || filterBackButtonRef.current || null;
+
+    if (first && last) {
+      accessibilityContext.addFocusOverride(
+        'filterOverlay-first',
+        first,
+        last,
+        undefined,
+      );
+      accessibilityContext.addFocusOverride(
+        'filterOverlay-last',
+        last,
+        undefined,
+        first,
+      );
+    }
+
+    return () => {
+      accessibilityContext.removeFocusOverride('filterOverlay-first');
+      accessibilityContext.removeFocusOverride('filterOverlay-last');
+    };
+  }, [accessibilityContext, isFilterOverlayOpen]);
 
   useEffect(() => {
     if (visibleCount === lastVisibleCount && isPaginating) {
@@ -574,6 +632,11 @@ const StartPage = () => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25, ease: 'easeInOut' }}
             className={styles.filterOverlay}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="filterOverlayTitle"
+            aria-describedby="filterOverlayContent"
+            ref={filterOverlayRef}
           >
             <div className={styles.filterOverlayHeader}>
               <Button
@@ -583,10 +646,15 @@ const StartPage = () => {
                 onClick={() => setIsFilterOverlayOpen(false)}
                 ref={filterBackButtonRef}
               />
-              <Heading size="medium">{t('start_page.filter.header')}</Heading>
+              <Heading size="medium" id="filterOverlayTitle">
+                {t('start_page.filter.header')}
+              </Heading>
             </div>
 
-            <div className={styles.filterOverlayContent}>
+            <div
+              className={styles.filterOverlayContent}
+              id="filterOverlayContent"
+            >
               <FilterSidebar onFilterChange={handleFilterChange} />
             </div>
 
@@ -625,6 +693,69 @@ const StartPage = () => {
       </AnimatePresence>
     );
   };
+
+  // const renderFilterOverlay = () => {
+  //   return (
+  //     <AnimatePresence>
+  //       {isSmallScreen && isFilterOverlayOpen && (
+  //         <motion.div
+  //           key="filterOverlay"
+  //           initial={{ opacity: 0 }}
+  //           animate={{ opacity: 1 }}
+  //           exit={{ opacity: 0 }}
+  //           transition={{ duration: 0.25, ease: 'easeInOut' }}
+  //           className={styles.filterOverlay}
+  //         >
+  //           <div className={styles.filterOverlayHeader}>
+  //             <Button
+  //               variant="tertiary"
+  //               icon="ArrowLeft"
+  //               aria-label={t('start_page.filter.back')}
+  //               onClick={() => setIsFilterOverlayOpen(false)}
+  //               ref={filterBackButtonRef}
+  //             />
+  //             <Heading size="medium">{t('start_page.filter.header')}</Heading>
+  //           </div>
+
+  //           <div className={styles.filterOverlayContent}>
+  //             <FilterSidebar onFilterChange={handleFilterChange} />
+  //           </div>
+
+  //           <div className={styles.filterOverlayFooter}>
+  //             {state.activeFilters.length >= 1 && (
+  //               <Button
+  //                 variant="secondary"
+  //                 className={styles.removeFilterButton}
+  //                 iconPosition="start"
+  //                 icon="XMark"
+  //                 onClick={() => {
+  //                   dispatch({
+  //                     type: ActionType.RESET_FILTERS,
+  //                     payload: {
+  //                       tables: state.availableTables,
+  //                       subjects: getSubjectTree(state.availableTables),
+  //                     },
+  //                   });
+  //                 }}
+  //               >
+  //                 {t('start_page.filter.remove_all_filter')}
+  //               </Button>
+  //             )}
+  //             <Button
+  //               variant="primary"
+  //               className={styles.showResultsButton}
+  //               onClick={() => setIsFilterOverlayOpen(false)}
+  //             >
+  //               {t('start_page.filter.show_results', {
+  //                 value: formatNumber(state.filteredTables.length),
+  //               })}
+  //             </Button>
+  //           </div>
+  //         </motion.div>
+  //       )}
+  //     </AnimatePresence>
+  //   );
+  // };
 
   const renderTableListSEO = () => {
     return (
