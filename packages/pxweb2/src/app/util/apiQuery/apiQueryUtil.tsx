@@ -11,8 +11,9 @@ export type ApiQueryInfoType = {
   postBody: string;
 };
 
-
-export function getApiQueryInfo(variablesSelection: VariablesSelection): ApiQueryInfoType {
+export function getApiQueryInfo(
+  variablesSelection: VariablesSelection,
+): ApiQueryInfoType {
   // Example: use variablesSelection to build URLs and body
   // This is a placeholder; adapt as needed for your real API
   return {
