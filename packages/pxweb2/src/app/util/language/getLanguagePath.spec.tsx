@@ -8,6 +8,7 @@ describe('getLanguagePath', () => {
   ];
   const defaultLanguage = 'en';
   const baseApplicationPath = '/';
+  const languagePositionAfter = 'after' as const;
 
   describe("when baseApplicationPath is '/app/'", () => {
     const appBaseApplicationPath = '/app/';
@@ -23,6 +24,7 @@ describe('getLanguagePath', () => {
         defaultLanguage,
         false,
         appBaseApplicationPath,
+        languagePositionAfter,
       );
 
       expect(result).toBe('/app/some/path');
@@ -39,6 +41,7 @@ describe('getLanguagePath', () => {
         defaultLanguage,
         false,
         appBaseApplicationPath,
+        languagePositionAfter,
       );
 
       expect(result).toBe('/app/pl/');
@@ -55,6 +58,7 @@ describe('getLanguagePath', () => {
         defaultLanguage,
         false,
         appBaseApplicationPath,
+        languagePositionAfter,
       );
 
       expect(result).toBe('/app/');
@@ -73,6 +77,7 @@ describe('getLanguagePath', () => {
         defaultLanguage,
         false,
         baseApplicationPath,
+        languagePositionAfter,
       );
 
       expect(result).toBe('/some/path');
@@ -89,6 +94,7 @@ describe('getLanguagePath', () => {
         defaultLanguage,
         false,
         baseApplicationPath,
+        languagePositionAfter,
       );
 
       expect(result).toBe('/no/some/path');
@@ -105,6 +111,7 @@ describe('getLanguagePath', () => {
         defaultLanguage,
         false,
         baseApplicationPath,
+        languagePositionAfter,
       );
 
       expect(result).toBe('/some/path');
@@ -121,6 +128,7 @@ describe('getLanguagePath', () => {
         defaultLanguage,
         false,
         baseApplicationPath,
+        languagePositionAfter,
       );
 
       expect(result).toBe('/no/some/path');
@@ -137,6 +145,7 @@ describe('getLanguagePath', () => {
         defaultLanguage,
         false,
         baseApplicationPath,
+        languagePositionAfter,
       );
 
       expect(result).toBe('/no/');
@@ -153,6 +162,7 @@ describe('getLanguagePath', () => {
         defaultLanguage,
         false,
         baseApplicationPath,
+        languagePositionAfter,
       );
 
       expect(result).toBe('/pl/');
@@ -169,6 +179,7 @@ describe('getLanguagePath', () => {
         defaultLanguage,
         false,
         baseApplicationPath,
+        languagePositionAfter,
       );
 
       expect(result).toBe('/');
@@ -185,6 +196,7 @@ describe('getLanguagePath', () => {
         defaultLanguage,
         false,
         baseApplicationPath,
+        languagePositionAfter,
       );
 
       expect(result).toBe('/pl/some/path/');
@@ -201,6 +213,7 @@ describe('getLanguagePath', () => {
         defaultLanguage,
         false,
         baseApplicationPath,
+        languagePositionAfter,
       );
 
       expect(result).toBe('/xx/some/path');
@@ -217,6 +230,7 @@ describe('getLanguagePath', () => {
         defaultLanguage,
         false,
         baseApplicationPath,
+        languagePositionAfter,
       );
 
       expect(result).toBe('/pl/some/path');
@@ -235,6 +249,7 @@ describe('getLanguagePath', () => {
         defaultLanguage,
         true,
         baseApplicationPath,
+        languagePositionAfter,
       );
 
       expect(result).toBe('/en/some/path');
@@ -251,6 +266,7 @@ describe('getLanguagePath', () => {
         defaultLanguage,
         true,
         baseApplicationPath,
+        languagePositionAfter,
       );
 
       expect(result).toBe('/en/some/path');
@@ -267,6 +283,7 @@ describe('getLanguagePath', () => {
         defaultLanguage,
         true,
         baseApplicationPath,
+        languagePositionAfter,
       );
 
       expect(result).toBe('/en/');
@@ -283,6 +300,7 @@ describe('getLanguagePath', () => {
         defaultLanguage,
         true,
         baseApplicationPath,
+        languagePositionAfter,
       );
 
       expect(result).toBe('/no/some/path');
@@ -299,9 +317,49 @@ describe('getLanguagePath', () => {
         defaultLanguage,
         true,
         baseApplicationPath,
+        languagePositionAfter,
       );
 
       expect(result).toBe('/en/');
+    });
+  });
+
+  describe("when positionInPath is 'before'", () => {
+    const languagePositionBefore = 'before' as const;
+    const appBaseApplicationPath = '/app/';
+
+    it('should switch from /{lang}/app/... to /app/... when target is default and showDefaultLanguageInPath=false', () => {
+      const pathname = '/no/app/some/path';
+      const targetLanguage = 'en';
+
+      const result = getLanguagePath(
+        pathname,
+        targetLanguage,
+        supportedLanguages,
+        defaultLanguage,
+        false,
+        appBaseApplicationPath,
+        languagePositionBefore,
+      );
+
+      expect(result).toBe('/app/some/path');
+    });
+
+    it('should switch from /app/... to /{lang}/app/... when target is not default and showDefaultLanguageInPath=false', () => {
+      const pathname = '/app/some/path';
+      const targetLanguage = 'no';
+
+      const result = getLanguagePath(
+        pathname,
+        targetLanguage,
+        supportedLanguages,
+        defaultLanguage,
+        false,
+        appBaseApplicationPath,
+        languagePositionBefore,
+      );
+
+      expect(result).toBe('/no/app/some/path');
     });
   });
 });
