@@ -469,10 +469,10 @@ const StartPage = () => {
 
   // Debounce the dispatch for search filter, so it waits a few moments for typing to finish
   const debouncedDispatch = useRef(
-    debounce(async (value: string) => {
+    debounce(async (value: string, language: string) => {
       let tableIds: string[] = [];
       if (value.length > 0) {
-        const searchedTables = await queryTablesByKeyword(value, i18n.language);
+        const searchedTables = await queryTablesByKeyword(value, language);
         tableIds = searchedTables.map((table: Table) => table.id);
       }
       dispatch({
@@ -486,7 +486,7 @@ const StartPage = () => {
 
   const updateQueryFilter = (value: string) => {
     setIsFadingTableList(true);
-    debouncedDispatch(value);
+    debouncedDispatch(value, i18n.language);
   };
 
   const renderPagination = () => {
