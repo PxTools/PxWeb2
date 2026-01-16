@@ -36,6 +36,7 @@ export async function savedQueryRouteLoader({ params }: LoaderFunctionArgs) {
       config.language.defaultLanguage,
       config.language.showDefaultLanguageInPath,
       config.baseApplicationPath,
+      config.language.positionInPath,
     );
 
     const search = `?${new URLSearchParams({ sq: sqId }).toString()}`;

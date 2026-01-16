@@ -340,6 +340,7 @@ const StartPage = () => {
         config.language.defaultLanguage,
         config.language.showDefaultLanguageInPath,
         config.baseApplicationPath,
+        config.language.positionInPath,
       );
       const discontinued = table.discontinued;
 
@@ -643,13 +644,19 @@ const StartPage = () => {
           {state.availableTables.map((table) => {
             const config = getConfig();
             const language = i18n.language;
-            const showLangInPath =
-              config.language.showDefaultLanguageInPath ||
-              language !== config.language.defaultLanguage;
-            const langPrefix = showLangInPath ? `/${language}` : '';
+            const tablePath = getLanguagePath(
+              `/table/${table.id}`,
+              language,
+              config.language.supportedLanguages,
+              config.language.defaultLanguage,
+              config.language.showDefaultLanguageInPath,
+              config.baseApplicationPath,
+              config.language.positionInPath,
+            );
+
             return (
               <li key={table.id}>
-                <a href={`${langPrefix}/table/${table.id}`} tabIndex={-1}>
+                <a href={tablePath} tabIndex={-1}>
                   {table.label}
                 </a>
               </li>

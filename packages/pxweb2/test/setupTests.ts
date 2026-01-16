@@ -1,5 +1,6 @@
 import React from 'react';
 import { vi } from 'vitest';
+import type { Config } from '../src/app/util/config/configType';
 
 // Polyfill: jsdom lacks ResizeObserver; mock minimal implementation for tests
 class MockResizeObserver {
@@ -31,7 +32,7 @@ interface MotionProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
 }
 
-export const mockedConfig = {
+export const mockedConfig: Config = {
   language: {
     supportedLanguages: [
       { shorthand: 'en', languageName: 'English' },
@@ -42,6 +43,7 @@ export const mockedConfig = {
     defaultLanguage: 'en',
     fallbackLanguage: 'en',
     showDefaultLanguageInPath: true,
+    positionInPath: 'after',
   },
   baseApplicationPath: '/',
   apiUrl: '',
