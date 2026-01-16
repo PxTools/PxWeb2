@@ -1,0 +1,72 @@
+.apiQuery {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  align-self: stretch;
+  // border: 1px solid black;
+}
+
+.descriptionAndLink {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  align-self: stretch;
+}
+
+.descriptionWrapper {
+  display: flex;
+  padding: 4px 8px 0 8px;
+  align-items: flex-start;
+  align-self: stretch;
+}
+
+.linkWrapper {
+  display: flex;
+  padding: 0 8px;
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: stretch;
+}
+
+.selectWrapper {
+  display: flex;
+  padding: 12px 8px 0 8px;
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: stretch;
+}
+
+.chipsWrapper {
+  display: flex;
+  padding: 8px 8px 0 8px;
+  align-items: center;
+  gap: 8px;
+  align-self: stretch;
+}
+
+.codeSnippetWrapper {
+  display: flex;
+  padding: 8px;
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: stretch;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* Ensure the embedded CodeSnippet never forces overflow */
+.codeSnippetWrapper > * {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* Allow long code lines to scroll horizontally within the container */
+.codeSnippetWrapper pre,
+.codeSnippetWrapper code {
+  max-width: 100%;
+  overflow-x: auto;
+}

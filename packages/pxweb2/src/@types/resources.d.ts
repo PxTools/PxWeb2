@@ -13,6 +13,13 @@ interface Resources {
         breadcrumb_root_title: 'Home';
         show_more_breadcrumbs: 'Show more';
       };
+      code_snippet: {
+        copied_button_label: 'Code copied to clipboard';
+        copy_button_label: 'Copy code for ';
+        copy_button_tooltip: 'Copy code';
+        unwrap_code_button_label: 'Unwrap lines';
+        wrap_code_button_label: 'Wrap lines';
+      };
       errors: {
         generic: {
           action_text: 'Refresh';
