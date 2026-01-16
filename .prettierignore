@@ -2,3 +2,7 @@
 /dist
 /coverage
 Icons.tsx
+
+*.ttf
+*.txt
+*.gitkeep
