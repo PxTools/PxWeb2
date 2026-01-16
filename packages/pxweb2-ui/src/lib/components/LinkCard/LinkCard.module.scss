@@ -23,6 +23,7 @@
       @extend .heading-underline;
     }
     cursor: pointer;
+    border: none;
   }
   &:hover .arrow-wrapper {
     padding-inline-start: 8px;
@@ -57,6 +58,7 @@
       @extend .heading-underline;
     }
     cursor: pointer;
+    border: none;
   }
   &:hover .arrow-wrapper {
     padding-inline-start: 8px;

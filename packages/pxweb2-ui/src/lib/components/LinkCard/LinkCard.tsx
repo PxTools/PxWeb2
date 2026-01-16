@@ -9,11 +9,11 @@ import { Heading, Icon, IconProps } from '@pxweb2/pxweb2-ui';
 
 export interface LinkCardProps {
   icon?: IconProps['iconName'];
-  headingText?: string;
+  headingText: string;
   description?: string;
-  url: string;
+  href: string;
   newTab?: boolean;
-  headingType?: 'span' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+  headingType?: 'span' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
   size?: 'small' | 'medium';
   readonly languageDirection?: 'ltr' | 'rtl';
 }
@@ -22,23 +22,24 @@ export function LinkCard({
   icon,
   headingText,
   description,
-  url,
+  href,
   newTab = true,
   headingType = 'h3',
   size = 'medium',
   languageDirection = 'ltr',
 }: LinkCardProps) {
+  // if (headingText.length < 1) {
+  //   throw new Error('heading must be at least 1 character');
+  // }
+
   const iconArrow = getIconDirection(
     languageDirection,
     'ArrowRight',
     'ArrowLeft',
   );
 
-  let headingLevel: '1' | '2' | '3' | '4' | '5' | '6' | undefined;
+  let headingLevel: '2' | '3' | '4' | '5' | '6' | undefined;
   switch (headingType) {
-    case 'h1':
-      headingLevel = '1';
-      break;
     case 'h2':
       headingLevel = '2';
       break;
@@ -62,7 +63,7 @@ export function LinkCard({
 
   const handleClick = () => {
     const link = document.createElement('a');
-    link.href = url;
+    link.href = href;
     link.rel = 'noopener noreferrer';
     if (newTab) {
       link.target = '_blank';
@@ -82,6 +83,7 @@ export function LinkCard({
       className={cl(styles[`link-card-${size}`])}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
+      tabIndex={0}
     >
       {icon && (
         <div className={cl(styles['icon-wrapper'])}>
