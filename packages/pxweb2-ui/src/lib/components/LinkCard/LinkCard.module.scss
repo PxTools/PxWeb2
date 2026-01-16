@@ -12,7 +12,7 @@
   background: var(--px-color-surface-default);
   position: relative;
   &:hover {
-    outline: 2px solid var(--px-color-border-subtle);
+    outline: 1px solid var(--px-color-border-subtle);
     h1,
     h2,
     h3,
@@ -23,7 +23,7 @@
       @extend .heading-underline;
     }
     cursor: pointer;
-    border: none;
+    // border: none;
   }
   &:hover .arrow-wrapper {
     padding-inline-start: 8px;
@@ -47,7 +47,7 @@
   background: var(--px-color-surface-default);
   position: relative;
   &:hover {
-    outline: 2px solid var(--px-color-border-subtle);
+    outline: 1px solid var(--px-color-border-subtle);
     h1,
     h2,
     h3,
@@ -58,7 +58,7 @@
       @extend .heading-underline;
     }
     cursor: pointer;
-    border: none;
+    //border: none;
   }
   &:hover .arrow-wrapper {
     padding-inline-start: 8px;
