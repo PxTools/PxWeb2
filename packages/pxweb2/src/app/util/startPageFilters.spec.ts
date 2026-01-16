@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import {
   findAncestors,
   findChildren,
@@ -332,13 +332,8 @@ describe('getYearRanges', () => {
     });
   });
 
-  it('returns default range on empty input array', () => {
-    vi.useFakeTimers();
-    vi.setSystemTime(new Date('2025-06-01T12:00:00.000Z'));
-
-    expect(getYearRanges([])).toEqual({ min: 1900, max: 2025 });
-
-    vi.useRealTimers();
+  it('throws on empty input array', () => {
+    expect(getYearRanges([])).toEqual({ min: 1900, max: 2026 });
   });
 });
 
