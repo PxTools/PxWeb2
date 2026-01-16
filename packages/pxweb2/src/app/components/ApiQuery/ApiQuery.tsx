@@ -3,19 +3,19 @@ import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 
 import styles from './ApiQuery.module.scss';
-import { BodyLong, Link, Chips, CodeSnippet } from '@pxweb2/pxweb2-ui';
+import { BodyLong, Link, Chips, CodeSnippet, Select } from '@pxweb2/pxweb2-ui';
 import { getApiQueryInfo } from '../../util/apiQuery/apiQueryUtil';
 import { fileFormats } from '../../constants/outputFormats';
-import useVariables from '../../context/useVariables';
+// import useVariables from '../../context/useVariables';
 
 export interface ApiQueryProps {}
 
 export const ApiQuery: React.FC<ApiQueryProps> = () => {
   const { t } = useTranslation();
   const [httpMethod, setHttpMethod] = useState<'GET' | 'POST'>('GET');
-  const { selectedVBValues } = useVariables();
+  // const { selectedVBValues } = useVariables();
 
-  const apiQueryInfo = getApiQueryInfo(selectedVBValues);
+  const apiQueryInfo = getApiQueryInfo();
 
   const codeSnippetTranslations = {
     copyButtonLabel: t('common.code_snippet.copy_button_label'),
@@ -44,20 +44,20 @@ export const ApiQuery: React.FC<ApiQueryProps> = () => {
         </div>
       </div>
       <div className={cl(styles.selectWrapper)}>
-        <label htmlFor="outputFormat">Select format</label>
-        <select
-          name="outputFormat"
-          id="outputFormat"
-          defaultValue={fileFormats[0]?.value}
-        >
-          {fileFormats.map((format) => (
-            <option key={format.value} value={format.value}>
-              {translate(
-                `presentation_page.side_menu.save.file.formats.${format.value}`,
-              )}
-            </option>
-          ))}
-        </select>
+        
+        <Select
+          label="Select format"
+          variant='default'
+          onChange={() => alert('hej')}
+          addModal={function sU(){}}
+          removeModal={function sU(){}}
+          options={fileFormats.map((format) => ({
+            value: format.value,
+            label: translate(
+              `presentation_page.side_menu.save.file.formats.${format.value}`
+            ),
+          }))}
+        />
       </div>
       <div className={cl(styles.chipsWrapper)}>
         <Chips>
