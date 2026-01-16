@@ -5,8 +5,10 @@ import classes from './ErrorAction.module.scss';
 import { ErrorMessageProps } from '../types';
 import { Button } from '@pxweb2/pxweb2-ui';
 
-interface ErrorActionProps
-  extends Pick<ErrorMessageProps, 'action' | 'actionText' | 'align'> {}
+interface ErrorActionProps extends Pick<
+  ErrorMessageProps,
+  'action' | 'actionText' | 'align'
+> {}
 
 export function ErrorAction({ action, actionText, align }: ErrorActionProps) {
   const navigate = useNavigate();

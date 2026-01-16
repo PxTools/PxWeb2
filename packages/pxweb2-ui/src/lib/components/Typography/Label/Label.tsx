@@ -3,7 +3,8 @@ import cl from 'clsx';
 import classes from './Label.module.scss';
 
 export interface LabelProps
-  extends React.LabelHTMLAttributes<HTMLLabelElement | HTMLLegendElement>,
+  extends
+    React.LabelHTMLAttributes<HTMLLabelElement | HTMLLegendElement>,
     React.HTMLAttributes<HTMLLabelElement | HTMLLegendElement> {
   size?: 'medium' | 'small';
   textcolor?: 'default' | 'subtle' | 'inherit';

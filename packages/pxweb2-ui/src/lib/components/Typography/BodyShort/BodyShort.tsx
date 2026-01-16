@@ -1,8 +1,7 @@
 import cl from 'clsx';
 import classes from './BodyShort.module.scss';
 
-export interface BodyShortProps
-  extends React.HTMLAttributes<HTMLParagraphElement> {
+export interface BodyShortProps extends React.HTMLAttributes<HTMLParagraphElement> {
   size?: 'medium' | 'small';
   spacing?: boolean;
   align?: 'start' | 'center' | 'end';

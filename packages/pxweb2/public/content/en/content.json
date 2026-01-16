@@ -51,9 +51,31 @@
             "url": "https://www.pxtools.net/PxWeb2/",
             "external": true
           },
-          { "text": "Contact", "url": "mailto:px@scb.se" }
+          {
+            "text": "Contact",
+            "url": "mailto:px@scb.se"
+          }
         ]
       }
     ]
+  },
+  "tableViewer": {
+    "helpSection": {
+      "description": "Help and guidance on how to use the PxWeb interface can be found on our help pages:",
+      "links": [
+        {
+          "text": "Example link 1",
+          "url": "#"
+        },
+        {
+          "text": "Example link 2",
+          "url": "#"
+        }
+      ],
+      "informationCard": {
+        "enabled": true,
+        "text": "For questions about the figures and table content, see the “Information” button."
+      }
+    }
   }
 }

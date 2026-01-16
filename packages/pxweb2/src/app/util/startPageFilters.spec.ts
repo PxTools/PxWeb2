@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import {
   findAncestors,
   findChildren,
@@ -590,5 +590,227 @@ describe('sortSubjectTreeAlpha', () => {
     // Lecel 3 - Alpha → Delta-branch
     const deltaKids = alphaKids.find((n) => n.label === 'Delta')!.children!;
     expect(deltaKids.map((n) => n.label)).toEqual(['Alpha', 'Gamma']);
+  });
+});
+
+describe('sortSubjectTree comparator by depth', () => {
+  it('uses label comparator at depth 1 (top-level)', () => {
+    const subjects = [
+      { id: 'b', label: 'Bravo', sortCode: '001' },
+      { id: 'a', label: 'Alpha', sortCode: '999' },
+      { id: 'c', label: 'Charlie', sortCode: '000' },
+    ];
+
+    const sorted = sortSubjectTree(subjects);
+    expect(sorted.map((n) => n.label)).toEqual(['Alpha', 'Bravo', 'Charlie']); // label asc
+  });
+
+  it('uses label comparator up to depth 3', () => {
+    const subjects = [
+      {
+        id: 'A',
+        label: 'Alpha',
+        children: [
+          { id: 'A2', label: 'Zebra' },
+          { id: 'A1', label: 'Beta' },
+          {
+            id: 'A3',
+            label: 'Delta',
+            children: [
+              { id: 'A3b', label: 'Gamma' },
+              { id: 'A3a', label: 'Alpha' },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'B',
+        label: 'Bravo',
+        children: [
+          { id: 'B2', label: 'Lima' },
+          { id: 'B1', label: 'Echo' },
+        ],
+      },
+    ];
+
+    const sorted = sortSubjectTree(subjects);
+
+    // Depth 1
+    expect(sorted.map((n) => n.label)).toEqual(['Alpha', 'Bravo']);
+
+    // Depth 2 - Alpha branch
+    const alphaBranch = sorted[0].children!;
+    expect(alphaBranch.map((n) => n.label)).toEqual(['Beta', 'Delta', 'Zebra']);
+
+    // Depth 3 - Alpha → Delta branch
+    const deltaBranch = alphaBranch.find((n) => n.label === 'Delta')!.children!;
+    expect(deltaBranch.map((n) => n.label)).toEqual(['Alpha', 'Gamma']);
+  });
+
+  it('uses sortCode then label comparator at depth 4', () => {
+    const level4Children = [
+      { id: 'c', label: 'C', sortCode: '2' }, // 2
+      { id: 'a', label: 'A', sortCode: '001' }, // 1
+      { id: 'z', label: 'Z', sortCode: '010' }, // 10
+      { id: 'b', label: 'B', sortCode: undefined }, // invalid -> after valids
+    ];
+    const subjects = [
+      {
+        id: 'root',
+        label: 'Root',
+        children: [
+          {
+            id: 'l2',
+            label: 'Level2',
+            children: [{ id: 'l3', label: 'Level3', children: level4Children }],
+          },
+        ],
+      },
+    ];
+
+    const sorted = sortSubjectTree(subjects);
+    const lvl4 = sorted[0].children![0].children![0].children!;
+    expect(lvl4.map((n) => n.label)).toEqual(['A', 'C', 'Z', 'B']);
+  });
+
+  it('uses sortCode comparator and label tie-breaker at depth 5', () => {
+    const level5Children = [
+      { id: 'a', label: 'Alpha', sortCode: '5' },
+      { id: 'c', label: 'Charlie', sortCode: '1' },
+      { id: 'b', label: 'Bravo', sortCode: '1' },
+    ];
+    const subjects = [
+      {
+        id: 'root',
+        label: 'Root',
+        children: [
+          {
+            id: 'l2',
+            label: 'Level2',
+            children: [
+              {
+                id: 'l3',
+                label: 'Level3',
+                children: [
+                  { id: 'l4', label: 'Level4', children: level5Children },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ];
+
+    const sorted = sortSubjectTree(subjects);
+    const lvl5 = sorted[0].children![0].children![0].children![0].children!;
+    expect(lvl5.map((n) => n.label)).toEqual(['Bravo', 'Charlie', 'Alpha']); // tie-break by label
+  });
+
+  it('keeps original order deeper than level 5 (depth 6+)', () => {
+    const level6Children = [
+      { id: 'c1', label: 'Bravo', sortCode: '001' },
+      { id: 'c2', label: 'Alpha', sortCode: '0' },
+      { id: 'c3', label: 'Charlie', sortCode: '999' },
+    ];
+    const subjects = [
+      {
+        id: 'root',
+        label: 'Root',
+        children: [
+          {
+            id: 'l2',
+            label: 'X',
+            children: [
+              {
+                id: 'l3',
+                label: 'Y',
+                children: [
+                  {
+                    id: 'l4',
+                    label: 'Z',
+                    children: [
+                      { id: 'l5', label: 'W', children: level6Children },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ];
+
+    const sorted = sortSubjectTree(subjects);
+    const lvl6 =
+      sorted[0].children![0].children![0].children![0].children![0].children!;
+    expect(lvl6.map((n) => n.label)).toEqual(['Bravo', 'Alpha', 'Charlie']); // insertion order preserved
+  });
+});
+
+describe('compareBySortCodeThenLabelAsc (via sortSubjectTree at depth 4)', () => {
+  const makeTreeWithLevel4 = (children: PathItem[]) => [
+    {
+      id: 'root',
+      label: 'Root',
+      children: [
+        {
+          id: 'l2',
+          label: 'Level2',
+          children: [{ id: 'l3', label: 'Level3', children: children }],
+        },
+      ],
+    },
+  ];
+
+  it('sorts valid numeric sort codes ascending', () => {
+    const children = [
+      { id: 'b', label: 'B', sortCode: '010' },
+      { id: 'a', label: 'A', sortCode: '2' },
+      { id: 'c', label: 'C', sortCode: '001' }, // parsed as 1
+    ];
+    const subjects = makeTreeWithLevel4(children);
+
+    const sorted = sortSubjectTree(subjects);
+    const lvl4 = sorted[0].children![0].children![0].children!;
+    expect(lvl4.map((n) => n.label)).toEqual(['C', 'A', 'B']); // 1, 2, 10
+  });
+
+  it('places invalid/missing sort codes after valid ones and falls back to label', () => {
+    const children = [
+      { id: 'a', label: 'Alpha', sortCode: undefined }, // invalid
+      { id: 'b', label: 'Bravo', sortCode: '3' }, // valid
+      { id: 'c', label: 'Charlie', sortCode: 'notdigits' }, // invalid
+    ];
+    const subjects = makeTreeWithLevel4(children);
+
+    const sorted = sortSubjectTree(subjects);
+    const lvl4 = sorted[0].children![0].children![0].children!;
+    expect(lvl4.map((n) => n.label)).toEqual(['Bravo', 'Alpha', 'Charlie']);
+  });
+
+  it('uses label as tie-breaker when sort codes are equal', () => {
+    const children = [
+      { id: 'b', label: 'Bravo', sortCode: '5' },
+      { id: 'a', label: 'Alpha', sortCode: '5' },
+      { id: 'c', label: 'Charlie', sortCode: '5' },
+    ];
+    const subjects = makeTreeWithLevel4(children);
+
+    const sorted = sortSubjectTree(subjects);
+    const lvl4 = sorted[0].children![0].children![0].children!;
+    expect(lvl4.map((n) => n.label)).toEqual(['Alpha', 'Bravo', 'Charlie']);
+  });
+
+  it('trims whitespace and treats non-digit strings as invalid', () => {
+    const children = [
+      { id: 'a', label: 'A', sortCode: '  4 ' }, // valid after trim
+      { id: 'b', label: 'C', sortCode: '   ' }, // invalid after trim -> empty
+      { id: 'c', label: 'B', sortCode: '-1' }, // invalid (non-digit)
+    ];
+    const subjects = makeTreeWithLevel4(children);
+
+    const sorted = sortSubjectTree(subjects);
+    const lvl4 = sorted[0].children![0].children![0].children!;
+    expect(lvl4.map((n) => n.label)).toEqual(['A', 'B', 'C']); // 4, then invalids by label
   });
 });
