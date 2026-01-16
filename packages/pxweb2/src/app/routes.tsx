@@ -101,7 +101,7 @@ export const routerConfig = [
         element: <TopicIcons />,
       },
       {
-        path: 'sq/:sqId',
+        path: `${basePath}sq/:sqId`,
         loader: savedQueryRouteLoader,
         // Provide a minimal element to avoid React Router warning for leaf routes
         element: <div>Redirecting…</div>,
