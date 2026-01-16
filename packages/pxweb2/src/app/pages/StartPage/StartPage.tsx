@@ -351,6 +351,15 @@ const StartPage = () => {
         cardRef = lastVisibleCardRef;
       }
 
+      let lastPeriodString: string | undefined = table.lastPeriod?.slice(0, 4);
+      if (
+        table.timeUnit &&
+        table.timeUnit.toLowerCase() === 'other' &&
+        table.lastPeriod?.slice(4, 5) === '-'
+      ) {
+        lastPeriodString = table.lastPeriod?.slice(5, 9);
+      }
+
       return (
         <TableCard
           key={table.id}
@@ -366,10 +375,7 @@ const StartPage = () => {
                 })
               : undefined
           }
-          period={`${table.firstPeriod?.slice(0, 4)}–${table.lastPeriod?.slice(
-            0,
-            4,
-          )}`}
+          period={`${table.firstPeriod?.slice(0, 4)}–${lastPeriodString}`}
           frequency={frequencyLabel}
           tableId={`${table.id}`}
           icon={getTopicIcon(table)}
@@ -383,7 +389,7 @@ const StartPage = () => {
                 })
               : undefined,
             yearFrom: table.firstPeriod?.slice(0, 4),
-            yearTo: table.lastPeriod?.slice(0, 4),
+            yearTo: lastPeriodString,
             frequency: frequencyLabel,
             tableNumber: table.id,
           })}
