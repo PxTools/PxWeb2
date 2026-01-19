@@ -29,6 +29,8 @@ import {
 } from '@pxweb2/pxweb2-ui';
 import { getLabelText } from '../app/util/utils';
 
+// TODO: Remove when real data is available from API
+//const tempMetaidLinksDataEmpty = {};
 // TODO: Remove temporary data when real data is available from API
 // const tempMetaidLinksData = {
 //   'statistics-homepage': {
@@ -118,6 +120,7 @@ const tempMetaidLinksDataExtended = {
 // TODO: Remove TEMPORARY function to map raw JSON definitions data to Definitions type
 // when real data is available from API
 // TODO: Use the correct Response type from the API when available
+// TODO: This needs a refactor when real data is available from API, quick and dirty for now
 function mapTableDefinitions(definitionsJson: any) {
   const definitions: Definitions = {};
 
@@ -208,7 +211,7 @@ export function mapJsonStat2Response(
     subjectArea: response.extension?.px?.['subject-area'] ?? '',
     variables: mapVariables(response, mapData),
     contacts: mapContacts(response.extension?.contact),
-    definitions: mapTableDefinitions(tempMetaidLinksDataExtended), // TODO: Mapping needs to be properly implemented
+    definitions: mapTableDefinitions(tempMetaidLinksDataExtended), // TODO: Use real data from API response when available
     notes: mapNotes(response.note, response.extension?.noteMandatory),
     pathElements: undefined,
   };
