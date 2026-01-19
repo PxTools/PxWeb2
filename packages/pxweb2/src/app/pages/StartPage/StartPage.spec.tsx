@@ -142,7 +142,7 @@ const baseState: StartPageState = {
   },
   originalSubjectTree: [],
   lastUsedYearRange: null,
-  availableTablesWhenQueryApplied: []
+  availableTablesWhenQueryApplied: [],
 };
 const config = configModule.getConfig();
 
