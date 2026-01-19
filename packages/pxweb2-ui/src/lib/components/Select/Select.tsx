@@ -76,8 +76,18 @@ export function Select({
           onChange={onChange}
           tabIndex={tabIndex}
           className={cssClasses}
-          addModal={addModal ?? (() => { /* empty */ })}
-          removeModal={removeModal ?? (() => { /* empty */ })}
+          addModal={
+            addModal ??
+            (() => {
+              /* empty */
+            })
+          }
+          removeModal={
+            removeModal ??
+            (() => {
+              /* empty */
+            })
+          }
           codeListLabelId={codeListLabelId}
         />
       )}
