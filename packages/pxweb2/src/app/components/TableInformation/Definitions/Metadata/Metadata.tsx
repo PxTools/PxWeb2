@@ -41,9 +41,9 @@ export function Metadata({ variablesDefinitions }: MetadataProps) {
                 {variable.variableName}
               </Heading>
 
-              <div className={cl(classes.linkGroupWrapper)}>
+              <ul className={cl(classes.linkGroupWrapper)}>
                 {variable.links.map((link, index) => (
-                  <div
+                  <li
                     key={`${link.href}-${index}`}
                     className={cl(classes.linkWrapper)}
                   >
@@ -53,12 +53,13 @@ export function Metadata({ variablesDefinitions }: MetadataProps) {
                       rel="noopener noreferrer"
                       icon="FileText"
                       iconPosition="start"
+                      size="medium"
                     >
                       {link.label}
                     </Link>
-                  </div>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
           ))}
         </div>
