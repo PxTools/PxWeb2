@@ -7,7 +7,6 @@ import styles from './ApiQuery.module.scss';
 import { BodyLong, Link, Chips, CodeSnippet, Select } from '@pxweb2/pxweb2-ui';
 import { useApiQueryInfo } from '../../util/apiQuery/apiQueryUtil';
 import { fileFormats } from '../../constants/outputFormats';
-// import useVariables from '../../context/useVariables';
 
 export interface ApiQueryProps {}
 
@@ -15,11 +14,7 @@ export const ApiQuery: React.FC<ApiQueryProps> = () => {
   const { t } = useTranslation();
   const [httpMethod, setHttpMethod] = useState<'GET' | 'POST'>('GET');
   const [selectedFormat, setSelectedFormat] = useState('jsonstat2');
-  // const { selectedVBValues } = useVariables();
-
   const apiQueryInfo = useApiQueryInfo(i18n.language, selectedFormat);
-
-  console.log({ apiQueryInfo });
 
   const codeSnippetTranslations = {
     copyButtonLabel: t('common.code_snippet.copy_button_label'),
