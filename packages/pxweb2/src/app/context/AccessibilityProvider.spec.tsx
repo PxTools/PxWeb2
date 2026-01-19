@@ -1,12 +1,17 @@
-
 import { render, fireEvent } from '@testing-library/react';
 import React, { useContext, useRef, useEffect, RefObject } from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { AccessibilityProvider, AccessibilityContext } from './AccessibilityProvider';
+import {
+  AccessibilityProvider,
+  AccessibilityContext,
+} from './AccessibilityProvider';
 
 interface TestComponentProps {
   onAddModal?: (ctx: AccessibilityContextType) => void;
-  onAddFocusOverride?: (ctx: AccessibilityContextType, ref: RefObject<HTMLButtonElement>) => void;
+  onAddFocusOverride?: (
+    ctx: AccessibilityContextType,
+    ref: RefObject<HTMLButtonElement>,
+  ) => void;
 }
 
 // Redefine the type here for test compatibility
@@ -59,7 +64,7 @@ describe('AccessibilityProvider', () => {
             return null;
           }}
         </AccessibilityContext.Consumer>
-      </AccessibilityProvider>
+      </AccessibilityProvider>,
     );
     expect(contextValue).toBeTruthy();
     if (contextValue && typeof contextValue === 'object') {
@@ -79,7 +84,7 @@ describe('AccessibilityProvider', () => {
             context.addModal('modal1', closeFn);
           }}
         />
-      </AccessibilityProvider>
+      </AccessibilityProvider>,
     );
     expect(closeFn).not.toHaveBeenCalled();
     ctx?.closeModal();
@@ -100,7 +105,7 @@ describe('AccessibilityProvider', () => {
             context.removeModal('modal1');
           }}
         />
-      </AccessibilityProvider>
+      </AccessibilityProvider>,
     );
     // Try to close, should not call closeFn since modal was removed
     ctx?.closeModal();
@@ -119,11 +124,13 @@ describe('AccessibilityProvider', () => {
               expect(btn.getAttribute('data-focus-override-id')).toBe('focus1');
               context.removeFocusOverride('focus1');
               // The attribute may or may not be removed depending on implementation, so just check it's still a string
-              expect(typeof btn.getAttribute('data-focus-override-id')).toBe('string');
+              expect(typeof btn.getAttribute('data-focus-override-id')).toBe(
+                'string',
+              );
             }
           }}
         />
-      </AccessibilityProvider>
+      </AccessibilityProvider>,
     );
   });
 
@@ -141,7 +148,7 @@ describe('AccessibilityProvider', () => {
             context.addFocusOverride('btn2', btn2, btn1, undefined);
           }}
         />
-      </AccessibilityProvider>
+      </AccessibilityProvider>,
     );
 
     btn1.setAttribute('data-focus-override-id', 'btn1');
@@ -169,7 +176,7 @@ describe('AccessibilityProvider', () => {
             context.addModal('modal1', closeFn);
           }}
         />
-      </AccessibilityProvider>
+      </AccessibilityProvider>,
     );
     fireEvent.keyDown(document, { key: 'Escape' });
     await new Promise((r) => setTimeout(r, 10));
