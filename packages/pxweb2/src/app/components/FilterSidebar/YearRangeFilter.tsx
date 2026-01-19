@@ -67,15 +67,15 @@ function getYearRangeForMatchingTables(
   to?: number,
 ) {
   const matching = tables.filter((table) => {
-    const first = parseInt(table.firstPeriod ?? '', 10);
+    const first = Number.parseInt(table.firstPeriod ?? '', 10);
 
-    let last = parseInt(table.lastPeriod ?? '', 10);
+    let last = Number.parseInt(table.lastPeriod ?? '', 10);
     if (
       table.timeUnit &&
       table.timeUnit.toLowerCase() === 'other' &&
       table.lastPeriod?.slice(4, 5) === '-'
     ) {
-      last = parseInt(table.lastPeriod?.slice(5, 9) ?? '', 10);
+      last = Number.parseInt(table.lastPeriod?.slice(5, 9) ?? '', 10);
     }
 
     if (!Number.isFinite(first) || !Number.isFinite(last)) {
@@ -91,14 +91,14 @@ function getYearRangeForMatchingTables(
   });
 
   const years = matching.flatMap((table) => {
-    const first = parseInt(table.firstPeriod ?? '', 10);
-    let last = parseInt(table.lastPeriod ?? '', 10);
+    const first = Number.parseInt(table.firstPeriod ?? '', 10);
+    let last = Number.parseInt(table.lastPeriod ?? '', 10);
     if (
       table.timeUnit &&
       table.timeUnit.toLowerCase() === 'other' &&
       table.lastPeriod?.slice(4, 5) === '-'
     ) {
-      last = parseInt(table.lastPeriod?.slice(5, 9) ?? '', 10);
+      last = Number.parseInt(table.lastPeriod?.slice(5, 9) ?? '', 10);
     }
 
     return Number.isFinite(first) && Number.isFinite(last) ? [first, last] : [];
@@ -127,17 +127,17 @@ export const YearRangeFilter: React.FC<{ onFilterChange?: () => void }> = ({
 
   const { min: dynamicMin, max: dynamicMax } = getYearRangeForMatchingTables(
     state.filteredTables,
-    fromYear ? parseInt(fromYear, 10) : undefined,
-    toYear ? parseInt(toYear, 10) : undefined,
+    fromYear ? Number.parseInt(fromYear, 10) : undefined,
+    toYear ? Number.parseInt(toYear, 10) : undefined,
   );
 
   const fromOptions = generateYearOptions(
     dynamicMin,
-    toYear ? parseInt(toYear, 10) : dynamicMax,
+    toYear ? Number.parseInt(toYear, 10) : dynamicMax,
   );
 
   const toOptions = generateYearOptions(
-    fromYear ? parseInt(fromYear, 10) : dynamicMin,
+    fromYear ? Number.parseInt(fromYear, 10) : dynamicMin,
     dynamicMax,
   ).reverse();
 
