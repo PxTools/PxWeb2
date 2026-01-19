@@ -84,6 +84,8 @@ export function LinkCard({
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       tabIndex={0}
+      aria-labelledby={`${headingText}${description ? ` ${description}` : ''}`}
+      role="link"
     >
       {icon && (
         <div className={cl(styles['icon-wrapper'])}>
@@ -98,6 +100,14 @@ export function LinkCard({
                 styles[`heading-${headingSize}`],
               ])}
             >
+              {/* <a
+                href={href}
+                target={newTab ? '_blank' : undefined}
+                rel={newTab ? 'noopener noreferrer' : undefined}
+                className={cl([styles[`heading-${headingSize}`]])}
+              >
+                {headingText}
+              </a> */}
               {headingText}
             </span>
           ) : (
@@ -106,6 +116,14 @@ export function LinkCard({
               level={headingLevel}
               className={cl(styles['heading-wrapper'])}
             >
+              {/* <a
+                href={href}
+                target={newTab ? '_blank' : undefined}
+                rel={newTab ? 'noopener noreferrer' : undefined}
+                className={cl(styles[`heading-${headingSize}`])}
+              >
+                {headingText}
+              </a> */}
               {headingText}
             </Heading>
           ))}
