@@ -3,7 +3,11 @@ import {
   VariablesSelection,
 } from '@pxweb2/pxweb2-api-client';
 import useVariables from '../../context/useVariables';
+import { getConfig } from '../config/getConfig';
+import { VariablesContextType } from '../../context/VariablesProvider';
 // import type { SelectedVBValues } from '@pxweb2/pxweb2-ui';
+
+const config = getConfig();
 
 export type ApiQueryInfoType = {
   getUrl: string;
@@ -11,26 +15,38 @@ export type ApiQueryInfoType = {
   postBody: string;
 };
 
-export function getApiQueryInfo(
+function getApiQueryInfo(
   variablesSelection: VariablesSelection,
+  tableId?: string,
 ): ApiQueryInfoType {
-  // Example: use variablesSelection to build URLs and body
-  // This is a placeholder; adapt as needed for your real API
+  // https://api.scb.se/OV0104/v2beta/api/v2/tables/TAB4410/data?lang=en&outputFormat=json-stat2
+  let apiUrl = config.apiUrl;
+  if (tableId) {
+    apiUrl += `/tables/${tableId}/data`;
+  } else {
+    apiUrl += '/data';
+  }
+  apiUrl += '?lang=' + config.language.defaultLanguage;
+  apiUrl += '&outputFormat=json-stat2';
+
   return {
-    getUrl: 'https://api.pxweb2.test/getQueryExample',
-    postUrl: 'https://api.pxweb2.test/postQueryExample',
-    postBody: JSON.stringify({ query: variablesSelection.selection }),
+    getUrl: apiUrl + getGetParams(variablesSelection),
+    postUrl: apiUrl,
+    postBody: getPostBody(variablesSelection),
   };
 }
 
 export function useApiQueryInfo(): ApiQueryInfoType {
-  const variablesSelection = useVariablesSelection();
-  return getApiQueryInfo(variablesSelection);
+  const variables = useVariables();
+  const variablesSelection = getVariablesSelection(variables);
+  const tableId = variables.pxTableMetadata?.id;
+
+  return getApiQueryInfo(variablesSelection, tableId);
 }
 
-export function useVariablesSelection(): VariablesSelection {
-  const variables = useVariables();
-
+function getVariablesSelection(
+  variables: VariablesContextType,
+): VariablesSelection {
   const selections: Array<VariableSelection> = [];
 
   // Get selection from Selection provider
@@ -54,4 +70,13 @@ export function useVariablesSelection(): VariablesSelection {
     selection: selections,
   };
   return variablesSelection;
+}
+function getGetParams(variablesSelection: VariablesSelection): string {
+  console.log({ variablesSelection });
+  return '';
+}
+
+function getPostBody(variablesSelection: VariablesSelection): string {
+  const jsonBody = JSON.stringify({ selection: variablesSelection.selection });
+  return JSON.stringify(JSON.parse(jsonBody), null, 2);
 }
