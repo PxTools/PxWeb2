@@ -24,8 +24,8 @@ export type SelectProps = {
   onChange: (selectedItem: SelectOption | undefined) => void;
   tabIndex?: number;
   className?: string;
-  addModal: (name: string, closeFunction: () => void) => void;
-  removeModal: (name: string) => void;
+  addModal?: (name: string, closeFunction: () => void) => void;
+  removeModal?: (name: string) => void;
   codeListLabelId?: string;
 };
 
@@ -76,8 +76,8 @@ export function Select({
           onChange={onChange}
           tabIndex={tabIndex}
           className={cssClasses}
-          addModal={addModal}
-          removeModal={removeModal}
+          addModal={addModal ?? (() => { /* empty */ })}
+          removeModal={removeModal ?? (() => { /* empty */ })}
           codeListLabelId={codeListLabelId}
         />
       )}
