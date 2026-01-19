@@ -9,17 +9,20 @@ import { DetailsTab } from './Details/DetailsTab';
 import useApp from '../../context/useApp';
 
 import {
-  SideSheet,
   BottomSheet,
+  Definitions,
+  DefinitionLink,
+  SideSheet,
   TabsProvider,
   Tabs,
   Tab,
   TabPanel,
+  VariableDefinition,
 } from '@pxweb2/pxweb2-ui';
 import { NotesTab } from './Notes/NotesTab';
 import { DefinitionsTab } from './Definitions/DefinitionsTab';
-import { Definitions } from 'packages/pxweb2-ui/src/lib/shared-types/definitions';
 
+// TODO: Remove temporary data when real data is available from API
 // const tempMetaidLinksData = {
 //   'statistics-homepage': {
 //     'dataset-links': [
@@ -107,6 +110,7 @@ const tempMetaidLinksDataExtended = {
 
 // TODO: Remove TEMPORARY function to map raw JSON definitions data to Definitions type
 // when real data is available from API
+// TODO: Use the correct Response type from the API when available
 function mapTableDefinitions(definitionsJson: any) {
   const definitions: Definitions = {};
 
@@ -118,21 +122,32 @@ function mapTableDefinitions(definitionsJson: any) {
     (definitions.aboutStatistic =
       definitionsJson['about-statistics']['dataset-links'][0] || []);
 
-  // definitions.definitions = {};
+  Object.keys(definitionsJson.definitions || {}).forEach((dimensionKey) => {
+    const dimensionData = definitionsJson.definitions[dimensionKey];
+    const variableDefinition: VariableDefinition = {
+      variableName: dimensionKey,
+      links: [],
+    };
 
-  // Object.keys(definitionsJson.definitions || {}).forEach((dimensionKey) => {
-  //   const dimensionData = definitionsJson.definitions[dimensionKey];
-  //   const dimensionLinks = dimensionData['dimension-links'] || [];
-  //   const categoryLinks = dimensionData['category-links'] || {};
+    if (dimensionData['dimension-links']) {
+      variableDefinition.links.push(...dimensionData['dimension-links']);
+    }
 
-  //   definitions.definitions[dimensionKey] = {
-  //     dimensionLinks,
-  //     categoryLinks,
-  //   };
-  // });
+    if (dimensionData['category-links']) {
+      Object.values(dimensionData['category-links']).forEach(
+        (categoryLinks: DefinitionLink[]) => {
+          variableDefinition.links.push(...categoryLinks);
+        },
+      );
+    }
 
-  // TODO: Remove temporary logging
-  //console.log('Mapped definitions:', definitions);
+    if (!definitions.variablesDefinitions) {
+      definitions.variablesDefinitions = [];
+    }
+
+    definitions.variablesDefinitions.push(variableDefinition);
+  });
+
   return definitions;
 }
 
