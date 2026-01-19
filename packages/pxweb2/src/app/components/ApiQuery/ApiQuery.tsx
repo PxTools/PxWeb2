@@ -51,7 +51,14 @@ export const ApiQuery: React.FC<ApiQueryProps> = () => {
         <Select
           label="Select format"
           variant="default"
-          value={selectedFormat}
+          selectedOption={fileFormats
+            .map((format) => ({
+              value: format.value,
+              label: translate(
+                `presentation_page.side_menu.save.file.formats.${format.value}`,
+              ),
+            }))
+            .find((option) => option.value === selectedFormat)}
           onChange={(e: any) => setSelectedFormat(e.target.value)}
           addModal={function sU() {}}
           removeModal={function sU() {}}
