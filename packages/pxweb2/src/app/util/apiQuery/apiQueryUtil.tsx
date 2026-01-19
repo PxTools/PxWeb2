@@ -3,9 +3,10 @@ import {
   VariablesSelection,
 } from '@pxweb2/pxweb2-api-client';
 import useVariables from '../../context/useVariables';
+import useTableData from '../../context/useTableData';
 import { getConfig } from '../config/getConfig';
 import { VariablesContextType } from '../../context/VariablesProvider';
-// import type { SelectedVBValues } from '@pxweb2/pxweb2-ui';
+import { Variable } from 'packages/pxweb2-ui/src/lib/shared-types/variable';
 
 const config = getConfig();
 
@@ -18,6 +19,8 @@ export type ApiQueryInfoType = {
 function getApiQueryInfo(
   variablesSelection: VariablesSelection,
   tableId?: string,
+  // heading?: string[],
+  // stub?: string[],
 ): ApiQueryInfoType {
   // https://api.scb.se/OV0104/v2beta/api/v2/tables/TAB4410/data?lang=en&outputFormat=json-stat2
   let apiUrl = config.apiUrl;
@@ -38,7 +41,10 @@ function getApiQueryInfo(
 
 export function useApiQueryInfo(): ApiQueryInfoType {
   const variables = useVariables();
-  const variablesSelection = getVariablesSelection(variables);
+  const heading = useTableData().data?.heading;
+  const stub = useTableData().data?.stub;
+
+  const variablesSelection = getVariablesSelection(variables, heading, stub);
   const tableId = variables.pxTableMetadata?.id;
 
   return getApiQueryInfo(variablesSelection, tableId);
@@ -46,6 +52,8 @@ export function useApiQueryInfo(): ApiQueryInfoType {
 
 function getVariablesSelection(
   variables: VariablesContextType,
+  heading?: Variable[],
+  stub?: Variable[],
 ): VariablesSelection {
   const selections: Array<VariableSelection> = [];
 
@@ -66,9 +74,20 @@ function getVariablesSelection(
     selections.push(selection);
   });
 
+  // Extract variable codes for heading and stub if provided
+  const placement: { heading?: string[]; stub?: string[] } = {};
+  if (heading && heading.length > 0) {
+    placement.heading = heading.map((v) => v.id);
+  }
+  if (stub && stub.length > 0) {
+    placement.stub = stub.map((v) => v.id);
+  }
+
   const variablesSelection: VariablesSelection = {
     selection: selections,
+    ...(placement.heading || placement.stub ? { placement } : {}),
   };
+
   return variablesSelection;
 }
 function getGetParams(variablesSelection: VariablesSelection): string {
@@ -77,6 +96,13 @@ function getGetParams(variablesSelection: VariablesSelection): string {
 }
 
 function getPostBody(variablesSelection: VariablesSelection): string {
-  const jsonBody = JSON.stringify({ selection: variablesSelection.selection });
-  return JSON.stringify(JSON.parse(jsonBody), null, 2);
+  // Include placement if present
+  const { selection, placement } = variablesSelection;
+  const body: { selection: typeof selection; placement?: typeof placement } = {
+    selection,
+  };
+  if (placement) {
+    body.placement = placement;
+  }
+  return JSON.stringify(body, null, 2);
 }
