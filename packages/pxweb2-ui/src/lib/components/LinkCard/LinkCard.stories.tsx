@@ -12,7 +12,6 @@ type Story = StoryObj<typeof LinkCard>;
 export const Default: Story = {
   args: {
     headingText: 'Link card with header',
-    icon: 'Book',
     description: 'This is a medium link card with heading and description.',
     href: 'https://www.ssb.no  ',
   },
@@ -82,6 +81,16 @@ export const WithSpanHeadingSmall: Story = {
   args: {
     headingText: 'Link card with header span',
     icon: 'Book',
+    description: 'This is a small link card with heading and description.',
+    href: 'https://www.ssb.no  ',
+    headingType: 'span',
+    size: 'small',
+  },
+  render: (args: LinkCardProps) => <LinkCard {...args} />,
+};
+export const WithoutIcon: Story = {
+  args: {
+    headingText: 'Link card without icon',
     description: 'This is a small link card with heading and description.',
     href: 'https://www.ssb.no  ',
     headingType: 'span',

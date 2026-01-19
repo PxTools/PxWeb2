@@ -24,7 +24,7 @@ export function LinkCard({
   description,
   href,
   newTab = true,
-  headingType = 'h3',
+  headingType = 'span',
   size = 'medium',
   languageDirection = 'ltr',
 }: LinkCardProps) {
