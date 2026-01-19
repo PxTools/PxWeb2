@@ -54,7 +54,7 @@ export const AccessibilityProvider = ({
 }: AccessibilityProviderProps) => {
   const [modals, setModals] = useState<Modal[]>([]);
   const [focusOverrides, setFocusOverrides] = useState<FocusOverride[]>([]);
-  const pendingCloseRef = useRef<(() => void) | null>(null); // ADD
+  const pendingCloseRef = useRef<(() => void) | null>(null);
 
   // Debug logging in development
   useEffect(() => {

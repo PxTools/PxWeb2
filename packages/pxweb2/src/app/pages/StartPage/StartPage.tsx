@@ -694,69 +694,6 @@ const StartPage = () => {
     );
   };
 
-  // const renderFilterOverlay = () => {
-  //   return (
-  //     <AnimatePresence>
-  //       {isSmallScreen && isFilterOverlayOpen && (
-  //         <motion.div
-  //           key="filterOverlay"
-  //           initial={{ opacity: 0 }}
-  //           animate={{ opacity: 1 }}
-  //           exit={{ opacity: 0 }}
-  //           transition={{ duration: 0.25, ease: 'easeInOut' }}
-  //           className={styles.filterOverlay}
-  //         >
-  //           <div className={styles.filterOverlayHeader}>
-  //             <Button
-  //               variant="tertiary"
-  //               icon="ArrowLeft"
-  //               aria-label={t('start_page.filter.back')}
-  //               onClick={() => setIsFilterOverlayOpen(false)}
-  //               ref={filterBackButtonRef}
-  //             />
-  //             <Heading size="medium">{t('start_page.filter.header')}</Heading>
-  //           </div>
-
-  //           <div className={styles.filterOverlayContent}>
-  //             <FilterSidebar onFilterChange={handleFilterChange} />
-  //           </div>
-
-  //           <div className={styles.filterOverlayFooter}>
-  //             {state.activeFilters.length >= 1 && (
-  //               <Button
-  //                 variant="secondary"
-  //                 className={styles.removeFilterButton}
-  //                 iconPosition="start"
-  //                 icon="XMark"
-  //                 onClick={() => {
-  //                   dispatch({
-  //                     type: ActionType.RESET_FILTERS,
-  //                     payload: {
-  //                       tables: state.availableTables,
-  //                       subjects: getSubjectTree(state.availableTables),
-  //                     },
-  //                   });
-  //                 }}
-  //               >
-  //                 {t('start_page.filter.remove_all_filter')}
-  //               </Button>
-  //             )}
-  //             <Button
-  //               variant="primary"
-  //               className={styles.showResultsButton}
-  //               onClick={() => setIsFilterOverlayOpen(false)}
-  //             >
-  //               {t('start_page.filter.show_results', {
-  //                 value: formatNumber(state.filteredTables.length),
-  //               })}
-  //             </Button>
-  //           </div>
-  //         </motion.div>
-  //       )}
-  //     </AnimatePresence>
-  //   );
-  // };
-
   const renderTableListSEO = () => {
     return (
       <nav
