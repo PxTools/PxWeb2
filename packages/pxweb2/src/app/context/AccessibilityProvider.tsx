@@ -73,9 +73,12 @@ export const AccessibilityProvider = ({
       if (prev.length === 0) {
         return prev;
       }
-      const last = prev[prev.length - 1];
-      pendingCloseRef.current = last.closeFunction; // capture, don't call here
-      return prev.slice(0, -1);
+      const last = prev.at(-1);
+      if (last) {
+        pendingCloseRef.current = last.closeFunction; // capture, don't call here
+        return prev.slice(0, -1);
+      }
+      return prev;
     });
 
     // Call the consumer close function after the state update

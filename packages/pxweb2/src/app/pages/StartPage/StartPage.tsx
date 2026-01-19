@@ -224,7 +224,7 @@ const StartPage = () => {
 
     const first = focusable[0] || filterBackButtonRef.current || null;
     const last =
-      focusable[focusable.length - 1] || filterBackButtonRef.current || null;
+      focusable.at(-1) || filterBackButtonRef.current || null;
 
     if (first && last) {
       accessibilityContext.addFocusOverride(
