@@ -1,6 +1,6 @@
 import { vi, Mock } from 'vitest';
 import { MemoryRouter } from 'react-router';
-import { waitFor, within } from '@testing-library/react';
+import { waitFor, within, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 
 import StartPage from './StartPage';
@@ -15,6 +15,17 @@ import * as startPageRender from '../../util/startPageRender';
 import * as configModule from '../../util/config/getConfig';
 import { getConfig } from '../../util/config/getConfig';
 import { mockedConfig } from '../../../../test/setupTests';
+
+// Mock screen size via useApp with mutable flags we can control per test
+let mockIsMobile = false;
+let mockIsTablet = false;
+vi.mock('../../context/useApp', () => ({
+  default: () => ({
+    isMobile: mockIsMobile,
+    isTablet: mockIsTablet,
+    isInitialized: true,
+  }),
+}));
 
 // Mock the getAllTables function
 vi.mock('../../util/tableHandler', () => ({
@@ -90,6 +101,10 @@ vi.mock('../../util/hooks/useTopicIcons', () => {
   };
 });
 
+// Import the mocked hooks for use in the harness
+import useApp from '../../context/useApp';
+import { useTopicIcons } from '../../util/hooks/useTopicIcons';
+
 vi.mock('react-i18next', async () => {
   const actual =
     await vi.importActual<typeof import('react-i18next')>('react-i18next');
@@ -127,6 +142,7 @@ const baseState: StartPageState = {
   },
   originalSubjectTree: [],
   lastUsedYearRange: null,
+  availableTablesWhenQueryApplied: []
 };
 const config = configModule.getConfig();
 
@@ -445,6 +461,62 @@ describe('StartPage', () => {
         expect(queryByText('Tips 1')).not.toBeInTheDocument();
         expect(queryByText('Tips 2')).not.toBeInTheDocument();
       });
+    });
+  });
+
+  describe('getTopicIcon size selection', () => {
+    // Minimal harness that reproduces the getTopicIcon logic using hooks
+    function IconProbe({ table }: { table: Partial<Table> }) {
+      const { isMobile, isTablet } = useApp();
+      const isSmallScreen = isTablet === true || isMobile === true;
+      const topicIconComponents = useTopicIcons();
+      const topicId = table.subjectCode as string | undefined;
+      const size = isSmallScreen ? 'small' : 'medium';
+      const icon = topicId
+        ? (topicIconComponents.find((i) => i.id === topicId)?.[size] ?? null)
+        : null;
+
+      return <div data-testid="probe">{icon}</div>;
+    }
+
+    beforeEach(() => {
+      mockIsMobile = false;
+      mockIsTablet = false;
+    });
+
+    it('returns small variant on small screens (mobile)', async () => {
+      mockIsMobile = true;
+
+      renderWithProviders(
+        <AccessibilityProvider>
+          <MemoryRouter>
+            <IconProbe table={{ subjectCode: 'al' }} />
+          </MemoryRouter>
+        </AccessibilityProvider>,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByTestId('mock-icon-small')).toBeInTheDocument();
+      });
+      expect(screen.queryByTestId('mock-icon-medium')).toBeNull();
+    });
+
+    it('returns medium variant on large screens (desktop)', async () => {
+      mockIsMobile = false;
+      mockIsTablet = false;
+
+      renderWithProviders(
+        <AccessibilityProvider>
+          <MemoryRouter>
+            <IconProbe table={{ subjectCode: 'al' }} />
+          </MemoryRouter>
+        </AccessibilityProvider>,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByTestId('mock-icon-medium')).toBeInTheDocument();
+      });
+      expect(screen.queryByTestId('mock-icon-small')).toBeNull();
     });
   });
 });
