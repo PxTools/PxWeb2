@@ -76,6 +76,7 @@ export function mapJsonStat2Response(
     subjectArea: response.extension?.px?.['subject-area'] ?? '',
     variables: mapVariables(response, mapData),
     contacts: mapContacts(response.extension?.contact),
+    definitions: {}, // TODO: Mapping needs to be implemented
     notes: mapNotes(response.note, response.extension?.noteMandatory),
     pathElements: undefined,
   };

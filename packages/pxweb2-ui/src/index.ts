@@ -54,6 +54,7 @@ export * from './lib/components/MarkdownRenderer/MarkdownRenderer';
 export * from './lib/shared-types/codelist';
 export * from './lib/shared-types/contact';
 export * from './lib/shared-types/contentInfo';
+export * from './lib/shared-types/definitions';
 export * from './lib/shared-types/note';
 export * from './lib/shared-types/pathElement';
 export * from './lib/shared-types/pxTable';

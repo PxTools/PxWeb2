@@ -233,8 +233,17 @@
           "show_all_footnotes": "إظهار كافة الملاحظات للجدول"
         },
         "definitions": {
-          "title": "التعاريف",
-          "description": "الجدول جزء من الإحصائيات {{statistics}}"
+          "panel_title": "التعاريف",
+          "about_statistics": {
+            "title": "",
+            "description": "",
+            "link_text_statistics_homepage": "",
+            "link_text_definitions": ""
+          },
+          "metadata": {
+            "title": "",
+            "description": ""
+          }
         },
         "details": {
           "title": "تفاصيل",

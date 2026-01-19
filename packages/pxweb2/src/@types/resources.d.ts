@@ -13,6 +13,13 @@ interface Resources {
         breadcrumb_root_title: 'Home';
         show_more_breadcrumbs: 'Show more';
       };
+      code_snippet: {
+        copied_button_label: 'Code copied to clipboard';
+        copy_button_label: 'Copy code for ';
+        copy_button_tooltip: 'Copy code';
+        unwrap_code_button_label: 'Unwrap lines';
+        wrap_code_button_label: 'Wrap lines';
+      };
       errors: {
         generic: {
           action_text: 'Refresh';
@@ -96,8 +103,17 @@ interface Resources {
             title: 'Contact';
           };
           definitions: {
-            description: 'The table is part of the statistics {{statistics}}';
-            title: 'Definitions';
+            about_statistics: {
+              description: "Definitions, explanations, and other information related to the table can be found on the table's statistics page.";
+              link_text_definitions: 'Definitions and explanations';
+              link_text_statistics_homepage: 'Statistics page';
+              title: 'About the statistics';
+            };
+            metadata: {
+              description: 'Here you can find links to variable definitions and classifications used in the table.';
+              title: 'Metadata';
+            };
+            panel_title: 'Definitions';
           };
           details: {
             base_time: 'Base time';

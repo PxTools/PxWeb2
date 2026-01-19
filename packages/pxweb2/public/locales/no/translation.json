@@ -304,8 +304,17 @@
           "important_about_selection_body_one_note": "Trykk på denne meldingen for å lese merknaden. "
         },
         "definitions": {
-          "title": "Definisjoner",
-          "description": "Tabellen er en del av statistikken {{statistics}}"
+          "panel_title": "Definisjoner",
+          "about_statistics": {
+            "title": "Om statistikken",
+            "description": "Definisjoner, forklaringer og annen informasjon relatert til tabellen, finner du på tabellens statistikkside.",
+            "link_text_statistics_homepage": "Statistikkside",
+            "link_text_definitions": "Definisjoner og forklaringer"
+          },
+          "metadata": {
+            "title": "Metadata",
+            "description": "Her finner du lenker til variabeldefinisjoner og klassifikasjoner brukt i tabellen."
+          }
         },
         "details": {
           "title": "Detaljer",

@@ -52,7 +52,7 @@ describe('TableInformation', () => {
     );
 
     const tabPanel = screen.getByText(
-      'presentation_page.main_content.about_table.definitions.title',
+      'presentation_page.main_content.about_table.definitions.panel_title',
     );
     expect(tabPanel).toBeInTheDocument();
   });
