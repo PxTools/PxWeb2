@@ -60,8 +60,6 @@ export const ApiQuery: React.FC<ApiQueryProps> = () => {
             }))
             .find((option) => option.value === selectedFormat)}
           onChange={(e: any) => setSelectedFormat(e.target.value)}
-          addModal={function sU() {}}
-          removeModal={function sU() {}}
           options={fileFormats.map((format) => ({
             value: format.value,
             label: translate(
