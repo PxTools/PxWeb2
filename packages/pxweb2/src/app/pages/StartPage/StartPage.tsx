@@ -223,8 +223,7 @@ const StartPage = () => {
     ).filter((el) => el.offsetParent !== null);
 
     const first = focusable[0] || filterBackButtonRef.current || null;
-    const last =
-      focusable.at(-1) || filterBackButtonRef.current || null;
+    const last = focusable.at(-1) || filterBackButtonRef.current || null;
 
     if (first && last) {
       accessibilityContext.addFocusOverride(
