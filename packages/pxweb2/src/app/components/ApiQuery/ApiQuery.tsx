@@ -1,6 +1,7 @@
 import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
+import i18n from '../../../i18n/config';
 
 import styles from './ApiQuery.module.scss';
 import { BodyLong, Link, Chips, CodeSnippet, Select } from '@pxweb2/pxweb2-ui';
@@ -13,9 +14,10 @@ export interface ApiQueryProps {}
 export const ApiQuery: React.FC<ApiQueryProps> = () => {
   const { t } = useTranslation();
   const [httpMethod, setHttpMethod] = useState<'GET' | 'POST'>('GET');
+  const [selectedFormat, setSelectedFormat] = useState('jsonstat2');
   // const { selectedVBValues } = useVariables();
 
-  const apiQueryInfo = useApiQueryInfo();
+  const apiQueryInfo = useApiQueryInfo(i18n.language, selectedFormat);
 
   console.log({ apiQueryInfo });
 
@@ -49,7 +51,8 @@ export const ApiQuery: React.FC<ApiQueryProps> = () => {
         <Select
           label="Select format"
           variant="default"
-          onChange={() => alert('hej')}
+          value={selectedFormat}
+          onChange={(e: any) => setSelectedFormat(e.target.value)}
           addModal={function sU() {}}
           removeModal={function sU() {}}
           options={fileFormats.map((format) => ({

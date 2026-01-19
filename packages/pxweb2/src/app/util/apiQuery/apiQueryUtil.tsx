@@ -19,8 +19,8 @@ export type ApiQueryInfoType = {
 function getApiQueryInfo(
   variablesSelection: VariablesSelection,
   tableId?: string,
-  // heading?: string[],
-  // stub?: string[],
+  language: string = config.language.defaultLanguage,
+  outputFormat: string = 'json-stat2',
 ): ApiQueryInfoType {
   // https://api.scb.se/OV0104/v2beta/api/v2/tables/TAB4410/data?lang=en&outputFormat=json-stat2
   let apiUrl = config.apiUrl;
@@ -29,8 +29,8 @@ function getApiQueryInfo(
   } else {
     apiUrl += '/data';
   }
-  apiUrl += '?lang=' + config.language.defaultLanguage;
-  apiUrl += '&outputFormat=json-stat2';
+  apiUrl += '?lang=' + encodeURIComponent(language);
+  apiUrl += '&outputFormat=' + encodeURIComponent(outputFormat);
 
   return {
     getUrl: apiUrl + getGetParams(variablesSelection),
@@ -39,7 +39,10 @@ function getApiQueryInfo(
   };
 }
 
-export function useApiQueryInfo(): ApiQueryInfoType {
+export function useApiQueryInfo(
+  language?: string,
+  outputFormat?: string,
+): ApiQueryInfoType {
   const variables = useVariables();
   const heading = useTableData().data?.heading;
   const stub = useTableData().data?.stub;
@@ -47,7 +50,12 @@ export function useApiQueryInfo(): ApiQueryInfoType {
   const variablesSelection = getVariablesSelection(variables, heading, stub);
   const tableId = variables.pxTableMetadata?.id;
 
-  return getApiQueryInfo(variablesSelection, tableId);
+  return getApiQueryInfo(
+    variablesSelection,
+    tableId,
+    language ?? config.language.defaultLanguage,
+    outputFormat ?? 'json-stat2',
+  );
 }
 
 function getVariablesSelection(
