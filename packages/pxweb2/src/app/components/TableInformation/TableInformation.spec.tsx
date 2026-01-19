@@ -7,6 +7,10 @@ import classes from './TableInformation.module.scss';
 import { mockHTMLDialogElement } from '@pxweb2/pxweb2-ui/src/lib/util/test-utils';
 import { renderWithProviders } from '../../util/testing-utils';
 import { AppContext } from '../../context/AppProvider';
+import {
+  TableDataContext,
+  TableDataContextType,
+} from '../../context/TableDataProvider';
 
 describe('TableInformation', () => {
   beforeEach(() => {
@@ -55,6 +59,61 @@ describe('TableInformation', () => {
       'presentation_page.main_content.about_table.contact.title',
     );
     expect(tabPanel).toBeInTheDocument();
+  });
+
+  it('should not render Definitions tab when definitions do not exist', () => {
+    const { queryByRole } = renderWithProviders(
+      <TableInformation
+        isOpen={true}
+        selectedTab="tab-definitions"
+        onClose={() => {
+          return;
+        }}
+      />,
+    );
+    const definitionsTab = queryByRole('tab', { name: /definitions/i });
+
+    expect(definitionsTab).not.toBeInTheDocument();
+  });
+
+  it('should render Definitions tab when definitions exist', () => {
+    const tableDataContextValue: TableDataContextType = {
+      isInitialized: true,
+      data: {
+        metadata: {
+          definitions: {
+            statisticsHomepage: 'https://example.com/statistics-homepage',
+          },
+        },
+      } as unknown as TableDataContextType['data'],
+      fetchTableData: vi.fn(),
+      fetchSavedQuery: vi.fn(),
+      pivotToMobile: vi.fn(),
+      pivotToDesktop: vi.fn(),
+      pivot: vi.fn(),
+      buildTableTitle: vi.fn().mockReturnValue({
+        firstTitlePart: '',
+        lastTitlePart: '',
+      }),
+    };
+
+    renderWithProviders(
+      <TableDataContext.Provider value={tableDataContextValue}>
+        <TableInformation
+          isOpen={true}
+          selectedTab="tab-definitions"
+          onClose={() => {
+            return;
+          }}
+        />
+      </TableDataContext.Provider>,
+    );
+
+    const definitionsTab = screen.getByRole('tab', {
+      name: 'presentation_page.main_content.about_table.definitions.panel_title',
+    });
+
+    expect(definitionsTab).toBeInTheDocument();
   });
 
   it('should reset scroll position when activeTab changes', () => {
