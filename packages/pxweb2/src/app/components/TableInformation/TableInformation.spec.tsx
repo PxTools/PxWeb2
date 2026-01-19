@@ -44,7 +44,7 @@ describe('TableInformation', () => {
     renderWithProviders(
       <TableInformation
         isOpen={true}
-        selectedTab="tab-definitions"
+        selectedTab="tab-contact"
         onClose={() => {
           return;
         }}
@@ -52,7 +52,7 @@ describe('TableInformation', () => {
     );
 
     const tabPanel = screen.getByText(
-      'presentation_page.main_content.about_table.definitions.panel_title',
+      'presentation_page.main_content.about_table.contact.title',
     );
     expect(tabPanel).toBeInTheDocument();
   });

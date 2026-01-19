@@ -10,146 +10,14 @@ import useApp from '../../context/useApp';
 
 import {
   BottomSheet,
-  Definitions,
-  DefinitionLink,
   SideSheet,
   TabsProvider,
   Tabs,
   Tab,
   TabPanel,
-  VariableDefinition,
 } from '@pxweb2/pxweb2-ui';
 import { NotesTab } from './Notes/NotesTab';
 import { DefinitionsTab } from './Definitions/DefinitionsTab';
-
-// TODO: Remove temporary data when real data is available from API
-// const tempMetaidLinksData = {
-//   'statistics-homepage': {
-//     'dataset-links': [
-//       {
-//         metaid: 'KORTNAVN:aku',
-//         href: 'https://www.ssb.no/befolkning/folketall/statistikk/befolkning',
-//         label: 'Statistics homepage',
-//         type: 'text/html',
-//       },
-//     ],
-//   },
-// };
-const tempMetaidLinksDataExtended = {
-  // TODO: Do these two links only contain one item each? They are arrays in the temp data
-  // which ones should be the "main" link that all tables should have (if they have anything in Definitions)?
-  'statistics-homepage': {
-    //currently "definisjoner og forklaringer"
-    'dataset-links': [
-      {
-        metaid: 'KORTNAVN:aku',
-        href: 'https://www.ssb.no/befolkning/folketall/statistikk/befolkning',
-        label: 'Statistics homepage',
-        type: 'text/html',
-      },
-    ],
-  },
-  'about-statistics': {
-    // currently "statistikkside"?
-    'dataset-links': [
-      {
-        metaid: 'KORTNAVN:aku',
-        href: 'https://www.ssb.no/befolkning/folketall/statistikk/befolkning#om-statistikken',
-        label: 'About the statistics',
-        type: 'text/html',
-      },
-    ],
-  },
-  definitions: {
-    // TODO: Missing a real way to know which dimension/category/variable these are for
-    // "Which one is Region"? We need an identifier to link these to the actual variables in the table
-    KOKkommuneregion0000: {
-      'dimension-links': [
-        {
-          metaid: 'urn:ssb:classification:klass:231',
-          href: 'https://www.ssb.no/klass/klassifikasjoner/231',
-          label: 'Classification for region.',
-          type: 'text/html',
-        },
-      ],
-    },
-    ContentsCode: {
-      'category-links': {
-        KOSKBDU0000: [
-          {
-            href: 'https://www.ssb.no/contextvariable/KOSKBDU0000',
-            label: 'Korrigerte brutto driftsutgifter  (1000 kr)',
-            type: 'text/html',
-            metaid:
-              'urn:ssb:contextvariable:common:8c42e415-e5dc-4a47-93bf-c9c515b39aa6:104549:KOSKBDU0000',
-          },
-        ],
-        KOSKBDUperelev0000: [
-          {
-            href: 'https://www.ssb.no/contextvariable/KOSKBDUperelev0000',
-            label: 'Korrigerte brutto driftsutgifter per elev (kr)',
-            type: 'text/html',
-            metaid:
-              'urn:ssb:contextvariable:common:8c42e415-e5dc-4a47-93bf-c9c515b39aa6:104549:KOSKBDUperelev0000',
-          },
-        ],
-        KOSKBDUperskyss0000: [
-          {
-            href: 'https://www.ssb.no/contextvariable/KOSKBDUperskyss0000',
-            label:
-              'Korrigerte brutto driftsutgifter per elev  som får skoleskyss (223) (kr)',
-            type: 'text/html',
-            metaid:
-              'urn:ssb:contextvariable:common:8c42e415-e5dc-4a47-93bf-c9c515b39aa6:104549:KOSKBDUperskyss0000',
-          },
-        ],
-      },
-    },
-  },
-};
-
-// TODO: Remove TEMPORARY function to map raw JSON definitions data to Definitions type
-// when real data is available from API
-// TODO: Use the correct Response type from the API when available
-function mapTableDefinitions(definitionsJson: any) {
-  const definitions: Definitions = {};
-
-  definitionsJson['statistics-homepage'] &&
-    (definitions.statisticsHomepage =
-      definitionsJson['statistics-homepage']['dataset-links'][0] || []);
-
-  definitionsJson['about-statistics'] &&
-    (definitions.aboutStatistic =
-      definitionsJson['about-statistics']['dataset-links'][0] || []);
-
-  Object.keys(definitionsJson.definitions || {}).forEach((dimensionKey) => {
-    const dimensionData = definitionsJson.definitions[dimensionKey];
-    const variableDefinition: VariableDefinition = {
-      variableName: dimensionKey,
-      links: [],
-    };
-
-    if (dimensionData['dimension-links']) {
-      variableDefinition.links.push(...dimensionData['dimension-links']);
-    }
-
-    if (dimensionData['category-links']) {
-      Object.values(dimensionData['category-links']).forEach(
-        (categoryLinks: DefinitionLink[]) => {
-          variableDefinition.links.push(...categoryLinks);
-        },
-      );
-    }
-
-    if (!definitions.variablesDefinitions) {
-      definitions.variablesDefinitions = [];
-    }
-
-    definitions.variablesDefinitions.push(variableDefinition);
-  });
-
-  return definitions;
-}
 
 export interface TableInformationProps {
   readonly isOpen: boolean;
@@ -186,10 +54,6 @@ export function TableInformation({
   const SheetComponent = isMobile ? BottomSheet : SideSheet;
   const tabsVariant = isMobile ? 'scrollable' : 'fixed';
 
-  // TODO: Use real definitions data when available
-  //const tmpDefinitions = mapTableDefinitions(tempMetaidLinksData);
-  const tmpDefinitions = mapTableDefinitions(tempMetaidLinksDataExtended);
-
   return (
     <SheetComponent
       heading={t('presentation_page.main_content.about_table.title')}
@@ -209,19 +73,15 @@ export function TableInformation({
               )}
               controls="pnl-footnotes"
             ></Tab>
-            {
-              // TODO: Remove checking for temp data when real data is available
-              (metadataOrUndefined?.definitions ||
-                tmpDefinitions.statisticsHomepage) && (
-                <Tab
-                  id="tab-definitions"
-                  label={t(
-                    'presentation_page.main_content.about_table.definitions.panel_title',
-                  )}
-                  controls="pnl-definitions"
-                ></Tab>
-              )
-            }
+            {metadataOrUndefined?.definitions && (
+              <Tab
+                id="tab-definitions"
+                label={t(
+                  'presentation_page.main_content.about_table.definitions.panel_title',
+                )}
+                controls="pnl-definitions"
+              ></Tab>
+            )}
             <Tab
               id="tab-details"
               label={t(
@@ -251,17 +111,9 @@ export function TableInformation({
             <NotesTab pxTableMetadata={metadataOrUndefined} />
           </TabPanel>
           <TabPanel id="pnl-definitions" controlledBy="tab-definitions">
-            {
-              // TODO: Remove checking for temp data when real data is available
-              (metadataOrUndefined?.definitions ||
-                tmpDefinitions.aboutStatistic) && (
-                <DefinitionsTab
-                  definitions={
-                    tmpDefinitions || metadataOrUndefined?.definitions
-                  }
-                />
-              )
-            }
+            {metadataOrUndefined?.definitions && (
+              <DefinitionsTab definitions={metadataOrUndefined?.definitions} />
+            )}
           </TabPanel>
           <TabPanel id="pnl-details" controlledBy="tab-details">
             {metadataOrUndefined && (
