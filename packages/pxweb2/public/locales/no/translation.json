@@ -141,7 +141,7 @@
           "search": {
             "placeholder": "Søk i listen",
             "label": "Søk",
-            "aria_label_clear_button_text": "Ikon for å fjerne tekst i søkefeltet"
+            "aria_label_clear_button_text": "Tøm"
           },
           "header": {
             "tag_selected": "{{selected}} av {{total}} valgt",
