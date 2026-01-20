@@ -49,7 +49,8 @@ export const Search = forwardRef<SearchHandle, SearchProps>(
     const combinedRef = (ref || inputRef) as React.RefObject<SearchHandle>;
 
     const { t } = useTranslation();
-    const ariaLabelClear = arialLabelClearButtonText ?? t('aria_label_clear_button_text');
+    const ariaLabelClear =
+      arialLabelClearButtonText ?? t('aria_label_clear_button_text');
 
     useEffect(() => {
       setInputValue(value);
