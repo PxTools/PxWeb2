@@ -1,10 +1,10 @@
 import cl from 'clsx';
 import React from 'react';
+
 import styles from './LinkCard.module.scss';
 import BodyLong from '../Typography/BodyLong/BodyLong';
 import BodyShort from '../Typography/BodyShort/BodyShort';
 import { getIconDirection } from '../../util/util';
-
 import { Heading, Icon, IconProps } from '@pxweb2/pxweb2-ui';
 
 export interface LinkCardProps {
