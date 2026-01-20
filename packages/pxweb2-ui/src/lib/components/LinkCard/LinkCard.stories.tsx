@@ -11,7 +11,7 @@ type Story = StoryObj<typeof LinkCard>;
 
 export const Default: Story = {
   args: {
-    headingText: 'Link card with header',
+    headingText: 'Heading Link card with header',
     description: 'This is a medium link card with heading and description.',
     href: 'https://www.ssb.no  ',
     icon: 'Book',
@@ -22,7 +22,7 @@ export const Default: Story = {
 export const WithoutHeading: Story = {
   args: {
     icon: 'Book',
-    headingText: 'Link card with header',
+    headingText: 'Heading Link card with header',
     description:
       'This is a medium link card without heading, but with description.',
     href: 'https://www.ssb.no  ',
@@ -32,7 +32,7 @@ export const WithoutHeading: Story = {
 
 export const WithHeadingMedium: Story = {
   args: {
-    headingText: 'Link card with header level 2',
+    headingText: 'Heading Link card with header level 2',
     icon: 'Book',
     description: 'This is a medium link card with heading and description.',
     headingType: 'h2',
@@ -44,7 +44,7 @@ export const WithHeadingMedium: Story = {
 
 export const WithHeadingSmall: Story = {
   args: {
-    headingText: 'Link card with header level 2',
+    headingText: 'Heading Link card with header level 2',
     icon: 'Book',
     description: 'This is a small link card with heading and description.',
     headingType: 'h2',
@@ -57,7 +57,7 @@ export const WithHeadingSmall: Story = {
 
 export const WithoutDescriptionSmall: Story = {
   args: {
-    headingText: 'Link card with header level 2',
+    headingText: 'Heading Link card with header level 2',
     icon: 'Book',
     headingType: 'h2',
     size: 'small',
@@ -69,7 +69,7 @@ export const WithoutDescriptionSmall: Story = {
 
 export const WithSpanHeadingMedium: Story = {
   args: {
-    headingText: 'Link card with header span',
+    headingText: 'Heading Link card with header span',
     icon: 'Book',
     description: 'This is a medium link card with heading and description.',
     headingType: 'span',
@@ -80,7 +80,7 @@ export const WithSpanHeadingMedium: Story = {
 };
 export const WithSpanHeadingSmall: Story = {
   args: {
-    headingText: 'Link card with header span',
+    headingText: 'Heading Link card with header span',
     icon: 'Book',
     description: 'This is a small link card with heading and description.',
     href: 'https://www.ssb.no  ',
@@ -91,7 +91,7 @@ export const WithSpanHeadingSmall: Story = {
 };
 export const WithoutIcon: Story = {
   args: {
-    headingText: 'Link card without icon',
+    headingText: 'Heading Link card without icon',
     description: 'This is a small link card with heading and description.',
     href: 'https://www.ssb.no  ',
     headingType: 'span',
