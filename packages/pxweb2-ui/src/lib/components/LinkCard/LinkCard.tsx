@@ -108,7 +108,7 @@ export function LinkCard({
             </Heading>
           ))}
         {description && (
-          <div className={styles['child-wrapper']}>
+          <div className={styles['description-wrapper']}>
             {size === 'medium' && (
               <BodyLong size="medium">{description}</BodyLong>
             )}

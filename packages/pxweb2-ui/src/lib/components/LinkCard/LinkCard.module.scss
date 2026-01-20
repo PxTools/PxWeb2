@@ -92,7 +92,7 @@
   align-self: stretch;
 }
 
-.child-wrapper {
+.description-wrapper {
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
@@ -107,8 +107,4 @@
   border: none;
   background-color: transparent;
   margin-inline-start: auto;
-}
-a {
-  text-decoration: none;
-  color: inherit;
 }
