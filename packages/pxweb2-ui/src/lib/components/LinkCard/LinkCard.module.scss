@@ -1,0 +1,114 @@
+@use '../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixed;
+@use '../../text-styles.scss';
+
+.link-card-medium {
+  display: flex;
+  padding: fixed.$spacing-4 fixed.$spacing-5;
+  align-items: flex-start;
+  gap: 1rem;
+
+  border-radius: var(--px-border-radius-large);
+  border: 1px solid var(--px-color-border-subtle);
+  background: var(--px-color-surface-default);
+  position: relative;
+  &:hover {
+    outline: 1px solid var(--px-color-border-subtle);
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    span {
+      @extend .heading-underline;
+    }
+    cursor: pointer;
+  }
+  &:hover .arrow-wrapper {
+    padding-inline-start: 8px;
+    transition: 100ms;
+  }
+  &:focus-visible {
+    outline: 3px solid var(--px-color-border-focus-outline);
+    outline-offset: 6px;
+    box-shadow: 0 0 0 3px var(--px-color-border-focus-boxshadow);
+  }
+}
+
+.link-card-small {
+  display: flex;
+  padding: fixed.$spacing-3 fixed.$spacing-4;
+  align-items: flex-start;
+  gap: 0.75rem;
+
+  border-radius: var(--px-border-radius-medium);
+  border: 1px solid var(--px-color-border-subtle);
+  background: var(--px-color-surface-default);
+  position: relative;
+  &:hover {
+    outline: 1px solid var(--px-color-border-subtle);
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    span {
+      @extend .heading-underline;
+    }
+    cursor: pointer;
+  }
+  &:hover .arrow-wrapper {
+    padding-inline-start: 8px;
+    transition: 100ms;
+  }
+  &:focus-visible {
+    outline: 3px solid var(--px-color-border-focus-outline);
+    outline-offset: 6px;
+    box-shadow: 0 0 0 3px var(--px-color-border-focus-boxshadow);
+  }
+}
+.content-wrapper {
+  display: inline-flex;
+  flex-direction: column;
+  row-gap: 0.25rem;
+  align-self: center;
+}
+
+.icon-wrapper {
+  display: flex;
+  width: 44px;
+  height: 44px;
+  padding: 0.625rem;
+  justify-content: center;
+  align-items: center;
+  aspect-ratio: 1/1;
+  background: var(--px-color-surface-moderate);
+
+  border-radius: var(--px-border-radius-medium);
+}
+
+.heading-wrapper {
+  align-self: stretch;
+}
+
+.child-wrapper {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+.arrow-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background-color: transparent;
+  margin-left: auto;
+}
+a {
+  text-decoration: none;
+  color: inherit;
+}

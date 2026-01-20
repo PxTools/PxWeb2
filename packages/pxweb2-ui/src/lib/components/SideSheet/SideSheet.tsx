@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import classes from './SideSheet.module.scss';
 import Heading from '../Typography/Heading/Heading';
 import Button from '../Button/Button';
+import { LinkCard } from '../LinkCard/LinkCard';
 
 export interface SideSheetProps {
   readonly heading: string;
@@ -11,7 +12,7 @@ export interface SideSheetProps {
   readonly isOpen: boolean;
   readonly onClose?: () => void;
   readonly className?: string;
-  readonly children: React.ReactNode;
+  // readonly children: React.ReactNode;
 }
 
 export function SideSheet({
@@ -20,7 +21,7 @@ export function SideSheet({
   isOpen,
   onClose,
   className = '',
-  children,
+  // children,
 }: SideSheetProps) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
   const [isSideSheetOpen, setIsSideSheetOpen] = useState(isOpen);
@@ -87,7 +88,15 @@ export function SideSheet({
             ></Button>
           </div>
         </div>
-        <div className={cl(classes.content)}>{children}</div>
+        <div className={cl(classes.content)}>
+          {' '}
+          <LinkCard
+            headingText="Link card"
+            description="This is a small link card with heading and description."
+            href="#"
+            size="small"
+          />
+        </div>
       </aside>
     </dialog>
   );
