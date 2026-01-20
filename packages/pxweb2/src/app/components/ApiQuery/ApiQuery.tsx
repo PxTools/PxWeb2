@@ -4,7 +4,14 @@ import { useState } from 'react';
 import i18n from '../../../i18n/config';
 
 import styles from './ApiQuery.module.scss';
-import { BodyLong, Link, Chips, CodeSnippet, Select } from '@pxweb2/pxweb2-ui';
+import {
+  BodyLong,
+  Link,
+  Chips,
+  CodeSnippet,
+  Select,
+  SelectOption,
+} from '@pxweb2/pxweb2-ui';
 import { useApiQueryInfo } from '../../util/apiQuery/apiQueryUtil';
 import { fileFormats } from '../../constants/outputFormats';
 
@@ -24,6 +31,12 @@ export const ApiQuery: React.FC<ApiQueryProps> = () => {
     unwrapCodeButtonLabel: t('common.code_snippet.unwrap_code_button_label'),
   };
   const translate = t as unknown as (key: string) => string;
+
+  function selectedOptionChanged(selectedItem: SelectOption | undefined) {
+    if (selectedItem) {
+      setSelectedFormat(selectedItem.value);
+    }
+  }
 
   return (
     <div className={cl(styles.apiQuery)}>
@@ -54,7 +67,7 @@ export const ApiQuery: React.FC<ApiQueryProps> = () => {
               ),
             }))
             .find((option) => option.value === selectedFormat)}
-          onChange={(e: any) => setSelectedFormat(e.target.value)}
+          onChange={selectedOptionChanged}
           options={fileFormats.map((format) => ({
             value: format.value,
             label: translate(
