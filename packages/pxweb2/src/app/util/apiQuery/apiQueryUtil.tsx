@@ -105,7 +105,12 @@ function getGetParams(variablesSelection: VariablesSelection): string {
   }
 
   const params: string[] = variablesSelection.selection
-    .filter((item) => item.variableCode && Array.isArray(item.valueCodes) && item.valueCodes.length > 0)
+    .filter(
+      (item) =>
+        item.variableCode &&
+        Array.isArray(item.valueCodes) &&
+        item.valueCodes.length > 0,
+    )
     .map((item) => {
       const key = `valuecodes[${encodeURIComponent(item.variableCode)}]`;
       const value = (item.valueCodes ?? []).map(encodeURIComponent).join(',');
