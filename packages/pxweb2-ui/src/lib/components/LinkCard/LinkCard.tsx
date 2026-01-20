@@ -8,13 +8,13 @@ import { getIconDirection } from '../../util/util';
 import { Heading, Icon, IconProps } from '@pxweb2/pxweb2-ui';
 
 export interface LinkCardProps {
-  icon?: IconProps['iconName'];
-  headingText: string;
-  description?: string;
-  href: string;
-  newTab?: boolean;
-  headingType?: 'span' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
-  size?: 'small' | 'medium';
+  readonly icon?: IconProps['iconName'];
+  readonly headingText: string;
+  readonly description?: string;
+  readonly href: string;
+  readonly newTab?: boolean;
+  readonly headingType?: 'span' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+  readonly size?: 'small' | 'medium';
   readonly languageDirection?: 'ltr' | 'rtl';
 }
 
