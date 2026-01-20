@@ -104,19 +104,22 @@ function getGetParams(variablesSelection: VariablesSelection): string {
     return '';
   }
 
-  const params: string[] = variablesSelection.selection
-    .filter(
-      (item) =>
-        item.variableCode &&
-        Array.isArray(item.valueCodes) &&
-        item.valueCodes.length > 0,
-    )
-    .map((item) => {
+  const params: string[] = [];
+  variablesSelection.selection.forEach((item) => {
+    if (
+      item.variableCode &&
+      Array.isArray(item.valueCodes) &&
+      item.valueCodes.length > 0
+    ) {
       const key = `valuecodes[${encodeURIComponent(item.variableCode)}]`;
-      const value = (item.valueCodes ?? []).map(encodeURIComponent).join(',');
-      return `${key}=${value}`;
-    });
-
+      const value = item.valueCodes.map(encodeURIComponent).join(',');
+      params.push(`${key}=${value}`);
+    }
+    if (item.variableCode && item.codelist) {
+      const codelistKey = `codelist[${encodeURIComponent(item.variableCode)}]`;
+      params.push(`${codelistKey}=${encodeURIComponent(item.codelist)}`);
+    }
+  });
   return params.length > 0 ? '&' + params.join('&') : '';
 }
 
