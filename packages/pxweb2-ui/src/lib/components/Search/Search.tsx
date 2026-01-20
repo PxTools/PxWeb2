@@ -7,7 +7,6 @@ import {
   useCallback,
 } from 'react';
 import cl from 'clsx';
-import { useTranslation } from 'react-i18next';
 
 import classes from './Search.module.scss';
 import { Icon } from '../Icon/Icon';
@@ -48,9 +47,7 @@ export const Search = forwardRef<SearchHandle, SearchProps>(
     const inputRef = useRef<HTMLInputElement>(null);
     const combinedRef = (ref || inputRef) as React.RefObject<SearchHandle>;
 
-    const { t } = useTranslation();
-    const ariaLabelClear =
-      arialLabelClearButtonText ?? t('aria_label_clear_button_text');
+    const ariaLabelClear = arialLabelClearButtonText ?? 'aria_label_clear_button_text';
 
     useEffect(() => {
       setInputValue(value);
