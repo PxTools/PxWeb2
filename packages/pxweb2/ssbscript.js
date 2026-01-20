@@ -84,7 +84,7 @@
         'Velkommen til nye Statistikkbanken! Vi jobber med de siste detaljene. ' +
           'Skulle du savne noe, kan du fortsatt ',
       );
-      mytext = 'bruke den gamle versjonen';
+      mytext = 'bruke den gamle løsningen';
     }
     const newUrl = computeTransformedUrl();
     const linkId = 'myLink';
