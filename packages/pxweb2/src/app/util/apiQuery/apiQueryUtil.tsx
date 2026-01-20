@@ -120,6 +120,29 @@ function getGetParams(variablesSelection: VariablesSelection): string {
       params.push(`${codelistKey}=${encodeURIComponent(item.codelist)}`);
     }
   });
+  // Add heading and stub if placement exists
+  if (variablesSelection.placement) {
+    if (
+      Array.isArray(variablesSelection.placement.heading) &&
+      variablesSelection.placement.heading.length > 0
+    ) {
+      params.push(
+        'heading=' +
+          variablesSelection.placement.heading
+            .map(encodeURIComponent)
+            .join(','),
+      );
+    }
+    if (
+      Array.isArray(variablesSelection.placement.stub) &&
+      variablesSelection.placement.stub.length > 0
+    ) {
+      params.push(
+        'stub=' +
+          variablesSelection.placement.stub.map(encodeURIComponent).join(','),
+      );
+    }
+  }
   return params.length > 0 ? '&' + params.join('&') : '';
 }
 
