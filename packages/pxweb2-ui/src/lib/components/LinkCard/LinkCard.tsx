@@ -28,10 +28,6 @@ export function LinkCard({
   size = 'medium',
   languageDirection = 'ltr',
 }: LinkCardProps) {
-  // if (headingText.length < 1) {
-  //   throw new Error('heading must be at least 1 character');
-  // }
-
   const iconArrow = getIconDirection(
     languageDirection,
     'ArrowRight',
@@ -100,14 +96,6 @@ export function LinkCard({
                 styles[`heading-${headingSize}`],
               ])}
             >
-              {/* <a
-                href={href}
-                target={newTab ? '_blank' : undefined}
-                rel={newTab ? 'noopener noreferrer' : undefined}
-                className={cl([styles[`heading-${headingSize}`]])}
-              >
-                {headingText}
-              </a> */}
               {headingText}
             </span>
           ) : (
@@ -116,14 +104,6 @@ export function LinkCard({
               level={headingLevel}
               className={cl(styles['heading-wrapper'])}
             >
-              {/* <a
-                href={href}
-                target={newTab ? '_blank' : undefined}
-                rel={newTab ? 'noopener noreferrer' : undefined}
-                className={cl(styles[`heading-${headingSize}`])}
-              >
-                {headingText}
-              </a> */}
               {headingText}
             </Heading>
           ))}
