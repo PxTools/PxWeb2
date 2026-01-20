@@ -74,7 +74,9 @@ describe('LinkCard', () => {
 
   it('should navigate to href on click', async () => {
     const user = userEvent.setup();
-    const handleClickSpy = vi.spyOn(globalThis, 'open' as any).mockReturnValue(null);
+    const handleClickSpy = vi
+      .spyOn(globalThis, 'open' as any)
+      .mockReturnValue(null);
 
     const { getByRole } = render(
       <LinkCard headingText="Test Heading" href="https://example.com" />,
