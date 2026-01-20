@@ -14,6 +14,7 @@ export const Default: Story = {
     headingText: 'Link card with header',
     description: 'This is a medium link card with heading and description.',
     href: 'https://www.ssb.no  ',
+    icon: 'Book',
   },
   render: (args: LinkCardProps) => <LinkCard {...args} />,
 };
