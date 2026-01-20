@@ -18,7 +18,7 @@ export type ApiQueryInfoType = {
 
 function getApiQueryInfo(
   variablesSelection: VariablesSelection,
-  tableId?: string,
+  tableId: string,
   language: string = config.language.defaultLanguage,
   outputFormat: string = 'json-stat2',
 ): ApiQueryInfoType {
@@ -52,7 +52,7 @@ export function useApiQueryInfo(
 
   return getApiQueryInfo(
     variablesSelection,
-    tableId,
+    tableId ?? '',
     language ?? config.language.defaultLanguage,
     outputFormat ?? 'json-stat2',
   );
