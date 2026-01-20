@@ -98,9 +98,21 @@ function getVariablesSelection(
 
   return variablesSelection;
 }
+
 function getGetParams(variablesSelection: VariablesSelection): string {
-  console.log({ variablesSelection });
-  return '';
+  if (!variablesSelection) {
+    return '';
+  }
+
+  const params: string[] = variablesSelection.selection
+    .filter((item) => item.variableCode && item.valueCodes.length > 0)
+    .map((item) => {
+      const key = `valuecodes[${encodeURIComponent(item.variableCode)}]`;
+      const value = item.valueCodes.map(encodeURIComponent).join(',');
+      return `${key}=${value}`;
+    });
+
+  return params.length > 0 ? '&' + params.join('&') : '';
 }
 
 function getPostBody(variablesSelection: VariablesSelection): string {
