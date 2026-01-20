@@ -336,7 +336,6 @@ export function VariableBoxContent({
             searchPlaceHolder={t(
               'presentation_page.side_menu.selection.variablebox.search.placeholder',
             )}
-         
             variableBoxTopBorderOverride={hasSelectAndSearch}
           />
         </div>

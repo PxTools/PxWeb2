@@ -47,8 +47,6 @@ export const Search = forwardRef<SearchHandle, SearchProps>(
     const inputRef = useRef<HTMLInputElement>(null);
     const combinedRef = (ref || inputRef) as React.RefObject<SearchHandle>;
     const { t } = useTranslation();
-    
-            
 
     useEffect(() => {
       setInputValue(value);
@@ -135,7 +133,9 @@ export const Search = forwardRef<SearchHandle, SearchProps>(
               onKeyDown={(e) => {
                 handleKeyDown(e, true);
               }}
-              aria-label={t('presentation_page.side_menu.selection.variablebox.search.aria_label_clear_button_text')}
+              aria-label={t(
+                'presentation_page.side_menu.selection.variablebox.search.aria_label_clear_button_text',
+              )}
             ></Button>
           )}
         </div>
