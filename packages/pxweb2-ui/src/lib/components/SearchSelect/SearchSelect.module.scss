@@ -28,6 +28,19 @@
     outline-offset: 3px;
     box-shadow: inset 0 0 0 3px var(--px-color-border-focus-boxshadow);
   }
+
+  &:hover {
+    border-radius: var(--px-border-radius-medium);
+    box-shadow: inset 0 0 0 2px var(--px-color-border-hover);
+    background: var(--px-color-surface-default);
+  }
+
+  /* Apply outline when the INPUT has keyboard focus */
+  &:has(input:focus-visible) {
+    outline: 3px solid var(--px-color-border-focus-outline);
+    outline-offset: 3px;
+    box-shadow: inset 0 0 0 3px var(--px-color-border-focus-boxshadow);
+  }
 }
 
 .input {
