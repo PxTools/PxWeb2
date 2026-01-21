@@ -1,30 +1,31 @@
+@use '$ui/style-dictionary/dist/scss/fixed-variables.scss' as fixed;
+
 .apiQuery {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 16px;
+  gap: fixed.$spacing-4;
   align-self: stretch;
-  // border: 1px solid black;
 }
 
 .descriptionAndLink {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 8px;
+  gap: fixed.$spacing-2;
   align-self: stretch;
 }
 
 .descriptionWrapper {
   display: flex;
-  padding: 4px 8px 0 8px;
+  padding: fixed.$spacing-1 fixed.$spacing-2 0 fixed.$spacing-2;
   align-items: flex-start;
   align-self: stretch;
 }
 
 .linkWrapper {
   display: flex;
-  padding: 0 8px;
+  padding: 0 fixed.$spacing-2;
   flex-direction: column;
   align-items: flex-start;
   align-self: stretch;
@@ -32,7 +33,7 @@
 
 .selectWrapper {
   display: flex;
-  padding: 12px 8px 0 8px;
+  padding: fixed.$spacing-3 fixed.$spacing-2 0 fixed.$spacing-2;
   flex-direction: column;
   align-items: flex-start;
   align-self: stretch;
@@ -40,15 +41,15 @@
 
 .chipsWrapper {
   display: flex;
-  padding: 8px 8px 0 8px;
+  padding: fixed.$spacing-2 fixed.$spacing-2 0 fixed.$spacing-2;
   align-items: center;
-  gap: 8px;
+  gap: fixed.$spacing-2;
   align-self: stretch;
 }
 
 .codeSnippetWrapper {
   display: flex;
-  padding: 8px;
+  padding: fixed.$spacing-2;
   flex-direction: column;
   align-items: flex-start;
   align-self: stretch;

@@ -22,12 +22,11 @@ function getApiQueryInfo(
   language: string = config.language.defaultLanguage,
   outputFormat: string = 'json-stat2',
 ): ApiQueryInfoType {
-  // https://api.scb.se/OV0104/v2beta/api/v2/tables/TAB4410/data?lang=en&outputFormat=json-stat2
   let apiUrl = config.apiUrl;
   if (tableId) {
     apiUrl += `/tables/${tableId}/data`;
   } else {
-    apiUrl += '/data';
+    apiUrl += '/tables/tableId/data';
   }
   apiUrl += '?lang=' + encodeURIComponent(language);
   apiUrl += '&outputFormat=' + encodeURIComponent(outputFormat);
