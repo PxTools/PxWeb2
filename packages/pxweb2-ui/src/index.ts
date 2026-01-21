@@ -19,6 +19,7 @@ export * from './lib/components/Icon/Icon';
 export * from './lib/components/Icon/ActionItemIcon';
 export * from './lib/components/InformationCard/InformationCard';
 export * from './lib/components/Link/Link';
+export * from './lib/components/LinkCard/LinkCard';
 export * from './lib/components/List';
 export * from './lib/components/LocalAlert/LocalAlert';
 export * from './lib/components/Notes/MandatoryNotes';
