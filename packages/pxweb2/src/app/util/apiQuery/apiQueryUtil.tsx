@@ -68,9 +68,24 @@ function getVariablesSelection(
   const ids = variables.getUniqueIds();
   ids.forEach((id) => {
     const selectedCodeList = variables.getSelectedCodelistById(id);
+    let valueCodes = variables.getSelectedValuesByIdSorted(id);
+
+    // Find the corresponding variable in pxTableMetadata
+    const pxVar = variables.pxTableMetadata?.variables?.find(
+      (v) => v.id === id,
+    );
+    if (
+      pxVar &&
+      Array.isArray(pxVar.values) &&
+      valueCodes.length === pxVar.values.length
+    ) {
+      // All values selected: use ["*"]
+      valueCodes = ['*'];
+    }
+
     const selection: VariableSelection = {
       variableCode: id,
-      valueCodes: variables.getSelectedValuesByIdSorted(id),
+      valueCodes,
     };
 
     // Add selected codelist to selection if it exists
