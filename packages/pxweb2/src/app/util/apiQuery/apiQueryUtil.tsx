@@ -23,10 +23,8 @@ function getApiQueryInfo(
   outputFormat: string = 'json-stat2',
 ): ApiQueryInfoType {
   // Normalize outputFormat if needed
-  let normalizedOutputFormat = outputFormat;
-  if (outputFormat === 'jsonstat2') {
-    normalizedOutputFormat = 'json-stat2';
-  }
+  const normalizedOutputFormat =
+    outputFormat === 'jsonstat2' ? 'json-stat2' : outputFormat;
 
   let apiUrl = config.apiUrl;
   if (tableId) {
@@ -56,10 +54,8 @@ export function useApiQueryInfo(
   const tableId = variables.pxTableMetadata?.id;
 
   // Normalize outputFormat if needed
-  let normalizedOutputFormat = outputFormat;
-  if (outputFormat === 'jsonstat2') {
-    normalizedOutputFormat = 'json-stat2';
-  }
+  const normalizedOutputFormat =
+    outputFormat === 'jsonstat2' ? 'json-stat2' : outputFormat;
   return getApiQueryInfo(
     variablesSelection,
     tableId ?? '',
