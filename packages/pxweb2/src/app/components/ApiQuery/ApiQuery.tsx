@@ -98,25 +98,27 @@ export const ApiQuery: React.FC<ApiQueryProps> = () => {
           </Chips.Toggle>
         </Chips>
       </div>
-      <div className={cl(styles.codeSnippetWrapper)}>
-        <CodeSnippet
-          title={`${httpMethod} URL`}
-          translations={codeSnippetTranslations}
-        >
-          {httpMethod === 'GET' ? apiQueryInfo.getUrl : apiQueryInfo.postUrl}
-        </CodeSnippet>
-      </div>
-      {httpMethod === 'POST' && (
+      <div className={cl(styles.postWrapper)}>
         <div className={cl(styles.codeSnippetWrapper)}>
           <CodeSnippet
-            highlight="json"
-            title={t('presentation_page.side_menu.save.api.post_body_text')}
+            title={`${httpMethod} URL`}
             translations={codeSnippetTranslations}
           >
-            {apiQueryInfo.postBody}
+            {httpMethod === 'GET' ? apiQueryInfo.getUrl : apiQueryInfo.postUrl}
           </CodeSnippet>
         </div>
-      )}
+        {httpMethod === 'POST' && (
+          <div className={cl(styles.codeSnippetWrapper)}>
+            <CodeSnippet
+              highlight="json"
+              title={t('presentation_page.side_menu.save.api.post_body_text')}
+              translations={codeSnippetTranslations}
+            >
+              {apiQueryInfo.postBody}
+            </CodeSnippet>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
