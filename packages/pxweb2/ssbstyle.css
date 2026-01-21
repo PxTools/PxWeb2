@@ -1,0 +1,66 @@
+.container {
+  @media (min-width: 0px) and (max-width: 575px) {
+    padding: 20px 16px;
+  }
+  @media (min-width: 576px) and (max-width: 767px) {
+    padding: 20px 24px;
+  }
+  @media (min-width: 768px) and (max-width: 991px) {
+    padding: 20px 24px;
+  }
+  @media (min-width: 992px) and (max-width: 1199px) {
+    padding: 20px 24px;
+  }
+  @media (min-width: 1200px) and (max-width: 1399px) {
+    padding: 20px 24px;
+  }
+  @media (min-width: 1400px) {
+    padding: 20px 24px;
+  }
+}
+
+.oldLinkClass {
+  display: inline-flex;
+  background-color: #c3e6fe;
+  width: 100%;
+  font-family: 'PxWeb-font';
+  font-weight: 400;
+  font-size: 1rem;
+  font-style: normal;
+  line-height: 1.75rem;
+  text-decoration: none;
+  color: #162327;
+  gap: 12px;
+}
+a.oldLinkClass {
+  display: inline;
+  padding: 0px;
+  text-decoration-line: underline;
+  color: #274247;
+}
+a.oldLinkClass:hover {
+  text-decoration: none;
+}
+a.oldLinkClass:focus-visible {
+  outline: 3px solid var(--px-color-border-focus-outline);
+  outline-offset: 5px;
+  box-shadow: 0 0 0 3px var(--px-color-border-focus-boxshadow);
+}
+svg.info-icon {
+  min-width: max-content;
+}
+.info-text {
+  margin-block-start: 0px;
+}
+
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}

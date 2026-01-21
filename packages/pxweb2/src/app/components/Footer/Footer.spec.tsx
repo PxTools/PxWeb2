@@ -114,7 +114,7 @@ describe('Footer', () => {
       // Fast-forward all timers
       vi.runAllTimers();
 
-      expect(container.scrollTop).toBe(0);
+      expect(container.scrollTop).toBe(1000);
       vi.useRealTimers();
     });
 

@@ -36,7 +36,7 @@ export function scrollToTop(ref?: React.RefObject<HTMLDivElement | null>) {
     function animateScroll(time: number) {
       const elapsed = time - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      container.scrollTop = start * (1 - progress);
+      window.scrollTo({ top: start * (1 - progress), behavior: 'smooth' });
       if (progress < 1) {
         requestAnimationFrame(animateScroll);
       }
