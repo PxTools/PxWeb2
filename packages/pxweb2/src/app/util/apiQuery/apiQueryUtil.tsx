@@ -22,6 +22,12 @@ function getApiQueryInfo(
   language: string = config.language.defaultLanguage,
   outputFormat: string = 'json-stat2',
 ): ApiQueryInfoType {
+  // Normalize outputFormat if needed
+  let normalizedOutputFormat = outputFormat;
+  if (outputFormat === 'jsonstat2') {
+    normalizedOutputFormat = 'json-stat2';
+  }
+
   let apiUrl = config.apiUrl;
   if (tableId) {
     apiUrl += `/tables/${tableId}/data`;
@@ -29,7 +35,7 @@ function getApiQueryInfo(
     apiUrl += '/tables/tableId/data';
   }
   apiUrl += '?lang=' + encodeURIComponent(language);
-  apiUrl += '&outputFormat=' + encodeURIComponent(outputFormat);
+  apiUrl += '&outputFormat=' + encodeURIComponent(normalizedOutputFormat);
 
   return {
     getUrl: apiUrl + getGetParams(variablesSelection),
@@ -49,11 +55,16 @@ export function useApiQueryInfo(
   const variablesSelection = getVariablesSelection(variables, heading, stub);
   const tableId = variables.pxTableMetadata?.id;
 
+  // Normalize outputFormat if needed
+  let normalizedOutputFormat = outputFormat;
+  if (outputFormat === 'jsonstat2') {
+    normalizedOutputFormat = 'json-stat2';
+  }
   return getApiQueryInfo(
     variablesSelection,
     tableId ?? '',
     language ?? config.language.defaultLanguage,
-    outputFormat ?? 'json-stat2',
+    normalizedOutputFormat ?? 'json-stat2',
   );
 }
 
