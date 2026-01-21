@@ -2,7 +2,7 @@ import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
 
 import classes from './AboutLinks.module.scss';
-import { Heading, BodyLong } from '@pxweb2/pxweb2-ui';
+import { Heading, BodyLong, LinkCard } from '@pxweb2/pxweb2-ui';
 
 interface AboutTextsProps {
   readonly title: string;
@@ -75,22 +75,33 @@ export function AboutLinks({
         />
       )}
       <div className={cl(classes.linkCardContainer)}>
-        <p>(The links below should be LinkCard components)</p>
-        <a
+        {/* <p>(The links below should be LinkCard components)</p> */}
+        <LinkCard
+          href={statisticsHomepage.href}
+          headingText={statisticsHomepageText}
+          size="small"
+        ></LinkCard>
+        {/* <a
           href={statisticsHomepage.href}
           target="_blank"
           rel="noreferrer noopener"
         >
+
           {statisticsHomepageText}
-        </a>
+        </a> */}
         {aboutStatistic && (
-          <a
+          <LinkCard
             href={aboutStatistic.href}
-            target="_blank"
-            rel="noreferrer noopener"
-          >
-            {aboutStatisticsText}
-          </a>
+            headingText={aboutStatisticsText || ''}
+            size="small"
+          ></LinkCard>
+          // <a
+          //   href={aboutStatistic.href}
+          //   target="_blank"
+          //   rel="noreferrer noopener"
+          // >
+          //   {aboutStatisticsText}
+          // </a>
         )}
       </div>
     </div>
