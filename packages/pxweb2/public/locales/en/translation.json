@@ -254,8 +254,16 @@
         },
         "api": {
           "title": "API",
-          "description": "Description text...",
-          "query": "API query"
+          "description": "Here you’ll find the API query for the table. Use GET for small queries (under about 2 100 characters) and POST for larger or more complex ones",
+          "query": "API query",
+          "link_text": "Learn more about using the API",
+          "link_url": "https://www.pxtools.net/PxWebApi/documentation/user-guide/",
+          "select_format": "Select format",
+          "get_button_text": "GET",
+          "post_button_text": "POST",
+          "url_text": "URL",
+          "post_body_text": "POST BODY",
+          "select_http_method_aria": "Select HTTP request method"
         }
       },
       "help": {

@@ -43,21 +43,22 @@ export const ApiQuery: React.FC<ApiQueryProps> = () => {
       <div className={cl(styles.descriptionAndLink)}>
         <div className={cl(styles.descriptionWrapper)}>
           <BodyLong size="medium">
-            API query description text. API query description text. API query
-            description text. API query description text. API query description
-            text. API query description text. API query description text. API
-            query description text.
+            {t('presentation_page.side_menu.save.api.description')}
           </BodyLong>
         </div>
         <div className={cl(styles.linkWrapper)}>
-          <Link href="#" size="medium">
-            Read more about API
+          <Link
+            href={t('presentation_page.side_menu.save.api.link_url')}
+            size="medium"
+            target="_blank"
+          >
+            {t('presentation_page.side_menu.save.api.link_text')}
           </Link>
         </div>
       </div>
       <div className={cl(styles.selectWrapper)}>
         <Select
-          label="Select format"
+          label={t('presentation_page.side_menu.save.api.select_format')}
           variant="default"
           selectedOption={fileFormats
             .map((format) => ({
@@ -77,20 +78,24 @@ export const ApiQuery: React.FC<ApiQueryProps> = () => {
         />
       </div>
       <div className={cl(styles.chipsWrapper)}>
-        <Chips>
+        <Chips
+          aria-label={t(
+            'presentation_page.side_menu.save.api.select_http_method_aria',
+          )}
+        >
           <Chips.Toggle
             selected={httpMethod === 'GET'}
             checkmark={false}
             onClick={() => setHttpMethod('GET')}
           >
-            GET
+            {t('presentation_page.side_menu.save.api.get_button_text')}
           </Chips.Toggle>
           <Chips.Toggle
             selected={httpMethod === 'POST'}
             checkmark={false}
             onClick={() => setHttpMethod('POST')}
           >
-            POST
+            {t('presentation_page.side_menu.save.api.post_button_text')}
           </Chips.Toggle>
         </Chips>
       </div>
@@ -106,7 +111,7 @@ export const ApiQuery: React.FC<ApiQueryProps> = () => {
         <div className={cl(styles.codeSnippetWrapper)}>
           <CodeSnippet
             highlight="json"
-            title={`POST BODY`}
+            title={t('presentation_page.side_menu.save.api.post_body_text')}
             translations={codeSnippetTranslations}
           >
             {apiQueryInfo.postBody}
