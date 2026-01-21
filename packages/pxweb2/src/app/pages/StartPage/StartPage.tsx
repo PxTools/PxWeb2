@@ -65,7 +65,7 @@ const StartPage = () => {
   const { state, dispatch } = useContext(FilterContext);
   useFilterUrlSync(state, dispatch, t);
 
-  const accessibilityContext = useContext(AccessibilityContext);
+  const accessibility = useContext(AccessibilityContext);
 
   const paginationCount = 15;
   const isSmallScreen = isTablet === true || isMobile === true;
@@ -121,6 +121,7 @@ const StartPage = () => {
   const noResultSearchHelpContent =
     localeContent?.startPage?.noResultSearchHelp;
   const showBreadCrumb = getConfig().showBreadCrumbOnStartPage;
+
 
   // Run once when initially loading the page, then again if language changes
   // We want to try fetching tables in the selected language if possible
@@ -197,18 +198,18 @@ const StartPage = () => {
 
   useEffect(() => {
     if (isSmallScreen && isFilterOverlayOpen) {
-      accessibilityContext?.addModal('filterOverlay', () =>
+      accessibility?.addModal('filterOverlay', () =>
         setIsFilterOverlayOpen(false),
       );
     } else {
-      accessibilityContext?.removeModal('filterOverlay');
+      accessibility?.removeModal('filterOverlay');
     }
-    return () => accessibilityContext?.removeModal('filterOverlay');
-  }, [accessibilityContext, isSmallScreen, isFilterOverlayOpen]);
+    return () => accessibility?.removeModal('filterOverlay');
+  }, [accessibility, isSmallScreen, isFilterOverlayOpen]);
 
   useEffect(() => {
     if (
-      !accessibilityContext ||
+      !accessibility ||
       !isFilterOverlayOpen ||
       !filterOverlayRef.current
     ) {
@@ -226,13 +227,13 @@ const StartPage = () => {
     const last = focusable.at(-1) || filterBackButtonRef.current || null;
 
     if (first && last) {
-      accessibilityContext.addFocusOverride(
+      accessibility?.addFocusOverride(
         'filterOverlay-first',
         first,
         last,
         undefined,
       );
-      accessibilityContext.addFocusOverride(
+      accessibility?.addFocusOverride(
         'filterOverlay-last',
         last,
         undefined,
@@ -241,10 +242,10 @@ const StartPage = () => {
     }
 
     return () => {
-      accessibilityContext.removeFocusOverride('filterOverlay-first');
-      accessibilityContext.removeFocusOverride('filterOverlay-last');
+      accessibility?.removeFocusOverride('filterOverlay-first');
+      accessibility?.removeFocusOverride('filterOverlay-last');
     };
-  }, [accessibilityContext, isFilterOverlayOpen]);
+  }, [accessibility, isFilterOverlayOpen]);
 
   useEffect(() => {
     if (visibleCount === lastVisibleCount && isPaginating) {
