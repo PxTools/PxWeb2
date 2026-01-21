@@ -122,7 +122,6 @@ const StartPage = () => {
     localeContent?.startPage?.noResultSearchHelp;
   const showBreadCrumb = getConfig().showBreadCrumbOnStartPage;
 
-
   // Run once when initially loading the page, then again if language changes
   // We want to try fetching tables in the selected language if possible
   useEffect(() => {
@@ -208,11 +207,7 @@ const StartPage = () => {
   }, [accessibility, isSmallScreen, isFilterOverlayOpen]);
 
   useEffect(() => {
-    if (
-      !accessibility ||
-      !isFilterOverlayOpen ||
-      !filterOverlayRef.current
-    ) {
+    if (!accessibility || !isFilterOverlayOpen || !filterOverlayRef.current) {
       return;
     }
 
