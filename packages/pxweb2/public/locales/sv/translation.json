@@ -257,7 +257,7 @@
           "description": "Här kan du hämta API-frågan för tabellen du tagit ut. Använd GET om frågan är liten (under ca 2 100 tecken) och POST om frågan är stor och mer detaljerad.",
           "query": "API-uttag",
           "link_text": "Läs mer om att använda API:et",
-          "link_url": "https://www.pxtools.net/PxWebApi/documentation/user-guide/",
+          "link_url": "",
           "select_format": "Välj format",
           "get_button_text": "GET",
           "post_button_text": "POST",

@@ -31,6 +31,7 @@ export const ApiQuery: React.FC<ApiQueryProps> = () => {
     unwrapCodeButtonLabel: t('common.code_snippet.unwrap_code_button_label'),
   };
   const translate = t as unknown as (key: string) => string;
+  const apiLinkUrl = t('presentation_page.side_menu.save.api.link_url');
 
   function selectedOptionChanged(selectedItem: SelectOption | undefined) {
     if (selectedItem) {
@@ -46,15 +47,13 @@ export const ApiQuery: React.FC<ApiQueryProps> = () => {
             {t('presentation_page.side_menu.save.api.description')}
           </BodyLong>
         </div>
-        <div className={cl(styles.linkWrapper)}>
-          <Link
-            href={t('presentation_page.side_menu.save.api.link_url')}
-            size="medium"
-            target="_blank"
-          >
-            {t('presentation_page.side_menu.save.api.link_text')}
-          </Link>
-        </div>
+        {apiLinkUrl && (
+          <div className={cl(styles.linkWrapper)}>
+            <Link href={apiLinkUrl} size="medium" target="_blank">
+              {t('presentation_page.side_menu.save.api.link_text')}
+            </Link>
+          </div>
+        )}
       </div>
       <div className={cl(styles.selectWrapper)}>
         <Select
