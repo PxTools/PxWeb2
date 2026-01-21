@@ -8,6 +8,11 @@ import { AboutLinks } from './AboutLinks';
 vi.mock('@pxweb2/pxweb2-ui', () => ({
   Heading: ({ children }: { children: ReactNode }) => <h3>{children}</h3>,
   BodyLong: ({ children }: { children: ReactNode }) => <p>{children}</p>,
+  LinkCard: ({ href, headingText }: { href: string; headingText: string }) => (
+    <a href={href} data-testid="link-card">
+      {headingText}
+    </a>
+  ),
 }));
 
 let translations: Record<string, string> = {};
