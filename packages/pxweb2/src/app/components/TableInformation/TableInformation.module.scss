@@ -8,10 +8,11 @@
 
 .tabsContent {
   // Not from Figma
-  overflow-y: auto;
+  //overflow-y: auto;
   padding-top: fixed.$spacing-10;
   padding-bottom: fixed.$spacing-10;
   width: 100%;
+  overflow: visible;
 
   &.mobileView {
     padding: fixed.$spacing-6 fixed.$spacing-5 fixed.$spacing-6 fixed.$spacing-5;
