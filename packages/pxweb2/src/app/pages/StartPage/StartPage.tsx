@@ -195,6 +195,8 @@ const StartPage = () => {
     };
   }, [isFilterOverlayOpen, isSmallScreen]);
 
+  // Register and unregister the filter overlay as a modal with the app’s AccessibilityContext,
+  // so global accessibility behaviors (like closing via Escape) apply on small screens.
   useEffect(() => {
     if (isSmallScreen && isFilterOverlayOpen) {
       accessibility?.addModal('filterOverlay', () =>
@@ -206,6 +208,9 @@ const StartPage = () => {
     return () => accessibility?.removeModal('filterOverlay');
   }, [accessibility, isSmallScreen, isFilterOverlayOpen]);
 
+// Trap keyboard focus inside the mobile filter overlay while it’s open, ensuring accessible tabbing.
+// Runs only when accessibility is available, the overlay is open (isFilterOverlayOpen),
+// and the overlay’s container ref (filterOverlayRef) is set.
   useEffect(() => {
     if (!accessibility || !isFilterOverlayOpen || !filterOverlayRef.current) {
       return;
