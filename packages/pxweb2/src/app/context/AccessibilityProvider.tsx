@@ -68,8 +68,7 @@ export const AccessibilityProvider = ({
     // }
   }, [modals, focusOverrides]);
 
-
-   //This function updates the modal state by removing the last modal from the stack.
+  //This function updates the modal state by removing the last modal from the stack.
   const closeModal = useCallback(() => {
     setModals((prev) => {
       if (prev.length === 0) {
