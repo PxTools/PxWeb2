@@ -56,8 +56,6 @@
   width: 100%;
   max-width: 100%;
   min-width: 0;
-  max-height: 600px;
-  overflow-y: auto;
 }
 
 .postWrapper {
@@ -72,10 +70,4 @@
   width: 100%;
   max-width: 100%;
   min-width: 0;
-}
-
-.codeSnippetWrapper pre,
-.codeSnippetWrapper code {
-  max-width: 100%;
-  overflow-x: auto;
 }
