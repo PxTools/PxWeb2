@@ -40,7 +40,7 @@ function getApiQueryInfo(
   };
 }
 
-function getNormalizedOutput(outputFormat: string): string {
+export function getNormalizedOutput(outputFormat: string): string {
   if (!outputFormat || outputFormat.trim() === '') {
     return 'json-stat2';
   }
