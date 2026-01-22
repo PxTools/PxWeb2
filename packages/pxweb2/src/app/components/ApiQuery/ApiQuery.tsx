@@ -112,7 +112,7 @@ export const ApiQuery: React.FC<ApiQueryProps> = () => {
           <div className={cl(styles.codeSnippetWrapper)}>
             <CodeSnippet
               highlight="json"
-              maxHeight="600px"
+              maxHeight="644px"
               title={t('presentation_page.side_menu.save.api.post_body_text')}
               translations={codeSnippetTranslations}
             >
