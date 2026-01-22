@@ -64,7 +64,9 @@ export function useApiQueryInfo(
   const variablesSelection = getVariablesSelection(variables, heading, stub);
   const tableId = variables.pxTableMetadata?.id;
 
-  const normalizedOutputFormat = getNormalizedOutput(outputFormat ?? 'json-stat2');
+  const normalizedOutputFormat = getNormalizedOutput(
+    outputFormat ?? 'json-stat2',
+  );
 
   return getApiQueryInfo(
     variablesSelection,
