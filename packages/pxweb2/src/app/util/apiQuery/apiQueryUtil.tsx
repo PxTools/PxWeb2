@@ -22,9 +22,7 @@ function getApiQueryInfo(
   language: string = config.language.defaultLanguage,
   outputFormat: string = 'json-stat2',
 ): ApiQueryInfoType {
-  // Normalize outputFormat if needed
-  const normalizedOutputFormat =
-    outputFormat === 'jsonstat2' ? 'json-stat2' : outputFormat;
+  const normalizedOutputFormat = getNormalizedOutput(outputFormat);
 
   let apiUrl = config.apiUrl;
   if (tableId) {
@@ -42,6 +40,19 @@ function getApiQueryInfo(
   };
 }
 
+function getNormalizedOutput(outputFormat: string): string {
+  if (!outputFormat || outputFormat.trim() === '') {
+    return 'json-stat2';
+  }
+  if (outputFormat === 'jsonstat2') {
+    return 'json-stat2';
+  }
+  if (outputFormat === 'excel') {
+    return 'xlsx';
+  }
+  return outputFormat;
+}
+
 export function useApiQueryInfo(
   language?: string,
   outputFormat?: string,
@@ -53,14 +64,13 @@ export function useApiQueryInfo(
   const variablesSelection = getVariablesSelection(variables, heading, stub);
   const tableId = variables.pxTableMetadata?.id;
 
-  // Normalize outputFormat if needed
-  const normalizedOutputFormat =
-    outputFormat === 'jsonstat2' ? 'json-stat2' : outputFormat;
+  const normalizedOutputFormat = getNormalizedOutput(outputFormat ?? 'json-stat2');
+
   return getApiQueryInfo(
     variablesSelection,
     tableId ?? '',
     language ?? config.language.defaultLanguage,
-    normalizedOutputFormat ?? 'json-stat2',
+    normalizedOutputFormat,
   );
 }
 
