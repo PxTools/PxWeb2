@@ -216,16 +216,23 @@ const StartPage = () => {
       return;
     }
 
+    //filterOverlayRef is a ref to the overlay root DOM element
     const container = filterOverlayRef.current;
+
+    // selects elements that are typically focusable via keyboard
+    //.filter((el) => el.offsetParent !== null) removes elements that are not currently visible / not in layout. This avoids trapping focus on hidden controls.
     const focusable = Array.from(
       container.querySelectorAll<HTMLElement>(
         'a[href], area[href], input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex]:not([tabindex="-1"])',
       ),
     ).filter((el) => el.offsetParent !== null);
 
+    // Define first and last focusable elements, with fallback to back button if none found
     const first = focusable[0] || filterBackButtonRef.current || null;
     const last = focusable.at(-1) || filterBackButtonRef.current || null;
 
+    // Register focus overrides for the first and last focusable elements
+    // to create a focus trap within the overlay
     if (first && last) {
       accessibility?.addFocusOverride(
         'filterOverlay-first',
@@ -241,6 +248,7 @@ const StartPage = () => {
       );
     }
 
+    // Cleanup focus overrides when the overlay is closed or dependencies change
     return () => {
       accessibility?.removeFocusOverride('filterOverlay-first');
       accessibility?.removeFocusOverride('filterOverlay-last');
