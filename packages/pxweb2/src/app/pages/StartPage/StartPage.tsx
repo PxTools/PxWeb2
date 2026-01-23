@@ -25,7 +25,10 @@ import {
   MarkdownRenderer,
 } from '@pxweb2/pxweb2-ui';
 import { type Table } from '@pxweb2/pxweb2-api-client';
-import { AccessibilityProvider } from '../../context/AccessibilityProvider';
+import {
+  AccessibilityProvider,
+  AccessibilityContext,
+} from '../../context/AccessibilityProvider';
 import { Header } from '../../components/Header/Header';
 import { Footer } from '../../components/Footer/Footer';
 import { ErrorMessage } from '../../components/ErrorMessage/ErrorMessage';
@@ -62,6 +65,8 @@ const StartPage = () => {
   const { state, dispatch } = useContext(FilterContext);
   useFilterUrlSync(state, dispatch, t);
 
+  const accessibility = useContext(AccessibilityContext);
+
   const paginationCount = 15;
   const isSmallScreen = isTablet === true || isMobile === true;
   const topicIconComponents = useTopicIcons();
@@ -86,6 +91,7 @@ const StartPage = () => {
   const hasFetchedRef = useRef(false);
   const hasEverHydratedRef = useRef(false);
   const previousLanguage = useRef('');
+  const filterOverlayRef = useRef<HTMLDivElement>(null);
 
   const navigate = useNavigate();
 
@@ -188,6 +194,66 @@ const StartPage = () => {
       document.body.style.overflow = '';
     };
   }, [isFilterOverlayOpen, isSmallScreen]);
+
+  // Register and unregister the filter overlay as a modal with the app’s AccessibilityContext,
+  // so global accessibility behaviors (like closing via Escape) apply on small screens.
+  useEffect(() => {
+    if (isSmallScreen && isFilterOverlayOpen) {
+      accessibility?.addModal('filterOverlay', () =>
+        setIsFilterOverlayOpen(false),
+      );
+    } else {
+      accessibility?.removeModal('filterOverlay');
+    }
+    return () => accessibility?.removeModal('filterOverlay');
+  }, [accessibility, isSmallScreen, isFilterOverlayOpen]);
+
+  // Trap keyboard focus inside the mobile filter overlay while it’s open, ensuring accessible tabbing.
+  // Runs only when accessibility is available, the overlay is open (isFilterOverlayOpen),
+  // and the overlay’s container ref (filterOverlayRef) is set.
+  useEffect(() => {
+    if (!accessibility || !isFilterOverlayOpen || !filterOverlayRef.current) {
+      return;
+    }
+
+    //filterOverlayRef is a ref to the overlay root DOM element
+    const container = filterOverlayRef.current;
+
+    // selects elements that are typically focusable via keyboard
+    //.filter((el) => el.offsetParent !== null) removes elements that are not currently visible / not in layout. This avoids trapping focus on hidden controls.
+    const focusable = Array.from(
+      container.querySelectorAll<HTMLElement>(
+        'a[href], area[href], input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      ),
+    ).filter((el) => el.offsetParent !== null);
+
+    // Define first and last focusable elements, with fallback to back button if none found
+    const first = focusable[0] || filterBackButtonRef.current || null;
+    const last = focusable.at(-1) || filterBackButtonRef.current || null;
+
+    // Register focus overrides for the first and last focusable elements
+    // to create a focus trap within the overlay
+    if (first && last) {
+      accessibility?.addFocusOverride(
+        'filterOverlay-first',
+        first,
+        last,
+        undefined,
+      );
+      accessibility?.addFocusOverride(
+        'filterOverlay-last',
+        last,
+        undefined,
+        first,
+      );
+    }
+
+    // Cleanup focus overrides when the overlay is closed or dependencies change
+    return () => {
+      accessibility?.removeFocusOverride('filterOverlay-first');
+      accessibility?.removeFocusOverride('filterOverlay-last');
+    };
+  }, [accessibility, isFilterOverlayOpen]);
 
   useEffect(() => {
     if (visibleCount === lastVisibleCount && isPaginating) {
@@ -581,6 +647,11 @@ const StartPage = () => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25, ease: 'easeInOut' }}
             className={styles.filterOverlay}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="filterOverlayTitle"
+            aria-describedby="filterOverlayContent"
+            ref={filterOverlayRef}
           >
             <div className={styles.filterOverlayHeader}>
               <Button
@@ -590,10 +661,15 @@ const StartPage = () => {
                 onClick={() => setIsFilterOverlayOpen(false)}
                 ref={filterBackButtonRef}
               />
-              <Heading size="medium">{t('start_page.filter.header')}</Heading>
+              <Heading size="medium" id="filterOverlayTitle">
+                {t('start_page.filter.header')}
+              </Heading>
             </div>
 
-            <div className={styles.filterOverlayContent}>
+            <div
+              className={styles.filterOverlayContent}
+              id="filterOverlayContent"
+            >
               <FilterSidebar onFilterChange={handleFilterChange} />
             </div>
 
