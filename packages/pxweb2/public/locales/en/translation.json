@@ -141,7 +141,7 @@
           "search": {
             "placeholder": "Search in list",
             "label": "Search",
-            "aria_label_clear_button_text": "Clear search icon"
+            "aria_label_clear_button_text": "Clear"
           },
           "header": {
             "tag_selected": "{{selected}} of {{total}} selected",

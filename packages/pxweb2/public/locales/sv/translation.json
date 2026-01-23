@@ -141,7 +141,7 @@
           "search": {
             "placeholder": "Sök i listan",
             "label": "Sök",
-            "aria_label_clear_button_text": "Ikon för att ta bort text i sökfältet"
+            "aria_label_clear_button_text": "Rensa"
           },
           "header": {
             "tag_selected": "{{selected}} av {{total}} valda",

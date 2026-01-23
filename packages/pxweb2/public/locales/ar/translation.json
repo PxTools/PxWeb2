@@ -84,7 +84,7 @@
           "search": {
             "placeholder": "البحث في القائمة",
             "label": "يبحث",
-            "aria_label_clear_button_text": "مسح أيقونة البحث"
+            "aria_label_clear_button_text": "واضح"
           },
           "header": {
             "tag_selected": "{{selected}} ل {{total}} مختارة",
