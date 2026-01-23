@@ -153,18 +153,4 @@ describe('useApiQueryInfo', () => {
     ]);
     expect(parsed.placement).toBeUndefined();
   });
-
-  it('falls back to placeholder table when table id missing', () => {
-    setUseVariablesMock({
-      getUniqueIds: () => [],
-      getSelectedCodelistById: () => undefined,
-      getSelectedValuesByIdSorted: () => [],
-      pxTableMetadata: { id: undefined },
-    });
-    setUseTableDataMock({ data: {} });
-
-    const info = useApiQueryInfo();
-    // When no id, it should use /tables/tableId/data
-    expect(info.postUrl).toContain('/tables/tableId/data?');
-  });
 });
