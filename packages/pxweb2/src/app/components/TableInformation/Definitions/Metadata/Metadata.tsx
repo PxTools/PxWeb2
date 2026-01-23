@@ -37,7 +37,7 @@ export function Metadata({ variablesDefinitions }: MetadataProps) {
               key={variable.variableName}
               className={cl(classes.variableLinkGroup)}
             >
-              <Heading size="xsmall" level="2" spacing={true}>
+              <Heading size="xsmall" level="4" spacing={true}>
                 {variable.variableName}
               </Heading>
 
