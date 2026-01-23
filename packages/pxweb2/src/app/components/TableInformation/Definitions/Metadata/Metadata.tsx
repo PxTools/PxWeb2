@@ -37,11 +37,16 @@ export function Metadata({ variablesDefinitions }: MetadataProps) {
               key={variable.variableName}
               className={cl(classes.variableLinkGroup)}
             >
-              <Heading size="xsmall" level="4" spacing={true}>
-                {variable.variableName}
-              </Heading>
+              <div id={`sidesheet-metadata-${variable.variableName}`}>
+                <Heading size="xsmall" level="4" spacing={true}>
+                  {variable.variableName}
+                </Heading>
+              </div>
 
-              <ul className={cl(classes.linkGroupWrapper)}>
+              <ul
+                className={cl(classes.linkGroupWrapper)}
+                aria-labelledby={`sidesheet-metadata-${variable.variableName}`}
+              >
                 {variable.links.map((link, index) => (
                   <li
                     key={`${link.href}-${index}`}
