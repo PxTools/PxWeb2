@@ -12,6 +12,6 @@ export type VariableDefinition = {
 
 export type Definitions = {
   statisticsHomepage?: DefinitionLink;
-  aboutStatistic?: DefinitionLink;
+  statisticsDefinitions?: DefinitionLink;
   variablesDefinitions?: VariableDefinition[];
 };

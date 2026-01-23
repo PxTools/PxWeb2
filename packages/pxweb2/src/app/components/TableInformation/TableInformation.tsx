@@ -54,10 +54,8 @@ export function TableInformation({
   const SheetComponent = isMobile ? BottomSheet : SideSheet;
   const tabsVariant = isMobile ? 'scrollable' : 'fixed';
 
-  const definitionsExistAndHasMandatoryLink =
-    metadataOrUndefined?.definitions?.statisticsHomepage !== undefined;
-
-  // TODO: which link do we require to consider definitions as existing?
+  const definitionsMandatoryLinkExists =
+    metadataOrUndefined?.definitions?.statisticsDefinitions !== undefined;
 
   return (
     <SheetComponent
@@ -78,7 +76,7 @@ export function TableInformation({
               )}
               controls="pnl-footnotes"
             ></Tab>
-            {definitionsExistAndHasMandatoryLink && (
+            {definitionsMandatoryLinkExists && (
               <Tab
                 id="tab-definitions"
                 label={t(
@@ -116,7 +114,7 @@ export function TableInformation({
             <NotesTab pxTableMetadata={metadataOrUndefined} />
           </TabPanel>
           <TabPanel id="pnl-definitions" controlledBy="tab-definitions">
-            {definitionsExistAndHasMandatoryLink && (
+            {definitionsMandatoryLinkExists && (
               <DefinitionsTab definitions={metadataOrUndefined?.definitions} />
             )}
           </TabPanel>

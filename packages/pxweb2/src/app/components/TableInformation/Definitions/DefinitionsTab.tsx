@@ -10,15 +10,15 @@ interface DefinitionsTabProps {
 }
 
 export function DefinitionsTab({ definitions }: DefinitionsTabProps) {
-  if (!definitions.statisticsHomepage) {
+  if (!definitions.statisticsDefinitions) {
     return null;
   }
 
   return (
     <div className={cl(classes.definitionsTab)}>
       <AboutLinks
-        statisticsHomepage={definitions.statisticsHomepage}
-        aboutStatistic={definitions.aboutStatistic}
+        definitionsLink={definitions.statisticsDefinitions}
+        homepageLink={definitions.statisticsHomepage}
       />
       <Metadata variablesDefinitions={definitions.variablesDefinitions} />
     </div>

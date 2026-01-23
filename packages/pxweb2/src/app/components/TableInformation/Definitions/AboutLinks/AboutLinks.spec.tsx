@@ -28,21 +28,21 @@ describe('AboutLinks', () => {
     translations = {};
   });
 
-  it('renders nothing when statisticsHomepage is missing', () => {
+  it('renders nothing when definitionsLink is missing', () => {
     const { container } = render(
-      <AboutLinks statisticsHomepage={undefined as unknown as never} />,
+      <AboutLinks definitionsLink={undefined as unknown as never} />,
     );
 
     expect(container).toBeEmptyDOMElement();
   });
 
-  it('renders only the homepage link and falls back to label when link text translations are empty', () => {
+  it('renders only the definitions link and falls back to label when link text translations are empty', () => {
     translations = {
       'presentation_page.main_content.about_table.definitions.about_statistics.title':
         '',
       'presentation_page.main_content.about_table.definitions.about_statistics.description':
         '',
-      'presentation_page.main_content.about_table.definitions.about_statistics.link_text_statistics_homepage':
+      'presentation_page.main_content.about_table.definitions.about_statistics.link_text_homepage':
         '',
       'presentation_page.main_content.about_table.definitions.about_statistics.link_text_definitions':
         '',
@@ -50,9 +50,9 @@ describe('AboutLinks', () => {
 
     render(
       <AboutLinks
-        statisticsHomepage={{
+        definitionsLink={{
           href: 'https://example.com',
-          label: 'Stats home',
+          label: 'Stats definitions',
         }}
       />,
     );
@@ -60,10 +60,9 @@ describe('AboutLinks', () => {
     expect(
       screen.queryByRole('heading', { name: /about/i }),
     ).not.toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Stats home' })).toHaveAttribute(
-      'href',
-      'https://example.com',
-    );
+    expect(
+      screen.getByRole('link', { name: 'Stats definitions' }),
+    ).toHaveAttribute('href', 'https://example.com');
     expect(screen.getAllByRole('link')).toHaveLength(1);
   });
 
@@ -73,7 +72,7 @@ describe('AboutLinks', () => {
         'About statistics',
       'presentation_page.main_content.about_table.definitions.about_statistics.description':
         'Some description',
-      'presentation_page.main_content.about_table.definitions.about_statistics.link_text_statistics_homepage':
+      'presentation_page.main_content.about_table.definitions.about_statistics.link_text_homepage':
         'Statistics homepage',
       'presentation_page.main_content.about_table.definitions.about_statistics.link_text_definitions':
         'Definitions',
@@ -81,11 +80,11 @@ describe('AboutLinks', () => {
 
     render(
       <AboutLinks
-        statisticsHomepage={{
+        homepageLink={{
           href: 'https://example.com',
           label: 'Fallback 1',
         }}
-        aboutStatistic={{
+        definitionsLink={{
           href: 'https://example.com/defs',
           label: 'Fallback 2',
         }}
@@ -111,7 +110,7 @@ describe('AboutLinks', () => {
         'About statistics',
       'presentation_page.main_content.about_table.definitions.about_statistics.description':
         'Some description',
-      'presentation_page.main_content.about_table.definitions.about_statistics.link_text_statistics_homepage':
+      'presentation_page.main_content.about_table.definitions.about_statistics.link_text_homepage':
         'Statistics homepage',
       'presentation_page.main_content.about_table.definitions.about_statistics.link_text_definitions':
         '',
@@ -119,11 +118,11 @@ describe('AboutLinks', () => {
 
     render(
       <AboutLinks
-        statisticsHomepage={{
+        homepageLink={{
           href: 'https://example.com',
           label: 'Fallback 1',
         }}
-        aboutStatistic={{
+        definitionsLink={{
           href: 'https://example.com/defs',
           label: 'About defs',
         }}

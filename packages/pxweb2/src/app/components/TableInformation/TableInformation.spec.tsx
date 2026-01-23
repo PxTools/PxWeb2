@@ -82,7 +82,10 @@ describe('TableInformation', () => {
       data: {
         metadata: {
           definitions: {
-            statisticsHomepage: 'https://example.com/statistics-homepage',
+            statisticsDefinitions: {
+              href: 'https://example.com/definitions',
+              label: 'Definitions',
+            },
           },
         },
       } as unknown as TableDataContextType['data'],

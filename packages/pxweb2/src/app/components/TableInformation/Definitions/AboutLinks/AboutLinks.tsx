@@ -21,23 +21,20 @@ function AboutTexts({ title, description }: AboutTextsProps) {
 }
 
 interface AboutLinksProps {
-  readonly statisticsHomepage: {
+  readonly definitionsLink: {
     href: string;
     label: string;
   };
-  readonly aboutStatistic?: {
+  readonly homepageLink?: {
     href: string;
     label: string;
   };
 }
 
-export function AboutLinks({
-  statisticsHomepage,
-  aboutStatistic,
-}: AboutLinksProps) {
+export function AboutLinks({ definitionsLink, homepageLink }: AboutLinksProps) {
   const { t } = useTranslation();
 
-  if (!statisticsHomepage) {
+  if (!definitionsLink) {
     return null;
   }
 
@@ -47,24 +44,23 @@ export function AboutLinks({
   const aboutStatisticsDescription = t(
     'presentation_page.main_content.about_table.definitions.about_statistics.description',
   );
-  const linkTextStatisticsHomepage = t(
-    'presentation_page.main_content.about_table.definitions.about_statistics.link_text_statistics_homepage',
+  const linkTextHomepage = t(
+    'presentation_page.main_content.about_table.definitions.about_statistics.link_text_homepage',
   );
-  const linkTextAboutDefinitions = t(
+  const linkTextDefinitions = t(
     'presentation_page.main_content.about_table.definitions.about_statistics.link_text_definitions',
   );
 
   const hasCustomAboutStatisticsTitle = aboutStatisticsTitle.length > 0;
-  const hasCustomLinkTextStatisticsHomepage =
-    linkTextStatisticsHomepage.length > 0;
-  const hasCustomLinkTextAboutDefinitions = linkTextAboutDefinitions.length > 0;
+  const hasCustomHomepageLinkText = linkTextHomepage.length > 0;
+  const hasCustomDefinitionsLinkText = linkTextDefinitions.length > 0;
 
-  const statisticsHomepageText = hasCustomLinkTextStatisticsHomepage
-    ? linkTextStatisticsHomepage
-    : statisticsHomepage.label;
-  const aboutStatisticsText = hasCustomLinkTextAboutDefinitions
-    ? linkTextAboutDefinitions
-    : aboutStatistic?.label;
+  const homepageLinkText = hasCustomHomepageLinkText
+    ? linkTextHomepage
+    : homepageLink?.label;
+  const definitionsLinkText = hasCustomDefinitionsLinkText
+    ? linkTextDefinitions
+    : definitionsLink?.label;
 
   return (
     <div className={cl(classes.aboutLinks)}>
@@ -75,20 +71,21 @@ export function AboutLinks({
         />
       )}
       <div className={cl(classes.linkCardContainer)}>
-        {/* <p>(The links below should be LinkCard components)</p> */}
-        <LinkCard
-          href={statisticsHomepage.href}
-          headingText={statisticsHomepageText}
-          size="small"
-        ></LinkCard>
-
-        {aboutStatistic && (
+        {homepageLink && homepageLinkText && (
           <LinkCard
-            href={aboutStatistic.href}
-            headingText={aboutStatisticsText || ''}
+            href={homepageLink?.href}
+            icon="PieChart"
+            headingText={homepageLinkText}
             size="small"
           ></LinkCard>
         )}
+
+        <LinkCard
+          href={definitionsLink.href}
+          icon="Files"
+          headingText={definitionsLinkText}
+          size="small"
+        ></LinkCard>
       </div>
     </div>
   );

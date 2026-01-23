@@ -7,7 +7,7 @@ const mockDefinitions: Definitions = {
     href: 'https://example.com/statistics-homepage',
     type: 'text/html',
   },
-  aboutStatistic: {
+  statisticsDefinitions: {
     label: 'About the Statistic',
     href: 'https://example.com/about-statistic',
     type: 'text/html',

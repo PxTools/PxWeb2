@@ -33,12 +33,13 @@ import { getLabelText } from '../app/util/utils';
 //const tempMetaidLinksDataEmpty = {};
 // TODO: Remove temporary data when real data is available from API
 // const tempMetaidLinksData = {
-//   'statistics-homepage': {
+//   'about-statistics': {
+//     // currently "definisjoner og forklaringer"
 //     'dataset-links': [
 //       {
 //         metaid: 'KORTNAVN:aku',
-//         href: 'https://www.ssb.no/befolkning/folketall/statistikk/befolkning',
-//         label: 'Statistics homepage',
+//         href: 'https://www.ssb.no/befolkning/folketall/statistikk/befolkning#om-statistikken',
+//         label: 'About the statistics',
 //         type: 'text/html',
 //       },
 //     ],
@@ -48,7 +49,7 @@ const tempMetaidLinksDataExtended = {
   // TODO: Do these two links only contain one item each? They are arrays in the temp data
   // which ones should be the "main" link that all tables should have (if they have anything in Definitions)?
   'statistics-homepage': {
-    //currently "definisjoner og forklaringer"
+    //currently "statistikkside"
     'dataset-links': [
       {
         metaid: 'KORTNAVN:aku',
@@ -59,7 +60,7 @@ const tempMetaidLinksDataExtended = {
     ],
   },
   'about-statistics': {
-    // currently "statistikkside"?
+    // currently "definisjoner og forklaringer"
     'dataset-links': [
       {
         metaid: 'KORTNAVN:aku',
@@ -70,8 +71,6 @@ const tempMetaidLinksDataExtended = {
     ],
   },
   definitions: {
-    // TODO: Missing a real way to know which dimension/category/variable these are for
-    // "Which one is Region"? We need an identifier to link these to the actual variables in the table
     KOKkommuneregion0000: {
       'dimension-links': [
         {
@@ -129,7 +128,7 @@ function mapTableDefinitions(definitionsJson: any) {
       definitionsJson['statistics-homepage']['dataset-links'][0] || []);
 
   definitionsJson['about-statistics'] &&
-    (definitions.aboutStatistic =
+    (definitions.statisticsDefinitions =
       definitionsJson['about-statistics']['dataset-links'][0] || []);
 
   Object.keys(definitionsJson.definitions || {}).forEach((dimensionKey) => {

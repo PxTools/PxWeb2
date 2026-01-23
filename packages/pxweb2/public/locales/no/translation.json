@@ -308,8 +308,8 @@
           "about_statistics": {
             "title": "Om statistikken",
             "description": "Definisjoner, forklaringer og annen informasjon relatert til tabellen, finner du på tabellens statistikkside.",
-            "link_text_statistics_homepage": "Statistikkside",
-            "link_text_definitions": "Definisjoner og forklaringer"
+            "link_text_definitions": "Definisjoner og forklaringer",
+            "link_text_homepage": "Statistikkside"
           },
           "metadata": {
             "title": "Metadata",
