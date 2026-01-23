@@ -20,7 +20,7 @@ export function Metadata({ variablesDefinitions }: MetadataProps) {
       {variablesDefinitions && variablesDefinitions.length > 0 && (
         <div className={cl(classes.metadataContainer)}>
           <div className={cl(classes.metadataHeader)}>
-            <Heading level={'3'} size="small">
+            <Heading level={'3'} size="small" spacing={true}>
               {t(
                 'presentation_page.main_content.about_table.definitions.metadata.title',
               )}

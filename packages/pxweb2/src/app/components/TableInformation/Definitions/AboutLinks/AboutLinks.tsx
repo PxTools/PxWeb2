@@ -12,7 +12,7 @@ interface AboutTextsProps {
 function AboutTexts({ title, description }: AboutTextsProps) {
   return (
     <div className={cl(classes.textContainer)}>
-      <Heading level={'3'} size="small">
+      <Heading level={'3'} size="small" spacing={true}>
         {title}
       </Heading>
       <BodyLong size="medium">{description}</BodyLong>
@@ -81,27 +81,13 @@ export function AboutLinks({
           headingText={statisticsHomepageText}
           size="small"
         ></LinkCard>
-        {/* <a
-          href={statisticsHomepage.href}
-          target="_blank"
-          rel="noreferrer noopener"
-        >
 
-          {statisticsHomepageText}
-        </a> */}
         {aboutStatistic && (
           <LinkCard
             href={aboutStatistic.href}
             headingText={aboutStatisticsText || ''}
             size="small"
           ></LinkCard>
-          // <a
-          //   href={aboutStatistic.href}
-          //   target="_blank"
-          //   rel="noreferrer noopener"
-          // >
-          //   {aboutStatisticsText}
-          // </a>
         )}
       </div>
     </div>
