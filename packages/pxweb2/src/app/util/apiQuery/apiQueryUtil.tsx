@@ -22,16 +22,10 @@ function getApiQueryInfo(
   language: string = config.language.defaultLanguage,
   outputFormat: string = 'json-stat2',
 ): ApiQueryInfoType {
-  const normalizedOutputFormat = getNormalizedOutput(outputFormat);
-
   let apiUrl = config.apiUrl;
-  if (tableId) {
-    apiUrl += `/tables/${tableId}/data`;
-  } else {
-    apiUrl += '/tables/tableId/data';
-  }
+  apiUrl += `/tables/${tableId}/data`;
   apiUrl += '?lang=' + encodeURIComponent(language);
-  apiUrl += '&outputFormat=' + encodeURIComponent(normalizedOutputFormat);
+  apiUrl += '&outputFormat=' + encodeURIComponent(outputFormat);
 
   return {
     getUrl: apiUrl + getGetParams(variablesSelection),
