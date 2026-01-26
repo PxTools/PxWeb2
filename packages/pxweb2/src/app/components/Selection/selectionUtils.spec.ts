@@ -8,7 +8,7 @@ import {
   mockTableService,
 } from '../../util/testing-utils';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
-import type { PathElement } from '@pxweb2/pxweb2-ui';
+import type { PxTable, PathElement } from '@pxweb2/pxweb2-ui';
 
 import {
   updateSelectedCodelistForVariable,
@@ -425,6 +425,44 @@ vi.mock('@pxweb2/pxweb2-ui', async () => {
   } as typeof actual;
 });
 
+// Mock mapper to simplify metadata creation during codelist change
+vi.mock('../../../mappers/JsonStat2ResponseMapper', async () => {
+  const actual = await vi.importActual<
+    typeof import('../../../mappers/JsonStat2ResponseMapper')
+  >('../../../mappers/JsonStat2ResponseMapper');
+  return {
+    ...actual,
+    // Return a minimal PxTable structure; Selection will reapply preserved pathElements onto this metadata
+    mapJsonStat2Response: vi.fn(
+      (): PxTable => ({
+        metadata: {
+          id: 'test-table',
+          language: 'en',
+          label: 'Test',
+          description: 'Mock table',
+          updated: new Date('2000-01-01'),
+          source: 'Mock source',
+          infofile: 'mock.info',
+          decimals: 0,
+          officialStatistics: false,
+          aggregationAllowed: false,
+          contents: 'Mock contents',
+          descriptionDefault: false,
+          matrix: 'mock-matrix',
+          subjectCode: 'SUBJ',
+          subjectArea: 'AREA',
+          variables: [],
+          contacts: [],
+          notes: [],
+        },
+        data: { cube: {}, variableOrder: [], isLoaded: false },
+        stub: [],
+        heading: [],
+      }),
+    ),
+  } as typeof actual;
+});
+
 // Install default API client mocks
 mockTableService();
 
@@ -454,6 +492,9 @@ describe('Selection (integration): preserves pathElements on codelist change', (
       ],
       links: [],
     });
+
+    // Ensure codelist-change metadata request resolves so async branch executes
+    (TablesService.getMetadataById as unknown as Mock).mockResolvedValue({});
 
     const { default: Selection } = await import('./Selection');
 
