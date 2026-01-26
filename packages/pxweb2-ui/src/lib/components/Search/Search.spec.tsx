@@ -50,11 +50,7 @@ describe('Search component', () => {
     });
 
     it('sets aria labels on the icon and clear button', () => {
-      const { container } = render(
-        <Search
-            value="test"
-        />,
-      );
+      const { container } = render(<Search value="test" />);
 
       const icon = container.querySelector('svg');
       const button = container.querySelector('button');
