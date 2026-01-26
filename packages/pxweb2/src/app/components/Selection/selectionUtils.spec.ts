@@ -3,7 +3,10 @@ import { act, waitFor } from '@testing-library/react';
 import type { Mock } from 'vitest';
 import { describe, it, expect, beforeEach } from 'vitest';
 
-import { renderWithProviders, mockTableService } from '../../util/testing-utils';
+import {
+  renderWithProviders,
+  mockTableService,
+} from '../../util/testing-utils';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import type { PathElement } from '@pxweb2/pxweb2-ui';
 
@@ -371,9 +374,8 @@ describe('selectionUtils', () => {
 const capture: { initial?: string[]; after?: string[] } = {};
 
 // Hold last handleCodeListChange reference from VariableList
-let latestHandleCodeListChange:
-  | ((o: SelectOption, id: string) => void)
-  | null = null;
+let latestHandleCodeListChange: ((o: SelectOption, id: string) => void) | null =
+  null;
 
 type VariableListMockProps = {
   pxTableMetadata: PxTableMetadata | null;
@@ -382,9 +384,10 @@ type VariableListMockProps = {
 
 // Partially mock ui lib to keep exports but stub VariableList to capture handleCodeListChange
 vi.mock('@pxweb2/pxweb2-ui', async () => {
-  const actual = await vi.importActual<typeof import('@pxweb2/pxweb2-ui')>(
-    '@pxweb2/pxweb2-ui',
-  );
+  const actual =
+    await vi.importActual<typeof import('@pxweb2/pxweb2-ui')>(
+      '@pxweb2/pxweb2-ui',
+    );
   const React = await import('react');
   return {
     ...actual,
@@ -415,7 +418,9 @@ vi.mock('@pxweb2/pxweb2-ui', async () => {
           );
         }
       }, [pxTableMetadata, handleCodeListChange]);
-      return React.createElement('div', { 'data-testid': 'variable-list-stub' });
+      return React.createElement('div', {
+        'data-testid': 'variable-list-stub',
+      });
     },
   } as typeof actual;
 });
@@ -441,10 +446,12 @@ describe('Selection (integration): preserves pathElements on codelist change', (
       elimination: false,
       type: 'Table',
       subjectCode: 'SUBJ',
-      paths: [[
-        { id: 'SUBJ', label: 'Subject' },
-        { id: 'CHILD', label: 'Child' },
-      ]],
+      paths: [
+        [
+          { id: 'SUBJ', label: 'Subject' },
+          { id: 'CHILD', label: 'Child' },
+        ],
+      ],
       links: [],
     });
 
