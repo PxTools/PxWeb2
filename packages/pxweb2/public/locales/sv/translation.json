@@ -222,7 +222,7 @@
           "formats": {
             "excel": "Excel (.xlsx)",
             "csv": "Semikolonavgränsad med rubrik (.csv)",
-            "px": "PC-Axis (.px)",
+            "px": "Px-fil (.px)",
             "jsonstat2": "JSON-stat2 (.json)",
             "html": "HTML (.html)",
             "parquet": "Parquet (.parquet)"
