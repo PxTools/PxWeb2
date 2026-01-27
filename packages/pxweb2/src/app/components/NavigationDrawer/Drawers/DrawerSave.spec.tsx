@@ -87,7 +87,12 @@ vi.mock('react-i18next', () => ({
     },
     i18n: { language: 'en' },
   }),
-  initReactI18next: { type: '3rdParty', init: () => {} }, // <-- add this export for compatibility
+  initReactI18next: {
+    type: '3rdParty',
+    init: () => {
+      vi.fn();
+    },
+  }, // <-- add this export for compatibility
 }));
 
 // Mock context and export utils
