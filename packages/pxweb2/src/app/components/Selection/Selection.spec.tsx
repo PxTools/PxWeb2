@@ -112,7 +112,6 @@ vi.mock('../../../mappers/JsonStat2ResponseMapper', async () => {
 mockTableService();
 
 describe('Selection', () => {
-
   it('should throw an error when triggered', () => {
     const TestComponent = () => {
       const context = React.useContext(TableDataContext);
