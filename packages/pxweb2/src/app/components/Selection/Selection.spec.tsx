@@ -85,14 +85,12 @@ describe('Selection', () => {
           },
         }),
       };
-      const mapJsonStat2Response = vi
-        .fn()
-        .mockReturnValue({
-          metadata: {
-            variables: [{ id: 'var1', codeLists: [{ id: 'codelist1' }] }],
-            pathElements: [],
-          },
-        });
+      const mapJsonStat2Response = vi.fn().mockReturnValue({
+        metadata: {
+          variables: [{ id: 'var1', codeLists: [{ id: 'codelist1' }] }],
+          pathElements: [],
+        },
+      });
       mockGetSelectedCodelists.mockReturnValue({ var1: 'codelist1' });
       mockUpdateSelectedCodelistForVariable.mockReturnValue(
         updateSelectedCodelistForVariableReturn,
