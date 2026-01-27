@@ -70,7 +70,7 @@ vi.mock('@pxweb2/pxweb2-ui', async () => {
   } as typeof actual;
 });
 
-// Mock mapper to simplify metadata creation during codelist change
+// Mock mapper to simplify metadata creation and ensure a matching variable exists
 vi.mock('../../../mappers/JsonStat2ResponseMapper', async () => {
   const actual = await vi.importActual<
     typeof import('../../../mappers/JsonStat2ResponseMapper')
@@ -96,7 +96,19 @@ vi.mock('../../../mappers/JsonStat2ResponseMapper', async () => {
           matrix: 'mock-matrix',
           subjectCode: 'SUBJ',
           subjectArea: 'AREA',
-          variables: [],
+          // Include a variable that matches the varId used in the test so
+          // handleCodeListChange does not early-return and the codelist-change
+          // branch (including pathElements preservation) executes.
+          variables: [
+            {
+              id: 'Region',
+              label: 'Region',
+              type: 'c' as unknown as PxTableMetadata['variables'][number]['type'],
+              mandatory: false,
+              values: [],
+              codeLists: [{ id: 'vs_RegionLän07', label: 'County' }],
+            } as unknown as PxTableMetadata['variables'][number],
+          ],
           contacts: [],
           notes: [],
         },
