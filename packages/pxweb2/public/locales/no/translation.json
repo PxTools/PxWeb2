@@ -222,7 +222,7 @@
           "formats": {
             "excel": "Excel (.xlsx)",
             "csv": "Semikolonseparert med overskrift (.csv)",
-            "px": "PC-Axis (.px)",
+            "px": "Px-fil (.px)",
             "jsonstat2": "JSON-stat2 (.json)",
             "html": "HTML (.html)",
             "parquet": "Parquet (.parquet)"
@@ -254,8 +254,16 @@
         },
         "api": {
           "title": "API",
-          "description": "Beskrivelsestekst...",
-          "query": "API-spørring"
+          "description": "Her finner du API-spørringen for tabellen. Bruk GET om spørringen er liten (under ca. 2 100 tegn), og POST om spørringen er stor og mer detaljert.",
+          "query": "API-spørring",
+          "link_text": "Les mer om bruk av API-et",
+          "link_url": "https://www.ssb.no/api/pxwebapiv2",
+          "select_format": "Velg format",
+          "get_button_text": "GET",
+          "post_button_text": "POST",
+          "url_text": "URL",
+          "post_body_text": "POST BODY",
+          "select_http_method_aria": "Velg HTTP-forespørselsmetode"
         }
       },
       "help": {

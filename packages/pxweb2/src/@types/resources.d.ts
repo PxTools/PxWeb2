@@ -13,6 +13,13 @@ interface Resources {
         breadcrumb_root_title: 'Home';
         show_more_breadcrumbs: 'Show more';
       };
+      code_snippet: {
+        copied_button_label: 'Code copied to clipboard';
+        copy_button_label: 'Copy code for ';
+        copy_button_tooltip: 'Copy code';
+        unwrap_code_button_label: 'Unwrap lines';
+        wrap_code_button_label: 'Wrap lines';
+      };
       errors: {
         generic: {
           action_text: 'Refresh';
@@ -206,9 +213,17 @@ interface Resources {
         hide: 'Hide';
         save: {
           api: {
-            description: 'Description text...';
+            description: 'Here you’ll find the API query for the table. Use GET for small queries (under about 2 100 characters) and POST for larger or more complex ones';
+            get_button_text: 'GET';
+            link_text: 'Learn more about using the API';
+            link_url: 'https://www.pxtools.net/PxWebApi/documentation/user-guide/';
+            post_body_text: 'POST BODY';
+            post_button_text: 'POST';
             query: 'API query';
+            select_format: 'Select format';
+            select_http_method_aria: 'Select HTTP request method';
             title: 'API';
+            url_text: 'URL';
           };
           file: {
             formats: {

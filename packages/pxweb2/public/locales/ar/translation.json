@@ -165,7 +165,7 @@
           "formats": {
             "excel": "اكسل (xlsx)",
             "csv": "مفصولة بفاصلة منقوطة مع عنوان (.csv)",
-            "px": "PC-Axis (.px)",
+            "px": "ملف Px (.px)",
             "jsonstat2": "JSON-stat2 (.json)",
             "html": "HTML (.html)",
             "parquet": "Parquet (.parquet)"
@@ -197,8 +197,16 @@
         },
         "api": {
           "title": "واجهة برمجة التطبيقات",
-          "description": "نص الوصف...",
-          "query": "استعلام API"
+          "description": "هنا ستجد استعلام API للجدول. استخدم GET للاستعلامات الصغيرة (أقل من حوالي 2100 حرف) وPOST للاستعلامات الأكبر أو الأكثر تعقيدًا.",
+          "query": "استعلام API",
+          "link_text": "تعرف على المزيد حول استخدام API",
+          "link_url": "https://www.pxtools.net/PxWebApi/documentation/user-guide/",
+          "select_format": "اختر التنسيق",
+          "get_button_text": "GET",
+          "post_button_text": "POST",
+          "url_text": "الرابط (URL)",
+          "post_body_text": "محتوى POST",
+          "select_http_method_aria": "اختر طريقة طلب HTTP"
         }
       },
       "help": {
