@@ -1,4 +1,5 @@
 @use '../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixed;
+@use '../../../../style-dictionary/dist/css/variables.css' as var;
 @use '../../text-styles.scss';
 
 .link-card-medium {
@@ -92,6 +93,7 @@
 
 .heading-wrapper {
   align-self: stretch;
+  color: var(--px-color-text-default);
 }
 
 .description-wrapper {
