@@ -8,7 +8,6 @@ import {
   BodyLong,
   BodyShort,
   ContentBox,
-  IconProps,
   InformationCard,
   Radio,
   RadioOption,
@@ -31,12 +30,11 @@ import {
   exportToFile,
   TimeFilter,
 } from '../../../util/export/exportUtil';
+import { ApiQuery } from '../../ApiQuery/ApiQuery';
+import { fileFormats } from '../../../constants/outputFormats';
+export { fileFormats } from '../../../constants/outputFormats';
 
-interface FileFormat {
-  value: string;
-  outputFormat: OutputFormatType;
-  iconName: IconProps['iconName'];
-}
+// File formats moved to shared constants in app/constants/outputFormats
 
 type SaveQueryOptions = 'selected' | 'from' | 'top';
 type SaveQueryButtonState = 'create' | 'loading' | 'copy' | 'copied';
@@ -48,38 +46,7 @@ type SaveQueryButtonProps = {
   saveQueryUrl?: string;
 };
 
-export const fileFormats: FileFormat[] = [
-  {
-    value: 'excel',
-    outputFormat: OutputFormatType.XLSX,
-    iconName: 'FileText',
-  },
-  {
-    value: 'csv',
-    outputFormat: OutputFormatType.CSV,
-    iconName: 'FileText',
-  },
-  {
-    value: 'px',
-    outputFormat: OutputFormatType.PX,
-    iconName: 'FileCode',
-  },
-  {
-    value: 'jsonstat2',
-    outputFormat: OutputFormatType.JSON_STAT2,
-    iconName: 'FileCode',
-  },
-  {
-    value: 'html',
-    outputFormat: OutputFormatType.HTML,
-    iconName: 'FileCode',
-  },
-  // { // Parquet export temporarily disabled, remember to enable in DrawerSave.spec.tsx as well
-  //   value: 'parquet',
-  //   outputFormat: OutputFormatType.PARQUET,
-  //   iconName: 'FileCode',
-  // },
-];
+// Using shared fileFormats
 
 export const SaveQueryCreateButton: React.FC<SaveQueryButtonProps> = ({
   buttonRef,
@@ -225,6 +192,8 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
   const [selectedRadio, setSelectedRadio] = useState<SaveQueryOptions>('top');
   const [saveQueryButtonState, setSaveQueryButtonState] =
     useState<SaveQueryButtonState>('create');
+
+  const translate = t as unknown as (key: string) => string;
 
   // If time filter is used when saving query, we need to know the id of the time variable
   const timeVarId = useTableData().data?.metadata.variables.find(
@@ -490,8 +459,8 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
           {fileFormats.map((format) => (
             <li key={`saveToFile${format.value}`}>
               <ActionItem
-                label={t(
-                  `presentation_page.side_menu.save.file.formats.${format.value}`, // Not sure how to fix this i18next type error
+                label={translate(
+                  `presentation_page.side_menu.save.file.formats.${format.value}`,
                 )}
                 onClick={() => saveToFile(format.outputFormat)}
                 iconName={format.iconName}
@@ -552,9 +521,7 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
         </div>
       </ContentBox>
       <ContentBox title={t('presentation_page.side_menu.save.api.query')}>
-        <LocalAlert variant="info" className={classes.alert}>
-          {t('common.status_messages.drawer_save_api')}
-        </LocalAlert>
+        <ApiQuery />
       </ContentBox>
     </>
   );

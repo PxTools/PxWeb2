@@ -1,7 +1,21 @@
 import React from 'react';
 import { vi } from 'vitest';
-
 import type { Config } from '../src/app/util/config/configType';
+
+// Polyfill: jsdom lacks ResizeObserver; mock minimal implementation for tests
+class MockResizeObserver {
+  callback: ResizeObserverCallback;
+  constructor(callback: ResizeObserverCallback) {
+    this.callback = callback;
+  }
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+// Assign to global scope if not already present
+if (!(globalThis as any).ResizeObserver) {
+  (globalThis as any).ResizeObserver = MockResizeObserver as unknown as typeof ResizeObserver;
+}
 
 // Types for motion props to avoid using 'any'
 interface MotionProps extends React.HTMLAttributes<HTMLElement> {
