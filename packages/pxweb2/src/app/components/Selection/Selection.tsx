@@ -434,6 +434,11 @@ export function Selection({
 
     setIsFadingVariableList(true);
 
+    // Preserve current pathElements so we don't lose them on codelist change
+    const preservedPathElements = structuredClone(
+      pxTableMetaToRender?.pathElements ?? undefined,
+    );
+
     // Get table metadata in the new codelist context
     TablesService.getMetadataById(
       selectedTabId,
@@ -444,6 +449,11 @@ export function Selection({
     )
       .then((Dataset) => {
         const pxTable: PxTable = mapJsonStat2Response(Dataset, false);
+
+        // Reapply preserved pathElements to the new metadata
+        if (preservedPathElements && preservedPathElements.length > 0) {
+          pxTable.metadata.pathElements = preservedPathElements;
+        }
 
         setPxTableMetadata(pxTable.metadata);
 
