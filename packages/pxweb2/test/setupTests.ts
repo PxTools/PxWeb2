@@ -8,13 +8,26 @@ class MockResizeObserver {
   constructor(callback: ResizeObserverCallback) {
     this.callback = callback;
   }
-  observe() {}
-  unobserve() {}
-  disconnect() {}
+  observe() {
+    vi.fn();
+  }
+  unobserve() {
+    vi.fn();
+  }
+  disconnect() {
+    vi.fn();
+  }
 }
 // Assign to global scope if not already present
-if (!(globalThis as any).ResizeObserver) {
-  (globalThis as any).ResizeObserver = MockResizeObserver as unknown as typeof ResizeObserver;
+type GlobalWithResizeObserver = typeof globalThis & {
+  ResizeObserver?: typeof ResizeObserver;
+};
+
+const globalWithResizeObserver = globalThis as GlobalWithResizeObserver;
+
+if (!globalWithResizeObserver.ResizeObserver) {
+  globalWithResizeObserver.ResizeObserver =
+    MockResizeObserver as unknown as typeof ResizeObserver;
 }
 
 // Types for motion props to avoid using 'any'
@@ -99,7 +112,7 @@ vi.mock('motion/react', () => ({
         layoutId,
         ...restProps
       } = props;
-      void whileHover,
+      (void whileHover,
         whileTap,
         variants,
         initial,
@@ -107,7 +120,7 @@ vi.mock('motion/react', () => ({
         exit,
         transition,
         layout,
-        layoutId;
+        layoutId);
       return React.createElement('div', { className, ...restProps }, children);
     },
     button: ({ children, className, ...props }: MotionProps) => {
@@ -124,7 +137,7 @@ vi.mock('motion/react', () => ({
         layoutId,
         ...restProps
       } = props;
-      void whileHover,
+      (void whileHover,
         whileTap,
         variants,
         initial,
@@ -132,7 +145,7 @@ vi.mock('motion/react', () => ({
         exit,
         transition,
         layout,
-        layoutId;
+        layoutId);
       return React.createElement(
         'button',
         { className, ...restProps },
@@ -153,7 +166,7 @@ vi.mock('motion/react', () => ({
         layoutId,
         ...restProps
       } = props;
-      void whileHover,
+      (void whileHover,
         whileTap,
         variants,
         initial,
@@ -161,7 +174,7 @@ vi.mock('motion/react', () => ({
         exit,
         transition,
         layout,
-        layoutId;
+        layoutId);
       return React.createElement('span', { className, ...restProps }, children);
     },
   },
@@ -180,7 +193,7 @@ vi.mock('motion/react', () => ({
         layoutId,
         ...restProps
       } = props;
-      void whileHover,
+      (void whileHover,
         whileTap,
         variants,
         initial,
@@ -188,7 +201,7 @@ vi.mock('motion/react', () => ({
         exit,
         transition,
         layout,
-        layoutId;
+        layoutId);
       return React.createElement('div', { className, ...restProps }, children);
     },
     button: ({ children, className, ...props }: MotionProps) => {
@@ -205,7 +218,7 @@ vi.mock('motion/react', () => ({
         layoutId,
         ...restProps
       } = props;
-      void whileHover,
+      (void whileHover,
         whileTap,
         variants,
         initial,
@@ -213,7 +226,7 @@ vi.mock('motion/react', () => ({
         exit,
         transition,
         layout,
-        layoutId;
+        layoutId);
       return React.createElement(
         'button',
         { className, ...restProps },
@@ -234,7 +247,7 @@ vi.mock('motion/react', () => ({
         layoutId,
         ...restProps
       } = props;
-      void whileHover,
+      (void whileHover,
         whileTap,
         variants,
         initial,
@@ -242,7 +255,7 @@ vi.mock('motion/react', () => ({
         exit,
         transition,
         layout,
-        layoutId;
+        layoutId);
       return React.createElement('span', { className, ...restProps }, children);
     },
   },
