@@ -5,10 +5,11 @@
 import type { CodelistMetadata } from './CodelistMetadata';
 import type { Link } from './Link';
 export type CodelistsResponse = {
-  /**
-   * The language code for the language used in this response
-   */
-  language: string;
-  codelists?: Array<CodelistMetadata>;
-  links?: Array<Link>;
+    /**
+     * The language code for the language used in this response
+     */
+    language: string;
+    codelists?: Array<CodelistMetadata>;
+    links?: Array<Link>;
 };
+

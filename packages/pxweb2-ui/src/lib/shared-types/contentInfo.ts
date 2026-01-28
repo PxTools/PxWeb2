@@ -18,4 +18,8 @@ export type ContentInfo = {
    * The content's base period.
    */
   basePeriod: string;
+  /**
+   * Alternative text for the content.
+   */
+  alternativeText: string;
 };
