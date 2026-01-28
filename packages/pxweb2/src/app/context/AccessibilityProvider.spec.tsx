@@ -1,4 +1,4 @@
-import { render, fireEvent } from '@testing-library/react';
+import { act, render, fireEvent } from '@testing-library/react';
 import React, { useContext, useRef, useEffect, RefObject } from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import {
@@ -87,7 +87,10 @@ describe('AccessibilityProvider', () => {
       </AccessibilityProvider>,
     );
     expect(closeFn).not.toHaveBeenCalled();
-    ctx?.closeModal();
+
+    act(() => {
+      ctx?.closeModal();
+    });
     // closeModal uses setTimeout, so wait for event loop
     await new Promise((r) => setTimeout(r, 10));
     expect(closeFn).toHaveBeenCalledTimes(1);
@@ -108,7 +111,9 @@ describe('AccessibilityProvider', () => {
       </AccessibilityProvider>,
     );
     // Try to close, should not call closeFn since modal was removed
-    ctx?.closeModal();
+    act(() => {
+      ctx?.closeModal();
+    });
     expect(closeFn).not.toHaveBeenCalled();
   });
 
