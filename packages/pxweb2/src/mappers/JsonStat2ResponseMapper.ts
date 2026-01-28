@@ -351,6 +351,7 @@ function mapContentInfo(dimension: any, code: string): ContentInfo {
     decimals: unit.decimals,
     referencePeriod: dimension.extension?.refperiod?.[code] ?? '',
     basePeriod: dimension.extension?.basePeriod?.[code] ?? '',
+    alternativeText: dimension.extension?.alternativeText?.[code] ?? '',
   };
 }
 
