@@ -1,4 +1,5 @@
 @use '$ui/style-dictionary/dist/scss/fixed-variables.scss' as fixed;
+@use '$ui/src/lib/text-styles.scss';
 
 .navigationRailList {
   list-style: none;
