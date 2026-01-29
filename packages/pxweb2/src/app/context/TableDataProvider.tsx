@@ -17,6 +17,7 @@ import {
   getPxTableData,
   setPxTableData,
   Variable,
+  VartypeEnum,
 } from '@pxweb2/pxweb2-ui';
 import { mapJsonStat2Response } from '../../mappers/JsonStat2ResponseMapper';
 
@@ -41,7 +42,7 @@ export interface TableDataContextType {
   buildTableTitle: (
     stub: Variable[],
     heading: Variable[],
-  ) => { firstTitlePart: string; lastTitlePart: string };
+  ) => { contentText: string; firstTitlePart: string; lastTitlePart: string };
 }
 
 interface TableDataProviderProps {
@@ -67,7 +68,11 @@ const TableDataContext = createContext<TableDataContextType | undefined>({
   pivot: () => {
     // No-op: useTableData hook prevents this from being called
   },
-  buildTableTitle: () => ({ firstTitlePart: '', lastTitlePart: '' }),
+  buildTableTitle: () => ({
+    contentText: '',
+    firstTitlePart: '',
+    lastTitlePart: '',
+  }),
 });
 
 const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
@@ -308,6 +313,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * @param tableId - The id of the table to fetch data for.
    * @param i18n - The i18n object for handling langauages
    * @param variablesSelection - User selection of variables and their values.
+   * @param tableContentText - The content text of the table.
    * @param codelistChanged - If the codelist has changed.
    */
   const fetchWithoutValidAccData = React.useCallback(
@@ -316,6 +322,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       i18n: i18n,
       isMobile: boolean,
       variablesSelection: VariablesSelection,
+      tableContentText: string | undefined,
       codelistChanged: boolean,
     ) => {
       // Clear current table while fetching new data if codelist has changed
@@ -335,6 +342,11 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         i18n,
         variablesSelection,
       );
+
+      // We need to set the table contents as defined in table metadata
+      if (tableContentText) {
+        pxTable.metadata.contents = tableContentText;
+      }
 
       initializeStubAndHeading(pxTable, isMobile, i18n.language);
       setData(pxTable);
@@ -751,6 +763,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * @param tableId - The id of the table to fetch data for.
    * @param i18n - The i18n object for handling langauages
    * @param variablesSelection - User selection of variables and their values.
+   * @param tableContentText - The content text of the table.
    */
   const fetchWithValidAccData = React.useCallback(
     async (
@@ -758,6 +771,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       i18n: i18n,
       isMobile: boolean,
       variablesSelection: VariablesSelection,
+      tableContentText: string | undefined,
     ) => {
       // Check if all data and metadata asked for by the user is already loaded from earlier API-calls
 
@@ -798,12 +812,19 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
           }
         }
       });
+
       // Get the not already loaded data from the API
       let pxTable: PxTable = await fetchFromApi(
         tableId,
         i18n,
         notLoadedVarSelection,
       );
+
+      // We need to set the table contents as defined in table metadata
+      if (tableContentText) {
+        pxTable.metadata.contents = tableContentText;
+      }
+
       // Merge pxTable with accumulatedData
       mergeWithAccumulatedData(
         pxTable,
@@ -957,6 +978,9 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       try {
         const selections: Array<VariableSelection> = [];
 
+        // Get table content text from table metadata
+        const tableContentText = variables.pxTableMetadata?.contents;
+
         // Get selection from Selection provider
         const ids = variables.getUniqueIds();
         ids.forEach((id) => {
@@ -994,6 +1018,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
             i18n,
             isMobile,
             variablesSelection,
+            tableContentText,
           );
         } else {
           // We do not have valid accumulated data in the data cube, so we need to fetch
@@ -1002,6 +1027,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
             i18n,
             isMobile,
             variablesSelection,
+            tableContentText,
             codelistChanged,
           );
         }
@@ -1117,10 +1143,28 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       stub: Variable[],
       heading: Variable[],
     ): {
+      contentText: string;
       firstTitlePart: string;
       lastTitlePart: string;
     } => {
       const titleParts: string[] = [];
+
+      const contentsVariable = data?.metadata.variables.find(
+        (v) => v.type === VartypeEnum.CONTENTS_VARIABLE,
+      );
+
+      let contentText: string = '';
+
+      console.log(data?.metadata);
+      if (contentsVariable) {
+        console.log({ contentsVariable });
+        if (contentsVariable.values.length == 1) {
+          contentText =
+            contentsVariable.values[0].contentInfo?.alternativeText || '';
+        } else if (contentsVariable.values.length > 1) {
+          contentText = data?.metadata.contents || '';
+        }
+      }
 
       // Add stub variables to title
       stub.forEach((variable) => {
@@ -1142,9 +1186,11 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
       const firstTitlePart = titleParts.join(', ');
 
-      return { firstTitlePart, lastTitlePart };
+      console.log({ contentText });
+
+      return { contentText, firstTitlePart, lastTitlePart };
     },
-    [],
+    [data?.metadata],
   );
 
   /**

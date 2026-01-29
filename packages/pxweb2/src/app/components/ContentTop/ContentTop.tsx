@@ -165,14 +165,15 @@ export function ContentTop({
     });
   }, [isTableInformationOpen, tableInformationOpener, accessibility]);
 
-  const { firstTitlePart, lastTitlePart } = buildTableTitle(
+  const { contentText, firstTitlePart, lastTitlePart } = buildTableTitle(
     pxtable.stub,
     pxtable.heading,
   );
 
   // Example title: "Population by region, observations, year and sex"
   const tableTitle = t('presentation_page.main_content.dynamic_table_title', {
-    table_content_type: pxtable.metadata.contents,
+    // table_content_type: pxtable.metadata.contents,
+    table_content_type: contentText,
     table_content_label_first_part: firstTitlePart,
     table_content_label_last_part: lastTitlePart,
   });
