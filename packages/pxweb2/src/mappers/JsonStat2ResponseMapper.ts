@@ -128,10 +128,12 @@ function mapTableDefinitions() {
   //   (definitions.statisticsHomepage =
   //     definitionsJson['statistics-homepage']['dataset-links'][0] || []);
 
+  // NOSONAR: Disabled sonar warning for unused code below, as this is temporary code
   // definitionsJson['about-statistics'] &&
   //   (definitions.statisticsDefinitions =
   //     definitionsJson['about-statistics']['dataset-links'][0] || []);
 
+  // NOSONAR: Disabled sonar warning for unused code below, as this is temporary code
   // Object.keys(definitionsJson.definitions || {}).forEach((dimensionKey) => {
   //   const dimensionData = definitionsJson.definitions[dimensionKey];
   //   const variableDefinition: VariableDefinition = {
@@ -139,10 +141,12 @@ function mapTableDefinitions() {
   //     links: [],
   //   };
 
+  // NOSONAR: Disabled sonar warning for unused code below, as this is temporary code
   //   if (dimensionData['dimension-links']) {
   //     variableDefinition.links.push(...dimensionData['dimension-links']);
   //   }
 
+  // NOSONAR: Disabled sonar warning for unused code below, as this is temporary code
   //   if (dimensionData['category-links']) {
   //     Object.values(dimensionData['category-links']).forEach(
   //       (categoryLinks: DefinitionLink[]) => {
@@ -151,10 +155,12 @@ function mapTableDefinitions() {
   //     );
   //   }
 
+  // NOSONAR: Disabled sonar warning for unused code below, as this is temporary code
   //   if (!definitions.variablesDefinitions) {
   //     definitions.variablesDefinitions = [];
   //   }
 
+  // NOSONAR: Disabled sonar warning for unused code below, as this is temporary code
   //   definitions.variablesDefinitions.push(variableDefinition);
   // });
 
