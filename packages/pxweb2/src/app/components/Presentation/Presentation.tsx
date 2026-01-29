@@ -1,6 +1,6 @@
 import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useLayoutEffect } from 'react';
 import isEqual from 'lodash/isEqual';
 
 import classes from './Presentation.module.scss';
@@ -157,7 +157,8 @@ export function Presentation({
     setIsFadingTable(true);
   }, [variablesChanged]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    // useEffect(() => {
     if (variables.isMatrixSizeAllowed) {
       setIsFadingTable(false); // Stop fading once data is loaded
     }
