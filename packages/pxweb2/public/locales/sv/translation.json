@@ -312,8 +312,17 @@
           "important_about_selection_body_one_note": "Tryck på detta meddelande för att läsa noten. "
         },
         "definitions": {
-          "title": "Definitioner",
-          "description": "Tabellen är en del av statistiken {{statistics}}"
+          "panel_title": "Definitioner",
+          "about_statistics": {
+            "title": "",
+            "description": "",
+            "link_text_definitions": "",
+            "link_text_homepage": ""
+          },
+          "metadata": {
+            "title": "",
+            "description": ""
+          }
         },
         "details": {
           "title": "Detaljer",

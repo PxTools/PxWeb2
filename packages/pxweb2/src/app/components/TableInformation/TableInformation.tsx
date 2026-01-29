@@ -9,15 +9,15 @@ import { DetailsTab } from './Details/DetailsTab';
 import useApp from '../../context/useApp';
 
 import {
-  SideSheet,
   BottomSheet,
+  SideSheet,
   TabsProvider,
   Tabs,
   Tab,
   TabPanel,
-  LocalAlert,
 } from '@pxweb2/pxweb2-ui';
 import { NotesTab } from './Notes/NotesTab';
+import { DefinitionsTab } from './Definitions/DefinitionsTab';
 
 export interface TableInformationProps {
   readonly isOpen: boolean;
@@ -32,7 +32,7 @@ export function TableInformation({
 }: TableInformationProps) {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('');
-  const tableData = useTableData();
+  const metadataOrUndefined = useTableData().data?.metadata;
   const { isMobile } = useApp();
   const tabsContentRef = useRef<HTMLDivElement | null>(null);
 
@@ -54,6 +54,9 @@ export function TableInformation({
   const SheetComponent = isMobile ? BottomSheet : SideSheet;
   const tabsVariant = isMobile ? 'scrollable' : 'fixed';
 
+  const definitionsMandatoryLinkExists =
+    metadataOrUndefined?.definitions?.statisticsDefinitions !== undefined;
+
   return (
     <SheetComponent
       heading={t('presentation_page.main_content.about_table.title')}
@@ -73,13 +76,15 @@ export function TableInformation({
               )}
               controls="pnl-footnotes"
             ></Tab>
-            <Tab
-              id="tab-definitions"
-              label={t(
-                'presentation_page.main_content.about_table.definitions.title',
-              )}
-              controls="pnl-definitions"
-            ></Tab>
+            {definitionsMandatoryLinkExists && (
+              <Tab
+                id="tab-definitions"
+                label={t(
+                  'presentation_page.main_content.about_table.definitions.panel_title',
+                )}
+                controls="pnl-definitions"
+              ></Tab>
+            )}
             <Tab
               id="tab-details"
               label={t(
@@ -104,21 +109,22 @@ export function TableInformation({
             isMobile && classes.mobileView,
           )}
         >
+          {/* TabPanels handle conditional rendering themselves */}
           <TabPanel id="pnl-footnotes" controlledBy="tab-footnotes">
-            <NotesTab pxTableMetadata={tableData.data?.metadata} />
+            <NotesTab pxTableMetadata={metadataOrUndefined} />
           </TabPanel>
           <TabPanel id="pnl-definitions" controlledBy="tab-definitions">
-            <LocalAlert variant="info">
-              {t('common.status_messages.tab_definitions')}
-            </LocalAlert>
+            {definitionsMandatoryLinkExists && (
+              <DefinitionsTab definitions={metadataOrUndefined?.definitions} />
+            )}
           </TabPanel>
           <TabPanel id="pnl-details" controlledBy="tab-details">
-            {tableData.data?.metadata && (
-              <DetailsTab tableMetadata={tableData.data.metadata} />
+            {metadataOrUndefined && (
+              <DetailsTab tableMetadata={metadataOrUndefined} />
             )}
           </TabPanel>
           <TabPanel id="pnl-contact" controlledBy="tab-contact">
-            <ContactTab contacts={tableData.data?.metadata.contacts || []} />
+            <ContactTab contacts={metadataOrUndefined?.contacts || []} />
           </TabPanel>
         </div>
       </TabsProvider>
