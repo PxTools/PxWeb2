@@ -241,8 +241,17 @@
           "show_all_footnotes": "إظهار كافة الملاحظات للجدول"
         },
         "definitions": {
-          "title": "التعاريف",
-          "description": "الجدول جزء من الإحصائيات {{statistics}}"
+          "panel_title": "التعاريف",
+          "about_statistics": {
+            "title": "",
+            "description": "",
+            "link_text_definitions": "",
+            "link_text_homepage": ""
+          },
+          "metadata": {
+            "title": "",
+            "description": ""
+          }
         },
         "details": {
           "title": "تفاصيل",
