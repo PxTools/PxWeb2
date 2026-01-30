@@ -398,9 +398,10 @@ export type TableTitlePartsType = {
 /**
  * Builds table title parts from the given variables and layout.
  *
- * Determines `contentText` from the contents variable:
- * - If the contents variable has a single value, uses its `contentInfo.alternativeText`.
- * - If it has multiple values, uses `tableContentText` as a fallback (typically a combined content text).
+ * Determines `contentText` based on configuration and the contents variable:
+ * - Respects the configuration setting `useDynamicContentInTitle` (via `getConfig()?.useDynamicContentInTitle`).
+ *   - When `true`: If the contents variable has a single value, `contentText` is set to that value's `contentInfo.alternativeText`; otherwise it falls back to `tableContentText`.
+ *   - When `false`: `contentText` always derives from `tableContentText`, regardless of the contents variable.
  *
  * Combines labels from `stub` and `heading` to form the title:
  * - `firstTitlePart` is all labels except the last, joined with ", ".
