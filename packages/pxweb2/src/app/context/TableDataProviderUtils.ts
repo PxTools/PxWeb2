@@ -24,6 +24,7 @@ import {
 } from '@pxweb2/pxweb2-ui';
 
 import { translateOutsideReactWithParams } from '../util/language/translateOutsideReact';
+import { getConfig } from '../util/config/getConfig';
 
 const decimalFormats: Record<number, string> = {
   0: 'number.simple_number_with_zero_decimal',
@@ -428,16 +429,21 @@ export function getTableTitleParts(
 
   const titleParts: string[] = [];
 
-  const contentsVariable = variables.find(
-    (v) => v.type === VartypeEnum.CONTENTS_VARIABLE,
-  );
+  const useDynamicContentInTitle =
+    getConfig()?.useDynamicContentInTitle ?? false;
 
-  if (contentsVariable) {
-    if (contentsVariable.values.length == 1) {
-      tableTitleParts.contentText =
-        contentsVariable.values[0].contentInfo?.alternativeText || '';
-    } else if (contentsVariable.values.length > 1) {
-      tableTitleParts.contentText = tableContentText || '';
+  tableTitleParts.contentText = tableContentText || '';
+
+  if (useDynamicContentInTitle) {
+    const contentsVariable = variables.find(
+      (v) => v.type === VartypeEnum.CONTENTS_VARIABLE,
+    );
+
+    if (contentsVariable) {
+      if (contentsVariable.values.length == 1) {
+        tableTitleParts.contentText =
+          contentsVariable.values[0].contentInfo?.alternativeText || '';
+      }
     }
   }
 

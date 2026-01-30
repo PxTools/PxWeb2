@@ -1198,7 +1198,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       contextText,
     );
 
-    console.log({ tableTitleParts });
     return tableTitleParts;
   }, [data, variables.pxTableMetadata]);
 

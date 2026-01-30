@@ -13,7 +13,7 @@ window.PxWeb2Config = {
   baseApplicationPath: '/',
   apiUrl: 'https://api.scb.se/OV0104/v2beta/api/v2',
   maxDataCells: 150000,
-  useDynamicContentInTitle: false,
+  useDynamicContentInTitle: true,
   showBreadCrumbOnStartPage: false,
   specialCharacters: ['.', '..', ':', '-', '...', '*'],
   variableFilterExclusionList: {
