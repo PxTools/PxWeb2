@@ -164,19 +164,29 @@ export function ContentTop({
       setIsTableInformationOpen(false);
     });
   }, [isTableInformationOpen, tableInformationOpener, accessibility]);
+  const [tableTitle, setTableTitle] = useState('');
 
-  const { contentText, firstTitlePart, lastTitlePart } = buildTableTitle(
-    pxtable.stub,
-    pxtable.heading,
-  );
+  // Only recompute the table title when selectedMetadata changes
+  useEffect(() => {
+    // Skip building title until table data is available
+    if (!selectedMetadata) {
+      return;
+    }
 
-  // Example title: "Population by region, observations, year and sex"
-  const tableTitle = t('presentation_page.main_content.dynamic_table_title', {
-    // table_content_type: pxtable.metadata.contents,
-    table_content_type: contentText,
-    table_content_label_first_part: firstTitlePart,
-    table_content_label_last_part: lastTitlePart,
-  });
+    // try {
+    const { contentText, firstTitlePart, lastTitlePart } = buildTableTitle();
+    const newTitle = t('presentation_page.main_content.dynamic_table_title', {
+      table_content_type: contentText,
+      table_content_label_first_part: firstTitlePart,
+      table_content_label_last_part: lastTitlePart,
+    });
+    setTableTitle(newTitle);
+    // } catch (_) {
+    //   // If building the title fails due to missing table parts, ignore during initial render
+    //   // and allow title to be computed once data becomes available.
+    // }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedMetadata]);
 
   useEffect(() => {
     setTitle(staticTitle);

@@ -387,3 +387,60 @@ export function sortVariablesByType<T extends { type: VartypeEnum }>(
   // Use stable sort: JavaScript's Array.prototype.sort is stable in modern runtimes (Node >= 12, modern browsers).
   return copied.sort((a, b) => precedence[a.type] - precedence[b.type]);
 }
+
+export type TableTitlePartsType = {
+  contentText: string;
+  firstTitlePart: string;
+  lastTitlePart: string;
+};
+
+export function getTableTitleParts(
+  variables: Variable[],
+  stub: Variable[],
+  heading: Variable[],
+  tableContentText: string,
+): TableTitlePartsType {
+  const tableTitleParts: TableTitlePartsType = {
+    contentText: '',
+    firstTitlePart: '',
+    lastTitlePart: '',
+  };
+
+  const titleParts: string[] = [];
+
+  const contentsVariable = variables.find(
+    (v) => v.type === VartypeEnum.CONTENTS_VARIABLE,
+  );
+
+  if (contentsVariable) {
+    if (contentsVariable.values.length == 1) {
+      tableTitleParts.contentText =
+        contentsVariable.values[0].contentInfo?.alternativeText || '';
+    } else if (contentsVariable.values.length > 1) {
+      tableTitleParts.contentText = tableContentText || '';
+    }
+  }
+
+  // Add stub variables to title
+  stub.forEach((variable) => {
+    titleParts.push(variable.label);
+  });
+
+  // Add heading variables to title
+  heading.forEach((variable) => {
+    titleParts.push(variable.label);
+  });
+
+  const lastTitlePart = titleParts.pop();
+
+  if (!lastTitlePart) {
+    throw new Error(
+      'TableDataProviderUtil.getTableTitleParts: Missing last title part. This should not happen. Please report this as a bug.',
+    );
+  }
+
+  tableTitleParts.lastTitlePart = lastTitlePart;
+  tableTitleParts.firstTitlePart = titleParts.join(', ');
+
+  return tableTitleParts;
+}

@@ -16,8 +16,6 @@ import {
   PxTableMetadata,
   getPxTableData,
   setPxTableData,
-  Variable,
-  VartypeEnum,
 } from '@pxweb2/pxweb2-ui';
 import { mapJsonStat2Response } from '../../mappers/JsonStat2ResponseMapper';
 
@@ -26,6 +24,8 @@ import {
   filterStubAndHeadingArrays,
   autoPivotTable,
   pivotTableCW,
+  TableTitlePartsType,
+  getTableTitleParts,
 } from './TableDataProviderUtils';
 import { problemMessage } from '../util/problemMessage';
 import { PivotType } from './PivotType';
@@ -39,10 +39,7 @@ export interface TableDataContextType {
   pivotToMobile: () => void;
   pivotToDesktop: () => void;
   pivot: (type: PivotType) => void;
-  buildTableTitle: (
-    stub: Variable[],
-    heading: Variable[],
-  ) => { contentText: string; firstTitlePart: string; lastTitlePart: string };
+  buildTableTitle: () => TableTitlePartsType;
 }
 
 interface TableDataProviderProps {
@@ -313,7 +310,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * @param tableId - The id of the table to fetch data for.
    * @param i18n - The i18n object for handling langauages
    * @param variablesSelection - User selection of variables and their values.
-   * @param tableContentText - The content text of the table.
    * @param codelistChanged - If the codelist has changed.
    */
   const fetchWithoutValidAccData = React.useCallback(
@@ -322,7 +318,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       i18n: i18n,
       isMobile: boolean,
       variablesSelection: VariablesSelection,
-      tableContentText: string | undefined,
       codelistChanged: boolean,
     ) => {
       // Clear current table while fetching new data if codelist has changed
@@ -343,10 +338,10 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         variablesSelection,
       );
 
-      // We need to set the table contents as defined in table metadata
-      if (tableContentText) {
-        pxTable.metadata.contents = tableContentText;
-      }
+      // // We need to set the table contents as defined in table metadata
+      // if (tableContentText) {
+      //   pxTable.metadata.contents = tableContentText;
+      // }
 
       initializeStubAndHeading(pxTable, isMobile, i18n.language);
       setData(pxTable);
@@ -763,7 +758,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * @param tableId - The id of the table to fetch data for.
    * @param i18n - The i18n object for handling langauages
    * @param variablesSelection - User selection of variables and their values.
-   * @param tableContentText - The content text of the table.
    */
   const fetchWithValidAccData = React.useCallback(
     async (
@@ -771,7 +765,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       i18n: i18n,
       isMobile: boolean,
       variablesSelection: VariablesSelection,
-      tableContentText: string | undefined,
     ) => {
       // Check if all data and metadata asked for by the user is already loaded from earlier API-calls
 
@@ -821,9 +814,9 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       );
 
       // We need to set the table contents as defined in table metadata
-      if (tableContentText) {
-        pxTable.metadata.contents = tableContentText;
-      }
+      // if (tableContentText) {
+      //   pxTable.metadata.contents = tableContentText;
+      // }
 
       // Merge pxTable with accumulatedData
       mergeWithAccumulatedData(
@@ -979,7 +972,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         const selections: Array<VariableSelection> = [];
 
         // Get table content text from table metadata
-        const tableContentText = variables.pxTableMetadata?.contents;
+        // const tableContentText = variables.pxTableMetadata?.contents;
 
         // Get selection from Selection provider
         const ids = variables.getUniqueIds();
@@ -1018,7 +1011,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
             i18n,
             isMobile,
             variablesSelection,
-            tableContentText,
           );
         } else {
           // We do not have valid accumulated data in the data cube, so we need to fetch
@@ -1027,7 +1019,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
             i18n,
             isMobile,
             variablesSelection,
-            tableContentText,
             codelistChanged,
           );
         }
@@ -1129,69 +1120,86 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     }
   }, [data, stubDesktop, headingDesktop]);
 
-  /**
-   * Builds a title for the table based on the stub and heading variables.
-   * The title is built by concatenating the labels of the variables in the stub first,
-   * followed by the labels of the variables in the heading.
-   *
-   * @param stub - Array of variables in the stub
-   * @param heading - Array of variables in the heading
-   * @returns An object with the first and last title parts as strings
-   */
-  const buildTableTitle = React.useCallback(
-    (
-      stub: Variable[],
-      heading: Variable[],
-    ): {
-      contentText: string;
-      firstTitlePart: string;
-      lastTitlePart: string;
-    } => {
-      const titleParts: string[] = [];
+  // /**
+  //  * Builds a title for the table based on the stub and heading variables.
+  //  * The title is built by concatenating the labels of the variables in the stub first,
+  //  * followed by the labels of the variables in the heading.
+  //  *
+  //  * @param stub - Array of variables in the stub
+  //  * @param heading - Array of variables in the heading
+  //  * @returns An object with table content text together with the first and last title parts as strings
+  //  */
+  // const buildTableTitle = React.useCallback(
+  //   (
+  //     stub: Variable[],
+  //     heading: Variable[],
+  //   ): {
+  //     contentText: string;
+  //     firstTitlePart: string;
+  //     lastTitlePart: string;
+  //   } => {
+  //     const titleParts: string[] = [];
 
-      const contentsVariable = data?.metadata.variables.find(
-        (v) => v.type === VartypeEnum.CONTENTS_VARIABLE,
-      );
+  //     const contentsVariable = data?.metadata.variables.find(
+  //       (v) => v.type === VartypeEnum.CONTENTS_VARIABLE,
+  //     );
 
-      let contentText: string = '';
+  //     let contentText: string = '';
 
-      console.log(data?.metadata);
-      if (contentsVariable) {
-        console.log({ contentsVariable });
-        if (contentsVariable.values.length == 1) {
-          contentText =
-            contentsVariable.values[0].contentInfo?.alternativeText || '';
-        } else if (contentsVariable.values.length > 1) {
-          contentText = data?.metadata.contents || '';
-        }
-      }
+  //     console.log(data?.metadata);
+  //     if (contentsVariable) {
+  //       console.log({ contentsVariable });
+  //       if (contentsVariable.values.length == 1) {
+  //         contentText =
+  //           contentsVariable.values[0].contentInfo?.alternativeText || '';
+  //       } else if (contentsVariable.values.length > 1) {
+  //         contentText = data?.metadata.contents || '';
+  //       }
+  //     }
 
-      // Add stub variables to title
-      stub.forEach((variable) => {
-        titleParts.push(variable.label);
-      });
+  //     // Add stub variables to title
+  //     stub.forEach((variable) => {
+  //       titleParts.push(variable.label);
+  //     });
 
-      // Add heading variables to title
-      heading.forEach((variable) => {
-        titleParts.push(variable.label);
-      });
+  //     // Add heading variables to title
+  //     heading.forEach((variable) => {
+  //       titleParts.push(variable.label);
+  //     });
 
-      const lastTitlePart = titleParts.pop();
+  //     const lastTitlePart = titleParts.pop();
 
-      if (!lastTitlePart) {
-        throw new Error(
-          'TableDataProvider.buildTableTitle: Missing last title part. This should not happen. Please report this as a bug.',
-        );
-      }
+  //     if (!lastTitlePart) {
+  //       throw new Error(
+  //         'TableDataProvider.buildTableTitle: Missing last title part. This should not happen. Please report this as a bug.',
+  //       );
+  //     }
 
-      const firstTitlePart = titleParts.join(', ');
+  //     const firstTitlePart = titleParts.join(', ');
 
-      console.log({ contentText });
+  //     console.log({ contentText });
 
-      return { contentText, firstTitlePart, lastTitlePart };
-    },
-    [data?.metadata],
-  );
+  //     return { contentText, firstTitlePart, lastTitlePart };
+  //   },
+  //   [data?.metadata],
+  // );
+
+  const buildTableTitle = React.useCallback((): TableTitlePartsType => {
+    const vars = data?.metadata.variables || [];
+    const stub = data?.stub || [];
+    const heading = data?.heading || [];
+    const contextText = variables.pxTableMetadata?.contents || '';
+
+    const tableTitleParts = getTableTitleParts(
+      vars,
+      stub,
+      heading,
+      contextText,
+    );
+
+    console.log({ tableTitleParts });
+    return tableTitleParts;
+  }, [data, variables.pxTableMetadata]);
 
   /**
    * Pivots the table based on the specified pivot type.
