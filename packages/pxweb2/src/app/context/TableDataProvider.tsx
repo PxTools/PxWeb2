@@ -1190,6 +1190,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     const heading = data?.heading || [];
     const contextText = variables.pxTableMetadata?.contents || '';
 
+    // NOTE: We use the actual objects in the PxTable. We trust that they are not changed by the getTableTitleParts function.
     const tableTitleParts = getTableTitleParts(
       vars,
       stub,

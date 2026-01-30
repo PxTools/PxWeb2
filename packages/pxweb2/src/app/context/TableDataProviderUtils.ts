@@ -394,6 +394,26 @@ export type TableTitlePartsType = {
   lastTitlePart: string;
 };
 
+/**
+ * Builds table title parts from the given variables and layout.
+ *
+ * Determines `contentText` from the contents variable:
+ * - If the contents variable has a single value, uses its `contentInfo.alternativeText`.
+ * - If it has multiple values, uses `tableContentText` as a fallback (typically a combined content text).
+ *
+ * Combines labels from `stub` and `heading` to form the title:
+ * - `firstTitlePart` is all labels except the last, joined with ", ".
+ * - `lastTitlePart` is the final label; an error is thrown if none can be determined.
+ *
+ * NOTE: This function does NOT mutate the input objects.
+ *
+ * @param variables - All table variables; used to locate the contents variable.
+ * @param stub - Variables placed in the stub (rows); their labels contribute to the title.
+ * @param heading - Variables placed in the heading (columns); their labels contribute to the title.
+ * @param tableContentText - Fallback text used when the contents variable has multiple values.
+ * @returns Table title parts: `contentText`, `firstTitlePart`, and `lastTitlePart`.
+ * @throws Error if no `lastTitlePart` can be determined.
+ */
 export function getTableTitleParts(
   variables: Variable[],
   stub: Variable[],

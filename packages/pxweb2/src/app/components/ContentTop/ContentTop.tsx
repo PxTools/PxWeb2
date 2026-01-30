@@ -129,6 +129,8 @@ export function ContentTop({
     }
     setIsTableInformationOpen(true);
   };
+
+  // TODO: Only build note info when selectedMetadata changes
   const noteInfo =
     selectedMetadata && totalMetadata
       ? getMandatoryNotesCompressed(
@@ -173,7 +175,6 @@ export function ContentTop({
       return;
     }
 
-    // try {
     const { contentText, firstTitlePart, lastTitlePart } = buildTableTitle();
     const newTitle = t('presentation_page.main_content.dynamic_table_title', {
       table_content_type: contentText,
@@ -181,10 +182,6 @@ export function ContentTop({
       table_content_label_last_part: lastTitlePart,
     });
     setTableTitle(newTitle);
-    // } catch (_) {
-    //   // If building the title fails due to missing table parts, ignore during initial render
-    //   // and allow title to be computed once data becomes available.
-    // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedMetadata]);
 
