@@ -312,8 +312,17 @@
           "important_about_selection_body_one_note": "Click on this message to read the note."
         },
         "definitions": {
-          "title": "Definitions",
-          "description": "The table is part of the statistics {{statistics}}"
+          "panel_title": "Definitions",
+          "about_statistics": {
+            "title": "About the statistics",
+            "description": "Definitions, explanations, and other information related to the table can be found on the table's statistics page.",
+            "link_text_definitions": "Definitions and explanations",
+            "link_text_homepage": "Statistics page"
+          },
+          "metadata": {
+            "title": "Metadata",
+            "description": "Here you can find links to variable definitions and classifications used in the table."
+          }
         },
         "details": {
           "title": "Details",

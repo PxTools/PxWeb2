@@ -1,0 +1,41 @@
+.metadataContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: stretch;
+}
+
+.metadataHeader {
+  display: flex;
+  padding-bottom: 28px;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.variableLinkGroup {
+  display: flex;
+  padding-bottom: 28px;
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: stretch;
+}
+
+.linkGroupWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: stretch;
+
+  // Reset list styles
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.linkWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 4px;
+}
