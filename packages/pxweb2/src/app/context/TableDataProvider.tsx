@@ -288,6 +288,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       const res = await SavedQueriesService.runSaveQuery(
         loadSavedQueryId,
         i18n.language,
+        OutputFormatType.JSON_STAT2,
       );
       // Map response to json-stat2 Dataset
       const pxDataobj: unknown = res;
