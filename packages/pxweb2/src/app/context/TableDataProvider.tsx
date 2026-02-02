@@ -339,11 +339,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         variablesSelection,
       );
 
-      // // We need to set the table contents as defined in table metadata
-      // if (tableContentText) {
-      //   pxTable.metadata.contents = tableContentText;
-      // }
-
       initializeStubAndHeading(pxTable, isMobile, i18n.language);
       setData(pxTable);
 
@@ -814,11 +809,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         notLoadedVarSelection,
       );
 
-      // We need to set the table contents as defined in table metadata
-      // if (tableContentText) {
-      //   pxTable.metadata.contents = tableContentText;
-      // }
-
       // Merge pxTable with accumulatedData
       mergeWithAccumulatedData(
         pxTable,
@@ -1121,70 +1111,10 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     }
   }, [data, stubDesktop, headingDesktop]);
 
-  // /**
-  //  * Builds a title for the table based on the stub and heading variables.
-  //  * The title is built by concatenating the labels of the variables in the stub first,
-  //  * followed by the labels of the variables in the heading.
-  //  *
-  //  * @param stub - Array of variables in the stub
-  //  * @param heading - Array of variables in the heading
-  //  * @returns An object with table content text together with the first and last title parts as strings
-  //  */
-  // const buildTableTitle = React.useCallback(
-  //   (
-  //     stub: Variable[],
-  //     heading: Variable[],
-  //   ): {
-  //     contentText: string;
-  //     firstTitlePart: string;
-  //     lastTitlePart: string;
-  //   } => {
-  //     const titleParts: string[] = [];
-
-  //     const contentsVariable = data?.metadata.variables.find(
-  //       (v) => v.type === VartypeEnum.CONTENTS_VARIABLE,
-  //     );
-
-  //     let contentText: string = '';
-
-  //     console.log(data?.metadata);
-  //     if (contentsVariable) {
-  //       console.log({ contentsVariable });
-  //       if (contentsVariable.values.length == 1) {
-  //         contentText =
-  //           contentsVariable.values[0].contentInfo?.alternativeText || '';
-  //       } else if (contentsVariable.values.length > 1) {
-  //         contentText = data?.metadata.contents || '';
-  //       }
-  //     }
-
-  //     // Add stub variables to title
-  //     stub.forEach((variable) => {
-  //       titleParts.push(variable.label);
-  //     });
-
-  //     // Add heading variables to title
-  //     heading.forEach((variable) => {
-  //       titleParts.push(variable.label);
-  //     });
-
-  //     const lastTitlePart = titleParts.pop();
-
-  //     if (!lastTitlePart) {
-  //       throw new Error(
-  //         'TableDataProvider.buildTableTitle: Missing last title part. This should not happen. Please report this as a bug.',
-  //       );
-  //     }
-
-  //     const firstTitlePart = titleParts.join(', ');
-
-  //     console.log({ contentText });
-
-  //     return { contentText, firstTitlePart, lastTitlePart };
-  //   },
-  //   [data?.metadata],
-  // );
-
+  /**
+   * Builds the table title parts based on the current table data and metadata.
+   * @returns An object containing the parts of the table title.
+   */
   const buildTableTitle = React.useCallback((): TableTitlePartsType => {
     const vars = data?.metadata.variables || [];
     const stub = data?.stub || [];
