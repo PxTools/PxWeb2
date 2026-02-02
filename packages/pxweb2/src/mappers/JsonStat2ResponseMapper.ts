@@ -616,6 +616,8 @@ function getCodelists(dimensionExtension: extension_dimension): CodeList[] {
       return {
         id: codeList.id,
         label: codeList.label,
+        // No values provided in CodelistInformation; default to empty
+        values: [],
       };
     });
   }
