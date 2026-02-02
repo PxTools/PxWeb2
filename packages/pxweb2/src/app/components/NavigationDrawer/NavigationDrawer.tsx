@@ -27,7 +27,10 @@ export const NavigationDrawer = forwardRef<
   const { t } = useTranslation();
   const { addModal, removeModal } = useAccessibility();
   const { skipToMainFocused, isMobile, isTablet } = useApp();
-  const isSmallScreen = isMobile === true || isTablet === true || window.matchMedia('(max-width: 1199px)').matches;
+  const isSmallScreen =
+    isMobile === true ||
+    isTablet === true ||
+    window.matchMedia('(max-width: 1199px)').matches;
   const containerRef = React.useRef<HTMLDivElement | null>(null);
   const headingId = React.useId();
 
@@ -79,7 +82,9 @@ export const NavigationDrawer = forwardRef<
       const sel =
         'a[href], area[href], input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex]:not([tabindex="-1"])';
       const node = containerRef.current;
-      if (!node) {return [] as HTMLElement[];}
+      if (!node) {
+        return [] as HTMLElement[];
+      }
       const list = Array.from(node.querySelectorAll<HTMLElement>(sel)).filter(
         (el) => el.offsetParent !== null,
       );
@@ -87,7 +92,8 @@ export const NavigationDrawer = forwardRef<
     };
 
     const focusables = getFocusable();
-    const first = focusables[0] || (ref && typeof ref !== 'function' ? ref.current : null);
+    const first =
+      focusables[0] || (ref && typeof ref !== 'function' ? ref.current : null);
     const last = focusables[focusables.length - 1] || first;
 
     // Move focus into the drawer before trapping
@@ -107,9 +113,13 @@ export const NavigationDrawer = forwardRef<
         onClose(true, view);
         return;
       }
-      if (e.key !== 'Tab') {return;}
+      if (e.key !== 'Tab') {
+        return;
+      }
       const active = document.activeElement as HTMLElement | null;
-      if (!first || !last) {return;}
+      if (!first || !last) {
+        return;
+      }
       if (e.shiftKey) {
         if (active === first) {
           e.preventDefault();
@@ -126,7 +136,9 @@ export const NavigationDrawer = forwardRef<
     node?.addEventListener('keydown', handleKeyDown);
     // Global trap to catch Tab presses even if focus escapes
     const handleDocKeyDown = (e: KeyboardEvent) => {
-      if (e.key !== 'Tab') {return;}
+      if (e.key !== 'Tab') {
+        return;
+      }
       const inDrawer = node?.contains(document.activeElement as Node) ?? false;
       if (!inDrawer && first) {
         e.preventDefault();
@@ -141,7 +153,8 @@ export const NavigationDrawer = forwardRef<
     };
   }, [onClose, view, ref, isSmallScreen]);
 
-  const portalTarget = document.querySelector('[data-drawer-root]') ?? document.body;
+  const portalTarget =
+    document.querySelector('[data-drawer-root]') ?? document.body;
   return createPortal(
     <>
       {isSmallScreen && (
