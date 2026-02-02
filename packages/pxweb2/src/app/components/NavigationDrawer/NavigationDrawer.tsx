@@ -1,4 +1,5 @@
 import React, { forwardRef } from 'react';
+import { createPortal } from 'react-dom';
 import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
 
@@ -25,7 +26,10 @@ export const NavigationDrawer = forwardRef<
 >(({ children, heading, view, openedWithKeyboard, onClose }, ref) => {
   const { t } = useTranslation();
   const { addModal, removeModal } = useAccessibility();
-  const { skipToMainFocused } = useApp();
+  const { skipToMainFocused, isMobile, isTablet } = useApp();
+  const isSmallScreen = isMobile === true || isTablet === true || window.matchMedia('(max-width: 1199px)').matches;
+  const containerRef = React.useRef<HTMLDivElement | null>(null);
+  const headingId = React.useId();
 
   React.useEffect(() => {
     addModal('NavigationDrawer', () => {
@@ -66,21 +70,100 @@ export const NavigationDrawer = forwardRef<
     }
   }, [openedWithKeyboard, ref]);
 
-  return (
+  // Trap focus within the drawer on small screens only
+  React.useEffect(() => {
+    if (!isSmallScreen) {
+      return;
+    }
+    const getFocusable = () => {
+      const sel =
+        'a[href], area[href], input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+      const node = containerRef.current;
+      if (!node) {return [] as HTMLElement[];}
+      const list = Array.from(node.querySelectorAll<HTMLElement>(sel)).filter(
+        (el) => el.offsetParent !== null,
+      );
+      return list as HTMLElement[];
+    };
+
+    const focusables = getFocusable();
+    const first = focusables[0] || (ref && typeof ref !== 'function' ? ref.current : null);
+    const last = focusables[focusables.length - 1] || first;
+
+    // Move focus into the drawer before trapping
+    const active = document.activeElement as HTMLElement | null;
+    const node = containerRef.current;
+    if (active && node && !node.contains(active)) {
+      active.blur();
+    }
+    if (first) {
+      // Defer to next tick to ensure render
+      setTimeout(() => first.focus(), 0);
+    }
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onClose(true, view);
+        return;
+      }
+      if (e.key !== 'Tab') {return;}
+      const active = document.activeElement as HTMLElement | null;
+      if (!first || !last) {return;}
+      if (e.shiftKey) {
+        if (active === first) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (active === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+
+    node?.addEventListener('keydown', handleKeyDown);
+    // Global trap to catch Tab presses even if focus escapes
+    const handleDocKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab') {return;}
+      const inDrawer = node?.contains(document.activeElement as Node) ?? false;
+      if (!inDrawer && first) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener('keydown', handleDocKeyDown, true);
+
+    return () => {
+      node?.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('keydown', handleDocKeyDown, true);
+    };
+  }, [onClose, view, ref, isSmallScreen]);
+
+  const portalTarget = document.querySelector('[data-drawer-root]') ?? document.body;
+  return createPortal(
     <>
+      {isSmallScreen && (
+        <div
+          onClick={() => onClose(false, view)}
+          className={styles.backdrop}
+          aria-hidden="true"
+        ></div>
+      )}
       <div
-        onClick={() => onClose(false, view)}
-        className={styles.backdrop}
-      ></div>
-      <div
+        ref={containerRef}
         className={cl(styles.navigationDrawer, styles.fadein, {
           [styles.skipToMainContentVisible]: skipToMainFocused,
         })}
-        role="region"
-        aria-label={heading}
+        role={isSmallScreen ? 'dialog' : 'region'}
+        aria-modal={isSmallScreen ? 'true' : undefined}
+        aria-labelledby={headingId}
+        data-testid={`${view}-drawer`}
+        data-view={view}
       >
         <div className={styles.heading}>
-          <Heading level="2" size="medium">
+          <Heading id={headingId} level="2" size="medium">
             {heading}
           </Heading>
           <button
@@ -100,7 +183,8 @@ export const NavigationDrawer = forwardRef<
         </div>
         {children}
       </div>
-    </>
+    </>,
+    portalTarget,
   );
 });
 

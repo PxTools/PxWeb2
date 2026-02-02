@@ -67,18 +67,9 @@
     border-end-end-radius: var(--px-border-radius-xlarge);
     border-end-start-radius: var(--px-border-radius-none);
 
-    // Not from Figma
-    position: absolute;
-    inset-inline-start: 120px; // Instead of "left" to handle rtl languages
-    z-index: 999;
-
-    // Position NavigationDrawer below the header
-    top: fixed.$spacing-22;
-
-    &.skipToMainContentVisible {
-      // Calculate position of NavigationDrawer below the header and SkipToMainContent
-      top: calc(fixed.$spacing-22 + var(--skip-to-main-content-height));
-    }
+    // Participate in flex layout within mainContainer
+    position: static;
+    order: 0;
   }
 
   // xlarge and xxlarge
@@ -86,6 +77,10 @@
     width: 396px;
     padding: 0px fixed.$spacing-8 fixed.$spacing-8 0px;
     border-radius: var(--px-border-radius-none);
+
+    // Participate in flex layout within mainContainer
+    position: static;
+    order: 0;
   }
 }
 

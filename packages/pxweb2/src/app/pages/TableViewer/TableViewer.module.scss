@@ -60,6 +60,7 @@
     justify-content: center;
     align-items: flex-start;
     flex-shrink: 0;
+    //position: relative; // Anchor absolute-positioned drawer inside this container
 
     // Handle rtl languages
     border-start-start-radius: var(--px-border-radius-xlarge);
@@ -97,6 +98,7 @@
     padding-bottom: fixed.$spacing-8;
     overflow-y: auto;
     gap: fixed.$spacing-8;
+    order: 1; // Ensure content sits to the right of the drawer in flex layout
   }
 
   &.expanded {
