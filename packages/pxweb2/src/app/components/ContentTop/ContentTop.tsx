@@ -131,7 +131,6 @@ export function ContentTop({
     setIsTableInformationOpen(true);
   };
 
-  // TODO: Only build note info when selectedMetadata changes
   const noteInfo =
     selectedMetadata && totalMetadata
       ? getMandatoryNotesCompressed(
