@@ -1,4 +1,5 @@
 @use '../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixed;
+@use '../../../../style-dictionary/dist/css/variables.css' as var;
 @use '../../text-styles.scss';
 
 .link-card-medium {
@@ -6,6 +7,7 @@
   padding: fixed.$spacing-4 fixed.$spacing-5;
   align-items: flex-start;
   gap: 1rem;
+  min-height: 78px;
 
   border-radius: var(--px-border-radius-large);
   border: 1px solid var(--px-color-border-subtle);
@@ -40,6 +42,7 @@
   padding: fixed.$spacing-3 fixed.$spacing-4;
   align-items: flex-start;
   gap: 0.75rem;
+  min-height: 70px;
 
   border-radius: var(--px-border-radius-medium);
   border: 1px solid var(--px-color-border-subtle);
@@ -90,6 +93,7 @@
 
 .heading-wrapper {
   align-self: stretch;
+  color: var(--px-color-text-default);
 }
 
 .description-wrapper {
