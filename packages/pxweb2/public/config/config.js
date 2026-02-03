@@ -1,4 +1,4 @@
-window.PxWeb2Config = {
+globalThis.PxWeb2Config = {
   language: {
     supportedLanguages: [
       { shorthand: 'en', languageName: 'English' },
