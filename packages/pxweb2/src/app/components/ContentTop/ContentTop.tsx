@@ -182,8 +182,7 @@ export function ContentTop({
       table_content_label_last_part: lastTitlePart,
     });
     setTableTitle(newTitle);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedMetadata]);
+  }, [buildTableTitle, selectedMetadata, t]);
 
   useEffect(() => {
     setTitle(staticTitle);
