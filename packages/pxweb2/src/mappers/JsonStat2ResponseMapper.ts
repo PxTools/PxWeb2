@@ -5,6 +5,10 @@ import {
   jsonstat_note,
   jsonstat_noteMandatory,
   extension_dimension,
+  Role,
+  jsonstat_category,
+  jsonstat_extension_link,
+  label,
   CodelistInformation,
 } from '@pxweb2/pxweb2-api-client';
 import {
@@ -178,6 +182,15 @@ type counter = {
 interface VariableWithValueDisplayType extends Variable {
   valueDisplayType: ValueDisplayType;
 }
+
+// Narrowed type for a single dimension entry value based on the API client's Dimension type
+type DimensionItem = {
+  label?: label;
+  note?: jsonstat_note;
+  category?: jsonstat_category;
+  extension?: extension_dimension;
+  link?: jsonstat_extension_link;
+};
 
 /**
  * Maps a JSONStat2 dataset response to a PxTable object.
@@ -413,14 +426,18 @@ function getMandatoryNote(
  * @param role - The role object from the JSON-stat 2.0 response.
  * @returns A Variable object if the dimension has valid categories; otherwise, null.
  */
-function mapDimension(id: string, dimension: any, role: any): Variable | null {
+function mapDimension(
+  id: string,
+  dimension: DimensionItem,
+  role: Role | undefined,
+): Variable | null {
   if (dimension.category?.index && dimension.category.label) {
     const variableType = mapVariableTypeEnum(id, role);
     const isContentVariable = variableType === VartypeEnum.CONTENTS_VARIABLE;
 
     const variable: VariableWithValueDisplayType = {
       id: id,
-      label: dimension.label,
+      label: dimension.label ?? '',
       type: variableType,
       mandatory: getMandatoryVariable(dimension.extension),
       values: mapVariableValues(dimension, isContentVariable),
@@ -443,24 +460,28 @@ function mapDimension(id: string, dimension: any, role: any): Variable | null {
  * @returns An array of Value objects.
  */
 function mapVariableValues(
-  dimension: any,
+  dimension: DimensionItem,
   isContentVariable: boolean,
 ): Value[] {
   const valueDisplayType: ValueDisplayType = getValueDisplayType(
     dimension.extension,
   );
   const values: Value[] = [];
-  const indexEntries = Object.entries(dimension.category.index);
+  const category = dimension.category;
+  if (!category?.index || !category?.label) {
+    return values;
+  }
+  const indexEntries = Object.entries(category.index);
   indexEntries.sort(
     ([, valueA], [, valueB]) => Number(valueA) - Number(valueB),
   );
 
   for (const [code] of indexEntries) {
-    if (Object.hasOwn(dimension.category.index, code)) {
+    if (Object.hasOwn(category.index, code)) {
       const labelText: string = getLabelText(
         valueDisplayType,
         code,
-        dimension.category.label[code],
+        category.label[code],
       );
 
       const mappedValue: Value = { code: code, label: labelText };
@@ -485,12 +506,15 @@ function mapVariableValues(
  * @param code - The code of the value.
  * @returns The ContentInfo object for the value.
  */
-function mapContentInfo(dimension: any, code: string): ContentInfo {
-  const unit = dimension.category.unit?.[code] ?? '';
+function mapContentInfo(
+  dimension: DimensionItem,
+  code: string,
+): ContentInfo {
+  const unitInfo = dimension.category?.unit?.[code];
 
   return {
-    unit: unit.base,
-    decimals: unit.decimals,
+    unit: unitInfo?.base ?? '',
+    decimals: unitInfo?.decimals ?? 0,
     referencePeriod: dimension.extension?.refperiod?.[code] ?? '',
     basePeriod: dimension.extension?.basePeriod?.[code] ?? '',
     alternativeText: dimension.extension?.alternativeText?.[code] ?? '',
@@ -503,26 +527,28 @@ function mapContentInfo(dimension: any, code: string): ContentInfo {
  * @param dimension - The dimension object from the JSON-stat 2.0 response.
  * @param mappedValues - The array of Value objects to map the notes to.
  */
-function mapValueNotes(dimension: any, mappedValues: Value[]): void {
-  if (
-    dimension.category?.index &&
-    dimension.category.label &&
-    dimension.category.note
-  ) {
-    const noteEntries = Object.entries(dimension.category.note);
+function mapValueNotes(
+  dimension: DimensionItem,
+  mappedValues: Value[],
+): void {
+  const category = dimension.category;
+  if (!category?.index || !category?.label || !category?.note) {
+    return;
+  }
 
-    for (const [code] of noteEntries) {
-      if (Object.hasOwn(dimension.category.note, code)) {
-        const noteTexts = dimension.category.note[code];
+  const noteEntries = Object.entries(category.note);
 
-        for (let i = 0; i < noteTexts.length; i++) {
-          let newNote: Note = {
-            text: noteTexts[i],
-            mandatory: getMandatoryValueNote(dimension.extension, code, i),
-          };
+  for (const [code] of noteEntries) {
+    if (Object.hasOwn(category.note, code)) {
+      const noteTexts = category.note[code];
 
-          addNoteToItsValue(code, newNote, mappedValues);
-        }
+      for (let i = 0; i < noteTexts.length; i++) {
+        let newNote: Note = {
+          text: noteTexts[i],
+          mandatory: getMandatoryValueNote(dimension.extension, code, i),
+        };
+
+        addNoteToItsValue(code, newNote, mappedValues);
       }
     }
   }
@@ -537,7 +563,7 @@ function mapValueNotes(dimension: any, mappedValues: Value[]): void {
  * @returns True if the note is mandatory; otherwise, false.
  */
 function getMandatoryValueNote(
-  dimensionExtension: extension_dimension,
+  dimensionExtension: extension_dimension | undefined,
   code: string,
   noteIndex: number,
 ): boolean {
@@ -557,10 +583,8 @@ function getMandatoryValueNote(
 function addNoteToItsValue(code: string, note: Note, values: Value[]): void {
   const mappedValue = values.find((v) => v.code === code);
   if (mappedValue) {
-    if (!mappedValue.notes) {
-      mappedValue.notes = [];
-    }
-    mappedValue.notes?.push(note);
+    mappedValue.notes ??= [];
+    mappedValue.notes.push(note);
   }
 }
 
@@ -571,7 +595,7 @@ function addNoteToItsValue(code: string, note: Note, values: Value[]): void {
  * @returns The value display type for the dimension.
  */
 function getValueDisplayType(
-  dimensionExtension: extension_dimension,
+  dimensionExtension: extension_dimension | undefined,
 ): ValueDisplayType {
   if (dimensionExtension?.show) {
     if (dimensionExtension.show === 'code') {
@@ -596,7 +620,7 @@ function getValueDisplayType(
  * @returns True if the variable is mandatory; otherwise, false.
  */
 function getMandatoryVariable(
-  dimensionExtension: extension_dimension,
+  dimensionExtension: extension_dimension | undefined,
 ): boolean {
   if (dimensionExtension?.elimination) {
     return !dimensionExtension.elimination;
@@ -610,7 +634,9 @@ function getMandatoryVariable(
  * @param dimensionExtension - The dimension extension object from the JSON-stat 2.0 response.
  * @returns An array of CodeList objects.
  */
-function getCodelists(dimensionExtension: extension_dimension): CodeList[] {
+function getCodelists(
+  dimensionExtension: extension_dimension | undefined,
+): CodeList[] {
   if (dimensionExtension?.codelists) {
     return dimensionExtension.codelists.map((codeList: CodelistInformation) => {
       return {
@@ -632,7 +658,10 @@ function getCodelists(dimensionExtension: extension_dimension): CodeList[] {
  * @param role - The role object from the JSON-stat 2.0 response.
  * @returns The corresponding `VartypeEnum` for the given variable ID.
  */
-function mapVariableTypeEnum(id: string, role: any): VartypeEnum {
+function mapVariableTypeEnum(
+  id: string,
+  role: Role | undefined,
+): VartypeEnum {
   if (!role) {
     return VartypeEnum.REGULAR_VARIABLE;
   }
