@@ -111,6 +111,7 @@ export function ContentTop({
     useState<boolean>(false);
   const [activeTab, setActiveTab] = useState('');
   const [tableInformationOpener, setTableInformationOpener] = useState('');
+  const [tableTitle, setTableTitle] = useState('');
   const accessibility = useContext(AccessibilityContext);
   const { pxTableMetadata, selectedVBValues } = useVariables();
   const selectedMetadata = useTableData().data?.metadata;
@@ -166,7 +167,6 @@ export function ContentTop({
       setIsTableInformationOpen(false);
     });
   }, [isTableInformationOpen, tableInformationOpener, accessibility]);
-  const [tableTitle, setTableTitle] = useState('');
 
   // Only recompute the table title when selectedMetadata changes
   useEffect(() => {
