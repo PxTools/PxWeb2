@@ -1,4 +1,5 @@
 import { vi, beforeEach } from 'vitest';
+import type { ReactNode } from 'react';
 
 // Disable CSS animations and transitions in tests for faster execution
 beforeEach(() => {
@@ -22,7 +23,13 @@ vi.mock('react-i18next', () => ({
     t: (key: string) => key,
     i18n: { changeLanguage: () => Promise.resolve() },
   }),
-  Trans: ({ i18nKey, children }: { i18nKey?: string; children?: any }) => {
+  Trans: ({
+    i18nKey,
+    children,
+  }: {
+    i18nKey?: string;
+    children?: ReactNode;
+  }) => {
     if (i18nKey) {
       return i18nKey;
     }

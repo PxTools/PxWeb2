@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import {
   render,
   screen,
@@ -87,7 +87,12 @@ vi.mock('react-i18next', () => ({
     },
     i18n: { language: 'en' },
   }),
-  initReactI18next: { type: '3rdParty', init: () => {} }, // <-- add this export for compatibility
+  initReactI18next: {
+    type: '3rdParty',
+    init: () => {
+      vi.fn();
+    },
+  }, // <-- add this export for compatibility
 }));
 
 // Mock context and export utils
@@ -118,6 +123,19 @@ vi.mock('../../../util/export/exportUtil', () => ({
   createSavedQueryURL: (id: string) => `https://example.com/query/${id}`,
   exportToFile: vi.fn(),
 }));
+
+// Mock CodeSnippet component used in DrawerSave
+vi.mock('@pxweb2/pxweb2-ui', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@pxweb2/pxweb2-ui')>();
+  type CodeSnippetProps = Parameters<typeof actual.CodeSnippet>[0];
+
+  return {
+    ...actual,
+    CodeSnippet: (props: CodeSnippetProps) => (
+      <div data-testid="code-snippet">{props.children}</div>
+    ),
+  };
+});
 
 describe('DrawerSave', () => {
   it('renders without crashing', () => {

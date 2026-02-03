@@ -74,9 +74,22 @@ describe('LinkCard', () => {
 
   it('should navigate to href on click', async () => {
     const user = userEvent.setup();
-    const handleClickSpy = vi
-      .spyOn(globalThis, 'open' as any)
-      .mockReturnValue(null);
+    const clickSpy = vi.fn();
+    let createdAnchor: HTMLAnchorElement | undefined;
+
+    const originalCreateElement = document.createElement.bind(document);
+    const createElementSpy = vi
+      .spyOn(document, 'createElement')
+      .mockImplementation((tagName: string) => {
+        const element = originalCreateElement(tagName);
+
+        if (tagName === 'a') {
+          createdAnchor = element as HTMLAnchorElement;
+          vi.spyOn(createdAnchor, 'click').mockImplementation(clickSpy);
+        }
+
+        return element;
+      });
 
     const { getByRole } = render(
       <LinkCard headingText="Test Heading" href="https://example.com" />,
@@ -85,7 +98,12 @@ describe('LinkCard', () => {
     const link = getByRole('link');
     await user.click(link);
 
-    handleClickSpy.mockRestore();
+    expect(createElementSpy).toHaveBeenCalledWith('a');
+    expect(clickSpy).toHaveBeenCalledTimes(1);
+    expect(createdAnchor?.href).toBe('https://example.com/');
+    expect(createdAnchor?.target).toBe('_blank');
+
+    createElementSpy.mockRestore();
   });
 
   it('should open link in new tab when newTab is true', async () => {

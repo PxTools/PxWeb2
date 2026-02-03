@@ -103,8 +103,17 @@ interface Resources {
             title: 'Contact';
           };
           definitions: {
-            description: 'The table is part of the statistics {{statistics}}';
-            title: 'Definitions';
+            about_statistics: {
+              description: "Definitions, explanations, and other information related to the table can be found on the table's statistics page.";
+              link_text_definitions: 'Definitions and explanations';
+              link_text_homepage: 'Statistics page';
+              title: 'About the statistics';
+            };
+            metadata: {
+              description: 'Here you can find links to variable definitions and classifications used in the table.';
+              title: 'Metadata';
+            };
+            panel_title: 'Definitions';
           };
           details: {
             base_time: 'Base time';

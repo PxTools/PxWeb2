@@ -113,13 +113,13 @@ jobs:
       - name: Prepare alternative deployment with different configuration
         run: |
           mkdir dist
-          cp -r packages/pxweb2/dist dist/statbank2
-          mv dist/statbank2/_headers dist/
-          mv dist/statbank2/index.html dist/
-          mv dist/statbank2/icons/topicIconMapNO.json dist/statbank2/icons/topicIconMap.json
-          echo "/ /statbank2/ 301" > dist/_redirects
-          curl -s -o dist/statbank2/config/config.js https://www.ssb.no/statbank2/config/config.js
-          sed -i 's|<base href="/"|<base href="/statbank2/"|' dist/index.html
+          cp -r packages/pxweb2/dist dist/statbank
+          mv dist/statbank/_headers dist/
+          mv dist/statbank/index.html dist/
+          mv dist/statbank/icons/topicIconMapNO.json dist/statbank/icons/topicIconMap.json
+          echo "/ /statbank/ 301" > dist/_redirects
+          curl -s -o dist/statbank/config/config.js https://www.ssb.no/statbank/config/config.js
+          sed -i 's|<base href="/"|<base href="/statbank/"|' dist/index.html
 
       - name: Alternative Deploy
         id: alt-deploy
