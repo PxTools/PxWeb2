@@ -903,14 +903,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         if (!variable) {
           return false;
         }
-        // We need to check that the variable codelist has not been changed
-        // else {
-        //   if (selection.codeList) {
-        //     if (variable.codeList !== selection.codeList) {
-        //       return false;
-        //     }
-        //   }
-        // }
       }
 
       return true;
@@ -961,9 +953,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     async (tableId: string, i18n: i18n, isMobile: boolean) => {
       try {
         const selections: Array<VariableSelection> = [];
-
-        // Get table content text from table metadata
-        // const tableContentText = variables.pxTableMetadata?.contents;
 
         // Get selection from Selection provider
         const ids = variables.getUniqueIds();
