@@ -1,6 +1,12 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import { render, screen, fireEvent, within, waitFor } from '@testing-library/react';
+import {
+  render,
+  screen,
+  fireEvent,
+  within,
+  waitFor,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { vi, afterEach } from 'vitest';
 import NavigationDrawer from './NavigationDrawer';
@@ -22,7 +28,8 @@ vi.mock('@pxweb2/pxweb2-ui', () => ({
   Heading: (props: React.ComponentProps<'h2'>) => <h2 {...props} />,
   Icon: () => <span data-icon="true" />,
   Label: (props: React.ComponentProps<'span'>) => <span {...props} />,
-  getIconDirection: (dir: string, ltr: string, rtl: string) => (dir === 'rtl' ? rtl : ltr),
+  getIconDirection: (dir: string, ltr: string, rtl: string) =>
+    dir === 'rtl' ? rtl : ltr,
 }));
 
 vi.mock('i18next', () => ({
@@ -104,7 +111,7 @@ function renderDrawer(options?: {
         <button type="button">A</button>
         <button type="button">B</button>
       </div>
-    </NavigationDrawer>
+    </NavigationDrawer>,
   );
 
   return { ref, onClose };
@@ -113,7 +120,9 @@ function renderDrawer(options?: {
 test('portals into [data-drawer-root] when present', () => {
   renderDrawer({ smallScreen: false, useDrawerRoot: true });
 
-  const portalRoot = document.querySelector('[data-drawer-root]') as HTMLElement;
+  const portalRoot = document.querySelector(
+    '[data-drawer-root]',
+  ) as HTMLElement;
   expect(portalRoot).toBeInTheDocument();
 
   const drawer = within(portalRoot).getByTestId('selection-drawer');
@@ -127,7 +136,9 @@ test('portals into [data-drawer-root] when present', () => {
 test('falls back to document.body when no [data-drawer-root] is present', () => {
   renderDrawer({ smallScreen: false, useDrawerRoot: false });
 
-  const drawer = document.querySelector('[data-view="selection"]') as HTMLElement;
+  const drawer = document.querySelector(
+    '[data-view="selection"]',
+  ) as HTMLElement;
   expect(drawer).toBeInTheDocument();
   expect(drawer.parentElement).toBe(document.body);
 });
@@ -144,7 +155,9 @@ test('small screens: role="dialog" and aria-modal="true"', () => {
 test('small screens: clicking backdrop calls onClose(false, view)', () => {
   const { onClose } = renderDrawer({ smallScreen: true });
 
-  const backdrop = document.querySelector('[aria-hidden="true"]') as HTMLElement;
+  const backdrop = document.querySelector(
+    '[aria-hidden="true"]',
+  ) as HTMLElement;
   expect(backdrop).toBeInTheDocument();
 
   fireEvent.click(backdrop);
@@ -152,7 +165,10 @@ test('small screens: clicking backdrop calls onClose(false, view)', () => {
 });
 
 test('forwarded ref focuses hide button when openedWithKeyboard=true', async () => {
-  const { ref } = renderDrawer({ smallScreen: false, openedWithKeyboard: true });
+  const { ref } = renderDrawer({
+    smallScreen: false,
+    openedWithKeyboard: true,
+  });
 
   const hideBtn = screen.getByRole('button', {
     name: 'presentation_page.side_menu.hide',
@@ -165,7 +181,7 @@ test('forwarded ref focuses hide button when openedWithKeyboard=true', async () 
 test('small screens: focus trap cycles Tab within the drawer', async () => {
   renderDrawer({ smallScreen: true });
 
-    const hideBtn = screen.getByRole('button', {
+  const hideBtn = screen.getByRole('button', {
     name: 'presentation_page.side_menu.hide',
   });
   const btnA = screen.getByRole('button', { name: 'A' });
@@ -178,7 +194,10 @@ test('small screens: focus trap cycles Tab within the drawer', async () => {
       configurable: true,
     });
     Object.defineProperty(el, 'offsetWidth', { value: 10, configurable: true });
-    Object.defineProperty(el, 'offsetHeight', { value: 10, configurable: true });
+    Object.defineProperty(el, 'offsetHeight', {
+      value: 10,
+      configurable: true,
+    });
   });
 
   // Move focus to the last focusable element (B)
