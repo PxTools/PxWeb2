@@ -591,7 +591,7 @@ export function sortSubjectTree(subjects: PathItem[]): PathItem[] {
 }
 
 export function sortTablesByUpdated(tables: Table[]): Table[] {
-  return tables.slice().sort((a, b) => {
+  const sortedTables = tables.slice().sort((a, b) => {
     const dateA = Date.parse(a.updated ?? '');
     const dateB = Date.parse(b.updated ?? '');
     const isValidA = !isNaN(dateA);
@@ -609,9 +609,28 @@ export function sortTablesByUpdated(tables: Table[]): Table[] {
     if (!isValidB) {
       return -1;
     }
-    // Both valid -> newer first
+
+    // If dates are the same, sort on subjectCode ascending
+    if (dateA === dateB) {
+      const subjectA = a.subjectCode ?? '';
+      const subjectB = b.subjectCode ?? '';
+
+      if (subjectA < subjectB) {
+        return -1;
+      }
+      if (subjectA > subjectB) {
+        return 1;
+      }
+
+      // Same subjectCode too -> keep original order
+      return 0;
+    }
+
+    // Both valid, but not the same date -> newer first
     return dateB - dateA;
   });
+
+  return sortedTables;
 }
 
 export function getStatus(
