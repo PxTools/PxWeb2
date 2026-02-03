@@ -57,7 +57,7 @@ export const NavigationRail = React.forwardRef<
     <div className={styles.navigationRail}>
       <LazyMotion features={loadFeatures}>
         <MotionConfig reducedMotion="user">
-          <nav>
+          <nav aria-labelledby="navRailHeading">
             <Heading
               level={'2'}
               className={cl(styles['sr-only'])}

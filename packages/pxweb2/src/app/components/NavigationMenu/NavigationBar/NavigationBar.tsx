@@ -52,7 +52,7 @@ export const NavigationBar = React.forwardRef<
     <div className={styles.navigationBar}>
       <LazyMotion features={loadFeatures}>
         <MotionConfig reducedMotion="user">
-          <nav>
+          <nav aria-labelledby="navBarHeading">
             <Heading
               level={'2'}
               className={cl(styles['sr-only'])}
