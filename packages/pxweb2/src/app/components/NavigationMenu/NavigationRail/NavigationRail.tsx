@@ -57,15 +57,18 @@ export const NavigationRail = React.forwardRef<
     <div className={styles.navigationRail}>
       <LazyMotion features={loadFeatures}>
         <MotionConfig reducedMotion="user">
-          <nav
-            aria-label={t(
-              'presentation_page.side_menu.aria_label_tool_side_menu',
-            )}
-          >
-            <Heading level={'2'} className={cl(styles['sr-only'])}>
+          <nav>
+            <Heading
+              level={'2'}
+              className={cl(styles['sr-only'])}
+              id="navRailHeading"
+            >
               {t('presentation_page.side_menu.aria_label_tool_side_menu')}
             </Heading>
-            <ul className={styles.navigationRailList}>
+            <ul
+              className={styles.navigationRailList}
+              aria-labelledby="navRailHeading"
+            >
               <Item
                 ref={refs.selection}
                 parentName="navRail"
