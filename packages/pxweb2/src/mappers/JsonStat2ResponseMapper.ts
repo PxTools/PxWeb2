@@ -506,10 +506,7 @@ function mapVariableValues(
  * @param code - The code of the value.
  * @returns The ContentInfo object for the value.
  */
-function mapContentInfo(
-  dimension: DimensionItem,
-  code: string,
-): ContentInfo {
+function mapContentInfo(dimension: DimensionItem, code: string): ContentInfo {
   const unitInfo = dimension.category?.unit?.[code];
 
   return {
@@ -527,10 +524,7 @@ function mapContentInfo(
  * @param dimension - The dimension object from the JSON-stat 2.0 response.
  * @param mappedValues - The array of Value objects to map the notes to.
  */
-function mapValueNotes(
-  dimension: DimensionItem,
-  mappedValues: Value[],
-): void {
+function mapValueNotes(dimension: DimensionItem, mappedValues: Value[]): void {
   const category = dimension.category;
   if (!category?.index || !category?.label || !category?.note) {
     return;
@@ -658,10 +652,7 @@ function getCodelists(
  * @param role - The role object from the JSON-stat 2.0 response.
  * @returns The corresponding `VartypeEnum` for the given variable ID.
  */
-function mapVariableTypeEnum(
-  id: string,
-  role: Role | undefined,
-): VartypeEnum {
+function mapVariableTypeEnum(id: string, role: Role | undefined): VartypeEnum {
   if (!role) {
     return VartypeEnum.REGULAR_VARIABLE;
   }
