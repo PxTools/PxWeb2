@@ -670,6 +670,33 @@ describe('TableDataProviderUtils', () => {
         'TableDataProviderUtil.getTableTitleParts: Missing last title part. This should not happen. Please report this as a bug.',
       );
     });
+
+    it('omits contents variable label from title parts', () => {
+      // Config: dynamic content disabled (set in beforeEach)
+      const contents: Variable = {
+        id: 'contents',
+        label: 'Contents label should be omitted',
+        type: VartypeEnum.CONTENTS_VARIABLE,
+        mandatory: false,
+        values: [],
+      };
+
+      const geo = makeVariable('geo', 'Municipality');
+      const year = makeVariable('year', 'Year');
+
+      const variables: Variable[] = [contents, geo, year];
+      const stub: Variable[] = [geo];
+      const heading: Variable[] = [contents, year];
+
+      const result = getTableTitleParts(variables, stub, heading, 'Population');
+
+      // Contents label should not appear in any title part
+      expect(result.firstTitlePart).toBe('Municipality');
+      expect(result.lastTitlePart).toBe('Year');
+      expect(`${result.firstTitlePart}, ${result.lastTitlePart}`).not.toContain(
+        'Contents label should be omitted',
+      );
+    });
   });
 });
 
