@@ -174,12 +174,14 @@ export function ContentTop({
       return;
     }
 
+    const titleBy = t('presentation_page.common.table_title_by');
+    const titleAnd = t('presentation_page.common.table_title_and');
     const { contentText, firstTitlePart, lastTitlePart } = buildTableTitle();
-    const newTitle = t('presentation_page.main_content.dynamic_table_title', {
-      table_content_type: contentText,
-      table_content_label_first_part: firstTitlePart,
-      table_content_label_last_part: lastTitlePart,
-    });
+    const newTitle = `${contentText} ${titleBy} ${
+      firstTitlePart
+        ? ` ${firstTitlePart} ${titleAnd} ${lastTitlePart}`
+        : ` ${lastTitlePart}`
+    }`;
     setTableTitle(newTitle);
   }, [buildTableTitle, selectedMetadata, t]);
 
