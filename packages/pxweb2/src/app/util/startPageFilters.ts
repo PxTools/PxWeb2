@@ -615,18 +615,7 @@ export function sortTablesByUpdated(tables: Table[]): Table[] {
 
     // If dates are the same, sort on subjectCode ascending
     if (dateA === dateB) {
-      const subjectA = a.subjectCode ?? '';
-      const subjectB = b.subjectCode ?? '';
-
-      if (subjectA < subjectB) {
-        return -1;
-      }
-      if (subjectA > subjectB) {
-        return 1;
-      }
-
-      // Same subjectCode too -> keep original order
-      return 0;
+      return compareBySubjectCodeAsc(a, b);
     }
 
     // Both valid, but not the same date -> newer first
@@ -634,6 +623,39 @@ export function sortTablesByUpdated(tables: Table[]): Table[] {
   });
 
   return sortedTables;
+}
+
+function compareBySubjectCodeAsc(tableA: Table, tableB: Table): number {
+  const subjectA = tableA.subjectCode ?? '';
+  const subjectB = tableB.subjectCode ?? '';
+
+  // check for validity
+  const isSubjectAValid = subjectA.trim() !== '';
+  const isSubjectBValid = subjectB.trim() !== '';
+
+  // Both invalid/missing -> keep original order
+  if (!isSubjectAValid && !isSubjectBValid) {
+    return 0;
+  }
+  // Only A invalid -> B comes first
+  if (!isSubjectAValid) {
+    return 1;
+  }
+  // Only B invalid -> A comes first
+  if (!isSubjectBValid) {
+    return -1;
+  }
+
+  // Compare subjectCodes
+  if (subjectA < subjectB) {
+    return -1;
+  }
+  if (subjectA > subjectB) {
+    return 1;
+  }
+
+  // Same subjectCode too -> keep original order
+  return 0;
 }
 
 export function getStatus(
