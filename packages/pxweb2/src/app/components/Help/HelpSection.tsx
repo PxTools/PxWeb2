@@ -29,20 +29,20 @@ export default function HelpSection({ helpSectionContent }: HelpSectionProps) {
           )}
           {hasLinks && links && (
             <div className={styles.linksWrapper}>
-                <ul className={styles.linksList}>
-                  {links.map((link, idx) => (
-                    <li key={`${link.url}-${idx}`} className={styles.linkItem}>
-                      <Link
-                        href={link.url}
-                        size="medium"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {link.text}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
+              <ul className={styles.linksList}>
+                {links.map((link, idx) => (
+                  <li key={`${link.url}-${idx}`} className={styles.linkItem}>
+                    <Link
+                      href={link.url}
+                      size="medium"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {link.text}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
           )}
         </div>

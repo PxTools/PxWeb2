@@ -26,11 +26,20 @@ export const NavigationDrawer = forwardRef<
 >(({ children, heading, view, openedWithKeyboard, onClose }, ref) => {
   const { t } = useTranslation();
   const { addModal, removeModal } = useAccessibility();
-  const { skipToMainFocused, isMobile, isTablet, isXLargeDesktop, isXXLargeDesktop } = useApp();
+  const {
+    skipToMainFocused,
+    isMobile,
+    isTablet,
+    isXLargeDesktop,
+    isXXLargeDesktop,
+  } = useApp();
   const isSmallScreen =
     isMobile === true ||
     isTablet === true ||
-    (isXLargeDesktop === false && isXXLargeDesktop === false && isMobile === false && isTablet === false)
+    (isXLargeDesktop === false &&
+      isXXLargeDesktop === false &&
+      isMobile === false &&
+      isTablet === false);
   const containerRef = React.useRef<HTMLDivElement | null>(null);
   const headingId = React.useId();
 
