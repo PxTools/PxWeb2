@@ -435,11 +435,11 @@ export function getTableTitleParts(
 
   tableTitleParts.contentText = tableContentText || '';
 
-  if (useDynamicContentInTitle) {
-    const contentsVariable = variables.find(
-      (v) => v.type === VartypeEnum.CONTENTS_VARIABLE,
-    );
+  const contentsVariable = variables.find(
+    (v) => v.type === VartypeEnum.CONTENTS_VARIABLE,
+  );
 
+  if (useDynamicContentInTitle) {
     if (contentsVariable) {
       if (contentsVariable.values.length == 1) {
         tableTitleParts.contentText =
@@ -450,12 +450,16 @@ export function getTableTitleParts(
 
   // Add stub variables to title
   stub.forEach((variable) => {
-    titleParts.push(variable.label);
+    if (variable.id !== contentsVariable?.id) {
+      titleParts.push(variable.label);
+    }
   });
 
   // Add heading variables to title
   heading.forEach((variable) => {
-    titleParts.push(variable.label);
+    if (variable.id !== contentsVariable?.id) {
+      titleParts.push(variable.label);
+    }
   });
 
   const lastTitlePart = titleParts.pop();
