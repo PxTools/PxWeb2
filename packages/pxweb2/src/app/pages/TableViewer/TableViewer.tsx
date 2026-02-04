@@ -13,7 +13,6 @@ import { SkipToMain } from '../../components/SkipToMain/SkipToMain';
 import { Footer } from '../../components/Footer/Footer';
 import { getConfig } from '../../util/config/getConfig';
 import { OpenAPI } from '@pxweb2/pxweb2-api-client';
-import useAccessibility from '../../context/useAccessibility';
 import useApp from '../../context/useApp';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import { VariablesProvider } from '../../context/VariablesProvider';
@@ -28,7 +27,6 @@ export function TableViewer() {
     setSkipToMainFocused,
   } = useApp();
   const config = getConfig();
-  const accessibility = useAccessibility();
 
   const baseUrl = config.apiUrl;
   OpenAPI.BASE = baseUrl;
@@ -59,68 +57,7 @@ export function TableViewer() {
     }
   }, [hasFocus]);
 
-  useEffect(() => {
-    if (!navigationBarRef.current || !hideMenuRef.current) {
-      return;
-    }
-    let item = null;
-
-    if (selectedNavigationView === 'selection') {
-      item = navigationBarRef.current.selection;
-      accessibility.addFocusOverride(
-        'selectionButton',
-        navigationBarRef.current.selection,
-        undefined,
-        hideMenuRef.current,
-      );
-    }
-
-    if (selectedNavigationView === 'view') {
-      item = navigationBarRef.current.view;
-      accessibility.addFocusOverride(
-        'viewButton',
-        navigationBarRef.current.view,
-        undefined,
-        hideMenuRef.current,
-      );
-    }
-    if (selectedNavigationView === 'edit') {
-      item = navigationBarRef.current.edit;
-      accessibility.addFocusOverride(
-        'editButton',
-        navigationBarRef.current.edit,
-        undefined,
-        hideMenuRef.current,
-      );
-    }
-    if (selectedNavigationView === 'save') {
-      item = navigationBarRef.current.save;
-      accessibility.addFocusOverride(
-        'saveButton',
-        navigationBarRef.current.save,
-        undefined,
-        hideMenuRef.current,
-      );
-    }
-    if (selectedNavigationView === 'help') {
-      item = navigationBarRef.current.help;
-      accessibility.addFocusOverride(
-        'helpButton',
-        navigationBarRef.current.help,
-        undefined,
-        hideMenuRef.current,
-      );
-    }
-
-    if (item) {
-      accessibility.addFocusOverride(
-        'hideButton',
-        hideMenuRef.current,
-        item,
-        undefined,
-      );
-    }
-  }, [accessibility, selectedNavigationView]);
+  // Drawer focus-trap is implemented inside NavigationDrawer via portal
 
   // Monitor focus on SkipToMain
   useEffect(() => {
@@ -209,6 +146,7 @@ export function TableViewer() {
           />
         )}{' '}
         <div
+          data-drawer-root
           className={cl(styles.mainContainer, {
             [styles.skipToMainContentVisible]: skipToMainFocused,
           })}
