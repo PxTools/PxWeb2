@@ -28,10 +28,10 @@
     "@storybook/react-vite": "^10.2.5",
     "@storybook/addon-docs": "^10.2.5",
     "eslint-plugin-storybook": "10.2.5",
-    "@testing-library/react": "^16.3.1",
+    "@testing-library/react": "^16.3.2",
     "prop-types": "^15.8.1",
     "shiki": "^3.21.0",
     "storybook": "^10.2.5",
-    "vitest": "^4.0.16"
+    "vitest": "^4.0.18"
   }
 }
