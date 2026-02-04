@@ -6,29 +6,6 @@ type HelpSectionProps = Readonly<{
   helpSectionContent: HelpSectionLocaleContent;
 }>;
 
-function LinkList({
-  items,
-}: Readonly<{
-  items: NonNullable<HelpSectionLocaleContent['links']>;
-}>) {
-  return (
-    <ul className={styles.linksList}>
-      {items.map((link, idx) => (
-        <li key={`${link.url}-${idx}`} className={styles.linkItem}>
-          <Link
-            href={link.url}
-            size="medium"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {link.text}
-          </Link>
-        </li>
-      ))}
-    </ul>
-  );
-}
-
 export default function HelpSection({ helpSectionContent }: HelpSectionProps) {
   const { description, links, informationCard } = helpSectionContent;
   const hasLinks = Boolean(links && links.length > 0);
@@ -50,9 +27,22 @@ export default function HelpSection({ helpSectionContent }: HelpSectionProps) {
               <BodyLong size="medium">{description}</BodyLong>
             </div>
           )}
-          {hasLinks && (
+          {hasLinks && links && (
             <div className={styles.linksWrapper}>
-              <LinkList items={links!} />
+                <ul className={styles.linksList}>
+                  {links.map((link, idx) => (
+                    <li key={`${link.url}-${idx}`} className={styles.linkItem}>
+                      <Link
+                        href={link.url}
+                        size="medium"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {link.text}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
             </div>
           )}
         </div>

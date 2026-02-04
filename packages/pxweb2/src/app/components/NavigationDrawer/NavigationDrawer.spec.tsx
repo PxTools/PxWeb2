@@ -49,6 +49,8 @@ function setSmallScreen(isSmall: boolean) {
     skipToMainFocused: false,
     isMobile: false,
     isTablet: false,
+    isXLargeDesktop: !isSmall,
+    isXXLargeDesktop: !isSmall,
   });
   Object.defineProperty(window, 'matchMedia', {
     writable: true,

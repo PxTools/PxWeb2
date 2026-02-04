@@ -26,11 +26,11 @@ export const NavigationDrawer = forwardRef<
 >(({ children, heading, view, openedWithKeyboard, onClose }, ref) => {
   const { t } = useTranslation();
   const { addModal, removeModal } = useAccessibility();
-  const { skipToMainFocused, isMobile, isTablet } = useApp();
+  const { skipToMainFocused, isMobile, isTablet, isXLargeDesktop, isXXLargeDesktop } = useApp();
   const isSmallScreen =
     isMobile === true ||
     isTablet === true ||
-    window.matchMedia('(max-width: 1199px)').matches;
+    (isXLargeDesktop === false && isXXLargeDesktop === false && isMobile === false && isTablet === false)
   const containerRef = React.useRef<HTMLDivElement | null>(null);
   const headingId = React.useId();
 
@@ -169,8 +169,9 @@ export const NavigationDrawer = forwardRef<
         className={cl(styles.navigationDrawer, styles.fadein, {
           [styles.skipToMainContentVisible]: skipToMainFocused,
         })}
-        role={isSmallScreen ? 'dialog' : 'region'}
-        aria-modal={isSmallScreen ? 'true' : undefined}
+        {...(isSmallScreen
+          ? { role: 'dialog', 'aria-modal': 'true' }
+          : { role: 'region' })}
         aria-labelledby={headingId}
         data-testid={`${view}-drawer`}
         data-view={view}

@@ -67,8 +67,10 @@
     border-end-end-radius: var(--px-border-radius-xlarge);
     border-end-start-radius: var(--px-border-radius-none);
 
-    // Participate in flex layout within mainContainer
-    position: static;
+    position: absolute;
+    inset-inline-start: 120px;
+    z-index: 999;
+    top: 88px;
     order: 0;
   }
 
