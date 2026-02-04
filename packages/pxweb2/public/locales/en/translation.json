@@ -132,6 +132,10 @@
     }
   },
   "presentation_page": {
+    "common": {
+      "table_title_by": "by",
+      "table_title_and": "and"
+    },
     "side_menu": {
       "aria_label_tool_side_menu": "Tool menu for table",
       "hide": "Hide",
@@ -275,7 +279,6 @@
       "shrink_view": "Shrink view",
       "last_updated": "Updated",
       "show_details": "Show details",
-      "dynamic_table_title": "{{table_content_type}} by {{table_content_label_first_part}} and {{table_content_label_last_part}}",
       "table": {
         "warnings": {
           "missing_mandatory": {

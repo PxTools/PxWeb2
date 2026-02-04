@@ -24,6 +24,7 @@ import {
 } from '@pxweb2/pxweb2-ui';
 
 import { translateOutsideReactWithParams } from '../util/language/translateOutsideReact';
+import { getConfig } from '../util/config/getConfig';
 
 const decimalFormats: Record<number, string> = {
   0: 'number.simple_number_with_zero_decimal',
@@ -386,4 +387,91 @@ export function sortVariablesByType<T extends { type: VartypeEnum }>(
 
   // Use stable sort: JavaScript's Array.prototype.sort is stable in modern runtimes (Node >= 12, modern browsers).
   return copied.sort((a, b) => precedence[a.type] - precedence[b.type]);
+}
+
+export type TableTitlePartsType = {
+  contentText: string;
+  firstTitlePart: string;
+  lastTitlePart: string;
+};
+
+/**
+ * Builds table title parts from the given variables and layout.
+ *
+ * Determines `contentText` based on configuration and the contents variable:
+ * - Respects the configuration setting `useDynamicContentInTitle` (via `getConfig()?.useDynamicContentInTitle`).
+ *   - When `true`: If the contents variable has a single value, `contentText` is set to that value's `contentInfo.alternativeText`; otherwise it falls back to `tableContentText`.
+ *   - When `false`: `contentText` always derives from `tableContentText`, regardless of the contents variable.
+ *
+ * Combines labels from `stub` and `heading` to form the title:
+ * - `firstTitlePart` is all labels except the last, joined with ", ".
+ * - `lastTitlePart` is the final label; an error is thrown if none can be determined.
+ *
+ * NOTE: This function does NOT mutate the input objects.
+ *
+ * @param variables - All table variables; used to locate the contents variable.
+ * @param stub - Variables placed in the stub (rows); their labels contribute to the title.
+ * @param heading - Variables placed in the heading (columns); their labels contribute to the title.
+ * @param tableContentText - Fallback text used when the contents variable has multiple values.
+ * @returns Table title parts: `contentText`, `firstTitlePart`, and `lastTitlePart`.
+ * @throws Error if no `lastTitlePart` can be determined.
+ */
+export function getTableTitleParts(
+  variables: Variable[],
+  stub: Variable[],
+  heading: Variable[],
+  tableContentText: string,
+): TableTitlePartsType {
+  const tableTitleParts: TableTitlePartsType = {
+    contentText: '',
+    firstTitlePart: '',
+    lastTitlePart: '',
+  };
+
+  const titleParts: string[] = [];
+
+  const useDynamicContentInTitle =
+    getConfig()?.useDynamicContentInTitle ?? false;
+
+  tableTitleParts.contentText = tableContentText || '';
+
+  const contentsVariable = variables.find(
+    (v) => v.type === VartypeEnum.CONTENTS_VARIABLE,
+  );
+
+  if (useDynamicContentInTitle) {
+    if (contentsVariable) {
+      if (contentsVariable.values.length == 1) {
+        tableTitleParts.contentText =
+          contentsVariable.values[0].contentInfo?.alternativeText || '';
+      }
+    }
+  }
+
+  // Add stub variables to title
+  stub.forEach((variable) => {
+    if (variable.id !== contentsVariable?.id) {
+      titleParts.push(variable.label);
+    }
+  });
+
+  // Add heading variables to title
+  heading.forEach((variable) => {
+    if (variable.id !== contentsVariable?.id) {
+      titleParts.push(variable.label);
+    }
+  });
+
+  const lastTitlePart = titleParts.pop();
+
+  if (!lastTitlePart) {
+    throw new Error(
+      'TableDataProviderUtil.getTableTitleParts: Missing last title part. This should not happen. Please report this as a bug.',
+    );
+  }
+
+  tableTitleParts.lastTitlePart = lastTitlePart;
+  tableTitleParts.firstTitlePart = titleParts.join(', ');
+
+  return tableTitleParts;
 }

@@ -9,6 +9,7 @@ export type Config = {
   baseApplicationPath: string;
   apiUrl: string;
   maxDataCells: number;
+  useDynamicContentInTitle: boolean;
   showBreadCrumbOnStartPage: boolean;
   specialCharacters: string[];
   variableFilterExclusionList: { [propName: string]: string[] };

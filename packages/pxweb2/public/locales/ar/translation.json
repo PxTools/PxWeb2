@@ -75,6 +75,10 @@
     "skip_to_result": "تخطي إلى النتيجة"
   },
   "presentation_page": {
+    "common": {
+      "table_title_by": "بواسطة",
+      "table_title_and": "و"
+    },
     "side_menu": {
       "aria_label_tool_side_menu": "قائمة الأدوات للجدول",
       "hide": "يخفي",
@@ -218,7 +222,6 @@
       "shrink_view": "عرض الانكماش",
       "last_updated": "آخر تحديث",
       "show_details": "إظهار التفاصيل",
-      "dynamic_table_title": "{{table_content_type}} بعد {{table_content_label_first_part}} و {{table_content_label_last_part}}",
       "table": {
         "warnings": {
           "missing_mandatory": {

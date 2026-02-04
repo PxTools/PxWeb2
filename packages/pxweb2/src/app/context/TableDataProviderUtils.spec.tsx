@@ -5,7 +5,10 @@ import {
   addFormattingToPxTable,
   filterStubAndHeadingArrays,
   autoPivotTable,
+  getTableTitleParts,
 } from './TableDataProviderUtils';
+import { getConfig } from '../util/config/getConfig';
+import type { Config } from '../util/config/configType';
 import { DataCell, PxTable, VartypeEnum, Variable } from '@pxweb2/pxweb2-ui';
 
 // Mock dependencies
@@ -56,6 +59,7 @@ describe('TableDataProviderUtils', () => {
         matrix: 'Test Matrix',
         contents: 'Test Contents',
         contacts: [],
+        definitions: {},
         descriptionDefault: false,
         subjectArea: 'Test Subject Area',
         subjectCode: 'Test Subject Code',
@@ -249,6 +253,7 @@ describe('TableDataProviderUtils', () => {
           matrix: 'Test Matrix',
           contents: 'Test Contents',
           contacts: [],
+          definitions: {},
           descriptionDefault: false,
           subjectArea: 'Test Subject Area',
           subjectCode: 'Test Subject Code',
@@ -302,6 +307,7 @@ describe('TableDataProviderUtils', () => {
                     decimals: 0,
                     unit: 'pcs',
                     referencePeriod: '2023-10',
+                    alternativeText: '',
                   },
                 },
                 {
@@ -312,6 +318,7 @@ describe('TableDataProviderUtils', () => {
                     decimals: 1,
                     unit: 'pcs',
                     referencePeriod: '2023-10',
+                    alternativeText: '',
                   },
                 },
               ],
@@ -330,6 +337,7 @@ describe('TableDataProviderUtils', () => {
           matrix: 'Test Matrix',
           contents: 'Test Contents',
           contacts: [],
+          definitions: {},
           descriptionDefault: false,
           subjectArea: 'Test Subject Area',
           subjectCode: 'Test Subject Code',
@@ -370,6 +378,7 @@ describe('TableDataProviderUtils', () => {
           matrix: 'Test Matrix',
           contents: 'Test Contents',
           contacts: [],
+          definitions: {},
           descriptionDefault: false,
           subjectArea: 'Test Subject Area',
           subjectCode: 'Test Subject Code',
@@ -490,6 +499,203 @@ describe('TableDataProviderUtils', () => {
       expect(result.headingDesktop).toEqual(['a', 'b', 'c']);
       expect(result.stubMobile).toEqual(['a', 'b', 'c']);
       expect(result.headingMobile).toEqual(['a', 'b', 'c']);
+    });
+  });
+
+  describe('getTableTitleParts', () => {
+    // Helpers for building variables
+    const makeVariable = (
+      id: string,
+      label: string,
+      type: VartypeEnum = VartypeEnum.REGULAR_VARIABLE,
+      values: Variable['values'] = [],
+      mandatory = false,
+    ): Variable => ({ id, label, type, mandatory, values });
+
+    const makeContentsVariableSingleValue = (altText?: string): Variable => ({
+      id: 'contents',
+      label: 'Contents',
+      type: VartypeEnum.CONTENTS_VARIABLE,
+      mandatory: false,
+      values: [
+        {
+          code: 'POP',
+          label: 'Population',
+          contentInfo: {
+            unit: 'persons',
+            decimals: 0,
+            referencePeriod: '',
+            basePeriod: '',
+            alternativeText: altText ?? '',
+          },
+        },
+      ],
+    });
+
+    const makeContentsVariableMultiValue = (): Variable => ({
+      id: 'contents',
+      label: 'Contents',
+      type: VartypeEnum.CONTENTS_VARIABLE,
+      mandatory: false,
+      values: [
+        {
+          code: 'POP',
+          label: 'Population',
+          contentInfo: {
+            unit: 'persons',
+            decimals: 0,
+            referencePeriod: '',
+            basePeriod: '',
+            alternativeText: 'Population (total)',
+          },
+        },
+        {
+          code: 'POP_M',
+          label: 'Population male',
+          contentInfo: {
+            unit: 'persons',
+            decimals: 0,
+            referencePeriod: '',
+            basePeriod: '',
+            alternativeText: 'Population (male)',
+          },
+        },
+      ],
+    });
+
+    const baseConfig: Config = {
+      language: {
+        supportedLanguages: [
+          { shorthand: 'en', languageName: 'English' },
+          { shorthand: 'no', languageName: 'Norsk' },
+          { shorthand: 'sv', languageName: 'Svenska' },
+          { shorthand: 'ar', languageName: 'العربية' },
+        ],
+        defaultLanguage: 'en',
+        fallbackLanguage: 'en',
+        showDefaultLanguageInPath: true,
+        positionInPath: 'after',
+      },
+      baseApplicationPath: '/',
+      apiUrl: '',
+      maxDataCells: 100000,
+      useDynamicContentInTitle: false,
+      showBreadCrumbOnStartPage: true,
+      specialCharacters: ['.', '..', ':', '-', '...', '*'],
+      variableFilterExclusionList: {
+        en: ['statisticalvariable', 'year', 'quarter', 'month', 'week'],
+      },
+    };
+
+    beforeEach(() => {
+      // Default: disable dynamic content in title
+      (
+        getConfig as unknown as { mockReturnValue: (cfg: Config) => void }
+      ).mockReturnValue({ ...baseConfig, useDynamicContentInTitle: false });
+    });
+
+    it('uses tableContentText when dynamic content is disabled', () => {
+      const variables: Variable[] = [];
+      const stub: Variable[] = [
+        makeVariable('geo', 'Municipality'),
+        makeVariable('age', 'Age group'),
+      ];
+      const heading: Variable[] = [makeVariable('year', 'Year')];
+
+      const result = getTableTitleParts(variables, stub, heading, 'Population');
+
+      expect(result.contentText).toBe('Population');
+      expect(result.firstTitlePart).toBe('Municipality, Age group');
+      expect(result.lastTitlePart).toBe('Year');
+    });
+
+    it('uses content alternativeText when enabled and a single content value exists', () => {
+      (
+        getConfig as unknown as { mockReturnValue: (cfg: Config) => void }
+      ).mockReturnValue({ ...baseConfig, useDynamicContentInTitle: true });
+
+      const contents = makeContentsVariableSingleValue('Population (total)');
+      const variables: Variable[] = [contents];
+      const stub: Variable[] = [makeVariable('geo', 'Municipality')];
+      const heading: Variable[] = [makeVariable('year', 'Year')];
+
+      const result = getTableTitleParts(variables, stub, heading, 'Population');
+
+      expect(result.contentText).toBe('Population (total)');
+      expect(result.firstTitlePart).toBe('Municipality');
+      expect(result.lastTitlePart).toBe('Year');
+    });
+
+    it('falls back to tableContentText when multiple content values exist', () => {
+      (
+        getConfig as unknown as { mockReturnValue: (cfg: Config) => void }
+      ).mockReturnValue({ ...baseConfig, useDynamicContentInTitle: true });
+
+      const contents = makeContentsVariableMultiValue();
+      const variables: Variable[] = [contents];
+      const stub: Variable[] = [makeVariable('geo', 'Municipality')];
+      const heading: Variable[] = [makeVariable('year', 'Year')];
+
+      const result = getTableTitleParts(variables, stub, heading, 'Population');
+
+      expect(result.contentText).toBe('Population');
+      expect(result.lastTitlePart).toBe('Year');
+    });
+
+    it('sets empty contentText when single content value lacks alternativeText', () => {
+      (
+        getConfig as unknown as { mockReturnValue: (cfg: Config) => void }
+      ).mockReturnValue({ ...baseConfig, useDynamicContentInTitle: true });
+
+      const contents = makeContentsVariableSingleValue(undefined);
+      const variables: Variable[] = [contents];
+      const stub: Variable[] = [makeVariable('geo', 'Municipality')];
+      const heading: Variable[] = [makeVariable('year', 'Year')];
+
+      const result = getTableTitleParts(variables, stub, heading, 'Population');
+
+      expect(result.contentText).toBe('');
+      expect(result.firstTitlePart).toBe('Municipality');
+      expect(result.lastTitlePart).toBe('Year');
+    });
+
+    it('throws when no title parts are available', () => {
+      const variables: Variable[] = [];
+      const stub: Variable[] = [];
+      const heading: Variable[] = [];
+
+      expect(() =>
+        getTableTitleParts(variables, stub, heading, 'Population'),
+      ).toThrowError(
+        'TableDataProviderUtil.getTableTitleParts: Missing last title part. This should not happen. Please report this as a bug.',
+      );
+    });
+
+    it('omits contents variable label from title parts', () => {
+      // Config: dynamic content disabled (set in beforeEach)
+      const contents: Variable = {
+        id: 'contents',
+        label: 'Contents label should be omitted',
+        type: VartypeEnum.CONTENTS_VARIABLE,
+        mandatory: false,
+        values: [],
+      };
+
+      const geo = makeVariable('geo', 'Municipality');
+      const year = makeVariable('year', 'Year');
+
+      const variables: Variable[] = [contents, geo, year];
+      const stub: Variable[] = [geo];
+      const heading: Variable[] = [contents, year];
+
+      const result = getTableTitleParts(variables, stub, heading, 'Population');
+
+      // Contents label should not appear in any title part
+      expect(result.firstTitlePart).toBe('Municipality');
+      expect(result.lastTitlePart).toBe('Year');
+      expect(`${result.firstTitlePart}, ${result.lastTitlePart}`).not.toContain(
+        'Contents label should be omitted',
+      );
     });
   });
 });

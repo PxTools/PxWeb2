@@ -56,8 +56,7 @@ function PivotButton({
     if (!announceOnNextChange) {
       return;
     }
-
-    const { firstTitlePart, lastTitlePart } = buildTableTitle(stub, heading);
+    const { firstTitlePart, lastTitlePart } = buildTableTitle();
     const message = t(screenReaderAnnouncementKey, '', {
       first_variables: firstTitlePart,
       last_variable: lastTitlePart,
