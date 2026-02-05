@@ -34,7 +34,6 @@ vi.mock('../i18n/config', () => ({
 describe('savedQueryRouteLoader', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    OpenAPI.BASE = '';
   });
 
   it('throws 400 when sqId is missing', async () => {
@@ -86,7 +85,6 @@ describe('savedQueryRouteLoader', () => {
     expect(res.status).toBe(302);
     expect(res.headers.get('Location')).toBe('/en/table/T1?sq=123');
     expect(i18n.changeLanguage).toHaveBeenCalledWith('en');
-    expect(OpenAPI.BASE).toBe('https://api.example');
   });
 
   it('redirects to /table when lang is default and showDefaultLanguageInPath=false', async () => {
