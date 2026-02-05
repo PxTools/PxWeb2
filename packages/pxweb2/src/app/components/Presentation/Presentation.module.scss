@@ -56,6 +56,15 @@
   opacity: 0.6;
   transition: 'opacity 0.3s ease-in-out';
 }
+.fadeTable tbody tr {
+  &:hover {
+    background: none !important;
+
+    th {
+      background: var(--px-color-surface-moderate) !important;
+    }
+  }
+}
 
 .gradientContainer {
   position: relative;
