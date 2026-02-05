@@ -158,7 +158,6 @@ export function Presentation({
   }, [variablesChanged]);
 
   useLayoutEffect(() => {
-    // useEffect(() => {
     if (variables.isMatrixSizeAllowed) {
       setIsFadingTable(false); // Stop fading once data is loaded
     }
