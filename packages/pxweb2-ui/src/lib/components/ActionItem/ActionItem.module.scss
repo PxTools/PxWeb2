@@ -1,72 +1,111 @@
 @use '../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixed;
 @use '../../text-styles.scss';
 
-.actionItem {
+.action-item {
   display: flex;
   align-items: flex-start;
-  gap: 0.75rem;
   padding: fixed.$spacing-3 fixed.$spacing-4 fixed.$spacing-3 fixed.$spacing-2;
   border: none;
   width: 100%;
   background: var(--px-color-background-default);
+
   &:hover {
     border-radius: var(--px-border-radius-medium);
     background: var(--px-color-surface-action-subtle-hover);
     cursor: pointer;
   }
+
   &:active {
     border-radius: var(--px-border-radius-medium);
     background: var(--px-color-surface-action-subtle-active);
   }
-  &:focus-visible {
+
+  &:focus-visible:not(.toggleable) {
     outline: 3px solid var(--px-color-border-focus-outline);
     outline-offset: 3px;
     box-shadow: inset 0 0 0 3px var(--px-color-border-focus-boxshadow);
     border-radius: var(--px-border-radius-medium);
   }
+
+  // Outline styles for toggleable action items
+  &.toggleable:focus-visible {
+    outline: none;
+
+    span {
+      outline: 3px solid var(--px-color-border-focus-outline);
+      outline-offset: 3px;
+      border: solid 3px var(--px-color-border-focus-boxshadow);
+      border-radius: var(--px-border-radius-full);
+    }
+  }
 }
 
-.iconWrapper {
+.action-item-medium {
+  gap: 0.5rem;
+}
+.action-item-large {
+  gap: 0.75rem;
+}
+
+.icon-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.iconWrapper-large {
+.icon-wrapper-large {
   min-width: 68px;
   height: 68px;
   background: var(--px-color-surface-subtle);
   border-radius: var(--px-border-radius-medium);
-  .actionItem:hover & {
+
+  .action-item:hover & {
     background: var(--px-color-surface-action-subtle-hover);
   }
-  .actionItem:active & {
+
+  .action-item:active & {
     background: var(--px-color-surface-action-subtle-active);
   }
 }
 
-.labelDescriptionWrapper {
-  display: flex;
+.label-description-wrapper {
+  flex: 1 0 0;
   flex-direction: column;
-  align-items: flex-start; // ensures left alignment
-  gap: 0.5rem;
   text-align: start; // aligns text to the start
   word-break: break-word; // allows long words to wrap
   white-space: normal; // allows normal text wrapping
 }
 
-.iconLabelWrapper-large {
+.icon-label-wrapper-medium {
   display: flex;
-  align-items: center;
+  gap: 0.5rem;
+}
+
+.icon-label-wrapper-large {
+  display: flex;
+  align-self: center;
   gap: 0.75rem;
 }
 
-.bodyShort {
+.body-short {
   margin-top: 0.5rem;
 }
 
-.labelHover {
+.label-hover {
   &:hover {
     cursor: pointer;
   }
+}
+
+.toggle-wrapper {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.toggle-wrapper-medium {
+  align-self: flex-start;
+}
+
+.toggle-wrapper-large {
+  align-self: center;
 }

@@ -50,19 +50,13 @@ describe('Search component', () => {
     });
 
     it('sets aria labels on the icon and clear button', () => {
-      const arialLabelClearButtonText = 'Clear button label';
-      const { container } = render(
-        <Search
-          arialLabelClearButtonText={arialLabelClearButtonText}
-          value="test"
-        />,
-      );
+      const { container } = render(<Search value="test" />);
 
       const icon = container.querySelector('svg');
       const button = container.querySelector('button');
 
       expect(icon).not.toHaveAttribute('aria-label');
-      expect(button).toHaveAttribute('aria-label', arialLabelClearButtonText);
+      expect(button).toHaveAttribute('aria-label');
     });
 
     it('initializes the input with a provided value', () => {

@@ -25,9 +25,11 @@ import {
 } from '../util/startPageFilters';
 import { shouldTableBeIncluded } from '../util/tableHandler';
 import { wrapWithLocalizedQuotemarks } from '../util/utils';
+import { Table } from 'packages/pxweb2-api-client/src';
 
 const initialState: StartPageState = Object.freeze({
   availableTables: [],
+  availableTablesWhenQueryApplied: [],
   filteredTables: [],
   availableFilters: getFilters([]),
   activeFilters: [],
@@ -65,6 +67,14 @@ export const FilterProvider: React.FC<FilterProviderProps> = ({
   );
 };
 
+function getAvailableTables(state: StartPageState): Table[] {
+  if (state.availableTablesWhenQueryApplied?.length > 0) {
+    return state.availableTablesWhenQueryApplied;
+  } else {
+    return state.availableTables;
+  }
+}
+
 function reducer(
   state: StartPageState,
   action: ReducerActionTypes,
@@ -76,6 +86,7 @@ function reducer(
       return {
         ...initialState,
         availableTables: action.payload.tables,
+        availableTablesWhenQueryApplied: [],
         filteredTables: action.payload.tables,
         originalSubjectTree: action.payload.subjects,
         subjectOrderList: subjectOrder,
@@ -99,7 +110,7 @@ function reducer(
         incoming[0]?.type === 'yearRange' ? f.type !== 'yearRange' : true,
       );
       const newFilters = [...clearedFilters, ...incoming];
-      const filteredTables = state.availableTables.filter((table) =>
+      const filteredTables = getAvailableTables(state).filter((table) =>
         shouldTableBeIncluded(table, newFilters),
       );
       const addType = action.payload[0]?.type as FilterType | undefined;
@@ -110,7 +121,7 @@ function reducer(
       const recomputed = recomputeAvailableFilters(
         addType,
         newFilters,
-        state.availableTables,
+        getAvailableTables(state),
         state.originalSubjectTree,
       );
 
@@ -129,6 +140,10 @@ function reducer(
         lastUsedYearRange: updatedLastUsedYearRange,
       };
     }
+    // Note: The ActionType ADD_SEARCH has been replaced by ADD_QUERY_FILTER.
+    // In the same way the FilterType 'search' has been replaced by 'query'.
+    // It is kept here for possible future use. One scenario could be that the API query fails,
+    // then we can fall back to client-side search filtering.
     case ActionType.ADD_SEARCH_FILTER: {
       let newFilters: Filter[];
 
@@ -180,6 +195,70 @@ function reducer(
         },
       };
     }
+    case ActionType.ADD_QUERY_FILTER: {
+      let newFilters: Filter[];
+
+      const newQuery: Filter = {
+        type: 'query',
+        label: action.payload.query,
+        value: action.payload.tableIds.join(','),
+        index: 1,
+      };
+
+      const existingQuery = state.activeFilters.findIndex(
+        (filter) => filter.type == 'query',
+      );
+
+      // We remove the query filter if the query is empty (field cleared)
+      // Otherwise, update if it already exists, or if not add it.
+      // Ensures we only ever have one filter of type query
+      if (action.payload.query == '') {
+        newFilters = state.activeFilters.filter((filter) => {
+          return filter.type != 'query';
+        });
+      } else {
+        newFilters =
+          existingQuery >= 0
+            ? state.activeFilters.with(existingQuery, newQuery)
+            : [...state.activeFilters, newQuery];
+      }
+
+      let newTables: Table[] = [];
+      let queryTables: Table[] = [];
+
+      if (action.payload.query == '') {
+        // No query => filter from all available tables
+        newTables = state.availableTables.filter((table) =>
+          shouldTableBeIncluded(table, newFilters),
+        );
+      } else {
+        // query present => filter from tables matching the query
+        queryTables = state.availableTables.filter((table) =>
+          action.payload.tableIds.includes(table.id),
+        );
+
+        newTables = queryTables.filter((table) =>
+          shouldTableBeIncluded(table, newFilters),
+        );
+      }
+
+      return {
+        ...state,
+        availableTablesWhenQueryApplied: queryTables,
+        activeFilters: newFilters,
+        filteredTables: newTables,
+        availableFilters: {
+          subjectTree: updateSubjectTreeCounts(
+            state.originalSubjectTree,
+            newTables,
+          ),
+          timeUnits: getTimeUnits(newTables),
+          yearRange: getYearRanges(newTables),
+          variables: getVariables(newTables),
+          status: getStatus(newTables),
+        },
+      };
+    }
     case ActionType.REMOVE_FILTER: {
       const removedType = action.payload.type;
 
@@ -212,9 +291,17 @@ function reducer(
         };
       }
 
-      const filteredTables = state.availableTables.filter((table) =>
-        shouldTableBeIncluded(table, currentFilters),
-      );
+      let filteredTables: Table[] = [];
+      if (removedType === 'query') {
+        state.availableTablesWhenQueryApplied = [];
+        filteredTables = state.availableTables.filter((table) =>
+          shouldTableBeIncluded(table, currentFilters),
+        );
+      } else {
+        filteredTables = getAvailableTables(state).filter((table) =>
+          shouldTableBeIncluded(table, currentFilters),
+        );
+      }
 
       const yearRangeStillActive = currentFilters.some(
         (f) => f.type === 'yearRange',
@@ -226,7 +313,7 @@ function reducer(
       const recomputed = recomputeAvailableFilters(
         removedType,
         currentFilters,
-        state.availableTables,
+        getAvailableTables(state),
         state.originalSubjectTree,
       );
 

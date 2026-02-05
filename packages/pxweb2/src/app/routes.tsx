@@ -6,9 +6,26 @@ import StartPage from './pages/StartPage/StartPage';
 import TableViewer from './pages/TableViewer/TableViewer';
 import TopicIcons from './pages/TopicIcons/TopicIcons';
 import { getConfig } from './util/config/getConfig';
+import { savedQueryRouteLoader } from './savedQueryRouteLoader';
+import { normalizeBaseApplicationPath } from './util/pathUtil';
 
 const config = getConfig();
 const showDefaultLanguageInPath = config.language.showDefaultLanguageInPath;
+const langPositionInPath = config.language.positionInPath ?? 'after';
+const basePath = normalizeBaseApplicationPath(config.baseApplicationPath);
+const getLanguageBasePath = (lang: string) => {
+  if (langPositionInPath === 'before') {
+    // basePath already ends with '/'
+    return `/${lang}${basePath}`;
+  }
+  return `${basePath}${lang}/`;
+};
+const defaultLanguagePath = getLanguageBasePath(
+  config.language.defaultLanguage,
+);
+const routerRootPath = langPositionInPath === 'before' ? '/' : basePath;
+const topicIconsRoutePath =
+  routerRootPath === '/' ? `${basePath}topicIcons` : 'topicIcons';
 
 const supportedLangRoutes = config.language.supportedLanguages.map((lang) => {
   // the normal error handling will show "page not found",
@@ -18,12 +35,24 @@ const supportedLangRoutes = config.language.supportedLanguages.map((lang) => {
     !showDefaultLanguageInPath &&
     lang.shorthand === config.language.defaultLanguage
   ) {
-    return {};
+    return {
+      path: basePath,
+      children: [
+        {
+          index: true,
+          element: <StartPage />,
+        },
+        {
+          path: 'table/:tableId',
+          element: <TableViewer />,
+        },
+      ],
+    };
   }
 
   // If the default language should be shown in the path
   return {
-    path: `/${lang.shorthand}/`,
+    path: getLanguageBasePath(lang.shorthand),
     children: [
       {
         index: true,
@@ -37,37 +66,46 @@ const supportedLangRoutes = config.language.supportedLanguages.map((lang) => {
   };
 });
 
-const routingWithDefaultLanguageInURL = [
-  {
-    index: true,
-    element: <Navigate to={`/${config.language.defaultLanguage}/`} replace />,
-  },
-  ...supportedLangRoutes,
-];
-const routingWithoutDefaultLanguageInURL = [
-  {
-    index: true,
-    element: <StartPage />,
-  },
-  {
-    path: 'table/:tableId',
-    element: <TableViewer />,
-  },
-  ...supportedLangRoutes,
-];
-
 export const routerConfig = [
   {
-    path: '/',
+    path: routerRootPath,
     element: <RootLayout />,
     errorElement: <ErrorPageWithLocalization />,
     children: [
       ...(showDefaultLanguageInPath
-        ? routingWithDefaultLanguageInURL
-        : routingWithoutDefaultLanguageInURL),
+        ? [
+            // Redirect from the router root to the default language path
+            {
+              index: true,
+              element: <Navigate to={defaultLanguagePath} replace />,
+            },
+            // When language comes before basePath, also redirect from basePath (no language)
+            ...(langPositionInPath === 'before'
+              ? [
+                  {
+                    path: basePath,
+                    children: [
+                      {
+                        index: true,
+                        element: <Navigate to={defaultLanguagePath} replace />,
+                      },
+                    ],
+                  },
+                ]
+              : []),
+          ]
+        : []),
+      ...supportedLangRoutes,
       {
-        path: 'topicIcons',
+        path: topicIconsRoutePath,
         element: <TopicIcons />,
+      },
+      {
+        path: `${basePath}sq/:sqId`,
+        loader: savedQueryRouteLoader,
+        // Provide a minimal element to avoid React Router warning for leaf routes
+        element: <div>Redirecting…</div>,
+        HydrateFallback: () => <div />,
       },
     ],
   },

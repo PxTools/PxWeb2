@@ -24,6 +24,7 @@
       }
     },
     "skip_to_main": "Hopp til hovedinnhold",
+    "switch_language_landmark": "Velg språk",
     "footer": {
       "language_header": "Språk",
       "copyright": "© Opphavsrett PxTools",
@@ -59,6 +60,13 @@
       "breadcrumb_home_title": "Hjem",
       "breadcrumb_root_title": "Nye statistikkbanken",
       "show_more_breadcrumbs": "Vis mer"
+    },
+    "code_snippet": {
+      "copy_button_tooltip": "Kopier kode",
+      "copy_button_label": "Kopier kode for ",
+      "copied_button_label": "Kode kopiert til utklippstavle",
+      "wrap_code_button_label": "Bryt linjer",
+      "unwrap_code_button_label": "Ikke bryt linjer"
     }
   },
   "start_page": {
@@ -71,7 +79,9 @@
     "no_result_search_help": "Søkehjelp",
     "result_hidden_header": "Resultat",
     "search_label": "Søk i Statistikkbanken",
-    "search_placeholder": "Søk etter tabellnavn eller variabler",
+    "search_placeholder": "",
+    "skip_to.filter": "Gå til filter",
+    "skip_to.result": "Gå til resultat",
     "filter": {
       "button": "Filter",
       "back": "Tilbake",
@@ -131,7 +141,7 @@
           "search": {
             "placeholder": "Søk i listen",
             "label": "Søk",
-            "aria_label_clear_button_text": "Ikon for å fjerne tekst i søkefeltet"
+            "aria_label_clear_button_text": "Tøm"
           },
           "header": {
             "tag_selected": "{{selected}} av {{total}} valgt",
@@ -152,7 +162,9 @@
             "values_list": {
               "aria_label": "Liste av {{total}} verdier.",
               "no_results_heading": "Ingen treff på «{{search}}»",
-              "no_results_bodyshort": "Prøv med et annet søkeord eller en annen stavemåte."
+              "no_results_bodyshort": "Prøv med et annet søkeord eller en annen stavemåte.",
+              "showing_number_of_values": " {{searchResultsCount}} treff",
+              "showing_number_of_one_value": " {{searchResultsCount}} treff"
             }
           }
         }
@@ -210,7 +222,7 @@
           "formats": {
             "excel": "Excel (.xlsx)",
             "csv": "Semikolonseparert med overskrift (.csv)",
-            "px": "PC-Axis (.px)",
+            "px": "Px-fil (.px)",
             "jsonstat2": "JSON-stat2 (.json)",
             "html": "HTML (.html)",
             "parquet": "Parquet (.parquet)"
@@ -242,8 +254,16 @@
         },
         "api": {
           "title": "API",
-          "description": "Beskrivelsestekst...",
-          "query": "API-spørring"
+          "description": "Her finner du API-spørringen for tabellen. Bruk GET om spørringen er liten (under ca. 2 100 tegn), og POST om spørringen er stor og mer detaljert.",
+          "query": "API-spørring",
+          "link_text": "Les mer om bruk av API-et",
+          "link_url": "https://www.ssb.no/api/pxwebapiv2",
+          "select_format": "Velg format",
+          "get_button_text": "GET",
+          "post_button_text": "POST",
+          "url_text": "URL",
+          "post_body_text": "POST BODY",
+          "select_http_method_aria": "Velg HTTP-forespørselsmetode"
         }
       },
       "help": {
@@ -292,8 +312,17 @@
           "important_about_selection_body_one_note": "Trykk på denne meldingen for å lese merknaden. "
         },
         "definitions": {
-          "title": "Definisjoner",
-          "description": "Tabellen er en del av statistikken {{statistics}}"
+          "panel_title": "Definisjoner",
+          "about_statistics": {
+            "title": "Om statistikken",
+            "description": "Definisjoner, forklaringer og annen informasjon relatert til tabellen, finner du på tabellens statistikkside.",
+            "link_text_definitions": "Definisjoner og forklaringer",
+            "link_text_homepage": "Statistikkside"
+          },
+          "metadata": {
+            "title": "Metadata",
+            "description": "Her finner du lenker til variabeldefinisjoner og klassifikasjoner brukt i tabellen."
+          }
         },
         "details": {
           "title": "Detaljer",

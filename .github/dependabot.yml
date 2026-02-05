@@ -1,23 +1,29 @@
 version: 2
 updates:
-  - package-ecosystem: "npm"
+  - package-ecosystem: 'npm'
     directories:
-      - "/"
-      - "/packages/pxweb2"
-      - "/packages/pxweb2-api-client"
-      - "/packages/pxweb2-ui"
+      - '/'
+      - '/packages/pxweb2'
+      - '/packages/pxweb2-api-client'
+      - '/packages/pxweb2-ui'
     schedule:
-      interval: "weekly"
+      interval: 'weekly'
     versioning-strategy: auto
     open-pull-requests-limit: 5
     ignore:
-      - dependency-name: "*"
-        update-types: ["version-update:semver-patch"]
-  - package-ecosystem: "github-actions"
-    directory: "/"
+      - dependency-name: '*'
+        update-types: ['version-update:semver-patch']
+    cooldown:
+      default-days: 9
+  - package-ecosystem: 'github-actions'
+    directory: '/'
     schedule:
-      interval: "weekly"
-  - package-ecosystem: "docker"
-    directory: "/"
+      interval: 'weekly'
+    cooldown:
+      default-days: 9
+  - package-ecosystem: 'docker'
+    directory: '/'
     schedule:
-      interval: "weekly"
+      interval: 'weekly'
+    cooldown:
+      default-days: 9

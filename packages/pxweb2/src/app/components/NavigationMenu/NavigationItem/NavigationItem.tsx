@@ -2,15 +2,7 @@ import cl from 'clsx';
 import { m } from 'motion/react';
 import { forwardRef, MouseEvent } from 'react';
 
-import {
-  Icon,
-  IconProps,
-  Label,
-  ColorSurfaceDefault,
-  ColorSurfaceSubtle,
-  ColorSurfaceActionSubtleActive,
-  ColorSurfaceActionSubtleHover,
-} from '@pxweb2/pxweb2-ui';
+import { Icon, IconProps, Label } from '@pxweb2/pxweb2-ui';
 import styles from './NavigationItem.module.scss';
 
 // Framer Motion spring animation configuration
@@ -33,9 +25,11 @@ export const Item = forwardRef<HTMLButtonElement, ItemProps>(
   ({ label, parentName, selected, icon, onClick }, ref) => {
     const btnId = 'px-' + parentName + '-' + label;
     const initialBaseBackgroundColor =
-      parentName === 'navBar' ? ColorSurfaceSubtle : ColorSurfaceDefault;
+      parentName === 'navBar'
+        ? 'var(--px-color-surface-subtle)'
+        : 'var(--px-color-surface-default)';
     const initialBackgroundColor = selected
-      ? ColorSurfaceActionSubtleActive
+      ? 'var(--px-color-surface-action-subtle-active)'
       : initialBaseBackgroundColor;
     const buttonVariants = {
       initial: {
@@ -45,14 +39,14 @@ export const Item = forwardRef<HTMLButtonElement, ItemProps>(
       hover: {
         backgroundColor: [
           initialBackgroundColor,
-          ColorSurfaceActionSubtleHover,
+          'var(--px-color-surface-action-subtle-hover)',
         ],
         transition: springConfig,
       },
       pressed: {
         backgroundColor: [
-          ColorSurfaceActionSubtleHover,
-          ColorSurfaceActionSubtleActive,
+          'var(--px-color-surface-action-subtle-hover)',
+          'var(--px-color-surface-action-subtle-active)',
         ],
         transition: springConfig,
       },

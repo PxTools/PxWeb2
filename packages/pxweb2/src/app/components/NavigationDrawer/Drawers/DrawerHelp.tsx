@@ -1,16 +1,26 @@
 import { useTranslation } from 'react-i18next';
 
-import { ContentBox, Alert } from '@pxweb2/pxweb2-ui';
-import classes from './DrawerHelp.module.scss';
+import HelpSection from '../../Help/HelpSection';
+import { ContentBox } from '@pxweb2/pxweb2-ui';
+import { useLocaleContent } from '../../../util/hooks/useLocaleContent';
+import type {
+  LocaleContent,
+  HelpSection as HelpSectionType,
+} from '../../../util/config/localeContentTypes';
 
 export function DrawerHelp() {
-  const { t } = useTranslation();
+  const { i18n } = useTranslation();
+  const localeContent: LocaleContent | null = useLocaleContent(i18n.language);
+  const helpSectionContent: HelpSectionType | undefined =
+    localeContent?.tableViewer?.helpSection;
+
+  if (!helpSectionContent) {
+    return null;
+  }
 
   return (
     <ContentBox>
-      <Alert variant="info" className={classes.alert}>
-        {t('common.status_messages.drawer_help')}
-      </Alert>
+      <HelpSection helpSectionContent={helpSectionContent} />
     </ContentBox>
   );
 }

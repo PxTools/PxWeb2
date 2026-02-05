@@ -34,7 +34,7 @@ export type ConfigResponse = {
      */
     maxCallsPerTimeWindow: number;
     /**
-     * The time window restricting how many call that can be done.
+     * The time window restricting how many call that can be done. Note that this time window is for fetching data from the API and that different endpoints might have different limits.
      */
     timeWindow: number;
     /**

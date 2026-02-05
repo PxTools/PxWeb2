@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 
 import {
   ApiError,
-  TableService,
+  TablesService,
   SavedQueriesService,
   SelectionResponse,
   PathElement,
@@ -296,13 +296,13 @@ export function Selection({
 
     // Make parallel calls to getMetadataById and getTableById
     Promise.all([
-      TableService.getMetadataById(
+      TablesService.getMetadataById(
         selectedTabId,
         i18n.resolvedLanguage,
         metaDataDefaultSelection,
         savedQueryId,
       ),
-      TableService.getTableById(selectedTabId, i18n.resolvedLanguage),
+      TablesService.getTableById(selectedTabId, i18n.resolvedLanguage),
     ])
       .then(([Dataset, TableData]) => {
         const pxTable: PxTable = mapJsonStat2Response(Dataset, false);
@@ -385,7 +385,7 @@ export function Selection({
           i18n.resolvedLanguage,
         );
       } else {
-        response = await TableService.getDefaultSelection(
+        response = await TablesService.getDefaultSelection(
           selectedTabId,
           i18n.resolvedLanguage,
         );
@@ -434,8 +434,13 @@ export function Selection({
 
     setIsFadingVariableList(true);
 
+    // Preserve current pathElements so we don't lose them on codelist change
+    const preservedPathElements = structuredClone(
+      pxTableMetaToRender?.pathElements ?? undefined,
+    );
+
     // Get table metadata in the new codelist context
-    TableService.getMetadataById(
+    TablesService.getMetadataById(
       selectedTabId,
       i18n.resolvedLanguage,
       false,
@@ -444,6 +449,11 @@ export function Selection({
     )
       .then((Dataset) => {
         const pxTable: PxTable = mapJsonStat2Response(Dataset, false);
+
+        // Reapply preserved pathElements to the new metadata
+        if (preservedPathElements && preservedPathElements.length > 0) {
+          pxTable.metadata.pathElements = preservedPathElements;
+        }
 
         setPxTableMetadata(pxTable.metadata);
 

@@ -2,6 +2,7 @@ import { PathElement } from './pathElement';
 import { Contact } from './contact';
 import { Note } from './note';
 import { Variable } from './variable';
+import { Definitions } from './definitions';
 
 /**
  * Represents the metadata of a table in PxWeb.
@@ -95,6 +96,11 @@ export type PxTableMetadata = {
    * The contacts that are associated with the table.
    */
   contacts: Contact[];
+  /**
+   * The definitions that are associated with the table.
+   */
+  definitions: Definitions;
+
   /**
    * Notes that are associated with the table.
    */

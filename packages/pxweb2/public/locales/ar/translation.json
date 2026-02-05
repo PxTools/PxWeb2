@@ -24,6 +24,7 @@
       }
     },
     "skip_to_main": "انتقل إلى المحتوى الرئيسي",
+    "switch_language_landmark": "اختر اللغة",
     "footer": {
       "language_header": "اللغة",
       "copyright": "© حقوق الطبع والنشر PxTools",
@@ -58,11 +59,20 @@
       "aria_label_breadcrumb": "خبز",
       "breadcrumb_root_title": "الصفحة الرئيسية",
       "show_more_breadcrumbs": "عرض المزيد"
+    },
+    "code_snippet": {
+      "copy_button_tooltip": "نسخ الشيفرة",
+      "copy_button_label": "نسخ رمز ل ",
+      "copied_button_label": "تم نسخ الرمز إلى لوحة الكتابة",
+      "wrap_code_button_label": "خطوط الالتفاف",
+      "unwrap_code_button_label": "فك السطور"
     }
   },
   "start_page": {
     "header": "مرحبا بكم في التطبيق!",
-    "welcome_trans_test": "مرحبا بكم في <1>برنامج</1> لبكسي ويب 2.0!"
+    "welcome_trans_test": "مرحبا بكم في <1>برنامج</1> لبكسي ويب 2.0!",
+    "skip_to_filter": "تخطي إلى الفلتر",
+    "skip_to_result": "تخطي إلى النتيجة"
   },
   "presentation_page": {
     "side_menu": {
@@ -74,7 +84,7 @@
           "search": {
             "placeholder": "البحث في القائمة",
             "label": "يبحث",
-            "aria_label_clear_button_text": "مسح أيقونة البحث"
+            "aria_label_clear_button_text": "واضح"
           },
           "header": {
             "tag_selected": "{{selected}} ل {{total}} مختارة",
@@ -95,7 +105,9 @@
             "values_list": {
               "aria_label": "قائمة {{total}} قيم.",
               "no_results_heading": "“{{search}}” لا توجد نتائج ل",
-              "no_results_bodyshort": "جرّب كلمة رئيسية أو تهجئة مختلفة."
+              "no_results_bodyshort": "جرّب كلمة رئيسية أو تهجئة مختلفة.",
+              "showing_number_of_values": " {{searchResultsCount}} قيم",
+              "showing_number_of_one_value": " {{searchResultsCount}} قيمة"
             }
           }
         }
@@ -153,7 +165,7 @@
           "formats": {
             "excel": "اكسل (xlsx)",
             "csv": "مفصولة بفاصلة منقوطة مع عنوان (.csv)",
-            "px": "PC-Axis (.px)",
+            "px": "ملف Px (.px)",
             "jsonstat2": "JSON-stat2 (.json)",
             "html": "HTML (.html)",
             "parquet": "Parquet (.parquet)"
@@ -185,8 +197,16 @@
         },
         "api": {
           "title": "واجهة برمجة التطبيقات",
-          "description": "نص الوصف...",
-          "query": "استعلام API"
+          "description": "هنا ستجد استعلام API للجدول. استخدم GET للاستعلامات الصغيرة (أقل من حوالي 2100 حرف) وPOST للاستعلامات الأكبر أو الأكثر تعقيدًا.",
+          "query": "استعلام API",
+          "link_text": "تعرف على المزيد حول استخدام API",
+          "link_url": "https://www.pxtools.net/PxWebApi/documentation/user-guide/",
+          "select_format": "اختر التنسيق",
+          "get_button_text": "GET",
+          "post_button_text": "POST",
+          "url_text": "الرابط (URL)",
+          "post_body_text": "محتوى POST",
+          "select_http_method_aria": "اختر طريقة طلب HTTP"
         }
       },
       "help": {
@@ -221,8 +241,17 @@
           "show_all_footnotes": "إظهار كافة الملاحظات للجدول"
         },
         "definitions": {
-          "title": "التعاريف",
-          "description": "الجدول جزء من الإحصائيات {{statistics}}"
+          "panel_title": "التعاريف",
+          "about_statistics": {
+            "title": "",
+            "description": "",
+            "link_text_definitions": "",
+            "link_text_homepage": ""
+          },
+          "metadata": {
+            "title": "",
+            "description": ""
+          }
         },
         "details": {
           "title": "تفاصيل",

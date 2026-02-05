@@ -24,6 +24,7 @@
       }
     },
     "skip_to_main": "Gå direkt till huvudinnehållet",
+    "switch_language_landmark": "Välj språk",
     "footer": {
       "language_header": "Språk",
       "copyright": "© Upphovsrätt PxTools",
@@ -59,6 +60,13 @@
       "breadcrumb_home_title": "Hem",
       "breadcrumb_root_title": "Hem",
       "show_more_breadcrumbs": "Visa mer"
+    },
+    "code_snippet": {
+      "copy_button_tooltip": "Kopiera kod",
+      "copy_button_label": "Kopiera kod för ",
+      "copied_button_label": "Kod kopierad till urklipp",
+      "wrap_code_button_label": "Radbryt rader",
+      "unwrap_code_button_label": "Avbryt radbrytning"
     }
   },
   "start_page": {
@@ -71,7 +79,9 @@
     "no_result_search_help": "Sökhjälp",
     "result_hidden_header": "Resultat",
     "search_label": "Sök i Statistikdatabasen",
-    "search_placeholder": "Sök efter tabellrubrik eller variabel",
+    "search_placeholder": "",
+    "skip_to.filter": "Gå till filter",
+    "skip_to.result": "Gå till resultat",
     "filter": {
       "button": "Filter",
       "back": "Tilbaka",
@@ -131,7 +141,7 @@
           "search": {
             "placeholder": "Sök i listan",
             "label": "Sök",
-            "aria_label_clear_button_text": "Ikon för att ta bort text i sökfältet"
+            "aria_label_clear_button_text": "Rensa"
           },
           "header": {
             "tag_selected": "{{selected}} av {{total}} valda",
@@ -152,7 +162,9 @@
             "values_list": {
               "aria_label": "Lista över {{total}} värden.",
               "no_results_heading": "Tyvärr hittades inte ”{{search}}”",
-              "no_results_bodyshort": "Försök med en annan stavning eller ett annat ord."
+              "no_results_bodyshort": "Försök med en annan stavning eller ett annat ord.",
+              "showing_number_of_values": " {{searchResultsCount}} träffar",
+              "showing_number_of_one_value": " {{searchResultsCount}} träff"
             }
           }
         }
@@ -210,7 +222,7 @@
           "formats": {
             "excel": "Excel (.xlsx)",
             "csv": "Semikolonavgränsad med rubrik (.csv)",
-            "px": "PC-Axis (.px)",
+            "px": "Px-fil (.px)",
             "jsonstat2": "JSON-stat2 (.json)",
             "html": "HTML (.html)",
             "parquet": "Parquet (.parquet)"
@@ -242,8 +254,16 @@
         },
         "api": {
           "title": "API",
-          "description": "Beskrivande text...",
-          "query": "API-uttag"
+          "description": "Här kan du hämta API-frågan för tabellen du tagit ut. Använd GET om frågan är liten (under ca 2 100 tecken) och POST om frågan är stor och mer detaljerad.",
+          "query": "API-uttag",
+          "link_text": "Läs mer om att använda API:et",
+          "link_url": "https://www.pxtools.net/PxWebApi/documentation/user-guide/",
+          "select_format": "Välj format",
+          "get_button_text": "GET",
+          "post_button_text": "POST",
+          "url_text": "URL",
+          "post_body_text": "POST BODY",
+          "select_http_method_aria": "Välj HTTP-förfrågningsmetod"
         }
       },
       "help": {
@@ -292,8 +312,17 @@
           "important_about_selection_body_one_note": "Tryck på detta meddelande för att läsa noten. "
         },
         "definitions": {
-          "title": "Definitioner",
-          "description": "Tabellen är en del av statistiken {{statistics}}"
+          "panel_title": "Definitioner",
+          "about_statistics": {
+            "title": "",
+            "description": "",
+            "link_text_definitions": "",
+            "link_text_homepage": ""
+          },
+          "metadata": {
+            "title": "",
+            "description": ""
+          }
         },
         "details": {
           "title": "Detaljer",

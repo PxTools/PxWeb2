@@ -3,6 +3,7 @@ import type { TFunction } from 'i18next';
 
 import { getConfig } from './config/getConfig';
 import { getPathWithUniqueIds } from '../util/pathUtil';
+import { getLanguagePath } from './language/getLanguagePath';
 
 export type BreadcrumbItemsParm = {
   currentPage?: { label: string; href: string };
@@ -20,13 +21,18 @@ export function createBreadcrumbItems(
   const currentLocation = breadCrumbsParm.currentPage?.href || undefined;
 
   const config = getConfig();
-  const basePath = config.baseApplicationPath;
   const breadcrumbItems: BreadcrumbItem[] = [];
-  const languageInPath =
-    !config.language.showDefaultLanguageInPath &&
-    language === config.language.defaultLanguage
-      ? ''
-      : language;
+
+  const buildInternalHref = (pathname: string) =>
+    getLanguagePath(
+      pathname,
+      language,
+      config.language.supportedLanguages,
+      config.language.defaultLanguage,
+      config.language.showDefaultLanguageInPath,
+      config.baseApplicationPath,
+      config.language.positionInPath,
+    );
 
   const eksternalHomePage = config.homePage
     ? config.homePage[language as keyof typeof config.homePage]
@@ -41,16 +47,18 @@ export function createBreadcrumbItems(
   //Path to root (startpage)
   breadcrumbItems.push({
     label: breadCrumbsParm.t('common.breadcrumbs.breadcrumb_root_title'),
-    href: basePath + languageInPath,
+    href: buildInternalHref('/'),
   });
 
   // middle parts of breadcrumb ,path to subjects
   if (pathElements && pathElements.length > 0) {
     const pathWithUniqueIds = getPathWithUniqueIds(pathElements);
+    const rootPath = buildInternalHref('/');
+
     breadcrumbItems.push(
       ...pathWithUniqueIds.map((path) => ({
         label: path.label,
-        href: `${basePath}${languageInPath}?subject=${path.uniqueId}`,
+        href: `${rootPath}?subject=${path.uniqueId}`,
       })),
     );
   }
@@ -59,7 +67,7 @@ export function createBreadcrumbItems(
   if (currentPageLabel && currentLocation) {
     breadcrumbItems.push({
       label: currentPageLabel,
-      href: basePath + currentLocation.substring(1),
+      href: buildInternalHref(currentLocation),
     });
   }
   return breadcrumbItems;

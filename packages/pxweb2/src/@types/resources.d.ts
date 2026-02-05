@@ -9,8 +9,16 @@ interface Resources {
       };
       breadcrumbs: {
         aria_label_breadcrumb: 'Breadcrumb';
+        breadcrumb_home_title: 'Home';
         breadcrumb_root_title: 'Home';
         show_more_breadcrumbs: 'Show more';
+      };
+      code_snippet: {
+        copied_button_label: 'Code copied to clipboard';
+        copy_button_label: 'Copy code for ';
+        copy_button_tooltip: 'Copy code';
+        unwrap_code_button_label: 'Unwrap lines';
+        wrap_code_button_label: 'Wrap lines';
       };
       errors: {
         generic: {
@@ -57,8 +65,9 @@ interface Resources {
         drawer_save_file: 'More file formats are in the works.';
         drawer_view: 'Graph display is under construction.';
         tab_definitions: 'The content of this tab is under construction.';
-        welcome: "Welcome to the new PxWeb 2.0! We're still improving to help you find and use the numbers you need 📊✨";
+        welcome: "Welcome to the new PxWeb 2.0! We're still improving to help you find and use the figures you need 📊✨";
       };
+      switch_language_landmark: 'Select language';
       title: 'PxWeb 2.0';
     };
     date: {
@@ -94,8 +103,17 @@ interface Resources {
             title: 'Contact';
           };
           definitions: {
-            description: 'The table is part of the statistics {{statistics}}';
-            title: 'Definitions';
+            about_statistics: {
+              description: "Definitions, explanations, and other information related to the table can be found on the table's statistics page.";
+              link_text_definitions: 'Definitions and explanations';
+              link_text_homepage: 'Statistics page';
+              title: 'About the statistics';
+            };
+            metadata: {
+              description: 'Here you can find links to variable definitions and classifications used in the table.';
+              title: 'Metadata';
+            };
+            panel_title: 'Definitions';
           };
           details: {
             base_time: 'Base time';
@@ -103,7 +121,7 @@ interface Resources {
             boolean_true: 'Yes';
             copyright: 'Copyright';
             description: 'Description text...';
-            last_updated: 'Last updated';
+            last_updated: 'Updated';
             link: 'Link';
             matrix: 'Matrix';
             next_update: 'Next update';
@@ -136,7 +154,7 @@ interface Resources {
         };
         dynamic_table_title: '{{table_content_type}} by {{table_content_label_first_part}} and {{table_content_label_last_part}}';
         expand_view: 'Expand view';
-        last_updated: 'Last updated';
+        last_updated: 'Updated';
         related: {
           description: 'Description text...';
           title: 'Related';
@@ -172,10 +190,10 @@ interface Resources {
           };
           customize: {
             auto_pivot: {
-              aria_label: 'Auto rotate table';
-              description: 'Automatically organises rows and columns for a clearer table layout';
-              screen_reader_announcement: 'Table layout improved and organised after {{table_heading}}';
-              title: 'Auto rotate table';
+              aria_label: 'Improve table layout';
+              description: 'Organises rows and columns automatically for a clearer table layout';
+              screen_reader_announcement: 'Table layout improved and organised after {{first_variables}} and {{last_variable}}';
+              title: 'Improve table layout';
             };
             change_order: {
               description: 'Description text...';
@@ -191,7 +209,7 @@ interface Resources {
               description: 'Description text...';
               title: 'Rearrange table';
             };
-            title: 'Customize';
+            title: 'Customise';
           };
           hide_display: {
             title: 'Hide/display';
@@ -204,9 +222,17 @@ interface Resources {
         hide: 'Hide';
         save: {
           api: {
-            description: 'Description text...';
+            description: 'Here you’ll find the API query for the table. Use GET for small queries (under about 2 100 characters) and POST for larger or more complex ones';
+            get_button_text: 'GET';
+            link_text: 'Learn more about using the API';
+            link_url: 'https://www.pxtools.net/PxWebApi/documentation/user-guide/';
+            post_body_text: 'POST BODY';
+            post_button_text: 'POST';
             query: 'API query';
+            select_format: 'Select format';
+            select_http_method_aria: 'Select HTTP request method';
             title: 'API';
+            url_text: 'URL';
           };
           file: {
             formats: {
@@ -264,6 +290,8 @@ interface Resources {
                 aria_label: 'List of {{total}} values.';
                 no_results_bodyshort: 'Try a different keyword or spelling.';
                 no_results_heading: 'No results for “{{search}}”';
+                showing_number_of_one_value: ' {{searchResultsCount}} result';
+                showing_number_of_values: ' {{searchResultsCount}} results';
               };
             };
             header: {
@@ -273,7 +301,6 @@ interface Resources {
             };
             search: {
               aria_label_clear_button_text: 'Clear search icon';
-              aria_label_icon_text: 'Search icon';
               label: 'Search';
               placeholder: 'Search in list';
             };
@@ -329,7 +356,7 @@ interface Resources {
         };
       };
       header: 'Welcome to PxWeb 2.0';
-      ingress: "Looking for the perfect table? Use the search field and filters to dig into the numbers you need. Whether you're hunting for trends, facts, or just an oddly satisfying dataset, PxWeb 2.0 has your back.";
+      ingress: "Looking for the perfect table? Use the search field and filters to dig into the figures you need. Whether you're hunting for trends, facts, or just an oddly satisfying dataset, PxWeb 2.0 has your back.";
       more_about_label: 'More about PxWeb 2.0';
       more_about_text: 'More about Text EN';
       no_result_description: 'Try a different keyword or adjust your filters.';
@@ -337,7 +364,9 @@ interface Resources {
       no_result_search_help: 'Search help';
       result_hidden_header: 'Result';
       search_label: 'Search in PxWeb 2.0';
-      search_placeholder: 'Search for table names or variables';
+      search_placeholder: '';
+      'skip_to.filter': 'Skip to filter';
+      'skip_to.result': 'Skip to result';
       table: {
         card_description: '{{title}}. Year: {{yearFrom}}-{{yearTo}}. Time period {{frequency}}. Updated {{updatedDate}}. Table number {{tableNumber}}.';
         loading: 'Loading...';

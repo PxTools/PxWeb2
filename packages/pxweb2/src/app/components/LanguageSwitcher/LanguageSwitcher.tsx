@@ -37,6 +37,8 @@ export const LanguageSwitcher = () => {
         config.language.supportedLanguages,
         config.language.defaultLanguage,
         config.language.showDefaultLanguageInPath,
+        config.baseApplicationPath,
+        config.language.positionInPath,
       ),
     );
 
@@ -64,12 +66,13 @@ export const LanguageSwitcher = () => {
 
   return (
     config.language.supportedLanguages.length > 1 && (
-      <div
+      <nav
         className={cl(
           classes.languageSwitcher,
           classes[`textcolor-default`],
           isTabbed && classes['focusMarkings'],
         )}
+        aria-label={t('common.switch_language_landmark')}
       >
         <div className={cl(classes.languageSwitcherIconContainer)}>
           <Icon
@@ -115,7 +118,7 @@ export const LanguageSwitcher = () => {
             </option>
           ))}
         </select>
-      </div>
+      </nav>
     )
   );
 };

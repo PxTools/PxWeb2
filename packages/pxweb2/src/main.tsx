@@ -17,10 +17,7 @@ validateConfig();
 
 const config = getConfig();
 OpenAPI.BASE = config.apiUrl;
-
-const router = createBrowserRouter(routerConfig, {
-  basename: config.baseApplicationPath,
-});
+const router = createBrowserRouter(routerConfig);
 
 root.render(
   <StrictMode>

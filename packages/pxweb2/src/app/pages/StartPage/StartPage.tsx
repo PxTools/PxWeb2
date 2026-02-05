@@ -22,13 +22,18 @@ import {
   DetailsSection,
   List,
   ListItem,
+  MarkdownRenderer,
 } from '@pxweb2/pxweb2-ui';
 import { type Table } from '@pxweb2/pxweb2-api-client';
-import { AccessibilityProvider } from '../../context/AccessibilityProvider';
+import {
+  AccessibilityProvider,
+  AccessibilityContext,
+} from '../../context/AccessibilityProvider';
 import { Header } from '../../components/Header/Header';
 import { Footer } from '../../components/Footer/Footer';
 import { ErrorMessage } from '../../components/ErrorMessage/ErrorMessage';
 import { FilterSidebar } from '../../components/FilterSidebar/FilterSidebar';
+import { SkipToContent } from '../../components/SkipToContent/SkipToContent';
 import { ActionType } from './StartPageTypes';
 import {
   getSubjectTree,
@@ -39,10 +44,11 @@ import { useTopicIcons } from '../../util/hooks/useTopicIcons';
 import useApp from '../../context/useApp';
 import { getConfig } from '../../util/config/getConfig';
 import { FilterContext, FilterProvider } from '../../context/FilterContext';
-import { getAllTables } from '../../util/tableHandler';
+import { getAllTables, queryTablesByKeyword } from '../../util/tableHandler';
 import { tableListIsReadyToRender } from '../../util/startPageRender';
 import useFilterUrlSync from '../../util/hooks/useFilterUrlSync';
 import StartpageDetails from '../../components/StartPageDetails/StartPageDetails';
+import { getLanguagePath } from '../../util/language/getLanguagePath';
 import { useLocaleContent } from '../../util/hooks/useLocaleContent';
 import type {
   LocaleContent,
@@ -58,6 +64,8 @@ const StartPage = () => {
   const { isMobile, isTablet } = useApp();
   const { state, dispatch } = useContext(FilterContext);
   useFilterUrlSync(state, dispatch, t);
+
+  const accessibility = useContext(AccessibilityContext);
 
   const paginationCount = 15;
   const isSmallScreen = isTablet === true || isMobile === true;
@@ -83,8 +91,23 @@ const StartPage = () => {
   const hasFetchedRef = useRef(false);
   const hasEverHydratedRef = useRef(false);
   const previousLanguage = useRef('');
+  const filterOverlayRef = useRef<HTMLDivElement>(null);
 
   const navigate = useNavigate();
+
+  // On initial load, seed search from URL query parameter once
+  useEffect(() => {
+    if (globalThis.window === undefined) {
+      return;
+    }
+    const params = new URLSearchParams(globalThis.window.location.search);
+    const queryText = params.get('query') || '';
+    if (queryText) {
+      updateQueryFilter(queryText);
+    }
+    // run only once on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const isReadyToRender = tableListIsReadyToRender(
     state,
@@ -171,6 +194,66 @@ const StartPage = () => {
       document.body.style.overflow = '';
     };
   }, [isFilterOverlayOpen, isSmallScreen]);
+
+  // Register and unregister the filter overlay as a modal with the app’s AccessibilityContext,
+  // so global accessibility behaviors (like closing via Escape) apply on small screens.
+  useEffect(() => {
+    if (isSmallScreen && isFilterOverlayOpen) {
+      accessibility?.addModal('filterOverlay', () =>
+        setIsFilterOverlayOpen(false),
+      );
+    } else {
+      accessibility?.removeModal('filterOverlay');
+    }
+    return () => accessibility?.removeModal('filterOverlay');
+  }, [accessibility, isSmallScreen, isFilterOverlayOpen]);
+
+  // Trap keyboard focus inside the mobile filter overlay while it’s open, ensuring accessible tabbing.
+  // Runs only when accessibility is available, the overlay is open (isFilterOverlayOpen),
+  // and the overlay’s container ref (filterOverlayRef) is set.
+  useEffect(() => {
+    if (!accessibility || !isFilterOverlayOpen || !filterOverlayRef.current) {
+      return;
+    }
+
+    //filterOverlayRef is a ref to the overlay root DOM element
+    const container = filterOverlayRef.current;
+
+    // selects elements that are typically focusable via keyboard
+    //.filter((el) => el.offsetParent !== null) removes elements that are not currently visible / not in layout. This avoids trapping focus on hidden controls.
+    const focusable = Array.from(
+      container.querySelectorAll<HTMLElement>(
+        'a[href], area[href], input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      ),
+    ).filter((el) => el.offsetParent !== null);
+
+    // Define first and last focusable elements, with fallback to back button if none found
+    const first = focusable[0] || filterBackButtonRef.current || null;
+    const last = focusable.at(-1) || filterBackButtonRef.current || null;
+
+    // Register focus overrides for the first and last focusable elements
+    // to create a focus trap within the overlay
+    if (first && last) {
+      accessibility?.addFocusOverride(
+        'filterOverlay-first',
+        first,
+        last,
+        undefined,
+      );
+      accessibility?.addFocusOverride(
+        'filterOverlay-last',
+        last,
+        undefined,
+        first,
+      );
+    }
+
+    // Cleanup focus overrides when the overlay is closed or dependencies change
+    return () => {
+      accessibility?.removeFocusOverride('filterOverlay-first');
+      accessibility?.removeFocusOverride('filterOverlay-last');
+    };
+  }, [accessibility, isFilterOverlayOpen]);
 
   useEffect(() => {
     if (visibleCount === lastVisibleCount && isPaginating) {
@@ -316,10 +399,15 @@ const StartPage = () => {
 
       const config = getConfig();
       const language = i18n.language;
-      const showLangInPath =
-        config.language.showDefaultLanguageInPath ||
-        language !== config.language.defaultLanguage;
-      const langPrefix = showLangInPath ? `/${language}` : '';
+      const tablePath = getLanguagePath(
+        `/table/${table.id}`,
+        language,
+        config.language.supportedLanguages,
+        config.language.defaultLanguage,
+        config.language.showDefaultLanguageInPath,
+        config.baseApplicationPath,
+        config.language.positionInPath,
+      );
       const discontinued = table.discontinued;
 
       let cardRef: React.RefObject<HTMLDivElement | null> | undefined;
@@ -329,11 +417,20 @@ const StartPage = () => {
         cardRef = lastVisibleCardRef;
       }
 
+      let lastPeriodString: string | undefined = table.lastPeriod?.slice(0, 4);
+      if (
+        table.timeUnit &&
+        table.timeUnit.toLowerCase() === 'other' &&
+        table.lastPeriod?.slice(4, 5) === '-'
+      ) {
+        lastPeriodString = table.lastPeriod?.slice(5, 9);
+      }
+
       return (
         <TableCard
           key={table.id}
           title={`${table.label}`}
-          href={() => navigate(`${langPrefix}/table/${table.id}`)}
+          href={() => navigate(tablePath)}
           updatedLabel={
             table.updated ? t('start_page.table.updated_label') : undefined
           }
@@ -344,10 +441,7 @@ const StartPage = () => {
                 })
               : undefined
           }
-          period={`${table.firstPeriod?.slice(0, 4)}–${table.lastPeriod?.slice(
-            0,
-            4,
-          )}`}
+          period={`${table.firstPeriod?.slice(0, 4)}–${lastPeriodString}`}
           frequency={frequencyLabel}
           tableId={`${table.id}`}
           icon={getTopicIcon(table)}
@@ -361,7 +455,7 @@ const StartPage = () => {
                 })
               : undefined,
             yearFrom: table.firstPeriod?.slice(0, 4),
-            yearTo: table.lastPeriod?.slice(0, 4),
+            yearTo: lastPeriodString,
             frequency: frequencyLabel,
             tableNumber: table.id,
           })}
@@ -413,7 +507,9 @@ const StartPage = () => {
             <DetailsSection header={t('start_page.no_result_search_help')}>
               <List listType="ul">
                 {searchHelpItems.map((text, index) => (
-                  <ListItem key={`${text}-${index}`}>{text}</ListItem>
+                  <ListItem key={`${text}-${index}`}>
+                    <MarkdownRenderer mdText={text} />
+                  </ListItem>
                 ))}
               </List>
             </DetailsSection>
@@ -427,7 +523,6 @@ const StartPage = () => {
     <>
       {renderNumberofTablesScreenReader()}
       {renderTableCount()}
-
       {state.filteredTables.length === 0 ? (
         renderNoResult()
       ) : (
@@ -447,14 +542,25 @@ const StartPage = () => {
 
   // Debounce the dispatch for search filter, so it waits a few moments for typing to finish
   const debouncedDispatch = useRef(
-    debounce((value: string) => {
+    debounce(async (value: string, language: string) => {
+      let tableIds: string[] = [];
+      if (value.length > 0) {
+        const searchedTables = await queryTablesByKeyword(value, language);
+        tableIds = searchedTables.map((table: Table) => table.id);
+      }
       dispatch({
-        type: ActionType.ADD_SEARCH_FILTER,
-        payload: { text: value, language: i18n.language },
+        type: ActionType.ADD_QUERY_FILTER,
+        payload: { query: value, tableIds: tableIds },
       });
-      handleFilterChange();
-    }, 500),
+      setVisibleCount(paginationCount);
+      setIsFadingTableList(false);
+    }, 700),
   ).current;
+
+  const updateQueryFilter = (value: string) => {
+    setIsFadingTableList(true);
+    debouncedDispatch(value, i18n.language);
+  };
 
   const renderPagination = () => {
     const shouldShowPagination =
@@ -541,6 +647,11 @@ const StartPage = () => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25, ease: 'easeInOut' }}
             className={styles.filterOverlay}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="filterOverlayTitle"
+            aria-describedby="filterOverlayContent"
+            ref={filterOverlayRef}
           >
             <div className={styles.filterOverlayHeader}>
               <Button
@@ -550,10 +661,15 @@ const StartPage = () => {
                 onClick={() => setIsFilterOverlayOpen(false)}
                 ref={filterBackButtonRef}
               />
-              <Heading size="medium">{t('start_page.filter.header')}</Heading>
+              <Heading size="medium" id="filterOverlayTitle">
+                {t('start_page.filter.header')}
+              </Heading>
             </div>
 
-            <div className={styles.filterOverlayContent}>
+            <div
+              className={styles.filterOverlayContent}
+              id="filterOverlayContent"
+            >
               <FilterSidebar onFilterChange={handleFilterChange} />
             </div>
 
@@ -610,13 +726,19 @@ const StartPage = () => {
           {state.availableTables.map((table) => {
             const config = getConfig();
             const language = i18n.language;
-            const showLangInPath =
-              config.language.showDefaultLanguageInPath ||
-              language !== config.language.defaultLanguage;
-            const langPrefix = showLangInPath ? `/${language}` : '';
+            const tablePath = getLanguagePath(
+              `/table/${table.id}`,
+              language,
+              config.language.supportedLanguages,
+              config.language.defaultLanguage,
+              config.language.showDefaultLanguageInPath,
+              config.baseApplicationPath,
+              config.language.positionInPath,
+            );
+
             return (
               <li key={table.id}>
-                <a href={`${langPrefix}/table/${table.id}`} tabIndex={-1}>
+                <a href={tablePath} tabIndex={-1}>
                   {table.label}
                 </a>
               </li>
@@ -640,147 +762,173 @@ const StartPage = () => {
   };
 
   return (
-    <div className={styles.startPageLayout}>
-      <Header stroke={true} />
-      <main className={styles.startPage}>
-        <div className={cl(styles.startPageHeader)}>
-          <div
-            className={cl(styles.contentTop, styles.container, {
-              [styles.hasBreadcrumb]: showBreadCrumb,
-            })}
-          >
-            {showBreadCrumb && renderBreadCrumb()}
-            <div className={styles.information}>
-              <Heading size="large" level="1" className={styles.title}>
-                {t('start_page.header')}
-              </Heading>
-              <Ingress>{t('start_page.ingress')}</Ingress>
-              <div className={styles.showDetailsSection}>
-                {detailsSectionContent && (
-                  <StartpageDetails detailsSection={detailsSectionContent} />
+    <>
+      <nav>
+        <SkipToContent
+          targetId="px-start-filter"
+          label={t('start_page.skip_to.filter')}
+        />
+        <SkipToContent
+          targetId="px-start-result"
+          label={t('start_page.skip_to.result')}
+        />
+      </nav>
+      <div className={styles.startPageLayout}>
+        <Header stroke={true} />
+        <main className={styles.startPage}>
+          <div className={cl(styles.startPageHeader)}>
+            <div
+              className={cl(styles.contentTop, styles.container, {
+                [styles.hasBreadcrumb]: showBreadCrumb,
+              })}
+            >
+              {showBreadCrumb && renderBreadCrumb()}
+              <div className={styles.information}>
+                <Heading size="large" level="1" className={styles.title}>
+                  {t('start_page.header')}
+                </Heading>
+                <Ingress>{t('start_page.ingress')}</Ingress>
+                <div className={styles.showDetailsSection}>
+                  {detailsSectionContent && (
+                    <StartpageDetails detailsSection={detailsSectionContent} />
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className={cl(styles.searchFilterResult, styles.container)}>
+            <div className={styles.searchAreaWrapper}>
+              <div className={cl(styles.search)} role="search">
+                <Search
+                  searchPlaceHolder={t('start_page.search_placeholder')}
+                  variant="default"
+                  ref={searchFieldRef}
+                  showLabel
+                  labelText={t('start_page.search_label')}
+                  value={
+                    (state.activeFilters.find((f) => f.type === 'query')
+                      ?.label as string) ?? ''
+                  }
+                  onChange={(value: string) => {
+                    updateQueryFilter(value);
+                  }}
+                />
+              </div>
+
+              <Button
+                variant="secondary"
+                iconPosition="start"
+                icon="Controls"
+                className={styles.filterToggleButton}
+                onClick={() => setIsFilterOverlayOpen(true)}
+                ref={filterToggleRef}
+                aria-expanded={isFilterOverlayOpen}
+                aria-live="polite"
+              >
+                {t('start_page.filter.button')}
+              </Button>
+            </div>
+
+            <div
+              id="px-start-filter"
+              className={cl(styles.filterAndListWrapper)}
+            >
+              {!isSmallScreen && (
+                <div>
+                  <Heading
+                    className={cl(styles.filterHeading)}
+                    size="medium"
+                    level="2"
+                  >
+                    {t('start_page.filter.header')}
+                  </Heading>
+                  <FilterSidebar onFilterChange={handleFilterChange} />
+                </div>
+              )}
+
+              {renderFilterOverlay()}
+
+              <div className={styles.listTables} id="px-start-result">
+                <Heading level="2" className={styles['sr-only']}>
+                  {t('start_page.result_hidden_header')}
+                </Heading>
+                {state.activeFilters.length >= 1 && (
+                  <div className={styles.filterPillContainer}>
+                    <Chips
+                      aria-label={t('start_page.filter.list_filters_aria')}
+                    >
+                      {renderRemoveAllChips()}
+                      {sortAndDeduplicateFilterChips(
+                        state.activeFilters,
+                        state.subjectOrderList,
+                      ).map((filter) => (
+                        <Chips.Removable
+                          onClick={() => {
+                            dispatch({
+                              type: ActionType.REMOVE_FILTER,
+                              payload: {
+                                value: filter.value,
+                                type: filter.type,
+                              },
+                            });
+                            handleFilterChange();
+                            if (filter.type == 'query') {
+                              searchFieldRef.current?.clearInputField();
+                            }
+                          }}
+                          aria-label={t(
+                            'start_page.filter.remove_filter_aria',
+                            {
+                              value: filter.label,
+                            },
+                          )}
+                          key={filter.value}
+                          truncate
+                        >
+                          {filter.label}
+                        </Chips.Removable>
+                      ))}
+                    </Chips>
+                  </div>
+                )}
+                {state.error && (
+                  <div className={styles.errorContainer}>
+                    <ErrorMessage
+                      action="button"
+                      align="center"
+                      size="small"
+                      illustration="GenericError"
+                      backgroundShape="wavy"
+                      headingLevel="2"
+                      title={t('common.errors.no_tables_loaded.title')}
+                      description={t(
+                        'common.errors.no_tables_loaded.description',
+                      )}
+                      actionText={t(
+                        'common.errors.no_tables_loaded.action_text',
+                      )}
+                    />
+                  </div>
+                )}
+                {!state.error && !isReadyToRender ? (
+                  <div className={styles.loadingSpinner}>
+                    <Spinner size="xlarge" />
+                  </div>
+                ) : (
+                  !state.error && renderTableCardList()
                 )}
               </div>
             </div>
           </div>
-        </div>
-        <div className={cl(styles.searchFilterResult, styles.container)}>
-          <div className={styles.searchAreaWrapper}>
-            <div className={cl(styles.search)} role="search">
-              <Search
-                searchPlaceHolder={t('start_page.search_placeholder')}
-                variant="default"
-                ref={searchFieldRef}
-                showLabel
-                labelText={t('start_page.search_label')}
-                onChange={(value: string) => {
-                  debouncedDispatch(value);
-                }}
-              />
-            </div>
-
-            <Button
-              variant="secondary"
-              iconPosition="start"
-              icon="Controls"
-              className={styles.filterToggleButton}
-              onClick={() => setIsFilterOverlayOpen(true)}
-              ref={filterToggleRef}
-              aria-expanded={isFilterOverlayOpen}
-              aria-live="polite"
-            >
-              {t('start_page.filter.button')}
-            </Button>
+          {renderTableListSEO()}
+        </main>
+        <div className={cl(styles.footerContent)}>
+          <div className={cl(styles.container)}>
+            <Footer enableWindowScroll />
           </div>
-
-          <div className={cl(styles.filterAndListWrapper)}>
-            {!isSmallScreen && (
-              <div>
-                <Heading
-                  className={cl(styles.filterHeading)}
-                  size="medium"
-                  level="2"
-                >
-                  {t('start_page.filter.header')}
-                </Heading>
-                <FilterSidebar onFilterChange={handleFilterChange} />
-              </div>
-            )}
-
-            {renderFilterOverlay()}
-
-            <div className={styles.listTables}>
-              <Heading level="2" className={styles['sr-only']}>
-                {t('start_page.result_hidden_header')}
-              </Heading>
-              {state.activeFilters.length >= 1 && (
-                <div className={styles.filterPillContainer}>
-                  <Chips aria-label={t('start_page.filter.list_filters_aria')}>
-                    {renderRemoveAllChips()}
-                    {sortAndDeduplicateFilterChips(
-                      state.activeFilters,
-                      state.subjectOrderList,
-                    ).map((filter) => (
-                      <Chips.Removable
-                        onClick={() => {
-                          dispatch({
-                            type: ActionType.REMOVE_FILTER,
-                            payload: {
-                              value: filter.value,
-                              type: filter.type,
-                            },
-                          });
-                          handleFilterChange();
-                          if (filter.type == 'search') {
-                            searchFieldRef.current?.clearInputField();
-                          }
-                        }}
-                        aria-label={t('start_page.filter.remove_filter_aria', {
-                          value: filter.label,
-                        })}
-                        key={filter.value}
-                        truncate
-                      >
-                        {filter.label}
-                      </Chips.Removable>
-                    ))}
-                  </Chips>
-                </div>
-              )}
-              {state.error && (
-                <div className={styles.errorContainer}>
-                  <ErrorMessage
-                    action="button"
-                    align="center"
-                    size="small"
-                    illustration="GenericError"
-                    backgroundShape="wavy"
-                    headingLevel="2"
-                    title={t('common.errors.no_tables_loaded.title')}
-                    description={t(
-                      'common.errors.no_tables_loaded.description',
-                    )}
-                    actionText={t('common.errors.no_tables_loaded.action_text')}
-                  />
-                </div>
-              )}
-              {!state.error && !isReadyToRender ? (
-                <div className={styles.loadingSpinner}>
-                  <Spinner size="xlarge" />
-                </div>
-              ) : (
-                !state.error && renderTableCardList()
-              )}
-            </div>
-          </div>
-        </div>
-        {renderTableListSEO()}
-      </main>
-      <div className={cl(styles.footerContent)}>
-        <div className={cl(styles.container)}>
-          <Footer enableWindowScroll />
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

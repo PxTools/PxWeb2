@@ -5,9 +5,10 @@ import {
   jsonstat_note,
   jsonstat_noteMandatory,
   extension_dimension,
-  CodeListInformation,
+  CodelistInformation,
 } from '@pxweb2/pxweb2-api-client';
 import {
+  Definitions,
   Dimensions,
   PxTable,
   setPxTableData,
@@ -25,6 +26,146 @@ import {
   PathElement,
 } from '@pxweb2/pxweb2-ui';
 import { getLabelText } from '../app/util/utils';
+
+// NOSONAR: Example temporary data for definitions mapping, remove when real data is available from API
+// TODO: Remove when real data is available from API
+//const tempMetaidLinksDataEmpty = {};
+// TODO: Remove temporary data when real data is available from API
+// const tempMetaidLinksData = {
+//   'about-statistics': {
+//     // currently "definisjoner og forklaringer"
+//     'dataset-links': [
+//       {
+//         metaid: 'KORTNAVN:aku',
+//         href: 'https://www.ssb.no/befolkning/folketall/statistikk/befolkning#om-statistikken',
+//         label: 'About the statistics',
+//         type: 'text/html',
+//       },
+//     ],
+//   },
+// };
+// const tempMetaidLinksDataExtended = {
+//   // TODO: Do these two links only contain one item each? They are arrays in the temp data
+//   // which ones should be the "main" link that all tables should have (if they have anything in Definitions)?
+//   'statistics-homepage': {
+//     //currently "statistikkside"
+//     'dataset-links': [
+//       {
+//         metaid: 'KORTNAVN:aku',
+//         href: 'https://www.ssb.no/befolkning/folketall/statistikk/befolkning',
+//         label: 'Statistics homepage',
+//         type: 'text/html',
+//       },
+//     ],
+//   },
+//   'about-statistics': {
+//     // currently "definisjoner og forklaringer"
+//     'dataset-links': [
+//       {
+//         metaid: 'KORTNAVN:aku',
+//         href: 'https://www.ssb.no/befolkning/folketall/statistikk/befolkning#om-statistikken',
+//         label: 'About the statistics',
+//         type: 'text/html',
+//       },
+//     ],
+//   },
+//   definitions: {
+//     KOKkommuneregion0000: {
+//       'dimension-links': [
+//         {
+//           metaid: 'urn:ssb:classification:klass:231',
+//           href: 'https://www.ssb.no/klass/klassifikasjoner/231',
+//           label: 'Classification for region.',
+//           type: 'text/html',
+//         },
+//       ],
+//     },
+//     ContentsCode: {
+//       'category-links': {
+//         KOSKBDU0000: [
+//           {
+//             href: 'https://www.ssb.no/contextvariable/KOSKBDU0000',
+//             label: 'Korrigerte brutto driftsutgifter  (1000 kr)',
+//             type: 'text/html',
+//             metaid:
+//               'urn:ssb:contextvariable:common:8c42e415-e5dc-4a47-93bf-c9c515b39aa6:104549:KOSKBDU0000',
+//           },
+//         ],
+//         KOSKBDUperelev0000: [
+//           {
+//             href: 'https://www.ssb.no/contextvariable/KOSKBDUperelev0000',
+//             label: 'Korrigerte brutto driftsutgifter per elev (kr)',
+//             type: 'text/html',
+//             metaid:
+//               'urn:ssb:contextvariable:common:8c42e415-e5dc-4a47-93bf-c9c515b39aa6:104549:KOSKBDUperelev0000',
+//           },
+//         ],
+//         KOSKBDUperskyss0000: [
+//           {
+//             href: 'https://www.ssb.no/contextvariable/KOSKBDUperskyss0000',
+//             label:
+//               'Korrigerte brutto driftsutgifter per elev  som får skoleskyss (223) (kr)',
+//             type: 'text/html',
+//             metaid:
+//               'urn:ssb:contextvariable:common:8c42e415-e5dc-4a47-93bf-c9c515b39aa6:104549:KOSKBDUperskyss0000',
+//           },
+//         ],
+//       },
+//     },
+//   },
+// };
+
+// TODO: Remove TEMPORARY function to map raw JSON definitions data to Definitions type
+// when real data is available from API
+// TODO: Use the correct Response type from the API when available
+// TODO: This needs a refactor when real data is available from API, quick and dirty for now
+function mapTableDefinitions() {
+  const definitions: Definitions = {};
+
+  // NOSONAR: Disabled sonar warning for unused code below, as this is temporary code
+  // until real data is available from the API
+  // definitionsJson['statistics-homepage'] &&
+  //   (definitions.statisticsHomepage =
+  //     definitionsJson['statistics-homepage']['dataset-links'][0] || []);
+
+  // NOSONAR: Disabled sonar warning for unused code below, as this is temporary code
+  // definitionsJson['about-statistics'] &&
+  //   (definitions.statisticsDefinitions =
+  //     definitionsJson['about-statistics']['dataset-links'][0] || []);
+
+  // NOSONAR: Disabled sonar warning for unused code below, as this is temporary code
+  // Object.keys(definitionsJson.definitions || {}).forEach((dimensionKey) => {
+  //   const dimensionData = definitionsJson.definitions[dimensionKey];
+  //   const variableDefinition: VariableDefinition = {
+  //     variableName: dimensionKey,
+  //     links: [],
+  //   };
+
+  // NOSONAR: Disabled sonar warning for unused code below, as this is temporary code
+  //   if (dimensionData['dimension-links']) {
+  //     variableDefinition.links.push(...dimensionData['dimension-links']);
+  //   }
+
+  // NOSONAR: Disabled sonar warning for unused code below, as this is temporary code
+  //   if (dimensionData['category-links']) {
+  //     Object.values(dimensionData['category-links']).forEach(
+  //       (categoryLinks: DefinitionLink[]) => {
+  //         variableDefinition.links.push(...categoryLinks);
+  //       },
+  //     );
+  //   }
+
+  // NOSONAR: Disabled sonar warning for unused code below, as this is temporary code
+  //   if (!definitions.variablesDefinitions) {
+  //     definitions.variablesDefinitions = [];
+  //   }
+
+  // NOSONAR: Disabled sonar warning for unused code below, as this is temporary code
+  //   definitions.variablesDefinitions.push(variableDefinition);
+  // });
+
+  return definitions;
+}
 
 /**
  * Internal type. Used to keep track of index in json-stat2 value array
@@ -76,6 +217,7 @@ export function mapJsonStat2Response(
     subjectArea: response.extension?.px?.['subject-area'] ?? '',
     variables: mapVariables(response, mapData),
     contacts: mapContacts(response.extension?.contact),
+    definitions: mapTableDefinitions(), // TODO: Use real data from API response when available
     notes: mapNotes(response.note, response.extension?.noteMandatory),
     pathElements: undefined,
   };
@@ -468,8 +610,8 @@ function getMandatoryVariable(
  * @returns An array of CodeList objects.
  */
 function getCodelists(dimensionExtension: extension_dimension): CodeList[] {
-  if (dimensionExtension?.codeLists) {
-    return dimensionExtension.codeLists.map((codeList: CodeListInformation) => {
+  if (dimensionExtension?.codelists) {
+    return dimensionExtension.codelists.map((codeList: CodelistInformation) => {
       return {
         id: codeList.id,
         label: codeList.label,

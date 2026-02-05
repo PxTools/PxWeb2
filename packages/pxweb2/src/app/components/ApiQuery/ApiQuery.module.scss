@@ -1,0 +1,73 @@
+@use '$ui/style-dictionary/dist/scss/fixed-variables.scss' as fixed;
+
+.apiQuery {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: fixed.$spacing-4;
+  align-self: stretch;
+}
+
+.descriptionAndLink {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: fixed.$spacing-2;
+  align-self: stretch;
+}
+
+.descriptionWrapper {
+  display: flex;
+  padding: fixed.$spacing-1 fixed.$spacing-2 0 fixed.$spacing-2;
+  align-items: flex-start;
+  align-self: stretch;
+}
+
+.linkWrapper {
+  display: flex;
+  padding: 0 fixed.$spacing-2;
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: stretch;
+}
+
+.selectWrapper {
+  display: flex;
+  padding: fixed.$spacing-3 fixed.$spacing-2 0 fixed.$spacing-2;
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: stretch;
+}
+
+.chipsWrapper {
+  display: flex;
+  padding: fixed.$spacing-2 fixed.$spacing-2 0 fixed.$spacing-2;
+  align-items: center;
+  gap: fixed.$spacing-2;
+  align-self: stretch;
+}
+
+.codeSnippetWrapper {
+  display: flex;
+  padding: fixed.$spacing-2;
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: stretch;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.postWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: fixed.$spacing-2;
+  align-self: stretch;
+}
+
+.codeSnippetWrapper > * {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
