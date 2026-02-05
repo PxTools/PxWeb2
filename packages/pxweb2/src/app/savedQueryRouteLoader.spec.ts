@@ -5,7 +5,6 @@ import { savedQueryRouteLoader } from './savedQueryRouteLoader';
 import { getConfig } from './util/config/getConfig';
 import i18n from '../i18n/config';
 import {
-  OpenAPI,
   SavedQueriesService,
   type SavedQueryResponse,
 } from '@pxweb2/pxweb2-api-client';
