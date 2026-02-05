@@ -42,6 +42,8 @@ export interface TableDataContextType {
     stub: Variable[],
     heading: Variable[],
   ) => { firstTitlePart: string; lastTitlePart: string };
+  isFadingTable: boolean;
+  setIsFadingTable: (value: boolean) => void;
 }
 
 interface TableDataProviderProps {
@@ -68,6 +70,10 @@ const TableDataContext = createContext<TableDataContextType | undefined>({
     // No-op: useTableData hook prevents this from being called
   },
   buildTableTitle: () => ({ firstTitlePart: '', lastTitlePart: '' }),
+  isFadingTable: false,
+  setIsFadingTable: () => {
+    // No-op
+  },
 });
 
 const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
@@ -101,6 +107,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   >({});
 
   const [errorMsg, setErrorMsg] = useState('');
+  const [isFadingTable, setIsFadingTable] = useState(false);
   const variables = useVariables();
 
   useEffect(() => {
@@ -1264,6 +1271,8 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       pivot,
       buildTableTitle,
       isInitialized,
+      isFadingTable,
+      setIsFadingTable,
     }),
     [
       data,
@@ -1274,6 +1283,8 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       pivot,
       buildTableTitle,
       isInitialized,
+      isFadingTable,
+      setIsFadingTable,
     ],
   );
 

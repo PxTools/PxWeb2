@@ -49,7 +49,7 @@ export function Presentation({
   const [isMissingMandatoryVariables, setIsMissingMandatoryVariables] =
     useState(false);
   const [initialRun, setInitialRun] = useState(true);
-  const [isFadingTable, setIsFadingTable] = useState(false);
+  const { isFadingTable, setIsFadingTable } = tableData;
   const [isMandatoryNotSelectedFirst, setIsMandatoryNotSelectedFirst] =
     useState(true);
 
