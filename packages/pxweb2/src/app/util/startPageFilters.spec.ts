@@ -1,4 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
+
 import {
   findAncestors,
   findChildren,
@@ -13,6 +14,7 @@ import {
   getVariables,
   sortTimeUnit,
   sortSubjectTree,
+  sortTablesByUpdated,
 } from '../util/startPageFilters';
 import { Filter, type PathItem } from '../pages/StartPage/StartPageTypes';
 import { Table } from '@pxweb2/pxweb2-api-client';
@@ -817,5 +819,105 @@ describe('compareBySortCodeThenLabelAsc (via sortSubjectTree at depth 4)', () =>
     const sorted = sortSubjectTree(subjects);
     const lvl4 = sorted[0].children![0].children![0].children!;
     expect(lvl4.map((n) => n.label)).toEqual(['A', 'B', 'C']); // 4, then invalids by label
+  });
+});
+
+describe('sortTablesByUpdated (date-only, newest first)', () => {
+  const createTable = (overrides: Partial<Table> = {}): Table =>
+    ({
+      id: Math.random().toString(36).slice(2),
+      label: overrides.label ?? 'Some table',
+      updated: overrides.updated,
+      firstPeriod: overrides.firstPeriod ?? '2000',
+      lastPeriod: overrides.lastPeriod ?? '2001',
+      timeUnit: overrides.timeUnit ?? 'Annual',
+      variableNames: overrides.variableNames ?? [],
+      source: overrides.source ?? 'SSB',
+      paths: overrides.paths ?? [],
+      ...overrides,
+    }) as unknown as Table;
+
+  it('sort on updated DESC (newest first)', () => {
+    const a = createTable({ id: 'a', updated: '2023-01-01T00:00:00Z' });
+    const b = createTable({ id: 'b', updated: '2025-07-15T12:34:56Z' }); // newest
+    const c = createTable({ id: 'c', updated: '2024-12-31T23:59:59Z' });
+
+    const out = sortTablesByUpdated([a, b, c]);
+    expect(out.map((t) => t.id)).toEqual(['b', 'c', 'a']);
+  });
+
+  it('sorts same dates by subjectCode', () => {
+    const a = createTable({
+      id: 'a',
+      updated: '2025-01-01T00:00:00Z',
+      subjectCode: 'zz',
+    });
+    const b = createTable({
+      id: 'b',
+      updated: '2025-01-01T00:00:00Z',
+      subjectCode: 'aa',
+    });
+    const c = createTable({
+      id: 'c',
+      updated: '2025-01-01T00:00:00Z',
+      subjectCode: 'mm',
+    });
+    const d = createTable({
+      id: 'd',
+      updated: '2025-01-01T00:00:00Z',
+      subjectCode: undefined,
+    });
+    const e = createTable({
+      id: 'e',
+      updated: '2025-01-01T00:00:00Z',
+      subjectCode: 'aa',
+    });
+
+    const out = sortTablesByUpdated([a, b, c, d, e]);
+    expect(out.map((t) => t.id)).toEqual(['b', 'e', 'c', 'a', 'd']);
+  });
+
+  it('places missing/invalid date at the bottom', () => {
+    const newest = createTable({
+      id: 'newest',
+      updated: '2025-08-05T06:00:00Z',
+    });
+    const invalid = createTable({
+      id: 'invalid',
+      updated: 'not-a-date' as unknown as string,
+    });
+    const missing = createTable({ id: 'missing', updated: undefined });
+
+    const out = sortTablesByUpdated([invalid, newest, missing]);
+    expect(out.map((t) => t.id)).toEqual(['newest', 'invalid', 'missing']);
+  });
+
+  it('does not mutate the original array', () => {
+    const a = createTable({ id: 'a', updated: '2024-01-01T00:00:00Z' });
+    const b = createTable({ id: 'b', updated: '2025-01-01T00:00:00Z' });
+    const input = [a, b];
+    const snapshot = [...input];
+
+    const out = sortTablesByUpdated(input);
+
+    expect(input).toEqual(snapshot);
+    expect(out).not.toBe(input);
+  });
+
+  it('handles ISO date without time', () => {
+    const d1 = createTable({ id: 'd1', updated: '2024-05-01' });
+    const d2 = createTable({ id: 'd2', updated: '2025-03-10' });
+
+    const out = sortTablesByUpdated([d1, d2]);
+    expect(out.map((t) => t.id)).toEqual(['d2', 'd1']);
+  });
+
+  it('preserves original order when updated is equal', () => {
+    const a = createTable({ id: 'a', updated: '2025-01-01T00:00:00Z' });
+    const b = createTable({ id: 'b', updated: '2025-01-01T00:00:00Z' });
+    const c = createTable({ id: 'c', updated: '2025-01-01T00:00:00Z' });
+
+    const out = sortTablesByUpdated([a, b, c]);
+    expect(out.map((t) => t.id)).toEqual(['a', 'b', 'c']);
   });
 });
