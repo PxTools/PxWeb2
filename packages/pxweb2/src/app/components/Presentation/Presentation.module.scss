@@ -55,15 +55,7 @@
 .fadeTable table {
   opacity: 0.6;
   transition: 'opacity 0.3s ease-in-out';
-}
-.fadeTable tbody tr {
-  &:hover {
-    background: none !important;
-
-    th {
-      background: var(--px-color-surface-moderate) !important;
-    }
-  }
+  pointer-events: none;
 }
 
 .gradientContainer {
@@ -78,7 +70,7 @@
   right: 0;
   height: 100%;
   width: 30px; /* Adjust this value to your liking */
-  pointer-events: none; /* So the gradient won't block scroll */
+  pointer-events: none; /* So the gradient won't blnpm run lintock scroll */
   background: linear-gradient(
     to right,
     rgba(255, 255, 255, 0) 20%,
