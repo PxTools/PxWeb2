@@ -70,7 +70,7 @@
   right: 0;
   height: 100%;
   width: 30px; /* Adjust this value to your liking */
-  pointer-events: none; /* So the gradient won't blnpm run lintock scroll */
+  pointer-events: none; /* So the gradient won't block scroll */
   background: linear-gradient(
     to right,
     rgba(255, 255, 255, 0) 20%,
