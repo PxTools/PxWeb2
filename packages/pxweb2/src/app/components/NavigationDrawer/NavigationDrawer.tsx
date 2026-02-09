@@ -113,7 +113,7 @@ export const NavigationDrawer = forwardRef<
     }
     if (first) {
       // Defer to next tick to ensure render
-      setTimeout(() => first && first.focus(), 0);
+      setTimeout(() => first?.focus(), 0);
     }
 
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -161,17 +161,17 @@ export const NavigationDrawer = forwardRef<
       first =
         focusables[0] ||
         (ref && typeof ref !== 'function' ? ref.current : null);
-      last = focusables[focusables.length - 1] || first;
+      last = focusables.at(-1) || first;
       if (first) {
-        setTimeout(() => first && first.focus(), 0);
+        setTimeout(() => first?.focus(), 0);
       }
     };
-    window.addEventListener('drawer-help-rendered', rerunFocus);
+    globalThis.addEventListener('drawer-help-rendered', rerunFocus);
 
     return () => {
       node?.removeEventListener('keydown', handleKeyDown);
       document.removeEventListener('keydown', handleDocKeyDown, true);
-      window.removeEventListener('drawer-help-rendered', rerunFocus);
+      globalThis.removeEventListener('drawer-help-rendered', rerunFocus);
     };
   }, [onClose, view, ref, isSmallScreen]);
 

@@ -18,7 +18,7 @@ export function DrawerHelp() {
   React.useEffect(() => {
     // Fire a custom event after mount to signal that HelpSection is rendered
     const timeout = setTimeout(() => {
-      window.dispatchEvent(new CustomEvent('drawer-help-rendered'));
+      globalThis.dispatchEvent(new CustomEvent('drawer-help-rendered'));
     }, 0);
     return () => clearTimeout(timeout);
   }, [helpSectionContent]);
