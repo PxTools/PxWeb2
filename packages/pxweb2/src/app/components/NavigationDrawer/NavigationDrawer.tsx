@@ -134,10 +134,11 @@ export const NavigationDrawer = forwardRef<
           e.preventDefault();
           last.focus();
         }
-      } if (active === last) {
-          e.preventDefault();
-          first.focus();
-        }
+      }
+      if (active === last) {
+        e.preventDefault();
+        first.focus();
+      }
     };
 
     node?.addEventListener('keydown', handleKeyDown);
