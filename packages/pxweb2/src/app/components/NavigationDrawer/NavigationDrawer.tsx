@@ -100,10 +100,10 @@ export const NavigationDrawer = forwardRef<
       return list as HTMLElement[];
     };
 
-    const focusables = getFocusable();
-    const first =
+    let focusables = getFocusable();
+    let first =
       focusables[0] || (ref && typeof ref !== 'function' ? ref.current : null);
-    const last = focusables[focusables.length - 1] || first;
+    let last = focusables[focusables.length - 1] || first;
 
     // Move focus into the drawer before trapping
     const active = document.activeElement as HTMLElement | null;
@@ -113,7 +113,7 @@ export const NavigationDrawer = forwardRef<
     }
     if (first) {
       // Defer to next tick to ensure render
-      setTimeout(() => first.focus(), 0);
+      setTimeout(() => first && first.focus(), 0);
     }
 
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -156,9 +156,21 @@ export const NavigationDrawer = forwardRef<
     };
     document.addEventListener('keydown', handleDocKeyDown, true);
 
+    // Listen for custom event to re-run getFocusable when DrawerHelp is rendered
+    const rerunFocus = () => {
+      focusables = getFocusable();
+      first = focusables[0] || (ref && typeof ref !== 'function' ? ref.current : null);
+      last = focusables[focusables.length - 1] || first;
+      if (first) {
+        setTimeout(() => first && first.focus(), 0);
+      }
+    };
+    window.addEventListener('drawer-help-rendered', rerunFocus);
+
     return () => {
       node?.removeEventListener('keydown', handleKeyDown);
       document.removeEventListener('keydown', handleDocKeyDown, true);
+      window.removeEventListener('drawer-help-rendered', rerunFocus);
     };
   }, [onClose, view, ref, isSmallScreen]);
 
