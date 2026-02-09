@@ -254,7 +254,7 @@
         },
         "api": {
           "title": "API",
-          "description": "Her finner du API-spørringen for tabellen. Bruk GET om spørringen er liten (under ca. 2 100 tegn), og POST om spørringen er stor og mer detaljert.",
+          "description": "Her finner du API-spørring for tabellen. Bruk GET om spørringen er kort (under ca. 2 100 tegn), og POST om spørringen er lang og mer detaljert.",
           "query": "API-spørring",
           "link_text": "Les mer om bruk av API-et",
           "link_url": "https://www.ssb.no/api/pxwebapiv2",

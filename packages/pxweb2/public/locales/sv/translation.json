@@ -254,7 +254,7 @@
         },
         "api": {
           "title": "API",
-          "description": "Här kan du hämta API-frågan för tabellen du tagit ut. Använd GET om frågan är liten (under ca 2 100 tecken) och POST om frågan är stor och mer detaljerad.",
+          "description": "Här hittar du API-frågan för tabellen. Använd GET för kortare frågor (under ca 2 100 tecken) och POST om frågan är lång och mer detaljerad.",
           "query": "API-uttag",
           "link_text": "Läs mer om att använda API:et",
           "link_url": "https://www.pxtools.net/PxWebApi/documentation/user-guide/",
