@@ -230,12 +230,12 @@
         },
         "savequery": {
           "title": "Lenke til oppdatert tabell",
-          "info": "Du får en unik lenke til tabellen din, som vi holder oppdatert for deg. Hvordan nye tidsperioder legges til, velger du selv.",
+          "info": "Will you be using this table again? Here you will get a link to the table, so you don't have to set it up again. The table will stay up to date, and you choose how new time periods are added.",
           "radio_legend": "Valg for nye tidsperioder",
           "period_options": {
-            "selected": "Ikke legg til nye (tabellen vil kun vise de du har valgt nå)",
-            "from": "Legg til nye (de nye vil komme i tillegg til de du har valgt nå)",
-            "top": "Legg til nye, men behold samme antall (når en ny tidsperiode legges til, fjernes den eldste)"
+            "selected": "Ikke legg til nye tidsperioder – jeg vil kun ha de jeg har valgt nå",
+            "from": "Legg til alle nye tidsperioder",
+            "top": "Legg til alle nye tidsperioder, men behold samme antall (når en ny periode legges til, fjernes den eldste)"
           },
           "create_button": "Få lenke",
           "copy_button": "Kopier lenke",

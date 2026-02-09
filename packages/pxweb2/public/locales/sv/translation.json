@@ -230,12 +230,12 @@
         },
         "savequery": {
           "title": "Länk till uppdaterad tabell",
-          "info": "Du får en unik länk till din tabell, som vi håller uppdaterad åt dig. Hur nya tidsperioder läggs till väljer du själv.",
+          "info": "Kommer du att använda den här tabellen igen? Här får du en länk till tabellen, så att du slipper ställa in den igen. Tabellen kommer att hållas uppdaterad, och du väljer själv hur nya tidsperioder läggs till.",
           "radio_legend": "Val av nya tidsperioder",
           "period_options": {
-            "selected": "Lägg inte till nya (tabellen visar samma tidsperioder som du valt nu)",
-            "from": "Lägg till nya (nya tidsperioder läggs till de du har valt nu)",
-            "top": "Lägg till nya men behåll samma antal (när en ny tidsperiod läggs till tas den äldsta bort)"
+            "selected": "Lägg inte till nya tidsperioder – jag vill bara ha de jag har valt nu",
+            "from": "Lägg till alla nya tidsperioder",
+            "top": "Lägg till nya tidsperioder, men behåll samma antal (när en ny tidsperiod läggs till tas den äldsta bort)"
           },
           "create_button": "Skapa länk",
           "copy_button": "Kopiera länk",
