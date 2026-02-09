@@ -159,7 +159,9 @@ export const NavigationDrawer = forwardRef<
     // Listen for custom event to re-run getFocusable when DrawerHelp is rendered
     const rerunFocus = () => {
       focusables = getFocusable();
-      first = focusables[0] || (ref && typeof ref !== 'function' ? ref.current : null);
+      first =
+        focusables[0] ||
+        (ref && typeof ref !== 'function' ? ref.current : null);
       last = focusables[focusables.length - 1] || first;
       if (first) {
         setTimeout(() => first && first.focus(), 0);

@@ -15,13 +15,13 @@ export function DrawerHelp() {
   const helpSectionContent: HelpSectionType | undefined =
     localeContent?.tableViewer?.helpSection;
 
-    React.useEffect(() => {
-      // Fire a custom event after mount to signal that HelpSection is rendered
-      const timeout = setTimeout(() => {
-        window.dispatchEvent(new CustomEvent('drawer-help-rendered'));
-      }, 0);
-      return () => clearTimeout(timeout);
-    }, [helpSectionContent]);
+  React.useEffect(() => {
+    // Fire a custom event after mount to signal that HelpSection is rendered
+    const timeout = setTimeout(() => {
+      window.dispatchEvent(new CustomEvent('drawer-help-rendered'));
+    }, 0);
+    return () => clearTimeout(timeout);
+  }, [helpSectionContent]);
 
   if (!helpSectionContent) {
     return null;
