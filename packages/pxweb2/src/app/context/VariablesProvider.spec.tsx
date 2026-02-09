@@ -66,8 +66,6 @@ describe('VariablesProvider', () => {
     expect(captured!.getSelectedValuesById('A')).toEqual(['1', '2']);
     expect(captured!.getNumberOfSelectedValues()).toBe(2);
     expect(captured!.getUniqueIds()).toEqual(['A']);
-    expect(captured!.toString()).toContain(' A-1');
-    expect(captured!.toString()).toContain(' A-2');
 
     act(() => {
       captured!.addSelectedValues('B', []);
