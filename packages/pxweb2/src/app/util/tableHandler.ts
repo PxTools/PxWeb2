@@ -1,17 +1,10 @@
-import {
-  type Table,
-  TablesService,
-  OpenAPI,
-  ApiError,
-} from '@pxweb2/pxweb2-api-client';
+import { type Table, TablesService, ApiError } from '@pxweb2/pxweb2-api-client';
 import { getConfig } from './config/getConfig';
 import type { Filter } from '../pages/StartPage/StartPageTypes';
 import { getYearRangeFromPeriod } from './startPageFilters';
 
 export async function getAllTables(language?: string) {
   const config = getConfig();
-  const baseUrl = config.apiUrl;
-  OpenAPI.BASE = baseUrl;
 
   try {
     const response = await TablesService.listAllTables(
@@ -59,8 +52,6 @@ export async function getAllTables(language?: string) {
 
 export async function queryTablesByKeyword(query: string, language?: string) {
   const config = getConfig();
-  const baseUrl = config.apiUrl;
-  OpenAPI.BASE = baseUrl;
 
   try {
     const response = await TablesService.listAllTables(
@@ -151,8 +142,8 @@ export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
     }
 
     const [fromStr, toStr] = yearRangeFilter.value.split('-');
-    const from = parseInt(fromStr, 10);
-    const to = toStr ? parseInt(toStr, 10) : from;
+    const from = Number.parseInt(fromStr, 10);
+    const to = toStr ? Number.parseInt(toStr, 10) : from;
 
     const [firstStart, firstEnd] = getYearRangeFromPeriod(
       table.firstPeriod ?? '',
@@ -165,7 +156,8 @@ export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
       return false;
     }
 
-    const hasFrom = fromStr !== undefined && fromStr !== '' && !isNaN(from);
+    const hasFrom =
+      fromStr !== undefined && fromStr !== '' && !Number.isNaN(from);
     const hasTo = !!toStr;
 
     if (hasFrom && hasTo) {

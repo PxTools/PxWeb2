@@ -1,10 +1,12 @@
 import React from 'react';
+import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { LazyMotion, MotionConfig } from 'motion/react';
 
 import styles from './NavigationBar.module.scss';
 import { NavigationItem } from '../NavigationItem/NavigationItemType';
 import { Item } from '../NavigationItem/NavigationItem';
+import { Heading } from '@pxweb2/pxweb2-ui';
 
 // Lazy load the animation features
 const loadFeatures = () =>
@@ -50,12 +52,18 @@ export const NavigationBar = React.forwardRef<
     <div className={styles.navigationBar}>
       <LazyMotion features={loadFeatures}>
         <MotionConfig reducedMotion="user">
-          <nav
-            aria-label={t(
-              'presentation_page.side_menu.aria_label_tool_side_menu',
-            )}
-          >
-            <ul className={styles.navigationBarList}>
+          <nav aria-labelledby="navBarHeading">
+            <Heading
+              level={'2'}
+              className={cl(styles['sr-only'])}
+              id="navBarHeading"
+            >
+              {t('presentation_page.side_menu.aria_label_tool_side_menu')}
+            </Heading>
+            <ul
+              className={styles.navigationBarList}
+              aria-labelledby="navBarHeading"
+            >
               <Item
                 ref={refs.selection}
                 parentName="navBar"

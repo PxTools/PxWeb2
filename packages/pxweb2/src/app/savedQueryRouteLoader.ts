@@ -1,9 +1,5 @@
 import { redirect, type LoaderFunctionArgs } from 'react-router';
-import {
-  ApiError,
-  OpenAPI,
-  SavedQueriesService,
-} from '@pxweb2/pxweb2-api-client';
+import { ApiError, SavedQueriesService } from '@pxweb2/pxweb2-api-client';
 import { getConfig } from './util/config/getConfig';
 import i18n from '../i18n/config';
 import { getLanguagePath } from './util/language/getLanguagePath';
@@ -13,11 +9,10 @@ import { getLanguagePath } from './util/language/getLanguagePath';
 export async function savedQueryRouteLoader({ params }: LoaderFunctionArgs) {
   const config = getConfig();
   const { sqId } = params as { sqId?: string };
+
   if (!sqId) {
     throw new Response('Missing saved query id', { status: 400 });
   }
-
-  OpenAPI.BASE = config.apiUrl;
 
   try {
     const res = await SavedQueriesService.getSaveQuery(sqId);
@@ -47,6 +42,7 @@ export async function savedQueryRouteLoader({ params }: LoaderFunctionArgs) {
     const status = err?.status ?? 500;
     const message =
       status === 404 ? 'Saved query not found' : 'Failed to load saved query';
+
     throw new Response(message, { status });
   }
 }

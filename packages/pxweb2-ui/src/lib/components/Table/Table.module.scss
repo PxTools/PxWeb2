@@ -17,10 +17,10 @@
 
   tbody tr {
     &:hover {
-      background: var(--px-color-surface-subtle) !important;
+      background: var(--px-color-surface-subtle);
 
       th {
-        background: var(--px-color-surface-subtle) !important;
+        background: var(--px-color-surface-subtle);
       }
     }
   }

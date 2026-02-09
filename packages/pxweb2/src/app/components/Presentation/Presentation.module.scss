@@ -55,6 +55,7 @@
 .fadeTable table {
   opacity: 0.6;
   transition: 'opacity 0.3s ease-in-out';
+  pointer-events: none;
 }
 
 .gradientContainer {
