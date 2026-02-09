@@ -97,13 +97,13 @@ export const NavigationDrawer = forwardRef<
       const list = Array.from(node.querySelectorAll<HTMLElement>(sel)).filter(
         (el) => el.offsetParent !== null,
       );
-      return list as HTMLElement[];
+      return list;
     };
 
     let focusables = getFocusable();
     let first =
       focusables[0] || (ref && typeof ref !== 'function' ? ref.current : null);
-    let last = focusables[focusables.length - 1] || first;
+    let last = focusables.at(-1) || first;
 
     // Move focus into the drawer before trapping
     const active = document.activeElement as HTMLElement | null;
@@ -134,12 +134,10 @@ export const NavigationDrawer = forwardRef<
           e.preventDefault();
           last.focus();
         }
-      } else {
-        if (active === last) {
+      } if (active === last) {
           e.preventDefault();
           first.focus();
         }
-      }
     };
 
     node?.addEventListener('keydown', handleKeyDown);
