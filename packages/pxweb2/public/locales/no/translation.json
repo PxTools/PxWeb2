@@ -230,7 +230,7 @@
         },
         "savequery": {
           "title": "Lenke til oppdatert tabell",
-          "info": "Will you be using this table again? Here you will get a link to the table, so you don't have to set it up again. The table will stay up to date, and you choose how new time periods are added.",
+          "info": "Skal du bruke tabellen flere ganger? Her får du en lenke til tabellen, så trenger du ikke tilpasse den på nytt. Tabellen vil holde seg oppdatert, og du velger selv hvordan nye tidsperioder legges til.",
           "radio_legend": "Valg for nye tidsperioder",
           "period_options": {
             "selected": "Ikke legg til nye tidsperioder – jeg vil kun ha de jeg har valgt nå",
