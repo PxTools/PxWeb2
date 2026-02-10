@@ -713,6 +713,9 @@ const StartPage = () => {
     const config = getConfig();
     const language = i18n.language;
 
+    // TODO: Remove temporary console log after verifying that the memoization is working
+    console.log('Rendering SEO Table List');
+
     return (
       <nav
         aria-hidden="true"
