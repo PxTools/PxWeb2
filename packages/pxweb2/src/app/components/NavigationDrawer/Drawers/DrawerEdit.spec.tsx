@@ -97,9 +97,7 @@ describe('DrawerEdit', () => {
         'presentation_page.side_menu.edit.customize.pivot.title',
       ),
     ).toBeInTheDocument();
-    expect(
-      screen.getByText('Hide emty rows')
-    ).toBeInTheDocument();
+    expect(screen.getByText('Hide emty rows')).toBeInTheDocument();
   });
 
   it('has correct display name', () => {
