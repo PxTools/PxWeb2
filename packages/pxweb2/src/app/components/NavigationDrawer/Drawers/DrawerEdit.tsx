@@ -119,20 +119,20 @@ export function DrawerEdit() {
   const [loadingPivotType, setLoadingPivotType] = useState<PivotType | null>(
     null,
   );
-const [hideEmtyRows, setHideEmtyRows] = useState(false);
+  const [hideEmtyRows, setHideEmtyRows] = useState(false);
 
-const handleHideEmtyRowsClick = async () => {
+  const handleHideEmtyRowsClick = async () => {
     setHideEmtyRows((prev) => !prev);
-  if (hideEmtyRows) {
-    // Show empty rows
-    // Implement the logic to show empty rows here
-  }
+    if (hideEmtyRows) {
+      // Show empty rows
+      // Implement the logic to show empty rows here
+    }
     // Hide empty rows
     // Implement the logic to hide empty rows here
 
     // Simulate async operation
     return new Promise((resolve) => setTimeout(resolve, 500));
-}
+  };
 
   return (
     <ContentBox title={t('presentation_page.side_menu.edit.customize.title')}>
