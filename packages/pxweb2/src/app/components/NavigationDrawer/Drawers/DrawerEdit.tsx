@@ -119,6 +119,20 @@ export function DrawerEdit() {
   const [loadingPivotType, setLoadingPivotType] = useState<PivotType | null>(
     null,
   );
+const [hideEmtyRows, setHideEmtyRows] = useState(false);
+
+const handleHideEmtyRowsClick = async () => {
+    setHideEmtyRows((prev) => !prev);
+  if (hideEmtyRows) {
+    // Show empty rows
+    // Implement the logic to show empty rows here
+  }
+    // Hide empty rows
+    // Implement the logic to hide empty rows here
+
+    // Simulate async operation
+    return new Promise((resolve) => setTimeout(resolve, 500));
+}
 
   return (
     <ContentBox title={t('presentation_page.side_menu.edit.customize.title')}>
@@ -139,6 +153,19 @@ export function DrawerEdit() {
             pivotType={PivotType.Clockwise}
             loadingPivotType={loadingPivotType}
             setLoadingPivotType={setLoadingPivotType}
+          />
+        )}
+        {data && (
+          <ActionItem
+            label="Hide emty rows"
+            ariaLabel="Hide empty rows"
+            description="Toggle visibility of rows that contain no data"
+            size="medium"
+            onClick={() => {
+              handleHideEmtyRowsClick();
+            }}
+            iconName="RemoveTableRow"
+            toggleState={hideEmtyRows}
           />
         )}
       </div>
