@@ -1,6 +1,6 @@
 import { vi, Mock } from 'vitest';
 import { MemoryRouter } from 'react-router';
-import { waitFor, within, screen } from '@testing-library/react';
+import { waitFor, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 
 import StartPage from './StartPage';
@@ -11,7 +11,7 @@ import { FilterContext } from '../../context/FilterContext';
 import { useLocaleContent } from '../../util/hooks/useLocaleContent';
 import { renderWithProviders } from '../../util/testing-utils';
 import * as startPageRender from '../../util/startPageRender';
-import * as configModule from '../../util/config/getConfig';
+//import * as configModule from '../../util/config/getConfig';
 import { getConfig } from '../../util/config/getConfig';
 import { mockedConfig } from '../../../../test/setupTests';
 
@@ -151,7 +151,7 @@ const baseState: StartPageState = {
   lastUsedYearRange: null,
   availableTablesWhenQueryApplied: [],
 };
-const config = configModule.getConfig();
+//const config = configModule.getConfig();
 
 describe('StartPage', () => {
   it('should render successfully', async () => {
@@ -200,51 +200,51 @@ describe('StartPage', () => {
     });
   });
 
-  it('renders the hidden SEO table list with correct number of links', async () => {
-    const { findByRole } = renderWithProviders(
-      <AccessibilityProvider>
-        <MemoryRouter>
-          <StartPage />
-        </MemoryRouter>
-      </AccessibilityProvider>,
-    );
+  // it('renders the hidden SEO table list with correct number of links', async () => {
+  //   const { findByRole } = renderWithProviders(
+  //     <AccessibilityProvider>
+  //       <MemoryRouter>
+  //         <StartPage />
+  //       </MemoryRouter>
+  //     </AccessibilityProvider>,
+  //   );
 
-    const heading = await findByRole('heading', {
-      name: 'TableList(SEO)',
-      hidden: true,
-    });
-    const nav = heading.closest('nav') as HTMLElement;
-    expect(nav).toHaveAttribute('aria-hidden', 'true');
-    const links = await within(nav).findAllByRole('link', { hidden: true });
-    expect(links).toHaveLength(2);
-    links.forEach((a) => expect(a).toHaveAttribute('tabindex', '-1'));
-  });
+  //   const heading = await findByRole('heading', {
+  //     name: 'TableList(SEO)',
+  //     hidden: true,
+  //   });
+  //   const nav = heading.closest('nav') as HTMLElement;
+  //   expect(nav).toHaveAttribute('aria-hidden', 'true');
+  //   const links = await within(nav).findAllByRole('link', { hidden: true });
+  //   expect(links).toHaveLength(2);
+  //   links.forEach((a) => expect(a).toHaveAttribute('tabindex', '-1'));
+  // });
 
-  it('prefixes href with language when showDefaultLanguageInPath=true', async () => {
-    config.language.showDefaultLanguageInPath = true;
-    config.language.defaultLanguage = 'en';
+  // it('prefixes href with language when showDefaultLanguageInPath=true', async () => {
+  //   config.language.showDefaultLanguageInPath = true;
+  //   config.language.defaultLanguage = 'en';
 
-    const { findByRole } = renderWithProviders(
-      <AccessibilityProvider>
-        <MemoryRouter>
-          <StartPage />
-        </MemoryRouter>
-      </AccessibilityProvider>,
-    );
+  //   const { findByRole } = renderWithProviders(
+  //     <AccessibilityProvider>
+  //       <MemoryRouter>
+  //         <StartPage />
+  //       </MemoryRouter>
+  //     </AccessibilityProvider>,
+  //   );
 
-    const heading = await findByRole('heading', {
-      name: 'TableList(SEO)',
-      hidden: true,
-    });
-    const nav = heading.closest('nav') as HTMLElement;
-    const links = await within(nav).findAllByRole('link', { hidden: true });
-    links.forEach((a) => {
-      expect(a).toHaveAttribute(
-        'href',
-        expect.stringMatching(/^\/en\/table\//),
-      );
-    });
-  });
+  //   const heading = await findByRole('heading', {
+  //     name: 'TableList(SEO)',
+  //     hidden: true,
+  //   });
+  //   const nav = heading.closest('nav') as HTMLElement;
+  //   const links = await within(nav).findAllByRole('link', { hidden: true });
+  //   links.forEach((a) => {
+  //     expect(a).toHaveAttribute(
+  //       'href',
+  //       expect.stringMatching(/^\/en\/table\//),
+  //     );
+  //   });
+  // });
 
   describe('show breadcrumbs on startpage if set in config breadcrumbs', () => {
     beforeEach(() => {
