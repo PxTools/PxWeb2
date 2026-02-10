@@ -1,4 +1,4 @@
-import { useEffect, useContext, useState, useRef } from 'react';
+import { useEffect, useContext, useState, useRef, useMemo } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 import { useNavigate } from 'react-router';
 import type { TFunction } from 'i18next';
@@ -709,45 +709,46 @@ const StartPage = () => {
     );
   };
 
-  // const renderTableListSEO = () => {
-  //   return (
-  //     <nav
-  //       aria-hidden="true"
-  //       style={{
-  //         position: 'absolute',
-  //         left: '-9999px',
-  //         width: '1px',
-  //         height: '1px',
-  //         overflow: 'hidden',
-  //       }}
-  //     >
-  //       <h2>TableList(SEO)</h2>
-  //       <ul>
-  //         {state.availableTables.map((table) => {
-  //           const config = getConfig();
-  //           const language = i18n.language;
-  //           const tablePath = getLanguagePath(
-  //             `/table/${table.id}`,
-  //             language,
-  //             config.language.supportedLanguages,
-  //             config.language.defaultLanguage,
-  //             config.language.showDefaultLanguageInPath,
-  //             config.baseApplicationPath,
-  //             config.language.positionInPath,
-  //           );
+  const renderMemoizedTableListSEO = useMemo(() => {
+    const config = getConfig();
+    const language = i18n.language;
 
-  //           return (
-  //             <li key={table.id}>
-  //               <a href={tablePath} tabIndex={-1}>
-  //                 {table.label}
-  //               </a>
-  //             </li>
-  //           );
-  //         })}
-  //       </ul>
-  //     </nav>
-  //   );
-  // };
+    return (
+      <nav
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          left: '-9999px',
+          width: '1px',
+          height: '1px',
+          overflow: 'hidden',
+        }}
+      >
+        <h2>TableList(SEO)</h2>
+        <ul>
+          {state.availableTables.map((table) => {
+            const tablePath = getLanguagePath(
+              `/table/${table.id}`,
+              language,
+              config.language.supportedLanguages,
+              config.language.defaultLanguage,
+              config.language.showDefaultLanguageInPath,
+              config.baseApplicationPath,
+              config.language.positionInPath,
+            );
+
+            return (
+              <li key={table.id}>
+                <a href={tablePath} tabIndex={-1}>
+                  {table.label}
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+    );
+  }, [i18n.language, state.availableTables]);
 
   const renderBreadCrumb = () => {
     if (showBreadCrumb) {
@@ -920,7 +921,7 @@ const StartPage = () => {
               </div>
             </div>
           </div>
-          {/* {renderTableListSEO()} */}
+          {renderMemoizedTableListSEO}
         </main>
         <div className={cl(styles.footerContent)}>
           <div className={cl(styles.container)}>
