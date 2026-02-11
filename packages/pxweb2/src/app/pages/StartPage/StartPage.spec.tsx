@@ -23,7 +23,7 @@ vi.mock('../../util/seo/TableListSEO', () => {
   };
 });
 
-import { createTableListSEO } from '../../util/seo/TableListSEO2';
+import { createTableListSEO } from '../../util/seo/tableListSEO';
 
 // Mock screen size via useApp with mutable flags we can control per test
 let mockIsMobile = false;

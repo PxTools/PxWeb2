@@ -58,7 +58,7 @@ import {
   createBreadcrumbItems,
   BreadcrumbItemsParm,
 } from '../../util/createBreadcrumbItems';
-import { createTableListSEO } from '../../util/seo/TableListSEO2';
+import { createTableListSEO } from '../../util/seo/tableListSEO';
 
 const StartPage = () => {
   const { t, i18n } = useTranslation();

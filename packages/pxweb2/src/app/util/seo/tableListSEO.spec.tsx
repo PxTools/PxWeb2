@@ -1,4 +1,4 @@
-import { createTableListSEO } from './TableListSEO2';
+import { createTableListSEO } from './tableListSEO';
 import { Table } from 'packages/pxweb2-api-client/src';
 
 describe('createTableListSEO', () => {
