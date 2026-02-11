@@ -58,6 +58,7 @@ import {
   createBreadcrumbItems,
   BreadcrumbItemsParm,
 } from '../../util/createBreadcrumbItems';
+import { createTableListSEO } from '../../util/seo/TableListSEO';
 
 const StartPage = () => {
   const { t, i18n } = useTranslation();
@@ -711,44 +712,8 @@ const StartPage = () => {
 
   const renderMemoizedTableListSEO = useMemo(() => {
     console.log('SEO');
-    const config = getConfig();
-    const language = i18n.language;
 
-    // Build JSON-LD ItemList with absolute URLs to reduce DOM overhead
-    const itemListElement = state.availableTables.map((table, index) => {
-      const tablePath = getLanguagePath(
-        `/table/${table.id}`,
-        language,
-        config.language.supportedLanguages,
-        config.language.defaultLanguage,
-        config.language.showDefaultLanguageInPath,
-        config.baseApplicationPath,
-        config.language.positionInPath,
-      );
-
-      const absoluteUrl = globalThis.window
-        ? new URL(tablePath, globalThis.window.location.origin).href
-        : tablePath;
-
-      return {
-        '@type': 'ListItem',
-        position: index + 1,
-        name: table.label,
-        url: absoluteUrl,
-      };
-    });
-
-    const jsonLd = {
-      '@context': 'https://schema.org',
-      '@type': 'ItemList',
-      itemListElement,
-    };
-
-    return (
-      <script type="application/ld+json" id="seo-table-list-jsonld">
-        {JSON.stringify(jsonLd)}
-      </script>
-    );
+    return createTableListSEO(state.availableTables, i18n.language);
   }, [i18n.language, state.availableTables]);
 
   const renderBreadCrumb = () => {
@@ -922,7 +887,7 @@ const StartPage = () => {
               </div>
             </div>
           </div>
-          {renderMemoizedTableListSEO}
+          {state.availableTables.length > 0 && renderMemoizedTableListSEO}
         </main>
         <div className={cl(styles.footerContent)}>
           <div className={cl(styles.container)}>
