@@ -70,9 +70,10 @@ const StartPage = () => {
   const paginationCount = 15;
   const isSmallScreen = isTablet === true || isMobile === true;
   const topicIconComponents = useTopicIcons();
-  const hasUrlParams =
-    typeof window !== 'undefined' &&
-    new URLSearchParams(window.location.search).toString().length > 0;
+  const hasUrlParams = globalThis.window
+    ? new URLSearchParams(globalThis.window.location.search).toString().length >
+      0
+    : false;
 
   const [isFilterOverlayOpen, setIsFilterOverlayOpen] = useState(false);
   const [visibleCount, setVisibleCount] = useState(paginationCount);
@@ -419,8 +420,7 @@ const StartPage = () => {
 
       let lastPeriodString: string | undefined = table.lastPeriod?.slice(0, 4);
       if (
-        table.timeUnit &&
-        table.timeUnit.toLowerCase() === 'other' &&
+        table.timeUnit?.toLowerCase() === 'other' &&
         table.lastPeriod?.slice(4, 5) === '-'
       ) {
         lastPeriodString = table.lastPeriod?.slice(5, 9);
@@ -710,46 +710,44 @@ const StartPage = () => {
   };
 
   const renderMemoizedTableListSEO = useMemo(() => {
+    console.log('SEO');
     const config = getConfig();
     const language = i18n.language;
 
-    // TODO: Remove temporary console log after verifying that the memoization is working
-    console.log('Rendering SEO Table List');
+    // Build JSON-LD ItemList with absolute URLs to reduce DOM overhead
+    const itemListElement = state.availableTables.map((table, index) => {
+      const tablePath = getLanguagePath(
+        `/table/${table.id}`,
+        language,
+        config.language.supportedLanguages,
+        config.language.defaultLanguage,
+        config.language.showDefaultLanguageInPath,
+        config.baseApplicationPath,
+        config.language.positionInPath,
+      );
+
+      const absoluteUrl = globalThis.window
+        ? new URL(tablePath, globalThis.window.location.origin).href
+        : tablePath;
+
+      return {
+        '@type': 'ListItem',
+        position: index + 1,
+        name: table.label,
+        url: absoluteUrl,
+      };
+    });
+
+    const jsonLd = {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      itemListElement,
+    };
 
     return (
-      <nav
-        aria-hidden="true"
-        style={{
-          position: 'absolute',
-          left: '-9999px',
-          width: '1px',
-          height: '1px',
-          overflow: 'hidden',
-        }}
-      >
-        <h2>TableList(SEO)</h2>
-        <ul>
-          {state.availableTables.map((table) => {
-            const tablePath = getLanguagePath(
-              `/table/${table.id}`,
-              language,
-              config.language.supportedLanguages,
-              config.language.defaultLanguage,
-              config.language.showDefaultLanguageInPath,
-              config.baseApplicationPath,
-              config.language.positionInPath,
-            );
-
-            return (
-              <li key={table.id}>
-                <a href={tablePath} tabIndex={-1}>
-                  {table.label}
-                </a>
-              </li>
-            );
-          })}
-        </ul>
-      </nav>
+      <script type="application/ld+json" id="seo-table-list-jsonld">
+        {JSON.stringify(jsonLd)}
+      </script>
     );
   }, [i18n.language, state.availableTables]);
 
