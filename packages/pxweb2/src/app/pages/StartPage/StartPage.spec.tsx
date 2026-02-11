@@ -17,7 +17,7 @@ import { mockedConfig } from '../../../../test/setupTests';
 
 // Note: `vi.mock` calls are hoisted by Vitest. We declare this mock early so that when `StartPage`
 // (which imports `createTableListSEO`) is evaluated, it receives the mocked implementation.
-vi.mock('../../util/seo/TableListSEO', () => {
+vi.mock('../../util/seo/tableListSEO', () => {
   return {
     createTableListSEO: vi.fn(() => <div data-testid="table-list-seo" />),
   };
