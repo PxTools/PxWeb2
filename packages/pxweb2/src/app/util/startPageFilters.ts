@@ -267,15 +267,18 @@ export function getYearRangeFromPeriod(period: string): [number, number] {
 
   const rangeMatch = rangeRegex.exec(period);
   if (rangeMatch) {
-    return [parseInt(rangeMatch[1], 10), parseInt(rangeMatch[2], 10)];
+    return [
+      Number.parseInt(rangeMatch[1], 10),
+      Number.parseInt(rangeMatch[2], 10),
+    ];
   }
 
   const yearMatch = singleYearRegex.exec(period);
   if (yearMatch) {
-    const year = parseInt(yearMatch[1], 10);
+    const year = Number.parseInt(yearMatch[1], 10);
     return [year, year];
   }
-  return [NaN, NaN];
+  return [Number.NaN, Number.NaN];
 }
 
 export function flattenSubjectTreeToList(subjectTree: PathItem[]): string[] {
@@ -591,11 +594,11 @@ export function sortSubjectTree(subjects: PathItem[]): PathItem[] {
 }
 
 export function sortTablesByUpdated(tables: Table[]): Table[] {
-  return tables.slice().sort((a, b) => {
+  const sortedTables = tables.slice().sort((a, b) => {
     const dateA = Date.parse(a.updated ?? '');
     const dateB = Date.parse(b.updated ?? '');
-    const isValidA = !isNaN(dateA);
-    const isValidB = !isNaN(dateB);
+    const isValidA = !Number.isNaN(dateA);
+    const isValidB = !Number.isNaN(dateB);
 
     // Both invalid/missing -> keep original order
     if (!isValidA && !isValidB) {
@@ -609,9 +612,50 @@ export function sortTablesByUpdated(tables: Table[]): Table[] {
     if (!isValidB) {
       return -1;
     }
-    // Both valid -> newer first
+
+    // If dates are the same, sort on subjectCode ascending
+    if (dateA === dateB) {
+      return compareBySubjectCodeAsc(a, b);
+    }
+
+    // Both valid, but not the same date -> newer first
     return dateB - dateA;
   });
+
+  return sortedTables;
+}
+
+function compareBySubjectCodeAsc(tableA: Table, tableB: Table): number {
+  const subjectA = tableA.subjectCode ?? '';
+  const subjectB = tableB.subjectCode ?? '';
+
+  // check for validity
+  const isSubjectAValid = subjectA.trim() !== '';
+  const isSubjectBValid = subjectB.trim() !== '';
+
+  // Both invalid/missing -> keep original order
+  if (!isSubjectAValid && !isSubjectBValid) {
+    return 0;
+  }
+  // Only A invalid -> B comes first
+  if (!isSubjectAValid) {
+    return 1;
+  }
+  // Only B invalid -> A comes first
+  if (!isSubjectBValid) {
+    return -1;
+  }
+
+  // Compare subjectCodes
+  if (subjectA < subjectB) {
+    return -1;
+  }
+  if (subjectA > subjectB) {
+    return 1;
+  }
+
+  // Same subjectCode too -> keep original order
+  return 0;
 }
 
 export function getStatus(

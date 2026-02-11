@@ -1,10 +1,12 @@
 import React from 'react';
+import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { LazyMotion, MotionConfig } from 'motion/react';
 
 import styles from './NavigationRail.module.scss';
 import { NavigationItem } from '../NavigationItem/NavigationItemType';
 import { Item } from '../NavigationItem/NavigationItem';
+import { Heading } from '@pxweb2/pxweb2-ui';
 
 // Lazy load the animation features
 const loadFeatures = () =>
@@ -55,12 +57,18 @@ export const NavigationRail = React.forwardRef<
     <div className={styles.navigationRail}>
       <LazyMotion features={loadFeatures}>
         <MotionConfig reducedMotion="user">
-          <nav
-            aria-label={t(
-              'presentation_page.side_menu.aria_label_tool_side_menu',
-            )}
-          >
-            <ul className={styles.navigationRailList}>
+          <nav aria-labelledby="navRailHeading">
+            <Heading
+              level={'2'}
+              className={cl(styles['sr-only'])}
+              id="navRailHeading"
+            >
+              {t('presentation_page.side_menu.aria_label_tool_side_menu')}
+            </Heading>
+            <ul
+              className={styles.navigationRailList}
+              aria-labelledby="navRailHeading"
+            >
               <Item
                 ref={refs.selection}
                 parentName="navRail"

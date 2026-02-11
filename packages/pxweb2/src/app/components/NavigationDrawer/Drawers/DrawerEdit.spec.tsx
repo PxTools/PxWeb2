@@ -27,6 +27,7 @@ vi.mock('react-i18next', () => ({
 vi.mock('../../../context/useTableData', () => ({
   default: () => ({
     pivot: mockPivot,
+    setIsFadingTable: vi.fn(),
     data: {
       // Minimal shape; DrawerEdit only passes these through
       stub: [{ name: 'variable1' }],
