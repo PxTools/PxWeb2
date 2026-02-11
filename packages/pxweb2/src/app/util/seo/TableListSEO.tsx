@@ -2,7 +2,7 @@ import { Table } from 'packages/pxweb2-api-client/src';
 import { getConfig } from '../config/getConfig';
 import { getLanguagePath } from '../language/getLanguagePath';
 
-export function createTableListSEO(tables: Table[], language: string) {
+export function createTableListSEO(language: string, tables: Table[]) {
   const config = getConfig();
 
   // Build JSON-LD ItemList with absolute URLs to reduce DOM overhead

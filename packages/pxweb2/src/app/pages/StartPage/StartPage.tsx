@@ -711,9 +711,7 @@ const StartPage = () => {
   };
 
   const renderMemoizedTableListSEO = useMemo(() => {
-    console.log('SEO');
-
-    return createTableListSEO(state.availableTables, i18n.language);
+    return createTableListSEO(i18n.language, state.availableTables);
   }, [i18n.language, state.availableTables]);
 
   const renderBreadCrumb = () => {

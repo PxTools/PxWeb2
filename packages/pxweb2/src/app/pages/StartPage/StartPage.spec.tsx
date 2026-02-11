@@ -1,6 +1,7 @@
+import { useMemo, useReducer } from 'react';
 import { vi, Mock } from 'vitest';
 import { MemoryRouter } from 'react-router';
-import { waitFor, screen } from '@testing-library/react';
+import { waitFor, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 
 import StartPage from './StartPage';
@@ -11,9 +12,18 @@ import { FilterContext } from '../../context/FilterContext';
 import { useLocaleContent } from '../../util/hooks/useLocaleContent';
 import { renderWithProviders } from '../../util/testing-utils';
 import * as startPageRender from '../../util/startPageRender';
-//import * as configModule from '../../util/config/getConfig';
 import { getConfig } from '../../util/config/getConfig';
 import { mockedConfig } from '../../../../test/setupTests';
+
+// Note: `vi.mock` calls are hoisted by Vitest. We declare this mock early so that when `StartPage`
+// (which imports `createTableListSEO`) is evaluated, it receives the mocked implementation.
+vi.mock('../../util/seo/TableListSEO', () => {
+  return {
+    createTableListSEO: vi.fn(() => <div data-testid="table-list-seo" />),
+  };
+});
+
+import { createTableListSEO } from '../../util/seo/TableListSEO';
 
 // Mock screen size via useApp with mutable flags we can control per test
 let mockIsMobile = false;
@@ -151,7 +161,6 @@ const baseState: StartPageState = {
   lastUsedYearRange: null,
   availableTablesWhenQueryApplied: [],
 };
-//const config = configModule.getConfig();
 
 describe('StartPage', () => {
   it('should render successfully', async () => {
@@ -200,51 +209,71 @@ describe('StartPage', () => {
     });
   });
 
-  // it('renders the hidden SEO table list with correct number of links', async () => {
-  //   const { findByRole } = renderWithProviders(
-  //     <AccessibilityProvider>
-  //       <MemoryRouter>
-  //         <StartPage />
-  //       </MemoryRouter>
-  //     </AccessibilityProvider>,
-  //   );
+  it('memoizes TableListSEO content and does not re-render when unrelated state changes', async () => {
+    mockIsMobile = true;
+    mockIsTablet = false;
 
-  //   const heading = await findByRole('heading', {
-  //     name: 'TableList(SEO)',
-  //     hidden: true,
-  //   });
-  //   const nav = heading.closest('nav') as HTMLElement;
-  //   expect(nav).toHaveAttribute('aria-hidden', 'true');
-  //   const links = await within(nav).findAllByRole('link', { hidden: true });
-  //   expect(links).toHaveLength(2);
-  //   links.forEach((a) => expect(a).toHaveAttribute('tabindex', '-1'));
-  // });
+    const createTableListSEOMock = createTableListSEO as unknown as Mock;
+    createTableListSEOMock.mockClear();
 
-  // it('prefixes href with language when showDefaultLanguageInPath=true', async () => {
-  //   config.language.showDefaultLanguageInPath = true;
-  //   config.language.defaultLanguage = 'en';
+    // Keep the availableTables array reference stable across re-renders.
+    const tables = [
+      {
+        id: 't1',
+        label: 'Table 1',
+      },
+    ] as unknown as Table[];
 
-  //   const { findByRole } = renderWithProviders(
-  //     <AccessibilityProvider>
-  //       <MemoryRouter>
-  //         <StartPage />
-  //       </MemoryRouter>
-  //     </AccessibilityProvider>,
-  //   );
+    const mockState: StartPageState = {
+      ...baseState,
+      availableTables: tables,
+      filteredTables: tables,
+    };
 
-  //   const heading = await findByRole('heading', {
-  //     name: 'TableList(SEO)',
-  //     hidden: true,
-  //   });
-  //   const nav = heading.closest('nav') as HTMLElement;
-  //   const links = await within(nav).findAllByRole('link', { hidden: true });
-  //   links.forEach((a) => {
-  //     expect(a).toHaveAttribute(
-  //       'href',
-  //       expect.stringMatching(/^\/en\/table\//),
-  //     );
-  //   });
-  // });
+    const mockDispatch = vi.fn();
+
+    function Harness() {
+      const [tick, bump] = useReducer((n: number) => n + 1, 0);
+
+      const contextValue = useMemo(
+        () => ({ state: mockState, dispatch: mockDispatch }),
+        [],
+      );
+
+      return (
+        <div data-testid="harness" data-tick={tick}>
+          <button type="button" onClick={bump}>
+            unrelated
+          </button>
+          <FilterContext.Provider value={contextValue}>
+            <StartPage />
+          </FilterContext.Provider>
+        </div>
+      );
+    }
+
+    renderWithProviders(
+      <AccessibilityProvider>
+        <MemoryRouter>
+          <Harness />
+        </MemoryRouter>
+      </AccessibilityProvider>,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByTestId('table-list-seo')).toBeInTheDocument();
+    });
+
+    const callsBefore = createTableListSEOMock.mock.calls.length;
+    expect(callsBefore).toBeGreaterThan(0);
+
+    // Trigger an unrelated re-render (parent state), without changing i18n.language or availableTables.
+    fireEvent.click(screen.getByRole('button', { name: 'unrelated' }));
+
+    await waitFor(() => {
+      expect(createTableListSEOMock.mock.calls.length).toBe(callsBefore);
+    });
+  });
 
   describe('show breadcrumbs on startpage if set in config breadcrumbs', () => {
     beforeEach(() => {
@@ -404,11 +433,11 @@ describe('StartPage', () => {
 
   describe('getTopicIcon size selection', () => {
     // Minimal harness that reproduces the getTopicIcon logic using hooks
-    function IconProbe({ table }: { table: Partial<Table> }) {
+    function IconProbe({ table }: Readonly<{ table: Partial<Table> }>) {
       const { isMobile, isTablet } = useApp();
       const isSmallScreen = isTablet === true || isMobile === true;
       const topicIconComponents = useTopicIcons();
-      const topicId = table.subjectCode as string | undefined;
+      const topicId = table.subjectCode;
       const size = isSmallScreen ? 'small' : 'medium';
       const icon = topicId
         ? (topicIconComponents.find((i) => i.id === topicId)?.[size] ?? null)

@@ -25,7 +25,7 @@ describe('createTableListSEO', () => {
     ];
     const language = 'en';
 
-    const result = createTableListSEO(tables, language);
+    const result = createTableListSEO(language, tables);
 
     // Extract the JSON-LD content from the script element
     const jsonLdContent = result.props.children;
