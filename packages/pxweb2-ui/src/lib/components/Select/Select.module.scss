@@ -68,12 +68,15 @@
 
 .iconColor {
   --px-icon-color: var(--px-color-icon-action);
-  position: absolute;
   font-size: 1.5rem;
   pointer-events: none;
   align-self: center;
   background: var(--px-color-surface-default);
   inset-inline-end: fixed.$spacing-3;
+}
+
+.iconPositionAbsolute {
+  position: absolute;
 }
 
 // --------------------------------------------------------
@@ -136,6 +139,7 @@
   -webkit-line-clamp: 1;
   line-clamp: 1;
   align-self: stretch;
+  overflow: hidden;
 }
 
 .modalRadioList {
