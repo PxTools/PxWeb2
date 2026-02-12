@@ -111,7 +111,6 @@ export function ContentTop({
     useState<boolean>(false);
   const [activeTab, setActiveTab] = useState('');
   const [tableInformationOpener, setTableInformationOpener] = useState('');
-  const [tableTitle, setTableTitle] = useState('');
   const accessibility = useContext(AccessibilityContext);
   const { pxTableMetadata, selectedVBValues } = useVariables();
   const selectedMetadata = useTableData().data?.metadata;
@@ -167,23 +166,17 @@ export function ContentTop({
     });
   }, [isTableInformationOpen, tableInformationOpener, accessibility]);
 
-  // Only recompute the table title when selectedMetadata changes
-  useEffect(() => {
-    // Skip building title until table data is available
-    if (!selectedMetadata) {
-      return;
-    }
-
+  let tableTitle = '';
+  if (selectedMetadata) {
     const titleBy = t('presentation_page.common.table_title_by');
     const titleAnd = t('presentation_page.common.table_title_and');
     const { contentText, firstTitlePart, lastTitlePart } = buildTableTitle();
-    const newTitle = `${contentText} ${titleBy} ${
+    tableTitle = `${contentText} ${titleBy} ${
       firstTitlePart
         ? ` ${firstTitlePart} ${titleAnd} ${lastTitlePart}`
         : ` ${lastTitlePart}`
     }`;
-    setTableTitle(newTitle);
-  }, [buildTableTitle, selectedMetadata, t]);
+  }
 
   useEffect(() => {
     setTitle(staticTitle);
