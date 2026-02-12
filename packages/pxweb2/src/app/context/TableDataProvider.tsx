@@ -16,7 +16,6 @@ import {
   PxTableMetadata,
   getPxTableData,
   setPxTableData,
-  Variable,
 } from '@pxweb2/pxweb2-ui';
 import { mapJsonStat2Response } from '../../mappers/JsonStat2ResponseMapper';
 
@@ -25,6 +24,8 @@ import {
   filterStubAndHeadingArrays,
   autoPivotTable,
   pivotTableCW,
+  TableTitlePartsType,
+  getTableTitleParts,
 } from './TableDataProviderUtils';
 import { problemMessage } from '../util/problemMessage';
 import { PivotType } from './PivotType';
@@ -38,10 +39,7 @@ export interface TableDataContextType {
   pivotToMobile: () => void;
   pivotToDesktop: () => void;
   pivot: (type: PivotType) => void;
-  buildTableTitle: (
-    stub: Variable[],
-    heading: Variable[],
-  ) => { firstTitlePart: string; lastTitlePart: string };
+  buildTableTitle: () => TableTitlePartsType;
   isFadingTable: boolean;
   setIsFadingTable: (value: boolean) => void;
 }
@@ -69,7 +67,11 @@ const TableDataContext = createContext<TableDataContextType | undefined>({
   pivot: () => {
     // No-op: useTableData hook prevents this from being called
   },
-  buildTableTitle: () => ({ firstTitlePart: '', lastTitlePart: '' }),
+  buildTableTitle: () => ({
+    contentText: '',
+    firstTitlePart: '',
+    lastTitlePart: '',
+  }),
   isFadingTable: false,
   setIsFadingTable: () => {
     // No-op
@@ -806,12 +808,14 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
           }
         }
       });
+
       // Get the not already loaded data from the API
       let pxTable: PxTable = await fetchFromApi(
         tableId,
         i18n,
         notLoadedVarSelection,
       );
+
       // Merge pxTable with accumulatedData
       mergeWithAccumulatedData(
         pxTable,
@@ -906,14 +910,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         if (!variable) {
           return false;
         }
-        // We need to check that the variable codelist has not been changed
-        // else {
-        //   if (selection.codeList) {
-        //     if (variable.codeList !== selection.codeList) {
-        //       return false;
-        //     }
-        //   }
-        // }
       }
 
       return true;
@@ -1112,48 +1108,25 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   }, [data, stubDesktop, headingDesktop]);
 
   /**
-   * Builds a title for the table based on the stub and heading variables.
-   * The title is built by concatenating the labels of the variables in the stub first,
-   * followed by the labels of the variables in the heading.
-   *
-   * @param stub - Array of variables in the stub
-   * @param heading - Array of variables in the heading
-   * @returns An object with the first and last title parts as strings
+   * Builds the table title parts based on the current table data and metadata.
+   * @returns An object containing the parts of the table title.
    */
-  const buildTableTitle = React.useCallback(
-    (
-      stub: Variable[],
-      heading: Variable[],
-    ): {
-      firstTitlePart: string;
-      lastTitlePart: string;
-    } => {
-      const titleParts: string[] = [];
+  const buildTableTitle = React.useCallback((): TableTitlePartsType => {
+    const vars = data?.metadata.variables || [];
+    const stub = data?.stub || [];
+    const heading = data?.heading || [];
+    const contextText = variables.pxTableMetadata?.contents || '';
 
-      // Add stub variables to title
-      stub.forEach((variable) => {
-        titleParts.push(variable.label);
-      });
+    // NOTE: We use the actual objects in the PxTable. We trust that they are not changed by the getTableTitleParts function.
+    const tableTitleParts = getTableTitleParts(
+      vars,
+      stub,
+      heading,
+      contextText,
+    );
 
-      // Add heading variables to title
-      heading.forEach((variable) => {
-        titleParts.push(variable.label);
-      });
-
-      const lastTitlePart = titleParts.pop();
-
-      if (!lastTitlePart) {
-        throw new Error(
-          'TableDataProvider.buildTableTitle: Missing last title part. This should not happen. Please report this as a bug.',
-        );
-      }
-
-      const firstTitlePart = titleParts.join(', ');
-
-      return { firstTitlePart, lastTitlePart };
-    },
-    [],
-  );
+    return tableTitleParts;
+  }, [data, variables.pxTableMetadata]);
 
   /**
    * Pivots the table based on the specified pivot type.

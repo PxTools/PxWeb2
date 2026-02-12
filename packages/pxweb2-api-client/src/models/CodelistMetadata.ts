@@ -5,14 +5,15 @@
 import type { CodelistType } from './CodelistType';
 import type { Link } from './Link';
 export type CodelistMetadata = {
-  /**
-   * The identiyer for the codelist
-   */
-  id: string;
-  /**
-   * The textual name  for the codelist.
-   */
-  label: string;
-  type: CodelistType;
-  links: Array<Link>;
+    /**
+     * The identiyer for the codelist
+     */
+    id: string;
+    /**
+     * The textual name  for the codelist.
+     */
+    label: string;
+    type: CodelistType;
+    links: Array<Link>;
 };
+

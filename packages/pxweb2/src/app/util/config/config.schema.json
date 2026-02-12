@@ -68,6 +68,10 @@
       "type": "number",
       "description": "The maximum number of cells allowed to be shown in a table"
     },
+    "useDynamicContentInTitle": {
+      "type": "boolean",
+      "description": "Set to true to use dynamic content texts in the table title. If false, contents text at table level will be used."
+    },
     "showBreadCrumbOnStartPage": {
       "type": "boolean",
       "description": "Set to true to show breadcrumb on start page"
