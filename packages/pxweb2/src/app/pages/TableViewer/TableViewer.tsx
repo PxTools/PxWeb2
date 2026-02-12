@@ -11,6 +11,7 @@ import NavigationRail from '../../components/NavigationMenu/NavigationRail/Navig
 import NavigationBar from '../../components/NavigationMenu/NavigationBar/NavigationBar';
 import { SkipToMain } from '../../components/SkipToMain/SkipToMain';
 import { Footer } from '../../components/Footer/Footer';
+import useAccessibility from '../../context/useAccessibility';
 import useApp from '../../context/useApp';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import { VariablesProvider } from '../../context/VariablesProvider';
@@ -24,6 +25,7 @@ export function TableViewer() {
     skipToMainFocused,
     setSkipToMainFocused,
   } = useApp();
+    const accessibility = useAccessibility();
 
   const { tableId } = useParams<{ tableId: string }>();
   const [selectedTableId] = useState(tableId ?? '');
@@ -45,11 +47,78 @@ export function TableViewer() {
   const hideMenuRef = useRef<HTMLButtonElement>(null);
   const skipToMainRef = useRef<HTMLDivElement>(null);
 
+  const isSmallScreen = isTablet === true || isMobile === true;
+
+
   useEffect(() => {
     if (hasFocus !== 'none' && navigationBarRef.current) {
       hideMenuRef.current?.focus();
     }
   }, [hasFocus]);
+
+  useEffect(() => {
+    if (isSmallScreen) {return};
+    if (!navigationBarRef.current || !hideMenuRef.current) {
+      return;
+    }
+    let item = null;
+
+    if (selectedNavigationView === 'selection') {
+      item = navigationBarRef.current.selection;
+      accessibility.addFocusOverride(
+        'selectionButton',
+        navigationBarRef.current.selection,
+        undefined,
+        hideMenuRef.current,
+      );
+    }
+
+    if (selectedNavigationView === 'view') {
+      item = navigationBarRef.current.view;
+      accessibility.addFocusOverride(
+        'viewButton',
+        navigationBarRef.current.view,
+        undefined,
+        hideMenuRef.current,
+      );
+    }
+    if (selectedNavigationView === 'edit') {
+      item = navigationBarRef.current.edit;
+      accessibility.addFocusOverride(
+        'editButton',
+        navigationBarRef.current.edit,
+        undefined,
+        hideMenuRef.current,
+      );
+    }
+    if (selectedNavigationView === 'save') {
+      item = navigationBarRef.current.save;
+      accessibility.addFocusOverride(
+        'saveButton',
+        navigationBarRef.current.save,
+        undefined,
+        hideMenuRef.current,
+      );
+    }
+    if (selectedNavigationView === 'help') {
+      item = navigationBarRef.current.help;
+      accessibility.addFocusOverride(
+        'helpButton',
+        navigationBarRef.current.help,
+        undefined,
+        hideMenuRef.current,
+      );
+    }
+
+    if (item) {
+      accessibility.addFocusOverride(
+        'hideButton',
+        hideMenuRef.current,
+        item,
+        undefined,
+      );
+    }
+  }, [accessibility, selectedNavigationView, isSmallScreen]);
 
   // Drawer focus-trap is implemented inside NavigationDrawer via portal
 
@@ -111,7 +180,6 @@ export function TableViewer() {
     }
   };
 
-  const isSmallScreen = isTablet === true || isMobile === true;
 
   return (
     <>
@@ -139,8 +207,9 @@ export function TableViewer() {
             selected={selectedNavigationView}
           />
         )}{' '}
+
         <div
-          data-drawer-root
+          {...(isSmallScreen ? { 'data-drawer-root': true } : {})}
           className={cl(styles.mainContainer, {
             [styles.skipToMainContentVisible]: skipToMainFocused,
           })}
