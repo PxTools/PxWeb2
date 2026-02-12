@@ -23,11 +23,11 @@ interface NavigationRailProps {
 
 export const NavigationRail = React.forwardRef<
   {
-    selection: HTMLButtonElement;
-    view: HTMLButtonElement;
-    edit: HTMLButtonElement;
-    save: HTMLButtonElement;
-    help: HTMLButtonElement;
+    selection: React.RefObject<HTMLButtonElement | null>;
+    view: React.RefObject<HTMLButtonElement | null>;
+    edit: React.RefObject<HTMLButtonElement | null>;
+    save: React.RefObject<HTMLButtonElement | null>;
+    help: React.RefObject<HTMLButtonElement | null>;
   },
   NavigationRailProps
 >(({ onChange, selected }, ref) => {
@@ -37,21 +37,23 @@ export const NavigationRail = React.forwardRef<
     return event.screenX === 0 && event.screenY === 0;
   };
 
-  React.useImperativeHandle(ref, () => ({
-    selection: refs.selection.current!,
-    view: refs.view.current!,
-    edit: refs.edit.current!,
-    save: refs.save.current!,
-    help: refs.help.current!,
-  }));
+  const selectionRef = React.useRef<HTMLButtonElement>(null);
+  const viewRef = React.useRef<HTMLButtonElement>(null);
+  const editRef = React.useRef<HTMLButtonElement>(null);
+  const saveRef = React.useRef<HTMLButtonElement>(null);
+  const helpRef = React.useRef<HTMLButtonElement>(null);
 
-  const refs = {
-    save: React.useRef<HTMLButtonElement>(null),
-    help: React.useRef<HTMLButtonElement>(null),
-    selection: React.useRef<HTMLButtonElement>(null),
-    view: React.useRef<HTMLButtonElement>(null),
-    edit: React.useRef<HTMLButtonElement>(null),
-  };
+  React.useImperativeHandle(
+    ref,
+    () => ({
+      selection: selectionRef,
+      view: viewRef,
+      edit: editRef,
+      save: saveRef,
+      help: helpRef,
+    }),
+    [],
+  );
 
   return (
     <div className={styles.navigationRail}>
@@ -70,7 +72,7 @@ export const NavigationRail = React.forwardRef<
               aria-labelledby="navRailHeading"
             >
               <Item
-                ref={refs.selection}
+                ref={selectionRef}
                 parentName="navRail"
                 label={t('presentation_page.side_menu.selection.title')}
                 selected={selected === 'selection'}
@@ -84,7 +86,7 @@ export const NavigationRail = React.forwardRef<
                 }}
               />
               <Item
-                ref={refs.view}
+                ref={viewRef}
                 parentName="navRail"
                 label={t('presentation_page.side_menu.view.title')}
                 selected={selected === 'view'}
@@ -94,7 +96,7 @@ export const NavigationRail = React.forwardRef<
                 }}
               />
               <Item
-                ref={refs.edit}
+                ref={editRef}
                 parentName="navRail"
                 label={t('presentation_page.side_menu.edit.title')}
                 selected={selected === 'edit'}
@@ -104,7 +106,7 @@ export const NavigationRail = React.forwardRef<
                 }}
               />
               <Item
-                ref={refs.save}
+                ref={saveRef}
                 parentName="navRail"
                 label={t('presentation_page.side_menu.save.title')}
                 selected={selected === 'save'}
@@ -114,7 +116,7 @@ export const NavigationRail = React.forwardRef<
                 }}
               />
               <Item
-                ref={refs.help}
+                ref={helpRef}
                 parentName="navRail"
                 label={t('presentation_page.side_menu.help.title')}
                 selected={selected === 'help'}

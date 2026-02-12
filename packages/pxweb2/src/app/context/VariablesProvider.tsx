@@ -14,7 +14,6 @@ export type VariablesContextType = {
   getSelectedMatrixSize: () => number;
   getUniqueIds: () => string[];
   syncVariablesAndValues: (values: SelectedVBValues[]) => void;
-  toString: () => string;
   hasLoadedInitialSelection: boolean;
   setHasLoadedInitialSelection: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedVBValues: React.Dispatch<React.SetStateAction<SelectedVBValues[]>>;
@@ -45,7 +44,6 @@ export const VariablesContext = createContext<VariablesContextType>({
   },
   getSelectedMatrixSize: () => 1,
   getUniqueIds: () => [],
-  toString: () => '',
 
   hasLoadedInitialSelection: false,
   setHasLoadedInitialSelection: () => false,
@@ -84,50 +82,62 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
   /**
    * Adds multiple values for a given variable
    */
-  const addSelectedValues = (variableId: string, values: string[]) => {
-    setVariables((prev) => {
-      const newVariables = new Map(prev);
-      if (values.length === 0) {
-        newVariables.set(variableId + '-none-selected', {
-          id: variableId,
-          value: 'none-selected',
-        });
-      } else {
-        values.forEach((value) => {
-          newVariables.set(variableId + '-' + value, { id: variableId, value });
-        });
-      }
-      return newVariables;
-    });
-  };
+  const addSelectedValues = React.useCallback(
+    (variableId: string, values: string[]) => {
+      setVariables((prev) => {
+        const newVariables = new Map(prev);
+        if (values.length === 0) {
+          newVariables.set(variableId + '-none-selected', {
+            id: variableId,
+            value: 'none-selected',
+          });
+        } else {
+          values.forEach((value) => {
+            newVariables.set(variableId + '-' + value, {
+              id: variableId,
+              value,
+            });
+          });
+        }
+        return newVariables;
+      });
+    },
+    [],
+  );
 
-  const getSelectedValuesById = (variableId: string) => {
-    const values: string[] = [];
-    variables.forEach((item) => {
-      if (item.id === variableId) {
-        values.push(item.value);
-      }
-    });
+  const getSelectedValuesById = React.useCallback(
+    (variableId: string) => {
+      const values: string[] = [];
+      variables.forEach((item) => {
+        if (item.id === variableId) {
+          values.push(item.value);
+        }
+      });
 
-    return values;
-  };
+      return values;
+    },
+    [variables],
+  );
 
   // not in use so far, but maybe to use it in TableDataProvdider when update Cube.
-  const getSelectedValuesByIdSorted = (variableId: string) => {
-    let sortedValues: string[] = [];
-    pxTableMetadata?.variables.forEach((item) => {
-      if (item.id === variableId) {
-        sortedValues = item.values
-          .filter((value) =>
-            selectedVBValues
-              .find((selvar) => selvar.id === variableId)
-              ?.values.includes(value.code),
-          )
-          .map((value) => value.code);
-      }
-    });
-    return sortedValues;
-  };
+  const getSelectedValuesByIdSorted = React.useCallback(
+    (variableId: string) => {
+      let sortedValues: string[] = [];
+      pxTableMetadata?.variables.forEach((item) => {
+        if (item.id === variableId) {
+          sortedValues = item.values
+            .filter((value) =>
+              selectedVBValues
+                .find((selvar) => selvar.id === variableId)
+                ?.values.includes(value.code),
+            )
+            .map((value) => value.code);
+        }
+      });
+      return sortedValues;
+    },
+    [pxTableMetadata, selectedVBValues],
+  );
 
   /**
    * Get selected codelist for a given variable by it's id
@@ -135,114 +145,118 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
    * @param variableId
    * @returns selected codelist for the given variable or undefined if not found
    */
-  const getSelectedCodelistById = (variableId: string) => {
-    const selectedCodelist = selectedVBValues?.find(
-      (item) => item.id === variableId,
-    )?.selectedCodeList;
+  const getSelectedCodelistById = React.useCallback(
+    (variableId: string) => {
+      const selectedCodelist = selectedVBValues?.find(
+        (item) => item.id === variableId,
+      )?.selectedCodeList;
 
-    return selectedCodelist;
-  };
+      return selectedCodelist;
+    },
+    [selectedVBValues],
+  );
 
-  const getNumberOfSelectedValues = () => {
+  const getNumberOfSelectedValues = React.useCallback(() => {
     return variables.size;
-  };
+  }, [variables]);
 
-  const getUniqueIds = () => {
+  const getUniqueIds = React.useCallback(() => {
     const unique = new Set<string>();
     variables.forEach((item) => {
       unique.add(item.id);
     });
     return Array.from(unique);
-  };
+  }, [variables]);
 
   /**
    * Checks if newVariables introduces changes to the state.
    * @param newVariables
    * @returns
    */
-  const hasChanges = (newVariables: SelectedVBValues[]) => {
-    let selectionHasChanges = false;
+  const hasChanges = React.useCallback(
+    (newVariables: SelectedVBValues[]) => {
+      let selectionHasChanges = false;
 
-    const newVars: Set<string> = new Set();
-    newVariables.forEach((variable) => {
-      variable.values.forEach((value) => {
-        newVars.add(variable.id + '-' + value);
+      const newVars: Set<string> = new Set();
+      newVariables.forEach((variable) => {
+        variable.values.forEach((value) => {
+          newVars.add(variable.id + '-' + value);
+        });
       });
-    });
 
-    // If size is different, there is changes
-    if (newVars.size !== variables.size) {
-      return true;
-    }
-
-    // Check if there is a key in variables that is missing in newVars.
-    // If it is missing, that means there has been some changes
-    variables.forEach((variable, key) => {
-      if (!newVars.has(key)) {
-        selectionHasChanges = true;
+      // If size is different, there is changes
+      if (newVars.size !== variables.size) {
+        return true;
       }
-    });
-    if (selectionHasChanges) {
-      return true;
-    }
 
-    // Check if newVars has some key that is missing in variables.
-    // If it is missing, that means there has been some changes
-    newVars.forEach((val) => {
-      if (!variables.has(val)) {
-        selectionHasChanges = true;
+      // Check if there is a key in variables that is missing in newVars.
+      // If it is missing, that means there has been some changes
+      variables.forEach((variable, key) => {
+        if (!newVars.has(key)) {
+          selectionHasChanges = true;
+        }
+      });
+      if (selectionHasChanges) {
+        return true;
       }
-    });
-    if (selectionHasChanges) {
-      return true;
-    }
 
-    // No changes found
-    return false;
-  };
+      // Check if newVars has some key that is missing in variables.
+      // If it is missing, that means there has been some changes
+      newVars.forEach((val) => {
+        if (!variables.has(val)) {
+          selectionHasChanges = true;
+        }
+      });
+      if (selectionHasChanges) {
+        return true;
+      }
 
-  const syncVariablesAndValues = (variables: SelectedVBValues[]) => {
-    createSelectedMatrixSize(variables);
-    if (!hasChanges(variables)) {
-      return;
-    }
-    setVariables(new Map());
-    variables.forEach((variable) => {
-      addSelectedValues(variable.id, variable.values);
-    });
-  };
+      // No changes found
+      return false;
+    },
+    [variables],
+  );
 
-  const toString = () => {
-    let str = '';
-    variables.forEach((value) => {
-      str += ' ' + value.id + '-' + value.value;
-    });
-    return str;
-  };
-
-  const createSelectedMatrixSize = (selectedValues: SelectedVBValues[]) => {
-    let matrixSize = 1;
-    let numberOfValues = 1;
-    selectedValues.forEach((variable) => {
-      if (variable.values.length === 0) {
-        numberOfValues = 1;
+  const createSelectedMatrixSize = React.useCallback(
+    (selectedValues: SelectedVBValues[]) => {
+      let matrixSize = 1;
+      let numberOfValues = 1;
+      selectedValues.forEach((variable) => {
+        if (variable.values.length === 0) {
+          numberOfValues = 1;
+        } else {
+          numberOfValues = variable.values.length;
+        }
+        matrixSize *= numberOfValues;
+      });
+      setSelectedMatrixSize(matrixSize);
+      const maxAllowedMatrixSize = config.maxDataCells;
+      if (matrixSize > maxAllowedMatrixSize) {
+        setIsMatrixSizeAllowed(false);
       } else {
-        numberOfValues = variable.values.length;
+        setIsMatrixSizeAllowed(true);
       }
-      matrixSize *= numberOfValues;
-    });
-    setSelectedMatrixSize(matrixSize);
-    const maxAllowedMatrixSize = config.maxDataCells;
-    if (matrixSize > maxAllowedMatrixSize) {
-      setIsMatrixSizeAllowed(false);
-    } else {
-      setIsMatrixSizeAllowed(true);
-    }
-  };
+    },
+    [config.maxDataCells],
+  );
 
-  const getSelectedMatrixSize = () => {
+  const syncVariablesAndValues = React.useCallback(
+    (variables: SelectedVBValues[]) => {
+      createSelectedMatrixSize(variables);
+      if (!hasChanges(variables)) {
+        return;
+      }
+      setVariables(new Map());
+      variables.forEach((variable) => {
+        addSelectedValues(variable.id, variable.values);
+      });
+    },
+    [createSelectedMatrixSize, hasChanges, addSelectedValues],
+  );
+
+  const getSelectedMatrixSize = React.useCallback(() => {
     return selectedMatrixSize;
-  };
+  }, [selectedMatrixSize]);
 
   const memoizedValues = useMemo(
     () => ({
@@ -255,7 +269,6 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
       getUniqueIds,
       getSelectedMatrixSize,
       syncVariablesAndValues,
-      toString,
       hasLoadedInitialSelection,
       setHasLoadedInitialSelection,
       setSelectedVBValues,
@@ -276,7 +289,6 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
       getUniqueIds,
       getSelectedMatrixSize,
       syncVariablesAndValues,
-      toString,
       hasLoadedInitialSelection,
       setHasLoadedInitialSelection,
       setSelectedVBValues,
