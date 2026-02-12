@@ -103,7 +103,7 @@ jobs:
 
       - name: Prepare deployment with different configuration
         run: |
-          sed -i 's|useDynamicContentInTitle: false,|useDynamicContentInTitle: true,|' dist/config/config.js
+          sed -i 's|useDynamicContentInTitle: false,|useDynamicContentInTitle: true,|' config/config.js
 
       - name: Deploy
         id: deploy
