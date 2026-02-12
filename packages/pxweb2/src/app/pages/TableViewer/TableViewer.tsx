@@ -25,7 +25,7 @@ export function TableViewer() {
     skipToMainFocused,
     setSkipToMainFocused,
   } = useApp();
-    const accessibility = useAccessibility();
+  const accessibility = useAccessibility();
 
   const { tableId } = useParams<{ tableId: string }>();
   const [selectedTableId] = useState(tableId ?? '');
@@ -49,7 +49,6 @@ export function TableViewer() {
 
   const isSmallScreen = isTablet === true || isMobile === true;
 
-
   useEffect(() => {
     if (hasFocus !== 'none' && navigationBarRef.current) {
       hideMenuRef.current?.focus();
@@ -57,7 +56,9 @@ export function TableViewer() {
   }, [hasFocus]);
 
   useEffect(() => {
-    if (isSmallScreen) {return};
+    if (isSmallScreen) {
+      return;
+    }
     if (!navigationBarRef.current || !hideMenuRef.current) {
       return;
     }
@@ -180,7 +181,6 @@ export function TableViewer() {
     }
   };
 
-
   return (
     <>
       <SkipToMain ref={skipToMainRef} />
@@ -207,7 +207,6 @@ export function TableViewer() {
             selected={selectedNavigationView}
           />
         )}{' '}
-
         <div
           {...(isSmallScreen ? { 'data-drawer-root': true } : {})}
           className={cl(styles.mainContainer, {
