@@ -1,9 +1,8 @@
-window.PxWeb2Config = {
+globalThis.PxWeb2Config = {
   language: {
     supportedLanguages: [
       { shorthand: 'en', languageName: 'English' },
       { shorthand: 'sv', languageName: 'Svenska' },
-      { shorthand: 'no', languageName: 'Norsk' },
     ],
     defaultLanguage: 'en',
     fallbackLanguage: 'en',
@@ -13,25 +12,10 @@ window.PxWeb2Config = {
   baseApplicationPath: '/',
   apiUrl: 'https://api.scb.se/OV0104/v2beta/api/v2',
   maxDataCells: 150000,
+  useDynamicContentInTitle: false,
   showBreadCrumbOnStartPage: false,
   specialCharacters: ['.', '..', ':', '-', '...', '*'],
   variableFilterExclusionList: {
-    no: [
-      'statistikkvariabel',
-      'år',
-      'kvartal',
-      'måned',
-      'uke',
-      'driftsår',
-      'enkeltår',
-      'intervall (år)',
-      'halvår',
-      'kvartal (u)',
-      'termin',
-      'toårlig',
-      'fireårlig',
-      'femårlig',
-    ],
     en: [
       'observations',
       'year',
@@ -51,7 +35,6 @@ window.PxWeb2Config = {
     ],
   },
   homePage: {
-    no: '', // Set to your Norwegian homepage URL
     sv: '', // Set to your Swedish homepage URL
     en: '', // Set to your English homepage URL
   },

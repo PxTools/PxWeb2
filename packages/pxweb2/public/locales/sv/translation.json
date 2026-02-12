@@ -132,6 +132,10 @@
     }
   },
   "presentation_page": {
+    "common": {
+      "table_title_by": "efter",
+      "table_title_and": "och"
+    },
     "side_menu": {
       "aria_label_tool_side_menu": "Verktygsmeny för tabell",
       "hide": "Dölj",
@@ -275,7 +279,6 @@
       "shrink_view": "Minimera visning",
       "last_updated": "Senast uppdaterad",
       "show_details": "Visa detaljer",
-      "dynamic_table_title": "{{table_content_type}} efter {{table_content_label_first_part}} och {{table_content_label_last_part}}",
       "table": {
         "warnings": {
           "missing_mandatory": {

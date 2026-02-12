@@ -86,6 +86,10 @@ interface Resources {
       simple_number_with_zero_decimal: '{{value, pxNumber(minimumFractionDigits: 0; maximumFractionDigits: 0;)}}';
     };
     presentation_page: {
+      common: {
+        table_title_and: 'and';
+        table_title_by: 'by';
+      };
       footer: {
         contact: 'Contact';
         copyright: 'Copyright © 2024 Statistics Sweden and Statistics Norway';
@@ -152,7 +156,6 @@ interface Resources {
           };
           title: 'Information';
         };
-        dynamic_table_title: '{{table_content_type}} by {{table_content_label_first_part}} and {{table_content_label_last_part}}';
         expand_view: 'Expand view';
         last_updated: 'Updated';
         related: {
@@ -222,7 +225,7 @@ interface Resources {
         hide: 'Hide';
         save: {
           api: {
-            description: 'Here you’ll find the API query for the table. Use GET for small queries (under about 2 100 characters) and POST for larger or more complex ones';
+            description: 'Here you’ll find the API query for the table. Use GET for small queries (under about 2 100 characters) and POST for larger or more complex ones.';
             get_button_text: 'GET';
             link_text: 'Learn more about using the API';
             link_url: 'https://www.pxtools.net/PxWebApi/documentation/user-guide/';
@@ -241,7 +244,7 @@ interface Resources {
               html: 'HTML (.html)';
               jsonstat2: 'JSON-stat2 (.json)';
               parquet: 'Parquet (.parquet)';
-              px: 'PC-Axis (.px)';
+              px: 'Px-file (.px)';
             };
             loading_announcement: 'File is still being processed. Please wait.';
             title: 'Download as file';
@@ -300,7 +303,7 @@ interface Resources {
               tag_selected: '{{selected}} of {{total}} selected';
             };
             search: {
-              aria_label_clear_button_text: 'Clear search icon';
+              aria_label_clear_button_text: 'Clear';
               label: 'Search';
               placeholder: 'Search in list';
             };
