@@ -230,10 +230,10 @@
         },
         "savequery": {
           "title": "Länk till uppdaterad tabell",
-          "info": "Kommer du att använda den här tabellen igen? Här får du en länk till tabellen, så att du slipper ställa in den igen. Tabellen kommer att hållas uppdaterad, och du väljer själv hur nya tidsperioder läggs till.",
+          "info": "Ska du använda den här tabellen igen? Här kan du skapa en länk till den, så du slipper ställa in allt på nytt. Tabellen uppdateras löpande och du bestämmer själv hur nya tidsperioder läggs in.",
           "radio_legend": "Val av nya tidsperioder",
           "period_options": {
-            "selected": "Lägg inte till nya tidsperioder – jag vill bara ha de jag har valt nu",
+            "selected": "Lägg inte till nya tidsperioder – jag vill ha de jag har valt nu",
             "from": "Lägg till alla nya tidsperioder",
             "top": "Lägg till nya tidsperioder, men behåll samma antal (när en ny tidsperiod läggs till tas den äldsta bort)"
           },
