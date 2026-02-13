@@ -92,15 +92,11 @@ describe('NavigationDrawer', () => {
   it('traps focus within the drawer when Tab and Shift+Tab are pressed', async () => {
     const ref = React.createRef<HTMLButtonElement>();
     render(
-      <NavigationDrawer
-        {...defaultProps}
-        openedWithKeyboard={true}
-        ref={ref}
-      >
+      <NavigationDrawer {...defaultProps} openedWithKeyboard={true} ref={ref}>
         <button data-testid="first">First</button>
         <button data-testid="middle">Middle</button>
         <button data-testid="last">Last</button>
-      </NavigationDrawer>
+      </NavigationDrawer>,
     );
     const drawer = screen.getByRole('region');
     const first = screen.getByTestId('first');
