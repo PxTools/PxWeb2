@@ -5,10 +5,10 @@ import { NavigationDrawer } from './NavigationDrawer';
 
 vi.mock('i18next', () => ({
   default: { dir: () => 'ltr' },
-  dir: () => 'ltr'
+  dir: () => 'ltr',
 }));
 vi.mock('react-i18next', () => ({
-  useTranslation: () => ({ t: (s: any) => s })
+  useTranslation: () => ({ t: (s: any) => s }),
 }));
 vi.mock('../../context/useAccessibility', () => ({
   default: () => ({
