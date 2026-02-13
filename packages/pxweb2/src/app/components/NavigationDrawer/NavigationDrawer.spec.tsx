@@ -1,7 +1,8 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, beforeEach, vi, expect } from 'vitest';
 import '@testing-library/jest-dom';
 import { NavigationDrawer } from './NavigationDrawer';
+import React from 'react';
 
 vi.mock('i18next', () => ({
   default: { dir: () => 'ltr' },
@@ -71,5 +72,20 @@ describe('NavigationDrawer', () => {
     render(<NavigationDrawer {...defaultProps} />);
     const sentinels = screen.getAllByRole('presentation', { hidden: true });
     expect(sentinels.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it('focuses the close button when openedWithKeyboard is true', async () => {
+    const ref = React.createRef<HTMLButtonElement>();
+    render(
+      <NavigationDrawer
+        {...defaultProps}
+        openedWithKeyboard={true}
+        ref={ref}
+      />
+    );
+    const button = screen.getByRole('button');
+    await waitFor(() => {
+      expect(document.activeElement).toBe(button);
+    });
   });
 });
