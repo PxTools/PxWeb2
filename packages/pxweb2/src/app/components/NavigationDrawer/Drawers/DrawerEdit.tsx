@@ -118,6 +118,37 @@ export function DrawerEdit() {
   const [loadingPivotType, setLoadingPivotType] = useState<PivotType | null>(
     null,
   );
+  const [hideEmtyRows, setHideEmtyRows] = useState(false);
+
+  const handleHideEmtyRowsClick = async () => {
+    setHideEmtyRows((prev) => {
+      const newValue = !prev;
+      setUrlParam('supressNullRows', newValue);
+      return newValue;
+    });
+
+    // Simulate async operation
+    return new Promise((resolve) => setTimeout(resolve, 500));
+  };
+
+  function setUrlParam(param: string, value: boolean) {
+    const url = new URL(window.location.href);
+    if (value) {
+      url.searchParams.set(param, '1');
+    } else {
+      url.searchParams.delete(param);
+    }
+    window.history.replaceState({}, '', url.toString());
+  }
+
+  useEffect(() => {
+    setUrlParam('hideEmtyRows', hideEmtyRows);
+  }, [hideEmtyRows]);
+
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    setHideEmtyRows(url.searchParams.has('supressNullRows'));
+  }, []);
 
   return (
     <ContentBox title={t('presentation_page.side_menu.edit.customize.title')}>
@@ -138,6 +169,19 @@ export function DrawerEdit() {
             pivotType={PivotType.Clockwise}
             loadingPivotType={loadingPivotType}
             setLoadingPivotType={setLoadingPivotType}
+          />
+        )}
+        {data && (
+          <ActionItem
+            label="Hide emty rows"
+            ariaLabel="Hide empty rows"
+            description="Toggle visibility of rows that contain no data"
+            size="medium"
+            onClick={() => {
+              handleHideEmtyRowsClick();
+            }}
+            iconName="RemoveTableRow"
+            toggleState={hideEmtyRows}
           />
         )}
       </div>

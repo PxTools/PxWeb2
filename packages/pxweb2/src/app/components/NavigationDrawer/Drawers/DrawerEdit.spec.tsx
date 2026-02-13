@@ -12,6 +12,7 @@ interface MockActionItemProps {
   iconName?: string;
   ariaLabel?: string;
   isLoading?: boolean;
+  toggleState?: boolean;
   [key: string]: unknown;
 }
 
@@ -51,6 +52,7 @@ vi.mock('@pxweb2/pxweb2-ui', () => ({
     ariaLabel,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     isLoading,
+    //toggleState, // <-- Destructure to avoid passing to DOM
     ...props
   }: MockActionItemProps) => (
     <button
@@ -81,9 +83,9 @@ describe('DrawerEdit', () => {
     render(<DrawerEdit />);
 
     expect(screen.getByTestId('content-box')).toBeInTheDocument();
-    // Two action buttons: auto pivot & clockwise pivot (unified PivotButton)
+    // Three action buttons: auto pivot, clockwise pivot, hide empty rows
     const buttons = screen.getAllByTestId('action-item');
-    expect(buttons).toHaveLength(2);
+    expect(buttons).toHaveLength(3);
     // Check labels via translation keys
     expect(
       screen.getByText(
@@ -95,6 +97,7 @@ describe('DrawerEdit', () => {
         'presentation_page.side_menu.edit.customize.pivot.title',
       ),
     ).toBeInTheDocument();
+    expect(screen.getByText('Hide emty rows')).toBeInTheDocument();
   });
 
   it('has correct display name', () => {
