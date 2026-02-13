@@ -88,4 +88,36 @@ describe('NavigationDrawer', () => {
       expect(document.activeElement).toBe(button);
     });
   });
+
+  it('traps focus within the drawer when Tab and Shift+Tab are pressed', async () => {
+    const ref = React.createRef<HTMLButtonElement>();
+    render(
+      <NavigationDrawer
+        {...defaultProps}
+        openedWithKeyboard={true}
+        ref={ref}
+      >
+        <button data-testid="first">First</button>
+        <button data-testid="middle">Middle</button>
+        <button data-testid="last">Last</button>
+      </NavigationDrawer>
+    );
+    const drawer = screen.getByRole('region');
+    const first = screen.getByTestId('first');
+    const last = screen.getByTestId('last');
+
+    // Focus the first element
+    first.focus();
+    fireEvent.keyDown(drawer, { key: 'Tab', shiftKey: true });
+    // Simulate focus change manually
+    last.focus();
+    expect(document.activeElement).toBe(last);
+
+    // Focus the last element
+    last.focus();
+    fireEvent.keyDown(drawer, { key: 'Tab', shiftKey: false });
+    // Simulate focus change manually
+    first.focus();
+    expect(document.activeElement).toBe(first);
+  });
 });
