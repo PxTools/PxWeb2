@@ -83,6 +83,12 @@
     // Participate in flex layout within mainContainer
     // position: static;
     // order: 0;
+
+    position: static;
+    top: 0;
+    left: 0; // or inset-inline-start: 0; for RTL support
+    z-index: 999;
+    order: 0;
   }
 }
 
