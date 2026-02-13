@@ -121,17 +121,34 @@ export function DrawerEdit() {
   const [hideEmtyRows, setHideEmtyRows] = useState(false);
 
   const handleHideEmtyRowsClick = async () => {
-    setHideEmtyRows((prev) => !prev);
-    if (hideEmtyRows) {
-      // Show empty rows
-      // Implement the logic to show empty rows here
-    }
-    // Hide empty rows
-    // Implement the logic to hide empty rows here
+    setHideEmtyRows((prev) => {
+      const newValue = !prev;
+      setUrlParam('supressNullRows', newValue);
+      return newValue;
+    });
 
     // Simulate async operation
     return new Promise((resolve) => setTimeout(resolve, 500));
   };
+
+  function setUrlParam(param: string, value: boolean) {
+    const url = new URL(window.location.href);
+    if (value) {
+      url.searchParams.set(param, '1');
+    } else {
+      url.searchParams.delete(param);
+    }
+    window.history.replaceState({}, '', url.toString());
+  }
+
+  useEffect(() => {
+    setUrlParam('hideEmtyRows', hideEmtyRows);
+  }, [hideEmtyRows]);
+
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    setHideEmtyRows(url.searchParams.has('supressNullRows'));
+  }, []);
 
   return (
     <ContentBox title={t('presentation_page.side_menu.edit.customize.title')}>
