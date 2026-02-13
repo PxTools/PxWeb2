@@ -478,7 +478,7 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
       </ContentBox>
       <ContentBox title={t('presentation_page.side_menu.save.savequery.title')}>
         <div className={classes.informationCardWrapper}>
-          <InformationCard icon="InformationCircle">
+          <InformationCard icon="LightBulb">
             <BodyLong size="medium">
               {t('presentation_page.side_menu.save.savequery.info')}
             </BodyLong>

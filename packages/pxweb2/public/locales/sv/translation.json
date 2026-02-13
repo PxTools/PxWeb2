@@ -234,12 +234,12 @@
         },
         "savequery": {
           "title": "Länk till uppdaterad tabell",
-          "info": "Du får en unik länk till din tabell, som vi håller uppdaterad åt dig. Hur nya tidsperioder läggs till väljer du själv.",
+          "info": "Ska du använda den här tabellen igen? Här kan du skapa en länk till den, så du slipper ställa in allt på nytt. Tabellen uppdateras löpande och du bestämmer själv hur nya tidsperioder läggs in.",
           "radio_legend": "Val av nya tidsperioder",
           "period_options": {
-            "selected": "Lägg inte till nya (tabellen visar samma tidsperioder som du valt nu)",
-            "from": "Lägg till nya (nya tidsperioder läggs till de du har valt nu)",
-            "top": "Lägg till nya men behåll samma antal (när en ny tidsperiod läggs till tas den äldsta bort)"
+            "selected": "Lägg inte till nya tidsperioder – jag vill ha de jag har valt nu",
+            "from": "Lägg till alla nya tidsperioder",
+            "top": "Lägg till nya tidsperioder, men behåll samma antal (när en ny tidsperiod läggs till tas den äldsta bort)"
           },
           "create_button": "Skapa länk",
           "copy_button": "Kopiera länk",
@@ -258,7 +258,7 @@
         },
         "api": {
           "title": "API",
-          "description": "Här kan du hämta API-frågan för tabellen du tagit ut. Använd GET om frågan är liten (under ca 2 100 tecken) och POST om frågan är stor och mer detaljerad.",
+          "description": "Här hittar du API-frågan för tabellen. Använd GET för kortare frågor (under ca 2 100 tecken) och POST om frågan är lång och mer detaljerad.",
           "query": "API-uttag",
           "link_text": "Läs mer om att använda API:et",
           "link_url": "https://www.pxtools.net/PxWebApi/documentation/user-guide/",
