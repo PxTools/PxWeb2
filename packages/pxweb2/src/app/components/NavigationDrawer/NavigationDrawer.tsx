@@ -31,7 +31,6 @@ export const NavigationDrawer = forwardRef<
 
   const isLargeScreen = isXXLargeDesktop === true && isXLargeDesktop === true;
 
-
   React.useEffect(() => {
     addModal('NavigationDrawer', () => {
       onClose(true, view);
@@ -72,90 +71,91 @@ export const NavigationDrawer = forwardRef<
   }, [openedWithKeyboard, ref]);
 
   function getFocusableElements(container: HTMLElement | null) {
-  if (!container) {return []};
-  return Array.from(
-    container.querySelectorAll<HTMLElement>(
-      'a[href], button:not([disabled]), textarea, input[type="text"], input[type="radio"], input[type="checkbox"], select, [tabindex]:not([tabindex="-1"])'
-    )
-  ).filter(el => !el.hasAttribute('disabled') && !el.getAttribute('aria-hidden'));
-}
-
-const drawerRef = React.useRef<HTMLDivElement>(null);
-
-React.useEffect(() => {
-  if (!isLargeScreen) {
-    const handleTabTrap = (e: KeyboardEvent) => {
-      if (e.key !== 'Tab') {return};
-      const focusableEls = getFocusableElements(drawerRef.current);
-      if (focusableEls.length === 0) {return};
-
-      const firstEl = focusableEls[0];
-      const lastEl = focusableEls[focusableEls.length - 1];
-
-      if (e.shiftKey && document.activeElement === firstEl) {
-        e.preventDefault();
-        lastEl.focus();
-      } else if (!e.shiftKey && document.activeElement === lastEl) {
-        e.preventDefault();
-        firstEl.focus();
-      }
-    };
-
-    drawerRef.current?.addEventListener('keydown', handleTabTrap);
-    return () => {
-      drawerRef.current?.removeEventListener('keydown', handleTabTrap);
-    };
+    if (!container) {
+      return [];
+    }
+    return Array.from(
+      container.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), textarea, input[type="text"], input[type="radio"], input[type="checkbox"], select, [tabindex]:not([tabindex="-1"])',
+      ),
+    ).filter(
+      (el) => !el.hasAttribute('disabled') && !el.getAttribute('aria-hidden'),
+    );
   }
-}, [isLargeScreen]);
 
+  const drawerRef = React.useRef<HTMLDivElement>(null);
 
+  React.useEffect(() => {
+    if (!isLargeScreen) {
+      const handleTabTrap = (e: KeyboardEvent) => {
+        if (e.key !== 'Tab') {
+          return;
+        }
+        const focusableEls = getFocusableElements(drawerRef.current);
+        if (focusableEls.length === 0) {
+          return;
+        }
 
-return (
-  <>
-    <div
-      onClick={() => onClose(false, view)}
-      className={styles.backdrop}
-    ></div>
-    <div
-      ref={drawerRef}
-      className={cl(styles.navigationDrawer, styles.fadein, {
-        [styles.skipToMainContentVisible]: skipToMainFocused,
-      })}
-      role="region"
-      aria-label={heading}
-      tabIndex={-1}
-    >
-      {/* Focus trap sentinels */}
-      {!isLargeScreen && (
-        <div tabIndex={0} aria-hidden="true" />
-      )}
-      <div className={styles.heading}>
-        <Heading level="2" size="medium">
-          {heading}
-        </Heading>
-        <button
-          ref={ref}
-          type="button"
-          onClick={() => onClose(false, view)}
-          onKeyDown={handleKeyDown}
-          className={cl(styles.hideMenu, styles.clickable)}
-        >
-          <span className={styles.hideIconWrapper}>
-            <Icon iconName={hideIcon} className="" />
-          </span>
-          <Label size="medium" className={styles.clickable}>
-            {t('presentation_page.side_menu.hide')}
-          </Label>
-        </button>
+        const firstEl = focusableEls[0];
+        const lastEl = focusableEls[focusableEls.length - 1];
+
+        if (e.shiftKey && document.activeElement === firstEl) {
+          e.preventDefault();
+          lastEl.focus();
+        } else if (!e.shiftKey && document.activeElement === lastEl) {
+          e.preventDefault();
+          firstEl.focus();
+        }
+      };
+
+      drawerRef.current?.addEventListener('keydown', handleTabTrap);
+      return () => {
+        drawerRef.current?.removeEventListener('keydown', handleTabTrap);
+      };
+    }
+  }, [isLargeScreen]);
+
+  return (
+    <>
+      <div
+        onClick={() => onClose(false, view)}
+        className={styles.backdrop}
+      ></div>
+      <div
+        ref={drawerRef}
+        className={cl(styles.navigationDrawer, styles.fadein, {
+          [styles.skipToMainContentVisible]: skipToMainFocused,
+        })}
+        role="region"
+        aria-label={heading}
+        tabIndex={-1}
+      >
+        {/* Focus trap sentinels */}
+        {!isLargeScreen && <div tabIndex={0} aria-hidden="true" />}
+        <div className={styles.heading}>
+          <Heading level="2" size="medium">
+            {heading}
+          </Heading>
+          <button
+            ref={ref}
+            type="button"
+            onClick={() => onClose(false, view)}
+            onKeyDown={handleKeyDown}
+            className={cl(styles.hideMenu, styles.clickable)}
+          >
+            <span className={styles.hideIconWrapper}>
+              <Icon iconName={hideIcon} className="" />
+            </span>
+            <Label size="medium" className={styles.clickable}>
+              {t('presentation_page.side_menu.hide')}
+            </Label>
+          </button>
+        </div>
+        {children}
+        {!isLargeScreen && <div tabIndex={0} aria-hidden="true" />}
       </div>
-      {children}
-      {!isLargeScreen && (
-        <div tabIndex={0} aria-hidden="true" />
-      )}
-    </div>
-  </>
-);
-
+    </>
+  );
 });
 
 export default NavigationDrawer;
