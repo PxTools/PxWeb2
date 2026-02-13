@@ -3,18 +3,25 @@ import { describe, it, beforeEach, vi, expect } from 'vitest';
 import '@testing-library/jest-dom';
 import { NavigationDrawer } from './NavigationDrawer';
 
-vi.mock('i18next', () => ({ dir: () => 'ltr' }));
+vi.mock('i18next', () => ({
+  default: { dir: () => 'ltr' },
+  dir: () => 'ltr'
+}));
 vi.mock('react-i18next', () => ({
-  useTranslation: () => ({ t: (s: string) => s }),
+  useTranslation: () => ({ t: (s: any) => s })
 }));
-vi.mock('../../context/useAccessibility', () => () => ({
-  addModal: vi.fn(),
-  removeModal: vi.fn(),
+vi.mock('../../context/useAccessibility', () => ({
+  default: () => ({
+    addModal: vi.fn(),
+    removeModal: vi.fn(),
+  }),
 }));
-vi.mock('../../context/useApp', () => () => ({
-  skipToMainFocused: false,
-  isXLargeDesktop: false,
-  isXXLargeDesktop: false,
+vi.mock('../../context/useApp', () => ({
+  default: () => ({
+    skipToMainFocused: false,
+    isXLargeDesktop: false,
+    isXXLargeDesktop: false,
+  }),
 }));
 
 describe('NavigationDrawer', () => {
@@ -40,10 +47,7 @@ describe('NavigationDrawer', () => {
 
   it('calls onClose when backdrop is clicked', () => {
     render(<NavigationDrawer {...defaultProps} />);
-    fireEvent.click(
-      screen.getByRole('presentation', { hidden: true }) ||
-        screen.getByText('', { selector: 'div' }),
-    );
+    fireEvent.click(screen.getByTestId('drawer-backdrop'));
     expect(defaultProps.onClose).toHaveBeenCalledWith(false, 'selection');
   });
 
