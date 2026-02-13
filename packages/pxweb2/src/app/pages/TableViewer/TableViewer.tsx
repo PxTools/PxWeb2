@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, type RefObject } from 'react';
 import { useParams } from 'react-router';
 import cl from 'clsx';
 
@@ -37,12 +37,12 @@ export function TableViewer() {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const navigationBarRef = useRef<{
-    selection: HTMLButtonElement;
-    view: HTMLButtonElement;
-    edit: HTMLButtonElement;
-    save: HTMLButtonElement;
-    help: HTMLButtonElement;
-  }>(null);
+    selection: RefObject<HTMLButtonElement | null>;
+    view: RefObject<HTMLButtonElement | null>;
+    edit: RefObject<HTMLButtonElement | null>;
+    save: RefObject<HTMLButtonElement | null>;
+    help: RefObject<HTMLButtonElement | null>;
+  } | null>(null);
 
   const hideMenuRef = useRef<HTMLButtonElement>(null);
   const skipToMainRef = useRef<HTMLDivElement>(null);
@@ -60,47 +60,47 @@ export function TableViewer() {
     let item = null;
 
     if (selectedNavigationView === 'selection') {
-      item = navigationBarRef.current.selection;
+      item = navigationBarRef.current.selection.current;
       accessibility.addFocusOverride(
         'selectionButton',
-        navigationBarRef.current.selection,
+        navigationBarRef.current.selection.current!,
         undefined,
         hideMenuRef.current,
       );
     }
 
     if (selectedNavigationView === 'view') {
-      item = navigationBarRef.current.view;
+      item = navigationBarRef.current.view.current;
       accessibility.addFocusOverride(
         'viewButton',
-        navigationBarRef.current.view,
+        navigationBarRef.current.view.current!,
         undefined,
         hideMenuRef.current,
       );
     }
     if (selectedNavigationView === 'edit') {
-      item = navigationBarRef.current.edit;
+      item = navigationBarRef.current.edit.current;
       accessibility.addFocusOverride(
         'editButton',
-        navigationBarRef.current.edit,
+        navigationBarRef.current.edit.current!,
         undefined,
         hideMenuRef.current,
       );
     }
     if (selectedNavigationView === 'save') {
-      item = navigationBarRef.current.save;
+      item = navigationBarRef.current.save.current;
       accessibility.addFocusOverride(
         'saveButton',
-        navigationBarRef.current.save,
+        navigationBarRef.current.save.current!,
         undefined,
         hideMenuRef.current,
       );
     }
     if (selectedNavigationView === 'help') {
-      item = navigationBarRef.current.help;
+      item = navigationBarRef.current.help.current;
       accessibility.addFocusOverride(
         'helpButton',
-        navigationBarRef.current.help,
+        navigationBarRef.current.help.current!,
         undefined,
         hideMenuRef.current,
       );
@@ -142,12 +142,10 @@ export function TableViewer() {
   ) => {
     if (close && keyboard) {
       if (newSelectedNavView !== 'none') {
-        window.setTimeout(() => {
+        globalThis.setTimeout(() => {
           // Sorry about this hack, can't justify spending more time on this
-          navigationBarRef.current?.[
-            newSelectedNavView as keyof typeof navigationBarRef.current
-          ].focus();
-          navigationBarRef.current?.[newSelectedNavView].focus();
+          navigationBarRef.current?.[newSelectedNavView].current?.focus();
+          navigationBarRef.current?.[newSelectedNavView].current?.focus();
         }, 100);
       }
       setSelectedNavigationView('none');
@@ -215,7 +213,7 @@ export function TableViewer() {
             hideMenuRef={hideMenuRef}
           />
           <div
-            ref={!isSmallScreen ? outerContainerRef : undefined}
+            ref={isSmallScreen ? undefined : outerContainerRef}
             className={cl(styles.contentAndFooterContainer, {
               [styles.expanded]: isExpanded,
             })}

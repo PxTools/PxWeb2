@@ -171,7 +171,10 @@ function DefaultSelect({
             </option>
           ))}
         </select>
-        <Icon iconName="ChevronDown" className={cl(classes.iconColor)}></Icon>
+        <Icon
+          iconName="ChevronDown"
+          className={cl(classes.iconColor, classes.iconPositionAbsolute)}
+        ></Icon>
       </div>
     </div>
   );
@@ -269,7 +272,7 @@ function VariableBoxSelect({
   const programmaticFocusRef = useRef<boolean>(false);
 
   useEffect(() => {
-    if (!isModalOpen) {
+    if (isModalOpen === false) {
       removeModal('VariableBoxSelect');
     } else {
       addModal('VariableBoxSelect', () => {

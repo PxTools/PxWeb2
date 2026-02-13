@@ -132,6 +132,10 @@
     }
   },
   "presentation_page": {
+    "common": {
+      "table_title_by": "etter",
+      "table_title_and": "og"
+    },
     "side_menu": {
       "aria_label_tool_side_menu": "Verktøymeny for tabell",
       "hide": "Skjul",
@@ -275,7 +279,6 @@
       "shrink_view": "Minimer visning",
       "last_updated": "Oppdatert",
       "show_details": "Vis detaljer",
-      "dynamic_table_title": "{{table_content_type}} etter {{table_content_label_first_part}} og {{table_content_label_last_part}}",
       "table": {
         "warnings": {
           "missing_mandatory": {

@@ -1,4 +1,4 @@
-import { useEffect, useContext, useState, useRef } from 'react';
+import { useEffect, useContext, useState, useRef, useMemo } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 import { useNavigate } from 'react-router';
 import type { TFunction } from 'i18next';
@@ -58,6 +58,7 @@ import {
   createBreadcrumbItems,
   BreadcrumbItemsParm,
 } from '../../util/createBreadcrumbItems';
+import { createTableListSEO } from '../../util/seo/tableListSEO';
 
 const StartPage = () => {
   const { t, i18n } = useTranslation();
@@ -70,9 +71,10 @@ const StartPage = () => {
   const paginationCount = 15;
   const isSmallScreen = isTablet === true || isMobile === true;
   const topicIconComponents = useTopicIcons();
-  const hasUrlParams =
-    typeof window !== 'undefined' &&
-    new URLSearchParams(window.location.search).toString().length > 0;
+  const hasUrlParams = globalThis.window
+    ? new URLSearchParams(globalThis.window.location.search).toString().length >
+      0
+    : false;
 
   const [isFilterOverlayOpen, setIsFilterOverlayOpen] = useState(false);
   const [visibleCount, setVisibleCount] = useState(paginationCount);
@@ -419,8 +421,7 @@ const StartPage = () => {
 
       let lastPeriodString: string | undefined = table.lastPeriod?.slice(0, 4);
       if (
-        table.timeUnit &&
-        table.timeUnit.toLowerCase() === 'other' &&
+        table.timeUnit?.toLowerCase() === 'other' &&
         table.lastPeriod?.slice(4, 5) === '-'
       ) {
         lastPeriodString = table.lastPeriod?.slice(5, 9);
@@ -709,45 +710,9 @@ const StartPage = () => {
     );
   };
 
-  const renderTableListSEO = () => {
-    return (
-      <nav
-        aria-hidden="true"
-        style={{
-          position: 'absolute',
-          left: '-9999px',
-          width: '1px',
-          height: '1px',
-          overflow: 'hidden',
-        }}
-      >
-        <h2>TableList(SEO)</h2>
-        <ul>
-          {state.availableTables.map((table) => {
-            const config = getConfig();
-            const language = i18n.language;
-            const tablePath = getLanguagePath(
-              `/table/${table.id}`,
-              language,
-              config.language.supportedLanguages,
-              config.language.defaultLanguage,
-              config.language.showDefaultLanguageInPath,
-              config.baseApplicationPath,
-              config.language.positionInPath,
-            );
-
-            return (
-              <li key={table.id}>
-                <a href={tablePath} tabIndex={-1}>
-                  {table.label}
-                </a>
-              </li>
-            );
-          })}
-        </ul>
-      </nav>
-    );
-  };
+  const renderMemoizedTableListSEO = useMemo(() => {
+    return createTableListSEO(i18n.language, state.availableTables);
+  }, [i18n.language, state.availableTables]);
 
   const renderBreadCrumb = () => {
     if (showBreadCrumb) {
@@ -920,7 +885,7 @@ const StartPage = () => {
               </div>
             </div>
           </div>
-          {renderTableListSEO()}
+          {state.availableTables.length > 0 && renderMemoizedTableListSEO}
         </main>
         <div className={cl(styles.footerContent)}>
           <div className={cl(styles.container)}>

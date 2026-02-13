@@ -101,6 +101,10 @@ jobs:
         id: branch-names
         uses: tj-actions/branch-names@v9
 
+      - name: Prepare deployment with different configuration
+        run: |
+          sed -i 's|useDynamicContentInTitle: false,|useDynamicContentInTitle: true,|' packages/pxweb2/dist/config/config.js
+
       - name: Deploy
         id: deploy
         uses: cloudflare/wrangler-action@v3
