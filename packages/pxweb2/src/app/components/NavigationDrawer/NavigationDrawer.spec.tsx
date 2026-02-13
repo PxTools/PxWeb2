@@ -81,7 +81,7 @@ describe('NavigationDrawer', () => {
         {...defaultProps}
         openedWithKeyboard={true}
         ref={ref}
-      />
+      />,
     );
     const button = screen.getByRole('button');
     await waitFor(() => {
