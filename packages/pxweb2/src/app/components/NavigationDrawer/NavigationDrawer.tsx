@@ -43,7 +43,7 @@ export const NavigationDrawer = forwardRef<
   const isXLargeDesktop = useApp().isXLargeDesktop;
   const isXXLargeDesktop = useApp().isXXLargeDesktop;
 
-  const isLargeScreen = isXXLargeDesktop === true && isXLargeDesktop === true;
+  const isLargeScreen = isXXLargeDesktop === true || isXLargeDesktop === true;
 
   React.useEffect(() => {
     addModal('NavigationDrawer', () => {
@@ -136,8 +136,6 @@ export const NavigationDrawer = forwardRef<
         aria-label={heading}
         tabIndex={-1}
       >
-        {/* Focus trap sentinels */}
-        {!isLargeScreen && <div tabIndex={0} aria-hidden="true" />}
         <div className={styles.heading}>
           <Heading level="2" size="medium">
             {heading}
@@ -158,7 +156,6 @@ export const NavigationDrawer = forwardRef<
           </button>
         </div>
         {children}
-        {!isLargeScreen && <div tabIndex={0} aria-hidden="true" />}
       </div>
     </>
   );
