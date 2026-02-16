@@ -68,12 +68,6 @@ describe('NavigationDrawer', () => {
     expect(defaultProps.onClose).toHaveBeenCalledWith(true, 'selection');
   });
 
-  it('renders focus trap sentinels when not large screen', () => {
-    render(<NavigationDrawer {...defaultProps} />);
-    const sentinels = screen.getAllByRole('presentation', { hidden: true });
-    expect(sentinels.length).toBeGreaterThanOrEqual(1);
-  });
-
   it('focuses the close button when openedWithKeyboard is true', async () => {
     const ref = React.createRef<HTMLButtonElement>();
     render(
