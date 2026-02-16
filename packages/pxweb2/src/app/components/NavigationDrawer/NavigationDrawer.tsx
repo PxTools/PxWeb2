@@ -8,6 +8,20 @@ import i18next from 'i18next';
 import useAccessibility from '../../context/useAccessibility';
 import useApp from '../../context/useApp';
 
+// Utility to get all focusable elements within a container
+function getFocusableElements(container: HTMLElement | null) {
+  if (!container) {
+    return [];
+  }
+  return Array.from(
+    container.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), textarea, input[type="text"], input[type="radio"], input[type="checkbox"], select, [tabindex]:not([tabindex="-1"])',
+    ),
+  ).filter(
+    (el) => !el.hasAttribute('disabled') && !el.getAttribute('aria-hidden'),
+  );
+}
+
 export interface NavigationDrawerProps {
   children: React.ReactNode;
   heading: string;
@@ -70,19 +84,6 @@ export const NavigationDrawer = forwardRef<
     }
   }, [openedWithKeyboard, ref]);
 
-  function getFocusableElements(container: HTMLElement | null) {
-    if (!container) {
-      return [];
-    }
-    return Array.from(
-      container.querySelectorAll<HTMLElement>(
-        'a[href], button:not([disabled]), textarea, input[type="text"], input[type="radio"], input[type="checkbox"], select, [tabindex]:not([tabindex="-1"])',
-      ),
-    ).filter(
-      (el) => !el.hasAttribute('disabled') && !el.getAttribute('aria-hidden'),
-    );
-  }
-
   const drawerRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
@@ -97,14 +98,18 @@ export const NavigationDrawer = forwardRef<
         }
 
         const firstEl = focusableEls[0];
-        const lastEl = focusableEls[focusableEls.length - 1];
+        const lastEl = focusableEls.at(-1);
 
         if (e.shiftKey && document.activeElement === firstEl) {
           e.preventDefault();
-          lastEl.focus();
+          if (lastEl) {
+            lastEl.focus();
+          }
         } else if (!e.shiftKey && document.activeElement === lastEl) {
           e.preventDefault();
-          firstEl.focus();
+          if (firstEl) {
+            firstEl.focus();
+          }
         }
       };
 
