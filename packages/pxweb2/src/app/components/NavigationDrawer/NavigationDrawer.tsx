@@ -138,7 +138,7 @@ export const NavigationDrawer = forwardRef<
       >
         {/* Focus trap sentinels */}
         {!isLargeScreen && (
-          <div tabIndex={0} aria-hidden="true" role="presentation" />
+          <div tabIndex={0} aria-hidden="true" />
         )}
         <div className={styles.heading}>
           <Heading level="2" size="medium">
@@ -161,7 +161,7 @@ export const NavigationDrawer = forwardRef<
         </div>
         {children}
         {!isLargeScreen && (
-          <div tabIndex={0} aria-hidden="true" role="presentation" />
+          <div tabIndex={0} aria-hidden="true" />
         )}
       </div>
     </>
