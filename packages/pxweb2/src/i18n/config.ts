@@ -48,6 +48,7 @@ const initPromise = i18n
       lookupFromPathIndex: lookingForLanguagePos,
       caches: [], // Do not cache the language in local storage or cookies.
     },
+    showSupportNotice: false, // Disable the Locize support notice in the console.
   });
 
 i18n.services.formatter?.add('pxNumber', pxNumber);
