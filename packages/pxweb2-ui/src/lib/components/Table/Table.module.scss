@@ -256,3 +256,74 @@
     border: none;
   }
 }
+
+.virtualTable {
+  position: relative;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: var(--px-border-radius-medium);
+  border: 1px solid var(--px-color-border-default);
+  color: var(--px-color-text-default);
+  background: var(--px-color-surface-default);
+}
+
+.virtualHeaderRowGroup {
+  display: block;
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background: var(--px-color-surface-default);
+  border-bottom: 2px solid var(--px-color-border-default);
+}
+
+.virtualBodyRowGroup {
+  display: block;
+  position: relative;
+}
+
+.virtualRow {
+  display: block;
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+
+.virtualCell {
+  position: absolute;
+  top: 0;
+  display: flex;
+  align-items: center;
+  border-top: 1px solid var(--px-color-border-default);
+  border-left: 1px solid var(--px-color-border-default);
+  padding: 8px 12px;
+  font-variant-numeric: tabular-nums;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.virtualHeaderRowGroup .virtualRow {
+  position: relative;
+}
+
+.virtualColumnHeader {
+  justify-content: flex-end;
+  background: var(--px-color-surface-moderate);
+  font-family: PxWeb-font, sans-serif;
+  font-weight: 700;
+}
+
+.virtualRowHeaderCell {
+  left: 0;
+  justify-content: flex-start;
+  background: var(--px-color-surface-moderate);
+  font-family: PxWeb-font, sans-serif;
+  font-weight: 700;
+  z-index: 2;
+  border-left: none;
+}
+
+.virtualDataCell {
+  justify-content: flex-end;
+  background: var(--px-color-surface-default);
+}

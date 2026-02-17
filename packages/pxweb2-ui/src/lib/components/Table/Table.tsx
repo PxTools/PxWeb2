@@ -1,5 +1,6 @@
-import { memo, useMemo } from 'react';
+import { memo, useEffect, useMemo, useRef } from 'react';
 import cl from 'clsx';
+import { useVirtualizer } from '@tanstack/react-virtual';
 
 import classes from './Table.module.scss';
 import { PxTable } from '../../shared-types/pxTable';
@@ -56,11 +57,49 @@ interface CreateRowMobileParams {
  */
 type DataCellCodes = DataCellMeta[];
 
+type LeafDimension = {
+  key: string;
+  label: string;
+  codesByPosition: (string | undefined)[];
+};
+
+const VIRTUALIZATION_CELL_THRESHOLD = 800;
+
+export function shouldUseDesktopVirtualization(
+  rowCount: number,
+  columnCount: number,
+  hasViewport: boolean,
+): boolean {
+  if (!hasViewport) {
+    return false;
+  }
+
+  return rowCount * columnCount >= VIRTUALIZATION_CELL_THRESHOLD;
+}
+
 export const Table = memo(function Table({
   pxtable,
   isMobile,
   className = '',
 }: TableProps) {
+  if (isMobile) {
+    return (
+      <LegacyTable
+        pxtable={pxtable}
+        isMobile={isMobile}
+        className={className}
+      />
+    );
+  }
+
+  return <VirtualizedDesktopTable pxtable={pxtable} className={className} />;
+});
+
+function LegacyTable({
+  pxtable,
+  isMobile,
+  className = '',
+}: Readonly<TableProps>) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
 
   const tableMeta: columnRowMeta = calculateRowAndColumnMeta(pxtable);
@@ -144,7 +183,297 @@ export const Table = memo(function Table({
       </tbody>
     </table>
   );
-});
+}
+
+function VirtualizedDesktopTable({
+  pxtable,
+  className = '',
+}: Readonly<{
+  pxtable: PxTable;
+  className?: string;
+}>) {
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const cssClasses = className.length > 0 ? ' ' + className : '';
+
+  const variableOrder = pxtable.data.variableOrder;
+
+  const rowDimensions = useMemo(
+    () =>
+      buildLeafDimensions(
+        pxtable.stub,
+        variableOrder,
+        variableOrder.length,
+        ' / ',
+      ),
+    [pxtable.stub, variableOrder],
+  );
+
+  const columnDimensions = useMemo(
+    () =>
+      buildLeafDimensions(
+        pxtable.heading,
+        variableOrder,
+        variableOrder.length,
+        ' · ',
+      ),
+    [pxtable.heading, variableOrder],
+  );
+
+  const scrollElement = rootRef.current?.parentElement as HTMLElement | null;
+  const cellCacheRef = useRef<Map<string, string>>(new Map());
+
+  const rowVirtualizer = useVirtualizer({
+    count: rowDimensions.length,
+    getScrollElement: () => scrollElement,
+    estimateSize: () => 36,
+    overscan: 10,
+  });
+
+  const columnVirtualizer = useVirtualizer({
+    horizontal: true,
+    count: columnDimensions.length,
+    getScrollElement: () => scrollElement,
+    estimateSize: () => 112,
+    overscan: 4,
+  });
+
+  const virtualRows = rowVirtualizer.getVirtualItems();
+  const virtualColumns = columnVirtualizer.getVirtualItems();
+
+  const hasViewport = Boolean(
+    scrollElement &&
+    scrollElement.clientWidth > 0 &&
+    scrollElement.clientHeight > 0,
+  );
+  const shouldVirtualize = shouldUseDesktopVirtualization(
+    rowDimensions.length,
+    columnDimensions.length,
+    hasViewport,
+  );
+
+  const pivotSignature = useMemo(
+    () =>
+      `${pxtable.stub.map((variable) => variable.id).join('|')}::${pxtable.heading
+        .map((variable) => variable.id)
+        .join('|')}::${pxtable.data.variableOrder.join('|')}`,
+    [pxtable.stub, pxtable.heading, pxtable.data.variableOrder],
+  );
+
+  useEffect(() => {
+    cellCacheRef.current.clear();
+  }, [pivotSignature]);
+
+  if (!shouldVirtualize) {
+    return (
+      <LegacyTable pxtable={pxtable} isMobile={false} className={className} />
+    );
+  }
+
+  const rowHeaderWidth = 260;
+  const headerHeight = 44;
+  const totalBodyHeight = rowVirtualizer.getTotalSize();
+  const totalDataWidth = columnVirtualizer.getTotalSize();
+  const totalWidth = rowHeaderWidth + totalDataWidth;
+
+  return (
+    <div
+      ref={rootRef}
+      style={{
+        width: totalWidth,
+        minWidth: '100%',
+      }}
+    >
+      <table
+        className={cl(
+          classes.virtualTable,
+          classes[`bodyshort-medium`],
+          cssClasses,
+        )}
+        aria-label={pxtable.metadata.label}
+      >
+        <thead className={classes.virtualHeaderRowGroup}>
+          <tr className={classes.virtualRow}>
+            <th
+              scope="col"
+              className={cl(classes.virtualCell, classes.virtualRowHeaderCell)}
+              style={{
+                width: rowHeaderWidth,
+                height: headerHeight,
+              }}
+            >
+              Row
+            </th>
+
+            {virtualColumns.map((virtualColumn) => {
+              const column = columnDimensions[virtualColumn.index];
+
+              return (
+                <th
+                  scope="col"
+                  key={column.key}
+                  className={cl(
+                    classes.virtualCell,
+                    classes.virtualColumnHeader,
+                  )}
+                  style={{
+                    width: virtualColumn.size,
+                    height: headerHeight,
+                    transform: `translateX(${rowHeaderWidth + virtualColumn.start}px)`,
+                  }}
+                >
+                  {column.label}
+                </th>
+              );
+            })}
+          </tr>
+        </thead>
+
+        <tbody
+          className={classes.virtualBodyRowGroup}
+          style={{ height: totalBodyHeight }}
+        >
+          {virtualRows.map((virtualRow) => {
+            const row = rowDimensions[virtualRow.index];
+
+            return (
+              <tr
+                key={row.key}
+                className={classes.virtualRow}
+                style={{
+                  height: virtualRow.size,
+                  transform: `translateY(${virtualRow.start}px)`,
+                }}
+              >
+                <th
+                  scope="row"
+                  className={cl(
+                    classes.virtualCell,
+                    classes.virtualRowHeaderCell,
+                  )}
+                  style={{
+                    width: rowHeaderWidth,
+                    height: virtualRow.size,
+                  }}
+                >
+                  {row.label}
+                </th>
+
+                {virtualColumns.map((virtualColumn) => {
+                  const column = columnDimensions[virtualColumn.index];
+                  const cacheKey = `${row.key}|${column.key}`;
+                  let formattedValue = cellCacheRef.current.get(cacheKey);
+
+                  if (formattedValue === undefined) {
+                    formattedValue = getVirtualCellValue(
+                      pxtable,
+                      row.codesByPosition,
+                      column.codesByPosition,
+                      variableOrder.length,
+                    );
+                    cellCacheRef.current.set(cacheKey, formattedValue);
+                  }
+
+                  return (
+                    <td
+                      key={cacheKey}
+                      className={cl(
+                        classes.virtualCell,
+                        classes.virtualDataCell,
+                      )}
+                      style={{
+                        width: virtualColumn.size,
+                        height: virtualRow.size,
+                        transform: `translateX(${rowHeaderWidth + virtualColumn.start}px)`,
+                      }}
+                    >
+                      {formattedValue}
+                    </td>
+                  );
+                })}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function buildLeafDimensions(
+  variables: Variable[],
+  variableOrder: string[],
+  variableOrderLength: number,
+  labelDelimiter: string,
+): LeafDimension[] {
+  if (variables.length === 0) {
+    return [
+      {
+        key: '__root__',
+        label: '',
+        codesByPosition: new Array(variableOrderLength),
+      },
+    ];
+  }
+
+  const combinations: LeafDimension[] = [];
+
+  function walk(
+    variableIndex: number,
+    labels: string[],
+    parts: string[],
+    codesByPosition: (string | undefined)[],
+  ) {
+    const variable = variables[variableIndex];
+    const varPosition = variableOrder.indexOf(variable.id);
+
+    for (const value of variable.values) {
+      labels.push(value.label);
+      parts.push(`${variable.id}:${value.code}`);
+
+      const previousCode =
+        varPosition >= 0 ? codesByPosition[varPosition] : undefined;
+      if (varPosition >= 0) {
+        codesByPosition[varPosition] = value.code;
+      }
+
+      if (variableIndex === variables.length - 1) {
+        const key = parts.join('|');
+        combinations.push({
+          key,
+          label: labels.join(labelDelimiter),
+          codesByPosition: [...codesByPosition],
+        });
+      } else {
+        walk(variableIndex + 1, labels, parts, codesByPosition);
+      }
+
+      if (varPosition >= 0) {
+        codesByPosition[varPosition] = previousCode;
+      }
+      parts.pop();
+      labels.pop();
+    }
+  }
+
+  walk(0, [], [], new Array(variableOrderLength));
+
+  return combinations;
+}
+
+function getVirtualCellValue(
+  pxtable: PxTable,
+  rowCodesByPosition: (string | undefined)[],
+  columnCodesByPosition: (string | undefined)[],
+  variableOrderLength: number,
+): string {
+  const dimensions: string[] = new Array(variableOrderLength);
+
+  for (let i = 0; i < variableOrderLength; i++) {
+    dimensions[i] = rowCodesByPosition[i] ?? columnCodesByPosition[i] ?? '';
+  }
+
+  return getPxTableData(pxtable.data.cube, dimensions)?.formattedValue ?? '';
+}
 
 /**
  * Creates the heading rows for the table.

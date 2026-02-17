@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 
-import Table from './Table';
+import Table, { shouldUseDesktopVirtualization } from './Table';
 import { pxTable } from './testData';
 
 describe('Table', () => {
@@ -44,5 +44,14 @@ describe('Table', () => {
       }
     });
     expect(found).toBe(false);
+  });
+
+  it('should use virtualization only above threshold when viewport exists', () => {
+    expect(shouldUseDesktopVirtualization(20, 20, true)).toBe(false);
+    expect(shouldUseDesktopVirtualization(40, 25, true)).toBe(true);
+  });
+
+  it('should not use virtualization without viewport', () => {
+    expect(shouldUseDesktopVirtualization(1000, 1000, false)).toBe(false);
   });
 });
