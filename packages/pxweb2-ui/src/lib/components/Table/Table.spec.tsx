@@ -134,4 +134,16 @@ describe('Table', () => {
 
     expect(rowHeaderTexts.slice(0, 6)).toEqual(['x', 'a', 'b', 'y', 'a', 'b']);
   });
+
+  it('should render top-left virtualized header corner as td with correct rowSpan', () => {
+    const table = createVirtualizedOrderTestTable();
+    const { baseElement } = render(<Table pxtable={table} isMobile={false} />);
+
+    const topLeftHeaderCell = baseElement.querySelector('thead tr td');
+
+    expect(topLeftHeaderCell?.tagName).toBe('TD');
+    expect(topLeftHeaderCell?.getAttribute('rowspan')).toBe(
+      String(table.heading.length),
+    );
+  });
 });

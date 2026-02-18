@@ -418,6 +418,8 @@ function VirtualizedDesktopTable({
     virtualRowEntries.length,
     columnDimensions.length,
   );
+  const headerDimensionCount = Math.max(pxtable.heading.length, 1);
+  const headerGroupHeight = headerHeight * headerDimensionCount;
 
   const pivotSignature = useMemo(
     () =>
@@ -468,7 +470,7 @@ function VirtualizedDesktopTable({
               >
                 {hasStub && headingLevel === 0 && (
                   <td
-                    rowSpan={pxtable.heading.length}
+                    rowSpan={headerDimensionCount}
                     className={cl(
                       classes.virtualCell,
                       classes.virtualRowHeaderCell,
@@ -476,7 +478,7 @@ function VirtualizedDesktopTable({
                     )}
                     style={{
                       width: rowHeaderWidth,
-                      height: headerHeight,
+                      height: headerGroupHeight,
                     }}
                   />
                 )}
@@ -488,6 +490,7 @@ function VirtualizedDesktopTable({
             <tr className={classes.virtualRow} style={{ height: headerHeight }}>
               {hasStub && (
                 <td
+                  rowSpan={headerDimensionCount}
                   className={cl(
                     classes.virtualCell,
                     classes.virtualRowHeaderCell,
@@ -495,7 +498,7 @@ function VirtualizedDesktopTable({
                   )}
                   style={{
                     width: rowHeaderWidth,
-                    height: headerHeight,
+                    height: headerGroupHeight,
                   }}
                 />
               )}
