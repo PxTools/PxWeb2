@@ -330,7 +330,9 @@ function VirtualizedDesktopTable({
                   ? `${variable.label} ${value.label}`
                   : undefined
               }
-              className={cl(classes.virtualCell, classes.virtualColumnHeader)}
+              className={cl(classes.virtualCell, classes.virtualColumnHeader, {
+                [classes.firstColNoStub]: !hasStub && runIndex === 0,
+              })}
               style={{
                 width: runSize,
                 height: headerHeight,
@@ -384,6 +386,7 @@ function VirtualizedDesktopTable({
       columnDimensions,
       headerHeight,
       rowHeaderWidth,
+      hasStub,
     ],
   );
 
@@ -424,6 +427,7 @@ function VirtualizedDesktopTable({
     >
       <table
         className={cl(
+          classes.table,
           classes.virtualTable,
           classes[`bodyshort-medium`],
           cssClasses,
@@ -444,6 +448,7 @@ function VirtualizedDesktopTable({
                     className={cl(
                       classes.virtualCell,
                       classes.virtualRowHeaderCell,
+                      classes.emptyTableData,
                     )}
                     style={{
                       width: rowHeaderWidth,
@@ -462,6 +467,7 @@ function VirtualizedDesktopTable({
                   className={cl(
                     classes.virtualCell,
                     classes.virtualRowHeaderCell,
+                    classes.emptyTableData,
                   )}
                   style={{
                     width: rowHeaderWidth,
@@ -480,6 +486,9 @@ function VirtualizedDesktopTable({
                     className={cl(
                       classes.virtualCell,
                       classes.virtualColumnHeader,
+                      {
+                        [classes.firstColNoStub]: !hasStub && virtualColumn.index === 0,
+                      },
                     )}
                     style={{
                       width: virtualColumn.size,
@@ -505,7 +514,9 @@ function VirtualizedDesktopTable({
             return (
               <tr
                 key={rowEntry.key}
-                className={classes.virtualRow}
+                className={cl(classes.virtualRow, {
+                  [classes.firstdim]: rowEntry.level === 0,
+                })}
                 style={{
                   height: virtualRow.size,
                   transform: `translateY(${virtualRow.start}px)`,
@@ -517,7 +528,8 @@ function VirtualizedDesktopTable({
                     className={cl(
                       classes.virtualCell,
                       classes.virtualRowHeaderCell,
-                      classes[`virtualStub-${rowEntry.level}`],
+                      classes.stub,
+                      classes[`stub-${rowEntry.level}`],
                     )}
                     style={{
                       width: rowHeaderWidth,

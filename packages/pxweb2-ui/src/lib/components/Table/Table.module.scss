@@ -325,58 +325,6 @@
   border-left: none;
 }
 
-.virtualRowHeaderLine {
-  display: block;
-  width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.virtualStub-0 {
-  padding-left: 12px;
-}
-
-.virtualStub-1 {
-  padding-left: 28px;
-}
-
-.virtualStub-2 {
-  padding-left: 44px;
-}
-
-.virtualStub-3 {
-  padding-left: 60px;
-}
-
-.virtualStub-4 {
-  padding-left: 76px;
-}
-
-.virtualStub-5 {
-  padding-left: 92px;
-}
-
-.virtualStub-6 {
-  padding-left: 108px;
-}
-
-.virtualStub-7 {
-  padding-left: 124px;
-}
-
-.virtualStub-8 {
-  padding-left: 140px;
-}
-
-.virtualStub-9 {
-  padding-left: 156px;
-}
-
-.virtualStub-10 {
-  padding-left: 172px;
-}
-
 .virtualDataCell {
   justify-content: flex-end;
   background: var(--px-color-surface-default);
