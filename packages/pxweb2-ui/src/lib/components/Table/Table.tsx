@@ -316,7 +316,9 @@ function VirtualizedDesktopTable({
           }
 
           const value =
-            currentCode === undefined ? undefined : codeToValue.get(currentCode);
+            currentCode === undefined
+              ? undefined
+              : codeToValue.get(currentCode);
 
           headerCells.push(
             <th
@@ -439,7 +441,10 @@ function VirtualizedDesktopTable({
                 {hasStub && headingLevel === 0 && (
                   <td
                     rowSpan={pxtable.heading.length}
-                    className={cl(classes.virtualCell, classes.virtualRowHeaderCell)}
+                    className={cl(
+                      classes.virtualCell,
+                      classes.virtualRowHeaderCell,
+                    )}
                     style={{
                       width: rowHeaderWidth,
                       height: headerHeight,
@@ -454,7 +459,10 @@ function VirtualizedDesktopTable({
             <tr className={classes.virtualRow} style={{ height: headerHeight }}>
               {hasStub && (
                 <td
-                  className={cl(classes.virtualCell, classes.virtualRowHeaderCell)}
+                  className={cl(
+                    classes.virtualCell,
+                    classes.virtualRowHeaderCell,
+                  )}
                   style={{
                     width: rowHeaderWidth,
                     height: headerHeight,
