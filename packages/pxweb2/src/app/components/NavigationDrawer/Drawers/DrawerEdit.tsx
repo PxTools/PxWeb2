@@ -40,7 +40,6 @@ function PivotButton({
     setIsFadingTable(true);
     setAnnounceOnNextChange(true);
     setLoadingPivotType(pivotType);
-    await new Promise((resolve) => setTimeout(resolve, 1000)); // Allow spinner to render
     try {
       await Promise.resolve(pivot(pivotType));
     } finally {
