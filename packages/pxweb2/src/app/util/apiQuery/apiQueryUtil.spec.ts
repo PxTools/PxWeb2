@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { renderHook } from '@testing-library/react';
 import { getNormalizedOutput, useApiQueryInfo } from './apiQueryUtil';
 
 // Local mock types to avoid `any`
@@ -106,7 +107,10 @@ describe('useApiQueryInfo', () => {
       },
     });
 
-    const info = useApiQueryInfo(undefined, 'jsonstat2');
+    const { result } = renderHook(() =>
+      useApiQueryInfo(undefined, 'jsonstat2'),
+    );
+    const info = result.current;
     // apiUrl is mocked to '' in setupTests, so path starts with /tables
     expect(info.postUrl).toContain('/tables/TABLE_123/data?');
     expect(info.postUrl).toContain('lang=en');
@@ -139,7 +143,8 @@ describe('useApiQueryInfo', () => {
     });
     setUseTableDataMock({ data: {} });
 
-    const info = useApiQueryInfo('no', 'excel');
+    const { result } = renderHook(() => useApiQueryInfo('no', 'excel'));
+    const info = result.current;
     expect(info.postUrl).toContain('/tables/T/data?');
     expect(info.postUrl).toContain('lang=no');
     expect(info.postUrl).toContain('outputFormat=xlsx');
