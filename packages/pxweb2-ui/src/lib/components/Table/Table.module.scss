@@ -329,3 +329,7 @@
   justify-content: flex-end;
   background: var(--px-color-surface-default);
 }
+
+.virtualBodyRowGroup .virtualRow:hover .virtualDataCell {
+  background: var(--px-color-surface-subtle);
+}
