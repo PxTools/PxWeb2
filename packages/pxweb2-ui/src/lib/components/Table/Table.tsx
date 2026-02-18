@@ -227,15 +227,39 @@ function VirtualizedDesktopTable({
       }));
     }
 
-    return rowDimensions.flatMap((leaf) =>
-      leaf.labelParts.map((label, level) => ({
-        key: `${leaf.key}::${level}`,
-        leaf,
-        level,
-        label,
-        isDataRow: level === leaf.labelParts.length - 1,
-      })),
-    );
+    const entries: VirtualRowEntry[] = [];
+    const lastSeenPrefixByLevel: (string | undefined)[] = [];
+
+    for (const leaf of rowDimensions) {
+      const pathParts = leaf.key.split('|');
+      const pathPrefixes = pathParts.map((_, index) =>
+        pathParts.slice(0, index + 1).join('|'),
+      );
+      const lastLevel = leaf.labelParts.length - 1;
+
+      for (let level = 0; level <= lastLevel; level++) {
+        const isDataRow = level === lastLevel;
+        const prefix = pathPrefixes[level] ?? `${leaf.key}::${level}`;
+
+        if (!isDataRow && lastSeenPrefixByLevel[level] === prefix) {
+          continue;
+        }
+
+        entries.push({
+          key: isDataRow ? `${leaf.key}::data` : `${prefix}::group`,
+          leaf,
+          level,
+          label: leaf.labelParts[level],
+          isDataRow,
+        });
+
+        if (!isDataRow) {
+          lastSeenPrefixByLevel[level] = prefix;
+        }
+      }
+    }
+
+    return entries;
   }, [hasStub, rowDimensions]);
 
   const columnDimensions = useMemo(
