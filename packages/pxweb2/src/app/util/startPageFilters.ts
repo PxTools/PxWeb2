@@ -415,9 +415,9 @@ export function buildSubjectToTableIdsMap(
 
 export function getVariables(allTables: Table[]) {
   const config = getConfig();
-  const exclusionList: string[] = config.variableFilterExclusionList[
-    i18n.language
-  ] ?? [''];
+  // Safely handle when variableFilterExclusionList is undefined or missing for the current language
+  const exclusionList: string[] =
+    config.variableFilterExclusionList?.[i18n.language] ?? [];
 
   const variables = new Map<string, number>();
   allTables.forEach((table) => {
