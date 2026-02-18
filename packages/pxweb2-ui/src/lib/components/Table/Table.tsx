@@ -60,7 +60,16 @@ type DataCellCodes = DataCellMeta[];
 type LeafDimension = {
   key: string;
   label: string;
+  labelParts: string[];
   codesByPosition: (string | undefined)[];
+};
+
+type VirtualRowEntry = {
+  key: string;
+  leaf: LeafDimension;
+  level: number;
+  label: string;
+  isDataRow: boolean;
 };
 
 const VIRTUALIZATION_CELL_THRESHOLD = 800;
@@ -68,12 +77,7 @@ const VIRTUALIZATION_CELL_THRESHOLD = 800;
 export function shouldUseDesktopVirtualization(
   rowCount: number,
   columnCount: number,
-  hasViewport: boolean,
 ): boolean {
-  if (!hasViewport) {
-    return false;
-  }
-
   return rowCount * columnCount >= VIRTUALIZATION_CELL_THRESHOLD;
 }
 
@@ -194,6 +198,10 @@ function VirtualizedDesktopTable({
 }>) {
   const rootRef = useRef<HTMLDivElement | null>(null);
   const cssClasses = className.length > 0 ? ' ' + className : '';
+  const hasStub = pxtable.stub.length > 0;
+  const rowHeaderWidth = hasStub ? 260 : 0;
+  const headerHeight = 44;
+  const rowHeight = 36;
 
   const variableOrder = pxtable.data.variableOrder;
 
@@ -207,6 +215,28 @@ function VirtualizedDesktopTable({
       ),
     [pxtable.stub, variableOrder],
   );
+
+  const virtualRowEntries = useMemo<VirtualRowEntry[]>(() => {
+    if (!hasStub) {
+      return rowDimensions.map((leaf) => ({
+        key: `${leaf.key}::data`,
+        leaf,
+        level: 0,
+        label: leaf.label,
+        isDataRow: true,
+      }));
+    }
+
+    return rowDimensions.flatMap((leaf) =>
+      leaf.labelParts.map((label, level) => ({
+        key: `${leaf.key}::${level}`,
+        leaf,
+        level,
+        label,
+        isDataRow: level === leaf.labelParts.length - 1,
+      })),
+    );
+  }, [hasStub, rowDimensions]);
 
   const columnDimensions = useMemo(
     () =>
@@ -223,9 +253,9 @@ function VirtualizedDesktopTable({
   const cellCacheRef = useRef<Map<string, string>>(new Map());
 
   const rowVirtualizer = useVirtualizer({
-    count: rowDimensions.length,
+    count: virtualRowEntries.length,
     getScrollElement: () => scrollElement,
-    estimateSize: () => 36,
+    estimateSize: () => rowHeight,
     overscan: 10,
   });
 
@@ -240,15 +270,124 @@ function VirtualizedDesktopTable({
   const virtualRows = rowVirtualizer.getVirtualItems();
   const virtualColumns = columnVirtualizer.getVirtualItems();
 
-  const hasViewport = Boolean(
-    scrollElement &&
-    scrollElement.clientWidth > 0 &&
-    scrollElement.clientHeight > 0,
+  const renderedRows =
+    virtualRows.length > 0
+      ? virtualRows
+      : virtualRowEntries.map((_, index) => ({
+          index,
+          start: index * rowHeight,
+          size: rowHeight,
+          key: index,
+        }));
+
+  const renderedColumns =
+    virtualColumns.length > 0
+      ? virtualColumns
+      : columnDimensions.map((_, index) => ({
+          index,
+          start: index * 112,
+          size: 112,
+          key: index,
+        }));
+
+  const headingVariablePositions = useMemo(
+    () => pxtable.heading.map((variable) => variableOrder.indexOf(variable.id)),
+    [pxtable.heading, variableOrder],
   );
+
+  const virtualHeaderRows = useMemo(
+    () =>
+      pxtable.heading.map((variable, headingLevel) => {
+        const codeToValue = new Map(
+          variable.values.map((value) => [value.code, value]),
+        );
+        const variablePosition = headingVariablePositions[headingLevel];
+        const headerCells: React.JSX.Element[] = [];
+
+        let currentCode: string | undefined;
+        let runStart = 0;
+        let runSize = 0;
+        let runColSpan = 0;
+        let runIndex = 0;
+
+        const pushRun = () => {
+          if (runColSpan === 0) {
+            return;
+          }
+
+          const value =
+            currentCode === undefined ? undefined : codeToValue.get(currentCode);
+
+          headerCells.push(
+            <th
+              scope="col"
+              key={`${variable.id}-${runIndex}-${runStart}`}
+              colSpan={runColSpan}
+              aria-label={
+                variable.type === VartypeEnum.TIME_VARIABLE && value
+                  ? `${variable.label} ${value.label}`
+                  : undefined
+              }
+              className={cl(classes.virtualCell, classes.virtualColumnHeader)}
+              style={{
+                width: runSize,
+                height: headerHeight,
+                transform: `translateX(${rowHeaderWidth + runStart}px)`,
+              }}
+            >
+              {value?.label ?? ''}
+            </th>,
+          );
+          runIndex++;
+        };
+
+        for (let i = 0; i < renderedColumns.length; i++) {
+          const virtualColumn = renderedColumns[i];
+          const column = columnDimensions[virtualColumn.index];
+          const code =
+            variablePosition >= 0
+              ? column.codesByPosition[variablePosition]
+              : undefined;
+
+          if (i === 0) {
+            currentCode = code;
+            runStart = virtualColumn.start;
+            runSize = virtualColumn.size;
+            runColSpan = 1;
+            continue;
+          }
+
+          const isContiguous = virtualColumn.start === runStart + runSize;
+          if (code === currentCode && isContiguous) {
+            runSize += virtualColumn.size;
+            runColSpan++;
+            continue;
+          }
+
+          pushRun();
+          currentCode = code;
+          runStart = virtualColumn.start;
+          runSize = virtualColumn.size;
+          runColSpan = 1;
+        }
+
+        pushRun();
+
+        return headerCells;
+      }),
+    [
+      pxtable.heading,
+      headingVariablePositions,
+      renderedColumns,
+      columnDimensions,
+      headerHeight,
+      rowHeaderWidth,
+    ],
+  );
+
   const shouldVirtualize = shouldUseDesktopVirtualization(
-    rowDimensions.length,
+    virtualRowEntries.length,
     columnDimensions.length,
-    hasViewport,
   );
 
   const pivotSignature = useMemo(
@@ -269,8 +408,6 @@ function VirtualizedDesktopTable({
     );
   }
 
-  const rowHeaderWidth = 260;
-  const headerHeight = 44;
   const totalBodyHeight = rowVirtualizer.getTotalSize();
   const totalDataWidth = columnVirtualizer.getTotalSize();
   const totalWidth = rowHeaderWidth + totalDataWidth;
@@ -292,81 +429,106 @@ function VirtualizedDesktopTable({
         aria-label={pxtable.metadata.label}
       >
         <thead className={classes.virtualHeaderRowGroup}>
-          <tr className={classes.virtualRow}>
-            <th
-              scope="col"
-              className={cl(classes.virtualCell, classes.virtualRowHeaderCell)}
-              style={{
-                width: rowHeaderWidth,
-                height: headerHeight,
-              }}
-            >
-              Row
-            </th>
+          {pxtable.heading.length > 0 ? (
+            pxtable.heading.map((_, headingLevel) => (
+              <tr
+                className={classes.virtualRow}
+                key={`header-row-${pxtable.heading[headingLevel].id}`}
+                style={{ height: headerHeight }}
+              >
+                {hasStub && headingLevel === 0 && (
+                  <td
+                    rowSpan={pxtable.heading.length}
+                    className={cl(classes.virtualCell, classes.virtualRowHeaderCell)}
+                    style={{
+                      width: rowHeaderWidth,
+                      height: headerHeight,
+                    }}
+                  />
+                )}
 
-            {virtualColumns.map((virtualColumn) => {
-              const column = columnDimensions[virtualColumn.index];
-
-              return (
-                <th
-                  scope="col"
-                  key={column.key}
-                  className={cl(
-                    classes.virtualCell,
-                    classes.virtualColumnHeader,
-                  )}
+                {virtualHeaderRows[headingLevel]}
+              </tr>
+            ))
+          ) : (
+            <tr className={classes.virtualRow} style={{ height: headerHeight }}>
+              {hasStub && (
+                <td
+                  className={cl(classes.virtualCell, classes.virtualRowHeaderCell)}
                   style={{
-                    width: virtualColumn.size,
+                    width: rowHeaderWidth,
                     height: headerHeight,
-                    transform: `translateX(${rowHeaderWidth + virtualColumn.start}px)`,
                   }}
-                >
-                  {column.label}
-                </th>
-              );
-            })}
-          </tr>
+                />
+              )}
+
+              {renderedColumns.map((virtualColumn) => {
+                const column = columnDimensions[virtualColumn.index];
+
+                return (
+                  <th
+                    scope="col"
+                    key={column.key}
+                    className={cl(
+                      classes.virtualCell,
+                      classes.virtualColumnHeader,
+                    )}
+                    style={{
+                      width: virtualColumn.size,
+                      height: headerHeight,
+                      transform: `translateX(${rowHeaderWidth + virtualColumn.start}px)`,
+                    }}
+                  >
+                    {column.label}
+                  </th>
+                );
+              })}
+            </tr>
+          )}
         </thead>
 
         <tbody
           className={classes.virtualBodyRowGroup}
           style={{ height: totalBodyHeight }}
         >
-          {virtualRows.map((virtualRow) => {
-            const row = rowDimensions[virtualRow.index];
+          {renderedRows.map((virtualRow) => {
+            const rowEntry = virtualRowEntries[virtualRow.index];
 
             return (
               <tr
-                key={row.key}
+                key={rowEntry.key}
                 className={classes.virtualRow}
                 style={{
                   height: virtualRow.size,
                   transform: `translateY(${virtualRow.start}px)`,
                 }}
               >
-                <th
-                  scope="row"
-                  className={cl(
-                    classes.virtualCell,
-                    classes.virtualRowHeaderCell,
-                  )}
-                  style={{
-                    width: rowHeaderWidth,
-                    height: virtualRow.size,
-                  }}
-                >
-                  {row.label}
-                </th>
+                {hasStub && (
+                  <th
+                    scope="row"
+                    className={cl(
+                      classes.virtualCell,
+                      classes.virtualRowHeaderCell,
+                      classes[`virtualStub-${rowEntry.level}`],
+                    )}
+                    style={{
+                      width: rowHeaderWidth,
+                      height: virtualRow.size,
+                    }}
+                  >
+                    {rowEntry.label}
+                  </th>
+                )}
 
-                {virtualColumns.map((virtualColumn) => {
+                {renderedColumns.map((virtualColumn) => {
                   const column = columnDimensions[virtualColumn.index];
-                  const cacheKey = `${row.key}|${column.key}`;
+                  const cacheKey = `${rowEntry.leaf.key}|${column.key}`;
                   let formattedValue = cellCacheRef.current.get(cacheKey);
 
-                  if (formattedValue === undefined) {
+                  if (rowEntry.isDataRow && formattedValue === undefined) {
                     formattedValue = getVirtualCellValue(
                       pxtable,
-                      row.codesByPosition,
+                      rowEntry.leaf.codesByPosition,
                       column.codesByPosition,
                       variableOrder.length,
                     );
@@ -386,7 +548,7 @@ function VirtualizedDesktopTable({
                         transform: `translateX(${rowHeaderWidth + virtualColumn.start}px)`,
                       }}
                     >
-                      {formattedValue}
+                      {rowEntry.isDataRow ? formattedValue : ''}
                     </td>
                   );
                 })}
@@ -410,6 +572,7 @@ function buildLeafDimensions(
       {
         key: '__root__',
         label: '',
+        labelParts: [],
         codesByPosition: new Array(variableOrderLength),
       },
     ];
@@ -441,6 +604,7 @@ function buildLeafDimensions(
         combinations.push({
           key,
           label: labels.join(labelDelimiter),
+          labelParts: [...labels],
           codesByPosition: [...codesByPosition],
         });
       } else {
