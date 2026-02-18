@@ -234,12 +234,12 @@
         },
         "savequery": {
           "title": "Link to updated table",
-          "info": "You get a unique link to your table, that we keep updated for you. How new time periods are added is up to you.",
+          "info": "Will you be using this table again? Here you will get a link to the table, so you don't have to set it up again. The table will stay up to date, and you choose how new time periods are added.",
           "radio_legend": "Options for new time periods",
           "period_options": {
-            "selected": "Don't add new ones (the table will only show the ones you've selected now)",
-            "from": "Add new ones (they will be added to the ones you've selected now)",
-            "top": "Add new ones, but keep the same number (when a new time period is added, the oldest one is removed)"
+            "selected": "Don't add new time periods – I only want the ones I've selected now",
+            "from": "Add new time periods",
+            "top": "Add new time periods, but keep the same number (when a new period is added, the oldest one is removed)"
           },
           "create_button": "Get link",
           "copy_button": "Copy link",
@@ -258,7 +258,7 @@
         },
         "api": {
           "title": "API",
-          "description": "Here you’ll find the API query for the table. Use GET for small queries (under about 2 100 characters) and POST for larger or more complex ones.",
+          "description": "Here you will find the API query for the table. Use GET for short queries (under about 2 100 characters) and POST if the query is long and more detailed.",
           "query": "API query",
           "link_text": "Learn more about using the API",
           "link_url": "https://www.pxtools.net/PxWebApi/documentation/user-guide/",

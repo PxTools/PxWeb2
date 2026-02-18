@@ -5,13 +5,24 @@ import { SelectOption } from './SelectOptionType';
 const meta: Meta<typeof Select> = {
   component: Select,
   title: 'Components/Select',
+  decorators: [
+    (Story) => (
+      <div style={{ width: '400px' }}>
+        <Story />
+      </div>
+    ),
+  ],
 };
 export default meta;
 
 const options: SelectOption[] = [
   { label: 'Option 1', value: 'opt1' },
   { label: 'Option 2', value: 'opt2' },
-  { label: 'Option 3 is an option with a very long text', value: 'opt3' },
+  {
+    label:
+      'Option 3 is an option with a very long text, very, very, very, very, very, very, very, very, very, very, very, very, very, very, very, very, very, very, long text',
+    value: 'opt3',
+  },
   { label: 'Option 4', value: 'opt4' },
   { label: 'Option 5', value: 'opt5' },
   { label: 'Option 6', value: 'opt6' },
@@ -109,7 +120,16 @@ export const SelectedOption: StoryFn<typeof Select> = () => {
     <>
       <h1>Selected option</h1>
 
-      <h2>Selected option = Option 2:</h2>
+      <h2>Default Select:</h2>
+      <h3>No selected option:</h3>
+      <Select
+        label="Label"
+        hideLabel
+        options={options}
+        placeholder={placeholder}
+        onChange={selectedOptionChanged}
+      ></Select>
+      <h3> Selected option = Option 2:</h3>
       <Select
         label="Label"
         options={options}
@@ -118,12 +138,49 @@ export const SelectedOption: StoryFn<typeof Select> = () => {
         onChange={selectedOptionChanged}
       ></Select>
 
-      <h2>No selected option:</h2>
+      <h2>InVariableBox Select:</h2>
+      <h3>No selected option:</h3>
       <Select
         label="Label"
+        variant="inVariableBox"
         hideLabel
         options={options}
         placeholder={placeholder}
+        onChange={selectedOptionChanged}
+      ></Select>
+      <h3>Selected option = Option 2:</h3>
+      <Select
+        label="Label"
+        variant="inVariableBox"
+        options={options}
+        placeholder={placeholder}
+        selectedOption={options[1]}
+        onChange={selectedOptionChanged}
+      ></Select>
+    </>
+  );
+};
+
+export const WithVeryLongOptionText: StoryFn<typeof Select> = () => {
+  return (
+    <>
+      <h1>With very long option text</h1>
+      <h2>Default</h2>
+      <Select
+        label="Label"
+        options={options}
+        placeholder={placeholder}
+        selectedOption={options[2]}
+        onChange={selectedOptionChanged}
+      ></Select>
+
+      <h2>InVariableBox</h2>
+      <Select
+        label="Label"
+        variant="inVariableBox"
+        options={options}
+        placeholder={placeholder}
+        selectedOption={options[2]}
         onChange={selectedOptionChanged}
       ></Select>
     </>
