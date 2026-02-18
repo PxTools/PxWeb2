@@ -487,7 +487,8 @@ function VirtualizedDesktopTable({
                       classes.virtualCell,
                       classes.virtualColumnHeader,
                       {
-                        [classes.firstColNoStub]: !hasStub && virtualColumn.index === 0,
+                        [classes.firstColNoStub]:
+                          !hasStub && virtualColumn.index === 0,
                       },
                     )}
                     style={{
