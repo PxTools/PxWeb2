@@ -1,4 +1,4 @@
-import { memo, useEffect, useMemo, useRef } from 'react';
+import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import cl from 'clsx';
 import { useVirtualizer } from '@tanstack/react-virtual';
 
@@ -72,7 +72,7 @@ type VirtualRowEntry = {
   isDataRow: boolean;
 };
 
-const VIRTUALIZATION_CELL_THRESHOLD = 800;
+const VIRTUALIZATION_CELL_THRESHOLD = 10;
 
 export function shouldUseDesktopVirtualization(
   rowCount: number,
@@ -197,6 +197,7 @@ function VirtualizedDesktopTable({
   className?: string;
 }>) {
   const rootRef = useRef<HTMLDivElement | null>(null);
+  const [scrollElementWidth, setScrollElementWidth] = useState(0);
   const cssClasses = className.length > 0 ? ' ' + className : '';
   const hasStub = pxtable.stub.length > 0;
   const rowHeaderWidth = hasStub ? 260 : 0;
@@ -276,6 +277,34 @@ function VirtualizedDesktopTable({
   const scrollElement = rootRef.current?.parentElement as HTMLElement | null;
   const cellCacheRef = useRef<Map<string, string>>(new Map());
 
+  useEffect(() => {
+    const element = rootRef.current?.parentElement as HTMLElement | null;
+    if (!element) {
+      return;
+    }
+
+    const updateWidth = () => {
+      setScrollElementWidth(element.clientWidth);
+    };
+
+    updateWidth();
+
+    const resizeObserver =
+      typeof ResizeObserver !== 'undefined'
+        ? new ResizeObserver(() => {
+            updateWidth();
+          })
+        : null;
+    resizeObserver?.observe(element);
+
+    window.addEventListener('resize', updateWidth);
+
+    return () => {
+      resizeObserver?.disconnect();
+      window.removeEventListener('resize', updateWidth);
+    };
+  }, []);
+
   const rowVirtualizer = useVirtualizer({
     count: virtualRowEntries.length,
     getScrollElement: () => scrollElement,
@@ -313,6 +342,16 @@ function VirtualizedDesktopTable({
           size: 112,
           key: index,
         }));
+
+  const totalDataWidth = columnVirtualizer.getTotalSize();
+  const availableDataWidth = Math.max(
+    scrollElementWidth - rowHeaderWidth,
+    0,
+  );
+  const widthStretchFactor =
+    totalDataWidth > 0
+      ? Math.max(1, availableDataWidth / totalDataWidth)
+      : 1;
 
   const headingVariablePositions = useMemo(
     () => pxtable.heading.map((variable) => variableOrder.indexOf(variable.id)),
@@ -358,9 +397,9 @@ function VirtualizedDesktopTable({
                 [classes.firstColNoStub]: !hasStub && runIndex === 0,
               })}
               style={{
-                width: runSize,
+                width: runSize * widthStretchFactor,
                 height: headerHeight,
-                transform: `translateX(${rowHeaderWidth + runStart}px)`,
+                transform: `translateX(${rowHeaderWidth + runStart * widthStretchFactor}px)`,
               }}
             >
               {value?.label ?? ''}
@@ -411,6 +450,7 @@ function VirtualizedDesktopTable({
       headerHeight,
       rowHeaderWidth,
       hasStub,
+      widthStretchFactor,
     ],
   );
 
@@ -440,8 +480,7 @@ function VirtualizedDesktopTable({
   }
 
   const totalBodyHeight = rowVirtualizer.getTotalSize();
-  const totalDataWidth = columnVirtualizer.getTotalSize();
-  const totalWidth = rowHeaderWidth + totalDataWidth;
+  const totalWidth = rowHeaderWidth + totalDataWidth * widthStretchFactor;
 
   return (
     <div
@@ -519,9 +558,9 @@ function VirtualizedDesktopTable({
                       },
                     )}
                     style={{
-                      width: virtualColumn.size,
+                      width: virtualColumn.size * widthStretchFactor,
                       height: headerHeight,
-                      transform: `translateX(${rowHeaderWidth + virtualColumn.start}px)`,
+                      transform: `translateX(${rowHeaderWidth + virtualColumn.start * widthStretchFactor}px)`,
                     }}
                   >
                     {column.label}
@@ -591,9 +630,9 @@ function VirtualizedDesktopTable({
                         classes.virtualDataCell,
                       )}
                       style={{
-                        width: virtualColumn.size,
+                        width: virtualColumn.size * widthStretchFactor,
                         height: virtualRow.size,
-                        transform: `translateX(${rowHeaderWidth + virtualColumn.start}px)`,
+                        transform: `translateX(${rowHeaderWidth + virtualColumn.start * widthStretchFactor}px)`,
                       }}
                     >
                       {rowEntry.isDataRow ? formattedValue : ''}

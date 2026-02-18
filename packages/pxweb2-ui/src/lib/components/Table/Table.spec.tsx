@@ -116,8 +116,8 @@ describe('Table', () => {
   });
 
   it('should use virtualization only above threshold', () => {
-    expect(shouldUseDesktopVirtualization(20, 20)).toBe(false);
-    expect(shouldUseDesktopVirtualization(40, 25)).toBe(true);
+    expect(shouldUseDesktopVirtualization(2, 4)).toBe(false);
+    expect(shouldUseDesktopVirtualization(2, 5)).toBe(true);
   });
 
   it('should use virtualization for very large tables', () => {
