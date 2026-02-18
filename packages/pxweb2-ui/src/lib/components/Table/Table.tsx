@@ -344,14 +344,9 @@ function VirtualizedDesktopTable({
         }));
 
   const totalDataWidth = columnVirtualizer.getTotalSize();
-  const availableDataWidth = Math.max(
-    scrollElementWidth - rowHeaderWidth,
-    0,
-  );
+  const availableDataWidth = Math.max(scrollElementWidth - rowHeaderWidth, 0);
   const widthStretchFactor =
-    totalDataWidth > 0
-      ? Math.max(1, availableDataWidth / totalDataWidth)
-      : 1;
+    totalDataWidth > 0 ? Math.max(1, availableDataWidth / totalDataWidth) : 1;
 
   const headingVariablePositions = useMemo(
     () => pxtable.heading.map((variable) => variableOrder.indexOf(variable.id)),
