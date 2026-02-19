@@ -197,7 +197,11 @@ function VirtualizedDesktopTable({
   className?: string;
 }>) {
   const rootRef = useRef<HTMLDivElement | null>(null);
+  const bodyRef = useRef<HTMLTableSectionElement | null>(null);
+  const headerRef = useRef<HTMLTableSectionElement | null>(null);
   const [scrollElementWidth, setScrollElementWidth] = useState(0);
+  const [headerRowHeights, setHeaderRowHeights] = useState<number[]>([]);
+  const [bodyRowHeightsVersion, setBodyRowHeightsVersion] = useState(0);
   const cssClasses = className.length > 0 ? ' ' + className : '';
   const hasStub = pxtable.stub.length > 0;
   const rowHeaderWidth = hasStub ? 260 : 0;
@@ -276,6 +280,7 @@ function VirtualizedDesktopTable({
 
   const scrollElement = rootRef.current?.parentElement as HTMLElement | null;
   const cellCacheRef = useRef<Map<string, string>>(new Map());
+  const measuredRowHeightsRef = useRef<Map<number, number>>(new Map());
 
   useEffect(() => {
     const element = rootRef.current?.parentElement as HTMLElement | null;
@@ -343,6 +348,32 @@ function VirtualizedDesktopTable({
           key: index,
         }));
 
+  const positionedRenderedRows = useMemo(() => {
+    let previousIndex: number | null = null;
+    let previousStart = 0;
+    let previousHeight = rowHeight;
+
+    return renderedRows.map((virtualRow) => {
+      const resolvedHeight =
+        measuredRowHeightsRef.current.get(virtualRow.index) ?? virtualRow.size;
+
+      let resolvedStart = virtualRow.start;
+      if (previousIndex !== null && virtualRow.index === previousIndex + 1) {
+        resolvedStart = previousStart + previousHeight;
+      }
+
+      previousIndex = virtualRow.index;
+      previousStart = resolvedStart;
+      previousHeight = resolvedHeight;
+
+      return {
+        virtualRow,
+        resolvedHeight,
+        resolvedStart,
+      };
+    });
+  }, [renderedRows, rowHeight, bodyRowHeightsVersion]);
+
   const totalDataWidth = columnVirtualizer.getTotalSize();
   const availableDataWidth = Math.max(scrollElementWidth - rowHeaderWidth, 0);
   const widthStretchFactor =
@@ -351,6 +382,24 @@ function VirtualizedDesktopTable({
   const headingVariablePositions = useMemo(
     () => pxtable.heading.map((variable) => variableOrder.indexOf(variable.id)),
     [pxtable.heading, variableOrder],
+  );
+
+  const headerDimensionCount = Math.max(pxtable.heading.length, 1);
+  const resolvedHeaderRowHeights = useMemo(
+    () =>
+      Array.from(
+        { length: headerDimensionCount },
+        (_, index) => headerRowHeights[index] ?? headerHeight,
+      ),
+    [headerDimensionCount, headerRowHeights, headerHeight],
+  );
+  const headerGroupHeight = useMemo(
+    () =>
+      resolvedHeaderRowHeights.reduce(
+        (sum, currentHeight) => sum + currentHeight,
+        0,
+      ),
+    [resolvedHeaderRowHeights],
   );
 
   const virtualHeaderRows = useMemo(
@@ -391,9 +440,10 @@ function VirtualizedDesktopTable({
               className={cl(classes.virtualCell, classes.virtualColumnHeader, {
                 [classes.firstColNoStub]: !hasStub && runIndex === 0,
               })}
+              data-virtual-header-cell
               style={{
                 width: runSize * widthStretchFactor,
-                height: headerHeight,
+                minHeight: resolvedHeaderRowHeights[headingLevel],
                 transform: `translateX(${rowHeaderWidth + runStart * widthStretchFactor}px)`,
               }}
             >
@@ -442,7 +492,7 @@ function VirtualizedDesktopTable({
       headingVariablePositions,
       renderedColumns,
       columnDimensions,
-      headerHeight,
+      resolvedHeaderRowHeights,
       rowHeaderWidth,
       hasStub,
       widthStretchFactor,
@@ -453,8 +503,6 @@ function VirtualizedDesktopTable({
     virtualRowEntries.length,
     columnDimensions.length,
   );
-  const headerDimensionCount = Math.max(pxtable.heading.length, 1);
-  const headerGroupHeight = headerHeight * headerDimensionCount;
 
   const pivotSignature = useMemo(
     () =>
@@ -466,7 +514,140 @@ function VirtualizedDesktopTable({
 
   useEffect(() => {
     cellCacheRef.current.clear();
+    measuredRowHeightsRef.current.clear();
+    setBodyRowHeightsVersion((version) => version + 1);
   }, [pivotSignature]);
+
+  useEffect(() => {
+    setHeaderRowHeights(
+      Array.from({ length: headerDimensionCount }, () => headerHeight),
+    );
+  }, [headerDimensionCount, headerHeight, pivotSignature]);
+
+  useEffect(() => {
+    if (!shouldVirtualize) {
+      return;
+    }
+
+    const headerElement = headerRef.current;
+    if (!headerElement) {
+      return;
+    }
+
+    const frameId = requestAnimationFrame(() => {
+      const measuredHeights = Array.from(
+        { length: headerDimensionCount },
+        (_, index) => {
+          const rowElement = headerElement.querySelector<HTMLTableRowElement>(
+            `tr[data-virtual-header-row-index="${index}"]`,
+          );
+
+          if (!rowElement) {
+            return headerHeight;
+          }
+
+          let measuredHeight = headerHeight;
+          const cellElements = rowElement.querySelectorAll<HTMLElement>(
+            'th[data-virtual-header-cell]',
+          );
+
+          for (const cellElement of cellElements) {
+            measuredHeight = Math.max(
+              measuredHeight,
+              Math.ceil(cellElement.scrollHeight),
+            );
+          }
+
+          return measuredHeight;
+        },
+      );
+
+      const hasDifference = measuredHeights.some(
+        (height, index) =>
+          Math.abs((headerRowHeights[index] ?? headerHeight) - height) > 1,
+      );
+
+      if (hasDifference) {
+        setHeaderRowHeights(measuredHeights);
+      }
+    });
+
+    return () => {
+      cancelAnimationFrame(frameId);
+    };
+  }, [
+    shouldVirtualize,
+    headerDimensionCount,
+    headerHeight,
+    headerRowHeights,
+    renderedColumns,
+    widthStretchFactor,
+    hasStub,
+    rowHeaderWidth,
+  ]);
+
+  useEffect(() => {
+    if (!shouldVirtualize) {
+      return;
+    }
+
+    const bodyElement = bodyRef.current;
+    if (!bodyElement) {
+      return;
+    }
+
+    const frameId = requestAnimationFrame(() => {
+      const rowElements = bodyElement.querySelectorAll<HTMLTableRowElement>(
+        'tr[data-virtual-row-index]',
+      );
+      let hasResizedRows = false;
+
+      for (const rowElement of rowElements) {
+        const rowIndex = Number(rowElement.dataset.virtualRowIndex);
+        if (!Number.isInteger(rowIndex) || rowIndex < 0) {
+          continue;
+        }
+
+        const cellElements = rowElement.querySelectorAll<HTMLElement>(
+          '[data-virtual-cell]',
+        );
+
+        let measuredHeight = rowHeight;
+        for (const cellElement of cellElements) {
+          measuredHeight = Math.max(
+            measuredHeight,
+            Math.ceil(cellElement.scrollHeight),
+          );
+        }
+
+        const previousHeight = measuredRowHeightsRef.current.get(rowIndex);
+        if (
+          previousHeight === undefined ||
+          Math.abs(previousHeight - measuredHeight) > 1
+        ) {
+          measuredRowHeightsRef.current.set(rowIndex, measuredHeight);
+          rowVirtualizer.resizeItem(rowIndex, measuredHeight);
+          hasResizedRows = true;
+        }
+      }
+
+      if (hasResizedRows) {
+        rowVirtualizer.measure();
+        setBodyRowHeightsVersion((version) => version + 1);
+      }
+    });
+
+    return () => {
+      cancelAnimationFrame(frameId);
+    };
+  }, [
+    shouldVirtualize,
+    renderedRows,
+    renderedColumns,
+    widthStretchFactor,
+    rowHeight,
+    rowVirtualizer,
+  ]);
 
   if (!shouldVirtualize) {
     return (
@@ -494,13 +675,14 @@ function VirtualizedDesktopTable({
         )}
         aria-label={pxtable.metadata.label}
       >
-        <thead className={classes.virtualHeaderRowGroup}>
+        <thead ref={headerRef} className={classes.virtualHeaderRowGroup}>
           {pxtable.heading.length > 0 ? (
             pxtable.heading.map((_, headingLevel) => (
               <tr
                 className={classes.virtualRow}
                 key={`header-row-${pxtable.heading[headingLevel].id}`}
-                style={{ height: headerHeight }}
+                data-virtual-header-row-index={headingLevel}
+                style={{ height: resolvedHeaderRowHeights[headingLevel] }}
               >
                 {hasStub && headingLevel === 0 && (
                   <td
@@ -521,7 +703,11 @@ function VirtualizedDesktopTable({
               </tr>
             ))
           ) : (
-            <tr className={classes.virtualRow} style={{ height: headerHeight }}>
+            <tr
+              className={classes.virtualRow}
+              data-virtual-header-row-index={0}
+              style={{ height: resolvedHeaderRowHeights[0] }}
+            >
               {hasStub && (
                 <td
                   rowSpan={headerDimensionCount}
@@ -552,9 +738,10 @@ function VirtualizedDesktopTable({
                           !hasStub && virtualColumn.index === 0,
                       },
                     )}
+                    data-virtual-header-cell
                     style={{
                       width: virtualColumn.size * widthStretchFactor,
-                      height: headerHeight,
+                      minHeight: resolvedHeaderRowHeights[0],
                       transform: `translateX(${rowHeaderWidth + virtualColumn.start * widthStretchFactor}px)`,
                     }}
                   >
@@ -567,76 +754,82 @@ function VirtualizedDesktopTable({
         </thead>
 
         <tbody
+          ref={bodyRef}
           className={classes.virtualBodyRowGroup}
           style={{ height: totalBodyHeight }}
         >
-          {renderedRows.map((virtualRow) => {
-            const rowEntry = virtualRowEntries[virtualRow.index];
+          {positionedRenderedRows.map(
+            ({ virtualRow, resolvedHeight, resolvedStart }) => {
+              const rowEntry = virtualRowEntries[virtualRow.index];
 
-            return (
-              <tr
-                key={rowEntry.key}
-                className={cl(classes.virtualRow, {
-                  [classes.firstdim]: rowEntry.level === 0,
-                })}
-                style={{
-                  height: virtualRow.size,
-                  transform: `translateY(${virtualRow.start}px)`,
-                }}
-              >
-                {hasStub && (
-                  <th
-                    scope="row"
-                    className={cl(
-                      classes.virtualCell,
-                      classes.virtualRowHeaderCell,
-                      classes.stub,
-                      classes[`stub-${rowEntry.level}`],
-                    )}
-                    style={{
-                      width: rowHeaderWidth,
-                      height: virtualRow.size,
-                    }}
-                  >
-                    {rowEntry.label}
-                  </th>
-                )}
-
-                {renderedColumns.map((virtualColumn) => {
-                  const column = columnDimensions[virtualColumn.index];
-                  const cacheKey = `${rowEntry.leaf.key}|${column.key}`;
-                  let formattedValue = cellCacheRef.current.get(cacheKey);
-
-                  if (rowEntry.isDataRow && formattedValue === undefined) {
-                    formattedValue = getVirtualCellValue(
-                      pxtable,
-                      rowEntry.leaf.codesByPosition,
-                      column.codesByPosition,
-                      variableOrder.length,
-                    );
-                    cellCacheRef.current.set(cacheKey, formattedValue);
-                  }
-
-                  return (
-                    <td
-                      key={cacheKey}
+              return (
+                <tr
+                  key={rowEntry.key}
+                  className={cl(classes.virtualRow, {
+                    [classes.firstdim]: rowEntry.level === 0,
+                  })}
+                  data-virtual-row-index={virtualRow.index}
+                  style={{
+                    height: resolvedHeight,
+                    transform: `translateY(${resolvedStart}px)`,
+                  }}
+                >
+                  {hasStub && (
+                    <th
+                      scope="row"
                       className={cl(
                         classes.virtualCell,
-                        classes.virtualDataCell,
+                        classes.virtualRowHeaderCell,
+                        classes.stub,
+                        classes[`stub-${rowEntry.level}`],
                       )}
+                      data-virtual-cell
                       style={{
-                        width: virtualColumn.size * widthStretchFactor,
-                        height: virtualRow.size,
-                        transform: `translateX(${rowHeaderWidth + virtualColumn.start * widthStretchFactor}px)`,
+                        width: rowHeaderWidth,
+                        minHeight: resolvedHeight,
                       }}
                     >
-                      {rowEntry.isDataRow ? formattedValue : ''}
-                    </td>
-                  );
-                })}
-              </tr>
-            );
-          })}
+                      {rowEntry.label}
+                    </th>
+                  )}
+
+                  {renderedColumns.map((virtualColumn) => {
+                    const column = columnDimensions[virtualColumn.index];
+                    const cacheKey = `${rowEntry.leaf.key}|${column.key}`;
+                    let formattedValue = cellCacheRef.current.get(cacheKey);
+
+                    if (rowEntry.isDataRow && formattedValue === undefined) {
+                      formattedValue = getVirtualCellValue(
+                        pxtable,
+                        rowEntry.leaf.codesByPosition,
+                        column.codesByPosition,
+                        variableOrder.length,
+                      );
+                      cellCacheRef.current.set(cacheKey, formattedValue);
+                    }
+
+                    return (
+                      <td
+                        key={cacheKey}
+                        className={cl(
+                          classes.virtualCell,
+                          classes.virtualDataCell,
+                        )}
+                        data-virtual-cell
+                        style={{
+                          width: virtualColumn.size * widthStretchFactor,
+                          minHeight: resolvedHeight,
+                          transform: `translateX(${rowHeaderWidth + virtualColumn.start * widthStretchFactor}px)`,
+                        }}
+                      >
+                        {rowEntry.isDataRow ? formattedValue : ''}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            },
+          )}
         </tbody>
       </table>
     </div>

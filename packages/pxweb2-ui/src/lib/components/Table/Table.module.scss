@@ -298,9 +298,9 @@
   border-left: 1px solid var(--px-color-border-default);
   padding: 8px 12px;
   font-variant-numeric: tabular-nums;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .virtualHeaderRowGroup .virtualRow {

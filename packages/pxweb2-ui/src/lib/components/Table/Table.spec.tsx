@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 
 import Table, { shouldUseDesktopVirtualization } from './Table';
@@ -80,6 +80,79 @@ function createVirtualizedOrderTestTable(): PxTable {
   return table;
 }
 
+function createVirtualizedMultiHeadingTestTable(): PxTable {
+  const stubDim: Variable = {
+    id: 'Stub',
+    label: 'Stub',
+    type: VartypeEnum.REGULAR_VARIABLE,
+    mandatory: false,
+    values: [
+      { code: 's1', label: 's1' },
+      { code: 's2', label: 's2' },
+    ],
+  };
+
+  const headingDimOne: Variable = {
+    id: 'Heading1',
+    label: 'Heading1',
+    type: VartypeEnum.REGULAR_VARIABLE,
+    mandatory: false,
+    values: [
+      { code: 'h1a', label: 'h1a' },
+      { code: 'h1b', label: 'h1b' },
+      { code: 'h1c', label: 'h1c' },
+    ],
+  };
+
+  const headingDimTwo: Variable = {
+    id: 'Heading2',
+    label: 'Heading2',
+    type: VartypeEnum.TIME_VARIABLE,
+    mandatory: false,
+    values: [
+      { code: '2024', label: '2024' },
+      { code: '2025', label: '2025' },
+    ],
+  };
+
+  const variables = [stubDim, headingDimOne, headingDimTwo];
+
+  const table: PxTable = {
+    metadata: {
+      id: 'multi-heading-order-test',
+      label: 'Multi heading order test table',
+      updated: new Date('2026-02-18T00:00:00.000Z'),
+      variables,
+      language: 'en',
+      contacts: [],
+      source: '',
+      infofile: '',
+      decimals: 0,
+      officialStatistics: false,
+      notes: [],
+      matrix: '',
+      subjectCode: '',
+      subjectArea: '',
+      aggregationAllowed: false,
+      contents: '',
+      descriptionDefault: false,
+      definitions: {},
+    },
+    data: {
+      cube: {},
+      variableOrder: variables.map((variable) => variable.id),
+      isLoaded: false,
+    },
+    heading: [headingDimOne, headingDimTwo],
+    stub: [stubDim],
+  };
+
+  fakeData(table, [], 0, 0);
+  table.data.isLoaded = true;
+
+  return table;
+}
+
 describe('Table', () => {
   it('should render successfully desktop', () => {
     const { baseElement } = render(
@@ -145,5 +218,191 @@ describe('Table', () => {
     expect(topLeftHeaderCell?.getAttribute('rowspan')).toBe(
       String(table.heading.length),
     );
+  });
+
+  it('should keep virtual header row heights stable across rerenders', async () => {
+    const table = createVirtualizedMultiHeadingTestTable();
+    const originalScrollHeight = Object.getOwnPropertyDescriptor(
+      HTMLElement.prototype,
+      'scrollHeight',
+    );
+
+    Object.defineProperty(HTMLElement.prototype, 'scrollHeight', {
+      configurable: true,
+      get() {
+        const cssHeight =
+          (this as HTMLElement).style.height ||
+          (this as HTMLElement).style.minHeight;
+        const parsed = Number.parseFloat(cssHeight);
+        return Number.isFinite(parsed) ? parsed : 44;
+      },
+    });
+
+    try {
+      const { baseElement, rerender } = render(
+        <Table pxtable={table} isMobile={false} />,
+      );
+
+      const getHeaderRowHeight = () => {
+        const row = baseElement.querySelector<HTMLTableRowElement>(
+          'thead tr[data-virtual-header-row-index="0"]',
+        );
+        return Number.parseFloat(row?.style.height ?? '0');
+      };
+
+      await waitFor(() => {
+        expect(getHeaderRowHeight()).toBe(44);
+      });
+
+      rerender(<Table pxtable={table} isMobile={false} />);
+
+      await waitFor(() => {
+        expect(getHeaderRowHeight()).toBe(44);
+      });
+
+      const cornerCell = baseElement.querySelector('thead tr td[rowspan="2"]');
+      expect(cornerCell?.getAttribute('data-virtual-header-cell')).toBeNull();
+    } finally {
+      if (originalScrollHeight) {
+        Object.defineProperty(
+          HTMLElement.prototype,
+          'scrollHeight',
+          originalScrollHeight,
+        );
+      }
+    }
+  });
+
+  it('should position virtual body rows using measured row heights', async () => {
+    const table = createVirtualizedOrderTestTable();
+    const originalScrollHeight = Object.getOwnPropertyDescriptor(
+      HTMLElement.prototype,
+      'scrollHeight',
+    );
+
+    Object.defineProperty(HTMLElement.prototype, 'scrollHeight', {
+      configurable: true,
+      get() {
+        const element = this as HTMLElement;
+
+        if (
+          element.matches(
+            'tbody tr[data-virtual-row-index="0"] th[scope="row"]',
+          )
+        ) {
+          return 80;
+        }
+
+        if (
+          element.matches(
+            'tbody tr[data-virtual-row-index="1"] th[scope="row"]',
+          )
+        ) {
+          return 50;
+        }
+
+        const cssHeight = element.style.height || element.style.minHeight;
+        const parsed = Number.parseFloat(cssHeight);
+        return Number.isFinite(parsed) ? parsed : 36;
+      },
+    });
+
+    try {
+      const { baseElement } = render(
+        <Table pxtable={table} isMobile={false} />,
+      );
+
+      const parseTranslateY = (value: string | undefined): number => {
+        if (!value) {
+          return Number.NaN;
+        }
+
+        const match = value.match(/translateY\(([-\d.]+)px\)/);
+        return match ? Number.parseFloat(match[1]) : Number.NaN;
+      };
+
+      await waitFor(() => {
+        const firstRow = baseElement.querySelector<HTMLTableRowElement>(
+          'tbody tr[data-virtual-row-index="0"]',
+        );
+        const secondRow = baseElement.querySelector<HTMLTableRowElement>(
+          'tbody tr[data-virtual-row-index="1"]',
+        );
+
+        expect(firstRow).toBeTruthy();
+        expect(secondRow).toBeTruthy();
+        expect(firstRow?.style.height).toBe('80px');
+        expect(secondRow?.style.height).toBe('50px');
+
+        const firstTranslateY = parseTranslateY(firstRow?.style.transform);
+        const secondTranslateY = parseTranslateY(secondRow?.style.transform);
+
+        expect(firstTranslateY).toBe(0);
+        expect(secondTranslateY).toBe(80);
+      });
+    } finally {
+      if (originalScrollHeight) {
+        Object.defineProperty(
+          HTMLElement.prototype,
+          'scrollHeight',
+          originalScrollHeight,
+        );
+      }
+    }
+  });
+
+  it('should increase parent tbody row height when stub th is taller', async () => {
+    const table = createVirtualizedOrderTestTable();
+    const originalScrollHeight = Object.getOwnPropertyDescriptor(
+      HTMLElement.prototype,
+      'scrollHeight',
+    );
+
+    Object.defineProperty(HTMLElement.prototype, 'scrollHeight', {
+      configurable: true,
+      get() {
+        const element = this as HTMLElement;
+
+        if (
+          element.matches(
+            'tbody tr[data-virtual-row-index="0"] th[scope="row"]',
+          )
+        ) {
+          return 96;
+        }
+
+        const cssHeight = element.style.height || element.style.minHeight;
+        const parsed = Number.parseFloat(cssHeight);
+        return Number.isFinite(parsed) ? parsed : 36;
+      },
+    });
+
+    try {
+      const { baseElement } = render(
+        <Table pxtable={table} isMobile={false} />,
+      );
+
+      await waitFor(() => {
+        const firstRow = baseElement.querySelector<HTMLTableRowElement>(
+          'tbody tr[data-virtual-row-index="0"]',
+        );
+        const firstStubHeader = baseElement.querySelector<HTMLElement>(
+          'tbody tr[data-virtual-row-index="0"] th[scope="row"]',
+        );
+
+        expect(firstRow).toBeTruthy();
+        expect(firstStubHeader).toBeTruthy();
+        expect(firstRow?.style.height).toBe('96px');
+        expect(firstStubHeader?.style.minHeight).toBe('96px');
+      });
+    } finally {
+      if (originalScrollHeight) {
+        Object.defineProperty(
+          HTMLElement.prototype,
+          'scrollHeight',
+          originalScrollHeight,
+        );
+      }
+    }
   });
 });
