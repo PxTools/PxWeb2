@@ -26,9 +26,21 @@ An overview of the current technical debt in the project:
 ### Long running tasks
 
 1. Updating the packages used in the project. This includes both Dependabot PRs and other outdated packages.
-   - For security reasons, we want to wait atleast 9 days before updating packages.
-   Use NPM '--before' or npm-check-updates '--cooldown' flags.
-   E.g: npm-check-updates --format group --deep --cooldown 9 -iu
+    - For security reasons, we want to wait at least 9 days before updating packages.
+    - Use NPM '--before' or npm-check-updates '--cooldown' flags.
+       - Note: There are challenges with using npm-check-updates and cooldown, read this issue:
+          https://github.com/raineorshine/npm-check-updates/issues/1556#issuecomment-3809050192
+    - First update Storybook to the latest version that is outside the cooldown of 9 days:
+       - Go to Storybook and find the correct version to update to
+          OR look at which Storybook version is wanted in the command output of:
+          npm outdated --before "7 Feb 2026" (change to correct date)
+       - Run the Storybook CLI update command:
+          npx storybook@10.2.7 upgrade (change to correct version)
+    - Compare the versions the commands below show:
+       1. npx npm-check-updates --format group --deep --cooldown 9 --target greatest --pre 0
+       2. npm outdated --before "7 Feb 2026" (change to correct date)
+    - If the versions are the same, you can update to that version with this command:
+       npx npm-check-updates --format group --deep --cooldown 9 --target greatest --pre 0 -iu
 2. Fix [SonarQube issues/codesmells](https://sonarcloud.io/project/overview?id=PxTools_PxWeb2)
 3. Fix warnings when running `npm run lint`
 
