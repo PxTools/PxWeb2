@@ -153,6 +153,161 @@ function createVirtualizedMultiHeadingTestTable(): PxTable {
   return table;
 }
 
+function createVirtualizedSingleChildPerParentHeaderTable(): PxTable {
+  const stubDim: Variable = {
+    id: 'Stub',
+    label: 'Stub',
+    type: VartypeEnum.REGULAR_VARIABLE,
+    mandatory: false,
+    values: [
+      { code: 's1', label: 's1' },
+      { code: 's2', label: 's2' },
+      { code: 's3', label: 's3' },
+      { code: 's4', label: 's4' },
+    ],
+  };
+
+  const headingDimOne: Variable = {
+    id: 'Year',
+    label: 'Year',
+    type: VartypeEnum.TIME_VARIABLE,
+    mandatory: false,
+    values: [
+      { code: '2024', label: '2024' },
+      { code: '2025', label: '2025' },
+      { code: '2026', label: '2026' },
+    ],
+  };
+
+  const headingDimTwo: Variable = {
+    id: 'Measure',
+    label: 'Measure',
+    type: VartypeEnum.REGULAR_VARIABLE,
+    mandatory: false,
+    values: [{ code: 'net', label: 'net' }],
+  };
+
+  const variables = [stubDim, headingDimOne, headingDimTwo];
+
+  const table: PxTable = {
+    metadata: {
+      id: 'single-child-per-parent-header-test',
+      label: 'Single child per parent header test table',
+      updated: new Date('2026-02-18T00:00:00.000Z'),
+      variables,
+      language: 'en',
+      contacts: [],
+      source: '',
+      infofile: '',
+      decimals: 0,
+      officialStatistics: false,
+      notes: [],
+      matrix: '',
+      subjectCode: '',
+      subjectArea: '',
+      aggregationAllowed: false,
+      contents: '',
+      descriptionDefault: false,
+      definitions: {},
+    },
+    data: {
+      cube: {},
+      variableOrder: variables.map((variable) => variable.id),
+      isLoaded: false,
+    },
+    heading: [headingDimOne, headingDimTwo],
+    stub: [stubDim],
+  };
+
+  fakeData(table, [], 0, 0);
+  table.data.isLoaded = true;
+
+  return table;
+}
+
+function createVirtualizedThreeLevelHeadingTestTable(): PxTable {
+  const stubDim: Variable = {
+    id: 'Stub',
+    label: 'Stub',
+    type: VartypeEnum.REGULAR_VARIABLE,
+    mandatory: false,
+    values: [
+      { code: 's1', label: 's1' },
+      { code: 's2', label: 's2' },
+    ],
+  };
+
+  const headingDimOne: Variable = {
+    id: 'Year',
+    label: 'Year',
+    type: VartypeEnum.TIME_VARIABLE,
+    mandatory: false,
+    values: [
+      { code: '2024', label: '2024' },
+      { code: '2025', label: '2025' },
+    ],
+  };
+
+  const headingDimTwo: Variable = {
+    id: 'Measure',
+    label: 'Measure',
+    type: VartypeEnum.REGULAR_VARIABLE,
+    mandatory: false,
+    values: [
+      { code: 'gross', label: 'gross' },
+      { code: 'net', label: 'net' },
+    ],
+  };
+
+  const headingDimThree: Variable = {
+    id: 'Unit',
+    label: 'Unit',
+    type: VartypeEnum.REGULAR_VARIABLE,
+    mandatory: false,
+    values: [
+      { code: 'count', label: 'count' },
+      { code: 'share', label: 'share' },
+    ],
+  };
+
+  const variables = [stubDim, headingDimOne, headingDimTwo, headingDimThree];
+
+  const table: PxTable = {
+    metadata: {
+      id: 'three-level-heading-test',
+      label: 'Three level heading test table',
+      updated: new Date('2026-02-18T00:00:00.000Z'),
+      variables,
+      language: 'en',
+      contacts: [],
+      source: '',
+      infofile: '',
+      decimals: 0,
+      officialStatistics: false,
+      notes: [],
+      matrix: '',
+      subjectCode: '',
+      subjectArea: '',
+      aggregationAllowed: false,
+      contents: '',
+      descriptionDefault: false,
+      definitions: {},
+    },
+    data: {
+      cube: {},
+      variableOrder: variables.map((variable) => variable.id),
+      isLoaded: false,
+    },
+    heading: [headingDimOne, headingDimTwo, headingDimThree],
+    stub: [stubDim],
+  };
+
+  fakeData(table, [], 0, 0);
+  table.data.isLoaded = true;
+
+  return table;
+}
+
 describe('Table', () => {
   it('should render successfully desktop', () => {
     const { baseElement } = render(
@@ -271,6 +426,169 @@ describe('Table', () => {
         );
       }
     }
+  });
+
+  it('should render virtual hierarchical headers with parent colspans', async () => {
+    const table = createVirtualizedMultiHeadingTestTable();
+    const { baseElement } = render(<Table pxtable={table} isMobile={false} />);
+
+    await waitFor(() => {
+      const headerRows = Array.from(
+        baseElement.querySelectorAll<HTMLTableRowElement>(
+          'thead tr[data-virtual-header-row-index]',
+        ),
+      );
+
+      expect(headerRows.length).toBe(table.heading.length);
+
+      const cellsPerRow = headerRows.map((row) =>
+        Array.from(
+          row.querySelectorAll<HTMLTableCellElement>(
+            'th[data-virtual-header-cell]',
+          ),
+        ),
+      );
+
+      expect(cellsPerRow[0].length).toBe(3);
+      expect(cellsPerRow[1].length).toBe(6);
+
+      const parentColspans = cellsPerRow[0].map(
+        (cell) => cell.getAttribute('colspan') ?? '1',
+      );
+      expect(parentColspans).toEqual(['2', '2', '2']);
+
+      const childColspans = cellsPerRow[1].map(
+        (cell) => cell.getAttribute('colspan') ?? '1',
+      );
+      expect(childColspans.every((colspan) => colspan === '1')).toBe(true);
+    });
+  });
+
+  it('should keep child labels without repeated parent label text', async () => {
+    const table = createVirtualizedMultiHeadingTestTable();
+    const { baseElement } = render(<Table pxtable={table} isMobile={false} />);
+
+    await waitFor(() => {
+      const headerRows = Array.from(
+        baseElement.querySelectorAll<HTMLTableRowElement>(
+          'thead tr[data-virtual-header-row-index]',
+        ),
+      );
+
+      expect(headerRows.length).toBe(table.heading.length);
+
+      const rowTexts = headerRows.map((row) =>
+        Array.from(
+          row.querySelectorAll<HTMLTableCellElement>(
+            'th[data-virtual-header-cell]',
+          ),
+        ).map((cell) => cell.textContent?.trim() ?? ''),
+      );
+
+      expect(rowTexts[0]).toEqual(['h1a', 'h1b', 'h1c']);
+      expect(rowTexts[1]).toEqual([
+        '2024',
+        '2025',
+        '2024',
+        '2025',
+        '2024',
+        '2025',
+      ]);
+      expect(rowTexts[1].every((label) => !label.includes('·'))).toBe(true);
+    });
+  });
+
+  it('should not merge single child headers across different parents', async () => {
+    const table = createVirtualizedSingleChildPerParentHeaderTable();
+    const { baseElement } = render(<Table pxtable={table} isMobile={false} />);
+
+    await waitFor(() => {
+      const headerRows = Array.from(
+        baseElement.querySelectorAll<HTMLTableRowElement>(
+          'thead tr[data-virtual-header-row-index]',
+        ),
+      );
+
+      expect(headerRows.length).toBe(table.heading.length);
+
+      const firstRowCells = Array.from(
+        headerRows[0].querySelectorAll<HTMLTableCellElement>(
+          'th[data-virtual-header-cell]',
+        ),
+      );
+      const secondRowCells = Array.from(
+        headerRows[1].querySelectorAll<HTMLTableCellElement>(
+          'th[data-virtual-header-cell]',
+        ),
+      );
+
+      expect(
+        firstRowCells.map((cell) => cell.textContent?.trim() ?? ''),
+      ).toEqual(['2024', '2025', '2026']);
+      expect(
+        secondRowCells.map((cell) => cell.textContent?.trim() ?? ''),
+      ).toEqual(['net', 'net', 'net']);
+
+      expect(
+        firstRowCells.map((cell) => cell.getAttribute('colspan') ?? '1'),
+      ).toEqual(['1', '1', '1']);
+      expect(
+        secondRowCells.map((cell) => cell.getAttribute('colspan') ?? '1'),
+      ).toEqual(['1', '1', '1']);
+    });
+  });
+
+  it('should keep parent and child colspans across grandchildren in 3-level hierarchy', async () => {
+    const table = createVirtualizedThreeLevelHeadingTestTable();
+    const { baseElement } = render(<Table pxtable={table} isMobile={false} />);
+
+    await waitFor(() => {
+      const headerRows = Array.from(
+        baseElement.querySelectorAll<HTMLTableRowElement>(
+          'thead tr[data-virtual-header-row-index]',
+        ),
+      );
+
+      expect(headerRows.length).toBe(3);
+
+      const rowCells = headerRows.map((row) =>
+        Array.from(
+          row.querySelectorAll<HTMLTableCellElement>(
+            'th[data-virtual-header-cell]',
+          ),
+        ),
+      );
+
+      expect(rowCells[0].map((cell) => cell.textContent?.trim() ?? '')).toEqual(
+        ['2024', '2025'],
+      );
+      expect(
+        rowCells[0].map((cell) => cell.getAttribute('colspan') ?? '1'),
+      ).toEqual(['4', '4']);
+
+      expect(rowCells[1].map((cell) => cell.textContent?.trim() ?? '')).toEqual(
+        ['gross', 'net', 'gross', 'net'],
+      );
+      expect(
+        rowCells[1].map((cell) => cell.getAttribute('colspan') ?? '1'),
+      ).toEqual(['2', '2', '2', '2']);
+
+      expect(rowCells[2].map((cell) => cell.textContent?.trim() ?? '')).toEqual(
+        [
+          'count',
+          'share',
+          'count',
+          'share',
+          'count',
+          'share',
+          'count',
+          'share',
+        ],
+      );
+      expect(
+        rowCells[2].map((cell) => cell.getAttribute('colspan') ?? '1'),
+      ).toEqual(['1', '1', '1', '1', '1', '1', '1', '1']);
+    });
   });
 
   it('should position virtual body rows using measured row heights', async () => {

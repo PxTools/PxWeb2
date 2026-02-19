@@ -412,6 +412,7 @@ function VirtualizedDesktopTable({
         const headerCells: React.JSX.Element[] = [];
 
         let currentCode: string | undefined;
+        let currentPathKey: string | undefined;
         let runStart = 0;
         let runSize = 0;
         let runColSpan = 0;
@@ -460,9 +461,16 @@ function VirtualizedDesktopTable({
             variablePosition >= 0
               ? column.codesByPosition[variablePosition]
               : undefined;
+          const pathKey = headingVariablePositions
+            .slice(0, headingLevel + 1)
+            .map((position) =>
+              position >= 0 ? (column.codesByPosition[position] ?? '') : '',
+            )
+            .join('|');
 
           if (i === 0) {
             currentCode = code;
+            currentPathKey = pathKey;
             runStart = virtualColumn.start;
             runSize = virtualColumn.size;
             runColSpan = 1;
@@ -470,7 +478,11 @@ function VirtualizedDesktopTable({
           }
 
           const isContiguous = virtualColumn.start === runStart + runSize;
-          if (code === currentCode && isContiguous) {
+          if (
+            pathKey === currentPathKey &&
+            code === currentCode &&
+            isContiguous
+          ) {
             runSize += virtualColumn.size;
             runColSpan++;
             continue;
@@ -478,6 +490,7 @@ function VirtualizedDesktopTable({
 
           pushRun();
           currentCode = code;
+          currentPathKey = pathKey;
           runStart = virtualColumn.start;
           runSize = virtualColumn.size;
           runColSpan = 1;
