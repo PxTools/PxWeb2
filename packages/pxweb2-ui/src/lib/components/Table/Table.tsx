@@ -52,6 +52,17 @@ interface CreateRowMobileParams {
   contentsVariableDecimals?: Record<string, { decimals: number }>;
 }
 
+interface CreateSecondLastMobileHeaderParams {
+  stubLength: number;
+  stubIndex: number;
+  cellMeta: DataCellMeta;
+  variable: Variable;
+  val: Value;
+  valueIndex: number;
+  tableRows: React.JSX.Element[];
+  uniqueIdCounter: { idCounter: number };
+}
+
 /**
  * Represents the metadata for multiple dimensions of a data cell.
  */
@@ -201,7 +212,6 @@ function VirtualizedDesktopTable({
   const headerRef = useRef<HTMLTableSectionElement | null>(null);
   const [scrollElementWidth, setScrollElementWidth] = useState(0);
   const [headerRowHeights, setHeaderRowHeights] = useState<number[]>([]);
-  const [bodyRowHeightsVersion, setBodyRowHeightsVersion] = useState(0);
   const cssClasses = className.length > 0 ? ' ' + className : '';
   const hasStub = pxtable.stub.length > 0;
   const rowHeaderWidth = hasStub ? 260 : 0;
@@ -295,11 +305,11 @@ function VirtualizedDesktopTable({
     updateWidth();
 
     const resizeObserver =
-      typeof ResizeObserver !== 'undefined'
-        ? new ResizeObserver(() => {
+      typeof ResizeObserver === 'undefined'
+        ? null
+        : new ResizeObserver(() => {
             updateWidth();
-          })
-        : null;
+          });
     resizeObserver?.observe(element);
 
     window.addEventListener('resize', updateWidth);
@@ -348,7 +358,7 @@ function VirtualizedDesktopTable({
           key: index,
         }));
 
-  const positionedRenderedRows = useMemo(() => {
+  const positionedRenderedRows = (() => {
     let previousIndex: number | null = null;
     let previousStart = 0;
     let previousHeight = rowHeight;
@@ -372,7 +382,7 @@ function VirtualizedDesktopTable({
         resolvedStart,
       };
     });
-  }, [renderedRows, rowHeight, bodyRowHeightsVersion]);
+  })();
 
   const totalDataWidth = columnVirtualizer.getTotalSize();
   const availableDataWidth = Math.max(scrollElementWidth - rowHeaderWidth, 0);
@@ -528,7 +538,6 @@ function VirtualizedDesktopTable({
   useEffect(() => {
     cellCacheRef.current.clear();
     measuredRowHeightsRef.current.clear();
-    setBodyRowHeightsVersion((version) => version + 1);
   }, [pivotSignature]);
 
   useEffect(() => {
@@ -548,32 +557,37 @@ function VirtualizedDesktopTable({
     }
 
     const frameId = requestAnimationFrame(() => {
-      const measuredHeights = Array.from(
+      const measuredHeights: number[] = [];
+
+      const headerRowIndices = Array.from(
         { length: headerDimensionCount },
-        (_, index) => {
-          const rowElement = headerElement.querySelector<HTMLTableRowElement>(
-            `tr[data-virtual-header-row-index="${index}"]`,
-          );
-
-          if (!rowElement) {
-            return headerHeight;
-          }
-
-          let measuredHeight = headerHeight;
-          const cellElements = rowElement.querySelectorAll<HTMLElement>(
-            'th[data-virtual-header-cell]',
-          );
-
-          for (const cellElement of cellElements) {
-            measuredHeight = Math.max(
-              measuredHeight,
-              Math.ceil(cellElement.scrollHeight),
-            );
-          }
-
-          return measuredHeight;
-        },
+        (_, index) => index,
       );
+
+      for (const index of headerRowIndices) {
+        const rowElement = headerElement.querySelector<HTMLTableRowElement>(
+          `tr[data-virtual-header-row-index="${index}"]`,
+        );
+
+        if (!rowElement) {
+          measuredHeights.push(headerHeight);
+          continue;
+        }
+
+        let measuredHeight = headerHeight;
+        const cellElements = rowElement.querySelectorAll<HTMLElement>(
+          'th[data-virtual-header-cell]',
+        );
+
+        for (const cellElement of Array.from(cellElements)) {
+          measuredHeight = Math.max(
+            measuredHeight,
+            Math.ceil(cellElement.scrollHeight),
+          );
+        }
+
+        measuredHeights.push(measuredHeight);
+      }
 
       const hasDifference = measuredHeights.some(
         (height, index) =>
@@ -610,28 +624,26 @@ function VirtualizedDesktopTable({
     }
 
     const frameId = requestAnimationFrame(() => {
-      const rowElements = bodyElement.querySelectorAll<HTMLTableRowElement>(
-        'tr[data-virtual-row-index]',
+      const rowElements = Array.from(
+        bodyElement.querySelectorAll('tr[data-virtual-row-index]'),
       );
       let hasResizedRows = false;
 
-      for (const rowElement of rowElements) {
+      for (const rowElement of rowElements as HTMLTableRowElement[]) {
         const rowIndex = Number(rowElement.dataset.virtualRowIndex);
         if (!Number.isInteger(rowIndex) || rowIndex < 0) {
           continue;
         }
 
-        const cellElements = rowElement.querySelectorAll<HTMLElement>(
-          '[data-virtual-cell]',
-        );
+        const cellElements = rowElement.querySelectorAll('[data-virtual-cell]');
 
         let measuredHeight = rowHeight;
-        for (const cellElement of cellElements) {
+        cellElements.forEach((cellElement) => {
           measuredHeight = Math.max(
             measuredHeight,
-            Math.ceil(cellElement.scrollHeight),
+            Math.ceil((cellElement as HTMLElement).scrollHeight),
           );
-        }
+        });
 
         const previousHeight = measuredRowHeightsRef.current.get(rowIndex);
         if (
@@ -646,7 +658,6 @@ function VirtualizedDesktopTable({
 
       if (hasResizedRows) {
         rowVirtualizer.measure();
-        setBodyRowHeightsVersion((version) => version + 1);
       }
     });
 
@@ -849,6 +860,23 @@ function VirtualizedDesktopTable({
   );
 }
 
+function getTimeVariableAriaLabel(
+  variable: Variable,
+  valueLabel: string,
+): string | undefined {
+  return variable.type === VartypeEnum.TIME_VARIABLE
+    ? `${variable.label} ${valueLabel}`
+    : undefined;
+}
+
+function isFirstHeaderCellWithoutStub(
+  valueIndex: number,
+  repetitionIndex: number,
+  hasStub: boolean,
+): boolean {
+  return valueIndex === 0 && repetitionIndex === 1 && !hasStub;
+}
+
 function buildLeafDimensions(
   variables: Variable[],
   variableOrder: string[],
@@ -994,16 +1022,16 @@ export function createHeading(
             scope="col"
             colSpan={columnSpan}
             key={getNewKey()}
-            aria-label={
-              variable.type === VartypeEnum.TIME_VARIABLE
-                ? `${variable.label} ${variable.values[i].label}`
-                : undefined
-            }
+            aria-label={getTimeVariableAriaLabel(
+              variable,
+              variable.values[i].label,
+            )}
             className={cl({
-              [classes.firstColNoStub]:
-                i === 0 &&
-                idxRepetitionCurrentHeadingLevel === 1 &&
-                table.stub.length === 0,
+              [classes.firstColNoStub]: isFirstHeaderCellWithoutStub(
+                i,
+                idxRepetitionCurrentHeadingLevel,
+                table.stub.length > 0,
+              ),
             })}
           >
             {variable.values[i].label}
@@ -1273,35 +1301,18 @@ function createRowMobile({
     }
     // If there are more stub variables that need to add headers to this row
     if (stubLength > stubIndex + 1) {
-      switch (stubIndex) {
-        case stubLength - 3: {
-          // third last level
-          // Repeat the headers for all stubs except the 2 last levels
-          createRepeatedMobileHeader(
-            table,
-            stubLength,
-            stubIndex,
-            stubDataCellCodes,
-            tableRows,
-            uniqueIdCounter,
-          );
-          break;
-        }
-        case stubLength - 2: {
-          // second last level
-          createSecondLastMobileHeader(
-            stubLength,
-            stubIndex,
-            cellMeta,
-            variable,
-            val,
-            i,
-            tableRows,
-            uniqueIdCounter,
-          );
-          break;
-        }
-      }
+      createIntermediateMobileHeaders({
+        table,
+        stubLength,
+        stubIndex,
+        stubDataCellCodes,
+        tableRows,
+        uniqueIdCounter,
+        cellMeta,
+        variable,
+        val,
+        valueIndex: i,
+      });
       // Create a new row for the next stub
       createRowMobile({
         stubIndex: stubIndex + 1,
@@ -1418,7 +1429,7 @@ function fillData(
     // Merge the metadata structure for the dimensions of the stub and header cells
     const dataCellCodes = stubDataCellCodes.concat(headingDataCellCodes[i]);
     const datacellIds: string[] = dataCellCodes.map((obj) => obj.htmlId);
-    const headers: string = datacellIds.toString().replace(/,/g, ' ');
+    const headers: string = datacellIds.toString().replaceAll(',', ' ');
     const dimensions: string[] = [];
     // Arrange the dimensons in the right order according to how data is stored is the cube
     for (const dataCell of dataCellCodes) {
@@ -1504,6 +1515,57 @@ function createRepeatedMobileHeader(
   }
 }
 
+function createIntermediateMobileHeaders({
+  table,
+  stubLength,
+  stubIndex,
+  stubDataCellCodes,
+  tableRows,
+  uniqueIdCounter,
+  cellMeta,
+  variable,
+  val,
+  valueIndex,
+}: {
+  table: PxTable;
+  stubLength: number;
+  stubIndex: number;
+  stubDataCellCodes: DataCellCodes;
+  tableRows: React.JSX.Element[];
+  uniqueIdCounter: { idCounter: number };
+  cellMeta: DataCellMeta;
+  variable: Variable;
+  val: Value;
+  valueIndex: number;
+}): void {
+  switch (stubIndex) {
+    case stubLength - 3: {
+      createRepeatedMobileHeader(
+        table,
+        stubLength,
+        stubIndex,
+        stubDataCellCodes,
+        tableRows,
+        uniqueIdCounter,
+      );
+      break;
+    }
+    case stubLength - 2: {
+      createSecondLastMobileHeader({
+        stubLength,
+        stubIndex,
+        cellMeta,
+        variable,
+        val,
+        valueIndex,
+        tableRows,
+        uniqueIdCounter,
+      });
+      break;
+    }
+  }
+}
+
 /**
  * Creates and appends a second last level mobile header row to the table rows.
  *
@@ -1514,16 +1576,16 @@ function createRepeatedMobileHeader(
  * @param {number} i - The index of the current iteration.
  * @param {React.JSX.Element[]} tableRows - The array of table rows to which the new row will be appended.
  */
-function createSecondLastMobileHeader(
-  stubLength: number,
-  stubIndex: number,
-  cellMeta: DataCellMeta,
-  variable: Variable,
-  val: Value,
-  i: number,
-  tableRows: React.JSX.Element[],
-  uniqueIdCounter: { idCounter: number },
-): void {
+function createSecondLastMobileHeader({
+  stubLength,
+  stubIndex,
+  cellMeta,
+  variable,
+  val,
+  valueIndex,
+  tableRows,
+  uniqueIdCounter,
+}: CreateSecondLastMobileHeaderParams): void {
   // second last level
   let tableRowSecondLastHeader: React.JSX.Element[] = [];
   let tempid =
@@ -1560,7 +1622,7 @@ function createSecondLastMobileHeader(
         },
 
         {
-          [classes.mobileRowHeadFirstValueOfSecondLastStub]: i === 0,
+          [classes.mobileRowHeadFirstValueOfSecondLastStub]: valueIndex === 0,
         },
       )}
       key={getNewKey()}
