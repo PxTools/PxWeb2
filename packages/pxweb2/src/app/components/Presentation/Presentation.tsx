@@ -1,7 +1,6 @@
 import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
 import React, { useRef, useEffect, useState, useLayoutEffect } from 'react';
-import isEqual from 'lodash/isEqual';
 
 import classes from './Presentation.module.scss';
 import useApp from '../../context/useApp';
@@ -24,7 +23,7 @@ const MemoizedTable = React.memo(
     <Table pxtable={pxtable} isMobile={isMobile} />
   ),
   (prevProps, nextProps) =>
-    isEqual(prevProps.pxtable, nextProps.pxtable) &&
+    prevProps.pxtable === nextProps.pxtable &&
     prevProps.isMobile === nextProps.isMobile,
 );
 export function Presentation({

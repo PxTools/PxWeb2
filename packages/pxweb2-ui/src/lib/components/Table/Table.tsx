@@ -1,5 +1,6 @@
-import { memo, useMemo } from 'react';
+import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import cl from 'clsx';
+import { useVirtualizer } from '@tanstack/react-virtual';
 
 import classes from './Table.module.scss';
 import { PxTable } from '../../shared-types/pxTable';
@@ -51,16 +52,502 @@ interface CreateRowMobileParams {
   contentsVariableDecimals?: Record<string, { decimals: number }>;
 }
 
+interface CreateSecondLastMobileHeaderParams {
+  stubLength: number;
+  stubIndex: number;
+  cellMeta: DataCellMeta;
+  variable: Variable;
+  val: Value;
+  valueIndex: number;
+  tableRows: React.JSX.Element[];
+  uniqueIdCounter: { idCounter: number };
+}
+
 /**
  * Represents the metadata for multiple dimensions of a data cell.
  */
 type DataCellCodes = DataCellMeta[];
+
+type LeafDimension = {
+  key: string;
+  label: string;
+  labelParts: string[];
+  codesByPosition: (string | undefined)[];
+};
+
+type VirtualRowEntry = {
+  key: string;
+  leaf: LeafDimension;
+  level: number;
+  label: string;
+  isDataRow: boolean;
+};
+
+type MobileHeaderCellDescriptor = {
+  id: string;
+  scope: 'col' | 'row';
+  colSpan?: number;
+  className: string;
+  label: string;
+  ariaLabel?: string;
+};
+
+type MobileRowDescriptor = {
+  key: string;
+  className?: string;
+  headerCells: MobileHeaderCellDescriptor[];
+  stubDataCellCodes?: DataCellCodes;
+};
+
+function toMobileHeaderId(
+  cellMeta: Pick<DataCellMeta, 'varId' | 'valCode'>,
+  uniqueIdCounter: { idCounter: number },
+): string {
+  return `${cellMeta.varId}_${cellMeta.valCode}_I${uniqueIdCounter.idCounter}`;
+}
+
+function buildMobileRowDescriptors(table: PxTable): MobileRowDescriptor[] {
+  const rows: MobileRowDescriptor[] = [];
+  const stubDataCellCodes: DataCellCodes = [];
+  const uniqueIdCounter = { idCounter: 0 };
+  const stubLength = table.stub.length;
+
+  const pushRepeatedHeaderRows = (stubIndex: number) => {
+    for (let n = 0; n <= stubLength - 3; n++) {
+      uniqueIdCounter.idCounter++;
+      const currentMeta = stubDataCellCodes[n];
+      const variable = table.stub[n];
+
+      if (!currentMeta || !variable) {
+        continue;
+      }
+
+      currentMeta.htmlId = toMobileHeaderId(currentMeta, uniqueIdCounter);
+
+      rows.push({
+        key: `repeat-${n}-${currentMeta.htmlId}`,
+        className: cl(
+          { [classes.firstdim]: n === 0 },
+          {
+            [classes.mobileRowHeadLevel1]: n === stubLength - 3,
+          },
+          classes.mobileEmptyRowCell,
+        ),
+        headerCells: [
+          {
+            id: currentMeta.htmlId,
+            scope: 'col',
+            colSpan: 2,
+            className: cl(classes.stub, classes[`stub-${stubIndex}`]),
+            label: currentMeta.valLabel,
+            ariaLabel: getTimeVariableAriaLabel(variable, currentMeta.valLabel),
+          },
+        ],
+      });
+    }
+  };
+
+  const pushSecondLastHeaderRow = (
+    stubIndex: number,
+    cellMeta: DataCellMeta,
+    variable: Variable,
+    val: Value,
+    valueIndex: number,
+  ) => {
+    cellMeta.htmlId = toMobileHeaderId(cellMeta, uniqueIdCounter);
+
+    rows.push({
+      key: `second-last-${cellMeta.htmlId}`,
+      className: cl(
+        { [classes.firstdim]: stubIndex === 0 },
+        classes.mobileEmptyRowCell,
+        {
+          [classes.mobileRowHeadLevel2]: stubLength > 2,
+        },
+        {
+          [classes.mobileRowHeadLevel1]: stubLength === 2,
+        },
+        {
+          [classes.mobileRowHeadFirstValueOfSecondLastStub]: valueIndex === 0,
+        },
+      ),
+      headerCells: [
+        {
+          id: cellMeta.htmlId,
+          scope: 'col',
+          colSpan: 2,
+          className: cl(classes.stub, classes[`stub-${stubIndex}`]),
+          label: val.label,
+          ariaLabel: getTimeVariableAriaLabel(variable, val.label),
+        },
+      ],
+    });
+  };
+
+  const walk = (stubIndex: number) => {
+    const variable = table.stub[stubIndex];
+    const stubValues = variable?.values ?? [];
+
+    for (let valueIndex = 0; valueIndex < stubValues.length; valueIndex++) {
+      uniqueIdCounter.idCounter++;
+      const val = stubValues[valueIndex];
+
+      const cellMeta: DataCellMeta = {
+        varId: variable.id,
+        valCode: val.code,
+        valLabel: val.label,
+        varPos: table.data.variableOrder.indexOf(variable.id),
+        htmlId: '',
+      };
+
+      stubDataCellCodes.push(cellMeta);
+
+      const isLeafLevel = stubIndex === stubLength - 1;
+
+      if (!isLeafLevel) {
+        if (stubIndex === stubLength - 3) {
+          pushRepeatedHeaderRows(stubIndex);
+        } else if (stubIndex === stubLength - 2) {
+          pushSecondLastHeaderRow(
+            stubIndex,
+            cellMeta,
+            variable,
+            val,
+            valueIndex,
+          );
+        }
+
+        walk(stubIndex + 1);
+        stubDataCellCodes.pop();
+        continue;
+      }
+
+      const lastValueOfLastStub = valueIndex === stubValues.length - 1;
+      cellMeta.htmlId = toMobileHeaderId(cellMeta, uniqueIdCounter);
+
+      rows.push({
+        key: `leaf-${cellMeta.htmlId}`,
+        className: cl(
+          classes.mobileRowHeadLastStub,
+          {
+            [classes.mobileRowHeadlastValueOfLastStub]: lastValueOfLastStub,
+          },
+          {
+            [classes.mobileRowHeadfirstValueOfLastStub2Dim]:
+              valueIndex === 0 && stubLength === 2,
+          },
+        ),
+        headerCells: [
+          {
+            id: cellMeta.htmlId,
+            scope: 'row',
+            className: cl(classes.stub, classes[`stub-${stubIndex}`]),
+            label: val.label,
+            ariaLabel: getTimeVariableAriaLabel(variable, val.label),
+          },
+        ],
+        stubDataCellCodes: stubDataCellCodes.map((meta) => ({ ...meta })),
+      });
+
+      stubDataCellCodes.pop();
+    }
+  };
+
+  if (table.stub.length > 0) {
+    walk(0);
+  } else {
+    rows.push({
+      key: 'leaf-no-stub',
+      className: cl(classes.firstColNoStub),
+      headerCells: [],
+      stubDataCellCodes: [],
+    });
+  }
+
+  return rows;
+}
+
+const VIRTUALIZATION_CELL_THRESHOLD = 10;
+
+export function shouldUseDesktopVirtualization(
+  rowCount: number,
+  columnCount: number,
+): boolean {
+  return rowCount * columnCount >= VIRTUALIZATION_CELL_THRESHOLD;
+}
 
 export const Table = memo(function Table({
   pxtable,
   isMobile,
   className = '',
 }: TableProps) {
+  if (isMobile) {
+    return <VirtualizedMobileTable pxtable={pxtable} className={className} />;
+  }
+
+  return <VirtualizedDesktopTable pxtable={pxtable} className={className} />;
+});
+
+interface VirtualizedMobileTableProps extends Omit<TableProps, 'isMobile'> {}
+
+// Returns the virtualized table for mobile devices
+function VirtualizedMobileTable({
+  pxtable,
+  className = '',
+}: Readonly<VirtualizedMobileTableProps>) {
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const [scrollElement, setScrollElement] = useState<HTMLDivElement | null>(
+    null,
+  );
+  const measuredRowHeightsRef = useRef<Map<number, number>>(new Map());
+  const lastNonEmptyVirtualRowsRef = useRef<
+    ReturnType<typeof rowVirtualizer.getVirtualItems>
+  >([]);
+  const cssClasses = className.length > 0 ? ' ' + className : '';
+
+  const { tableMeta, headingRows, headingDataCellCodes, mobileRowDescriptors } =
+    useMemo(() => {
+      const resolvedTableMeta = calculateRowAndColumnMeta(pxtable);
+      const tableColumnSize =
+        resolvedTableMeta.columns - resolvedTableMeta.columnOffset;
+
+      const tableHeadingDataCellCodes: DataCellCodes[] = new Array(
+        tableColumnSize,
+      );
+
+      for (let i = 0; i < tableColumnSize; i++) {
+        const dataCellCodes: DataCellCodes = new Array<DataCellMeta>(
+          pxtable.heading.length,
+        );
+
+        for (let j = 0; j < pxtable.heading.length; j++) {
+          dataCellCodes[j] = {
+            varId: '',
+            valCode: '',
+            valLabel: '',
+            varPos: 0,
+            htmlId: '',
+          };
+        }
+
+        tableHeadingDataCellCodes[i] = dataCellCodes;
+      }
+
+      const resolvedHeadingRows = createHeading(
+        pxtable,
+        resolvedTableMeta,
+        tableHeadingDataCellCodes,
+      );
+
+      return {
+        tableMeta: resolvedTableMeta,
+        headingRows: resolvedHeadingRows,
+        headingDataCellCodes: tableHeadingDataCellCodes,
+        mobileRowDescriptors: buildMobileRowDescriptors(pxtable),
+      };
+    }, [pxtable]);
+
+  const rowVirtualizer = useVirtualizer({
+    count: mobileRowDescriptors.length,
+    getScrollElement: () => scrollElement,
+    estimateSize: () => 40,
+    overscan: 10,
+  });
+
+  const virtualRows = rowVirtualizer.getVirtualItems();
+
+  if (virtualRows.length > 0) {
+    lastNonEmptyVirtualRowsRef.current = virtualRows;
+  }
+
+  const bootstrapRows = useMemo(
+    () =>
+      Array.from(
+        { length: Math.min(mobileRowDescriptors.length, 12) },
+        (_, index) => ({
+          index,
+          start: index * 40,
+          size: 40,
+          end: (index + 1) * 40,
+          lane: 0,
+          key: `bootstrap-${index}`,
+        }),
+      ),
+    [mobileRowDescriptors.length],
+  );
+
+  let renderedRows = virtualRows;
+  if (renderedRows.length === 0) {
+    renderedRows = lastNonEmptyVirtualRowsRef.current;
+  }
+  if (renderedRows.length === 0) {
+    renderedRows = bootstrapRows;
+  }
+
+  const topSpacerHeight = renderedRows[0]?.start ?? 0;
+  const bottomSpacerHeight =
+    renderedRows.length > 0
+      ? Math.max(
+          0,
+          rowVirtualizer.getTotalSize() - (renderedRows.at(-1)?.end ?? 0),
+        )
+      : 0;
+  const bodyColSpan = Math.max(1, tableMeta.columns);
+
+  useEffect(() => {
+    const frameId = requestAnimationFrame(() => {
+      const bodyRows = rootRef.current?.querySelectorAll<HTMLTableRowElement>(
+        'tbody tr[data-virtual-mobile-row-index]',
+      );
+
+      if (!bodyRows || bodyRows.length === 0) {
+        return;
+      }
+
+      for (const rowElement of Array.from(bodyRows)) {
+        const rowIndex = Number(rowElement.dataset.virtualMobileRowIndex);
+        if (!Number.isInteger(rowIndex) || rowIndex < 0) {
+          continue;
+        }
+
+        const measuredHeight = Math.max(1, Math.ceil(rowElement.scrollHeight));
+        const previousHeight = measuredRowHeightsRef.current.get(rowIndex);
+
+        if (
+          previousHeight === undefined ||
+          Math.abs(previousHeight - measuredHeight) > 1
+        ) {
+          measuredRowHeightsRef.current.set(rowIndex, measuredHeight);
+          rowVirtualizer.resizeItem(rowIndex, measuredHeight);
+        }
+      }
+    });
+
+    return () => {
+      cancelAnimationFrame(frameId);
+    };
+  }, [renderedRows, rowVirtualizer]);
+
+  useEffect(() => {
+    measuredRowHeightsRef.current.clear();
+    lastNonEmptyVirtualRowsRef.current = [];
+  }, [pxtable]);
+
+  return (
+    <div
+      ref={setScrollElement}
+      className={classes.mobileVirtualScrollContainer}
+    >
+      <div ref={rootRef}>
+        <table
+          className={
+            cl(classes.table, classes[`bodyshort-medium`]) + cssClasses
+          }
+          aria-label={pxtable.metadata.label}
+        >
+          <thead>{headingRows}</thead>
+          <tbody>
+            {topSpacerHeight > 0 && (
+              <tr>
+                <td
+                  colSpan={bodyColSpan}
+                  style={{
+                    border: 'none',
+                    background: 'transparent',
+                    padding: 0,
+                    height: topSpacerHeight,
+                  }}
+                />
+              </tr>
+            )}
+
+            {renderedRows.map((virtualRow) => {
+              const rowDescriptor = mobileRowDescriptors[virtualRow.index];
+
+              if (!rowDescriptor) {
+                return null;
+              }
+
+              const maxCols = tableMeta.columns - tableMeta.columnOffset;
+
+              return (
+                <tr
+                  key={`mobile-virtual-row-${virtualRow.index}-${rowDescriptor.key}`}
+                  className={rowDescriptor.className}
+                  data-virtual-mobile-row-index={virtualRow.index}
+                >
+                  {rowDescriptor.headerCells.map((headerCell) => (
+                    <th
+                      key={`${headerCell.id}-${headerCell.scope}`}
+                      id={headerCell.id}
+                      scope={headerCell.scope}
+                      colSpan={headerCell.colSpan}
+                      aria-label={headerCell.ariaLabel}
+                      className={headerCell.className}
+                    >
+                      {headerCell.label}
+                    </th>
+                  ))}
+
+                  {rowDescriptor.stubDataCellCodes &&
+                    Array.from({ length: maxCols }, (_, columnIndex) => {
+                      const dataCellCodes =
+                        rowDescriptor.stubDataCellCodes!.concat(
+                          headingDataCellCodes[columnIndex],
+                        );
+                      const headers = dataCellCodes
+                        .map((obj) => obj.htmlId)
+                        .toString()
+                        .replaceAll(',', ' ');
+
+                      const dimensions: string[] = [];
+                      for (const dataCell of dataCellCodes) {
+                        dimensions[dataCell.varPos] = dataCell.valCode;
+                      }
+
+                      const dataValue = getPxTableData(
+                        pxtable.data.cube,
+                        dimensions,
+                      );
+
+                      return (
+                        <td
+                          key={`${rowDescriptor.key}-data-${columnIndex}`}
+                          headers={headers}
+                        >
+                          {dataValue?.formattedValue}
+                        </td>
+                      );
+                    })}
+                </tr>
+              );
+            })}
+
+            {bottomSpacerHeight > 0 && (
+              <tr>
+                <td
+                  colSpan={bodyColSpan}
+                  style={{
+                    border: 'none',
+                    background: 'transparent',
+                    padding: 0,
+                    height: bottomSpacerHeight,
+                  }}
+                />
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+function LegacyTable({
+  pxtable,
+  isMobile,
+  className = '',
+}: Readonly<TableProps>) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
 
   const tableMeta: columnRowMeta = calculateRowAndColumnMeta(pxtable);
@@ -144,7 +631,805 @@ export const Table = memo(function Table({
       </tbody>
     </table>
   );
-});
+}
+
+function VirtualizedDesktopTable({
+  pxtable,
+  className = '',
+}: Readonly<{
+  pxtable: PxTable;
+  className?: string;
+}>) {
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const bodyRef = useRef<HTMLTableSectionElement | null>(null);
+  const headerRef = useRef<HTMLTableSectionElement | null>(null);
+  const [scrollElementWidth, setScrollElementWidth] = useState(0);
+  const [headerRowHeights, setHeaderRowHeights] = useState<number[]>([]);
+  const cssClasses = className.length > 0 ? ' ' + className : '';
+  const hasStub = pxtable.stub.length > 0;
+  const rowHeaderWidth = hasStub ? 260 : 0;
+  const headerHeight = 44;
+  const rowHeight = 36;
+
+  const variableOrder = pxtable.data.variableOrder;
+
+  const rowDimensions = useMemo(
+    () =>
+      buildLeafDimensions(
+        pxtable.stub,
+        variableOrder,
+        variableOrder.length,
+        ' / ',
+      ),
+    [pxtable.stub, variableOrder],
+  );
+
+  const virtualRowEntries = useMemo<VirtualRowEntry[]>(() => {
+    if (!hasStub) {
+      return rowDimensions.map((leaf) => ({
+        key: `${leaf.key}::data`,
+        leaf,
+        level: 0,
+        label: leaf.label,
+        isDataRow: true,
+      }));
+    }
+
+    const entries: VirtualRowEntry[] = [];
+    const lastSeenPrefixByLevel: (string | undefined)[] = [];
+
+    for (const leaf of rowDimensions) {
+      const pathParts = leaf.key.split('|');
+      const pathPrefixes = pathParts.map((_, index) =>
+        pathParts.slice(0, index + 1).join('|'),
+      );
+      const lastLevel = leaf.labelParts.length - 1;
+
+      for (let level = 0; level <= lastLevel; level++) {
+        const isDataRow = level === lastLevel;
+        const prefix = pathPrefixes[level] ?? `${leaf.key}::${level}`;
+
+        if (!isDataRow && lastSeenPrefixByLevel[level] === prefix) {
+          continue;
+        }
+
+        entries.push({
+          key: isDataRow ? `${leaf.key}::data` : `${prefix}::group`,
+          leaf,
+          level,
+          label: leaf.labelParts[level],
+          isDataRow,
+        });
+
+        if (!isDataRow) {
+          lastSeenPrefixByLevel[level] = prefix;
+        }
+      }
+    }
+
+    return entries;
+  }, [hasStub, rowDimensions]);
+
+  const columnDimensions = useMemo(
+    () =>
+      buildLeafDimensions(
+        pxtable.heading,
+        variableOrder,
+        variableOrder.length,
+        ' · ',
+      ),
+    [pxtable.heading, variableOrder],
+  );
+
+  const scrollElement = rootRef.current?.parentElement as HTMLElement | null;
+  const cellCacheRef = useRef<Map<string, string>>(new Map());
+  const measuredRowHeightsRef = useRef<Map<number, number>>(new Map());
+  const lastNonEmptyVirtualRowsRef = useRef<
+    ReturnType<typeof rowVirtualizer.getVirtualItems>
+  >([]);
+  const lastNonEmptyVirtualColumnsRef = useRef<
+    ReturnType<typeof columnVirtualizer.getVirtualItems>
+  >([]);
+
+  useEffect(() => {
+    const element = rootRef.current?.parentElement as HTMLElement | null;
+    if (!element) {
+      return;
+    }
+
+    const updateWidth = () => {
+      setScrollElementWidth(element.clientWidth);
+    };
+
+    updateWidth();
+
+    const resizeObserver =
+      typeof ResizeObserver === 'undefined'
+        ? null
+        : new ResizeObserver(() => {
+            updateWidth();
+          });
+    resizeObserver?.observe(element);
+
+    window.addEventListener('resize', updateWidth);
+
+    return () => {
+      resizeObserver?.disconnect();
+      window.removeEventListener('resize', updateWidth);
+    };
+  }, []);
+
+  const rowVirtualizer = useVirtualizer({
+    count: virtualRowEntries.length,
+    getScrollElement: () => scrollElement,
+    estimateSize: () => rowHeight,
+    overscan: 10,
+  });
+
+  const columnVirtualizer = useVirtualizer({
+    horizontal: true,
+    count: columnDimensions.length,
+    getScrollElement: () => scrollElement,
+    estimateSize: () => 112,
+    overscan: 4,
+  });
+
+  const virtualRows = rowVirtualizer.getVirtualItems();
+  const virtualColumns = columnVirtualizer.getVirtualItems();
+
+  if (virtualRows.length > 0) {
+    lastNonEmptyVirtualRowsRef.current = virtualRows;
+  }
+  if (virtualColumns.length > 0) {
+    lastNonEmptyVirtualColumnsRef.current = virtualColumns;
+  }
+
+  const bootstrapRows = useMemo(
+    () =>
+      Array.from(
+        { length: Math.min(virtualRowEntries.length, 24) },
+        (_, index) => ({
+          index,
+          start: index * rowHeight,
+          size: rowHeight,
+          end: (index + 1) * rowHeight,
+          lane: 0,
+          key: `desktop-bootstrap-row-${index}`,
+        }),
+      ),
+    [virtualRowEntries.length, rowHeight],
+  );
+
+  const bootstrapColumns = useMemo(
+    () =>
+      Array.from(
+        { length: Math.min(columnDimensions.length, 12) },
+        (_, index) => ({
+          index,
+          start: index * 112,
+          size: 112,
+          end: (index + 1) * 112,
+          lane: 0,
+          key: `desktop-bootstrap-col-${index}`,
+        }),
+      ),
+    [columnDimensions.length],
+  );
+
+  let renderedRows = virtualRows;
+  if (renderedRows.length === 0) {
+    renderedRows = lastNonEmptyVirtualRowsRef.current;
+  }
+  if (renderedRows.length === 0) {
+    renderedRows = bootstrapRows;
+  }
+
+  let renderedColumns = virtualColumns;
+  if (renderedColumns.length === 0) {
+    renderedColumns = lastNonEmptyVirtualColumnsRef.current;
+  }
+  if (renderedColumns.length === 0) {
+    renderedColumns = bootstrapColumns;
+  }
+
+  const positionedRenderedRows = (() => {
+    let previousIndex: number | null = null;
+    let previousStart = 0;
+    let previousHeight = rowHeight;
+
+    return renderedRows.map((virtualRow) => {
+      const resolvedHeight =
+        measuredRowHeightsRef.current.get(virtualRow.index) ?? virtualRow.size;
+
+      let resolvedStart = virtualRow.start;
+      if (previousIndex !== null && virtualRow.index === previousIndex + 1) {
+        resolvedStart = previousStart + previousHeight;
+      }
+
+      previousIndex = virtualRow.index;
+      previousStart = resolvedStart;
+      previousHeight = resolvedHeight;
+
+      return {
+        virtualRow,
+        resolvedHeight,
+        resolvedStart,
+      };
+    });
+  })();
+
+  const totalDataWidth = columnVirtualizer.getTotalSize();
+  const availableDataWidth = Math.max(scrollElementWidth - rowHeaderWidth, 0);
+  const widthStretchFactor =
+    totalDataWidth > 0 ? Math.max(1, availableDataWidth / totalDataWidth) : 1;
+
+  const headingVariablePositions = useMemo(
+    () => pxtable.heading.map((variable) => variableOrder.indexOf(variable.id)),
+    [pxtable.heading, variableOrder],
+  );
+
+  const headerDimensionCount = Math.max(pxtable.heading.length, 1);
+  const resolvedHeaderRowHeights = useMemo(
+    () =>
+      Array.from(
+        { length: headerDimensionCount },
+        (_, index) => headerRowHeights[index] ?? headerHeight,
+      ),
+    [headerDimensionCount, headerRowHeights, headerHeight],
+  );
+  const headerGroupHeight = useMemo(
+    () =>
+      resolvedHeaderRowHeights.reduce(
+        (sum, currentHeight) => sum + currentHeight,
+        0,
+      ),
+    [resolvedHeaderRowHeights],
+  );
+
+  const virtualHeaderRows = useMemo(
+    () =>
+      pxtable.heading.map((variable, headingLevel) => {
+        const codeToValue = new Map(
+          variable.values.map((value) => [value.code, value]),
+        );
+        const variablePosition = headingVariablePositions[headingLevel];
+        const headerCells: React.JSX.Element[] = [];
+
+        let currentCode: string | undefined;
+        let currentPathKey: string | undefined;
+        let runStart = 0;
+        let runSize = 0;
+        let runColSpan = 0;
+        let runIndex = 0;
+
+        const pushRun = () => {
+          if (runColSpan === 0) {
+            return;
+          }
+
+          const value =
+            currentCode === undefined
+              ? undefined
+              : codeToValue.get(currentCode);
+
+          headerCells.push(
+            <th
+              scope="col"
+              key={`${variable.id}-${runIndex}-${runStart}`}
+              colSpan={runColSpan}
+              aria-label={
+                variable.type === VartypeEnum.TIME_VARIABLE && value
+                  ? `${variable.label} ${value.label}`
+                  : undefined
+              }
+              className={cl(classes.virtualCell, classes.virtualColumnHeader, {
+                [classes.firstColNoStub]: !hasStub && runIndex === 0,
+              })}
+              data-virtual-header-cell
+              style={{
+                width: runSize * widthStretchFactor,
+                minHeight: resolvedHeaderRowHeights[headingLevel],
+                transform: `translateX(${rowHeaderWidth + runStart * widthStretchFactor}px)`,
+              }}
+            >
+              {value?.label ?? ''}
+            </th>,
+          );
+          runIndex++;
+        };
+
+        for (let i = 0; i < renderedColumns.length; i++) {
+          const virtualColumn = renderedColumns[i];
+          const column = columnDimensions[virtualColumn.index];
+          const code =
+            variablePosition >= 0
+              ? column.codesByPosition[variablePosition]
+              : undefined;
+          const pathKey = headingVariablePositions
+            .slice(0, headingLevel + 1)
+            .map((position) =>
+              position >= 0 ? (column.codesByPosition[position] ?? '') : '',
+            )
+            .join('|');
+
+          if (i === 0) {
+            currentCode = code;
+            currentPathKey = pathKey;
+            runStart = virtualColumn.start;
+            runSize = virtualColumn.size;
+            runColSpan = 1;
+            continue;
+          }
+
+          const isContiguous = virtualColumn.start === runStart + runSize;
+          if (
+            pathKey === currentPathKey &&
+            code === currentCode &&
+            isContiguous
+          ) {
+            runSize += virtualColumn.size;
+            runColSpan++;
+            continue;
+          }
+
+          pushRun();
+          currentCode = code;
+          currentPathKey = pathKey;
+          runStart = virtualColumn.start;
+          runSize = virtualColumn.size;
+          runColSpan = 1;
+        }
+
+        pushRun();
+
+        return headerCells;
+      }),
+    [
+      pxtable.heading,
+      headingVariablePositions,
+      renderedColumns,
+      columnDimensions,
+      resolvedHeaderRowHeights,
+      rowHeaderWidth,
+      hasStub,
+      widthStretchFactor,
+    ],
+  );
+
+  const shouldVirtualize = shouldUseDesktopVirtualization(
+    virtualRowEntries.length,
+    columnDimensions.length,
+  );
+
+  const pivotSignature = useMemo(
+    () =>
+      `${pxtable.stub.map((variable) => variable.id).join('|')}::${pxtable.heading
+        .map((variable) => variable.id)
+        .join('|')}::${pxtable.data.variableOrder.join('|')}`,
+    [pxtable.stub, pxtable.heading, pxtable.data.variableOrder],
+  );
+
+  useEffect(() => {
+    cellCacheRef.current.clear();
+    measuredRowHeightsRef.current.clear();
+    lastNonEmptyVirtualRowsRef.current = [];
+    lastNonEmptyVirtualColumnsRef.current = [];
+  }, [pivotSignature]);
+
+  useEffect(() => {
+    setHeaderRowHeights(
+      Array.from({ length: headerDimensionCount }, () => headerHeight),
+    );
+  }, [headerDimensionCount, headerHeight, pivotSignature]);
+
+  useEffect(() => {
+    if (!shouldVirtualize) {
+      return;
+    }
+
+    const headerElement = headerRef.current;
+    if (!headerElement) {
+      return;
+    }
+
+    const frameId = requestAnimationFrame(() => {
+      const measuredHeights: number[] = [];
+
+      const headerRowIndices = Array.from(
+        { length: headerDimensionCount },
+        (_, index) => index,
+      );
+
+      for (const index of headerRowIndices) {
+        const rowElement = headerElement.querySelector<HTMLTableRowElement>(
+          `tr[data-virtual-header-row-index="${index}"]`,
+        );
+
+        if (!rowElement) {
+          measuredHeights.push(headerHeight);
+          continue;
+        }
+
+        let measuredHeight = headerHeight;
+        const cellElements = rowElement.querySelectorAll<HTMLElement>(
+          'th[data-virtual-header-cell]',
+        );
+
+        for (const cellElement of Array.from(cellElements)) {
+          measuredHeight = Math.max(
+            measuredHeight,
+            Math.ceil(cellElement.scrollHeight),
+          );
+        }
+
+        measuredHeights.push(measuredHeight);
+      }
+
+      const hasDifference = measuredHeights.some(
+        (height, index) =>
+          Math.abs((headerRowHeights[index] ?? headerHeight) - height) > 1,
+      );
+
+      if (hasDifference) {
+        setHeaderRowHeights(measuredHeights);
+      }
+    });
+
+    return () => {
+      cancelAnimationFrame(frameId);
+    };
+  }, [
+    shouldVirtualize,
+    headerDimensionCount,
+    headerHeight,
+    headerRowHeights,
+    renderedColumns,
+    widthStretchFactor,
+    hasStub,
+    rowHeaderWidth,
+  ]);
+
+  useEffect(() => {
+    if (!shouldVirtualize) {
+      return;
+    }
+
+    const bodyElement = bodyRef.current;
+    if (!bodyElement) {
+      return;
+    }
+
+    const frameId = requestAnimationFrame(() => {
+      const rowElements = Array.from(
+        bodyElement.querySelectorAll('tr[data-virtual-row-index]'),
+      );
+      let hasResizedRows = false;
+
+      for (const rowElement of rowElements as HTMLTableRowElement[]) {
+        const rowIndex = Number(rowElement.dataset.virtualRowIndex);
+        if (!Number.isInteger(rowIndex) || rowIndex < 0) {
+          continue;
+        }
+
+        const cellElements = rowElement.querySelectorAll('[data-virtual-cell]');
+
+        let measuredHeight = rowHeight;
+        cellElements.forEach((cellElement) => {
+          measuredHeight = Math.max(
+            measuredHeight,
+            Math.ceil((cellElement as HTMLElement).scrollHeight),
+          );
+        });
+
+        const previousHeight = measuredRowHeightsRef.current.get(rowIndex);
+        if (
+          previousHeight === undefined ||
+          Math.abs(previousHeight - measuredHeight) > 1
+        ) {
+          measuredRowHeightsRef.current.set(rowIndex, measuredHeight);
+          rowVirtualizer.resizeItem(rowIndex, measuredHeight);
+          hasResizedRows = true;
+        }
+      }
+
+      if (hasResizedRows) {
+        rowVirtualizer.measure();
+      }
+    });
+
+    return () => {
+      cancelAnimationFrame(frameId);
+    };
+  }, [
+    shouldVirtualize,
+    renderedRows,
+    renderedColumns,
+    widthStretchFactor,
+    rowHeight,
+    rowVirtualizer,
+  ]);
+
+  if (!shouldVirtualize) {
+    return (
+      <LegacyTable pxtable={pxtable} isMobile={false} className={className} />
+    );
+  }
+
+  const totalBodyHeight = rowVirtualizer.getTotalSize();
+  const totalWidth = rowHeaderWidth + totalDataWidth * widthStretchFactor;
+
+  return (
+    <div
+      ref={rootRef}
+      style={{
+        width: totalWidth,
+        minWidth: '100%',
+      }}
+    >
+      <table
+        className={cl(
+          classes.table,
+          classes.virtualTable,
+          classes[`bodyshort-medium`],
+          cssClasses,
+        )}
+        aria-label={pxtable.metadata.label}
+      >
+        <thead ref={headerRef} className={classes.virtualHeaderRowGroup}>
+          {pxtable.heading.length > 0 ? (
+            pxtable.heading.map((_, headingLevel) => (
+              <tr
+                className={classes.virtualRow}
+                key={`header-row-${pxtable.heading[headingLevel].id}`}
+                data-virtual-header-row-index={headingLevel}
+                style={{ height: resolvedHeaderRowHeights[headingLevel] }}
+              >
+                {hasStub && headingLevel === 0 && (
+                  <td
+                    rowSpan={headerDimensionCount}
+                    className={cl(
+                      classes.virtualCell,
+                      classes.virtualRowHeaderCell,
+                      classes.emptyTableData,
+                    )}
+                    style={{
+                      width: rowHeaderWidth,
+                      height: headerGroupHeight,
+                    }}
+                  />
+                )}
+
+                {virtualHeaderRows[headingLevel]}
+              </tr>
+            ))
+          ) : (
+            <tr
+              className={classes.virtualRow}
+              data-virtual-header-row-index={0}
+              style={{ height: resolvedHeaderRowHeights[0] }}
+            >
+              {hasStub && (
+                <td
+                  rowSpan={headerDimensionCount}
+                  className={cl(
+                    classes.virtualCell,
+                    classes.virtualRowHeaderCell,
+                    classes.emptyTableData,
+                  )}
+                  style={{
+                    width: rowHeaderWidth,
+                    height: headerGroupHeight,
+                  }}
+                />
+              )}
+
+              {renderedColumns.map((virtualColumn) => {
+                const column = columnDimensions[virtualColumn.index];
+
+                return (
+                  <th
+                    scope="col"
+                    key={column.key}
+                    className={cl(
+                      classes.virtualCell,
+                      classes.virtualColumnHeader,
+                      {
+                        [classes.firstColNoStub]:
+                          !hasStub && virtualColumn.index === 0,
+                      },
+                    )}
+                    data-virtual-header-cell
+                    style={{
+                      width: virtualColumn.size * widthStretchFactor,
+                      minHeight: resolvedHeaderRowHeights[0],
+                      transform: `translateX(${rowHeaderWidth + virtualColumn.start * widthStretchFactor}px)`,
+                    }}
+                  >
+                    {column.label}
+                  </th>
+                );
+              })}
+            </tr>
+          )}
+        </thead>
+
+        <tbody
+          ref={bodyRef}
+          className={classes.virtualBodyRowGroup}
+          style={{ height: totalBodyHeight }}
+        >
+          {positionedRenderedRows.map(
+            ({ virtualRow, resolvedHeight, resolvedStart }) => {
+              const rowEntry = virtualRowEntries[virtualRow.index];
+
+              return (
+                <tr
+                  key={rowEntry.key}
+                  className={cl(classes.virtualRow, {
+                    [classes.firstdim]: rowEntry.level === 0,
+                  })}
+                  data-virtual-row-index={virtualRow.index}
+                  style={{
+                    height: resolvedHeight,
+                    transform: `translateY(${resolvedStart}px)`,
+                  }}
+                >
+                  {hasStub && (
+                    <th
+                      scope="row"
+                      className={cl(
+                        classes.virtualCell,
+                        classes.virtualRowHeaderCell,
+                        classes.stub,
+                        classes[`stub-${rowEntry.level}`],
+                      )}
+                      data-virtual-cell
+                      style={{
+                        width: rowHeaderWidth,
+                        minHeight: resolvedHeight,
+                      }}
+                    >
+                      {rowEntry.label}
+                    </th>
+                  )}
+
+                  {renderedColumns.map((virtualColumn) => {
+                    const column = columnDimensions[virtualColumn.index];
+                    const cacheKey = `${rowEntry.leaf.key}|${column.key}`;
+                    let formattedValue = cellCacheRef.current.get(cacheKey);
+
+                    if (rowEntry.isDataRow && formattedValue === undefined) {
+                      formattedValue = getVirtualCellValue(
+                        pxtable,
+                        rowEntry.leaf.codesByPosition,
+                        column.codesByPosition,
+                        variableOrder.length,
+                      );
+                      cellCacheRef.current.set(cacheKey, formattedValue);
+                    }
+
+                    return (
+                      <td
+                        key={cacheKey}
+                        className={cl(
+                          classes.virtualCell,
+                          classes.virtualDataCell,
+                        )}
+                        data-virtual-cell
+                        style={{
+                          width: virtualColumn.size * widthStretchFactor,
+                          minHeight: resolvedHeight,
+                          transform: `translateX(${rowHeaderWidth + virtualColumn.start * widthStretchFactor}px)`,
+                        }}
+                      >
+                        {rowEntry.isDataRow ? formattedValue : ''}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            },
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function getTimeVariableAriaLabel(
+  variable: Variable,
+  valueLabel: string,
+): string | undefined {
+  return variable.type === VartypeEnum.TIME_VARIABLE
+    ? `${variable.label} ${valueLabel}`
+    : undefined;
+}
+
+function isFirstHeaderCellWithoutStub(
+  valueIndex: number,
+  repetitionIndex: number,
+  hasStub: boolean,
+): boolean {
+  return valueIndex === 0 && repetitionIndex === 1 && !hasStub;
+}
+
+function buildLeafDimensions(
+  variables: Variable[],
+  variableOrder: string[],
+  variableOrderLength: number,
+  labelDelimiter: string,
+): LeafDimension[] {
+  if (variables.length === 0) {
+    return [
+      {
+        key: '__root__',
+        label: '',
+        labelParts: [],
+        codesByPosition: new Array(variableOrderLength),
+      },
+    ];
+  }
+
+  const combinations: LeafDimension[] = [];
+
+  function walk(
+    variableIndex: number,
+    labels: string[],
+    parts: string[],
+    codesByPosition: (string | undefined)[],
+  ) {
+    const variable = variables[variableIndex];
+    const varPosition = variableOrder.indexOf(variable.id);
+
+    for (const value of variable.values) {
+      labels.push(value.label);
+      parts.push(`${variable.id}:${value.code}`);
+
+      const previousCode =
+        varPosition >= 0 ? codesByPosition[varPosition] : undefined;
+      if (varPosition >= 0) {
+        codesByPosition[varPosition] = value.code;
+      }
+
+      if (variableIndex === variables.length - 1) {
+        const key = parts.join('|');
+        combinations.push({
+          key,
+          label: labels.join(labelDelimiter),
+          labelParts: [...labels],
+          codesByPosition: [...codesByPosition],
+        });
+      } else {
+        walk(variableIndex + 1, labels, parts, codesByPosition);
+      }
+
+      if (varPosition >= 0) {
+        codesByPosition[varPosition] = previousCode;
+      }
+      parts.pop();
+      labels.pop();
+    }
+  }
+
+  walk(0, [], [], new Array(variableOrderLength));
+
+  return combinations;
+}
+
+function getVirtualCellValue(
+  pxtable: PxTable,
+  rowCodesByPosition: (string | undefined)[],
+  columnCodesByPosition: (string | undefined)[],
+  variableOrderLength: number,
+): string {
+  const dimensions: string[] = new Array(variableOrderLength);
+
+  for (let i = 0; i < variableOrderLength; i++) {
+    dimensions[i] = rowCodesByPosition[i] ?? columnCodesByPosition[i] ?? '';
+  }
+
+  return getPxTableData(pxtable.data.cube, dimensions)?.formattedValue ?? '';
+}
 
 /**
  * Creates the heading rows for the table.
@@ -213,16 +1498,16 @@ export function createHeading(
             scope="col"
             colSpan={columnSpan}
             key={getNewKey()}
-            aria-label={
-              variable.type === VartypeEnum.TIME_VARIABLE
-                ? `${variable.label} ${variable.values[i].label}`
-                : undefined
-            }
+            aria-label={getTimeVariableAriaLabel(
+              variable,
+              variable.values[i].label,
+            )}
             className={cl({
-              [classes.firstColNoStub]:
-                i === 0 &&
-                idxRepetitionCurrentHeadingLevel === 1 &&
-                table.stub.length === 0,
+              [classes.firstColNoStub]: isFirstHeaderCellWithoutStub(
+                i,
+                idxRepetitionCurrentHeadingLevel,
+                table.stub.length > 0,
+              ),
             })}
           >
             {variable.values[i].label}
@@ -492,35 +1777,18 @@ function createRowMobile({
     }
     // If there are more stub variables that need to add headers to this row
     if (stubLength > stubIndex + 1) {
-      switch (stubIndex) {
-        case stubLength - 3: {
-          // third last level
-          // Repeat the headers for all stubs except the 2 last levels
-          createRepeatedMobileHeader(
-            table,
-            stubLength,
-            stubIndex,
-            stubDataCellCodes,
-            tableRows,
-            uniqueIdCounter,
-          );
-          break;
-        }
-        case stubLength - 2: {
-          // second last level
-          createSecondLastMobileHeader(
-            stubLength,
-            stubIndex,
-            cellMeta,
-            variable,
-            val,
-            i,
-            tableRows,
-            uniqueIdCounter,
-          );
-          break;
-        }
-      }
+      createIntermediateMobileHeaders({
+        table,
+        stubLength,
+        stubIndex,
+        stubDataCellCodes,
+        tableRows,
+        uniqueIdCounter,
+        cellMeta,
+        variable,
+        val,
+        valueIndex: i,
+      });
       // Create a new row for the next stub
       createRowMobile({
         stubIndex: stubIndex + 1,
@@ -637,7 +1905,7 @@ function fillData(
     // Merge the metadata structure for the dimensions of the stub and header cells
     const dataCellCodes = stubDataCellCodes.concat(headingDataCellCodes[i]);
     const datacellIds: string[] = dataCellCodes.map((obj) => obj.htmlId);
-    const headers: string = datacellIds.toString().replace(/,/g, ' ');
+    const headers: string = datacellIds.toString().replaceAll(',', ' ');
     const dimensions: string[] = [];
     // Arrange the dimensons in the right order according to how data is stored is the cube
     for (const dataCell of dataCellCodes) {
@@ -723,6 +1991,57 @@ function createRepeatedMobileHeader(
   }
 }
 
+function createIntermediateMobileHeaders({
+  table,
+  stubLength,
+  stubIndex,
+  stubDataCellCodes,
+  tableRows,
+  uniqueIdCounter,
+  cellMeta,
+  variable,
+  val,
+  valueIndex,
+}: {
+  table: PxTable;
+  stubLength: number;
+  stubIndex: number;
+  stubDataCellCodes: DataCellCodes;
+  tableRows: React.JSX.Element[];
+  uniqueIdCounter: { idCounter: number };
+  cellMeta: DataCellMeta;
+  variable: Variable;
+  val: Value;
+  valueIndex: number;
+}): void {
+  switch (stubIndex) {
+    case stubLength - 3: {
+      createRepeatedMobileHeader(
+        table,
+        stubLength,
+        stubIndex,
+        stubDataCellCodes,
+        tableRows,
+        uniqueIdCounter,
+      );
+      break;
+    }
+    case stubLength - 2: {
+      createSecondLastMobileHeader({
+        stubLength,
+        stubIndex,
+        cellMeta,
+        variable,
+        val,
+        valueIndex,
+        tableRows,
+        uniqueIdCounter,
+      });
+      break;
+    }
+  }
+}
+
 /**
  * Creates and appends a second last level mobile header row to the table rows.
  *
@@ -733,16 +2052,16 @@ function createRepeatedMobileHeader(
  * @param {number} i - The index of the current iteration.
  * @param {React.JSX.Element[]} tableRows - The array of table rows to which the new row will be appended.
  */
-function createSecondLastMobileHeader(
-  stubLength: number,
-  stubIndex: number,
-  cellMeta: DataCellMeta,
-  variable: Variable,
-  val: Value,
-  i: number,
-  tableRows: React.JSX.Element[],
-  uniqueIdCounter: { idCounter: number },
-): void {
+function createSecondLastMobileHeader({
+  stubLength,
+  stubIndex,
+  cellMeta,
+  variable,
+  val,
+  valueIndex,
+  tableRows,
+  uniqueIdCounter,
+}: CreateSecondLastMobileHeaderParams): void {
   // second last level
   let tableRowSecondLastHeader: React.JSX.Element[] = [];
   let tempid =
@@ -779,7 +2098,7 @@ function createSecondLastMobileHeader(
         },
 
         {
-          [classes.mobileRowHeadFirstValueOfSecondLastStub]: i === 0,
+          [classes.mobileRowHeadFirstValueOfSecondLastStub]: valueIndex === 0,
         },
       )}
       key={getNewKey()}

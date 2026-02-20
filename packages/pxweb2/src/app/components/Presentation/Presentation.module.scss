@@ -15,6 +15,10 @@
     .tableContainer {
       width: 100cqw;
       overflow-x: auto;
+      @media (min-width: fixed.$breakpoints-small-min-width) {
+        overflow-y: auto;
+        max-height: 70vh;
+      }
 
       &:focus-visible {
         outline: 2px solid var(--px-color-border-focus-outline);
