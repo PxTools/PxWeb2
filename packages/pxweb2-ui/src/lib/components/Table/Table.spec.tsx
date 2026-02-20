@@ -308,6 +308,79 @@ function createVirtualizedThreeLevelHeadingTestTable(): PxTable {
   return table;
 }
 
+function createVirtualizedMobileLayoutTestTable(): PxTable {
+  const stubDimOne: Variable = {
+    id: 'Region',
+    label: 'Region',
+    type: VartypeEnum.REGULAR_VARIABLE,
+    mandatory: false,
+    values: [
+      { code: 'north', label: 'North' },
+      { code: 'south', label: 'South' },
+    ],
+  };
+
+  const stubDimTwo: Variable = {
+    id: 'Gender',
+    label: 'Gender',
+    type: VartypeEnum.REGULAR_VARIABLE,
+    mandatory: false,
+    values: [
+      { code: 'men', label: 'Men' },
+      { code: 'women', label: 'Women' },
+    ],
+  };
+
+  const headingDim: Variable = {
+    id: 'Year',
+    label: 'Year',
+    type: VartypeEnum.TIME_VARIABLE,
+    mandatory: false,
+    values: [
+      { code: '2022', label: '2022' },
+      { code: '2023', label: '2023' },
+      { code: '2024', label: '2024' },
+    ],
+  };
+
+  const variables = [stubDimOne, stubDimTwo, headingDim];
+
+  const table: PxTable = {
+    metadata: {
+      id: 'virtualized-mobile-layout-test',
+      label: 'Virtualized mobile layout test table',
+      updated: new Date('2026-02-20T00:00:00.000Z'),
+      variables,
+      language: 'en',
+      contacts: [],
+      source: '',
+      infofile: '',
+      decimals: 0,
+      officialStatistics: false,
+      notes: [],
+      matrix: '',
+      subjectCode: '',
+      subjectArea: '',
+      aggregationAllowed: false,
+      contents: '',
+      descriptionDefault: false,
+      definitions: {},
+    },
+    data: {
+      cube: {},
+      variableOrder: variables.map((variable) => variable.id),
+      isLoaded: false,
+    },
+    heading: [headingDim],
+    stub: [stubDimOne, stubDimTwo],
+  };
+
+  fakeData(table, [], 0, 0);
+  table.data.isLoaded = true;
+
+  return table;
+}
+
 describe('Table', () => {
   it('should render successfully desktop', () => {
     const { baseElement } = render(
@@ -722,5 +795,39 @@ describe('Table', () => {
         );
       }
     }
+  });
+
+  it('should render virtualized mobile rows with stable row index markers', async () => {
+    const table = createVirtualizedMobileLayoutTestTable();
+    const { baseElement } = render(<Table pxtable={table} isMobile={true} />);
+
+    await waitFor(() => {
+      const rows = baseElement.querySelectorAll(
+        'tbody tr[data-virtual-mobile-row-index]',
+      );
+
+      expect(rows.length).toBeGreaterThan(0);
+    });
+  });
+
+  it('should preserve legacy mobile row structure in virtualized mobile mode', async () => {
+    const table = createVirtualizedMobileLayoutTestTable();
+    const { baseElement } = render(<Table pxtable={table} isMobile={true} />);
+
+    await waitFor(() => {
+      const intermediateHeaderCells = baseElement.querySelectorAll(
+        'tbody tr th[colspan="2"]',
+      );
+      const leafStubHeaders = baseElement.querySelectorAll(
+        'tbody tr th[scope="row"]',
+      );
+      const dataCells = baseElement.querySelectorAll(
+        'tbody tr td:not([colspan])',
+      );
+
+      expect(intermediateHeaderCells.length).toBeGreaterThan(0);
+      expect(leafStubHeaders.length).toBeGreaterThan(0);
+      expect(dataCells.length).toBeGreaterThan(0);
+    });
   });
 });

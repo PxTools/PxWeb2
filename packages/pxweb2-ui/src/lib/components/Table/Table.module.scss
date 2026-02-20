@@ -335,3 +335,10 @@
 .virtualBodyRowGroup .virtualRow:hover .virtualDataCell {
   background: var(--px-color-surface-subtle);
 }
+
+.mobileVirtualScrollContainer {
+  max-height: 70vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
