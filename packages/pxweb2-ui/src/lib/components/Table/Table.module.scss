@@ -265,5 +265,11 @@
 
 .virtualizedWrapper {
   max-height: 70vh;
+  overflow-x: auto;
   overflow-y: auto;
+}
+
+.virtualizedTable {
+  width: max-content;
+  min-width: 100%;
 }

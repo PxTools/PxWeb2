@@ -33,6 +33,7 @@ interface CreateRowParams {
   stubIteration: number;
   table: PxTable;
   tableMeta: columnRowMeta;
+  columnWindow: ColumnRenderWindow;
   stubDataCellCodes: DataCellCodes;
   headingDataCellCodes: DataCellCodes[];
   tableRows: React.JSX.Element[];
@@ -44,6 +45,7 @@ interface CreateRowMobileParams {
   rowSpan: number;
   table: PxTable;
   tableMeta: columnRowMeta;
+  columnWindow: ColumnRenderWindow;
   stubDataCellCodes: DataCellCodes;
   headingDataCellCodes: DataCellCodes[];
   tableRows: React.JSX.Element[];
@@ -56,6 +58,13 @@ interface CreateRowMobileParams {
  * Represents the metadata for multiple dimensions of a data cell.
  */
 type DataCellCodes = DataCellMeta[];
+
+interface ColumnRenderWindow {
+  start: number;
+  end: number;
+  leftPadding: number;
+  rightPadding: number;
+}
 
 export const Table = memo(function Table({
   pxtable,
@@ -97,6 +106,49 @@ export const Table = memo(function Table({
     [pxtable.metadata.variables],
   );
 
+  const shouldVirtualizeColumns = !isMobile && tableColumnSize > 60;
+  const columnVirtualizer = useVirtualizer({
+    horizontal: true,
+    count: tableColumnSize,
+    getScrollElement: () => scrollContainerRef.current,
+    estimateSize: () => 88,
+    overscan: 8,
+  });
+
+  const virtualColumns = shouldVirtualizeColumns
+    ? columnVirtualizer.getVirtualItems()
+    : [];
+  const firstVirtualColumn = virtualColumns[0];
+  const lastVirtualColumn = virtualColumns.at(-1);
+
+  const columnWindow: ColumnRenderWindow = useMemo(
+    () =>
+      shouldVirtualizeColumns
+        ? {
+            start: firstVirtualColumn?.index ?? 0,
+            end: lastVirtualColumn
+              ? lastVirtualColumn.index + 1
+              : tableColumnSize,
+            leftPadding: firstVirtualColumn?.start ?? 0,
+            rightPadding: lastVirtualColumn
+              ? columnVirtualizer.getTotalSize() - lastVirtualColumn.end
+              : 0,
+          }
+        : {
+            start: 0,
+            end: tableColumnSize,
+            leftPadding: 0,
+            rightPadding: 0,
+          },
+    [
+      shouldVirtualizeColumns,
+      firstVirtualColumn,
+      lastVirtualColumn,
+      tableColumnSize,
+      columnVirtualizer,
+    ],
+  );
+
   const { headingRows, bodyRows } = useMemo(() => {
     const headingDataCellCodes = new Array<DataCellCodes>(tableColumnSize);
 
@@ -118,11 +170,17 @@ export const Table = memo(function Table({
     }
 
     return {
-      headingRows: createHeading(pxtable, tableMeta, headingDataCellCodes),
+      headingRows: createHeading(
+        pxtable,
+        tableMeta,
+        headingDataCellCodes,
+        columnWindow,
+      ),
       bodyRows: createRows(
         pxtable,
         tableMeta,
         headingDataCellCodes,
+        columnWindow,
         isMobile,
         contentVarIndex,
         contentsVariableDecimals,
@@ -132,6 +190,7 @@ export const Table = memo(function Table({
     tableColumnSize,
     pxtable,
     tableMeta,
+    columnWindow,
     isMobile,
     contentVarIndex,
     contentsVariableDecimals,
@@ -147,7 +206,7 @@ export const Table = memo(function Table({
 
   const virtualRows = shouldVirtualize ? rowVirtualizer.getVirtualItems() : [];
   const firstVirtualRow = virtualRows[0];
-  const lastVirtualRow = virtualRows[virtualRows.length - 1];
+  const lastVirtualRow = virtualRows.at(-1);
   const topPaddingHeight = firstVirtualRow ? firstVirtualRow.start : 0;
   const bottomPaddingHeight = lastVirtualRow
     ? rowVirtualizer.getTotalSize() - lastVirtualRow.end
@@ -157,19 +216,27 @@ export const Table = memo(function Table({
   const visibleBodyRows = shouldVirtualize
     ? bodyRows.slice(visibleRowStart, visibleRowEnd)
     : bodyRows;
-  console.log(
-    'rendering table with ' +
-      bodyRows.length +
-      ' body rows, virtualized: ' +
-      shouldVirtualize,
-  );
+
+  const renderedColumnCount =
+    tableMeta.columnOffset +
+    (columnWindow.end - columnWindow.start) +
+    (columnWindow.leftPadding > 0 ? 1 : 0) +
+    (columnWindow.rightPadding > 0 ? 1 : 0);
+
   return (
     <div
       ref={scrollContainerRef}
-      className={cl({ [classes.virtualizedWrapper]: shouldVirtualize })}
+      className={cl({
+        [classes.virtualizedWrapper]:
+          shouldVirtualize || shouldVirtualizeColumns,
+      })}
     >
       <table
-        className={cl(classes.table, classes[`bodyshort-medium`]) + cssClasses}
+        className={
+          cl(classes.table, classes[`bodyshort-medium`], {
+            [classes.virtualizedTable]: shouldVirtualizeColumns,
+          }) + cssClasses
+        }
         aria-label={pxtable.metadata.label}
       >
         <thead>{headingRows}</thead>
@@ -177,7 +244,7 @@ export const Table = memo(function Table({
           {shouldVirtualize && topPaddingHeight > 0 && (
             <tr>
               <td
-                colSpan={tableMeta.columns}
+                colSpan={renderedColumnCount}
                 className={classes.virtualPaddingCell}
                 style={{ height: `${topPaddingHeight}px` }}
               />
@@ -189,7 +256,7 @@ export const Table = memo(function Table({
           {shouldVirtualize && bottomPaddingHeight > 0 && (
             <tr>
               <td
-                colSpan={tableMeta.columns}
+                colSpan={renderedColumnCount}
                 className={classes.virtualPaddingCell}
                 style={{ height: `${bottomPaddingHeight}px` }}
               />
@@ -213,6 +280,7 @@ export function createHeading(
   table: PxTable,
   tableMeta: columnRowMeta,
   headingDataCellCodes: DataCellCodes[],
+  columnWindow: ColumnRenderWindow,
 ): React.JSX.Element[] {
   // Number of times to add all values for a variable, default to 1 for first header row
   let repetitionsCurrentHeaderLevel = 1;
@@ -243,6 +311,16 @@ export function createHeading(
     idxHeadingLevel < table.heading.length;
     idxHeadingLevel++
   ) {
+    if (columnWindow.leftPadding > 0) {
+      headerRow.push(
+        <td
+          key={getNewKey()}
+          className={classes.virtualPaddingCell}
+          style={{ width: `${columnWindow.leftPadding}px` }}
+        />,
+      );
+    }
+
     // Set the column span for the header cells for the current row
     columnSpan = columnSpan / table.heading[idxHeadingLevel].values.length;
     const variable = table.heading[idxHeadingLevel];
@@ -255,6 +333,8 @@ export function createHeading(
     ) {
       // loop trough all the values for the header variable
       for (let i = 0; i < variable.values.length; i++) {
+        const spanStart = columnIndex;
+        const spanEnd = columnIndex + columnSpan;
         const htmlId: string =
           'H' +
           idxHeadingLevel +
@@ -262,27 +342,35 @@ export function createHeading(
           variable.values[i].code +
           '.I' +
           idxRepetitionCurrentHeadingLevel;
-        headerRow.push(
-          <th
-            id={htmlId}
-            scope="col"
-            colSpan={columnSpan}
-            key={getNewKey()}
-            aria-label={
-              variable.type === VartypeEnum.TIME_VARIABLE
-                ? `${variable.label} ${variable.values[i].label}`
-                : undefined
-            }
-            className={cl({
-              [classes.firstColNoStub]:
-                i === 0 &&
-                idxRepetitionCurrentHeadingLevel === 1 &&
-                table.stub.length === 0,
-            })}
-          >
-            {variable.values[i].label}
-          </th>,
-        );
+        const visibleSpanStart = Math.max(spanStart, columnWindow.start);
+        const visibleSpanEnd = Math.min(spanEnd, columnWindow.end);
+        const visibleSpan = visibleSpanEnd - visibleSpanStart;
+
+        if (visibleSpan > 0) {
+          headerRow.push(
+            <th
+              id={htmlId}
+              scope="col"
+              colSpan={visibleSpan}
+              key={getNewKey()}
+              aria-label={
+                variable.type === VartypeEnum.TIME_VARIABLE
+                  ? `${variable.label} ${variable.values[i].label}`
+                  : undefined
+              }
+              className={cl({
+                [classes.firstColNoStub]:
+                  i === 0 &&
+                  idxRepetitionCurrentHeadingLevel === 1 &&
+                  table.stub.length === 0 &&
+                  visibleSpanStart === 0,
+              })}
+            >
+              {variable.values[i].label}
+            </th>,
+          );
+        }
+
         // Repeat for the number of columns in the column span
         for (let j = 0; j < columnSpan; j++) {
           // Fill the metadata structure for the dimensions of the header cells
@@ -296,6 +384,16 @@ export function createHeading(
           columnIndex++;
         }
       }
+    }
+
+    if (columnWindow.rightPadding > 0) {
+      headerRow.push(
+        <td
+          key={getNewKey()}
+          className={classes.virtualPaddingCell}
+          style={{ width: `${columnWindow.rightPadding}px` }}
+        />,
+      );
     }
 
     headerRows.push(<tr key={getNewKey()}>{headerRow}</tr>);
@@ -320,6 +418,7 @@ export function createRows(
   table: PxTable,
   tableMeta: columnRowMeta,
   headingDataCellCodes: DataCellCodes[],
+  columnWindow: ColumnRenderWindow,
   isMobile: boolean,
   contentVarIndex: number,
   contentsVariableDecimals?: Record<string, { decimals: number }>,
@@ -333,6 +432,7 @@ export function createRows(
         rowSpan: tableMeta.rows - tableMeta.rowOffset,
         table,
         tableMeta,
+        columnWindow,
         stubDataCellCodes: stubDatacellCodes,
         headingDataCellCodes,
         tableRows,
@@ -347,6 +447,7 @@ export function createRows(
         stubIteration: 0,
         table,
         tableMeta,
+        columnWindow,
         stubDataCellCodes: stubDatacellCodes,
         headingDataCellCodes,
         tableRows,
@@ -358,7 +459,7 @@ export function createRows(
     const tableRow: React.JSX.Element[] = [];
     fillData(
       table,
-      tableMeta,
+      columnWindow,
       stubDatacellCodes,
       headingDataCellCodes,
       tableRow,
@@ -394,6 +495,7 @@ function createRowDesktop({
   stubIteration,
   table,
   tableMeta,
+  columnWindow,
   stubDataCellCodes,
   headingDataCellCodes,
   tableRows,
@@ -445,7 +547,7 @@ function createRowDesktop({
     // If there are more stub variables that need to add headers to this row
     if (table.stub.length > stubIndex + 1) {
       // make the rest of this row empty
-      fillEmpty(tableMeta, tableRow);
+      fillEmpty(tableRow, columnWindow);
       tableRows.push(
         <tr
           className={cl({ [classes.firstdim]: stubIndex === 0 })}
@@ -463,6 +565,7 @@ function createRowDesktop({
         stubIteration,
         table,
         tableMeta,
+        columnWindow,
         stubDataCellCodes,
         headingDataCellCodes,
         tableRows,
@@ -474,7 +577,7 @@ function createRowDesktop({
       // If no more stubs need to add headers then fill the row with data
       fillData(
         table,
-        tableMeta,
+        columnWindow,
         stubDataCellCodes,
         headingDataCellCodes,
         tableRow,
@@ -508,6 +611,7 @@ function createRowMobile({
   rowSpan,
   table,
   tableMeta,
+  columnWindow,
   stubDataCellCodes,
   headingDataCellCodes,
   tableRows,
@@ -582,6 +686,7 @@ function createRowMobile({
         rowSpan,
         table,
         tableMeta,
+        columnWindow,
         stubDataCellCodes,
         headingDataCellCodes,
         tableRows,
@@ -616,7 +721,7 @@ function createRowMobile({
       );
       fillData(
         table,
-        tableMeta,
+        columnWindow,
         stubDataCellCodes,
         headingDataCellCodes,
         tableRow,
@@ -653,17 +758,37 @@ function createRowMobile({
  * @param tableRow - The array of React.JSX.Element representing the row of the table.
  */
 function fillEmpty(
-  tableMeta: columnRowMeta,
   tableRow: React.JSX.Element[],
+  columnWindow: ColumnRenderWindow,
 ): void {
   const emptyText = '';
 
-  // Loop through cells that need to be added to the row
-  const maxCols = tableMeta.columns - tableMeta.columnOffset;
+  if (columnWindow.leftPadding > 0) {
+    tableRow.push(
+      <td
+        key={getNewKey()}
+        className={classes.virtualPaddingCell}
+        style={{ width: `${columnWindow.leftPadding}px` }}
+      >
+        {emptyText}
+      </td>,
+    );
+  }
 
-  // Loop through all data columns in the table
-  for (let i = 0; i < maxCols; i++) {
+  for (let i = columnWindow.start; i < columnWindow.end; i++) {
     tableRow.push(<td key={getNewKey()}>{emptyText}</td>);
+  }
+
+  if (columnWindow.rightPadding > 0) {
+    tableRow.push(
+      <td
+        key={getNewKey()}
+        className={classes.virtualPaddingCell}
+        style={{ width: `${columnWindow.rightPadding}px` }}
+      >
+        {emptyText}
+      </td>,
+    );
   }
 }
 
@@ -678,17 +803,22 @@ function fillEmpty(
  */
 function fillData(
   table: PxTable,
-  tableMeta: columnRowMeta,
+  columnWindow: ColumnRenderWindow,
   stubDataCellCodes: DataCellCodes,
   headingDataCellCodes: DataCellCodes[],
   tableRow: React.JSX.Element[],
 ): void {
-  // Loop through cells that need to be added to the row
-  const maxCols = tableMeta.columns - tableMeta.columnOffset;
+  if (columnWindow.leftPadding > 0) {
+    tableRow.push(
+      <td
+        key={getNewKey()}
+        className={classes.virtualPaddingCell}
+        style={{ width: `${columnWindow.leftPadding}px` }}
+      />,
+    );
+  }
 
-  // Loop through all data columns in the table
-
-  for (let i = 0; i < maxCols; i++) {
+  for (let i = columnWindow.start; i < columnWindow.end; i++) {
     // Merge the metadata structure for the dimensions of the stub and header cells
     const dataCellCodes = stubDataCellCodes.concat(headingDataCellCodes[i]);
     const datacellIds: string[] = dataCellCodes.map((obj) => obj.htmlId);
@@ -712,6 +842,16 @@ function fillData(
       <td key={getNewKey()} headers={headers}>
         {dataValue?.formattedValue}
       </td>,
+    );
+  }
+
+  if (columnWindow.rightPadding > 0) {
+    tableRow.push(
+      <td
+        key={getNewKey()}
+        className={classes.virtualPaddingCell}
+        style={{ width: `${columnWindow.rightPadding}px` }}
+      />,
     );
   }
 }
