@@ -125,6 +125,8 @@ jobs:
           curl -s -o dist/statbank/config/config.js https://www.ssb.no/statbank/config/config.js
           sed -i 's|<base href="/"|<base href="/statbank/"|' dist/index.html
 
+          sed -i 's|maxDataCells: 150000,|maxDataCells: 1500000,|' dist/statbank/config/config.js
+
       - name: Alternative Deploy
         id: alt-deploy
         uses: cloudflare/wrangler-action@v3
