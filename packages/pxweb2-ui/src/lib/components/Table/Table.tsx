@@ -1,5 +1,6 @@
-import { memo, useMemo } from 'react';
+import { memo, useMemo, useRef } from 'react';
 import cl from 'clsx';
+import { useVirtualizer } from '@tanstack/react-virtual';
 
 import classes from './Table.module.scss';
 import { PxTable } from '../../shared-types/pxTable';
@@ -61,15 +62,15 @@ export const Table = memo(function Table({
   isMobile,
   className = '',
 }: TableProps) {
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const cssClasses = className.length > 0 ? ' ' + className : '';
 
-  const tableMeta: columnRowMeta = calculateRowAndColumnMeta(pxtable);
+  const tableMeta: columnRowMeta = useMemo(
+    () => calculateRowAndColumnMeta(pxtable),
+    [pxtable],
+  );
 
   const tableColumnSize: number = tableMeta.columns - tableMeta.columnOffset;
-  const headingDataCellCodes = useMemo(
-    () => new Array<DataCellCodes>(tableColumnSize),
-    [tableColumnSize],
-  ); // Contains header variable and value codes for each column in the table
 
   // Find the contents variable
   const contentsVariable = pxtable.metadata.variables.find(
@@ -81,68 +82,122 @@ export const Table = memo(function Table({
     contentVarIndex = pxtable.data.variableOrder.indexOf(contentsVariable.id);
   }
 
-  const contentsVariableDecimals = Object.fromEntries(
-    pxtable.metadata.variables
-      .filter((variable) => variable.type === 'ContentsVariable')
-      .flatMap((variable) =>
-        variable.values.map((value) => [
-          value.code,
-          { decimals: value.contentInfo?.decimals ?? 6 },
-        ]),
+  const contentsVariableDecimals = useMemo(
+    () =>
+      Object.fromEntries(
+        pxtable.metadata.variables
+          .filter((variable) => variable.type === 'ContentsVariable')
+          .flatMap((variable) =>
+            variable.values.map((value) => [
+              value.code,
+              { decimals: value.contentInfo?.decimals ?? 6 },
+            ]),
+          ),
       ),
+    [pxtable.metadata.variables],
   );
 
-  // Create empty metadata structure for the dimensions in the header.
-  // This structure will be filled with metadata when the header is created.
+  const { headingRows, bodyRows } = useMemo(() => {
+    const headingDataCellCodes = new Array<DataCellCodes>(tableColumnSize);
 
-  // Loop through all columns in the table. i is the column index
-  for (let i = 0; i < tableColumnSize; i++) {
-    const dataCellCodes: DataCellCodes = new Array<DataCellMeta>(
-      pxtable.heading.length,
-    );
+    for (let i = 0; i < tableColumnSize; i++) {
+      const dataCellCodes: DataCellCodes = new Array<DataCellMeta>(
+        pxtable.heading.length,
+      );
 
-    // Loop through all header variables. j is the header variable index
-    for (let j = 0; j < pxtable.heading.length; j++) {
-      const dataCellMeta: DataCellMeta = {
-        varId: '',
-        valCode: '',
-        valLabel: '',
-        varPos: 0,
-        htmlId: '',
-      };
-      dataCellCodes[j] = dataCellMeta; // add empty object
+      for (let j = 0; j < pxtable.heading.length; j++) {
+        dataCellCodes[j] = {
+          varId: '',
+          valCode: '',
+          valLabel: '',
+          varPos: 0,
+          htmlId: '',
+        };
+      }
+      headingDataCellCodes[i] = dataCellCodes;
     }
-    headingDataCellCodes[i] = dataCellCodes;
-  }
 
+    return {
+      headingRows: createHeading(pxtable, tableMeta, headingDataCellCodes),
+      bodyRows: createRows(
+        pxtable,
+        tableMeta,
+        headingDataCellCodes,
+        isMobile,
+        contentVarIndex,
+        contentsVariableDecimals,
+      ),
+    };
+  }, [
+    tableColumnSize,
+    pxtable,
+    tableMeta,
+    isMobile,
+    contentVarIndex,
+    contentsVariableDecimals,
+  ]);
+
+  const shouldVirtualize = bodyRows.length > 100;
+  const rowVirtualizer = useVirtualizer({
+    count: bodyRows.length,
+    getScrollElement: () => scrollContainerRef.current,
+    estimateSize: () => (isMobile ? 44 : 36),
+    overscan: 12,
+  });
+
+  const virtualRows = shouldVirtualize ? rowVirtualizer.getVirtualItems() : [];
+  const firstVirtualRow = virtualRows[0];
+  const lastVirtualRow = virtualRows[virtualRows.length - 1];
+  const topPaddingHeight = firstVirtualRow ? firstVirtualRow.start : 0;
+  const bottomPaddingHeight = lastVirtualRow
+    ? rowVirtualizer.getTotalSize() - lastVirtualRow.end
+    : 0;
+  const visibleRowStart = firstVirtualRow?.index ?? 0;
+  const visibleRowEnd = lastVirtualRow ? lastVirtualRow.index + 1 : 0;
+  const visibleBodyRows = shouldVirtualize
+    ? bodyRows.slice(visibleRowStart, visibleRowEnd)
+    : bodyRows;
+  console.log(
+    'rendering table with ' +
+      bodyRows.length +
+      ' body rows, virtualized: ' +
+      shouldVirtualize,
+  );
   return (
-    <table
-      className={cl(classes.table, classes[`bodyshort-medium`]) + cssClasses}
-      aria-label={pxtable.metadata.label}
+    <div
+      ref={scrollContainerRef}
+      className={cl({ [classes.virtualizedWrapper]: shouldVirtualize })}
     >
-      <thead>{createHeading(pxtable, tableMeta, headingDataCellCodes)}</thead>
-      <tbody>
-        {useMemo(
-          () =>
-            createRows(
-              pxtable,
-              tableMeta,
-              headingDataCellCodes,
-              isMobile,
-              contentVarIndex,
-              contentsVariableDecimals,
-            ),
-          [
-            pxtable,
-            tableMeta,
-            headingDataCellCodes,
-            isMobile,
-            contentVarIndex,
-            contentsVariableDecimals,
-          ],
-        )}
-      </tbody>
-    </table>
+      <table
+        className={cl(classes.table, classes[`bodyshort-medium`]) + cssClasses}
+        aria-label={pxtable.metadata.label}
+      >
+        <thead>{headingRows}</thead>
+        <tbody>
+          {shouldVirtualize && topPaddingHeight > 0 && (
+            <tr>
+              <td
+                colSpan={tableMeta.columns}
+                className={classes.virtualPaddingCell}
+                style={{ height: `${topPaddingHeight}px` }}
+              />
+            </tr>
+          )}
+
+          {visibleBodyRows}
+
+          {shouldVirtualize && bottomPaddingHeight > 0 && (
+            <tr>
+              <td
+                colSpan={tableMeta.columns}
+                className={classes.virtualPaddingCell}
+                style={{ height: `${bottomPaddingHeight}px` }}
+              />
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </div>
   );
 });
 
