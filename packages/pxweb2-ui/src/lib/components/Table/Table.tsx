@@ -1,4 +1,4 @@
-import { memo, useMemo, useRef } from 'react';
+import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import cl from 'clsx';
 import { useVirtualizer } from '@tanstack/react-virtual';
 
@@ -72,7 +72,80 @@ export const Table = memo(function Table({
   className = '',
 }: TableProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [verticalScrollElement, setVerticalScrollElement] =
+    useState<HTMLElement | null>(null);
+  const [tableScrollMargin, setTableScrollMargin] = useState(0);
   const cssClasses = className.length > 0 ? ' ' + className : '';
+
+  useEffect(() => {
+    const findContentAndFooterContainer = (
+      element: HTMLElement | null,
+    ): HTMLElement | null => {
+      let parent = element?.parentElement ?? null;
+
+      while (parent) {
+        if (
+          typeof parent.className === 'string' &&
+          parent.className.includes('contentAndFooterContainer')
+        ) {
+          return parent;
+        }
+        parent = parent.parentElement;
+      }
+      return null;
+    };
+
+    const updateVerticalScrollElement = () => {
+      setVerticalScrollElement(
+        findContentAndFooterContainer(scrollContainerRef.current),
+      );
+    };
+
+    updateVerticalScrollElement();
+    globalThis.addEventListener('resize', updateVerticalScrollElement);
+
+    return () => {
+      globalThis.removeEventListener('resize', updateVerticalScrollElement);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!verticalScrollElement || !scrollContainerRef.current) {
+      setTableScrollMargin(0);
+      return;
+    }
+
+    const updateTableScrollMargin = () => {
+      if (!scrollContainerRef.current) {
+        return;
+      }
+
+      const tableTop = scrollContainerRef.current.getBoundingClientRect().top;
+      const containerTop = verticalScrollElement.getBoundingClientRect().top;
+      const margin = tableTop - containerTop + verticalScrollElement.scrollTop;
+      setTableScrollMargin(Math.max(0, margin));
+    };
+
+    updateTableScrollMargin();
+    globalThis.addEventListener('resize', updateTableScrollMargin);
+
+    const resizeObserver =
+      typeof ResizeObserver === 'undefined'
+        ? null
+        : new ResizeObserver(() => {
+            updateTableScrollMargin();
+          });
+
+    if (resizeObserver && scrollContainerRef.current) {
+      resizeObserver.observe(scrollContainerRef.current);
+      resizeObserver.observe(verticalScrollElement);
+    }
+
+    return () => {
+      globalThis.removeEventListener('resize', updateTableScrollMargin);
+      resizeObserver?.disconnect();
+    };
+  }, [verticalScrollElement]);
 
   const tableMeta: columnRowMeta = useMemo(
     () => calculateRowAndColumnMeta(pxtable),
@@ -199,7 +272,8 @@ export const Table = memo(function Table({
   const shouldVirtualize = bodyRows.length > 100;
   const rowVirtualizer = useVirtualizer({
     count: bodyRows.length,
-    getScrollElement: () => scrollContainerRef.current,
+    getScrollElement: () => verticalScrollElement ?? scrollContainerRef.current,
+    scrollMargin: tableScrollMargin,
     estimateSize: () => (isMobile ? 44 : 36),
     overscan: 12,
   });
@@ -207,7 +281,9 @@ export const Table = memo(function Table({
   const virtualRows = shouldVirtualize ? rowVirtualizer.getVirtualItems() : [];
   const firstVirtualRow = virtualRows[0];
   const lastVirtualRow = virtualRows.at(-1);
-  const topPaddingHeight = firstVirtualRow ? firstVirtualRow.start : 0;
+  const topPaddingHeight = firstVirtualRow
+    ? Math.max(0, firstVirtualRow.start - tableScrollMargin)
+    : 0;
   const bottomPaddingHeight = lastVirtualRow
     ? rowVirtualizer.getTotalSize() - lastVirtualRow.end
     : 0;
@@ -229,6 +305,8 @@ export const Table = memo(function Table({
       className={cl({
         [classes.virtualizedWrapper]:
           shouldVirtualize || shouldVirtualizeColumns,
+        [classes.virtualizedWrapperUseParentScroll]:
+          verticalScrollElement !== null,
       })}
     >
       <table
@@ -855,6 +933,7 @@ function fillData(
     );
   }
 }
+
 /**
  * Creates repeated mobile headers for a table and appends them to the provided table rows.
  *

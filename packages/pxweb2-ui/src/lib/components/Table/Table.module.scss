@@ -269,6 +269,10 @@
   overflow-y: auto;
 }
 
+.virtualizedWrapperUseParentScroll {
+  max-height: none;
+}
+
 .virtualizedTable {
   width: max-content;
   min-width: 100%;
