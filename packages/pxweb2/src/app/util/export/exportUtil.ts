@@ -228,7 +228,6 @@ export function getTimestamp(): string {
  * @returns {string} - The complete URL for the saved query.
  */
 export function createSavedQueryURL(id: string): string {
-
   const baseUrl = window.location.origin;
   const path = window.location.pathname;
   const queryParams = new URLSearchParams({
