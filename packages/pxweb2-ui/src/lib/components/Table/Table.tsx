@@ -1,6 +1,5 @@
 import { memo, useMemo } from 'react';
 import cl from 'clsx';
-
 import classes from './Table.module.scss';
 import { PxTable } from '../../shared-types/pxTable';
 import { calculateRowAndColumnMeta, columnRowMeta } from './columnRowMeta';
@@ -13,6 +12,7 @@ export interface TableProps {
   readonly pxtable: PxTable;
   readonly isMobile: boolean;
   readonly className?: string;
+  readonly suppressNullRows?: boolean;
 }
 
 /**
@@ -32,6 +32,7 @@ interface CreateRowParams {
   stubIteration: number;
   table: PxTable;
   tableMeta: columnRowMeta;
+  suppressNullRows: boolean | undefined;
   stubDataCellCodes: DataCellCodes;
   headingDataCellCodes: DataCellCodes[];
   tableRows: React.JSX.Element[];
@@ -43,6 +44,7 @@ interface CreateRowMobileParams {
   rowSpan: number;
   table: PxTable;
   tableMeta: columnRowMeta;
+  suppressNullRows: boolean | undefined;
   stubDataCellCodes: DataCellCodes;
   headingDataCellCodes: DataCellCodes[];
   tableRows: React.JSX.Element[];
@@ -60,6 +62,7 @@ export const Table = memo(function Table({
   pxtable,
   isMobile,
   className = '',
+  suppressNullRows = false,
 }: TableProps) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
 
@@ -129,6 +132,7 @@ export const Table = memo(function Table({
               tableMeta,
               headingDataCellCodes,
               isMobile,
+              suppressNullRows,
               contentVarIndex,
               contentsVariableDecimals,
             ),
@@ -137,6 +141,7 @@ export const Table = memo(function Table({
             tableMeta,
             headingDataCellCodes,
             isMobile,
+            suppressNullRows,
             contentVarIndex,
             contentsVariableDecimals,
           ],
@@ -266,18 +271,20 @@ export function createRows(
   tableMeta: columnRowMeta,
   headingDataCellCodes: DataCellCodes[],
   isMobile: boolean,
+  suppressNullRows: boolean | undefined,
   contentVarIndex: number,
   contentsVariableDecimals?: Record<string, { decimals: number }>,
 ): React.JSX.Element[] {
   const tableRows: React.JSX.Element[] = [];
   const stubDatacellCodes: DataCellCodes = new Array<DataCellMeta>();
   if (table.stub.length > 0) {
-    if (isMobile) {
+  if (isMobile) {
       createRowMobile({
         stubIndex: 0,
         rowSpan: tableMeta.rows - tableMeta.rowOffset,
         table,
         tableMeta,
+        suppressNullRows,
         stubDataCellCodes: stubDatacellCodes,
         headingDataCellCodes,
         tableRows,
@@ -292,6 +299,7 @@ export function createRows(
         stubIteration: 0,
         table,
         tableMeta,
+        suppressNullRows,
         stubDataCellCodes: stubDatacellCodes,
         headingDataCellCodes,
         tableRows,
@@ -314,7 +322,6 @@ export function createRows(
       </tr>,
     );
   }
-
   return tableRows;
 }
 
@@ -331,7 +338,7 @@ export function createRows(
  * @param tableRows - An array of React.JSX.Element representing the rows of the table.
  * @param contentsVarIndex - The index of the contents variable in the variable order.
  * @param contentsVariableDecimals - The metadata structure for the contents variable decimals.
- * @returns An array of React.JSX.Element representing the rows of the table.
+ * @param suppressNullRows - Flag to indicate whether to suppress rows with empty data.
  */
 function createRowDesktop({
   stubIndex,
@@ -339,6 +346,7 @@ function createRowDesktop({
   stubIteration,
   table,
   tableMeta,
+  suppressNullRows,
   stubDataCellCodes,
   headingDataCellCodes,
   tableRows,
@@ -371,6 +379,16 @@ function createRowDesktop({
       rowSpan = 1;
     }
 
+  // Calculate if the row should be suppressed (i.e., if all data values are null/zero)
+  const shouldRenderRow = shouldRenderDataRow({
+    table,
+    tableMeta,
+    stubDataCellCodes,
+    headingDataCellCodes,
+    suppressNullRows,
+  });
+
+  if (shouldRenderRow) {
     tableRow.push(
       <th
         id={cellMeta.htmlId}
@@ -386,6 +404,7 @@ function createRowDesktop({
         {val.label}
       </th>,
     );
+
 
     // If there are more stub variables that need to add headers to this row
     if (table.stub.length > stubIndex + 1) {
@@ -408,6 +427,7 @@ function createRowDesktop({
         stubIteration,
         table,
         tableMeta,
+        suppressNullRows,
         stubDataCellCodes,
         headingDataCellCodes,
         tableRows,
@@ -429,6 +449,8 @@ function createRowDesktop({
       stubDataCellCodes.pop();
     }
   }
+  }
+  (tableRows);
 
   return tableRows;
 }
@@ -446,13 +468,16 @@ function createRowDesktop({
  * @param tableRows - An array of React.JSX.Element representing the rows of the table.
  * @param contentsVarIndex - The index of the contents variable in the variable order.
  * @param contentsVariableDecimals - The metadata structure for the contents variable decimals.
+ * @param suppressNullRows - Flag to indicate whether to suppress rows with empty data.
  * @returns An array of React.JSX.Element representing the rows of the table.
+ *
  */
 function createRowMobile({
   stubIndex,
   rowSpan,
   table,
   tableMeta,
+  suppressNullRows,
   stubDataCellCodes,
   headingDataCellCodes,
   tableRows,
@@ -527,6 +552,7 @@ function createRowMobile({
         rowSpan,
         table,
         tableMeta,
+        suppressNullRows,
         stubDataCellCodes,
         headingDataCellCodes,
         tableRows,
@@ -537,6 +563,16 @@ function createRowMobile({
       stubDataCellCodes.pop();
     } else {
       // last level
+const shouldRenderRow = shouldRenderDataRow({
+    table,
+    tableMeta,
+    stubDataCellCodes,
+    headingDataCellCodes,
+    suppressNullRows,
+  });
+
+if (shouldRenderRow) {
+
       let tempid =
         cellMeta.varId +
         '_' +
@@ -587,6 +623,7 @@ function createRowMobile({
       stubDataCellCodes.pop();
     }
   }
+}
 
   return tableRows;
 }
@@ -610,6 +647,54 @@ function fillEmpty(
   for (let i = 0; i < maxCols; i++) {
     tableRow.push(<td key={getNewKey()}>{emptyText}</td>);
   }
+}
+
+
+/**
+ * Determines whether a data row should be rendered based on the suppressNullRows flag and the data values in the row.
+ * Returns true if the row contains at least one non-null, non-zero, or non-empty value, or if suppressNullRows is false/undefined.
+ *
+ * @param {Object} params - The parameters for the check.
+ * @param {PxTable} params.table - The PxTable object.
+ * @param {columnRowMeta} params.tableMeta - The table metadata.
+ * @param {DataCellCodes} params.stubDataCellCodes - The stub data cell codes for the row.
+ * @param {DataCellCodes[]} params.headingDataCellCodes - The heading data cell codes for the columns.
+ * @param {boolean | undefined} params.suppressNullRows - Whether to suppress rows with only null/empty/zero values.
+ * @returns {boolean} - True if the row should be rendered, false otherwise.
+ */
+function shouldRenderDataRow({
+  table,
+  tableMeta,
+  stubDataCellCodes,
+  headingDataCellCodes,
+  suppressNullRows,
+}: {
+  table: PxTable;
+  tableMeta: columnRowMeta;
+  stubDataCellCodes: DataCellCodes;
+  headingDataCellCodes: DataCellCodes[];
+  suppressNullRows: boolean | undefined;
+}): boolean {
+  if (!suppressNullRows) {
+    return true;
+  }
+  const maxCols = tableMeta.columns - tableMeta.columnOffset;
+  let rowSum = 0;
+  for (let i = 0; i < maxCols; i++) {
+    const dataCellCodes = stubDataCellCodes.concat(headingDataCellCodes[i]);
+    const dimensions: string[] = [];
+    for (const dataCell of dataCellCodes) {
+      dimensions[dataCell.varPos] = dataCell.valCode;
+    }
+    const dataValue = getPxTableData(table.data.cube, dimensions);
+    if (dataValue && dataValue.value !== undefined && dataValue.value !== null) {
+      const num = Number(dataValue.value);
+      if (!isNaN(num)) {
+        rowSum += num;
+      }
+    }
+  }
+  return rowSum > 0;
 }
 
 /*

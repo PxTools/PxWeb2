@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
+import { MemoryRouter } from  'react-router';
 import '@testing-library/jest-dom/vitest';
 import userEvent from '@testing-library/user-event';
 
@@ -79,8 +80,13 @@ afterEach(() => {
 });
 
 describe('DrawerEdit', () => {
+
   it('renders successfully', () => {
-    render(<DrawerEdit />);
+    render(
+      <MemoryRouter>
+        <DrawerEdit />
+      </MemoryRouter>
+    );
 
     expect(screen.getByTestId('content-box')).toBeInTheDocument();
     // Three action buttons: auto pivot, clockwise pivot, hide empty rows
@@ -97,7 +103,9 @@ describe('DrawerEdit', () => {
         'presentation_page.side_menu.edit.customize.pivot.title',
       ),
     ).toBeInTheDocument();
-    expect(screen.getByText('Hide emty rows')).toBeInTheDocument();
+    expect(
+      screen.getByText('presentation_page.side_menu.edit.customize.suppress_empty_rows.title')
+    ).toBeInTheDocument();
   });
 
   it('has correct display name', () => {
@@ -105,7 +113,11 @@ describe('DrawerEdit', () => {
   });
 
   it('calls pivot with PivotType.Clockwise on its button click', async () => {
-    render(<DrawerEdit />);
+    render(
+      <MemoryRouter>
+        <DrawerEdit />
+      </MemoryRouter>
+    );
     const user = userEvent.setup();
     const clockwiseButton = screen.getByText(
       'presentation_page.side_menu.edit.customize.pivot.title',
@@ -121,7 +133,11 @@ describe('DrawerEdit', () => {
   });
 
   it('calls pivot with PivotType.Auto on its button click', async () => {
-    render(<DrawerEdit />);
+    render(
+      <MemoryRouter>
+        <DrawerEdit />
+      </MemoryRouter>
+    );
     const user = userEvent.setup();
     const autoButton = screen.getByText(
       'presentation_page.side_menu.edit.customize.auto_pivot.title',

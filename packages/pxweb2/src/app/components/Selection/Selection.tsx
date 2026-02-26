@@ -40,6 +40,7 @@ import {
   getSelectedCodelists,
   updateSelectedCodelistForVariable,
 } from './selectionUtils';
+import { MemoryRouter } from 'react-router';
 
 function addValueToVariable(
   selectedValuesArr: SelectedVBValues[],
@@ -605,7 +606,7 @@ export function Selection({
       >
         {selectedNavigationView === 'selection' && drawerSelection}
         {selectedNavigationView === 'view' && <DrawerView />}
-        {selectedNavigationView === 'edit' && <DrawerEdit />}
+        {selectedNavigationView === 'edit' && <MemoryRouter><DrawerEdit /></MemoryRouter>}
         {selectedNavigationView === 'save' && (
           <DrawerSave tableId={selectedTabId} />
         )}

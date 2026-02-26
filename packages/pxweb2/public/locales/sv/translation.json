@@ -205,6 +205,11 @@
           "change_order": {
             "title": "Ändra ordning",
             "description": "Beskrivande text..."
+          },
+          "suppress_empty_rows": {
+            "title": "Dölj tomma rader",
+            "aria_label": "Dölj tomma rader",
+            "description": "Döljer rader som inte innehåller data"
           }
         },
         "calculate": {

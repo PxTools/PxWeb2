@@ -205,6 +205,11 @@
           "change_order": {
             "title": "Endre rekkefølge",
             "description": "Beskrivelsestekst..."
+          },
+          "suppress_empty_rows": {
+            "title": "Skjul tomme rader",
+            "aria_label": "Skjul tomme rader",
+            "description": "Skjuler rader som ikke inneholder data"
           }
         },
         "calculate": {

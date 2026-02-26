@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -29,7 +30,7 @@ function PivotButton({
 }: PivotButtonProps) {
   const { t } = useTranslation();
   const tableData = useTableData();
-  const { pivot, buildTableTitle } = tableData;
+  const { pivot, buildTableTitle} = tableData;
   const { setIsFadingTable } = useTableData();
 
   // Live region text for screen readers after activation
@@ -115,22 +116,24 @@ export function DrawerEdit() {
   const { t } = useTranslation();
   const { isMobile } = useApp();
   const data = useTableData().data;
+
   const [loadingPivotType, setLoadingPivotType] = useState<PivotType | null>(
     null,
   );
   const [hideEmtyRows, setHideEmtyRows] = useState(false);
 
   const handleHideEmtyRowsClick = async () => {
-    setHideEmtyRows((prev) => {
-      const newValue = !prev;
-      setUrlParam('supressNullRows', newValue);
-      return newValue;
-    });
-
-    // Simulate async operation
-    return new Promise((resolve) => setTimeout(resolve, 500));
+    // Toggle the value based on current state and optimistically update state
+    const url = new URL(window.location.href);
+    const currentlyHidden = url.searchParams.has('suppressNullRows');
+    const newValue = !currentlyHidden;
+    setHideEmtyRows(newValue); // Optimistic update for immediate UI feedback
+    setUrlParam('suppressNullRows', newValue);
+    return new Promise((resolve) => setTimeout(resolve, 500))
   };
 
+  // Use React Router navigation to update the URL so location.search stays in sync
+  const navigate = useNavigate();
   function setUrlParam(param: string, value: boolean) {
     const url = new URL(window.location.href);
     if (value) {
@@ -138,16 +141,13 @@ export function DrawerEdit() {
     } else {
       url.searchParams.delete(param);
     }
-    window.history.replaceState({}, '', url.toString());
+    // Use navigate to update the URL and sync router state
+    navigate(url.pathname + url.search, { replace: true });
   }
 
   useEffect(() => {
-    setUrlParam('hideEmtyRows', hideEmtyRows);
-  }, [hideEmtyRows]);
-
-  useEffect(() => {
     const url = new URL(window.location.href);
-    setHideEmtyRows(url.searchParams.has('supressNullRows'));
+    setHideEmtyRows(url.searchParams.has('suppressNullRows'));
   }, []);
 
   return (
@@ -173,9 +173,9 @@ export function DrawerEdit() {
         )}
         {data && (
           <ActionItem
-            label="Hide emty rows"
-            ariaLabel="Hide empty rows"
-            description="Toggle visibility of rows that contain no data"
+            label={t('presentation_page.side_menu.edit.customize.suppress_empty_rows.title')}
+            ariaLabel={t('presentation_page.side_menu.edit.customize.suppress_empty_rows.aria_label')}
+            description={t('presentation_page.side_menu.edit.customize.suppress_empty_rows.description')}
             size="medium"
             onClick={() => {
               handleHideEmtyRowsClick();
