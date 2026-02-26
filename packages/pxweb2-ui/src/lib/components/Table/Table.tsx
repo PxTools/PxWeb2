@@ -62,8 +62,18 @@ export const Table = memo(function Table({
   pxtable,
   isMobile,
   className = '',
-  suppressNullRows = false,
+  suppressNullRows,
 }: TableProps) {
+  // Determine suppressNullRows from URL if not explicitly provided
+  let effectiveSuppressNullRows = false;
+  if (typeof suppressNullRows === 'boolean') {
+    effectiveSuppressNullRows = suppressNullRows;
+  } else {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      effectiveSuppressNullRows = params.get('suppressNullRows') === '1';
+    }
+  }
   const cssClasses = className.length > 0 ? ' ' + className : '';
 
   const tableMeta: columnRowMeta = calculateRowAndColumnMeta(pxtable);
@@ -132,7 +142,7 @@ export const Table = memo(function Table({
               tableMeta,
               headingDataCellCodes,
               isMobile,
-              suppressNullRows,
+              effectiveSuppressNullRows,
               contentVarIndex,
               contentsVariableDecimals,
             ),
@@ -141,7 +151,7 @@ export const Table = memo(function Table({
             tableMeta,
             headingDataCellCodes,
             isMobile,
-            suppressNullRows,
+            effectiveSuppressNullRows,
             contentVarIndex,
             contentsVariableDecimals,
           ],
