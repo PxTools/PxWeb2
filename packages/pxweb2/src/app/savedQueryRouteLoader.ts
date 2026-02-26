@@ -19,6 +19,8 @@ export async function savedQueryRouteLoader({ params }: LoaderFunctionArgs) {
 
     const lang = res.savedQuery.language;
 
+    //todo:  handle suppressemtyrows
+
     // Ensure i18next language matches the target route language
     if (lang && i18n.language !== lang) {
       await i18n.changeLanguage(lang);
