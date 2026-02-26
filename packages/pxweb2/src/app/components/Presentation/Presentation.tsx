@@ -20,7 +20,15 @@ type propsType = {
 };
 
 const MemoizedTable = React.memo(
-  ({ pxtable, isMobile, suppressNullRows }: { pxtable: PxTable; isMobile: boolean; suppressNullRows: boolean }) => (
+  ({
+    pxtable,
+    isMobile,
+    suppressNullRows,
+  }: {
+    pxtable: PxTable;
+    isMobile: boolean;
+    suppressNullRows: boolean;
+  }) => (
     <Table
       pxtable={pxtable}
       isMobile={isMobile}
@@ -278,7 +286,8 @@ export function Presentation({
               <div className={classes.tableContainer} ref={tableContainerRef}>
                 {(() => {
                   const urlParams = new URLSearchParams(window.location.search);
-                  const suppressNullRows = urlParams.get('suppressNullRows') === '1';
+                  const suppressNullRows =
+                    urlParams.get('suppressNullRows') === '1';
                   return (
                     <MemoizedTable
                       pxtable={tableData.data}
@@ -299,8 +308,11 @@ export function Presentation({
               >
                 <div className={classes.tableContainer} ref={tableContainerRef}>
                   {(() => {
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const suppressNullRows = urlParams.get('suppressNullRows') === '1';
+                    const urlParams = new URLSearchParams(
+                      window.location.search,
+                    );
+                    const suppressNullRows =
+                      urlParams.get('suppressNullRows') === '1';
                     return (
                       <MemoizedTable
                         pxtable={tableData.data}
