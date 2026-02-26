@@ -606,7 +606,11 @@ export function Selection({
       >
         {selectedNavigationView === 'selection' && drawerSelection}
         {selectedNavigationView === 'view' && <DrawerView />}
-        {selectedNavigationView === 'edit' && <MemoryRouter><DrawerEdit /></MemoryRouter>}
+        {selectedNavigationView === 'edit' && (
+          <MemoryRouter>
+            <DrawerEdit />
+          </MemoryRouter>
+        )}
         {selectedNavigationView === 'save' && (
           <DrawerSave tableId={selectedTabId} />
         )}

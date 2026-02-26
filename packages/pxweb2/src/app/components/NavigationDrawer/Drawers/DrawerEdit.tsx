@@ -30,7 +30,7 @@ function PivotButton({
 }: PivotButtonProps) {
   const { t } = useTranslation();
   const tableData = useTableData();
-  const { pivot, buildTableTitle} = tableData;
+  const { pivot, buildTableTitle } = tableData;
   const { setIsFadingTable } = useTableData();
 
   // Live region text for screen readers after activation
@@ -129,7 +129,7 @@ export function DrawerEdit() {
     const newValue = !currentlyHidden;
     setHideEmtyRows(newValue); // Optimistic update for immediate UI feedback
     setUrlParam('suppressNullRows', newValue);
-    return new Promise((resolve) => setTimeout(resolve, 500))
+    return new Promise((resolve) => setTimeout(resolve, 500));
   };
 
   // Use React Router navigation to update the URL so location.search stays in sync
@@ -173,9 +173,15 @@ export function DrawerEdit() {
         )}
         {data && (
           <ActionItem
-            label={t('presentation_page.side_menu.edit.customize.suppress_empty_rows.title')}
-            ariaLabel={t('presentation_page.side_menu.edit.customize.suppress_empty_rows.aria_label')}
-            description={t('presentation_page.side_menu.edit.customize.suppress_empty_rows.description')}
+            label={t(
+              'presentation_page.side_menu.edit.customize.suppress_empty_rows.title',
+            )}
+            ariaLabel={t(
+              'presentation_page.side_menu.edit.customize.suppress_empty_rows.aria_label',
+            )}
+            description={t(
+              'presentation_page.side_menu.edit.customize.suppress_empty_rows.description',
+            )}
             size="medium"
             onClick={() => {
               handleHideEmtyRowsClick();

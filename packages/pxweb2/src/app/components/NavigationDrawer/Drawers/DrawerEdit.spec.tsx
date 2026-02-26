@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
-import { MemoryRouter } from  'react-router';
+import { MemoryRouter } from 'react-router';
 import '@testing-library/jest-dom/vitest';
 import userEvent from '@testing-library/user-event';
 
@@ -80,12 +80,11 @@ afterEach(() => {
 });
 
 describe('DrawerEdit', () => {
-
   it('renders successfully', () => {
     render(
       <MemoryRouter>
         <DrawerEdit />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(screen.getByTestId('content-box')).toBeInTheDocument();
@@ -104,7 +103,9 @@ describe('DrawerEdit', () => {
       ),
     ).toBeInTheDocument();
     expect(
-      screen.getByText('presentation_page.side_menu.edit.customize.suppress_empty_rows.title')
+      screen.getByText(
+        'presentation_page.side_menu.edit.customize.suppress_empty_rows.title',
+      ),
     ).toBeInTheDocument();
   });
 
@@ -116,7 +117,7 @@ describe('DrawerEdit', () => {
     render(
       <MemoryRouter>
         <DrawerEdit />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     const user = userEvent.setup();
     const clockwiseButton = screen.getByText(
@@ -136,7 +137,7 @@ describe('DrawerEdit', () => {
     render(
       <MemoryRouter>
         <DrawerEdit />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     const user = userEvent.setup();
     const autoButton = screen.getByText(

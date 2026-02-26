@@ -278,7 +278,7 @@ export function createRows(
   const tableRows: React.JSX.Element[] = [];
   const stubDatacellCodes: DataCellCodes = new Array<DataCellMeta>();
   if (table.stub.length > 0) {
-  if (isMobile) {
+    if (isMobile) {
       createRowMobile({
         stubIndex: 0,
         rowSpan: tableMeta.rows - tableMeta.rowOffset,
@@ -379,78 +379,77 @@ function createRowDesktop({
       rowSpan = 1;
     }
 
-  // Calculate if the row should be suppressed (i.e., if all data values are null/zero)
-  const shouldRenderRow = shouldRenderDataRow({
-    table,
-    tableMeta,
-    stubDataCellCodes,
-    headingDataCellCodes,
-    suppressNullRows,
-  });
+    // Calculate if the row should be suppressed (i.e., if all data values are null/zero)
+    const shouldRenderRow = shouldRenderDataRow({
+      table,
+      tableMeta,
+      stubDataCellCodes,
+      headingDataCellCodes,
+      suppressNullRows,
+    });
 
-  if (shouldRenderRow) {
-    tableRow.push(
-      <th
-        id={cellMeta.htmlId}
-        scope="row"
-        aria-label={
-          variable.type === VartypeEnum.TIME_VARIABLE
-            ? `${variable.label} ${val.label}`
-            : undefined
-        }
-        className={cl(classes.stub, classes[`stub-${stubIndex}`])}
-        key={getNewKey()}
-      >
-        {val.label}
-      </th>,
-    );
-
-
-    // If there are more stub variables that need to add headers to this row
-    if (table.stub.length > stubIndex + 1) {
-      // make the rest of this row empty
-      fillEmpty(tableMeta, tableRow);
-      tableRows.push(
-        <tr
-          className={cl({ [classes.firstdim]: stubIndex === 0 })}
+    if (shouldRenderRow) {
+      tableRow.push(
+        <th
+          id={cellMeta.htmlId}
+          scope="row"
+          aria-label={
+            variable.type === VartypeEnum.TIME_VARIABLE
+              ? `${variable.label} ${val.label}`
+              : undefined
+          }
+          className={cl(classes.stub, classes[`stub-${stubIndex}`])}
           key={getNewKey()}
         >
-          {tableRow}
-        </tr>,
+          {val.label}
+        </th>,
       );
-      tableRow = [];
 
-      // Create a new row for the next stub
-      createRowDesktop({
-        stubIndex: stubIndex + 1,
-        rowSpan,
-        stubIteration,
-        table,
-        tableMeta,
-        suppressNullRows,
-        stubDataCellCodes,
-        headingDataCellCodes,
-        tableRows,
-        contentVarIndex,
-        contentsVariableDecimals,
-      });
-      stubDataCellCodes.pop();
-    } else {
-      // If no more stubs need to add headers then fill the row with data
-      fillData(
-        table,
-        tableMeta,
-        stubDataCellCodes,
-        headingDataCellCodes,
-        tableRow,
-      );
-      tableRows.push(<tr key={getNewKey()}>{tableRow}</tr>);
-      tableRow = [];
-      stubDataCellCodes.pop();
+      // If there are more stub variables that need to add headers to this row
+      if (table.stub.length > stubIndex + 1) {
+        // make the rest of this row empty
+        fillEmpty(tableMeta, tableRow);
+        tableRows.push(
+          <tr
+            className={cl({ [classes.firstdim]: stubIndex === 0 })}
+            key={getNewKey()}
+          >
+            {tableRow}
+          </tr>,
+        );
+        tableRow = [];
+
+        // Create a new row for the next stub
+        createRowDesktop({
+          stubIndex: stubIndex + 1,
+          rowSpan,
+          stubIteration,
+          table,
+          tableMeta,
+          suppressNullRows,
+          stubDataCellCodes,
+          headingDataCellCodes,
+          tableRows,
+          contentVarIndex,
+          contentsVariableDecimals,
+        });
+        stubDataCellCodes.pop();
+      } else {
+        // If no more stubs need to add headers then fill the row with data
+        fillData(
+          table,
+          tableMeta,
+          stubDataCellCodes,
+          headingDataCellCodes,
+          tableRow,
+        );
+        tableRows.push(<tr key={getNewKey()}>{tableRow}</tr>);
+        tableRow = [];
+        stubDataCellCodes.pop();
+      }
     }
   }
-  }
-  (tableRows);
+  tableRows;
 
   return tableRows;
 }
@@ -563,67 +562,66 @@ function createRowMobile({
       stubDataCellCodes.pop();
     } else {
       // last level
-const shouldRenderRow = shouldRenderDataRow({
-    table,
-    tableMeta,
-    stubDataCellCodes,
-    headingDataCellCodes,
-    suppressNullRows,
-  });
-
-if (shouldRenderRow) {
-
-      let tempid =
-        cellMeta.varId +
-        '_' +
-        cellMeta.valCode +
-        '_I' +
-        uniqueIdCounter.idCounter;
-      cellMeta.htmlId = tempid;
-      tableRow.push(
-        <th
-          id={cellMeta.htmlId}
-          scope="row"
-          aria-label={
-            variable.type === VartypeEnum.TIME_VARIABLE
-              ? `${variable.label} ${val.label}`
-              : undefined
-          }
-          className={cl(classes.stub, classes[`stub-${stubIndex}`])}
-          key={getNewKey()}
-        >
-          {val.label}
-        </th>,
-      );
-      fillData(
+      const shouldRenderRow = shouldRenderDataRow({
         table,
         tableMeta,
         stubDataCellCodes,
         headingDataCellCodes,
-        tableRow,
-      );
-      tableRows.push(
-        <tr
-          key={getNewKey()}
-          className={cl(
-            classes.mobileRowHeadLastStub,
-            {
-              [classes.mobileRowHeadlastValueOfLastStub]: lastValueOfLastStub,
-            },
-            {
-              [classes.mobileRowHeadfirstValueOfLastStub2Dim]:
-                i === 0 && stubLength === 2,
-            },
-          )}
-        >
-          {tableRow}
-        </tr>,
-      );
-      tableRow = [];
-      stubDataCellCodes.pop();
+        suppressNullRows,
+      });
+
+      if (shouldRenderRow) {
+        let tempid =
+          cellMeta.varId +
+          '_' +
+          cellMeta.valCode +
+          '_I' +
+          uniqueIdCounter.idCounter;
+        cellMeta.htmlId = tempid;
+        tableRow.push(
+          <th
+            id={cellMeta.htmlId}
+            scope="row"
+            aria-label={
+              variable.type === VartypeEnum.TIME_VARIABLE
+                ? `${variable.label} ${val.label}`
+                : undefined
+            }
+            className={cl(classes.stub, classes[`stub-${stubIndex}`])}
+            key={getNewKey()}
+          >
+            {val.label}
+          </th>,
+        );
+        fillData(
+          table,
+          tableMeta,
+          stubDataCellCodes,
+          headingDataCellCodes,
+          tableRow,
+        );
+        tableRows.push(
+          <tr
+            key={getNewKey()}
+            className={cl(
+              classes.mobileRowHeadLastStub,
+              {
+                [classes.mobileRowHeadlastValueOfLastStub]: lastValueOfLastStub,
+              },
+              {
+                [classes.mobileRowHeadfirstValueOfLastStub2Dim]:
+                  i === 0 && stubLength === 2,
+              },
+            )}
+          >
+            {tableRow}
+          </tr>,
+        );
+        tableRow = [];
+        stubDataCellCodes.pop();
+      }
     }
   }
-}
 
   return tableRows;
 }
@@ -648,7 +646,6 @@ function fillEmpty(
     tableRow.push(<td key={getNewKey()}>{emptyText}</td>);
   }
 }
-
 
 /**
  * Determines whether a data row should be rendered based on the suppressNullRows flag and the data values in the row.
@@ -687,7 +684,11 @@ function shouldRenderDataRow({
       dimensions[dataCell.varPos] = dataCell.valCode;
     }
     const dataValue = getPxTableData(table.data.cube, dimensions);
-    if (dataValue && dataValue.value !== undefined && dataValue.value !== null) {
+    if (
+      dataValue &&
+      dataValue.value !== undefined &&
+      dataValue.value !== null
+    ) {
       const num = Number(dataValue.value);
       if (!isNaN(num)) {
         rowSum += num;
