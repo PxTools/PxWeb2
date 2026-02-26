@@ -40,7 +40,6 @@ import {
   getSelectedCodelists,
   updateSelectedCodelistForVariable,
 } from './selectionUtils';
-import { MemoryRouter } from 'react-router';
 
 function addValueToVariable(
   selectedValuesArr: SelectedVBValues[],
