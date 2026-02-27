@@ -34,7 +34,15 @@ export default defineConfig({
     port: 4300,
     host: 'localhost',
   },
-  plugins: [react(), themeInjectorPlugin(), virtualModulePlugin()],
+  plugins: [
+    react({
+      babel: {
+        plugins: ['babel-plugin-react-compiler'],
+      },
+    }),
+    themeInjectorPlugin(),
+    virtualModulePlugin(),
+  ],
   build: {
     outDir: './dist/',
     reportCompressedSize: true,

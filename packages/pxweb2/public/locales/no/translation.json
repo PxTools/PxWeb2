@@ -234,12 +234,12 @@
         },
         "savequery": {
           "title": "Lenke til oppdatert tabell",
-          "info": "Du får en unik lenke til tabellen din, som vi holder oppdatert for deg. Hvordan nye tidsperioder legges til, velger du selv.",
+          "info": "Skal du bruke tabellen flere ganger? Her får du en lenke til tabellen, så trenger du ikke tilpasse den på nytt. Tabellen vil holde seg oppdatert, og du velger selv hvordan nye tidsperioder legges til.",
           "radio_legend": "Valg for nye tidsperioder",
           "period_options": {
-            "selected": "Ikke legg til nye (tabellen vil kun vise de du har valgt nå)",
-            "from": "Legg til nye (de nye vil komme i tillegg til de du har valgt nå)",
-            "top": "Legg til nye, men behold samme antall (når en ny tidsperiode legges til, fjernes den eldste)"
+            "selected": "Ikke legg til nye tidsperioder – jeg vil kun ha de jeg har valgt nå",
+            "from": "Legg til alle nye tidsperioder",
+            "top": "Legg til alle nye tidsperioder, men behold samme antall (når en ny periode legges til, fjernes den eldste)"
           },
           "create_button": "Få lenke",
           "copy_button": "Kopier lenke",
@@ -258,7 +258,7 @@
         },
         "api": {
           "title": "API",
-          "description": "Her finner du API-spørringen for tabellen. Bruk GET om spørringen er liten (under ca. 2 100 tegn), og POST om spørringen er stor og mer detaljert.",
+          "description": "Her finner du API-spørring for tabellen. Bruk GET om spørringen er kort (under ca. 2 100 tegn), og POST om spørringen er lang og mer detaljert.",
           "query": "API-spørring",
           "link_text": "Les mer om bruk av API-et",
           "link_url": "https://www.ssb.no/api/pxwebapiv2",
