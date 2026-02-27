@@ -695,8 +695,7 @@ function shouldRenderDataRow({
     if (
       dataValue &&
       dataValue.value !== undefined &&
-      (dataValue.value !== null ||
-      Number(dataValue.value) !== 0)
+      (dataValue.value !== null || Number(dataValue.value) !== 0)
     ) {
       return true; // At least one non-zero value
     }
