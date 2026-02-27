@@ -7,6 +7,7 @@ import { getPxTableData } from './cubeHelper';
 import { Value } from '../../shared-types/value';
 import { VartypeEnum } from '../../shared-types/vartypeEnum';
 import { Variable } from '../../shared-types/variable';
+import { useLocation } from 'react-router';
 
 export interface TableProps {
   readonly pxtable: PxTable;
@@ -64,15 +65,14 @@ export const Table = memo(function Table({
   className = '',
   suppressNullRows,
 }: TableProps) {
+  const location = useLocation();
   // Determine suppressNullRows from URL if not explicitly provided
   let effectiveSuppressNullRows = false;
   if (typeof suppressNullRows === 'boolean') {
     effectiveSuppressNullRows = suppressNullRows;
   } else {
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
+          const params = new URLSearchParams(location.search);
       effectiveSuppressNullRows = params.get('suppressNullRows') === '1';
-    }
   }
   const cssClasses = className.length > 0 ? ' ' + className : '';
 
