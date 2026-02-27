@@ -288,7 +288,8 @@ export function Presentation({
               <div className={classes.tableContainer} ref={tableContainerRef}>
                 {(() => {
                   const urlParams = new URLSearchParams(location.search);
-                  const suppressNullRows = urlParams.get('suppressNullRows') === '1';
+                  const suppressNullRows =
+                    urlParams.get('suppressNullRows') === '1';
                   return (
                     <MemoizedTable
                       pxtable={tableData.data}
@@ -310,7 +311,8 @@ export function Presentation({
                 <div className={classes.tableContainer} ref={tableContainerRef}>
                   {(() => {
                     const urlParams = new URLSearchParams(location.search);
-                    const suppressNullRows = urlParams.get('suppressNullRows') === '1';
+                    const suppressNullRows =
+                      urlParams.get('suppressNullRows') === '1';
                     return (
                       <MemoizedTable
                         pxtable={tableData.data}

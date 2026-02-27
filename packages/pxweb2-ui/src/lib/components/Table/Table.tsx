@@ -71,8 +71,8 @@ export const Table = memo(function Table({
   if (typeof suppressNullRows === 'boolean') {
     effectiveSuppressNullRows = suppressNullRows;
   } else {
-          const params = new URLSearchParams(location.search);
-      effectiveSuppressNullRows = params.get('suppressNullRows') === '1';
+    const params = new URLSearchParams(location.search);
+    effectiveSuppressNullRows = params.get('suppressNullRows') === '1';
   }
   const cssClasses = className.length > 0 ? ' ' + className : '';
 
