@@ -459,7 +459,6 @@ function createRowDesktop({
       }
     }
   }
-  tableRows;
 
   return tableRows;
 }
