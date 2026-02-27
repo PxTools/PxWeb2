@@ -13,6 +13,7 @@ import { Variable } from '../../shared-types/variable';
 export interface TableProps {
   readonly pxtable: PxTable;
   readonly isMobile: boolean;
+  readonly getVerticalScrollElement?: () => HTMLElement | null;
   readonly className?: string;
 }
 
@@ -69,6 +70,7 @@ interface ColumnRenderWindow {
 export const Table = memo(function Table({
   pxtable,
   isMobile,
+  getVerticalScrollElement,
   className = '',
 }: TableProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -78,27 +80,13 @@ export const Table = memo(function Table({
   const cssClasses = className.length > 0 ? ' ' + className : '';
 
   useEffect(() => {
-    const findContentAndFooterContainer = (
-      element: HTMLElement | null,
-    ): HTMLElement | null => {
-      let parent = element?.parentElement ?? null;
-
-      while (parent) {
-        if (
-          typeof parent.className === 'string' &&
-          parent.className.includes('contentAndFooterContainer')
-        ) {
-          return parent;
-        }
-        parent = parent.parentElement;
-      }
-      return null;
-    };
-
+    // Use outer container scroll if it is provided, otherwise use the table container scroll
     const updateVerticalScrollElement = () => {
-      setVerticalScrollElement(
-        findContentAndFooterContainer(scrollContainerRef.current),
-      );
+      if (getVerticalScrollElement) {
+        setVerticalScrollElement(getVerticalScrollElement());
+      } else {
+        setVerticalScrollElement(null);
+      }
     };
 
     updateVerticalScrollElement();
@@ -107,7 +95,7 @@ export const Table = memo(function Table({
     return () => {
       globalThis.removeEventListener('resize', updateVerticalScrollElement);
     };
-  }, []);
+  }, [getVerticalScrollElement]);
 
   useEffect(() => {
     if (!verticalScrollElement || !scrollContainerRef.current) {

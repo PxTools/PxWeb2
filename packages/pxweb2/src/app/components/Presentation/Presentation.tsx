@@ -1,6 +1,12 @@
 import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
-import React, { useRef, useEffect, useState, useLayoutEffect } from 'react';
+import React, {
+  useRef,
+  useEffect,
+  useState,
+  useLayoutEffect,
+  useCallback,
+} from 'react';
 import isEqual from 'lodash/isEqual';
 
 import classes from './Presentation.module.scss';
@@ -20,12 +26,25 @@ type propsType = {
 };
 
 const MemoizedTable = React.memo(
-  ({ pxtable, isMobile }: { pxtable: PxTable; isMobile: boolean }) => (
-    <Table pxtable={pxtable} isMobile={isMobile} />
+  ({
+    pxtable,
+    isMobile,
+    getVerticalScrollElement,
+  }: {
+    pxtable: PxTable;
+    isMobile: boolean;
+    getVerticalScrollElement?: () => HTMLElement | null;
+  }) => (
+    <Table
+      pxtable={pxtable}
+      isMobile={isMobile}
+      getVerticalScrollElement={getVerticalScrollElement}
+    />
   ),
   (prevProps, nextProps) =>
     isEqual(prevProps.pxtable, nextProps.pxtable) &&
-    prevProps.isMobile === nextProps.isMobile,
+    prevProps.isMobile === nextProps.isMobile &&
+    prevProps.getVerticalScrollElement === nextProps.getVerticalScrollElement,
 );
 export function Presentation({
   selectedTabId,
@@ -46,6 +65,12 @@ export function Presentation({
     selectedVBValues,
   } = variables;
   const tableId: string = selectedTabId;
+  const getVerticalScrollElement = useCallback((): HTMLElement | null => {
+    if (!scrollRef || typeof scrollRef === 'function') {
+      return null;
+    }
+    return scrollRef.current;
+  }, [scrollRef]);
   const [isMissingMandatoryVariables, setIsMissingMandatoryVariables] =
     useState(false);
   const [initialRun, setInitialRun] = useState(true);
@@ -270,7 +295,11 @@ export function Presentation({
               ref={gradientContainerRef}
             >
               <div className={classes.tableContainer} ref={tableContainerRef}>
-                <MemoizedTable pxtable={tableData.data} isMobile={isMobile} />
+                <MemoizedTable
+                  pxtable={tableData.data}
+                  isMobile={isMobile}
+                  getVerticalScrollElement={getVerticalScrollElement}
+                />
               </div>
             </div>
           )}
@@ -282,7 +311,11 @@ export function Presentation({
                 ref={gradientContainerRef}
               >
                 <div className={classes.tableContainer} ref={tableContainerRef}>
-                  <MemoizedTable pxtable={tableData.data} isMobile={isMobile} />
+                  <MemoizedTable
+                    pxtable={tableData.data}
+                    isMobile={isMobile}
+                    getVerticalScrollElement={getVerticalScrollElement}
+                  />
                 </div>
               </div>
             )}
