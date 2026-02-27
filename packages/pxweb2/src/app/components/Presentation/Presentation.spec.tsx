@@ -41,10 +41,22 @@ describe('Presentation', () => {
     const pxTableMock = {
       metadata: { label: 'Test Table', variables: [], pathElements: [] },
       heading: [
-        { id: 'H', label: 'Header', type: 'REGULAR_VARIABLE', mandatory: false, values: [{ label: 'H1', code: 'h1' }] },
+        {
+          id: 'H',
+          label: 'Header',
+          type: 'REGULAR_VARIABLE',
+          mandatory: false,
+          values: [{ label: 'H1', code: 'h1' }],
+        },
       ],
       stub: [
-        { id: 'S', label: 'Stub', type: 'REGULAR_VARIABLE', mandatory: false, values: [{ label: 'S1', code: 's1' }] },
+        {
+          id: 'S',
+          label: 'Stub',
+          type: 'REGULAR_VARIABLE',
+          mandatory: false,
+          values: [{ label: 'S1', code: 's1' }],
+        },
       ],
       data: {
         cube: { s1: { h1: { value: 1 } } },
@@ -79,7 +91,7 @@ describe('Presentation', () => {
     // Simulate URL param
     window.history.pushState({}, '', '/?suppressNullRows=1');
     renderWithProviders(
-      <MemoryRouter initialEntries={[ '/?suppressNullRows=1' ]}>
+      <MemoryRouter initialEntries={['/?suppressNullRows=1']}>
         <Presentation
           selectedTabId="1"
           isExpanded={false}
@@ -127,7 +139,9 @@ describe('Presentation', () => {
         />
       </MemoryRouter>,
     );
-    expect((container.firstChild as HTMLElement | null)?.className).toMatch(/fadeTable/);
+    expect((container.firstChild as HTMLElement | null)?.className).toMatch(
+      /fadeTable/,
+    );
     vi.resetModules();
   });
 });
