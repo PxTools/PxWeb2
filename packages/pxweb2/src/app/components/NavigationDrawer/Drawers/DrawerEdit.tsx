@@ -30,7 +30,7 @@ function PivotButton({
 }: PivotButtonProps) {
   const { t } = useTranslation();
   const tableData = useTableData();
-  const { pivot, buildTableTitle } = tableData;
+  const { pivot, buildTableTitle} = tableData;
   const { setIsFadingTable } = useTableData();
 
   // Live region text for screen readers after activation
@@ -124,7 +124,7 @@ export function DrawerEdit() {
 
   const handleHideEmtyRowsClick = async () => {
     // Toggle the value based on current state and optimistically update state
-    const url = new URL(window.location.href);
+    const url = new URL(globalThis.window.location.href);
     const currentlyHidden = url.searchParams.has('suppressNullRows');
     const newValue = !currentlyHidden;
     setHideEmtyRows(newValue); // Optimistic update for immediate UI feedback
@@ -135,7 +135,7 @@ export function DrawerEdit() {
   // Use React Router navigation to update the URL so location.search stays in sync
   const navigate = useNavigate();
   function setUrlParam(param: string, value: boolean) {
-    const url = new URL(window.location.href);
+    const url = new URL(globalThis.window.location.href);
     if (value) {
       url.searchParams.set(param, '1');
     } else {
@@ -146,7 +146,7 @@ export function DrawerEdit() {
   }
 
   useEffect(() => {
-    const url = new URL(window.location.href);
+    const url = new URL(globalThis.window.location.href);
     setHideEmtyRows(url.searchParams.has('suppressNullRows'));
   }, []);
 
@@ -173,15 +173,9 @@ export function DrawerEdit() {
         )}
         {data && (
           <ActionItem
-            label={t(
-              'presentation_page.side_menu.edit.customize.suppress_empty_rows.title',
-            )}
-            ariaLabel={t(
-              'presentation_page.side_menu.edit.customize.suppress_empty_rows.aria_label',
-            )}
-            description={t(
-              'presentation_page.side_menu.edit.customize.suppress_empty_rows.description',
-            )}
+            label={t('presentation_page.side_menu.edit.customize.suppress_empty_rows.title')}
+            ariaLabel={t('presentation_page.side_menu.edit.customize.suppress_empty_rows.aria_label')}
+            description={t('presentation_page.side_menu.edit.customize.suppress_empty_rows.description')}
             size="medium"
             onClick={() => {
               handleHideEmtyRowsClick();
