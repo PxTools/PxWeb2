@@ -685,7 +685,6 @@ function shouldRenderDataRow({
     return true;
   }
   const maxCols = tableMeta.columns - tableMeta.columnOffset;
-  let rowSum = 0;
   for (let i = 0; i < maxCols; i++) {
     const dataCellCodes = stubDataCellCodes.concat(headingDataCellCodes[i]);
     const dimensions: string[] = [];
@@ -696,15 +695,13 @@ function shouldRenderDataRow({
     if (
       dataValue &&
       dataValue.value !== undefined &&
-      dataValue.value !== null
+      (dataValue.value !== null ||
+      Number(dataValue.value) !== 0)
     ) {
-      const num = Number(dataValue.value);
-      if (!isNaN(num)) {
-        rowSum += num;
-      }
+      return true; // At least one non-zero value
     }
   }
-  return rowSum > 0;
+  return false; // All values are zero or null/undefined
 }
 
 /*

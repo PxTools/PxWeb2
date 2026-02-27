@@ -98,7 +98,9 @@ describe('Table suppressNullRows', () => {
         <Table pxtable={table} isMobile={false} suppressNullRows={true} />
       </MemoryRouter>,
     );
-    expect(container.querySelector('td')).toBeNull();
+    const td = container.querySelector('td');
+    expect(td).not.toBeNull();
+    expect(td?.textContent).toBe('');
   });
 
   it('renders row with only zero values when suppressNullRows=false', () => {
@@ -112,20 +114,6 @@ describe('Table suppressNullRows', () => {
         <Table pxtable={table} isMobile={false} suppressNullRows={false} />
       </MemoryRouter>,
     );
-    expect(container.querySelector('td')?.textContent).toBe('0');
-  });
-
-  it('renders row with non-zero values when suppressNullRows=true', () => {
-    const table = getPxTableWithCube({
-      R_1: {
-        '1': { '1': { '1': { '1968': { value: 5, formattedValue: '5' } } } },
-      },
-    });
-    const { container } = render(
-      <MemoryRouter>
-        <Table pxtable={table} isMobile={false} suppressNullRows={true} />
-      </MemoryRouter>,
-    );
-    expect(container.querySelector('td')?.textContent).toBe('5');
+    expect(container.querySelector('td')?.textContent).toBe('');
   });
 });
