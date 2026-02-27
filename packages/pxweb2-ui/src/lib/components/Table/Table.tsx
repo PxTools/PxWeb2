@@ -693,8 +693,7 @@ function shouldRenderDataRow({
     }
     const dataValue = getPxTableData(table.data.cube, dimensions);
     if (
-      dataValue &&
-      dataValue.value !== undefined &&
+      dataValue?.value !== undefined &&
       (dataValue.value !== null || Number(dataValue.value) !== 0)
     ) {
       return true; // At least one non-zero value

@@ -235,7 +235,7 @@ export function createSavedQueryURL(id: string): string {
   });
 
   // If suppressNullRows=1 is present in the current URL, add it to the saved query URL
-  if (typeof globalThis.window !== 'undefined') {
+  if (globalThis.window !== undefined) {
     const params = new URLSearchParams(globalThis.window.location.search);
     if (params.get('suppressNullRows') === '1') {
       queryParams.set('suppressNullRows', '1');
