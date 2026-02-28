@@ -47,6 +47,8 @@ export function TableViewer() {
   const hideMenuRef = useRef<HTMLButtonElement>(null);
   const skipToMainRef = useRef<HTMLDivElement>(null);
 
+  const isSmallScreen = isTablet === true || isMobile === true;
+
   useEffect(() => {
     if (hasFocus !== 'none' && navigationBarRef.current) {
       hideMenuRef.current?.focus();
@@ -54,6 +56,9 @@ export function TableViewer() {
   }, [hasFocus]);
 
   useEffect(() => {
+    if (isSmallScreen) {
+      return;
+    }
     if (!navigationBarRef.current || !hideMenuRef.current) {
       return;
     }
@@ -114,7 +119,9 @@ export function TableViewer() {
         undefined,
       );
     }
-  }, [accessibility, selectedNavigationView]);
+  }, [accessibility, selectedNavigationView, isSmallScreen]);
+
+  // Drawer focus-trap is implemented inside NavigationDrawer via portal
 
   // Monitor focus on SkipToMain
   useEffect(() => {
@@ -172,8 +179,6 @@ export function TableViewer() {
     }
   };
 
-  const isSmallScreen = isTablet === true || isMobile === true;
-
   return (
     <>
       <SkipToMain ref={skipToMainRef} />
@@ -201,6 +206,7 @@ export function TableViewer() {
           />
         )}{' '}
         <div
+          {...(isSmallScreen ? { 'data-drawer-root': true } : {})}
           className={cl(styles.mainContainer, {
             [styles.skipToMainContentVisible]: skipToMainFocused,
           })}

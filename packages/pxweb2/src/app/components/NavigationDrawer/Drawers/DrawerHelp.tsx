@@ -7,12 +7,21 @@ import type {
   LocaleContent,
   HelpSection as HelpSectionType,
 } from '../../../util/config/localeContentTypes';
+import React from 'react';
 
 export function DrawerHelp() {
   const { i18n } = useTranslation();
   const localeContent: LocaleContent | null = useLocaleContent(i18n.language);
   const helpSectionContent: HelpSectionType | undefined =
     localeContent?.tableViewer?.helpSection;
+
+  React.useEffect(() => {
+    // Fire a custom event after mount to signal that HelpSection is rendered
+    const timeout = setTimeout(() => {
+      globalThis.dispatchEvent(new CustomEvent('drawer-help-rendered'));
+    }, 0);
+    return () => clearTimeout(timeout);
+  }, [helpSectionContent]);
 
   if (!helpSectionContent) {
     return null;
