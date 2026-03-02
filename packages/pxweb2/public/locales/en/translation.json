@@ -205,6 +205,11 @@
           "change_order": {
             "title": "Change order",
             "description": "Description text..."
+          },
+          "suppress_empty_rows": {
+            "title": "Hide empty rows",
+            "aria_label": "Hide empty rows",
+            "description": "Don't show rows with zeros, dashes, and dots in the table"
           }
         },
         "calculate": {
