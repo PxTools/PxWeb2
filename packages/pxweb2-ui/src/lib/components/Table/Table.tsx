@@ -67,6 +67,12 @@ interface ColumnRenderWindow {
   rightPadding: number;
 }
 
+const TABLE_COLUMN_ESTIMATE_WIDTH_PX = 88;
+const HEADER_CELL_HORIZONTAL_PADDING_PX = 24;
+const HEADER_CELL_VERTICAL_PADDING_PX = 16;
+const HEADER_ROW_LINE_HEIGHT_PX = 24;
+const AVERAGE_CHARACTER_WIDTH_PX = 8;
+
 export const Table = memo(function Table({
   pxtable,
   isMobile,
@@ -168,11 +174,15 @@ export const Table = memo(function Table({
   );
 
   const shouldVirtualizeColumns = !isMobile && tableColumnSize > 60;
+  const headingRowHeights = useMemo(
+    () => calculateHeadingRowHeights(pxtable, tableMeta),
+    [pxtable, tableMeta],
+  );
   const columnVirtualizer = useVirtualizer({
     horizontal: true,
     count: tableColumnSize,
     getScrollElement: () => scrollContainerRef.current,
-    estimateSize: () => 88,
+    estimateSize: () => TABLE_COLUMN_ESTIMATE_WIDTH_PX,
     overscan: 8,
   });
 
@@ -236,6 +246,7 @@ export const Table = memo(function Table({
         tableMeta,
         headingDataCellCodes,
         columnWindow,
+        headingRowHeights,
       ),
       bodyRows: createRows(
         pxtable,
@@ -252,6 +263,7 @@ export const Table = memo(function Table({
     pxtable,
     tableMeta,
     columnWindow,
+    headingRowHeights,
     isMobile,
     contentVarIndex,
     contentsVariableDecimals,
@@ -347,6 +359,7 @@ export function createHeading(
   tableMeta: columnRowMeta,
   headingDataCellCodes: DataCellCodes[],
   columnWindow: ColumnRenderWindow,
+  headingRowHeights: number[],
 ): React.JSX.Element[] {
   // Number of times to add all values for a variable, default to 1 for first header row
   let repetitionsCurrentHeaderLevel = 1;
@@ -377,12 +390,17 @@ export function createHeading(
     idxHeadingLevel < table.heading.length;
     idxHeadingLevel++
   ) {
+    const headingRowHeight = headingRowHeights[idxHeadingLevel];
+
     if (columnWindow.leftPadding > 0) {
       headerRow.push(
         <td
           key={getNewKey()}
           className={classes.virtualPaddingCell}
-          style={{ width: `${columnWindow.leftPadding}px` }}
+          style={{
+            width: `${columnWindow.leftPadding}px`,
+            height: `${headingRowHeight}px`,
+          }}
         />,
       );
     }
@@ -431,6 +449,7 @@ export function createHeading(
                   table.stub.length === 0 &&
                   visibleSpanStart === 0,
               })}
+              style={{ height: `${headingRowHeight}px` }}
             >
               {variable.values[i].label}
             </th>,
@@ -457,7 +476,10 @@ export function createHeading(
         <td
           key={getNewKey()}
           className={classes.virtualPaddingCell}
-          style={{ width: `${columnWindow.rightPadding}px` }}
+          style={{
+            width: `${columnWindow.rightPadding}px`,
+            height: `${headingRowHeight}px`,
+          }}
         />,
       );
     }
@@ -471,6 +493,33 @@ export function createHeading(
   }
 
   return headerRows;
+}
+
+export function calculateHeadingRowHeights(
+  table: PxTable,
+  tableMeta: columnRowMeta,
+): number[] {
+  const headerCellTextWidthPx = Math.max(
+    1,
+    TABLE_COLUMN_ESTIMATE_WIDTH_PX - HEADER_CELL_HORIZONTAL_PADDING_PX,
+  );
+  const estimatedCharsPerLine = Math.max(
+    1,
+    Math.floor(headerCellTextWidthPx / AVERAGE_CHARACTER_WIDTH_PX),
+  );
+
+  return table.heading.map((variable) => {
+    const longestLabelLength =
+      tableMeta.longestValueTextByVariableId[variable.id] ?? 0;
+    const lineCount = Math.max(
+      1,
+      Math.ceil(longestLabelLength / estimatedCharsPerLine),
+    );
+
+    return (
+      lineCount * HEADER_ROW_LINE_HEIGHT_PX + HEADER_CELL_VERTICAL_PADDING_PX
+    );
+  });
 }
 
 /**
