@@ -178,6 +178,7 @@ export const Table = memo(function Table({
     () => calculateHeadingRowHeights(pxtable, tableMeta),
     [pxtable, tableMeta],
   );
+
   const columnVirtualizer = useVirtualizer({
     horizontal: true,
     count: tableColumnSize,
@@ -499,16 +500,24 @@ export function calculateHeadingRowHeights(
   table: PxTable,
   tableMeta: columnRowMeta,
 ): number[] {
-  const headerCellTextWidthPx = Math.max(
-    1,
-    TABLE_COLUMN_ESTIMATE_WIDTH_PX - HEADER_CELL_HORIZONTAL_PADDING_PX,
-  );
-  const estimatedCharsPerLine = Math.max(
-    1,
-    Math.floor(headerCellTextWidthPx / AVERAGE_CHARACTER_WIDTH_PX),
-  );
+  let columnSpan = tableMeta.columns - tableMeta.columnOffset;
 
   return table.heading.map((variable) => {
+    columnSpan = columnSpan / variable.values.length;
+
+    const estimatedCellWidthPx = Math.max(
+      TABLE_COLUMN_ESTIMATE_WIDTH_PX,
+      columnSpan * TABLE_COLUMN_ESTIMATE_WIDTH_PX,
+    );
+    const headerCellTextWidthPx = Math.max(
+      1,
+      estimatedCellWidthPx - HEADER_CELL_HORIZONTAL_PADDING_PX,
+    );
+    const estimatedCharsPerLine = Math.max(
+      1,
+      Math.floor(headerCellTextWidthPx / AVERAGE_CHARACTER_WIDTH_PX),
+    );
+
     const longestLabelLength =
       tableMeta.longestValueTextByVariableId[variable.id] ?? 0;
     const lineCount = Math.max(
