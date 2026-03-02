@@ -209,7 +209,7 @@
           "suppress_empty_rows": {
             "title": "Dölj tomma rader",
             "aria_label": "Dölj tomma rader",
-            "description": "Döljer rader som inte innehåller data"
+            "description": "Visa inte rader med noll, streck och prickar i tabellen"
           }
         },
         "calculate": {

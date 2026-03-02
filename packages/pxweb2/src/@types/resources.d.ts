@@ -215,7 +215,7 @@ interface Resources {
             suppress_empty_rows: {
               aria_label: 'Hide empty rows';
               description: 'Hides rows that contain no data';
-              title: 'Hide empty rows';
+              title: "Don't show rows with zeros, dashes, and dots in the table";
             };
             title: 'Customise';
           };
