@@ -116,6 +116,8 @@ export function DrawerEdit() {
   const { t } = useTranslation();
   const { isMobile } = useApp();
   const data = useTableData().data;
+  const { setIsFadingTable } = useTableData();
+
 
   const [loadingPivotType, setLoadingPivotType] = useState<PivotType | null>(
     null,
@@ -124,12 +126,17 @@ export function DrawerEdit() {
 
   const handleHideEmtyRowsClick = async () => {
     // Toggle the value based on current state and optimistically update state
+
+    setIsFadingTable(true);
     const url = new URL(globalThis.window.location.href);
     const currentlyHidden = url.searchParams.has('suppressNullRows');
     const newValue = !currentlyHidden;
     setHideEmtyRows(newValue); // Optimistic update for immediate UI feedback
     setUrlParam('suppressNullRows', newValue);
-    return new Promise((resolve) => setTimeout(resolve, 500));
+    return new Promise((resolve) => setTimeout(resolve, 500))
+      .finally(() => {
+        setIsFadingTable(false);
+      });
   };
 
   // Use React Router navigation to update the URL so location.search stays in sync
