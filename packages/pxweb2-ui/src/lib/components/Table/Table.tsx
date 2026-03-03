@@ -72,6 +72,27 @@ const HEADER_CELL_HORIZONTAL_PADDING_PX = 24;
 const HEADER_CELL_VERTICAL_PADDING_PX = 16;
 const HEADER_ROW_LINE_HEIGHT_PX = 24;
 const AVERAGE_CHARACTER_WIDTH_PX = 8;
+const HEADER_BASE_TEXT_LENGTH = 10;
+const HEADER_ADDITIONAL_WIDTH_PER_CHAR_PX = 4;
+const HEADER_MAX_WIDTH_PX = 280;
+const HEADER_MAX_LINE_COUNT = 25;
+
+function trimValueLabel(valueLabel: string): string {
+  return valueLabel.trim();
+}
+
+function calculateHeaderCellWidthPx(valueLabelLength: number): number {
+  const extraCharacterCount = Math.max(
+    0,
+    valueLabelLength - HEADER_BASE_TEXT_LENGTH,
+  );
+
+  return Math.min(
+    HEADER_MAX_WIDTH_PX,
+    TABLE_COLUMN_ESTIMATE_WIDTH_PX +
+      extraCharacterCount * HEADER_ADDITIONAL_WIDTH_PER_CHAR_PX,
+  );
+}
 
 export const Table = memo(function Table({
   pxtable,
@@ -418,6 +439,7 @@ export function createHeading(
     ) {
       // loop trough all the values for the header variable
       for (let i = 0; i < variable.values.length; i++) {
+        const valueLabel = variable.values[i].label;
         const spanStart = columnIndex;
         const spanEnd = columnIndex + columnSpan;
         const htmlId: string =
@@ -440,7 +462,7 @@ export function createHeading(
               key={getNewKey()}
               aria-label={
                 variable.type === VartypeEnum.TIME_VARIABLE
-                  ? `${variable.label} ${variable.values[i].label}`
+                  ? `${variable.label} ${valueLabel}`
                   : undefined
               }
               className={cl({
@@ -450,9 +472,15 @@ export function createHeading(
                   table.stub.length === 0 &&
                   visibleSpanStart === 0,
               })}
-              style={{ height: `${headingRowHeight}px` }}
+              style={{
+                height: `${headingRowHeight}px`,
+                width:
+                  visibleSpan === 1
+                    ? `${calculateHeaderCellWidthPx(valueLabel.length)}px`
+                    : undefined,
+              }}
             >
-              {variable.values[i].label}
+              {valueLabel}
             </th>,
           );
         }
@@ -509,21 +537,26 @@ export function calculateHeadingRowHeights(
       TABLE_COLUMN_ESTIMATE_WIDTH_PX,
       columnSpan * TABLE_COLUMN_ESTIMATE_WIDTH_PX,
     );
+    const longestLabelLength =
+      tableMeta.longestValueTextByVariableId[variable.id] ?? 0;
+    const adjustedEstimatedCellWidthPx = Math.max(
+      estimatedCellWidthPx,
+      calculateHeaderCellWidthPx(longestLabelLength),
+    );
     const headerCellTextWidthPx = Math.max(
       1,
-      estimatedCellWidthPx - HEADER_CELL_HORIZONTAL_PADDING_PX,
+      adjustedEstimatedCellWidthPx - HEADER_CELL_HORIZONTAL_PADDING_PX,
     );
     const estimatedCharsPerLine = Math.max(
       1,
       Math.floor(headerCellTextWidthPx / AVERAGE_CHARACTER_WIDTH_PX),
     );
 
-    const longestLabelLength =
-      tableMeta.longestValueTextByVariableId[variable.id] ?? 0;
-    const lineCount = Math.max(
+    let lineCount = Math.max(
       1,
       Math.ceil(longestLabelLength / estimatedCharsPerLine),
     );
+    lineCount = Math.min(lineCount, HEADER_MAX_LINE_COUNT);
 
     return (
       lineCount * HEADER_ROW_LINE_HEIGHT_PX + HEADER_CELL_VERTICAL_PADDING_PX
@@ -635,6 +668,7 @@ function createRowDesktop({
 
   // Loop through all the values in the stub variable
   for (const val of table.stub[stubIndex].values) {
+    const trimmedValueLabel = trimValueLabel(val.label);
     if (stubIndex === 0) {
       stubIteration++;
     }
@@ -642,7 +676,7 @@ function createRowDesktop({
     const cellMeta: DataCellMeta = {
       varId: variable.id,
       valCode: val.code,
-      valLabel: val.label,
+      valLabel: trimmedValueLabel,
       varPos: table.data.variableOrder.indexOf(variable.id),
       htmlId: 'R.' + stubIndex + val.code + '.I' + stubIteration,
     };
@@ -658,13 +692,13 @@ function createRowDesktop({
         scope="row"
         aria-label={
           variable.type === VartypeEnum.TIME_VARIABLE
-            ? `${variable.label} ${val.label}`
+            ? `${variable.label} ${trimmedValueLabel}`
             : undefined
         }
         className={cl(classes.stub, classes[`stub-${stubIndex}`])}
         key={getNewKey()}
       >
-        {val.label}
+        {trimmedValueLabel}
       </th>,
     );
 
@@ -756,10 +790,11 @@ function createRowMobile({
     const variable = table.stub[stubIndex];
     uniqueIdCounter.idCounter++;
     const val = table.stub[stubIndex].values[i];
+    const trimmedValueLabel = trimValueLabel(val.label);
     const cellMeta: DataCellMeta = {
       varId: table.stub[stubIndex].id,
       valCode: val.code,
-      valLabel: val.label,
+      valLabel: trimmedValueLabel,
       varPos: table.data.variableOrder.indexOf(table.stub[stubIndex].id),
       htmlId: '',
     };
@@ -834,13 +869,13 @@ function createRowMobile({
           scope="row"
           aria-label={
             variable.type === VartypeEnum.TIME_VARIABLE
-              ? `${variable.label} ${val.label}`
+              ? `${variable.label} ${trimmedValueLabel}`
               : undefined
           }
           className={cl(classes.stub, classes[`stub-${stubIndex}`])}
           key={getNewKey()}
         >
-          {val.label}
+          {trimmedValueLabel}
         </th>,
       );
       fillData(
@@ -1063,6 +1098,7 @@ function createSecondLastMobileHeader(
   tableRows: React.JSX.Element[],
   uniqueIdCounter: { idCounter: number },
 ): void {
+  const trimmedValueLabel = trimValueLabel(val.label);
   // second last level
   let tableRowSecondLastHeader: React.JSX.Element[] = [];
   let tempid =
@@ -1075,13 +1111,13 @@ function createSecondLastMobileHeader(
       scope="col"
       aria-label={
         variable.type === VartypeEnum.TIME_VARIABLE
-          ? `${variable.label} ${val.label}`
+          ? `${variable.label} ${trimmedValueLabel}`
           : undefined
       }
       className={cl(classes.stub, classes[`stub-${stubIndex}`])}
       key={getNewKey()}
     >
-      {val.label}
+      {trimmedValueLabel}
     </th>,
   );
 
