@@ -61,6 +61,10 @@ export const mockedConfig: Config = {
   baseApplicationPath: '/',
   apiUrl: '',
   maxDataCells: 100000,
+  tableViewer: {
+    selectionOnLanguageChange: 'reset',
+  },
+  useDynamicContentInTitle: false,
   showBreadCrumbOnStartPage: true,
   specialCharacters: ['.', '..', ':', '-', '...', '*'],
   variableFilterExclusionList: {
