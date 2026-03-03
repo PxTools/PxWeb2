@@ -19,7 +19,7 @@
   "private": true,
   "dependencies": {
     "@uidotdev/usehooks": "^2.4.1",
-    "i18next": "^25.8.7",
+    "i18next": "^25.8.13",
     "i18next-browser-languagedetector": "^8.2.1",
     "i18next-http-backend": "^3.0.2",
     "react": "^19.2.4",
@@ -36,8 +36,8 @@
     "@types/node": "^22.18.0",
     "@types/react": "^19.2.13",
     "@types/react-dom": "^19.2.3",
-    "@typescript-eslint/eslint-plugin": "^8.54.0",
-    "@typescript-eslint/parser": "^8.54.0",
+    "@typescript-eslint/eslint-plugin": "^8.56.0",
+    "@typescript-eslint/parser": "^8.56.0",
     "@vitest/coverage-istanbul": "^4.0.18",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
@@ -45,11 +45,11 @@
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.1",
-    "eslint-plugin-storybook": "10.2.8",
+    "eslint-plugin-storybook": "10.2.10",
     "eslint-plugin-unused-imports": "^4.4.1",
     "style-dictionary": "^5.3.0",
     "typescript": "^5.9.3",
-    "wrangler": "^4.63.0"
+    "wrangler": "^4.67.0"
   },
   "readme": "ERROR: No README data found!",
   "_id": "@pxweb2/source@0.0.0",

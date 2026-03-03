@@ -20,7 +20,7 @@
     "@emotion/is-prop-valid": "^1.4.0",
     "@pxweb2/pxweb2-ui": "*",
     "babel-plugin-react-compiler": "^1.0.0",
-    "framer-motion": "^12.33.0",
+    "framer-motion": "^12.34.3",
     "lodash": "^4.17.23",
     "react-router": "^7.13.0"
   },
@@ -28,7 +28,7 @@
     "@testing-library/react": "^16.3.2",
     "ajv": "^8.18.0",
     "concurrently": "^9.2.1",
-    "html-validate": "^10.7.0",
+    "html-validate": "^10.8.0",
     "husky": "^9.1.7",
     "jsdom": "^27.4.0",
     "playwright": "^1.58.2",
