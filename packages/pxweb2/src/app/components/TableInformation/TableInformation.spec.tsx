@@ -1,12 +1,13 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
+import { useState } from 'react';
 
 import TableInformation from './TableInformation';
 import classes from './TableInformation.module.scss';
 import { mockHTMLDialogElement } from '@pxweb2/pxweb2-ui/src/lib/util/test-utils';
 import { renderWithProviders } from '../../util/testing-utils';
-import { AppContext } from '../../context/AppProvider';
+import { AppContext, AppContextType } from '../../context/AppProvider';
 import {
   TableDataContext,
   TableDataContextType,
@@ -42,6 +43,84 @@ describe('TableInformation', () => {
 
     const activeTab = screen.getByRole('tab', { selected: true });
     expect(activeTab).toHaveAttribute('id', 'tab-details');
+  });
+
+  it('should keep user-selected tab when selectedTab changes while open', () => {
+    function TestWrapper() {
+      const [selectedTab, setSelectedTab] = useState('tab-footnotes');
+
+      return (
+        <>
+          <button type="button" onClick={() => setSelectedTab('tab-details')}>
+            switch-tab
+          </button>
+          <TableInformation
+            isOpen={true}
+            selectedTab={selectedTab}
+            onClose={() => {
+              return;
+            }}
+          />
+        </>
+      );
+    }
+
+    renderWithProviders(<TestWrapper />);
+
+    const contactTab = screen.getByRole('tab', {
+      name: 'presentation_page.main_content.about_table.contact.title',
+    });
+    fireEvent.click(contactTab);
+    expect(screen.getByRole('tab', { selected: true })).toHaveAttribute(
+      'id',
+      'tab-contact',
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'switch-tab' }));
+
+    expect(screen.getByRole('tab', { selected: true })).toHaveAttribute(
+      'id',
+      'tab-contact',
+    );
+  });
+
+  it('should not change active tab for invalid selectedTab while open', () => {
+    function TestWrapper() {
+      const [selectedTab, setSelectedTab] = useState('tab-footnotes');
+
+      return (
+        <>
+          <button type="button" onClick={() => setSelectedTab('tab-unknown')}>
+            set-invalid-tab
+          </button>
+          <TableInformation
+            isOpen={true}
+            selectedTab={selectedTab}
+            onClose={() => {
+              return;
+            }}
+          />
+        </>
+      );
+    }
+
+    renderWithProviders(<TestWrapper />);
+
+    const detailsTab = screen.getByRole('tab', {
+      name: 'presentation_page.main_content.about_table.details.title',
+    });
+    fireEvent.click(detailsTab);
+    expect(screen.getByRole('tab', { selected: true })).toHaveAttribute(
+      'id',
+      'tab-details',
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'set-invalid-tab' }));
+
+    expect(screen.getByRole('tab', { selected: true })).toHaveAttribute(
+      'id',
+      'tab-details',
+    );
   });
 
   it('should render the correct tab panel content', () => {
@@ -95,9 +174,12 @@ describe('TableInformation', () => {
       pivotToDesktop: vi.fn(),
       pivot: vi.fn(),
       buildTableTitle: vi.fn().mockReturnValue({
+        contentText: '',
         firstTitlePart: '',
         lastTitlePart: '',
       }),
+      isFadingTable: false,
+      setIsFadingTable: vi.fn(),
     };
 
     renderWithProviders(
@@ -147,12 +229,17 @@ describe('TableInformation', () => {
 
   it('renders the BottomSheet when isMobile is true', () => {
     // Mock the AppContext to simulate isMobile = true
-    const mockAppContextValue = {
+    const mockAppContextValue: AppContextType = {
+      getSavedQueryId: vi.fn().mockReturnValue(''),
       isInitialized: true,
+      isXLargeDesktop: false,
+      isXXLargeDesktop: false,
       isTablet: false,
       isMobile: true,
       skipToMainFocused: false,
       setSkipToMainFocused: vi.fn(),
+      title: '',
+      setTitle: vi.fn(),
     };
 
     const { container } = renderWithProviders(
@@ -176,12 +263,17 @@ describe('TableInformation', () => {
 
   it('renders the SideSheet when isMobile is false', () => {
     // Mock the AppContext to simulate isMobile = false
-    const mockAppContextValue = {
+    const mockAppContextValue: AppContextType = {
+      getSavedQueryId: vi.fn().mockReturnValue(''),
       isInitialized: true,
+      isXLargeDesktop: false,
+      isXXLargeDesktop: false,
       isTablet: false,
       isMobile: false,
       skipToMainFocused: false,
       setSkipToMainFocused: vi.fn(),
+      title: '',
+      setTitle: vi.fn(),
     };
 
     const { container } = renderWithProviders(
