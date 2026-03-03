@@ -8,7 +8,10 @@ import {
 } from '../../util/testing-utils';
 import Selection from './Selection';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
-import { TableDataContext, TableDataProvider } from '../../context/TableDataProvider';
+import {
+  TableDataContext,
+  TableDataProvider,
+} from '../../context/TableDataProvider';
 import { AppProvider } from '../../context/AppProvider';
 import { VariablesProvider } from '../../context/VariablesProvider';
 import { TablesService } from '@pxweb2/pxweb2-api-client';
