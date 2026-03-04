@@ -31,16 +31,10 @@ export function TableInformation({
   onClose,
 }: TableInformationProps) {
   const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState('');
+  const [activeTab, setActiveTab] = useState(selectedTab ?? '');
   const metadataOrUndefined = useTableData().data?.metadata;
   const { isMobile } = useApp();
   const tabsContentRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    if (isOpen && selectedTab) {
-      setActiveTab(selectedTab);
-    }
-  }, [isOpen, selectedTab]);
 
   useEffect(() => {
     if (tabsContentRef.current) {
