@@ -67,13 +67,11 @@
     border-end-end-radius: var(--px-border-radius-xlarge);
     border-end-start-radius: var(--px-border-radius-none);
 
-    // Not from Figma
-    position: absolute;
+    // Make the drawer sticky under the header
+    position: sticky;
+    top: 0;
     inset-inline-start: 120px; // Instead of "left" to handle rtl languages
     z-index: 999;
-
-    // Position NavigationDrawer below the header
-    top: fixed.$spacing-22;
 
     &.skipToMainContentVisible {
       // Calculate position of NavigationDrawer below the header and SkipToMainContent
@@ -86,6 +84,11 @@
     width: 396px;
     padding: 0px fixed.$spacing-8 fixed.$spacing-8 0px;
     border-radius: var(--px-border-radius-none);
+
+    // Stick under header
+    position: sticky;
+    top: 0;
+    height: calc(100vh - fixed.$spacing-22);
   }
 }
 
