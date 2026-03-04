@@ -29,6 +29,7 @@ import {
 } from './TableDataProviderUtils';
 import { problemMessage } from '../util/problemMessage';
 import { PivotType } from './PivotType';
+import { getConfig } from '../util/config/getConfig';
 
 // Define types for the context state and provider props
 export interface TableDataContextType {
@@ -79,6 +80,7 @@ const TableDataContext = createContext<TableDataContextType | undefined>({
 });
 
 const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
+  const config = getConfig();
   const [isInitialized] = useState(true);
   // Data (metadata) that reflects variables and values selected by user right now. Used as data source for the table
   const [data, setData] = useState<PxTable | undefined>(undefined);
@@ -337,7 +339,12 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         accumulatedData?.metadata.language.toLowerCase() !==
         i18n.language.toLowerCase()
       ) {
-        variablesSelection = { selection: [] }; // If language is changed we shall fetch data with the default selection.
+        const shouldResetSelectionOnLanguageChange =
+          config.tableViewer?.selectionOnLanguageChange !== 'keep';
+
+        if (shouldResetSelectionOnLanguageChange) {
+          variablesSelection = { selection: [] }; // If language is changed we shall fetch data with the default selection.
+        }
       }
 
       const pxTable: PxTable = await fetchFromApi(
@@ -353,7 +360,11 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       setAccumulatedData(structuredClone(pxTable));
       // }
     },
-    [accumulatedData?.metadata.language, initializeStubAndHeading],
+    [
+      accumulatedData?.metadata.language,
+      config.tableViewer?.selectionOnLanguageChange,
+      initializeStubAndHeading,
+    ],
   );
 
   /**
