@@ -1,5 +1,6 @@
-import { memo, useMemo } from 'react';
+import { memo, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import cl from 'clsx';
+import { TableComponents, TableVirtuoso } from 'react-virtuoso';
 
 import classes from './Table.module.scss';
 import { PxTable } from '../../shared-types/pxTable';
@@ -56,12 +57,61 @@ interface CreateRowMobileParams {
  */
 type DataCellCodes = DataCellMeta[];
 
+type VirtualTableRow = {
+  className?: string;
+  cells: React.ReactNode;
+};
+
+type VirtualTableContext = {
+  tableClassName: string;
+  tableLabel: string;
+};
+
+const tableVirtuosoComponents: TableComponents<
+  VirtualTableRow,
+  VirtualTableContext
+> = {
+  Table: ({ children, style, context }) => (
+    <table
+      style={style}
+      className={context.tableClassName}
+      aria-label={context.tableLabel}
+    >
+      {children}
+    </table>
+  ),
+  TableRow: ({ item, ...props }) => (
+    <tr {...props} className={item.className} />
+  ),
+};
+
 export const Table = memo(function Table({
   pxtable,
   isMobile,
   className = '',
 }: TableProps) {
+  const tableHostRef = useRef<HTMLDivElement>(null);
+  const [customScrollParent, setCustomScrollParent] =
+    useState<HTMLElement | null>(null);
+
   const cssClasses = className.length > 0 ? ' ' + className : '';
+
+  useLayoutEffect(() => {
+    let parent = tableHostRef.current?.parentElement ?? null;
+    while (parent) {
+      const style = window.getComputedStyle(parent);
+      const hasScrollableOverflow = /(auto|scroll|overlay)/.test(
+        style.overflowY,
+      );
+      if (hasScrollableOverflow && parent.scrollHeight > parent.clientHeight) {
+        setCustomScrollParent(parent);
+        return;
+      }
+      parent = parent.parentElement;
+    }
+
+    setCustomScrollParent(null);
+  }, [pxtable, isMobile]);
 
   const tableMeta: columnRowMeta = calculateRowAndColumnMeta(pxtable);
 
@@ -115,34 +165,57 @@ export const Table = memo(function Table({
     headingDataCellCodes[i] = dataCellCodes;
   }
 
+  const headingRows = useMemo(
+    () => createHeading(pxtable, tableMeta, headingDataCellCodes),
+    [pxtable, tableMeta, headingDataCellCodes],
+  );
+
+  const tableRows = useMemo(
+    () =>
+      createRows(
+        pxtable,
+        tableMeta,
+        headingDataCellCodes,
+        isMobile,
+        contentVarIndex,
+        contentsVariableDecimals,
+      ),
+    [
+      pxtable,
+      tableMeta,
+      headingDataCellCodes,
+      isMobile,
+      contentVarIndex,
+      contentsVariableDecimals,
+    ],
+  );
+
+  const rowData = useMemo(
+    () =>
+      tableRows.map((row) => ({
+        className: row.props.className,
+        cells: row.props.children,
+      })),
+    [tableRows],
+  );
+
   return (
-    <table
-      className={cl(classes.table, classes[`bodyshort-medium`]) + cssClasses}
-      aria-label={pxtable.metadata.label}
-    >
-      <thead>{createHeading(pxtable, tableMeta, headingDataCellCodes)}</thead>
-      <tbody>
-        {useMemo(
-          () =>
-            createRows(
-              pxtable,
-              tableMeta,
-              headingDataCellCodes,
-              isMobile,
-              contentVarIndex,
-              contentsVariableDecimals,
-            ),
-          [
-            pxtable,
-            tableMeta,
-            headingDataCellCodes,
-            isMobile,
-            contentVarIndex,
-            contentsVariableDecimals,
-          ],
-        )}
-      </tbody>
-    </table>
+    <div ref={tableHostRef}>
+      <TableVirtuoso
+        useWindowScroll={!customScrollParent}
+        customScrollParent={customScrollParent ?? undefined}
+        data={rowData}
+        context={{
+          tableClassName:
+            cl(classes.table, classes[`bodyshort-medium`]) + cssClasses,
+          tableLabel: pxtable.metadata.label,
+        }}
+        components={tableVirtuosoComponents}
+        fixedHeaderContent={() => headingRows}
+        itemContent={(_index, row) => row.cells}
+        computeItemKey={(index) => index.toString()}
+      />
+    </div>
   );
 });
 
