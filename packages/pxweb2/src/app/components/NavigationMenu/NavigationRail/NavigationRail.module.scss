@@ -20,6 +20,11 @@
   // large, xlarge and xxlarge
   @media ((min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-xlarge-max-width)) or ((min-width: fixed.$breakpoints-xxlarge-min-width)) {
     display: flex;
+    position: sticky;
+    top: fixed.$spacing-20;
+    height: calc(100vh - fixed.$spacing-20);
+    z-index: 10;
+    align-self: flex-start;
   }
 
   &:focus-visible {
