@@ -87,6 +87,18 @@
     width: 396px;
     padding: 0px fixed.$spacing-8 fixed.$spacing-8 0px;
     border-radius: var(--px-border-radius-none);
+
+    // Calculate height of main container, minus the header height
+    height: calc(100vh - fixed.$spacing-20);
+
+    position: sticky;
+    top: fixed.$spacing-20;
+    z-index: 10;
+
+    &.skipToMainContentVisible {
+      // Calculate position of NavigationDrawer below the header and SkipToMainContent
+      top: calc(fixed.$spacing-20 + var(--skip-to-main-content-height));
+    }
   }
 }
 
