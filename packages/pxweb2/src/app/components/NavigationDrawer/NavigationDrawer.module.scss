@@ -32,25 +32,25 @@
     border-start-end-radius: var(--px-border-radius-xlarge);
     border-end-end-radius: var(--px-border-radius-xlarge);
     border-end-start-radius: var(--px-border-radius-none);
-
     // Not from Figma
-    position: absolute;
+    position: fixed;
     top: 0;
-    z-index: 999;
+    z-index: 70;
   }
 
   @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
-    height: calc(100vh - 80px);
+    height: calc(
+      100vh - fixed.$spacing-20 - 80px
+    ); // 80px is the height of NavigationBar, needs to be subtracted from the height of NavigationDrawer when it is visible
     // Handle rtl languages
     border-start-start-radius: var(--px-border-radius-none);
     border-start-end-radius: var(--px-border-radius-xlarge);
     border-end-end-radius: var(--px-border-radius-xlarge);
     border-end-start-radius: var(--px-border-radius-none);
-
     // Not from Figma
-    position: absolute;
-    top: 0;
-    z-index: 999;
+    position: fixed;
+    top: fixed.$spacing-20;
+    z-index: 60;
   }
 
   // large
@@ -59,7 +59,7 @@
     padding: fixed.$spacing-8;
 
     // Calculate height of main container, minus the header height
-    height: calc(100vh - fixed.$spacing-22);
+    height: calc(100vh - fixed.$spacing-20);
 
     // Handle rtl languages
     border-start-start-radius: var(--px-border-radius-xlarge);
@@ -68,16 +68,17 @@
     border-end-start-radius: var(--px-border-radius-none);
 
     // Not from Figma
-    position: absolute;
+    position: sticky;
+    top: fixed.$spacing-20;
     inset-inline-start: 120px; // Instead of "left" to handle rtl languages
-    z-index: 999;
+    z-index: 60;
 
-    // Position NavigationDrawer below the header
-    top: fixed.$spacing-22;
+    // // Position NavigationDrawer below the header
+    // top: fixed.$spacing-22;
 
     &.skipToMainContentVisible {
       // Calculate position of NavigationDrawer below the header and SkipToMainContent
-      top: calc(fixed.$spacing-22 + var(--skip-to-main-content-height));
+      top: calc(fixed.$spacing-20 + var(--skip-to-main-content-height));
     }
   }
 
@@ -86,6 +87,18 @@
     width: 396px;
     padding: 0px fixed.$spacing-8 fixed.$spacing-8 0px;
     border-radius: var(--px-border-radius-none);
+
+    // Calculate height of main container, minus the header height
+    height: calc(100vh - fixed.$spacing-20);
+
+    position: sticky;
+    top: fixed.$spacing-20;
+    z-index: 60;
+
+    &.skipToMainContentVisible {
+      // Calculate position of NavigationDrawer below the header and SkipToMainContent
+      top: calc(fixed.$spacing-20 + var(--skip-to-main-content-height));
+    }
   }
 }
 
@@ -158,7 +171,7 @@
     width: 100%;
     height: 100%;
     background-color: var(--px-color-surface-scrim);
-    z-index: 999;
+    z-index: 50;
   }
 }
 

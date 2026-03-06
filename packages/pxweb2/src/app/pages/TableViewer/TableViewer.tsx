@@ -177,7 +177,11 @@ export function TableViewer() {
   return (
     <>
       <SkipToMain ref={skipToMainRef} />
-      {!isSmallScreen && <Header />}
+      {!isSmallScreen && (
+        <div className={styles.stickyHeader}>
+          <Header />
+        </div>
+      )}
       {/* tabindex={-1} to fix firefox focusing this div*/}
       <div
         ref={isSmallScreen ? outerContainerRef : undefined}
@@ -186,7 +190,9 @@ export function TableViewer() {
       >
         {isSmallScreen ? (
           <>
-            <Header stroke={true} />
+            <div className={styles.stickyHeader}>
+              <Header stroke={true} />
+            </div>
             <NavigationBar
               ref={navigationBarRef}
               onChange={changeSelectedNavView}
@@ -212,19 +218,21 @@ export function TableViewer() {
             openedWithKeyboard={openedWithKeyboard}
             hideMenuRef={hideMenuRef}
           />
-          <div
-            ref={isSmallScreen ? undefined : outerContainerRef}
-            className={cl(styles.contentAndFooterContainer, {
-              [styles.expanded]: isExpanded,
-            })}
-          >
-            <Presentation
-              scrollRef={outerContainerRef}
-              selectedTabId={selectedTableId}
-              isExpanded={isExpanded}
-              setIsExpanded={setIsExpanded}
-            ></Presentation>
-            <Footer containerRef={outerContainerRef} variant="tableview" />
+          <div className={cl(styles.contentAndFooterContainerWrapper)}>
+            <div
+              ref={isSmallScreen ? undefined : outerContainerRef}
+              className={cl(styles.contentAndFooterContainer, {
+                [styles.expanded]: isExpanded,
+              })}
+            >
+              <Presentation
+                scrollRef={outerContainerRef}
+                selectedTabId={selectedTableId}
+                isExpanded={isExpanded}
+                setIsExpanded={setIsExpanded}
+              ></Presentation>
+              <Footer containerRef={outerContainerRef} variant="tableview" />
+            </div>
           </div>
         </div>
       </div>
