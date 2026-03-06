@@ -218,9 +218,7 @@ export function TableViewer() {
             openedWithKeyboard={openedWithKeyboard}
             hideMenuRef={hideMenuRef}
           />
-          <div
-            className={cl(styles.contentAndFooterContainerWrapper)}
-          >
+          <div className={cl(styles.contentAndFooterContainerWrapper)}>
             <div
               ref={isSmallScreen ? undefined : outerContainerRef}
               className={cl(styles.contentAndFooterContainer, {
