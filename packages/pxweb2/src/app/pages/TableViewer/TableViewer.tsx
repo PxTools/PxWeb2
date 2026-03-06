@@ -219,18 +219,22 @@ export function TableViewer() {
             hideMenuRef={hideMenuRef}
           />
           <div
-            ref={isSmallScreen ? undefined : outerContainerRef}
-            className={cl(styles.contentAndFooterContainer, {
-              [styles.expanded]: isExpanded,
-            })}
+            className={cl(styles.contentAndFooterContainerWrapper)}
           >
-            <Presentation
-              scrollRef={outerContainerRef}
-              selectedTabId={selectedTableId}
-              isExpanded={isExpanded}
-              setIsExpanded={setIsExpanded}
-            ></Presentation>
-            <Footer containerRef={outerContainerRef} variant="tableview" />
+            <div
+              ref={isSmallScreen ? undefined : outerContainerRef}
+              className={cl(styles.contentAndFooterContainer, {
+                [styles.expanded]: isExpanded,
+              })}
+            >
+              <Presentation
+                scrollRef={outerContainerRef}
+                selectedTabId={selectedTableId}
+                isExpanded={isExpanded}
+                setIsExpanded={setIsExpanded}
+              ></Presentation>
+              <Footer containerRef={outerContainerRef} variant="tableview" />
+            </div>
           </div>
         </div>
       </div>
