@@ -27,18 +27,13 @@ type DataCellMeta = {
   htmlId: string; // id used in th. Will build up the headers attribute for datacells. For accesability
 };
 
-interface CreateRowParams {
+interface CreateRowDesktopParams {
   stubIndex: number;
-  rowSpan: number;
-  stubIteration: number;
   table: PxTable;
   tableMeta: columnRowMeta;
   suppressNullRows: boolean | undefined;
   stubDataCellCodes: DataCellCodes;
   headingDataCellCodes: DataCellCodes[];
-  tableRows: React.JSX.Element[];
-  contentVarIndex: number;
-  contentsVariableDecimals?: Record<string, { decimals: number }>;
 }
 interface CreateRowMobileParams {
   stubIndex: number;
@@ -58,6 +53,11 @@ interface CreateRowMobileParams {
  * Represents the metadata for multiple dimensions of a data cell.
  */
 type DataCellCodes = DataCellMeta[];
+
+type DesktopBuildResult = {
+  rows: React.JSX.Element[];
+  hasVisibleLeaf: boolean;
+};
 
 export const Table = memo(function Table({
   pxtable,
@@ -303,19 +303,15 @@ export function createRows(
         contentVarIndex,
       });
     } else {
-      createRowDesktop({
+      const desktopRows = createRowDesktop({
         stubIndex: 0,
-        rowSpan: tableMeta.rows - tableMeta.rowOffset,
-        stubIteration: 0,
         table,
         tableMeta,
         suppressNullRows,
         stubDataCellCodes: stubDatacellCodes,
         headingDataCellCodes,
-        tableRows,
-        contentsVariableDecimals,
-        contentVarIndex,
       });
+      tableRows.push(...desktopRows);
     }
   } else {
     const tableRow: React.JSX.Element[] = [];
@@ -352,115 +348,134 @@ export function createRows(
  */
 function createRowDesktop({
   stubIndex,
-  rowSpan,
-  stubIteration,
   table,
   tableMeta,
   suppressNullRows,
   stubDataCellCodes,
   headingDataCellCodes,
-  tableRows,
-  contentVarIndex,
-  contentsVariableDecimals,
-}: CreateRowParams): React.JSX.Element[] {
-  // Calculate the rowspan for all the cells to add in this call
-  rowSpan = rowSpan / table.stub[stubIndex].values.length;
+}: CreateRowDesktopParams): React.JSX.Element[] {
+  const result = buildDesktopRows({
+    stubIndex,
+    table,
+    tableMeta,
+    suppressNullRows,
+    stubDataCellCodes,
+    headingDataCellCodes,
+  });
 
-  let tableRow: React.JSX.Element[] = [];
+  return result.rows;
+}
+
+function buildDesktopRows({
+  stubIndex,
+  table,
+  tableMeta,
+  suppressNullRows,
+  stubDataCellCodes,
+  headingDataCellCodes,
+}: CreateRowDesktopParams): DesktopBuildResult {
+  const rows: React.JSX.Element[] = [];
+  let hasVisibleLeaf = false;
 
   const variable = table.stub[stubIndex];
 
   // Loop through all the values in the stub variable
   for (const val of table.stub[stubIndex].values) {
-    if (stubIndex === 0) {
-      stubIteration++;
-    }
-
     const cellMeta: DataCellMeta = {
       varId: variable.id,
       valCode: val.code,
       valLabel: val.label,
       varPos: table.data.variableOrder.indexOf(variable.id),
-      htmlId: 'R.' + stubIndex + val.code + '.I' + stubIteration,
+      htmlId: 'R.' + stubIndex + '.' + val.code + '.I' + getNewKey(),
     };
-    stubDataCellCodes.push(cellMeta);
-    // Fix the rowspan
-    if (rowSpan === 0) {
-      rowSpan = 1;
-    }
+    const nextStubDataCellCodes = [...stubDataCellCodes, cellMeta];
 
-    // Calculate if the row should be suppressed (i.e., if all data values are null/zero)
-    const shouldRenderRow = shouldRenderDataRow({
-      table,
-      tableMeta,
-      stubDataCellCodes,
-      headingDataCellCodes,
-      suppressNullRows,
-    });
+    // If there are more stub variables that need to add headers to this row
+    if (table.stub.length > stubIndex + 1) {
+      const childResult = buildDesktopRows({
+        stubIndex: stubIndex + 1,
+        table,
+        tableMeta,
+        suppressNullRows,
+        stubDataCellCodes: nextStubDataCellCodes,
+        headingDataCellCodes,
+      });
 
-    if (shouldRenderRow) {
-      tableRow.push(
-        <th
-          id={cellMeta.htmlId}
-          scope="row"
-          aria-label={
-            variable.type === VartypeEnum.TIME_VARIABLE
-              ? `${variable.label} ${val.label}`
-              : undefined
-          }
-          className={cl(classes.stub, classes[`stub-${stubIndex}`])}
-          key={getNewKey()}
-        >
-          {val.label}
-        </th>,
-      );
+      if (childResult.hasVisibleLeaf) {
+        const parentRow: React.JSX.Element[] = [];
+        parentRow.push(
+          <th
+            id={cellMeta.htmlId}
+            scope="row"
+            aria-label={
+              variable.type === VartypeEnum.TIME_VARIABLE
+                ? `${variable.label} ${val.label}`
+                : undefined
+            }
+            className={cl(classes.stub, classes[`stub-${stubIndex}`])}
+            key={getNewKey()}
+          >
+            {val.label}
+          </th>,
+        );
 
-      // If there are more stub variables that need to add headers to this row
-      if (table.stub.length > stubIndex + 1) {
         // make the rest of this row empty
-        fillEmpty(tableMeta, tableRow);
-        tableRows.push(
+        fillEmpty(tableMeta, parentRow);
+        rows.push(
           <tr
             className={cl({ [classes.firstdim]: stubIndex === 0 })}
             key={getNewKey()}
           >
-            {tableRow}
+            {parentRow}
           </tr>,
         );
-        tableRow = [];
+        rows.push(...childResult.rows);
+        hasVisibleLeaf = true;
+      }
+    } else {
+      // If no more stubs need to add headers then fill the row with data
+      const shouldRenderRow = shouldRenderDataRow({
+        table,
+        tableMeta,
+        stubDataCellCodes: nextStubDataCellCodes,
+        headingDataCellCodes,
+        suppressNullRows,
+      });
 
-        // Create a new row for the next stub
-        createRowDesktop({
-          stubIndex: stubIndex + 1,
-          rowSpan,
-          stubIteration,
-          table,
-          tableMeta,
-          suppressNullRows,
-          stubDataCellCodes,
-          headingDataCellCodes,
-          tableRows,
-          contentVarIndex,
-          contentsVariableDecimals,
-        });
-        stubDataCellCodes.pop();
-      } else {
-        // If no more stubs need to add headers then fill the row with data
+      if (shouldRenderRow) {
+        const leafRow: React.JSX.Element[] = [];
+        leafRow.push(
+          <th
+            id={cellMeta.htmlId}
+            scope="row"
+            aria-label={
+              variable.type === VartypeEnum.TIME_VARIABLE
+                ? `${variable.label} ${val.label}`
+                : undefined
+            }
+            className={cl(classes.stub, classes[`stub-${stubIndex}`])}
+            key={getNewKey()}
+          >
+            {val.label}
+          </th>,
+        );
         fillData(
           table,
           tableMeta,
-          stubDataCellCodes,
+          nextStubDataCellCodes,
           headingDataCellCodes,
-          tableRow,
+          leafRow,
         );
-        tableRows.push(<tr key={getNewKey()}>{tableRow}</tr>);
-        tableRow = [];
-        stubDataCellCodes.pop();
+        rows.push(<tr key={getNewKey()}>{leafRow}</tr>);
+        hasVisibleLeaf = true;
       }
     }
   }
 
-  return tableRows;
+  return {
+    rows,
+    hasVisibleLeaf,
+  };
 }
 
 /**
@@ -681,6 +696,8 @@ function shouldRenderDataRow({
   headingDataCellCodes: DataCellCodes[];
   suppressNullRows: boolean | undefined;
 }): boolean {
+  //console.log(table.stub.length);
+  //if (!suppressNullRows || table.stub.length > 1) {
   if (!suppressNullRows) {
     return true;
   }
@@ -689,8 +706,10 @@ function shouldRenderDataRow({
     const dataCellCodes = stubDataCellCodes.concat(headingDataCellCodes[i]);
     const dimensions: string[] = [];
     for (const dataCell of dataCellCodes) {
+      //console.log(dataCell.varPos + ' ' + dataCell.valCode);
       dimensions[dataCell.varPos] = dataCell.valCode;
     }
+    //console.log(dimensions);
     const dataValue = getPxTableData(table.data.cube, dimensions);
     if (
       dataValue?.value !== undefined &&

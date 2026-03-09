@@ -116,4 +116,48 @@ describe('Table suppressNullRows', () => {
     );
     expect(container.querySelector('td')?.textContent).toBe('');
   });
+
+  function getSparseCubeWithSingleVisibleLeaf() {
+    return {
+      R_1: {
+        '1': {
+          '2': {
+            '1': {
+              '1968': { value: 7, formattedValue: '7' },
+            },
+          },
+        },
+      },
+    };
+  }
+
+  it('hides parent stub branches that have no visible descendants when suppressNullRows=true', () => {
+    const table = getPxTableWithCube(getSparseCubeWithSingleVisibleLeaf());
+
+    const { container } = render(
+      <MemoryRouter>
+        <Table pxtable={table} isMobile={false} suppressNullRows={true} />
+      </MemoryRouter>,
+    );
+
+    // Civilstatus value 1 has no visible descendants and should be removed
+    expect(container.textContent).not.toContain('CS_1');
+    // Civilstatus value 2 contains the only visible subtree and should remain
+    expect(container.textContent).toContain('CS_2');
+    // The visible data point should be rendered
+    expect(container.textContent).toContain('7');
+  });
+
+  it('keeps parent stub branches even without visible descendants when suppressNullRows=false', () => {
+    const table = getPxTableWithCube(getSparseCubeWithSingleVisibleLeaf());
+
+    const { container } = render(
+      <MemoryRouter>
+        <Table pxtable={table} isMobile={false} suppressNullRows={false} />
+      </MemoryRouter>,
+    );
+
+    expect(container.textContent).toContain('CS_1');
+    expect(container.textContent).toContain('CS_2');
+  });
 });
