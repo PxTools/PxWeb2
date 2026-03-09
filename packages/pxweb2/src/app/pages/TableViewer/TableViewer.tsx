@@ -179,7 +179,7 @@ export function TableViewer() {
       <SkipToMain ref={skipToMainRef} />
       {!isSmallScreen && (
         <div className={styles.stickyHeader}>
-          <Header />
+          <Header stroke={true} />
         </div>
       )}
       {/* tabindex={-1} to fix firefox focusing this div*/}
@@ -232,6 +232,7 @@ export function TableViewer() {
                 setIsExpanded={setIsExpanded}
               ></Presentation>
               <Footer containerRef={outerContainerRef} variant="tableview" />
+              {/* <Footer enableWindowScroll variant="tableview" /> */}
             </div>
           </div>
         </div>

@@ -18,10 +18,7 @@
 
   @media ((min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-medium-max-width)) {
     width: 428px;
-    padding-left: fixed.$spacing-8;
-    padding-right: fixed.$spacing-8;
-    padding-top: fixed.$spacing-6;
-    padding-bottom: fixed.$spacing-6;
+    padding: fixed.$spacing-6 fixed.$spacing-8; 
   }
 
   // xsmall, small and medium
@@ -56,14 +53,16 @@
   // large
   @media (min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width) {
     width: 428px;
-    padding: fixed.$spacing-8;
+    padding-inline-start: fixed.$spacing-8;
+    padding-inline-end: fixed.$spacing-8;
+    padding-top: fixed.$spacing-2;
+    padding-bottom: fixed.$spacing-8;
+    border-top: fixed.$spacing-2 solid var(--px-color-background-subtle);
 
     // Calculate height of main container, minus the header height
     height: calc(100vh - fixed.$spacing-20);
 
     // Handle rtl languages
-    border-start-start-radius: var(--px-border-radius-xlarge);
-    border-start-end-radius: var(--px-border-radius-xlarge);
     border-end-end-radius: var(--px-border-radius-xlarge);
     border-end-start-radius: var(--px-border-radius-none);
 
@@ -73,9 +72,6 @@
     inset-inline-start: 120px; // Instead of "left" to handle rtl languages
     z-index: 60;
 
-    // // Position NavigationDrawer below the header
-    // top: fixed.$spacing-22;
-
     &.skipToMainContentVisible {
       // Calculate position of NavigationDrawer below the header and SkipToMainContent
       top: calc(fixed.$spacing-20 + var(--skip-to-main-content-height));
@@ -84,13 +80,15 @@
 
   // xlarge and xxlarge
   @media ((min-width: fixed.$breakpoints-xlarge-min-width) and (max-width: fixed.$breakpoints-xlarge-max-width)) or ((min-width: fixed.$breakpoints-xxlarge-min-width)) {
-    width: 396px;
-    padding: 0px fixed.$spacing-8 fixed.$spacing-8 0px;
-    border-radius: var(--px-border-radius-none);
+    width: 428px;
+    padding-inline-start: fixed.$spacing-8;
+    padding-inline-end: fixed.$spacing-8;
+    padding-top: fixed.$spacing-2;
+    padding-bottom: fixed.$spacing-8;
+    border-top: fixed.$spacing-2 solid var(--px-color-background-subtle);
 
     // Calculate height of main container, minus the header height
     height: calc(100vh - fixed.$spacing-20);
-
     position: sticky;
     top: fixed.$spacing-20;
     z-index: 60;
