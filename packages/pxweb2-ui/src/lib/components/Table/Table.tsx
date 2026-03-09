@@ -516,7 +516,6 @@ function createRowMobile({
   let tableRow: React.JSX.Element[] = [];
 
   // Loop through all the values in the stub variable
-  //const stubValuesLength = table.stub[stubIndex].values.length;
   for (let i = 0; i < stubValuesLength; i++) {
     const variable = table.stub[stubIndex];
     uniqueIdCounter.idCounter++;
@@ -696,8 +695,6 @@ function shouldRenderDataRow({
   headingDataCellCodes: DataCellCodes[];
   suppressNullRows: boolean | undefined;
 }): boolean {
-  //console.log(table.stub.length);
-  //if (!suppressNullRows || table.stub.length > 1) {
   if (!suppressNullRows) {
     return true;
   }
@@ -706,10 +703,8 @@ function shouldRenderDataRow({
     const dataCellCodes = stubDataCellCodes.concat(headingDataCellCodes[i]);
     const dimensions: string[] = [];
     for (const dataCell of dataCellCodes) {
-      //console.log(dataCell.varPos + ' ' + dataCell.valCode);
       dimensions[dataCell.varPos] = dataCell.valCode;
     }
-    //console.log(dimensions);
     const dataValue = getPxTableData(table.data.cube, dimensions);
     if (
       dataValue?.value !== undefined &&
@@ -880,7 +875,6 @@ function createSecondLastMobileHeader(
       className={cl(
         { [classes.firstdim]: stubIndex === 0 },
         classes.mobileEmptyRowCell,
-        // classes.mobileRowHeadSecondLastStub,
         {
           [classes.mobileRowHeadLevel2]: stubLength > 2,
         },
