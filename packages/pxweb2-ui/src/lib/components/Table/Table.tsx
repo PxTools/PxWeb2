@@ -428,8 +428,8 @@ function buildDesktopRows({
           >
             {parentRow}
           </tr>,
+          ...childResult.rows,
         );
-        rows.push(...childResult.rows);
         hasVisibleLeaf = true;
       }
     } else {
