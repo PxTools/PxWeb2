@@ -115,7 +115,8 @@ export function ContentTop({
   const { pxTableMetadata, selectedVBValues } = useVariables();
   const selectedMetadata = useTableData().data?.metadata;
   const buildTableTitle = useTableData().buildTableTitle;
-  const { setTitle, isXXLargeDesktop, isTablet } = useApp();
+  const { setTitle, isXXLargeDesktop, isTablet, setHidePageScrollbar } =
+    useApp();
 
   const openInformationButtonRef = useRef<HTMLButtonElement>(null);
   const openInformationLinkRef = useRef<HTMLAnchorElement>(null);
@@ -128,6 +129,7 @@ export function ContentTop({
       setActiveTab(selectedTab);
     }
     setIsTableInformationOpen(true);
+    setHidePageScrollbar(true);
   };
 
   const noteInfo =
@@ -279,6 +281,7 @@ export function ContentTop({
           selectedTab={activeTab}
           onClose={() => {
             setIsTableInformationOpen(false);
+            setHidePageScrollbar(false);
           }}
         ></TableInformation>
       )}
