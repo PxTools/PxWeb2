@@ -87,8 +87,8 @@ const StartPage = () => {
   const filterToggleRef = useRef<HTMLButtonElement>(null);
   const hasOverlayBeenOpenedRef = useRef(false);
   const paginationButtonRef = useRef<HTMLButtonElement>(null);
-  const firstNewCardRef = useRef<HTMLDivElement>(null);
-  const lastVisibleCardRef = useRef<HTMLDivElement>(null);
+  const firstNewCardRef = useRef<HTMLElement>(null);
+  const lastVisibleCardRef = useRef<HTMLElement>(null);
   const searchFieldRef = useRef<SearchHandle>(null);
   const hasFetchedRef = useRef(false);
   const hasEverHydratedRef = useRef(false);
@@ -412,7 +412,7 @@ const StartPage = () => {
       );
       const discontinued = table.discontinued;
 
-      let cardRef: React.RefObject<HTMLDivElement | null> | undefined;
+      let cardRef: React.RefObject<HTMLElement | null> | undefined;
       if (isFirstNew) {
         cardRef = firstNewCardRef;
       } else if (isLastVisible) {
@@ -431,7 +431,8 @@ const StartPage = () => {
         <TableCard
           key={table.id}
           title={`${table.label}`}
-          href={() => navigate(tablePath)}
+          href={tablePath}
+          onNavigate={() => navigate(tablePath)}
           updatedLabel={
             table.updated ? t('start_page.table.updated_label') : undefined
           }

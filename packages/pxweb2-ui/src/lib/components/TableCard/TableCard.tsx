@@ -1,4 +1,4 @@
-import { type ReactNode, forwardRef, KeyboardEvent } from 'react';
+import { type ReactNode, forwardRef, KeyboardEvent, MouseEvent } from 'react';
 import cl from 'clsx';
 
 import styles from './TableCard.module.scss';
@@ -12,6 +12,7 @@ interface TableCardProps {
   href?: string | (() => void);
   icon?: ReactNode;
   lastUpdated?: string;
+  onNavigate?: () => void;
   period?: string;
   status?: 'active' | 'closed';
   tableId?: string;
@@ -20,7 +21,7 @@ interface TableCardProps {
   tabIndex?: number;
 }
 
-export const TableCard = forwardRef<HTMLDivElement, TableCardProps>(
+export const TableCard = forwardRef<HTMLElement, TableCardProps>(
   (
     {
       ariaLabel,
@@ -28,6 +29,7 @@ export const TableCard = forwardRef<HTMLDivElement, TableCardProps>(
       href,
       icon,
       lastUpdated,
+      onNavigate,
       period,
       status = 'active',
       tableId,
@@ -37,32 +39,53 @@ export const TableCard = forwardRef<HTMLDivElement, TableCardProps>(
     },
     ref,
   ) => {
-    const handleClick = () => {
-      const noTextSelected = !window.getSelection()?.toString();
-      if (noTextSelected && href && typeof href === 'string') {
-        window.location.href = href;
-      } else if (noTextSelected && typeof href === 'function') {
+    const noTextSelected = () => !window.getSelection()?.toString();
+
+    const handleActionClick = () => {
+      if (noTextSelected() && typeof href === 'function') {
         href();
       }
     };
 
-    const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-      if (event.key === 'Enter' || event.key === ' ') {
+    const handleLinkClick = (event: MouseEvent<HTMLAnchorElement>) => {
+      if (!noTextSelected()) {
         event.preventDefault();
-        handleClick();
+        return;
+      }
+
+      const isPlainLeftClick =
+        event.button === 0 &&
+        !event.metaKey &&
+        !event.ctrlKey &&
+        !event.shiftKey &&
+        !event.altKey;
+
+      if (isPlainLeftClick && onNavigate) {
+        event.preventDefault();
+        onNavigate();
       }
     };
 
-    return (
-      <div
-        className={cl(styles.tableCard)}
-        role="link"
-        aria-label={ariaLabel}
-        onClick={handleClick}
-        onKeyDown={handleKeyDown}
-        ref={ref}
-        tabIndex={tabIndex ?? 0}
-      >
+    const handleKeyDown = (event: KeyboardEvent<HTMLElement>) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        if (typeof href === 'string') {
+          if (noTextSelected()) {
+            if (onNavigate) {
+              onNavigate();
+            } else {
+              window.location.href = href;
+            }
+          }
+          return;
+        }
+
+        handleActionClick();
+      }
+    };
+
+    const content = (
+      <>
         {icon && (
           <div className={cl(styles.iconWrapper, styles[status])}>{icon}</div>
         )}
@@ -105,6 +128,36 @@ export const TableCard = forwardRef<HTMLDivElement, TableCardProps>(
             )}
           </div>
         </div>
+      </>
+    );
+
+    if (typeof href === 'string') {
+      return (
+        <a
+          className={cl(styles.tableCard)}
+          aria-label={ariaLabel}
+          href={href}
+          onClick={handleLinkClick}
+          onKeyDown={handleKeyDown}
+          ref={ref as React.Ref<HTMLAnchorElement>}
+          tabIndex={tabIndex ?? 0}
+        >
+          {content}
+        </a>
+      );
+    }
+
+    return (
+      <div
+        className={cl(styles.tableCard)}
+        role="link"
+        aria-label={ariaLabel}
+        onClick={handleActionClick}
+        onKeyDown={handleKeyDown}
+        ref={ref as React.Ref<HTMLDivElement>}
+        tabIndex={tabIndex ?? 0}
+      >
+        {content}
       </div>
     );
   },
