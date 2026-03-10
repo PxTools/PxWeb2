@@ -15,7 +15,6 @@
   // Tablet and mobile sizes
   @media (breakpoints.$xsmall) or (breakpoints.$small) or (breakpoints.$medium) {
     flex-direction: column;
-    // overflow-y: auto;
   }
 }
 
@@ -23,7 +22,6 @@
   --skip-to-main-content-height: 48px;
 
   display: flex;
-  // background: var(--px-color-surface-subtle);
   height: 100%;
 
   // xsmall, small and medium general settings
@@ -31,32 +29,6 @@
     background: var(--px-color-surface-default);
     width: 100%;
   }
-
-  // // height calculations
-  // @media (breakpoints.$xsmall) or (breakpoints.$small) {
-  //   // Calculate height of main container, minus the header and navigation bar heights
-  //   height: calc(100vh - fixed.$spacing-19 - 78px);
-
-  //   &.skipToMainContentVisible {
-  //     // Calculate height of main container, minus the header and navigation bar and SkipToMainContent heights
-  //     height: calc(
-  //       100vh - fixed.$spacing-19 -
-  //         fixed.$spacing-20 - var(--skip-to-main-content-height)
-  //     );
-  //   }
-  // }
-  // @media (breakpoints.$medium) {
-  //   // Calculate height of main container, minus the header and navigation bar heights
-  //   height: calc(100vh - fixed.$spacing-20 - 78px);
-
-  //   &.skipToMainContentVisible {
-  //     // Calculate height of main container, minus the header and navigation bar and SkipToMainContent heights
-  //     height: calc(
-  //       100vh - fixed.$spacing-20 -
-  //         fixed.$spacing-20 - var(--skip-to-main-content-height)
-  //     );
-  //   }
-  // }
 
   // large, xlarge and xxlarge
   @media (breakpoints.$large) or (breakpoints.$xlarge) or (breakpoints.$xxlarge) {
@@ -71,7 +43,6 @@
     border-end-end-radius: var(--px-border-radius-none);
     border-end-start-radius: var(--px-border-radius-none);
 
-    // padding: 0px fixed.$spacing-8 0px fixed.$spacing-8;
     padding-right: fixed.$spacing-8;
   }
 }
@@ -108,7 +79,6 @@
   // large, xlarge and xxlarge
   @media (breakpoints.$large) or (breakpoints.$xlarge) or (breakpoints.$xxlarge) {
     padding-bottom: fixed.$spacing-8;
-    // overflow-y: auto;
     gap: fixed.$spacing-8;
   }
 
