@@ -8,6 +8,20 @@ import i18next from 'i18next';
 import useAccessibility from '../../context/useAccessibility';
 import useApp from '../../context/useApp';
 
+// Utility to get all focusable elements within a container
+function getFocusableElements(container: HTMLElement | null) {
+  if (!container) {
+    return [];
+  }
+  return Array.from(
+    container.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), textarea, input[type="text"], input[type="radio"], input[type="checkbox"], select, [tabindex]:not([tabindex="-1"])',
+    ),
+  ).filter(
+    (el) => !el.hasAttribute('disabled') && !el.getAttribute('aria-hidden'),
+  );
+}
+
 export interface NavigationDrawerProps {
   children: React.ReactNode;
   heading: string;
@@ -25,7 +39,9 @@ export const NavigationDrawer = forwardRef<
 >(({ children, heading, view, openedWithKeyboard, onClose }, ref) => {
   const { t } = useTranslation();
   const { addModal, removeModal } = useAccessibility();
-  const { skipToMainFocused } = useApp();
+  const { skipToMainFocused, isXLargeDesktop, isXXLargeDesktop } = useApp();
+
+  const isLargeScreen = isXXLargeDesktop === true || isXLargeDesktop === true;
 
   React.useEffect(() => {
     addModal('NavigationDrawer', () => {
@@ -66,6 +82,43 @@ export const NavigationDrawer = forwardRef<
     }
   }, [openedWithKeyboard, ref]);
 
+  const drawerRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    if (!isLargeScreen) {
+      const handleTabTrap = (e: KeyboardEvent) => {
+        if (e.key !== 'Tab') {
+          return;
+        }
+        const focusableEls = getFocusableElements(drawerRef.current);
+        if (focusableEls.length === 0) {
+          return;
+        }
+
+        const firstEl = focusableEls[0];
+        const lastEl = focusableEls.at(-1);
+
+        if (e.shiftKey && document.activeElement === firstEl) {
+          e.preventDefault();
+          if (lastEl) {
+            lastEl.focus();
+          }
+        } else if (!e.shiftKey && document.activeElement === lastEl) {
+          e.preventDefault();
+          if (firstEl) {
+            firstEl.focus();
+          }
+        }
+      };
+
+      const drawerElement = drawerRef.current;
+      drawerElement?.addEventListener('keydown', handleTabTrap);
+      return () => {
+        drawerElement?.removeEventListener('keydown', handleTabTrap);
+      };
+    }
+  }, [isLargeScreen]);
+
   return (
     <>
       <div
@@ -73,11 +126,13 @@ export const NavigationDrawer = forwardRef<
         className={styles.backdrop}
       ></div>
       <div
+        ref={drawerRef}
         className={cl(styles.navigationDrawer, styles.fadein, {
           [styles.skipToMainContentVisible]: skipToMainFocused,
         })}
         role="region"
         aria-label={heading}
+        tabIndex={-1}
       >
         <div className={styles.heading}>
           <Heading level="2" size="medium">
