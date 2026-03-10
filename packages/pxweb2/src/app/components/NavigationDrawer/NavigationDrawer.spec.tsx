@@ -9,7 +9,7 @@ vi.mock('i18next', () => ({
   dir: () => 'ltr',
 }));
 vi.mock('react-i18next', () => ({
-  useTranslation: () => ({ t: (s: any) => s }),
+  useTranslation: () => ({ t: (s: string) => s }),
 }));
 vi.mock('../../context/useAccessibility', () => ({
   default: () => ({
@@ -48,7 +48,13 @@ describe('NavigationDrawer', () => {
 
   it('calls onClose when backdrop is clicked', () => {
     render(<NavigationDrawer {...defaultProps} />);
-    fireEvent.click(screen.getByTestId('drawer-backdrop'));
+    const drawer = screen.getByRole('region', { name: 'Test Heading' });
+    const backdrop = drawer.previousElementSibling as HTMLElement | null;
+    expect(backdrop).toBeInTheDocument();
+    if (!backdrop) {
+      throw new Error('Backdrop element not found');
+    }
+    fireEvent.click(backdrop);
     expect(defaultProps.onClose).toHaveBeenCalledWith(false, 'selection');
   });
 

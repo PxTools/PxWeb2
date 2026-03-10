@@ -39,9 +39,7 @@ export const NavigationDrawer = forwardRef<
 >(({ children, heading, view, openedWithKeyboard, onClose }, ref) => {
   const { t } = useTranslation();
   const { addModal, removeModal } = useAccessibility();
-  const { skipToMainFocused } = useApp();
-  const isXLargeDesktop = useApp().isXLargeDesktop;
-  const isXXLargeDesktop = useApp().isXXLargeDesktop;
+  const { skipToMainFocused, isXLargeDesktop, isXXLargeDesktop } = useApp();
 
   const isLargeScreen = isXXLargeDesktop === true || isXLargeDesktop === true;
 
@@ -113,9 +111,10 @@ export const NavigationDrawer = forwardRef<
         }
       };
 
-      drawerRef.current?.addEventListener('keydown', handleTabTrap);
+      const drawerElement = drawerRef.current;
+      drawerElement?.addEventListener('keydown', handleTabTrap);
       return () => {
-        drawerRef.current?.removeEventListener('keydown', handleTabTrap);
+        drawerElement?.removeEventListener('keydown', handleTabTrap);
       };
     }
   }, [isLargeScreen]);
@@ -123,7 +122,6 @@ export const NavigationDrawer = forwardRef<
   return (
     <>
       <div
-        data-testid="drawer-backdrop"
         onClick={() => onClose(false, view)}
         className={styles.backdrop}
       ></div>
