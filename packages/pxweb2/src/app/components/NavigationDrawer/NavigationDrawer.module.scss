@@ -57,7 +57,6 @@
     padding-inline-end: fixed.$spacing-8;
     padding-top: fixed.$spacing-2;
     padding-bottom: fixed.$spacing-8;
-    border-top: fixed.$spacing-2 solid var(--px-color-background-subtle);
 
     // Calculate height of main container, minus the header height
     height: calc(100vh - fixed.$spacing-20);
@@ -85,7 +84,6 @@
     padding-inline-end: fixed.$spacing-8;
     padding-top: fixed.$spacing-2;
     padding-bottom: fixed.$spacing-8;
-    border-top: fixed.$spacing-2 solid var(--px-color-background-subtle);
 
     // Calculate height of main container, minus the header height
     height: calc(100vh - fixed.$spacing-20);
