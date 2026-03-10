@@ -190,9 +190,7 @@ export function TableViewer() {
       >
         {isSmallScreen ? (
           <>
-            <div className={styles.stickyHeader}>
-              <Header stroke={true} />
-            </div>
+            <Header stroke={true} />
             <NavigationBar
               ref={navigationBarRef}
               onChange={changeSelectedNavView}
