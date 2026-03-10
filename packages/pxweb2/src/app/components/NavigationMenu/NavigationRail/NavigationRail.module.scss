@@ -8,13 +8,14 @@
 }
 
 .navigationRail {
-  width: 120px;
+  width: 100px;
   height: 100%;
-  padding: fixed.$spacing-8 0px fixed.$spacing-14 0px;
+  padding: fixed.$spacing-6 0px fixed.$spacing-14 0px;
   flex-direction: column;
   align-items: center;
   flex-shrink: 0;
   background: var(--px-color-surface-default);
+  border-inline-end: 1px solid var(--px-color-border-subtle);
   gap: 24px;
 
   // large, xlarge and xxlarge

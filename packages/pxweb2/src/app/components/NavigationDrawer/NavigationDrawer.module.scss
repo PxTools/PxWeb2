@@ -69,7 +69,7 @@
     // Not from Figma
     position: sticky;
     top: fixed.$spacing-20;
-    inset-inline-start: 120px; // Instead of "left" to handle rtl languages
+    inset-inline-start: 100px; // Instead of "left" to handle rtl languages
     z-index: 60;
 
     &.skipToMainContentVisible {
