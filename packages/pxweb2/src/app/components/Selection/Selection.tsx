@@ -235,7 +235,12 @@ export function Selection({
 }: SelectionProps) {
   const variables = useVariables();
   const app = useApp();
-  const { isTablet } = useApp();
+  const {
+    isTablet,
+    isSmallTablet,
+    isMobile,
+    setSelectionWantsToHidePageScrollbar,
+  } = useApp();
   const {
     selectedVBValues,
     setSelectedVBValues,
@@ -589,6 +594,26 @@ export function Selection({
       removeModal={removeModal}
     />
   );
+
+  useEffect(() => {
+    if (selectedNavigationView !== 'none' && (isSmallTablet || isMobile)) {
+      setSelectionWantsToHidePageScrollbar(true);
+    } else {
+      setSelectionWantsToHidePageScrollbar(false);
+    }
+  }, [
+    selectedNavigationView,
+    isSmallTablet,
+    isMobile,
+    setSelectionWantsToHidePageScrollbar,
+  ]);
+
+  // Release selection lock on unmount.
+  useEffect(() => {
+    return () => {
+      setSelectionWantsToHidePageScrollbar(false);
+    };
+  }, [setSelectionWantsToHidePageScrollbar]);
 
   return (
     selectedNavigationView !== 'none' && (

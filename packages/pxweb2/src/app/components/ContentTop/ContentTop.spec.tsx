@@ -321,7 +321,11 @@ let mockIsXXLargeDesktop = true;
 vi.mock('../../context/useApp', () => ({
   default: () => ({
     isXXLargeDesktop: mockIsXXLargeDesktop,
+    isTablet: false,
     setTitle: () => {
+      vi.fn();
+    },
+    setTableInformationWantsToHidePageScrollbar: () => {
       vi.fn();
     },
   }),

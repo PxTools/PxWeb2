@@ -2,6 +2,7 @@ import React, { createContext, useState, useEffect, useMemo } from 'react';
 
 import {
   BreakpointsXsmallMaxWidth,
+  BreakpointsSmallMaxWidth,
   BreakpointsMediumMaxWidth,
   BreakpointsLargeMaxWidth,
   BreakpointsXlargeMaxWidth,
@@ -14,13 +15,17 @@ export type AppContextType = {
   isXLargeDesktop: boolean;
   isXXLargeDesktop: boolean;
   isTablet: boolean;
+  isSmallTablet: boolean;
   isMobile: boolean;
   skipToMainFocused: boolean;
   setSkipToMainFocused: (focused: boolean) => void;
   title: string;
   setTitle: (title: string) => void;
   hidePageScrollbar: boolean;
-  setHidePageScrollbar: (hide: boolean) => void;
+  selectionWantsToHidePageScrollbar: boolean;
+  setSelectionWantsToHidePageScrollbar: (hide: boolean) => void;
+  tableInformationWantsToHidePageScrollbar: boolean;
+  setTableInformationWantsToHidePageScrollbar: (hide: boolean) => void;
 };
 
 // Create the context with default values
@@ -30,6 +35,7 @@ export const AppContext = createContext<AppContextType>({
   isXLargeDesktop: false,
   isXXLargeDesktop: false,
   isTablet: false,
+  isSmallTablet: false,
   isMobile: false,
   skipToMainFocused: false,
   setSkipToMainFocused: () => {
@@ -40,7 +46,12 @@ export const AppContext = createContext<AppContextType>({
     return;
   },
   hidePageScrollbar: false,
-  setHidePageScrollbar: () => {
+  selectionWantsToHidePageScrollbar: false,
+  setSelectionWantsToHidePageScrollbar: () => {
+    return;
+  },
+  tableInformationWantsToHidePageScrollbar: false,
+  setTableInformationWantsToHidePageScrollbar: () => {
     return;
   },
 });
@@ -52,14 +63,27 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isInitialized] = useState(true);
   const [skipToMainFocused, setSkipToMainFocused] = useState(false);
   const [title, setTitle] = useState<string>('');
-  const [hidePageScrollbar, setHidePageScrollbar] = useState(false);
+  const [
+    selectionWantsToHidePageScrollbar,
+    setSelectionWantsToHidePageScrollbar,
+  ] = useState(false);
+  const [
+    tableInformationWantsToHidePageScrollbar,
+    setTableInformationWantsToHidePageScrollbar,
+  ] = useState(false);
+  const hidePageScrollbar =
+    selectionWantsToHidePageScrollbar ||
+    tableInformationWantsToHidePageScrollbar;
 
   /**
-   * Keep state if window screen size is mobile, pad or desktop.
+   * Keep state if window screen size is mobile, small tablet, tablet, or desktop.
    */
   const largeBreakpoint = Number(BreakpointsLargeMaxWidth.replace('px', ''));
   const xLargeBreakpoint = Number(BreakpointsXlargeMaxWidth.replace('px', ''));
   const tabletBreakpoint = Number(BreakpointsMediumMaxWidth.replace('px', ''));
+  const smallTabletBreakpoint = Number(
+    BreakpointsSmallMaxWidth.replace('px', ''),
+  );
   const mobileBreakpoint = Number(BreakpointsXsmallMaxWidth.replace('px', ''));
   const [isXLargeDesktop, setIsXLargeDesktop] = useState(
     window.innerWidth > largeBreakpoint,
@@ -69,6 +93,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
   );
   const [isTablet, setIsTablet] = useState(
     window.innerWidth <= tabletBreakpoint,
+  );
+  const [isSmallTablet, setIsSmallTablet] = useState(
+    window.innerWidth <= smallTabletBreakpoint,
   );
   const [isMobile, setIsMobile] = useState(
     window.innerWidth <= mobileBreakpoint,
@@ -88,6 +115,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
       setIsXLargeDesktop(window.innerWidth > largeBreakpoint);
       setIsXXLargeDesktop(window.innerWidth > xLargeBreakpoint);
       setIsTablet(window.innerWidth <= tabletBreakpoint);
+      setIsSmallTablet(window.innerWidth <= smallTabletBreakpoint);
       setIsMobile(window.innerWidth <= mobileBreakpoint);
     };
 
@@ -96,7 +124,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, [mobileBreakpoint, tabletBreakpoint, largeBreakpoint, xLargeBreakpoint]);
+  }, [
+    mobileBreakpoint,
+    tabletBreakpoint,
+    smallTabletBreakpoint,
+    largeBreakpoint,
+    xLargeBreakpoint,
+  ]);
 
   const getSavedQueryId = React.useCallback(() => {
     let savedQueryId: string = '';
@@ -116,13 +150,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
       isXLargeDesktop,
       isXXLargeDesktop,
       isTablet,
+      isSmallTablet,
       isMobile,
       skipToMainFocused,
       setSkipToMainFocused,
       title,
       setTitle,
       hidePageScrollbar,
-      setHidePageScrollbar,
+      selectionWantsToHidePageScrollbar,
+      setSelectionWantsToHidePageScrollbar,
+      tableInformationWantsToHidePageScrollbar,
+      setTableInformationWantsToHidePageScrollbar,
     }),
     [
       getSavedQueryId,
@@ -130,13 +168,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
       isXLargeDesktop,
       isXXLargeDesktop,
       isTablet,
+      isSmallTablet,
       isMobile,
       skipToMainFocused,
       setSkipToMainFocused,
       title,
       setTitle,
       hidePageScrollbar,
-      setHidePageScrollbar,
+      selectionWantsToHidePageScrollbar,
+      setSelectionWantsToHidePageScrollbar,
+      tableInformationWantsToHidePageScrollbar,
+      setTableInformationWantsToHidePageScrollbar,
     ],
   );
 
