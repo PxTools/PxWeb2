@@ -43,7 +43,6 @@ interface CreateRowMobileParams {
   suppressNullRows: boolean | undefined;
   stubDataCellCodes: DataCellCodes;
   headingDataCellCodes: DataCellCodes[];
-  tableRows: React.JSX.Element[];
   uniqueIdCounter: { idCounter: number };
   contentVarIndex: number;
   contentsVariableDecimals?: Record<string, { decimals: number }>;
@@ -55,6 +54,11 @@ interface CreateRowMobileParams {
 type DataCellCodes = DataCellMeta[];
 
 type DesktopBuildResult = {
+  rows: React.JSX.Element[];
+  hasVisibleLeaf: boolean;
+};
+
+type MobileBuildResult = {
   rows: React.JSX.Element[];
   hasVisibleLeaf: boolean;
 };
@@ -289,7 +293,7 @@ export function createRows(
   const stubDatacellCodes: DataCellCodes = new Array<DataCellMeta>();
   if (table.stub.length > 0) {
     if (isMobile) {
-      createRowMobile({
+      const mobileRows = createRowMobile({
         stubIndex: 0,
         rowSpan: tableMeta.rows - tableMeta.rowOffset,
         table,
@@ -297,11 +301,11 @@ export function createRows(
         suppressNullRows,
         stubDataCellCodes: stubDatacellCodes,
         headingDataCellCodes,
-        tableRows,
         uniqueIdCounter: { idCounter: 0 },
         contentsVariableDecimals,
         contentVarIndex,
       });
+      tableRows.push(...mobileRows.rows);
     } else {
       const desktopRows = createRowDesktop({
         stubIndex: 0,
@@ -503,11 +507,12 @@ function createRowMobile({
   suppressNullRows,
   stubDataCellCodes,
   headingDataCellCodes,
-  tableRows,
   uniqueIdCounter,
   contentVarIndex,
   contentsVariableDecimals,
-}: CreateRowMobileParams): React.JSX.Element[] {
+}: CreateRowMobileParams): MobileBuildResult {
+  const rows: React.JSX.Element[] = [];
+  let hasVisibleLeaf = false;
   const stubValuesLength = table.stub[stubIndex].values.length;
   const stubLength = table.stub.length;
   // Calculate the rowspan for all the cells to add in this call
@@ -527,7 +532,7 @@ function createRowMobile({
       varPos: table.data.variableOrder.indexOf(table.stub[stubIndex].id),
       htmlId: '',
     };
-    stubDataCellCodes.push(cellMeta);
+    const nextStubDataCellCodes = [...stubDataCellCodes, cellMeta];
     // Fix the rowspan
     if (rowSpan === 0) {
       rowSpan = 1;
@@ -539,56 +544,59 @@ function createRowMobile({
     }
     // If there are more stub variables that need to add headers to this row
     if (stubLength > stubIndex + 1) {
-      switch (stubIndex) {
-        case stubLength - 3: {
-          // third last level
-          // Repeat the headers for all stubs except the 2 last levels
-          createRepeatedMobileHeader(
-            table,
-            stubLength,
-            stubIndex,
-            stubDataCellCodes,
-            tableRows,
-            uniqueIdCounter,
-          );
-          break;
-        }
-        case stubLength - 2: {
-          // second last level
-          createSecondLastMobileHeader(
-            stubLength,
-            stubIndex,
-            cellMeta,
-            variable,
-            val,
-            i,
-            tableRows,
-            uniqueIdCounter,
-          );
-          break;
-        }
-      }
-      // Create a new row for the next stub
-      createRowMobile({
+      // Create rows for the next stub
+      const childResult = createRowMobile({
         stubIndex: stubIndex + 1,
         rowSpan,
         table,
         tableMeta,
         suppressNullRows,
-        stubDataCellCodes,
+        stubDataCellCodes: nextStubDataCellCodes,
         headingDataCellCodes,
-        tableRows,
         uniqueIdCounter,
         contentVarIndex,
         contentsVariableDecimals,
       });
-      stubDataCellCodes.pop();
+
+      if (childResult.hasVisibleLeaf) {
+        switch (stubIndex) {
+          case stubLength - 3: {
+            // third last level
+            // Repeat the headers for all stubs except the 2 last levels
+            createRepeatedMobileHeader(
+              table,
+              stubLength,
+              stubIndex,
+              nextStubDataCellCodes,
+              rows,
+              uniqueIdCounter,
+            );
+            break;
+          }
+          case stubLength - 2: {
+            // second last level
+            createSecondLastMobileHeader(
+              stubLength,
+              stubIndex,
+              cellMeta,
+              variable,
+              val,
+              i,
+              rows,
+              uniqueIdCounter,
+            );
+            break;
+          }
+        }
+        rows.push(...childResult.rows);
+        hasVisibleLeaf = true;
+      }
     } else {
       // last level
       const shouldRenderRow = shouldRenderDataRow({
         table,
         tableMeta,
-        stubDataCellCodes,
+        stubDataCellCodes: nextStubDataCellCodes,
         headingDataCellCodes,
         suppressNullRows,
       });
@@ -619,11 +627,11 @@ function createRowMobile({
         fillData(
           table,
           tableMeta,
-          stubDataCellCodes,
+          nextStubDataCellCodes,
           headingDataCellCodes,
           tableRow,
         );
-        tableRows.push(
+        rows.push(
           <tr
             key={getNewKey()}
             className={cl(
@@ -641,12 +649,15 @@ function createRowMobile({
           </tr>,
         );
         tableRow = [];
-        stubDataCellCodes.pop();
+        hasVisibleLeaf = true;
       }
     }
   }
 
-  return tableRows;
+  return {
+    rows,
+    hasVisibleLeaf,
+  };
 }
 
 /**
