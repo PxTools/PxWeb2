@@ -16,6 +16,7 @@ import useApp from '../../context/useApp';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import { VariablesProvider } from '../../context/VariablesProvider';
 import { TableDataProvider } from '../../context/TableDataProvider';
+import WipStatusMessage from '../../components/Banners/WipStatusMessage';
 
 export function TableViewer() {
   const {
@@ -217,6 +218,9 @@ export function TableViewer() {
             hideMenuRef={hideMenuRef}
           />
           <div className={cl(styles.contentAndFooterContainerWrapper)}>
+            <div className={cl(styles.globalAlertWrapper)}>
+              <WipStatusMessage />
+            </div>
             <div
               ref={isSmallScreen ? undefined : outerContainerRef}
               className={cl(styles.contentAndFooterContainer, {

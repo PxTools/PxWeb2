@@ -59,6 +59,7 @@ import {
   BreadcrumbItemsParm,
 } from '../../util/createBreadcrumbItems';
 import { createTableListSEO } from '../../util/seo/tableListSEO';
+import WipStatusMessage from '../../components/Banners/WipStatusMessage';
 
 const StartPage = () => {
   const { t, i18n } = useTranslation();
@@ -739,6 +740,7 @@ const StartPage = () => {
         />
       </nav>
       <div className={styles.startPageLayout}>
+        <WipStatusMessage />
         <Header stroke={true} />
         <main className={styles.startPage}>
           <div className={cl(styles.startPageHeader)}>

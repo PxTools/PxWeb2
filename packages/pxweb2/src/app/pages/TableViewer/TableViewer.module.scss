@@ -32,7 +32,7 @@
 
   // large, xlarge and xxlarge
   @media (breakpoints.$large) or (breakpoints.$xlarge) or (breakpoints.$xxlarge) {
-    width: calc(100% - 120px);
+    width: calc(100% - 100px);
     justify-content: start;
     align-items: flex-start;
     flex-shrink: 0;
@@ -42,8 +42,6 @@
     border-start-end-radius: var(--px-border-radius-none);
     border-end-end-radius: var(--px-border-radius-none);
     border-end-start-radius: var(--px-border-radius-none);
-
-    padding-right: fixed.$spacing-8;
   }
 }
 
@@ -85,4 +83,7 @@
   &.expanded {
     max-width: 100%;
   }
+}
+.globalAlertWrapper {
+  width: 100%;
 }
