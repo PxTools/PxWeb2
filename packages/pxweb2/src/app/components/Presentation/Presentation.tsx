@@ -14,7 +14,7 @@ import { getConfig } from '../../util/config/getConfig';
 
 type propsType = {
   readonly selectedTabId: string;
-  readonly scrollRef?: React.Ref<HTMLDivElement>;
+  readonly scrollRef?: React.RefObject<HTMLElement | null>;
   isExpanded: boolean;
   setIsExpanded: (expanded: boolean) => void;
 };

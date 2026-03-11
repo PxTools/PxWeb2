@@ -34,7 +34,7 @@ export function TableViewer() {
     useState<NavigationItem>(isXLargeDesktop ? 'selection' : 'none');
   const [hasFocus, setHasFocus] = useState<NavigationItem>('none');
   const [openedWithKeyboard, setOpenedWithKeyboard] = useState(false);
-  const outerContainerRef = useRef<HTMLDivElement | null>(null);
+  const outerContainerRef = useRef<HTMLElement | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
 
   const navigationBarRef = useRef<{
@@ -53,6 +53,12 @@ export function TableViewer() {
       hideMenuRef.current?.focus();
     }
   }, [hasFocus]);
+
+  useEffect(() => {
+    // Use the actual document scroll root instead of a component div.
+    outerContainerRef.current =
+      (document.scrollingElement as HTMLElement | null) ?? document.body;
+  }, []);
 
   useEffect(() => {
     if (!navigationBarRef.current || !hideMenuRef.current) {
@@ -184,11 +190,7 @@ export function TableViewer() {
         </div>
       )}
       {/* tabindex={-1} to fix firefox focusing this div*/}
-      <div
-        ref={isSmallScreen ? outerContainerRef : undefined}
-        className={styles.navigationAndContentContainer}
-        tabIndex={-1}
-      >
+      <div className={styles.navigationAndContentContainer} tabIndex={-1}>
         {isSmallScreen ? (
           <>
             <Header stroke={true} />
@@ -222,7 +224,6 @@ export function TableViewer() {
               <WipStatusMessage />
             </div>
             <div
-              ref={isSmallScreen ? undefined : outerContainerRef}
               className={cl(styles.contentAndFooterContainer, {
                 [styles.expanded]: isExpanded,
               })}
@@ -233,8 +234,7 @@ export function TableViewer() {
                 isExpanded={isExpanded}
                 setIsExpanded={setIsExpanded}
               ></Presentation>
-              {/* <Footer containerRef={outerContainerRef} variant="tableview" /> */}
-              <Footer enableWindowScroll variant="tableview" />
+              <Footer containerRef={outerContainerRef} variant="tableview" />
             </div>
           </div>
         </div>
