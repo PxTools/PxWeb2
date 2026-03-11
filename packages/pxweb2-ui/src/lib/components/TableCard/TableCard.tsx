@@ -39,7 +39,7 @@ export const TableCard = forwardRef<HTMLElement, TableCardProps>(
     },
     ref,
   ) => {
-    const noTextSelected = () => !window.getSelection()?.toString();
+    const noTextSelected = () => !globalThis.getSelection()?.toString();
 
     const handleActionClick = () => {
       if (noTextSelected() && typeof href === 'function') {
@@ -63,6 +63,12 @@ export const TableCard = forwardRef<HTMLElement, TableCardProps>(
       if (isPlainLeftClick && onNavigate) {
         event.preventDefault();
         onNavigate();
+      }
+    };
+
+    const handleMouseDown = (event: MouseEvent<HTMLElement>) => {
+      if (event.ctrlKey && event.button === 0) {
+        event.preventDefault();
       }
     };
 
@@ -138,6 +144,7 @@ export const TableCard = forwardRef<HTMLElement, TableCardProps>(
           aria-label={ariaLabel}
           href={href}
           onClick={handleLinkClick}
+          onMouseDown={handleMouseDown}
           onKeyDown={handleKeyDown}
           ref={ref as React.Ref<HTMLAnchorElement>}
           tabIndex={tabIndex ?? 0}
@@ -153,6 +160,7 @@ export const TableCard = forwardRef<HTMLElement, TableCardProps>(
         role="link"
         aria-label={ariaLabel}
         onClick={handleActionClick}
+        onMouseDown={handleMouseDown}
         onKeyDown={handleKeyDown}
         ref={ref as React.Ref<HTMLDivElement>}
         tabIndex={tabIndex ?? 0}
