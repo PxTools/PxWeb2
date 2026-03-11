@@ -66,7 +66,7 @@
     border-end-start-radius: var(--px-border-radius-none);
 
     // Not from Figma
-    position: sticky;
+    position: fixed;
     top: fixed.$spacing-20;
     inset-inline-start: 100px; // Instead of "left" to handle rtl languages
     z-index: 60;
