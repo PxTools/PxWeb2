@@ -24,14 +24,14 @@
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^5.0.1",
-    "@storybook/addon-a11y": "10.2.10",
-    "@storybook/addon-docs": "10.2.10",
-    "@storybook/react-vite": "10.2.10",
+    "@storybook/addon-a11y": "10.2.17",
+    "@storybook/addon-docs": "10.2.17",
+    "@storybook/react-vite": "10.2.17",
     "@testing-library/react": "^16.3.2",
-    "eslint-plugin-storybook": "10.2.10",
+    "eslint-plugin-storybook": "10.2.17",
     "prop-types": "^15.8.1",
     "shiki": "^3.23.0",
-    "storybook": "10.2.10",
+    "storybook": "10.2.17",
     "vitest": "^4.0.18"
   }
 }
