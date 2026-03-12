@@ -22,6 +22,7 @@ export * from './lib/components/Link/Link';
 export * from './lib/components/LinkCard/LinkCard';
 export * from './lib/components/List';
 export * from './lib/components/LocalAlert/LocalAlert';
+export * from './lib/components/Modal/Modal';
 export * from './lib/components/Notes/MandatoryNotes';
 export * from './lib/components/Notes/MandatoryTableNotes';
 export * from './lib/components/Notes/MandatoryVariableNotes';

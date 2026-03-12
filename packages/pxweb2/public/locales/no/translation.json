@@ -200,7 +200,15 @@
           },
           "rearrange": {
             "title": "Omorganiser tabell",
-            "description": "Beskrivelsestekst..."
+            "description": "Beskrivelsestekst...",
+            "rearrange_modal": {
+              "cancel_button": "Avbryt",
+              "confirm_button": "Bekreft",
+              "description": "Dra og slipp variablene for å endre tabelloppsettet",
+              "title": "Tilpass tabell",
+              "stub_variable_header": "Rader",
+              "heading_variable_header": "Kolonner"
+            }
           },
           "change_order": {
             "title": "Endre rekkefølge",

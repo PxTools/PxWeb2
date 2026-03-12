@@ -200,7 +200,15 @@
           },
           "rearrange": {
             "title": "Rearrange table",
-            "description": "Description text..."
+            "description": "Description text...",
+            "rearrange_modal": {
+              "cancel_button": "Cancel",
+              "confirm_button": "Confirm",
+              "description": "Drag and drop the variables to rearrange the table layout",
+              "title": "Rearrange table",
+              "stub_variable_header": "Stub variables",
+              "heading_variable_header": "Heading variables"
+            }
           },
           "change_order": {
             "title": "Change order",

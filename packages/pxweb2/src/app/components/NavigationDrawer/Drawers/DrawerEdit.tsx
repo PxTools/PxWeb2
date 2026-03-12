@@ -11,6 +11,7 @@ import useTableData from '../../../context/useTableData';
 import classes from './DrawerEdit.module.scss';
 import { PivotType } from '../../../context/PivotType';
 import useApp from '../../../context/useApp';
+import ManualPivot from '../../ManualPivot/ManualPivot';
 
 interface PivotButtonProps {
   readonly stub: Variable[];
@@ -18,6 +19,27 @@ interface PivotButtonProps {
   readonly pivotType: PivotType;
   readonly loadingPivotType: PivotType | null;
   readonly setLoadingPivotType: (type: PivotType | null) => void;
+}
+
+interface PivotManuallyButtonProps {
+  readonly onClick: () => void;
+}
+
+function PivotManuallyButton({ onClick }: PivotManuallyButtonProps) {
+  const { t } = useTranslation();
+  return (
+    <ActionItem
+      label={t('presentation_page.side_menu.edit.customize.rearrange.title')}
+      ariaLabel={t(
+        'presentation_page.side_menu.edit.customize.rearrange.title',
+      )}
+      description={t(
+        'presentation_page.side_menu.edit.customize.rearrange.description',
+      )}
+      onClick={onClick}
+      iconName="Table"
+    />
+  );
 }
 
 function PivotButton({
@@ -118,6 +140,7 @@ export function DrawerEdit() {
   const [loadingPivotType, setLoadingPivotType] = useState<PivotType | null>(
     null,
   );
+  const [isManualPivotOpen, setIsManualPivotOpen] = useState(false);
 
   return (
     <ContentBox title={t('presentation_page.side_menu.edit.customize.title')}>
@@ -140,7 +163,18 @@ export function DrawerEdit() {
             setLoadingPivotType={setLoadingPivotType}
           />
         )}
+        {data && (
+          <PivotManuallyButton onClick={() => setIsManualPivotOpen(true)} />
+        )}
       </div>
+      {isManualPivotOpen && (
+        <ManualPivot
+          isOpen={isManualPivotOpen}
+          onClose={() => setIsManualPivotOpen(false)}
+          headerVariables={data?.heading ?? []}
+          stubVariables={data?.stub ?? []}
+        />
+      )}
       <LocalAlert variant="info" className={classes.alert}>
         {t('common.status_messages.drawer_edit')}
       </LocalAlert>
