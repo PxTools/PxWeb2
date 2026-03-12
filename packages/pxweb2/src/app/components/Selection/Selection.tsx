@@ -235,12 +235,7 @@ export function Selection({
 }: SelectionProps) {
   const variables = useVariables();
   const app = useApp();
-  const {
-    isTablet,
-    isSmallTablet,
-    isMobile,
-    setSelectionWantsToHidePageScrollbar,
-  } = useApp();
+  const { isTablet, isMobile, setSelectionWantsToHidePageScrollbar } = useApp();
   const {
     selectedVBValues,
     setSelectedVBValues,
@@ -596,14 +591,14 @@ export function Selection({
   );
 
   useEffect(() => {
-    if (selectedNavigationView !== 'none' && (isSmallTablet || isMobile)) {
+    if (selectedNavigationView !== 'none' && (isTablet || isMobile)) {
       setSelectionWantsToHidePageScrollbar(true);
     } else {
       setSelectionWantsToHidePageScrollbar(false);
     }
   }, [
     selectedNavigationView,
-    isSmallTablet,
+    isTablet,
     isMobile,
     setSelectionWantsToHidePageScrollbar,
   ]);
