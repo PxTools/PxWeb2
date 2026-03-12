@@ -84,7 +84,9 @@ export function ManualPivot({
       return;
     }
 
-    const nextSourceItems = sourceItems.filter((item) => item.id !== draggedItemId);
+    const nextSourceItems = sourceItems.filter(
+      (item) => item.id !== draggedItemId,
+    );
     const nextTargetItems = [
       ...targetItems.filter((item) => item.id !== draggedItemId),
       movingItem,

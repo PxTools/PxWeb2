@@ -30,7 +30,9 @@ function PivotManuallyButton({ onClick }: PivotManuallyButtonProps) {
   return (
     <ActionItem
       label={t('presentation_page.side_menu.edit.customize.rearrange.title')}
-      ariaLabel={t('presentation_page.side_menu.edit.customize.rearrange.title')}
+      ariaLabel={t(
+        'presentation_page.side_menu.edit.customize.rearrange.title',
+      )}
       description={t(
         'presentation_page.side_menu.edit.customize.rearrange.description',
       )}
