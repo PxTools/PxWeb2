@@ -83,7 +83,7 @@ describe('DrawerEdit', () => {
     expect(screen.getByTestId('content-box')).toBeInTheDocument();
     // Two action buttons: auto pivot & clockwise pivot (unified PivotButton)
     const buttons = screen.getAllByTestId('action-item');
-    expect(buttons).toHaveLength(2);
+    expect(buttons).toHaveLength(3);
     // Check labels via translation keys
     expect(
       screen.getByText(
