@@ -21,12 +21,12 @@ function useSafeLocation(): { pathname: string } {
 }
 
 type FooterProps = {
-  containerRef?: React.RefObject<HTMLDivElement | null>;
+  containerRef?: React.RefObject<HTMLElement | null>;
   variant?: 'generic' | 'tableview';
   enableWindowScroll?: boolean;
 };
 
-export function scrollToTop(ref?: React.RefObject<HTMLDivElement | null>) {
+export function scrollToTop(ref?: React.RefObject<HTMLElement | null>) {
   if (ref?.current) {
     const container = ref.current;
     const start = container.scrollTop;
