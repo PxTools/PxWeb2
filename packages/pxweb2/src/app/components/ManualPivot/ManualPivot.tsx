@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Reorder, type PanInfo } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import { Label } from '@pxweb2/pxweb2-ui';
 
 import { Modal, Variable } from '@pxweb2/pxweb2-ui';
 import classes from './ManualPivot.module.scss';
@@ -161,10 +162,20 @@ export function ManualPivot({
       // label={t('presentation_page.main_content.about_table.manual_pivot.label')}
       heading={t('presentation_page.side_menu.edit.customize.pivot.title')}
       label={t('presentation_page.side_menu.edit.title')}
+      cancelLabel={t(
+        'presentation_page.side_menu.edit.customize.rearrange.rearrange_modal.cancel_button',
+      )}
+      confirmLabel={t(
+        'presentation_page.side_menu.edit.customize.rearrange.rearrange_modal.confirm_button',
+      )}
     >
       <div className={classes.wrapper}>
         <section className={classes.groupColumn}>
-          <h4>Header variables</h4>
+          <Label>
+            {t(
+              'presentation_page.side_menu.edit.customize.rearrange.rearrange_modal.heading_variable_header',
+            )}
+          </Label>
           <div ref={headerZoneRef} className={classes.groupZone}>
             <Reorder.Group
               axis="y"
@@ -209,7 +220,11 @@ export function ManualPivot({
         </section>
 
         <section className={classes.groupColumn}>
-          <h4>Stub variables</h4>
+          <Label>
+            {t(
+              'presentation_page.side_menu.edit.customize.rearrange.rearrange_modal.stub_variable_header',
+            )}
+          </Label>
           <div ref={stubZoneRef} className={classes.groupZone}>
             <Reorder.Group
               axis="y"
