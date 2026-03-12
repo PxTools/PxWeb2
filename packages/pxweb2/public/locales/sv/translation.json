@@ -200,7 +200,15 @@
           },
           "rearrange": {
             "title": "Anpassa tabell",
-            "description": "Beskrivande text..."
+            "description": "Beskrivande text...",
+            "rearrange_modal": {
+                "cancel_button": "Avbryt",
+                "confirm_button": "Bekräfta",
+                "description": "Dra och släpp variablerna för att ändra tabellens layout",
+                "title": "Anpassa tabell",
+                "stub_variable_header": "Rader",
+                "heading_variable_header": "Kolumner"
+            }
           },
           "change_order": {
             "title": "Ändra ordning",

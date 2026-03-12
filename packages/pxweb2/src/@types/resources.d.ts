@@ -211,6 +211,14 @@ interface Resources {
             rearrange: {
               description: 'Description text...';
               title: 'Rearrange table';
+              rearrange_modal: {
+                cancel_button: 'Cancel';
+                confirm_button: 'Confirm';
+                description: 'Drag and drop the variables to rearrange the table layout';
+                title: 'Rearrange table';
+                stub_variable_header: 'Stub variables';
+                heading_variable_header: 'Header variables';
+              };
             };
             title: 'Customise';
           };

@@ -143,7 +143,15 @@
           },
           "rearrange": {
             "title": "إعادة ترتيب الجدول",
-            "description": "نص الوصف..."
+            "description": "نص الوصف...",
+            "rearrange_modal": {
+              "cancel_button": "يلغي",
+              "confirm_button": "يحفظ",
+              "description": "اسحب وأفلت المتغيرات لإعادة ترتيب تخطيط الجدول",
+              "title": "إعادة ترتيب الجدول",
+              "stub_variable_header": "متغيرات الستوب",
+              "heading_variable_header": "متغيرات العنوان"
+            }
           },
           "change_order": {
             "title": "تغيير الترتيب",
