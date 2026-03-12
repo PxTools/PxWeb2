@@ -66,12 +66,6 @@ export const TableCard = forwardRef<HTMLElement, TableCardProps>(
       }
     };
 
-    const handleMouseDown = (event: MouseEvent<HTMLElement>) => {
-      if (event.ctrlKey && event.button === 0) {
-        event.preventDefault();
-      }
-    };
-
     const handleKeyDown = (event: KeyboardEvent<HTMLElement>) => {
       if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault();
@@ -144,7 +138,6 @@ export const TableCard = forwardRef<HTMLElement, TableCardProps>(
           aria-label={ariaLabel}
           href={href}
           onClick={handleLinkClick}
-          onMouseDown={handleMouseDown}
           onKeyDown={handleKeyDown}
           ref={ref as React.Ref<HTMLAnchorElement>}
           tabIndex={tabIndex ?? 0}
@@ -160,7 +153,6 @@ export const TableCard = forwardRef<HTMLElement, TableCardProps>(
         role="link"
         aria-label={ariaLabel}
         onClick={handleActionClick}
-        onMouseDown={handleMouseDown}
         onKeyDown={handleKeyDown}
         ref={ref as React.Ref<HTMLDivElement>}
         tabIndex={tabIndex ?? 0}
