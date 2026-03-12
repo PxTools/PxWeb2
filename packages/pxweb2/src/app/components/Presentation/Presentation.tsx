@@ -20,12 +20,25 @@ type propsType = {
 };
 
 const MemoizedTable = React.memo(
-  ({ pxtable, isMobile }: { pxtable: PxTable; isMobile: boolean }) => (
-    <Table pxtable={pxtable} isMobile={isMobile} />
+  ({
+    pxtable,
+    isMobile,
+    verticalScrollRef,
+  }: {
+    pxtable: PxTable;
+    isMobile: boolean;
+    verticalScrollRef?: React.RefObject<HTMLElement | null>;
+  }) => (
+    <Table
+      pxtable={pxtable}
+      isMobile={isMobile}
+      verticalScrollRef={verticalScrollRef}
+    />
   ),
   (prevProps, nextProps) =>
     isEqual(prevProps.pxtable, nextProps.pxtable) &&
-    prevProps.isMobile === nextProps.isMobile,
+    prevProps.isMobile === nextProps.isMobile &&
+    prevProps.verticalScrollRef === nextProps.verticalScrollRef,
 );
 export function Presentation({
   selectedTabId,
@@ -270,7 +283,11 @@ export function Presentation({
               ref={gradientContainerRef}
             >
               <div className={classes.tableContainer} ref={tableContainerRef}>
-                <MemoizedTable pxtable={tableData.data} isMobile={isMobile} />
+                <MemoizedTable
+                  pxtable={tableData.data}
+                  isMobile={isMobile}
+                  verticalScrollRef={scrollRef}
+                />
               </div>
             </div>
           )}
@@ -282,7 +299,11 @@ export function Presentation({
                 ref={gradientContainerRef}
               >
                 <div className={classes.tableContainer} ref={tableContainerRef}>
-                  <MemoizedTable pxtable={tableData.data} isMobile={isMobile} />
+                  <MemoizedTable
+                    pxtable={tableData.data}
+                    isMobile={isMobile}
+                    verticalScrollRef={scrollRef}
+                  />
                 </div>
               </div>
             )}
