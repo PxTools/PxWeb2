@@ -16,6 +16,7 @@ import useApp from '../../context/useApp';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import { VariablesProvider } from '../../context/VariablesProvider';
 import { TableDataProvider } from '../../context/TableDataProvider';
+import WipStatusMessage from '../../components/Banners/WipStatusMessage';
 
 export function TableViewer() {
   const {
@@ -33,7 +34,7 @@ export function TableViewer() {
     useState<NavigationItem>(isXLargeDesktop ? 'selection' : 'none');
   const [hasFocus, setHasFocus] = useState<NavigationItem>('none');
   const [openedWithKeyboard, setOpenedWithKeyboard] = useState(false);
-  const outerContainerRef = useRef<HTMLDivElement | null>(null);
+  const outerContainerRef = useRef<HTMLElement | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
 
   const navigationBarRef = useRef<{
@@ -52,6 +53,12 @@ export function TableViewer() {
       hideMenuRef.current?.focus();
     }
   }, [hasFocus]);
+
+  useEffect(() => {
+    // Use the actual document scroll root instead of a component div.
+    outerContainerRef.current =
+      (document.scrollingElement as HTMLElement | null) ?? document.body;
+  }, []);
 
   useEffect(() => {
     if (!navigationBarRef.current || !hideMenuRef.current) {
@@ -176,14 +183,14 @@ export function TableViewer() {
 
   return (
     <>
-      <SkipToMain ref={skipToMainRef} />
-      {!isSmallScreen && <Header />}
+      <SkipToMain ref={skipToMainRef} withStickyHeaderOffset />
+      {!isSmallScreen && (
+        <div className={styles.stickyHeader}>
+          <Header stroke={true} />
+        </div>
+      )}
       {/* tabindex={-1} to fix firefox focusing this div*/}
-      <div
-        ref={isSmallScreen ? outerContainerRef : undefined}
-        className={styles.navigationAndContentContainer}
-        tabIndex={-1}
-      >
+      <div className={styles.navigationAndContentContainer} tabIndex={-1}>
         {isSmallScreen ? (
           <>
             <Header stroke={true} />
@@ -212,19 +219,23 @@ export function TableViewer() {
             openedWithKeyboard={openedWithKeyboard}
             hideMenuRef={hideMenuRef}
           />
-          <div
-            ref={isSmallScreen ? undefined : outerContainerRef}
-            className={cl(styles.contentAndFooterContainer, {
-              [styles.expanded]: isExpanded,
-            })}
-          >
-            <Presentation
-              scrollRef={outerContainerRef}
-              selectedTabId={selectedTableId}
-              isExpanded={isExpanded}
-              setIsExpanded={setIsExpanded}
-            ></Presentation>
-            <Footer containerRef={outerContainerRef} variant="tableview" />
+          <div className={cl(styles.contentAndFooterContainerWrapper)}>
+            <div className={cl(styles.globalAlertWrapper)}>
+              <WipStatusMessage />
+            </div>
+            <div
+              className={cl(styles.contentAndFooterContainer, {
+                [styles.expanded]: isExpanded,
+              })}
+            >
+              <Presentation
+                scrollRef={outerContainerRef}
+                selectedTabId={selectedTableId}
+                isExpanded={isExpanded}
+                setIsExpanded={setIsExpanded}
+              ></Presentation>
+              <Footer containerRef={outerContainerRef} variant="tableview" />
+            </div>
           </div>
         </div>
       </div>

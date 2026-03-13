@@ -1,4 +1,4 @@
-import React from 'react';
+import { HTMLAttributes, Ref } from 'react';
 import cl from 'clsx';
 import { useLocation, useSearchParams } from 'react-router';
 import { useTranslation } from 'react-i18next';
@@ -8,18 +8,22 @@ import { Link } from '@pxweb2/pxweb2-ui';
 import { getConfig } from '../../util/config/getConfig';
 import { getLanguagePath } from '../../util/language/getLanguagePath';
 
-export type SkipToContentProps = React.HTMLAttributes<HTMLDivElement> & {
+export type SkipToContentProps = HTMLAttributes<HTMLDivElement> & {
   // Jump to
   targetId?: string;
 
   // label for the link
   label?: string;
 
-  containerRef?: React.Ref<HTMLDivElement>;
+  containerRef?: Ref<HTMLDivElement>;
 };
 
-export function SkipToContent(props: SkipToContentProps) {
-  const { targetId, label, containerRef, ...rest } = props;
+export function SkipToContent({
+  targetId,
+  label,
+  containerRef,
+  ...rest
+}: SkipToContentProps) {
   const { i18n } = useTranslation();
   const config = getConfig();
   const location = useLocation().pathname;
