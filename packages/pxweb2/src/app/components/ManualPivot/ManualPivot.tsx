@@ -158,8 +158,6 @@ export function ManualPivot({
     <Modal
       isOpen={isOpen}
       onClose={() => onClose()}
-      // heading={t('presentation_page.main_content.about_table.manual_pivot.heading')}
-      // label={t('presentation_page.main_content.about_table.manual_pivot.label')}
       heading={t('presentation_page.side_menu.edit.customize.pivot.title')}
       label={t('presentation_page.side_menu.edit.title')}
       cancelLabel={t(
@@ -190,6 +188,7 @@ export function ManualPivot({
                   key={variable.id}
                   value={variable}
                   className={classes.listItem}
+                  tabIndex={0}
                   drag
                   dragMomentum={false}
                   dragElastic={0.12}
@@ -239,6 +238,7 @@ export function ManualPivot({
                   key={variable.id}
                   value={variable}
                   className={classes.listItem}
+                  tabIndex={0}
                   drag
                   dragMomentum={false}
                   dragElastic={0.12}
