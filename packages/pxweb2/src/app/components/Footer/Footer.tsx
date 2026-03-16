@@ -25,11 +25,13 @@ type FooterProps = {
   enableWindowScroll?: boolean;
 };
 
-export function scrollToTop(
-) {
+export function scrollToTop() {
   const duration = 200; // ms, decrease for even faster scroll
 
-  const animateToTop = (start: number, setPosition: (value: number) => void) => {
+  const animateToTop = (
+    start: number,
+    setPosition: (value: number) => void,
+  ) => {
     const startTime = performance.now();
 
     function animateScroll(time: number) {
@@ -44,15 +46,15 @@ export function scrollToTop(
     requestAnimationFrame(animateScroll);
   };
 
-    const root = document.scrollingElement as HTMLElement | null;
-    const start = root?.scrollTop ?? window.scrollY;
-    if (start <= 0) {
-      return;
-    }
+  const root = document.scrollingElement as HTMLElement | null;
+  const start = root?.scrollTop ?? window.scrollY;
+  if (start <= 0) {
+    return;
+  }
 
-    animateToTop(start, (value) => {
-      window.scrollTo(0, value);
-    });
+  animateToTop(start, (value) => {
+    window.scrollTo(0, value);
+  });
 }
 
 export const Footer: React.FC<FooterProps> = ({

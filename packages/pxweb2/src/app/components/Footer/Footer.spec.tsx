@@ -101,7 +101,7 @@ describe('Footer', () => {
       const scrollSpy = vi
         .spyOn(globalThis, 'scrollTo')
         .mockImplementation(() => {
-        vi.fn();
+          vi.fn();
         });
       const rafSpy = vi
         .spyOn(globalThis, 'requestAnimationFrame')
@@ -153,7 +153,7 @@ describe('Footer', () => {
       const scrollSpy = vi
         .spyOn(globalThis, 'scrollTo')
         .mockImplementation(() => {
-        vi.fn();
+          vi.fn();
         });
       const rafSpy = vi
         .spyOn(globalThis, 'requestAnimationFrame')

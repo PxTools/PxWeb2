@@ -261,7 +261,6 @@ export const Table = memo(function Table({
 
   const shouldVirtualize = bodyRows.length > 100;
 
-  
   // const rowVirtualizer = useVirtualizer({
   //   count: bodyRows.length,
   //   getScrollElement: () => verticalScrollElement ?? scrollContainerRef.current,
