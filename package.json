@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "@types/lodash": "^4.17.24",
-    "@types/node": "^22.19.13",
+    "@types/node": "^24.0.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@typescript-eslint/eslint-plugin": "^8.56.1",
@@ -51,6 +51,9 @@
     "style-dictionary": "^5.3.3",
     "typescript": "^5.9.3",
     "wrangler": "^4.69.0"
+  },
+  "engines": {
+    "node": ">=24"
   },
   "readme": "ERROR: No README data found!",
   "_id": "@pxweb2/source@0.0.0",
