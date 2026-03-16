@@ -21,32 +21,41 @@ function useSafeLocation(): { pathname: string } {
 }
 
 type FooterProps = {
-  containerRef?: React.RefObject<HTMLElement | null>;
   variant?: 'generic' | 'tableview';
   enableWindowScroll?: boolean;
 };
 
-export function scrollToTop(ref?: React.RefObject<HTMLElement | null>) {
-  if (ref?.current) {
-    const container = ref.current;
-    const start = container.scrollTop;
-    const duration = 200; // ms, decrease for even faster scroll
+export function scrollToTop(
+) {
+  const duration = 200; // ms, decrease for even faster scroll
+
+  const animateToTop = (start: number, setPosition: (value: number) => void) => {
     const startTime = performance.now();
 
     function animateScroll(time: number) {
       const elapsed = time - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      container.scrollTop = start * (1 - progress);
+      setPosition(start * (1 - progress));
       if (progress < 1) {
         requestAnimationFrame(animateScroll);
       }
     }
+
     requestAnimationFrame(animateScroll);
-  }
+  };
+
+    const root = document.scrollingElement as HTMLElement | null;
+    const start = root?.scrollTop ?? window.scrollY;
+    if (start <= 0) {
+      return;
+    }
+
+    animateToTop(start, (value) => {
+      window.scrollTo(0, value);
+    });
 }
 
 export const Footer: React.FC<FooterProps> = ({
-  containerRef,
   variant = 'generic',
   enableWindowScroll = false,
 }) => {
@@ -60,14 +69,8 @@ export const Footer: React.FC<FooterProps> = ({
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
   const location = useSafeLocation();
 
-  const canShowTopButton = !!containerRef || enableWindowScroll;
-
   const handleScrollTop = () => {
-    if (containerRef?.current) {
-      scrollToTop(containerRef);
-    } else if (enableWindowScroll) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    scrollToTop();
   };
 
   return (
@@ -156,7 +159,7 @@ export const Footer: React.FC<FooterProps> = ({
                 {t('common.footer.copyright')}
               </BodyShort>
             </div>
-            {canShowTopButton && (
+            {enableWindowScroll && (
               <Button
                 icon="ArrowUp"
                 variant="secondary"

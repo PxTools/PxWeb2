@@ -56,8 +56,9 @@ export function TableViewer() {
 
   useEffect(() => {
     // Use the actual document scroll root instead of a component div.
-    outerContainerRef.current =
-      (document.scrollingElement as HTMLElement | null) ?? document.body;
+    // outerContainerRef.current =
+    //   (document.scrollingElement as HTMLElement | null) ?? document.body;
+    outerContainerRef.current = document.getElementById('scroll-root');
   }, []);
 
   useEffect(() => {
@@ -219,7 +220,10 @@ export function TableViewer() {
             openedWithKeyboard={openedWithKeyboard}
             hideMenuRef={hideMenuRef}
           />
-          <div className={cl(styles.contentAndFooterContainerWrapper)}>
+          <div
+            id="scroll-root"
+            className={cl(styles.contentAndFooterContainerWrapper)}
+          >
             <div className={cl(styles.globalAlertWrapper)}>
               <WipStatusMessage />
             </div>
@@ -234,7 +238,7 @@ export function TableViewer() {
                 isExpanded={isExpanded}
                 setIsExpanded={setIsExpanded}
               ></Presentation>
-              <Footer containerRef={outerContainerRef} variant="tableview" />
+              <Footer variant="tableview" enableWindowScroll />
             </div>
           </div>
         </div>

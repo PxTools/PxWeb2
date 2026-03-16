@@ -1,6 +1,6 @@
 import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
-import React, { useRef, useEffect, useState, useLayoutEffect } from 'react';
+import React, { useRef, useEffect, useState, useLayoutEffect, useCallback } from 'react';
 import isEqual from 'lodash/isEqual';
 
 import classes from './Presentation.module.scss';
@@ -19,27 +19,50 @@ type propsType = {
   setIsExpanded: (expanded: boolean) => void;
 };
 
+// const MemoizedTable = React.memo(
+//   ({
+//     pxtable,
+//     isMobile,
+//     verticalScrollRef,
+//   }: {
+//     pxtable: PxTable;
+//     isMobile: boolean;
+//     verticalScrollRef?: React.RefObject<HTMLElement | null>;
+//   }) => (
+//     <Table
+//       pxtable={pxtable}
+//       isMobile={isMobile}
+//       verticalScrollRef={verticalScrollRef}
+//     />
+//   ),
+//   (prevProps, nextProps) =>
+//     isEqual(prevProps.pxtable, nextProps.pxtable) &&
+//     prevProps.isMobile === nextProps.isMobile &&
+//     prevProps.verticalScrollRef === nextProps.verticalScrollRef,
+// );
+
 const MemoizedTable = React.memo(
   ({
     pxtable,
     isMobile,
-    verticalScrollRef,
+    getVerticalScrollElement,
   }: {
     pxtable: PxTable;
     isMobile: boolean;
-    verticalScrollRef?: React.RefObject<HTMLElement | null>;
+    getVerticalScrollElement?: () => HTMLElement | null;
   }) => (
     <Table
       pxtable={pxtable}
       isMobile={isMobile}
-      verticalScrollRef={verticalScrollRef}
+      getVerticalScrollElement={getVerticalScrollElement}
     />
   ),
   (prevProps, nextProps) =>
     isEqual(prevProps.pxtable, nextProps.pxtable) &&
     prevProps.isMobile === nextProps.isMobile &&
-    prevProps.verticalScrollRef === nextProps.verticalScrollRef,
+    prevProps.getVerticalScrollElement === nextProps.getVerticalScrollElement,
 );
+
 export function Presentation({
   selectedTabId,
   scrollRef,
@@ -59,6 +82,12 @@ export function Presentation({
     selectedVBValues,
   } = variables;
   const tableId: string = selectedTabId;
+  const getVerticalScrollElement = useCallback((): HTMLElement | null => {
+    if (!scrollRef || typeof scrollRef === 'function') {
+      return null;
+    }
+    return scrollRef.current;
+  }, [scrollRef]);
   const [isMissingMandatoryVariables, setIsMissingMandatoryVariables] =
     useState(false);
   const [initialRun, setInitialRun] = useState(true);
@@ -286,7 +315,7 @@ export function Presentation({
                 <MemoizedTable
                   pxtable={tableData.data}
                   isMobile={isMobile}
-                  verticalScrollRef={scrollRef}
+                  getVerticalScrollElement={getVerticalScrollElement}
                 />
               </div>
             </div>
@@ -302,7 +331,7 @@ export function Presentation({
                   <MemoizedTable
                     pxtable={tableData.data}
                     isMobile={isMobile}
-                    verticalScrollRef={scrollRef}
+                    getVerticalScrollElement={getVerticalScrollElement}
                   />
                 </div>
               </div>

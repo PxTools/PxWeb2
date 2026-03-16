@@ -1,6 +1,6 @@
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import cl from 'clsx';
-import { useVirtualizer } from '@tanstack/react-virtual';
+import { useVirtualizer, useWindowVirtualizer } from '@tanstack/react-virtual';
 
 import classes from './Table.module.scss';
 import { PxTable } from '../../shared-types/pxTable';
@@ -13,7 +13,7 @@ import { Variable } from '../../shared-types/variable';
 export interface TableProps {
   readonly pxtable: PxTable;
   readonly isMobile: boolean;
-  readonly verticalScrollRef?: React.RefObject<HTMLElement>;
+  readonly getVerticalScrollElement?: () => HTMLElement | null;
   readonly className?: string;
 }
 
@@ -70,7 +70,7 @@ interface ColumnRenderWindow {
 export const Table = memo(function Table({
   pxtable,
   isMobile,
-  verticalScrollRef,
+  getVerticalScrollElement,
   className = '',
 }: TableProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -82,8 +82,8 @@ export const Table = memo(function Table({
   useEffect(() => {
     // Use outer container scroll if it is provided, otherwise use the table container scroll
     const updateVerticalScrollElement = () => {
-      if (verticalScrollRef?.current) {
-        setVerticalScrollElement(verticalScrollRef.current);
+      if (getVerticalScrollElement) {
+        setVerticalScrollElement(getVerticalScrollElement());
       } else {
         setVerticalScrollElement(null);
       }
@@ -95,7 +95,7 @@ export const Table = memo(function Table({
     return () => {
       globalThis.removeEventListener('resize', updateVerticalScrollElement);
     };
-  }, [verticalScrollRef]);
+  }, [getVerticalScrollElement]);
 
   useEffect(() => {
     if (!verticalScrollElement || !scrollContainerRef.current) {
@@ -111,6 +111,8 @@ export const Table = memo(function Table({
       const tableTop = scrollContainerRef.current.getBoundingClientRect().top;
       const containerTop = verticalScrollElement.getBoundingClientRect().top;
       const margin = tableTop - containerTop + verticalScrollElement.scrollTop;
+
+      //let margin = 100;
       setTableScrollMargin(Math.max(0, margin));
     };
 
@@ -258,9 +260,18 @@ export const Table = memo(function Table({
   ]);
 
   const shouldVirtualize = bodyRows.length > 100;
-  const rowVirtualizer = useVirtualizer({
+
+  
+  // const rowVirtualizer = useVirtualizer({
+  //   count: bodyRows.length,
+  //   getScrollElement: () => verticalScrollElement ?? scrollContainerRef.current,
+  //   scrollMargin: tableScrollMargin,
+  //   estimateSize: () => (isMobile ? 44 : 36),
+  //   overscan: 12,
+  // });
+  const rowVirtualizer = useWindowVirtualizer({
     count: bodyRows.length,
-    getScrollElement: () => verticalScrollElement ?? scrollContainerRef.current,
+    //getScrollElement: () => verticalScrollElement ?? scrollContainerRef.current,
     scrollMargin: tableScrollMargin,
     estimateSize: () => (isMobile ? 44 : 36),
     overscan: 12,
