@@ -66,6 +66,7 @@ export const mockedConfig: Config = {
   variableFilterExclusionList: {
     en: ['statisticalvariable', 'year', 'quarter', 'month', 'week'],
   },
+  useDynamicContentInTitle: false,
 };
 
 vi.mock('../src/app/util/config/getConfig', () => {
