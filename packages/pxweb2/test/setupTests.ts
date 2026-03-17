@@ -66,6 +66,7 @@ export const mockedConfig: Config = {
   variableFilterExclusionList: {
     en: ['statisticalvariable', 'year', 'quarter', 'month', 'week'],
   },
+  useDynamicContentInTitle: false,
 };
 
 vi.mock('../src/app/util/config/getConfig', () => {
@@ -94,6 +95,7 @@ vi.mock('react-i18next', () => ({
 
 // Mock motion/react components to avoid DOM access issues in tests
 vi.mock('motion/react', () => ({
+  AnimatePresence: ({ children }: { children: React.ReactNode }) => children,
   LazyMotion: ({ children }: { children: React.ReactNode }) => children,
   MotionConfig: ({ children }: { children: React.ReactNode }) => children,
   LayoutGroup: ({ children }: { children: React.ReactNode }) => children,
