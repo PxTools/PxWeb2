@@ -112,7 +112,6 @@ export const Table = memo(function Table({
       const containerTop = verticalScrollElement.getBoundingClientRect().top;
       const margin = tableTop - containerTop + verticalScrollElement.scrollTop;
 
-      //let margin = 100;
       setTableScrollMargin(Math.max(0, margin));
     };
 
@@ -261,20 +260,25 @@ export const Table = memo(function Table({
 
   const shouldVirtualize = bodyRows.length > 100;
 
-  // const rowVirtualizer = useVirtualizer({
-  //   count: bodyRows.length,
-  //   getScrollElement: () => verticalScrollElement ?? scrollContainerRef.current,
-  //   scrollMargin: tableScrollMargin,
-  //   estimateSize: () => (isMobile ? 44 : 36),
-  //   overscan: 12,
-  // });
-  const rowVirtualizer = useWindowVirtualizer({
+  const windowRowVirtualizer = useWindowVirtualizer({
     count: bodyRows.length,
-    //getScrollElement: () => verticalScrollElement ?? scrollContainerRef.current,
     scrollMargin: tableScrollMargin,
     estimateSize: () => (isMobile ? 44 : 36),
     overscan: 12,
   });
+
+  const containerRowVirtualizer = useVirtualizer({
+    count: bodyRows.length,
+    getScrollElement: () => scrollContainerRef.current,
+    scrollMargin: tableScrollMargin,
+    estimateSize: () => (isMobile ? 44 : 36),
+    overscan: 12,
+  });
+
+  const rowVirtualizer =
+    verticalScrollElement === null
+      ? containerRowVirtualizer
+      : windowRowVirtualizer;
 
   const virtualRows = shouldVirtualize ? rowVirtualizer.getVirtualItems() : [];
   const firstVirtualRow = virtualRows[0];
