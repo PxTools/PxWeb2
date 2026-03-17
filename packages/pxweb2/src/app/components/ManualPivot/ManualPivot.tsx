@@ -48,7 +48,10 @@ export function ManualPivot({
     }
   }, [headerVariables, isOpen, stubVariables]);
 
-  const commitLists = (nextHeaderItems: Variable[], nextStubItems: Variable[]) => {
+  const commitLists = (
+    nextHeaderItems: Variable[],
+    nextStubItems: Variable[],
+  ) => {
     headerItemsRef.current = nextHeaderItems;
     stubItemsRef.current = nextStubItems;
     setHeaderItems(nextHeaderItems);
@@ -99,7 +102,8 @@ export function ManualPivot({
   ): number => {
     const zoneRef = group === 'header' ? headerZoneRef : stubZoneRef;
     const itemElements = Array.from(
-      zoneRef.current?.querySelectorAll<HTMLElement>('[data-variable-id]') ?? [],
+      zoneRef.current?.querySelectorAll<HTMLElement>('[data-variable-id]') ??
+        [],
     ).filter((element) => element.dataset.variableId !== draggedItemId);
 
     if (itemElements.length === 0) {
