@@ -136,7 +136,9 @@ function PivotButton({
 export function DrawerEdit() {
   const { t } = useTranslation();
   const { isMobile } = useApp();
-  const data = useTableData().data;
+  const tableData = useTableData();
+  const data = tableData.data;
+  const { pivotManual } = tableData;
   const [loadingPivotType, setLoadingPivotType] = useState<PivotType | null>(
     null,
   );
@@ -170,7 +172,13 @@ export function DrawerEdit() {
       {isManualPivotOpen && (
         <ManualPivot
           isOpen={isManualPivotOpen}
-          onClose={() => setIsManualPivotOpen(false)}
+          onClose={(headerItems, stubItems) => {
+            pivotManual(
+              headerItems.map((item) => item.id),
+              stubItems.map((item) => item.id),
+            );
+            setIsManualPivotOpen(false);
+          }}
           headerVariables={data?.heading ?? []}
           stubVariables={data?.stub ?? []}
         />

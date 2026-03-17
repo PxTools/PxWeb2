@@ -11,9 +11,11 @@
 }
 
 .groupZone {
+  position: relative;
   border: 1px solid var(--px-color-border-subtle);
   border-radius: var(--px-border-radius-medium);
   padding: 8px;
+  min-height: 220px;
 }
 
 .list {
@@ -23,6 +25,8 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+  position: relative;
+  z-index: 1;
 }
 
 .listItem {
@@ -34,9 +38,7 @@
   -webkit-user-select: none;
   user-select: none;
   touch-action: none;
-  transition:
-    box-shadow 120ms ease,
-    transform 120ms ease;
+  transition: box-shadow 120ms ease;
 }
 
 .listItem:active {
@@ -49,8 +51,8 @@
 }
 
 .dropZone {
-  margin-top: 8px;
-  min-height: 44px;
+  position: absolute;
+  inset: 8px;
   border: 1px dashed var(--px-color-border-default);
   border-radius: var(--px-border-radius-small);
   display: flex;
@@ -58,9 +60,14 @@
   justify-content: center;
   color: var(--px-color-text-subtle);
   font-size: 14px;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 120ms ease;
 }
 
 .dropZoneActive {
+  opacity: 1;
   border-color: var(--px-color-border-default);
   background: var(--px-color-background-subtle);
 }

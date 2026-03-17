@@ -39,6 +39,7 @@ export interface TableDataContextType {
   pivotToMobile: () => void;
   pivotToDesktop: () => void;
   pivot: (type: PivotType) => void;
+  pivotManual: (heading: string[], stub: string[]) => void;
   buildTableTitle: () => TableTitlePartsType;
   isFadingTable: boolean;
   setIsFadingTable: (value: boolean) => void;
@@ -65,6 +66,9 @@ const TableDataContext = createContext<TableDataContextType | undefined>({
     // No-op: useTableData hook prevents this from being called
   },
   pivot: () => {
+    // No-op: useTableData hook prevents this from being called
+  },
+  pivotManual: () => {
     // No-op: useTableData hook prevents this from being called
   },
   buildTableTitle: () => ({
@@ -1194,6 +1198,37 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   );
 
   /**
+   * Pivots the table according to explicitly provided heading/stub variable order.
+   */
+  const pivotManual = React.useCallback(
+    (heading: string[], stub: string[]): void => {
+      if (data?.heading === undefined || data?.stub === undefined) {
+        return;
+      }
+
+      if (stub.length === 0 && heading.length === 0) {
+        return;
+      }
+
+      const tmpTable = copyPxTableWithoutData(data);
+      pivotTable(tmpTable, stub, heading);
+
+      // Reassemble table data
+      tmpTable.data = data.data;
+      setData(tmpTable);
+
+      if (isMobileMode) {
+        setStubMobile(stub);
+        setHeadingMobile(heading);
+      } else {
+        setStubDesktop(stub);
+        setHeadingDesktop(heading);
+      }
+    },
+    [data, isMobileMode],
+  );
+
+  /**
    * Pivots the table according to the stub- and heading order.
    */
   function pivotTable(pxTable: PxTable, stub: string[], heading: string[]) {
@@ -1243,6 +1278,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       pivotToMobile,
       pivotToDesktop,
       pivot,
+      pivotManual,
       buildTableTitle,
       isInitialized,
       isFadingTable,
@@ -1255,6 +1291,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       pivotToMobile,
       pivotToDesktop,
       pivot,
+      pivotManual,
       buildTableTitle,
       isInitialized,
       isFadingTable,

@@ -173,6 +173,7 @@ describe('TableInformation', () => {
       pivotToMobile: vi.fn(),
       pivotToDesktop: vi.fn(),
       pivot: vi.fn(),
+      pivotManual: vi.fn(),
       buildTableTitle: vi.fn().mockReturnValue({
         contentText: '',
         firstTitlePart: '',

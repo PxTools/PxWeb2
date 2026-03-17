@@ -6,9 +6,14 @@ import { Label } from '@pxweb2/pxweb2-ui';
 import { Modal, Variable } from '@pxweb2/pxweb2-ui';
 import classes from './ManualPivot.module.scss';
 
+type VariableGroup = 'header' | 'stub';
+type GroupLabelKey =
+  | 'presentation_page.side_menu.edit.customize.rearrange.rearrange_modal.stub_variable_header'
+  | 'presentation_page.side_menu.edit.customize.rearrange.rearrange_modal.heading_variable_header';
+
 interface ManualPivotProps {
   readonly isOpen: boolean;
-  readonly onClose: () => void;
+  readonly onClose: (headerItems: Variable[], stubItems: Variable[]) => void;
   readonly headerVariables: Variable[];
   readonly stubVariables: Variable[];
 }
@@ -22,23 +27,46 @@ export function ManualPivot({
   const { t } = useTranslation();
   const [headerItems, setHeaderItems] = useState<Variable[]>(headerVariables);
   const [stubItems, setStubItems] = useState<Variable[]>(stubVariables);
+  const headerItemsRef = useRef<Variable[]>(headerVariables);
+  const stubItemsRef = useRef<Variable[]>(stubVariables);
   const headerZoneRef = useRef<HTMLDivElement | null>(null);
   const stubZoneRef = useRef<HTMLDivElement | null>(null);
   const draggedItemIdRef = useRef<string | null>(null);
-  const dragSourceGroupRef = useRef<'header' | 'stub' | null>(null);
-  const hoveredGroupRef = useRef<'header' | 'stub' | null>(null);
-  const [activeDropGroup, setActiveDropGroup] = useState<
-    'header' | 'stub' | null
-  >(null);
+  const dragSourceGroupRef = useRef<VariableGroup | null>(null);
+  const hoveredGroupRef = useRef<VariableGroup | null>(null);
+  const lastPointerYRef = useRef<number | null>(null);
+  const [activeDropGroup, setActiveDropGroup] = useState<VariableGroup | null>(
+    null,
+  );
 
   useEffect(() => {
     if (isOpen) {
       setHeaderItems(headerVariables);
       setStubItems(stubVariables);
+      headerItemsRef.current = headerVariables;
+      stubItemsRef.current = stubVariables;
     }
   }, [headerVariables, isOpen, stubVariables]);
 
-  const getGroupAtPoint = (x: number, y: number): 'header' | 'stub' | null => {
+  const commitLists = (nextHeaderItems: Variable[], nextStubItems: Variable[]) => {
+    headerItemsRef.current = nextHeaderItems;
+    stubItemsRef.current = nextStubItems;
+    setHeaderItems(nextHeaderItems);
+    setStubItems(nextStubItems);
+  };
+
+  const dedupeById = (items: Variable[]): Variable[] => {
+    const seen = new Set<string>();
+    return items.filter((item) => {
+      if (seen.has(item.id)) {
+        return false;
+      }
+      seen.add(item.id);
+      return true;
+    });
+  };
+
+  const getGroupAtPoint = (x: number, y: number): VariableGroup | null => {
     const headerRect = headerZoneRef.current?.getBoundingClientRect();
     if (
       headerRect &&
@@ -64,21 +92,52 @@ export function ManualPivot({
     return null;
   };
 
+  const getInsertIndexForGroup = (
+    group: VariableGroup,
+    pointerY: number,
+    draggedItemId: string,
+  ): number => {
+    const zoneRef = group === 'header' ? headerZoneRef : stubZoneRef;
+    const itemElements = Array.from(
+      zoneRef.current?.querySelectorAll<HTMLElement>('[data-variable-id]') ?? [],
+    ).filter((element) => element.dataset.variableId !== draggedItemId);
+
+    if (itemElements.length === 0) {
+      return 0;
+    }
+
+    const index = itemElements.findIndex((element) => {
+      const rect = element.getBoundingClientRect();
+      const midpoint = rect.top + rect.height / 2;
+      return pointerY < midpoint;
+    });
+
+    return index === -1 ? itemElements.length : index;
+  };
+
   const moveItemBetweenGroups = () => {
     const draggedItemId = draggedItemIdRef.current;
-    const dragSourceGroup = dragSourceGroupRef.current;
+    const currentGroup = dragSourceGroupRef.current;
     const hoveredGroup = hoveredGroupRef.current;
+    const lastPointerY = lastPointerYRef.current;
 
-    if (!draggedItemId || !dragSourceGroup || !hoveredGroup) {
+    if (
+      !draggedItemId ||
+      !currentGroup ||
+      !hoveredGroup ||
+      lastPointerY === null
+    ) {
       return;
     }
 
-    if (dragSourceGroup === hoveredGroup) {
+    if (currentGroup === hoveredGroup) {
       return;
     }
 
-    const sourceItems = dragSourceGroup === 'header' ? headerItems : stubItems;
-    const targetItems = hoveredGroup === 'header' ? headerItems : stubItems;
+    const sourceItems =
+      currentGroup === 'header' ? headerItemsRef.current : stubItemsRef.current;
+    const targetItems =
+      hoveredGroup === 'header' ? headerItemsRef.current : stubItemsRef.current;
     const movingItem = sourceItems.find((item) => item.id === draggedItemId);
 
     if (!movingItem) {
@@ -88,24 +147,30 @@ export function ManualPivot({
     const nextSourceItems = sourceItems.filter(
       (item) => item.id !== draggedItemId,
     );
-    const nextTargetItems = [
-      ...targetItems.filter((item) => item.id !== draggedItemId),
-      movingItem,
-    ];
+    const nextTargetItems = targetItems.filter(
+      (item) => item.id !== draggedItemId,
+    );
+    const insertIndex = getInsertIndexForGroup(
+      hoveredGroup,
+      lastPointerY,
+      draggedItemId,
+    );
+    nextTargetItems.splice(insertIndex, 0, movingItem);
 
-    if (dragSourceGroup === 'header') {
-      setHeaderItems(nextSourceItems);
-      setStubItems(nextTargetItems);
+    if (currentGroup === 'header') {
+      commitLists(nextSourceItems, nextTargetItems);
     } else {
-      setStubItems(nextSourceItems);
-      setHeaderItems(nextTargetItems);
+      commitLists(nextTargetItems, nextSourceItems);
     }
+
+    dragSourceGroupRef.current = hoveredGroup;
   };
 
   const resetDragState = () => {
     draggedItemIdRef.current = null;
     dragSourceGroupRef.current = null;
     hoveredGroupRef.current = null;
+    lastPointerYRef.current = null;
     setActiveDropGroup(null);
   };
 
@@ -136,9 +201,14 @@ export function ManualPivot({
     info: PanInfo,
   ) => {
     const point = getClientPoint(event, info);
+    lastPointerYRef.current = point.y;
     const hoveredGroup = getGroupAtPoint(point.x, point.y);
     hoveredGroupRef.current = hoveredGroup;
     setActiveDropGroup(hoveredGroup);
+
+    if (hoveredGroup && hoveredGroup !== dragSourceGroupRef.current) {
+      moveItemBetweenGroups();
+    }
   };
 
   const handleItemDragEnd = (
@@ -146,18 +216,96 @@ export function ManualPivot({
     info: PanInfo,
   ) => {
     const point = getClientPoint(event, info);
+    lastPointerYRef.current = point.y;
     const hoveredGroup = getGroupAtPoint(point.x, point.y);
     hoveredGroupRef.current = hoveredGroup;
     setActiveDropGroup(hoveredGroup);
 
-    moveItemBetweenGroups();
+    if (hoveredGroup && hoveredGroup !== dragSourceGroupRef.current) {
+      moveItemBetweenGroups();
+    }
     resetDragState();
   };
+
+  const handleDragStart = (group: VariableGroup, variableId: string) => {
+    draggedItemIdRef.current = variableId;
+    dragSourceGroupRef.current = group;
+    hoveredGroupRef.current = group;
+    setActiveDropGroup(group);
+  };
+
+  const handleGroupReorder = (group: VariableGroup, nextItems: Variable[]) => {
+    const dedupedItems = dedupeById(nextItems);
+
+    if (group === 'stub') {
+      const nextHeaderItems = headerItemsRef.current.filter(
+        (headerItem) =>
+          !dedupedItems.some((stubItem) => stubItem.id === headerItem.id),
+      );
+      commitLists(nextHeaderItems, dedupedItems);
+      return;
+    }
+
+    const nextStubItems = stubItemsRef.current.filter(
+      (stubItem) =>
+        !dedupedItems.some((headerItem) => headerItem.id === stubItem.id),
+    );
+    commitLists(dedupedItems, nextStubItems);
+  };
+
+  const renderGroup = (
+    group: VariableGroup,
+    labelKey: GroupLabelKey,
+    items: Variable[],
+    zoneRef: React.RefObject<HTMLDivElement | null>,
+  ) => (
+    <section className={classes.groupColumn}>
+      <Label>{t(labelKey)}</Label>
+      <div ref={zoneRef} className={classes.groupZone}>
+        <Reorder.Group
+          axis="y"
+          as="ul"
+          values={items}
+          onReorder={(nextItems) => handleGroupReorder(group, nextItems)}
+          className={classes.list}
+        >
+          {items.map((variable) => (
+            <Reorder.Item
+              as="li"
+              key={variable.id}
+              data-variable-id={variable.id}
+              value={variable}
+              className={classes.listItem}
+              tabIndex={0}
+              drag
+              dragMomentum={false}
+              dragElastic={0}
+              whileDrag={{
+                scale: 1.02,
+                zIndex: 10,
+                boxShadow: '0 8px 20px rgba(0, 0, 0, 0.2)',
+              }}
+              onDragStart={() => handleDragStart(group, variable.id)}
+              onDrag={handleItemDrag}
+              onDragEnd={handleItemDragEnd}
+            >
+              {variable.label}
+            </Reorder.Item>
+          ))}
+        </Reorder.Group>
+        <div
+          className={`${classes.dropZone} ${activeDropGroup === group ? classes.dropZoneActive : ''}`}
+        >
+          Drop here
+        </div>
+      </div>
+    </section>
+  );
 
   return (
     <Modal
       isOpen={isOpen}
-      onClose={() => onClose()}
+      onClose={() => onClose(headerItems, stubItems)}
       heading={t('presentation_page.side_menu.edit.customize.pivot.title')}
       label={t('presentation_page.side_menu.edit.title')}
       cancelLabel={t(
@@ -168,105 +316,18 @@ export function ManualPivot({
       )}
     >
       <div className={classes.wrapper}>
-        <section className={classes.groupColumn}>
-          <Label>
-            {t(
-              'presentation_page.side_menu.edit.customize.rearrange.rearrange_modal.heading_variable_header',
-            )}
-          </Label>
-          <div ref={headerZoneRef} className={classes.groupZone}>
-            <Reorder.Group
-              axis="y"
-              as="ul"
-              values={headerItems}
-              onReorder={setHeaderItems}
-              className={classes.list}
-            >
-              {headerItems.map((variable) => (
-                <Reorder.Item
-                  as="li"
-                  key={variable.id}
-                  value={variable}
-                  className={classes.listItem}
-                  tabIndex={0}
-                  drag
-                  dragMomentum={false}
-                  dragElastic={0.12}
-                  whileDrag={{
-                    scale: 1.02,
-                    zIndex: 10,
-                    boxShadow: '0 8px 20px rgba(0, 0, 0, 0.2)',
-                  }}
-                  onDragStart={() => {
-                    draggedItemIdRef.current = variable.id;
-                    dragSourceGroupRef.current = 'header';
-                    hoveredGroupRef.current = 'header';
-                    setActiveDropGroup('header');
-                  }}
-                  onDrag={handleItemDrag}
-                  onDragEnd={handleItemDragEnd}
-                >
-                  {variable.label}
-                </Reorder.Item>
-              ))}
-            </Reorder.Group>
-            <div
-              className={`${classes.dropZone} ${activeDropGroup === 'header' ? classes.dropZoneActive : ''}`}
-            >
-              Drop here
-            </div>
-          </div>
-        </section>
-
-        <section className={classes.groupColumn}>
-          <Label>
-            {t(
-              'presentation_page.side_menu.edit.customize.rearrange.rearrange_modal.stub_variable_header',
-            )}
-          </Label>
-          <div ref={stubZoneRef} className={classes.groupZone}>
-            <Reorder.Group
-              axis="y"
-              as="ul"
-              values={stubItems}
-              onReorder={setStubItems}
-              className={classes.list}
-            >
-              {stubItems.map((variable) => (
-                <Reorder.Item
-                  as="li"
-                  key={variable.id}
-                  value={variable}
-                  className={classes.listItem}
-                  tabIndex={0}
-                  drag
-                  dragMomentum={false}
-                  dragElastic={0.12}
-                  whileDrag={{
-                    scale: 1.02,
-                    zIndex: 10,
-                    boxShadow: '0 8px 20px rgba(0, 0, 0, 0.2)',
-                  }}
-                  onDragStart={() => {
-                    draggedItemIdRef.current = variable.id;
-                    dragSourceGroupRef.current = 'stub';
-                    hoveredGroupRef.current = 'stub';
-                    setActiveDropGroup('stub');
-                  }}
-                  onDrag={handleItemDrag}
-                  onDragEnd={handleItemDragEnd}
-                >
-                  {variable.label}
-                </Reorder.Item>
-              ))}
-            </Reorder.Group>
-            <div
-              className={`${classes.dropZone} ${activeDropGroup === 'stub' ? classes.dropZoneActive : ''}`}
-            >
-              Drop here
-            </div>
-          </div>
-        </section>
+        {renderGroup(
+          'stub',
+          'presentation_page.side_menu.edit.customize.rearrange.rearrange_modal.stub_variable_header',
+          stubItems,
+          stubZoneRef,
+        )}
+        {renderGroup(
+          'header',
+          'presentation_page.side_menu.edit.customize.rearrange.rearrange_modal.heading_variable_header',
+          headerItems,
+          headerZoneRef,
+        )}
       </div>
     </Modal>
   );
