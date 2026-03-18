@@ -301,6 +301,16 @@ export const Table = memo(function Table({
     (columnWindow.leftPadding > 0 ? 1 : 0) +
     (columnWindow.rightPadding > 0 ? 1 : 0);
 
+  /***
+   * Sjur's notes about mobile performance:
+   *
+   * Pivot and rendering in mobile view is slow
+   * but ram usage seems stable
+   * the problem is how the createMobileRow function works
+   * - it creates all rows and then we slice the array to get the visible rows
+   *    (this is computationally expensive, basically we are doing the work of creating all rows even if we only show a fraction of them)
+   * */
+
   return (
     <div
       ref={scrollContainerRef}
