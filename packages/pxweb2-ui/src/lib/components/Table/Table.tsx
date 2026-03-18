@@ -3,6 +3,8 @@ import cl from 'clsx';
 import { useVirtualizer, useWindowVirtualizer } from '@tanstack/react-virtual';
 
 import classes from './Table.module.scss';
+import { DesktopVirtualizedTable } from './TableDesktopVirtualized';
+import { MobileVirtualizedTable } from './TableMobileVirtualized';
 import { PxTable } from '../../shared-types/pxTable';
 import { calculateRowAndColumnMeta, columnRowMeta } from './columnRowMeta';
 import { getPxTableData } from './cubeHelper';
@@ -17,7 +19,7 @@ export interface TableProps {
   readonly className?: string;
 }
 
-interface BaseVirtualizedTableProps {
+export interface BaseVirtualizedTableProps {
   readonly pxtable: PxTable;
   readonly tableMeta: columnRowMeta;
   readonly tableColumnSize: number;
@@ -29,7 +31,7 @@ interface BaseVirtualizedTableProps {
   readonly className?: string;
 }
 
-interface VirtualizedTableLayoutProps {
+export interface VirtualizedTableLayoutProps {
   readonly pxtable: PxTable;
   readonly className: string;
   readonly headingRows: React.JSX.Element[];
@@ -81,6 +83,8 @@ interface CreateRowMobileParams {
   contentVarIndex: number;
   contentsVariableDecimals?: Record<string, { decimals: number }>;
   nextKey: () => string;
+  rowWindow?: RowWindow;
+  rowCursor: { index: number };
 }
 
 interface CreateSecondLastMobileHeaderParams {
@@ -93,6 +97,20 @@ interface CreateSecondLastMobileHeaderParams {
   tableRows: React.JSX.Element[];
   uniqueIdCounter: { idCounter: number };
   nextKey: () => string;
+  rowWindow?: RowWindow;
+  rowCursor: { index: number };
+}
+
+interface CreateRepeatedMobileHeaderParams {
+  table: PxTable;
+  stubLength: number;
+  stubIndex: number;
+  stubDataCellCodes: DataCellCodes;
+  tableRows: React.JSX.Element[];
+  uniqueIdCounter: { idCounter: number };
+  nextKey: () => string;
+  rowWindow: RowWindow | undefined;
+  rowCursor: { index: number };
 }
 
 /**
@@ -107,7 +125,12 @@ interface ColumnRenderWindow {
   rightPadding: number;
 }
 
-const DESKTOP_COLUMN_VIRTUALIZATION_THRESHOLD = 60;
+interface RowWindow {
+  start: number;
+  end: number;
+}
+
+export const DESKTOP_COLUMN_VIRTUALIZATION_THRESHOLD = 60;
 const ROW_VIRTUALIZATION_THRESHOLD = 100;
 
 export const Table = memo(function Table({
@@ -240,174 +263,7 @@ function useTableScrollContext(
   return { scrollContainerRef, verticalScrollElement, tableScrollMargin };
 }
 
-function DesktopVirtualizedTable({
-  pxtable,
-  tableMeta,
-  tableColumnSize,
-  contentVarIndex,
-  contentsVariableDecimals,
-  scrollContainerRef,
-  verticalScrollElement,
-  tableScrollMargin,
-  className = '',
-}: BaseVirtualizedTableProps) {
-  const shouldVirtualizeColumns =
-    tableColumnSize > DESKTOP_COLUMN_VIRTUALIZATION_THRESHOLD;
-  const columnVirtualizer = useVirtualizer({
-    horizontal: true,
-    enabled: shouldVirtualizeColumns,
-    count: tableColumnSize,
-    getScrollElement: () => scrollContainerRef.current,
-    estimateSize: () => 88,
-    overscan: 8,
-  });
-
-  const virtualColumns = shouldVirtualizeColumns
-    ? columnVirtualizer.getVirtualItems()
-    : [];
-  const firstVirtualColumn = virtualColumns[0];
-  const lastVirtualColumn = virtualColumns.at(-1);
-
-  const columnWindow: ColumnRenderWindow = useMemo(
-    () =>
-      shouldVirtualizeColumns
-        ? {
-            start: firstVirtualColumn?.index ?? 0,
-            end: lastVirtualColumn
-              ? lastVirtualColumn.index + 1
-              : tableColumnSize,
-            leftPadding: firstVirtualColumn?.start ?? 0,
-            rightPadding: lastVirtualColumn
-              ? columnVirtualizer.getTotalSize() - lastVirtualColumn.end
-              : 0,
-          }
-        : {
-            start: 0,
-            end: tableColumnSize,
-            leftPadding: 0,
-            rightPadding: 0,
-          },
-    [
-      shouldVirtualizeColumns,
-      firstVirtualColumn,
-      lastVirtualColumn,
-      tableColumnSize,
-      columnVirtualizer,
-    ],
-  );
-
-  const { headingRows, bodyRows } = useTableRows({
-    pxtable,
-    tableMeta,
-    tableColumnSize,
-    columnWindow,
-    isMobile: false,
-    contentVarIndex,
-    contentsVariableDecimals,
-  });
-
-  const {
-    shouldVirtualize,
-    visibleBodyRows,
-    topPaddingHeight,
-    bottomPaddingHeight,
-  } = useBodyRowVirtualization({
-    bodyRows,
-    isMobile: false,
-    tableScrollMargin,
-    verticalScrollElement,
-    scrollContainerRef,
-  });
-
-  const renderedColumnCount =
-    tableMeta.columnOffset +
-    (columnWindow.end - columnWindow.start) +
-    (columnWindow.leftPadding > 0 ? 1 : 0) +
-    (columnWindow.rightPadding > 0 ? 1 : 0);
-
-  return (
-    <VirtualizedTableLayout
-      pxtable={pxtable}
-      className={className}
-      headingRows={headingRows}
-      visibleBodyRows={visibleBodyRows}
-      shouldVirtualize={shouldVirtualize}
-      shouldVirtualizeColumns={shouldVirtualizeColumns}
-      topPaddingHeight={topPaddingHeight}
-      bottomPaddingHeight={bottomPaddingHeight}
-      renderedColumnCount={renderedColumnCount}
-      scrollContainerRef={scrollContainerRef}
-      verticalScrollElement={verticalScrollElement}
-    />
-  );
-}
-
-function MobileVirtualizedTable({
-  pxtable,
-  tableMeta,
-  tableColumnSize,
-  contentVarIndex,
-  contentsVariableDecimals,
-  scrollContainerRef,
-  verticalScrollElement,
-  tableScrollMargin,
-  className = '',
-}: BaseVirtualizedTableProps) {
-  const shouldVirtualizeColumns = false;
-
-  const columnWindow = useMemo(
-    () => ({
-      start: 0,
-      end: tableColumnSize,
-      leftPadding: 0,
-      rightPadding: 0,
-    }),
-    [tableColumnSize],
-  );
-
-  const { headingRows, bodyRows } = useTableRows({
-    pxtable,
-    tableMeta,
-    tableColumnSize,
-    columnWindow,
-    isMobile: true,
-    contentVarIndex,
-    contentsVariableDecimals,
-  });
-
-  const {
-    shouldVirtualize,
-    visibleBodyRows,
-    topPaddingHeight,
-    bottomPaddingHeight,
-  } = useBodyRowVirtualization({
-    bodyRows,
-    isMobile: true,
-    tableScrollMargin,
-    verticalScrollElement,
-    scrollContainerRef,
-  });
-
-  const renderedColumnCount = tableMeta.columnOffset + tableColumnSize;
-
-  return (
-    <VirtualizedTableLayout
-      pxtable={pxtable}
-      className={className}
-      headingRows={headingRows}
-      visibleBodyRows={visibleBodyRows}
-      shouldVirtualize={shouldVirtualize}
-      shouldVirtualizeColumns={shouldVirtualizeColumns}
-      topPaddingHeight={topPaddingHeight}
-      bottomPaddingHeight={bottomPaddingHeight}
-      renderedColumnCount={renderedColumnCount}
-      scrollContainerRef={scrollContainerRef}
-      verticalScrollElement={verticalScrollElement}
-    />
-  );
-}
-
-function useTableRows({
+export function useTableRows({
   pxtable,
   tableMeta,
   tableColumnSize,
@@ -415,6 +271,7 @@ function useTableRows({
   isMobile,
   contentVarIndex,
   contentsVariableDecimals,
+  rowWindow,
 }: {
   pxtable: PxTable;
   tableMeta: columnRowMeta;
@@ -423,27 +280,16 @@ function useTableRows({
   isMobile: boolean;
   contentVarIndex: number;
   contentsVariableDecimals?: Record<string, { decimals: number }>;
+  rowWindow?: RowWindow;
 }) {
+  const { start, end, leftPadding, rightPadding } = columnWindow;
+
   return useMemo(() => {
     const nextKey = createKeyFactory();
-    const headingDataCellCodes = new Array<DataCellCodes>(tableColumnSize);
-
-    for (let i = 0; i < tableColumnSize; i++) {
-      const dataCellCodes: DataCellCodes = new Array<DataCellMeta>(
-        pxtable.heading.length,
-      );
-
-      for (let j = 0; j < pxtable.heading.length; j++) {
-        dataCellCodes[j] = {
-          varId: '',
-          valCode: '',
-          valLabel: '',
-          varPos: 0,
-          htmlId: '',
-        };
-      }
-      headingDataCellCodes[i] = dataCellCodes;
-    }
+    const headingDataCellCodes = createHeadingDataCellCodes(
+      pxtable,
+      tableColumnSize,
+    );
 
     return {
       headingRows: createHeading(
@@ -462,49 +308,126 @@ function useTableRows({
         contentVarIndex,
         contentsVariableDecimals,
         nextKey,
+        rowWindow,
       ),
     };
   }, [
-    tableColumnSize,
     pxtable,
     tableMeta,
-    columnWindow,
+    tableColumnSize,
+    start,
+    end,
+    leftPadding,
+    rightPadding,
     isMobile,
     contentVarIndex,
     contentsVariableDecimals,
+    rowWindow?.start,
+    rowWindow?.end,
   ]);
 }
 
-function useBodyRowVirtualization({
-  bodyRows,
+function createInitialDataCellCodes(length: number): DataCellCodes {
+  const codes: DataCellCodes = new Array<DataCellMeta>(length);
+
+  for (let i = 0; i < length; i++) {
+    codes[i] = {
+      varId: '',
+      valCode: '',
+      valLabel: '',
+      varPos: 0,
+      htmlId: '',
+    };
+  }
+
+  return codes;
+}
+
+export function createHeadingDataCellCodes(
+  table: PxTable,
+  tableColumnSize: number,
+): DataCellCodes[] {
+  const headingDataCellCodes = new Array<DataCellCodes>(tableColumnSize);
+
+  for (let i = 0; i < tableColumnSize; i++) {
+    const dataCellCodes: DataCellCodes = new Array<DataCellMeta>(
+      table.heading.length,
+    );
+
+    for (let j = 0; j < table.heading.length; j++) {
+      dataCellCodes[j] = {
+        varId: '',
+        valCode: '',
+        valLabel: '',
+        varPos: 0,
+        htmlId: '',
+      };
+    }
+    headingDataCellCodes[i] = dataCellCodes;
+  }
+
+  return headingDataCellCodes;
+}
+
+export function calculateMobileBodyRowCount(table: PxTable): number {
+  if (table.stub.length === 0) {
+    return 1;
+  }
+
+  if (table.stub.length === 1) {
+    return table.stub[0].values.length;
+  }
+
+  const stubLength = table.stub.length;
+  const valueCounts = table.stub.map((stub) => stub.values.length);
+
+  let rowsForCurrentLevel = valueCounts[stubLength - 1];
+
+  for (let stubIndex = stubLength - 2; stubIndex >= 0; stubIndex--) {
+    let rowOverheadPerValue = 0;
+    if (stubIndex === stubLength - 2) {
+      rowOverheadPerValue = 1;
+    } else if (stubIndex === stubLength - 3) {
+      rowOverheadPerValue = stubLength - 2;
+    }
+
+    rowsForCurrentLevel =
+      valueCounts[stubIndex] * (rowOverheadPerValue + rowsForCurrentLevel);
+  }
+
+  return rowsForCurrentLevel;
+}
+
+export function useBodyRowVirtualizationWindow({
+  rowCount,
   isMobile,
   tableScrollMargin,
   verticalScrollElement,
   scrollContainerRef,
 }: {
-  bodyRows: React.JSX.Element[];
+  rowCount: number;
   isMobile: boolean;
   tableScrollMargin: number;
   verticalScrollElement: HTMLElement | null;
   scrollContainerRef: React.RefObject<HTMLDivElement | null>;
 }) {
-  const shouldVirtualize = bodyRows.length > ROW_VIRTUALIZATION_THRESHOLD;
+  const shouldVirtualize = rowCount > ROW_VIRTUALIZATION_THRESHOLD;
 
   const windowRowVirtualizer = useWindowVirtualizer({
     enabled: shouldVirtualize && verticalScrollElement !== null,
-    count: bodyRows.length,
+    count: rowCount,
     scrollMargin: tableScrollMargin,
     estimateSize: () => (isMobile ? 44 : 36),
-    overscan: 12,
+    overscan: isMobile ? 4 : 12,
   });
 
   const containerRowVirtualizer = useVirtualizer({
     enabled: shouldVirtualize && verticalScrollElement === null,
-    count: bodyRows.length,
+    count: rowCount,
     getScrollElement: () => scrollContainerRef.current,
     scrollMargin: tableScrollMargin,
     estimateSize: () => (isMobile ? 44 : 36),
-    overscan: 12,
+    overscan: isMobile ? 4 : 12,
   });
 
   const rowVirtualizer =
@@ -522,20 +445,28 @@ function useBodyRowVirtualization({
     ? rowVirtualizer.getTotalSize() - lastVirtualRow.end
     : 0;
   const visibleRowStart = firstVirtualRow?.index ?? 0;
-  const visibleRowEnd = lastVirtualRow ? lastVirtualRow.index + 1 : 0;
-  const visibleBodyRows = shouldVirtualize
-    ? bodyRows.slice(visibleRowStart, visibleRowEnd)
-    : bodyRows;
+  const visibleRowEnd = lastVirtualRow ? lastVirtualRow.index + 1 : rowCount;
+
+  if (!shouldVirtualize) {
+    return {
+      shouldVirtualize,
+      visibleRowStart: 0,
+      visibleRowEnd: rowCount,
+      topPaddingHeight: 0,
+      bottomPaddingHeight: 0,
+    };
+  }
 
   return {
     shouldVirtualize,
-    visibleBodyRows,
+    visibleRowStart,
+    visibleRowEnd,
     topPaddingHeight,
     bottomPaddingHeight,
   };
 }
 
-function VirtualizedTableLayout({
+export function VirtualizedTableLayout({
   pxtable,
   className,
   headingRows,
@@ -548,14 +479,17 @@ function VirtualizedTableLayout({
   scrollContainerRef,
   verticalScrollElement,
 }: VirtualizedTableLayoutProps) {
+  const shouldUseInternalScrollContainer =
+    shouldVirtualizeColumns ||
+    (shouldVirtualize && verticalScrollElement === null);
+
   return (
     <div
       ref={scrollContainerRef}
       className={cl({
-        [classes.virtualizedWrapper]:
-          shouldVirtualize || shouldVirtualizeColumns,
+        [classes.virtualizedWrapper]: shouldUseInternalScrollContainer,
         [classes.virtualizedWrapperUseParentScroll]:
-          verticalScrollElement !== null,
+          shouldUseInternalScrollContainer && verticalScrollElement !== null,
       })}
     >
       <table
@@ -754,27 +688,35 @@ export function createRows(
   contentVarIndex: number,
   contentsVariableDecimals?: Record<string, { decimals: number }>,
   nextKey?: () => string,
+  rowWindow?: RowWindow,
 ): React.JSX.Element[] {
   const resolvedNextKey = nextKey ?? createKeyFactory();
   const tableRows: React.JSX.Element[] = [];
-  const stubDatacellCodes: DataCellCodes = new Array<DataCellMeta>();
   if (table.stub.length > 0) {
     if (isMobile) {
+      const mobileStubDatacellCodes = createInitialDataCellCodes(
+        table.stub.length,
+      );
+
       createRowMobile({
         stubIndex: 0,
         rowSpan: tableMeta.rows - tableMeta.rowOffset,
         table,
         tableMeta,
         columnWindow,
-        stubDataCellCodes: stubDatacellCodes,
+        stubDataCellCodes: mobileStubDatacellCodes,
         headingDataCellCodes,
         tableRows,
         uniqueIdCounter: { idCounter: 0 },
         contentsVariableDecimals,
         contentVarIndex,
         nextKey: resolvedNextKey,
+        rowWindow,
+        rowCursor: { index: 0 },
       });
     } else {
+      const desktopStubDatacellCodes: DataCellCodes = [];
+
       createRowDesktop({
         stubIndex: 0,
         rowSpan: tableMeta.rows - tableMeta.rowOffset,
@@ -782,7 +724,7 @@ export function createRows(
         table,
         tableMeta,
         columnWindow,
-        stubDataCellCodes: stubDatacellCodes,
+        stubDataCellCodes: desktopStubDatacellCodes,
         headingDataCellCodes,
         tableRows,
         contentsVariableDecimals,
@@ -791,11 +733,12 @@ export function createRows(
       });
     }
   } else {
+    const noStubDataCellCodes: DataCellCodes = [];
     const tableRow: React.JSX.Element[] = [];
     fillData(
       table,
       columnWindow,
-      stubDatacellCodes,
+      noStubDataCellCodes,
       headingDataCellCodes,
       tableRow,
       resolvedNextKey,
@@ -958,6 +901,8 @@ function createRowMobile({
   contentVarIndex,
   contentsVariableDecimals,
   nextKey,
+  rowWindow,
+  rowCursor,
 }: CreateRowMobileParams): React.JSX.Element[] {
   const stubValuesLength = table.stub[stubIndex].values.length;
   const stubLength = table.stub.length;
@@ -979,7 +924,7 @@ function createRowMobile({
       varPos: table.data.variableOrder.indexOf(table.stub[stubIndex].id),
       htmlId: '',
     };
-    stubDataCellCodes.push(cellMeta);
+    stubDataCellCodes[stubIndex] = cellMeta;
     // Fix the rowspan
     if (rowSpan === 0) {
       rowSpan = 1;
@@ -995,7 +940,7 @@ function createRowMobile({
         case stubLength - 3: {
           // third last level
           // Repeat the headers for all stubs except the 2 last levels
-          createRepeatedMobileHeader(
+          createRepeatedMobileHeader({
             table,
             stubLength,
             stubIndex,
@@ -1003,7 +948,9 @@ function createRowMobile({
             tableRows,
             uniqueIdCounter,
             nextKey,
-          );
+            rowWindow,
+            rowCursor,
+          });
           break;
         }
         case stubLength - 2: {
@@ -1018,6 +965,8 @@ function createRowMobile({
             tableRows,
             uniqueIdCounter,
             nextKey,
+            rowWindow,
+            rowCursor,
           });
           break;
         }
@@ -1036,8 +985,9 @@ function createRowMobile({
         contentVarIndex,
         contentsVariableDecimals,
         nextKey,
+        rowWindow,
+        rowCursor,
       });
-      stubDataCellCodes.pop();
     } else {
       // last level
       let tempid =
@@ -1047,48 +997,51 @@ function createRowMobile({
         '_I' +
         uniqueIdCounter.idCounter;
       cellMeta.htmlId = tempid;
-      tableRow.push(
-        <th
-          id={cellMeta.htmlId}
-          scope="row"
-          aria-label={
-            variable.type === VartypeEnum.TIME_VARIABLE
-              ? `${variable.label} ${val.label}`
-              : undefined
-          }
-          className={cl(classes.stub, classes[`stub-${stubIndex}`])}
-          key={nextKey()}
-        >
-          {val.label}
-        </th>,
-      );
-      fillData(
-        table,
-        columnWindow,
-        stubDataCellCodes,
-        headingDataCellCodes,
-        tableRow,
-        nextKey,
-      );
-      tableRows.push(
-        <tr
-          key={nextKey()}
-          className={cl(
-            classes.mobileRowHeadLastStub,
-            {
-              [classes.mobileRowHeadlastValueOfLastStub]: lastValueOfLastStub,
-            },
-            {
-              [classes.mobileRowHeadfirstValueOfLastStub2Dim]:
-                i === 0 && stubLength === 2,
-            },
-          )}
-        >
-          {tableRow}
-        </tr>,
-      );
-      tableRow = [];
-      stubDataCellCodes.pop();
+      if (isRowVisible(rowCursor, rowWindow)) {
+        tableRow.push(
+          <th
+            id={cellMeta.htmlId}
+            scope="row"
+            aria-label={
+              variable.type === VartypeEnum.TIME_VARIABLE
+                ? `${variable.label} ${val.label}`
+                : undefined
+            }
+            className={cl(classes.stub, classes[`stub-${stubIndex}`])}
+            key={nextKey()}
+          >
+            {val.label}
+          </th>,
+        );
+        fillData(
+          table,
+          columnWindow,
+          stubDataCellCodes,
+          headingDataCellCodes,
+          tableRow,
+          nextKey,
+        );
+        tableRows.push(
+          <tr
+            key={nextKey()}
+            className={cl(
+              classes.mobileRowHeadLastStub,
+              {
+                [classes.mobileRowHeadlastValueOfLastStub]: lastValueOfLastStub,
+              },
+              {
+                [classes.mobileRowHeadfirstValueOfLastStub2Dim]:
+                  i === 0 && stubLength === 2,
+              },
+            )}
+          >
+            {tableRow}
+          </tr>,
+        );
+        tableRow = [];
+      }
+
+      rowCursor.index++;
     }
   }
 
@@ -1211,15 +1164,17 @@ function fillData(
  * @param {DataCellCodes} stubDataCellCodes - An array of data cell codes containing HTML IDs and value labels.
  * @param {React.JSX.Element[]} tableRows - An array of table row elements to which the repeated headers will be appended.
  */
-function createRepeatedMobileHeader(
-  table: PxTable,
-  stubLength: number,
-  stubIndex: number,
-  stubDataCellCodes: DataCellCodes,
-  tableRows: React.JSX.Element[],
-  uniqueIdCounter: { idCounter: number },
-  nextKey: () => string,
-) {
+function createRepeatedMobileHeader({
+  table,
+  stubLength,
+  stubIndex,
+  stubDataCellCodes,
+  tableRows,
+  uniqueIdCounter,
+  nextKey,
+  rowWindow,
+  rowCursor,
+}: CreateRepeatedMobileHeaderParams) {
   let tableRowRepeatHeader: React.JSX.Element[] = [];
   for (let n = 0; n <= stubLength - 3; n++) {
     uniqueIdCounter.idCounter++;
@@ -1232,36 +1187,39 @@ function createRepeatedMobileHeader(
       uniqueIdCounter.idCounter;
 
     stubDataCellCodes[n].htmlId = tempid;
-    tableRowRepeatHeader.push(
-      <th
-        colSpan={2}
-        id={stubDataCellCodes[n].htmlId}
-        scope="col"
-        aria-label={
-          variable.type === VartypeEnum.TIME_VARIABLE
-            ? `${variable.label} ${stubDataCellCodes[n].valLabel}`
-            : undefined
-        }
-        className={cl(classes.stub, classes[`stub-${stubIndex}`])}
-        key={nextKey()}
-      >
-        {stubDataCellCodes[n].valLabel}
-      </th>,
-    );
-    tableRows.push(
-      <tr
-        className={cl(
-          { [classes.firstdim]: n === 0 },
-          {
-            [classes.mobileRowHeadLevel1]: n === stubLength - 3,
-          },
-          classes.mobileEmptyRowCell,
-        )}
-        key={nextKey()}
-      >
-        {tableRowRepeatHeader}
-      </tr>,
-    );
+    if (isRowVisible(rowCursor, rowWindow)) {
+      tableRowRepeatHeader.push(
+        <th
+          colSpan={2}
+          id={stubDataCellCodes[n].htmlId}
+          scope="col"
+          aria-label={
+            variable.type === VartypeEnum.TIME_VARIABLE
+              ? `${variable.label} ${stubDataCellCodes[n].valLabel}`
+              : undefined
+          }
+          className={cl(classes.stub, classes[`stub-${stubIndex}`])}
+          key={nextKey()}
+        >
+          {stubDataCellCodes[n].valLabel}
+        </th>,
+      );
+      tableRows.push(
+        <tr
+          className={cl(
+            { [classes.firstdim]: n === 0 },
+            {
+              [classes.mobileRowHeadLevel1]: n === stubLength - 3,
+            },
+            classes.mobileEmptyRowCell,
+          )}
+          key={nextKey()}
+        >
+          {tableRowRepeatHeader}
+        </tr>,
+      );
+    }
+    rowCursor.index++;
     tableRowRepeatHeader = [];
   }
 }
@@ -1286,54 +1244,67 @@ function createSecondLastMobileHeader({
   tableRows,
   uniqueIdCounter,
   nextKey,
+  rowWindow,
+  rowCursor,
 }: CreateSecondLastMobileHeaderParams): void {
   // second last level
   let tableRowSecondLastHeader: React.JSX.Element[] = [];
   let tempid =
     cellMeta.varId + '_' + cellMeta.valCode + '_I' + uniqueIdCounter.idCounter;
   cellMeta.htmlId = tempid;
-  tableRowSecondLastHeader.push(
-    <th
-      colSpan={2}
-      id={cellMeta.htmlId}
-      scope="col"
-      aria-label={
-        variable.type === VartypeEnum.TIME_VARIABLE
-          ? `${variable.label} ${val.label}`
-          : undefined
-      }
-      className={cl(classes.stub, classes[`stub-${stubIndex}`])}
-      key={nextKey()}
-    >
-      {val.label}
-    </th>,
-  );
+  if (isRowVisible(rowCursor, rowWindow)) {
+    tableRowSecondLastHeader.push(
+      <th
+        colSpan={2}
+        id={cellMeta.htmlId}
+        scope="col"
+        aria-label={
+          variable.type === VartypeEnum.TIME_VARIABLE
+            ? `${variable.label} ${val.label}`
+            : undefined
+        }
+        className={cl(classes.stub, classes[`stub-${stubIndex}`])}
+        key={nextKey()}
+      >
+        {val.label}
+      </th>,
+    );
 
-  tableRows.push(
-    <tr
-      className={cl(
-        { [classes.firstdim]: stubIndex === 0 },
-        classes.mobileEmptyRowCell,
-        // classes.mobileRowHeadSecondLastStub,
-        {
-          [classes.mobileRowHeadLevel2]: stubLength > 2,
-        },
-        {
-          [classes.mobileRowHeadLevel1]: stubLength === 2,
-        },
+    tableRows.push(
+      <tr
+        className={cl(
+          { [classes.firstdim]: stubIndex === 0 },
+          classes.mobileEmptyRowCell,
+          // classes.mobileRowHeadSecondLastStub,
+          {
+            [classes.mobileRowHeadLevel2]: stubLength > 2,
+          },
+          {
+            [classes.mobileRowHeadLevel1]: stubLength === 2,
+          },
 
-        {
-          [classes.mobileRowHeadFirstValueOfSecondLastStub]: valueIndex === 0,
-        },
-      )}
-      key={nextKey()}
-    >
-      {tableRowSecondLastHeader}
-    </tr>,
-  );
+          {
+            [classes.mobileRowHeadFirstValueOfSecondLastStub]: valueIndex === 0,
+          },
+        )}
+        key={nextKey()}
+      >
+        {tableRowSecondLastHeader}
+      </tr>,
+    );
+  }
+  rowCursor.index++;
 }
 
-function createKeyFactory(): () => string {
+function isRowVisible(rowCursor: { index: number }, rowWindow?: RowWindow) {
+  if (!rowWindow) {
+    return true;
+  }
+
+  return rowCursor.index >= rowWindow.start && rowCursor.index < rowWindow.end;
+}
+
+export function createKeyFactory(): () => string {
   let counter = 0;
 
   return () => {
