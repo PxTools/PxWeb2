@@ -25,28 +25,6 @@ type propsType = {
   setIsExpanded: (expanded: boolean) => void;
 };
 
-// const MemoizedTable = React.memo(
-//   ({
-//     pxtable,
-//     isMobile,
-//     verticalScrollRef,
-//   }: {
-//     pxtable: PxTable;
-//     isMobile: boolean;
-//     verticalScrollRef?: React.RefObject<HTMLElement | null>;
-//   }) => (
-//     <Table
-//       pxtable={pxtable}
-//       isMobile={isMobile}
-//       verticalScrollRef={verticalScrollRef}
-//     />
-//   ),
-//   (prevProps, nextProps) =>
-//     isEqual(prevProps.pxtable, nextProps.pxtable) &&
-//     prevProps.isMobile === nextProps.isMobile &&
-//     prevProps.verticalScrollRef === nextProps.verticalScrollRef,
-// );
-
 const MemoizedTable = React.memo(
   ({
     pxtable,
