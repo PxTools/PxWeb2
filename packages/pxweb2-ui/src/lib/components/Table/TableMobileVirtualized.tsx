@@ -225,7 +225,11 @@ function renderMobileBodyRows({
   const createDataCells = (stubCodes: StubCellMeta[]) => {
     const dataCells: React.JSX.Element[] = [];
 
-    for (let colIndex = columnWindow.start; colIndex < columnWindow.end; colIndex++) {
+    for (
+      let colIndex = columnWindow.start;
+      colIndex < columnWindow.end;
+      colIndex++
+    ) {
       const headingCodes = headingDataCellCodes[colIndex];
       const dataCodes = stubCodes.concat(headingCodes);
       const headers = dataCodes.map((meta) => meta.htmlId).join(' ');
@@ -330,12 +334,7 @@ export function MobileVirtualizedTable({
         columnWindow,
         createKeyFactory(),
       ),
-    [
-      pxtable,
-      tableMeta,
-      headingDataCellCodes,
-      columnWindow,
-    ],
+    [pxtable, tableMeta, headingDataCellCodes, columnWindow],
   );
 
   const mobileRowEntries = useMemo(
@@ -369,12 +368,7 @@ export function MobileVirtualizedTable({
         headingDataCellCodes,
         cube: pxtable.data.cube,
       }),
-    [
-      visibleMobileRows,
-      columnWindow,
-      headingDataCellCodes,
-      pxtable.data.cube,
-    ],
+    [visibleMobileRows, columnWindow, headingDataCellCodes, pxtable.data.cube],
   );
 
   const renderedColumnCount = tableMeta.columnOffset + tableColumnSize;

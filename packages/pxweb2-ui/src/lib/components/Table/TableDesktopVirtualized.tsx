@@ -88,7 +88,11 @@ function renderNoStubBodyRows({
     rowCells.push(createPaddingCell(columnWindow.leftPadding, nextKey));
   }
 
-  for (let colIndex = columnWindow.start; colIndex < columnWindow.end; colIndex++) {
+  for (
+    let colIndex = columnWindow.start;
+    colIndex < columnWindow.end;
+    colIndex++
+  ) {
     const headingCodes = headingDataCellCodes[colIndex];
     const headers = headingCodes.map((cell) => cell.htmlId).join(' ');
     const dimensions: string[] = [];
@@ -151,14 +155,22 @@ function renderDesktopBodyRows({
       rowCells.push(createPaddingCell(columnWindow.leftPadding, nextKey));
     }
 
-    for (let colIndex = columnWindow.start; colIndex < columnWindow.end; colIndex++) {
+    for (
+      let colIndex = columnWindow.start;
+      colIndex < columnWindow.end;
+      colIndex++
+    ) {
       if (!rowEntry.isDataRow) {
         rowCells.push(<td key={nextKey()} />);
         continue;
       }
 
       const headingCodes = headingDataCellCodes[colIndex];
-      const dataMeta = buildDataCellMeta(rowEntry.stubCellCodes, headingCodes, cube);
+      const dataMeta = buildDataCellMeta(
+        rowEntry.stubCellCodes,
+        headingCodes,
+        cube,
+      );
 
       rowCells.push(
         <td key={nextKey()} headers={dataMeta.headers}>
@@ -279,48 +291,45 @@ export function DesktopVirtualizedTable({
     [bootstrapColumnEnd, columnVirtualizer],
   );
 
-  const columnWindow = useMemo(
-    () => {
-      if (!shouldVirtualizeColumns) {
-        return {
-          start: 0,
-          end: tableColumnSize,
-          leftPadding: 0,
-          rightPadding: 0,
-        };
-      }
-
-      if (virtualColumns.length === 0) {
-        if (lastNonEmptyColumnWindowRef.current) {
-          return lastNonEmptyColumnWindowRef.current;
-        }
-
-        return bootstrapColumnWindow;
-      }
-
-      const firstVirtualColumn = virtualColumns[0];
-      const lastVirtualColumn = virtualColumns.at(-1);
-
-      const window = {
-        start: firstVirtualColumn?.index ?? 0,
-        end: lastVirtualColumn ? lastVirtualColumn.index + 1 : tableColumnSize,
-        leftPadding: firstVirtualColumn?.start ?? 0,
-        rightPadding: lastVirtualColumn
-          ? columnVirtualizer.getTotalSize() - lastVirtualColumn.end
-          : 0,
+  const columnWindow = useMemo(() => {
+    if (!shouldVirtualizeColumns) {
+      return {
+        start: 0,
+        end: tableColumnSize,
+        leftPadding: 0,
+        rightPadding: 0,
       };
+    }
 
-      lastNonEmptyColumnWindowRef.current = window;
-      return window;
-    },
-    [
-      shouldVirtualizeColumns,
-      virtualColumns,
-      tableColumnSize,
-      bootstrapColumnWindow,
-      columnVirtualizer,
-    ],
-  );
+    if (virtualColumns.length === 0) {
+      if (lastNonEmptyColumnWindowRef.current) {
+        return lastNonEmptyColumnWindowRef.current;
+      }
+
+      return bootstrapColumnWindow;
+    }
+
+    const firstVirtualColumn = virtualColumns[0];
+    const lastVirtualColumn = virtualColumns.at(-1);
+
+    const window = {
+      start: firstVirtualColumn?.index ?? 0,
+      end: lastVirtualColumn ? lastVirtualColumn.index + 1 : tableColumnSize,
+      leftPadding: firstVirtualColumn?.start ?? 0,
+      rightPadding: lastVirtualColumn
+        ? columnVirtualizer.getTotalSize() - lastVirtualColumn.end
+        : 0,
+    };
+
+    lastNonEmptyColumnWindowRef.current = window;
+    return window;
+  }, [
+    shouldVirtualizeColumns,
+    virtualColumns,
+    tableColumnSize,
+    bootstrapColumnWindow,
+    columnVirtualizer,
+  ]);
 
   const headingDataCellCodes = useMemo(
     () => createHeadingDataCellCodes(pxtable, tableColumnSize),
@@ -347,9 +356,10 @@ export function DesktopVirtualizedTable({
     ],
   );
 
-  const desktopRowEntries = useMemo(() => buildDesktopRowEntries(pxtable), [
-    pxtable,
-  ]);
+  const desktopRowEntries = useMemo(
+    () => buildDesktopRowEntries(pxtable),
+    [pxtable],
+  );
 
   const hasNoStub = pxtable.stub.length === 0;
 
