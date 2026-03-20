@@ -45,4 +45,20 @@ describe('Table', () => {
     });
     expect(found).toBe(false);
   });
+
+  it('should include second-last stub header id in mobile td headers', () => {
+    const { baseElement } = render(<Table pxtable={pxTable} isMobile={true} />);
+    const firstDataCell = baseElement.querySelector('tbody tr td[headers]');
+
+    expect(firstDataCell).toBeTruthy();
+
+    const headerTokens =
+      firstDataCell?.getAttribute('headers')?.split(' ').filter(Boolean) ?? [];
+
+    expect(headerTokens.some((token) => token.startsWith('Civilstatus_'))).toBe(
+      true,
+    );
+    expect(headerTokens.some((token) => token.startsWith('Kon_'))).toBe(true);
+    expect(headerTokens.some((token) => token.startsWith('TIME_'))).toBe(true);
+  });
 });

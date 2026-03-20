@@ -112,6 +112,7 @@ function buildMobileRowEntries(pxtable: VirtualizedTableProps['pxtable']) {
     valueIndex: number,
   ) => {
     const cellId = createCellId(variable.id, valCode);
+    stubDataCellCodes[stubIndex].htmlId = cellId;
 
     rows.push({
       key: `mobile-second-last-${cellId}`,
