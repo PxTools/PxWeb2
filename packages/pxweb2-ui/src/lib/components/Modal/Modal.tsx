@@ -1,11 +1,6 @@
 import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
-import {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import classes from './Modal.module.scss';
 import Label from '../Typography/Label/Label';
