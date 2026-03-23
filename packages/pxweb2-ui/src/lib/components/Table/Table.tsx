@@ -71,8 +71,8 @@ interface ColumnRenderWindow {
   rightPadding: number;
 }
 
-export const DESKTOP_COLUMN_VIRTUALIZATION_THRESHOLD = 60;
-const ROW_VIRTUALIZATION_THRESHOLD = 100;
+export const DESKTOP_COLUMN_VIRTUALIZATION_THRESHOLD = 15;
+const ROW_VIRTUALIZATION_THRESHOLD = 30;
 
 export const Table = memo(function Table({
   pxtable,
