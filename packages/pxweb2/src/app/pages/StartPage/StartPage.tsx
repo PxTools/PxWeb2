@@ -2,7 +2,7 @@ import { useEffect, useContext, useState, useRef, useMemo } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 import { useNavigate } from 'react-router';
 import type { TFunction } from 'i18next';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import cl from 'clsx';
 import { debounce } from 'lodash';
 
