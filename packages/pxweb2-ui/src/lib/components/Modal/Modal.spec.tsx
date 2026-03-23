@@ -144,7 +144,7 @@ describe('Modal', () => {
     expect(screen.getByText('Test Heading')).toBeDefined();
   });
 
-  it('should handle Enter key press on buttons', () => {
+  it('should not close on button keyup Enter alone', () => {
     const onCloseMock = vi.fn();
 
     render(
@@ -157,7 +157,19 @@ describe('Modal', () => {
 
     fireEvent.keyUp(confirmButton, { key: 'Enter' });
 
-    expect(onCloseMock).toHaveBeenCalledWith(true, 'Enter');
+    expect(onCloseMock).not.toHaveBeenCalled();
+  });
+
+  it('should focus modal body when opened', () => {
+    const { container } = render(
+      <Modal isOpen={true}>
+        <span>test</span>
+      </Modal>,
+    );
+
+    const body = container.querySelector('div[class*="body"]');
+
+    expect(body).toBe(document.activeElement);
   });
 
   it('should update body overflow style when opening and closing', () => {

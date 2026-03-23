@@ -5,8 +5,6 @@ import {
   useEffect,
   useRef,
   useState,
-  KeyboardEvent as ReactKeyboardEvent,
-  MouseEvent,
 } from 'react';
 
 import classes from './Modal.module.scss';
@@ -39,6 +37,7 @@ export function Modal({
   const cssClasses = className.length > 0 ? ' ' + className : '';
   const [isModalOpen, setIsModalOpen] = useState(isOpen);
   const modalRef = useRef<HTMLDialogElement | null>(null);
+  const bodyRef = useRef<HTMLDivElement | null>(null);
   let cancelLabelValue = cancelLabel;
   let confirmLabelValue = confirmLabel;
 
@@ -59,6 +58,7 @@ export function Modal({
       if (isModalOpen) {
         modalElement.showModal();
         setWindowScroll(false);
+        bodyRef.current?.focus();
       } else {
         modalElement.close();
         setWindowScroll(true);
@@ -74,33 +74,15 @@ export function Modal({
   };
 
   const handleCloseModal = useCallback(
-    (updated: boolean, event?: ReactKeyboardEvent | MouseEvent) => {
-      const handleKeyboardEvent = (
-        updated: boolean,
-        event: ReactKeyboardEvent,
-      ) => {
-        const keyPress = event.key;
-        const isValidKeyPress =
-          keyPress === 'Enter' || keyPress === ' ' || keyPress === 'Escape';
-
-        if (onClose && isValidKeyPress) {
-          setWindowScroll(true);
+    (updated: boolean, keyPress?: ' ' | 'Enter' | 'Escape') => {
+      if (onClose) {
+        setWindowScroll(true);
+        if (keyPress) {
           onClose(updated, keyPress);
-          setIsModalOpen(false);
-        }
-      };
-
-      const handleMouseEvent = (updated: boolean) => {
-        if (onClose) {
-          setWindowScroll(true);
+        } else {
           onClose(updated);
-          setIsModalOpen(false);
         }
-      };
-      if (event) {
-        handleKeyboardEvent(updated, event as ReactKeyboardEvent);
-      } else {
-        handleMouseEvent(updated);
+        setIsModalOpen(false);
       }
     },
     [onClose],
@@ -110,11 +92,7 @@ export function Modal({
     // Handle the Escape key to close the modal
     const handleKeyDownInModal = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        // 'as unknown as ReactKeyboardEvent' is a hack to avoid the type error when passing the event to the function
-        handleCloseModal(false, event as unknown as ReactKeyboardEvent);
-      }
-      if (event.key === 'Enter') {
-        event.preventDefault(); // Prevent the default behavior of the Enter key on buttons (turns it into a mouse click event)
+        handleCloseModal(false, 'Escape');
       }
     };
 
@@ -149,14 +127,13 @@ export function Modal({
               icon="XMark"
               type="button"
               onClick={() => handleCloseModal(false)}
-              onKeyUp={(event) => handleCloseModal(false, event)}
               aria-label={cancelLabelValue}
             ></Button>
           </div>
         </div>
       </div>
       {/* tabIndex to fix the div being focusable for some reason */}
-      <div className={cl(classes.body)} tabIndex={-1}>
+      <div ref={bodyRef} className={cl(classes.body)} tabIndex={-1}>
         {children}
       </div>
       <div className={cl(classes.footer)}>
@@ -166,7 +143,6 @@ export function Modal({
             size="medium"
             type="button"
             onClick={() => handleCloseModal(true)}
-            onKeyUp={(event) => handleCloseModal(true, event)}
             aria-label={confirmLabelValue}
           >
             {confirmLabelValue}
@@ -176,7 +152,6 @@ export function Modal({
             size="medium"
             type="button"
             onClick={() => handleCloseModal(false)}
-            onKeyUp={(event) => handleCloseModal(false, event)}
             aria-label={cancelLabelValue}
           >
             {cancelLabelValue}
