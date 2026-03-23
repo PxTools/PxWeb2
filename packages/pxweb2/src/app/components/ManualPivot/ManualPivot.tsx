@@ -61,7 +61,8 @@ export function ManualPivot({
       return;
     }
 
-    const zoneRef = dropPreview.group === 'header' ? headerZoneRef : stubZoneRef;
+    const zoneRef =
+      dropPreview.group === 'header' ? headerZoneRef : stubZoneRef;
     zoneRef.current?.style.setProperty(
       '--drop-preview-height',
       `${dropPreview.height}px`,
@@ -104,8 +105,12 @@ export function ManualPivot({
       return null;
     }
 
-    const headerDistance = headerRect ? distanceToRect(headerRect) : Number.POSITIVE_INFINITY;
-    const stubDistance = stubRect ? distanceToRect(stubRect) : Number.POSITIVE_INFINITY;
+    const headerDistance = headerRect
+      ? distanceToRect(headerRect)
+      : Number.POSITIVE_INFINITY;
+    const stubDistance = stubRect
+      ? distanceToRect(stubRect)
+      : Number.POSITIVE_INFINITY;
 
     const nearestGroup = headerDistance <= stubDistance ? 'header' : 'stub';
     const nearestDistance = Math.min(headerDistance, stubDistance);
@@ -279,7 +284,9 @@ export function ManualPivot({
 
     const draggedItemId = draggedItemIdRef.current;
     if (hoveredGroup && draggedItemId) {
-      updateDropPreview(getDropPreviewForGroup(hoveredGroup, point.y, draggedItemId));
+      updateDropPreview(
+        getDropPreviewForGroup(hoveredGroup, point.y, draggedItemId),
+      );
     } else {
       updateDropPreview(null);
     }
@@ -301,7 +308,9 @@ export function ManualPivot({
 
     const draggedItemId = draggedItemIdRef.current;
     if (hoveredGroup && draggedItemId) {
-      updateDropPreview(getDropPreviewForGroup(hoveredGroup, point.y, draggedItemId));
+      updateDropPreview(
+        getDropPreviewForGroup(hoveredGroup, point.y, draggedItemId),
+      );
     }
 
     const persistedDropTarget = dropPreviewRef.current;
@@ -324,10 +333,13 @@ export function ManualPivot({
     dragSourceGroupRef.current = group;
     hoveredGroupRef.current = group;
 
-    const zoneRect =
-      (group === 'header' ? headerZoneRef.current : stubZoneRef.current)?.getBoundingClientRect();
+    const zoneRect = (
+      group === 'header' ? headerZoneRef.current : stubZoneRef.current
+    )?.getBoundingClientRect();
     if (zoneRect) {
-      updateDropPreview(getDropPreviewForGroup(group, zoneRect.top, variableId));
+      updateDropPreview(
+        getDropPreviewForGroup(group, zoneRect.top, variableId),
+      );
     }
   };
 
@@ -337,12 +349,16 @@ export function ManualPivot({
     const sourceGroup = dragSourceGroupRef.current;
 
     if (isDraggingRef.current && draggedItemId && sourceGroup === group) {
-      const hasDraggedItem = dedupedItems.some((item) => item.id === draggedItemId);
+      const hasDraggedItem = dedupedItems.some(
+        (item) => item.id === draggedItemId,
+      );
 
       if (!hasDraggedItem) {
         const currentGroupItems =
           group === 'header' ? headerItemsRef.current : stubItemsRef.current;
-        const draggedItem = currentGroupItems.find((item) => item.id === draggedItemId);
+        const draggedItem = currentGroupItems.find(
+          (item) => item.id === draggedItemId,
+        );
 
         if (draggedItem) {
           dedupedItems = [...dedupedItems, draggedItem];
@@ -381,65 +397,69 @@ export function ManualPivot({
       : undefined;
 
     return (
-    <section className={classes.groupColumn}>
-      <Label>{t(labelKey)}</Label>
-      <div ref={zoneRef} className={classes.groupZone}>
-        <Reorder.Group
-          axis="y"
-          as="ul"
-          values={items}
-          onReorder={(nextItems) => handleGroupReorder(group, nextItems)}
-          className={classes.list}
-        >
-          {items.map((variable, index) => (
-            <Fragment key={variable.id}>
-              {previewIndex === index ? (
-                <li
-                  aria-hidden="true"
-                  className={classes.dropPlaceholder}
-                  title={draggedItemLabel}
+      <section className={classes.groupColumn}>
+        <Label>{t(labelKey)}</Label>
+        <div ref={zoneRef} className={classes.groupZone}>
+          <Reorder.Group
+            axis="y"
+            as="ul"
+            values={items}
+            onReorder={(nextItems) => handleGroupReorder(group, nextItems)}
+            className={classes.list}
+          >
+            {items.map((variable, index) => (
+              <Fragment key={variable.id}>
+                {previewIndex === index ? (
+                  <li
+                    aria-hidden="true"
+                    className={classes.dropPlaceholder}
+                    title={draggedItemLabel}
+                  >
+                    {draggedItemLabel ? (
+                      <span className={classes.dropPlaceholderLabel}>
+                        {draggedItemLabel}
+                      </span>
+                    ) : null}
+                  </li>
+                ) : null}
+                <Reorder.Item
+                  as="li"
+                  data-variable-id={variable.id}
+                  value={variable}
+                  className={classes.listItem}
+                  tabIndex={0}
+                  drag
+                  dragMomentum={false}
+                  dragElastic={0}
+                  whileDrag={{
+                    scale: 1.02,
+                    zIndex: 10,
+                    boxShadow: '0 8px 20px rgba(0, 0, 0, 0.2)',
+                  }}
+                  onDragStart={() => handleDragStart(group, variable.id)}
+                  onDrag={handleItemDrag}
+                  onDragEnd={handleItemDragEnd}
                 >
-                  {draggedItemLabel ? (
-                    <span className={classes.dropPlaceholderLabel}>{draggedItemLabel}</span>
-                  ) : null}
-                </li>
-              ) : null}
-              <Reorder.Item
-                as="li"
-                data-variable-id={variable.id}
-                value={variable}
-                className={classes.listItem}
-                tabIndex={0}
-                drag
-                dragMomentum={false}
-                dragElastic={0}
-                whileDrag={{
-                  scale: 1.02,
-                  zIndex: 10,
-                  boxShadow: '0 8px 20px rgba(0, 0, 0, 0.2)',
-                }}
-                onDragStart={() => handleDragStart(group, variable.id)}
-                onDrag={handleItemDrag}
-                onDragEnd={handleItemDragEnd}
+                  {variable.label}
+                </Reorder.Item>
+              </Fragment>
+            ))}
+            {previewIndex === items.length ? (
+              <li
+                aria-hidden="true"
+                className={classes.dropPlaceholder}
+                title={draggedItemLabel}
               >
-                {variable.label}
-              </Reorder.Item>
-            </Fragment>
-          ))}
-          {previewIndex === items.length ? (
-            <li
-              aria-hidden="true"
-              className={classes.dropPlaceholder}
-              title={draggedItemLabel}
-            >
-              {draggedItemLabel ? (
-                <span className={classes.dropPlaceholderLabel}>{draggedItemLabel}</span>
-              ) : null}
-            </li>
-          ) : null}
-        </Reorder.Group>
-      </div>
-    </section>
+                {draggedItemLabel ? (
+                  <span className={classes.dropPlaceholderLabel}>
+                    {draggedItemLabel}
+                  </span>
+                ) : null}
+              </li>
+            ) : null}
+          </Reorder.Group>
+        </div>
+      </section>
     );
   };
 
