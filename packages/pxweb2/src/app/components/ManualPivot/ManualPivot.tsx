@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useId, useRef, useState } from 'react';
 import { Reorder, type PanInfo } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Label } from '@pxweb2/pxweb2-ui';
@@ -15,6 +15,10 @@ type DropPreview = {
 type GroupLabelKey =
   | 'presentation_page.side_menu.edit.customize.rearrange.rearrange_modal.stub_variable_header'
   | 'presentation_page.side_menu.edit.customize.rearrange.rearrange_modal.heading_variable_header';
+type KeyboardDragSnapshot = {
+  headerItems: Variable[];
+  stubItems: Variable[];
+};
 
 interface ManualPivotProps {
   readonly isOpen: boolean;
@@ -30,12 +34,20 @@ export function ManualPivot({
   stubVariables,
 }: ManualPivotProps) {
   const { t } = useTranslation();
+  const keyboardInstructionsId = useId();
   const [headerItems, setHeaderItems] = useState<Variable[]>(headerVariables);
   const [stubItems, setStubItems] = useState<Variable[]>(stubVariables);
+  const [keyboardDraggedItemId, setKeyboardDraggedItemId] = useState<
+    string | null
+  >(null);
+  const [liveAnnouncement, setLiveAnnouncement] = useState('');
   const headerItemsRef = useRef<Variable[]>(headerVariables);
   const stubItemsRef = useRef<Variable[]>(stubVariables);
   const headerZoneRef = useRef<HTMLDivElement | null>(null);
   const stubZoneRef = useRef<HTMLDivElement | null>(null);
+  const itemRefs = useRef(new Map<string, HTMLLIElement>());
+  const pendingFocusItemIdRef = useRef<string | null>(null);
+  const keyboardDragSnapshotRef = useRef<KeyboardDragSnapshot | null>(null);
   const draggedItemIdRef = useRef<string | null>(null);
   const dragSourceGroupRef = useRef<VariableGroup | null>(null);
   const hoveredGroupRef = useRef<VariableGroup | null>(null);
@@ -50,8 +62,29 @@ export function ManualPivot({
       setStubItems(stubVariables);
       headerItemsRef.current = headerVariables;
       stubItemsRef.current = stubVariables;
+      setKeyboardDraggedItemId(null);
+      setLiveAnnouncement('');
+      keyboardDragSnapshotRef.current = null;
     }
   }, [headerVariables, isOpen, stubVariables]);
+
+  useEffect(() => {
+    const pendingItemId = pendingFocusItemIdRef.current;
+
+    if (!pendingItemId) {
+      return;
+    }
+
+    const animationFrame = requestAnimationFrame(() => {
+      itemRefs.current.get(pendingItemId)?.focus();
+    });
+
+    pendingFocusItemIdRef.current = null;
+
+    return () => {
+      cancelAnimationFrame(animationFrame);
+    };
+  }, [headerItems, stubItems]);
 
   useEffect(() => {
     headerZoneRef.current?.style.removeProperty('--drop-preview-height');
@@ -237,6 +270,159 @@ export function ManualPivot({
     dragSourceGroupRef.current = targetGroup;
   };
 
+  const getItemsForGroup = (group: VariableGroup): Variable[] =>
+    group === 'header' ? headerItemsRef.current : stubItemsRef.current;
+
+  const getItemById = (itemId: string): Variable | undefined =>
+    [...headerItemsRef.current, ...stubItemsRef.current].find(
+      (item) => item.id === itemId,
+    );
+
+  const getGroupLabel = (group: VariableGroup): string =>
+    group === 'stub'
+      ? t(
+          'presentation_page.side_menu.edit.customize.rearrange.rearrange_modal.stub_variable_header',
+        )
+      : t(
+          'presentation_page.side_menu.edit.customize.rearrange.rearrange_modal.heading_variable_header',
+        );
+
+  const announceKeyboardMove = (itemId: string, group: VariableGroup) => {
+    const groupItems = getItemsForGroup(group);
+    const itemIndex = groupItems.findIndex((item) => item.id === itemId);
+    const itemLabel = getItemById(itemId)?.label;
+
+    if (itemLabel && itemIndex !== -1) {
+      setLiveAnnouncement(
+        `${itemLabel} moved to position ${itemIndex + 1} in ${getGroupLabel(group)}.`,
+      );
+    }
+  };
+
+  const startKeyboardDrag = (group: VariableGroup, variableId: string) => {
+    isDraggingRef.current = true;
+    draggedItemIdRef.current = variableId;
+    dragSourceGroupRef.current = group;
+    hoveredGroupRef.current = group;
+    keyboardDragSnapshotRef.current = {
+      headerItems: [...headerItemsRef.current],
+      stubItems: [...stubItemsRef.current],
+    };
+    setKeyboardDraggedItemId(variableId);
+
+    const itemLabel = getItemById(variableId)?.label;
+    if (itemLabel) {
+      setLiveAnnouncement(
+        `${itemLabel} selected. Use arrow keys to move, Enter to drop, Escape to cancel.`,
+      );
+    }
+  };
+
+  const moveKeyboardDraggedItemWithinGroup = (direction: -1 | 1): boolean => {
+    const draggedItemId = draggedItemIdRef.current;
+    const sourceGroup = dragSourceGroupRef.current;
+
+    if (!draggedItemId || !sourceGroup) {
+      return false;
+    }
+
+    const sourceItems = getItemsForGroup(sourceGroup);
+    const sourceIndex = sourceItems.findIndex((item) => item.id === draggedItemId);
+
+    if (sourceIndex === -1) {
+      return false;
+    }
+
+    const targetIndex = Math.min(
+      Math.max(0, sourceIndex + direction),
+      sourceItems.length - 1,
+    );
+
+    if (sourceIndex === targetIndex) {
+      return false;
+    }
+
+    const nextSourceItems = [...sourceItems];
+    const [movingItem] = nextSourceItems.splice(sourceIndex, 1);
+    nextSourceItems.splice(targetIndex, 0, movingItem);
+
+    if (sourceGroup === 'header') {
+      commitLists(nextSourceItems, stubItemsRef.current);
+    } else {
+      commitLists(headerItemsRef.current, nextSourceItems);
+    }
+
+    pendingFocusItemIdRef.current = draggedItemId;
+    announceKeyboardMove(draggedItemId, sourceGroup);
+
+    return true;
+  };
+
+  const moveKeyboardDraggedItemAcrossGroups = (
+    targetGroup: VariableGroup,
+  ): boolean => {
+    const draggedItemId = draggedItemIdRef.current;
+    const sourceGroup = dragSourceGroupRef.current;
+
+    if (!draggedItemId || !sourceGroup || sourceGroup === targetGroup) {
+      return false;
+    }
+
+    const sourceItems = getItemsForGroup(sourceGroup);
+    const sourceIndex = sourceItems.findIndex((item) => item.id === draggedItemId);
+
+    if (sourceIndex === -1) {
+      return false;
+    }
+
+    const targetItems = getItemsForGroup(targetGroup);
+    const targetIndex = Math.min(sourceIndex, targetItems.length);
+
+    moveDraggedItemToGroup(targetGroup, targetIndex);
+    pendingFocusItemIdRef.current = draggedItemId;
+    announceKeyboardMove(draggedItemId, targetGroup);
+
+    return true;
+  };
+
+  const dropKeyboardDrag = () => {
+    const draggedItemId = draggedItemIdRef.current;
+    const sourceGroup = dragSourceGroupRef.current;
+
+    if (draggedItemId && sourceGroup) {
+      const itemLabel = getItemById(draggedItemId)?.label;
+      const groupLabel = getGroupLabel(sourceGroup);
+      if (itemLabel) {
+        setLiveAnnouncement(`${itemLabel} dropped in ${groupLabel}.`);
+      }
+    }
+
+    keyboardDragSnapshotRef.current = null;
+    setKeyboardDraggedItemId(null);
+    resetDragState();
+  };
+
+  const cancelKeyboardDrag = () => {
+    const draggedItemId = draggedItemIdRef.current;
+    const snapshot = keyboardDragSnapshotRef.current;
+
+    if (snapshot) {
+      commitLists(snapshot.headerItems, snapshot.stubItems);
+    }
+
+    if (draggedItemId) {
+      const itemLabel = getItemById(draggedItemId)?.label;
+      if (itemLabel) {
+        setLiveAnnouncement(`${itemLabel} move cancelled.`);
+      }
+      pendingFocusItemIdRef.current = draggedItemId;
+    }
+
+    keyboardDragSnapshotRef.current = null;
+    setKeyboardDraggedItemId(null);
+    resetDragState();
+  };
+
   const resetDragState = () => {
     isDraggingRef.current = false;
     draggedItemIdRef.current = null;
@@ -244,6 +430,59 @@ export function ManualPivot({
     hoveredGroupRef.current = null;
     lastPointerYRef.current = null;
     updateDropPreview(null);
+  };
+
+  const handleItemKeyDown = (
+    event: React.KeyboardEvent<HTMLLIElement>,
+    group: VariableGroup,
+    variableId: string,
+  ) => {
+    const isKeyboardDragging = keyboardDraggedItemId === variableId;
+
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      if (isKeyboardDragging) {
+        dropKeyboardDrag();
+      } else if (!keyboardDraggedItemId) {
+        startKeyboardDrag(group, variableId);
+      }
+      return;
+    }
+
+    if (event.key === 'Escape' && isKeyboardDragging) {
+      event.preventDefault();
+      cancelKeyboardDrag();
+      return;
+    }
+
+    if (!isKeyboardDragging) {
+      return;
+    }
+
+    if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      moveKeyboardDraggedItemWithinGroup(-1);
+      return;
+    }
+
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      moveKeyboardDraggedItemWithinGroup(1);
+      return;
+    }
+
+    if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      const targetGroup = group === 'header' ? 'stub' : 'header';
+      moveKeyboardDraggedItemAcrossGroups(targetGroup);
+      return;
+    }
+
+    if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      const targetGroup = group === 'header' ? 'stub' : 'header';
+      moveKeyboardDraggedItemAcrossGroups(targetGroup);
+    }
   };
 
   const getClientPoint = (
@@ -427,7 +666,16 @@ export function ManualPivot({
                   data-variable-id={variable.id}
                   value={variable}
                   className={classes.listItem}
+                  ref={(element: HTMLLIElement | null) => {
+                    if (element) {
+                      itemRefs.current.set(variable.id, element);
+                    } else {
+                      itemRefs.current.delete(variable.id);
+                    }
+                  }}
                   tabIndex={0}
+                  aria-grabbed={keyboardDraggedItemId === variable.id}
+                  aria-describedby={keyboardInstructionsId}
                   drag
                   dragMomentum={false}
                   dragElastic={0}
@@ -439,6 +687,9 @@ export function ManualPivot({
                   onDragStart={() => handleDragStart(group, variable.id)}
                   onDrag={handleItemDrag}
                   onDragEnd={handleItemDragEnd}
+                  onKeyDown={(event) =>
+                    handleItemKeyDown(event, group, variable.id)
+                  }
                 >
                   {variable.label}
                 </Reorder.Item>
@@ -476,6 +727,13 @@ export function ManualPivot({
         'presentation_page.side_menu.edit.customize.rearrange.rearrange_modal.confirm_button',
       )}
     >
+      <p id={keyboardInstructionsId} className={classes.visuallyHidden}>
+        Press Space or Enter to pick up an item. Use arrow keys to move it,
+        then press Enter to drop. Press Escape to cancel.
+      </p>
+      <div className={classes.visuallyHidden} aria-live="polite">
+        {liveAnnouncement}
+      </div>
       <div className={classes.wrapper}>
         {renderGroup(
           'stub',
