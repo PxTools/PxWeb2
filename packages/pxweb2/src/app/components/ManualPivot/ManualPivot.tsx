@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { Reorder, type PanInfo } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Label } from '@pxweb2/pxweb2-ui';
@@ -7,6 +7,11 @@ import { Modal, Variable } from '@pxweb2/pxweb2-ui';
 import classes from './ManualPivot.module.scss';
 
 type VariableGroup = 'header' | 'stub';
+type DropPreview = {
+  group: VariableGroup;
+  index: number;
+  height: number;
+} | null;
 type GroupLabelKey =
   | 'presentation_page.side_menu.edit.customize.rearrange.rearrange_modal.stub_variable_header'
   | 'presentation_page.side_menu.edit.customize.rearrange.rearrange_modal.heading_variable_header';
@@ -34,10 +39,10 @@ export function ManualPivot({
   const draggedItemIdRef = useRef<string | null>(null);
   const dragSourceGroupRef = useRef<VariableGroup | null>(null);
   const hoveredGroupRef = useRef<VariableGroup | null>(null);
+  const isDraggingRef = useRef(false);
   const lastPointerYRef = useRef<number | null>(null);
-  const [activeDropGroup, setActiveDropGroup] = useState<VariableGroup | null>(
-    null,
-  );
+  const dropPreviewRef = useRef<DropPreview>(null);
+  const [dropPreview, setDropPreview] = useState<DropPreview>(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -47,6 +52,21 @@ export function ManualPivot({
       stubItemsRef.current = stubVariables;
     }
   }, [headerVariables, isOpen, stubVariables]);
+
+  useEffect(() => {
+    headerZoneRef.current?.style.removeProperty('--drop-preview-height');
+    stubZoneRef.current?.style.removeProperty('--drop-preview-height');
+
+    if (!dropPreview) {
+      return;
+    }
+
+    const zoneRef = dropPreview.group === 'header' ? headerZoneRef : stubZoneRef;
+    zoneRef.current?.style.setProperty(
+      '--drop-preview-height',
+      `${dropPreview.height}px`,
+    );
+  }, [dropPreview]);
 
   const commitLists = (
     nextHeaderItems: Variable[],
@@ -70,26 +90,28 @@ export function ManualPivot({
   };
 
   const getGroupAtPoint = (x: number, y: number): VariableGroup | null => {
+    const hitPadding = 20;
+    const distanceToRect = (rect: DOMRect): number => {
+      const dx = Math.max(rect.left - x, 0, x - rect.right);
+      const dy = Math.max(rect.top - y, 0, y - rect.bottom);
+      return Math.sqrt(dx * dx + dy * dy);
+    };
+
     const headerRect = headerZoneRef.current?.getBoundingClientRect();
-    if (
-      headerRect &&
-      x >= headerRect.left &&
-      x <= headerRect.right &&
-      y >= headerRect.top &&
-      y <= headerRect.bottom
-    ) {
-      return 'header';
+    const stubRect = stubZoneRef.current?.getBoundingClientRect();
+
+    if (!headerRect && !stubRect) {
+      return null;
     }
 
-    const stubRect = stubZoneRef.current?.getBoundingClientRect();
-    if (
-      stubRect &&
-      x >= stubRect.left &&
-      x <= stubRect.right &&
-      y >= stubRect.top &&
-      y <= stubRect.bottom
-    ) {
-      return 'stub';
+    const headerDistance = headerRect ? distanceToRect(headerRect) : Number.POSITIVE_INFINITY;
+    const stubDistance = stubRect ? distanceToRect(stubRect) : Number.POSITIVE_INFINITY;
+
+    const nearestGroup = headerDistance <= stubDistance ? 'header' : 'stub';
+    const nearestDistance = Math.min(headerDistance, stubDistance);
+
+    if (nearestDistance <= hitPadding) {
+      return nearestGroup;
     }
 
     return null;
@@ -119,29 +141,70 @@ export function ManualPivot({
     return index === -1 ? itemElements.length : index;
   };
 
-  const moveItemBetweenGroups = () => {
-    const draggedItemId = draggedItemIdRef.current;
-    const currentGroup = dragSourceGroupRef.current;
-    const hoveredGroup = hoveredGroupRef.current;
-    const lastPointerY = lastPointerYRef.current;
+  const getDropPreviewForGroup = (
+    group: VariableGroup,
+    pointerY: number,
+    draggedItemId: string,
+  ): DropPreview => {
+    const zoneRef = group === 'header' ? headerZoneRef : stubZoneRef;
+    const zoneElement = zoneRef.current;
 
-    if (
-      !draggedItemId ||
-      !currentGroup ||
-      !hoveredGroup ||
-      lastPointerY === null
-    ) {
+    if (!zoneElement) {
+      return null;
+    }
+
+    const itemElements = Array.from(
+      zoneElement.querySelectorAll<HTMLElement>('[data-variable-id]'),
+    ).filter((element) => element.dataset.variableId !== draggedItemId);
+
+    const index = getInsertIndexForGroup(group, pointerY, draggedItemId);
+    const defaultItemHeight = 40;
+
+    if (itemElements.length === 0) {
+      return { group, index: 0, height: defaultItemHeight };
+    }
+
+    const clampedIndex = Math.min(Math.max(0, index), itemElements.length);
+    const referenceElement =
+      clampedIndex >= itemElements.length
+        ? itemElements[itemElements.length - 1]
+        : itemElements[clampedIndex];
+    const referenceHeight = Math.max(
+      defaultItemHeight,
+      Math.round(referenceElement.getBoundingClientRect().height),
+    );
+
+    return {
+      group,
+      index: clampedIndex,
+      height: referenceHeight,
+    };
+  };
+
+  const updateDropPreview = (nextPreview: DropPreview) => {
+    dropPreviewRef.current = nextPreview;
+    setDropPreview(nextPreview);
+  };
+
+  const moveDraggedItemToGroup = (
+    targetGroup: VariableGroup,
+    targetIndex: number,
+  ) => {
+    const draggedItemId = draggedItemIdRef.current;
+    const sourceGroup = dragSourceGroupRef.current;
+
+    if (!draggedItemId || !sourceGroup) {
       return;
     }
 
-    if (currentGroup === hoveredGroup) {
+    if (sourceGroup === targetGroup) {
       return;
     }
 
     const sourceItems =
-      currentGroup === 'header' ? headerItemsRef.current : stubItemsRef.current;
+      sourceGroup === 'header' ? headerItemsRef.current : stubItemsRef.current;
     const targetItems =
-      hoveredGroup === 'header' ? headerItemsRef.current : stubItemsRef.current;
+      targetGroup === 'header' ? headerItemsRef.current : stubItemsRef.current;
     const movingItem = sourceItems.find((item) => item.id === draggedItemId);
 
     if (!movingItem) {
@@ -154,28 +217,28 @@ export function ManualPivot({
     const nextTargetItems = targetItems.filter(
       (item) => item.id !== draggedItemId,
     );
-    const insertIndex = getInsertIndexForGroup(
-      hoveredGroup,
-      lastPointerY,
-      draggedItemId,
+    const clampedInsertIndex = Math.min(
+      Math.max(0, targetIndex),
+      nextTargetItems.length,
     );
-    nextTargetItems.splice(insertIndex, 0, movingItem);
+    nextTargetItems.splice(clampedInsertIndex, 0, movingItem);
 
-    if (currentGroup === 'header') {
+    if (sourceGroup === 'header') {
       commitLists(nextSourceItems, nextTargetItems);
     } else {
       commitLists(nextTargetItems, nextSourceItems);
     }
 
-    dragSourceGroupRef.current = hoveredGroup;
+    dragSourceGroupRef.current = targetGroup;
   };
 
   const resetDragState = () => {
+    isDraggingRef.current = false;
     draggedItemIdRef.current = null;
     dragSourceGroupRef.current = null;
     hoveredGroupRef.current = null;
     lastPointerYRef.current = null;
-    setActiveDropGroup(null);
+    updateDropPreview(null);
   };
 
   const getClientPoint = (
@@ -206,12 +269,19 @@ export function ManualPivot({
   ) => {
     const point = getClientPoint(event, info);
     lastPointerYRef.current = point.y;
-    const hoveredGroup = getGroupAtPoint(point.x, point.y);
-    hoveredGroupRef.current = hoveredGroup;
-    setActiveDropGroup(hoveredGroup);
+    const detectedGroup = getGroupAtPoint(point.x, point.y);
+    if (detectedGroup) {
+      hoveredGroupRef.current = detectedGroup;
+    }
 
-    if (hoveredGroup && hoveredGroup !== dragSourceGroupRef.current) {
-      moveItemBetweenGroups();
+    const hoveredGroup =
+      detectedGroup ?? hoveredGroupRef.current ?? dragSourceGroupRef.current;
+
+    const draggedItemId = draggedItemIdRef.current;
+    if (hoveredGroup && draggedItemId) {
+      updateDropPreview(getDropPreviewForGroup(hoveredGroup, point.y, draggedItemId));
+    } else {
+      updateDropPreview(null);
     }
   };
 
@@ -221,25 +291,64 @@ export function ManualPivot({
   ) => {
     const point = getClientPoint(event, info);
     lastPointerYRef.current = point.y;
-    const hoveredGroup = getGroupAtPoint(point.x, point.y);
-    hoveredGroupRef.current = hoveredGroup;
-    setActiveDropGroup(hoveredGroup);
+    const detectedGroup = getGroupAtPoint(point.x, point.y);
+    if (detectedGroup) {
+      hoveredGroupRef.current = detectedGroup;
+    }
 
-    if (hoveredGroup && hoveredGroup !== dragSourceGroupRef.current) {
-      moveItemBetweenGroups();
+    const hoveredGroup =
+      detectedGroup ?? hoveredGroupRef.current ?? dragSourceGroupRef.current;
+
+    const draggedItemId = draggedItemIdRef.current;
+    if (hoveredGroup && draggedItemId) {
+      updateDropPreview(getDropPreviewForGroup(hoveredGroup, point.y, draggedItemId));
+    }
+
+    const persistedDropTarget = dropPreviewRef.current;
+    const targetGroup = persistedDropTarget?.group ?? hoveredGroup;
+    const targetIndex = persistedDropTarget?.index;
+
+    if (
+      targetGroup &&
+      typeof targetIndex === 'number' &&
+      targetGroup !== dragSourceGroupRef.current
+    ) {
+      moveDraggedItemToGroup(targetGroup, targetIndex);
     }
     resetDragState();
   };
 
   const handleDragStart = (group: VariableGroup, variableId: string) => {
+    isDraggingRef.current = true;
     draggedItemIdRef.current = variableId;
     dragSourceGroupRef.current = group;
     hoveredGroupRef.current = group;
-    setActiveDropGroup(group);
+
+    const zoneRect =
+      (group === 'header' ? headerZoneRef.current : stubZoneRef.current)?.getBoundingClientRect();
+    if (zoneRect) {
+      updateDropPreview(getDropPreviewForGroup(group, zoneRect.top, variableId));
+    }
   };
 
   const handleGroupReorder = (group: VariableGroup, nextItems: Variable[]) => {
-    const dedupedItems = dedupeById(nextItems);
+    let dedupedItems = dedupeById(nextItems);
+    const draggedItemId = draggedItemIdRef.current;
+    const sourceGroup = dragSourceGroupRef.current;
+
+    if (isDraggingRef.current && draggedItemId && sourceGroup === group) {
+      const hasDraggedItem = dedupedItems.some((item) => item.id === draggedItemId);
+
+      if (!hasDraggedItem) {
+        const currentGroupItems =
+          group === 'header' ? headerItemsRef.current : stubItemsRef.current;
+        const draggedItem = currentGroupItems.find((item) => item.id === draggedItemId);
+
+        if (draggedItem) {
+          dedupedItems = [...dedupedItems, draggedItem];
+        }
+      }
+    }
 
     if (group === 'stub') {
       const nextHeaderItems = headerItemsRef.current.filter(
@@ -262,7 +371,16 @@ export function ManualPivot({
     labelKey: GroupLabelKey,
     items: Variable[],
     zoneRef: React.RefObject<HTMLDivElement | null>,
-  ) => (
+  ) => {
+    const preview = dropPreview?.group === group ? dropPreview : null;
+    const previewIndex = preview?.index;
+    const draggedItemLabel = draggedItemIdRef.current
+      ? [...headerItemsRef.current, ...stubItemsRef.current].find(
+          (item) => item.id === draggedItemIdRef.current,
+        )?.label
+      : undefined;
+
+    return (
     <section className={classes.groupColumn}>
       <Label>{t(labelKey)}</Label>
       <div ref={zoneRef} className={classes.groupZone}>
@@ -273,38 +391,57 @@ export function ManualPivot({
           onReorder={(nextItems) => handleGroupReorder(group, nextItems)}
           className={classes.list}
         >
-          {items.map((variable) => (
-            <Reorder.Item
-              as="li"
-              key={variable.id}
-              data-variable-id={variable.id}
-              value={variable}
-              className={classes.listItem}
-              tabIndex={0}
-              drag
-              dragMomentum={false}
-              dragElastic={0}
-              whileDrag={{
-                scale: 1.02,
-                zIndex: 10,
-                boxShadow: '0 8px 20px rgba(0, 0, 0, 0.2)',
-              }}
-              onDragStart={() => handleDragStart(group, variable.id)}
-              onDrag={handleItemDrag}
-              onDragEnd={handleItemDragEnd}
-            >
-              {variable.label}
-            </Reorder.Item>
+          {items.map((variable, index) => (
+            <Fragment key={variable.id}>
+              {previewIndex === index ? (
+                <li
+                  aria-hidden="true"
+                  className={classes.dropPlaceholder}
+                  title={draggedItemLabel}
+                >
+                  {draggedItemLabel ? (
+                    <span className={classes.dropPlaceholderLabel}>{draggedItemLabel}</span>
+                  ) : null}
+                </li>
+              ) : null}
+              <Reorder.Item
+                as="li"
+                data-variable-id={variable.id}
+                value={variable}
+                className={classes.listItem}
+                tabIndex={0}
+                drag
+                dragMomentum={false}
+                dragElastic={0}
+                whileDrag={{
+                  scale: 1.02,
+                  zIndex: 10,
+                  boxShadow: '0 8px 20px rgba(0, 0, 0, 0.2)',
+                }}
+                onDragStart={() => handleDragStart(group, variable.id)}
+                onDrag={handleItemDrag}
+                onDragEnd={handleItemDragEnd}
+              >
+                {variable.label}
+              </Reorder.Item>
+            </Fragment>
           ))}
+          {previewIndex === items.length ? (
+            <li
+              aria-hidden="true"
+              className={classes.dropPlaceholder}
+              title={draggedItemLabel}
+            >
+              {draggedItemLabel ? (
+                <span className={classes.dropPlaceholderLabel}>{draggedItemLabel}</span>
+              ) : null}
+            </li>
+          ) : null}
         </Reorder.Group>
-        <div
-          className={`${classes.dropZone} ${activeDropGroup === group ? classes.dropZoneActive : ''}`}
-        >
-          Drop here
-        </div>
       </div>
     </section>
-  );
+    );
+  };
 
   return (
     <Modal
