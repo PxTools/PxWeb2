@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useId, useRef, useState } from 'react';
 import { Reorder, type PanInfo } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { Label } from '@pxweb2/pxweb2-ui';
+import { BodyShort, Label } from '@pxweb2/pxweb2-ui';
 
 import { Modal, Variable } from '@pxweb2/pxweb2-ui';
 import classes from './ManualPivot.module.scss';
@@ -122,6 +122,9 @@ export function ManualPivot({
       return true;
     });
   };
+
+  const capitalizeLabel = (label: string): string =>
+    label.charAt(0).toUpperCase() + label.slice(1);
 
   const getGroupAtPoint = (x: number, y: number): VariableGroup | null => {
     const hitPadding = 20;
@@ -291,10 +294,11 @@ export function ManualPivot({
     const groupItems = getItemsForGroup(group);
     const itemIndex = groupItems.findIndex((item) => item.id === itemId);
     const itemLabel = getItemById(itemId)?.label;
+    const capitalizedItemLabel = itemLabel ? capitalizeLabel(itemLabel) : '';
 
-    if (itemLabel && itemIndex !== -1) {
+    if (capitalizedItemLabel && itemIndex !== -1) {
       setLiveAnnouncement(
-        `${itemLabel} moved to position ${itemIndex + 1} in ${getGroupLabel(group)}.`,
+        `${capitalizedItemLabel} moved to position ${itemIndex + 1} in ${getGroupLabel(group)}.`,
       );
     }
   };
@@ -312,8 +316,9 @@ export function ManualPivot({
 
     const itemLabel = getItemById(variableId)?.label;
     if (itemLabel) {
+      const capitalizedItemLabel = capitalizeLabel(itemLabel);
       setLiveAnnouncement(
-        `${itemLabel} selected. Use arrow keys to move, Enter to drop, Escape to cancel.`,
+        `${capitalizedItemLabel} selected. Use arrow keys to move, Enter to drop, Escape to cancel.`,
       );
     }
   };
@@ -397,7 +402,9 @@ export function ManualPivot({
       const itemLabel = getItemById(draggedItemId)?.label;
       const groupLabel = getGroupLabel(sourceGroup);
       if (itemLabel) {
-        setLiveAnnouncement(`${itemLabel} dropped in ${groupLabel}.`);
+        setLiveAnnouncement(
+          `${capitalizeLabel(itemLabel)} dropped in ${groupLabel}.`,
+        );
       }
     }
 
@@ -417,7 +424,7 @@ export function ManualPivot({
     if (draggedItemId) {
       const itemLabel = getItemById(draggedItemId)?.label;
       if (itemLabel) {
-        setLiveAnnouncement(`${itemLabel} move cancelled.`);
+        setLiveAnnouncement(`${capitalizeLabel(itemLabel)} move cancelled.`);
       }
       pendingFocusItemIdRef.current = draggedItemId;
     }
@@ -638,6 +645,9 @@ export function ManualPivot({
           (item) => item.id === draggedItemIdRef.current,
         )?.label
       : undefined;
+    const capitalizedDraggedItemLabel = draggedItemLabel
+      ? capitalizeLabel(draggedItemLabel)
+      : undefined;
 
     return (
       <section className={classes.groupColumn}>
@@ -656,11 +666,11 @@ export function ManualPivot({
                   <li
                     aria-hidden="true"
                     className={classes.dropPlaceholder}
-                    title={draggedItemLabel}
+                    title={capitalizedDraggedItemLabel}
                   >
-                    {draggedItemLabel ? (
+                    {capitalizedDraggedItemLabel ? (
                       <span className={classes.dropPlaceholderLabel}>
-                        {draggedItemLabel}
+                        {capitalizedDraggedItemLabel}
                       </span>
                     ) : null}
                   </li>
@@ -670,6 +680,14 @@ export function ManualPivot({
                   data-variable-id={variable.id}
                   value={variable}
                   className={classes.listItem}
+                  style={{
+                    zIndex:
+                      isDraggingRef.current && draggedItemIdRef.current === variable.id
+                        ? 2
+                        : previewIndex !== undefined && index < previewIndex
+                          ? 3
+                          : 1,
+                  }}
                   ref={(element: HTMLLIElement | null) => {
                     if (element) {
                       itemRefs.current.set(variable.id, element);
@@ -685,7 +703,7 @@ export function ManualPivot({
                   dragElastic={0}
                   whileDrag={{
                     scale: 1.02,
-                    zIndex: 10,
+                    zIndex: 2,
                     boxShadow: '0 8px 20px rgba(0, 0, 0, 0.2)',
                   }}
                   onDragStart={() => handleDragStart(group, variable.id)}
@@ -695,7 +713,7 @@ export function ManualPivot({
                     handleItemKeyDown(event, group, variable.id)
                   }
                 >
-                  {variable.label}
+                  <BodyShort size="medium">{capitalizeLabel(variable.label)}</BodyShort>
                 </Reorder.Item>
               </Fragment>
             ))}
@@ -703,11 +721,11 @@ export function ManualPivot({
               <li
                 aria-hidden="true"
                 className={classes.dropPlaceholder}
-                title={draggedItemLabel}
+                title={capitalizedDraggedItemLabel}
               >
-                {draggedItemLabel ? (
+                {capitalizedDraggedItemLabel ? (
                   <span className={classes.dropPlaceholderLabel}>
-                    {draggedItemLabel}
+                    {capitalizedDraggedItemLabel}
                   </span>
                 ) : null}
               </li>

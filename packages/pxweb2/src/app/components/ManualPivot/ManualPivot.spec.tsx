@@ -53,6 +53,7 @@ vi.mock('@pxweb2/pxweb2-ui', () => ({
       </div>
     ) : null,
   Label: ({ children }: { children: ReactNode }) => <span>{children}</span>,
+  BodyShort: ({ children }: { children: ReactNode }) => <span>{children}</span>,
 }));
 
 const createVariable = (id: string, label: string): Variable =>
