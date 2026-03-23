@@ -682,7 +682,8 @@ export function ManualPivot({
                   className={classes.listItem}
                   style={{
                     zIndex:
-                      isDraggingRef.current && draggedItemIdRef.current === variable.id
+                      isDraggingRef.current &&
+                      draggedItemIdRef.current === variable.id
                         ? 2
                         : previewIndex !== undefined && index < previewIndex
                           ? 3
@@ -713,7 +714,9 @@ export function ManualPivot({
                     handleItemKeyDown(event, group, variable.id)
                   }
                 >
-                  <BodyShort size="medium">{capitalizeLabel(variable.label)}</BodyShort>
+                  <BodyShort size="medium">
+                    {capitalizeLabel(variable.label)}
+                  </BodyShort>
                 </Reorder.Item>
               </Fragment>
             ))}
