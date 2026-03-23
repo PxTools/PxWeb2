@@ -327,7 +327,9 @@ export function ManualPivot({
     }
 
     const sourceItems = getItemsForGroup(sourceGroup);
-    const sourceIndex = sourceItems.findIndex((item) => item.id === draggedItemId);
+    const sourceIndex = sourceItems.findIndex(
+      (item) => item.id === draggedItemId,
+    );
 
     if (sourceIndex === -1) {
       return false;
@@ -369,7 +371,9 @@ export function ManualPivot({
     }
 
     const sourceItems = getItemsForGroup(sourceGroup);
-    const sourceIndex = sourceItems.findIndex((item) => item.id === draggedItemId);
+    const sourceIndex = sourceItems.findIndex(
+      (item) => item.id === draggedItemId,
+    );
 
     if (sourceIndex === -1) {
       return false;
@@ -728,8 +732,8 @@ export function ManualPivot({
       )}
     >
       <p id={keyboardInstructionsId} className={classes.visuallyHidden}>
-        Press Space or Enter to pick up an item. Use arrow keys to move it,
-        then press Enter to drop. Press Escape to cancel.
+        Press Space or Enter to pick up an item. Use arrow keys to move it, then
+        press Enter to drop. Press Escape to cancel.
       </p>
       <div className={classes.visuallyHidden} aria-live="polite">
         {liveAnnouncement}
