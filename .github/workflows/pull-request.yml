@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [22.x, 24.x]
+        node-version: [24.x]
     steps:
       - uses: actions/checkout@v6
         with:
@@ -45,7 +45,7 @@ jobs:
 
       - uses: actions/setup-node@v6
         with:
-          node-version: 22.x
+          node-version: 24.x
           cache: 'npm'
 
       - run: npm ci && npm run build && npm run coverage
