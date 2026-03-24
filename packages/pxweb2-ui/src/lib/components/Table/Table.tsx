@@ -73,6 +73,111 @@ interface ColumnRenderWindow {
 
 export const DESKTOP_COLUMN_VIRTUALIZATION_THRESHOLD = 15;
 const ROW_VIRTUALIZATION_THRESHOLD = 30;
+const DESKTOP_ROW_ESTIMATE_SIZE = 36;
+const MOBILE_ROW_ESTIMATE_SIZE = 44;
+const DESKTOP_ROW_OVERSCAN = 12;
+const MOBILE_ROW_OVERSCAN = 4;
+// Bootstrap rows are a temporary first window used before the virtualizer has
+// measured/returned concrete items. This avoids rendering an empty tbody frame.
+const DESKTOP_BOOTSTRAP_ROW_COUNT = 24;
+const MOBILE_BOOTSTRAP_ROW_COUNT = 12;
+
+type BodyRowWindow = {
+  visibleRowStart: number;
+  visibleRowEnd: number;
+  topPaddingHeight: number;
+  bottomPaddingHeight: number;
+};
+
+type BodyRowWindowResult = BodyRowWindow & {
+  shouldVirtualize: boolean;
+};
+
+type VirtualRowItem = {
+  index: number;
+  start: number;
+  end: number;
+};
+
+function getBodyRowVirtualizationSettings(isMobile: boolean) {
+  return {
+    estimateSize: isMobile
+      ? MOBILE_ROW_ESTIMATE_SIZE
+      : DESKTOP_ROW_ESTIMATE_SIZE,
+    overscan: isMobile ? MOBILE_ROW_OVERSCAN : DESKTOP_ROW_OVERSCAN,
+    bootstrapRowCount: isMobile
+      ? MOBILE_BOOTSTRAP_ROW_COUNT
+      : DESKTOP_BOOTSTRAP_ROW_COUNT,
+  };
+}
+
+function createBodyRowWindowResult(
+  shouldVirtualize: boolean,
+  window: BodyRowWindow,
+): BodyRowWindowResult {
+  return {
+    shouldVirtualize,
+    ...window,
+  };
+}
+
+function createNonVirtualizedBodyRowWindow(rowCount: number): BodyRowWindow {
+  return {
+    visibleRowStart: 0,
+    visibleRowEnd: rowCount,
+    topPaddingHeight: 0,
+    bottomPaddingHeight: 0,
+  };
+}
+
+function createBootstrapBodyRowWindow({
+  rowCount,
+  bootstrapRowCount,
+  estimatedRowSize,
+  totalSize,
+}: {
+  rowCount: number;
+  bootstrapRowCount: number;
+  estimatedRowSize: number;
+  totalSize: number;
+}): BodyRowWindow {
+  // Render an initial estimated window from row 0 while waiting for a
+  // non-empty virtualizer result.
+  const visibleRowEnd = Math.min(rowCount, bootstrapRowCount);
+
+  return {
+    visibleRowStart: 0,
+    visibleRowEnd,
+    topPaddingHeight: 0,
+    bottomPaddingHeight: Math.max(
+      0,
+      totalSize - visibleRowEnd * estimatedRowSize,
+    ),
+  };
+}
+
+function createComputedBodyRowWindow({
+  firstVirtualRow,
+  lastVirtualRow,
+  rowCount,
+  tableScrollMargin,
+  totalSize,
+}: {
+  firstVirtualRow: VirtualRowItem | undefined;
+  lastVirtualRow: VirtualRowItem | undefined;
+  rowCount: number;
+  tableScrollMargin: number;
+  totalSize: number;
+}): BodyRowWindow {
+  return {
+    visibleRowStart: firstVirtualRow?.index ?? 0,
+    visibleRowEnd: lastVirtualRow ? lastVirtualRow.index + 1 : rowCount,
+    topPaddingHeight: firstVirtualRow
+      ? Math.max(0, firstVirtualRow.start - tableScrollMargin)
+      : 0,
+    bottomPaddingHeight: lastVirtualRow ? totalSize - lastVirtualRow.end : 0,
+  };
+}
 
 export const Table = memo(function Table({
   pxtable,
@@ -296,13 +401,14 @@ export function useBodyRowVirtualizationWindow({
   scrollContainerRef: React.RefObject<HTMLDivElement | null>;
 }) {
   const shouldVirtualize = rowCount > ROW_VIRTUALIZATION_THRESHOLD;
+  const rowVirtualizationSettings = getBodyRowVirtualizationSettings(isMobile);
 
   const windowRowVirtualizer = useWindowVirtualizer({
     enabled: shouldVirtualize && verticalScrollElement !== null,
     count: rowCount,
     scrollMargin: tableScrollMargin,
-    estimateSize: () => (isMobile ? 44 : 36),
-    overscan: isMobile ? 4 : 12,
+    estimateSize: () => rowVirtualizationSettings.estimateSize,
+    overscan: rowVirtualizationSettings.overscan,
   });
 
   const containerRowVirtualizer = useVirtualizer({
@@ -310,85 +416,59 @@ export function useBodyRowVirtualizationWindow({
     count: rowCount,
     getScrollElement: () => scrollContainerRef.current,
     scrollMargin: tableScrollMargin,
-    estimateSize: () => (isMobile ? 44 : 36),
-    overscan: isMobile ? 4 : 12,
+    estimateSize: () => rowVirtualizationSettings.estimateSize,
+    overscan: rowVirtualizationSettings.overscan,
   });
 
-  const rowVirtualizer =
+  const activeRowVirtualizer =
     verticalScrollElement === null
       ? containerRowVirtualizer
       : windowRowVirtualizer;
 
-  const lastNonEmptyWindowRef = useRef<{
-    visibleRowStart: number;
-    visibleRowEnd: number;
-    topPaddingHeight: number;
-    bottomPaddingHeight: number;
-  } | null>(null);
-
-  const virtualRows = shouldVirtualize ? rowVirtualizer.getVirtualItems() : [];
-  const bootstrapRowCount = Math.min(rowCount, isMobile ? 12 : 24);
-  const estimatedRowSize = isMobile ? 44 : 36;
-  const bootstrapEnd = bootstrapRowCount;
-  const bootstrapBottomPaddingHeight = Math.max(
-    0,
-    rowVirtualizer.getTotalSize() - bootstrapEnd * estimatedRowSize,
-  );
-
-  if (shouldVirtualize && virtualRows.length === 0) {
-    if (lastNonEmptyWindowRef.current) {
-      return {
-        shouldVirtualize,
-        ...lastNonEmptyWindowRef.current,
-      };
-    }
-
-    return {
-      shouldVirtualize,
-      visibleRowStart: 0,
-      visibleRowEnd: bootstrapEnd,
-      topPaddingHeight: 0,
-      bottomPaddingHeight: bootstrapBottomPaddingHeight,
-    };
-  }
-
-  const firstVirtualRow = virtualRows[0];
-  const lastVirtualRow = virtualRows.at(-1);
-  const topPaddingHeight = firstVirtualRow
-    ? Math.max(0, firstVirtualRow.start - tableScrollMargin)
-    : 0;
-  const bottomPaddingHeight = lastVirtualRow
-    ? rowVirtualizer.getTotalSize() - lastVirtualRow.end
-    : 0;
-  const visibleRowStart = firstVirtualRow?.index ?? 0;
-  const visibleRowEnd = lastVirtualRow ? lastVirtualRow.index + 1 : rowCount;
-
-  if (shouldVirtualize) {
-    lastNonEmptyWindowRef.current = {
-      visibleRowStart,
-      visibleRowEnd,
-      topPaddingHeight,
-      bottomPaddingHeight,
-    };
-  }
+  const lastNonEmptyWindowRef = useRef<BodyRowWindow | null>(null);
 
   if (!shouldVirtualize) {
-    return {
+    return createBodyRowWindowResult(
       shouldVirtualize,
-      visibleRowStart: 0,
-      visibleRowEnd: rowCount,
-      topPaddingHeight: 0,
-      bottomPaddingHeight: 0,
-    };
+      createNonVirtualizedBodyRowWindow(rowCount),
+    );
   }
 
-  return {
-    shouldVirtualize,
-    visibleRowStart,
-    visibleRowEnd,
-    topPaddingHeight,
-    bottomPaddingHeight,
-  };
+  const virtualRows = activeRowVirtualizer.getVirtualItems();
+  const totalSize = activeRowVirtualizer.getTotalSize();
+
+  if (virtualRows.length === 0) {
+    // During warm-up the virtualizer can briefly return no items; prefer the
+    // last stable window, otherwise fall back to the bootstrap window.
+    if (lastNonEmptyWindowRef.current) {
+      return createBodyRowWindowResult(
+        shouldVirtualize,
+        lastNonEmptyWindowRef.current,
+      );
+    }
+
+    return createBodyRowWindowResult(
+      shouldVirtualize,
+      createBootstrapBodyRowWindow({
+        rowCount,
+        bootstrapRowCount: rowVirtualizationSettings.bootstrapRowCount,
+        estimatedRowSize: rowVirtualizationSettings.estimateSize,
+        totalSize,
+      }),
+    );
+  }
+
+  const computedWindow = createComputedBodyRowWindow({
+    firstVirtualRow: virtualRows[0],
+    lastVirtualRow: virtualRows.at(-1),
+    rowCount,
+    tableScrollMargin,
+    totalSize,
+  });
+
+  lastNonEmptyWindowRef.current = computedWindow;
+
+  return createBodyRowWindowResult(shouldVirtualize, computedWindow);
 }
 
 export function VirtualizedTableLayout({

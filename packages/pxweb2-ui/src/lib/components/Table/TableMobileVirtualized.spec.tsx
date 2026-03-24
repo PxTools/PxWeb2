@@ -118,4 +118,21 @@ describe('TableMobileVirtualized', () => {
 
     expect(paddingCells.length).toBeGreaterThan(0);
   });
+
+  it('does not render row virtualization padding when row count is at or below threshold', () => {
+    const smallRowTable = cloneTable(pxTable);
+    smallRowTable.stub[0].values = smallRowTable.stub[0].values.slice(0, 1);
+    smallRowTable.stub[1].values = smallRowTable.stub[1].values.slice(0, 1);
+    smallRowTable.stub[2].values = smallRowTable.stub[2].values.slice(0, 1);
+
+    const { container } = render(
+      <MobileVirtualizedTable pxtable={smallRowTable} />,
+    );
+
+    const paddingCells = container.querySelectorAll(
+      'tbody td[style*="height"]',
+    );
+
+    expect(paddingCells.length).toBe(0);
+  });
 });
