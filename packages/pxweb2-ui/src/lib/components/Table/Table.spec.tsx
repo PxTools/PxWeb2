@@ -1,64 +1,101 @@
-import { render } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+
+const childMocks = vi.hoisted(() => ({
+  desktopRender: vi.fn(),
+  mobileRender: vi.fn(),
+}));
+
+vi.mock('./TableDesktopVirtualized', () => ({
+  DesktopVirtualizedTable: ({
+    className,
+    getVerticalScrollElement,
+  }: {
+    className?: string;
+    getVerticalScrollElement?: () => HTMLElement | null;
+  }) => {
+    childMocks.desktopRender({ className, getVerticalScrollElement });
+    return <div data-testid="desktop-virtualized-table" />;
+  },
+}));
+
+vi.mock('./TableMobileVirtualized', () => ({
+  MobileVirtualizedTable: ({
+    className,
+    getVerticalScrollElement,
+  }: {
+    className?: string;
+    getVerticalScrollElement?: () => HTMLElement | null;
+  }) => {
+    childMocks.mobileRender({ className, getVerticalScrollElement });
+    return <div data-testid="mobile-virtualized-table" />;
+  },
+}));
 
 import Table from './Table';
 import { pxTable } from './testData';
 
 describe('Table', () => {
-  it('should render successfully desktop', () => {
-    const { baseElement } = render(
-      <Table pxtable={pxTable} isMobile={false} />,
-    );
-    expect(baseElement).toBeTruthy();
+  beforeEach(() => {
+    childMocks.desktopRender.mockClear();
+    childMocks.mobileRender.mockClear();
   });
 
-  it('should render successfully mobile', () => {
-    const { baseElement } = render(<Table pxtable={pxTable} isMobile={true} />);
-    expect(baseElement).toBeTruthy();
+  it('renders desktop component when isMobile is false', () => {
+    render(<Table pxtable={pxTable} isMobile={false} />);
+
+    expect(screen.getByTestId('desktop-virtualized-table')).toBeTruthy();
+    expect(screen.queryByTestId('mobile-virtualized-table')).toBeNull();
+    expect(childMocks.desktopRender).toHaveBeenCalledTimes(1);
+    expect(childMocks.mobileRender).not.toHaveBeenCalled();
   });
 
-  it('should have a th header named 1968', () => {
-    const { baseElement } = render(
-      <Table pxtable={pxTable} isMobile={false} />,
-    );
-    const ths = baseElement.querySelectorAll('th');
-    let found = false;
-    ths.forEach((th) => {
-      if (th.innerHTML === '1968') {
-        found = true;
-      }
-    });
-    expect(found).toBe(true);
-    expect(ths.length).toBeGreaterThan(0);
+  it('renders mobile component when isMobile is true', () => {
+    render(<Table pxtable={pxTable} isMobile={true} />);
+
+    expect(screen.getByTestId('mobile-virtualized-table')).toBeTruthy();
+    expect(screen.queryByTestId('desktop-virtualized-table')).toBeNull();
+    expect(childMocks.mobileRender).toHaveBeenCalledTimes(1);
+    expect(childMocks.desktopRender).not.toHaveBeenCalled();
   });
 
-  it('should NOT have a th header named 1967', () => {
-    const { baseElement } = render(
-      <Table pxtable={pxTable} isMobile={false} />,
+  it('forwards className and getVerticalScrollElement to desktop component', () => {
+    const getVerticalScrollElement = vi.fn(() => null);
+
+    render(
+      <Table
+        pxtable={pxTable}
+        isMobile={false}
+        className="custom-table-class"
+        getVerticalScrollElement={getVerticalScrollElement}
+      />,
     );
-    const ths = baseElement.querySelectorAll('th');
-    let found = false;
-    ths.forEach((th) => {
-      if (th.innerHTML === '1967') {
-        found = true;
-      }
-    });
-    expect(found).toBe(false);
+
+    expect(childMocks.desktopRender).toHaveBeenCalledWith(
+      expect.objectContaining({
+        className: 'custom-table-class',
+        getVerticalScrollElement,
+      }),
+    );
   });
 
-  it('should include second-last stub header id in mobile td headers', () => {
-    const { baseElement } = render(<Table pxtable={pxTable} isMobile={true} />);
-    const firstDataCell = baseElement.querySelector('tbody tr td[headers]');
+  it('forwards className and getVerticalScrollElement to mobile component', () => {
+    const getVerticalScrollElement = vi.fn(() => null);
 
-    expect(firstDataCell).toBeTruthy();
-
-    const headerTokens =
-      firstDataCell?.getAttribute('headers')?.split(' ').filter(Boolean) ?? [];
-
-    expect(headerTokens.some((token) => token.startsWith('Civilstatus_'))).toBe(
-      true,
+    render(
+      <Table
+        pxtable={pxTable}
+        isMobile={true}
+        className="mobile-table-class"
+        getVerticalScrollElement={getVerticalScrollElement}
+      />,
     );
-    expect(headerTokens.some((token) => token.startsWith('Kon_'))).toBe(true);
-    expect(headerTokens.some((token) => token.startsWith('TIME_'))).toBe(true);
+
+    expect(childMocks.mobileRender).toHaveBeenCalledWith(
+      expect.objectContaining({
+        className: 'mobile-table-class',
+        getVerticalScrollElement,
+      }),
+    );
   });
 });
