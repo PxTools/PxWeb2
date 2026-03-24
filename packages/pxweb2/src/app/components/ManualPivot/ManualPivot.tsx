@@ -442,6 +442,9 @@ export function ManualPivot({
     updateDropPreview(null);
   };
 
+  const getOtherGroup = (group: VariableGroup): VariableGroup =>
+    group === 'header' ? 'stub' : 'header';
+
   const handleItemKeyDown = (
     event: React.KeyboardEvent<HTMLLIElement>,
     group: VariableGroup,
@@ -449,49 +452,52 @@ export function ManualPivot({
   ) => {
     const isKeyboardDragging = keyboardDraggedItemId === variableId;
 
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      if (isKeyboardDragging) {
-        dropKeyboardDrag();
-      } else if (!keyboardDraggedItemId) {
-        startKeyboardDrag(group, variableId);
+    switch (event.key) {
+      case 'Enter':
+      case ' ': {
+        event.preventDefault();
+        if (isKeyboardDragging) {
+          dropKeyboardDrag();
+        } else if (!keyboardDraggedItemId) {
+          startKeyboardDrag(group, variableId);
+        }
+        return;
       }
-      return;
-    }
-
-    if (event.key === 'Escape' && isKeyboardDragging) {
-      event.preventDefault();
-      cancelKeyboardDrag();
-      return;
-    }
-
-    if (!isKeyboardDragging) {
-      return;
-    }
-
-    if (event.key === 'ArrowUp') {
-      event.preventDefault();
-      moveKeyboardDraggedItemWithinGroup(-1);
-      return;
-    }
-
-    if (event.key === 'ArrowDown') {
-      event.preventDefault();
-      moveKeyboardDraggedItemWithinGroup(1);
-      return;
-    }
-
-    if (event.key === 'ArrowLeft') {
-      event.preventDefault();
-      const targetGroup = group === 'header' ? 'stub' : 'header';
-      moveKeyboardDraggedItemAcrossGroups(targetGroup);
-      return;
-    }
-
-    if (event.key === 'ArrowRight') {
-      event.preventDefault();
-      const targetGroup = group === 'header' ? 'stub' : 'header';
-      moveKeyboardDraggedItemAcrossGroups(targetGroup);
+      case 'Escape': {
+        if (!isKeyboardDragging) {
+          return;
+        }
+        event.preventDefault();
+        cancelKeyboardDrag();
+        return;
+      }
+      case 'ArrowUp': {
+        if (!isKeyboardDragging) {
+          return;
+        }
+        event.preventDefault();
+        moveKeyboardDraggedItemWithinGroup(-1);
+        return;
+      }
+      case 'ArrowDown': {
+        if (!isKeyboardDragging) {
+          return;
+        }
+        event.preventDefault();
+        moveKeyboardDraggedItemWithinGroup(1);
+        return;
+      }
+      case 'ArrowLeft':
+      case 'ArrowRight': {
+        if (!isKeyboardDragging) {
+          return;
+        }
+        event.preventDefault();
+        moveKeyboardDraggedItemAcrossGroups(getOtherGroup(group));
+        return;
+      }
+      default:
+        return;
     }
   };
 
