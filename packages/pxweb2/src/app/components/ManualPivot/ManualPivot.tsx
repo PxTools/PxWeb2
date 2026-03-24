@@ -1,9 +1,8 @@
 import { Fragment, useEffect, useId, useRef, useState } from 'react';
 import { Reorder, type PanInfo } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { BodyShort, Label } from '@pxweb2/pxweb2-ui';
 
-import { Modal, Variable } from '@pxweb2/pxweb2-ui';
+import { Modal, Variable, BodyShort, Label } from '@pxweb2/pxweb2-ui';
 import classes from './ManualPivot.module.scss';
 
 type VariableGroup = 'header' | 'stub';
