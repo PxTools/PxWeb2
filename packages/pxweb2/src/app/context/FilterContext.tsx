@@ -23,7 +23,10 @@ import {
   recomputeAvailableFilters,
   getStatus,
 } from '../util/startPageFilters';
-import { shouldTableBeIncluded } from '../util/tableHandler';
+import {
+  buildCompiledMatcher,
+  shouldTableBeIncludedWithMatcher,
+} from '../util/tableHandler';
 import { wrapWithLocalizedQuotemarks } from '../util/utils';
 import { Table } from 'packages/pxweb2-api-client/src';
 
@@ -110,8 +113,9 @@ function reducer(
         incoming[0]?.type === 'yearRange' ? f.type !== 'yearRange' : true,
       );
       const newFilters = [...clearedFilters, ...incoming];
+      const matcher = buildCompiledMatcher(newFilters);
       const filteredTables = getAvailableTables(state).filter((table) =>
-        shouldTableBeIncluded(table, newFilters),
+        shouldTableBeIncludedWithMatcher(table, matcher),
       );
       const addType = action.payload[0]?.type as FilterType | undefined;
       const updatedLastUsedYearRange = incomingTypes.has('yearRange')
@@ -175,8 +179,9 @@ function reducer(
             : [...state.activeFilters, newSearch];
       }
 
+      const matcher = buildCompiledMatcher(newFilters);
       const newTables = state.availableTables.filter((table) =>
-        shouldTableBeIncluded(table, newFilters),
+        shouldTableBeIncludedWithMatcher(table, matcher),
       );
 
       return {
@@ -228,8 +233,9 @@ function reducer(
 
       if (action.payload.query == '') {
         // No query => filter from all available tables
+        const matcher = buildCompiledMatcher(newFilters);
         newTables = state.availableTables.filter((table) =>
-          shouldTableBeIncluded(table, newFilters),
+          shouldTableBeIncludedWithMatcher(table, matcher),
         );
       } else {
         // query present => filter from tables matching the query
@@ -237,8 +243,9 @@ function reducer(
           action.payload.tableIds.includes(table.id),
         );
 
+        const matcher = buildCompiledMatcher(newFilters);
         newTables = queryTables.filter((table) =>
-          shouldTableBeIncluded(table, newFilters),
+          shouldTableBeIncludedWithMatcher(table, matcher),
         );
       }
 
@@ -259,79 +266,11 @@ function reducer(
         },
       };
     }
-    case ActionType.REMOVE_FILTER: {
-      const removedType = action.payload.type;
+    case ActionType.REMOVE_FILTER:
+      return applyRemoveFilters(state, [action.payload]);
 
-      const currentFilters =
-        removedType === 'subject' && action.payload.uniqueId
-          ? state.activeFilters.filter(
-              (filter) => filter.uniqueId !== action.payload.uniqueId,
-            )
-          : state.activeFilters.filter(
-              (filter) => filter.value !== action.payload.value,
-            );
-
-      if (currentFilters.length === 0) {
-        const fullRange = getYearRanges(state.availableTables);
-        return {
-          ...state,
-          activeFilters: [],
-          filteredTables: state.availableTables,
-          availableFilters: {
-            subjectTree: updateSubjectTreeCounts(
-              state.originalSubjectTree,
-              state.availableTables,
-            ),
-            timeUnits: getTimeUnits(state.availableTables),
-            yearRange: fullRange,
-            variables: getVariables(state.availableTables),
-            status: getStatus(state.availableTables),
-          },
-          lastUsedYearRange: fullRange,
-        };
-      }
-
-      let filteredTables: Table[] = [];
-      if (removedType === 'query') {
-        state.availableTablesWhenQueryApplied = [];
-        filteredTables = state.availableTables.filter((table) =>
-          shouldTableBeIncluded(table, currentFilters),
-        );
-      } else {
-        filteredTables = getAvailableTables(state).filter((table) =>
-          shouldTableBeIncluded(table, currentFilters),
-        );
-      }
-
-      const yearRangeStillActive = currentFilters.some(
-        (f) => f.type === 'yearRange',
-      );
-      const updatedLastUsedYearRange = yearRangeStillActive
-        ? state.lastUsedYearRange
-        : getYearRanges(filteredTables);
-
-      const recomputed = recomputeAvailableFilters(
-        removedType,
-        currentFilters,
-        getAvailableTables(state),
-        state.originalSubjectTree,
-      );
-
-      return {
-        ...state,
-        activeFilters: currentFilters,
-        filteredTables,
-        availableFilters: {
-          subjectTree:
-            recomputed.subjectTree ?? state.availableFilters.subjectTree,
-          timeUnits: recomputed.timeUnits ?? state.availableFilters.timeUnits,
-          yearRange: recomputed.yearRange ?? state.availableFilters.yearRange,
-          variables: getVariables(filteredTables),
-          status: recomputed.status ?? state.availableFilters.status,
-        },
-        lastUsedYearRange: updatedLastUsedYearRange,
-      };
-    }
+    case ActionType.REMOVE_FILTERS:
+      return applyRemoveFilters(state, action.payload);
 
     case ActionType.SET_ERROR:
       return { ...state, error: action.payload };
@@ -342,4 +281,91 @@ function reducer(
     default:
       return state;
   }
+}
+
+type RemovePayload = { value: string; type: FilterType; uniqueId?: string };
+
+function applyRemoveFilters(
+  state: StartPageState,
+  removals: RemovePayload[],
+): StartPageState {
+  const removalSetByUniqueId = new Set(
+    removals
+      .filter((r) => r.type === 'subject' && r.uniqueId)
+      .map((r) => r.uniqueId as string),
+  );
+  const removalSetByTypeValue = new Set(
+    removals.map((r) => `${r.type}|${r.value}`),
+  );
+
+  const currentFilters = state.activeFilters.filter((f) => {
+    if (f.type === 'subject' && f.uniqueId && removalSetByUniqueId.size > 0) {
+      if (removalSetByUniqueId.has(f.uniqueId)) {
+        return false;
+      }
+    }
+    return !removalSetByTypeValue.has(`${f.type}|${f.value}`);
+  });
+
+  if (currentFilters.length === 0) {
+    const fullRange = getYearRanges(state.availableTables);
+    return {
+      ...state,
+      availableTablesWhenQueryApplied: [],
+      activeFilters: [],
+      filteredTables: state.availableTables,
+      availableFilters: {
+        subjectTree: updateSubjectTreeCounts(
+          state.originalSubjectTree,
+          state.availableTables,
+        ),
+        timeUnits: getTimeUnits(state.availableTables),
+        yearRange: fullRange,
+        variables: getVariables(state.availableTables),
+        status: getStatus(state.availableTables),
+      },
+      lastUsedYearRange: fullRange,
+    };
+  }
+
+  const removedQuery = removals.some((r) => r.type === 'query');
+  const baseTables = removedQuery
+    ? state.availableTables
+    : getAvailableTables(state);
+  const matcher = buildCompiledMatcher(currentFilters);
+
+  const filteredTables = baseTables.filter((table) =>
+    shouldTableBeIncludedWithMatcher(table, matcher),
+  );
+
+  const yearRangeStillActive = currentFilters.some((f) => f.type === 'yearRange');
+  const updatedLastUsedYearRange = yearRangeStillActive
+    ? state.lastUsedYearRange
+    : getYearRanges(filteredTables);
+
+  const removedTypeHint = removals[0]?.type as FilterType | undefined;
+
+  const recomputed = recomputeAvailableFilters(
+    removedTypeHint,
+    currentFilters,
+    baseTables,
+    state.originalSubjectTree,
+  );
+
+  return {
+    ...state,
+    availableTablesWhenQueryApplied: removedQuery
+      ? []
+      : state.availableTablesWhenQueryApplied,
+    activeFilters: currentFilters,
+    filteredTables,
+    availableFilters: {
+      subjectTree: recomputed.subjectTree ?? state.availableFilters.subjectTree,
+      timeUnits: recomputed.timeUnits ?? state.availableFilters.timeUnits,
+      yearRange: recomputed.yearRange ?? state.availableFilters.yearRange,
+      variables: getVariables(filteredTables),
+      status: recomputed.status ?? state.availableFilters.status,
+    },
+    lastUsedYearRange: updatedLastUsedYearRange,
+  };
 }

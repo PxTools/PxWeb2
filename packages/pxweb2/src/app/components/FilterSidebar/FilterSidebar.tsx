@@ -66,31 +66,35 @@ const Collapsible: React.FC<CollapsibleProps> = ({
             });
 
             // If the subject has children, we remove all ancestors from filter
-            for (const ancestor of ancestors) {
-              const isAncestorInFilter = state.activeFilters.some(
-                (f) => f.type === 'subject' && f.value === ancestor.id,
-              );
-              if (isAncestorInFilter) {
-                dispatch({
-                  type: ActionType.REMOVE_FILTER,
-                  payload: { value: ancestor.id, type: 'subject' },
-                });
-              }
+            const ancestorPayload = ancestors
+              .filter((ancestor) =>
+                state.activeFilters.some(
+                  (f) => f.type === 'subject' && f.value === ancestor.id,
+                ),
+              )
+              .map((ancestor) => ({
+                value: ancestor.id,
+                type: 'subject' as const,
+              }));
+
+            if (ancestorPayload.length > 0) {
+              dispatch({
+                type: ActionType.REMOVE_FILTERS,
+                payload: ancestorPayload,
+              });
             }
           } else {
             //Remove subject and all its descendants from filter
             const descendants = [subject, ...children];
 
-            for (const d of descendants) {
-              dispatch({
-                type: ActionType.REMOVE_FILTER,
-                payload: {
-                  value: d.id,
-                  type: 'subject',
-                  uniqueId: d.uniqueId,
-                },
-              });
-            }
+            dispatch({
+              type: ActionType.REMOVE_FILTERS,
+              payload: descendants.map((d) => ({
+                value: d.id,
+                type: 'subject' as const,
+                uniqueId: d.uniqueId,
+              })),
+            });
 
             // Ensure first parent is actually added as a filter, and not just ephemerally selected
             const parent: PathItem | undefined = ancestors.length

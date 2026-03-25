@@ -51,6 +51,8 @@ vi.mock('../util/startPageFilters', () => {
 });
 
 vi.mock('../util/tableHandler', () => ({
+  buildCompiledMatcher: (filters: Filter[]) => filters,
+  shouldTableBeIncludedWithMatcher: () => true,
   shouldTableBeIncluded: () => true,
 }));
 
