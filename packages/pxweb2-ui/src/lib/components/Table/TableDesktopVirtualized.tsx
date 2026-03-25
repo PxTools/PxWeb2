@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import cl from 'clsx';
 
@@ -39,6 +39,8 @@ type ColumnWindow = {
   leftPadding: number;
   rightPadding: number;
 };
+
+const HORIZONTAL_SCROLL_IDLE_DELAY_MS = 450;
 
 function createPaddingCell(
   width: number,
@@ -259,6 +261,17 @@ export function DesktopVirtualizedTable({
 
   const shouldVirtualizeColumns =
     tableColumnSize > DESKTOP_COLUMN_VIRTUALIZATION_THRESHOLD;
+  const headingRef = useRef<HTMLTableSectionElement>(null);
+  const lastScrollLeftRef = useRef(0);
+  const scrollIdleTimerRef =
+    useRef<ReturnType<typeof globalThis.setTimeout> | null>(null);
+  const captureLockFrameRef = useRef<number | null>(null);
+  const isScrollingHorizontallyRef = useRef(false);
+  const isPointerDraggingRef = useRef(false);
+  const stableHeadingRowLocksRef = useRef<number[] | null>(null);
+  const [isScrollingHorizontally, setIsScrollingHorizontally] = useState(false);
+  const [headingRowLocks, setHeadingRowLocks] = useState<number[] | null>(null);
+
   const columnVirtualizer = useVirtualizer({
     horizontal: true,
     enabled: shouldVirtualizeColumns,
@@ -291,7 +304,7 @@ export function DesktopVirtualizedTable({
     [bootstrapColumnEnd, columnVirtualizer],
   );
 
-  const columnWindow = useMemo(() => {
+  const columnWindow = (() => {
     if (!shouldVirtualizeColumns) {
       return {
         start: 0,
@@ -323,13 +336,7 @@ export function DesktopVirtualizedTable({
 
     lastNonEmptyColumnWindowRef.current = window;
     return window;
-  }, [
-    shouldVirtualizeColumns,
-    virtualColumns,
-    tableColumnSize,
-    bootstrapColumnWindow,
-    columnVirtualizer,
-  ]);
+  })();
 
   const headingDataCellCodes = useMemo(
     () => createHeadingDataCellCodes(pxtable, tableColumnSize),
@@ -344,15 +351,14 @@ export function DesktopVirtualizedTable({
         headingDataCellCodes,
         columnWindow,
         createKeyFactory(),
+        headingRowLocks,
       ),
     [
       pxtable,
       tableMeta,
       headingDataCellCodes,
-      columnWindow.start,
-      columnWindow.end,
-      columnWindow.leftPadding,
-      columnWindow.rightPadding,
+      columnWindow,
+      headingRowLocks,
     ],
   );
 
@@ -399,10 +405,7 @@ export function DesktopVirtualizedTable({
       cube: pxtable.data.cube,
     });
   }, [
-    columnWindow.end,
-    columnWindow.leftPadding,
-    columnWindow.rightPadding,
-    columnWindow.start,
+    columnWindow,
     hasNoStub,
     headingDataCellCodes,
     pxtable.data.cube,
@@ -414,6 +417,182 @@ export function DesktopVirtualizedTable({
     (columnWindow.end - columnWindow.start) +
     (columnWindow.leftPadding > 0 ? 1 : 0) +
     (columnWindow.rightPadding > 0 ? 1 : 0);
+
+  const clearScrollIdleTimer = () => {
+    if (scrollIdleTimerRef.current !== null) {
+      globalThis.clearTimeout(scrollIdleTimerRef.current);
+      scrollIdleTimerRef.current = null;
+    }
+  };
+
+  const clearCaptureLockFrame = () => {
+    if (captureLockFrameRef.current !== null) {
+      cancelAnimationFrame(captureLockFrameRef.current);
+      captureLockFrameRef.current = null;
+    }
+  };
+
+  const captureCurrentHeaderRowHeights = () => {
+    const headingElement = headingRef.current;
+    if (!headingElement) {
+      return null;
+    }
+
+    const rowElements = Array.from(headingElement.querySelectorAll('tr'));
+    if (rowElements.length === 0) {
+      return null;
+    }
+
+    const rowHeights = rowElements.map((rowElement) =>
+      Math.ceil(rowElement.getBoundingClientRect().height),
+    );
+
+    if (rowHeights.some((height) => height <= 0)) {
+      return null;
+    }
+
+    return rowHeights;
+  };
+
+  useEffect(() => {
+    if (!shouldVirtualizeColumns || isScrollingHorizontally) {
+      return;
+    }
+
+    const headingElement = headingRef.current;
+    if (!headingElement || typeof ResizeObserver === 'undefined') {
+      return;
+    }
+
+    const captureStableRowLocks = () => {
+      const rowHeights = captureCurrentHeaderRowHeights();
+      if (rowHeights) {
+        stableHeadingRowLocksRef.current = rowHeights;
+      }
+    };
+
+    captureStableRowLocks();
+
+    const resizeObserver = new ResizeObserver(() => {
+      captureStableRowLocks();
+    });
+
+    resizeObserver.observe(headingElement);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [headingRows, isScrollingHorizontally, shouldVirtualizeColumns]);
+
+  useEffect(() => {
+    if (!shouldVirtualizeColumns) {
+      clearScrollIdleTimer();
+      clearCaptureLockFrame();
+      stableHeadingRowLocksRef.current = null;
+      isScrollingHorizontallyRef.current = false;
+      isPointerDraggingRef.current = false;
+      setIsScrollingHorizontally(false);
+      setHeadingRowLocks(null);
+      return;
+    }
+
+    const scrollContainer = scrollContainerRef.current;
+    if (!scrollContainer) {
+      return;
+    }
+
+    lastScrollLeftRef.current = scrollContainer.scrollLeft;
+
+    const scheduleScrollIdleRelease = () => {
+      clearScrollIdleTimer();
+      scrollIdleTimerRef.current = globalThis.setTimeout(() => {
+        if (isPointerDraggingRef.current) {
+          scheduleScrollIdleRelease();
+          return;
+        }
+
+        isScrollingHorizontallyRef.current = false;
+        setIsScrollingHorizontally(false);
+        setHeadingRowLocks(null);
+        scrollIdleTimerRef.current = null;
+      }, HORIZONTAL_SCROLL_IDLE_DELAY_MS);
+    };
+
+    const handlePointerDown = () => {
+      isPointerDraggingRef.current = true;
+    };
+
+    const handlePointerUp = () => {
+      isPointerDraggingRef.current = false;
+      if (isScrollingHorizontallyRef.current) {
+        scheduleScrollIdleRelease();
+      }
+    };
+
+    const handleScroll = () => {
+      const scrollLeft = scrollContainer.scrollLeft;
+      if (scrollLeft === lastScrollLeftRef.current) {
+        return;
+      }
+
+      lastScrollLeftRef.current = scrollLeft;
+
+      if (!isScrollingHorizontallyRef.current) {
+        const rowHeights = captureCurrentHeaderRowHeights();
+        if (rowHeights) {
+          isScrollingHorizontallyRef.current = true;
+          setHeadingRowLocks(rowHeights);
+          setIsScrollingHorizontally(true);
+        } else {
+          const stableRowHeights = stableHeadingRowLocksRef.current;
+          if (stableRowHeights) {
+            isScrollingHorizontallyRef.current = true;
+            setHeadingRowLocks(stableRowHeights.slice());
+            setIsScrollingHorizontally(true);
+          } else {
+            // If layout is still settling at scroll start, retry on the next frame.
+            clearCaptureLockFrame();
+            captureLockFrameRef.current = requestAnimationFrame(() => {
+              captureLockFrameRef.current = null;
+              const fallbackRowHeights = captureCurrentHeaderRowHeights();
+              if (fallbackRowHeights) {
+                isScrollingHorizontallyRef.current = true;
+                setHeadingRowLocks(fallbackRowHeights);
+                setIsScrollingHorizontally(true);
+              }
+            });
+          }
+        }
+      }
+
+      if (!isPointerDraggingRef.current) {
+        scheduleScrollIdleRelease();
+      }
+    };
+
+    scrollContainer.addEventListener('pointerdown', handlePointerDown, {
+      passive: true,
+    });
+    globalThis.addEventListener('pointerup', handlePointerUp, { passive: true });
+    scrollContainer.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      scrollContainer.removeEventListener('pointerdown', handlePointerDown);
+      globalThis.removeEventListener('pointerup', handlePointerUp);
+      scrollContainer.removeEventListener('scroll', handleScroll);
+      clearScrollIdleTimer();
+      clearCaptureLockFrame();
+      setHeadingRowLocks(null);
+      isPointerDraggingRef.current = false;
+    };
+  }, [scrollContainerRef, shouldVirtualizeColumns]);
+
+  const headingClassName = cl({
+    [classes.tableHeadingLocked]:
+      shouldVirtualizeColumns && headingRowLocks !== null,
+    [classes.tableHeadingScrolling]:
+      shouldVirtualizeColumns && isScrollingHorizontally && headingRowLocks !== null,
+  });
 
   return (
     <VirtualizedTableLayout
@@ -428,6 +607,9 @@ export function DesktopVirtualizedTable({
       renderedColumnCount={renderedColumnCount}
       scrollContainerRef={scrollContainerRef}
       verticalScrollElement={verticalScrollElement}
+      headingRef={headingRef}
+      headingStyle={undefined}
+      headingClassName={headingClassName}
     />
   );
 }

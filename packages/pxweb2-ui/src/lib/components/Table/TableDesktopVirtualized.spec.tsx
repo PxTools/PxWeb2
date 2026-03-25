@@ -1,5 +1,5 @@
-import { render } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { act, fireEvent, render } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const virtualizerState = vi.hoisted(() => ({
   columnItems: [] as Array<{ index: number; start: number; end: number }>,
@@ -52,6 +52,20 @@ function cloneTable(table: PxTable): PxTable {
   return structuredClone(table);
 }
 
+function createDomRect(height: number): DOMRect {
+  return {
+    x: 0,
+    y: 0,
+    width: 640,
+    height,
+    top: 0,
+    left: 0,
+    right: 640,
+    bottom: height,
+    toJSON: () => ({}),
+  } as DOMRect;
+}
+
 describe('TableDesktopVirtualized', () => {
   beforeEach(() => {
     virtualizerState.columnItems = createVirtualItems(0, 8, 88);
@@ -60,6 +74,11 @@ describe('TableDesktopVirtualized', () => {
     virtualizerState.rowTotalSize = 50 * 36;
     virtualizerState.windowRowItems = [];
     virtualizerState.windowRowTotalSize = 0;
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
   });
 
   it('enables column virtualization when column count exceeds threshold', () => {
@@ -152,5 +171,81 @@ describe('TableDesktopVirtualized', () => {
     );
 
     expect(paddingCells.length).toBe(0);
+  });
+
+  it('keeps heading lock active across horizontal scroll updates', () => {
+    vi.useFakeTimers();
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(
+      () => createDomRect(52),
+    );
+
+    const { container } = render(<DesktopVirtualizedTable pxtable={pxTable} />);
+    const scrollContainer = container.querySelector(`.${classes.virtualizedWrapper}`);
+    const heading = container.querySelector('thead');
+
+    expect(scrollContainer).toBeTruthy();
+    expect(heading).toBeTruthy();
+
+    Object.defineProperty(scrollContainer as HTMLElement, 'scrollLeft', {
+      configurable: true,
+      writable: true,
+      value: 120,
+    });
+
+    fireEvent.scroll(scrollContainer as HTMLElement);
+
+    expect(heading?.classList.contains(classes.tableHeadingLocked)).toBe(true);
+    expect(heading?.classList.contains(classes.tableHeadingScrolling)).toBe(true);
+
+    act(() => {
+      vi.advanceTimersByTime(451);
+    });
+
+    expect(heading?.classList.contains(classes.tableHeadingScrolling)).toBe(
+      false,
+    );
+  });
+
+  it('releases fixed heading height after scroll idle so full headers can expand', () => {
+    vi.useFakeTimers();
+    let headingHeight = 80;
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(
+      () => createDomRect(headingHeight),
+    );
+
+    const { container } = render(<DesktopVirtualizedTable pxtable={pxTable} />);
+    const scrollContainer = container.querySelector(`.${classes.virtualizedWrapper}`);
+    const heading = container.querySelector('thead');
+    const firstHeaderRow = container.querySelector('thead tr');
+
+    expect(scrollContainer).toBeTruthy();
+    expect(heading).toBeTruthy();
+    expect(firstHeaderRow).toBeTruthy();
+
+    Object.defineProperty(scrollContainer as HTMLElement, 'scrollLeft', {
+      configurable: true,
+      writable: true,
+      value: 88,
+    });
+
+    fireEvent.scroll(scrollContainer as HTMLElement);
+
+    headingHeight = 40;
+
+    Object.defineProperty(scrollContainer as HTMLElement, 'scrollLeft', {
+      configurable: true,
+      writable: true,
+      value: 140,
+    });
+
+    fireEvent.scroll(scrollContainer as HTMLElement);
+
+    expect((firstHeaderRow as HTMLElement).style.minHeight).toBe('80px');
+
+    act(() => {
+      vi.advanceTimersByTime(451);
+    });
+
+    expect((firstHeaderRow as HTMLElement).style.minHeight).toBe('');
   });
 });

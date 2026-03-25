@@ -46,6 +46,9 @@ export interface VirtualizedTableLayoutProps {
   readonly renderedColumnCount: number;
   readonly scrollContainerRef: React.RefObject<HTMLDivElement | null>;
   readonly verticalScrollElement: HTMLElement | null;
+  readonly headingRef?: React.RefObject<HTMLTableSectionElement | null>;
+  readonly headingStyle?: React.CSSProperties;
+  readonly headingClassName?: string;
 }
 
 /**
@@ -483,6 +486,9 @@ export function VirtualizedTableLayout({
   renderedColumnCount,
   scrollContainerRef,
   verticalScrollElement,
+  headingRef,
+  headingStyle,
+  headingClassName,
 }: VirtualizedTableLayoutProps) {
   const shouldUseInternalScrollContainer =
     shouldVirtualizeColumns ||
@@ -508,7 +514,9 @@ export function VirtualizedTableLayout({
         )}
         aria-label={pxtable.metadata.label}
       >
-        <thead>{headingRows}</thead>
+        <thead ref={headingRef} style={headingStyle} className={headingClassName}>
+          {headingRows}
+        </thead>
         <tbody>
           {shouldVirtualize && topPaddingHeight > 0 && (
             <tr>
@@ -551,6 +559,7 @@ export function createHeading(
   headingDataCellCodes: DataCellCodes[],
   columnWindow: ColumnRenderWindow,
   nextKey: () => string,
+  headingRowLocks?: number[] | null,
 ): React.JSX.Element[] {
   // Number of times to add all values for a variable, default to 1 for first header row
   let repetitionsCurrentHeaderLevel = 1;
@@ -581,12 +590,29 @@ export function createHeading(
     idxHeadingLevel < table.heading.length;
     idxHeadingLevel++
   ) {
+    const rowLockHeight = headingRowLocks?.[idxHeadingLevel];
+    const rowHeightStyle =
+      rowLockHeight && rowLockHeight > 0
+        ? {
+            height: `${rowLockHeight}px`,
+            minHeight: `${rowLockHeight}px`,
+            maxHeight: `${rowLockHeight}px`,
+          }
+        : undefined;
+
     if (columnWindow.leftPadding > 0) {
       headerRow.push(
         <td
           key={nextKey()}
           className={classes.virtualPaddingCell}
-          style={{ width: `${columnWindow.leftPadding}px` }}
+          style={
+            rowHeightStyle
+              ? {
+                  ...rowHeightStyle,
+                  width: `${columnWindow.leftPadding}px`,
+                }
+              : { width: `${columnWindow.leftPadding}px` }
+          }
         />,
       );
     }
@@ -635,8 +661,11 @@ export function createHeading(
                   table.stub.length === 0 &&
                   visibleSpanStart === 0,
               })}
+              style={rowHeightStyle}
             >
-              {variable.values[i].label}
+              <span className={classes.tableHeadingText}>
+                {variable.values[i].label}
+              </span>
             </th>,
           );
         }
@@ -661,12 +690,23 @@ export function createHeading(
         <td
           key={nextKey()}
           className={classes.virtualPaddingCell}
-          style={{ width: `${columnWindow.rightPadding}px` }}
+          style={
+            rowHeightStyle
+              ? {
+                  ...rowHeightStyle,
+                  width: `${columnWindow.rightPadding}px`,
+                }
+              : { width: `${columnWindow.rightPadding}px` }
+          }
         />,
       );
     }
 
-    headerRows.push(<tr key={nextKey()}>{headerRow}</tr>);
+    headerRows.push(
+      <tr key={nextKey()} style={rowHeightStyle}>
+        {headerRow}
+      </tr>,
+    );
 
     // Set repetiton for the next header variable
     repetitionsCurrentHeaderLevel *=

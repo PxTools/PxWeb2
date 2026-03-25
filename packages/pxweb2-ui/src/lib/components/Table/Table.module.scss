@@ -278,3 +278,21 @@
   width: max-content;
   min-width: 100%;
 }
+
+.tableHeadingText {
+  display: block;
+}
+
+.tableHeadingLocked {
+  will-change: min-height;
+}
+
+.tableHeadingScrolling {
+  .tableHeadingText {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    text-overflow: ellipsis;
+  }
+}
