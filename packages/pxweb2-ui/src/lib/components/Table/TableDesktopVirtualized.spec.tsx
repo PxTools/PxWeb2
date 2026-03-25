@@ -180,7 +180,9 @@ describe('TableDesktopVirtualized', () => {
     );
 
     const { container } = render(<DesktopVirtualizedTable pxtable={pxTable} />);
-    const scrollContainer = container.querySelector(`.${classes.virtualizedWrapper}`);
+    const scrollContainer = container.querySelector(
+      `.${classes.virtualizedWrapper}`,
+    );
     const heading = container.querySelector('thead');
 
     expect(scrollContainer).toBeTruthy();
@@ -195,7 +197,9 @@ describe('TableDesktopVirtualized', () => {
     fireEvent.scroll(scrollContainer as HTMLElement);
 
     expect(heading?.classList.contains(classes.tableHeadingLocked)).toBe(true);
-    expect(heading?.classList.contains(classes.tableHeadingScrolling)).toBe(true);
+    expect(heading?.classList.contains(classes.tableHeadingScrolling)).toBe(
+      true,
+    );
 
     act(() => {
       vi.advanceTimersByTime(451);
@@ -214,7 +218,9 @@ describe('TableDesktopVirtualized', () => {
     );
 
     const { container } = render(<DesktopVirtualizedTable pxtable={pxTable} />);
-    const scrollContainer = container.querySelector(`.${classes.virtualizedWrapper}`);
+    const scrollContainer = container.querySelector(
+      `.${classes.virtualizedWrapper}`,
+    );
     const heading = container.querySelector('thead');
     const firstHeaderRow = container.querySelector('thead tr');
 

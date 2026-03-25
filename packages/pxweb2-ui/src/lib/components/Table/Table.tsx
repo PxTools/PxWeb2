@@ -514,7 +514,11 @@ export function VirtualizedTableLayout({
         )}
         aria-label={pxtable.metadata.label}
       >
-        <thead ref={headingRef} style={headingStyle} className={headingClassName}>
+        <thead
+          ref={headingRef}
+          style={headingStyle}
+          className={headingClassName}
+        >
           {headingRows}
         </thead>
         <tbody>

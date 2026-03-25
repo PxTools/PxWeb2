@@ -263,8 +263,9 @@ export function DesktopVirtualizedTable({
     tableColumnSize > DESKTOP_COLUMN_VIRTUALIZATION_THRESHOLD;
   const headingRef = useRef<HTMLTableSectionElement>(null);
   const lastScrollLeftRef = useRef(0);
-  const scrollIdleTimerRef =
-    useRef<ReturnType<typeof globalThis.setTimeout> | null>(null);
+  const scrollIdleTimerRef = useRef<ReturnType<
+    typeof globalThis.setTimeout
+  > | null>(null);
   const captureLockFrameRef = useRef<number | null>(null);
   const isScrollingHorizontallyRef = useRef(false);
   const isPointerDraggingRef = useRef(false);
@@ -353,13 +354,7 @@ export function DesktopVirtualizedTable({
         createKeyFactory(),
         headingRowLocks,
       ),
-    [
-      pxtable,
-      tableMeta,
-      headingDataCellCodes,
-      columnWindow,
-      headingRowLocks,
-    ],
+    [pxtable, tableMeta, headingDataCellCodes, columnWindow, headingRowLocks],
   );
 
   const desktopRowEntries = useMemo(
@@ -573,7 +568,9 @@ export function DesktopVirtualizedTable({
     scrollContainer.addEventListener('pointerdown', handlePointerDown, {
       passive: true,
     });
-    globalThis.addEventListener('pointerup', handlePointerUp, { passive: true });
+    globalThis.addEventListener('pointerup', handlePointerUp, {
+      passive: true,
+    });
     scrollContainer.addEventListener('scroll', handleScroll, { passive: true });
 
     return () => {
@@ -591,7 +588,9 @@ export function DesktopVirtualizedTable({
     [classes.tableHeadingLocked]:
       shouldVirtualizeColumns && headingRowLocks !== null,
     [classes.tableHeadingScrolling]:
-      shouldVirtualizeColumns && isScrollingHorizontally && headingRowLocks !== null,
+      shouldVirtualizeColumns &&
+      isScrollingHorizontally &&
+      headingRowLocks !== null,
   });
 
   return (
