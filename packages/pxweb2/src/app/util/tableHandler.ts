@@ -16,7 +16,10 @@ type CompiledMatcher = {
 
 const subjectIdCache = new WeakMap<Table, Set<string>>();
 const searchTextCache = new WeakMap<Table, string>();
-const yearRangeCache = new WeakMap<Table, { start: number; end: number } | null>();
+const yearRangeCache = new WeakMap<
+  Table,
+  { start: number; end: number } | null
+>();
 
 export async function getAllTables(language?: string) {
   const config = getConfig();
@@ -126,13 +129,17 @@ function getSearchTextForTable(table: Table): string {
   return text;
 }
 
-function getYearSpanForTable(table: Table): { start: number; end: number } | null {
+function getYearSpanForTable(
+  table: Table,
+): { start: number; end: number } | null {
   const cached = yearRangeCache.get(table);
   if (cached !== undefined) {
     return cached;
   }
 
-  const [firstStart, firstEnd] = getYearRangeFromPeriod(table.firstPeriod ?? '');
+  const [firstStart, firstEnd] = getYearRangeFromPeriod(
+    table.firstPeriod ?? '',
+  );
   const [lastStart, lastEnd] = getYearRangeFromPeriod(table.lastPeriod ?? '');
   const start = Math.min(firstStart, lastStart);
   const end = Math.max(firstEnd, lastEnd);
@@ -185,9 +192,7 @@ export function buildCompiledMatcher(filters: Filter[]): CompiledMatcher {
     if (filter.type === 'yearRange') {
       const [fromStr, toStr] = filter.value.split('-');
       const parsedFrom = Number.parseInt(fromStr ?? '', 10);
-      const parsedTo = toStr
-        ? Number.parseInt(toStr, 10)
-        : parsedFrom;
+      const parsedTo = toStr ? Number.parseInt(toStr, 10) : parsedFrom;
 
       yearFrom = Number.isNaN(parsedFrom) ? undefined : parsedFrom;
       yearTo = Number.isNaN(parsedTo) ? undefined : parsedTo;

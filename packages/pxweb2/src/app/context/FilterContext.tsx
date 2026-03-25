@@ -338,7 +338,9 @@ function applyRemoveFilters(
     shouldTableBeIncludedWithMatcher(table, matcher),
   );
 
-  const yearRangeStillActive = currentFilters.some((f) => f.type === 'yearRange');
+  const yearRangeStillActive = currentFilters.some(
+    (f) => f.type === 'yearRange',
+  );
   const updatedLastUsedYearRange = yearRangeStillActive
     ? state.lastUsedYearRange
     : getYearRanges(filteredTables);
