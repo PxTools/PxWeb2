@@ -1,5 +1,5 @@
-const validator = require('html-validate');
-const { firefox } = require('playwright');
+import { HtmlValidate } from 'html-validate';
+import { firefox } from 'playwright';
 
 const validateLocalhost = async () => {
   let browser;
@@ -17,7 +17,7 @@ const validateLocalhost = async () => {
     const html = await page.content();
 
     // Create validator instance with default config
-    const htmlvalidate = new validator.HtmlValidate();
+    const htmlvalidate = new HtmlValidate();
     const report = await htmlvalidate.validateString(html);
 
     if (report.valid) {
