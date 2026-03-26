@@ -219,78 +219,100 @@ export function shouldTableBeIncludedWithMatcher(
   table: Table,
   matcher: CompiledMatcher,
 ): boolean {
-  if (matcher.timeUnits.size > 0) {
-    const tableTimeUnit = table.timeUnit?.toLowerCase() ?? '';
-    if (!matcher.timeUnits.has(tableTimeUnit)) {
-      return false;
+  const matchesTimeUnit = (): boolean => {
+    if (matcher.timeUnits.size === 0) {
+      return true;
     }
-  }
+    const tableTimeUnit = table.timeUnit?.toLowerCase() ?? '';
+    return matcher.timeUnits.has(tableTimeUnit);
+  };
 
-  if (matcher.subjectIds.size > 0) {
+  const matchesSubject = (): boolean => {
+    if (matcher.subjectIds.size === 0) {
+      return true;
+    }
     const tableSubjects = getSubjectIdsForTable(table);
-    let hasMatchingSubject = false;
     for (const subjectId of matcher.subjectIds) {
       if (tableSubjects.has(subjectId)) {
-        hasMatchingSubject = true;
-        break;
+        return true;
       }
     }
-    if (!hasMatchingSubject) {
-      return false;
-    }
-  }
+    return false;
+  };
 
-  if (matcher.searchWords.length > 0) {
+  const matchesSearch = (): boolean => {
+    if (matcher.searchWords.length === 0) {
+      return true;
+    }
     const text = getSearchTextForTable(table);
     for (const word of matcher.searchWords) {
       if (!text.includes(word)) {
         return false;
       }
     }
-  }
+    return true;
+  };
 
-  if (matcher.yearFrom !== undefined || matcher.yearTo !== undefined) {
+  const matchesYearRange = (): boolean => {
+    const { yearFrom, yearTo } = matcher;
+    if (yearFrom === undefined && yearTo === undefined) {
+      return true;
+    }
+
     const span = getYearSpanForTable(table);
     if (!span) {
       return false;
     }
 
-    const { yearFrom, yearTo } = matcher;
     if (yearFrom !== undefined && yearTo !== undefined) {
-      if (!(span.start <= yearFrom && span.end >= yearTo)) {
-        return false;
-      }
-    } else if (yearFrom !== undefined) {
-      if (!(yearFrom >= span.start && yearFrom <= span.end)) {
-        return false;
-      }
-    } else if (yearTo !== undefined) {
-      if (!(yearTo >= span.start && yearTo <= span.end)) {
-        return false;
-      }
+      return span.start <= yearFrom && span.end >= yearTo;
     }
-  }
 
-  if (matcher.variableNames.size > 0) {
+    if (yearFrom !== undefined) {
+      return yearFrom >= span.start && yearFrom <= span.end;
+    }
+
+    return yearTo !== undefined && yearTo >= span.start && yearTo <= span.end;
+  };
+
+  const matchesVariables = (): boolean => {
+    if (matcher.variableNames.size === 0) {
+      return true;
+    }
     for (const variable of matcher.variableNames) {
       if (!table.variableNames.includes(variable)) {
         return false;
       }
     }
-  }
+    return true;
+  };
 
-  if (matcher.statusActive || matcher.statusDiscontinued) {
-    const isDiscontinued = table.discontinued === true;
-    if (matcher.statusActive && matcher.statusDiscontinued) {
-      // Both selected means all statuses are accepted.
-    } else if (matcher.statusActive && isDiscontinued) {
-      return false;
-    } else if (matcher.statusDiscontinued && !isDiscontinued) {
-      return false;
+  const matchesStatus = (): boolean => {
+    const { statusActive, statusDiscontinued } = matcher;
+    if (!statusActive && !statusDiscontinued) {
+      return true;
     }
-  }
 
-  return true;
+    if (statusActive && statusDiscontinued) {
+      return true;
+    }
+
+    const isDiscontinued = table.discontinued === true;
+    if (statusActive) {
+      return !isDiscontinued;
+    }
+
+    return isDiscontinued;
+  };
+
+  return (
+    matchesTimeUnit() &&
+    matchesSubject() &&
+    matchesSearch() &&
+    matchesYearRange() &&
+    matchesVariables() &&
+    matchesStatus()
+  );
 }
 
 export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
