@@ -106,7 +106,7 @@ describe('TableDesktopVirtualized', () => {
     expect(table).toBeTruthy();
     expect(table?.classList.contains(classes.virtualizedTable)).toBe(false);
   });
-  
+
   // -- STICKY HEADER --
   // it('applies sticky class to desktop heading', () => {
   //   const { container } = render(<DesktopVirtualizedTable pxtable={pxTable} />);
