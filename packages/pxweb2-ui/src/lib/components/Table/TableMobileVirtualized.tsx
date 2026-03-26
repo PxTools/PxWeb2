@@ -2,13 +2,13 @@ import { useMemo } from 'react';
 import cl from 'clsx';
 
 import {
-  VirtualizedTableProps,
   createHeading,
   createHeadingDataCellCodes,
   createKeyFactory,
   useBodyRowVirtualizationWindow,
   useVirtualizedTableBaseProps,
   VirtualizedTableLayout,
+  VirtualizedTableProps,
 } from './Table';
 import classes from './Table.module.scss';
 import { getPxTableData } from './cubeHelper';
@@ -42,8 +42,8 @@ type MobileRowEntry = {
 type ColumnWindow = {
   start: number;
   end: number;
-  leftPadding: number;
-  rightPadding: number;
+  startPadding: number;
+  endPadding: number;
 };
 
 function getAriaLabel(variable: Variable, label: string): string | undefined {
@@ -269,8 +269,8 @@ function renderMobileBodyRows({
       );
     }
 
-    if (columnWindow.leftPadding > 0) {
-      cells.push(createPaddingCell(columnWindow.leftPadding, nextKey));
+    if (columnWindow.startPadding > 0) {
+      cells.push(createPaddingCell(columnWindow.startPadding, nextKey));
     }
 
     if (row.isDataRow) {
@@ -278,8 +278,8 @@ function renderMobileBodyRows({
       cells.push(...createDataCells(stubCodes));
     }
 
-    if (columnWindow.rightPadding > 0) {
-      cells.push(createPaddingCell(columnWindow.rightPadding, nextKey));
+    if (columnWindow.endPadding > 0) {
+      cells.push(createPaddingCell(columnWindow.endPadding, nextKey));
     }
 
     renderedRows.push(
@@ -315,8 +315,8 @@ export function MobileVirtualizedTable({
     () => ({
       start: 0,
       end: tableColumnSize,
-      leftPadding: 0,
-      rightPadding: 0,
+      startPadding: 0,
+      endPadding: 0,
     }),
     [tableColumnSize],
   );

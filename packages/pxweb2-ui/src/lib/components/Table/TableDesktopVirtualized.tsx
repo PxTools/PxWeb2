@@ -3,14 +3,14 @@ import { useVirtualizer } from '@tanstack/react-virtual';
 import cl from 'clsx';
 
 import {
-  VirtualizedTableProps,
-  DESKTOP_COLUMN_VIRTUALIZATION_THRESHOLD,
   createHeading,
   createHeadingDataCellCodes,
   createKeyFactory,
+  DESKTOP_COLUMN_VIRTUALIZATION_THRESHOLD,
   useBodyRowVirtualizationWindow,
   useVirtualizedTableBaseProps,
   VirtualizedTableLayout,
+  VirtualizedTableProps,
 } from './Table';
 import classes from './Table.module.scss';
 import { getPxTableData } from './cubeHelper';
@@ -36,8 +36,8 @@ type DesktopRowEntry = {
 type ColumnWindow = {
   start: number;
   end: number;
-  leftPadding: number;
-  rightPadding: number;
+  startPadding: number;
+  endPadding: number;
 };
 
 function createPaddingCell(
@@ -84,8 +84,8 @@ function renderNoStubBodyRows({
   const nextKey = createKeyFactory();
   const rowCells: React.JSX.Element[] = [];
 
-  if (columnWindow.leftPadding > 0) {
-    rowCells.push(createPaddingCell(columnWindow.leftPadding, nextKey));
+  if (columnWindow.startPadding > 0) {
+    rowCells.push(createPaddingCell(columnWindow.startPadding, nextKey));
   }
 
   for (
@@ -109,8 +109,8 @@ function renderNoStubBodyRows({
     );
   }
 
-  if (columnWindow.rightPadding > 0) {
-    rowCells.push(createPaddingCell(columnWindow.rightPadding, nextKey));
+  if (columnWindow.endPadding > 0) {
+    rowCells.push(createPaddingCell(columnWindow.endPadding, nextKey));
   }
 
   return [
@@ -151,8 +151,8 @@ function renderDesktopBodyRows({
       </th>,
     ];
 
-    if (columnWindow.leftPadding > 0) {
-      rowCells.push(createPaddingCell(columnWindow.leftPadding, nextKey));
+    if (columnWindow.startPadding > 0) {
+      rowCells.push(createPaddingCell(columnWindow.startPadding, nextKey));
     }
 
     for (
@@ -179,8 +179,8 @@ function renderDesktopBodyRows({
       );
     }
 
-    if (columnWindow.rightPadding > 0) {
-      rowCells.push(createPaddingCell(columnWindow.rightPadding, nextKey));
+    if (columnWindow.endPadding > 0) {
+      rowCells.push(createPaddingCell(columnWindow.endPadding, nextKey));
     }
 
     renderedRows.push(
@@ -274,16 +274,16 @@ export function DesktopVirtualizedTable({
   const lastNonEmptyColumnWindowRef = useRef<{
     start: number;
     end: number;
-    leftPadding: number;
-    rightPadding: number;
+    startPadding: number;
+    endPadding: number;
   } | null>(null);
   const bootstrapColumnEnd = Math.min(tableColumnSize, 12);
   const bootstrapColumnWindow = useMemo(
     () => ({
       start: 0,
       end: bootstrapColumnEnd,
-      leftPadding: 0,
-      rightPadding: Math.max(
+      startPadding: 0,
+      endPadding: Math.max(
         0,
         columnVirtualizer.getTotalSize() - bootstrapColumnEnd * 88,
       ),
@@ -296,8 +296,8 @@ export function DesktopVirtualizedTable({
       return {
         start: 0,
         end: tableColumnSize,
-        leftPadding: 0,
-        rightPadding: 0,
+        startPadding: 0,
+        endPadding: 0,
       };
     }
 
@@ -315,8 +315,8 @@ export function DesktopVirtualizedTable({
     const window = {
       start: firstVirtualColumn?.index ?? 0,
       end: lastVirtualColumn ? lastVirtualColumn.index + 1 : tableColumnSize,
-      leftPadding: firstVirtualColumn?.start ?? 0,
-      rightPadding: lastVirtualColumn
+      startPadding: firstVirtualColumn?.start ?? 0,
+      endPadding: lastVirtualColumn
         ? columnVirtualizer.getTotalSize() - lastVirtualColumn.end
         : 0,
     };
@@ -351,8 +351,8 @@ export function DesktopVirtualizedTable({
       headingDataCellCodes,
       columnWindow.start,
       columnWindow.end,
-      columnWindow.leftPadding,
-      columnWindow.rightPadding,
+      columnWindow.startPadding,
+      columnWindow.endPadding,
     ],
   );
 
@@ -400,8 +400,8 @@ export function DesktopVirtualizedTable({
     });
   }, [
     columnWindow.end,
-    columnWindow.leftPadding,
-    columnWindow.rightPadding,
+    columnWindow.startPadding,
+    columnWindow.endPadding,
     columnWindow.start,
     hasNoStub,
     headingDataCellCodes,
@@ -412,8 +412,8 @@ export function DesktopVirtualizedTable({
   const renderedColumnCount =
     tableMeta.columnOffset +
     (columnWindow.end - columnWindow.start) +
-    (columnWindow.leftPadding > 0 ? 1 : 0) +
-    (columnWindow.rightPadding > 0 ? 1 : 0);
+    (columnWindow.startPadding > 0 ? 1 : 0) +
+    (columnWindow.endPadding > 0 ? 1 : 0);
 
   return (
     <VirtualizedTableLayout

@@ -67,8 +67,8 @@ type DataCellCodes = DataCellMeta[];
 interface ColumnRenderWindow {
   start: number;
   end: number;
-  leftPadding: number;
-  rightPadding: number;
+  startPadding: number;
+  endPadding: number;
 }
 
 export const DESKTOP_COLUMN_VIRTUALIZATION_THRESHOLD = 15;
@@ -581,12 +581,12 @@ export function createHeading(
     idxHeadingLevel < table.heading.length;
     idxHeadingLevel++
   ) {
-    if (columnWindow.leftPadding > 0) {
+    if (columnWindow.startPadding > 0) {
       headerRow.push(
         <td
           key={nextKey()}
           className={classes.virtualPaddingCell}
-          style={{ width: `${columnWindow.leftPadding}px` }}
+          style={{ width: `${columnWindow.startPadding}px` }}
         />,
       );
     }
@@ -656,12 +656,12 @@ export function createHeading(
       }
     }
 
-    if (columnWindow.rightPadding > 0) {
+    if (columnWindow.endPadding > 0) {
       headerRow.push(
         <td
           key={nextKey()}
           className={classes.virtualPaddingCell}
-          style={{ width: `${columnWindow.rightPadding}px` }}
+          style={{ width: `${columnWindow.endPadding}px` }}
         />,
       );
     }
