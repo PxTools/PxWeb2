@@ -51,24 +51,41 @@ export interface VirtualizedTableLayoutProps {
 /**
  * Represents the metadata for one dimension of a data cell.
  */
-type DataCellMeta = {
+interface DataCellMeta {
   varId: string; // id of variable
   valCode: string; // value code
   valLabel: string; // value label
   varPos: number; // variable position in stored data
   htmlId: string; // id used in th. Will build up the headers attribute for datacells. For accesability
-};
+}
 
 /**
  * Represents the metadata for multiple dimensions of a data cell.
  */
-type DataCellCodes = DataCellMeta[];
+interface DataCellCodes extends Array<DataCellMeta> {}
 
 interface ColumnRenderWindow {
   start: number;
   end: number;
   startPadding: number;
   endPadding: number;
+}
+
+interface BodyRowWindow {
+  visibleRowStart: number;
+  visibleRowEnd: number;
+  topPaddingHeight: number;
+  bottomPaddingHeight: number;
+}
+
+interface BodyRowWindowResult extends BodyRowWindow {
+  shouldVirtualize: boolean;
+}
+
+interface VirtualRowItem {
+  index: number;
+  start: number;
+  end: number;
 }
 
 export const DESKTOP_COLUMN_VIRTUALIZATION_THRESHOLD = 15;
@@ -81,23 +98,6 @@ const MOBILE_ROW_OVERSCAN = 4;
 // measured/returned concrete items. This avoids rendering an empty tbody frame.
 const DESKTOP_BOOTSTRAP_ROW_COUNT = 24;
 const MOBILE_BOOTSTRAP_ROW_COUNT = 12;
-
-type BodyRowWindow = {
-  visibleRowStart: number;
-  visibleRowEnd: number;
-  topPaddingHeight: number;
-  bottomPaddingHeight: number;
-};
-
-type BodyRowWindowResult = BodyRowWindow & {
-  shouldVirtualize: boolean;
-};
-
-type VirtualRowItem = {
-  index: number;
-  start: number;
-  end: number;
-};
 
 function getBodyRowVirtualizationSettings(isMobile: boolean) {
   return {
