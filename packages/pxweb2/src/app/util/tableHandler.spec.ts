@@ -122,7 +122,9 @@ describe('getAllTables', () => {
   });
 
   it('should throw a friendly error when API returns 404', async () => {
-    vi.spyOn(TablesService, 'listAllTables').mockRejectedValueOnce({ status: 404 });
+    vi.spyOn(TablesService, 'listAllTables').mockRejectedValueOnce({
+      status: 404,
+    });
 
     await expect(getAllTables('en')).rejects.toThrow('No tables found (404)');
   });
@@ -188,9 +190,13 @@ describe('queryTablesByKeyword', () => {
   });
 
   it('should throw when keyword query fails', async () => {
-    vi.spyOn(TablesService, 'listAllTables').mockRejectedValueOnce(new Error('query failed'));
+    vi.spyOn(TablesService, 'listAllTables').mockRejectedValueOnce(
+      new Error('query failed'),
+    );
 
-    await expect(queryTablesByKeyword('personer', 'en')).rejects.toThrow('query failed');
+    await expect(queryTablesByKeyword('personer', 'en')).rejects.toThrow(
+      'query failed',
+    );
   });
 
   it('should use default language for keyword query when language is omitted', async () => {
