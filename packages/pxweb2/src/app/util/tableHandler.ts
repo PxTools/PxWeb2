@@ -1,6 +1,6 @@
 import { type Table, TablesService, ApiError } from '@pxweb2/pxweb2-api-client';
 import { getConfig } from './config/getConfig';
-import type { Filter } from '../pages/StartPage/StartPageTypes';
+import type { Filter, FilterType } from '../pages/StartPage/StartPageTypes';
 import { getYearRangeFromPeriod } from './startPageFilters';
 
 type CompiledMatcher = {
@@ -155,70 +155,64 @@ function getYearSpanForTable(
 }
 
 export function buildCompiledMatcher(filters: Filter[]): CompiledMatcher {
-  const timeUnits = new Set<string>();
-  const subjectIds = new Set<string>();
-  const variableNames = new Set<string>();
-  let searchWords: string[] = [];
-  let yearFrom: number | undefined;
-  let yearTo: number | undefined;
-  let statusActive = false;
-  let statusDiscontinued = false;
+  const matcher: CompiledMatcher = {
+    timeUnits: new Set<string>(),
+    subjectIds: new Set<string>(),
+    searchWords: [],
+    yearFrom: undefined,
+    yearTo: undefined,
+    variableNames: new Set<string>(),
+    statusActive: false,
+    statusDiscontinued: false,
+  };
+
+  const parseSearchWords = (value: string): string[] =>
+    value.toLowerCase().normalize().split(' ').filter(Boolean);
+
+  const parseYearRange = (
+    value: string,
+  ): Pick<CompiledMatcher, 'yearFrom' | 'yearTo'> => {
+    const [fromStr, toStr] = value.split('-');
+    const parsedFrom = Number.parseInt(fromStr ?? '', 10);
+    const parsedTo = toStr ? Number.parseInt(toStr, 10) : parsedFrom;
+
+    return {
+      yearFrom: Number.isNaN(parsedFrom) ? undefined : parsedFrom,
+      yearTo: Number.isNaN(parsedTo) ? undefined : parsedTo,
+    };
+  };
+
+  const filterHandlers: Partial<
+    Record<FilterType, (filter: Filter, current: CompiledMatcher) => void>
+  > = {
+    timeUnit: (filter, current) => {
+      current.timeUnits.add(filter.value.toLowerCase());
+    },
+    subject: (filter, current) => {
+      current.subjectIds.add(filter.value);
+    },
+    variable: (filter, current) => {
+      current.variableNames.add(filter.value);
+    },
+    search: (filter, current) => {
+      current.searchWords = parseSearchWords(filter.value);
+    },
+    yearRange: (filter, current) => {
+      const { yearFrom, yearTo } = parseYearRange(filter.value);
+      current.yearFrom = yearFrom;
+      current.yearTo = yearTo;
+    },
+    status: (filter, current) => {
+      current.statusActive ||= filter.value === 'active';
+      current.statusDiscontinued ||= filter.value === 'discontinued';
+    },
+  };
 
   for (const filter of filters) {
-    if (filter.type === 'timeUnit') {
-      timeUnits.add(filter.value.toLowerCase());
-      continue;
-    }
-
-    if (filter.type === 'subject') {
-      subjectIds.add(filter.value);
-      continue;
-    }
-
-    if (filter.type === 'variable') {
-      variableNames.add(filter.value);
-      continue;
-    }
-
-    if (filter.type === 'search') {
-      searchWords = filter.value
-        .toLowerCase()
-        .normalize()
-        .split(' ')
-        .filter(Boolean);
-      continue;
-    }
-
-    if (filter.type === 'yearRange') {
-      const [fromStr, toStr] = filter.value.split('-');
-      const parsedFrom = Number.parseInt(fromStr ?? '', 10);
-      const parsedTo = toStr ? Number.parseInt(toStr, 10) : parsedFrom;
-
-      yearFrom = Number.isNaN(parsedFrom) ? undefined : parsedFrom;
-      yearTo = Number.isNaN(parsedTo) ? undefined : parsedTo;
-      continue;
-    }
-
-    if (filter.type === 'status') {
-      if (filter.value === 'active') {
-        statusActive = true;
-      }
-      if (filter.value === 'discontinued') {
-        statusDiscontinued = true;
-      }
-    }
+    filterHandlers[filter.type]?.(filter, matcher);
   }
 
-  return {
-    timeUnits,
-    subjectIds,
-    searchWords,
-    yearFrom,
-    yearTo,
-    variableNames,
-    statusActive,
-    statusDiscontinued,
-  };
+  return matcher;
 }
 
 export function shouldTableBeIncludedWithMatcher(
