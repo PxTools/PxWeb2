@@ -42,6 +42,11 @@ type ColumnWindow = {
 
 const HORIZONTAL_SCROLL_IDLE_DELAY_MS = 450;
 
+// function parseCssPx(value: string): number {
+//   const parsed = Number.parseFloat(value);
+//   return Number.isFinite(parsed) ? parsed : 0;
+// }
+
 function createPaddingCell(
   width: number,
   nextKey: () => string,
@@ -584,7 +589,85 @@ export function DesktopVirtualizedTable({
     };
   }, [scrollContainerRef, shouldVirtualizeColumns]);
 
+  // -- STICKY HEADER --
+  // useLayoutEffect(() => {
+  //   const scrollContainer = scrollContainerRef.current;
+  //   const headingElement = headingRef.current;
+
+  //   if (!scrollContainer || !headingElement) {
+  //     return;
+  //   }
+
+  //   const tableElement = scrollContainer.querySelector('table');
+  //   if (!tableElement) {
+  //     return;
+  //   }
+
+  //   const scrollSource: HTMLElement | Window =
+  //     verticalScrollElement ?? globalThis.window;
+  //   let frameId: number | null = null;
+  //   let lastAppliedTranslate = Number.NaN;
+
+  //   const updateStickyPosition = () => {
+  //     frameId = null;
+
+  //     const containerRect = scrollContainer.getBoundingClientRect();
+  //     const tableRect = tableElement.getBoundingClientRect();
+  //     const stickyOffset = parseCssPx(
+  //       getComputedStyle(document.body).getPropertyValue(
+  //         '--px-skip-to-main-sticky-offset',
+  //       ),
+  //     );
+  //     const headingHeight = headingElement.offsetHeight;
+
+  //     const desiredTop = Math.min(
+  //       Math.max(containerRect.top, stickyOffset),
+  //       tableRect.bottom - headingHeight,
+  //     );
+  //     const translate = Math.max(0, desiredTop - containerRect.top);
+
+  //     if (Math.abs(lastAppliedTranslate - translate) < 0.5) {
+  //       return;
+  //     }
+
+  //     headingElement.style.transform = `translateY(${translate}px)`;
+  //     lastAppliedTranslate = translate;
+  //   };
+
+  //   const requestUpdate = () => {
+  //     if (frameId !== null) {
+  //       return;
+  //     }
+
+  //     frameId = requestAnimationFrame(updateStickyPosition);
+  //   };
+
+  //   updateStickyPosition();
+
+  //   scrollSource.addEventListener('scroll', requestUpdate, { passive: true });
+  //   globalThis.addEventListener('resize', requestUpdate, { passive: true });
+
+  //   const resizeObserver =
+  //     typeof ResizeObserver === 'undefined'
+  //       ? null
+  //       : new ResizeObserver(() => requestUpdate());
+  //   resizeObserver?.observe(headingElement);
+  //   resizeObserver?.observe(scrollContainer);
+
+  //   return () => {
+  //     if (frameId !== null) {
+  //       cancelAnimationFrame(frameId);
+  //     }
+
+  //     scrollSource.removeEventListener('scroll', requestUpdate);
+  //     globalThis.removeEventListener('resize', requestUpdate);
+  //     resizeObserver?.disconnect();
+  //     headingElement.style.transform = '';
+  //   };
+  // }, [headingRows, scrollContainerRef, verticalScrollElement]);
+
   const headingClassName = cl({
+    // [classes.tableHeadingStickyDesktop]: true,
     [classes.tableHeadingLocked]:
       shouldVirtualizeColumns && headingRowLocks !== null,
     [classes.tableHeadingScrolling]:

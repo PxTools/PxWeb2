@@ -106,6 +106,18 @@ describe('TableDesktopVirtualized', () => {
     expect(table).toBeTruthy();
     expect(table?.classList.contains(classes.virtualizedTable)).toBe(false);
   });
+  
+  // -- STICKY HEADER --
+  // it('applies sticky class to desktop heading', () => {
+  //   const { container } = render(<DesktopVirtualizedTable pxtable={pxTable} />);
+
+  //   const heading = container.querySelector('thead');
+
+  //   expect(heading).toBeTruthy();
+  //   expect(heading?.classList.contains(classes.tableHeadingStickyDesktop)).toBe(
+  //     true,
+  //   );
+  // });
 
   it('uses bootstrap column window when virtualizer initially returns no columns', () => {
     virtualizerState.columnItems = [];

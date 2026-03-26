@@ -283,6 +283,15 @@
   display: block;
 }
 
+// -- STICKY HEADER --
+// .tableHeadingStickyDesktop {
+//   position: relative;
+//   z-index: 10;
+//   background: var(--px-color-surface-moderate);
+//   will-change: transform;
+//   backface-visibility: hidden;
+// }
+
 .tableHeadingLocked {
   will-change: min-height;
 }
