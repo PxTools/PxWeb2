@@ -55,9 +55,7 @@ export function TableViewer() {
   }, [hasFocus]);
 
   useEffect(() => {
-    // Use the actual document scroll root instead of a component div.
-    // outerContainerRef.current =
-    //   (document.scrollingElement as HTMLElement | null) ?? document.body;
+    // Set the scroll container for the virtualized table
     outerContainerRef.current = document.getElementById('scroll-root');
   }, []);
 

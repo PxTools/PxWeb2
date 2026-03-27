@@ -2,8 +2,8 @@ import { useMemo } from 'react';
 import cl from 'clsx';
 
 import {
-  createHeading,
-  createHeadingDataCellCodes,
+  createHeadingRowsAndDataCellCodes,
+  createVirtualPaddingCell,
   createKeyFactory,
   useBodyRowVirtualizationWindow,
   useVirtualizedTableBaseProps,
@@ -11,7 +11,8 @@ import {
   VirtualizedTableProps,
 } from './Table';
 import classes from './Table.module.scss';
-import { getPxTableData } from './cubeHelper';
+import { resolveDataCell } from './TableCellData';
+import { walkStubTree } from './TableStubTraversal';
 import { VartypeEnum } from '../../shared-types/vartypeEnum';
 import { Variable } from '../../shared-types/variable';
 
@@ -40,18 +41,20 @@ type MobileRowEntry = {
 };
 
 type ColumnWindow = {
-  start: number;
-  end: number;
+  visibleColumnStart: number;
+  visibleColumnEnd: number;
   startPadding: number;
   endPadding: number;
 };
 
+/** Builds an accessibility label for time variables and leaves others undefined. */
 function getAriaLabel(variable: Variable, label: string): string | undefined {
   return variable.type === VartypeEnum.TIME_VARIABLE
     ? `${variable.label} ${label}`
     : undefined;
 }
 
+/** Flattens stub dimensions into mobile row entries with header/data row metadata. */
 function buildMobileRowEntries(pxtable: VirtualizedTableProps['pxtable']) {
   const stubLength = pxtable.stub.length;
 
@@ -135,28 +138,29 @@ function buildMobileRowEntries(pxtable: VirtualizedTableProps['pxtable']) {
     });
   };
 
-  const walk = (stubIndex: number) => {
-    const variable = pxtable.stub[stubIndex];
-    const values = variable.values;
-
-    for (let valueIndex = 0; valueIndex < values.length; valueIndex++) {
+  walkStubTree<StubCellMeta>({
+    pxtable,
+    createPathItem: ({ variable, value }) => {
       uniqueIdCounter.idCounter++;
-      const value = values[valueIndex];
-      stubDataCellCodes[stubIndex] = {
+
+      return {
         varPos: pxtable.data.variableOrder.indexOf(variable.id),
         valCode: value.code,
         htmlId: '',
         valLabel: value.label,
       };
+    },
+    onVisit: ({ level, variable, value, valueIndex, isLeaf, path }) => {
+      for (let idx = 0; idx <= level; idx++) {
+        stubDataCellCodes[idx] = path[idx];
+      }
 
-      const isLeafLevel = stubIndex === stubLength - 1;
-
-      if (!isLeafLevel) {
-        if (stubIndex === stubLength - 3) {
-          pushRepeatedHeaders(stubIndex);
-        } else if (stubIndex === stubLength - 2) {
+      if (!isLeaf) {
+        if (level === stubLength - 3) {
+          pushRepeatedHeaders(level);
+        } else if (level === stubLength - 2) {
           pushSecondLastHeader(
-            stubIndex,
+            level,
             variable,
             value.code,
             value.label,
@@ -164,13 +168,12 @@ function buildMobileRowEntries(pxtable: VirtualizedTableProps['pxtable']) {
           );
         }
 
-        walk(stubIndex + 1);
-        continue;
+        return;
       }
 
       const cellId = createCellId(variable.id, value.code);
-      stubDataCellCodes[stubIndex].htmlId = cellId;
-      const lastValueOfLastStub = valueIndex === values.length - 1;
+      stubDataCellCodes[level].htmlId = cellId;
+      const lastValueOfLastStub = valueIndex === variable.values.length - 1;
 
       rows.push({
         key: `mobile-leaf-${cellId}`,
@@ -186,29 +189,19 @@ function buildMobileRowEntries(pxtable: VirtualizedTableProps['pxtable']) {
           id: cellId,
           scope: 'row',
           label: value.label,
-          className: cl(classes.stub, classes[`stub-${stubIndex}`]),
+          className: cl(classes.stub, classes[`stub-${level}`]),
           ariaLabel: getAriaLabel(variable, value.label),
         },
         isDataRow: true,
         stubCellCodes: stubDataCellCodes.map((code) => ({ ...code })),
       });
-    }
-  };
+    },
+  });
 
-  walk(0);
   return rows;
 }
 
-function createPaddingCell(width: number, nextKey: () => string) {
-  return (
-    <td
-      key={nextKey()}
-      className={classes.virtualPaddingCell}
-      style={{ width: `${width}px` }}
-    />
-  );
-}
-
+/** Renders mobile body rows for the current row and column render windows. */
 function renderMobileBodyRows({
   rows,
   columnWindow,
@@ -227,23 +220,17 @@ function renderMobileBodyRows({
     const dataCells: React.JSX.Element[] = [];
 
     for (
-      let colIndex = columnWindow.start;
-      colIndex < columnWindow.end;
+      let colIndex = columnWindow.visibleColumnStart;
+      colIndex < columnWindow.visibleColumnEnd;
       colIndex++
     ) {
-      const headingCodes = headingDataCellCodes[colIndex];
-      const dataCodes = stubCodes.concat(headingCodes);
-      const headers = dataCodes.map((meta) => meta.htmlId).join(' ');
-      const dimensions: string[] = [];
-
-      for (const meta of dataCodes) {
-        dimensions[meta.varPos] = meta.valCode;
-      }
-
-      const dataValue = getPxTableData(cube, dimensions);
+      const dataValue = resolveDataCell(
+        stubCodes.concat(headingDataCellCodes[colIndex]),
+        cube,
+      );
       dataCells.push(
-        <td key={nextKey()} headers={headers}>
-          {dataValue?.formattedValue}
+        <td key={nextKey()} headers={dataValue.headers}>
+          {dataValue.formattedValue}
         </td>,
       );
     }
@@ -270,7 +257,7 @@ function renderMobileBodyRows({
     }
 
     if (columnWindow.startPadding > 0) {
-      cells.push(createPaddingCell(columnWindow.startPadding, nextKey));
+      cells.push(createVirtualPaddingCell(columnWindow.startPadding, nextKey));
     }
 
     if (row.isDataRow) {
@@ -279,7 +266,7 @@ function renderMobileBodyRows({
     }
 
     if (columnWindow.endPadding > 0) {
-      cells.push(createPaddingCell(columnWindow.endPadding, nextKey));
+      cells.push(createVirtualPaddingCell(columnWindow.endPadding, nextKey));
     }
 
     renderedRows.push(
@@ -292,6 +279,7 @@ function renderMobileBodyRows({
   return renderedRows;
 }
 
+/** Renders the mobile table variant with row virtualization enabled. */
 export function MobileVirtualizedTable({
   pxtable,
   getVerticalScrollElement,
@@ -313,29 +301,24 @@ export function MobileVirtualizedTable({
 
   const columnWindow = useMemo(
     () => ({
-      start: 0,
-      end: tableColumnSize,
+      visibleColumnStart: 0,
+      visibleColumnEnd: tableColumnSize,
       startPadding: 0,
       endPadding: 0,
     }),
     [tableColumnSize],
   );
 
-  const headingDataCellCodes = useMemo(
-    () => createHeadingDataCellCodes(pxtable, tableColumnSize),
-    [pxtable, tableColumnSize],
-  );
-
-  const headingRows = useMemo(
+  const { headingRows, headingDataCellCodes } = useMemo(
     () =>
-      createHeading(
-        pxtable,
+      createHeadingRowsAndDataCellCodes({
+        table: pxtable,
         tableMeta,
-        headingDataCellCodes,
+        tableColumnSize,
         columnWindow,
-        createKeyFactory(),
-      ),
-    [pxtable, tableMeta, headingDataCellCodes, columnWindow],
+        nextKey: createKeyFactory(),
+      }),
+    [pxtable, tableMeta, tableColumnSize, columnWindow],
   );
 
   const mobileRowEntries = useMemo(

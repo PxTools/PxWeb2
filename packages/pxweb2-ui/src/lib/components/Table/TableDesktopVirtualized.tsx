@@ -3,8 +3,8 @@ import { useVirtualizer } from '@tanstack/react-virtual';
 import cl from 'clsx';
 
 import {
-  createHeading,
-  createHeadingDataCellCodes,
+  createHeadingRowsAndDataCellCodes,
+  createVirtualPaddingCell,
   createKeyFactory,
   DESKTOP_COLUMN_VIRTUALIZATION_THRESHOLD,
   useBodyRowVirtualizationWindow,
@@ -13,7 +13,8 @@ import {
   VirtualizedTableProps,
 } from './Table';
 import classes from './Table.module.scss';
-import { getPxTableData } from './cubeHelper';
+import { resolveDataCell } from './TableCellData';
+import { walkStubTree } from './TableStubTraversal';
 import { VartypeEnum } from '../../shared-types/vartypeEnum';
 import { Variable } from '../../shared-types/variable';
 
@@ -34,44 +35,66 @@ type DesktopRowEntry = {
 };
 
 type ColumnWindow = {
-  start: number;
-  end: number;
+  visibleColumnStart: number;
+  visibleColumnEnd: number;
   startPadding: number;
   endPadding: number;
 };
 
-function createPaddingCell(
-  width: number,
-  nextKey: () => string,
-): React.JSX.Element {
-  return (
-    <td
-      key={nextKey()}
-      className={classes.virtualPaddingCell}
-      style={{ width: `${width}px` }}
-    />
-  );
-}
+type VirtualColumnItem = {
+  index: number;
+  start: number;
+  end: number;
+};
 
-function buildDataCellMeta(
-  stubCodes: StubCellMeta[],
-  headingCodes: StubCellMeta[],
-  cube: VirtualizedTableProps['pxtable']['data']['cube'],
-): { headers: string; formattedValue: string | undefined } {
-  const dataCodes = stubCodes.concat(headingCodes);
-  const headers = dataCodes.map((cell) => cell.htmlId).join(' ');
-  const dimensions: string[] = [];
+const DESKTOP_COLUMN_ESTIMATE_SIZE = 88;
+const DESKTOP_COLUMN_OVERSCAN = 8;
+const DESKTOP_BOOTSTRAP_COLUMN_COUNT = 12;
+const EMPTY_VIRTUAL_COLUMNS: never[] = [];
 
-  for (const cell of dataCodes) {
-    dimensions[cell.varPos] = cell.valCode;
+/** Chooses bootstrap/last/computed desktop column window from virtualizer output. */
+function resolveVisibleColumnsWindow({
+  shouldVirtualizeColumns,
+  virtualColumns,
+  lastNonEmptyColumnWindow,
+  tableColumnSize,
+  totalSize,
+  bootstrapColumnWindow,
+}: {
+  shouldVirtualizeColumns: boolean;
+  virtualColumns: VirtualColumnItem[];
+  lastNonEmptyColumnWindow: ColumnWindow | null;
+  tableColumnSize: number;
+  totalSize: number;
+  bootstrapColumnWindow: ColumnWindow;
+}): ColumnWindow {
+  if (!shouldVirtualizeColumns) {
+    return {
+      visibleColumnStart: 0,
+      visibleColumnEnd: tableColumnSize,
+      startPadding: 0,
+      endPadding: 0,
+    };
   }
 
+  if (virtualColumns.length === 0) {
+    return lastNonEmptyColumnWindow ?? bootstrapColumnWindow;
+  }
+
+  const firstVirtualColumn = virtualColumns[0];
+  const lastVirtualColumn = virtualColumns.at(-1);
+
   return {
-    headers,
-    formattedValue: getPxTableData(cube, dimensions)?.formattedValue,
+    visibleColumnStart: firstVirtualColumn?.index ?? 0,
+    visibleColumnEnd: lastVirtualColumn
+      ? lastVirtualColumn.index + 1
+      : tableColumnSize,
+    startPadding: firstVirtualColumn?.start ?? 0,
+    endPadding: lastVirtualColumn ? totalSize - lastVirtualColumn.end : 0,
   };
 }
 
+/** Renders a single body row when the table has no stub dimensions. */
 function renderNoStubBodyRows({
   columnWindow,
   headingDataCellCodes,
@@ -85,32 +108,24 @@ function renderNoStubBodyRows({
   const rowCells: React.JSX.Element[] = [];
 
   if (columnWindow.startPadding > 0) {
-    rowCells.push(createPaddingCell(columnWindow.startPadding, nextKey));
+    rowCells.push(createVirtualPaddingCell(columnWindow.startPadding, nextKey));
   }
 
   for (
-    let colIndex = columnWindow.start;
-    colIndex < columnWindow.end;
+    let colIndex = columnWindow.visibleColumnStart;
+    colIndex < columnWindow.visibleColumnEnd;
     colIndex++
   ) {
-    const headingCodes = headingDataCellCodes[colIndex];
-    const headers = headingCodes.map((cell) => cell.htmlId).join(' ');
-    const dimensions: string[] = [];
-
-    for (const cell of headingCodes) {
-      dimensions[cell.varPos] = cell.valCode;
-    }
-
-    const dataValue = getPxTableData(cube, dimensions);
+    const dataValue = resolveDataCell(headingDataCellCodes[colIndex], cube);
     rowCells.push(
-      <td key={nextKey()} headers={headers}>
-        {dataValue?.formattedValue}
+      <td key={nextKey()} headers={dataValue.headers}>
+        {dataValue.formattedValue}
       </td>,
     );
   }
 
   if (columnWindow.endPadding > 0) {
-    rowCells.push(createPaddingCell(columnWindow.endPadding, nextKey));
+    rowCells.push(createVirtualPaddingCell(columnWindow.endPadding, nextKey));
   }
 
   return [
@@ -120,6 +135,7 @@ function renderNoStubBodyRows({
   ];
 }
 
+/** Renders desktop body rows for the current visible row and column windows. */
 function renderDesktopBodyRows({
   rows,
   columnWindow,
@@ -152,12 +168,14 @@ function renderDesktopBodyRows({
     ];
 
     if (columnWindow.startPadding > 0) {
-      rowCells.push(createPaddingCell(columnWindow.startPadding, nextKey));
+      rowCells.push(
+        createVirtualPaddingCell(columnWindow.startPadding, nextKey),
+      );
     }
 
     for (
-      let colIndex = columnWindow.start;
-      colIndex < columnWindow.end;
+      let colIndex = columnWindow.visibleColumnStart;
+      colIndex < columnWindow.visibleColumnEnd;
       colIndex++
     ) {
       if (!rowEntry.isDataRow) {
@@ -165,10 +183,8 @@ function renderDesktopBodyRows({
         continue;
       }
 
-      const headingCodes = headingDataCellCodes[colIndex];
-      const dataMeta = buildDataCellMeta(
-        rowEntry.stubCellCodes,
-        headingCodes,
+      const dataMeta = resolveDataCell(
+        rowEntry.stubCellCodes.concat(headingDataCellCodes[colIndex]),
         cube,
       );
 
@@ -180,7 +196,7 @@ function renderDesktopBodyRows({
     }
 
     if (columnWindow.endPadding > 0) {
-      rowCells.push(createPaddingCell(columnWindow.endPadding, nextKey));
+      rowCells.push(createVirtualPaddingCell(columnWindow.endPadding, nextKey));
     }
 
     renderedRows.push(
@@ -196,50 +212,45 @@ function renderDesktopBodyRows({
   return renderedRows;
 }
 
+/** Expands stub dimensions into flat desktop row entries with data-row markers. */
 function buildDesktopRowEntries(pxtable: VirtualizedTableProps['pxtable']) {
   if (pxtable.stub.length === 0) {
     return [] as DesktopRowEntry[];
   }
 
   const rowEntries: DesktopRowEntry[] = [];
-  const lastStubLevel = pxtable.stub.length - 1;
   let stubIteration = 0;
 
-  const walk = (level: number, stubCellCodes: StubCellMeta[]) => {
-    const variable = pxtable.stub[level];
-
-    for (const value of variable.values) {
+  walkStubTree<StubCellMeta>({
+    pxtable,
+    createPathItem: ({ level, variable, value }) => {
       if (level === 0) {
         stubIteration++;
       }
 
-      const nextStubCellCodes = stubCellCodes.slice(0, level);
-      nextStubCellCodes[level] = {
+      return {
         varPos: pxtable.data.variableOrder.indexOf(variable.id),
         valCode: value.code,
         htmlId: `R.${level}${value.code}.I${stubIteration}`,
       };
-
+    },
+    onVisit: ({ level, variable, value, isLeaf, path }) => {
       rowEntries.push({
         key: `${level}:${value.code}:${stubIteration}:${rowEntries.length}`,
         level,
         label: value.label,
-        isDataRow: level === lastStubLevel,
+        isDataRow: isLeaf,
         isFirstDimGroupRow: level === 0 && pxtable.stub.length > 1,
         variable,
-        stubCellCodes: nextStubCellCodes,
+        stubCellCodes: path,
       });
+    },
+  });
 
-      if (level < lastStubLevel) {
-        walk(level + 1, nextStubCellCodes);
-      }
-    }
-  };
-
-  walk(0, []);
   return rowEntries;
 }
 
+/** Renders the desktop table using row and column virtualization windows. */
 export function DesktopVirtualizedTable({
   pxtable,
   getVerticalScrollElement,
@@ -264,65 +275,53 @@ export function DesktopVirtualizedTable({
     enabled: shouldVirtualizeColumns,
     count: tableColumnSize,
     getScrollElement: () => scrollContainerRef.current,
-    estimateSize: () => 88,
-    overscan: 8,
+    estimateSize: () => DESKTOP_COLUMN_ESTIMATE_SIZE,
+    overscan: DESKTOP_COLUMN_OVERSCAN,
   });
 
   const virtualColumns = shouldVirtualizeColumns
     ? columnVirtualizer.getVirtualItems()
-    : [];
+    : EMPTY_VIRTUAL_COLUMNS;
+
   const lastNonEmptyColumnWindowRef = useRef<{
-    start: number;
-    end: number;
+    visibleColumnStart: number;
+    visibleColumnEnd: number;
     startPadding: number;
     endPadding: number;
   } | null>(null);
-  const bootstrapColumnEnd = Math.min(tableColumnSize, 12);
+  const bootstrapColumnEnd = Math.min(
+    tableColumnSize,
+    DESKTOP_BOOTSTRAP_COLUMN_COUNT,
+  );
   const bootstrapColumnWindow = useMemo(
     () => ({
-      start: 0,
-      end: bootstrapColumnEnd,
+      visibleColumnStart: 0,
+      visibleColumnEnd: bootstrapColumnEnd,
       startPadding: 0,
       endPadding: Math.max(
         0,
-        columnVirtualizer.getTotalSize() - bootstrapColumnEnd * 88,
+        columnVirtualizer.getTotalSize() -
+          bootstrapColumnEnd * DESKTOP_COLUMN_ESTIMATE_SIZE,
       ),
     }),
     [bootstrapColumnEnd, columnVirtualizer],
   );
 
   const columnWindow = useMemo(() => {
-    if (!shouldVirtualizeColumns) {
-      return {
-        start: 0,
-        end: tableColumnSize,
-        startPadding: 0,
-        endPadding: 0,
-      };
+    const resolvedWindow = resolveVisibleColumnsWindow({
+      shouldVirtualizeColumns,
+      virtualColumns,
+      lastNonEmptyColumnWindow: lastNonEmptyColumnWindowRef.current,
+      tableColumnSize,
+      totalSize: columnVirtualizer.getTotalSize(),
+      bootstrapColumnWindow,
+    });
+
+    if (virtualColumns.length > 0) {
+      lastNonEmptyColumnWindowRef.current = resolvedWindow;
     }
 
-    if (virtualColumns.length === 0) {
-      if (lastNonEmptyColumnWindowRef.current) {
-        return lastNonEmptyColumnWindowRef.current;
-      }
-
-      return bootstrapColumnWindow;
-    }
-
-    const firstVirtualColumn = virtualColumns[0];
-    const lastVirtualColumn = virtualColumns.at(-1);
-
-    const window = {
-      start: firstVirtualColumn?.index ?? 0,
-      end: lastVirtualColumn ? lastVirtualColumn.index + 1 : tableColumnSize,
-      startPadding: firstVirtualColumn?.start ?? 0,
-      endPadding: lastVirtualColumn
-        ? columnVirtualizer.getTotalSize() - lastVirtualColumn.end
-        : 0,
-    };
-
-    lastNonEmptyColumnWindowRef.current = window;
-    return window;
+    return resolvedWindow;
   }, [
     shouldVirtualizeColumns,
     virtualColumns,
@@ -331,29 +330,16 @@ export function DesktopVirtualizedTable({
     columnVirtualizer,
   ]);
 
-  const headingDataCellCodes = useMemo(
-    () => createHeadingDataCellCodes(pxtable, tableColumnSize),
-    [pxtable, tableColumnSize],
-  );
-
-  const headingRows = useMemo(
+  const { headingRows, headingDataCellCodes } = useMemo(
     () =>
-      createHeading(
-        pxtable,
+      createHeadingRowsAndDataCellCodes({
+        table: pxtable,
         tableMeta,
-        headingDataCellCodes,
+        tableColumnSize,
         columnWindow,
-        createKeyFactory(),
-      ),
-    [
-      pxtable,
-      tableMeta,
-      headingDataCellCodes,
-      columnWindow.start,
-      columnWindow.end,
-      columnWindow.startPadding,
-      columnWindow.endPadding,
-    ],
+        nextKey: createKeyFactory(),
+      }),
+    [pxtable, tableMeta, tableColumnSize, columnWindow],
   );
 
   const desktopRowEntries = useMemo(
@@ -399,10 +385,7 @@ export function DesktopVirtualizedTable({
       cube: pxtable.data.cube,
     });
   }, [
-    columnWindow.end,
-    columnWindow.startPadding,
-    columnWindow.endPadding,
-    columnWindow.start,
+    columnWindow,
     hasNoStub,
     headingDataCellCodes,
     pxtable.data.cube,
@@ -411,7 +394,7 @@ export function DesktopVirtualizedTable({
 
   const renderedColumnCount =
     tableMeta.columnOffset +
-    (columnWindow.end - columnWindow.start) +
+    (columnWindow.visibleColumnEnd - columnWindow.visibleColumnStart) +
     (columnWindow.startPadding > 0 ? 1 : 0) +
     (columnWindow.endPadding > 0 ? 1 : 0);
 
