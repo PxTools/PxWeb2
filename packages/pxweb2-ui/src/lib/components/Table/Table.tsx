@@ -294,6 +294,7 @@ function useTableScrollContext(
     useState<HTMLElement | null>(null);
   const [tableScrollMargin, setTableScrollMargin] = useState(0);
 
+  // Resolve the vertical scroll element
   useEffect(() => {
     // Use outer container scroll if it is provided, otherwise use the table container scroll
     let frameId: number | null = null;
@@ -332,6 +333,7 @@ function useTableScrollContext(
     };
   }, [getVerticalScrollElement]);
 
+  // Update the table scroll margin used for virtualization when the scroll element or table geometry changes
   useEffect(() => {
     if (!verticalScrollElement || !scrollContainerRef.current) {
       setTableScrollMargin(0);
