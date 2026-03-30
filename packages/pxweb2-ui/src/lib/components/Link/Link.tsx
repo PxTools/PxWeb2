@@ -32,7 +32,7 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(function Link(
   return (
     <a
       href={href}
-      target={target ? target : ''}
+      target={target}
       className={cl(classes.link, {
         [classes.no_underline]: noUnderline,
         [classes.inline]: inline,
