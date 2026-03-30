@@ -26,6 +26,10 @@ interface FilterSidebarProps {
   onFilterChange?: () => void;
 }
 
+// Handles one subject node in the tree.
+// Checked means this node is selected as the representative filter.
+// Unchecked means this node and its descendants are removed, then the nearest
+// ancestor is restored to keep parent-level selection stable.
 const Collapsible: React.FC<CollapsibleProps> = ({
   subject,
   index,
@@ -47,11 +51,13 @@ const Collapsible: React.FC<CollapsibleProps> = ({
         value={isActive}
         subtle={!isActive && count === 0}
         onChange={(value) => {
+          // We always compute relatives from the static tree so the update logic
+          // remains deterministic regardless of current active filter state.
           const ancestors = findAncestors(subjectTree, subject.uniqueId!);
           const children = getAllDescendants(subject);
 
           if (value) {
-            // If subject has children, add the subject itself
+            // Selecting a node makes that node the explicit filter.
             dispatch({
               type: ActionType.ADD_FILTER,
               payload: [
@@ -65,7 +71,8 @@ const Collapsible: React.FC<CollapsibleProps> = ({
               ],
             });
 
-            // If the subject has children, we remove all ancestors from filter
+            // Remove any selected ancestors so we do not keep both broad and
+            // narrow subject filters active at the same time.
             const ancestorPayload = ancestors
               .filter((ancestor) =>
                 state.activeFilters.some(
@@ -84,7 +91,7 @@ const Collapsible: React.FC<CollapsibleProps> = ({
               });
             }
           } else {
-            //Remove subject and all its descendants from filter
+            // Deselecting a node clears that node and every descendant.
             const descendants = [subject, ...children];
 
             dispatch({
@@ -96,7 +103,8 @@ const Collapsible: React.FC<CollapsibleProps> = ({
               })),
             });
 
-            // Ensure first parent is actually added as a filter, and not just ephemerally selected
+            // Restore nearest ancestor if needed so parent-level selection
+            // remains explicit in the active filter list.
             const parent: PathItem | undefined = ancestors.length
               ? ancestors[ancestors.length - 1]
               : undefined;

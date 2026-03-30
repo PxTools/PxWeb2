@@ -70,6 +70,8 @@ export const FilterProvider: React.FC<FilterProviderProps> = ({
   );
 };
 
+// Returns the table set that should be used as the filter base.
+// When a query is active, all non-query filters are applied on top of that subset.
 function getAvailableTables(state: StartPageState): Table[] {
   if (state.availableTablesWhenQueryApplied?.length > 0) {
     return state.availableTablesWhenQueryApplied;
@@ -109,6 +111,8 @@ function reducer(
     case ActionType.ADD_FILTER: {
       const incoming = action.payload;
       const incomingTypes = new Set(incoming.map((f) => f.type));
+      // Year range behaves as a single-value filter, so old year range entries
+      // are replaced when a new year range is added.
       const clearedFilters = state.activeFilters.filter((f) =>
         incoming[0]?.type === 'yearRange' ? f.type !== 'yearRange' : true,
       );
@@ -118,6 +122,8 @@ function reducer(
         shouldTableBeIncludedWithMatcher(table, matcher),
       );
       const addType = action.payload[0]?.type as FilterType | undefined;
+      // lastUsedYearRange tracks the non-year constrained range and should only
+      // be recalculated when yearRange itself was not the newly added filter.
       const updatedLastUsedYearRange = incomingTypes.has('yearRange')
         ? state.lastUsedYearRange
         : getYearRanges(filteredTables);
@@ -232,13 +238,14 @@ function reducer(
       let queryTables: Table[] = [];
 
       if (action.payload.query == '') {
-        // No query => filter from all available tables
+        // No query: reset to full table set and apply remaining filters.
         const matcher = buildCompiledMatcher(newFilters);
         newTables = state.availableTables.filter((table) =>
           shouldTableBeIncludedWithMatcher(table, matcher),
         );
       } else {
-        // query present => filter from tables matching the query
+        // Query present: first narrow to API-returned table IDs, then apply
+        // all other active filters on that subset.
         queryTables = state.availableTables.filter((table) =>
           action.payload.tableIds.includes(table.id),
         );
@@ -266,6 +273,8 @@ function reducer(
         },
       };
     }
+    // Single and batch remove actions share one implementation to keep removal
+    // semantics consistent for UI events that clear one or many filters.
     case ActionType.REMOVE_FILTER:
       return applyRemoveFilters(state, [action.payload]);
 
@@ -285,15 +294,20 @@ function reducer(
 
 type RemovePayload = { value: string; type: FilterType; uniqueId?: string };
 
+// Removes one or many filters and recomputes derived table/filter state.
+// Subject filters can be removed by uniqueId to avoid collisions where multiple
+// nodes share the same subject id value.
 function applyRemoveFilters(
   state: StartPageState,
   removals: RemovePayload[],
 ): StartPageState {
+  // Precise removal key for subject tree nodes.
   const removalSetByUniqueId = new Set(
     removals
       .filter((r) => r.type === 'subject' && r.uniqueId)
       .map((r) => r.uniqueId as string),
   );
+  // Generic key for non-subject filters, and subject fallback by type+value.
   const removalSetByTypeValue = new Set(
     removals.map((r) => `${r.type}|${r.value}`),
   );
@@ -328,6 +342,8 @@ function applyRemoveFilters(
     };
   }
 
+  // If query was removed, filtering must resume from the full dataset.
+  // Otherwise, keep the currently query-scoped base table set.
   const removedQuery = removals.some((r) => r.type === 'query');
   const baseTables = removedQuery
     ? state.availableTables
@@ -341,6 +357,7 @@ function applyRemoveFilters(
   const yearRangeStillActive = currentFilters.some(
     (f) => f.type === 'yearRange',
   );
+  // Preserve previously remembered range while a year filter is still active.
   const updatedLastUsedYearRange = yearRangeStillActive
     ? state.lastUsedYearRange
     : getYearRanges(filteredTables);
