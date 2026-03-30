@@ -799,7 +799,6 @@ function calculateHeadingLevelLines(
   headingLevel: number,
   longestValueTextLength: number,
 ): number {
-  console.log({ totalHeadingLevels, headingLevel, longestValueTextLength });
   const weightedLength =
     longestValueTextLength / (totalHeadingLevels - headingLevel);
   return Math.max(1, Math.ceil(weightedLength / HEADER_LINE_CHAR_THRESHOLD));
