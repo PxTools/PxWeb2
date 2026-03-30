@@ -46,7 +46,29 @@
   thead th {
     font-family: PxWeb-font, sans-serif;
     font-weight: 700;
+
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+      min-width: 200px;
+      vertical-align: top;
+    }
   }
+
+  .desktopHeaderLabel {
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: var(--desktop-header-lines, 3);
+      line-clamp: var(--desktop-header-lines, 3);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: normal;
+      line-height: 1.25;
+      min-height: calc(1.25em * var(--desktop-header-lines, 3));
+      max-height: calc(1.25em * var(--desktop-header-lines, 3));
+      word-break: break-word;
+    }
+  }
+
   thead tr:last-child th {
     text-align: end;
     border-bottom-width: 2px;

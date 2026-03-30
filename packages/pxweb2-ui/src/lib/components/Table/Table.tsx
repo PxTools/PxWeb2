@@ -100,6 +100,7 @@ const MOBILE_ROW_OVERSCAN = 4;
 // measured/returned concrete items. This avoids rendering an empty tbody frame.
 const DESKTOP_BOOTSTRAP_ROW_COUNT = 24;
 const MOBILE_BOOTSTRAP_ROW_COUNT = 12;
+const HEADER_LINE_CHAR_THRESHOLD = 20; // Approximate character count per header line used to determine when to wrap header text.
 
 /** Returns row virtualization sizing and overscan tuned for desktop/mobile. */
 function getBodyRowVirtualizationSettings(isMobile: boolean) {
@@ -642,6 +643,7 @@ function writeHeadingCellMetadata({
 
 function createVisibleHeadingCell({
   variable,
+  headingLines,
   valueIndex,
   repetitionIndex,
   spanStart,
@@ -652,6 +654,7 @@ function createVisibleHeadingCell({
   nextKey,
 }: {
   variable: PxTable['heading'][number];
+  headingLines: number;
   valueIndex: number;
   repetitionIndex: number;
   spanStart: number;
@@ -688,7 +691,16 @@ function createVisibleHeadingCell({
           visibleSpanStart === 0,
       })}
     >
-      {variable.values[valueIndex].label}
+      <span
+        className={classes.desktopHeaderLabel}
+        style={
+          {
+            '--desktop-header-lines': headingLines,
+          } as React.CSSProperties
+        }
+      >
+        {variable.values[valueIndex].label}
+      </span>
     </th>
   );
 }
@@ -696,6 +708,7 @@ function createVisibleHeadingCell({
 function createHeadingRowForLevel({
   table,
   headingLevel,
+  headingLines,
   repetitionsCurrentHeaderLevel,
   columnSpan,
   columnWindow,
@@ -704,6 +717,7 @@ function createHeadingRowForLevel({
 }: {
   table: PxTable;
   headingLevel: number;
+  headingLines: number;
   repetitionsCurrentHeaderLevel: number;
   columnSpan: number;
   columnWindow: VisibleColumnsWindow;
@@ -738,6 +752,7 @@ function createHeadingRowForLevel({
 
       const headingCell = createVisibleHeadingCell({
         variable,
+        headingLines,
         valueIndex,
         repetitionIndex,
         spanStart,
@@ -774,9 +789,21 @@ function createHeadingRowForLevel({
 
 type HeadingLevelLayout = {
   headingLevel: number;
+  headingLines: number;
   columnSpan: number;
   repetitionsCurrentHeaderLevel: number;
 };
+
+function calculateHeadingLevelLines(
+  totalHeadingLevels: number,
+  headingLevel: number,
+  longestValueTextLength: number,
+): number {
+  console.log({ totalHeadingLevels, headingLevel, longestValueTextLength });
+  const weightedLength =
+    longestValueTextLength / (totalHeadingLevels - headingLevel);
+  return Math.max(1, Math.ceil(weightedLength / HEADER_LINE_CHAR_THRESHOLD));
+}
 
 function createHeadingLevelLayouts(
   table: PxTable,
@@ -792,10 +819,19 @@ function createHeadingLevelLayouts(
     headingLevel++
   ) {
     const valueCount = table.heading[headingLevel].values.length;
+    const longestValueTextLength =
+      tableMeta.longestValueTextByVariableId[table.heading[headingLevel].id] ||
+      1;
+    const headingLines = calculateHeadingLevelLines(
+      table.heading.length,
+      headingLevel,
+      longestValueTextLength,
+    );
     columnSpan /= valueCount;
 
     layouts.push({
       headingLevel,
+      headingLines,
       columnSpan,
       repetitionsCurrentHeaderLevel,
     });
@@ -838,6 +874,7 @@ export function createHeading(
     const headerRow = createHeadingRowForLevel({
       table,
       headingLevel: headingLevelLayout.headingLevel,
+      headingLines: headingLevelLayout.headingLines,
       repetitionsCurrentHeaderLevel:
         headingLevelLayout.repetitionsCurrentHeaderLevel,
       columnSpan: headingLevelLayout.columnSpan,
