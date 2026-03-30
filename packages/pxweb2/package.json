@@ -21,7 +21,7 @@
     "@pxweb2/pxweb2-ui": "^0.0.1",
     "babel-plugin-react-compiler": "^1.0.0",
     "lodash": "^4.17.23",
-    "motion": "^12.36.0",
+    "motion": "^12.38.0",
     "react-router": "^7.13.1"
   },
   "devDependencies": {
