@@ -58,6 +58,7 @@ interface Resources {
         logo_alt: 'To the front page';
       };
       skip_to_main: 'Skip to main content';
+      skip_to_toolsmenu: 'Skip to tool menu for table';
       status_messages: {
         drawer_edit: 'More tools for editing the table are under construction.';
         drawer_help: 'The help section is under construction. It will be possible to set up links that point directly to your own help pages.';

@@ -10,6 +10,7 @@ import { NavigationItem } from '../../components/NavigationMenu/NavigationItem/N
 import NavigationRail from '../../components/NavigationMenu/NavigationRail/NavigationRail';
 import NavigationBar from '../../components/NavigationMenu/NavigationBar/NavigationBar';
 import { SkipToMain } from '../../components/SkipToMain/SkipToMain';
+import { SkipToToolsMenu } from '../../components/SkipToMain/SkipToToolsMenu';
 import { Footer } from '../../components/Footer/Footer';
 import useAccessibility from '../../context/useAccessibility';
 import useApp from '../../context/useApp';
@@ -173,13 +174,17 @@ export function TableViewer() {
   };
 
   const isSmallScreen = isTablet === true || isMobile === true;
-
   return (
     <>
-      <SkipToMain ref={skipToMainRef} />
+      <div ref={skipToMainRef}>
+        <SkipToMain />
+        <SkipToToolsMenu />
+      </div>
+
       {!isSmallScreen && <Header />}
       {/* tabindex={-1} to fix firefox focusing this div*/}
       <div
+        id="px-table-viewer-outer-container"
         ref={isSmallScreen ? outerContainerRef : undefined}
         className={styles.navigationAndContentContainer}
         tabIndex={-1}
