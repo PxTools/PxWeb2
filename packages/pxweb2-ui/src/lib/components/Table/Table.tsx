@@ -95,7 +95,7 @@ const ROW_VIRTUALIZATION_THRESHOLD = 30;
 const DESKTOP_ROW_ESTIMATE_SIZE = 36;
 const MOBILE_ROW_ESTIMATE_SIZE = 44;
 const DESKTOP_ROW_OVERSCAN = 12;
-const MOBILE_ROW_OVERSCAN = 4;
+const MOBILE_ROW_OVERSCAN = 8;
 // Bootstrap rows are a temporary first window used before the virtualizer has
 // measured/returned concrete items. This avoids rendering an empty tbody frame.
 const DESKTOP_BOOTSTRAP_ROW_COUNT = 24;
