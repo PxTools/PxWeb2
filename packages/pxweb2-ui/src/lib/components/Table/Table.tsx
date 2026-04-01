@@ -95,7 +95,7 @@ const ROW_VIRTUALIZATION_THRESHOLD = 30;
 const DESKTOP_ROW_ESTIMATE_SIZE = 36;
 const MOBILE_ROW_ESTIMATE_SIZE = 44;
 const DESKTOP_ROW_OVERSCAN = 12;
-const MOBILE_ROW_OVERSCAN = 12;
+const MOBILE_ROW_OVERSCAN = 4;
 // Bootstrap rows are a temporary first window used before the virtualizer has
 // measured/returned concrete items. This avoids rendering an empty tbody frame.
 const DESKTOP_BOOTSTRAP_ROW_COUNT = 24;
@@ -692,14 +692,18 @@ function createVisibleHeadingCell({
       })}
     >
       <span
-        className={classes.desktopHeaderLabel}
+        className={classes.desktopHeaderLabelWrapper}
         style={
           {
             '--desktop-header-lines': headingLines,
           } as React.CSSProperties
         }
       >
-        {variable.values[valueIndex].label}
+        <span
+          className={classes.desktopHeaderLabel}
+        >
+          {variable.values[valueIndex].label}
+        </span>
       </span>
     </th>
   );

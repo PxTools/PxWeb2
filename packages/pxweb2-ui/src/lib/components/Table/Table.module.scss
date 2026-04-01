@@ -49,10 +49,17 @@
 
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       min-width: 200px;
-      vertical-align: top;
     }
   }
 
+  .desktopHeaderLabelWrapper {
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(1.25em * var(--desktop-header-lines, 3));
+    }
+  }
   .desktopHeaderLabel {
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       display: -webkit-box;
@@ -63,8 +70,6 @@
       text-overflow: ellipsis;
       white-space: normal;
       line-height: 1.25;
-      min-height: calc(1.25em * var(--desktop-header-lines, 3));
-      max-height: calc(1.25em * var(--desktop-header-lines, 3));
       word-break: break-word;
     }
   }
@@ -72,6 +77,10 @@
   thead tr:last-child th {
     text-align: end;
     border-bottom-width: 2px;
+
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+      text-align: center;
+    }
   }
   th.stub {
     text-align: left;
