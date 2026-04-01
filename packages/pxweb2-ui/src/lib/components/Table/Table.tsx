@@ -699,9 +699,7 @@ function createVisibleHeadingCell({
           } as React.CSSProperties
         }
       >
-        <span
-          className={classes.desktopHeaderLabel}
-        >
+        <span className={classes.desktopHeaderLabel}>
           {variable.values[valueIndex].label}
         </span>
       </span>
