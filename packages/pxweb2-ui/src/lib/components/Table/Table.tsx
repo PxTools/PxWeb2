@@ -100,7 +100,7 @@ const MOBILE_ROW_OVERSCAN = 4;
 // measured/returned concrete items. This avoids rendering an empty tbody frame.
 const DESKTOP_BOOTSTRAP_ROW_COUNT = 24;
 const MOBILE_BOOTSTRAP_ROW_COUNT = 12;
-const HEADER_LINE_CHAR_THRESHOLD = 20; // Approximate character count per header line used to determine when to wrap header text.
+const HEADER_LINE_CHAR_THRESHOLD = 15; // Approximate character count per header line used to determine when to wrap header text.
 
 /** Returns row virtualization sizing and overscan tuned for desktop/mobile. */
 function getBodyRowVirtualizationSettings(isMobile: boolean) {
@@ -800,10 +800,23 @@ function calculateHeadingLevelLines(
   totalHeadingLevels: number,
   headingLevel: number,
   longestValueTextLength: number,
+  totalColumnSpan: number,
 ): number {
+  console.log({
+    totalHeadingLevels,
+    headingLevel,
+    longestValueTextLength,
+    totalColumnSpan,
+  });
   const weightedLength =
-    longestValueTextLength / (totalHeadingLevels - headingLevel);
-  return Math.max(1, Math.ceil(weightedLength / HEADER_LINE_CHAR_THRESHOLD));
+    totalColumnSpan > 4
+      ? longestValueTextLength / (totalHeadingLevels - headingLevel)
+      : longestValueTextLength;
+  const lineChars =
+    totalColumnSpan > 4
+      ? HEADER_LINE_CHAR_THRESHOLD
+      : HEADER_LINE_CHAR_THRESHOLD * 2;
+  return Math.max(1, Math.ceil(weightedLength / lineChars));
 }
 
 function createHeadingLevelLayouts(
@@ -827,6 +840,7 @@ function createHeadingLevelLayouts(
       table.heading.length,
       headingLevel,
       longestValueTextLength,
+      columnSpan,
     );
     columnSpan /= valueCount;
 
