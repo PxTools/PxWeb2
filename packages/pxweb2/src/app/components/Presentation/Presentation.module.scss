@@ -15,6 +15,7 @@
     .tableContainer {
       width: 100cqw;
       overflow-x: auto;
+      overflow-y: clip;
 
       &:focus-visible {
         outline: 2px solid var(--px-color-border-focus-outline);
@@ -61,6 +62,7 @@
 .gradientContainer {
   position: relative;
   overflow-x: auto;
+  overflow-y: clip;
   max-width: 100%; /* Set this to limit table width to screen */
 }
 .gradientContainer::after {
@@ -74,7 +76,7 @@
   background: linear-gradient(
     to right,
     rgba(255, 255, 255, 0) 20%,
-    rgba(255, 255, 255, 1) 100%
+    var(--px-color-surface-default) 100%
   );
   background-repeat: no-repeat;
   z-index: 1;
@@ -94,7 +96,7 @@
   background: linear-gradient(
     to left,
     rgba(255, 255, 255, 0) 20%,
-    rgba(255, 255, 255, 1) 100%
+    var(--px-color-surface-default) 100%
   );
   background-repeat: no-repeat;
   z-index: 1;

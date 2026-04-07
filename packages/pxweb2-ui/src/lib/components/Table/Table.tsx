@@ -29,6 +29,7 @@ export interface BaseVirtualizedTableProps {
   readonly scrollContainerRef: React.RefObject<HTMLDivElement | null>;
   readonly verticalScrollElement: HTMLElement | null;
   readonly tableScrollMargin: number;
+  readonly stickyHeaderTopPx: number;
 }
 
 /** Inputs required by the generic virtualized table layout wrapper. */
@@ -44,6 +45,8 @@ export interface VirtualizedTableLayoutProps {
   readonly renderedColumnCount: number;
   readonly scrollContainerRef: React.RefObject<HTMLDivElement | null>;
   readonly verticalScrollElement: HTMLElement | null;
+  readonly enableDesktopStickyHeader?: boolean;
+  readonly stickyHeaderTopPx?: number;
 }
 
 /**
@@ -101,6 +104,7 @@ const MOBILE_ROW_OVERSCAN = 4;
 const DESKTOP_BOOTSTRAP_ROW_COUNT = 24;
 const MOBILE_BOOTSTRAP_ROW_COUNT = 12;
 const HEADER_LINE_CHAR_THRESHOLD = 18; // Approximate character count per header line used to determine when to wrap header text.
+const DESKTOP_STICKY_HEADER_OFFSET_CSS_VAR = '--px-skip-to-main-sticky-offset';
 
 /** Returns row virtualization sizing and overscan tuned for desktop/mobile. */
 function getBodyRowVirtualizationSettings(isMobile: boolean) {
@@ -263,6 +267,7 @@ export function useVirtualizedTableBaseProps({
 }: VirtualizedTableProps): BaseVirtualizedTableProps {
   const { scrollContainerRef, verticalScrollElement, tableScrollMargin } =
     useTableScrollContext(getVerticalScrollElement);
+  const stickyHeaderTopPx = useDesktopStickyHeaderTopOffset();
 
   const tableMeta: columnRowMeta = useMemo(
     () => calculateRowAndColumnMeta(pxtable),
@@ -278,8 +283,61 @@ export function useVirtualizedTableBaseProps({
     scrollContainerRef,
     verticalScrollElement,
     tableScrollMargin,
+    stickyHeaderTopPx,
     className,
   };
+}
+
+/** Resolves desktop sticky-header top offset from the global skip-to-main CSS variable. */
+function useDesktopStickyHeaderTopOffset() {
+  const [stickyHeaderTopPx, setStickyHeaderTopPx] = useState(0);
+
+  useEffect(() => {
+    let frameId: number | null = null;
+
+    const updateStickyHeaderTopOffset = () => {
+      if (typeof document === 'undefined' || !document.body) {
+        setStickyHeaderTopPx(0);
+        return;
+      }
+
+      const parsedOffset = Number.parseFloat(
+        getComputedStyle(document.body)
+          .getPropertyValue(DESKTOP_STICKY_HEADER_OFFSET_CSS_VAR)
+          .trim(),
+      );
+
+      setStickyHeaderTopPx(
+        Number.isFinite(parsedOffset) ? Math.max(0, parsedOffset) : 0,
+      );
+    };
+
+    const scheduleUpdateStickyHeaderTopOffset = () => {
+      if (frameId !== null) {
+        return;
+      }
+
+      frameId = requestAnimationFrame(() => {
+        frameId = null;
+        updateStickyHeaderTopOffset();
+      });
+    };
+
+    updateStickyHeaderTopOffset();
+    globalThis.addEventListener('resize', scheduleUpdateStickyHeaderTopOffset);
+
+    return () => {
+      globalThis.removeEventListener(
+        'resize',
+        scheduleUpdateStickyHeaderTopOffset,
+      );
+      if (frameId !== null) {
+        cancelAnimationFrame(frameId);
+      }
+    };
+  }, []);
+
+  return stickyHeaderTopPx;
 }
 
 /**
@@ -299,13 +357,18 @@ function useTableScrollContext(
   useEffect(() => {
     // Use outer container scroll if it is provided, otherwise use the table container scroll
     let frameId: number | null = null;
+    let retryFrameId: number | null = null;
+
+    const resolveVerticalScrollElement = () => {
+      if (!getVerticalScrollElement) {
+        return null;
+      }
+
+      return getVerticalScrollElement();
+    };
 
     const updateVerticalScrollElement = () => {
-      if (getVerticalScrollElement) {
-        setVerticalScrollElement(getVerticalScrollElement());
-      } else {
-        setVerticalScrollElement(null);
-      }
+      setVerticalScrollElement(resolveVerticalScrollElement());
     };
 
     const scheduleUpdateVerticalScrollElement = () => {
@@ -320,6 +383,22 @@ function useTableScrollContext(
     };
 
     updateVerticalScrollElement();
+
+    // Some hosts set scroll root refs in their own effects; retry until available.
+    const retryUntilResolved = () => {
+      const resolvedElement = resolveVerticalScrollElement();
+      if (resolvedElement) {
+        setVerticalScrollElement(resolvedElement);
+        return;
+      }
+
+      retryFrameId = requestAnimationFrame(retryUntilResolved);
+    };
+
+    if (getVerticalScrollElement) {
+      retryFrameId = requestAnimationFrame(retryUntilResolved);
+    }
+
     // Keep the resolved scroll element in sync with layout/viewport changes.
     globalThis.addEventListener('resize', scheduleUpdateVerticalScrollElement);
 
@@ -330,6 +409,9 @@ function useTableScrollContext(
       );
       if (frameId !== null) {
         cancelAnimationFrame(frameId);
+      }
+      if (retryFrameId !== null) {
+        cancelAnimationFrame(retryFrameId);
       }
     };
   }, [getVerticalScrollElement]);
@@ -555,32 +637,282 @@ export function VirtualizedTableLayout({
   renderedColumnCount,
   scrollContainerRef,
   verticalScrollElement,
+  enableDesktopStickyHeader = false,
+  stickyHeaderTopPx = 0,
 }: VirtualizedTableLayoutProps) {
   const shouldUseInternalScrollContainer =
     shouldVirtualizeColumns ||
     (shouldVirtualize && verticalScrollElement === null);
+  const tableRef = useRef<HTMLTableElement | null>(null);
+  const headerRef = useRef<HTMLTableSectionElement | null>(null);
+  const cornerOverlayRef = useRef<HTMLDivElement | null>(null);
+  const lastHeaderTranslateYRef = useRef(0);
+  const lastHeaderTranslateXRef = useRef(0);
+
+  useEffect(() => {
+    if (!enableDesktopStickyHeader) {
+      lastHeaderTranslateYRef.current = 0;
+      lastHeaderTranslateXRef.current = 0;
+      if (scrollContainerRef.current) {
+        scrollContainerRef.current.dataset.stickyPinned = 'false';
+      }
+      if (cornerOverlayRef.current) {
+        cornerOverlayRef.current.dataset.stickyPinned = 'false';
+        cornerOverlayRef.current.dataset.rowHeadersPinned = 'false';
+      }
+      scrollContainerRef.current?.style.setProperty(
+        '--table-header-translate-y',
+        '0px',
+      );
+      scrollContainerRef.current?.style.setProperty(
+        '--table-header-translate-x',
+        '0px',
+      );
+      scrollContainerRef.current?.style.setProperty('--table-header-height', '0px');
+      scrollContainerRef.current?.style.setProperty('--table-corner-width', '200px');
+      scrollContainerRef.current?.style.setProperty(
+        '--table-row-header-nudge-x',
+        '0px',
+      );
+      tableRef.current?.style.setProperty('--table-header-translate-y', '0px');
+      tableRef.current?.style.setProperty('--table-header-translate-x', '0px');
+      tableRef.current?.style.setProperty('--table-header-height', '0px');
+      tableRef.current?.style.setProperty('--table-corner-width', '200px');
+      tableRef.current?.style.setProperty('--table-row-header-nudge-x', '0px');
+      if (headerRef.current) {
+        headerRef.current.dataset.stickyPinned = 'false';
+      }
+      return;
+    }
+
+    let frameId: number | null = null;
+
+    const updateDesktopHeaderTranslateY = () => {
+      if (!tableRef.current || !headerRef.current) {
+        return;
+      }
+
+      const headerHeight = headerRef.current.getBoundingClientRect().height;
+      const cornerHeaderCell = headerRef.current.querySelector<HTMLElement>(
+        '[data-corner-header="true"]',
+      );
+      const cornerWidth = cornerHeaderCell?.getBoundingClientRect().width ?? 200;
+      scrollContainerRef.current?.style.setProperty(
+        '--table-header-height',
+        `${headerHeight}px`,
+      );
+      scrollContainerRef.current?.style.setProperty(
+        '--table-corner-width',
+        `${cornerWidth}px`,
+      );
+      tableRef.current.style.setProperty('--table-header-height', `${headerHeight}px`);
+      tableRef.current.style.setProperty('--table-corner-width', `${cornerWidth}px`);
+      const tableHeight = tableRef.current.offsetHeight;
+      const maxTranslate = Math.max(0, tableHeight - headerHeight);
+      const isInternalScrollMode = verticalScrollElement === null;
+
+      let nextTranslateY = 0;
+
+      if (isInternalScrollMode) {
+        nextTranslateY = Math.min(
+          maxTranslate,
+          Math.max(0, scrollContainerRef.current?.scrollTop ?? 0),
+        );
+      } else {
+        const tableRect = tableRef.current.getBoundingClientRect();
+        nextTranslateY = Math.min(
+          maxTranslate,
+          Math.max(0, stickyHeaderTopPx - tableRect.top),
+        );
+      }
+
+      const devicePixelRatio = globalThis.devicePixelRatio || 1;
+      const roundedTranslateY =
+        Math.round(nextTranslateY * devicePixelRatio) / devicePixelRatio;
+      const roundedTranslateX =
+        Math.round(
+          (scrollContainerRef.current?.scrollLeft ?? 0) * devicePixelRatio,
+        ) / devicePixelRatio;
+
+      if (
+        lastHeaderTranslateYRef.current === roundedTranslateY &&
+        lastHeaderTranslateXRef.current === roundedTranslateX
+      ) {
+        const isStickyPinned = roundedTranslateY > 0;
+        headerRef.current.dataset.stickyPinned = isStickyPinned ? 'true' : 'false';
+        if (scrollContainerRef.current) {
+          scrollContainerRef.current.dataset.stickyPinned = isStickyPinned
+            ? 'true'
+            : 'false';
+        }
+        if (cornerOverlayRef.current) {
+          cornerOverlayRef.current.dataset.stickyPinned = isStickyPinned
+            ? 'true'
+            : 'false';
+          cornerOverlayRef.current.dataset.rowHeadersPinned =
+            roundedTranslateX > 0 ? 'true' : 'false';
+        }
+        return;
+      }
+
+      lastHeaderTranslateYRef.current = roundedTranslateY;
+      lastHeaderTranslateXRef.current = roundedTranslateX;
+      tableRef.current.style.setProperty(
+        '--table-header-translate-y',
+        `${roundedTranslateY}px`,
+      );
+      scrollContainerRef.current?.style.setProperty(
+        '--table-header-translate-y',
+        `${roundedTranslateY}px`,
+      );
+      tableRef.current.style.setProperty(
+        '--table-header-translate-x',
+        `${roundedTranslateX}px`,
+      );
+      scrollContainerRef.current?.style.setProperty(
+        '--table-header-translate-x',
+        `${roundedTranslateX}px`,
+      );
+      const rowHeaderNudgeX = roundedTranslateX > 0 ? '-1px' : '0px';
+      tableRef.current.style.setProperty('--table-row-header-nudge-x', rowHeaderNudgeX);
+      scrollContainerRef.current?.style.setProperty(
+        '--table-row-header-nudge-x',
+        rowHeaderNudgeX,
+      );
+      const isStickyPinned = roundedTranslateY > 0;
+      headerRef.current.dataset.stickyPinned = isStickyPinned ? 'true' : 'false';
+      if (scrollContainerRef.current) {
+        scrollContainerRef.current.dataset.stickyPinned = isStickyPinned
+          ? 'true'
+          : 'false';
+      }
+      if (cornerOverlayRef.current) {
+        cornerOverlayRef.current.dataset.stickyPinned = isStickyPinned
+          ? 'true'
+          : 'false';
+        cornerOverlayRef.current.dataset.rowHeadersPinned =
+          roundedTranslateX > 0 ? 'true' : 'false';
+      }
+    };
+
+    const scheduleDesktopHeaderTranslateYUpdate = () => {
+      if (frameId !== null) {
+        return;
+      }
+
+      frameId = requestAnimationFrame(() => {
+        frameId = null;
+        updateDesktopHeaderTranslateY();
+      });
+    };
+
+    updateDesktopHeaderTranslateY();
+
+    const activeScrollTarget =
+      verticalScrollElement ?? scrollContainerRef.current;
+    const horizontalScrollTarget = scrollContainerRef.current;
+
+    activeScrollTarget?.addEventListener(
+      'scroll',
+      scheduleDesktopHeaderTranslateYUpdate,
+      { passive: true },
+    );
+    horizontalScrollTarget?.addEventListener(
+      'scroll',
+      scheduleDesktopHeaderTranslateYUpdate,
+      { passive: true },
+    );
+    document.addEventListener('scroll', scheduleDesktopHeaderTranslateYUpdate, {
+      passive: true,
+      capture: true,
+    });
+
+    globalThis.addEventListener('resize', scheduleDesktopHeaderTranslateYUpdate);
+
+    return () => {
+      activeScrollTarget?.removeEventListener(
+        'scroll',
+        scheduleDesktopHeaderTranslateYUpdate,
+      );
+      horizontalScrollTarget?.removeEventListener(
+        'scroll',
+        scheduleDesktopHeaderTranslateYUpdate,
+      );
+      document.removeEventListener(
+        'scroll',
+        scheduleDesktopHeaderTranslateYUpdate,
+        true,
+      );
+      globalThis.removeEventListener(
+        'resize',
+        scheduleDesktopHeaderTranslateYUpdate,
+      );
+      if (frameId !== null) {
+        cancelAnimationFrame(frameId);
+      }
+    };
+  }, [
+    enableDesktopStickyHeader,
+    scrollContainerRef,
+    stickyHeaderTopPx,
+    verticalScrollElement,
+  ]);
 
   return (
     <div
       ref={scrollContainerRef}
+      style={
+        {
+          '--table-header-translate-y': '0px',
+          '--table-header-translate-x': '0px',
+          '--table-header-height': '0px',
+          '--table-corner-width': '200px',
+          '--table-row-header-nudge-x': '0px',
+        } as React.CSSProperties
+      }
       className={cl({
         [classes.virtualizedWrapper]: shouldUseInternalScrollContainer,
         [classes.virtualizedWrapperUseParentScroll]:
           shouldUseInternalScrollContainer && verticalScrollElement !== null,
       })}
     >
+      {enableDesktopStickyHeader && pxtable.stub.length > 0 && (
+        <div
+          ref={cornerOverlayRef}
+          className={classes.cornerHeaderOverlay}
+          aria-hidden="true"
+          data-sticky-pinned="false"
+          data-row-headers-pinned="false"
+        />
+      )}
       <table
+        ref={tableRef}
         className={cl(
           classes.table,
           classes[`bodyshort-medium`],
           {
             [classes.virtualizedTable]: shouldVirtualizeColumns,
+            [classes.tableStickyDesktop]: enableDesktopStickyHeader,
           },
           className,
         )}
+        style={
+          {
+            '--table-sticky-header-top': `${stickyHeaderTopPx}px`,
+            '--table-header-translate-y': '0px',
+            '--table-header-translate-x': '0px',
+          } as React.CSSProperties
+        }
         aria-label={pxtable.metadata.label}
       >
-        <thead>{headingRows}</thead>
+        <thead
+          ref={headerRef}
+          className={cl({
+            [classes.tableHeadingStickyDesktop]: enableDesktopStickyHeader,
+          })}
+        >
+          {headingRows}
+        </thead>
         <tbody>
           {shouldVirtualize && topPaddingHeight > 0 && (
             <tr>
@@ -802,12 +1134,6 @@ function calculateHeadingLevelLines(
   longestValueTextLength: number,
   totalColumnSpan: number,
 ): number {
-  console.log({
-    totalHeadingLevels,
-    headingLevel,
-    longestValueTextLength,
-    totalColumnSpan,
-  });
   const weightedLength =
     totalColumnSpan > 4
       ? longestValueTextLength / (totalHeadingLevels - headingLevel)
@@ -875,15 +1201,18 @@ export function createHeading(
   const headerRows: React.JSX.Element[] = [];
   const hasStub = table.stub.length > 0;
   const headingLevelLayouts = createHeadingLevelLayouts(table, tableMeta);
-  const topLeftCell = hasStub ? (
-    <td
-      rowSpan={table.heading.length}
-      className={classes.emptyTableData}
+
+  const createCornerHeaderCell = () => (
+    <th
+      scope="col"
+      className={classes.cornerHeaderCell}
+      data-corner-header="true"
+      rowSpan={headingLevelLayouts.length}
       key={nextKey()}
     >
       {''}
-    </td>
-  ) : null;
+    </th>
+  );
 
   for (const headingLevelLayout of headingLevelLayouts) {
     const headerRow = createHeadingRowForLevel({
@@ -899,8 +1228,8 @@ export function createHeading(
     });
 
     const rowCells =
-      hasStub && headingLevelLayout.headingLevel === 0 && topLeftCell
-        ? [topLeftCell, ...headerRow]
+      hasStub && headingLevelLayout.headingLevel === 0
+        ? [createCornerHeaderCell(), ...headerRow]
         : headerRow;
 
     headerRows.push(<tr key={nextKey()}>{rowCells}</tr>);

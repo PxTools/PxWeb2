@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const virtualizerState = vi.hoisted(() => ({
@@ -8,10 +8,25 @@ const virtualizerState = vi.hoisted(() => ({
   rowTotalSize: 0,
   windowRowItems: [] as Array<{ index: number; start: number; end: number }>,
   windowRowTotalSize: 0,
+  calls: [] as Array<{
+    horizontal?: boolean;
+    count?: number;
+    getScrollElement?: () => HTMLElement | null;
+  }>,
+  windowCalls: [] as Array<{
+    count?: number;
+    scrollMargin?: number;
+  }>,
 }));
 
 vi.mock('@tanstack/react-virtual', () => ({
-  useVirtualizer: (options?: { horizontal?: boolean }) => {
+  useVirtualizer: (options?: {
+    horizontal?: boolean;
+    count?: number;
+    getScrollElement?: () => HTMLElement | null;
+  }) => {
+    virtualizerState.calls.push(options ?? {});
+
     if (options?.horizontal) {
       return {
         getVirtualItems: () => virtualizerState.columnItems,
@@ -24,10 +39,17 @@ vi.mock('@tanstack/react-virtual', () => ({
       getTotalSize: () => virtualizerState.rowTotalSize,
     };
   },
-  useWindowVirtualizer: () => ({
-    getVirtualItems: () => virtualizerState.windowRowItems,
-    getTotalSize: () => virtualizerState.windowRowTotalSize,
-  }),
+  useWindowVirtualizer: (options?: {
+    count?: number;
+    scrollMargin?: number;
+  }) => {
+    virtualizerState.windowCalls.push(options ?? {});
+
+    return {
+      getVirtualItems: () => virtualizerState.windowRowItems,
+      getTotalSize: () => virtualizerState.windowRowTotalSize,
+    };
+  },
 }));
 
 import classes from './Table.module.scss';
@@ -60,6 +82,8 @@ describe('TableDesktopVirtualized', () => {
     virtualizerState.rowTotalSize = 50 * 36;
     virtualizerState.windowRowItems = [];
     virtualizerState.windowRowTotalSize = 0;
+    virtualizerState.calls = [];
+    virtualizerState.windowCalls = [];
   });
 
   it('enables column virtualization when column count exceeds threshold', () => {
@@ -152,5 +176,49 @@ describe('TableDesktopVirtualized', () => {
     );
 
     expect(paddingCells.length).toBe(0);
+  });
+
+  it('applies desktop sticky heading class on thead', () => {
+    const { container } = render(<DesktopVirtualizedTable pxtable={pxTable} />);
+
+    const thead = container.querySelector('thead');
+
+    expect(thead?.classList.contains(classes.tableHeadingStickyDesktop)).toBe(
+      true,
+    );
+  });
+
+  it('uses window row virtualizer when external scroll element is provided', async () => {
+    const externalScrollElement = document.createElement('div');
+
+    render(
+      <DesktopVirtualizedTable
+        pxtable={pxTable}
+        getVerticalScrollElement={() => externalScrollElement}
+      />,
+    );
+
+    await waitFor(() => {
+      const hasWindowRowVirtualizerCall = virtualizerState.windowCalls.some(
+        (call) => typeof call.count === 'number' && call.count > 0,
+      );
+
+      expect(hasWindowRowVirtualizerCall).toBe(true);
+    });
+  });
+
+  it('uses internal row virtualizer when external scroll element is not provided', async () => {
+    render(<DesktopVirtualizedTable pxtable={pxTable} />);
+
+    await waitFor(() => {
+      const usesInternalScrollElement = virtualizerState.calls.some(
+        (call) =>
+          !call.horizontal &&
+          typeof call.getScrollElement === 'function' &&
+          call.getScrollElement() !== null,
+      );
+
+      expect(usesInternalScrollElement).toBe(true);
+    });
   });
 });

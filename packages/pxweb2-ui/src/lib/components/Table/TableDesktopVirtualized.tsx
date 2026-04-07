@@ -262,6 +262,7 @@ export function DesktopVirtualizedTable({
     scrollContainerRef,
     verticalScrollElement,
     tableScrollMargin,
+    stickyHeaderTopPx,
   } = useVirtualizedTableBaseProps({
     pxtable,
     getVerticalScrollElement,
@@ -411,6 +412,8 @@ export function DesktopVirtualizedTable({
       renderedColumnCount={renderedColumnCount}
       scrollContainerRef={scrollContainerRef}
       verticalScrollElement={verticalScrollElement}
+      enableDesktopStickyHeader
+      stickyHeaderTopPx={stickyHeaderTopPx}
     />
   );
 }
