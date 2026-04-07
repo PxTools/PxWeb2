@@ -270,10 +270,15 @@ const VariablesFilter: React.FC<{ onFilterChange?: () => void }> = ({
           const isActive = state.activeFilters.some(
             (filter) => filter.type === 'variable' && filter.value === key,
           );
+          const normalizedKeyForId = key
+            .trim()
+            .toLowerCase()
+            .replaceAll(/\s+/g, '_')
+            .replaceAll(/[^a-z0-9_-]/g, '_');
           return (
             <li key={key}>
               <Checkbox
-                id={`var-${key}`}
+                id={`var-${normalizedKeyForId}-${index}`}
                 text={`${upperFirst(key)} (${count})`}
                 value={isActive}
                 onChange={(value) => {
