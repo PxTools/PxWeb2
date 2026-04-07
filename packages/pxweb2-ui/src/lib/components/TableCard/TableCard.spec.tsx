@@ -72,5 +72,4 @@ describe('TableCard', () => {
 
     expect(subLink).toHaveBeenCalled();
   });
-
 });
