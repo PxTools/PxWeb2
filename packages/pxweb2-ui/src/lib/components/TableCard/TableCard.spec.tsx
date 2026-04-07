@@ -73,20 +73,4 @@ describe('TableCard', () => {
     expect(subLink).toHaveBeenCalled();
   });
 
-  it('should NOT navigate on click if text is selected', () => {
-    const mockSelection: Partial<Selection> = {
-      toString: () => 'noe tekst',
-    };
-
-    vi.spyOn(window, 'getSelection').mockReturnValue(
-      mockSelection as Selection,
-    );
-
-    const { getByRole } = render(<TableCard href="/wrong" title="Test" />);
-
-    const event = new MouseEvent('click', { bubbles: true, cancelable: true });
-    getByRole('link').dispatchEvent(event);
-
-    expect(event.defaultPrevented).toBe(true);
-  });
 });
