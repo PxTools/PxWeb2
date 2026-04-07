@@ -39,20 +39,13 @@ export const TableCard = forwardRef<HTMLElement, TableCardProps>(
     },
     ref,
   ) => {
-    const noTextSelected = () => !globalThis.getSelection()?.toString();
-
     const handleActionClick = () => {
-      if (noTextSelected() && typeof href === 'function') {
+      if (typeof href === 'function') {
         href();
       }
     };
 
     const handleLinkClick = (event: MouseEvent<HTMLAnchorElement>) => {
-      if (!noTextSelected()) {
-        event.preventDefault();
-        return;
-      }
-
       const isPlainLeftClick =
         event.button === 0 &&
         !event.metaKey &&
@@ -70,12 +63,10 @@ export const TableCard = forwardRef<HTMLElement, TableCardProps>(
       if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault();
         if (typeof href === 'string') {
-          if (noTextSelected()) {
-            if (onNavigate) {
-              onNavigate();
-            } else {
-              window.location.href = href;
-            }
+          if (onNavigate) {
+            onNavigate();
+          } else {
+            window.location.href = href;
           }
           return;
         }
