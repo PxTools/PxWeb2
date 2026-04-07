@@ -668,8 +668,14 @@ export function VirtualizedTableLayout({
         '--table-header-translate-x',
         '0px',
       );
-      scrollContainerRef.current?.style.setProperty('--table-header-height', '0px');
-      scrollContainerRef.current?.style.setProperty('--table-corner-width', '200px');
+      scrollContainerRef.current?.style.setProperty(
+        '--table-header-height',
+        '0px',
+      );
+      scrollContainerRef.current?.style.setProperty(
+        '--table-corner-width',
+        '200px',
+      );
       scrollContainerRef.current?.style.setProperty(
         '--table-row-header-nudge-x',
         '0px',
@@ -696,7 +702,8 @@ export function VirtualizedTableLayout({
       const cornerHeaderCell = headerRef.current.querySelector<HTMLElement>(
         '[data-corner-header="true"]',
       );
-      const cornerWidth = cornerHeaderCell?.getBoundingClientRect().width ?? 200;
+      const cornerWidth =
+        cornerHeaderCell?.getBoundingClientRect().width ?? 200;
       scrollContainerRef.current?.style.setProperty(
         '--table-header-height',
         `${headerHeight}px`,
@@ -705,8 +712,14 @@ export function VirtualizedTableLayout({
         '--table-corner-width',
         `${cornerWidth}px`,
       );
-      tableRef.current.style.setProperty('--table-header-height', `${headerHeight}px`);
-      tableRef.current.style.setProperty('--table-corner-width', `${cornerWidth}px`);
+      tableRef.current.style.setProperty(
+        '--table-header-height',
+        `${headerHeight}px`,
+      );
+      tableRef.current.style.setProperty(
+        '--table-corner-width',
+        `${cornerWidth}px`,
+      );
       const tableHeight = tableRef.current.offsetHeight;
       const maxTranslate = Math.max(0, tableHeight - headerHeight);
       const isInternalScrollMode = verticalScrollElement === null;
@@ -739,7 +752,9 @@ export function VirtualizedTableLayout({
         lastHeaderTranslateXRef.current === roundedTranslateX
       ) {
         const isStickyPinned = roundedTranslateY > 0;
-        headerRef.current.dataset.stickyPinned = isStickyPinned ? 'true' : 'false';
+        headerRef.current.dataset.stickyPinned = isStickyPinned
+          ? 'true'
+          : 'false';
         if (scrollContainerRef.current) {
           scrollContainerRef.current.dataset.stickyPinned = isStickyPinned
             ? 'true'
@@ -774,13 +789,18 @@ export function VirtualizedTableLayout({
         `${roundedTranslateX}px`,
       );
       const rowHeaderNudgeX = roundedTranslateX > 0 ? '-1px' : '0px';
-      tableRef.current.style.setProperty('--table-row-header-nudge-x', rowHeaderNudgeX);
+      tableRef.current.style.setProperty(
+        '--table-row-header-nudge-x',
+        rowHeaderNudgeX,
+      );
       scrollContainerRef.current?.style.setProperty(
         '--table-row-header-nudge-x',
         rowHeaderNudgeX,
       );
       const isStickyPinned = roundedTranslateY > 0;
-      headerRef.current.dataset.stickyPinned = isStickyPinned ? 'true' : 'false';
+      headerRef.current.dataset.stickyPinned = isStickyPinned
+        ? 'true'
+        : 'false';
       if (scrollContainerRef.current) {
         scrollContainerRef.current.dataset.stickyPinned = isStickyPinned
           ? 'true'
@@ -827,7 +847,10 @@ export function VirtualizedTableLayout({
       capture: true,
     });
 
-    globalThis.addEventListener('resize', scheduleDesktopHeaderTranslateYUpdate);
+    globalThis.addEventListener(
+      'resize',
+      scheduleDesktopHeaderTranslateYUpdate,
+    );
 
     return () => {
       activeScrollTarget?.removeEventListener(

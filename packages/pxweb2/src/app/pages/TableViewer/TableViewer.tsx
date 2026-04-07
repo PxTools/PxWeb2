@@ -182,10 +182,7 @@ export function TableViewer() {
 
   return (
     <>
-      <SkipToMain
-        ref={skipToMainRef}
-        withStickyHeaderOffset={!isSmallScreen}
-      />
+      <SkipToMain ref={skipToMainRef} withStickyHeaderOffset={!isSmallScreen} />
       {!isSmallScreen && (
         <div className={styles.stickyHeader}>
           <Header stroke={true} />
