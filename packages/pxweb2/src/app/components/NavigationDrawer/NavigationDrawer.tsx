@@ -39,7 +39,13 @@ export const NavigationDrawer = forwardRef<
 >(({ children, heading, view, openedWithKeyboard, onClose }, ref) => {
   const { t } = useTranslation();
   const { addModal, removeModal } = useAccessibility();
-  const { skipToMainFocused, isMobile, isTablet, isXLargeDesktop, isXXLargeDesktop } = useApp();
+  const {
+    skipToMainFocused,
+    isMobile,
+    isTablet,
+    isXLargeDesktop,
+    isXXLargeDesktop,
+  } = useApp();
 
   const isLargeScreen = isXXLargeDesktop === true || isXLargeDesktop === true;
   const hasBackdrop = isMobile || isTablet;

@@ -115,11 +115,7 @@ export function ContentTop({
   const { pxTableMetadata, selectedVBValues } = useVariables();
   const selectedMetadata = useTableData().data?.metadata;
   const buildTableTitle = useTableData().buildTableTitle;
-  const {
-    setTitle,
-    isXXLargeDesktop,
-    isTablet,
-  } = useApp();
+  const { setTitle, isXXLargeDesktop, isTablet } = useApp();
 
   const openInformationButtonRef = useRef<HTMLButtonElement>(null);
   const openInformationLinkRef = useRef<HTMLAnchorElement>(null);
