@@ -160,14 +160,17 @@ describe('Modal', () => {
     expect(onCloseMock).toHaveBeenCalledWith(true, 'Enter');
   });
 
-  it('should update body overflow style when opening and closing', () => {
-    const { rerender } = render(
+  it('should expose overlay marker and toggle dialog visibility when opening and closing', () => {
+    const { rerender, container } = render(
       <Modal isOpen={true}>
         <span>test</span>
       </Modal>,
     );
 
-    expect(document.body.style.overflow).toBe('hidden');
+    const dialog = container.querySelector('dialog');
+
+    expect(dialog?.getAttribute('data-px-overlay-backdrop')).toBe('true');
+    expect(dialog?.style.display).toBe('block');
 
     rerender(
       <Modal isOpen={false}>
@@ -175,7 +178,7 @@ describe('Modal', () => {
       </Modal>,
     );
 
-    expect(document.body.style.overflow).toBe('auto');
+    expect(dialog?.style.display).toBe('none');
   });
 
   it('should apply custom className when provided', () => {

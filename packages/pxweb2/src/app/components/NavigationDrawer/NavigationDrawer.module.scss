@@ -145,15 +145,13 @@
 
 // Not from Figma
 .backdrop {
-  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: var(--px-color-surface-scrim);
-    z-index: 50;
-  }
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--px-color-surface-scrim);
+  z-index: 50;
 }
 
 .fadein {

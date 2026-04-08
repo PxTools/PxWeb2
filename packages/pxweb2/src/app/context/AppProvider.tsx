@@ -19,11 +19,6 @@ export type AppContextType = {
   setSkipToMainFocused: (focused: boolean) => void;
   title: string;
   setTitle: (title: string) => void;
-  hidePageScrollbar: boolean;
-  selectionWantsToHidePageScrollbar: boolean;
-  setSelectionWantsToHidePageScrollbar: (hide: boolean) => void;
-  tableInformationWantsToHidePageScrollbar: boolean;
-  setTableInformationWantsToHidePageScrollbar: (hide: boolean) => void;
 };
 
 // Create the context with default values
@@ -42,15 +37,6 @@ export const AppContext = createContext<AppContextType>({
   setTitle: () => {
     return;
   },
-  hidePageScrollbar: false,
-  selectionWantsToHidePageScrollbar: false,
-  setSelectionWantsToHidePageScrollbar: () => {
-    return;
-  },
-  tableInformationWantsToHidePageScrollbar: false,
-  setTableInformationWantsToHidePageScrollbar: () => {
-    return;
-  },
 });
 
 // Provider component
@@ -60,17 +46,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isInitialized] = useState(true);
   const [skipToMainFocused, setSkipToMainFocused] = useState(false);
   const [title, setTitle] = useState<string>('');
-  const [
-    selectionWantsToHidePageScrollbar,
-    setSelectionWantsToHidePageScrollbar,
-  ] = useState(false);
-  const [
-    tableInformationWantsToHidePageScrollbar,
-    setTableInformationWantsToHidePageScrollbar,
-  ] = useState(false);
-  const hidePageScrollbar =
-    selectionWantsToHidePageScrollbar ||
-    tableInformationWantsToHidePageScrollbar;
 
   /**
    * Keep state if window screen size is mobile, small tablet, tablet, or desktop.
@@ -91,14 +66,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isMobile, setIsMobile] = useState(
     window.innerWidth <= mobileBreakpoint,
   );
-
-  useEffect(() => {
-    document.body.classList.toggle('hide-scrollbar', hidePageScrollbar);
-
-    return () => {
-      document.body.classList.remove('hide-scrollbar');
-    };
-  }, [hidePageScrollbar]);
 
   // Use effect to set the isMobile and isTablet state
   useEffect(() => {
@@ -139,11 +106,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
       setSkipToMainFocused,
       title,
       setTitle,
-      hidePageScrollbar,
-      selectionWantsToHidePageScrollbar,
-      setSelectionWantsToHidePageScrollbar,
-      tableInformationWantsToHidePageScrollbar,
-      setTableInformationWantsToHidePageScrollbar,
     }),
     [
       getSavedQueryId,
@@ -156,11 +118,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
       setSkipToMainFocused,
       title,
       setTitle,
-      hidePageScrollbar,
-      selectionWantsToHidePageScrollbar,
-      setSelectionWantsToHidePageScrollbar,
-      tableInformationWantsToHidePageScrollbar,
-      setTableInformationWantsToHidePageScrollbar,
     ],
   );
 

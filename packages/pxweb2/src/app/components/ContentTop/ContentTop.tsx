@@ -119,7 +119,6 @@ export function ContentTop({
     setTitle,
     isXXLargeDesktop,
     isTablet,
-    setTableInformationWantsToHidePageScrollbar,
   } = useApp();
 
   const openInformationButtonRef = useRef<HTMLButtonElement>(null);
@@ -133,7 +132,6 @@ export function ContentTop({
       setActiveTab(selectedTab);
     }
     setIsTableInformationOpen(true);
-    setTableInformationWantsToHidePageScrollbar(true);
   };
 
   const noteInfo =
@@ -171,13 +169,6 @@ export function ContentTop({
       setIsTableInformationOpen(false);
     });
   }, [isTableInformationOpen, tableInformationOpener, accessibility]);
-
-  // Release table info lock on unmount.
-  useEffect(() => {
-    return () => {
-      setTableInformationWantsToHidePageScrollbar(false);
-    };
-  }, [setTableInformationWantsToHidePageScrollbar]);
 
   let tableTitle = '';
   if (selectedMetadata) {
@@ -292,7 +283,6 @@ export function ContentTop({
           selectedTab={activeTab}
           onClose={() => {
             setIsTableInformationOpen(false);
-            setTableInformationWantsToHidePageScrollbar(false);
           }}
         ></TableInformation>
       )}
