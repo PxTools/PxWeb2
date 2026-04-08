@@ -77,11 +77,14 @@
   thead tr:last-child th {
     text-align: end;
     border-bottom-width: 2px;
+  }
 
+  thead tr:last-child th .desktopHeaderLabelWrapper {
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
-      text-align: center;
+      justify-content: flex-end;
     }
   }
+
   th.stub {
     text-align: left;
     min-width: 200px;
