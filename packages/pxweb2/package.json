@@ -13,7 +13,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "coverage": "vitest run --coverage",
-    "test:html-validate": "npm run build && concurrently --kill-others-on-fail \"npx serve ./dist\" \"node test/html-validator.js\"",
+    "test:html-validate": "npm run build && concurrently --kill-others-on-fail \"vite preview\" \"node test/html-validator.js\"",
     "prettier": "prettier --config ../../.prettierrc --check ./src/** --write --ignore-path ../../.prettierignore"
   },
   "dependencies": {
