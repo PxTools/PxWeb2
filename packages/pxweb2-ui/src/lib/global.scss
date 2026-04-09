@@ -7,8 +7,7 @@ body {
   }
 }
 
-body:has(dialog[data-px-overlay-backdrop='true'][open]),
-body:has([data-px-overlay-backdrop='true']:not(dialog)) {
+body:has([data-px-overlay-backdrop='true']) {
   overflow-y: hidden;
 }
 
