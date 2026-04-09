@@ -23,22 +23,28 @@ export const FilterCategory: React.FC<FilterCategoryProps> = ({
   return (
     <div className={cl(styles.filterCategory)}>
       <button
+        type="button"
         className={cl(styles.filterCategoryHeader)}
         aria-expanded={isOpen ? 'true' : 'false'}
         onClick={() => setIsOpen(!isOpen)}
         tabIndex={0}
       >
-        <Heading size="small" level="3" className={styles.filterCategoryTitle}>
+        <Heading
+          as="span"
+          size="small"
+          level="3"
+          className={styles.filterCategoryTitle}
+        >
           {header}
         </Heading>
-        <div className={cl(styles.filterCategoryIconWrapper)}>
+        <span className={cl(styles.filterCategoryIconWrapper)}>
           <Icon
             className={cl({
               [styles[`open`]]: isOpen,
             })}
             iconName="ChevronDown"
           />
-        </div>
+        </span>
       </button>
       <div
         className={cl(
