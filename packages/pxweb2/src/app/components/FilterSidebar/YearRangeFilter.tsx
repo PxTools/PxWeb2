@@ -33,7 +33,7 @@ function useYearLabels(t: ReturnType<typeof useTranslation>['t']) {
   return { fromLabel, toLabel, fromYearLabel, toYearLabel };
 }
 
-function parseYearRange(
+function parseYearRangeFilter(
   filter?: { value: string; label: string },
   fromLabelText?: string,
   toLabelText?: string,
@@ -119,7 +119,7 @@ export const YearRangeFilter: React.FC<{ onFilterChange?: () => void }> = ({
   const yearRangeFilter = state.activeFilters.find(
     (f) => f.type === 'yearRange',
   );
-  const { from: fromYear, to: toYear } = parseYearRange(
+  const { from: fromYear, to: toYear } = parseYearRangeFilter(
     yearRangeFilter,
     fromLabel,
     toLabel,
@@ -145,7 +145,7 @@ export const YearRangeFilter: React.FC<{ onFilterChange?: () => void }> = ({
   const noOptionsText = t('start_page.filter.year.no_option');
 
   function handleSelect(item: Option | undefined, type: 'from' | 'to') {
-    const { from: prevFrom, to: prevTo } = parseYearRange(
+    const { from: prevFrom, to: prevTo } = parseYearRangeFilter(
       yearRangeFilter,
       fromLabel,
       toLabel,
