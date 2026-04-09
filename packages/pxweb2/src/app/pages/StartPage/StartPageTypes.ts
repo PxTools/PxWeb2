@@ -10,6 +10,7 @@ export enum ActionType {
   ADD_SEARCH_FILTER = 'ADD_SEARCH_FILTER',
   ADD_QUERY_FILTER = 'ADD_QUERY_FILTER',
   REMOVE_FILTER = 'REMOVE_FILTER',
+  REMOVE_FILTERS = 'REMOVE_FILTERS',
   UPDATE_TABLES = 'UPDATE_TABLES',
   SET_ERROR = 'SET_ERROR',
   SET_LOADING = 'SET_LOADING',
@@ -67,11 +68,17 @@ export type ReducerActionTypes =
   | RemoveFilterAction
   | UpdateTablesAction
   | SetErrorAction
-  | SetLoadingAction;
+  | SetLoadingAction
+  | RemoveFiltersAction;
 
 type RemoveFilterAction = {
   type: ActionType.REMOVE_FILTER;
   payload: { value: string; type: FilterType; uniqueId?: string };
+};
+
+type RemoveFiltersAction = {
+  type: ActionType.REMOVE_FILTERS;
+  payload: Array<{ value: string; type: FilterType; uniqueId?: string }>;
 };
 
 type ResetFilterAction = {
