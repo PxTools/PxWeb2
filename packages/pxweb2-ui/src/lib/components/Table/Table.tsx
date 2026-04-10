@@ -802,12 +802,6 @@ function calculateHeadingLevelLines(
   longestValueTextLength: number,
   totalColumnSpan: number,
 ): number {
-  console.log({
-    totalHeadingLevels,
-    headingLevel,
-    longestValueTextLength,
-    totalColumnSpan,
-  });
   const weightedLength =
     totalColumnSpan > 4
       ? longestValueTextLength / (totalHeadingLevels - headingLevel)
