@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom/vitest';
 
 import Link from './Link';
 
@@ -13,11 +14,11 @@ describe('Link', () => {
     expect(link.getAttribute('href')).toBe('#');
   });
 
-  it('sets empty target attribute when target prop is not provided', () => {
+  it('omits target attribute when target prop is not provided', () => {
     render(<Link href="#">{linkText}</Link>);
     const link = screen.getByRole('link');
-    // target="" is explicitly set in component when no target passed
-    expect(link.getAttribute('target')).toBe('');
+    expect(link).not.toHaveAttribute('target');
+    expect(link.getAttribute('target')).toBeNull();
   });
 
   it('applies target attribute when provided', () => {

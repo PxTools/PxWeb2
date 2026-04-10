@@ -7,7 +7,10 @@ import {
   PathItem,
   YearRange,
 } from '../pages/StartPage/StartPageTypes';
-import { shouldTableBeIncluded } from '../util/tableHandler';
+import {
+  buildCompiledMatcher,
+  shouldTableBeIncludedWithMatcher,
+} from '../util/tableHandler';
 import { getConfig } from './config/getConfig';
 import i18n from '../../i18n/config';
 
@@ -323,8 +326,9 @@ export function tablesForFilterCounts(
     return availableTables;
   }
   const minusThisFacet = filtersExcludingType(currentFilters, targetFilter);
+  const matcher = buildCompiledMatcher(minusThisFacet);
   return availableTables.filter((t) =>
-    shouldTableBeIncluded(t, minusThisFacet),
+    shouldTableBeIncludedWithMatcher(t, matcher),
   );
 }
 
