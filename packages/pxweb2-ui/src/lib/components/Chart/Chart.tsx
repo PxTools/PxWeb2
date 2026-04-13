@@ -46,7 +46,9 @@ export function Chart() {
     <div>
       <h2>Line Chart Example</h2>
       <LineChart data={data} />
-      <h2>Bar Chart Example</h2>
+      <h2>Bar Chart Horizontal Example</h2>
+      <BarChart data={data} isHorizontal={true} />
+      <h2>Bar Chart Vertical Example</h2>
       <BarChart data={data} />
     </div>
   );
