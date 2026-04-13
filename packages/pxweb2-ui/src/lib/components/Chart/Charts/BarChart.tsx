@@ -8,25 +8,30 @@ import {
   YAxis,
 } from 'recharts';
 
-interface BarChartDataPoint {
-  readonly name: string;
-  readonly pv: number;
-  readonly uv: number;
-}
+import type { ChartDataPoint, ChartSeries } from '../Chart';
+
+const seriesColors = ['#5f3dc4', '#1864ab', '#0b7285', '#2b8a3e', '#e67700'];
 
 interface BarChartProps {
-  readonly data: BarChartDataPoint[] | { readonly data: BarChartDataPoint[] };
+  readonly data: ChartDataPoint[];
+  readonly series: ChartSeries[];
   readonly isHorizontal?: boolean;
 }
-export function BarChart({ data, isHorizontal = false }: BarChartProps) {
-  const chartData = Array.isArray(data) ? data : data?.data;
+
+export function BarChart({
+  data,
+  series,
+  isHorizontal = false,
+}: BarChartProps) {
+  const chartSeries =
+    series.length > 0 ? series : [{ key: 'value', name: 'Value' }];
 
   return (
     <RechartsBarChart
       style={{ width: '100%', aspectRatio: 1.618, maxWidth: 600 }}
       responsive
       layout={isHorizontal ? 'vertical' : 'horizontal'}
-      data={chartData}
+      data={data}
     >
       <CartesianGrid strokeDasharray="3 3" />
       <XAxis
@@ -40,16 +45,15 @@ export function BarChart({ data, isHorizontal = false }: BarChartProps) {
       />
       <Tooltip />
       <Legend />
-      <Bar
-        dataKey="pv"
-        fill="#8884d8"
-        activeBar={{ fill: 'pink', stroke: 'blue' }}
-      />
-      <Bar
-        dataKey="uv"
-        fill="#82ca9d"
-        activeBar={{ fill: 'gold', stroke: 'purple' }}
-      />
+
+      {chartSeries.map((serie, index) => (
+        <Bar
+          key={serie.key}
+          dataKey={serie.key}
+          name={serie.name}
+          fill={seriesColors[index % seriesColors.length]}
+        />
+      ))}
     </RechartsBarChart>
   );
 }
