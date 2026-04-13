@@ -8,7 +8,7 @@ import {
   YAxis,
 } from 'recharts';
 
-import type { ChartDataPoint, ChartSeries } from '../Chart';
+import type { ChartDataPoint, ChartSeries } from '../chartTypes';
 
 interface LineChartProps {
   readonly data: ChartDataPoint[];

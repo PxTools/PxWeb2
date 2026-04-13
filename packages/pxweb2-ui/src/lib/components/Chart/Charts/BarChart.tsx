@@ -8,7 +8,7 @@ import {
   YAxis,
 } from 'recharts';
 
-import type { ChartDataPoint, ChartSeries } from '../Chart';
+import type { ChartDataPoint, ChartSeries } from '../chartTypes';
 
 const seriesColors = ['#5f3dc4', '#1864ab', '#0b7285', '#2b8a3e', '#e67700'];
 
