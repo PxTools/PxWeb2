@@ -1,6 +1,12 @@
 import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
-import React, { useRef, useEffect, useState, useLayoutEffect } from 'react';
+import React, {
+  Activity,
+  useRef,
+  useEffect,
+  useState,
+  useLayoutEffect,
+} from 'react';
 import { useSearchParams } from 'react-router';
 import isEqual from 'lodash/isEqual';
 
@@ -278,15 +284,16 @@ export function Presentation({
               className={classes.gradientContainer}
               ref={gradientContainerRef}
             >
-              {isGraphView ? (
+              <Activity mode={isGraphView ? 'visible' : 'hidden'}>
                 <div className={classes.chartContainer}>
                   <Chart pxtable={tableData.data} />
                 </div>
-              ) : (
+              </Activity>
+              <Activity mode={isGraphView ? 'hidden' : 'visible'}>
                 <div className={classes.tableContainer} ref={tableContainerRef}>
                   <MemoizedTable pxtable={tableData.data} isMobile={isMobile} />
                 </div>
-              )}
+              </Activity>
             </div>
           )}
           {isMissingMandatoryVariables &&
@@ -296,11 +303,12 @@ export function Presentation({
                 className={classes.gradientContainer}
                 ref={gradientContainerRef}
               >
-                {isGraphView ? (
+                <Activity mode={isGraphView ? 'visible' : 'hidden'}>
                   <div className={classes.chartContainer}>
                     <Chart pxtable={tableData.data} />
                   </div>
-                ) : (
+                </Activity>
+                <Activity mode={isGraphView ? 'hidden' : 'visible'}>
                   <div
                     className={classes.tableContainer}
                     ref={tableContainerRef}
@@ -310,7 +318,7 @@ export function Presentation({
                       isMobile={isMobile}
                     />
                   </div>
-                )}
+                </Activity>
               </div>
             )}
           {!isLoadingMetadata &&
