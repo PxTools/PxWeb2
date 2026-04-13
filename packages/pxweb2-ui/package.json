@@ -20,6 +20,7 @@
     "clsx": "^2.1.1",
     "hast-util-to-jsx-runtime": "^2.3.6",
     "motion": "^12.38.0",
+    "recharts": "^3.8.1",
     "vite-plugin-dts": "^4.5.4"
   },
   "devDependencies": {
