@@ -1,12 +1,13 @@
 import { useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
+import type { ChartConfig } from '../chartTypes';
 
 interface BarChartProps {
-  readonly data: any;
+  readonly chartConfig: ChartConfig;
   readonly isHorizontal?: boolean;
 }
 
-export function BarChart({ data, isHorizontal = false }: BarChartProps) {
+export function BarChart({ chartConfig, isHorizontal = false }: BarChartProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
@@ -20,26 +21,24 @@ export function BarChart({ data, isHorizontal = false }: BarChartProps) {
         indexAxis: isHorizontal ? 'y' : 'x',
       },
       data: {
-        labels: data.map((row) => row.year),
-        datasets: [
-          {
-            label: 'Acquisitions by year',
-            data: data.map((row) => row.count),
-          },
-        ],
+        labels: chartConfig.data.map((row) => row.name),
+        datasets: chartConfig.series.map((series) => ({
+          label: series.name,
+          data: chartConfig.data.map((row) => row[series.key] as number | null),
+        })),
       },
     });
 
     return () => {
       chart.destroy();
     };
-  }, []);
+  }, [chartConfig, isHorizontal]);
 
   return (
     <>
       <h1>Chart</h1>
 
-      <canvas id="acquisitions" ref={canvasRef} />
+      <canvas ref={canvasRef} />
     </>
   );
 }

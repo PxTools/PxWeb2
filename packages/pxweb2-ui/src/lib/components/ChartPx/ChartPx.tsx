@@ -1,27 +1,20 @@
 import type { PxTable } from '../../shared-types/pxTable';
 import { BarChart } from './Charts/BarChart';
 import { LineChart } from './Charts/LineChart';
+import { useMemo } from 'react';
+import { mapPxTableToChart } from './chartDataMapper';
 
 interface ChartProps {
   readonly pxtable: PxTable;
 }
 
-const data = [
-  { year: 2010, count: 10 },
-  { year: 2011, count: 20 },
-  { year: 2012, count: 15 },
-  { year: 2013, count: 25 },
-  { year: 2014, count: 22 },
-  { year: 2015, count: 30 },
-  { year: 2016, count: 28 },
-];
-
 export function ChartPx({ pxtable }: ChartProps) {
+  const chartConfig = useMemo(() => mapPxTableToChart(pxtable), [pxtable]);
   return (
     <>
-      <BarChart data={data} />
-      <BarChart data={data} isHorizontal={true} />
-      <LineChart data={data} />
+      <BarChart chartConfig={chartConfig} />
+      <BarChart chartConfig={chartConfig} isHorizontal={true} />
+      <LineChart chartConfig={chartConfig} />
       <span>{pxtable.metadata.label}</span>
     </>
   );
