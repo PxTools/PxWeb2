@@ -10,7 +10,6 @@ export function BarChart({ data, isHorizontal = false }: BarChartProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
-
     if (!canvasRef.current) {
       return;
     }
