@@ -10,6 +10,16 @@ interface PopulationPyramidProps {
   readonly validation: PopulationPyramidValidationResult;
 }
 
+function formatAbsoluteValue(value: number | string): string {
+  const numericValue = typeof value === 'number' ? value : Number(value);
+
+  if (Number.isNaN(numericValue)) {
+    return String(value);
+  }
+
+  return Math.abs(numericValue).toLocaleString();
+}
+
 function getValidationMessage(
   validation: PopulationPyramidValidationResult,
 ): string {
@@ -58,9 +68,23 @@ export function PopulationPyramid({
         scales: {
           x: {
             stacked: true,
+            ticks: {
+              callback: (value) => formatAbsoluteValue(value),
+            },
           },
           y: {
             stacked: true,
+          },
+        },
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: (context) => {
+                const label = context.dataset.label ? `${context.dataset.label}: ` : '';
+                const rawValue = context.parsed?.x ?? 0;
+                return `${label}${formatAbsoluteValue(rawValue)}`;
+              },
+            },
           },
         },
       },
