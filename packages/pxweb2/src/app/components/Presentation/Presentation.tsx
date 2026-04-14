@@ -6,7 +6,7 @@ import isEqual from 'lodash/isEqual';
 import classes from './Presentation.module.scss';
 import useApp from '../../context/useApp';
 import { ContentTop } from '../ContentTop/ContentTop';
-import { Table, EmptyState, PxTable, LocalAlert } from '@pxweb2/pxweb2-ui';
+import {Chart, Table, EmptyState, PxTable, LocalAlert } from '@pxweb2/pxweb2-ui';
 import useTableData from '../../context/useTableData';
 import useVariables from '../../context/useVariables';
 import { useDebounce } from '@uidotdev/usehooks';
@@ -269,6 +269,10 @@ export function Presentation({
               className={classes.gradientContainer}
               ref={gradientContainerRef}
             >
+
+              <div>
+                <Chart pxtable={tableData.data}></Chart>
+                </div>
               <div className={classes.tableContainer} ref={tableContainerRef}>
                 <MemoizedTable pxtable={tableData.data} isMobile={isMobile} />
               </div>
