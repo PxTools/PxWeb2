@@ -7,7 +7,7 @@ import classes from './Presentation.module.scss';
 import useApp from '../../context/useApp';
 import { ContentTop } from '../ContentTop/ContentTop';
 import {
-  Chart,
+  ChartPx,
   Table,
   EmptyState,
   PxTable,
@@ -276,7 +276,7 @@ export function Presentation({
               ref={gradientContainerRef}
             >
               <div>
-                <Chart pxtable={tableData.data}></Chart>
+                <ChartPx pxtable={tableData.data}></ChartPx>
               </div>
               <div className={classes.tableContainer} ref={tableContainerRef}>
                 <MemoizedTable pxtable={tableData.data} isMobile={isMobile} />
