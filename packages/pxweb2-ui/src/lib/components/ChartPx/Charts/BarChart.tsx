@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
 import type { ChartConfig } from '../chartTypes';
+import { downloadCanvasAsPng } from '../chartExport';
 
 interface BarChartProps {
   readonly chartConfig: ChartConfig;
@@ -9,6 +10,16 @@ interface BarChartProps {
 
 export function BarChart({ chartConfig, isHorizontal = false }: BarChartProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  const chartName = isHorizontal ? 'bar-chart-horizontal.png' : 'bar-chart.png';
+
+  const handleDownloadPng = () => {
+    if (!canvasRef.current) {
+      return;
+    }
+
+    downloadCanvasAsPng(canvasRef.current, chartName);
+  };
 
   useEffect(() => {
     if (!canvasRef.current) {
@@ -37,6 +48,9 @@ export function BarChart({ chartConfig, isHorizontal = false }: BarChartProps) {
   return (
     <>
       <h1>Chart</h1>
+      <button onClick={handleDownloadPng} type="button">
+        Download PNG
+      </button>
 
       <canvas ref={canvasRef} />
     </>

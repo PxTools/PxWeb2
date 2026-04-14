@@ -4,6 +4,7 @@ import type {
   PopulationPyramidConfig,
   PopulationPyramidValidationResult,
 } from '../chartTypes';
+import { downloadCanvasAsPng } from '../chartExport';
 
 interface PopulationPyramidProps {
   readonly config?: PopulationPyramidConfig;
@@ -55,6 +56,14 @@ export function PopulationPyramid({
     () => getValidationMessage(validation),
     [validation],
   );
+
+  const handleDownloadPng = () => {
+    if (!canvasRef.current) {
+      return;
+    }
+
+    downloadCanvasAsPng(canvasRef.current, 'population-pyramid.png');
+  };
 
   useEffect(() => {
     if (!validation.isValid || !config || !canvasRef.current) {
@@ -124,6 +133,9 @@ export function PopulationPyramid({
   return (
     <>
       <h1>Population Pyramid</h1>
+      <button onClick={handleDownloadPng} type="button">
+        Download PNG
+      </button>
       <canvas ref={canvasRef} />
     </>
   );

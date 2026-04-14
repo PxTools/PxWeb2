@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
 import type { ChartConfig } from '../chartTypes';
+import { downloadCanvasAsPng } from '../chartExport';
 
 interface LineChartProps {
   readonly chartConfig: ChartConfig;
@@ -8,6 +9,14 @@ interface LineChartProps {
 
 export function LineChart({ chartConfig }: LineChartProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  const handleDownloadPng = () => {
+    if (!canvasRef.current) {
+      return;
+    }
+
+    downloadCanvasAsPng(canvasRef.current, 'line-chart.png');
+  };
 
   useEffect(() => {
     if (!canvasRef.current) {
@@ -33,6 +42,9 @@ export function LineChart({ chartConfig }: LineChartProps) {
   return (
     <>
       <h1>Chart</h1>
+      <button onClick={handleDownloadPng} type="button">
+        Download PNG
+      </button>
 
       <canvas ref={canvasRef} />
     </>
