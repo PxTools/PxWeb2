@@ -1,11 +1,13 @@
 import type { PxTable } from '../../shared-types/pxTable';
 import { BarChart } from './Charts/BarChart';
+import { LineChart } from './Charts/LineChart';
+
 
 interface ChartProps {
   readonly pxtable: PxTable;
 }
 
-const data = [
+  const data = [
   { year: 2010, count: 10 },
   { year: 2011, count: 20 },
   { year: 2012, count: 15 },
@@ -20,6 +22,7 @@ export function ChartPx({ pxtable }: ChartProps) {
     <>
       <BarChart data={data} />
       <BarChart data={data} isHorizontal={true} />
+      <LineChart data={data} />
       <span>{pxtable.metadata.label}</span>
     </>
   );
