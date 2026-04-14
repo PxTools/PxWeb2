@@ -80,7 +80,9 @@ export function PopulationPyramid({
           tooltip: {
             callbacks: {
               label: (context) => {
-                const label = context.dataset.label ? `${context.dataset.label}: ` : '';
+                const label = context.dataset.label
+                  ? `${context.dataset.label}: `
+                  : '';
                 const rawValue = context.parsed?.x ?? 0;
                 return `${label}${formatAbsoluteValue(rawValue)}`;
               },
