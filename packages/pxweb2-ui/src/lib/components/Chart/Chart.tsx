@@ -5,9 +5,8 @@ interface ChartProps {
 }
 
 export function Chart({ pxtable }: ChartProps) {
-
   return <h1>Chart</h1>;
-  <span>{pxtable.metadata.label}</span>
-};
+  <span>{pxtable.metadata.label}</span>;
+}
 
 export default Chart;
