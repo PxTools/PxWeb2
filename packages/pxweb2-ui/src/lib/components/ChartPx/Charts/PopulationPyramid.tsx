@@ -10,23 +10,36 @@ interface PopulationPyramidProps {
   readonly validation: PopulationPyramidValidationResult;
 }
 
-function getValidationMessage(validation: PopulationPyramidValidationResult): string {
+function getValidationMessage(
+  validation: PopulationPyramidValidationResult,
+): string {
   if (!validation.reason) {
     return 'Population pyramid data is not valid.';
   }
 
-  const messages: Record<NonNullable<PopulationPyramidValidationResult['reason']>, string> = {
-    MISSING_TWO_VALUE_DIMENSION: 'Population pyramid requires exactly one dimension with 2 values.',
-    MULTIPLE_TWO_VALUE_DIMENSIONS: 'Population pyramid supports only one dimension with exactly 2 values.',
-    MISSING_MULTI_VALUE_DIMENSION: 'Population pyramid requires exactly one dimension with more than 2 values.',
-    MULTIPLE_MULTI_VALUE_DIMENSIONS: 'Population pyramid supports only one dimension with more than 2 values.',
-    NON_SINGLE_VALUE_REMAINING_DIMENSIONS: 'All remaining dimensions must have exactly one value for population pyramid.',
+  const messages: Record<
+    NonNullable<PopulationPyramidValidationResult['reason']>,
+    string
+  > = {
+    MISSING_TWO_VALUE_DIMENSION:
+      'Population pyramid requires exactly one dimension with 2 values.',
+    MULTIPLE_TWO_VALUE_DIMENSIONS:
+      'Population pyramid supports only one dimension with exactly 2 values.',
+    MISSING_MULTI_VALUE_DIMENSION:
+      'Population pyramid requires exactly one dimension with more than 2 values.',
+    MULTIPLE_MULTI_VALUE_DIMENSIONS:
+      'Population pyramid supports only one dimension with more than 2 values.',
+    NON_SINGLE_VALUE_REMAINING_DIMENSIONS:
+      'All remaining dimensions must have exactly one value for population pyramid.',
   };
 
   return messages[validation.reason];
 }
 
-export function PopulationPyramid({ config, validation }: PopulationPyramidProps) {
+export function PopulationPyramid({
+  config,
+  validation,
+}: PopulationPyramidProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const validationMessage = useMemo(
     () => getValidationMessage(validation),
@@ -56,7 +69,9 @@ export function PopulationPyramid({ config, validation }: PopulationPyramidProps
         datasets: [
           {
             label: config.leftSeriesName,
-            data: config.data.map((row) => (row.left === null ? null : -Math.abs(row.left))),
+            data: config.data.map((row) =>
+              row.left === null ? null : -Math.abs(row.left),
+            ),
           },
           {
             label: config.rightSeriesName,
