@@ -27,7 +27,17 @@ export interface PopulationPyramidConfig {
 
 export interface PopulationPyramidValidationResult {
   readonly isValid: boolean;
-  readonly reason?: string;
+  readonly reason?:
+    | 'MISSING_TWO_VALUE_DIMENSION'
+    | 'MULTIPLE_TWO_VALUE_DIMENSIONS'
+    | 'MISSING_MULTI_VALUE_DIMENSION'
+    | 'MULTIPLE_MULTI_VALUE_DIMENSIONS'
+    | 'NON_SINGLE_VALUE_REMAINING_DIMENSIONS';
   readonly twoValueDimensionId?: string;
   readonly multiValueDimensionId?: string;
+}
+
+export interface PopulationPyramidMappingResult {
+  readonly validation: PopulationPyramidValidationResult;
+  readonly config?: PopulationPyramidConfig;
 }
