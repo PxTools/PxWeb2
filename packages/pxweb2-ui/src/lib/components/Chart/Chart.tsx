@@ -48,9 +48,15 @@ export function Chart({ pxtable }: ChartProps) {
       <BarChart dataset={dataset}></BarChart>
       <LineChart dataset={dataset}></LineChart>
       {populationPyramidResult.config ? (
-        <PopulationPyramid dataset={populationPyramidResult.config}></PopulationPyramid>
+        <PopulationPyramid
+          dataset={populationPyramidResult.config}
+        ></PopulationPyramid>
       ) : (
-        <LocalAlert variant="warning" size="small" heading="Population pyramid unavailable">
+        <LocalAlert
+          variant="warning"
+          size="small"
+          heading="Population pyramid unavailable"
+        >
           {pyramidWarningText}
         </LocalAlert>
       )}
