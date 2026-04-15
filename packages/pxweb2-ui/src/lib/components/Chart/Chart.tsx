@@ -1,10 +1,12 @@
 import BarChart from './Charts/BarChart';
 import LineChart from './Charts/LineChart';
 import { useMemo } from 'react';
-import { mapChartConfigToEChartsDataset, mapPxTableToChart } from './chartDataMapper';
+import {
+  mapChartConfigToEChartsDataset,
+  mapPxTableToChart,
+} from './chartDataMapper';
 
 import type { PxTable } from '../../shared-types/pxTable';
-
 
 interface ChartProps {
   readonly pxtable: PxTable;
