@@ -2,7 +2,12 @@ import { getPxTableData } from '../Table/cubeHelper';
 import type { PxTable } from '../../shared-types/pxTable';
 import type { DataCell } from '../../shared-types/pxTableData';
 
-import type { ChartConfig, ChartDataPoint, ChartSeries } from './chartTypes';
+import type {
+  ChartConfig,
+  ChartDataPoint,
+  ChartSeries,
+  EChartsDataset,
+} from './chartTypes';
 
 interface CombinationItem {
   readonly variableId: string;
@@ -103,4 +108,33 @@ export function mapPxTableToChart(pxtable: PxTable): ChartConfig {
   });
 
   return { data, series };
+}
+
+export function mapChartConfigToEChartsDataset(
+  chartConfig: ChartConfig,
+): EChartsDataset {
+  const dimensions = [
+    'name',
+    ...chartConfig.series.map((series) => series.key),
+  ];
+
+  const source = chartConfig.data.map((point) => {
+    const row: Record<string, string | number | null> = {
+      name: point.name,
+    };
+
+    for (const series of chartConfig.series) {
+      const value = point[series.key];
+      row[series.key] =
+        typeof value === 'number' || value === null ? value : null;
+    }
+
+    return row;
+  });
+
+  return {
+    dimensions,
+    source,
+    series: chartConfig.series,
+  };
 }

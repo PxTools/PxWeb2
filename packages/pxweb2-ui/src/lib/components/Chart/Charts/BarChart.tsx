@@ -1,8 +1,10 @@
 import { useRef, useEffect } from 'react';
 import * as echarts from 'echarts';
 
+import type { EChartsDataset } from '../chartTypes';
+
 interface BarChartProps {
-  readonly dataset: any;
+  readonly dataset: EChartsDataset;
   readonly isHorizontal?: boolean;
 }
 export function BarChart({ dataset, isHorizontal = false }: BarChartProps) {
@@ -23,7 +25,10 @@ export function BarChart({ dataset, isHorizontal = false }: BarChartProps) {
       title: {
         text: 'ECharts Getting Started Example',
       },
-      dataset: dataset,
+      dataset: {
+        dimensions: dataset.dimensions,
+        source: dataset.source,
+      },
       legend: {},
       tooltip: {},
       // Declare an x-axis (category axis).
@@ -31,10 +36,15 @@ export function BarChart({ dataset, isHorizontal = false }: BarChartProps) {
       xAxis: xAxisType,
       // Declare a y-axis (value axis).
       yAxis: yAxisType,
-      // Declare several 'bar' series,
-      // every series will auto-map to each column by default.
-      series: [{ type: 'bar' }, { type: 'bar' }, { type: 'bar' }],
+      series: dataset.series.map((series) => ({
+        name: series.name,
+        type: 'bar',
+      })),
     });
+
+    return () => {
+      myChart.dispose();
+    };
   }, [divRef, dataset, isHorizontal]);
   return <div ref={divRef} style={{ width: '600px', height: '400px' }}></div>;
 }

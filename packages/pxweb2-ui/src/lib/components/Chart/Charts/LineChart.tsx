@@ -1,8 +1,10 @@
 import { useRef, useEffect } from 'react';
 import * as echarts from 'echarts';
 
+import type { EChartsDataset } from '../chartTypes';
+
 interface LineChartProps {
-  readonly dataset: any;
+  readonly dataset: EChartsDataset;
 }
 export function LineChart({ dataset }: LineChartProps) {
   const divRef = useRef<HTMLDivElement | null>(null);
@@ -20,7 +22,10 @@ export function LineChart({ dataset }: LineChartProps) {
       title: {
         text: 'ECharts Getting Started Example',
       },
-      dataset: dataset,
+      dataset: {
+        dimensions: dataset.dimensions,
+        source: dataset.source,
+      },
       legend: {},
       tooltip: {},
       // Declare an x-axis (category axis).
@@ -28,10 +33,15 @@ export function LineChart({ dataset }: LineChartProps) {
       xAxis: { type: 'category' },
       // Declare a y-axis (value axis).
       yAxis: {},
-      // Declare several 'bar' series,
-      // every series will auto-map to each column by default.
-      series: [{ type: 'line' }, { type: 'line' }, { type: 'line' }],
+      series: dataset.series.map((series) => ({
+        name: series.name,
+        type: 'line',
+      })),
     });
+
+    return () => {
+      myChart.dispose();
+    };
   }, [divRef, dataset]);
   return <div ref={divRef} style={{ width: '600px', height: '400px' }}></div>;
 }

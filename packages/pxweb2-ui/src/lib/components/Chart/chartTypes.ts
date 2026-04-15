@@ -13,6 +13,12 @@ export interface ChartConfig {
   readonly series: ChartSeries[];
 }
 
+export interface EChartsDataset {
+  readonly dimensions: string[];
+  readonly source: Array<Record<string, string | number | null>>;
+  readonly series: ChartSeries[];
+}
+
 export interface PopulationPyramidDataPoint {
   readonly name: string;
   readonly left: number | null;

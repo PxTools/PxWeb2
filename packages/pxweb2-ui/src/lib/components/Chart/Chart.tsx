@@ -1,17 +1,20 @@
 import BarChart from './Charts/BarChart';
 import LineChart from './Charts/LineChart';
+import { useMemo } from 'react';
+import { mapChartConfigToEChartsDataset, mapPxTableToChart } from './chartDataMapper';
 
-export function Chart() {
-  const dataset = {
-    // Provide a set of data.
-    source: [
-      ['product', '2015', '2016', '2017'],
-      ['Matcha Latte', 43.3, 85.8, 93.7],
-      ['Milk Tea', 83.1, 73.4, 55.1],
-      ['Cheese Cocoa', 86.4, 65.2, 82.5],
-      ['Walnut Brownie', 72.4, 53.9, 39.1],
-    ],
-  };
+import type { PxTable } from '../../shared-types/pxTable';
+
+
+interface ChartProps {
+  readonly pxtable: PxTable;
+}
+export function Chart({ pxtable }: ChartProps) {
+  const chartConfig = useMemo(() => mapPxTableToChart(pxtable), [pxtable]);
+  const dataset = useMemo(
+    () => mapChartConfigToEChartsDataset(chartConfig),
+    [chartConfig],
+  );
 
   return (
     <>
