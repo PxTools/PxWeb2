@@ -1,7 +1,10 @@
 import { useRef, useEffect } from 'react';
 import * as echarts from 'echarts';
 
-export function BarChart() {
+interface BarChartProps {
+  readonly dataset: any;
+}
+export function BarChart({ dataset }: BarChartProps) {
   const divRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -9,24 +12,25 @@ export function BarChart() {
       return;
     }
     // Create the echarts instance
-    const myChart = echarts.init(divRef.current as HTMLElement);
+    const myChart = echarts.init(divRef.current as HTMLElement, null, {
+      renderer: 'svg',
+    });
     // Draw the chart
     myChart.setOption({
       title: {
         text: 'ECharts Getting Started Example',
       },
+      dataset: dataset,
+      legend: {},
       tooltip: {},
-      xAxis: {
-        data: ['shirt', 'cardigan', 'chiffon', 'pants', 'heels', 'socks'],
-      },
+      // Declare an x-axis (category axis).
+      // The category map the first column in the dataset by default.
+      xAxis: { type: 'category' },
+      // Declare a y-axis (value axis).
       yAxis: {},
-      series: [
-        {
-          name: 'sales',
-          type: 'bar',
-          data: [5, 20, 36, 10, 10, 20],
-        },
-      ],
+      // Declare several 'bar' series,
+      // every series will auto-map to each column by default.
+      series: [{ type: 'bar' }, { type: 'bar' }, { type: 'bar' }],
     });
   }, [divRef]);
   return (
