@@ -12,6 +12,11 @@ export function Chart() {
     ],
   };
 
-  return <BarChart dataset={dataset}></BarChart>;
+  return (
+    <>
+      <BarChart dataset={dataset} isHorizontal={true}></BarChart>;
+      <BarChart dataset={dataset}></BarChart>;
+    </>
+  );
 }
 export default Chart;

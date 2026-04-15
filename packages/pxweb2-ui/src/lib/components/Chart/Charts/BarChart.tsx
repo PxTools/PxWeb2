@@ -3,9 +3,12 @@ import * as echarts from 'echarts';
 
 interface BarChartProps {
   readonly dataset: any;
+  readonly isHorizontal?: boolean;
 }
-export function BarChart({ dataset }: BarChartProps) {
+export function BarChart({ dataset, isHorizontal = false }: BarChartProps) {
   const divRef = useRef<HTMLDivElement | null>(null);
+  const xAxisType = isHorizontal ? { type: 'category' } : {};
+  const yAxisType = isHorizontal ? {} : { type: 'category' };
 
   useEffect(() => {
     if (!divRef.current) {
@@ -25,9 +28,9 @@ export function BarChart({ dataset }: BarChartProps) {
       tooltip: {},
       // Declare an x-axis (category axis).
       // The category map the first column in the dataset by default.
-      xAxis: { type: 'category' },
+      xAxis: xAxisType,
       // Declare a y-axis (value axis).
-      yAxis: {},
+      yAxis: yAxisType,
       // Declare several 'bar' series,
       // every series will auto-map to each column by default.
       series: [{ type: 'bar' }, { type: 'bar' }, { type: 'bar' }],
