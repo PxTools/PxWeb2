@@ -3,6 +3,7 @@ import type * as echarts from 'echarts';
 
 import { buildDatasetOption, buildSeriesOption } from '../chartOptionBuilder';
 import type { EChartsDataset } from '../chartTypes';
+import ChartExportButtons from './ChartExportButtons';
 import { useEChartOption } from './useEChartOption';
 
 interface BarChartProps {
@@ -22,7 +23,16 @@ export function BarChart({ dataset, isHorizontal = false }: BarChartProps) {
     };
   }, [dataset, isHorizontal]);
 
-  const divRef = useEChartOption(option);
-  return <div ref={divRef} style={{ width: '600px', height: '400px' }}></div>;
+  const { divRef, chartRef } = useEChartOption(option);
+
+  return (
+    <div>
+      <ChartExportButtons
+        chartRef={chartRef}
+        fileName={isHorizontal ? 'bar-chart-horizontal' : 'bar-chart-vertical'}
+      />
+      <div ref={divRef} style={{ width: '600px', height: '400px' }}></div>
+    </div>
+  );
 }
 export default BarChart;

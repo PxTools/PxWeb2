@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import type * as echarts from 'echarts';
 
 import type { PopulationPyramidConfig } from '../chartTypes';
+import ChartExportButtons from './ChartExportButtons';
 import { useEChartOption } from './useEChartOption';
 
 interface PopulationPyramidProps {
@@ -58,6 +59,12 @@ export function PopulationPyramid({ dataset }: PopulationPyramidProps) {
     };
   }, [dataset]);
 
-  const divRef = useEChartOption(option);
-  return <div ref={divRef} style={{ width: '600px', height: '400px' }}></div>;
+  const { divRef, chartRef } = useEChartOption(option);
+
+  return (
+    <div>
+      <ChartExportButtons chartRef={chartRef} fileName="population-pyramid" />
+      <div ref={divRef} style={{ width: '600px', height: '400px' }}></div>
+    </div>
+  );
 }

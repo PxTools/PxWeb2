@@ -6,6 +6,7 @@ export function useEChartOption(
   renderer: 'canvas' | 'svg' = 'svg',
 ) {
   const divRef = useRef<HTMLDivElement | null>(null);
+  const chartRef = useRef<echarts.EChartsType | null>(null);
 
   useEffect(() => {
     if (!divRef.current) {
@@ -13,12 +14,14 @@ export function useEChartOption(
     }
 
     const chart = echarts.init(divRef.current, null, { renderer });
+    chartRef.current = chart;
     chart.setOption(option);
 
     return () => {
+      chartRef.current = null;
       chart.dispose();
     };
   }, [option, renderer]);
 
-  return divRef;
+  return { divRef, chartRef };
 }
