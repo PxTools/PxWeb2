@@ -1,48 +1,25 @@
-import { useRef, useEffect } from 'react';
-import * as echarts from 'echarts';
+import { useMemo } from 'react';
+import type * as echarts from 'echarts';
 
+import { buildDatasetOption, buildSeriesOption } from '../chartOptionBuilder';
 import type { EChartsDataset } from '../chartTypes';
+import { useEChartOption } from './useEChartOption';
 
 interface LineChartProps {
   readonly dataset: EChartsDataset;
 }
 export function LineChart({ dataset }: LineChartProps) {
-  const divRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    if (!divRef.current) {
-      return;
-    }
-    // Create the echarts instance
-    const myChart = echarts.init(divRef.current as HTMLElement, null, {
-      renderer: 'svg',
-    });
-    // Draw the chart
-    myChart.setOption({
-      title: {
-        text: 'ECharts Getting Started Example',
-      },
-      dataset: {
-        dimensions: dataset.dimensions,
-        source: dataset.source,
-      },
-      legend: {},
-      tooltip: {},
-      // Declare an x-axis (category axis).
-      // The category map the first column in the dataset by default.
-      xAxis: { type: 'category' },
-      // Declare a y-axis (value axis).
+  const option = useMemo<echarts.EChartsOption>(
+    () => ({
+      ...buildDatasetOption(dataset),
+      xAxis: { type: 'category' as const },
       yAxis: {},
-      series: dataset.series.map((series) => ({
-        name: series.name,
-        type: 'line',
-      })),
-    });
+      series: buildSeriesOption(dataset, 'line'),
+    }),
+    [dataset],
+  );
 
-    return () => {
-      myChart.dispose();
-    };
-  }, [divRef, dataset]);
+  const divRef = useEChartOption(option);
   return <div ref={divRef} style={{ width: '600px', height: '400px' }}></div>;
 }
 export default LineChart;
