@@ -1,19 +1,16 @@
 import { useRef, useEffect } from 'react';
 import * as echarts from 'echarts';
 
-interface BarChartProps {
+interface LineChartProps {
   readonly dataset: any;
-  readonly isHorizontal?: boolean;
 }
-export function BarChart({ dataset, isHorizontal = false }: BarChartProps) {
+export function LineChart({ dataset }: LineChartProps) {
   const divRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (!divRef.current) {
       return;
     }
-    const xAxisType = isHorizontal ? { type: 'category' } : {};
-    const yAxisType = isHorizontal ? {} : { type: 'category' };
     // Create the echarts instance
     const myChart = echarts.init(divRef.current as HTMLElement, null, {
       renderer: 'svg',
@@ -28,14 +25,14 @@ export function BarChart({ dataset, isHorizontal = false }: BarChartProps) {
       tooltip: {},
       // Declare an x-axis (category axis).
       // The category map the first column in the dataset by default.
-      xAxis: xAxisType,
+      xAxis: { type: 'category' },
       // Declare a y-axis (value axis).
-      yAxis: yAxisType,
+      yAxis: {},
       // Declare several 'bar' series,
       // every series will auto-map to each column by default.
-      series: [{ type: 'bar' }, { type: 'bar' }, { type: 'bar' }],
+      series: [{ type: 'line' }, { type: 'line' }, { type: 'line' }],
     });
-  }, [divRef, dataset, isHorizontal]);
+  }, [divRef, dataset]);
   return <div ref={divRef} style={{ width: '600px', height: '400px' }}></div>;
 }
-export default BarChart;
+export default LineChart;

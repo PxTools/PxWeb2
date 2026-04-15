@@ -1,4 +1,5 @@
 import BarChart from './Charts/BarChart';
+import LineChart from './Charts/LineChart';
 
 export function Chart() {
   const dataset = {
@@ -16,6 +17,7 @@ export function Chart() {
     <>
       <BarChart dataset={dataset} isHorizontal={true}></BarChart>;
       <BarChart dataset={dataset}></BarChart>;
+      <LineChart dataset={dataset}></LineChart>;
     </>
   );
 }
