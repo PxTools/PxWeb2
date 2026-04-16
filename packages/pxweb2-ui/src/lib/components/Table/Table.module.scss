@@ -5,11 +5,36 @@
   border-collapse: separate; /* Ensure border-radius works */
   border-spacing: 0; /* Optional: Makes sure there is no spacing between the cells */
   width: 100%;
+  position: relative;
 
   border-radius: var(--px-border-radius-medium);
   border: 1px solid var(--px-color-border-default);
   overflow: hidden; /* Ensures content stays within rounded borders */
   color: var(--px-color-text-default);
+
+  &.tableStickyDesktop {
+    border: 1px solid var(--px-color-border-default);
+    overflow: visible;
+
+    &::after {
+      display: none;
+    }
+
+    tbody th.stub {
+      position: sticky;
+      left: 0;
+      inset-inline-start: 0;
+      z-index: 2;
+      background: var(--px-color-surface-moderate);
+      box-shadow:
+        inset 1px 0 0 var(--px-color-border-default),
+        1px 0 0 var(--px-color-border-default);
+    }
+
+    tbody tr:hover th.stub {
+      background: var(--px-color-surface-subtle);
+    }
+  }
 
   @media screen and (max-width: fixed.$breakpoints-xsmall-max-width) {
     line-height: fixed.$spacing-6;
@@ -46,10 +71,83 @@
   thead th {
     font-family: PxWeb-font, sans-serif;
     font-weight: 700;
+
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+      min-width: 200px;
+    }
   }
+
+  thead td {
+    background: var(--px-color-surface-moderate);
+  }
+
+  .tableHeadingStickyDesktop th,
+  .tableHeadingStickyDesktop td {
+    z-index: 10;
+    background: var(--px-color-surface-moderate);
+    position: relative;
+    transform: translateY(var(--table-header-translate-y, 0px));
+  }
+
+  .tableHeadingStickyDesktop .cornerHeaderCell {
+    position: relative;
+    z-index: 7;
+    min-width: 200px;
+    width: 200px;
+    background: var(--px-color-surface-moderate);
+  }
+
+  .tableHeadingStickyDesktop {
+    position: relative;
+    z-index: 9;
+
+    &[data-sticky-pinned='true'] {
+      .cornerHeaderCell {
+        border-top: 1px solid var(--px-color-border-default);
+        border-bottom: 2px solid var(--px-color-border-default);
+      }
+
+      tr:first-child th,
+      tr:first-child td {
+        border-top: 1px solid var(--px-color-border-default);
+      }
+
+      tr:last-child th,
+      tr:last-child td {
+        border-bottom: 2px solid var(--px-color-border-default);
+      }
+    }
+  }
+
+  .desktopHeaderLabelWrapper {
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(1.25em * var(--desktop-header-lines, 3));
+    }
+  }
+  .desktopHeaderLabel {
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: var(--desktop-header-lines, 3);
+      line-clamp: var(--desktop-header-lines, 3);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: normal;
+      line-height: 1.25;
+      word-break: break-word;
+    }
+  }
+
   thead tr:last-child th {
     text-align: end;
     border-bottom-width: 2px;
+
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+      text-align: center;
+    }
   }
   th.stub {
     text-align: left;
@@ -255,4 +353,64 @@
     background: var(--px-color-surface-moderate);
     border: none;
   }
+
+  .cornerHeaderCell {
+    background: var(--px-color-surface-moderate);
+    border-left: none;
+    border-top: none;
+  }
+
+  .virtualPaddingCell {
+    padding: 0;
+    border: none;
+    background: none;
+  }
+}
+
+.virtualizedWrapper {
+  position: relative;
+  max-height: 70vh;
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
+.virtualizedWrapperUseParentScroll {
+  position: relative;
+  max-height: none;
+  overflow-y: visible;
+}
+
+.cornerHeaderOverlay {
+  position: absolute;
+  left: calc(1px + var(--table-row-header-nudge-x, 0px));
+  top: 0;
+  width: calc(var(--table-corner-width, 200px) + 1px);
+  height: var(--table-header-height, 0px);
+  transform: translate3d(
+    var(--table-header-translate-x, 0px),
+    var(--table-header-translate-y, 0px),
+    0
+  );
+  box-sizing: border-box;
+  background: var(--px-color-surface-moderate);
+  border-top: 1px solid var(--px-color-border-default);
+  border-left: 1px solid var(--px-color-border-default);
+  border-right: 1px solid var(--px-color-border-default);
+  border-top-left-radius: var(--px-border-radius-medium);
+  pointer-events: none;
+  z-index: 11;
+}
+
+.cornerHeaderOverlay[data-sticky-pinned='true'] {
+  transform: translate3d(
+    var(--table-header-translate-x, 0px),
+    calc(var(--table-header-translate-y, 0px) + 1px),
+    0
+  );
+  border-bottom: 2px solid var(--px-color-border-default);
+}
+
+.virtualizedTable {
+  width: max-content;
+  min-width: 100%;
 }

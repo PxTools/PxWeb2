@@ -29,4 +29,31 @@ describe('Presentation', () => {
 
     expect(baseElement).toBeTruthy();
   });
+
+  it('cleans up window resize listener on unmount', () => {
+    const addEventListenerSpy = vi.spyOn(globalThis, 'addEventListener');
+    const removeEventListenerSpy = vi.spyOn(globalThis, 'removeEventListener');
+
+    const { unmount } = renderWithProviders(
+      <Presentation
+        selectedTabId="1"
+        isExpanded={false}
+        setIsExpanded={vi.fn()}
+      />,
+    );
+
+    unmount();
+
+    expect(addEventListenerSpy).toHaveBeenCalledWith(
+      'resize',
+      expect.any(Function),
+    );
+    expect(removeEventListenerSpy).toHaveBeenCalledWith(
+      'resize',
+      expect.any(Function),
+    );
+
+    addEventListenerSpy.mockRestore();
+    removeEventListenerSpy.mockRestore();
+  });
 });
