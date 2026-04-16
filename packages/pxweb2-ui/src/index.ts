@@ -4,6 +4,7 @@ export * from './lib/components/ActionItem/ActionItem';
 export * from './lib/components/BottomSheet/BottomSheet';
 export * from './lib/components/Breadcrumbs/Breadcrumbs';
 export * from './lib/components/Button/Button';
+export * from './lib/components/ChartPx/ChartPx';
 export * from './lib/components/Checkbox/Checkbox';
 export * from './lib/components/CheckCircle/CheckCircleIcon';
 export * from './lib/components/CheckCircle/CheckCircleToggle';
