@@ -255,4 +255,53 @@
     background: var(--px-color-surface-moderate);
     border: none;
   }
+
+  .virtualPaddingCell {
+    padding: 0;
+    border: none;
+    background: none;
+  }
+}
+
+.virtualizedWrapper {
+  max-height: 70vh;
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
+.virtualizedWrapperUseParentScroll {
+  max-height: none;
+  overflow-y: visible;
+}
+
+.virtualizedTable {
+  width: max-content;
+  min-width: 100%;
+}
+
+.tableHeadingText {
+  display: block;
+}
+
+// -- STICKY HEADER --
+// .tableHeadingStickyDesktop {
+//   position: relative;
+//   z-index: 10;
+//   background: var(--px-color-surface-moderate);
+//   will-change: transform;
+//   backface-visibility: hidden;
+// }
+
+.tableHeadingLocked {
+  will-change: min-height;
+}
+
+.tableHeadingScrolling {
+  .tableHeadingText {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    text-overflow: ellipsis;
+  }
 }

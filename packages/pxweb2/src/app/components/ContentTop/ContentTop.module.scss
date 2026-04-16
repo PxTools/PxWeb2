@@ -30,6 +30,11 @@
   align-items: flex-start;
   gap: fixed.$spacing-4;
   align-self: stretch;
+
+  // Offset anchor jump only for desktop widths where TableViewer header is sticky.
+  @media (min-width: fixed.$breakpoints-large-min-width) {
+    scroll-margin-top: var(--px-skip-to-main-sticky-offset, 0px);
+  }
 }
 .information {
   display: flex;

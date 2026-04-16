@@ -71,6 +71,11 @@ function getPxTable(): PxTable {
     aggregationAllowed: false,
     contents: '',
     descriptionDefault: false,
+    definitions: {
+      statisticsHomepage: undefined,
+      statisticsDefinitions: undefined,
+      variablesDefinitions: undefined,
+    },
   };
   const table: PxTable = {
     metadata: tableMeta,
