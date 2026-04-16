@@ -1,12 +1,25 @@
 import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
-import React, { useRef, useEffect, useState, useLayoutEffect } from 'react';
+import React, {
+  Activity,
+  useRef,
+  useEffect,
+  useState,
+  useLayoutEffect,
+} from 'react';
+import { useSearchParams } from 'react-router';
 import isEqual from 'lodash/isEqual';
 
 import classes from './Presentation.module.scss';
 import useApp from '../../context/useApp';
 import { ContentTop } from '../ContentTop/ContentTop';
-import { Table, EmptyState, PxTable, LocalAlert } from '@pxweb2/pxweb2-ui';
+import {
+  Chart,
+  Table,
+  EmptyState,
+  PxTable,
+  LocalAlert,
+} from '@pxweb2/pxweb2-ui';
 import useTableData from '../../context/useTableData';
 import useVariables from '../../context/useVariables';
 import { useDebounce } from '@uidotdev/usehooks';
@@ -33,6 +46,7 @@ export function Presentation({
   isExpanded,
   setIsExpanded,
 }: Readonly<propsType>) {
+  const [searchParams] = useSearchParams();
   const { isMobile, getSavedQueryId } = useApp();
   const config = getConfig();
   const { i18n, t } = useTranslation();
@@ -52,6 +66,7 @@ export function Presentation({
   const { isFadingTable, setIsFadingTable } = tableData;
   const [isMandatoryNotSelectedFirst, setIsMandatoryNotSelectedFirst] =
     useState(true);
+  const isGraphView = searchParams.get('view') === 'graph';
 
   const tableContainerRef = useRef<HTMLDivElement | null>(null);
   const gradientContainerRef = useRef<HTMLDivElement | null>(null);
@@ -269,9 +284,16 @@ export function Presentation({
               className={classes.gradientContainer}
               ref={gradientContainerRef}
             >
-              <div className={classes.tableContainer} ref={tableContainerRef}>
-                <MemoizedTable pxtable={tableData.data} isMobile={isMobile} />
-              </div>
+              <Activity mode={isGraphView ? 'visible' : 'hidden'}>
+                <div className={classes.chartContainer}>
+                  <Chart pxtable={tableData.data} />
+                </div>
+              </Activity>
+              <Activity mode={isGraphView ? 'hidden' : 'visible'}>
+                <div className={classes.tableContainer} ref={tableContainerRef}>
+                  <MemoizedTable pxtable={tableData.data} isMobile={isMobile} />
+                </div>
+              </Activity>
             </div>
           )}
           {isMissingMandatoryVariables &&
@@ -281,9 +303,22 @@ export function Presentation({
                 className={classes.gradientContainer}
                 ref={gradientContainerRef}
               >
-                <div className={classes.tableContainer} ref={tableContainerRef}>
-                  <MemoizedTable pxtable={tableData.data} isMobile={isMobile} />
-                </div>
+                <Activity mode={isGraphView ? 'visible' : 'hidden'}>
+                  <div className={classes.chartContainer}>
+                    <Chart pxtable={tableData.data} />
+                  </div>
+                </Activity>
+                <Activity mode={isGraphView ? 'hidden' : 'visible'}>
+                  <div
+                    className={classes.tableContainer}
+                    ref={tableContainerRef}
+                  >
+                    <MemoizedTable
+                      pxtable={tableData.data}
+                      isMobile={isMobile}
+                    />
+                  </div>
+                </Activity>
               </div>
             )}
           {!isLoadingMetadata &&

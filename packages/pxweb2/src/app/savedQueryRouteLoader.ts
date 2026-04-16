@@ -6,9 +6,14 @@ import { getLanguagePath } from './util/language/getLanguagePath';
 
 // Handles URL:s for saved queries containing only the saved query id and redirects to the proper table URL.
 // Example: https://www.yourpxweb.com/sq/123456 -> https://www.yourpxweb.com/{lang}/table/{tableId}?sq=123456
-export async function savedQueryRouteLoader({ params }: LoaderFunctionArgs) {
+export async function savedQueryRouteLoader({
+  params,
+  request,
+}: LoaderFunctionArgs) {
   const config = getConfig();
   const { sqId } = params as { sqId?: string };
+  const requestUrl = new URL(request.url);
+  const incomingView = requestUrl.searchParams.get('view');
 
   if (!sqId) {
     throw new Response('Missing saved query id', { status: 400 });
@@ -34,7 +39,12 @@ export async function savedQueryRouteLoader({ params }: LoaderFunctionArgs) {
       config.language.positionInPath,
     );
 
-    const search = `?${new URLSearchParams({ sq: sqId }).toString()}`;
+    const redirectParams = new URLSearchParams({ sq: sqId });
+    if (incomingView === 'table' || incomingView === 'graph') {
+      redirectParams.set('view', incomingView);
+    }
+
+    const search = `?${redirectParams.toString()}`;
 
     return redirect(`${path}${search}`);
   } catch (e: unknown) {

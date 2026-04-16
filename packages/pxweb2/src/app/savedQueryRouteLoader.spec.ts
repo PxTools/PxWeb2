@@ -17,6 +17,16 @@ const makeArgs = (sqId?: string): LoaderFunctionArgs => ({
   unstable_pattern: '',
 });
 
+const makeArgsWithSearch = (
+  sqId: string,
+  search: string,
+): LoaderFunctionArgs => ({
+  params: { sqId },
+  request: new Request(`http://localhost/sq/${sqId}${search}`),
+  context: undefined,
+  unstable_pattern: '',
+});
+
 vi.mock('./util/config/getConfig', () => ({
   getConfig: vi.fn(),
 }));
@@ -84,6 +94,38 @@ describe('savedQueryRouteLoader', () => {
     expect(res.status).toBe(302);
     expect(res.headers.get('Location')).toBe('/en/table/T1?sq=123');
     expect(i18n.changeLanguage).toHaveBeenCalledWith('en');
+  });
+
+  it('preserves valid view query parameter on redirect', async () => {
+    vi.mocked(getConfig).mockReturnValue({
+      apiUrl: 'https://api.example',
+      baseApplicationPath: '',
+      language: {
+        defaultLanguage: 'en',
+        showDefaultLanguageInPath: true,
+        supportedLanguages: [
+          { shorthand: 'en', languageName: 'English' },
+          { shorthand: 'sv', languageName: 'Swedish' },
+        ],
+      },
+    } as unknown as AppConfig);
+    vi.mocked(SavedQueriesService.getSaveQuery).mockResolvedValue({
+      language: 'en',
+      id: '123',
+      savedQuery: {
+        tableId: 'T1',
+        language: 'en',
+        selection: { selection: [] },
+      },
+      links: [],
+    } as SavedQueryResponse);
+
+    const res = await savedQueryRouteLoader(
+      makeArgsWithSearch('123', '?view=graph'),
+    );
+
+    expect(res.status).toBe(302);
+    expect(res.headers.get('Location')).toBe('/en/table/T1?sq=123&view=graph');
   });
 
   it('redirects to /table when lang is default and showDefaultLanguageInPath=false', async () => {
