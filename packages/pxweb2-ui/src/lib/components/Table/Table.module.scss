@@ -46,6 +46,7 @@
   thead th {
     font-family: PxWeb-font, sans-serif;
     font-weight: 700;
+    white-space: nowrap;
   }
 
   .longHeaderCellText {
@@ -59,6 +60,11 @@
       word-break: break-word;
       overflow: hidden;
       display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: var(--desktop-header-lines);
+      line-clamp: var(--desktop-header-lines);
+      white-space: normal;
+      line-height: 1.25;      
     }
   }
   .desktopHeaderLabelWrapper {
@@ -67,15 +73,6 @@
       align-items: center;
       justify-content: center;
       min-height: calc(1.25em * var(--desktop-header-lines));
-    }
-  }
-  .desktopHeaderLabel {
-    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: var(--desktop-header-lines);
-      line-clamp: var(--desktop-header-lines);
-      white-space: normal;
-      line-height: 1.25;
     }
   }
 

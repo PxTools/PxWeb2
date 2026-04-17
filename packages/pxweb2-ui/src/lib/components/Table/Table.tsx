@@ -701,7 +701,7 @@ function createVisibleHeadingCell({
         }
       >
         <span
-          className={cl(classes.desktopHeaderLabel, {
+          className={cl({
             [classes.longHeaderCellTextLabel]: headingLines > 1,
           })}
         >
