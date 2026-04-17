@@ -6,6 +6,19 @@ For more detailed information about this project, please refer to our [Project p
 
 If you want to have a look at the current state of PxWeb2 you could always see our automatic build of our main branch at [pxweb2.pages.dev](https://pxweb2.pages.dev/).
 
+## Dependency Install Cooldown
+
+This repository enforces an npm dependency release cooldown of 9 days.
+
+- Configuration is set in the root `.npmrc`.
+- In this npm workspaces setup, npm commands started from workspace folders still resolve to the monorepo root project config.
+- The cooldown applies to both `npm install` and `npm ci`.
+- This helps reduce the risk of pulling in very recently published packages.
+
+If an urgent one-off override is needed, run the install command with `--min-release-age=0` for that specific command.
+
+This policy relies on npm v11 support for `min-release-age`.
+
 ## Contact
 
 If you're interested in this project and want to know more, feel free to contact

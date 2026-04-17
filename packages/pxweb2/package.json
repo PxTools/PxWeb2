@@ -13,7 +13,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "coverage": "vitest run --coverage",
-    "test:html-validate": "npm run build && concurrently --kill-others-on-fail \"npx serve ./dist\" \"node test/html-validator.js\"",
+    "test:html-validate": "npm run build && concurrently --kill-others-on-fail \"vite preview\" \"node test/html-validator.js\"",
     "prettier": "prettier --config ../../.prettierrc --check ./src/** --write --ignore-path ../../.prettierignore"
   },
   "dependencies": {
@@ -22,15 +22,15 @@
     "babel-plugin-react-compiler": "^1.0.0",
     "lodash": "^4.18.1",
     "motion": "^12.38.0",
-    "react-router": "^7.13.1"
+    "react-router": "^7.14.0"
   },
   "devDependencies": {
     "@testing-library/react": "^16.3.2",
     "ajv": "^8.18.0",
     "concurrently": "^9.2.1",
-    "html-validate": "^10.11.2",
+    "html-validate": "^10.11.3",
     "husky": "^9.1.7",
-    "playwright": "^1.58.2",
+    "playwright": "^1.59.1",
     "vite-plugin-babel": "^1.6.0",
     "vitest": "^4.0.18"
   }
