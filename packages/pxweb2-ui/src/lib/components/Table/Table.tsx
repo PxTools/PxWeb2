@@ -689,6 +689,7 @@ function createVisibleHeadingCell({
           repetitionIndex === 1 &&
           !hasStub &&
           visibleSpanStart === 0,
+        [classes.longHeaderCellText]: headingLines > 1,
       })}
     >
       <span
@@ -699,7 +700,11 @@ function createVisibleHeadingCell({
           } as React.CSSProperties
         }
       >
-        <span className={classes.desktopHeaderLabel}>
+        <span
+          className={cl(classes.desktopHeaderLabel, {
+            [classes.longHeaderCellTextLabel]: headingLines > 1,
+          })}
+        >
           {variable.values[valueIndex].label}
         </span>
       </span>
@@ -878,7 +883,7 @@ export function createHeading(
       {''}
     </td>
   ) : null;
-
+  console.log({ headingLevelLayouts });
   for (const headingLevelLayout of headingLevelLayouts) {
     const headerRow = createHeadingRowForLevel({
       table,

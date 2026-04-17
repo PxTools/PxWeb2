@@ -46,31 +46,36 @@
   thead th {
     font-family: PxWeb-font, sans-serif;
     font-weight: 700;
+  }
 
+  .longHeaderCellText {
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       min-width: 200px;
     }
   }
-
+  .longHeaderCellTextLabel {
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+      text-overflow: ellipsis;
+      word-break: break-word;
+      overflow: hidden;
+      display: -webkit-box;
+    }
+  }
   .desktopHeaderLabelWrapper {
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: calc(1.25em * var(--desktop-header-lines, 3));
+      min-height: calc(1.25em * var(--desktop-header-lines));
     }
   }
   .desktopHeaderLabel {
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
-      display: -webkit-box;
       -webkit-box-orient: vertical;
-      -webkit-line-clamp: var(--desktop-header-lines, 3);
-      line-clamp: var(--desktop-header-lines, 3);
-      overflow: hidden;
-      text-overflow: ellipsis;
+      -webkit-line-clamp: var(--desktop-header-lines);
+      line-clamp: var(--desktop-header-lines);
       white-space: normal;
       line-height: 1.25;
-      word-break: break-word;
     }
   }
 
