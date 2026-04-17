@@ -44,7 +44,7 @@ const Collapsible: React.FC<CollapsibleProps> = ({
   const subjectTree = state.availableFilters.subjectTree;
 
   return (
-    <span className={styles.filterLabel}>
+    <div className={styles.filterLabel}>
       <Checkbox
         id={subjectId + index}
         text={`${subjectLabel} (${count})`}
@@ -130,7 +130,7 @@ const Collapsible: React.FC<CollapsibleProps> = ({
         }}
       />
       {isActive && children}
-    </span>
+    </div>
   );
 };
 
