@@ -1,8 +1,38 @@
 import { type Table, TablesService, ApiError } from '@pxweb2/pxweb2-api-client';
 import { getConfig } from './config/getConfig';
-import type { Filter } from '../pages/StartPage/StartPageTypes';
+import type { Filter, FilterType } from '../pages/StartPage/StartPageTypes';
 import { getYearRangeFromPeriod } from './startPageFilters';
 
+// Normalized filter representation used by the matching pipeline.
+// Raw UI filters are compiled once into this shape, then reused for each table.
+type CompiledMatcher = {
+  // Lowercased time units selected by the user.
+  timeUnits: Set<string>;
+  // Subject IDs selected in the subject tree.
+  subjectIds: Set<string>;
+  // Search terms split from free-text input.
+  searchWords: string[];
+  // Optional parsed year bounds from a year/year-range filter.
+  yearFrom?: number;
+  yearTo?: number;
+  // Variable names that must all exist on a table.
+  variableNames: Set<string>;
+  // Status toggles compiled into booleans for quick checks.
+  statusActive: boolean;
+  statusDiscontinued: boolean;
+};
+
+// Per-table caches used during matching.
+// WeakMap avoids memory leaks because entries are released with the table object.
+const subjectIdCache = new WeakMap<Table, Set<string>>();
+const searchTextCache = new WeakMap<Table, string>();
+const yearRangeCache = new WeakMap<
+  Table,
+  { start: number; end: number } | null
+>();
+
+// Loads all tables for the selected language and retries once with fallback
+// language if the API reports "Unsupported language".
 export async function getAllTables(language?: string) {
   const config = getConfig();
 
@@ -69,150 +99,244 @@ export async function queryTablesByKeyword(query: string, language?: string) {
   }
 }
 
-export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
-  const timeUnitFilters = filters.filter((f) => {
-    return f.type === 'timeUnit';
-  });
+// Extracts and caches all subject IDs that appear in the table path hierarchy.
+function getSubjectIdsForTable(table: Table): Set<string> {
+  const cached = subjectIdCache.get(table);
+  if (cached) {
+    return cached;
+  }
 
-  const testTimeUnitFilters = function () {
-    if (timeUnitFilters.length == 0) {
-      return true;
-    } else {
-      return timeUnitFilters.some((filter) => {
-        return table?.timeUnit?.toLowerCase() === filter.value.toLowerCase();
-      });
+  const ids = new Set<string>();
+  for (const path of table.paths ?? []) {
+    for (const segment of path ?? []) {
+      if (segment?.id) {
+        ids.add(segment.id);
+      }
     }
+  }
+
+  subjectIdCache.set(table, ids);
+  return ids;
+}
+
+// Builds and caches one normalized text blob for case-insensitive word matching.
+function getSearchTextForTable(table: Table): string {
+  const cached = searchTextCache.get(table);
+  if (cached) {
+    return cached;
+  }
+
+  const text = ''
+    .concat(
+      table.description ?? '',
+      ' ',
+      table.label ?? '',
+      ' ',
+      table.id,
+      ' ',
+      table.variableNames.join(' '),
+    )
+    .toLowerCase()
+    .normalize();
+
+  searchTextCache.set(table, text);
+  return text;
+}
+
+// Computes and caches the inclusive year span covered by first/last period.
+// Returns null when no finite range can be derived.
+function getYearSpanForTable(
+  table: Table,
+): { start: number; end: number } | null {
+  const cached = yearRangeCache.get(table);
+  if (cached !== undefined) {
+    return cached;
+  }
+
+  const [firstStart, firstEnd] = getYearRangeFromPeriod(
+    table.firstPeriod ?? '',
+  );
+  const [lastStart, lastEnd] = getYearRangeFromPeriod(table.lastPeriod ?? '');
+  const start = Math.min(firstStart, lastStart);
+  const end = Math.max(firstEnd, lastEnd);
+
+  if (!Number.isFinite(start) || !Number.isFinite(end)) {
+    yearRangeCache.set(table, null);
+    return null;
+  }
+
+  const span = { start, end };
+  yearRangeCache.set(table, span);
+  return span;
+}
+
+// Compiles UI filters into a matcher optimized for repeated table checks.
+export function buildCompiledMatcher(filters: Filter[]): CompiledMatcher {
+  const matcher: CompiledMatcher = {
+    timeUnits: new Set<string>(),
+    subjectIds: new Set<string>(),
+    searchWords: [],
+    yearFrom: undefined,
+    yearTo: undefined,
+    variableNames: new Set<string>(),
+    statusActive: false,
+    statusDiscontinued: false,
   };
 
-  const subjectFilters = filters.filter((f) => {
-    return f.type === 'subject';
-  });
+  const parseSearchWords = (value: string): string[] =>
+    value.toLowerCase().normalize().split(' ').filter(Boolean);
 
-  const testSubjectFilters = function () {
-    if (subjectFilters.length == 0) {
-      return true;
-    } else {
-      return subjectFilters.some((filter) => {
-        return table?.paths?.flat().some((path) => {
-          return path.id === filter.value;
-        });
-      });
-    }
+  const parseYearRange = (
+    value: string,
+  ): Pick<CompiledMatcher, 'yearFrom' | 'yearTo'> => {
+    const [fromStr, toStr] = value.split('-');
+    const parsedFrom = Number.parseInt(fromStr ?? '', 10);
+    const parsedTo = toStr ? Number.parseInt(toStr, 10) : parsedFrom;
+
+    return {
+      yearFrom: Number.isNaN(parsedFrom) ? undefined : parsedFrom,
+      yearTo: Number.isNaN(parsedTo) ? undefined : parsedTo,
+    };
   };
 
-  // Note: The ActionType ADD_SEARCH has been replaced by ADD_QUERY_FILTER.
-  // In the same way the FilterType 'search' has been replaced by 'query'.
-  // It is kept here for possible future use. One scenario could be that the API query fails,
-  // then we can fall back to client-side search filtering.
-  const searchFilter = filters.find((f) => {
-    return f.type === 'search';
-  });
-
-  const testSearchFilter = function () {
-    if (!searchFilter) {
-      return true;
-    } else {
-      const text = ''
-        .concat(
-          table.description ?? '',
-          ' ',
-          table.label ?? '',
-          ' ',
-          table.id,
-          ' ',
-          table.variableNames.join(' '),
-        )
-        .toLowerCase()
-        .normalize();
-
-      return searchFilter.value
-        .toLowerCase()
-        .normalize()
-        .split(' ')
-        .every((word) => {
-          return text.includes(word);
-        });
-    }
+  const filterHandlers: Partial<
+    Record<FilterType, (filter: Filter, current: CompiledMatcher) => void>
+  > = {
+    timeUnit: (filter, current) => {
+      current.timeUnits.add(filter.value.toLowerCase());
+    },
+    subject: (filter, current) => {
+      current.subjectIds.add(filter.value);
+    },
+    variable: (filter, current) => {
+      current.variableNames.add(filter.value);
+    },
+    search: (filter, current) => {
+      current.searchWords = parseSearchWords(filter.value);
+    },
+    yearRange: (filter, current) => {
+      const { yearFrom, yearTo } = parseYearRange(filter.value);
+      current.yearFrom = yearFrom;
+      current.yearTo = yearTo;
+    },
+    status: (filter, current) => {
+      current.statusActive ||= filter.value === 'active';
+      current.statusDiscontinued ||= filter.value === 'discontinued';
+    },
   };
 
-  const testYearRangeFilter = () => {
-    const yearRangeFilter = filters.find((f) => f.type === 'yearRange');
-    if (!yearRangeFilter) {
+  for (const filter of filters) {
+    filterHandlers[filter.type]?.(filter, matcher);
+  }
+
+  return matcher;
+}
+
+// Applies each filter category to a table. A table is included only when all
+// categories match, while each category decides its own OR/AND behavior.
+export function shouldTableBeIncludedWithMatcher(
+  table: Table,
+  matcher: CompiledMatcher,
+): boolean {
+  const matchesTimeUnit = (): boolean => {
+    if (matcher.timeUnits.size === 0) {
       return true;
     }
+    const tableTimeUnit = table.timeUnit?.toLowerCase() ?? '';
+    return matcher.timeUnits.has(tableTimeUnit);
+  };
 
-    const [fromStr, toStr] = yearRangeFilter.value.split('-');
-    const from = Number.parseInt(fromStr, 10);
-    const to = toStr ? Number.parseInt(toStr, 10) : from;
-
-    const [firstStart, firstEnd] = getYearRangeFromPeriod(
-      table.firstPeriod ?? '',
-    );
-    const [lastStart, lastEnd] = getYearRangeFromPeriod(table.lastPeriod ?? '');
-    const tableStart = Math.min(firstStart, lastStart);
-    const tableEnd = Math.max(firstEnd, lastEnd);
-
-    if (!Number.isFinite(tableStart) || !Number.isFinite(tableEnd)) {
-      return false;
+  const matchesSubject = (): boolean => {
+    if (matcher.subjectIds.size === 0) {
+      return true;
     }
-
-    const hasFrom =
-      fromStr !== undefined && fromStr !== '' && !Number.isNaN(from);
-    const hasTo = !!toStr;
-
-    if (hasFrom && hasTo) {
-      return tableStart <= from && tableEnd >= to;
+    const tableSubjects = getSubjectIdsForTable(table);
+    for (const subjectId of matcher.subjectIds) {
+      if (tableSubjects.has(subjectId)) {
+        return true;
+      }
     }
+    return false;
+  };
 
-    if (hasFrom) {
-      return from >= tableStart && from <= tableEnd;
+  const matchesSearch = (): boolean => {
+    if (matcher.searchWords.length === 0) {
+      return true;
     }
-
-    if (hasTo) {
-      return to >= tableStart && to <= tableEnd;
+    const text = getSearchTextForTable(table);
+    for (const word of matcher.searchWords) {
+      if (!text.includes(word)) {
+        return false;
+      }
     }
-
     return true;
   };
 
-  const variableFilters = filters.filter((f) => {
-    return f.type === 'variable';
-  });
-  const testVariableFilters = function () {
-    if (variableFilters.length == 0) {
-      return true;
-    } else {
-      return variableFilters.every((filter) => {
-        return table.variableNames.some((varName) => {
-          return varName === filter.value;
-        });
-      });
-    }
-  };
-  const statusFilters = filters.filter((f) => {
-    return f.type === 'status';
-  });
-  const testStatusFilters = function () {
-    if (statusFilters.length === 0) {
+  const matchesYearRange = (): boolean => {
+    const { yearFrom, yearTo } = matcher;
+    if (yearFrom === undefined && yearTo === undefined) {
       return true;
     }
-    return statusFilters.some((filter) => {
-      if (filter.value === 'active') {
-        return table.discontinued !== true;
-      }
-      if (filter.value === 'discontinued') {
-        return table.discontinued === true;
-      }
+
+    const span = getYearSpanForTable(table);
+    if (!span) {
       return false;
-    });
+    }
+
+    if (yearFrom !== undefined && yearTo !== undefined) {
+      return span.start <= yearFrom && span.end >= yearTo;
+    }
+
+    if (yearFrom !== undefined) {
+      return yearFrom >= span.start && yearFrom <= span.end;
+    }
+
+    return yearTo !== undefined && yearTo >= span.start && yearTo <= span.end;
+  };
+
+  const matchesVariables = (): boolean => {
+    if (matcher.variableNames.size === 0) {
+      return true;
+    }
+    for (const variable of matcher.variableNames) {
+      if (!table.variableNames.includes(variable)) {
+        return false;
+      }
+    }
+    return true;
+  };
+
+  const matchesStatus = (): boolean => {
+    const { statusActive, statusDiscontinued } = matcher;
+    if (!statusActive && !statusDiscontinued) {
+      return true;
+    }
+
+    if (statusActive && statusDiscontinued) {
+      return true;
+    }
+
+    const isDiscontinued = table.discontinued === true;
+    if (statusActive) {
+      return !isDiscontinued;
+    }
+
+    return isDiscontinued;
   };
 
   return (
-    testTimeUnitFilters() &&
-    testSubjectFilters() &&
-    testYearRangeFilter() &&
-    testSearchFilter() &&
-    testVariableFilters() &&
-    testStatusFilters()
+    matchesTimeUnit() &&
+    matchesSubject() &&
+    matchesSearch() &&
+    matchesYearRange() &&
+    matchesVariables() &&
+    matchesStatus()
   );
+}
+
+// Convenience wrapper used by callers that have raw filters.
+// Internally compiles filters once and then runs matcher logic.
+export function shouldTableBeIncluded(table: Table, filters: Filter[]) {
+  const matcher = buildCompiledMatcher(filters);
+  return shouldTableBeIncludedWithMatcher(table, matcher);
 }

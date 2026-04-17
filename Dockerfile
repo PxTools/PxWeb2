@@ -1,10 +1,10 @@
-FROM node:24.14.0-slim AS build
+FROM node:24.14.1-slim AS build
 WORKDIR /app
 COPY . ./
 RUN npm ci && npm run build-artifact
 
 # production environment
-FROM nginxinc/nginx-unprivileged:1.29.4-alpine-slim
+FROM nginxinc/nginx-unprivileged:1.29.8-alpine-slim
 COPY --from=build /app/packages/pxweb2/dist /usr/share/nginx/html
 COPY nginx/conf.d /etc/nginx/conf.d
 EXPOSE 8080
