@@ -29,21 +29,23 @@ export const LanguageSwitcher = () => {
   const handleLanguageChange = (
     event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
-    // Change the URL to the selected language path
-    navigate(
-      getLanguagePath(
-        location.pathname,
-        event.target.value,
-        config.language.supportedLanguages,
-        config.language.defaultLanguage,
-        config.language.showDefaultLanguageInPath,
-        config.baseApplicationPath,
-        config.language.positionInPath,
-      ),
+    let newPath = getLanguagePath(
+      location.pathname,
+      event.target.value,
+      config.language.supportedLanguages,
+      config.language.defaultLanguage,
+      config.language.showDefaultLanguageInPath,
+      config.baseApplicationPath,
+      config.language.positionInPath,
     );
 
-    // Change the language in i18n
+    // Preserve all current query parameters
+    if (location.search) {
+      newPath += location.search;
+    }
+
     i18n.changeLanguage(event.target.value);
+    navigate(newPath);
   };
 
   function handleKeyUp(event: React.KeyboardEvent<HTMLSelectElement>) {
