@@ -47,7 +47,7 @@ type VirtualColumnItem = {
   end: number;
 };
 
-const DESKTOP_COLUMN_ESTIMATE_SIZE = 88;
+const DESKTOP_COLUMN_ESTIMATE_SIZE = 70;
 const DESKTOP_COLUMN_OVERSCAN = 8;
 const DESKTOP_BOOTSTRAP_COLUMN_COUNT = 12;
 const EMPTY_VIRTUAL_COLUMNS: never[] = [];
