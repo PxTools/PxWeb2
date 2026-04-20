@@ -1,5 +1,6 @@
 import { Plugin, defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import react, { reactCompilerPreset } from '@vitejs/plugin-react';
+import babel from '@rolldown/plugin-babel';
 import path from 'path';
 import { virtualModulePlugin } from './vite-plugin-virtual-module';
 
@@ -35,11 +36,8 @@ export default defineConfig({
     host: 'localhost',
   },
   plugins: [
-    react({
-      babel: {
-        plugins: ['babel-plugin-react-compiler'],
-      },
-    }),
+    react(),
+    babel({ presets: [reactCompilerPreset()] }),
     themeInjectorPlugin(),
     virtualModulePlugin(),
   ],
