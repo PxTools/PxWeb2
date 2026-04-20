@@ -25,7 +25,7 @@
 .content-wrapper {
   display: inline-flex;
   flex-direction: column;
-  background: var();
+  background: var(--px-color-background-subtle);
 }
 
 .icon-wrapper {
