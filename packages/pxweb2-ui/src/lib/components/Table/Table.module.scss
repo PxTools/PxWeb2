@@ -89,7 +89,12 @@
 
   th.stub {
     text-align: left;
-    min-width: 200px;
+    // We need both min-width and max-width to make sure the row header width do not change when scrolling
+    // vertically. Only width requires us to also specify table-layout: fixed. This causes other problems.
+    min-width: 250px;
+    max-width: 250px;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   tr:first-child th:first-child {
