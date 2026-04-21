@@ -128,7 +128,7 @@
       "show_less": "Vis færre",
       "loading": "Laster...",
       "show_number_of_tables": "Viser {{countShown}} av {{countTotal}}",
-      "show_number_of_tables_aria": "Treff på {{count}} tabeller, viser {{countShown}} av {{countTotal}}"
+      "show_number_of_tables_aria": "Treff på {{countTotal}} tabeller, viser {{countShown}} av {{countTotal}}"
     }
   },
   "presentation_page": {

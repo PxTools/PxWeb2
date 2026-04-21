@@ -128,7 +128,7 @@
       "show_less": "Show less",
       "loading": "Loading...",
       "show_number_of_tables": "Showing {{countShown}} of {{countTotal}}",
-      "show_number_of_tables_aria": "{{count}} tables found, showing {{countShown}} of {{countTotal}}"
+      "show_number_of_tables_aria": "{{countTotal}} tables found, showing {{countShown}} of {{countTotal}}"
     }
   },
   "presentation_page": {
