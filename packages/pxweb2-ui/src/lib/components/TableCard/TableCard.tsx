@@ -66,7 +66,7 @@ export const TableCard = forwardRef<HTMLElement, TableCardProps>(
           if (onNavigate) {
             onNavigate();
           } else {
-            window.location.href = href;
+            globalThis.location.href = href;
           }
           return;
         }

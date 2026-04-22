@@ -226,7 +226,7 @@ interface Resources {
         hide: 'Hide';
         save: {
           api: {
-            description: 'Here you’ll find the API query for the table. Use GET for small queries (under about 2 100 characters) and POST for larger or more complex ones.';
+            description: 'Here you will find the API query for the table. Use GET for short queries (under about 2 100 characters) and POST if the query is long and more detailed.';
             get_button_text: 'GET';
             link_text: 'Learn more about using the API';
             link_url: 'https://www.pxtools.net/PxWebApi/documentation/user-guide/';
@@ -264,12 +264,12 @@ interface Resources {
             copy_status: 'Link copied to clipboard';
             create_button: 'Get link';
             create_status: 'Link generated. Click again to copy the link';
-            info: 'You get a unique link to your table, that we keep updated for you. How new time periods are added is up to you.';
+            info: "Will you be using this table again? Here you will get a link to the table, so you don't have to set it up again. The table will stay up to date, and you choose how new time periods are added.";
             loading_status: 'Generating link';
             period_options: {
-              from: "Add new ones (they will be added to the ones you've selected now)";
-              selected: "Don't add new ones (the table will only show the ones you've selected now)";
-              top: 'Add new ones, but keep the same number (when a new time period is added, the oldest one is removed)';
+              from: 'Add new time periods';
+              selected: "Don't add new time periods – I only want the ones I've selected now";
+              top: 'Add new time periods, but keep the same number (when a new period is added, the oldest one is removed)';
             };
             radio_legend: 'Options for new time periods';
             title: 'Link to updated table';
@@ -379,7 +379,7 @@ interface Resources {
         show_less: 'Show less';
         show_more: 'Show more';
         show_number_of_tables: 'Showing {{countShown}} of {{countTotal}}';
-        show_number_of_tables_aria: '{{count}} tables found, showing {{countShown}} of {{countTotal}}';
+        show_number_of_tables_aria: '{{countTotal}} tables found, showing {{countShown}} of {{countTotal}}';
         updated_label: 'Updated';
       };
     };
