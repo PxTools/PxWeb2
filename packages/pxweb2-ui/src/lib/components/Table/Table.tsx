@@ -100,7 +100,7 @@ const MOBILE_ROW_OVERSCAN = 4;
 // measured/returned concrete items. This avoids rendering an empty tbody frame.
 const DESKTOP_BOOTSTRAP_ROW_COUNT = 24;
 const MOBILE_BOOTSTRAP_ROW_COUNT = 12;
-const HEADER_LINE_CHAR_THRESHOLD = 18; // Approximate character count per header line used to determine when to wrap header text.
+const HEADER_LINE_CHAR_THRESHOLD = 14; // Approximate character count per header line used to determine when to wrap header text.
 
 /** Returns row virtualization sizing and overscan tuned for desktop/mobile. */
 function getBodyRowVirtualizationSettings(isMobile: boolean) {
