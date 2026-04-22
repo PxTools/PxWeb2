@@ -428,10 +428,19 @@ const StartPage = () => {
         lastPeriodString = table.lastPeriod?.slice(5, 9);
       }
 
+      const cardTitle = table.label ?? '';
+      const cardUpdatedDate = table.updated
+        ? t('date.simple_date', {
+            value: new Date(table.updated),
+          })
+        : '';
+      const cardYearFrom = table.firstPeriod?.slice(0, 4) ?? '';
+      const cardYearTo = lastPeriodString ?? '';
+
       return (
         <TableCard
           key={table.id}
-          title={`${table.label}`}
+          title={cardTitle}
           href={tablePath}
           onNavigate={() => navigate(tablePath)}
           updatedLabel={
@@ -451,14 +460,10 @@ const StartPage = () => {
           ref={cardRef}
           tabIndex={tabIndex}
           ariaLabel={t('start_page.table.card_description', {
-            title: table.label,
-            updatedDate: table.updated
-              ? t('date.simple_date', {
-                  value: new Date(table.updated),
-                })
-              : undefined,
-            yearFrom: table.firstPeriod?.slice(0, 4),
-            yearTo: lastPeriodString,
+            title: cardTitle,
+            updatedDate: cardUpdatedDate,
+            yearFrom: cardYearFrom,
+            yearTo: cardYearTo,
             frequency: frequencyLabel,
             tableNumber: table.id,
           })}
@@ -601,16 +606,17 @@ const StartPage = () => {
 
   const renderNumberofTablesScreenReader = () => {
     const formattedCount = formatNumber(state.filteredTables.length);
+    const formattedVisibleCount = formatNumber(
+      Math.min(visibleCount, state.filteredTables.length),
+    );
+
     return (
       <span className={styles['sr-only']} aria-live="polite" aria-atomic="true">
         <Trans
           i18nKey="start_page.table.show_number_of_tables_aria"
           values={{
-            count: formattedCount,
-            countShown: formatNumber(
-              Math.min(visibleCount, state.filteredTables.length),
-            ),
-            countTotal: formatNumber(state.filteredTables.length),
+            countShown: formattedVisibleCount,
+            countTotal: formattedCount,
           }}
         />
       </span>
