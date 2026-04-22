@@ -40,7 +40,7 @@ export const Header = ({ stroke = false }: HeaderProps) => {
   const logoUrl = homePageUrl || defaultPath;
 
   return (
-    <header className={cl(styles.header, { [styles.stroke]: stroke })}>
+    <header aria-hidden="true" className={cl(styles.header, { [styles.stroke]: stroke })}>
       <div className={styles.logoContainer}>
         <a href={logoUrl}>
           <MainLogo />
