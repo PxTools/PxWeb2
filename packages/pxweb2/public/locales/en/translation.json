@@ -154,8 +154,9 @@
           },
           "content": {
             "select": {
-              "label": "Select grouping",
+              "label": "Select category",
               "placeholder": "Nothing selected",
+              "change_category": "Change",
               "modal": {
                 "cancel_button": "Cancel",
                 "confirm_button": "Save"

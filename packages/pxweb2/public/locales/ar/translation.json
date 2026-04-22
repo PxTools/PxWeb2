@@ -97,8 +97,9 @@
           },
           "content": {
             "select": {
-              "label": "حدد التجميع",
+              "label": "حدد الفئة",
               "placeholder": "قم بالاختيار",
+              "change_category": "تغيير الفئة",
               "modal": {
                 "cancel_button": "يلغي",
                 "confirm_button": "يحفظ"

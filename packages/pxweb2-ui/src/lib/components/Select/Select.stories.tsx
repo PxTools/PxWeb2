@@ -89,7 +89,6 @@ export const Variant: StoryFn<typeof Select> = () => {
         addModal={addModal}
         removeModal={closeModal}
         changeCategory={changeCategory}
-
       ></Select>
     </>
   );
@@ -205,6 +204,8 @@ export const RTLLanguage: StoryFn<typeof Select> = () => {
   ];
 
   const rtlPlaceholder = 'اختر خيارًا';
+
+const changeCategory = 'تغيير الفئة';
 
   return (
     <div style={{ width: '100%' }}>

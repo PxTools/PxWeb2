@@ -282,12 +282,13 @@ interface Resources {
               mixed_checkbox: 'Select all';
               mixed_checkbox_search: 'Select all results';
               select: {
-                label: 'Select grouping';
+                label: 'Select category';
                 modal: {
                   cancel_button: 'Cancel';
                   confirm_button: 'Save';
                 };
                 placeholder: 'Nothing selected';
+                change_category: 'Change';
               };
               values_list: {
                 aria_label: 'List of {{total}} values.';
