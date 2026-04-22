@@ -37,7 +37,6 @@ type VariableBoxContentProps = VariableBoxPropsToContent & {
   selectedValues: SelectedVBValues[];
   totalValues: number;
   totalChosenValues: number;
-  languageDirection: 'ltr' | 'rtl';
   onChangeCodeList: (selectedItem: SelectOption, varId: string) => void;
   onChangeCheckbox: (varId: string, value: string) => void;
   onChangeMixedCheckbox: (
