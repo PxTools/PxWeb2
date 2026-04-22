@@ -51,6 +51,8 @@ function closeModal() {
   console.log('Close modal');
 }
 
+const changeCategory = 'Change category';
+
 export const Default = {
   args: {
     variant: 'default',
@@ -59,6 +61,7 @@ export const Default = {
     hideLabel: false,
     options: options,
     placeholder: placeholder,
+    changeCategory: changeCategory,
     onChange: selectedOptionChanged,
   },
 };
@@ -85,6 +88,8 @@ export const Variant: StoryFn<typeof Select> = () => {
         onChange={selectedOptionChanged}
         addModal={addModal}
         removeModal={closeModal}
+        changeCategory={changeCategory}
+
       ></Select>
     </>
   );
@@ -147,6 +152,7 @@ export const SelectedOption: StoryFn<typeof Select> = () => {
         options={options}
         placeholder={placeholder}
         onChange={selectedOptionChanged}
+        changeCategory={changeCategory}
       ></Select>
       <h3>Selected option = Option 2:</h3>
       <Select
@@ -156,6 +162,7 @@ export const SelectedOption: StoryFn<typeof Select> = () => {
         placeholder={placeholder}
         selectedOption={options[1]}
         onChange={selectedOptionChanged}
+        changeCategory={changeCategory}
       ></Select>
     </>
   );
@@ -182,6 +189,7 @@ export const WithVeryLongOptionText: StoryFn<typeof Select> = () => {
         placeholder={placeholder}
         selectedOption={options[2]}
         onChange={selectedOptionChanged}
+        changeCategory={changeCategory}
       ></Select>
     </>
   );
@@ -207,12 +215,12 @@ export const RTLLanguage: StoryFn<typeof Select> = () => {
         <Select
           label="التصنيف"
           variant="inVariableBox"
-          languageDirection="rtl"
           options={rtlOptions}
           placeholder={rtlPlaceholder}
           onChange={selectedOptionChanged}
           addModal={addModal}
           removeModal={closeModal}
+          changeCategory={changeCategory}
         />
       </div>
 
@@ -221,9 +229,9 @@ export const RTLLanguage: StoryFn<typeof Select> = () => {
         <Select
           label="التصنيف"
           variant="inVariableBox"
-          languageDirection="rtl"
           options={rtlOptions}
           placeholder={rtlPlaceholder}
+          changeCategory={changeCategory}
           selectedOption={rtlOptions[1]}
           onChange={selectedOptionChanged}
           addModal={addModal}
