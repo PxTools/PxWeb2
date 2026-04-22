@@ -205,7 +205,7 @@ export const RTLLanguage: StoryFn<typeof Select> = () => {
 
   const rtlPlaceholder = 'اختر خيارًا';
 
-const changeCategory = 'تغيير الفئة';
+  const changeCategory = 'تغيير الفئة';
 
   return (
     <div style={{ width: '100%' }}>
