@@ -16,7 +16,6 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@vitejs/plugin-react": "^5.2.0",
     "clsx": "^2.1.1",
     "hast-util-to-jsx-runtime": "^2.3.6",
     "motion": "^12.38.0",
