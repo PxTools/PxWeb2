@@ -176,7 +176,8 @@ export function TableViewer() {
   const isSmallScreen = isTablet === true || isMobile === true;
   return (
     <>
-      <div ref={skipToMainRef}>
+      <div ref={skipToMainRef} tabIndex={-1}
+>
         <SkipToMain />
         <SkipToToolsMenu />
       </div>
