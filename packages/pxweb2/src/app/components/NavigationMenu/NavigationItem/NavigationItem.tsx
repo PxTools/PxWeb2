@@ -62,8 +62,7 @@ export const Item = forwardRef<HTMLDivElement, ItemProps>(
             styles[`${parentName}Item`],
           )}
           onClick={(event) => onClick(event)}
-          
-role="button"
+          role="button"
           id={btnId}
           aria-expanded={selected}
           // Framer Motion animations
