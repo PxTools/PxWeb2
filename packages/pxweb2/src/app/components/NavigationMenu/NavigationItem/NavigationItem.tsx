@@ -1,13 +1,13 @@
 import cl from 'clsx';
 import { m } from 'motion/react';
-import { forwardRef, MouseEvent } from 'react';
+import { forwardRef, KeyboardEvent, MouseEvent } from 'react';
 
 import { Icon, IconProps, Label } from '@pxweb2/pxweb2-ui';
 import styles from './NavigationItem.module.scss';
 
 // Framer Motion spring animation configuration
 const springConfig = {
-  type: 'spring',
+  type: 'spring' as const,
   mass: 1,
   stiffness: 200,
   damping: 30,
@@ -62,6 +62,12 @@ export const Item = forwardRef<HTMLDivElement, ItemProps>(
             styles[`${parentName}Item`],
           )}
           onClick={(event) => onClick(event)}
+          onKeyDown={(event: KeyboardEvent<HTMLDivElement>) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault();
+              event.currentTarget.click();
+            }
+          }}
           role="button"
           id={btnId}
           aria-expanded={selected}

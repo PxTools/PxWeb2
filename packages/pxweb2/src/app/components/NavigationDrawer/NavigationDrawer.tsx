@@ -141,6 +141,7 @@ export const NavigationDrawer = forwardRef<
           <div
             ref={ref}
             role="button"
+            tabIndex={0}
             onClick={() => onClose(false, view)}
             onKeyDown={handleKeyDown}
             className={cl(styles.hideMenu, styles.clickable)}

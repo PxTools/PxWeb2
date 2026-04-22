@@ -87,7 +87,7 @@ export const NavigationBar = React.forwardRef<
                 label={t('presentation_page.side_menu.view.title')}
                 selected={selected === 'view'}
                 icon={'BarChart'}
-                onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+                onClick={(event: React.MouseEvent<HTMLDivElement>) => {
                   onChange(
                     event.screenX === 0 && event.screenY === 0,
                     selected === 'view',
@@ -101,7 +101,7 @@ export const NavigationBar = React.forwardRef<
                 label={t('presentation_page.side_menu.edit.title')}
                 selected={selected === 'edit'}
                 icon={'ArrowsUpDown'}
-                onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+                onClick={(event: React.MouseEvent<HTMLDivElement>) => {
                   onChange(
                     event.screenX === 0 && event.screenY === 0,
                     selected === 'edit',
@@ -115,7 +115,7 @@ export const NavigationBar = React.forwardRef<
                 label={t('presentation_page.side_menu.save.title')}
                 selected={selected === 'save'}
                 icon={'Download'}
-                onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+                onClick={(event: React.MouseEvent<HTMLDivElement>) => {
                   onChange(
                     event.screenX === 0 && event.screenY === 0,
                     selected === 'save',
@@ -129,7 +129,7 @@ export const NavigationBar = React.forwardRef<
                 label={t('presentation_page.side_menu.help.title')}
                 selected={selected === 'help'}
                 icon={'QuestionMarkCircle'}
-                onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+                onClick={(event: React.MouseEvent<HTMLDivElement>) => {
                   onChange(
                     event.screenX === 0 && event.screenY === 0,
                     selected === 'help',
