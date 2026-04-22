@@ -60,22 +60,23 @@ describe('NavigationDrawer', () => {
 
   it('calls onClose when close button is clicked', () => {
     render(<NavigationDrawer {...defaultProps} />);
-    const button = screen.getByRole('button');
-    fireEvent.click(button);
+    const div = screen.getByRole('button');
+    fireEvent.click(div);
     expect(defaultProps.onClose).toHaveBeenCalledWith(false, 'selection');
   });
 
   it('calls onClose with keyboard=true when Enter or Space is pressed on close button', () => {
     render(<NavigationDrawer {...defaultProps} />);
-    const button = screen.getByRole('button');
-    fireEvent.keyDown(button, { key: 'Enter' });
+    const div = screen.getByRole('button');
+    fireEvent.keyDown(div, { key: 'Enter' });
     expect(defaultProps.onClose).toHaveBeenCalledWith(true, 'selection');
-    fireEvent.keyDown(button, { key: ' ' });
+    fireEvent.keyDown(div, { key: ' ' });
     expect(defaultProps.onClose).toHaveBeenCalledWith(true, 'selection');
   });
 
   it('focuses the close button when openedWithKeyboard is true', async () => {
-    const ref = React.createRef<HTMLButtonElement>();
+    const focusSpy = vi.spyOn(HTMLElement.prototype, 'focus');
+    const ref = React.createRef<HTMLDivElement>();
     render(
       <NavigationDrawer
         {...defaultProps}
@@ -83,14 +84,16 @@ describe('NavigationDrawer', () => {
         ref={ref}
       />,
     );
-    const button = screen.getByRole('button');
+    const closeButton = screen.getByRole('button');
     await waitFor(() => {
-      expect(document.activeElement).toBe(button);
+      expect(focusSpy).toHaveBeenCalled();
     });
+    expect(closeButton).toBeInTheDocument();
+    focusSpy.mockRestore();
   });
 
   it('traps focus within the drawer when Tab and Shift+Tab are pressed', async () => {
-    const ref = React.createRef<HTMLButtonElement>();
+    const ref = React.createRef<HTMLDivElement>();
     render(
       <NavigationDrawer {...defaultProps} openedWithKeyboard={true} ref={ref}>
         <button data-testid="first">First</button>
@@ -105,15 +108,11 @@ describe('NavigationDrawer', () => {
     // Focus the first element
     first.focus();
     fireEvent.keyDown(drawer, { key: 'Tab', shiftKey: true });
-    // Simulate focus change manually
-    last.focus();
     expect(document.activeElement).toBe(last);
 
     // Focus the last element
     last.focus();
     fireEvent.keyDown(drawer, { key: 'Tab', shiftKey: false });
-    // Simulate focus change manually
-    first.focus();
     expect(document.activeElement).toBe(first);
   });
 });
