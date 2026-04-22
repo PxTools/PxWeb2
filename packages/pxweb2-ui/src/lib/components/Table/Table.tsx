@@ -703,7 +703,13 @@ function createVisibleHeadingCell({
         <span
           className={cl({
             [classes.longHeaderCellTextLabel]: headingLines > 1,
+            [classes.longTextColumnSpan]: (visibleSpan > 0),
           })}
+         style={
+          {
+            '--desktop-header-colspan': visibleSpan,
+          } as React.CSSProperties
+        }
         >
           {variable.values[valueIndex].label}
         </span>
@@ -883,7 +889,7 @@ export function createHeading(
       {''}
     </td>
   ) : null;
-  console.log({ headingLevelLayouts });
+
   for (const headingLevelLayout of headingLevelLayouts) {
     const headerRow = createHeadingRowForLevel({
       table,
