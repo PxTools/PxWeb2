@@ -79,6 +79,11 @@
   position: absolute;
 }
 
+.visualOnlyButton
+{
+  pointer-events: none;
+}
+
 // --------------------------------------------------------
 // --- CSS classes for the Variabelbox Select component ---
 // --------------------------------------------------------
