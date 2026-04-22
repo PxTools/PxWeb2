@@ -41,7 +41,6 @@ export const Header = ({ stroke = false }: HeaderProps) => {
 
   return (
     <header
-      aria-hidden="true"
       className={cl(styles.header, { [styles.stroke]: stroke })}
     >
       <div className={styles.logoContainer}>
