@@ -183,16 +183,20 @@ function renderDesktopBodyRows({
         continue;
       }
 
-      const dataMeta = resolveDataCell(
-        rowEntry.stubCellCodes.concat(headingDataCellCodes[colIndex]),
-        cube,
-      );
+      try {
+        const dataMeta = resolveDataCell(
+          rowEntry.stubCellCodes.concat(headingDataCellCodes[colIndex]),
+          cube,
+        );
 
-      rowCells.push(
-        <td key={nextKey()} headers={dataMeta.headers}>
-          {dataMeta.formattedValue}
-        </td>,
-      );
+        rowCells.push(
+          <td key={nextKey()} headers={dataMeta.headers}>
+            {dataMeta.formattedValue}
+          </td>,
+        );
+      } catch {
+        rowCells.push(<td key={nextKey()} />);
+      }
     }
 
     if (columnWindow.endPadding > 0) {
