@@ -65,7 +65,7 @@
 
   .longTextColumnSpan {
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
-      max-width: calc(var(--desktop-header-colspan) * 150px);
+      max-width: calc(var(--desktop-header-colspan) * 160px);
     }
   }
 
