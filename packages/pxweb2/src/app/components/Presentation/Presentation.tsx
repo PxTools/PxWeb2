@@ -147,7 +147,16 @@ export function Presentation({
         setInitialRun(false);
       }
     }
-  }, [tableId, selectedVBValues]);
+  }, [
+    tableId,
+    selectedVBValues,
+    pxTableMetadata,
+    hasLoadedInitialSelection,
+    isLoadingMetadata,
+    initialRun,
+    isMobile,
+    i18n.resolvedLanguage,
+  ]);
 
   useEffect(() => {
     memoizedDataFetch();
