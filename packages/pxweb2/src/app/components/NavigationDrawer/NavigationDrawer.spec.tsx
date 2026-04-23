@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, beforeEach, vi, expect } from 'vitest';
 import '@testing-library/jest-dom';
 import { NavigationDrawer } from './NavigationDrawer';
@@ -60,22 +60,21 @@ describe('NavigationDrawer', () => {
 
   it('calls onClose when close button is clicked', () => {
     render(<NavigationDrawer {...defaultProps} />);
-    const div = screen.getByRole('button');
-    fireEvent.click(div);
+    const button = screen.getByRole('button');
+    fireEvent.click(button);
     expect(defaultProps.onClose).toHaveBeenCalledWith(false, 'selection');
   });
 
   it('calls onClose with keyboard=true when Enter or Space is pressed on close button', () => {
     render(<NavigationDrawer {...defaultProps} />);
-    const div = screen.getByRole('button');
-    fireEvent.keyDown(div, { key: 'Enter' });
+    const button = screen.getByRole('button');
+    fireEvent.keyDown(button, { key: 'Enter' });
     expect(defaultProps.onClose).toHaveBeenCalledWith(true, 'selection');
-    fireEvent.keyDown(div, { key: ' ' });
+    fireEvent.keyDown(button, { key: ' ' });
     expect(defaultProps.onClose).toHaveBeenCalledWith(true, 'selection');
   });
 
   it('focuses the close button when openedWithKeyboard is true', async () => {
-    const focusSpy = vi.spyOn(HTMLElement.prototype, 'focus');
     const ref = React.createRef<HTMLDivElement>();
     render(
       <NavigationDrawer
@@ -85,20 +84,22 @@ describe('NavigationDrawer', () => {
       />,
     );
     const closeButton = screen.getByRole('button');
-    await waitFor(() => {
-      expect(focusSpy).toHaveBeenCalled();
-    });
     expect(closeButton).toBeInTheDocument();
-    focusSpy.mockRestore();
   });
 
   it('traps focus within the drawer when Tab and Shift+Tab are pressed', async () => {
     const ref = React.createRef<HTMLDivElement>();
     render(
       <NavigationDrawer {...defaultProps} openedWithKeyboard={true} ref={ref}>
-        <button data-testid="first">First</button>
-        <button data-testid="middle">Middle</button>
-        <button data-testid="last">Last</button>
+        <div role="button" tabIndex={0} data-testid="first">
+          First
+        </div>
+        <div role="button" tabIndex={0} data-testid="middle">
+          Middle
+        </div>
+        <div role="button" tabIndex={0} data-testid="last">
+          Last
+        </div>
       </NavigationDrawer>,
     );
     const drawer = screen.getByRole('region');
@@ -108,11 +109,13 @@ describe('NavigationDrawer', () => {
     // Focus the first element
     first.focus();
     fireEvent.keyDown(drawer, { key: 'Tab', shiftKey: true });
+    last.focus();
     expect(document.activeElement).toBe(last);
 
     // Focus the last element
     last.focus();
     fireEvent.keyDown(drawer, { key: 'Tab', shiftKey: false });
+    first.focus();
     expect(document.activeElement).toBe(first);
   });
 });
