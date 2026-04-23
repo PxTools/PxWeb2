@@ -101,6 +101,7 @@ const MOBILE_ROW_OVERSCAN = 4;
 const DESKTOP_BOOTSTRAP_ROW_COUNT = 24;
 const MOBILE_BOOTSTRAP_ROW_COUNT = 12;
 const HEADER_LINE_CHAR_THRESHOLD = 12; // Approximate character count per header line used to determine when to wrap header text.
+const DESKTOP_COLUMN_VIRTUALIZATION_FEW_COLUMNS_THRESHOLD = 4; // If there are few columns, we can allow more characters before wrapping, as there is more horizontal space available.
 
 /** Returns row virtualization sizing and overscan tuned for desktop/mobile. */
 function getBodyRowVirtualizationSettings(isMobile: boolean) {
@@ -651,6 +652,7 @@ function createVisibleHeadingCell({
   columnWindow,
   hasStub,
   htmlId,
+  totalColumns,
   nextKey,
 }: {
   variable: PxTable['heading'][number];
@@ -662,11 +664,14 @@ function createVisibleHeadingCell({
   columnWindow: VisibleColumnsWindow;
   hasStub: boolean;
   htmlId: string;
+  totalColumns: number;
   nextKey: () => string;
 }): React.JSX.Element | null {
   const visibleSpanStart = Math.max(spanStart, columnWindow.visibleColumnStart);
   const visibleSpanEnd = Math.min(spanEnd, columnWindow.visibleColumnEnd);
   const visibleSpan = visibleSpanEnd - visibleSpanStart;
+  const fewColumns =
+    totalColumns <= DESKTOP_COLUMN_VIRTUALIZATION_FEW_COLUMNS_THRESHOLD;
 
   if (visibleSpan <= 0) {
     return null;
@@ -703,7 +708,9 @@ function createVisibleHeadingCell({
         <span
           className={cl({
             [classes.longHeaderCellTextLabel]: headingLines > 1,
-            [classes.longTextColumnSpan]: visibleSpan > 0,
+            [classes.longTextColumnSpan]: visibleSpan > 0 && !fewColumns,
+            [classes.longTextColumnSpanFewColumns]:
+              visibleSpan > 0 && fewColumns,
           })}
           style={
             {
@@ -726,6 +733,7 @@ function createHeadingRowForLevel({
   columnSpan,
   columnWindow,
   headingDataCellCodes,
+  totalColumns,
   nextKey,
 }: {
   table: PxTable;
@@ -735,6 +743,7 @@ function createHeadingRowForLevel({
   columnSpan: number;
   columnWindow: VisibleColumnsWindow;
   headingDataCellCodes: DataCellCodes[];
+  totalColumns: number;
   nextKey: () => string;
 }): React.JSX.Element[] {
   const headerRow: React.JSX.Element[] = [];
@@ -773,6 +782,7 @@ function createHeadingRowForLevel({
         columnWindow,
         hasStub: table.stub.length > 0,
         htmlId,
+        totalColumns,
         nextKey,
       });
 
@@ -814,11 +824,11 @@ function calculateHeadingLevelLines(
   totalColumnSpan: number,
 ): number {
   const weightedLength =
-    totalColumnSpan > 4
+    totalColumnSpan > DESKTOP_COLUMN_VIRTUALIZATION_FEW_COLUMNS_THRESHOLD
       ? longestValueTextLength / (totalHeadingLevels - headingLevel)
       : longestValueTextLength;
   const lineChars =
-    totalColumnSpan > 4
+    totalColumnSpan > DESKTOP_COLUMN_VIRTUALIZATION_FEW_COLUMNS_THRESHOLD
       ? HEADER_LINE_CHAR_THRESHOLD
       : HEADER_LINE_CHAR_THRESHOLD * 2;
   return Math.max(1, Math.ceil(weightedLength / lineChars));
@@ -901,6 +911,7 @@ export function createHeading(
       columnWindow,
       headingDataCellCodes,
       nextKey,
+      totalColumns: tableMeta.columns,
     });
 
     const rowCells =

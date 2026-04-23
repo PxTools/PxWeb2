@@ -68,6 +68,11 @@
       max-width: calc(var(--desktop-header-colspan) * 160px);
     }
   }
+  .longTextColumnSpanFewColumns {
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+      max-width: calc(var(--desktop-header-colspan) * 250px);
+    }
+  }
 
   .longHeaderCellText .longHeaderCellTextLabel {
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
