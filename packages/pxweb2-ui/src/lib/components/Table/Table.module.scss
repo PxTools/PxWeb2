@@ -26,7 +26,7 @@
   }
 
   th {
-    width: 40px;
+    min-width: 40px;
     padding-left: 16px;
     font-weight: normal;
     text-align: center;
@@ -114,12 +114,15 @@
 
   th.stub {
     text-align: left;
-    // We need both min-width and max-width to make sure the row header width do not change when scrolling
-    // vertically. Only width requires us to also specify table-layout: fixed. This causes other problems.
-    min-width: 250px;
-    max-width: 250px;
     overflow: hidden;
     text-overflow: ellipsis;
+
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+      // Keep desktop row headers constant while allowing non-stub columns to flex.
+      width: 250px;
+      min-width: 250px;
+      max-width: 250px;
+    }
   }
 
   tr:first-child th:first-child {
@@ -203,7 +206,7 @@
   }
   td {
     padding-right: 16px;
-    width: 40px;
+    min-width: 40px;
     text-align: right;
     border-top: 1px solid var(--px-color-border-default);
     border-left: 1px solid var(--px-color-border-default);
