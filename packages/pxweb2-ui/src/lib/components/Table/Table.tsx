@@ -100,7 +100,7 @@ const MOBILE_ROW_OVERSCAN = 4;
 // measured/returned concrete items. This avoids rendering an empty tbody frame.
 const DESKTOP_BOOTSTRAP_ROW_COUNT = 24;
 const MOBILE_BOOTSTRAP_ROW_COUNT = 12;
-const HEADER_LINE_CHAR_THRESHOLD = 12; // Approximate character count per header line used to determine when to wrap header text.
+const HEADER_LINE_CHAR_THRESHOLD = 15; // Approximate character count per header line used to determine when to wrap header text.
 const DESKTOP_COLUMN_VIRTUALIZATION_FEW_COLUMNS_THRESHOLD = 4; // If there are few columns, we can allow more characters before wrapping, as there is more horizontal space available.
 
 /** Returns row virtualization sizing and overscan tuned for desktop/mobile. */
@@ -818,20 +818,22 @@ type HeadingLevelLayout = {
 };
 
 function calculateHeadingLevelLines(
-  totalHeadingLevels: number,
-  headingLevel: number,
   longestValueTextLength: number,
-  totalColumnSpan: number,
+  columnSpan: number,
+  valueCount: number,
+  totalColumns: number,
 ): number {
-  const weightedLength =
-    totalColumnSpan > DESKTOP_COLUMN_VIRTUALIZATION_FEW_COLUMNS_THRESHOLD
-      ? longestValueTextLength / (totalHeadingLevels - headingLevel)
-      : longestValueTextLength;
-  const lineChars =
-    totalColumnSpan > DESKTOP_COLUMN_VIRTUALIZATION_FEW_COLUMNS_THRESHOLD
-      ? HEADER_LINE_CHAR_THRESHOLD
-      : HEADER_LINE_CHAR_THRESHOLD * 2;
-  return Math.max(1, Math.ceil(weightedLength / lineChars));
+  const columnsPerValue = columnSpan / valueCount;
+  let effectiveCharThreshold = HEADER_LINE_CHAR_THRESHOLD * columnsPerValue;
+
+  if (totalColumns <= DESKTOP_COLUMN_VIRTUALIZATION_FEW_COLUMNS_THRESHOLD) {
+    effectiveCharThreshold *= 2;
+  }
+
+  const returnValue = Math.ceil(
+    longestValueTextLength / effectiveCharThreshold,
+  );
+  return returnValue;
 }
 
 function createHeadingLevelLayouts(
@@ -840,7 +842,8 @@ function createHeadingLevelLayouts(
 ): HeadingLevelLayout[] {
   const layouts: HeadingLevelLayout[] = [];
   let repetitionsCurrentHeaderLevel = 1;
-  let columnSpan = tableMeta.columns - tableMeta.columnOffset;
+  const totalColumns = tableMeta.columns - tableMeta.columnOffset;
+  let columnSpan = totalColumns;
 
   for (
     let headingLevel = 0;
@@ -852,10 +855,10 @@ function createHeadingLevelLayouts(
       tableMeta.longestValueTextByVariableId[table.heading[headingLevel].id] ||
       1;
     const headingLines = calculateHeadingLevelLines(
-      table.heading.length,
-      headingLevel,
       longestValueTextLength,
       columnSpan,
+      valueCount,
+      totalColumns,
     );
     columnSpan /= valueCount;
 
