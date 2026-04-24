@@ -29,7 +29,7 @@
     "react-markdown": "^10.1.0",
     "react-virtuoso": "^4.18.4",
     "sass": "^1.99.0",
-    "uuid": "^13.0.0",
+    "uuid": "^14.0.0",
     "vite": "^8.0.8"
   },
   "devDependencies": {
