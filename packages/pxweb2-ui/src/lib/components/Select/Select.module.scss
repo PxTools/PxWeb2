@@ -134,16 +134,17 @@
   justify-content: center;
   align-items: flex-start;
   gap: var(--px-border_width-default);
-  flex: 1 0 0;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .optionLayoutVariablebox {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
-  line-clamp: 1;
+  display: block;
+  width: 100%;
   align-self: stretch;
   overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .modalRadioList {
