@@ -2,14 +2,18 @@ import React from 'react';
 
 import { SkipLink } from './SkipLink';
 
+type SkipToToolsMenuProps = React.HTMLAttributes<HTMLDivElement> & {
+  targetId?: string;
+};
+
 export const SkipToToolsMenu = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->((props, ref) => {
+  SkipToToolsMenuProps
+>(({ targetId = 'px-table-viewer-outer-container', ...props }, ref) => {
   return (
     <SkipLink
       ref={ref}
-      targetId="px-table-viewer-outer-container"
+      targetId={targetId}
       translationKey="common.skip_to_toolsmenu"
       {...props}
     />

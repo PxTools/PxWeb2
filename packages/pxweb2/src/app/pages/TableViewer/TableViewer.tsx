@@ -174,11 +174,17 @@ export function TableViewer() {
   };
 
   const isSmallScreen = isTablet === true || isMobile === true;
+  const mobileToolsMenuTargetId = 'px-table-viewer-mobile-tools-menu';
+  const desktopToolsMenuTargetId = 'px-table-viewer-outer-container';
+  const toolsMenuTargetId = isSmallScreen
+    ? mobileToolsMenuTargetId
+    : desktopToolsMenuTargetId;
+
   return (
     <>
       <div ref={skipToMainRef} tabIndex={-1}>
         <SkipToMain />
-        <SkipToToolsMenu />
+        <SkipToToolsMenu targetId={toolsMenuTargetId} />
       </div>
 
       {!isSmallScreen && <Header />}
@@ -192,11 +198,13 @@ export function TableViewer() {
         {isSmallScreen ? (
           <>
             <Header stroke={true} />
-            <NavigationBar
-              ref={navigationBarRef}
-              onChange={changeSelectedNavView}
-              selected={selectedNavigationView}
-            />
+            <div id={mobileToolsMenuTargetId}>
+              <NavigationBar
+                ref={navigationBarRef}
+                onChange={changeSelectedNavView}
+                selected={selectedNavigationView}
+              />
+            </div>
           </>
         ) : (
           <NavigationRail
