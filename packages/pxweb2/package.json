@@ -27,7 +27,7 @@
     "@testing-library/react": "^16.3.2",
     "ajv": "^8.18.0",
     "concurrently": "^9.2.1",
-    "html-validate": "^10.11.3",
+    "html-validate": "^10.13.1",
     "husky": "^9.1.7",
     "playwright": "^1.59.1",
     "vite-plugin-babel": "^1.6.0",
