@@ -53,7 +53,7 @@
     "jsdom": "^28.1.0",
     "style-dictionary": "^5.4.0",
     "typescript": "^6.0.2",
-    "wrangler": "^4.80.0"
+    "wrangler": "^4.83.0"
   },
   "engines": {
     "node": ">=24"
