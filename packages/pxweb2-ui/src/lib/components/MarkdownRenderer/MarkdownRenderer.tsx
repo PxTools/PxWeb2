@@ -31,13 +31,17 @@ const UnwantedMdRender = ({ children }: UnwantedMdRenderProps) => (
   <>{children}</>
 );
 
+const ParagraphRender = ({ children }: UnwantedMdRenderProps) => (
+  <p>{children}</p>
+);
+
 export const MarkdownRenderer: React.FC<MdProps> = ({ mdText }) => {
   const mdTextEscaped = escapeDecimalLikeLabels(mdText);
   return (
     <ReactMarkdown
       components={{
         a: LinkRenderer,
-        p: UnwantedMdRender,
+        p: ParagraphRender,
         strong: UnwantedMdRender,
         em: ItalicRenderer,
       }}
