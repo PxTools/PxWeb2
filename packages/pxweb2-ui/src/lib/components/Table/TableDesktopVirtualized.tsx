@@ -7,6 +7,7 @@ import {
   createVirtualPaddingCell,
   createKeyFactory,
   DESKTOP_COLUMN_VIRTUALIZATION_THRESHOLD,
+  DESKTOP_COLUMN_VIRTUALIZATION_FEW_COLUMNS_THRESHOLD,
   useBodyRowVirtualizationWindow,
   useVirtualizedTableBaseProps,
   VirtualizedTableLayout,
@@ -139,11 +140,13 @@ function renderNoStubBodyRows({
 function renderDesktopBodyRows({
   rows,
   columnWindow,
+  hasFewColumns,
   headingDataCellCodes,
   cube,
 }: {
   rows: DesktopRowEntry[];
   columnWindow: ColumnWindow;
+  hasFewColumns: boolean;
   headingDataCellCodes: StubCellMeta[][];
   cube: VirtualizedTableProps['pxtable']['data']['cube'];
 }): React.JSX.Element[] {
@@ -160,7 +163,11 @@ function renderDesktopBodyRows({
             ? `${rowEntry.variable.label} ${rowEntry.label}`
             : undefined
         }
-        className={cl(classes.stub, classes[`stub-${rowEntry.level}`])}
+        className={cl(
+          classes.stub,
+          { [classes.stubFewColumns]: hasFewColumns },
+          classes[`stub-${rowEntry.level}`],
+        )}
         key={nextKey()}
       >
         {rowEntry.label}
@@ -352,6 +359,8 @@ export function DesktopVirtualizedTable({
   );
 
   const hasNoStub = pxtable.stub.length === 0;
+  const hasFewColumns =
+    tableColumnSize <= DESKTOP_COLUMN_VIRTUALIZATION_FEW_COLUMNS_THRESHOLD;
 
   const rowCount = hasNoStub ? 1 : desktopRowEntries.length;
 
@@ -385,11 +394,13 @@ export function DesktopVirtualizedTable({
     return renderDesktopBodyRows({
       rows: visibleDesktopRows,
       columnWindow,
+      hasFewColumns,
       headingDataCellCodes,
       cube: pxtable.data.cube,
     });
   }, [
     columnWindow,
+    hasFewColumns,
     hasNoStub,
     headingDataCellCodes,
     pxtable.data.cube,

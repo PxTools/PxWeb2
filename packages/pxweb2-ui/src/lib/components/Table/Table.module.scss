@@ -123,9 +123,17 @@
 
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       // Keep desktop row headers constant while allowing non-stub columns to flex.
-      width: 250px;
-      min-width: 250px;
-      max-width: 250px;
+      width: 300px;
+      min-width: 300px;
+      max-width: 300px;
+    }
+  }
+
+  th.stubFewColumns {
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+      width: 400px;
+      min-width: 400px;
+      max-width: 400px;
     }
   }
 
