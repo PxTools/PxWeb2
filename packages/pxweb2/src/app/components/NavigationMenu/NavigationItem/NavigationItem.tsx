@@ -1,13 +1,13 @@
 import cl from 'clsx';
 import { m } from 'motion/react';
-import { forwardRef, MouseEvent } from 'react';
+import { forwardRef, KeyboardEvent, MouseEvent } from 'react';
 
 import { Icon, IconProps, Label } from '@pxweb2/pxweb2-ui';
 import styles from './NavigationItem.module.scss';
 
 // Framer Motion spring animation configuration
 const springConfig = {
-  type: 'spring',
+  type: 'spring' as const,
   mass: 1,
   stiffness: 200,
   damping: 30,
@@ -18,10 +18,10 @@ interface ItemProps {
   parentName: 'navBar' | 'navRail';
   selected: boolean;
   icon: IconProps['iconName'];
-  onClick: (event: MouseEvent<HTMLButtonElement>) => void;
+  onClick: (event: MouseEvent<HTMLDivElement>) => void;
 }
 
-export const Item = forwardRef<HTMLButtonElement, ItemProps>(
+export const Item = forwardRef<HTMLDivElement, ItemProps>(
   ({ label, parentName, selected, icon, onClick }, ref) => {
     const btnId = 'px-' + parentName + '-' + label;
     const initialBaseBackgroundColor =
@@ -54,7 +54,7 @@ export const Item = forwardRef<HTMLButtonElement, ItemProps>(
 
     return (
       <li className={cl(styles.navigationBarListItem, styles.fadein)}>
-        <m.button
+        <m.div
           ref={ref}
           className={cl(
             { [styles.selected]: selected },
@@ -62,7 +62,13 @@ export const Item = forwardRef<HTMLButtonElement, ItemProps>(
             styles[`${parentName}Item`],
           )}
           onClick={(event) => onClick(event)}
-          type="button"
+          onKeyDown={(event: KeyboardEvent<HTMLDivElement>) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault();
+              event.currentTarget.click();
+            }
+          }}
+          role="button"
           id={btnId}
           aria-expanded={selected}
           // Framer Motion animations
@@ -79,7 +85,7 @@ export const Item = forwardRef<HTMLButtonElement, ItemProps>(
             <Icon iconName={icon} />
           </m.div>
           <Label htmlFor={btnId}>{label}</Label>
-        </m.button>
+        </m.div>
       </li>
     );
   },
