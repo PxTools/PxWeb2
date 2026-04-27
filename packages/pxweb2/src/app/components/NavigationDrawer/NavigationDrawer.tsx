@@ -34,7 +34,7 @@ export interface NavigationDrawerProps {
 }
 
 export const NavigationDrawer = forwardRef<
-  HTMLButtonElement,
+  HTMLDivElement,
   NavigationDrawerProps
 >(({ children, heading, view, openedWithKeyboard, onClose }, ref) => {
   const { t } = useTranslation();
@@ -66,7 +66,7 @@ export const NavigationDrawer = forwardRef<
     'ChevronLeft',
     'ChevronRight',
   );
-  function handleKeyDown(event: React.KeyboardEvent<HTMLButtonElement>) {
+  function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault(); // Prevent scrolling with space
 
@@ -149,9 +149,10 @@ export const NavigationDrawer = forwardRef<
           <Heading level="2" size="medium">
             {heading}
           </Heading>
-          <button
+          <div
             ref={ref}
-            type="button"
+            role="button"
+            tabIndex={0}
             onClick={() => onClose(false, view)}
             onKeyDown={handleKeyDown}
             className={cl(styles.hideMenu, styles.clickable)}
@@ -162,7 +163,7 @@ export const NavigationDrawer = forwardRef<
             <Label size="medium" className={styles.clickable}>
               {t('presentation_page.side_menu.hide')}
             </Label>
-          </button>
+          </div>
         </div>
         {children}
       </div>

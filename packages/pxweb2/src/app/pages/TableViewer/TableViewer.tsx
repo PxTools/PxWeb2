@@ -38,14 +38,14 @@ export function TableViewer() {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const navigationBarRef = useRef<{
-    selection: RefObject<HTMLButtonElement | null>;
-    view: RefObject<HTMLButtonElement | null>;
-    edit: RefObject<HTMLButtonElement | null>;
-    save: RefObject<HTMLButtonElement | null>;
-    help: RefObject<HTMLButtonElement | null>;
+    selection: RefObject<HTMLDivElement | null>;
+    view: RefObject<HTMLDivElement | null>;
+    edit: RefObject<HTMLDivElement | null>;
+    save: RefObject<HTMLDivElement | null>;
+    help: RefObject<HTMLDivElement | null>;
   } | null>(null);
 
-  const hideMenuRef = useRef<HTMLButtonElement>(null);
+  const hideMenuRef = useRef<HTMLDivElement>(null);
   const skipToMainRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
