@@ -94,8 +94,8 @@ export const DESKTOP_COLUMN_VIRTUALIZATION_THRESHOLD = 15;
 const ROW_VIRTUALIZATION_THRESHOLD = 30;
 const DESKTOP_ROW_ESTIMATE_SIZE = 44;
 const MOBILE_ROW_ESTIMATE_SIZE = 44;
-const DESKTOP_ROW_OVERSCAN = 12;
-const MOBILE_ROW_OVERSCAN = 4;
+const DESKTOP_ROW_OVERSCAN = 30;
+const MOBILE_ROW_OVERSCAN = 30;
 // Bootstrap rows are a temporary first window used before the virtualizer has
 // measured/returned concrete items. This avoids rendering an empty tbody frame.
 const DESKTOP_BOOTSTRAP_ROW_COUNT = 24;
@@ -465,11 +465,14 @@ export function createHeadingRowsAndDataCellCodes({
 export function createVirtualPaddingCell(
   width: number,
   nextKey: () => string,
+  position: 'start' | 'end' = 'start',
 ): React.JSX.Element {
   return (
     <td
       key={nextKey()}
-      className={classes.virtualPaddingCell}
+      className={cl(classes.virtualColumnPaddingCell, {
+        [classes.virtualColumnPaddingCellEnd]: position === 'end',
+      })}
       style={{ width: `${width}px` }}
     />
   );
@@ -804,7 +807,9 @@ function createHeadingRowForLevel({
   }
 
   if (columnWindow.endPadding > 0) {
-    headerRow.push(createVirtualPaddingCell(columnWindow.endPadding, nextKey));
+    headerRow.push(
+      createVirtualPaddingCell(columnWindow.endPadding, nextKey, 'end'),
+    );
   }
 
   return headerRow;

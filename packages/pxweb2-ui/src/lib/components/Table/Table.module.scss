@@ -342,6 +342,25 @@
     border: none;
     background: none;
   }
+
+  .virtualColumnPaddingCell {
+    padding: 0;
+    border-top: 1px solid var(--px-color-border-default);
+    border-left: none;
+    background: var(--px-color-surface-default);
+  }
+
+  thead .virtualColumnPaddingCell {
+    background: var(--px-color-surface-moderate);
+  }
+
+  tbody tr:hover .virtualColumnPaddingCell {
+    background: var(--px-color-surface-subtle);
+  }
+
+  .virtualColumnPaddingCellEnd {
+    border-right: none;
+  }
 }
 
 .virtualizedWrapper {

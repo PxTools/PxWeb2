@@ -48,9 +48,10 @@ type VirtualColumnItem = {
   end: number;
 };
 
-const DESKTOP_COLUMN_ESTIMATE_SIZE = 70;
-const DESKTOP_COLUMN_OVERSCAN = 8;
+const DESKTOP_COLUMN_ESTIMATE_SIZE = 100;
+const DESKTOP_COLUMN_OVERSCAN = 20;
 const DESKTOP_BOOTSTRAP_COLUMN_COUNT = 12;
+const DESKTOP_HORIZONTAL_END_SCROLL_PADDING = 0;
 const EMPTY_VIRTUAL_COLUMNS: never[] = [];
 
 /** Chooses bootstrap/last/computed desktop column window from virtualizer output. */
@@ -91,7 +92,9 @@ function resolveVisibleColumnsWindow({
       ? lastVirtualColumn.index + 1
       : tableColumnSize,
     startPadding: firstVirtualColumn?.start ?? 0,
-    endPadding: lastVirtualColumn ? totalSize - lastVirtualColumn.end : 0,
+    endPadding:
+      (lastVirtualColumn ? totalSize - lastVirtualColumn.end : 0) +
+      DESKTOP_HORIZONTAL_END_SCROLL_PADDING,
   };
 }
 
@@ -126,7 +129,9 @@ function renderNoStubBodyRows({
   }
 
   if (columnWindow.endPadding > 0) {
-    rowCells.push(createVirtualPaddingCell(columnWindow.endPadding, nextKey));
+    rowCells.push(
+      createVirtualPaddingCell(columnWindow.endPadding, nextKey, 'end'),
+    );
   }
 
   return [
@@ -207,7 +212,9 @@ function renderDesktopBodyRows({
     }
 
     if (columnWindow.endPadding > 0) {
-      rowCells.push(createVirtualPaddingCell(columnWindow.endPadding, nextKey));
+      rowCells.push(
+        createVirtualPaddingCell(columnWindow.endPadding, nextKey, 'end'),
+      );
     }
 
     renderedRows.push(
@@ -309,11 +316,12 @@ export function DesktopVirtualizedTable({
       visibleColumnStart: 0,
       visibleColumnEnd: bootstrapColumnEnd,
       startPadding: 0,
-      endPadding: Math.max(
-        0,
-        columnVirtualizer.getTotalSize() -
-          bootstrapColumnEnd * DESKTOP_COLUMN_ESTIMATE_SIZE,
-      ),
+      endPadding:
+        Math.max(
+          0,
+          columnVirtualizer.getTotalSize() -
+            bootstrapColumnEnd * DESKTOP_COLUMN_ESTIMATE_SIZE,
+        ) + DESKTOP_HORIZONTAL_END_SCROLL_PADDING,
     }),
     [bootstrapColumnEnd, columnVirtualizer],
   );
