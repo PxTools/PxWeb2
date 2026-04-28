@@ -26,7 +26,7 @@
   }
 
   th {
-    width: 40px;
+    min-width: 40px;
     padding-left: 16px;
     font-weight: normal;
     text-align: center;
@@ -46,14 +46,95 @@
   thead th {
     font-family: PxWeb-font, sans-serif;
     font-weight: 700;
+    white-space: nowrap;
   }
+
+  .longHeaderCellText {
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+      width: auto;
+    }
+  }
+  .longHeaderCellTextLabel {
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      line-height: 1.25;
+    }
+  }
+
+  .longTextColumnSpan {
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+      max-width: calc(var(--desktop-header-colspan) * 160px);
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+  }
+  .longTextColumnSpanFewColumns {
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+      max-width: calc(var(--desktop-header-colspan) * 250px);
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+  }
+
+  .longHeaderCellText .longHeaderCellTextLabel {
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+      width: max-content;
+      word-break: normal;
+      overflow-wrap: normal;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: var(--desktop-header-lines);
+      line-clamp: var(--desktop-header-lines);
+      white-space: normal;
+    }
+  }
+
+  .longHeaderCellText .desktopHeaderLabelWrapper {
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+      width: 100%;
+    }
+  }
+  .desktopHeaderLabelWrapper {
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(1.25em * var(--desktop-header-lines));
+    }
+  }
+
   thead tr:last-child th {
     text-align: end;
     border-bottom-width: 2px;
   }
+
+  thead tr:last-child th .desktopHeaderLabelWrapper {
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+      justify-content: flex-end;
+    }
+  }
+
   th.stub {
     text-align: left;
-    min-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+      // Keep desktop row headers constant while allowing non-stub columns to flex.
+      width: 300px;
+      min-width: 300px;
+      max-width: 300px;
+    }
+  }
+
+  th.stubFewColumns {
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+      width: 400px;
+      min-width: 400px;
+      max-width: 400px;
+    }
   }
 
   tr:first-child th:first-child {
@@ -137,7 +218,7 @@
   }
   td {
     padding-right: 16px;
-    width: 40px;
+    min-width: 40px;
     text-align: right;
     border-top: 1px solid var(--px-color-border-default);
     border-left: 1px solid var(--px-color-border-default);
@@ -255,4 +336,45 @@
     background: var(--px-color-surface-moderate);
     border: none;
   }
+
+  .virtualPaddingCell {
+    padding: 0;
+    border: none;
+    background: none;
+  }
+
+  .virtualColumnPaddingCell {
+    padding: 0;
+    border-top: 1px solid var(--px-color-border-default);
+    border-left: none;
+    background: var(--px-color-surface-default);
+  }
+
+  thead .virtualColumnPaddingCell {
+    background: var(--px-color-surface-moderate);
+  }
+
+  tbody tr:hover .virtualColumnPaddingCell {
+    background: var(--px-color-surface-subtle);
+  }
+
+  .virtualColumnPaddingCellEnd {
+    border-right: none;
+  }
+}
+
+.virtualizedWrapper {
+  max-height: 70vh;
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
+.virtualizedWrapperUseParentScroll {
+  max-height: none;
+  overflow-y: visible;
+}
+
+.virtualizedTable {
+  width: max-content;
+  min-width: 100%;
 }

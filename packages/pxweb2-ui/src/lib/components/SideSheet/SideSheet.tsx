@@ -65,6 +65,7 @@ export function SideSheet({
 
   return (
     <dialog
+      data-px-overlay-backdrop="true"
       onClick={(event) => handleClick(event)}
       onKeyDown={handleKeyDown}
       ref={sideSheetRef}

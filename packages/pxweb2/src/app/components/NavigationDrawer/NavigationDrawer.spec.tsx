@@ -20,6 +20,8 @@ vi.mock('../../context/useAccessibility', () => ({
 vi.mock('../../context/useApp', () => ({
   default: () => ({
     skipToMainFocused: false,
+    isMobile: true,
+    isTablet: false,
     isXLargeDesktop: false,
     isXXLargeDesktop: false,
   }),
@@ -48,12 +50,14 @@ describe('NavigationDrawer', () => {
 
   it('calls onClose when backdrop is clicked', () => {
     render(<NavigationDrawer {...defaultProps} />);
-    const drawer = screen.getByRole('region', { name: 'Test Heading' });
-    const backdrop = drawer.previousElementSibling as HTMLElement | null;
+    const backdrop = document.querySelector(
+      '[data-px-overlay-backdrop="true"]',
+    ) as HTMLElement | null;
     expect(backdrop).toBeInTheDocument();
     if (!backdrop) {
       throw new Error('Backdrop element not found');
     }
+    expect(backdrop.getAttribute('data-px-overlay-backdrop')).toBe('true');
     fireEvent.click(backdrop);
     expect(defaultProps.onClose).toHaveBeenCalledWith(false, 'selection');
   });

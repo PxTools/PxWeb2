@@ -48,7 +48,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
   const [title, setTitle] = useState<string>('');
 
   /**
-   * Keep state if window screen size is mobile, pad or desktop.
+   * Keep state if window screen size is mobile, small tablet, tablet, or desktop.
    */
   const largeBreakpoint = Number(BreakpointsLargeMaxWidth.replace('px', ''));
   const xLargeBreakpoint = Number(BreakpointsXlargeMaxWidth.replace('px', ''));

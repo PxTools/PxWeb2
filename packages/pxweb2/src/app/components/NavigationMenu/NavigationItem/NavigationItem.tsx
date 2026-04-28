@@ -1,5 +1,5 @@
 import cl from 'clsx';
-import { m } from 'motion/react';
+import { m, type Transition, type Variants } from 'motion/react';
 import { forwardRef, KeyboardEvent, MouseEvent } from 'react';
 
 import { Icon, IconProps, Label } from '@pxweb2/pxweb2-ui';
@@ -11,7 +11,7 @@ const springConfig = {
   mass: 1,
   stiffness: 200,
   damping: 30,
-};
+} satisfies Transition;
 
 interface ItemProps {
   label: string;
@@ -24,10 +24,7 @@ interface ItemProps {
 export const Item = forwardRef<HTMLDivElement, ItemProps>(
   ({ label, parentName, selected, icon, onClick }, ref) => {
     const btnId = 'px-' + parentName + '-' + label;
-    const initialBaseBackgroundColor =
-      parentName === 'navBar'
-        ? 'var(--px-color-surface-subtle)'
-        : 'var(--px-color-surface-default)';
+    const initialBaseBackgroundColor = 'var(--px-color-surface-default)';
     const initialBackgroundColor = selected
       ? 'var(--px-color-surface-action-subtle-active)'
       : initialBaseBackgroundColor;
@@ -50,7 +47,7 @@ export const Item = forwardRef<HTMLDivElement, ItemProps>(
         ],
         transition: springConfig,
       },
-    };
+    } satisfies Variants;
 
     return (
       <li className={cl(styles.navigationBarListItem, styles.fadein)}>
