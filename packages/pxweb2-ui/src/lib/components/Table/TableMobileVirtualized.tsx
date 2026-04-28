@@ -266,7 +266,9 @@ function renderMobileBodyRows({
     }
 
     if (columnWindow.endPadding > 0) {
-      cells.push(createVirtualPaddingCell(columnWindow.endPadding, nextKey, 'end'));
+      cells.push(
+        createVirtualPaddingCell(columnWindow.endPadding, nextKey, 'end'),
+      );
     }
 
     renderedRows.push(
