@@ -31,10 +31,62 @@ import {
 } from '@pxweb2/pxweb2-ui';
 import { getLabelText } from '../app/util/utils';
 
-function mapDefinitions() {
+function mapDefinitions(
+  tableLinks: jsonstat_extension_link['related'] | undefined,
+  dimensions: Dataset['dimension'] | undefined,
+): Definitions {
   const definitions: Definitions = {};
 
+  for (const relatedLink of tableLinks ?? []) {
+    const relation = relatedLink.extension.relation;
+    if (
+      relation === 'statistics-homepage' &&
+      definitions.statisticsHomepage === undefined
+    ) {
+      definitions.statisticsHomepage = mapDefinitionLink(relatedLink);
+    } else if (
+      relation === 'about-statistics' &&
+      definitions.statisticsDefinitions === undefined
+    ) {
+      definitions.statisticsDefinitions = mapDefinitionLink(relatedLink);
+    }
+  }
+
+  const variablesDefinitions = Object.entries(dimensions ?? {}).reduce<
+    NonNullable<Definitions['variablesDefinitions']>
+  >((acc, [dimensionId, dimension]) => {
+    const definitionLinks = (dimension.link?.related ?? [])
+      .filter((relatedLink) => relatedLink.extension.relation === 'definitions')
+      .map(mapDefinitionLink);
+
+    if (definitionLinks.length > 0) {
+      acc.push({
+        variableName: dimension.label ?? dimensionId,
+        links: definitionLinks,
+      });
+    }
+
+    return acc;
+  }, []);
+
+  if (variablesDefinitions.length > 0) {
+    definitions.variablesDefinitions = variablesDefinitions;
+  }
+
+  console.log('Mapped definitions:', definitions);
+
   return definitions;
+}
+
+function mapDefinitionLink(
+  relatedLink: NonNullable<jsonstat_extension_link['related']>[number],
+) {
+  return {
+    href: relatedLink.href,
+    label: relatedLink.label,
+    type: relatedLink.type,
+    metaid: relatedLink.extension.metaid,
+  };
 }
 
 /**
@@ -96,7 +148,7 @@ export function mapJsonStat2Response(
     subjectArea: response.extension?.px?.['subject-area'] ?? '',
     variables: mapVariables(response, mapData),
     contacts: mapContacts(response.extension?.contact),
-    definitions: mapDefinitions(), // TODO: Use real data from API response when available
+    definitions: mapDefinitions(response.link?.related, response.dimension),
     notes: mapNotes(response.note, response.extension?.noteMandatory),
     pathElements: undefined,
   };
