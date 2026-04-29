@@ -23,11 +23,11 @@ interface NavigationRailProps {
 
 export const NavigationRail = React.forwardRef<
   {
-    selection: React.RefObject<HTMLDivElement | null>;
-    view: React.RefObject<HTMLDivElement | null>;
-    edit: React.RefObject<HTMLDivElement | null>;
-    save: React.RefObject<HTMLDivElement | null>;
-    help: React.RefObject<HTMLDivElement | null>;
+    selection: React.RefObject<HTMLButtonElement | null>;
+    view: React.RefObject<HTMLButtonElement | null>;
+    edit: React.RefObject<HTMLButtonElement | null>;
+    save: React.RefObject<HTMLButtonElement | null>;
+    help: React.RefObject<HTMLButtonElement | null>;
   },
   NavigationRailProps
 >(({ onChange, selected }, ref) => {
@@ -37,11 +37,11 @@ export const NavigationRail = React.forwardRef<
     return event.screenX === 0 && event.screenY === 0;
   };
 
-  const selectionRef = React.useRef<HTMLDivElement>(null);
-  const viewRef = React.useRef<HTMLDivElement>(null);
-  const editRef = React.useRef<HTMLDivElement>(null);
-  const saveRef = React.useRef<HTMLDivElement>(null);
-  const helpRef = React.useRef<HTMLDivElement>(null);
+  const selectionRef = React.useRef<HTMLButtonElement>(null);
+  const viewRef = React.useRef<HTMLButtonElement>(null);
+  const editRef = React.useRef<HTMLButtonElement>(null);
+  const saveRef = React.useRef<HTMLButtonElement>(null);
+  const helpRef = React.useRef<HTMLButtonElement>(null);
 
   React.useImperativeHandle(
     ref,

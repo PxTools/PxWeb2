@@ -1,13 +1,13 @@
 import cl from 'clsx';
 import { m } from 'motion/react';
-import { forwardRef, KeyboardEvent, MouseEvent } from 'react';
+import { forwardRef, MouseEvent } from 'react';
 
 import { Icon, IconProps, Label } from '@pxweb2/pxweb2-ui';
 import styles from './NavigationItem.module.scss';
 
 // Framer Motion spring animation configuration
 const springConfig = {
-  type: 'spring' as const,
+  type: 'spring',
   mass: 1,
   stiffness: 200,
   damping: 30,
@@ -18,10 +18,10 @@ interface ItemProps {
   parentName: 'navBar' | 'navRail';
   selected: boolean;
   icon: IconProps['iconName'];
-  onClick: (event: MouseEvent<HTMLDivElement>) => void;
+  onClick: (event: MouseEvent<HTMLButtonElement>) => void;
 }
 
-export const Item = forwardRef<HTMLDivElement, ItemProps>(
+export const Item = forwardRef<HTMLButtonElement, ItemProps>(
   ({ label, parentName, selected, icon, onClick }, ref) => {
     const btnId = 'px-' + parentName + '-' + label;
     const initialBaseBackgroundColor =
@@ -54,7 +54,7 @@ export const Item = forwardRef<HTMLDivElement, ItemProps>(
 
     return (
       <li className={cl(styles.navigationBarListItem, styles.fadein)}>
-        <m.div
+        <m.button
           ref={ref}
           className={cl(
             { [styles.selected]: selected },
@@ -62,13 +62,7 @@ export const Item = forwardRef<HTMLDivElement, ItemProps>(
             styles[`${parentName}Item`],
           )}
           onClick={(event) => onClick(event)}
-          onKeyDown={(event: KeyboardEvent<HTMLDivElement>) => {
-            if (event.key === 'Enter' || event.key === ' ') {
-              event.preventDefault();
-              event.currentTarget.click();
-            }
-          }}
-          role="button"
+          type="button"
           id={btnId}
           aria-expanded={selected}
           // Framer Motion animations
@@ -77,15 +71,17 @@ export const Item = forwardRef<HTMLDivElement, ItemProps>(
           whileHover={'hover'}
           whileTap={'pressed'}
         >
-          <m.div
+          <m.span
             className={cl(styles.icon)}
             // Framer Motion animations
             variants={buttonVariants}
           >
             <Icon iconName={icon} />
-          </m.div>
-          <Label htmlFor={btnId}>{label}</Label>
-        </m.div>
+          </m.span>
+          <Label as="span" htmlFor={btnId}>
+            {label}
+          </Label>
+        </m.button>
       </li>
     );
   },

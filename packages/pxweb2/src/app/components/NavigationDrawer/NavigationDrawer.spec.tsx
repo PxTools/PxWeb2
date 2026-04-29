@@ -75,7 +75,7 @@ describe('NavigationDrawer', () => {
   });
 
   it('focuses the close button when openedWithKeyboard is true', async () => {
-    const ref = React.createRef<HTMLDivElement>();
+    const ref = React.createRef<HTMLButtonElement>();
     render(
       <NavigationDrawer
         {...defaultProps}
@@ -83,26 +83,19 @@ describe('NavigationDrawer', () => {
         ref={ref}
       />,
     );
-    const closeButton = screen.getByRole('button');
-
+    const button = screen.getByRole('button');
     await waitFor(() => {
-      expect(document.activeElement).toBe(closeButton);
+      expect(document.activeElement).toBe(button);
     });
   });
 
   it('traps focus within the drawer when Tab and Shift+Tab are pressed', async () => {
-    const ref = React.createRef<HTMLDivElement>();
+    const ref = React.createRef<HTMLButtonElement>();
     render(
       <NavigationDrawer {...defaultProps} openedWithKeyboard={true} ref={ref}>
-        <div role="button" tabIndex={0} data-testid="first">
-          First
-        </div>
-        <div role="button" tabIndex={0} data-testid="middle">
-          Middle
-        </div>
-        <div role="button" tabIndex={0} data-testid="last">
-          Last
-        </div>
+        <button data-testid="first">First</button>
+        <button data-testid="middle">Middle</button>
+        <button data-testid="last">Last</button>
       </NavigationDrawer>,
     );
     const drawer = screen.getByRole('region');
