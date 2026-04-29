@@ -23,7 +23,8 @@
         "action_text": "Last siden på nytt"
       }
     },
-    "skip_to_main": "Hopp til hovedinnhold",
+    "skip_to_main": "Gå til hovedinnhold",
+    "skip_to_toolsmenu": "Gå til verktøymeny for tabell",
     "switch_language_landmark": "Velg språk",
     "footer": {
       "language_header": "Språk",
