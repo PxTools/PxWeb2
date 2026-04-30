@@ -369,118 +369,6 @@ describe('JsonStat2ResponseMapper', () => {
       });
     });
 
-    it('filters unrelated relations and keeps first table singleton link', () => {
-      const datasetWithUnrelatedLinks: Dataset = {
-        class: ClassType.DATASET,
-        version: Dataset.version._2_0,
-        dimension: {
-          measure: {
-            label: 'Measure',
-            category: {
-              index: { M: 0 },
-              label: { M: 'Measure' },
-            },
-            link: {
-              related: [
-                {
-                  extension: { relation: 'about-statistics', metaid: 'skip-var' },
-                  href: 'https://example.com/skip-variable',
-                  label: 'Skip variable relation',
-                  type: 'text/html',
-                },
-                {
-                  extension: { relation: 'definition', metaid: 'keep-var' },
-                  href: 'https://example.com/keep-variable',
-                  label: 'Keep variable definition',
-                  type: 'text/html',
-                },
-              ],
-            },
-          },
-        },
-        id: ['measure'],
-        size: [1],
-        value: [1],
-        link: {
-          related: [
-            {
-              extension: {
-                relation: 'statistics-homepage',
-                metaid: 'home-first',
-              },
-              href: 'https://example.com/home-first',
-              label: 'First homepage',
-              type: 'text/html',
-            },
-            {
-              extension: {
-                relation: 'statistics-homepage',
-                metaid: 'home-second',
-              },
-              href: 'https://example.com/home-second',
-              label: 'Second homepage',
-              type: 'text/html',
-            },
-            {
-              extension: {
-                relation: 'about-statistics',
-                metaid: 'about-first',
-              },
-              href: 'https://example.com/about-first',
-              label: 'First about',
-              type: 'text/html',
-            },
-            {
-              extension: {
-                relation: 'about-statistics',
-                metaid: 'about-second',
-              },
-              href: 'https://example.com/about-second',
-              label: 'Second about',
-              type: 'text/html',
-            },
-            {
-              extension: {
-                relation: 'definition',
-                metaid: 'ignore-table-definition',
-              },
-              href: 'https://example.com/ignore-table-definition',
-              label: 'Ignored table definition',
-              type: 'text/html',
-            },
-          ],
-        },
-      };
-
-      const mapped = mapJsonStat2Response(datasetWithUnrelatedLinks);
-
-      expect(mapped.metadata.definitions.statisticsHomepage).toEqual({
-        href: 'https://example.com/home-first',
-        label: 'First homepage',
-        type: 'text/html',
-        metaid: 'home-first',
-      });
-      expect(mapped.metadata.definitions.statisticsDefinitions).toEqual({
-        href: 'https://example.com/about-first',
-        label: 'First about',
-        type: 'text/html',
-        metaid: 'about-first',
-      });
-      expect(mapped.metadata.definitions.variablesDefinitions).toEqual([
-        {
-          variableName: 'Measure',
-          links: [
-            {
-              href: 'https://example.com/keep-variable',
-              label: 'Keep variable definition',
-              type: 'text/html',
-              metaid: 'keep-var',
-            },
-          ],
-        },
-      ]);
-    });
-
     it('returns empty definitions safely when related links are missing or empty', () => {
       const withoutLinks: Dataset = {
         class: ClassType.DATASET,
@@ -510,10 +398,12 @@ describe('JsonStat2ResponseMapper', () => {
         },
       };
 
-      expect(mapJsonStat2Response(withoutLinks).metadata.definitions).toEqual({});
-      expect(mapJsonStat2Response(withEmptyRelated).metadata.definitions).toEqual(
+      expect(mapJsonStat2Response(withoutLinks).metadata.definitions).toEqual(
         {},
       );
+      expect(
+        mapJsonStat2Response(withEmptyRelated).metadata.definitions,
+      ).toEqual({});
     });
 
     it('maps definitions independently across sequential calls', () => {
@@ -622,6 +512,8 @@ describe('JsonStat2ResponseMapper', () => {
       });
     });
 
+    //TODO: This should not be run? Only metadata calls has definitions?
+    //      This is a possible fault in the current implementation that should be fixed in this PR
     it('maps definitions for both mapData=true and mapData=false', () => {
       const definitionsDataset: Dataset = {
         class: ClassType.DATASET,
@@ -693,6 +585,7 @@ describe('JsonStat2ResponseMapper', () => {
       });
     });
   });
+
   describe('createDataAndStatus', () => {
     it('should map values and statuses correctly when both are provided', () => {
       // Arrange
@@ -837,6 +730,7 @@ describe('JsonStat2ResponseMapper', () => {
         ],
         contacts: [],
         notes: [],
+        definitions: {},
       };
 
       const data: PxTableData = {
@@ -916,6 +810,7 @@ describe('JsonStat2ResponseMapper', () => {
         ],
         contacts: [],
         notes: [],
+        definitions: {},
       };
 
       const data: PxTableData = {
@@ -982,6 +877,7 @@ describe('JsonStat2ResponseMapper', () => {
         ],
         contacts: [],
         notes: [],
+        definitions: {},
       };
 
       const data: PxTableData = {

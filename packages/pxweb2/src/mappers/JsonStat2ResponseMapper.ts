@@ -44,7 +44,8 @@ function mapDefinitions(
       definitions.statisticsHomepage === undefined
     ) {
       definitions.statisticsHomepage = mapDefinitionLink(relatedLink);
-    } else if (
+    }
+    if (
       relation === 'about-statistics' &&
       definitions.statisticsDefinitions === undefined
     ) {
@@ -55,9 +56,9 @@ function mapDefinitions(
   const variablesDefinitions = Object.entries(dimensions ?? {}).reduce<
     NonNullable<Definitions['variablesDefinitions']>
   >((acc, [dimensionId, dimension]) => {
-    const definitionLinks = (dimension.link?.related ?? [])
-      .filter((relatedLink) => relatedLink.extension.relation === 'definitions')
-      .map(mapDefinitionLink);
+    const definitionLinks = (dimension.link?.related ?? []).map(
+      mapDefinitionLink,
+    );
 
     if (definitionLinks.length > 0) {
       acc.push({
@@ -72,8 +73,6 @@ function mapDefinitions(
   if (variablesDefinitions.length > 0) {
     definitions.variablesDefinitions = variablesDefinitions;
   }
-
-  console.log('Mapped definitions:', definitions);
 
   return definitions;
 }
