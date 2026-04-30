@@ -512,8 +512,6 @@ describe('JsonStat2ResponseMapper', () => {
       });
     });
 
-    //TODO: This should not be run? Only metadata calls has definitions?
-    //      This is a possible fault in the current implementation that should be fixed in this PR
     it('maps definitions for both mapData=true and mapData=false', () => {
       const definitionsDataset: Dataset = {
         class: ClassType.DATASET,
