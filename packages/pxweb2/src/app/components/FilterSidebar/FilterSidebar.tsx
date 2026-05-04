@@ -13,6 +13,7 @@ import { FilterContext } from '../../context/FilterContext';
 import { YearRangeFilter } from './YearRangeFilter';
 import { ReactNode, useContext, useState, useMemo } from 'react';
 import { upperFirst, debounce } from 'lodash';
+import { v4 as uuidv4 } from 'uuid';
 
 interface CollapsibleProps {
   subject: PathItem;
@@ -236,6 +237,8 @@ const VariablesFilter: React.FC<{ onFilterChange?: () => void }> = ({
   const { state, dispatch } = useContext(FilterContext);
   const [variableSearch, setVariableSearch] = useState('');
   const { t } = useTranslation();
+  const [uniqueId] = useState(() => uuidv4());
+  const searchId = 'variable-search-' + uniqueId;
 
   // Compute the filtered list of variables only when either the available variables
   // or the search query changes. The search query is normalized (trimmed + lowercased)
@@ -250,12 +253,14 @@ const VariablesFilter: React.FC<{ onFilterChange?: () => void }> = ({
     <>
       <div className={styles.variablesSearchBox}>
         <Search
+          id={searchId}
           searchPlaceHolder={t('start_page.filter.variabel_search')}
           variant="default"
           onChange={debounce((value) => setVariableSearch(value), 500)}
         />
       </div>
       <label
+        htmlFor={searchId}
         className={styles['sr-only']}
         aria-live="polite"
         aria-atomic="true"
