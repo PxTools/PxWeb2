@@ -39,16 +39,10 @@ function mapDefinitions(
 
   for (const relatedLink of tableLinks ?? []) {
     const relation = relatedLink.extension.relation;
-    if (
-      relation === 'statistics-homepage' &&
-      definitions.statisticsHomepage === undefined
-    ) {
+    if (relation === 'statistics-homepage') {
       definitions.statisticsHomepage = mapDefinitionLink(relatedLink);
     }
-    if (
-      relation === 'about-statistics' &&
-      definitions.statisticsDefinitions === undefined
-    ) {
+    if (relation === 'about-statistics') {
       definitions.statisticsDefinitions = mapDefinitionLink(relatedLink);
     }
   }
@@ -64,8 +58,7 @@ function mapDefinitions(
       const variableName = dimension.label ?? dimensionId;
 
       acc.push({
-        variableName:
-          variableName.charAt(0).toUpperCase() + variableName.slice(1), // Capitalize first letter
+        variableName: variableName,
         links: definitionLinks,
       });
     }
