@@ -61,8 +61,11 @@ function mapDefinitions(
     );
 
     if (definitionLinks.length > 0) {
+      const variableName = dimension.label ?? dimensionId;
+
       acc.push({
-        variableName: dimension.label ?? dimensionId,
+        variableName:
+          variableName.charAt(0).toUpperCase() + variableName.slice(1), // Capitalize first letter
         links: definitionLinks,
       });
     }
