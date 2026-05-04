@@ -24,19 +24,11 @@ function normalizeNewLines(markdown: string): string {
 }
 
 function newLineToBreak(markdown: string): string {
-  const emptyRowToken = '__PXWEB_EMPTY_ROW__';
-  const blankLineGroupRegex = /\n[ \t]*\n+/g;
+  return markdown.replace(/\n/g, '  \n');
+}
 
-  // Mark blank-line groups first, then convert all remaining newlines to hard breaks.
-  const withMarkedEmptyRows = markdown.replace(
-    blankLineGroupRegex,
-    `\n${emptyRowToken}\n`,
-  );
-
-  return withMarkedEmptyRows
-    .split('\n')
-    .map((line) => (line === emptyRowToken ? '&nbsp;' : line))
-    .join('  \n');
+function splitIntoBlocks(markdown: string): string[] {
+  return markdown.split(/\n[ \t]*\n+/);
 }
 
 const LinkRenderer = ({ href = '', children }: LinkProps) => (
@@ -58,20 +50,27 @@ const UnwantedMdRender = ({ children }: UnwantedMdRenderProps) => (
 export const MarkdownRenderer: React.FC<MdProps> = ({ mdText }) => {
   const mdTextNormalized = normalizeNewLines(mdText);
   const mdTextEscaped = escapeDecimalLikeLabels(mdTextNormalized);
-  const mdTextWithBreaks = newLineToBreak(mdTextEscaped);
+  const markdownBlocks = splitIntoBlocks(mdTextEscaped);
 
   return (
-    <ReactMarkdown
-      components={{
-        a: LinkRenderer,
-        p: UnwantedMdRender,
-        strong: UnwantedMdRender,
-        em: ItalicRenderer,
-      }}
-      skipHtml={false} // Enable raw HTML rendering
-    >
-      {mdTextWithBreaks}
-    </ReactMarkdown>
+    <>
+      {markdownBlocks.map((block, index) => (
+        <React.Fragment key={index}>
+          <ReactMarkdown
+            components={{
+              a: LinkRenderer,
+              p: UnwantedMdRender,
+              strong: UnwantedMdRender,
+              em: ItalicRenderer,
+            }}
+            skipHtml={false} // Enable raw HTML rendering
+          >
+            {newLineToBreak(block)}
+          </ReactMarkdown>
+          {index < markdownBlocks.length - 1 && <p></p>}
+        </React.Fragment>
+      ))}
+    </>
   );
 };
 
