@@ -56,9 +56,6 @@ export default defineConfig([
           unnamedComponents: 'arrow-function',
         },
       ],
-      'react/jsx-uses-react': 'error',
-      'react/jsx-uses-vars': 'error',
-      'react/react-in-jsx-scope': 'off',
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
 
