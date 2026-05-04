@@ -82,7 +82,7 @@
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
       width: max-content;
       word-break: normal;
-      overflow-wrap: normal;
+      overflow-wrap: break-word;
       display: -webkit-box;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: var(--desktop-header-lines);
