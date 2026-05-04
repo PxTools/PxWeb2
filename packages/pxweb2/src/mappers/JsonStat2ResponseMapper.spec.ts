@@ -355,7 +355,7 @@ describe('JsonStat2ResponseMapper', () => {
             ],
           },
           {
-            variableName: 'Age',
+            variableName: 'age',
             links: [
               {
                 href: 'https://example.com/definitions/age-1',
