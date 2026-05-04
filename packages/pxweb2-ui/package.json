@@ -22,15 +22,15 @@
     "vite-plugin-dts": "^4.5.4"
   },
   "devDependencies": {
-    "@chromatic-com/storybook": "^5.1.1",
-    "@storybook/addon-a11y": "10.3.4",
-    "@storybook/addon-docs": "10.3.4",
-    "@storybook/react-vite": "10.3.4",
+    "@chromatic-com/storybook": "^5.1.2",
+    "@storybook/addon-a11y": "10.3.5",
+    "@storybook/addon-docs": "10.3.5",
+    "@storybook/react-vite": "10.3.5",
     "@testing-library/react": "^16.3.2",
-    "eslint-plugin-storybook": "10.3.4",
+    "eslint-plugin-storybook": "10.3.5",
     "prop-types": "^15.8.1",
     "shiki": "^4.0.2",
-    "storybook": "10.3.4",
+    "storybook": "10.3.5",
     "vitest": "^4.0.18"
   }
 }
