@@ -17,10 +17,8 @@ function escapeDecimalLikeLabels(markdown: string): string {
 
 function normalizeNewLines(markdown: string): string {
   return markdown
-    .replaceAll(/\r\n/g, '\n')
-    .replaceAll(/\n/g, '\n')
-    .replaceAll(/\r/g, '\n')
-    .replaceAll(/\r\n|\r/g, '\n');
+    .replaceAll('\r\n', '\n')
+    .replaceAll('\r', '\n');
 }
 
 function newLineToBreak(markdown: string): string {
