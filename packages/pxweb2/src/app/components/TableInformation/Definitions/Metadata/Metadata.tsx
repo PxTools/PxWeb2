@@ -37,7 +37,11 @@ export function Metadata({ variablesDefinitions }: MetadataProps) {
         >
           <div id={`sidesheet-metadata-${variable.variableName}`}>
             <Heading size="xsmall" level="4" spacing={true}>
-              {variable.variableName}
+              {
+                // Capitalize the first letter of the variable name
+                variable.variableName.charAt(0).toUpperCase() +
+                  variable.variableName.slice(1)
+              }
             </Heading>
           </div>
 

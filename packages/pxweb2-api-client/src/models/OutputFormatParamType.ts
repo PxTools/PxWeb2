@@ -11,6 +11,7 @@
  * * SeparatorTab: Can not be combined with SeparatorSpace and SeparatorSemicolon. And only applicable for csv output format.
  * * SeparatorSpace: Can not be combined with SeparatorTab and SeparatorSemicolon. And only applicable for csv output format.
  * * SeparatorSemicolon: Can not be combined with SeparatorTab and SeparatorSpace. And only applicable for csv output format.
+ * * ExcludeZerosAndMissingValues: Can be used by all formats but only have effect on csv, html and xlsx output format.
  *
  */
 export enum OutputFormatParamType {
@@ -21,4 +22,5 @@ export enum OutputFormatParamType {
     SEPARATOR_TAB = 'SeparatorTab',
     SEPARATOR_SPACE = 'SeparatorSpace',
     SEPARATOR_SEMICOLON = 'SeparatorSemicolon',
+    EXCLUDE_ZEROS_AND_MISSING_VALUES = 'ExcludeZerosAndMissingValues',
 }
