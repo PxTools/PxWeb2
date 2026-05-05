@@ -1,5 +1,63 @@
+import React from 'react';
 import { render } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
+
+type VirtualRowMock = {
+  className?: string;
+  cells: React.ReactNode;
+};
+
+type TableVirtuosoMockProps = {
+  data?: VirtualRowMock[];
+  fixedHeaderContent?: () => React.ReactNode;
+  itemContent: (index: number, item: VirtualRowMock) => React.ReactNode;
+};
+
+function getRowKey(item: VirtualRowMock, index: number): string {
+  if (Array.isArray(item.cells)) {
+    const elementKeys = item.cells
+      .map((cell) => {
+        if (typeof cell !== 'object' || cell === null) {
+          return '';
+        }
+        if ('key' in cell) {
+          return String((cell as React.ReactElement).key);
+        }
+        return '';
+      })
+      .join('-');
+    if (elementKeys.length > 0) {
+      return elementKeys;
+    }
+  }
+
+  if (React.isValidElement(item.cells) && item.cells.key) {
+    return String(item.cells.key);
+  }
+
+  if (item.className && item.className.length > 0) {
+    return item.className + '-' + String(index);
+  }
+
+  return 'row-' + String(index);
+}
+
+vi.mock('react-virtuoso', () => ({
+  TableVirtuoso: ({
+    data = [],
+    fixedHeaderContent,
+    itemContent,
+  }: TableVirtuosoMockProps) => (
+    <table>
+      <thead>{fixedHeaderContent?.()}</thead>
+      <tbody>
+        {data.map((item, index) => (
+          <tr key={getRowKey(item, index)}>{itemContent(index, item)}</tr>
+        ))}
+      </tbody>
+    </table>
+  ),
+}));
 
 import Table from './Table';
 import { pxTable } from './testData';
