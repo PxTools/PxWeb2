@@ -15,6 +15,18 @@ function escapeDecimalLikeLabels(markdown: string): string {
   return markdown.replace(/^(\d+)\.(?=\s)/gm, '$1\\.');
 }
 
+function normalizeNewLines(markdown: string): string {
+  return markdown.replaceAll('\r\n', '\n').replaceAll('\r', '\n');
+}
+
+function newLineToBreak(markdown: string): string {
+  return markdown.replaceAll('\n', '  \n');
+}
+
+function splitIntoBlocks(markdown: string): string[] {
+  return markdown.split(/\n[ \t]*\n+/);
+}
+
 const LinkRenderer = ({ href = '', children }: LinkProps) => (
   <Link href={href} target="_blank" rel="noopener noreferrer" inline>
     {children}
@@ -32,19 +44,36 @@ const UnwantedMdRender = ({ children }: UnwantedMdRenderProps) => (
 );
 
 export const MarkdownRenderer: React.FC<MdProps> = ({ mdText }) => {
-  const mdTextEscaped = escapeDecimalLikeLabels(mdText);
+  const mdTextNormalized = normalizeNewLines(mdText);
+  const mdTextEscaped = escapeDecimalLikeLabels(mdTextNormalized);
+  const markdownBlocks = splitIntoBlocks(mdTextEscaped);
+  const blockOccurrences = new Map<string, number>();
+
   return (
-    <ReactMarkdown
-      components={{
-        a: LinkRenderer,
-        p: UnwantedMdRender,
-        strong: UnwantedMdRender,
-        em: ItalicRenderer,
-      }}
-      skipHtml={false} // Enable raw HTML rendering
-    >
-      {mdTextEscaped}
-    </ReactMarkdown>
+    <>
+      {markdownBlocks.map((block, index) => {
+        const occurrence = blockOccurrences.get(block) ?? 0;
+        blockOccurrences.set(block, occurrence + 1);
+        const blockKey = `${block}-${occurrence}`;
+
+        return (
+          <React.Fragment key={blockKey}>
+            <ReactMarkdown
+              components={{
+                a: LinkRenderer,
+                p: UnwantedMdRender,
+                strong: UnwantedMdRender,
+                em: ItalicRenderer,
+              }}
+              skipHtml={false} // Enable raw HTML rendering
+            >
+              {newLineToBreak(block)}
+            </ReactMarkdown>
+            {index < markdownBlocks.length - 1 && <p></p>}
+          </React.Fragment>
+        );
+      })}
+    </>
   );
 };
 
