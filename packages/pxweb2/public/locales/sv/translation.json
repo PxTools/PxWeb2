@@ -154,8 +154,9 @@
           },
           "content": {
             "select": {
-              "label": "Välj indelning",
+              "label": "Välj kategori",
               "placeholder": "Inget valt",
+              "change_category": "Ändra",
               "modal": {
                 "cancel_button": "Avbryt",
                 "confirm_button": "Spara"
