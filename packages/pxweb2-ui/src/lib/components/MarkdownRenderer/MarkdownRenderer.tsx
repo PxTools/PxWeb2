@@ -17,14 +17,14 @@ function escapeDecimalLikeLabels(markdown: string): string {
 
 function normalizeNewLines(markdown: string): string {
   return markdown
-    .replace(/\\r\\n/g, '\n')
-    .replace(/\\n/g, '\n')
-    .replace(/\\r/g, '\n')
-    .replace(/\r\n|\r/g, '\n');
+    .replaceAll(/\r\n/g, '\n')
+    .replaceAll(/\n/g, '\n')
+    .replaceAll(/\r/g, '\n')
+    .replaceAll(/\r\n|\r/g, '\n');
 }
 
 function newLineToBreak(markdown: string): string {
-  return markdown.replace(/\n/g, '  \n');
+  return markdown.replaceAll(/\n/g, '  \n');
 }
 
 function splitIntoBlocks(markdown: string): string[] {
@@ -51,11 +51,17 @@ export const MarkdownRenderer: React.FC<MdProps> = ({ mdText }) => {
   const mdTextNormalized = normalizeNewLines(mdText);
   const mdTextEscaped = escapeDecimalLikeLabels(mdTextNormalized);
   const markdownBlocks = splitIntoBlocks(mdTextEscaped);
+  const blockOccurrences = new Map<string, number>();
 
   return (
     <>
-      {markdownBlocks.map((block, index) => (
-        <React.Fragment key={index}>
+      {markdownBlocks.map((block, index) => {
+        const occurrence = blockOccurrences.get(block) ?? 0;
+        blockOccurrences.set(block, occurrence + 1);
+        const blockKey = `${block}-${occurrence}`;
+
+        return (
+          <React.Fragment key={blockKey}>
           <ReactMarkdown
             components={{
               a: LinkRenderer,
@@ -68,8 +74,9 @@ export const MarkdownRenderer: React.FC<MdProps> = ({ mdText }) => {
             {newLineToBreak(block)}
           </ReactMarkdown>
           {index < markdownBlocks.length - 1 && <p></p>}
-        </React.Fragment>
-      ))}
+          </React.Fragment>
+        );
+      })}
     </>
   );
 };
