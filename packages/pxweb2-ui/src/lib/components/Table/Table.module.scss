@@ -83,6 +83,8 @@
       width: max-content;
       word-break: normal;
       overflow-wrap: break-word;
+      -webkit-hyphens: auto;
+      hyphens: auto;
       display: -webkit-box;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: var(--desktop-header-lines);
