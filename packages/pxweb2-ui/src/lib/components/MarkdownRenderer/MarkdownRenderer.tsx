@@ -62,18 +62,18 @@ export const MarkdownRenderer: React.FC<MdProps> = ({ mdText }) => {
 
         return (
           <React.Fragment key={blockKey}>
-          <ReactMarkdown
-            components={{
-              a: LinkRenderer,
-              p: UnwantedMdRender,
-              strong: UnwantedMdRender,
-              em: ItalicRenderer,
-            }}
-            skipHtml={false} // Enable raw HTML rendering
-          >
-            {newLineToBreak(block)}
-          </ReactMarkdown>
-          {index < markdownBlocks.length - 1 && <p></p>}
+            <ReactMarkdown
+              components={{
+                a: LinkRenderer,
+                p: UnwantedMdRender,
+                strong: UnwantedMdRender,
+                em: ItalicRenderer,
+              }}
+              skipHtml={false} // Enable raw HTML rendering
+            >
+              {newLineToBreak(block)}
+            </ReactMarkdown>
+            {index < markdownBlocks.length - 1 && <p></p>}
           </React.Fragment>
         );
       })}
