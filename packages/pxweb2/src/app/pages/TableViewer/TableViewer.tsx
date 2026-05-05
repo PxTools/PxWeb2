@@ -10,6 +10,7 @@ import { NavigationItem } from '../../components/NavigationMenu/NavigationItem/N
 import NavigationRail from '../../components/NavigationMenu/NavigationRail/NavigationRail';
 import NavigationBar from '../../components/NavigationMenu/NavigationBar/NavigationBar';
 import { SkipToMain } from '../../components/SkipToMain/SkipToMain';
+import { SkipToToolsMenu } from '../../components/SkipToMain/SkipToToolsMenu';
 import { Footer } from '../../components/Footer/Footer';
 import useAccessibility from '../../context/useAccessibility';
 import useApp from '../../context/useApp';
@@ -173,13 +174,23 @@ export function TableViewer() {
   };
 
   const isSmallScreen = isTablet === true || isMobile === true;
+  const mobileToolsMenuTargetId = 'px-table-viewer-mobile-tools-menu';
+  const desktopToolsMenuTargetId = 'px-table-viewer-outer-container';
+  const toolsMenuTargetId = isSmallScreen
+    ? mobileToolsMenuTargetId
+    : desktopToolsMenuTargetId;
 
   return (
     <>
-      <SkipToMain ref={skipToMainRef} />
+      <div ref={skipToMainRef} tabIndex={-1}>
+        <SkipToMain />
+        <SkipToToolsMenu targetId={toolsMenuTargetId} />
+      </div>
+
       {!isSmallScreen && <Header />}
       {/* tabindex={-1} to fix firefox focusing this div*/}
       <div
+        id="px-table-viewer-outer-container"
         ref={isSmallScreen ? outerContainerRef : undefined}
         className={styles.navigationAndContentContainer}
         tabIndex={-1}
@@ -187,11 +198,13 @@ export function TableViewer() {
         {isSmallScreen ? (
           <>
             <Header stroke={true} />
-            <NavigationBar
-              ref={navigationBarRef}
-              onChange={changeSelectedNavView}
-              selected={selectedNavigationView}
-            />
+            <div id={mobileToolsMenuTargetId}>
+              <NavigationBar
+                ref={navigationBarRef}
+                onChange={changeSelectedNavView}
+                selected={selectedNavigationView}
+              />
+            </div>
           </>
         ) : (
           <NavigationRail
