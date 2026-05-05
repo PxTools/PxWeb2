@@ -20,7 +20,7 @@ function normalizeNewLines(markdown: string): string {
 }
 
 function newLineToBreak(markdown: string): string {
-  return markdown.replaceAll(/\n/g, '  \n');
+  return markdown.replaceAll('\n', '  \n');
 }
 
 function splitIntoBlocks(markdown: string): string[] {
