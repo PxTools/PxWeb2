@@ -311,11 +311,17 @@
       "neutral-moderate": {
         "value": "{color.neutral.200}"
       },
+      "info": {
+        "value": "{color.info.600}"
+      },
       "info-subtle": {
         "value": "{color.info.100}"
       },
       "info-moderate": {
         "value": "{color.info.200}"
+      },
+      "success": {
+        "value": "{color.success.600}"
       },
       "success-subtle": {
         "value": "{color.success.100}"
@@ -323,11 +329,17 @@
       "success-moderate": {
         "value": "{color.success.200}"
       },
+      "warning": {
+        "value": "{color.warning.600}"
+      },
       "warning-subtle": {
         "value": "{color.warning.100}"
       },
       "warning-moderate": {
         "value": "{color.warning.200}"
+      },
+      "error": {
+        "value": "{color.danger.600}"
       },
       "error-subtle": {
         "value": "{color.danger.100}"
