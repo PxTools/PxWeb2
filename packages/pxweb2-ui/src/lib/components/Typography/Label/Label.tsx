@@ -38,7 +38,7 @@ export function Label({
           cl({ [classes['visually-hidden']]: visuallyHidden }),
         ) + cssClasses
       }
-      {...(forID.length > 0 ? { htmlFor: forID } : {})}
+      {...(forID.length > 0 && as === 'label' ? { htmlFor: forID } : {})}
       {...rest}
     >
       {children}
