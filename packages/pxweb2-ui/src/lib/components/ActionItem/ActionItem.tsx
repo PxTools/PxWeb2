@@ -28,13 +28,15 @@ function IconWrapper({
   }
 
   return (
-    <div className={cl(styles[`icon-wrapper-${size}`], styles['icon-wrapper'])}>
+    <span
+      className={cl(styles[`icon-wrapper-${size}`], styles['icon-wrapper'])}
+    >
       {size === 'medium' ? (
         <Icon iconName={iconName} />
       ) : (
         <ActionItemIcon largeIconName={largeIconName} />
       )}
-    </div>
+    </span>
   );
 }
 
@@ -86,7 +88,7 @@ export function ActionItem({
         iconName={iconName}
         largeIconName={largeIconName}
       />
-      <div
+      <span
         className={cl(
           styles['label-description-wrapper'],
           styles[`icon-label-wrapper-${size}`],
@@ -98,16 +100,16 @@ export function ActionItem({
         {size === 'medium' && description && (
           <BodyShort>{description}</BodyShort>
         )}
-      </div>
+      </span>
       {hasToggleState && (
-        <div
+        <span
           className={cl(
             styles['toggle-wrapper'],
             styles[`toggle-wrapper-${size}`],
           )}
         >
           <CheckCircleIcon checked={toggleState} />
-        </div>
+        </span>
       )}
     </button>
   );
