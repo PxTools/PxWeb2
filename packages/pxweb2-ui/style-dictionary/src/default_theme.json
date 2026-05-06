@@ -33,7 +33,6 @@
       "transparent": {
         "value": "#FFFFFF00"
       }
-
     },
     "brand-alpha": {
       "800": {
@@ -60,7 +59,7 @@
         "value": "#F5533D"
       },
       "600": {
-        "value": "#E23822"
+        "value": "#DD2913"
       },
       "700": {
         "value": "#BF2B18"
@@ -92,7 +91,7 @@
         "value": "#EB9C07"
       },
       "600": {
-        "value": "#CB7603"
+        "value": "#D6850F"
       },
       "700": {
         "value": "#A25206"
