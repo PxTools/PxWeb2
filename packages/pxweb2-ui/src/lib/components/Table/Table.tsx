@@ -100,7 +100,8 @@ const MOBILE_ROW_OVERSCAN = 15;
 // measured/returned concrete items. This avoids rendering an empty tbody frame.
 const DESKTOP_BOOTSTRAP_ROW_COUNT = 24;
 const MOBILE_BOOTSTRAP_ROW_COUNT = 12;
-const HEADER_LINE_CHAR_THRESHOLD = 16; // Approximate character count per header line used to determine when to wrap header text.
+//const HEADER_LINE_CHAR_THRESHOLD = 16;
+const HEADER_LINE_CHAR_THRESHOLD = 12; // Approximate character count per header line used to determine when to wrap header text.
 export const DESKTOP_COLUMN_VIRTUALIZATION_FEW_COLUMNS_THRESHOLD = 4; // If there are few columns, we can allow more characters before wrapping, as there is more horizontal space available.
 
 /** Returns row virtualization sizing and overscan tuned for desktop/mobile. */
