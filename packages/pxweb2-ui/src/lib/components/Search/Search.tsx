@@ -15,6 +15,7 @@ import { Label } from '../Typography/Label/Label';
 import { Button } from '../Button/Button';
 
 export interface SearchProps {
+  id: string;
   value?: string;
   variant?: 'default' | 'inVariableBox';
   labelText?: string;
@@ -32,6 +33,7 @@ export interface SearchHandle extends HTMLInputElement {
 export const Search = forwardRef<SearchHandle, SearchProps>(
   (
     {
+      id,
       value = '',
       variant = 'default',
       labelText,
@@ -47,6 +49,7 @@ export const Search = forwardRef<SearchHandle, SearchProps>(
     const inputRef = useRef<HTMLInputElement>(null);
     const combinedRef = (ref || inputRef) as React.RefObject<SearchHandle>;
     const { t } = useTranslation();
+    const searchInputId = id;
 
     useEffect(() => {
       setInputValue(value);
@@ -91,7 +94,11 @@ export const Search = forwardRef<SearchHandle, SearchProps>(
 
     return (
       <div className={cl(classes.search, classes[variant])}>
-        {showLabel && <Label size="medium">{labelText}</Label>}
+        {showLabel && (
+          <Label forID={searchInputId} size="medium">
+            {labelText}
+          </Label>
+        )}
         <div
           className={cl(classes.wrapper, classes.border, classes[variant], {
             [classes.variableboxSearchAndSelectBorderOverride]:
@@ -100,6 +107,7 @@ export const Search = forwardRef<SearchHandle, SearchProps>(
         >
           <Icon iconName="MagnifyingGlass"></Icon>
           <input
+            id={searchInputId}
             type="text"
             {...(labelText ? { 'aria-label': labelText } : {})}
             ref={combinedRef}

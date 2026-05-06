@@ -87,6 +87,7 @@ export function VariableBoxContent({
   const hasSelectAndSearch = hasCodeLists && hasSevenOrMoreValues;
   const valuesToRender = structuredClone(values);
   const codeListLabelId = 'codelist-label-' + uniqueId;
+  const codeListSearchId = 'codelist-search-' + uniqueId;
 
   const searchedValues: Value[] = values.filter(
     (value) =>
@@ -311,6 +312,7 @@ export function VariableBoxContent({
           className={classes['focusableItem']}
         >
           <Search
+            id={codeListSearchId}
             ref={searchRef}
             value={search}
             onChange={(value: string) => {

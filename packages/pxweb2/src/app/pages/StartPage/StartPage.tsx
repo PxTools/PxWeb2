@@ -5,6 +5,7 @@ import type { TFunction } from 'i18next';
 import { motion, AnimatePresence } from 'motion/react';
 import cl from 'clsx';
 import { debounce } from 'lodash';
+import { v4 as uuidv4 } from 'uuid';
 
 import styles from './StartPage.module.scss';
 import {
@@ -96,6 +97,8 @@ const StartPage = () => {
   const filterOverlayRef = useRef<HTMLDivElement>(null);
 
   const navigate = useNavigate();
+  const [uniqueId] = useState(() => uuidv4());
+  const searchId = 'pxweb-search-' + uniqueId;
 
   // On initial load, seed search from URL query parameter once
   useEffect(() => {
@@ -772,6 +775,7 @@ const StartPage = () => {
             <div className={styles.searchAreaWrapper}>
               <div className={cl(styles.search)} role="search">
                 <Search
+                  id={searchId}
                   searchPlaceHolder={t('start_page.search_placeholder')}
                   variant="default"
                   ref={searchFieldRef}
