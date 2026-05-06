@@ -20,7 +20,9 @@ describe('Badge', () => {
     render(<Badge label="9" />);
 
     expect(screen.getByText('9')).toBeInTheDocument();
-    expect(screen.getByText('9').parentElement).not.toHaveClass(classes['no-label']);
+    expect(screen.getByText('9').parentElement).not.toHaveClass(
+      classes['no-label'],
+    );
   });
 
   it('renders in no-label mode when label is an empty string', () => {
@@ -70,13 +72,10 @@ describe('Badge', () => {
     },
   );
 
-  it.each(['medium', 'large'] as const)(
-    'applies size class for %s',
-    (size) => {
-      const { container } = render(<Badge size={size} label="4" />);
-      const badge = container.firstElementChild as HTMLElement;
+  it.each(['medium', 'large'] as const)('applies size class for %s', (size) => {
+    const { container } = render(<Badge size={size} label="4" />);
+    const badge = container.firstElementChild as HTMLElement;
 
-      expect(badge).toHaveClass(classes[`size-${size}`]);
-    },
-  );
+    expect(badge).toHaveClass(classes[`size-${size}`]);
+  });
 });

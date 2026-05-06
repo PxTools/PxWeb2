@@ -68,7 +68,10 @@ export const SizeAndLabelStates: Story = {
     renderBadgeRow(args, [
       { labelText: 'Medium with label', badge: { size: 'medium', label: '9' } },
       { labelText: 'Large with label', badge: { size: 'large', label: '99' } },
-      { labelText: 'Medium without label', badge: { size: 'medium', label: '' } },
+      {
+        labelText: 'Medium without label',
+        badge: { size: 'medium', label: '' },
+      },
       { labelText: 'Large without label', badge: { size: 'large', label: '' } },
     ]),
 };
@@ -84,7 +87,12 @@ export const DefaultColors: Story = {
       </div>
       <div style={rowStyle}>
         {colors.map((color) => (
-          <Badge key={`default-unlabeled-${color}`} {...args} color={color} label="" />
+          <Badge
+            key={`default-unlabeled-${color}`}
+            {...args}
+            color={color}
+            label=""
+          />
         ))}
       </div>
     </div>
@@ -102,7 +110,12 @@ export const SubtleColors: Story = {
       </div>
       <div style={rowStyle}>
         {colors.map((color) => (
-          <Badge key={`subtle-unlabeled-${color}`} {...args} color={color} label="" />
+          <Badge
+            key={`subtle-unlabeled-${color}`}
+            {...args}
+            color={color}
+            label=""
+          />
         ))}
       </div>
     </div>
