@@ -94,7 +94,7 @@ export function ActionItem({
           styles[`icon-label-wrapper-${size}`],
         )}
       >
-        <Label size="medium" className={cl(styles['label-hover'])}>
+        <Label as="span" size="medium" className={cl(styles['label-hover'])}>
           {label}
         </Label>
         {size === 'medium' && description && (
