@@ -18,74 +18,68 @@
 
   @media ((min-width: fixed.$breakpoints-small-min-width) and (max-width: fixed.$breakpoints-medium-max-width)) {
     width: 428px;
-    padding-left: fixed.$spacing-8;
-    padding-right: fixed.$spacing-8;
-    padding-top: fixed.$spacing-6;
-    padding-bottom: fixed.$spacing-6;
+    padding: fixed.$spacing-6 fixed.$spacing-8;
   }
 
   // xsmall, small and medium
-  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
+  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
     height: 100vh;
     // Handle rtl languages
     border-start-start-radius: var(--px-border-radius-none);
     border-start-end-radius: var(--px-border-radius-xlarge);
     border-end-end-radius: var(--px-border-radius-xlarge);
     border-end-start-radius: var(--px-border-radius-none);
-
     // Not from Figma
-    position: absolute;
+    position: fixed;
     top: 0;
-    z-index: 999;
-  }
-
-  @media (min-width: fixed.$breakpoints-medium-min-width) and (max-width: fixed.$breakpoints-medium-max-width) {
-    height: calc(100vh - 80px);
-    // Handle rtl languages
-    border-start-start-radius: var(--px-border-radius-none);
-    border-start-end-radius: var(--px-border-radius-xlarge);
-    border-end-end-radius: var(--px-border-radius-xlarge);
-    border-end-start-radius: var(--px-border-radius-none);
-
-    // Not from Figma
-    position: absolute;
-    top: 0;
-    z-index: 999;
+    z-index: 70;
   }
 
   // large
   @media (min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-large-max-width) {
     width: 428px;
-    padding: fixed.$spacing-8;
+    padding-inline-start: fixed.$spacing-8;
+    padding-inline-end: fixed.$spacing-8;
+    padding-top: fixed.$spacing-5;
+    padding-bottom: fixed.$spacing-8;
 
     // Calculate height of main container, minus the header height
-    height: calc(100vh - fixed.$spacing-22);
+    height: calc(100vh - fixed.$spacing-20);
 
     // Handle rtl languages
-    border-start-start-radius: var(--px-border-radius-xlarge);
-    border-start-end-radius: var(--px-border-radius-xlarge);
     border-end-end-radius: var(--px-border-radius-xlarge);
     border-end-start-radius: var(--px-border-radius-none);
 
     // Not from Figma
-    position: absolute;
-    inset-inline-start: 120px; // Instead of "left" to handle rtl languages
-    z-index: 999;
-
-    // Position NavigationDrawer below the header
-    top: fixed.$spacing-22;
+    position: fixed;
+    top: fixed.$spacing-20;
+    inset-inline-start: 100px; // Instead of "left" to handle rtl languages
+    z-index: 60;
 
     &.skipToMainContentVisible {
       // Calculate position of NavigationDrawer below the header and SkipToMainContent
-      top: calc(fixed.$spacing-22 + var(--skip-to-main-content-height));
+      top: calc(fixed.$spacing-20 + var(--skip-to-main-content-height));
     }
   }
 
   // xlarge and xxlarge
   @media ((min-width: fixed.$breakpoints-xlarge-min-width) and (max-width: fixed.$breakpoints-xlarge-max-width)) or ((min-width: fixed.$breakpoints-xxlarge-min-width)) {
-    width: 396px;
-    padding: 0px fixed.$spacing-8 fixed.$spacing-8 0px;
-    border-radius: var(--px-border-radius-none);
+    width: 428px;
+    padding-inline-start: fixed.$spacing-8;
+    padding-inline-end: fixed.$spacing-8;
+    padding-top: fixed.$spacing-5;
+    padding-bottom: fixed.$spacing-8;
+
+    // Calculate height of main container, minus the header height
+    height: calc(100vh - fixed.$spacing-20);
+    position: sticky;
+    top: fixed.$spacing-20;
+    z-index: 60;
+
+    &.skipToMainContentVisible {
+      // Calculate position of NavigationDrawer below the header and SkipToMainContent
+      top: calc(fixed.$spacing-20 + var(--skip-to-main-content-height));
+    }
   }
 }
 
@@ -151,15 +145,13 @@
 
 // Not from Figma
 .backdrop {
-  @media (min-width: fixed.$breakpoints-xsmall-min-width) and (max-width: fixed.$breakpoints-small-max-width) {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: var(--px-color-surface-scrim);
-    z-index: 999;
-  }
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--px-color-surface-scrim);
+  z-index: 50;
 }
 
 .fadein {

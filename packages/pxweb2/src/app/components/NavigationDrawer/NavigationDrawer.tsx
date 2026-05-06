@@ -39,9 +39,16 @@ export const NavigationDrawer = forwardRef<
 >(({ children, heading, view, openedWithKeyboard, onClose }, ref) => {
   const { t } = useTranslation();
   const { addModal, removeModal } = useAccessibility();
-  const { skipToMainFocused, isXLargeDesktop, isXXLargeDesktop } = useApp();
+  const {
+    skipToMainFocused,
+    isMobile,
+    isTablet,
+    isXLargeDesktop,
+    isXXLargeDesktop,
+  } = useApp();
 
   const isLargeScreen = isXXLargeDesktop === true || isXLargeDesktop === true;
+  const hasBackdrop = isMobile || isTablet;
 
   React.useEffect(() => {
     addModal('NavigationDrawer', () => {
@@ -121,10 +128,14 @@ export const NavigationDrawer = forwardRef<
 
   return (
     <>
-      <div
-        onClick={() => onClose(false, view)}
-        className={styles.backdrop}
-      ></div>
+      {hasBackdrop && (
+        <div
+          data-px-overlay-backdrop="true"
+          aria-hidden="true"
+          onClick={() => onClose(false, view)}
+          className={styles.backdrop}
+        ></div>
+      )}
       <div
         ref={drawerRef}
         className={cl(styles.navigationDrawer, styles.fadein, {

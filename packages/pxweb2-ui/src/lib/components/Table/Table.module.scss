@@ -26,18 +26,18 @@
   }
 
   th {
-    width: 40px;
-    padding-left: 16px;
+    min-width: 2.5rem;
+    padding-inline-start: 1rem;
     font-weight: normal;
     text-align: center;
     font-variant-numeric: tabular-nums;
 
     background: var(--px-color-surface-moderate);
     border-top: 1px solid var(--px-color-border-default);
-    border-left: 1px solid var(--px-color-border-default);
+    border-inline-start: 1px solid var(--px-color-border-default);
 
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
-      padding: 8px 12px;
+      padding: 0.5rem 0.75rem;
     }
     @media screen and (max-width: fixed.$breakpoints-xsmall-max-width) {
       width: fit-content;
@@ -46,18 +46,100 @@
   thead th {
     font-family: PxWeb-font, sans-serif;
     font-weight: 700;
+    white-space: nowrap;
   }
+
+  .longHeaderCellText {
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+      width: auto;
+    }
+  }
+  .longHeaderCellTextLabel {
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      line-height: 1.25;
+    }
+  }
+
+  .longTextColumnSpan {
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+      max-width: calc(var(--desktop-header-colspan) * 10rem);
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+  }
+  .longTextColumnSpanFewColumns {
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+      max-width: calc(var(--desktop-header-colspan) * 15.625rem);
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+  }
+
+  .longHeaderCellText .longHeaderCellTextLabel {
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+      width: max-content;
+      word-break: normal;
+      overflow-wrap: break-word;
+      -webkit-hyphens: auto;
+      hyphens: auto;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: var(--desktop-header-lines);
+      line-clamp: var(--desktop-header-lines);
+      white-space: normal;
+    }
+  }
+
+  .longHeaderCellText .desktopHeaderLabelWrapper {
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+      width: 100%;
+    }
+  }
+  .desktopHeaderLabelWrapper {
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(1.25em * var(--desktop-header-lines));
+    }
+  }
+
   thead tr:last-child th {
     text-align: end;
     border-bottom-width: 2px;
   }
+
+  thead tr:last-child th .desktopHeaderLabelWrapper {
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+      justify-content: flex-end;
+    }
+  }
+
   th.stub {
-    text-align: left;
-    min-width: 200px;
+    text-align: start;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+      width: 18.75rem;
+      min-width: 18.75rem;
+      max-width: 18.75rem;
+    }
+  }
+
+  th.stubFewColumns {
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+      width: 25rem;
+      min-width: 25rem;
+      max-width: 25rem;
+    }
   }
 
   tr:first-child th:first-child {
-    border-left: none;
+    border-inline-start: none;
     @media screen and (max-width: fixed.$breakpoints-xsmall-max-width) {
       border-top: none;
     }
@@ -70,81 +152,81 @@
   }
 
   th.stub-0 {
-    border-left: none;
+    border-inline-start: none;
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
-      padding-left: 12px;
+      padding-inline-start: 0.75rem;
     }
   }
   th.stub-1 {
-    border-left: none;
+    border-inline-start: none;
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
-      padding-left: 28px;
+      padding-inline-start: 1.75rem;
     }
   }
   th.stub-2 {
-    border-left: none;
+    border-inline-start: none;
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
-      padding-left: 44px;
+      padding-inline-start: 2.75rem;
     }
   }
   th.stub-3 {
-    border-left: none;
+    border-inline-start: none;
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
-      padding-left: 60px;
+      padding-inline-start: 3.75rem;
     }
   }
   th.stub-4 {
-    border-left: none;
+    border-inline-start: none;
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
-      padding-left: 76px;
+      padding-inline-start: 4.75rem;
     }
   }
   th.stub-5 {
-    border-left: none;
+    border-inline-start: none;
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
-      padding-left: 92px;
+      padding-inline-start: 5.75rem;
     }
   }
   th.stub-6 {
-    border-left: none;
+    border-inline-start: none;
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
-      padding-left: 108px;
+      padding-inline-start: 6.75rem;
     }
   }
   th.stub-7 {
-    border-left: none;
+    border-inline-start: none;
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
-      padding-left: 124px;
+      padding-inline-start: 7.75rem;
     }
   }
   th.stub-8 {
-    border-left: none;
+    border-inline-start: none;
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
-      padding-left: 140px;
+      padding-inline-start: 8.75rem;
     }
   }
   th.stub-9 {
-    border-left: none;
+    border-inline-start: none;
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
-      padding-left: 156px;
+      padding-inline-start: 9.75rem;
     }
   }
   th.stub-10 {
-    border-left: none;
+    border-inline-start: none;
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
-      padding-left: 172px;
+      padding-inline-start: 10.75rem;
     }
   }
   td {
-    padding-right: 16px;
-    width: 40px;
-    text-align: right;
+    padding-inline-end: 1rem;
+    min-width: 2.5rem;
+    text-align: end;
     border-top: 1px solid var(--px-color-border-default);
-    border-left: 1px solid var(--px-color-border-default);
+    border-inline-start: 1px solid var(--px-color-border-default);
     font-variant-numeric: tabular-nums;
 
     @media screen and (min-width: fixed.$breakpoints-small-min-width) {
-      padding: 8px 12px;
+      padding: 0.5rem 0.75rem;
     }
     @media screen and (max-width: fixed.$breakpoints-xsmall-max-width) {
       width: fit-content;
@@ -158,8 +240,8 @@
       border-top: 2px solid var(--px-color-border-default);
     }
     @media screen and (max-width: fixed.$breakpoints-xsmall-max-width) {
-      padding-top: 16px;
-      padding-right: 16px;
+      padding-top: 1rem;
+      padding-inline-end: 1rem;
     }
   }
   tr.firstdim td {
@@ -181,52 +263,52 @@
     }
   }
   tr.firstColNoStub > td:first-child {
-    border-left: none;
+    border-inline-start: none;
   }
 
   .firstColNoStub {
-    border-left: none;
+    border-inline-start: none;
   }
 
   .mobileEmptyRowCell > th,
   .mobileEmptyRowCell > td {
     background: var(--px-color-surface-moderate);
-    border-left: none;
+    border-inline-start: none;
     border-bottom: none;
     border-top: none;
   }
 
   .mobileRowHeadLastStub > th {
-    padding-bottom: 4px;
-    padding-top: 4px;
+    padding-bottom: 0.25rem;
+    padding-top: 0.25rem;
     background: none;
-    border-left: none;
-    border-right: none;
+    border-inline-start: none;
+    border-inline-end: none;
     border-bottom: none;
     border-top: none;
     vertical-align: top;
   }
 
   .mobileRowHeadLastStub > td {
-    padding-bottom: 4px;
-    padding-top: 4px;
+    padding-bottom: 0.25rem;
+    padding-top: 0.25rem;
     background: none;
-    border-left: none;
-    border-right: none;
+    border-inline-start: none;
+    border-inline-end: none;
     border-bottom: none;
     border-top: none;
     vertical-align: top;
-    padding-left: 16px;
+    padding-inline-start: 1rem;
   }
 
   .mobileRowHeadLevel2 > th,
   .mobileRowHeadLevel2 > td {
-    padding-top: 0px;
-    padding-bottom: 4px;
-    padding-right: 16px;
+    padding-top: 0rem;
+    padding-bottom: 0.25rem;
+    padding-inline-end: 1rem;
     background: none;
-    border-left: none;
-    border-right: none;
+    border-inline-start: none;
+    border-inline-end: none;
     border-bottom: none;
     border-top: none;
     font-family: PxWeb-font, sans-serif;
@@ -235,24 +317,65 @@
 
   .mobileRowHeadLevel1 > th,
   .mobileRowHeadLevel1 > td {
-    padding-bottom: 16px;
+    padding-bottom: 1rem;
   }
   .mobileRowHeadlastValueOfLastStub > th,
   .mobileRowHeadlastValueOfLastStub > td {
-    padding-bottom: 28px;
+    padding-bottom: 1.75rem;
   }
   .mobileRowHeadfirstValueOfLastStub2Dim > th,
   .mobileRowHeadfirstValueOfLastStub2Dim > td {
-    padding-top: 28px;
+    padding-top: 1.75rem;
   }
 
   .mobileRowHeadFirstValueOfSecondLastStub > th,
   .mobileRowHeadFirstValueOfSecondLastStub > td {
-    padding-top: 28px;
+    padding-top: 1.75rem;
   }
 
   .emptyTableData {
     background: var(--px-color-surface-moderate);
     border: none;
   }
+
+  .virtualPaddingCell {
+    padding: 0;
+    border: none;
+    background: none;
+  }
+
+  .virtualColumnPaddingCell {
+    padding: 0;
+    border-top: 1px solid var(--px-color-border-default);
+    border-inline-start: none;
+    background: var(--px-color-surface-default);
+  }
+
+  thead .virtualColumnPaddingCell {
+    background: var(--px-color-surface-moderate);
+  }
+
+  tbody tr:hover .virtualColumnPaddingCell {
+    background: var(--px-color-surface-subtle);
+  }
+
+  .virtualColumnPaddingCellEnd {
+    border-inline-end: none;
+  }
+}
+
+.virtualizedWrapper {
+  max-height: 70vh;
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
+.virtualizedWrapperUseParentScroll {
+  max-height: none;
+  overflow-y: visible;
+}
+
+.virtualizedTable {
+  width: max-content;
+  min-width: 100%;
 }

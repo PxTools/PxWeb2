@@ -15,6 +15,7 @@
   padding: 0px 0px 0px 0px;
   border-style: none;
   max-height: 100vh; // Override default margins at top and bottom for <dialog>
+  overflow: hidden;
 }
 
 .sideSheet::backdrop {

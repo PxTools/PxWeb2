@@ -97,43 +97,32 @@ describe('Footer', () => {
   });
 
   describe('scrollToTop', () => {
-    it('should scroll the container to the top quickly', () => {
-      // Create a mock container
-      const container = document.createElement('div');
-      container.scrollTop = 1000;
-      Object.defineProperty(container, 'scrollTop', {
-        writable: true,
-        value: 1000,
+    it('scrolls window to top when the page is scrolled', () => {
+      const scrollSpy = vi
+        .spyOn(globalThis, 'scrollTo')
+        .mockImplementation(() => {
+          vi.fn();
+        });
+      const rafSpy = vi
+        .spyOn(globalThis, 'requestAnimationFrame')
+        .mockImplementation((callback: FrameRequestCallback) => {
+          callback(performance.now() + 250);
+          return 1;
+        });
+
+      Object.defineProperty(document, 'scrollingElement', {
+        configurable: true,
+        value: { scrollTop: 1000 },
       });
-      // Mock ref
-      const ref = { current: container };
 
-      // Use fake timers
-      vi.useFakeTimers();
-      scrollToTop(ref);
-      // Fast-forward all timers
-      vi.runAllTimers();
+      scrollToTop();
 
-      expect(container.scrollTop).toBe(0);
-      vi.useRealTimers();
+      expect(scrollSpy).toHaveBeenCalledWith(0, 0);
+      rafSpy.mockRestore();
+      scrollSpy.mockRestore();
     });
 
-    it('shows Top button when containerRef is provided', () => {
-      (useLocaleContent as Mock).mockReturnValue(footerContent);
-      const ref = {
-        current: document.createElement('div'),
-      } as React.RefObject<HTMLDivElement>;
-      render(
-        <MemoryRouter initialEntries={[currentPathname]}>
-          <Footer containerRef={ref} />
-        </MemoryRouter>,
-      );
-      expect(
-        screen.getByRole('button', { name: /common.footer.top_button_text/i }),
-      ).toBeInTheDocument();
-    });
-
-    it('shows Top button when enableWindowScroll is true (no containerRef)', () => {
+    it('shows Top button when enableWindowScroll is true', () => {
       (useLocaleContent as Mock).mockReturnValue(footerContent);
       render(
         <MemoryRouter initialEntries={[currentPathname]}>
@@ -145,7 +134,7 @@ describe('Footer', () => {
       ).toBeInTheDocument();
     });
 
-    it('hides Top button when neither containerRef nor enableWindowScroll', () => {
+    it('hides Top button when enableWindowScroll is false', () => {
       (useLocaleContent as Mock).mockReturnValue(footerContent);
       render(
         <MemoryRouter initialEntries={[currentPathname]}>
@@ -161,8 +150,20 @@ describe('Footer', () => {
 
     it('scrolls window to top when enableWindowScroll is true', () => {
       (useLocaleContent as Mock).mockReturnValue(footerContent);
-      const scrollSpy = vi.spyOn(window, 'scrollTo').mockImplementation(() => {
-        vi.fn();
+      const scrollSpy = vi
+        .spyOn(globalThis, 'scrollTo')
+        .mockImplementation(() => {
+          vi.fn();
+        });
+      const rafSpy = vi
+        .spyOn(globalThis, 'requestAnimationFrame')
+        .mockImplementation((callback: FrameRequestCallback) => {
+          callback(performance.now() + 250);
+          return 1;
+        });
+      Object.defineProperty(document, 'scrollingElement', {
+        configurable: true,
+        value: { scrollTop: 1000 },
       });
       render(
         <MemoryRouter initialEntries={[currentPathname]}>
@@ -175,7 +176,9 @@ describe('Footer', () => {
       });
       btn.click();
 
-      expect(scrollSpy).toHaveBeenCalledWith({ top: 0, behavior: 'smooth' });
+      expect(scrollSpy).toHaveBeenCalled();
+      expect(scrollSpy).toHaveBeenLastCalledWith(0, 0);
+      rafSpy.mockRestore();
       scrollSpy.mockRestore();
     });
   });
