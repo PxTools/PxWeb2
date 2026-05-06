@@ -829,7 +829,10 @@ function calculateHeadingLevelLines(
   valueCount: number,
   totalColumns: number,
 ): number {
-  const charsPerLine = longestValueTextLength > 50 ? HEADER_LINE_CHAR_THRESHOLD_LONG_TEXT : HEADER_LINE_CHAR_THRESHOLD;
+  const charsPerLine =
+    longestValueTextLength > 50
+      ? HEADER_LINE_CHAR_THRESHOLD_LONG_TEXT
+      : HEADER_LINE_CHAR_THRESHOLD;
   const columnsPerValue = columnSpan / valueCount;
   let effectiveCharThreshold = charsPerLine * columnsPerValue;
 
