@@ -32,6 +32,18 @@
   }
 }
 
+.color-subtle {
+  &.variant-default {
+    background-color: var(--px-color-surface-subtle);
+  }
+
+  &.variant-border {
+    background-color: var(--px-color-surface-default);
+    outline: 1px solid var(--px-color-border-subtle);
+    outline-offset: -1px;
+  }
+}
+
 .color-neutral {
   &.variant-default {
     background-color: var(--px-color-surface-moderate);
