@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, startTransition, useRef } from 'react';
 
 import {
   ApiError,
@@ -41,18 +41,65 @@ import {
   updateSelectedCodelistForVariable,
 } from './selectionUtils';
 
+const BULK_UPDATE_CHUNK_SIZE = 4000;
+const SYNC_DEBOUNCE_MS = 150;
+
+function yieldToMainThread(): Promise<void> {
+  return new Promise((resolve) => {
+    if (
+      typeof window !== 'undefined' &&
+      typeof window.requestAnimationFrame === 'function'
+    ) {
+      window.requestAnimationFrame(() => resolve());
+      return;
+    }
+
+    setTimeout(resolve, 0);
+  });
+}
+
+function buildMergedValuesFast(
+  previousValues: string[],
+  searchedValues: Value[],
+): string[] {
+  const merged = new Set(previousValues);
+  for (let index = 0; index < searchedValues.length; index += 1) {
+    merged.add(searchedValues[index].code);
+  }
+
+  return Array.from(merged);
+}
+
+async function buildRemainingValuesInChunks(
+  currentValues: string[],
+  searchedCodes: Set<string>,
+): Promise<string[]> {
+  const remainingValues: string[] = [];
+
+  for (let index = 0; index < currentValues.length; index += 1) {
+    const valueCode = currentValues[index];
+    if (!searchedCodes.has(valueCode)) {
+      remainingValues.push(valueCode);
+    }
+
+    if (index > 0 && index % BULK_UPDATE_CHUNK_SIZE === 0) {
+      await yieldToMainThread();
+    }
+  }
+
+  return remainingValues;
+}
+
 function addValueToVariable(
   selectedValuesArr: SelectedVBValues[],
   varId: string,
   value: Value['code'],
 ) {
-  const newSelectedValues = selectedValuesArr.map((variable) => {
-    if (variable.id === varId) {
-      variable.values = [...variable.values, value];
-    }
-
-    return variable;
-  });
+  const newSelectedValues = selectedValuesArr.map((variable) =>
+    variable.id === varId
+      ? { ...variable, values: [...variable.values, value] }
+      : variable,
+  );
 
   return newSelectedValues;
 }
@@ -85,7 +132,10 @@ function removeValueOfVariable(
           (!hasMultipleValuesSelected &&
             variable.selectedCodeList !== undefined)
         ) {
-          variable.values = variable.values.filter((val) => val !== value);
+          return {
+            ...variable,
+            values: variable.values.filter((val) => val !== value),
+          };
         }
         if (
           !hasMultipleValuesSelected &&
@@ -98,86 +148,6 @@ function removeValueOfVariable(
       return variable;
     })
     .filter((value) => value !== null);
-
-  return newSelectedValues;
-}
-
-function addMultipleValuesToVariable(
-  selectedValuesArr: SelectedVBValues[],
-  varId: string,
-  valuesToAdd: Value[],
-  searchedValues: Value[],
-): SelectedVBValues[] {
-  const currentVariable = selectedValuesArr.find(
-    (variable) => variable.id === varId,
-  );
-  let newSelectedValues: SelectedVBValues[] = [];
-
-  if (currentVariable) {
-    newSelectedValues = selectedValuesArr.map((variable) => {
-      if (variable.id === varId) {
-        const prevValues = [...variable.values];
-        const valuesList = valuesToAdd
-          .filter(
-            (v) => prevValues.includes(v.code) || searchedValues.includes(v),
-          )
-          .map((value) => value.code);
-        variable.values = valuesList;
-      }
-      return variable;
-    });
-  }
-  if (!currentVariable) {
-    newSelectedValues = [
-      ...selectedValuesArr,
-      {
-        id: varId,
-        selectedCodeList: undefined,
-        values: valuesToAdd
-          .filter((v) => searchedValues.includes(v))
-          .map((value) => value.code),
-      },
-    ];
-  }
-
-  return newSelectedValues;
-}
-
-function removeMultipleValuesToVariable(
-  selectedValuesArr: SelectedVBValues[],
-  varId: string,
-  valuesToAdd: Value[],
-  searchedValues: Value[],
-): SelectedVBValues[] {
-  const currentVariable = selectedValuesArr.find(
-    (variable) => variable.id === varId,
-  );
-  let newSelectedValues: SelectedVBValues[] = [];
-
-  if (currentVariable) {
-    newSelectedValues = selectedValuesArr.map((variable) => {
-      if (variable.id === varId) {
-        const prevValues = [...variable.values];
-        const valuesList = prevValues.filter(
-          (val) => !searchedValues.some((v) => v.code === val),
-        );
-        variable.values = valuesList;
-      }
-      return variable;
-    });
-  }
-  if (!currentVariable) {
-    newSelectedValues = [
-      ...selectedValuesArr,
-      {
-        id: varId,
-        selectedCodeList: undefined,
-        values: valuesToAdd
-          .filter((v) => searchedValues.includes(v))
-          .map((value) => value.code),
-      },
-    ];
-  }
 
   return newSelectedValues;
 }
@@ -233,6 +203,13 @@ export function Selection({
   setSelectedNavigationView,
   hideMenuRef,
 }: SelectionProps) {
+  const bulkUpdateTokenRef = useRef(0);
+  const syncTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const latestSyncPayloadRef = useRef<{
+    values: SelectedVBValues[];
+    changedVariableId?: string;
+    previousValues?: string[];
+  } | null>(null);
   const variables = useVariables();
   const app = useApp();
   const { isTablet } = useApp();
@@ -263,6 +240,14 @@ export function Selection({
       throw new Error(errorMsg);
     }
   }, [errorMsg]);
+
+  useEffect(() => {
+    return () => {
+      if (syncTimerRef.current) {
+        clearTimeout(syncTimerRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     let shouldGetInitialSelection = !hasLoadedInitialSelection;
@@ -494,7 +479,11 @@ export function Selection({
   }
 
   const handleCheckboxChange = (varId: string, value: Value['code']) => {
-    const prevSelectedValues = structuredClone(selectedVBValues);
+    bulkUpdateTokenRef.current += 1;
+    const currentValues =
+      selectedVBValues.find((variables) => variables.id === varId)?.values ??
+      [];
+
     const hasVariable =
       selectedVBValues.findIndex((variables) => variables.id === varId) !== -1;
     const hasValue = selectedVBValues
@@ -503,30 +492,30 @@ export function Selection({
 
     if (hasVariable && hasValue) {
       const newSelectedValues = removeValueOfVariable(
-        prevSelectedValues,
+        selectedVBValues,
         varId,
         value,
       );
 
-      updateAndSyncVBValues(newSelectedValues);
+      updateAndSyncVBValues(newSelectedValues, varId, currentValues);
     }
     if (hasVariable && !hasValue) {
       const newSelectedValues = addValueToVariable(
-        prevSelectedValues,
+        selectedVBValues,
         varId,
         value,
       );
 
-      updateAndSyncVBValues(newSelectedValues);
+      updateAndSyncVBValues(newSelectedValues, varId, currentValues);
     }
     if (!hasVariable) {
       const newSelectedValues = addValueToNewVariable(
-        prevSelectedValues,
+        selectedVBValues,
         varId,
         value,
       );
 
-      updateAndSyncVBValues(newSelectedValues);
+      updateAndSyncVBValues(newSelectedValues, varId, currentValues);
     }
   };
 
@@ -535,42 +524,120 @@ export function Selection({
     allValuesSelected: string,
     searchValues: Value[],
   ) => {
-    const prevSelectedValues = structuredClone(selectedVBValues);
+    const updateToken = bulkUpdateTokenRef.current + 1;
+    bulkUpdateTokenRef.current = updateToken;
+    const currentVariable = selectedVBValues.find(
+      (variable) => variable.id === varId,
+    );
+    const currentValues = currentVariable?.values ?? [];
+    const searchedCodes = new Set(searchValues.map((value) => value.code));
 
-    if (allValuesSelected === 'false' || allValuesSelected === 'mixed') {
-      const allValuesOfVariable =
-        pxTableMetaToRender?.variables.find((variable) => variable.id === varId)
-          ?.values || [];
-      const newSelectedValues = addMultipleValuesToVariable(
-        prevSelectedValues,
-        varId,
-        allValuesOfVariable,
-        searchValues,
-      );
-      updateAndSyncVBValues(newSelectedValues);
-    } else if (allValuesSelected === 'true' && searchValues.length > 0) {
-      const allValuesOfVariable =
-        pxTableMetaToRender?.variables.find((variable) => variable.id === varId)
-          ?.values || [];
-      const newSelectedValues = removeMultipleValuesToVariable(
-        prevSelectedValues,
-        varId,
-        allValuesOfVariable,
-        searchValues,
-      );
-      updateAndSyncVBValues(newSelectedValues);
-    } else if (allValuesSelected === 'true') {
-      const newSelectedValues = removeAllValuesOfVariable(
-        prevSelectedValues,
-        varId,
-      );
-      updateAndSyncVBValues(newSelectedValues);
-    }
+    const runBulkUpdate = async () => {
+      if (allValuesSelected === 'false' || allValuesSelected === 'mixed') {
+        const mergedValues = buildMergedValuesFast(
+          currentVariable?.values ?? [],
+          searchValues,
+        );
+
+        if (bulkUpdateTokenRef.current !== updateToken) {
+          return;
+        }
+
+        const newSelectedValues = currentVariable
+          ? selectedVBValues.map((variable) =>
+              variable.id === varId
+                ? { ...variable, values: mergedValues }
+                : variable,
+            )
+          : [
+              ...selectedVBValues,
+              {
+                id: varId,
+                selectedCodeList: undefined,
+                values: mergedValues,
+              },
+            ];
+
+        updateAndSyncVBValues(newSelectedValues, varId, currentValues);
+        return;
+      }
+
+      if (allValuesSelected === 'true' && searchValues.length > 0) {
+        const remainingValues = await buildRemainingValuesInChunks(
+          currentVariable?.values ?? [],
+          searchedCodes,
+        );
+
+        if (bulkUpdateTokenRef.current !== updateToken) {
+          return;
+        }
+
+        const newSelectedValues = currentVariable
+          ? selectedVBValues.map((variable) =>
+              variable.id === varId
+                ? { ...variable, values: remainingValues }
+                : variable,
+            )
+          : [
+              ...selectedVBValues,
+              {
+                id: varId,
+                selectedCodeList: undefined,
+                values: [],
+              },
+            ];
+
+        updateAndSyncVBValues(newSelectedValues, varId, currentValues);
+        return;
+      }
+
+      if (allValuesSelected === 'true') {
+        if (bulkUpdateTokenRef.current !== updateToken) {
+          return;
+        }
+
+        const newSelectedValues = removeAllValuesOfVariable(
+          selectedVBValues,
+          varId,
+        );
+        updateAndSyncVBValues(newSelectedValues, varId, currentValues);
+      }
+    };
+
+    void runBulkUpdate();
   };
 
-  function updateAndSyncVBValues(selectedVBValues: SelectedVBValues[]) {
-    setSelectedVBValues(selectedVBValues);
-    variables.syncVariablesAndValues(selectedVBValues);
+  function updateAndSyncVBValues(
+    selectedVBValues: SelectedVBValues[],
+    changedVariableId?: string,
+    previousValues?: string[],
+  ) {
+    startTransition(() => {
+      setSelectedVBValues(selectedVBValues);
+    });
+
+    latestSyncPayloadRef.current = {
+      values: selectedVBValues,
+      changedVariableId,
+      previousValues,
+    };
+
+    if (syncTimerRef.current) {
+      clearTimeout(syncTimerRef.current);
+    }
+
+    syncTimerRef.current = setTimeout(() => {
+      const payload = latestSyncPayloadRef.current;
+      if (!payload) {
+        return;
+      }
+
+      variables.syncVariablesAndValues(
+        payload.values,
+        payload.changedVariableId,
+        payload.previousValues,
+      );
+    }, SYNC_DEBOUNCE_MS);
   }
 
   const drawerSelection = (

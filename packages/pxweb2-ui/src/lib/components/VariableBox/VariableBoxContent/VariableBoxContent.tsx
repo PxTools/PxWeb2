@@ -77,7 +77,6 @@ export function VariableBoxContent({
   >('mixed');
 
   const debouncedSearch = useDebounce(search, 300);
-  const [items, setItems] = useState<VirtualListItem[]>([]);
   const [uniqueId] = useState(() => uuidv4());
   const valuesOnlyList = useRef<HTMLDivElement>(null);
   const hasCodeLists = codeLists && codeLists.length > 0;
@@ -85,28 +84,42 @@ export function VariableBoxContent({
   const [initiallyHadSevenOrMoreValues] = useState(hasSevenOrMoreValues);
   const hasTwoOrMoreValues = values && values.length > 1;
   const hasSelectAndSearch = hasCodeLists && hasSevenOrMoreValues;
-  const valuesToRender = structuredClone(values);
   const codeListLabelId = 'codelist-label-' + uniqueId;
+  const valuesToRender = useMemo(() => {
+    if (type !== VartypeEnum.TIME_VARIABLE) {
+      return values;
+    }
 
-  const searchedValues: Value[] = values.filter(
-    (value) =>
-      deburr(value.label)
-        .toLowerCase()
-        .indexOf(deburr(debouncedSearch).toLowerCase()) > -1,
+    return [...values].reverse();
+  }, [type, values]);
+
+  const normalizedDebouncedSearch = useMemo(
+    () => deburr(debouncedSearch).toLowerCase(),
+    [debouncedSearch],
+  );
+
+  const searchedValues: Value[] = useMemo(
+    () =>
+      valuesToRender.filter(
+        (value) =>
+          deburr(value.label).toLowerCase().indexOf(normalizedDebouncedSearch) >
+          -1,
+      ),
+    [valuesToRender, normalizedDebouncedSearch],
   );
   const selectedValuesForVar = useMemo(() => {
     return (
-      selectedValues
-        .find((variables) => variables.id === varId)
-        ?.values.sort() || []
+      selectedValues.find((variables) => variables.id === varId)?.values || []
     );
   }, [selectedValues, varId]);
-
-  // The API always returns the oldest values first,
-  // so we can just reverse the values array when the type is TIME_VARIABLE
-  if (type === VartypeEnum.TIME_VARIABLE) {
-    valuesToRender.reverse();
-  }
+  const selectedValueCodes = useMemo(
+    () => new Set(selectedValuesForVar),
+    [selectedValuesForVar],
+  );
+  const mixedCheckboxAriaControls = useMemo(
+    () => valuesToRender.map((value) => value.code + uniqueId),
+    [valuesToRender, uniqueId],
+  );
 
   const searchRef = useRef<SearchHandle>(null);
   const lastInteractionWasPointer = useRef(false);
@@ -162,12 +175,12 @@ export function VariableBoxContent({
     }
   };
 
-  useEffect(() => {
-    const newItems: VirtualListItem[] = [];
-
+  const items = useMemo(() => {
     if (!valuesToRender || valuesToRender.length === 0) {
-      return;
+      return [];
     }
+
+    const newItems: VirtualListItem[] = [];
 
     if (hasSevenOrMoreValues) {
       newItems.push({ type: 'search' });
@@ -180,35 +193,39 @@ export function VariableBoxContent({
       newItems.push({ type: 'mixedCheckbox' });
     }
 
-    valuesToRender
-      .filter(
-        (value) =>
-          deburr(value.label)
-            .toLowerCase()
-            .indexOf(deburr(debouncedSearch).toLowerCase()) > -1,
-      )
-      .forEach((value) => {
-        newItems.push({ type: 'value', value });
-      });
+    searchedValues.forEach((value) => {
+      newItems.push({ type: 'value', value });
+    });
 
-    setItems(newItems);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasSevenOrMoreValues, hasTwoOrMoreValues, debouncedSearch, values]);
+    return newItems;
+  }, [
+    valuesToRender,
+    hasSevenOrMoreValues,
+    hasTwoOrMoreValues,
+    searchedValues,
+  ]);
 
   // Function to compare the searched values with the chosen values
   function compareSearchedAndChosenValues(
     searchedValues: string | Value[],
     chosenValues: string | string[],
   ): 'mixed' | 'none' | 'all' {
-    const compareArrays = Array.isArray(searchedValues)
-      ? searchedValues
-          .map((searchedValue) => searchedValue.code)
-          .filter((value: string) => chosenValues.includes(value))
-      : [];
-    if (compareArrays.length === 0) {
+    if (!Array.isArray(searchedValues) || !Array.isArray(chosenValues)) {
       return 'none';
-    } else if (compareArrays.length === searchedValues.length) {
+    }
+
+    const chosenValueCodes = new Set(chosenValues);
+    let matchCount = 0;
+
+    for (const searchedValue of searchedValues) {
+      if (chosenValueCodes.has(searchedValue.code)) {
+        matchCount += 1;
+      }
+    }
+
+    if (matchCount === 0) {
+      return 'none';
+    } else if (matchCount === searchedValues.length) {
       return 'all';
     } else {
       return 'mixed';
@@ -216,6 +233,19 @@ export function VariableBoxContent({
   }
 
   useEffect(() => {
+    const hasSearchFilter = debouncedSearch.trim() !== '';
+
+    if (!hasSearchFilter) {
+      if (totalChosenValues === 0) {
+        setAllValuesSelected('false');
+      } else if (totalChosenValues === totalValues) {
+        setAllValuesSelected('true');
+      } else {
+        setAllValuesSelected('mixed');
+      }
+      return;
+    }
+
     const searcedResult = compareSearchedAndChosenValues(
       searchedValues,
       selectedValuesForVar,
@@ -225,7 +255,7 @@ export function VariableBoxContent({
       // If no values are chosen and no values are searched for
       (totalChosenValues === 0 && searchedValues.length === 0) ||
       // If there are searched values and searched and chosen values do not match
-      (searchedValues.length > 0 && searcedResult === 'none')
+      searcedResult === 'none'
     ) {
       setAllValuesSelected('false');
     } else if (
@@ -235,18 +265,24 @@ export function VariableBoxContent({
         totalChosenValues < totalValues &&
         searchedValues.length === 0) ||
       // If some values are chosen and some values are searched for and they do match
-      (searchedValues.length > 0 && searcedResult === 'mixed')
+      searcedResult === 'mixed'
     ) {
       setAllValuesSelected('mixed');
     } else if (
       // If all values are chosen and no values are searched for
       (totalChosenValues === totalValues && searchedValues.length === 0) ||
       // If all values chosen and matching searched values
-      (searchedValues.length > 0 && searcedResult === 'all')
+      searcedResult === 'all'
     ) {
       setAllValuesSelected('true');
     }
-  }, [totalChosenValues, totalValues, searchedValues, selectedValuesForVar]);
+  }, [
+    debouncedSearch,
+    totalChosenValues,
+    totalValues,
+    searchedValues,
+    selectedValuesForVar,
+  ]);
 
   const mappedAndSortedCodeLists: SelectOption[] =
     mapAndSortCodeLists(codeLists);
@@ -369,9 +405,7 @@ export function VariableBoxContent({
               onChange={() =>
                 onChangeMixedCheckbox(varId, allValuesSelected, searchedValues)
               }
-              ariaControls={valuesToRender.map(
-                (value) => value.code + uniqueId,
-              )}
+              ariaControls={mixedCheckboxAriaControls}
               strong={true}
               inVariableBox={true}
             />
@@ -402,10 +436,7 @@ export function VariableBoxContent({
               id={value.code + uniqueId + 'checkbox'}
               key={varId + value.code}
               value={
-                selectedValues?.length > 0 &&
-                selectedValues
-                  .find((variables) => variables.id === varId)
-                  ?.values.includes(value.code) === true
+                selectedValues?.length > 0 && selectedValueCodes.has(value.code)
               }
               text={value.label}
               searchTerm={search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}

@@ -13,7 +13,11 @@ export type VariablesContextType = {
   getNumberOfSelectedValues: () => number;
   getSelectedMatrixSize: () => number;
   getUniqueIds: () => string[];
-  syncVariablesAndValues: (values: SelectedVBValues[]) => void;
+  syncVariablesAndValues: (
+    values: SelectedVBValues[],
+    changedVariableId?: string,
+    previousValues?: string[],
+  ) => void;
   hasLoadedInitialSelection: boolean;
   setHasLoadedInitialSelection: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedVBValues: React.Dispatch<React.SetStateAction<SelectedVBValues[]>>;
@@ -78,6 +82,32 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isMatrixSizeAllowed, setIsMatrixSizeAllowed] = useState<boolean>(true);
 
   const config = getConfig();
+
+  const createSelectionMap = React.useCallback(
+    (selection: SelectedVBValues[]) => {
+      const map = new Map<string, { id: string; value: string }>();
+
+      selection.forEach((variable) => {
+        if (variable.values.length === 0) {
+          map.set(variable.id + '-none-selected', {
+            id: variable.id,
+            value: 'none-selected',
+          });
+          return;
+        }
+
+        variable.values.forEach((value) => {
+          map.set(variable.id + '-' + value, {
+            id: variable.id,
+            value,
+          });
+        });
+      });
+
+      return map;
+    },
+    [],
+  );
 
   /**
    * Adds multiple values for a given variable
@@ -174,44 +204,17 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
    * @returns
    */
   const hasChanges = React.useCallback(
-    (newVariables: SelectedVBValues[]) => {
-      let selectionHasChanges = false;
-
-      const newVars: Set<string> = new Set();
-      newVariables.forEach((variable) => {
-        variable.values.forEach((value) => {
-          newVars.add(variable.id + '-' + value);
-        });
-      });
-
-      // If size is different, there is changes
-      if (newVars.size !== variables.size) {
+    (newVariablesMap: Map<string, { id: string; value: string }>) => {
+      if (newVariablesMap.size !== variables.size) {
         return true;
       }
 
-      // Check if there is a key in variables that is missing in newVars.
-      // If it is missing, that means there has been some changes
-      variables.forEach((variable, key) => {
-        if (!newVars.has(key)) {
-          selectionHasChanges = true;
+      for (const key of newVariablesMap.keys()) {
+        if (!variables.has(key)) {
+          return true;
         }
-      });
-      if (selectionHasChanges) {
-        return true;
       }
 
-      // Check if newVars has some key that is missing in variables.
-      // If it is missing, that means there has been some changes
-      newVars.forEach((val) => {
-        if (!variables.has(val)) {
-          selectionHasChanges = true;
-        }
-      });
-      if (selectionHasChanges) {
-        return true;
-      }
-
-      // No changes found
       return false;
     },
     [variables],
@@ -241,17 +244,64 @@ export const VariablesProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 
   const syncVariablesAndValues = React.useCallback(
-    (variables: SelectedVBValues[]) => {
-      createSelectedMatrixSize(variables);
-      if (!hasChanges(variables)) {
+    (
+      selection: SelectedVBValues[],
+      changedVariableId?: string,
+      previousValues?: string[],
+    ) => {
+      createSelectedMatrixSize(selection);
+
+      if (changedVariableId) {
+        const nextVariableSelection = selection.find(
+          (variable) => variable.id === changedVariableId,
+        );
+
+        setVariables((previousMap) => {
+          const nextMap = new Map(previousMap);
+
+          if (previousValues && previousValues.length > 0) {
+            previousValues.forEach((value) => {
+              nextMap.delete(changedVariableId + '-' + value);
+            });
+          } else if (previousValues && previousValues.length === 0) {
+            nextMap.delete(changedVariableId + '-none-selected');
+          } else {
+            nextMap.forEach((entry, key) => {
+              if (entry.id === changedVariableId) {
+                nextMap.delete(key);
+              }
+            });
+          }
+
+          if (nextVariableSelection) {
+            if (nextVariableSelection.values.length === 0) {
+              nextMap.set(changedVariableId + '-none-selected', {
+                id: changedVariableId,
+                value: 'none-selected',
+              });
+            } else {
+              nextVariableSelection.values.forEach((value) => {
+                nextMap.set(changedVariableId + '-' + value, {
+                  id: changedVariableId,
+                  value,
+                });
+              });
+            }
+          }
+
+          return nextMap;
+        });
         return;
       }
-      setVariables(new Map());
-      variables.forEach((variable) => {
-        addSelectedValues(variable.id, variable.values);
-      });
+
+      const newSelectionMap = createSelectionMap(selection);
+      if (!hasChanges(newSelectionMap)) {
+        return;
+      }
+
+      setVariables(newSelectionMap);
     },
-    [createSelectedMatrixSize, hasChanges, addSelectedValues],
+    [createSelectedMatrixSize, createSelectionMap, hasChanges],
   );
 
   const getSelectedMatrixSize = React.useCallback(() => {
