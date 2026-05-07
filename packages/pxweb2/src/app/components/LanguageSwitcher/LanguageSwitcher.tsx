@@ -11,7 +11,7 @@ import classes from './LanguageSwitcher.module.scss';
 
 export const LanguageSwitcher = () => {
   const { t, i18n } = useTranslation();
-  const { isMobile, languageFilter: appLanguageFilter } = useApp();
+  const { isMobile, languageFilter: appLanguageFilter = [] } = useApp();
   const config = getConfig();
   const navigate = useNavigate();
   const location = useLocation();
