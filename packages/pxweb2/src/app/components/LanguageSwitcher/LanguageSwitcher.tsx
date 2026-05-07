@@ -116,15 +116,17 @@ export const LanguageSwitcher = () => {
           onChange={(event) => handleLanguageChange(event)}
         >
           {config.language.supportedLanguages.map((language) => (
-              <option
-                key={language.shorthand}
-                lang={language.shorthand}
-                value={language.shorthand}
-                disabled={hasLanguageFilter && !languageFilter.has(language.shorthand)}
-              >
-                {language.languageName}
-              </option>
-            ))}
+            <option
+              key={language.shorthand}
+              lang={language.shorthand}
+              value={language.shorthand}
+              disabled={
+                hasLanguageFilter && !languageFilter.has(language.shorthand)
+              }
+            >
+              {language.languageName}
+            </option>
+          ))}
         </select>
       </nav>
     )
