@@ -3,7 +3,14 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { Tag } from './Tag';
 
-const colors = ['neutral', 'info', 'success', 'warning', 'error'] as const;
+const colors = [
+  'subtle',
+  'neutral',
+  'info',
+  'success',
+  'warning',
+  'error',
+] as const;
 const sizes = ['medium', 'small', 'xsmall'] as const;
 const variants = ['default', 'border'] as const;
 
@@ -70,7 +77,9 @@ function renderColorRow(args: TagProps, keyPrefix: string, tag: TagProps) {
   return (
     <div style={rowStyle}>
       {colors.map((color) => (
-        <Tag key={`${keyPrefix}-${color}`} {...args} {...tag} color={color} />
+        <Tag key={`${keyPrefix}-${color}`} {...args} {...tag} color={color}>
+          {color}
+        </Tag>
       ))}
     </div>
   );
