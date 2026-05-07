@@ -717,7 +717,14 @@ function createVisibleHeadingCell({
           !hasStub &&
           visibleSpanStart === 0,
         [classes.longHeaderCellText]: headingLines > 1,
+        [classes.longTextColumnSpan]: visibleSpan > 0 && !fewColumns,
+        [classes.longTextColumnSpanFewColumns]: visibleSpan > 0 && fewColumns,
       })}
+      style={
+        {
+          '--desktop-header-colspan': visibleSpan,
+        } as React.CSSProperties
+      }
     >
       <span
         className={classes.desktopHeaderLabelWrapper}
@@ -730,15 +737,7 @@ function createVisibleHeadingCell({
         <span
           className={cl({
             [classes.longHeaderCellTextLabel]: headingLines > 1,
-            [classes.longTextColumnSpan]: visibleSpan > 0 && !fewColumns,
-            [classes.longTextColumnSpanFewColumns]:
-              visibleSpan > 0 && fewColumns,
           })}
-          style={
-            {
-              '--desktop-header-colspan': visibleSpan,
-            } as React.CSSProperties
-          }
         >
           {renderHeaderLabelWithSlashBreaks(variable.values[valueIndex].label)}
         </span>
