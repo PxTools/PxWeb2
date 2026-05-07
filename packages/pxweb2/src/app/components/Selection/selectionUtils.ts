@@ -5,6 +5,21 @@ import {
   Variable,
   PxTableMetadata,
 } from '@pxweb2/pxweb2-ui';
+import { Link } from '@pxweb2/pxweb2-api-client';
+
+export function mapAvailableLanguagesFromLinks(
+  links: Link[] | null | undefined,
+): string[] {
+  const relevantRels = new Set(['self', 'alternate']);
+
+  return Array.from(
+    new Set(
+      (links ?? [])
+        .filter((link) => relevantRels.has(link.rel) && link.hreflang)
+        .map((link) => link.hreflang),
+    ),
+  );
+}
 
 export function updateSelectedCodelistForVariable(
   selectedItem: SelectOption,

@@ -38,6 +38,7 @@ import useAccessibility from '../../context/useAccessibility';
 import { problemMessage } from '../../util/problemMessage';
 import {
   getSelectedCodelists,
+  mapAvailableLanguagesFromLinks,
   updateSelectedCodelistForVariable,
 } from './selectionUtils';
 
@@ -307,6 +308,10 @@ export function Selection({
       .then(([Dataset, TableData]) => {
         const pxTable: PxTable = mapJsonStat2Response(Dataset, false);
 
+        pxTable.metadata.availableLanguages = mapAvailableLanguagesFromLinks(
+          TableData.links,
+        );
+
         const firstMatchingPathArray = TableData.paths?.find(
           (pathArr: PathElement[]) => pathArr[0]?.id === TableData.subjectCode,
         );
@@ -454,6 +459,11 @@ export function Selection({
         if (preservedPathElements && preservedPathElements.length > 0) {
           pxTable.metadata.pathElements = preservedPathElements;
         }
+
+        // Preserve available languages because codelist metadata response
+        // does not include table links.
+        pxTable.metadata.availableLanguages =
+          pxTableMetaToRender?.availableLanguages ?? [];
 
         setPxTableMetadata(pxTable.metadata);
 
