@@ -78,15 +78,6 @@ function renderColorRow(
   );
 }
 
-function renderColorRows(args: BadgeProps, variant: 'default' | 'subtle') {
-  return (
-    <div style={wrapperStyle}>
-      {renderColorRow(args, `${variant}-labeled`, {})}
-      {renderColorRow(args, `${variant}-unlabeled`, { label: '' })}
-    </div>
-  );
-}
-
 export const Playground: Story = {};
 
 export const SizeAndLabelStates: Story = {
@@ -102,14 +93,38 @@ export const SizeAndLabelStates: Story = {
     ]),
 };
 
-export const DefaultColors: Story = {
-  args: { variant: 'default', label: '9', size: 'medium' },
-  render: (args) => renderColorRows(args, 'default'),
-};
-
-export const SubtleColors: Story = {
-  args: { variant: 'subtle', label: '9', size: 'medium' },
-  render: (args) => renderColorRows(args, 'subtle'),
+export const ColorsByVariant: Story = {
+  args: { label: '9', size: 'medium' },
+  argTypes: {
+    variant: { control: false },
+    color: { control: false },
+  },
+  render: (args) => (
+    <div style={wrapperStyle}>
+      <div style={rowStyle}>
+        <span style={labelStyle}>Default (with label)</span>
+        {renderColorRow(args, 'default-labeled', { variant: 'default' })}
+      </div>
+      <div style={rowStyle}>
+        <span style={labelStyle}>Default (without label)</span>
+        {renderColorRow(args, 'default-unlabeled', {
+          variant: 'default',
+          label: '',
+        })}
+      </div>
+      <div style={rowStyle}>
+        <span style={labelStyle}>Subtle (with label)</span>
+        {renderColorRow(args, 'subtle-labeled', { variant: 'subtle' })}
+      </div>
+      <div style={rowStyle}>
+        <span style={labelStyle}>Subtle (without label)</span>
+        {renderColorRow(args, 'subtle-unlabeled', {
+          variant: 'subtle',
+          label: '',
+        })}
+      </div>
+    </div>
+  ),
 };
 
 export const AllCombinations: Story = {
