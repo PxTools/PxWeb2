@@ -5,6 +5,7 @@ import { Badge } from './Badge';
 
 const colors = ['neutral', 'info', 'success', 'warning', 'error'] as const;
 const sizes = ['medium', 'large'] as const;
+const variants = ['default', 'subtle'] as const;
 const meta = {
   component: Badge,
   title: 'Components/Badge',
@@ -43,14 +44,12 @@ const labelStyle = {
 
 type Story = StoryObj<typeof meta>;
 type BadgeProps = ComponentProps<typeof Badge>;
+type BadgeRow = { labelText: string; badge: BadgeProps };
 
-function renderBadgeRow(
-  args: BadgeProps,
-  overrides: Array<{ labelText: string; badge: BadgeProps }>,
-) {
+function renderBadgeRows(args: BadgeProps, rows: BadgeRow[]) {
   return (
     <div style={wrapperStyle}>
-      {overrides.map(({ labelText, badge }) => (
+      {rows.map(({ labelText, badge }) => (
         <div key={labelText} style={rowStyle}>
           <span style={labelStyle}>{labelText}</span>
           <Badge {...args} {...badge} />
@@ -60,11 +59,39 @@ function renderBadgeRow(
   );
 }
 
+function renderColorRow(
+  args: BadgeProps,
+  keyPrefix: string,
+  badge: BadgeProps,
+) {
+  return (
+    <div style={rowStyle}>
+      {colors.map((color) => (
+        <Badge
+          key={`${keyPrefix}-${color}`}
+          {...args}
+          {...badge}
+          color={color}
+        />
+      ))}
+    </div>
+  );
+}
+
+function renderColorRows(args: BadgeProps, variant: 'default' | 'subtle') {
+  return (
+    <div style={wrapperStyle}>
+      {renderColorRow(args, `${variant}-labeled`, {})}
+      {renderColorRow(args, `${variant}-unlabeled`, { label: '' })}
+    </div>
+  );
+}
+
 export const Playground: Story = {};
 
 export const SizeAndLabelStates: Story = {
   render: (args) =>
-    renderBadgeRow(args, [
+    renderBadgeRows(args, [
       { labelText: 'Medium with label', badge: { size: 'medium', label: '9' } },
       { labelText: 'Large with label', badge: { size: 'large', label: '99' } },
       {
@@ -77,48 +104,12 @@ export const SizeAndLabelStates: Story = {
 
 export const DefaultColors: Story = {
   args: { variant: 'default', label: '9', size: 'medium' },
-  render: (args) => (
-    <div style={wrapperStyle}>
-      <div style={rowStyle}>
-        {colors.map((color) => (
-          <Badge key={`default-labeled-${color}`} {...args} color={color} />
-        ))}
-      </div>
-      <div style={rowStyle}>
-        {colors.map((color) => (
-          <Badge
-            key={`default-unlabeled-${color}`}
-            {...args}
-            color={color}
-            label=""
-          />
-        ))}
-      </div>
-    </div>
-  ),
+  render: (args) => renderColorRows(args, 'default'),
 };
 
 export const SubtleColors: Story = {
   args: { variant: 'subtle', label: '9', size: 'medium' },
-  render: (args) => (
-    <div style={wrapperStyle}>
-      <div style={rowStyle}>
-        {colors.map((color) => (
-          <Badge key={`subtle-labeled-${color}`} {...args} color={color} />
-        ))}
-      </div>
-      <div style={rowStyle}>
-        {colors.map((color) => (
-          <Badge
-            key={`subtle-unlabeled-${color}`}
-            {...args}
-            color={color}
-            label=""
-          />
-        ))}
-      </div>
-    </div>
-  ),
+  render: (args) => renderColorRows(args, 'subtle'),
 };
 
 export const AllCombinations: Story = {
@@ -131,29 +122,23 @@ export const AllCombinations: Story = {
   },
   render: (args) => (
     <div style={wrapperStyle}>
-      {(['default', 'subtle'] as const).map((variant) =>
+      {variants.map((variant) =>
         sizes.map((size) => (
           <div key={`${variant}-${size}`} style={rowStyle}>
             <span style={labelStyle}>{`${variant} / ${size}`}</span>
 
-            {colors.map((color) => (
-              <Badge
-                key={`${variant}-${size}-${color}`}
-                {...args}
-                variant={variant}
-                size={size}
-                color={color}
-              />
-            ))}
+            {/* With label */}
+            {renderColorRow(args, `${variant}-${size}-labeled`, {
+              variant,
+              size,
+            })}
 
-            {colors.map((color) => (
-              <Badge
-                key={`${variant}-${size}-${color}`}
-                variant={variant}
-                size={size}
-                color={color}
-              />
-            ))}
+            {/* Without label */}
+            {renderColorRow(args, `${variant}-${size}-unlabeled`, {
+              variant,
+              size,
+              label: '',
+            })}
           </div>
         )),
       )}
