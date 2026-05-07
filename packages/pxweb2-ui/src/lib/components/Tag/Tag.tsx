@@ -1,40 +1,33 @@
-import cl from 'clsx';
+import clsx from 'clsx';
 
 import classes from './Tag.module.scss';
 
 export interface TagProps extends React.HTMLAttributes<HTMLSpanElement> {
   size?: 'medium' | 'small' | 'xsmall';
-  variant?:
-    | 'neutral'
-    | 'info'
-    | 'success'
-    | 'warning'
-    | 'error'
-    | 'subtle'
-    | 'error-subtle';
-  type?: 'default' | 'border';
+  variant?: 'default' | 'border';
+  color?: 'neutral' | 'info' | 'success' | 'warning' | 'error';
   children?: React.ReactNode;
 }
 
 export function Tag({
   size = 'medium',
-  variant = 'neutral',
-  type = 'default',
+  variant = 'default',
+  color = 'neutral',
   children,
+  className,
   ...rest
 }: TagProps) {
-  let textStyle = 'label-small';
-  if (size === 'medium') {
-    textStyle = 'label-medium';
-  }
+  const textStyle = size === 'medium' ? 'label-medium' : 'label-small';
+
   return (
     <span
-      className={cl(
+      className={clsx(
         classes.tag,
-        classes[size],
+        classes[`size-${size}`],
+        classes[`color-${color}`],
+        classes[`variant-${variant}`],
         classes[textStyle],
-        classes[variant],
-        classes[type],
+        className,
       )}
       {...rest}
     >
