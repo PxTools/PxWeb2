@@ -8,6 +8,7 @@ import {
 } from 'react';
 import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
+import { v4 as uuidv4 } from 'uuid';
 
 import classes from './Search.module.scss';
 import { Icon } from '../Icon/Icon';
@@ -15,7 +16,7 @@ import { Label } from '../Typography/Label/Label';
 import { Button } from '../Button/Button';
 
 export interface SearchProps {
-  id: string;
+  id?: string;
   value?: string;
   variant?: 'default' | 'inVariableBox';
   labelText?: string;
@@ -49,7 +50,7 @@ export const Search = forwardRef<SearchHandle, SearchProps>(
     const inputRef = useRef<HTMLInputElement>(null);
     const combinedRef = (ref || inputRef) as React.RefObject<SearchHandle>;
     const { t } = useTranslation();
-    const searchInputId = id;
+    const searchInputId = id ?? 'search' + uuidv4();
 
     useEffect(() => {
       setInputValue(value);
