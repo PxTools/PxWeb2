@@ -312,6 +312,8 @@ export function Selection({
           TableData.links,
         );
 
+        app.setLanguageFilter(pxTable.metadata.availableLanguages);
+
         const firstMatchingPathArray = TableData.paths?.find(
           (pathArr: PathElement[]) => pathArr[0]?.id === TableData.subjectCode,
         );
