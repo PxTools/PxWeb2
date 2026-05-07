@@ -10,6 +10,7 @@ const colors = [
   'success',
   'warning',
   'error',
+  'error-subtle',
 ] as const;
 const sizes = ['medium', 'small', 'xsmall'] as const;
 const variants = ['default', 'border'] as const;

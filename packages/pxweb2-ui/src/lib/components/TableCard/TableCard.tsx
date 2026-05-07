@@ -97,7 +97,7 @@ export const TableCard = forwardRef<HTMLElement, TableCardProps>(
                 <div className={cl(styles.frequency)}>
                   <Tag
                     size="small"
-                    color={status === 'closed' ? 'error' : 'subtle'}
+                    color={status === 'closed' ? 'error-subtle' : 'subtle'}
                     variant={status === 'closed' ? 'border' : 'default'}
                   >
                     {frequency}

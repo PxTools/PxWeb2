@@ -5,7 +5,14 @@ import classes from './Tag.module.scss';
 export interface TagProps extends React.HTMLAttributes<HTMLSpanElement> {
   size?: 'medium' | 'small' | 'xsmall';
   variant?: 'default' | 'border';
-  color?: 'subtle' | 'neutral' | 'info' | 'success' | 'warning' | 'error';
+  color?:
+    | 'subtle'
+    | 'neutral'
+    | 'info'
+    | 'success'
+    | 'warning'
+    | 'error'
+    | 'error-subtle';
   children?: React.ReactNode;
 }
 

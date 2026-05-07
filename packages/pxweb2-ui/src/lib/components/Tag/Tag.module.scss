@@ -103,3 +103,8 @@
     outline-offset: -1px;
   }
 }
+
+/* Subtle error variant without border. Looks the same in both default and border variants. */
+.color-error-subtle {
+  background-color: var(--px-color-surface-error-subtle);
+}
