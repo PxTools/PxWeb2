@@ -17,6 +17,7 @@
     background-color: var(--px-color-surface-subtle);
   }
 }
+
 .color-info {
   &.variant-default {
     color: var(--px-color-text-on-inverted);
@@ -26,6 +27,7 @@
     background-color: var(--px-color-surface-info-moderate);
   }
 }
+
 .color-success {
   &.variant-default {
     color: var(--px-color-text-on-inverted);
@@ -35,6 +37,7 @@
     background-color: var(--px-color-surface-success-moderate);
   }
 }
+
 .color-warning {
   &.variant-default {
     background-color: var(--px-color-surface-warning);
@@ -43,6 +46,7 @@
     background-color: var(--px-color-surface-warning-moderate);
   }
 }
+
 .color-error {
   &.variant-default {
     color: var(--px-color-text-on-inverted);
@@ -68,6 +72,7 @@
     padding: 0;
   }
 }
+
 .size-large {
   border-radius: var(--px-border-radius-small);
   height: 28px;

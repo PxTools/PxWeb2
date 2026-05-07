@@ -3,10 +3,8 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { Badge } from './Badge';
 
-type BadgeProps = ComponentProps<typeof Badge>;
 const colors = ['neutral', 'info', 'success', 'warning', 'error'] as const;
 const sizes = ['medium', 'large'] as const;
-
 const meta = {
   component: Badge,
   title: 'Components/Badge',
@@ -27,39 +25,40 @@ const meta = {
     label: { control: 'text' },
   },
 } satisfies Meta<typeof Badge>;
-
-type Story = StoryObj<typeof meta>;
 const wrapperStyle = {
   display: 'flex',
   flexDirection: 'column',
   gap: '16px',
 } as const;
-
 const rowStyle = {
   display: 'flex',
   alignItems: 'center',
   gap: '12px',
   flexWrap: 'wrap',
 } as const;
-
 const labelStyle = {
   minWidth: '120px',
   fontWeight: 600,
 } as const;
 
-const renderBadgeRow = (
+type Story = StoryObj<typeof meta>;
+type BadgeProps = ComponentProps<typeof Badge>;
+
+function renderBadgeRow(
   args: BadgeProps,
   overrides: Array<{ labelText: string; badge: BadgeProps }>,
-) => (
-  <div style={wrapperStyle}>
-    {overrides.map(({ labelText, badge }) => (
-      <div key={labelText} style={rowStyle}>
-        <span style={labelStyle}>{labelText}</span>
-        <Badge {...args} {...badge} />
-      </div>
-    ))}
-  </div>
-);
+) {
+  return (
+    <div style={wrapperStyle}>
+      {overrides.map(({ labelText, badge }) => (
+        <div key={labelText} style={rowStyle}>
+          <span style={labelStyle}>{labelText}</span>
+          <Badge {...args} {...badge} />
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export const Playground: Story = {};
 
@@ -122,18 +121,34 @@ export const SubtleColors: Story = {
   ),
 };
 
-export const FullMatrix: Story = {
+export const AllCombinations: Story = {
   args: { label: '9' },
+  argTypes: {
+    variant: { control: false },
+    color: { control: false },
+    size: { control: false },
+    label: { control: false },
+  },
   render: (args) => (
     <div style={wrapperStyle}>
       {(['default', 'subtle'] as const).map((variant) =>
         sizes.map((size) => (
           <div key={`${variant}-${size}`} style={rowStyle}>
             <span style={labelStyle}>{`${variant} / ${size}`}</span>
+
             {colors.map((color) => (
               <Badge
                 key={`${variant}-${size}-${color}`}
                 {...args}
+                variant={variant}
+                size={size}
+                color={color}
+              />
+            ))}
+
+            {colors.map((color) => (
+              <Badge
+                key={`${variant}-${size}-${color}`}
                 variant={variant}
                 size={size}
                 color={color}
