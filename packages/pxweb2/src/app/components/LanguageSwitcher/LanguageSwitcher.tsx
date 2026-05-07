@@ -26,13 +26,11 @@ export const LanguageSwitcher = () => {
     setCurrentLang(i18n.language);
   }, [location.pathname, i18n.language]);
 
+  const hasLanguageFilter = appLanguageFilter.length > 0;
   const languageFilter = new Set(
-    (appLanguageFilter.length > 0
-      ? config.language.supportedLanguages.filter((language) =>
-          appLanguageFilter.includes(language.shorthand),
-        )
-      : config.language.supportedLanguages
-    ).map((language) => language.shorthand),
+    config.language.supportedLanguages
+      .filter((language) => appLanguageFilter.includes(language.shorthand))
+      .map((language) => language.shorthand),
   );
 
   const handleLanguageChange = (
@@ -117,13 +115,12 @@ export const LanguageSwitcher = () => {
           }}
           onChange={(event) => handleLanguageChange(event)}
         >
-          {config.language.supportedLanguages
-            .filter((language) => languageFilter.has(language.shorthand))
-            .map((language) => (
+          {config.language.supportedLanguages.map((language) => (
               <option
                 key={language.shorthand}
                 lang={language.shorthand}
                 value={language.shorthand}
+                disabled={hasLanguageFilter && !languageFilter.has(language.shorthand)}
               >
                 {language.languageName}
               </option>
