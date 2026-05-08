@@ -71,14 +71,16 @@ export const Item = forwardRef<HTMLButtonElement, ItemProps>(
           whileHover={'hover'}
           whileTap={'pressed'}
         >
-          <m.div
+          <m.span
             className={cl(styles.icon)}
             // Framer Motion animations
             variants={buttonVariants}
           >
             <Icon iconName={icon} />
-          </m.div>
-          <Label htmlFor={btnId}>{label}</Label>
+          </m.span>
+          <Label as="span" htmlFor={btnId}>
+            {label}
+          </Label>
         </m.button>
       </li>
     );

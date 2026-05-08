@@ -53,7 +53,7 @@ export const Radio = forwardRef<HTMLInputElement, Readonly<RadioProps>>(
               })}
               key={option.value}
             >
-              <div
+              <span
                 className={cl(classes.divider, {
                   [classes.checkCircle]: isCheckCircle,
                   [classes.inModal]: inModal,
@@ -77,7 +77,7 @@ export const Radio = forwardRef<HTMLInputElement, Readonly<RadioProps>>(
                   <CheckCircleIcon checked={option.value === selectedOption} />
                 )}
                 {option.label}
-              </div>
+              </span>
             </label>
           ))}
         </div>

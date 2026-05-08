@@ -4,10 +4,44 @@ import { firefox } from 'playwright';
 const DETAILED_RULE_ID = ''; // ex: 'element-permitted-content'
 const ERROR_SEVERITY = 2;
 const WARNING_SEVERITY = 1;
+const TABLE_URL = 'http://localhost:4300/en/table/TAB6458';
+
+const NAV_RAIL_SELECTIONS = [
+  { key: 'selection', label: 'Filter' },
+  { key: 'view', label: 'Display' },
+  { key: 'edit', label: 'Edit' },
+  { key: 'save', label: 'Save' },
+  { key: 'help', label: 'Help' },
+];
+
+const ensureNavRailLoaded = async (page) => {
+  await page.getByRole('navigation', { name: 'Tool menu for table' }).waitFor();
+};
+
+const selectNavRailItem = async (page, label) => {
+  const item = page.getByRole('button', { name: label, exact: true });
+  await item.click();
+  await item.waitFor({ state: 'visible' });
+  await page.waitForSelector(
+    `button[aria-expanded="true"]:has-text("${label}")`,
+  );
+};
 
 const TARGETS = [
   { name: 'Start page (en)', url: 'http://localhost:4300/en/' },
-  { name: 'Table TAB6458 (en)', url: 'http://localhost:4300/en/table/TAB6458' },
+  ...NAV_RAIL_SELECTIONS.map((selection) => ({
+    name: `Table TAB6458 (en) nav selected: ${selection.key}`,
+    url: TABLE_URL,
+    setup: async (page) => {
+      await ensureNavRailLoaded(page);
+      if (selection.key !== 'selection') {
+        await selectNavRailItem(page, selection.label);
+      }
+      await page.waitForSelector(
+        `button[aria-expanded="true"]:has-text("${selection.label}")`,
+      );
+    },
+  })),
 ];
 
 const groupByRule = (messages) =>
@@ -64,7 +98,9 @@ const printSamples = (title, rules) => {
 };
 
 const printDetailedRuleErrors = (ruleId, errors) => {
-  const filteredErrors = errors.filter((error) => (error.ruleId ?? '') === ruleId);
+  const filteredErrors = errors.filter(
+    (error) => (error.ruleId ?? '') === ruleId,
+  );
 
   console.log(`\n🔍 Detailed errors for rule: ${ruleId}`);
   if (filteredErrors.length === 0) {
@@ -73,7 +109,9 @@ const printDetailedRuleErrors = (ruleId, errors) => {
   }
 
   filteredErrors.forEach((error, index) => {
-    console.log(`\n🔍 Validation Error (${index + 1}/${filteredErrors.length}):`);
+    console.log(
+      `\n🔍 Validation Error (${index + 1}/${filteredErrors.length}):`,
+    );
     console.log(`Rule:     ${error.ruleId}`);
     console.log(`Message:  ${error.message}`);
     console.log(`Location: Line ${error.line}, Column ${error.column}`);
@@ -113,7 +151,12 @@ const validateTarget = async (browser, target) => {
   const page = await browser.newPage();
 
   try {
+    await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto(target.url, { waitUntil: 'networkidle' });
+
+    if (target.setup) {
+      await target.setup(page);
+    }
 
     const html = await page.content();
     const htmlvalidate = new HtmlValidate();
