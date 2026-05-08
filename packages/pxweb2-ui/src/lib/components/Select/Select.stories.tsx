@@ -193,3 +193,52 @@ export const WithVeryLongOptionText: StoryFn<typeof Select> = () => {
     </>
   );
 };
+
+export const RTLLanguage: StoryFn<typeof Select> = () => {
+  const rtlOptions: SelectOption[] = [
+    { label: 'الخيار 1', value: 'opt1' },
+    { label: 'الخيار 2', value: 'opt2' },
+    { label: 'الخيار 3 هو خيار بنص طويل جدًا', value: 'opt3' },
+    { label: 'الخيار 4', value: 'opt4' },
+    { label: 'الخيار 5', value: 'opt5' },
+  ];
+
+  const rtlPlaceholder = 'اختر خيارًا';
+
+  const changeCategory = 'تغيير الفئة';
+
+  return (
+    <div style={{ width: '100%' }}>
+      <h1>RTL Language Support</h1>
+
+      <h2>Arabic interface:</h2>
+      <div dir="rtl">
+        <Select
+          label="التصنيف"
+          variant="inVariableBox"
+          options={rtlOptions}
+          placeholder={rtlPlaceholder}
+          onChange={selectedOptionChanged}
+          addModal={addModal}
+          removeModal={closeModal}
+          changeCategory={changeCategory}
+        />
+      </div>
+
+      <h2>Selected option with RTL:</h2>
+      <div dir="rtl">
+        <Select
+          label="التصنيف"
+          variant="inVariableBox"
+          options={rtlOptions}
+          placeholder={rtlPlaceholder}
+          changeCategory={changeCategory}
+          selectedOption={rtlOptions[1]}
+          onChange={selectedOptionChanged}
+          addModal={addModal}
+          removeModal={closeModal}
+        />
+      </div>
+    </div>
+  );
+};
