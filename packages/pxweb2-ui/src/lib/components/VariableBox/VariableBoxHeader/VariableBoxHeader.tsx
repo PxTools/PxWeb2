@@ -69,7 +69,7 @@ export function VariableBoxHeader({
             {label}
           </Heading>
           <div id={tagsId} className={cl(classes['header-tags'])}>
-            <Tag variant="neutral">
+            <Tag color="neutral" variant="default">
               {t(
                 'presentation_page.side_menu.selection.variablebox.header.tag_selected',
                 {
@@ -83,7 +83,7 @@ export function VariableBoxHeader({
               )}
             </Tag>
             {mandatory && (
-              <Tag variant="info">
+              <Tag color="info" variant="default">
                 {t(
                   'presentation_page.side_menu.selection.variablebox.header.tag_mandatory',
                 )}

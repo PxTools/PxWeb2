@@ -6,7 +6,7 @@ import type { ClassType } from './ClassType';
 import type { Dimension } from './Dimension';
 import type { extension_root } from './extension_root';
 import type { href } from './href';
-import type { jsonstat_link } from './jsonstat_link';
+import type { jsonstat_extension_link } from './jsonstat_extension_link';
 import type { jsonstat_note } from './jsonstat_note';
 import type { label } from './label';
 import type { Role } from './Role';
@@ -29,7 +29,7 @@ export type Dataset = {
     label?: label;
     source?: source;
     updated?: updated;
-    link?: jsonstat_link;
+    link?: jsonstat_extension_link;
     /**
      * Note for table
      */
