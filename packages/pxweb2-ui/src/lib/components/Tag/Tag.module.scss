@@ -1,4 +1,3 @@
-@use '../../../../style-dictionary/dist/scss/fixed-variables.scss' as fixed;
 @use '../../text-styles.scss';
 
 .tag {
@@ -7,85 +6,105 @@
   align-items: center;
 }
 
-.medium {
+.size-medium {
   min-height: 32px;
   padding: 5px 8px 4px 8px;
   border-radius: var(--px-border-radius-small);
 }
 
-.small {
+.size-small {
   min-height: 24px;
   padding: 2px 4px 2px 4px;
   border-radius: var(--px-border-radius-xsmall);
-  &.border {
+
+  &.variant-border {
     padding: 1px 4px 2px 4px;
   }
 }
 
-.xsmall {
+.size-xsmall {
   min-height: 20px;
   padding: 2px 4px 0px;
   border-radius: var(--px-border-radius-xsmall);
+
+  &.variant-border {
+    padding: 1px 4px 0px;
+  }
 }
 
-.subtle {
-  background-color: var(--px-color-surface-subtle);
-  &.border {
+.color-subtle {
+  &.variant-default {
+    background-color: var(--px-color-surface-subtle);
+  }
+
+  &.variant-border {
     background-color: var(--px-color-surface-default);
     outline: 1px solid var(--px-color-border-subtle);
     outline-offset: -1px;
   }
 }
 
-.neutral {
-  background-color: var(--px-color-surface-moderate);
-  &.border {
+.color-neutral {
+  &.variant-default {
+    background-color: var(--px-color-surface-moderate);
+  }
+
+  &.variant-border {
     background-color: var(--px-color-surface-subtle);
     outline: 1px solid var(--px-color-border-moderate);
     outline-offset: -1px;
   }
 }
 
-.info {
-  background-color: var(--px-color-surface-info-moderate);
-  &.border {
+.color-info {
+  &.variant-default {
+    background-color: var(--px-color-surface-info-moderate);
+  }
+
+  &.variant-border {
     background-color: var(--px-color-surface-info-subtle);
     outline: 1px solid var(--px-color-border-info);
     outline-offset: -1px;
   }
 }
 
-.success {
-  background-color: var(--px-color-surface-success-moderate);
-  &.border {
+.color-success {
+  &.variant-default {
+    background-color: var(--px-color-surface-success-moderate);
+  }
+
+  &.variant-border {
     background-color: var(--px-color-surface-success-subtle);
     outline: 1px solid var(--px-color-border-success);
     outline-offset: -1px;
   }
 }
 
-.warning {
-  background-color: var(--px-color-surface-warning-moderate);
-  &.border {
+.color-warning {
+  &.variant-default {
+    background-color: var(--px-color-surface-warning-moderate);
+  }
+
+  &.variant-border {
     background-color: var(--px-color-surface-warning-subtle);
     outline: 1px solid var(--px-color-border-warning);
     outline-offset: -1px;
   }
 }
 
-.error {
-  background-color: var(--px-color-surface-error-moderate);
-  &.border {
+.color-error {
+  &.variant-default {
+    background-color: var(--px-color-surface-error-moderate);
+  }
+
+  &.variant-border {
     background-color: var(--px-color-surface-error-subtle);
     outline: 1px solid var(--px-color-border-error);
     outline-offset: -1px;
   }
 }
 
-.error-subtle {
+/* Subtle error variant without border. Looks the same in both default and border variants. */
+.color-error-subtle {
   background-color: var(--px-color-surface-error-subtle);
-}
-
-.default {
-  border: none;
 }
