@@ -42,8 +42,8 @@
 
 .screen-reader-only-main {
   &:not(:focus-within) {
-   position: absolute;
-   left: -99999px;
+    position: absolute;
+    left: -99999px;
   }
 }
 
