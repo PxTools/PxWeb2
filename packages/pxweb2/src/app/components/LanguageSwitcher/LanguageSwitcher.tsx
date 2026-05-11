@@ -27,11 +27,11 @@ export const LanguageSwitcher = () => {
   }, [location.pathname, i18n.language]);
 
   const hasLanguageFilter = appLanguageFilter.length > 0;
-  const languageFilter = new Set(
-    config.language.supportedLanguages
-      .filter((language) => appLanguageFilter.includes(language.shorthand))
-      .map((language) => language.shorthand),
-  );
+  const languageOptions = hasLanguageFilter
+    ? config.language.supportedLanguages.filter((language) =>
+        appLanguageFilter.includes(language.shorthand),
+      )
+    : config.language.supportedLanguages;
 
   const handleLanguageChange = (
     event: React.ChangeEvent<HTMLSelectElement>,
@@ -115,14 +115,11 @@ export const LanguageSwitcher = () => {
           }}
           onChange={(event) => handleLanguageChange(event)}
         >
-          {config.language.supportedLanguages.map((language) => (
+          {languageOptions.map((language) => (
             <option
               key={language.shorthand}
               lang={language.shorthand}
               value={language.shorthand}
-              disabled={
-                hasLanguageFilter && !languageFilter.has(language.shorthand)
-              }
             >
               {language.languageName}
             </option>
