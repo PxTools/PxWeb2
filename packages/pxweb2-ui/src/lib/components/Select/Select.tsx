@@ -223,6 +223,13 @@ function VariableBoxSelect({
   );
 
   const selectedItem: SelectOption | undefined = selectedOption;
+  const triggerAriaLabel = [
+    label,
+    selectedItem ? selectedItem.label : placeholder,
+    changeCategory,
+  ]
+    .filter(Boolean)
+    .join(', ');
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -296,6 +303,7 @@ function VariableBoxSelect({
         tabIndex={tabIndex}
         role="button"
         aria-haspopup="dialog"
+        aria-label={triggerAriaLabel}
         ref={selectRef}
         onClick={(event) => {
           if (programmaticFocusRef.current) {
@@ -306,7 +314,7 @@ function VariableBoxSelect({
           handleOpenModal();
         }}
         onKeyUp={(event) => {
-          if (event.key === ' ') {
+          if (event.key === ' ' || event.key === 'Enter') {
             handleOpenModal();
           }
         }}
@@ -316,8 +324,8 @@ function VariableBoxSelect({
           }
         }}
       >
-        <div className={cl(classes.textWrapper)}>
-          <Label size="small" textcolor="default">
+        <div className={cl(classes.textWrapper)} aria-hidden="true" inert>
+          <Label as="span" size="small" textcolor="default">
             {label}
           </Label>
           <BodyShort
@@ -337,6 +345,7 @@ function VariableBoxSelect({
           className={cl(classes.visualOnlyButton)}
           tabIndex={-1}
           aria-hidden="true"
+          inert
         >
           {changeCategory}
         </Button>
