@@ -4,6 +4,7 @@ import cl from 'clsx';
 
 import classes from './TableInformation.module.scss';
 import useTableData from '../../context/useTableData';
+import useVariables from '../../context/useVariables';
 import { ContactTab } from './Contact/ContactTab';
 import { DetailsTab } from './Details/DetailsTab';
 import useApp from '../../context/useApp';
@@ -32,7 +33,8 @@ export function TableInformation({
 }: TableInformationProps) {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState(selectedTab ?? '');
-  const metadataOrUndefined = useTableData().data?.metadata;
+  const metadataOrUndefined = useTableData().data?.metadata; // metadata only for chosen values
+  const definitionsOrUndefined = useVariables().pxTableMetadata?.definitions; // total metadata, narrowed down to definitions
   const { isMobile } = useApp();
   const tabsContentRef = useRef<HTMLDivElement | null>(null);
 
@@ -49,7 +51,7 @@ export function TableInformation({
   const tabsVariant = isMobile ? 'scrollable' : 'fixed';
 
   const definitionsMandatoryLinkExists =
-    metadataOrUndefined?.definitions?.statisticsDefinitions !== undefined;
+    definitionsOrUndefined?.statisticsDefinitions !== undefined;
 
   return (
     <SheetComponent
@@ -109,7 +111,7 @@ export function TableInformation({
           </TabPanel>
           <TabPanel id="pnl-definitions" controlledBy="tab-definitions">
             {definitionsMandatoryLinkExists && (
-              <DefinitionsTab definitions={metadataOrUndefined?.definitions} />
+              <DefinitionsTab definitions={definitionsOrUndefined} />
             )}
           </TabPanel>
           <TabPanel id="pnl-details" controlledBy="tab-details">
