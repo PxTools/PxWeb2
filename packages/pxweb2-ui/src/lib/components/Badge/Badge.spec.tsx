@@ -29,7 +29,7 @@ describe('Badge', () => {
     const { container } = render(<Badge label="" />);
     const badge = container.firstElementChild as HTMLElement;
 
-    expect(container.querySelector('span')).toBeNull();
+    expect(container.querySelector(`.${classes['label-medium']}`)).toBeNull();
     expect(badge).toHaveClass(classes['no-label']);
   });
 

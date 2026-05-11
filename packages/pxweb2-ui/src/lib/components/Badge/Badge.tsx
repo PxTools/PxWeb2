@@ -18,7 +18,7 @@ export function Badge({
   const withoutLabel = !label || label.trim() === '';
 
   return (
-    <div
+    <span
       className={clsx(
         classes['badge'],
         classes[`color-${color}`],
@@ -28,7 +28,7 @@ export function Badge({
       )}
     >
       {label && <span className={classes['label-medium']}>{label}</span>}
-    </div>
+    </span>
   );
 }
 
