@@ -12,6 +12,7 @@ export interface LabelProps
   children?: React.ReactNode;
   className?: string;
   forID?: string;
+  as?: React.ElementType;
 }
 
 export function Label({
@@ -21,12 +22,14 @@ export function Label({
   children,
   className = '',
   forID = '',
+  as = 'label',
   ...rest
 }: LabelProps) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
+  const Component = as ?? ('label' as React.ElementType);
 
   return (
-    <label
+    <Component
       className={
         cl(
           classes.label,
@@ -35,11 +38,11 @@ export function Label({
           cl({ [classes['visually-hidden']]: visuallyHidden }),
         ) + cssClasses
       }
-      {...(forID.length > 0 ? { htmlFor: forID } : {})}
+      {...(forID.length > 0 && as === 'label' ? { htmlFor: forID } : {})}
       {...rest}
     >
       {children}
-    </label>
+    </Component>
   );
 }
 

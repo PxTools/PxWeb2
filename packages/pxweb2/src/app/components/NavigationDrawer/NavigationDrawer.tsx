@@ -148,7 +148,7 @@ export const NavigationDrawer = forwardRef<
             <span className={styles.hideIconWrapper}>
               <Icon iconName={hideIcon} className="" />
             </span>
-            <Label size="medium" className={styles.clickable}>
+            <Label as="span" size="medium" className={styles.clickable}>
               {t('presentation_page.side_menu.hide')}
             </Label>
           </button>
