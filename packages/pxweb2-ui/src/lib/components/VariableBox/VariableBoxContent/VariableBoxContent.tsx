@@ -54,6 +54,148 @@ type VirtualListItem = {
   value?: Value;
 };
 
+const WORD_DELIMITER_REGEX = /[\s\-_/.,;:()[\]{}]+/;
+
+const toNormalizedWords = (text: string) => {
+  return deburr(text).toLowerCase().split(WORD_DELIMITER_REGEX).filter(Boolean);
+};
+
+const toNormalizedText = (text: string) => {
+  return deburr(text).toLowerCase();
+};
+
+const matchesAtWordStart = (text: string, norm: string) => {
+  if (norm === '') {
+    return true;
+  }
+
+  return deburr(text)
+    .toLowerCase()
+    .split(WORD_DELIMITER_REGEX)
+    .some((word) => word.startsWith(norm));
+};
+
+const parseSearch = (searchValue: string) => {
+  const trimmed = searchValue.trim();
+  const isExactPhrase =
+    trimmed.length >= 2 && trimmed.startsWith('"') && trimmed.endsWith('"');
+  const hasLeadingWildcard = !isExactPhrase && trimmed.startsWith('*');
+  const hasTrailingWildcard = !isExactPhrase && trimmed.endsWith('*');
+
+  let rawTerm = isExactPhrase ? trimmed.slice(1, -1) : trimmed;
+
+  if (hasLeadingWildcard) {
+    rawTerm = rawTerm.slice(1);
+  }
+
+  if (hasTrailingWildcard) {
+    rawTerm = rawTerm.slice(0, -1);
+  }
+
+  return {
+    isExactPhrase,
+    hasLeadingWildcard,
+    hasTrailingWildcard,
+    norm: deburr(rawTerm).toLowerCase().trim(),
+  };
+};
+
+const matchesContains = (text: string, norm: string) => {
+  if (norm === '') {
+    return true;
+  }
+
+  return toNormalizedText(text).includes(norm);
+};
+
+const matchesAtWordEnd = (text: string, norm: string) => {
+  if (norm === '') {
+    return true;
+  }
+
+  return toNormalizedText(text)
+    .split(WORD_DELIMITER_REGEX)
+    .some((word) => word.endsWith(norm));
+};
+
+// const matchesTextStart = (text: string, norm: string) => {
+//   if (norm === '') {
+//     return true;
+//   }
+
+//   return toNormalizedText(text).startsWith(norm);
+// };
+
+const matchesExactPhrase = (text: string, norm: string) => {
+  if (norm === '') {
+    return true;
+  }
+
+  const phraseWords = norm.split(WORD_DELIMITER_REGEX).filter(Boolean);
+  const textWords = toNormalizedWords(text);
+
+  if (phraseWords.length === 0) {
+    return true;
+  }
+
+  if (phraseWords.length > textWords.length) {
+    return false;
+  }
+
+  for (let i = 0; i <= textWords.length - phraseWords.length; i += 1) {
+    const isMatch = phraseWords.every(
+      (phraseWord, offset) => textWords[i + offset] === phraseWord,
+    );
+
+    if (isMatch) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
+const matchesSearch = (value: Value, searchValue: string) => {
+  const { isExactPhrase, hasLeadingWildcard, hasTrailingWildcard, norm } =
+    parseSearch(searchValue);
+
+  if (isExactPhrase) {
+    return (
+      matchesExactPhrase(value.label, norm) ||
+      matchesExactPhrase(String(value.code ?? ''), norm)
+    );
+  }
+
+  // *term* -> contains match
+  if (hasLeadingWildcard && hasTrailingWildcard) {
+    return (
+      matchesContains(value.label, norm) ||
+      matchesContains(String(value.code ?? ''), norm)
+    );
+  }
+
+  // *term -> word-ending match
+  if (hasLeadingWildcard) {
+    return (
+      matchesAtWordEnd(value.label, norm) ||
+      matchesAtWordEnd(String(value.code ?? ''), norm)
+    );
+  }
+
+  // term* -> starts-with match
+  if (hasTrailingWildcard) {
+    return (
+      matchesAtWordStart(value.label, norm) ||
+      matchesAtWordStart(String(value.code ?? ''), norm)
+    );
+  }
+
+  return (
+    matchesAtWordStart(value.label, norm) ||
+    matchesAtWordStart(String(value.code ?? ''), norm)
+  );
+};
+
 export function VariableBoxContent({
   varId,
   label,
@@ -88,11 +230,8 @@ export function VariableBoxContent({
   const valuesToRender = structuredClone(values);
   const codeListLabelId = 'codelist-label-' + uniqueId;
 
-  const searchedValues: Value[] = values.filter(
-    (value) =>
-      deburr(value.label)
-        .toLowerCase()
-        .indexOf(deburr(debouncedSearch).toLowerCase()) > -1,
+  const searchedValues: Value[] = values.filter((value) =>
+    matchesSearch(value, debouncedSearch),
   );
   const selectedValuesForVar = useMemo(() => {
     return (
@@ -118,10 +257,20 @@ export function VariableBoxContent({
 
   // Recalculate count whenever user types (raw search) or underlying values array changes
   useEffect(() => {
-    const norm = deburr(search).toLowerCase();
-    const nextCount = values.filter((v) =>
-      deburr(v.label).toLowerCase().includes(norm),
-    ).length;
+    const { norm } = parseSearch(search);
+    console.log(
+      'Calculating search results count for search:',
+      search,
+      'normalized:',
+      norm,
+    );
+    console.log(
+      'Values to search through:',
+      values.map((v) => v.label),
+    );
+    const nextCount = values.filter((v) => matchesSearch(v, search)).length;
+
+    console.log('Search results count:', nextCount);
     setSearchResultsCount(nextCount);
   }, [search, values]);
 
@@ -181,12 +330,7 @@ export function VariableBoxContent({
     }
 
     valuesToRender
-      .filter(
-        (value) =>
-          deburr(value.label)
-            .toLowerCase()
-            .indexOf(deburr(debouncedSearch).toLowerCase()) > -1,
-      )
+      .filter((value) => matchesSearch(value, debouncedSearch))
       .forEach((value) => {
         newItems.push({ type: 'value', value });
       });
@@ -317,9 +461,8 @@ export function VariableBoxContent({
               // Escape special characters in search value
               setSearch(value);
               // Immediate count update for live region on each keystroke
-              const norm = deburr(value).toLowerCase();
               const nextCount = values.filter((v) =>
-                deburr(v.label).toLowerCase().includes(norm),
+                matchesSearch(v, value),
               ).length;
               setSearchResultsCount(nextCount);
               if (value === '') {
