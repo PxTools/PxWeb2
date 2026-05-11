@@ -270,7 +270,7 @@ describe('LanguageSwitcher', () => {
     expect(options.every((option) => !option.disabled)).toBe(true);
   });
 
-  it('disables non-filtered languages when app language filter has values', () => {
+  it('only displays filtered languages when app language filter has values', () => {
     appLanguageFilter = ['en', 'sv'];
 
     render(<LanguageSwitcher />);
@@ -280,9 +280,10 @@ describe('LanguageSwitcher', () => {
       options.map((option) => [option.value, option]),
     );
 
-    expect(optionByValue.en.disabled).toBe(false);
-    expect(optionByValue.sv.disabled).toBe(false);
-    expect(optionByValue.no.disabled).toBe(true);
-    expect(optionByValue.ar.disabled).toBe(true);
+    expect(options).toHaveLength(2);
+    expect(optionByValue.en).toBeDefined();
+    expect(optionByValue.sv).toBeDefined();
+    expect(optionByValue.no).toBeUndefined();
+    expect(optionByValue.ar).toBeUndefined();
   });
 });
