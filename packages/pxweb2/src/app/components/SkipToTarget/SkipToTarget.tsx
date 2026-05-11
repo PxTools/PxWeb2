@@ -3,20 +3,32 @@ import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useSearchParams } from 'react-router';
 
-import classes from './SkipToMain.module.scss';
+import classes from './SkipToTarget.module.scss';
 import { Link } from '@pxweb2/pxweb2-ui';
 import { getConfig } from '../../util/config/getConfig';
 import { getLanguagePath } from '../../util/language/getLanguagePath';
 
 type SkipTranslationKey = 'common.skip_to_main' | 'common.skip_to_toolsmenu';
 
-export type SkipLinkProps = React.HTMLAttributes<HTMLDivElement> & {
+export type SkipToTargetProps = React.HTMLAttributes<HTMLDivElement> & {
   targetId: string;
-  translationKey: SkipTranslationKey;
+  translationKey?: SkipTranslationKey;
+  label?: string;
+  styleVariant?: 'main' | 'content';
 };
 
-export const SkipLink = React.forwardRef<HTMLDivElement, SkipLinkProps>(
-  ({ targetId, translationKey, ...props }, ref) => {
+export const SkipToTarget = React.forwardRef<HTMLDivElement, SkipToTargetProps>(
+  (
+    {
+      targetId,
+      translationKey,
+      label,
+      styleVariant = 'main',
+      className = '',
+      ...props
+    },
+    ref,
+  ) => {
     const { t, i18n } = useTranslation();
     const config = getConfig();
     const location = useLocation().pathname;
@@ -36,19 +48,28 @@ export const SkipLink = React.forwardRef<HTMLDivElement, SkipLinkProps>(
     const paramsString = searchParams.toString();
     const params = paramsString ? `?${paramsString}` : '';
     const path = `${basePath}${params}#${targetId}`;
+    const linkText = label ?? (translationKey ? t(translationKey) : '');
 
     return (
       <div
         ref={ref}
-        className={cl(classes['skip-to-main'], classes['screen-reader-only'])}
+        className={cl(
+          styleVariant === 'content'
+            ? classes['skip-to-content']
+            : classes['skip-to-main'],
+          styleVariant === 'content'
+            ? classes['screen-reader-only-content']
+            : classes['screen-reader-only-main'],
+          className,
+        )}
         {...props}
       >
         <Link href={path} size="medium">
-          {t(translationKey)}
+          {linkText}
         </Link>
       </div>
     );
   },
 );
 
-SkipLink.displayName = 'SkipLink';
+SkipToTarget.displayName = 'SkipToTarget';

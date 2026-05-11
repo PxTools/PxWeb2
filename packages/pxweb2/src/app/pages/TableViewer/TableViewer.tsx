@@ -9,8 +9,7 @@ import { Header } from '../../components/Header/Header';
 import { NavigationItem } from '../../components/NavigationMenu/NavigationItem/NavigationItemType';
 import NavigationRail from '../../components/NavigationMenu/NavigationRail/NavigationRail';
 import NavigationBar from '../../components/NavigationMenu/NavigationBar/NavigationBar';
-import { SkipToMain } from '../../components/SkipToMain/SkipToMain';
-import { SkipToToolsMenu } from '../../components/SkipToMain/SkipToToolsMenu';
+import { SkipToTarget } from '../../components/SkipToTarget/SkipToTarget';
 import { Footer } from '../../components/Footer/Footer';
 import useAccessibility from '../../context/useAccessibility';
 import useApp from '../../context/useApp';
@@ -183,8 +182,14 @@ export function TableViewer() {
   return (
     <>
       <div ref={skipToMainRef} tabIndex={-1}>
-        <SkipToMain />
-        <SkipToToolsMenu targetId={toolsMenuTargetId} />
+        <SkipToTarget
+          targetId="px-main-content"
+          translationKey="common.skip_to_main"
+        />
+        <SkipToTarget
+          targetId={toolsMenuTargetId}
+          translationKey="common.skip_to_toolsmenu"
+        />
       </div>
 
       {!isSmallScreen && <Header />}

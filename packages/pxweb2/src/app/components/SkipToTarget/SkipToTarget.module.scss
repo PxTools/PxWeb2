@@ -1,3 +1,14 @@
+.skip-to-main {
+  &:focus-within {
+    display: flex;
+    background-color: var(--px-color-surface-inverted);
+    width: 100%;
+    height: 48px;
+    justify-content: center;
+    margin: -1px;
+  }
+}
+
 .skip-to-content {
   &:focus-within {
     display: flex;
@@ -8,6 +19,7 @@
   }
 }
 
+.skip-to-main a,
 .skip-to-content a {
   justify-content: center;
   background-color: var(--px-color-surface-inverted);
@@ -28,7 +40,20 @@
   }
 }
 
-.screen-reader-only {
+.screen-reader-only-main {
+  &:not(:focus-within) {
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+  }
+}
+
+.screen-reader-only-content {
   &:not(:focus-within) {
     width: 1px;
     height: 1px;
