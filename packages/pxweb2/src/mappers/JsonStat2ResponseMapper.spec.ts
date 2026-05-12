@@ -238,7 +238,352 @@ describe('JsonStat2ResponseMapper', () => {
         pxTable.metadata.variables[2].values[1].contentInfo?.decimals,
       ).equals(1);
     });
+
+    it('maps table-level and variable-level definitions from related links', () => {
+      const datasetWithDefinitions: Dataset = {
+        class: ClassType.DATASET,
+        version: Dataset.version._2_0,
+        label: 'Definitions table',
+        dimension: {
+          region: {
+            label: 'Region',
+            category: {
+              index: { N: 0 },
+              label: { N: 'North' },
+            },
+            link: {
+              related: [
+                {
+                  extension: {
+                    relation: 'definition',
+                    metaid: 'var-region-1',
+                  },
+                  href: 'https://example.com/definitions/region-1',
+                  label: 'Region definition 1',
+                  type: 'text/html',
+                },
+                {
+                  extension: {
+                    relation: 'definition',
+                    metaid: 'var-region-2',
+                  },
+                  href: 'https://example.com/definitions/region-2',
+                  label: 'Region definition 2',
+                  type: 'text/html',
+                },
+              ],
+            },
+          },
+          age: {
+            category: {
+              index: { A: 0 },
+              label: { A: 'All ages' },
+            },
+            link: {
+              related: [
+                {
+                  extension: {
+                    relation: 'definition',
+                    metaid: 'var-age-1',
+                  },
+                  href: 'https://example.com/definitions/age-1',
+                  label: 'Age definition',
+                  type: 'text/html',
+                },
+              ],
+            },
+          },
+        },
+        id: ['region', 'age'],
+        size: [1, 1],
+        value: [1],
+        link: {
+          related: [
+            {
+              extension: {
+                relation: 'statistics-homepage',
+                metaid: 'table-home',
+              },
+              href: 'https://example.com/statistics-homepage',
+              label: 'Statistics homepage',
+              type: 'text/html',
+            },
+            {
+              extension: {
+                relation: 'about-statistics',
+                metaid: 'table-about',
+              },
+              href: 'https://example.com/about-statistics',
+              label: 'About statistics',
+              type: 'text/html',
+            },
+          ],
+        },
+      };
+
+      const mapped = mapJsonStat2Response(datasetWithDefinitions);
+
+      expect(mapped.metadata.definitions).toEqual({
+        statisticsHomepage: {
+          href: 'https://example.com/statistics-homepage',
+          label: 'Statistics homepage',
+          type: 'text/html',
+          metaid: 'table-home',
+        },
+        statisticsDefinitions: {
+          href: 'https://example.com/about-statistics',
+          label: 'About statistics',
+          type: 'text/html',
+          metaid: 'table-about',
+        },
+        variablesDefinitions: [
+          {
+            variableName: 'Region',
+            links: [
+              {
+                href: 'https://example.com/definitions/region-1',
+                label: 'Region definition 1',
+                type: 'text/html',
+                metaid: 'var-region-1',
+              },
+              {
+                href: 'https://example.com/definitions/region-2',
+                label: 'Region definition 2',
+                type: 'text/html',
+                metaid: 'var-region-2',
+              },
+            ],
+          },
+          {
+            variableName: 'age',
+            links: [
+              {
+                href: 'https://example.com/definitions/age-1',
+                label: 'Age definition',
+                type: 'text/html',
+                metaid: 'var-age-1',
+              },
+            ],
+          },
+        ],
+      });
+    });
+
+    it('returns empty definitions safely when related links are missing or empty', () => {
+      const withoutLinks: Dataset = {
+        class: ClassType.DATASET,
+        version: Dataset.version._2_0,
+        dimension: {
+          region: {
+            label: 'Region',
+            category: {
+              index: { N: 0 },
+              label: { N: 'North' },
+            },
+          },
+        },
+        id: ['region'],
+        size: [1],
+        value: [1],
+      };
+
+      const withEmptyRelated: Dataset = {
+        ...withoutLinks,
+        link: { related: [] },
+        dimension: {
+          region: {
+            ...withoutLinks.dimension.region,
+            link: { related: [] },
+          },
+        },
+      };
+
+      expect(mapJsonStat2Response(withoutLinks).metadata.definitions).toEqual(
+        {},
+      );
+      expect(
+        mapJsonStat2Response(withEmptyRelated).metadata.definitions,
+      ).toEqual({});
+    });
+
+    it('maps definitions independently across sequential calls', () => {
+      const firstDataset: Dataset = {
+        class: ClassType.DATASET,
+        version: Dataset.version._2_0,
+        dimension: {
+          region: {
+            label: 'Region',
+            category: {
+              index: { N: 0 },
+              label: { N: 'North' },
+            },
+            link: {
+              related: [
+                {
+                  extension: { relation: 'definition', metaid: 'var-first' },
+                  href: 'https://example.com/var-first',
+                  label: 'Variable first',
+                  type: 'text/html',
+                },
+              ],
+            },
+          },
+        },
+        id: ['region'],
+        size: [1],
+        value: [1],
+        link: {
+          related: [
+            {
+              extension: {
+                relation: 'about-statistics',
+                metaid: 'about-first',
+              },
+              href: 'https://example.com/about-first',
+              label: 'About first',
+              type: 'text/html',
+            },
+          ],
+        },
+      };
+
+      const secondDataset: Dataset = {
+        class: ClassType.DATASET,
+        version: Dataset.version._2_0,
+        dimension: {
+          time: {
+            label: 'Time',
+            category: {
+              index: { '2025': 0 },
+              label: { '2025': '2025' },
+            },
+          },
+        },
+        id: ['time'],
+        size: [1],
+        value: [2],
+        link: {
+          related: [
+            {
+              extension: {
+                relation: 'statistics-homepage',
+                metaid: 'home-second',
+              },
+              href: 'https://example.com/home-second',
+              label: 'Home second',
+              type: 'text/html',
+            },
+          ],
+        },
+      };
+
+      const firstMapped = mapJsonStat2Response(firstDataset);
+      const secondMapped = mapJsonStat2Response(secondDataset);
+
+      expect(firstMapped.metadata.definitions).toEqual({
+        statisticsDefinitions: {
+          href: 'https://example.com/about-first',
+          label: 'About first',
+          type: 'text/html',
+          metaid: 'about-first',
+        },
+        variablesDefinitions: [
+          {
+            variableName: 'Region',
+            links: [
+              {
+                href: 'https://example.com/var-first',
+                label: 'Variable first',
+                type: 'text/html',
+                metaid: 'var-first',
+              },
+            ],
+          },
+        ],
+      });
+
+      expect(secondMapped.metadata.definitions).toEqual({
+        statisticsHomepage: {
+          href: 'https://example.com/home-second',
+          label: 'Home second',
+          type: 'text/html',
+          metaid: 'home-second',
+        },
+      });
+    });
+
+    it('maps definitions for both mapData=true and mapData=false', () => {
+      const definitionsDataset: Dataset = {
+        class: ClassType.DATASET,
+        version: Dataset.version._2_0,
+        dimension: {
+          contentsCode: {
+            label: 'Contents',
+            category: {
+              index: { C1: 0 },
+              label: { C1: 'Count' },
+            },
+            link: {
+              related: [
+                {
+                  extension: { relation: 'definition', metaid: 'var-content' },
+                  href: 'https://example.com/var-content',
+                  label: 'Content definition',
+                  type: 'text/html',
+                },
+              ],
+            },
+          },
+        },
+        role: { metric: ['contentsCode'] },
+        id: ['contentsCode'],
+        size: [1],
+        value: [42],
+        link: {
+          related: [
+            {
+              extension: {
+                relation: 'about-statistics',
+                metaid: 'about-both',
+              },
+              href: 'https://example.com/about-both',
+              label: 'About both',
+              type: 'text/html',
+            },
+          ],
+        },
+      };
+
+      const mappedWithData = mapJsonStat2Response(definitionsDataset, true);
+      const mappedWithoutData = mapJsonStat2Response(definitionsDataset, false);
+
+      expect(mappedWithData.metadata.definitions).toEqual(
+        mappedWithoutData.metadata.definitions,
+      );
+      expect(mappedWithData.metadata.definitions).toEqual({
+        statisticsDefinitions: {
+          href: 'https://example.com/about-both',
+          label: 'About both',
+          type: 'text/html',
+          metaid: 'about-both',
+        },
+        variablesDefinitions: [
+          {
+            variableName: 'Contents',
+            links: [
+              {
+                href: 'https://example.com/var-content',
+                label: 'Content definition',
+                type: 'text/html',
+                metaid: 'var-content',
+              },
+            ],
+          },
+        ],
+      });
+    });
   });
+
   describe('createDataAndStatus', () => {
     it('should map values and statuses correctly when both are provided', () => {
       // Arrange
@@ -383,6 +728,7 @@ describe('JsonStat2ResponseMapper', () => {
         ],
         contacts: [],
         notes: [],
+        definitions: {},
       };
 
       const data: PxTableData = {
@@ -462,6 +808,7 @@ describe('JsonStat2ResponseMapper', () => {
         ],
         contacts: [],
         notes: [],
+        definitions: {},
       };
 
       const data: PxTableData = {
@@ -528,6 +875,7 @@ describe('JsonStat2ResponseMapper', () => {
         ],
         contacts: [],
         notes: [],
+        definitions: {},
       };
 
       const data: PxTableData = {

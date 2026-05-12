@@ -9,9 +9,9 @@ import { mockHTMLDialogElement } from '@pxweb2/pxweb2-ui/src/lib/util/test-utils
 import { renderWithProviders } from '../../util/testing-utils';
 import { AppContext, AppContextType } from '../../context/AppProvider';
 import {
-  TableDataContext,
-  TableDataContextType,
-} from '../../context/TableDataProvider';
+  VariablesContext,
+  VariablesContextType,
+} from '../../context/VariablesProvider';
 
 describe('TableInformation', () => {
   beforeEach(() => {
@@ -155,35 +155,38 @@ describe('TableInformation', () => {
     expect(definitionsTab).not.toBeInTheDocument();
   });
 
-  it('should render Definitions tab when definitions exist', () => {
-    const tableDataContextValue: TableDataContextType = {
+  it('should render Definitions tab when variables metadata contains definitions', () => {
+    const variablesContextValue: VariablesContextType = {
       isInitialized: true,
-      data: {
-        metadata: {
-          definitions: {
-            statisticsDefinitions: {
-              href: 'https://example.com/definitions',
-              label: 'Definitions',
-            },
+      pxTableMetadata: {
+        definitions: {
+          statisticsDefinitions: {
+            href: 'https://example.com/from-metadata-call',
+            label: 'Definitions from metadata call',
+            type: 'text/html',
           },
         },
-      } as unknown as TableDataContextType['data'],
-      fetchTableData: vi.fn(),
-      fetchSavedQuery: vi.fn(),
-      pivotToMobile: vi.fn(),
-      pivotToDesktop: vi.fn(),
-      pivot: vi.fn(),
-      buildTableTitle: vi.fn().mockReturnValue({
-        contentText: '',
-        firstTitlePart: '',
-        lastTitlePart: '',
-      }),
-      isFadingTable: false,
-      setIsFadingTable: vi.fn(),
+      } as unknown as VariablesContextType['pxTableMetadata'],
+      setPxTableMetadata: vi.fn(),
+      addSelectedValues: vi.fn(),
+      getSelectedValuesById: vi.fn().mockReturnValue([]),
+      getSelectedValuesByIdSorted: vi.fn().mockReturnValue([]),
+      getSelectedCodelistById: vi.fn().mockReturnValue(undefined),
+      getNumberOfSelectedValues: vi.fn().mockReturnValue(0),
+      getSelectedMatrixSize: vi.fn().mockReturnValue(1),
+      getUniqueIds: vi.fn().mockReturnValue([]),
+      syncVariablesAndValues: vi.fn(),
+      hasLoadedInitialSelection: false,
+      setHasLoadedInitialSelection: vi.fn(),
+      setSelectedVBValues: vi.fn(),
+      selectedVBValues: [],
+      isMatrixSizeAllowed: true,
+      isLoadingMetadata: false,
+      setIsLoadingMetadata: vi.fn(),
     };
 
     renderWithProviders(
-      <TableDataContext.Provider value={tableDataContextValue}>
+      <VariablesContext.Provider value={variablesContextValue}>
         <TableInformation
           isOpen={true}
           selectedTab="tab-definitions"
@@ -191,7 +194,7 @@ describe('TableInformation', () => {
             return;
           }}
         />
-      </TableDataContext.Provider>,
+      </VariablesContext.Provider>,
     );
 
     const definitionsTab = screen.getByRole('tab', {
