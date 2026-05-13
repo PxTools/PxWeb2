@@ -103,6 +103,11 @@ function getPxTable(): PxTable {
       { mandatory: false, text: 'Note number 2' },
       { mandatory: true, text: 'Note number 3' },
     ],
+    definitions: {
+      statisticsHomepage: undefined,
+      statisticsDefinitions: undefined,
+      variablesDefinitions: undefined
+    }
   };
   const table: PxTable = {
     metadata: tableMeta,
@@ -323,9 +328,6 @@ vi.mock('../../context/useApp', () => ({
     isXXLargeDesktop: mockIsXXLargeDesktop,
     isTablet: false,
     setTitle: () => {
-      vi.fn();
-    },
-    setTableInformationWantsToHidePageScrollbar: () => {
       vi.fn();
     },
   }),
