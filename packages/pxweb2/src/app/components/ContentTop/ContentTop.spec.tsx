@@ -106,8 +106,8 @@ function getPxTable(): PxTable {
     definitions: {
       statisticsHomepage: undefined,
       statisticsDefinitions: undefined,
-      variablesDefinitions: undefined
-    }
+      variablesDefinitions: undefined,
+    },
   };
   const table: PxTable = {
     metadata: tableMeta,

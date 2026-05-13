@@ -289,7 +289,7 @@ export function DesktopVirtualizedTable({
 
   const shouldVirtualizeColumns =
     tableColumnSize > DESKTOP_COLUMN_VIRTUALIZATION_THRESHOLD;
-  
+
   const columnVirtualizer = useVirtualizer({
     horizontal: true,
     enabled: shouldVirtualizeColumns,
@@ -309,12 +309,12 @@ export function DesktopVirtualizedTable({
     startPadding: number;
     endPadding: number;
   } | null>(null);
-  
+
   const bootstrapColumnEnd = Math.min(
     tableColumnSize,
     DESKTOP_BOOTSTRAP_COLUMN_COUNT,
   );
-  
+
   const bootstrapColumnWindow = useMemo(
     () => ({
       visibleColumnStart: 0,
@@ -369,9 +369,9 @@ export function DesktopVirtualizedTable({
     () => buildDesktopRowEntries(pxtable),
     [pxtable],
   );
-  
+
   const hasNoStub = pxtable.stub.length === 0;
-  
+
   const hasFewColumns =
     tableColumnSize <= DESKTOP_COLUMN_VIRTUALIZATION_FEW_COLUMNS_THRESHOLD;
 
