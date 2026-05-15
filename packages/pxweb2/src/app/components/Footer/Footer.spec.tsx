@@ -8,9 +8,14 @@ import { Footer, scrollToTop } from './Footer';
 import { useLocaleContent } from '../../util/hooks/useLocaleContent';
 
 let currentPathname = '/en/tables';
+let appLanguageFilter: string[] = [];
 
 vi.mock('../../util/hooks/useLocaleContent', () => ({
   useLocaleContent: vi.fn(),
+}));
+
+vi.mock('../../context/useApp', () => ({
+  default: () => ({ languageFilter: appLanguageFilter }),
 }));
 
 const footerContent = {
@@ -55,6 +60,7 @@ describe('Footer', () => {
   describe('Render from config', () => {
     beforeEach(() => {
       (useLocaleContent as Mock).mockReset?.();
+      appLanguageFilter = [];
     });
 
     it('renders footer columns and links from mocked hook', async () => {
@@ -94,9 +100,45 @@ describe('Footer', () => {
       const footer = screen.getByRole('contentinfo');
       expect(footer.className).toMatch(/variant--generic/);
     });
+
+    it('shows only filtered languages when appLanguageFilter has values', () => {
+      (useLocaleContent as Mock).mockReturnValue(footerContent);
+      appLanguageFilter = ['no', 'sv'];
+
+      render(
+        <MemoryRouter initialEntries={[currentPathname]}>
+          <Footer />
+        </MemoryRouter>,
+      );
+
+      expect(screen.getByText('Norsk')).toBeInTheDocument();
+      expect(screen.getByText('Svenska')).toBeInTheDocument();
+      expect(screen.queryByText('English')).not.toBeInTheDocument();
+      expect(screen.queryByText('العربية')).not.toBeInTheDocument();
+    });
+
+    it('shows all supported languages when appLanguageFilter is empty', () => {
+      (useLocaleContent as Mock).mockReturnValue(footerContent);
+      appLanguageFilter = [];
+
+      render(
+        <MemoryRouter initialEntries={[currentPathname]}>
+          <Footer />
+        </MemoryRouter>,
+      );
+
+      expect(screen.getByText('English')).toBeInTheDocument();
+      expect(screen.getByText('Norsk')).toBeInTheDocument();
+      expect(screen.getByText('Svenska')).toBeInTheDocument();
+      expect(screen.getByText('العربية')).toBeInTheDocument();
+    });
   });
 
   describe('scrollToTop', () => {
+    beforeEach(() => {
+      appLanguageFilter = [];
+    });
+
     it('should scroll the container to the top quickly', () => {
       // Create a mock container
       const container = document.createElement('div');
