@@ -12,12 +12,12 @@ import {
   useVirtualizedTableBaseProps,
   VirtualizedTableLayout,
   VirtualizedTableProps,
-} from './Table';
-import classes from './Table.module.scss';
-import { resolveDataCell } from './TableCellData';
-import { walkStubTree } from './TableStubTraversal';
-import { VartypeEnum } from '../../shared-types/vartypeEnum';
-import { Variable } from '../../shared-types/variable';
+} from '../Table';
+import classes from '../Table.module.scss';
+import { resolveDataCell } from '../TableCellData';
+import { walkStubTree } from '../TableStubTraversal';
+import { VartypeEnum } from '../../../shared-types/vartypeEnum';
+import { Variable } from '../../../shared-types/variable';
 
 type StubCellMeta = {
   varPos: number;

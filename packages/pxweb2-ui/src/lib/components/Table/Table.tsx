@@ -3,7 +3,7 @@ import cl from 'clsx';
 import { useVirtualizer, useWindowVirtualizer } from '@tanstack/react-virtual';
 
 import classes from './Table.module.scss';
-import { DesktopVirtualizedTable } from './TableDesktopVirtualized';
+import { DesktopVirtualizedTable } from './Desktop/TableDesktopVirtualized';
 import { MobileVirtualizedTable } from './TableMobileVirtualized';
 import { PxTable } from '../../shared-types/pxTable';
 import { calculateRowAndColumnMeta, columnRowMeta } from './columnRowMeta';
