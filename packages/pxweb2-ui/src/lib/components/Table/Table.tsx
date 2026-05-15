@@ -4,7 +4,7 @@ import { useVirtualizer, useWindowVirtualizer } from '@tanstack/react-virtual';
 
 import classes from './Table.module.scss';
 import { DesktopVirtualizedTable } from './Desktop/TableDesktopVirtualized';
-import { MobileVirtualizedTable } from './TableMobileVirtualized';
+import { MobileVirtualizedTable } from './Mobile/TableMobileVirtualized';
 import { PxTable } from '../../shared-types/pxTable';
 import { calculateRowAndColumnMeta, columnRowMeta } from './columnRowMeta';
 import { VartypeEnum } from '../../shared-types/vartypeEnum';

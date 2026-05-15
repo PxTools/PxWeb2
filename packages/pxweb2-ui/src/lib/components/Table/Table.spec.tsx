@@ -19,7 +19,7 @@ vi.mock('./Desktop/TableDesktopVirtualized', () => ({
   },
 }));
 
-vi.mock('./TableMobileVirtualized', () => ({
+vi.mock('./Mobile/TableMobileVirtualized', () => ({
   MobileVirtualizedTable: ({
     className,
     getVerticalScrollElement,
