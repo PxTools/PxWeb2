@@ -30,7 +30,7 @@ vi.mock('@tanstack/react-virtual', () => ({
   }),
 }));
 
-import classes from '../Table.module.scss';
+import desktopClasses from './TableDesktopVirtualized.module.scss';
 import { DesktopVirtualizedTable } from './TableDesktopVirtualized';
 import { pxTable } from '../testData';
 import { PxTable } from '../../../shared-types/pxTable';
@@ -70,7 +70,9 @@ describe('TableDesktopVirtualized', () => {
     const table = container.querySelector('table');
 
     expect(table).toBeTruthy();
-    expect(table?.classList.contains(classes.virtualizedTable)).toBe(true);
+    expect(table?.classList.contains(desktopClasses.virtualizedTable)).toBe(
+      true,
+    );
   });
 
   it('does not enable column virtualization at or below threshold', () => {
@@ -85,7 +87,9 @@ describe('TableDesktopVirtualized', () => {
     const table = container.querySelector('table');
 
     expect(table).toBeTruthy();
-    expect(table?.classList.contains(classes.virtualizedTable)).toBe(false);
+    expect(table?.classList.contains(desktopClasses.virtualizedTable)).toBe(
+      false,
+    );
   });
 
   it('uses bootstrap column window when virtualizer initially returns no columns', () => {
