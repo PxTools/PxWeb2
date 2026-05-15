@@ -72,7 +72,6 @@ export const Footer: React.FC<FooterProps> = ({
       : supportedLanguages;
 
   const canShowTopButton = !!containerRef || enableWindowScroll;
-
   const handleScrollTop = () => {
     if (containerRef?.current) {
       scrollToTop(containerRef);
