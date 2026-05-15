@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -115,9 +116,44 @@ export function DrawerEdit() {
   const { t } = useTranslation();
   const { isMobile } = useApp();
   const data = useTableData().data;
+  const { setIsFadingTable } = useTableData();
+
   const [loadingPivotType, setLoadingPivotType] = useState<PivotType | null>(
     null,
   );
+  const [hideEmtyRows, setHideEmtyRows] = useState(false);
+
+  const handleHideEmtyRowsClick = async () => {
+    // Toggle the value based on current state and optimistically update state
+
+    setIsFadingTable(true);
+    const url = new URL(globalThis.window.location.href);
+    const currentlyHidden = url.searchParams.has('suppressNullRows');
+    const newValue = !currentlyHidden;
+    setHideEmtyRows(newValue); // Optimistic update for immediate UI feedback
+    setUrlParam('suppressNullRows', newValue);
+    return new Promise((resolve) => setTimeout(resolve, 500)).finally(() => {
+      setIsFadingTable(false);
+    });
+  };
+
+  // Use React Router navigation to update the URL so location.search stays in sync
+  const navigate = useNavigate();
+  function setUrlParam(param: string, value: boolean) {
+    const url = new URL(globalThis.window.location.href);
+    if (value) {
+      url.searchParams.set(param, '1');
+    } else {
+      url.searchParams.delete(param);
+    }
+    // Use navigate to update the URL and sync router state
+    navigate(url.pathname + url.search, { replace: true });
+  }
+
+  useEffect(() => {
+    const url = new URL(globalThis.window.location.href);
+    setHideEmtyRows(url.searchParams.has('suppressNullRows'));
+  }, []);
 
   return (
     <ContentBox title={t('presentation_page.side_menu.edit.customize.title')}>
@@ -138,6 +174,25 @@ export function DrawerEdit() {
             pivotType={PivotType.Clockwise}
             loadingPivotType={loadingPivotType}
             setLoadingPivotType={setLoadingPivotType}
+          />
+        )}
+        {data && (
+          <ActionItem
+            label={t(
+              'presentation_page.side_menu.edit.customize.suppress_empty_rows.title',
+            )}
+            ariaLabel={t(
+              'presentation_page.side_menu.edit.customize.suppress_empty_rows.aria_label',
+            )}
+            description={t(
+              'presentation_page.side_menu.edit.customize.suppress_empty_rows.description',
+            )}
+            size="medium"
+            onClick={() => {
+              handleHideEmtyRowsClick();
+            }}
+            iconName="RemoveTableRow"
+            toggleState={hideEmtyRows}
           />
         )}
       </div>

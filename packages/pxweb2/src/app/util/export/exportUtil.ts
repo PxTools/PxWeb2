@@ -228,10 +228,19 @@ export function getTimestamp(): string {
  * @returns {string} - The complete URL for the saved query.
  */
 export function createSavedQueryURL(id: string): string {
-  const baseUrl = window.location.origin;
-  const path = window.location.pathname;
+  const baseUrl = globalThis.window.location.origin;
+  const path = globalThis.window.location.pathname;
   const queryParams = new URLSearchParams({
     sq: id,
   });
+
+  // If suppressNullRows=1 is present in the current URL, add it to the saved query URL
+  if (globalThis.window !== undefined) {
+    const params = new URLSearchParams(globalThis.window.location.search);
+    if (params.get('suppressNullRows') === '1') {
+      queryParams.set('suppressNullRows', '1');
+    }
+  }
+
   return `${baseUrl}${path}?${queryParams.toString()}`;
 }

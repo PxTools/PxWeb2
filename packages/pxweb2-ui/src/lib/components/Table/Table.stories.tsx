@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, within } from 'storybook/test';
+import { MemoryRouter } from 'react-router';
 
 import { Table } from './Table';
 import { pxTable } from './testData';
@@ -7,6 +8,13 @@ import { pxTable } from './testData';
 const meta: Meta<typeof Table> = {
   component: Table,
   title: 'Components/Table',
+  decorators: [
+    (Story) => (
+      <MemoryRouter>
+        <Story />
+      </MemoryRouter>
+    ),
+  ],
 };
 export default meta;
 type Story = StoryObj<typeof Table>;

@@ -148,6 +148,11 @@
           "change_order": {
             "title": "تغيير الترتيب",
             "description": "نص الوصف..."
+          },
+          "suppress_empty_rows": {
+            "title": "إخفاء الصفوف الفارغة",
+            "aria_label": "إخفاء الصفوف الفارغة",
+            "description": "يخفي الصفوف التي لا تحتوي على بيانات"
           }
         },
         "calculate": {

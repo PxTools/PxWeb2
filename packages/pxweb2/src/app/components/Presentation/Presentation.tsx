@@ -1,6 +1,7 @@
 import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
 import React, { useRef, useEffect, useState, useLayoutEffect } from 'react';
+import { useLocation } from 'react-router';
 import isEqual from 'lodash/isEqual';
 
 import classes from './Presentation.module.scss';
@@ -20,12 +21,26 @@ type propsType = {
 };
 
 const MemoizedTable = React.memo(
-  ({ pxtable, isMobile }: { pxtable: PxTable; isMobile: boolean }) => (
-    <Table pxtable={pxtable} isMobile={isMobile} />
+  ({
+    pxtable,
+    isMobile,
+    suppressNullRows,
+  }: {
+    pxtable: PxTable;
+    isMobile: boolean;
+    suppressNullRows: boolean;
+  }) => (
+    <Table
+      pxtable={pxtable}
+      isMobile={isMobile}
+      suppressNullRows={suppressNullRows}
+      key={suppressNullRows ? 'suppressNullRows-1' : 'suppressNullRows-0'}
+    />
   ),
   (prevProps, nextProps) =>
     isEqual(prevProps.pxtable, nextProps.pxtable) &&
-    prevProps.isMobile === nextProps.isMobile,
+    prevProps.isMobile === nextProps.isMobile &&
+    prevProps.suppressNullRows === nextProps.suppressNullRows,
 );
 export function Presentation({
   selectedTabId,
@@ -34,6 +49,7 @@ export function Presentation({
   setIsExpanded,
 }: Readonly<propsType>) {
   const { isMobile, getSavedQueryId } = useApp();
+  const location = useLocation();
   const config = getConfig();
   const { i18n, t } = useTranslation();
   const tableData = useTableData();
@@ -270,7 +286,18 @@ export function Presentation({
               ref={gradientContainerRef}
             >
               <div className={classes.tableContainer} ref={tableContainerRef}>
-                <MemoizedTable pxtable={tableData.data} isMobile={isMobile} />
+                {(() => {
+                  const urlParams = new URLSearchParams(location.search);
+                  const suppressNullRows =
+                    urlParams.get('suppressNullRows') === '1';
+                  return (
+                    <MemoizedTable
+                      pxtable={tableData.data}
+                      isMobile={isMobile}
+                      suppressNullRows={suppressNullRows}
+                    />
+                  );
+                })()}
               </div>
             </div>
           )}
@@ -282,7 +309,18 @@ export function Presentation({
                 ref={gradientContainerRef}
               >
                 <div className={classes.tableContainer} ref={tableContainerRef}>
-                  <MemoizedTable pxtable={tableData.data} isMobile={isMobile} />
+                  {(() => {
+                    const urlParams = new URLSearchParams(location.search);
+                    const suppressNullRows =
+                      urlParams.get('suppressNullRows') === '1';
+                    return (
+                      <MemoizedTable
+                        pxtable={tableData.data}
+                        isMobile={isMobile}
+                        suppressNullRows={suppressNullRows}
+                      />
+                    );
+                  })()}
                 </div>
               </div>
             )}

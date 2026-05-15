@@ -205,6 +205,11 @@
           "change_order": {
             "title": "Ändra ordning",
             "description": "Beskrivande text..."
+          },
+          "suppress_empty_rows": {
+            "title": "Dölj tomma rader",
+            "aria_label": "Dölj tomma rader",
+            "description": "Visa inte rader med noll, streck och prickar i tabellen"
           }
         },
         "calculate": {

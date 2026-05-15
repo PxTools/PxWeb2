@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
+import { MemoryRouter } from 'react-router';
 import '@testing-library/jest-dom/vitest';
 import userEvent from '@testing-library/user-event';
 
@@ -12,6 +13,7 @@ interface MockActionItemProps {
   iconName?: string;
   ariaLabel?: string;
   isLoading?: boolean;
+  toggleState?: boolean;
   [key: string]: unknown;
 }
 
@@ -51,6 +53,7 @@ vi.mock('@pxweb2/pxweb2-ui', () => ({
     ariaLabel,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     isLoading,
+    //toggleState, // <-- Destructure to avoid passing to DOM
     ...props
   }: MockActionItemProps) => (
     <button
@@ -78,12 +81,16 @@ afterEach(() => {
 
 describe('DrawerEdit', () => {
   it('renders successfully', () => {
-    render(<DrawerEdit />);
+    render(
+      <MemoryRouter>
+        <DrawerEdit />
+      </MemoryRouter>,
+    );
 
     expect(screen.getByTestId('content-box')).toBeInTheDocument();
-    // Two action buttons: auto pivot & clockwise pivot (unified PivotButton)
+    // Three action buttons: auto pivot, clockwise pivot, hide empty rows
     const buttons = screen.getAllByTestId('action-item');
-    expect(buttons).toHaveLength(2);
+    expect(buttons).toHaveLength(3);
     // Check labels via translation keys
     expect(
       screen.getByText(
@@ -95,6 +102,11 @@ describe('DrawerEdit', () => {
         'presentation_page.side_menu.edit.customize.pivot.title',
       ),
     ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'presentation_page.side_menu.edit.customize.suppress_empty_rows.title',
+      ),
+    ).toBeInTheDocument();
   });
 
   it('has correct display name', () => {
@@ -102,7 +114,11 @@ describe('DrawerEdit', () => {
   });
 
   it('calls pivot with PivotType.Clockwise on its button click', async () => {
-    render(<DrawerEdit />);
+    render(
+      <MemoryRouter>
+        <DrawerEdit />
+      </MemoryRouter>,
+    );
     const user = userEvent.setup();
     const clockwiseButton = screen.getByText(
       'presentation_page.side_menu.edit.customize.pivot.title',
@@ -118,7 +134,11 @@ describe('DrawerEdit', () => {
   });
 
   it('calls pivot with PivotType.Auto on its button click', async () => {
-    render(<DrawerEdit />);
+    render(
+      <MemoryRouter>
+        <DrawerEdit />
+      </MemoryRouter>,
+    );
     const user = userEvent.setup();
     const autoButton = screen.getByText(
       'presentation_page.side_menu.edit.customize.auto_pivot.title',
