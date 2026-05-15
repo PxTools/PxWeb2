@@ -11,6 +11,7 @@ import {
   VirtualizedTableProps,
 } from '../Table';
 import classes from '../Table.module.scss';
+import mobileClasses from './TableMobileVirtualized.module.scss';
 import { resolveDataCell } from '../TableCellData';
 import { walkStubTree } from '../TableStubTraversal';
 import { VartypeEnum } from '../../../shared-types/vartypeEnum';
@@ -91,8 +92,8 @@ function buildMobileRowEntries(pxtable: VirtualizedTableProps['pxtable']) {
         key: `mobile-repeat-${n}-${currentMeta.htmlId}`,
         className: cl(
           { [classes.firstdim]: n === 0 },
-          { [classes.mobileRowHeadLevel1]: n === stubLength - 3 },
-          classes.mobileEmptyRowCell,
+          { [mobileClasses.mobileRowHeadLevel1]: n === stubLength - 3 },
+          mobileClasses.mobileEmptyRowCell,
         ),
         headerCell: {
           id: currentMeta.htmlId,
@@ -121,10 +122,13 @@ function buildMobileRowEntries(pxtable: VirtualizedTableProps['pxtable']) {
       key: `mobile-second-last-${cellId}`,
       className: cl(
         { [classes.firstdim]: stubIndex === 0 },
-        classes.mobileEmptyRowCell,
-        { [classes.mobileRowHeadLevel2]: stubLength > 2 },
-        { [classes.mobileRowHeadLevel1]: stubLength === 2 },
-        { [classes.mobileRowHeadFirstValueOfSecondLastStub]: valueIndex === 0 },
+        mobileClasses.mobileEmptyRowCell,
+        { [mobileClasses.mobileRowHeadLevel2]: stubLength > 2 },
+        { [mobileClasses.mobileRowHeadLevel1]: stubLength === 2 },
+        {
+          [mobileClasses.mobileRowHeadFirstValueOfSecondLastStub]:
+            valueIndex === 0,
+        },
       ),
       headerCell: {
         id: cellId,
@@ -178,10 +182,13 @@ function buildMobileRowEntries(pxtable: VirtualizedTableProps['pxtable']) {
       rows.push({
         key: `mobile-leaf-${cellId}`,
         className: cl(
-          classes.mobileRowHeadLastStub,
-          { [classes.mobileRowHeadlastValueOfLastStub]: lastValueOfLastStub },
+          mobileClasses.mobileRowHeadLastStub,
           {
-            [classes.mobileRowHeadfirstValueOfLastStub2Dim]:
+            [mobileClasses.mobileRowHeadlastValueOfLastStub]:
+              lastValueOfLastStub,
+          },
+          {
+            [mobileClasses.mobileRowHeadfirstValueOfLastStub2Dim]:
               valueIndex === 0 && stubLength === 2,
           },
         ),
