@@ -3,6 +3,7 @@ import cl from 'clsx';
 import { useVirtualizer, useWindowVirtualizer } from '@tanstack/react-virtual';
 
 import classes from './Table.module.scss';
+import desktopClasses from './Desktop/TableDesktopVirtualized.module.scss';
 import { DesktopVirtualizedTable } from './Desktop/TableDesktopVirtualized';
 import { MobileVirtualizedTable } from './Mobile/TableMobileVirtualized';
 import { PxTable } from '../../shared-types/pxTable';
@@ -489,8 +490,8 @@ export function createVirtualPaddingCell(
   return (
     <td
       key={nextKey()}
-      className={cl(classes.virtualColumnPaddingCell, {
-        [classes.virtualColumnPaddingCellEnd]: position === 'end',
+      className={cl(desktopClasses.virtualColumnPaddingCell, {
+        [desktopClasses.virtualColumnPaddingCellEnd]: position === 'end',
       })}
       style={{ width: `${width}px` }}
     />
@@ -597,7 +598,7 @@ export function VirtualizedTableLayout({
           classes.table,
           classes[`bodyshort-medium`],
           {
-            [classes.virtualizedTable]: shouldVirtualizeColumns,
+            [desktopClasses.virtualizedTable]: shouldVirtualizeColumns,
           },
           className,
         )}
@@ -716,9 +717,10 @@ function createVisibleHeadingCell({
           repetitionIndex === 1 &&
           !hasStub &&
           visibleSpanStart === 0,
-        [classes.longHeaderCellText]: headingLines > 1,
-        [classes.longTextColumnSpan]: visibleSpan > 0 && !fewColumns,
-        [classes.longTextColumnSpanFewColumns]: visibleSpan > 0 && fewColumns,
+        [desktopClasses.longHeaderCellText]: headingLines > 1,
+        [desktopClasses.longTextColumnSpan]: visibleSpan > 0 && !fewColumns,
+        [desktopClasses.longTextColumnSpanFewColumns]:
+          visibleSpan > 0 && fewColumns,
       })}
       style={
         {
@@ -727,7 +729,7 @@ function createVisibleHeadingCell({
       }
     >
       <span
-        className={classes.desktopHeaderLabelWrapper}
+        className={desktopClasses.desktopHeaderLabelWrapper}
         style={
           {
             '--desktop-header-lines': headingLines,
@@ -736,7 +738,7 @@ function createVisibleHeadingCell({
       >
         <span
           className={cl({
-            [classes.longHeaderCellTextLabel]: headingLines > 1,
+            [desktopClasses.longHeaderCellTextLabel]: headingLines > 1,
           })}
         >
           {renderHeaderLabelWithSlashBreaks(variable.values[valueIndex].label)}

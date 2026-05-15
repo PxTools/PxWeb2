@@ -14,6 +14,7 @@ import {
   VirtualizedTableProps,
 } from '../Table';
 import classes from '../Table.module.scss';
+import desktopClasses from './TableDesktopVirtualized.module.scss';
 import { resolveDataCell } from '../TableCellData';
 import { walkStubTree } from '../TableStubTraversal';
 import { VartypeEnum } from '../../../shared-types/vartypeEnum';
@@ -170,7 +171,7 @@ function renderDesktopBodyRows({
         }
         className={cl(
           classes.stub,
-          { [classes.stubFewColumns]: hasFewColumns },
+          { [desktopClasses.stubFewColumns]: hasFewColumns },
           classes[`stub-${rowEntry.level}`],
         )}
         key={nextKey()}
