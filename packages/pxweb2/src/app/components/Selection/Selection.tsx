@@ -36,6 +36,7 @@ import useApp from '../../context/useApp';
 import { NavigationItem } from '../../components/NavigationMenu/NavigationItem/NavigationItemType';
 import useAccessibility from '../../context/useAccessibility';
 import { problemMessage } from '../../util/problemMessage';
+import { getConfig } from '../../util/config/getConfig';
 import {
   getSelectedCodelists,
   updateSelectedCodelistForVariable,
@@ -233,6 +234,7 @@ export function Selection({
   setSelectedNavigationView,
   hideMenuRef,
 }: SelectionProps) {
+  const config = getConfig();
   const variables = useVariables();
   const app = useApp();
   const { isTablet } = useApp();
@@ -271,14 +273,22 @@ export function Selection({
       return;
     }
 
-    //  If the table has changed, or the language has changed, we need to reload the default selection
+    const isTableChanged = prevTableId === '' || prevTableId !== selectedTabId;
+    const languageChanged = prevLang !== i18n.resolvedLanguage;
+    const shouldResetSelectionOnLanguageChange =
+      config.tableViewer?.selectionOnLanguageChange !== 'keep';
+
+    // If table changes, selection should always be reset to initial selection.
+    // If language changes, resetting is controlled by config.
     if (
-      prevTableId === '' ||
-      prevTableId !== selectedTabId ||
-      prevLang !== i18n.resolvedLanguage
+      isTableChanged ||
+      (languageChanged && shouldResetSelectionOnLanguageChange)
     ) {
       variables.setHasLoadedInitialSelection(false);
       shouldGetInitialSelection = true;
+    }
+
+    if (isTableChanged || languageChanged) {
       setPrevTableId(selectedTabId);
       setPrevLang(i18n.resolvedLanguage ?? '');
     }

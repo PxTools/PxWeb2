@@ -9,6 +9,9 @@ export type Config = {
   baseApplicationPath: string;
   apiUrl: string;
   maxDataCells: number;
+  tableViewer?: {
+    selectionOnLanguageChange?: 'reset' | 'keep';
+  };
   useDynamicContentInTitle: boolean;
   showBreadCrumbOnStartPage: boolean;
   specialCharacters: string[];

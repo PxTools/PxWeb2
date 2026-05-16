@@ -12,6 +12,9 @@ globalThis.PxWeb2Config = {
   baseApplicationPath: '/',
   apiUrl: 'https://api.scb.se/OV0104/v2beta/api/v2',
   maxDataCells: 150000,
+  tableViewer: {
+    selectionOnLanguageChange: 'keep', // Options: 'keep', 'reset'
+  },
   useDynamicContentInTitle: false,
   showBreadCrumbOnStartPage: false,
   specialCharacters: ['.', '..', ':', '-', '...', '*'],
