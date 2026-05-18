@@ -8,7 +8,7 @@ import { useEChartOption } from './useEChartOption';
 
 interface LineChartProps {
   readonly dataset: EChartsDataset;
-    readonly colors?: string[];
+  readonly colors?: string[];
 }
 export function LineChart({ dataset, colors }: LineChartProps) {
   const option = useMemo<echarts.EChartsOption>(

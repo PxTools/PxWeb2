@@ -11,7 +11,11 @@ interface BarChartProps {
   readonly isHorizontal?: boolean;
   readonly colors?: string[];
 }
-export function BarChart({ dataset, colors, isHorizontal = false }: BarChartProps) {
+export function BarChart({
+  dataset,
+  colors,
+  isHorizontal = false,
+}: BarChartProps) {
   const option = useMemo<echarts.EChartsOption>(() => {
     const xAxisType = isHorizontal ? ({ type: 'category' } as const) : {};
     const yAxisType = isHorizontal ? {} : ({ type: 'category' } as const);

@@ -40,8 +40,6 @@ export function buildDatasetOption(
   };
 }
 
-
-
 export function buildSeriesOption(
   dataset: EChartsDataset,
   type: 'bar' | 'line',

@@ -45,7 +45,11 @@ export function Chart({ pxtable, colors }: ChartProps) {
 
   return (
     <>
-      <BarChart dataset={dataset} colors={colors} isHorizontal={true}></BarChart>
+      <BarChart
+        dataset={dataset}
+        colors={colors}
+        isHorizontal={true}
+      ></BarChart>
       <BarChart dataset={dataset} colors={colors}></BarChart>
       <LineChart dataset={dataset} colors={colors}></LineChart>
       {populationPyramidResult.config ? (
