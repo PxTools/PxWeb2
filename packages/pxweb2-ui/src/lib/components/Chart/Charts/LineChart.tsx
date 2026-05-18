@@ -30,6 +30,19 @@ export function LineChart({ dataset, colors }: LineChartProps) {
         height: 40 * dataset.series.length, // increase legend height based on number of series to prevent overlap with x-axis labels
       },
       series: buildSeriesOption(dataset, 'line', colors),
+      dataZoom: [
+        {
+          id: 'dataZoomX',
+          type: 'slider',
+          xAxisIndex: [0],
+          filterMode: 'filter',
+          bottom: 60,
+        },
+      ],
+      // For line charts, tooltips are more useful when triggered by axis to show values of all series at a given category
+      tooltip: {
+        trigger: 'axis',
+      },
     }),
     [dataset, colors],
   );
