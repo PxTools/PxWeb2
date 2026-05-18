@@ -24,7 +24,7 @@ export function LineChart({ dataset, colors }: LineChartProps) {
         //   align: 'center',
         // },
         // min: 100,
-        min: (value) => value.min, 
+        min: (value) => value.min,
       },
       series: buildSeriesOption(dataset, 'line', colors),
     }),

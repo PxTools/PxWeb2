@@ -155,7 +155,10 @@ export function mapPxTableToChart(pxtable: PxTable): ChartConfig {
 
   const title = pxtable.metadata.label;
   const origin = pxtable.metadata.source;
-  const unit = pxtable.metadata.variables.find((variable) => variable.type === VartypeEnum.CONTENTS_VARIABLE)?.values[0]?.contentInfo?.unit ?? '';
+  const unit =
+    pxtable.metadata.variables.find(
+      (variable) => variable.type === VartypeEnum.CONTENTS_VARIABLE,
+    )?.values[0]?.contentInfo?.unit ?? '';
   const series: ChartSeries[] = seriesCombinations.map(
     (combination, index) => ({
       key:
