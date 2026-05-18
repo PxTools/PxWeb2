@@ -15,7 +15,7 @@ export function LineChart({ dataset, colors }: LineChartProps) {
     () => ({
       ...buildDatasetOption(dataset),
       grid: { top: 100, bottom: 200, right: '4%', containLabel: true },
-      xAxis: { type: 'category' as const },
+      xAxis: { type: 'category' as const, axisLabel: { rotate: 45 } },
       yAxis: {
         name: dataset.unit,
         // For line charts with small values, start y-axis at 0 to avoid misleading representation
@@ -48,7 +48,7 @@ export function LineChart({ dataset, colors }: LineChartProps) {
   );
 
   const { divRef, chartRef } = useEChartOption(option);
-  const height = 400 + dataset.series.length * 20; // increase chart height based on number of series to prevent legend overlap
+  const height = 600 + dataset.series.length * 10; // increase chart height based on number of series to prevent legend overlap
 
   return (
     <div>

@@ -17,7 +17,7 @@ export function BarChart({
   isHorizontal = false,
 }: BarChartProps) {
   const option = useMemo<echarts.EChartsOption>(() => {
-    const xAxisType = isHorizontal ? ({ type: 'category' } as const) : {};
+    const xAxisType = isHorizontal ? ({ type: 'category', axisLabel: { rotate: 45 } } as const) : {};
     const yAxisType = isHorizontal ? {} : ({ type: 'category' } as const);
 
     return {
@@ -39,7 +39,7 @@ export function BarChart({
   }, [dataset, isHorizontal, colors]);
 
   const { divRef, chartRef } = useEChartOption(option);
-  const height = 400 + dataset.series.length * 20; // increase chart height based on number of series to prevent legend overlap
+  const height = 800 + dataset.series.length * 10; // increase chart height based on number of series to prevent legend overlap
 
   return (
     <div>
