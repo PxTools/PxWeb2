@@ -17,7 +17,9 @@ export function BarChart({
   isHorizontal = false,
 }: BarChartProps) {
   const option = useMemo<echarts.EChartsOption>(() => {
-    const xAxisType = isHorizontal ? ({ type: 'category', axisLabel: { rotate: 45 } } as const) : {};
+    const xAxisType = isHorizontal
+      ? ({ type: 'category', axisLabel: { rotate: 45 } } as const)
+      : {};
     const yAxisType = isHorizontal ? {} : ({ type: 'category' } as const);
 
     return {
