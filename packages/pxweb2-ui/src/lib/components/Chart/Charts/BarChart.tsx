@@ -22,13 +22,19 @@ export function BarChart({
 
     return {
       ...buildDatasetOption(dataset),
+      grid: { top: 100, bottom: 200, right: '4%', containLabel: true },
       xAxis: xAxisType,
       yAxis: yAxisType,
       series: buildSeriesOption(dataset, 'bar', colors),
+      legend: {
+        height: 40 * dataset.series.length, // increase legend height based on number of series to prevent overlap with x-axis labels
+      },
+
     };
   }, [dataset, isHorizontal, colors]);
 
   const { divRef, chartRef } = useEChartOption(option);
+  const height = 400 + dataset.series.length * 20; // increase chart height based on number of series to prevent legend overlap
 
   return (
     <div>
@@ -36,7 +42,7 @@ export function BarChart({
         chartRef={chartRef}
         fileName={isHorizontal ? 'bar-chart-horizontal' : 'bar-chart-vertical'}
       />
-      <div ref={divRef} style={{ width: '100%', height: '400px' }}></div>
+      <div ref={divRef} style={{ width: '100%', height: `${height}px` }}></div>
     </div>
   );
 }

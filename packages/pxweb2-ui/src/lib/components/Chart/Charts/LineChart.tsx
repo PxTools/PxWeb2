@@ -14,7 +14,7 @@ export function LineChart({ dataset, colors }: LineChartProps) {
   const option = useMemo<echarts.EChartsOption>(
     () => ({
       ...buildDatasetOption(dataset),
-      grid: { top: 100, bottom: 50, right: '4%', containLabel: true },
+      grid: { top: 100, bottom: 200, right: '4%', containLabel: true },
       xAxis: { type: 'category' as const },
       yAxis: {
         name: dataset.unit,
@@ -26,17 +26,21 @@ export function LineChart({ dataset, colors }: LineChartProps) {
         // min: 100,
         min: (value) => value.min,
       },
+      legend: {
+        height: 40 * dataset.series.length, // increase legend height based on number of series to prevent overlap with x-axis labels
+      },
       series: buildSeriesOption(dataset, 'line', colors),
     }),
     [dataset, colors],
   );
 
   const { divRef, chartRef } = useEChartOption(option);
+  const height = 400 + dataset.series.length * 20; // increase chart height based on number of series to prevent legend overlap
 
   return (
     <div>
       <ChartExportButtons chartRef={chartRef} fileName="line-chart" />
-      <div ref={divRef} style={{ width: '100%', height: '400px' }}></div>
+      <div ref={divRef} style={{ width: '100%', height: `${height}px` }}></div>
     </div>
   );
 }
