@@ -29,6 +29,12 @@ export function BarChart({
       legend: {
         height: 40 * dataset.series.length, // increase legend height based on number of series to prevent overlap with x-axis labels
       },
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'shadow',
+        },
+      },
     };
   }, [dataset, isHorizontal, colors]);
 
