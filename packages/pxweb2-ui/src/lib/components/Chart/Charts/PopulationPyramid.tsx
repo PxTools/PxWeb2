@@ -24,6 +24,20 @@ export function PopulationPyramid({ dataset }: PopulationPyramidProps) {
       title: {
         text: dataset.title,
       },
+      // Add origin in bottom-left corner of the chart canvas
+      graphic: [
+        {
+          type: 'text',
+          left: 8,
+          bottom: 8,
+          silent: true, // don't capture mouse events
+          style: {
+            text: `Source: ${dataset.origin}`,
+            fill: '#6b7280',
+            font: '12px sans-serif',
+          },
+        },
+      ],
       legend: {
         data: [dataset.leftSeriesName, dataset.rightSeriesName],
       },

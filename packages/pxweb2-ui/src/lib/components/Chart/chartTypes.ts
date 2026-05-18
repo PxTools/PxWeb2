@@ -10,12 +10,14 @@ export interface ChartSeries {
 
 export interface ChartConfig {
   readonly title: string;
+  readonly origin: string;
   readonly data: ChartDataPoint[];
   readonly series: ChartSeries[];
 }
 
 export interface EChartsDataset {
   readonly title: string;
+  readonly origin: string;
   readonly dimensions: string[];
   readonly source: Array<Record<string, string | number | null>>;
   readonly series: ChartSeries[];
@@ -32,6 +34,7 @@ export interface PopulationPyramidConfig {
   readonly data: PopulationPyramidDataPoint[];
   readonly leftSeriesName: string;
   readonly rightSeriesName: string;
+  readonly origin: string;
 }
 
 export interface PopulationPyramidValidationResult {
