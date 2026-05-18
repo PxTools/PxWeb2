@@ -54,7 +54,8 @@ type VirtualListItem = {
   value?: Value;
 };
 
-const WORD_DELIMITER_REGEX = /[\s\-_/.,;:()[\]{}]+/;
+//const WORD_DELIMITER_REGEX = /[\s\-_/.,;:()[\]{}]+/;
+const WORD_DELIMITER_REGEX = /\s+/;
 
 const toNormalizedWords = (text: string) => {
   return deburr(text).toLowerCase().split(WORD_DELIMITER_REGEX).filter(Boolean);
@@ -64,19 +65,10 @@ const toNormalizedText = (text: string) => {
   return deburr(text).toLowerCase();
 };
 
-const matchesAtWordStart = (text: string, norm: string) => {
-  if (norm === '') {
-    return true;
-  }
-
-  return deburr(text)
-    .toLowerCase()
-    .split(WORD_DELIMITER_REGEX)
-    .some((word) => word.startsWith(norm));
-};
-
 const parseSearch = (searchValue: string) => {
+  // console.log('Parsing search value:', searchValue);
   const trimmed = searchValue.trim();
+  // console.log('Trimmed search value:', trimmed);
   const isExactPhrase =
     trimmed.length >= 2 && trimmed.startsWith('"') && trimmed.endsWith('"');
   const hasLeadingWildcard = !isExactPhrase && trimmed.startsWith('*');
@@ -108,6 +100,26 @@ const matchesContains = (text: string, norm: string) => {
   return toNormalizedText(text).includes(norm);
 };
 
+const matchesTextStart = (text: string, norm: string) => {
+  if (norm === '') {
+    return true;
+  }
+  //console.log('Checking text start match. Text:', text, 'Norm:', norm);
+  return toNormalizedText(text).startsWith(norm);
+};
+
+const matchesAtWordStart = (text: string, norm: string) => {
+  if (norm === '') {
+    return true;
+  }
+
+  return deburr(text)
+    .toLowerCase()
+    .split(WORD_DELIMITER_REGEX)
+    .some((word) => word.startsWith(norm));
+  //return deburr(text).toLowerCase().startsWith(norm);
+};
+
 const matchesAtWordEnd = (text: string, norm: string) => {
   if (norm === '') {
     return true;
@@ -117,14 +129,6 @@ const matchesAtWordEnd = (text: string, norm: string) => {
     .split(WORD_DELIMITER_REGEX)
     .some((word) => word.endsWith(norm));
 };
-
-// const matchesTextStart = (text: string, norm: string) => {
-//   if (norm === '') {
-//     return true;
-//   }
-
-//   return toNormalizedText(text).startsWith(norm);
-// };
 
 const matchesExactPhrase = (text: string, norm: string) => {
   if (norm === '') {
@@ -158,6 +162,13 @@ const matchesExactPhrase = (text: string, norm: string) => {
 const matchesSearch = (value: Value, searchValue: string) => {
   const { isExactPhrase, hasLeadingWildcard, hasTrailingWildcard, norm } =
     parseSearch(searchValue);
+  // console.log('Parsed search value:', {
+  //   isExactPhrase,
+  //   hasLeadingWildcard,
+  //   hasTrailingWildcard,
+  //   norm,
+  // });
+  //console.log('Checking value:', value.label, 'with code:', value.code);
 
   if (isExactPhrase) {
     return (
@@ -185,12 +196,18 @@ const matchesSearch = (value: Value, searchValue: string) => {
   // term* -> starts-with match
   if (hasTrailingWildcard) {
     return (
+      // matchesAtWordStart(value.label, norm) ||
+      // matchesAtWordStart(String(value.code ?? ''), norm)
+      matchesTextStart(value.label, norm) ||
+      matchesTextStart(String(value.code ?? ''), norm) ||
       matchesAtWordStart(value.label, norm) ||
       matchesAtWordStart(String(value.code ?? ''), norm)
     );
   }
 
   return (
+    matchesTextStart(value.label, norm) ||
+    matchesTextStart(String(value.code ?? ''), norm) ||
     matchesAtWordStart(value.label, norm) ||
     matchesAtWordStart(String(value.code ?? ''), norm)
   );
@@ -257,20 +274,20 @@ export function VariableBoxContent({
 
   // Recalculate count whenever user types (raw search) or underlying values array changes
   useEffect(() => {
-    const { norm } = parseSearch(search);
-    console.log(
-      'Calculating search results count for search:',
-      search,
-      'normalized:',
-      norm,
-    );
-    console.log(
-      'Values to search through:',
-      values.map((v) => v.label),
-    );
+    // const { norm } = parseSearch(search);
+    // console.log(
+    //   'Calculating search results count for search:',
+    //   search,
+    //   'normalized:',
+    //   norm,
+    // );
+    // console.log(
+    //   'Values to search through:',
+    //   values.map((v) => v.label),
+    // );
     const nextCount = values.filter((v) => matchesSearch(v, search)).length;
 
-    console.log('Search results count:', nextCount);
+    //console.log('Search results Useeffect count:', nextCount);
     setSearchResultsCount(nextCount);
   }, [search, values]);
 
