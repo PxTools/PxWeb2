@@ -8,16 +8,17 @@ import { useEChartOption } from './useEChartOption';
 
 interface LineChartProps {
   readonly dataset: EChartsDataset;
+    readonly colors?: string[];
 }
-export function LineChart({ dataset }: LineChartProps) {
+export function LineChart({ dataset, colors }: LineChartProps) {
   const option = useMemo<echarts.EChartsOption>(
     () => ({
       ...buildDatasetOption(dataset),
       xAxis: { type: 'category' as const },
       yAxis: {},
-      series: buildSeriesOption(dataset, 'line'),
+      series: buildSeriesOption(dataset, 'line', colors),
     }),
-    [dataset],
+    [dataset, colors],
   );
 
   const { divRef, chartRef } = useEChartOption(option);

@@ -9,8 +9,9 @@ import { useEChartOption } from './useEChartOption';
 interface BarChartProps {
   readonly dataset: EChartsDataset;
   readonly isHorizontal?: boolean;
+  readonly colors?: string[];
 }
-export function BarChart({ dataset, isHorizontal = false }: BarChartProps) {
+export function BarChart({ dataset, colors, isHorizontal = false }: BarChartProps) {
   const option = useMemo<echarts.EChartsOption>(() => {
     const xAxisType = isHorizontal ? ({ type: 'category' } as const) : {};
     const yAxisType = isHorizontal ? {} : ({ type: 'category' } as const);
@@ -19,9 +20,9 @@ export function BarChart({ dataset, isHorizontal = false }: BarChartProps) {
       ...buildDatasetOption(dataset),
       xAxis: xAxisType,
       yAxis: yAxisType,
-      series: buildSeriesOption(dataset, 'bar'),
+      series: buildSeriesOption(dataset, 'bar', colors),
     };
-  }, [dataset, isHorizontal]);
+  }, [dataset, isHorizontal, colors]);
 
   const { divRef, chartRef } = useEChartOption(option);
 

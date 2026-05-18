@@ -276,7 +276,7 @@ export function Presentation({
               ref={gradientContainerRef}
             >
               <div>
-                <Chart pxtable={tableData.data}></Chart>
+                <Chart pxtable={tableData.data} colors={config.presentationPage?.chart.colors}></Chart>
               </div>
               <div className={classes.tableContainer} ref={tableContainerRef}>
                 <MemoizedTable pxtable={tableData.data} isMobile={isMobile} />

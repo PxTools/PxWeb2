@@ -13,8 +13,9 @@ import type { PxTable } from '../../shared-types/pxTable';
 
 interface ChartProps {
   readonly pxtable: PxTable;
+  readonly colors?: string[];
 }
-export function Chart({ pxtable }: ChartProps) {
+export function Chart({ pxtable, colors }: ChartProps) {
   const chartConfig = useMemo(() => mapPxTableToChart(pxtable), [pxtable]);
   const dataset = useMemo(
     () => mapChartConfigToEChartsDataset(chartConfig),
@@ -44,9 +45,9 @@ export function Chart({ pxtable }: ChartProps) {
 
   return (
     <>
-      <BarChart dataset={dataset} isHorizontal={true}></BarChart>
-      <BarChart dataset={dataset}></BarChart>
-      <LineChart dataset={dataset}></LineChart>
+      <BarChart dataset={dataset} colors={colors} isHorizontal={true}></BarChart>
+      <BarChart dataset={dataset} colors={colors}></BarChart>
+      <LineChart dataset={dataset} colors={colors}></LineChart>
       {populationPyramidResult.config ? (
         <PopulationPyramid
           dataset={populationPyramidResult.config}

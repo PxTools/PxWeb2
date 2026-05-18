@@ -40,12 +40,16 @@ export function buildDatasetOption(
   };
 }
 
+
+
 export function buildSeriesOption(
   dataset: EChartsDataset,
   type: 'bar' | 'line',
+  colors?: string[],
 ): echarts.SeriesOption[] {
-  return dataset.series.map((series) => ({
+  return dataset.series.map((series, index) => ({
     name: series.name,
     type,
+    color: colors ? colors[index % colors.length] : undefined,
   }));
 }
