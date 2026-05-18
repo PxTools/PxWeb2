@@ -14,8 +14,18 @@ export function LineChart({ dataset, colors }: LineChartProps) {
   const option = useMemo<echarts.EChartsOption>(
     () => ({
       ...buildDatasetOption(dataset),
+      grid: { top: 100, bottom: 50, right: '4%', containLabel: true },
       xAxis: { type: 'category' as const },
-      yAxis: {},
+      yAxis: {
+        name: dataset.unit,
+        // For line charts with small values, start y-axis at 0 to avoid misleading representation
+        // axisLabel: {
+        //   formatter: '{value} kg',
+        //   align: 'center',
+        // },
+        // min: 100,
+        min: (value) => value.min, 
+      },
       series: buildSeriesOption(dataset, 'line', colors),
     }),
     [dataset, colors],

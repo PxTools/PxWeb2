@@ -11,6 +11,7 @@ import type {
   PopulationPyramidMappingResult,
   PopulationPyramidValidationResult,
 } from './chartTypes';
+import { VartypeEnum } from '../../shared-types/vartypeEnum';
 
 interface CombinationItem {
   readonly variableId: string;
@@ -154,6 +155,7 @@ export function mapPxTableToChart(pxtable: PxTable): ChartConfig {
 
   const title = pxtable.metadata.label;
   const origin = pxtable.metadata.source;
+  const unit = pxtable.metadata.variables.find((variable) => variable.type === VartypeEnum.CONTENTS_VARIABLE)?.values[0]?.contentInfo?.unit ?? '';
   const series: ChartSeries[] = seriesCombinations.map(
     (combination, index) => ({
       key:
@@ -193,7 +195,7 @@ export function mapPxTableToChart(pxtable: PxTable): ChartConfig {
     return point as ChartDataPoint;
   });
 
-  return { title, origin, data, series };
+  return { title, origin, unit, data, series };
 }
 
 export function mapChartConfigToEChartsDataset(
@@ -201,6 +203,7 @@ export function mapChartConfigToEChartsDataset(
 ): EChartsDataset {
   const title = chartConfig.title;
   const origin = chartConfig.origin;
+  const unit = chartConfig.unit;
   const dimensions = [
     'name',
     ...chartConfig.series.map((series) => series.key),
@@ -223,6 +226,7 @@ export function mapChartConfigToEChartsDataset(
   return {
     title,
     origin,
+    unit,
     dimensions,
     source,
     series: chartConfig.series,

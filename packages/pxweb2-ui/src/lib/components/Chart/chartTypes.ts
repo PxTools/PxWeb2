@@ -11,6 +11,7 @@ export interface ChartSeries {
 export interface ChartConfig {
   readonly title: string;
   readonly origin: string;
+  readonly unit: string;
   readonly data: ChartDataPoint[];
   readonly series: ChartSeries[];
 }
@@ -18,6 +19,7 @@ export interface ChartConfig {
 export interface EChartsDataset {
   readonly title: string;
   readonly origin: string;
+  readonly unit: string;
   readonly dimensions: string[];
   readonly source: Array<Record<string, string | number | null>>;
   readonly series: ChartSeries[];
