@@ -31,7 +31,7 @@ export function BarChart({ dataset, isHorizontal = false }: BarChartProps) {
         chartRef={chartRef}
         fileName={isHorizontal ? 'bar-chart-horizontal' : 'bar-chart-vertical'}
       />
-      <div ref={divRef} style={{ width: '600px', height: '400px' }}></div>
+      <div ref={divRef} style={{ width: '100%', height: '400px' }}></div>
     </div>
   );
 }

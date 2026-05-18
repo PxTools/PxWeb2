@@ -9,11 +9,13 @@ export interface ChartSeries {
 }
 
 export interface ChartConfig {
+  readonly title: string;
   readonly data: ChartDataPoint[];
   readonly series: ChartSeries[];
 }
 
 export interface EChartsDataset {
+  readonly title: string;
   readonly dimensions: string[];
   readonly source: Array<Record<string, string | number | null>>;
   readonly series: ChartSeries[];
@@ -26,6 +28,7 @@ export interface PopulationPyramidDataPoint {
 }
 
 export interface PopulationPyramidConfig {
+  readonly title: string;
   readonly data: PopulationPyramidDataPoint[];
   readonly leftSeriesName: string;
   readonly rightSeriesName: string;

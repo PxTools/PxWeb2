@@ -25,7 +25,7 @@ export function LineChart({ dataset }: LineChartProps) {
   return (
     <div>
       <ChartExportButtons chartRef={chartRef} fileName="line-chart" />
-      <div ref={divRef} style={{ width: '600px', height: '400px' }}></div>
+      <div ref={divRef} style={{ width: '100%', height: '400px' }}></div>
     </div>
   );
 }

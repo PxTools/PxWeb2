@@ -152,6 +152,7 @@ export function mapPxTableToChart(pxtable: PxTable): ChartConfig {
   const rowCombinations = buildCombinations(pxtable.stub);
   const seriesCombinations = buildCombinations(pxtable.heading);
 
+  const title = pxtable.metadata.label;
   const series: ChartSeries[] = seriesCombinations.map(
     (combination, index) => ({
       key:
@@ -191,12 +192,13 @@ export function mapPxTableToChart(pxtable: PxTable): ChartConfig {
     return point as ChartDataPoint;
   });
 
-  return { data, series };
+  return { title, data, series };
 }
 
 export function mapChartConfigToEChartsDataset(
   chartConfig: ChartConfig,
 ): EChartsDataset {
+  const title = chartConfig.title;
   const dimensions = [
     'name',
     ...chartConfig.series.map((series) => series.key),
@@ -217,6 +219,7 @@ export function mapChartConfigToEChartsDataset(
   });
 
   return {
+    title,
     dimensions,
     source,
     series: chartConfig.series,
@@ -405,6 +408,7 @@ export function mapPxTableToPopulationPyramid(
   return {
     validation,
     config: {
+      title: pxtable.metadata.label,
       data,
       leftSeriesName: leftValue.label,
       rightSeriesName: rightValue.label,

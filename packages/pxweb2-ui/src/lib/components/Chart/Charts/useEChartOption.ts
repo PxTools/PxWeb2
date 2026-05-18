@@ -1,6 +1,41 @@
 import { useEffect, useRef } from 'react';
 import * as echarts from 'echarts';
 
+function isSingleTitleOption(
+  title: echarts.EChartsOption['title'],
+): title is echarts.TitleComponentOption {
+  return typeof title === 'object' && title !== null && !Array.isArray(title);
+}
+
+function applyOptionWithWrappedTitle(
+  chart: echarts.EChartsType,
+  option: echarts.EChartsOption,
+) {
+  if (!isSingleTitleOption(option.title)) {
+    chart.setOption(option);
+    return;
+  }
+
+  const titleTextStyle = option.title.textStyle ?? {};
+  const titleWidth = Math.max(80, chart.getWidth() - 32);
+
+  chart.setOption({
+    ...option,
+    title: {
+      ...option.title,
+      left: 0,
+      right: 0,
+      width: '100%',
+      textStyle: {
+        ...titleTextStyle,
+        overflow: 'break',
+        width: titleWidth,
+        align: titleTextStyle.align ?? 'center',
+      },
+    },
+  });
+}
+
 export function useEChartOption(
   option: echarts.EChartsOption,
   renderer: 'canvas' | 'svg' = 'svg',
@@ -15,9 +50,18 @@ export function useEChartOption(
 
     const chart = echarts.init(divRef.current, null, { renderer });
     chartRef.current = chart;
-    chart.setOption(option);
+
+    applyOptionWithWrappedTitle(chart, option);
+
+    const handleResize = () => {
+      chart.resize();
+      applyOptionWithWrappedTitle(chart, option);
+    };
+
+    window.addEventListener('resize', handleResize);
 
     return () => {
+      window.removeEventListener('resize', handleResize);
       chartRef.current = null;
       chart.dispose();
     };

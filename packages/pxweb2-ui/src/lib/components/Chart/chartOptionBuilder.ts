@@ -7,7 +7,15 @@ export function buildDatasetOption(
 ): echarts.EChartsOption {
   return {
     title: {
-      text: 'ECharts Getting Started Example',
+      text: dataset.title,
+      left: 0,
+      right: 0,
+      width: '100%',
+      textStyle: {
+        overflow: 'break',
+        align: 'center',
+        lineHeight: 20,
+      },
     },
     dataset: {
       dimensions: dataset.dimensions,

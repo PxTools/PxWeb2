@@ -22,7 +22,7 @@ export function PopulationPyramid({ dataset }: PopulationPyramidProps) {
 
     return {
       title: {
-        text: 'Population pyramid',
+        text: dataset.title,
       },
       legend: {
         data: [dataset.leftSeriesName, dataset.rightSeriesName],
@@ -64,7 +64,7 @@ export function PopulationPyramid({ dataset }: PopulationPyramidProps) {
   return (
     <div>
       <ChartExportButtons chartRef={chartRef} fileName="population-pyramid" />
-      <div ref={divRef} style={{ width: '600px', height: '400px' }}></div>
+      <div ref={divRef} style={{ width: '100%', height: '400px' }}></div>
     </div>
   );
 }
