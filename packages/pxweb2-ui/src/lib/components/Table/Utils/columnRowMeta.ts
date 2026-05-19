@@ -1,4 +1,4 @@
-import { PxTable } from '../../shared-types/pxTable';
+import { PxTable } from '../../../shared-types/pxTable';
 
 /**
  * Internal type holding metadata about the column and row structure of a table.
@@ -45,12 +45,12 @@ export function calculateRowAndColumnMeta(pxtable: PxTable): columnRowMeta {
   const rowOffset = pxtable.heading.length;
   const longestValueTextByVariableId: Record<string, number> = {};
 
-  for (let i = 0; i < pxtable.heading.length; i++) {
-    columnCount *= pxtable.heading[i].values.length;
+  for (const element of pxtable.heading) {
+    columnCount *= element.values.length;
   }
 
-  for (let i = 0; i < pxtable.stub.length; i++) {
-    rowCount *= pxtable.stub[i].values.length;
+  for (const element of pxtable.stub) {
+    rowCount *= element.values.length;
   }
 
   const allVariables = [...pxtable.heading, ...pxtable.stub];
