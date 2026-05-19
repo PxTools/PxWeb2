@@ -1,5 +1,5 @@
-import { PxTable } from '../../shared-types/pxTable';
-import { Variable } from '../../shared-types/variable';
+import { PxTable } from '../../../shared-types/pxTable';
+import { Variable } from '../../../shared-types/variable';
 
 export type StubValue = Variable['values'][number];
 

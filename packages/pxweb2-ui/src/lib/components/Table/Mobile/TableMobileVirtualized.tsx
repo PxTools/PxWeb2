@@ -13,7 +13,7 @@ import {
 import classes from '../Table.module.scss';
 import mobileClasses from './TableMobileVirtualized.module.scss';
 import { resolveDataCell } from '../TableCellData';
-import { walkStubTree } from '../TableStubTraversal';
+import { walkStubTree } from '../Utils/TableStubTraversal';
 import { VartypeEnum } from '../../../shared-types/vartypeEnum';
 import { Variable } from '../../../shared-types/variable';
 
