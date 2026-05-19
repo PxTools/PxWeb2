@@ -764,7 +764,12 @@ function createHeadingRowForLevel({
   nextKey: () => string;
 }): React.JSX.Element[] {
   const headerRow: React.JSX.Element[] = [];
-  const { headingLevel, headingLines, repetitionsCurrentHeaderLevel, columnSpan } = headingLevelLayout;
+  const {
+    headingLevel,
+    headingLines,
+    repetitionsCurrentHeaderLevel,
+    columnSpan,
+  } = headingLevelLayout;
   const variable = table.heading[headingLevel];
   const variablePosition = table.data.variableOrder.indexOf(variable.id);
   let columnIndex = 0;
