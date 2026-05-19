@@ -7,7 +7,10 @@ import desktopClasses from './Desktop/TableDesktopVirtualized.module.scss';
 import { DesktopVirtualizedTable } from './Desktop/TableDesktopVirtualized';
 import { MobileVirtualizedTable } from './Mobile/TableMobileVirtualized';
 import { PxTable } from '../../shared-types/pxTable';
-import { calculateRowAndColumnMeta, columnRowMeta } from './Utils/columnRowMeta';
+import {
+  calculateRowAndColumnMeta,
+  columnRowMeta,
+} from './Utils/columnRowMeta';
 import { VartypeEnum } from '../../shared-types/vartypeEnum';
 
 /** Public props for the table component that selects desktop/mobile rendering. */
