@@ -15,7 +15,7 @@ import {
 } from '../Table';
 import classes from '../Table.module.scss';
 import desktopClasses from './TableDesktopVirtualized.module.scss';
-import { resolveDataCell } from '../TableCellData';
+import { resolveDataCell } from '../Utils/TableCellData';
 import { walkStubTree } from '../Utils/TableStubTraversal';
 import { VartypeEnum } from '../../../shared-types/vartypeEnum';
 import { Variable } from '../../../shared-types/variable';

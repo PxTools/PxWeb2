@@ -1,4 +1,4 @@
-import { PxTable } from '../../shared-types/pxTable';
+import { PxTable } from '../../../shared-types/pxTable';
 import { getPxTableData } from './cubeHelper';
 
 export type CellLookupMeta = {
