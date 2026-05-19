@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { Table } from './Table';
-import { pxTable } from './testData';
+import { pxTable } from './Test/testData';
 
 const meta: Meta<typeof Table> = {
   component: Table,
