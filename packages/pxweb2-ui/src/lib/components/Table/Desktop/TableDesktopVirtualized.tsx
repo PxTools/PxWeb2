@@ -241,6 +241,18 @@ function buildDesktopRowEntries(pxtable: VirtualizedTableProps['pxtable']) {
 
   let stubIteration = 0;
 
+  // walkStubTree iterates the stub hierarchy depth-first and gives us a
+  // complete `path` for each visited node. We emit one visual row per visit,
+  // and mark only leaf visits as data rows.
+  //
+  // Parameters passed to walkStubTree:
+  // - pxtable: the table that contains all stub dimensions.
+  // - createPathItem: callback defined here by this desktop caller. It returns
+  //   a StubCellMeta object for the current node, which becomes one entry in
+  //   the traversal path used later for data-cell lookup and headers.
+  // - onVisit: callback defined here by this desktop caller. It runs on every
+  //   visited node and translates traversal state (level/value/isLeaf/path)
+  //   into flat DesktopRowEntry rows.
   walkStubTree<StubCellMeta>({
     pxtable,
     createPathItem: ({ level, variable, value }) => {
@@ -255,6 +267,8 @@ function buildDesktopRowEntries(pxtable: VirtualizedTableProps['pxtable']) {
       };
     },
     onVisit: ({ level, variable, value, isLeaf, path }) => {
+      // `path` contains the ordered stub coordinates up to `level`, so leaf
+      // rows can resolve data cells and intermediate rows can render grouping.
       rowEntries.push({
         key: `${level}:${value.code}:${stubIteration}:${rowEntries.length}`,
         level,

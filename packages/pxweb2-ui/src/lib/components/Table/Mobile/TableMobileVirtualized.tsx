@@ -142,6 +142,18 @@ function buildMobileRowEntries(pxtable: VirtualizedTableProps['pxtable']) {
     });
   };
 
+  // walkStubTree visits every stub node depth-first. Non-leaf visits are used
+  // to create mobile header/group rows, while leaf visits produce data rows
+  // with a full stub coordinate path for data-cell lookup.
+  //
+  // Parameters passed to walkStubTree:
+  // - pxtable: the table that defines the stub tree to traverse.
+  // - createPathItem: callback defined here by this mobile caller. It creates
+  //   StubCellMeta for the current node, which is stored in `path` and reused
+  //   when constructing header ids and row data coordinates.
+  // - onVisit: callback defined here by this mobile caller. It runs for each
+  //   visited node and decides whether to push group/header rows (non-leaf) or
+  //   data rows (leaf), based on traversal state.
   walkStubTree<StubCellMeta>({
     pxtable,
     createPathItem: ({ variable, value }) => {
@@ -155,6 +167,8 @@ function buildMobileRowEntries(pxtable: VirtualizedTableProps['pxtable']) {
       };
     },
     onVisit: ({ level, variable, value, valueIndex, isLeaf, path }) => {
+      // Copy the traversed branch into the reusable stub buffer up to current
+      // depth so each emitted row has the correct coordinate prefix.
       for (let idx = 0; idx <= level; idx++) {
         stubDataCellCodes[idx] = path[idx];
       }
