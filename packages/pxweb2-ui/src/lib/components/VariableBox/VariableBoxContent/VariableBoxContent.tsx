@@ -92,6 +92,10 @@ const parseSearch = (searchValue: string) => {
   };
 };
 
+const sanitizeSearchTermForHighlight = (searchValue: string) => {
+  return searchValue.trim().replace(/^[*\"]+|[*\"]+$/g, '');
+};
+
 const matchesContains = (text: string, norm: string) => {
   if (norm === '') {
     return true;
@@ -145,7 +149,9 @@ const matchesExactPhrase = (text: string, norm: string) => {
   if (phraseWords.length > textWords.length) {
     return false;
   }
-
+  // console.log('Checking exact phrase match. Text:', text, 'Norm:', norm);
+  // console.log('Phrase words:', phraseWords);
+  // console.log('Text words:', textWords);
   for (let i = 0; i <= textWords.length - phraseWords.length; i += 1) {
     const isMatch = phraseWords.every(
       (phraseWord, offset) => textWords[i + offset] === phraseWord,
@@ -463,7 +469,7 @@ export function VariableBoxContent({
       }
       lastInteractionWasPointer.current = false;
     };
-
+    console.log('Rendering item at index:', index, 'with type:', item.type);
     if (item.type === 'search') {
       return (
         <div
@@ -543,6 +549,7 @@ export function VariableBoxContent({
       item.value &&
       searchedValues.length > 0
     ) {
+      console.log('search:', search);
       const value = item.value;
       return (
         <>
@@ -568,7 +575,10 @@ export function VariableBoxContent({
                   ?.values.includes(value.code) === true
               }
               text={value.label}
-              searchTerm={search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}
+              searchTerm={sanitizeSearchTermForHighlight(search).replace(
+                /[.*+?^${}()|[\]\\]/g,
+                '\\$&',
+              )}
               onChange={() => onChangeCheckbox(varId, value.code)}
             />
           </div>
