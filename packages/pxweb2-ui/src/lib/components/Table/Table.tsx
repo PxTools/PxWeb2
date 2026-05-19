@@ -750,26 +750,21 @@ function createVisibleHeadingCell({
 
 function createHeadingRowForLevel({
   table,
-  headingLevel,
-  headingLines,
-  repetitionsCurrentHeaderLevel,
-  columnSpan,
+  headingLevelLayout,
   columnWindow,
   headingDataCellCodes,
   totalColumns,
   nextKey,
 }: {
   table: PxTable;
-  headingLevel: number;
-  headingLines: number;
-  repetitionsCurrentHeaderLevel: number;
-  columnSpan: number;
+  headingLevelLayout: HeadingLevelLayout;
   columnWindow: VisibleColumnsWindow;
   headingDataCellCodes: DataCellCodes[];
   totalColumns: number;
   nextKey: () => string;
 }): React.JSX.Element[] {
   const headerRow: React.JSX.Element[] = [];
+  const { headingLevel, headingLines, repetitionsCurrentHeaderLevel, columnSpan } = headingLevelLayout;
   const variable = table.heading[headingLevel];
   const variablePosition = table.data.variableOrder.indexOf(variable.id);
   let columnIndex = 0;
@@ -936,11 +931,7 @@ export function createHeading(
   for (const headingLevelLayout of headingLevelLayouts) {
     const headerRow = createHeadingRowForLevel({
       table,
-      headingLevel: headingLevelLayout.headingLevel,
-      headingLines: headingLevelLayout.headingLines,
-      repetitionsCurrentHeaderLevel:
-        headingLevelLayout.repetitionsCurrentHeaderLevel,
-      columnSpan: headingLevelLayout.columnSpan,
+      headingLevelLayout,
       columnWindow,
       headingDataCellCodes,
       nextKey,
