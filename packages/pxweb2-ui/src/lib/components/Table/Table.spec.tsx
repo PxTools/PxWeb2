@@ -33,7 +33,7 @@ vi.mock('./Mobile/TableMobileVirtualized', () => ({
 }));
 
 import Table from './Table';
-import { pxTable } from './testData';
+import { pxTable } from './Test/testData';
 
 describe('Table', () => {
   beforeEach(() => {

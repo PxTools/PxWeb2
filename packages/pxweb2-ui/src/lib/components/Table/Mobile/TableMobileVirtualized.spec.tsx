@@ -21,7 +21,7 @@ vi.mock('@tanstack/react-virtual', () => ({
 
 import classes from '../Table.module.scss';
 import { MobileVirtualizedTable } from './TableMobileVirtualized';
-import { pxTable } from '../testData';
+import { pxTable } from '../Test/testData';
 import { PxTable } from '../../../shared-types/pxTable';
 
 function createVirtualItems(startIndex: number, count: number, size: number) {
