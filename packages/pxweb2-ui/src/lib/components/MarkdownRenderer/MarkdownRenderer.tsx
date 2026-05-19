@@ -35,7 +35,6 @@ const ParagraphRender = ({ children }: UnwantedMdRenderProps) => (
   <p>{children}</p>
 );
 
-
 export const MarkdownRenderer: React.FC<MdProps> = ({ mdText }) => {
   const mdTextEscaped = escapeDecimalLikeLabels(mdText);
   return (
