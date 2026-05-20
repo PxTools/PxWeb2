@@ -88,58 +88,54 @@ const parseSearch = (searchValue: string) => {
     isExactPhrase,
     hasLeadingWildcard,
     hasTrailingWildcard,
-    norm: deburr(rawTerm).toLowerCase().trim(),
+    normSearch: deburr(rawTerm).toLowerCase().trim(),
   };
 };
 
-const sanitizeSearchTermForHighlight = (searchValue: string) => {
-  return searchValue.trim().replace(/^[*\"]+|[*\"]+$/g, '');
-};
-
-const matchesContains = (text: string, norm: string) => {
-  if (norm === '') {
+const matchesContains = (text: string, normSearch: string) => {
+  if (normSearch === '') {
     return true;
   }
 
-  return toNormalizedText(text).includes(norm);
+  return toNormalizedText(text).includes(normSearch);
 };
 
-const matchesTextStart = (text: string, norm: string) => {
-  if (norm === '') {
+const matchesTextStart = (text: string, normSearch: string) => {
+  if (normSearch === '') {
     return true;
   }
   //console.log('Checking text start match. Text:', text, 'Norm:', norm);
-  return toNormalizedText(text).startsWith(norm);
+  return toNormalizedText(text).startsWith(normSearch);
 };
 
-const matchesAtWordStart = (text: string, norm: string) => {
-  if (norm === '') {
+const matchesAtWordStart = (text: string, normSearch: string) => {
+  if (normSearch === '') {
     return true;
   }
 
   return deburr(text)
     .toLowerCase()
     .split(WORD_DELIMITER_REGEX)
-    .some((word) => word.startsWith(norm));
-  //return deburr(text).toLowerCase().startsWith(norm);
+    .some((word) => word.startsWith(normSearch));
+  //return deburr(text).toLowerCase().startsWith(normSearch);
 };
 
-const matchesAtWordEnd = (text: string, norm: string) => {
-  if (norm === '') {
+const matchesAtWordEnd = (text: string, normSearch: string) => {
+  if (normSearch === '') {
     return true;
   }
 
   return toNormalizedText(text)
     .split(WORD_DELIMITER_REGEX)
-    .some((word) => word.endsWith(norm));
+    .some((word) => word.endsWith(normSearch));
 };
 
-const matchesExactPhrase = (text: string, norm: string) => {
-  if (norm === '') {
+const matchesExactPhrase = (text: string, normSearch: string) => {
+  if (normSearch === '') {
     return true;
   }
 
-  const phraseWords = norm.split(WORD_DELIMITER_REGEX).filter(Boolean);
+  const phraseWords = normSearch.split(WORD_DELIMITER_REGEX).filter(Boolean);
   const textWords = toNormalizedWords(text);
 
   if (phraseWords.length === 0) {
@@ -166,36 +162,36 @@ const matchesExactPhrase = (text: string, norm: string) => {
 };
 
 const matchesSearch = (value: Value, searchValue: string) => {
-  const { isExactPhrase, hasLeadingWildcard, hasTrailingWildcard, norm } =
+  const { isExactPhrase, hasLeadingWildcard, hasTrailingWildcard, normSearch } =
     parseSearch(searchValue);
   // console.log('Parsed search value:', {
   //   isExactPhrase,
   //   hasLeadingWildcard,
   //   hasTrailingWildcard,
-  //   norm,
+  //   normSearch,
   // });
   //console.log('Checking value:', value.label, 'with code:', value.code);
 
   if (isExactPhrase) {
     return (
-      matchesExactPhrase(value.label, norm) ||
-      matchesExactPhrase(String(value.code ?? ''), norm)
+      matchesExactPhrase(value.label, normSearch) ||
+      matchesExactPhrase(String(value.code ?? ''), normSearch)
     );
   }
 
   // *term* -> contains match
   if (hasLeadingWildcard && hasTrailingWildcard) {
     return (
-      matchesContains(value.label, norm) ||
-      matchesContains(String(value.code ?? ''), norm)
+      matchesContains(value.label, normSearch) ||
+      matchesContains(String(value.code ?? ''), normSearch)
     );
   }
 
   // *term -> word-ending match
   if (hasLeadingWildcard) {
     return (
-      matchesAtWordEnd(value.label, norm) ||
-      matchesAtWordEnd(String(value.code ?? ''), norm)
+      matchesAtWordEnd(value.label, normSearch) ||
+      matchesAtWordEnd(String(value.code ?? ''), normSearch)
     );
   }
 
@@ -204,21 +200,23 @@ const matchesSearch = (value: Value, searchValue: string) => {
     return (
       // matchesAtWordStart(value.label, norm) ||
       // matchesAtWordStart(String(value.code ?? ''), norm)
-      matchesTextStart(value.label, norm) ||
-      matchesTextStart(String(value.code ?? ''), norm) ||
-      matchesAtWordStart(value.label, norm) ||
-      matchesAtWordStart(String(value.code ?? ''), norm)
+      matchesTextStart(value.label, normSearch) ||
+      matchesTextStart(String(value.code ?? ''), normSearch) ||
+      matchesAtWordStart(value.label, normSearch) ||
+      matchesAtWordStart(String(value.code ?? ''), normSearch)
     );
   }
 
   return (
-    matchesTextStart(value.label, norm) ||
-    matchesTextStart(String(value.code ?? ''), norm) ||
-    matchesAtWordStart(value.label, norm) ||
-    matchesAtWordStart(String(value.code ?? ''), norm)
+    matchesTextStart(value.label, normSearch) ||
+    matchesTextStart(String(value.code ?? ''), normSearch) ||
+    matchesAtWordStart(value.label, normSearch) ||
+    matchesAtWordStart(String(value.code ?? ''), normSearch)
   );
 };
-
+const sanitizeSearchTermForHighlight = (searchValue: string) => {
+  return searchValue.trim().replace(/^[*\"]+|[*\"]+$/g, '');
+};
 export function VariableBoxContent({
   varId,
   label,
