@@ -4,7 +4,6 @@ import cl from 'clsx';
 import {
   createHeadingRowsAndDataCellCodes,
   createVirtualPaddingCell,
-  createKeyFactory,
   useBodyRowVirtualizationWindow,
   useVirtualizedTableBaseProps,
   VirtualizedTableLayout,
@@ -12,6 +11,7 @@ import {
 } from '../Table';
 import classes from '../Table.module.scss';
 import mobileClasses from './TableMobileVirtualized.module.scss';
+import { createKeyFactory } from '../Utils/TableHelper';
 import { resolveDataCell } from '../Utils/TableCellData';
 import { walkStubTree } from '../Utils/TableStubTraversal';
 import { VartypeEnum } from '../../../shared-types/vartypeEnum';
