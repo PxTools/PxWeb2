@@ -56,32 +56,15 @@ export function LinkCard({
   }
 
   const headingSize = size === 'small' ? 'xsmall' : 'small';
-
-  const handleClick = () => {
-    const link = document.createElement('a');
-    link.href = href;
-    link.rel = 'noopener noreferrer';
-    if (newTab) {
-      link.target = '_blank';
-    }
-    link.click();
-  };
-
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      handleClick();
-    }
-  };
+  const ariaLabel = description ? `${headingText} ${description}` : headingText;
 
   return (
-    <div
+    <a
       className={cl(styles[`link-card-${size}`])}
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
-      tabIndex={0}
-      aria-labelledby={`${headingText}${description ? ` ${description}` : ''}`}
-      role="link"
+      href={href}
+      target={newTab ? '_blank' : undefined}
+      rel={newTab ? 'noopener noreferrer' : undefined}
+      aria-label={ariaLabel}
     >
       {icon && (
         <div className={cl(styles['icon-wrapper'])}>
@@ -121,6 +104,6 @@ export function LinkCard({
       <div className={cl(styles['arrow-wrapper'])}>
         <Icon iconName={iconArrow} />
       </div>
-    </div>
+    </a>
   );
 }
