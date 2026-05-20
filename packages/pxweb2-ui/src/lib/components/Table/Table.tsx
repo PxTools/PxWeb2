@@ -1,4 +1,4 @@
-import { Fragment, memo, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import cl from 'clsx';
 import { useVirtualizer, useWindowVirtualizer } from '@tanstack/react-virtual';
 
@@ -11,6 +11,7 @@ import {
   calculateRowAndColumnMeta,
   columnRowMeta,
 } from './Utils/columnRowMeta';
+import { renderHeaderLabelWithSlashBreaks } from './Utils/TableHelper';
 import { VartypeEnum } from '../../shared-types/vartypeEnum';
 
 /** Public props for the table component that selects desktop/mobile rendering. */
@@ -107,24 +108,6 @@ const MOBILE_BOOTSTRAP_ROW_COUNT = 12;
 const HEADER_LINE_CHAR_THRESHOLD = 12; // Approximate character count per header line used to determine when to wrap header text.
 const HEADER_LINE_CHAR_THRESHOLD_LONG_TEXT = 16; // Approximate character per line when long texts.
 export const DESKTOP_COLUMN_VIRTUALIZATION_FEW_COLUMNS_THRESHOLD = 4; // If there are few columns, we can allow more characters before wrapping, as there is more horizontal space available.
-
-/** Adds explicit line-break opportunities after forward slashes in labels. */
-function renderHeaderLabelWithSlashBreaks(label: string): React.ReactNode {
-  if (!label.includes('/')) {
-    return label;
-  }
-
-  return label.split('/').map((segment, index, allSegments) => (
-    <Fragment key={`${segment}-${index}`}>
-      {segment}
-      {index < allSegments.length - 1 ? (
-        <>
-          /<wbr />
-        </>
-      ) : null}
-    </Fragment>
-  ));
-}
 
 /** Returns row virtualization sizing and overscan tuned for desktop/mobile. */
 function getBodyRowVirtualizationSettings(isMobile: boolean) {
