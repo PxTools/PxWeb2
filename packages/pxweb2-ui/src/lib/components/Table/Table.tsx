@@ -11,7 +11,11 @@ import {
   calculateRowAndColumnMeta,
   columnRowMeta,
 } from './Utils/columnRowMeta';
-import { renderHeaderLabelWithSlashBreaks } from './Utils/TableHelper';
+import {
+  calculateHeadingLevelLines,
+  getBodyRowVirtualizationSettings,
+  renderHeaderLabelWithSlashBreaks,
+} from './Utils/TableHelper';
 import { VartypeEnum } from '../../shared-types/vartypeEnum';
 
 /** Public props for the table component that selects desktop/mobile rendering. */
@@ -97,30 +101,7 @@ interface VirtualRowItem {
 
 export const DESKTOP_COLUMN_VIRTUALIZATION_THRESHOLD = 15;
 const ROW_VIRTUALIZATION_THRESHOLD = 30;
-const DESKTOP_ROW_ESTIMATE_SIZE = 44;
-const MOBILE_ROW_ESTIMATE_SIZE = 44;
-const DESKTOP_ROW_OVERSCAN = 15;
-const MOBILE_ROW_OVERSCAN = 15;
-// Bootstrap rows are a temporary first window used before the virtualizer has
-// measured/returned concrete items. This avoids rendering an empty tbody frame.
-const DESKTOP_BOOTSTRAP_ROW_COUNT = 24;
-const MOBILE_BOOTSTRAP_ROW_COUNT = 12;
-const HEADER_LINE_CHAR_THRESHOLD = 12; // Approximate character count per header line used to determine when to wrap header text.
-const HEADER_LINE_CHAR_THRESHOLD_LONG_TEXT = 16; // Approximate character per line when long texts.
 export const DESKTOP_COLUMN_VIRTUALIZATION_FEW_COLUMNS_THRESHOLD = 4; // If there are few columns, we can allow more characters before wrapping, as there is more horizontal space available.
-
-/** Returns row virtualization sizing and overscan tuned for desktop/mobile. */
-function getBodyRowVirtualizationSettings(isMobile: boolean) {
-  return {
-    estimateSize: isMobile
-      ? MOBILE_ROW_ESTIMATE_SIZE
-      : DESKTOP_ROW_ESTIMATE_SIZE,
-    overscan: isMobile ? MOBILE_ROW_OVERSCAN : DESKTOP_ROW_OVERSCAN,
-    bootstrapRowCount: isMobile
-      ? MOBILE_BOOTSTRAP_ROW_COUNT
-      : DESKTOP_BOOTSTRAP_ROW_COUNT,
-  };
-}
 
 /** Combines a row window with its virtualization state flag. */
 function createVisibleRowsWindowResult(
@@ -827,30 +808,6 @@ type HeadingLevelLayout = {
   columnSpan: number;
   repetitionsCurrentHeaderLevel: number;
 };
-
-function calculateHeadingLevelLines(
-  longestValueTextLength: number,
-  columnSpan: number,
-  valueCount: number,
-  totalColumns: number,
-): number {
-  const charsPerLine =
-    longestValueTextLength > 50
-      ? HEADER_LINE_CHAR_THRESHOLD_LONG_TEXT
-      : HEADER_LINE_CHAR_THRESHOLD;
-  const columnsPerValue = columnSpan / valueCount;
-  let effectiveCharThreshold = charsPerLine * columnsPerValue;
-
-  if (totalColumns <= 2) {
-    effectiveCharThreshold *= 2;
-  }
-
-  const returnValue = Math.ceil(
-    longestValueTextLength / effectiveCharThreshold,
-  );
-
-  return returnValue;
-}
 
 function createHeadingLevelLayouts(
   table: PxTable,
