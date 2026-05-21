@@ -6,7 +6,7 @@ const childMocks = vi.hoisted(() => ({
   mobileRender: vi.fn(),
 }));
 
-vi.mock('./Desktop/TableDesktopVirtualized', () => ({
+vi.mock('./DesktopVirtualizedTable/DesktopVirtualizedTable', () => ({
   DesktopVirtualizedTable: ({
     className,
     getVerticalScrollElement,
@@ -19,7 +19,7 @@ vi.mock('./Desktop/TableDesktopVirtualized', () => ({
   },
 }));
 
-vi.mock('./Mobile/TableMobileVirtualized', () => ({
+vi.mock('./MobileVirtualizedTable/MobileVirtualizedTable', () => ({
   MobileVirtualizedTable: ({
     className,
     getVerticalScrollElement,

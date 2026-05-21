@@ -5,7 +5,7 @@ import { useVirtualizer, useWindowVirtualizer } from '@tanstack/react-virtual';
 import classes from './Table.module.scss';
 import desktopClasses from './DesktopVirtualizedTable/DesktopVirtualizedTable.module.scss';
 import { DesktopVirtualizedTable } from './DesktopVirtualizedTable/DesktopVirtualizedTable';
-import { MobileVirtualizedTable } from './Mobile/TableMobileVirtualized';
+import { MobileVirtualizedTable } from './MobileVirtualizedTable/MobileVirtualizedTable';
 import { PxTable } from '../../shared-types/pxTable';
 import {
   calculateRowAndColumnMeta,

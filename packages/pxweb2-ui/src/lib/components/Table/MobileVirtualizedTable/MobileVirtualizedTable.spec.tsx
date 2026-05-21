@@ -20,7 +20,7 @@ vi.mock('@tanstack/react-virtual', () => ({
 }));
 
 import classes from '../Table.module.scss';
-import { MobileVirtualizedTable } from './TableMobileVirtualized';
+import { MobileVirtualizedTable } from './MobileVirtualizedTable';
 import { pxTable } from '../Test/testData';
 import { PxTable } from '../../../shared-types/pxTable';
 

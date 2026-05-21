@@ -30,7 +30,7 @@ vi.mock('@tanstack/react-virtual', () => ({
   }),
 }));
 
-import desktopClasses from './TableDesktopVirtualized.module.scss';
+import desktopClasses from './DesktopVirtualizedTable.module.scss';
 import { DesktopVirtualizedTable } from './DesktopVirtualizedTable';
 import { pxTable } from '../Test/testData';
 import { PxTable } from '../../../shared-types/pxTable';

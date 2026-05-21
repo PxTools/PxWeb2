@@ -10,7 +10,7 @@ import {
   VirtualizedTableProps,
 } from '../Table';
 import classes from '../Table.module.scss';
-import mobileClasses from './TableMobileVirtualized.module.scss';
+import mobileClasses from './MobileVirtualizedTable.module.scss';
 import { createKeyFactory } from '../Utils/TableHelper';
 import { resolveDataCell } from '../Utils/TableCellData';
 import { walkStubTree } from '../Utils/TableStubTraversal';
