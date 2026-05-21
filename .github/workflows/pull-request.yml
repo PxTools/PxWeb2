@@ -81,7 +81,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      issues: write
       pull-requests: write
 
       # Only deploy for PRs created by non-dependabot users from the main repository (not forks)
