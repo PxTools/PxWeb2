@@ -23,7 +23,7 @@ import {
   resolveVisibleRowsWindow,
   VisibleRowsWindow,
   writeHeadingCellMetadata,
-} from './Utils/TableHelper';
+} from './Utils/tableHelper';
 import { VartypeEnum } from '../../shared-types/vartypeEnum';
 
 /** Public props for the table component that selects desktop/mobile rendering. */

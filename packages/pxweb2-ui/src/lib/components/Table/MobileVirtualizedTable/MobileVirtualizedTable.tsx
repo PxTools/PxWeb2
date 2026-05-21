@@ -11,9 +11,9 @@ import {
 } from '../Table';
 import classes from '../Table.module.scss';
 import mobileClasses from './MobileVirtualizedTable.module.scss';
-import { createKeyFactory } from '../Utils/TableHelper';
-import { resolveDataCell } from '../Utils/TableCellData';
-import { walkStubTree } from '../Utils/TableStubTraversal';
+import { createKeyFactory } from '../Utils/tableHelper';
+import { resolveDataCell } from '../Utils/tableCellData';
+import { walkStubTree } from '../Utils/tableStubTraversal';
 import { VartypeEnum } from '../../../shared-types/vartypeEnum';
 import { Variable } from '../../../shared-types/variable';
 
