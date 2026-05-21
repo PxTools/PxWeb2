@@ -3,8 +3,8 @@ import cl from 'clsx';
 import { useVirtualizer, useWindowVirtualizer } from '@tanstack/react-virtual';
 
 import classes from './Table.module.scss';
-import desktopClasses from './Desktop/TableDesktopVirtualized.module.scss';
-import { DesktopVirtualizedTable } from './Desktop/TableDesktopVirtualized';
+import desktopClasses from './DesktopVirtualizedTable/DesktopVirtualizedTable.module.scss';
+import { DesktopVirtualizedTable } from './DesktopVirtualizedTable/DesktopVirtualizedTable';
 import { MobileVirtualizedTable } from './Mobile/TableMobileVirtualized';
 import { PxTable } from '../../shared-types/pxTable';
 import {

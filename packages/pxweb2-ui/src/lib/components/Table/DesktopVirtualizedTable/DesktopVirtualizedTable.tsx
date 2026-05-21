@@ -13,7 +13,7 @@ import {
   VirtualizedTableProps,
 } from '../Table';
 import classes from '../Table.module.scss';
-import desktopClasses from './TableDesktopVirtualized.module.scss';
+import desktopClasses from './DesktopVirtualizedTable.module.scss';
 import { createKeyFactory } from '../Utils/TableHelper';
 import { resolveDataCell } from '../Utils/TableCellData';
 import { walkStubTree } from '../Utils/TableStubTraversal';
