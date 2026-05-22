@@ -5,14 +5,25 @@ import styles from './Highlight.module.scss';
 interface HighlightProps {
   text: string;
   searchTerm?: string;
+  searchStartOfWordOnly?: boolean;
 }
-export const Highlight: FC<HighlightProps> = ({ text, searchTerm }) => {
+export const Highlight: FC<HighlightProps> = ({
+  text,
+  searchTerm,
+  searchStartOfWordOnly = false,
+}) => {
   if (!searchTerm || searchTerm.length < 1) {
     return <span>{text}</span>;
   }
 
-  const regex = new RegExp(`(${searchTerm})`, 'gi');
+  let regex;
+  if (searchStartOfWordOnly) {
+    regex = new RegExp(`(\\b${searchTerm})`, 'gi');
+  } else {
+    regex = new RegExp(`(${searchTerm})`, 'gi');
+  }
   const parts = text.split(regex);
+  console.log(parts, 'parts after splitting text with regex:', regex);
 
   return (
     <span>

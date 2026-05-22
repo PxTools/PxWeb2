@@ -254,6 +254,7 @@ export function VariableBoxContent({
   const searchedValues: Value[] = values.filter((value) =>
     matchesSearch(value, debouncedSearch),
   );
+  console.log(searchedValues, 'values match search term:', matchesSearch);
   const selectedValuesForVar = useMemo(() => {
     return (
       selectedValues
@@ -577,6 +578,7 @@ export function VariableBoxContent({
                 /[.*+?^${}()|[\]\\]/g,
                 '\\$&',
               )}
+              searchStartOfWordOnly={true}
               onChange={() => onChangeCheckbox(varId, value.code)}
             />
           </div>

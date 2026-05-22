@@ -9,6 +9,7 @@ interface CheckboxProps {
   id: string;
   text: string;
   searchTerm?: string;
+  searchStartOfWordOnly?: boolean;
   value: boolean;
   onChange: (str: boolean) => void;
   tabIndex?: number;
@@ -22,12 +23,21 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   value,
   text,
   searchTerm,
+  searchStartOfWordOnly = false,
   onChange,
   tabIndex,
   strong,
   noMargin,
   subtle,
 }) => {
+  console.log(
+    'Rendering Checkbox with searchTerm:',
+    searchTerm,
+    'value:',
+    value,
+    'text:',
+    text,
+  );
   return (
     <div
       id={id}
@@ -72,7 +82,11 @@ export const Checkbox: React.FC<CheckboxProps> = ({
       </span>
       <div className={styles.label} id={id + '-label'}>
         <span className={cl({ [styles.strong]: strong })}>
-          <Highlight text={text} searchTerm={searchTerm} />
+          <Highlight
+            text={text}
+            searchTerm={searchTerm}
+            searchStartOfWordOnly={searchStartOfWordOnly}
+          />
         </span>
       </div>
     </div>
