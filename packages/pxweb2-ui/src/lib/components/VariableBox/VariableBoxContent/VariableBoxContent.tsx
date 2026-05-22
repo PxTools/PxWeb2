@@ -53,8 +53,6 @@ type VirtualListItem = {
   type: string;
   value?: Value;
 };
-
-//const WORD_DELIMITER_REGEX = /[\s\-_/.,;:()[\]{}]+/;
 const WORD_DELIMITER_REGEX = /\s+/;
 
 const toNormalizedWords = (text: string) => {
@@ -66,9 +64,7 @@ const toNormalizedText = (text: string) => {
 };
 
 const parseSearch = (searchValue: string) => {
-  // console.log('Parsing search value:', searchValue);
   const trimmed = searchValue.trim();
-  // console.log('Trimmed search value:', trimmed);
   const isExactPhrase =
     trimmed.length >= 2 && trimmed.startsWith('"') && trimmed.endsWith('"');
   const hasLeadingWildcard = !isExactPhrase && trimmed.startsWith('*');
@@ -104,7 +100,6 @@ const matchesTextStart = (text: string, normSearch: string) => {
   if (normSearch === '') {
     return true;
   }
-  //console.log('Checking text start match. Text:', text, 'Norm:', norm);
   return toNormalizedText(text).startsWith(normSearch);
 };
 
@@ -117,7 +112,6 @@ const matchesAtWordStart = (text: string, normSearch: string) => {
     .toLowerCase()
     .split(WORD_DELIMITER_REGEX)
     .some((word) => word.startsWith(normSearch));
-  //return deburr(text).toLowerCase().startsWith(normSearch);
 };
 
 const matchesAtWordEnd = (text: string, normSearch: string) => {
@@ -145,9 +139,6 @@ const matchesExactPhrase = (text: string, normSearch: string) => {
   if (phraseWords.length > textWords.length) {
     return false;
   }
-  // console.log('Checking exact phrase match. Text:', text, 'Norm:', norm);
-  // console.log('Phrase words:', phraseWords);
-  // console.log('Text words:', textWords);
   for (let i = 0; i <= textWords.length - phraseWords.length; i += 1) {
     const isMatch = phraseWords.every(
       (phraseWord, offset) => textWords[i + offset] === phraseWord,
@@ -164,13 +155,6 @@ const matchesExactPhrase = (text: string, normSearch: string) => {
 const matchesSearch = (value: Value, searchValue: string) => {
   const { isExactPhrase, hasLeadingWildcard, hasTrailingWildcard, normSearch } =
     parseSearch(searchValue);
-  // console.log('Parsed search value:', {
-  //   isExactPhrase,
-  //   hasLeadingWildcard,
-  //   hasTrailingWildcard,
-  //   normSearch,
-  // });
-  //console.log('Checking value:', value.label, 'with code:', value.code);
 
   if (isExactPhrase) {
     return (
@@ -254,7 +238,6 @@ export function VariableBoxContent({
   const searchedValues: Value[] = values.filter((value) =>
     matchesSearch(value, debouncedSearch),
   );
-  console.log(searchedValues, 'values match search term:', matchesSearch);
   const selectedValuesForVar = useMemo(() => {
     return (
       selectedValues
@@ -279,20 +262,8 @@ export function VariableBoxContent({
 
   // Recalculate count whenever user types (raw search) or underlying values array changes
   useEffect(() => {
-    // const { norm } = parseSearch(search);
-    // console.log(
-    //   'Calculating search results count for search:',
-    //   search,
-    //   'normalized:',
-    //   norm,
-    // );
-    // console.log(
-    //   'Values to search through:',
-    //   values.map((v) => v.label),
-    // );
     const nextCount = values.filter((v) => matchesSearch(v, search)).length;
 
-    //console.log('Search results Useeffect count:', nextCount);
     setSearchResultsCount(nextCount);
   }, [search, values]);
 
@@ -468,7 +439,6 @@ export function VariableBoxContent({
       }
       lastInteractionWasPointer.current = false;
     };
-    console.log('Rendering item at index:', index, 'with type:', item.type);
     if (item.type === 'search') {
       return (
         <div
@@ -506,6 +476,7 @@ export function VariableBoxContent({
         </div>
       );
     } else if (item.type === 'mixedCheckbox' && searchedValues.length > 1) {
+      console.log('do i ever end up here?');
       return (
         <>
           <div
@@ -548,7 +519,6 @@ export function VariableBoxContent({
       item.value &&
       searchedValues.length > 0
     ) {
-      console.log('search:', search);
       const value = item.value;
       return (
         <>

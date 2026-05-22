@@ -23,7 +23,6 @@ export const Highlight: FC<HighlightProps> = ({
     regex = new RegExp(`(${searchTerm})`, 'gi');
   }
   const parts = text.split(regex);
-  console.log(parts, 'parts after splitting text with regex:', regex);
 
   return (
     <span>

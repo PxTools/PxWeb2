@@ -30,14 +30,6 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   noMargin,
   subtle,
 }) => {
-  console.log(
-    'Rendering Checkbox with searchTerm:',
-    searchTerm,
-    'value:',
-    value,
-    'text:',
-    text,
-  );
   return (
     <div
       id={id}
