@@ -30,7 +30,7 @@ vi.mock('@tanstack/react-virtual', () => ({
   }),
 }));
 
-import desktopClasses from './DesktopVirtualizedTable.module.scss';
+import layoutClasses from '../VirtualizedTableLayout/VirtualizedTableLayout.module.scss';
 import { DesktopVirtualizedTable } from './DesktopVirtualizedTable';
 import { pxTable } from '../Test/testData';
 import { PxTable } from '../../../shared-types/pxTable';
@@ -70,7 +70,7 @@ describe('TableDesktopVirtualized', () => {
     const table = container.querySelector('table');
 
     expect(table).toBeTruthy();
-    expect(table?.classList.contains(desktopClasses.virtualizedTable)).toBe(
+    expect(table?.classList.contains(layoutClasses.virtualizedTable)).toBe(
       true,
     );
   });
@@ -87,7 +87,7 @@ describe('TableDesktopVirtualized', () => {
     const table = container.querySelector('table');
 
     expect(table).toBeTruthy();
-    expect(table?.classList.contains(desktopClasses.virtualizedTable)).toBe(
+    expect(table?.classList.contains(layoutClasses.virtualizedTable)).toBe(
       false,
     );
   });

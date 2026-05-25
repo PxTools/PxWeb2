@@ -19,7 +19,7 @@ vi.mock('@tanstack/react-virtual', () => ({
   }),
 }));
 
-import classes from '../Table.module.scss';
+import layoutClasses from '../VirtualizedTableLayout/VirtualizedTableLayout.module.scss';
 import { MobileVirtualizedTable } from './MobileVirtualizedTable';
 import { pxTable } from '../Test/testData';
 import { PxTable } from '../../../shared-types/pxTable';
@@ -71,7 +71,9 @@ describe('TableMobileVirtualized', () => {
     const table = container.querySelector('table');
 
     expect(table).toBeTruthy();
-    expect(table?.classList.contains(classes.virtualizedTable)).toBe(false);
+    expect(table?.classList.contains(layoutClasses.virtualizedTable)).toBe(
+      false,
+    );
   });
 
   it('renders one body row in no-stub mode', () => {

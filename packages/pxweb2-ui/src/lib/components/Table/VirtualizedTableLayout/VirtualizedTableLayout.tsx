@@ -1,7 +1,7 @@
 import cl from 'clsx';
 
 import classes from '../Table.module.scss';
-import desktopClasses from '../DesktopVirtualizedTable/DesktopVirtualizedTable.module.scss';
+import layoutClasses from './VirtualizedTableLayout.module.scss';
 import { PxTable } from '../../../shared-types/pxTable';
 
 /** Inputs required by the generic virtualized table layout wrapper. */
@@ -41,8 +41,8 @@ export function VirtualizedTableLayout({
     <div
       ref={scrollContainerRef}
       className={cl({
-        [classes.virtualizedWrapper]: shouldUseInternalScrollContainer,
-        [classes.virtualizedWrapperUseParentScroll]:
+        [layoutClasses.virtualizedWrapper]: shouldUseInternalScrollContainer,
+        [layoutClasses.virtualizedWrapperUseParentScroll]:
           shouldUseInternalScrollContainer && verticalScrollElement !== null,
       })}
     >
@@ -51,7 +51,7 @@ export function VirtualizedTableLayout({
           classes.table,
           classes[`bodyshort-medium`],
           {
-            [desktopClasses.virtualizedTable]: shouldVirtualizeColumns,
+            [layoutClasses.virtualizedTable]: shouldVirtualizeColumns,
           },
           className,
         )}
@@ -63,7 +63,7 @@ export function VirtualizedTableLayout({
             <tr>
               <td
                 colSpan={renderedColumnCount}
-                className={classes.virtualPaddingCell}
+                className={layoutClasses.virtualPaddingCell}
                 style={{ height: `${topPaddingHeight}px` }}
               />
             </tr>
@@ -75,7 +75,7 @@ export function VirtualizedTableLayout({
             <tr>
               <td
                 colSpan={renderedColumnCount}
-                className={classes.virtualPaddingCell}
+                className={layoutClasses.virtualPaddingCell}
                 style={{ height: `${bottomPaddingHeight}px` }}
               />
             </tr>
