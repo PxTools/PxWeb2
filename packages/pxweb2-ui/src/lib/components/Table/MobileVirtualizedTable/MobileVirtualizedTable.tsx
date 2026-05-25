@@ -2,15 +2,15 @@ import { useMemo } from 'react';
 import cl from 'clsx';
 
 import {
-  createHeadingRowsAndDataCellCodes,
-  createVirtualPaddingCell,
-  useBodyRowVirtualizationWindow,
   VirtualizedTableLayout,
 } from '../Table';
 import classes from '../Table.module.scss';
 import mobileClasses from './MobileVirtualizedTable.module.scss';
 import {
+  createHeadingRowsAndDataCellCodes,
+  createVirtualPaddingCell,
   createKeyFactory,
+  useBodyRowVirtualizationWindow,
   useVirtualizedTableBaseProps,
   VirtualizedTableProps,
 } from '../Utils/tableHelper';

@@ -3,17 +3,17 @@ import { useVirtualizer } from '@tanstack/react-virtual';
 import cl from 'clsx';
 
 import {
-  createHeadingRowsAndDataCellCodes,
-  createVirtualPaddingCell,
   DESKTOP_COLUMN_VIRTUALIZATION_THRESHOLD,
   DESKTOP_COLUMN_VIRTUALIZATION_FEW_COLUMNS_THRESHOLD,
-  useBodyRowVirtualizationWindow,
   VirtualizedTableLayout,
 } from '../Table';
 import classes from '../Table.module.scss';
 import desktopClasses from './DesktopVirtualizedTable.module.scss';
 import {
+  createHeadingRowsAndDataCellCodes,
+  createVirtualPaddingCell,
   createKeyFactory,
+  useBodyRowVirtualizationWindow,
   useVirtualizedTableBaseProps,
   VirtualizedTableProps,
 } from '../Utils/tableHelper';
