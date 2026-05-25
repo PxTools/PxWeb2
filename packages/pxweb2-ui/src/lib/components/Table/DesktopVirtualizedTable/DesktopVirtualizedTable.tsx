@@ -8,13 +8,15 @@ import {
   DESKTOP_COLUMN_VIRTUALIZATION_THRESHOLD,
   DESKTOP_COLUMN_VIRTUALIZATION_FEW_COLUMNS_THRESHOLD,
   useBodyRowVirtualizationWindow,
-  useVirtualizedTableBaseProps,
   VirtualizedTableLayout,
-  VirtualizedTableProps,
 } from '../Table';
 import classes from '../Table.module.scss';
 import desktopClasses from './DesktopVirtualizedTable.module.scss';
-import { createKeyFactory } from '../Utils/tableHelper';
+import {
+  createKeyFactory,
+  useVirtualizedTableBaseProps,
+  VirtualizedTableProps,
+} from '../Utils/tableHelper';
 import { resolveDataCell } from '../Utils/tableCellData';
 import { walkStubTree } from '../Utils/tableStubTraversal';
 import { VartypeEnum } from '../../../shared-types/vartypeEnum';

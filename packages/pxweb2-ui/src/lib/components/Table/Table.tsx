@@ -1,4 +1,4 @@
-import { memo, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useRef } from 'react';
 import cl from 'clsx';
 import { useVirtualizer, useWindowVirtualizer } from '@tanstack/react-virtual';
 
@@ -9,10 +9,7 @@ import { MobileVirtualizedTable } from './MobileVirtualizedTable/MobileVirtualiz
 export { VirtualizedTableLayout } from './VirtualizedTableLayout/VirtualizedTableLayout';
 export type { VirtualizedTableLayoutProps } from './VirtualizedTableLayout/VirtualizedTableLayout';
 import { PxTable } from '../../shared-types/pxTable';
-import {
-  calculateRowAndColumnMeta,
-  columnRowMeta,
-} from './Utils/columnRowMeta';
+import { columnRowMeta } from './Utils/columnRowMeta';
 import {
   createHeadingDataCellCodes,
   createHeadingLevelLayouts,
@@ -34,20 +31,6 @@ export interface TableProps {
   readonly getVerticalScrollElement?: () => HTMLElement | null;
   readonly className?: string;
   readonly isMobile: boolean;
-}
-
-/** Props shared by virtualized table entry points. */
-export interface VirtualizedTableProps extends Omit<TableProps, 'isMobile'> {}
-
-/** Computed values and refs needed to render virtualized table variants. */
-export interface BaseVirtualizedTableProps {
-  readonly pxtable: PxTable;
-  readonly className?: string;
-  readonly tableMeta: columnRowMeta;
-  readonly tableColumnSize: number;
-  readonly scrollContainerRef: React.RefObject<HTMLDivElement | null>;
-  readonly verticalScrollElement: HTMLElement | null;
-  readonly tableScrollMargin: number;
 }
 
 /** Horizontal column slice and matching virtual padding in pixels. */
@@ -87,147 +70,6 @@ export const Table = memo(function Table({
     />
   );
 });
-
-/** Computes shared table metadata, refs, and derived values for virtualized tables. */
-export function useVirtualizedTableBaseProps({
-  pxtable,
-  getVerticalScrollElement,
-  className = '',
-}: VirtualizedTableProps): BaseVirtualizedTableProps {
-  const { scrollContainerRef, verticalScrollElement, tableScrollMargin } =
-    useTableScrollContext(getVerticalScrollElement);
-
-  const tableMeta: columnRowMeta = useMemo(
-    () => calculateRowAndColumnMeta(pxtable),
-    [pxtable],
-  );
-
-  const tableColumnSize: number = tableMeta.columns - tableMeta.columnOffset;
-
-  return {
-    pxtable,
-    tableMeta,
-    tableColumnSize,
-    scrollContainerRef,
-    verticalScrollElement,
-    tableScrollMargin,
-    className,
-  };
-}
-
-/**
- * Resolves which element drives vertical scrolling and computes the table
- * scroll margin used by virtualization when the table lives inside another
- * scroll container.
- */
-function useTableScrollContext(
-  getVerticalScrollElement?: () => HTMLElement | null,
-) {
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [verticalScrollElement, setVerticalScrollElement] =
-    useState<HTMLElement | null>(null);
-  const [tableScrollMargin, setTableScrollMargin] = useState(0);
-
-  // Resolve the vertical scroll element
-  useEffect(() => {
-    // Use outer container scroll if it is provided, otherwise use the table container scroll
-    let frameId: number | null = null;
-
-    const updateVerticalScrollElement = () => {
-      if (getVerticalScrollElement) {
-        setVerticalScrollElement(getVerticalScrollElement());
-      } else {
-        setVerticalScrollElement(null);
-      }
-    };
-
-    const scheduleUpdateVerticalScrollElement = () => {
-      if (frameId !== null) {
-        return;
-      }
-
-      frameId = requestAnimationFrame(() => {
-        frameId = null;
-        updateVerticalScrollElement();
-      });
-    };
-
-    updateVerticalScrollElement();
-    // Keep the resolved scroll element in sync with layout/viewport changes.
-    globalThis.addEventListener('resize', scheduleUpdateVerticalScrollElement);
-
-    return () => {
-      globalThis.removeEventListener(
-        'resize',
-        scheduleUpdateVerticalScrollElement,
-      );
-      if (frameId !== null) {
-        cancelAnimationFrame(frameId);
-      }
-    };
-  }, [getVerticalScrollElement]);
-
-  // Update the table scroll margin used for virtualization when the scroll element or table geometry changes
-  useEffect(() => {
-    if (!verticalScrollElement || !scrollContainerRef.current) {
-      setTableScrollMargin(0);
-      return;
-    }
-
-    let frameId: number | null = null;
-
-    const updateTableScrollMargin = () => {
-      if (!scrollContainerRef.current) {
-        return;
-      }
-
-      // Margin aligns virtualizer coordinates with the active scroll source.
-      const tableTop = scrollContainerRef.current.getBoundingClientRect().top;
-      const containerTop = verticalScrollElement.getBoundingClientRect().top;
-      const margin = tableTop - containerTop + verticalScrollElement.scrollTop;
-
-      setTableScrollMargin(Math.max(0, margin));
-    };
-
-    const scheduleUpdateTableScrollMargin = () => {
-      if (frameId !== null) {
-        return;
-      }
-
-      frameId = requestAnimationFrame(() => {
-        frameId = null;
-        updateTableScrollMargin();
-      });
-    };
-
-    updateTableScrollMargin();
-    // Recalculate on viewport changes.
-    globalThis.addEventListener('resize', scheduleUpdateTableScrollMargin);
-
-    const resizeObserver =
-      typeof ResizeObserver === 'undefined'
-        ? null
-        : new ResizeObserver(() => {
-            scheduleUpdateTableScrollMargin();
-          });
-
-    if (resizeObserver && scrollContainerRef.current) {
-      // Recalculate if table or scroll container geometry changes.
-      resizeObserver.observe(scrollContainerRef.current);
-      resizeObserver.observe(verticalScrollElement);
-    }
-
-    return () => {
-      globalThis.removeEventListener('resize', scheduleUpdateTableScrollMargin);
-      resizeObserver?.disconnect();
-      if (frameId !== null) {
-        cancelAnimationFrame(frameId);
-      }
-    };
-  }, [verticalScrollElement]);
-
-  return { scrollContainerRef, verticalScrollElement, tableScrollMargin };
-}
 
 /** Builds heading rows and aligned heading metadata in one call. */
 export function createHeadingRowsAndDataCellCodes({

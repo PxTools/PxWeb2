@@ -1,7 +1,166 @@
-import { createElement } from 'react';
-import type { ReactNode } from 'react';
+import { createElement, useEffect, useMemo, useRef, useState } from 'react';
+import type { ReactNode, RefObject } from 'react';
 import { PxTable } from '../../../shared-types/pxTable';
-import { columnRowMeta } from './columnRowMeta';
+import { calculateRowAndColumnMeta, columnRowMeta } from './columnRowMeta';
+
+/** Props shared by virtualized table entry points. */
+export interface VirtualizedTableProps {
+  readonly pxtable: PxTable;
+  readonly getVerticalScrollElement?: () => HTMLElement | null;
+  readonly className?: string;
+}
+
+/** Computed values and refs needed to render virtualized table variants. */
+export interface BaseVirtualizedTableProps {
+  readonly pxtable: PxTable;
+  readonly className?: string;
+  readonly tableMeta: columnRowMeta;
+  readonly tableColumnSize: number;
+  readonly scrollContainerRef: RefObject<HTMLDivElement | null>;
+  readonly verticalScrollElement: HTMLElement | null;
+  readonly tableScrollMargin: number;
+}
+
+/** Computes shared table metadata, refs, and derived values for virtualized tables. */
+export function useVirtualizedTableBaseProps({
+  pxtable,
+  getVerticalScrollElement,
+  className = '',
+}: VirtualizedTableProps): BaseVirtualizedTableProps {
+  const { scrollContainerRef, verticalScrollElement, tableScrollMargin } =
+    useTableScrollContext(getVerticalScrollElement);
+
+  const tableMeta: columnRowMeta = useMemo(
+    () => calculateRowAndColumnMeta(pxtable),
+    [pxtable],
+  );
+
+  const tableColumnSize: number = tableMeta.columns - tableMeta.columnOffset;
+
+  return {
+    pxtable,
+    tableMeta,
+    tableColumnSize,
+    scrollContainerRef,
+    verticalScrollElement,
+    tableScrollMargin,
+    className,
+  };
+}
+
+/**
+ * Resolves which element drives vertical scrolling and computes the table
+ * scroll margin used by virtualization when the table lives inside another
+ * scroll container.
+ */
+function useTableScrollContext(
+  getVerticalScrollElement?: () => HTMLElement | null,
+) {
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [verticalScrollElement, setVerticalScrollElement] =
+    useState<HTMLElement | null>(null);
+  const [tableScrollMargin, setTableScrollMargin] = useState(0);
+
+  // Resolve the vertical scroll element
+  useEffect(() => {
+    // Use outer container scroll if it is provided, otherwise use the table container scroll
+    let frameId: number | null = null;
+
+    const updateVerticalScrollElement = () => {
+      if (getVerticalScrollElement) {
+        setVerticalScrollElement(getVerticalScrollElement());
+      } else {
+        setVerticalScrollElement(null);
+      }
+    };
+
+    const scheduleUpdateVerticalScrollElement = () => {
+      if (frameId !== null) {
+        return;
+      }
+
+      frameId = requestAnimationFrame(() => {
+        frameId = null;
+        updateVerticalScrollElement();
+      });
+    };
+
+    updateVerticalScrollElement();
+    // Keep the resolved scroll element in sync with layout/viewport changes.
+    globalThis.addEventListener('resize', scheduleUpdateVerticalScrollElement);
+
+    return () => {
+      globalThis.removeEventListener(
+        'resize',
+        scheduleUpdateVerticalScrollElement,
+      );
+      if (frameId !== null) {
+        cancelAnimationFrame(frameId);
+      }
+    };
+  }, [getVerticalScrollElement]);
+
+  // Update the table scroll margin used for virtualization when the scroll element or table geometry changes
+  useEffect(() => {
+    if (!verticalScrollElement || !scrollContainerRef.current) {
+      setTableScrollMargin(0);
+      return;
+    }
+
+    let frameId: number | null = null;
+
+    const updateTableScrollMargin = () => {
+      if (!scrollContainerRef.current) {
+        return;
+      }
+
+      // Margin aligns virtualizer coordinates with the active scroll source.
+      const tableTop = scrollContainerRef.current.getBoundingClientRect().top;
+      const containerTop = verticalScrollElement.getBoundingClientRect().top;
+      const margin = tableTop - containerTop + verticalScrollElement.scrollTop;
+
+      setTableScrollMargin(Math.max(0, margin));
+    };
+
+    const scheduleUpdateTableScrollMargin = () => {
+      if (frameId !== null) {
+        return;
+      }
+
+      frameId = requestAnimationFrame(() => {
+        frameId = null;
+        updateTableScrollMargin();
+      });
+    };
+
+    updateTableScrollMargin();
+    // Recalculate on viewport changes.
+    globalThis.addEventListener('resize', scheduleUpdateTableScrollMargin);
+
+    const resizeObserver =
+      typeof ResizeObserver === 'undefined'
+        ? null
+        : new ResizeObserver(() => {
+            scheduleUpdateTableScrollMargin();
+          });
+
+    if (resizeObserver && scrollContainerRef.current) {
+      // Recalculate if table or scroll container geometry changes.
+      resizeObserver.observe(scrollContainerRef.current);
+      resizeObserver.observe(verticalScrollElement);
+    }
+
+    return () => {
+      globalThis.removeEventListener('resize', scheduleUpdateTableScrollMargin);
+      resizeObserver?.disconnect();
+      if (frameId !== null) {
+        cancelAnimationFrame(frameId);
+      }
+    };
+  }, [verticalScrollElement]);
+
+  return { scrollContainerRef, verticalScrollElement, tableScrollMargin };
+}
 
 /** Vertical row slice and spacer heights for body virtualization. */
 export interface VisibleRowsWindow {

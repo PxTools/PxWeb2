@@ -5,13 +5,15 @@ import {
   createHeadingRowsAndDataCellCodes,
   createVirtualPaddingCell,
   useBodyRowVirtualizationWindow,
-  useVirtualizedTableBaseProps,
   VirtualizedTableLayout,
-  VirtualizedTableProps,
 } from '../Table';
 import classes from '../Table.module.scss';
 import mobileClasses from './MobileVirtualizedTable.module.scss';
-import { createKeyFactory } from '../Utils/tableHelper';
+import {
+  createKeyFactory,
+  useVirtualizedTableBaseProps,
+  VirtualizedTableProps,
+} from '../Utils/tableHelper';
 import { resolveDataCell } from '../Utils/tableCellData';
 import { walkStubTree } from '../Utils/tableStubTraversal';
 import { VartypeEnum } from '../../../shared-types/vartypeEnum';
