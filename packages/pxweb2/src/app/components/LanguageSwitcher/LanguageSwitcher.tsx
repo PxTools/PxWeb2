@@ -11,7 +11,7 @@ import classes from './LanguageSwitcher.module.scss';
 
 export const LanguageSwitcher = () => {
   const { t, i18n } = useTranslation();
-  const { isMobile, languageFilter: appLanguageFilter = [] } = useApp();
+  const { isMobile, languageFilter } = useApp();
   const config = getConfig();
   const navigate = useNavigate();
   const location = useLocation();
@@ -26,12 +26,12 @@ export const LanguageSwitcher = () => {
     setCurrentLang(i18n.language);
   }, [location.pathname, i18n.language]);
 
-  const hasLanguageFilter = appLanguageFilter.length > 0;
-  const languageOptions = hasLanguageFilter
-    ? config.language.supportedLanguages.filter((language) =>
-        appLanguageFilter.includes(language.shorthand),
-      )
-    : config.language.supportedLanguages;
+  const languageOptions =
+    languageFilter.length > 0
+      ? config.language.supportedLanguages.filter((language) =>
+          languageFilter.includes(language.shorthand),
+        )
+      : config.language.supportedLanguages;
 
   const handleLanguageChange = (
     event: React.ChangeEvent<HTMLSelectElement>,
