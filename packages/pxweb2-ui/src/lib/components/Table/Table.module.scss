@@ -66,6 +66,14 @@
     }
   }
 
+  th.stub.stubFewColumns {
+    @media screen and (min-width: fixed.$breakpoints-small-min-width) {
+      width: 25rem;
+      min-width: 25rem;
+      max-width: 25rem;
+    }
+  }
+
   tr:first-child th:first-child {
     border-inline-start: none;
     @media screen and (max-width: fixed.$breakpoints-xsmall-max-width) {

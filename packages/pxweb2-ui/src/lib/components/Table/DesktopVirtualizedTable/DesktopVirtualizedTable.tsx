@@ -4,7 +4,6 @@ import cl from 'clsx';
 
 import { VirtualizedTableLayout } from '../VirtualizedTableLayout/VirtualizedTableLayout';
 import classes from '../Table.module.scss';
-import desktopClasses from './DesktopVirtualizedTable.module.scss';
 import {
   createHeadingRowsAndDataCellCodes,
   createVirtualPaddingCell,
@@ -172,7 +171,7 @@ function renderDesktopBodyRows({
         }
         className={cl(
           classes.stub,
-          { [desktopClasses.stubFewColumns]: hasFewColumns },
+          { [classes.stubFewColumns]: hasFewColumns },
           classes[`stub-${rowEntry.level}`],
         )}
         key={nextKey()}

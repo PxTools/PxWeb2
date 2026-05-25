@@ -67,14 +67,6 @@ thead tr:last-child th .desktopHeaderLabelWrapper {
   }
 }
 
-.stubFewColumns {
-  @media screen and (min-width: fixed.$breakpoints-small-min-width) {
-    width: 25rem;
-    min-width: 25rem;
-    max-width: 25rem;
-  }
-}
-
 .virtualColumnPaddingCell {
   padding: 0;
   border-top: 1px solid var(--px-color-border-default);
