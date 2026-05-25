@@ -113,3 +113,11 @@ li.variableNote {
     transform: translateY(0px);
   }
 }
+
+p {
+  margin-bottom: 0px;
+}
+
+li > p:first-child {
+  margin-top: 0;
+}
