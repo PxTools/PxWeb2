@@ -19,9 +19,6 @@ export interface TableProps {
   readonly isMobile: boolean;
 }
 
-export const DESKTOP_COLUMN_VIRTUALIZATION_THRESHOLD = 15;
-export const DESKTOP_COLUMN_VIRTUALIZATION_FEW_COLUMNS_THRESHOLD = 4; // If there are few columns, we can allow more characters before wrapping, as there is more horizontal space available.
-
 /** Renders the mobile or desktop table variant based on viewport mode. */
 export const Table = memo(function Table({
   pxtable,

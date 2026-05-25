@@ -3,8 +3,6 @@ import { useVirtualizer } from '@tanstack/react-virtual';
 import cl from 'clsx';
 
 import {
-  DESKTOP_COLUMN_VIRTUALIZATION_THRESHOLD,
-  DESKTOP_COLUMN_VIRTUALIZATION_FEW_COLUMNS_THRESHOLD,
   VirtualizedTableLayout,
 } from '../Table';
 import classes from '../Table.module.scss';
@@ -56,6 +54,9 @@ const DESKTOP_COLUMN_OVERSCAN = 20;
 const DESKTOP_BOOTSTRAP_COLUMN_COUNT = 12;
 const DESKTOP_HORIZONTAL_END_SCROLL_PADDING = 0;
 const EMPTY_VIRTUAL_COLUMNS: never[] = [];
+const DESKTOP_COLUMN_VIRTUALIZATION_THRESHOLD = 15;
+// With very few columns there is more horizontal space, so wrapping can be looser.
+const DESKTOP_COLUMN_VIRTUALIZATION_FEW_COLUMNS_THRESHOLD = 4;
 
 /** Chooses bootstrap/last/computed desktop column window from virtualizer output. */
 function resolveVisibleColumnsWindow({
