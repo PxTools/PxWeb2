@@ -40,6 +40,7 @@ export * from './lib/components/Spinner/Spinner';
 export * from './lib/components/SideSheet/SideSheet';
 export * from './lib/components/Table/Utils/cubeHelper';
 export * from './lib/components/Table/Table';
+export * from './lib/components/Table/VirtualizedTableLayout/VirtualizedTableLayout';
 export * from './lib/components/TableCard/TableCard';
 export * from './lib/components/Tabs/Tab';
 export * from './lib/components/Tabs/TabPanel';
