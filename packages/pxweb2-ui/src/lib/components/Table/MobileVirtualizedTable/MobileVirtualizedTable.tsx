@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import cl from 'clsx';
 
-import { VirtualizedTableLayout } from '../Table';
+import { VirtualizedTableLayout } from '../VirtualizedTableLayout/VirtualizedTableLayout';
 import classes from '../Table.module.scss';
 import mobileClasses from './MobileVirtualizedTable.module.scss';
 import {

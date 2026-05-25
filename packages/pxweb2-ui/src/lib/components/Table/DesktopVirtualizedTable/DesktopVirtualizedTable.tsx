@@ -2,7 +2,7 @@ import { useMemo, useRef } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import cl from 'clsx';
 
-import { VirtualizedTableLayout } from '../Table';
+import { VirtualizedTableLayout } from '../VirtualizedTableLayout/VirtualizedTableLayout';
 import classes from '../Table.module.scss';
 import desktopClasses from './DesktopVirtualizedTable.module.scss';
 import {

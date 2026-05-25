@@ -1,14 +1,6 @@
 import { memo } from 'react';
 import { DesktopVirtualizedTable } from './DesktopVirtualizedTable/DesktopVirtualizedTable';
 import { MobileVirtualizedTable } from './MobileVirtualizedTable/MobileVirtualizedTable';
-export { VirtualizedTableLayout } from './VirtualizedTableLayout/VirtualizedTableLayout';
-export type { VirtualizedTableLayoutProps } from './VirtualizedTableLayout/VirtualizedTableLayout';
-export {
-  createHeading,
-  createHeadingRowsAndDataCellCodes,
-  createVirtualPaddingCell,
-  useBodyRowVirtualizationWindow,
-} from './Utils/tableHelper';
 import { PxTable } from '../../shared-types/pxTable';
 
 /** Public props for the table component that selects desktop/mobile rendering. */
