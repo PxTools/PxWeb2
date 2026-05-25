@@ -28,20 +28,13 @@ export const Desktop: Story = {
     pxtable: pxTable,
     isMobile: false,
   },
-  parameters: {
-    viewport: {
-      viewports: {
-        desktop: {
-          name: 'Desktop',
-          styles: {
-            width: '1280px',
-            height: '900px',
-          },
-        },
-      },
-      defaultViewport: 'desktop',
-    },
-  },
+  decorators: [
+    (Story) => (
+      <div style={{ maxWidth: '1280px', width: '100%', margin: '0 auto' }}>
+        <Story />
+      </div>
+    ),
+  ],
 };
 
 export const Mobile: Story = {
@@ -56,18 +49,11 @@ export const Mobile: Story = {
       <Table {...args} />
     </>
   ),
-  parameters: {
-    viewport: {
-      viewports: {
-        mobile: {
-          name: 'Mobile',
-          styles: {
-            width: '375px',
-            height: '667px',
-          },
-        },
-      },
-      defaultViewport: 'mobile',
-    },
-  },
+  decorators: [
+    (Story) => (
+      <div style={{ maxWidth: '375px', width: '100%', margin: '0 auto' }}>
+        <Story />
+      </div>
+    ),
+  ],
 };
