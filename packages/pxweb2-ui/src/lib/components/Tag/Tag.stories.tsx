@@ -1,99 +1,142 @@
-import type { Meta, StoryFn } from '@storybook/react-vite';
+import type { ComponentProps } from 'react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
+
 import { Tag } from './Tag';
 
-const meta: Meta<typeof Tag> = {
+const colors = [
+  'subtle',
+  'neutral',
+  'info',
+  'success',
+  'warning',
+  'error',
+  'error-subtle',
+] as const;
+const sizes = ['medium', 'small', 'xsmall'] as const;
+const variants = ['default', 'border'] as const;
+
+const meta = {
   component: Tag,
   title: 'Components/Tag',
-};
-export default meta;
-
-const text = 'Tag';
-
-export const Default = {
+  tags: ['autodocs'],
   args: {
     size: 'medium',
-    variant: 'neutral',
-    type: 'default',
-    children: text,
+    variant: 'default',
+    color: 'neutral',
+    children: 'Tag',
   },
   argTypes: {
-    size: {
-      options: ['medium', 'small', 'xsmall'],
-      control: { type: 'radio' },
-    },
+    size: { control: 'inline-radio', options: ['medium', 'small', 'xsmall'] },
     variant: {
-      options: [
-        'neutral',
-        'subtle',
-        'info',
-        'success',
-        'warning',
-        'error',
-        'error-subtle',
-      ],
-      control: { type: 'radio' },
-    },
-    type: {
+      control: 'inline-radio',
       options: ['default', 'border'],
-      control: { type: 'radio' },
     },
+    color: {
+      control: 'inline-radio',
+      options: ['neutral', 'info', 'success', 'warning', 'error'],
+    },
+    children: { control: 'text' },
   },
-};
+} satisfies Meta<typeof Tag>;
 
-export const Size: StoryFn<typeof Tag> = () => {
+const wrapperStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '16px',
+} as const;
+
+const rowStyle = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '12px',
+  flexWrap: 'wrap',
+} as const;
+
+const labelStyle = {
+  minWidth: '150px',
+  fontWeight: 600,
+} as const;
+
+type Story = StoryObj<typeof meta>;
+type TagProps = ComponentProps<typeof Tag>;
+type TagRow = { labelText: string; tag: TagProps };
+
+function renderTagRows(args: TagProps, rows: TagRow[]) {
   return (
-    <>
-      <h1>Size</h1>
-
-      <h2>default:</h2>
-      <Tag>{text}</Tag>
-
-      <h2>medium:</h2>
-      <Tag size="medium">{text}</Tag>
-
-      <h2>small:</h2>
-      <Tag size="small">{text}</Tag>
-
-      <h2>xsmall:</h2>
-      <Tag size="xsmall">{text}</Tag>
-    </>
+    <div style={wrapperStyle}>
+      {rows.map(({ labelText, tag }) => (
+        <div key={labelText} style={rowStyle}>
+          <span style={labelStyle}>{labelText}</span>
+          <Tag {...args} {...tag} />
+        </div>
+      ))}
+    </div>
   );
-};
+}
 
-export const Variant: StoryFn<typeof Tag> = () => {
+function renderColorRow(args: TagProps, keyPrefix: string, tag: TagProps) {
   return (
-    <>
-      <h1>Variant</h1>
-      <h2>default:</h2>
-      <Tag>{text}</Tag>
-      <h2>subtle:</h2>
-      <Tag variant="subtle">{text}</Tag>
-      <h2>neutral:</h2>
-      <Tag variant="neutral">{text}</Tag>
-      <h2>info:</h2>
-      <Tag variant="info">{text}</Tag>
-      <h2>success:</h2>
-      <Tag variant="success">{text}</Tag>
-      <h2>warning:</h2>
-      <Tag variant="warning">{text}</Tag>
-      <h2>error:</h2>
-      <Tag variant="error">{text}</Tag>
-      <h2>error-subtle:</h2>
-      <Tag variant="error-subtle">{text}</Tag>
-    </>
+    <div style={rowStyle}>
+      {colors.map((color) => (
+        <Tag key={`${keyPrefix}-${color}`} {...args} {...tag} color={color}>
+          {color}
+        </Tag>
+      ))}
+    </div>
   );
+}
+
+export const Playground: Story = {};
+
+export const SizeStates: Story = {
+  render: (args) =>
+    renderTagRows(args, [
+      { labelText: 'Medium', tag: { size: 'medium' } },
+      { labelText: 'Small', tag: { size: 'small' } },
+      { labelText: 'Xsmall', tag: { size: 'xsmall' } },
+    ]),
 };
 
-export const Type: StoryFn<typeof Tag> = () => {
-  return (
-    <>
-      <h1>Type</h1>
-
-      <h2>default:</h2>
-      <Tag type="default">{text}</Tag>
-
-      <h2>border:</h2>
-      <Tag type="border">{text}</Tag>
-    </>
-  );
+export const ColorsByVariant: Story = {
+  args: { children: 'Tag', size: 'medium' },
+  argTypes: {
+    variant: { control: false },
+    color: { control: false },
+  },
+  render: (args) => (
+    <div style={wrapperStyle}>
+      <div style={rowStyle}>
+        <span style={labelStyle}>Default</span>
+        {renderColorRow(args, 'default', { variant: 'default' })}
+      </div>
+      <div style={rowStyle}>
+        <span style={labelStyle}>Border</span>
+        {renderColorRow(args, 'border', { variant: 'border' })}
+      </div>
+    </div>
+  ),
 };
+
+export const AllCombinations: Story = {
+  args: { children: 'Tag' },
+  argTypes: {
+    variant: { control: false },
+    color: { control: false },
+    size: { control: false },
+    children: { control: false },
+  },
+  render: (args) => (
+    <div style={wrapperStyle}>
+      {variants.map((variant) =>
+        sizes.map((size) => (
+          <div key={`${variant}-${size}`} style={rowStyle}>
+            <span style={labelStyle}>{`${variant} / ${size}`}</span>
+            {renderColorRow(args, `${variant}-${size}`, { variant, size })}
+          </div>
+        )),
+      )}
+    </div>
+  ),
+};
+
+export default meta;

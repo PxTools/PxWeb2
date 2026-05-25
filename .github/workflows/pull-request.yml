@@ -8,7 +8,6 @@ on:
 
 permissions:
   contents: read
-  pull-requests: write
 
 jobs:
   build:
@@ -51,7 +50,7 @@ jobs:
       - run: npm ci && npm run build && npm run coverage
 
       - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v7.1.0
+        uses: SonarSource/sonarqube-scan-action@v8.0.0
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
@@ -80,8 +79,12 @@ jobs:
     name: Deploy to Cloudflare Pages
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
 
-    if: ${{ github.actor != 'dependabot[bot]' && github.event_name == 'pull_request' }}
+      # Only deploy for PRs created by non-dependabot users from the main repository (not forks)
+    if: ${{ github.actor != 'dependabot[bot]' && github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == false }}
     outputs:
       deployment-url: ${{ steps.deploy.outputs.deployment-url }}
       alias-url: ${{ steps.deploy.outputs.pages-deployment-alias-url }}
@@ -107,7 +110,7 @@ jobs:
 
       - name: Deploy
         id: deploy
-        uses: cloudflare/wrangler-action@v3.15.0
+        uses: cloudflare/wrangler-action@v4.0.0
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -127,7 +130,7 @@ jobs:
 
       - name: Alternative Deploy
         id: alt-deploy
-        uses: cloudflare/wrangler-action@v3.15.0
+        uses: cloudflare/wrangler-action@v4.0.0
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -135,16 +138,36 @@ jobs:
             pages deploy dist --branch=alternative-${{ steps.branch-names.outputs.current_branch }}
 
       - name: Add deployment info to PR description
-        uses: jupier/powerful-pr-comment@v0.0.5
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          sticky: true
-          body: |
-            ## Branch Deployment to Cloudflare Pages
-            :articulated_lorry: Preview URL: ${{ steps.deploy.outputs.deployment-url }}
-            :construction: Branch preview URL: ${{ steps.deploy.outputs.pages-deployment-alias-url }}
-            :truck: Alternative Preview URL: ${{ steps.alt-deploy.outputs.deployment-url }}
-            :construction_worker: Alternative Branch preview URL: ${{ steps.alt-deploy.outputs.pages-deployment-alias-url }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          DEPLOY_URL: ${{ steps.deploy.outputs.deployment-url }}
+          DEPLOY_ALIAS_URL: ${{ steps.deploy.outputs.pages-deployment-alias-url }}
+          ALT_DEPLOY_URL: ${{ steps.alt-deploy.outputs.deployment-url }}
+          ALT_DEPLOY_ALIAS_URL: ${{ steps.alt-deploy.outputs.pages-deployment-alias-url }}
+        run: |
+          set -euo pipefail
+
+          for required_var in REPO PR_NUMBER DEPLOY_URL DEPLOY_ALIAS_URL ALT_DEPLOY_URL ALT_DEPLOY_ALIAS_URL; do
+            if [ -z "${!required_var}" ]; then
+              echo "::error::Missing required value: ${required_var}"
+              exit 1
+            fi
+          done
+
+          comment_body="$(printf '%s\n' \
+            '## Branch Deployment to Cloudflare Pages' \
+            ":articulated_lorry: Preview URL: ${DEPLOY_URL}" \
+            ":construction: Branch preview URL: ${DEPLOY_ALIAS_URL}" \
+            ":truck: Alternative Preview URL: ${ALT_DEPLOY_URL}" \
+            ":construction_worker: Alternative Branch preview URL: ${ALT_DEPLOY_ALIAS_URL}")"
+
+          gh pr comment "${PR_NUMBER}" \
+            --repo "${REPO}" \
+            --body "$comment_body" \
+            --edit-last \
+            --create-if-none
 
   test:
     name: Run Mabl tests
