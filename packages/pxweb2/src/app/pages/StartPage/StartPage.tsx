@@ -62,7 +62,7 @@ import { createTableListSEO } from '../../util/seo/tableListSEO';
 
 const StartPage = () => {
   const { t, i18n } = useTranslation();
-  const { isMobile, isTablet } = useApp();
+  const { isMobile, isTablet, setLanguageFilter } = useApp();
   const { state, dispatch } = useContext(FilterContext);
   useFilterUrlSync(state, dispatch, t);
 
@@ -96,6 +96,11 @@ const StartPage = () => {
   const filterOverlayRef = useRef<HTMLDivElement>(null);
 
   const navigate = useNavigate();
+
+  // Clear any previously set app-level language filtering when StartPage mounts.
+  useEffect(() => {
+    setLanguageFilter([]);
+  }, [setLanguageFilter]);
 
   // On initial load, seed search from URL query parameter once
   useEffect(() => {
