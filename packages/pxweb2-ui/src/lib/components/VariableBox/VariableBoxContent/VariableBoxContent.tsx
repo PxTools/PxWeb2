@@ -199,7 +199,10 @@ const matchesSearch = (value: Value, searchValue: string) => {
   );
 };
 const sanitizeSearchTermForHighlight = (searchValue: string) => {
-  return searchValue.trim().replace(/^[*\"]+|[*\"]+$/g, '');
+  return searchValue
+    .trim()
+    .replace(/^[*"]+/, '')
+    .replace(/[*"]+$/, '');
 };
 export function VariableBoxContent({
   varId,
