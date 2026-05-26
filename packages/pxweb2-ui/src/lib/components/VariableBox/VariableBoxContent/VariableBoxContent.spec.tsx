@@ -287,7 +287,7 @@ describe('With Virtuoso mock', () => {
       searchTerm: '"Total population"',
       expectedValues: ['Total population'],
       unexpectedValues: [
-        'Urban population',
+        'Urban populations',
         'Population density',
         'Region North',
       ],
