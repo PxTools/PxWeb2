@@ -262,7 +262,11 @@ describe('With Virtuoso mock', () => {
   it.each([
     {
       searchTerm: '*tion',
-      expectedValues: ['Total population', 'Urban population'],
+      expectedValues: [
+        'Total population',
+        'Urban population',
+        'Population density',
+      ],
       unexpectedValues: ['Region North', 'Households'],
     },
     {
@@ -287,7 +291,7 @@ describe('With Virtuoso mock', () => {
       searchTerm: '"Total population"',
       expectedValues: ['Total population'],
       unexpectedValues: [
-        'Urban populations',
+        'Urban population',
         'Population density',
         'Region North',
       ],
@@ -301,18 +305,27 @@ describe('With Virtuoso mock', () => {
         target: { value: searchTerm },
       });
 
-      await waitFor(() => {
-        expectedValues.forEach((value) => {
-          expect(
-            screen.getByRole('checkbox', { name: value }),
-          ).toBeInTheDocument();
-        });
+      const expectedCheckboxCount =
+        expectedValues.length > 1
+          ? expectedValues.length + 1
+          : expectedValues.length;
 
-        unexpectedValues.forEach((value) => {
-          expect(
-            screen.queryByRole('checkbox', { name: value }),
-          ).not.toBeInTheDocument();
-        });
+      await waitFor(() => {
+        expect(screen.getAllByRole('checkbox')).toHaveLength(
+          expectedCheckboxCount,
+        );
+      });
+
+      expectedValues.forEach((value) => {
+        expect(
+          screen.getByRole('checkbox', { name: value }),
+        ).toBeInTheDocument();
+      });
+
+      unexpectedValues.forEach((value) => {
+        expect(
+          screen.queryByRole('checkbox', { name: value }),
+        ).not.toBeInTheDocument();
       });
     },
   );
