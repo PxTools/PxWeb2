@@ -496,7 +496,6 @@ export function VariableBoxContent({
         </div>
       );
     } else if (item.type === 'mixedCheckbox' && searchedValues.length > 1) {
-      console.log('do i ever end up here?');
       return (
         <>
           <div
