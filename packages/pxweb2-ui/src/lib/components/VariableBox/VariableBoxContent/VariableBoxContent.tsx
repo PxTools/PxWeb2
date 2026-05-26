@@ -199,10 +199,27 @@ const matchesSearch = (value: Value, searchValue: string) => {
   );
 };
 const sanitizeSearchTermForHighlight = (searchValue: string) => {
-  return searchValue
-    .trim()
-    .replace(/^[*"]+/, '')
-    .replace(/[*"]+$/, '');
+  const trimmedSearchValue = searchValue.trim();
+  let startIndex = 0;
+  let endIndex = trimmedSearchValue.length;
+
+  while (
+    startIndex < endIndex &&
+    (trimmedSearchValue[startIndex] === '*' ||
+      trimmedSearchValue[startIndex] === '"')
+  ) {
+    startIndex += 1;
+  }
+
+  while (
+    endIndex > startIndex &&
+    (trimmedSearchValue[endIndex - 1] === '*' ||
+      trimmedSearchValue[endIndex - 1] === '"')
+  ) {
+    endIndex -= 1;
+  }
+
+  return trimmedSearchValue.slice(startIndex, endIndex);
 };
 export function VariableBoxContent({
   varId,
@@ -549,7 +566,7 @@ export function VariableBoxContent({
               text={value.label}
               searchTerm={sanitizeSearchTermForHighlight(search).replace(
                 /[.*+?^${}()|[\]\\]/g,
-                '\\$&',
+                String.raw`\$&`,
               )}
               searchStartOfWordOnly={true}
               onChange={() => onChangeCheckbox(varId, value.code)}
