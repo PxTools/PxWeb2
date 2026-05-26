@@ -182,8 +182,6 @@ const matchesSearch = (value: Value, searchValue: string) => {
   // term* -> starts-with match
   if (hasTrailingWildcard) {
     return (
-      // matchesAtWordStart(value.label, norm) ||
-      // matchesAtWordStart(String(value.code ?? ''), norm)
       matchesTextStart(value.label, normSearch) ||
       matchesTextStart(String(value.code ?? ''), normSearch) ||
       matchesAtWordStart(value.label, normSearch) ||
