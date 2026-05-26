@@ -1,5 +1,11 @@
 import React from 'react';
-import { render, screen, getAllByRole } from '@testing-library/react';
+import {
+  render,
+  screen,
+  getAllByRole,
+  fireEvent,
+  waitFor,
+} from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 
@@ -128,7 +134,7 @@ function renderVirtuosoItems(
     const content = itemContent(i);
 
     // Use index as key for test mock - simpler and sufficient for testing purposes
-    return <div key={i}>{content}</div>;
+    return <div key={i}>{content}</div>; // NOSONAR
   });
 }
 
@@ -252,4 +258,101 @@ describe('With Virtuoso mock', () => {
     // aria-labelledby should only contain title-varId
     expect(searchInput).toHaveAttribute('aria-labelledby', 'title-test-2');
   });
+
+  it.each([
+    {
+      searchTerm: '*tion',
+      expectedValues: ['Total population', 'Urban population'],
+      unexpectedValues: ['Region North', 'Households'],
+    },
+    {
+      searchTerm: 'pop*',
+      expectedValues: [
+        'Total population',
+        'Urban population',
+        'Population density',
+      ],
+      unexpectedValues: ['Region North', 'Households'],
+    },
+    {
+      searchTerm: '*pula*',
+      expectedValues: [
+        'Total population',
+        'Urban population',
+        'Population density',
+      ],
+      unexpectedValues: ['Region North', 'Households'],
+    },
+    {
+      searchTerm: '"Total population"',
+      expectedValues: ['Total population'],
+      unexpectedValues: [
+        'Urban population',
+        'Population density',
+        'Region North',
+      ],
+    },
+  ])(
+    'should filter values when search term is $searchTerm',
+    async ({ searchTerm, expectedValues, unexpectedValues }) => {
+      renderVariableBoxContentWithSearchValues();
+
+      fireEvent.change(screen.getByRole('textbox'), {
+        target: { value: searchTerm },
+      });
+
+      await waitFor(() => {
+        expectedValues.forEach((value) => {
+          expect(
+            screen.getByRole('checkbox', { name: value }),
+          ).toBeInTheDocument();
+        });
+
+        unexpectedValues.forEach((value) => {
+          expect(
+            screen.queryByRole('checkbox', { name: value }),
+          ).not.toBeInTheDocument();
+        });
+      });
+    },
+  );
 });
+
+function renderVariableBoxContentWithSearchValues() {
+  render(
+    <VariableBoxContent
+      label="test-search"
+      languageDirection="ltr"
+      type={VartypeEnum.REGULAR_VARIABLE}
+      values={[
+        { code: 'total-population', label: 'Total population' },
+        { code: 'urban-population', label: 'Urban population' },
+        { code: 'region-north', label: 'Region North' },
+        { code: 'foreign-citizens', label: 'Foreign citizens' },
+        { code: 'population-density', label: 'Population density' },
+        { code: 'households', label: 'Households' },
+        { code: 'average-age', label: 'Average age' },
+      ]}
+      codeLists={[]}
+      onChangeCodeList={() => {
+        return;
+      }}
+      onChangeCheckbox={() => {
+        return;
+      }}
+      onChangeMixedCheckbox={() => {
+        return;
+      }}
+      addModal={() => {
+        return;
+      }}
+      removeModal={() => {
+        return;
+      }}
+      varId="test-search"
+      selectedValues={[]}
+      totalValues={7}
+      totalChosenValues={0}
+    />,
+  );
+}
