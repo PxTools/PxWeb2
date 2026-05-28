@@ -18,7 +18,7 @@ export const Highlight: FC<HighlightProps> = ({
 
   let regex;
   if (searchStartOfWordOnly) {
-    regex = new RegExp(`(\\b${searchTerm})`, 'gi');
+    regex = new RegExp(String.raw`(\b${searchTerm})`, 'gi');
   } else {
     regex = new RegExp(`(${searchTerm})`, 'gi');
   }
