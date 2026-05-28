@@ -8,10 +8,12 @@ import {
   createHeadingRowsAndDataCellCodes,
   createVirtualPaddingCell,
   createKeyFactory,
+} from '../Utils/tableHelper';
+import {
   useBodyRowVirtualizationWindow,
   useVirtualizedTableBaseProps,
   VirtualizedTableProps,
-} from '../Utils/tableHelper';
+} from '../Hooks/tableHooks';
 import { resolveDataCell } from '../Utils/tableCellData';
 import { walkStubTree } from '../Utils/tableStubTraversal';
 import { VartypeEnum } from '../../../shared-types/vartypeEnum';
