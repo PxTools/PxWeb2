@@ -37,7 +37,6 @@ type VariableBoxContentProps = VariableBoxPropsToContent & {
   selectedValues: SelectedVBValues[];
   totalValues: number;
   totalChosenValues: number;
-  languageDirection: 'ltr' | 'rtl';
   onChangeCodeList: (selectedItem: SelectOption, varId: string) => void;
   onChangeCheckbox: (varId: string, value: string) => void;
   onChangeMixedCheckbox: (
@@ -57,7 +56,6 @@ type VirtualListItem = {
 export function VariableBoxContent({
   varId,
   label,
-  languageDirection,
   type,
   values,
   codeLists,
@@ -516,7 +514,6 @@ export function VariableBoxContent({
               label={t(
                 'presentation_page.side_menu.selection.variablebox.content.select.label',
               )}
-              languageDirection={languageDirection}
               modalHeading={label}
               modalCancelLabel={t(
                 'presentation_page.side_menu.selection.variablebox.content.select.modal.cancel_button',
@@ -526,6 +523,9 @@ export function VariableBoxContent({
               )}
               placeholder={t(
                 'presentation_page.side_menu.selection.variablebox.content.select.placeholder',
+              )}
+              changeCategory={t(
+                'presentation_page.side_menu.selection.variablebox.content.select.change_category',
               )}
               addModal={addModal}
               removeModal={removeModal}
