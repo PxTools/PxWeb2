@@ -15,20 +15,18 @@ export type SkipToTargetProps = React.HTMLAttributes<HTMLDivElement> & {
   translationKey?: SkipTranslationKey;
   label?: string;
   styleVariant?: 'main' | 'content';
+  ref?: React.Ref<HTMLDivElement>;
 };
 
-export const SkipToTarget = React.forwardRef<HTMLDivElement, SkipToTargetProps>(
-  (
-    {
-      targetId,
-      translationKey,
-      label,
-      styleVariant = 'main',
-      className = '',
-      ...props
-    },
-    ref,
-  ) => {
+export const SkipToTarget = ({
+  targetId,
+  translationKey,
+  label,
+  styleVariant = 'main',
+  className = '',
+  ref,
+  ...props
+}: SkipToTargetProps) => {
     const { t, i18n } = useTranslation();
     const config = getConfig();
     const location = useLocation().pathname;
@@ -50,26 +48,22 @@ export const SkipToTarget = React.forwardRef<HTMLDivElement, SkipToTargetProps>(
     const path = `${basePath}${params}#${targetId}`;
     const linkText = label ?? (translationKey ? t(translationKey) : '');
 
-    return (
-      <div
-        ref={ref}
-        className={cl(
-          styleVariant === 'content'
-            ? classes['skip-to-content']
-            : classes['skip-to-main'],
-          styleVariant === 'content'
-            ? classes['screen-reader-only-content']
-            : classes['screen-reader-only-main'],
-          className,
-        )}
-        {...props}
-      >
-        <Link href={path} size="medium">
-          {linkText}
-        </Link>
-      </div>
-    );
-  },
-);
+  return (
+    <div
+      ref={ref}
+      className={cl(
+        classes['skip-to-target'],
+        classes['screen-reader-only'],
+        styleVariant === 'main' && classes['skip-to-margin'],
+        className,
+      )}
+      {...props}
+    >
+      <Link href={path} size="medium">
+        {linkText}
+      </Link>
+    </div>
+  );
+};
 
 SkipToTarget.displayName = 'SkipToTarget';
