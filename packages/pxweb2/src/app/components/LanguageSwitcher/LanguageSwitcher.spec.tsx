@@ -11,6 +11,7 @@ import classes from './LanguageSwitcher.module.scss';
 let currentPathname = '/en/tables';
 const navigateMock = vi.fn();
 let isMobile = false;
+let appLanguageFilter: string[] = [];
 let mockI18nLanguage = 'en';
 const changeLanguageMock = vi.fn();
 
@@ -43,7 +44,7 @@ vi.mock('@pxweb2/pxweb2-ui', () => ({
 }));
 
 vi.mock('../../context/useApp', () => ({
-  default: () => ({ isMobile }),
+  default: () => ({ isMobile, languageFilter: appLanguageFilter }),
 }));
 
 // Override the global i18n mock for this test file to add controllable behavior
@@ -64,6 +65,7 @@ describe('LanguageSwitcher', () => {
     changeLanguageMock.mockClear();
     currentPathname = '/en/tables';
     isMobile = false;
+    appLanguageFilter = [];
     mockI18nLanguage = 'en';
   });
 
@@ -255,5 +257,33 @@ describe('LanguageSwitcher', () => {
     rerender(<LanguageSwitcher />);
 
     expect(select.value).toBe('sv');
+  });
+
+  it('enables all languages when app language filter is empty', () => {
+    appLanguageFilter = [];
+
+    render(<LanguageSwitcher />);
+
+    const options = screen.getAllByRole('option') as HTMLOptionElement[];
+
+    expect(options).toHaveLength(4);
+    expect(options.every((option) => !option.disabled)).toBe(true);
+  });
+
+  it('only displays filtered languages when app language filter has values', () => {
+    appLanguageFilter = ['en', 'sv'];
+
+    render(<LanguageSwitcher />);
+
+    const options = screen.getAllByRole('option') as HTMLOptionElement[];
+    const optionByValue = Object.fromEntries(
+      options.map((option) => [option.value, option]),
+    );
+
+    expect(options).toHaveLength(2);
+    expect(optionByValue.en).toBeDefined();
+    expect(optionByValue.sv).toBeDefined();
+    expect(optionByValue.no).toBeUndefined();
+    expect(optionByValue.ar).toBeUndefined();
   });
 });

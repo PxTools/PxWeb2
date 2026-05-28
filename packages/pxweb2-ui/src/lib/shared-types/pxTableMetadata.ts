@@ -17,6 +17,10 @@ export type PxTableMetadata = {
    */
   language: string;
   /**
+   * The available languages for the table.
+   */
+  availableLanguages: string[];
+  /**
    * A title for the table that describes the content of it.
    */
   label: string;

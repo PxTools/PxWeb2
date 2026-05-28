@@ -19,6 +19,8 @@ export type AppContextType = {
   setSkipToMainFocused: (focused: boolean) => void;
   title: string;
   setTitle: (title: string) => void;
+  languageFilter: string[];
+  setLanguageFilter: (languages: string[]) => void;
 };
 
 // Create the context with default values
@@ -37,6 +39,10 @@ export const AppContext = createContext<AppContextType>({
   setTitle: () => {
     return;
   },
+  languageFilter: [],
+  setLanguageFilter: () => {
+    return;
+  },
 });
 
 // Provider component
@@ -46,7 +52,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isInitialized] = useState(true);
   const [skipToMainFocused, setSkipToMainFocused] = useState(false);
   const [title, setTitle] = useState<string>('');
-
+  const [languageFilter, setLanguageFilter] = useState<string[]>([]);
   /**
    * Keep state if window screen size is mobile, pad or desktop.
    */
@@ -106,6 +112,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
       setSkipToMainFocused,
       title,
       setTitle,
+      languageFilter,
+      setLanguageFilter,
     }),
     [
       getSavedQueryId,
@@ -118,6 +126,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
       setSkipToMainFocused,
       title,
       setTitle,
+      languageFilter,
+      setLanguageFilter,
     ],
   );
 
