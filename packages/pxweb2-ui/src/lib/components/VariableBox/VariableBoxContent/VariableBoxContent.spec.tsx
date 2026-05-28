@@ -12,6 +12,22 @@ import '@testing-library/jest-dom/vitest';
 import VariableBoxContent from './VariableBoxContent';
 import { VartypeEnum } from '../../../shared-types/vartypeEnum';
 
+vi.mock('react-virtuoso', () => {
+  return {
+    Virtuoso: ({
+      totalCount,
+      itemContent,
+    }: {
+      totalCount: number;
+      itemContent: (index: number) => React.ReactNode;
+    }) => (
+      <div data-testid="mock-virtuoso">
+        {renderVirtuosoItems(totalCount, itemContent)}
+      </div>
+    ),
+  };
+});
+
 describe('VariableBoxContent', () => {
   it('should render successfully', () => {
     const { baseElement } = render(
@@ -139,28 +155,6 @@ function renderVirtuosoItems(
 }
 
 describe('With Virtuoso mock', () => {
-  beforeAll(() => {
-    vi.mock('react-virtuoso', () => {
-      return {
-        Virtuoso: ({
-          totalCount,
-          itemContent,
-        }: {
-          totalCount: number;
-          itemContent: (index: number) => React.ReactNode;
-        }) => (
-          <div data-testid="mock-virtuoso">
-            {renderVirtuosoItems(totalCount, itemContent)}
-          </div>
-        ),
-      };
-    });
-  });
-
-  afterAll(() => {
-    vi.resetModules();
-  });
-
   it('should set aria-labelledby to include codeListLabelId when codeLists are present', () => {
     render(
       <VariableBoxContent

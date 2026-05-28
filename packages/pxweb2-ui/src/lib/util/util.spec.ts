@@ -25,7 +25,7 @@ describe('getCSSVariable', () => {
 
 describe('mapCodeListToSelectOption', () => {
   it('should map a CodeList to a SelectOption', () => {
-    const codeList: CodeList = { id: '1', label: 'Option 1' };
+    const codeList: CodeList = { id: '1', label: 'Option 1', values: [] };
     const result: SelectOption = mapCodeListToSelectOption(codeList);
 
     expect(result).toEqual({ label: 'Option 1', value: '1' });
@@ -35,8 +35,8 @@ describe('mapCodeListToSelectOption', () => {
 describe('mapCodeListsToSelectOptions', () => {
   it('should map an array of CodeLists to an array of SelectOptions', () => {
     const codeLists: CodeList[] = [
-      { id: '1', label: 'Option 1' },
-      { id: '2', label: 'Option 2' },
+      { id: '1', label: 'Option 1', values: [] },
+      { id: '2', label: 'Option 2', values: [] },
     ];
     const result: SelectOption[] = mapCodeListsToSelectOptions(codeLists);
 

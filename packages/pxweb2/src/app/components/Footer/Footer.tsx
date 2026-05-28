@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router';
 
 import styles from './Footer.module.scss';
+import useApp from '../../context/useApp';
 import { getConfig } from '../../util/config/getConfig';
 import { getLanguagePath } from '../../util/language/getLanguagePath';
 import { BodyShort, Button, Heading, Link } from '@pxweb2/pxweb2-ui';
@@ -51,6 +52,7 @@ export const Footer: React.FC<FooterProps> = ({
   enableWindowScroll = false,
 }) => {
   const { i18n, t } = useTranslation();
+  const { languageFilter: appLanguageFilter = [] } = useApp();
   const config = getConfig();
   const content = useLocaleContent(
     i18n.language || config.language.defaultLanguage,
@@ -59,9 +61,17 @@ export const Footer: React.FC<FooterProps> = ({
   // Ref for the main scrollable container
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
   const location = useSafeLocation();
+  const supportedLanguages = Array.isArray(config?.language?.supportedLanguages)
+    ? config.language.supportedLanguages
+    : [];
+  const languagesToShow =
+    appLanguageFilter.length > 0
+      ? supportedLanguages.filter((lang: { shorthand: string }) =>
+          appLanguageFilter.includes(lang.shorthand),
+        )
+      : supportedLanguages;
 
   const canShowTopButton = !!containerRef || enableWindowScroll;
-
   const handleScrollTop = () => {
     if (containerRef?.current) {
       scrollToTop(containerRef);
@@ -113,39 +123,38 @@ export const Footer: React.FC<FooterProps> = ({
                   {t('common.footer.language_header')}
                 </Heading>
                 <div className={cl(styles.footerLinkList)}>
-                  {Array.isArray(config?.language?.supportedLanguages) &&
-                    config.language.supportedLanguages.map(
-                      (lang: { shorthand: string; languageName: string }) => {
-                        const languageHref = getLanguagePath(
-                          location.pathname,
-                          lang.shorthand,
-                          config.language.supportedLanguages,
-                          config.language.defaultLanguage,
-                          config.language.showDefaultLanguageInPath,
-                          config.baseApplicationPath,
-                          config.language.positionInPath,
-                        );
-                        const isCurrent = i18n.language?.startsWith(
-                          lang.shorthand,
-                        );
-                        return (
-                          <Navlink
-                            to={languageHref}
-                            size="medium"
-                            key={lang.shorthand}
-                            lang={lang.shorthand}
-                            aria-current={isCurrent ? 'true' : undefined}
-                            onClick={() => {
-                              if (!isCurrent) {
-                                i18n.changeLanguage(lang.shorthand);
-                              }
-                            }}
-                          >
-                            {lang.languageName || lang.shorthand.toUpperCase()}
-                          </Navlink>
-                        );
-                      },
-                    )}
+                  {languagesToShow.map(
+                    (lang: { shorthand: string; languageName: string }) => {
+                      const languageHref = getLanguagePath(
+                        location.pathname,
+                        lang.shorthand,
+                        supportedLanguages,
+                        config.language.defaultLanguage,
+                        config.language.showDefaultLanguageInPath,
+                        config.baseApplicationPath,
+                        config.language.positionInPath,
+                      );
+                      const isCurrent = i18n.language?.startsWith(
+                        lang.shorthand,
+                      );
+                      return (
+                        <Navlink
+                          to={languageHref}
+                          size="medium"
+                          key={lang.shorthand}
+                          lang={lang.shorthand}
+                          aria-current={isCurrent ? 'true' : undefined}
+                          onClick={() => {
+                            if (!isCurrent) {
+                              i18n.changeLanguage(lang.shorthand);
+                            }
+                          }}
+                        >
+                          {lang.languageName || lang.shorthand.toUpperCase()}
+                        </Navlink>
+                      );
+                    },
+                  )}
                 </div>
               </div>
             </div>

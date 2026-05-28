@@ -37,7 +37,6 @@ export const MarkdownRenderer: React.FC<MdProps> = ({ mdText }) => {
     <ReactMarkdown
       components={{
         a: LinkRenderer,
-        p: UnwantedMdRender,
         strong: UnwantedMdRender,
         em: ItalicRenderer,
       }}

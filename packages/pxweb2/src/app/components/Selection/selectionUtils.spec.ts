@@ -4,6 +4,7 @@ import {
   updateSelectedCodelistForVariable,
   addSelectedCodeListToVariable,
   getSelectedCodelists,
+  mapAvailableLanguagesFromLinks,
 } from './selectionUtils';
 import {
   SelectedVBValues,
@@ -354,6 +355,52 @@ describe('selectionUtils', () => {
         var2: 'C',
         var3: 'A',
       });
+    });
+  });
+
+  describe('mapAvailableLanguagesFromLinks', () => {
+    it('maps hreflang from self and alternate links only', () => {
+      const result = mapAvailableLanguagesFromLinks([
+        {
+          rel: 'self',
+          hreflang: 'en',
+          href: 'https://example.org/table?lang=en',
+        },
+        {
+          rel: 'alternate',
+          hreflang: 'sv',
+          href: 'https://example.org/table?lang=sv',
+        },
+        {
+          rel: 'metadata',
+          hreflang: 'no',
+          href: 'https://example.org/table/metadata?lang=no',
+        },
+      ]);
+
+      expect(result).toEqual(['en', 'sv']);
+    });
+
+    it('removes duplicate hreflang values', () => {
+      const result = mapAvailableLanguagesFromLinks([
+        {
+          rel: 'self',
+          hreflang: 'en',
+          href: 'https://example.org/table?lang=en',
+        },
+        {
+          rel: 'alternate',
+          hreflang: 'en',
+          href: 'https://example.org/table?lang=en',
+        },
+      ]);
+
+      expect(result).toEqual(['en']);
+    });
+
+    it('returns empty array when links are missing', () => {
+      expect(mapAvailableLanguagesFromLinks(undefined)).toEqual([]);
+      expect(mapAvailableLanguagesFromLinks(null)).toEqual([]);
     });
   });
 });

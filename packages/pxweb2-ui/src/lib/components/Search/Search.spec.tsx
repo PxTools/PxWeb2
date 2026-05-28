@@ -87,11 +87,7 @@ describe('Search component', () => {
       const user = userEvent.setup();
       const handleChange = vi.fn();
       const { getByRole } = render(
-        <Search
-          onChange={handleChange}
-          value="test"
-          arialLabelClearButtonText="Clear button"
-        />,
+        <Search onChange={handleChange} value="test" />,
       );
       const input = getByRole('textbox');
 
@@ -107,11 +103,7 @@ describe('Search component', () => {
       const user = userEvent.setup();
       const handleChange = vi.fn();
       const { getByRole } = render(
-        <Search
-          onChange={handleChange}
-          value="test"
-          arialLabelClearButtonText="Clear button"
-        />,
+        <Search onChange={handleChange} value="test" />,
       );
       const input = getByRole('textbox');
 

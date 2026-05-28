@@ -28,10 +28,14 @@ import { createTableListSEO } from '../../util/seo/tableListSEO';
 // Mock screen size via useApp with mutable flags we can control per test
 let mockIsMobile = false;
 let mockIsTablet = false;
+let mockLanguageFilter: string[] = [];
+const mockSetLanguageFilter = vi.fn();
 vi.mock('../../context/useApp', () => ({
   default: () => ({
     isMobile: mockIsMobile,
     isTablet: mockIsTablet,
+    languageFilter: mockLanguageFilter,
+    setLanguageFilter: mockSetLanguageFilter,
     isInitialized: true,
   }),
 }));

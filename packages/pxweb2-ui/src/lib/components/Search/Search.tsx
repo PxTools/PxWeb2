@@ -23,7 +23,6 @@ export interface SearchProps {
   searchPlaceHolder?: string;
   showLabel?: boolean;
   variableBoxTopBorderOverride?: boolean;
-  arialLabelClearButtonText?: string;
   onChange?: (value: string) => void;
 }
 

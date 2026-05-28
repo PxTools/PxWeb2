@@ -22,10 +22,6 @@ const meta: Meta<typeof Search> = {
       control: 'boolean',
       description: 'Override for border radius when used in a variableBox',
     },
-    arialLabelClearButtonText: {
-      control: 'text',
-      description: 'Accessibility label for the clear button',
-    },
   },
   decorators: [
     (Story) => (
