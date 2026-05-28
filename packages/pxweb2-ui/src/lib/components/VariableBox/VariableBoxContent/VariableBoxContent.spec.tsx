@@ -96,7 +96,7 @@ describe('VariableBoxContent', () => {
     const renderedCheckboxes = getAllByRole(baseElement, 'checkbox');
 
     // Adds the select all checkbox when more than 1 value is present,
-    // therefore check [1] and [2] instead of [0] and [1].
+    // therefore check [1] and [2] instead of [0] and [1]
     expect(renderedCheckboxes[1]).toHaveTextContent('test-1');
     expect(renderedCheckboxes[2]).toHaveTextContent('test-2');
   });
