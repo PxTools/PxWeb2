@@ -150,7 +150,7 @@ function renderVirtuosoItems(
     const content = itemContent(i);
 
     // Use index as key for test mock - simpler and sufficient for testing purposes
-    return <div key={i}>{content}</div>; // NOSONAR
+    return <div key={i}>{content}</div>;
   });
 }
 
