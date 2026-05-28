@@ -27,26 +27,26 @@ export const SkipToTarget = ({
   ref,
   ...props
 }: SkipToTargetProps) => {
-    const { t, i18n } = useTranslation();
-    const config = getConfig();
-    const location = useLocation().pathname;
-    const [searchParams] = useSearchParams();
+  const { t, i18n } = useTranslation();
+  const config = getConfig();
+  const location = useLocation().pathname;
+  const [searchParams] = useSearchParams();
 
-    const basePath = getLanguagePath(
-      location,
-      i18n.language,
-      config.language.supportedLanguages,
-      config.language.defaultLanguage,
-      config.language.showDefaultLanguageInPath,
-      config.baseApplicationPath,
-      config.language.positionInPath,
-    );
+  const basePath = getLanguagePath(
+    location,
+    i18n.language,
+    config.language.supportedLanguages,
+    config.language.defaultLanguage,
+    config.language.showDefaultLanguageInPath,
+    config.baseApplicationPath,
+    config.language.positionInPath,
+  );
 
-    // Build a single, URL-encoded query string from the search params.
-    const paramsString = searchParams.toString();
-    const params = paramsString ? `?${paramsString}` : '';
-    const path = `${basePath}${params}#${targetId}`;
-    const linkText = label ?? (translationKey ? t(translationKey) : '');
+  // Build a single, URL-encoded query string from the search params.
+  const paramsString = searchParams.toString();
+  const params = paramsString ? `?${paramsString}` : '';
+  const path = `${basePath}${params}#${targetId}`;
+  const linkText = label ?? (translationKey ? t(translationKey) : '');
 
   return (
     <div
