@@ -219,6 +219,7 @@ const sanitizeSearchTermForHighlight = (searchValue: string) => {
 
   return trimmedSearchValue.slice(startIndex, endIndex);
 };
+
 export function VariableBoxContent({
   varId,
   label,
