@@ -19,3 +19,7 @@
   align-items: flex-start;
   align-self: stretch;
 }
+
+.single-note > p:only-child {
+  margin-block-start: 0;
+}

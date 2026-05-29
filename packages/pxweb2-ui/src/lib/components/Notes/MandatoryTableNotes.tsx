@@ -32,7 +32,7 @@ export function MandatoryTableNotes({ notes }: MandatoryTableNotesProps) {
       className={cl(classes[`mandatory-box`])}
     >
       {notes.length === 1 ? (
-        <span>
+        <span className={cl(classes[`single-note`])}>
           <MarkdownRenderer mdText={notes[0]} />
         </span>
       ) : (
