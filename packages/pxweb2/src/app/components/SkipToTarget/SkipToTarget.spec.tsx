@@ -16,7 +16,9 @@ describe('SkipToTarget', () => {
   });
 
   it('sets sticky offset css var when withStickyHeaderOffset is true', () => {
-    const { unmount } = render(<SkipToTarget withStickyHeaderOffset targetId={''} />);
+    const { unmount } = render(
+      <SkipToTarget withStickyHeaderOffset targetId={''} />,
+    );
 
     expect(
       document.body.style.getPropertyValue(STICKY_SKIP_OFFSET_CSS_VAR),
