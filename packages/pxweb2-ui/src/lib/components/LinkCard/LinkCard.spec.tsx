@@ -1,6 +1,4 @@
 import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 
 import { LinkCard } from './LinkCard';
@@ -56,12 +54,12 @@ describe('LinkCard', () => {
     expect(svg).toBeInTheDocument();
   });
 
-  it('should have tabIndex of 0 for keyboard navigation', () => {
+  it('should render as a native link with href', () => {
     const { getByRole } = render(
       <LinkCard headingText="Test Heading" href="https://example.com" />,
     );
 
-    expect(getByRole('link')).toHaveAttribute('tabIndex', '0');
+    expect(getByRole('link')).toHaveAttribute('href', 'https://example.com');
   });
 
   it('should have role link', () => {
@@ -72,44 +70,7 @@ describe('LinkCard', () => {
     expect(getByRole('link')).toBeInTheDocument();
   });
 
-  it('should navigate to href on click', async () => {
-    const user = userEvent.setup();
-    const clickSpy = vi.fn();
-    let createdAnchor: HTMLAnchorElement | undefined;
-
-    const originalCreateElement = document.createElement.bind(document);
-    const createElementSpy = vi
-      .spyOn(document, 'createElement')
-      .mockImplementation((tagName: string) => {
-        const element = originalCreateElement(tagName);
-
-        if (tagName === 'a') {
-          createdAnchor = element as HTMLAnchorElement;
-          vi.spyOn(createdAnchor, 'click').mockImplementation(clickSpy);
-        }
-
-        return element;
-      });
-
-    const { getByRole } = render(
-      <LinkCard headingText="Test Heading" href="https://example.com" />,
-    );
-
-    const link = getByRole('link');
-    await user.click(link);
-
-    expect(createElementSpy).toHaveBeenCalledWith('a');
-    expect(clickSpy).toHaveBeenCalledTimes(1);
-    expect(createdAnchor?.href).toBe('https://example.com/');
-    expect(createdAnchor?.target).toBe('_blank');
-
-    createElementSpy.mockRestore();
-  });
-
-  it('should open link in new tab when newTab is true', async () => {
-    const user = userEvent.setup();
-    const clickSpy = vi.fn();
-
+  it('should open link in new tab when newTab is true', () => {
     const { getByRole } = render(
       <LinkCard
         headingText="Test Heading"
@@ -119,25 +80,11 @@ describe('LinkCard', () => {
     );
 
     const link = getByRole('link');
-
-    // Mock the created link element's click method
-    const originalCreateElement = document.createElement;
-    vi.spyOn(document, 'createElement').mockImplementation((tag) => {
-      const element = originalCreateElement.call(document, tag);
-      if (tag === 'a') {
-        vi.spyOn(element, 'click').mockImplementation(clickSpy);
-      }
-      return element;
-    });
-
-    await user.click(link);
-
-    document.createElement = originalCreateElement;
+    expect(link).toHaveAttribute('target', '_blank');
+    expect(link).toHaveAttribute('rel', 'noopener noreferrer');
   });
 
-  it('should open link in same tab when newTab is false', async () => {
-    const user = userEvent.setup();
-
+  it('should open link in same tab when newTab is false', () => {
     const { getByRole } = render(
       <LinkCard
         headingText="Test Heading"
@@ -147,35 +94,8 @@ describe('LinkCard', () => {
     );
 
     const link = getByRole('link');
-    await user.click(link);
-
-    expect(link).toBeInTheDocument();
-  });
-
-  it('should navigate on Enter key press', async () => {
-    const user = userEvent.setup();
-
-    const { getByRole } = render(
-      <LinkCard headingText="Test Heading" href="https://example.com" />,
-    );
-
-    const link = getByRole('link');
-    await user.keyboard('{Enter}');
-
-    expect(link).toBeInTheDocument();
-  });
-
-  it('should navigate on Space key press', async () => {
-    const user = userEvent.setup();
-
-    const { getByRole } = render(
-      <LinkCard headingText="Test Heading" href="https://example.com" />,
-    );
-
-    const link = getByRole('link');
-    await user.keyboard(' ');
-
-    expect(link).toBeInTheDocument();
+    expect(link).not.toHaveAttribute('target');
+    expect(link).not.toHaveAttribute('rel');
   });
 
   it('should render with heading type span by default', () => {
@@ -280,18 +200,15 @@ describe('LinkCard', () => {
     expect(getByRole('link')).toBeInTheDocument();
   });
 
-  it('should have aria-labelledby with heading text only', () => {
+  it('should have aria-label with heading text only', () => {
     const { getByRole } = render(
       <LinkCard headingText="Test Heading" href="https://example.com" />,
     );
 
-    expect(getByRole('link')).toHaveAttribute(
-      'aria-labelledby',
-      'Test Heading',
-    );
+    expect(getByRole('link')).toHaveAttribute('aria-label', 'Test Heading');
   });
 
-  it('should have aria-labelledby with heading and description', () => {
+  it('should have aria-label with heading and description', () => {
     const { getByRole } = render(
       <LinkCard
         headingText="Test Heading"
@@ -301,7 +218,7 @@ describe('LinkCard', () => {
     );
 
     expect(getByRole('link')).toHaveAttribute(
-      'aria-labelledby',
+      'aria-label',
       'Test Heading Test description',
     );
   });

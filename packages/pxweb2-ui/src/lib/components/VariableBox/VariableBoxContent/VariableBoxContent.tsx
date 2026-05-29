@@ -37,7 +37,6 @@ type VariableBoxContentProps = VariableBoxPropsToContent & {
   selectedValues: SelectedVBValues[];
   totalValues: number;
   totalChosenValues: number;
-  languageDirection: 'ltr' | 'rtl';
   onChangeCodeList: (selectedItem: SelectOption, varId: string) => void;
   onChangeCheckbox: (varId: string, value: string) => void;
   onChangeMixedCheckbox: (
@@ -53,11 +52,176 @@ type VirtualListItem = {
   type: string;
   value?: Value;
 };
+const WORD_DELIMITER_REGEX = /\s+/;
+
+const toNormalizedWords = (text: string) => {
+  return deburr(text).toLowerCase().split(WORD_DELIMITER_REGEX).filter(Boolean);
+};
+
+const toNormalizedText = (text: string) => {
+  return deburr(text).toLowerCase();
+};
+
+const parseSearch = (searchValue: string) => {
+  const trimmed = searchValue.trim();
+  const isExactPhrase =
+    trimmed.length >= 2 && trimmed.startsWith('"') && trimmed.endsWith('"');
+  const hasLeadingWildcard = !isExactPhrase && trimmed.startsWith('*');
+  const hasTrailingWildcard = !isExactPhrase && trimmed.endsWith('*');
+
+  let rawTerm = isExactPhrase ? trimmed.slice(1, -1) : trimmed;
+
+  if (hasLeadingWildcard) {
+    rawTerm = rawTerm.slice(1);
+  }
+
+  if (hasTrailingWildcard) {
+    rawTerm = rawTerm.slice(0, -1);
+  }
+
+  return {
+    isExactPhrase,
+    hasLeadingWildcard,
+    hasTrailingWildcard,
+    normSearch: deburr(rawTerm).toLowerCase().trim(),
+  };
+};
+
+const matchesContains = (text: string, normSearch: string) => {
+  if (normSearch === '') {
+    return true;
+  }
+
+  return toNormalizedText(text).includes(normSearch);
+};
+
+const matchesTextStart = (text: string, normSearch: string) => {
+  if (normSearch === '') {
+    return true;
+  }
+  return toNormalizedText(text).startsWith(normSearch);
+};
+
+const matchesAtWordStart = (text: string, normSearch: string) => {
+  if (normSearch === '') {
+    return true;
+  }
+
+  return deburr(text)
+    .toLowerCase()
+    .split(WORD_DELIMITER_REGEX)
+    .some((word) => word.startsWith(normSearch));
+};
+
+const matchesAtWordEnd = (text: string, normSearch: string) => {
+  if (normSearch === '') {
+    return true;
+  }
+
+  return toNormalizedText(text)
+    .split(WORD_DELIMITER_REGEX)
+    .some((word) => word.endsWith(normSearch));
+};
+
+const matchesExactPhrase = (text: string, normSearch: string) => {
+  if (normSearch === '') {
+    return true;
+  }
+
+  const phraseWords = normSearch.split(WORD_DELIMITER_REGEX).filter(Boolean);
+  const textWords = toNormalizedWords(text);
+
+  if (phraseWords.length === 0) {
+    return true;
+  }
+
+  if (phraseWords.length > textWords.length) {
+    return false;
+  }
+  for (let i = 0; i <= textWords.length - phraseWords.length; i += 1) {
+    const isMatch = phraseWords.every(
+      (phraseWord, offset) => textWords[i + offset] === phraseWord,
+    );
+
+    if (isMatch) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
+const matchesSearch = (value: Value, searchValue: string) => {
+  const { isExactPhrase, hasLeadingWildcard, hasTrailingWildcard, normSearch } =
+    parseSearch(searchValue);
+
+  if (isExactPhrase) {
+    return (
+      matchesExactPhrase(value.label, normSearch) ||
+      matchesExactPhrase(String(value.code ?? ''), normSearch)
+    );
+  }
+
+  // *term* -> contains match
+  if (hasLeadingWildcard && hasTrailingWildcard) {
+    return (
+      matchesContains(value.label, normSearch) ||
+      matchesContains(String(value.code ?? ''), normSearch)
+    );
+  }
+
+  // *term -> word-ending match
+  if (hasLeadingWildcard) {
+    return (
+      matchesAtWordEnd(value.label, normSearch) ||
+      matchesAtWordEnd(String(value.code ?? ''), normSearch)
+    );
+  }
+
+  // term* -> starts-with match
+  if (hasTrailingWildcard) {
+    return (
+      matchesTextStart(value.label, normSearch) ||
+      matchesTextStart(String(value.code ?? ''), normSearch) ||
+      matchesAtWordStart(value.label, normSearch) ||
+      matchesAtWordStart(String(value.code ?? ''), normSearch)
+    );
+  }
+
+  return (
+    matchesTextStart(value.label, normSearch) ||
+    matchesTextStart(String(value.code ?? ''), normSearch) ||
+    matchesAtWordStart(value.label, normSearch) ||
+    matchesAtWordStart(String(value.code ?? ''), normSearch)
+  );
+};
+const sanitizeSearchTermForHighlight = (searchValue: string) => {
+  const trimmedSearchValue = searchValue.trim();
+  let startIndex = 0;
+  let endIndex = trimmedSearchValue.length;
+
+  while (
+    startIndex < endIndex &&
+    (trimmedSearchValue[startIndex] === '*' ||
+      trimmedSearchValue[startIndex] === '"')
+  ) {
+    startIndex += 1;
+  }
+
+  while (
+    endIndex > startIndex &&
+    (trimmedSearchValue[endIndex - 1] === '*' ||
+      trimmedSearchValue[endIndex - 1] === '"')
+  ) {
+    endIndex -= 1;
+  }
+
+  return trimmedSearchValue.slice(startIndex, endIndex);
+};
 
 export function VariableBoxContent({
   varId,
   label,
-  languageDirection,
   type,
   values,
   codeLists,
@@ -88,11 +252,8 @@ export function VariableBoxContent({
   const valuesToRender = structuredClone(values);
   const codeListLabelId = 'codelist-label-' + uniqueId;
 
-  const searchedValues: Value[] = values.filter(
-    (value) =>
-      deburr(value.label)
-        .toLowerCase()
-        .indexOf(deburr(debouncedSearch).toLowerCase()) > -1,
+  const searchedValues: Value[] = values.filter((value) =>
+    matchesSearch(value, debouncedSearch),
   );
   const selectedValuesForVar = useMemo(() => {
     return (
@@ -118,10 +279,8 @@ export function VariableBoxContent({
 
   // Recalculate count whenever user types (raw search) or underlying values array changes
   useEffect(() => {
-    const norm = deburr(search).toLowerCase();
-    const nextCount = values.filter((v) =>
-      deburr(v.label).toLowerCase().includes(norm),
-    ).length;
+    const nextCount = values.filter((v) => matchesSearch(v, search)).length;
+
     setSearchResultsCount(nextCount);
   }, [search, values]);
 
@@ -181,12 +340,7 @@ export function VariableBoxContent({
     }
 
     valuesToRender
-      .filter(
-        (value) =>
-          deburr(value.label)
-            .toLowerCase()
-            .indexOf(deburr(debouncedSearch).toLowerCase()) > -1,
-      )
+      .filter((value) => matchesSearch(value, debouncedSearch))
       .forEach((value) => {
         newItems.push({ type: 'value', value });
       });
@@ -302,7 +456,6 @@ export function VariableBoxContent({
       }
       lastInteractionWasPointer.current = false;
     };
-
     if (item.type === 'search') {
       return (
         <div
@@ -317,9 +470,8 @@ export function VariableBoxContent({
               // Escape special characters in search value
               setSearch(value);
               // Immediate count update for live region on each keystroke
-              const norm = deburr(value).toLowerCase();
               const nextCount = values.filter((v) =>
-                deburr(v.label).toLowerCase().includes(norm),
+                matchesSearch(v, value),
               ).length;
               setSearchResultsCount(nextCount);
               if (value === '') {
@@ -408,7 +560,11 @@ export function VariableBoxContent({
                   ?.values.includes(value.code) === true
               }
               text={value.label}
-              searchTerm={search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}
+              searchTerm={sanitizeSearchTermForHighlight(search).replace(
+                /[.*+?^${}()|[\]\\]/g,
+                String.raw`\$&`,
+              )}
+              searchStartOfWordOnly={true}
               onChange={() => onChangeCheckbox(varId, value.code)}
             />
           </div>
@@ -516,7 +672,6 @@ export function VariableBoxContent({
               label={t(
                 'presentation_page.side_menu.selection.variablebox.content.select.label',
               )}
-              languageDirection={languageDirection}
               modalHeading={label}
               modalCancelLabel={t(
                 'presentation_page.side_menu.selection.variablebox.content.select.modal.cancel_button',
@@ -526,6 +681,9 @@ export function VariableBoxContent({
               )}
               placeholder={t(
                 'presentation_page.side_menu.selection.variablebox.content.select.placeholder',
+              )}
+              changeCategory={t(
+                'presentation_page.side_menu.selection.variablebox.content.select.change_category',
               )}
               addModal={addModal}
               removeModal={removeModal}

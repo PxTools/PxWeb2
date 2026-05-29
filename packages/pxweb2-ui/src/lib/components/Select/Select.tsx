@@ -8,17 +8,17 @@ import BodyShort from '../Typography/BodyShort/BodyShort';
 import { Icon } from '../Icon/Icon';
 import Modal from '../Modal/Modal';
 import Radio from '../Radio/Radio';
-import { getIconDirection } from '../../util/util';
+import Button from '../Button/Button';
 
 export type SelectProps = {
   variant?: 'default' | 'inVariableBox';
   label: string;
-  languageDirection?: 'ltr' | 'rtl';
   modalHeading?: string;
   modalCancelLabel?: string;
   modalConfirmLabel?: string;
   hideLabel?: boolean;
   placeholder?: string;
+  changeCategory?: string;
   options: SelectOption[];
   selectedOption?: SelectOption;
   onChange: (selectedItem: SelectOption | undefined) => void;
@@ -32,12 +32,12 @@ export type SelectProps = {
 export function Select({
   variant = 'default',
   label,
-  languageDirection = 'ltr',
   modalHeading = '',
   modalCancelLabel = '',
   modalConfirmLabel = '',
   hideLabel = false,
   placeholder = '',
+  changeCategory = '',
   options: ops,
   selectedOption,
   onChange,
@@ -66,12 +66,12 @@ export function Select({
       {variant === 'inVariableBox' && (
         <VariableBoxSelect
           label={label}
-          languageDirection={languageDirection}
           modalHeading={modalHeading}
           modalCancelLabel={modalCancelLabel}
           modalConfirmLabel={modalConfirmLabel}
           options={ops}
           placeholder={placeholder}
+          changeCategory={changeCategory}
           selectedOption={selectedOption}
           onChange={onChange}
           tabIndex={tabIndex}
@@ -194,19 +194,19 @@ type VariableBoxSelectProps = Pick<
   | 'className'
   | 'codeListLabelId'
 > & {
-  languageDirection: 'ltr' | 'rtl';
   addModal: (id: string, onClose: () => void) => void;
   removeModal: (name: string) => void;
+  changeCategory?: string;
 };
 
 function VariableBoxSelect({
   label,
-  languageDirection,
   modalHeading,
   modalCancelLabel,
   modalConfirmLabel,
   options,
   placeholder,
+  changeCategory,
   selectedOption,
   onChange,
   tabIndex,
@@ -223,6 +223,13 @@ function VariableBoxSelect({
   );
 
   const selectedItem: SelectOption | undefined = selectedOption;
+  const triggerAriaLabel = [
+    label,
+    selectedItem ? selectedItem.label : placeholder,
+    changeCategory,
+  ]
+    .filter(Boolean)
+    .join(', ');
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -289,13 +296,6 @@ function VariableBoxSelect({
     }
   }, [removeModal, isModalOpen, addModal]);
 
-  // handle rtl for the icon
-  const chevronIcon = getIconDirection(
-    languageDirection,
-    'ChevronRight',
-    'ChevronLeft',
-  );
-
   return (
     <>
       <div
@@ -303,6 +303,7 @@ function VariableBoxSelect({
         tabIndex={tabIndex}
         role="button"
         aria-haspopup="dialog"
+        aria-label={triggerAriaLabel}
         ref={selectRef}
         onClick={(event) => {
           if (programmaticFocusRef.current) {
@@ -313,7 +314,7 @@ function VariableBoxSelect({
           handleOpenModal();
         }}
         onKeyUp={(event) => {
-          if (event.key === ' ') {
+          if (event.key === ' ' || event.key === 'Enter') {
             handleOpenModal();
           }
         }}
@@ -323,8 +324,8 @@ function VariableBoxSelect({
           }
         }}
       >
-        <div className={cl(classes.textWrapper)}>
-          <Label size="small" textcolor="default">
+        <div className={cl(classes.textWrapper)} aria-hidden="true" inert>
+          <Label as="span" size="small" textcolor="default">
             {label}
           </Label>
           <BodyShort
@@ -338,13 +339,16 @@ function VariableBoxSelect({
             {selectedItem ? selectedItem.label : placeholder}
           </BodyShort>
         </div>
-        <Icon
-          iconName={chevronIcon}
-          className={cl(
-            classes.iconColor,
-            languageDirection === 'rtl' ? classes.rtl : classes.ltr,
-          )}
-        ></Icon>
+        <Button
+          variant="primary"
+          size="small"
+          className={cl(classes.visualOnlyButton)}
+          tabIndex={-1}
+          aria-hidden="true"
+          inert
+        >
+          {changeCategory}
+        </Button>
       </div>
       <div className={cl(classes.divider)}></div>
       {isModalOpen && (
