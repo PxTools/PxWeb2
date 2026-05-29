@@ -24,6 +24,7 @@
       }
     },
     "skip_to_main": "Skip to main content",
+    "skip_to_toolsmenu": "Skip to tool menu for table",
     "switch_language_landmark": "Select language",
     "footer": {
       "language_header": "Language",

@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { render } from '@testing-library/react';
 
-import { SkipToMain } from './SkipToMain';
+import { SkipToTarget } from './SkipToTarget';
 
 const STICKY_SKIP_OFFSET_CSS_VAR = '--px-skip-to-main-sticky-offset';
 
@@ -10,13 +10,13 @@ vi.mock('react-router', () => ({
   useSearchParams: () => [new URLSearchParams('foo=bar')],
 }));
 
-describe('SkipToMain', () => {
+describe('SkipToTarget', () => {
   afterEach(() => {
     document.body.style.removeProperty(STICKY_SKIP_OFFSET_CSS_VAR);
   });
 
   it('sets sticky offset css var when withStickyHeaderOffset is true', () => {
-    const { unmount } = render(<SkipToMain withStickyHeaderOffset />);
+    const { unmount } = render(<SkipToTarget withStickyHeaderOffset targetId={''} />);
 
     expect(
       document.body.style.getPropertyValue(STICKY_SKIP_OFFSET_CSS_VAR),
@@ -30,7 +30,7 @@ describe('SkipToMain', () => {
   });
 
   it('does not set sticky offset css var when withStickyHeaderOffset is false', () => {
-    render(<SkipToMain />);
+    render(<SkipToTarget targetId={''} />);
 
     expect(
       document.body.style.getPropertyValue(STICKY_SKIP_OFFSET_CSS_VAR),

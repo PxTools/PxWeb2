@@ -1,25 +1,35 @@
-import { HTMLAttributes, Ref, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useSearchParams } from 'react-router';
 
-import classes from './SkipToMain.module.scss';
+import classes from './SkipToTarget.module.scss';
 import { Link } from '@pxweb2/pxweb2-ui';
 import { getConfig } from '../../util/config/getConfig';
 import { getLanguagePath } from '../../util/language/getLanguagePath';
 
+type SkipTranslationKey = 'common.skip_to_main' | 'common.skip_to_toolsmenu';
 const STICKY_SKIP_OFFSET_CSS_VAR = '--px-skip-to-main-sticky-offset';
 
-type SkipToMainProps = HTMLAttributes<HTMLDivElement> & {
+export type SkipToTargetProps = React.HTMLAttributes<HTMLDivElement> & {
+  targetId: string;
+  translationKey?: SkipTranslationKey;
+  label?: string;
+  styleVariant?: 'main' | 'content';
   withStickyHeaderOffset?: boolean;
-  ref?: Ref<HTMLDivElement>;
+  ref?: React.Ref<HTMLDivElement>;
 };
 
-export function SkipToMain({
+export const SkipToTarget = ({
+  targetId,
+  translationKey,
+  label,
+  styleVariant = 'main',
+  className = '',
   withStickyHeaderOffset = false,
   ref,
   ...rest
-}: SkipToMainProps) {
+}: SkipToTargetProps) => {
   const { t, i18n } = useTranslation();
   const config = getConfig();
   const location = useLocation().pathname;
@@ -47,22 +57,28 @@ export function SkipToMain({
     config.language.positionInPath,
   );
 
-  // build a single, URL-encoded query string from the search params
-  const paramsString = searchParams.toString(); // URLSearchParams handles encoding
+  // Build a single, URL-encoded query string from the search params.
+  const paramsString = searchParams.toString();
   const params = paramsString ? `?${paramsString}` : '';
-  const path = `${basePath}${params}#px-main-content`;
+  const path = `${basePath}${params}#${targetId}`;
+  const linkText = label ?? (translationKey ? t(translationKey) : '');
 
   return (
     <div
       ref={ref}
-      className={cl(classes['skip-to-main'], classes['screen-reader-only'])}
+      className={cl(
+        classes['skip-to-target'],
+        classes['screen-reader-only'],
+        styleVariant === 'main' && classes['skip-to-margin'],
+        className,
+      )}
       {...rest}
     >
       <Link href={path} size="medium">
-        {t('common.skip_to_main')}
+        {linkText}
       </Link>
     </div>
   );
-}
+};
 
-SkipToMain.displayName = 'SkipToMain';
+SkipToTarget.displayName = 'SkipToTarget';

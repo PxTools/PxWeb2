@@ -9,7 +9,7 @@ import { Header } from '../../components/Header/Header';
 import { NavigationItem } from '../../components/NavigationMenu/NavigationItem/NavigationItemType';
 import NavigationRail from '../../components/NavigationMenu/NavigationRail/NavigationRail';
 import NavigationBar from '../../components/NavigationMenu/NavigationBar/NavigationBar';
-import { SkipToMain } from '../../components/SkipToMain/SkipToMain';
+import { SkipToTarget } from '../../components/SkipToTarget/SkipToTarget';
 import { Footer } from '../../components/Footer/Footer';
 import useAccessibility from '../../context/useAccessibility';
 import useApp from '../../context/useApp';
@@ -179,10 +179,26 @@ export function TableViewer() {
   };
 
   const isSmallScreen = isTablet === true || isMobile === true;
+  const mobileToolsMenuTargetId = 'px-table-viewer-mobile-tools-menu';
+  const desktopToolsMenuTargetId = 'px-table-viewer-outer-container';
+  const toolsMenuTargetId = isSmallScreen
+    ? mobileToolsMenuTargetId
+    : desktopToolsMenuTargetId;
 
   return (
     <>
-      <SkipToMain ref={skipToMainRef} withStickyHeaderOffset />
+      <div ref={skipToMainRef} tabIndex={-1}>
+        <SkipToTarget
+          targetId="px-main-content"
+          translationKey="common.skip_to_main"
+          withStickyHeaderOffset
+        />
+        <SkipToTarget
+          targetId={toolsMenuTargetId}
+          translationKey="common.skip_to_toolsmenu"
+          withStickyHeaderOffset
+        />
+      </div>
       {!isSmallScreen && (
         <div className={styles.stickyHeader}>
           <Header stroke={true} />
@@ -193,18 +209,22 @@ export function TableViewer() {
         {isSmallScreen ? (
           <>
             <Header stroke={true} />
-            <NavigationBar
+            <div id={mobileToolsMenuTargetId}>
+              <NavigationBar
+                ref={navigationBarRef}
+                onChange={changeSelectedNavView}
+                selected={selectedNavigationView}
+              />
+            </div>
+          </>
+        ) : (
+          <div id={desktopToolsMenuTargetId}>
+            <NavigationRail
               ref={navigationBarRef}
               onChange={changeSelectedNavView}
               selected={selectedNavigationView}
             />
-          </>
-        ) : (
-          <NavigationRail
-            ref={navigationBarRef}
-            onChange={changeSelectedNavView}
-            selected={selectedNavigationView}
-          />
+          </div>
         )}{' '}
         <div
           className={cl(styles.mainContainer, {

@@ -1,4 +1,4 @@
-.skip-to-main {
+.skip-to-target {
   &:focus-within {
     display: flex;
     background-color: var(--px-color-surface-inverted);
@@ -8,7 +8,13 @@
   }
 }
 
-.skip-to-main a {
+.skip-to-margin {
+  &:focus-within {
+    margin: -1px;
+  }
+}
+
+.skip-to-target a {
   justify-content: center;
   background-color: var(--px-color-surface-inverted);
   color: var(--px-color-text-on-inverted);
@@ -30,13 +36,7 @@
 
 .screen-reader-only {
   &:not(:focus-within) {
-    width: 1px !important;
-    height: 1px !important;
-    padding: 0 !important;
-    margin: -1px !important;
-    overflow: hidden !important;
-    clip: rect(0, 0, 0, 0) !important;
-    white-space: nowrap !important;
-    border: 0 !important;
+    position: absolute;
+    left: -99999px;
   }
 }
