@@ -1,6 +1,6 @@
-import { createElement } from 'react';
-import type { ReactNode } from 'react';
+import { createElement, type ReactNode } from 'react';
 import cl from 'clsx';
+
 import classes from '../Table.module.scss';
 import desktopClasses from '../DesktopVirtualizedTable/DesktopVirtualizedTable.module.scss';
 import { PxTable } from '../../../shared-types/pxTable';

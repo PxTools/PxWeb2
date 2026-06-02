@@ -1,4 +1,5 @@
 import { memo } from 'react';
+
 import { DesktopVirtualizedTable } from './DesktopVirtualizedTable/DesktopVirtualizedTable';
 import { MobileVirtualizedTable } from './MobileVirtualizedTable/MobileVirtualizedTable';
 import { PxTable } from '../../shared-types/pxTable';
