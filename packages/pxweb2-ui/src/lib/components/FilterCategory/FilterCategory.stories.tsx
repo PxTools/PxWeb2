@@ -61,22 +61,13 @@ export const Default: Story = {
 };
 
 export const WithFilterContent: StoryFn<typeof FilterCategory> = () => {
-  return (
-    <FilterCategory
-      header="Filter name"
-      screenReaderTxt="Filter screenreader content"
-    >
-      {filterContent}
-    </FilterCategory>
-  );
-};
+  const activeFiltersCount = filterItems.filter((item) => item.value).length;
 
-export const WithActiveFilters: StoryFn<typeof FilterCategory> = () => {
   return (
     <FilterCategory
       header="Filter name"
       screenReaderTxt="Filter screenreader content"
-      activeFiltersCount={1}
+      activeFiltersCount={activeFiltersCount}
     >
       {filterContent}
     </FilterCategory>
@@ -84,10 +75,13 @@ export const WithActiveFilters: StoryFn<typeof FilterCategory> = () => {
 };
 
 export const OpenByDefault: StoryFn<typeof FilterCategory> = () => {
+  const activeFiltersCount = filterItems.filter((item) => item.value).length;
+
   return (
     <FilterCategory
       header="Filter name"
       screenReaderTxt="Filter screenreader content"
+      activeFiltersCount={activeFiltersCount}
       openByDefault
     >
       {filterContent}
