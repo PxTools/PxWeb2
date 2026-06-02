@@ -86,7 +86,11 @@
     "filter": {
       "button": "Filter",
       "back": "Tilbake",
-      "badge_aria": "{{count}} filter valgt",
+      "badge": {
+        "aria_zero": "Ingen filter valgt",
+        "aria_one": "{{count}} filter valgt",
+        "aria_other": "{{count}} filter valgt"
+      },
       "show_results": "Vis {{value}} treff",
       "close": "Lukk filter",
       "header": "Filter",

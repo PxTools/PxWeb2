@@ -430,7 +430,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
         <div className={styles.sideBarWrapper}>
           <FilterCategory
             header={t('start_page.filter.subject')}
-            screenReaderTxt={t('start_page.filter.badge_aria', {
+            screenReaderTxt={t('start_page.filter.badge.aria', {
               count: subjectFilterCount,
             })}
             activeFiltersCount={subjectFilterCount}
@@ -445,7 +445,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
           </FilterCategory>
           <FilterCategory
             header={t('start_page.filter.year.title')}
-            screenReaderTxt={t('start_page.filter.badge_aria', {
+            screenReaderTxt={t('start_page.filter.badge.aria', {
               count: yearRangeFilterCount,
             })}
             activeFiltersCount={yearRangeFilterCount}
@@ -454,7 +454,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
           </FilterCategory>
           <FilterCategory
             header={t('start_page.filter.time_unit')}
-            screenReaderTxt={t('start_page.filter.badge_aria', {
+            screenReaderTxt={t('start_page.filter.badge.aria', {
               count: timeUnitFilterCount,
             })}
             activeFiltersCount={timeUnitFilterCount}
@@ -465,7 +465,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
           </FilterCategory>
           <FilterCategory
             header={t('start_page.filter.variabel')}
-            screenReaderTxt={t('start_page.filter.badge_aria', {
+            screenReaderTxt={t('start_page.filter.badge.aria', {
               count: variableFilterCount,
             })}
             activeFiltersCount={variableFilterCount}
@@ -475,7 +475,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
           {shouldShowStatusFilter && (
             <FilterCategory
               header={t('start_page.filter.status.title')}
-              screenReaderTxt={t('start_page.filter.badge_aria', {
+              screenReaderTxt={t('start_page.filter.badge.aria', {
                 count: statusFilterCount,
               })}
               activeFiltersCount={statusFilterCount}

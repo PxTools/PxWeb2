@@ -85,7 +85,11 @@
     "filter": {
       "button": "تصفية",
       "back": "رجوع",
-      "badge_aria": "{{count}} عوامل تصفية محددة",
+      "badge": {
+        "aria_zero": "لا توجد عوامل تصفية مطبقة",
+        "aria_one": "{{count}} عامل تصفية محدد",
+        "aria_other": "{{count}} عوامل تصفية محددة"
+      },
       "show_results": "عرض {{value}} نتيجة",
       "close": "إغلاق التصفية",
       "header": "تصفية",

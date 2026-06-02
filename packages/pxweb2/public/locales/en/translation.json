@@ -86,7 +86,11 @@
     "filter": {
       "button": "Filter",
       "back": "Back",
-      "badge_aria": "{{count}} filters selected",
+      "badge": {
+        "aria_zero": "No filters applied",
+        "aria_one": "{{count}} filter applied",
+        "aria_other": "{{count}} filters applied"
+      },
       "show_results": "Show {{value}} results",
       "close": "Close filter",
       "header": "Filter",

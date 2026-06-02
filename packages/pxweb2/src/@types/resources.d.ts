@@ -325,7 +325,11 @@ export default interface Resources {
     start_page: {
       filter: {
         back: 'Back';
-        badge_aria: '{{count}} filters selected';
+        badge: {
+          aria_one: '{{count}} filter applied';
+          aria_other: '{{count}} filters applied';
+          aria_zero: 'No filters applied';
+        };
         button: 'Filter';
         close: 'Close filter';
         frequency: {
