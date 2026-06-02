@@ -74,6 +74,7 @@ const makeBaseState = (
   overrides: Partial<StartPageState> = {},
 ): StartPageState => ({
   availableTables: [],
+  availableTablesWhenQueryApplied: [],
   activeFilters: [],
   availableFilters: {
     subjectTree: [],
@@ -162,7 +163,7 @@ describe('FilterSidebar - Status filter', () => {
     ).toBeInTheDocument();
   });
 
-  it('avkrysser "not_updating" når aktiv -> dispatcher REMOVE_FILTER', async () => {
+  it('unchecks "not_updating" when active -> dispatches REMOVE_FILTER', async () => {
     const state = makeBaseState({
       availableTables: [createMockTable('B', { discontinued: true })],
       activeFilters: [
@@ -194,7 +195,7 @@ describe('FilterSidebar - Status filter', () => {
       name: /start_page\.filter\.status\.not_updating(?:\s*\(\s*3\s*\))?/i,
     });
 
-    // Ett klikk når den er aktiv -> REMOVE
+    // One click when it is active -> REMOVE
     await user.click(box);
 
     expect(dispatch).toHaveBeenCalledWith({
@@ -203,7 +204,7 @@ describe('FilterSidebar - Status filter', () => {
     });
   });
 
-  // Når "not_updating" er inaktiv -> ett klikk skal ADD_FILTER
+  // When "not_updating" is inactive -> one click should ADD_FILTER
   it('unchecks "not_updating" when active -> dispatches REMOVE_FILTER', async () => {
     const state = makeBaseState({
       availableTables: [createMockTable('B', { discontinued: true })],
@@ -229,7 +230,7 @@ describe('FilterSidebar - Status filter', () => {
       name: /start_page\.filter\.status\.not_updating(?:\s*\(\s*3\s*\))?/i,
     });
 
-    // Ett klikk når den er inaktiv -> ADD
+    // One click when it is inactive -> ADD
     await user.click(box);
 
     expect(dispatch).toHaveBeenCalledWith({
@@ -319,21 +320,21 @@ describe('FilterSidebar - TimeUnit filter', () => {
     const annual = screen.getByText('start_page.filter.frequency.annual (2)');
     const monthly = screen.getByText('start_page.filter.frequency.monthly (1)');
 
-    // Annual skal være avkrysset (vi la den inn i activeFilters)
+    // Annual should be checked (we added it to activeFilters)
     const annualBox = within(annual.closest('label')!).getByRole('checkbox');
     const monthlyBox = within(monthly.closest('label')!).getByRole('checkbox');
 
     expect(annualBox).toBeChecked();
     expect(monthlyBox).not.toBeChecked();
 
-    // Klikk av "Annual" -> REMOVE_FILTER
+    // Uncheck "Annual" -> REMOVE_FILTER
     fireEvent.click(annualBox);
     expect(dispatch).toHaveBeenCalledWith({
       type: ActionType.REMOVE_FILTER,
       payload: { value: 'Annual', type: 'timeUnit' },
     });
 
-    // Klikk på "Monthly" -> ADD_FILTER
+    // Click "Monthly" -> ADD_FILTER
     fireEvent.click(monthlyBox);
     expect(dispatch).toHaveBeenCalledWith({
       type: ActionType.ADD_FILTER,

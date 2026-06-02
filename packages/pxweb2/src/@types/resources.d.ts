@@ -325,6 +325,7 @@ export default interface Resources {
     start_page: {
       filter: {
         back: 'Back';
+        badge_aria: '{{count}} filters selected';
         button: 'Filter';
         close: 'Close filter';
         frequency: {

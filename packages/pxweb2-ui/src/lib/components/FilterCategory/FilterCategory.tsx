@@ -1,27 +1,36 @@
-import React, { type ReactNode, useState, useRef } from 'react';
+import { Activity, type ReactNode, useState, useRef } from 'react';
 import cl from 'clsx';
 
 import styles from './FilterCategory.module.scss';
 import { Icon } from '../Icon/Icon';
 import { Heading } from '../Typography/Heading/Heading';
+import { Badge } from '../Badge/Badge';
 
-export interface FilterCategoryProps {
-  header?: string;
-  children?: ReactNode;
-  openByDefault?: boolean;
+interface FilterCategoryProps {
+  readonly header: string;
+  readonly screenReaderTxt: string;
+  readonly openByDefault?: boolean;
+  readonly activeFiltersCount?: number;
+  readonly children?: ReactNode;
 }
 
-export const FilterCategory: React.FC<FilterCategoryProps> = ({
+export function FilterCategory({
   header,
-  children,
+  screenReaderTxt,
   openByDefault = false,
-}) => {
+  activeFiltersCount = 0,
+  children,
+}: FilterCategoryProps) {
   const [isOpen, setIsOpen] = useState(openByDefault);
+  const hasActiveFilters = activeFiltersCount > 0;
 
   const contentRef = useRef<HTMLDivElement>(null);
 
   return (
     <div className={cl(styles.filterCategory)}>
+      <div aria-live="polite" className={cl(styles['sr-only'])}>
+        {screenReaderTxt}
+      </div>
       <div
         role="button"
         className={cl(styles.filterCategoryHeader)}
@@ -38,6 +47,11 @@ export const FilterCategory: React.FC<FilterCategoryProps> = ({
         <Heading size="small" level="3" className={styles.filterCategoryTitle}>
           {header}
         </Heading>
+
+        <Activity mode={hasActiveFilters ? 'visible' : 'hidden'}>
+          <Badge label={activeFiltersCount.toString()} />
+        </Activity>
+
         <span className={cl(styles.filterCategoryIconWrapper)}>
           <Icon
             className={cl({
@@ -59,6 +73,6 @@ export const FilterCategory: React.FC<FilterCategoryProps> = ({
       </div>
     </div>
   );
-};
+}
 
 export default FilterCategory;
