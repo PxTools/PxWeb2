@@ -49,7 +49,12 @@ export function FilterCategory({
         </Heading>
 
         <Activity mode={hasActiveFilters ? 'visible' : 'hidden'}>
-          <Badge label={activeFiltersCount.toString()} />
+          <Badge
+            label={activeFiltersCount.toString()}
+            variant="subtle"
+            color="info"
+            size="medium"
+          />
         </Activity>
 
         <span className={cl(styles.filterCategoryIconWrapper)}>
