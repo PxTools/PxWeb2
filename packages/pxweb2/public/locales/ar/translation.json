@@ -88,6 +88,9 @@
       "badge": {
         "aria_zero": "لا توجد عوامل تصفية مطبقة",
         "aria_one": "{{count}} عامل تصفية محدد",
+        "aria_two": "{{count}} عاملين تصفية محددين",
+        "aria_few": "{{count}} عوامل تصفية محددة",
+        "aria_many": "{{count}} عوامل تصفية محددة",
         "aria_other": "{{count}} عوامل تصفية محددة"
       },
       "show_results": "عرض {{value}} نتيجة",
