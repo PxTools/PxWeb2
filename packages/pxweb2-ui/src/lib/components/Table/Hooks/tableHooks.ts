@@ -158,7 +158,7 @@ export function useBodyRowVirtualizationWindow({
 function useTableScrollContext(
   getVerticalScrollElement?: () => HTMLElement | null,
 ) {
-  // scrollContainerRef tracks the table's outer container used for scroll event handling and geometry calculations. 
+  // scrollContainerRef tracks the table's outer container used for scroll event handling and geometry calculations.
   // scrollContainerRef is returned from this hook and are then attached to the table wrapper element in VirtualizedTableLayout.
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [verticalScrollElement, setVerticalScrollElement] =
