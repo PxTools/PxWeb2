@@ -2,15 +2,25 @@ import { useMemo } from 'react';
 import type * as echarts from 'echarts';
 
 import { buildDatasetOption, buildSeriesOption } from '../chartOptionBuilder';
-import type { EChartsDataset } from '../chartTypes';
+// import type { EChartsDataset } from '../chartTypes';
 import ChartExportButtons from './ChartExportButtons';
 import { useEChartOption } from './useEChartOption';
+import { PxTable } from '../../../shared-types/pxTable';
+import {
+  mapChartConfigToEChartsDataset,
+  mapPxTableToChart,
+} from '../chartDataMapper';
 
 interface LineChartProps {
-  readonly dataset: EChartsDataset;
+  readonly pxtable: PxTable;
   readonly colors?: string[];
 }
-export function LineChart({ dataset, colors }: LineChartProps) {
+export function LineChart({ pxtable, colors }: LineChartProps) {
+  const chartConfig = useMemo(() => mapPxTableToChart(pxtable), [pxtable]);
+  const dataset = useMemo(
+    () => mapChartConfigToEChartsDataset(chartConfig),
+    [chartConfig],
+  );
   const option = useMemo<echarts.EChartsOption>(
     () => ({
       ...buildDatasetOption(dataset),
@@ -30,15 +40,15 @@ export function LineChart({ dataset, colors }: LineChartProps) {
         height: 40 * dataset.series.length, // increase legend height based on number of series to prevent overlap with x-axis labels
       },
       series: buildSeriesOption(dataset, 'line', colors),
-      dataZoom: [
-        {
-          id: 'dataZoomX',
-          type: 'slider',
-          xAxisIndex: [0],
-          filterMode: 'filter',
-          bottom: 60,
-        },
-      ],
+      // dataZoom: [
+      //   {
+      //     id: 'dataZoomX',
+      //     type: 'slider',
+      //     xAxisIndex: [0],
+      //     filterMode: 'filter',
+      //     bottom: 60,
+      //   },
+      // ],
       // For line charts, tooltips are more useful when triggered by axis to show values of all series at a given category
       tooltip: {
         trigger: 'axis',

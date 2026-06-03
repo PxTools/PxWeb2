@@ -5,6 +5,7 @@ export * from './lib/components/BottomSheet/BottomSheet';
 export * from './lib/components/Breadcrumbs/Breadcrumbs';
 export * from './lib/components/Button/Button';
 export * from './lib/components/Chart/Chart';
+export * from './lib/components/Chart/Charts/LineChart';
 export * from './lib/components/Checkbox/Checkbox';
 export * from './lib/components/CheckCircle/CheckCircleIcon';
 export * from './lib/components/CheckCircle/CheckCircleToggle';
