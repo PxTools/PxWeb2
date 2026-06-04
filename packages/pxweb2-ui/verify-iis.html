@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PxWeb Standalone LineChart (IIS Sample)</title>
+
+    <link rel="stylesheet" href="./pxweb-line-chart.wc.css" />
+    <style>
+      body {
+        margin: 0;
+        padding: 24px;
+        font-family: Segoe UI, Arial, sans-serif;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        margin-top: 0;
+      }
+
+      .note {
+        color: #444;
+        margin-bottom: 16px;
+      }
+    </style>
+
+    <script>
+      const PXWEB_API_BASE_URL = 'API_BASE_URL';
+
+      globalThis.PxwebLineChartConfig = {
+        baseUrl: PXWEB_API_BASE_URL,
+      };
+    </script>
+    <script type="module" src="./pxweb-line-chart.wc.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Standalone LineChart (IIS)</h1>
+      <p class="note">
+        Replace API_BASE_URL and TABLE_ID placeholders before deployment.
+      </p>
+
+      <pxweb-line-chart
+        data-url=""
+        colors="#1d4ed8,#0f766e,#b45309"
+        strict-base-match="true"
+      ></pxweb-line-chart>
+
+      <script>
+        const chartElement = document.querySelector('pxweb-line-chart');
+        if (chartElement) {
+          chartElement.setAttribute(
+            'data-url',
+            `${PXWEB_API_BASE_URL}/tables/TABLE_ID/data?lang=en&heading=Tid&stub=Region`,
+          );
+        }
+      </script>
+    </div>
+  </body>
+</html>
