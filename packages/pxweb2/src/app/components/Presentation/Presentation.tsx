@@ -11,7 +11,7 @@ import {
   EmptyState,
   PxTable,
   LocalAlert,
-  Chart,
+  LineChart,
 } from '@pxweb2/pxweb2-ui';
 import useTableData from '../../context/useTableData';
 import useVariables from '../../context/useVariables';
@@ -276,10 +276,14 @@ export function Presentation({
               ref={gradientContainerRef}
             >
               <div>
-                <Chart
+                <LineChart
                   pxtable={tableData.data}
                   colors={config.presentationPage?.chart.colors}
-                ></Chart>
+                ></LineChart>
+                {/* <Chart
+                  pxtable={tableData.data}
+                  colors={config.presentationPage?.chart.colors}
+                ></Chart> */}
               </div>
               <div className={classes.tableContainer} ref={tableContainerRef}>
                 <MemoizedTable pxtable={tableData.data} isMobile={isMobile} />

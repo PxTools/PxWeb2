@@ -1,5 +1,5 @@
 import BarChart from './Charts/BarChart';
-import LineChart from './Charts/LineChart';
+// import LineChart from './Charts/LineChart';
 import { PopulationPyramid } from './Charts/PopulationPyramid';
 import { useMemo } from 'react';
 import LocalAlert from '../LocalAlert/LocalAlert';
@@ -51,7 +51,7 @@ export function Chart({ pxtable, colors }: ChartProps) {
         isHorizontal={true}
       ></BarChart>
       <BarChart dataset={dataset} colors={colors}></BarChart>
-      <LineChart dataset={dataset} colors={colors}></LineChart>
+      {/* <LineChart dataset={dataset} colors={colors}></LineChart> */}
       {populationPyramidResult.config ? (
         <PopulationPyramid
           dataset={populationPyramidResult.config}
