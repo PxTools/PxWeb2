@@ -1,5 +1,5 @@
 // This file implements the web component <pxweb-line-chart> that renders a line chart from a given data URL, using React under the hood.
-// Some of the functions in this file are web component specific and should exist for web components.                
+// Some of the functions in this file are web component specific and should exist for web components.
 import { createRoot, type Root } from 'react-dom/client';
 
 import { StandaloneLineChart } from './StandaloneLineChart';
