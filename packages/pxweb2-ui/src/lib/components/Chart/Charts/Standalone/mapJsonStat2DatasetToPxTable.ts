@@ -1,4 +1,4 @@
-// Duplicate jsonstat2-to-pxtable mapping logic. 
+// Duplicate jsonstat2-to-pxtable mapping logic.
 // The original mapper is in the pxweb2 package. SHOULD WE MOVE THIS TO A SHARED PACKAGE?
 import type { Dataset, jsonstat_category } from '@pxweb2/pxweb2-api-client';
 
@@ -72,7 +72,9 @@ function mapVariables(dataset: Dataset): Variable[] {
       label: dimension?.label ?? variableId,
       type: resolveVariableType(variableId, dataset.role),
       mandatory: false,
-      values: codes.map((code) => mapValue(code, labels[code] ?? code, units?.[code])),
+      values: codes.map((code) =>
+        mapValue(code, labels[code] ?? code, units?.[code]),
+      ),
     };
   });
 }

@@ -1,5 +1,5 @@
 // This file defines the actual custom HTML element <pxweb-line-chart> and renders a React chart inside it.
-// In short: this file is the bridge between plain HTML custom-element usage and your React chart component, 
+// In short: this file is the bridge between plain HTML custom-element usage and your React chart component,
 // including attribute parsing and lifecycle-safe mounting.
 import { createRoot, type Root } from 'react-dom/client';
 

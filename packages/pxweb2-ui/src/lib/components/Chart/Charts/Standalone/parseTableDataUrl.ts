@@ -16,9 +16,7 @@ function parseBracketKey(
   key: string,
   prefix: string,
 ): { variableCode: string; isArraySyntax: boolean } | null {
-  const baseRegex = new RegExp(
-    String.raw`^${prefix}\[([^\]]+)\](\[\])?$`,
-  );
+  const baseRegex = new RegExp(String.raw`^${prefix}\[([^\]]+)\](\[\])?$`);
   const match = baseRegex.exec(key);
   if (!match) {
     return null;
@@ -53,8 +51,9 @@ function parseRecordArray(
         value,
       };
     })
-    .filter((entry): entry is { variableCode: string; value: string } =>
-      entry !== null,
+    .filter(
+      (entry): entry is { variableCode: string; value: string } =>
+        entry !== null,
     );
 
   if (entries.length === 0) {
@@ -84,8 +83,9 @@ function parseRecord(
         value,
       };
     })
-    .filter((entry): entry is { variableCode: string; value: string } =>
-      entry !== null,
+    .filter(
+      (entry): entry is { variableCode: string; value: string } =>
+        entry !== null,
     );
 
   if (entries.length === 0) {
