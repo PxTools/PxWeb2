@@ -113,7 +113,12 @@ describe('Checkboxes', () => {
 
     it('should not set aria-describedby when not provided', () => {
       const { getByRole } = render(
-        <Checkbox id="test" text="Variable 1" value={false} onChange={vi.fn()} />,
+        <Checkbox
+          id="test"
+          text="Variable 1"
+          value={false}
+          onChange={vi.fn()}
+        />,
       );
 
       expect(getByRole('checkbox')).not.toHaveAttribute('aria-describedby');

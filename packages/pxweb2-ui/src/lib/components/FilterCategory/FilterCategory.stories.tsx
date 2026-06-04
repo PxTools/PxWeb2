@@ -63,7 +63,10 @@ export const WithFilterContent: StoryFn<typeof FilterCategory> = () => {
   const activeFiltersCount = filterItems.filter((item) => item.value).length;
 
   return (
-    <FilterCategory header="Filter name" activeFiltersCount={activeFiltersCount}>
+    <FilterCategory
+      header="Filter name"
+      activeFiltersCount={activeFiltersCount}
+    >
       {filterContent}
     </FilterCategory>
   );
