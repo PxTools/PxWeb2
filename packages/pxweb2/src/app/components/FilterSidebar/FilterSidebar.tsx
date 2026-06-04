@@ -20,6 +20,7 @@ interface CollapsibleProps {
   index: number;
   count: number;
   isActive: boolean;
+  ariaDescribedBy?: string;
   children: ReactNode;
   onFilterChange?: () => void;
 }
@@ -36,6 +37,7 @@ const Collapsible: React.FC<CollapsibleProps> = ({
   index,
   count,
   isActive,
+  ariaDescribedBy,
   children,
   onFilterChange,
 }) => {
@@ -49,6 +51,7 @@ const Collapsible: React.FC<CollapsibleProps> = ({
       <Checkbox
         id={subjectId + index}
         text={`${subjectLabel} (${count})`}
+        ariaDescribedBy={ariaDescribedBy}
         value={isActive}
         subtle={!isActive && count === 0}
         onChange={(value) => {
@@ -138,8 +141,9 @@ const Collapsible: React.FC<CollapsibleProps> = ({
 const RenderSubjects: React.FC<{
   firstLevel: boolean;
   subjects: PathItem[];
+  ariaDescribedBy?: string;
   onFilterChange?: () => void;
-}> = ({ firstLevel, subjects, onFilterChange }) => {
+}> = ({ firstLevel, subjects, ariaDescribedBy, onFilterChange }) => {
   const { state } = useContext(FilterContext);
 
   return (
@@ -168,6 +172,7 @@ const RenderSubjects: React.FC<{
               index={index}
               count={count}
               isActive={isChecked}
+              ariaDescribedBy={ariaDescribedBy}
               onFilterChange={onFilterChange}
             >
               {!!subject.children?.length && (
@@ -175,6 +180,7 @@ const RenderSubjects: React.FC<{
                   <RenderSubjects
                     firstLevel={false}
                     subjects={subject.children}
+                    ariaDescribedBy={ariaDescribedBy}
                     onFilterChange={onFilterChange}
                   />
                 </ul>
@@ -187,9 +193,10 @@ const RenderSubjects: React.FC<{
   );
 };
 
-const RenderTimeUnitFilters: React.FC<{ onFilterChange?: () => void }> = ({
-  onFilterChange,
-}) => {
+const RenderTimeUnitFilters: React.FC<{
+  onFilterChange?: () => void;
+  ariaDescribedBy?: string;
+}> = ({ onFilterChange, ariaDescribedBy }) => {
   const { state, dispatch } = useContext(FilterContext);
   const { t } = useTranslation();
 
@@ -211,6 +218,7 @@ const RenderTimeUnitFilters: React.FC<{ onFilterChange?: () => void }> = ({
         <Checkbox
           id={key}
           text={`${label} (${count})`}
+          ariaDescribedBy={ariaDescribedBy}
           value={isActive}
           subtle={!isActive && count === 0}
           onChange={(value) => {
@@ -231,9 +239,10 @@ const RenderTimeUnitFilters: React.FC<{ onFilterChange?: () => void }> = ({
   });
 };
 
-const VariablesFilter: React.FC<{ onFilterChange?: () => void }> = ({
-  onFilterChange,
-}) => {
+const VariablesFilter: React.FC<{
+  onFilterChange?: () => void;
+  ariaDescribedBy?: string;
+}> = ({ onFilterChange, ariaDescribedBy }) => {
   const { state, dispatch } = useContext(FilterContext);
   const [variableSearch, setVariableSearch] = useState('');
   const { t } = useTranslation();
@@ -285,6 +294,7 @@ const VariablesFilter: React.FC<{ onFilterChange?: () => void }> = ({
               <Checkbox
                 id={`var-${normalizedKeyForId}-${index}`}
                 text={`${upperFirst(key)} (${count})`}
+                ariaDescribedBy={ariaDescribedBy}
                 value={isActive}
                 onChange={(value) => {
                   value
@@ -314,9 +324,10 @@ const VariablesFilter: React.FC<{ onFilterChange?: () => void }> = ({
   );
 };
 
-const StatusFilter: React.FC<{ onFilterChange?: () => void }> = ({
-  onFilterChange,
-}) => {
+const StatusFilter: React.FC<{
+  onFilterChange?: () => void;
+  ariaDescribedBy?: string;
+}> = ({ onFilterChange, ariaDescribedBy }) => {
   const { state, dispatch } = useContext(FilterContext);
   const { t } = useTranslation();
 
@@ -342,6 +353,7 @@ const StatusFilter: React.FC<{ onFilterChange?: () => void }> = ({
         <Checkbox
           id="status-active"
           text={`${labelActive} (${activeCount})`}
+          ariaDescribedBy={ariaDescribedBy}
           value={activeChecked}
           subtle={!activeChecked && activeCount === 0}
           onChange={(value) => {
@@ -369,6 +381,7 @@ const StatusFilter: React.FC<{ onFilterChange?: () => void }> = ({
         <Checkbox
           id="status-discontinued"
           text={`${labelDiscontinued} (${discontinuedCount})`}
+          ariaDescribedBy={ariaDescribedBy}
           value={discontinuedChecked}
           subtle={!discontinuedChecked && discontinuedCount === 0}
           onChange={(value) => {
@@ -424,63 +437,88 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
     (filter) => filter.type === 'status',
   ).length;
 
+  const subjectSRDescriptionId = 'filter-subject-sr-description';
+  const timeUnitSRDescriptionId = 'filter-time-unit-sr-description';
+  const variableSRDescriptionId = 'filter-variable-sr-description';
+  const statusSRDescriptionId = 'filter-status-sr-description';
+
+  const subjectSRDescriptionText = t('start_page.filter.badge.aria', {
+    count: subjectFilterCount,
+  });
+  const timeUnitSRDescriptionText = t('start_page.filter.badge.aria', {
+    count: timeUnitFilterCount,
+  });
+  const variableSRDescriptionText = t('start_page.filter.badge.aria', {
+    count: variableFilterCount,
+  });
+  const statusSRDescriptionText = t('start_page.filter.badge.aria', {
+    count: statusFilterCount,
+  });
+
   return (
     <nav aria-label={t('start_page.filter.button')}>
       <div className={styles.sideBar}>
         <div className={styles.sideBarWrapper}>
           <FilterCategory
             header={t('start_page.filter.subject')}
-            screenReaderTxt={t('start_page.filter.badge.aria', {
-              count: subjectFilterCount,
-            })}
             activeFiltersCount={subjectFilterCount}
           >
+            <span id={subjectSRDescriptionId} className={styles['sr-only']}>
+              {subjectSRDescriptionText}
+            </span>
             <ul className={styles.filterList}>
               <RenderSubjects
                 firstLevel={true}
                 subjects={state.availableFilters.subjectTree}
+                ariaDescribedBy={subjectSRDescriptionId}
                 onFilterChange={onFilterChange}
               />
             </ul>
           </FilterCategory>
           <FilterCategory
             header={t('start_page.filter.year.title')}
-            screenReaderTxt={t('start_page.filter.badge.aria', {
-              count: yearRangeFilterCount,
-            })}
             activeFiltersCount={yearRangeFilterCount}
           >
             <YearRangeFilter onFilterChange={onFilterChange} />
           </FilterCategory>
           <FilterCategory
             header={t('start_page.filter.time_unit')}
-            screenReaderTxt={t('start_page.filter.badge.aria', {
-              count: timeUnitFilterCount,
-            })}
             activeFiltersCount={timeUnitFilterCount}
           >
+            <span id={timeUnitSRDescriptionId} className={styles['sr-only']}>
+              {timeUnitSRDescriptionText}
+            </span>
             <ul className={styles.filterList}>
-              <RenderTimeUnitFilters onFilterChange={onFilterChange} />
+              <RenderTimeUnitFilters
+                ariaDescribedBy={timeUnitSRDescriptionId}
+                onFilterChange={onFilterChange}
+              />
             </ul>
           </FilterCategory>
           <FilterCategory
             header={t('start_page.filter.variabel')}
-            screenReaderTxt={t('start_page.filter.badge.aria', {
-              count: variableFilterCount,
-            })}
             activeFiltersCount={variableFilterCount}
           >
-            <VariablesFilter onFilterChange={onFilterChange} />
+            <span id={variableSRDescriptionId} className={styles['sr-only']}>
+              {variableSRDescriptionText}
+            </span>
+            <VariablesFilter
+              ariaDescribedBy={variableSRDescriptionId}
+              onFilterChange={onFilterChange}
+            />
           </FilterCategory>
           {shouldShowStatusFilter && (
             <FilterCategory
               header={t('start_page.filter.status.title')}
-              screenReaderTxt={t('start_page.filter.badge.aria', {
-                count: statusFilterCount,
-              })}
               activeFiltersCount={statusFilterCount}
             >
-              <StatusFilter onFilterChange={onFilterChange} />
+              <span id={statusSRDescriptionId} className={styles['sr-only']}>
+                {statusSRDescriptionText}
+              </span>
+              <StatusFilter
+                ariaDescribedBy={statusSRDescriptionId}
+                onFilterChange={onFilterChange}
+              />
             </FilterCategory>
           )}
         </div>

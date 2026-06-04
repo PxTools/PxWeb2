@@ -8,7 +8,6 @@ import { Badge } from '../Badge/Badge';
 
 interface FilterCategoryProps {
   readonly header: string;
-  readonly screenReaderTxt: string;
   readonly openByDefault?: boolean;
   readonly activeFiltersCount?: number;
   readonly children?: ReactNode;
@@ -16,7 +15,6 @@ interface FilterCategoryProps {
 
 export function FilterCategory({
   header,
-  screenReaderTxt,
   openByDefault = false,
   activeFiltersCount = 0,
   children,
@@ -28,9 +26,6 @@ export function FilterCategory({
 
   return (
     <div className={cl(styles.filterCategory)}>
-      <div aria-live="polite" className={cl(styles['sr-only'])}>
-        {screenReaderTxt}
-      </div>
       <div
         role="button"
         className={cl(styles.filterCategoryHeader)}
