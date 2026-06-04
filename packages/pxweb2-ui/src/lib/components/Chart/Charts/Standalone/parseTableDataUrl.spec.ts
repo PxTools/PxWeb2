@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { parseTableDataUrl } from '../parseTableDataUrl';
+import { parseTableDataUrl } from './parseTableDataUrl';
 
 describe('parseTableDataUrl', () => {
   it('parses table id and simple query parameters', () => {
