@@ -30,8 +30,10 @@ interface FilterSidebarProps {
 
 // Handles one subject node in the tree.
 // Checked means this node is selected as the representative filter.
-// Unchecked means this node and its descendants are removed, then the nearest
-// ancestor is restored to keep parent-level selection stable.
+// Unchecked means this node and its descendants are removed. The nearest
+// ancestor is only restored when no other active descendant remains under that
+// same ancestor, so sibling selections stay explicit instead of collapsing back
+// to the parent subject.
 const Collapsible: React.FC<CollapsibleProps> = ({
   subject,
   index,
@@ -45,6 +47,9 @@ const Collapsible: React.FC<CollapsibleProps> = ({
   const subjectId = subject.id;
   const subjectLabel = subject.label;
   const subjectTree = state.availableFilters.subjectTree;
+  const activeSubjectFilters = state.activeFilters.filter(
+    (filter) => filter.type === 'subject',
+  );
 
   return (
     <div className={styles.filterLabel}>
@@ -98,6 +103,14 @@ const Collapsible: React.FC<CollapsibleProps> = ({
             // Deselecting a node clears that node and every descendant.
             const descendants = [subject, ...children];
 
+            // We need to check if any of the removed filters are still active as siblings under the same parent,
+            // so we keep track of their uniqueIds in a set for O(1) lookups.
+            const removedUniqueIds = new Set(
+              descendants
+                .map((descendant) => descendant.uniqueId)
+                .filter((uniqueId): uniqueId is string => !!uniqueId),
+            );
+
             dispatch({
               type: ActionType.REMOVE_FILTERS,
               payload: descendants.map((d) => ({
@@ -107,15 +120,29 @@ const Collapsible: React.FC<CollapsibleProps> = ({
               })),
             });
 
-            // Restore nearest ancestor if needed so parent-level selection
-            // remains explicit in the active filter list.
-            const parent: PathItem | undefined = ancestors.length
-              ? ancestors[ancestors.length - 1]
-              : undefined;
+            // Subject uniqueIds encode the full tree path, so a shared prefix
+            // lets us detect whether another branch under the same parent is
+            // still active without re-walking the subtree. If another child is
+            // still selected, we must not promote the parent back into the
+            // active filter list.
+            const parent = ancestors.at(-1);
+            const hasRemainingActiveDescendantUnderParent =
+              !!parent?.uniqueId &&
+              activeSubjectFilters.some(
+                (filter) =>
+                  // Must share the same parent uniqueId prefix to be a sibling, but must not be one we just removed.
+                  !!filter.uniqueId &&
+                  filter.uniqueId.startsWith(`${parent.uniqueId}__`) &&
+                  !removedUniqueIds.has(filter.uniqueId),
+              );
             const isParentInFilter = state.activeFilters.some(
               (f) => f.type === 'subject' && f.value === parent?.id,
             );
-            if (parent && !isParentInFilter) {
+            if (
+              parent &&
+              !isParentInFilter &&
+              !hasRemainingActiveDescendantUnderParent
+            ) {
               dispatch({
                 type: ActionType.ADD_FILTER,
                 payload: [
