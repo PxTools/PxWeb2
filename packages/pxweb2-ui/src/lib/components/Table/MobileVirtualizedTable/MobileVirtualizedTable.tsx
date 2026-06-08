@@ -334,6 +334,9 @@ export function MobileVirtualizedTable({
     [tableColumnSize],
   );
 
+  // Mobile table do not have any variables in the heading, 
+  // so headingDataCellCodes are only used for data cell coordinate construction and not 
+  // rendered as part of the heading rows.
   const { headingRows, headingDataCellCodes } = useMemo(
     () =>
       createHeadingRowsAndDataCellCodes({
