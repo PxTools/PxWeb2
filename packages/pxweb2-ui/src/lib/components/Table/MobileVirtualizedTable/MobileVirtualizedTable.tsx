@@ -84,7 +84,7 @@ function buildMobileRowEntries(pxtable: VirtualizedTableProps['pxtable']) {
       uniqueIdCounter.idCounter++;
       const currentMeta = stubDataCellCodes[n];
       const variable = pxtable.stub[n];
-      
+
       if (!currentMeta || !variable) {
         continue;
       }
