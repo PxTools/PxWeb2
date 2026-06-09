@@ -26,6 +26,7 @@ export function Badge({
         classes[`variant-${variant}`],
         { [classes['no-label']]: withoutLabel },
       )}
+      inert
     >
       {label && <span className={classes['label-medium']}>{label}</span>}
     </span>
