@@ -3,9 +3,6 @@ import type { PxTable } from '../../shared-types/pxTable';
 import type { DataCell } from '../../shared-types/pxTableData';
 
 import type {
-  ChartConfig,
-  ChartDataPoint,
-  ChartSeries,
   EChartsDataset,
   PopulationPyramidConfig,
   PopulationPyramidMappingResult,
@@ -149,7 +146,7 @@ function resolveSelectedValues(
   return variable.values;
 }
 
-export function mapPxTableToChart(pxtable: PxTable): ChartConfig {
+export function mapPxTableToChartDataset(pxtable: PxTable): EChartsDataset {
   const rowCombinations = buildCombinations(pxtable.stub);
   const seriesCombinations = buildCombinations(pxtable.heading);
 
@@ -159,7 +156,7 @@ export function mapPxTableToChart(pxtable: PxTable): ChartConfig {
     pxtable.metadata.variables.find(
       (variable) => variable.type === VartypeEnum.CONTENTS_VARIABLE,
     )?.values[0]?.contentInfo?.unit ?? '';
-  const series: ChartSeries[] = seriesCombinations.map(
+  const series = seriesCombinations.map(
     (combination, index) => ({
       key:
         combination.items.map((item) => item.code).join('|') ||
@@ -167,10 +164,11 @@ export function mapPxTableToChart(pxtable: PxTable): ChartConfig {
       name: getLabel(combination.items, 'Value'),
     }),
   );
+  const dimensions = ['name', ...series.map((seriesItem) => seriesItem.key)];
 
-  const data = rowCombinations.map((rowCombination) => {
+  const source = rowCombinations.map((rowCombination) => {
     const rowMap = toCodeMap(rowCombination.items);
-    const point: Record<string, number | string | null> = {
+    const row: Record<string, number | string | null> = {
       name: getLabel(rowCombination.items, 'Value'),
     };
 
@@ -186,42 +184,14 @@ export function mapPxTableToChart(pxtable: PxTable): ChartConfig {
       );
 
       if (dimensions.some((dimension) => !dimension)) {
-        point[seriesKey] = null;
+        row[seriesKey] = null;
         return;
       }
 
       const dataCell = getPxTableData<DataCell>(pxtable.data.cube, dimensions);
 
-      point[seriesKey] = dataCell?.value ?? null;
+      row[seriesKey] = dataCell?.value ?? null;
     });
-
-    return point as ChartDataPoint;
-  });
-
-  return { title, origin, unit, data, series };
-}
-
-export function mapChartConfigToEChartsDataset(
-  chartConfig: ChartConfig,
-): EChartsDataset {
-  const title = chartConfig.title;
-  const origin = chartConfig.origin;
-  const unit = chartConfig.unit;
-  const dimensions = [
-    'name',
-    ...chartConfig.series.map((series) => series.key),
-  ];
-
-  const source = chartConfig.data.map((point) => {
-    const row: Record<string, string | number | null> = {
-      name: point.name,
-    };
-
-    for (const series of chartConfig.series) {
-      const value = point[series.key];
-      row[series.key] =
-        typeof value === 'number' || value === null ? value : null;
-    }
 
     return row;
   });
@@ -232,7 +202,7 @@ export function mapChartConfigToEChartsDataset(
     unit,
     dimensions,
     source,
-    series: chartConfig.series,
+    series,
   };
 }
 

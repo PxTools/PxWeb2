@@ -1,19 +1,6 @@
-export interface ChartDataPoint {
-  readonly name: string;
-  readonly [seriesKey: string]: number | string | null;
-}
-
 export interface ChartSeries {
   readonly key: string;
   readonly name: string;
-}
-
-export interface ChartConfig {
-  readonly title: string;
-  readonly origin: string;
-  readonly unit: string;
-  readonly data: ChartDataPoint[];
-  readonly series: ChartSeries[];
 }
 
 export interface EChartsDataset {

@@ -6,8 +6,7 @@ import ChartExportButtons from '../ChartExportButtons/ChartExportButtons';
 import { useEChartOption } from '../useEChartOption';
 import type { PxTable } from '../../../shared-types/pxTable';
 import {
-  mapChartConfigToEChartsDataset,
-  mapPxTableToChart,
+  mapPxTableToChartDataset,
 } from '../chartDataMapper';
 
 interface LineChartProps {
@@ -15,11 +14,7 @@ interface LineChartProps {
   readonly colors?: string[];
 }
 export function LineChart({ pxtable, colors }: LineChartProps) {
-  const chartConfig = useMemo(() => mapPxTableToChart(pxtable), [pxtable]);
-  const dataset = useMemo(
-    () => mapChartConfigToEChartsDataset(chartConfig),
-    [chartConfig],
-  );
+  const dataset = useMemo(() => mapPxTableToChartDataset(pxtable), [pxtable]);
   const option = useMemo<echarts.EChartsOption>(
     () => ({
       ...buildDatasetOption(dataset),
