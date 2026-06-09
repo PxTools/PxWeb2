@@ -28,7 +28,7 @@ import {
   shouldTableBeIncludedWithMatcher,
 } from '../util/tableHandler';
 import { wrapWithLocalizedQuotemarks } from '../util/utils';
-import { Table } from 'packages/pxweb2-api-client/src';
+import { Table } from '@pxweb2/pxweb2-api-client';
 
 const initialState: StartPageState = Object.freeze({
   availableTables: [],

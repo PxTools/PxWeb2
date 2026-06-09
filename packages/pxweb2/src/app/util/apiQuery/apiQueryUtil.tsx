@@ -2,11 +2,11 @@ import {
   VariableSelection,
   VariablesSelection,
 } from '@pxweb2/pxweb2-api-client';
+import { Variable } from '@pxweb2/pxweb2-ui';
 import useVariables from '../../context/useVariables';
 import useTableData from '../../context/useTableData';
 import { getConfig } from '../config/getConfig';
 import { VariablesContextType } from '../../context/VariablesProvider';
-import { Variable } from 'packages/pxweb2-ui/src/lib/shared-types/variable';
 
 const config = getConfig();
 
