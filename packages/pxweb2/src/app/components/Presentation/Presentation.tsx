@@ -277,7 +277,7 @@ export function Presentation({
             >
               <div>
                 {' '}
-                <LineChart text="XXXXXXXXXX" />{' '}
+                <LineChart pxtable={tableData.data} />{' '}
               </div>
               <div className={classes.tableContainer} ref={tableContainerRef}>
                 <MemoizedTable pxtable={tableData.data} isMobile={isMobile} />
