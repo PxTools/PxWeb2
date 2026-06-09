@@ -10,7 +10,7 @@ globalThis.PxWeb2Config = {
     positionInPath: 'after',
   },
   baseApplicationPath: '/',
-  apiUrl: 'https://api.scb.se/OV0104/v2beta/api/v2',
+  apiUrl: 'https:/data.qa.ssb.no/api/pxwebapi/v2',
   maxDataCells: 150000,
   useDynamicContentInTitle: false,
   showBreadCrumbOnStartPage: false,
