@@ -2,17 +2,12 @@ import React from 'react';
 import { act } from '@testing-library/react';
 import { vi } from 'vitest';
 
-import {
-  renderWithProviders,
-  mockTableService,
-} from '../../util/testing-utils';
+import { renderWithProviders } from '../../util/testing-utils';
 import Selection from './Selection';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import { TableDataContext } from '../../context/TableDataProvider';
 
 describe('Selection', () => {
-  mockTableService();
-
   it('should throw an error when triggered', () => {
     const TestComponent = () => {
       const context = React.useContext(TableDataContext);
