@@ -156,14 +156,11 @@ export function mapPxTableToChartDataset(pxtable: PxTable): EChartsDataset {
     pxtable.metadata.variables.find(
       (variable) => variable.type === VartypeEnum.CONTENTS_VARIABLE,
     )?.values[0]?.contentInfo?.unit ?? '';
-  const series = seriesCombinations.map(
-    (combination, index) => ({
-      key:
-        combination.items.map((item) => item.code).join('|') ||
-        `series-${index}`,
-      name: getLabel(combination.items, 'Value'),
-    }),
-  );
+  const series = seriesCombinations.map((combination, index) => ({
+    key:
+      combination.items.map((item) => item.code).join('|') || `series-${index}`,
+    name: getLabel(combination.items, 'Value'),
+  }));
   const dimensions = ['name', ...series.map((seriesItem) => seriesItem.key)];
 
   const source = rowCombinations.map((rowCombination) => {

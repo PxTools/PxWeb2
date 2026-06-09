@@ -5,9 +5,7 @@ import { buildDatasetOption, buildSeriesOption } from '../chartOptionBuilder';
 import ChartExportButtons from '../ChartExportButtons/ChartExportButtons';
 import { useEChartOption } from '../useEChartOption';
 import type { PxTable } from '../../../shared-types/pxTable';
-import {
-  mapPxTableToChartDataset,
-} from '../chartDataMapper';
+import { mapPxTableToChartDataset } from '../chartDataMapper';
 
 interface LineChartProps {
   readonly pxtable: PxTable;
