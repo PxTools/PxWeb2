@@ -13,6 +13,11 @@ export type Config = {
   showBreadCrumbOnStartPage: boolean;
   specialCharacters: string[];
   variableFilterExclusionList: { [propName: string]: string[] };
+  tableCardTitleTransform?: {
+    pattern: string;
+    flags?: string;
+    replacement?: string;
+  };
   homePage?: {
     [lang: string]: string;
   };

@@ -14,6 +14,13 @@ globalThis.PxWeb2Config = {
   maxDataCells: 150000,
   useDynamicContentInTitle: false,
   showBreadCrumbOnStartPage: false,
+  //Optional table-card title transform applied on StartPage before rendering TableCard.
+  //Example below removes a leading numeric code like "1234: " from titles.
+  tableCardTitleTransform: {
+    pattern: '^\\s*\\d+\\s*:\\s*',
+    flags: '',
+    replacement: '',
+  },
   specialCharacters: ['.', '..', ':', '-', '...', '*'],
   variableFilterExclusionList: {
     en: [
