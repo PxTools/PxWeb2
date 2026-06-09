@@ -5,6 +5,7 @@ export * from './lib/components/Badge/Badge';
 export * from './lib/components/BottomSheet/BottomSheet';
 export * from './lib/components/Breadcrumbs/Breadcrumbs';
 export * from './lib/components/Button/Button';
+export * from './lib/components/Chart/LineChart/LineChart';
 export * from './lib/components/Checkbox/Checkbox';
 export * from './lib/components/CheckCircle/CheckCircleIcon';
 export * from './lib/components/CheckCircle/CheckCircleToggle';
@@ -67,3 +68,4 @@ export * from './lib/shared-types/valueDisplayType';
 export * from './lib/shared-types/variable';
 export * from './lib/shared-types/vartypeEnum';
 export * from './lib/util/util';
+
