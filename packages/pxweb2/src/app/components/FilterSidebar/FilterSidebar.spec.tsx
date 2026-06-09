@@ -50,7 +50,7 @@ vi.mock('@pxweb2/pxweb2-ui', () => ({
     </label>
   ),
   Search: () => <div data-testid="search-stub" />,
-  SearchSelect: (props: { label: string; value: string }) => (
+  SearchSelect: (props: { label: string }) => (
     <div
       data-testid="searchselect-stub"
       aria-label={props?.label ?? 'SearchSelect'}
@@ -74,6 +74,7 @@ const makeBaseState = (
   overrides: Partial<StartPageState> = {},
 ): StartPageState => ({
   availableTables: [],
+  availableTablesWhenQueryApplied: [],
   activeFilters: [],
   availableFilters: {
     subjectTree: [],
@@ -343,6 +344,171 @@ describe('FilterSidebar - TimeUnit filter', () => {
           value: 'Monthly',
           label: 'start_page.filter.frequency.monthly',
           index: 1,
+        },
+      ],
+    });
+  });
+});
+
+describe('FilterSidebar - Subject filter', () => {
+  it('does not restore the parent subject when another sibling subject is still active', async () => {
+    const state = makeBaseState({
+      activeFilters: [
+        {
+          type: 'subject',
+          value: 'al03',
+          label: 'Arbeidsledighet',
+          uniqueId: 'al__al03',
+          index: 0,
+        },
+        {
+          type: 'subject',
+          value: 'al06',
+          label: 'Sysselsetting',
+          uniqueId: 'al__al06',
+          index: 1,
+        },
+      ],
+      availableFilters: {
+        subjectTree: [
+          {
+            id: 'al',
+            label: 'Arbeid og lønn',
+            uniqueId: 'al',
+            count: 2,
+            children: [
+              {
+                id: 'al03',
+                label: 'Arbeidsledighet',
+                uniqueId: 'al__al03',
+                count: 1,
+                children: [],
+              },
+              {
+                id: 'al06',
+                label: 'Sysselsetting',
+                uniqueId: 'al__al06',
+                count: 1,
+                children: [],
+              },
+            ],
+          },
+        ],
+        timeUnits: new Map(),
+        variables: new Map(),
+        status: new Map(),
+        yearRange: { min: 0, max: 0 },
+      },
+    });
+
+    const dispatch = vi.fn();
+    const user = userEvent.setup();
+
+    renderWithFilterContext(state, dispatch);
+
+    await user.click(
+      screen.getByRole('checkbox', {
+        name: 'Arbeidsledighet (1)',
+      }),
+    );
+
+    expect(dispatch).toHaveBeenCalledWith({
+      type: ActionType.REMOVE_FILTERS,
+      payload: [
+        {
+          value: 'al03',
+          type: 'subject',
+          uniqueId: 'al__al03',
+        },
+      ],
+    });
+    expect(dispatch).not.toHaveBeenCalledWith({
+      type: ActionType.ADD_FILTER,
+      payload: [
+        {
+          type: 'subject',
+          value: 'al',
+          label: 'Arbeid og lønn',
+          uniqueId: 'al',
+          index: 0,
+        },
+      ],
+    });
+  });
+
+  it('restores the parent subject when all sibling subjects are inactive', async () => {
+    const state = makeBaseState({
+      activeFilters: [
+        {
+          type: 'subject',
+          value: 'al03',
+          label: 'Arbeidsledighet',
+          uniqueId: 'al__al03',
+          index: 0,
+        },
+      ],
+      availableFilters: {
+        subjectTree: [
+          {
+            id: 'al',
+            label: 'Arbeid og lønn',
+            uniqueId: 'al',
+            count: 2,
+            children: [
+              {
+                id: 'al03',
+                label: 'Arbeidsledighet',
+                uniqueId: 'al__al03',
+                count: 1,
+                children: [],
+              },
+              {
+                id: 'al06',
+                label: 'Sysselsetting',
+                uniqueId: 'al__al06',
+                count: 1,
+                children: [],
+              },
+            ],
+          },
+        ],
+        timeUnits: new Map(),
+        variables: new Map(),
+        status: new Map(),
+        yearRange: { min: 0, max: 0 },
+      },
+    });
+
+    const dispatch = vi.fn();
+    const user = userEvent.setup();
+
+    renderWithFilterContext(state, dispatch);
+
+    await user.click(
+      screen.getByRole('checkbox', {
+        name: 'Arbeidsledighet (1)',
+      }),
+    );
+
+    expect(dispatch).toHaveBeenCalledWith({
+      type: ActionType.REMOVE_FILTERS,
+      payload: [
+        {
+          value: 'al03',
+          type: 'subject',
+          uniqueId: 'al__al03',
+        },
+      ],
+    });
+    expect(dispatch).toHaveBeenCalledWith({
+      type: ActionType.ADD_FILTER,
+      payload: [
+        {
+          type: 'subject',
+          value: 'al',
+          label: 'Arbeid og lønn',
+          uniqueId: 'al',
+          index: 0,
         },
       ],
     });
