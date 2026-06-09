@@ -55,6 +55,7 @@ const filterContent = (
 export const Default: Story = {
   args: {
     header: 'Filter name',
+    screenReaderTxt: 'Filter screenreader content',
     children: 'Filter content',
   },
 };
@@ -65,6 +66,7 @@ export const WithFilterContent: StoryFn<typeof FilterCategory> = () => {
   return (
     <FilterCategory
       header="Filter name"
+      screenReaderTxt="Filter screenreader content"
       activeFiltersCount={activeFiltersCount}
     >
       {filterContent}
@@ -78,6 +80,7 @@ export const OpenByDefault: StoryFn<typeof FilterCategory> = () => {
   return (
     <FilterCategory
       header="Filter name"
+      screenReaderTxt="Filter screenreader content"
       activeFiltersCount={activeFiltersCount}
       openByDefault
     >

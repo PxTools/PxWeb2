@@ -8,7 +8,6 @@ import { Icon } from '../Icon/Icon';
 interface CheckboxProps {
   id: string;
   text: string;
-  ariaDescribedBy?: string;
   searchTerm?: string;
   searchStartOfWordOnly?: boolean;
   value: boolean;
@@ -23,7 +22,6 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   id,
   value,
   text,
-  ariaDescribedBy,
   searchTerm,
   searchStartOfWordOnly = false,
   onChange,
@@ -38,7 +36,6 @@ export const Checkbox: React.FC<CheckboxProps> = ({
       role="checkbox"
       aria-checked={value}
       aria-labelledby={id + '-label'}
-      aria-describedby={ariaDescribedBy}
       aria-disabled={subtle}
       className={cl(styles.checkboxWrapper, {
         [styles[`subtle`]]: subtle,

@@ -32,13 +32,11 @@ vi.mock('@pxweb2/pxweb2-ui', () => ({
     value,
     onChange,
     subtle,
-    ariaDescribedBy,
   }: {
     id: string;
     text: string;
     value: boolean;
     subtle?: boolean;
-    ariaDescribedBy?: string;
     onChange?: (checked: boolean) => void;
   }) => (
     <label htmlFor={id} data-subtle={subtle ? 'true' : 'false'}>
@@ -46,14 +44,13 @@ vi.mock('@pxweb2/pxweb2-ui', () => ({
         id={id}
         type="checkbox"
         checked={!!value}
-        aria-describedby={ariaDescribedBy}
         onChange={(e) => onChange?.(e.currentTarget.checked)}
       />
       <span>{text}</span>
     </label>
   ),
   Search: () => <div data-testid="search-stub" />,
-  SearchSelect: (props: { label: string }) => (
+  SearchSelect: (props: { label: string; value: string }) => (
     <div
       data-testid="searchselect-stub"
       aria-label={props?.label ?? 'SearchSelect'}
@@ -350,36 +347,6 @@ describe('FilterSidebar - TimeUnit filter', () => {
         },
       ],
     });
-  });
-
-  it('connects time unit checkboxes to category screen reader description', () => {
-    const state = makeBaseState({
-      availableTables: [createMockTable('t1', { timeUnit: TimeUnit.MONTHLY })],
-      availableFilters: {
-        subjectTree: [],
-        variables: new Map(),
-        status: new Map(),
-        timeUnits: new Map<string, number>([['Monthly', 1]]),
-        yearRange: { min: 0, max: 0 },
-      },
-    });
-
-    const { container } = renderWithFilterContext(state);
-    const monthlyCheckbox = screen.getByRole('checkbox', {
-      name: /start_page\.filter\.frequency\.monthly/i,
-    });
-
-    expect(monthlyCheckbox).toHaveAttribute(
-      'aria-describedby',
-      'filter-time-unit-sr-description',
-    );
-
-    const description = container.querySelector(
-      '#filter-time-unit-sr-description',
-    );
-
-    expect(description).toBeInTheDocument();
-    expect(description).toHaveTextContent('start_page.filter.badge.aria');
   });
 });
 

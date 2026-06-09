@@ -93,36 +93,6 @@ describe('Checkboxes', () => {
 
       expect(onChangeMock.called).toBe(false);
     });
-
-    it('should set aria-describedby when provided', () => {
-      const { getByRole } = render(
-        <Checkbox
-          id="test"
-          text="Variable 1"
-          value={false}
-          ariaDescribedBy="subject-filter-description"
-          onChange={vi.fn()}
-        />,
-      );
-
-      expect(getByRole('checkbox')).toHaveAttribute(
-        'aria-describedby',
-        'subject-filter-description',
-      );
-    });
-
-    it('should not set aria-describedby when not provided', () => {
-      const { getByRole } = render(
-        <Checkbox
-          id="test"
-          text="Variable 1"
-          value={false}
-          onChange={vi.fn()}
-        />,
-      );
-
-      expect(getByRole('checkbox')).not.toHaveAttribute('aria-describedby');
-    });
   });
 
   describe('MixedCheckbox', () => {
