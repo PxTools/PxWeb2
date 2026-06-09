@@ -87,7 +87,6 @@
       "button": "Filter",
       "back": "Tilbake",
       "badge": {
-        "aria_zero": "Ingen filter valgt",
         "aria_one": "{{count}} filter valgt",
         "aria_other": "{{count}} filter valgt"
       },

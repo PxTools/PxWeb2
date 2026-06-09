@@ -87,7 +87,6 @@
       "button": "Filter",
       "back": "Tilbaka",
       "badge": {
-        "aria_zero": "Inga filter valda",
         "aria_one": "{{count}} filter valt",
         "aria_other": "{{count}} filter valda"
       },

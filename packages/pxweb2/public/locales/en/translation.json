@@ -87,7 +87,6 @@
       "button": "Filter",
       "back": "Back",
       "badge": {
-        "aria_zero": "No filters applied",
         "aria_one": "{{count}} filter applied",
         "aria_other": "{{count}} filters applied"
       },

@@ -30,8 +30,9 @@ export function FilterCategory({
   return (
     <div className={cl(styles.filterCategory)}>
       <span id={subjectSRDescriptionId} className={styles['sr-only']}>
-        {screenReaderTxt}
+        {hasActiveFilters ? screenReaderTxt : ''}
       </span>
+
       <div
         role="button"
         className={cl(styles.filterCategoryHeader)}

@@ -81,6 +81,20 @@ describe('FilterCategory', () => {
     const { getByText } = render(
       <FilterCategory
         header="Filter name"
+        screenReaderTxt="1 active filters"
+        activeFiltersCount={1}
+      >
+        {content}
+      </FilterCategory>,
+    );
+
+    expect(getByText('1 active filters')).toBeVisible();
+  });
+
+  it('should not have screen reader text when there are no active filters', () => {
+    const { queryByText } = render(
+      <FilterCategory
+        header="Filter name"
         screenReaderTxt="0 active filters"
         activeFiltersCount={0}
       >
@@ -88,7 +102,7 @@ describe('FilterCategory', () => {
       </FilterCategory>,
     );
 
-    expect(getByText('0 active filters')).toBeVisible();
+    expect(queryByText('0 active filters')).not.toBeInTheDocument();
   });
 
   it('should change aria-expanded attribute when header is clicked', () => {
