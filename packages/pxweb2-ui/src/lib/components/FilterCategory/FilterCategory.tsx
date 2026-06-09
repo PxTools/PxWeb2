@@ -25,16 +25,18 @@ export function FilterCategory({
   const hasActiveFilters = activeFiltersCount > 0;
 
   const contentRef = useRef<HTMLDivElement>(null);
+  const subjectSRDescriptionId = `${header.replace(/\s+/g, '-').toLowerCase()}-description-id`;
 
   return (
     <div className={cl(styles.filterCategory)}>
-      <div aria-live="polite" className={cl(styles['sr-only'])}>
+      <span id={subjectSRDescriptionId} className={styles['sr-only']}>
         {screenReaderTxt}
-      </div>
+      </span>
       <div
         role="button"
         className={cl(styles.filterCategoryHeader)}
         aria-expanded={isOpen ? 'true' : 'false'}
+        aria-describedby={subjectSRDescriptionId}
         onClick={() => setIsOpen(!isOpen)}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
