@@ -1,7 +1,14 @@
 import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
-import React, { useRef, useEffect, useState, useLayoutEffect } from 'react';
+import React, {
+  useRef,
+  useEffect,
+  useState,
+  useLayoutEffect,
+  Activity,
+} from 'react';
 import isEqual from 'lodash/isEqual';
+import { useSearchParams } from 'react-router';
 
 import classes from './Presentation.module.scss';
 import useApp from '../../context/useApp';
@@ -18,6 +25,12 @@ import useVariables from '../../context/useVariables';
 import { useDebounce } from '@uidotdev/usehooks';
 import { getConfig } from '../../util/config/getConfig';
 
+type viewModeType = 'table' | 'linechart';
+
+function getViewMode(searchParams: URLSearchParams): viewModeType {
+  return searchParams.get('view') === 'linechart' ? 'linechart' : 'table';
+}
+
 type propsType = {
   readonly selectedTabId: string;
   readonly scrollRef?: React.Ref<HTMLDivElement>;
@@ -33,6 +46,7 @@ const MemoizedTable = React.memo(
     isEqual(prevProps.pxtable, nextProps.pxtable) &&
     prevProps.isMobile === nextProps.isMobile,
 );
+
 export function Presentation({
   selectedTabId,
   scrollRef,
@@ -44,6 +58,8 @@ export function Presentation({
   const { i18n, t } = useTranslation();
   const tableData = useTableData();
   const variablesChanged = useVariables();
+  const [searchParams] = useSearchParams();
+  const viewMode = getViewMode(searchParams);
   const variables = useDebounce(useVariables(), 500);
   const {
     pxTableMetadata,
@@ -275,13 +291,16 @@ export function Presentation({
               className={classes.gradientContainer}
               ref={gradientContainerRef}
             >
-              <div>
-                {' '}
-                <LineChart pxtable={tableData.data} />{' '}
-              </div>
-              <div className={classes.tableContainer} ref={tableContainerRef}>
-                <MemoizedTable pxtable={tableData.data} isMobile={isMobile} />
-              </div>
+              <Activity mode={viewMode === 'table' ? 'visible' : 'hidden'}>
+                <div className={classes.tableContainer} ref={tableContainerRef}>
+                  <MemoizedTable pxtable={tableData.data} isMobile={isMobile} />
+                </div>
+              </Activity>
+              <Activity mode={viewMode === 'linechart' ? 'visible' : 'hidden'}>
+                <div className={classes.chartContainer}>
+                  <LineChart pxtable={tableData.data} />
+                </div>
+              </Activity>
             </div>
           )}
           {isMissingMandatoryVariables &&
@@ -291,9 +310,24 @@ export function Presentation({
                 className={classes.gradientContainer}
                 ref={gradientContainerRef}
               >
-                <div className={classes.tableContainer} ref={tableContainerRef}>
-                  <MemoizedTable pxtable={tableData.data} isMobile={isMobile} />
-                </div>
+                <Activity mode={viewMode === 'table' ? 'visible' : 'hidden'}>
+                  <div
+                    className={classes.tableContainer}
+                    ref={tableContainerRef}
+                  >
+                    <MemoizedTable
+                      pxtable={tableData.data}
+                      isMobile={isMobile}
+                    />
+                  </div>
+                </Activity>
+                <Activity
+                  mode={viewMode === 'linechart' ? 'visible' : 'hidden'}
+                >
+                  <div className={classes.chartContainer}>
+                    <LineChart pxtable={tableData.data} />
+                  </div>
+                </Activity>
               </div>
             )}
           {!isLoadingMetadata &&
