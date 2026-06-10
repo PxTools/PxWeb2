@@ -23,7 +23,8 @@ export function DrawerView() {
       <ul className={classes.operationList}>
         <li>
           <ActionItem
-            iconName="Table"
+            largeIconName="Table"
+            size="large"
             label={t('presentation_page.side_menu.view.table.title')}
             ariaLabel={t('presentation_page.side_menu.view.table.title')}
             onClick={() => setViewMode('table')}
@@ -32,7 +33,8 @@ export function DrawerView() {
         </li>
         <li>
           <ActionItem
-            iconName="LineChart"
+            largeIconName="LineChart"
+            size="large"
             label={t('presentation_page.side_menu.view.linechart.title')}
             ariaLabel={t('presentation_page.side_menu.view.linechart.title')}
             onClick={() => setViewMode('linechart')}
