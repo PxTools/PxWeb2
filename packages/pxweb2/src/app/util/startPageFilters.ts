@@ -1,5 +1,6 @@
-import { Table } from '@pxweb2/pxweb2-api-client';
 import { useTranslation } from 'react-i18next';
+
+import { Table } from '@pxweb2/pxweb2-api-client';
 import {
   StartPageFilters,
   Filter,

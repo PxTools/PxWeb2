@@ -1,5 +1,5 @@
 import { createTableListSEO } from './tableListSEO';
-import { Table } from 'packages/pxweb2-api-client/src';
+import { Table } from '@pxweb2/pxweb2-api-client';
 
 describe('createTableListSEO', () => {
   it('should create correct JSON-LD script for given tables and language', () => {
