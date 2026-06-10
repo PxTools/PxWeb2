@@ -24,6 +24,8 @@ export default mergeConfig(
         reporter: ['lcov', 'text'],
         include: ['src/**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
         exclude: [
+          '**/pxweb2-api-client/**',
+          '**/pxweb2-ui/**',
           '**/*.stories.{js,ts,tsx}',
           ...coverageConfigDefaults.exclude,
         ],
