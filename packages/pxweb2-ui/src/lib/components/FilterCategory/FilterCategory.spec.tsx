@@ -61,6 +61,21 @@ describe('FilterCategory', () => {
     expect(within(header).getByText('3')).toBeVisible();
   });
 
+  it('should keep badge count out of the button accessible name', () => {
+    const { getByRole } = render(
+      <FilterCategory
+        header="Filter name"
+        screenReaderTxt="3 active filters"
+        activeFiltersCount={3}
+      >
+        {content}
+      </FilterCategory>,
+    );
+
+    const header = getByRole('button', { name: 'Filter name' });
+    expect(header).toHaveAccessibleName('Filter name');
+  });
+
   it('should not show badge when activeFiltersCount is 0', () => {
     const { getByRole } = render(
       <FilterCategory

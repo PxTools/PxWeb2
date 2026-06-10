@@ -25,14 +25,16 @@ export function FilterCategory({
   const hasActiveFilters = activeFiltersCount > 0;
 
   const contentRef = useRef<HTMLDivElement>(null);
-  const subjectSRDescriptionId = `${header.replace(/\s+/g, '-').toLowerCase()}-description-id`;
+  const subjectId = header.replace(/\s+/g, '-').toLowerCase();
+  const subjectSRDescriptionId = `${subjectId}-description-id`;
+  const subjectHeadingId = `${subjectId}-heading-id`;
 
   return (
     <div className={cl(styles.filterCategory)}>
       <span
         id={subjectSRDescriptionId}
         className={styles['sr-only']}
-        inert // Needed to make the element not reachable with screen reader navigation. The content is still read when the header is focused, but it won't be read as a separate item in the screen reader's navigation order.
+        aria-hidden="true"
       >
         {hasActiveFilters ? screenReaderTxt : ''}
       </span>
@@ -41,7 +43,8 @@ export function FilterCategory({
         role="button"
         className={cl(styles.filterCategoryHeader)}
         aria-expanded={isOpen ? 'true' : 'false'}
-        aria-describedby={subjectSRDescriptionId}
+        aria-labelledby={subjectHeadingId} // Needed for proper screen reader announcement in Safari. Without this it also reads the number inside Badge.
+        aria-describedby={subjectSRDescriptionId} // Associate the screen reader description with the header
         onClick={() => setIsOpen(!isOpen)}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
@@ -51,11 +54,19 @@ export function FilterCategory({
         }}
         tabIndex={0}
       >
-        <Heading size="small" level="3" className={styles.filterCategoryTitle}>
+        <Heading
+          id={subjectHeadingId}
+          size="small"
+          level="3"
+          className={styles.filterCategoryTitle}
+        >
           {header}
         </Heading>
 
-        <Activity mode={hasActiveFilters ? 'visible' : 'hidden'}>
+        <Activity
+          mode={hasActiveFilters ? 'visible' : 'hidden'}
+          aria-hidden="true"
+        >
           <Badge
             label={activeFiltersCount.toString()}
             variant="subtle"
