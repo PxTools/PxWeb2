@@ -29,7 +29,11 @@ export function FilterCategory({
 
   return (
     <div className={cl(styles.filterCategory)}>
-      <span id={subjectSRDescriptionId} className={styles['sr-only']}>
+      <span
+        id={subjectSRDescriptionId}
+        className={styles['sr-only']}
+        inert // Needed to make the element not reachable with screen reader navigation. The content is still read when the header is focused, but it won't be read as a separate item in the screen reader's navigation order.
+      >
         {hasActiveFilters ? screenReaderTxt : ''}
       </span>
 
