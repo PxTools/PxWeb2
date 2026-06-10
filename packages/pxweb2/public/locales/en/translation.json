@@ -87,8 +87,8 @@
       "button": "Filter",
       "back": "Back",
       "badge": {
-        "aria_one": "{{count}} filter applied",
-        "aria_other": "{{count}} filters applied"
+        "aria_one": "{{count}} filter selected",
+        "aria_other": "{{count}} filters selected"
       },
       "show_results": "Show {{value}} results",
       "close": "Close filter",

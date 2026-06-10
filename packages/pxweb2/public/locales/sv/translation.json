@@ -87,7 +87,7 @@
       "button": "Filter",
       "back": "Tilbaka",
       "badge": {
-        "aria_one": "{{count}} filter valt",
+        "aria_one": "{{count}} filter vald",
         "aria_other": "{{count}} filter valda"
       },
       "show_results": "Visa {{value}} träffar",
