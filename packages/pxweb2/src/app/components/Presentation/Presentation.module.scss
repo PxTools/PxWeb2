@@ -63,6 +63,11 @@
   overflow-x: auto;
   max-width: 100%; /* Set this to limit table width to screen */
 }
+
+.chartContainer {
+  width: 100%;
+}
+
 .gradientContainer::after {
   content: '';
   position: absolute;

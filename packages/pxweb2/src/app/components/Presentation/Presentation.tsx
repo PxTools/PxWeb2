@@ -287,25 +287,7 @@ export function Presentation({
           )}
 
           {!isMissingMandatoryVariables && (
-            <div
-              className={classes.gradientContainer}
-              ref={gradientContainerRef}
-            >
-              <Activity mode={viewMode === 'table' ? 'visible' : 'hidden'}>
-                <div className={classes.tableContainer} ref={tableContainerRef}>
-                  <MemoizedTable pxtable={tableData.data} isMobile={isMobile} />
-                </div>
-              </Activity>
-              <Activity mode={viewMode === 'linechart' ? 'visible' : 'hidden'}>
-                <div className={classes.chartContainer}>
-                  <LineChart pxtable={tableData.data} />
-                </div>
-              </Activity>
-            </div>
-          )}
-          {isMissingMandatoryVariables &&
-            !variables.isMatrixSizeAllowed &&
-            !isMandatoryNotSelectedFirst && (
+            <>
               <div
                 className={classes.gradientContainer}
                 ref={gradientContainerRef}
@@ -321,6 +303,34 @@ export function Presentation({
                     />
                   </div>
                 </Activity>
+              </div>
+              <Activity mode={viewMode === 'linechart' ? 'visible' : 'hidden'}>
+                <div className={classes.chartContainer}>
+                  <LineChart pxtable={tableData.data} />
+                </div>
+              </Activity>
+            </>
+          )}
+          {isMissingMandatoryVariables &&
+            !variables.isMatrixSizeAllowed &&
+            !isMandatoryNotSelectedFirst && (
+              <>
+                <div
+                  className={classes.gradientContainer}
+                  ref={gradientContainerRef}
+                >
+                  <Activity mode={viewMode === 'table' ? 'visible' : 'hidden'}>
+                    <div
+                      className={classes.tableContainer}
+                      ref={tableContainerRef}
+                    >
+                      <MemoizedTable
+                        pxtable={tableData.data}
+                        isMobile={isMobile}
+                      />
+                    </div>
+                  </Activity>
+                </div>
                 <Activity
                   mode={viewMode === 'linechart' ? 'visible' : 'hidden'}
                 >
@@ -328,7 +338,7 @@ export function Presentation({
                     <LineChart pxtable={tableData.data} />
                   </div>
                 </Activity>
-              </div>
+              </>
             )}
           {!isLoadingMetadata &&
             isMissingMandatoryVariables &&
