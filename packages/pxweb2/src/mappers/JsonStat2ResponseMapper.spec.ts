@@ -1,11 +1,10 @@
-import { ClassType, CodelistType, Dataset } from '@pxweb2/pxweb2-api-client';
 import {
   mapJsonStat2Response,
   createDataAndStatus,
   createCube,
   orderVariablesByType,
 } from '../mappers/JsonStat2ResponseMapper';
-
+import { ClassType, CodelistType, Dataset } from '@pxweb2/pxweb2-api-client';
 import {
   Dimensions,
   PxTableData,

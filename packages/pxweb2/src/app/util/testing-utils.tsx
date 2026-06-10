@@ -1,6 +1,6 @@
 import React from 'react';
-
 import { render } from '@testing-library/react';
+
 import { VariablesProvider } from '../context/VariablesProvider';
 import { TableDataProvider } from '../context/TableDataProvider';
 import { AppProvider } from '../context/AppProvider';
