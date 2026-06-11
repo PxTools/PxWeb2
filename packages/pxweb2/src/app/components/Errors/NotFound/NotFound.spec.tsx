@@ -41,6 +41,7 @@ vi.mock('@pxweb2/pxweb2-ui', () => ({
     </div>
   ),
   BreakpointsXsmallMaxWidth: '575px',
+  BreakpointsSmallMaxWidth: '600px',
   BreakpointsMediumMaxWidth: '767px',
   BreakpointsLargeMaxWidth: '991px',
   BreakpointsXlargeMaxWidth: '1199px',

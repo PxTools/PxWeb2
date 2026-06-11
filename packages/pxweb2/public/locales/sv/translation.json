@@ -86,6 +86,10 @@
     "filter": {
       "button": "Filter",
       "back": "Tilbaka",
+      "badge": {
+        "aria_one": "{{count}} filter valt",
+        "aria_other": "{{count}} filter valda"
+      },
       "show_results": "Visa {{value}} träffar",
       "close": "Lukk filter",
       "header": "Filter",

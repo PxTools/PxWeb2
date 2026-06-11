@@ -7,6 +7,10 @@ body {
   }
 }
 
+body:has([data-px-overlay-backdrop='true']) {
+  overflow-y: hidden;
+}
+
 @font-face {
   font-family: 'PxWeb-font';
   src: url('/fonts/PxWeb-font-400.ttf') format('truetype');

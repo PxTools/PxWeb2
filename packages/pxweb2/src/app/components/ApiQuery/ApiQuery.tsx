@@ -57,6 +57,7 @@ export const ApiQuery: React.FC<ApiQueryProps> = () => {
       </div>
       <div className={cl(styles.selectWrapper)}>
         <Select
+          className={cl(styles.selectWidthOverride)}
           label={t('presentation_page.side_menu.save.api.select_format')}
           variant="default"
           selectedOption={fileFormats

@@ -1,5 +1,5 @@
-import { PxTable } from '../../shared-types/pxTable';
-import { DataCell, PxData } from '../../shared-types/pxTableData';
+import { PxTable } from '../../../shared-types/pxTable';
+import { DataCell, PxData } from '../../../shared-types/pxTableData';
 
 /**
  * Represents an array of dimensions - one per variable in the table.

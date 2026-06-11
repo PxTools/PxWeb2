@@ -1,4 +1,4 @@
-import { PxTable } from '../../shared-types/pxTable';
+import { PxTable } from '../../../shared-types/pxTable';
 
 /**
  * Internal type holding metadata about the column and row structure of a table.
@@ -20,6 +20,10 @@ export type columnRowMeta = {
    * The number of rows that contain headers
    */
   rowOffset: number;
+  /**
+   * The longest value label for each variable, keyed by variable id.
+   */
+  longestValueTextByVariableId: Record<string, number>;
 };
 
 /**
@@ -29,6 +33,7 @@ export type columnRowMeta = {
  * - The number of rows in the table
  * - The number of columns that contain headers
  * - The number of rows that contain headers
+ * - The longest value label for each variable, keyed by variable id
  *
  * @param pxtable The PxTable object for which to calculate the metadata.
  * @returns The calculated columnRowMeta object containing the table metadata.
@@ -38,13 +43,29 @@ export function calculateRowAndColumnMeta(pxtable: PxTable): columnRowMeta {
   let rowCount = 1;
   const columnOffset = 1;
   const rowOffset = pxtable.heading.length;
+  const longestValueTextByVariableId: Record<string, number> = {};
 
-  for (let i = 0; i < pxtable.heading.length; i++) {
-    columnCount *= pxtable.heading[i].values.length;
+  for (const element of pxtable.heading) {
+    columnCount *= element.values.length;
   }
 
-  for (let i = 0; i < pxtable.stub.length; i++) {
-    rowCount *= pxtable.stub[i].values.length;
+  for (const element of pxtable.stub) {
+    rowCount *= element.values.length;
+  }
+
+  const allVariables = [...pxtable.heading, ...pxtable.stub];
+  for (const variable of allVariables) {
+    let longestValueText = '';
+
+    for (const value of variable.values) {
+      const valueLabel = value.label;
+
+      if (valueLabel.length > longestValueText.length) {
+        longestValueText = valueLabel;
+      }
+    }
+
+    longestValueTextByVariableId[variable.id] = longestValueText.length;
   }
 
   rowCount += pxtable.heading.length;
@@ -55,5 +76,6 @@ export function calculateRowAndColumnMeta(pxtable: PxTable): columnRowMeta {
     columns: columnCount,
     columnOffset: columnOffset,
     rowOffset: rowOffset,
+    longestValueTextByVariableId: longestValueTextByVariableId,
   };
 }

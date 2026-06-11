@@ -39,6 +39,10 @@
   align-self: stretch;
 }
 
+.selectWidthOverride {
+  width: 100%;
+}
+
 .chipsWrapper {
   display: flex;
   padding: fixed.$spacing-2 fixed.$spacing-2 0 fixed.$spacing-2;

@@ -103,6 +103,11 @@ function getPxTable(): PxTable {
       { mandatory: false, text: 'Note number 2' },
       { mandatory: true, text: 'Note number 3' },
     ],
+    definitions: {
+      statisticsHomepage: undefined,
+      statisticsDefinitions: undefined,
+      variablesDefinitions: undefined,
+    },
   };
   const table: PxTable = {
     metadata: tableMeta,
@@ -321,6 +326,7 @@ let mockIsXXLargeDesktop = true;
 vi.mock('../../context/useApp', () => ({
   default: () => ({
     isXXLargeDesktop: mockIsXXLargeDesktop,
+    isTablet: false,
     setTitle: () => {
       vi.fn();
     },

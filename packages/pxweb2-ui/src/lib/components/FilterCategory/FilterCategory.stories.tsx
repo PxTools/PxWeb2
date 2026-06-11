@@ -6,6 +6,13 @@ import Checkbox from '../Checkbox/Checkbox';
 const meta: Meta<typeof FilterCategory> = {
   component: FilterCategory,
   title: 'Components/FilterCategory',
+  decorators: [
+    (Story) => (
+      <div style={{ width: '300px' }}>
+        <Story />
+      </div>
+    ),
+  ],
 };
 export default meta;
 
@@ -48,17 +55,35 @@ const filterContent = (
 export const Default: Story = {
   args: {
     header: 'Filter name',
+    screenReaderTxt: 'Filter screenreader content',
     children: 'Filter content',
   },
 };
 
 export const WithFilterContent: StoryFn<typeof FilterCategory> = () => {
-  return <FilterCategory header="Filter name">{filterContent}</FilterCategory>;
+  const activeFiltersCount = filterItems.filter((item) => item.value).length;
+
+  return (
+    <FilterCategory
+      header="Filter name"
+      screenReaderTxt="Filter screenreader content"
+      activeFiltersCount={activeFiltersCount}
+    >
+      {filterContent}
+    </FilterCategory>
+  );
 };
 
 export const OpenByDefault: StoryFn<typeof FilterCategory> = () => {
+  const activeFiltersCount = filterItems.filter((item) => item.value).length;
+
   return (
-    <FilterCategory header="Filter name" openByDefault>
+    <FilterCategory
+      header="Filter name"
+      screenReaderTxt="Filter screenreader content"
+      activeFiltersCount={activeFiltersCount}
+      openByDefault
+    >
       {filterContent}
     </FilterCategory>
   );

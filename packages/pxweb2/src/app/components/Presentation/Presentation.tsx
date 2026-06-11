@@ -6,6 +6,7 @@ import React, {
   useState,
   useLayoutEffect,
   Activity,
+  useCallback,
 } from 'react';
 import isEqual from 'lodash/isEqual';
 import { useSearchParams } from 'react-router';
@@ -33,18 +34,31 @@ function getViewMode(searchParams: URLSearchParams): viewModeType {
 
 type propsType = {
   readonly selectedTabId: string;
-  readonly scrollRef?: React.Ref<HTMLDivElement>;
+  readonly scrollRef?: React.RefObject<HTMLElement | null>;
   isExpanded: boolean;
   setIsExpanded: (expanded: boolean) => void;
 };
 
 const MemoizedTable = React.memo(
-  ({ pxtable, isMobile }: { pxtable: PxTable; isMobile: boolean }) => (
-    <Table pxtable={pxtable} isMobile={isMobile} />
+  ({
+    pxtable,
+    isMobile,
+    getVerticalScrollElement,
+  }: {
+    pxtable: PxTable;
+    isMobile: boolean;
+    getVerticalScrollElement?: () => HTMLElement | null;
+  }) => (
+    <Table
+      pxtable={pxtable}
+      isMobile={isMobile}
+      getVerticalScrollElement={getVerticalScrollElement}
+    />
   ),
   (prevProps, nextProps) =>
     isEqual(prevProps.pxtable, nextProps.pxtable) &&
-    prevProps.isMobile === nextProps.isMobile,
+    prevProps.isMobile === nextProps.isMobile &&
+    prevProps.getVerticalScrollElement === nextProps.getVerticalScrollElement,
 );
 
 export function Presentation({
@@ -68,6 +82,12 @@ export function Presentation({
     selectedVBValues,
   } = variables;
   const tableId: string = selectedTabId;
+  const getVerticalScrollElement = useCallback((): HTMLElement | null => {
+    if (!scrollRef || typeof scrollRef === 'function') {
+      return null;
+    }
+    return scrollRef.current;
+  }, [scrollRef]);
   const [isMissingMandatoryVariables, setIsMissingMandatoryVariables] =
     useState(false);
   const [initialRun, setInitialRun] = useState(true);
@@ -288,22 +308,20 @@ export function Presentation({
 
           {!isMissingMandatoryVariables && (
             <>
+            <Activity mode={viewMode === 'table' ? 'visible' : 'hidden'}>
               <div
                 className={classes.gradientContainer}
                 ref={gradientContainerRef}
               >
-                <Activity mode={viewMode === 'table' ? 'visible' : 'hidden'}>
-                  <div
-                    className={classes.tableContainer}
-                    ref={tableContainerRef}
-                  >
-                    <MemoizedTable
-                      pxtable={tableData.data}
-                      isMobile={isMobile}
-                    />
-                  </div>
-                </Activity>
+                <div className={classes.tableContainer} ref={tableContainerRef}>
+                  <MemoizedTable
+                    pxtable={tableData.data}
+                    isMobile={isMobile}
+                    getVerticalScrollElement={getVerticalScrollElement}
+                  />
+                </div>
               </div>
+              </Activity>
               <Activity mode={viewMode === 'linechart' ? 'visible' : 'hidden'}>
                 <div className={classes.chartContainer}>
                   <LineChart pxtable={tableData.data} />
@@ -315,11 +333,11 @@ export function Presentation({
             !variables.isMatrixSizeAllowed &&
             !isMandatoryNotSelectedFirst && (
               <>
-                <div
-                  className={classes.gradientContainer}
-                  ref={gradientContainerRef}
-                >
-                  <Activity mode={viewMode === 'table' ? 'visible' : 'hidden'}>
+                <Activity mode={viewMode === 'table' ? 'visible' : 'hidden'}>
+                  <div
+                    className={classes.gradientContainer}
+                    ref={gradientContainerRef}
+                  >
                     <div
                       className={classes.tableContainer}
                       ref={tableContainerRef}
@@ -327,10 +345,11 @@ export function Presentation({
                       <MemoizedTable
                         pxtable={tableData.data}
                         isMobile={isMobile}
+                        getVerticalScrollElement={getVerticalScrollElement}
                       />
                     </div>
-                  </Activity>
-                </div>
+                  </div>
+                </Activity>
                 <Activity
                   mode={viewMode === 'linechart' ? 'visible' : 'hidden'}
                 >
