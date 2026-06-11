@@ -308,19 +308,22 @@ export function Presentation({
 
           {!isMissingMandatoryVariables && (
             <>
-            <Activity mode={viewMode === 'table' ? 'visible' : 'hidden'}>
-              <div
-                className={classes.gradientContainer}
-                ref={gradientContainerRef}
-              >
-                <div className={classes.tableContainer} ref={tableContainerRef}>
-                  <MemoizedTable
-                    pxtable={tableData.data}
-                    isMobile={isMobile}
-                    getVerticalScrollElement={getVerticalScrollElement}
-                  />
+              <Activity mode={viewMode === 'table' ? 'visible' : 'hidden'}>
+                <div
+                  className={classes.gradientContainer}
+                  ref={gradientContainerRef}
+                >
+                  <div
+                    className={classes.tableContainer}
+                    ref={tableContainerRef}
+                  >
+                    <MemoizedTable
+                      pxtable={tableData.data}
+                      isMobile={isMobile}
+                      getVerticalScrollElement={getVerticalScrollElement}
+                    />
+                  </div>
                 </div>
-              </div>
               </Activity>
               <Activity mode={viewMode === 'linechart' ? 'visible' : 'hidden'}>
                 <div className={classes.chartContainer}>

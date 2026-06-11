@@ -1,4 +1,4 @@
-import { getPxTableData } from '../Table/cubeHelper';
+import { getPxTableData } from '../Table/Utils/cubeHelper';
 import type { PxTable } from '../../shared-types/pxTable';
 import type { DataCell } from '../../shared-types/pxTableData';
 
