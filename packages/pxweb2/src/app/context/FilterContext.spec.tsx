@@ -1,7 +1,6 @@
-import React from 'react';
+import { act } from 'react';
 import { describe, it, expect, beforeEach } from 'vitest';
 import { render } from '@testing-library/react';
-import { act } from 'react';
 
 import { FilterContext, FilterProvider } from './FilterContext';
 import {
@@ -63,12 +62,12 @@ vi.mock('../util/utils', () => ({
 // Minimal consumer to read and dispatch against the context
 function Consumer({
   onRender,
-}: {
+}: Readonly<{
   onRender: (ctx: {
     state: StartPageState;
     dispatch: (action: unknown) => void;
   }) => void;
-}) {
+}>) {
   return (
     <FilterContext.Consumer>
       {(value) => {
@@ -139,7 +138,7 @@ describe('FilterContext', () => {
       captured!.dispatch({
         type: ActionType.RESET_FILTERS,
         payload: { tables, subjects },
-      } as ReducerActionTypes);
+      });
     });
 
     const state = captured!.state;
@@ -166,7 +165,7 @@ describe('FilterContext', () => {
       captured!.dispatch({
         type: ActionType.RESET_FILTERS,
         payload: { tables: makeTables(2), subjects: makeSubjects() },
-      } as ReducerActionTypes);
+      });
     });
 
     act(() => {
@@ -175,7 +174,7 @@ describe('FilterContext', () => {
         payload: [
           { type: 'subject', value: 's1', label: 'Subject 1', index: 1 },
         ],
-      } as ReducerActionTypes);
+      });
     });
 
     const state = captured!.state;
@@ -199,14 +198,14 @@ describe('FilterContext', () => {
       captured!.dispatch({
         type: ActionType.RESET_FILTERS,
         payload: { tables: makeTables(2), subjects: makeSubjects() },
-      } as ReducerActionTypes);
+      });
     });
 
     act(() => {
       captured!.dispatch({
         type: ActionType.ADD_SEARCH_FILTER,
         payload: { text: 'economy', language: 'en' },
-      } as ReducerActionTypes);
+      });
     });
 
     let state = captured!.state;
@@ -220,7 +219,7 @@ describe('FilterContext', () => {
       captured!.dispatch({
         type: ActionType.ADD_SEARCH_FILTER,
         payload: { text: 'population', language: 'en' },
-      } as ReducerActionTypes);
+      });
     });
 
     state = captured!.state;
@@ -233,7 +232,7 @@ describe('FilterContext', () => {
       captured!.dispatch({
         type: ActionType.ADD_SEARCH_FILTER,
         payload: { text: '', language: 'en' },
-      } as ReducerActionTypes);
+      });
     });
 
     state = captured!.state;
@@ -254,14 +253,14 @@ describe('FilterContext', () => {
       captured!.dispatch({
         type: ActionType.RESET_FILTERS,
         payload: { tables, subjects: makeSubjects() },
-      } as ReducerActionTypes);
+      });
     });
 
     act(() => {
       captured!.dispatch({
         type: ActionType.ADD_QUERY_FILTER,
         payload: { query: 'Q1', tableIds: ['T1', 'T2'] },
-      } as ReducerActionTypes);
+      });
     });
 
     let state = captured!.state;
@@ -279,7 +278,7 @@ describe('FilterContext', () => {
       captured!.dispatch({
         type: ActionType.ADD_QUERY_FILTER,
         payload: { query: '', tableIds: [] },
-      } as ReducerActionTypes);
+      });
     });
 
     state = captured!.state;
@@ -298,7 +297,7 @@ describe('FilterContext', () => {
       captured!.dispatch({
         type: ActionType.RESET_FILTERS,
         payload: { tables: makeTables(2), subjects: makeSubjects() },
-      } as ReducerActionTypes);
+      });
     });
 
     // Add two filters
@@ -320,7 +319,7 @@ describe('FilterContext', () => {
             index: 1,
           },
         ],
-      } as ReducerActionTypes);
+      });
     });
 
     let state = captured!.state;
@@ -331,7 +330,7 @@ describe('FilterContext', () => {
       captured!.dispatch({
         type: ActionType.REMOVE_FILTER,
         payload: { type: 'subject', value: 's1', uniqueId: 'u1' },
-      } as ReducerActionTypes);
+      });
     });
 
     state = captured!.state;
@@ -343,7 +342,7 @@ describe('FilterContext', () => {
       captured!.dispatch({
         type: ActionType.REMOVE_FILTER,
         payload: { type: 'yearRange', value: '2000-2020' },
-      } as ReducerActionTypes);
+      });
     });
 
     state = captured!.state;
@@ -363,11 +362,11 @@ describe('FilterContext', () => {
       captured!.dispatch({
         type: ActionType.SET_LOADING,
         payload: true,
-      } as ReducerActionTypes);
+      });
       captured!.dispatch({
         type: ActionType.SET_ERROR,
         payload: 'Boom',
-      } as ReducerActionTypes);
+      });
     });
 
     const state = captured!.state;

@@ -17,16 +17,21 @@
   }
 }
 
+.filterCategoryTitle {
+  width: 100%;
+}
+
 .filterCategoryHeader {
-  align-items: center;
   background-color: transparent;
-  border: none;
   color: var(--px-color-text-default);
+  border: none;
   cursor: pointer;
   display: flex;
-  height: 64px;
+  align-items: center;
   justify-content: space-between;
   text-align: start;
+  height: 64px;
+  gap: 12px;
   padding: 0;
 
   &:focus-visible,

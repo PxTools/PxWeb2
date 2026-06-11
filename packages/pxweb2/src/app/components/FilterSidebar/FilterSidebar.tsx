@@ -1,8 +1,11 @@
 import cl from 'clsx';
+import { useTranslation } from 'react-i18next';
+import { ReactNode, useContext, useState, useMemo } from 'react';
+import { upperFirst, debounce } from 'lodash';
+import { v4 as uuidv4 } from 'uuid';
 
 import { ActionType, PathItem } from '../../pages/StartPage/StartPageTypes';
 import styles from './FilterSidebar.module.scss';
-import { useTranslation } from 'react-i18next';
 import { Checkbox, FilterCategory, Search } from '@pxweb2/pxweb2-ui';
 import {
   findAncestors,
@@ -11,9 +14,6 @@ import {
 } from '../../util/startPageFilters';
 import { FilterContext } from '../../context/FilterContext';
 import { YearRangeFilter } from './YearRangeFilter';
-import { ReactNode, useContext, useState, useMemo } from 'react';
-import { upperFirst, debounce } from 'lodash';
-import { v4 as uuidv4 } from 'uuid';
 
 interface CollapsibleProps {
   subject: PathItem;
@@ -435,11 +435,33 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
     [state.availableTables],
   );
 
+  const subjectFilterCount = state.activeFilters.filter(
+    (filter) => filter.type === 'subject',
+  ).length;
+  const yearRangeFilterCount = state.activeFilters.filter(
+    (filter) => filter.type === 'yearRange',
+  ).length;
+  const timeUnitFilterCount = state.activeFilters.filter(
+    (filter) => filter.type === 'timeUnit',
+  ).length;
+  const variableFilterCount = state.activeFilters.filter(
+    (filter) => filter.type === 'variable',
+  ).length;
+  const statusFilterCount = state.activeFilters.filter(
+    (filter) => filter.type === 'status',
+  ).length;
+
   return (
-    <nav aria-label="Filter">
+    <nav aria-label={t('start_page.filter.button')}>
       <div className={styles.sideBar}>
         <div className={styles.sideBarWrapper}>
-          <FilterCategory header={t('start_page.filter.subject')}>
+          <FilterCategory
+            header={t('start_page.filter.subject')}
+            screenReaderTxt={t('start_page.filter.badge.aria', {
+              count: subjectFilterCount,
+            })}
+            activeFiltersCount={subjectFilterCount}
+          >
             <ul className={styles.filterList}>
               <RenderSubjects
                 firstLevel={true}
@@ -448,19 +470,43 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
               />
             </ul>
           </FilterCategory>
-          <FilterCategory header={t('start_page.filter.year.title')}>
+          <FilterCategory
+            header={t('start_page.filter.year.title')}
+            screenReaderTxt={t('start_page.filter.badge.aria', {
+              count: yearRangeFilterCount,
+            })}
+            activeFiltersCount={yearRangeFilterCount}
+          >
             <YearRangeFilter onFilterChange={onFilterChange} />
           </FilterCategory>
-          <FilterCategory header={t('start_page.filter.time_unit')}>
+          <FilterCategory
+            header={t('start_page.filter.time_unit')}
+            screenReaderTxt={t('start_page.filter.badge.aria', {
+              count: timeUnitFilterCount,
+            })}
+            activeFiltersCount={timeUnitFilterCount}
+          >
             <ul className={styles.filterList}>
               <RenderTimeUnitFilters onFilterChange={onFilterChange} />
             </ul>
           </FilterCategory>
-          <FilterCategory header={t('start_page.filter.variabel')}>
+          <FilterCategory
+            header={t('start_page.filter.variabel')}
+            screenReaderTxt={t('start_page.filter.badge.aria', {
+              count: variableFilterCount,
+            })}
+            activeFiltersCount={variableFilterCount}
+          >
             <VariablesFilter onFilterChange={onFilterChange} />
           </FilterCategory>
           {shouldShowStatusFilter && (
-            <FilterCategory header={t('start_page.filter.status.title')}>
+            <FilterCategory
+              header={t('start_page.filter.status.title')}
+              screenReaderTxt={t('start_page.filter.badge.aria', {
+                count: statusFilterCount,
+              })}
+              activeFiltersCount={statusFilterCount}
+            >
               <StatusFilter onFilterChange={onFilterChange} />
             </FilterCategory>
           )}

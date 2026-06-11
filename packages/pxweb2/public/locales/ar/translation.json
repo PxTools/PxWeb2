@@ -70,10 +70,73 @@
     }
   },
   "start_page": {
-    "header": "مرحبا بكم في التطبيق!",
-    "welcome_trans_test": "مرحبا بكم في <1>برنامج</1> لبكسي ويب 2.0!",
-    "skip_to_filter": "تخطي إلى الفلتر",
-    "skip_to_result": "تخطي إلى النتيجة"
+    "header": "مرحبًا بك في PxWeb 2.0",
+    "ingress": "هل تبحث عن الجدول المثالي؟ استخدم حقل البحث وعوامل التصفية للوصول إلى الأرقام التي تحتاجها. سواء كنت تبحث عن اتجاهات أو حقائق أو مجموعة بيانات مميزة، فإن PxWeb 2.0 هنا لمساعدتك.",
+    "more_about_label": "المزيد حول PxWeb 2.0",
+    "more_about_text": "مزيد من المعلومات",
+    "no_result_header": "لم نتمكن من العثور على أي جداول",
+    "no_result_description": "جرّب كلمة مفتاحية مختلفة أو عدّل عوامل التصفية.",
+    "no_result_search_help": "مساعدة البحث",
+    "result_hidden_header": "النتيجة",
+    "search_label": "ابحث في PxWeb 2.0",
+    "search_placeholder": "",
+    "skip_to.filter": "انتقل إلى عوامل التصفية",
+    "skip_to.result": "انتقل إلى النتائج",
+    "filter": {
+      "button": "تصفية",
+      "back": "رجوع",
+      "badge": {
+        "aria_one": "{{count}} عامل تصفية محدد",
+        "aria_two": "{{count}} عاملين تصفية محددين",
+        "aria_few": "{{count}} عوامل تصفية محددة",
+        "aria_many": "{{count}} عوامل تصفية محددة",
+        "aria_other": "{{count}} عوامل تصفية محددة"
+      },
+      "show_results": "عرض {{value}} نتيجة",
+      "close": "إغلاق التصفية",
+      "header": "تصفية",
+      "list_filters_aria": "عوامل التصفية المحددة",
+      "remove_all_filter": "إزالة جميع عوامل التصفية",
+      "remove_filter_aria": "إزالة عامل التصفية، {{value}}",
+      "subject": "الموضوع",
+      "time_unit": "الفترة الزمنية",
+      "year": {
+        "title": "السنة",
+        "from_label": "من",
+        "to_label": "إلى",
+        "from_year": "من سنة",
+        "to_year": "إلى سنة",
+        "clear_selection": "مسح التحديد",
+        "no_option": "لا توجد نتائج"
+      },
+      "variabel": "المتغير",
+      "variabel_search": "ابحث عن متغير",
+      "variable_count": "عرض {{countShown}} من {{countTotal}} متغيرات",
+      "frequency": {
+        "annual": "السنة",
+        "monthly": "الشهر",
+        "quarterly": "الربع",
+        "term": "الفترة",
+        "weekly": "الأسبوع",
+        "other": "أخرى"
+      },
+      "status": {
+        "title": "الحالة",
+        "updating": "محدّث",
+        "not_updating": "لم يعد محدّثًا"
+      }
+    },
+    "table": {
+      "card_description": "{{title}}. السنة: {{yearFrom}}-{{yearTo}}. الفترة الزمنية {{frequency}}. تم التحديث {{updatedDate}}. رقم الجدول {{tableNumber}}.",
+      "number_of_tables": "<strong>{{count}}</strong> جدول",
+      "number_of_tables_found": "<strong>{{count}}</strong> جدولًا تم العثور عليه",
+      "updated_label": "تم التحديث",
+      "show_more": "عرض المزيد",
+      "show_less": "عرض أقل",
+      "loading": "جارٍ التحميل...",
+      "show_number_of_tables": "عرض {{countShown}} من {{countTotal}}",
+      "show_number_of_tables_aria": "تم العثور على {{countTotal}} جدولًا، يتم عرض {{countShown}} من {{countTotal}}"
+    }
   },
   "presentation_page": {
     "common": {
