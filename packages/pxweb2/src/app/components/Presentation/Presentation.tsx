@@ -28,7 +28,13 @@ import { getConfig } from '../../util/config/getConfig';
 
 type viewModeType = 'table' | 'linechart';
 
-function getViewMode(searchParams: URLSearchParams): viewModeType {
+function getViewMode(
+  searchParams: URLSearchParams,
+  chartEnabled: boolean,
+): viewModeType {
+  if (!chartEnabled) {
+    return 'table';
+  }
   return searchParams.get('view') === 'linechart' ? 'linechart' : 'table';
 }
 
@@ -69,11 +75,12 @@ export function Presentation({
 }: Readonly<propsType>) {
   const { isMobile, getSavedQueryId } = useApp();
   const config = getConfig();
+  const chartEnabled = config.features.chartEnabled;
   const { i18n, t } = useTranslation();
   const tableData = useTableData();
   const variablesChanged = useVariables();
   const [searchParams] = useSearchParams();
-  const viewMode = getViewMode(searchParams);
+  const viewMode = getViewMode(searchParams, chartEnabled);
   const variables = useDebounce(useVariables(), 500);
   const {
     pxTableMetadata,

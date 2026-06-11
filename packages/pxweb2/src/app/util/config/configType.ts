@@ -16,4 +16,7 @@ export type Config = {
   homePage?: {
     [lang: string]: string;
   };
+  features: {
+    chartEnabled: boolean;
+  };
 };

@@ -75,6 +75,16 @@
     "showBreadCrumbOnStartPage": {
       "type": "boolean",
       "description": "Set to true to show breadcrumb on start page"
+    },
+    "features": {
+      "type": "object",
+      "description": "Feature flags controlling optional functionality",
+      "properties": {
+        "chartEnabled": {
+          "type": "boolean",
+          "description": "Set to true to enable chart functionality"
+        }
+      }
     }
   },
   "required": ["language", "baseApplicationPath", "apiUrl", "maxDataCells"]
