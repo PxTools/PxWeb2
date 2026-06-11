@@ -26,7 +26,11 @@ export function FilterCategory({
 
   const contentRef = useRef<HTMLDivElement>(null);
   const subjectId = header.replace(/\s+/g, '-').toLowerCase();
-  const subjectSRDescriptionId = `${subjectId}-description-id`;
+
+  // Unique ID for screen reader description, includes activeFiltersCount to ensure it updates when the count changes
+  // (Safari needs this to properly announce changes in the number of active filters,
+  // otherwise it is stuck on "1 active filter" even when the count changes)
+  const subjectSRDescriptionId = `${subjectId}-description-id-${activeFiltersCount}`;
   const subjectHeadingId = `${subjectId}-heading-id`;
 
   return (
@@ -34,7 +38,7 @@ export function FilterCategory({
       <span
         id={subjectSRDescriptionId}
         className={styles['sr-only']}
-        aria-hidden="true"
+        aria-hidden={true}
       >
         {hasActiveFilters ? screenReaderTxt : ''}
       </span>

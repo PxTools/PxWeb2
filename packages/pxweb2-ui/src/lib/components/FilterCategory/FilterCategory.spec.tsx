@@ -76,6 +76,35 @@ describe('FilterCategory', () => {
     expect(header).toHaveAccessibleName('Filter name');
   });
 
+  it('should update aria-describedby target when activeFiltersCount changes', () => {
+    const { getByRole, rerender } = render(
+      <FilterCategory
+        header="Filter name"
+        screenReaderTxt="1 active filter"
+        activeFiltersCount={1}
+      >
+        {content}
+      </FilterCategory>,
+    );
+
+    const header = getByRole('button', { name: 'Filter name' });
+    const initialDescriptionId = header.getAttribute('aria-describedby');
+
+    rerender(
+      <FilterCategory
+        header="Filter name"
+        screenReaderTxt="3 active filters"
+        activeFiltersCount={3}
+      >
+        {content}
+      </FilterCategory>,
+    );
+
+    const updatedDescriptionId = header.getAttribute('aria-describedby');
+    expect(updatedDescriptionId).not.toBe(initialDescriptionId);
+    expect(updatedDescriptionId).toContain('-description-id-3');
+  });
+
   it('should not show badge when activeFiltersCount is 0', () => {
     const { getByRole } = render(
       <FilterCategory
