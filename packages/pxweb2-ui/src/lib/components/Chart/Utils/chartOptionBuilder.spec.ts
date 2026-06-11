@@ -71,7 +71,10 @@ describe('buildSeriesOption', () => {
   });
 
   it('builds bar series with provided colors', () => {
-    const series = buildSeriesOption(mockDataset, 'bar', ['#111111', '#222222']);
+    const series = buildSeriesOption(mockDataset, 'bar', [
+      '#111111',
+      '#222222',
+    ]);
 
     expect(series).toEqual([
       { name: 'Men', type: 'bar', color: '#111111' },
@@ -91,7 +94,9 @@ describe('buildSeriesOption', () => {
       source: [{ name: '2022', men: 100, women: 110, total: 210 }],
     };
 
-    const series = buildSeriesOption(datasetWithThreeSeries, 'bar', ['#aaaaaa']);
+    const series = buildSeriesOption(datasetWithThreeSeries, 'bar', [
+      '#aaaaaa',
+    ]);
 
     expect(series).toEqual([
       { name: 'Men', type: 'bar', color: '#aaaaaa' },

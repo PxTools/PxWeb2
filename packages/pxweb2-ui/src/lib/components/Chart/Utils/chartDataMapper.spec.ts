@@ -83,11 +83,9 @@ describe('mapPxTableToChartDataset', () => {
       { code: 'M', label: 'Men' },
       { code: 'F', label: 'Women' },
     ]);
-    const contents = createVariable(
-      'contents',
-      VartypeEnum.CONTENTS_VARIABLE,
-      [{ code: 'POP', label: 'Population' }],
-    );
+    const contents = createVariable('contents', VartypeEnum.CONTENTS_VARIABLE, [
+      { code: 'POP', label: 'Population' },
+    ]);
 
     contents.values[0] = {
       ...contents.values[0],

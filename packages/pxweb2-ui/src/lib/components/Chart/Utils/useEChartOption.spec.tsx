@@ -55,9 +55,13 @@ describe('useEChartOption', () => {
     render(<HookHost option={option} />);
 
     expect(echarts.init).toHaveBeenCalledTimes(1);
-    expect(echarts.init).toHaveBeenCalledWith(expect.any(HTMLDivElement), null, {
-      renderer: 'svg',
-    });
+    expect(echarts.init).toHaveBeenCalledWith(
+      expect.any(HTMLDivElement),
+      null,
+      {
+        renderer: 'svg',
+      },
+    );
   });
 
   it('uses provided renderer when creating chart', () => {
@@ -71,9 +75,13 @@ describe('useEChartOption', () => {
     render(<HookHost option={option} renderer="canvas" />);
 
     expect(echarts.init).toHaveBeenCalledTimes(1);
-    expect(echarts.init).toHaveBeenCalledWith(expect.any(HTMLDivElement), null, {
-      renderer: 'canvas',
-    });
+    expect(echarts.init).toHaveBeenCalledWith(
+      expect.any(HTMLDivElement),
+      null,
+      {
+        renderer: 'canvas',
+      },
+    );
   });
 
   it('applies wrapped title style when option has a single title object', () => {
