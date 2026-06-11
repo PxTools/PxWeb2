@@ -19,7 +19,7 @@ export function DrawerView() {
   const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const config = getConfig();
-  const chartEnabled = config.features.chartEnabled;
+  const chartEnabled = config.features?.chartEnabled !== false;
   const selectedViewMode = getViewMode(searchParams, chartEnabled);
   function setViewMode(viewMode: ViewMode) {
     const nextSearchParams = new URLSearchParams(searchParams);

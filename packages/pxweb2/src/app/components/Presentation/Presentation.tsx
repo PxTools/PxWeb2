@@ -75,7 +75,7 @@ export function Presentation({
 }: Readonly<propsType>) {
   const { isMobile, getSavedQueryId } = useApp();
   const config = getConfig();
-  const chartEnabled = config.features.chartEnabled;
+  const chartEnabled = config.features?.chartEnabled !== false;
   const { i18n, t } = useTranslation();
   const tableData = useTableData();
   const variablesChanged = useVariables();
