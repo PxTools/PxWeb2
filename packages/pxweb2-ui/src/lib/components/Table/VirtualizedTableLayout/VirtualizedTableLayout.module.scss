@@ -1,0 +1,21 @@
+.virtualizedWrapper {
+  max-height: 70vh;
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
+.virtualizedWrapperUseParentScroll {
+  max-height: none;
+  overflow-y: visible;
+}
+
+.virtualPaddingCell {
+  padding: 0;
+  border: none;
+  background: none;
+}
+
+.virtualizedTable {
+  width: max-content;
+  min-width: 100%;
+}

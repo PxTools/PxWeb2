@@ -1,8 +1,8 @@
-import { Variable } from '../../shared-types/variable';
-import { VartypeEnum } from '../../shared-types/vartypeEnum';
-import { PxTableMetadata } from '../../shared-types/pxTableMetadata';
-import { PxTable } from '../../shared-types/pxTable';
-import { fakeData } from './cubeHelper';
+import { Variable } from '../../../shared-types/variable';
+import { VartypeEnum } from '../../../shared-types/vartypeEnum';
+import { PxTableMetadata } from '../../../shared-types/pxTableMetadata';
+import { PxTable } from '../../../shared-types/pxTable';
+import { fakeData } from '../Utils/cubeHelper';
 
 function getPxTable(): PxTable {
   const variables: Variable[] = [
@@ -11,7 +11,7 @@ function getPxTable(): PxTable {
       label: 'region',
       type: VartypeEnum.GEOGRAPHICAL_VARIABLE,
       mandatory: false,
-      values: Array.from(Array(4).keys()).map((i) => {
+      values: Array.from(new Array(4).keys()).map((i) => {
         return { label: 'region_' + (i + 1), code: 'R_' + (i + 1) };
       }),
     },
@@ -20,7 +20,7 @@ function getPxTable(): PxTable {
       label: 'ålder',
       type: VartypeEnum.REGULAR_VARIABLE,
       mandatory: false,
-      values: Array.from(Array(4).keys()).map((i) => {
+      values: Array.from(new Array(4).keys()).map((i) => {
         return { label: 'år ' + (i + 1), code: '' + (i + 1) };
       }),
     },
@@ -29,7 +29,7 @@ function getPxTable(): PxTable {
       label: 'civilstatus',
       type: VartypeEnum.REGULAR_VARIABLE,
       mandatory: false,
-      values: Array.from(Array(5).keys()).map((i) => {
+      values: Array.from(new Array(5).keys()).map((i) => {
         return { label: 'CS_' + (i + 1), code: '' + (i + 1) };
       }),
     },
@@ -38,7 +38,7 @@ function getPxTable(): PxTable {
       label: 'kön',
       type: VartypeEnum.REGULAR_VARIABLE,
       mandatory: false,
-      values: Array.from(Array(2).keys()).map((i) => {
+      values: Array.from(new Array(2).keys()).map((i) => {
         return { label: 'G_' + (i + 1), code: '' + (i + 1) };
       }),
     },
@@ -47,7 +47,7 @@ function getPxTable(): PxTable {
       label: 'tid',
       type: VartypeEnum.TIME_VARIABLE,
       mandatory: false,
-      values: Array.from(Array(5).keys()).map((i) => {
+      values: Array.from(new Array(5).keys()).map((i) => {
         return { label: '' + (1968 + i), code: '' + (1968 + i) };
       }),
     },
@@ -71,6 +71,11 @@ function getPxTable(): PxTable {
     aggregationAllowed: false,
     contents: '',
     descriptionDefault: false,
+    definitions: {
+      statisticsHomepage: undefined,
+      statisticsDefinitions: undefined,
+      variablesDefinitions: undefined,
+    },
   };
   const table: PxTable = {
     metadata: tableMeta,

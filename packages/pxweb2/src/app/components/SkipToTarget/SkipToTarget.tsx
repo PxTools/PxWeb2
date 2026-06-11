@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useSearchParams } from 'react-router';
@@ -9,12 +9,14 @@ import { getConfig } from '../../util/config/getConfig';
 import { getLanguagePath } from '../../util/language/getLanguagePath';
 
 type SkipTranslationKey = 'common.skip_to_main' | 'common.skip_to_toolsmenu';
+const STICKY_SKIP_OFFSET_CSS_VAR = '--px-skip-to-main-sticky-offset';
 
 export type SkipToTargetProps = React.HTMLAttributes<HTMLDivElement> & {
   targetId: string;
   translationKey?: SkipTranslationKey;
   label?: string;
   styleVariant?: 'main' | 'content';
+  withStickyHeaderOffset?: boolean;
   ref?: React.Ref<HTMLDivElement>;
 };
 
@@ -24,13 +26,26 @@ export const SkipToTarget = ({
   label,
   styleVariant = 'main',
   className = '',
+  withStickyHeaderOffset = false,
   ref,
-  ...props
+  ...rest
 }: SkipToTargetProps) => {
   const { t, i18n } = useTranslation();
   const config = getConfig();
   const location = useLocation().pathname;
   const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    if (!withStickyHeaderOffset) {
+      return;
+    }
+
+    document.body.style.setProperty(STICKY_SKIP_OFFSET_CSS_VAR, '80px');
+
+    return () => {
+      document.body.style.removeProperty(STICKY_SKIP_OFFSET_CSS_VAR);
+    };
+  }, [withStickyHeaderOffset]);
 
   const basePath = getLanguagePath(
     location,
@@ -57,7 +72,7 @@ export const SkipToTarget = ({
         styleVariant === 'main' && classes['skip-to-margin'],
         className,
       )}
-      {...props}
+      {...rest}
     >
       <Link href={path} size="medium">
         {linkText}

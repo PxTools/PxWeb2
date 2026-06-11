@@ -58,20 +58,11 @@ export function Modal({
     if (modalElement) {
       if (isModalOpen) {
         modalElement.showModal();
-        setWindowScroll(false);
       } else {
         modalElement.close();
-        setWindowScroll(true);
       }
     }
   }, [isModalOpen]);
-
-  const setWindowScroll = (scroll: boolean) => {
-    const body = document.querySelector('body');
-    if (body) {
-      body.style.overflow = scroll ? 'auto' : 'hidden';
-    }
-  };
 
   const handleCloseModal = useCallback(
     (updated: boolean, event?: ReactKeyboardEvent | MouseEvent) => {
@@ -84,7 +75,6 @@ export function Modal({
           keyPress === 'Enter' || keyPress === ' ' || keyPress === 'Escape';
 
         if (onClose && isValidKeyPress) {
-          setWindowScroll(true);
           onClose(updated, keyPress);
           setIsModalOpen(false);
         }
@@ -92,7 +82,6 @@ export function Modal({
 
       const handleMouseEvent = (updated: boolean) => {
         if (onClose) {
-          setWindowScroll(true);
           onClose(updated);
           setIsModalOpen(false);
         }
@@ -124,6 +113,7 @@ export function Modal({
 
   return (
     <dialog
+      data-px-overlay-backdrop="true"
       ref={modalRef}
       className={cl(classes.modal) + cssClasses}
       aria-labelledby="px-modal-heading"

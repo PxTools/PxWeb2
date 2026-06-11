@@ -8,18 +8,24 @@
 }
 
 .navigationRail {
-  width: 120px;
+  width: 100px;
   height: 100%;
-  padding: fixed.$spacing-8 0px fixed.$spacing-14 0px;
+  padding: fixed.$spacing-6 0px fixed.$spacing-14 0px;
   flex-direction: column;
   align-items: center;
   flex-shrink: 0;
   background: var(--px-color-surface-default);
+  border-inline-end: 1px solid var(--px-color-border-subtle);
   gap: 24px;
 
   // large, xlarge and xxlarge
   @media ((min-width: fixed.$breakpoints-large-min-width) and (max-width: fixed.$breakpoints-xlarge-max-width)) or ((min-width: fixed.$breakpoints-xxlarge-min-width)) {
     display: flex;
+    position: sticky;
+    top: fixed.$spacing-20;
+    height: calc(100vh - fixed.$spacing-20);
+    z-index: 10;
+    align-self: flex-start;
   }
 
   &:focus-visible {

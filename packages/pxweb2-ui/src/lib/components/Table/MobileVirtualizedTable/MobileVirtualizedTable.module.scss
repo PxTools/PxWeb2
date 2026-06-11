@@ -1,0 +1,64 @@
+.mobileEmptyRowCell > th,
+.mobileEmptyRowCell > td {
+  background: var(--px-color-surface-moderate);
+  border-inline-start: none;
+  border-bottom: none;
+  border-top: none;
+}
+
+.mobileRowHeadLastStub > th {
+  padding-bottom: 0.25rem;
+  padding-top: 0.25rem;
+  background: none;
+  border-inline-start: none;
+  border-inline-end: none;
+  border-bottom: none;
+  border-top: none;
+  vertical-align: top;
+}
+
+.mobileRowHeadLastStub > td {
+  padding-bottom: 0.25rem;
+  padding-top: 0.25rem;
+  background: none;
+  border-inline-start: none;
+  border-inline-end: none;
+  border-bottom: none;
+  border-top: none;
+  vertical-align: top;
+  padding-inline-start: 1rem;
+}
+
+.mobileRowHeadLevel2 > th,
+.mobileRowHeadLevel2 > td {
+  padding-top: 0rem;
+  padding-bottom: 0.25rem;
+  padding-inline-end: 1rem;
+  background: none;
+  border-inline-start: none;
+  border-inline-end: none;
+  border-bottom: none;
+  border-top: none;
+  font-family: PxWeb-font, sans-serif;
+  font-weight: 700;
+}
+
+.mobileRowHeadLevel1 > th,
+.mobileRowHeadLevel1 > td {
+  padding-bottom: 1rem;
+}
+
+.mobileRowHeadlastValueOfLastStub > th,
+.mobileRowHeadlastValueOfLastStub > td {
+  padding-bottom: 1.75rem;
+}
+
+.mobileRowHeadfirstValueOfLastStub2Dim > th,
+.mobileRowHeadfirstValueOfLastStub2Dim > td {
+  padding-top: 1.75rem;
+}
+
+.mobileRowHeadFirstValueOfSecondLastStub > th,
+.mobileRowHeadFirstValueOfSecondLastStub > td {
+  padding-top: 1.75rem;
+}
