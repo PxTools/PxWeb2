@@ -326,9 +326,8 @@ export default interface Resources {
       filter: {
         back: 'Back';
         badge: {
-          aria_one: '{{count}} filter applied';
-          aria_other: '{{count}} filters applied';
-          aria_zero: 'No filters applied';
+          aria_one: '{{count}} filter selected';
+          aria_other: '{{count}} filters selected';
         };
         button: 'Filter';
         close: 'Close filter';
