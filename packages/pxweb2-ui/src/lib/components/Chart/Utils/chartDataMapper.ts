@@ -1,6 +1,6 @@
-import { getPxTableData } from '../Table/Utils/cubeHelper';
-import type { PxTable } from '../../shared-types/pxTable';
-import type { DataCell } from '../../shared-types/pxTableData';
+import { getPxTableData } from '../../Table/Utils/cubeHelper';
+import type { PxTable } from '../../../shared-types/pxTable';
+import type { DataCell } from '../../../shared-types/pxTableData';
 
 import type {
   EChartsDataset,
@@ -8,7 +8,7 @@ import type {
   PopulationPyramidMappingResult,
   PopulationPyramidValidationResult,
 } from './chartTypes';
-import { VartypeEnum } from '../../shared-types/vartypeEnum';
+import { VartypeEnum } from '../../../shared-types/vartypeEnum';
 
 interface CombinationItem {
   readonly variableId: string;

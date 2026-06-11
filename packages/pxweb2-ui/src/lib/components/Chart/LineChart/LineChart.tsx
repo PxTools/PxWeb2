@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
 import type * as echarts from 'echarts';
 
-import { buildDatasetOption, buildSeriesOption } from '../chartOptionBuilder';
+import { buildDatasetOption, buildSeriesOption } from '../Utils/chartOptionBuilder';
 import ChartExportButtons from '../ChartExportButtons/ChartExportButtons';
-import { useEChartOption } from '../useEChartOption';
+import { useEChartOption } from '../Utils/useEChartOption';
 import type { PxTable } from '../../../shared-types/pxTable';
-import { mapPxTableToChartDataset } from '../chartDataMapper';
+import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
 
 interface LineChartProps {
   readonly pxtable: PxTable;
