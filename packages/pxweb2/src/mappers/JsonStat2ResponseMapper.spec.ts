@@ -1,11 +1,10 @@
-import { ClassType, CodelistType, Dataset } from '@pxweb2/pxweb2-api-client';
 import {
   mapJsonStat2Response,
   createDataAndStatus,
   createCube,
   orderVariablesByType,
 } from '../mappers/JsonStat2ResponseMapper';
-
+import { ClassType, CodelistType, Dataset } from '@pxweb2/pxweb2-api-client';
 import {
   Dimensions,
   PxTableData,
@@ -15,156 +14,156 @@ import {
   Variable,
 } from '@pxweb2/pxweb2-ui';
 
-describe('JsonStat2ResponseMapper', () => {
-  describe('mapJsonStat2Response', () => {
-    const dataset: Dataset = {
-      // Dummy data
-      label: 'Table label',
-      source: 'Statistics Sweden',
-      updated: '2025-02-21T07:00:00Z',
-      dimension: {
-        time: {
-          label: 'Time',
-          category: {
-            index: {
-              '2021': 0,
-              '2022': 1,
-            },
-            label: {
-              '2021': '2021',
-              '2022': '2022',
-            },
-          },
-          extension: { elimination: false },
+const dataset: Dataset = {
+  // Dummy data
+  label: 'Table label',
+  source: 'Statistics Sweden',
+  updated: '2025-02-21T07:00:00Z',
+  dimension: {
+    time: {
+      label: 'Time',
+      category: {
+        index: {
+          '2021': 0,
+          '2022': 1,
         },
-        country: {
-          label: 'Country',
-          note: ['Variable note 1', 'Variable note 2'],
-          category: {
-            index: {
-              US: 0,
-              UK: 1,
-            },
-            label: {
-              US: 'United States',
-              UK: 'United Kingdom',
-            },
-            note: {
-              US: [
-                'This note is NOT mandatory. Value note for US',
-                'This note is mandatory! Value note for US',
-              ],
-              UK: ['This note is mandatory! Value note for UK'],
-            },
-          },
-          extension: {
-            elimination: true,
-            noteMandatory: {
-              '0': true,
-            },
-            categoryNoteMandatory: {
-              US: {
-                '1': true,
-              },
-              UK: {
-                '0': true,
-              },
-            },
-
-            codelists: [
-              {
-                id: 'cd1',
-                label: 'Codelist 1',
-                type: CodelistType.AGGREGATION,
-                links: [],
-              },
-              {
-                id: 'cd2',
-                label: 'Codelist 2',
-                type: CodelistType.VALUESET,
-                links: [],
-              },
-            ],
-          },
-        },
-        ContentsCode: {
-          label: 'observations',
-          category: {
-            index: {
-              CONTENT1: 0,
-              CONTENT2: 1,
-            },
-            label: {
-              CONTENT1: 'Population',
-              CONTENT2: 'Population growth',
-            },
-            unit: {
-              CONTENT1: {
-                base: 'number of persons',
-                decimals: 0,
-              },
-              CONTENT2: {
-                base: 'number of persons',
-                decimals: 1,
-              },
-            },
-          },
-          extension: {
-            elimination: false,
-            refperiod: {
-              CONTENT1: '31 December each year',
-              CONTENT2: '1 January each year',
-            },
-            show: 'value',
-            codelists: [],
-          },
+        label: {
+          '2021': '2021',
+          '2022': '2022',
         },
       },
-      value: [100, 200, 300, 400, 500, 600, 700, 800],
-      version: Dataset.version._2_0,
-      class: ClassType.DATASET,
-      role: {
-        time: ['Time'],
-        metric: ['ContentsCode'],
+      extension: { elimination: false },
+    },
+    country: {
+      label: 'Country',
+      note: ['Variable note 1', 'Variable note 2'],
+      category: {
+        index: {
+          US: 0,
+          UK: 1,
+        },
+        label: {
+          US: 'United States',
+          UK: 'United Kingdom',
+        },
+        note: {
+          US: [
+            'This note is NOT mandatory. Value note for US',
+            'This note is mandatory! Value note for US',
+          ],
+          UK: ['This note is mandatory! Value note for UK'],
+        },
       },
-      id: ['Time', 'Country', 'ContentsCode'],
-      size: [2, 2, 2],
-      note: ['Note 1', 'Note 2', 'Note 3'],
       extension: {
+        elimination: true,
         noteMandatory: {
           '0': true,
-          '1': true,
         },
-        px: {
-          infofile: 'TEST01',
-          tableid: 'TAB001',
-          decimals: 0,
-          'official-statistics': true,
-          aggregallowed: true,
-          language: 'en',
-          contents: 'Population',
-          descriptiondefault: false,
-          matrix: 'TEST001',
-          'subject-code': 'POP',
-          'subject-area': 'Population',
+        categoryNoteMandatory: {
+          US: {
+            '1': true,
+          },
+          UK: {
+            '0': true,
+          },
         },
-        contact: [
+
+        codelists: [
           {
-            name: ' Contact 1',
-            phone: '111-1111 11 11',
-            mail: 'information@company.com',
-            raw: ' Contact 1, Company# 111-1111 11 11#information@company.com',
+            id: 'cd1',
+            label: 'Codelist 1',
+            type: CodelistType.AGGREGATION,
+            links: [],
           },
           {
-            name: ' Contact 2',
-            phone: '222-2222 22 22',
-            mail: 'information2@company.com',
-            raw: ' Contact 2, Company# 222-2222 22 22#information2@company.com',
+            id: 'cd2',
+            label: 'Codelist 2',
+            type: CodelistType.VALUESET,
+            links: [],
           },
         ],
       },
-    };
+    },
+    ContentsCode: {
+      label: 'observations',
+      category: {
+        index: {
+          CONTENT1: 0,
+          CONTENT2: 1,
+        },
+        label: {
+          CONTENT1: 'Population',
+          CONTENT2: 'Population growth',
+        },
+        unit: {
+          CONTENT1: {
+            base: 'number of persons',
+            decimals: 0,
+          },
+          CONTENT2: {
+            base: 'number of persons',
+            decimals: 1,
+          },
+        },
+      },
+      extension: {
+        elimination: false,
+        refperiod: {
+          CONTENT1: '31 December each year',
+          CONTENT2: '1 January each year',
+        },
+        show: 'value',
+        codelists: [],
+      },
+    },
+  },
+  value: [100, 200, 300, 400, 500, 600, 700, 800],
+  version: Dataset.version._2_0,
+  class: ClassType.DATASET,
+  role: {
+    time: ['Time'],
+    metric: ['ContentsCode'],
+  },
+  id: ['Time', 'Country', 'ContentsCode'],
+  size: [2, 2, 2],
+  note: ['Note 1', 'Note 2', 'Note 3'],
+  extension: {
+    noteMandatory: {
+      '0': true,
+      '1': true,
+    },
+    px: {
+      infofile: 'TEST01',
+      tableid: 'TAB001',
+      decimals: 0,
+      'official-statistics': true,
+      aggregallowed: true,
+      language: 'en',
+      contents: 'Population',
+      descriptiondefault: false,
+      matrix: 'TEST001',
+      'subject-code': 'POP',
+      'subject-area': 'Population',
+    },
+    contact: [
+      {
+        name: ' Contact 1',
+        phone: '111-1111 11 11',
+        mail: 'information@company.com',
+        raw: ' Contact 1, Company# 111-1111 11 11#information@company.com',
+      },
+      {
+        name: ' Contact 2',
+        phone: '222-2222 22 22',
+        mail: 'information2@company.com',
+        raw: ' Contact 2, Company# 222-2222 22 22#information2@company.com',
+      },
+    ],
+  },
+};
 
+describe('JsonStat2ResponseMapper', () => {
+  describe('mapJsonStat2Response', () => {
     it('should reorder varibles if mapData is false', () => {
       const pxTable = mapJsonStat2Response(dataset, false);
 
@@ -585,6 +584,38 @@ describe('JsonStat2ResponseMapper', () => {
   });
 
   describe('createDataAndStatus', () => {
+    const baseMetadata: Omit<PxTableMetadata, 'variables'> = {
+      id: 'TAB001',
+      language: 'en',
+      availableLanguages: ['en'],
+      label: 'Test Table',
+      description: '',
+      updated: new Date(),
+      source: 'Test Source',
+      infofile: '',
+      decimals: 0,
+      officialStatistics: true,
+      aggregationAllowed: true,
+      contents: '',
+      descriptionDefault: false,
+      matrix: '',
+      survey: '',
+      updateFrequency: '',
+      link: '',
+      copyright: false,
+      nextUpdate: undefined,
+      subjectCode: '',
+      subjectArea: '',
+      contacts: [],
+      notes: [],
+      definitions: {},
+    };
+
+    const createMetadata = (variables: Variable[]): PxTableMetadata => ({
+      ...baseMetadata,
+      variables,
+    });
+
     it('should map values and statuses correctly when both are provided', () => {
       // Arrange
       const dataset: Dataset = {
@@ -680,56 +711,32 @@ describe('JsonStat2ResponseMapper', () => {
         3: { value: 400, status: 'D', presentation: undefined },
       };
 
-      const metadata: PxTableMetadata = {
-        id: 'TAB001',
-        language: 'en',
-        label: 'Test Table',
-        description: '',
-        updated: new Date(),
-        source: 'Test Source',
-        infofile: '',
-        decimals: 0,
-        officialStatistics: true,
-        aggregationAllowed: true,
-        contents: '',
-        descriptionDefault: false,
-        matrix: '',
-        survey: '',
-        updateFrequency: '',
-        link: '',
-        nextUpdate: undefined,
-        subjectCode: '',
-        subjectArea: '',
-        variables: [
-          {
-            id: 'Time',
-            label: 'Time',
-            type: VartypeEnum.REGULAR_VARIABLE,
-            mandatory: true,
-            values: [
-              { code: '2021', label: '2021' },
-              { code: '2022', label: '2022' },
-            ],
-            codeLists: [],
-            notes: [],
-          },
-          {
-            id: 'Country',
-            label: 'Country',
-            type: VartypeEnum.REGULAR_VARIABLE,
-            mandatory: true,
-            values: [
-              { code: 'US', label: 'United States' },
-              { code: 'UK', label: 'United Kingdom' },
-            ],
-            codeLists: [],
-            notes: [],
-          },
-        ],
-        contacts: [],
-        notes: [],
-        definitions: {},
-      };
+      const metadata: PxTableMetadata = createMetadata([
+        {
+          id: 'Time',
+          label: 'Time',
+          type: VartypeEnum.REGULAR_VARIABLE,
+          mandatory: true,
+          values: [
+            { code: '2021', label: '2021' },
+            { code: '2022', label: '2022' },
+          ],
+          codeLists: [],
+          notes: [],
+        },
+        {
+          id: 'Country',
+          label: 'Country',
+          type: VartypeEnum.REGULAR_VARIABLE,
+          mandatory: true,
+          values: [
+            { code: 'US', label: 'United States' },
+            { code: 'UK', label: 'United Kingdom' },
+          ],
+          codeLists: [],
+          notes: [],
+        },
+      ]);
 
       const data: PxTableData = {
         cube: {},
@@ -760,56 +767,32 @@ describe('JsonStat2ResponseMapper', () => {
       // Arrange
       const valueAndStatus: Record<string, DataCell> = {};
 
-      const metadata: PxTableMetadata = {
-        id: 'TAB001',
-        language: 'en',
-        label: 'Test Table',
-        description: '',
-        updated: new Date(),
-        source: 'Test Source',
-        infofile: '',
-        decimals: 0,
-        officialStatistics: true,
-        aggregationAllowed: true,
-        contents: '',
-        descriptionDefault: false,
-        matrix: '',
-        survey: '',
-        updateFrequency: '',
-        link: '',
-        nextUpdate: undefined,
-        subjectCode: '',
-        subjectArea: '',
-        variables: [
-          {
-            id: 'Time',
-            label: 'Time',
-            type: VartypeEnum.REGULAR_VARIABLE,
-            mandatory: true,
-            values: [
-              { code: '2021', label: '2021' },
-              { code: '2022', label: '2022' },
-            ],
-            codeLists: [],
-            notes: [],
-          },
-          {
-            id: 'Country',
-            label: 'Country',
-            type: VartypeEnum.REGULAR_VARIABLE,
-            mandatory: true,
-            values: [
-              { code: 'US', label: 'United States' },
-              { code: 'UK', label: 'United Kingdom' },
-            ],
-            codeLists: [],
-            notes: [],
-          },
-        ],
-        contacts: [],
-        notes: [],
-        definitions: {},
-      };
+      const metadata: PxTableMetadata = createMetadata([
+        {
+          id: 'Time',
+          label: 'Time',
+          type: VartypeEnum.REGULAR_VARIABLE,
+          mandatory: true,
+          values: [
+            { code: '2021', label: '2021' },
+            { code: '2022', label: '2022' },
+          ],
+          codeLists: [],
+          notes: [],
+        },
+        {
+          id: 'Country',
+          label: 'Country',
+          type: VartypeEnum.REGULAR_VARIABLE,
+          mandatory: true,
+          values: [
+            { code: 'US', label: 'United States' },
+            { code: 'UK', label: 'United Kingdom' },
+          ],
+          codeLists: [],
+          notes: [],
+        },
+      ]);
 
       const data: PxTableData = {
         cube: {},
@@ -842,41 +825,17 @@ describe('JsonStat2ResponseMapper', () => {
         0: { value: 100, status: 'A', presentation: undefined },
       };
 
-      const metadata: PxTableMetadata = {
-        id: 'TAB001',
-        language: 'en',
-        label: 'Test Table',
-        description: '',
-        updated: new Date(),
-        source: 'Test Source',
-        infofile: '',
-        decimals: 0,
-        officialStatistics: true,
-        aggregationAllowed: true,
-        contents: '',
-        descriptionDefault: false,
-        matrix: '',
-        survey: '',
-        updateFrequency: '',
-        link: '',
-        nextUpdate: undefined,
-        subjectCode: '',
-        subjectArea: '',
-        variables: [
-          {
-            id: 'Time',
-            label: 'Time',
-            type: VartypeEnum.REGULAR_VARIABLE,
-            mandatory: true,
-            values: [{ code: '2021', label: '2021' }],
-            codeLists: [],
-            notes: [],
-          },
-        ],
-        contacts: [],
-        notes: [],
-        definitions: {},
-      };
+      const metadata: PxTableMetadata = createMetadata([
+        {
+          id: 'Time',
+          label: 'Time',
+          type: VartypeEnum.REGULAR_VARIABLE,
+          mandatory: true,
+          values: [{ code: '2021', label: '2021' }],
+          codeLists: [],
+          notes: [],
+        },
+      ]);
 
       const data: PxTableData = {
         cube: {},

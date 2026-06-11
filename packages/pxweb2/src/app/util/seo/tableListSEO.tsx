@@ -1,4 +1,4 @@
-import { Table } from 'packages/pxweb2-api-client/src';
+import { Table } from '@pxweb2/pxweb2-api-client';
 import { getConfig } from '../config/getConfig';
 import { getLanguagePath } from '../language/getLanguagePath';
 

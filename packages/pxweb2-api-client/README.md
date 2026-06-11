@@ -1,6 +1,6 @@
 # pxweb2-api-client
 
-This library was generated with [Nx](https://nx.dev).
+This package contains the API client for PxWeb2. It provides functions to interact with the PxWeb2 API, such as fetching tables, variables, and data. Generated using [openapi-typescript-codegen](https://github.com/ferdikoomen/openapi-typescript-codegen).
 
 ## Building
 

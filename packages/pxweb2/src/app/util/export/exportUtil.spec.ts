@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+
 import {
   applyTimeFilter,
   createSavedQueryURL,
@@ -46,7 +47,7 @@ describe('exportToFile', () => {
 
     // Mock document.createElement for 'a' elements with working href/download
     createElementOrig = document.createElement;
-    document.createElement = ((tagName: string) => {
+    document.createElement = (tagName: string) => {
       if (tagName === 'a') {
         let _href = '';
         let _download = '';
@@ -71,7 +72,7 @@ describe('exportToFile', () => {
         return mockAnchor as HTMLAnchorElement;
       }
       return createElementOrig.call(document, tagName);
-    }) as typeof document.createElement;
+    };
 
     // Mock URL.createObjectURL
     createObjectURLOrig = URL.createObjectURL;

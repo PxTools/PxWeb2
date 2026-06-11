@@ -75,7 +75,6 @@ export async function getAllTables(language?: string) {
       throw new Error('No tables found (404)');
     }
 
-    console.error('Failed to fetch tables:' + JSON.stringify(error, null, 2));
     throw error;
   }
 }
