@@ -38,6 +38,21 @@ globalThis.PxWeb2Config = {
     sv: '', // Set to your Swedish homepage URL
     en: '', // Set to your English homepage URL
   },
+  presentationPage: {
+    chart: {
+      colors: [
+        '#274247',
+        '#e07400',
+        '#6d120d',
+        '#7E9866',
+        '#0083a3',
+        '#673c4f',
+        '#d95979',
+        '#b07156',
+        '#b28d2e',
+      ],
+    },
+  },
   features: {
     chartEnabled: true,
   },

@@ -334,7 +334,7 @@ export function Presentation({
               </Activity>
               <Activity mode={viewMode === 'linechart' ? 'visible' : 'hidden'}>
                 <div className={classes.chartContainer}>
-                  <LineChart pxtable={tableData.data} />
+                  <LineChart pxtable={tableData.data} colors={config.presentationPage?.chart.colors} />
                 </div>
               </Activity>
             </>
@@ -364,7 +364,7 @@ export function Presentation({
                   mode={viewMode === 'linechart' ? 'visible' : 'hidden'}
                 >
                   <div className={classes.chartContainer}>
-                    <LineChart pxtable={tableData.data} />
+                    <LineChart pxtable={tableData.data} colors={config.presentationPage?.chart.colors} />
                   </div>
                 </Activity>
               </>
