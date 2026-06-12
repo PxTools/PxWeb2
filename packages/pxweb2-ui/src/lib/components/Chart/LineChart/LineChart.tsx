@@ -5,7 +5,6 @@ import {
   buildDatasetOption,
   buildSeriesOption,
 } from '../Utils/chartOptionBuilder';
-import ChartExportButtons from '../ChartExportButtons/ChartExportButtons';
 import { useEChartOption } from '../Utils/useEChartOption';
 import type { PxTable } from '../../../shared-types/pxTable';
 import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
@@ -23,28 +22,12 @@ export function LineChart({ pxtable, colors }: LineChartProps) {
       xAxis: { type: 'category' as const, axisLabel: { rotate: 45 } },
       yAxis: {
         name: dataset.unit,
-        // For line charts with small values, start y-axis at 0 to avoid misleading representation
-        // axisLabel: {
-        //   formatter: '{value} kg',
-        //   align: 'center',
-        // },
-        // min: 100,
         min: (value) => value.min,
       },
       legend: {
         height: 40 * dataset.series.length, // increase legend height based on number of series to prevent overlap with x-axis labels
       },
       series: buildSeriesOption(dataset, 'line', colors),
-      // dataZoom: [
-      //   {
-      //     id: 'dataZoomX',
-      //     type: 'slider',
-      //     xAxisIndex: [0],
-      //     filterMode: 'filter',
-      //     bottom: 60,
-      //   },
-      // ],
-      // For line charts, tooltips are more useful when triggered by axis to show values of all series at a given category
       tooltip: {
         trigger: 'axis',
       },
@@ -52,12 +35,11 @@ export function LineChart({ pxtable, colors }: LineChartProps) {
     [dataset, colors],
   );
 
-  const { divRef, chartRef } = useEChartOption(option);
+  const { divRef } = useEChartOption(option);
   const height = 600 + dataset.series.length * 10; // increase chart height based on number of series to prevent legend overlap
 
   return (
     <div>
-      <ChartExportButtons chartRef={chartRef} fileName="line-chart" />
       <div ref={divRef} style={{ width: '100%', height: `${height}px` }}></div>
     </div>
   );
