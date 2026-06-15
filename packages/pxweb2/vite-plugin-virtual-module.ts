@@ -1,6 +1,7 @@
 import type { Plugin } from 'vite';
 import Ajv from 'ajv';
 import standaloneCode from 'ajv/dist/standalone';
+
 import * as configSchema from './src/app/util/config/config.schema.json';
 
 export function virtualModulePlugin(): Plugin {
@@ -9,7 +10,7 @@ export function virtualModulePlugin(): Plugin {
   const resolvedModuleId = '\0' + virtualModuleId;
 
   return {
-    name: 'my-virtual-module-plugin',
+    name: 'pxweb2-config-schema-validator',
 
     resolveId(id) {
       if (id === virtualModuleId) {
