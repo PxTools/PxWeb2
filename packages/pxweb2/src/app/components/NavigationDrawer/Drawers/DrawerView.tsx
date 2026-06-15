@@ -3,18 +3,12 @@ import { useSearchParams } from 'react-router';
 
 import { ActionItem, ContentBox } from '@pxweb2/pxweb2-ui';
 import { getConfig } from '../../../util/config/getConfig';
+import {
+  ViewMode,
+  getSearchParamsWithViewMode,
+  getViewMode,
+} from '../../../pages/TableViewer/Utils/tableViewerHelper';
 import classes from './DrawerView.module.scss';
-
-type ViewMode = 'table' | 'linechart';
-function getViewMode(
-  searchParams: URLSearchParams,
-  chartEnabled: boolean,
-): ViewMode {
-  if (!chartEnabled) {
-    return 'table';
-  }
-  return searchParams.get('view') === 'linechart' ? 'linechart' : 'table';
-}
 export function DrawerView() {
   const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -22,9 +16,7 @@ export function DrawerView() {
   const chartEnabled = config.features?.chartEnabled !== false;
   const selectedViewMode = getViewMode(searchParams, chartEnabled);
   function setViewMode(viewMode: ViewMode) {
-    const nextSearchParams = new URLSearchParams(searchParams);
-    nextSearchParams.set('view', viewMode);
-    setSearchParams(nextSearchParams);
+    setSearchParams(getSearchParamsWithViewMode(searchParams, viewMode));
   }
 
   return (

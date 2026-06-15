@@ -25,18 +25,7 @@ import useTableData from '../../context/useTableData';
 import useVariables from '../../context/useVariables';
 import { useDebounce } from '@uidotdev/usehooks';
 import { getConfig } from '../../util/config/getConfig';
-
-type viewModeType = 'table' | 'linechart';
-
-function getViewMode(
-  searchParams: URLSearchParams,
-  chartEnabled: boolean,
-): viewModeType {
-  if (!chartEnabled) {
-    return 'table';
-  }
-  return searchParams.get('view') === 'linechart' ? 'linechart' : 'table';
-}
+import { getViewMode } from '../../pages/TableViewer/Utils/tableViewerHelper';
 
 type propsType = {
   readonly selectedTabId: string;
