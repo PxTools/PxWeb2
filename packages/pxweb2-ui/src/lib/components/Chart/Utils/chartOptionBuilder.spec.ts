@@ -19,34 +19,10 @@ const mockDataset: EChartsDataset = {
 };
 
 describe('buildDatasetOption', () => {
-  it('builds chart option with title, source graphic, dataset, legend and tooltip', () => {
+  it('builds chart option with dataset, legend and tooltip', () => {
     const option = buildDatasetOption(mockDataset);
 
     expect(option).toEqual({
-      title: {
-        text: 'Population by year',
-        left: 0,
-        right: 0,
-        width: '100%',
-        textStyle: {
-          overflow: 'break',
-          align: 'center',
-          lineHeight: 20,
-        },
-      },
-      graphic: [
-        {
-          type: 'text',
-          left: 8,
-          bottom: 8,
-          silent: true,
-          style: {
-            text: 'Source: Statistics Demo',
-            fill: '#6b7280',
-            font: '12px sans-serif',
-          },
-        },
-      ],
       dataset: {
         dimensions: ['name', 'men', 'women'],
         source: [
@@ -65,8 +41,20 @@ describe('buildSeriesOption', () => {
     const series = buildSeriesOption(mockDataset, 'line');
 
     expect(series).toEqual([
-      { name: 'Men', type: 'line', color: undefined },
-      { name: 'Women', type: 'line', color: undefined },
+      {
+        name: 'Men',
+        type: 'line',
+        color: undefined,
+        symbol: 'circle',
+        symbolSize: 8,
+      },
+      {
+        name: 'Women',
+        type: 'line',
+        color: undefined,
+        symbol: 'rect',
+        symbolSize: 8,
+      },
     ]);
   });
 
