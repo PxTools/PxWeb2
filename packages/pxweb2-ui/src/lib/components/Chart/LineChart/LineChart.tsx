@@ -18,7 +18,7 @@ export function LineChart({ pxtable, colors }: LineChartProps) {
   const option = useMemo<echarts.EChartsOption>(
     () => ({
       ...buildDatasetOption(dataset),
-      grid: { top: 100, bottom: 200, right: '4%', containLabel: true },
+      grid: { top: 0, bottom: 200, left: '0', right: '0', containLabel: false },
       xAxis: { type: 'category' as const, axisLabel: { rotate: 45 } },
       yAxis: {
         name: dataset.unit,
