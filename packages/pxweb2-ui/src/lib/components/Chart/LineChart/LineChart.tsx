@@ -78,7 +78,7 @@ export function LineChart({ pxtable, colors }: LineChartProps) {
                 ];
               const color = param.color ?? '#666666';
 
-              return `<div style="display:flex;align-items:center;gap:6px;"><span style="display:inline-flex;align-items:center;">${getTooltipSymbolSvg(symbol, color)}</span><span>${param.seriesName}: ${value ?? ''}</span></div>`;
+              return `<div style="display:flex;align-items:center;gap:6px"><span style="display:inline-flex;align-items:center">${getTooltipSymbolSvg(symbol, color)}</span><span>${param.seriesName}: ${value ?? ''}</span></div>`;
             })
             .join('');
 

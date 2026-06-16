@@ -48,7 +48,8 @@ export function useEChartOption(
       return;
     }
 
-    const chart = echarts.init(divRef.current, null, { renderer });
+    const chartContainer = divRef.current;
+    const chart = echarts.init(chartContainer, null, { renderer });
     chartRef.current = chart;
 
     applyOptionWithWrappedTitle(chart, option);
@@ -58,9 +59,16 @@ export function useEChartOption(
       applyOptionWithWrappedTitle(chart, option);
     };
 
+    const resizeObserver = new ResizeObserver(() => {
+      handleResize();
+    });
+
+    resizeObserver.observe(chartContainer);
+
     window.addEventListener('resize', handleResize);
 
     return () => {
+      resizeObserver.disconnect();
       window.removeEventListener('resize', handleResize);
       chartRef.current = null;
       chart.dispose();
