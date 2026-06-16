@@ -10,7 +10,7 @@ type LineSeriesSymbol =
   | 'pin'
   | 'arrow';
 
-const LINE_SERIES_SYMBOLS: LineSeriesSymbol[] = [
+export const LINE_SERIES_SYMBOLS: LineSeriesSymbol[] = [
   'circle',
   'rect',
   'triangle',
