@@ -59,16 +59,19 @@ export function useEChartOption(
       applyOptionWithWrappedTitle(chart, option);
     };
 
-    const resizeObserver = new ResizeObserver(() => {
-      handleResize();
-    });
+    const resizeObserver =
+      typeof ResizeObserver !== 'undefined'
+        ? new ResizeObserver(() => {
+            handleResize();
+          })
+        : null;
 
-    resizeObserver.observe(chartContainer);
+    resizeObserver?.observe(chartContainer);
 
     window.addEventListener('resize', handleResize);
 
     return () => {
-      resizeObserver.disconnect();
+      resizeObserver?.disconnect();
       window.removeEventListener('resize', handleResize);
       chartRef.current = null;
       chart.dispose();
