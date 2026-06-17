@@ -23,6 +23,7 @@ export function buildDatasetOption(
   dataset: EChartsDataset,
 ): echarts.EChartsOption {
   return {
+    // TODO: Title and source should only be displayed when chart is exported as image, not when rendered in the browser.
     // title: {
     //   text: dataset.title,
     //   left: 0,

@@ -60,11 +60,11 @@ export function useEChartOption(
     };
 
     const resizeObserver =
-      typeof ResizeObserver !== 'undefined'
-        ? new ResizeObserver(() => {
+      typeof ResizeObserver === 'undefined'
+        ? null
+        : new ResizeObserver(() => {
             handleResize();
-          })
-        : null;
+          });
 
     resizeObserver?.observe(chartContainer);
 
