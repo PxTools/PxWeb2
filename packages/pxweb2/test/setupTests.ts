@@ -67,6 +67,9 @@ export const mockedConfig: Config = {
     en: ['statisticalvariable', 'year', 'quarter', 'month', 'week'],
   },
   useDynamicContentInTitle: false,
+  features: {
+    chartEnabled: true,
+  },
 };
 
 vi.mock('../src/app/util/config/getConfig', () => {

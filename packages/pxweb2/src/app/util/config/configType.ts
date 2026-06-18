@@ -16,4 +16,12 @@ export type Config = {
   homePage?: {
     [lang: string]: string;
   };
+  presentationPage?: {
+    chart: {
+      colors: string[];
+    };
+  };
+  features: {
+    chartEnabled: boolean;
+  };
 };

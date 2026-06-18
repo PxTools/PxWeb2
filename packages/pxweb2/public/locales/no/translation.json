@@ -184,8 +184,8 @@
         "table": {
           "title": "Tabell"
         },
-        "graph": {
-          "title": "Graf"
+        "linechart": {
+          "title": "Linjediagram"
         }
       },
       "edit": {

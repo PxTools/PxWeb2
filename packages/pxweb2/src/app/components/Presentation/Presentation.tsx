@@ -5,18 +5,27 @@ import React, {
   useEffect,
   useState,
   useLayoutEffect,
+  Activity,
   useCallback,
 } from 'react';
 import isEqual from 'lodash/isEqual';
+import { useSearchParams } from 'react-router';
 
 import classes from './Presentation.module.scss';
 import useApp from '../../context/useApp';
 import { ContentTop } from '../ContentTop/ContentTop';
-import { Table, EmptyState, PxTable, LocalAlert } from '@pxweb2/pxweb2-ui';
+import {
+  Table,
+  EmptyState,
+  PxTable,
+  LocalAlert,
+  LineChart,
+} from '@pxweb2/pxweb2-ui';
 import useTableData from '../../context/useTableData';
 import useVariables from '../../context/useVariables';
 import { useDebounce } from '@uidotdev/usehooks';
 import { getConfig } from '../../util/config/getConfig';
+import { getViewMode } from '../../pages/TableViewer/Utils/tableViewerHelper';
 
 type propsType = {
   readonly selectedTabId: string;
@@ -55,9 +64,12 @@ export function Presentation({
 }: Readonly<propsType>) {
   const { isMobile, getSavedQueryId } = useApp();
   const config = getConfig();
+  const chartEnabled = config.features?.chartEnabled === true;
   const { i18n, t } = useTranslation();
   const tableData = useTableData();
   const variablesChanged = useVariables();
+  const [searchParams] = useSearchParams();
+  const viewMode = getViewMode(searchParams, chartEnabled);
   const variables = useDebounce(useVariables(), 500);
   const {
     pxTableMetadata,
@@ -291,34 +303,60 @@ export function Presentation({
           )}
 
           {!isMissingMandatoryVariables && (
-            <div
-              className={classes.gradientContainer}
-              ref={gradientContainerRef}
-            >
-              <div className={classes.tableContainer} ref={tableContainerRef}>
-                <MemoizedTable
-                  pxtable={tableData.data}
-                  isMobile={isMobile}
-                  getVerticalScrollElement={getVerticalScrollElement}
-                />
-              </div>
-            </div>
+            <>
+              <Activity mode={viewMode === 'table' ? 'visible' : 'hidden'}>
+                <div
+                  className={classes.gradientContainer}
+                  ref={gradientContainerRef}
+                >
+                  <div
+                    className={classes.tableContainer}
+                    ref={tableContainerRef}
+                  >
+                    <MemoizedTable
+                      pxtable={tableData.data}
+                      isMobile={isMobile}
+                      getVerticalScrollElement={getVerticalScrollElement}
+                    />
+                  </div>
+                </div>
+              </Activity>
+              <Activity mode={viewMode === 'linechart' ? 'visible' : 'hidden'}>
+                <div className={classes.chartContainer}>
+                  <LineChart pxtable={tableData.data} />
+                </div>
+              </Activity>
+            </>
           )}
           {isMissingMandatoryVariables &&
             !variables.isMatrixSizeAllowed &&
             !isMandatoryNotSelectedFirst && (
-              <div
-                className={classes.gradientContainer}
-                ref={gradientContainerRef}
-              >
-                <div className={classes.tableContainer} ref={tableContainerRef}>
-                  <MemoizedTable
-                    pxtable={tableData.data}
-                    isMobile={isMobile}
-                    getVerticalScrollElement={getVerticalScrollElement}
-                  />
-                </div>
-              </div>
+              <>
+                <Activity mode={viewMode === 'table' ? 'visible' : 'hidden'}>
+                  <div
+                    className={classes.gradientContainer}
+                    ref={gradientContainerRef}
+                  >
+                    <div
+                      className={classes.tableContainer}
+                      ref={tableContainerRef}
+                    >
+                      <MemoizedTable
+                        pxtable={tableData.data}
+                        isMobile={isMobile}
+                        getVerticalScrollElement={getVerticalScrollElement}
+                      />
+                    </div>
+                  </div>
+                </Activity>
+                <Activity
+                  mode={viewMode === 'linechart' ? 'visible' : 'hidden'}
+                >
+                  <div className={classes.chartContainer}>
+                    <LineChart pxtable={tableData.data} />
+                  </div>
+                </Activity>
+              </>
             )}
           {!isLoadingMetadata &&
             isMissingMandatoryVariables &&
