@@ -60,6 +60,7 @@ import {
 } from '../../util/createBreadcrumbItems';
 import { createTableListSEO } from '../../util/seo/tableListSEO';
 import WipStatusMessage from '../../components/Banners/WipStatusMessage';
+import { applyTableCardTitleTransform } from '../../util/tableCardTitleTransform';
 
 const StartPage = () => {
   const { t, i18n } = useTranslation();
@@ -433,7 +434,7 @@ const StartPage = () => {
         lastPeriodString = table.lastPeriod?.slice(5, 9);
       }
 
-      const cardTitle = table.label ?? '';
+      const cardTitle = applyTableCardTitleTransform(table.label ?? '');
       const cardUpdatedDate = table.updated
         ? t('date.simple_date', {
             value: new Date(table.updated),

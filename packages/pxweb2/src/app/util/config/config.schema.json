@@ -75,6 +75,25 @@
     "showBreadCrumbOnStartPage": {
       "type": "boolean",
       "description": "Set to true to show breadcrumb on start page"
+    },
+    "tableCardTitleTransform": {
+      "type": "object",
+      "description": "Optional regex transform applied to start page card titles before rendering.",
+      "properties": {
+        "pattern": {
+          "type": "string",
+          "description": "Regular expression source string used to match parts of a title."
+        },
+        "flags": {
+          "type": "string",
+          "description": "Regular expression flags, for example 'g' or 'gi'."
+        },
+        "replacement": {
+          "type": "string",
+          "description": "Replacement string used with String.replace. Defaults to empty string."
+        }
+      },
+      "required": ["pattern"]
     }
   },
   "required": ["language", "baseApplicationPath", "apiUrl", "maxDataCells"]
