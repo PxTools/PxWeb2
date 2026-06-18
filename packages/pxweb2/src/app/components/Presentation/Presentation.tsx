@@ -325,7 +325,6 @@ export function Presentation({
                 <div className={classes.chartContainer}>
                   <LineChart
                     pxtable={tableData.data}
-                    // colors={config.presentationPage?.chart.colors}
                   />
                 </div>
               </Activity>
@@ -358,7 +357,6 @@ export function Presentation({
                   <div className={classes.chartContainer}>
                     <LineChart
                       pxtable={tableData.data}
-                      // colors={config.presentationPage?.chart.colors}
                     />
                   </div>
                 </Activity>
