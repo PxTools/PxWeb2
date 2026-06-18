@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router';
 
-import { ActionItem, ContentBox } from '@pxweb2/pxweb2-ui';
+import { ActionItem, ContentBox, LocalAlert } from '@pxweb2/pxweb2-ui';
 import { getConfig } from '../../../util/config/getConfig';
 import {
   ViewMode,
@@ -21,18 +21,18 @@ export function DrawerView() {
 
   return (
     <ContentBox>
-      <ul className={classes.operationList}>
-        <li>
-          <ActionItem
-            largeIconName="Table"
-            size="large"
-            label={t('presentation_page.side_menu.view.table.title')}
-            ariaLabel={t('presentation_page.side_menu.view.table.title')}
-            onClick={() => setViewMode('table')}
-            toggleState={selectedViewMode === 'table'}
-          />
-        </li>
-        {chartEnabled && (
+      {chartEnabled && (
+        <ul className={classes.operationList}>
+          <li>
+            <ActionItem
+              largeIconName="Table"
+              size="large"
+              label={t('presentation_page.side_menu.view.table.title')}
+              ariaLabel={t('presentation_page.side_menu.view.table.title')}
+              onClick={() => setViewMode('table')}
+              toggleState={selectedViewMode === 'table'}
+            />
+          </li>
           <li>
             <ActionItem
               largeIconName="LineChart"
@@ -43,8 +43,13 @@ export function DrawerView() {
               toggleState={selectedViewMode === 'linechart'}
             />
           </li>
-        )}
-      </ul>
+        </ul>
+      )}
+      {!chartEnabled && (
+        <LocalAlert variant="info" className={classes.alert}>
+          {t('common.status_messages.drawer_view')}
+        </LocalAlert>
+      )}
     </ContentBox>
   );
 }
