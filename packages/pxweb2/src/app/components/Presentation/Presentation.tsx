@@ -7,6 +7,7 @@ import React, {
   useLayoutEffect,
   Activity,
   useCallback,
+  useMemo,
 } from 'react';
 import isEqual from 'lodash/isEqual';
 import { useSearchParams } from 'react-router';
@@ -20,6 +21,7 @@ import {
   PxTable,
   LocalAlert,
   LineChart,
+  getChartColorsFromCssVariables,
 } from '@pxweb2/pxweb2-ui';
 import useTableData from '../../context/useTableData';
 import useVariables from '../../context/useVariables';
@@ -90,6 +92,8 @@ export function Presentation({
   const { isFadingTable, setIsFadingTable } = tableData;
   const [isMandatoryNotSelectedFirst, setIsMandatoryNotSelectedFirst] =
     useState(true);
+
+  const chartColors = useMemo(() => getChartColorsFromCssVariables(), []);
 
   const tableContainerRef = useRef<HTMLDivElement | null>(null);
   const gradientContainerRef = useRef<HTMLDivElement | null>(null);
@@ -323,7 +327,7 @@ export function Presentation({
               </Activity>
               <Activity mode={viewMode === 'linechart' ? 'visible' : 'hidden'}>
                 <div className={classes.chartContainer}>
-                  <LineChart pxtable={tableData.data} />
+                  <LineChart pxtable={tableData.data} colors={chartColors} />
                 </div>
               </Activity>
             </>
@@ -353,7 +357,7 @@ export function Presentation({
                   mode={viewMode === 'linechart' ? 'visible' : 'hidden'}
                 >
                   <div className={classes.chartContainer}>
-                    <LineChart pxtable={tableData.data} />
+                    <LineChart pxtable={tableData.data} colors={chartColors} />
                   </div>
                 </Activity>
               </>
