@@ -1,5 +1,5 @@
 {
-  "extends": ["html-validate:recommended", "html-validate:prettier"],
+  "extends": ["html-validate:recommended"],
   "rules": {
     "close-order": "error",
     "void-style": ["warn", { "style": "omit" }]
