@@ -104,9 +104,6 @@ jobs:
         id: branch-names
         uses: tj-actions/branch-names@5250492686b253f06fa55861556d1027b067aeb5 # v9.0.2
 
-      - name: Prepare deployment with different configuration
-        run: |
-          sed -i 's|useDynamicContentInTitle: false,|useDynamicContentInTitle: true,|' packages/pxweb2/dist/config/config.js
 
       - name: Deploy
         id: deploy
