@@ -94,6 +94,36 @@
         }
       },
       "required": ["pattern"]
+    "presentationPage": {
+      "type": "object",
+      "description": "Configuration for the presentation page",
+      "properties": {
+        "chart": {
+          "type": "object",
+          "description": "Chart-specific presentation settings",
+          "properties": {
+            "colors": {
+              "type": "array",
+              "description": "Ordered list of hex colors used for chart series",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": ["colors"]
+        }
+      },
+      "required": ["chart"]
+    },
+    "features": {
+      "type": "object",
+      "description": "Feature flags controlling optional functionality",
+      "properties": {
+        "chartEnabled": {
+          "type": "boolean",
+          "description": "Set to true to enable chart functionality"
+        }
+      }
     }
   },
   "required": ["language", "baseApplicationPath", "apiUrl", "maxDataCells"]
