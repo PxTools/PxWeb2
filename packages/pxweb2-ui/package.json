@@ -20,8 +20,7 @@
     "clsx": "^2.1.1",
     "echarts": "^6.1.0",
     "hast-util-to-jsx-runtime": "^2.3.6",
-    "motion": "^12.40.0",
-    "vite-plugin-dts": "^4.5.4"
+    "motion": "^12.40.0"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^5.2.1",

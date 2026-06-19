@@ -53,6 +53,7 @@
     "jsdom": "^29.1.1",
     "style-dictionary": "^5.4.4",
     "typescript": "^6.0.3",
+    "unplugin-dts": "^1.0.2",
     "wrangler": "^4.99.0"
   },
   "engines": {
