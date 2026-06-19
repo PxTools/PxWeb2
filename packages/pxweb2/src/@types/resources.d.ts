@@ -312,8 +312,8 @@ export default interface Resources {
           };
         };
         view: {
-          graph: {
-            title: 'Graph';
+          linechart: {
+            title: 'Line chart';
           };
           table: {
             title: 'Table';

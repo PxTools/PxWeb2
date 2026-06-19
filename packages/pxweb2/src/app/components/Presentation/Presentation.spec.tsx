@@ -1,4 +1,5 @@
 import { renderWithProviders } from '../../util/testing-utils';
+import { MemoryRouter } from 'react-router';
 import Presentation from './Presentation';
 
 describe('Presentation', () => {
@@ -20,11 +21,13 @@ describe('Presentation', () => {
 
   it('should render successfully', () => {
     const { baseElement } = renderWithProviders(
-      <Presentation
-        selectedTabId="1"
-        isExpanded={false}
-        setIsExpanded={vi.fn()}
-      />,
+      <MemoryRouter>
+        <Presentation
+          selectedTabId="1"
+          isExpanded={false}
+          setIsExpanded={vi.fn()}
+        />
+      </MemoryRouter>,
     );
 
     expect(baseElement).toBeTruthy();

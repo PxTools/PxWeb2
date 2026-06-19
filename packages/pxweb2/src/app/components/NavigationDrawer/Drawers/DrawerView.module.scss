@@ -1,3 +1,15 @@
+.operationList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
 .alert {
-  margin: 8px;
+  margin-left: 8px;
+  margin-right: 8px;
+  margin-bottom: 8px;
 }
