@@ -46,19 +46,5 @@ export function getChartColorsFromCssVariables(): string[] | undefined {
     }
   }
 
-  const indexedColors: string[] = [];
-
-  for (let i = 1; i <= 100; i += 1) {
-    const color = styles.getPropertyValue(`--px-color-chart-${i}`).trim();
-    if (!color) {
-      break;
-    }
-
-    const resolvedColor = resolveCssVariableValue(color, styles).trim();
-    if (resolvedColor) {
-      indexedColors.push(resolvedColor);
-    }
-  }
-
-  return indexedColors.length > 0 ? indexedColors : undefined;
+  return undefined;
 }

@@ -42,7 +42,7 @@ describe('getChartColorsFromCssVariables', () => {
     ]);
   });
 
-  it('falls back to indexed chart colors when csv color list is empty', () => {
+  it('returns undefined when csv color list is empty', () => {
     vi.stubGlobal('document', { documentElement: {} });
     vi.stubGlobal(
       'getComputedStyle',
@@ -57,7 +57,7 @@ describe('getChartColorsFromCssVariables', () => {
       ),
     );
 
-    expect(getChartColorsFromCssVariables()).toEqual(['#111111', '#222222']);
+    expect(getChartColorsFromCssVariables()).toBeUndefined();
   });
 
   it('returns undefined when no chart colors are configured', () => {
