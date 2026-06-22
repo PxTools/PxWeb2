@@ -2,7 +2,7 @@ globalThis.PxWeb2Config = {
   language: {
     supportedLanguages: [
       { shorthand: 'en', languageName: 'English' },
-      { shorthand: 'no', languageName: 'Norsk' },
+      { shorthand: 'sv', languageName: 'Svenska' },
     ],
     defaultLanguage: 'en',
     fallbackLanguage: 'en',
@@ -10,18 +10,10 @@ globalThis.PxWeb2Config = {
     positionInPath: 'after',
   },
   baseApplicationPath: '/',
-  //apiUrl: 'https://api.scb.se/OV0104/v2beta/api/v2',
-  apiUrl: 'https://data.qa.ssb.no/api/pxwebapi/v2',
+  apiUrl: 'https://api.scb.se/OV0104/v2beta/api/v2',
   maxDataCells: 150000,
   useDynamicContentInTitle: false,
   showBreadCrumbOnStartPage: false,
-  //Optional table-card title transform applied on StartPage before rendering TableCard.
-  //Example below removes a leading numeric code like "1234: " from titles.
-  tableCardTitleTransform: {
-    pattern: '^\\s*\\d+\\s*:\\s*',
-    flags: '',
-    replacement: '',
-  },
   specialCharacters: ['.', '..', ':', '-', '...', '*'],
   variableFilterExclusionList: {
     en: [
@@ -32,7 +24,7 @@ globalThis.PxWeb2Config = {
       'every other year',
       'every fifth year',
     ],
-    no: [
+    sv: [
       'tabellinnehåll',
       'år',
       'kvartal',
@@ -43,7 +35,7 @@ globalThis.PxWeb2Config = {
     ],
   },
   homePage: {
-    no: '', // Set to your Swedish homepage URL
+    sv: '', // Set to your Swedish homepage URL
     en: '', // Set to your English homepage URL
   },
 };
