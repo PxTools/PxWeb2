@@ -1081,7 +1081,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * This function updates the table structure to fit a mobile layout by adjusting the stub and heading order.
    */
   const pivotToMobile = React.useCallback(() => {
-    console.log('Pivoting to mobile layout');
+    console.log('TableDataProvider - pivotToMobile called');
     if (data?.heading !== undefined) {
       const tmpTable = structuredClone(data);
 
@@ -1122,7 +1122,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * This function updates the table structure to fit a desktop layout by adjusting the stub and heading order.
    */
   const pivotToDesktop = React.useCallback(() => {
-    console.log('Pivoting to desktop layout');
+    console.log('TableDataProvider - pivotToDesktop called');
     if (data?.heading !== undefined) {
       const tmpTable = structuredClone(data);
 
@@ -1166,6 +1166,8 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    */
   const pivot = React.useCallback(
     (type: PivotType): void => {
+
+      console.log('TableDataProvider - pivot called with type:', type);
       // Autopivot not allowed for mobile mode
       if (isMobileMode && type === PivotType.Auto) {
         return;

@@ -232,6 +232,7 @@ export function chartPivot(
   stub: string[],
   heading: string[],
 ) {
+  console.log('TableDataProviderUtils - chartPivot called');
   // Ensure we start from empty arrays
   stub.length = 0;
   heading.length = 0;
