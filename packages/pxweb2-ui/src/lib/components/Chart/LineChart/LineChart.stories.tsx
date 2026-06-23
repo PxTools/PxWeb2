@@ -194,10 +194,23 @@ export const Default: Story = {
   },
 };
 
+export const CssVariableFallbackColors: Story = {
+  args: {
+    pxtable: defaultPxTable,
+  },
+};
+
 export const CustomColors: Story = {
   args: {
     pxtable: defaultPxTable,
     colors: ['#0b5fff', '#fa4d56'],
+  },
+};
+
+export const EmptyColorsArrayUsesFallback: Story = {
+  args: {
+    pxtable: defaultPxTable,
+    colors: [],
   },
 };
 
