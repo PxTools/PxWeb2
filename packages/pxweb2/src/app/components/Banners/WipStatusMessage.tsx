@@ -32,6 +32,7 @@ export default function WipStatusMessage() {
   return (
     message && (
       <GlobalAlert
+        id="wip-status-message"
         variant="info"
         closeButton={true}
         className={classes.welcomeAlert}
