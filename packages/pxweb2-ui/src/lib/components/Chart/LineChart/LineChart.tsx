@@ -9,6 +9,7 @@ import {
 import { useEChartOption } from '../Utils/useEChartOption';
 import type { PxTable } from '../../../shared-types/pxTable';
 import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
+import { getChartColorsFromCssVariables } from '../Utils/chartHelper';
 
 interface LineChartProps {
   readonly pxtable: PxTable;
@@ -42,6 +43,13 @@ function getTooltipSymbolSvg(symbol: string, color: string): string {
 
 export function LineChart({ pxtable, colors }: LineChartProps) {
   const dataset = useMemo(() => mapPxTableToChartDataset(pxtable), [pxtable]);
+
+  const resolvedColors = useMemo(() => {
+    return colors && colors.length > 0
+      ? colors
+      : getChartColorsFromCssVariables();
+  }, [colors]);
+
   const option = useMemo<echarts.EChartsOption>(
     () => ({
       ...buildDatasetOption(dataset),
@@ -54,7 +62,7 @@ export function LineChart({ pxtable, colors }: LineChartProps) {
       legend: {
         height: 40 * dataset.series.length, // increase legend height based on number of series to prevent overlap with x-axis labels
       },
-      series: buildSeriesOption(dataset, 'line', colors),
+      series: buildSeriesOption(dataset, 'line', resolvedColors),
       tooltip: {
         trigger: 'axis',
         formatter: (params: unknown) => {
@@ -86,7 +94,7 @@ export function LineChart({ pxtable, colors }: LineChartProps) {
         },
       },
     }),
-    [dataset, colors],
+    [dataset, resolvedColors],
   );
 
   const { divRef } = useEChartOption(option);
