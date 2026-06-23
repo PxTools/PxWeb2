@@ -5,16 +5,44 @@ import { MemoryRouter } from 'react-router';
 
 import { DrawerView } from './DrawerView';
 
-const mockGetConfig = vi.fn();
+const { defaultMockConfig, mockGetConfig } = vi.hoisted(() => {
+  const defaultMockConfig = {
+    baseApplicationPath: '/',
+    features: {
+      chartEnabled: true,
+    },
+    language: {
+      defaultLanguage: 'en',
+      fallbackLanguage: 'en',
+      supportedLanguages: [{ shorthand: 'en' }],
+      positionInPath: 'after',
+    },
+  };
+
+  return {
+    defaultMockConfig,
+    mockGetConfig: vi.fn(() => defaultMockConfig),
+  };
+});
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string) => key,
   }),
+  initReactI18next: {
+    type: '3rdParty',
+    init: () => undefined,
+  },
 }));
 
 vi.mock('../../../util/config/getConfig', () => ({
-  getConfig: () => mockGetConfig(),
+  getConfig: mockGetConfig,
+}));
+
+vi.mock('../../../context/useTableData', () => ({
+  default: () => ({
+    pivot: vi.fn(),
+  }),
 }));
 
 interface MockActionItemProps {
@@ -34,11 +62,8 @@ vi.mock('@pxweb2/pxweb2-ui', () => ({
 }));
 
 beforeEach(() => {
-  mockGetConfig.mockReturnValue({
-    features: {
-      chartEnabled: true,
-    },
-  });
+  mockGetConfig.mockReset();
+  mockGetConfig.mockReturnValue(defaultMockConfig);
 });
 
 describe('DrawerView', () => {
@@ -56,6 +81,7 @@ describe('DrawerView', () => {
 
   it('renders info alert when chart view is disabled', () => {
     mockGetConfig.mockReturnValue({
+      ...defaultMockConfig,
       features: {
         chartEnabled: false,
       },
