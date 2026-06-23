@@ -140,10 +140,12 @@ export function Presentation({
     };
   });
   useEffect(() => {
-    if (isMobile) {
-      tableData.pivotToMobile();
-    } else {
-      tableData.pivotToDesktop();
+    if (getViewMode(searchParams, chartEnabled) === 'table') {
+      if (isMobile) {
+        tableData.pivotToMobile();
+      } else {
+        tableData.pivotToDesktop();
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMobile]);

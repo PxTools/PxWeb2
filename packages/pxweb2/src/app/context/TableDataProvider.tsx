@@ -26,6 +26,7 @@ import {
   pivotTableCW,
   TableTitlePartsType,
   getTableTitleParts,
+  chartPivot,
 } from './TableDataProviderUtils';
 import { problemMessage } from '../util/problemMessage';
 import { PivotType } from './PivotType';
@@ -1080,11 +1081,36 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * This function updates the table structure to fit a mobile layout by adjusting the stub and heading order.
    */
   const pivotToMobile = React.useCallback(() => {
+    console.log('Pivoting to mobile layout');
     if (data?.heading !== undefined) {
       const tmpTable = structuredClone(data);
 
       if (tmpTable !== undefined) {
-        pivotTable(tmpTable, stubMobile, headingMobile);
+        let stubOrderMobile: string[] = stubMobile;
+        let headingOrderMobile: string[] = headingMobile;
+
+        if (headingOrderMobile.length > 0) {
+          // Mobile table should never have any variables in the heading.
+          // -> Set stub and heading order for mobile according to the order in pxTable
+          const tmpStubMobile = structuredClone(tmpTable.stub);
+          const tmpHeadingMobile = structuredClone(tmpTable.heading);
+
+          tmpHeadingMobile.forEach((variable) => {
+            tmpStubMobile.push(variable);
+          });
+
+          tmpStubMobile.sort((a, b) => a.values.length - b.values.length);
+
+          stubOrderMobile = tmpStubMobile.map((variable) => variable.id);
+          headingOrderMobile = [];
+
+          setStubMobile(stubOrderMobile);
+          setHeadingMobile(headingOrderMobile);
+        }
+
+        pivotTable(tmpTable, stubOrderMobile, headingOrderMobile);
+
+        // pivotTable(tmpTable, stubMobile, headingMobile);
         setData(tmpTable);
         setIsMobileMode(true);
       }
@@ -1096,6 +1122,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * This function updates the table structure to fit a desktop layout by adjusting the stub and heading order.
    */
   const pivotToDesktop = React.useCallback(() => {
+    console.log('Pivoting to desktop layout');
     if (data?.heading !== undefined) {
       const tmpTable = structuredClone(data);
 
@@ -1164,8 +1191,10 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
       if (type === PivotType.Auto) {
         autoPivotTable(tmpTable.metadata.variables, stub, heading);
-      } else {
+      } else if (type === PivotType.Clockwise) {
         pivotTableCW(stub, heading);
+      } else if (type === PivotType.Chart) {
+        chartPivot(tmpTable.metadata.variables, stub, heading);
       }
 
       pivotTable(tmpTable, stub, heading);

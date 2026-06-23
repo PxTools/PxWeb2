@@ -227,6 +227,30 @@ export function filterStubAndHeadingArrays(
   };
 }
 
+export function chartPivot(
+  variables: Variable[],
+  stub: string[],
+  heading: string[],
+) {
+  // Ensure we start from empty arrays
+  stub.length = 0;
+  heading.length = 0;
+
+  const timeVariable = variables.find(
+    (variable) => variable.type === VartypeEnum.TIME_VARIABLE,
+  );
+
+  if (timeVariable) {
+    stub.push(timeVariable.id);
+  }
+
+  for (const variable of variables) {
+    if (variable.id !== timeVariable?.id) {
+      heading.push(variable.id);
+    }
+  }
+}
+
 export function autoPivotTable(
   variables: Variable[],
   stub: string[],
