@@ -84,6 +84,7 @@
   --px-color-neutral-700: #525962;
   --px-color-neutral-800: #42474F;
   --px-color-neutral-900: #22262A;
+  --px-color-chart-series: #274247, #e07400, #6d120d, #7E9866, #0083a3, #673c4f, #d95979, #b07156, #b28d2e;
   --px-color-background-default: var(--px-color-base-00);
   --px-color-background-subtle: var(--px-color-brand-50);
   --px-color-surface-default: var(--px-color-base-00);
