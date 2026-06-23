@@ -90,6 +90,7 @@ export function Presentation({
   const { isFadingTable, setIsFadingTable } = tableData;
   const [isMandatoryNotSelectedFirst, setIsMandatoryNotSelectedFirst] =
     useState(true);
+    
   const tableContainerRef = useRef<HTMLDivElement | null>(null);
   const gradientContainerRef = useRef<HTMLDivElement | null>(null);
 
