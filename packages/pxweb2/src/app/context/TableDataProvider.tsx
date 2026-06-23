@@ -1166,7 +1166,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    */
   const pivot = React.useCallback(
     (type: PivotType): void => {
-
       console.log('TableDataProvider - pivot called with type:', type);
       // Autopivot not allowed for mobile mode
       if (isMobileMode && type === PivotType.Auto) {

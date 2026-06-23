@@ -151,8 +151,7 @@ export function Presentation({
         console.log('Presentation - Pivoting to desktop view');
         tableData.pivotToDesktop();
       }
-    }
-    else if (viewMode === 'linechart') {
+    } else if (viewMode === 'linechart') {
       console.log('Presentation - Pivoting to chart view');
       tableData.pivot(PivotType.Chart);
     }
