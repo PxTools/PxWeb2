@@ -26,7 +26,7 @@ import {
   pivotTableCW,
   TableTitlePartsType,
   getTableTitleParts,
-  chartPivot,
+  // chartPivot,
 } from './TableDataProviderUtils';
 import { problemMessage } from '../util/problemMessage';
 import { PivotType } from './PivotType';
@@ -1081,36 +1081,36 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * This function updates the table structure to fit a mobile layout by adjusting the stub and heading order.
    */
   const pivotToMobile = React.useCallback(() => {
-    console.log('TableDataProvider - pivotToMobile called');
+    // console.log('TableDataProvider - pivotToMobile called');
     if (data?.heading !== undefined) {
       const tmpTable = structuredClone(data);
 
       if (tmpTable !== undefined) {
-        let stubOrderMobile: string[] = stubMobile;
-        let headingOrderMobile: string[] = headingMobile;
+        // let stubOrderMobile: string[] = stubMobile;
+        // let headingOrderMobile: string[] = headingMobile;
 
-        if (headingOrderMobile.length > 0) {
-          // Mobile table should never have any variables in the heading.
-          // -> Set stub and heading order for mobile according to the order in pxTable
-          const tmpStubMobile = structuredClone(tmpTable.stub);
-          const tmpHeadingMobile = structuredClone(tmpTable.heading);
+        // if (headingOrderMobile.length > 0) {
+        //   // Mobile table should never have any variables in the heading.
+        //   // -> Set stub and heading order for mobile according to the order in pxTable
+        //   const tmpStubMobile = structuredClone(tmpTable.stub);
+        //   const tmpHeadingMobile = structuredClone(tmpTable.heading);
 
-          tmpHeadingMobile.forEach((variable) => {
-            tmpStubMobile.push(variable);
-          });
+        //   tmpHeadingMobile.forEach((variable) => {
+        //     tmpStubMobile.push(variable);
+        //   });
 
-          tmpStubMobile.sort((a, b) => a.values.length - b.values.length);
+        //   tmpStubMobile.sort((a, b) => a.values.length - b.values.length);
 
-          stubOrderMobile = tmpStubMobile.map((variable) => variable.id);
-          headingOrderMobile = [];
+        //   stubOrderMobile = tmpStubMobile.map((variable) => variable.id);
+        //   headingOrderMobile = [];
 
-          setStubMobile(stubOrderMobile);
-          setHeadingMobile(headingOrderMobile);
-        }
+        //   setStubMobile(stubOrderMobile);
+        //   setHeadingMobile(headingOrderMobile);
+        // }
 
-        pivotTable(tmpTable, stubOrderMobile, headingOrderMobile);
+        // pivotTable(tmpTable, stubOrderMobile, headingOrderMobile);
 
-        // pivotTable(tmpTable, stubMobile, headingMobile);
+        pivotTable(tmpTable, stubMobile, headingMobile);
         setData(tmpTable);
         setIsMobileMode(true);
       }
@@ -1122,7 +1122,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * This function updates the table structure to fit a desktop layout by adjusting the stub and heading order.
    */
   const pivotToDesktop = React.useCallback(() => {
-    console.log('TableDataProvider - pivotToDesktop called');
+    // console.log('TableDataProvider - pivotToDesktop called');
     if (data?.heading !== undefined) {
       const tmpTable = structuredClone(data);
 
@@ -1166,7 +1166,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    */
   const pivot = React.useCallback(
     (type: PivotType): void => {
-      console.log('TableDataProvider - pivot called with type:', type);
+      // console.log('TableDataProvider - pivot called with type:', type);
       // Autopivot not allowed for mobile mode
       if (isMobileMode && type === PivotType.Auto) {
         return;
@@ -1192,11 +1192,12 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
       if (type === PivotType.Auto) {
         autoPivotTable(tmpTable.metadata.variables, stub, heading);
-      } else if (type === PivotType.Clockwise) {
+      } else {
         pivotTableCW(stub, heading);
-      } else if (type === PivotType.Chart) {
-        chartPivot(tmpTable.metadata.variables, stub, heading);
       }
+      // } else if (type === PivotType.Chart) {
+      //   chartPivot(tmpTable.metadata.variables, stub, heading);
+      // }
 
       pivotTable(tmpTable, stub, heading);
 
