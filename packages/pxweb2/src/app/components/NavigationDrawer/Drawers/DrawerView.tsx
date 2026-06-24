@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router';
 
 import { ActionItem, ContentBox, LocalAlert } from '@pxweb2/pxweb2-ui';
 import useTableData from '../../../context/useTableData';
-import { PivotType } from '../../../context/PivotType';
+//import { PivotType } from '../../../context/PivotType';
 import { getConfig } from '../../../util/config/getConfig';
 import {
   ViewMode,
@@ -14,7 +14,7 @@ import classes from './DrawerView.module.scss';
 export function DrawerView() {
   const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { pivot } = useTableData();
+  const { pivotToChart } = useTableData();
   const config = getConfig();
   const chartEnabled = config.features?.chartEnabled === true;
   const selectedViewMode = getViewMode(searchParams, chartEnabled);
@@ -43,7 +43,7 @@ export function DrawerView() {
               label={t('presentation_page.side_menu.view.linechart.title')}
               ariaLabel={t('presentation_page.side_menu.view.linechart.title')}
               onClick={() => {
-                pivot(PivotType.Chart);
+                pivotToChart();
                 setViewMode('linechart');
               }}
               toggleState={selectedViewMode === 'linechart'}

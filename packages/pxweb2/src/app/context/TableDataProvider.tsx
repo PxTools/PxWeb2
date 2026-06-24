@@ -14,6 +14,7 @@ import {
 import {
   PxTable,
   PxTableMetadata,
+  VartypeEnum,
   getPxTableData,
   setPxTableData,
 } from '@pxweb2/pxweb2-ui';
@@ -39,6 +40,7 @@ export interface TableDataContextType {
   fetchSavedQuery: (queryId: string, i18n: i18n, isMobile: boolean) => void;
   pivotToMobile: () => void;
   pivotToDesktop: () => void;
+  pivotToChart: () => void;
   pivot: (type: PivotType) => void;
   buildTableTitle: () => TableTitlePartsType;
   isFadingTable: boolean;
@@ -63,6 +65,9 @@ const TableDataContext = createContext<TableDataContextType | undefined>({
     // No-op: useTableData hook prevents this from being called
   },
   pivotToDesktop: () => {
+    // No-op: useTableData hook prevents this from being called
+  },
+  pivotToChart: () => {
     // No-op: useTableData hook prevents this from being called
   },
   pivot: () => {
@@ -100,6 +105,11 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   const [stubMobile, setStubMobile] = useState<string[]>([]);
   // Variables in the heading (mobile table)
   const [headingMobile, setHeadingMobile] = useState<string[]>([]);
+
+  // Variables in the stub (chart)
+  const [stubChart, setStubChart] = useState<string[]>([]);
+  // Variables in the heading (chart)
+  const [headingChart, setHeadingChart] = useState<string[]>([]);
 
   // When default selection is loaded we need to initialize which codelists are selected for each variable.
   const [codelistsInitialized, setCodelistsInitialized] = useState(false);
@@ -213,6 +223,27 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
         setStubMobile(stubOrderMobile);
         setHeadingMobile(headingOrderMobile);
+
+        // -> Set stub and heading order for chart according to the order in pxTable
+        const stubOrderChart: string[] = [];
+        const headingOrderChart: string[] = [];
+
+        const timeVariable = pxTable.metadata.variables.find(
+          (variable) => variable.type === VartypeEnum.TIME_VARIABLE,
+        );
+
+        if (timeVariable) {
+          stubOrderChart.push(timeVariable.id);
+        }
+
+        for (const variable of pxTable.metadata.variables) {
+          if (variable.id !== timeVariable?.id) {
+            headingOrderChart.push(variable.id);
+          }
+        }
+
+        setStubChart(stubOrderChart);
+        setHeadingChart(headingOrderChart);
 
         if (isMobile) {
           pivotTable(pxTable, stubOrderMobile, headingOrderMobile);
@@ -1135,6 +1166,23 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   }, [data, stubDesktop, headingDesktop]);
 
   /**
+   * Pivots the table to chart layout.
+   * This function updates the table structure to fit a chart layout by adjusting the stub and heading order.
+   */
+  const pivotToChart = React.useCallback(() => {
+    // console.log('TableDataProvider - pivotToChart called');
+    if (data?.heading !== undefined) {
+      const tmpTable = structuredClone(data);
+
+      if (tmpTable !== undefined) {
+        pivotTable(tmpTable, stubChart, headingChart);
+        setData(tmpTable);
+        setIsMobileMode(false);
+      }
+    }
+  }, [data, stubChart, headingChart]);
+
+  /**
    * Builds the table title parts based on the current table data and metadata.
    * @returns An object containing the parts of the table title.
    */
@@ -1273,6 +1321,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       fetchSavedQuery,
       pivotToMobile,
       pivotToDesktop,
+      pivotToChart,
       pivot,
       buildTableTitle,
       isInitialized,
@@ -1285,6 +1334,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       fetchSavedQuery,
       pivotToMobile,
       pivotToDesktop,
+      pivotToChart,
       pivot,
       buildTableTitle,
       isInitialized,
