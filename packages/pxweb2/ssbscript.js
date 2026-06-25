@@ -12,32 +12,6 @@
     },
   };
 
-  // document.addEventListener('DOMContentLoaded', function () {
-  //   const html = `
-  //     <div id="alert-container" class="container oldLinkClass">
-  //       <svg
-  //         xmlns="http://www.w3.org/2000/svg"
-  //         viewBox="0 0 24 24"
-  //         width="24"
-  //         height="24"
-  //         role="img"
-  //         aria-hidden="true"
-  //         class="info-icon"
-  //       >
-  //         <path
-  //           d="M12 21.75C17.3848 21.75 21.75 17.3848 21.75 12C21.75 6.61522 17.3848 2.25 12 2.25C6.61522 2.25 2.25 6.61522 2.25 12C2.25 17.3848 6.61522 21.75 12 21.75ZM11 8C11 7.44771 11.4477 7 12 7C12.5523 7 13 7.44771 13 8C13 8.55228 12.5523 9 12 9C11.4477 9 11 8.55228 11 8ZM12 10.25C12.4142 10.25 12.75 10.5858 12.75 11L12.75 16.5C12.75 16.9142 12.4142 17.25 12 17.25C11.5858 17.25 11.25 16.9142 11.25 16.5L11.25 11C11.25 10.5858 11.5858 10.25 12 10.25Z"
-  //           fill="#0179C8"
-  //         />
-  //       </svg>
-  //       <div id="info-text-container">
-  //     </div>
-  //     </div>
-  //   `;
-
-  //   // Insert at the very start of <body>
-  //   document.body.insertAdjacentHTML('afterbegin', html);
-  // });
-
   function checkLanguage() {
     const url = new URL(globalThis.location.href);
     if (url.pathname.includes('/en/')) {
@@ -56,6 +30,10 @@
     const newUrl = url.pathname.replace('/statbank', '/statbank1');
     return newUrl.toString();
   }
+  // ---------------------------------------------
+  // Track last language to detect language changes
+  // ---------------------------------------------
+  let lastLang = null;
 
   function update() {
     const bodyLong = document.querySelector(
@@ -85,6 +63,15 @@
     bodyLong.appendChild(before);
     bodyLong.appendChild(link);
     bodyLong.appendChild(after);
+    // ---------------------------------------------
+    // Cookie Banner Language Sync
+    // ---------------------------------------------
+    if (language !== lastLang) {
+      // Language changed => reinitialize banner content
+      const content = bannerContent[language];
+      initCookieConsent(content);
+      lastLang = language;
+    }
   }
 
   function scheduleUpdate() {
