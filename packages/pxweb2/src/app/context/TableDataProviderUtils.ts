@@ -218,8 +218,8 @@ export function filterStubAndHeadingArrays(
   headingDesktop: string[],
   stubMobile: string[],
   headingMobile: string[],
-  stubChart: string[],
-  headingChart: string[],
+  stubChart: string[] = [],
+  headingChart: string[] = [],
 ) {
   return {
     stubDesktop: stubDesktop.filter((id) => variableIds.includes(id)),
