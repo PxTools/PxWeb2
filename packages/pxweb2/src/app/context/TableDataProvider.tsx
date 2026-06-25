@@ -31,13 +31,24 @@ import {
 } from './TableDataProviderUtils';
 import { problemMessage } from '../util/problemMessage';
 import { PivotType } from './PivotType';
+import { DataViewModeType } from './DataViewModeType';
 
 // Define types for the context state and provider props
 export interface TableDataContextType {
   isInitialized: boolean;
   data: PxTable | undefined;
-  fetchTableData: (tableId: string, i18n: i18n, isMobile: boolean) => void;
-  fetchSavedQuery: (queryId: string, i18n: i18n, isMobile: boolean) => void;
+  fetchTableData: (
+    tableId: string,
+    i18n: i18n,
+    isMobile: boolean,
+    dataViewMode: DataViewModeType,
+  ) => void;
+  fetchSavedQuery: (
+    queryId: string,
+    i18n: i18n,
+    isMobile: boolean,
+    dataViewMode: DataViewModeType,
+  ) => void;
   pivotToMobile: () => void;
   pivotToDesktop: () => void;
   pivotToChart: () => void;
@@ -187,7 +198,12 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * @param isMobile - If the device is mobile or not.
    */
   const initializeStubAndHeading = React.useCallback(
-    (pxTable: PxTable, isMobile: boolean, lang: string) => {
+    (
+      pxTable: PxTable,
+      isMobile: boolean,
+      dataViewMode: DataViewModeType,
+      lang: string,
+    ) => {
       if (
         accumulatedData === undefined ||
         accumulatedData.metadata.id !== pxTable.metadata.id ||
@@ -245,10 +261,17 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         setStubChart(stubOrderChart);
         setHeadingChart(headingOrderChart);
 
-        if (isMobile) {
+        // if (isMobile) {
+        //   pivotTable(pxTable, stubOrderMobile, headingOrderMobile);
+        // } else {
+        //   pivotTable(pxTable, stubOrderDesktop, headingOrderDesktop);
+        // }
+        if (dataViewMode === DataViewModeType.MobileTable) {
           pivotTable(pxTable, stubOrderMobile, headingOrderMobile);
-        } else {
+        } else if (dataViewMode === DataViewModeType.DesktopTable) {
           pivotTable(pxTable, stubOrderDesktop, headingOrderDesktop);
+        } else if (dataViewMode === DataViewModeType.Chart) {
+          pivotTable(pxTable, stubOrderChart, headingOrderChart);
         }
       } else {
         // The number of variables has changed.
@@ -265,17 +288,29 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
             headingDesktop,
             stubMobile,
             headingMobile,
+            stubChart,
+            headingChart,
           );
+
           setStubDesktop(filtered.stubDesktop);
           setHeadingDesktop(filtered.headingDesktop);
           setStubMobile(filtered.stubMobile);
           setHeadingMobile(filtered.headingMobile);
+          setStubChart(filtered.stubChart);
+          setHeadingChart(filtered.headingChart);
         }
 
-        if (isMobile) {
+        // if (isMobile) {
+        //   pivotTable(pxTable, stubMobile, headingMobile);
+        // } else {
+        //   pivotTable(pxTable, stubDesktop, headingDesktop);
+        // }
+        if (dataViewMode === DataViewModeType.MobileTable) {
           pivotTable(pxTable, stubMobile, headingMobile);
-        } else {
+        } else if (dataViewMode === DataViewModeType.DesktopTable) {
           pivotTable(pxTable, stubDesktop, headingDesktop);
+        } else if (dataViewMode === DataViewModeType.Chart) {
+          pivotTable(pxTable, stubChart, headingChart);
         }
 
         // Variable has been added
@@ -304,7 +339,15 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         }
       }
     },
-    [accumulatedData, stubDesktop, headingDesktop, stubMobile, headingMobile],
+    [
+      accumulatedData,
+      stubDesktop,
+      headingDesktop,
+      stubMobile,
+      headingMobile,
+      stubChart,
+      headingChart,
+    ],
   );
 
   /**
@@ -323,7 +366,12 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * - Updates the context state with the new table data and stores a cloned copy as accumulated data.
    */
   const fetchSavedQuery = React.useCallback(
-    async (loadSavedQueryId: string, i18n: i18n, isMobile: boolean) => {
+    async (
+      loadSavedQueryId: string,
+      i18n: i18n,
+      isMobile: boolean,
+      dataViewMode: DataViewModeType,
+    ) => {
       const res = await SavedQueriesService.runSaveQuery(
         loadSavedQueryId,
         i18n.language,
@@ -337,7 +385,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       // Add formatting to the PxTable datacell values
       await addFormattingToPxTable(pxTable);
 
-      initializeStubAndHeading(pxTable, isMobile, i18n.language);
+      initializeStubAndHeading(pxTable, isMobile, dataViewMode, i18n.language);
       setData(pxTable);
 
       // Store as accumulated data
@@ -357,6 +405,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       tableId: string,
       i18n: i18n,
       isMobile: boolean,
+      dataViewMode: DataViewModeType,
       variablesSelection: VariablesSelection,
       codelistChanged: boolean,
     ) => {
@@ -378,7 +427,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         variablesSelection,
       );
 
-      initializeStubAndHeading(pxTable, isMobile, i18n.language);
+      initializeStubAndHeading(pxTable, isMobile, dataViewMode, i18n.language);
       setData(pxTable);
 
       // Store as accumulated data
@@ -788,6 +837,18 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   );
 
   /**
+   * Adjusts the table for chart layout.
+   *
+   * @param {PxTable} pxTable - The table to be pivoted.
+   */
+  const pivotForChart = React.useCallback(
+    (pxTable: PxTable) => {
+      pivotTable(pxTable, stubChart, headingChart);
+    },
+    [stubChart, headingChart],
+  );
+
+  /**
    * Fetch data. We DO have valid accumulated data in the data cube.
    *
    * @param tableId - The id of the table to fetch data for.
@@ -799,6 +860,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       tableId: string,
       i18n: i18n,
       isMobile: boolean,
+      dataViewMode: DataViewModeType,
       variablesSelection: VariablesSelection,
     ) => {
       // Check if all data and metadata asked for by the user is already loaded from earlier API-calls
@@ -811,10 +873,17 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         const pxTable = createPxTableFromAccumulatedData(variablesSelection);
 
         if (pxTable) {
-          if (isMobile) {
+          // if (isMobile) {
+          //   pivotForMobile(pxTable);
+          // } else {
+          //   pivotForDesktop(pxTable);
+          // }
+          if (dataViewMode === DataViewModeType.MobileTable) {
             pivotForMobile(pxTable);
-          } else {
+          } else if (dataViewMode === DataViewModeType.DesktopTable) {
             pivotForDesktop(pxTable);
+          } else if (dataViewMode === DataViewModeType.Chart) {
+            pivotForChart(pxTable);
           }
           setData(pxTable);
           return;
@@ -860,21 +929,28 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         pxTable = pxTableMerged;
       }
 
-      if (isMobile) {
+      // if (isMobile) {
+      //   pivotForMobile(pxTable);
+      // } else {
+      //   pivotForDesktop(pxTable);
+      // }
+      if (dataViewMode === DataViewModeType.MobileTable) {
         pivotForMobile(pxTable);
-      } else {
+      } else if (dataViewMode === DataViewModeType.DesktopTable) {
         pivotForDesktop(pxTable);
+      } else if (dataViewMode === DataViewModeType.Chart) {
+        pivotForChart(pxTable);
       }
 
       setData(pxTable);
     },
     [
-      setData,
-      pivotForMobile,
-      pivotForDesktop,
-      createPxTableFromAccumulatedData,
       isAllDataAlreadyLoaded,
       mergeWithAccumulatedData,
+      createPxTableFromAccumulatedData,
+      pivotForMobile,
+      pivotForDesktop,
+      pivotForChart,
     ],
   );
 
@@ -989,7 +1065,12 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * @param i18n - The i18n object for handling langauages
    */
   const fetchTableData = React.useCallback(
-    async (tableId: string, i18n: i18n, isMobile: boolean) => {
+    async (
+      tableId: string,
+      i18n: i18n,
+      isMobile: boolean,
+      dataViewMode: DataViewModeType,
+    ) => {
       try {
         const selections: Array<VariableSelection> = [];
 
@@ -1029,6 +1110,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
             tableId,
             i18n,
             isMobile,
+            dataViewMode,
             variablesSelection,
           );
         } else {
@@ -1037,6 +1119,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
             tableId,
             i18n,
             isMobile,
+            dataViewMode,
             variablesSelection,
             codelistChanged,
           );

@@ -25,7 +25,10 @@ import useTableData from '../../context/useTableData';
 import useVariables from '../../context/useVariables';
 import { useDebounce } from '@uidotdev/usehooks';
 import { getConfig } from '../../util/config/getConfig';
-import { getViewMode } from '../../pages/TableViewer/Utils/tableViewerHelper';
+import {
+  getViewMode,
+  getDataViewMode,
+} from '../../pages/TableViewer/Utils/tableViewerHelper';
 
 type propsType = {
   readonly selectedTabId: string;
@@ -140,18 +143,18 @@ export function Presentation({
     };
   });
   useEffect(() => {
-    const viewMode = getViewMode(searchParams, chartEnabled);
-    console.log('Presentation - viewMode changed:', viewMode);
+    // const viewMode = getViewMode(searchParams, chartEnabled);
+    // console.log('Presentation - viewMode changed:', viewMode);
     if (viewMode === 'table') {
       if (isMobile) {
-        console.log('Presentation - Pivoting to mobile view');
+        // console.log('Presentation - Pivoting to mobile view');
         tableData.pivotToMobile();
       } else {
-        console.log('Presentation - Pivoting to desktop view');
+        // console.log('Presentation - Pivoting to desktop view');
         tableData.pivotToDesktop();
       }
     } else if (viewMode === 'linechart') {
-      console.log('Presentation - Pivoting to chart view');
+      // console.log('Presentation - Pivoting to chart view');
       tableData.pivotToChart();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -171,7 +174,13 @@ export function Presentation({
 
     if (initialRun && !hasSelectedValues) {
       if (getSavedQueryId()?.length > 0) {
-        tableData.fetchSavedQuery(getSavedQueryId(), i18n, isMobile);
+        const dataViewMode = getDataViewMode(viewMode, isMobile);
+        tableData.fetchSavedQuery(
+          getSavedQueryId(),
+          i18n,
+          isMobile,
+          dataViewMode,
+        );
       } else {
         fetchTableDataIfAllowed();
       }
@@ -212,7 +221,8 @@ export function Presentation({
 
   function fetchTableDataIfAllowed() {
     if (variables.isMatrixSizeAllowed) {
-      tableData.fetchTableData(tableId, i18n, isMobile);
+      const dataViewMode = getDataViewMode(viewMode, isMobile);
+      tableData.fetchTableData(tableId, i18n, isMobile, dataViewMode);
     } else {
       // fade table and give warning
       setIsFadingTable(true);

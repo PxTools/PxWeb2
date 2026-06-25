@@ -218,39 +218,18 @@ export function filterStubAndHeadingArrays(
   headingDesktop: string[],
   stubMobile: string[],
   headingMobile: string[],
+  stubChart: string[],
+  headingChart: string[],
 ) {
   return {
     stubDesktop: stubDesktop.filter((id) => variableIds.includes(id)),
     headingDesktop: headingDesktop.filter((id) => variableIds.includes(id)),
     stubMobile: stubMobile.filter((id) => variableIds.includes(id)),
     headingMobile: headingMobile.filter((id) => variableIds.includes(id)),
+    stubChart: stubChart.filter((id) => variableIds.includes(id)),
+    headingChart: headingChart.filter((id) => variableIds.includes(id)),
   };
 }
-
-// export function chartPivot(
-//   variables: Variable[],
-//   stub: string[],
-//   heading: string[],
-// ) {
-//   console.log('TableDataProviderUtils - chartPivot called');
-//   // Ensure we start from empty arrays
-//   stub.length = 0;
-//   heading.length = 0;
-
-//   const timeVariable = variables.find(
-//     (variable) => variable.type === VartypeEnum.TIME_VARIABLE,
-//   );
-
-//   if (timeVariable) {
-//     stub.push(timeVariable.id);
-//   }
-
-//   for (const variable of variables) {
-//     if (variable.id !== timeVariable?.id) {
-//       heading.push(variable.id);
-//     }
-//   }
-// }
 
 export function autoPivotTable(
   variables: Variable[],
