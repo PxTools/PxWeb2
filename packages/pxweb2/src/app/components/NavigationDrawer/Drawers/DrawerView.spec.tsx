@@ -1,9 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import { MemoryRouter } from 'react-router';
 
 import { DrawerView } from './DrawerView';
+import { renderWithProviders } from '../../../util/testing-utils';
 
 const { defaultMockConfig, mockGetConfig } = vi.hoisted(() => {
   const defaultMockConfig = {
@@ -49,17 +50,22 @@ interface MockActionItemProps {
   label?: string;
 }
 
-vi.mock('@pxweb2/pxweb2-ui', () => ({
-  ContentBox: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="content-box">{children}</div>
-  ),
-  ActionItem: ({ label }: MockActionItemProps) => (
-    <button data-testid="action-item">{label}</button>
-  ),
-  LocalAlert: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="local-alert">{children}</div>
-  ),
-}));
+vi.mock('@pxweb2/pxweb2-ui', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@pxweb2/pxweb2-ui')>();
+
+  return {
+    ...actual,
+    ContentBox: ({ children }: { children: React.ReactNode }) => (
+      <div data-testid="content-box">{children}</div>
+    ),
+    ActionItem: ({ label }: MockActionItemProps) => (
+      <button data-testid="action-item">{label}</button>
+    ),
+    LocalAlert: ({ children }: { children: React.ReactNode }) => (
+      <div data-testid="local-alert">{children}</div>
+    ),
+  };
+});
 
 beforeEach(() => {
   mockGetConfig.mockReset();
@@ -68,7 +74,7 @@ beforeEach(() => {
 
 describe('DrawerView', () => {
   it('renders successfully', () => {
-    render(
+    renderWithProviders(
       <MemoryRouter>
         <DrawerView />
       </MemoryRouter>,
@@ -87,7 +93,7 @@ describe('DrawerView', () => {
       },
     });
 
-    render(
+    renderWithProviders(
       <MemoryRouter>
         <DrawerView />
       </MemoryRouter>,
