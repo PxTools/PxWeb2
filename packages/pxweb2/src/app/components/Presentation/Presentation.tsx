@@ -26,7 +26,6 @@ import useVariables from '../../context/useVariables';
 import { useDebounce } from '@uidotdev/usehooks';
 import { getConfig } from '../../util/config/getConfig';
 import { getViewMode } from '../../pages/TableViewer/Utils/tableViewerHelper';
-import { PivotType } from '../../context/PivotType';
 
 type propsType = {
   readonly selectedTabId: string;
@@ -153,7 +152,7 @@ export function Presentation({
       }
     } else if (viewMode === 'linechart') {
       console.log('Presentation - Pivoting to chart view');
-      tableData.pivot(PivotType.Chart);
+      tableData.pivotToChart();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMobile]);
