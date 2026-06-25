@@ -1,21 +1,36 @@
-globalThis.PxWeb2Config = {
+window.PxWeb2Config = {
   language: {
     supportedLanguages: [
+      { shorthand: 'no', languageName: 'Norsk' },
       { shorthand: 'en', languageName: 'English' },
-      { shorthand: 'sv', languageName: 'Svenska' },
     ],
-    defaultLanguage: 'en',
+    defaultLanguage: 'no',
     fallbackLanguage: 'en',
-    showDefaultLanguageInPath: true,
-    positionInPath: 'after',
+    showDefaultLanguageInPath: false,
+    positionInPath: 'before',
   },
   baseApplicationPath: '/',
-  apiUrl: 'https://api.scb.se/OV0104/v2beta/api/v2',
+  apiUrl: 'https://data.ssb.no/api/pxwebapi/v2',
   maxDataCells: 150000,
-  useDynamicContentInTitle: false,
-  showBreadCrumbOnStartPage: false,
+  showBreadCrumbOnStartPage: true,
   specialCharacters: ['.', '..', ':', '-', '...', '*'],
   variableFilterExclusionList: {
+    no: [
+      'statistikkvariabel',
+      'år',
+      'kvartal',
+      'måned',
+      'uke',
+      'driftsår',
+      'enkeltår',
+      'intervall (år)',
+      'halvår',
+      'kvartal (u)',
+      'termin',
+      'toårlig',
+      'fireårlig',
+      'femårlig',
+    ],
     en: [
       'observations',
       'year',
@@ -23,6 +38,18 @@ globalThis.PxWeb2Config = {
       'month',
       'every other year',
       'every fifth year',
+      'contents',
+      'half year',
+      'quarter (u)',
+      'termin',
+      'week',
+      'single years',
+      'biannual',
+      'every 4th year',
+      'every 5th year',
+      'interval (year)',
+      'driftsår',
+      'every ten years',
     ],
     sv: [
       'tabellinnehåll',
@@ -35,7 +62,7 @@ globalThis.PxWeb2Config = {
     ],
   },
   homePage: {
-    sv: '', // Set to your Swedish homepage URL
-    en: '', // Set to your English homepage URL
+    no: '/',
+    en: '/en/',
   },
 };
