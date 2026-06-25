@@ -180,7 +180,7 @@ jobs:
 
       - name: Regression test against feature branch
         id: mabl-test-deployment
-        uses: mablhq/github-run-tests-action@43061c6f3eeabd3dbd2c6c045c8e307b231f4427 # v1.15
+        uses: mablhq/github-run-tests-action@e46db148f0124be267acff561cd4d9303375852a # v1.16
         env:
           # Use a "CI/CD Integration" type of mabl API key
           MABL_API_KEY: ${{ secrets.MABL_API_KEY }}
