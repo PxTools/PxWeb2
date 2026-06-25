@@ -11,6 +11,7 @@ import {
 } from '../../../pages/TableViewer/Utils/tableViewerHelper';
 import classes from './DrawerView.module.scss';
 import useApp from '../../../context/useApp';
+
 export function DrawerView() {
   const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
