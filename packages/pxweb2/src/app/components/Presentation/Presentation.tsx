@@ -172,12 +172,7 @@ export function Presentation({
     if (initialRun && !hasSelectedValues) {
       if (getSavedQueryId()?.length > 0) {
         const dataViewMode = getDataViewMode(viewMode, isMobile);
-        tableData.fetchSavedQuery(
-          getSavedQueryId(),
-          i18n,
-          isMobile,
-          dataViewMode,
-        );
+        tableData.fetchSavedQuery(getSavedQueryId(), i18n, dataViewMode);
       } else {
         fetchTableDataIfAllowed();
       }
@@ -219,7 +214,7 @@ export function Presentation({
   function fetchTableDataIfAllowed() {
     if (variables.isMatrixSizeAllowed) {
       const dataViewMode = getDataViewMode(viewMode, isMobile);
-      tableData.fetchTableData(tableId, i18n, isMobile, dataViewMode);
+      tableData.fetchTableData(tableId, i18n, dataViewMode);
     } else {
       // fade table and give warning
       setIsFadingTable(true);
