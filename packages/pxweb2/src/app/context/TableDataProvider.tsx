@@ -105,7 +105,12 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   );
 
   // State for mobile mode. If mobile mode data will be pivoted so that all variables are in the stub.
-  const [isMobileMode, setIsMobileMode] = useState<boolean>(false);
+  //const [isMobileMode, setIsMobileMode] = useState<boolean>(false);
+
+  // state for data view mode.
+  const [dataViewMode, setDataViewMode] = useState<DataViewModeType>(
+    DataViewModeType.DesktopTable,
+  );
 
   // Variables in the stub (desktop table)
   const [stubDesktop, setStubDesktop] = useState<string[]>([]);
@@ -1130,12 +1135,14 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
           );
         }
 
-        if (isMobile && !isMobileMode) {
-          setIsMobileMode(true);
-        }
-        if (!isMobile && isMobileMode) {
-          setIsMobileMode(false);
-        }
+        // if (isMobile && !isMobileMode) {
+        //   setIsMobileMode(true);
+        // }
+        // if (!isMobile && isMobileMode) {
+        //   setIsMobileMode(false);
+        // }
+
+        setDataViewMode(dataViewMode);
       } catch (error: unknown) {
         const err = error as Error;
 
@@ -1147,7 +1154,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       variables,
       manageSelectedCodelists,
       isAccumulatedDataValid,
-      isMobileMode,
       fetchWithValidAccData,
       fetchWithoutValidAccData,
     ],
@@ -1231,7 +1237,9 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
         pivotTable(tmpTable, stubMobile, headingMobile);
         setData(tmpTable);
-        setIsMobileMode(true);
+        // setIsMobileMode(true);
+
+        setDataViewMode(DataViewModeType.MobileTable);
       }
     }
   }, [data, stubMobile, headingMobile]);
@@ -1248,7 +1256,9 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       if (tmpTable !== undefined) {
         pivotTable(tmpTable, stubDesktop, headingDesktop);
         setData(tmpTable);
-        setIsMobileMode(false);
+        //setIsMobileMode(false);
+
+        setDataViewMode(DataViewModeType.DesktopTable);
       }
     }
   }, [data, stubDesktop, headingDesktop]);
@@ -1265,7 +1275,9 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       if (tmpTable !== undefined) {
         pivotTable(tmpTable, stubChart, headingChart);
         setData(tmpTable);
-        setIsMobileMode(false);
+        //setIsMobileMode(false);
+
+        setDataViewMode(DataViewModeType.Chart);
       }
     }
   }, [data, stubChart, headingChart]);
@@ -1304,7 +1316,13 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     (type: PivotType): void => {
       // console.log('TableDataProvider - pivot called with type:', type);
       // Autopivot not allowed for mobile mode
-      if (isMobileMode && type === PivotType.Auto) {
+      // if (isMobileMode && type === PivotType.Auto) {
+      //   return;
+      // }
+      if (
+        dataViewMode === DataViewModeType.MobileTable &&
+        type === PivotType.Auto
+      ) {
         return;
       }
       if (data?.heading === undefined || data?.stub === undefined) {
@@ -1315,13 +1333,25 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       let stub: string[] = [];
       let heading: string[] = [];
 
-      if (isMobileMode) {
-        stub = structuredClone(stubMobile);
-        heading = structuredClone(headingMobile);
-      } else {
+      // if (isMobileMode) {
+      //   stub = structuredClone(stubMobile);
+      //   heading = structuredClone(headingMobile);
+      // } else {
+      //   stub = structuredClone(stubDesktop);
+      //   heading = structuredClone(headingDesktop);
+      // }
+
+      if (dataViewMode === DataViewModeType.DesktopTable) {
         stub = structuredClone(stubDesktop);
         heading = structuredClone(headingDesktop);
+      } else if (dataViewMode === DataViewModeType.MobileTable) {
+        stub = structuredClone(stubMobile);
+        heading = structuredClone(headingMobile);
+      } else if (dataViewMode === DataViewModeType.Chart) {
+        stub = structuredClone(stubChart);
+        heading = structuredClone(headingChart);
       }
+
       if (stub.length === 0 && heading.length === 0) {
         return;
       }
@@ -1342,21 +1372,33 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
       setData(tmpTable);
 
-      if (isMobileMode) {
-        setStubMobile(stub);
-        setHeadingMobile(heading);
-      } else {
+      // if (isMobileMode) {
+      //   setStubMobile(stub);
+      //   setHeadingMobile(heading);
+      // } else {
+      //   setStubDesktop(stub);
+      //   setHeadingDesktop(heading);
+      // }
+      if (dataViewMode === DataViewModeType.DesktopTable) {
         setStubDesktop(stub);
         setHeadingDesktop(heading);
+      } else if (dataViewMode === DataViewModeType.MobileTable) {
+        setStubMobile(stub);
+        setHeadingMobile(heading);
+      } else if (dataViewMode === DataViewModeType.Chart) {
+        setStubChart(stub);
+        setHeadingChart(heading);
       }
     },
     [
+      dataViewMode,
       data,
-      isMobileMode,
-      stubMobile,
-      headingMobile,
       stubDesktop,
       headingDesktop,
+      stubMobile,
+      headingMobile,
+      stubChart,
+      headingChart,
     ],
   );
 
