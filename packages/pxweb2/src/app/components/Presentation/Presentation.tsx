@@ -142,19 +142,16 @@ export function Presentation({
       }
     };
   });
+
+  // Get the right view mode when switching between mobile/desktop screen sizes.
   useEffect(() => {
-    // const viewMode = getViewMode(searchParams, chartEnabled);
-    // console.log('Presentation - viewMode changed:', viewMode);
     if (viewMode === 'table') {
       if (isMobile) {
-        // console.log('Presentation - Pivoting to mobile view');
         tableData.pivotToMobile();
       } else {
-        // console.log('Presentation - Pivoting to desktop view');
         tableData.pivotToDesktop();
       }
     } else if (viewMode === 'linechart') {
-      // console.log('Presentation - Pivoting to chart view');
       tableData.pivotToChart();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

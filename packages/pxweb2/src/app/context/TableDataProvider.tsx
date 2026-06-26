@@ -324,6 +324,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         if (remainingVariables.length > 0) {
           const newStubDesktop = structuredClone(stubDesktop);
           const newStubMobile = structuredClone(stubMobile);
+          const newStubChart = structuredClone(stubChart);
 
           remainingVariables.forEach((variable) => {
             if (!newStubDesktop.includes(variable.id)) {
@@ -333,9 +334,13 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
             if (!newStubMobile.includes(variable.id)) {
               newStubMobile.push(variable.id);
             }
+            if (!newStubChart.includes(variable.id)) {
+              newStubChart.push(variable.id);
+            }
           });
           setStubDesktop(newStubDesktop);
           setStubMobile(newStubMobile);
+          setStubChart(newStubChart);
         }
       }
     },
