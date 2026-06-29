@@ -16,7 +16,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@tanstack/react-virtual": "^3.14.2",
+    "@tanstack/react-virtual": "^3.14.3",
     "clsx": "^2.1.1",
     "echarts": "^6.1.0",
     "hast-util-to-jsx-runtime": "^2.3.6",
@@ -24,14 +24,14 @@
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^5.2.1",
-    "@storybook/addon-a11y": "10.4.3",
-    "@storybook/addon-docs": "10.4.3",
-    "@storybook/react-vite": "10.4.3",
+    "@storybook/addon-a11y": "10.4.6",
+    "@storybook/addon-docs": "10.4.6",
+    "@storybook/react-vite": "10.4.6",
     "@testing-library/react": "^16.3.2",
-    "eslint-plugin-storybook": "10.4.3",
+    "eslint-plugin-storybook": "10.4.6",
     "prop-types": "^15.8.1",
     "shiki": "^4.2.0",
-    "storybook": "10.4.3",
+    "storybook": "10.4.6",
     "vitest": "^4.0.18"
   }
 }
