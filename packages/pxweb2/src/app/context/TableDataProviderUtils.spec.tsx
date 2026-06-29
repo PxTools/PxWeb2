@@ -3,6 +3,9 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import {
   getFormattedValue,
   addFormattingToPxTable,
+  initStubAndHeadingDesktop,
+  initStubAndHeadingMobile,
+  initStubAndHeadingChart,
   filterStubAndHeadingArrays,
   autoPivotTable,
   getTableTitleParts,
@@ -65,6 +68,7 @@ describe('TableDataProviderUtils', () => {
         subjectCode: 'Test Subject Code',
         notes: [],
         ...((overrides.metadata as object) || {}),
+        availableLanguages: [],
       },
       data: {
         variableOrder: [],
@@ -258,6 +262,7 @@ describe('TableDataProviderUtils', () => {
           subjectArea: 'Test Subject Area',
           subjectCode: 'Test Subject Code',
           notes: [],
+          availableLanguages: [],
         },
         data: {
           variableOrder: ['dim1', 'dim2'],
@@ -342,6 +347,7 @@ describe('TableDataProviderUtils', () => {
           subjectArea: 'Test Subject Area',
           subjectCode: 'Test Subject Code',
           notes: [],
+          availableLanguages: [],
         },
         data: {
           variableOrder: ['contents'],
@@ -383,6 +389,7 @@ describe('TableDataProviderUtils', () => {
           subjectArea: 'Test Subject Area',
           subjectCode: 'Test Subject Code',
           notes: [],
+          availableLanguages: [],
         },
         data: {
           variableOrder: [],
@@ -502,6 +509,198 @@ describe('TableDataProviderUtils', () => {
     });
   });
 
+  describe('initStubAndHeading helpers', () => {
+    it('initStubAndHeadingDesktop returns stub and heading ids in current order', () => {
+      const region = createVariable(
+        'region',
+        VartypeEnum.GEOGRAPHICAL_VARIABLE,
+        3,
+      );
+      const time = createVariable('time', VartypeEnum.TIME_VARIABLE, 2);
+      const sex = createVariable('sex', VartypeEnum.REGULAR_VARIABLE, 2);
+
+      const pxTable = createBasePxTable({
+        metadata: {
+          variables: [region, time, sex],
+          id: '',
+          language: '',
+          availableLanguages: [],
+          label: '',
+          updated: new Date(2023, 0, 1),
+          source: '',
+          infofile: '',
+          decimals: 0,
+          officialStatistics: false,
+          aggregationAllowed: false,
+          contents: '',
+          descriptionDefault: false,
+          matrix: '',
+          subjectCode: '',
+          subjectArea: '',
+          contacts: [],
+          definitions: {
+            statisticsHomepage: undefined,
+            statisticsDefinitions: undefined,
+            variablesDefinitions: undefined,
+          },
+          notes: [],
+        },
+        stub: [region, sex],
+        heading: [time],
+      });
+
+      const result = initStubAndHeadingDesktop(pxTable);
+
+      expect(result.stubOrderDesktop).toEqual(['region', 'sex']);
+      expect(result.headingOrderDesktop).toEqual(['time']);
+    });
+
+    it('initStubAndHeadingMobile combines stub and heading then sorts by value length', () => {
+      const time = createVariable('time', VartypeEnum.TIME_VARIABLE, 2);
+      const sex = createVariable('sex', VartypeEnum.REGULAR_VARIABLE, 3);
+      const region = createVariable(
+        'region',
+        VartypeEnum.GEOGRAPHICAL_VARIABLE,
+        4,
+      );
+
+      const pxTable = createBasePxTable({
+        metadata: {
+          variables: [time, sex, region],
+          id: '',
+          language: '',
+          availableLanguages: [],
+          label: '',
+          updated: new Date(2023, 0, 1),
+          source: '',
+          infofile: '',
+          decimals: 0,
+          officialStatistics: false,
+          aggregationAllowed: false,
+          contents: '',
+          descriptionDefault: false,
+          matrix: '',
+          subjectCode: '',
+          subjectArea: '',
+          contacts: [],
+          definitions: {
+            statisticsHomepage: undefined,
+            statisticsDefinitions: undefined,
+            variablesDefinitions: undefined,
+          },
+          notes: [],
+        },
+        stub: [region],
+        heading: [sex, time],
+      });
+
+      const originalStub = pxTable.stub.map((v) => v.id);
+      const originalHeading = pxTable.heading.map((v) => v.id);
+
+      const result = initStubAndHeadingMobile(pxTable);
+
+      expect(result.stubOrderMobile).toEqual(['time', 'sex', 'region']);
+      expect(result.headingOrderMobile).toEqual([]);
+
+      // Utility should not mutate pxTable.stub/pxTable.heading
+      expect(pxTable.stub.map((v) => v.id)).toEqual(originalStub);
+      expect(pxTable.heading.map((v) => v.id)).toEqual(originalHeading);
+    });
+
+    it('initStubAndHeadingChart places time variable in stub and others in heading order', () => {
+      const contents = createVariable(
+        'contents',
+        VartypeEnum.CONTENTS_VARIABLE,
+        2,
+      );
+      const time = createVariable('time', VartypeEnum.TIME_VARIABLE, 3);
+      const region = createVariable(
+        'region',
+        VartypeEnum.GEOGRAPHICAL_VARIABLE,
+        4,
+      );
+
+      const pxTable = createBasePxTable({
+        metadata: {
+          variables: [contents, time, region],
+          id: '',
+          language: '',
+          availableLanguages: [],
+          label: '',
+          updated: new Date(2023, 0, 1),
+          source: '',
+          infofile: '',
+          decimals: 0,
+          officialStatistics: false,
+          aggregationAllowed: false,
+          contents: '',
+          descriptionDefault: false,
+          matrix: '',
+          subjectCode: '',
+          subjectArea: '',
+          contacts: [],
+          definitions: {
+            statisticsHomepage: undefined,
+            statisticsDefinitions: undefined,
+            variablesDefinitions: undefined,
+          },
+          notes: [],
+        },
+      });
+
+      const result = initStubAndHeadingChart(pxTable);
+
+      expect(result.stubOrderChart).toEqual(['time']);
+      expect(result.headingOrderChart).toEqual(['contents', 'region']);
+    });
+
+    it('initStubAndHeadingChart keeps all variables in heading when no time variable exists', () => {
+      const contents = createVariable(
+        'contents',
+        VartypeEnum.CONTENTS_VARIABLE,
+        2,
+      );
+      const region = createVariable(
+        'region',
+        VartypeEnum.GEOGRAPHICAL_VARIABLE,
+        4,
+      );
+
+      const pxTable = createBasePxTable({
+        metadata: {
+          variables: [contents, region],
+          id: '',
+          language: '',
+          availableLanguages: [],
+          label: '',
+          updated: new Date(2023, 0, 1),
+          source: '',
+          infofile: '',
+          decimals: 0,
+          officialStatistics: false,
+          aggregationAllowed: false,
+          contents: '',
+          descriptionDefault: false,
+          matrix: '',
+          subjectCode: '',
+          subjectArea: '',
+          contacts: [],
+          definitions: {
+            statisticsHomepage: undefined,
+            statisticsDefinitions: undefined,
+            variablesDefinitions: undefined,
+          },
+          notes: [],
+        },
+      });
+
+      const result = initStubAndHeadingChart(pxTable);
+
+      expect(result.stubOrderChart).toEqual([]);
+      expect(result.headingOrderChart).toEqual(['contents', 'region']);
+    });
+  });
+
   describe('getTableTitleParts', () => {
     // Helpers for building variables
     const makeVariable = (
@@ -584,6 +783,9 @@ describe('TableDataProviderUtils', () => {
       specialCharacters: ['.', '..', ':', '-', '...', '*'],
       variableFilterExclusionList: {
         en: ['statisticalvariable', 'year', 'quarter', 'month', 'week'],
+      },
+      features: {
+        chartEnabled: false,
       },
     };
 
