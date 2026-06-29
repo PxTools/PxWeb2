@@ -16,7 +16,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@tanstack/react-virtual": "^3.14.2",
+    "@tanstack/react-virtual": "^3.14.3",
     "clsx": "^2.1.1",
     "echarts": "^6.1.0",
     "hast-util-to-jsx-runtime": "^2.3.6",
