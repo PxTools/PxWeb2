@@ -2,11 +2,19 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { screen } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import { MemoryRouter } from 'react-router';
+import userEvent from '@testing-library/user-event';
 
 import { DrawerView } from './DrawerView';
 import { renderWithProviders } from '../../../util/testing-utils';
 
-const { defaultMockConfig, mockGetConfig } = vi.hoisted(() => {
+const {
+  defaultMockConfig,
+  mockGetConfig,
+  mockPivotToMobile,
+  mockPivotToDesktop,
+  mockPivotToChart,
+  mockIsMobile,
+} = vi.hoisted(() => {
   const defaultMockConfig = {
     baseApplicationPath: '/',
     features: {
@@ -23,6 +31,10 @@ const { defaultMockConfig, mockGetConfig } = vi.hoisted(() => {
   return {
     defaultMockConfig,
     mockGetConfig: vi.fn(() => defaultMockConfig),
+    mockPivotToMobile: vi.fn(),
+    mockPivotToDesktop: vi.fn(),
+    mockPivotToChart: vi.fn(),
+    mockIsMobile: vi.fn(() => false),
   };
 });
 
@@ -42,12 +54,23 @@ vi.mock('../../../util/config/getConfig', () => ({
 
 vi.mock('../../../context/useTableData', () => ({
   default: () => ({
-    pivot: vi.fn(),
+    pivotToMobile: mockPivotToMobile,
+    pivotToDesktop: mockPivotToDesktop,
+    pivotToChart: mockPivotToChart,
+  }),
+}));
+
+vi.mock('../../../context/useApp', () => ({
+  default: () => ({
+    isMobile: mockIsMobile(),
   }),
 }));
 
 interface MockActionItemProps {
   label?: string;
+  ariaLabel?: string;
+  onClick?: () => void;
+  toggleState?: boolean;
 }
 
 vi.mock('@pxweb2/pxweb2-ui', async (importOriginal) => {
@@ -58,8 +81,20 @@ vi.mock('@pxweb2/pxweb2-ui', async (importOriginal) => {
     ContentBox: ({ children }: { children: React.ReactNode }) => (
       <div data-testid="content-box">{children}</div>
     ),
-    ActionItem: ({ label }: MockActionItemProps) => (
-      <button data-testid="action-item">{label}</button>
+    ActionItem: ({
+      label,
+      ariaLabel,
+      onClick,
+      toggleState,
+    }: MockActionItemProps) => (
+      <button
+        data-testid="action-item"
+        aria-label={ariaLabel}
+        data-toggle-state={toggleState ? 'on' : 'off'}
+        onClick={onClick}
+      >
+        {label}
+      </button>
     ),
     LocalAlert: ({ children }: { children: React.ReactNode }) => (
       <div data-testid="local-alert">{children}</div>
@@ -68,8 +103,10 @@ vi.mock('@pxweb2/pxweb2-ui', async (importOriginal) => {
 });
 
 beforeEach(() => {
+  vi.clearAllMocks();
   mockGetConfig.mockReset();
   mockGetConfig.mockReturnValue(defaultMockConfig);
+  mockIsMobile.mockReturnValue(false);
 });
 
 describe('DrawerView', () => {
@@ -107,5 +144,80 @@ describe('DrawerView', () => {
 
   it('has correct display name', () => {
     expect(DrawerView.displayName).toBe('DrawerView');
+  });
+
+  it('clicking table action pivots to desktop table when not mobile', async () => {
+    renderWithProviders(
+      <MemoryRouter initialEntries={['/?view=linechart']}>
+        <DrawerView />
+      </MemoryRouter>,
+    );
+
+    const user = userEvent.setup();
+    await user.click(
+      screen.getByRole('button', {
+        name: 'presentation_page.side_menu.view.table.title',
+      }),
+    );
+
+    expect(mockPivotToDesktop).toHaveBeenCalledTimes(1);
+    expect(mockPivotToMobile).not.toHaveBeenCalled();
+  });
+
+  it('clicking table action pivots to mobile table when mobile', async () => {
+    mockIsMobile.mockReturnValue(true);
+
+    renderWithProviders(
+      <MemoryRouter initialEntries={['/?view=linechart']}>
+        <DrawerView />
+      </MemoryRouter>,
+    );
+
+    const user = userEvent.setup();
+    await user.click(
+      screen.getByRole('button', {
+        name: 'presentation_page.side_menu.view.table.title',
+      }),
+    );
+
+    expect(mockPivotToMobile).toHaveBeenCalledTimes(1);
+    expect(mockPivotToDesktop).not.toHaveBeenCalled();
+  });
+
+  it('clicking linechart action pivots to chart', async () => {
+    renderWithProviders(
+      <MemoryRouter>
+        <DrawerView />
+      </MemoryRouter>,
+    );
+
+    const user = userEvent.setup();
+    await user.click(
+      screen.getByRole('button', {
+        name: 'presentation_page.side_menu.view.linechart.title',
+      }),
+    );
+
+    expect(mockPivotToChart).toHaveBeenCalledTimes(1);
+    expect(mockPivotToDesktop).not.toHaveBeenCalled();
+    expect(mockPivotToMobile).not.toHaveBeenCalled();
+  });
+
+  it('sets correct toggleState from search param view=linechart', () => {
+    renderWithProviders(
+      <MemoryRouter initialEntries={['/?view=linechart']}>
+        <DrawerView />
+      </MemoryRouter>,
+    );
+
+    const tableButton = screen.getByRole('button', {
+      name: 'presentation_page.side_menu.view.table.title',
+    });
+    const chartButton = screen.getByRole('button', {
+      name: 'presentation_page.side_menu.view.linechart.title',
+    });
+
+    expect(tableButton).toHaveAttribute('data-toggle-state', 'off');
+    expect(chartButton).toHaveAttribute('data-toggle-state', 'on');
   });
 });
