@@ -190,6 +190,86 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     variables.hasLoadedInitialSelection,
   ]);
 
+  const initializeStubAndHeadingDesktop = React.useCallback(
+    (pxTable: PxTable) => {
+      // -> Set stub and heading order for desktop according to the order in pxTable
+      const stubOrderDesktop: string[] = pxTable.stub.map(
+        (variable) => variable.id,
+      );
+      const headingOrderDesktop: string[] = pxTable.heading.map(
+        (variable) => variable.id,
+      );
+      setStubDesktop(stubOrderDesktop);
+      setHeadingDesktop(headingOrderDesktop);
+
+      return {
+        stubOrderDesktop,
+        headingOrderDesktop,
+      };
+    },
+    [],
+  );
+
+  const initializeStubAndHeadingMobile = React.useCallback(
+    (pxTable: PxTable) => {
+      // -> Set stub and heading order for mobile according to the order in pxTable
+      const tmpStubMobile = structuredClone(pxTable.stub);
+      const tmpHeadingMobile = structuredClone(pxTable.heading);
+
+      tmpHeadingMobile.forEach((variable) => {
+        tmpStubMobile.push(variable);
+      });
+
+      tmpStubMobile.sort((a, b) => a.values.length - b.values.length);
+
+      const stubOrderMobile: string[] = tmpStubMobile.map(
+        (variable) => variable.id,
+      );
+
+      const headingOrderMobile: string[] = [];
+
+      setStubMobile(stubOrderMobile);
+      setHeadingMobile(headingOrderMobile);
+
+      return {
+        stubOrderMobile,
+        headingOrderMobile,
+      };
+    },
+    [],
+  );
+
+  const initializeStubAndHeadingChart = React.useCallback(
+    (pxTable: PxTable) => {
+      // -> Set stub and heading order for chart according to the order in pxTable
+      const stubOrderChart: string[] = [];
+      const headingOrderChart: string[] = [];
+
+      const timeVariable = pxTable.metadata.variables.find(
+        (variable) => variable.type === VartypeEnum.TIME_VARIABLE,
+      );
+
+      if (timeVariable) {
+        stubOrderChart.push(timeVariable.id);
+      }
+
+      for (const variable of pxTable.metadata.variables) {
+        if (variable.id !== timeVariable?.id) {
+          headingOrderChart.push(variable.id);
+        }
+      }
+
+      setStubChart(stubOrderChart);
+      setHeadingChart(headingOrderChart);
+
+      return {
+        stubOrderChart,
+        headingOrderChart,
+      };
+    },
+    [],
+  );
+
   /**
    * Remember order of variables in stub and heading when table setup is changed.
    *
@@ -206,55 +286,14 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       ) {
         // First time we get data OR we have a new table OR language is changed.
 
-        // -> Set stub and heading order for desktop according to the order in pxTable
-        const stubOrderDesktop: string[] = pxTable.stub.map(
-          (variable) => variable.id,
-        );
-        const headingOrderDesktop: string[] = pxTable.heading.map(
-          (variable) => variable.id,
-        );
-        setStubDesktop(stubOrderDesktop);
-        setHeadingDesktop(headingOrderDesktop);
+        const { stubOrderDesktop, headingOrderDesktop } =
+          initializeStubAndHeadingDesktop(pxTable);
 
-        // -> Set stub and heading order for mobile according to the order in pxTable
-        const tmpStubMobile = structuredClone(pxTable.stub);
-        const tmpHeadingMobile = structuredClone(pxTable.heading);
+        const { stubOrderMobile, headingOrderMobile } =
+          initializeStubAndHeadingMobile(pxTable);
 
-        tmpHeadingMobile.forEach((variable) => {
-          tmpStubMobile.push(variable);
-        });
-
-        tmpStubMobile.sort((a, b) => a.values.length - b.values.length);
-
-        const stubOrderMobile: string[] = tmpStubMobile.map(
-          (variable) => variable.id,
-        );
-
-        const headingOrderMobile: string[] = [];
-
-        setStubMobile(stubOrderMobile);
-        setHeadingMobile(headingOrderMobile);
-
-        // -> Set stub and heading order for chart according to the order in pxTable
-        const stubOrderChart: string[] = [];
-        const headingOrderChart: string[] = [];
-
-        const timeVariable = pxTable.metadata.variables.find(
-          (variable) => variable.type === VartypeEnum.TIME_VARIABLE,
-        );
-
-        if (timeVariable) {
-          stubOrderChart.push(timeVariable.id);
-        }
-
-        for (const variable of pxTable.metadata.variables) {
-          if (variable.id !== timeVariable?.id) {
-            headingOrderChart.push(variable.id);
-          }
-        }
-
-        setStubChart(stubOrderChart);
-        setHeadingChart(headingOrderChart);
+        const { stubOrderChart, headingOrderChart } =
+          initializeStubAndHeadingChart(pxTable);
 
         if (dataViewMode === DataViewModeType.MobileTable) {
           pivotTable(pxTable, stubOrderMobile, headingOrderMobile);
@@ -331,6 +370,9 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     },
     [
       accumulatedData,
+      initializeStubAndHeadingDesktop,
+      initializeStubAndHeadingMobile,
+      initializeStubAndHeadingChart,
       stubDesktop,
       headingDesktop,
       stubMobile,
