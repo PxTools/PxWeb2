@@ -15,19 +15,11 @@ import classes from './DrawerView.module.scss';
 export function DrawerView() {
   const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { pivotToMobile, pivotToDesktop, pivotToChart } = useTableData();
+  const { pivotToChart, pivotToTable } = useTableData();
   const { isMobile } = useApp();
   const config = getConfig();
   const chartEnabled = config.features?.chartEnabled === true;
   const selectedViewMode = getViewMode(searchParams, chartEnabled);
-
-  function pivotToTable() {
-    if (isMobile) {
-      pivotToMobile();
-    } else {
-      pivotToDesktop();
-    }
-  }
 
   function setViewMode(viewMode: ViewMode) {
     setSearchParams(getSearchParamsWithViewMode(searchParams, viewMode));
@@ -44,7 +36,7 @@ export function DrawerView() {
               label={t('presentation_page.side_menu.view.table.title')}
               ariaLabel={t('presentation_page.side_menu.view.table.title')}
               onClick={() => {
-                pivotToTable();
+                pivotToTable(isMobile);
                 setViewMode('table');
               }}
               toggleState={selectedViewMode === 'table'}

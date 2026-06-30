@@ -10,8 +10,7 @@ import { renderWithProviders } from '../../../util/testing-utils';
 const {
   defaultMockConfig,
   mockGetConfig,
-  mockPivotToMobile,
-  mockPivotToDesktop,
+  mockPivotToTable,
   mockPivotToChart,
   mockIsMobile,
 } = vi.hoisted(() => {
@@ -31,8 +30,7 @@ const {
   return {
     defaultMockConfig,
     mockGetConfig: vi.fn(() => defaultMockConfig),
-    mockPivotToMobile: vi.fn(),
-    mockPivotToDesktop: vi.fn(),
+    mockPivotToTable: vi.fn(),
     mockPivotToChart: vi.fn(),
     mockIsMobile: vi.fn(() => false),
   };
@@ -54,8 +52,7 @@ vi.mock('../../../util/config/getConfig', () => ({
 
 vi.mock('../../../context/useTableData', () => ({
   default: () => ({
-    pivotToMobile: mockPivotToMobile,
-    pivotToDesktop: mockPivotToDesktop,
+    pivotToTable: mockPivotToTable,
     pivotToChart: mockPivotToChart,
   }),
 }));
@@ -160,8 +157,8 @@ describe('DrawerView', () => {
       }),
     );
 
-    expect(mockPivotToDesktop).toHaveBeenCalledTimes(1);
-    expect(mockPivotToMobile).not.toHaveBeenCalled();
+    expect(mockPivotToTable).toHaveBeenCalledTimes(1);
+    expect(mockPivotToTable).toHaveBeenCalledWith(false);
   });
 
   it('clicking table action pivots to mobile table when mobile', async () => {
@@ -180,8 +177,8 @@ describe('DrawerView', () => {
       }),
     );
 
-    expect(mockPivotToMobile).toHaveBeenCalledTimes(1);
-    expect(mockPivotToDesktop).not.toHaveBeenCalled();
+    expect(mockPivotToTable).toHaveBeenCalledTimes(1);
+    expect(mockPivotToTable).toHaveBeenCalledWith(true);
   });
 
   it('clicking linechart action pivots to chart', async () => {
@@ -199,8 +196,7 @@ describe('DrawerView', () => {
     );
 
     expect(mockPivotToChart).toHaveBeenCalledTimes(1);
-    expect(mockPivotToDesktop).not.toHaveBeenCalled();
-    expect(mockPivotToMobile).not.toHaveBeenCalled();
+    expect(mockPivotToTable).not.toHaveBeenCalled();
   });
 
   it('sets correct toggleState from search param view=linechart', () => {

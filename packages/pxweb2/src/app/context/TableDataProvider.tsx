@@ -50,6 +50,7 @@ export interface TableDataContextType {
   ) => void;
   pivotToMobile: () => void;
   pivotToDesktop: () => void;
+  pivotToTable: (isMobile: boolean) => void;
   pivotToChart: () => void;
   pivot: (type: PivotType) => void;
   buildTableTitle: () => TableTitlePartsType;
@@ -75,6 +76,9 @@ const TableDataContext = createContext<TableDataContextType | undefined>({
     // No-op: useTableData hook prevents this from being called
   },
   pivotToDesktop: () => {
+    // No-op: useTableData hook prevents this from being called
+  },
+  pivotToTable: () => {
     // No-op: useTableData hook prevents this from being called
   },
   pivotToChart: () => {
@@ -1202,6 +1206,24 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   }, [data, stubDesktop, headingDesktop]);
 
   /**
+   * Pivots to table layout.
+   * This function updates the table structure to fit a table layout by adjusting the stub and heading order.
+   * If the `isMobile` parameter is true, it pivots to mobile layout; otherwise, it pivots to desktop layout.
+   *
+   * @param isMobile - A boolean indicating whether to pivot to mobile layout (true) or desktop layout (false).
+   */
+  const pivotToTable = React.useCallback(
+    (isMobile: boolean) => {
+      if (isMobile) {
+        pivotToMobile();
+      } else {
+        pivotToDesktop();
+      }
+    },
+    [pivotToDesktop, pivotToMobile],
+  );
+
+  /**
    * Pivots the table to chart layout.
    * This function updates the table structure to fit a chart layout by adjusting the stub and heading order.
    */
@@ -1363,6 +1385,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       fetchSavedQuery,
       pivotToMobile,
       pivotToDesktop,
+      pivotToTable,
       pivotToChart,
       pivot,
       buildTableTitle,
@@ -1376,6 +1399,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       fetchSavedQuery,
       pivotToMobile,
       pivotToDesktop,
+      pivotToTable,
       pivotToChart,
       pivot,
       buildTableTitle,
