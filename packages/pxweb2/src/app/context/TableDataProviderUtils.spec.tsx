@@ -451,6 +451,8 @@ describe('TableDataProviderUtils', () => {
       const headingDesktop = ['d', 'e', 'f'];
       const stubMobile = ['a', 'e', 'g'];
       const headingMobile = ['c', 'h', 'i'];
+      const stubChart = ['a', 'd', 'e'];
+      const headingChart = ['b', 'c', 'f'];
 
       const result = filterStubAndHeadingArrays(
         variableIds,
@@ -458,12 +460,16 @@ describe('TableDataProviderUtils', () => {
         headingDesktop,
         stubMobile,
         headingMobile,
+        stubChart,
+        headingChart,
       );
 
       expect(result.stubDesktop).toEqual(['a', 'c']);
       expect(result.headingDesktop).toEqual(['e']);
       expect(result.stubMobile).toEqual(['a', 'e']);
       expect(result.headingMobile).toEqual(['c']);
+      expect(result.stubChart).toEqual(['a', 'e']);
+      expect(result.headingChart).toEqual(['c']);
     });
 
     it('returns empty arrays if no variableIds match', () => {
@@ -472,6 +478,8 @@ describe('TableDataProviderUtils', () => {
       const headingDesktop = ['c', 'd'];
       const stubMobile = ['e', 'f'];
       const headingMobile = ['g', 'h'];
+      const stubChart = ['i', 'j'];
+      const headingChart = ['k', 'l'];
 
       const result = filterStubAndHeadingArrays(
         variableIds,
@@ -479,12 +487,16 @@ describe('TableDataProviderUtils', () => {
         headingDesktop,
         stubMobile,
         headingMobile,
+        stubChart,
+        headingChart,
       );
 
       expect(result.stubDesktop).toEqual([]);
       expect(result.headingDesktop).toEqual([]);
       expect(result.stubMobile).toEqual([]);
       expect(result.headingMobile).toEqual([]);
+      expect(result.stubChart).toEqual([]);
+      expect(result.headingChart).toEqual([]);
     });
 
     it('returns original arrays if all variableIds match', () => {
@@ -493,6 +505,8 @@ describe('TableDataProviderUtils', () => {
       const headingDesktop = ['a', 'b', 'c'];
       const stubMobile = ['a', 'b', 'c'];
       const headingMobile = ['a', 'b', 'c'];
+      const stubChart = ['a', 'b', 'c'];
+      const headingChart = ['a', 'b', 'c'];
 
       const result = filterStubAndHeadingArrays(
         variableIds,
@@ -500,12 +514,16 @@ describe('TableDataProviderUtils', () => {
         headingDesktop,
         stubMobile,
         headingMobile,
+        stubChart,
+        headingChart,
       );
 
       expect(result.stubDesktop).toEqual(['a', 'b', 'c']);
       expect(result.headingDesktop).toEqual(['a', 'b', 'c']);
       expect(result.stubMobile).toEqual(['a', 'b', 'c']);
       expect(result.headingMobile).toEqual(['a', 'b', 'c']);
+      expect(result.stubChart).toEqual(['a', 'b', 'c']);
+      expect(result.headingChart).toEqual(['a', 'b', 'c']);
     });
   });
 
