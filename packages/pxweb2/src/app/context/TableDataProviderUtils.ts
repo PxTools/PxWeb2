@@ -273,7 +273,7 @@ export function initStubAndHeadingChart(pxTable: PxTable) {
 
 /**
  * Filters stub and heading arrays to only include variable IDs present in variableIds.
- * Returns new arrays for stubDesktop, headingDesktop, stubMobile, headingMobile.
+ * Returns new arrays for stubDesktop, headingDesktop, stubMobile, headingMobile, stubChart, headingChart.
  */
 export function filterStubAndHeadingArrays(
   variableIds: string[],
@@ -281,8 +281,8 @@ export function filterStubAndHeadingArrays(
   headingDesktop: string[],
   stubMobile: string[],
   headingMobile: string[],
-  stubChart: string[] = [],
-  headingChart: string[] = [],
+  stubChart: string[],
+  headingChart: string[],
 ) {
   return {
     stubDesktop: stubDesktop.filter((id) => variableIds.includes(id)),

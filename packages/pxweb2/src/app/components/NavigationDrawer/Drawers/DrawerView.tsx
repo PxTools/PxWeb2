@@ -1,16 +1,16 @@
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router';
 
-import { ActionItem, ContentBox, LocalAlert } from '@pxweb2/pxweb2-ui';
 import useTableData from '../../../context/useTableData';
+import useApp from '../../../context/useApp';
 import { getConfig } from '../../../util/config/getConfig';
 import {
   ViewMode,
   getSearchParamsWithViewMode,
   getViewMode,
 } from '../../../pages/TableViewer/Utils/tableViewerHelper';
+import { ActionItem, ContentBox, LocalAlert } from '@pxweb2/pxweb2-ui';
 import classes from './DrawerView.module.scss';
-import useApp from '../../../context/useApp';
 
 export function DrawerView() {
   const { t } = useTranslation();

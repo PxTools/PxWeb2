@@ -250,12 +250,11 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   const initializeStubAndHeading = React.useCallback(
     (pxTable: PxTable, dataViewMode: DataViewModeType, lang: string) => {
       if (
-        accumulatedData === undefined ||
+        accumulatedData === undefined || //NOSONAR: This is a valid check to determine if the accumulated data is undefined or if the table ID or language has changed.
         accumulatedData.metadata.id !== pxTable.metadata.id ||
         accumulatedData.metadata.language.toLowerCase() !== lang.toLowerCase()
       ) {
         // First time we get data OR we have a new table OR language is changed.
-
         const { stubOrderDesktop, headingOrderDesktop } =
           initializeStubAndHeadingDesktop(pxTable);
 
