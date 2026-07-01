@@ -1,4 +1,5 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import cl from 'clsx';
 import type * as echarts from 'echarts';
 
 import {
@@ -10,11 +11,20 @@ import { useEChartOption } from '../Utils/useEChartOption';
 import type { PxTable } from '../../../shared-types/pxTable';
 import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
 import { getChartColorsFromCssVariables } from '../Utils/chartHelper';
+import styles from './LineChart.module.scss';
 
 interface LineChartProps {
   readonly pxtable: PxTable;
   readonly colors?: string[];
+  readonly legendOverflowMode?: LineChartLegendOverflowMode;
+  readonly visibleLegendItemCount?: number;
 }
+
+export type LineChartLegendOverflowMode = 'pagination' | 'showMore';
+
+const DEFAULT_VISIBLE_LEGEND_ITEM_COUNT = 8;
+const LEGEND_ITEM_HEIGHT = 24;
+const MIN_LEGEND_HEIGHT = 40;
 
 type TooltipParam = {
   axisValueLabel?: string;
@@ -41,8 +51,150 @@ function getTooltipSymbolSvg(symbol: string, color: string): string {
   }
 }
 
-export function LineChart({ pxtable, colors }: LineChartProps) {
+function getNormalizedVisibleLegendItemCount(
+  visibleLegendItemCount?: number,
+): number {
+  return Math.max(
+    1,
+    Math.floor(visibleLegendItemCount ?? DEFAULT_VISIBLE_LEGEND_ITEM_COUNT),
+  );
+}
+
+function getLegendItemNames(
+  dataset: ReturnType<typeof mapPxTableToChartDataset>,
+): string[] {
+  return dataset.series.map((series) => series.name);
+}
+
+function getLegendData(
+  legendItemNames: string[],
+  legendOverflowMode: LineChartLegendOverflowMode | undefined,
+  visibleLegendItemCount: number,
+  showAllLegendItems: boolean,
+): string[] | undefined {
+  if (!legendOverflowMode || legendItemNames.length <= visibleLegendItemCount) {
+    return undefined;
+  }
+
+  if (legendOverflowMode === 'pagination') {
+    return legendItemNames;
+  }
+
+  if (legendOverflowMode === 'showMore' && !showAllLegendItems) {
+    return legendItemNames.slice(0, visibleLegendItemCount);
+  }
+
+  return legendItemNames;
+}
+
+function getVisibleLegendItemCount(
+  legendItemCount: number,
+  legendOverflowMode: LineChartLegendOverflowMode | undefined,
+  visibleLegendItemCount: number,
+  showAllLegendItems: boolean,
+): number {
+  if (!legendOverflowMode || legendItemCount <= visibleLegendItemCount) {
+    return legendItemCount;
+  }
+
+  if (legendOverflowMode === 'showMore' && showAllLegendItems) {
+    return legendItemCount;
+  }
+
+  return visibleLegendItemCount;
+}
+
+type LineChartLegendOption = {
+  readonly height: number;
+  readonly data?: string[];
+  readonly type?: 'scroll';
+  readonly orient?: 'horizontal' | 'vertical';
+  readonly pageButtonPosition?: 'start' | 'end';
+  readonly pageFormatter?: string;
+};
+
+function getLegendHeight(visibleLegendItems: number): number {
+  return Math.max(MIN_LEGEND_HEIGHT, visibleLegendItems * LEGEND_ITEM_HEIGHT);
+}
+
+function getLegendOption(
+  legendItemNames: string[],
+  legendOverflowMode: LineChartLegendOverflowMode | undefined,
+  visibleLegendItemCount: number,
+  visibleLegendItems: number,
+  showAllLegendItems: boolean,
+): LineChartLegendOption {
+  const legendData = getLegendData(
+    legendItemNames,
+    legendOverflowMode,
+    visibleLegendItemCount,
+    showAllLegendItems,
+  );
+  const baseLegend = {
+    height: getLegendHeight(visibleLegendItems),
+  };
+
+  if (legendOverflowMode === 'pagination' && legendData) {
+    return {
+      ...baseLegend,
+      type: 'scroll',
+      orient: 'horizontal',
+      data: legendData,
+    };
+  }
+
+  if (legendData) {
+    return {
+      ...baseLegend,
+      data: legendData,
+    };
+  }
+
+  return baseLegend;
+}
+
+export function LineChart({
+  pxtable,
+  colors,
+  legendOverflowMode,
+  visibleLegendItemCount,
+}: LineChartProps) {
   const dataset = useMemo(() => mapPxTableToChartDataset(pxtable), [pxtable]);
+  const normalizedVisibleLegendItemCount = getNormalizedVisibleLegendItemCount(
+    visibleLegendItemCount,
+  );
+  const [showAllLegendItems, setShowAllLegendItems] = useState(false);
+
+  useEffect(() => {
+    setShowAllLegendItems(false);
+  }, [dataset, legendOverflowMode, normalizedVisibleLegendItemCount]);
+
+  const legendItemNames = useMemo(() => getLegendItemNames(dataset), [dataset]);
+  const hasOverflowingLegend =
+    legendItemNames.length > normalizedVisibleLegendItemCount;
+  const visibleLegendItems = getVisibleLegendItemCount(
+    legendItemNames.length,
+    legendOverflowMode,
+    normalizedVisibleLegendItemCount,
+    showAllLegendItems,
+  );
+  const legendOptionsMemoized = useMemo(
+    () =>
+      getLegendOption(
+        legendItemNames,
+        legendOverflowMode,
+        normalizedVisibleLegendItemCount,
+        visibleLegendItems,
+        showAllLegendItems,
+      ),
+    [
+      legendItemNames,
+      legendOverflowMode,
+      normalizedVisibleLegendItemCount,
+      showAllLegendItems,
+      visibleLegendItems,
+    ],
+  );
 
   const resolvedColors = useMemo(() => {
     return colors && colors.length > 0
@@ -59,9 +211,7 @@ export function LineChart({ pxtable, colors }: LineChartProps) {
         name: dataset.unit,
         min: (value) => value.min,
       },
-      legend: {
-        height: 40 * dataset.series.length, // increase legend height based on number of series to prevent overlap with x-axis labels
-      },
+      legend: legendOptionsMemoized,
       series: buildSeriesOption(dataset, 'line', resolvedColors),
       tooltip: {
         trigger: 'axis',
@@ -94,15 +244,38 @@ export function LineChart({ pxtable, colors }: LineChartProps) {
         },
       },
     }),
-    [dataset, resolvedColors],
+    [dataset, legendOptionsMemoized, resolvedColors],
   );
 
   const { divRef } = useEChartOption(option);
-  const height = 600 + dataset.series.length * 10; // increase chart height based on number of series to prevent legend overlap
+  const hasExpandedLegend =
+    visibleLegendItems > DEFAULT_VISIBLE_LEGEND_ITEM_COUNT;
+
+  const controls = (() => {
+    if (legendOverflowMode === 'showMore' && hasOverflowingLegend) {
+      return (
+        <button
+          type="button"
+          aria-expanded={showAllLegendItems}
+          onClick={() => setShowAllLegendItems((current) => !current)}
+        >
+          {showAllLegendItems ? 'Show less' : 'Show more'}
+        </button>
+      );
+    }
+
+    return null;
+  })();
 
   return (
-    <div>
-      <div ref={divRef} style={{ width: '100%', height: `${height}px` }}></div>
+    <div className={styles.lineChart}>
+      <div
+        ref={divRef}
+        className={cl(styles.chart, {
+          [styles.expandedLegend]: hasExpandedLegend,
+        })}
+      ></div>
+      {controls}
     </div>
   );
 }

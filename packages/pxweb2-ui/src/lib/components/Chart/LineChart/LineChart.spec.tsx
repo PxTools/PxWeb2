@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, beforeEach, vi } from 'vitest';
 
 import LineChart from './LineChart';
@@ -11,6 +11,7 @@ import {
 import { getChartColorsFromCssVariables } from '../Utils/chartHelper';
 import type { EChartsDataset } from '../Utils/chartTypes';
 import type { PxTable } from '../../../shared-types/pxTable';
+import styles from './LineChart.module.scss';
 
 vi.mock('../Utils/chartDataMapper', () => ({
   mapPxTableToChartDataset: vi.fn(),
@@ -64,6 +65,30 @@ function getTooltipFormatter(option: { tooltip?: unknown }) {
     : undefined;
 }
 
+function getLastChartOption() {
+  const calls = vi.mocked(useEChartOption).mock.calls;
+  const lastCall = calls.at(-1);
+
+  if (!lastCall) {
+    throw new Error('Expected useEChartOption to be called');
+  }
+
+  return lastCall[0];
+}
+
+const overflowingDataset: EChartsDataset = {
+  ...mockDataset,
+  dimensions: ['name', 's1', 's2', 's3', 's4', 's5'],
+  source: [{ name: '2024', s1: 10, s2: 12, s3: 14, s4: 16, s5: 18 }],
+  series: [
+    { key: 's1', name: 'Detailed population segment 1' },
+    { key: 's2', name: 'Detailed population segment 2' },
+    { key: 's3', name: 'Detailed population segment 3' },
+    { key: 's4', name: 'Detailed population segment 4' },
+    { key: 's5', name: 'Detailed population segment 5' },
+  ],
+};
+
 describe('LineChart', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -105,7 +130,7 @@ describe('LineChart', () => {
     const option = vi.mocked(useEChartOption).mock.calls[0][0];
 
     expect(option.legend).toEqual({
-      height: 40 * mockDataset.series.length,
+      height: 72,
     });
     expect(option.yAxis).toMatchObject({
       name: 'persons',
@@ -147,15 +172,13 @@ describe('LineChart', () => {
     );
   });
 
-  it('renders chart container with height based on number of series', () => {
+  it('renders chart container with stylesheet sizing', () => {
     const { container } = render(<LineChart pxtable={{} as PxTable} />);
 
-    const chartDiv = Array.from(container.querySelectorAll('div')).find(
-      (element) => element.style.height,
-    );
+    const chartDiv = container.querySelector(`.${styles.chart}`);
 
     expect(chartDiv).toBeTruthy();
-    expect(chartDiv?.style.height).toBe('630px');
+    expect(chartDiv?.getAttribute('style')).toBeNull();
   });
 
   it('returns empty tooltip text for empty params', () => {
@@ -197,5 +220,60 @@ describe('LineChart', () => {
     expect(html).toContain('fill="#ff0000"');
     expect(html).toContain('<circle');
     expect(html).toContain('<rect');
+  });
+
+  it('uses ECharts paginated legend without changing chart data', () => {
+    vi.mocked(mapPxTableToChartDataset).mockReturnValue(overflowingDataset);
+
+    render(
+      <LineChart
+        pxtable={{} as PxTable}
+        legendOverflowMode="pagination"
+        visibleLegendItemCount={2}
+      />,
+    );
+
+    expect(buildDatasetOption).toHaveBeenLastCalledWith(overflowingDataset);
+    expect(buildSeriesOption).toHaveBeenLastCalledWith(
+      overflowingDataset,
+      'line',
+      ['#333333', '#444444'],
+    );
+    expect(getLastChartOption().legend).toEqual({
+      height: 48,
+      type: 'scroll',
+      orient: 'vertical',
+      data: overflowingDataset.series.map((series) => series.name),
+      pageButtonPosition: 'end',
+      pageFormatter: '{current} / {total}',
+    });
+    expect(getLastChartOption().dataZoom).toBeUndefined();
+  });
+
+  it('reveals all legend items when show more mode is expanded', () => {
+    vi.mocked(mapPxTableToChartDataset).mockReturnValue(overflowingDataset);
+
+    render(
+      <LineChart
+        pxtable={{} as PxTable}
+        legendOverflowMode="showMore"
+        visibleLegendItemCount={2}
+      />,
+    );
+
+    expect(buildDatasetOption).toHaveBeenLastCalledWith(overflowingDataset);
+    expect(getLastChartOption().legend).toEqual({
+      height: 48,
+      data: ['Detailed population segment 1', 'Detailed population segment 2'],
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: 'Show more' }));
+
+    expect(buildDatasetOption).toHaveBeenLastCalledWith(overflowingDataset);
+    expect(getLastChartOption().legend).toEqual({
+      height: 120,
+      data: overflowingDataset.series.map((series) => series.name),
+    });
+    expect(screen.getByRole('button', { name: 'Show less' })).toBeTruthy();
   });
 });
