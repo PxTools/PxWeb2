@@ -538,31 +538,6 @@ describe('TableDataProviderUtils', () => {
       const sex = createVariable('sex', VartypeEnum.REGULAR_VARIABLE, 2);
 
       const pxTable = createBasePxTable({
-        metadata: {
-          variables: [region, time, sex],
-          id: '',
-          language: '',
-          availableLanguages: [],
-          label: '',
-          updated: new Date(2023, 0, 1),
-          source: '',
-          infofile: '',
-          decimals: 0,
-          officialStatistics: false,
-          aggregationAllowed: false,
-          contents: '',
-          descriptionDefault: false,
-          matrix: '',
-          subjectCode: '',
-          subjectArea: '',
-          contacts: [],
-          definitions: {
-            statisticsHomepage: undefined,
-            statisticsDefinitions: undefined,
-            variablesDefinitions: undefined,
-          },
-          notes: [],
-        },
         stub: [region, sex],
         heading: [time],
       });
@@ -583,31 +558,6 @@ describe('TableDataProviderUtils', () => {
       );
 
       const pxTable = createBasePxTable({
-        metadata: {
-          variables: [time, sex, region],
-          id: '',
-          language: '',
-          availableLanguages: [],
-          label: '',
-          updated: new Date(2023, 0, 1),
-          source: '',
-          infofile: '',
-          decimals: 0,
-          officialStatistics: false,
-          aggregationAllowed: false,
-          contents: '',
-          descriptionDefault: false,
-          matrix: '',
-          subjectCode: '',
-          subjectArea: '',
-          contacts: [],
-          definitions: {
-            statisticsHomepage: undefined,
-            statisticsDefinitions: undefined,
-            variablesDefinitions: undefined,
-          },
-          notes: [],
-        },
         stub: [region],
         heading: [sex, time],
       });
@@ -638,33 +588,8 @@ describe('TableDataProviderUtils', () => {
         4,
       );
 
-      const pxTable = createBasePxTable({
-        metadata: {
-          variables: [contents, time, region],
-          id: '',
-          language: '',
-          availableLanguages: [],
-          label: '',
-          updated: new Date(2023, 0, 1),
-          source: '',
-          infofile: '',
-          decimals: 0,
-          officialStatistics: false,
-          aggregationAllowed: false,
-          contents: '',
-          descriptionDefault: false,
-          matrix: '',
-          subjectCode: '',
-          subjectArea: '',
-          contacts: [],
-          definitions: {
-            statisticsHomepage: undefined,
-            statisticsDefinitions: undefined,
-            variablesDefinitions: undefined,
-          },
-          notes: [],
-        },
-      });
+      const pxTable = createBasePxTable();
+      pxTable.metadata.variables = [contents, time, region];
 
       const result = initStubAndHeadingChart(pxTable);
 
@@ -684,33 +609,8 @@ describe('TableDataProviderUtils', () => {
         4,
       );
 
-      const pxTable = createBasePxTable({
-        metadata: {
-          variables: [contents, region],
-          id: '',
-          language: '',
-          availableLanguages: [],
-          label: '',
-          updated: new Date(2023, 0, 1),
-          source: '',
-          infofile: '',
-          decimals: 0,
-          officialStatistics: false,
-          aggregationAllowed: false,
-          contents: '',
-          descriptionDefault: false,
-          matrix: '',
-          subjectCode: '',
-          subjectArea: '',
-          contacts: [],
-          definitions: {
-            statisticsHomepage: undefined,
-            statisticsDefinitions: undefined,
-            variablesDefinitions: undefined,
-          },
-          notes: [],
-        },
-      });
+      const pxTable = createBasePxTable();
+      pxTable.metadata.variables = [contents, region];
 
       const result = initStubAndHeadingChart(pxTable);
 
