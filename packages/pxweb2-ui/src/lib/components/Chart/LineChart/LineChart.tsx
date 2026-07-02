@@ -48,6 +48,10 @@ function getTooltipSymbolSvg(symbol: string, color: string): string {
 export function LineChart({ pxtable, colors }: LineChartProps) {
   const dataset = useMemo(() => mapPxTableToChartDataset(pxtable), [pxtable]);
 
+  const xAxisName = useMemo(() => {
+    return pxtable.stub.map((variable) => variable.label).join(' / ');
+  }, [pxtable]);
+
   const resolvedColors = useMemo(() => {
     return colors && colors.length > 0
       ? colors
@@ -58,7 +62,13 @@ export function LineChart({ pxtable, colors }: LineChartProps) {
     () => ({
       ...buildDatasetOption(dataset),
       grid: { top: 0, bottom: 200, left: '0', right: '0', containLabel: false },
-      xAxis: { type: 'category' as const, axisLabel: { rotate: 45 } },
+      xAxis: {
+        type: 'category' as const,
+        name: xAxisName,
+        nameLocation: 'end',
+        nameGap: 70,
+        axisLabel: { rotate: 45 },
+      },
       yAxis: {
         name: dataset.unit,
         scale: true,
@@ -100,7 +110,7 @@ export function LineChart({ pxtable, colors }: LineChartProps) {
         },
       },
     }),
-    [dataset, resolvedColors],
+    [dataset, resolvedColors, xAxisName],
   );
 
   const { divRef } = useEChartOption(option);
