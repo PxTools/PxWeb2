@@ -250,17 +250,12 @@ export function initStubAndHeadingChart(pxTable: PxTable) {
   // -> Set stub and heading order for chart according to the order in pxTable
   const stubOrderChart: string[] = [];
   const headingOrderChart: string[] = [];
+  const stubVariableId: string = getChartStubVariableId(pxTable);
 
-  const timeVariable = pxTable.metadata.variables.find(
-    (variable) => variable.type === VartypeEnum.TIME_VARIABLE,
-  );
-
-  if (timeVariable) {
-    stubOrderChart.push(timeVariable.id);
-  }
+  stubOrderChart.push(stubVariableId);
 
   for (const variable of pxTable.metadata.variables) {
-    if (variable.id !== timeVariable?.id) {
+    if (variable.id !== stubVariableId) {
       headingOrderChart.push(variable.id);
     }
   }
@@ -269,6 +264,37 @@ export function initStubAndHeadingChart(pxTable: PxTable) {
     stubOrderChart,
     headingOrderChart,
   };
+}
+
+// Returns the variable to be used for the x-axis in charts, prioritizing time variable if it has more than one value, otherwise the variable with the most values, or the first variable if none of the above.
+export function getChartStubVariableId(pxTable: PxTable): string {
+  const timeVariable = pxTable.metadata.variables.find(
+    (variable) => variable.type === VartypeEnum.TIME_VARIABLE,
+  );
+
+  if (timeVariable && timeVariable.values.length > 1) {
+    return timeVariable.id;
+  }
+
+  const variableWithMostValues =
+    pxTable.metadata.variables.reduce<Variable | null>(
+      (maxVariable, currentVariable) =>
+        maxVariable === null ||
+        currentVariable.values.length > maxVariable.values.length
+          ? currentVariable
+          : maxVariable,
+      null,
+    );
+
+  if (variableWithMostValues) {
+    return variableWithMostValues.id;
+  }
+
+  if (pxTable.metadata.variables.length > 0) {
+    return pxTable.metadata.variables[0].id;
+  }
+
+  return '';
 }
 
 /**

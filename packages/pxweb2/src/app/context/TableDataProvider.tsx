@@ -29,6 +29,7 @@ import {
   initStubAndHeadingDesktop,
   initStubAndHeadingMobile,
   initStubAndHeadingChart,
+  getChartStubVariableId,
 } from './TableDataProviderUtils';
 import { problemMessage } from '../util/problemMessage';
 import { PivotType } from './PivotType';
@@ -840,6 +841,26 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     [stubDesktop, headingDesktop],
   );
 
+  // Check if the chart needs to be re-initialized.
+  // If the stubChart is empty or has more than one variable, or if the variable in the stubChart
+  // does not match the variable in the pxTable, then re-initialize the chart.
+  // This can happen when the user makes changes in the variable selection, such as adding or
+  // removing variables and values.
+  const checkIfChartNeedsReInitialize = React.useCallback(
+    (pxTable: PxTable): boolean => {
+      if (stubChart.length === 0 || stubChart.length > 1) {
+        return true;
+      }
+
+      if (getChartStubVariableId(pxTable) !== stubChart[0]) {
+        return true;
+      }
+
+      return false;
+    },
+    [stubChart],
+  );
+
   /**
    * Adjusts the table for chart layout.
    *
@@ -847,9 +868,21 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    */
   const pivotForChart = React.useCallback(
     (pxTable: PxTable) => {
-      pivotTable(pxTable, stubChart, headingChart);
+      if (checkIfChartNeedsReInitialize(pxTable)) {
+        const { stubOrderChart, headingOrderChart } =
+          initializeStubAndHeadingChart(pxTable);
+
+        pivotTable(pxTable, stubOrderChart, headingOrderChart);
+      } else {
+        pivotTable(pxTable, stubChart, headingChart);
+      }
     },
-    [stubChart, headingChart],
+    [
+      checkIfChartNeedsReInitialize,
+      initializeStubAndHeadingChart,
+      stubChart,
+      headingChart,
+    ],
   );
 
   /**
@@ -1232,12 +1265,12 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       const tmpTable = structuredClone(data);
 
       if (tmpTable !== undefined) {
-        pivotTable(tmpTable, stubChart, headingChart);
+        pivotForChart(tmpTable);
         setData(tmpTable);
         setDataViewMode(DataViewModeType.Chart);
       }
     }
-  }, [data, stubChart, headingChart]);
+  }, [data, pivotForChart]);
 
   /**
    * Builds the table title parts based on the current table data and metadata.
