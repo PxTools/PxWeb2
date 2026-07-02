@@ -597,7 +597,7 @@ describe('TableDataProviderUtils', () => {
       expect(result.headingOrderChart).toEqual(['contents', 'region']);
     });
 
-    it('initStubAndHeadingChart keeps all variables in heading when no time variable exists', () => {
+    it('initStubAndHeadingChart uses variable with most values in stub when no time variable exists', () => {
       const contents = createVariable(
         'contents',
         VartypeEnum.CONTENTS_VARIABLE,
@@ -614,8 +614,8 @@ describe('TableDataProviderUtils', () => {
 
       const result = initStubAndHeadingChart(pxTable);
 
-      expect(result.stubOrderChart).toEqual([]);
-      expect(result.headingOrderChart).toEqual(['contents', 'region']);
+      expect(result.stubOrderChart).toEqual(['region']);
+      expect(result.headingOrderChart).toEqual(['contents']);
     });
   });
 
