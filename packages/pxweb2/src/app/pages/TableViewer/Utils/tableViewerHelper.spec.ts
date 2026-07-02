@@ -1,4 +1,9 @@
-import { getSearchParamsWithViewMode, getViewMode } from './tableViewerHelper';
+import { DataViewModeType } from '../../../context/DataViewModeType';
+import {
+  getDataViewMode,
+  getSearchParamsWithViewMode,
+  getViewMode,
+} from './tableViewerHelper';
 
 describe('tableViewerHelper', () => {
   describe('getViewMode', () => {
@@ -48,6 +53,23 @@ describe('tableViewerHelper', () => {
       expect(result).not.toBe(searchParams);
       expect(result.get('view')).toBe('linechart');
       expect(searchParams.get('view')).toBe('table');
+    });
+  });
+
+  describe('getDataViewMode', () => {
+    it('returns Chart when viewMode is linechart regardless of device type', () => {
+      expect(getDataViewMode('linechart', true)).toBe(DataViewModeType.Chart);
+      expect(getDataViewMode('linechart', false)).toBe(DataViewModeType.Chart);
+    });
+
+    it('returns MobileTable when viewMode is table and device is mobile', () => {
+      expect(getDataViewMode('table', true)).toBe(DataViewModeType.MobileTable);
+    });
+
+    it('returns DesktopTable when viewMode is table and device is not mobile', () => {
+      expect(getDataViewMode('table', false)).toBe(
+        DataViewModeType.DesktopTable,
+      );
     });
   });
 });
