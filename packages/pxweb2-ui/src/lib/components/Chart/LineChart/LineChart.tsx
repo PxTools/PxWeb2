@@ -9,7 +9,11 @@ import {
 import { useEChartOption } from '../Utils/useEChartOption';
 import type { PxTable } from '../../../shared-types/pxTable';
 import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
-import { getChartColorsFromCssVariables } from '../Utils/chartHelper';
+import {
+  getAdaptiveYAxisMax,
+  getAdaptiveYAxisMin,
+  getChartColorsFromCssVariables,
+} from '../Utils/chartHelper';
 
 interface LineChartProps {
   readonly pxtable: PxTable;
@@ -57,7 +61,9 @@ export function LineChart({ pxtable, colors }: LineChartProps) {
       xAxis: { type: 'category' as const, axisLabel: { rotate: 45 } },
       yAxis: {
         name: dataset.unit,
-        min: (value) => value.min,
+        scale: true,
+        min: getAdaptiveYAxisMin,
+        max: getAdaptiveYAxisMax,
       },
       legend: {
         height: 40 * dataset.series.length, // increase legend height based on number of series to prevent overlap with x-axis labels

@@ -48,3 +48,69 @@ export function getChartColorsFromCssVariables(): string[] | undefined {
 
   return undefined;
 }
+
+function getNiceNumber(value: number): number {
+  if (!Number.isFinite(value) || value <= 0) {
+    return 1;
+  }
+
+  const exponent = Math.floor(Math.log10(value));
+  const base = 10 ** exponent;
+  const fraction = value / base;
+
+  if (fraction <= 1) {
+    return 1 * base;
+  }
+  if (fraction <= 2) {
+    return 2 * base;
+  }
+  if (fraction <= 5) {
+    return 5 * base;
+  }
+  return 10 * base;
+}
+
+function getAdaptiveSnapUnit(min: number, max: number): number {
+  const span = Math.max(max - min, 1);
+
+  // No fixed tick count: just derive a clean rounding grain from data span.
+  // For spans around 1.3M this typically becomes 500k.
+  return getNiceNumber(span / 3);
+}
+
+export function getAdaptiveYAxisMin(value: {
+  min: number;
+  max: number;
+}): number {
+  const min = Number(value.min);
+  const max = Number(value.max);
+
+  const span = Math.max(max - min, 1);
+  const pad = span * 0.03;
+  const snap = getAdaptiveSnapUnit(min, max);
+
+  const paddedMin = min - pad;
+  const roundedMin = Math.floor(paddedMin / snap) * snap;
+
+  // Keep non-negative axes non-negative.
+  if (min >= 0) {
+    return Math.max(0, roundedMin);
+  }
+
+  return roundedMin;
+}
+
+export function getAdaptiveYAxisMax(value: {
+  min: number;
+  max: number;
+}): number {
+  const min = Number(value.min);
+  const max = Number(value.max);
+
+  const span = Math.max(max - min, 1);
+  const pad = span * 0.03;
+  const snap = getAdaptiveSnapUnit(min, max);
+
+  const paddedMax = max + pad;
+  return Math.ceil(paddedMax / snap) * snap;
+}
