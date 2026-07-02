@@ -34,6 +34,8 @@ vi.mock('../Utils/chartOptionBuilder', async () => {
 
 vi.mock('../Utils/chartHelper', () => ({
   getChartColorsFromCssVariables: vi.fn(),
+  getAdaptiveYAxisMin: vi.fn(),
+  getAdaptiveYAxisMax: vi.fn(),
 }));
 
 const mockDataset: EChartsDataset = {
