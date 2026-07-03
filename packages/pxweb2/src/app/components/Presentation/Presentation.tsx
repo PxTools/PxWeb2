@@ -322,7 +322,11 @@ export function Presentation({
                 </div>
               </Activity>
               <Activity mode={viewMode === 'linechart' ? 'visible' : 'hidden'}>
-                <div className={classes.chartContainer}>
+                <div
+                  className={cl(classes.chartContainer, {
+                    [classes.fadeChart]: isFadingTable,
+                  })}
+                >
                   <LineChart pxtable={tableData.data} />
                 </div>
               </Activity>
@@ -352,7 +356,11 @@ export function Presentation({
                 <Activity
                   mode={viewMode === 'linechart' ? 'visible' : 'hidden'}
                 >
-                  <div className={classes.chartContainer}>
+                  <div
+                    className={cl(classes.chartContainer, {
+                      [classes.fadeChart]: isFadingTable,
+                    })}
+                  >
                     <LineChart pxtable={tableData.data} />
                   </div>
                 </Activity>
