@@ -24,7 +24,7 @@ export async function fetchLocaleContent(
   const fetchPromise = (async () => {
     try {
       const res = await fetch(
-        `./content/${key}/content.json?v=${__BUILD_DATE__}`,
+        `./content/${key}/content.json?v=${__APP_VERSION__}`,
         {
           cache: 'no-store',
         },

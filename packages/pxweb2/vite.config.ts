@@ -3,6 +3,10 @@ import react, { reactCompilerPreset } from '@vitejs/plugin-react';
 import babel from '@rolldown/plugin-babel';
 import path from 'path';
 import { virtualModulePlugin } from './vite-plugin-virtual-module';
+import pkg from '../../package.json';
+
+const buildNumber =
+  process.env.BUILD_NUMBER ?? process.env.GITHUB_RUN_NUMBER ?? 'local';
 
 // Custom plugin to handle theme CSS injection
 const themeInjectorPlugin = (): Plugin => ({
@@ -10,16 +14,16 @@ const themeInjectorPlugin = (): Plugin => ({
   transformIndexHtml(html) {
     // Remove the theme CSS link from the original HTML
     html = html.replace(
-      '<link rel="stylesheet" href="./theme/variables.css?v=__BUILD_DATE__" />',
+      '<link rel="stylesheet" href="./theme/variables.css?v=__APP_VERSION__" />',
       '',
     );
     // Inject it at the end of head to ensure it loads last
     html = html.replace(
       '</head>',
-      '<link rel="stylesheet" href="./theme/variables.css?v=__BUILD_DATE__" /></head>',
+      '<link rel="stylesheet" href="./theme/variables.css?v=__APP_VERSION__" /></head>',
     );
     // Replace cache busting build date placeholder
-    return html.replace(/__BUILD_DATE__/g, new Date().toISOString());
+    return html.replace(/__APP_VERSION__/g, `${pkg.version}+${buildNumber}`);
   },
 });
 
@@ -57,7 +61,6 @@ export default defineConfig({
     // Used for cache busting of configuration files.
     // Since we don't update pkg.version on release yet, we use build date instead.
     //   import pkg from './package.json';
-    //   __BUILD_VERSION__: JSON.stringify(pkg.version),
-    __BUILD_DATE__: JSON.stringify(new Date().toISOString()),
+    __APP_VERSION__: JSON.stringify(`${pkg.version}+${buildNumber}`),
   },
 });
