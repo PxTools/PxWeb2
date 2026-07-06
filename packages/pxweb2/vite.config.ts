@@ -59,8 +59,6 @@ export default defineConfig({
   },
   define: {
     // Used for cache busting of configuration files.
-    // Since we don't update pkg.version on release yet, we use build date instead.
-    //   import pkg from './package.json';
     __APP_VERSION__: JSON.stringify(`${pkg.version}+${buildNumber}`),
   },
 });
