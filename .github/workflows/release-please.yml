@@ -1,30 +1,62 @@
-name: release-please
+name: Create release
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      prerelease:
+        description: Create a prerelease instead of a release
+        type: boolean
+        required: false
+        default: false
 
 jobs:
-  release-please:
+  release:
     runs-on: ubuntu-latest
     permissions:
       contents: write
       issues: write
       pull-requests: write
     outputs:
-      release_created: ${{ steps.release.outputs.release_created }}
-      tag_name: ${{ steps.release.outputs.tag_name }}
+      release_created: ${{ steps.release.outputs.release_created || steps.prerelease.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name || steps.prerelease.outputs.tag_name }}
+      is_prerelease: ${{ steps.detect-prerelease.outputs.is_prerelease }}
 
     steps:
-      - uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
+      - name: Checkout repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Detect prerelease from version in package.json
+        id: detect-prerelease
+        run: |
+          VERSION=$(sed -nE 's/^[[:space:]]*"version"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/p' package.json | head -n 1)
+          IS_PRERELEASE=false
+          if [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*(\+[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$ ]]; then
+            IS_PRERELEASE=true
+          fi
+          echo "is_prerelease=${IS_PRERELEASE}" >> "$GITHUB_OUTPUT"
+
+      - name: Create prerelease
+        if: (github.event_name == 'workflow_dispatch' && inputs.prerelease == true) || steps.detect-prerelease.outputs.is_prerelease == 'true'
+        uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
+        id: prerelease
+        with:
+          config-file: .github/prerelease-config.json
+          manifest-file: .github/prerelease-manifest.json
+
+      - name: Create release
+        if: (github.event_name == 'workflow_dispatch' && inputs.prerelease == false) || steps.detect-prerelease.outputs.is_prerelease == 'false'
+        uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
         id: release
         with:
-          config-file: .github/release-please-config.json
+          config-file: .github/release-config.json
+          manifest-file: .github/release-manifest.json
 
   upload-asset:
-    needs: release-please
-    if: ${{ needs.release-please.outputs.release_created }}
+    needs: release
+    if: ${{ needs.release.outputs.release_created }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -32,7 +64,7 @@ jobs:
       attestations: write
 
     env:
-      TAG_NAME: ${{ needs.release-please.outputs.tag_name }}
+      TAG_NAME: ${{ needs.release.outputs.tag_name }}
 
     steps:
       - name: Checkout repository
@@ -58,8 +90,8 @@ jobs:
           gh release upload ${{ env.TAG_NAME }} pxweb-${{ env.TAG_NAME }}.zip
 
   docker-publish:
-    needs: release-please
-    if: ${{ needs.release-please.outputs.release_created }}
+    needs: release
+    if: ${{ needs.release.outputs.release_created }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -68,7 +100,7 @@ jobs:
     env:
       REGISTRY: ghcr.io
       IMAGE_NAME: ${{ github.repository }}
-      TAG_NAME: ${{ needs.release-please.outputs.tag_name }}
+      TAG_NAME: ${{ needs.release.outputs.tag_name }}
 
     steps:
       - name: Checkout repository
@@ -108,14 +140,14 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
   publish-release:
-    needs: [release-please, upload-asset, docker-publish]
-    if: ${{ needs.release-please.outputs.release_created }}
+    needs: [release, upload-asset, docker-publish]
+    if: ${{ needs.release.outputs.release_created }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
 
     env:
-      TAG_NAME: ${{ needs.release-please.outputs.tag_name }}
+      TAG_NAME: ${{ needs.release.outputs.tag_name }}
 
     steps:
       - name: Checkout repository
