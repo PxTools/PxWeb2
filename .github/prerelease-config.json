@@ -1,0 +1,36 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "always-update": true,
+  "changelog-type": "default",
+  "commit-search-depth": 50,
+  "draft": true,
+  "force-tag-creation": true,
+  "include-commit-authors": true,
+  "include-component-in-tag": false,
+  "include-v-in-release-name": true,
+  "include-v-in-tag": true,
+  "initial-version": "2.9.0",
+  "prerelease": true,
+  "prerelease-type": "rc.1",
+  "release-type": "node",
+  "versioning": "prerelease",
+  "packages": {
+    ".": {
+      "changelog-sections": [
+        { "type": "feat", "section": ":sparkles: Features" },
+        { "type": "feature", "section": ":sparkles: Features" },
+        { "type": "fix", "section": ":bug: Bug Fixes" },
+        { "type": "patch", "section": ":bug: Bug Fixes" },
+        { "type": "perf", "section": ":zap: Performance Improvements" },
+        { "type": "refactor", "section": ":wrench: Code Refactoring" },
+        { "type": "docs", "section": ":books: Documentation" },
+        { "type": "style", "section": ":art: Styles" },
+        { "type": "test", "section": ":test_tube: Tests" },
+        { "type": "build", "section": ":building_construction: Build System and dependencies" },
+        { "type": "ci", "section": ":building_construction: Build System and dependencies" },
+        { "type": "chore", "section": ":broom: Chores", "hidden": false },
+        { "type": "revert", "section": ":rewind: Reverts" }
+      ]
+    }
+  }
+}
