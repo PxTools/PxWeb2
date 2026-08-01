@@ -1,6 +1,10 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { getChartColorsFromCssVariables } from './chartHelper';
+import {
+  getAdaptiveYAxisMax,
+  getAdaptiveYAxisMin,
+  getChartColorsFromCssVariables,
+} from './chartHelper';
 
 function mockStyles(values: Record<string, string>): CSSStyleDeclaration {
   return {
@@ -73,5 +77,33 @@ describe('getChartColorsFromCssVariables', () => {
     );
 
     expect(getChartColorsFromCssVariables()).toBeUndefined();
+  });
+});
+
+describe('getAdaptiveYAxisMin', () => {
+  it('clamps to zero when the source range is non-negative', () => {
+    expect(getAdaptiveYAxisMin({ min: 0, max: 1 })).toBe(0);
+  });
+
+  it('rounds down to a clean snap value for positive ranges', () => {
+    expect(getAdaptiveYAxisMin({ min: 100, max: 200 })).toBe(50);
+  });
+
+  it('keeps negative ranges negative and rounds down', () => {
+    expect(getAdaptiveYAxisMin({ min: -120, max: 80 })).toBe(-200);
+  });
+});
+
+describe('getAdaptiveYAxisMax', () => {
+  it('rounds up to a clean snap value for positive ranges', () => {
+    expect(getAdaptiveYAxisMax({ min: 100, max: 200 })).toBe(250);
+  });
+
+  it('adds headroom and rounds up for small decimal ranges', () => {
+    expect(getAdaptiveYAxisMax({ min: 0, max: 1 })).toBe(1.5);
+  });
+
+  it('works when min and max are equal', () => {
+    expect(getAdaptiveYAxisMax({ min: 5, max: 5 })).toBe(5.5);
   });
 });

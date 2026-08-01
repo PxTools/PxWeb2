@@ -9,7 +9,11 @@ import {
 import { useEChartOption } from '../Utils/useEChartOption';
 import type { PxTable } from '../../../shared-types/pxTable';
 import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
-import { getChartColorsFromCssVariables } from '../Utils/chartHelper';
+import {
+  getAdaptiveYAxisMax,
+  getAdaptiveYAxisMin,
+  getChartColorsFromCssVariables,
+} from '../Utils/chartHelper';
 
 interface LineChartProps {
   readonly pxtable: PxTable;
@@ -44,6 +48,10 @@ function getTooltipSymbolSvg(symbol: string, color: string): string {
 export function LineChart({ pxtable, colors }: LineChartProps) {
   const dataset = useMemo(() => mapPxTableToChartDataset(pxtable), [pxtable]);
 
+  const xAxisName = useMemo(() => {
+    return pxtable.stub.map((variable) => variable.label).join(' / ');
+  }, [pxtable]);
+
   const resolvedColors = useMemo(() => {
     return colors && colors.length > 0
       ? colors
@@ -54,10 +62,18 @@ export function LineChart({ pxtable, colors }: LineChartProps) {
     () => ({
       ...buildDatasetOption(dataset),
       grid: { top: 0, bottom: 200, left: '0', right: '0', containLabel: false },
-      xAxis: { type: 'category' as const, axisLabel: { rotate: 45 } },
+      xAxis: {
+        type: 'category' as const,
+        name: xAxisName,
+        nameLocation: 'end',
+        nameGap: 70,
+        axisLabel: { rotate: 45 },
+      },
       yAxis: {
         name: dataset.unit,
-        min: (value) => value.min,
+        scale: true,
+        min: getAdaptiveYAxisMin,
+        max: getAdaptiveYAxisMax,
       },
       legend: {
         height: 40 * dataset.series.length, // increase legend height based on number of series to prevent overlap with x-axis labels
@@ -94,7 +110,7 @@ export function LineChart({ pxtable, colors }: LineChartProps) {
         },
       },
     }),
-    [dataset, resolvedColors],
+    [dataset, resolvedColors, xAxisName],
   );
 
   const { divRef } = useEChartOption(option);
