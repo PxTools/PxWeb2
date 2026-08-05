@@ -21,7 +21,6 @@ interface PivotButtonProps {
   readonly setLoadingPivotType: (type: PivotType | null) => void;
 }
 
-
 interface PivotManuallyButtonProps {
   readonly onClick: () => void;
 }
@@ -42,8 +41,6 @@ function PivotManuallyButton({ onClick }: PivotManuallyButtonProps) {
     />
   );
 }
-
-
 
 function PivotButton({
   stub,
@@ -168,11 +165,11 @@ export function DrawerEdit() {
             setLoadingPivotType={setLoadingPivotType}
           />
         )}
-         {data && (
+        {data && (
           <PivotManuallyButton onClick={() => setIsManualPivotOpen(true)} />
         )}
       </div>
-       {isManualPivotOpen && (
+      {isManualPivotOpen && (
         <ManualPivoting
           isOpen={isManualPivotOpen}
           onClose={(headerItems, stubItems) => {

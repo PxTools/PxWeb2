@@ -2,7 +2,7 @@ import { Fragment, useEffect, useId, useRef, useState } from 'react';
 import { Reorder, type PanInfo } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
-import { Modal, Variable, BodyShort, Label } from '@pxweb2/pxweb2-ui';
+import { Modal, Variable, Label } from '@pxweb2/pxweb2-ui';
 import classes from './ManualPivoting.module.scss';
 
 type VariableGroup = 'header' | 'stub';
@@ -281,16 +281,14 @@ export function ManualPivot({
     );
 
   const getGroupLabel = (group: VariableGroup): string =>
-    group === 'stub'
-  ? "Stub Variable Header"
-  : "Heading Variable Header";
+    group === 'stub' ? 'Stub Variable Header' : 'Heading Variable Header';
 
-      // ? t(
-      //     'presentation_page.side_menu.edit.customize.rearrange.rearrange_modal.stub_variable_header',
-      //   )
-      // : t(
-      //     'presentation_page.side_menu.edit.customize.rearrange.rearrange_modal.heading_variable_header',
-      //   );
+  // ? t(
+  //     'presentation_page.side_menu.edit.customize.rearrange.rearrange_modal.stub_variable_header',
+  //   )
+  // : t(
+  //     'presentation_page.side_menu.edit.customize.rearrange.rearrange_modal.heading_variable_header',
+  //   );
 
   const announceKeyboardMove = (itemId: string, group: VariableGroup) => {
     const groupItems = getItemsForGroup(group);
@@ -722,9 +720,7 @@ export function ManualPivot({
                     handleItemKeyDown(event, group, variable.id)
                   }
                 >
-                  <Label size="medium">
-                    {capitalizeLabel(variable.label)}
-                  </Label>
+                  <Label size="medium">{capitalizeLabel(variable.label)}</Label>
                 </Reorder.Item>
               </Fragment>
             ))}
