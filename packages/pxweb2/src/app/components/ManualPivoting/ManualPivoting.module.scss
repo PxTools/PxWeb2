@@ -1,0 +1,93 @@
+.wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  width: 100%;
+  gap: 12px;
+}
+
+.groupColumn {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.groupZone {
+  position: relative;
+  width: 100%;
+  border: 1px solid var(--px-color-border-subtle);
+  border-radius: var(--px-border-radius-medium);
+  padding: 8px;
+  min-height: 220px;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+  z-index: 1;
+}
+
+.dropPlaceholder {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: var(--drop-preview-height, 40px);
+  border: 1px dashed var(--px-color-border-focus-outline);
+  border-radius: var(--px-border-radius-small);
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  background: color-mix(
+    in srgb,
+    var(--px-color-background-subtle) 88%,
+    transparent
+  );
+  pointer-events: none;
+}
+
+.dropPlaceholderLabel {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.listItem {
+  position: relative;
+  z-index: 1;
+  border: 1px solid var(--px-color-border-subtle);
+  border-radius: var(--px-border-radius-small);
+  background: var(--px-color-surface-default);
+  padding: 8px 10px;
+  cursor: grab;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: none;
+  transition: box-shadow 120ms ease;
+}
+
+.listItem:active {
+  cursor: grabbing;
+}
+
+.listItem:focus-visible {
+  outline: 2px solid var(--px-color-border-focus-outline);
+  outline-offset: 1px;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
