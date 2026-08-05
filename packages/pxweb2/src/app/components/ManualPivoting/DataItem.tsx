@@ -7,7 +7,6 @@ type DataItemProps = {
   label: string;
 };
 
-
 const DataItem = ({ label }: DataItemProps) => {
   const { t } = useTranslation();
   return (
