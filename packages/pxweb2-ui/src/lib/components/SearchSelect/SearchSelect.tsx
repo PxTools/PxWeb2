@@ -41,6 +41,7 @@ export function SearchSelect({
   const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
   const inputRef = useRef<HTMLInputElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const optionRefs = useRef<Array<HTMLLIElement | null>>([]);
 
   const searchSelectId = id ?? 'search-select';
 
@@ -74,6 +75,15 @@ export function SearchSelect({
     document.addEventListener('mousedown', onMouseDown);
     return () => document.removeEventListener('mousedown', onMouseDown);
   }, []);
+
+  useEffect(() => {
+    if (!isOpen || highlightedIndex < 0) {
+      return;
+    }
+
+    const optionEl = optionRefs.current[highlightedIndex];
+    optionEl?.scrollIntoView({ block: 'nearest' });
+  }, [highlightedIndex, isOpen]);
 
   const filteredOptions = inputValue
     ? options.filter((opt) =>
@@ -124,6 +134,11 @@ export function SearchSelect({
           handleSelect(filteredOptions[highlightedIndex]);
         } else if (exactMatch) {
           handleSelect(exactMatch);
+        } else if (isOpen) {
+          setIsOpen(false);
+          setHighlightedIndex(-1);
+        } else {
+          setIsOpen(true);
         }
         break;
       case 'Tab':
@@ -158,6 +173,18 @@ export function SearchSelect({
     setHighlightedIndex(-1);
   };
 
+  const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const nextFocusedElement = e.relatedTarget as HTMLElement | null;
+    const focusStayedInComponent =
+      !!nextFocusedElement && contentRef.current?.contains(nextFocusedElement);
+
+    if (focusStayedInComponent) {
+      return;
+    }
+
+    confirmSelection();
+  };
+
   const showClearButton = !!selectedOption || inputValue.length > 0;
 
   return (
@@ -187,9 +214,9 @@ export function SearchSelect({
             setIsOpen(true);
             setHighlightedIndex(-1);
           }}
-          onFocus={() => setIsOpen(true)}
+          // onFocus={() => setIsOpen(true)}
           onKeyDown={handleKeyDown}
-          onBlur={() => setTimeout(confirmSelection, 100)}
+          onBlur={handleInputBlur}
           role="combobox"
           inputMode={inputMode}
           pattern={inputMode === 'numeric' ? '[0-9]*' : undefined}
@@ -236,6 +263,9 @@ export function SearchSelect({
             filteredOptions.map((option, index) => (
               <li
                 key={option.value}
+                ref={(el) => {
+                  optionRefs.current[index] = el;
+                }}
                 id={`${searchSelectId}-option-${index}`}
                 role="option"
                 className={cl(
