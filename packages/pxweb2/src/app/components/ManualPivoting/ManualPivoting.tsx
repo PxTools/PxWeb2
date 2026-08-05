@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import { Modal, Variable, Label } from '@pxweb2/pxweb2-ui';
 import classes from './ManualPivoting.module.scss';
+import DataItem from './DataItem';
 
 type VariableGroup = 'header' | 'stub';
 type DropPreview = {
@@ -720,7 +721,7 @@ export function ManualPivot({
                     handleItemKeyDown(event, group, variable.id)
                   }
                 >
-                  <Label size="medium">{capitalizeLabel(variable.label)}</Label>
+                  <DataItem label={capitalizeLabel(variable.label)} />
                 </Reorder.Item>
               </Fragment>
             ))}
