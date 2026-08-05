@@ -52,7 +52,7 @@
     "eslint-plugin-unused-imports": "^4.4.1",
     "jsdom": "^29.1.1",
     "style-dictionary": "^5.5.0",
-    "typescript": "^6.0.3",
+    "typescript": "^7.0.2",
     "unplugin-dts": "^1.0.3",
     "wrangler": "^4.114.0"
   },
