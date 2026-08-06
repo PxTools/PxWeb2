@@ -13,15 +13,12 @@ import {
   mapJsonStat2ResponsePathElements,
 } from '../../../mappers/JsonStat2ResponseMapper';
 import { mapTableSelectionResponse } from '../../../mappers/TableSelectionResponseMapper';
-
 import {
   PxTable,
   PxTableMetadata,
   SelectedVBValues,
   SelectOption,
   Value,
-  ValueDisplayType,
-  Variable,
   VariableList,
 } from '@pxweb2/pxweb2-ui';
 import {
@@ -34,7 +31,7 @@ import {
 import useVariables from '../../context/useVariables';
 import useApp from '../../context/useApp';
 import { NavigationItem } from '../../components/NavigationMenu/NavigationItem/NavigationItemType';
-import useAccessibility from '../../context/useAccessibility';
+import { useAccessibility } from '../../context/useAccessibility';
 import { problemMessage } from '../../util/problemMessage';
 import {
   getSelectedCodelists,
@@ -207,10 +204,6 @@ function removeAllValuesOfVariable(
     .filter((value) => value !== null);
 
   return newValues;
-}
-
-export interface VariableWithDisplayType extends Variable {
-  valueDisplayType: ValueDisplayType;
 }
 
 type NavigationView = 'selection' | 'view' | 'edit' | 'save' | 'help' | 'none';
@@ -626,5 +619,3 @@ export function Selection({
     )
   );
 }
-
-export default Selection;

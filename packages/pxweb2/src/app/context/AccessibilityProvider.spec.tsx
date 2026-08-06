@@ -43,7 +43,6 @@ const TestComponent = ({
       // btnRef is RefObject<HTMLButtonElement | null>, but test expects RefObject<HTMLButtonElement>
       onAddFocusOverride(ctx, btnRef as React.RefObject<HTMLButtonElement>);
     }
-    // eslint-disable-next-line
   }, [ctx]);
 
   return <button ref={btnRef}>Button</button>;

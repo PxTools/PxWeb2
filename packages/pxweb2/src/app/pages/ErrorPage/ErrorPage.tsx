@@ -1,5 +1,5 @@
 import { isRouteErrorResponse, useRouteError } from 'react-router';
-import React from 'react';
+import { JSX } from 'react';
 
 import { GenericError } from '../../components/Errors/GenericError/GenericError';
 import { NotFound } from '../../components/Errors/NotFound/NotFound';
@@ -12,7 +12,7 @@ type RouteError = {
   data?: string;
 };
 
-export const ErrorPage: React.FC = () => {
+export function ErrorPage(): JSX.Element {
   const error = useRouteError() as RouteError;
 
   // If expanding the error handling in the future, read this:
@@ -25,13 +25,11 @@ export const ErrorPage: React.FC = () => {
 
   // Handle all errors not specifically handled above
   return <GenericError />;
-};
+}
 
 // Wrapper for router-level errors
-export function ErrorPageWithLocalization() {
+export function ErrorPageWithLocalization(): JSX.Element {
   useLocalizeDocumentAttributes();
 
   return <ErrorPage />;
 }
-
-export default ErrorPage;

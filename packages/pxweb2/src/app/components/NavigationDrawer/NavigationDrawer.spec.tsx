@@ -12,7 +12,7 @@ vi.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (s: string) => s }),
 }));
 vi.mock('../../context/useAccessibility', () => ({
-  default: () => ({
+  useAccessibility: () => ({
     addModal: vi.fn(),
     removeModal: vi.fn(),
   }),

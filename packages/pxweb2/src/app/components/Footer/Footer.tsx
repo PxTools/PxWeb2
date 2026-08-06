@@ -9,7 +9,7 @@ import { getConfig } from '../../util/config/getConfig';
 import { getLanguagePath } from '../../util/language/getLanguagePath';
 import { BodyShort, Button, Heading, Link } from '@pxweb2/pxweb2-ui';
 import { useLocaleContent } from '../../util/hooks/useLocaleContent';
-import Navlink from '../Navlink/Navlink';
+import { Navlink } from '../Navlink/Navlink';
 
 function useSafeLocation(): { pathname: string } {
   try {

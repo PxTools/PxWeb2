@@ -1,6 +1,6 @@
 import { renderWithProviders } from '../../util/testing-utils';
 import { MemoryRouter } from 'react-router';
-import Presentation from './Presentation';
+import { Presentation } from './Presentation';
 
 describe('Presentation', () => {
   // Setup console mocks before all tests

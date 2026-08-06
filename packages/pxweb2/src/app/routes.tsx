@@ -4,7 +4,7 @@ import RootLayout from './components/RootLayout';
 import { ErrorPageWithLocalization } from './pages/ErrorPage/ErrorPage';
 import StartPage from './pages/StartPage/StartPage';
 import TableViewer from './pages/TableViewer/TableViewer';
-import TopicIcons from './pages/TopicIcons/TopicIcons';
+import { TopicIcons } from './pages/TopicIcons/TopicIcons';
 import { getConfig } from './util/config/getConfig';
 import { savedQueryRouteLoader } from './savedQueryRouteLoader';
 import { normalizeBaseApplicationPath } from './util/pathUtil';

@@ -1,7 +1,7 @@
 import type { IconProps, BreadcrumbItem } from '@pxweb2/pxweb2-ui';
 
 /** Base link shape shared across content areas */
-export type LinkBase = Readonly<{
+type LinkBase = Readonly<{
   text: string;
   url: string;
 }>;
@@ -15,38 +15,38 @@ export type DetailLink = LinkBase &
   }>;
 
 /** Grouped links (with optional header) for detail content */
-export type Links = Readonly<{
+type Links = Readonly<{
   header?: string;
   items?: ReadonlyArray<DetailLink>;
 }>;
 
 /** Optional text block with header + body */
-export type TextBlock = Readonly<{
+type TextBlock = Readonly<{
   header?: string;
   text?: string;
 }>;
 
 /** One details item can contain a textBlock and links group */
-export type DetailsContent = Readonly<{
+type DetailsContent = Readonly<{
   textBlock?: TextBlock;
   links?: Links;
 }>;
 
 /** Collapsible details section configuration */
-export type DetailsSection = Readonly<{
+type DetailsSection = Readonly<{
   enabled?: boolean;
   detailHeader?: string;
   detailContent?: ReadonlyArray<DetailsContent>;
 }>;
 
 /** Help texts shown when search yields no results */
-export type NoResultSearchHelp = Readonly<{
+type NoResultSearchHelp = Readonly<{
   enabled?: boolean;
   helpText?: ReadonlyArray<string>;
 }>;
 
 /** Breadcrumb config */
-export type BreadCrumb = Readonly<{
+type BreadCrumb = Readonly<{
   enabled: boolean;
   items?: ReadonlyArray<BreadcrumbItem>;
 }>;
@@ -59,19 +59,19 @@ export type Startpage = Readonly<{
 }>;
 
 /** Footer link with optional external flag */
-export type FooterLink = LinkBase &
+type FooterLink = LinkBase &
   Readonly<{
     external?: boolean;
   }>;
 
 /** Footer column with a header and links */
-export type FooterColumn = Readonly<{
+type FooterColumn = Readonly<{
   header: string;
   links: ReadonlyArray<FooterLink>;
 }>;
 
 /** Footer configuration */
-export type Footer = Readonly<{
+type Footer = Readonly<{
   columns: ReadonlyArray<FooterColumn>;
 }>;
 
@@ -83,12 +83,12 @@ export type LocaleContent = Readonly<{
 }>;
 
 /** Table viewer-specific content */
-export type TableViewer = Readonly<{
+type TableViewer = Readonly<{
   helpSection?: HelpSection;
 }>;
 
 /** Information card shown in Help section */
-export type InformationCard = Readonly<{
+type InformationCard = Readonly<{
   enabled: boolean;
   text: string;
 }>;

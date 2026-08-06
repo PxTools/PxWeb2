@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import styles from './NavigationDrawer.module.scss';
 import { Heading, Icon, getIconDirection, Label } from '@pxweb2/pxweb2-ui';
 import i18next from 'i18next';
-import useAccessibility from '../../context/useAccessibility';
+import { useAccessibility } from '../../context/useAccessibility';
 import useApp from '../../context/useApp';
 
 // Utility to get all focusable elements within a container

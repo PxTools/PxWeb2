@@ -19,18 +19,22 @@ interface NavigationBarProps {
     close: boolean,
     newSelected: NavigationItem,
   ) => void;
+  ref?: React.Ref<NavigationBarRef>;
 }
 
-export const NavigationBar = React.forwardRef<
-  {
-    selection: React.RefObject<HTMLButtonElement | null>;
-    view: React.RefObject<HTMLButtonElement | null>;
-    edit: React.RefObject<HTMLButtonElement | null>;
-    save: React.RefObject<HTMLButtonElement | null>;
-    help: React.RefObject<HTMLButtonElement | null>;
-  },
-  NavigationBarProps
->(({ selected, onChange }, ref) => {
+interface NavigationBarRef {
+  selection: React.RefObject<HTMLButtonElement | null>;
+  view: React.RefObject<HTMLButtonElement | null>;
+  edit: React.RefObject<HTMLButtonElement | null>;
+  save: React.RefObject<HTMLButtonElement | null>;
+  help: React.RefObject<HTMLButtonElement | null>;
+}
+
+export function NavigationBar({
+  selected,
+  onChange,
+  ref,
+}: Readonly<NavigationBarProps>) {
   const { t } = useTranslation();
 
   const selectionRef = React.useRef<HTMLButtonElement>(null);
@@ -143,6 +147,4 @@ export const NavigationBar = React.forwardRef<
       </LazyMotion>
     </div>
   );
-});
-
-export default NavigationBar;
+}

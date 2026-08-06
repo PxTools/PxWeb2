@@ -1,5 +1,6 @@
 import { MemoryRouter } from 'react-router';
-import TableViewer from './TableViewer';
+
+import { TableViewer } from './TableViewer';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import { renderWithProviders } from '../../util/testing-utils';
 import { Config } from '../../util/config/configType';
@@ -22,10 +23,13 @@ window.PxWeb2Config = {
     defaultLanguage: 'en',
     fallbackLanguage: 'en',
     showDefaultLanguageInPath: true,
+    positionInPath: 'after',
   },
   apiUrl: '',
   baseApplicationPath: '/',
   maxDataCells: 100000,
+  useDynamicContentInTitle: false,
+  showBreadCrumbOnStartPage: false,
   specialCharacters: ['.', '..', ':', '-', '...', '*'],
   variableFilterExclusionList: {},
 };

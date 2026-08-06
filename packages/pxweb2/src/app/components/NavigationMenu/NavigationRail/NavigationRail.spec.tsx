@@ -1,6 +1,6 @@
 import { getByText, render } from '@testing-library/react';
 
-import NavigationRail from './NavigationRail';
+import { NavigationRail } from './NavigationRail';
 
 describe('NavigationRail', () => {
   it('should render successfully', () => {

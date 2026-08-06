@@ -26,14 +26,14 @@ vi.mock('./pages/StartPage/StartPage', () => ({
 }));
 
 vi.mock('./pages/ErrorPage/ErrorPage', () => ({
-  default: () => <div data-testid="error-page">Error Page</div>,
+  ErrorPage: () => <div data-testid="error-page">Error Page</div>,
   ErrorPageWithLocalization: () => (
     <div data-testid="error-page-localized">Error Page with Localization</div>
   ),
 }));
 
 vi.mock('./pages/TopicIcons/TopicIcons', () => ({
-  default: () => <div data-testid="topic-icons">Topic Icons</div>,
+  TopicIcons: () => <div data-testid="topic-icons">Topic Icons</div>,
 }));
 
 vi.mock('./components/Errors/GenericError/GenericError', () => ({
@@ -67,6 +67,7 @@ describe('Router configuration', () => {
       showDefaultLanguageInPath: false,
       positionInPath: 'after',
     },
+    useDynamicContentInTitle: false,
     apiUrl: 'test',
     baseApplicationPath: '/',
     showBreadCrumbOnStartPage: false,

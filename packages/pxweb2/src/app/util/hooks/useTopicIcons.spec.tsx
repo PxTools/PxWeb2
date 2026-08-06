@@ -1,4 +1,3 @@
-// useTopicIcons.test.tsx
 import React from 'react';
 import { renderHook, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';

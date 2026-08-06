@@ -11,7 +11,7 @@ import {
   PxTable,
   PathElement,
 } from '@pxweb2/pxweb2-ui';
-import TableInformation from '../TableInformation/TableInformation';
+import { TableInformation } from '../TableInformation/TableInformation';
 import { AccessibilityContext } from '../../context/AccessibilityProvider';
 import {
   getMandatoryNotesCompressed,

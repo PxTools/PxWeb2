@@ -1,10 +1,10 @@
 import * as BreadcrumbsIcons from './BreadcrumbsIcons';
 
-export interface BreadcrumbsIconsProps {
-  className?: string;
+interface BreadcrumbsIconsProps {
+  readonly className?: string;
 }
 
-const BreadcrumbsIcon: React.FC<BreadcrumbsIconsProps> = ({ className }) => {
+function BreadcrumbsIcon({ className }: BreadcrumbsIconsProps) {
   const breadcrumbsIcon = BreadcrumbsIcons['ChevronRight'];
 
   if (!breadcrumbsIcon) {
@@ -24,6 +24,6 @@ const BreadcrumbsIcon: React.FC<BreadcrumbsIconsProps> = ({ className }) => {
       {breadcrumbsIcon}
     </svg>
   );
-};
+}
 
 export { BreadcrumbsIcon };

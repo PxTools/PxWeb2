@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 const ICON_MAP_URL = `./icons/topicIconMap.json?v=${__BUILD_DATE__}`;
 const ICON_BASE_PATH = './icons/topic';
 
-export type TopicIconComponents = {
+type TopicIconComponents = {
   id: string;
   fileName: string;
   small: React.ReactNode;

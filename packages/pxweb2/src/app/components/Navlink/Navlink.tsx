@@ -89,5 +89,3 @@ export function Navlink({
     </RouterNavLink>
   );
 }
-
-export default Navlink;

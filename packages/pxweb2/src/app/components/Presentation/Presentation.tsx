@@ -376,5 +376,3 @@ export function Presentation({
     </main>
   );
 }
-
-export default Presentation;

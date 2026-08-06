@@ -19,18 +19,22 @@ interface NavigationRailProps {
     close: boolean,
     newSelected: NavigationItem,
   ) => void;
+  ref?: React.Ref<NavigationRailRef>;
 }
 
-export const NavigationRail = React.forwardRef<
-  {
-    selection: React.RefObject<HTMLButtonElement | null>;
-    view: React.RefObject<HTMLButtonElement | null>;
-    edit: React.RefObject<HTMLButtonElement | null>;
-    save: React.RefObject<HTMLButtonElement | null>;
-    help: React.RefObject<HTMLButtonElement | null>;
-  },
-  NavigationRailProps
->(({ onChange, selected }, ref) => {
+interface NavigationRailRef {
+  selection: React.RefObject<HTMLButtonElement | null>;
+  view: React.RefObject<HTMLButtonElement | null>;
+  edit: React.RefObject<HTMLButtonElement | null>;
+  save: React.RefObject<HTMLButtonElement | null>;
+  help: React.RefObject<HTMLButtonElement | null>;
+}
+
+export function NavigationRail({
+  onChange,
+  selected,
+  ref,
+}: Readonly<NavigationRailProps>) {
   const { t } = useTranslation();
 
   const isKeyboardClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -131,6 +135,4 @@ export const NavigationRail = React.forwardRef<
       </LazyMotion>
     </div>
   );
-});
-
-export default NavigationRail;
+}

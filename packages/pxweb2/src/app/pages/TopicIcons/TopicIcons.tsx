@@ -56,5 +56,3 @@ export const TopicIcons: React.FC = () => {
     </div>
   );
 };
-
-export default TopicIcons;

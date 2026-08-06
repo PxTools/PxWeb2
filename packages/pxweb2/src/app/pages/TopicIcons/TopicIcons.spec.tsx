@@ -1,7 +1,7 @@
-// TopicIcons.spec.tsx
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import { vi, describe, it, beforeEach, afterEach, expect, Mock } from 'vitest';
+
 import { TopicIcons } from './TopicIcons';
 
 describe('TopicIcons', () => {

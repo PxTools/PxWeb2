@@ -1,6 +1,6 @@
 import { getByText, render } from '@testing-library/react';
 
-import NavigationBar from './NavigationBar';
+import { NavigationBar } from './NavigationBar';
 
 describe('NavigationBar', () => {
   it('should render successfully', () => {

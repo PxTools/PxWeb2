@@ -3,7 +3,7 @@ import { screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import { useState } from 'react';
 
-import TableInformation from './TableInformation';
+import { TableInformation } from './TableInformation';
 import classes from './TableInformation.module.scss';
 import { mockHTMLDialogElement } from '@pxweb2/pxweb2-ui/src/lib/util/test-utils';
 import { renderWithProviders } from '../../util/testing-utils';
@@ -243,6 +243,8 @@ describe('TableInformation', () => {
       setSkipToMainFocused: vi.fn(),
       title: '',
       setTitle: vi.fn(),
+      languageFilter: ['en'],
+      setLanguageFilter: vi.fn(),
     };
 
     const { container } = renderWithProviders(
@@ -277,6 +279,8 @@ describe('TableInformation', () => {
       setSkipToMainFocused: vi.fn(),
       title: '',
       setTitle: vi.fn(),
+      languageFilter: ['en'],
+      setLanguageFilter: vi.fn(),
     };
 
     const { container } = renderWithProviders(

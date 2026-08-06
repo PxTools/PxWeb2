@@ -4,7 +4,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { MemoryRouter } from 'react-router';
 import '@testing-library/jest-dom/vitest';
 
-import Navlink from './Navlink';
+import { Navlink } from './Navlink';
 
 // Mock pxweb2-ui Link and Icon for fallback
 vi.mock('@pxweb2/pxweb2-ui', () => ({

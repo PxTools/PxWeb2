@@ -20,7 +20,7 @@ import {
 import { NotesTab } from './Notes/NotesTab';
 import { DefinitionsTab } from './Definitions/DefinitionsTab';
 
-export interface TableInformationProps {
+interface TableInformationProps {
   readonly isOpen: boolean;
   readonly selectedTab?: string;
   readonly onClose: () => void;
@@ -127,5 +127,3 @@ export function TableInformation({
     </SheetComponent>
   );
 }
-
-export default TableInformation;
