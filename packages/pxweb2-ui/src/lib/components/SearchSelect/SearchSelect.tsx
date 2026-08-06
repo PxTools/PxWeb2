@@ -162,12 +162,8 @@ export function SearchSelect({
 
     if (match) {
       handleSelect(match);
-    } else {
-      // setInputValue('');
-      // inputRef.current?.focus();
-      if (selectedOption) {
-        onSelect(undefined);
-      }
+    } else if (selectedOption) {
+      onSelect(undefined);
     }
 
     setIsOpen(false);
