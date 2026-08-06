@@ -163,7 +163,8 @@ export function SearchSelect({
     if (match) {
       handleSelect(match);
     } else {
-      setInputValue('');
+      // setInputValue('');
+      // inputRef.current?.focus();
       if (selectedOption) {
         onSelect(undefined);
       }
@@ -173,22 +174,28 @@ export function SearchSelect({
     setHighlightedIndex(-1);
   };
 
-  const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+  const handleComponentBlur = (e: React.FocusEvent<HTMLDivElement>) => {
     const nextFocusedElement = e.relatedTarget as HTMLElement | null;
     const focusStayedInComponent =
-      !!nextFocusedElement && contentRef.current?.contains(nextFocusedElement);
+      !!nextFocusedElement && e.currentTarget.contains(nextFocusedElement);
 
     if (focusStayedInComponent) {
       return;
     }
 
     confirmSelection();
+    const trimmed = inputValue.trim().toLowerCase();
+    const match = options.find((opt) => opt.label.toLowerCase() === trimmed);
+
+    if (!match) {
+      setInputValue('');
+    }
   };
 
   const showClearButton = !!selectedOption || inputValue.length > 0;
 
   return (
-    <div className={styles.searchableSelect}>
+    <div className={styles.searchableSelect} onBlur={handleComponentBlur}>
       {label && (
         <Label
           className={styles.label}
@@ -216,7 +223,6 @@ export function SearchSelect({
           }}
           // onFocus={() => setIsOpen(true)}
           onKeyDown={handleKeyDown}
-          onBlur={handleInputBlur}
           role="combobox"
           inputMode={inputMode}
           pattern={inputMode === 'numeric' ? '[0-9]*' : undefined}
