@@ -77,7 +77,7 @@ describe('SearchableSelect', () => {
     expect(mockOnSelect).toHaveBeenCalledWith(undefined);
   });
 
-  it('should clear input whwn tabbed to the clear button an press enter', async () => {
+  it('should clear input when tabbed to the clear button and press enter', async () => {
     const user = userEvent.setup();
     const { getByRole } = render(
       <SearchSelect options={mockOptions} onSelect={mockOnSelect} />,

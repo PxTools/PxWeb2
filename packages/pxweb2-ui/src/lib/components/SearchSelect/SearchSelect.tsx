@@ -146,7 +146,6 @@ export function SearchSelect({
         if (!isOpen) {
           e.preventDefault();
           setIsOpen(true);
-          console.log('space pressed');
         }
         break;
       case 'Tab':
@@ -189,7 +188,7 @@ export function SearchSelect({
 
     confirmSelection();
     const trimmed = inputValue.trim().toLowerCase();
-    const match = options.find((opt) => opt.label.toLowerCase() === trimmed);
+    const match = options.some((opt) => opt.label.toLowerCase() === trimmed);
 
     if (!match) {
       setInputValue('');
@@ -225,7 +224,6 @@ export function SearchSelect({
             setIsOpen(true);
             setCurrentIndex(-1);
           }}
-          // onFocus={() => setIsOpen(true)}
           onKeyDown={handleKeyDown}
           role="combobox"
           inputMode={inputMode}
