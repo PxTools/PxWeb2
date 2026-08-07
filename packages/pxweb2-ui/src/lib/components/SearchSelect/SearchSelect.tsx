@@ -143,8 +143,8 @@ export function SearchSelect({
         break;
       case ' ':
       case 'Spacebar':
-        e.preventDefault();
         if (!isOpen) {
+          e.preventDefault();
           setIsOpen(true);
           console.log('space pressed');
         }
