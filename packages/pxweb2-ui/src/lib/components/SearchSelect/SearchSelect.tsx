@@ -141,6 +141,14 @@ export function SearchSelect({
           setIsOpen(true);
         }
         break;
+      case ' ':
+      case 'Spacebar':
+        e.preventDefault();
+        if (!isOpen) {
+          setIsOpen(true);
+          console.log('space pressed');
+        }
+        break;
       case 'Tab':
         confirmSelection();
         break;
