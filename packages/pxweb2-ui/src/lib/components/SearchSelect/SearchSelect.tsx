@@ -38,9 +38,10 @@ export function SearchSelect({
 }: Readonly<SearchSelectProps>) {
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState('');
-  const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
+  const [currentIndex, setCurrentIndex] = useState<number>(-1);
   const inputRef = useRef<HTMLInputElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const optionRefs = useRef<Array<HTMLLIElement | null>>([]);
 
   const searchSelectId = id ?? 'search-select';
 
@@ -66,7 +67,7 @@ export function SearchSelect({
 
         if (!isScrollbarClick) {
           setIsOpen(false);
-          setHighlightedIndex(-1);
+          setCurrentIndex(-1);
         }
       }
     };
@@ -74,6 +75,15 @@ export function SearchSelect({
     document.addEventListener('mousedown', onMouseDown);
     return () => document.removeEventListener('mousedown', onMouseDown);
   }, []);
+
+  useEffect(() => {
+    if (!isOpen || currentIndex < 0) {
+      return;
+    }
+
+    const optionEl = optionRefs.current[currentIndex];
+    optionEl?.scrollIntoView({ block: 'nearest' });
+  }, [currentIndex, isOpen]);
 
   const filteredOptions = inputValue
     ? options.filter((opt) =>
@@ -85,7 +95,7 @@ export function SearchSelect({
     onSelect(option);
     setInputValue(option.label);
     setIsOpen(false);
-    setHighlightedIndex(-1);
+    setCurrentIndex(-1);
   };
 
   const handleClear = () => {
@@ -104,26 +114,39 @@ export function SearchSelect({
       case 'ArrowDown':
         e.preventDefault();
         setIsOpen(true);
-        setHighlightedIndex((prev) =>
+        setCurrentIndex((prev) =>
           prev < filteredOptions.length - 1 ? prev + 1 : 0,
         );
         break;
       case 'ArrowUp':
         e.preventDefault();
         setIsOpen(true);
-        setHighlightedIndex((prev) =>
+        setCurrentIndex((prev) =>
           prev > 0 ? prev - 1 : filteredOptions.length - 1,
         );
         break;
       case 'Enter':
         if (
           isOpen &&
-          highlightedIndex >= 0 &&
-          highlightedIndex < filteredOptions.length
+          currentIndex >= 0 &&
+          currentIndex < filteredOptions.length
         ) {
-          handleSelect(filteredOptions[highlightedIndex]);
+          handleSelect(filteredOptions[currentIndex]);
         } else if (exactMatch) {
           handleSelect(exactMatch);
+        } else if (isOpen) {
+          setIsOpen(false);
+          setCurrentIndex(-1);
+        } else {
+          setIsOpen(true);
+        }
+        break;
+      case ' ':
+      case 'Spacebar':
+        if (!isOpen) {
+          e.preventDefault();
+          setIsOpen(true);
+          console.log('space pressed');
         }
         break;
       case 'Tab':
@@ -131,7 +154,7 @@ export function SearchSelect({
         break;
       case 'Escape':
         setIsOpen(false);
-        setHighlightedIndex(-1);
+        setCurrentIndex(-1);
         break;
       default:
         if (!isOpen && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) {
@@ -147,21 +170,36 @@ export function SearchSelect({
 
     if (match) {
       handleSelect(match);
-    } else {
-      setInputValue('');
-      if (selectedOption) {
-        onSelect(undefined);
-      }
+    } else if (selectedOption) {
+      onSelect(undefined);
     }
 
     setIsOpen(false);
-    setHighlightedIndex(-1);
+    setCurrentIndex(-1);
+  };
+
+  const handleComponentBlur = (e: React.FocusEvent<HTMLDivElement>) => {
+    const nextFocusedElement = e.relatedTarget as HTMLElement | null;
+    const focusStayedInComponent =
+      !!nextFocusedElement && e.currentTarget.contains(nextFocusedElement);
+
+    if (focusStayedInComponent) {
+      return;
+    }
+
+    confirmSelection();
+    const trimmed = inputValue.trim().toLowerCase();
+    const match = options.find((opt) => opt.label.toLowerCase() === trimmed);
+
+    if (!match) {
+      setInputValue('');
+    }
   };
 
   const showClearButton = !!selectedOption || inputValue.length > 0;
 
   return (
-    <div className={styles.searchableSelect}>
+    <div className={styles.searchableSelect} onBlur={handleComponentBlur}>
       {label && (
         <Label
           className={styles.label}
@@ -185,11 +223,10 @@ export function SearchSelect({
           onChange={(e) => {
             setInputValue(e.target.value);
             setIsOpen(true);
-            setHighlightedIndex(-1);
+            setCurrentIndex(-1);
           }}
-          onFocus={() => setIsOpen(true)}
+          // onFocus={() => setIsOpen(true)}
           onKeyDown={handleKeyDown}
-          onBlur={() => setTimeout(confirmSelection, 100)}
           role="combobox"
           inputMode={inputMode}
           pattern={inputMode === 'numeric' ? '[0-9]*' : undefined}
@@ -198,8 +235,8 @@ export function SearchSelect({
           aria-expanded={isOpen}
           aria-controls={`${searchSelectId}-listbox`}
           aria-activedescendant={
-            highlightedIndex >= 0
-              ? `${searchSelectId}-option-${highlightedIndex}`
+            currentIndex >= 0
+              ? `${searchSelectId}-option-${currentIndex}`
               : undefined
           }
         />
@@ -236,11 +273,14 @@ export function SearchSelect({
             filteredOptions.map((option, index) => (
               <li
                 key={option.value}
+                ref={(el) => {
+                  optionRefs.current[index] = el;
+                }}
                 id={`${searchSelectId}-option-${index}`}
                 role="option"
                 className={cl(
                   styles.option,
-                  index === highlightedIndex && styles.highlighted,
+                  index === currentIndex && styles.currentoption,
                   styles['bodyshort-medium'],
                 )}
                 tabIndex={-1}

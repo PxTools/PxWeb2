@@ -86,6 +86,7 @@ describe('YearRangeFilter', () => {
 
     const fromSelect = screen.getByLabelText(/from_year/i);
     fireEvent.focus(fromSelect);
+    fireEvent.keyDown(fromSelect, { key: 'Enter' });
     const fromListbox = await screen.findByRole('listbox');
     expect(within(fromListbox).getByText('2000')).toBeInTheDocument();
     expect(within(fromListbox).getByText('2005')).toBeInTheDocument();
@@ -93,6 +94,7 @@ describe('YearRangeFilter', () => {
 
     const toSelect = screen.getByLabelText(/to_year/i);
     fireEvent.focus(toSelect);
+    fireEvent.keyDown(fromSelect, { key: 'Enter' });
     const toListbox = await screen.findByRole('listbox');
     expect(within(toListbox).getByText('2000')).toBeInTheDocument();
     expect(within(toListbox).getByText('2005')).toBeInTheDocument();
@@ -105,8 +107,9 @@ describe('YearRangeFilter', () => {
       label: 'from_label 2003',
     };
     renderWithContext({ activeFilters: [filter] });
-
-    fireEvent.focus(screen.getByLabelText(/to_year/i));
+    const toYear = screen.getByLabelText(/to_year/i);
+    fireEvent.focus(toYear);
+    fireEvent.keyDown(toYear, { key: 'Enter' });
     expect(screen.queryByText('2000')).not.toBeInTheDocument();
     expect(screen.getByText('2003')).toBeInTheDocument();
     expect(screen.getByText('2005')).toBeInTheDocument();
