@@ -163,16 +163,20 @@ export function SearchSelect({
     }
   };
 
-  const confirmSelection = () => {
+  const confirmSelection = (triggeredByBlur = false) => {
     const trimmed = inputValue.trim().toLowerCase();
     const match = options.find((opt) => opt.label.toLowerCase() === trimmed);
 
     if (match) {
       handleSelect(match);
-    } else if (selectedOption) {
-      onSelect(undefined);
+    } else {
+      if (selectedOption) {
+        onSelect(undefined);
+      }
+      if (triggeredByBlur) {
+        setInputValue('');
+      }
     }
-
     setIsOpen(false);
     setCurrentIndex(-1);
   };
@@ -185,14 +189,7 @@ export function SearchSelect({
     if (focusStayedInComponent) {
       return;
     }
-
-    confirmSelection();
-    const trimmed = inputValue.trim().toLowerCase();
-    const match = options.some((opt) => opt.label.toLowerCase() === trimmed);
-
-    if (!match) {
-      setInputValue('');
-    }
+    confirmSelection(true);
   };
 
   const showClearButton = !!selectedOption || inputValue.length > 0;
