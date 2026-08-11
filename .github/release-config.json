@@ -9,7 +9,6 @@
   "include-component-in-tag": false,
   "include-v-in-release-name": true,
   "include-v-in-tag": true,
-  "initial-version": "2.10.0",
   "prerelease": false,
   "prerelease-type": "rc.1",
   "release-type": "node",
