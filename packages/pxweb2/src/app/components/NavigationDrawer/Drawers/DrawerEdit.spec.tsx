@@ -81,9 +81,9 @@ describe('DrawerEdit', () => {
     render(<DrawerEdit />);
 
     expect(screen.getByTestId('content-box')).toBeInTheDocument();
-    // Two action buttons: auto pivot & clockwise pivot (unified PivotButton)
+    // Three action buttons: auto pivot, clockwise pivot, and manual rearrange
     const buttons = screen.getAllByTestId('action-item');
-    expect(buttons).toHaveLength(2);
+    expect(buttons).toHaveLength(3);
     // Check labels via translation keys
     expect(
       screen.getByText(
@@ -93,6 +93,11 @@ describe('DrawerEdit', () => {
     expect(
       screen.getByText(
         'presentation_page.side_menu.edit.customize.pivot.title',
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'presentation_page.side_menu.edit.customize.rearrange.title',
       ),
     ).toBeInTheDocument();
   });
