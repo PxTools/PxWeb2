@@ -11,7 +11,7 @@ const DataItem = ({ label }: DataItemProps) => {
   const { t } = useTranslation();
   return (
     <div className={classes.dataItem}>
-      <Icon iconName="MenuElipsisVertical" />
+      <Icon iconName="DragVertical" />
       <Label>{t('dataItem', { defaultValue: label })}</Label>
     </div>
   );

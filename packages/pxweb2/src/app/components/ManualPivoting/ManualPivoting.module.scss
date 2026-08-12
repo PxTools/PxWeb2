@@ -57,6 +57,17 @@
   text-overflow: ellipsis;
 }
 
+.sourcePlaceholder {
+  height: var(--source-placeholder-height, 40px);
+}
+
+.dropTargetRow {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  padding: 2px 0;
+}
+
 .listItem {
   position: relative;
   z-index: 1;
