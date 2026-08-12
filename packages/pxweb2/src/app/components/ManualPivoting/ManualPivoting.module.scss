@@ -1,10 +1,10 @@
 .manualPivotModal {
-display: flex;
-width: 620px;
-flex-direction: column;
-align-items: center;
-border-radius: var(--border-radius-xlarge, 24px);
-background: var(--color-surface-default, #FFF);
+  display: flex;
+  width: 620px;
+  flex-direction: column;
+  align-items: center;
+  border-radius: var(--border-radius-xlarge, 24px);
+  background: var(--color-surface-default, #fff);
 }
 
 .wrapper {
