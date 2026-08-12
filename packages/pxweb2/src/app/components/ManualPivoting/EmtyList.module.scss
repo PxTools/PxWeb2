@@ -1,0 +1,13 @@
+.emptyListBox {
+  display: flex;
+  //width: 322px;
+  height: 160px;
+  padding: 12px 60px;
+  border-radius: var(--border-radius-medium, 8px);
+  border: 1px dashed var(--color-border-subtle, #c3dcdc);
+  background: var(--color-surface-subtle, #f0f8f9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}

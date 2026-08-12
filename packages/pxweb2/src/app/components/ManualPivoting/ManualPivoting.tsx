@@ -6,6 +6,7 @@ import { Modal, Variable, Label } from '@pxweb2/pxweb2-ui';
 import classes from './ManualPivoting.module.scss';
 import DataItem from './DataItem';
 import DropTarget from './DropTarget';
+import EmtyList from './EmtyList';
 
 type VariableGroup = 'header' | 'stub';
 type DropPreview = {
@@ -775,6 +776,8 @@ export function ManualPivot({
     items: Variable[],
     zoneRef: React.RefObject<HTMLDivElement | null>,
   ) => {
+    const isAnyGroupEmpty =
+      headerItemsRef.current.length === 0 || stubItemsRef.current.length === 0;
     const preview = dropPreview?.group === group ? dropPreview : null;
     const previewIndex = preview?.index;
     const pointerDragSnapshot = pointerDragSnapshotRef.current;
@@ -785,6 +788,10 @@ export function ManualPivot({
       pointerDragSnapshot?.sourceGroup === group
         ? pointerDragSnapshot.sourceIndex
         : undefined;
+    const isActivePointerDragSource =
+      isPointerDragging && dragSourceGroupRef.current === group;
+    const isHoveringEmptyGroup =
+      isPointerDragging && items.length === 0 && preview?.group === group;
     const nonDraggedItemCount = items.reduce(
       (count, item) =>
         isPointerDragging && draggedItemId && item.id === draggedItemId
@@ -804,7 +811,18 @@ export function ManualPivot({
             values={items}
             onReorder={(nextItems) => handleGroupReorder(group, nextItems)}
             className={classes.list}
+            style={{ zIndex: isActivePointerDragSource ? 20 : 1 }}
           >
+            {items.length === 0 ? (
+              <li aria-hidden="true">
+                <EmtyList
+                  label={t('manual_pivot.empty_group', {
+                    defaultValue: 'Drop variable here',
+                  })}
+                  hideLabel={isHoveringEmptyGroup}
+                />
+              </li>
+            ) : null}
             {items.map((variable, index) =>
               (() => {
                 const isDraggedItem =
@@ -822,7 +840,9 @@ export function ManualPivot({
                         className={`${classes.dropPlaceholder} ${classes.sourcePlaceholder}`}
                       />
                     ) : null}
-                    {previewIndex === currentVisibleIndex && !isDraggedItem ? (
+                    {previewIndex === currentVisibleIndex &&
+                    !isDraggedItem &&
+                    !isAnyGroupEmpty ? (
                       <li aria-hidden="true" className={classes.dropTargetRow}>
                         <DropTarget />
                       </li>
@@ -892,7 +912,7 @@ export function ManualPivot({
                 className={`${classes.dropPlaceholder} ${classes.sourcePlaceholder}`}
               />
             ) : null}
-            {previewIndex === nonDraggedItemCount ? (
+            {previewIndex === nonDraggedItemCount && !isAnyGroupEmpty ? (
               <li aria-hidden="true" className={classes.dropTargetRow}>
                 <DropTarget />
               </li>
@@ -905,6 +925,7 @@ export function ManualPivot({
 
   return (
     <Modal
+      className={classes.manualPivotModal}
       isOpen={isOpen}
       onClose={() => onClose(headerItems, stubItems)}
       heading={t('presentation_page.side_menu.edit.customize.pivot.title')}
