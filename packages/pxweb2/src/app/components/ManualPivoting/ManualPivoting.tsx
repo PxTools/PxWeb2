@@ -785,9 +785,6 @@ export function ManualPivot({
       pointerDragSnapshot?.sourceGroup === group
         ? pointerDragSnapshot.sourceIndex
         : undefined;
-    const sourcePlaceholderLabel = pointerDragSnapshot
-      ? capitalizeLabel(pointerDragSnapshot.sourceLabel)
-      : undefined;
     const nonDraggedItemCount = items.reduce(
       (count, item) =>
         isPointerDragging && draggedItemId && item.id === draggedItemId
@@ -823,14 +820,7 @@ export function ManualPivot({
                       <li
                         aria-hidden="true"
                         className={`${classes.dropPlaceholder} ${classes.sourcePlaceholder}`}
-                        title={sourcePlaceholderLabel}
-                      >
-                        {sourcePlaceholderLabel ? (
-                          <span className={classes.dropPlaceholderLabel}>
-                            {sourcePlaceholderLabel}
-                          </span>
-                        ) : null}
-                      </li>
+                      />
                     ) : null}
                     {previewIndex === currentVisibleIndex && !isDraggedItem ? (
                       <li aria-hidden="true" className={classes.dropTargetRow}>
@@ -854,7 +844,7 @@ export function ManualPivot({
                         zIndex:
                           isDraggingRef.current &&
                           draggedItemIdRef.current === variable.id
-                            ? 2
+                            ? 10
                             : previewIndex !== undefined && index < previewIndex
                               ? 3
                               : 1,
@@ -874,7 +864,7 @@ export function ManualPivot({
                       dragElastic={0}
                       whileDrag={{
                         scale: 1.02,
-                        zIndex: 2,
+                        zIndex: 10,
                         borderRadius: 'var(--border-radius-medium, 8px)',
                         borderWidth: 1,
                         borderStyle: 'solid',
@@ -900,14 +890,7 @@ export function ManualPivot({
               <li
                 aria-hidden="true"
                 className={`${classes.dropPlaceholder} ${classes.sourcePlaceholder}`}
-                title={sourcePlaceholderLabel}
-              >
-                {sourcePlaceholderLabel ? (
-                  <span className={classes.dropPlaceholderLabel}>
-                    {sourcePlaceholderLabel}
-                  </span>
-                ) : null}
-              </li>
+              />
             ) : null}
             {previewIndex === nonDraggedItemCount ? (
               <li aria-hidden="true" className={classes.dropTargetRow}>

@@ -16,8 +16,8 @@
 .groupZone {
   position: relative;
   width: 100%;
-  border: 1px solid var(--px-color-border-subtle);
-  border-radius: var(--px-border-radius-medium);
+  // border: 1px solid var(--px-color-border-subtle);
+  // border-radius: var(--px-border-radius-medium);
   padding: 8px;
   min-height: 220px;
 }
@@ -38,16 +38,12 @@
   z-index: 2;
   width: 100%;
   height: var(--drop-preview-height, 40px);
-  border: 1px dashed var(--px-color-border-focus-outline);
-  border-radius: var(--px-border-radius-small);
+  border-radius: var(--border-radius-medium, 8px);
+  border: 1px dashed var(--color-border-moderate, #62919A);
   padding: 8px 10px;
   display: flex;
   align-items: center;
-  background: color-mix(
-    in srgb,
-    var(--px-color-background-subtle) 88%,
-    transparent
-  );
+  background: var(--color-surface-subtle, #F0F8F9);
   pointer-events: none;
 }
 
@@ -71,10 +67,10 @@
 .listItem {
   position: relative;
   z-index: 1;
-  border: 1px solid var(--px-color-border-subtle);
-  border-radius: var(--px-border-radius-small);
+   border: 1px solid var(--px-color-border-subtle);
   background: var(--px-color-surface-default);
-  padding: 8px 10px;
+  border-radius: var(--px-border-radius-medium);
+  padding: 12px 16px 12px 8px;
   cursor: grab;
   -webkit-user-select: none;
   user-select: none;
