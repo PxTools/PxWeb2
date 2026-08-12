@@ -45,7 +45,7 @@
     }
   }
   &.variant--tableview {
-    padding: fixed.$spacing-11 fixed.$spacing-11;
+    padding: fixed.$spacing-11 0;
     background-color: var(--px-color-surface-moderate);
 
     // xsmall - small

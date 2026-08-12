@@ -79,7 +79,6 @@
   @media (breakpoints.$large) or (breakpoints.$xlarge) or (breakpoints.$xxlarge) {
     min-height: calc(100vh - fixed.$spacing-20);
     min-height: calc(100dvh - fixed.$spacing-20);
-    padding-bottom: fixed.$spacing-8;
     gap: fixed.$spacing-8;
   }
 
@@ -94,7 +93,8 @@
 .footerContent {
   background-color: var(--px-color-surface-moderate);
   width: 100%;
-
+  //background-color: blue;
+  padding: 0px 40px;
   // Keep footer content clear of the fixed bottom navigation on small screens
   @media (breakpoints.$xsmall) or (breakpoints.$small) or (breakpoints.$medium) {
     padding-bottom: calc(fixed.$spacing-20 + env(safe-area-inset-bottom));
