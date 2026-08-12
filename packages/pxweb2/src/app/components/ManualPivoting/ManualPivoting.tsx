@@ -679,10 +679,7 @@ export function ManualPivot({
     const targetGroup = persistedDropTarget?.group ?? hoveredGroup;
     const targetIndex = persistedDropTarget?.index;
 
-    if (
-      targetGroup &&
-      typeof targetIndex === 'number'
-    ) {
+    if (targetGroup && typeof targetIndex === 'number') {
       moveDraggedItemToGroup(targetGroup, targetIndex);
     }
     resetDragState();
@@ -697,7 +694,9 @@ export function ManualPivot({
     const sourceItems =
       group === 'header' ? headerItemsRef.current : stubItemsRef.current;
     const sourceIndex = sourceItems.findIndex((item) => item.id === variableId);
-    const sourceLabel = sourceItems.find((item) => item.id === variableId)?.label;
+    const sourceLabel = sourceItems.find(
+      (item) => item.id === variableId,
+    )?.label;
     const sourceHeight = Math.max(
       40,
       Math.round(
@@ -780,7 +779,8 @@ export function ManualPivot({
     const previewIndex = preview?.index;
     const pointerDragSnapshot = pointerDragSnapshotRef.current;
     const draggedItemId = draggedItemIdRef.current;
-    const isPointerDragging = isDraggingRef.current && keyboardDraggedItemId === null;
+    const isPointerDragging =
+      isDraggingRef.current && keyboardDraggedItemId === null;
     const sourcePlaceholderIndex =
       pointerDragSnapshot?.sourceGroup === group
         ? pointerDragSnapshot.sourceIndex
@@ -808,7 +808,7 @@ export function ManualPivot({
             onReorder={(nextItems) => handleGroupReorder(group, nextItems)}
             className={classes.list}
           >
-            {items.map((variable, index) => (
+            {items.map((variable, index) =>
               (() => {
                 const isDraggedItem =
                   isPointerDragging && draggedItemId === variable.id;
@@ -818,84 +818,84 @@ export function ManualPivot({
                 }
 
                 return (
-              <Fragment key={variable.id}>
-                {sourcePlaceholderIndex === index ? (
-                  <li
-                    aria-hidden="true"
-                    className={`${classes.dropPlaceholder} ${classes.sourcePlaceholder}`}
-                    title={sourcePlaceholderLabel}
-                  >
-                    {sourcePlaceholderLabel ? (
-                      <span className={classes.dropPlaceholderLabel}>
-                        {sourcePlaceholderLabel}
-                      </span>
+                  <Fragment key={variable.id}>
+                    {sourcePlaceholderIndex === index ? (
+                      <li
+                        aria-hidden="true"
+                        className={`${classes.dropPlaceholder} ${classes.sourcePlaceholder}`}
+                        title={sourcePlaceholderLabel}
+                      >
+                        {sourcePlaceholderLabel ? (
+                          <span className={classes.dropPlaceholderLabel}>
+                            {sourcePlaceholderLabel}
+                          </span>
+                        ) : null}
+                      </li>
                     ) : null}
-                  </li>
-                ) : null}
-                {previewIndex === currentVisibleIndex && !isDraggedItem ? (
-                  <li aria-hidden="true" className={classes.dropTargetRow}>
-                    <DropTarget />
-                  </li>
-                ) : null}
-                <Reorder.Item
-                  as="li"
-                  data-variable-id={variable.id}
-                  value={variable}
-                  className={classes.listItem}
-                  style={{
-                    position:
-                      isDraggingRef.current &&
-                      keyboardDraggedItemId === null &&
-                      draggedItemIdRef.current === variable.id
-                        ? 'absolute'
-                        : 'relative',
-                    left: 0,
-                    right: 0,
-                    zIndex:
-                      isDraggingRef.current &&
-                      draggedItemIdRef.current === variable.id
-                        ? 2
-                        : previewIndex !== undefined && index < previewIndex
-                          ? 3
-                          : 1,
-                  }}
-                  ref={(element: HTMLLIElement | null) => {
-                    if (element) {
-                      itemRefs.current.set(variable.id, element);
-                    } else {
-                      itemRefs.current.delete(variable.id);
-                    }
-                  }}
-                  tabIndex={0}
-                  aria-grabbed={keyboardDraggedItemId === variable.id}
-                  aria-describedby={keyboardInstructionsId}
-                  drag
-                  dragMomentum={false}
-                  dragElastic={0}
-                  whileDrag={{
-                    scale: 1.02,
-                    zIndex: 2,
-                    borderRadius: 'var(--border-radius-medium, 8px)',
-                    borderWidth: 1,
-                    borderStyle: 'solid',
-                    borderColor: 'var(--color-border-subtle, #C3DCDC)',
-                    opacity: 0.6,
-                    backgroundColor: 'var(--color-surface-default, #FFF)',
-                    boxShadow: '0 8px 20px rgba(0, 0, 0, 0.2)',
-                  }}
-                  onDragStart={() => handleDragStart(group, variable.id)}
-                  onDrag={handleItemDrag}
-                  onDragEnd={handleItemDragEnd}
-                  onKeyDown={(event) =>
-                    handleItemKeyDown(event, group, variable.id)
-                  }
-                >
-                  <DataItem label={capitalizeLabel(variable.label)} />
-                </Reorder.Item>
-              </Fragment>
+                    {previewIndex === currentVisibleIndex && !isDraggedItem ? (
+                      <li aria-hidden="true" className={classes.dropTargetRow}>
+                        <DropTarget />
+                      </li>
+                    ) : null}
+                    <Reorder.Item
+                      as="li"
+                      data-variable-id={variable.id}
+                      value={variable}
+                      className={classes.listItem}
+                      style={{
+                        position:
+                          isDraggingRef.current &&
+                          keyboardDraggedItemId === null &&
+                          draggedItemIdRef.current === variable.id
+                            ? 'absolute'
+                            : 'relative',
+                        left: 0,
+                        right: 0,
+                        zIndex:
+                          isDraggingRef.current &&
+                          draggedItemIdRef.current === variable.id
+                            ? 2
+                            : previewIndex !== undefined && index < previewIndex
+                              ? 3
+                              : 1,
+                      }}
+                      ref={(element: HTMLLIElement | null) => {
+                        if (element) {
+                          itemRefs.current.set(variable.id, element);
+                        } else {
+                          itemRefs.current.delete(variable.id);
+                        }
+                      }}
+                      tabIndex={0}
+                      aria-grabbed={keyboardDraggedItemId === variable.id}
+                      aria-describedby={keyboardInstructionsId}
+                      drag
+                      dragMomentum={false}
+                      dragElastic={0}
+                      whileDrag={{
+                        scale: 1.02,
+                        zIndex: 2,
+                        borderRadius: 'var(--border-radius-medium, 8px)',
+                        borderWidth: 1,
+                        borderStyle: 'solid',
+                        borderColor: 'var(--color-border-subtle, #C3DCDC)',
+                        opacity: 0.6,
+                        backgroundColor: 'var(--color-surface-default, #FFF)',
+                        boxShadow: '0 8px 20px rgba(0, 0, 0, 0.2)',
+                      }}
+                      onDragStart={() => handleDragStart(group, variable.id)}
+                      onDrag={handleItemDrag}
+                      onDragEnd={handleItemDragEnd}
+                      onKeyDown={(event) =>
+                        handleItemKeyDown(event, group, variable.id)
+                      }
+                    >
+                      <DataItem label={capitalizeLabel(variable.label)} />
+                    </Reorder.Item>
+                  </Fragment>
                 );
-              })()
-            ))}
+              })(),
+            )}
             {sourcePlaceholderIndex === items.length ? (
               <li
                 aria-hidden="true"
@@ -943,16 +943,8 @@ export function ManualPivot({
         {liveAnnouncement}
       </div>
       <div className={classes.wrapper}>
-        {renderGroup(
-          'stub',
-          stubItems,
-          stubZoneRef,
-        )}
-        {renderGroup(
-          'header',
-          headerItems,
-          headerZoneRef,
-        )}
+        {renderGroup('stub', stubItems, stubZoneRef)}
+        {renderGroup('header', headerItems, headerZoneRef)}
       </div>
     </Modal>
   );
