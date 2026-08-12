@@ -5,6 +5,6 @@
   "compatibility_flags": ["nodejs_compat"],
   "pages_build_output_dir": "./packages/pxweb2/dist",
   "vars": {
-    "NODE_VERSION": "24.13.0"
+    "NODE_VERSION": "24.17.0"
   }
 }
