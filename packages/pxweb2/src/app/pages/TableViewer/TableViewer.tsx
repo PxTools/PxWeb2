@@ -256,8 +256,13 @@ export function TableViewer() {
                 isExpanded={isExpanded}
                 setIsExpanded={setIsExpanded}
               ></Presentation>
-              <Footer variant="tableview" enableWindowScroll />
             </div>
+            <div className={cl(styles.footerContent)}>
+              <div className={cl(styles.container)}>
+                <Footer variant="tableview" enableWindowScroll />
+              </div>
+            </div>
+            {/* </div> */}
           </div>
         </div>
       </div>
