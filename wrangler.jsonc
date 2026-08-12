@@ -2,6 +2,6 @@
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "pxweb2",
   "compatibility_date": "2026-08-12",
-  "pages_build_output_dir": "./packages/pxweb2/dist",
-  "keep_vars": true
+  "compatibility_flags": ["nodejs_compat"],
+  "pages_build_output_dir": "./packages/pxweb2/dist"
 }
