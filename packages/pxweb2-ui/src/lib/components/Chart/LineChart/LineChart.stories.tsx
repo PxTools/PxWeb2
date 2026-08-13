@@ -1,7 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import LineChart from './LineChart';
-import type { LineChartLegendOverflowMode } from './LineChart';
+import type {
+  LineChartLegendOverflowMode,
+  LineChartLegendPaginationOrientation,
+} from './LineChart';
 import { setPxTableData } from '../../Table/Utils/cubeHelper';
 import type { PxTable } from '../../../shared-types/pxTable';
 import type { DataCell, PxData } from '../../../shared-types/pxTableData';
@@ -20,6 +23,32 @@ const legendOverflowModeLabels: Record<LineChartLegendOverflowMode, string> = {
   pagination: 'Pagination',
   showMore: 'Show more',
 };
+
+const legendPaginationOrientations: LineChartLegendPaginationOrientation[] = [
+  'horizontal',
+  'vertical',
+];
+
+const legendOverflowComparisonCases: Array<{
+  readonly title: string;
+  readonly legendOverflowMode: LineChartLegendOverflowMode;
+  readonly legendPaginationOrientation?: LineChartLegendPaginationOrientation;
+}> = [
+  {
+    title: 'Horizontal pagination',
+    legendOverflowMode: 'pagination',
+    legendPaginationOrientation: 'horizontal',
+  },
+  {
+    title: 'Vertical pagination',
+    legendOverflowMode: 'pagination',
+    legendPaginationOrientation: 'vertical',
+  },
+  {
+    title: legendOverflowModeLabels.showMore,
+    legendOverflowMode: 'showMore',
+  },
+];
 
 function createVariable(
   id: string,
@@ -207,6 +236,10 @@ const meta: Meta<typeof LineChart> = {
       control: 'radio',
       options: legendOverflowModes,
     },
+    legendPaginationOrientation: {
+      control: 'radio',
+      options: legendPaginationOrientations,
+    },
     visibleLegendItemCount: {
       control: { type: 'number', min: 1, max: 18, step: 1 },
     },
@@ -276,10 +309,10 @@ export const LegendOverflowComparison: Story = {
   },
   render: (args) => (
     <div className={styles.legendOverflowComparison}>
-      {legendOverflowModes.map((mode) => (
-        <section key={mode}>
-          <h3>{legendOverflowModeLabels[mode]}</h3>
-          <LineChart {...args} legendOverflowMode={mode} />
+      {legendOverflowComparisonCases.map((comparisonCase) => (
+        <section key={comparisonCase.title}>
+          <h3>{comparisonCase.title}</h3>
+          <LineChart {...args} {...comparisonCase} />
         </section>
       ))}
     </div>

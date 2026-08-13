@@ -250,6 +250,28 @@ describe('LineChart', () => {
     expect(getLastChartOption().dataZoom).toBeUndefined();
   });
 
+  it('supports a horizontal ECharts paginated legend', () => {
+    vi.mocked(mapPxTableToChartDataset).mockReturnValue(overflowingDataset);
+
+    render(
+      <LineChart
+        pxtable={{} as PxTable}
+        legendOverflowMode="pagination"
+        legendPaginationOrientation="horizontal"
+        visibleLegendItemCount={2}
+      />,
+    );
+
+    expect(getLastChartOption().legend).toEqual({
+      height: 48,
+      type: 'scroll',
+      orient: 'horizontal',
+      data: overflowingDataset.series.map((series) => series.name),
+      pageButtonPosition: 'end',
+      pageFormatter: '{current} / {total}',
+    });
+  });
+
   it('reveals all legend items when show more mode is expanded', () => {
     vi.mocked(mapPxTableToChartDataset).mockReturnValue(overflowingDataset);
 

@@ -17,10 +17,12 @@ interface LineChartProps {
   readonly pxtable: PxTable;
   readonly colors?: string[];
   readonly legendOverflowMode?: LineChartLegendOverflowMode;
+  readonly legendPaginationOrientation?: LineChartLegendPaginationOrientation;
   readonly visibleLegendItemCount?: number;
 }
 
 export type LineChartLegendOverflowMode = 'pagination' | 'showMore';
+export type LineChartLegendPaginationOrientation = 'horizontal' | 'vertical';
 
 const DEFAULT_VISIBLE_LEGEND_ITEM_COUNT = 8;
 const LEGEND_ITEM_HEIGHT = 24;
@@ -120,6 +122,7 @@ function getLegendHeight(visibleLegendItems: number): number {
 function getLegendOption(
   legendItemNames: string[],
   legendOverflowMode: LineChartLegendOverflowMode | undefined,
+  legendPaginationOrientation: LineChartLegendPaginationOrientation | undefined,
   visibleLegendItemCount: number,
   visibleLegendItems: number,
   showAllLegendItems: boolean,
@@ -138,7 +141,7 @@ function getLegendOption(
     return {
       ...baseLegend,
       type: 'scroll',
-      orient: 'vertical',
+      orient: legendPaginationOrientation ?? 'vertical',
       data: legendData,
       pageButtonPosition: 'end',
       pageFormatter: '{current} / {total}',
@@ -159,6 +162,7 @@ export function LineChart({
   pxtable,
   colors,
   legendOverflowMode,
+  legendPaginationOrientation,
   visibleLegendItemCount,
 }: LineChartProps) {
   const dataset = useMemo(() => mapPxTableToChartDataset(pxtable), [pxtable]);
@@ -185,6 +189,7 @@ export function LineChart({
       getLegendOption(
         legendItemNames,
         legendOverflowMode,
+        legendPaginationOrientation,
         normalizedVisibleLegendItemCount,
         visibleLegendItems,
         showAllLegendItems,
@@ -192,6 +197,7 @@ export function LineChart({
     [
       legendItemNames,
       legendOverflowMode,
+      legendPaginationOrientation,
       normalizedVisibleLegendItemCount,
       showAllLegendItems,
       visibleLegendItems,
@@ -219,8 +225,7 @@ export function LineChart({
         trigger: 'axis',
         formatter: (params: unknown) => {
           const axisParams = (Array.isArray(params) ? params : [params]) as
-            | TooltipParam[]
-            | undefined;
+            TooltipParam[] | undefined;
 
           if (!axisParams || axisParams.length === 0) {
             return '';
