@@ -217,7 +217,7 @@ export function getNoteInfo(
   );
 
   const config = getConfig();
-  const specialCharacters = config.specialCharacters;
+  const specialCharacters = config.specialCharacters ?? [];
   const notes = getNotes(
     metadataCopyForSelection,
     pxTableMetadata,
