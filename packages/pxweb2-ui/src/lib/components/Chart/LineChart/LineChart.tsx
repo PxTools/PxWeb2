@@ -138,8 +138,10 @@ function getLegendOption(
     return {
       ...baseLegend,
       type: 'scroll',
-      orient: 'horizontal',
+      orient: 'vertical',
       data: legendData,
+      pageButtonPosition: 'end',
+      pageFormatter: '{current} / {total}',
     };
   }
 
