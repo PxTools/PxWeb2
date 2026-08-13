@@ -273,7 +273,6 @@ export function TableViewer() {
             </div>
             <div className={cl(styles.footerContent)}>
               <div className={cl(styles.container)}>
-                {/* <Footer variant="tableview" enableWindowScroll /> */}
                 <Footer enableWindowScroll />
               </div>
             </div>

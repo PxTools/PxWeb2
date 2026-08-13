@@ -93,7 +93,6 @@
 .footerContent {
   background-color: var(--px-color-surface-moderate);
   width: 100%;
-  //background-color: blue;
   padding: 0px 40px;
   @media (breakpoints.$xsmall) {
     padding: 0px 16px;
@@ -110,27 +109,6 @@
 .container {
   margin-left: auto;
   margin-right: auto;
-
-  // @media #{breakpoints.$xsmall} {
-  //   margin-left: 1rem;
-  //   margin-right: 1rem;
-  // }
-
-  // @media #{breakpoints.$small} {
-  //   max-width: 508px;
-  // }
-
-  // @media #{breakpoints.$medium} {
-  //   max-width: 688px;
-  // }
-
-  // @media #{breakpoints.$large} {
-  //   max-width: 928px;
-  // }
-
-  // @media #{breakpoints.$xlarge} {
-  //   max-width: 1108px;
-  // }
 
   @media #{breakpoints.$xxlarge} {
     max-width: 1288px;
