@@ -95,7 +95,10 @@
   width: 100%;
   //background-color: blue;
   padding: 0px 40px;
-  @media (breakpoints.$xsmall) or (breakpoints.$small) {
+  @media (breakpoints.$xsmall) {
+    padding: 0px 16px;
+  }
+  @media (breakpoints.$small) {
     padding: 0px 32px;
   }
   // Keep footer content clear of the fixed bottom navigation on small screens
