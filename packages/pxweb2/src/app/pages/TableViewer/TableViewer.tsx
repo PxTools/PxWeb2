@@ -276,7 +276,6 @@ export function TableViewer() {
                 <Footer enableWindowScroll />
               </div>
             </div>
-            {/* </div> */}
           </div>
         </div>
       </div>
