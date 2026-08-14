@@ -260,7 +260,7 @@ export function TableViewer() {
               <WipStatusMessage />
             </div>
             <div
-              className={cl(styles.contentAndFooterContainer, {
+              className={cl(styles.contentContainer, {
                 [styles.expanded]: isExpanded,
               })}
             >
