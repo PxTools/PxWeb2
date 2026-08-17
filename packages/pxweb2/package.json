@@ -20,7 +20,7 @@
     "@emotion/is-prop-valid": "^1.4.0",
     "@pxweb2/pxweb2-ui": "^0.0.1",
     "lodash": "^4.18.1",
-    "motion": "^12.43.0",
+    "motion": "^13.0.0",
     "react-router": "^8.3.0"
   },
   "devDependencies": {
