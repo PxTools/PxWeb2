@@ -207,8 +207,12 @@
             "screen_reader_announcement": "جدول مدور بعد {{first_variables}} و {{last_variable}}"
           },
           "rearrange": {
+            "description": "نص الوصف...",
             "title": "إعادة ترتيب الجدول",
-            "description": "نص الوصف..."
+            "stub_title": "الصفوف",
+            "header_title": "الأعمدة",
+            "cancel_button": "يلغي",
+            "confirm_button": "يحفظ"
           },
           "change_order": {
             "title": "تغيير الترتيب",

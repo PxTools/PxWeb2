@@ -212,6 +212,10 @@ export default interface Resources {
             rearrange: {
               description: 'Description text...';
               title: 'Rearrange table';
+              stub_title: 'Stub';
+              header_title: 'Header';
+              cancel_button: 'Cancel';
+              confirm_button: 'Confirm';
             };
             title: 'Customise';
           };

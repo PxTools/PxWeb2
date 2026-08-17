@@ -2,7 +2,7 @@ import { Fragment, useEffect, useId, useRef, useState } from 'react';
 import { Reorder, type PanInfo } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
-import { Modal, Variable, Label } from '@pxweb2/pxweb2-ui';
+import { Modal, Variable, Label, InformationCard, BodyLong } from '@pxweb2/pxweb2-ui';
 import classes from './ManualPivoting.module.scss';
 import DataItem from './DataItem';
 import DropTarget from './DropTarget';
@@ -389,8 +389,8 @@ export function ManualPivot({
 
   const getGroupLabelText = (group: VariableGroup): string =>
     group === 'stub'
-      ? t('presentation_page.side_menu.edit.customize.change_order.title')
-      : t('presentation_page.side_menu.edit.customize.rearrange.title');
+      ? t('presentation_page.side_menu.edit.customize.rearrange.stub_title')
+      : t('presentation_page.side_menu.edit.customize.rearrange.header_title');
 
   const getGroupLabel = (group: VariableGroup): string =>
     getGroupLabelText(group);
@@ -930,14 +930,12 @@ export function ManualPivot({
       onClose={() => onClose(headerItems, stubItems)}
       heading={t('presentation_page.side_menu.edit.customize.pivot.title')}
       label={t('presentation_page.side_menu.edit.title')}
-      cancelLabel="Avbryt"
-      // cancelLabel={t(
-      //   'presentation_page.side_menu.edit.customize.rearrange.cancel_button',
-      // )}
-      confirmLabel="Bekreft"
-      // confirmLabel={t(
-      //   'presentation_page.side_menu.edit.customize.rearrange.confirm_button',
-      // )}
+      cancelLabel={t(
+        'presentation_page.side_menu.edit.customize.rearrange.cancel_button',
+      )}
+      confirmLabel={t(
+        'presentation_page.side_menu.edit.customize.rearrange.confirm_button',
+      )}
     >
       <p id={keyboardInstructionsId} className={classes.visuallyHidden}>
         Press Space or Enter to pick up an item. Use arrow keys to move it, then
@@ -946,6 +944,9 @@ export function ManualPivot({
       <div className={classes.visuallyHidden} aria-live="polite">
         {liveAnnouncement}
       </div>
+      <InformationCard icon="InformationCircle">
+                  <BodyLong size="medium">Some text here</BodyLong>
+                </InformationCard>
       <div className={classes.wrapper}>
         {renderGroup('stub', stubItems, stubZoneRef)}
         {renderGroup('header', headerItems, headerZoneRef)}

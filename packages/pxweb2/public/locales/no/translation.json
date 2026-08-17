@@ -205,8 +205,12 @@
             "screen_reader_announcement": "Tabell rotert etter {{first_variables}} og {{last_variable}}"
           },
           "rearrange": {
+            "description": "Beskrivelsestekst...",
             "title": "Omorganiser tabell",
-            "description": "Beskrivelsestekst..."
+            "stub_title": "Rader",
+            "header_title": "Kolonner",
+            "cancel_button": "Avbryt",
+            "confirm_button": "Bekreft"
           },
           "change_order": {
             "title": "Endre rekkefølge",
