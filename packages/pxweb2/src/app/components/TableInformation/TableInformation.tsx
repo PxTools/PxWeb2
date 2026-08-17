@@ -51,7 +51,8 @@ export function TableInformation({
   const tabsVariant = isMobile ? 'scrollable' : 'fixed';
 
   const definitionsMandatoryLinkExists =
-    definitionsOrUndefined?.statisticsDefinitions || definitionsOrUndefined?.statisticsHomepage !== undefined;
+    definitionsOrUndefined?.statisticsDefinitions ||
+    definitionsOrUndefined?.statisticsHomepage !== undefined;
 
   return (
     <SheetComponent
