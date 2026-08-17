@@ -67,8 +67,7 @@ export function LineChart({ pxtable, colors }: LineChartProps) {
         trigger: 'axis',
         formatter: (params: unknown) => {
           const axisParams = (Array.isArray(params) ? params : [params]) as
-            | TooltipParam[]
-            | undefined;
+            TooltipParam[] | undefined;
 
           if (!axisParams || axisParams.length === 0) {
             return '';
