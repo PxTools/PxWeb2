@@ -2,7 +2,13 @@ import { Fragment, useEffect, useId, useRef, useState } from 'react';
 import { Reorder, type PanInfo } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
-import { Modal, Variable, Label, InformationCard, BodyLong } from '@pxweb2/pxweb2-ui';
+import {
+  Modal,
+  Variable,
+  Label,
+  InformationCard,
+  BodyLong,
+} from '@pxweb2/pxweb2-ui';
 import classes from './ManualPivoting.module.scss';
 import DataItem from './DataItem';
 import DropTarget from './DropTarget';
@@ -945,8 +951,8 @@ export function ManualPivot({
         {liveAnnouncement}
       </div>
       <InformationCard icon="InformationCircle">
-                  <BodyLong size="medium">Some text here</BodyLong>
-                </InformationCard>
+        <BodyLong size="medium">Some text here</BodyLong>
+      </InformationCard>
       <div className={classes.wrapper}>
         {renderGroup('stub', stubItems, stubZoneRef)}
         {renderGroup('header', headerItems, headerZoneRef)}
