@@ -54,7 +54,11 @@
 
 .fadeTable table {
   opacity: 0.6;
-  transition: 'opacity 0.3s ease-in-out';
+  pointer-events: none;
+}
+
+.fadeChart {
+  opacity: 0.6;
   pointer-events: none;
 }
 
