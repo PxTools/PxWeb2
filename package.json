@@ -1,6 +1,6 @@
 {
   "name": "@pxweb2/source",
-  "version": "0.0.0",
+  "version": "2.9.2",
   "license": "MIT",
   "type": "module",
   "scripts": {
@@ -50,7 +50,7 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-storybook": "10.5.5",
     "eslint-plugin-unused-imports": "^4.4.1",
-    "jsdom": "^29.1.1",
+    "jsdom": "^30.0.1",
     "style-dictionary": "^5.5.0",
     "typescript": "^6.0.3",
     "unplugin-dts": "^1.0.3",

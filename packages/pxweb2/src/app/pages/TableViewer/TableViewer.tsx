@@ -60,6 +60,20 @@ export function TableViewer() {
   }, []);
 
   useEffect(() => {
+    // Reset scroll position when entering a table page from another route.
+    const scrollContainer = document.getElementById('scroll-root');
+    if (scrollContainer) {
+      if (typeof scrollContainer.scrollTo === 'function') {
+        scrollContainer.scrollTo({ top: 0, behavior: 'instant' });
+      }
+      scrollContainer.scrollTop = 0;
+    }
+
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }, [tableId]);
+
+  useEffect(() => {
     if (!navigationBarRef.current || !hideMenuRef.current) {
       return;
     }
@@ -246,7 +260,7 @@ export function TableViewer() {
               <WipStatusMessage />
             </div>
             <div
-              className={cl(styles.contentAndFooterContainer, {
+              className={cl(styles.contentContainer, {
                 [styles.expanded]: isExpanded,
               })}
             >
@@ -256,7 +270,11 @@ export function TableViewer() {
                 isExpanded={isExpanded}
                 setIsExpanded={setIsExpanded}
               ></Presentation>
-              <Footer variant="tableview" enableWindowScroll />
+            </div>
+            <div className={cl(styles.footerContent)}>
+              <div className={cl(styles.container)}>
+                <Footer enableWindowScroll />
+              </div>
             </div>
           </div>
         </div>
