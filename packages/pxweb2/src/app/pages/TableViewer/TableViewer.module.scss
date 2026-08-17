@@ -53,14 +53,15 @@
   height: 100%;
 }
 
-.contentAndFooterContainer {
+.contentContainer {
   // Not from Figma
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   width: 100%;
   max-width: 1368px;
-  height: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
 
   @media (breakpoints.$xsmall) {
     padding-top: fixed.$spacing-4;
@@ -76,7 +77,8 @@
 
   // large, xlarge and xxlarge
   @media (breakpoints.$large) or (breakpoints.$xlarge) or (breakpoints.$xxlarge) {
-    padding-bottom: fixed.$spacing-8;
+    min-height: calc(100vh - fixed.$spacing-20);
+    min-height: calc(100dvh - fixed.$spacing-20);
     gap: fixed.$spacing-8;
   }
 
@@ -86,4 +88,29 @@
 }
 .globalAlertWrapper {
   width: 100%;
+}
+
+.footerContent {
+  background-color: var(--px-color-surface-moderate);
+  width: 100%;
+  padding: 0px 40px;
+  @media (breakpoints.$xsmall) {
+    padding: 0px 16px;
+  }
+  @media (breakpoints.$small) {
+    padding: 0px 32px;
+  }
+  // Keep footer content clear of the fixed bottom navigation on small screens
+  @media (breakpoints.$xsmall) or (breakpoints.$small) or (breakpoints.$medium) {
+    padding-bottom: calc(fixed.$spacing-20 + env(safe-area-inset-bottom));
+  }
+}
+
+.container {
+  margin-left: auto;
+  margin-right: auto;
+
+  @media #{breakpoints.$xxlarge} {
+    max-width: 1288px;
+  }
 }
