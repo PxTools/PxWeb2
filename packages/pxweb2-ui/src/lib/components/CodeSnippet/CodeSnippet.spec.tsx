@@ -190,7 +190,7 @@ describe('CodeSnippet', () => {
     );
 
     const codeSnippetDiv = container.firstChild as HTMLElement;
-    expect(codeSnippetDiv).toHaveStyle({ maxHeight: '50vh' });
+    expect(codeSnippetDiv.style.maxHeight).toBe('50vh');
 
     rerender(
       <CodeSnippet
@@ -202,7 +202,7 @@ describe('CodeSnippet', () => {
       </CodeSnippet>,
     );
 
-    expect(codeSnippetDiv).toHaveStyle({ maxHeight: '20rem' });
+    expect(codeSnippetDiv.style.maxHeight).toBe('20rem');
   });
 
   it('should pass wrapCode state to header and body', () => {

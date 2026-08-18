@@ -77,6 +77,18 @@ describe('SearchableSelect', () => {
     expect(mockOnSelect).toHaveBeenCalledWith(undefined);
   });
 
+  it('should clear input when tabbed to the clear button and press enter', async () => {
+    const user = userEvent.setup();
+    const { getByRole } = render(
+      <SearchSelect options={mockOptions} onSelect={mockOnSelect} />,
+    );
+    const input = getByRole('combobox');
+    await user.type(input, 'invalid');
+    await user.tab(); // tab to clearbutton
+    await user.keyboard('[Enter]'); // enter on clear button
+    expect((input as HTMLInputElement).value).toBe('');
+  });
+
   it('should clear input on blur when value has no match', async () => {
     const user = userEvent.setup();
     const { getByRole } = render(
@@ -84,7 +96,8 @@ describe('SearchableSelect', () => {
     );
     const input = getByRole('combobox');
     await user.type(input, 'invalid');
-    await user.tab(); // blur input
+    await user.tab(); // tab to clearbutton
+    await user.tab(); // tabb out of component blur
     expect((input as HTMLInputElement).value).toBe('');
   });
 

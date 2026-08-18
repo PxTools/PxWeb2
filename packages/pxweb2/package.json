@@ -17,19 +17,18 @@
     "prettier": "prettier --config ../../.prettierrc --check ./src/** --write --ignore-path ../../.prettierignore"
   },
   "dependencies": {
-    "@emotion/is-prop-valid": "^1.4.0",
     "@pxweb2/pxweb2-ui": "^0.0.1",
     "lodash": "^4.18.1",
-    "motion": "^12.40.0",
-    "react-router": "^8.0.1"
+    "motion": "^13.0.0",
+    "react-router": "^8.3.0"
   },
   "devDependencies": {
     "@testing-library/react": "^16.3.2",
     "ajv": "^8.18.0",
-    "concurrently": "^10.0.3",
-    "html-validate": "^11.5.3",
+    "concurrently": "^10.0.4",
+    "html-validate": "^11.6.2",
     "husky": "^9.1.7",
-    "playwright": "^1.61.0",
+    "playwright": "^1.62.1",
     "vite-plugin-babel": "^1.7.3",
     "vitest": "^4.0.18"
   }

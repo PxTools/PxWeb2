@@ -1,6 +1,6 @@
 import cl from 'clsx';
 import { useTranslation } from 'react-i18next';
-import { ReactNode, useContext, useState, useMemo } from 'react';
+import { ReactNode, useContext, useEffect, useState, useMemo } from 'react';
 import { upperFirst, debounce } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -266,6 +266,20 @@ const VariablesFilter: React.FC<{ onFilterChange?: () => void }> = ({
   const { t } = useTranslation();
   const [uniqueId] = useState(() => uuidv4());
   const searchId = 'variable-search-' + uniqueId;
+  const debouncedVariableSearch = useMemo(
+    () =>
+      debounce((value: string) => {
+        setVariableSearch(value);
+      }, 500),
+    [],
+  );
+
+  // Cancel the debounced function when the component unmounts to avoid memory leaks
+  useEffect(() => {
+    return () => {
+      debouncedVariableSearch.cancel();
+    };
+  }, [debouncedVariableSearch]);
 
   // Compute the filtered list of variables only when either the available variables
   // or the search query changes. The search query is normalized (trimmed + lowercased)
@@ -283,7 +297,7 @@ const VariablesFilter: React.FC<{ onFilterChange?: () => void }> = ({
           id={searchId}
           searchPlaceHolder={t('start_page.filter.variabel_search')}
           variant="default"
-          onChange={debounce((value) => setVariableSearch(value), 500)}
+          onChange={debouncedVariableSearch}
         />
       </div>
       <label
