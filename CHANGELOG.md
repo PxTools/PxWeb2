@@ -1,5 +1,38 @@
 # Changelog
 
+## [2.10.0](https://github.com/PxTools/PxWeb2/compare/v2.9.2...v2.10.0) (2026-08-18)
+
+
+### :sparkles: Features
+
+* add chart filter feedback feature with fade effect ([#1359](https://github.com/PxTools/PxWeb2/issues/1359)) ([f5acd23](https://github.com/PxTools/PxWeb2/commit/f5acd23dfea19503206b52d808483767dff44402))
+* enhance WIP status message with markdown support and update welcome message ([#1357](https://github.com/PxTools/PxWeb2/issues/1357)) ([53f54ed](https://github.com/PxTools/PxWeb2/commit/53f54ed6ceffc0c7ac048eba2a3ba09c2a455833))
+* show PxWeb version ([2584818](https://github.com/PxTools/PxWeb2/commit/25848189b38f5c6a6588aff199e79cd91f8463ff))
+
+
+### :bug: Bug Fixes
+
+* definitionstab show only statistics homepage if wanted ([#1442](https://github.com/PxTools/PxWeb2/issues/1442)) ([e201188](https://github.com/PxTools/PxWeb2/commit/e201188115f653a7e3c33ae97e0a8544518d91c2))
+
+
+### :art: Styles
+
+* Enhance footer layout for table page ([#1431](https://github.com/PxTools/PxWeb2/issues/1431)) ([133ee55](https://github.com/PxTools/PxWeb2/commit/133ee55d050663ed6002d2eb9fa3a23daf220ac3))
+
+
+### :building_construction: Build System and dependencies
+
+* **deps-dev:** bump jsdom from 29.1.1 to 30.0.1 ([#1435](https://github.com/PxTools/PxWeb2/issues/1435)) ([749cffa](https://github.com/PxTools/PxWeb2/commit/749cffa2a2517e97a89608a3557667405906f577))
+* **deps:** bump actions/setup-node from 6.4.0 to 7.0.0 ([#1445](https://github.com/PxTools/PxWeb2/issues/1445)) ([f22c74a](https://github.com/PxTools/PxWeb2/commit/f22c74a93e790ce2284fd3360f7d85a6eb60aa11))
+* **deps:** bump docker/login-action from 4.2.0 to 4.6.0 ([#1443](https://github.com/PxTools/PxWeb2/issues/1443)) ([b8713ea](https://github.com/PxTools/PxWeb2/commit/b8713ea07bcf5a55c442c488742b5a3901cfd2bb))
+* **deps:** bump github/codeql-action/upload-sarif ([#1452](https://github.com/PxTools/PxWeb2/issues/1452)) ([46c8315](https://github.com/PxTools/PxWeb2/commit/46c83155431e73209ca596962ddd876205d3d4b1))
+* **deps:** bump motion from 12.43.0 to 13.0.0 ([#1449](https://github.com/PxTools/PxWeb2/issues/1449)) ([39660a6](https://github.com/PxTools/PxWeb2/commit/39660a6e2044888b10568ef95612689bccb4e65e))
+
+
+### :broom: Chores
+
+* Upgrade all non-major dependencies ([#1441](https://github.com/PxTools/PxWeb2/issues/1441)) ([fd39d5a](https://github.com/PxTools/PxWeb2/commit/fd39d5aebd3dc4840dbab225842407fb323cd348))
+
 ## [2.9.2](https://github.com/PxTools/PxWeb2/compare/v2.9.1...v2.9.2) (2026-08-13)
 
 
