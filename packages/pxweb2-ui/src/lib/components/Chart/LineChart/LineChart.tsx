@@ -105,4 +105,3 @@ export function LineChart({ pxtable, colors }: LineChartProps) {
     </div>
   );
 }
-export default LineChart;

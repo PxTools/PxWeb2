@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import { describe, expect, it, beforeEach, vi } from 'vitest';
 
-import LineChart from './LineChart';
+import { LineChart } from './LineChart';
 import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
 import { useEChartOption } from '../Utils/useEChartOption';
 import {

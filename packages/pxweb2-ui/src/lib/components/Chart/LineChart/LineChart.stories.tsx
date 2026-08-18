@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import LineChart from './LineChart';
+import { LineChart } from './LineChart';
 import { setPxTableData } from '../../Table/Utils/cubeHelper';
 import type { PxTable } from '../../../shared-types/pxTable';
 import type { DataCell, PxData } from '../../../shared-types/pxTableData';
