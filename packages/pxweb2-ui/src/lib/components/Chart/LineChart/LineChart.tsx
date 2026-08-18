@@ -1,5 +1,6 @@
 import {
   type Ref,
+  useCallback,
   useEffect,
   useImperativeHandle,
   useMemo,
@@ -277,31 +278,60 @@ export function LineChart({
   const hasExpandedLegend =
     visibleLegendItems > DEFAULT_VISIBLE_LEGEND_ITEM_COUNT;
 
+  // Exports must show every legend item, ignoring any "show more"/pagination truncation used on screen
+  const getExportOption = useCallback((): {
+    option: echarts.EChartsOption;
+    extraLegendHeight: number;
+  } => {
+    const fullLegendOption = getLegendOption(
+      legendItemNames,
+      undefined,
+      legendPaginationOrientation,
+      legendItemNames.length,
+      legendItemNames.length,
+      true,
+    );
+
+    return {
+      option: { ...option, legend: fullLegendOption, animation: false },
+      extraLegendHeight: Math.max(
+        0,
+        getLegendHeight(legendItemNames.length) -
+          getLegendHeight(visibleLegendItems),
+      ),
+    };
+  }, [legendItemNames, legendPaginationOrientation, option, visibleLegendItems]);
+
+  const renderExportDataURL = useCallback(
+    (renderer: 'canvas' | 'svg', type: 'png' | 'svg') => {
+      const liveChart = chartRef.current;
+      if (!liveChart) {
+        return undefined;
+      }
+
+      const { option: exportOption, extraLegendHeight } = getExportOption();
+      const exportChart = echarts.init(document.createElement('div'), null, {
+        renderer,
+        width: liveChart.getWidth(),
+        height: liveChart.getHeight() + extraLegendHeight,
+      });
+      // Disable animation so lines are fully drawn before the dataURL is captured
+      exportChart.setOption(exportOption);
+      const dataUrl = exportChart.getDataURL({ type });
+      exportChart.dispose();
+
+      return dataUrl;
+    },
+    [chartRef, getExportOption],
+  );
+
   useImperativeHandle(
     ref,
     () => ({
-      // PNG export needs a canvas renderer, so render the option offscreen instead of using the visible svg chart
-      getPngDataURL: () => {
-        const svgChart = chartRef.current;
-        if (!svgChart) {
-          return undefined;
-        }
-
-        const canvasChart = echarts.init(document.createElement('div'), null, {
-          renderer: 'canvas',
-          width: svgChart.getWidth(),
-          height: svgChart.getHeight(),
-        });
-        // Disable animation so lines are fully drawn before the dataURL is captured
-        canvasChart.setOption({ ...option, animation: false });
-        const dataUrl = canvasChart.getDataURL({ type: 'png' });
-        canvasChart.dispose();
-
-        return dataUrl;
-      },
-      getSvgDataURL: () => chartRef.current?.getDataURL({ type: 'svg' }),
+      getPngDataURL: () => renderExportDataURL('canvas', 'png'),
+      getSvgDataURL: () => renderExportDataURL('svg', 'svg'),
     }),
-    [chartRef, option],
+    [renderExportDataURL],
   );
 
   const controls = (() => {

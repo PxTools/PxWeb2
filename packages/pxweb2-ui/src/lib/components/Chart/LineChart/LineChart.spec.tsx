@@ -309,18 +309,45 @@ describe('LineChart', () => {
     expect(screen.getByRole('button', { name: 'Show less' })).toBeTruthy();
   });
 
-  it('exposes getSvgDataURL that reads from the underlying chart instance', () => {
-    const getDataURL = vi.fn().mockReturnValue('data:image/svg+xml;base64,abc');
+  it('exposes getSvgDataURL that renders the option offscreen with an svg renderer', () => {
     vi.mocked(useEChartOption).mockReturnValue({
       divRef: { current: null },
-      chartRef: { current: { getDataURL } as never },
+      chartRef: {
+        current: {
+          getDataURL: vi.fn(),
+          getWidth: () => 640,
+          getHeight: () => 480,
+        } as never,
+      },
     });
-    const ref = createRef<LineChartHandle>();
 
+    const svgExportGetDataURL = vi
+      .fn()
+      .mockReturnValue('data:image/svg+xml;base64,abc');
+    const dispose = vi.fn();
+    const setOption = vi.fn();
+    const initSpy = vi.mocked(echarts.init).mockReturnValue({
+      setOption,
+      getDataURL: svgExportGetDataURL,
+      dispose,
+    } as never);
+
+    const ref = createRef<LineChartHandle>();
     render(<LineChart pxtable={{} as PxTable} ref={ref} />);
 
     expect(ref.current?.getSvgDataURL()).toBe('data:image/svg+xml;base64,abc');
-    expect(getDataURL).toHaveBeenCalledWith({ type: 'svg' });
+    expect(initSpy).toHaveBeenCalledWith(
+      expect.any(HTMLDivElement),
+      null,
+      expect.objectContaining({ renderer: 'svg', width: 640, height: 480 }),
+    );
+    expect(svgExportGetDataURL).toHaveBeenCalledWith({ type: 'svg' });
+    expect(setOption).toHaveBeenCalledWith(
+      expect.objectContaining({ animation: false }),
+    );
+    expect(dispose).toHaveBeenCalledTimes(1);
+
+    initSpy.mockRestore();
   });
 
   it('exposes getPngDataURL that renders the option offscreen with a canvas renderer', () => {
@@ -362,6 +389,58 @@ describe('LineChart', () => {
     );
     expect(dispose).toHaveBeenCalledTimes(1);
     expect(svgChartGetDataURL).not.toHaveBeenCalled();
+
+    initSpy.mockRestore();
+  });
+
+  it('always exports the full legend and extra height, even when "show more" truncates it on screen', () => {
+    vi.mocked(mapPxTableToChartDataset).mockReturnValue(overflowingDataset);
+    vi.mocked(useEChartOption).mockReturnValue({
+      divRef: { current: null },
+      chartRef: {
+        current: {
+          getDataURL: vi.fn(),
+          getWidth: () => 640,
+          getHeight: () => 480,
+        } as never,
+      },
+    });
+
+    const setOption = vi.fn();
+    const initSpy = vi.mocked(echarts.init).mockReturnValue({
+      setOption,
+      getDataURL: vi.fn().mockReturnValue('data:image/png;base64,abc'),
+      dispose: vi.fn(),
+    } as never);
+
+    const ref = createRef<LineChartHandle>();
+    render(
+      <LineChart
+        pxtable={{} as PxTable}
+        legendOverflowMode="showMore"
+        visibleLegendItemCount={2}
+        ref={ref}
+      />,
+    );
+
+    // On screen, only 2 of the 5 legend items are shown until "Show more" is clicked
+    expect(getLastChartOption().legend).toEqual({
+      height: 48,
+      data: overflowingDataset.series.slice(0, 2).map((series) => series.name),
+    });
+
+    ref.current?.getPngDataURL();
+
+    // Exported legend always contains every series, with no truncated `data` list
+    expect(setOption).toHaveBeenCalledWith(
+      expect.objectContaining({ legend: { height: 120 } }),
+    );
+    // Chart height grows to fit the full legend instead of the collapsed on-screen height
+    expect(initSpy).toHaveBeenCalledWith(
+      expect.any(HTMLDivElement),
+      null,
+      expect.objectContaining({ height: 480 + (120 - 48) }),
+    );
 
     initSpy.mockRestore();
   });
