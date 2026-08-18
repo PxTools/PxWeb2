@@ -300,7 +300,12 @@ export function LineChart({
           getLegendHeight(visibleLegendItems),
       ),
     };
-  }, [legendItemNames, legendPaginationOrientation, option, visibleLegendItems]);
+  }, [
+    legendItemNames,
+    legendPaginationOrientation,
+    option,
+    visibleLegendItems,
+  ]);
 
   const renderExportDataURL = useCallback(
     (renderer: 'canvas' | 'svg', type: 'png' | 'svg') => {
