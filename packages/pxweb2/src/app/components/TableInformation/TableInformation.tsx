@@ -52,7 +52,7 @@ export function TableInformation({
 
   const definitionsMandatoryLinkExists =
     definitionsOrUndefined?.statisticsDefinitions ||
-    definitionsOrUndefined?.statisticsHomepage !== undefined;
+    definitionsOrUndefined?.statisticsHomepage;
 
   return (
     <SheetComponent
