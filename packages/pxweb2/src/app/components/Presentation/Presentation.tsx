@@ -23,6 +23,7 @@ import {
 } from '@pxweb2/pxweb2-ui';
 import useTableData from '../../context/useTableData';
 import useVariables from '../../context/useVariables';
+import useChartRef from '../../context/useChartRef';
 import { useDebounce } from '@uidotdev/usehooks';
 import { getConfig } from '../../util/config/getConfig';
 import { getViewMode } from '../../pages/TableViewer/Utils/tableViewerHelper';
@@ -68,6 +69,7 @@ export function Presentation({
   const { i18n, t } = useTranslation();
   const tableData = useTableData();
   const variablesChanged = useVariables();
+  const { chartRef } = useChartRef();
   const [searchParams] = useSearchParams();
   const viewMode = getViewMode(searchParams, chartEnabled);
   const variables = useDebounce(useVariables(), 500);
@@ -327,7 +329,7 @@ export function Presentation({
                     [classes.fadeChart]: isFadingTable,
                   })}
                 >
-                  <LineChart pxtable={tableData.data} />
+                  <LineChart pxtable={tableData.data} ref={chartRef} />
                 </div>
               </Activity>
             </>
@@ -361,7 +363,7 @@ export function Presentation({
                       [classes.fadeChart]: isFadingTable,
                     })}
                   >
-                    <LineChart pxtable={tableData.data} />
+                    <LineChart pxtable={tableData.data} ref={chartRef} />
                   </div>
                 </Activity>
               </>

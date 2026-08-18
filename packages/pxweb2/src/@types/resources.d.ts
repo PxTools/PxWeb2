@@ -252,6 +252,7 @@ export default interface Resources {
           };
           imagefile: {
             png: 'Chart (png)';
+            svg: 'Chart (svg)';
             title: 'Save as graph';
           };
           link: {

@@ -1,6 +1,12 @@
-import { useEffect, useMemo, useState } from 'react';
+import {
+  type Ref,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useState,
+} from 'react';
 import cl from 'clsx';
-import type * as echarts from 'echarts';
+import * as echarts from 'echarts';
 
 import {
   buildDatasetOption,
@@ -19,10 +25,16 @@ interface LineChartProps {
   readonly legendOverflowMode?: LineChartLegendOverflowMode;
   readonly legendPaginationOrientation?: LineChartLegendPaginationOrientation;
   readonly visibleLegendItemCount?: number;
+  readonly ref?: Ref<LineChartHandle>;
 }
 
 export type LineChartLegendOverflowMode = 'pagination' | 'showMore';
 export type LineChartLegendPaginationOrientation = 'horizontal' | 'vertical';
+
+export interface LineChartHandle {
+  getPngDataURL: () => string | undefined;
+  getSvgDataURL: () => string | undefined;
+}
 
 const DEFAULT_VISIBLE_LEGEND_ITEM_COUNT = 8;
 const LEGEND_ITEM_HEIGHT = 24;
@@ -164,6 +176,7 @@ export function LineChart({
   legendOverflowMode,
   legendPaginationOrientation,
   visibleLegendItemCount,
+  ref,
 }: LineChartProps) {
   const dataset = useMemo(() => mapPxTableToChartDataset(pxtable), [pxtable]);
   const normalizedVisibleLegendItemCount = getNormalizedVisibleLegendItemCount(
@@ -213,7 +226,13 @@ export function LineChart({
   const option = useMemo<echarts.EChartsOption>(
     () => ({
       ...buildDatasetOption(dataset),
-      grid: { top: 0, bottom: 200, left: '0', right: '0', containLabel: false },
+      grid: {
+        top: 0,
+        bottom: 200,
+        left: '0',
+        right: '0',
+        containLabel: false,
+      },
       xAxis: { type: 'category' as const, axisLabel: { rotate: 45 } },
       yAxis: {
         name: dataset.unit,
@@ -254,9 +273,36 @@ export function LineChart({
     [dataset, legendOptionsMemoized, resolvedColors],
   );
 
-  const { divRef } = useEChartOption(option);
+  const { divRef, chartRef } = useEChartOption(option);
   const hasExpandedLegend =
     visibleLegendItems > DEFAULT_VISIBLE_LEGEND_ITEM_COUNT;
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      // PNG export needs a canvas renderer, so render the option offscreen instead of using the visible svg chart
+      getPngDataURL: () => {
+        const svgChart = chartRef.current;
+        if (!svgChart) {
+          return undefined;
+        }
+
+        const canvasChart = echarts.init(document.createElement('div'), null, {
+          renderer: 'canvas',
+          width: svgChart.getWidth(),
+          height: svgChart.getHeight(),
+        });
+        // Disable animation so lines are fully drawn before the dataURL is captured
+        canvasChart.setOption({ ...option, animation: false });
+        const dataUrl = canvasChart.getDataURL({ type: 'png' });
+        canvasChart.dispose();
+
+        return dataUrl;
+      },
+      getSvgDataURL: () => chartRef.current?.getDataURL({ type: 'svg' }),
+    }),
+    [chartRef, option],
+  );
 
   const controls = (() => {
     if (legendOverflowMode === 'showMore' && hasOverflowingLegend) {
@@ -286,4 +332,3 @@ export function LineChart({
     </div>
   );
 }
-export default LineChart;

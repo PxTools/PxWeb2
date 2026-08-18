@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import LineChart from './LineChart';
-import type {
-  LineChartLegendOverflowMode,
-  LineChartLegendPaginationOrientation,
+import {
+  LineChart,
+  type LineChartLegendOverflowMode,
+  type LineChartLegendPaginationOrientation,
 } from './LineChart';
 import { setPxTableData } from '../../Table/Utils/cubeHelper';
 import type { PxTable } from '../../../shared-types/pxTable';

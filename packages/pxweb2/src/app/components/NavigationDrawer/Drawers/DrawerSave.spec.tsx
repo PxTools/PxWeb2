@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import {
   render,
   screen,
@@ -122,6 +122,24 @@ vi.mock('../../../util/export/exportUtil', () => ({
   createNewSavedQuery: vi.fn(() => Promise.resolve('query123')),
   createSavedQueryURL: (id: string) => `https://example.com/query/${id}`,
   exportToFile: vi.fn(),
+  getTimestamp: () => '20260101-000000',
+}));
+
+const mockSearchParams = { current: new URLSearchParams() };
+vi.mock('react-router', () => ({
+  useSearchParams: () => [mockSearchParams.current],
+}));
+
+const mockChartRef = {
+  current: {
+    current: null as {
+      getPngDataURL: () => string | undefined;
+      getSvgDataURL: () => string | undefined;
+    } | null,
+  },
+};
+vi.mock('../../../context/useChartRef', () => ({
+  default: () => ({ chartRef: mockChartRef.current }),
 }));
 
 // Mock CodeSnippet component used in DrawerSave
@@ -138,6 +156,11 @@ vi.mock('@pxweb2/pxweb2-ui', async (importOriginal) => {
 });
 
 describe('DrawerSave', () => {
+  beforeEach(() => {
+    mockSearchParams.current = new URLSearchParams();
+    mockChartRef.current = { current: null };
+  });
+
   it('renders without crashing', () => {
     render(<DrawerSave tableId="table1" />);
 
@@ -297,6 +320,71 @@ describe('DrawerSave', () => {
           screen.getByText('https://example.com/query/query123'),
         ).toBeInTheDocument(),
       );
+    });
+  });
+
+  describe('Save chart as image', () => {
+    it('does not render chart image options in table view', () => {
+      mockSearchParams.current = new URLSearchParams();
+
+      render(<DrawerSave tableId="table1" />);
+
+      expect(
+        screen.queryByRole('button', {
+          name: 'presentation_page.side_menu.save.imagefile.svg',
+        }),
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('button', {
+          name: 'presentation_page.side_menu.save.imagefile.png',
+        }),
+      ).not.toBeInTheDocument();
+    });
+
+    it('renders and downloads chart images in chart view', async () => {
+      mockSearchParams.current = new URLSearchParams('view=linechart');
+      const getPngDataURL = vi
+        .fn()
+        .mockReturnValue('data:image/png;base64,abc');
+      const getSvgDataURL = vi
+        .fn()
+        .mockReturnValue('data:image/svg+xml;base64,abc');
+      mockChartRef.current = { current: { getPngDataURL, getSvgDataURL } };
+
+      const blob = new Blob(['chart'], { type: 'image/png' });
+      vi.stubGlobal(
+        'fetch',
+        vi.fn(() => Promise.resolve({ blob: () => Promise.resolve(blob) })),
+      );
+      const createObjectURL = vi.fn(() => 'blob:mock-url');
+      const revokeObjectURL = vi.fn();
+      vi.stubGlobal('URL', { ...URL, createObjectURL, revokeObjectURL });
+      const clickSpy = vi
+        .spyOn(HTMLAnchorElement.prototype, 'click')
+        .mockImplementation(() => {});
+
+      render(<DrawerSave tableId="table1" />);
+
+      const svgBtn = screen.getByRole('button', {
+        name: 'presentation_page.side_menu.save.imagefile.svg',
+      });
+      fireEvent.click(svgBtn);
+
+      await waitFor(() => expect(clickSpy).toHaveBeenCalledTimes(1));
+      expect(getSvgDataURL).toHaveBeenCalledTimes(1);
+      expect(createObjectURL).toHaveBeenCalledWith(blob);
+      expect(revokeObjectURL).toHaveBeenCalledWith('blob:mock-url');
+
+      const pngBtn = screen.getByRole('button', {
+        name: 'presentation_page.side_menu.save.imagefile.png',
+      });
+      fireEvent.click(pngBtn);
+
+      await waitFor(() => expect(clickSpy).toHaveBeenCalledTimes(2));
+      expect(getPngDataURL).toHaveBeenCalledTimes(1);
+
+      clickSpy.mockRestore();
+      vi.unstubAllGlobals();
     });
   });
 });

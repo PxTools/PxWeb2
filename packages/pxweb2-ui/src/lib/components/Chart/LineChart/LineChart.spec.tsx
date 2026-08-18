@@ -1,7 +1,9 @@
+import { createRef } from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, beforeEach, vi } from 'vitest';
+import * as echarts from 'echarts';
 
-import LineChart from './LineChart';
+import { LineChart, LineChartHandle } from './LineChart';
 import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
 import { useEChartOption } from '../Utils/useEChartOption';
 import {
@@ -36,6 +38,14 @@ vi.mock('../Utils/chartOptionBuilder', async () => {
 vi.mock('../Utils/chartHelper', () => ({
   getChartColorsFromCssVariables: vi.fn(),
 }));
+
+vi.mock('echarts', async () => {
+  const actual = await vi.importActual<typeof import('echarts')>('echarts');
+  return {
+    ...actual,
+    init: vi.fn(actual.init),
+  };
+});
 
 const mockDataset: EChartsDataset = {
   title: 'Population by year',
@@ -297,5 +307,78 @@ describe('LineChart', () => {
       data: overflowingDataset.series.map((series) => series.name),
     });
     expect(screen.getByRole('button', { name: 'Show less' })).toBeTruthy();
+  });
+
+  it('exposes getSvgDataURL that reads from the underlying chart instance', () => {
+    const getDataURL = vi.fn().mockReturnValue('data:image/svg+xml;base64,abc');
+    vi.mocked(useEChartOption).mockReturnValue({
+      divRef: { current: null },
+      chartRef: { current: { getDataURL } as never },
+    });
+    const ref = createRef<LineChartHandle>();
+
+    render(<LineChart pxtable={{} as PxTable} ref={ref} />);
+
+    expect(ref.current?.getSvgDataURL()).toBe('data:image/svg+xml;base64,abc');
+    expect(getDataURL).toHaveBeenCalledWith({ type: 'svg' });
+  });
+
+  it('exposes getPngDataURL that renders the option offscreen with a canvas renderer', () => {
+    const svgChartGetDataURL = vi.fn();
+    vi.mocked(useEChartOption).mockReturnValue({
+      divRef: { current: null },
+      chartRef: {
+        current: {
+          getDataURL: svgChartGetDataURL,
+          getWidth: () => 640,
+          getHeight: () => 480,
+        } as never,
+      },
+    });
+
+    const pngChartGetDataURL = vi
+      .fn()
+      .mockReturnValue('data:image/png;base64,abc');
+    const dispose = vi.fn();
+    const setOption = vi.fn();
+    const initSpy = vi.mocked(echarts.init).mockReturnValue({
+      setOption,
+      getDataURL: pngChartGetDataURL,
+      dispose,
+    } as never);
+
+    const ref = createRef<LineChartHandle>();
+    render(<LineChart pxtable={{} as PxTable} ref={ref} />);
+
+    expect(ref.current?.getPngDataURL()).toBe('data:image/png;base64,abc');
+    expect(initSpy).toHaveBeenCalledWith(
+      expect.any(HTMLDivElement),
+      null,
+      expect.objectContaining({ renderer: 'canvas', width: 640, height: 480 }),
+    );
+    expect(pngChartGetDataURL).toHaveBeenCalledWith({ type: 'png' });
+    expect(setOption).toHaveBeenCalledWith(
+      expect.objectContaining({ animation: false }),
+    );
+    expect(dispose).toHaveBeenCalledTimes(1);
+    expect(svgChartGetDataURL).not.toHaveBeenCalled();
+
+    initSpy.mockRestore();
+  });
+
+  it('returns undefined from getSvgDataURL when the chart instance is not ready', () => {
+    const ref = createRef<LineChartHandle>();
+
+    render(<LineChart pxtable={{} as PxTable} ref={ref} />);
+
+    expect(ref.current?.getSvgDataURL()).toBeUndefined();
+  });
+
+  it('returns undefined from getPngDataURL when the chart instance is not ready', () => {
+    const ref = createRef<LineChartHandle>();
+
+    render(<LineChart pxtable={{} as PxTable} ref={ref} />);
+
+    expect(ref.current?.getPngDataURL()).toBeUndefined();
   });
 });
