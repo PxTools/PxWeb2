@@ -327,7 +327,15 @@ export function Presentation({
                     [classes.fadeChart]: isFadingTable,
                   })}
                 >
-                  <LineChart pxtable={tableData.data} />
+                  <LineChart
+                    pxtable={tableData.data}
+                    emptyStateTitle={t(
+                      'presentation_page.main_content.chart.line_chart.warnings.multiple_units.title',
+                    )}
+                    emptyStateDescription={t(
+                      'presentation_page.main_content.chart.line_chart.warnings.multiple_units.description',
+                    )}
+                  />
                 </div>
               </Activity>
             </>

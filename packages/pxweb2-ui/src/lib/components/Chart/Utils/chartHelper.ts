@@ -1,3 +1,6 @@
+import { PxTable } from '../../../shared-types/pxTable';
+import { VartypeEnum } from '../../../shared-types/vartypeEnum';
+
 function resolveCssVariableValue(
   value: string,
   styles: CSSStyleDeclaration,
@@ -113,4 +116,26 @@ export function getAdaptiveYAxisMax(value: {
 
   const paddedMax = max + pad;
   return Math.ceil(paddedMax / snap) * snap;
+}
+
+// Check if the contents variable has multiple units selected.
+// If so, we cannot display the chart since the y-axis will be ambiguous.
+export function checkMultipleUnits(pxtable: PxTable): boolean {
+  const contentsVariable = pxtable.metadata.variables.find(
+    (variable) => variable.type === VartypeEnum.CONTENTS_VARIABLE,
+  );
+
+  if (!contentsVariable || contentsVariable.values.length < 2) {
+    return false;
+  }
+
+  const units = contentsVariable.values
+    .map((value) => value.contentInfo?.unit)
+    .filter((unit): unit is NonNullable<typeof unit> => unit !== undefined);
+
+  if (units.length < 2) {
+    return false;
+  }
+
+  return units.some((unit) => unit !== units[0]);
 }

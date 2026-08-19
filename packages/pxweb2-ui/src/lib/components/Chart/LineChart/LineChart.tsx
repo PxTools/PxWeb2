@@ -13,11 +13,17 @@ import {
   getAdaptiveYAxisMax,
   getAdaptiveYAxisMin,
   getChartColorsFromCssVariables,
+  checkMultipleUnits,
 } from '../Utils/chartHelper';
+import EmptyState from '../../EmptyState/EmptyState';
+import type { EmptyStateProps } from '../../EmptyState/EmptyState';
 
 interface LineChartProps {
   readonly pxtable: PxTable;
   readonly colors?: string[];
+  readonly emptyStateTitle?: string;
+  readonly emptyStateDescription?: string;
+  readonly emptyStateSvgName?: EmptyStateProps['svgName'];
 }
 
 type TooltipParam = {
@@ -45,7 +51,15 @@ function getTooltipSymbolSvg(symbol: string, color: string): string {
   }
 }
 
-export function LineChart({ pxtable, colors }: LineChartProps) {
+export function LineChart({
+  pxtable,
+  colors,
+  emptyStateTitle,
+  emptyStateDescription,
+  emptyStateSvgName,
+}: LineChartProps) {
+  const hasMultipleUnits = checkMultipleUnits(pxtable);
+
   const dataset = useMemo(() => mapPxTableToChartDataset(pxtable), [pxtable]);
 
   const xAxisName = useMemo(() => {
@@ -57,6 +71,16 @@ export function LineChart({ pxtable, colors }: LineChartProps) {
       ? colors
       : getChartColorsFromCssVariables();
   }, [colors]);
+
+  const resolvedEmptyStateTitle =
+    emptyStateTitle?.trim() || 'Cannot display chart';
+  const resolvedEmptyStateDescription =
+    emptyStateDescription?.trim() ||
+    'The line chart cannot be displayed because your selection includes contents with different units (for example number and percent). Please select contents with the same unit to see the line chart.';
+  const resolvedEmptyStateSvgName: EmptyStateProps['svgName'] =
+    emptyStateSvgName && emptyStateSvgName.trim().length > 0
+      ? emptyStateSvgName
+      : 'ManWithMagnifyingGlass';
 
   const option = useMemo<echarts.EChartsOption>(
     () => ({
@@ -117,7 +141,18 @@ export function LineChart({ pxtable, colors }: LineChartProps) {
 
   return (
     <div>
-      <div ref={divRef} style={{ width: '100%', height: `${height}px` }}></div>
+      {hasMultipleUnits ? (
+        <EmptyState
+          svgName={resolvedEmptyStateSvgName}
+          headingTxt={resolvedEmptyStateTitle}
+          descriptionTxt={resolvedEmptyStateDescription}
+        />
+      ) : (
+        <div
+          ref={divRef}
+          style={{ width: '100%', height: `${height}px` }}
+        ></div>
+      )}
     </div>
   );
 }
