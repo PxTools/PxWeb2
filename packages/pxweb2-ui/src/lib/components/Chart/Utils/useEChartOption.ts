@@ -36,9 +36,51 @@ function applyOptionWithWrappedTitle(
   });
 }
 
+type LegendMeasurableChart = {
+  getModel?: () => { getComponent?: (mainType: string) => unknown } | undefined;
+  getViewOfComponentModel?: (componentModel: unknown) =>
+    | { group?: { getBoundingRect?: () => { height: number } } }
+    | undefined;
+};
+
+function getRenderedLegendHeight(chart: echarts.EChartsType): number | null {
+  const measurable = chart as unknown as LegendMeasurableChart;
+  const legendModel = measurable.getModel?.()?.getComponent?.('legend');
+
+  if (!legendModel) {
+    return null;
+  }
+
+  const height = measurable
+    .getViewOfComponentModel?.(legendModel)
+    ?.group?.getBoundingRect?.().height;
+
+  return typeof height === 'number' && Number.isFinite(height) ? height : null;
+}
+
+// Keeps a constant distance between the x axis labels and the legend, no matter how many legend rows are rendered.
+function applyLegendGap(
+  chart: echarts.EChartsType,
+  option: echarts.EChartsOption,
+  legendGap: number,
+) {
+  const legendHeight = getRenderedLegendHeight(chart);
+
+  if (legendHeight === null) {
+    return;
+  }
+
+  const grid = Array.isArray(option.grid) ? option.grid[0] : option.grid;
+
+  chart.setOption({
+    grid: { ...grid, bottom: Math.round(legendHeight + legendGap) },
+  });
+}
+
 export function useEChartOption(
   option: echarts.EChartsOption,
   renderer: 'canvas' | 'svg' = 'svg',
+  legendGap?: number,
 ) {
   const divRef = useRef<HTMLDivElement | null>(null);
   const chartRef = useRef<echarts.EChartsType | null>(null);
@@ -52,11 +94,19 @@ export function useEChartOption(
     const chart = echarts.init(chartContainer, null, { renderer });
     chartRef.current = chart;
 
-    applyOptionWithWrappedTitle(chart, option);
+    const applyOption = () => {
+      applyOptionWithWrappedTitle(chart, option);
+
+      if (typeof legendGap === 'number') {
+        applyLegendGap(chart, option, legendGap);
+      }
+    };
+
+    applyOption();
 
     const handleResize = () => {
       chart.resize();
-      applyOptionWithWrappedTitle(chart, option);
+      applyOption();
     };
 
     const resizeObserver =
@@ -76,7 +126,7 @@ export function useEChartOption(
       chartRef.current = null;
       chart.dispose();
     };
-  }, [option, renderer]);
+  }, [option, renderer, legendGap]);
 
   return { divRef, chartRef };
 }

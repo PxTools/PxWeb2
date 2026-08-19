@@ -24,6 +24,9 @@ type TooltipParam = {
   color?: string;
 };
 
+const LEGEND_ITEM_HEIGHT = 40;
+const X_AXIS_LABEL_TO_LEGEND_GAP = 35;
+
 function getTooltipSymbolSvg(symbol: string, color: string): string {
   switch (symbol) {
     case 'rect':
@@ -50,17 +53,25 @@ export function LineChart({ pxtable, colors }: LineChartProps) {
       : getChartColorsFromCssVariables();
   }, [colors]);
 
-  const option = useMemo<echarts.EChartsOption>(
-    () => ({
+  const option = useMemo<echarts.EChartsOption>(() => {
+    const estimatedLegendHeight = LEGEND_ITEM_HEIGHT * dataset.series.length;
+
+    return {
       ...buildDatasetOption(dataset),
-      grid: { top: 0, bottom: 200, left: '0', right: '0', containLabel: false },
+      grid: {
+        top: 0,
+        bottom: estimatedLegendHeight + X_AXIS_LABEL_TO_LEGEND_GAP,
+        left: '0',
+        right: '0',
+        containLabel: true,
+      },
       xAxis: { type: 'category' as const, axisLabel: { rotate: 45 } },
       yAxis: {
         name: dataset.unit,
         min: (value) => value.min,
       },
       legend: {
-        height: 40 * dataset.series.length, // increase legend height based on number of series to prevent overlap with x-axis labels
+        bottom: 0,
       },
       series: buildSeriesOption(dataset, 'line', resolvedColors),
       tooltip: {
@@ -92,11 +103,10 @@ export function LineChart({ pxtable, colors }: LineChartProps) {
           return `<div><div>${title}</div>${rows}</div>`;
         },
       },
-    }),
-    [dataset, resolvedColors],
-  );
+    };
+  }, [dataset, resolvedColors]);
 
-  const { divRef } = useEChartOption(option);
+  const { divRef } = useEChartOption(option, 'svg', X_AXIS_LABEL_TO_LEGEND_GAP);
   const height = 600 + dataset.series.length * 10; // increase chart height based on number of series to prevent legend overlap
 
   return (
