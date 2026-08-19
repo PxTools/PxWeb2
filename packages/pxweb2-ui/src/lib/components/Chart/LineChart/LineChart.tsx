@@ -74,6 +74,9 @@ export function LineChart({ pxtable, colors }: LineChartProps) {
         bottom: 0,
       },
       series: buildSeriesOption(dataset, 'line', resolvedColors),
+      emphasis: {
+        focus: 'series',
+      },
       tooltip: {
         trigger: 'axis',
         formatter: (params: unknown) => {
