@@ -8,7 +8,10 @@ import {
   buildDatasetOption,
   buildSeriesOption,
 } from '../Utils/chartOptionBuilder';
-import { getChartColorsFromCssVariables } from '../Utils/chartHelper';
+import {
+  getChartColorsFromCssVariables,
+  checkMultipleUnits,
+} from '../Utils/chartHelper';
 import type { EChartsDataset } from '../Utils/chartTypes';
 import type { PxTable } from '../../../shared-types/pxTable';
 
@@ -36,6 +39,7 @@ vi.mock('../Utils/chartHelper', () => ({
   getChartColorsFromCssVariables: vi.fn(),
   getAdaptiveYAxisMin: vi.fn(),
   getAdaptiveYAxisMax: vi.fn(),
+  checkMultipleUnits: vi.fn(),
 }));
 
 const mockDataset: EChartsDataset = {
@@ -74,6 +78,7 @@ describe('LineChart', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
+    vi.mocked(checkMultipleUnits).mockReturnValue(false);
     vi.mocked(mapPxTableToChartDataset).mockReturnValue(mockDataset);
     vi.mocked(buildDatasetOption).mockReturnValue({
       dataset: {
@@ -204,4 +209,10 @@ describe('LineChart', () => {
     expect(html).toContain('<circle');
     expect(html).toContain('<rect');
   });
+});
+
+it('renders empty state when multiple units are selected', () => {
+  vi.mocked(checkMultipleUnits).mockReturnValue(true);
+  const { getByText } = render(<LineChart pxtable={mockPxTable} />);
+  expect(getByText('Cannot display chart')).toBeTruthy();
 });
