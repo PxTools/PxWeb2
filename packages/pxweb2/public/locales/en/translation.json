@@ -256,7 +256,8 @@
         },
         "imagefile": {
           "title": "Save as graph",
-          "png": "Chart (png)"
+          "png": "Chart (png)",
+          "svg": "Chart (svg)"
         },
         "link": {
           "title": "Save as link",

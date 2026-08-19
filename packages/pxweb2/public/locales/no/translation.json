@@ -256,7 +256,8 @@
         },
         "imagefile": {
           "title": "Lagre som graf",
-          "png": "Diagram (png)"
+          "png": "Diagram (png)",
+          "svg": "Diagram (svg)"
         },
         "link": {
           "title": "Lagre som lenke",

@@ -16,6 +16,7 @@ import useApp from '../../context/useApp';
 import { AccessibilityProvider } from '../../context/AccessibilityProvider';
 import { VariablesProvider } from '../../context/VariablesProvider';
 import { TableDataProvider } from '../../context/TableDataProvider';
+import { ChartRefProvider } from '../../context/ChartRefProvider';
 import WipStatusMessage from '../../components/Banners/WipStatusMessage';
 
 export function TableViewer() {
@@ -288,7 +289,9 @@ function Render() {
     <AccessibilityProvider>
       <VariablesProvider>
         <TableDataProvider>
-          <TableViewer />
+          <ChartRefProvider>
+            <TableViewer />
+          </ChartRefProvider>
         </TableDataProvider>
       </VariablesProvider>
     </AccessibilityProvider>

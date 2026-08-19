@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState, useRef } from 'react';
+import { useSearchParams } from 'react-router';
 
 import classes from './DrawerSave.module.scss';
 import {
@@ -22,12 +23,16 @@ import {
 } from '@pxweb2/pxweb2-api-client';
 import useVariables from '../../../context/useVariables';
 import useTableData from '../../../context/useTableData';
+import useChartRef from '../../../context/useChartRef';
 import { problemMessage } from '../../../util/problemMessage';
+import { getConfig } from '../../../util/config/getConfig';
+import { getViewMode } from '../../../pages/TableViewer/Utils/tableViewerHelper';
 import {
   applyTimeFilter,
   createNewSavedQuery,
   createSavedQueryURL,
   exportToFile,
+  getTimestamp,
   TimeFilter,
 } from '../../../util/export/exportUtil';
 import { ApiQuery } from '../../ApiQuery/ApiQuery';
@@ -179,9 +184,17 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
   const variables = useVariables();
   const heading = useTableData().data?.heading;
   const stub = useTableData().data?.stub;
+  const { chartRef } = useChartRef();
+  const [searchParams] = useSearchParams();
+  const chartEnabled = getConfig().features?.chartEnabled === true;
+  const isChartView =
+    chartEnabled && getViewMode(searchParams, chartEnabled) === 'linechart';
   const [loadingFormat, setLoadingFormat] = useState<OutputFormatType | null>(
     null,
   );
+  const [savingChartFormat, setSavingChartFormat] = useState<
+    'png' | 'svg' | null
+  >(null);
   const [errorMsg, setErrorMsg] = useState('');
 
   const [saveQueryUrl, setsaveQueryUrl] = useState('');
@@ -337,6 +350,39 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
       });
   }
 
+  async function saveChartAsImage(
+    format: 'png' | 'svg',
+    dataUrl: string | undefined,
+  ): Promise<void> {
+    if (!dataUrl) {
+      setErrorMsg(`Could not export chart as ${format.toUpperCase()}.`);
+      return;
+    }
+
+    setSavingChartFormat(format);
+
+    try {
+      const blob = await fetch(dataUrl).then((response) => response.blob());
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `${tableId}_${getTimestamp()}.${format}`;
+      link.click();
+      URL.revokeObjectURL(link.href);
+    } catch {
+      setErrorMsg(`Could not export chart as ${format.toUpperCase()}.`);
+    } finally {
+      setSavingChartFormat(null);
+    }
+  }
+
+  function saveChartAsSvg(): Promise<void> {
+    return saveChartAsImage('svg', chartRef.current?.getSvgDataURL());
+  }
+
+  function saveChartAsPng(): Promise<void> {
+    return saveChartAsImage('png', chartRef.current?.getPngDataURL());
+  }
+
   /**
    * Creates a saved query with the current variable selections and time filter.
    * If a time filter is provided, it modifies the selection for the time variable accordingly.
@@ -456,6 +502,30 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
           className={classes.saveAsActionList}
           aria-labelledby="drawer-save-to-file"
         >
+          {isChartView && (
+            <>
+              <li key="saveChartAsSvg">
+                <ActionItem
+                  label={translate(
+                    'presentation_page.side_menu.save.imagefile.svg',
+                  )}
+                  onClick={saveChartAsSvg}
+                  iconName="FileImage"
+                  isLoading={savingChartFormat === 'svg'}
+                />
+              </li>
+              <li key="saveChartAsPng">
+                <ActionItem
+                  label={translate(
+                    'presentation_page.side_menu.save.imagefile.png',
+                  )}
+                  onClick={saveChartAsPng}
+                  iconName="FileImage"
+                  isLoading={savingChartFormat === 'png'}
+                />
+              </li>
+            </>
+          )}
           {fileFormats.map((format) => (
             <li key={`saveToFile${format.value}`}>
               <ActionItem

@@ -1,5 +1,13 @@
-import { useMemo } from 'react';
-import type * as echarts from 'echarts';
+import {
+  type Ref,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useState,
+} from 'react';
+import cl from 'clsx';
+import * as echarts from 'echarts';
 
 import {
   buildDatasetOption,
@@ -10,11 +18,28 @@ import { useEChartOption } from '../Utils/useEChartOption';
 import type { PxTable } from '../../../shared-types/pxTable';
 import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
 import { getChartColorsFromCssVariables } from '../Utils/chartHelper';
+import styles from './LineChart.module.scss';
 
 interface LineChartProps {
   readonly pxtable: PxTable;
   readonly colors?: string[];
+  readonly legendOverflowMode?: LineChartLegendOverflowMode;
+  readonly legendPaginationOrientation?: LineChartLegendPaginationOrientation;
+  readonly visibleLegendItemCount?: number;
+  readonly ref?: Ref<LineChartHandle>;
 }
+
+export type LineChartLegendOverflowMode = 'pagination' | 'showMore';
+export type LineChartLegendPaginationOrientation = 'horizontal' | 'vertical';
+
+export interface LineChartHandle {
+  getPngDataURL: () => string | undefined;
+  getSvgDataURL: () => string | undefined;
+}
+
+const DEFAULT_VISIBLE_LEGEND_ITEM_COUNT = 8;
+const LEGEND_ITEM_HEIGHT = 24;
+const MIN_LEGEND_HEIGHT = 40;
 
 type TooltipParam = {
   axisValueLabel?: string;
@@ -41,8 +66,157 @@ function getTooltipSymbolSvg(symbol: string, color: string): string {
   }
 }
 
-export function LineChart({ pxtable, colors }: LineChartProps) {
+function getNormalizedVisibleLegendItemCount(
+  visibleLegendItemCount?: number,
+): number {
+  return Math.max(
+    1,
+    Math.floor(visibleLegendItemCount ?? DEFAULT_VISIBLE_LEGEND_ITEM_COUNT),
+  );
+}
+
+function getLegendItemNames(
+  dataset: ReturnType<typeof mapPxTableToChartDataset>,
+): string[] {
+  return dataset.series.map((series) => series.name);
+}
+
+function getLegendData(
+  legendItemNames: string[],
+  legendOverflowMode: LineChartLegendOverflowMode | undefined,
+  visibleLegendItemCount: number,
+  showAllLegendItems: boolean,
+): string[] | undefined {
+  if (!legendOverflowMode || legendItemNames.length <= visibleLegendItemCount) {
+    return undefined;
+  }
+
+  if (legendOverflowMode === 'pagination') {
+    return legendItemNames;
+  }
+
+  if (legendOverflowMode === 'showMore' && !showAllLegendItems) {
+    return legendItemNames.slice(0, visibleLegendItemCount);
+  }
+
+  return legendItemNames;
+}
+
+function getVisibleLegendItemCount(
+  legendItemCount: number,
+  legendOverflowMode: LineChartLegendOverflowMode | undefined,
+  visibleLegendItemCount: number,
+  showAllLegendItems: boolean,
+): number {
+  if (!legendOverflowMode || legendItemCount <= visibleLegendItemCount) {
+    return legendItemCount;
+  }
+
+  if (legendOverflowMode === 'showMore' && showAllLegendItems) {
+    return legendItemCount;
+  }
+
+  return visibleLegendItemCount;
+}
+
+type LineChartLegendOption = {
+  readonly height: number;
+  readonly data?: string[];
+  readonly type?: 'scroll';
+  readonly orient?: 'horizontal' | 'vertical';
+  readonly pageButtonPosition?: 'start' | 'end';
+  readonly pageFormatter?: string;
+};
+
+function getLegendHeight(visibleLegendItems: number): number {
+  return Math.max(MIN_LEGEND_HEIGHT, visibleLegendItems * LEGEND_ITEM_HEIGHT);
+}
+
+function getLegendOption(
+  legendItemNames: string[],
+  legendOverflowMode: LineChartLegendOverflowMode | undefined,
+  legendPaginationOrientation: LineChartLegendPaginationOrientation | undefined,
+  visibleLegendItemCount: number,
+  visibleLegendItems: number,
+  showAllLegendItems: boolean,
+): LineChartLegendOption {
+  const legendData = getLegendData(
+    legendItemNames,
+    legendOverflowMode,
+    visibleLegendItemCount,
+    showAllLegendItems,
+  );
+  const baseLegend = {
+    height: getLegendHeight(visibleLegendItems),
+  };
+
+  if (legendOverflowMode === 'pagination' && legendData) {
+    return {
+      ...baseLegend,
+      type: 'scroll',
+      orient: legendPaginationOrientation ?? 'vertical',
+      data: legendData,
+      pageButtonPosition: 'end',
+      pageFormatter: '{current} / {total}',
+    };
+  }
+
+  if (legendData) {
+    return {
+      ...baseLegend,
+      data: legendData,
+    };
+  }
+
+  return baseLegend;
+}
+
+export function LineChart({
+  pxtable,
+  colors,
+  legendOverflowMode,
+  legendPaginationOrientation,
+  visibleLegendItemCount,
+  ref,
+}: LineChartProps) {
   const dataset = useMemo(() => mapPxTableToChartDataset(pxtable), [pxtable]);
+  const normalizedVisibleLegendItemCount = getNormalizedVisibleLegendItemCount(
+    visibleLegendItemCount,
+  );
+  const [showAllLegendItems, setShowAllLegendItems] = useState(false);
+
+  useEffect(() => {
+    setShowAllLegendItems(false);
+  }, [dataset, legendOverflowMode, normalizedVisibleLegendItemCount]);
+
+  const legendItemNames = useMemo(() => getLegendItemNames(dataset), [dataset]);
+  const hasOverflowingLegend =
+    legendItemNames.length > normalizedVisibleLegendItemCount;
+  const visibleLegendItems = getVisibleLegendItemCount(
+    legendItemNames.length,
+    legendOverflowMode,
+    normalizedVisibleLegendItemCount,
+    showAllLegendItems,
+  );
+  const legendOptionsMemoized = useMemo(
+    () =>
+      getLegendOption(
+        legendItemNames,
+        legendOverflowMode,
+        legendPaginationOrientation,
+        normalizedVisibleLegendItemCount,
+        visibleLegendItems,
+        showAllLegendItems,
+      ),
+    [
+      legendItemNames,
+      legendOverflowMode,
+      legendPaginationOrientation,
+      normalizedVisibleLegendItemCount,
+      showAllLegendItems,
+      visibleLegendItems,
+    ],
+  );
 
   const resolvedColors = useMemo(() => {
     return colors && colors.length > 0
@@ -53,15 +227,19 @@ export function LineChart({ pxtable, colors }: LineChartProps) {
   const option = useMemo<echarts.EChartsOption>(
     () => ({
       ...buildDatasetOption(dataset),
-      grid: { top: 0, bottom: 200, left: '0', right: '0', containLabel: false },
+      grid: {
+        top: 0,
+        bottom: 200,
+        left: '0',
+        right: '0',
+        containLabel: false,
+      },
       xAxis: { type: 'category' as const, axisLabel: { rotate: 45 } },
       yAxis: {
         name: dataset.unit,
         min: (value) => value.min,
       },
-      legend: {
-        height: 40 * dataset.series.length, // increase legend height based on number of series to prevent overlap with x-axis labels
-      },
+      legend: legendOptionsMemoized,
       series: buildSeriesOption(dataset, 'line', resolvedColors),
       tooltip: {
         trigger: 'axis',
@@ -93,16 +271,99 @@ export function LineChart({ pxtable, colors }: LineChartProps) {
         },
       },
     }),
-    [dataset, resolvedColors],
+    [dataset, legendOptionsMemoized, resolvedColors],
   );
 
-  const { divRef } = useEChartOption(option);
-  const height = 600 + dataset.series.length * 10; // increase chart height based on number of series to prevent legend overlap
+  const { divRef, chartRef } = useEChartOption(option);
+  const hasExpandedLegend =
+    visibleLegendItems > DEFAULT_VISIBLE_LEGEND_ITEM_COUNT;
+
+  // Exports must show every legend item, ignoring any "show more"/pagination truncation used on screen
+  const getExportOption = useCallback((): {
+    option: echarts.EChartsOption;
+    extraLegendHeight: number;
+  } => {
+    const fullLegendOption = getLegendOption(
+      legendItemNames,
+      undefined,
+      legendPaginationOrientation,
+      legendItemNames.length,
+      legendItemNames.length,
+      true,
+    );
+
+    return {
+      option: { ...option, legend: fullLegendOption, animation: false },
+      extraLegendHeight: Math.max(
+        0,
+        getLegendHeight(legendItemNames.length) -
+          getLegendHeight(visibleLegendItems),
+      ),
+    };
+  }, [
+    legendItemNames,
+    legendPaginationOrientation,
+    option,
+    visibleLegendItems,
+  ]);
+
+  const renderExportDataURL = useCallback(
+    (renderer: 'canvas' | 'svg', type: 'png' | 'svg') => {
+      const liveChart = chartRef.current;
+      if (!liveChart) {
+        return undefined;
+      }
+
+      const { option: exportOption, extraLegendHeight } = getExportOption();
+      const exportChart = echarts.init(document.createElement('div'), null, {
+        renderer,
+        width: liveChart.getWidth(),
+        height: liveChart.getHeight() + extraLegendHeight,
+      });
+      // Disable animation so lines are fully drawn before the dataURL is captured
+      exportChart.setOption(exportOption);
+      const dataUrl = exportChart.getDataURL({ type });
+      exportChart.dispose();
+
+      return dataUrl;
+    },
+    [chartRef, getExportOption],
+  );
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      getPngDataURL: () => renderExportDataURL('canvas', 'png'),
+      getSvgDataURL: () => renderExportDataURL('svg', 'svg'),
+    }),
+    [renderExportDataURL],
+  );
+
+  const controls = (() => {
+    if (legendOverflowMode === 'showMore' && hasOverflowingLegend) {
+      return (
+        <button
+          type="button"
+          aria-expanded={showAllLegendItems}
+          onClick={() => setShowAllLegendItems((current) => !current)}
+        >
+          {showAllLegendItems ? 'Show less' : 'Show more'}
+        </button>
+      );
+    }
+
+    return null;
+  })();
 
   return (
-    <div>
-      <div ref={divRef} style={{ width: '100%', height: `${height}px` }}></div>
+    <div className={styles.lineChart}>
+      <div
+        ref={divRef}
+        className={cl(styles.chart, {
+          [styles.expandedLegend]: hasExpandedLegend,
+        })}
+      ></div>
+      {controls}
     </div>
   );
 }
-export default LineChart;
