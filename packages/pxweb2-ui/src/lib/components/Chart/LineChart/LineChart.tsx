@@ -9,7 +9,10 @@ import {
 import { useEChartOption } from '../Utils/useEChartOption';
 import type { PxTable } from '../../../shared-types/pxTable';
 import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
-import { getChartColorsFromCssVariables } from '../Utils/chartHelper';
+import {
+  getChartColorsFromCssVariables,
+  getAxisColorsFromCssVariables,
+} from '../Utils/chartHelper';
 
 interface LineChartProps {
   readonly pxtable: PxTable;
@@ -53,6 +56,9 @@ export function LineChart({ pxtable, colors }: LineChartProps) {
       : getChartColorsFromCssVariables();
   }, [colors]);
 
+  const resolvedAxisColor = useMemo(() => {
+    return getAxisColorsFromCssVariables();
+  }, []);
   const option = useMemo<echarts.EChartsOption>(() => {
     const estimatedLegendHeight = LEGEND_ITEM_HEIGHT * dataset.series.length;
 
@@ -65,10 +71,23 @@ export function LineChart({ pxtable, colors }: LineChartProps) {
         right: '0',
         containLabel: true,
       },
-      xAxis: { type: 'category' as const, axisLabel: { rotate: 45 } },
+      xAxis: {
+        type: 'category' as const,
+        axisLabel: { rotate: 45 },
+        axisLine: {
+          show: true,
+          lineStyle: { color: resolvedAxisColor ?? '#162327' },
+        },
+        axisTick: { show: true, alignWithLabel: true },
+      },
       yAxis: {
         name: dataset.unit,
         min: (value) => value.min,
+        axisLine: {
+          show: true,
+          lineStyle: { color: resolvedAxisColor ?? '#162327' },
+        },
+        axisTick: { show: true },
       },
       legend: {
         bottom: 0,
@@ -107,7 +126,7 @@ export function LineChart({ pxtable, colors }: LineChartProps) {
         },
       },
     };
-  }, [dataset, resolvedColors]);
+  }, [dataset, resolvedAxisColor, resolvedColors]);
 
   const { divRef } = useEChartOption(option, 'svg', X_AXIS_LABEL_TO_LEGEND_GAP);
   const height = 600 + dataset.series.length * 10; // increase chart height based on number of series to prevent legend overlap

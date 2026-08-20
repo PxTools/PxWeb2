@@ -48,3 +48,19 @@ export function getChartColorsFromCssVariables(): string[] | undefined {
 
   return undefined;
 }
+
+export function getAxisColorsFromCssVariables(): string | undefined {
+  if (globalThis.window === undefined || globalThis.document === undefined) {
+    return undefined;
+  }
+
+  const styles = getComputedStyle(globalThis.document.documentElement);
+
+  const axisColor = styles.getPropertyValue('--px-color-border-default').trim();
+
+  if (axisColor) {
+    return resolveCssVariableValue(axisColor, styles).trim();
+  }
+
+  return undefined;
+}
