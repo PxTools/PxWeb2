@@ -1,20 +1,26 @@
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router';
 
-import { ActionItem, ContentBox, LocalAlert } from '@pxweb2/pxweb2-ui';
+import useTableData from '../../../context/useTableData';
+import useApp from '../../../context/useApp';
 import { getConfig } from '../../../util/config/getConfig';
 import {
   ViewMode,
   getSearchParamsWithViewMode,
   getViewMode,
 } from '../../../pages/TableViewer/Utils/tableViewerHelper';
+import { ActionItem, ContentBox, LocalAlert } from '@pxweb2/pxweb2-ui';
 import classes from './DrawerView.module.scss';
+
 export function DrawerView() {
   const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
+  const { pivotToChart, pivotToTable } = useTableData();
+  const { isMobile } = useApp();
   const config = getConfig();
   const chartEnabled = config.features?.chartEnabled === true;
   const selectedViewMode = getViewMode(searchParams, chartEnabled);
+
   function setViewMode(viewMode: ViewMode) {
     setSearchParams(getSearchParamsWithViewMode(searchParams, viewMode));
   }
@@ -29,7 +35,10 @@ export function DrawerView() {
               size="large"
               label={t('presentation_page.side_menu.view.table.title')}
               ariaLabel={t('presentation_page.side_menu.view.table.title')}
-              onClick={() => setViewMode('table')}
+              onClick={() => {
+                pivotToTable(isMobile);
+                setViewMode('table');
+              }}
               toggleState={selectedViewMode === 'table'}
             />
           </li>
@@ -39,7 +48,10 @@ export function DrawerView() {
               size="large"
               label={t('presentation_page.side_menu.view.linechart.title')}
               ariaLabel={t('presentation_page.side_menu.view.linechart.title')}
-              onClick={() => setViewMode('linechart')}
+              onClick={() => {
+                pivotToChart();
+                setViewMode('linechart');
+              }}
               toggleState={selectedViewMode === 'linechart'}
             />
           </li>

@@ -25,7 +25,10 @@ import useTableData from '../../context/useTableData';
 import useVariables from '../../context/useVariables';
 import { useDebounce } from '@uidotdev/usehooks';
 import { getConfig } from '../../util/config/getConfig';
-import { getViewMode } from '../../pages/TableViewer/Utils/tableViewerHelper';
+import {
+  getViewMode,
+  getDataViewMode,
+} from '../../pages/TableViewer/Utils/tableViewerHelper';
 
 type propsType = {
   readonly selectedTabId: string;
@@ -198,11 +201,17 @@ export function Presentation({
       }
     };
   });
+
+  // Get the right view mode when switching between mobile/desktop screen sizes.
   useEffect(() => {
-    if (isMobile) {
-      tableData.pivotToMobile();
-    } else {
-      tableData.pivotToDesktop();
+    if (viewMode === 'table') {
+      if (isMobile) {
+        tableData.pivotToMobile();
+      } else {
+        tableData.pivotToDesktop();
+      }
+    } else if (viewMode === 'linechart') {
+      tableData.pivotToChart();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMobile]);
@@ -221,7 +230,8 @@ export function Presentation({
 
     if (initialRun && !hasSelectedValues) {
       if (getSavedQueryId()?.length > 0) {
-        tableData.fetchSavedQuery(getSavedQueryId(), i18n, isMobile);
+        const dataViewMode = getDataViewMode(viewMode, isMobile);
+        tableData.fetchSavedQuery(getSavedQueryId(), i18n, dataViewMode);
       } else {
         fetchTableDataIfAllowed();
       }
@@ -262,7 +272,8 @@ export function Presentation({
 
   function fetchTableDataIfAllowed() {
     if (variables.isMatrixSizeAllowed) {
-      tableData.fetchTableData(tableId, i18n, isMobile);
+      const dataViewMode = getDataViewMode(viewMode, isMobile);
+      tableData.fetchTableData(tableId, i18n, dataViewMode);
     } else {
       // fade table and give warning
       setIsFadingTable(true);
