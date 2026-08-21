@@ -208,9 +208,98 @@ export async function addFormattingToPxTable(
   return true;
 }
 
+export function initStubAndHeadingDesktop(pxTable: PxTable) {
+  // -> Set stub and heading order for desktop according to the order in pxTable
+  const stubOrderDesktop: string[] = pxTable.stub.map(
+    (variable) => variable.id,
+  );
+  const headingOrderDesktop: string[] = pxTable.heading.map(
+    (variable) => variable.id,
+  );
+
+  return {
+    stubOrderDesktop,
+    headingOrderDesktop,
+  };
+}
+
+export function initStubAndHeadingMobile(pxTable: PxTable) {
+  // -> Set stub and heading order for mobile according to the order in pxTable
+  const tmpStubMobile = structuredClone(pxTable.stub);
+  const tmpHeadingMobile = structuredClone(pxTable.heading);
+
+  tmpHeadingMobile.forEach((variable) => {
+    tmpStubMobile.push(variable);
+  });
+
+  tmpStubMobile.sort((a, b) => a.values.length - b.values.length);
+
+  const stubOrderMobile: string[] = tmpStubMobile.map(
+    (variable) => variable.id,
+  );
+
+  const headingOrderMobile: string[] = [];
+
+  return {
+    stubOrderMobile,
+    headingOrderMobile,
+  };
+}
+
+export function initStubAndHeadingChart(pxTable: PxTable) {
+  // -> Set stub and heading order for chart according to the order in pxTable
+  const stubOrderChart: string[] = [];
+  const headingOrderChart: string[] = [];
+  const stubVariableId: string = getChartStubVariableId(pxTable);
+
+  stubOrderChart.push(stubVariableId);
+
+  for (const variable of pxTable.metadata.variables) {
+    if (variable.id !== stubVariableId) {
+      headingOrderChart.push(variable.id);
+    }
+  }
+
+  return {
+    stubOrderChart,
+    headingOrderChart,
+  };
+}
+
+// Returns the variable to be used for the x-axis in charts, prioritizing time variable if it has more than one value, otherwise the variable with the most values, or the first variable if none of the above.
+export function getChartStubVariableId(pxTable: PxTable): string {
+  const timeVariable = pxTable.metadata.variables.find(
+    (variable) => variable.type === VartypeEnum.TIME_VARIABLE,
+  );
+
+  if (timeVariable && timeVariable.values.length > 1) {
+    return timeVariable.id;
+  }
+
+  const variableWithMostValues =
+    pxTable.metadata.variables.reduce<Variable | null>(
+      (maxVariable, currentVariable) =>
+        maxVariable === null ||
+        currentVariable.values.length > maxVariable.values.length
+          ? currentVariable
+          : maxVariable,
+      null,
+    );
+
+  if (variableWithMostValues) {
+    return variableWithMostValues.id;
+  }
+
+  if (pxTable.metadata.variables.length > 0) {
+    return pxTable.metadata.variables[0].id;
+  }
+
+  return '';
+}
+
 /**
  * Filters stub and heading arrays to only include variable IDs present in variableIds.
- * Returns new arrays for stubDesktop, headingDesktop, stubMobile, headingMobile.
+ * Returns new arrays for stubDesktop, headingDesktop, stubMobile, headingMobile, stubChart, headingChart.
  */
 export function filterStubAndHeadingArrays(
   variableIds: string[],
@@ -218,12 +307,16 @@ export function filterStubAndHeadingArrays(
   headingDesktop: string[],
   stubMobile: string[],
   headingMobile: string[],
+  stubChart: string[],
+  headingChart: string[],
 ) {
   return {
     stubDesktop: stubDesktop.filter((id) => variableIds.includes(id)),
     headingDesktop: headingDesktop.filter((id) => variableIds.includes(id)),
     stubMobile: stubMobile.filter((id) => variableIds.includes(id)),
     headingMobile: headingMobile.filter((id) => variableIds.includes(id)),
+    stubChart: stubChart.filter((id) => variableIds.includes(id)),
+    headingChart: headingChart.filter((id) => variableIds.includes(id)),
   };
 }
 
