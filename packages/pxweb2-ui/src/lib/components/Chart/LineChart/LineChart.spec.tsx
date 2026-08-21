@@ -8,7 +8,10 @@ import {
   buildDatasetOption,
   buildSeriesOption,
 } from '../Utils/chartOptionBuilder';
-import { getChartColorsFromCssVariables } from '../Utils/chartHelper';
+import {
+  getAxisColorsFromCssVariables,
+  getChartColorsFromCssVariables,
+} from '../Utils/chartHelper';
 import type { EChartsDataset } from '../Utils/chartTypes';
 import type { PxTable } from '../../../shared-types/pxTable';
 
@@ -33,6 +36,7 @@ vi.mock('../Utils/chartOptionBuilder', async () => {
 });
 
 vi.mock('../Utils/chartHelper', () => ({
+  getAxisColorsFromCssVariables: vi.fn(),
   getChartColorsFromCssVariables: vi.fn(),
 }));
 
@@ -86,6 +90,7 @@ describe('LineChart', () => {
       '#333333',
       '#444444',
     ]);
+    vi.mocked(getAxisColorsFromCssVariables).mockReturnValue(undefined);
     vi.mocked(useEChartOption).mockReturnValue({
       divRef: { current: null },
       chartRef: { current: null },
@@ -111,7 +116,7 @@ describe('LineChart', () => {
       name: 'persons',
     });
     expect(option.grid).toEqual({
-      top: 0,
+      top: 12,
       bottom: 200,
       left: '0',
       right: '0',
