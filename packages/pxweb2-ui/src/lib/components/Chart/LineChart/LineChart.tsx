@@ -9,11 +9,21 @@ import {
 import { useEChartOption } from '../Utils/useEChartOption';
 import type { PxTable } from '../../../shared-types/pxTable';
 import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
-import { getChartColorsFromCssVariables } from '../Utils/chartHelper';
+import {
+  getAdaptiveYAxisMax,
+  getAdaptiveYAxisMin,
+  getChartColorsFromCssVariables,
+  checkMultipleUnits,
+} from '../Utils/chartHelper';
+import EmptyState from '../../EmptyState/EmptyState';
+import type { EmptyStateProps } from '../../EmptyState/EmptyState';
 
 interface LineChartProps {
   readonly pxtable: PxTable;
   readonly colors?: string[];
+  readonly emptyStateTitle?: string;
+  readonly emptyStateDescription?: string;
+  readonly emptyStateSvgName?: EmptyStateProps['svgName'];
 }
 
 type TooltipParam = {
@@ -41,8 +51,20 @@ function getTooltipSymbolSvg(symbol: string, color: string): string {
   }
 }
 
-export function LineChart({ pxtable, colors }: LineChartProps) {
+export function LineChart({
+  pxtable,
+  colors,
+  emptyStateTitle,
+  emptyStateDescription,
+  emptyStateSvgName,
+}: LineChartProps) {
+  const hasMultipleUnits = checkMultipleUnits(pxtable);
+
   const dataset = useMemo(() => mapPxTableToChartDataset(pxtable), [pxtable]);
+
+  const xAxisName = useMemo(() => {
+    return pxtable.stub.map((variable) => variable.label).join(' / ');
+  }, [pxtable]);
 
   const resolvedColors = useMemo(() => {
     return colors && colors.length > 0
@@ -50,14 +72,32 @@ export function LineChart({ pxtable, colors }: LineChartProps) {
       : getChartColorsFromCssVariables();
   }, [colors]);
 
+  const resolvedEmptyStateTitle =
+    emptyStateTitle?.trim() || 'Cannot display chart';
+  const resolvedEmptyStateDescription =
+    emptyStateDescription?.trim() ||
+    'The line chart cannot be displayed because your selection includes contents with different units (for example number and percent). Please select contents with the same unit to see the line chart.';
+  const resolvedEmptyStateSvgName: EmptyStateProps['svgName'] =
+    emptyStateSvgName && emptyStateSvgName.trim().length > 0
+      ? emptyStateSvgName
+      : 'ManWithMagnifyingGlass';
+
   const option = useMemo<echarts.EChartsOption>(
     () => ({
       ...buildDatasetOption(dataset),
       grid: { top: 0, bottom: 200, left: '0', right: '0', containLabel: false },
-      xAxis: { type: 'category' as const, axisLabel: { rotate: 45 } },
+      xAxis: {
+        type: 'category' as const,
+        name: xAxisName,
+        nameLocation: 'end',
+        nameGap: 70,
+        axisLabel: { rotate: 45 },
+      },
       yAxis: {
         name: dataset.unit,
-        min: (value) => value.min,
+        scale: true,
+        min: getAdaptiveYAxisMin,
+        max: getAdaptiveYAxisMax,
       },
       legend: {
         height: 40 * dataset.series.length, // increase legend height based on number of series to prevent overlap with x-axis labels
@@ -93,7 +133,7 @@ export function LineChart({ pxtable, colors }: LineChartProps) {
         },
       },
     }),
-    [dataset, resolvedColors],
+    [dataset, resolvedColors, xAxisName],
   );
 
   const { divRef } = useEChartOption(option);
@@ -101,7 +141,18 @@ export function LineChart({ pxtable, colors }: LineChartProps) {
 
   return (
     <div>
-      <div ref={divRef} style={{ width: '100%', height: `${height}px` }}></div>
+      {hasMultipleUnits ? (
+        <EmptyState
+          svgName={resolvedEmptyStateSvgName}
+          headingTxt={resolvedEmptyStateTitle}
+          descriptionTxt={resolvedEmptyStateDescription}
+        />
+      ) : (
+        <div
+          ref={divRef}
+          style={{ width: '100%', height: `${height}px` }}
+        ></div>
+      )}
     </div>
   );
 }

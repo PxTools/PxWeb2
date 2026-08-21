@@ -59,6 +59,59 @@ const MemoizedTable = React.memo(
     prevProps.getVerticalScrollElement === nextProps.getVerticalScrollElement,
 );
 
+type PresentationViewProps = {
+  readonly pxtable: PxTable;
+  readonly viewMode: 'table' | 'linechart';
+  readonly isMobile: boolean;
+  readonly isFadingTable: boolean;
+  readonly gradientContainerRef: React.RefObject<HTMLDivElement | null>;
+  readonly tableContainerRef: React.RefObject<HTMLDivElement | null>;
+  readonly getVerticalScrollElement: () => HTMLElement | null;
+  readonly lineChartEmptyStateTitle: string;
+  readonly lineChartEmptyStateDescription: string;
+};
+
+function PresentationView({
+  pxtable,
+  viewMode,
+  isMobile,
+  isFadingTable,
+  gradientContainerRef,
+  tableContainerRef,
+  getVerticalScrollElement,
+  lineChartEmptyStateTitle,
+  lineChartEmptyStateDescription,
+}: Readonly<PresentationViewProps>) {
+  return (
+    <>
+      <Activity mode={viewMode === 'table' ? 'visible' : 'hidden'}>
+        <div className={classes.gradientContainer} ref={gradientContainerRef}>
+          <div className={classes.tableContainer} ref={tableContainerRef}>
+            <MemoizedTable
+              pxtable={pxtable}
+              isMobile={isMobile}
+              getVerticalScrollElement={getVerticalScrollElement}
+            />
+          </div>
+        </div>
+      </Activity>
+      <Activity mode={viewMode === 'linechart' ? 'visible' : 'hidden'}>
+        <div
+          className={cl(classes.chartContainer, {
+            [classes.fadeChart]: isFadingTable,
+          })}
+        >
+          <LineChart
+            pxtable={pxtable}
+            emptyStateTitle={lineChartEmptyStateTitle}
+            emptyStateDescription={lineChartEmptyStateDescription}
+          />
+        </div>
+      </Activity>
+    </>
+  );
+}
+
 export function Presentation({
   selectedTabId,
   scrollRef,
@@ -96,6 +149,12 @@ export function Presentation({
 
   const tableContainerRef = useRef<HTMLDivElement | null>(null);
   const gradientContainerRef = useRef<HTMLDivElement | null>(null);
+  const lineChartEmptyStateTitle = t(
+    'presentation_page.main_content.chart.line_chart.warnings.multiple_units.title',
+  );
+  const lineChartEmptyStateDescription = t(
+    'presentation_page.main_content.chart.line_chart.warnings.multiple_units.description',
+  );
 
   useEffect(() => {
     const checkScrollAndGradient = () => {
@@ -235,6 +294,16 @@ export function Presentation({
     }
   }, [isMissingMandatoryVariables]);
 
+  const shouldShowNormalPresentation = !isMissingMandatoryVariables;
+  const shouldShowStalePresentation =
+    isMissingMandatoryVariables &&
+    !variables.isMatrixSizeAllowed &&
+    !isMandatoryNotSelectedFirst;
+  const shouldShowMissingMandatoryEmptyState =
+    !isLoadingMetadata &&
+    isMissingMandatoryVariables &&
+    (variables.isMatrixSizeAllowed || isMandatoryNotSelectedFirst);
+
   useEffect(() => {
     if (!variables.isMatrixSizeAllowed && !isMandatoryNotSelectedFirst) {
       // Scroll to the top of the page when the Alert is shown
@@ -313,83 +382,30 @@ export function Presentation({
             </div>
           )}
 
-          {!isMissingMandatoryVariables && (
-            <>
-              <Activity mode={viewMode === 'table' ? 'visible' : 'hidden'}>
-                <div
-                  className={classes.gradientContainer}
-                  ref={gradientContainerRef}
-                >
-                  <div
-                    className={classes.tableContainer}
-                    ref={tableContainerRef}
-                  >
-                    <MemoizedTable
-                      pxtable={tableData.data}
-                      isMobile={isMobile}
-                      getVerticalScrollElement={getVerticalScrollElement}
-                    />
-                  </div>
-                </div>
-              </Activity>
-              <Activity mode={viewMode === 'linechart' ? 'visible' : 'hidden'}>
-                <div
-                  className={cl(classes.chartContainer, {
-                    [classes.fadeChart]: isFadingTable,
-                  })}
-                >
-                  <LineChart pxtable={tableData.data} />
-                </div>
-              </Activity>
-            </>
+          {(shouldShowNormalPresentation || shouldShowStalePresentation) && (
+            <PresentationView
+              pxtable={tableData.data}
+              viewMode={viewMode}
+              isMobile={isMobile}
+              isFadingTable={isFadingTable}
+              gradientContainerRef={gradientContainerRef}
+              tableContainerRef={tableContainerRef}
+              getVerticalScrollElement={getVerticalScrollElement}
+              lineChartEmptyStateTitle={lineChartEmptyStateTitle}
+              lineChartEmptyStateDescription={lineChartEmptyStateDescription}
+            />
           )}
-          {isMissingMandatoryVariables &&
-            !variables.isMatrixSizeAllowed &&
-            !isMandatoryNotSelectedFirst && (
-              <>
-                <Activity mode={viewMode === 'table' ? 'visible' : 'hidden'}>
-                  <div
-                    className={classes.gradientContainer}
-                    ref={gradientContainerRef}
-                  >
-                    <div
-                      className={classes.tableContainer}
-                      ref={tableContainerRef}
-                    >
-                      <MemoizedTable
-                        pxtable={tableData.data}
-                        isMobile={isMobile}
-                        getVerticalScrollElement={getVerticalScrollElement}
-                      />
-                    </div>
-                  </div>
-                </Activity>
-                <Activity
-                  mode={viewMode === 'linechart' ? 'visible' : 'hidden'}
-                >
-                  <div
-                    className={cl(classes.chartContainer, {
-                      [classes.fadeChart]: isFadingTable,
-                    })}
-                  >
-                    <LineChart pxtable={tableData.data} />
-                  </div>
-                </Activity>
-              </>
-            )}
-          {!isLoadingMetadata &&
-            isMissingMandatoryVariables &&
-            (variables.isMatrixSizeAllowed || isMandatoryNotSelectedFirst) && (
-              <EmptyState
-                svgName="ManWithMagnifyingGlass"
-                headingTxt={t(
-                  'presentation_page.main_content.table.warnings.missing_mandatory.title',
-                )}
-                descriptionTxt={t(
-                  'presentation_page.main_content.table.warnings.missing_mandatory.description',
-                )}
-              />
-            )}
+          {shouldShowMissingMandatoryEmptyState && (
+            <EmptyState
+              svgName="ManWithMagnifyingGlass"
+              headingTxt={t(
+                'presentation_page.main_content.table.warnings.missing_mandatory.title',
+              )}
+              descriptionTxt={t(
+                'presentation_page.main_content.table.warnings.missing_mandatory.description',
+              )}
+            />
+          )}
         </>
       )}
     </main>
