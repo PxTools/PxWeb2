@@ -9,10 +9,7 @@ import {
 import { useEChartOption } from '../Utils/useEChartOption';
 import type { PxTable } from '../../../shared-types/pxTable';
 import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
-import {
-  getChartColorsFromCssVariables,
-  getAxisColorsFromCssVariables,
-} from '../Utils/chartHelper';
+import { getChartCssVariables } from '../Utils/chartHelper';
 
 interface LineChartProps {
   readonly pxtable: PxTable;
@@ -53,11 +50,11 @@ export function LineChart({ pxtable, colors }: LineChartProps) {
   const resolvedColors = useMemo(() => {
     return colors && colors.length > 0
       ? colors
-      : getChartColorsFromCssVariables();
+      : getChartCssVariables()?.chartColors;
   }, [colors]);
 
   const resolvedAxisColor = useMemo(() => {
-    return getAxisColorsFromCssVariables();
+    return getChartCssVariables()?.axisColor;
   }, []);
   const option = useMemo<echarts.EChartsOption>(() => {
     const estimatedLegendHeight = LEGEND_ITEM_HEIGHT * dataset.series.length;

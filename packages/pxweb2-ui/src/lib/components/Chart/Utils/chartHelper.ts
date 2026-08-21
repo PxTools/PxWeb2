@@ -23,6 +23,39 @@ function resolveCssVariableValue(
   return resolvedValue;
 }
 
+type ChartCssValues = {
+  chartColors: string[] | undefined;
+  axisColor: string | undefined;
+};
+export function getChartCssVariables(): ChartCssValues | undefined {
+  if (globalThis.window === undefined || globalThis.document === undefined) {
+    return undefined;
+  }
+
+  const styles = getComputedStyle(globalThis.document.documentElement);
+
+  const csvColorList = styles
+    .getPropertyValue('--px-color-chart-series')
+    .trim();
+
+  if (csvColorList) {
+    const parsedColors = csvColorList
+      .split(',')
+      .map((color) => resolveCssVariableValue(color, styles))
+      .map((color) => color.trim())
+      .filter(Boolean);
+
+    if (parsedColors.length > 0) {
+      return {
+        chartColors: getChartColorsFromCssVariables(),
+        axisColor: getAxisColorsFromCssVariables(),
+      };
+    }
+  }
+
+  return undefined;
+}
+
 export function getChartColorsFromCssVariables(): string[] | undefined {
   if (globalThis.window === undefined || globalThis.document === undefined) {
     return undefined;
