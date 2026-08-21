@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.11.0](https://github.com/PxTools/PxWeb2/compare/v2.10.0...v2.11.0) (2026-08-21)
+
+
+### :sparkles: Features
+
+* Chart autopivot ([#1346](https://github.com/PxTools/PxWeb2/issues/1346)) ([763b42a](https://github.com/PxTools/PxWeb2/commit/763b42a5f9786158446e0df8ec8d84262436190f))
+
 ## [2.10.0](https://github.com/PxTools/PxWeb2/compare/v2.9.2...v2.10.0) (2026-08-18)
 
 
