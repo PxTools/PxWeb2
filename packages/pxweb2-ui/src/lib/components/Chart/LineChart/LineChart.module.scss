@@ -1,0 +1,13 @@
+.lineChart {
+  display: grid;
+  gap: 12px;
+}
+
+.chart {
+  width: 100%;
+  height: 680px;
+
+  &.expandedLegend {
+    height: 800px;
+  }
+}

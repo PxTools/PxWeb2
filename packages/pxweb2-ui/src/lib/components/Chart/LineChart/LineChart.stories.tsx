@@ -1,13 +1,54 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import LineChart from './LineChart';
+import {
+  LineChart,
+  type LineChartLegendOverflowMode,
+  type LineChartLegendPaginationOrientation,
+} from './LineChart';
 import { setPxTableData } from '../../Table/Utils/cubeHelper';
 import type { PxTable } from '../../../shared-types/pxTable';
 import type { DataCell, PxData } from '../../../shared-types/pxTableData';
 import type { Variable } from '../../../shared-types/variable';
 import { VartypeEnum } from '../../../shared-types/vartypeEnum';
+import styles from './LineChart.stories.module.scss';
 
 type Story = StoryObj<typeof LineChart>;
+
+const legendOverflowModes: LineChartLegendOverflowMode[] = [
+  'pagination',
+  'showMore',
+];
+
+const legendOverflowModeLabels: Record<LineChartLegendOverflowMode, string> = {
+  pagination: 'Pagination',
+  showMore: 'Show more',
+};
+
+const legendPaginationOrientations: LineChartLegendPaginationOrientation[] = [
+  'horizontal',
+  'vertical',
+];
+
+const legendOverflowComparisonCases: Array<{
+  readonly title: string;
+  readonly legendOverflowMode: LineChartLegendOverflowMode;
+  readonly legendPaginationOrientation?: LineChartLegendPaginationOrientation;
+}> = [
+  {
+    title: 'Horizontal pagination',
+    legendOverflowMode: 'pagination',
+    legendPaginationOrientation: 'horizontal',
+  },
+  {
+    title: 'Vertical pagination',
+    legendOverflowMode: 'pagination',
+    legendPaginationOrientation: 'vertical',
+  },
+  {
+    title: legendOverflowModeLabels.showMore,
+    legendOverflowMode: 'showMore',
+  },
+];
 
 function createVariable(
   id: string,
@@ -174,12 +215,38 @@ const sparseDataPxTable = createLineChartPxTable(
   },
 );
 
+const legendOverflowPxTable = createLineChartPxTable(
+  ['2019', '2020', '2021', '2022', '2023', '2024'],
+  Array.from({ length: 18 }, (_value, index) => ({
+    code: `S${index + 1}`,
+    label: `Detailed population segment ${index + 1}`,
+  })),
+  (_year, seriesCode, yearIndex) => {
+    const seriesNumber = Number(seriesCode.replace('S', ''));
+    return 100 + yearIndex * 4 + seriesNumber * 12;
+  },
+);
+
 const meta: Meta<typeof LineChart> = {
   component: LineChart,
   title: 'Components/Chart/LineChart',
+  argTypes: {
+    pxtable: { control: false },
+    legendOverflowMode: {
+      control: 'radio',
+      options: legendOverflowModes,
+    },
+    legendPaginationOrientation: {
+      control: 'radio',
+      options: legendPaginationOrientations,
+    },
+    visibleLegendItemCount: {
+      control: { type: 'number', min: 1, max: 18, step: 1 },
+    },
+  },
   decorators: [
     (StoryComponent) => (
-      <div style={{ maxWidth: '960px', margin: '0 auto' }}>
+      <div className={styles.storyWrapper}>
         <StoryComponent />
       </div>
     ),
@@ -225,4 +292,29 @@ export const SparseData: Story = {
     pxtable: sparseDataPxTable,
     colors: ['#24a148', '#8a3ffc'],
   },
+};
+
+export const LegendOverflowPlayground: Story = {
+  args: {
+    pxtable: legendOverflowPxTable,
+    legendOverflowMode: 'pagination',
+    visibleLegendItemCount: 8,
+  },
+};
+
+export const LegendOverflowComparison: Story = {
+  args: {
+    pxtable: legendOverflowPxTable,
+    visibleLegendItemCount: 8,
+  },
+  render: (args) => (
+    <div className={styles.legendOverflowComparison}>
+      {legendOverflowComparisonCases.map((comparisonCase) => (
+        <section key={comparisonCase.title}>
+          <h3>{comparisonCase.title}</h3>
+          <LineChart {...args} {...comparisonCase} />
+        </section>
+      ))}
+    </div>
+  ),
 };

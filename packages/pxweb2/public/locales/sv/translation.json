@@ -256,7 +256,8 @@
         },
         "imagefile": {
           "title": "Spara som diagram",
-          "png": "Diagram (png)"
+          "png": "Diagram (png)",
+          "svg": "Diagram (svg)"
         },
         "link": {
           "title": "Spara som länk",
