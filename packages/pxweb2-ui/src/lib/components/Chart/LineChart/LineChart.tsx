@@ -36,9 +36,7 @@ const getConfinedTooltipPosition: NonNullable<
   const padding = 8;
   const offset = 12;
 
-  const [rawX, rawY] = Array.isArray(point)
-    ? point
-    : [padding, padding];
+  const [rawX, rawY] = Array.isArray(point) ? point : [padding, padding];
 
   const [contentWidth, contentHeight] = size?.contentSize ?? [0, 0];
   const [viewWidth, viewHeight] = size?.viewSize ?? [0, 0];
