@@ -87,11 +87,15 @@ vi.mock('@pxweb2/pxweb2-ui', async () => {
           {children}
         </div>
       ) : null,
-    Label: ({ children }: { children: React.ReactNode }) => <span>{children}</span>,
+    Label: ({ children }: { children: React.ReactNode }) => (
+      <span>{children}</span>
+    ),
     InformationCard: ({ children }: { children: React.ReactNode }) => (
       <div>{children}</div>
     ),
-    BodyLong: ({ children }: { children: React.ReactNode }) => <p>{children}</p>,
+    BodyLong: ({ children }: { children: React.ReactNode }) => (
+      <p>{children}</p>
+    ),
     Icon: ({ iconName }: { iconName: string }) => <span>{iconName}</span>,
   };
 });
@@ -117,7 +121,7 @@ describe('ManualPivoting', () => {
           makeVariable('s1', 'Stub 1'),
           makeVariable('s2', 'Stub 2'),
         ]}
-      />, 
+      />,
     );
 
     const draggedItem = document.querySelector(
@@ -152,7 +156,7 @@ describe('ManualPivoting', () => {
         onClose={onClose}
         headerVariables={[makeVariable('h1', 'Header 1')]}
         stubVariables={[makeVariable('s1', 'Stub 1')]}
-      />, 
+      />,
     );
 
     fireEvent.click(
