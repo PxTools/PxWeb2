@@ -39,15 +39,7 @@ vi.mock('framer-motion', async () => {
     }
   >(
     (
-      {
-        as,
-        children,
-        drag,
-        dragMomentum,
-        dragElastic,
-        whileDrag,
-        ...props
-      },
+      { as, children, drag, dragMomentum, dragElastic, whileDrag, ...props },
       ref,
     ) => {
       void drag;
