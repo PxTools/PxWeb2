@@ -1,5 +1,19 @@
 import { useEffect, useRef } from 'react';
 import * as echarts from 'echarts';
+import { getChartCssVariables } from '../Utils/chartHelper';
+
+const textStyle = {
+  fontFamily: 'PxWeb-font, sans-serif',
+  fontSize: '0.875rem',
+  color: getFontColor().color,
+} satisfies NonNullable<echarts.EChartsOption['textStyle']>;
+
+function getAxisColor(): { color: string } {
+  return { color: getChartCssVariables()?.axisColor || '#162327' };
+}
+function getFontColor(): { color: string } {
+  return { color: getChartCssVariables()?.fontColor || '#162327' };
+}
 
 function isSingleTitleOption(
   title: echarts.EChartsOption['title'],
@@ -38,9 +52,9 @@ function applyOptionWithWrappedTitle(
 
 type LegendMeasurableChart = {
   getModel?: () => { getComponent?: (mainType: string) => unknown } | undefined;
-  getViewOfComponentModel?: (componentModel: unknown) =>
-    | { group?: { getBoundingRect?: () => { height: number } } }
-    | undefined;
+  getViewOfComponentModel?: (
+    componentModel: unknown,
+  ) => { group?: { getBoundingRect?: () => { height: number } } } | undefined;
 };
 
 function getRenderedLegendHeight(chart: echarts.EChartsType): number | null {
@@ -56,6 +70,86 @@ function getRenderedLegendHeight(chart: echarts.EChartsType): number | null {
     ?.group?.getBoundingRect?.().height;
 
   return typeof height === 'number' && Number.isFinite(height) ? height : null;
+}
+
+function applyStyling(option: echarts.EChartsOption): echarts.EChartsOption {
+  const axisColor = getAxisColor();
+  const xAxis = Array.isArray(option.xAxis)
+    ? option.xAxis.map((axis) => ({
+        ...axis,
+        axisLine: {
+          ...axis.axisLine,
+          lineStyle: {
+            ...axis.axisLine?.lineStyle,
+            ...axisColor,
+          },
+        },
+        axisLabel: { ...axis.axisLabel, ...textStyle },
+      }))
+    : {
+        ...option.xAxis,
+        axisLine: {
+          ...option.xAxis?.axisLine,
+          lineStyle: {
+            ...option.xAxis?.axisLine?.lineStyle,
+            ...axisColor,
+          },
+        },
+        axisLabel: {
+          ...option.xAxis?.axisLabel,
+          ...textStyle,
+        },
+      };
+  const yAxis = Array.isArray(option.yAxis)
+    ? option.yAxis.map((axis) => ({
+        ...axis,
+        axisLine: {
+          ...axis.axisLine,
+          lineStyle: { ...axis.axisLine?.lineStyle, ...axisColor },
+        },
+        axisLabel: { ...axis.axisLabel, ...textStyle },
+      }))
+    : {
+        ...option.yAxis,
+        axisLine: {
+          ...option.yAxis?.axisLine,
+          lineStyle: {
+            ...option.yAxis?.axisLine?.lineStyle,
+            ...axisColor,
+          },
+        },
+        axisLabel: {
+          ...option.yAxis?.axisLabel,
+          ...textStyle,
+        },
+      };
+  const legend = Array.isArray(option.legend)
+    ? option.legend.map((legendItem) => ({
+        ...legendItem,
+        textStyle: { ...legendItem.textStyle, ...textStyle },
+      }))
+    : {
+        ...option.legend,
+        textStyle: { ...option.legend?.textStyle, ...textStyle },
+      };
+
+  const title = Array.isArray(option.title)
+    ? option.title.map((titleItem) => ({
+        ...titleItem,
+        textStyle: { ...titleItem.textStyle, ...textStyle },
+      }))
+    : {
+        ...option.title,
+        textStyle: { ...option.title?.textStyle, ...textStyle },
+      };
+
+  return {
+    ...option,
+    legend,
+    xAxis: xAxis as echarts.EChartsOption['xAxis'],
+    yAxis: yAxis as echarts.EChartsOption['yAxis'],
+    title: title as echarts.EChartsOption['title'],
+  };
 }
 
 // Keeps a constant distance between the x axis labels and the legend, no matter how many legend rows are rendered.
@@ -95,7 +189,7 @@ export function useEChartOption(
     chartRef.current = chart;
 
     const applyOption = () => {
-      applyOptionWithWrappedTitle(chart, option);
+      applyOptionWithWrappedTitle(chart, applyStyling(option));
 
       if (typeof legendGap === 'number') {
         applyLegendGap(chart, option, legendGap);
