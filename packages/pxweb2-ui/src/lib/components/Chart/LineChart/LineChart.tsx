@@ -10,17 +10,23 @@ import { useEChartOption } from '../Utils/useEChartOption';
 import type { PxTable } from '../../../shared-types/pxTable';
 import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
 import { getChartColorsFromCssVariables } from '../Utils/chartHelper';
+import { EChartsDataset } from '../Utils/chartTypes';
+
+type TooltipType = 'axis' | 'item';
 
 interface LineChartProps {
   readonly pxtable: PxTable;
   readonly colors?: string[];
+  readonly tooltipType?: TooltipType;
 }
 
 type TooltipParam = {
   axisValueLabel?: string;
+  axisValue?: string | number;
+  name?: string;
   seriesIndex: number;
   seriesName: string;
-  data?: Record<string, string | number>;
+  data?: Record<string, string | number | null>;
   color?: string;
 };
 
@@ -41,29 +47,13 @@ function getTooltipSymbolSvg(symbol: string, color: string): string {
   }
 }
 
-export function LineChart({ pxtable, colors }: LineChartProps) {
-  const dataset = useMemo(() => mapPxTableToChartDataset(pxtable), [pxtable]);
-
-  const resolvedColors = useMemo(() => {
-    return colors && colors.length > 0
-      ? colors
-      : getChartColorsFromCssVariables();
-  }, [colors]);
-
-  const option = useMemo<echarts.EChartsOption>(
-    () => ({
-      ...buildDatasetOption(dataset),
-      grid: { top: 0, bottom: 200, left: '0', right: '0', containLabel: false },
-      xAxis: { type: 'category' as const, axisLabel: { rotate: 45 } },
-      yAxis: {
-        name: dataset.unit,
-        min: (value) => value.min,
-      },
-      legend: {
-        height: 40 * dataset.series.length, // increase legend height based on number of series to prevent overlap with x-axis labels
-      },
-      series: buildSeriesOption(dataset, 'line', resolvedColors),
-      tooltip: {
+function getTooltip(
+  tooltipType: TooltipType,
+  dataset: EChartsDataset,
+): echarts.EChartsOption['tooltip'] {
+  switch (tooltipType) {
+    case 'axis':
+      return {
         trigger: 'axis',
         formatter: (params: unknown) => {
           const axisParams = (Array.isArray(params) ? params : [params]) as
@@ -91,9 +81,106 @@ export function LineChart({ pxtable, colors }: LineChartProps) {
 
           return `<div><div>${title}</div>${rows}</div>`;
         },
+      };
+    case 'item':
+      return {
+        trigger: 'item',
+        formatter: (params: unknown) => {
+          const param = params as TooltipParam;
+          const seriesMeta = dataset.series[param.seriesIndex];
+
+          if (!seriesMeta) {
+            return '';
+          }
+
+          const row = param.data;
+          const title =
+            param.axisValueLabel ??
+            (param.axisValue != null ? String(param.axisValue) : undefined) ??
+            param.name ??
+            (row?.name != null ? String(row.name) : '');
+          const value = row?.[seriesMeta.key] ?? '';
+          const symbol =
+            LINE_SERIES_SYMBOLS[param.seriesIndex % LINE_SERIES_SYMBOLS.length];
+          const color = param.color ?? '#666666';
+
+          return `
+        <div>${title}</div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <span style="display:inline-flex;align-items:center">
+            ${getTooltipSymbolSvg(symbol, color)}
+          </span>
+          <span>${param.seriesName}: ${value}</span>
+        </div>
+      `;
+        },
+      };
+    default:
+      return {
+        trigger: 'axis',
+      };
+  }
+}
+
+export function LineChart({
+  pxtable,
+  colors,
+  tooltipType = 'axis',
+}: LineChartProps) {
+  const dataset = useMemo(() => mapPxTableToChartDataset(pxtable), [pxtable]);
+
+  const resolvedColors = useMemo(() => {
+    return colors && colors.length > 0
+      ? colors
+      : getChartColorsFromCssVariables();
+  }, [colors]);
+
+  const option = useMemo<echarts.EChartsOption>(
+    () => ({
+      ...buildDatasetOption(dataset),
+      grid: { top: 0, bottom: 200, left: '0', right: '0', containLabel: false },
+      xAxis: { type: 'category' as const, axisLabel: { rotate: 45 } },
+      yAxis: {
+        name: dataset.unit,
+        min: (value) => value.min,
+      },
+      legend: {
+        height: 40 * dataset.series.length, // increase legend height based on number of series to prevent overlap with x-axis labels
+      },
+      series: buildSeriesOption(dataset, 'line', resolvedColors),
+      tooltip: {
+        ...getTooltip(tooltipType, dataset),
+
+        // trigger: 'axis',
+        // formatter: (params: unknown) => {
+        //   const axisParams = (Array.isArray(params) ? params : [params]) as
+        //     TooltipParam[] | undefined;
+
+        //   if (!axisParams || axisParams.length === 0) {
+        //     return '';
+        //   }
+
+        //   const title = axisParams[0].axisValueLabel;
+        //   const rows = axisParams
+        //     .map((param) => {
+        //       const seriesMeta = dataset.series[param.seriesIndex];
+        //       const row = param.data as Record<string, string | number>;
+        //       const value = row?.[seriesMeta.key];
+        //       const symbol =
+        //         LINE_SERIES_SYMBOLS[
+        //           param.seriesIndex % LINE_SERIES_SYMBOLS.length
+        //         ];
+        //       const color = param.color ?? '#666666';
+
+        //       return `<div style="display:flex;align-items:center;gap:6px"><span style="display:inline-flex;align-items:center">${getTooltipSymbolSvg(symbol, color)}</span><span>${param.seriesName}: ${value ?? ''}</span></div>`;
+        //     })
+        //     .join('');
+
+        //   return `<div><div>${title}</div>${rows}</div>`;
+        // },
       },
     }),
-    [dataset, resolvedColors],
+    [dataset, resolvedColors, tooltipType],
   );
 
   const { divRef } = useEChartOption(option);
