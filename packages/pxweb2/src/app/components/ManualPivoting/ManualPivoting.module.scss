@@ -25,9 +25,6 @@
 .groupZone {
   position: relative;
   width: 100%;
-  // border: 1px solid var(--px-color-border-subtle);
-  // border-radius: var(--px-border-radius-medium);
-  padding: 8px;
   min-height: 220px;
 }
 
@@ -106,4 +103,12 @@
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+.modalBody {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  width: 100%;
+  padding: 16px 28px 12px 28px;
 }

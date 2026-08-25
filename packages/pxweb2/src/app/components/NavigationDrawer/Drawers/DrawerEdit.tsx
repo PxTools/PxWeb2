@@ -174,11 +174,13 @@ export function DrawerEdit() {
       {isManualPivotOpen && (
         <ManualPivoting
           isOpen={isManualPivotOpen}
-          onClose={(headerItems, stubItems) => {
-            pivotManual(
-              headerItems.map((item) => item.id),
-              stubItems.map((item) => item.id),
-            );
+          onClose={(updated, headerItems, stubItems) => {
+            if (updated) {
+              pivotManual(
+                headerItems.map((item) => item.id),
+                stubItems.map((item) => item.id),
+              );
+            }
             setIsManualPivotOpen(false);
           }}
           headerVariables={data?.heading ?? []}

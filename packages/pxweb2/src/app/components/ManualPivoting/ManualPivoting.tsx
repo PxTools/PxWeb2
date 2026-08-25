@@ -38,7 +38,11 @@ type SourcePlaceholderMeta = {
 
 interface ManualPivotProps {
   readonly isOpen: boolean;
-  readonly onClose: (headerItems: Variable[], stubItems: Variable[]) => void;
+  readonly onClose: (
+    updated: boolean,
+    headerItems: Variable[],
+    stubItems: Variable[],
+  ) => void;
   readonly headerVariables: Variable[];
   readonly stubVariables: Variable[];
 }
@@ -937,7 +941,7 @@ export function ManualPivot({
     <Modal
       className={classes.manualPivotModal}
       isOpen={isOpen}
-      onClose={() => onClose(headerItems, stubItems)}
+      onClose={(updated) => onClose(updated, headerItems, stubItems)}
       heading={t('presentation_page.side_menu.edit.customize.pivot.title')}
       label={t('presentation_page.side_menu.edit.title')}
       cancelLabel={t(
