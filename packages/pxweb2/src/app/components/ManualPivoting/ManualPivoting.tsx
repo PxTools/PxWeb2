@@ -395,8 +395,12 @@ export function ManualPivot({
 
   const getGroupLabelText = (group: VariableGroup): string =>
     group === 'stub'
-      ? t('presentation_page.side_menu.edit.customize.manual_pivoting.manual_pivoting_modal.stub_title')
-      : t('presentation_page.side_menu.edit.customize.manual_pivoting.manual_pivoting_modal.header_title');
+      ? t(
+          'presentation_page.side_menu.edit.customize.manual_pivoting.manual_pivoting_modal.stub_title',
+        )
+      : t(
+          'presentation_page.side_menu.edit.customize.manual_pivoting.manual_pivoting_modal.header_title',
+        );
 
   const getGroupLabel = (group: VariableGroup): string =>
     getGroupLabelText(group);
@@ -952,9 +956,11 @@ export function ManualPivot({
       </div>
       <div modal-body className={classes.modalBody}>
         <InformationCard icon="LightBulb">
-          <BodyLong size="medium">{t(
-        'presentation_page.side_menu.edit.customize.manual_pivoting.manual_pivoting_modal.info_text',
-        )}</BodyLong>
+          <BodyLong size="medium">
+            {t(
+              'presentation_page.side_menu.edit.customize.manual_pivoting.manual_pivoting_modal.info_text',
+            )}
+          </BodyLong>
         </InformationCard>
         <div className={classes.wrapper}>
           {renderGroup('stub', stubItems, stubZoneRef)}
