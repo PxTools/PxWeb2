@@ -1,6 +1,6 @@
 {
   "name": "@pxweb2/source",
-  "version": "2.9.2",
+  "version": "2.10.0",
   "license": "MIT",
   "type": "module",
   "scripts": {
@@ -54,7 +54,7 @@
     "style-dictionary": "^5.5.1",
     "typescript": "^6.0.3",
     "unplugin-dts": "^1.0.3",
-    "wrangler": "^4.120.0"
+    "wrangler": "^4.123.0"
   },
   "engines": {
     "node": ">=24",

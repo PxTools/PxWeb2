@@ -1,3 +1,5 @@
+import { DataViewModeType } from '../../../context/DataViewModeType';
+
 export type ViewMode = 'table' | 'linechart';
 
 export function getViewMode(
@@ -18,4 +20,17 @@ export function getSearchParamsWithViewMode(
   const nextSearchParams = new URLSearchParams(searchParams);
   nextSearchParams.set('view', viewMode);
   return nextSearchParams;
+}
+
+export function getDataViewMode(
+  viewMode: ViewMode,
+  isMobile: boolean,
+): DataViewModeType {
+  if (viewMode === 'linechart') {
+    return DataViewModeType.Chart;
+  }
+
+  return isMobile
+    ? DataViewModeType.MobileTable
+    : DataViewModeType.DesktopTable;
 }
