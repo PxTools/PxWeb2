@@ -287,7 +287,7 @@ export function Presentation({
                       selectedCells: t(
                         'number.simple_number_with_zero_decimal',
                         {
-                          value: variables.getSelectedMatrixSize(),
+                          value: String(variables.getSelectedMatrixSize()),
                         },
                       ),
                     },
@@ -301,7 +301,7 @@ export function Presentation({
                     'presentation_page.main_content.table.warnings.to_many_values_selected.maxCells',
                     {
                       maxCells: t('number.simple_number_with_zero_decimal', {
-                        value: config.maxDataCells,
+                        value: String(config.maxDataCells),
                       }),
                     },
                   )}
