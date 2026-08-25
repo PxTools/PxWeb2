@@ -158,6 +158,28 @@ export function LineChart({
       : getChartColorsFromCssVariables();
   }, [colors]);
 
+  const series = useMemo<echarts.SeriesOption[]>(() => {
+    const baseSeries = buildSeriesOption(dataset, 'line', resolvedColors);
+
+    if (tooltipType !== 'item') {
+      return baseSeries;
+    }
+
+    // Show all symbols for 'item' tooltip type to ensure that the tooltip is displayed for all data points
+    return baseSeries.map((seriesOption) => {
+      if (seriesOption.type !== 'line') {
+        return seriesOption;
+      }
+
+      return {
+        ...seriesOption,
+        showSymbol: true,
+        showAllSymbol: true,
+        symbolSize: 7,
+      } as echarts.LineSeriesOption;
+    });
+  }, [dataset, resolvedColors, tooltipType]);
+
   const option = useMemo<echarts.EChartsOption>(
     () => ({
       ...buildDatasetOption(dataset),
@@ -170,7 +192,7 @@ export function LineChart({
       legend: {
         height: 40 * dataset.series.length, // increase legend height based on number of series to prevent overlap with x-axis labels
       },
-      series: buildSeriesOption(dataset, 'line', resolvedColors),
+      series,
       tooltip: {
         ...getTooltip(tooltipType, dataset),
         confine: true,
@@ -179,36 +201,9 @@ export function LineChart({
           'max-width:min(92vw,340px);white-space:normal;word-break:break-word;overflow-wrap:anywhere;',
         position: getConfinedTooltipPosition,
 
-        // trigger: 'axis',
-        // formatter: (params: unknown) => {
-        //   const axisParams = (Array.isArray(params) ? params : [params]) as
-        //     TooltipParam[] | undefined;
-
-        //   if (!axisParams || axisParams.length === 0) {
-        //     return '';
-        //   }
-
-        //   const title = axisParams[0].axisValueLabel;
-        //   const rows = axisParams
-        //     .map((param) => {
-        //       const seriesMeta = dataset.series[param.seriesIndex];
-        //       const row = param.data as Record<string, string | number>;
-        //       const value = row?.[seriesMeta.key];
-        //       const symbol =
-        //         LINE_SERIES_SYMBOLS[
-        //           param.seriesIndex % LINE_SERIES_SYMBOLS.length
-        //         ];
-        //       const color = param.color ?? '#666666';
-
-        //       return `<div style="display:flex;align-items:center;gap:6px"><span style="display:inline-flex;align-items:center">${getTooltipSymbolSvg(symbol, color)}</span><span>${param.seriesName}: ${value ?? ''}</span></div>`;
-        //     })
-        //     .join('');
-
-        //   return `<div><div>${title}</div>${rows}</div>`;
-        // },
       },
     }),
-    [dataset, resolvedColors, tooltipType],
+    [dataset, series, tooltipType],
   );
 
   const { divRef } = useEChartOption(option);
