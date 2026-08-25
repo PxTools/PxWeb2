@@ -19,7 +19,7 @@ vi.mock('framer-motion', async () => {
     className,
     children,
   }: {
-    as?: keyof JSX.IntrinsicElements;
+    as?: React.ElementType;
     className?: string;
     children: React.ReactNode;
   }) => {
@@ -29,18 +29,39 @@ vi.mock('framer-motion', async () => {
 
   const Item = React.forwardRef<
     HTMLLIElement,
-    React.HTMLAttributes<HTMLLIElement> & {
-      as?: keyof JSX.IntrinsicElements;
+    {
+      as?: React.ElementType;
       children: React.ReactNode;
+      drag?: boolean;
+      dragMomentum?: boolean;
+      dragElastic?: number;
+      whileDrag?: unknown;
     }
-  >(({ as, children, ...props }, ref) => {
-    const Element = as ?? 'div';
-    return (
-      <Element ref={ref} {...props}>
-        {children}
-      </Element>
-    );
-  });
+  >(
+    (
+      {
+        as,
+        children,
+        drag,
+        dragMomentum,
+        dragElastic,
+        whileDrag,
+        ...props
+      },
+      ref,
+    ) => {
+      void drag;
+      void dragMomentum;
+      void dragElastic;
+      void whileDrag;
+      const Element = as ?? 'div';
+      return (
+        <Element ref={ref} {...props}>
+          {children}
+        </Element>
+      );
+    },
+  );
   Item.displayName = 'ReorderItem';
 
   return {

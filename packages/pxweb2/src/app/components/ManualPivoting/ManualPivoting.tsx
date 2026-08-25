@@ -958,7 +958,7 @@ export function ManualPivot({
       <div className={classes.visuallyHidden} aria-live="polite">
         {liveAnnouncement}
       </div>
-      <div modal-body className={classes.modalBody}>
+      <div data-modal-body className={classes.modalBody}>
         <InformationCard icon="LightBulb">
           <BodyLong size="medium">
             {t(
