@@ -1,20 +1,16 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import type * as echarts from 'echarts';
 
+import { Button } from '../../Button/Button';
 import {
   buildDatasetOption,
   buildSeriesOption,
   LINE_SERIES_SYMBOLS,
 } from '../Utils/chartOptionBuilder';
 import { useEChartOption } from '../Utils/useEChartOption';
-import type { PxTable } from '../../../shared-types/pxTable';
 import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
 import { getChartColorsFromCssVariables } from '../Utils/chartHelper';
-
-interface LineChartProps {
-  readonly pxtable: PxTable;
-  readonly colors?: string[];
-}
+import type { PxTable } from '../../../shared-types/pxTable';
 
 type TooltipParam = {
   axisValueLabel?: string;
@@ -41,15 +37,45 @@ function getTooltipSymbolSvg(symbol: string, color: string): string {
   }
 }
 
-export function LineChart({ pxtable, colors }: LineChartProps) {
-  const dataset = useMemo(() => mapPxTableToChartDataset(pxtable), [pxtable]);
+interface LineChartTranslations {
+  readonly showMore: string;
+  readonly showLess: string;
+}
+
+interface LineChartProps {
+  readonly pxtable: PxTable;
+  readonly colors?: string[];
+  readonly translations: LineChartTranslations;
+  readonly isMediumOrSmallerScreen?: boolean;
+}
+
+export function LineChart({
+  pxtable,
+  colors,
+  translations,
+  isMediumOrSmallerScreen = false,
+}: LineChartProps) {
+  const [isLegendExpanded, setIsLegendExpanded] = useState(false);
 
   const resolvedColors = useMemo(() => {
     return colors && colors.length > 0
       ? colors
       : getChartColorsFromCssVariables();
   }, [colors]);
-
+  const dataset = useMemo(() => mapPxTableToChartDataset(pxtable), [pxtable]);
+  const hasLegendOverflow = dataset.series.length > 5;
+  const shouldShowLegendToggle = hasLegendOverflow && isMediumOrSmallerScreen;
+  const shouldShowLimitedLegend = shouldShowLegendToggle && !isLegendExpanded;
+  const memoizedAllLegendData = useMemo(
+    () => dataset.series.map((series) => series.name),
+    [dataset.series],
+  );
+  const memoizedLimitedLegendData = useMemo(() => {
+    return memoizedAllLegendData.slice(0, 5);
+  }, [memoizedAllLegendData]);
+  const visibleLegendData = shouldShowLimitedLegend
+    ? memoizedLimitedLegendData
+    : memoizedAllLegendData;
   const option = useMemo<echarts.EChartsOption>(
     () => ({
       ...buildDatasetOption(dataset),
@@ -60,7 +86,8 @@ export function LineChart({ pxtable, colors }: LineChartProps) {
         min: (value) => value.min,
       },
       legend: {
-        height: 40 * dataset.series.length, // increase legend height based on number of series to prevent overlap with x-axis labels
+        data: visibleLegendData,
+        height: 40 * visibleLegendData.length, // increase legend height based on number of series to prevent overlap with x-axis labels
       },
       series: buildSeriesOption(dataset, 'line', resolvedColors),
       tooltip: {
@@ -93,15 +120,36 @@ export function LineChart({ pxtable, colors }: LineChartProps) {
         },
       },
     }),
-    [dataset, resolvedColors],
+    [dataset, resolvedColors, visibleLegendData],
   );
 
   const { divRef } = useEChartOption(option);
   const height = 600 + dataset.series.length * 10; // increase chart height based on number of series to prevent legend overlap
 
   return (
-    <div>
+    <>
       <div ref={divRef} style={{ width: '100%', height: `${height}px` }}></div>
-    </div>
+      {shouldShowLegendToggle && (
+        <LegendToggleButton
+          onClick={() => setIsLegendExpanded((current) => !current)}
+          text={
+            isLegendExpanded ? translations.showLess : translations.showMore
+          }
+        />
+      )}
+    </>
+  );
+}
+
+interface LegendToggleButtonProps {
+  readonly onClick: () => void;
+  readonly text: string;
+}
+
+function LegendToggleButton({ onClick, text }: LegendToggleButtonProps) {
+  return (
+    <Button onClick={onClick} variant="tertiary" size="small">
+      {text}
+    </Button>
   );
 }

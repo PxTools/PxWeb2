@@ -185,7 +185,11 @@
           "title": "Table"
         },
         "linechart": {
-          "title": "Line chart"
+          "title": "Line chart",
+          "legend": {
+            "show_more": "Show more",
+            "show_less": "Show less"
+          }
         }
       },
       "edit": {
@@ -298,6 +302,14 @@
             "description3": " cells. Reduce the number of selections in the filter, and once this message disappears, the table will update as usual.",
             "selectedCells": "{{selectedCells}}",
             "maxCells": "{{maxCells}}"
+          }
+        }
+      },
+      "chart": {
+        "line_chart": {
+          "legend": {
+            "show_more": "Show more",
+            "show_less": "Show less"
           }
         }
       },

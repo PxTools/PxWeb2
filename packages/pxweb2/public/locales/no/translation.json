@@ -301,6 +301,14 @@
           }
         }
       },
+      "chart": {
+        "line_chart": {
+          "legend": {
+            "show_more": "Vis mer",
+            "show_less": "Vis mindre"
+          }
+        }
+      },
       "about_table": {
         "title": "Informasjon",
         "footnotes": {

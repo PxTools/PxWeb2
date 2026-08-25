@@ -301,6 +301,14 @@
           }
         }
       },
+      "chart": {
+        "line_chart": {
+          "legend": {
+            "show_more": "Visa mer",
+            "show_less": "Visa mindre"
+          }
+        }
+      },
       "about_table": {
         "title": "Information",
         "footnotes": {
