@@ -1,6 +1,6 @@
 {
   "name": "@pxweb2/source",
-  "version": "0.0.0",
+  "version": "2.10.0",
   "license": "MIT",
   "type": "module",
   "scripts": {
@@ -19,10 +19,10 @@
   "private": true,
   "dependencies": {
     "@uidotdev/usehooks": "^2.4.1",
-    "@vitejs/plugin-react": "^6.0.4",
+    "@vitejs/plugin-react": "^6.0.5",
     "i18next": "^26.3.6",
     "i18next-browser-languagedetector": "^8.2.1",
-    "i18next-http-backend": "^4.0.0",
+    "i18next-http-backend": "^4.0.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-i18next": "^17.0.11",
@@ -30,16 +30,16 @@
     "react-virtuoso": "^4.18.11",
     "sass": "^1.102.0",
     "uuid": "^14.0.1",
-    "vite": "^8.1.5"
+    "vite": "^8.2.1"
   },
   "devDependencies": {
     "@rolldown/plugin-babel": "^0.2.3",
-    "@types/lodash": "^4.17.24",
+    "@types/lodash": "^4.17.25",
     "@types/node": "^24.13.3",
-    "@types/react": "^19.2.17",
-    "@types/react-dom": "^19.2.3",
-    "@typescript-eslint/eslint-plugin": "^8.65.0",
-    "@typescript-eslint/parser": "^8.65.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "@typescript-eslint/eslint-plugin": "^8.66.0",
+    "@typescript-eslint/parser": "^8.66.0",
     "@vitest/coverage-istanbul": "^4.1.0",
     "babel-plugin-react-compiler": "^1.0.0",
     "eslint": "^9.39.5",
@@ -48,16 +48,17 @@
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.1.1",
-    "eslint-plugin-storybook": "10.5.4",
+    "eslint-plugin-storybook": "10.5.7",
     "eslint-plugin-unused-imports": "^4.4.1",
-    "jsdom": "^29.1.1",
-    "style-dictionary": "^5.5.0",
+    "jsdom": "^30.0.1",
+    "style-dictionary": "^5.5.1",
     "typescript": "^6.0.3",
     "unplugin-dts": "^1.0.3",
-    "wrangler": "^4.114.0"
+    "wrangler": "^4.123.0"
   },
   "engines": {
-    "node": ">=24"
+    "node": ">=24",
+    "npm": ">=11.13.0"
   },
   "packageManager": "npm@11.13.0",
   "readme": "ERROR: No README data found!",

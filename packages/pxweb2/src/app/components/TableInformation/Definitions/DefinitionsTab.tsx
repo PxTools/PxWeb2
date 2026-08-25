@@ -10,7 +10,7 @@ interface DefinitionsTabProps {
 }
 
 export function DefinitionsTab({ definitions }: DefinitionsTabProps) {
-  if (!definitions.statisticsDefinitions) {
+  if (!definitions.statisticsDefinitions && !definitions.statisticsHomepage) {
     return null;
   }
 
