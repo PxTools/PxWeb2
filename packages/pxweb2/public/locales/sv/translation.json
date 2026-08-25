@@ -204,13 +204,18 @@
             "description": "",
             "screen_reader_announcement": "Tabell roterat efter {{first_variables}} och {{last_variable}}"
           },
-          "rearrange": {
+          "manual_pivoting": {
             "description": "Beskrivande text...",
             "title": "Anpassa tabell",
-            "stub_title": "Rader",
-            "header_title": "Kolumner",
-            "cancel_button": "Avbryt",
-            "confirm_button": "Spara"
+            "manual_pivoting_modal": {
+              "label": "Anpassa tabell",
+              "header": "Anpassa tabell manuellt",
+              "info_text": "Välj vad som ska visas var i tabellen genom att flytta objekt mellan rader och kolumner och ändra ordningen",
+              "stub_title": "Rader",
+              "header_title": "Kolumner",
+              "cancel_button": "Avbryt",
+              "confirm_button": "Spara"
+            }
           },
           "change_order": {
             "title": "Ändra ordning",

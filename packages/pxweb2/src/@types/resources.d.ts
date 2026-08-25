@@ -209,13 +209,18 @@ export default interface Resources {
               screen_reader_announcement: 'Table rotated after {{first_variables}} and {{last_variable}}';
               title: 'Rotate table';
             };
-            rearrange: {
+            manual_pivoting: {
               description: 'Description text...';
               title: 'Rearrange table';
-              stub_title: 'Stub';
-              header_title: 'Header';
-              cancel_button: 'Cancel';
-              confirm_button: 'Confirm';
+              manual_pivoting_modal: {
+                label: 'Rearrange table';
+                header: 'Rearrange table';
+                info_text: 'Choose what is displayed where in the table by moving items between rows and columns and changing the order';
+                stub_title: 'Stub';
+                header_title: 'Header';
+                cancel_button: 'Cancel';
+                confirm_button: 'Confirm';
+              };
             };
             title: 'Customise';
           };

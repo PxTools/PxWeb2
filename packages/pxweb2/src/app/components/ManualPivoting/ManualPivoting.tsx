@@ -395,8 +395,8 @@ export function ManualPivot({
 
   const getGroupLabelText = (group: VariableGroup): string =>
     group === 'stub'
-      ? t('presentation_page.side_menu.edit.customize.rearrange.stub_title')
-      : t('presentation_page.side_menu.edit.customize.rearrange.header_title');
+      ? t('presentation_page.side_menu.edit.customize.manual_pivoting.manual_pivoting_modal.stub_title')
+      : t('presentation_page.side_menu.edit.customize.manual_pivoting.manual_pivoting_modal.header_title');
 
   const getGroupLabel = (group: VariableGroup): string =>
     getGroupLabelText(group);
@@ -937,10 +937,10 @@ export function ManualPivot({
       heading={t('presentation_page.side_menu.edit.customize.pivot.title')}
       label={t('presentation_page.side_menu.edit.title')}
       cancelLabel={t(
-        'presentation_page.side_menu.edit.customize.rearrange.cancel_button',
+        'presentation_page.side_menu.edit.customize.manual_pivoting.manual_pivoting_modal.cancel_button',
       )}
       confirmLabel={t(
-        'presentation_page.side_menu.edit.customize.rearrange.confirm_button',
+        'presentation_page.side_menu.edit.customize.manual_pivoting.manual_pivoting_modal.confirm_button',
       )}
     >
       <p id={keyboardInstructionsId} className={classes.visuallyHidden}>
@@ -950,12 +950,16 @@ export function ManualPivot({
       <div className={classes.visuallyHidden} aria-live="polite">
         {liveAnnouncement}
       </div>
-      <InformationCard icon="InformationCircle">
-        <BodyLong size="medium">Some text here</BodyLong>
-      </InformationCard>
-      <div className={classes.wrapper}>
-        {renderGroup('stub', stubItems, stubZoneRef)}
-        {renderGroup('header', headerItems, headerZoneRef)}
+      <div modal-body className={classes.modalBody}>
+        <InformationCard icon="LightBulb">
+          <BodyLong size="medium">{t(
+        'presentation_page.side_menu.edit.customize.manual_pivoting.manual_pivoting_modal.info_text',
+        )}</BodyLong>
+        </InformationCard>
+        <div className={classes.wrapper}>
+          {renderGroup('stub', stubItems, stubZoneRef)}
+          {renderGroup('header', headerItems, headerZoneRef)}
+        </div>
       </div>
     </Modal>
   );

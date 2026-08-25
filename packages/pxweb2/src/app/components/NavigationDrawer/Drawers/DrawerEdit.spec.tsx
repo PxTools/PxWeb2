@@ -97,7 +97,7 @@ describe('DrawerEdit', () => {
     ).toBeInTheDocument();
     expect(
       screen.getByText(
-        'presentation_page.side_menu.edit.customize.rearrange.title',
+        'presentation_page.side_menu.edit.customize.manual_pivoting.title',
       ),
     ).toBeInTheDocument();
   });

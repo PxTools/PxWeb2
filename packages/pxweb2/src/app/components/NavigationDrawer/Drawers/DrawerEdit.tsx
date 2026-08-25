@@ -29,12 +29,12 @@ function PivotManuallyButton({ onClick }: PivotManuallyButtonProps) {
   const { t } = useTranslation();
   return (
     <ActionItem
-      label={t('presentation_page.side_menu.edit.customize.rearrange.title')}
+      label={t('presentation_page.side_menu.edit.customize.manual_pivoting.title')}
       ariaLabel={t(
-        'presentation_page.side_menu.edit.customize.rearrange.title',
+        'presentation_page.side_menu.edit.customize.manual_pivoting.title',
       )}
       description={t(
-        'presentation_page.side_menu.edit.customize.rearrange.description',
+        'presentation_page.side_menu.edit.customize.manual_pivoting.description',
       )}
       onClick={onClick}
       iconName="Table"
