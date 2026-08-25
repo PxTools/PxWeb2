@@ -30,6 +30,31 @@ type TooltipParam = {
   color?: string;
 };
 
+const getConfinedTooltipPosition: NonNullable<
+  echarts.TooltipComponentOption['position']
+> = (point, _params, _dom, _rect, size) => {
+  const padding = 8;
+  const offset = 12;
+
+  const [rawX, rawY] = Array.isArray(point)
+    ? point
+    : [padding, padding];
+
+  const [contentWidth, contentHeight] = size?.contentSize ?? [0, 0];
+  const [viewWidth, viewHeight] = size?.viewSize ?? [0, 0];
+
+  const desiredX = rawX + offset;
+  const desiredY = rawY + offset;
+
+  const maxX = Math.max(padding, viewWidth - contentWidth - padding);
+  const maxY = Math.max(padding, viewHeight - contentHeight - padding);
+
+  const x = Math.min(Math.max(desiredX, padding), maxX);
+  const y = Math.min(Math.max(desiredY, padding), maxY);
+
+  return [x, y];
+};
+
 function getTooltipSymbolSvg(symbol: string, color: string): string {
   switch (symbol) {
     case 'rect':
@@ -75,7 +100,7 @@ function getTooltip(
                 ];
               const color = param.color ?? '#666666';
 
-              return `<div style="display:flex;align-items:center;gap:6px"><span style="display:inline-flex;align-items:center">${getTooltipSymbolSvg(symbol, color)}</span><span>${param.seriesName}: ${value ?? ''}</span></div>`;
+              return `<div style="display:flex;align-items:flex-start;gap:6px"><span style="display:inline-flex;align-items:flex-start;line-height:1;transform:translateY(2px)">${getTooltipSymbolSvg(symbol, color)}</span><span>${param.seriesName}: ${value ?? ''}</span></div>`;
             })
             .join('');
 
@@ -106,8 +131,8 @@ function getTooltip(
 
           return `
         <div>${title}</div>
-        <div style="display:flex;align-items:center;gap:6px">
-          <span style="display:inline-flex;align-items:center">
+        <div style="display:flex;align-items:flex-start;gap:6px">
+          <span style="display:inline-flex;align-items:flex-start;line-height:1;transform:translateY(2px)">
             ${getTooltipSymbolSvg(symbol, color)}
           </span>
           <span>${param.seriesName}: ${value}</span>
@@ -150,6 +175,11 @@ export function LineChart({
       series: buildSeriesOption(dataset, 'line', resolvedColors),
       tooltip: {
         ...getTooltip(tooltipType, dataset),
+        confine: true,
+        appendToBody: true,
+        extraCssText:
+          'max-width:min(92vw,340px);white-space:normal;word-break:break-word;overflow-wrap:anywhere;',
+        position: getConfinedTooltipPosition,
 
         // trigger: 'axis',
         // formatter: (params: unknown) => {
