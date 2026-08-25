@@ -98,7 +98,7 @@ function getTooltip(
                 ];
               const color = param.color ?? '#666666';
 
-              return `<div style="display:flex;align-items:flex-start;gap:6px"><span style="display:inline-flex;align-items:flex-start;line-height:1;transform:translateY(2px)">${getTooltipSymbolSvg(symbol, color)}</span><span>${param.seriesName}: ${value ?? ''}</span></div>`;
+              return `<div style="display:flex;align-items:flex-start;gap:6px"><span style="display:inline-flex;align-items:flex-start;line-height:1;transform:translateY(2px)">${getTooltipSymbolSvg(symbol, color)}</span><span>${param.seriesName}: <b>${value ?? ''}</b></span></div>`;
             })
             .join('');
 
@@ -133,7 +133,7 @@ function getTooltip(
           <span style="display:inline-flex;align-items:flex-start;line-height:1;transform:translateY(2px)">
             ${getTooltipSymbolSvg(symbol, color)}
           </span>
-          <span>${param.seriesName}: ${value}</span>
+          <span>${param.seriesName}: <b>${value}</b></span>
         </div>
       `;
         },
