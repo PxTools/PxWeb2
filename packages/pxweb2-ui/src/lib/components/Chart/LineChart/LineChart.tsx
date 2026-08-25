@@ -200,7 +200,6 @@ export function LineChart({
         extraCssText:
           'max-width:min(92vw,340px);white-space:normal;word-break:break-word;overflow-wrap:anywhere;',
         position: getConfinedTooltipPosition,
-
       },
     }),
     [dataset, series, tooltipType],
