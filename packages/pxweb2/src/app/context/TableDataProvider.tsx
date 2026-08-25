@@ -1381,11 +1381,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * Applies a manual pivot order from the edit dialog.
    */
   const pivotManual = React.useCallback(
-    (
-      heading: string[],
-      stub: string[],
-      isMobileMode: boolean,
-    ): void => {
+    (heading: string[], stub: string[], isMobileMode: boolean): void => {
       if (data?.heading === undefined || data?.stub === undefined) {
         return;
       }
