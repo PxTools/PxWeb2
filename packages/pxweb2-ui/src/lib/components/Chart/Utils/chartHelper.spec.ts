@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { getChartColorsFromCssVariables } from './chartHelper';
+import { getChartCssVariables } from './chartHelper';
 
 function mockStyles(values: Record<string, string>): CSSStyleDeclaration {
   return {
@@ -8,16 +8,15 @@ function mockStyles(values: Record<string, string>): CSSStyleDeclaration {
   } as CSSStyleDeclaration;
 }
 
-describe('getChartColorsFromCssVariables', () => {
+describe('getChartCssVariables', () => {
   afterEach(() => {
     vi.unstubAllGlobals();
   });
 
-  it('returns undefined when window and document are unavailable', () => {
-    vi.stubGlobal('window', undefined);
+  it('returns undefined when document is unavailable', () => {
     vi.stubGlobal('document', undefined);
 
-    expect(getChartColorsFromCssVariables()).toBeUndefined();
+    expect(getChartCssVariables()?.chartColors).toBeUndefined();
   });
 
   it('parses csv colors and resolves referenced css variables', () => {
@@ -35,7 +34,7 @@ describe('getChartColorsFromCssVariables', () => {
       ),
     );
 
-    expect(getChartColorsFromCssVariables()).toEqual([
+    expect(getChartCssVariables()?.chartColors).toEqual([
       '#ff0000',
       '#00ff00',
       '#0000ff',
@@ -57,7 +56,7 @@ describe('getChartColorsFromCssVariables', () => {
       ),
     );
 
-    expect(getChartColorsFromCssVariables()).toBeUndefined();
+    expect(getChartCssVariables()?.chartColors).toBeUndefined();
   });
 
   it('returns undefined when no chart colors are configured', () => {
@@ -72,6 +71,6 @@ describe('getChartColorsFromCssVariables', () => {
       ),
     );
 
-    expect(getChartColorsFromCssVariables()).toBeUndefined();
+    expect(getChartCssVariables()?.chartColors).toBeUndefined();
   });
 });

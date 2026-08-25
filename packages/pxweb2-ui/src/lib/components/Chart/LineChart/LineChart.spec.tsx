@@ -8,10 +8,9 @@ import {
   buildDatasetOption,
   buildSeriesOption,
 } from '../Utils/chartOptionBuilder';
-import {
-  getAxisColorsFromCssVariables,
-  getChartColorsFromCssVariables,
-} from '../Utils/chartHelper';
+
+import { getChartCssVariables } from '../Utils/chartHelper';
+
 import type { EChartsDataset } from '../Utils/chartTypes';
 import type { PxTable } from '../../../shared-types/pxTable';
 
@@ -36,8 +35,7 @@ vi.mock('../Utils/chartOptionBuilder', async () => {
 });
 
 vi.mock('../Utils/chartHelper', () => ({
-  getAxisColorsFromCssVariables: vi.fn(),
-  getChartColorsFromCssVariables: vi.fn(),
+  getChartCssVariables: vi.fn(),
 }));
 
 const mockDataset: EChartsDataset = {
@@ -86,11 +84,11 @@ describe('LineChart', () => {
       { name: 'Women', type: 'line', symbol: 'rect', symbolSize: 8 },
       { name: 'Total', type: 'line', symbol: 'triangle', symbolSize: 8 },
     ]);
-    vi.mocked(getChartColorsFromCssVariables).mockReturnValue([
-      '#333333',
-      '#444444',
-    ]);
-    vi.mocked(getAxisColorsFromCssVariables).mockReturnValue(undefined);
+    vi.mocked(getChartCssVariables).mockReturnValue({
+      chartColors: ['#333333', '#444444'],
+      axisColor: undefined,
+      fontColor: undefined,
+    });
     vi.mocked(useEChartOption).mockReturnValue({
       divRef: { current: null },
       chartRef: { current: null },
@@ -105,32 +103,34 @@ describe('LineChart', () => {
     expect(mapPxTableToChartDataset).toHaveBeenCalledWith({});
     expect(buildDatasetOption).toHaveBeenCalledWith(mockDataset);
     expect(buildSeriesOption).toHaveBeenCalledWith(mockDataset, 'line', colors);
-    expect(getChartColorsFromCssVariables).not.toHaveBeenCalled();
+    expect(getChartCssVariables).not.toHaveBeenCalled();
 
     const option = vi.mocked(useEChartOption).mock.calls[0][0];
 
-    expect(option.legend).toEqual({
-      height: 40 * mockDataset.series.length,
-    });
+    expect(option.legend).toEqual({ bottom: 0 });
     expect(option.yAxis).toMatchObject({
       name: 'persons',
     });
     expect(option.grid).toEqual({
-      top: 12,
-      bottom: 200,
+      top: 35,
+      bottom: 155,
       left: '0',
       right: '0',
-      containLabel: false,
+      containLabel: true,
     });
   });
 
   it('uses fallback colors when colors are not provided', () => {
     const fallbackColors = ['#abcdef', '#fedcba'];
-    vi.mocked(getChartColorsFromCssVariables).mockReturnValue(fallbackColors);
+    vi.mocked(getChartCssVariables).mockReturnValue({
+      chartColors: fallbackColors,
+      axisColor: undefined,
+      fontColor: undefined,
+    });
 
     render(<LineChart pxtable={{} as PxTable} />);
 
-    expect(getChartColorsFromCssVariables).toHaveBeenCalledTimes(1);
+    expect(getChartCssVariables).toHaveBeenCalledTimes(1);
     expect(buildSeriesOption).toHaveBeenCalledWith(
       mockDataset,
       'line',
@@ -140,11 +140,15 @@ describe('LineChart', () => {
 
   it('uses fallback colors when provided colors array is empty', () => {
     const fallbackColors = ['#121212', '#343434'];
-    vi.mocked(getChartColorsFromCssVariables).mockReturnValue(fallbackColors);
+    vi.mocked(getChartCssVariables).mockReturnValue({
+      chartColors: fallbackColors,
+      axisColor: undefined,
+      fontColor: undefined,
+    });
 
     render(<LineChart pxtable={{} as PxTable} colors={[]} />);
 
-    expect(getChartColorsFromCssVariables).toHaveBeenCalledTimes(1);
+    expect(getChartCssVariables).toHaveBeenCalledTimes(1);
     expect(buildSeriesOption).toHaveBeenCalledWith(
       mockDataset,
       'line',
