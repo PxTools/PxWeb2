@@ -179,6 +179,7 @@ export function DrawerEdit() {
               pivotManual(
                 headerItems.map((item) => item.id),
                 stubItems.map((item) => item.id),
+                isMobile,
               );
             }
             setIsManualPivotOpen(false);

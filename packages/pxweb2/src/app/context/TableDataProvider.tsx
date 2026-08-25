@@ -54,7 +54,11 @@ export interface TableDataContextType {
   pivotToTable: (isMobile: boolean) => void;
   pivotToChart: () => void;
   pivot: (type: PivotType) => void;
-  pivotManual: (heading: string[], stub: string[]) => void;
+  pivotManual: (
+    heading: string[],
+    stub: string[],
+    isMobileMode: boolean,
+  ) => void;
   buildTableTitle: () => TableTitlePartsType;
   isFadingTable: boolean;
   setIsFadingTable: (value: boolean) => void;
@@ -1377,7 +1381,11 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * Applies a manual pivot order from the edit dialog.
    */
   const pivotManual = React.useCallback(
-    (heading: string[], stub: string[]): void => {
+    (
+      heading: string[],
+      stub: string[],
+      isMobileMode: boolean,
+    ): void => {
       if (data?.heading === undefined || data?.stub === undefined) {
         return;
       }
@@ -1401,7 +1409,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         setHeadingDesktop(nextHeading);
       }
     },
-    [data, isMobileMode],
+    [data],
   );
 
   /**
