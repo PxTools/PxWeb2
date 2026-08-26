@@ -108,6 +108,9 @@ function getTooltip(
     case 'item':
       return {
         trigger: 'item',
+        axisPointer: {
+          type: 'cross',
+        },
         formatter: (params: unknown) => {
           const param = params as TooltipParam;
           const seriesMeta = dataset.series[param.seriesIndex];
