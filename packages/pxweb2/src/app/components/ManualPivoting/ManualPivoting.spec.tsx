@@ -283,7 +283,10 @@ describe('ManualPivoting', () => {
         isOpen={true}
         onClose={onClose}
         headerVariables={[makeVariable('h1', 'Header 1')]}
-        stubVariables={[makeVariable('s1', 'Stub 1'), makeVariable('s2', 'Stub 2')]}
+        stubVariables={[
+          makeVariable('s1', 'Stub 1'),
+          makeVariable('s2', 'Stub 2'),
+        ]}
       />,
     );
 
@@ -305,7 +308,10 @@ describe('ManualPivoting', () => {
         isOpen={true}
         onClose={onClose}
         headerVariables={[makeVariable('h1', 'Header 1')]}
-        stubVariables={[makeVariable('s1', 'Stub 1'), makeVariable('s2', 'Stub 2')]}
+        stubVariables={[
+          makeVariable('s1', 'Stub 1'),
+          makeVariable('s2', 'Stub 2'),
+        ]}
       />,
     );
 
