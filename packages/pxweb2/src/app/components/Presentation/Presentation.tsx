@@ -338,7 +338,8 @@ export function Presentation({
                     [classes.fadeChart]: isFadingTable,
                   })}
                 >
-                  <LineChart pxtable={tableData.data} />
+                  <LineChart pxtable={tableData.data} tooltipType="axis" />
+                  <LineChart pxtable={tableData.data} tooltipType="item" />
                 </div>
               </Activity>
             </>
