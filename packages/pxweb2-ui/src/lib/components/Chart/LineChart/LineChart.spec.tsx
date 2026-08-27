@@ -1,7 +1,8 @@
-import { render } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, expect, it, beforeEach, vi } from 'vitest';
+import '@testing-library/jest-dom/vitest';
 
-import LineChart from './LineChart';
+import { LineChart } from './LineChart';
 import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
 import { useEChartOption } from '../Utils/useEChartOption';
 import {
@@ -53,6 +54,13 @@ const mockDataset: EChartsDataset = {
     { key: 'women', name: 'Women' },
     { key: 'total', name: 'Total' },
   ],
+};
+const mockTranslations = {
+  showMore: 'Show more',
+  showLess: 'Show less',
+  emptyStateTitle: 'Cannot display chart',
+  emptyStateDescription:
+    'The line chart cannot be displayed because your selection includes contents with different units (for example number and percent). Please select contents with the same unit to see the line chart.',
 };
 
 const mockPxTable = {
@@ -106,7 +114,13 @@ describe('LineChart', () => {
   it('builds chart option with mapped dataset and provided colors', () => {
     const colors = ['#111111', '#222222'];
 
-    render(<LineChart pxtable={mockPxTable} colors={colors} />);
+    render(
+      <LineChart
+        pxtable={mockPxTable}
+        colors={colors}
+        translations={mockTranslations}
+      />,
+    );
 
     expect(mapPxTableToChartDataset).toHaveBeenCalledWith(mockPxTable);
     expect(buildDatasetOption).toHaveBeenCalledWith(mockDataset);
@@ -116,6 +130,7 @@ describe('LineChart', () => {
     const option = vi.mocked(useEChartOption).mock.calls[0][0];
 
     expect(option.legend).toEqual({
+      data: ['Men', 'Women', 'Total'],
       height: 40 * mockDataset.series.length,
     });
     expect(option.yAxis).toMatchObject({
@@ -134,7 +149,7 @@ describe('LineChart', () => {
     const fallbackColors = ['#abcdef', '#fedcba'];
     vi.mocked(getChartColorsFromCssVariables).mockReturnValue(fallbackColors);
 
-    render(<LineChart pxtable={mockPxTable} />);
+    render(<LineChart pxtable={mockPxTable} translations={mockTranslations} />);
 
     expect(getChartColorsFromCssVariables).toHaveBeenCalledTimes(1);
     expect(buildSeriesOption).toHaveBeenCalledWith(
@@ -148,7 +163,7 @@ describe('LineChart', () => {
     const fallbackColors = ['#121212', '#343434'];
     vi.mocked(getChartColorsFromCssVariables).mockReturnValue(fallbackColors);
 
-    render(<LineChart pxtable={mockPxTable} colors={[]} />);
+    render(<LineChart pxtable={mockPxTable} colors={[]} translations={mockTranslations} />);
 
     expect(getChartColorsFromCssVariables).toHaveBeenCalledTimes(1);
     expect(buildSeriesOption).toHaveBeenCalledWith(
@@ -159,7 +174,7 @@ describe('LineChart', () => {
   });
 
   it('renders chart container with height based on number of series', () => {
-    const { container } = render(<LineChart pxtable={mockPxTable} />);
+    const { container } = render(<LineChart pxtable={mockPxTable} translations={mockTranslations} />);
 
     const chartDiv = Array.from(container.querySelectorAll('div')).find(
       (element) => element.style.height,
@@ -170,7 +185,7 @@ describe('LineChart', () => {
   });
 
   it('returns empty tooltip text for empty params', () => {
-    render(<LineChart pxtable={mockPxTable} />);
+    render(<LineChart pxtable={mockPxTable} translations={mockTranslations} />);
 
     const option = vi.mocked(useEChartOption).mock.calls[0][0];
     const formatter = getTooltipFormatter(option);
@@ -180,7 +195,7 @@ describe('LineChart', () => {
   });
 
   it('formats tooltip rows with symbol svg, labels, values and fallback color', () => {
-    render(<LineChart pxtable={mockPxTable} />);
+    render(<LineChart pxtable={mockPxTable} translations={mockTranslations} />);
 
     const option = vi.mocked(useEChartOption).mock.calls[0][0];
     const formatter = getTooltipFormatter(option);
@@ -209,10 +224,124 @@ describe('LineChart', () => {
     expect(html).toContain('<circle');
     expect(html).toContain('<rect');
   });
+
+  describe('legends', () => {
+    it('shows a "Show more" button on small screens, when there are more than 5 series', () => {
+      vi.mocked(mapPxTableToChartDataset).mockReturnValue({
+        ...mockDataset,
+        series: [
+          { key: 'a', name: 'A' },
+          { key: 'b', name: 'B' },
+          { key: 'c', name: 'C' },
+          { key: 'd', name: 'D' },
+          { key: 'e', name: 'E' },
+          { key: 'f', name: 'F' },
+        ],
+      });
+
+      render(
+        <LineChart
+          pxtable={mockPxTable}
+          isMediumOrSmallerScreen={true}
+          translations={mockTranslations}
+        />,
+      );
+
+      expect(
+        screen.getByRole('button', { name: /Show More/i }),
+      ).toBeInTheDocument();
+    });
+
+    it('does not show a "Show more" button on large screens, even with more than 5 series', () => {
+      vi.mocked(mapPxTableToChartDataset).mockReturnValue({
+        ...mockDataset,
+        series: [
+          { key: 'a', name: 'A' },
+          { key: 'b', name: 'B' },
+          { key: 'c', name: 'C' },
+          { key: 'd', name: 'D' },
+          { key: 'e', name: 'E' },
+          { key: 'f', name: 'F' },
+        ],
+      });
+
+      render(
+        <LineChart
+          pxtable={mockPxTable}
+          isMediumOrSmallerScreen={false}
+          translations={mockTranslations}
+        />,
+      );
+
+      expect(
+        screen.queryByRole('button', { name: /Show More/i }),
+      ).not.toBeInTheDocument();
+    });
+
+    it('does not show a "Show more" button on small screens with 5 or fewer series', () => {
+      render(
+        <LineChart
+          pxtable={mockPxTable}
+          isMediumOrSmallerScreen={true}
+          translations={mockTranslations}
+        />,
+      );
+
+      expect(
+        screen.queryByRole('button', {
+          name: /Show More/i,
+        }),
+      ).not.toBeInTheDocument();
+    });
+
+    it('toggles the legend expansion state when the "Show more" button is clicked', () => {
+      vi.mocked(mapPxTableToChartDataset).mockReturnValue({
+        ...mockDataset,
+        series: [
+          { key: 'a', name: 'A' },
+          { key: 'b', name: 'B' },
+          { key: 'c', name: 'C' },
+          { key: 'd', name: 'D' },
+          { key: 'e', name: 'E' },
+          { key: 'f', name: 'F' },
+        ],
+      });
+
+      render(
+        <LineChart
+          pxtable={mockPxTable}
+          isMediumOrSmallerScreen={true}
+          translations={mockTranslations}
+        />,
+      );
+
+      const showMoreButton = screen.getByRole('button', {
+        name: /Show More/i,
+      });
+
+      expect(showMoreButton).toBeInTheDocument();
+
+      // Click the button to expand the legend
+      fireEvent.click(showMoreButton);
+
+      // After clicking, the button text should change to "Show less"
+      expect(
+        screen.getByRole('button', { name: /Show Less/i }),
+      ).toBeInTheDocument();
+
+      // Click the button again to collapse the legend
+      fireEvent.click(showMoreButton);
+
+      // After clicking again, the button text should revert to "Show more"
+      expect(
+        screen.getByRole('button', { name: /Show More/i }),
+      ).toBeInTheDocument();
+    });
+  });
 });
 
 it('renders empty state when multiple units are selected', () => {
   vi.mocked(checkMultipleUnits).mockReturnValue(true);
-  const { getByText } = render(<LineChart pxtable={mockPxTable} />);
+  const { getByText } = render(<LineChart pxtable={mockPxTable} translations={mockTranslations} />);
   expect(getByText('Cannot display chart')).toBeTruthy();
 });

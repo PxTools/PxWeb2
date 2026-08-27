@@ -38,8 +38,8 @@
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
-    "@typescript-eslint/eslint-plugin": "^8.66.0",
-    "@typescript-eslint/parser": "^8.66.0",
+    "@typescript-eslint/eslint-plugin": "^8.67.0",
+    "@typescript-eslint/parser": "^8.67.0",
     "@vitest/coverage-istanbul": "^4.1.0",
     "babel-plugin-react-compiler": "^1.0.0",
     "eslint": "^9.39.5",
@@ -54,7 +54,7 @@
     "style-dictionary": "^5.5.1",
     "typescript": "^6.0.3",
     "unplugin-dts": "^1.0.3",
-    "wrangler": "^4.120.0"
+    "wrangler": "^4.123.0"
   },
   "engines": {
     "node": ">=24",

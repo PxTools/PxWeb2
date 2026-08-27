@@ -67,8 +67,6 @@ type PresentationViewProps = {
   readonly gradientContainerRef: React.RefObject<HTMLDivElement | null>;
   readonly tableContainerRef: React.RefObject<HTMLDivElement | null>;
   readonly getVerticalScrollElement: () => HTMLElement | null;
-  readonly lineChartEmptyStateTitle: string;
-  readonly lineChartEmptyStateDescription: string;
 };
 
 function PresentationView({
@@ -79,9 +77,23 @@ function PresentationView({
   gradientContainerRef,
   tableContainerRef,
   getVerticalScrollElement,
-  lineChartEmptyStateTitle,
-  lineChartEmptyStateDescription,
 }: Readonly<PresentationViewProps>) {
+  const { t } = useTranslation();
+  const { isTablet } = useApp();
+
+  const lineChartEmptyStateTitle = t(
+    'presentation_page.main_content.chart.line_chart.warnings.multiple_units.title',
+  );
+  const lineChartEmptyStateDescription = t(
+    'presentation_page.main_content.chart.line_chart.warnings.multiple_units.description',
+  );
+  const showMoreText = t(
+    'presentation_page.main_content.chart.line_chart.legend.show_more',
+  );
+  const showLessText = t(
+    'presentation_page.main_content.chart.line_chart.legend.show_less',
+  );
+
   return (
     <>
       <Activity mode={viewMode === 'table' ? 'visible' : 'hidden'}>
@@ -103,8 +115,13 @@ function PresentationView({
         >
           <LineChart
             pxtable={pxtable}
-            emptyStateTitle={lineChartEmptyStateTitle}
-            emptyStateDescription={lineChartEmptyStateDescription}
+            isMediumOrSmallerScreen={isTablet}
+            translations={{
+              showMore: showMoreText,
+              showLess: showLessText,
+              emptyStateTitle: lineChartEmptyStateTitle,
+              emptyStateDescription: lineChartEmptyStateDescription,
+            }}
           />
         </div>
       </Activity>
@@ -149,12 +166,6 @@ export function Presentation({
 
   const tableContainerRef = useRef<HTMLDivElement | null>(null);
   const gradientContainerRef = useRef<HTMLDivElement | null>(null);
-  const lineChartEmptyStateTitle = t(
-    'presentation_page.main_content.chart.line_chart.warnings.multiple_units.title',
-  );
-  const lineChartEmptyStateDescription = t(
-    'presentation_page.main_content.chart.line_chart.warnings.multiple_units.description',
-  );
 
   useEffect(() => {
     const checkScrollAndGradient = () => {
@@ -356,7 +367,7 @@ export function Presentation({
                       selectedCells: t(
                         'number.simple_number_with_zero_decimal',
                         {
-                          value: variables.getSelectedMatrixSize(),
+                          value: String(variables.getSelectedMatrixSize()),
                         },
                       ),
                     },
@@ -370,7 +381,7 @@ export function Presentation({
                     'presentation_page.main_content.table.warnings.to_many_values_selected.maxCells',
                     {
                       maxCells: t('number.simple_number_with_zero_decimal', {
-                        value: config.maxDataCells,
+                        value: String(config.maxDataCells),
                       }),
                     },
                   )}
@@ -391,8 +402,6 @@ export function Presentation({
               gradientContainerRef={gradientContainerRef}
               tableContainerRef={tableContainerRef}
               getVerticalScrollElement={getVerticalScrollElement}
-              lineChartEmptyStateTitle={lineChartEmptyStateTitle}
-              lineChartEmptyStateDescription={lineChartEmptyStateDescription}
             />
           )}
           {shouldShowMissingMandatoryEmptyState && (

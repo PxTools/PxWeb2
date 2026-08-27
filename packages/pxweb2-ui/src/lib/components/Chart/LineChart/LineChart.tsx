@@ -1,13 +1,13 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import type * as echarts from 'echarts';
 
+import { Button } from '../../Button/Button';
 import {
   buildDatasetOption,
   buildSeriesOption,
   LINE_SERIES_SYMBOLS,
 } from '../Utils/chartOptionBuilder';
 import { useEChartOption } from '../Utils/useEChartOption';
-import type { PxTable } from '../../../shared-types/pxTable';
 import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
 import {
   getAdaptiveYAxisMax,
@@ -17,14 +17,7 @@ import {
 } from '../Utils/chartHelper';
 import EmptyState from '../../EmptyState/EmptyState';
 import type { EmptyStateProps } from '../../EmptyState/EmptyState';
-
-interface LineChartProps {
-  readonly pxtable: PxTable;
-  readonly colors?: string[];
-  readonly emptyStateTitle?: string;
-  readonly emptyStateDescription?: string;
-  readonly emptyStateSvgName?: EmptyStateProps['svgName'];
-}
+import type { PxTable } from '../../../shared-types/pxTable';
 
 type TooltipParam = {
   axisValueLabel?: string;
@@ -51,16 +44,30 @@ function getTooltipSymbolSvg(symbol: string, color: string): string {
   }
 }
 
+interface LineChartTranslations {
+  readonly showMore: string;
+  readonly showLess: string;
+  readonly emptyStateTitle: string;
+  readonly emptyStateDescription: string;
+}
+
+interface LineChartProps {
+  readonly pxtable: PxTable;
+  readonly colors?: string[];
+  readonly emptyStateSvgName?: EmptyStateProps['svgName'];
+  readonly translations: LineChartTranslations;
+  readonly isMediumOrSmallerScreen?: boolean;
+}
+
 export function LineChart({
   pxtable,
   colors,
-  emptyStateTitle,
-  emptyStateDescription,
   emptyStateSvgName,
+  translations,
+  isMediumOrSmallerScreen = false,
 }: LineChartProps) {
+  const [isLegendExpanded, setIsLegendExpanded] = useState(false);
   const hasMultipleUnits = checkMultipleUnits(pxtable);
-
-  const dataset = useMemo(() => mapPxTableToChartDataset(pxtable), [pxtable]);
 
   const xAxisName = useMemo(() => {
     return pxtable.stub.map((variable) => variable.label).join(' / ');
@@ -73,15 +80,29 @@ export function LineChart({
   }, [colors]);
 
   const resolvedEmptyStateTitle =
-    emptyStateTitle?.trim() || 'Cannot display chart';
+    translations.emptyStateTitle?.trim() || 'Cannot display chart';
   const resolvedEmptyStateDescription =
-    emptyStateDescription?.trim() ||
+    translations.emptyStateDescription?.trim() ||
     'The line chart cannot be displayed because your selection includes contents with different units (for example number and percent). Please select contents with the same unit to see the line chart.';
   const resolvedEmptyStateSvgName: EmptyStateProps['svgName'] =
     emptyStateSvgName && emptyStateSvgName.trim().length > 0
       ? emptyStateSvgName
       : 'ManWithMagnifyingGlass';
 
+  const dataset = useMemo(() => mapPxTableToChartDataset(pxtable), [pxtable]);
+  const hasLegendOverflow = dataset.series.length > 5;
+  const shouldShowLegendToggle = hasLegendOverflow && isMediumOrSmallerScreen;
+  const shouldShowLimitedLegend = shouldShowLegendToggle && !isLegendExpanded;
+  const memoizedAllLegendData = useMemo(
+    () => dataset.series.map((series) => series.name),
+    [dataset.series],
+  );
+  const memoizedLimitedLegendData = useMemo(() => {
+    return memoizedAllLegendData.slice(0, 5);
+  }, [memoizedAllLegendData]);
+  const visibleLegendData = shouldShowLimitedLegend
+    ? memoizedLimitedLegendData
+    : memoizedAllLegendData;
   const option = useMemo<echarts.EChartsOption>(
     () => ({
       ...buildDatasetOption(dataset),
@@ -100,7 +121,8 @@ export function LineChart({
         max: getAdaptiveYAxisMax,
       },
       legend: {
-        height: 40 * dataset.series.length, // increase legend height based on number of series to prevent overlap with x-axis labels
+        data: visibleLegendData,
+        height: 40 * visibleLegendData.length, // increase legend height based on number of series to prevent overlap with x-axis labels
       },
       series: buildSeriesOption(dataset, 'line', resolvedColors),
       tooltip: {
@@ -133,14 +155,14 @@ export function LineChart({
         },
       },
     }),
-    [dataset, resolvedColors, xAxisName],
+    [dataset, resolvedColors, xAxisName, visibleLegendData],
   );
 
   const { divRef } = useEChartOption(option);
   const height = 600 + dataset.series.length * 10; // increase chart height based on number of series to prevent legend overlap
 
   return (
-    <div>
+    <>
       {hasMultipleUnits ? (
         <EmptyState
           svgName={resolvedEmptyStateSvgName}
@@ -148,12 +170,35 @@ export function LineChart({
           descriptionTxt={resolvedEmptyStateDescription}
         />
       ) : (
-        <div
-          ref={divRef}
-          style={{ width: '100%', height: `${height}px` }}
-        ></div>
+        <>
+          <div
+            ref={divRef}
+            style={{ width: '100%', height: `${height}px` }}
+          ></div>
+          {shouldShowLegendToggle && (
+            <LegendToggleButton
+              onClick={() => setIsLegendExpanded((current) => !current)}
+              text={
+                isLegendExpanded ? translations.showLess : translations.showMore
+              }
+            />
+          )}
+        </>
+        //  )
       )}
-    </div>
+    </>
   );
 }
-export default LineChart;
+
+interface LegendToggleButtonProps {
+  readonly onClick: () => void;
+  readonly text: string;
+}
+
+function LegendToggleButton({ onClick, text }: LegendToggleButtonProps) {
+  return (
+    <Button onClick={onClick} variant="tertiary" size="small">
+      {text}
+    </Button>
+  );
+}

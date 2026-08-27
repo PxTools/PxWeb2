@@ -159,6 +159,10 @@ export default interface Resources {
         };
         chart: {
           line_chart: {
+            legend: {
+              show_less: 'Show less';
+              show_more: 'Show more';
+            };
             warnings: {
               multiple_units: {
                 description: 'The line chart cannot be displayed because your selection includes contents with different units (for example number and percent). Please select contents with the same unit to see the line chart.';
