@@ -133,6 +133,12 @@ describe('useEChartOption', () => {
           color: '#162327',
         },
         axisLine: { lineStyle: { color: '#162327' } },
+        nameTextStyle: {
+          fontFamily: 'PxWeb-font, sans-serif',
+          fontSize: '0.875rem',
+          color: '#162327',
+          align: 'left',
+        },
       },
     });
   });
@@ -190,6 +196,12 @@ describe('useEChartOption', () => {
           color: '#162327',
         },
         axisLine: { lineStyle: { color: '#162327' } },
+        nameTextStyle: {
+          fontFamily: 'PxWeb-font, sans-serif',
+          fontSize: '0.875rem',
+          color: '#162327',
+          align: 'left',
+        },
       },
     });
   });
@@ -250,6 +262,12 @@ describe('useEChartOption', () => {
           color: '#162327',
         },
         axisLine: { lineStyle: { color: '#162327' } },
+        nameTextStyle: {
+          fontFamily: 'PxWeb-font, sans-serif',
+          fontSize: '0.875rem',
+          color: '#162327',
+          align: 'left',
+        },
       },
     });
   });
