@@ -65,7 +65,7 @@ export function Presentation({
   isExpanded,
   setIsExpanded,
 }: Readonly<propsType>) {
-  const { isMobile, getSavedQueryId } = useApp();
+  const { isMobile, isTablet, getSavedQueryId } = useApp();
   const config = getConfig();
   const chartEnabled = config.features?.chartEnabled === true;
   const { i18n, t } = useTranslation();
@@ -338,7 +338,18 @@ export function Presentation({
                     [classes.fadeChart]: isFadingTable,
                   })}
                 >
-                  <LineChart pxtable={tableData.data} />
+                  <LineChart
+                    pxtable={tableData.data}
+                    isMediumOrSmallerScreen={isTablet}
+                    translations={{
+                      showMore: t(
+                        'presentation_page.main_content.chart.line_chart.legend.show_more',
+                      ),
+                      showLess: t(
+                        'presentation_page.main_content.chart.line_chart.legend.show_less',
+                      ),
+                    }}
+                  />
                 </div>
               </Activity>
             </>
@@ -372,7 +383,18 @@ export function Presentation({
                       [classes.fadeChart]: isFadingTable,
                     })}
                   >
-                    <LineChart pxtable={tableData.data} />
+                    <LineChart
+                      pxtable={tableData.data}
+                      isMediumOrSmallerScreen={isTablet}
+                      translations={{
+                        showMore: t(
+                          'presentation_page.main_content.chart.line_chart.legend.show_more',
+                        ),
+                        showLess: t(
+                          'presentation_page.main_content.chart.line_chart.legend.show_less',
+                        ),
+                      }}
+                    />
                   </div>
                 </Activity>
               </>

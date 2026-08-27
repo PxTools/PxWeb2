@@ -295,6 +295,14 @@
           }
         }
       },
+      "chart": {
+        "line_chart": {
+          "legend": {
+            "show_more": "أظهر المزيد",
+            "show_less": "أظهر أقل"
+          }
+        }
+      },
       "about_table": {
         "title": "معلومة",
         "footnotes": {

@@ -301,6 +301,14 @@
           }
         }
       },
+      "chart": {
+        "line_chart": {
+          "legend": {
+            "show_more": "Show more",
+            "show_less": "Show less"
+          }
+        }
+      },
       "about_table": {
         "title": "Information",
         "footnotes": {
