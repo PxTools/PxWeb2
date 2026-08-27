@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import { ManualPivot } from './ManualPivoting';
 import { VartypeEnum, type Variable } from '@pxweb2/pxweb2-ui';
@@ -349,5 +349,43 @@ describe('ManualPivoting', () => {
     const [, headerItems, stubItems] = onClose.mock.calls[0];
     expect(headerItems.map((item: Variable) => item.id)).toEqual(['h2']);
     expect(stubItems.map((item: Variable) => item.id)).toEqual(['s2']);
+  });
+
+  it('keeps keyboard focus on the item after dropping it', async () => {
+    const onClose = vi.fn();
+
+    render(
+      <ManualPivot
+        isOpen={true}
+        onClose={onClose}
+        headerVariables={[makeVariable('h1', 'Header 1')]}
+        stubVariables={[makeVariable('s1', 'Stub 1')]}
+      />,
+    );
+
+    const firstItem = getItem('s1');
+    firstItem.focus();
+    fireEvent.keyDown(firstItem, { key: 'Enter' });
+    fireEvent.keyDown(firstItem, { key: 'ArrowRight' });
+    fireEvent.keyDown(firstItem, { key: 'Enter' });
+
+    await waitFor(() => {
+      expect(document.activeElement).toBe(getItem('s1'));
+    });
+
+    const secondItem = document.activeElement as HTMLLIElement;
+    expect(secondItem).toBe(getItem('s1'));
+    fireEvent.keyDown(secondItem, { key: 'Enter' });
+    await waitFor(() => {
+      expect(getItem('s1')).toHaveAttribute('aria-grabbed', 'true');
+    });
+    fireEvent.keyDown(secondItem, { key: 'ArrowLeft' });
+    fireEvent.keyDown(secondItem, { key: 'Enter' });
+    confirmPivot();
+
+    expect(onClose).toHaveBeenCalledTimes(1);
+    const [, headerItems, stubItems] = onClose.mock.calls[0];
+    expect(headerItems.map((item: Variable) => item.id)).toEqual(['h1']);
+    expect(stubItems.map((item: Variable) => item.id)).toEqual(['s1']);
   });
 });
