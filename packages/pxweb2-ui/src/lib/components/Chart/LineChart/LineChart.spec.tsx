@@ -163,7 +163,13 @@ describe('LineChart', () => {
     const fallbackColors = ['#121212', '#343434'];
     vi.mocked(getChartColorsFromCssVariables).mockReturnValue(fallbackColors);
 
-    render(<LineChart pxtable={mockPxTable} colors={[]} translations={mockTranslations} />);
+    render(
+      <LineChart
+        pxtable={mockPxTable}
+        colors={[]}
+        translations={mockTranslations}
+      />,
+    );
 
     expect(getChartColorsFromCssVariables).toHaveBeenCalledTimes(1);
     expect(buildSeriesOption).toHaveBeenCalledWith(
@@ -174,7 +180,9 @@ describe('LineChart', () => {
   });
 
   it('renders chart container with height based on number of series', () => {
-    const { container } = render(<LineChart pxtable={mockPxTable} translations={mockTranslations} />);
+    const { container } = render(
+      <LineChart pxtable={mockPxTable} translations={mockTranslations} />,
+    );
 
     const chartDiv = Array.from(container.querySelectorAll('div')).find(
       (element) => element.style.height,
@@ -342,6 +350,8 @@ describe('LineChart', () => {
 
 it('renders empty state when multiple units are selected', () => {
   vi.mocked(checkMultipleUnits).mockReturnValue(true);
-  const { getByText } = render(<LineChart pxtable={mockPxTable} translations={mockTranslations} />);
+  const { getByText } = render(
+    <LineChart pxtable={mockPxTable} translations={mockTranslations} />,
+  );
   expect(getByText('Cannot display chart')).toBeTruthy();
 });
