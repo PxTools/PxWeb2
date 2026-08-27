@@ -301,8 +301,14 @@
           }
         }
       },
-      "chart": {
+      "chart":{
         "line_chart": {
+          "warnings": {
+            "multiple_units": {
+              "title": "The line chart cannot be displayed",
+              "description": "The line chart cannot be displayed because your selection includes contents with different units (for example number and percent). Please select contents with the same unit to see the line chart."
+            }
+          },
           "legend": {
             "show_more": "Show more",
             "show_less": "Show less"

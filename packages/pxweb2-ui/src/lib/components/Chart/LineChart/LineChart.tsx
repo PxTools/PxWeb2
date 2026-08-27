@@ -9,7 +9,14 @@ import {
 } from '../Utils/chartOptionBuilder';
 import { useEChartOption } from '../Utils/useEChartOption';
 import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
-import { getChartColorsFromCssVariables } from '../Utils/chartHelper';
+import {
+  getAdaptiveYAxisMax,
+  getAdaptiveYAxisMin,
+  getChartColorsFromCssVariables,
+  checkMultipleUnits,
+} from '../Utils/chartHelper';
+import EmptyState from '../../EmptyState/EmptyState';
+import type { EmptyStateProps } from '../../EmptyState/EmptyState';
 import type { PxTable } from '../../../shared-types/pxTable';
 
 type TooltipParam = {
@@ -40,11 +47,14 @@ function getTooltipSymbolSvg(symbol: string, color: string): string {
 interface LineChartTranslations {
   readonly showMore: string;
   readonly showLess: string;
+  readonly emptyStateTitle: string;
+  readonly emptyStateDescription: string;
 }
 
 interface LineChartProps {
   readonly pxtable: PxTable;
   readonly colors?: string[];
+  readonly emptyStateSvgName?: EmptyStateProps['svgName'];
   readonly translations: LineChartTranslations;
   readonly isMediumOrSmallerScreen?: boolean;
 }
@@ -52,16 +62,33 @@ interface LineChartProps {
 export function LineChart({
   pxtable,
   colors,
+  emptyStateSvgName,
   translations,
   isMediumOrSmallerScreen = false,
 }: LineChartProps) {
   const [isLegendExpanded, setIsLegendExpanded] = useState(false);
+  const hasMultipleUnits = checkMultipleUnits(pxtable);
+
+  const xAxisName = useMemo(() => {
+    return pxtable.stub.map((variable) => variable.label).join(' / ');
+  }, [pxtable]);
 
   const resolvedColors = useMemo(() => {
     return colors && colors.length > 0
       ? colors
       : getChartColorsFromCssVariables();
   }, [colors]);
+
+  const resolvedEmptyStateTitle =
+    translations.emptyStateTitle?.trim() || 'Cannot display chart';
+  const resolvedEmptyStateDescription =
+    translations.emptyStateDescription?.trim() ||
+    'The line chart cannot be displayed because your selection includes contents with different units (for example number and percent). Please select contents with the same unit to see the line chart.';
+  const resolvedEmptyStateSvgName: EmptyStateProps['svgName'] =
+    emptyStateSvgName && emptyStateSvgName.trim().length > 0
+      ? emptyStateSvgName
+      : 'ManWithMagnifyingGlass';
+
   const dataset = useMemo(() => mapPxTableToChartDataset(pxtable), [pxtable]);
   const hasLegendOverflow = dataset.series.length > 5;
   const shouldShowLegendToggle = hasLegendOverflow && isMediumOrSmallerScreen;
@@ -80,10 +107,18 @@ export function LineChart({
     () => ({
       ...buildDatasetOption(dataset),
       grid: { top: 0, bottom: 200, left: '0', right: '0', containLabel: false },
-      xAxis: { type: 'category' as const, axisLabel: { rotate: 45 } },
+      xAxis: {
+        type: 'category' as const,
+        name: xAxisName,
+        nameLocation: 'end',
+        nameGap: 70,
+        axisLabel: { rotate: 45 },
+      },
       yAxis: {
         name: dataset.unit,
-        min: (value) => value.min,
+        scale: true,
+        min: getAdaptiveYAxisMin,
+        max: getAdaptiveYAxisMax,
       },
       legend: {
         data: visibleLegendData,
@@ -120,7 +155,7 @@ export function LineChart({
         },
       },
     }),
-    [dataset, resolvedColors, visibleLegendData],
+    [dataset, resolvedColors, xAxisName, visibleLegendData],
   );
 
   const { divRef } = useEChartOption(option);
@@ -128,14 +163,28 @@ export function LineChart({
 
   return (
     <>
-      <div ref={divRef} style={{ width: '100%', height: `${height}px` }}></div>
-      {shouldShowLegendToggle && (
-        <LegendToggleButton
-          onClick={() => setIsLegendExpanded((current) => !current)}
-          text={
-            isLegendExpanded ? translations.showLess : translations.showMore
-          }
+      {hasMultipleUnits ? (
+        <EmptyState
+          svgName={resolvedEmptyStateSvgName}
+          headingTxt={resolvedEmptyStateTitle}
+          descriptionTxt={resolvedEmptyStateDescription}
         />
+      ) : (
+        <>
+          <div
+            ref={divRef}
+            style={{ width: '100%', height: `${height}px` }}
+          ></div>
+          {shouldShowLegendToggle && (
+            <LegendToggleButton
+              onClick={() => setIsLegendExpanded((current) => !current)}
+              text={
+                isLegendExpanded ? translations.showLess : translations.showMore
+              }
+            />
+          )}
+        </>
+        //  )
       )}
     </>
   );

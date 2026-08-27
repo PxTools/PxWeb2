@@ -301,8 +301,14 @@
           }
         }
       },
-      "chart": {
+      "chart":{
         "line_chart": {
+          "warnings": {
+            "multiple_units": {
+              "title": "Linjediagrammet kan ikke vises",
+              "description": "Linjediagrammet kan ikke vises fordi ditt utvalg inneholder innhold med forskjellige enheter (for eksempel antall og prosent). Vennligst velg innhold med samme enhet for å se linjediagrammet."
+            }
+          },
           "legend": {
             "show_more": "Vis mer",
             "show_less": "Vis mindre"
