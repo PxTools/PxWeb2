@@ -185,11 +185,7 @@
           "title": "Table"
         },
         "linechart": {
-          "title": "Line chart",
-          "legend": {
-            "show_more": "Show more",
-            "show_less": "Show less"
-          }
+          "title": "Line chart"
         }
       },
       "edit": {

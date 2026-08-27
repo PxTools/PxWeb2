@@ -321,10 +321,6 @@ export default interface Resources {
         };
         view: {
           linechart: {
-            legend: {
-              show_less: 'Show less';
-              show_more: 'Show more';
-            };
             title: 'Line chart';
           };
           table: {
