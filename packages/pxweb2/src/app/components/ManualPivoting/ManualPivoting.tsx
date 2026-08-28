@@ -617,8 +617,7 @@ export function ManualPivot({
     group: VariableGroup,
     variableId: string,
   ) => {
-    const isKeyboardDragging =
-      keyboardDraggedItemIdRef.current === variableId;
+    const isKeyboardDragging = keyboardDraggedItemIdRef.current === variableId;
 
     switch (event.key) {
       case 'Enter':
