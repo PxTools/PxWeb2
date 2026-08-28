@@ -5,11 +5,19 @@ import styles from './EmtyList.module.scss';
 type EmtyListProps = {
   label?: string;
   hideLabel?: boolean;
+  active?: boolean;
 };
 
-const EmtyList = ({ label = '', hideLabel = false }: EmtyListProps) => {
+const EmtyList = ({
+  label = '',
+  hideLabel = false,
+  active = false,
+}: EmtyListProps) => {
   return (
-    <div className={styles.emptyListBox}>
+    <div
+      className={`${styles.emptyListBox} ${active ? styles.active : ''}`}
+      data-active={active || undefined}
+    >
       {!hideLabel && label ? <Label>{label}</Label> : null}
     </div>
   );

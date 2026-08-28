@@ -9,3 +9,9 @@
   justify-content: center;
   text-align: center;
 }
+
+.active {
+  border-radius: var(--border-radius-medium, 8px);
+  border: 2px dashed var(--color-border-default, #162327);
+  background: var(--color-surface-subtle, #F0F8F9);
+}

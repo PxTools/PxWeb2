@@ -885,6 +885,7 @@ export function ManualPivot({
                     defaultValue: 'Drop variable here',
                   })}
                   hideLabel={isHoveringEmptyGroup}
+                  active={isHoveringEmptyGroup}
                 />
               </li>
             ) : null}
