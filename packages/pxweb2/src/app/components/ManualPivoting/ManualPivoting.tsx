@@ -992,6 +992,7 @@ export function ManualPivot({
     <Modal
       className={classes.manualPivotModal}
       isOpen={isOpen}
+      focusTrap
       onClose={(updated) => onClose(updated, headerItems, stubItems)}
       heading={t('presentation_page.side_menu.edit.customize.pivot.title')}
       label={t('presentation_page.side_menu.edit.title')}

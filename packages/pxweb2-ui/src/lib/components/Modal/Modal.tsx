@@ -20,6 +20,7 @@ export interface ModalProps {
   cancelLabel?: string;
   confirmLabel?: string;
   isOpen: boolean;
+  focusTrap?: boolean;
   onClose?: (updated: boolean, keyPress?: ' ' | 'Enter' | 'Escape') => void;
   className?: string;
   children: React.ReactNode;
@@ -31,6 +32,7 @@ export function Modal({
   cancelLabel = '',
   confirmLabel = '',
   isOpen,
+  focusTrap = false,
   onClose,
   className = '',
   children,
@@ -110,6 +112,48 @@ export function Modal({
     document.addEventListener('keydown', handleKeyDownInModal);
     return () => document.removeEventListener('keydown', handleKeyDownInModal);
   }, [handleCloseModal]);
+
+  useEffect(() => {
+    if (!focusTrap || !isModalOpen) {
+      return;
+    }
+
+    const modalElement = modalRef.current;
+    if (!modalElement) {
+      return;
+    }
+
+    const handleTabKey = (event: KeyboardEvent) => {
+      if (event.key !== 'Tab') {
+        return;
+      }
+
+      const focusableElements = Array.from(
+        modalElement.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter((element) => element.offsetParent !== null);
+
+      if (focusableElements.length === 0) {
+        return;
+      }
+
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+      const activeElement = document.activeElement;
+
+      if (event.shiftKey && activeElement === firstElement) {
+        event.preventDefault();
+        lastElement.focus();
+      } else if (!event.shiftKey && activeElement === lastElement) {
+        event.preventDefault();
+        firstElement.focus();
+      }
+    };
+
+    modalElement.addEventListener('keydown', handleTabKey);
+    return () => modalElement.removeEventListener('keydown', handleTabKey);
+  }, [focusTrap, isModalOpen]);
 
   return (
     <dialog
