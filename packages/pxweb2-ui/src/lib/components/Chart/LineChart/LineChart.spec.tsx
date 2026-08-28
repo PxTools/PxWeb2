@@ -198,6 +198,18 @@ describe('LineChart', () => {
     expect(chartDiv?.style.height).toBe('630px');
   });
 
+  it('allows vertical page scrolling but prevents horizontal page movement', () => {
+    const { container } = render(
+      <LineChart pxtable={mockPxTable} translations={mockTranslations} />,
+    );
+
+    const chartDiv = Array.from(container.querySelectorAll('div')).find(
+      (element) => element.style.height,
+    );
+
+    expect(chartDiv?.style.touchAction).toBe('pan-y');
+  });
+
   it('returns empty tooltip text for empty params', () => {
     render(<LineChart pxtable={mockPxTable} translations={mockTranslations} />);
 
