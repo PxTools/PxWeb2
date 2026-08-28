@@ -84,6 +84,7 @@ function applyStyling(option: echarts.EChartsOption): echarts.EChartsOption {
             ...axisColor,
           },
         },
+        nameTextStyle: { ...textStyle, align: 'left' },
         axisLabel: { ...axis.axisLabel, ...textStyle },
       }))
     : {
@@ -95,6 +96,7 @@ function applyStyling(option: echarts.EChartsOption): echarts.EChartsOption {
             ...axisColor,
           },
         },
+        nameTextStyle: { ...textStyle, align: 'left' },
         axisLabel: {
           ...option.xAxis?.axisLabel,
           ...textStyle,
