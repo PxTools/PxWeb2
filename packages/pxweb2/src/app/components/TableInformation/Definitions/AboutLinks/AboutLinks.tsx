@@ -21,7 +21,7 @@ function AboutTexts({ title, description }: AboutTextsProps) {
 }
 
 interface AboutLinksProps {
-  readonly definitionsLink: {
+  readonly definitionsLink?: {
     href: string;
     label: string;
   };
@@ -34,7 +34,7 @@ interface AboutLinksProps {
 export function AboutLinks({ definitionsLink, homepageLink }: AboutLinksProps) {
   const { t } = useTranslation();
 
-  if (!definitionsLink) {
+  if (!definitionsLink && !homepageLink) {
     return null;
   }
 
@@ -79,13 +79,14 @@ export function AboutLinks({ definitionsLink, homepageLink }: AboutLinksProps) {
             size="small"
           ></LinkCard>
         )}
-
-        <LinkCard
-          href={definitionsLink.href}
-          icon="Files"
-          headingText={definitionsLinkText}
-          size="small"
-        ></LinkCard>
+        {definitionsLink && definitionsLinkText && (
+          <LinkCard
+            href={definitionsLink.href}
+            icon="Files"
+            headingText={definitionsLinkText}
+            size="small"
+          ></LinkCard>
+        )}
       </div>
     </div>
   );

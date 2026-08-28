@@ -25,7 +25,10 @@ import useTableData from '../../context/useTableData';
 import useVariables from '../../context/useVariables';
 import { useDebounce } from '@uidotdev/usehooks';
 import { getConfig } from '../../util/config/getConfig';
-import { getViewMode } from '../../pages/TableViewer/Utils/tableViewerHelper';
+import {
+  getViewMode,
+  getDataViewMode,
+} from '../../pages/TableViewer/Utils/tableViewerHelper';
 
 type propsType = {
   readonly selectedTabId: string;
@@ -55,6 +58,76 @@ const MemoizedTable = React.memo(
     prevProps.isMobile === nextProps.isMobile &&
     prevProps.getVerticalScrollElement === nextProps.getVerticalScrollElement,
 );
+
+type PresentationViewProps = {
+  readonly pxtable: PxTable;
+  readonly viewMode: 'table' | 'linechart';
+  readonly isMobile: boolean;
+  readonly isFadingTable: boolean;
+  readonly gradientContainerRef: React.RefObject<HTMLDivElement | null>;
+  readonly tableContainerRef: React.RefObject<HTMLDivElement | null>;
+  readonly getVerticalScrollElement: () => HTMLElement | null;
+};
+
+function PresentationView({
+  pxtable,
+  viewMode,
+  isMobile,
+  isFadingTable,
+  gradientContainerRef,
+  tableContainerRef,
+  getVerticalScrollElement,
+}: Readonly<PresentationViewProps>) {
+  const { t } = useTranslation();
+  const { isTablet } = useApp();
+
+  const lineChartEmptyStateTitle = t(
+    'presentation_page.main_content.chart.line_chart.warnings.multiple_units.title',
+  );
+  const lineChartEmptyStateDescription = t(
+    'presentation_page.main_content.chart.line_chart.warnings.multiple_units.description',
+  );
+  const showMoreText = t(
+    'presentation_page.main_content.chart.line_chart.legend.show_more',
+  );
+  const showLessText = t(
+    'presentation_page.main_content.chart.line_chart.legend.show_less',
+  );
+
+  return (
+    <>
+      <Activity mode={viewMode === 'table' ? 'visible' : 'hidden'}>
+        <div className={classes.gradientContainer} ref={gradientContainerRef}>
+          <div className={classes.tableContainer} ref={tableContainerRef}>
+            <MemoizedTable
+              pxtable={pxtable}
+              isMobile={isMobile}
+              getVerticalScrollElement={getVerticalScrollElement}
+            />
+          </div>
+        </div>
+      </Activity>
+      <Activity mode={viewMode === 'linechart' ? 'visible' : 'hidden'}>
+        <div
+          className={cl(classes.chartContainer, {
+            [classes.fadeChart]: isFadingTable,
+          })}
+        >
+          <LineChart
+            pxtable={pxtable}
+            isMediumOrSmallerScreen={isTablet}
+            translations={{
+              showMore: showMoreText,
+              showLess: showLessText,
+              emptyStateTitle: lineChartEmptyStateTitle,
+              emptyStateDescription: lineChartEmptyStateDescription,
+            }}
+          />
+        </div>
+      </Activity>
+    </>
+  );
+}
 
 export function Presentation({
   selectedTabId,
@@ -139,11 +212,17 @@ export function Presentation({
       }
     };
   });
+
+  // Get the right view mode when switching between mobile/desktop screen sizes.
   useEffect(() => {
-    if (isMobile) {
-      tableData.pivotToMobile();
-    } else {
-      tableData.pivotToDesktop();
+    if (viewMode === 'table') {
+      if (isMobile) {
+        tableData.pivotToMobile();
+      } else {
+        tableData.pivotToDesktop();
+      }
+    } else if (viewMode === 'linechart') {
+      tableData.pivotToChart();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMobile]);
@@ -162,7 +241,8 @@ export function Presentation({
 
     if (initialRun && !hasSelectedValues) {
       if (getSavedQueryId()?.length > 0) {
-        tableData.fetchSavedQuery(getSavedQueryId(), i18n, isMobile);
+        const dataViewMode = getDataViewMode(viewMode, isMobile);
+        tableData.fetchSavedQuery(getSavedQueryId(), i18n, dataViewMode);
       } else {
         fetchTableDataIfAllowed();
       }
@@ -203,7 +283,8 @@ export function Presentation({
 
   function fetchTableDataIfAllowed() {
     if (variables.isMatrixSizeAllowed) {
-      tableData.fetchTableData(tableId, i18n, isMobile);
+      const dataViewMode = getDataViewMode(viewMode, isMobile);
+      tableData.fetchTableData(tableId, i18n, dataViewMode);
     } else {
       // fade table and give warning
       setIsFadingTable(true);
@@ -223,6 +304,16 @@ export function Presentation({
       setIsMandatoryNotSelectedFirst(false);
     }
   }, [isMissingMandatoryVariables]);
+
+  const shouldShowNormalPresentation = !isMissingMandatoryVariables;
+  const shouldShowStalePresentation =
+    isMissingMandatoryVariables &&
+    !variables.isMatrixSizeAllowed &&
+    !isMandatoryNotSelectedFirst;
+  const shouldShowMissingMandatoryEmptyState =
+    !isLoadingMetadata &&
+    isMissingMandatoryVariables &&
+    (variables.isMatrixSizeAllowed || isMandatoryNotSelectedFirst);
 
   useEffect(() => {
     if (!variables.isMatrixSizeAllowed && !isMandatoryNotSelectedFirst) {
@@ -276,7 +367,7 @@ export function Presentation({
                       selectedCells: t(
                         'number.simple_number_with_zero_decimal',
                         {
-                          value: variables.getSelectedMatrixSize(),
+                          value: String(variables.getSelectedMatrixSize()),
                         },
                       ),
                     },
@@ -290,7 +381,7 @@ export function Presentation({
                     'presentation_page.main_content.table.warnings.to_many_values_selected.maxCells',
                     {
                       maxCells: t('number.simple_number_with_zero_decimal', {
-                        value: config.maxDataCells,
+                        value: String(config.maxDataCells),
                       }),
                     },
                   )}
@@ -302,83 +393,28 @@ export function Presentation({
             </div>
           )}
 
-          {!isMissingMandatoryVariables && (
-            <>
-              <Activity mode={viewMode === 'table' ? 'visible' : 'hidden'}>
-                <div
-                  className={classes.gradientContainer}
-                  ref={gradientContainerRef}
-                >
-                  <div
-                    className={classes.tableContainer}
-                    ref={tableContainerRef}
-                  >
-                    <MemoizedTable
-                      pxtable={tableData.data}
-                      isMobile={isMobile}
-                      getVerticalScrollElement={getVerticalScrollElement}
-                    />
-                  </div>
-                </div>
-              </Activity>
-              <Activity mode={viewMode === 'linechart' ? 'visible' : 'hidden'}>
-                <div
-                  className={cl(classes.chartContainer, {
-                    [classes.fadeChart]: isFadingTable,
-                  })}
-                >
-                  <LineChart pxtable={tableData.data} />
-                </div>
-              </Activity>
-            </>
+          {(shouldShowNormalPresentation || shouldShowStalePresentation) && (
+            <PresentationView
+              pxtable={tableData.data}
+              viewMode={viewMode}
+              isMobile={isMobile}
+              isFadingTable={isFadingTable}
+              gradientContainerRef={gradientContainerRef}
+              tableContainerRef={tableContainerRef}
+              getVerticalScrollElement={getVerticalScrollElement}
+            />
           )}
-          {isMissingMandatoryVariables &&
-            !variables.isMatrixSizeAllowed &&
-            !isMandatoryNotSelectedFirst && (
-              <>
-                <Activity mode={viewMode === 'table' ? 'visible' : 'hidden'}>
-                  <div
-                    className={classes.gradientContainer}
-                    ref={gradientContainerRef}
-                  >
-                    <div
-                      className={classes.tableContainer}
-                      ref={tableContainerRef}
-                    >
-                      <MemoizedTable
-                        pxtable={tableData.data}
-                        isMobile={isMobile}
-                        getVerticalScrollElement={getVerticalScrollElement}
-                      />
-                    </div>
-                  </div>
-                </Activity>
-                <Activity
-                  mode={viewMode === 'linechart' ? 'visible' : 'hidden'}
-                >
-                  <div
-                    className={cl(classes.chartContainer, {
-                      [classes.fadeChart]: isFadingTable,
-                    })}
-                  >
-                    <LineChart pxtable={tableData.data} />
-                  </div>
-                </Activity>
-              </>
-            )}
-          {!isLoadingMetadata &&
-            isMissingMandatoryVariables &&
-            (variables.isMatrixSizeAllowed || isMandatoryNotSelectedFirst) && (
-              <EmptyState
-                svgName="ManWithMagnifyingGlass"
-                headingTxt={t(
-                  'presentation_page.main_content.table.warnings.missing_mandatory.title',
-                )}
-                descriptionTxt={t(
-                  'presentation_page.main_content.table.warnings.missing_mandatory.description',
-                )}
-              />
-            )}
+          {shouldShowMissingMandatoryEmptyState && (
+            <EmptyState
+              svgName="ManWithMagnifyingGlass"
+              headingTxt={t(
+                'presentation_page.main_content.table.warnings.missing_mandatory.title',
+              )}
+              descriptionTxt={t(
+                'presentation_page.main_content.table.warnings.missing_mandatory.description',
+              )}
+            />
+          )}
         </>
       )}
     </main>
