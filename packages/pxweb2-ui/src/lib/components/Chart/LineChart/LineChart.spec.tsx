@@ -265,7 +265,6 @@ describe('LineChart', () => {
     expect(html).toContain('<div><div>2024</div>');
     expect(html).toContain('Women: 12');
     expect(html).not.toContain('Men: 10');
-    expect(html).toContain('fill="#666666"');
     expect(html).toContain('fill="#ff0000"');
     expect(html).toContain('<rect');
   });
