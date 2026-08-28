@@ -47,6 +47,7 @@ interface ManualPivotProps {
   readonly stubVariables: Variable[];
 }
 
+/** Renders the modal used to manually reorder variables between table groups. */
 export function ManualPivot({
   isOpen,
   onClose,
@@ -79,6 +80,7 @@ export function ManualPivot({
   const [sourcePlaceholderMeta, setSourcePlaceholderMeta] =
     useState<SourcePlaceholderMeta>(null);
 
+  /** Restores the local lists and drag state whenever the modal is opened. */
   useEffect(() => {
     if (isOpen) {
       setHeaderItems(headerVariables);
@@ -93,6 +95,7 @@ export function ManualPivot({
     }
   }, [headerVariables, isOpen, stubVariables]);
 
+  /** Moves focus to an item after a keyboard reorder has updated the lists. */
   useEffect(() => {
     const pendingItemId = pendingFocusItemIdRef.current;
 
@@ -111,7 +114,9 @@ export function ManualPivot({
     };
   }, [headerItems, stubItems]);
 
+  /** Synchronizes drag placeholder dimensions with the rendered drop zones. */
   useEffect(() => {
+    /** Applies or removes a CSS custom property on a drop zone. */
     const applyZoneProperty = (
       zoneRef: React.RefObject<HTMLDivElement | null>,
       property: string,
@@ -150,6 +155,7 @@ export function ManualPivot({
     );
   }, [dropPreview, sourcePlaceholderMeta]);
 
+  /** Updates both rendered lists and their refs used by drag callbacks. */
   const commitLists = (
     nextHeaderItems: Variable[],
     nextStubItems: Variable[],
@@ -160,6 +166,7 @@ export function ManualPivot({
     setStubItems(nextStubItems);
   };
 
+  /** Removes duplicate variables while preserving their first-seen order. */
   const dedupeById = (items: Variable[]): Variable[] => {
     const seen = new Set<string>();
     return items.filter((item) => {
@@ -171,12 +178,15 @@ export function ManualPivot({
     });
   };
 
+  /** Capitalizes the first character of a variable label for display. */
   const capitalizeLabel = (label: string): string =>
     label.charAt(0).toUpperCase() + label.slice(1);
 
+  /** Returns the nearest drop zone containing or close to a pointer position. */
   const getGroupAtPoint = (x: number, y: number): VariableGroup | null => {
     const hitPadding = 20;
     const groupSwitchHysteresis = 14;
+    /** Calculates the shortest distance from a point to a rectangle. */
     const distanceToRect = (rect: DOMRect): number => {
       const dx = Math.max(rect.left - x, 0, x - rect.right);
       const dy = Math.max(rect.top - y, 0, y - rect.bottom);
@@ -220,6 +230,7 @@ export function ManualPivot({
     return null;
   };
 
+  /** Finds the insertion index indicated by the pointer's vertical position. */
   const getInsertIndexForElements = (
     itemElements: HTMLElement[],
     pointerY: number,
@@ -237,6 +248,7 @@ export function ManualPivot({
     return index === -1 ? itemElements.length : index;
   };
 
+  /** Applies hysteresis so the drop preview does not flicker at item boundaries. */
   const getStableInsertIndex = (
     group: VariableGroup,
     rawIndex: number,
@@ -275,6 +287,7 @@ export function ManualPivot({
     return pointerY >= midpoint - hysteresisPx ? previousIndex : rawIndex;
   };
 
+  /** Builds a drop preview for a group while excluding the dragged item. */
   const getDropPreviewForGroup = (
     group: VariableGroup,
     pointerY: number,
@@ -315,6 +328,7 @@ export function ManualPivot({
     };
   };
 
+  /** Stores a changed drop preview and publishes it for rendering. */
   const updateDropPreview = (nextPreview: DropPreview) => {
     const currentPreview = dropPreviewRef.current;
     const isSamePreview =
@@ -330,6 +344,7 @@ export function ManualPivot({
     setDropPreview(nextPreview);
   };
 
+  /** Inserts the active dragged item into a group at the requested index. */
   const moveDraggedItemToGroup = (
     targetGroup: VariableGroup,
     targetIndex: number,
@@ -389,14 +404,17 @@ export function ManualPivot({
     dragSourceGroupRef.current = targetGroup;
   };
 
+  /** Reads the current items belonging to a variable group. */
   const getItemsForGroup = (group: VariableGroup): Variable[] =>
     group === 'header' ? headerItemsRef.current : stubItemsRef.current;
 
+  /** Finds a variable in either group by its identifier. */
   const getItemById = (itemId: string): Variable | undefined =>
     [...headerItemsRef.current, ...stubItemsRef.current].find(
       (item) => item.id === itemId,
     );
 
+  /** Gets the translated visible label for a variable group. */
   const getGroupLabelText = (group: VariableGroup): string =>
     group === 'stub'
       ? t(
@@ -406,9 +424,11 @@ export function ManualPivot({
           'presentation_page.side_menu.edit.customize.manual_pivoting.manual_pivoting_modal.header_title',
         );
 
+  /** Gets the translated label used in drag announcements. */
   const getGroupLabel = (group: VariableGroup): string =>
     getGroupLabelText(group);
 
+  /** Announces the active item's current position. */
   const announceKeyboardMove = (itemId: string, group: VariableGroup) => {
     const groupItems = getItemsForGroup(group);
     const itemIndex = groupItems.findIndex((item) => item.id === itemId);
@@ -422,6 +442,7 @@ export function ManualPivot({
     }
   };
 
+  /** Starts keyboard dragging for a variable and records its original lists. */
   const startKeyboardDrag = (group: VariableGroup, variableId: string) => {
     isDraggingRef.current = true;
     draggedItemIdRef.current = variableId;
@@ -442,6 +463,7 @@ export function ManualPivot({
     }
   };
 
+  /** Moves the keyboard-dragged item up or down within its current group. */
   const moveKeyboardDraggedItemWithinGroup = (direction: -1 | 1): boolean => {
     const draggedItemId = draggedItemIdRef.current;
     const sourceGroup = dragSourceGroupRef.current;
@@ -484,6 +506,7 @@ export function ManualPivot({
     return true;
   };
 
+  /** Moves the keyboard-dragged item to the other group. */
   const moveKeyboardDraggedItemAcrossGroups = (
     targetGroup: VariableGroup,
   ): boolean => {
@@ -513,6 +536,7 @@ export function ManualPivot({
     return true;
   };
 
+  /** Commits a keyboard drag and announces the destination group. */
   const dropKeyboardDrag = () => {
     const draggedItemId = draggedItemIdRef.current;
     const sourceGroup = dragSourceGroupRef.current;
@@ -532,6 +556,7 @@ export function ManualPivot({
     resetDragState();
   };
 
+  /** Restores the lists captured before a keyboard drag began. */
   const cancelKeyboardDrag = () => {
     const draggedItemId = draggedItemIdRef.current;
     const snapshot = keyboardDragSnapshotRef.current;
@@ -553,6 +578,7 @@ export function ManualPivot({
     resetDragState();
   };
 
+  /** Clears shared state used by pointer and keyboard dragging. */
   const resetDragState = () => {
     isDraggingRef.current = false;
     draggedItemIdRef.current = null;
@@ -564,9 +590,11 @@ export function ManualPivot({
     updateDropPreview(null);
   };
 
+  /** Returns the group opposite the supplied group. */
   const getOtherGroup = (group: VariableGroup): VariableGroup =>
     group === 'header' ? 'stub' : 'header';
 
+  /** Handles keyboard commands for selecting, moving, dropping, or cancelling an item. */
   const handleItemKeyDown = (
     event: React.KeyboardEvent<HTMLLIElement>,
     group: VariableGroup,
@@ -623,6 +651,7 @@ export function ManualPivot({
     }
   };
 
+  /** Extracts client coordinates from the supported drag event shapes. */
   const getClientPoint = (
     event: MouseEvent | TouchEvent | PointerEvent,
     info: PanInfo,
@@ -645,6 +674,7 @@ export function ManualPivot({
     return { x: info.point.x, y: info.point.y };
   };
 
+  /** Updates the active pointer drag preview as the pointer moves. */
   const handleItemDrag = (
     event: MouseEvent | TouchEvent | PointerEvent,
     info: PanInfo,
@@ -669,6 +699,7 @@ export function ManualPivot({
     }
   };
 
+  /** Resolves the final pointer drop position and moves the dragged item. */
   const handleItemDragEnd = (
     event: MouseEvent | TouchEvent | PointerEvent,
     info: PanInfo,
@@ -700,6 +731,7 @@ export function ManualPivot({
     resetDragState();
   };
 
+  /** Captures source metadata and initializes a pointer drag. */
   const handleDragStart = (group: VariableGroup, variableId: string) => {
     isDraggingRef.current = true;
     draggedItemIdRef.current = variableId;
@@ -740,6 +772,7 @@ export function ManualPivot({
     }
   };
 
+  /** Applies a reorder while keeping variables unique across both groups. */
   const handleGroupReorder = (group: VariableGroup, nextItems: Variable[]) => {
     // Pointer drag uses custom preview/placeholder rendering; applying
     // framer-motion reorder updates at the same time causes visual thrash.
@@ -785,6 +818,7 @@ export function ManualPivot({
     commitLists(dedupedItems, nextStubItems);
   };
 
+  /** Renders one variable group and its drag, drop, and keyboard affordances. */
   const renderGroup = (
     group: VariableGroup,
     items: Variable[],
