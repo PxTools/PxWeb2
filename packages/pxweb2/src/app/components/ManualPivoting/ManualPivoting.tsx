@@ -841,8 +841,6 @@ export function ManualPivot({
     items: Variable[],
     zoneRef: React.RefObject<HTMLDivElement | null>,
   ) => {
-    const isAnyGroupEmpty =
-      headerItemsRef.current.length === 0 || stubItemsRef.current.length === 0;
     const preview = dropPreview?.group === group ? dropPreview : null;
     const previewIndex = preview?.index;
     const pointerDragSnapshot = pointerDragSnapshotRef.current;
@@ -906,9 +904,9 @@ export function ManualPivot({
                         className={`${classes.dropPlaceholder} ${classes.sourcePlaceholder}`}
                       />
                     ) : null}
-                    {previewIndex === currentVisibleIndex &&
-                    !isDraggedItem &&
-                    !isAnyGroupEmpty ? (
+                    {items.length > 0 &&
+                    previewIndex === currentVisibleIndex &&
+                    !isDraggedItem ? (
                       <li aria-hidden="true" className={classes.dropTargetRow}>
                         <DropTarget />
                       </li>
@@ -978,7 +976,7 @@ export function ManualPivot({
                 className={`${classes.dropPlaceholder} ${classes.sourcePlaceholder}`}
               />
             ) : null}
-            {previewIndex === nonDraggedItemCount && !isAnyGroupEmpty ? (
+            {items.length > 0 && previewIndex === nonDraggedItemCount ? (
               <li aria-hidden="true" className={classes.dropTargetRow}>
                 <DropTarget />
               </li>
