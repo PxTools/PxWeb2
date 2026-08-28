@@ -1,4 +1,11 @@
-import { Fragment, useEffect, useId, useRef, useState } from 'react';
+import {
+  Fragment,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import { Reorder, type PanInfo } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
@@ -61,6 +68,7 @@ export function ManualPivot({
   const [keyboardDraggedItemId, setKeyboardDraggedItemId] = useState<
     string | null
   >(null);
+  const keyboardDraggedItemIdRef = useRef<string | null>(null);
   const [liveAnnouncement, setLiveAnnouncement] = useState('');
   const headerItemsRef = useRef<Variable[]>(headerVariables);
   const stubItemsRef = useRef<Variable[]>(stubVariables);
@@ -88,6 +96,7 @@ export function ManualPivot({
       headerItemsRef.current = headerVariables;
       stubItemsRef.current = stubVariables;
       setKeyboardDraggedItemId(null);
+      keyboardDraggedItemIdRef.current = null;
       setLiveAnnouncement('');
       keyboardDragSnapshotRef.current = null;
       pointerDragSnapshotRef.current = null;
@@ -96,7 +105,7 @@ export function ManualPivot({
   }, [headerVariables, isOpen, stubVariables]);
 
   /** Moves focus to an item after a keyboard reorder has updated the lists. */
-  useEffect(() => {
+  useLayoutEffect(() => {
     const pendingItemId = pendingFocusItemIdRef.current;
 
     if (!pendingItemId) {
@@ -453,6 +462,7 @@ export function ManualPivot({
       stubItems: [...stubItemsRef.current],
     };
     setKeyboardDraggedItemId(variableId);
+    keyboardDraggedItemIdRef.current = variableId;
 
     const itemLabel = getItemById(variableId)?.label;
     if (itemLabel) {
@@ -494,13 +504,14 @@ export function ManualPivot({
     const [movingItem] = nextSourceItems.splice(sourceIndex, 1);
     nextSourceItems.splice(targetIndex, 0, movingItem);
 
+    pendingFocusItemIdRef.current = draggedItemId;
+
     if (sourceGroup === 'header') {
       commitLists(nextSourceItems, stubItemsRef.current);
     } else {
       commitLists(headerItemsRef.current, nextSourceItems);
     }
 
-    pendingFocusItemIdRef.current = draggedItemId;
     announceKeyboardMove(draggedItemId, sourceGroup);
 
     return true;
@@ -529,8 +540,8 @@ export function ManualPivot({
     const targetItems = getItemsForGroup(targetGroup);
     const targetIndex = Math.min(sourceIndex, targetItems.length);
 
-    moveDraggedItemToGroup(targetGroup, targetIndex);
     pendingFocusItemIdRef.current = draggedItemId;
+    moveDraggedItemToGroup(targetGroup, targetIndex);
     announceKeyboardMove(draggedItemId, targetGroup);
 
     return true;
@@ -540,6 +551,10 @@ export function ManualPivot({
   const dropKeyboardDrag = () => {
     const draggedItemId = draggedItemIdRef.current;
     const sourceGroup = dragSourceGroupRef.current;
+
+    if (draggedItemId) {
+      pendingFocusItemIdRef.current = draggedItemId;
+    }
 
     if (draggedItemId && sourceGroup) {
       const itemLabel = getItemById(draggedItemId)?.label;
@@ -553,6 +568,7 @@ export function ManualPivot({
 
     keyboardDragSnapshotRef.current = null;
     setKeyboardDraggedItemId(null);
+    keyboardDraggedItemIdRef.current = null;
     resetDragState();
   };
 
@@ -575,6 +591,7 @@ export function ManualPivot({
 
     keyboardDragSnapshotRef.current = null;
     setKeyboardDraggedItemId(null);
+    keyboardDraggedItemIdRef.current = null;
     resetDragState();
   };
 
@@ -600,7 +617,8 @@ export function ManualPivot({
     group: VariableGroup,
     variableId: string,
   ) => {
-    const isKeyboardDragging = keyboardDraggedItemId === variableId;
+    const isKeyboardDragging =
+      keyboardDraggedItemIdRef.current === variableId;
 
     switch (event.key) {
       case 'Enter':
@@ -608,7 +626,7 @@ export function ManualPivot({
         event.preventDefault();
         if (isKeyboardDragging) {
           dropKeyboardDrag();
-        } else if (!keyboardDraggedItemId) {
+        } else if (!keyboardDraggedItemIdRef.current) {
           startKeyboardDrag(group, variableId);
         }
         return;

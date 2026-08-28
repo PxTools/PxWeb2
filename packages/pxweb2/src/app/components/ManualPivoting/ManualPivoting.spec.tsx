@@ -158,7 +158,7 @@ describe('ManualPivoting', () => {
 
     fireEvent.keyDown(draggedItem, { key: ' ' });
     fireEvent.keyDown(draggedItem, { key: 'ArrowRight' });
-    fireEvent.keyDown(draggedItem, { key: 'Enter' });
+    fireEvent.keyDown(getItem('s2'), { key: 'Enter' });
 
     confirmPivot();
 
@@ -241,7 +241,7 @@ describe('ManualPivoting', () => {
     const draggedItem = getItem('h2');
     fireEvent.keyDown(draggedItem, { key: 'Enter' });
     fireEvent.keyDown(draggedItem, { key: 'ArrowLeft' });
-    fireEvent.keyDown(draggedItem, { key: 'Enter' });
+    fireEvent.keyDown(getItem('h2'), { key: 'Enter' });
     confirmPivot();
 
     const [, headerItems, stubItems] = onClose.mock.calls[0];
@@ -267,7 +267,7 @@ describe('ManualPivoting', () => {
     const draggedItem = getItem('s1');
     fireEvent.keyDown(draggedItem, { key: 'Enter' });
     fireEvent.keyDown(draggedItem, { key: 'ArrowRight' });
-    fireEvent.keyDown(draggedItem, { key: 'Enter' });
+    fireEvent.keyDown(getItem('s1'), { key: 'Enter' });
     confirmPivot();
 
     const [, headerItems, stubItems] = onClose.mock.calls[0];
@@ -367,7 +367,7 @@ describe('ManualPivoting', () => {
     firstItem.focus();
     fireEvent.keyDown(firstItem, { key: 'Enter' });
     fireEvent.keyDown(firstItem, { key: 'ArrowRight' });
-    fireEvent.keyDown(firstItem, { key: 'Enter' });
+    fireEvent.keyDown(getItem('s1'), { key: 'Enter' });
 
     await waitFor(() => {
       expect(document.activeElement).toBe(getItem('s1'));
@@ -387,5 +387,39 @@ describe('ManualPivoting', () => {
     const [, headerItems, stubItems] = onClose.mock.calls[0];
     expect(headerItems.map((item: Variable) => item.id)).toEqual(['h1']);
     expect(stubItems.map((item: Variable) => item.id)).toEqual(['s1']);
+  });
+
+  it('allows a different item to be grabbed after the first item is dropped', async () => {
+    const onClose = vi.fn();
+
+    render(
+      <ManualPivot
+        isOpen={true}
+        onClose={onClose}
+        headerVariables={[makeVariable('h1', 'Header 1')]}
+        stubVariables={[
+          makeVariable('s1', 'Stub 1'),
+          makeVariable('s2', 'Stub 2'),
+        ]}
+      />,
+    );
+
+    const firstItem = getItem('s1');
+    firstItem.focus();
+    fireEvent.keyDown(firstItem, { key: 'Enter' });
+    fireEvent.keyDown(firstItem, { key: 'ArrowRight' });
+    fireEvent.keyDown(getItem('s1'), { key: 'Enter' });
+
+    await waitFor(() => {
+      expect(document.activeElement).toBe(getItem('s1'));
+    });
+
+    const secondItem = getItem('s2');
+    secondItem.focus();
+    fireEvent.keyDown(secondItem, { key: 'Enter' });
+
+    await waitFor(() => {
+      expect(getItem('s2')).toHaveAttribute('aria-grabbed', 'true');
+    });
   });
 });
