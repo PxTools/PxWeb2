@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type * as echarts from 'echarts';
 
 import { Button } from '../../Button/Button';
@@ -67,6 +67,7 @@ export function LineChart({
   isMediumOrSmallerScreen = false,
 }: LineChartProps) {
   const [isLegendExpanded, setIsLegendExpanded] = useState(false);
+  const hoveredSeriesIndexRef = useRef<number | null>(null);
   const hasMultipleUnits = checkMultipleUnits(pxtable);
 
   const xAxisName = useMemo(() => {
@@ -125,8 +126,15 @@ export function LineChart({
         height: 40 * visibleLegendData.length, // increase legend height based on number of series to prevent overlap with x-axis labels
       },
       series: buildSeriesOption(dataset, 'line', resolvedColors),
+      emphasis: {
+        focus: 'series',
+      },
       tooltip: {
         trigger: 'axis',
+        confine: true,
+        appendToBody: true,
+        extraCssText:
+          'max-width:400px;box-sizing:border-box;white-space:normal;overflow-wrap:anywhere;',
         formatter: (params: unknown) => {
           const axisParams = (Array.isArray(params) ? params : [params]) as
             TooltipParam[] | undefined;
@@ -135,8 +143,15 @@ export function LineChart({
             return '';
           }
 
+          if (hoveredSeriesIndexRef.current === null) {
+            return '';
+          }
+
           const title = axisParams[0].axisValueLabel;
-          const rows = axisParams
+          const hoveredParams = axisParams.filter(
+            (param) => param.seriesIndex === hoveredSeriesIndexRef.current,
+          );
+          const rows = hoveredParams
             .map((param) => {
               const seriesMeta = dataset.series[param.seriesIndex];
               const row = param.data as Record<string, string | number>;
@@ -147,7 +162,7 @@ export function LineChart({
                 ];
               const color = param.color ?? '#666666';
 
-              return `<div style="display:flex;align-items:center;gap:6px"><span style="display:inline-flex;align-items:center">${getTooltipSymbolSvg(symbol, color)}</span><span>${param.seriesName}: ${value ?? ''}</span></div>`;
+              return `<div style="display:flex;align-items:flex-start;gap:6px;white-space:normal;overflow-wrap:anywhere"><span style="display:inline-flex;align-items:center;flex:none">${getTooltipSymbolSvg(symbol, color)}</span><span style="min-width:0;overflow-wrap:anywhere">${param.seriesName}: ${value ?? ''}</span></div>`;
             })
             .join('');
 
@@ -158,7 +173,38 @@ export function LineChart({
     [dataset, resolvedColors, xAxisName, visibleLegendData],
   );
 
-  const { divRef } = useEChartOption(option);
+  const { divRef, chartRef } = useEChartOption(option);
+
+  useEffect(() => {
+    const chart = chartRef.current;
+    if (!chart) {
+      return;
+    }
+
+    const handleMouseOver = (params: {
+      componentType?: string;
+      seriesIndex?: number;
+    }) => {
+      if (
+        params.componentType === 'series' &&
+        typeof params.seriesIndex === 'number'
+      ) {
+        hoveredSeriesIndexRef.current = params.seriesIndex;
+      }
+    };
+    const handleGlobalOut = () => {
+      hoveredSeriesIndexRef.current = null;
+    };
+
+    chart.on('mouseover', handleMouseOver);
+    chart.on('globalout', handleGlobalOut);
+
+    return () => {
+      chart.off('mouseover', handleMouseOver);
+      chart.off('globalout', handleGlobalOut);
+    };
+  }, [chartRef, option]);
+
   const height = 600 + dataset.series.length * 10; // increase chart height based on number of series to prevent legend overlap
 
   return (

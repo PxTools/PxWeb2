@@ -1,6 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, expect, it, beforeEach, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
+import type * as echarts from 'echarts';
 
 import { LineChart } from './LineChart';
 import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
@@ -143,6 +144,11 @@ describe('LineChart', () => {
       right: '0',
       containLabel: false,
     });
+    expect(option.tooltip).toMatchObject({
+      trigger: 'axis',
+      extraCssText:
+        'max-width:400px;box-sizing:border-box;white-space:normal;overflow-wrap:anywhere;',
+    });
   });
 
   it('uses fallback colors when colors are not provided', () => {
@@ -202,8 +208,40 @@ describe('LineChart', () => {
     expect(formatter?.([])).toBe('');
   });
 
-  it('formats tooltip rows with symbol svg, labels, values and fallback color', () => {
+  it('returns empty tooltip text when no series is hovered', () => {
     render(<LineChart pxtable={mockPxTable} translations={mockTranslations} />);
+
+    const option = vi.mocked(useEChartOption).mock.calls[0][0];
+    const formatter = getTooltipFormatter(option);
+
+    expect(
+      formatter?.([
+        {
+          axisValueLabel: '2024',
+          seriesIndex: 0,
+          seriesName: 'Men',
+          data: { men: 10, women: 12 },
+        },
+      ]),
+    ).toBe('');
+  });
+
+  it('formats tooltip text only for the hovered series', () => {
+    const chart = {
+      on: vi.fn(),
+      off: vi.fn(),
+    };
+    vi.mocked(useEChartOption).mockReturnValue({
+      divRef: { current: null },
+      chartRef: { current: chart as unknown as echarts.EChartsType },
+    });
+
+    render(<LineChart pxtable={mockPxTable} translations={mockTranslations} />);
+
+    const mouseOverHandler = chart.on.mock.calls.find(
+      ([eventName]) => eventName === 'mouseover',
+    )?.[1] as (params: { componentType: string; seriesIndex: number }) => void;
+    mouseOverHandler({ componentType: 'series', seriesIndex: 1 });
 
     const option = vi.mocked(useEChartOption).mock.calls[0][0];
     const formatter = getTooltipFormatter(option);
@@ -225,11 +263,10 @@ describe('LineChart', () => {
     ]);
 
     expect(html).toContain('<div><div>2024</div>');
-    expect(html).toContain('Men: 10');
     expect(html).toContain('Women: 12');
+    expect(html).not.toContain('Men: 10');
     expect(html).toContain('fill="#666666"');
     expect(html).toContain('fill="#ff0000"');
-    expect(html).toContain('<circle');
     expect(html).toContain('<rect');
   });
 
