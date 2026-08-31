@@ -9,7 +9,6 @@ import {
 } from '../Utils/chartOptionBuilder';
 import { useEChartOption } from '../Utils/useEChartOption';
 import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
-
 import {
   getAdaptiveYAxisMax,
   getAdaptiveYAxisMin,
