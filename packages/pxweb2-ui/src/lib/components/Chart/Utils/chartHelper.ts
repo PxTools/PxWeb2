@@ -42,6 +42,7 @@ export function getChartCssVariables(): ChartCssValues | undefined {
     .getPropertyValue('--px-color-chart-series')
     .trim();
   let parsedColors: string[] = [];
+  
   if (csvColorList) {
     parsedColors = csvColorList
       .split(',')
