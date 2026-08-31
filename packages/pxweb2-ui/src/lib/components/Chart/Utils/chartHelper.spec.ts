@@ -10,7 +10,6 @@ import type { PxTable } from '../../../shared-types/pxTable';
 import type { Variable } from '../../../shared-types/variable';
 import { VartypeEnum } from '../../../shared-types/vartypeEnum';
 
-
 function mockStyles(values: Record<string, string>): CSSStyleDeclaration {
   return {
     getPropertyValue: (property: string) => values[property] ?? '',
