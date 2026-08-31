@@ -169,7 +169,7 @@ export function LineChart({
                 ];
               const color = param.color ?? '#666666';
 
-              return `<div style="display:flex;align-items:flex-start;gap:6px;white-space:normal;overflow-wrap:anywhere"><span style="display:inline-flex;align-items:center;flex:none">${getTooltipSymbolSvg(symbol, color)}</span><span style="min-width:0;overflow-wrap:anywhere">${param.seriesName}: <strong>${tooltipValue}</strong></span></div>`;
+              return `<div style="display:flex;align-items:flex-start;gap:6px;white-space:normal;overflow-wrap:anywhere"><span style="display:inline-flex;align-items:center;height:1.4em;flex:none">${getTooltipSymbolSvg(symbol, color)}</span><span style="min-width:0;overflow-wrap:anywhere">${param.seriesName}: <strong>${tooltipValue}</strong></span></div>`;
             })
             .join('');
 
