@@ -72,6 +72,13 @@ vi.mock('../../../context/useApp', () => ({
   default: () => ({ isMobile: false }),
 }));
 
+vi.mock('../../../context/useAccessibility', () => ({
+  default: () => ({
+    addModal: vi.fn(),
+    removeModal: vi.fn(),
+  }),
+}));
+
 afterEach(() => {
   vi.clearAllMocks();
 });

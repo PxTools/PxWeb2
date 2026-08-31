@@ -12,6 +12,7 @@ import useTableData from '../../../context/useTableData';
 import classes from './DrawerEdit.module.scss';
 import { PivotType } from '../../../context/PivotType';
 import useApp from '../../../context/useApp';
+import useAccessibility from '../../../context/useAccessibility';
 
 interface PivotButtonProps {
   readonly stub: Variable[];
@@ -148,6 +149,7 @@ function PivotButton({
 export function DrawerEdit() {
   const { t } = useTranslation();
   const { isMobile } = useApp();
+  const { addModal, removeModal } = useAccessibility();
   const tableData = useTableData();
   const data = tableData.data;
   const { pivotManual } = tableData;
@@ -155,6 +157,16 @@ export function DrawerEdit() {
     null,
   );
   const [isManualPivotOpen, setIsManualPivotOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isManualPivotOpen) {
+      return;
+    }
+
+    addModal('ManualPivot', () => setIsManualPivotOpen(false));
+
+    return () => removeModal('ManualPivot');
+  }, [addModal, isManualPivotOpen, removeModal]);
 
   return (
     <ContentBox title={t('presentation_page.side_menu.edit.customize.title')}>
