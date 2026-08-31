@@ -915,7 +915,11 @@ export function ManualPivot({
                       as="li"
                       data-variable-id={variable.id}
                       value={variable}
-                      className={classes.listItem}
+                      className={`${classes.listItem}${
+                        (isDraggedItem || keyboardDraggedItemId === variable.id)
+                          ? ` ${classes.listItemDragging}`
+                          : ''
+                      }`}
                       style={{
                         position:
                           isDraggingRef.current &&
@@ -946,17 +950,7 @@ export function ManualPivot({
                       drag
                       dragMomentum={false}
                       dragElastic={0}
-                      whileDrag={{
-                        scale: 1.02,
-                        zIndex: 10,
-                        borderRadius: 'var(--border-radius-medium, 8px)',
-                        borderWidth: 1,
-                        borderStyle: 'solid',
-                        borderColor: 'var(--color-border-subtle, #C3DCDC)',
-                        opacity: 0.6,
-                        backgroundColor: 'var(--color-surface-default, #FFF)',
-                        boxShadow: '0 8px 20px rgba(0, 0, 0, 0.2)',
-                      }}
+                      whileDrag={{ scale: 1.02 }}
                       onDragStart={() => handleDragStart(group, variable.id)}
                       onDrag={handleItemDrag}
                       onDragEnd={handleItemDragEnd}

@@ -84,18 +84,40 @@
   transition: box-shadow 120ms ease;
   &:hover {
     border-radius: var(--border-radius-medium, 8px);
-    border: 1px solid var(--color-border-subtle, #C3DCDC);
-    background: var(--color-surface-action-subtle-hover, #DBEBEB);
+    border: 1px solid var(--color-border-subtle, #c3dcdc);
+    background: var(--color-surface-action-subtle-hover, #dbebeb);
+  }
+  &:active {
+    cursor: grabbing;
+  }
+  &:focus-visible {
+    outline: 3px solid var(--px-color-border-focus-outline);
+    outline-offset: 3px;
+    box-shadow: inset 0 0 0 3px var(--px-color-border-focus-boxshadow);
   }
 }
 
-.listItem:active {
-  cursor: grabbing;
-}
+// .listItem:active {
+//   cursor: grabbing;
+//   border-radius: var(--border-radius-medium, 8px);
+//   border: 2px solid var(--color-border-default, #162327);
+//   background: var(--color-surface-action-subtle-active, #c3dcdc);
+// }
 
-.listItem:focus-visible {
-  outline: 2px solid var(--px-color-border-focus-outline);
-  outline-offset: 1px;
+// .listItem:focus-visible {
+//     outline: 3px solid var(--px-color-border-focus-outline);
+//     outline-offset: 3px;
+//     box-shadow: inset 0 0 0 3px var(--px-color-border-focus-boxshadow);
+// }
+
+.listItemDragging {
+  z-index: 10;
+  border-radius: var(--border-radius-medium, 8px);
+  border: 1px solid var(--color-border-subtle, #c3dcdc);
+  opacity: 0.6;
+  background: var(--color-surface-default, #fff);
+  box-shadow: 0 8px 20px rgb(0 0 0 / 20%);
+
 }
 
 .visuallyHidden {
