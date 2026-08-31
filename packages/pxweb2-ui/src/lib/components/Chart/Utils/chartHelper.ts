@@ -22,6 +22,7 @@ function resolveCssVariableValue(
 
     resolvedValue = variableValue;
   }
+  
   return resolvedValue;
 }
 
