@@ -193,8 +193,8 @@
         "customize": {
           "title": "Tilpass",
           "auto_pivot": {
-            "title": "Rydd opp i tabellen",
-            "aria_label": "Rydd opp i tabellen",
+            "title": "Organiser tabellen automatisk",
+            "aria_label": "Sorterer rader og kolonner automatiskt for en mer oversiktlig tabell",
             "description": "Gjør tabellen mer oversiktlig ved å automatisk organisere rader og kolonner",
             "screen_reader_announcement": "Tabell ryddet opp og organisert etter {{first_variables}} og {{last_variable}}"
           },
