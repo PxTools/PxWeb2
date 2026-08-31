@@ -23,7 +23,9 @@ type TooltipParam = {
   axisValueLabel?: string;
   seriesIndex: number;
   seriesName: string;
-  data?: Record<string, string | number>;
+  data?: Record<string, string | number | null> & {
+    formattedValues?: Record<string, string | null>;
+  };
   color?: string;
 };
 
@@ -154,15 +156,21 @@ export function LineChart({
           const rows = hoveredParams
             .map((param) => {
               const seriesMeta = dataset.series[param.seriesIndex];
-              const row = param.data as Record<string, string | number>;
+              const row = param.data;
               const value = row?.[seriesMeta.key];
+              const formattedValue =
+                row?.formattedValues?.[seriesMeta.key] ?? value;
+              const tooltipValue =
+                formattedValue == null
+                  ? ''
+                  : `${formattedValue}${dataset.unit ? ` ${dataset.unit}` : ''}`;
               const symbol =
                 LINE_SERIES_SYMBOLS[
                   param.seriesIndex % LINE_SERIES_SYMBOLS.length
                 ];
               const color = param.color ?? '#666666';
 
-              return `<div style="display:flex;align-items:flex-start;gap:6px;white-space:normal;overflow-wrap:anywhere"><span style="display:inline-flex;align-items:center;flex:none">${getTooltipSymbolSvg(symbol, color)}</span><span style="min-width:0;overflow-wrap:anywhere">${param.seriesName}: ${value ?? ''}</span></div>`;
+              return `<div style="display:flex;align-items:flex-start;gap:6px;white-space:normal;overflow-wrap:anywhere"><span style="display:inline-flex;align-items:center;flex:none">${getTooltipSymbolSvg(symbol, color)}</span><span style="min-width:0;overflow-wrap:anywhere">${param.seriesName}: <strong>${tooltipValue}</strong></span></div>`;
             })
             .join('');
 

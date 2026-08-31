@@ -168,6 +168,7 @@ export function mapPxTableToChartDataset(pxtable: PxTable): EChartsDataset {
     const row: Record<string, number | string | null> = {
       name: getLabel(rowCombination.items, 'Value'),
     };
+    const formattedValues: Record<string, string | null> = {};
 
     seriesCombinations.forEach((seriesCombination, seriesIndex) => {
       const seriesKey = series[seriesIndex].key;
@@ -188,9 +189,10 @@ export function mapPxTableToChartDataset(pxtable: PxTable): EChartsDataset {
       const dataCell = getPxTableData<DataCell>(pxtable.data.cube, dimensions);
 
       row[seriesKey] = dataCell?.value ?? null;
+      formattedValues[seriesKey] = dataCell?.formattedValue ?? null;
     });
 
-    return row;
+    return { ...row, formattedValues };
   });
 
   return {

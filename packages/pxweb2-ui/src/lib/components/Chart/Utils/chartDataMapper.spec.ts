@@ -99,10 +99,10 @@ describe('mapPxTableToChartDataset', () => {
     };
 
     const cube: PxData<DataCell> = {};
-    setPxTableData(cube, ['2023', 'M'], { value: 10 });
-    setPxTableData(cube, ['2023', 'F'], { value: 11 });
-    setPxTableData(cube, ['2024', 'M'], { value: 12 });
-    setPxTableData(cube, ['2024', 'F'], { value: 13 });
+    setPxTableData(cube, ['2023', 'M'], { value: 10, formattedValue: '10' });
+    setPxTableData(cube, ['2023', 'F'], { value: 11, formattedValue: '11' });
+    setPxTableData(cube, ['2024', 'M'], { value: 12, formattedValue: '12' });
+    setPxTableData(cube, ['2024', 'F'], { value: 13, formattedValue: '13' });
 
     const table = createPxTable([year], [sex], ['year', 'sex'], cube, [
       year,
@@ -121,8 +121,18 @@ describe('mapPxTableToChartDataset', () => {
     ]);
     expect(result.dimensions).toEqual(['name', 'M', 'F']);
     expect(result.source).toEqual([
-      { name: '2023', M: 10, F: 11 },
-      { name: '2024', M: 12, F: 13 },
+      {
+        name: '2023',
+        M: 10,
+        F: 11,
+        formattedValues: { M: '10', F: '11' },
+      },
+      {
+        name: '2024',
+        M: 12,
+        F: 13,
+        formattedValues: { M: '12', F: '13' },
+      },
     ]);
   });
 
@@ -142,7 +152,14 @@ describe('mapPxTableToChartDataset', () => {
 
     const result = mapPxTableToChartDataset(table);
 
-    expect(result.source).toEqual([{ name: '2023', M: 10, F: null }]);
+    expect(result.source).toEqual([
+      {
+        name: '2023',
+        M: 10,
+        F: null,
+        formattedValues: { M: null, F: null },
+      },
+    ]);
   });
 });
 

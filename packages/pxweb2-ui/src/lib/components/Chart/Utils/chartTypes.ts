@@ -8,7 +8,11 @@ export interface EChartsDataset {
   readonly origin: string;
   readonly unit: string;
   readonly dimensions: string[];
-  readonly source: Array<Record<string, string | number | null>>;
+  readonly source: Array<
+    Record<string, string | number | null> & {
+      readonly formattedValues?: Record<string, string | null>;
+    }
+  >;
   readonly series: ChartSeries[];
 }
 

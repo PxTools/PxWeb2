@@ -49,7 +49,14 @@ const mockDataset: EChartsDataset = {
   origin: 'Statistics Demo',
   unit: 'persons',
   dimensions: ['name', 'men', 'women'],
-  source: [{ name: '2024', men: 10, women: 12 }],
+  source: [
+    {
+      name: '2024',
+      men: 10,
+      women: 12,
+      formattedValues: { men: '10', women: '12' },
+    },
+  ],
   series: [
     { key: 'men', name: 'Men' },
     { key: 'women', name: 'Women' },
@@ -263,22 +270,67 @@ describe('LineChart', () => {
         axisValueLabel: '2024',
         seriesIndex: 0,
         seriesName: 'Men',
-        data: { men: 10, women: 12 },
+        data: {
+          men: 10,
+          women: 12,
+          formattedValues: { men: '10', women: '12' },
+        },
       },
       {
         axisValueLabel: '2024',
         seriesIndex: 1,
         seriesName: 'Women',
         color: '#ff0000',
-        data: { men: 10, women: 12 },
+        data: {
+          men: 10,
+          women: 12,
+          formattedValues: { men: '10', women: '12' },
+        },
       },
     ]);
 
     expect(html).toContain('<div><div>2024</div>');
-    expect(html).toContain('Women: 12');
-    expect(html).not.toContain('Men: 10');
+    expect(html).toContain('Women: <strong>12 persons</strong>');
+    expect(html).not.toContain('Men: <strong>10 persons</strong>');
     expect(html).toContain('fill="#ff0000"');
     expect(html).toContain('<rect');
+  });
+
+  it('uses formatted values in the tooltip', () => {
+    const chart = {
+      on: vi.fn(),
+      off: vi.fn(),
+    };
+    vi.mocked(useEChartOption).mockReturnValue({
+      divRef: { current: null },
+      chartRef: { current: chart as unknown as echarts.EChartsType },
+    });
+
+    render(<LineChart pxtable={mockPxTable} translations={mockTranslations} />);
+
+    const mouseOverHandler = chart.on.mock.calls.find(
+      ([eventName]) => eventName === 'mouseover',
+    )?.[1] as (params: { componentType: string; seriesIndex: number }) => void;
+    mouseOverHandler({ componentType: 'series', seriesIndex: 1 });
+
+    const option = vi.mocked(useEChartOption).mock.calls[0][0];
+    const formatter = getTooltipFormatter(option);
+    const html = formatter?.([
+      {
+        axisValueLabel: '2024',
+        seriesIndex: 1,
+        seriesName: 'Women',
+        data: {
+          men: 10,
+          women: 12.345,
+          formattedValues: { men: '10', women: '12.35' },
+        },
+      },
+    ]);
+
+    expect(html).toContain('Women: <strong>12.35 persons</strong>');
+    expect(html).toContain('<strong>12.35 persons</strong>');
+    expect(html).not.toContain('Women: 12.345');
   });
 
   describe('legends', () => {
