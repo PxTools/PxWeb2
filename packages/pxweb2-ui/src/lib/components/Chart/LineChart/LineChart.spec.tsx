@@ -9,9 +9,7 @@ import {
   buildDatasetOption,
   buildSeriesOption,
 } from '../Utils/chartOptionBuilder';
-
 import { getChartCssVariables, checkMultipleUnits } from '../Utils/chartHelper';
-
 import type { EChartsDataset } from '../Utils/chartTypes';
 import type { PxTable } from '../../../shared-types/pxTable';
 
