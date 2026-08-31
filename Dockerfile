@@ -1,4 +1,4 @@
-FROM node:24.18.1-slim AS build
+FROM node:26.8.1-slim AS build
 WORKDIR /app
 COPY . ./
 RUN npm ci && npm run build-artifact
