@@ -82,6 +82,11 @@
   user-select: none;
   touch-action: none;
   transition: box-shadow 120ms ease;
+  &:hover {
+    border-radius: var(--border-radius-medium, 8px);
+    border: 1px solid var(--color-border-subtle, #C3DCDC);
+    background: var(--color-surface-action-subtle-hover, #DBEBEB);
+  }
 }
 
 .listItem:active {
