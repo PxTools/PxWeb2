@@ -37,7 +37,6 @@ export function getChartCssVariables(): ChartCssValues | undefined {
   }
 
   const styles = getComputedStyle(globalThis.document.documentElement);
-
   const csvColorList = styles
     .getPropertyValue('--px-color-chart-series')
     .trim();
@@ -50,6 +49,7 @@ export function getChartCssVariables(): ChartCssValues | undefined {
       .map((color) => color.trim())
       .filter(Boolean);
   }
+  
   const axisColor = styles.getPropertyValue('--px-color-border-default').trim();
   const fontColor = styles.getPropertyValue('--px-color-text-default').trim();
 
