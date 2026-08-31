@@ -27,6 +27,14 @@ interface PivotManuallyButtonProps {
 
 function PivotManuallyButton({ onClick }: PivotManuallyButtonProps) {
   const { t } = useTranslation();
+  const stopKeyboardPropagation = (
+    event: React.KeyboardEvent<HTMLButtonElement>,
+  ) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.stopPropagation();
+    }
+  };
+
   return (
     <ActionItem
       label={t(
@@ -39,6 +47,8 @@ function PivotManuallyButton({ onClick }: PivotManuallyButtonProps) {
         'presentation_page.side_menu.edit.customize.manual_pivoting.description',
       )}
       onClick={onClick}
+      onKeyDown={stopKeyboardPropagation}
+      onKeyUp={stopKeyboardPropagation}
       iconName="TableCog"
     />
   );
@@ -159,7 +169,9 @@ export function DrawerEdit() {
           />
         )}
         {data && (
-          <PivotManuallyButton onClick={() => setIsManualPivotOpen(true)} />
+          <PivotManuallyButton
+            onClick={() => setIsManualPivotOpen(true)}
+          />
         )}
         {data && (
           <PivotButton
