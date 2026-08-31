@@ -22,7 +22,7 @@ function resolveCssVariableValue(
 
     resolvedValue = variableValue;
   }
-  
+
   return resolvedValue;
 }
 
@@ -41,7 +41,7 @@ export function getChartCssVariables(): ChartCssValues | undefined {
     .getPropertyValue('--px-color-chart-series')
     .trim();
   let parsedColors: string[] = [];
-  
+
   if (csvColorList) {
     parsedColors = csvColorList
       .split(',')
@@ -49,7 +49,7 @@ export function getChartCssVariables(): ChartCssValues | undefined {
       .map((color) => color.trim())
       .filter(Boolean);
   }
-  
+
   const axisColor = styles.getPropertyValue('--px-color-border-default').trim();
   const fontColor = styles.getPropertyValue('--px-color-text-default').trim();
 

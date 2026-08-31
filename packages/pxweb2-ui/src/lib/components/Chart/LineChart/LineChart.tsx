@@ -113,7 +113,7 @@ export function LineChart({
 
   const option = useMemo<echarts.EChartsOption>(() => {
     const estimatedLegendHeight = LEGEND_ITEM_HEIGHT * visibleLegendData.length;
-    
+
     return {
       ...buildDatasetOption(dataset),
       grid: {
@@ -204,7 +204,11 @@ export function LineChart({
     };
   }, [dataset, resolvedColors, xAxisName, visibleLegendData]);
 
-  const { divRef, chartRef } = useEChartOption(option, 'svg', X_AXIS_LABEL_TO_LEGEND_GAP);
+  const { divRef, chartRef } = useEChartOption(
+    option,
+    'svg',
+    X_AXIS_LABEL_TO_LEGEND_GAP,
+  );
 
   useEffect(() => {
     const chart = chartRef.current;
