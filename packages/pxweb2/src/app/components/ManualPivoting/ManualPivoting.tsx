@@ -916,7 +916,7 @@ export function ManualPivot({
                       data-variable-id={variable.id}
                       value={variable}
                       className={`${classes.listItem}${
-                        (isDraggedItem || keyboardDraggedItemId === variable.id)
+                        isDraggedItem || keyboardDraggedItemId === variable.id
                           ? ` ${classes.listItemDragging}`
                           : ''
                       }`}
