@@ -22,34 +22,46 @@ function resolveCssVariableValue(
 
     resolvedValue = variableValue;
   }
-
+  
   return resolvedValue;
 }
 
-export function getChartColorsFromCssVariables(): string[] | undefined {
+type ChartCssValues = {
+  chartColors: string[] | undefined;
+  axisColor: string | undefined;
+  fontColor: string | undefined;
+};
+export function getChartCssVariables(): ChartCssValues | undefined {
   if (globalThis.window === undefined || globalThis.document === undefined) {
     return undefined;
   }
 
   const styles = getComputedStyle(globalThis.document.documentElement);
-
   const csvColorList = styles
     .getPropertyValue('--px-color-chart-series')
     .trim();
-
+  let parsedColors: string[] = [];
+  
   if (csvColorList) {
-    const parsedColors = csvColorList
+    parsedColors = csvColorList
       .split(',')
       .map((color) => resolveCssVariableValue(color, styles))
       .map((color) => color.trim())
       .filter(Boolean);
-
-    if (parsedColors.length > 0) {
-      return parsedColors;
-    }
   }
+  
+  const axisColor = styles.getPropertyValue('--px-color-border-default').trim();
+  const fontColor = styles.getPropertyValue('--px-color-text-default').trim();
 
-  return undefined;
+  return {
+    chartColors: parsedColors.length > 0 ? parsedColors : undefined,
+    axisColor: axisColor
+      ? resolveCssVariableValue(axisColor, styles)
+      : undefined,
+    fontColor: fontColor
+      ? resolveCssVariableValue(fontColor, styles)
+      : undefined,
+  };
 }
 
 function getNiceNumber(value: number): number {
