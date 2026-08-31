@@ -635,6 +635,7 @@ export function ManualPivot({
           return;
         }
         event.preventDefault();
+        event.stopPropagation();
         cancelKeyboardDrag();
         return;
       }
