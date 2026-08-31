@@ -10,10 +10,7 @@ import {
   buildDatasetOption,
   buildSeriesOption,
 } from '../Utils/chartOptionBuilder';
-import {
-  getChartColorsFromCssVariables,
-  checkMultipleUnits,
-} from '../Utils/chartHelper';
+import { getChartCssVariables, checkMultipleUnits } from '../Utils/chartHelper';
 import type { EChartsDataset } from '../Utils/chartTypes';
 import type { PxTable } from '../../../shared-types/pxTable';
 
@@ -38,7 +35,7 @@ vi.mock('../Utils/chartOptionBuilder', async () => {
 });
 
 vi.mock('../Utils/chartHelper', () => ({
-  getChartColorsFromCssVariables: vi.fn(),
+  getChartCssVariables: vi.fn(),
   getAdaptiveYAxisMin: vi.fn(),
   getAdaptiveYAxisMax: vi.fn(),
   checkMultipleUnits: vi.fn(),
@@ -109,10 +106,11 @@ describe('LineChart', () => {
       { name: 'Women', type: 'line', symbol: 'rect', symbolSize: 8 },
       { name: 'Total', type: 'line', symbol: 'triangle', symbolSize: 8 },
     ]);
-    vi.mocked(getChartColorsFromCssVariables).mockReturnValue([
-      '#333333',
-      '#444444',
-    ]);
+    vi.mocked(getChartCssVariables).mockReturnValue({
+      chartColors: ['#333333', '#444444'],
+      axisColor: undefined,
+      fontColor: undefined,
+    });
     vi.mocked(useEChartOption).mockReturnValue({
       divRef: { current: null },
       chartRef: { current: null },
@@ -133,23 +131,25 @@ describe('LineChart', () => {
     expect(mapPxTableToChartDataset).toHaveBeenCalledWith(mockPxTable);
     expect(buildDatasetOption).toHaveBeenCalledWith(mockDataset);
     expect(buildSeriesOption).toHaveBeenCalledWith(mockDataset, 'line', colors);
-    expect(getChartColorsFromCssVariables).not.toHaveBeenCalled();
+    expect(getChartCssVariables).not.toHaveBeenCalled();
 
     const option = vi.mocked(useEChartOption).mock.calls[0][0];
 
     expect(option.legend).toEqual({
       data: ['Men', 'Women', 'Total'],
-      height: 40 * mockDataset.series.length,
+      bottom: 0,
     });
+
     expect(option.yAxis).toMatchObject({
       name: 'persons',
     });
     expect(option.grid).toEqual({
-      top: 0,
-      bottom: 200,
+      top: 36,
+      bottom: 156,
       left: '0',
       right: '0',
-      containLabel: false,
+      outerBoundsContain: 'all',
+      outerBoundsMode: 'same',
     });
     expect(option.tooltip).toMatchObject({
       trigger: 'axis',
@@ -160,11 +160,15 @@ describe('LineChart', () => {
 
   it('uses fallback colors when colors are not provided', () => {
     const fallbackColors = ['#abcdef', '#fedcba'];
-    vi.mocked(getChartColorsFromCssVariables).mockReturnValue(fallbackColors);
+    vi.mocked(getChartCssVariables).mockReturnValue({
+      chartColors: fallbackColors,
+      axisColor: undefined,
+      fontColor: undefined,
+    });
 
     render(<LineChart pxtable={mockPxTable} translations={mockTranslations} />);
 
-    expect(getChartColorsFromCssVariables).toHaveBeenCalledTimes(1);
+    expect(getChartCssVariables).toHaveBeenCalledTimes(1);
     expect(buildSeriesOption).toHaveBeenCalledWith(
       mockDataset,
       'line',
@@ -174,7 +178,11 @@ describe('LineChart', () => {
 
   it('uses fallback colors when provided colors array is empty', () => {
     const fallbackColors = ['#121212', '#343434'];
-    vi.mocked(getChartColorsFromCssVariables).mockReturnValue(fallbackColors);
+    vi.mocked(getChartCssVariables).mockReturnValue({
+      chartColors: fallbackColors,
+      axisColor: undefined,
+      fontColor: undefined,
+    });
 
     render(
       <LineChart
@@ -184,7 +192,7 @@ describe('LineChart', () => {
       />,
     );
 
-    expect(getChartColorsFromCssVariables).toHaveBeenCalledTimes(1);
+    expect(getChartCssVariables).toHaveBeenCalledTimes(1);
     expect(buildSeriesOption).toHaveBeenCalledWith(
       mockDataset,
       'line',
@@ -202,7 +210,7 @@ describe('LineChart', () => {
     );
 
     expect(chartDiv).toBeTruthy();
-    expect(chartDiv?.style.height).toBe('630px');
+    expect(chartDiv?.style.height).toBe('38.4rem'); // 36 + 3 * 0.8 = 38.4
   });
 
   it('allows vertical page scrolling but prevents horizontal page movement', () => {

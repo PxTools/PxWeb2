@@ -12,7 +12,7 @@ import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
 import {
   getAdaptiveYAxisMax,
   getAdaptiveYAxisMin,
-  getChartColorsFromCssVariables,
+  getChartCssVariables,
   checkMultipleUnits,
 } from '../Utils/chartHelper';
 import EmptyState from '../../EmptyState/EmptyState';
@@ -28,6 +28,10 @@ type TooltipParam = {
   };
   color?: string;
 };
+
+const LEGEND_ITEM_HEIGHT = 40;
+const X_AXIS_LABEL_TO_LEGEND_GAP = 36;
+const TOP_CHART_PADDING = 36;
 
 function getTooltipSymbolSvg(symbol: string, color: string): string {
   switch (symbol) {
@@ -79,7 +83,7 @@ export function LineChart({
   const resolvedColors = useMemo(() => {
     return colors && colors.length > 0
       ? colors
-      : getChartColorsFromCssVariables();
+      : getChartCssVariables()?.chartColors;
   }, [colors]);
 
   const resolvedEmptyStateTitle =
@@ -106,26 +110,47 @@ export function LineChart({
   const visibleLegendData = shouldShowLimitedLegend
     ? memoizedLimitedLegendData
     : memoizedAllLegendData;
-  const option = useMemo<echarts.EChartsOption>(
-    () => ({
+
+  const option = useMemo<echarts.EChartsOption>(() => {
+    const estimatedLegendHeight = LEGEND_ITEM_HEIGHT * visibleLegendData.length;
+    
+    return {
       ...buildDatasetOption(dataset),
-      grid: { top: 0, bottom: 200, left: '0', right: '0', containLabel: false },
+      grid: {
+        top: TOP_CHART_PADDING,
+        bottom: estimatedLegendHeight + X_AXIS_LABEL_TO_LEGEND_GAP,
+        left: '0',
+        right: '0',
+        //'same' keeps axis labels inside the grid rect
+        outerBoundsMode: 'same',
+        // 'all' keeps the axis names inside the grid rect
+        outerBoundsContain: 'all',
+      },
       xAxis: {
         type: 'category' as const,
         name: xAxisName,
         nameLocation: 'end',
-        nameGap: 70,
+        // Keeps the axis name clear of the rotated labels instead of using a hardcoded nameGap.
+        nameMoveOverlap: true,
         axisLabel: { rotate: 45 },
+        axisLine: {
+          show: true,
+        },
+        axisTick: { show: true, alignWithLabel: true },
       },
       yAxis: {
         name: dataset.unit,
         scale: true,
         min: getAdaptiveYAxisMin,
         max: getAdaptiveYAxisMax,
+        axisLine: {
+          show: true,
+        },
+        axisTick: { show: true },
       },
       legend: {
         data: visibleLegendData,
-        height: 40 * visibleLegendData.length, // increase legend height based on number of series to prevent overlap with x-axis labels
+        bottom: 0,
       },
       series: buildSeriesOption(dataset, 'line', resolvedColors),
       emphasis: {
@@ -176,11 +201,10 @@ export function LineChart({
           return `<div><div>${title}</div>${rows}</div>`;
         },
       },
-    }),
-    [dataset, resolvedColors, xAxisName, visibleLegendData],
-  );
+    };
+  }, [dataset, resolvedColors, xAxisName, visibleLegendData]);
 
-  const { divRef, chartRef } = useEChartOption(option);
+  const { divRef, chartRef } = useEChartOption(option, 'svg', X_AXIS_LABEL_TO_LEGEND_GAP);
 
   useEffect(() => {
     const chart = chartRef.current;
@@ -212,7 +236,7 @@ export function LineChart({
     };
   }, [chartRef, option]);
 
-  const height = 600 + dataset.series.length * 10; // increase chart height based on number of series to prevent legend overlap
+  const height = 36 + dataset.series.length * 0.8; // increase chart height based on number of series to prevent legend overlap
 
   return (
     <>
@@ -228,7 +252,7 @@ export function LineChart({
             ref={divRef}
             style={{
               width: '100%',
-              height: `${height}px`,
+              height: `${height}rem`,
               touchAction: 'pan-y',
             }}
           ></div>

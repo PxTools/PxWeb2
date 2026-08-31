@@ -97,21 +97,59 @@ describe('useEChartOption', () => {
     expect(chartMock.setOption).toHaveBeenCalledTimes(1);
     expect(chartMock.setOption).toHaveBeenCalledWith({
       ...option,
+      legend: {
+        textStyle: {
+          fontFamily: 'PxWeb-font, sans-serif',
+          fontSize: '0.875rem',
+          color: '#162327',
+        },
+      },
+      xAxis: {
+        axisLabel: {
+          fontFamily: 'PxWeb-font, sans-serif',
+          fontSize: '0.875rem',
+          color: '#162327',
+        },
+        axisLine: { lineStyle: { color: '#162327' } },
+        nameTextStyle: {
+          fontFamily: 'PxWeb-font, sans-serif',
+          fontSize: '0.875rem',
+          color: '#162327',
+          align: 'left',
+        },
+      },
       title: {
         ...option.title,
         left: 0,
         right: 0,
         width: '100%',
         textStyle: {
+          fontFamily: 'PxWeb-font, sans-serif',
+          fontSize: '0.875rem',
+          color: '#162327',
           overflow: 'break',
           width: 368,
           align: 'center',
         },
       },
+      yAxis: {
+        axisLabel: {
+          fontFamily: 'PxWeb-font, sans-serif',
+          fontSize: '0.875rem',
+          color: '#162327',
+        },
+        axisLine: { lineStyle: { color: '#162327' } },
+        nameTextStyle: {
+          fontFamily: 'PxWeb-font, sans-serif',
+          fontSize: '0.875rem',
+          color: '#162327',
+          align: 'left',
+        },
+      },
     });
   });
 
-  it('passes option unchanged when title is not a single title object', () => {
+  it('applies global styles when title is not a single title object', () => {
     const chartMock = createChartMock();
     vi.mocked(echarts.init).mockReturnValue(chartMock);
 
@@ -122,7 +160,62 @@ describe('useEChartOption', () => {
     render(<HookHost option={option} />);
 
     expect(chartMock.setOption).toHaveBeenCalledTimes(1);
-    expect(chartMock.setOption).toHaveBeenCalledWith(option);
+    expect(chartMock.setOption).toHaveBeenCalledWith({
+      ...option,
+      title: [
+        {
+          text: 'Title 1',
+          textStyle: {
+            fontFamily: 'PxWeb-font, sans-serif',
+            fontSize: '0.875rem',
+            color: '#162327',
+          },
+        },
+        {
+          text: 'Title 2',
+          textStyle: {
+            fontFamily: 'PxWeb-font, sans-serif',
+            fontSize: '0.875rem',
+            color: '#162327',
+          },
+        },
+      ],
+      legend: {
+        textStyle: {
+          fontFamily: 'PxWeb-font, sans-serif',
+          fontSize: '0.875rem',
+          color: '#162327',
+        },
+      },
+      xAxis: {
+        axisLabel: {
+          fontFamily: 'PxWeb-font, sans-serif',
+          fontSize: '0.875rem',
+          color: '#162327',
+        },
+        axisLine: { lineStyle: { color: '#162327' } },
+        nameTextStyle: {
+          fontFamily: 'PxWeb-font, sans-serif',
+          fontSize: '0.875rem',
+          color: '#162327',
+          align: 'left',
+        },
+      },
+      yAxis: {
+        axisLabel: {
+          fontFamily: 'PxWeb-font, sans-serif',
+          fontSize: '0.875rem',
+          color: '#162327',
+        },
+        axisLine: { lineStyle: { color: '#162327' } },
+        nameTextStyle: {
+          fontFamily: 'PxWeb-font, sans-serif',
+          fontSize: '0.875rem',
+          color: '#162327',
+          align: 'left',
+        },
+      },
+    });
   });
 
   it('resizes and reapplies wrapped title on window resize', () => {
@@ -145,15 +238,53 @@ describe('useEChartOption', () => {
     expect(chartMock.setOption).toHaveBeenCalledTimes(2);
     expect(chartMock.setOption).toHaveBeenLastCalledWith({
       ...option,
+      legend: {
+        textStyle: {
+          fontFamily: 'PxWeb-font, sans-serif',
+          fontSize: '0.875rem',
+          color: '#162327',
+        },
+      },
+      xAxis: {
+        axisLabel: {
+          fontFamily: 'PxWeb-font, sans-serif',
+          fontSize: '0.875rem',
+          color: '#162327',
+        },
+        axisLine: { lineStyle: { color: '#162327' } },
+        nameTextStyle: {
+          fontFamily: 'PxWeb-font, sans-serif',
+          fontSize: '0.875rem',
+          color: '#162327',
+          align: 'left',
+        },
+      },
       title: {
         ...option.title,
         left: 0,
         right: 0,
         width: '100%',
         textStyle: {
+          fontFamily: 'PxWeb-font, sans-serif',
+          fontSize: '0.875rem',
+          color: '#162327',
           overflow: 'break',
           width: 168,
           align: 'center',
+        },
+      },
+      yAxis: {
+        axisLabel: {
+          fontFamily: 'PxWeb-font, sans-serif',
+          fontSize: '0.875rem',
+          color: '#162327',
+        },
+        axisLine: { lineStyle: { color: '#162327' } },
+        nameTextStyle: {
+          fontFamily: 'PxWeb-font, sans-serif',
+          fontSize: '0.875rem',
+          color: '#162327',
+          align: 'left',
         },
       },
     });
