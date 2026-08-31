@@ -34,9 +34,6 @@ globalThis.PxWeb2Config = {
       '2 ggr/år',
     ],
   },
-  features: {
-    chartEnabled: true,
-  },
   homePage: {
     sv: '', // Set to your Swedish homepage URL
     en: '', // Set to your English homepage URL
