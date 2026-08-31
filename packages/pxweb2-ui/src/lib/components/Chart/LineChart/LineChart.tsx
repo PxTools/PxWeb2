@@ -108,9 +108,9 @@ export function LineChart({
   const visibleLegendData = shouldShowLimitedLegend
     ? memoizedLimitedLegendData
     : memoizedAllLegendData;
-  //const estimatedLegendHeight = LEGEND_ITEM_HEIGHT * visibleLegendData.length;
+
   const option = useMemo<echarts.EChartsOption>(() => {
-    const estimatedLegendHeight = LEGEND_ITEM_HEIGHT * dataset.series.length;
+    const estimatedLegendHeight = LEGEND_ITEM_HEIGHT * visibleLegendData.length;
     return {
       ...buildDatasetOption(dataset),
       grid: {
@@ -122,7 +122,6 @@ export function LineChart({
         // inside the grid rect, and 'all' also keeps the axis names inside it.
         outerBoundsMode: 'same',
         outerBoundsContain: 'all',
-        //containLabel: true,
       },
       xAxis: {
         type: 'category' as const,
@@ -149,7 +148,6 @@ export function LineChart({
       legend: {
         data: visibleLegendData,
         bottom: 0,
-        //height: 40 * visibleLegendData.length, // increase legend height based on number of series to prevent overlap with x-axis labels
       },
       series: buildSeriesOption(dataset, 'line', resolvedColors),
       emphasis: {
@@ -164,7 +162,6 @@ export function LineChart({
           if (!axisParams || axisParams.length === 0) {
             return '';
           }
-
           const title = axisParams[0].axisValueLabel;
           const rows = axisParams
             .map((param) => {
