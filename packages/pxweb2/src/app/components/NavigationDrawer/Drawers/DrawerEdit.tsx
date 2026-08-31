@@ -169,9 +169,7 @@ export function DrawerEdit() {
           />
         )}
         {data && (
-          <PivotManuallyButton
-            onClick={() => setIsManualPivotOpen(true)}
-          />
+          <PivotManuallyButton onClick={() => setIsManualPivotOpen(true)} />
         )}
         {data && (
           <PivotButton
