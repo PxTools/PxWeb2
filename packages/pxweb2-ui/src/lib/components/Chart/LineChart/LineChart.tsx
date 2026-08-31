@@ -118,9 +118,9 @@ export function LineChart({
         bottom: estimatedLegendHeight + X_AXIS_LABEL_TO_LEGEND_GAP,
         left: '0',
         right: '0',
-        // ECharts 6 replacement for the deprecated containLabel. 'same' keeps axis labels
-        // inside the grid rect, and 'all' also keeps the axis names inside it.
+        //'same' keeps axis labels inside the grid rect
         outerBoundsMode: 'same',
+        // 'all' keeps the axis names inside the grid rect
         outerBoundsContain: 'all',
       },
       xAxis: {

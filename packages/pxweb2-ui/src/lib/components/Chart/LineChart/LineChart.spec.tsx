@@ -129,11 +129,8 @@ describe('LineChart', () => {
 
     const option = vi.mocked(useEChartOption).mock.calls[0][0];
 
-    // expect(option.legend).toEqual();
-
     expect(option.legend).toEqual({
       data: ['Men', 'Women', 'Total'],
-      // height: 40 * mockDataset.series.length,
       bottom: 0,
     });
 
