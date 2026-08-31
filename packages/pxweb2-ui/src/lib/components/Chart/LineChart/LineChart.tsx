@@ -160,10 +160,11 @@ export function LineChart({
               const value = row?.[seriesMeta.key];
               const formattedValue =
                 row?.formattedValues?.[seriesMeta.key] ?? value;
+              const unitSuffix = dataset.unit ? ` ${dataset.unit}` : '';
               const tooltipValue =
                 formattedValue == null
                   ? ''
-                  : `${formattedValue}${dataset.unit ? ` ${dataset.unit}` : ''}`;
+                  : `${formattedValue}${unitSuffix}`;
               const symbol =
                 LINE_SERIES_SYMBOLS[
                   param.seriesIndex % LINE_SERIES_SYMBOLS.length
