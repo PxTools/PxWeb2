@@ -210,10 +210,10 @@ export default interface Resources {
               title: 'Rotate table';
             };
             manual_pivoting: {
-              description: 'Description text...';
-              title: 'Rearrange table';
+              description: 'Sort rows and columns yourself to choose what is displayed where in the table';
+              title: 'Manually rearrange table';
               manual_pivoting_modal: {
-                label: 'Rearrange table';
+                label: 'Manually rearrange table';
                 header: 'Rearrange table';
                 info_text: 'Choose what is displayed where in the table by moving items between rows and columns and changing the order';
                 stub_title: 'Stub';

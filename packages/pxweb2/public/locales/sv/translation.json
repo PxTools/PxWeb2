@@ -205,8 +205,8 @@
             "screen_reader_announcement": "Tabell roterat efter {{first_variables}} och {{last_variable}}"
           },
           "manual_pivoting": {
-            "description": "Beskrivande text...",
-            "title": "Anpassa tabell",
+            "description": "Sortera rader och kolumner själv för att välja vad som ska visas var i tabellen",
+            "title": "Omorganisera tabellen själv",
             "manual_pivoting_modal": {
               "label": "Anpassa tabell",
               "header": "Anpassa tabell manuellt",

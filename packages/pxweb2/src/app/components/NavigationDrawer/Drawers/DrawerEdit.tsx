@@ -39,7 +39,7 @@ function PivotManuallyButton({ onClick }: PivotManuallyButtonProps) {
         'presentation_page.side_menu.edit.customize.manual_pivoting.description',
       )}
       onClick={onClick}
-      iconName="Table"
+      iconName="TableCog"
     />
   );
 }
@@ -116,7 +116,7 @@ function PivotButton({
       ? 'presentation_page.side_menu.edit.customize.auto_pivot.description'
       : 'presentation_page.side_menu.edit.customize.pivot.description';
   const iconName =
-    pivotType === PivotType.Auto ? 'Sparkles' : 'ArrowCirclepathClockwise';
+    pivotType === PivotType.Auto ? 'TableSparkle' : 'ArrowCirclepathClockwise';
 
   return (
     <>
@@ -159,6 +159,9 @@ export function DrawerEdit() {
           />
         )}
         {data && (
+          <PivotManuallyButton onClick={() => setIsManualPivotOpen(true)} />
+        )}
+        {data && (
           <PivotButton
             stub={data.stub}
             heading={data.heading}
@@ -166,9 +169,6 @@ export function DrawerEdit() {
             loadingPivotType={loadingPivotType}
             setLoadingPivotType={setLoadingPivotType}
           />
-        )}
-        {data && (
-          <PivotManuallyButton onClick={() => setIsManualPivotOpen(true)} />
         )}
       </div>
       {isManualPivotOpen && (

@@ -207,7 +207,7 @@
             "screen_reader_announcement": "جدول مدور بعد {{first_variables}} و {{last_variable}}"
           },
           "manual_pivoting": {
-            "description": "نص الوصف...",
+            "description": "قم بفرز الصفوف والأعمدة بنفسك لاختيار ما يتم عرضه في أي مكان في الجدول",
             "title": "إعادة ترتيب الجدول",
             "manual_pivoting_modal": {
               "label": "إعادة ترتيب الجدول",
