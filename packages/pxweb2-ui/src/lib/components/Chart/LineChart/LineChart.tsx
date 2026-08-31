@@ -110,6 +110,7 @@ export function LineChart({
 
   const option = useMemo<echarts.EChartsOption>(() => {
     const estimatedLegendHeight = LEGEND_ITEM_HEIGHT * visibleLegendData.length;
+    
     return {
       ...buildDatasetOption(dataset),
       grid: {
