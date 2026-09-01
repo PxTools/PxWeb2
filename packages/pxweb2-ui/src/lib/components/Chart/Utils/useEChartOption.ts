@@ -216,7 +216,6 @@ export function useEChartOption(
 
     const handleResize = () => {
       chart.resize();
-      applyOption();
     };
 
     const resizeObserver =
