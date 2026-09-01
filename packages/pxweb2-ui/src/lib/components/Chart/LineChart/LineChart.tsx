@@ -155,7 +155,7 @@ export function LineChart({
       },
       series: buildSeriesOption(dataset, 'line', resolvedColors),
       emphasis: {
-        focus: 'series',
+        focus: isMediumOrSmallerScreen ? 'none' : 'series',
       },
       tooltip: {
         trigger: 'axis',
