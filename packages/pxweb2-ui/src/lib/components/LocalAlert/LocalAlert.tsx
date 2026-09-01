@@ -24,7 +24,13 @@ export interface LocalAlertProps {
   readonly children?: string | React.ReactNode;
   readonly alertAriaLabel?: string;
   readonly ariaHasPopup?:
-    'false' | 'true' | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog';
+    | 'false'
+    | 'true'
+    | 'menu'
+    | 'listbox'
+    | 'tree'
+    | 'grid'
+    | 'dialog';
   readonly role?: React.AriaRole;
   ref?: React.Ref<HTMLDivElement>;
   id?: string;

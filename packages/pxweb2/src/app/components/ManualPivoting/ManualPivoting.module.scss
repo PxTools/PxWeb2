@@ -1,0 +1,131 @@
+.manualPivotModal {
+  display: flex;
+  width: 620px;
+  flex-direction: column;
+  align-items: center;
+  border-radius: var(--border-radius-xlarge, 24px);
+  background: var(--color-surface-default, #fff);
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  width: 100%;
+  gap: 12px;
+}
+
+.groupColumn {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.groupZone {
+  position: relative;
+  width: 100%;
+  min-height: 220px;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+  z-index: 1;
+}
+
+.dropPlaceholder {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: var(--drop-preview-height, 40px);
+  border-radius: var(--border-radius-medium, 8px);
+  border: 1px dashed var(--color-border-moderate, #62919a);
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  background: var(--color-surface-subtle, #f0f8f9);
+  pointer-events: none;
+}
+
+.dropPlaceholderLabel {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.sourcePlaceholder {
+  height: var(--source-placeholder-height, 40px);
+}
+
+.dropTargetRow {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  padding: 2px 0;
+}
+
+.listItem {
+  position: relative;
+  z-index: 1;
+  border: 1px solid var(--px-color-border-subtle);
+  background: var(--px-color-surface-default);
+  border-radius: var(--px-border-radius-medium);
+  padding: 12px 16px 12px 8px;
+  cursor: grab;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: none;
+  transition: box-shadow 120ms ease;
+  &:hover {
+    border-radius: var(--border-radius-medium, 8px);
+    border: 1px solid var(--color-border-subtle, #c3dcdc);
+    background: var(--color-surface-action-subtle-hover, #dbebeb);
+  }
+  &:active {
+    cursor: grabbing;
+  }
+  &:focus-visible {
+    outline: 3px solid var(--px-color-border-focus-outline);
+    outline-offset: 3px;
+    box-shadow: inset 0 0 0 3px var(--px-color-border-focus-boxshadow);
+  }
+}
+
+.listItemDragging {
+  z-index: 10;
+  border-radius: var(--border-radius-medium, 8px);
+  border: 1px solid var(--color-border-subtle, #c3dcdc);
+  opacity: 0.6;
+  background: var(--color-surface-default, #fff);
+  box-shadow: 0 8px 20px rgb(0 0 0 / 20%);
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.modalBody {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  width: 100%;
+  padding: 16px 28px 12px 28px;
+
+  &[data-pointer-dragging='true'] {
+    overflow: hidden;
+  }
+}

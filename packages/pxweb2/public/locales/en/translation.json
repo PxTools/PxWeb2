@@ -204,10 +204,19 @@
             "description": "",
             "screen_reader_announcement": "Table rotated after {{first_variables}} and {{last_variable}}"
           },
-          "rearrange": {
-            "title": "Rearrange table",
-            "description": "Description text..."
-          },
+          "manual_pivoting": {
+            "description": "Sort rows and columns yourself to choose what is displayed where in the table",
+            "title": "Manually rearrange table",
+            "manual_pivoting_modal": {
+              "label": "Rearrange table",
+              "header": "Rearrange table on your own",
+              "info_text": "Choose what is displayed where in the table by moving items between rows and columns and changing the order",
+              "stub_title": "Rows",
+              "header_title": "Columns",
+              "cancel_button": "Cancel",
+              "confirm_button": "Confirm"
+            }
+            },
           "change_order": {
             "title": "Change order",
             "description": "Description text..."

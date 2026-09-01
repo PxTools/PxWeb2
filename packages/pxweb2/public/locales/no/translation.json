@@ -193,8 +193,8 @@
         "customize": {
           "title": "Tilpass",
           "auto_pivot": {
-            "title": "Rydd opp i tabellen",
-            "aria_label": "Rydd opp i tabellen",
+            "title": "Organiser tabellen automatisk",
+            "aria_label": "Sorterer rader og kolonner automatiskt for en mer oversiktlig tabell",
             "description": "Gjør tabellen mer oversiktlig ved å automatisk organisere rader og kolonner",
             "screen_reader_announcement": "Tabell ryddet opp og organisert etter {{first_variables}} og {{last_variable}}"
           },
@@ -204,10 +204,19 @@
             "description": "",
             "screen_reader_announcement": "Tabell rotert etter {{first_variables}} og {{last_variable}}"
           },
-          "rearrange": {
-            "title": "Omorganiser tabell",
-            "description": "Beskrivelsestekst..."
-          },
+          "manual_pivoting": {
+            "description": "Sorter rader og kolloner selv for å velge hva som vises hvor i tabellen",
+            "title": "Omorganiser tabellen selv",
+            "manual_pivoting_modal": {
+              "label": "Omorganiser tabell",
+              "header": "Omorganiser tabell selv",
+              "info_text": "Velg hva som vises hvor i tabellen ved å flytte elementer mellom rader og kolonner og endre rekkefølgen",
+              "stub_title": "Rader",
+              "header_title": "Kolonner",
+              "cancel_button": "Avbryt",
+              "confirm_button": "Bekreft"
+            }
+            },
           "change_order": {
             "title": "Endre rekkefølge",
             "description": "Beskrivelsestekst..."

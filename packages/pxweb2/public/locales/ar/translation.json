@@ -206,10 +206,19 @@
             "description": "",
             "screen_reader_announcement": "جدول مدور بعد {{first_variables}} و {{last_variable}}"
           },
-          "rearrange": {
+          "manual_pivoting": {
+            "description": "قم بفرز الصفوف والأعمدة بنفسك لاختيار ما يتم عرضه في أي مكان في الجدول",
             "title": "إعادة ترتيب الجدول",
-            "description": "نص الوصف..."
-          },
+            "manual_pivoting_modal": {
+              "label": "إعادة ترتيب الجدول",
+              "header": "إعادة ترتيب الجدول بنفسك",
+              "info_text": "اختر ما يتم عرضه في أي مكان في الجدول عن طريق نقل العناصر بين الصفوف والأعمدة وتغيير الترتيب",
+              "stub_title": "الصفوف",
+              "header_title": "الأعمدة",
+              "cancel_button": "يلغي",
+              "confirm_button": "يحفظ"
+            }
+            },
           "change_order": {
             "title": "تغيير الترتيب",
             "description": "نص الوصف..."

@@ -20,6 +20,7 @@ export interface ModalProps {
   cancelLabel?: string;
   confirmLabel?: string;
   isOpen: boolean;
+  focusTrap?: boolean;
   onClose?: (updated: boolean, keyPress?: ' ' | 'Enter' | 'Escape') => void;
   className?: string;
   children: React.ReactNode;
@@ -31,6 +32,7 @@ export function Modal({
   cancelLabel = '',
   confirmLabel = '',
   isOpen,
+  focusTrap = false,
   onClose,
   className = '',
   children,
@@ -39,6 +41,7 @@ export function Modal({
   const cssClasses = className.length > 0 ? ' ' + className : '';
   const [isModalOpen, setIsModalOpen] = useState(isOpen);
   const modalRef = useRef<HTMLDialogElement | null>(null);
+  const modalButtonKeyDownRef = useRef(false);
   let cancelLabelValue = cancelLabel;
   let confirmLabelValue = confirmLabel;
 
@@ -95,6 +98,24 @@ export function Modal({
     [onClose],
   );
 
+  const handleModalButtonKeyDown = (event: ReactKeyboardEvent) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      modalButtonKeyDownRef.current = true;
+    }
+  };
+
+  const handleModalButtonKeyUp = (
+    updated: boolean,
+    event: ReactKeyboardEvent,
+  ) => {
+    if (!modalButtonKeyDownRef.current) {
+      return;
+    }
+
+    modalButtonKeyDownRef.current = false;
+    handleCloseModal(updated, event);
+  };
+
   useEffect(() => {
     // Handle the Escape key to close the modal
     const handleKeyDownInModal = (event: KeyboardEvent) => {
@@ -110,6 +131,51 @@ export function Modal({
     document.addEventListener('keydown', handleKeyDownInModal);
     return () => document.removeEventListener('keydown', handleKeyDownInModal);
   }, [handleCloseModal]);
+
+  useEffect(() => {
+    if (!focusTrap || !isModalOpen) {
+      return;
+    }
+
+    const modalElement = modalRef.current;
+    if (!modalElement) {
+      return;
+    }
+
+    const handleTabKey = (event: KeyboardEvent) => {
+      if (event.key !== 'Tab') {
+        return;
+      }
+
+      const focusableElements = Array.from(
+        modalElement.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter((element) => element.offsetParent !== null);
+
+      if (focusableElements.length === 0) {
+        return;
+      }
+
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements.at(-1);
+      if (!firstElement || !lastElement) {
+        return;
+      }
+      const activeElement = document.activeElement;
+
+      if (event.shiftKey && activeElement === firstElement) {
+        event.preventDefault();
+        lastElement.focus();
+      } else if (!event.shiftKey && activeElement === lastElement) {
+        event.preventDefault();
+        firstElement.focus();
+      }
+    };
+
+    modalElement.addEventListener('keydown', handleTabKey);
+    return () => modalElement.removeEventListener('keydown', handleTabKey);
+  }, [focusTrap, isModalOpen]);
 
   return (
     <dialog
@@ -139,7 +205,8 @@ export function Modal({
               icon="XMark"
               type="button"
               onClick={() => handleCloseModal(false)}
-              onKeyUp={(event) => handleCloseModal(false, event)}
+              onKeyDown={handleModalButtonKeyDown}
+              onKeyUp={(event) => handleModalButtonKeyUp(false, event)}
               aria-label={cancelLabelValue}
             ></Button>
           </div>
@@ -156,7 +223,8 @@ export function Modal({
             size="medium"
             type="button"
             onClick={() => handleCloseModal(true)}
-            onKeyUp={(event) => handleCloseModal(true, event)}
+            onKeyDown={handleModalButtonKeyDown}
+            onKeyUp={(event) => handleModalButtonKeyUp(true, event)}
             aria-label={confirmLabelValue}
           >
             {confirmLabelValue}
@@ -166,7 +234,8 @@ export function Modal({
             size="medium"
             type="button"
             onClick={() => handleCloseModal(false)}
-            onKeyUp={(event) => handleCloseModal(false, event)}
+            onKeyDown={handleModalButtonKeyDown}
+            onKeyUp={(event) => handleModalButtonKeyUp(false, event)}
             aria-label={cancelLabelValue}
           >
             {cancelLabelValue}
