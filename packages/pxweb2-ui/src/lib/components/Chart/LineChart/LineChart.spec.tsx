@@ -222,7 +222,7 @@ describe('LineChart', () => {
       (element) => element.style.height,
     );
 
-    expect(chartDiv?.style.touchAction).toBe('pan-y');
+    expect(chartDiv?.style.touchAction).toBe('none');
   });
 
   it('returns empty tooltip text for empty params', () => {
@@ -298,8 +298,8 @@ describe('LineChart', () => {
     ]);
 
     expect(html).toContain('<div><div>2024</div>');
-    expect(html).toContain('Women: <strong>12 persons</strong>');
-    expect(html).not.toContain('Men: <strong>10 persons</strong>');
+    expect(html).toContain('Women: <strong>12</strong>');
+    expect(html).not.toContain('Men: <strong>10</strong>');
     expect(html).toContain('fill="#ff0000"');
     expect(html).toContain('<rect');
   });
@@ -336,8 +336,8 @@ describe('LineChart', () => {
       },
     ]);
 
-    expect(html).toContain('Women: <strong>12.35 persons</strong>');
-    expect(html).toContain('<strong>12.35 persons</strong>');
+    expect(html).toContain('Women: <strong>12.35</strong>');
+    expect(html).not.toContain('<strong>12.35 persons</strong>');
     expect(html).not.toContain('Women: 12.345');
   });
 
