@@ -1004,7 +1004,11 @@ export function ManualPivot({
       <div className={classes.visuallyHidden} aria-live="polite">
         {liveAnnouncement}
       </div>
-      <div data-modal-body className={classes.modalBody}>
+      <div
+        data-modal-body
+        className={classes.modalBody}
+        data-pointer-dragging={sourcePlaceholderMeta !== null}
+      >
         <InformationCard icon="LightBulb">
           <BodyLong size="medium">
             {t(

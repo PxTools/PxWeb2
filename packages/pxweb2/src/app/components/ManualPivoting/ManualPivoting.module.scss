@@ -137,4 +137,8 @@
   gap: 32px;
   width: 100%;
   padding: 16px 28px 12px 28px;
+
+  &[data-pointer-dragging='true'] {
+    overflow: hidden;
+  }
 }
