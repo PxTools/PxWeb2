@@ -256,7 +256,7 @@ export function LineChart({
             style={{
               width: '100%',
               height: `${height}rem`,
-              touchAction: 'none',
+              touchAction: 'pan-y',
             }}
           ></div>
           {shouldShowLegendToggle && (

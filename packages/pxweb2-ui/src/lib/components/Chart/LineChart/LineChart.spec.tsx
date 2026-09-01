@@ -222,7 +222,7 @@ describe('LineChart', () => {
       (element) => element.style.height,
     );
 
-    expect(chartDiv?.style.touchAction).toBe('none');
+    expect(chartDiv?.style.touchAction).toBe('pan-y');
   });
 
   it('returns empty tooltip text for empty params', () => {
