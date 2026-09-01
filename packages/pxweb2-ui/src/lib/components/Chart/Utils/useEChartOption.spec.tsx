@@ -104,6 +104,13 @@ describe('useEChartOption', () => {
           color: '#162327',
         },
       },
+      tooltip: {
+        textStyle: {
+          fontFamily: 'PxWeb-font, sans-serif',
+          fontSize: '0.875rem',
+          color: '#162327',
+        },
+      },
       xAxis: {
         axisLabel: {
           fontFamily: 'PxWeb-font, sans-serif',
@@ -187,6 +194,13 @@ describe('useEChartOption', () => {
           color: '#162327',
         },
       },
+      tooltip: {
+        textStyle: {
+          fontFamily: 'PxWeb-font, sans-serif',
+          fontSize: '0.875rem',
+          color: '#162327',
+        },
+      },
       xAxis: {
         axisLabel: {
           fontFamily: 'PxWeb-font, sans-serif',
@@ -239,6 +253,13 @@ describe('useEChartOption', () => {
     expect(chartMock.setOption).toHaveBeenLastCalledWith({
       ...option,
       legend: {
+        textStyle: {
+          fontFamily: 'PxWeb-font, sans-serif',
+          fontSize: '0.875rem',
+          color: '#162327',
+        },
+      },
+      tooltip: {
         textStyle: {
           fontFamily: 'PxWeb-font, sans-serif',
           fontSize: '0.875rem',

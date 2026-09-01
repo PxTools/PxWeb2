@@ -148,12 +148,23 @@ function applyStyling(option: echarts.EChartsOption): echarts.EChartsOption {
         textStyle: { ...option.title?.textStyle, ...textStyle },
       };
 
+  const tooltip = Array.isArray(option.tooltip)
+    ? option.tooltip.map((tooltipItem) => ({
+        ...tooltipItem,
+        textStyle: { ...tooltipItem.textStyle, ...textStyle },
+      }))
+    : {
+        ...option.tooltip,
+        textStyle: { ...option.tooltip?.textStyle, ...textStyle },
+      };
+
   return {
     ...option,
     legend,
     xAxis: xAxis as echarts.EChartsOption['xAxis'],
     yAxis: yAxis as echarts.EChartsOption['yAxis'],
     title: title as echarts.EChartsOption['title'],
+    tooltip: tooltip as echarts.EChartsOption['tooltip'],
   };
 }
 

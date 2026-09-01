@@ -32,6 +32,7 @@ type TooltipParam = {
 const LEGEND_ITEM_HEIGHT = 40;
 const X_AXIS_LABEL_TO_LEGEND_GAP = 36;
 const TOP_CHART_PADDING = 36;
+const CHART_FONT_FAMILY = 'PxWeb-font, sans-serif';
 
 function getTooltipSymbolSvg(symbol: string, color: string): string {
   switch (symbol) {
@@ -197,7 +198,7 @@ export function LineChart({
             })
             .join('');
 
-          return `<div><div>${title}</div>${rows}</div>`;
+          return `<div style="font-family:${CHART_FONT_FAMILY}"><div>${title}</div>${rows}</div>`;
         },
       },
     };
