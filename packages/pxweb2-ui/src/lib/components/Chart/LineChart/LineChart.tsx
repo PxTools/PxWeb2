@@ -185,9 +185,8 @@ export function LineChart({
               const value = row?.[seriesMeta.key];
               const formattedValue =
                 row?.formattedValues?.[seriesMeta.key] ?? value;
-              const unitSuffix = dataset.unit ? ` ${dataset.unit}` : '';
               const tooltipValue =
-                formattedValue == null ? '' : `${formattedValue}${unitSuffix}`;
+                formattedValue == null ? '' : `${formattedValue}`;
               const symbol =
                 LINE_SERIES_SYMBOLS[
                   param.seriesIndex % LINE_SERIES_SYMBOLS.length
@@ -257,7 +256,7 @@ export function LineChart({
             style={{
               width: '100%',
               height: `${height}rem`,
-              touchAction: 'pan-y',
+              touchAction: 'none',
             }}
           ></div>
           {shouldShowLegendToggle && (
