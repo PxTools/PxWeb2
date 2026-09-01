@@ -154,7 +154,7 @@ describe('LineChart', () => {
     expect(option.tooltip).toMatchObject({
       trigger: 'axis',
       extraCssText:
-        'max-width:400px;box-sizing:border-box;white-space:normal;overflow-wrap:anywhere;',
+        'max-width:370px;box-sizing:border-box;white-space:normal;overflow-wrap:anywhere;',
     });
     expect(option.series).toEqual([
       expect.objectContaining({ emphasis: { focus: 'series' } }),
