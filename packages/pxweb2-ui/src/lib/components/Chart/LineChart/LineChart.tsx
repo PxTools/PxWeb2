@@ -167,7 +167,7 @@ export function LineChart({
         confine: true,
         appendToBody: true,
         extraCssText:
-          'max-width:400px;box-sizing:border-box;white-space:normal;overflow-wrap:anywhere;',
+          'max-width:370px;box-sizing:border-box;white-space:normal;overflow-wrap:anywhere;',
         formatter: (params: unknown) => {
           const axisParams = (Array.isArray(params) ? params : [params]) as
             TooltipParam[] | undefined;
