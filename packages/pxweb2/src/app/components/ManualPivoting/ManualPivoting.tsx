@@ -22,6 +22,7 @@ import DropTarget from './DropTarget';
 import EmtyList from './EmtyList';
 
 type VariableGroup = 'header' | 'stub';
+type DragEvent = MouseEvent | TouchEvent | PointerEvent;
 type DropPreview = {
   group: VariableGroup;
   index: number;
@@ -675,7 +676,7 @@ export function ManualPivot({
 
   /** Extracts client coordinates from the supported drag event shapes. */
   const getClientPoint = (
-    event: MouseEvent | TouchEvent | PointerEvent,
+    event: DragEvent,
     info: PanInfo,
   ) => {
     if ('clientX' in event && 'clientY' in event) {
@@ -698,7 +699,7 @@ export function ManualPivot({
 
   /** Updates the active pointer drag preview as the pointer moves. */
   const handleItemDrag = (
-    event: MouseEvent | TouchEvent | PointerEvent,
+    event: DragEvent,
     info: PanInfo,
   ) => {
     const point = getClientPoint(event, info);
@@ -723,7 +724,7 @@ export function ManualPivot({
 
   /** Resolves the final pointer drop position and moves the dragged item. */
   const handleItemDragEnd = (
-    event: MouseEvent | TouchEvent | PointerEvent,
+    event: DragEvent,
     info: PanInfo,
   ) => {
     const point = getClientPoint(event, info);
