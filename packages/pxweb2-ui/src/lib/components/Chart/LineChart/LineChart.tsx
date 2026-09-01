@@ -114,6 +114,14 @@ export function LineChart({
 
   const option = useMemo<echarts.EChartsOption>(() => {
     const estimatedLegendHeight = LEGEND_ITEM_HEIGHT * visibleLegendData.length;
+    const series = buildSeriesOption(dataset, 'line', resolvedColors).map(
+      (seriesOption) => ({
+        ...seriesOption,
+        emphasis: isMediumOrSmallerScreen
+          ? { disabled: true }
+          : { focus: 'series' as const },
+      }),
+    ) as echarts.EChartsOption['series'];
 
     return {
       ...buildDatasetOption(dataset),
@@ -153,10 +161,7 @@ export function LineChart({
         data: visibleLegendData,
         bottom: 0,
       },
-      series: buildSeriesOption(dataset, 'line', resolvedColors),
-      emphasis: {
-        focus: isMediumOrSmallerScreen ? 'none' : 'series',
-      },
+      series,
       tooltip: {
         trigger: 'axis',
         confine: true,
@@ -202,7 +207,13 @@ export function LineChart({
         },
       },
     };
-  }, [dataset, resolvedColors, xAxisName, visibleLegendData]);
+  }, [
+    dataset,
+    resolvedColors,
+    xAxisName,
+    visibleLegendData,
+    isMediumOrSmallerScreen,
+  ]);
 
   const { divRef, chartRef } = useEChartOption(
     option,

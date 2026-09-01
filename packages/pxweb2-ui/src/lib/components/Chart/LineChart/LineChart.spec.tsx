@@ -156,6 +156,29 @@ describe('LineChart', () => {
       extraCssText:
         'max-width:400px;box-sizing:border-box;white-space:normal;overflow-wrap:anywhere;',
     });
+    expect(option.series).toEqual([
+      expect.objectContaining({ emphasis: { focus: 'series' } }),
+      expect.objectContaining({ emphasis: { focus: 'series' } }),
+      expect.objectContaining({ emphasis: { focus: 'series' } }),
+    ]);
+  });
+
+  it('disables series emphasis on medium and smaller screens', () => {
+    render(
+      <LineChart
+        pxtable={mockPxTable}
+        translations={mockTranslations}
+        isMediumOrSmallerScreen
+      />,
+    );
+
+    const option = vi.mocked(useEChartOption).mock.calls[0][0];
+
+    expect(option.series).toEqual([
+      expect.objectContaining({ emphasis: { disabled: true } }),
+      expect.objectContaining({ emphasis: { disabled: true } }),
+      expect.objectContaining({ emphasis: { disabled: true } }),
+    ]);
   });
 
   it('uses fallback colors when colors are not provided', () => {
