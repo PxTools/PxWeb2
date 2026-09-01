@@ -892,13 +892,16 @@ export function ManualPivot({
                 if (!isDraggedItem) {
                   visibleItemIndex += 1;
                 }
-                const itemZIndex =
+                let itemZIndex = 1;
+                if (previewIndex !== undefined && index < previewIndex) {
+                  itemZIndex = 3;
+                }
+                if (
                   isDraggingRef.current &&
                   draggedItemIdRef.current === variable.id
-                    ? 10
-                    : previewIndex !== undefined && index < previewIndex
-                      ? 3
-                      : 1;
+                ) {
+                  itemZIndex = 10;
+                }
 
                 return (
                   <Fragment key={variable.id}>
