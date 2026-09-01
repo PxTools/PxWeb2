@@ -194,11 +194,11 @@ export function LineChart({
                 ];
               const color = param.color ?? '#666666';
 
-              return `<div style="display:flex;align-items:flex-start;gap:6px;white-space:normal;overflow-wrap:anywhere"><span style="display:inline-flex;align-items:center;height:1.1em;flex:none">${getTooltipSymbolSvg(symbol, color)}</span><span style="min-width:0;overflow-wrap:anywhere">${param.seriesName}: <strong>${tooltipValue}</strong></span></div>`;
+              return `<div style="display:flex;align-items:flex-start;gap:6px;white-space:normal;overflow-wrap:anywhere"><span style="display:inline-flex;align-items:center;height:1.1em;flex:none">${getTooltipSymbolSvg(symbol, color)}</span><span style="min-width:0;overflow-wrap:anywhere;line-height:1.4em">${param.seriesName}: <strong>${tooltipValue}</strong></span></div>`;
             })
             .join('');
 
-          return `<div style="font-family:${CHART_FONT_FAMILY}"><div>${title}</div>${rows}</div>`;
+          return `<div style="font-family:${CHART_FONT_FAMILY}"><div style="margin-bottom:4px;">${title}</div>${rows}</div>`;
         },
       },
     };
