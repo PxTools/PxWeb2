@@ -298,7 +298,7 @@ describe('LineChart', () => {
     ]);
 
     expect(html).toContain(
-      '<div style="font-family:PxWeb-font, sans-serif"><div>2024</div>',
+      '<div style="font-family:PxWeb-font, sans-serif"><div style="margin-bottom:4px;">2024</div>',
     );
     expect(html).toContain('Women: <strong>12</strong>');
     expect(html).not.toContain('Men: <strong>10</strong>');
