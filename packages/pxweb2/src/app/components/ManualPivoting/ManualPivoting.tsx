@@ -896,6 +896,13 @@ export function ManualPivot({
                 if (!isDraggedItem) {
                   visibleItemIndex += 1;
                 }
+                const itemZIndex =
+                  isDraggingRef.current &&
+                  draggedItemIdRef.current === variable.id
+                    ? 10
+                    : previewIndex !== undefined && index < previewIndex
+                      ? 3
+                      : 1;
 
                 return (
                   <Fragment key={variable.id}>
@@ -930,13 +937,7 @@ export function ManualPivot({
                             : 'relative',
                         left: 0,
                         right: 0,
-                        zIndex:
-                          isDraggingRef.current &&
-                          draggedItemIdRef.current === variable.id
-                            ? 10
-                            : previewIndex !== undefined && index < previewIndex
-                              ? 3
-                              : 1,
+                        zIndex: itemZIndex,
                       }}
                       ref={(element: HTMLLIElement | null) => {
                         if (element) {
