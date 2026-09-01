@@ -325,9 +325,9 @@ export function ManualPivot({
       clampedIndex >= itemElements.length
         ? itemElements.at(-1)
         : itemElements[clampedIndex];
-  if (!referenceElement) {
-    return null;
-}
+    if (!referenceElement) {
+      return null;
+    }
 
     const referenceHeight = Math.max(
       defaultItemHeight,

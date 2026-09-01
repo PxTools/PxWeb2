@@ -159,7 +159,7 @@ export function Modal({
 
       const firstElement = focusableElements[0];
       const lastElement = focusableElements.at(-1);
-       if (!firstElement || !lastElement) {
+      if (!firstElement || !lastElement) {
         return;
       }
       const activeElement = document.activeElement;
