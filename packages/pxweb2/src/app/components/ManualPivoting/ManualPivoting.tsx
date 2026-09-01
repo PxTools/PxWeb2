@@ -675,10 +675,7 @@ export function ManualPivot({
   };
 
   /** Extracts client coordinates from the supported drag event shapes. */
-  const getClientPoint = (
-    event: DragEvent,
-    info: PanInfo,
-  ) => {
+  const getClientPoint = (event: DragEvent, info: PanInfo) => {
     if ('clientX' in event && 'clientY' in event) {
       return { x: event.clientX, y: event.clientY };
     }
@@ -698,10 +695,7 @@ export function ManualPivot({
   };
 
   /** Updates the active pointer drag preview as the pointer moves. */
-  const handleItemDrag = (
-    event: DragEvent,
-    info: PanInfo,
-  ) => {
+  const handleItemDrag = (event: DragEvent, info: PanInfo) => {
     const point = getClientPoint(event, info);
     lastPointerYRef.current = point.y;
     const detectedGroup = getGroupAtPoint(point.x, point.y);
@@ -723,10 +717,7 @@ export function ManualPivot({
   };
 
   /** Resolves the final pointer drop position and moves the dragged item. */
-  const handleItemDragEnd = (
-    event: DragEvent,
-    info: PanInfo,
-  ) => {
+  const handleItemDragEnd = (event: DragEvent, info: PanInfo) => {
     const point = getClientPoint(event, info);
     lastPointerYRef.current = point.y;
     const detectedGroup = getGroupAtPoint(point.x, point.y);
