@@ -199,7 +199,7 @@ export function ManualPivot({
     const distanceToRect = (rect: DOMRect): number => {
       const dx = Math.max(rect.left - x, 0, x - rect.right);
       const dy = Math.max(rect.top - y, 0, y - rect.bottom);
-      return Math.sqrt(dx * dx + dy * dy);
+      return Math.hypot(dx, dy);
     };
 
     const headerRect = headerZoneRef.current?.getBoundingClientRect();
@@ -266,7 +266,7 @@ export function ManualPivot({
   ): number => {
     const previousPreview = dropPreviewRef.current;
 
-    if (!previousPreview || previousPreview.group !== group) {
+    if (previousPreview?.group !== group) {
       return rawIndex;
     }
 
@@ -323,8 +323,12 @@ export function ManualPivot({
     const clampedIndex = Math.min(Math.max(0, index), itemElements.length);
     const referenceElement =
       clampedIndex >= itemElements.length
-        ? itemElements[itemElements.length - 1]
+        ? itemElements.at(-1)
         : itemElements[clampedIndex];
+  if (!referenceElement) {
+    return null;
+}
+
     const referenceHeight = Math.max(
       defaultItemHeight,
       Math.round(referenceElement.getBoundingClientRect().height),
