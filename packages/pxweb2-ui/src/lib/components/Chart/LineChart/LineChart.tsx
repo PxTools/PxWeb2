@@ -232,16 +232,18 @@ export function LegendToggleButton({
   isExpanded,
 }: LegendToggleButtonProps) {
   return (
-    // TODO: Look into legend expanding downwards when button is clicked for expanded view
-    <Button
-      onClick={onClick}
-      variant="secondary"
-      size="medium"
-      iconPosition="end"
-      icon={isExpanded ? 'ChevronUp' : 'ChevronDown'}
-      className={cl(styles.buttonWidth)}
-    >
-      {text}
-    </Button>
+    <>
+      <div className={styles.divider}></div>
+      <Button
+        onClick={onClick}
+        variant="secondary"
+        size="medium"
+        iconPosition="end"
+        icon={isExpanded ? 'ChevronUp' : 'ChevronDown'}
+        className={cl(styles.buttonWidth)}
+      >
+        {text}
+      </Button>
+    </>
   );
 }
