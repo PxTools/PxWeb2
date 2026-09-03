@@ -9,7 +9,11 @@ import {
   buildDatasetOption,
   buildSeriesOption,
 } from '../Utils/chartOptionBuilder';
-import { getChartCssVariables, checkMultipleUnits } from '../Utils/chartHelper';
+import {
+  getChartCssVariables,
+  checkMultipleUnits,
+  getYAxisBreak,
+} from '../Utils/chartHelper';
 import type { EChartsDataset } from '../Utils/chartTypes';
 import type { PxTable } from '../../../shared-types/pxTable';
 
@@ -37,6 +41,7 @@ vi.mock('../Utils/chartHelper', () => ({
   getChartCssVariables: vi.fn(),
   getAdaptiveYAxisMin: vi.fn(),
   getAdaptiveYAxisMax: vi.fn(),
+  getYAxisBreak: vi.fn(),
   checkMultipleUnits: vi.fn(),
 }));
 
@@ -103,6 +108,7 @@ describe('LineChart', () => {
       axisColor: undefined,
       fontColor: undefined,
     });
+    vi.mocked(getYAxisBreak).mockReturnValue({ start: 0, end: 9.7 });
     vi.mocked(useEChartOption).mockReturnValue({
       divRef: { current: null },
       chartRef: { current: null },
@@ -134,6 +140,10 @@ describe('LineChart', () => {
 
     expect(option.yAxis).toMatchObject({
       name: 'persons',
+      min: 0,
+      breaks: [{ start: 0, end: 9.7 }],
+      breakArea: { show: false },
+      axisLine: { breakLine: true },
     });
     expect(option.grid).toEqual({
       top: 36,

@@ -22,7 +22,7 @@ function resolveCssVariableValue(
 
     resolvedValue = variableValue;
   }
-  
+
   return resolvedValue;
 }
 
@@ -41,7 +41,7 @@ export function getChartCssVariables(): ChartCssValues | undefined {
     .getPropertyValue('--px-color-chart-series')
     .trim();
   let parsedColors: string[] = [];
-  
+
   if (csvColorList) {
     parsedColors = csvColorList
       .split(',')
@@ -49,7 +49,7 @@ export function getChartCssVariables(): ChartCssValues | undefined {
       .map((color) => color.trim())
       .filter(Boolean);
   }
-  
+
   const axisColor = styles.getPropertyValue('--px-color-border-default').trim();
   const fontColor = styles.getPropertyValue('--px-color-text-default').trim();
 
@@ -128,6 +128,25 @@ export function getAdaptiveYAxisMax(value: {
 
   const paddedMax = max + pad;
   return Math.ceil(paddedMax / snap) * snap;
+}
+
+export function getYAxisBreak(
+  values: Array<number | null>,
+): { start: number; end: number } | undefined {
+  const finiteValues = values.filter(
+    (value): value is number => value !== null && Number.isFinite(value),
+  );
+  const lowestValue = Math.min(...finiteValues);
+
+  if (!Number.isFinite(lowestValue) || lowestValue <= 0) {
+    return undefined;
+  }
+
+  const visibleGap = lowestValue * 0.03;
+  return {
+    start: 0,
+    end: lowestValue - visibleGap,
+  };
 }
 
 // Check if the contents variable has multiple units selected.

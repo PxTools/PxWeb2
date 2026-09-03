@@ -5,6 +5,7 @@ import {
   getAdaptiveYAxisMax,
   getAdaptiveYAxisMin,
   getChartCssVariables,
+  getYAxisBreak,
 } from './chartHelper';
 import type { PxTable } from '../../../shared-types/pxTable';
 import type { Variable } from '../../../shared-types/variable';
@@ -138,6 +139,20 @@ describe('getAdaptiveYAxisMax', () => {
 
   it('works when min and max are equal', () => {
     expect(getAdaptiveYAxisMax({ min: 5, max: 5 })).toBe(5.5);
+  });
+});
+
+describe('getYAxisBreak', () => {
+  it('creates a break below the lowest positive value with visible spacing', () => {
+    expect(getYAxisBreak([100, 200, null])).toEqual({
+      start: 0,
+      end: 97,
+    });
+  });
+
+  it('does not create a break when zero or negative values are present', () => {
+    expect(getYAxisBreak([0, 100])).toBeUndefined();
+    expect(getYAxisBreak([-10, 100])).toBeUndefined();
   });
 });
 

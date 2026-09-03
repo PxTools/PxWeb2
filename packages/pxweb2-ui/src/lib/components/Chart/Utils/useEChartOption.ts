@@ -176,6 +176,113 @@ function applyLegendGap(
   });
 }
 
+type BreakMeasurableChart = {
+  getModel?: () => { getComponent?: (mainType: string) => unknown } | undefined;
+  convertToPixel?: (
+    finder: Record<string, number>,
+    value: number,
+  ) => number | number[] | undefined;
+};
+
+function getYAxisBreakRange(
+  option: echarts.EChartsOption,
+): { start: number; end: number } | null {
+  const yAxis = Array.isArray(option.yAxis) ? option.yAxis[0] : option.yAxis;
+  const breaks = (
+    yAxis as { breaks?: Array<{ start?: unknown; end?: unknown }> } | undefined
+  )?.breaks;
+  const singleBreak = breaks?.[0];
+
+  if (
+    typeof singleBreak?.start !== 'number' ||
+    typeof singleBreak?.end !== 'number'
+  ) {
+    return null;
+  }
+
+  return { start: singleBreak.start, end: singleBreak.end };
+}
+
+function getGridRect(
+  chart: echarts.EChartsType,
+): { x: number; y: number; width: number; height: number } | null {
+  const measurable = chart as unknown as BreakMeasurableChart;
+  const gridModel = measurable.getModel?.()?.getComponent?.('grid') as
+    | {
+        coordinateSystem?: {
+          getRect?: () => {
+            x: number;
+            y: number;
+            width: number;
+            height: number;
+          };
+        };
+      }
+    | undefined;
+
+  return gridModel?.coordinateSystem?.getRect?.() ?? null;
+}
+
+// Draws a compact "//" mark directly on the y-axis at the break, instead of relying on
+// ECharts' default zigzag band which stretches across the whole chart width.
+function applyYAxisBreakMark(
+  chart: echarts.EChartsType,
+  option: echarts.EChartsOption,
+) {
+  const breakRange = getYAxisBreakRange(option);
+
+  if (!breakRange) {
+    return;
+  }
+
+  const measurable = chart as unknown as BreakMeasurableChart;
+  const gridRect = getGridRect(chart);
+  const startPixel = measurable.convertToPixel?.(
+    { yAxisIndex: 0 },
+    breakRange.start,
+  );
+  const endPixel = measurable.convertToPixel?.(
+    { yAxisIndex: 0 },
+    breakRange.end,
+  );
+
+  if (
+    !gridRect ||
+    typeof startPixel !== 'number' ||
+    typeof endPixel !== 'number'
+  ) {
+    return;
+  }
+
+  const centerY = (startPixel + endPixel) / 2;
+  const axisColor = getAxisColor().color;
+  const lineStyle = { stroke: axisColor, lineWidth: 2 };
+
+  chart.setOption({
+    graphic: [
+      {
+        type: 'group',
+        left: gridRect.x - 6,
+        top: centerY - 8,
+        silent: true,
+        z: 10,
+        children: [
+          {
+            type: 'line',
+            shape: { x1: 0, y1: 16, x2: 8, y2: 0 },
+            style: lineStyle,
+          },
+          {
+            type: 'line',
+            shape: { x1: 6, y1: 16, x2: 14, y2: 0 },
+            style: lineStyle,
+          },
+        ],
+      },
+    ],
+  });
+}
+
 export function useEChartOption(
   option: echarts.EChartsOption,
   renderer: 'canvas' | 'svg' = 'svg',
@@ -199,6 +306,8 @@ export function useEChartOption(
       if (typeof legendGap === 'number') {
         applyLegendGap(chart, option, legendGap);
       }
+
+      applyYAxisBreakMark(chart, option);
     };
 
     applyOption();
