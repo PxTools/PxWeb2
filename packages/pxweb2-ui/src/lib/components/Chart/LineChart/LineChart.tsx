@@ -1,6 +1,8 @@
 import { useMemo, useState } from 'react';
 import type * as echarts from 'echarts';
+import cl from 'clsx';
 
+import styles from './LineChart.module.scss';
 import { Button } from '../../Button/Button';
 import {
   buildDatasetOption,
@@ -110,7 +112,7 @@ export function LineChart({
 
   const option = useMemo<echarts.EChartsOption>(() => {
     const estimatedLegendHeight = LEGEND_ITEM_HEIGHT * visibleLegendData.length;
-    
+
     return {
       ...buildDatasetOption(dataset),
       grid: {
@@ -162,7 +164,7 @@ export function LineChart({
           if (!axisParams || axisParams.length === 0) {
             return '';
           }
-          
+
           const title = axisParams[0].axisValueLabel;
           const rows = axisParams
             .map((param) => {
@@ -208,6 +210,7 @@ export function LineChart({
               text={
                 isLegendExpanded ? translations.showLess : translations.showMore
               }
+              isExpanded={isLegendExpanded}
             />
           )}
         </>
@@ -220,12 +223,27 @@ export function LineChart({
 interface LegendToggleButtonProps {
   readonly onClick: () => void;
   readonly text: string;
+  readonly isExpanded: boolean;
 }
 
-function LegendToggleButton({ onClick, text }: LegendToggleButtonProps) {
+export function LegendToggleButton({
+  onClick,
+  text,
+  isExpanded,
+}: LegendToggleButtonProps) {
   return (
-    <Button onClick={onClick} variant="tertiary" size="small">
-      {text}
-    </Button>
+    <>
+      <div className={styles.divider}></div>
+      <Button
+        onClick={onClick}
+        variant="secondary"
+        size="medium"
+        iconPosition="end"
+        icon={isExpanded ? 'ChevronUp' : 'ChevronDown'}
+        className={cl(styles.buttonWidth)}
+      >
+        {text}
+      </Button>
+    </>
   );
 }
