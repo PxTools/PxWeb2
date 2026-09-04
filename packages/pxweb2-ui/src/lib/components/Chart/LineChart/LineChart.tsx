@@ -164,6 +164,7 @@ export function LineChart({
       series,
       tooltip: {
         trigger: 'axis',
+        triggerOn: 'mousemove|click|mousewheel',
         confine: true,
         appendToBody: true,
         extraCssText:
@@ -176,13 +177,17 @@ export function LineChart({
             return '';
           }
 
-          if (hoveredSeriesIndexRef.current === null) {
+          const selectedSeriesIndex =
+            hoveredSeriesIndexRef.current ??
+            (isMediumOrSmallerScreen ? axisParams[0]?.seriesIndex : null);
+
+          if (selectedSeriesIndex == null) {
             return '';
           }
 
           const title = axisParams[0].axisValueLabel;
           const hoveredParams = axisParams.filter(
-            (param) => param.seriesIndex === hoveredSeriesIndexRef.current,
+            (param) => param.seriesIndex === selectedSeriesIndex,
           );
           const rows = hoveredParams
             .map((param) => {
@@ -227,7 +232,7 @@ export function LineChart({
       return;
     }
 
-    const handleMouseOver = (params: {
+    const handleSeriesInteraction = (params: {
       componentType?: string;
       seriesIndex?: number;
     }) => {
@@ -242,11 +247,13 @@ export function LineChart({
       hoveredSeriesIndexRef.current = null;
     };
 
-    chart.on('mouseover', handleMouseOver);
+    chart.on('mouseover', handleSeriesInteraction);
+    chart.on('click', handleSeriesInteraction);
     chart.on('globalout', handleGlobalOut);
 
     return () => {
-      chart.off('mouseover', handleMouseOver);
+      chart.off('mouseover', handleSeriesInteraction);
+      chart.off('click', handleSeriesInteraction);
       chart.off('globalout', handleGlobalOut);
     };
   }, [chartRef, option]);
