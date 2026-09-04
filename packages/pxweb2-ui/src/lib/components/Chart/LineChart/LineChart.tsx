@@ -247,14 +247,32 @@ export function LineChart({
       hoveredSeriesIndexRef.current = null;
     };
     const handleChartClick = (event: { offsetX: number; offsetY: number }) => {
-      if (!isMediumOrSmallerScreen) {
+      if (!isMediumOrSmallerScreen || dataset.source.length === 0) {
         return;
       }
 
+      const axisCoordinate = chart.convertFromPixel({ xAxisIndex: 0 }, [
+        event.offsetX,
+        event.offsetY,
+      ]);
+
+      if (
+        !Array.isArray(axisCoordinate) ||
+        typeof axisCoordinate[0] !== 'number'
+      ) {
+        return;
+      }
+
+      const dataIndex = Math.max(
+        0,
+        Math.min(dataset.source.length - 1, Math.round(axisCoordinate[0])),
+      );
+      hoveredSeriesIndexRef.current ??= 0;
+
       chart.dispatchAction({
         type: 'showTip',
-        x: event.offsetX,
-        y: event.offsetY,
+        seriesIndex: hoveredSeriesIndexRef.current,
+        dataIndex,
       });
     };
 
@@ -270,7 +288,7 @@ export function LineChart({
       chart.off('globalout', handleGlobalOut);
       zrender?.off('click', handleChartClick);
     };
-  }, [chartRef, option, isMediumOrSmallerScreen]);
+  }, [chartRef, option, dataset, isMediumOrSmallerScreen]);
 
   const height = 36 + dataset.series.length * 0.8; // increase chart height based on number of series to prevent legend overlap
 
