@@ -256,10 +256,7 @@ export function LineChart({
         event.offsetX,
       );
 
-      if (
-        typeof axisCoordinate !== 'number' ||
-        Number.isNaN(axisCoordinate)
-      ) {
+      if (typeof axisCoordinate !== 'number' || Number.isNaN(axisCoordinate)) {
         return;
       }
 
