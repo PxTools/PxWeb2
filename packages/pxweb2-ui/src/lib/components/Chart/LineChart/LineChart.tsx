@@ -246,17 +246,31 @@ export function LineChart({
     const handleGlobalOut = () => {
       hoveredSeriesIndexRef.current = null;
     };
+    const handleChartClick = (event: { offsetX: number; offsetY: number }) => {
+      if (!isMediumOrSmallerScreen) {
+        return;
+      }
+
+      chart.dispatchAction({
+        type: 'showTip',
+        x: event.offsetX,
+        y: event.offsetY,
+      });
+    };
 
     chart.on('mouseover', handleSeriesInteraction);
     chart.on('click', handleSeriesInteraction);
     chart.on('globalout', handleGlobalOut);
+    const zrender = chart.getZr?.();
+    zrender?.on('click', handleChartClick);
 
     return () => {
       chart.off('mouseover', handleSeriesInteraction);
       chart.off('click', handleSeriesInteraction);
       chart.off('globalout', handleGlobalOut);
+      zrender?.off('click', handleChartClick);
     };
-  }, [chartRef, option]);
+  }, [chartRef, option, isMediumOrSmallerScreen]);
 
   const height = 36 + dataset.series.length * 0.8; // increase chart height based on number of series to prevent legend overlap
 
