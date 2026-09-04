@@ -251,21 +251,21 @@ export function LineChart({
         return;
       }
 
-      const axisCoordinate = chart.convertFromPixel({ xAxisIndex: 0 }, [
+      const axisCoordinate = chart.convertFromPixel(
+        { xAxisIndex: 0 },
         event.offsetX,
-        event.offsetY,
-      ]);
+      );
 
       if (
-        !Array.isArray(axisCoordinate) ||
-        typeof axisCoordinate[0] !== 'number'
+        typeof axisCoordinate !== 'number' ||
+        Number.isNaN(axisCoordinate)
       ) {
         return;
       }
 
       const dataIndex = Math.max(
         0,
-        Math.min(dataset.source.length - 1, Math.round(axisCoordinate[0])),
+        Math.min(dataset.source.length - 1, Math.round(axisCoordinate)),
       );
       hoveredSeriesIndexRef.current ??= 0;
 
