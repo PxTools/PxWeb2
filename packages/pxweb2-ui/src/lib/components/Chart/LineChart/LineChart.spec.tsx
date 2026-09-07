@@ -51,9 +51,9 @@ const mockDataset: EChartsDataset = {
       name: '2024',
       men: 10,
       women: 12,
-      formattedValues: { men: '10', women: '12' },
     },
   ],
+  formattedValues: [{ men: '10', women: '12' }],
   series: [
     { key: 'men', name: 'Men' },
     { key: 'women', name: 'Women' },
@@ -299,23 +299,23 @@ describe('LineChart', () => {
     const html = formatter?.([
       {
         axisValueLabel: '2024',
+        dataIndex: 0,
         seriesIndex: 0,
         seriesName: 'Men',
         data: {
           men: 10,
           women: 12,
-          formattedValues: { men: '10', women: '12' },
         },
       },
       {
         axisValueLabel: '2024',
+        dataIndex: 0,
         seriesIndex: 1,
         seriesName: 'Women',
         color: '#ff0000',
         data: {
           men: 10,
           women: 12,
-          formattedValues: { men: '10', women: '12' },
         },
       },
     ]);
@@ -334,6 +334,10 @@ describe('LineChart', () => {
       on: vi.fn(),
       off: vi.fn(),
     };
+    vi.mocked(mapPxTableToChartDataset).mockReturnValue({
+      ...mockDataset,
+      formattedValues: [{ men: '10', women: '12.35' }],
+    });
     vi.mocked(useEChartOption).mockReturnValue({
       divRef: { current: null },
       chartRef: { current: chart as unknown as echarts.EChartsType },
@@ -351,12 +355,12 @@ describe('LineChart', () => {
     const html = formatter?.([
       {
         axisValueLabel: '2024',
+        dataIndex: 0,
         seriesIndex: 1,
         seriesName: 'Women',
         data: {
           men: 10,
           women: 12.345,
-          formattedValues: { men: '10', women: '12.35' },
         },
       },
     ]);

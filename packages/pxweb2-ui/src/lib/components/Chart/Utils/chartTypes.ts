@@ -3,12 +3,8 @@ export interface ChartSeries {
   readonly name: string;
 }
 
-type ChartSourceRow = Record<
-  string,
-  string | number | null | Record<string, string | null> | undefined
-> & {
-  readonly formattedValues?: Record<string, string | null>;
-};
+type ChartSourceRow = Record<string, string | number | null>;
+type ChartFormattedValues = Record<string, string | null>;
 
 export interface EChartsDataset {
   readonly title: string;
@@ -16,6 +12,7 @@ export interface EChartsDataset {
   readonly unit: string;
   readonly dimensions: string[];
   readonly source: ChartSourceRow[];
+  readonly formattedValues: ChartFormattedValues[];
   readonly series: ChartSeries[];
 }
 

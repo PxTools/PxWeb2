@@ -21,11 +21,10 @@ import type { PxTable } from '../../../shared-types/pxTable';
 
 type TooltipParam = {
   axisValueLabel?: string;
+  dataIndex?: number;
   seriesIndex: number;
   seriesName: string;
-  data?: Record<string, string | number | null> & {
-    formattedValues?: Record<string, string | null>;
-  };
+  data?: Record<string, string | number | null>;
   color?: string;
 };
 
@@ -195,7 +194,11 @@ export function LineChart({
               const row = param.data;
               const value = row?.[seriesMeta.key];
               const formattedValue =
-                row?.formattedValues?.[seriesMeta.key] ?? value;
+                (param.dataIndex == null
+                  ? undefined
+                  : dataset.formattedValues[param.dataIndex]?.[
+                      seriesMeta.key
+                    ]) ?? value;
               const tooltipValue =
                 formattedValue == null ? '' : `${formattedValue}`;
               const symbol =

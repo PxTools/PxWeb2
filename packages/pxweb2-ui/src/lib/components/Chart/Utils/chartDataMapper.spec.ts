@@ -125,14 +125,16 @@ describe('mapPxTableToChartDataset', () => {
         name: '2023',
         M: 10,
         F: 11,
-        formattedValues: { M: '10', F: '11' },
       },
       {
         name: '2024',
         M: 12,
         F: 13,
-        formattedValues: { M: '12', F: '13' },
       },
+    ]);
+    expect(result.formattedValues).toEqual([
+      { M: '10', F: '11' },
+      { M: '12', F: '13' },
     ]);
   });
 
@@ -157,9 +159,9 @@ describe('mapPxTableToChartDataset', () => {
         name: '2023',
         M: 10,
         F: null,
-        formattedValues: { M: null, F: null },
       },
     ]);
+    expect(result.formattedValues).toEqual([{ M: null, F: null }]);
   });
 });
 
