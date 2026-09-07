@@ -17,6 +17,21 @@ export const LINE_SERIES_SYMBOLS: LineSeriesSymbol[] = [
 export function buildDatasetOption(
   dataset: EChartsDataset,
 ): echarts.EChartsOption {
+  const source = dataset.source.map((row) => {
+    const chartRow: Record<string, string | number | null> = {};
+
+    Object.entries(row).forEach(([key, value]) => {
+      if (
+        key !== 'formattedValues' &&
+        (typeof value === 'string' || typeof value === 'number' || value === null)
+      ) {
+        chartRow[key] = value;
+      }
+    });
+
+    return chartRow;
+  });
+
   return {
     // TODO: Title and source should only be displayed when chart is exported as image, not when rendered in the browser.
     // title: {
@@ -32,7 +47,6 @@ export function buildDatasetOption(
     // },
     // // Add origin in bottom-left corner of the chart canvas
     // graphic: [
-    //   {
     //     type: 'text',
     //     left: 8,
     //     bottom: 8,
@@ -46,7 +60,7 @@ export function buildDatasetOption(
     // ],
     dataset: {
       dimensions: dataset.dimensions,
-      source: dataset.source,
+        source,
     },
     legend: {},
     tooltip: {},
