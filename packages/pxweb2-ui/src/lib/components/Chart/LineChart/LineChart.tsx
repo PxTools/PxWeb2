@@ -19,11 +19,17 @@ import EmptyState from '../../EmptyState/EmptyState';
 import type { EmptyStateProps } from '../../EmptyState/EmptyState';
 import type { PxTable } from '../../../shared-types/pxTable';
 
+// ECharts passes one of these objects to the tooltip formatter whenever the
+// user points at or clicks a chart value. The formatter uses this information
+// to decide what value and label to display.
 type TooltipParam = {
   axisValueLabel?: string;
+  // Position of the selected row in the chart dataset.
   dataIndex?: number;
+  // Position of the selected series in the dataset's series list.
   seriesIndex: number;
   seriesName: string;
+  // Raw chart values for the selected row, keyed by series name.
   data?: Record<string, string | number | null>;
   color?: string;
 };
@@ -73,6 +79,11 @@ export function LineChart({
   isMediumOrSmallerScreen = false,
 }: LineChartProps) {
   const [isLegendExpanded, setIsLegendExpanded] = useState(false);
+
+  // Stores the position of the chart series the user is currently hovering.
+  // null means that no series has been selected yet. A ref is used because
+  // this value is only needed by chart event handlers and the tooltip; changing
+  // it should not cause the whole chart component to render again.
   const hoveredSeriesIndexRef = useRef<number | null>(null);
   const hasMultipleUnits = checkMultipleUnits(pxtable);
 
@@ -169,30 +180,50 @@ export function LineChart({
         extraCssText:
           'max-width:370px;box-sizing:border-box;white-space:normal;overflow-wrap:anywhere;',
         formatter: (params: unknown) => {
+          // ECharts can provide one tooltip item or an array of items.
+          // Convert both cases to an array so the code below handles them
+          // consistently.
           const axisParams = (Array.isArray(params) ? params : [params]) as
             TooltipParam[] | undefined;
 
+          // There is nothing to display when ECharts provides no data.
           if (!axisParams || axisParams.length === 0) {
             return '';
           }
 
+          // On smaller screens, show the series selected by the user. If no
+          // series has been selected yet, use the first series from ECharts.
+          // On larger screens, the normal axis tooltip behavior is used.
           const selectedSeriesIndex =
             hoveredSeriesIndexRef.current ??
             (isMediumOrSmallerScreen ? axisParams[0]?.seriesIndex : null);
 
+          // Without a series index, we cannot match the tooltip item to the
+          // chart's series metadata.
           if (selectedSeriesIndex == null) {
             return '';
           }
 
+          // The first item contains the label for the current x-axis value.
           const title = axisParams[0].axisValueLabel;
+
+          // Keep only tooltip items belonging to the selected series.
           const hoveredParams = axisParams.filter(
             (param) => param.seriesIndex === selectedSeriesIndex,
           );
+
+          // Turn each selected tooltip item into one line of HTML.
           const rows = hoveredParams
             .map((param) => {
+              // Use the series index to find the matching series definition,
+              // including its key and display name.
               const seriesMeta = dataset.series[param.seriesIndex];
               const row = param.data;
               const value = row?.[seriesMeta.key];
+
+              // Formatted values are stored separately from the raw chart
+              // values. Use the formatted value when available, otherwise
+              // fall back to the raw value supplied by ECharts.
               const formattedValue =
                 (param.dataIndex == null
                   ? undefined
@@ -201,6 +232,9 @@ export function LineChart({
                     ]) ?? value;
               const tooltipValue =
                 formattedValue == null ? '' : `${formattedValue}`;
+
+              // Repeat the available symbols when there are more series than
+              // symbols, and use a fallback color if ECharts provides none.
               const symbol =
                 LINE_SERIES_SYMBOLS[
                   param.seriesIndex % LINE_SERIES_SYMBOLS.length
@@ -211,6 +245,8 @@ export function LineChart({
             })
             .join('');
 
+          // Add the x-axis title above the generated value rows and return the
+          // complete HTML string that ECharts will render as the tooltip.
           return `<div style="font-family:${CHART_FONT_FAMILY}"><div style="margin-bottom:4px;">${title}</div>${rows}</div>`;
         },
       },
@@ -230,11 +266,15 @@ export function LineChart({
   );
 
   useEffect(() => {
+    // ECharts creates the chart after the component renders. There is nothing
+    // to subscribe to until that chart instance is available.
     const chart = chartRef.current;
     if (!chart) {
       return;
     }
 
+    // Remember the series the user is interacting with so the tooltip can
+    // show only that series on smaller screens.
     const handleSeriesInteraction = (params: {
       componentType?: string;
       seriesIndex?: number;
@@ -246,9 +286,16 @@ export function LineChart({
         hoveredSeriesIndexRef.current = params.seriesIndex;
       }
     };
+
+    // Once the pointer leaves the chart, allow the next interaction to choose
+    // a series again.
     const handleGlobalOut = () => {
       hoveredSeriesIndexRef.current = null;
     };
+
+    // On smaller screens, a click on the chart should show the tooltip for
+    // the closest data row. ECharts gives us a pixel position, so we first
+    // convert it to an x-axis position and then to a valid row index.
     const handleChartClick = (event: { offsetX: number; offsetY: number }) => {
       if (!isMediumOrSmallerScreen || dataset.source.length === 0) {
         return;
@@ -263,12 +310,17 @@ export function LineChart({
         return;
       }
 
+      // Rounding selects the closest category. Clamping prevents clicks near
+      // the chart edges from producing an index outside the data array.
       const dataIndex = Math.max(
         0,
         Math.min(dataset.source.length - 1, Math.round(axisCoordinate)),
       );
+
+      // If no series has been selected yet, use the first one.
       hoveredSeriesIndexRef.current ??= 0;
 
+      // Ask ECharts to display the tooltip for the selected series and row.
       chart.dispatchAction({
         type: 'showTip',
         seriesIndex: hoveredSeriesIndexRef.current,
@@ -276,6 +328,7 @@ export function LineChart({
       });
     };
 
+    // Register the handlers with ECharts and its lower-level rendering layer.
     chart.on('mouseover', handleSeriesInteraction);
     chart.on('click', handleSeriesInteraction);
     chart.on('globalout', handleGlobalOut);
@@ -283,6 +336,8 @@ export function LineChart({
     zrender?.on('click', handleChartClick);
 
     return () => {
+      // Remove the handlers when the effect is rerun or the component is
+      // unmounted, preventing duplicate events and stale chart references.
       chart.off('mouseover', handleSeriesInteraction);
       chart.off('click', handleSeriesInteraction);
       chart.off('globalout', handleGlobalOut);

@@ -32,6 +32,7 @@ export function buildDatasetOption(
     // },
     // // Add origin in bottom-left corner of the chart canvas
     // graphic: [
+    //   {
     //     type: 'text',
     //     left: 8,
     //     bottom: 8,
