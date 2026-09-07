@@ -23,7 +23,9 @@ export function buildDatasetOption(
     Object.entries(row).forEach(([key, value]) => {
       if (
         key !== 'formattedValues' &&
-        (typeof value === 'string' || typeof value === 'number' || value === null)
+        (typeof value === 'string' ||
+          typeof value === 'number' ||
+          value === null)
       ) {
         chartRow[key] = value;
       }
@@ -60,7 +62,7 @@ export function buildDatasetOption(
     // ],
     dataset: {
       dimensions: dataset.dimensions,
-        source,
+      source,
     },
     legend: {},
     tooltip: {},
