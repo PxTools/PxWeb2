@@ -54,7 +54,7 @@
     "style-dictionary": "^5.5.2",
     "typescript": "^6.0.3",
     "unplugin-dts": "^1.0.3",
-    "wrangler": "^4.125.0"
+    "wrangler": "^4.127.1"
   },
   "engines": {
     "node": ">=24",
