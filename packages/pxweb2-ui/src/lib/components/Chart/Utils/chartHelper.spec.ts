@@ -147,7 +147,7 @@ describe('getYAxisBreak', () => {
     expect(getYAxisBreak([100, 200, null])).toEqual({
       start: 0,
       end: 50,
-      gap: '3%',
+      gap: '13%',
     });
   });
 
@@ -155,7 +155,7 @@ describe('getYAxisBreak', () => {
     expect(getYAxisBreak([123.85, 125.56])).toEqual({
       start: 0,
       end: 123,
-      gap: '3%',
+      gap: '13%',
     });
   });
 
