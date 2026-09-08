@@ -7,6 +7,7 @@
     "start": "npm run storybook",
     "build": "npm run build-style-dictionary && storybook build && mv ./storybook-static ../pxweb2/dist/storybook",
     "build-style-dictionary": "node ./style-dictionary/build.mjs",
+    "build-storybook": "storybook build",
     "storybook": "storybook dev -p 6006",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -16,22 +17,22 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@tanstack/react-virtual": "^3.14.9",
+    "@tanstack/react-virtual": "^3.14.10",
     "clsx": "^2.1.1",
     "echarts": "^6.1.0",
     "hast-util-to-jsx-runtime": "^2.3.6",
-    "motion": "^13.1.0"
+    "motion": "^13.1.1"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^5.3.0",
-    "@storybook/addon-a11y": "10.5.7",
-    "@storybook/addon-docs": "10.5.7",
-    "@storybook/react-vite": "10.5.7",
+    "@storybook/addon-a11y": "10.5.10",
+    "@storybook/addon-docs": "10.5.10",
+    "@storybook/react-vite": "10.5.10",
     "@testing-library/react": "^16.3.2",
-    "eslint-plugin-storybook": "10.5.7",
+    "eslint-plugin-storybook": "10.5.10",
     "prop-types": "^15.8.1",
-    "shiki": "^4.4.2",
-    "storybook": "10.5.7",
+    "shiki": "^4.4.3",
+    "storybook": "10.5.10",
     "vitest": "^4.0.18"
   }
 }
