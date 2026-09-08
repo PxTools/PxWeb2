@@ -254,7 +254,7 @@ function applyYAxisBreakMark(
     return;
   }
 
-  const centerY = Math.min(startPixel, endPixel) + 32;
+  const centerY = (startPixel + endPixel) / 2;
   const axisColor = getAxisColor().color;
   const lineStyle = { stroke: axisColor, lineWidth: 2 };
 
