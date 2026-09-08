@@ -254,7 +254,7 @@ function applyYAxisBreakMark(
     return;
   }
 
-  const centerY = (startPixel + endPixel) / 2;
+  const centerY = Math.min(startPixel, endPixel) + 32;
   const axisColor = getAxisColor().color;
   const lineStyle = { stroke: axisColor, lineWidth: 2 };
 
@@ -269,12 +269,12 @@ function applyYAxisBreakMark(
         children: [
           {
             type: 'line',
-            shape: { x1: 0, y1: 16, x2: 8, y2: 0 },
+            shape: { x1: 0, y1: 6, x2: 8, y2: 0 },
             style: lineStyle,
           },
           {
             type: 'line',
-            shape: { x1: 6, y1: 16, x2: 14, y2: 0 },
+            shape: { x1: 0, y1: 12, x2: 8, y2: 6 },
             style: lineStyle,
           },
         ],

@@ -143,11 +143,24 @@ describe('getAdaptiveYAxisMax', () => {
 });
 
 describe('getYAxisBreak', () => {
-  it('creates a break below the lowest positive value with visible spacing', () => {
+  it('creates a break with a small fixed visual gap up to the adaptive y-axis minimum', () => {
     expect(getYAxisBreak([100, 200, null])).toEqual({
       start: 0,
-      end: 97,
+      end: 50,
+      gap: '3%',
     });
+  });
+
+  it('keeps a visible gap for narrow positive ranges', () => {
+    expect(getYAxisBreak([123.85, 125.56])).toEqual({
+      start: 0,
+      end: 123,
+      gap: '3%',
+    });
+  });
+
+  it('does not create a break when the adaptive y-axis minimum is already zero', () => {
+    expect(getYAxisBreak([100, 900])).toBeUndefined();
   });
 
   it('does not create a break when zero or negative values are present', () => {

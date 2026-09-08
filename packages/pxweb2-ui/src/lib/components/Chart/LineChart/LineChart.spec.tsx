@@ -108,7 +108,7 @@ describe('LineChart', () => {
       axisColor: undefined,
       fontColor: undefined,
     });
-    vi.mocked(getYAxisBreak).mockReturnValue({ start: 0, end: 9.7 });
+    vi.mocked(getYAxisBreak).mockReturnValue({ start: 0, end: 9.7, gap: 48 });
     vi.mocked(useEChartOption).mockReturnValue({
       divRef: { current: null },
       chartRef: { current: null },
@@ -141,9 +141,9 @@ describe('LineChart', () => {
     expect(option.yAxis).toMatchObject({
       name: 'persons',
       min: 0,
-      breaks: [{ start: 0, end: 9.7 }],
+      breaks: [{ start: 0, end: 9.7, gap: 48 }],
       breakArea: { show: false },
-      axisLine: { breakLine: true },
+      axisLine: { breakLine: false },
     });
     expect(option.grid).toEqual({
       top: 36,

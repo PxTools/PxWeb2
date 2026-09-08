@@ -93,6 +93,8 @@ function getAdaptiveSnapUnit(min: number, max: number): number {
   return getNiceNumber(span / 3);
 }
 
+const Y_AXIS_BREAK_GAP = '13%';
+
 export function getAdaptiveYAxisMin(value: {
   min: number;
   max: number;
@@ -132,20 +134,30 @@ export function getAdaptiveYAxisMax(value: {
 
 export function getYAxisBreak(
   values: Array<number | null>,
-): { start: number; end: number } | undefined {
+): { start: number; end: number; gap: string } | undefined {
   const finiteValues = values.filter(
     (value): value is number => value !== null && Number.isFinite(value),
   );
   const lowestValue = Math.min(...finiteValues);
+  const highestValue = Math.max(...finiteValues);
 
   if (!Number.isFinite(lowestValue) || lowestValue <= 0) {
     return undefined;
   }
 
-  const visibleGap = lowestValue * 0.03;
+  const adaptiveMin = getAdaptiveYAxisMin({
+    min: lowestValue,
+    max: highestValue,
+  });
+
+  if (adaptiveMin <= 0) {
+    return undefined;
+  }
+
   return {
     start: 0,
-    end: lowestValue - visibleGap,
+    end: adaptiveMin,
+    gap: Y_AXIS_BREAK_GAP,
   };
 }
 

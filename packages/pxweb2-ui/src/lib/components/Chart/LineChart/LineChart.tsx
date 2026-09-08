@@ -11,6 +11,7 @@ import { useEChartOption } from '../Utils/useEChartOption';
 import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
 import {
   getAdaptiveYAxisMax,
+  getAdaptiveYAxisMin,
   getChartCssVariables,
   getYAxisBreak,
   checkMultipleUnits,
@@ -145,19 +146,18 @@ export function LineChart({
       },
       yAxis: {
         name: dataset.unit,
-        scale: true,
-        min: 0,
+        scale: false,
+        min: yAxisBreak ? 0 : getAdaptiveYAxisMin,
         max: getAdaptiveYAxisMax,
         ...(yAxisBreak
           ? {
               breaks: [yAxisBreak],
-              // Draws a compact "//" mark on the axis instead (see useEChartOption).
               breakArea: { show: false },
             }
           : {}),
         axisLine: {
           show: true,
-          breakLine: Boolean(yAxisBreak),
+          breakLine: false,
         },
         axisTick: { show: true },
       },
