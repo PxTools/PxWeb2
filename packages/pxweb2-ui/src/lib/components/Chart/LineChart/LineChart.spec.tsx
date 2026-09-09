@@ -2,7 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, expect, it, beforeEach, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 
-import { LineChart } from './LineChart';
+import { LineChart, LegendToggleButton } from './LineChart';
 import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
 import { useEChartOption } from '../Utils/useEChartOption';
 import {
@@ -10,6 +10,7 @@ import {
   buildSeriesOption,
 } from '../Utils/chartOptionBuilder';
 import { getChartCssVariables, checkMultipleUnits } from '../Utils/chartHelper';
+import * as Icons from '../../Icon/Icons';
 import type { EChartsDataset } from '../Utils/chartTypes';
 import type { PxTable } from '../../../shared-types/pxTable';
 
@@ -352,6 +353,44 @@ describe('LineChart', () => {
       expect(
         screen.getByRole('button', { name: /Show More/i }),
       ).toBeInTheDocument();
+    });
+
+    describe('LegendToggleButton', () => {
+      it('renders the button with the correct initial text and icon', () => {
+        const { container } = render(
+          <LegendToggleButton
+            onClick={vi.fn()}
+            text="Show More"
+            isExpanded={false}
+          />,
+        );
+
+        expect(
+          screen.getByRole('button', { name: /Show More/i }),
+        ).toBeInTheDocument();
+        expect(container.querySelector('button svg path')).toHaveAttribute(
+          'd',
+          Icons.ChevronDown.props.d,
+        );
+      });
+
+      it('updates the icon when expanded', () => {
+        const { container } = render(
+          <LegendToggleButton
+            onClick={vi.fn()}
+            text="Show Less"
+            isExpanded={true}
+          />,
+        );
+
+        expect(
+          screen.getByRole('button', { name: /Show Less/i }),
+        ).toBeInTheDocument();
+        expect(container.querySelector('button svg path')).toHaveAttribute(
+          'd',
+          Icons.ChevronUp.props.d,
+        );
+      });
     });
   });
 });
