@@ -257,9 +257,22 @@ function applyYAxisBreakMark(
   const centerY = (startPixel + endPixel) / 2;
   const axisColor = getAxisColor().color;
   const lineStyle = { stroke: axisColor, lineWidth: 2 };
+  const gridLineStyle = { stroke: '#e0e6f1', lineWidth: 1 };
 
   chart.setOption({
     graphic: [
+      {
+        type: 'line',
+        shape: {
+          x1: gridRect.x,
+          y1: endPixel,
+          x2: gridRect.x + gridRect.width,
+          y2: endPixel,
+        },
+        style: gridLineStyle,
+        silent: true,
+        z: 1,
+      },
       {
         type: 'group',
         left: gridRect.x - 6,

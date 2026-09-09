@@ -11,6 +11,7 @@ import { useEChartOption } from '../Utils/useEChartOption';
 import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
 import {
   getAdaptiveYAxisMax,
+  getAdaptiveYAxisInterval,
   getAdaptiveYAxisMin,
   getChartCssVariables,
   getYAxisBreak,
@@ -108,14 +109,31 @@ export function LineChart({
   const visibleLegendData = shouldShowLimitedLegend
     ? memoizedLimitedLegendData
     : memoizedAllLegendData;
-  const yAxisBreak = useMemo(() => {
-    const values = dataset.source.flatMap((row) =>
-      dataset.series.map((series) => row[series.key]),
-    );
-    return getYAxisBreak(
-      values.filter((value): value is number => typeof value === 'number'),
-    );
+  const yAxisValues = useMemo(() => {
+    return dataset.source
+      .flatMap((row) => dataset.series.map((series) => row[series.key]))
+      .filter((value): value is number => typeof value === 'number');
   }, [dataset]);
+  const yAxisDataExtent = useMemo(() => {
+    if (yAxisValues.length === 0) {
+      return undefined;
+    }
+
+    return {
+      min: Math.min(...yAxisValues),
+      max: Math.max(...yAxisValues),
+    };
+  }, [yAxisValues]);
+  const yAxisBreak = useMemo(() => {
+    return getYAxisBreak(yAxisValues);
+  }, [yAxisValues]);
+  const yAxisInterval = useMemo(() => {
+    if (!yAxisBreak || !yAxisDataExtent) {
+      return undefined;
+    }
+
+    return getAdaptiveYAxisInterval(yAxisDataExtent);
+  }, [yAxisBreak, yAxisDataExtent]);
 
   const option = useMemo<echarts.EChartsOption>(() => {
     const estimatedLegendHeight = LEGEND_ITEM_HEIGHT * visibleLegendData.length;
@@ -147,8 +165,10 @@ export function LineChart({
       yAxis: {
         name: dataset.unit,
         scale: false,
-        min: yAxisBreak ? 0 : getAdaptiveYAxisMin,
+        //min: yAxisBreak ? 0 : getAdaptiveYAxisMin,
+        min: 0,
         max: getAdaptiveYAxisMax,
+        interval: yAxisInterval,
         ...(yAxisBreak
           ? {
               breaks: [yAxisBreak],
@@ -199,7 +219,14 @@ export function LineChart({
         },
       },
     };
-  }, [dataset, resolvedColors, yAxisBreak, xAxisName, visibleLegendData]);
+  }, [
+    dataset,
+    resolvedColors,
+    yAxisBreak,
+    yAxisInterval,
+    xAxisName,
+    visibleLegendData,
+  ]);
 
   const { divRef } = useEChartOption(option, 'svg', X_AXIS_LABEL_TO_LEGEND_GAP);
   const height = 36 + dataset.series.length * 0.8; // increase chart height based on number of series to prevent legend overlap

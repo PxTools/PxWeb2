@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   checkMultipleUnits,
   getAdaptiveYAxisMax,
+  getAdaptiveYAxisInterval,
   getAdaptiveYAxisMin,
   getChartCssVariables,
   getYAxisBreak,
@@ -139,6 +140,12 @@ describe('getAdaptiveYAxisMax', () => {
 
   it('works when min and max are equal', () => {
     expect(getAdaptiveYAxisMax({ min: 5, max: 5 })).toBe(5.5);
+  });
+});
+
+describe('getAdaptiveYAxisInterval', () => {
+  it('uses the same snap unit that adaptive min and max use', () => {
+    expect(getAdaptiveYAxisInterval({ min: 100, max: 200 })).toBe(50);
   });
 });
 

@@ -72,6 +72,10 @@ function getNiceNumber(value: number): number {
   const exponent = Math.floor(Math.log10(value));
   const base = 10 ** exponent;
   const fraction = value / base;
+  // console.log('getNiceNumber input value:', value);
+  // console.log('getNiceNumber exponent:', exponent);
+  // console.log('getNiceNumber base:', base);
+  // console.log('getNiceNumber fraction:', fraction);
 
   if (fraction <= 1) {
     return 1 * base;
@@ -87,9 +91,11 @@ function getNiceNumber(value: number): number {
 
 function getAdaptiveSnapUnit(min: number, max: number): number {
   const span = Math.max(max - min, 1);
+  console.log('getAdaptiveSnapUnit input min:', min, 'max:', max);
 
   // No fixed tick count: just derive a clean rounding grain from data span.
   // For spans around 1.3M this typically becomes 500k.
+  console.log('getAdaptiveSnapUnit span nicenumber:', getNiceNumber(span / 3));
   return getNiceNumber(span / 3);
 }
 
@@ -99,15 +105,21 @@ export function getAdaptiveYAxisMin(value: {
   min: number;
   max: number;
 }): number {
+  console.log('getAdaptiveYAxisMin input value:', value);
   const min = Number(value.min);
   const max = Number(value.max);
 
   const span = Math.max(max - min, 1);
+  console.log('span:', span);
   const pad = span * 0.03;
+  console.log('pad:', pad);
   const snap = getAdaptiveSnapUnit(min, max);
+  console.log('snap:', snap);
 
   const paddedMin = min - pad;
+  console.log('paddedMin:', paddedMin);
   const roundedMin = Math.floor(paddedMin / snap) * snap;
+  console.log('roundedMin:', roundedMin);
 
   // Keep non-negative axes non-negative.
   if (min >= 0) {
@@ -132,6 +144,16 @@ export function getAdaptiveYAxisMax(value: {
   return Math.ceil(paddedMax / snap) * snap;
 }
 
+export function getAdaptiveYAxisInterval(value: {
+  min: number;
+  max: number;
+}): number {
+  const min = Number(value.min);
+  const max = Number(value.max);
+
+  return getAdaptiveSnapUnit(min, max);
+}
+
 export function getYAxisBreak(
   values: Array<number | null>,
 ): { start: number; end: number; gap: string } | undefined {
@@ -140,8 +162,16 @@ export function getYAxisBreak(
   );
   const lowestValue = Math.min(...finiteValues);
   const highestValue = Math.max(...finiteValues);
-
+  console.log(
+    'XXXXXXXlowestValue:',
+    lowestValue,
+    'highestValue:',
+    highestValue,
+  );
   if (!Number.isFinite(lowestValue) || lowestValue <= 0) {
+    console.log(
+      'Lowest value is not finite or non-positive, returning undefined.',
+    );
     return undefined;
   }
 
@@ -149,7 +179,7 @@ export function getYAxisBreak(
     min: lowestValue,
     max: highestValue,
   });
-
+  console.log('XXXXXXXX adaptiveMin:', adaptiveMin);
   if (adaptiveMin <= 0) {
     return undefined;
   }

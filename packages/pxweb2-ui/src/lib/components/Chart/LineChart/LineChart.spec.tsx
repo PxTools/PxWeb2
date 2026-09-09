@@ -11,6 +11,7 @@ import {
 } from '../Utils/chartOptionBuilder';
 import {
   getChartCssVariables,
+  getAdaptiveYAxisInterval,
   checkMultipleUnits,
   getYAxisBreak,
 } from '../Utils/chartHelper';
@@ -41,6 +42,7 @@ vi.mock('../Utils/chartHelper', () => ({
   getChartCssVariables: vi.fn(),
   getAdaptiveYAxisMin: vi.fn(),
   getAdaptiveYAxisMax: vi.fn(),
+  getAdaptiveYAxisInterval: vi.fn(),
   getYAxisBreak: vi.fn(),
   checkMultipleUnits: vi.fn(),
 }));
@@ -109,6 +111,7 @@ describe('LineChart', () => {
       fontColor: undefined,
     });
     vi.mocked(getYAxisBreak).mockReturnValue({ start: 0, end: 9.7, gap: 48 });
+    vi.mocked(getAdaptiveYAxisInterval).mockReturnValue(5);
     vi.mocked(useEChartOption).mockReturnValue({
       divRef: { current: null },
       chartRef: { current: null },
@@ -141,6 +144,7 @@ describe('LineChart', () => {
     expect(option.yAxis).toMatchObject({
       name: 'persons',
       min: 0,
+      interval: 5,
       breaks: [{ start: 0, end: 9.7, gap: 48 }],
       breakArea: { show: false },
       axisLine: { breakLine: false },
