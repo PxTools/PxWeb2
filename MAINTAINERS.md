@@ -46,11 +46,7 @@ This policy relies on npm v11 support for `min-release-age`.
        npm outdated
      - Run the Storybook CLI update command:
        npx storybook@10.2.7 upgrade (change to correct version)
-   - Compare the versions the commands below show:
-     1. npx npm-check-updates --format group --deep --cooldown 9 --target greatest --pre 0
-     2. npm outdated
-   - If the versions are the same, you can update to that version with this command:
-     npx npm-check-updates --format group --deep --cooldown 9 --target greatest --pre 0 -iu
+   - Update the other non-major versions: `npm update --save`
 2. Fix [SonarQube issues/codesmells](https://sonarcloud.io/project/overview?id=PxTools_PxWeb2)
 3. Fix warnings when running `npm run lint`
 
