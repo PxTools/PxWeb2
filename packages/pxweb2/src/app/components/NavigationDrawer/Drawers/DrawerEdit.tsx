@@ -169,7 +169,7 @@ export function DrawerEdit() {
   }, [addModal, isManualPivotOpen, removeModal]);
 
   return (
-    <ContentBox title={t('presentation_page.side_menu.edit.customize.title')}>
+    <ContentBox>
       <div className={classes.operationList}>
         {data && !isMobile && (
           <PivotButton
