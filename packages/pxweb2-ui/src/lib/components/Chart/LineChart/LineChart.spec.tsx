@@ -130,7 +130,14 @@ describe('LineChart', () => {
 
     expect(option.legend).toEqual({
       data: ['Men', 'Women', 'Total'],
+      orient: 'vertical',
+      left: 0,
+      right: 0,
       bottom: 0,
+      textStyle: {
+        overflow: 'breakAll',
+        lineHeight: 20,
+      },
     });
 
     expect(option.yAxis).toMatchObject({
@@ -188,7 +195,7 @@ describe('LineChart', () => {
     );
   });
 
-  it('renders chart container with height based on number of series', () => {
+  it('keeps the plot height stable and adds space for the legend', () => {
     const { container } = render(
       <LineChart pxtable={mockPxTable} translations={mockTranslations} />,
     );
@@ -198,7 +205,7 @@ describe('LineChart', () => {
     );
 
     expect(chartDiv).toBeTruthy();
-    expect(chartDiv?.style.height).toBe('38.4rem'); // 36 + 3 * 0.8 = 38.4
+    expect(chartDiv?.style.height).toBe('38.75rem'); // 29 + (3 * 40 + 36) / 16
   });
 
   it('returns empty tooltip text for empty params', () => {

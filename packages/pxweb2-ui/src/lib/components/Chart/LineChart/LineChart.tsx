@@ -32,6 +32,8 @@ type TooltipParam = {
 const LEGEND_ITEM_HEIGHT = 40;
 const X_AXIS_LABEL_TO_LEGEND_GAP = 36;
 const TOP_CHART_PADDING = 36;
+const CHART_PLOT_HEIGHT_REM = 29;
+const PIXELS_PER_REM = 16;
 
 function getTooltipSymbolSvg(symbol: string, color: string): string {
   switch (symbol) {
@@ -149,7 +151,14 @@ export function LineChart({
       },
       legend: {
         data: visibleLegendData,
+        orient: 'vertical',
+        left: 0,
+        right: 0,
         bottom: 0,
+        textStyle: {
+          overflow: 'breakAll',
+          lineHeight: 20,
+        },
       },
       series: buildSeriesOption(dataset, 'line', resolvedColors),
       emphasis: {
@@ -188,7 +197,11 @@ export function LineChart({
   }, [dataset, resolvedColors, xAxisName, visibleLegendData]);
 
   const { divRef } = useEChartOption(option, 'svg', X_AXIS_LABEL_TO_LEGEND_GAP);
-  const height = 36 + dataset.series.length * 0.8; // increase chart height based on number of series to prevent legend overlap
+  const legendHeight =
+    visibleLegendData.length * LEGEND_ITEM_HEIGHT +
+    X_AXIS_LABEL_TO_LEGEND_GAP;
+  const height =
+    CHART_PLOT_HEIGHT_REM + legendHeight / PIXELS_PER_REM;
 
   return (
     <>
