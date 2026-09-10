@@ -988,7 +988,9 @@ export function ManualPivot({
       isOpen={isOpen}
       focusTrap
       onClose={(updated) => onClose(updated, headerItems, stubItems)}
-      label={t('presentation_page.side_menu.edit.customize.manual_pivoting.title')}
+      label={t(
+        'presentation_page.side_menu.edit.customize.manual_pivoting.title',
+      )}
       cancelLabel={t(
         'presentation_page.side_menu.edit.customize.manual_pivoting.manual_pivoting_modal.cancel_button',
       )}

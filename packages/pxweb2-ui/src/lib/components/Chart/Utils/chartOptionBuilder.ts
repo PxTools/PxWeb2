@@ -3,12 +3,7 @@ import type * as echarts from 'echarts';
 import type { EChartsDataset } from './chartTypes';
 
 type LineSeriesSymbol =
-  | 'circle'
-  | 'rect'
-  | 'triangle'
-  | 'diamond'
-  | 'pin'
-  | 'arrow';
+  'circle' | 'rect' | 'triangle' | 'diamond' | 'pin' | 'arrow';
 
 export const LINE_SERIES_SYMBOLS: LineSeriesSymbol[] = [
   'circle',
