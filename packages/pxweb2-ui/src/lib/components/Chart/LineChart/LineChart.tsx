@@ -198,10 +198,8 @@ export function LineChart({
 
   const { divRef } = useEChartOption(option, 'svg', X_AXIS_LABEL_TO_LEGEND_GAP);
   const legendHeight =
-    visibleLegendData.length * LEGEND_ITEM_HEIGHT +
-    X_AXIS_LABEL_TO_LEGEND_GAP;
-  const height =
-    CHART_PLOT_HEIGHT_REM + legendHeight / PIXELS_PER_REM;
+    visibleLegendData.length * LEGEND_ITEM_HEIGHT + X_AXIS_LABEL_TO_LEGEND_GAP;
+  const height = CHART_PLOT_HEIGHT_REM + legendHeight / PIXELS_PER_REM;
 
   return (
     <>
