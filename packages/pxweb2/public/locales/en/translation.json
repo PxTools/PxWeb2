@@ -310,6 +310,20 @@
           }
         }
       },
+      "chart":{
+        "line_chart": {
+          "warnings": {
+            "multiple_units": {
+              "title": "The line chart cannot be displayed",
+              "description": "Different units are selected in the filter. These cannot be displayed in the same line chart."
+            }
+          },
+          "legend": {
+            "show_more": "Show more",
+            "show_less": "Show less"
+          }
+        }
+      },
       "about_table": {
         "title": "Information",
         "footnotes": {

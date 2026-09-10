@@ -1,6 +1,21 @@
 import { useEffect, useRef } from 'react';
 import * as echarts from 'echarts';
 
+import { getChartCssVariables } from '../Utils/chartHelper';
+
+const textStyle = {
+  fontFamily: 'PxWeb-font, sans-serif',
+  fontSize: '0.875rem',
+  color: getFontColor().color,
+} satisfies NonNullable<echarts.EChartsOption['textStyle']>;
+
+function getAxisColor(): { color: string } {
+  return { color: getChartCssVariables()?.axisColor || '#162327' };
+}
+function getFontColor(): { color: string } {
+  return { color: getChartCssVariables()?.fontColor || '#162327' };
+}
+
 function isSingleTitleOption(
   title: echarts.EChartsOption['title'],
 ): title is echarts.TitleComponentOption {
@@ -36,9 +51,135 @@ function applyOptionWithWrappedTitle(
   });
 }
 
+type LegendMeasurableChart = {
+  getModel?: () => { getComponent?: (mainType: string) => unknown } | undefined;
+  getViewOfComponentModel?: (
+    componentModel: unknown,
+  ) => { group?: { getBoundingRect?: () => { height: number } } } | undefined;
+};
+
+function getRenderedLegendHeight(chart: echarts.EChartsType): number | null {
+  const measurable = chart as unknown as LegendMeasurableChart;
+  const legendModel = measurable.getModel?.()?.getComponent?.('legend');
+
+  if (!legendModel) {
+    return null;
+  }
+
+  const height = measurable
+    .getViewOfComponentModel?.(legendModel)
+    ?.group?.getBoundingRect?.().height;
+
+  return typeof height === 'number' && Number.isFinite(height) ? height : null;
+}
+
+function applyStyling(option: echarts.EChartsOption): echarts.EChartsOption {
+  const axisColor = getAxisColor();
+  const xAxis = Array.isArray(option.xAxis)
+    ? option.xAxis.map((axis) => ({
+        ...axis,
+        axisLine: {
+          ...axis.axisLine,
+          lineStyle: {
+            ...axis.axisLine?.lineStyle,
+            ...axisColor,
+          },
+        },
+        nameTextStyle: { ...textStyle, align: 'left' },
+        axisLabel: { ...axis.axisLabel, ...textStyle },
+      }))
+    : {
+        ...option.xAxis,
+        axisLine: {
+          ...option.xAxis?.axisLine,
+          lineStyle: {
+            ...option.xAxis?.axisLine?.lineStyle,
+            ...axisColor,
+          },
+        },
+        nameTextStyle: { ...textStyle, align: 'left' },
+        axisLabel: {
+          ...option.xAxis?.axisLabel,
+          ...textStyle,
+        },
+      };
+  const yAxis = Array.isArray(option.yAxis)
+    ? option.yAxis.map((axis) => ({
+        ...axis,
+        axisLine: {
+          ...axis.axisLine,
+          lineStyle: { ...axis.axisLine?.lineStyle, ...axisColor },
+        },
+        axisLabel: { ...axis.axisLabel, ...textStyle },
+        nameTextStyle: { ...textStyle, align: 'left' },
+      }))
+    : {
+        ...option.yAxis,
+        axisLine: {
+          ...option.yAxis?.axisLine,
+          lineStyle: {
+            ...option.yAxis?.axisLine?.lineStyle,
+            ...axisColor,
+          },
+        },
+        nameTextStyle: { ...textStyle, align: 'left' },
+        axisLabel: {
+          ...option.yAxis?.axisLabel,
+          ...textStyle,
+        },
+      };
+  const legend = Array.isArray(option.legend)
+    ? option.legend.map((legendItem) => ({
+        ...legendItem,
+        textStyle: { ...legendItem.textStyle, ...textStyle },
+      }))
+    : {
+        ...option.legend,
+        textStyle: { ...option.legend?.textStyle, ...textStyle },
+      };
+
+  const title = Array.isArray(option.title)
+    ? option.title.map((titleItem) => ({
+        ...titleItem,
+        textStyle: { ...titleItem.textStyle, ...textStyle },
+      }))
+    : {
+        ...option.title,
+        textStyle: { ...option.title?.textStyle, ...textStyle },
+      };
+
+  return {
+    ...option,
+    legend,
+    xAxis: xAxis as echarts.EChartsOption['xAxis'],
+    yAxis: yAxis as echarts.EChartsOption['yAxis'],
+    title: title as echarts.EChartsOption['title'],
+  };
+}
+
+// Keeps a constant distance between the x axis labels and the legend, no matter how many legend rows are rendered.
+function applyLegendGap(
+  chart: echarts.EChartsType,
+  option: echarts.EChartsOption,
+  legendGap: number,
+) {
+  const legendHeight = getRenderedLegendHeight(chart);
+
+  if (legendHeight === null) {
+    return;
+  }
+
+  const grid = Array.isArray(option.grid) ? option.grid[0] : option.grid;
+
+  chart.setOption({
+    grid: { ...grid, bottom: Math.round(legendHeight + legendGap) },
+  });
+}
+
 export function useEChartOption(
   option: echarts.EChartsOption,
   renderer: 'canvas' | 'svg' = 'svg',
+  legendGap?: number,
 ) {
   const divRef = useRef<HTMLDivElement | null>(null);
   const chartRef = useRef<echarts.EChartsType | null>(null);
@@ -52,11 +193,19 @@ export function useEChartOption(
     const chart = echarts.init(chartContainer, null, { renderer });
     chartRef.current = chart;
 
-    applyOptionWithWrappedTitle(chart, option);
+    const applyOption = () => {
+      applyOptionWithWrappedTitle(chart, applyStyling(option));
+
+      if (typeof legendGap === 'number') {
+        applyLegendGap(chart, option, legendGap);
+      }
+    };
+
+    applyOption();
 
     const handleResize = () => {
       chart.resize();
-      applyOptionWithWrappedTitle(chart, option);
+      applyOption();
     };
 
     const resizeObserver =
@@ -76,7 +225,7 @@ export function useEChartOption(
       chartRef.current = null;
       chart.dispose();
     };
-  }, [option, renderer]);
+  }, [option, renderer, legendGap]);
 
   return { divRef, chartRef };
 }

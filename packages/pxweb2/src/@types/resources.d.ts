@@ -66,7 +66,7 @@ export default interface Resources {
         drawer_save_file: 'More file formats are in the works.';
         drawer_view: 'Graph display is under construction.';
         tab_definitions: 'The content of this tab is under construction.';
-        welcome: "Welcome to the new PxWeb 2.0! We're still improving to help you find and use the figures you need 📊✨";
+        welcome: "Welcome to the new PxWeb 2.0! We're still improving to help you find and use the figures you need  📊✨. [More about PxWeb](https://www.pxtools.net/)";
       };
       switch_language_landmark: 'Select language';
       title: 'PxWeb 2.0';
@@ -156,6 +156,20 @@ export default interface Resources {
             title: 'Notes';
           };
           title: 'Information';
+        };
+        chart: {
+          line_chart: {
+            legend: {
+              show_less: 'Show less';
+              show_more: 'Show more';
+            };
+            warnings: {
+              multiple_units: {
+                description: 'The line chart cannot be displayed because your selection includes contents with different units (for example number and percent). Please select contents with the same unit to see the line chart.';
+                title: 'The line chart cannot be displayed';
+              };
+            };
+          };
         };
         expand_view: 'Expand view';
         last_updated: 'Updated';

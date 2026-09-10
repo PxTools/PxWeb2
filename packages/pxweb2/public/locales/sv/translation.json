@@ -310,6 +310,20 @@
           }
         }
       },
+      "chart": {
+        "line_chart": {
+          "warnings": {
+            "multiple_units": {
+              "title": "Linjediagrammet kan inte visas",
+              "description": "Olika enheter är valt i filtret. De kan inte visas i samma linjediagram."
+            }
+          },
+          "legend": {
+            "show_more": "Visa mer",
+            "show_less": "Visa mindre"
+          }
+        }
+      },
       "about_table": {
         "title": "Information",
         "footnotes": {

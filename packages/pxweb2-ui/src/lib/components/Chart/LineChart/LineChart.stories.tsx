@@ -1,13 +1,35 @@
+import type { ComponentProps } from 'react';
+import type { TFunction } from 'i18next';
+import { useTranslation } from 'react-i18next';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import LineChart from './LineChart';
+import { LineChart } from './LineChart';
 import { setPxTableData } from '../../Table/Utils/cubeHelper';
 import type { PxTable } from '../../../shared-types/pxTable';
 import type { DataCell, PxData } from '../../../shared-types/pxTableData';
 import type { Variable } from '../../../shared-types/variable';
 import { VartypeEnum } from '../../../shared-types/vartypeEnum';
 
-type Story = StoryObj<typeof LineChart>;
+const getTranslations = (t: TFunction) => ({
+  showMore: t(
+    'presentation_page.main_content.chart.line_chart.legend.show_more',
+  ),
+  showLess: t(
+    'presentation_page.main_content.chart.line_chart.legend.show_less',
+  ),
+});
+
+type LineChartWithTranslationsProps = Omit<
+  ComponentProps<typeof LineChart>,
+  'translations'
+>;
+
+const LineChartWithTranslations = (props: LineChartWithTranslationsProps) => {
+  const { t } = useTranslation();
+  return <LineChart {...props} translations={getTranslations(t)} />;
+};
+
+type Story = StoryObj<typeof LineChartWithTranslations>;
 
 function createVariable(
   id: string,
@@ -174,8 +196,8 @@ const sparseDataPxTable = createLineChartPxTable(
   },
 );
 
-const meta: Meta<typeof LineChart> = {
-  component: LineChart,
+const meta: Meta<typeof LineChartWithTranslations> = {
+  component: LineChartWithTranslations,
   title: 'Components/Chart/LineChart',
   decorators: [
     (StoryComponent) => (
@@ -224,5 +246,19 @@ export const SparseData: Story = {
   args: {
     pxtable: sparseDataPxTable,
     colors: ['#24a148', '#8a3ffc'],
+  },
+};
+
+export const ManySeriesOnLargeScreen: Story = {
+  args: {
+    pxtable: manySeriesPxTable,
+    isMediumOrSmallerScreen: false,
+  },
+};
+
+export const ManySeriesOnSmallScreen: Story = {
+  args: {
+    pxtable: manySeriesPxTable,
+    isMediumOrSmallerScreen: true,
   },
 };
