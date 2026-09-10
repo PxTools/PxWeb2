@@ -23,6 +23,19 @@ By using these tools, we ensure a streamlined and efficient development process,
 
 An overview of the current technical debt in the project:
 
+### Dependency Install Cooldown
+
+This repository enforces an npm dependency release cooldown of 9 days.
+
+- Configuration is set in the root `.npmrc`.
+- In this npm workspaces setup, npm commands started from workspace folders still resolve to the monorepo root project config.
+- The cooldown applies to both `npm install` and `npm ci`.
+- This helps reduce the risk of pulling in very recently published packages.
+
+If an urgent one-off override is needed, run the install command with `--min-release-age=0` for that specific command.
+
+This policy relies on npm v11 support for `min-release-age`.
+
 ### Long running tasks
 
 1. Updating the packages used in the project. This includes both Dependabot PRs and other outdated packages.
