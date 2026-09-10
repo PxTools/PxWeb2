@@ -256,7 +256,7 @@ function applyYAxisBreakMark(
 
   const centerY = (startPixel + endPixel) / 2;
   const axisColor = getAxisColor().color;
-  const lineStyle = { stroke: axisColor, lineWidth: 2 };
+  const lineStyle = { stroke: axisColor, lineWidth: 1 };
   const gridLineStyle = { stroke: '#e0e6f1', lineWidth: 1 };
 
   chart.setOption({
