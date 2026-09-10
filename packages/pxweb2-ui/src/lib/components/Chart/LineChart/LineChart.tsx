@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type * as echarts from 'echarts';
+import cl from 'clsx';
 
+import styles from './LineChart.module.scss';
 import { Button } from '../../Button/Button';
 import {
   buildDatasetOption,
@@ -371,6 +373,7 @@ export function LineChart({
               text={
                 isLegendExpanded ? translations.showLess : translations.showMore
               }
+              isExpanded={isLegendExpanded}
             />
           )}
         </>
@@ -383,12 +386,27 @@ export function LineChart({
 interface LegendToggleButtonProps {
   readonly onClick: () => void;
   readonly text: string;
+  readonly isExpanded: boolean;
 }
 
-function LegendToggleButton({ onClick, text }: LegendToggleButtonProps) {
+export function LegendToggleButton({
+  onClick,
+  text,
+  isExpanded,
+}: LegendToggleButtonProps) {
   return (
-    <Button onClick={onClick} variant="tertiary" size="small">
-      {text}
-    </Button>
+    <>
+      <div className={styles.divider}></div>
+      <Button
+        onClick={onClick}
+        variant="secondary"
+        size="medium"
+        iconPosition="end"
+        icon={isExpanded ? 'ChevronUp' : 'ChevronDown'}
+        className={cl(styles.buttonWidth)}
+      >
+        {text}
+      </Button>
+    </>
   );
 }
