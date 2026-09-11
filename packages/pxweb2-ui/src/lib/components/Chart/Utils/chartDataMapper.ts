@@ -163,11 +163,13 @@ export function mapPxTableToChartDataset(pxtable: PxTable): EChartsDataset {
   }));
   const dimensions = ['name', ...series.map((seriesItem) => seriesItem.key)];
 
+  const formattedValues: Record<string, string | null>[] = [];
   const source = rowCombinations.map((rowCombination) => {
     const rowMap = toCodeMap(rowCombination.items);
     const row: Record<string, number | string | null> = {
       name: getLabel(rowCombination.items, 'Value'),
     };
+    const formattedRow: Record<string, string | null> = {};
 
     seriesCombinations.forEach((seriesCombination, seriesIndex) => {
       const seriesKey = series[seriesIndex].key;
@@ -182,14 +184,17 @@ export function mapPxTableToChartDataset(pxtable: PxTable): EChartsDataset {
 
       if (dimensions.some((dimension) => !dimension)) {
         row[seriesKey] = null;
+        formattedRow[seriesKey] = null;
         return;
       }
 
       const dataCell = getPxTableData<DataCell>(pxtable.data.cube, dimensions);
 
       row[seriesKey] = dataCell?.value ?? null;
+      formattedRow[seriesKey] = dataCell?.formattedValue ?? null;
     });
 
+    formattedValues.push(formattedRow);
     return row;
   });
 
@@ -199,6 +204,7 @@ export function mapPxTableToChartDataset(pxtable: PxTable): EChartsDataset {
     unit,
     dimensions,
     source,
+    formattedValues,
     series,
   };
 }
