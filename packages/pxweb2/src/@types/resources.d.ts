@@ -208,10 +208,10 @@ export default interface Resources {
           };
           customize: {
             auto_pivot: {
-              aria_label: 'Improve table layout';
-              description: 'Organises rows and columns automatically for a clearer table layout';
+              aria_label: 'Organize table automatically';
+              description: 'Automatically arranges rows and columns for a clearer table';
               screen_reader_announcement: 'Table layout improved and organised after {{first_variables}} and {{last_variable}}';
-              title: 'Improve table layout';
+              title: 'Organize table automatically';
             };
             change_order: {
               description: 'Description text...';
@@ -223,9 +223,19 @@ export default interface Resources {
               screen_reader_announcement: 'Table rotated after {{first_variables}} and {{last_variable}}';
               title: 'Rotate table';
             };
-            rearrange: {
-              description: 'Description text...';
-              title: 'Rearrange table';
+            manual_pivoting: {
+              description: 'Sort rows and columns yourself to choose what is displayed where in the table';
+              title: 'Organise table manually';
+              manual_pivoting_modal: {
+                label: 'Organise table manually';
+                header: 'Rearrange table manually';
+                info_text: 'Choose what is displayed where in the table by moving items between rows and columns and rearranging them';
+                stub_title: 'Stub';
+                header_title: 'Header';
+                cancel_button: 'Cancel';
+                confirm_button: 'Save';
+                emty_list: 'Drag or move items here';
+              };
             };
             title: 'Customise';
           };

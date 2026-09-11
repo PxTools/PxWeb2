@@ -193,7 +193,7 @@
         "customize": {
           "title": "Anpassa",
           "auto_pivot": {
-            "title": "Ordna tabellen",
+            "title": "Ordna tabellen automatiskt",
             "aria_label": "Ordna tabellen",
             "description": "Visa tabellen med automatiskt ordnade rader och kolumner",
             "screen_reader_announcement": "Tabell ordnad efter {{first_variables}} och {{last_variable}}"
@@ -204,9 +204,19 @@
             "description": "",
             "screen_reader_announcement": "Tabell roterat efter {{first_variables}} och {{last_variable}}"
           },
-          "rearrange": {
-            "title": "Anpassa tabell",
-            "description": "Beskrivande text..."
+          "manual_pivoting": {
+            "description": "Sortera rader och kolumner själv för att välja vad som ska visas var i tabellen",
+            "title": "Omorganisera tabellen själv",
+            "manual_pivoting_modal": {
+              "label": "Anpassa tabell",
+              "header": "Anpassa tabell manuellt",
+              "info_text": "Välj vad som ska visas var i tabellen genom att flytta objekt mellan rader och kolumner och ändra ordningen",
+              "stub_title": "Rader",
+              "header_title": "Kolumner",
+              "cancel_button": "Avbryt",
+              "confirm_button": "Spara",
+              "emty_list": "Dra eller flytta innehåll hit"
+            }
           },
           "change_order": {
             "title": "Ändra ordning",

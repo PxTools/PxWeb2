@@ -193,9 +193,9 @@
         "customize": {
           "title": "Customise",
           "auto_pivot": {
-            "title": "Improve table layout",
-            "aria_label": "Improve table layout",
-            "description": "Organises rows and columns automatically for a clearer table layout",
+            "title": "Organize table automatically",
+            "aria_label": "Organize table automatically",
+            "description": "Automatically arranges rows and columns for a clearer table",
             "screen_reader_announcement": "Table layout improved and organised after {{first_variables}} and {{last_variable}}"
           },
           "pivot": {
@@ -204,10 +204,20 @@
             "description": "",
             "screen_reader_announcement": "Table rotated after {{first_variables}} and {{last_variable}}"
           },
-          "rearrange": {
-            "title": "Rearrange table",
-            "description": "Description text..."
-          },
+          "manual_pivoting": {
+            "description": "Manually arrange rows and columns to choose what is displayed where in the table",
+            "title": "Organise table manually",
+            "manual_pivoting_modal": {
+              "label": "Organise table manually",
+              "header": "Rearrange table on your own",
+              "info_text": "Choose what is displayed where in the table by moving items between rows and columns and rearranging them.",
+              "stub_title": "Rows",
+              "header_title": "Columns",
+              "cancel_button": "Cancel",
+              "confirm_button": "Save",
+              "emty_list": "Drag or move items here"
+            }
+            },
           "change_order": {
             "title": "Change order",
             "description": "Description text..."
