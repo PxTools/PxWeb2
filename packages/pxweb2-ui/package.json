@@ -28,7 +28,7 @@
     "@storybook/addon-a11y": "10.5.10",
     "@storybook/addon-docs": "10.5.10",
     "@storybook/react-vite": "10.5.10",
-    "@testing-library/react": "^16.3.2",
+    "@testing-library/react": "^16.3.3",
     "eslint-plugin-storybook": "10.5.10",
     "prop-types": "^15.8.1",
     "shiki": "^4.4.3",
