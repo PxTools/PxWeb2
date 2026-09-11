@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.12.0](https://github.com/PxTools/PxWeb2/compare/v2.11.0...v2.12.0) (2026-09-11)
+
+
+### :sparkles: Features
+
+* Show break in y-axis ([#1490](https://github.com/PxTools/PxWeb2/issues/1490)) ([6c46c20](https://github.com/PxTools/PxWeb2/commit/6c46c20d5ed8547c009ec255532c64ca884e762e))
+
 ## [2.11.0](https://github.com/PxTools/PxWeb2/compare/v2.10.0...v2.11.0) (2026-09-10)
 
 
