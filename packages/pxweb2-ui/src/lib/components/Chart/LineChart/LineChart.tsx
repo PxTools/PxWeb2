@@ -14,7 +14,6 @@ import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
 import {
   getAdaptiveYAxisMax,
   getAdaptiveYAxisInterval,
-  getAdaptiveYAxisMin,
   getChartCssVariables,
   getYAxisBreak,
   checkMultipleUnits,
@@ -167,7 +166,6 @@ export function LineChart({
       yAxis: {
         name: dataset.unit,
         scale: false,
-        //min: yAxisBreak ? 0 : getAdaptiveYAxisMin,
         min: 0,
         max: getAdaptiveYAxisMax,
         interval: yAxisInterval,
