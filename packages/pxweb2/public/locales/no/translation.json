@@ -194,8 +194,8 @@
           "title": "Tilpass",
           "auto_pivot": {
             "title": "Organiser tabellen automatisk",
-            "aria_label": "Sorterer rader og kolonner automatiskt for en mer oversiktlig tabell",
-            "description": "Gjør tabellen mer oversiktlig ved å automatisk organisere rader og kolonner",
+            "aria_label": "Rydd opp i tabellen",
+            "description": "Sorterer rader og kolonner automatiskt for en mer oversiktlig tabell",
             "screen_reader_announcement": "Tabell ryddet opp og organisert etter {{first_variables}} og {{last_variable}}"
           },
           "pivot": {
