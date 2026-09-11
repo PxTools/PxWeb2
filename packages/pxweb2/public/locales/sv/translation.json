@@ -193,7 +193,7 @@
         "customize": {
           "title": "Anpassa",
           "auto_pivot": {
-            "title": "Ordna tabellen",
+            "title": "Ordna tabellen automatiskt",
             "aria_label": "Ordna tabellen",
             "description": "Visa tabellen med automatiskt ordnade rader och kolumner",
             "screen_reader_announcement": "Tabell ordnad efter {{first_variables}} och {{last_variable}}"
@@ -214,7 +214,8 @@
               "stub_title": "Rader",
               "header_title": "Kolumner",
               "cancel_button": "Avbryt",
-              "confirm_button": "Spara"
+              "confirm_button": "Spara",
+              "emty_list": "Dra eller flytta innehåll hit"
             }
           },
           "change_order": {

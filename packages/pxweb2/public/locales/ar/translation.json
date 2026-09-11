@@ -216,7 +216,8 @@
               "stub_title": "الصفوف",
               "header_title": "الأعمدة",
               "cancel_button": "يلغي",
-              "confirm_button": "يحفظ"
+              "confirm_button": "يحفظ",
+              "emty_list": "اسقط المتغير هنا"
             }
             },
           "change_order": {

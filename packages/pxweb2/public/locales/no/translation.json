@@ -209,12 +209,13 @@
             "title": "Omorganiser tabellen selv",
             "manual_pivoting_modal": {
               "label": "Omorganiser tabell",
-              "header": "Omorganiser tabell selv",
-              "info_text": "Velg hva som vises hvor i tabellen ved å flytte elementer mellom rader og kolonner og endre rekkefølgen",
+              "header": "Omorganiser tabellen selv",
+              "info_text": "Velg hva som vises hvor i tabellen ved å flytte elementer mellom rader og kolonner og endre rekkefølgen.",
               "stub_title": "Rader",
               "header_title": "Kolonner",
               "cancel_button": "Avbryt",
-              "confirm_button": "Bekreft"
+              "confirm_button": "Bekreft",
+              "emty_list": "Dra eller flytt innhold her"
             }
             },
           "change_order": {
