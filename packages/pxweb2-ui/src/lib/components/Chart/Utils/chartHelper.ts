@@ -93,17 +93,17 @@ function getAdaptiveSnapUnit(min: number, max: number): number {
   return getNiceNumber(span / 3);
 }
 
+const Y_AXIS_BREAK_GAP = '13%';
+
 export function getAdaptiveYAxisMin(value: {
   min: number;
   max: number;
 }): number {
   const min = Number(value.min);
   const max = Number(value.max);
-
   const span = Math.max(max - min, 1);
   const pad = span * 0.03;
   const snap = getAdaptiveSnapUnit(min, max);
-
   const paddedMin = min - pad;
   const roundedMin = Math.floor(paddedMin / snap) * snap;
 
@@ -111,7 +111,6 @@ export function getAdaptiveYAxisMin(value: {
   if (min >= 0) {
     return Math.max(0, roundedMin);
   }
-
   return roundedMin;
 }
 
@@ -121,13 +120,47 @@ export function getAdaptiveYAxisMax(value: {
 }): number {
   const min = Number(value.min);
   const max = Number(value.max);
-
   const span = Math.max(max - min, 1);
   const pad = span * 0.03;
   const snap = getAdaptiveSnapUnit(min, max);
-
   const paddedMax = max + pad;
   return Math.ceil(paddedMax / snap) * snap;
+}
+
+export function getAdaptiveYAxisInterval(value: {
+  min: number;
+  max: number;
+}): number {
+  const min = Number(value.min);
+  const max = Number(value.max);
+
+  return getAdaptiveSnapUnit(min, max);
+}
+
+export function getYAxisBreak(value: {
+  min: number;
+  max: number;
+}): { start: number; end: number; gap: string } | undefined {
+  const lowestValue = Number(value.min);
+  const highestValue = Number(value.max);
+  if (!Number.isFinite(lowestValue) || lowestValue <= 0) {
+    return undefined;
+  }
+
+  const adaptiveMin = getAdaptiveYAxisMin({
+    min: lowestValue,
+    max: highestValue,
+  });
+
+  if (adaptiveMin <= 0) {
+    return undefined;
+  }
+
+  return {
+    start: 0,
+    end: adaptiveMin,
+    gap: Y_AXIS_BREAK_GAP,
+  };
 }
 
 // Check if the contents variable has multiple units selected.

@@ -290,6 +290,48 @@ describe('useEChartOption', () => {
     });
   });
 
+  it('draws a gridline at the end of a y-axis break', () => {
+    const chartMock = {
+      ...createChartMock(),
+      getModel: vi.fn(() => ({
+        getComponent: vi.fn(() => ({
+          coordinateSystem: {
+            getRect: vi.fn(() => ({ x: 40, y: 20, width: 240, height: 180 })),
+          },
+        })),
+      })),
+      convertToPixel: vi.fn((_finder, value: number) =>
+        value === 0 ? 210 : 160,
+      ),
+    } as unknown as EChartsType;
+    vi.mocked(echarts.init).mockReturnValue(chartMock);
+
+    const option: EChartsOption = {
+      yAxis: {
+        breaks: [{ start: 0, end: 100 }],
+      },
+    };
+
+    render(<HookHost option={option} />);
+
+    expect(chartMock.setOption).toHaveBeenLastCalledWith({
+      graphic: [
+        {
+          type: 'line',
+          shape: { x1: 40, y1: 160, x2: 280, y2: 160 },
+          style: { stroke: '#e0e6f1', lineWidth: 1 },
+          silent: true,
+          z: 1,
+        },
+        expect.objectContaining({
+          type: 'group',
+          left: 34,
+          top: 177,
+        }),
+      ],
+    });
+  });
+
   it('disposes chart and clears chartRef on unmount', () => {
     const chartMock = createChartMock();
     vi.mocked(echarts.init).mockReturnValue(chartMock);

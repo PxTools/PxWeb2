@@ -9,7 +9,12 @@ import {
   buildDatasetOption,
   buildSeriesOption,
 } from '../Utils/chartOptionBuilder';
-import { getChartCssVariables, checkMultipleUnits } from '../Utils/chartHelper';
+import {
+  getChartCssVariables,
+  getAdaptiveYAxisInterval,
+  checkMultipleUnits,
+  getYAxisBreak,
+} from '../Utils/chartHelper';
 import * as Icons from '../../Icon/Icons';
 import type { EChartsDataset } from '../Utils/chartTypes';
 import type { PxTable } from '../../../shared-types/pxTable';
@@ -38,6 +43,8 @@ vi.mock('../Utils/chartHelper', () => ({
   getChartCssVariables: vi.fn(),
   getAdaptiveYAxisMin: vi.fn(),
   getAdaptiveYAxisMax: vi.fn(),
+  getAdaptiveYAxisInterval: vi.fn(),
+  getYAxisBreak: vi.fn(),
   checkMultipleUnits: vi.fn(),
 }));
 
@@ -104,6 +111,12 @@ describe('LineChart', () => {
       axisColor: undefined,
       fontColor: undefined,
     });
+    vi.mocked(getYAxisBreak).mockReturnValue({
+      start: 0,
+      end: 9.7,
+      gap: '13%',
+    });
+    vi.mocked(getAdaptiveYAxisInterval).mockReturnValue(5);
     vi.mocked(useEChartOption).mockReturnValue({
       divRef: { current: null },
       chartRef: { current: null },
@@ -125,6 +138,8 @@ describe('LineChart', () => {
     expect(buildDatasetOption).toHaveBeenCalledWith(mockDataset);
     expect(buildSeriesOption).toHaveBeenCalledWith(mockDataset, 'line', colors);
     expect(getChartCssVariables).not.toHaveBeenCalled();
+    expect(getYAxisBreak).toHaveBeenCalledWith({ min: 10, max: 12 });
+    expect(getAdaptiveYAxisInterval).toHaveBeenCalledWith({ min: 10, max: 12 });
 
     const option = vi.mocked(useEChartOption).mock.calls[0][0];
 
@@ -135,6 +150,11 @@ describe('LineChart', () => {
 
     expect(option.yAxis).toMatchObject({
       name: 'persons',
+      min: 0,
+      interval: 5,
+      breaks: [{ start: 0, end: 9.7, gap: '13%' }],
+      breakArea: { show: false },
+      axisLine: { breakLine: false },
     });
     expect(option.grid).toEqual({
       top: 36,

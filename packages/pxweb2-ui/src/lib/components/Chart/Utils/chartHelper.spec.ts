@@ -3,8 +3,10 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   checkMultipleUnits,
   getAdaptiveYAxisMax,
+  getAdaptiveYAxisInterval,
   getAdaptiveYAxisMin,
   getChartCssVariables,
+  getYAxisBreak,
 } from './chartHelper';
 import type { PxTable } from '../../../shared-types/pxTable';
 import type { Variable } from '../../../shared-types/variable';
@@ -138,6 +140,39 @@ describe('getAdaptiveYAxisMax', () => {
 
   it('works when min and max are equal', () => {
     expect(getAdaptiveYAxisMax({ min: 5, max: 5 })).toBe(5.5);
+  });
+});
+
+describe('getAdaptiveYAxisInterval', () => {
+  it('uses the same snap unit that adaptive min and max use', () => {
+    expect(getAdaptiveYAxisInterval({ min: 100, max: 200 })).toBe(50);
+  });
+});
+
+describe('getYAxisBreak', () => {
+  it('creates a break with a small fixed visual gap up to the adaptive y-axis minimum', () => {
+    expect(getYAxisBreak({ min: 100, max: 200 })).toEqual({
+      start: 0,
+      end: 50,
+      gap: '13%',
+    });
+  });
+
+  it('keeps a visible gap for narrow positive ranges', () => {
+    expect(getYAxisBreak({ min: 123.85, max: 125.56 })).toEqual({
+      start: 0,
+      end: 123,
+      gap: '13%',
+    });
+  });
+
+  it('does not create a break when the adaptive y-axis minimum is already zero', () => {
+    expect(getYAxisBreak({ min: 100, max: 900 })).toBeUndefined();
+  });
+
+  it('does not create a break when zero or negative values are present', () => {
+    expect(getYAxisBreak({ min: 0, max: 100 })).toBeUndefined();
+    expect(getYAxisBreak({ min: -10, max: 100 })).toBeUndefined();
   });
 });
 
