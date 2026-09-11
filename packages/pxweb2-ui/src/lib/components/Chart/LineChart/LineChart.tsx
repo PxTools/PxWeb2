@@ -156,7 +156,7 @@ export function LineChart({
         right: 0,
         bottom: 0,
         textStyle: {
-          overflow: 'breakAll',
+          overflow: 'break',
           lineHeight: 20,
         },
       },

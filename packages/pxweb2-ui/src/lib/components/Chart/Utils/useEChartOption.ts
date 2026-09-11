@@ -174,7 +174,7 @@ function applyResponsiveLegend(
               width: chartWidth,
               textStyle: {
                 ...legendItem.textStyle,
-                width: Math.max(80, chartWidth - 32),
+                width: Math.max(80, chartWidth - 40),
               },
             }
           : legendItem,
@@ -193,7 +193,7 @@ function applyResponsiveLegend(
       width: chartWidth,
       textStyle: {
         ...legend.textStyle,
-        width: Math.max(80, chartWidth - 32),
+        width: Math.max(80, chartWidth - 40),
       },
     },
   };
