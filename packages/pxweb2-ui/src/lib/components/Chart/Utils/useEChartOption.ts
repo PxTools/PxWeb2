@@ -157,6 +157,48 @@ function applyStyling(option: echarts.EChartsOption): echarts.EChartsOption {
   };
 }
 
+function applyResponsiveLegend(
+  chart: echarts.EChartsType,
+  option: echarts.EChartsOption,
+): echarts.EChartsOption {
+  const chartWidth = chart.getWidth();
+  const legend = option.legend;
+
+  if (Array.isArray(legend)) {
+    return {
+      ...option,
+      legend: legend.map((legendItem) =>
+        legendItem.orient === 'vertical'
+          ? {
+              ...legendItem,
+              width: chartWidth,
+              textStyle: {
+                ...legendItem.textStyle,
+                width: Math.max(80, chartWidth - 40),
+              },
+            }
+          : legendItem,
+      ),
+    };
+  }
+
+  if (legend?.orient !== 'vertical') {
+    return option;
+  }
+
+  return {
+    ...option,
+    legend: {
+      ...legend,
+      width: chartWidth,
+      textStyle: {
+        ...legend.textStyle,
+        width: Math.max(80, chartWidth - 40),
+      },
+    },
+  };
+}
+
 // Keeps a constant distance between the x axis labels and the legend, no matter how many legend rows are rendered.
 function applyLegendGap(
   chart: echarts.EChartsType,
@@ -314,7 +356,10 @@ export function useEChartOption(
     chartRef.current = chart;
 
     const applyOption = () => {
-      applyOptionWithWrappedTitle(chart, applyStyling(option));
+      applyOptionWithWrappedTitle(
+        chart,
+        applyResponsiveLegend(chart, applyStyling(option)),
+      );
 
       if (typeof legendGap === 'number') {
         applyLegendGap(chart, option, legendGap);
