@@ -17,7 +17,7 @@ function ParagraphRenderer({ children }: Readonly<SimpleChildrenProps>) {
 
 function AnchorRenderer({ href = '', children }: Readonly<AnchorProps>) {
   return (
-    <Link href={href} target="_blank" rel="noopener noreferrer" inline>
+    <Link href={href} target="_self" rel="noopener noreferrer" inline>
       {children}
     </Link>
   );
