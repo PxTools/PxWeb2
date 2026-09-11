@@ -137,14 +137,12 @@ export function getAdaptiveYAxisInterval(value: {
   return getAdaptiveSnapUnit(min, max);
 }
 
-export function getYAxisBreak(
-  values: Array<number | null>,
-): { start: number; end: number; gap: string } | undefined {
-  const finiteValues = values.filter(
-    (value): value is number => value !== null && Number.isFinite(value),
-  );
-  const lowestValue = Math.min(...finiteValues);
-  const highestValue = Math.max(...finiteValues);
+export function getYAxisBreak(value: {
+  min: number;
+  max: number;
+}): { start: number; end: number; gap: string } | undefined {
+  const lowestValue = Number(value.min);
+  const highestValue = Number(value.max);
   if (!Number.isFinite(lowestValue) || lowestValue <= 0) {
     return undefined;
   }

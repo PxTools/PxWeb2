@@ -126,8 +126,12 @@ export function LineChart({
     };
   }, [yAxisValues]);
   const yAxisBreak = useMemo(() => {
-    return getYAxisBreak(yAxisValues);
-  }, [yAxisValues]);
+    if (!yAxisDataExtent) {
+      return undefined;
+    }
+
+    return getYAxisBreak(yAxisDataExtent);
+  }, [yAxisDataExtent]);
   const yAxisInterval = useMemo(() => {
     if (!yAxisBreak || !yAxisDataExtent) {
       return undefined;
