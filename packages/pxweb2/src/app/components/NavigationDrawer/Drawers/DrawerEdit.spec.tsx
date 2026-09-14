@@ -36,11 +36,11 @@ function mockTranslate(
     : key ===
         'presentation_page.side_menu.edit.customize.pivot.screen_reader_announcement'
       ? `Table rotated after ${options?.first_variables} and ${options?.last_variable}`
-    : key === 'presentation_page.common.table_title_by'
-      ? 'by'
-      : key === 'presentation_page.common.table_title_and'
-        ? 'and'
-        : key;
+      : key === 'presentation_page.common.table_title_by'
+        ? 'by'
+        : key === 'presentation_page.common.table_title_and'
+          ? 'and'
+          : key;
 }
 
 const mockTableData = {
