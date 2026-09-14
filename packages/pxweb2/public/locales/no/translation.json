@@ -196,7 +196,7 @@
             "title": "Organiser tabellen automatisk",
             "aria_label": "Rydd opp i tabellen",
             "description": "Sorterer rader og kolonner automatiskt for en mer oversiktlig tabell",
-            "screen_reader_announcement": "Tabell ryddet opp og organisert etter {{first_variables}} og {{last_variable}}"
+            "screen_reader_announcement": "Tabell ryddet opp og organisert etter {{table_heading}}"
           },
           "pivot": {
             "title": "Roter tabellen",

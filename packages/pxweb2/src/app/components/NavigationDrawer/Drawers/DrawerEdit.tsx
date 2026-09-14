@@ -93,22 +93,34 @@ function PivotButton({
     if (!announceOnNextChange) {
       return;
     }
-    const { firstTitlePart, lastTitlePart } = buildTableTitle();
-    const message = t(screenReaderAnnouncementKey, '', {
-      first_variables: firstTitlePart,
-      last_variable: lastTitlePart,
-    });
+    let message: string;
+    if (pivotType === PivotType.Auto) {
+      const tableHeading =
+        document.getElementById('px-table-title')?.textContent?.trim() ?? '';
+      message = t(screenReaderAnnouncementKey, '', {
+        table_heading: tableHeading,
+      });
+    } else {
+      const { firstTitlePart, lastTitlePart } = buildTableTitle();
+      message = t(screenReaderAnnouncementKey, '', {
+        first_variables: firstTitlePart,
+        last_variable: lastTitlePart,
+      });
+    }
 
     // Clear first to ensure assistive tech re-announces even if message repeats
     setStatusMessage('');
-    const timer = setTimeout(() => setStatusMessage(message), 0); // Force state update on different ticks
-    setAnnounceOnNextChange(false);
+    const timer = setTimeout(() => {
+      setStatusMessage(message);
+      setAnnounceOnNextChange(false);
+    }, 0); // Force state update on different ticks
 
     return () => clearTimeout(timer);
   }, [
     stub,
     heading,
     announceOnNextChange,
+    pivotType,
     buildTableTitle,
     t,
     screenReaderAnnouncementKey,

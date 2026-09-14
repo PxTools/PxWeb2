@@ -210,7 +210,7 @@ export default interface Resources {
             auto_pivot: {
               aria_label: 'Organize table automatically';
               description: 'Automatically arranges rows and columns for a clearer table';
-              screen_reader_announcement: 'Table layout improved and organised after {{first_variables}} and {{last_variable}}';
+              screen_reader_announcement: 'Table organised after {{table_heading}}';
               title: 'Organize table automatically';
             };
             change_order: {

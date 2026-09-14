@@ -196,7 +196,7 @@
             "title": "Ordna tabellen automatiskt",
             "aria_label": "Ordna tabellen",
             "description": "Visa tabellen med automatiskt ordnade rader och kolumner",
-            "screen_reader_announcement": "Tabell ordnad efter {{first_variables}} och {{last_variable}}"
+            "screen_reader_announcement": "Tabell ordnad efter {{table_heading}}"
           },
           "pivot": {
             "title": "Rotera tabellen",

@@ -17,10 +17,41 @@ interface MockActionItemProps {
 
 const mockPivot = vi.fn();
 
+function mockBuildTableTitle() {
+  return {
+    contentText: 'Population',
+    firstTitlePart: 'First Part',
+    lastTitlePart: 'Last Part',
+  };
+}
+
+function mockTranslate(
+  key: string,
+  _defaultValue?: string,
+  options?: Record<string, string>,
+) {
+  return key ===
+    'presentation_page.side_menu.edit.customize.auto_pivot.screen_reader_announcement'
+    ? `Table organised after ${options?.table_heading}`
+    : key ===
+        'presentation_page.side_menu.edit.customize.pivot.screen_reader_announcement'
+      ? `Table rotated after ${options?.first_variables} and ${options?.last_variable}`
+    : key === 'presentation_page.common.table_title_by'
+      ? 'by'
+      : key === 'presentation_page.common.table_title_and'
+        ? 'and'
+        : key;
+}
+
+const mockTableData = {
+  stub: [{ name: 'variable1' }],
+  heading: [{ name: 'variable2' }],
+};
+
 // Mock dependencies
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
-    t: (key: string) => key,
+    t: mockTranslate,
   }),
 }));
 
@@ -28,15 +59,8 @@ vi.mock('../../../context/useTableData', () => ({
   default: () => ({
     pivot: mockPivot,
     setIsFadingTable: vi.fn(),
-    data: {
-      // Minimal shape; DrawerEdit only passes these through
-      stub: [{ name: 'variable1' }],
-      heading: [{ name: 'variable2' }],
-    },
-    buildTableTitle: () => ({
-      firstTitlePart: 'First Part',
-      lastTitlePart: 'Last Part',
-    }),
+    data: mockTableData,
+    buildTableTitle: mockBuildTableTitle,
   }),
 }));
 
@@ -124,13 +148,21 @@ describe('DrawerEdit', () => {
       () => {
         expect(mockPivot).toHaveBeenCalledWith(PivotType.Clockwise);
         expect(mockPivot).toHaveBeenCalledTimes(1);
+        expect(screen.getAllByRole('status')[1]).toHaveTextContent(
+          'Table rotated after First Part and Last Part',
+        );
       },
       { timeout: 2000 },
     );
   });
 
   it('calls pivot with PivotType.Auto on its button click', async () => {
-    render(<DrawerEdit />);
+    render(
+      <>
+        <h1 id="px-table-title">Population by First Part and Last Part</h1>
+        <DrawerEdit />
+      </>,
+    );
     const user = userEvent.setup();
     const autoButton = screen.getByText(
       'presentation_page.side_menu.edit.customize.auto_pivot.title',
@@ -140,6 +172,9 @@ describe('DrawerEdit', () => {
       () => {
         expect(mockPivot).toHaveBeenCalledWith(PivotType.Auto);
         expect(mockPivot).toHaveBeenCalledTimes(1);
+        expect(screen.getAllByRole('status')[0]).toHaveTextContent(
+          'Table organised after Population by First Part and Last Part',
+        );
       },
       { timeout: 2000 },
     );
