@@ -310,10 +310,10 @@ export function LineChart({
     isMediumOrSmallerScreen,
   ]);
 
-//  const { divRef } = useEChartOption(option, 'svg', X_AXIS_LABEL_TO_LEGEND_GAP);
   const legendHeight =
     visibleLegendData.length * LEGEND_ITEM_HEIGHT + X_AXIS_LABEL_TO_LEGEND_GAP;
   const height = CHART_PLOT_HEIGHT_REM + legendHeight / PIXELS_PER_REM;
+
   const { divRef, chartRef } = useEChartOption(
     option,
     'svg',
@@ -399,11 +399,6 @@ export function LineChart({
       zrender?.off('click', handleChartClick);
     };
   }, [chartRef, option, dataset, isMediumOrSmallerScreen]);
-
-  //const height = 36 + dataset.series.length * 0.8; // increase chart height based on number of series to prevent legend overlap
-  //   const legendHeight =
-  //   visibleLegendData.length * LEGEND_ITEM_HEIGHT + X_AXIS_LABEL_TO_LEGEND_GAP;
-  // const height = CHART_PLOT_HEIGHT_REM + legendHeight / PIXELS_PER_REM;
 
   return (
     <>
