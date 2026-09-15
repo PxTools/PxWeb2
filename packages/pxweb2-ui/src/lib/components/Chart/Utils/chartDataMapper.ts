@@ -3,6 +3,7 @@ import type { PxTable } from '../../../shared-types/pxTable';
 import type { DataCell } from '../../../shared-types/pxTableData';
 
 import type {
+  ChartFormattedValue,
   EChartsDataset,
   PopulationPyramidConfig,
   PopulationPyramidMappingResult,
@@ -163,13 +164,13 @@ export function mapPxTableToChartDataset(pxtable: PxTable): EChartsDataset {
   }));
   const dimensions = ['name', ...series.map((seriesItem) => seriesItem.key)];
 
-  const formattedValues: Record<string, string | null>[] = [];
+  const formattedValues: ChartFormattedValue[] = [];
   const source = rowCombinations.map((rowCombination) => {
     const rowMap = toCodeMap(rowCombination.items);
     const row: Record<string, number | string | null> = {
       name: getLabel(rowCombination.items, 'Value'),
     };
-    const formattedRow: Record<string, string | null> = {};
+    const formattedRow: ChartFormattedValue = {};
 
     seriesCombinations.forEach((seriesCombination, seriesIndex) => {
       const seriesKey = series[seriesIndex].key;
