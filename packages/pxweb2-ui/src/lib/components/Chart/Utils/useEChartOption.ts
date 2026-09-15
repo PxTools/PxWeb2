@@ -51,40 +51,40 @@ function applyOptionWithWrappedTitle(
   });
 }
 
-function hideDataSeries(
-  chart: echarts.EChartsType,
-  series: echarts.EChartsOption['series'],
-) {
-  const seriesItems = Array.isArray(series) ? series : series ? [series] : [];
+// function hideDataSeries(
+//   chart: echarts.EChartsType,
+//   series: echarts.EChartsOption['series'],
+// ) {
+//   const seriesItems = Array.isArray(series) ? series : series ? [series] : [];
 
-  if (seriesItems.length === 0) {
-    return;
-  }
+//   if (seriesItems.length === 0) {
+//     return;
+//   }
 
-  chart.setOption(
-    {
-      animationDurationUpdate: 0,
-      series: seriesItems.map(() => ({
-        lineStyle: { opacity: 0 },
-        itemStyle: { opacity: 0 },
-        areaStyle: { opacity: 0 },
-        symbol: 'none',
-      })),
-    } as echarts.EChartsOption,
-    { lazyUpdate: false },
-  );
-}
+//   chart.setOption(
+//     {
+//       animationDurationUpdate: 0,
+//       series: seriesItems.map(() => ({
+//         lineStyle: { opacity: 0 },
+//         itemStyle: { opacity: 0 },
+//         areaStyle: { opacity: 0 },
+//         symbol: 'none',
+//       })),
+//     } as echarts.EChartsOption,
+//     { lazyUpdate: false },
+//   );
+// }
 
-function restoreDataSeries(
-  chart: echarts.EChartsType,
-  series: echarts.EChartsOption['series'],
-) {
-  if (!series) {
-    return;
-  }
+// function restoreDataSeries(
+//   chart: echarts.EChartsType,
+//   series: echarts.EChartsOption['series'],
+// ) {
+//   if (!series) {
+//     return;
+//   }
 
-  chart.setOption({ series }, { lazyUpdate: false, replaceMerge: ['series'] });
-}
+//   chart.setOption({ series }, { lazyUpdate: false, replaceMerge: ['series'] });
+// }
 
 type LegendMeasurableChart = {
   getModel?: () => { getComponent?: (mainType: string) => unknown } | undefined;
@@ -416,12 +416,12 @@ export function useEChartOption(
 
     applyOption();
 
-    const series = option.series;
+    //const series = option.series;
     let previousWidth = chartContainer.clientWidth;
-    let restoreSeriesFrame: number | null = null;
+    // let restoreSeriesFrame: number | null = null;
 
     const handleResize = () => {
-      hideDataSeries(chart, series);
+      // hideDataSeries(chart, series);
       chart.resize({ animation: { duration: 0 } });
 
       const currentWidth = chartContainer.clientWidth;
@@ -430,14 +430,14 @@ export function useEChartOption(
         applyOption();
       }
 
-      if (restoreSeriesFrame !== null) {
-        cancelAnimationFrame(restoreSeriesFrame);
-      }
+      // if (restoreSeriesFrame !== null) {
+      //   cancelAnimationFrame(restoreSeriesFrame);
+      // }
 
-      restoreSeriesFrame = requestAnimationFrame(() => {
-        restoreDataSeries(chart, series);
-        restoreSeriesFrame = null;
-      });
+      // restoreSeriesFrame = requestAnimationFrame(() => {
+      //   restoreDataSeries(chart, series);
+      //   restoreSeriesFrame = null;
+      // });
     };
 
     const resizeObserver =
@@ -454,9 +454,9 @@ export function useEChartOption(
     return () => {
       resizeObserver?.disconnect();
       window.removeEventListener('resize', handleResize);
-      if (restoreSeriesFrame !== null) {
-        cancelAnimationFrame(restoreSeriesFrame);
-      }
+      // if (restoreSeriesFrame !== null) {
+      //   cancelAnimationFrame(restoreSeriesFrame);
+      // }
       chartRef.current = null;
       chart.dispose();
     };
