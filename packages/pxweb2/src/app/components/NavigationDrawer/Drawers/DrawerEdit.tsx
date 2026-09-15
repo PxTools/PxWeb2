@@ -97,8 +97,7 @@ function PivotButton({
     if (pivotType === PivotType.Auto) {
       const titleBy = t('presentation_page.common.table_title_by');
       const titleAnd = t('presentation_page.common.table_title_and');
-      const { contentText, firstTitlePart, lastTitlePart } =
-        buildTableTitle();
+      const { contentText, firstTitlePart, lastTitlePart } = buildTableTitle();
       const tableHeading = `${contentText} ${titleBy} ${
         firstTitlePart
           ? `${firstTitlePart} ${titleAnd} ${lastTitlePart}`
