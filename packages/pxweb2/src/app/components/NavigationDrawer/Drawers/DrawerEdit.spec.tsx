@@ -157,12 +157,7 @@ describe('DrawerEdit', () => {
   });
 
   it('calls pivot with PivotType.Auto on its button click', async () => {
-    render(
-      <>
-        <h1 id="px-table-title">Population by First Part and Last Part</h1>
-        <DrawerEdit />
-      </>,
-    );
+    render(<DrawerEdit />);
     const user = userEvent.setup();
     const autoButton = screen.getByText(
       'presentation_page.side_menu.edit.customize.auto_pivot.title',

@@ -95,8 +95,15 @@ function PivotButton({
     }
     let message: string;
     if (pivotType === PivotType.Auto) {
-      const tableHeading =
-        document.getElementById('px-table-title')?.textContent?.trim() ?? '';
+      const titleBy = t('presentation_page.common.table_title_by');
+      const titleAnd = t('presentation_page.common.table_title_and');
+      const { contentText, firstTitlePart, lastTitlePart } =
+        buildTableTitle();
+      const tableHeading = `${contentText} ${titleBy} ${
+        firstTitlePart
+          ? `${firstTitlePart} ${titleAnd} ${lastTitlePart}`
+          : lastTitlePart
+      }`;
       message = t(screenReaderAnnouncementKey, '', {
         table_heading: tableHeading,
       });
