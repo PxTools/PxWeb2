@@ -383,7 +383,7 @@ export function useEChartOption(
 
     const handleResize = () => {
       chart.resize();
-      applyOption();
+      //applyOption();
     };
 
     const resizeObserver =
