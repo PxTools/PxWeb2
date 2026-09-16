@@ -386,7 +386,7 @@ export function useEChartOption(
     const handleResize = () => {
       chart.resize();
 
-      // On mobile, resize can be triggered when scrolling vertically. 
+      // On mobile, resize can be triggered when scrolling vertically.
       // This makes the graph lines to jump around when applying the option.
       // To prevent this, we only apply the option if the width has actually changed.
       const currentWidth = chartContainer.clientWidth;
