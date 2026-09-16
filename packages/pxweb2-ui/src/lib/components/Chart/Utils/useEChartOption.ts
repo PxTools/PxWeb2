@@ -51,41 +51,6 @@ function applyOptionWithWrappedTitle(
   });
 }
 
-// function hideDataSeries(
-//   chart: echarts.EChartsType,
-//   series: echarts.EChartsOption['series'],
-// ) {
-//   const seriesItems = Array.isArray(series) ? series : series ? [series] : [];
-
-//   if (seriesItems.length === 0) {
-//     return;
-//   }
-
-//   chart.setOption(
-//     {
-//       animationDurationUpdate: 0,
-//       series: seriesItems.map(() => ({
-//         lineStyle: { opacity: 0 },
-//         itemStyle: { opacity: 0 },
-//         areaStyle: { opacity: 0 },
-//         symbol: 'none',
-//       })),
-//     } as echarts.EChartsOption,
-//     { lazyUpdate: false },
-//   );
-// }
-
-// function restoreDataSeries(
-//   chart: echarts.EChartsType,
-//   series: echarts.EChartsOption['series'],
-// ) {
-//   if (!series) {
-//     return;
-//   }
-
-//   chart.setOption({ series }, { lazyUpdate: false, replaceMerge: ['series'] });
-// }
-
 type LegendMeasurableChart = {
   getModel?: () => { getComponent?: (mainType: string) => unknown } | undefined;
   getViewOfComponentModel?: (
@@ -416,28 +381,19 @@ export function useEChartOption(
 
     applyOption();
 
-    //const series = option.series;
     let previousWidth = chartContainer.clientWidth;
-    // let restoreSeriesFrame: number | null = null;
 
     const handleResize = () => {
-      // hideDataSeries(chart, series);
-      chart.resize({ animation: { duration: 0 } });
+      chart.resize();
 
+      // On mobile, resize can be triggered when scrolling vertically. 
+      // This makes the graph lines to jump around when applying the option.
+      // To prevent this, we only apply the option if the width has actually changed.
       const currentWidth = chartContainer.clientWidth;
       if (currentWidth !== previousWidth) {
         previousWidth = currentWidth;
         applyOption();
       }
-
-      // if (restoreSeriesFrame !== null) {
-      //   cancelAnimationFrame(restoreSeriesFrame);
-      // }
-
-      // restoreSeriesFrame = requestAnimationFrame(() => {
-      //   restoreDataSeries(chart, series);
-      //   restoreSeriesFrame = null;
-      // });
     };
 
     const resizeObserver =
