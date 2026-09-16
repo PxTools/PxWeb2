@@ -248,9 +248,7 @@ describe('useEChartOption', () => {
       globalThis.dispatchEvent(new Event('resize'));
     });
 
-    expect(chartMock.resize).toHaveBeenCalledWith({
-      animation: { duration: 0 },
-    });
+    expect(chartMock.resize).toHaveBeenCalledWith();
     expect(chartMock.setOption).toHaveBeenCalledTimes(1);
   });
 
