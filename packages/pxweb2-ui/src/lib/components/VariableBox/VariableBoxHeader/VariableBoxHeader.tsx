@@ -73,11 +73,14 @@ export function VariableBoxHeader({
               {t(
                 'presentation_page.side_menu.selection.variablebox.header.tag_selected',
                 {
+                  // Keep missing translation keys visible instead of hiding them.
                   selected: t('number.simple_number_with_zero_decimal', {
                     value: totalChosenValues,
+                    defaultValue: 'number.simple_number_with_zero_decimal',
                   }),
                   total: t('number.simple_number_with_zero_decimal', {
                     value: totalValues,
+                    defaultValue: 'number.simple_number_with_zero_decimal',
                   }),
                 },
               )}
