@@ -48,7 +48,7 @@
     "eslint-plugin-storybook": "10.5.10",
     "jsdom": "^30.0.1",
     "style-dictionary": "^5.5.2",
-    "typescript": "^6.0.3",
+    "typescript": "^7.0.2",
     "unplugin-dts": "^1.1.0",
     "wrangler": "^4.129.0"
   },
