@@ -953,11 +953,6 @@ export function ManualPivot({
                       as="li"
                       data-variable-id={variable.id}
                       value={variable}
-                      className={`${classes.listItem}${
-                        isDraggedItem || keyboardDraggedItemId === variable.id
-                          ? ` ${classes.listItemDragging}`
-                          : ''
-                      }`}
                       style={{
                         position:
                           isDraggingRef.current &&
@@ -990,7 +985,12 @@ export function ManualPivot({
                         handleItemKeyDown(event, group, variable.id)
                       }
                     >
-                      <DataItem label={capitalizeLabel(variable.label)} />
+                      <DataItem
+                        label={capitalizeLabel(variable.label)}
+                        isDragging={
+                          isDraggedItem || keyboardDraggedItemId === variable.id
+                        }
+                      />
                     </Reorder.Item>
                   </Fragment>
                 );
