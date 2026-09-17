@@ -8,6 +8,20 @@ const mockPxTableMetadataSingle: PxTableMetadata = {
   id: '1',
   label: 'Mock Table',
   updated: new Date(),
+  availableLanguages: [],
+  source: '',
+  infofile: '',
+  decimals: 0,
+  officialStatistics: false,
+  aggregationAllowed: true,
+  contents: '',
+  descriptionDefault: false,
+  matrix: '',
+  subjectCode: '',
+  subjectArea: '',
+  contacts: [],
+  definitions: {},
+  notes: [],
   variables: [
     {
       id: '1',
@@ -34,6 +48,20 @@ const mockPxTableMetadataMultiple: PxTableMetadata = {
   id: '1',
   label: 'Mock Table',
   updated: new Date(),
+  availableLanguages: [],
+  source: '',
+  infofile: '',
+  decimals: 0,
+  officialStatistics: false,
+  aggregationAllowed: true,
+  contents: '',
+  descriptionDefault: false,
+  matrix: '',
+  subjectCode: '',
+  subjectArea: '',
+  contacts: [],
+  definitions: {},
+  notes: [],
   variables: [
     {
       id: '1',
@@ -75,6 +103,7 @@ describe('VariableList', () => {
       <VariableList
         pxTableMetadata={mockPxTableMetadataSingle}
         isLoadingMetadata={false}
+        languageDirection="ltr"
         hasLoadedDefaultSelection={false}
         selectedVBValues={[]}
         handleCodeListChange={() => {
@@ -104,6 +133,7 @@ describe('VariableList', () => {
       <VariableList
         pxTableMetadata={mockPxTableMetadataMultiple}
         isLoadingMetadata={false}
+        languageDirection="ltr"
         hasLoadedDefaultSelection={true}
         selectedVBValues={[]}
         handleCodeListChange={() => {
@@ -143,6 +173,7 @@ describe('VariableList', () => {
       <VariableList
         pxTableMetadata={mockPxTableMetadataSingle}
         isLoadingMetadata={false}
+        languageDirection="ltr"
         hasLoadedDefaultSelection={true}
         selectedVBValues={[]}
         handleCodeListChange={() => {
@@ -182,6 +213,7 @@ describe('VariableList', () => {
       <VariableList
         pxTableMetadata={mockPxTableMetadataMultiple}
         isLoadingMetadata={false}
+        languageDirection="ltr"
         hasLoadedDefaultSelection={true}
         selectedVBValues={[]}
         handleCodeListChange={() => {

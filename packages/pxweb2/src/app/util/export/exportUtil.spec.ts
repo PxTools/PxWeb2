@@ -64,7 +64,7 @@ describe('exportToFile', () => {
           set download(val: string) {
             _download = val;
           },
-          click: clickMock,
+          click: clickMock as () => void,
           style: {} as CSSStyleDeclaration,
           setAttribute: vi.fn(),
           remove: vi.fn(),

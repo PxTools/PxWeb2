@@ -8,6 +8,7 @@ describe('VariableBoxHeader', () => {
       <VariableBoxHeader
         label="test-1"
         mandatory={false}
+        varId="test-1"
         totalValues={1}
         totalChosenValues={0}
         isOpen={false}
