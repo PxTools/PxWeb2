@@ -78,8 +78,8 @@ describe('mapAndSortCodeLists', () => {
 
   it('should map codeLists to select options without sorting if no sorting is needed', () => {
     const codeLists: CodeList[] = [
-      { id: 'test_1', label: 'Test 1' },
-      { id: 'test_2', label: 'Test 2' },
+      { id: 'test_1', label: 'Test 1', values: [] },
+      { id: 'test_2', label: 'Test 2', values: [] },
     ];
     const expected: SelectOption[] = [
       { value: 'test_1', label: 'Test 1' },
@@ -92,8 +92,8 @@ describe('mapAndSortCodeLists', () => {
 
   it('should map and sort codeLists if sorting is needed', () => {
     const codeLists: CodeList[] = [
-      { id: 'agg_test', label: 'AGG Test' },
-      { id: 'vs_test', label: 'VS Test' },
+      { id: 'agg_test', label: 'AGG Test', values: [] },
+      { id: 'vs_test', label: 'VS Test', values: [] },
     ];
     const expected: SelectOption[] = [
       { value: 'vs_test', label: 'VS Test' },
