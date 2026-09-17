@@ -47,6 +47,7 @@ describe('selectionUtils', () => {
         variables: [variableMeta],
         id: 'test-table',
         language: 'en',
+        availableLanguages: [],
         label: 'Test Table',
         description: 'Test description',
         source: 'Test source',
@@ -62,6 +63,7 @@ describe('selectionUtils', () => {
         subjectArea: 'test-area',
         contacts: [],
         notes: [],
+        definitions: {},
       };
       const result = updateSelectedCodelistForVariable(
         invalidOption,
@@ -79,6 +81,7 @@ describe('selectionUtils', () => {
         variables: [variableMeta],
         id: 'test-table',
         language: 'en',
+        availableLanguages: [],
         label: 'Test Table',
         description: 'Test description',
         source: 'Test source',
@@ -94,6 +97,7 @@ describe('selectionUtils', () => {
         subjectArea: 'test-area',
         contacts: [],
         notes: [],
+        definitions: {},
       };
       const result = updateSelectedCodelistForVariable(
         selectOptionB,
@@ -122,6 +126,7 @@ describe('selectionUtils', () => {
         variables: [newMeta],
         id: 'test-table',
         language: 'en',
+        availableLanguages: [],
         label: 'Test Table',
         description: 'Test description',
         source: 'Test source',
@@ -137,6 +142,7 @@ describe('selectionUtils', () => {
         subjectArea: 'test-area',
         contacts: [],
         notes: [],
+        definitions: {},
       };
       const result = updateSelectedCodelistForVariable(
         selectOptionA,
@@ -167,6 +173,7 @@ describe('selectionUtils', () => {
         variables: [mandatoryVariable],
         id: 'test-table',
         language: 'en',
+        availableLanguages: [],
         label: 'Test Table',
         description: 'Test description',
         source: 'Test source',
@@ -182,6 +189,7 @@ describe('selectionUtils', () => {
         subjectArea: 'test-area',
         contacts: [],
         notes: [],
+        definitions: {},
       };
       const result = updateSelectedCodelistForVariable(
         selectOptionB,
@@ -207,6 +215,7 @@ describe('selectionUtils', () => {
         variables: [nonMandatoryVariable],
         id: 'test-table',
         language: 'en',
+        availableLanguages: [],
         label: 'Test Table',
         description: 'Test description',
         source: 'Test source',
@@ -222,6 +231,7 @@ describe('selectionUtils', () => {
         subjectArea: 'test-area',
         contacts: [],
         notes: [],
+        definitions: {},
       };
       const result = updateSelectedCodelistForVariable(
         selectOptionB,
@@ -256,6 +266,7 @@ describe('selectionUtils', () => {
         variables: [mandatoryVariable, mandatoryVariable2],
         id: 'test-table',
         language: 'en',
+        availableLanguages: [],
         label: 'Test Table',
         description: 'Test description',
         source: 'Test source',
@@ -271,6 +282,7 @@ describe('selectionUtils', () => {
         subjectArea: 'test-area',
         contacts: [],
         notes: [],
+        definitions: {},
       };
       const prevValuesWithData = [
         { id: varId, selectedCodeList: 'A', values: ['existing'] },

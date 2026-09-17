@@ -241,6 +241,8 @@ describe('TableInformation', () => {
       isMobile: true,
       skipToMainFocused: false,
       setSkipToMainFocused: vi.fn(),
+      languageFilter: [],
+      setLanguageFilter: vi.fn(),
       title: '',
       setTitle: vi.fn(),
     };
@@ -275,6 +277,8 @@ describe('TableInformation', () => {
       isMobile: false,
       skipToMainFocused: false,
       setSkipToMainFocused: vi.fn(),
+      languageFilter: [],
+      setLanguageFilter: vi.fn(),
       title: '',
       setTitle: vi.fn(),
     };

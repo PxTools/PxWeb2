@@ -67,10 +67,9 @@ describe('AccessibilityProvider', () => {
       </AccessibilityProvider>,
     );
     expect(contextValue).toBeTruthy();
-    if (contextValue && typeof contextValue === 'object') {
-      expect(typeof contextValue.addModal).toBe('function');
-      expect(typeof contextValue.closeModal).toBe('function');
-    }
+    const currentContext = contextValue as unknown as AccessibilityContextType;
+    expect(typeof currentContext.addModal).toBe('function');
+    expect(typeof currentContext.closeModal).toBe('function');
   });
 
   it('addModal and closeModal calls closeFunction', async () => {
