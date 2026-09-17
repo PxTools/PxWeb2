@@ -907,7 +907,9 @@ export function ManualPivot({
             {items.length === 0 ? (
               <li aria-hidden="true">
                 <EmtyList
-                  label={t('presentation_page.side_menu.edit.customize.manual_pivoting.manual_pivoting_modal.emty_list', )}
+                  label={t(
+                    'presentation_page.side_menu.edit.customize.manual_pivoting.manual_pivoting_modal.emty_list',
+                  )}
                   hideLabel={isHoveringEmptyGroup}
                   active={isHoveringEmptyGroup}
                 />
