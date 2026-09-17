@@ -215,7 +215,13 @@
               "header_title": "Kolonner",
               "cancel_button": "Avbryt",
               "confirm_button": "Bekreft",
-              "emty_list": "Dra eller flytt innhold her"
+              "emty_list": "Dra eller flytt innhold her",
+              "dialog_opened": "Dialogboksen for manuell tabellorganisering er åpnet. Rader og kolonner kan omorganiseres.",
+              "keyboard_instructions": "Trykk mellomrom eller Enter for å velge et element. Bruk piltastene for å flytte det, og trykk Enter for å slippe det. Trykk Escape for å avbryte.",
+              "item_selected": "{{item}} valgt. Bruk piltastene for å flytte, Enter for å slippe og Escape for å avbryte.",
+              "item_moved": "{{item}} flyttet til posisjon {{position}} i {{group}}.",
+              "item_dropped": "{{item}} sluppet i {{group}}.",
+              "move_cancelled": "Flyttingen av {{item}} ble avbrutt."
             }
             },
           "change_order": {

@@ -235,6 +235,12 @@ export default interface Resources {
                 cancel_button: 'Cancel';
                 confirm_button: 'Save';
                 emty_list: 'Drag or move items here';
+                dialog_opened: 'Manual table arrangement opened. Rows and columns can be rearranged.';
+                keyboard_instructions: 'Press Space or Enter to pick up an item. Use arrow keys to move it, then press Enter to drop. Press Escape to cancel.';
+                item_selected: '{{item}} selected. Use arrow keys to move, Enter to drop, Escape to cancel.';
+                item_moved: '{{item}} moved to position {{position}} in {{group}}.';
+                item_dropped: '{{item}} dropped in {{group}}.';
+                move_cancelled: '{{item}} move cancelled.';
               };
             };
             title: 'Customise';

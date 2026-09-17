@@ -64,6 +64,7 @@ export function ManualPivot({
 }: ManualPivotProps) {
   const { t } = useTranslation();
   const keyboardInstructionsId = useId();
+  const translationRef = useRef(t);
   const [headerItems, setHeaderItems] = useState<Variable[]>(headerVariables);
   const [stubItems, setStubItems] = useState<Variable[]>(stubVariables);
   const [keyboardDraggedItemId, setKeyboardDraggedItemId] = useState<
@@ -89,6 +90,8 @@ export function ManualPivot({
   const [sourcePlaceholderMeta, setSourcePlaceholderMeta] =
     useState<SourcePlaceholderMeta>(null);
 
+  translationRef.current = t;
+
   /** Restores the local lists and drag state whenever the modal is opened. */
   useEffect(() => {
     if (isOpen) {
@@ -98,7 +101,12 @@ export function ManualPivot({
       stubItemsRef.current = stubVariables;
       setKeyboardDraggedItemId(null);
       keyboardDraggedItemIdRef.current = null;
-      setLiveAnnouncement('');
+      // setLiveAnnouncement(
+      //   translationRef.current(
+      //     'presentation_page.side_menu.edit.customize.manual_pivoting.manual_pivoting_modal.dialog_opened',
+      //     'Manual table arrangement opened. Rows and columns can be rearranged.',
+      //   ),
+      // );
       keyboardDragSnapshotRef.current = null;
       pointerDragSnapshotRef.current = null;
       setSourcePlaceholderMeta(null);
@@ -451,7 +459,15 @@ export function ManualPivot({
 
     if (capitalizedItemLabel && itemIndex !== -1) {
       setLiveAnnouncement(
-        `${capitalizedItemLabel} moved to position ${itemIndex + 1} in ${getGroupLabel(group)}.`,
+        t(
+          'presentation_page.side_menu.edit.customize.manual_pivoting.manual_pivoting_modal.item_moved',
+          '{{item}} moved to position {{position}} in {{group}}.',
+          {
+            item: capitalizedItemLabel,
+            position: itemIndex + 1,
+            group: getGroupLabel(group),
+          },
+        ),
       );
     }
   };
@@ -473,7 +489,11 @@ export function ManualPivot({
     if (itemLabel) {
       const capitalizedItemLabel = capitalizeLabel(itemLabel);
       setLiveAnnouncement(
-        `${capitalizedItemLabel} selected. Use arrow keys to move, Enter to drop, Escape to cancel.`,
+        t(
+          'presentation_page.side_menu.edit.customize.manual_pivoting.manual_pivoting_modal.item_selected',
+          '{{item}} selected. Use arrow keys to move, Enter to drop, Escape to cancel.',
+          { item: capitalizedItemLabel },
+        ),
       );
     }
   };
@@ -566,7 +586,11 @@ export function ManualPivot({
       const groupLabel = getGroupLabel(sourceGroup);
       if (itemLabel) {
         setLiveAnnouncement(
-          `${capitalizeLabel(itemLabel)} dropped in ${groupLabel}.`,
+          t(
+            'presentation_page.side_menu.edit.customize.manual_pivoting.manual_pivoting_modal.item_dropped',
+            '{{item}} dropped in {{group}}.',
+            { item: capitalizeLabel(itemLabel), group: groupLabel },
+          ),
         );
       }
     }
@@ -589,7 +613,13 @@ export function ManualPivot({
     if (draggedItemId) {
       const itemLabel = getItemById(draggedItemId)?.label;
       if (itemLabel) {
-        setLiveAnnouncement(`${capitalizeLabel(itemLabel)} move cancelled.`);
+        setLiveAnnouncement(
+          t(
+            'presentation_page.side_menu.edit.customize.manual_pivoting.manual_pivoting_modal.move_cancelled',
+            '{{item}} move cancelled.',
+            { item: capitalizeLabel(itemLabel) },
+          ),
+        );
       }
       pendingFocusItemIdRef.current = draggedItemId;
     }
@@ -868,6 +898,7 @@ export function ManualPivot({
           <Reorder.Group
             axis="y"
             as="ul"
+            aria-label={getGroupLabelText(group)}
             values={items}
             onReorder={(nextItems) => handleGroupReorder(group, nextItems)}
             className={classes.list}
@@ -876,9 +907,7 @@ export function ManualPivot({
             {items.length === 0 ? (
               <li aria-hidden="true">
                 <EmtyList
-                  label={t('manual_pivot.empty_group', {
-                    defaultValue: 'Drop variable here',
-                  })}
+                  label={t('presentation_page.side_menu.edit.customize.manual_pivoting.manual_pivoting_modal.emty_list', )}
                   hideLabel={isHoveringEmptyGroup}
                   active={isHoveringEmptyGroup}
                 />
@@ -999,8 +1028,10 @@ export function ManualPivot({
       )}
     >
       <p id={keyboardInstructionsId} className={classes.visuallyHidden}>
-        Press Space or Enter to pick up an item. Use arrow keys to move it, then
-        press Enter to drop. Press Escape to cancel.
+        {t(
+          'presentation_page.side_menu.edit.customize.manual_pivoting.manual_pivoting_modal.keyboard_instructions',
+          'Press Space or Enter to pick up an item. Use arrow keys to move it, then press Enter to drop. Press Escape to cancel.',
+        )}
       </p>
       <div className={classes.visuallyHidden} aria-live="polite">
         {liveAnnouncement}

@@ -215,7 +215,13 @@
               "header_title": "Kolumner",
               "cancel_button": "Avbryt",
               "confirm_button": "Spara",
-              "emty_list": "Dra eller flytta innehåll hit"
+              "emty_list": "Dra eller flytta innehåll hit",
+              "dialog_opened": "Dialogrutan för manuell tabellanpassning har öppnats. Rader och kolumner kan ordnas om.",
+              "keyboard_instructions": "Tryck på mellanslag eller Enter för att välja ett objekt. Använd piltangenterna för att flytta det, tryck sedan på Enter för att släppa det. Tryck på Escape för att avbryta.",
+              "item_selected": "{{item}} valt. Använd piltangenterna för att flytta, Enter för att släppa och Escape för att avbryta.",
+              "item_moved": "{{item}} flyttat till position {{position}} i {{group}}.",
+              "item_dropped": "{{item}} släppt i {{group}}.",
+              "move_cancelled": "Flytten av {{item}} avbröts."
             }
           },
           "change_order": {
