@@ -1,9 +1,11 @@
+@use '$ui/style-dictionary/dist/scss/fixed-variables.scss' as fixed;
+
 .emptyListBox {
   height: 160px;
   padding: 12px 60px;
-  border-radius: var(--border-radius-medium, 8px);
-  border: 1px dashed var(--color-border-subtle, #c3dcdc);
-  background: var(--color-surface-subtle, #f0f8f9);
+  border-radius: var(--px-border-radius-medium);
+  border: 2px dashed var(--px-color-border-default);
+  background: var(--px-color-surface-subtle);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -11,7 +13,7 @@
 }
 
 .active {
-  border-radius: var(--border-radius-medium, 8px);
-  border: 2px dashed var(--color-border-default, #162327);
-  background: var(--color-surface-subtle, #f0f8f9);
+  border-radius: var(--px-border-radius-medium);
+  border: 2px dashed var(--px-color-border-default);
+  background: var(--px-color-surface-subtle);
 }

@@ -18,7 +18,7 @@ const EmtyList = ({
       className={`${styles.emptyListBox} ${active ? styles.active : ''}`}
       data-active={active || undefined}
     >
-      {!hideLabel && label ? <Label>{label}</Label> : null}
+      {!hideLabel && label ? <Label textcolor='subtle'>{label}</Label> : null}
     </div>
   );
 };
