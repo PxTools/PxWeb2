@@ -30,6 +30,7 @@ function createChartMock(width = 320): EChartsType {
   return {
     setOption: vi.fn(),
     getWidth: vi.fn(() => width),
+    getHeight: vi.fn(() => 400),
     resize: vi.fn(),
     dispose: vi.fn(),
   } as unknown as EChartsType;
@@ -95,65 +96,68 @@ describe('useEChartOption', () => {
     render(<HookHost option={option} />);
 
     expect(chartMock.setOption).toHaveBeenCalledTimes(1);
-    expect(chartMock.setOption).toHaveBeenCalledWith({
-      ...option,
-      legend: {
-        textStyle: {
-          fontFamily: 'PxWeb-font, sans-serif',
-          fontSize: '0.875rem',
-          color: '#162327',
+    expect(chartMock.setOption).toHaveBeenCalledWith(
+      {
+        ...option,
+        legend: {
+          textStyle: {
+            fontFamily: 'PxWeb-font, sans-serif',
+            fontSize: '0.875rem',
+            color: '#162327',
+          },
+        },
+        tooltip: {
+          textStyle: {
+            fontFamily: 'PxWeb-font, sans-serif',
+            fontSize: '0.875rem',
+            color: '#162327',
+          },
+        },
+        xAxis: {
+          axisLabel: {
+            fontFamily: 'PxWeb-font, sans-serif',
+            fontSize: '0.875rem',
+            color: '#162327',
+          },
+          axisLine: { lineStyle: { color: '#162327' } },
+          nameTextStyle: {
+            fontFamily: 'PxWeb-font, sans-serif',
+            fontSize: '0.875rem',
+            color: '#162327',
+            align: 'left',
+          },
+        },
+        title: {
+          ...option.title,
+          left: 0,
+          right: 0,
+          width: '100%',
+          textStyle: {
+            fontFamily: 'PxWeb-font, sans-serif',
+            fontSize: '0.875rem',
+            color: '#162327',
+            overflow: 'break',
+            width: 368,
+            align: 'center',
+          },
+        },
+        yAxis: {
+          axisLabel: {
+            fontFamily: 'PxWeb-font, sans-serif',
+            fontSize: '0.875rem',
+            color: '#162327',
+          },
+          axisLine: { lineStyle: { color: '#162327' } },
+          nameTextStyle: {
+            fontFamily: 'PxWeb-font, sans-serif',
+            fontSize: '0.875rem',
+            color: '#162327',
+            align: 'left',
+          },
         },
       },
-      tooltip: {
-        textStyle: {
-          fontFamily: 'PxWeb-font, sans-serif',
-          fontSize: '0.875rem',
-          color: '#162327',
-        },
-      },
-      xAxis: {
-        axisLabel: {
-          fontFamily: 'PxWeb-font, sans-serif',
-          fontSize: '0.875rem',
-          color: '#162327',
-        },
-        axisLine: { lineStyle: { color: '#162327' } },
-        nameTextStyle: {
-          fontFamily: 'PxWeb-font, sans-serif',
-          fontSize: '0.875rem',
-          color: '#162327',
-          align: 'left',
-        },
-      },
-      title: {
-        ...option.title,
-        left: 0,
-        right: 0,
-        width: '100%',
-        textStyle: {
-          fontFamily: 'PxWeb-font, sans-serif',
-          fontSize: '0.875rem',
-          color: '#162327',
-          overflow: 'break',
-          width: 368,
-          align: 'center',
-        },
-      },
-      yAxis: {
-        axisLabel: {
-          fontFamily: 'PxWeb-font, sans-serif',
-          fontSize: '0.875rem',
-          color: '#162327',
-        },
-        axisLine: { lineStyle: { color: '#162327' } },
-        nameTextStyle: {
-          fontFamily: 'PxWeb-font, sans-serif',
-          fontSize: '0.875rem',
-          color: '#162327',
-          align: 'left',
-        },
-      },
-    });
+      { replaceMerge: ['legend'] },
+    );
   });
 
   it('applies global styles when title is not a single title object', () => {
@@ -167,69 +171,72 @@ describe('useEChartOption', () => {
     render(<HookHost option={option} />);
 
     expect(chartMock.setOption).toHaveBeenCalledTimes(1);
-    expect(chartMock.setOption).toHaveBeenCalledWith({
-      ...option,
-      title: [
-        {
-          text: 'Title 1',
+    expect(chartMock.setOption).toHaveBeenCalledWith(
+      {
+        ...option,
+        title: [
+          {
+            text: 'Title 1',
+            textStyle: {
+              fontFamily: 'PxWeb-font, sans-serif',
+              fontSize: '0.875rem',
+              color: '#162327',
+            },
+          },
+          {
+            text: 'Title 2',
+            textStyle: {
+              fontFamily: 'PxWeb-font, sans-serif',
+              fontSize: '0.875rem',
+              color: '#162327',
+            },
+          },
+        ],
+        legend: {
           textStyle: {
             fontFamily: 'PxWeb-font, sans-serif',
             fontSize: '0.875rem',
             color: '#162327',
           },
         },
-        {
-          text: 'Title 2',
+        tooltip: {
           textStyle: {
             fontFamily: 'PxWeb-font, sans-serif',
             fontSize: '0.875rem',
             color: '#162327',
           },
         },
-      ],
-      legend: {
-        textStyle: {
-          fontFamily: 'PxWeb-font, sans-serif',
-          fontSize: '0.875rem',
-          color: '#162327',
+        xAxis: {
+          axisLabel: {
+            fontFamily: 'PxWeb-font, sans-serif',
+            fontSize: '0.875rem',
+            color: '#162327',
+          },
+          axisLine: { lineStyle: { color: '#162327' } },
+          nameTextStyle: {
+            fontFamily: 'PxWeb-font, sans-serif',
+            fontSize: '0.875rem',
+            color: '#162327',
+            align: 'left',
+          },
+        },
+        yAxis: {
+          axisLabel: {
+            fontFamily: 'PxWeb-font, sans-serif',
+            fontSize: '0.875rem',
+            color: '#162327',
+          },
+          axisLine: { lineStyle: { color: '#162327' } },
+          nameTextStyle: {
+            fontFamily: 'PxWeb-font, sans-serif',
+            fontSize: '0.875rem',
+            color: '#162327',
+            align: 'left',
+          },
         },
       },
-      tooltip: {
-        textStyle: {
-          fontFamily: 'PxWeb-font, sans-serif',
-          fontSize: '0.875rem',
-          color: '#162327',
-        },
-      },
-      xAxis: {
-        axisLabel: {
-          fontFamily: 'PxWeb-font, sans-serif',
-          fontSize: '0.875rem',
-          color: '#162327',
-        },
-        axisLine: { lineStyle: { color: '#162327' } },
-        nameTextStyle: {
-          fontFamily: 'PxWeb-font, sans-serif',
-          fontSize: '0.875rem',
-          color: '#162327',
-          align: 'left',
-        },
-      },
-      yAxis: {
-        axisLabel: {
-          fontFamily: 'PxWeb-font, sans-serif',
-          fontSize: '0.875rem',
-          color: '#162327',
-        },
-        axisLine: { lineStyle: { color: '#162327' } },
-        nameTextStyle: {
-          fontFamily: 'PxWeb-font, sans-serif',
-          fontSize: '0.875rem',
-          color: '#162327',
-          align: 'left',
-        },
-      },
-    });
+      { replaceMerge: ['legend'] },
+    );
   });
 
   it('resizes without rebuilding the chart option on window resize', () => {
@@ -250,6 +257,68 @@ describe('useEChartOption', () => {
 
     expect(chartMock.resize).toHaveBeenCalledWith();
     expect(chartMock.setOption).toHaveBeenCalledTimes(1);
+  });
+
+  it('recalculates the legend when the option is rebuilt', () => {
+    const chartMock = {
+      ...createChartMock(),
+      getModel: vi.fn(() => ({
+        getComponent: vi.fn(() => ({
+          legend: true,
+        })),
+      })),
+      getViewOfComponentModel: vi.fn(() => ({
+        group: { getBoundingRect: vi.fn(() => ({ height: 80 })) },
+      })),
+    } as unknown as EChartsType;
+    vi.mocked(echarts.init).mockReturnValue(chartMock);
+
+    const { rerender } = render(
+      <HookHost
+        option={{ legend: { data: ['A'], bottom: 0, orient: 'vertical' } }}
+      />,
+    );
+
+    rerender(
+      <HookHost
+        option={{
+          legend: { data: ['A', 'B'], bottom: 0, orient: 'vertical' },
+        }}
+      />,
+    );
+
+    expect(chartMock.setOption).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        legend: expect.objectContaining({
+          data: ['A', 'B'],
+          orient: 'vertical',
+          bottom: 0,
+          textStyle: expect.objectContaining({
+            fontFamily: 'PxWeb-font, sans-serif',
+            fontSize: '0.875rem',
+            color: '#162327',
+          }),
+        }),
+      }),
+      { replaceMerge: ['legend'] },
+    );
+
+    rerender(
+      <HookHost
+        option={{
+          legend: {
+            data: ['A', 'B', 'C'],
+            bottom: 0,
+            orient: 'vertical',
+          },
+        }}
+      />,
+    );
+
+    expect(
+      (vi.mocked(chartMock.setOption).mock.calls.at(-1)?.[0] as EChartsOption)
+        .legend,
+    ).toMatchObject({ bottom: 0 });
   });
 
   it('draws a gridline at the end of a y-axis break', () => {

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as echarts from 'echarts';
 
 import { getChartCssVariables } from '../Utils/chartHelper';
@@ -26,15 +26,21 @@ function applyOptionWithWrappedTitle(
   chart: echarts.EChartsType,
   option: echarts.EChartsOption,
 ) {
+  // Keep option updates in one place so legend entries removed from the new
+  // option are also removed from the chart instead of being kept by ECharts.
+  const setOption = (nextOption: echarts.EChartsOption) => {
+    chart.setOption(nextOption, { replaceMerge: ['legend'] });
+  };
+
   if (!isSingleTitleOption(option.title)) {
-    chart.setOption(option);
+    setOption(option);
     return;
   }
 
   const titleTextStyle = option.title.textStyle ?? {};
   const titleWidth = Math.max(80, chart.getWidth() - 32);
 
-  chart.setOption({
+  setOption({
     ...option,
     title: {
       ...option.title,
@@ -59,6 +65,9 @@ type LegendMeasurableChart = {
 };
 
 function getRenderedLegendHeight(chart: echarts.EChartsType): number | null {
+  // ECharts calculates the actual height after wrapping legend text. Reading
+  // the rendered group gives us the real height instead of estimating it from
+  // the number of series.
   const measurable = chart as unknown as LegendMeasurableChart;
   const legendModel = measurable.getModel?.()?.getComponent?.('legend');
 
@@ -216,6 +225,8 @@ function applyLegendGap(
   option: echarts.EChartsOption,
   legendGap: number,
 ) {
+  // The plot grid must leave room for every rendered legend row. This keeps
+  // the x-axis labels and the legend from being drawn on top of each other.
   const legendHeight = getRenderedLegendHeight(chart);
 
   if (legendHeight === null) {
@@ -356,17 +367,38 @@ export function useEChartOption(
 ) {
   const divRef = useRef<HTMLDivElement | null>(null);
   const chartRef = useRef<echarts.EChartsType | null>(null);
+  const [renderedLegendHeight, setRenderedLegendHeight] = useState<
+    number | null
+  >(null);
 
+  // The legend height is measured by ECharts, then used by LineChart to set
+  // the total chart height (plot area + gap + legend).
   useEffect(() => {
     if (!divRef.current) {
       return;
     }
 
+    setRenderedLegendHeight(null);
+
     const chartContainer = divRef.current;
     const chart = echarts.init(chartContainer, null, { renderer });
     chartRef.current = chart;
 
+    const updateRenderedLegendHeight = () => {
+      const measuredHeight = getRenderedLegendHeight(chart);
+
+      if (measuredHeight === null) {
+        return;
+      }
+
+      setRenderedLegendHeight((previousHeight) =>
+        previousHeight === measuredHeight ? previousHeight : measuredHeight,
+      );
+    };
+
     const applyOption = () => {
+      // Apply the new selection or legend state first. The legend can only be
+      // measured after ECharts has rendered the updated option.
       applyOptionWithWrappedTitle(
         chart,
         applyResponsiveLegend(chart, applyStyling(option)),
@@ -377,21 +409,32 @@ export function useEChartOption(
       }
 
       applyYAxisBreakMark(chart, option);
+      updateRenderedLegendHeight();
     };
 
     applyOption();
 
     let previousWidth = chartContainer.clientWidth;
+    let previousHeight = chartContainer.clientHeight;
 
     const handleResize = () => {
       chart.resize();
 
-      // On mobile, resize can be triggered when scrolling vertically.
-      // This makes the graph lines to jump around when applying the option.
-      // To prevent this, we only apply the option if the width has actually changed.
+      // On mobile, resize can be triggered when scrolling vertically. Reapply
+      // the option only when the chart dimensions actually changed.
       const currentWidth = chartContainer.clientWidth;
-      if (currentWidth !== previousWidth) {
+      const currentHeight = chartContainer.clientHeight;
+      const widthChanged = currentWidth !== previousWidth;
+      const heightChanged = currentHeight !== previousHeight;
+
+      if (widthChanged || heightChanged) {
         previousWidth = currentWidth;
+        previousHeight = currentHeight;
+        if (widthChanged) {
+          // A width change can wrap legend text differently, so the previous
+          // measurement is no longer valid.
+          setRenderedLegendHeight(null);
+        }
         applyOption();
       }
     };
@@ -410,13 +453,18 @@ export function useEChartOption(
     return () => {
       resizeObserver?.disconnect();
       window.removeEventListener('resize', handleResize);
-      // if (restoreSeriesFrame !== null) {
-      //   cancelAnimationFrame(restoreSeriesFrame);
-      // }
       chartRef.current = null;
       chart.dispose();
     };
   }, [option, renderer, legendGap]);
 
-  return { divRef, chartRef };
+  useEffect(() => {
+    if (renderedLegendHeight !== null) {
+      // React has now applied the new container height. Resize ECharts again
+      // so its plot grid is laid out against that height.
+      chartRef.current?.resize();
+    }
+  }, [renderedLegendHeight]);
+
+  return { divRef, chartRef, renderedLegendHeight };
 }

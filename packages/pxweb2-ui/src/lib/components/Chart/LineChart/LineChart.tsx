@@ -310,15 +310,16 @@ export function LineChart({
     isMediumOrSmallerScreen,
   ]);
 
-  const legendHeight =
-    visibleLegendData.length * LEGEND_ITEM_HEIGHT + X_AXIS_LABEL_TO_LEGEND_GAP;
-  const height = CHART_PLOT_HEIGHT_REM + legendHeight / PIXELS_PER_REM;
-
-  const { divRef, chartRef } = useEChartOption(
+  const { divRef, chartRef, renderedLegendHeight } = useEChartOption(
     option,
     'svg',
     X_AXIS_LABEL_TO_LEGEND_GAP,
   );
+
+  const legendHeight =
+    (renderedLegendHeight ?? visibleLegendData.length * LEGEND_ITEM_HEIGHT) +
+    X_AXIS_LABEL_TO_LEGEND_GAP;
+  const height = CHART_PLOT_HEIGHT_REM + legendHeight / PIXELS_PER_REM;
 
   useEffect(() => {
     // ECharts creates the chart after the component renders. There is nothing
