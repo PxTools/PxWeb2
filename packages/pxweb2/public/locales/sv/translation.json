@@ -235,7 +235,9 @@
             "px": "Px-fil (.px)",
             "jsonstat2": "JSON-stat2 (.json)",
             "html": "HTML (.html)",
-            "parquet": "Parquet (.parquet)"
+            "parquet": "Parquet (.parquet)",
+            "png": "Diagram (png)",
+            "svg": "Diagram (svg)"
           }
         },
         "savequery": {
@@ -312,6 +314,10 @@
           "legend": {
             "show_more": "Visa mer",
             "show_less": "Visa mindre"
+          },
+          "export": {
+            "download_png": "Ladda ner PNG",
+            "download_svg": "Ladda ner SVG"
           }
         }
       },

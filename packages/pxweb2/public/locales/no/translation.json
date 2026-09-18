@@ -235,7 +235,9 @@
             "px": "Px-fil (.px)",
             "jsonstat2": "JSON-stat2 (.json)",
             "html": "HTML (.html)",
-            "parquet": "Parquet (.parquet)"
+            "parquet": "Parquet (.parquet)",
+            "png": "Graf (png)",
+            "svg": "Graf (svg)"
           }
         },
         "savequery": {
@@ -301,7 +303,7 @@
           }
         }
       },
-      "chart":{
+      "chart": {
         "line_chart": {
           "warnings": {
             "multiple_units": {
@@ -312,6 +314,10 @@
           "legend": {
             "show_more": "Vis mer",
             "show_less": "Vis mindre"
+          },
+          "export": {
+            "download_png": "Last ned PNG",
+            "download_svg": "Last ned SVG"
           }
         }
       },
