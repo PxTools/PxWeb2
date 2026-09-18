@@ -294,19 +294,17 @@ export function LineChart({
             hoveredSeriesIndexRef.current ??
             (isMediumOrSmallerScreen ? axisParams[0]?.seriesIndex : null);
 
-          // Without a series index, we cannot match the tooltip item to the
-          // chart's series metadata.
-          if (selectedSeriesIndex == null) {
-            return '';
-          }
-
           // The first item contains the label for the current x-axis value.
           const title = axisParams[0].axisValueLabel;
 
-          // Keep only tooltip items belonging to the selected series.
-          const hoveredParams = axisParams.filter(
-            (param) => param.seriesIndex === selectedSeriesIndex,
-          );
+          // Without a selected series, show all series for this axis point;
+          // otherwise keep only the tooltip items for the selected series.
+          const hoveredParams =
+            selectedSeriesIndex == null
+              ? axisParams
+              : axisParams.filter(
+                  (param) => param.seriesIndex === selectedSeriesIndex,
+                );
 
           // Turn each selected tooltip item into one line of HTML.
           const rows = hoveredParams
