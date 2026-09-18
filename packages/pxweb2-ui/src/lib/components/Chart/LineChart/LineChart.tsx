@@ -40,6 +40,8 @@ type TooltipParam = {
 const LEGEND_ITEM_HEIGHT = 40;
 const X_AXIS_LABEL_TO_LEGEND_GAP = 36;
 const TOP_CHART_PADDING = 36;
+const CHART_PLOT_HEIGHT_REM = 29;
+const PIXELS_PER_REM = 16;
 const CHART_FONT_FAMILY = 'PxWeb-font, sans-serif';
 
 function getTooltipSymbolSvg(symbol: string, color: string): string {
@@ -209,7 +211,14 @@ export function LineChart({
       },
       legend: {
         data: visibleLegendData,
+        orient: 'vertical',
+        left: 0,
+        right: 0,
         bottom: 0,
+        textStyle: {
+          overflow: 'break',
+          lineHeight: 20,
+        },
       },
       series,
       tooltip: {
@@ -301,11 +310,16 @@ export function LineChart({
     isMediumOrSmallerScreen,
   ]);
 
-  const { divRef, chartRef } = useEChartOption(
+  const { divRef, chartRef, renderedLegendHeight } = useEChartOption(
     option,
     'svg',
     X_AXIS_LABEL_TO_LEGEND_GAP,
   );
+
+  const legendHeight =
+    (renderedLegendHeight ?? visibleLegendData.length * LEGEND_ITEM_HEIGHT) +
+    X_AXIS_LABEL_TO_LEGEND_GAP;
+  const height = CHART_PLOT_HEIGHT_REM + legendHeight / PIXELS_PER_REM;
 
   useEffect(() => {
     // ECharts creates the chart after the component renders. There is nothing
@@ -386,8 +400,6 @@ export function LineChart({
       zrender?.off('click', handleChartClick);
     };
   }, [chartRef, option, dataset, isMediumOrSmallerScreen]);
-
-  const height = 36 + dataset.series.length * 0.8; // increase chart height based on number of series to prevent legend overlap
 
   return (
     <>
