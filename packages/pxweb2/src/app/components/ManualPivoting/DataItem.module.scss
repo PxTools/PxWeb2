@@ -24,6 +24,10 @@
     background: var(--px-color-surface-action-subtle-hover);
   }
 
+  :global([data-pointer-dragging='true']) &:not(.dataItemDragging):hover {
+    background: var(--px-color-surface-default);
+  }
+
   &:active:not(.dataItemDragging) {
     cursor: grabbing;
     border-radius: var(--px-border-radius-medium);
