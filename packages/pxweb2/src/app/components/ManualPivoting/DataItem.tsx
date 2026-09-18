@@ -5,13 +5,18 @@ import classes from './DataItem.module.scss';
 type DataItemProps = {
   label: string;
   isDragging?: boolean;
+  isKeyboardDragging?: boolean;
 };
 
-const DataItem = ({ label, isDragging = false }: DataItemProps) => {
+const DataItem = ({
+  label,
+  isDragging = false,
+  isKeyboardDragging = false,
+}: DataItemProps) => {
   const { t } = useTranslation();
   return (
     <div
-      className={`${classes.dataItem}${isDragging ? ` ${classes.dataItemDragging}` : ''}`}
+      className={`${classes.dataItem}${isDragging ? ` ${classes.dataItemDragging}` : ''}${isKeyboardDragging ? ` ${classes.dataItemKeyboardDragging}` : ''}`}
     >
       <Icon iconName="DragVertical" />
       <Label>{t('dataItem', { defaultValue: label })}</Label>

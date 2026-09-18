@@ -991,6 +991,9 @@ export function ManualPivot({
                         isDragging={
                           isDraggedItem || keyboardDraggedItemId === variable.id
                         }
+                        isKeyboardDragging={
+                          keyboardDraggedItemId === variable.id
+                        }
                       />
                     </Reorder.Item>
                   </Fragment>
