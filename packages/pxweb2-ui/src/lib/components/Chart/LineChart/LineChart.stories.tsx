@@ -17,6 +17,12 @@ const getTranslations = (t: TFunction) => ({
   showLess: t(
     'presentation_page.main_content.chart.line_chart.legend.show_less',
   ),
+  downloadPng: t(
+    'presentation_page.main_content.chart.line_chart.export.download_png',
+  ),
+  downloadSvg: t(
+    'presentation_page.main_content.chart.line_chart.export.download_svg',
+  ),
 });
 
 type LineChartWithTranslationsProps = Omit<

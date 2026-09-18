@@ -177,8 +177,10 @@ export type DrawerSaveProps = {
 export function DrawerSave({ tableId }: DrawerSaveProps) {
   const { t, i18n } = useTranslation();
   const variables = useVariables();
-  const heading = useTableData().data?.heading;
-  const stub = useTableData().data?.stub;
+  // const StaticTitle = variables.pxTableMetadata?.label;
+  const { data, chart } = useTableData();
+  const heading = data?.heading;
+  const stub = data?.stub;
   const [loadingFormat, setLoadingFormat] = useState<OutputFormatType | null>(
     null,
   );
@@ -321,7 +323,14 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
     setLoadingFormat(outputFormat);
 
     // Export the file using the export utility
-    await exportToFile(tableId, i18n.language, variablesSelection, outputFormat)
+    console.log('chart', chart);
+    await exportToFile(
+      tableId,
+      i18n.language,
+      variablesSelection,
+      outputFormat,
+      chart,
+    )
       .then(
         () => {
           // Notify user of successful export
@@ -456,7 +465,10 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
           className={classes.saveAsActionList}
           aria-labelledby="drawer-save-to-file"
         >
-          {fileFormats.map((format) => (
+          {(chart
+            ? fileFormats
+            : fileFormats.filter((f) => f.value !== 'png' && f.value !== 'svg')
+          ).map((format) => (
             <li key={`saveToFile${format.value}`}>
               <ActionItem
                 label={translate(
