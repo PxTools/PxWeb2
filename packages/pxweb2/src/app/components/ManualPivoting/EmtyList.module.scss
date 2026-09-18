@@ -1,0 +1,19 @@
+@use '$ui/style-dictionary/dist/scss/fixed-variables.scss' as fixed;
+
+.emptyListBox {
+  height: 160px;
+  padding: 12px 60px;
+  border-radius: var(--px-border-radius-medium);
+  border: 2px dashed var(--px-color-border-default);
+  background: var(--px-color-surface-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.active {
+  border-radius: var(--px-border-radius-medium);
+  border: 2px dashed var(--px-color-border-default);
+  background: var(--px-color-surface-subtle);
+}

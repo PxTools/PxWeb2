@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import ManualPivoting from '../../ManualPivoting/ManualPivoting';
 
 import {
   ActionItem,
@@ -11,6 +12,7 @@ import useTableData from '../../../context/useTableData';
 import classes from './DrawerEdit.module.scss';
 import { PivotType } from '../../../context/PivotType';
 import useApp from '../../../context/useApp';
+import useAccessibility from '../../../context/useAccessibility';
 
 interface PivotButtonProps {
   readonly stub: Variable[];
@@ -18,6 +20,39 @@ interface PivotButtonProps {
   readonly pivotType: PivotType;
   readonly loadingPivotType: PivotType | null;
   readonly setLoadingPivotType: (type: PivotType | null) => void;
+}
+
+interface PivotManuallyButtonProps {
+  readonly onClick: () => void;
+}
+
+function PivotManuallyButton({ onClick }: PivotManuallyButtonProps) {
+  const { t } = useTranslation();
+  const stopKeyboardPropagation = (
+    event: React.KeyboardEvent<HTMLButtonElement>,
+  ) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.stopPropagation();
+    }
+  };
+
+  return (
+    <ActionItem
+      label={t(
+        'presentation_page.side_menu.edit.customize.manual_pivoting.title',
+      )}
+      ariaLabel={t(
+        'presentation_page.side_menu.edit.customize.manual_pivoting.title',
+      )}
+      description={t(
+        'presentation_page.side_menu.edit.customize.manual_pivoting.description',
+      )}
+      onClick={onClick}
+      onKeyDown={stopKeyboardPropagation}
+      onKeyUp={stopKeyboardPropagation}
+      iconName="TableCog"
+    />
+  );
 }
 
 function PivotButton({
@@ -58,22 +93,40 @@ function PivotButton({
     if (!announceOnNextChange) {
       return;
     }
-    const { firstTitlePart, lastTitlePart } = buildTableTitle();
-    const message = t(screenReaderAnnouncementKey, '', {
-      first_variables: firstTitlePart,
-      last_variable: lastTitlePart,
-    });
+    let message: string;
+    if (pivotType === PivotType.Auto) {
+      const titleBy = t('presentation_page.common.table_title_by');
+      const titleAnd = t('presentation_page.common.table_title_and');
+      const { contentText, firstTitlePart, lastTitlePart } = buildTableTitle();
+      const tableHeading = `${contentText} ${titleBy} ${
+        firstTitlePart
+          ? `${firstTitlePart} ${titleAnd} ${lastTitlePart}`
+          : lastTitlePart
+      }`;
+      message = t(screenReaderAnnouncementKey, '', {
+        table_heading: tableHeading,
+      });
+    } else {
+      const { firstTitlePart, lastTitlePart } = buildTableTitle();
+      message = t(screenReaderAnnouncementKey, '', {
+        first_variables: firstTitlePart,
+        last_variable: lastTitlePart,
+      });
+    }
 
     // Clear first to ensure assistive tech re-announces even if message repeats
     setStatusMessage('');
-    const timer = setTimeout(() => setStatusMessage(message), 0); // Force state update on different ticks
-    setAnnounceOnNextChange(false);
+    const timer = setTimeout(() => {
+      setStatusMessage(message);
+      setAnnounceOnNextChange(false);
+    }, 0); // Force state update on different ticks
 
     return () => clearTimeout(timer);
   }, [
     stub,
     heading,
     announceOnNextChange,
+    pivotType,
     buildTableTitle,
     t,
     screenReaderAnnouncementKey,
@@ -92,7 +145,7 @@ function PivotButton({
       ? 'presentation_page.side_menu.edit.customize.auto_pivot.description'
       : 'presentation_page.side_menu.edit.customize.pivot.description';
   const iconName =
-    pivotType === PivotType.Auto ? 'Sparkles' : 'ArrowCirclepathClockwise';
+    pivotType === PivotType.Auto ? 'TableSparkle' : 'ArrowCirclepathClockwise';
 
   return (
     <>
@@ -114,13 +167,27 @@ function PivotButton({
 export function DrawerEdit() {
   const { t } = useTranslation();
   const { isMobile } = useApp();
-  const data = useTableData().data;
+  const { addModal, removeModal } = useAccessibility();
+  const tableData = useTableData();
+  const data = tableData.data;
+  const { pivotManual } = tableData;
   const [loadingPivotType, setLoadingPivotType] = useState<PivotType | null>(
     null,
   );
+  const [isManualPivotOpen, setIsManualPivotOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isManualPivotOpen) {
+      return;
+    }
+
+    addModal('ManualPivot', () => setIsManualPivotOpen(false));
+
+    return () => removeModal('ManualPivot');
+  }, [addModal, isManualPivotOpen, removeModal]);
 
   return (
-    <ContentBox title={t('presentation_page.side_menu.edit.customize.title')}>
+    <ContentBox>
       <div className={classes.operationList}>
         {data && !isMobile && (
           <PivotButton
@@ -132,6 +199,9 @@ export function DrawerEdit() {
           />
         )}
         {data && (
+          <PivotManuallyButton onClick={() => setIsManualPivotOpen(true)} />
+        )}
+        {data && (
           <PivotButton
             stub={data.stub}
             heading={data.heading}
@@ -141,6 +211,23 @@ export function DrawerEdit() {
           />
         )}
       </div>
+      {isManualPivotOpen && (
+        <ManualPivoting
+          isOpen={isManualPivotOpen}
+          onClose={(updated, headerItems, stubItems) => {
+            if (updated) {
+              pivotManual(
+                headerItems.map((item) => item.id),
+                stubItems.map((item) => item.id),
+                isMobile,
+              );
+            }
+            setIsManualPivotOpen(false);
+          }}
+          headerVariables={data?.heading ?? []}
+          stubVariables={data?.stub ?? []}
+        />
+      )}
       <LocalAlert variant="info" className={classes.alert}>
         {t('common.status_messages.drawer_edit')}
       </LocalAlert>
