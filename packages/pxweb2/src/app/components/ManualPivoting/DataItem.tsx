@@ -1,5 +1,4 @@
 import { Icon, Label } from '@pxweb2/pxweb2-ui';
-
 import { useTranslation } from 'react-i18next';
 import classes from './DataItem.module.scss';
 

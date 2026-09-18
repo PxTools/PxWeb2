@@ -46,12 +46,12 @@
   z-index: 2;
   width: 100%;
   height: var(--drop-preview-height, 40px);
-  border-radius: var(--border-radius-medium, 8px);
-  border: 1px dashed var(--color-border-moderate, #62919a);
+  border-radius: var(--px-border-radius-medium);
+  border: 1px dashed var(--px-color-border-moderate);
   padding: 8px 10px;
   display: flex;
   align-items: center;
-  background: var(--color-surface-subtle, #f0f8f9);
+  background: var(--px-color-surface-subtle);
   pointer-events: none;
 }
 
