@@ -931,7 +931,7 @@ export function ManualPivot({
                   isDraggingRef.current &&
                   draggedItemIdRef.current === variable.id
                 ) {
-                  itemZIndex = 10;
+                  itemZIndex = 100;
                 }
 
                 return (
@@ -951,7 +951,7 @@ export function ManualPivot({
                     ) : null}
                     <Reorder.Item
                       as="li"
-                      className={classes.draggableItem}
+                      className={`${classes.draggableItem}${isDraggedItem ? ` ${classes.draggableItemDragging}` : ''}`}
                       data-variable-id={variable.id}
                       value={variable}
                       style={{
