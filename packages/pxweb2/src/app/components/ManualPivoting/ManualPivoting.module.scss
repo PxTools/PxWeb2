@@ -41,6 +41,10 @@
   z-index: 1;
 }
 
+.draggableItem:focus-visible {
+  outline: none;
+}
+
 .dropPlaceholder {
   position: relative;
   z-index: 2;

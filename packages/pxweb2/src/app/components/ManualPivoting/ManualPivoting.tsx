@@ -951,6 +951,7 @@ export function ManualPivot({
                     ) : null}
                     <Reorder.Item
                       as="li"
+                      className={classes.draggableItem}
                       data-variable-id={variable.id}
                       value={variable}
                       style={{
