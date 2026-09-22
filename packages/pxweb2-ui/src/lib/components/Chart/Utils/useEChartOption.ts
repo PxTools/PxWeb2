@@ -54,7 +54,7 @@ function splitLegendData<T>(data: T[], columnCount: number): T[][] {
 }
 
 function getLegendText(value: string | { name?: string }): string {
-  return typeof value === 'string' ? value : value.name ?? '';
+  return typeof value === 'string' ? value : (value.name ?? '');
 }
 
 function getLegendFontSize(): number {
@@ -138,22 +138,22 @@ function wrapLegendText(
 
   return text
     .split(/\s+/)
-    .reduce(
-      (lines, word) => {
-        const chunks = word.match(
-          new RegExp(`.{1,${charactersPerLine}}`, 'g'),
-        ) ?? [''];
-        const lastLine = lines.at(-1) ?? '';
+    .reduce((lines, word) => {
+      const chunks = word.match(
+        new RegExp(`.{1,${charactersPerLine}}`, 'g'),
+      ) ?? [''];
+      const lastLine = lines.at(-1) ?? '';
 
-        if (lastLine && lastLine.length + 1 + chunks[0].length <= charactersPerLine) {
-          lines[lines.length - 1] = `${lastLine} ${chunks.shift()}`;
-        }
+      if (
+        lastLine &&
+        lastLine.length + 1 + chunks[0].length <= charactersPerLine
+      ) {
+        lines[lines.length - 1] = `${lastLine} ${chunks.shift()}`;
+      }
 
-        lines.push(...chunks);
-        return lines;
-      },
-      [] as string[],
-    )
+      lines.push(...chunks);
+      return lines;
+    }, [] as string[])
     .join('\n');
 }
 
@@ -161,7 +161,7 @@ function applyHorizontalLegendColumns(
   chart: echarts.EChartsType,
   legend: echarts.LegendComponentOption,
   renderedLegendHeight?: number,
-    legendGap: number = 0,
+  legendGap: number = 0,
 ): echarts.LegendComponentOption[] {
   const data = legend.data;
 
@@ -294,8 +294,9 @@ function getRenderedLegendHeight(chart: echarts.EChartsType): number | null {
           .getViewOfComponentModel?.(legendModel)
           ?.group?.getBoundingRect?.().height,
     )
-    .filter((height): height is number =>
-      typeof height === 'number' && Number.isFinite(height),
+    .filter(
+      (height): height is number =>
+        typeof height === 'number' && Number.isFinite(height),
     );
 
   return heights.length > 0 ? Math.max(...heights) : null;
@@ -462,9 +463,8 @@ function applyLegendGap(
   const measurable = chart as unknown as {
     getModel?: () => { getComponent?: (mainType: string) => unknown };
   };
-  const currentGridModel = measurable
-    .getModel?.()
-    ?.getComponent?.('grid') as { option?: { bottom?: unknown } } | undefined;
+  const currentGridModel = measurable.getModel?.()?.getComponent?.('grid') as
+    { option?: { bottom?: unknown } } | undefined;
   const currentBottom = currentGridModel?.option?.bottom ?? grid?.bottom;
 
   if (currentBottom === nextBottom) {

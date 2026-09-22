@@ -456,8 +456,7 @@ describe('useEChartOption', () => {
     );
 
     const setOption = vi.mocked(chartMock.setOption).mock.calls[0]?.[0] as
-      | EChartsOption
-      | undefined;
+      EChartsOption | undefined;
     const legends = setOption?.legend;
 
     expect(Array.isArray(legends)).toBe(true);
@@ -466,8 +465,8 @@ describe('useEChartOption', () => {
       expect.objectContaining({
         data: ['A', 'B'],
         orient: 'vertical',
-          left: 0,
-          top: 352,
+        left: 0,
+        top: 352,
         bottom: undefined,
         width: 400,
         itemWidth: 14,
@@ -478,7 +477,7 @@ describe('useEChartOption', () => {
       expect.objectContaining({
         data: ['C', 'D'],
         left: 400,
-          top: 352,
+        top: 352,
         width: 400,
         itemWidth: 14,
         itemHeight: 14,
@@ -487,7 +486,7 @@ describe('useEChartOption', () => {
       expect.objectContaining({
         data: ['E'],
         left: 800,
-          top: 352,
+        top: 352,
         width: 400,
         itemWidth: 14,
         itemHeight: 14,
